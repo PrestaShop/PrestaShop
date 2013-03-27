@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -39,13 +39,13 @@
 			{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
 			name="latitude"
 			id="latitude"
-			value="{$fields_value[$input.name]|htmlentities}" /> /
+			value="{$fields_value[$input.name]|escape:'htmlall'}" /> /
 		<input type="text"
 			{if isset($input.size)}size="{$input.size}"{/if}
 			{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
 			name="longitude"
 			id="longitude"
-			value="{$fields_value['longitude']|htmlentities}" />
+			value="{$fields_value['longitude']|escape:'htmlall'}" />
 	{else}
 		{$smarty.block.parent}
 	{/if}
@@ -82,7 +82,7 @@
 				{foreach $fields_value.days as $k => $value}
 					<tr style="color: #7F7F7F; font-size: 0.85em;">
 						<td>{$value}</td>
-						<td><input type="text" size="25" name="hours_{$k}" value="{if isset($fields_value.hours[$k-1])}{$fields_value.hours[$k-1]|htmlentities}{/if}" /><br /></td>
+						<td><input type="text" size="25" name="hours_{$k}" value="{if isset($fields_value.hours[$k-1])}{$fields_value.hours[$k-1]|escape:'htmlall'}{/if}" /><br /></td>
 					</tr>
 				{/foreach}
 			</table>

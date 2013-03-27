@@ -17,7 +17,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -741,6 +741,7 @@ function showErrorMessage(msg, delay)
 $(document).ready(function()
 {
 	$('select.chosen').each(function(k, item){
+		$(item).val($(this).find('option[selected=selected]').val());
 		$(item).chosen();
 		if ($(item).hasClass('no-search'))
 			$(item).next().find('.chzn-search').hide();
@@ -809,7 +810,30 @@ $(document).ready(function()
 		$(this).slideUp('fast');
 		clearTimeout(ajax_running_timeout);
 	});
+	
+	bindTabModuleListAction();
+	
 });
+
+
+function bindTabModuleListAction()
+{
+	$('.action_tab_module').each( function (){
+		$(this).click(function () {
+			option = $('#'+$(this).data('option')+' :selected');
+			if ($(option).data('onclick') != '')
+			{
+				
+				var f = eval("(function(){ "+$(option).data('onclick')+"})");
+				if (f.call())
+					window.location.href = $(option).data('href');
+			}
+			else
+				window.location.href = $(option).data('href');
+			return false;
+		});			
+	});
+}
 
 // Delete all tags HTML
 function stripHTML(oldString)
@@ -846,7 +870,8 @@ function showAjaxOverlay()
 	clearTimeout(ajax_running_timeout);
 }
 
-function display_action_details(row_id, controller, token, action, params) {
+function display_action_details(row_id, controller, token, action, params)
+{
 	var id = action+'_'+row_id;
 	var current_element = $('#details_'+id);
 	if (!current_element.data('dataMaped')) {
@@ -953,4 +978,15 @@ function display_action_details(row_id, controller, token, action, params) {
 		current_element.parent().parent().parent().find('.details_'+id).show('fast');
 		current_element.data('opened', true);
 	}
+}
+
+function quickSelect(elt)
+{
+	var eltVal = $(elt).val();
+	if (eltVal == "0")
+		return false;
+	else if (eltVal.substr(eltVal.length - 6) == '_blank')
+		window.open(eltVal.substr(0, eltVal.length - 6), '_blank');
+	else
+		location.href = eltVal;
 }

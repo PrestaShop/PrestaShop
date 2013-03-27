@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -49,7 +49,7 @@ class StatsBestProducts extends ModuleGrid
 
 		$this->_defaultSortColumn = 'totalPriceSold';
 		$this->_defaultSortDirection = 'DESC';
-		$this->_emptyMessage = $this->l('Empty recordset returned');
+		$this->_emptyMessage = $this->l('An empty record-set was returned.');
 		$this->_pagingMessage = sprintf($this->l('Displaying %1$s of %2$s'), '{0} - {1}', '{2}');
 
 		$this->_columns = array(
@@ -90,29 +90,29 @@ class StatsBestProducts extends ModuleGrid
 			),
 			array(
 				'id' => 'averageQuantitySold',
-				'header' => $this->l('Quantity sold/ day'),
+				'header' => $this->l('Quantity sold in a day.'),
 				'dataIndex' => 'averageQuantitySold',
 				'width' => 60,
 				'align' => 'right'
 			),
 			array(
 				'id' => 'totalPageViewed',
-				'header' => $this->l('Page viewed'),
+				'header' => $this->l('Page views'),
 				'dataIndex' => 'totalPageViewed',
 				'width' => 60,
 				'align' => 'right'
 			),
 			array(
 				'id' => 'quantity',
-				'header' => $this->l('Available quantity for sale'),
+				'header' => $this->l('Available quantity for sale.'),
 				'dataIndex' => 'quantity',
 				'width' => 150,
 				'align' => 'right'
 			)
 		);
 		
-		$this->displayName = $this->l('Best products');
-		$this->description = $this->l('A list of the best products');
+		$this->displayName = $this->l('Best-selling products.');
+		$this->description = $this->l('A list of the best-selling products.');
 	}
 
 	public function install()

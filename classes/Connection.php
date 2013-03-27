@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -70,8 +70,6 @@ class ConnectionCore extends ObjectModel
 	 */
 	public function getFields()
 	{
-		if (!$this->id_shop)
-			$this->id_shop = Context::getContext()->shop->id;
 		if (!$this->id_shop_group)
 			$this->id_shop_group = Context::getContext()->shop->id_shop_group;
 
@@ -147,7 +145,7 @@ class ConnectionCore extends ObjectModel
 			$connection->id_shop_group = Context::getContext()->shop->id_shop_group;
 			$connection->date_add = $cookie->date_add;
 			if (Validate::isAbsoluteUrl($referer))
-				$connection->http_referer = $referer;
+				$connection->http_referer = substr($referer, 0, 254);
 			$connection->add();
 			$cookie->id_connections = $connection->id;
 			return $connection->id_page;

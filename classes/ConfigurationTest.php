@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -47,6 +47,7 @@ class ConfigurationTestCore
 			'upload' => false,
 			'gd' => false,
 			'mysql_support' => false,
+			'sessions' => false,
 			'config_dir' => 'config',
 			'cache_dir' => 'cache',
 			'sitemap' => 'sitemap.xml',
@@ -76,6 +77,7 @@ class ConfigurationTestCore
 			'register_globals' => false,
 			'gz' => false,
 			'mcrypt' => false,
+			'mbstring' => false,
 			'magicquotes' => false,
 			'dom' => false,
 			'pdo_mysql' => false,
@@ -294,11 +296,23 @@ class ConfigurationTestCore
 		return ConfigurationTest::test_dir($dir);
 	}
 
+	public static function test_mbstring()
+	{
+		return function_exists('mb_strtolower');
+	}
+
 	public static function test_mcrypt()
 	{
 		return function_exists('mcrypt_encrypt');
 	}
 
+	public static function test_sessions()
+	{
+		if (!$path = @ini_get('session.save_path'))
+			return true;
+
+		return is_writable($path);
+	}
 	public static function test_dom()
 	{
 		return extension_loaded('Dom');

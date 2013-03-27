@@ -18,7 +18,7 @@
 			<input onkeyup="$('#lastname').val(this.value);" type="text" class="text" id="customer_lastname" name="customer_lastname" value="{if isset($smarty.post.customer_lastname)}{$smarty.post.customer_lastname}{/if}" />
 		</p>
 		<p class="required">
-			<label for="email">{l s='E-mail'} <sup>*</sup></label>
+			<label for="email">{l s='E-Mail:'} <sup>*</sup></label>
 			<input type="text" class="text" id="email" name="email" value="{if isset($smarty.post.email)}{$smarty.post.email}{/if}" />
 		</p>
 		<p class="required">
@@ -64,17 +64,17 @@
 		{if $newsletter}
 		<p class="checkbox" >
 			<input type="checkbox" name="newsletter" id="newsletter" value="1" {if isset($smarty.post.newsletter) AND $smarty.post.newsletter == 1} checked="checked"{/if} />
-			<label for="newsletter">{l s='Sign up for our newsletter'}</label>
+			<label for="newsletter">{l s='Sign up for our newsletter!'}</label>
 		</p>
 		<p class="checkbox" >
 			<input type="checkbox"name="optin" id="optin" value="1" {if isset($smarty.post.optin) AND $smarty.post.optin == 1} checked="checked"{/if} />
-			<label for="optin">{l s='Receive special offers from our partners'}</label>
+			<label for="optin">{l s='Receive special offers from our partners!'}</label>
 		</p>
 		{/if}
 	</fieldset>
 	{if $b2b_enable}
 	<fieldset class="account_creation">
-		<h3>{l s='Your company informations'}</h3>
+		<h3>{l s='Your company information'}</h3>
 		<p class="text">
 			<label for="">{l s='Company'}</label>
 			<input type="text" class="text" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{/if}" />
@@ -123,13 +123,13 @@
 				<p class="required text">
 					<label for="address1">{l s='Address'} <sup>*</sup></label>
 					<input type="text" class="text" name="address1" id="address1" value="{if isset($smarty.post.address1)}{$smarty.post.address1}{/if}" />
-					<span class="inline-infos">{l s='Street address, P.O. box, compagny name, c/o'}</span>
+					<span class="inline-infos">{l s='Street address, P.O. Box, company name, etc.'}</span>
 				</p>
 			{elseif $field_name eq "address2"}
 				<p class="text">
 					<label for="address2">{l s='Address (Line 2)'}</label>
 					<input type="text" class="text" name="address2" id="address2" value="{if isset($smarty.post.address2)}{$smarty.post.address2}{/if}" />
-					<span class="inline-infos">{l s='Apartment, suite, unit, building, floor, etc.'}</span>
+					<span class="inline-infos">{l s='Apartment, suite, unit, building, floor, etc...'}</span>
 				</p>
 			{elseif $field_name eq "postcode"}
 				<p class="required postcode text">
@@ -187,7 +187,7 @@
 			<input type="text" class="text" name="phone_mobile" id="phone_mobile" value="{if isset($smarty.post.phone_mobile)}{$smarty.post.phone_mobile}{/if}" />
 		</p>
 		<p class="required text" id="address_alias">
-			<label for="alias">{l s='Assign an address title for future reference'} <sup>*</sup></label>
+			<label for="alias">{l s='Assign an address alias for future reference'} <sup>*</sup></label>
 			<input type="text" class="text" name="alias" id="alias" value="{if isset($smarty.post.alias)}{$smarty.post.alias}{else}{l s='My address'}{/if}" />
 		</p>
 	</fieldset>

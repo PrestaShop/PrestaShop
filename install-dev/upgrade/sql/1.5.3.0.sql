@@ -6,6 +6,8 @@ SET NAMES 'utf8';
 
 /* PHP:block_category_1521(); */;
 
+/* PHP:update_order_messages(); */;
+
 UPDATE `PREFIX_order_state` SET `delivery` = 0 WHERE `id_order_state` = 3;
 
 ALTER TABLE  `PREFIX_product_shop` ADD `id_product_redirected` int(10) unsigned NOT NULL default '0' AFTER `active` ;
@@ -22,7 +24,7 @@ INSERT INTO `PREFIX_configuration`(`name`, `value`, `date_add`, `date_upd`) VALU
 
 ALTER TABLE `PREFIX_order_cart_rule` CHANGE `name` `name` VARCHAR(254);
 
-ALTER TABLE `PREFIX_cart` CHANGE `delivery_option` `delivery_option` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+ALTER TABLE `PREFIX_cart` CHANGE `delivery_option` `delivery_option` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
 
 ALTER TABLE `PREFIX_currency_shop` ADD `conversion_rate` DECIMAL( 13, 6 ) NOT NULL;
 UPDATE `PREFIX_currency_shop` a SET `conversion_rate` = (SELECT `conversion_rate` FROM `PREFIX_currency` b WHERE a.id_currency = b.id_currency);

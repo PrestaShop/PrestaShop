@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -29,7 +29,7 @@
 <div data-role="content" id="content">
 	<a data-role="button" data-icon="arrow-l" data-theme="a" data-mini="true" data-inline="true" href="{$link->getPageLink('my-account', true)}" data-ajax="false">{l s='My account'}</a>
 
-	<p>{l s='Here are the orders you have placed since the creation of your account'}.</p>
+	<p>{l s='Here are the orders you\'ve placed since your account was created.'}.</p>
 
 	{if $slowValidation}<p class="warning">{l s='If you have just placed an order, it may take a few minutes for it to be validated. Please refresh this page if your order is missing.'}</p>{/if}
 
@@ -43,7 +43,7 @@
 					{if isset($order.invoice) && $order.invoice && isset($order.virtual) && $order.virtual}<img src="{$img_dir}icon/download_product.gif" class="icon" alt="{l s='Products to download'}" title="{l s='Products to download'}" />{/if}
 					<h3>{l s='#'}{$order.id_order|string_format:"%06d"}</h3>
 					<p><strong>{l s='Total price'}</strong> {displayPrice price=$order.total_paid currency=$order.id_currency no_utf8=false convert=false}</p>
-					<p><strong>{l s='Payment'}</strong> {$order.payment|escape:'htmlall':'UTF-8'}</p>
+					<p><strong>{l s='Payment: '}</strong> {$order.payment|escape:'htmlall':'UTF-8'}</p>
 					<p><strong>{l s='Status'}</strong> {if isset($order.order_state)}{$order.order_state|escape:'htmlall':'UTF-8'}{/if}</p>
 					<span class="ui-li-aside">{dateFormat date=$order.date_add full=0}</span>
 				</a>

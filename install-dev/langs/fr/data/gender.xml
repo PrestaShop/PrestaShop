@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <entity_gender>
-  <gender id="Mr" name="M."/>
-  <gender id="Ms" name="Mme"/>
-  <gender id="Miss" name="Melle"/>
+  <gender id="1" name="M."/>
+  <gender id="2" name="Mme"/>
+  <gender id="3" name="Mlle"/>
 </entity_gender>

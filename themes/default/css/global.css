@@ -61,6 +61,7 @@ body.content_only {
 
 /* positionnement ****************************************************************************** */
 .hidden {display:none}
+.f_left {float:left}
 .f_right {float:right}
 p.center {text-align:center}
 .clearBoth {clear:both}
@@ -747,8 +748,12 @@ table#cart_summary tr ul {
 table#cart_summary .cart_product {
 	width:80px;
 	text-align:center
-}table#cart_summary tbody tr:last-child td {
+}
+table#cart_summary tbody tr:last-child td {
 	border-bottom: 1px solid #999;
+}
+table#cart_summary tbody tr td.cart_discount_delete {
+	padding-left: 34px;
 }
 table#cart_summary  .cart_product  img {border:1px solid #ccc}
 table#cart_summary .cart_description {
@@ -811,6 +816,8 @@ table#cart_summary #total_price_container {
 	font-size:13px
 }
 .cart_voucher p {padding-bottom:0;}
+
+.cart_voucher p.discount_name_block {float:left;}
 .cart_voucher #display_cart_vouchers {
 	clear:both;
 	line-height: 20px;
@@ -924,7 +931,7 @@ table#cart_summary .gift-icon {
 
 #authentication #create-account_form fieldset,
 #authentication #login_form fieldset {
-	height: 200px
+	min-height: 200px
 }
 
 #authentication #create-account_form .form_content,
@@ -970,7 +977,8 @@ table#cart_summary .gift-icon {
 	width:220px;/* 230 */
 	border:1px solid #ccc;
 	color:#666;
-	background:url(../img/bg_discount_name.png) repeat-x 0 0 #fff
+	background:url(../img/bg_discount_name.png) repeat-x 0 0 #fff;
+	line-height:20px;
 }
 
 #create-account_form #SubmitCreate,
@@ -1256,7 +1264,7 @@ a.iframe {font-weight:bold}
 #order-opc #opc_delivery_methods h3 {margin-top:20px;}
 #order-opc #opc_delivery_methods textarea {
 	height:60px;
-	width:755px;
+	width:723px;
 	border:1px solid #ccc
 }
 
@@ -1395,7 +1403,7 @@ a.iframe {font-weight:bold}
 #addresses #center_column{width:757px}
 
 #address p.inline-infos {
-	margin:0 0 0 100px !important;
+	margin:0 0 0 265px !important;
 	font-size:12px;
 	color:#666;
 }
@@ -1407,13 +1415,13 @@ a.iframe {font-weight:bold}
 #address #left_column {display:none}
 #address #center_column{width:757px}
 
-form#add_adress {}
-#add_adress fieldset {
+form#add_address {}
+#add_address fieldset {
 	margin:0;
 	border:1px solid #ccc;
 	background:#F8F8F8
 }
-#add_adress h3 {
+#add_address h3 {
 	margin:0 0 15px 0;
 	padding:8px;
 	font-size:14px;
@@ -1421,55 +1429,56 @@ form#add_adress {}
 	text-transform:uppercase;
 	background:url(../img/bg_form_h3.png) repeat-x 0 0 #989898
 }
-#center_column #add_adress p {margin:0; padding:0 0 10px 0}
-#add_adress p.required {color:#222}
-#add_adress p.required  sup {color:#990000}
+#center_column #add_address p {margin:0; padding:0 0 10px 0}
+#add_address p.required {color:#222}
+#add_address p.required  sup {color:#990000}
 
-#add_adress p.text label,
-#add_adress p.password label,
-#add_adress p.select label,
-#add_adress p.select span,
-#add_adress p.textarea label {
+#add_address p.text label,
+#add_address p.password label,
+#add_address p.select label,
+#add_address p.select span,
+#add_address p.textarea label {
 	display:inline-block;
 	padding:6px 15px;
 	width:230px;/* 260 */
 	font-size:14px;
 	text-align:right
 }
-#add_adress p.text input,
-#add_adress p.password input,
-#add_adress p.select input {
+#add_address p.text input,
+#add_address p.password input,
+#add_address p.select input {
 	padding:0 5px;
 	height:22px;
 	width:360px;/* 370 */
 	border:1px solid #ccc;
 	font-size: 12px;
-	color:#666
+	color:#666;
+	line-height:22px
 }
-#add_adress p.checkbox input {
+#add_address p.checkbox input {
 	margin-left:260px;
 }
-#add_adress p.select select {
+#add_address p.select select {
 	margin-right:10px;
 	border:1px solid #ccc;
 	font-size: 12px;
 	color:#666
 }
-#add_adress p.textarea label {vertical-align:top}
-#add_adress p.textarea textarea {
+#add_address p.textarea label {vertical-align:top}
+#add_address p.textarea textarea {
 	height:80px;
 	width:370px;
 	border:1px solid #ccc;
 	font-size: 12px;
 	color:#666
 }
-#center_column  #add_adress p.submit2 {
+#center_column  #add_address p.submit2 {
 	margin-top:20px;
 	text-align:right
 }
 
-#add_adress span.form_info,
-#add_adress span.inline-infos {
+#add_address span.form_info,
+#add_address span.inline-infos {
 	display:block;
 	margin:5px 0 0 265px;
 	color:#666
@@ -1958,6 +1967,8 @@ div.star_hover a, div.star a:hover { background-position: 0 -12px }
 .blockcategories_footer {
 	padding:15px 10px;
 }
+.blockcategories_footer .category_footer {float:left;clear:none;}
+.blockcategories_footer .category_footer .list{float:left;}
 .blockcategories_footer ul ul {display:none !important}
 
 
@@ -2087,4 +2098,6 @@ tr.subitem > td:first-child + td {
 	text-align:center
 }
 
-.ie7 #featured-products_block_center .product_image span.new {top:-20px;right:-19px}
+.ie7 #featured-products_block_center .product_image span.new {top:110px;right:0;width:94%}
+.ie8 #featured-products_block_center .product_image span.new{top:110px;right:0;width:94%}
+.lt-ie6 #featured-products_block_center .product_image span.new {top:110px;right:0;width:94%}

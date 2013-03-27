@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -47,13 +47,13 @@ class PdfInvoiceControllerCore extends FrontController
 			$order = new Order((int)$id_order);
 
 		if (!isset($order) || !Validate::isLoadedObject($order))
-			die(Tools::displayError('Invoice not found'));
+			die(Tools::displayError('The invoice was not found.'));
 
 		if ((isset($this->context->customer->id) && $order->id_customer != $this->context->customer->id) || (Tools::isSubmit('secure_key') && $order->secure_key != Tools::getValue('secure_key')))
-			die(Tools::displayError('Invoice not found'));
+			die(Tools::displayError('The invoice was not found.'));
 
 		if (!OrderState::invoiceAvailable($order->getCurrentState()) && !$order->invoice_number)
-			die(Tools::displayError('No invoice available'));
+			die(Tools::displayError('No invoice is available.'));
 
 		$this->order = $order;
 	}

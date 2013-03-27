@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -30,7 +30,7 @@
 		{if isset($tr.$key)}
 			<a href="{$tr.$key}" onmouseover="$(this).css('text-decoration', 'underline')" onmouseout="$(this).css('text-decoration', 'none')" target="_blank">{$tr.$key}</a>
 		{else}
-			<a href="{$link->getAdminLink('AdminShopUrl')|escape:'htmlall':'UTF-8'}&id_shop={$tr.$identifier}&addshop_url" class="multishop_warning">{l s='Click here to set an URL for this shop'}</a>
+			<a href="{$link->getAdminLink('AdminShopUrl')|escape:'htmlall':'UTF-8'}&id_shop={$tr.$identifier}&addshop_url" class="multishop_warning">{l s='Click here to set a URL for this shop.'}</a>
 		{/if}
 	{else}
 		{$smarty.block.parent}

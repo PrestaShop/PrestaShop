@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -53,11 +53,11 @@ class OrderDetailControllerCore extends FrontController
 			$msgText = Tools::getValue('msgText');
 
 			if (!$idOrder || !Validate::isUnsignedId($idOrder))
-				$this->errors[] = Tools::displayError('Order is no longer valid');
+				$this->errors[] = Tools::displayError('The order is no longer valid.');
 			elseif (empty($msgText))
-				$this->errors[] = Tools::displayError('Message cannot be blank');
+				$this->errors[] = Tools::displayError('The message cannot be blank.');
 			elseif (!Validate::isMessage($msgText))
-				$this->errors[] = Tools::displayError('Message is invalid (HTML is not allowed)');
+				$this->errors[] = Tools::displayError('This message is invalid (HTML is not allowed).');
 			if (!count($this->errors))
 			{
 				$order = new Order($idOrder);
@@ -204,7 +204,7 @@ class OrderDetailControllerCore extends FrontController
 				unset($carrier, $addressInvoice, $addressDelivery);
 			}
 			else
-				$this->errors[] = Tools::displayError('Cannot find this order');
+				$this->errors[] = Tools::displayError('This order cannot be found.');
 			unset($order);
 		}
 

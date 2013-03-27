@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -40,7 +40,7 @@ class BlockManufacturer extends Module
         parent::__construct();
 
 		$this->displayName = $this->l('Manufacturers block');
-        $this->description = $this->l('Displays a block of manufacturers/brands');
+        $this->description = $this->l('Displays a block listing product manufacturers and/or brands.');
     }
 
 	public function install()
@@ -77,9 +77,9 @@ class BlockManufacturer extends Module
 			$text_nb = (int)(Tools::getValue('text_nb'));
 			$form_list = (int)(Tools::getValue('form_list'));
 			if ($text_list && !Validate::isUnsignedInt($text_nb))
-				$errors[] = $this->l('Invalid number of elements');
+				$errors[] = $this->l('There is an invalid number of elements');
 			elseif (!$text_list && !$form_list)
-				$errors[] = $this->l('Please activate at least one system list');
+				$errors[] = $this->l('Please activate at least one system list.');
 			else
 			{
 				Configuration::updateValue('MANUFACTURER_DISPLAY_TEXT', $text_list);
@@ -99,22 +99,22 @@ class BlockManufacturer extends Module
 		$output = '
 		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
 			<fieldset><legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
-				<label>'.$this->l('Use a plain-text list').'</label>
+				<label>'.$this->l('Use a plain-text list.').'</label>
 				<div class="margin-form">
 					<input type="radio" name="text_list" id="text_list_on" value="1" '.(Tools::getValue('text_list', Configuration::get('MANUFACTURER_DISPLAY_TEXT')) ? 'checked="checked" ' : '').'/>
 					<label class="t" for="text_list_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>
 					<input type="radio" name="text_list" id="text_list_off" value="0" '.(!Tools::getValue('text_list', Configuration::get('MANUFACTURER_DISPLAY_TEXT')) ? 'checked="checked" ' : '').'/>
 					<label class="t" for="text_list_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
-					&nbsp;&nbsp;&nbsp;'.$this->l('Display').' <input type="text" size="2" name="text_nb" value="'.(int)(Tools::getValue('text_nb', Configuration::get('MANUFACTURER_DISPLAY_TEXT_NB'))).'" /> '.$this->l('elements').'
-					<p class="clear">'.$this->l('To display manufacturers in a plain-text list').'</p>
+					&nbsp;&nbsp;&nbsp;'.$this->l('Display').' <input type="text" size="2" name="text_nb" value="'.(int)(Tools::getValue('text_nb', Configuration::get('MANUFACTURER_DISPLAY_TEXT_NB'))).'" /> '.$this->l('Elements').'
+					<p class="clear">'.$this->l('Display manufacturers in a plain-text list').'</p>
 				</div>
-				<label>'.$this->l('Use a drop-down list').'</label>
+				<label>'.$this->l('Use a drop-down list.').'</label>
 				<div class="margin-form">
 					<input type="radio" name="form_list" id="form_list_on" value="1" '.(Tools::getValue('form_list', Configuration::get('MANUFACTURER_DISPLAY_FORM')) ? 'checked="checked" ' : '').'/>
 					<label class="t" for="form_list_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>
 					<input type="radio" name="form_list" id="form_list_off" value="0" '.(!Tools::getValue('form_list', Configuration::get('MANUFACTURER_DISPLAY_FORM')) ? 'checked="checked" ' : '').'/>
 					<label class="t" for="form_list_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
-					<p class="clear">'.$this->l('To display manufacturers in a drop-down list').'</p>
+					<p class="clear">'.$this->l('Display manufacturers in a drop-down list.').'</p>
 				</div>
 				<center><input type="submit" name="submitBlockManufacturers" value="'.$this->l('Save').'" class="button" /></center>
 			</fieldset>

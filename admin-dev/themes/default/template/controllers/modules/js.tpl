@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -33,7 +33,7 @@
 	var ajaxCurrentIndex = '{$ajaxCurrentIndex}';
 	var installed_modules = {if isset($installed_modules) && count($installed_modules)}{$installed_modules}{else}false{/if};
 	var by = '{l s='by'}';
-	var errorLogin = '{l s='PrestaShop was unable to login to Addons, please check your credentials and your internet connection.'}';
+	var errorLogin = '{l s='PrestaShop was unable to login to Addons. Please check your credentials and your internet connection.'}';
 	var confirmPreferencesSaved = '{l s='Preferences saved'}';
 	{if isset($smarty.get.anchor) && !isset($error_module)}var anchor = '{$smarty.get.anchor|htmlentities|replace:'(':''|replace:')':''|replace:'{':''|replace:'}':''|replace:'\'':''|replace:'/':''}';{else}var anchor = '';{/if}
 
@@ -68,22 +68,22 @@
 
 		// AutoComplete Search
 		$('input[name="filtername"]').autocomplete(moduleList, {
-				minChars: 0,
-				width: 310,
-				matchContains: true,
-				highlightItem: true,
-				formatItem: function(row, i, max, term) {
-					var image = '../modules/'+row.name+'/logo.gif';
-					if (row.image != '')
-						image = row.image;
-					return '<img src="'+image+'" style="float:left;margin:5px;width:16px;height:16px"><strong>'+row.displayName+'</strong>'+((row.author != '') ? ' ' + by + ' ' + truncate_author(row.author) : '') + '<br /><span style="font-size: 80%;">'+ row.desc +'</span><br/><div style="height:15px;padding-top:5px">'+ row.option +'</div>';
-				},
-				formatResult: function(row) {
-					return row.displayName;
-				}
+			minChars: 0,
+			width: 310,
+			matchContains: true,
+			highlightItem: true,
+			formatItem: function(row, i, max, term) {
+				var image = '../modules/'+row.name+'/logo.gif';
+				if (row.image != '')
+					image = row.image;
+				return '<img src="'+image+'" style="float:left;margin:5px;width:16px;height:16px"><strong>'+row.displayName+'</strong>'+((row.author != '') ? ' ' + by + ' ' + truncate_author(row.author) : '') + '<br /><span style="font-size: 80%;">'+ row.desc +'</span><br/><div style="height:15px;padding-top:5px">'+ row.option +'</div>';
+			},
+			formatResult: function(row) {
+				return row.displayName;
+			}
 		});
 		$('input[name="filtername"]').result(function(event, data, formatted) {
-			 $('#filternameForm').submit();
+			$('#filternameForm').submit();
 		});
 
 		// Method to check / uncheck all modules checkbox
@@ -112,27 +112,21 @@
 			try
 			{
 				resAjax = $.ajax({
-						type:"POST",
-						url : ajaxReloadCurrentIndex,
-						async: true,
-						data : {
-							ajax : "1",
-							token : token,
-							controller : "AdminModules",
-							action : "reloadModulesList"
-						},
- 						beforeSend: function(xhr)
-						{
-							$('#moduleContainer').html('<img src="../img/loader.gif" alt="" border="0" />');
-						},
-						success : function(data)
-						{
-							$('#moduleContainer').html(data);
-						},
-						error: function(res,textStatus,jqXHR)
-						{
-							//jAlert("TECHNICAL ERROR"+res);
-						}
+					type:"POST",
+					url : ajaxReloadCurrentIndex,
+					async: true,
+					data : {
+						ajax : "1",
+						token : token,
+						controller : "AdminModules",
+						action : "reloadModulesList"
+					},
+					beforeSend: function(xhr){
+						$('#moduleContainer').html('<img src="../img/loader.gif" alt="" border="0" />');
+					},
+					success: function(data){
+						$('#moduleContainer').html(data);
+					}
 				});
 			}
 			catch(e){}
@@ -143,25 +137,19 @@
 		try
 		{
 			resAjax = $.ajax({
-					type:"POST",
-					url : ajaxCurrentIndex,
-					async: true,
-					data : {
+				type:"POST",
+				url: ajaxCurrentIndex,
+				async: true,
+				data: {
 					ajaxMode : "1",
 					ajax : "1",
 					token : token,
 					controller : "AdminModules",
 					action : "refreshModuleList"
 				},
-				success : function(data)
-				{
-					// res.status  = cache or refresh
+				success: function(data){
 					if (data == '{"status":"refresh"}')
 						window.location.href = window.location.href;
-				},
-				error: function(res,textStatus,jqXHR)
-				{
-					//jAlert("TECHNICAL ERROR"+res);
 				}
 			});
 		}
@@ -175,37 +163,30 @@
 			try
 			{
 				resAjax = $.ajax({
-						type:"POST",
-						url : ajaxCurrentIndex,
-						async: true,
-						data : {
-							ajax : "1",
-							token : token,
-							controller : "AdminModules",
-							action : "logOnAddonsWebservices",
-							username_addons : username_addons,
-							password_addons : password_addons
-						},
- 						beforeSend: function(xhr)
+					type:"POST",
+					url : ajaxCurrentIndex,
+					async: true,
+					data : {
+						ajax : "1",
+						token : token,
+						controller : "AdminModules",
+						action : "logOnAddonsWebservices",
+						username_addons : username_addons,
+						password_addons : password_addons
+					},
+					beforeSend: function(xhr){
+						$('#addons_loading').html('<img src="../img/loader.gif" alt="" border="0" />');
+					},
+					success : function(data){
+						if (data == 'OK')
 						{
-							$('#addons_loading').html('<img src="../img/loader.gif" alt="" border="0" />');
-						},
-						success : function(data)
-						{
-							// res.status  = cache or refresh
-							if (data == 'OK')
-							{
-								$('#addons_loading').html('');
-								$('#addons_login_div').fadeOut();
-								window.location.href = currentIndexWithToken;
-							}
-							else
-								$('#addons_loading').html(errorLogin);
-						},
-						error: function(res,textStatus,jqXHR)
-						{
-							//jAlert("TECHNICAL ERROR"+res);
+							$('#addons_loading').html('');
+							$('#addons_login_div').fadeOut();
+							window.location.href = currentIndexWithToken;
 						}
+						else
+							$('#addons_loading').html(errorLogin);
+					}
 				});
 			}
 			catch(e){}
@@ -218,35 +199,28 @@
 			try
 			{
 				resAjax = $.ajax({
-						type:"POST",
-						url : ajaxCurrentIndex,
-						async: true,
-						data : {
-							ajax : "1",
-							token : token,
-							controller : "AdminModules",
-							action : "logOutAddonsWebservices"
-						},
- 						beforeSend: function(xhr)
+					type:"POST",
+					url : ajaxCurrentIndex,
+					async: true,
+					data : {
+						ajax : "1",
+						token : token,
+						controller : "AdminModules",
+						action : "logOutAddonsWebservices"
+					},
+					beforeSend: function(xhr){
+						$('#addons_loading').html('<img src="../img/loader.gif" alt="" border="0" />');
+					},
+					success: function(data) {
+						if (data == 'OK')
 						{
-							$('#addons_loading').html('<img src="../img/loader.gif" alt="" border="0" />');
-						},
-						success : function(data)
-						{
-							// res.status  = cache or refresh
-							if (data == 'OK')
-							{
-								$('#addons_loading').html('');
-								$('#addons_login_div').fadeOut();
-								window.location.href = currentIndexWithToken;
-							}
-							else
-								$('#addons_loading').html(errorLogin);
-						},
-						error: function(res,textStatus,jqXHR)
-						{
-							//jAlert("TECHNICAL ERROR"+res);
+							$('#addons_loading').html('');
+							$('#addons_login_div').fadeOut();
+							window.location.href = currentIndexWithToken;
 						}
+						else
+							$('#addons_loading').html(errorLogin);
+					}
 				});
 			}
 			catch(e){}
@@ -263,30 +237,24 @@
 			try
 			{
 				resAjax = $.ajax({
-						type:"POST",
-						url : ajaxCurrentIndex,
-						async: true,
-						data : {
-							ajax : "1",
-							token : token,
-							controller : "AdminModules",
-							action : "setFilter",
-							module_type : module_type,
-							module_install : module_install,
-							module_status : module_status,
-							country_module_value : country_module_value,
-							filterModules : 'Filter'
-						},
-						success : function(data)
-						{
-							// res.status  = cache or refresh
-							if (data == 'OK')
-								window.location.href = currentIndexWithToken;
-						},
-						error: function(res,textStatus,jqXHR)
-						{
-							//jAlert("TECHNICAL ERROR"+res);
-						}
+					type:"POST",
+					url : ajaxCurrentIndex,
+					async: true,
+					data : {
+						ajax : "1",
+						token : token,
+						controller : "AdminModules",
+						action : "setFilter",
+						module_type : module_type,
+						module_install : module_install,
+						module_status : module_status,
+						country_module_value : country_module_value,
+						filterModules : 'Filter'
+					},
+					success : function(data){
+						if (data == 'OK')
+							window.location.href = currentIndexWithToken;
+					}
 				});
 			}
 			catch(e){}
@@ -297,6 +265,31 @@
 		$('#module_status_filter').change(function() { setFilter(); });
 		$('#country_module_value_filter').change(function() { setFilter(); });
 
+		$('.moduleTabPreferencesChoise').change(function()
+		{			
+			var value_pref = $(this).val();
+			var module_pref = $(this).attr('name');
+			module_pref = module_pref.substring(2, module_pref.length);
+
+			$.ajax({
+				type:"POST",
+				url : ajaxCurrentIndex,
+				async: true,
+				data : {
+					ajax : "1",
+					token : token,
+					controller : "AdminModules",
+					action : "saveTabModulePreferences",
+					module_pref : module_pref,
+					value_pref : value_pref
+				},
+				success : function(data){
+					if (data == 'OK')
+						$('#r_' + module_pref).html(confirmPreferencesSaved);
+				}
+			});
+		});
+		
 		// Method to save favorites preferences
 		$('.moduleFavorite').change(function()
 		{
@@ -307,28 +300,22 @@
 			try
 			{
 				resAjax = $.ajax({
-						type:"POST",
-						url : ajaxCurrentIndex,
-						async: true,
-						data : {
-							ajax : "1",
-							token : token,
-							controller : "AdminModules",
-							action : "saveFavoritePreferences",
-							action_pref : action_pref,
-							module_pref : module_pref,
-							value_pref : value_pref
-						},
-						success : function(data)
-						{
-							// res.status  = cache or refresh
-							if (data == 'OK')
-								$('#r_' + module_pref).html(confirmPreferencesSaved);
-						},
-						error: function(res,textStatus,jqXHR)
-						{
-							//jAlert("TECHNICAL ERROR"+res);
-						}
+					type:"POST",
+					url : ajaxCurrentIndex,
+					async: true,
+					data : {
+						ajax : "1",
+						token : token,
+						controller : "AdminModules",
+						action : "saveFavoritePreferences",
+						action_pref : action_pref,
+						module_pref : module_pref,
+						value_pref : value_pref
+					},
+					success : function(data){
+						if (data == 'OK')
+							$('#r_' + module_pref).html(confirmPreferencesSaved);
+					}
 				});
 			}
 			catch(e){}

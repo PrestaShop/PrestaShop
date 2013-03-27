@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -35,7 +35,7 @@
 	{if !$product->hasAttributes()}
 		<table border="0" cellpadding="0" cellspacing="0" class="table" style="">
 			<tr>
-				<th  width="450">{l s='Name:'} {$product->name}</th>
+				<th  width="450">{l s='Name'} {$product->name}</th>
 				{if !empty($product->product_supplier_reference)}<th width="190">{l s='Supplier Reference:'} {$product->product_supplier_reference}</th>{/if}
 				{if !empty($product->product_supplier_price_te)}<th width="190">{l s='Wholesale price:'} {$product->product_supplier_price_te}</th>{/if}
 				{if !empty($product->reference)}<th width="150">{l s='Reference:'} {$product->reference}</th>{/if}

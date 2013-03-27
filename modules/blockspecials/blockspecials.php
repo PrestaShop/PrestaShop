@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -43,7 +43,7 @@ class BlockSpecials extends Module
 		parent::__construct();
 
 		$this->displayName = $this->l('Specials block');
-		$this->description = $this->l('Adds a block with current product specials.');
+		$this->description = $this->l('Adds a block displaying current product specials.');
 	}
 
 	public function install()
@@ -68,7 +68,7 @@ class BlockSpecials extends Module
 		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
 			<fieldset>
 				<legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
-				<label>'.$this->l('Always display block').'</label>
+				<label>'.$this->l('Always display this block.').'</label>
 				<div class="margin-form">
 					<input type="radio" name="always_display" id="display_on" value="1" '.(Tools::getValue('always_display', Configuration::get('PS_BLOCK_SPECIALS_DISPLAY')) ? 'checked="checked" ' : '').'/>
 					<label class="t" for="display_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>

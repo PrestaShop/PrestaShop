@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -345,6 +345,11 @@ class OrderInvoiceCore extends ObjectModel
 		// shipping cost are added in the product taxes breakdown
 		if ($this->useOneAfterAnotherTaxComputationMethod())
 			return $taxes_breakdown;
+		
+		// No shipping breakdown if it's free!
+		foreach ($order->getCartRules() as $cart_rule)
+			if ($cart_rule['free_shipping'])
+				return $taxes_breakdown;
 
 		$shipping_tax_amount = $this->total_shipping_tax_incl - $this->total_shipping_tax_excl;
 
@@ -654,9 +659,9 @@ class OrderInvoiceCore extends ObjectModel
 	 * @param int $id_lang for invoice_prefix
 	 * @return string
 	 */
-	public function getInvoiceNumberFormatted($id_lang)
+	public function getInvoiceNumberFormatted($id_lang, $id_shop = null)
 	{
-		return '#'.Configuration::get('PS_INVOICE_PREFIX', $id_lang).sprintf('%06d', $this->number);
+		return '#'.Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, $id_shop).sprintf('%06d', $this->number);
 	}
 
 	public function saveCarrierTaxCalculator(array $taxes_amount)

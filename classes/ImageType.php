@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -62,7 +62,7 @@ class ImageTypeCore extends ObjectModel
 		'table' => 'image_type',
 		'primary' => 'id_image_type',
 		'fields' => array(
-			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isImageTypeName', 'required' => true, 'size' => 16),
+			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isImageTypeName', 'required' => true, 'size' => 64),
 			'width' => 			array('type' => self::TYPE_INT, 'validate' => 'isImageSize', 'required' => true),
 			'height' => 		array('type' => self::TYPE_INT, 'validate' => 'isImageSize', 'required' => true),
 			'categories' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
@@ -143,13 +143,16 @@ class ImageTypeCore extends ObjectModel
 	{
 		$theme_name = Context::getContext()->shop->theme_name;
 		$name_without_theme_name = str_replace(array('_'.$theme_name, $theme_name.'_'), '', $name);
+
 		//check if the theme name is already in $name if yes only return $name
 		if (strstr($name, $theme_name) && self::getByNameNType($name))
 			return $name;
 		else if (self::getByNameNType($name_without_theme_name.'_'.$theme_name))
 			return $name_without_theme_name.'_'.$theme_name;
-		else
+		else if (self::getByNameNType($theme_name.'_'.$name_without_theme_name))
 			return $theme_name.'_'.$name_without_theme_name;
+		else
+			return $name_without_theme_name.'_default';
 	}
 	
 }

@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,20 +18,18 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <div id="productBox">
-
 	{include file='controllers/modules/header.tpl'}
 	{include file='controllers/modules/filters.tpl'}
 
 	<ul class="view-modules">
 		<li class="button normal-view-disabled"><img src="themes/default/img/modules_view_layout_sidebar.png" alt="{l s='Normal view'}" border="0" /><span>{l s='Normal view'}</span></li>
 		<li class="button favorites-view"><a  href="index.php?controller={$smarty.get.controller|htmlentities}&token={$smarty.get.token|htmlentities}&select=favorites"><img src="themes/default/img/modules_view_table_select_row.png" alt="{l s='Favorites view'}" border="0" /><span>{l s='Favorites view'}</span></a></li>
-	
 	</ul>
 
 	<div id="container">
@@ -58,10 +56,8 @@
 				</ul>
 			</div>
 		</div>
-
 		<div id="moduleContainer">
 			{include file='controllers/modules/list.tpl'}
 		</div>
 	</div>
-
 </div>

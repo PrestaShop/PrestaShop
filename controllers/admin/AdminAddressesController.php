@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -44,6 +44,8 @@ class AdminAddressesControllerCore extends AdminController
 		$this->addRowAction('delete');
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
+		$this->allow_export = true;
+
 		if (!Tools::getValue('realedit'))
 			$this->deleted = true;
 
@@ -53,35 +55,31 @@ class AdminAddressesControllerCore extends AdminController
 
 		$this->fields_list = array(
 			'id_address' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'firstname' => array('title' => $this->l('First name'), 'width' => 120, 'filter_key' => 'a!firstname'),
-			'lastname' => array('title' => $this->l('Last name'), 'width' => 140, 'filter_key' => 'a!lastname'),
+			'firstname' => array('title' => $this->l('First Name'), 'width' => 120, 'filter_key' => 'a!firstname'),
+			'lastname' => array('title' => $this->l('Last Name'), 'width' => 140, 'filter_key' => 'a!lastname'),
 			'address1' => array('title' => $this->l('Address')),
-			'postcode' => array('title' => $this->l('Postal Code/Zip Code'), 'align' => 'right', 'width' => 80),
+			'postcode' => array('title' => $this->l('Zip/Postal Code'), 'align' => 'right', 'width' => 80),
 			'city' => array('title' => $this->l('City'), 'width' => 150),
 			'country' => array('title' => $this->l('Country'), 'width' => 100, 'type' => 'select', 'list' => $this->countries_array, 'filter_key' => 'cl!id_country'));
 
 		parent::__construct();
-	}
-	
-	public function initToolbar()
-	{
-		parent::initToolbar();
-		$this->toolbar_btn['import'] = array(
-			'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type='.$this->table,
-			'desc' => $this->l('Import')
-		);
-	}
-	
-	public function renderList()
-	{
+
 		$this->_select = 'cl.`name` as country';
 		$this->_join = '
 			LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (cl.`id_country` = a.`id_country` AND cl.`id_lang` = '.(int)$this->context->language->id.')
 			LEFT JOIN `'._DB_PREFIX_.'customer` c ON a.id_customer = c.id_customer
 		';
 		$this->_where = 'AND a.id_customer != 0 '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'c');
+	}
 
-		return parent::renderList();
+	public function initToolbar()
+	{
+		parent::initToolbar();
+		if (!$this->display)
+			$this->toolbar_btn['import'] = array(
+				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type='.$this->table,
+				'desc' => $this->l('Import')
+			);
 	}
 
 	public function renderForm()
@@ -128,7 +126,7 @@ class AdminAddressesControllerCore extends AdminController
 					'name' => 'phone_mobile',
 					'size' => 33,
 					'required' => false,
-					'desc' => sprintf($this->l('You must register at least one phone number %s'), '<sup>*</sup>')
+					'desc' => Configuration::get('PS_ONE_PHONE_AT_LEAST')? sprintf($this->l('You must register at least one phone number %s'), '<sup>*</sup>') : ''
 				),
 				array(
 					'type' => 'textarea',
@@ -141,7 +139,7 @@ class AdminAddressesControllerCore extends AdminController
 				),
 			),
 			'submit' => array(
-				'title' => $this->l('   Save   '),
+				'title' => $this->l('Save   '),
 				'class' => 'button'
 			)
 		);
@@ -208,7 +206,7 @@ class AdminAddressesControllerCore extends AdminController
 
 				$temp_fields[] = array(
 					'type' => 'text',
-					'label' => $this->l('Last name'),
+					'label' => $this->l('Last Name'),
 					'name' => 'lastname',
 					'size' => 33,
 					'required' => true,
@@ -228,7 +226,7 @@ class AdminAddressesControllerCore extends AdminController
 
 				$temp_fields[] = array(
 					'type' => 'text',
-					'label' => $this->l('First name'),
+					'label' => $this->l('First Name'),
 					'name' => 'firstname',
 					'size' => 33,
 					'required' => true,
@@ -260,7 +258,7 @@ class AdminAddressesControllerCore extends AdminController
 			{
 				$temp_fields[] = array(
 					'type' => 'text',
-					'label' => $this->l('Postal Code/Zip Code'),
+					'label' => $this->l('Zip/Postal Code'),
 					'name' => 'postcode',
 					'size' => 33,
 					'required' => true,
@@ -280,7 +278,7 @@ class AdminAddressesControllerCore extends AdminController
 			{
 				$temp_fields[] = array(
 					'type' => 'select',
-					'label' => $this->l('Country:'),
+					'label' => $this->l('Country'),
 					'name' => 'id_country',
 					'required' => false,
 					'default_value' => (int)$this->context->country->id,
@@ -320,7 +318,7 @@ class AdminAddressesControllerCore extends AdminController
 			if (Validate::isLoadedObject($customer))
 				$_POST['id_customer'] = $customer->id;
 			else
-				$this->errors[] = Tools::displayError('This e-mail address is not registered.');
+				$this->errors[] = Tools::displayError('This email address is not registered.');
 		}
 		else if ($id_customer = Tools::getValue('id_customer'))
 		{
@@ -333,41 +331,30 @@ class AdminAddressesControllerCore extends AdminController
 		else
 			$this->errors[] = Tools::displayError('Unknown customer');
 		if (Country::isNeedDniByCountryId(Tools::getValue('id_country')) && !Tools::getValue('dni'))
-			$this->errors[] = Tools::displayError('Identification number is incorrect or has already been used.');
+			$this->errors[] = Tools::displayError('The identification number is incorrect or has already been used.');
 
 		/* If the selected country does not contain states */
 		$id_state = (int)Tools::getValue('id_state');
 		$id_country = (int)Tools::getValue('id_country');
 		$country = new Country((int)$id_country);
 		if ($country && !(int)$country->contains_states && $id_state)
-			$this->errors[] = Tools::displayError('You have selected a state for a country that does not contain states.');
+			$this->errors[] = Tools::displayError('You\'ve selected a state for a country that does not contain states.');
 
 		/* If the selected country contains states, then a state have to be selected */
 		if ((int)$country->contains_states && !$id_state)
 			$this->errors[] = Tools::displayError('An address located in a country containing states must have a state selected.');
 
-		/* Check zip code */
-		if ($country->need_zip_code)
-		{
-			$zip_code_format = $country->zip_code_format;
-			if (($postcode = Tools::getValue('postcode')) && $zip_code_format)
-			{
-				$zip_regexp = '/^'.$zip_code_format.'$/ui';
-				$zip_regexp = str_replace(' ', '( |)', $zip_regexp);
-				$zip_regexp = str_replace('-', '(-|)', $zip_regexp);
-				$zip_regexp = str_replace('N', '[0-9]', $zip_regexp);
-				$zip_regexp = str_replace('L', '[a-zA-Z]', $zip_regexp);
-				$zip_regexp = str_replace('C', $country->iso_code, $zip_regexp);
-				if (!preg_match($zip_regexp, $postcode))
-					$this->errors[] = Tools::displayError('Your Postal Code/Zip Code is incorrect.').'<br />'.
-									   Tools::displayError('Must be typed as follows:').' '.
-									   str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $zip_code_format)));
-			}
-			else if ($zip_code_format)
-				$this->errors[] = Tools::displayError('Postal Code/Zip Code required.');
-			else if ($postcode && !preg_match('/^[0-9a-zA-Z -]{4,9}$/ui', $postcode))
-				$this->errors[] = Tools::displayError('Your Postal Code/Zip Code is incorrect.');
-		}
+		$postcode = Tools::getValue('postcode');		
+		/* Check zip code format */
+		if ($country->zip_code_format && !$country->checkZipCode($postcode))
+			$this->errors[] = Tools::displayError('Your Postal / Zip Code is incorrect.').'<br />'.Tools::displayError('It must be entered as follows:').' '.str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
+		elseif(empty($postcode) && $country->need_zip_code)
+			$this->errors[] = Tools::displayError('A Zip / Postal code is required.');
+		elseif ($postcode && !Validate::isPostCode($postcode))
+			$this->errors[] = Tools::displayError('The Zip / Postal code is invalid.');
+
+		if (Configuration::get('PS_ONE_PHONE_AT_LEAST') && !Tools::getValue('phone') && !Tools::getValue('phone_mobile'))		
+			$this->errors[] = Tools::displayError('You must register at least one phone number.');
 
 		/* If this address come from order's edition and is the same as the other one (invoice or delivery one)
 		** we delete its id_address to force the creation of a new one */

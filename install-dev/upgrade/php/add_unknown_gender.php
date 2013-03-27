@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -40,16 +40,16 @@ function add_unknown_gender()
 	// inserts lang values
 	$languages = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'lang`');
 	$lang_names = array(
-		1 => 'Unknown',
-		2 => 'Unbekannte',
-		3 => 'Desconocido',
-		4 => 'Inconnu',
-		5 => 'Sconosciuto',
+		'en' => 'Unknown',
+		'de' => 'Unbekannte',
+		'es' => 'Desconocido',
+		'fr' => 'Inconnu',
+		'it' => 'Sconosciuto',
 	);
 
 	foreach ($languages as $lang)
 	{
-		$name = (isset($lang_names[$lang['id_lang']]) ? $lang_names[$lang['id_lang']] : 'Unknown');
+		$name = (isset($lang_names[$lang['iso_code']]) ? $lang_names[$lang['iso_code']] : 'Unknown');
 		$res &= Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'gender_lang` (`id_gender`, `id_lang`, `name`) VALUES
 				('.(int)$id_gender.', '.(int)$lang['id_lang'].', \''.pSQL($name).'\')');

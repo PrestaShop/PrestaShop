@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -38,6 +38,9 @@ function p15016_add_missing_columns()
 		if (!in_array('id_shop', $list_fields))
 			if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'reinsurance` ADD `id_shop` INT(10) NOT NULL default "1" AFTER id_reinsurance'))
 				$errors[] = Db::getInstance()->getMsgError();
+		if (in_array('filename', $list_fields))
+			if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'reinsurance` CHANGE `filename` `file_name` VARCHAR(100) NOT NULL'))
+				$errors[] = Db::getInstance()->getMsgError();				
 	}
 	
 	$id_module = Db::getInstance()->getValue('SELECT id_module FROM `'._DB_PREFIX_.'module` WHERE name="blocktopmenu"');

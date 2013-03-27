@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -61,7 +61,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 			'name' => array(
 				'title' => $this->l('Name'),
 				'filter_key' => 'a!name',
-				'width' => 200
+				'width' => 'auto'
 			),
 			'shop_name' => array(
 				'title' => $this->l('Shop'),
@@ -140,16 +140,16 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name:'),
+					'label' => $this->l('Name'),
 					'name' => 'name',
 					'size' => 33,
 					'maxlength' => 32,
 					'required' => true,
-					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
+					'hint' => $this->l('Forbidden characters').' <>;=#{}'
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Shop:'),
+					'label' => $this->l('Shop'),
 					'name' => 'id_shop',
 					'options' => array(
 						'query' => $shops,
@@ -161,7 +161,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Currency:'),
+					'label' => $this->l('Currency'),
 					'name' => 'id_currency',
 					'options' => array(
 						'query' => array_merge(array(0 => array('id_currency' => 0, 'name' => $this->l('All currencies'))), Currency::getCurrencies()),
@@ -171,7 +171,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Country:'),
+					'label' => $this->l('Country'),
 					'name' => 'id_country',
 					'options' => array(
 						'query' => array_merge(array(0 => array('id_country' => 0, 'name' => $this->l('All countries'))), Country::getCountries((int)$this->context->language->id)),
@@ -181,7 +181,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Group:'),
+					'label' => $this->l('Group'),
 					'name' => 'id_group',
 					'options' => array(
 						'query' => array_merge(array(0 => array('id_group' => 0, 'name' => $this->l('All groups'))), Group::getGroups((int)$this->context->language->id)),
@@ -191,7 +191,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('From quantity:'),
+					'label' => $this->l('From quantity'),
 					'name' => 'from_quantity',
 					'size' => 6,
 					'maxlength' => 10,
@@ -199,7 +199,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Price (tax excl.):'),
+					'label' => $this->l('Price (tax excl.)'),
 					'name' => 'price',
 					'size' => 6,
 					'disabled' => ($this->object->price == -1 ? 1 : 0),
@@ -225,19 +225,19 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 				),
 				array(
 					'type' => 'date',
-					'label' => $this->l('From:'),
+					'label' => $this->l('From'),
 					'name' => 'from',
 					'size' => 12,
 				),
 				array(
 					'type' => 'date',
-					'label' => $this->l('To:'),
+					'label' => $this->l('To'),
 					'name' => 'to',
 					'size' => 12,
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Reduction type:'),
+					'label' => $this->l('Reduction type'),
 					'name' => 'reduction_type',
 					'options' => array(
 						'query' => array(array('reduction_type' => 'amount', 'name' => $this->l('Amount')), array('reduction_type' => 'percentage', 'name' => $this->l('Percentage'))),
@@ -247,7 +247,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Reduction:'),
+					'label' => $this->l('Reduction'),
 					'name' => 'reduction',
 					'required' => true,
 				),

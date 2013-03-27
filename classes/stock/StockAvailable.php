@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -171,6 +171,14 @@ class StockAvailableCore extends ObjectModel
 						continue;
 
 					$product_quantity = $manager->getProductRealQuantities($id_product, null, $allowed_warehouse_for_product_clean, true);
+					
+					Hook::exec('actionUpdateQuantity',
+									array(
+										'id_product' => $id_product,
+										'id_product_attribute' => 0,
+										'quantity' => $product_quantity
+										)
+					);
 				}
 				// else this product has attributes, hence loops on $ids_product_attribute
 				else
@@ -359,9 +367,11 @@ class StockAvailableCore extends ObjectModel
 	 */
 	public function add($autodate = true, $null_values = false)
 	{
-		if (!parent::add($autodate, $null_values))
+		if (!$result = parent::add($autodate, $null_values))
 			return false;
-		$this->postSave();
+
+		$result &= $this->postSave();		
+		return $result;
 	}
 
 	/**
@@ -370,9 +380,11 @@ class StockAvailableCore extends ObjectModel
 	 */
 	public function update($null_values = false)
 	{
-		if (!parent::update($null_values))
+		if (!$result = parent::update($null_values))
 			return false;
-		return $this->postSave();
+
+		$result &= $this->postSave();		
+		return $result;
 	}
 
 	/**
@@ -545,11 +557,31 @@ class StockAvailableCore extends ObjectModel
 						return true;
 			}
 
-		return Db::getInstance()->execute('
+		$res =  Db::getInstance()->execute('
 		DELETE FROM '._DB_PREFIX_.'stock_available
 		WHERE id_product = '.(int)$id_product.
 		($id_product_attribute ? ' AND id_product_attribute = '.(int)$id_product_attribute : '').
 		StockAvailable::addSqlShopRestriction(null, $shop));
+		
+		if ($id_product_attribute)
+		{
+			if ($shop === null || !Validate::isLoadedObject($shop))
+			{
+				$shop_datas = array();
+				StockAvailable::addSqlShopParams($shop_datas);
+				$id_shop = (int)$shop_datas['id_shop'];
+			}
+			else
+				$id_shop = (int)$shop->id;
+
+			$stock_available = new StockAvailable();
+			$stock_available->id_product = (int)$id_product;
+			$stock_available->id_product_attribute = (int)$id_product;
+			$stock_available->id_shop = (int)$id_shop;
+			$stock_available->postSave();
+		}
+
+		return $res;
 	}
 
 	/**

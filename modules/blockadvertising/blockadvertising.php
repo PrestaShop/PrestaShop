@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -52,7 +52,7 @@ class BlockAdvertising extends Module
 		parent::__construct();
 
 		$this->displayName = $this->l('Block advertising');
-		$this->description = $this->l('Adds a block to display an advertisement.');
+		$this->description = $this->l('Adds an advertisement block to selected sections of your e-commerce webiste.');
 		
 		$this->initialize();
 	}
@@ -139,7 +139,7 @@ class BlockAdvertising extends Module
 
 					// Copy the image in the module directory with its new name
 					if (!move_uploaded_file($_FILES['adv_img']['tmp_name'], _PS_MODULE_DIR_.$this->name.'/'.$this->adv_imgname.'.'.Configuration::get('BLOCKADVERT_IMG_EXT')))
-						$errors .= $this->l('Error move uploaded file');
+						$errors .= $this->l('File upload error.');
 				}
 			}
 			
@@ -157,6 +157,7 @@ class BlockAdvertising extends Module
 			
 			// Reset the module properties
 			$this->initialize();
+			$this->_clearCache('blockadvertising.tpl');
 		}
 		if ($errors)
 			echo $this->displayError($errors);
@@ -187,12 +188,12 @@ class BlockAdvertising extends Module
 				$output .= '<input class="button" type="submit" name="submitDeleteImgConf" value="'.$this->l('Delete image').'" style=""/>';
 		}
 		else
-			$output .= '<div style="margin-left: 100px;width:163px;">'.$this->l('no image').'</div>';
+			$output .= '<div style="margin-left: 100px;width:163px;">'.$this->l('No image').'</div>';
 		$output .= '<br/><br/>
 				<label for="adv_img">'.$this->l('Change image').'&nbsp;&nbsp;</label>
 				<div class="margin-form">
 					<input id="adv_img" type="file" name="adv_img" />
-					<p>'.$this->l('Image will be displayed as 155x163.').'</p>
+					<p>'.$this->l('Image will be displayed as 155x163').'</p>
 				</div>
 				<br class="clear"/>
 				<label for="adv_link">'.$this->l('Image link').'</label>
@@ -216,13 +217,14 @@ class BlockAdvertising extends Module
 
 	public function hookRightColumn($params)
 	{
-		$this->smarty->assign(array(
-			'image' => $this->context->link->protocol_content.$this->adv_img,
-			'adv_link' => $this->adv_link,
-			'adv_title' => $this->adv_title,
-		));
+		if (!$this->isCached('blockadvertising.tpl', $this->getCacheId()))
+			$this->smarty->assign(array(
+				'image' => $this->context->link->protocol_content.$this->adv_img,
+				'adv_link' => $this->adv_link,
+				'adv_title' => $this->adv_title,
+			));
 
-		return $this->display(__FILE__, 'blockadvertising.tpl');
+		return $this->display(__FILE__, 'blockadvertising.tpl', $this->getCacheId());
 	}
 
 	public function hookLeftColumn($params)

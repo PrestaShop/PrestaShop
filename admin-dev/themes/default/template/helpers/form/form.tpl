@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -50,7 +50,7 @@
 							<input type="hidden" name="{$input.name}" id="{$input.name}" value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" />
 						{else}
 							{if $input.name == 'id_state'}
-								<div id="contains_states" {if $contains_states}style="display:none;"{/if}>
+								<div id="contains_states" {if !$contains_states}style="display:none;"{/if}>
 							{/if}
 							{block name="label"}
 								{if isset($input.label)}<label>{$input.label} </label>{/if}
@@ -167,6 +167,8 @@
 																{/if}
 															{/if}
 														>{$option->$input.options.name}</option>
+													{elseif $option == "-"}
+														<option value="">--</option>
 													{else}
 														<option value="{$option[$input.options.id]}"
 															{if isset($input.multiple)}
@@ -316,7 +318,7 @@
 								{if isset($input.required) && $input.required && $input.type != 'radio'} <sup>*</sup>{/if}
 								{/block}{* end block input *}
 								{block name="description"}
-									{if isset($input.desc)}
+									{if isset($input.desc) && !empty($input.desc)}
 										<p class="preference_description">
 											{if is_array($input.desc)}
 												{foreach $input.desc as $p}
@@ -396,11 +398,7 @@
 	$(document).ready(function(){
 		{block name="autoload_tinyMCE"}
 			tinySetup({
-				editor_selector :"autoload_rte",
-				theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull|cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,undo,redo",
-				theme_advanced_buttons2 : "link,unlink,anchor,image,cleanup,code,|,forecolor,backcolor,|,hr,removeformat,visualaid,|,charmap,media,|,ltr,rtl,|,fullscreen",
-				theme_advanced_buttons3 : "",
-				theme_advanced_buttons4 : ""
+				editor_selector :"autoload_rte"
 			});
 		{/block}
 	});

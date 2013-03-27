@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -65,7 +65,7 @@
 	<input class="button floatr" type="submit" name="unhookform" value="{l s='Unhook the selection'}"/></div>
 
 {if !$can_move}
-	<br /><div><b>{l s='If you want to order/move the following data, please select a shop from the shop list'}</b></div>
+	<br /><div><b>{l s='If you want to order/move the following data, please select a shop from the shop list.'}</b></div>
 {/if}
 {foreach $hooks as $hook}
 	<a name="{$hook['name']}"/>
@@ -79,7 +79,7 @@
 		</colgroup>
 	<tr class="nodrag nodrop"><th colspan="5">	{if $hook['module_count'] && $can_move}
 		<input type="checkbox" id="Ghook{$hook['id_hook']}" style="margin-right: 2px;" onclick="hookCheckboxes({$hook['id_hook']}, 0, this)"/>
-	{/if}{$hook['title']} - <span style="color: red">{$hook['module_count']}</span> {if $hook['module_count'] > 1}{l s='modules'}{else}{l s='module'}{/if}
+	{/if}{$hook['title']} - <span style="color: red">{$hook['module_count']}</span> {if $hook['module_count'] > 1}{l s='Modules'}{else}{l s='Module'}{/if}
 
 	{if !empty($hook['description'])}
 		&nbsp;<span style="font-size:0.8em; font-weight: normal">[{$hook['description']}]</span>
@@ -121,7 +121,7 @@
 			{/if}
 		{/foreach}
 	{else}
-		<tr><td colspan="5">{l s='No module for this hook'}</td></tr>
+		<tr><td colspan="5">{l s='No module was found for this hook.'}</td></tr>
 	{/if}
 	</table>
 {/foreach}

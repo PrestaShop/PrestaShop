@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -30,13 +30,13 @@
 	{if !empty($limit_warning)}
 	<div class="warn">
 		{if $limit_warning['error_type'] == 'suhosin'}
-			{l s='Warning, your hosting provider is using the suhosin patch for PHP, which limits the maximum number of fields to post in a form:'}
+			{l s='Warning: Your hosting provider is using the suhosin patch for PHP, which limits the maximum number of fields allowed in a form:'}
 
 			<b>{$limit_warning['post.max_vars']}</b> {l s='for suhosin.post.max_vars.'}<br/>
 			<b>{$limit_warning['request.max_vars']}</b> {l s='for suhosin.request.max_vars.'}<br/>
-			{l s='Please ask your hosting provider to increase the suhosin post and request a limit of'}
+			{l s='Please ask your hosting provider to increase the suhosin limit to'}
 		{else}
-			{l s='Warning, your PHP configuration limits the maximum number of fields to post in a form:'}<br/>
+			{l s='Warning! Your PHP configuration limits the maximum number of fields allowed in a form:'}<br/>
 			<b>{$limit_warning['max_input_vars']}</b> {l s='for max_input_vars.'}<br/>
 			{l s='Please ask your hosting provider to increase the this limit to'}
 		{/if}

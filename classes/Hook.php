@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -98,7 +98,7 @@ class HookCore extends ObjectModel
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT * FROM `'._DB_PREFIX_.'hook` h
 			'.($position ? 'WHERE h.`position` = 1' : '').'
-			ORDER BY `title`'
+			ORDER BY `name`'
 		);
 	}
 
@@ -286,6 +286,7 @@ class HookCore extends ObjectModel
 			{
 				$sql->leftJoin('module_group', 'mg', 'mg.`id_module` = m.`id_module`');
 				$sql->where('mg.`id_group` IN ('.implode(', ', $groups).')');
+				$sql->where(Module::getPaypalIgnore());
 				$sql->groupBy('hm.id_hook, hm.id_module');
 			}
 
@@ -298,16 +299,9 @@ class HookCore extends ObjectModel
 			// Get all available payment module
 			$payment_modules = array();
 
-			if (isset($context->shop->id))
-				foreach (Module::getPaymentModules() as $module)
-					$payment_modules[] = $module['name'];
-			
 			if ($results)
 				foreach ($results as $row)
 				{
-					if ($row['hook'] == 'displayPayment' && !in_array($row['module'], $payment_modules))
-						continue;
-
 					$row['hook'] = strtolower($row['hook']);
 					if (!isset($list[$row['hook']]))
 						$list[$row['hook']] = array();
@@ -399,7 +393,17 @@ class HookCore extends ObjectModel
 			if ($check_exceptions)
 			{
 				$exceptions = $moduleInstance->getExceptions($array['id_hook']);
-				if (in_array(Dispatcher::getInstance()->getController(), $exceptions))
+				$controller = Dispatcher::getInstance()->getController();
+								
+				if (in_array($controller, $exceptions))
+					continue;
+				
+				//retro compat of controller names
+				$matching_name = array(
+					'authentication' => 'auth',
+					'compare' => 'products-comparison',
+					);
+				if (isset($matching_name[$controller]) && in_array($matching_name[$controller], $exceptions))
 					continue;
 				if (Validate::isLoadedObject($context->employee) && !$moduleInstance->getPermission('view', $context->employee))
 					continue;

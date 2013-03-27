@@ -1,5 +1,5 @@
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -52,11 +52,8 @@ var ajaxCart = {
 			var customizationId = 0;
 			var productId = 0;
 			var productAttributeId = 0;
-			if ($($(this).parent().parent()).attr('name') == 'customization')
-				// Reverse two levels: a >> div >> li
-				var customizableProductDiv = $($(this).parent().parent()).find("div[id^=deleteCustomizableProduct_]");
-			else
-				var customizableProductDiv = $($(this).parent()).find("div[id^=deleteCustomizableProduct_]");
+			var customizableProductDiv = $($(this).parent().parent()).find("div[id^=deleteCustomizableProduct_]");
+
 			if (customizableProductDiv && $(customizableProductDiv).length)
 			{
 				$(customizableProductDiv).each(function(){
@@ -110,10 +107,12 @@ var ajaxCart = {
 
 			// save the expand statut in the user cookie
 			$.ajax({
-				type: 'GET',
-				url: baseDir + 'modules/blockcart/blockcart-set-collapse.php',
+				type: 'POST',
+				headers: { "cache-control": "no-cache" },
+				url: baseDir + 'modules/blockcart/blockcart-set-collapse.php' + '?rand=' + new Date().getTime(),
 				async: true,
-				data: 'ajax_blockcart_display=expand' + '&rand=' + new Date().getTime()
+				cache: false,
+				data: 'ajax_blockcart_display=expand'
 			});
 
 
@@ -122,8 +121,9 @@ var ajaxCart = {
 	// Fix display when using back and previous browsers buttons
 	refresh : function(){
 		$.ajax({
-			type: 'GET',
-			url: baseUri,
+			type: 'POST',
+			headers: { "cache-control": "no-cache" },
+			url: baseUri + '?rand=' + new Date().getTime(),
 			async: true,
 			cache: false,
 			dataType : "json",
@@ -152,9 +152,11 @@ var ajaxCart = {
 
 			// save the expand statut in the user cookie
 			$.ajax({
-				type: 'GET',
-				url: baseDir + 'modules/blockcart/blockcart-set-collapse.php',
+				type: 'POST',
+				headers: { "cache-control": "no-cache" },
+				url: baseDir + 'modules/blockcart/blockcart-set-collapse.php' + '?rand=' + new Date().getTime(),
 				async: true,
+				cache: false,
 				data: 'ajax_blockcart_display=collapse' + '&rand=' + new Date().getTime()
 			});
 		}
@@ -180,7 +182,7 @@ var ajaxCart = {
 			return ;
 		}
 		emptyCustomizations();
-		//disabled the button when adding to do not double add if user double click
+		//disabled the button when adding to not double add if user double click
 		if (addedFromProductPage)
 		{
 			$('#add_to_cart input').attr('disabled', true).removeClass('exclusive').addClass('exclusive_disabled');
@@ -194,7 +196,8 @@ var ajaxCart = {
 		//send the ajax request to the server
 		$.ajax({
 			type: 'POST',
-			url: baseUri,
+			headers: { "cache-control": "no-cache" },
+			url: baseUri + '?rand=' + new Date().getTime(),
 			async: true,
 			cache: false,
 			dataType : "json",
@@ -216,7 +219,7 @@ var ajaxCart = {
 					$picture.css({'position': 'absolute', 'top': pictureOffsetOriginal.top, 'left': pictureOffsetOriginal.left});
 
 				var pictureOffset = $picture.offset();
-				if ($('#cart_block').offset().top && $('#cart_block').offset().left)
+				if ($('#cart_block')[0] && $('#cart_block').offset().top && $('#cart_block').offset().left)
 					var cartBlockOffset = $('#cart_block').offset();
 				else
 					var cartBlockOffset = $('#shopping_cart').offset();
@@ -251,7 +254,8 @@ var ajaxCart = {
 		//send the ajax request to the server
 		$.ajax({
 			type: 'POST',
-			url: baseUri,
+			headers: { "cache-control": "no-cache" },
+			url: baseUri + '?rand=' + new Date().getTime(),
 			async: true,
 			cache: false,
 			dataType : "json",
@@ -308,7 +312,7 @@ var ajaxCart = {
 								// If the cart is now empty, show the 'no product in the cart' message and close detail
 								if($('#cart_block dl.products dt').length == 0)
 								{
-									$("#cart_block").stop(true, true).slideUp(200);
+									$("#header #cart_block").stop(true, true).slideUp(200);
 									$('#cart_block_no_products:hidden').slideDown(450);
 									$('#cart_block dl.products').remove();
 								}
@@ -345,8 +349,8 @@ var ajaxCart = {
 		}
 		var removeLinks = $('#cart_block_product_' + domIdProduct).find('a.ajax_cart_block_remove_link');
 		if (!product.hasCustomizedDatas && !removeLinks.length)
-			$('#' + domIdProduct + ' span.remove_link').html('<a class="ajax_cart_block_remove_link" rel="nofollow" href="' + baseUri + '?controller=cart&amp;delete&amp;id_product=' + product['id'] + '&amp;ipa=' + product['idCombination'] + '&amp;token=' + static_token + '"> </a>');
-		if (parseFloat(product.price_float) <= 0)
+			$('#' + domIdProduct + ' span.remove_link').html('<a class="ajax_cart_block_remove_link" rel="nofollow" href="' + baseUri + '?controller=cart&amp;delete=1&amp;id_product=' + product['id'] + '&amp;ipa=' + product['idCombination'] + '&amp;token=' + static_token + '"> </a>');
+		if (product.is_gift)
 			$('#' + domIdProduct + ' span.remove_link').html('');
 	},
 
@@ -423,6 +427,7 @@ var ajaxCart = {
 			if (this.id != undefined)
 			{
 				//create a container for listing the products and hide the 'no product in the cart' message (only if the cart was empty)
+				
 				if ($('#cart_block dl.products').length == 0)
 				{
 					$('#cart_block_no_products').before('<dl class="products"></dl>');
@@ -430,9 +435,8 @@ var ajaxCart = {
 				}
 				//if product is not in the displayed cart, add a new product's line
 				var domIdProduct = this.id + '_' + (this.idCombination ? this.idCombination : '0') + '_' + (this.idAddressDelivery ? this.idAddressDelivery : '0');
-
 				var domIdProductAttribute = this.id + '_' + (this.idCombination ? this.idCombination : '0');
-				if ($('#cart_block_product_'+ domIdProduct ).length == 0)
+				if ($('#cart_block_product_'+ domIdProduct).length == 0)
 				{
 					var productId = parseInt(this.id);
 					var productAttributeId = (this.hasAttributes ? parseInt(this.attributes) : 0);
@@ -442,11 +446,11 @@ var ajaxCart = {
 					content += '<a href="' + this.link + '" title="' + this.name + '">' + name + '</a>';
 					
 					if (parseFloat(this.price_float) > 0)
-						content += '<span class="remove_link"><a rel="nofollow" class="ajax_cart_block_remove_link" href="' + baseUri + '?controller=cart&amp;delete&amp;id_product=' + productId + '&amp;token=' + static_token + (this.hasAttributes ? '&amp;ipa=' + parseInt(this.idCombination) : '') + '"> </a></span>';
+						content += '<span class="remove_link"><a rel="nofollow" class="ajax_cart_block_remove_link" href="' + baseUri + '?controller=cart&amp;delete=1&amp;id_product=' + productId + '&amp;token=' + static_token + (this.hasAttributes ? '&amp;ipa=' + parseInt(this.idCombination) : '') + '"> </a></span>';
 					else
 						content += '<span class="remove_link"></span>';
 					if (typeof(freeShippingTranslation) != 'undefined')
-						content += '<span class="price">' + (parseFloat(this.price_float) > 0 ? this.priceByLine : freeProductTranslation) + '</span>';
+						content += '<span class="price">' + (parseFloat(this.price_float) > 0 ? this.priceByLine : freeShippingTranslation) + '</span>';
 					content += '</dt>';
 					if (this.hasAttributes)
 						  content += '<dd id="cart_block_combination_of_' + domIdProduct + '" class="hidden"><a href="' + this.link + '" title="' + this.name + '">' + this.attributes + '</a>';
@@ -460,10 +464,10 @@ var ajaxCart = {
 				else
 				{
 					var jsonProduct = this;
-					if($('#cart_block_product_' + domIdProduct + ' .quantity').text() != jsonProduct.quantity || $('dt#cart_block_product_' + domIdProduct + ' .price').text() != jsonProduct.priceByLine)
+					if($.trim($('#cart_block_product_' + domIdProduct + ' .quantity').html()) != jsonProduct.quantity || $.trim($('#cart_block_product_' + domIdProduct + ' .price').html()) != jsonProduct.priceByLine)
 					{
 						// Usual product
-						if (parseFloat(this.price_float) > 0)
+						if (!this.is_gift)
 							$('#cart_block_product_' + domIdProduct + ' .price').text(jsonProduct.priceByLine);
 						else
 							$('#cart_block_product_' + domIdProduct + ' .price').html(freeProductTranslation);
@@ -514,11 +518,12 @@ var ajaxCart = {
 				content += '<ul class="cart_block_customizations" id="customization_' + productId + '_' + productAttributeId + '">';
 		}
 
-		$(product.customizedDatas).each(function(){
+		$(product.customizedDatas).each(function()
+		{
 			var done = 0;
 			customizationId = parseInt(this.customizationId);
 			productAttributeId = typeof(product.idCombination) == 'undefined' ? 0 : parseInt(product.idCombination);
-			content += '<li name="customization"><div class="deleteCustomizableProduct" id="deleteCustomizableProduct_' + customizationId + '_' + productId + '_' + (productAttributeId ?  productAttributeId : '0') + '"><a  rel="nofollow" class="ajax_cart_block_remove_link" href="' + baseUri + '?controller=cart&amp;delete&amp;id_product=' + productId + '&amp;ipa=' + productAttributeId + '&amp;id_customization=' + customizationId + '&amp;token=' + static_token + '"> </a></div><span class="quantity-formated"><span class="quantity">' + parseInt(this.quantity) + '</span>x</span>';
+			content += '<li name="customization"><div class="deleteCustomizableProduct" id="deleteCustomizableProduct_' + customizationId + '_' + productId + '_' + (productAttributeId ?  productAttributeId : '0') + '"><a rel="nofollow" class="ajax_cart_block_remove_link" href="' + baseUri + '?controller=cart&amp;delete=1&amp;id_product=' + productId + '&amp;ipa=' + productAttributeId + '&amp;id_customization=' + customizationId + '&amp;token=' + static_token + '"></a></div><span class="quantity-formated"><span class="quantity">' + parseInt(this.quantity) + '</span>x</span>';
 
 			// Give to the customized product the first textfield value as name
 			$(this.datas).each(function(){
@@ -588,7 +593,7 @@ var ajaxCart = {
 
 	//update general cart informations everywhere in the page
 	updateCartEverywhere : function(jsonData) {
-		$('.ajax_cart_total').text(jsonData.productTotal);
+		$('.ajax_cart_total').text($.trim(jsonData.productTotal));
 		
 		if (parseFloat(jsonData.shippingCostFloat) > 0 || jsonData.nbTotalProducts < 1)
 			$('.ajax_cart_shipping_cost').text(jsonData.shippingCost);
@@ -676,10 +681,10 @@ $(document).ready(function(){
 				$("#cart_block").stop(true, true).slideDown(450);
 		},
 		function() {
-			$('#shopping_cart a').css('border-radius', '3px');
+			$('#header #shopping_cart a').css('border-radius', '3px');
 			setTimeout(function() {
 				if (!shopping_cart.isHoveringOver() && !cart_block.isHoveringOver())
-					$("#cart_block").stop(true, true).slideUp(450);
+					$("#header #cart_block").stop(true, true).slideUp(450);
 			}, 200);
 		}
 	);
@@ -698,7 +703,13 @@ $(document).ready(function(){
 	);
 	
 	$('.delete_voucher').live('click', function() {
-		$.ajax({url:$(this).attr('href')});
+		$.ajax({
+			type: 'POST',			
+			headers: { "cache-control": "no-cache" },
+			async: true,
+			cache: false,			
+			url:$(this).attr('href') + '?rand=' + new Date().getTime()
+		});
 		$(this).parent().parent().remove();
 		if ($('body').attr('id') == 'order' || $('body').attr('id') == 'order-opc')
 		{

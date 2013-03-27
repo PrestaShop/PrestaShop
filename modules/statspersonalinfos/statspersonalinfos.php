@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -43,7 +43,7 @@ class StatsPersonalInfos extends ModuleGraph
 
 		parent::__construct();
 
-		$this->displayName = $this->l('Registered Customer Info');
+		$this->displayName = $this->l('Registered customer information');
 		$this->description = $this->l('Display characteristics such as gender and age.');
 	}
 
@@ -70,41 +70,41 @@ class StatsPersonalInfos extends ModuleGraph
 					$this->csvExport(array('type' => 'pie', 'option' => 'language'));
 
 			$this->html .= '
-				<p><img src="../img/admin/down.gif" />'.$this->l('Gender distribution allows you to determine the percentage of men and women among your customers.').'</p>
+				<p><img src="../img/admin/down.gif" />'.$this->l('Gender distribution allows you to determine the percentage of men and women shoppers in your store. ').'</p>
 				<div>'.$this->engine(array('type' => 'pie', 'option' => 'gender')).'</div><br />
 				<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=gender"><span>'.$this->l('CSV Export').'</span></a></p>
 				<br class="clear" /><br />
-				<p><img src="../img/admin/down.gif" />'.$this->l('Age ranges allows you to determine in which age range your customers are.').'</p>
+				<p><img src="../img/admin/down.gif" />'.$this->l('Age ranges allow you to better understand target demographics. ').'</p>
 				<div>'.$this->engine(array('type' => 'pie', 'option' => 'age')).'</div><br />
 				<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=age"><span>'.$this->l('CSV Export').'</span></a></p><br /><br />
-				<p><img src="../img/admin/down.gif" />'.$this->l('Country distribution allows you to determine in which part of the world your customers are shopping from.').'</p>
+				<p><img src="../img/admin/down.gif" />'.$this->l('Country distribution allows you to analyze which part of the world your customers are shopping from.').'</p>
 				<div>'.$this->engine(array('type' => 'pie', 'option' => 'country')).'</div><br />
 				<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=country"><span>'.$this->l('CSV Export').'</span></a></p><br /><br />
-				<p><img src="../img/admin/down.gif" />'.$this->l('Currency ranges allows you to determine which currencies your customers are using.').'</p>
+				<p><img src="../img/admin/down.gif" />'.$this->l('Currency range allows you to determine which currency your customers are using.').'</p>
 				<div>'.$this->engine(array('type' => 'pie', 'option' => 'currency')).'</div><br />
 				<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=currency"><span>'.$this->l('CSV Export').'</span></a></p><br /><br />
-				<p><img src="../img/admin/down.gif" />'.$this->l('Language distribution allows you to determine the general languages your customers are using on your shop.').'</p>
+				<p><img src="../img/admin/down.gif" />'.$this->l('Language distribution allows you to analyze the browsing language used by your customers. ').'</p>
 				<div>'.$this->engine(array('type' => 'pie', 'option' => 'language')).'</div><br />
 				<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=language"><span>'.$this->l('CSV Export').'</span></a></p>
 			</center>';
 		}
 		else
-			$this->html .= '<p>'.$this->l('No customers registered yet.').'</p>';
+			$this->html .= '<p>'.$this->l('No customers have registered yet.').'</p>';
 		$this->html .= '
 		</div><br />
 		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</h2>
-			<h2>'.$this->l('Target your audience').'</h2>
+			<h2>'.$this->l('Target your audience.').'</h2>
 			<p>
-				'.$this->l('In order for each message to have an impact, you need to know to whom it should be addressed.').'
-				'.$this->l('Addressing the right audience is essential for choosing the right tools to win them over.').'
-				'.$this->l('It is best to limit action to a group or groups of clients.').'
-				'.$this->l('Registered customer information allows you to accurately define the typical customer profile so that you can adapt your specials to various criteria.').'
+				'.$this->l('In order for each message to have an impact, you need to know who it is being addressed to. ').'
+				'.$this->l('Defining your target audience is essential when choosing the right tools to win them over.').'
+				'.$this->l('It is best to limit action to a group -- or groups -- of clients.').'
+				'.$this->l('Storing registered customer information allows you to accurately define customer profile so you can adapt your special deals and promotions.').'
 			</p><br />
 			<p>
-				'.$this->l('You should use this information to increase your sales by').'
+				'.$this->l('Increase your sales by').'
 				<ul>
-					<li class="bullet">'.$this->l('launching ad campaigns addressed to specific customers who might be interested in a particular offer at specific dates and times.').'</li>
-					<li class="bullet">'.$this->l('Contacting a group of clients by e-mail / newsletter.').'</li>
+					<li class="bullet">'.$this->l('launching targeted advertisement campaigns.').'</li>
+					<li class="bullet">'.$this->l('Contact a group of clients by email or newsletter.').'</li>
 				</ul>
 			</p><br />
 		</div>';
@@ -153,7 +153,7 @@ class StatsPersonalInfos extends ModuleGraph
 			break;
 
 			case 'age':
-				$this->_titles['main'] = $this->l('Age ranges');
+				$this->_titles['main'] = $this->l('Age Range');
 
 				// 0 - 18 years
 				$sql = 'SELECT COUNT(`id_customer`) as total
@@ -165,7 +165,7 @@ class StatsPersonalInfos extends ModuleGraph
 				if (isset($result['total']) && $result['total'])
 				{
 					$this->_values[] = $result['total'];
-					$this->_legend[] = $this->l('0-18 years old');
+					$this->_legend[] = $this->l('0-18');
 				}
 
 				// 18 - 24 years
@@ -179,7 +179,7 @@ class StatsPersonalInfos extends ModuleGraph
 				if (isset($result['total']) && $result['total'])
 				{
 					$this->_values[] = $result['total'];
-					$this->_legend[] = $this->l('18-24 years old');
+					$this->_legend[] = $this->l('18-24');
 				}
 
 				// 25 - 34 years
@@ -193,7 +193,7 @@ class StatsPersonalInfos extends ModuleGraph
 				if (isset($result['total']) && $result['total'])
 				{
 					$this->_values[] = $result['total'];
-					$this->_legend[] = $this->l('25-34 years old');
+					$this->_legend[] = $this->l('25-34');
 				}
 
 				// 35 - 49 years
@@ -207,7 +207,7 @@ class StatsPersonalInfos extends ModuleGraph
 				if (isset($result['total']) && $result['total'])
 				{
 					$this->_values[] = $result['total'];
-					$this->_legend[] = $this->l('35-49 years old');
+					$this->_legend[] = $this->l('35-49');
 				}
 
 				// 50 - 59 years
@@ -221,7 +221,7 @@ class StatsPersonalInfos extends ModuleGraph
 				if (isset($result['total']) && $result['total'])
 				{
 					$this->_values[] = $result['total'];
-					$this->_legend[] = $this->l('50-59 years old');
+					$this->_legend[] = $this->l('50-59');
 				}
 
 				// More than 60 years
@@ -234,7 +234,7 @@ class StatsPersonalInfos extends ModuleGraph
 				if (isset($result['total']) && $result['total'])
 				{
 					$this->_values[] = $result['total'];
-					$this->_legend[] = $this->l('60 years old and more');
+					$this->_legend[] = $this->l('60+');
 				}
 
 				// Total unknown

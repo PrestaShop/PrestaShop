@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -45,7 +45,7 @@ class StatsVisits extends ModuleGraph
 		parent::__construct();
 
 		$this->displayName = $this->l('Visits and Visitors');
-		$this->description = $this->l('Display statistics about your visits and visitors.');
+		$this->description = $this->l('Displays statistics about your visits and visitors.');
 	}
 
 	public function install()
@@ -86,8 +86,8 @@ class StatsVisits extends ModuleGraph
 		$this->html = '
 		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
 			<p>
-				<img src="../img/admin/down.gif" />'.$this->l('A visit corresponds to an internet user coming to your shop. Until the end of their session, only one visit is counted.').'
-				'.$this->l('A visitor is an unknown person, who has not registered or logged on, surfing on your shop. A visitor can come and visit your shop many times.').'
+				<img src="../img/admin/down.gif" />'.$this->l('A visit corresponds to an internet user coming to your shop, and until the end of their session, only one visit is counted.').'
+				'.$this->l('A visitor is an unknown person who has not registered or logged into your store. A visitor can also be considered a person who has visited your shop multiple times.').'
 			</p>
 			<div style="margin-top:20px"></div>
 			<p>'.$this->l('Total visits:').' <span class="totalStats">'.$totalVisits.'</span></p>
@@ -96,13 +96,13 @@ class StatsVisits extends ModuleGraph
 		</div>
 		<br />
 		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</h2>
-				<h2>'.$this->l('Determine the interest of a visit').'</h2>
+				<h2>'.$this->l('Determine the interest of a visit.').'</h2>
 				'.$this->l('The visitors\' evolution graph strongly resembles the visits\' graph, but provides additional information:').'<br />
 				<ul>
-					<li>'.$this->l('If this is the case, congratulations, your website is well planned and pleasing.').'</li>
-					<li>'.$this->l('Otherwise, the conclusion is not so simple. The problem can be aesthetic or ergonomic, or else the offer is not sufficient. It is also possible that these visitors mistakenly came here without particular interest for your shop; this phenomenon often happens with the search engines.').'</li>
+					<li>'.$this->l('If this is the case, congratulations, your website is well planned and pleasing. Glad to see that you\'ve been paying attention.').'</li>
+					<li>'.$this->l('Otherwise, the conclusion is not so simple. The problem can be aesthetic or ergonomic. It is also possible that many visitors have mistakenly visited your URL without possessing a particular interest in your shop. This strange and ever-confusing phenomenon is most likely cause by search engines. If this is the case, you should consider revising your SEO structure.').'</li>
 				</ul>
-				'.$this->l('This information is mostly qualitative: you have to determine the interest of a disjointed visit.').'<br />
+				'.$this->l('This information is mostly qualitative. It is up to you to determine the interest of a disjointed visit.').'<br />
 		</div>';
 
 		return $this->html;

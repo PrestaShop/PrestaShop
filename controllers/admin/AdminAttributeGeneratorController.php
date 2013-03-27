@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -85,7 +85,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 			if ($this->tabAccess['edit'] === '1')
 				$this->action = 'generate';
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to add here.');
+				$this->errors[] = Tools::displayError('You do not have permission to add this.');
 		}
 		parent::initProcess();
 	}
@@ -100,7 +100,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 	public function processGenerate()
 	{
 		if (!is_array(Tools::getValue('options')))
-			$this->errors[] = Tools::displayError('Please choose at least 1 attribute.');
+			$this->errors[] = Tools::displayError('Please select at least one attribute.');
 		else
 		{
 			$tab = array_values(Tools::getValue('options'));
@@ -134,7 +134,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 				Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&addproduct&key_tab=Combinations&conf=4');
 			}
 			else
-				$this->errors[] = Tools::displayError('Unable to initialize parameters, combination is missing or object cannot be loaded.');
+				$this->errors[] = Tools::displayError('Unable to initialize these parameters. A combination is missing or an object cannot be loaded.');
 		}
 	}
 
@@ -222,7 +222,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 	{
 		$this->toolbar_btn['back'] = array(
 			'href' => $this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&addproduct&key_tab=Combinations',
-			'desc' => $this->l('Back to product')
+			'desc' => $this->l('Back to the product')
 		);
 	}
 
@@ -230,7 +230,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 	{
 		if (!Combination::isFeatureActive())
 		{
-			$this->displayWarning($this->l('This feature has been disabled, you can activate it at:').'
+			$this->displayWarning($this->l('This feature has been disabled. You can activate it at:').'
 				<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.
 					$this->l('Performance').'</a>');
 			return;

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -37,25 +37,39 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 	 */
 	public function processNextStep()
 	{
-		// Save shop configuration
-		$this->session->shop_name = trim(Tools::getValue('shop_name'));
-		$this->session->shop_activity = Tools::getValue('shop_activity');
-		$this->session->install_type = Tools::getValue('db_mode');
-		$this->session->shop_country = Tools::getValue('shop_country');
-		$this->session->shop_timezone = Tools::getValue('shop_timezone');
+		if (Tools::isSubmit('shop_name'))
+		{
+			// Save shop configuration
+			$this->session->shop_name = trim(Tools::getValue('shop_name'));
+			$this->session->shop_activity = Tools::getValue('shop_activity');
+			$this->session->install_type = Tools::getValue('db_mode');
+			$this->session->shop_country = Tools::getValue('shop_country');
+			$this->session->shop_timezone = Tools::getValue('shop_timezone');
 
-		// Save admin configuration
-		$this->session->admin_firstname = trim(Tools::getValue('admin_firstname'));
-		$this->session->admin_lastname = trim(Tools::getValue('admin_lastname'));
-		$this->session->admin_email = trim(Tools::getValue('admin_email'));
-		$this->session->send_informations = Tools::getValue('send_informations');
+			// Save admin configuration
+			$this->session->admin_firstname = trim(Tools::getValue('admin_firstname'));
+			$this->session->admin_lastname = trim(Tools::getValue('admin_lastname'));
+			$this->session->admin_email = trim(Tools::getValue('admin_email'));
+			$this->session->send_informations = Tools::getValue('send_informations');
+			if ($this->session->send_informations)
+			{
+				$params = http_build_query(array(
+					'email' => $this->session->admin_email,
+					'method' => 'addMemberToNewsletter',
+					'language' => $this->session->lang,
+					'visitorType' => 1,
+					'source' => 'installer'
+				));
+				Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
+			}
 
-		// If password fields are empty, but are already stored in session, do not fill them again
-		if (!$this->session->admin_password || trim(Tools::getValue('admin_password')))
-			$this->session->admin_password = trim(Tools::getValue('admin_password'));
+			// If password fields are empty, but are already stored in session, do not fill them again
+			if (!$this->session->admin_password || trim(Tools::getValue('admin_password')))
+				$this->session->admin_password = trim(Tools::getValue('admin_password'));
 
-		if (!$this->session->admin_password_confirm || trim(Tools::getValue('admin_password_confirm')))
-			$this->session->admin_password_confirm = trim(Tools::getValue('admin_password_confirm'));
+			if (!$this->session->admin_password_confirm || trim(Tools::getValue('admin_password_confirm')))
+				$this->session->admin_password_confirm = trim(Tools::getValue('admin_password_confirm'));
+		}
 	}
 
 	/**
@@ -250,7 +264,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 
 		foreach ($top_countries as $iso)
 			$this->list_countries[] = array('iso' => $iso, 'name' => $countries[$iso]);
-		$this->list_countries[] = array('name' => '-----------------');
+		$this->list_countries[] = array('iso' => 0, 'name' => '-----------------');
 
 		foreach ($countries as $iso => $lang)
 			if (!in_array($iso, $top_countries))

@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -39,12 +39,12 @@
 		{assign var='requestNb' value=$link->getPaginationLink(false, false, true, false, false, true)}
 	{/if}
 	<!-- nbr product/page -->
-	{if $nb_products > 10}
+	{if $nb_products > $products_per_page}
 		<form action="{if !is_array($requestNb)}{$requestNb}{else}{$requestNb.requestUrl}{/if}" method="get" class="nbrItemPage pagination">
 			<p>
 				{if isset($search_query) AND $search_query}<input type="hidden" name="search_query" value="{$search_query|escape:'htmlall':'UTF-8'}" />{/if}
 				{if isset($tag) AND $tag AND !is_array($tag)}<input type="hidden" name="tag" value="{$tag|escape:'htmlall':'UTF-8'}" />{/if}
-				<label for="nb_item">{l s='Show:'}</label>
+				<label for="nb_item">{l s='Show'}</label>
 				{if is_array($requestNb)}
 					{foreach from=$requestNb item=requestValue key=requestKey}
 						{if $requestKey != 'requestUrl'}
@@ -61,7 +61,7 @@
 					{assign var="lastnValue" value=$nValue}
 				{/foreach}
 				</select>
-				<span>{l s='products by page'}</span>
+				<span>{l s='Products by page'}</span>
 			</p>
 		</form>
 	{/if}

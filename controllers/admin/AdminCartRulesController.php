@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -119,13 +119,13 @@ class AdminCartRulesControllerCore extends AdminController
 
 			// Idiot-proof control
 			if (strtotime(Tools::getValue('date_from')) > strtotime(Tools::getValue('date_to')))
-				$this->errors[] = Tools::displayError('The voucher cannot end before it begins');
+				$this->errors[] = Tools::displayError('The voucher cannot end before it begins.');
 			if ((int)Tools::getValue('minimum_amount') < 0)
-				$this->errors[] = Tools::displayError('Minimum amount cannot be lower than 0');
+				$this->errors[] = Tools::displayError('The minimum amount cannot be lower than zero.');
 			if ((float)Tools::getValue('reduction_percent') < 0 || (float)Tools::getValue('reduction_percent') > 100)
 				$this->errors[] = Tools::displayError('Reduction percent must be between 0% and 100%');
 			if ((int)Tools::getValue('reduction_amount') < 0)
-				$this->errors[] = Tools::displayError('Reduction amount cannot be lower than 0');
+				$this->errors[] = Tools::displayError('Reduction amount cannot be lower than zero.');
 			if (Tools::getValue('code') && ($same_code = (int)CartRule::getIdByCode(Tools::getValue('code'))) && $same_code != Tools::getValue('id_cart_rule'))
 				$this->errors[] = sprintf(Tools::displayError('This cart rule code is already used (conflict with cart rule %d)'), $same_code);
 		}
@@ -451,7 +451,7 @@ class AdminCartRulesControllerCore extends AdminController
 			);
 		}
 		else
-			return array('found' => false, 'notfound' => Tools::displayError('No product found'));
+			return array('found' => false, 'notfound' => Tools::displayError('No product has been found.'));
 	}
 	
 	public function ajaxProcessSearchProducts()
@@ -541,7 +541,7 @@ class AdminCartRulesControllerCore extends AdminController
 				'show_toolbar' => true,
 				'toolbar_btn' => $this->toolbar_btn,
 				'toolbar_scroll' => $this->toolbar_scroll,
-				'title' => array($this->l('Payment'), $this->l('Cart Rules')),
+				'title' => array($this->l('Payment: '), $this->l('Cart Rules')),
 				'defaultDateFrom' => date('Y-m-d H:00:00'),
 				'defaultDateTo' => date('Y-m-d H:00:00', strtotime('+1 month')),
 				'customerFilter' => $customer_filter,

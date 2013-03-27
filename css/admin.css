@@ -6,8 +6,8 @@ body {
 	padding: 0;
 	font-size: 12px;
 	color: #000;
-	text-align: center;
-/*	behavior: url(csshover.htc); */
+/*	text-align: center;
+	behavior: url(csshover.htc); */
 }
 
 .float {float:left}
@@ -352,6 +352,7 @@ select optgroup option {
 #content {
 	padding: 1.25em;
 	padding-bottom: 0.5em;
+	position: relative;
 }
 
 #news {
@@ -2383,4 +2384,9 @@ margin-bottom:7px;
 #BoxUseSpecialSyntax ul{
 	margin-left:30px;
 	list-style-type:disc;
+}
+
+.id_customization .customization_field {
+	min-width: 205px;
+	width: 205px;
 }

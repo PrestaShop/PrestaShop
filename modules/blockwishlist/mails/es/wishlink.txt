@@ -1,7 +1,0 @@
-Hola,
-
-{shop_name} le invita a que envíe este enlace a sus amigos, de manera que ellos puedan ver su lista de deseos {wishlist}:
-
-{message}
-
-{shop_url} desarrollado por PrestaShop™

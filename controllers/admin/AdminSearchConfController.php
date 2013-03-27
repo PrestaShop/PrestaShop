@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -63,15 +63,15 @@ class AdminSearchConfControllerCore extends AdminController
 				'title' => $this->l('Indexation'),
 				'icon' => 'search',
 				'info' =>
-						$this->l('The "indexed" products have been analyzed by PrestaShop and will appear in the results of the Front Office search.').'<br />
-						'.$this->l('Indexed products:').' <b>'.(int)$indexed.' / '.(int)$total.'</b>.
+						$this->l('The "indexed" products have been analyzed by PrestaShop and will appear in the results of a Front Office search.').'<br />
+						'.$this->l('Indexed products').' <b>'.(int)$indexed.' / '.(int)$total.'</b>.
 						</p>
-						<p>'.$this->l('Building the product index can take a few minutes or more.')
-						.$this->l('If your server stops the process before it ends, you can resume the indexation by clicking "Add missing products."').'</p>
+						<p>'.$this->l('Building the product index may take a few minutes.')
+						.$this->l('If your server stops before the process ends, you can resume the indexation by clicking "Add missing products."').'</p>
 						-&gt; <a href="searchcron.php?token='.substr(_COOKIE_KEY_, 34, 8).'&redirect=1" class="bold">'.
-							$this->l('Add missing products to index.').'</a><br />
+							$this->l('Add missing products to the index.').'</a><br />
 						-&gt; <a href="searchcron.php?full=1&token='.substr(_COOKIE_KEY_, 34, 8).'&redirect=1" class="bold">'.
-							$this->l('Re-build entire index.').'</a><br /><br />
+							$this->l('Re-build the entire index.').'</a><br /><br />
 						'.$this->l('You can set a cron job that will rebuild your index using the following URL:').' <a href="'.$cron_url.'">'.$cron_url.'</a>',
 				'fields' =>	array(
 					'PS_SEARCH_INDEXATION' => array(
@@ -79,7 +79,7 @@ class AdminSearchConfControllerCore extends AdminController
 						'validation' => 'isBool',
 						'type' => 'bool',
 						'cast' => 'intval',
-						'desc' => $this->l('Enable automatic indexation of the products. If you enable this feature, the products will be indexed in the search automatically when they are saved, but if the feature is disabled, you will have to index the products manually by using the links provided in this fieldset.')
+						'desc' => $this->l('Enable the automatic indexation of products. If you enable this feature, the products will be indexed in the search automatically when they are saved. If the feature is disabled, you will have to index products manually by using the links provided in the field set.')
 					)
 				)
 			),
@@ -99,7 +99,7 @@ class AdminSearchConfControllerCore extends AdminController
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool',
-						'desc' => $this->l('Enable instant search for your visitors.').'<br />'.
+						'desc' => $this->l('Enable instant search for your visitors?').'<br />'.
 								$this->l('With instant search, the results will appear immediately as the user writes a query.')),
 					'PS_SEARCH_MINWORDLEN' => array(
 						'title' => $this->l('Minimum word length (in characters)'),
@@ -113,7 +113,7 @@ class AdminSearchConfControllerCore extends AdminController
 						'title' => $this->l('Blacklisted words'),
 						'size' => 35,
 						'validation' => 'isGenericName',
-						'desc' => $this->l('Please enter the words separated by a "|".'),
+						'desc' => $this->l('Please enter the index words separated by a "|".'),
 						'type' => 'textLang'
 					)
 				),
@@ -123,9 +123,9 @@ class AdminSearchConfControllerCore extends AdminController
 				'title' =>	$this->l('Weight'),
 				'icon' =>	'weight',
 				'info' =>
-						$this->l('The "weight" represents its importance and relevance for the ranking of the products when try a new search.').'<br />
-						'.$this->l('A word with a weight of 8 will have 4 times more value than a word with a weight of 2.').'<br /><br />
-						'.$this->l('That\'s why we advise to set a greater weight for words which appear in the name or reference of a product than the ones in the description. Thus, the search results will be as precise and relevant as possible.'),
+						$this->l('The "weight" represents its importance and relevance for the ranking of the products when completing a new search.').'<br />
+						'.$this->l('A word with a weight of eight will have four times more value than a word with a weight of two.').'<br /><br />
+						'.$this->l('We advise you to set a greater weight for words which appear in the name or reference of a product. This will allow the search results to be as precise and relevant as possible.'),
 				'fields' =>	array(
 					'PS_SEARCH_WEIGHT_PNAME' => array(
 						'title' => $this->l('Product name weight'),
@@ -240,7 +240,7 @@ class AdminSearchConfControllerCore extends AdminController
 					'size' => 40,
 					'required' => true,
 					'desc' => array(
-						$this->l('Enter each alias separated by a comma (\',\') (e.g. \'prestshop,preztashop,prestasohp\')'),
+						$this->l('Enter each alias separated by a comma (e.g. \'prestshop,preztashop,prestasohp\')'),
 						$this->l('Forbidden characters: <>;=#{}')
 					)
 				),
@@ -270,12 +270,12 @@ class AdminSearchConfControllerCore extends AdminController
 		$string = strval(Tools::getValue('alias'));
 		$aliases = explode(',', $string);
 		if (empty($search) || empty($string))
-			$this->errors[] = $this->l('aliases and result are both required');
+			$this->errors[] = $this->l('Aliases and results are both required.');
 		if (!Validate::isValidSearch($search))
-			$this->errors[] = $search.' '.$this->l('is not a valid result');
+			$this->errors[] = $search.' '.$this->l('Is not a valid result');
 		foreach ($aliases as $alias)
 			if (!Validate::isValidSearch($alias))
-				$this->errors[] = $alias.' '.$this->l('is not a valid alias');
+				$this->errors[] = $alias.' '.$this->l('Is not a valid alias');
 
 		if (!count($this->errors))
 		{

@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -28,7 +28,7 @@
 	{/if}
 	var lastMove = '';
 	var saveOK = '{l s='Module position saved' js=1}';
-	var confirmClose = '{l s='Are you sure? If you close this window, its position won\'t be saved'  js=1}';
+	var confirmClose = "{l s="Are you sure? If you close this window, its position won't be saved"  js=1}";
 	var close = '{l s='Close' js=1}';
 	var cancel = '{l s='Cancel' js=1}';
 	var confirm = '{l s='Confirm' js=1}';

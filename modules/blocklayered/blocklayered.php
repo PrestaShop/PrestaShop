@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registred Trademark & Property of PrestaShop SA
 */
@@ -523,7 +523,7 @@ class BlockLayered extends Module
 			$id_lang = (int)$language['id_lang'];
 			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_feature_lang_value
 			VALUES ('.(int)$params['id_feature'].', '.$id_lang.', \''.pSQL(Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang))).'\',
-			\''.pSQL(Tools::safeOutput(Tools::getValue('meta_title_'.$id_lang), true)).'\')');
+			\''.pSQL(Tools::getValue('meta_title_'.$id_lang), true).'\')');
 		}
 	}
 
@@ -539,7 +539,7 @@ class BlockLayered extends Module
 			$id_lang = (int)$language['id_lang'];
 			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_feature_value_lang_value
 			VALUES ('.(int)$params['id_feature_value'].', '.$id_lang.', \''.pSQL(Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang))).'\',
-			\''.pSQL(Tools::safeOutput(Tools::getValue('meta_title_'.$id_lang), true)).'\')');
+			\''.pSQL(Tools::getValue('meta_title_'.$id_lang), true).'\')');
 		}
 	}
 	
@@ -626,7 +626,7 @@ class BlockLayered extends Module
 			$id_lang = (int)$language['id_lang'];
 			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_attribute_lang_value
 			VALUES ('.(int)$params['id_attribute'].', '.$id_lang.', \''.pSQL(Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang))).'\',
-			\''.pSQL(Tools::safeOutput(Tools::getValue('meta_title_'.$id_lang), true)).'\')');
+			\''.pSQL(Tools::getValue('meta_title_'.$id_lang), true).'\')');
 		}
 	}
 	
@@ -727,7 +727,7 @@ class BlockLayered extends Module
 			$id_lang = (int)$language['id_lang'];
 			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_attribute_group_lang_value
 			VALUES ('.(int)$params['id_attribute_group'].', '.$id_lang.', \''.pSQL(Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang))).'\',
-			\''.pSQL(Tools::safeOutput(Tools::getValue('meta_title_'.$id_lang), true)).'\')');
+			\''.pSQL(Tools::getValue('meta_title_'.$id_lang), true).'\')');
 		}
 	}
 	
@@ -2525,7 +2525,7 @@ class BlockLayered extends Module
 			LEFT JOIN '._DB_PREFIX_.'category c ON (c.id_category = cp.id_category)
 			LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = cp.`id_product`
 			'.$join.'
-			LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = p.id_product)
+			LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = p.id_product'.Shop::addSqlRestrictionOnLang('pl').')
 			LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = p.id_product AND i.cover = 1)
 			LEFT JOIN '._DB_PREFIX_.'image_lang il ON (i.id_image = il.id_image AND il.id_lang = '.(int)($cookie->id_lang).')
 			LEFT JOIN '._DB_PREFIX_.'manufacturer m ON (m.id_manufacturer = p.id_manufacturer)

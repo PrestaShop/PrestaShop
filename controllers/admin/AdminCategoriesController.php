@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -45,6 +45,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->lang = true;
 		$this->deleted = false;
 		$this->explicitSelect = true;
+		$this->allow_export = true;
 
 		$this->context = Context::getContext();
 
@@ -101,12 +102,46 @@ class AdminCategoriesControllerCore extends AdminController
 		if (($id_category = Tools::getvalue('id_category')) && $this->action != 'select_delete')
 			$this->_category = new Category($id_category);
 		else
+		{
 			if (Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP)
 				$this->_category = new Category($this->context->shop->id_category);
-			else if (count(Category::getCategoriesWithoutParent()) > 1 && Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && count(Shop::getShops(true, null, true)) != 1)
+			elseif (count(Category::getCategoriesWithoutParent()) > 1 && Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && count(Shop::getShops(true, null, true)) != 1)
 				$this->_category = Category::getTopCategory();
 			else
 				$this->_category = new Category(Configuration::get('PS_HOME_CATEGORY'));
+		}
+
+		$count_categories_without_parent = count(Category::getCategoriesWithoutParent());
+		$top_category = Category::getTopCategory();
+		if (Tools::isSubmit('id_category'))
+			$id_parent = $this->_category->id;
+		elseif (!Shop::isFeatureActive() && $count_categories_without_parent > 1)
+			$id_parent = $top_category->id;
+		elseif (Shop::isFeatureActive() && $count_categories_without_parent == 1)
+			$id_parent = Configuration::get('PS_HOME_CATEGORY');
+		elseif (Shop::isFeatureActive() && $count_categories_without_parent > 1 && Shop::getContext() != Shop::CONTEXT_SHOP)
+		{
+			if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && count(Shop::getShops(true, null, true)) == 1)
+				$id_parent = $this->context->shop->id_category;
+			else
+				$id_parent = $top_category->id;
+		}
+		else
+			$id_parent = $this->context->shop->id_category;
+
+		$this->_select = 'sa.position position';
+		$this->_filter .= ' AND `id_parent` = '.(int)$id_parent.' ';
+
+		if (Shop::getContext() == Shop::CONTEXT_SHOP)
+			$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = '.(int)$this->context->shop->id.') ';
+		else
+			$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = a.id_shop_default) ';
+
+
+		// we add restriction for shop
+		if (Shop::getContext() == Shop::CONTEXT_SHOP && Shop::isFeatureActive())
+			$this->_where = ' AND sa.`id_shop` = '.(int)Context::getContext()->shop->id;
+
 		// if we are not in a shop context, we remove the position column
 		if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP)
 			unset($this->fields_list['position']);
@@ -144,41 +179,12 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->addRowAction('add');
 		$this->addRowAction('view');
 
-		$count_categories_without_parent = count(Category::getCategoriesWithoutParent());
-		$is_multishop = Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
-		$top_category = Category::getTopCategory();
-
-		if (Tools::isSubmit('id_category'))
-			$id_parent = $this->_category->id;
-		else if (!$is_multishop && $count_categories_without_parent > 1)
-			$id_parent = $top_category->id;
-		else if ($is_multishop && $count_categories_without_parent == 1)
-			$id_parent = Configuration::get('PS_HOME_CATEGORY');
-		else if ($is_multishop && $count_categories_without_parent > 1 && Shop::getContext() != Shop::CONTEXT_SHOP)
-			if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && count(Shop::getShops(true, null, true)) == 1)
-				$id_parent = $this->context->shop->id_category;
-			else
-				$id_parent = $top_category->id;
-		else
-			$id_parent = $this->context->shop->id_category;
-
-		$this->_select = 'sa.position position';
-		$this->_filter .= ' AND `id_parent` = '.(int)$id_parent.' ';
-
-		if (Shop::getContext() == Shop::CONTEXT_SHOP)
-			$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = '.(int)$this->context->shop->id.') ';
-		else
-				$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = a.id_shop_default) ';
-
-
-		// we add restriction for shop
-		if (Shop::getContext() == Shop::CONTEXT_SHOP && $is_multishop)
-			$this->_where = ' AND sa.`id_shop` = '.(int)Context::getContext()->shop->id;
-
+		$count_categories_without_parent = count(Category::getCategoriesWithoutParent());	
 		$categories_tree = $this->_category->getParentsCategories();
+
 		if (empty($categories_tree)
 			&& ($this->_category->id != 1 || Tools::isSubmit('id_category'))
-			&& (Shop::getContext() == Shop::CONTEXT_SHOP && !$is_multishop && $count_categories_without_parent > 1))
+			&& (Shop::getContext() == Shop::CONTEXT_SHOP && !Shop::isFeatureActive() && $count_categories_without_parent > 1))
 			$categories_tree = array(array('name' => $this->_category->name[$this->context->language->id]));
 
 		asort($categories_tree);
@@ -232,7 +238,7 @@ class AdminCategoriesControllerCore extends AdminController
 				);
 			$this->toolbar_btn['new'] = array(
 				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
-				'desc' => $this->l('Add new')
+				'desc' => $this->l('Add New')
 			);
 			$this->toolbar_btn['import'] = array(
 				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type='.$this->table,
@@ -257,7 +263,7 @@ class AdminCategoriesControllerCore extends AdminController
 		if ($this->display == 'view')
 			$this->toolbar_btn['new'] = array(
 				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;id_parent='.(int)Tools::getValue('id_category').'&amp;token='.$this->token,
-				'desc' => $this->l('Add new')
+				'desc' => $this->l('Add New')
 			);
 		parent::initToolbar();
 		if ($this->_category->id == Category::getTopCategory()->id && isset($this->toolbar_btn['new']))
@@ -268,7 +274,7 @@ class AdminCategoriesControllerCore extends AdminController
 			$id_category = (Tools::isSubmit('id_category')) ? '&amp;id_parent='.(int)Tools::getValue('id_category') : '';
 			$this->toolbar_btn['new'] = array(
 				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token.$id_category,
-				'desc' => $this->l('Add new')
+				'desc' => $this->l('Add New')
 			);
 
 			if (Tools::isSubmit('id_category'))
@@ -291,10 +297,14 @@ class AdminCategoriesControllerCore extends AdminController
 			if ($this->tabAccess['add'])
 			{
 				$this->action = 'add'.$this->table.'root';
-				$this->display = 'edit';
+				$obj = $this->loadObject(true);
+				if (Validate::isLoadedObject($obj))
+					$this->display = 'edit';
+				else
+					$this->display = 'add';
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 
 		parent::initProcess();
@@ -318,8 +328,8 @@ class AdminCategoriesControllerCore extends AdminController
 		$guest = new Group(Configuration::get('PS_GUEST_GROUP'));
 		$default = new Group(Configuration::get('PS_CUSTOMER_GROUP'));
 
-		$unidentified_group_information = sprintf($this->l('%s - All people without a validated customer account.'), '<b>'.$unidentified->name[$this->context->language->id].'</b>');
-		$guest_group_information = sprintf($this->l('%s - Customer who placed an order with the Guest Checkout.'), '<b>'.$guest->name[$this->context->language->id].'</b>');
+		$unidentified_group_information = sprintf($this->l('%s - All people without a valid customer account.'), '<b>'.$unidentified->name[$this->context->language->id].'</b>');
+		$guest_group_information = sprintf($this->l('%s - Customer who placed an order with the guest checkout.'), '<b>'.$guest->name[$this->context->language->id].'</b>');
 		$default_group_information = sprintf($this->l('%s - All people who have created an account on this site.'), '<b>'.$default->name[$this->context->language->id].'</b>');
 		$root_category = Category::getRootCategory();
 		$root_category = array('id_category' => $root_category->id, 'name' => $root_category->name);
@@ -367,7 +377,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'values' => array(
 						'trads' => array(
 							 'Root' => $root_category,
-							 'selected' => $this->l('selected'),
+							 'selected' => $this->l('Selected'),
 							 'Collapse All' => $this->l('Collapse All'),
 							 'Expand All' => $this->l('Expand All')
 						),
@@ -414,7 +424,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'label' => $this->l('Image:'),
 					'name' => 'image',
 					'display_image' => true,
-					'desc' => $this->l('Upload category logo from your computer')
+					'desc' => $this->l('Upload a category logo from your computer.')
 				),
 				array(
 					'type' => 'text',
@@ -436,7 +446,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'name' => 'meta_keywords',
 					'lang' => true,
 					'hint' => $this->l('Forbidden characters:').' <>;=#{}',
-					'desc' => $this->l('To add "tags" click in the field, write something, then press "Enter"')
+					'desc' => $this->l('To add "tags," click in the field, write something, and then press "Enter."')
 				),
 				array(
 					'type' => 'text',
@@ -444,7 +454,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'name' => 'link_rewrite',
 					'lang' => true,
 					'required' => true,
-					'hint' => $this->l('Only letters and the minus (-) character are allowed')
+					'hint' => $this->l('Only letters and the minus (-) character are allowed.')
 				),
 				array(
 					'type' => 'group',
@@ -455,7 +465,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'unidentified' => $unidentified_group_information,
 					'guest' => $guest_group_information,
 					'customer' => $default_group_information,
-					'desc' => $this->l('Mark all customer groups you want to give access to this category')
+					'desc' => $this->l('Mark all of the customer groups you;d like to have access to this category.')
 				)
 			),
 			'submit' => array(
@@ -540,10 +550,10 @@ class AdminCategoriesControllerCore extends AdminController
 			if ($id_category != $id_parent)
 			{
 				if (!Category::checkBeforeMove($id_category, $id_parent))
-					$this->errors[] = Tools::displayError($this->l('Category cannot be moved here'));
+					$this->errors[] = Tools::displayError($this->l('The category cannot be moved here.'));
 			}
 			else
-				$this->errors[] = Tools::displayError($this->l('Category cannot be parent of itself.'));
+				$this->errors[] = Tools::displayError($this->l('The category cannot be a parent of itself.'));
 		}
 		$object = parent::processAdd();
 		
@@ -589,7 +599,7 @@ class AdminCategoriesControllerCore extends AdminController
 				return false;
 		}
 		else
-			$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+			$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 	}
 	
 	public function processDelete()
@@ -598,7 +608,7 @@ class AdminCategoriesControllerCore extends AdminController
 		if ($this->tabAccess['delete'] === '1')
 		{
 			if ($category->isRootCategoryForAShop())
-				$this->errors[] = Tools::displayError('You cannot remove this category because a shop uses this category as a root category.');
+				$this->errors[] = Tools::displayError('You cannot remove this category because one of your shops uses it as a root category.');
 			else if (parent::processDelete())
 			{
 				$this->setDeleteMode();
@@ -609,7 +619,7 @@ class AdminCategoriesControllerCore extends AdminController
 				return false;
 		}
 		else
-			$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+			$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 	}
 	
 	public function processFatherlessProducts($id_parent)
@@ -619,10 +629,10 @@ class AdminCategoriesControllerCore extends AdminController
 			SELECT p.`id_product` FROM `'._DB_PREFIX_.'product` p
 			'.Shop::addSqlAssociation('product', 'p').'
 			WHERE p.`id_product` NOT IN (SELECT DISTINCT(cp.`id_product`) FROM `'._DB_PREFIX_.'category_product` cp)');
-			
+
 		foreach ($fatherless_products as $id_poor_product)
 		{
-			$poor_product = new Product((int)$id_poor_product);
+			$poor_product = new Product((int)$id_poor_product['id_product']);
 			if (Validate::isLoadedObject($poor_product))
 			{
 				if ($this->remove_products || $id_parent == 0)
@@ -642,9 +652,9 @@ class AdminCategoriesControllerCore extends AdminController
 	public function processPosition()
 	{
 		if ($this->tabAccess['edit'] !== '1')
-			$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+			$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		else if (!Validate::isLoadedObject($object = new Category((int)Tools::getValue($this->identifier, Tools::getValue('id_category_to_move', 1)))))
-			$this->errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.
+			$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.
 				$this->table.'</b> '.Tools::displayError('(cannot load object)');
 		if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
 			$this->errors[] = Tools::displayError('Failed to update the position.');

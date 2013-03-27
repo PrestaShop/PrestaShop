@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -51,7 +51,10 @@ class TranslateCore
 		if ($_LANGADM == null)
 		{
 			$iso = Context::getContext()->language->iso_code;
-			include_once(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
+			if (empty($iso))
+				$iso = Language::getIsoById((int)(Configuration::get('PS_LANG_DEFAULT')));			
+			if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php'))
+				include_once(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
 		}
 
 		if (isset($modules_tabs[strtolower($class)]))

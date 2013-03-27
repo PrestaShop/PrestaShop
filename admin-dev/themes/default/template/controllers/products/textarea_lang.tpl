@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -26,11 +26,11 @@
 <div class="translatable">
 {foreach from=$languages item=language}
 <div class="lang_{$language.id_lang}" style="{if !$language.is_default}display:none;{/if}float: left;">
-	<textarea cols="100" rows="10" type="text" id="{$input_name}_{$language.id_lang}" 
+	<textarea cols="100" rows="10" id="{$input_name}_{$language.id_lang}" 
 		name="{$input_name}_{$language.id_lang}" 
 		class="autoload_rte" >{if isset($input_value[$language.id_lang])}{$input_value[$language.id_lang]|htmlentitiesUTF8}{/if}</textarea>
 	<span class="counter" max="{if isset($max)}{$max}{else}none{/if}"></span>
-	<span class="hint" name="help_box">{$hint|default:''}<span class="hint-pointer">&nbsp;</span></span>
+	<span class="hint">{$hint|default:''}<span class="hint-pointer">&nbsp;</span></span>
 </div>
 {/foreach}
 </div>

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -37,6 +37,16 @@ class PageNotFoundControllerCore extends FrontController
 	{
 		header('HTTP/1.1 404 Not Found');
 		header('Status: 404 Not Found');
+
+		if (in_array(Tools::strtolower(substr($_SERVER['REQUEST_URI'], -3)), array('png', 'jpg', 'gif')))
+		{
+			header('Content-Type: image/gif');
+			readfile(_PS_IMG_DIR_.'404.gif');
+			exit;
+		}
+		elseif (in_array(Tools::strtolower(substr($_SERVER['REQUEST_URI'], -3)), array('.js', 'css')))
+			exit;
+
 		parent::initContent();
 
 		$this->setTemplate(_PS_THEME_DIR_.'404.tpl');

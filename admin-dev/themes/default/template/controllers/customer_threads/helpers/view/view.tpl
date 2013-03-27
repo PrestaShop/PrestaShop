@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -51,12 +51,12 @@
 			</p>
 
 			<div id="message_forward_email" style="display:none">
-				<b>{l s='E-mail'}</b> <input type="text" name="email" />
+				<b>{l s='Email'}</b> <input type="text" name="email" />
 			</div>
 
 			<div id="message_forward" style="display:none;margin-bottom:10px">
 				<textarea name="message_forward" style="width:500px;height:80px;margin-top:15px;">{l s='You can add a comment here.'}</textarea><br />
-				<input type="Submit" name="submitForward" class="button" value="{l s='Forward this discussion'}" style="margin-top: 10px;" />
+				<input type="Submit" name="submitForward" class="button" value="{l s='Forward this discussion.'}" style="margin-top: 10px;" />
 			</div>
 
 		</fieldset>
@@ -74,9 +74,9 @@
 						<tr>
 							<th class="center">{l s='ID'}</th>
 							<th class="center">{l s='Date'}</th>
-							<th class="center">{l s='Products'}</th>
+							<th class="center">{l s='Products:'}</th>
 							<th class="center">{l s='Total paid'}</th>
-							<th class="center">{l s='Payment'}</th>
+							<th class="center">{l s='Payment: '}</th>
 							<th class="center">{l s='State'}</th>
 							<th class="center">{l s='Actions'}</th>
 						</tr>
@@ -106,7 +106,7 @@
 		{/if}
 		{if $products && count($products)}
 			<div>
-				<h2>{l s='Products'}</h2>
+				<h2>{l s='Products:'}</h2>
 				<table cellspacing="0" cellpadding="0" class="table">
 					<tr>
 						<th class="center">{l s='Date'}</th>

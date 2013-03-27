@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -41,7 +41,7 @@ class StatsStock extends Module
 
 		parent::__construct();
 
-		$this->displayName = $this->l('Available quantities stats');
+		$this->displayName = $this->l('Stats on available quantities.');
 		$this->description = '';
 	}
 
@@ -84,7 +84,7 @@ class StatsStock extends Module
 
 		$this->html .= '
 		<script type="text/javascript">$(\'#calendar\').slideToggle();</script>
-		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->l('Available quantities for sale valuation').'</h2>
+		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->l('Evaluation of available quantities for sale.').'</h2>
 		<form action="'.$ru.'" method="post">
 			<input type="hidden" name="submitCategory" value="1" />
 			'.$this->l('Category').' : <select name="statsstock_id_category" onchange="this.form.submit();">
@@ -139,7 +139,7 @@ class StatsStock extends Module
 					<td>'.Tools::displayPrice($rollup['stockvalue'], $currency).'</td>
 				</tr>
 			</table>
-			<p>* '.$this->l('Correspond to the default wholesale price according to the default supplier for the product. An average price is used when the product has attributes.').'</p></div>';
+			<p>* '.$this->l('This section corresponds to the default wholesale price according to the default supplier for the product. An average price is used when the product has attributes.').'</p></div>';
 
 			return $this->html;
 		}

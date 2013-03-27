@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -39,7 +39,36 @@ class PDFGeneratorCore extends TCPDF
 	public $content;
 	public $font;
 
-	public $font_by_lang = array('jp' => 'cid0jp');
+	public $font_by_lang = array(
+		'ja' => 'cid0jp', 
+		'bg' => 'freeserif', 
+		'ru' => 'freeserif', 
+		'uk' => 'freeserif', 
+		'mk' => 'freeserif', 
+		'el' => 'freeserif', 
+		'vn' => 'dejavusans', 
+		'pl' => 'dejavusans',
+		'ar' => 'dejavusans',
+		'fa' => 'dejavusans',
+		'ur' => 'dejavusans',
+		'az' => 'dejavusans',
+		'ca' => 'dejavusans',
+		'gl' => 'dejavusans',
+		'hr' => 'dejavusans',
+		'sr' => 'dejavusans',
+		'si' => 'dejavusans',
+		'cs' => 'dejavusans',
+		'sk' => 'dejavusans',
+		'ka' => 'dejavusans',
+		'he' => 'dejavusans',
+		'lo' => 'dejavusans',
+		'lv' => 'dejavusans',
+		'tr' => 'dejavusans',
+		'ko' => 'cid0kr',
+		'zh' => 'cid0cs',
+		'tw' => 'cid0cs',
+		'th' => 'freeserif'
+		);
 
 
 	public function __construct($use_cache = false)
@@ -93,10 +122,11 @@ class PDFGeneratorCore extends TCPDF
 	public function setFontForLang($iso_lang)
 	{
 		$this->font = PDFGenerator::DEFAULT_FONT;
-		$this->setHeaderFont(array(PDFGenerator::DEFAULT_FONT, '', PDF_FONT_SIZE_MAIN));
-		$this->setFooterFont(array(PDFGenerator::DEFAULT_FONT, '', PDF_FONT_SIZE_MAIN));
 		if (array_key_exists($iso_lang, $this->font_by_lang))
 			$this->font = $this->font_by_lang[$iso_lang];
+
+		$this->setHeaderFont(array($this->font, '', PDF_FONT_SIZE_MAIN));
+		$this->setFooterFont(array($this->font, '', PDF_FONT_SIZE_MAIN));
 
 		$this->setFont($this->font);
 	}

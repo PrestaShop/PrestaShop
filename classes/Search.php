@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -52,7 +52,7 @@ define('PREG_CLASS_SEARCH_EXCLUDE',
 '\x{2ce5}-\x{2cff}\x{2d6f}\x{2e00}-\x{3005}\x{3007}-\x{303b}\x{303d}-\x{303f}'.
 '\x{3099}-\x{309e}\x{30a0}\x{30fb}\x{30fd}\x{30fe}\x{3190}-\x{319f}\x{31c0}-'.
 '\x{31cf}\x{3200}-\x{33ff}\x{4dc0}-\x{4dff}\x{a015}\x{a490}-\x{a716}\x{a802}'.
-'\x{E000}-\x{F8FF}\x{FB29}\x{FD3E}-\x{FD3F}\x{FDFC}-\x{FDFD}'.
+'\x{e000}-\x{f8ff}\x{fb29}\x{fd3e}-\x{fd3f}\x{fdfc}-\x{fdfd}'.
 '\x{fd3f}\x{fdfc}-\x{fe6b}\x{feff}-\x{ff0f}\x{ff1a}-\x{ff20}\x{ff3b}-\x{ff40}'.
 '\x{ff5b}-\x{ff65}\x{ff70}\x{ff9e}\x{ff9f}\x{ffe0}-\x{fffd}');
 
@@ -111,7 +111,7 @@ class SearchCore
 			$string = preg_replace('/[^\s]-+/', '', $string);
 		}
 
-		$blacklist = Configuration::get('PS_SEARCH_BLACKLIST', $id_lang);
+		$blacklist = Tools::strtolower(Configuration::get('PS_SEARCH_BLACKLIST', $id_lang));
 		if (!empty($blacklist))
 		{
 			$string = preg_replace('/(?<=\s)('.$blacklist.')(?=\s)/Su', '', $string);
@@ -283,7 +283,7 @@ class SearchCore
 			$alias = 'product_shop.';
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, 
 				pl.`description_short`, pl.`available_now`, pl.`available_later`, pl.`link_rewrite`, pl.`name`,
-			 image_shop.`id_image`, il.`legend`, m.`name` manufacturer_name '.$score.', product_attribute_shop.`id_product_attribute`,
+			 MAX(image_shop.`id_image`) id_image, il.`legend`, m.`name` manufacturer_name '.$score.', MAX(product_attribute_shop.`id_product_attribute`) id_product_attribute,
 				DATEDIFF(
 					p.`date_add`,
 					DATE_SUB(
@@ -305,8 +305,7 @@ class SearchCore
 				Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				WHERE p.`id_product` '.$product_pool.'
-				AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))
-				AND (pa.id_product_attribute IS NULL OR product_attribute_shop.id_shop='.(int)$context->shop->id.')
+				GROUP BY product_shop.id_product
 				'.($order_by ? 'ORDER BY  '.$alias.$order_by : '').($order_way ? ' '.$order_way : '').'
 				LIMIT '.(int)(($page_number - 1) * $page_size).','.(int)$page_size;
 		$result = $db->executeS($sql);
@@ -319,11 +318,7 @@ class SearchCore
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
 				)
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
-				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
-				Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
-				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
-				WHERE p.`id_product` '.$product_pool.'
-				AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))';
+				WHERE p.`id_product` '.$product_pool;
 		$total = $db->getValue($sql);
 
 		if (!$result)
@@ -382,7 +377,7 @@ class SearchCore
 	{
 		// Adjust the limit to get only "whole" products, in every languages (and at least one)
 		$max_possibilities = $total_languages * count(Shop::getShops(true));
-		$limit = max(1, floor($limit / $max_possibilities) * $max_possibilities);
+		$limit = max($max_possibilities, floor($limit / $max_possibilities) * $max_possibilities);
 
 		return Db::getInstance()->executeS('
 			SELECT p.id_product, pl.id_lang, pl.id_shop, pl.name pname, p.reference, p.ean13, p.upc,
@@ -633,7 +628,7 @@ class SearchCore
 		}
 
 		$sql = 'SELECT DISTINCT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description_short`, pl.`link_rewrite`, pl.`name`,
-					image_shop.`id_image`, il.`legend`, m.`name` manufacturer_name, 1 position,
+					MAX(image_shop.`id_image`) id_image, il.`legend`, m.`name` manufacturer_name, 1 position,
 					DATEDIFF(
 						p.`date_add`,
 						DATE_SUB(
@@ -663,7 +658,7 @@ class SearchCore
 						SELECT id_group FROM '._DB_PREFIX_.'customer_group
 						WHERE id_customer = '.(int)$id_customer.')').'
 					AND t.`name` LIKE \'%'.pSQL($tag).'%\'
-					AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))
+					GROUP BY product_shop.id_image
 				ORDER BY position DESC'.($orderBy ? ', '.$orderBy : '').($orderWay ? ' '.$orderWay : '').'
 				LIMIT '.(int)(($pageNumber - 1) * $pageSize).','.(int)$pageSize;
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))

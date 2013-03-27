@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -122,6 +122,8 @@ abstract class ModuleCore
 	
 	const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
 	
+	const CACHE_FILE_TAB_MODULES_LIST = '/config/xml/tab_modules_list.xml';
+	
 	const CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST = '/config/xml/default_country_modules_list.xml';
 	
 	const CACHE_FILE_CUSTOMER_MODULES_LIST = '/config/xml/customer_modules_list.xml';
@@ -176,8 +178,6 @@ abstract class ModuleCore
 			}
 			$this->local_path = _PS_MODULE_DIR_.$this->name.'/';
 		}
-		
-		$this->database_version = $this->version;
 	}
 
 	/**
@@ -185,9 +185,13 @@ abstract class ModuleCore
 	 */
 	public function install()
 	{
+		Hook::exec('actionModuleInstallBefore', array('object' => $this));
 		// Check module name validation
 		if (!Validate::isModuleName($this->name))
-			die(Tools::displayError());
+		{
+			$this->_errors[] = $this->l('Unable to install the module (Module name is not valid).');
+			return false;
+		}
 
 		// Check PS version compliancy
 		if (version_compare(_PS_VERSION_, $this->ps_versions_compliancy['min']) < 0 || version_compare(_PS_VERSION_, $this->ps_versions_compliancy['max']) >= 0)
@@ -260,7 +264,7 @@ abstract class ModuleCore
 
 		// Adding Restrictions for client groups
 		Group::addRestrictionsForModule($this->id, Shop::getShops(true, null, true));
-
+		Hook::exec('actionModuleInstallAfter', array('object' => $this));
 		return true;
 	}
 
@@ -400,9 +404,10 @@ abstract class ModuleCore
 		// Check the version of the module with the registered one and look if any upgrade file exist
 		if (Tools::version_compare($module->version, $module->database_version, '>'))
 		{
+			$old_version = $module->database_version;
 			$module = Module::getInstanceByName($module->name);
 			if ($module instanceof Module)
-				return $module->loadUpgradeVersionList($module->name, $module->version, $module->database_version);
+				return $module->loadUpgradeVersionList($module->name, $module->version, $old_version);
 		}
 		return null;
 	}
@@ -496,9 +501,8 @@ abstract class ModuleCore
 		$result = Db::getInstance()->executeS($sql);
 		foreach	($result as $row)
 		{
-			$sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module` WHERE `id_module` = '.(int)$this->id.' AND `id_hook` = '.(int)$row['id_hook'];
-			Db::getInstance()->execute($sql);
-			$this->cleanPositions($row['id_hook']);
+			$this->unregisterHook((int)$row['id_hook']);
+			$this->unregisterExceptions((int)$row['id_hook']);
 		}
 
 		// Disable the module for all shops
@@ -855,7 +859,12 @@ abstract class ModuleCore
 	public static function getInstanceByName($module_name)
 	{
 		if (!Validate::isModuleName($module_name))
-			die(Tools::displayError());
+		{
+			if (_PS_MODE_DEV_)
+				die(Tools::displayError($module_name.' is not a valid module name.'));
+			return false;
+		}
+
 		if (!isset(self::$_INSTANCE[$module_name]))
 		{
 			if (Tools::file_exists_cache(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php'))
@@ -1154,10 +1163,10 @@ abstract class ModuleCore
 							$item->active = 0;
 							if (isset($modaddons->img))
 							{
-								if (!file_exists('../img/tmp/'.md5($modaddons->name).'.jpg'))
-									if (!@copy($modaddons->img, '../img/tmp/'.md5($modaddons->name).'.jpg'))
-										@copy('../img/404.gif', '../img/tmp/'.md5($modaddons->name).'.jpg');
-								if (file_exists('../img/tmp/'.md5($modaddons->name).'.jpg'))
+								if (!file_exists(_PS_TMP_IMG_DIR_.md5($modaddons->name).'.jpg'))
+									if (!file_put_contents(_PS_TMP_IMG_DIR_.md5($modaddons->name).'.jpg', Tools::file_get_contents($modaddons->img)))
+										copy(_PS_IMG_DIR_.'404.gif', _PS_TMP_IMG_DIR_.md5($modaddons->name).'.jpg');
+								if (file_exists(_PS_TMP_IMG_DIR_.md5($modaddons->name).'.jpg'))
 									$item->image = '../img/tmp/'.md5($modaddons->name).'.jpg';
 							}
 							if ($item->type == 'addonsMustHave')
@@ -1167,12 +1176,12 @@ abstract class ModuleCore
 								$id_default_currency = Configuration::get('PS_CURRENCY_DEFAULT');
 								foreach ($prices as $currency => $price)
 									if ($id_currency = Currency::getIdByIsoCode($currency))
+									{
+										$item->price = (float)$price;
+										$item->id_currency = (int)$id_currency;
 										if ($id_default_currency == $id_currency)
-										{
-											$item->price = (float)$price;
-											$item->id_currency = (int)$id_currency;
-										}
-										
+											break;
+									}
 							}
 							$module_list[] = $item;
 						}
@@ -1296,6 +1305,14 @@ abstract class ModuleCore
 	{
 		return true;
 	}
+	
+	public static function getPaypalIgnore()
+	{
+		$iso_code = Country::getIsoById((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+		$paypal_countries = array('ES', 'FR', 'PL', 'IT');
+		if (Context::getContext()->getMobileDevice() && Context::getContext()->shop->getTheme() == 'default' && in_array($iso_code, $paypal_countries))
+			return 'm.`name` = \'paypal\'';
+	}
 
 	/**
 	 * Returns the list of the payment module associated to the current customer
@@ -1324,14 +1341,10 @@ abstract class ModuleCore
 		if (Db::getInstance()->getValue('SELECT `id_hook` FROM `'._DB_PREFIX_.'hook` WHERE `name` = \'displayPayment\''))
 			$hookPayment = 'displayPayment';
 
-		$paypal_condition = '';
-		$iso_code = Country::getIsoById((int)Configuration::get('PS_COUNTRY_DEFAULT'));
-		$paypal_countries = array('ES', 'FR', 'PL', 'IT');
-		if (Context::getContext()->getMobileDevice() && Context::getContext()->shop->getTheme() == 'default' && in_array($iso_code, $paypal_countries))
-			$paypal_condition = ' AND m.`name` = \'paypal\'';
-
 		$list = Shop::getContextListShopID();
-
+		if ($paypal_condition = Module::getPaypalIgnore())
+			$paypal_condition = ' AND '.$paypal_condition;
+			
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT DISTINCT m.`id_module`, h.`id_hook`, m.`name`, hm.`position`
 		FROM `'._DB_PREFIX_.'module` m
 		'.($frontend ? 'LEFT JOIN `'._DB_PREFIX_.'module_country` mc ON (m.`id_module` = mc.`id_module` AND mc.id_shop = '.(int)$context->shop->id.')' : '').'
@@ -1367,7 +1380,7 @@ abstract class ModuleCore
 	 * @param boolean|string $specific filename to use in translation key
 	 * @return string Translation
 	 */
-	public function l($string, $specific = false, $id_lang = null)
+	public function l($string, $specific = false)
 	{
 		if (self::$_generate_config_xml_mode)
 			return $string;
@@ -1577,11 +1590,18 @@ abstract class ModuleCore
 	{
 		return Module::_isTemplateOverloadedStatic($this->name, $template);
 	}
+	
+	protected function getCacheId($name = null)
+	{
+		if ($name === null)
+			$name = $this->name;
+		return $name.'|'.(int)$this->context->shop->id.'_'.(int)Group::getCurrent()->id.'_'.(int)$this->context->language->id;
+	}
 
 	public function display($file, $template, $cacheId = null, $compileId = null)
 	{
 		if (($overloaded = Module::_isTemplateOverloadedStatic(basename($file, '.php'), $template)) === null)
-			$result = Tools::displayError('No template found for module').' '.basename($file, '.php');
+			return Tools::displayError('No template found for module').' '.basename($file, '.php');
 		else
 		{
 			$this->smarty->assign(array(
@@ -1589,16 +1609,22 @@ abstract class ModuleCore
 				'module_template_dir' =>	($overloaded ? _THEME_DIR_ : __PS_BASE_URI__).'modules/'.basename($file, '.php').'/'
 			));
 
+			if ($cacheId !== null)
+				Tools::enableCache();
+
 			$smarty_subtemplate = $this->context->smarty->createTemplate(
 				$this->getTemplatePath($template),
 				$cacheId,
 				$compileId,
 				$this->smarty
 			);
-
 			$result = $smarty_subtemplate->fetch();
+
+			if ($cacheId !== null)
+				Tools::restoreCacheSettings();
+
+			return $result;
 		}
-		return $result;
 	}
 
 	/**
@@ -1630,7 +1656,11 @@ abstract class ModuleCore
 	{
 		$context = Context::getContext();
 
-		return $context->smarty->isCached($this->getTemplatePath($template), $cacheId, $compileId);
+		Tools::enableCache();
+		$is_cached =  $context->smarty->isCached($this->getTemplatePath($template), $cacheId, $compileId);
+		Tools::restoreCacheSettings();
+
+		return $is_cached;
 	}
 
 	protected function _clearCache($template, $cache_id = null, $compile_id = null)
@@ -1886,12 +1916,14 @@ abstract class ModuleCore
 			if (!is_writable(dirname($override_dest)))
 				throw new Exception(sprintf(Tools::displayError('directory (%s) not writable'), dirname($override_dest)));
 			copy($override_src, $override_dest);
+			// Re-generate the class index
+			Autoload::getInstance()->generateIndex();
 			return true;
 		}
 		
 		// Check if override file is writable
 		$override_path = _PS_ROOT_DIR_.'/'.Autoload::getInstance()->getClassPath($classname);
-		if (!is_writable($override_path))
+		if ((!file_exists($override_path) && !is_writable(dirname($override_path))) || (file_exists($override_path) && !is_writable($override_path)))
 			throw new Exception(sprintf(Tools::displayError('file (%s) not writable'), $override_path));
 			
 		// Make a reflection of the override class and the module override class
@@ -1934,7 +1966,7 @@ abstract class ModuleCore
 
 		if (!Autoload::getInstance()->getClassPath($classname))
 			return true;
-		
+
 		// Check if override file is writable
 		$override_path = _PS_ROOT_DIR_.'/'.Autoload::getInstance()->getClassPath($classname);
 		if (!is_writable($override_path))
@@ -1967,7 +1999,7 @@ abstract class ModuleCore
 			if (!$override_class->hasProperty($property->getName()))
 				continue;
 
-			// Remplacer la ligne de déclaration par "remove"
+			// Remplacer la ligne de declaration par "remove"
 			foreach ($override_file as $line_number => &$line_content)
 				if (preg_match('/(public|private|protected)\s+(static\s+)?\$'.$property->getName().'/i', $line_content))
 				{

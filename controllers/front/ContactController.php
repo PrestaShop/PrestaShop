@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -48,15 +48,15 @@ class ContactControllerCore extends FrontController
 			}
 			$message = Tools::getValue('message'); // Html entities is not usefull, iscleanHtml check there is no bad html tags.
 			if (!($from = trim(Tools::getValue('from'))) || !Validate::isEmail($from))
-				$this->errors[] = Tools::displayError('Invalid e-mail address');
+				$this->errors[] = Tools::displayError('Invalid email address.');
 			else if (!$message)
-				$this->errors[] = Tools::displayError('Message cannot be blank');
+				$this->errors[] = Tools::displayError('The message cannot be blank.');
 			else if (!Validate::isCleanHtml($message))
 				$this->errors[] = Tools::displayError('Invalid message');
 			else if (!($id_contact = (int)(Tools::getValue('id_contact'))) || !(Validate::isLoadedObject($contact = new Contact($id_contact, $this->context->language->id))))
-				$this->errors[] = Tools::displayError('Please select a subject from the list.');
+				$this->errors[] = Tools::displayError('Please select a subject from the list provided. ');
 			else if (!empty($_FILES['fileUpload']['name']) && $_FILES['fileUpload']['error'] != 0)
-				$this->errors[] = Tools::displayError('An error occurred during the file upload');
+				$this->errors[] = Tools::displayError('An error occurred during the file-upload process.');
 			else if (!empty($_FILES['fileUpload']['name']) && !in_array(substr($_FILES['fileUpload']['name'], -4), $extension) && !in_array(substr($_FILES['fileUpload']['name'], -5), $extension))
 				$this->errors[] = Tools::displayError('Bad file extension');
 			else
@@ -114,27 +114,6 @@ class ContactControllerCore extends FrontController
 					$contact->email = '';
 					$contact->customer_service = 0;
 				}
-				if (!empty($contact->email))
-				{
-					$id_order = (int)Tools::getValue('id_order', 0);
-					$order = new Order($id_order);
-
-					$mail_var_list = array(
-						'{email}' => $from,
-						'{message}' => Tools::nl2br(stripslashes($message)),
-						'{id_order}' => $id_order,
-						'{order_name}' => $order->getUniqReference(),
-						'{attached_file}' => isset($_FILES['fileUpload'], $_FILES['fileUpload']['name']) ? $_FILES['fileUpload']['name'] : ''
-					);
-
-					if (Mail::Send($this->context->language->id, 'contact', Mail::l('Message from contact form'),
-						$mail_var_list, $contact->email, $contact->name, $from, ($customer->id ? $customer->firstname.' '.$customer->lastname : ''),
-								$fileAttachment) &&
-							Mail::Send($this->context->language->id, 'contact_form', Mail::l('Your message has been correctly sent'), $mail_var_list, $from))
-								$this->context->smarty->assign('confirmation', 1);
-					else
-						$this->errors[] = Tools::displayError('An error occurred while sending message.');
-				}
 
 				if ($contact->customer_service)
 				{
@@ -177,34 +156,59 @@ class ContactControllerCore extends FrontController
 							$cm->file_name = $filename;
 						$cm->ip_address = ip2long($_SERVER['REMOTE_ADDR']);
 						$cm->user_agent = $_SERVER['HTTP_USER_AGENT'];
-						if ($cm->add())
-						{
-							if (empty($contact->email))
-							{
-								$var_list = array(
-									'{order_name}' => '-',
-									'{attached_file}' => '-',
-									'{message}' => stripslashes($message)
-								);
-								if ($ct->id_order)
-								{
-									$order = new Order($ct->id_order);
-									$var_list['{order_name}'] = $order->reference;
-								}
-								if (isset($filename))
-									$var_list['{attached_file}'] = $_FILES['fileUpload']['name'];
-								Mail::Send($this->context->language->id, 'contact_form', Mail::l('Your message has been correctly sent'), $var_list, $from);
-							}
-							$this->context->smarty->assign('confirmation', 1);
-						}
-						else
-							$this->errors[] = Tools::displayError('An error occurred while sending message.');
+						if (!$cm->add())
+							$this->errors[] = Tools::displayError('An error occurred while sending the message.');
 					}
 					else
-						$this->errors[] = Tools::displayError('An error occurred while sending message.');
+						$this->errors[] = Tools::displayError('An error occurred while sending the message.');
 				}
+
+				if (!count($this->errors))
+				{
+					$var_list = array(
+									'{order_name}' => '-',
+									'{attached_file}' => '-',
+									'{message}' => Tools::nl2br(stripslashes($message)),
+									'{email}' =>  $from,
+								);
+
+					if (isset($filename))
+						$var_list['{attached_file}'] = $_FILES['fileUpload']['name'];
+
+					$id_order = (int)Tools::getValue('id_order');
+					
+					if (isset($ct) && Validate::isLoadedObject($ct))
+					{
+						if ($ct->id_order)
+							$id_order = $ct->id_order;
+						$subject = sprintf(Mail::l('Your message has been correctly sent #ct%1$s #tc%2$s'), $ct->id, $ct->token);
+					}
+					else
+						$subject = Mail::l('Your message has been correctly sent');
+
+					if ($id_order)
+					{
+						$order = new Order((int)$id_order);
+						$var_list['{order_name}'] = $order->getUniqReference();
+						$var_list['{id_order}'] = $id_order;
+					}
+					
+					if (empty($contact->email))
+						Mail::Send($this->context->language->id, 'contact_form', $subject, $var_list, $from, null, null, null, $fileAttachment);
+					else
+					{					
+						if (!Mail::Send($this->context->language->id, 'contact', Mail::l('Message from contact form').' [no_sync]',
+							$var_list, $contact->email, $contact->name, $from, ($customer->id ? $customer->firstname.' '.$customer->lastname : ''),
+									$fileAttachment) ||
+								!Mail::Send($this->context->language->id, 'contact_form', $subject, $var_list, $from, null, $contact->email, $contact->name, $fileAttachment))
+									$this->errors[] = Tools::displayError('An error occurred while sending the message.');
+					}
+				}
+				
 				if (count($this->errors) > 1)
 					array_unique($this->errors);
+				else
+					$this->context->smarty->assign('confirmation', 1);
 			}
 		}
 	}
@@ -235,7 +239,7 @@ class ContactControllerCore extends FrontController
 		));
 
 
-		if ($id_customer_thread = (int)Tools::getValue('id_customer_thread') && $token = Tools::getValue('token'))
+		if (($id_customer_thread = (int)Tools::getValue('id_customer_thread')) && $token = Tools::getValue('token'))
 		{
 			$customerThread = Db::getInstance()->getRow('
 				SELECT cm.* 

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -40,6 +40,7 @@ class GuestCore extends ObjectModel
 	public $real_player;
 	public $windows_media;
 	public $accept_language;
+	public $mobile_theme;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -62,6 +63,7 @@ class GuestCore extends ObjectModel
 			'real_player' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'windows_media' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'accept_language' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 8),
+			'mobile_theme' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 		),
 	);
 
@@ -77,7 +79,7 @@ class GuestCore extends ObjectModel
 		$acceptLanguage = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '';
 		$this->id_operating_system = $this->getOs($userAgent);
 		$this->id_web_browser = $this->getBrowser($userAgent);
-		$this->accept_language = $this->getLanguage($acceptLanguage);
+		$this->mobile_theme = Context::getContext()->getMobileDevice();
 	}
 	
 	protected function getLanguage($acceptLanguage)
@@ -183,12 +185,7 @@ class GuestCore extends ObjectModel
 	{
 		$guest = new Guest(isset($cookie->id_customer) ? Guest::getFromCustomer((int)($cookie->id_customer)) : null);
 		$guest->userAgent();
-		if ($guest->id_operating_system || $guest->id_web_browser)
-		{
-			$guest->save();
-			$cookie->id_guest = (int)($guest->id);
-		}
+		$guest->save();
+		$cookie->id_guest = (int)($guest->id);
 	}
 }
-
-

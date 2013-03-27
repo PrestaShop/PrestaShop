@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -169,11 +169,11 @@ class AdminHomeControllerCore extends AdminController
 			return;
 
 		$shop = Context::getContext()->shop;
-		if ($_SERVER['HTTP_HOST'] != $shop->domain && $_SERVER['HTTP_HOST'] != $shop->domain_ssl)
-			$this->displayWarning($this->l('You are currently connected with the following domain name:').' <span style="color: #CC0000;">'.$_SERVER['HTTP_HOST'].'</span><br />'.
-			$this->l('This is different from the main shop domain name set in "Multistore" page under the "Advanced Parameters" menu:').' <span style="color: #CC0000;">'.$shop->domain.'</span><br />
+		if ($_SERVER['HTTP_HOST'] != $shop->domain && $_SERVER['HTTP_HOST'] != $shop->domain_ssl && Tools::getValue('ajax') == false)
+			$this->displayWarning($this->l('You are currently connected under the following domain name:').' <span style="color: #CC0000;">'.$_SERVER['HTTP_HOST'].'</span><br />'.
+			$this->l('This is different from the main shop domain name set in the "Multistore" page under the "Advanced Parameters" menu:').' <span style="color: #CC0000;">'.$shop->domain.'</span><br />
 			<a href="index.php?controller=AdminMeta&token='.Tools::getAdminTokenLite('AdminMeta').'#conf_id_domain">'.
-			$this->l('Click here if you want to modify the main shop domain name').'</a>');
+			$this->l('Click here if you want to modify your main shop\'s domain name.').'</a>');
 	}
 
 	protected function getQuickLinks()
@@ -184,7 +184,7 @@ class AdminHomeControllerCore extends AdminController
 		if ($profile_access[(int)Tab::getIdFromClassName('AdminStats')]['view'])
 			$quick_links['first'] = array(
 				'href' => $this->context->link->getAdminLink('AdminStats').'&amp;module=statsbestproducts',
-				'title' => $this->l('Products sold recently'),
+				'title' => $this->l('Recently sold products.'),
 				'description' => $this->l('Create a new category and organize your catalog.'),
 			);
 		
@@ -198,14 +198,14 @@ class AdminHomeControllerCore extends AdminController
 		if ($profile_access[(int)Tab::getIdFromClassName('AdminSpecificPriceRule')]['add'])
 			$quick_links['third'] = array(
 				'href' => $this->context->link->getAdminLink('AdminSpecificPriceRule').'&amp;addspecific_price_rule',
-				'title' => $this->l('New Price Rule for catalog'),
+				'title' => $this->l('New price rule for catalog'),
 				'description' => $this->l('Monitor your activity with a thorough analysis of your shop.'),
 			);
 		
 		if ($profile_access[(int)Tab::getIdFromClassName('AdminProducts')]['add'])
 			$quick_links['fourth'] = array(
 				'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;addproduct',
-				'title' => $this->l('New Product'),
+				'title' => $this->l('New product'),
 				'description' => $this->l('Add a new employee account and discharge a part of your duties as shop owner.'),
 			);
 
@@ -213,28 +213,28 @@ class AdminHomeControllerCore extends AdminController
 			$quick_links['fifth'] = array(
 				'href' => $this->context->link->getAdminLink('AdminModules'),
 				'title' => $this->l('New module'),
-				'description' => $this->l('Configure your modules.'),
+				'description' => $this->l('Configure your modules'),
 			);
 			
 		if ($profile_access[(int)Tab::getIdFromClassName('AdminCartRules')]['add'])
 			$quick_links['sixth'] = array(
 				'href' => $this->context->link->getAdminLink('AdminCartRules').'&amp;addcart_rule',
-				'title' => $this->l('New Price Rule for cart'),
-				'description' => $this->l('Add new cart rule.'),
+				'title' => $this->l('New price rule for cart'),
+				'description' => $this->l('Add new cart rule'),
 			);
 			
 		if ($profile_access[(int)Tab::getIdFromClassName('AdminCmsContent')]['add'])
 			$quick_links['seventh'] = array(
 				'href' => $this->context->link->getAdminLink('AdminCmsContent').'&amp;addcms',
-				'title' => $this->l('New Page CMS'),
+				'title' => $this->l('New CMS page'),
 				'description' => $this->l('Add a new CMS page.'),
 			);
 
 		if ($profile_access[(int)Tab::getIdFromClassName('AdminCarts')]['view'])
 			$quick_links['eighth'] = array(
 				'href' => $this->context->link->getAdminLink('AdminCarts').'&amp;id_cart',
-				'title' => $this->l('Abandoned Carts'),
-				'description' => $this->l('View your customer carts.'),
+				'title' => $this->l('Abandoned shopping carts'),
+				'description' => $this->l('View your customer\'s carts.'),
 			);
 		return $quick_links;
 	}
@@ -457,7 +457,7 @@ class AdminHomeControllerCore extends AdminController
 		if (Configuration::updateValue('PS_HIDE_OPTIMIZATION_TIPS', 1))
 		{
 			$result['result'] = 'ok';
-			$result['msg'] = $this->l('Optimization Tips will be hidden by default');
+			$result['msg'] = $this->l('Optimization Tips will be hidden by default.');
 		}
 		else
 		{
@@ -480,10 +480,8 @@ class AdminHomeControllerCore extends AdminController
 		$stream_context = @stream_context_create(array('http' => array('method'=> 'GET', 'timeout' => 2)));
 
 		// SCREENCAST
-		if (@fsockopen('screencasts.prestashop.com', 80, $errno, $errst, AdminHomeController::TIPS_TIMEOUT))
-			$result['screencast'] = 'OK';
-		else
-			$result['screencast'] = 'NOK';
+		$result['screencast'] = 'OK';
+
 
 		// PREACTIVATION
 		$result['partner_preactivation'] = $this->getBlockPartners();
@@ -491,10 +489,7 @@ class AdminHomeControllerCore extends AdminController
 		// DISCOVER PRESTASHOP
 		$result['discover_prestashop'] = '<div id="block_tips">'.$this->getBlockDiscover().'</div>';
 
-		if (@fsockopen('api.prestashop.com', 80, $errno, $errst, AdminHomeController::TIPS_TIMEOUT))
-			$result['discover_prestashop'] .= '<div class="row-news"><div id="block_discover"><iframe frameborder="no" style="margin: 0px; padding: 0px; width: 100%; height:300px; overflow:hidden;" src="'.$protocol.'://api.prestashop.com/rss2/news2.php?v='._PS_VERSION_.'&lang='.$isoUser.'"></iframe></div>';
-		else
-			$result['discover_prestashop'] .= '';
+		$result['discover_prestashop'] .= '<div class="row-news"><div id="block_discover"><iframe frameborder="no" style="margin: 0px; padding: 0px; width: 100%; height:300px; overflow:hidden;" src="'.$protocol.'://api.prestashop.com/rss2/news2.php?v='._PS_VERSION_.'&lang='.$isoUser.'"></iframe></div>';
 
 		// SHOW TIPS OF THE DAY
 		$content = @file_get_contents($protocol.'://api.prestashop.com/partner/tipsoftheday/?protocol='.$protocol.'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser), false, $stream_context);
@@ -544,8 +539,12 @@ class AdminHomeControllerCore extends AdminController
 			{
 				// Cache the logo
 				if (!file_exists('../img/tmp/preactivation_'.htmlentities((string)$partner->module).'.png'))
-					@copy(htmlentities((string)$partner->logo), '../img/tmp/preactivation_'.htmlentities((string)$partner->module).'.png');
-			
+				{
+					$logo = @Tools::file_get_contents(htmlentities((string)$partner->logo));
+					if (sizeof($logo) > 0)
+						file_put_contents('../img/tmp/preactivation_'.htmlentities((string)$partner->module).'.png', $logo);
+				}
+
 				// Check if module is not already installed and configured
 				$display = 0;
 				if (file_exists('../config/xml/default_country_modules_list.xml') && filesize('../config/xml/default_country_modules_list.xml') > 10)
@@ -621,7 +620,7 @@ class AdminHomeControllerCore extends AdminController
 		$firstname = $employee->firstname;
 		$lastname = $employee->lastname;
 		$email = $employee->email;
-		$return = @file_get_contents('http://api.prestashop.com/partner/premium/set_request.php?iso_country='.strtoupper($isoCountry).'&iso_lang='.strtolower($isoUser).'&host='.urlencode($_SERVER['HTTP_HOST']).'&ps_version='._PS_VERSION_.'&ps_creation='._PS_CREATION_DATE_.'&partner='.htmlentities(Tools::getValue('module')).'&shop='.urlencode(Configuration::get('PS_SHOP_NAME')).'&email='.urlencode($email).'&firstname='.urlencode($firstname).'&lastname='.urlencode($lastname).'&type=home');
+		$return = @Tools::file_get_contents('http://api.prestashop.com/partner/premium/set_request.php?iso_country='.strtoupper($isoCountry).'&iso_lang='.strtolower($isoUser).'&host='.urlencode($_SERVER['HTTP_HOST']).'&ps_version='._PS_VERSION_.'&ps_creation='._PS_CREATION_DATE_.'&partner='.htmlentities(Tools::getValue('module')).'&shop='.urlencode(Configuration::get('PS_SHOP_NAME')).'&email='.urlencode($email).'&firstname='.urlencode($firstname).'&lastname='.urlencode($lastname).'&type=home');
 		die($return);
 	}
 
@@ -634,7 +633,7 @@ class AdminHomeControllerCore extends AdminController
 		$isoUser = Context::getContext()->language->iso_code;
 		$isoCountry = Context::getContext()->country->iso_code;
 
-		$content = @file_get_contents($protocol.'://api.prestashop.com/partner/prestashop/prestashop-link.php?iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id.'&ps_version='.urlencode(_PS_VERSION_), false, $stream_context);
+		$content = @Tools::file_get_contents($protocol.'://api.prestashop.com/partner/prestashop/prestashop-link.php?iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id.'&ps_version='.urlencode(_PS_VERSION_), false, $stream_context);
 
 		if (!$content)
 			return ''; // NOK
@@ -670,7 +669,7 @@ class AdminHomeControllerCore extends AdminController
 		}
 		
 		if (!$this->isFresh(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 86400))
-			file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, $this->addonsRequest('native'));
+			file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, Tools::addonsRequest('native'));
 
 		$tpl_vars['upgrade'] = $upgrade;
 

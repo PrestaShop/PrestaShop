@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -31,24 +31,24 @@
 	<div class="sitemap_block">
 		<h3>{l s='Our offers'}</h3>
 		<ul>
-			<li><a href="{$link->getPageLink('new-products')}" title="{l s='View a new products'}">{l s='New products'}</a></li>
+			<li><a href="{$link->getPageLink('new-products')}" title="{l s='View a new product'}">{l s='New products'}</a></li>
 			{if !$PS_CATALOG_MODE}
-			<li><a href="{$link->getPageLink('best-sales')}" title="{l s='View a top sellers products'}">{l s='Top sellers'}</a></li>
-			<li><a href="{$link->getPageLink('prices-drop')}" title="{l s='View a products with price drop'}">{l s='Price drop'}</a></li>
+			<li><a href="{$link->getPageLink('best-sales')}" title="{l s='View top-selling products'}">{l s='Best sellers'}</a></li>
+			<li><a href="{$link->getPageLink('prices-drop')}" title="{l s='View products with a price drop'}">{l s='Price drop'}</a></li>
 			{/if}
-			{if $display_manufacturer_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('manufacturer')}" title="{l s='View list of a manufacturers'}">{l s='Manufacturers'}</a></li>{/if}
-			{if $display_supplier_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('supplier')}" title="{l s='View list of a suppliers'}">{l s='Suppliers'}</a></li>{/if}
+			{if $display_manufacturer_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('manufacturer')}" title="{l s='View a list of manufacturers'}">{l s='Manufacturers:'}</a></li>{/if}
+			{if $display_supplier_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('supplier')}" title="{l s='View a list of suppliers'}">{l s='Suppliers:'}</a></li>{/if}
 		</ul>
 	</div>
 	<div class="sitemap_block">
 		<h3>{l s='Your Account'}</h3>
 		<ul>
 		{if $logged}
-			<li><a href="{$link->getPageLink('my-account', true)}" title="{l s='Manage my customer account'}" rel="nofollow">{l s='Your Account'}</a></li>
-			<li><a href="{$link->getPageLink('identity', true)}" title="{l s='Manage my personal information'}" rel="nofollow">{l s='Personal information'}</a></li>
-			<li><a href="{$link->getPageLink('addresses', true)}" title="{l s='View list of my addresses'}" rel="nofollow">{l s='Addresses'}</a></li>
-			{if $voucherAllowed}<li><a href="{$link->getPageLink('discount', true)}" title="{l s='View list of my discounts'}" rel="nofollow">{l s='Discounts'}</a></li>{/if}
-			<li><a href="{$link->getPageLink('history', true)}" title="{l s='View list of my orders'}" rel="nofollow">{l s='Order history'}</a></li>
+			<li><a href="{$link->getPageLink('my-account', true)}" title="{l s='Manage your customer account'}" rel="nofollow">{l s='Your Account'}</a></li>
+			<li><a href="{$link->getPageLink('identity', true)}" title="{l s='Manage your personal information'}" rel="nofollow">{l s='Personal information'}</a></li>
+			<li><a href="{$link->getPageLink('addresses', true)}" title="{l s='View a list of my addresses'}" rel="nofollow">{l s='Addresses'}</a></li>
+			{if $voucherAllowed}<li><a href="{$link->getPageLink('discount', true)}" title="{l s='View a list of my discounts'}" rel="nofollow">{l s='Discounts'}</a></li>{/if}
+			<li><a href="{$link->getPageLink('history', true)}" title="{l s='View a list of my orders'}" rel="nofollow">{l s='Order history'}</a></li>
 		{else}
 			<li><a href="{$link->getPageLink('authentication', true)}" title="{l s='Authentication'}" rel="nofollow">{l s='Authentication'}</a></li>
 			<li><a href="{$link->getPageLink('authentication', true)}" title="{l s='Create new account'}"rel="nofollow">{l s='Create new account'}</a></li>

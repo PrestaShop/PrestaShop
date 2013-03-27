@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -53,16 +53,16 @@ class AdminGeolocationControllerCore extends AdminController
 						'title' => $this->l('Geolocation behavior for restricted countries'),
 						'type' => 'select',
 						'identifier' => 'key',
-						'list' => array(array('key' => _PS_GEOLOCATION_NO_CATALOG_, 'name' => $this->l('Visitors cannot see your catalog')),
-										array('key' => _PS_GEOLOCATION_NO_ORDER_, 'name' => $this->l('Visitors can see your catalog but cannot place an order'))),
+						'list' => array(array('key' => _PS_GEOLOCATION_NO_CATALOG_, 'name' => $this->l('Visitors cannot see your catalog.')),
+										array('key' => _PS_GEOLOCATION_NO_ORDER_, 'name' => $this->l('Visitors can see your catalog but cannot place an order.'))),
 					),
 		 			'PS_GEOLOCATION_NA_BEHAVIOR' => array(
 						'title' => $this->l('Geolocation behavior for other countries'),
 						'type' => 'select',
 						'identifier' => 'key',
 						'list' => array(array('key' => '-1', 'name' => $this->l('All features are available')),
-										array('key' => _PS_GEOLOCATION_NO_CATALOG_, 'name' => $this->l('Visitors cannot see your catalog')),
-										array('key' => _PS_GEOLOCATION_NO_ORDER_, 'name' => $this->l('Visitors can see your catalog but cannot place an order')))
+										array('key' => _PS_GEOLOCATION_NO_CATALOG_, 'name' => $this->l('Visitors cannot see your catalog.')),
+										array('key' => _PS_GEOLOCATION_NO_ORDER_, 'name' => $this->l('Visitors can see your catalog but cannot place an order.')))
 					),
 				),
 			),
@@ -87,12 +87,12 @@ class AdminGeolocationControllerCore extends AdminController
 			Configuration::updateValue('PS_GEOLOCATION_ENABLED', (int)Tools::getValue('PS_GEOLOCATION_ENABLED'));
 		// stop processing if geolocation is set to yes but geolite pack is not available
 		elseif (Tools::getValue('PS_GEOLOCATION_ENABLED'))
-			$this->errors[] = Tools::displayError('Geolocation database is unavailable.');
+			$this->errors[] = Tools::displayError('The geolocation database is unavailable.');
 
 		if (empty($this->errors))
 		{
 			if (!is_array(Tools::getValue('countries')) || !count(Tools::getValue('countries')))
-				$this->errors[] = Tools::displayError('Country selection is invalid');
+				$this->errors[] = Tools::displayError('Country selection is invalid.');
 			else
 			{
 				Configuration::updateValue(
@@ -121,7 +121,7 @@ class AdminGeolocationControllerCore extends AdminController
 	{
 		// This field is not declared in class constructor because we want it to be manually post processed
 		$this->fields_options['geolocationCountries']['fields']['countries'] = array(
-								'title' => $this->l('Select countries that can access your store:'),
+								'title' => $this->l('Select the countries from which your store is accessible'),
 								'type' => 'checkbox_table',
 								'identifier' => 'iso_code',
 								'list' => Country::getCountries($this->context->language->id),
@@ -139,7 +139,7 @@ class AdminGeolocationControllerCore extends AdminController
 		if (!$this->isGeoLiteCityAvailable())
 			$this->displayWarning($this->l('In order to use Geolocation, please download').' 
 				<a href="http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz">'.$this->l('this file').'</a> '.
-				$this->l('and extract it (using Winrar or Gzip) into the /tools/geoip/ directory'));
+				$this->l('and extract it (using Winrar or Gzip) into the /tools/geoip/ directory.'));
 
 		parent::initContent();
 	}

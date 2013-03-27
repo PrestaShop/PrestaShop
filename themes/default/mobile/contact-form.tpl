@@ -55,9 +55,9 @@
 			
 			<fieldset>
 				{if isset($customerThread.email)}
-					<input class="ui-input-text ui-body-c ui-corner-all ui-shadow-inset" type="email" id="email" name="from" value="{$customerThread.email}" placeholder="{l s='E-mail address'}" readonly="readonly" />
+					<input class="ui-input-text ui-body-c ui-corner-all ui-shadow-inset" type="email" id="email" name="from" value="{$customerThread.email}" placeholder="{l s='Email address'}" readonly="readonly" />
 				{else}
-					<input class="ui-input-text ui-body-c ui-corner-all ui-shadow-inset" type="email" id="email" name="from" value="{$email}" placeholder="{l s='E-mail address'}"/>
+					<input class="ui-input-text ui-body-c ui-corner-all ui-shadow-inset" type="email" id="email" name="from" value="{$email}" placeholder="{l s='Email address'}"/>
 				{/if}
 			</fieldset>
 			

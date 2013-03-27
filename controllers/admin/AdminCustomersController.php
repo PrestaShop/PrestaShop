@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -42,24 +42,27 @@ class AdminCustomersControllerCore extends AdminController
 		$this->deleted = true;
 		$this->explicitSelect = true;
 
+		$this->allow_export = true;
+
 		$this->addRowAction('edit');
 		$this->addRowAction('view');
 		$this->addRowAction('delete');
-		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Would you like to delete the selected items?')));
 
 		$this->context = Context::getContext();
 
 		$this->default_form_language = $this->context->language->id;
 
 		$genders = array();
-		$genders_icon = array('default' => 'unknown.gif');
+		$genders_icon = array();
+		$genders_icon[] = array('src' => '../genders/Unknown.jpg', 'alt' => '');		
 		foreach (Gender::getGenders() as $gender)
 		{
 			$gender_file = 'genders/'.$gender->id.'.jpg';
 			if (file_exists(_PS_IMG_DIR_.$gender_file))
-				$genders_icon[$gender->id] = '../'.$gender_file;
+				$genders_icon[$gender->id] = array('src' => '../'.$gender_file, 'alt' => $gender->name);
 			else
-				$genders_icon[$gender->id] = $gender->name;
+				$genders_icon[$gender->id] = array('src' => '../genders/Unknown.jpg', 'alt' => $gender->name);
 			$genders[$gender->id] = $gender->name;
 		}
 
@@ -79,7 +82,7 @@ class AdminCustomersControllerCore extends AdminController
 				'width' => 20
 			),
 			'id_gender' => array(
-				'title' => $this->l('Titles'),
+				'title' => $this->l('Title'),
 				'width' => 70,
 				'align' => 'center',
 				'icon' => $genders_icon,
@@ -89,15 +92,15 @@ class AdminCustomersControllerCore extends AdminController
 				'filter_key' => 'a!id_gender',
 			),
 			'lastname' => array(
-				'title' => $this->l('Last Name'),
+				'title' => $this->l('Last name'),
 				'width' => 'auto'
 			),
 			'firstname' => array(
-				'title' => $this->l('First name'),
+				'title' => $this->l('First Name'),
 				'width' => 'auto'
 			),
 			'email' => array(
-				'title' => $this->l('E-mail address'),
+				'title' => $this->l('Email address'),
 				'width' => 140,
 			),
 			'age' => array(
@@ -174,7 +177,7 @@ class AdminCustomersControllerCore extends AdminController
 			));
 
 		if (!$this->can_add_customer && !$this->display)
-			$this->informations[] = $this->l('You have to select a shop if you want to create a customer');
+			$this->informations[] = $this->l('You have to select a shop if you want to create a customer.');
 
 		parent::initContent();
 	}
@@ -202,21 +205,21 @@ class AdminCustomersControllerCore extends AdminController
 			if ($this->tabAccess['edit'] === '1')
 				$this->action = 'guest_to_customer';
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 		elseif (Tools::isSubmit('changeNewsletterVal') && $this->id_object)
 		{
 			if ($this->tabAccess['edit'] === '1')
 				$this->action = 'change_newsletter_val';
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 		elseif (Tools::isSubmit('changeOptinVal') && $this->id_object)
 		{
 			if ($this->tabAccess['edit'] === '1')
 				$this->action = 'change_optin_val';
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 
 		// When deleting, first display a form to select the type of deletion
@@ -266,7 +269,7 @@ class AdminCustomersControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Titles:'),
+					'label' => $this->l('Title:'),
 					'name' => 'id_gender',
 					'required' => false,
 					'class' => 't',
@@ -290,7 +293,7 @@ class AdminCustomersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('E-mail address:'),
+					'label' => $this->l('Email address:'),
 					'name' => 'email',
 					'size' => 33,
 					'required' => true
@@ -301,7 +304,7 @@ class AdminCustomersControllerCore extends AdminController
 					'name' => 'passwd',
 					'size' => 33,
 					'required' => ($obj->id ? false : true),
-					'desc' => ($obj->id ? $this->l('Leave blank if no change') : $this->l('5 characters min., only letters, numbers, or').' -_')
+					'desc' => ($obj->id ? $this->l('Leave  this field blank if there\'s no change') : $this->l('Minimum of five characters (only letters and numbers).').' -_')
 				),
 				array(
 					'type' => 'birthday',
@@ -332,7 +335,7 @@ class AdminCustomersControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Allow or disallow this customer to log in')
+					'desc' => $this->l('Enable or disable customer login')
 				),
 				array(
 					'type' => 'radio',
@@ -353,11 +356,11 @@ class AdminCustomersControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Customer will receive your newsletter via e-mail')
+					'desc' => $this->l('Customers will receive your newsletter via email.')
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Opt-in:'),
+					'label' => $this->l('Opt in:'),
 					'name' => 'optin',
 					'required' => false,
 					'class' => 't',
@@ -374,7 +377,7 @@ class AdminCustomersControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Customer will receive your ads via e-mail')
+					'desc' => $this->l('Customer will receive your ads via email.')
 				),
 			)
 		);
@@ -397,7 +400,7 @@ class AdminCustomersControllerCore extends AdminController
 								'name' => 'groupBox',
 								'values' => $groups,
 								'required' => true,
-								'desc' => $this->l('Select all customer groups you would like to apply to this customer')
+								'desc' => $this->l('Select all the groups that you would like to apply to this customer.')
 							),
 					array(
 						'type' => 'select',
@@ -467,7 +470,7 @@ class AdminCustomersControllerCore extends AdminController
 			);
 			$this->fields_form['input'][] = array(
 				'type' => 'text',
-				'label' => $this->l('Max payment days:'),
+				'label' => $this->l('Maximum number of payment days:'),
 				'name' => 'max_payment_days',
 				'size' => 10,
 				'hint' => $this->l('Valid characters:').' 0-9'
@@ -487,7 +490,7 @@ class AdminCustomersControllerCore extends AdminController
 		}
 
 		$this->fields_form['submit'] = array(
-			'title' => $this->l('   Save   '),
+			'title' => $this->l('Save   '),
 			'class' => 'button'
 		);
 
@@ -500,7 +503,10 @@ class AdminCustomersControllerCore extends AdminController
 		);
 
 		// Added values of object Group
-		$customer_groups = $obj->getGroups();
+		if (!Validate::isUnsignedId($obj->id))
+			$customer_groups = array();
+		else
+			$customer_groups = $obj->getGroups();
 		$customer_groups_ids = array();
 		if (is_array($customer_groups))
 			foreach ($customer_groups as $customer_group)
@@ -578,7 +584,7 @@ class AdminCustomersControllerCore extends AdminController
 		foreach ($orders as $order)
 		{
 			if (!isset($order['order_state']))
-				$order['order_state'] = $this->l('The state isn\'t still defined for this order');
+				$order['order_state'] = $this->l('The state isn\'t defined for this order');
 
 			if ($order['valid'])
 			{
@@ -666,7 +672,8 @@ class AdminCustomersControllerCore extends AdminController
 			'customer_birthday' => Tools::displayDate($customer->birthday, $this->default_form_language),
 			'last_update' => Tools::displayDate($customer->date_upd, $this->default_form_language, true),
 			'customer_exists' => Customer::customerExists($customer->email),
-			'id_lang' => (int)(count($orders) ? $orders[0]['id_lang'] : Configuration::get('PS_LANG_DEFAULT')),
+			'id_lang' => $customer->id_lang,
+			'customerLanguage' => (new Language($customer->id_lang)),
 
 			// Add a Private note
 			'customer_note' => Tools::htmlentitiesUTF8($customer->note),
@@ -745,7 +752,7 @@ class AdminCustomersControllerCore extends AdminController
 			$customer->getByEmail($customer_email);
 		if ($customer->id)
 		{
-			$this->errors[] = Tools::displayError('An account already exists for this e-mail address:').' '.$customer_email;
+			$this->errors[] = Tools::displayError('An account already exists for this email address:').' '.$customer_email;
 			$this->display = 'edit';
 			return $customer;
 		}
@@ -769,13 +776,13 @@ class AdminCustomersControllerCore extends AdminController
 				$customer = new Customer();
 				$customer->getByEmail($customer_email);
 				if ($customer->id)
-					$this->errors[] = Tools::displayError('An account already exists for this e-mail address:').' '.$customer_email;
+					$this->errors[] = Tools::displayError('An account already exists for this email address:').' '.$customer_email;
 			}
 
 			return parent::processUpdate();
 		}
 		else
-			$this->errors[] = Tools::displayError('An error occurred while loading object.').'
+			$this->errors[] = Tools::displayError('An error occurred while loading the object.').'
 				<b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 	}
 
@@ -783,7 +790,7 @@ class AdminCustomersControllerCore extends AdminController
 	{
 		// Check that default group is selected
 		if (!is_array(Tools::getValue('groupBox')) || !in_array(Tools::getValue('id_default_group'), Tools::getValue('groupBox')))
-			$this->errors[] = Tools::displayError('Default customer group must be selected in group box.');
+			$this->errors[] = Tools::displayError('A default customer group must be selected in group box.');
 
 		// Check the requires fields which are settings in the BO
 		$customer = new Customer();
@@ -817,7 +824,7 @@ class AdminCustomersControllerCore extends AdminController
 		else if ($customer->transformToCustomer(Tools::getValue('id_lang', $this->context->language->id)))
 			Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$customer->id.'&conf=3&token='.$this->token);
 		else
-			$this->errors[] = Tools::displayError('An error occurred while updating the customer.');
+			$this->errors[] = Tools::displayError('An error occurred while updating customer information.');
 	}
 
 	/**
@@ -827,10 +834,10 @@ class AdminCustomersControllerCore extends AdminController
 	{
 		$customer = new Customer($this->id_object);
 		if (!Validate::isLoadedObject($customer))
-			$this->errors[] = Tools::displayError('An error occurred while updating the customer.');
+			$this->errors[] = Tools::displayError('An error occurred while updating customer information.');
 		$customer->newsletter = $customer->newsletter ? 0 : 1;
 		if (!$customer->update())
-			$this->errors[] = Tools::displayError('An error occurred while updating the customer.');
+			$this->errors[] = Tools::displayError('An error occurred while updating customer information.');
 		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 	}
 
@@ -841,10 +848,10 @@ class AdminCustomersControllerCore extends AdminController
 	{
 		$customer = new Customer($this->id_object);
 		if (!Validate::isLoadedObject($customer))
-			$this->errors[] = Tools::displayError('An error occurred while updating the customer.');
+			$this->errors[] = Tools::displayError('An error occurred while updating customer information.');
 		$customer->optin = $customer->optin ? 0 : 1;
 		if (!$customer->update())
-			$this->errors[] = Tools::displayError('An error occurred while updating the customer.');
+			$this->errors[] = Tools::displayError('An error occurred while updating customer information.');
 		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 	}
 
@@ -880,7 +887,7 @@ class AdminCustomersControllerCore extends AdminController
 
 		$tpl->assign(array(
 			'href' => self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
-			'confirm' => $this->l('Delete selected item?').$name,
+			'confirm' => $this->l('Delete the selected item?').$name,
 			'action' => $this->l('Delete'),
 			'id' => $id,
 		));

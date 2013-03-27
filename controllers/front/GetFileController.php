@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -296,8 +296,8 @@ class GetFileControllerCore extends FrontController
 		'This file no longer exists.'	=> Tools::displayError('This file no longer exists.'),
         'This product has been refunded.' => Tools::displayError('This product has been refunded.'),
 		'The product deadline is in the past.' => Tools::displayError('The product deadline is in the past.'),
-		'Expiration date exceeded' => Tools::displayError('Expiration date has passed, you cannot download this product'),
-		'You have reached the maximum number of allowed downloads.' => Tools::displayError('You have reached the maximum number of allowed downloads.'));
+		'Expiration date exceeded' => Tools::displayError('The product expiration date has passed, preventing you from download this product.'),
+		'You have reached the maximum number of allowed downloads.' => Tools::displayError('You have reached the maximum number of downloads allowed.'));
 		?>
 		<script type="text/javascript">
 		//<![CDATA[

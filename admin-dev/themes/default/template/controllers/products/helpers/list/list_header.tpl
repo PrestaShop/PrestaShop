@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -35,7 +35,7 @@
 					if (this.value !== "")
 						location.href = base_url + '&id_category=' + parseInt(this.value);
 					else
-						location.href = base_url;
+						location.href = base_url + '&reset_filter_category=1';
 				});
 
 				// Make sure the checkbox is checked/unchecked when the link is clicked
@@ -47,7 +47,7 @@
 					else
 					{
 						$(this).find('input').removeAttr('checked');
-						location.href = base_url;
+						location.href = base_url + '&reset_filter_category=1';
 					}
 				});
 			});

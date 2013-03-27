@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -44,11 +44,11 @@
 
 					<div id="send_friend_form_content">
 						<p class="text">
-							<label for="friend-name">{l s='Friend\'s name:' mod='sendtoafriend'}</label>
+							<label for="friend-name">{l s='Friend\'s name' mod='sendtoafriend'}</label>
 							<input type="text" id="friend-name" name="name" value="{if isset($smarty.post.name)}{$smarty.post.name|escape:'htmlall':'UTF-8'|stripslashes}{/if}" />
 						</p>
 						<p class="text">
-							<label for="friend-address">{l s='Friend\'s email:' mod='sendtoafriend'}</label>
+							<label for="friend-address">{l s='Friend\'s email' mod='sendtoafriend'}</label>
 							<input type="text" id="friend-address" name="email" value="{if isset($smarty.post.name)}{$smarty.post.email|escape:'htmlall'|stripslashes}{/if}" />
 						</p>
 

@@ -47,6 +47,7 @@
   <tab id="Outstanding" name="Insoluti"/>
   <tab id="Cart_Rules" name="Regole Carrello"/>
   <tab id="Catalog_Price_Rules" name="Regole catalogo prezzi"/>
+  <tab id="Marketing" name="Marketing"/>
   <tab id="Shipping_1" name="Spedizione"/>
   <tab id="Carriers" name="Corrieri"/>
   <tab id="Price_Ranges" name="Range di prezzi"/>

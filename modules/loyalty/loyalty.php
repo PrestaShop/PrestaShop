@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -82,7 +82,7 @@ class Loyalty extends Module
 		Configuration::updateValue('PS_LOYALTY_VOUCHER_DETAILS', $conf);
 
 		$category_config = '';
-		$categories = Category::getSimpleCategories((int)(Configuration::get('PS_LANG_DEFAULT')));
+		$categories = Category::getSimpleCategories((int)Configuration::get('PS_LANG_DEFAULT'));
 		foreach ($categories as $category)
 			$category_config .= (int)$category['id_category'].',';
 		$category_config = rtrim($category_config, ',');

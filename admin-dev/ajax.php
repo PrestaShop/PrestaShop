@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -27,7 +27,7 @@
 define('_PS_ADMIN_DIR_', getcwd());
 include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 /* Getting cookie or logout */
-require_once(dirname(__FILE__).'/init.php');
+require_once(_PS_ADMIN_DIR_.'/init.php');
 
 $context = Context::getContext();
 
@@ -169,110 +169,6 @@ if (Tools::isSubmit('updateElementEmployee') && Tools::getValue('updateElementEm
 {
 	$notification = new Notification;
 	die($notification->updateEmployeeLastElement(Tools::getValue('updateElementEmployeeType')));
-}
-
-if (Tools::isSubmit('syncImapMail'))
-{
-	if (!($url = Configuration::get('PS_SAV_IMAP_URL'))
-	|| !($port = Configuration::get('PS_SAV_IMAP_PORT'))
-	|| !($user = Configuration::get('PS_SAV_IMAP_USER'))
-	|| !($password = Configuration::get('PS_SAV_IMAP_PWD')))
-	die('{"hasError" : true, "errors" : ["Configuration is not correct"]}');
-
-	$conf = Configuration::getMultiple(array(
-		'PS_SAV_IMAP_OPT_NORSH', 'PS_SAV_IMAP_OPT_SSL',
-		'PS_SAV_IMAP_OPT_VALIDATE-CERT', 'PS_SAV_IMAP_OPT_NOVALIDATE-CERT',
-		'PS_SAV_IMAP_OPT_TLS', 'PS_SAV_IMAP_OPT_NOTLS'));
-	
-	$conf_str = '';
-	if ($conf['PS_SAV_IMAP_OPT_NORSH'])
-		$conf_str .= '/norsh';
-	if ($conf['PS_SAV_IMAP_OPT_SSL'])
-		$conf_str .= '/ssl';
-	if ($conf['PS_SAV_IMAP_OPT_VALIDATE-CERT'])
-		$conf_str .= '/validate-cert';
-	if ($conf['PS_SAV_IMAP_OPT_NOVALIDATE-CERT'])
-		$conf_str .= '/novalidate-cert';
-	if ($conf['PS_SAV_IMAP_OPT_TLS'])
-		$conf_str .= '/tls';
-	if ($conf['PS_SAV_IMAP_OPT_NOTLS'])
-		$conf_str .= '/notls';
-
-	if (!function_exists('imap_open'))
-		die('{"hasError" : true, "errors" : ["imap is not installed on this server"]}');
-
-	$mbox = @imap_open('{'.$url.':'.$port.$conf_str.'}', $user, $password);
-
-	//checks if there is no error when connecting imap server
-	$errors = imap_errors();
-	$str_errors = '';
-	$str_error_delete = '';
-	if (sizeof($errors) && is_array($errors))
-	{
-		var_dump($errors);
-		$str_errors = '';
-		foreach($errors as $error)
-			$str_errors .= '"'.$error.'",';
-		$str_errors = rtrim($str_errors, ',').'';
-	}
-	//checks if imap connexion is active
-	if (!$mbox)
-		die('{"hasError" : true, "errors" : ["Cannot connect to the mailbox"]}');
-
-	//Returns information about the current mailbox. Returns FALSE on failure.
-	$check = imap_check($mbox);
-	if (!$check)
-		die('{"hasError" : true, "errors" : ["Fail to get information about the current mailbox"]}');
-
-	if ($check->Nmsgs == 0)
-		die('{"hasError" : true, "errors" : ["NO message to sync"]}');
-
-	$result = imap_fetch_overview($mbox,"1:{$check->Nmsgs}",0);
-	foreach ($result as $overview)
-	{
-	    //check if message exist in database
-	    if (isset($overview->subject))
-	   		$subject = $overview->subject;
-	   	else
-	   		$subject = '';
-
-		//Creating an md5 to check if message has been allready processed
-	    $md5 = md5($overview->date.$overview->from.$subject.$overview->msgno);
-	    $exist = Db::getInstance()->getValue(
-			    'SELECT `md5_header`
-			    FROM `'._DB_PREFIX_.'customer_message_sync_imap`
-			    WHERE `md5_header` = \''.pSQL($md5).'\'');
-	    if ($exist)
-	    {
-			if (Configuration::get('PS_SAV_IMAP_DELETE_MSG'))
-				if (!imap_delete($mbox, $overview->msgno))
-					$str_error_delete = ', "Fail to delete message"';
-	    }
-	    else
-	    {
-	    	//check if subject has id_order
-	    	preg_match('/\#ct([0-9]*)/', $subject, $matches1);
-	    	preg_match('/\#tc([0-9-a-z-A-Z]*)/', $subject, $matches2);
-
-			if (isset($matches1[1]) && isset($matches2[1]))
-			{
-				//check if order exist in database
-				$ct = new CustomerThread((int)$matches1[1]);
-
-				if (Validate::isLoadedObject($ct) && $ct->token == $matches2[1])
-				{
-					$cm = new CustomerMessage();
-					$cm->id_customer_thread = $ct->id;
-					$cm->message = imap_fetchbody($mbox, $overview->msgno, 1);
-					$cm->add();
-				}
-			}
-			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customer_message_sync_imap` (`md5_header`) VALUES (\''.pSQL($md5).'\')');
-	    }
-	}
-	imap_expunge($mbox);
-	imap_close($mbox);
-	die('{"hasError" : false, "errors" : ["'.$str_errors.$str_error_delete.'"]}');
 }
 
 if (Tools::isSubmit('searchCategory'))

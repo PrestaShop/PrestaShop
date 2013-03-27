@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -58,7 +58,7 @@
 		{/if}
 
 		{if !$categoryData['hide_multishop_checkbox'] && $use_multishop}
-			<input type="checkbox" style="vertical-align: text-top" onclick="checkAllMultishopDefaultValue(this)" /> <b>{l s='Check/uncheck all'}</b> {l s='(check boxes if you want to set a custom value for this shop or group shop context)'}
+			<input type="checkbox" style="vertical-align: text-top" onclick="checkAllMultishopDefaultValue(this)" /> <b>{l s='Check/uncheck all'}</b> {l s='(Check boxes if you want to set a custom value for this shop or group shop context)'}
 			<div class="separation"></div>
 		{/if}
 
@@ -188,7 +188,7 @@
 						{if isset($field['hint'])}<span class="hint" name="help_box">{$field['hint']}<span class="hint-pointer">&nbsp;</span></span>{/if}
 					{/block}{* end block input *}
 					{if isset($field['desc'])}<p class="preference_description">{$field['desc']}</p>{/if}
-					{if $field['is_invisible']}<p class="warn">{l s='You can\'t change the value of this configuration field in the context of this shop'}</p>{/if}
+					{if $field['is_invisible']}<p class="warn">{l s='You can\'t change the value of this configuration field in the context of this shop.'}</p>{/if}
 					</div>
 					</div>
 					<div class="clear"></div>

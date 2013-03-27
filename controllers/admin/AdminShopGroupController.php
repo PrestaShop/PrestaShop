@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -99,11 +99,11 @@ class AdminShopGroupControllerCore extends AdminController
 		{
 			unset($this->toolbar_btn);
 			$this->toolbar_btn['new'] = array(
-				'desc' => $this->l('Add new shop group'),
+				'desc' => $this->l('Add a new shop group'),
 				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
 			);
 			$this->toolbar_btn['new_2'] = array(
-				'desc' => $this->l('Add new shop'),
+				'desc' => $this->l('Add a new shop'),
 				'href' => $this->context->link->getAdminLink('AdminShop').'&amp;addshop',
 				'imgclass' => 'new'
 			);
@@ -128,9 +128,9 @@ class AdminShopGroupControllerCore extends AdminController
 	{
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Shop Group')
+				'title' => $this->l('Shop group:')
 			),
-			'description' => $this->l('Warning: it is not recommended to enable the "share customers" and "share orders" options, because once they are activated and customers or orders are created, you will not be able to disable these options. If you need these options, try to first consider using several categories instead on several shops.'),
+			'description' => $this->l('Warning: Enabling the "share customers" and "share orders" options is not recommended. Once activated and orders are created, you will not be able to disable these options. If you need these options, we recommend using several categories rather than several shops.'),
 			'input' => array(
 				array(
 					'type' => 'text',
@@ -158,7 +158,7 @@ class AdminShopGroupControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Once the option is enabled, the shops in this group will share their customers: if a customer registers on one of this group\'s shops, the account will automatically be available on the others shops of this goup. Warning: you will not be able to disable this option once you have customers registered on at least one shop of this group.'),
+					'desc' => $this->l('Once this option is enabled, the shops in this group will share customers. If a customer registers in any one of these shops, the account will automatically be available in the others shops of this goup. rnrnWarning: you will not be able to disable this option once you have registered customers.'),
 				),
 				array(
 					'type' => 'radio',
@@ -179,7 +179,7 @@ class AdminShopGroupControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Share available quantities to sell between shops of this group. When changing this option, all products available quantities for this group will be reset to 0.'),
+					'desc' => $this->l('Share available quantities between shops of this group. When changing this option, all available products quantities will be reset to 0.'),
 				),
 				array(
 					'type' => 'radio',
@@ -201,7 +201,7 @@ class AdminShopGroupControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Once this option is enabled (which is only possible if customers and available quantities are shared among shops), the customer\'s cart will be shared among all the shops in this group. This way, any purchase started on one of the shops in this group will be able to be finished in another shop from the same shop group. Warning: you will not be able to disable this option once you have orders on at least one shop of this group.')
+					'desc' => $this->l('Once this option is enabled (which is only possible if customers and available quantities are shared among shops), the customer\'s cart will be shared by all shops in this group. This way, any purchase started in one shop will be able to be completed in another shop from the same group. rnrnWarning: You will not be able to disable this option once you\'ve started to accept orders.')
 				),
 				array(
 					'type' => 'radio',
@@ -222,7 +222,7 @@ class AdminShopGroupControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Enable or disable group shop')
+					'desc' => $this->l('Enable or disable group shops?')
 				)
 			),
 			'submit' => array(
@@ -280,7 +280,7 @@ class AdminShopGroupControllerCore extends AdminController
 			if (ShopGroup::getTotalShopGroup() == 1)
 				$this->errors[] = Tools::displayError('You cannot delete or disable the last shop group.');
 			else if ($object->haveShops())
-				$this->errors[] = Tools::displayError('You cannot delete or disable a shop group which has shops using it.');
+				$this->errors[] = Tools::displayError('You cannot delete or disable a shop group in use. ');
 
 			if (count($this->errors))
 				return false;

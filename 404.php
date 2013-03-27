@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,23 +19,11 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-/* Send the proper status code in HTTP headers */
-header('HTTP/1.1 404 Not Found');
-header('Status: 404 Not Found');
-
-if (in_array(substr($_SERVER['REQUEST_URI'], -3), array('png', 'jpg', 'gif')))
-{
-	require_once(dirname(__FILE__).'/config/settings.inc.php');
-	header('Location: '.__PS_BASE_URI__.'img/404.gif');
-	exit;
-}
-elseif (in_array(substr($_SERVER['REQUEST_URI'], -3), array('.js', 'css')))
-	die('');
-
 require_once(dirname(__FILE__).'/config/config.inc.php');
+Tools::displayFileAsDeprecated();
 Controller::getController('PageNotFoundController')->run();

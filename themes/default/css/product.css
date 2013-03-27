@@ -169,6 +169,8 @@ span.view_scroll_spacer {
 	text-align:right;
 }
 
+.ie7 #pb-left-column #buy_block label {margin-right:5px}
+
 /* short description pack */
 .short_description_pack {
 	display:none;
@@ -192,26 +194,45 @@ span.view_scroll_spacer {
 	display:inline-block;
 }
 
-.attribute_list #color_to_pick_list {
+.ie7 #attributes .attribute_list {
+	display:inline;
+	zoom:1
+}
+
+#attributes .attribute_list ul{
+	list-style:none
+}
+
+#attributes .attribute_list ul li{
+	clear:both
+}
+
+#attributes .attribute_list input.attribute_radio{float: left;margin-left: 3px;}
+#attributes .attribute_list span{float: left;margin-bottom: 5px;margin-left: 3px;}
+
+.ie7 #attributes .attribute_list span{margin-top:1px}
+
+#attributes .attribute_list #color_to_pick_list {
 	list-style-type:none;
 	width:125px;
 }
 
-.attribute_list #color_to_pick_list li {
+#attributes .attribute_list #color_to_pick_list li {
 	float:left;
 	margin:0 8px 8px 0;
 	padding:1px;
 	border:1px solid #ccc;
+	clear:none
 }
 
-.attribute_list #color_to_pick_list li.selected {
+#attributes .attribute_list #color_to_pick_list li.selected {
 	border:1px solid #000;
 }
 
-.attribute_list #color_to_pick_list a.color_pick {
+#attributes .attribute_list #color_to_pick_list a.color_pick {
 	display:block;
-	height:15px;
-	width:15px;
+	height:20px;
+	width:20px;
 }
 
 .product_attributes {
@@ -236,7 +257,8 @@ span.view_scroll_spacer {
 	margin: 10px 0 0 0;
 }
 
-#availability_statut span#availability_label {
+#availability_statut span#availability_label, 
+#availability_date_label {
 	display:inline-block;
 	width:125px;
 	font-weight:700;
@@ -486,7 +508,10 @@ ul#uploadable_files,ul#text_fields {
 .customizationUploadLine {
 	padding-bottom:10px;
 }
-
+.customizationUploadBrowse img + a {
+	position: relative;
+	top: -51px;
+}
 .customizationUploadLine label {
 	display:inline-block;
 	width:150px;

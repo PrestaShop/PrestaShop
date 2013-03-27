@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -35,6 +35,8 @@ class LinkCore
 	public $protocol_content;
 
 	protected $ssl_enable;
+	
+	protected static $category_disable_rewrite = null;
 
 	/**
 	  * Constructor (initialization only)
@@ -50,6 +52,9 @@ class LinkCore
 			define('_PS_BASE_URL_', Tools::getShopDomain(true));
 		if (!defined('_PS_BASE_URL_SSL_'))
 			define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
+		
+		if (Link::$category_disable_rewrite === null)
+			Link::$category_disable_rewrite = array(Configuration::get('PS_HOME_CATEGORY'), Configuration::get('PS_ROOT_CATEGORY'));
 
 		$this->ssl_enable = Configuration::get('PS_SSL_ENABLED');
 	}
@@ -134,7 +139,7 @@ class LinkCore
 			$params['category'] = (!$category) ? $product->category : $category;
 			$cats = array();
 			foreach ($product->getParentCategories() as $cat)
-				if (!in_array($cat['id_category'], array(1, 2)))//remove root and home category from the URL
+				if (!in_array($cat['id_category'], Link::$category_disable_rewrite))//remove root and home category from the URL
 					$cats[] = $cat['link_rewrite'];
 			$params['categories'] = implode('/', $cats);
 		}
@@ -194,6 +199,7 @@ class LinkCore
 	{
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
+						
 		$url = _PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink($id_lang);
 
 		if (!is_object($category))
@@ -535,7 +541,11 @@ class LinkCore
 		}
 
 		if (!$array)
-			return $url.(($this->allow == 1 || $url == $this->url) ? '?' : '&').http_build_query($vars, '', '&');
+			if (count($vars))
+				return $url.(($this->allow == 1 || $url == $this->url) ? '?' : '&').http_build_query($vars, '', '&');
+			else
+				return $url;
+		
 		$vars['requestUrl'] = $url;
 
 		if ($type && $id_object)

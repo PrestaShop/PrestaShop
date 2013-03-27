@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -38,7 +38,7 @@ class AdminInvoicesControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_INVOICE' => array(
 						'title' => $this->l('Enable invoices:'),
-						'desc' => $this->l('If enabled, your customers will be able to receive an invoice for their purchases'),
+						'desc' => $this->l('If enabled, your customers will be able to receive an invoice for their purchase(s).'),
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
@@ -50,13 +50,13 @@ class AdminInvoicesControllerCore extends AdminController
 					),
 					'PS_INVOICE_START_NUMBER' => array(
 						'title' => $this->l('Invoice number:'),
-						'desc' => $this->l('The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (#').(Order::getLastInvoiceNumber() + 1).').',
+						'desc' => $this->l('The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number.').(Order::getLastInvoiceNumber() + 1).').',
 						'size' => 6,
 						'type' => 'text',
 						'cast' => 'intval'
 					),
 					'PS_INVOICE_FREE_TEXT' => array(
-						'title' => $this->l('Footer Text:'),
+						'title' => $this->l('Footer text:'),
 						'desc' => $this->l('This text will appear at the bottom of the invoice'),
 						'size' => 6,
 						'type' => 'textareaLang',
@@ -71,7 +71,7 @@ class AdminInvoicesControllerCore extends AdminController
 						'list' => $this->getInvoicesModels()
 					),
 					'PS_PDF_USE_CACHE' => array(
-						'title' => $this->l('Use disk as cache for PDF invoices'),
+						'title' => $this->l('Use disk as cache for PDF invoices:'),
 						'desc' => $this->l('Saves memory but slows down the rendering process.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
@@ -144,11 +144,11 @@ class AdminInvoicesControllerCore extends AdminController
 						'id' => 'id_order_state',
 						'name' => 'name'
 					),
-					'desc' => $this->l('You can also export orders which have not been charged yet').' (<img src="../img/admin/charged_ko.gif" alt="" />).'
+					'desc' => $this->l('You can also export orders which have not been charged yet.').' (<img src="../img/admin/charged_ko.gif" alt="" />).'
 				)
 			),
 			'submit' => array(
-				'title' => $this->l('Generate PDF file by status'),
+				'title' => $this->l('Generate PDF file by status.'),
 				'class' => 'button',
 				'id' => 'submitPrint2'
 			)
@@ -206,7 +206,7 @@ class AdminInvoicesControllerCore extends AdminController
 
 		$this->toolbar_btn['save-status'] = array(
 			'href' => '#',
-			'desc' => $this->l('Generate PDF file by status')
+			'desc' => $this->l('Generate PDF file by status.')
 		);
 	}
 
@@ -215,30 +215,30 @@ class AdminInvoicesControllerCore extends AdminController
 		if (Tools::getValue('submitAddinvoice_date'))
 		{
 			if (!Validate::isDate(Tools::getValue('date_from')))
-				$this->errors[] = $this->l('Invalid "From:" date');
+				$this->errors[] = $this->l('Invalid "From" date');
 
 			if (!Validate::isDate(Tools::getValue('date_to')))
-				$this->errors[] = $this->l('Invalid "To:" date');
+				$this->errors[] = $this->l('Invalid "To" date');
 
 			if (!count($this->errors))
 			{
 				if (count(OrderInvoice::getByDateInterval(Tools::getValue('date_from'), Tools::getValue('date_to'))))
 					Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf').'&submitAction=generateInvoicesPDF&date_from='.urlencode(Tools::getValue('date_from')).'&date_to='.urlencode(Tools::getValue('date_to')));
 
-				$this->errors[] = $this->l('No invoice found for this period');
+				$this->errors[] = $this->l('No invoice has been found for this period.');
 			}
 		}
 		else if (Tools::isSubmit('submitAddinvoice_status'))
 		{
 			if (!is_array($status_array = Tools::getValue('id_order_state')) || !count($status_array))
-				$this->errors[] = $this->l('You must select at least one order status');
+				$this->errors[] = $this->l('You must select at least one order status.');
 			else
 			{
 				foreach ($status_array as $id_order_state)
 					if (count(OrderInvoice::getByStatus((int)$id_order_state)))
 						Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf').'&submitAction=generateInvoicesPDF2&id_order_state='.implode('-', $status_array));
 
-				$this->errors[] = $this->l('No invoice found for this status');
+				$this->errors[] = $this->l('No invoice has been found for this status.');
 			}
 		}
 		else
@@ -248,7 +248,7 @@ class AdminInvoicesControllerCore extends AdminController
 	public function beforeUpdateOptions()
 	{
 		if ((int)Tools::getValue('PS_INVOICE_START_NUMBER') != 0 && (int)Tools::getValue('PS_INVOICE_START_NUMBER') <= Order::getLastInvoiceNumber())
-			$this->errors[] = $this->l('Invalid invoice number (must be > ').Order::getLastInvoiceNumber().')';
+			$this->errors[] = $this->l('Invalid invoice number.').Order::getLastInvoiceNumber().')';
 	}
 
 	protected function getInvoicesModels()
@@ -273,10 +273,13 @@ class AdminInvoicesControllerCore extends AdminController
 
 	protected function getInvoicesModelsFromDir($directory)
 	{
-		$templates = array();
+		$templates = false;
 
 		if (is_dir($directory))
 			$templates = glob($directory.'invoice-*.tpl');
+
+		if (!$templates)
+			$templates = array();
 
 		return $templates;
 	}

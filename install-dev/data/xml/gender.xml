@@ -4,8 +4,8 @@
     <field name="type"/>
   </fields>
   <entities>
-    <gender id="Mr" type="0"/>
-    <gender id="Ms" type="1"/>
-    <gender id="Miss" type="1"/>
+    <gender id="1" type="0"/>
+    <gender id="2" type="1"/>
+    <gender id="3" type="1"/>
   </entities>
 </entity_gender>

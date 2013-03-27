@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -37,7 +37,7 @@
 	<div id="condition_list">
 		<h3>{l s='Conditions'}</h3>
 		<div class="row">
-			<label for="id_category">{l s='Category:'}</label>
+			<label for="id_category">{l s='Category'}</label>
 				<div class="margin-form">
 					<select id="id_category" name="id_category">
 						{foreach from=$categories item='category'}
@@ -52,7 +52,7 @@
 		</div>
 		
 		<div class="row">
-		<label for="id_manufacturer">{l s='Manufacturer:'}</label>
+		<label for="id_manufacturer">{l s='Manufacturer'}</label>
 		<div class="margin-form">
 			<select id="id_manufacturer" name="id_manufacturer">
 				{foreach from=$manufacturers item='manufacturer'}
@@ -67,7 +67,7 @@
 		</div>
 		
 		<div class="row">
-		<label for="id_supplier">{l s='Supplier:'}</label>
+		<label for="id_supplier">{l s='Supplier'}</label>
 		<div class="margin-form">
 			<select id="id_supplier" name="id_supplier">
 				{foreach from=$suppliers item='supplier'}
@@ -82,7 +82,7 @@
 		</div>
 		
 		<div class="row">
-		<label for="id_attribute">{l s='Attributes:'}</label>
+		<label for="id_attribute">{l s='Attributes'}</label>
 		<div class="margin-form">
 			<select id="id_attribute_group">
 				{foreach from=$attributes_group item='attribute_group'}
@@ -105,7 +105,7 @@
 		</div>
 		
 		<div class="row">
-		<label for="id_attribute">{l s='Features:'}</label>
+		<label for="id_attribute">{l s='Features'}</label>
 		<div class="margin-form">
 			<select id="id_feature">
 				{foreach from=$features item='feature'}
@@ -137,12 +137,14 @@
 var current_id_condition_group = 0;
 var last_condition_group = 0;
 var conditions = new Array();
+
 function toggle_condition_group(id_condition_group)
 {
 	$('.condition_group > table').css('border', 'none');
 	$('#condition_group_'+id_condition_group+' > table').css('border', '2px solid');
 	current_id_condition_group = id_condition_group;
 }
+
 function add_condition(id_condition_group, type, value)
 {
 	var id_condition = id_condition_group+'_'+type+'_'+value;
@@ -155,12 +157,14 @@ function add_condition(id_condition_group, type, value)
 	conditions[id_condition] = condition;
 	return id_condition;
 }
+
 function delete_condition(condition)
 {
 	delete conditions[condition];
 	$('#'+condition).remove();
 	return false;
 }
+
 function new_condition_group()
 {
 	last_condition_group++;
@@ -170,6 +174,14 @@ function new_condition_group()
 	$('#condition_group_list').append(html);
 	toggle_condition_group(last_condition_group);
 }
+
+function appendConditionToGroup(html)
+{
+	if ($('#condition_group_'+current_id_condition_group+' table tbody tr').length > 0)
+		$('#condition_group_'+current_id_condition_group+' table tbody').append('<tr><td align="center" colspan="3"><b>{l s='AND' js=1}</b></td></tr>');
+	$('#condition_group_'+current_id_condition_group+' table tbody').append(html);
+}
+
 $(document).ready(function() {
 	$('#leave_bprice_on').click(function() {
 		if (this.checked)
@@ -177,72 +189,94 @@ $(document).ready(function() {
 		else
 			$('#price').removeAttr('disabled');
 	});
+
 	$('#specific_price_rule_form').live('submit', function(e) {
 		var html = '';
 		for (i in conditions)
 			html += '<input type="hidden" name="condition_group_'+conditions[i].id_condition_group+'[]" value="'+conditions[i].type+'_'+conditions[i].value+'" />';
 		$('#conditions').append(html);
 	});
+
 	$('#id_feature').change(function() {
 		$('.id_feature_value').hide();
 		$('#id_feature_'+$(this).val()).show();
 	});
+
 	$('#id_attribute_group').change(function() {
 		$('.id_attribute').hide();
 		$('#id_attribute_'+$(this).val()).show();
 	});
+
 	$('#add_condition_category').click(function() {
 		var id_condition = add_condition(current_id_condition_group, 'category', $('#id_category option:selected').val());
 		if (!id_condition)
 			return false;
+		
 		var html = '<tr id="'+id_condition+'"><td>{l s='Category'}</td><td>'+$('#id_category option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');"><img src="../img/admin/delete.gif" /></a></td></tr>';
-		$('#condition_group_'+current_id_condition_group+' table tbody').append(html);
+		appendConditionToGroup(html);
+
 		return false;
 	});
+
 	$('#add_condition_manufacturer').click(function() {
 		var id_condition = add_condition(current_id_condition_group, 'manufacturer', $('#id_manufacturer option:selected').val());
 		if (!id_condition)
 			return false;
+
 		var html = '<tr id="'+id_condition+'"><td>{l s='Manufacturer'}</td><td>'+$('#id_manufacturer option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');"><img src="../img/admin/delete.gif" /></a></td></tr>';
-		$('#condition_group_'+current_id_condition_group+' table tbody').append(html);
+		appendConditionToGroup(html);
+
 		return false;
 	});
+
 	$('#add_condition_supplier').click(function() {
 		var id_condition = add_condition(current_id_condition_group, 'supplier', $('#id_supplier option:selected').val());
 		if (!id_condition)
 			return false;
+
 		var html = '<tr id="'+id_condition+'"><td>{l s='Supplier'}</td><td>'+$('#id_supplier option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');"><img src="../img/admin/delete.gif" /></a></td></tr>';
-		$('#condition_group_'+current_id_condition_group+' table tbody').append(html);
+		appendConditionToGroup(html);
+
 		return false;
 	});
+
 	$('#add_condition_attribute').click(function() {
 		var id_condition = add_condition(current_id_condition_group, 'attribute', $('#id_attribute_'+$('#id_attribute_group option:selected').val()+' option:selected').val());
 		if (!id_condition)
 			return false;
+
 		var html = '<tr id="'+id_condition+'"><td>{l s='Attribute'}</td><td>'+$('#id_attribute_group option:selected').html()+': '+$('#id_attribute_'+$('#id_attribute_group option:selected').val()+' option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');"><img src="../img/admin/delete.gif" /></a></td></tr>';
-		$('#condition_group_'+current_id_condition_group+' table tbody').append(html);
+		appendConditionToGroup(html);
+
 		return false;
 	});
+
 	$('#add_condition_feature').click(function() {
 		var id_condition = add_condition(current_id_condition_group, 'feature', $('#id_feature_'+$('#id_feature option:selected').val()+' option:selected').val());
 		if (!id_condition)
 			return false;
+
 		var html = '<tr id="'+id_condition+'"><td>{l s='Feature'}</td><td>'+$('#id_feature option:selected').html()+': '+$('#id_feature_'+$('#id_feature option:selected').val()+' option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');"><img src="../img/admin/delete.gif" /></a></td></tr>';
-		$('#condition_group_'+current_id_condition_group+' table tbody').append(html);
+		appendConditionToGroup(html);
+
 		return false;
 	});
+
 	$('#add_condition_group').click(function() {
 		new_condition_group();
 		return false;
 	});
+
 	$('.condition_group').live('click', function() {
 		var id = this.id.split('_');
 		toggle_condition_group(id[2]);
 		return false;
 	});
+
 	{if $conditions|@count == 0}
 		new_condition_group();
 	{/if}
+
 	{foreach from=$conditions key='id_group_condition' item='condition_group'}
 		new_condition_group();
 		{foreach from=$condition_group item='condition'}

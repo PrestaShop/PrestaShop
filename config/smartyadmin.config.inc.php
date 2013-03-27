@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -27,6 +27,10 @@
 global $smarty;
 $smarty->debugging = false;
 $smarty->debugging_ctrl = 'NONE';
+
+/* Smarty should be in compile check mode in the BackOffice */
+$smarty->force_compile = false;
+$smarty->compile_check = true;
 
 function smartyTranslate($params, &$smarty)
 {
@@ -61,6 +65,8 @@ function smartyTranslate($params, &$smarty)
 		// Eg. xxx/controllers/customers/xxx => AdminCustomers
 		if ($key !== false)
 			$class = 'Admin'.Tools::toCamelCase($folder_tree[$key + 1], true);
+		elseif (isset($folder_tree[0]))
+			$class = 'Admin'.Tools::toCamelCase($folder_tree[0], true);
 		else
 			$class = null;
 	}

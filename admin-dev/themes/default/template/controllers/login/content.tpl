@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -48,10 +48,10 @@
 	{/if}
 	<div id="login">
 		<h1>{$shop_name}</h1>
-	{if !isset($wrong_folder_name)}
+	{if !isset($wrong_folder_name) && !isset($wrong_install_name)}
 		<form action="#" id="login_form" method="post">
 			<div class="field">
-				<label for="email">{l s='E-mail address:'}</label>
+				<label for="email">{l s='Email address:'}</label>
 				<input type="text" id="email" name="email" class="input email_field" value="{if isset($email)}{$email|escape:'htmlall':'UTF-8'}{/if}" />
 			</div>
 
@@ -77,10 +77,10 @@
 
 		<form action="#" id="forgot_password_form" method="post" class="hide">
 			<h2 class="no-margin">{l s='Forgot your password?'}</h2>
-			<p class="bold">{l s='Please enter the e-mail address you provided during the registration process in order to receive your access code by e-mail'}</p>
+			<p class="bold">{l s='In order to receive your access code by email, please enter the address you provided during the registration process.'}</p>
 
 			<div class="field">
-				<label>{l s='E-mail address:'}</label>
+				<label>{l s='Email address:'}</label>
 				<input type="text" name="email_forgot" id="email_forgot" class="input email_field" />
 			</div>
 
@@ -101,10 +101,10 @@
 		<div class="padding-30">
 			<p>{l s='For security reasons, you cannot connect to the Back Office until after you have:'}</p>
 			<ul>
-				<li>{l s='deleted the /install folder'}</li>
-				<li>{l s='renamed the /admin folder (e.g. /admin123%d)' sprintf=$randomNb}</li>
+				{if isset($wrong_install_name) && $wrong_install_name == true}<li>{l s='deleted the /install folder'}</li>{/if}
+				{if isset($wrong_folder_name) && $wrong_folder_name == true}<li>{l s='renamed the /admin folder (e.g. /admin%d)' sprintf=$randomNb}</li>{/if}
 			</ul>
-			<p>{l s='Please then access this page by the new URL (e.g. http://www.yoursite.com/admin123%d)' sprintf=$randomNb}</p>
+			{if isset($wrong_folder_name) && $wrong_folder_name == true}<p>{l s='Please then access this page by the new URL (e.g. http://www.yoursite.com/admin%d)' sprintf=$randomNb}</p>{/if}
 		</div>
 	{/if}
 	</div>

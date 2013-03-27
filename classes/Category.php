@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -239,9 +239,6 @@ class CategoryCore extends ObjectModel
 	public function recurseLiteCategTree($max_depth = 3, $current_depth = 0, $id_lang = null, $excluded_ids_array = null)
 	{
 		$id_lang = is_null($id_lang) ? Context::getContext()->language->id : (int)$id_lang;
-
-		if (!(int)$id_lang)
-			$id_lang = _USER_ID_LANG_;
 
 		$children = array();
 		$subcats = $this->getSubCategories($id_lang, true);
@@ -607,8 +604,8 @@ class CategoryCore extends ObjectModel
 			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 		}
 
-		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, product_attribute_shop.`id_product_attribute`, product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, pl.`description`, pl.`description_short`, pl.`available_now`,
-					pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, image_shop.`id_image`,
+		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, MAX(product_attribute_shop.id_product_attribute) id_product_attribute, product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, pl.`description`, pl.`description_short`, pl.`available_now`,
+					pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, MAX(image_shop.`id_image`) id_image,
 					il.`legend`, m.`name` AS manufacturer_name, cl.`name` AS category_default,
 					DATEDIFF(product_shop.`date_add`, DATE_SUB(NOW(),
 					INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).'
@@ -636,12 +633,11 @@ class CategoryCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m
 					ON m.`id_manufacturer` = p.`id_manufacturer`
 				WHERE product_shop.`id_shop` = '.(int)$context->shop->id.'
-				AND (pa.id_product_attribute IS NULL OR product_attribute_shop.id_shop='.(int)$context->shop->id.') 
-				AND (i.id_image IS NULL OR image_shop.id_shop='.(int)$context->shop->id.')
 					AND cp.`id_category` = '.(int)$this->id
 					.($active ? ' AND product_shop.`active` = 1' : '')
 					.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '')
-					.($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '');
+					.($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '')
+					.' GROUP BY product_shop.id_product';
 
 		if ($random === true)
 		{
@@ -1051,7 +1047,7 @@ class CategoryCore extends ObjectModel
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT ctg.`id_group`
 				FROM '._DB_PREFIX_.'category_group ctg
-				WHERE ctg.`id_category` = '.(int)$this->id.' AND ctg.`id_group` = 1
+				WHERE ctg.`id_category` = '.(int)$this->id.' AND ctg.`id_group` = '.(int)Group::getCurrent()->id.'
 			');
 		} else {
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
@@ -1164,7 +1160,7 @@ class CategoryCore extends ObjectModel
 				UPDATE `'._DB_PREFIX_.'category` c
 				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs
 					ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
-				SET cs.`position` = '.(int)$i.'
+				SET cs.`position` = '.(int)($i+1).'
 				WHERE c.`id_parent` = '.(int)$id_category_parent.'
 				AND c.`id_category` = '.(int)$result[$i]['id_category'];
 			$return &= Db::getInstance()->execute($sql);
@@ -1351,7 +1347,7 @@ class CategoryCore extends ObjectModel
 		SELECT c.`id_category`
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_shop` cs
-			ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
+			ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` IN ('.implode(', ', Shop::getContextListShopID()).') )
 		WHERE cs.`id_shop` = '.(int)$id_shop.'
 		AND c.`id_parent` = '.(int)$this->id_parent);
 	}
