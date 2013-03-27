@@ -26,7 +26,16 @@
 <div id="productBox">
 	{include file='controllers/modules/header.tpl'}
 	{include file='controllers/modules/filters.tpl'}
-
+	{if $upgrade_available|@count}
+		<div class="hint" style="display:block;">
+			{l s='An upgrade is available for some of your modules!'}
+			<ul>
+			{foreach from=$upgrade_available item='module'}
+				<li> &raquo; <a href="{$currentIndex|escape:htmlall}&token={$token|escape:htmlall}&anchor=anchor{$module.anchor|escape:htmlall}"><b>{$module.name|escape:htmlall}</b></a></li>
+			{/foreach}
+			</ul>
+		</div>
+	{/if}
 	<ul class="view-modules">
 		<li class="button normal-view-disabled"><img src="themes/default/img/modules_view_layout_sidebar.png" alt="{l s='Normal view'}" border="0" /><span>{l s='Normal view'}</span></li>
 		<li class="button favorites-view"><a  href="index.php?controller={$smarty.get.controller|htmlentities}&token={$smarty.get.token|htmlentities}&select=favorites"><img src="themes/default/img/modules_view_table_select_row.png" alt="{l s='Favorites view'}" border="0" /><span>{l s='Favorites view'}</span></a></li>
