@@ -144,7 +144,7 @@ CREATE TABLE `PREFIX_carrier` (
   `max_width` int(10) DEFAULT 0,
   `max_height` int(10)  DEFAULT 0,
   `max_depth` int(10)  DEFAULT 0,
-  `max_weight` int(10)  DEFAULT 0,
+  `max_weight` DECIMAL(20,6) DEFAULT 0,
   `grade` int(10)  DEFAULT 0,
   PRIMARY KEY (`id_carrier`),
   KEY `deleted` (`deleted`,`active`),
