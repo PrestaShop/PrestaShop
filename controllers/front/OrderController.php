@@ -155,14 +155,18 @@ class OrderControllerCore extends ParentOrderController
 					Tools::redirect('index.php?controller=order&step=2');
 				Context::getContext()->cookie->check_cgv = true;
 
-				// Check the delivery option is setted
+				// Check the delivery option is set
 				if (!$this->context->cart->isVirtualCart())
 				{
 					if (!Tools::getValue('delivery_option') && !Tools::getValue('id_carrier') && !$this->context->cart->delivery_option && !$this->context->cart->id_carrier)
 						Tools::redirect('index.php?controller=order&step=2');
 					elseif (!Tools::getValue('id_carrier') && !$this->context->cart->id_carrier)
 					{
-						foreach (Tools::getValue('delivery_option') as $delivery_option)
+						$deliveries_options = Tools::getValue('delivery_option');
+						if (!$deliveries_options) {
+							$deliveries_options = $this->context->cart->delivery_option;
+						}
+						foreach ($deliveries_options as $delivery_option)
 							if (empty($delivery_option))
 								Tools::redirect('index.php?controller=order&step=2');
 					}
