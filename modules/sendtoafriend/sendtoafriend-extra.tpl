@@ -43,7 +43,8 @@ $('document').ready(function(){
 		{
 			$.ajax({
 				{/literal}url: "{$module_dir}sendtoafriend_ajax.php",{literal}
-				post: "POST",
+				type: "POST",
+				headers: { "cache-control": "no-cache" },
 				data: {action: 'sendToMyFriend', secure_key: '{/literal}{$stf_secure_key}{literal}', friend: JSON.stringify(datas)},{/literal}{literal}
 				dataType: "json",
 				success: function(result){
