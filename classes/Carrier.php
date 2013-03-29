@@ -128,7 +128,7 @@ class CarrierCore extends ObjectModel
 			'max_width' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'max_height' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'max_depth' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-			'max_weight' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'max_weight' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
 			'grade' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => 1),
 			'external_module_name' => 	array('type' => self::TYPE_STRING, 'size' => 64),
 			'is_module' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),

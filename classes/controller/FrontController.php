@@ -398,7 +398,7 @@ class FrontControllerCore extends Controller
 			$this->displayRestrictedCountryPage();
 
 		if (Tools::isSubmit('live_edit') && !$this->checkLiveEditAccess())
-			die(Tools::displayError());
+			Tools::redirect('index.php?controller=404');
 
 		$this->iso = $iso;
 

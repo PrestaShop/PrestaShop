@@ -95,7 +95,9 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 			$this->processConfigureShop();
 		elseif (Tools::getValue('installModules') && !empty($this->session->process_validated['configureShop']))
 			$this->processInstallModules();
-		elseif (Tools::getValue('installFixtures') && !empty($this->session->process_validated['installModules']))
+		elseif (Tools::getValue('installModulesAddons') && !empty($this->session->process_validated['installModules']))
+			$this->processInstallAddonsModules();
+		elseif (Tools::getValue('installFixtures') && !empty($this->session->process_validated['installModulesAddons']))
 			$this->processInstallFixtures();
 		elseif (Tools::getValue('installTheme') && !empty($this->session->process_validated['installModules']))
 			$this->processInstallTheme();
@@ -231,6 +233,23 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		$this->session->process_validated = array_merge($this->session->process_validated, array('installModules' => true));
 		$this->ajaxJsonAnswer(true);
 	}
+	
+	/**
+	 * PROCESS : installModulesAddons
+	 * Install modules from addons
+	 */
+	public function processInstallAddonsModules()
+	{
+		$this->initializeContext();
+		if ($module = Tools::getValue('module') && $id_module = Tools::getValue('id_module'))
+			$result = $this->model_install->installModulesAddons(array('name' => $module, 'id_module' => $id_module));
+		else
+			$result = $this->model_install->installModulesAddons();
+		if (!$result || $this->model_install->getErrors())
+			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
+		$this->session->process_validated = array_merge($this->session->process_validated, array('installModulesAddons' => true));
+		$this->ajaxJsonAnswer(true);
+	}
 
 	/**
 	 * PROCESS : installFixtures
@@ -312,6 +331,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 	 */
 	public function display()
 	{
+		$this->initializeContext();
+		
 		// The installer SHOULD take less than 32M, but may take up to 35/36M sometimes. So 42M is a good value :)
 		$low_memory = Tools::getMemoryLimit() < Tools::getOctets('42M');
 
@@ -333,11 +354,16 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		$this->process_steps[] = $populate_step;
 		$this->process_steps[] = array('key' => 'configureShop', 'lang' => $this->l('Configure shop information'));
 
-
 		$install_modules = array('key' => 'installModules', 'lang' => $this->l('Install modules'));
 		if ($low_memory)
 			foreach ($this->model_install->getModulesList() as $module)
 				$install_modules['subtasks'][] = array('module' => $module);
+		$this->process_steps[] = $install_modules;
+		
+		$install_modules = array('key' => 'installModulesAddons', 'lang' => $this->l('Install modules Addons'));
+		if ($low_memory)
+			foreach ($this->model_install->getAddonsModulesList() as $module)
+				$install_modules['subtasks'][] = array('module' => (string)$module['name'], 'id_module' => (string)$module['id_module']);
 		$this->process_steps[] = $install_modules;
 
 		// Fixtures are installed only if option is selected

@@ -2298,7 +2298,7 @@ class AdminControllerCore extends Controller
 						else
 						{
 							$fieldValue = $this->getFieldValue($obj, $input['name']);
-							if (empty($fieldValue) && isset($input['default_value']))
+							if ($fieldValue === false && isset($input['default_value']))
 								$fieldValue = $input['default_value'];
 							$this->fields_value[$input['name']] = $fieldValue;
 						}
@@ -2320,9 +2320,9 @@ class AdminControllerCore extends Controller
 	public function getFieldValue($obj, $key, $id_lang = null)
 	{
 		if ($id_lang)
-			$default_value = ($obj->id && isset($obj->{$key}[$id_lang])) ? $obj->{$key}[$id_lang] : '';
+			$default_value = ($obj->id && isset($obj->{$key}[$id_lang])) ? $obj->{$key}[$id_lang] : false;
 		else
-			$default_value = isset($obj->{$key}) ? $obj->{$key} : '';
+			$default_value = isset($obj->{$key}) ? $obj->{$key} : false;
 
 		return Tools::getValue($key.($id_lang ? '_'.$id_lang : ''), $default_value);
 	}
