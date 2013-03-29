@@ -4663,6 +4663,34 @@ class ProductCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'product_tag`
 		WHERE `id_product` = '.(int)$this->id);
 	}
+	
+	/**
+	* Webservice setter : set tag ids of current product for association
+	*
+	* @param $tag_ids tag ids
+	*/
+	public function setWsTags($tag_ids)
+	{
+		$ids = array();
+		foreach ($tag_ids as $value)
+			$ids[] = $value['id'];
+		if ($this->deleteTags())
+		{
+			if ($ids)
+			{
+				$sql_values = '';
+				$ids = array_map('intval', $ids);
+				foreach ($ids as $position => $id)
+					$sql_values[] = '('.(int)$this->id.', '.(int)$id.')';
+				$result = Db::getInstance()->execute('
+					INSERT INTO `'._DB_PREFIX_.'product_tag` (`id_product`, `id_tag`)
+					VALUES '.implode(',', $sql_values)
+				);
+				return $result;
+			}
+		}
+		return true;
+	}	
 
 
 	public function getWsManufacturerName()
