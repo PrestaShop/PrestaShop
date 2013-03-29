@@ -1267,10 +1267,11 @@ a.iframe {font-weight:bold}
 	width:723px;
 	border:1px solid #ccc
 }
-
+#order-opc #opc_delivery_methods #message {
+	width: 757px;
+}
 #order-opc #opc_payment_methods {margin-bottom:20px}
 #order-opc #opc_payment_methods #opc_payment_methods-content p{margin:0}
-
 .delivery_option_carrier td {width:200px}
 .delivery_option_carrier td + td {width:280px;}
 .delivery_option_carrier td + td + td {width:200px}

@@ -405,9 +405,11 @@ class OrderOpcControllerCore extends ParentOrderController
 		if (!$this->isLogged)
 		{
 			$carriers = $this->context->cart->simulateCarriersOutput();
+			$oldMessage = Message::getMessageByCartId((int)($this->context->cart->id));
 			$this->context->smarty->assign(array(
 				'HOOK_EXTRACARRIER' => null,
 				'HOOK_EXTRACARRIER_ADDR' => null,
+				'oldMessage' => isset($oldMessage['message'])? $oldMessage['message'] : '',
 				'HOOK_BEFORECARRIER' => Hook::exec('displayBeforeCarrier', array(
 					'carriers' => $carriers,
 					'checked' => $this->context->cart->simulateCarrierSelectedOutput(),
@@ -494,6 +496,7 @@ class OrderOpcControllerCore extends ParentOrderController
 
 		$wrapping_fees = $this->context->cart->getGiftWrappingPrice(false);
 		$wrapping_fees_tax_inc = $wrapping_fees = $this->context->cart->getGiftWrappingPrice();
+		$oldMessage = Message::getMessageByCartId((int)($this->context->cart->id));
 
 		$vars = array(
 			'free_shipping' => false, // Deprecated since a cart rule can be applied the specific carriers only
@@ -513,6 +516,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			'delivery_option' => $delivery_option,
 			'address_collection' => $this->context->cart->getAddressCollection(),
 			'opc' => true,
+			'oldMessage' => isset($oldMessage['message'])? $oldMessage['message'] : '',
 			'HOOK_BEFORECARRIER' => Hook::exec('displayBeforeCarrier', array(
 				'carriers' => $carriers,
 				'delivery_option_list' => $this->context->cart->getDeliveryOptionList(),
@@ -538,6 +542,7 @@ class OrderOpcControllerCore extends ParentOrderController
 				)),
 				'carrier_block' => $this->context->smarty->fetch(_PS_THEME_DIR_.'order-carrier.tpl')
 			);
+
 			Cart::addExtraCarriers($result);
 			return $result;
 		}
