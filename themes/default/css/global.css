@@ -539,9 +539,9 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 ************************************************************************************************ */
 #header {position:relative}
 #header_logo {
-	float:left;
-	display:block;
-	margin-top:30px;
+	position: absolute;
+	top: 30px;
+	z-index: 1;
 }
 
 #header_right {
