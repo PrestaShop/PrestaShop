@@ -163,7 +163,7 @@ class BlockCategories extends Module
 			$groups = implode(', ', Customer::getGroupsStatic((int)$this->context->customer->id));
 			$maxdepth = Configuration::get('BLOCK_CATEG_MAX_DEPTH');
 			if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-				SELECT c.id_parent, c.id_category, cl.name, cl.description, cl.link_rewrite
+				SELECT DISTINCT c.id_parent, c.id_category, cl.name, cl.description, cl.link_rewrite
 				FROM `'._DB_PREFIX_.'category` c
 				INNER JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND cl.`id_lang` = '.(int)$this->context->language->id.Shop::addSqlRestrictionOnLang('cl').')
 				INNER JOIN `'._DB_PREFIX_.'category_shop` cs ON (cs.`id_category` = c.`id_category` AND cs.`id_shop` = '.(int)$this->context->shop->id.')
@@ -238,7 +238,7 @@ class BlockCategories extends Module
 			$maxdepth = Configuration::get('BLOCK_CATEG_MAX_DEPTH');
 			$groups = implode(', ', Customer::getGroupsStatic((int)$this->context->customer->id));
 			if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-				SELECT c.id_parent, c.id_category, cl.name, cl.description, cl.link_rewrite
+				SELECT DISTINCT c.id_parent, c.id_category, cl.name, cl.description, cl.link_rewrite
 				FROM `'._DB_PREFIX_.'category` c
 				'.Shop::addSqlAssociation('category', 'c').'
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND cl.`id_lang` = '.(int)$this->context->language->id.Shop::addSqlRestrictionOnLang('cl').')
