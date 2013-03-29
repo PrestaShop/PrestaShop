@@ -621,8 +621,7 @@ class InstallModelInstall extends InstallAbstractModel
 		}		
 		$errors = array();
 		foreach ($modules as $module_name)
-			if (!$this->installModules($module_name))
-				$errors[] = $this->language->l('Cannot install module "%s"', $module_name);
+			$this->installModules($module_name);
 
 		if ($errors)
 		{

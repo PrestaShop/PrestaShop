@@ -97,6 +97,8 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 			$this->printErrors();
 		if (!$this->processInstallModules())
 			$this->printErrors();
+		if (!$this->processInstallAddonsModules())
+			$this->printErrors();
 		if (!$this->processInstallFixtures())
 			$this->printErrors();
 		if (!$this->processInstallTheme())
@@ -264,6 +266,14 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 		);
 
 		return true;
+	}
+		/**
+	 * PROCESS : installModulesAddons
+	 * Install modules from addons
+	 */
+	public function processInstallAddonsModules()
+	{
+		return $this->model_install->installModulesAddons();
 	}
 }
 
