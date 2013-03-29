@@ -47,7 +47,6 @@ class ConfigurationTestCore
 			'upload' => false,
 			'gd' => false,
 			'mysql_support' => false,
-			'sessions' => false,
 			'config_dir' => 'config',
 			'cache_dir' => 'cache',
 			'sitemap' => 'sitemap.xml',
