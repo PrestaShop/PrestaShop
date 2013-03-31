@@ -131,59 +131,63 @@ param_product_url = '';
 									{/if}
 								{/foreach}
 								{else}
-									<select class="select" {if $filter.filter_show_limit > 1}multiple="multiple" size="{$filter.filter_show_limit}"{/if}>
-										<option value="">{l s='No filters' mod='blocklayered'}</option>
-										{foreach from=$filter.values key=id_value item=value}
-										{if $value.nbr || !$hide_0_values}
-											<option style="color: {if isset($value.color)}{$value.color}{/if}" id="layered_{$filter.type_lite}{if $id_value || $filter.type == 'quantity'}_{$id_value}{/if}" value="{$id_value}_{$filter.id_key}" {if isset($value.checked) && $value.checked}selected="selected"{/if} {if !$value.nbr}disabled="disabled"{/if}>
-												{$value.name|escape:html:'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}</a>
-											</option>
-										{/if}
-										{/foreach}
-									</select>
+									<li>
+										<select class="select" {if $filter.filter_show_limit > 1}multiple="multiple" size="{$filter.filter_show_limit}"{/if}>
+											<option value="">{l s='No filters' mod='blocklayered'}</option>
+											{foreach from=$filter.values key=id_value item=value}
+											{if $value.nbr || !$hide_0_values}
+												<option style="color: {if isset($value.color)}{$value.color}{/if}" id="layered_{$filter.type_lite}{if $id_value || $filter.type == 'quantity'}_{$id_value}{/if}" value="{$id_value}_{$filter.id_key}" {if isset($value.checked) && $value.checked}selected="selected"{/if} {if !$value.nbr}disabled="disabled"{/if}>
+													{$value.name|escape:html:'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}</a>
+												</option>
+											{/if}
+											{/foreach}
+										</select>
+									</li>
 								{/if}
 							{/if}
 						{else}
 							{if $filter.filter_type == 0}
-								<label for="{$filter.type}">{l s='Range:' mod='blocklayered'}</label> <span id="layered_{$filter.type}_range"></span>
-								<div class="layered_slider_container">
-									<div class="layered_slider" id="layered_{$filter.type}_slider"></div>
-								</div>
-								<script type="text/javascript">
-								{literal}
-									var filterRange = {/literal}{$filter.max}-{$filter.min}{literal};
-									var step = filterRange / 100;
-									if (step > 1)
-										step = parseInt(step);
-									addSlider('{/literal}{$filter.type}{literal}',{
-										range: true,
-										step: step,
-										min: {/literal}{$filter.min}{literal},
-										max: {/literal}{$filter.max}{literal},
-										values: [ {/literal}{$filter.values[0]}{literal}, {/literal}{$filter.values[1]}{literal}],
-										slide: function( event, ui ) {
-											stopAjaxQuery();
-											{/literal}
-											{if $filter.format < 5}
-											{literal}
-												from = blocklayeredFormatCurrency(ui.values[0], {/literal}{$filter.format}{literal}, '{/literal}{$filter.unit}{literal}');
-												to = blocklayeredFormatCurrency(ui.values[1], {/literal}{$filter.format}{literal}, '{/literal}{$filter.unit}{literal}');
-											{/literal}
-											{else}
-											{literal}
-												from = ui.values[0]+'{/literal}{$filter.unit}{literal}';
-												to = ui.values[1]+'{/literal}{$filter.unit}{literal}';
-											{/literal}
-											{/if}
-											{literal}
-											$('#layered_{/literal}{$filter.type}{literal}_range').html(from+' - '+to);
-										},
-										stop: function () {
-											reloadContent();
-										}
-									}, '{/literal}{$filter.unit}{literal}', {/literal}{$filter.format}{literal});
-								{/literal}
-								</script>
+								<li>	
+									<label for="{$filter.type}">{l s='Range:' mod='blocklayered'}</label> <span id="layered_{$filter.type}_range"></span>
+									<div class="layered_slider_container">
+										<div class="layered_slider" id="layered_{$filter.type}_slider"></div>
+									</div>
+									<script type="text/javascript">
+									{literal}
+										var filterRange = {/literal}{$filter.max}-{$filter.min}{literal};
+										var step = filterRange / 100;
+										if (step > 1)
+											step = parseInt(step);
+										addSlider('{/literal}{$filter.type}{literal}',{
+											range: true,
+											step: step,
+											min: {/literal}{$filter.min}{literal},
+											max: {/literal}{$filter.max}{literal},
+											values: [ {/literal}{$filter.values[0]}{literal}, {/literal}{$filter.values[1]}{literal}],
+											slide: function( event, ui ) {
+												stopAjaxQuery();
+												{/literal}
+												{if $filter.format < 5}
+												{literal}
+													from = blocklayeredFormatCurrency(ui.values[0], {/literal}{$filter.format}{literal}, '{/literal}{$filter.unit}{literal}');
+													to = blocklayeredFormatCurrency(ui.values[1], {/literal}{$filter.format}{literal}, '{/literal}{$filter.unit}{literal}');
+												{/literal}
+												{else}
+												{literal}
+													from = ui.values[0]+'{/literal}{$filter.unit}{literal}';
+													to = ui.values[1]+'{/literal}{$filter.unit}{literal}';
+												{/literal}
+												{/if}
+												{literal}
+												$('#layered_{/literal}{$filter.type}{literal}_range').html(from+' - '+to);
+											},
+											stop: function () {
+												reloadContent();
+											}
+										}, '{/literal}{$filter.unit}{literal}', {/literal}{$filter.format}{literal});
+									{/literal}
+									</script>
+								</li>
 							{else}
 								{if $filter.filter_type == 1}
 								<li class="nomargin">
@@ -213,8 +217,10 @@ param_product_url = '';
 							{/if}
 						{/if}
 						{if count($filter.values) > $filter.filter_show_limit && $filter.filter_show_limit > 0 && $filter.filter_type != 2}
-							<span class="hide-action more">{l s='Show more' mod='blocklayered'}</span>
-							<span class="hide-action less">{l s='Show less' mod='blocklayered'}</span>
+							<li>
+								<span class="hide-action more">{l s='Show more' mod='blocklayered'}</span>
+								<span class="hide-action less">{l s='Show less' mod='blocklayered'}</span>
+							</li>
 						{/if}
 						</ul>
 					</div>
