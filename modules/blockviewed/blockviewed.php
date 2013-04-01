@@ -93,7 +93,7 @@ class BlockViewed extends Module
 	public function hookRightColumn($params)
 	{
 		$id_product = (int)Tools::getValue('id_product');
-		$productsViewed = (isset($params['cookie']->viewed) && !empty($params['cookie']->viewed)) ? array_slice(explode(',', $params['cookie']->viewed), 0, Configuration::get('PRODUCTS_VIEWED_NBR')) : array();
+		$productsViewed = (isset($params['cookie']->viewed) && !empty($params['cookie']->viewed)) ? array_slice(array_reverse(explode(',', $params['cookie']->viewed)), 0, Configuration::get('PRODUCTS_VIEWED_NBR')) : array();
 
 	        if ( (int)$id_product and !in_array((int)$id_product, $productsViewed) ) {
 	            if( isset($params['cookie']->viewed) && !empty($params['cookie']->viewed) ) {
