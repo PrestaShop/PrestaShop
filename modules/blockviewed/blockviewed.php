@@ -95,6 +95,14 @@ class BlockViewed extends Module
 		$id_product = (int)Tools::getValue('id_product');
 		$productsViewed = (isset($params['cookie']->viewed) && !empty($params['cookie']->viewed)) ? array_slice(explode(',', $params['cookie']->viewed), 0, Configuration::get('PRODUCTS_VIEWED_NBR')) : array();
 
+	        if ( (int)$id_product and !in_array((int)$id_product, $productsViewed) ) {
+	            if( isset($params['cookie']->viewed) && !empty($params['cookie']->viewed) ) {
+	                $params['cookie']->viewed .= ',' . (int)$id_product;
+	            } else {
+	                $params['cookie']->viewed = (int)$id_product;
+	            }
+	        }
+        
 		if (count($productsViewed))
 		{
 			$defaultCover = Language::getIsoById($params['cookie']->id_lang).'-default';
@@ -154,10 +162,6 @@ class BlockViewed extends Module
 				if ($product->checkAccess((int)$this->context->customer->id))
 					array_unshift($productsViewed, $id_product);
 			}
-			$viewed = '';
-			foreach ($productsViewed as $id_product_viewed)
-				$viewed .= (int)($id_product_viewed).',';
-			$params['cookie']->viewed = rtrim($viewed, ',');
 
 			if (!count($productsViewedObj))
 				return;
@@ -168,8 +172,6 @@ class BlockViewed extends Module
 
 			return $this->display(__FILE__, 'blockviewed.tpl');
 		}
-		elseif ($id_product)
-			$params['cookie']->viewed = (int)($id_product);
 		return;
 	}
 
