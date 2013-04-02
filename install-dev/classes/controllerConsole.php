@@ -59,37 +59,43 @@ abstract class InstallControllerConsole
 	public $language;
 
 	/**
-	 * @var bool If false, disable next button access
-	 */
-	public $next_button = true;
-
-	/**
-	 * @var bool If false, disable previous button access
-	 */
-	public $previous_button = true;
-
-	/**
 	 * @var InstallAbstractModel
 	 */
 	public $model;
-
-	/**
-	 * @var array Magic vars
-	 */
-	protected $__vars = array();
-
-	/**
-	 * Process form to go to next step
-	 */
-	abstract public function processNextStep();
 
 	/**
 	 * Validate current step
 	 */
 	abstract public function validate();
 
-	final public static function execute()
+	final public static function execute($argc, $argv)
 	{
+		if (!($argc-1))
+		{
+			$available_arguments = Datas::getInstance()->getArgs();
+			echo 'Arguments available:'."\n";
+			foreach ($available_arguments as $key => $arg)
+			{
+				$name = isset($arg['name']) ? $arg['name'] : $key;
+				echo '--'.$name."\t".(isset($arg['help']) ? $arg['help'] : '').(isset($arg['default']) ? "\t".'(Default: '.$arg['default'].')' : '')."\n";
+			}
+			exit;
+		}
+		
+		$errors = Datas::getInstance()->getAndCheckArgs($argv);
+		if (Datas::getInstance()->show_license)
+		{
+			echo strip_tags(file_get_contents(_PS_INSTALL_PATH_.'theme/views/license_content.phtml'));
+			exit;
+		}
+
+		if ($errors !== true)
+		{
+			if (count($errors))
+				foreach ($errors as $error)
+					echo $error."\n";
+			exit;
+		}
 
 		// Include all controllers
 		foreach (self::$steps as $step)
@@ -119,6 +125,7 @@ abstract class InstallControllerConsole
 	{
 		$this->step = $step;
 		$this->datas = Datas::getInstance();
+		
 		// Set current language
 		$this->language = InstallLanguages::getInstance();
 		if (!$this->datas->language)
