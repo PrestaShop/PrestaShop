@@ -67,7 +67,7 @@ else
 	$input_xml = NULL;
 
 	// if a XML is in PUT
-	if ($_SERVER['REQUEST_METHOD'] == 'PUT')
+	if ($_SERVER['REQUEST_METHOD'] == 'PUT' OR $_SERVER['REQUEST_METHOD'] == 'POST')
 	{
 		$putresource = fopen("php://input", "r");
 		while ($putData = fread($putresource, 1024))
