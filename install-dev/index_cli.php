@@ -27,31 +27,12 @@
 /* Redefine REQUEST_URI */
 $_SERVER['REQUEST_URI'] = '/install/index_cli.php';
 require_once dirname(__FILE__).'/init.php';
+require_once _PS_INSTALL_PATH_.'classes/datas.php';
 ini_set('memory_limit', '128M');
-
 try
 {
-	require_once _PS_INSTALL_PATH_.'classes/datas.php';
-	if (!($argc-1))
-	{
-		$available_arguments = Datas::getInstance()->getArgs();
-		echo 'Arguments available:'."\n";
-		foreach ($available_arguments as $key => $arg)
-		{
-			$name = isset($arg['name']) ? $arg['name'] : $key;
-			echo '--'.$name."\t".(isset($arg['help']) ? $arg['help'] : '').(isset($arg['default']) ? "\t".'(Default: '.$arg['default'].')' : '')."\n";
-		}
-		exit;
-	}
-	if (($errors = Datas::getInstance()->getAndCheckArgs($argv)) !== true)
-	{
-		if (count($errors))
-			foreach ($errors as $error)
-				echo $error."\n";
-		exit;
-	}
 	require_once _PS_INSTALL_PATH_.'classes/controllerConsole.php';
-	InstallControllerConsole::execute();
+	InstallControllerConsole::execute($argc, $argv);
 	echo '-- Installation successfull! --'."\n";
 }
 catch (PrestashopInstallerException $e)
