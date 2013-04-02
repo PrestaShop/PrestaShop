@@ -4674,7 +4674,7 @@ class ProductCore extends ObjectModel
 		$ids = array();
 		foreach ($tag_ids as $value)
 			$ids[] = $value['id'];
-		if ($this->deleteTags())
+		if ($this->deleteWsTags())
 		{
 			if ($ids)
 			{
@@ -4690,7 +4690,17 @@ class ProductCore extends ObjectModel
 			}
 		}
 		return true;
-	}	
+	}
+	
+	/**
+	* Delete products tags entries without delete tags for webservice usage
+	*
+	* @return array Deletion result
+	*/
+	public function deleteWsTags()
+	{
+		return Db::getInstance()->delete('product_tag', 'id_product = '.(int)$this->id);
+	}		
 
 
 	public function getWsManufacturerName()
