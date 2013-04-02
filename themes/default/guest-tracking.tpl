@@ -96,7 +96,7 @@
 	{/if}
 	<form method="post" action="{$action|escape:'htmlall':'UTF-8'}" class="std">
 		<fieldset class="description_box">
-			<p>{l s='o track your order, please enter the following information:'}</p>
+			<p>{l s='To track your order, please enter the following information:'}</p>
 			<p class="text">
 				<label>{l s='Order Reference:'} </label>
 				<input type="text" name="order_reference" value="{if isset($smarty.get.id_order)}{$smarty.get.id_order|escape:'htmlall':'UTF-8'}{else}{if isset($smarty.post.id_order)}{$smarty.post.id_order|escape:'htmlall':'UTF-8'}{/if}{/if}" size="8" />
