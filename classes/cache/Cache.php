@@ -326,7 +326,7 @@ abstract class CacheCore
 
 	public static function clean($key)
 	{
-		if (strpos($key, '*'))
+		if (strpos($key, '*') !== false)
 		{
 			$regexp = str_replace('\\*', '.*', preg_quote($key, '#'));
 			foreach (array_keys(Cache::$local) as $key)
