@@ -35,7 +35,7 @@ var ajaxCart = {
 	overrideButtonsInThePage : function(){
 		//for every 'add' buttons...
 		$('.ajax_add_to_cart_button').unbind('click').click(function(){
-			var idProduct =  $(this).attr('rel').replace('ajax_id_product_', '');
+			var idProduct =  $(this).attr('rel').replace('nofollow', '').replace('ajax_id_product_', '');
 			if ($(this).attr('disabled') != 'disabled')
 				ajaxCart.add(idProduct, null, false, this);
 			return false;
