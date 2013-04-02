@@ -66,7 +66,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		Shop::setContext(Shop::CONTEXT_SHOP, 1);
 		Configuration::loadConfiguration();
 		Context::getContext()->language = new Language(Configuration::get('PS_LANG_DEFAULT'));
-		Context::getContext()->country = new Country('PS_COUNTRY_DEFAULT');
+		Context::getContext()->country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'));
 		Context::getContext()->cart = new Cart();
 		Context::getContext()->employee = new Employee(1);
 		define('_PS_SMARTY_FAST_LOAD_', true);

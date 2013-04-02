@@ -67,8 +67,8 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 		Context::getContext()->shop = new Shop(1);
 		Shop::setContext(Shop::CONTEXT_SHOP, 1);
 		Configuration::loadConfiguration();
-		Context::getContext()->language = new Language(Configuration::get('PS_LANG_DEFAULT'));
-		Context::getContext()->country = new Country('PS_COUNTRY_DEFAULT');
+		Context::getContext()->language = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		Context::getContext()->country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
 		Context::getContext()->cart = new Cart();
 		Context::getContext()->employee = new Employee(1);
 		if (!defined('_PS_SMARTY_FAST_LOAD_'))
