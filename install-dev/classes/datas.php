@@ -46,6 +46,7 @@ class Datas
 		'http_host' => array(
 			'name' => 'domain',
 			'validate' => 'isGenericName',
+			'default' => 'localhost',
 		),
 		'database_server' => array(
 			'name' => 'db_server',
@@ -122,6 +123,16 @@ class Datas
 			'validate' => 'isEmail',
 			'default' => 'pub@prestashop.com'
 		),
+		'show_license' => array(
+			'name' => 'license',
+			'default' => 0,
+			'help' => 'show PrestaShop license'
+		),
+		'newsletter' => array(
+			'name' => 'newsletter',
+			'default' => 1,
+			'help' => 'get news from PrestaShop',
+		),
 	);
 
 	protected $datas = array();
@@ -155,11 +166,15 @@ class Datas
 	{
 		if (!$argv)
 			return false;
+
 		$args_ok = array();
 		foreach ($argv as $arg)
 		{
-			if (!preg_match('/^--([^=\'"><|`]+)=([^=\'"><|`]+)/i', trim($arg), $res))
+			if (!preg_match('/^--([^=\'"><|`]+)(?:=([^=\'"><|`]+)|(?!license))/i', trim($arg), $res))
 				continue;
+
+			if ($res[1] == 'license' && !isset($res[2]))
+				$res[2] = 1;
 			$args_ok[$res[1]] = $res[2];
 		}
 
