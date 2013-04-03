@@ -74,7 +74,6 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 		if (!isset($this->tests['optional']))
 			$this->tests['optional'] = $this->model_system->checkOptionalTests();
 
-		$session_path = @ini_get('session.save_path');
 		// Generate display array
 		$this->tests_render = array(
 			'required' => array(
@@ -122,7 +121,6 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 						'magicquotes' => $this->l('PHP magic quotes option is enabled'),
 						'dom' => $this->l('Dom extension is not loaded'),
 						'pdo_mysql' => $this->l('PDO MySQL extension is not loaded'),
-						'sessions' => $this->l('Your PHP sessions path is not writable - check with your hosting provider:').' '.$session_path,
 					)
 				),
 			),
