@@ -277,6 +277,7 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 				{if isset($groups)}
 				<!-- attributes -->
 				<div id="attributes">
+				<div class="clear"></div>
 				{foreach from=$groups key=id_attribute_group item=group}
 					{if $group.attributes|@count}
 						<fieldset class="attribute_fieldset">
