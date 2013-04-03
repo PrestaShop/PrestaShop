@@ -29,4 +29,10 @@ themes/default/cache/*.js
 themes/default/cache/*.css
 modules/*/translations/*.php
 !modules/*/translations/index.php
+mails/*
+!mails/en
+modules/*/mails/*
+!modules/*/mails/en
+translations/*
+!translations/*.gzip
 
