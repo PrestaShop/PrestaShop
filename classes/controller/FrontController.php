@@ -705,7 +705,7 @@ class FrontControllerCore extends Controller
 		$this->addJS(_THEME_MOBILE_JS_DIR_.'jqm-docs.js');
 		$this->addJS(_PS_JS_DIR_.'tools.js');
 		$this->addJS(_THEME_MOBILE_JS_DIR_.'global.js');
-			$this->addjqueryPlugin('fancybox');
+		$this->addjqueryPlugin('fancybox');
 
 		$this->addCSS(_THEME_MOBILE_CSS_DIR_.'jquery.mobile-1.3.0.min.css', 'all');
 		$this->addCSS(_THEME_MOBILE_CSS_DIR_.'jqm-docs.css', 'all');
@@ -721,6 +721,7 @@ class FrontControllerCore extends Controller
 			$this->setMobileMedia();
 			return true;
 		}
+		$this->addCSS(_THEME_CSS_DIR_.'grid_prestashop.css', 'all');
 		$this->addCSS(_THEME_CSS_DIR_.'global.css', 'all');
 		$this->addjquery();
 		$this->addjqueryPlugin('easing');
