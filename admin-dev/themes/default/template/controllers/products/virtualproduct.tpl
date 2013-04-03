@@ -227,7 +227,7 @@
 				{else}
 					<div class="hint clear" style="display: block;width: 70%;">{l s='You cannot edit your file here because you used combinations. Please edit this file in the Combinations tab.'}</div>
 					<br />
-					{$error_product_download}
+					{if isset($error_product_download)}{$error_product_download}{/if}
 				{/if}
 			</table>
 		</div>
