@@ -200,7 +200,7 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 					{foreach from=$images item=image name=thumbnails}
 					{assign var=imageIds value="`$product->id`-`$image.id_image`"}
 					<li id="thumbnail_{$image.id_image}">
-						<a href="{$link->getImageLink($product->link_rewrite, $imageIds, thickbox_default)}" rel="other-views" class="thickbox {if $smarty.foreach.thumbnails.first}shown{/if}" title="{$image.legend|htmlspecialchars}">
+						<a href="{$link->getImageLink($product->link_rewrite, $imageIds, 'thickbox_default')}" rel="other-views" class="thickbox{if $smarty.foreach.thumbnails.first} shown{/if}" title="{$image.legend|htmlspecialchars}">
 							<img id="thumb_{$image.id_image}" src="{$link->getImageLink($product->link_rewrite, $imageIds, 'medium_default')}" alt="{$image.legend|htmlspecialchars}" height="{$mediumSize.height}" width="{$mediumSize.width}" />
 						</a>
 					</li>
@@ -540,7 +540,7 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 					{foreach from=$accessories item=accessory name=accessories_list}
 						{if ($accessory.allow_oosp || $accessory.quantity_all_versions > 0) AND $accessory.available_for_order AND !isset($restricted_country_mode)}
 							{assign var='accessoryLink' value=$link->getProductLink($accessory.id_product, $accessory.link_rewrite, $accessory.category)}
-							<li class="ajax_block_product {if $smarty.foreach.accessories_list.first}first_item{elseif $smarty.foreach.accessories_list.last}last_item{else}item{/if} product_accessories_description">
+							<li class="ajax_block_product{if $smarty.foreach.accessories_list.first} first_item{elseif $smarty.foreach.accessories_list.last} last_item{else} item{/if} product_accessories_description">
 								<p class="s_title_block">
 									<a href="{$accessoryLink|escape:'htmlall':'UTF-8'}">{$accessory.name|escape:'htmlall':'UTF-8'}</a>
 									{if $accessory.show_price AND !isset($restricted_country_mode) AND !$PS_CATALOG_MODE} - <span class="price">{if $priceDisplay != 1}{displayWtPrice p=$accessory.price}{else}{displayWtPrice p=$accessory.price_tax_exc}{/if}</span>{/if}
