@@ -45,8 +45,8 @@ var productHasAttributes = {if isset($groups)}true{else}false{/if};
 var quantitiesDisplayAllowed = {if $display_qties == 1}true{else}false{/if};
 var quantityAvailable = {if $display_qties == 1 && $product->quantity}{$product->quantity}{else}0{/if};
 var allowBuyWhenOutOfStock = {if $allow_oosp == 1}true{else}false{/if};
-var availableNowValue = '{$product->available_now|escape:'quotes':'UTF-8'}';
-var availableLaterValue = '{$product->available_later|escape:'quotes':'UTF-8'}';
+var availableNowValue = '{if $product->available_now}{$product->available_now|escape:'quotes':'UTF-8'}{else}{l s='Available'}{/if}';
+var availableLaterValue = '{if $product->available_later}{$product->available_later|escape:'quotes':'UTF-8'}{else}{l s='This product is no longer in stock'}{/if}';
 var productPriceTaxExcluded = {$product->getPriceWithoutReduct(true)|default:'null'} - {$product->ecotax};
 var reduction_percent = {if $product->specificPrice AND $product->specificPrice.reduction AND $product->specificPrice.reduction_type == 'percentage'}{$product->specificPrice.reduction*100}{else}0{/if};
 var reduction_price = {if $product->specificPrice AND $product->specificPrice.reduction AND $product->specificPrice.reduction_type == 'amount'}{$product->specificPrice.reduction|floatval}{else}0{/if};
@@ -346,7 +346,7 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 			<!-- availability -->
 			<p id="availability_statut"{if ($product->quantity <= 0 && !$product->available_later && $allow_oosp) OR ($product->quantity > 0 && !$product->available_now) OR !$product->available_for_order OR $PS_CATALOG_MODE} style="display: none;"{/if}>
 				<span id="availability_label">{l s='Availability:'}</span>
-				<span id="availability_value"{if $product->quantity <= 0} class="warning_inline"{/if}>{if $product->quantity <= 0}{if $allow_oosp}{$product->available_later}{else}{l s='This product is no longer in stock'}{/if}{else}{$product->available_now}{/if}</span>				
+				<span id="availability_value"{if $product->quantity <= 0} class="warning_inline"{/if}>{if $product->quantity <= 0}{if $allow_oosp}{$product->available_later}{else}{l s='This product is no longer in stock'}{/if}{elseif $product->available_now}{$product->available_now}{else}{l s='Available'}{/if}</span>				
 			</p>
 			<p id="availability_date"{if ($product->quantity > 0) OR !$product->available_for_order OR $PS_CATALOG_MODE OR !isset($product->available_date) OR $product->available_date < $smarty.now|date_format:'%Y-%m-%d'} style="display: none;"{/if}>
 				<span id="availability_date_label">{l s='Availability date:'}</span>
