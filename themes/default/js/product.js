@@ -414,21 +414,14 @@ function displayImage(domAAroundImgThumb, no_animation)
 {
 	if (typeof(no_animation) == 'undefined')
 		no_animation = false;
-	
 	if (domAAroundImgThumb.attr('href'))
 	{
-		var newSrc = domAAroundImgThumb.attr('href').replace('thickbox','large');
-		if(typeof(bigpicSrc) == 'undefined' || bigpicSrc == '')
-			bigpicSrc = $('#bigpic').attr('src');
-		if (bigpicSrc != newSrc)
+		var newSrc = domAAroundImgThumb.attr('href').replace('thickbox', 'large');
+		if ($('#bigpic').attr('src') != newSrc)
 		{
-			//fadeOut is too slow, displayImage can be called again before bigpic source has really changed so we use a global bigpicSrc
-			bigpicSrc = newSrc;
-			$('#bigpic').fadeOut((no_animation ? 0 : 'fast'), function(){
-				$(this).attr('src', newSrc).show();
-				if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
-					$(this).attr('alt', domAAroundImgThumb.attr('href'));
-			});
+			$('#bigpic').attr('src', newSrc);
+			if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
+				$(this).attr('alt', domAAroundImgThumb.attr('href'));
 		}
 		$('#views_block li a').removeClass('shown');
 		$(domAAroundImgThumb).addClass('shown');
@@ -481,7 +474,7 @@ function refreshProductImages(id_product_attribute)
 		$('#thumbs_list').trigger('goto', 0);
 		for (var i = 0; i < combinationImages[id_product_attribute].length; i++)
 			$('#thumbnail_' + parseInt(combinationImages[id_product_attribute][i])).show();
-		if (parseInt($('#thumbs_list_frame >li').length) != parseInt($('#thumbs_list_frame >li:visible').length))
+		if (parseInt($('#thumbs_list_frame >li:visible').length) < parseInt($('#thumbs_list_frame >li').length))
 			$('#wrapResetImages').show('slow');
 		else
 			$('#wrapResetImages').hide('slow');
@@ -559,7 +552,6 @@ $(document).ready(function()
 
 	original_url = window.location + '';
 	first_url_check = true;
-	bigpicSrc = $('#bigpic').attr('src');
 	checkUrl();
 	initLocationChange();
 
