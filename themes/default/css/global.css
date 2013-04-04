@@ -261,6 +261,7 @@ table.table_block {
 	border:1px solid #999;
 	border-bottom:none;
 	background:white;
+	border-collapse:inherit
 }
 table.std th,
 table.table_block th {
@@ -804,6 +805,7 @@ table#cart_summary .cart_total_price td.cart_voucher {
 
 table#cart_summary #total_price_container {
 	border-bottom:1px solid #999;
+	border-right: none;
 }
 
 .cart_voucher .title_block, .cart_voucher h4
