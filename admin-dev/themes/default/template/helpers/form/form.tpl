@@ -234,10 +234,10 @@
 									{/foreach}
 								{elseif $input.type == 'file'}
 									{if isset($input.display_image) && $input.display_image}
-										{if isset($fields_value.image) && $fields_value.image}
+										{if isset(input.image) && $input.image}
 											<div id="image">
-												{$fields_value.image}
-												<p align="center">{l s='File size'} {$fields_value.size}kb</p>
+												{$input.image}
+												<p align="center">{l s='File size'} {$input.size}kb</p>
 												<a href="{$current}&{$identifier}={$form_id}&token={$token}&deleteImage=1">
 													<img src="../img/admin/delete.gif" alt="{l s='Delete'}" /> {l s='Delete'}
 												</a>
