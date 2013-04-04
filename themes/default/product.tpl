@@ -46,7 +46,7 @@ var quantitiesDisplayAllowed = {if $display_qties == 1}true{else}false{/if};
 var quantityAvailable = {if $display_qties == 1 && $product->quantity}{$product->quantity}{else}0{/if};
 var allowBuyWhenOutOfStock = {if $allow_oosp == 1}true{else}false{/if};
 var availableNowValue = '{if $product->available_now}{$product->available_now|escape:'quotes':'UTF-8'}{else}{l s='Available'}{/if}';
-var availableLaterValue = '{if $product->available_now}{$product->available_later|escape:'quotes':'UTF-8'}{else}{l s='This product is no longer in stock'}{/if}';
+var availableLaterValue = '{if $product->available_later}{$product->available_later|escape:'quotes':'UTF-8'}{else}{l s='This product is no longer in stock'}{/if}';
 var productPriceTaxExcluded = {$product->getPriceWithoutReduct(true)|default:'null'} - {$product->ecotax};
 var reduction_percent = {if $product->specificPrice AND $product->specificPrice.reduction AND $product->specificPrice.reduction_type == 'percentage'}{$product->specificPrice.reduction*100}{else}0{/if};
 var reduction_price = {if $product->specificPrice AND $product->specificPrice.reduction AND $product->specificPrice.reduction_type == 'amount'}{$product->specificPrice.reduction|floatval}{else}0{/if};
