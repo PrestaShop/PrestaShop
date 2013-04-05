@@ -1595,7 +1595,7 @@ abstract class ModuleCore
 	{
 		if ($name === null)
 			$name = $this->name;
-		return $name.'|'.(int)$this->context->shop->id.'_'.(int)Group::getCurrent()->id.'_'.(int)$this->context->language->id;
+		return $name.'|'.(int)$this->context->shop->id.'|'.(int)Group::getCurrent()->id.'|'.(int)$this->context->language->id;
 	}
 
 	public function display($file, $template, $cacheId = null, $compileId = null)
