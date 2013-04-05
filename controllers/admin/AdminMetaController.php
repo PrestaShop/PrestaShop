@@ -66,7 +66,7 @@ class AdminMetaControllerCore extends AdminController
 			),
 			'PS_ALLOW_ACCENTED_CHARS_URL' => array(
 				'title' => $this->l('Accented URL'),
-				'desc' => $this->l('Enable if you want to allow accented characters in your friendly URLs.'),
+				'desc' => $this->l('Enable if you want to allow accented characters in your friendly URLs.').' '.$this->l('You should only activate this option if you are using non-latin characters ; for all the latin charsets, your SEO will be better without this option.'),
 				'validation' => 'isBool',
 				'cast' => 'intval',
 				'type' => 'bool'
