@@ -357,7 +357,8 @@ class OrderOpcControllerCore extends ParentOrderController
 		$this->_assignPayment();
 		Tools::safePostVars();
 
-		$this->context->smarty->assign('newsletter', (int)Module::getInstanceByName('blocknewsletter')->active);
+		$blocknewsletter = Module::getInstanceByName('blocknewsletter');
+		$this->context->smarty->assign('newsletter', (bool)($blocknewsletter && $blocknewsletter->active));
 
 		$this->_processAddressFormat();
 		$this->setTemplate(_PS_THEME_DIR_.'order-opc.tpl');
