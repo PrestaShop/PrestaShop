@@ -25,7 +25,7 @@
 */
 
 /* Debug only */
-define('_PS_MODE_DEV_', true);
+define('_PS_MODE_DEV_', false);
 if (_PS_MODE_DEV_)
 {
 	@ini_set('display_errors', 'on');	
