@@ -1875,26 +1875,10 @@ class AdminTranslationsControllerCore extends AdminController
 			throw new PrestaShopException(Tools::displayError('The module directory must be writable.'));
 
 		$modules = array();
-		if (!_PS_MODE_DEV_ && $this->theme_selected == self::DEFAULT_THEME_NAME)
-		{
-			// Get all module which are installed for to have a minimum of POST
-			$modules = Module::getModulesInstalled();
-
-			foreach ($modules as &$module)
-				$module = $module['name'];
-		}
-		elseif ($this->theme_selected == self::DEFAULT_THEME_NAME)
-		{
-			if (Tools::file_exists_cache($this->translations_informations['modules']['dir']))
-				$modules = scandir($this->translations_informations['modules']['dir']);
-			else
-				$this->displayWarning(Tools::displayError('There are no active modules in this copy of PrestaShop. Please use the Modules page to activate, or visit the PrestaShop Addons Store to download them.'));
-		}
-		else
-			if (Tools::file_exists_cache($this->translations_informations['modules']['override']['dir']))
-				$modules = scandir($this->translations_informations['modules']['override']['dir']);
-			else
-				$this->displayWarning(Tools::displayError('There are no active modules in this copy of PrestaShop. Please use the Modules page to activate, or visit the PrestaShop Addons Store to download them.'));
+		// Get all module which are installed for to have a minimum of POST
+		$modules = Module::getModulesInstalled();
+		foreach ($modules as &$module)
+			$module = $module['name'];
 
 		return $modules;
 	}
