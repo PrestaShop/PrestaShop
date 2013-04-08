@@ -586,7 +586,6 @@ class AdminTranslationsControllerCore extends AdminController
 				{
 					// Get instance of this tab by class name
 					$tab = Tab::getInstanceFromClassName($class_name);
-
 					//Check if class name exists
 					if (isset($tab->class_name) && !empty($tab->class_name))
 					{
@@ -1331,17 +1330,11 @@ class AdminTranslationsControllerCore extends AdminController
 			{
 				if ($this->tabAccess['edit'] === '1')
 				{
-					// Get a good path for module directory
-					if ($this->theme_selected == self::DEFAULT_THEME_NAME && _PS_MODE_DEV_)
-						$i18n_dir = $this->translations_informations[$this->type_selected]['dir'];
-					else
-						$i18n_dir = $this->translations_informations[$this->type_selected]['override']['dir'];
-
 					// Get list of modules
 					if ($modules = $this->getListModules())
 					{
 						// Get files of all modules
-						$arr_files = $this->getAllModuleFiles($modules, $i18n_dir, $this->lang_selected->iso_code, true);
+						$arr_files = $this->getAllModuleFiles($modules, null, $this->lang_selected->iso_code, true);
 
 						// Find and write all translation modules files
 						foreach ($arr_files as $value)
@@ -1890,11 +1883,13 @@ class AdminTranslationsControllerCore extends AdminController
 			foreach ($modules as &$module)
 				$module = $module['name'];
 		}
-		else if ($this->theme_selected == self::DEFAULT_THEME_NAME)
+		elseif ($this->theme_selected == self::DEFAULT_THEME_NAME)
+		{
 			if (Tools::file_exists_cache($this->translations_informations['modules']['dir']))
 				$modules = scandir($this->translations_informations['modules']['dir']);
 			else
 				$this->displayWarning(Tools::displayError('There are no active modules in this copy of PrestaShop. Please use the Modules page to activate, or visit the PrestaShop Addons Store to download them.'));
+		}
 		else
 			if (Tools::file_exists_cache($this->translations_informations['modules']['override']['dir']))
 				$modules = scandir($this->translations_informations['modules']['override']['dir']);
@@ -2539,12 +2534,30 @@ class AdminTranslationsControllerCore extends AdminController
 	 * @param boolean $is_default set it if modules are located in root/prestashop/modules folder
 	 * 				  This allow to distinguish overrided prestashop theme and original module
 	 */
-	protected function getAllModuleFiles($modules, $root_dir, $lang, $is_default = false)
+	protected function getAllModuleFiles($modules, $root_dir = null, $lang, $is_default = false)
 	{
 		$array_files = array();
+		$initial_root_dir = $root_dir;
 		foreach ($modules as $module)
 		{
-			if ($module{0} != '.' && is_dir($root_dir.$module))
+			$root_dir = $initial_root_dir;
+			if ($module{0} == '.')
+				continue;
+			// Get path of directory for find a good path of translation file
+			if ($root_dir == null)
+			{
+				$i18n_dir = $this->translations_informations[$this->type_selected]['override']['dir'];
+				if (is_dir($i18n_dir.$module))
+					$root_dir = $i18n_dir;
+			}
+			if ($root_dir == null)
+			{
+				$i18n_dir = $this->translations_informations[$this->type_selected]['dir'];
+				if (is_dir($i18n_dir.$module))
+					$root_dir = $i18n_dir;
+			}
+
+			if (is_dir($root_dir.$module))
 			{
 				if (Tools::file_exists_cache($root_dir.$module.'/translations/'.$lang.'.php'))
 					$lang_file = $root_dir.$module.'/translations/'.$lang.'.php';
@@ -2564,20 +2577,13 @@ class AdminTranslationsControllerCore extends AdminController
 	 */
 	public function initFormModules()
 	{
-		// Get path of directory for find a good path of translation file
-		if ($this->theme_selected != self::DEFAULT_THEME_NAME || !_PS_MODE_DEV_)
-			$i18n_dir = $this->translations_informations[$this->type_selected]['override']['dir'];
-		else
-			$i18n_dir = $this->translations_informations[$this->type_selected]['dir'];
-
 		// Get list of modules
 		$modules = $this->getListModules();
 
 		if (!empty($modules))
 		{
 			// Get all modules files and include all translation files
-			$arr_files = $this->getAllModuleFiles($modules, $i18n_dir, $this->lang_selected->iso_code, true);
-
+			$arr_files = $this->getAllModuleFiles($modules, null, $this->lang_selected->iso_code, true);
 			foreach ($arr_files as $value)
 				$this->findAndFillTranslations($value['files'], $value['theme'], $value['module'], $value['dir']);
 
