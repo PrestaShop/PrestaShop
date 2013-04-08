@@ -117,20 +117,30 @@ class OrderHistoryCore extends ObjectModel
 					{
 						$assign[$key]['name'] = $product_download->display_filename;
 						$dl_link = $product_download->getTextLink(false, $virtual_product['download_hash'])
-							.'&id_order='.$order->id
+							.'&id_order='.(int)$order->id
 							.'&secure_key='.$order->secure_key;
 						$assign[$key]['link'] = $dl_link;
-						if ($virtual_product['download_deadline'] != '0000-00-00 00:00:00')
-							$assign[$key]['deadline'] = Tools::displayDate($virtual_product['download_deadline'], $order->id_lang);
+						if ($virtual_product['date_expiration'] != '0000-00-00 00:00:00')
+							$assign[$key]['deadline'] = Tools::displayDate($virtual_product['date_expiration '], $order->id_lang);
 						if ($product_download->nb_downloadable != 0)
-							$assign[$key]['downloadable'] = $product_download->nb_downloadable;
+							$assign[$key]['downloadable'] = (int)$product_download->nb_downloadable;
 					}
 				}
+								
 				$customer = new Customer((int)$order->id_customer);
-				$context->smarty->assign('virtualProducts', $assign);
-				$context->smarty->assign('id_order', $order->id);
-				$iso = Language::getIsoById((int)($order->id_lang));
-				$links = $context->smarty->fetch(_PS_MAIL_DIR_.$iso.'/download-product.tpl');
+				
+				$links = '<ul>';
+				foreach($assign as $product)
+				{
+					$links .= '<li>';
+					$links .= '<a href="'.$product['link'].'">'.Tools::htmlentitiesUTF8($product['name']).'</a>';
+					if (isset($product['deadline']))
+						$links .= '&nbsp;'.Tools::htmlentitiesUTF8(Tools::displayError('expires on')).'&nbsp;'.$product['deadline'];
+					if (isset($product['downloadable']))
+						$links .= '&nbsp;'.Tools::htmlentitiesUTF8(sprintf(Tools::displayError('downloadable %d time(s)'), (int)$product['downloadable']));	
+					$links .= '</li>';
+				}
+				$links .= '<ul>';
 				$data = array(
 						'{lastname}' => $customer->lastname,
 						'{firstname}' => $customer->firstname,
