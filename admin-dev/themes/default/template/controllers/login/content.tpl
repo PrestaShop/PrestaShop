@@ -90,7 +90,7 @@
 							<p>{l s='For security reasons, you cannot connect to the Back Office until after you have:'}</p>
 							<ul>
 								{if isset($wrong_install_name) && $wrong_install_name == true}<li>{l s='deleted the /install folder'}</li>{/if}
-								{if isset($wrong_folder_name) && $wrong_folder_name == true}<li>{l s='renamed the /admin folder (e.g. /%s)' sprintf=$randomNb}</li>{/if}
+								{if isset($wrong_folder_name) && $wrong_folder_name == true}<li>{l s='renamed the /admin folder (e.g. %s)' sprintf=$randomNb}</li>{/if}
 							</ul>
 							<p><a href="{$adminUrl|escape:'htmlall':'UTF-8'}">{l s='Please then access this page by the new URL (e.g. %s)' sprintf=$adminUrl}</a></p>
 						</div>
