@@ -118,7 +118,7 @@ function findCombination(firstTime)
 
 			//show the large image in relation to the selected combination
 			if (combinations[combination]['image'] && combinations[combination]['image'] != -1)
-				displayImage( $('#thumb_' + combinations[combination]['image']).parent() );
+				displayImage($('#thumb_' + combinations[combination]['image']).parent());
 
 			//show discounts values according to the selected combination
 			if (combinations[combination]['idCombination'] && combinations[combination]['idCombination'] > 0)
@@ -414,17 +414,14 @@ function displayImage(domAAroundImgThumb, no_animation)
 {
 	if (typeof(no_animation) == 'undefined')
 		no_animation = false;
-	
 	if (domAAroundImgThumb.attr('href'))
 	{
-		var newSrc = domAAroundImgThumb.attr('href').replace('thickbox','large');
+		var newSrc = domAAroundImgThumb.attr('href').replace('thickbox', 'large');
 		if ($('#bigpic').attr('src') != newSrc)
 		{
-			$('#bigpic').fadeOut((no_animation ? 0 : 'fast'), function(){
-				$(this).attr('src', newSrc).show();
-				if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
-					$(this).attr('alt', domAAroundImgThumb.attr('href'));
-			});
+			$('#bigpic').attr('src', newSrc);
+			if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
+				$(this).attr('alt', domAAroundImgThumb.attr('href'));
 		}
 		$('#views_block li a').removeClass('shown');
 		$(domAAroundImgThumb).addClass('shown');
@@ -468,24 +465,29 @@ function serialScrollFixLock(event, targeted, scrolled, items, position)
 function refreshProductImages(id_product_attribute)
 {
 	$('#thumbs_list_frame').scrollTo('li:eq(0)', 700, {axis:'x'});
-	$('#thumbs_list li').hide();
+
 	id_product_attribute = parseInt(id_product_attribute);
 
-	if (typeof(combinationImages) != 'undefined' && typeof(combinationImages[id_product_attribute]) != 'undefined')
+	if (id_product_attribute > 0 && typeof(combinationImages) != 'undefined' && typeof(combinationImages[id_product_attribute]) != 'undefined')
 	{
+		$('#thumbs_list li').hide();
+		$('#thumbs_list').trigger('goto', 0);
 		for (var i = 0; i < combinationImages[id_product_attribute].length; i++)
 			$('#thumbnail_' + parseInt(combinationImages[id_product_attribute][i])).show();
-	}
-	if (i > 0)
-	{
-		var thumb_width = $('#thumbs_list_frame >li').width() + parseInt($('#thumbs_list_frame >li').css('marginRight'));
-		$('#thumbs_list_frame').width((parseInt((thumb_width)* i) + 3) + 'px'); //  Bug IE6, needs 3 pixels more ?
+		if (parseInt($('#thumbs_list_frame >li:visible').length) < parseInt($('#thumbs_list_frame >li').length))
+			$('#wrapResetImages').show('slow');
+		else
+			$('#wrapResetImages').hide('slow');
 	}
 	else
 	{
-		$('#thumbnail_' + idDefaultImage).show();
-		displayImage($('#thumbnail_' + idDefaultImage + ' a'));
+		$('#thumbs_list li').show();
+		if (parseInt($('#thumbs_list_frame >li').length) == parseInt($('#thumbs_list_frame >li:visible').length))
+			$('#wrapResetImages').hide('slow');
 	}
+
+	var thumb_width = $('#thumbs_list_frame >li').width() + parseInt($('#thumbs_list_frame >li').css('marginRight'));
+	$('#thumbs_list_frame').width((parseInt((thumb_width) * $('#thumbs_list_frame >li').length)) + 'px');
 	$('#thumbs_list').trigger('goto', 0);
 	serialScrollFixLock('', '', '', '', 0);// SerialScroll Bug on goto 0 ?
 }
@@ -548,6 +550,11 @@ $(document).ready(function()
 		$('#customizedDatas').append(uploading_in_progress);
 	});
 
+	original_url = window.location + '';
+	first_url_check = true;
+	checkUrl();
+	initLocationChange();
+
 	//init the price in relation of the selected attributes
 	if (typeof productHasAttributes != 'undefined' && productHasAttributes)
 		findCombination(true);
@@ -563,11 +570,6 @@ $(document).ready(function()
 		'transitionIn'	: 'elastic',
 		'transitionOut'	: 'elastic'
 	});
-	original_url = window.location + '';
-	first_url_check = true;
-	checkUrl();
-	initLocationChange();
-	
 });
 
 function saveCustomization()
@@ -668,12 +670,12 @@ function getProductAttribute()
 function initLocationChange(time)
 {
 	if(!time) time = 500;
-	setInterval(checkUrl, time);
+		setInterval(checkUrl, time);
 }
 
 function checkUrl()
 {
-	if (original_url != window.url || first_url_check)
+	if (original_url != window.location || first_url_check)
 	{
 		first_url_check = false;
 		url = window.location + '';
@@ -710,7 +712,7 @@ function checkUrl()
 			if (count >= 0)
 			{
 				findCombination(false);
-				original_url = window.location + '';
+				original_url = url;
 			}
 			// no combination found = removing attributes from url
 			else

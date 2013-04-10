@@ -175,7 +175,7 @@ class ProductDownloadCore extends ObjectModel
 	{
 		if (!ProductDownload::isFeatureActive())
 			return false;
-		if (array_key_exists($id_product, self::$_productIds))
+		if (array_key_exists((int)$id_product, self::$_productIds))
 			return self::$_productIds[$id_product];
 		self::$_productIds[$id_product] = (int)Db::getInstance()->getValue('
 		SELECT `id_product_download`

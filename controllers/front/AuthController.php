@@ -379,8 +379,8 @@ class AuthControllerCore extends FrontController
 				$this->errors[] = Tools::displayError('An account using this email address has already been registered.', false);
 		// Preparing customer
 		$customer = new Customer();
-		$lastnameAddress = $_POST['lastname'];
-		$firstnameAddress = $_POST['firstname'];		
+		$lastnameAddress = Tools::getValue('lastname');
+		$firstnameAddress = Tools::getValue('firstname');		
 		$_POST['lastname'] = Tools::getValue('customer_lastname');
 		$_POST['firstname'] = Tools::getValue('customer_firstname');
 		

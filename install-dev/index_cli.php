@@ -24,4 +24,18 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-define('_PS_INSTALL_VERSION_', '1.5.4.1');
+/* Redefine REQUEST_URI */
+$_SERVER['REQUEST_URI'] = '/install/index_cli.php';
+require_once dirname(__FILE__).'/init.php';
+require_once _PS_INSTALL_PATH_.'classes/datas.php';
+ini_set('memory_limit', '128M');
+try
+{
+	require_once _PS_INSTALL_PATH_.'classes/controllerConsole.php';
+	InstallControllerConsole::execute($argc, $argv);
+	echo '-- Installation successfull! --'."\n";
+}
+catch (PrestashopInstallerException $e)
+{
+	$e->displayMessage();
+}

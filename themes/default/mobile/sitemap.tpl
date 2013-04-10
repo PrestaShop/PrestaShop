@@ -26,18 +26,21 @@
 {hook h="displayMobileTopSiteMap"}
 </div>
 <hr width="99%" align="center" size="2" class=""/>
-
 {if isset($categoriesTree.children)}
 	<h2>{l s='Our offers'}</h2>
 
 	<ul data-role="listview" data-inset="true">
 		{for $i=0 to 4}
 			{if isset($categoriesTree.children.$i)}
+				{if isset($categoriesTree.children.$i.children) && ($categoriesTree.children.$i.children|@count > 0)}
+						{include file="./category-tree-branch.tpl" node=$categoriesTree.children.$i}
+				{else}
 				<li data-icon="arrow-d">
 					<a href="{$categoriesTree.children.$i.link|escape:'htmlall':'UTF-8'}" title="{$categoriesTree.children.$i.desc|escape:'htmlall':'UTF-8'}">
 						{$categoriesTree.children.$i.name|escape:'htmlall':'UTF-8'}
 					</a>
 				</li>
+				{/if}
 			{/if}
 		{/for}
 		<li>
