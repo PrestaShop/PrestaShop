@@ -209,12 +209,14 @@ class DbPDOCore extends Db
 
 		if (strtolower($engine) == 'innodb')
 		{
-			$sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
+			//$sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
+			$sql='SELECT * FROM INFORMATION_SCHEMA.ENGINES WHERE ENGINE LIKE \'INNODB\''; // fix for mysql  v5.6.10
 			$result = $link->query($sql);
 			if (!$result)
 				return 4;
 			$row = $result->fetch();
-			if (!$row || strtolower($row['Value']) != 'yes')
+			//if (!$row || strtolower($row['Value']) != 'yes')
+			if (!$row || (strtolower($row['SUPPORT']) != 'yes' && strtolower($row['SUPPORT']) != 'default')) // fix for mysql  v5.6.10
 				return 4;
 		}
 		unset($link);
