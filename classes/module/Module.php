@@ -139,8 +139,9 @@ abstract class ModuleCore
 	public function __construct($name = null, Context $context = null)
 	{
 		// Load context and smarty
-		$this->context = $context ? $context : Context::getContext();
-		$this->smarty = $this->context->smarty->createData($this->context->smarty);
+		$this->context = $context ? $context : Context::getContext();				
+		if (is_object($this->context->smarty))				
+			$this->smarty = $this->context->smarty->createData($this->context->smarty);
 
 		// If the module has no name we gave him its id as name
 		if ($this->name == null)
@@ -152,8 +153,9 @@ abstract class ModuleCore
 			// If cache is not generated, we generate it
 			if (self::$modules_cache == null && !is_array(self::$modules_cache))
 			{
-				// Join clause is done to check if the module is activated in current shop context
-				$sql_limit_shop = 'SELECT COUNT(*) FROM `'._DB_PREFIX_.'module_shop` ms WHERE m.`id_module` = ms.`id_module` AND ms.`id_shop` = '.(int)Context::getContext()->shop->id;
+				// Join clause is done to check if the module is activated in current shop context												
+				$sql_limit_shop = 'SELECT COUNT(*) FROM `'._DB_PREFIX_.'module_shop` ms WHERE m.`id_module` = ms.`id_module` AND ms.`id_shop` = '.((is_object(Context::getContext()->shop) && $id = (int)Context::getContext()->shop->id) ? $id : 1);
+									
 				$sql = 'SELECT m.`id_module`, m.`name`, ('.$sql_limit_shop.') as total FROM `'._DB_PREFIX_.'module` m';
 
 				// Result is cached
