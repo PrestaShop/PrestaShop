@@ -720,8 +720,10 @@ class ToolsCore
 		echo '<xmp style="text-align: left;">';
 		print_r($object);
 		echo '</xmp><br />';
+
 		if ($kill)
 			die('END');
+
 		return $object;
 	}
 
@@ -739,7 +741,7 @@ class ToolsCore
 		
 		echo '
 			<script type="text/javascript">
-				console.'.$type.'('.json_encode($object).');
+				console.'.$type.'('.Tools::jsonEncode($object).');
 			</script>
 		';
 	}
