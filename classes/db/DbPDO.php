@@ -209,13 +209,33 @@ class DbPDOCore extends Db
 
 		if (strtolower($engine) == 'innodb')
 		{
-			$sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
+			// check which version of MySQL is installed
+			$query = "SELECT variable_value FROM information_schema.global_variables WHERE variable_name = 'version'";
+			$res_version = $link->query($sql);
+			$mysql_version = null;
+			if($res_version){
+				$mysql_version = substr($res_version->variable_value,1,3);
+			}
+			if ( $mysql_version == "5.6")){
+				// MySQL version is 5.6
+				$sql='SELECT * FROM INFORMATION_SCHEMA.ENGINES WHERE ENGINE LIKE \'INNODB\'';
+			}
+			else{
+				// older version of MySQL e.g.: 5.5 or lower
+				$sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';	
+			}
 			$result = $link->query($sql);
 			if (!$result)
 				return 4;
 			$row = $result->fetch();
-			if (!$row || strtolower($row['Value']) != 'yes')
+			if (!$mysql_version == "5.6")){
+				if (!$row || strtolower($row['Value']) != 'yes')
 				return 4;
+			}
+			else{
+				if (!$row || (strtolower($row['SUPPORT']) != 'yes' && strtolower($row['SUPPORT']) != 'default'))
+   				return 4;
+			}
 		}
 		unset($link);
 		return 0;
