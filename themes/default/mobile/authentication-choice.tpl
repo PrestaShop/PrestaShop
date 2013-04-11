@@ -13,7 +13,7 @@
 		</div>
 	</form>
 
-	<hr width="99%" align="center" size="2" class=""/>
+	<hr/>
 
 	<form action="{$link->getPageLink('authentication', true)}" method="post" class="login_form">
 		<h2>{l s='Already registered?'}</h2>

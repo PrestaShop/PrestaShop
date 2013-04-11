@@ -25,7 +25,7 @@
 <div id="hook_mobile_top_site_map">
 {hook h="displayMobileTopSiteMap"}
 </div>
-<hr width="99%" align="center" size="2" class=""/>
+<hr/>
 {if isset($categoriesTree.children)}
 	<h2>{l s='Our offers'}</h2>
 
@@ -54,7 +54,7 @@
 	</ul>
 {/if}
 
-<hr width="99%" align="center" size="2" class=""/>
+<hr/>
 <h2>{l s='Sitemap'}</h2>
 <ul data-role="listview" data-inset="true" id="category">
 	{if $controller_name != 'index'}<li><a href="{$link->getPageLink('index', true)}">{l s='Home'}</a></li>{/if}
