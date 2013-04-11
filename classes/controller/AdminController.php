@@ -443,7 +443,8 @@ class AdminControllerCore extends Controller
 		if (isset($_GET) && !empty($_GET) && isset($this->table))
 			foreach ($_GET as $key => $value)
 				if (stripos($key, $this->table.'OrderBy') === 0 || stripos($key, $this->table.'Orderway') === 0)
-					$this->context->cookie->$key = $value;
+					$this->context->cookie->{$prefix.$key} = $value;
+
 		$filters = $this->context->cookie->getFamily($prefix.$this->table.'Filter_');
 		foreach ($filters as $key => $value)
 		{
@@ -885,11 +886,11 @@ class AdminControllerCore extends Controller
 		if (isset($this->context->cookie->{'submitFilter'.$this->table}))
 			unset($this->context->cookie->{'submitFilter'.$this->table});
 
-		if (isset($this->context->cookie->{$this->table.'Orderby'}))
-			unset($this->context->cookie->{$this->table.'Orderby'});
+		if (isset($this->context->cookie->{$prefix.$this->table.'Orderby'}))
+			unset($this->context->cookie->{$prefix.$this->table.'Orderby'});
 
-		if (isset($this->context->cookie->{$this->table.'Orderway'}))
-			unset($this->context->cookie->{$this->table.'Orderway'});
+		if (isset($this->context->cookie->{$prefix.$this->table.'Orderway'}))
+			unset($this->context->cookie->{$prefix.$this->table.'Orderway'});
 
 		unset($_POST);
 		$this->_filter = false;
@@ -2045,11 +2046,11 @@ class AdminControllerCore extends Controller
 
 		if (!Validate::isTableOrIdentifier($this->table))
 			throw new PrestaShopException(sprintf('Table name %s is invalid:', $this->table));
-
+		$prefix = str_replace(array('admin', 'controller'), '', Tools::strtolower(get_class($this)));
 		if (empty($order_by))
 		{
-			if ($this->context->cookie->{$this->table.'Orderby'})
-				$order_by = $this->context->cookie->{$this->table.'Orderby'};
+			if ($this->context->cookie->{$prefix.$this->table.'Orderby'})
+				$order_by = $this->context->cookie->{$prefix.$this->table.'Orderby'};
 			elseif ($this->_orderBy)
 				$order_by = $this->_orderBy;
 			else
@@ -2058,8 +2059,8 @@ class AdminControllerCore extends Controller
 
 		if (empty($order_way))
 		{
-			if ($this->context->cookie->{$this->table.'Orderway'})
-				$order_way = $this->context->cookie->{$this->table.'Orderway'};
+			if ($this->context->cookie->{$prefix.$this->table.'Orderway'})
+				$order_way = $this->context->cookie->{$prefix.$this->table.'Orderway'};
 			elseif ($this->_orderWay)
 				$order_way = $this->_orderWay;
 			else

@@ -102,14 +102,16 @@ $(function(){ldelim}
 			<label for="company">{l s='Company'}</label>
 			<input type="text" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{else}{if isset($address->company)}{$address->company}{/if}{/if}" />
 		</p>
-		<div id="vat_area">
-			<div id="vat_number">
-				<p class="text">
-					<label for="vat_number">{l s='VAT number'}</label>
-					<input type="text" class="text" name="vat_number" value="{if isset($smarty.post.vat_number)}{$smarty.post.vat_number}{else}{if isset($address->vat_number)}{$address->vat_number}{/if}{/if}" />
-				</p>
+		{/if}
+		{if $field_name eq 'vat_number'}
+			<div id="vat_area">
+				<div id="vat_number">
+					<p class="text">
+						<label for="vat_number">{l s='VAT number'}</label>
+						<input type="text" class="text" name="vat_number" value="{if isset($smarty.post.vat_number)}{$smarty.post.vat_number}{else}{if isset($address->vat_number)}{$address->vat_number}{/if}{/if}" />
+					</p>
+				</div>
 			</div>
-		</div>
 		{/if}
 		{if $field_name eq 'firstname'}
 		<p class="required text">

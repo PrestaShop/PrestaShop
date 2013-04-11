@@ -129,7 +129,7 @@ class TranslateCore
 		static $translations_merged = array();
 
 		$name = $module instanceof Module ? $module->name : $module;
-		if (!isset($translations_merged[$name]))
+		if (!isset($translations_merged[$name]) && isset(Context::getContext()->language))
 		{
 			$filesByPriority = array(
 				// Translations in theme
