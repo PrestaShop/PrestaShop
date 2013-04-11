@@ -117,7 +117,7 @@ class StatsBestVouchers extends ModuleGrid
 
 	public function getData()
 	{
-		$this->_query = 'SELECT SQL_CALC_FOUND_ROWS cr.code, ocr.name, COUNT(ocr.id_cart_rule) as total, ROUND(SUM(o.total_paid_real) / o.conversion_rate) as ca
+		$this->_query = 'SELECT SQL_CALC_FOUND_ROWS cr.code, ocr.name, COUNT(ocr.id_cart_rule) as total, ROUND(SUM(o.total_paid_real) / o.conversion_rate,2) as ca
 				FROM '._DB_PREFIX_.'order_cart_rule ocr
 				LEFT JOIN '._DB_PREFIX_.'orders o ON o.id_order = ocr.id_order
 				LEFT JOIN '._DB_PREFIX_.'cart_rule cr ON cr.id_cart_rule = ocr.id_cart_rule
