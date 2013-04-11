@@ -95,9 +95,9 @@ class Blocktopmenu extends Module
 		) ENGINE = '._MYSQL_ENGINE_.' CHARACTER SET utf8 COLLATE utf8_general_ci;') &&
 			Db::getInstance()->execute('
 			 CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'linksmenutop_lang` (
-			`id_linksmenutop` INT NOT NULL,
-			`id_lang` INT(11) NOT NULL,
-			`id_shop` INT(11) NOT NULL,
+			`id_linksmenutop` INT(11) UNSIGNED NOT NULL,
+			`id_lang` INT(11) UNSIGNED NOT NULL,
+			`id_shop` INT(11) UNSIGNED NOT NULL,
 			`label` VARCHAR( 128 ) NOT NULL ,
 			`link` VARCHAR( 128 ) NOT NULL ,
 			INDEX ( `id_linksmenutop` , `id_lang`, `id_shop`)
