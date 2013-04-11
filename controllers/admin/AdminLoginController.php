@@ -70,18 +70,23 @@ class AdminLoginControllerCore extends AdminController
 
 		if (file_exists(_PS_ADMIN_DIR_.'/../install'))
 			$this->context->smarty->assign('wrong_install_name', true);
-		if (file_exists(_PS_ADMIN_DIR_.'/../admin'))
+		
+		if (basename(_PS_ADMIN_DIR_) == 'admin' && file_exists(_PS_ADMIN_DIR_.'/../admin/'))
 		{	
-			$rand = sprintf('%04d', rand(0, 9999));
-			if (@rename(_PS_ADMIN_DIR_.'/../admin', _PS_ADMIN_DIR_.'/../admin'.$rand))
-				Tools::redirectAdmin('../admin'.$rand);
+			$rand = 'admin'.sprintf('%04d', rand(0, 9999)).'/';
+			if (@rename(_PS_ADMIN_DIR_.'/../admin/', _PS_ADMIN_DIR_.'/../'.$rand))
+				Tools::redirectAdmin('../'.$rand);
 			else
 				$this->context->smarty->assign(array(
 					'wrong_folder_name' => true
 				));
 		}
+		else
+			$rand = basename(_PS_ADMIN_DIR_).'/';
+
 		$this->context->smarty->assign(array(
-			'randomNb' => rand(0, 9999)
+			'randomNb' => $rand,
+			'adminUrl' => Tools::getCurrentUrlProtocolPrefix().Tools::getShopDomain().__PS_BASE_URI__.$rand
 		));
 
 		// Redirect to admin panel

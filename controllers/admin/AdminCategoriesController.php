@@ -542,9 +542,14 @@ class AdminCategoriesControllerCore extends AdminController
 	{
 		$id_category = (int)Tools::getValue('id_category');
 		$id_parent = (int)Tools::getValue('id_parent');
+
 		// if true, we are in a root category creation
 		if (!$id_parent && !Tools::isSubmit('is_root_category'))
-			$_POST['is_root_category'] = $_POST['level_depth'] = $_POST['id_parent'] = $id_parent = 1;
+		{
+			$_POST['is_root_category'] = $_POST['level_depth'] = 1;
+		   $_POST['id_parent'] = $id_parent = (int)Configuration::get('PS_ROOT_CATEGORY');
+		}
+
 		if ($id_category)
 		{
 			if ($id_category != $id_parent)
