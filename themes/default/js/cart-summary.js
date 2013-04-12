@@ -201,8 +201,9 @@ function changeAddressDelivery(obj)
 
 function updateAddressId(id_product, id_product_attribute, old_id_address_delivery, id_address_delivery, line)
 {
+
 	if (typeof(line) == 'undefined' || line.length == 0)
-		line = $('#product_' + id_product + '_' + id_product_attribute + '_0_' + old_id_address_delivery + ', #product_' + id_product + '_' + id_product_attribute + '_nocustom_' + old_id_address_delivery);
+		line = $('#cart_summary tr[id^=product_' + id_product + '_' + id_product_attribute + '_0_], #cart_summary tr[id^=product_' + id_product + '_' + id_product_attribute + '_nocustom_]');
 
 	$('.product_customization_for_' + id_product + '_' + id_product_attribute + '_' + old_id_address_delivery).each(function(){
 		$(this).attr('id', $(this).attr('id').replace(/_\d+$/, '_' + id_address_delivery)).removeClass('product_customization_for_' + id_product + '_' + id_product_attribute + '_' + old_id_address_delivery + ' address_' + old_id_address_delivery).addClass('product_customization_for_' + id_product + '_' + id_product_attribute + '_' + id_address_delivery + ' address_' + id_address_delivery);
