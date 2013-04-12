@@ -295,11 +295,12 @@ function updateDisplay()
 		var priceTaxExclWithoutGroupReduction = '';
 
 		// retrieve price without group_reduction in order to compute the group reduction after
-		// the specific price discount (done in the JS in order to keep backward compatibility)		priceTaxExclWithoutGroupReduction = ps_round(productPriceTaxExcluded, 6) * (1 / group_reduction);
+		// the specific price discount (done in the JS in order to keep backward compatibility)		
+		priceTaxExclWithoutGroupReduction = ps_round(productPriceTaxExcluded, 6) * (1 / group_reduction);
 
 		var tax = (taxRate / 100) + 1;
 		var taxExclPrice = priceTaxExclWithoutGroupReduction + (selectedCombination['price'] * currencyRate);
-		
+
 		if (selectedCombination.specific_price && selectedCombination.specific_price['id_product_attribute'])
 		{
 			if (selectedCombination.specific_price['price'] && selectedCombination.specific_price['price'] >=0)
