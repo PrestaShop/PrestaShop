@@ -1110,7 +1110,7 @@ class CartRuleCore extends ObjectModel
 				FROM '._DB_PREFIX_.'customer_group cg
 				LEFT JOIN '._DB_PREFIX_.'cart_rule_group crg ON cg.id_group = crg.id_group
 				WHERE cr.id_cart_rule = crg.id_cart_rule
-				AND cg.id_customer = '.(int)$context->customer->id.'
+				AND cg.id_customer = '.(int)$context->customer->id.' LIMIT 1
 			)' : '').'
 		)
 		AND (
