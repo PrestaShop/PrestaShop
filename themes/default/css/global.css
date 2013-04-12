@@ -612,7 +612,6 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 .idTabs {
 	list-style-type: none;
 	margin-top: 20px;
-	padding:0 5px;
 	border-bottom: 8px solid #f7b900
 }
 ul.idTabs li {
