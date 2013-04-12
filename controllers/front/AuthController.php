@@ -316,7 +316,7 @@ class AuthControllerCore extends FrontController
 				$this->context->cart->secure_key = $customer->secure_key;
 				$this->context->cart->save();
 				$this->context->cookie->id_cart = (int)$this->context->cart->id;
-				$this->context->cookie->update();
+				$this->context->cookie->write();
 				$this->context->cart->autosetProductAddress();
 
 				Hook::exec('actionAuthentication');
