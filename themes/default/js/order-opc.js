@@ -401,7 +401,6 @@ function updateNewAccountToAddressBlock()
 					$.each(json.summary.products, function() {
 						updateAddressId(this.id_product, this.id_product_attribute, '0', this.id_address_delivery);
 					});
-					updateCartSummary(json.summary);
 					updateAddressesDisplay(true);
 					updateCarrierList(json.carrier_data);
 					updateCarrierSelectionAndGift();
