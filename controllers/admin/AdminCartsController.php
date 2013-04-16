@@ -101,15 +101,15 @@ class AdminCartsControllerCore extends AdminController
 	{
 		if (!($cart = $this->loadObject(true)))
 			return;
-
 		$customer = new Customer($cart->id_customer);
+		$currency = new Currency($cart->id_currency);
 		$this->context->cart = $cart;
+		$this->context->currency = $currency;
 		$this->context->customer = $customer;
 		$products = $cart->getProducts();
 		$customized_datas = Product::getAllCustomizedDatas((int)$cart->id);
 		Product::addCustomizationPrice($products, $customized_datas);
 		$summary = $cart->getSummaryDetails();
-		$currency = new Currency($cart->id_currency);
 
 		/* Display order information */
 		$id_order = (int)Order::getOrderByCartId($cart->id);
@@ -739,6 +739,7 @@ class AdminCartsControllerCore extends AdminController
 	{
 		$context = Context::getContext();
 		$context->cart = new Cart($id_cart);
+		$context->currency = new Currency((int)$context->cart->id_currency);
 		$context->customer = new Customer((int)$context->cart->id_customer);
 		return Cart::getTotalCart($id_cart, true, Cart::BOTH_WITHOUT_SHIPPING);
 	}
