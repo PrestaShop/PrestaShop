@@ -265,6 +265,7 @@ function confirmFreeOrder()
 	else
 		$('#opc_account-overlay').fadeIn('slow');
 	$('#opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeOut('slow');
+	$('#confirmOrder').attr('disabled', 'disabled');
 	$.ajax({
 		type: 'POST',
 		headers: { "cache-control": "no-cache" },
@@ -275,6 +276,7 @@ function confirmFreeOrder()
 		data: 'ajax=true&method=makeFreeOrder&token=' + static_token ,
 		success: function(html)
 		{
+			$('#confirmOrder').attr('disabled', '');
 			var array_split = html.split(':');
 			if (array_split[0] == 'freeorder')
 			{
