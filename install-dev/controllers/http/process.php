@@ -331,8 +331,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 	 */
 	public function display()
 	{
-		$this->initializeContext();
-		
 		// The installer SHOULD take less than 32M, but may take up to 35/36M sometimes. So 42M is a good value :)
 		$low_memory = Tools::getMemoryLimit() < Tools::getOctets('42M');
 
@@ -361,8 +359,15 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		$this->process_steps[] = $install_modules;
 		
 		$install_modules = array('key' => 'installModulesAddons', 'lang' => $this->l('Install modules Addons'));
+
+		$params = array('iso_lang' => $this->language->getLanguageIso(), 
+							'iso_country' => $this->session->shop_country, 
+							'email' => $this->session->admin_email, 
+							'shop_url' => Tools::getHttpHost(),
+							'version' => _PS_INSTALL_VERSION_);
+
 		if ($low_memory)
-			foreach ($this->model_install->getAddonsModulesList() as $module)
+			foreach ($this->model_install->getAddonsModulesList($params) as $module)
 				$install_modules['subtasks'][] = array('module' => (string)$module['name'], 'id_module' => (string)$module['id_module']);
 		$this->process_steps[] = $install_modules;
 
