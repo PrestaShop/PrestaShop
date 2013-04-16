@@ -2870,8 +2870,12 @@ class CartCore extends ObjectModel
 			{
 				$cart_rule['value_real'] -= $total_shipping;
 				$cart_rule['value_tax_exc'] -= $total_shipping_tax_exc;
-				$total_discounts -= $total_shipping;
-				$total_discounts_tax_exc -= $total_shipping_tax_exc;
+				$cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'], (int)$context->currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
+				$cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'], (int)$context->currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
+				if ($total_discounts > $cart_rule['value_real'])
+					$total_discounts -= $total_shipping;
+				if ($total_discounts_tax_exc > $cart_rule['value_tax_exc'])
+					$total_discounts_tax_exc -= $total_shipping_tax_exc;
 
 				// Update total shipping
 				$total_shipping = 0;
