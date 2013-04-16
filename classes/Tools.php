@@ -2347,16 +2347,16 @@ exit;
 		$addons_url = 'api.addons.prestashop.com';
 		$postData = '';
 		$postDataArray = array(
-			'version' => _PS_VERSION_,
-			'iso_lang' => strtolower(Context::getContext()->language->iso_code),
-			'iso_code' => strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))),
-			'shop_url' => urlencode(Tools::getShopDomain()),
-			'mail' => urlencode(Configuration::get('PS_SHOP_EMAIL'))
+			'version' => isset($params['version']) ? $params['version'] : _PS_VERSION_,
+			'iso_lang' => Tools::strtolower(isset($params['iso_lang']) ? $params['iso_lang'] : Context::getContext()->language->iso_code),
+			'iso_code' => Tools::strtolower(isset($params['iso_country']) ? $params['iso_country'] : Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))),
+			'shop_url' => urlencode(isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain()),
+			'mail' => urlencode(isset($params['email']) ? $params['email'] : Configuration::get('email'))
 		);
 		foreach ($postDataArray as $postDataKey => $postDataValue)
 			$postData .= '&'.$postDataKey.'='.$postDataValue;
 		$postData = ltrim($postData, '&');
-		
+
 		// Config for each request
 		if ($request == 'native')
 		{
