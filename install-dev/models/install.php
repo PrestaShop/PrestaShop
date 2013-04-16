@@ -557,7 +557,6 @@ class InstallModelInstall extends InstallAbstractModel
 				'graphvisifire',
 				'graphxmlswfcharts',
 				'gridhtml',
-				'gsitemap',
 				'homefeatured',
 				'homeslider',
 				'pagesnotfound',
