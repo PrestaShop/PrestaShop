@@ -26,7 +26,7 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 			<select id="infosActivity" name="shop_activity" class="chosen">
 				<option value="0" style="font-weight: bold" <?php if (!$this->session->shop_activity): ?>selected="selected"<?php endif; ?>><?php echo $this->l('Please choose your main activity') ?></option>
 				<?php foreach ($this->list_activities as $i => $activity): ?>
-					<option value="<?php echo $i ?>" <?php if ($this->session->shop_activity == $i): ?>selected="selected"<?php endif; ?>><?php echo $activity ?></option>
+					<option value="<?php echo $i ?>" <?php if (isset($this->session->shop_activity) && $this->session->shop_activity == $i): ?>selected="selected"<?php endif; ?>><?php echo $activity ?></option>
 				<?php endforeach; ?>
 				<option value="0"><?php echo $this->l('Other activity...') ?></option>
 			</select>
