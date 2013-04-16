@@ -75,7 +75,7 @@ $(document).ready(function() {
 {assign var='stateExist' value=false}
 {if !isset($email_create)}
 	<script type="text/javascript">
-	{literal}	
+	{literal}
 	$(document).ready(function(){
 		// Retrocompatibility with 1.4
 		if (typeof baseUri === "undefined" && typeof baseDir !== "undefined")
