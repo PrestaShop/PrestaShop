@@ -220,7 +220,7 @@ $(function(){ldelim}
 		</p>
 		<p class="required text" id="adress_alias">
 			<label for="alias">{l s='Please assign an address title for future reference.'} <sup>*</sup></label>
-			<input type="text" id="alias" name="alias" value="{if isset($smarty.post.alias)}{$smarty.post.alias}{else if isset($address->alias)}{$address->alias}{else if !isset($select_address)}{l s='My address'}{/if}" />
+			<input type="text" id="alias" name="alias" value="{if isset($smarty.post.alias)}{$smarty.post.alias}{else if isset($address->alias)}{$address->alias}{elseif !$select_address}{l s='My address'}{/if}" />
 		</p>
 	</fieldset>
 	<p class="submit2">
