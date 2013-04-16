@@ -23,7 +23,7 @@ INSERT INTO `PREFIX_order_invoice_payment`
 
 -- Step 2: Add the collumn id_order_reference
 ALTER TABLE `PREFIX_order_payment`
-	ADD COLUMN `order_reference` VARCHAR(9)  AFTER `id_order`,
+	ADD COLUMN `order_reference` VARCHAR(10)  AFTER `id_order`,
 	ADD INDEX `order_reference`(`order_reference`);
 
 

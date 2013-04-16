@@ -509,7 +509,7 @@ class Blocknewsletter extends Module
 	public function hookDisplayLeftColumn($params)
 	{
 		$this->_prepareHook($params);
-		return $this->display(__FILE__, 'blocknewsletter.tpl', $this->getCacheId());
+		return $this->display(__FILE__, 'blocknewsletter.tpl');
 	}
 	
 	public function hookFooter($params)

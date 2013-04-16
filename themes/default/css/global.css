@@ -2,8 +2,6 @@
 	PRESTASHOP CSS
 ################################################################################################## */
 
-@import url("grid_prestashop.css");
-
 /* ****************************************************************************
 		reset
 **************************************************************************** */
@@ -105,7 +103,7 @@ p em {font-style:italic}
 	padding:10px;
 	border:1px solid #5cff74;
 	font-size:13px;
-	background: #d3ffab
+	background: #d3ffab;
 }
 .error {
 	margin:0 0 10px 0;
@@ -263,6 +261,7 @@ table.table_block {
 	border:1px solid #999;
 	border-bottom:none;
 	background:white;
+	border-collapse:inherit
 }
 table.std th,
 table.table_block th {
@@ -539,9 +538,9 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 ************************************************************************************************ */
 #header {position:relative}
 #header_logo {
-	float:left;
-	display:block;
-	margin-top:30px;
+	position: absolute;
+	top: 30px;
+	z-index: 1;
 }
 
 #header_right {
@@ -613,7 +612,6 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 .idTabs {
 	list-style-type: none;
 	margin-top: 20px;
-	padding:0 5px;
 	border-bottom: 8px solid #f7b900
 }
 ul.idTabs li {
@@ -806,6 +804,7 @@ table#cart_summary .cart_total_price td.cart_voucher {
 
 table#cart_summary #total_price_container {
 	border-bottom:1px solid #999;
+	border-right: none;
 }
 
 .cart_voucher .title_block, .cart_voucher h4
@@ -1267,10 +1266,11 @@ a.iframe {font-weight:bold}
 	width:723px;
 	border:1px solid #ccc
 }
-
+#order-opc #opc_delivery_methods #message {
+	width: 757px;
+}
 #order-opc #opc_payment_methods {margin-bottom:20px}
 #order-opc #opc_payment_methods #opc_payment_methods-content p{margin:0}
-
 .delivery_option_carrier td {width:200px}
 .delivery_option_carrier td + td {width:280px;}
 .delivery_option_carrier td + td + td {width:200px}

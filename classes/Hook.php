@@ -274,8 +274,9 @@ class HookCore extends ObjectModel
 			// For payment modules, we check that they are available in the contextual country
 			elseif ($frontend)
 			{
+				$sql->where(Module::getPaypalIgnore());
 				if (Validate::isLoadedObject($context->country))
-					$sql->where('(h.name = "displayPayment" AND (SELECT id_country FROM '._DB_PREFIX_.'module_country mc WHERE mc.id_module = m.id_module AND id_country = '.(int)$context->country->id.' LIMIT 1) = '.(int)$context->country->id.')');
+					$sql->where('(h.name = "displayPayment" AND (SELECT id_country FROM '._DB_PREFIX_.'module_country mc WHERE mc.id_module = m.id_module AND id_country = '.(int)$context->country->id.' AND id_shop = '.(int)$context->shop->id.' LIMIT 1) = '.(int)$context->country->id.')');
 				if (Validate::isLoadedObject($context->currency))
 					$sql->where('(h.name = "displayPayment" AND (SELECT id_currency FROM '._DB_PREFIX_.'module_currency mcr WHERE mcr.id_module = m.id_module AND id_currency IN ('.(int)$context->currency->id.', -2) LIMIT 1) IN ('.(int)$context->currency->id.', -2))');
 			}
@@ -286,7 +287,6 @@ class HookCore extends ObjectModel
 			{
 				$sql->leftJoin('module_group', 'mg', 'mg.`id_module` = m.`id_module`');
 				$sql->where('mg.`id_group` IN ('.implode(', ', $groups).')');
-				$sql->where(Module::getPaypalIgnore());
 				$sql->groupBy('hm.id_hook, hm.id_module');
 			}
 

@@ -557,7 +557,6 @@ class InstallModelInstall extends InstallAbstractModel
 				'graphvisifire',
 				'graphxmlswfcharts',
 				'gridhtml',
-				'gsitemap',
 				'homefeatured',
 				'homeslider',
 				'pagesnotfound',
@@ -585,7 +584,6 @@ class InstallModelInstall extends InstallAbstractModel
 				'statsvisits',
 			);
 		}
-
 		return $modules;
 	}
 	
@@ -602,18 +600,16 @@ class InstallModelInstall extends InstallAbstractModel
 		return $addons_modules;
 	}
 	
-
 	/**
 	 * PROCESS : installModules
 	 * Download module from addons and Install all modules in ~/modules/ directory
 	 */
-	public function installModules($module = null)
+	public function installModulesAddons($module = null)
 	{
-		$modules = $module ? array($module) : $this->getModulesList();
+		$addons_modules = $module ? array($module) : $this->getAddonsModulesList();
+		$modules = array();	
 		if (!InstallSession::getInstance()->safe_mode)
 		{
-			$addons_modules = $this->getAddonsModulesList();
-		
 			foreach($addons_modules as $addons_module)
 				if (file_put_contents(_PS_MODULE_DIR_.$addons_module['name'].'.zip', Tools::addonsRequest('module', array('id_module' => $addons_module['id_module']))))
 					if (Tools::ZipExtract(_PS_MODULE_DIR_.$addons_module['name'].'.zip', _PS_MODULE_DIR_))
@@ -622,6 +618,26 @@ class InstallModelInstall extends InstallAbstractModel
 						unlink(_PS_MODULE_DIR_.$addons_module['name'].'.zip');
 					}
 		}		
+		$errors = array();
+		foreach ($modules as $module_name)
+			$this->installModules($module_name);
+
+		if ($errors)
+		{
+			$this->setError($errors);
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * PROCESS : installModules
+	 * Download module from addons and Install all modules in ~/modules/ directory
+	 */
+	public function installModules($module = null)
+	{
+		$modules = $module ? array($module) : $this->getModulesList();
+	
 		$errors = array();
 		foreach ($modules as $module_name)
 		{
@@ -634,7 +650,7 @@ class InstallModelInstall extends InstallAbstractModel
 		}
 
 		if ($errors)
-		{
+		{	
 			$this->setError($errors);
 			return false;
 		}

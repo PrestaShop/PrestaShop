@@ -26,6 +26,13 @@
 
 class AdminPerformanceControllerCore extends AdminController
 {
+
+	public function __construct()
+	{
+		$this->className = 'Configuration';
+		parent::__construct();		
+	}
+	
 	public function initFieldsetSmarty()
 	{
 		$this->fields_form[0]['form'] = array(
@@ -541,6 +548,7 @@ class AdminPerformanceControllerCore extends AdminController
 
 	public function postProcess()
 	{
+	
 		/* PrestaShop demo mode */
 		if (_PS_MODE_DEMO_)
 		{
@@ -617,6 +625,9 @@ class AdminPerformanceControllerCore extends AdminController
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
+				$theme_cache_directory = _PS_ALL_THEMES_DIR_.$this->context->shop->theme_directory.'/cache/';							
+				if (((bool)Tools::getValue('PS_CSS_THEME_CACHE') || (bool)Tools::getValue('PS_JS_THEME_CACHE')) && !is_writable($theme_cache_directory))
+					$this->errors[] = Tools::displayError(sprintf($this->l('To use Smart Cache directory %s must be writable.'), realpath($theme_cache_directory)));
 				if (!Configuration::updateValue('PS_CSS_THEME_CACHE', (int)Tools::getValue('PS_CSS_THEME_CACHE')) ||
 					!Configuration::updateValue('PS_JS_THEME_CACHE', (int)Tools::getValue('PS_JS_THEME_CACHE')) ||
 					!Configuration::updateValue('PS_HTML_THEME_COMPRESSION', (int)Tools::getValue('PS_HTML_THEME_COMPRESSION')) ||
@@ -665,9 +676,8 @@ class AdminPerformanceControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
-
 		if ((bool)Tools::getValue('ciphering_up') && Configuration::get('PS_CIPHER_ALGORITHM') != (int)Tools::getValue('PS_CIPHER_ALGORITHM'))
-		{
+		{				
 			if ($this->tabAccess['edit'] === '1')
 			{
 				$algo = (int)Tools::getValue('PS_CIPHER_ALGORITHM');
@@ -793,8 +803,6 @@ class AdminPerformanceControllerCore extends AdminController
 			Hook::exec('action'.get_class($this).ucfirst($this->action).'After', array('controller' => $this, 'return' => ''));
 			Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
 		}
-		else
-			return parent::postProcess();
 	}
 
 	public function ajaxProcess()

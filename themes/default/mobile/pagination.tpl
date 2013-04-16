@@ -50,7 +50,7 @@
 	<!-- Pagination -->
 <div class="clearfix">
 	<div class="pagination_mobile wrapper_pagination_mobile">
-	{if $start!=$stop}
+	{if $start!=$stop && $pages_nb >= 1}
 		<ul class="pagination_mobile" data-role="controlgroup" data-type="horizontal">
 		{if $p != 1}
 			{assign var='p_previous' value=$p-1}
