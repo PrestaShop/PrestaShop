@@ -953,6 +953,7 @@ class CartCore extends ObjectModel
 		$this->update(true);
 		$context = Context::getContext()->cloneContext();
 		$context->cart = $this;
+		Cache::clean('getContextualValue_*');
 		if ($auto_add_cart_rule)
 			CartRule::autoAddToCart($context);
 
