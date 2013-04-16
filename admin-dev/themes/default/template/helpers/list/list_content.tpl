@@ -116,6 +116,8 @@
 				{if isset($params.color) && isset($tr.color)}
 					</span>
 				{/if}
+			{/block}
+			{block name="close_td"}
 				</td>
 			{/block}
 		{/foreach}

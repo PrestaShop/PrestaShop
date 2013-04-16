@@ -316,7 +316,7 @@ class OrderOpcControllerCore extends ParentOrderController
 		// If a rule offer free-shipping, force hidding shipping prices
 		$free_shipping = false;
 		foreach ($this->context->cart->getCartRules() as $rule)
-			if ($rule['free_shipping'])
+			if ($rule['free_shipping'] && !$rule['carrier_restriction'])
 			{
 				$free_shipping = true;
 				break;
@@ -498,9 +498,19 @@ class OrderOpcControllerCore extends ParentOrderController
 		$wrapping_fees = $this->context->cart->getGiftWrappingPrice(false);
 		$wrapping_fees_tax_inc = $wrapping_fees = $this->context->cart->getGiftWrappingPrice();
 		$oldMessage = Message::getMessageByCartId((int)($this->context->cart->id));
+		
+		$free_shipping = false;
+		foreach ($this->context->cart->getCartRules() as $rule)
+		{
+			if ($rule['free_shipping'] && !$rule['carrier_restriction'])
+			{
+				$free_shipping = true;
+				break;
+			}			
+		}		
 
 		$vars = array(
-			'free_shipping' => false, // Deprecated since a cart rule can be applied the specific carriers only
+			'free_shipping' => $free_shipping,
 			'checkedTOS' => (int)($this->context->cookie->checkedTOS),
 			'recyclablePackAllowed' => (int)(Configuration::get('PS_RECYCLABLE_PACK')),
 			'giftAllowed' => (int)(Configuration::get('PS_GIFT_WRAPPING')),
