@@ -424,7 +424,7 @@ function displayImage(domAAroundImgThumb, no_animation)
 		{
 			$('#bigpic').attr('src', newSrc);
 			if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
-				$(this).attr('alt', domAAroundImgThumb.attr('href'));
+				$('#bigpic').attr('rel', domAAroundImgThumb.attr('href'));
 		}
 		$('#views_block li a').removeClass('shown');
 		$(domAAroundImgThumb).addClass('shown');
@@ -528,6 +528,7 @@ $(document).ready(function()
 	//set jqZoom parameters if needed
 	if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
 	{
+		$('#bigpic').attr('rel', $('#bigpic').attr('src').replace('thickbox', 'large'));
 		$('img.jqzoom').jqueryzoom({
 			xzoom: 200, //zooming div default width(default width value is 200)
 			yzoom: 200, //zooming div default width(default height value is 200)
