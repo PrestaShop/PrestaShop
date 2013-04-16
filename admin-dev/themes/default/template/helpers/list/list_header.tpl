@@ -80,6 +80,9 @@
 
 {if !$simple_header}
 <form method="post" action="{$action}" class="form">
+
+	{block name="override_form_extra"}{/block}
+
 	<input type="hidden" id="submitFilter{$table}" name="submitFilter{$table}" value="0"/>
 {/if}
 	<table class="table_grid" name="list_table">
