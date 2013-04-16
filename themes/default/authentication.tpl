@@ -26,6 +26,12 @@
 {capture name=path}{l s='Login'}{/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
+{if ($back != 'my-account')} 
+	{assign var='current_step' value='login'}
+	{include file="$tpl_dir./order-steps.tpl"}
+	{include file="$tpl_dir./errors.tpl"}
+{/if}
+
 <script type="text/javascript">
 // <![CDATA[
 var idSelectedCountry = {if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{else}false{/if};
