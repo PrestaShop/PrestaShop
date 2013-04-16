@@ -95,14 +95,12 @@ class BlockViewed extends Module
 		$id_product = (int)Tools::getValue('id_product');
 		$productsViewed = (isset($params['cookie']->viewed) && !empty($params['cookie']->viewed)) ? array_slice(array_reverse(explode(',', $params['cookie']->viewed)), 0, Configuration::get('PRODUCTS_VIEWED_NBR')) : array();
 
-	        if ( (int)$id_product and !in_array((int)$id_product, $productsViewed) ) {
-	            if( isset($params['cookie']->viewed) && !empty($params['cookie']->viewed) ) {
-	                $params['cookie']->viewed .= ',' . (int)$id_product;
-	            } else {
-	                $params['cookie']->viewed = (int)$id_product;
-	            }
-	        }
-        
+           	if ($id_product && !in_array($id_product, $productsViewed))
+			if (isset($params['cookie']->viewed) && !empty($params['cookie']->viewed))
+		        	$params['cookie']->viewed .= ','.$id_product;
+	                else
+	                	$params['cookie']->viewed = $id_product;
+
 		if (count($productsViewed))
 		{
 			$defaultCover = Language::getIsoById($params['cookie']->id_lang).'-default';
