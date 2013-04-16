@@ -70,12 +70,12 @@ $(document).ready(function() {
 </script>
 
 <h1>{if !isset($email_create)}{l s='Log in'}{else}{l s='Create an account'}{/if}</h1>
-
+{if !isset($back) || $back != 'my-account'}{assign var='current_step' value='login'}{include file="$tpl_dir./order-steps.tpl"}{/if} 
 {include file="$tpl_dir./errors.tpl"}
 {assign var='stateExist' value=false}
 {if !isset($email_create)}
 	<script type="text/javascript">
-	{literal}
+	{literal}	
 	$(document).ready(function(){
 		// Retrocompatibility with 1.4
 		if (typeof baseUri === "undefined" && typeof baseDir !== "undefined")
