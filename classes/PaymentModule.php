@@ -435,6 +435,7 @@ abstract class PaymentModuleCore extends Module
 
 							$voucher->id_customer = $order->id_customer;
 							$voucher->quantity = 1;
+							$voucher->quantity_per_user = 1;
 							if ($voucher->add())
 							{
 								// If the voucher has conditions, they are now copied to the new voucher
