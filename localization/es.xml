@@ -9,11 +9,11 @@
 		<language iso_code="gl" />
 	</languages>
 	<taxes>
-		<tax id="1" name="IVA ES 18%" rate="18" />
-		<tax id="2" name="IVA ES 8%" rate="8" />
+		<tax id="1" name="IVA ES 21%" rate="21" />
+		<tax id="2" name="IVA ES 10%" rate="10" />
 		<tax id="3" name="IVA ES 4%" rate="4" />
 		
-		<taxRulesGroup name="ES Standard rate (18%)">
+		<taxRulesGroup name="ES Standard rate (21%)">
             <taxRule iso_code_country="be" id_tax="1" />
             <taxRule iso_code_country="bg" id_tax="1" />
             <taxRule iso_code_country="cz" id_tax="1" />
@@ -43,7 +43,7 @@
             <taxRule iso_code_country="uk" id_tax="1" />
         </taxRulesGroup>
         
-        <taxRulesGroup name="ES Reduced Rate (8%)">
+        <taxRulesGroup name="ES Reduced Rate (10%)">
             <taxRule iso_code_country="be" id_tax="2" />
             <taxRule iso_code_country="bg" id_tax="2" />
             <taxRule iso_code_country="cz" id_tax="2" />
