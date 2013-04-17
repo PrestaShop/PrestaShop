@@ -33,7 +33,10 @@ class AdminPaymentControllerCore extends AdminController
 		parent::__construct();
 
 		$shop_id = Context::getContext()->shop->id;
-
+		
+		if(is_null(Context::getContext()->link))
+            		Context::getContext()->link = new Link();
+            		
 		/* Get all modules then select only payment ones */
 		$modules = Module::getModulesOnDisk(true);
 
