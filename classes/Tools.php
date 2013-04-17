@@ -2117,7 +2117,7 @@ exit;
 	 *
 	 * @param Smarty $smarty
 	 */
-	public static function clearCache($smarty, $tpl = false, $cache_id = null, $compile_id = null)
+	public static function clearCache($smarty = null, $tpl = false, $cache_id = null, $compile_id = null)
 	{
 		if (is_null($smarty))
 			$smarty = Context::getContext()->smarty;

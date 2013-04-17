@@ -686,6 +686,9 @@ class AdminTranslationsControllerCore extends AdminController
 						if (pathinfo($file2check['filename'], PATHINFO_BASENAME) == 'index.php' && file_put_contents(_PS_TRANSLATIONS_DIR_.'../'.$file2check['filename'], Tools::getDefaultIndexContent()))
 							continue;
 
+					// Clear smarty modules cache
+					Tools::clearCache();
+
 					if (Validate::isLanguageFileName($filename))
 					{
 						if (!Language::checkAndAddLanguage($iso_code))
@@ -735,13 +738,14 @@ class AdminTranslationsControllerCore extends AdminController
 							$this->errors[] = Tools::displayError('The archive cannot be extracted.'). ' '.$error->message;
 						else
 						{
-
 							if (!Language::checkAndAddLanguage($arr_import_lang[0]))
 								$conf = 20;
 							else
 							{
 								// Reset cache 
 								Language::loadLanguages();
+								// Clear smarty modules cache
+								Tools::clearCache();
 
 								AdminTranslationsController::checkAndAddMailsFiles($arr_import_lang[0], $files_list);
 								if ($tab_errors = AdminTranslationsController::addNewTabs($arr_import_lang[0], $files_list))
@@ -1339,6 +1343,9 @@ class AdminTranslationsControllerCore extends AdminController
 						// Find and write all translation modules files
 						foreach ($arr_files as $value)
 							$this->findAndWriteTranslationsIntoFile($value['file_name'], $value['files'], $value['theme'], $value['module'], $value['dir']);
+
+						// Clear modules cache
+						Tools::clearCache();
 
 						// Redirect
 						if (Tools::getValue('submitTranslationsModulesAndStay'))
