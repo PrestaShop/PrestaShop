@@ -2139,7 +2139,10 @@ class ProductCore extends ObjectModel
 
 			$sql = 'SELECT p.*, product_shop.*, stock.`out_of_stock` out_of_stock, pl.`description`, pl.`description_short`,
 						pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`,
-						p.`ean13`, p.`upc`, MAX(image_shop.`id_image`) id_image, il.`legend`
+						p.`ean13`, p.`upc`, MAX(image_shop.`id_image`) id_image, il.`legend`,
+						DATEDIFF(product_shop.`date_add`, DATE_SUB(NOW(),
+						INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).'
+							DAY)) > 0 AS new
 					FROM `'._DB_PREFIX_.'product` p
 					LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
 						p.`id_product` = pl.`id_product`
