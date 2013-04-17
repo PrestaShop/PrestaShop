@@ -435,7 +435,7 @@ class PSCleaner extends Module
 				);
 				foreach ($tables as $table)
 					$db->execute('TRUNCATE TABLE `'._DB_PREFIX_.bqSQL($table).'`');
-				$db->execute('DELETE FROM `'._DB_PREFIX_.'address` WHERE id_customer > 0');
+				$db->execute('DELETE FROM `'._DB_PREFIX_.'address` WHERE id_manufacturer > 0 OR id_supplier > 0 OR id_warehouse > 0');
 
 				Image::deleteAllImages(_PS_PROD_IMG_DIR_);
 				if (!file_exists(_PS_PROD_IMG_DIR_))
@@ -488,7 +488,7 @@ class PSCleaner extends Module
 				);
 				foreach ($tables as $table)
 					$db->execute('TRUNCATE TABLE `'._DB_PREFIX_.bqSQL($table).'`');
-				$db->execute('DELETE FROM `'._DB_PREFIX_.'address` WHERE id_manufacturer > 0 OR id_supplier > 0');
+				$db->execute('DELETE FROM `'._DB_PREFIX_.'address` WHERE id_customer > 0');
 				break;
 		}
 	}
