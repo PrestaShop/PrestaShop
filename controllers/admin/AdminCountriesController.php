@@ -442,7 +442,7 @@ class AdminCountriesControllerCore extends AdminController
 			$html .= '<li>
 				<a href="javascript:void(0);" onClick="displayAvailableFields(\''.$class_name.'\')">'.$class_name.'</a>';
 			foreach (AddressFormat::getValidateFields($class_name) as $name)
-				$fields[] = '<a style="color:#4B8;" href="javascript:void(0);" class="addPattern" '.$name.' id="'.($class_name == 'Address' ? $name : $class_name.':'.$name).'">
+				$fields[] = '<a style="color:#4B8;" href="javascript:void(0);" class="addPattern" id="'.($class_name == 'Address' ? $name : $class_name.':'.$name).'">
 					'.$name.'</a>';
 			$html .= '
 				<div class="availableFieldsList" id="availableListFieldsFor_'.$class_name.'" style="width:300px;">

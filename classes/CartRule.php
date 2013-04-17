@@ -912,7 +912,7 @@ class CartRuleCore extends ObjectModel
 						if ($cart_vat_amount == 0 || $cart_amount_te == 0)
 							$cart_average_vat_rate = 0;
 						else
-							$cart_average_vat_rate = $cart_vat_amount / $cart_amount_te;
+							$cart_average_vat_rate = Tools::ps_round($cart_vat_amount / $cart_amount_te, 3);
 
 						if ($this->reduction_tax && !$use_tax)
 							$reduction_value += $prorata * $reduction_amount / (1 + $cart_average_vat_rate);

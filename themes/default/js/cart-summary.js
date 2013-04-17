@@ -655,9 +655,9 @@ function updateCartSummary(json)
 			location.reload();
 
 		if (priceDisplayMethod !== 0)
-			$('#total_discount').html(formatCurrency(json.total_discounts_tax_exc, currencyFormat, currencySign, currencyBlank));
+			$('#total_discount').html('-' + formatCurrency(json.total_discounts_tax_exc, currencyFormat, currencySign, currencyBlank));
 		else
-			$('#total_discount').html(formatCurrency(json.total_discounts, currencyFormat, currencySign, currencyBlank));
+			$('#total_discount').html('-' + formatCurrency(json.total_discounts, currencyFormat, currencySign, currencyBlank));
 
 		$('.cart_discount').each(function(){
 			var idElmt = $(this).attr('id').replace('cart_discount_','');
@@ -667,10 +667,12 @@ function updateCartSummary(json)
 				if (json.discounts[i].id_discount == idElmt)
 				{
 					if (json.discounts[i].value_real !== '!')
+					{
 						if (priceDisplayMethod !== 0)
 							$('#cart_discount_' + idElmt + ' td.cart_discount_price span.price-discount').html(formatCurrency(json.discounts[i].value_tax_exc * -1, currencyFormat, currencySign, currencyBlank));
 						else
 							$('#cart_discount_' + idElmt + ' td.cart_discount_price span.price-discount').html(formatCurrency(json.discounts[i].value_real * -1, currencyFormat, currencySign, currencyBlank));
+					}
 					toDelete = false;
 				}
 			if (toDelete)
