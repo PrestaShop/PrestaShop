@@ -227,7 +227,7 @@ class BlockCategories extends Module
 		$id_product = (int)Tools::getValue('id_product', 0);
 		$id_category = (int)Tools::getValue('id_category', 0);
 		$id_lang = (int)$this->context->language->id;
-		return 'blockcategories|'.$this->context->shop->id.'|'.$groups.'|'.$id_lang.'|'.$id_product.'|'.$id_category;
+		return 'blockcategories|'.(int)Tools::usingSecureMode().'|'.$this->context->shop->id.'|'.$groups.'|'.$id_lang.'|'.$id_product.'|'.$id_category;
 	}
 
 	public function hookFooter($params)
