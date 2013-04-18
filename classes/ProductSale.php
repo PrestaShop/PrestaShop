@@ -65,11 +65,9 @@ class ProductSaleCore
 	{
 		if ($page_number < 0) $page_number = 0;
 		if ($nb_products < 1) $nb_products = 10;
-
 		$final_order_by = $order_by;
-		if (empty($order_by) || $order_by == 'position' || $order_by = 'price') $order_by = 'sales';
-		if (empty($order_way) || $order_by == 'sales') $order_way = 'DESC';
-
+		if (is_null($order_by) || $order_by == 'position' || $order_by == 'price') $order_by = 'sales';
+		if (is_null($order_way) || $order_by == 'sales') $order_way == 'DESC';
 		$groups = FrontController::getCurrentCustomerGroups();
 		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
 		$interval = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
