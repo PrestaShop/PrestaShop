@@ -2119,9 +2119,12 @@ exit;
 	 */
 	public static function clearCache($smarty = null, $tpl = false, $cache_id = null, $compile_id = null)
 	{
-		if (is_null($smarty))
+		if ($smarty === null)
 			$smarty = Context::getContext()->smarty;
-		
+
+		if ($smarty === null)
+			return;
+
 		if (!$tpl && $cache_id === null && $compile_id === null)
 			return $smarty->clearAllCache();
 
@@ -2454,4 +2457,3 @@ function cmpPriceDesc($a, $b)
 		return -1;
 	return 0;
 }
-
