@@ -2293,7 +2293,7 @@ class CartCore extends ObjectModel
 			$this->id_carrier = 0;
 			return;
 		}
-
+		Cache::clean('getContextualValue_*');
 		$delivery_option_list = $this->getDeliveryOptionList(null, true);
 
 		foreach ($delivery_option_list as $id_address => $options)
