@@ -265,6 +265,7 @@ function confirmFreeOrder()
 	else
 		$('#opc_account-overlay').fadeIn('slow');
 	$('#opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeOut('slow');
+	$('#confirmOrder').attr('disabled', 'disabled');
 	$.ajax({
 		type: 'POST',
 		headers: { "cache-control": "no-cache" },
@@ -275,6 +276,7 @@ function confirmFreeOrder()
 		data: 'ajax=true&method=makeFreeOrder&token=' + static_token ,
 		success: function(html)
 		{
+			$('#confirmOrder').attr('disabled', '');
 			var array_split = html.split(':');
 			if (array_split[0] == 'freeorder')
 			{
@@ -401,7 +403,6 @@ function updateNewAccountToAddressBlock()
 					$.each(json.summary.products, function() {
 						updateAddressId(this.id_product, this.id_product_attribute, '0', this.id_address_delivery);
 					});
-					updateCartSummary(json.summary);
 					updateAddressesDisplay(true);
 					updateCarrierList(json.carrier_data);
 					updateCarrierSelectionAndGift();

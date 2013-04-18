@@ -339,11 +339,11 @@ class MailAlerts extends Module
 			'{delivery_block_txt}' => MailAlert::getFormatedAddress($delivery, "\n"),
 			'{invoice_block_txt}' => MailAlert::getFormatedAddress($invoice, "\n"),
 			'{delivery_block_html}' => MailAlert::getFormatedAddress($delivery, '<br />', array(
-			'firstname' => '<span style="color:#DB3484; font-weight:bold;">%s</span>',
-			'lastname' => '<span style="color:#DB3484; font-weight:bold;">%s</span>')),
+			'firstname' => '<span style="color:'.Configuration::get('PS_MAIL_COLOR').'; font-weight:bold;">%s</span>',
+			'lastname' => '<span style="color:'.Configuration::get('PS_MAIL_COLOR').'; font-weight:bold;">%s</span>')),
 			'{invoice_block_html}' => MailAlert::getFormatedAddress($invoice, '<br />', array(
-			'firstname' => '<span style="color:#DB3484; font-weight:bold;">%s</span>',
-			'lastname' => '<span style="color:#DB3484; font-weight:bold;">%s</span>')),
+			'firstname' => '<span style="color:'.Configuration::get('PS_MAIL_COLOR').' font-weight:bold;">%s</span>',
+			'lastname' => '<span style="color:'.Configuration::get('PS_MAIL_COLOR').'; font-weight:bold;">%s</span>')),
 			'{delivery_company}' => $delivery->company,
 			'{delivery_firstname}' => $delivery->firstname,
 			'{delivery_lastname}' => $delivery->lastname,

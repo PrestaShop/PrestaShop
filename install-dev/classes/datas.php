@@ -95,7 +95,7 @@ class Datas
 		),
 		'shop_activity'	=> array(
 			'name' => 'activity',
-			'default' => 1,
+			'default' => 0,
 			'validate' => 'isInt',
 		),
 		'shop_country' => array(
