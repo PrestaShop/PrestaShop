@@ -146,7 +146,6 @@ class AdminSuppliersControllerCore extends AdminController
 						'id' => 'id_country',
 						'name' => 'name',
 					),
-					'desc' => $this->l('Country where the state, region or city is located')
 				),
 				array(
 					'type' => 'select',
