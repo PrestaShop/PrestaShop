@@ -315,8 +315,8 @@ $(document).ready(function() {
 							</select>
 						</p>
 						{elseif $field_name eq "phone"}
-						<p class="required text">
-							<label for="phone">{l s='Phone'} <sup>*</sup></label>
+						<p class="{if $one_phone_at_least}required {/if}text">
+							<label for="phone">{l s='Phone'}{if $one_phone_at_least} <sup>*</sup>{/if}</label>
 							<input type="text" class="text" name="phone" id="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{/if} "/>
 						</p>
 					{/if}
