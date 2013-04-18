@@ -102,7 +102,7 @@ return array(
 		'Receive this information by e-mail' => 'Recevez ces informations par e-mail',
 		'Warning: You will receive this information only if your e-mail configuration is correct.' => 'Attention : vous ne recevrez ces informations que si votre configuration des e-mails est correcte',
 		'Configure your database by filling out the following fields:' => 'Configurez la connexion à votre base de données en remplissant les champs suivants.',
-		'You have to create a database, help available in <a href="http://doc.prestashop.com" target="_blank">our online documentation</a>.' => 'Vous devez créer une base de données, de l\'aide est disponible sur <a href="http://doc.prestashop.com" target="_blank">notre documentation en ligne</a>.',
+		'You have to create a database, help available in <a href="http://doc.prestashop.com" target="_blank">our online documentation</a>.' => 'Vous devez créer une base de données, de l\'aide est disponible sur <a href="http://doc.prestashop.com/display/PS15/Installer+PrestaShop#InstallerPrestaShop-Cr%C3%A9erunebasededonn%C3%A9espourvotreboutique" target="_blank">notre documentation en ligne</a>.',
 		'Database server address:' => 'Adresse du serveur de la base :',
 		'If you want to use a different port, add :XX after your server address where XX is your port number.' => 'Si vous souhaitez utiliser un port différent, ajoutez :XX à l\'adresse de votre serveur, XX étant le numéro de votre port.',
 		'Database name:' => 'Nom de la base :',
