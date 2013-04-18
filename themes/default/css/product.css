@@ -169,7 +169,7 @@ span.view_scroll_spacer {
 	text-align:right;
 }
 
-.ie7 #pb-left-column #buy_block label {margin-right:5px}
+.ie7 #pb-left-column #buy_block label {margin-right:5px;float:left}
 
 /* short description pack */
 .short_description_pack {
@@ -196,7 +196,8 @@ span.view_scroll_spacer {
 
 .ie7 #attributes .attribute_list {
 	display:inline;
-	zoom:1
+	zoom:1;
+	float:right
 }
 
 #attributes .attribute_list ul{
