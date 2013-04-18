@@ -190,6 +190,13 @@ class OrderOpcControllerCore extends ParentOrderController
 									$this->context->cart->id_address_invoice = Tools::isSubmit('same') ? $this->context->cart->id_address_delivery : (int)(Tools::getValue('id_address_invoice'));
 									if (!$this->context->cart->update())
 										$this->errors[] = Tools::displayError('An error occurred while updating your cart.');
+										
+									$infos = Address::getCountryAndState((int)($this->context->cart->id_address_delivery));
+									if (isset($infos['id_country']) && $infos['id_country'])
+									{
+										$country = new Country((int)$infos['id_country']);
+										$this->context->country = $country;
+									}
 
 									// Address has changed, so we check if the cart rules still apply
 									CartRule::autoRemoveFromCart($this->context);
