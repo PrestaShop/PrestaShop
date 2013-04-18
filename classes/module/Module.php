@@ -60,7 +60,7 @@ abstract class ModuleCore
 	/** @var int need_instance */
 	public $need_instance = 1;
 
-	/** @var string Admin tab correponding to the module */
+	/** @var string Admin tab corresponding to the module */
 	public $tab = null;
 
 	/** @var boolean Status */
@@ -1597,7 +1597,7 @@ abstract class ModuleCore
 	{
 		if ($name === null)
 			$name = $this->name;
-		return $name.'|'.(int)$this->context->shop->id.'|'.(int)Group::getCurrent()->id.'|'.(int)$this->context->language->id;
+		return $name.'|'.(int)Tools::usingSecureMode().'|'.(int)$this->context->shop->id.'|'.(int)Group::getCurrent()->id.'|'.(int)$this->context->language->id;
 	}
 
 	public function display($file, $template, $cacheId = null, $compileId = null)

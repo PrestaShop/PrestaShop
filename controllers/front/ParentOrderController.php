@@ -30,6 +30,8 @@
 class FreeOrder extends PaymentModule
 {
 	public $active = 1;
+	public $name = 'free_order';
+	public $displayName = 'free_order';	
 }
 
 class ParentOrderControllerCore extends FrontController
@@ -454,15 +456,15 @@ class ParentOrderControllerCore extends FrontController
 	}
 
 	protected function _assignCarrier()
-	{
+	{	
 		$address = new Address($this->context->cart->id_address_delivery);
 		$id_zone = Address::getZoneById($address->id);
 		$carriers = $this->context->cart->simulateCarriersOutput();
 		$checked = $this->context->cart->simulateCarrierSelectedOutput();
 		$delivery_option_list = $this->context->cart->getDeliveryOptionList();
 		$this->setDefaultCarrierSelection($delivery_option_list);
-		
-		$this->context->smarty->assign(array(
+
+		$this->context->smarty->assign(array(		
 			'address_collection' => $this->context->cart->getAddressCollection(),
 			'delivery_option_list' => $delivery_option_list,
 			'carriers' => $carriers,
@@ -497,8 +499,18 @@ class ParentOrderControllerCore extends FrontController
 			$this->link_conditions .= '?content_only=1';
 		else
 			$this->link_conditions .= '&content_only=1';
-
+		
+		$free_shipping = false;
+		foreach ($this->context->cart->getCartRules() as $rule)
+		{
+			if ($rule['free_shipping'] && !$rule['carrier_restriction'])
+			{
+				$free_shipping = true;
+				break;
+			}			
+		}	
 		$this->context->smarty->assign(array(
+			'free_shipping' => $free_shipping,
 			'checkedTOS' => (int)($this->context->cookie->checkedTOS),
 			'recyclablePackAllowed' => (int)(Configuration::get('PS_RECYCLABLE_PACK')),
 			'giftAllowed' => (int)(Configuration::get('PS_GIFT_WRAPPING')),

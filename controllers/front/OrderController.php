@@ -347,7 +347,6 @@ class OrderControllerCore extends ParentOrderController
 
 		$this->context->smarty->assign(
 			array(
-				'free_shipping' => false, // Deprecated since a cart rule can be applied the specific carriers only
 				'is_guest' => (isset($this->context->customer->is_guest) ? $this->context->customer->is_guest : 0)
 			));
 	}

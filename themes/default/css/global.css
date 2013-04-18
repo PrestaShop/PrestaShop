@@ -20,6 +20,8 @@ sub{vertical-align:baseline}
 legend{color:#000}
 input,button,textarea,select,optgroup,option{font-family:inherit;font-size:inherit;font-style:inherit;font-weight:inherit}
 input,button,textarea,select{font-size:100%}
+
+.ie7 input, .ie7 select{line-height:18px}
 a {cursor:pointer}
 
 .clearfix:before,
@@ -345,6 +347,8 @@ ul.footer_links li .icon {
 #center_column .sortPagiBar p {padding:0;}
 #center_column .sortPagiBar form {display:inline-block;}
 
+.ie7 #center_column .sortPagiBar form {display:inline;}
+
 .sortPagiBar #productsSortForm {float:right;}
 	.sortPagiBar select#selectPrductSort {
 		margin:0 0 0 10px;
@@ -406,6 +410,10 @@ ul.pagination li.disabled span {color:#ccc}
 
 #pagination_previous {float:left}
 #pagination_next {float:right}
+
+.ie7 #pagination_previous,
+.ie7 #pagination_next {float:none}
+
 #pagination_previous a, #pagination_previous span,
 #pagination_next a, #pagination_next span {
 	padding:0 8px;
@@ -612,7 +620,6 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 .idTabs {
 	list-style-type: none;
 	margin-top: 20px;
-	padding:0 5px;
 	border-bottom: 8px solid #f7b900
 }
 ul.idTabs li {

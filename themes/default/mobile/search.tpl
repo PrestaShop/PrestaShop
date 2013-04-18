@@ -42,7 +42,7 @@
 		</div>
 		{/if}
 		
-		<hr width="99%" align="center" size="2"/>
+		<hr/>
 		{if !isset($instantSearch) || (isset($instantSearch) && !$instantSearch)}
 			{include file="./pagination.tpl"}
 		{/if}

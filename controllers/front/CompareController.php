@@ -31,7 +31,7 @@ class CompareControllerCore extends FrontController
 	public function setMedia()
 	{
 		parent::setMedia();
-		$this->addCSS(_THEME_CSS_DIR_.'/comparator.css');
+		$this->addCSS(_THEME_CSS_DIR_.'comparator.css');
 
 		if (Configuration::get('PS_COMPARATOR_MAX_ITEM') > 0)
 			$this->addJS(_THEME_JS_DIR_.'products-comparison.js');

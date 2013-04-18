@@ -557,7 +557,6 @@ class InstallModelInstall extends InstallAbstractModel
 				'graphvisifire',
 				'graphxmlswfcharts',
 				'gridhtml',
-				'gsitemap',
 				'homefeatured',
 				'homeslider',
 				'pagesnotfound',
@@ -588,10 +587,10 @@ class InstallModelInstall extends InstallAbstractModel
 		return $modules;
 	}
 	
-	public function getAddonsModulesList()
+	public function getAddonsModulesList($params = array())
 	{
 		$addons_modules = array();
-		$content = Tools::addonsRequest('install-modules');
+		$content = Tools::addonsRequest('install-modules', $params);
 		$xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
 			
 		if ($xml !== false and isset($xml->module))
