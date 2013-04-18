@@ -219,22 +219,12 @@ class AdminCmsControllerCore extends AdminController
 		/* Close list table and submit button */
 		$this->displayListFooter($token);
 	}
-
-	/**
-	 * Modifying initial getList method to display position feature (drag and drop)
-	 */
-	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
-	{
-		if ($order_by && $this->context->cookie->__get($this->table.'Orderby'))
-			$order_by = $this->context->cookie->__get($this->table.'Orderby');
-		else
-			$order_by = 'position';
-
-		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
-	}
-
+	
 	public function postProcess()
 	{
+		if (Tools::isSubmit($this->table.'Orderby') || Tools::isSubmit($this->table.'Orderway'))
+			$this->filter = true;
+		
 		if (Tools::isSubmit('viewcms') && ($id_cms = (int)Tools::getValue('id_cms')) && ($cms = new CMS($id_cms, $this->context->language->id)) && Validate::isLoadedObject($cms))
 		{
 			$redir = $this->context->link->getCMSLink($cms);
