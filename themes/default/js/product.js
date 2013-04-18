@@ -295,17 +295,28 @@ function updateDisplay()
 		var priceTaxExclWithoutGroupReduction = '';
 
 		// retrieve price without group_reduction in order to compute the group reduction after
-		// the specific price discount (done in the JS in order to keep backward compatibility)
-		if (!displayPrice && !noTaxForThisProduct)
-		{
-			priceTaxExclWithoutGroupReduction = ps_round(productPriceTaxExcluded, 6) * (1 / group_reduction);
-		} else {
-			priceTaxExclWithoutGroupReduction = ps_round(productPriceTaxExcluded, 6) * (1 / group_reduction);
-		}
-		var combination_add_price = selectedCombination['price'] * group_reduction;
+		// the specific price discount (done in the JS in order to keep backward compatibility)		
+		priceTaxExclWithoutGroupReduction = ps_round(productPriceTaxExcluded, 6) * (1 / group_reduction);
 
 		var tax = (taxRate / 100) + 1;
+		var taxExclPrice = priceTaxExclWithoutGroupReduction + (selectedCombination['price'] * currencyRate);
 
+		if (selectedCombination.specific_price && selectedCombination.specific_price['id_product_attribute'])
+		{
+			if (selectedCombination.specific_price['price'] && selectedCombination.specific_price['price'] >=0)
+				var taxExclPrice = (specific_currency ? selectedCombination.specific_price['price'] : selectedCombination.specific_price['price'] * currencyRate);
+			else
+				var taxExclPrice = productBasePriceTaxExcluded * currencyRate + (selectedCombination['price'] * currencyRate);
+		}
+		else if (product_specific_price.price && product_specific_price.price >= 0)
+			var taxExclPrice = (specific_currency ? product_specific_price.price : product_specific_price.price * currencyRate) + (selectedCombination['price'] * currencyRate);
+
+		if (!displayPrice && !noTaxForThisProduct)
+			productPriceDisplay = taxExclPrice * tax; // Need to be global => no var
+		else
+			productPriceDisplay = ps_round(taxExclPrice, 2); // Need to be global => no var
+
+		productPriceWithoutReductionDisplay = productPriceDisplay * group_reduction;
 		var reduction = 0;
 		if (selectedCombination['specific_price'].reduction_price || selectedCombination['specific_price'].reduction_percent)
 		{
@@ -313,18 +324,26 @@ function updateDisplay()
 			reduction = productPriceDisplay * (parseFloat(selectedCombination['specific_price'].reduction_percent) / 100) + reduction_price;
 			if (reduction_price && (displayPrice || noTaxForThisProduct))
 				reduction = ps_round(reduction / tax, 6);
+
 		}
-		else if (product_specific_price.reduction_price || product_specific_price.reduction_percent)
+		else if (product_specific_price && product_specific_price.reduction)
 		{
-			reduction_price = (specific_currency ? product_specific_price.reduction_price : product_specific_price.reduction_price * currencyRate);
-			reduction = productPriceDisplay * (parseFloat(product_specific_price.reduction_percent) / 100) + reduction_price;
+			if (product_specific_price.reduction_type == 'amount')
+				reduction_price = (specific_currency ? product_specific_price.reduction : product_specific_price.reduction * currencyRate);
+			else
+				reduction_price = 0;
+
+			if (product_specific_price.reduction_type == 'percentage')
+				reduction_percent = productPriceDisplay * parseFloat(product_specific_price.reduction);
+
+			reduction = reduction_price + reduction_percent;
 			if (reduction_price && (displayPrice || noTaxForThisProduct))
 				reduction = ps_round(reduction / tax, 6);
 		}
 
 		if (selectedCombination.specific_price)
 		{
-			if (selectedCombination['specific_price'].reduction_type == 'percentage')
+			if (selectedCombination['specific_price'] && selectedCombination['specific_price'].reduction_type == 'percentage')
 			{
 				$('#reduction_amount').hide();
 				$('#reduction_percent_display').html('-' + parseFloat(selectedCombination['specific_price'].reduction_percent) + '%');
@@ -338,35 +357,19 @@ function updateDisplay()
 				$('#reduction_amount').hide();
 			}
 		}
-		else
-			if (product_specific_price['reduction_type'] == 'percentage')
-				$('#reduction_percent_display').html(product_specific_price['specific_price'].reduction_percent);
 
 		if (product_specific_price['reduction_type'] != '' || selectedCombination['specific_price'].reduction_type != '')
 			$('#discount_reduced_price,#old_price').show();
 		else
 			$('#discount_reduced_price,#old_price').hide();
-		
-		if (product_specific_price['reduction_type'] == 'percentage' || selectedCombination['specific_price'].reduction_type == 'percentage')
+		if ((product_specific_price['reduction_type'] == 'percentage' && selectedCombination['specific_price'].reduction_type == 'percentage') || selectedCombination['specific_price'].reduction_type == 'percentage')
 			$('#reduction_percent').show();
 		else
 			$('#reduction_percent').hide();
-		if (product_specific_price['price'] || selectedCombination.specific_price['price'])
+		if (product_specific_price['price'] || (selectedCombination.specific_price && selectedCombination.specific_price['price']))
 			$('#not_impacted_by_discount').show();
 		else
 			$('#not_impacted_by_discount').hide();
-
-		if (selectedCombination.specific_price['price'] && selectedCombination.specific_price['price'] >=0)
-			var taxExclPrice = (specific_currency ? selectedCombination.specific_price['price'] : selectedCombination.specific_price['price'] * currencyRate);
-		else
-			var taxExclPrice = priceTaxExclWithoutGroupReduction + (selectedCombination['price'] * currencyRate);
-
-		if (!displayPrice && !noTaxForThisProduct)
-			productPriceDisplay = taxExclPrice * tax; // Need to be global => no var
-		else
-			productPriceDisplay = ps_round(taxExclPrice, 2); // Need to be global => no var
-
-		productPriceWithoutReductionDisplay = productPriceDisplay * group_reduction;
 
 		productPriceDisplay -= reduction;
 		var tmp = productPriceDisplay * group_reduction;
@@ -421,7 +424,7 @@ function displayImage(domAAroundImgThumb, no_animation)
 		{
 			$('#bigpic').attr('src', newSrc);
 			if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
-				$(this).attr('alt', domAAroundImgThumb.attr('href'));
+				$('#bigpic').attr('rel', domAAroundImgThumb.attr('href'));
 		}
 		$('#views_block li a').removeClass('shown');
 		$(domAAroundImgThumb).addClass('shown');
@@ -525,6 +528,7 @@ $(document).ready(function()
 	//set jqZoom parameters if needed
 	if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
 	{
+		$('#bigpic').attr('rel', $('#bigpic').attr('src').replace('thickbox', 'large'));
 		$('img.jqzoom').jqueryzoom({
 			xzoom: 200, //zooming div default width(default width value is 200)
 			yzoom: 200, //zooming div default width(default height value is 200)

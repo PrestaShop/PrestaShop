@@ -117,7 +117,7 @@
 		{elseif $field_item eq "phone_mobile" && $address_invoice->phone_mobile}<p class="address_phone_mobile">{$address_invoice->phone_mobile|escape:'htmlall':'UTF-8'}</p>
 		{else}
 				{assign var=address_words value=" "|explode:$field_item}
-				<p>{foreach from=$address_words item=word_item name="word_loop"}{if !$smarty.foreach.word_loop.first} {/if}<span class="address_{$word_item}">{$invoiceAddressFormatedValues[$word_item]|escape:'htmlall':'UTF-8'}</span>{/foreach}</p>
+				<p>{foreach from=$address_words item=word_item name="word_loop"}{if !$smarty.foreach.word_loop.first} {/if}<span class="address_{$word_item|replace:',':''}">{$invoiceAddressFormatedValues[$word_item|replace:',':'']|escape:'htmlall':'UTF-8'}</span>{/foreach}</p>
 		{/if}
 	{/foreach}
 	</li>
@@ -130,7 +130,7 @@
 		{elseif $field_item eq "phone_mobile" && $address_delivery->phone_mobile}<p class="address_phone_mobile">{$address_delivery->phone_mobile|escape:'htmlall':'UTF-8'}</p>
 		{else}
 				{assign var=address_words value=" "|explode:$field_item} 
-				<p>{foreach from=$address_words item=word_item name="word_loop"}{if !$smarty.foreach.word_loop.first} {/if}<span class="address_{$word_item}">{$deliveryAddressFormatedValues[$word_item]|escape:'htmlall':'UTF-8'}</span>{/foreach}</p>
+				<p>{foreach from=$address_words item=word_item name="word_loop"}{if !$smarty.foreach.word_loop.first} {/if}<span class="address_{$word_item|replace:',':''}">{$deliveryAddressFormatedValues[$word_item|replace:',':'']|escape:'htmlall':'UTF-8'}</span>{/foreach}</p>
 		{/if}
 	{/foreach}
 	</li>
@@ -174,7 +174,7 @@
 	{if $priceDisplay && $use_tax}
 		<li data-theme="b" class="item">
 			{l s='Total products (tax excl.)'} <span class="price">{displayWtPriceWithCurrency price=$order->getTotalProductsWithoutTaxes() currency=$currency}</span>
-		</tr>
+		</li>
 	{/if}
 	<li data-theme="b" class="item">
 		{l s='Total products'} {if $use_tax}{l s='(tax incl.)'}{/if}: <span class="price">{displayWtPriceWithCurrency price=$order->getTotalProductsWithTaxes() currency=$currency}</span>

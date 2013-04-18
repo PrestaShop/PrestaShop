@@ -48,6 +48,8 @@ var allowBuyWhenOutOfStock = {if $allow_oosp == 1}true{else}false{/if};
 var availableNowValue = '{$product->available_now|escape:'quotes':'UTF-8'}';
 var availableLaterValue = '{$product->available_later|escape:'quotes':'UTF-8'}';
 var productPriceTaxExcluded = {$product->getPriceWithoutReduct(true)|default:'null'} - {$product->ecotax};
+var productBasePriceTaxExcluded = {$product->base_price} - {$product->ecotax};
+
 var reduction_percent = {if $product->specificPrice AND $product->specificPrice.reduction AND $product->specificPrice.reduction_type == 'percentage'}{$product->specificPrice.reduction*100}{else}0{/if};
 var reduction_price = {if $product->specificPrice AND $product->specificPrice.reduction AND $product->specificPrice.reduction_type == 'amount'}{$product->specificPrice.reduction|floatval}{else}0{/if};
 var specific_price = {if $product->specificPrice AND $product->specificPrice.price}{$product->specificPrice.price}{else}0{/if};
@@ -132,6 +134,7 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 		specific_price_combination['reduction_price'] = {if $combination.specific_price AND $combination.specific_price.reduction AND $combination.specific_price.reduction_type == 'amount'}{$combination.specific_price.reduction}{else}0{/if};
 		specific_price_combination['price'] = {if $combination.specific_price AND $combination.specific_price.price}{$combination.specific_price.price}{else}0{/if};
 		specific_price_combination['reduction_type'] = '{if $combination.specific_price}{$combination.specific_price.reduction_type}{/if}';
+		specific_price_combination['id_product_attribute'] = {if $combination.specific_price}{$combination.specific_price.id_product_attribute|intval}{else}0{/if};
 		available_date['date'] = '{$combination.available_date}';
 		available_date['date_formatted'] = '{dateFormat date=$combination.available_date full=false}';
 		addCombination({$idCombination|intval}, new Array({$combination.list}), {$combination.quantity}, {$combination.price}, {$combination.ecotax}, {$combination.id_image}, '{$combination.reference|addslashes}', {$combination.unit_impact}, {$combination.minimal_quantity}, available_date, specific_price_combination);
@@ -180,7 +183,7 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 		<div id="image-block">
 		{if $have_image}
 			<span id="view_full_size">
-				<img src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')}" {if $jqZoomEnabled}class="jqzoom" alt="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'thickbox_default')}"{else} title="{$product->name|escape:'htmlall':'UTF-8'}" alt="{$product->name|escape:'htmlall':'UTF-8'}" {/if} id="bigpic" width="{$largeSize.width}" height="{$largeSize.height}" />
+				<img src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')}"{if $jqZoomEnabled} class="jqzoom"{/if} title="{$product->name|escape:'htmlall':'UTF-8'}" alt="{$product->name|escape:'htmlall':'UTF-8'}" id="bigpic" width="{$largeSize.width}" height="{$largeSize.height}"/>
 				<span class="span_link">{l s='Maximize'}</span>
 			</span>
 		{else}
@@ -400,14 +403,14 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 				{/if}
 			</div>
 			<p id="reduction_percent" {if !$product->specificPrice OR $product->specificPrice.reduction_type != 'percentage'} style="display:none;"{/if}><span id="reduction_percent_display">{if $product->specificPrice AND $product->specificPrice.reduction_type == 'percentage'}-{$product->specificPrice.reduction*100}%{/if}</span></p>
-			<p id="reduction_amount" {if !$product->specificPrice OR $product->specificPrice.reduction_type != 'amount' && $product->specificPrice.reduction|intval ==0} style="display:none"{/if}>
+			<p id="reduction_amount" {if !$product->specificPrice OR $product->specificPrice.reduction_type != 'amount' || $product->specificPrice.reduction|intval ==0} style="display:none"{/if}>
 				<span id="reduction_amount_display">
 				{if $product->specificPrice AND $product->specificPrice.reduction_type == 'amount' AND $product->specificPrice.reduction|intval !=0}
 					-{convertPrice price=$productPriceWithoutReduction-$productPrice|floatval}
 				{/if}
 				</span>
 			</p>
-			{if $product->specificPrice AND $product->specificPrice.reduction}
+			{if $product->specificPrice AND $product->specificPrice.reduction && $product->specificPrice.reduction > 0}
 				<p id="old_price"><span class="bold">
 				{if $priceDisplay >= 0 && $priceDisplay <= 2}
 					{if $productPriceWithoutReduction > $productPrice}

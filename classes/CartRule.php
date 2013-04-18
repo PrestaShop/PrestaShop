@@ -912,7 +912,7 @@ class CartRuleCore extends ObjectModel
 						if ($cart_vat_amount == 0 || $cart_amount_te == 0)
 							$cart_average_vat_rate = 0;
 						else
-							$cart_average_vat_rate = $cart_vat_amount / $cart_amount_te;
+							$cart_average_vat_rate = Tools::ps_round($cart_vat_amount / $cart_amount_te, 3);
 
 						if ($this->reduction_tax && !$use_tax)
 							$reduction_value += $prorata * $reduction_amount / (1 + $cart_average_vat_rate);
@@ -1079,12 +1079,12 @@ class CartRuleCore extends ObjectModel
 		if (!CartRule::isFeatureActive() || !Validate::isLoadedObject($context->cart))
 			return;
 
-		$result = Db::getInstance()->executeS('
+		$sql = '
 		SELECT cr.*
 		FROM '._DB_PREFIX_.'cart_rule cr
 		LEFT JOIN '._DB_PREFIX_.'cart_rule_shop crs ON cr.id_cart_rule = crs.id_cart_rule
 		LEFT JOIN '._DB_PREFIX_.'cart_rule_carrier crca ON cr.id_cart_rule = crca.id_cart_rule
-		'.($context->cart->id_carrier ? 'INNER JOIN '._DB_PREFIX_.'carrier c ON (c.id_reference = crca.id_carrier AND c.deleted = 0)' : '').'		
+		'.($context->cart->id_carrier ? 'LEFT JOIN '._DB_PREFIX_.'carrier c ON (c.id_reference = crca.id_carrier AND c.deleted = 0)' : '').'		
 		LEFT JOIN '._DB_PREFIX_.'cart_rule_country crco ON cr.id_cart_rule = crco.id_cart_rule
 		WHERE cr.active = 1
 		AND cr.code = ""
@@ -1108,9 +1108,9 @@ class CartRuleCore extends ObjectModel
 			'.($context->customer->id ? 'OR 0 < (
 				SELECT cg.id_group
 				FROM '._DB_PREFIX_.'customer_group cg
-				LEFT JOIN '._DB_PREFIX_.'cart_rule_group crg ON cg.id_group = crg.id_group
+				LEFT JOIN '._DB_PREFIX_.'cart_rule_group crg ON (cg.id_group = crg.id_group AND cg.id_group = '.(int)$context->customer->id_default_group.')
 				WHERE cr.id_cart_rule = crg.id_cart_rule
-				AND cg.id_customer = '.(int)$context->customer->id.'
+				AND cg.id_customer = '.(int)$context->customer->id.' LIMIT 1
 			)' : '').'
 		)
 		AND (
@@ -1122,8 +1122,8 @@ class CartRuleCore extends ObjectModel
 			)
 		)
 		AND cr.id_cart_rule NOT IN (SELECT id_cart_rule	FROM '._DB_PREFIX_.'cart_cart_rule WHERE id_cart = '.(int)$context->cart->id.')
-		ORDER BY priority');
-		
+		ORDER BY priority';
+		$result = Db::getInstance()->executeS($sql);
 		if ($result)
 		{
 			$cart_rules = ObjectModel::hydrateCollection('CartRule', $result);

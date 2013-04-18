@@ -458,6 +458,10 @@ class ProductCore extends ObjectModel
 			$this->tax_rate = $this->getTaxesRate(new Address($address));
 
 			$this->new = $this->isNew();
+
+			// keep base price
+			$this->base_price = $this->price;
+
 			$this->price = Product::getPriceStatic((int)$this->id, false, null, 6, null, false, true, 1, false, null, null, null, $this->specificPrice);
 			$this->unit_price = ($this->unit_price_ratio != 0  ? $this->price / $this->unit_price_ratio : 0);
 			if ($this->id)
@@ -2135,7 +2139,10 @@ class ProductCore extends ObjectModel
 
 			$sql = 'SELECT p.*, product_shop.*, stock.`out_of_stock` out_of_stock, pl.`description`, pl.`description_short`,
 						pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`,
-						p.`ean13`, p.`upc`, MAX(image_shop.`id_image`) id_image, il.`legend`
+						p.`ean13`, p.`upc`, MAX(image_shop.`id_image`) id_image, il.`legend`,
+						DATEDIFF(product_shop.`date_add`, DATE_SUB(NOW(),
+						INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).'
+							DAY)) > 0 AS new
 					FROM `'._DB_PREFIX_.'product` p
 					LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
 						p.`id_product` = pl.`id_product`
