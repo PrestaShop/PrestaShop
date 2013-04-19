@@ -541,7 +541,7 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 				<div class="block_content">
 					<ul>
 					{foreach from=$accessories item=accessory name=accessories_list}
-						{if ($accessory.allow_oosp || $accessory.quantity_all_versions > 0) AND $accessory.available_for_order AND !isset($restricted_country_mode)}
+						{if ($accessory.allow_oosp || $accessory.quantity_all_versions > 0 || $accessory.quantity > 0) AND $accessory.available_for_order AND !isset($restricted_country_mode)}
 							{assign var='accessoryLink' value=$link->getProductLink($accessory.id_product, $accessory.link_rewrite, $accessory.category)}
 							<li class="ajax_block_product{if $smarty.foreach.accessories_list.first} first_item{elseif $smarty.foreach.accessories_list.last} last_item{else} item{/if} product_accessories_description">
 								<p class="s_title_block">
