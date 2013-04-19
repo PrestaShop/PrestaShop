@@ -75,7 +75,7 @@ var process_steps = <?php echo Tools::jsonEncode($this->process_steps) ?>;
 </div>
 
 <?php if (@fsockopen('addons.prestashop.com', 80, $errno, $errst, 3)): ?>
-	<iframe src="http://addons.prestashop.com/psinstall.php?version=2&lang=<?php echo $this->language->getLanguageIso() ?>&email=<?php echo $this->session->admin_email ?>&activity=<?php echo $this->session->shop_activity ?>&country=<?php echo $this->session->shop_country ?>" scrolling="no" id="prestastore">
+	<iframe src="http://addons.prestashop.com/psinstall1541.php?version=2&lang=<?php echo $this->language->getLanguageIso() ?>&email=<?php echo $this->session->admin_email ?>&activity=<?php echo $this->session->shop_activity ?>&country=<?php echo $this->session->shop_country ?>" scrolling="no" id="prestastore">
 		<p>Your browser does not support iframes.</p>
 	</iframe>
 <?php endif; ?>
