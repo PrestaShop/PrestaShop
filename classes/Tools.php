@@ -982,7 +982,7 @@ class ToolsCore
 
 		if (function_exists('mb_strtolower'))
 			$str = mb_strtolower($str, 'utf-8');
-		elseif (!$allow_accented_chars)
+		if (!$allow_accented_chars)
 			$str = Tools::replaceAccentedChars($str);
 
 		// Remove all non-whitelist chars.
