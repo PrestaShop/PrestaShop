@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <!DOCTYPE html>
-<html>
+<html lang="{$lang_iso}">
 	<head>
 		<title>{$meta_title|escape:'htmlall':'UTF-8'}</title>
 		{*<meta name="viewport" content="width=device-width, initial-scale=1">*}

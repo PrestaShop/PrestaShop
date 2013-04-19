@@ -104,12 +104,21 @@ class AuthControllerCore extends FrontController
 				$countries = Carrier::getDeliveredCountries($this->context->language->id, true, true);
 			else
 				$countries = Country::getCountries($this->context->language->id, true);
-
+			
+			if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
+			{
+				$array = preg_split('/,|-/', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+				if (!Validate::isLanguageIsoCode($array[0]) || !($sl_country = Country::getByIso($array[0])))
+					$sl_country = (int)Configuration::get('PS_COUNTRY_DEFAULT');
+			}
+			else
+				$sl_country = (int)Tools::getValue('id_country', Configuration::get('PS_COUNTRY_DEFAULT'));
+			
 			$this->context->smarty->assign(array(
 					'inOrderProcess' => true,
 					'PS_GUEST_CHECKOUT_ENABLED' => Configuration::get('PS_GUEST_CHECKOUT_ENABLED'),
 					'PS_REGISTRATION_PROCESS_TYPE' => Configuration::get('PS_REGISTRATION_PROCESS_TYPE'),
-					'sl_country' => (int)Tools::getValue('id_country', Configuration::get('PS_COUNTRY_DEFAULT')),
+					'sl_country' => (int)$sl_country,
 					'countries' => $countries
 				));
 		}
@@ -307,7 +316,7 @@ class AuthControllerCore extends FrontController
 				$this->context->cart->secure_key = $customer->secure_key;
 				$this->context->cart->save();
 				$this->context->cookie->id_cart = (int)$this->context->cart->id;
-				$this->context->cookie->update();
+				$this->context->cookie->write();
 				$this->context->cart->autosetProductAddress();
 
 				Hook::exec('actionAuthentication');
@@ -379,8 +388,8 @@ class AuthControllerCore extends FrontController
 				$this->errors[] = Tools::displayError('An account using this email address has already been registered.', false);
 		// Preparing customer
 		$customer = new Customer();
-		$lastnameAddress = $_POST['lastname'];
-		$firstnameAddress = $_POST['firstname'];		
+		$lastnameAddress = Tools::getValue('lastname');
+		$firstnameAddress = Tools::getValue('firstname');		
 		$_POST['lastname'] = Tools::getValue('customer_lastname');
 		$_POST['firstname'] = Tools::getValue('customer_firstname');
 		

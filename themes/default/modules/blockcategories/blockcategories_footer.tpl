@@ -26,8 +26,8 @@
 <!-- Block categories module -->
 <div class="blockcategories_footer">
 	<p class="title_block">{l s='Categories' mod='blockcategories'}</p>
-<div class="category_footer" style="float:left;clear:none;width:{$widthColumn}%">
-	<div style="float:left" class="list">
+<div class="category_footer" style="width:{$widthColumn}%">
+	<div class="list">
 		<ul class="tree {if $isDhtml}dhtml{/if}">
 	
 		{foreach from=$blockCategTree.children item=child name=blockCategTree}
@@ -43,7 +43,7 @@
 </div>
 
 <div class="category_footer" style="float:left;clear:none;width:{$widthColumn}%">
-		<div style="float:left" class="list">
+		<div class="list">
 		<ul class="tree {if $isDhtml}dhtml{/if}">
 			{/if}
 			{/foreach}

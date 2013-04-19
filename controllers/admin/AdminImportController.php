@@ -2518,13 +2518,7 @@ class AdminImportControllerCore extends AdminController
 
 	public function utf8EncodeArray($array)
 	{
-		if (is_array($array))
-			foreach ($array as $key => $value)
-				$array[$key] = utf8_encode($value);
-		else
-			$array = utf8_encode($array);
-
-		return $array;
+		return (is_array($array) ? array_map('utf8_encode', $array) : utf8_encode($array));
 	}
 
 	protected function getNbrColumn($handle, $glue)

@@ -257,9 +257,9 @@ class ProductControllerCore extends FrontController
 				'HOOK_EXTRA_LEFT' => Hook::exec('displayLeftColumnProduct'),
 				'HOOK_EXTRA_RIGHT' => Hook::exec('displayRightColumnProduct'),
 				'HOOK_PRODUCT_OOS' => Hook::exec('actionProductOutOfStock', array('product' => $this->product)),
-				'HOOK_PRODUCT_ACTIONS' => Hook::exec('displayProductButtons'),
-				'HOOK_PRODUCT_TAB' =>  Hook::exec('displayProductTab'),
-				'HOOK_PRODUCT_TAB_CONTENT' =>  Hook::exec('displayProductTabContent'),
+				'HOOK_PRODUCT_ACTIONS' => Hook::exec('displayProductButtons', array('product' => $this->product)),
+				'HOOK_PRODUCT_TAB' =>  Hook::exec('displayProductTab', array('product' => $this->product)),
+				'HOOK_PRODUCT_TAB_CONTENT' =>  Hook::exec('displayProductTabContent', array('product' => $this->product)),
 				'display_qties' => (int)Configuration::get('PS_DISPLAY_QTIES'),
 				'display_ht' => !Tax::excludeTaxeOption(),
 				'currencySign' => $this->context->currency->sign,
@@ -340,26 +340,39 @@ class ProductControllerCore extends FrontController
 	{
 		$images = $this->product->getImages((int)$this->context->cookie->id_lang);
 		$product_images = array();
+
+		if(isset($images[0]))
+			$this->context->smarty->assign('mainImage', $images[0]);
 		foreach ($images as $k => $image)
 		{
 			if ($image['cover'])
 			{
-				$this->context->smarty->assign('mainImage', $images[0]);
+				$this->context->smarty->assign('mainImage', $image);
 				$cover = $image;
 				$cover['id_image'] = (Configuration::get('PS_LEGACY_IMAGES') ? ($this->product->id.'-'.$image['id_image']) : $image['id_image']);
 				$cover['id_image_only'] = (int)$image['id_image'];
 			}
 			$product_images[(int)$image['id_image']] = $image;
 		}
+
 		if (!isset($cover))
-			$cover = array(
-				'id_image' => $this->context->language->iso_code.'-default', 
-				'legend' => 'No picture', 
-				'title' => 'No picture'
+		{
+			if(isset($images[0]))
+			{
+				$cover = $images[0];
+				$cover['id_image'] = (Configuration::get('PS_LEGACY_IMAGES') ? ($this->product->id.'-'.$images[0]['id_image']) : $images[0]['id_image']);
+				$cover['id_image_only'] = (int)$images[0]['id_image'];
+			}
+			else
+				$cover = array(
+					'id_image' => $this->context->language->iso_code.'-default',
+					'legend' => 'No picture',
+					'title' => 'No picture'
 				);
+		}
 		$size = Image::getSize(ImageType::getFormatedName('large'));
 		$this->context->smarty->assign(array(
-			'have_image' => Product::getCover((int)Tools::getValue('id_product')),
+			'have_image' => isset($cover['id_image'])? array((int)$cover['id_image']) : Product::getCover((int)Tools::getValue('id_product')),
 			'cover' => $cover,
 			'imgWidth' => (int)$size['width'],
 			'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
@@ -432,11 +445,37 @@ class ProductControllerCore extends FrontController
 				else
 					$combinations[$row['id_product_attribute']]['available_date'] = '';
 
-				if (isset($combination_images[$row['id_product_attribute']][0]['id_image']))
-					$combinations[$row['id_product_attribute']]['id_image'] = $combination_images[$row['id_product_attribute']][0]['id_image'];
-				else
+				if (!isset($combination_images[$row['id_product_attribute']][0]['id_image']))
 					$combinations[$row['id_product_attribute']]['id_image'] = -1;
+				else
+				{
+					$combinations[$row['id_product_attribute']]['id_image'] = $id_image = (int)$combination_images[$row['id_product_attribute']][0]['id_image'];
+					if ($row['default_on'] && $id_image > 0)
+					{
+						if (isset($this->context->smarty->tpl_vars['images']->value))
+							$product_images = $this->context->smarty->tpl_vars['images']->value;
+						if (is_array($product_images) && isset($product_images[$id_image]))
+						{
+							$product_images[$id_image]['cover'] = 1;
+							$this->context->smarty->assign('mainImage', $product_images[$id_image]);
+							if (count($product_images))
+								$this->context->smarty->assign('images', $product_images);
+						}
+						if (isset($this->context->smarty->tpl_vars['cover']->value))
+							$cover = $this->context->smarty->tpl_vars['cover']->value;
+						if (is_array($cover) && is_array($product_images))
+						{
+							$product_images[$cover['id_image']]['cover'] = 0;
+							if (isset($product_images[$id_image]))
+								$cover = $product_images[$id_image];
+							$cover['id_image'] = (Configuration::get('PS_LEGACY_IMAGES') ? ($this->product->id.'-'.$id_image) : (int)$id_image);
+							$cover['id_image_only'] = (int)$id_image;
+							$this->context->smarty->assign('cover', $cover);
+						}
+					}
+				}
 			}
+
 			// wash attributes list (if some attributes are unavailables and if allowed to wash it)
 			if (!Product::isAvailableWhenOutOfStock($this->product->out_of_stock) && Configuration::get('PS_DISP_UNAVAILABLE_ATTR') == 0)
 			{

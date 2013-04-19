@@ -317,8 +317,8 @@
 			line = line.replace(/image_path/g, path);
 				line = line.replace(/image_position/g, position);
 				line = line.replace(/blank/g, cover);
-				line = line.replace("<tbody>", "");
-				line = line.replace("</tbody>", "");
+				line = line.replace(/<tbody>/gi, "");
+				line = line.replace(/<\/tbody>/gi, "");
 				if (shops != false)
 				{
 					$.each(shops, function(key, value){

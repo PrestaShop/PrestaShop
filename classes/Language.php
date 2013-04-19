@@ -801,6 +801,8 @@ class LanguageCore extends ObjectModel
 			$files_list = $gz->listContent();
 			if (!$gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
 				$errors[] = Tools::displayError('Cannot decompress the translation file for the following language: ').(string)$iso;
+			// Clear smarty modules cache
+			Tools::clearCache();
 			if (!Language::checkAndAddLanguage((string)$iso, $lang_pack, false, $params))
 				$errors[] = Tools::displayError('An error occurred while creating the language: ').(string)$iso;
 			else

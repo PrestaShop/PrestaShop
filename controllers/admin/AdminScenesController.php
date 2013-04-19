@@ -206,7 +206,7 @@ class AdminScenesControllerCore extends AdminController
 			$this->addJqueryPlugin('autocomplete');
 			$this->addJqueryPlugin('imgareaselect');
 			$this->addJs(_PS_JS_DIR_.'admin-scene-cropping.js' );
-			$image_to_map_desc .= '<br /><img id="large_scene_image" style="clear:both;border:1px solid black;" alt="" src="'.
+			$image_to_map_desc .= '<br /><img id="large_scene_image" alt="" src="'.
 				_THEME_SCENE_DIR_.$obj->id.'-scene_default.jpg" /><br />';
 
 			$image_to_map_desc .= '
