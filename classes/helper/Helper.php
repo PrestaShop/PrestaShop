@@ -239,17 +239,14 @@ class HelperCore
 
 		$html .= '
 		<div class="category-filter">
-			<span><a href="#" id="collapse_all" >'.$translations['Collapse All'].'</a>
-			| </span>
-			<span><a href="#" id="expand_all" >'.$translations['Expand All'].'</a>
+			<span><a href="#" id="collapse_all">'.$translations['Collapse All'].'</a>|&nbsp;</span>
+			<span><a href="#" id="expand_all">'.$translations['Expand All'].'</a>|&nbsp;</span>
 			'.(!$use_radio ? '
-			 |</span>
-			 <span> <a href="#" id="check_all" >'.$translations['Check All'].'</a>
-			 |</span>
-			 <span><a href="#" id="uncheck_all" >'.$translations['Uncheck All'].'</a>|</span>
-			 ' : '').($use_search ? '<span>'.$translations['search'].' : <input type="text" name="search_cat" id="search_cat"></span>' : '').'
-		</div>
-		';
+				<span><a href="#" id="check_all">'.$translations['Check All'].'</a>|&nbsp;</span>
+				<span><a href="#" id="uncheck_all">'.$translations['Uncheck All'].'</a>|&nbsp;</span>' : '')
+			.($use_search ? '
+				<span>'.$translations['search'].': <input type="text" name="search_cat" id="search_cat"/></span>' : '')
+		.'</div>';
 
 		$home_is_selected = false;
 		foreach ($selected_cat as $cat)
