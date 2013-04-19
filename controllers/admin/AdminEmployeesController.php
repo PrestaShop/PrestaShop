@@ -227,7 +227,7 @@ class AdminEmployeesControllerCore extends AdminController
 					'name' => 'id_lang',
 					'required' => true,
 					'options' => array(
-						'query' => Language::getLanguages(),
+						'query' => Language::getLanguages(false),
 						'id' => 'id_lang',
 						'name' => 'name'
 					)

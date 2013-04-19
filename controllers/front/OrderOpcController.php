@@ -190,6 +190,13 @@ class OrderOpcControllerCore extends ParentOrderController
 									$this->context->cart->id_address_invoice = Tools::isSubmit('same') ? $this->context->cart->id_address_delivery : (int)(Tools::getValue('id_address_invoice'));
 									if (!$this->context->cart->update())
 										$this->errors[] = Tools::displayError('An error occurred while updating your cart.');
+										
+									$infos = Address::getCountryAndState((int)($this->context->cart->id_address_delivery));
+									if (isset($infos['id_country']) && $infos['id_country'])
+									{
+										$country = new Country((int)$infos['id_country']);
+										$this->context->country = $country;
+									}
 
 									// Address has changed, so we check if the cart rules still apply
 									CartRule::autoRemoveFromCart($this->context);
@@ -316,7 +323,7 @@ class OrderOpcControllerCore extends ParentOrderController
 		// If a rule offer free-shipping, force hidding shipping prices
 		$free_shipping = false;
 		foreach ($this->context->cart->getCartRules() as $rule)
-			if ($rule['free_shipping'])
+			if ($rule['free_shipping'] && !$rule['carrier_restriction'])
 			{
 				$free_shipping = true;
 				break;
@@ -357,7 +364,8 @@ class OrderOpcControllerCore extends ParentOrderController
 		$this->_assignPayment();
 		Tools::safePostVars();
 
-		$this->context->smarty->assign('newsletter', (int)Module::getInstanceByName('blocknewsletter')->active);
+		$blocknewsletter = Module::getInstanceByName('blocknewsletter');
+		$this->context->smarty->assign('newsletter', (bool)($blocknewsletter && $blocknewsletter->active));
 
 		$this->_processAddressFormat();
 		$this->setTemplate(_PS_THEME_DIR_.'order-opc.tpl');
@@ -405,9 +413,11 @@ class OrderOpcControllerCore extends ParentOrderController
 		if (!$this->isLogged)
 		{
 			$carriers = $this->context->cart->simulateCarriersOutput();
+			$oldMessage = Message::getMessageByCartId((int)($this->context->cart->id));
 			$this->context->smarty->assign(array(
 				'HOOK_EXTRACARRIER' => null,
 				'HOOK_EXTRACARRIER_ADDR' => null,
+				'oldMessage' => isset($oldMessage['message'])? $oldMessage['message'] : '',
 				'HOOK_BEFORECARRIER' => Hook::exec('displayBeforeCarrier', array(
 					'carriers' => $carriers,
 					'checked' => $this->context->cart->simulateCarrierSelectedOutput(),
@@ -494,9 +504,20 @@ class OrderOpcControllerCore extends ParentOrderController
 
 		$wrapping_fees = $this->context->cart->getGiftWrappingPrice(false);
 		$wrapping_fees_tax_inc = $wrapping_fees = $this->context->cart->getGiftWrappingPrice();
+		$oldMessage = Message::getMessageByCartId((int)($this->context->cart->id));
+		
+		$free_shipping = false;
+		foreach ($this->context->cart->getCartRules() as $rule)
+		{
+			if ($rule['free_shipping'] && !$rule['carrier_restriction'])
+			{
+				$free_shipping = true;
+				break;
+			}			
+		}		
 
 		$vars = array(
-			'free_shipping' => false, // Deprecated since a cart rule can be applied the specific carriers only
+			'free_shipping' => $free_shipping,
 			'checkedTOS' => (int)($this->context->cookie->checkedTOS),
 			'recyclablePackAllowed' => (int)(Configuration::get('PS_RECYCLABLE_PACK')),
 			'giftAllowed' => (int)(Configuration::get('PS_GIFT_WRAPPING')),
@@ -513,6 +534,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			'delivery_option' => $delivery_option,
 			'address_collection' => $this->context->cart->getAddressCollection(),
 			'opc' => true,
+			'oldMessage' => isset($oldMessage['message'])? $oldMessage['message'] : '',
 			'HOOK_BEFORECARRIER' => Hook::exec('displayBeforeCarrier', array(
 				'carriers' => $carriers,
 				'delivery_option_list' => $this->context->cart->getDeliveryOptionList(),
@@ -538,6 +560,7 @@ class OrderOpcControllerCore extends ParentOrderController
 				)),
 				'carrier_block' => $this->context->smarty->fetch(_PS_THEME_DIR_.'order-carrier.tpl')
 			);
+
 			Cart::addExtraCarriers($result);
 			return $result;
 		}

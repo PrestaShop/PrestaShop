@@ -48,6 +48,8 @@ var allowBuyWhenOutOfStock = {if $allow_oosp == 1}true{else}false{/if};
 var availableNowValue = '{$product->available_now|escape:'quotes':'UTF-8'}';
 var availableLaterValue = '{$product->available_later|escape:'quotes':'UTF-8'}';
 var productPriceTaxExcluded = {$product->getPriceWithoutReduct(true)|default:'null'} - {$product->ecotax};
+var productBasePriceTaxExcluded = {$product->base_price} - {$product->ecotax};
+
 var reduction_percent = {if $product->specificPrice AND $product->specificPrice.reduction AND $product->specificPrice.reduction_type == 'percentage'}{$product->specificPrice.reduction*100}{else}0{/if};
 var reduction_price = {if $product->specificPrice AND $product->specificPrice.reduction AND $product->specificPrice.reduction_type == 'amount'}{$product->specificPrice.reduction|floatval}{else}0{/if};
 var specific_price = {if $product->specificPrice AND $product->specificPrice.price}{$product->specificPrice.price}{else}0{/if};
@@ -79,6 +81,7 @@ var stock_management = {$stock_management|intval};
 	{assign var='productPrice' value=$product->getPrice(false, $smarty.const.NULL, $priceDisplayPrecision)}
 	{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
 {/if}
+
 
 var productPriceWithoutReduction = '{$productPriceWithoutReduction}';
 var productPrice = '{$productPrice}';
@@ -131,6 +134,7 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 		specific_price_combination['reduction_price'] = {if $combination.specific_price AND $combination.specific_price.reduction AND $combination.specific_price.reduction_type == 'amount'}{$combination.specific_price.reduction}{else}0{/if};
 		specific_price_combination['price'] = {if $combination.specific_price AND $combination.specific_price.price}{$combination.specific_price.price}{else}0{/if};
 		specific_price_combination['reduction_type'] = '{if $combination.specific_price}{$combination.specific_price.reduction_type}{/if}';
+		specific_price_combination['id_product_attribute'] = {if $combination.specific_price}{$combination.specific_price.id_product_attribute|intval}{else}0{/if};
 		available_date['date'] = '{$combination.available_date}';
 		available_date['date_formatted'] = '{dateFormat date=$combination.available_date full=false}';
 		addCombination({$idCombination|intval}, new Array({$combination.list}), {$combination.quantity}, {$combination.price}, {$combination.ecotax}, {$combination.id_image}, '{$combination.reference|addslashes}', {$combination.unit_impact}, {$combination.minimal_quantity}, available_date, specific_price_combination);
@@ -179,7 +183,7 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 		<div id="image-block">
 		{if $have_image}
 			<span id="view_full_size">
-				<img src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')}" {if $jqZoomEnabled}class="jqzoom" alt="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'thickbox_default')}"{else} title="{$product->name|escape:'htmlall':'UTF-8'}" alt="{$product->name|escape:'htmlall':'UTF-8'}" {/if} id="bigpic" width="{$largeSize.width}" height="{$largeSize.height}" />
+				<img src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')}"{if $jqZoomEnabled} class="jqzoom"{/if} title="{$product->name|escape:'htmlall':'UTF-8'}" alt="{$product->name|escape:'htmlall':'UTF-8'}" id="bigpic" width="{$largeSize.width}" height="{$largeSize.height}"/>
 				<span class="span_link">{l s='Maximize'}</span>
 			</span>
 		{else}
@@ -199,7 +203,7 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 					{foreach from=$images item=image name=thumbnails}
 					{assign var=imageIds value="`$product->id`-`$image.id_image`"}
 					<li id="thumbnail_{$image.id_image}">
-						<a href="{$link->getImageLink($product->link_rewrite, $imageIds, thickbox_default)}" rel="other-views" class="thickbox {if $smarty.foreach.thumbnails.first}shown{/if}" title="{$image.legend|htmlspecialchars}">
+						<a href="{$link->getImageLink($product->link_rewrite, $imageIds, 'thickbox_default')}" rel="other-views" class="thickbox{if $smarty.foreach.thumbnails.first} shown{/if}" title="{$image.legend|htmlspecialchars}">
 							<img id="thumb_{$image.id_image}" src="{$link->getImageLink($product->link_rewrite, $imageIds, 'medium_default')}" alt="{$image.legend|htmlspecialchars}" height="{$mediumSize.height}" width="{$mediumSize.width}" />
 						</a>
 					</li>
@@ -276,14 +280,15 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 				{if isset($groups)}
 				<!-- attributes -->
 				<div id="attributes">
+				<div class="clear"></div>
 				{foreach from=$groups key=id_attribute_group item=group}
 					{if $group.attributes|@count}
 						<fieldset class="attribute_fieldset">
-							<label class="attribute_label" for="group_{$id_attribute_group|intval}">{$group.name|escape:'htmlall':'UTF-8'} :</label>
+							<label class="attribute_label" for="group_{$id_attribute_group|intval}">{$group.name|escape:'htmlall':'UTF-8'} :&nbsp;</label>
 							{assign var="groupName" value="group_$id_attribute_group"}
 							<div class="attribute_list">
 							{if ($group.group_type == 'select')}
-								<select name="{$groupName}" id="group_{$id_attribute_group|intval}" class="attribute_select" onchange="findCombination();getProductAttribute();{if $colors|@count > 0}$('#wrapResetImages').show('slow');{/if};">
+								<select name="{$groupName}" id="group_{$id_attribute_group|intval}" class="attribute_select" onchange="findCombination();getProductAttribute();">
 									{foreach from=$group.attributes key=id_attribute item=group_attribute}
 										<option value="{$id_attribute|intval}"{if (isset($smarty.get.$groupName) && $smarty.get.$groupName|intval == $id_attribute) || $group.default == $id_attribute} selected="selected"{/if} title="{$group_attribute|escape:'htmlall':'UTF-8'}">{$group_attribute|escape:'htmlall':'UTF-8'}</option>
 									{/foreach}
@@ -293,9 +298,9 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 									{assign var="default_colorpicker" value=""}
 									{foreach from=$group.attributes key=id_attribute item=group_attribute}
 									<li{if $group.default == $id_attribute} class="selected"{/if}>
-										<a id="color_{$id_attribute|intval}" class="color_pick{if ($group.default == $id_attribute)} selected{/if}" style="background: {$colors.$id_attribute.value};" title="{$colors.$id_attribute.name}" onclick="colorPickerClick(this);getProductAttribute();{if $colors|@count > 0}$('#wrapResetImages').show('slow');{/if}">
+										<a id="color_{$id_attribute|intval}" class="color_pick{if ($group.default == $id_attribute)} selected{/if}" style="background: {$colors.$id_attribute.value};" title="{$colors.$id_attribute.name}" onclick="colorPickerClick(this);getProductAttribute();">
 											{if file_exists($col_img_dir|cat:$id_attribute|cat:'.jpg')}
-												<img src="{$img_col_dir}{$id_attribute}.jpg" alt="{$colors.$id_attribute.name}" width="20" height="20" /><br>
+												<img src="{$img_col_dir}{$id_attribute}.jpg" alt="{$colors.$id_attribute.name}" width="20" height="20" /><br />
 											{/if}
 										</a>
 									</li>
@@ -306,10 +311,14 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 								</ul>
 								<input type="hidden" class="color_pick_hidden" name="{$groupName}" value="{$default_colorpicker}" />
 							{elseif ($group.group_type == 'radio')}
-								{foreach from=$group.attributes key=id_attribute item=group_attribute}
-									<input type="radio" class="attribute_radio" name="{$groupName}" value="{$id_attribute}" {if ($group.default == $id_attribute)} checked="checked"{/if} onclick="findCombination();getProductAttribute();{if $colors|@count > 0}$('#wrapResetImages').show('slow');{/if}">
-									<span>{$group_attribute|escape:'htmlall':'UTF-8'}</span><br/>
-								{/foreach}
+								<ul>
+									{foreach from=$group.attributes key=id_attribute item=group_attribute}
+										<li>
+											<input type="radio" class="attribute_radio" name="{$groupName}" value="{$id_attribute}" {if ($group.default == $id_attribute)} checked="checked"{/if} onclick="findCombination();getProductAttribute();" />
+											<span>{$group_attribute|escape:'htmlall':'UTF-8'}</span>
+										</li>
+									{/foreach}
+								</ul>
 							{/if}
 							</div>
 						</fieldset>
@@ -373,14 +382,6 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 			{/if}
 
 			<div class="price">
-				{if !$priceDisplay || $priceDisplay == 2}
-					{assign var='productPrice' value=$product->getPrice(true, $smarty.const.NULL, $priceDisplayPrecision)}
-					{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(false, $smarty.const.NULL)}
-				{elseif $priceDisplay == 1}
-					{assign var='productPrice' value=$product->getPrice(false, $smarty.const.NULL, $priceDisplayPrecision)}
-					{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
-				{/if}
-
 				<p class="our_price_display">
 				{if $priceDisplay >= 0 && $priceDisplay <= 2}
 					<span id="our_price_display">{convertPrice price=$productPrice}</span>
@@ -402,14 +403,14 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 				{/if}
 			</div>
 			<p id="reduction_percent" {if !$product->specificPrice OR $product->specificPrice.reduction_type != 'percentage'} style="display:none;"{/if}><span id="reduction_percent_display">{if $product->specificPrice AND $product->specificPrice.reduction_type == 'percentage'}-{$product->specificPrice.reduction*100}%{/if}</span></p>
-			<p id="reduction_amount" {if !$product->specificPrice OR $product->specificPrice.reduction_type != 'amount' && $product->specificPrice.reduction|intval ==0} style="display:none"{/if}>
+			<p id="reduction_amount" {if !$product->specificPrice OR $product->specificPrice.reduction_type != 'amount' || $product->specificPrice.reduction|intval ==0} style="display:none"{/if}>
 				<span id="reduction_amount_display">
 				{if $product->specificPrice AND $product->specificPrice.reduction_type == 'amount' AND $product->specificPrice.reduction|intval !=0}
 					-{convertPrice price=$productPriceWithoutReduction-$productPrice|floatval}
 				{/if}
 				</span>
 			</p>
-			{if $product->specificPrice AND $product->specificPrice.reduction}
+			{if $product->specificPrice AND $product->specificPrice.reduction && $product->specificPrice.reduction > 0}
 				<p id="old_price"><span class="bold">
 				{if $priceDisplay >= 0 && $priceDisplay <= 2}
 					{if $productPriceWithoutReduction > $productPrice}
@@ -535,14 +536,14 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 	{/if}
 	{if isset($accessories) AND $accessories}
 		<!-- accessories -->
-		<ul id="idTab4" class="bullet">
+		<div id="idTab4" class="bullet">
 			<div class="block products_block accessories_block clearfix">
 				<div class="block_content">
 					<ul>
 					{foreach from=$accessories item=accessory name=accessories_list}
 						{if ($accessory.allow_oosp || $accessory.quantity_all_versions > 0) AND $accessory.available_for_order AND !isset($restricted_country_mode)}
 							{assign var='accessoryLink' value=$link->getProductLink($accessory.id_product, $accessory.link_rewrite, $accessory.category)}
-							<li class="ajax_block_product {if $smarty.foreach.accessories_list.first}first_item{elseif $smarty.foreach.accessories_list.last}last_item{else}item{/if} product_accessories_description">
+							<li class="ajax_block_product{if $smarty.foreach.accessories_list.first} first_item{elseif $smarty.foreach.accessories_list.last} last_item{else} item{/if} product_accessories_description">
 								<p class="s_title_block">
 									<a href="{$accessoryLink|escape:'htmlall':'UTF-8'}">{$accessory.name|escape:'htmlall':'UTF-8'}</a>
 									{if $accessory.show_price AND !isset($restricted_country_mode) AND !$PS_CATALOG_MODE} - <span class="price">{if $priceDisplay != 1}{displayWtPrice p=$accessory.price}{else}{displayWtPrice p=$accessory.price_tax_exc}{/if}</span>{/if}
@@ -568,7 +569,7 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 					</ul>
 				</div>
 			</div>
-		</ul>
+		</div>
 	{/if}
 
 	<!-- Customizable products -->
@@ -615,7 +616,7 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 						{if $field.type == 1}
 						<li class="customizationUploadLine{if $field.required} required{/if}">
 							<label for ="textField{$customizationField}">{assign var='key' value='textFields_'|cat:$product->id|cat:'_'|cat:$field.id_customization_field} {if !empty($field.name)}{$field.name}{/if}{if $field.required}<sup>*</sup>{/if}</label>
-							<textarea type="text" name="textField{$field.id_customization_field}" id="textField{$customizationField}" rows="1" cols="40" class="customization_block_input" />{if isset($textFields.$key)}{$textFields.$key|stripslashes}{/if}</textarea>
+							<textarea type="text" name="textField{$field.id_customization_field}" id="textField{$customizationField}" rows="1" cols="40" class="customization_block_input">{if isset($textFields.$key)}{$textFields.$key|stripslashes}{/if}</textarea>
 						</li>
 						{counter}
 						{/if}
@@ -638,13 +639,10 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 	</div>
 </div>
 {/if}
-
 {if isset($packItems) && $packItems|@count > 0}
 	<div id="blockpack">
 		<h2>{l s='Pack content'}</h2>
 		{include file="$tpl_dir./product-list.tpl" products=$packItems}
 	</div>
 {/if}
-
 {/if}
-

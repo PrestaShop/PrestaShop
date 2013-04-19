@@ -170,7 +170,7 @@
 								</td>
 								<td>
 								<div class="delivery_option_price">
-									{if $option.total_price_with_tax && !$free_shipping}
+									{if $option.total_price_with_tax && (!isset($free_shipping) || (isset($free_shipping) && !$free_shipping))}
 										{if $use_taxes == 1}
 											{convertPrice price=$option.total_price_with_tax} {l s='(tax incl.)'}
 										{else}
@@ -293,7 +293,7 @@
 	<h3>{l s='Leave a message'}</h3>
 	<div>
 		<p>{l s='If you would like to add a comment about your order, please write it in the field below.'}</p>
-		<p><textarea cols="120" rows="3" name="message" id="message">{if isset($oldMessage)}{$oldMessage}{/if}</textarea></p>
+		<p><textarea cols="120" rows="3" name="message" id="message">{if isset($oldMessage)}{$oldMessage|escape:'htmlall':'UTF-8'}{/if}</textarea></p>
 	</div>
 </div>
 {/if}

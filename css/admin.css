@@ -199,6 +199,8 @@ background: -moz-linear-gradient(center top , #F9F9F9, #ECECEC) repeat-x scroll 
 	color: #7F7F7F;
 	font-size: 0.85em;
 }
+
+
 .margin-form .normal-text {
 	display: block;
 	padding-top: 0.2em;
@@ -761,7 +763,6 @@ tr.deleted td {
 }
 
 .row {
-	background: #F4E6C9 url(../img/admin/news-bg.gif) repeat-x top left;
 }
 
 .uppercase {
@@ -844,6 +845,9 @@ tr.deleted td {
 	font-weight:bold;
 	font-size:16px;
 }
+
+span.hint {position: relative;}
+
 div.hint {
 	position: relative;
 }

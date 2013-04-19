@@ -280,7 +280,7 @@ class SpecificPriceRuleCore extends ObjectModel
 		$specific_price->id_currency = (int)$rule->id_currency;
 		$specific_price->id_group = (int)$rule->id_group;
 		$specific_price->from_quantity = (int)$rule->from_quantity;
-		$specific_price->price = (int)$rule->price;
+		$specific_price->price = (float)$rule->price;
 		$specific_price->reduction_type = $rule->reduction_type;
 		$specific_price->reduction = ($rule->reduction_type == 'percentage' ? $rule->reduction / 100 : (float)$rule->reduction);
 		$specific_price->from = $rule->from;

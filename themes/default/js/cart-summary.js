@@ -201,8 +201,9 @@ function changeAddressDelivery(obj)
 
 function updateAddressId(id_product, id_product_attribute, old_id_address_delivery, id_address_delivery, line)
 {
+
 	if (typeof(line) == 'undefined' || line.length == 0)
-		line = $('#product_' + id_product + '_' + id_product_attribute + '_0_' + old_id_address_delivery + ', #product_' + id_product + '_' + id_product_attribute + '_nocustom_' + old_id_address_delivery);
+		line = $('#cart_summary tr[id^=product_' + id_product + '_' + id_product_attribute + '_0_], #cart_summary tr[id^=product_' + id_product + '_' + id_product_attribute + '_nocustom_]');
 
 	$('.product_customization_for_' + id_product + '_' + id_product_attribute + '_' + old_id_address_delivery).each(function(){
 		$(this).attr('id', $(this).attr('id').replace(/_\d+$/, '_' + id_address_delivery)).removeClass('product_customization_for_' + id_product + '_' + id_product_attribute + '_' + old_id_address_delivery + ' address_' + old_id_address_delivery).addClass('product_customization_for_' + id_product + '_' + id_product_attribute + '_' + id_address_delivery + ' address_' + id_address_delivery);
@@ -217,6 +218,7 @@ function updateAddressId(id_product, id_product_attribute, old_id_address_delive
 	});
 	
 	line.attr('id', line.attr('id').replace(/_\d+$/, '_' + id_address_delivery)).removeClass('address_' + old_id_address_delivery).addClass('address_' + id_address_delivery).find('span[id^=cart_quantity_custom_], span[id^=total_product_price_], input[name^=quantity_], .cart_quantity_down, .cart_quantity_up, .cart_quantity_delete').each(function(){
+
 		if (typeof($(this).attr('name')) != 'undefined')
 			$(this).attr('name', $(this).attr('name').replace(/_\d+(_hidden|)$/, '_' + id_address_delivery));
 		if (typeof($(this).attr('id')) != 'undefined')
@@ -653,9 +655,9 @@ function updateCartSummary(json)
 			location.reload();
 
 		if (priceDisplayMethod !== 0)
-			$('#total_discount').html(formatCurrency(json.total_discounts_tax_exc, currencyFormat, currencySign, currencyBlank));
+			$('#total_discount').html('-' + formatCurrency(json.total_discounts_tax_exc, currencyFormat, currencySign, currencyBlank));
 		else
-			$('#total_discount').html(formatCurrency(json.total_discounts, currencyFormat, currencySign, currencyBlank));
+			$('#total_discount').html('-' + formatCurrency(json.total_discounts, currencyFormat, currencySign, currencyBlank));
 
 		$('.cart_discount').each(function(){
 			var idElmt = $(this).attr('id').replace('cart_discount_','');
@@ -665,10 +667,12 @@ function updateCartSummary(json)
 				if (json.discounts[i].id_discount == idElmt)
 				{
 					if (json.discounts[i].value_real !== '!')
+					{
 						if (priceDisplayMethod !== 0)
 							$('#cart_discount_' + idElmt + ' td.cart_discount_price span.price-discount').html(formatCurrency(json.discounts[i].value_tax_exc * -1, currencyFormat, currencySign, currencyBlank));
 						else
 							$('#cart_discount_' + idElmt + ' td.cart_discount_price span.price-discount').html(formatCurrency(json.discounts[i].value_real * -1, currencyFormat, currencySign, currencyBlank));
+					}
 					toDelete = false;
 				}
 			if (toDelete)

@@ -665,3 +665,7 @@ ul.listForm li {padding-bottom:3px;}
 
 #carrier_form label{padding-top:0}
 #carrier_form input{margin-top:3px}
+
+/************** SCENE *****************/
+
+#large_scene_image{clear:both;border:1px solid transparent;}

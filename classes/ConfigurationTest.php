@@ -47,7 +47,6 @@ class ConfigurationTestCore
 			'upload' => false,
 			'gd' => false,
 			'mysql_support' => false,
-			'sessions' => false,
 			'config_dir' => 'config',
 			'cache_dir' => 'cache',
 			'sitemap' => 'sitemap.xml',
@@ -55,9 +54,9 @@ class ConfigurationTestCore
 			'img_dir' => 'img',
 			'mails_dir' => 'mails',
 			'module_dir' => 'modules',
-			'theme_lang_dir' => 'themes/'._THEME_NAME_.'/lang',
+			'theme_lang_dir' => 'themes/'._THEME_NAME_.'/lang/',
 			'theme_pdf_lang_dir' => 'themes/'._THEME_NAME_.'/pdf/lang/',
-			'theme_cache_dir' => 'themes/'._THEME_NAME_.'/cache',
+			'theme_cache_dir' => 'themes/'._THEME_NAME_.'/cache/',
 			'translations_dir' => 'translations',
 			'customizable_products_dir' => 'upload',
 			'virtual_products_dir' => 'download'
@@ -267,21 +266,24 @@ class ConfigurationTestCore
 
 	public static function test_theme_lang_dir($dir)
 	{
-		if (!file_exists($dir))
-			return true;
+		$absoluteDir = rtrim(_PS_ROOT_DIR_, '\\/').DIRECTORY_SEPARATOR.trim($dir, '\\/');
+		if (!file_exists($absoluteDir))
+			return true;		
 		return ConfigurationTest::test_dir($dir, true);
 	}
 
 	public static function test_theme_pdf_lang_dir($dir)
 	{
-		if (!file_exists($dir))
+		$absoluteDir = rtrim(_PS_ROOT_DIR_, '\\/').DIRECTORY_SEPARATOR.trim($dir, '\\/');
+		if (!file_exists($absoluteDir))
 			return true;
 		return ConfigurationTest::test_dir($dir, true);
 	}
 
 	public static function test_theme_cache_dir($dir)
 	{
-		if (!file_exists($dir))
+		$absoluteDir = rtrim(_PS_ROOT_DIR_, '\\/').DIRECTORY_SEPARATOR.trim($dir, '\\/');
+		if (!file_exists($absoluteDir))
 			return true;
 		return ConfigurationTest::test_dir($dir, true);
 	}

@@ -117,11 +117,5 @@ public function hookDisplayMobileHeader($params)
 
 		return true;
 	}
-	
-	protected function getCacheId($name = null)
-	{
-		$cache_id = parent::getCacheId($name);
-		return $cache_id.'_'.(int)Tools::usingSecureMode();
-	}
 }
 

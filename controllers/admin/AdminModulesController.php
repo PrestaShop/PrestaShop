@@ -391,6 +391,8 @@ class AdminModulesControllerCore extends AdminController
 		$this->recursiveDeleteOnDisk($tmp_folder);
 		if ($success && $redirect)
 			Tools::redirectAdmin(self::$currentIndex.'&conf=8&anchor=anchor'.ucfirst($folder).'&token='.$this->token);
+
+		return $success;
 	}
 
 	protected function recursiveDeleteOnDisk($dir)
@@ -600,25 +602,14 @@ class AdminModulesControllerCore extends AdminController
 				foreach ($modules as $name)
 				{
 					$full_report = null;
-					if ($key == 'update')
-					{
-						if (ConfigurationTest::test_dir('modules/'.$name, true, $full_report))
-							Tools::deleteDirectory('../modules/'.$name.'/');
-						else
-						{
-							$module = Module::getInstanceByName(urldecode($name));
-							$this->errors[] = $this->l(sprintf("Module %s can't be upgraded : ", $module->displayName)).$full_report;
-							continue;
-						}					
-					}
-
 					// If Addons module, download and unzip it before installing it
-					if (!file_exists('../modules/'.$name.'/'.$name.'.php'))
+					if (!file_exists('../modules/'.$name.'/'.$name.'.php') || $key == 'update')
 					{
 						$filesList = array(
 							array('type' => 'addonsNative', 'file' => Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 'loggedOnAddons' => 0),
 							array('type' => 'addonsBought', 'file' => Module::CACHE_FILE_CUSTOMER_MODULES_LIST, 'loggedOnAddons' => 1),
 						);
+
 						foreach ($filesList as $f)
 							if (file_exists(_PS_ROOT_DIR_.$f['file']))
 							{
@@ -628,12 +619,19 @@ class AdminModulesControllerCore extends AdminController
 								foreach ($xml->module as $modaddons)
 									if ($name == $modaddons->name && isset($modaddons->id) && ($this->logged_on_addons || $f['loggedOnAddons'] == 0))
 									{
+										$download_ok = false;
 										if ($f['loggedOnAddons'] == 0)
-											if (file_put_contents('../modules/'.$modaddons->name.'.zip', Tools::addonsRequest('module', array('id_module' => pSQL($modaddons->id)))))
-												$this->extractArchive('../modules/'.$modaddons->name.'.zip', false);
-										if ($f['loggedOnAddons'] == 1 && $this->logged_on_addons)
-											if (file_put_contents('../modules/'.$modaddons->name.'.zip', Tools::addonsRequest('module', array('id_module' => pSQL($modaddons->id), 'username_addons' => pSQL(trim($this->context->cookie->username_addons)), 'password_addons' => pSQL(trim($this->context->cookie->password_addons))))))
-												$this->extractArchive('../modules/'.$modaddons->name.'.zip', false);
+											if (file_put_contents(_PS_MODULE_DIR_.$modaddons->name.'.zip', Tools::addonsRequest('module', array('id_module' => pSQL($modaddons->id)))))
+												$download_ok = true;
+										elseif ($f['loggedOnAddons'] == 1 && $this->logged_on_addons)
+											if (file_put_contents(_PS_MODULE_DIR_.$modaddons->name.'.zip', Tools::addonsRequest('module', array('id_module' => pSQL($modaddons->id), 'username_addons' => pSQL(trim($this->context->cookie->username_addons)), 'password_addons' => pSQL(trim($this->context->cookie->password_addons))))))
+												$download_ok = true;
+
+										if (!$download_ok)
+											$this->errors[] = $this->l('Error on downloading the lastest version');
+										else
+											if(!$this->extractArchive(_PS_MODULE_DIR_.$modaddons->name.'.zip', false))
+												$this->errors[] = $this->l(sprintf("Module %s can't be upgraded: ", $modaddons->name));
 									}
 							}
 					}
@@ -1005,6 +1003,7 @@ class AdminModulesControllerCore extends AdminController
 		$this->nb_modules_total = count($modules);
 		$module_errors = array();
 		$module_success = array();
+		$upgrade_available = array();
 
 		// Browse modules list
 		foreach ($modules as $km => $module)
@@ -1015,7 +1014,7 @@ class AdminModulesControllerCore extends AdminController
 				unset($modules[$km]);
 				continue;
 			}
-			
+
 			// Upgrade Module process, init check if a module could be upgraded
 			if (Module::initUpgradeModule($module))
 			{
@@ -1085,6 +1084,8 @@ class AdminModulesControllerCore extends AdminController
 					$modules[$km]->preferences = $modules_preferences[$modules[$km]->name];
 			}
 			unset($object);
+			if (isset($module->version_addons))
+				$upgrade_available[] = array('anchor' => ucfirst($module->name), 'name' => $module->displayName);;
 		}
 
 		// Don't display categories without modules
@@ -1109,6 +1110,7 @@ class AdminModulesControllerCore extends AdminController
 		$tpl_vars = array();
 
 		$tpl_vars['token'] = $this->token;
+		$tpl_vars['upgrade_available'] = $upgrade_available;
 		$tpl_vars['currentIndex'] = self::$currentIndex;
 		$tpl_vars['dirNameCurrentIndex'] = dirname(self::$currentIndex);
 		$tpl_vars['ajaxCurrentIndex'] = str_replace('index', 'ajax-tab', self::$currentIndex);
