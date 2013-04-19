@@ -227,28 +227,29 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 	{
 		// List of activities
 		$list_activities = array(
-			$this->l('Lingerie and Adult'),
-			$this->l('Animals and Pets'),
-			$this->l('Art and Culture'),
-			$this->l('Babies'),
-			$this->l('Beauty and Personal Care'),
-			$this->l('Cars'),
-			$this->l('Computer Hardware and Software'),
-			$this->l('Download'),
-			$this->l('Fashion and accessories'),
-			$this->l('Flowers, Gifts and Crafts'),
-			$this->l('Food and beverage'),
-			$this->l('HiFi, Photo and Video'),
-			$this->l('Home and Garden'),
-			$this->l('Home Appliances'),
-			$this->l('Jewelry'),
-			$this->l('Mobile and Telecom'),
-			$this->l('Services'),
-			$this->l('Shoes and accessories'),
-			$this->l('Sports and Entertainment'),
-			$this->l('Travel'),
+			1 => $this->l('Lingerie and Adult'),
+			2 => $this->l('Animals and Pets'),
+			3 => $this->l('Art and Culture'),
+			4 => $this->l('Babies'),
+			5 => $this->l('Beauty and Personal Care'),
+			6 => $this->l('Cars'),
+			7 => $this->l('Computer Hardware and Software'),
+			8 => $this->l('Download'),
+			9 => $this->l('Fashion and accessories'),
+			10 => $this->l('Flowers, Gifts and Crafts'),
+			11 => $this->l('Food and beverage'),
+			12 => $this->l('HiFi, Photo and Video'),
+			13 => $this->l('Home and Garden'),
+			14 => $this->l('Home Appliances'),
+			15 => $this->l('Jewelry'),
+			16 => $this->l('Mobile and Telecom'),
+			17 => $this->l('Services'),
+			18 => $this->l('Shoes and accessories'),
+			19 => $this->l('Sports and Entertainment'),
+			20 => $this->l('Travel'),
 		);
-		sort($list_activities);
+
+		asort($list_activities);
 		$this->list_activities = $list_activities;
 
 		// Countries list

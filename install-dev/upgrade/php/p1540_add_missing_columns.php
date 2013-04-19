@@ -47,10 +47,15 @@ function p1540_add_missing_columns()
 			$list_fields[$k] = $field['Field'];
 
 		if (!in_array('id_shop', $list_fields))
-			if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'layered_product_attribute` ADD `id_shop` INT( 10 ) UNSIGNED NOT NULL DEFAULT "1" AFTER `id_attribute_group` '))
+			if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'layered_product_attribute` ADD `id_shop` INT( 10 ) UNSIGNED NOT NULL DEFAULT "1" AFTER `id_attribute_group`'))
 				$errors[] = Db::getInstance()->getMsgError();				
 	}
-		
+	
+	$key_exists = Db::getInstance()->executeS('SHOW INDEX FROM `'._DB_PREFIX_.'stock_available` WHERE KEY_NAME = "product_sqlstock"');;
+	if (is_array($key_exists))
+		if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'stock_available` DROP INDEX `product_sqlstock`'))
+			$errors[] = Db::getInstance()->getMsgError();
+
 	if (count($errors))
 		return array('error' => 1, 'msg' => implode(',', $errors)) ;	
 }

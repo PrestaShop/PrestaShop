@@ -119,10 +119,10 @@
 		</div><!-- .clearfix -->
 		
 		{if $product->show_price AND !isset($restricted_country_mode) AND !$PS_CATALOG_MODE}
-			<hr width="99%" align="center" size="2" class="margin_less"/>
+			<hr class="margin_less"/>
 			{include file="./product-prices.tpl"}
 		{else}
-			<hr width="99%" align="center" size="2" class="margin_bottom"/>
+			<hr class="margin_bottom"/>
 		{/if}
 		<div id="displayMobileAddToCartTop">
 			{hook h="displayMobileAddToCartTop"}
@@ -147,13 +147,13 @@
 	{include file="./product-quantity-discount.tpl"}
 	{* ================================== *}
 	
-	<hr width="99%" align="center" size="2" class=""/>
+	<hr/>
 	<!-- description and features -->
 	{include file="./product-desc-features.tpl"}
 	
 	{if isset($packItems) && $packItems|@count > 0}
 	<!-- pack list -->
-	<hr width="99%" align="center" size="2" class="margin_less"/>
+	<hr class="margin_less"/>
 	<div id="blockpack">
 		<h2>{l s='Pack content'}</h2>
 		{include file="./category-product-list.tpl" products=$packItems}

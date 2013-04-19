@@ -31,9 +31,10 @@
 				var imageWidth = $(this).get(0).offsetWidth;
 				var imageHeight = $(this).get(0).offsetHeight;
 
-				noalt = $(this).attr("alt");
+				attr = typeof($(this).attr("rel")) != 'undefined' ? "rel" : "alt";
+				noalt = $(this).attr(attr);
 				var bigimage = noalt;
-				$(this).attr("alt", '');
+				$(this).attr(attr, '');
 
 				if($("div.zoomdiv").get().length == 0)
 					$(this).after("<div class='zoomdiv'><img class='bigimg' src='"+bigimage+"'/></div>");
@@ -67,7 +68,7 @@
 					$("div.zoomdiv").get(0).scrollLeft = (scrollx) * scalex ;
 				});
 			}, function() {
-				$(this).attr("alt", noalt);
+				$(this).attr(attr, noalt);
 				$("div.zoomdiv").hide();
 				$(document.body).unbind("mousemove");
 				$(".lenszoom").remove();

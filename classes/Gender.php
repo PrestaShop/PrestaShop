@@ -66,8 +66,8 @@ class GenderCore extends ObjectModel
 
 	public function getImage($use_unknown = false)
 	{
-		if (!file_exists(_PS_GENDERS_DIR_.$this->id.'.jpg'))
-			return ($use_unknown) ?  _PS_ADMIN_IMG_.'unknown.gif' : false;
+		if (!isset($this->id) || empty($this->id) || !file_exists(_PS_GENDERS_DIR_.$this->id.'.jpg'))
+			return _THEME_GENDERS_DIR_.'Unknown.jpg';
 		return _THEME_GENDERS_DIR_.$this->id.'.jpg';
 	}
 }

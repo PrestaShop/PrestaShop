@@ -5,7 +5,7 @@
 		{if isset($product) && $product->description}
 		<div data-role="collapsible" data-theme="a" data-content-theme="a">
 			<h3>{l s='More info'}</h3>
-			<p>{$product->description}</p>
+			<div>{$product->description}</div>
 		</div>
 		{/if}
 		
@@ -70,7 +70,7 @@
 								{assign var="btn_href" value=$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$accessory.id_product|intval}&amp;token={$static_token}&amp;add")}
 							{else}
 								{assign var="btn_class" value="disabled"}
-								{capture assign="btn_more"}<span class="availability">{if (isset($accessory.quantity_all_versions) && $accessory.quantity_all_versions > 0)}{l s='Product available with different options'}{else}{l s='Out of stock'}{/if}</span>{/capture}
+								{capture assign="btn_more"}<span class="availability">{if (isset($accessory.quantity_all_versions) && $accessory.quantity_all_versions > 0)}{l s='Product available with different options'}{else}{if !$PS_CATALOG_MODE}{l s='Out of stock'}{/if}{/if}</span>{/capture}
 							{/if}
 							<a class="{$btn_class}" data-role="button" data-inline="true" data-theme="e" data-icon="plus" data-mini="true" class="exclusive button ajax_add_to_cart_button" href="{$btn_href}" rel="ajax_id_product_{$accessory.id_product|intval}" title="{l s='Add to cart'}" data-ajax="false">{l s='Add to cart'}</a>
 							{$btn_more}

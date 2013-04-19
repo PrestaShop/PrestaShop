@@ -24,7 +24,7 @@
 *}
 <script type="text/javascript">
 	var id_cart = {$cart->id|intval};
-	var id_customer = '';
+	var id_customer = 0;
 	var changed_shipping_price = false;
 	var shipping_price_selected_carrier = '';
 	var current_index = '{$current}&token={$token}';
@@ -464,6 +464,7 @@
 		$('#summary_part').show();
 		var address_link = $('#new_address').attr('href');
 		id_customer = idCustomer;
+		id_cart = 0;
 		$('#new_address').attr('href', address_link.replace(/id_customer=[0-9]+/, 'id_customer='+id_customer));
 		$.ajax({
 			type:"POST",

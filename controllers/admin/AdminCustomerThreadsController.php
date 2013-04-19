@@ -458,7 +458,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
 		$extension = false;
 		foreach ($extensions as $key => $val)
-			if (substr($filename, -4) == $key || substr($filename, -5) == $key)
+			if (substr(Tools::strtolower($filename), -4) == $key || substr(Tools::strtolower($filename), -5) == $key)
 			{
 				$extension = $val;
 				break;

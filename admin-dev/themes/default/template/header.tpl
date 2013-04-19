@@ -82,7 +82,6 @@
 		<script type="text/javascript" src="{$js_uri}"></script>
 	{/foreach}
 {/if}
-
 	<link rel="icon" type="image/vnd.microsoft.icon" href="{$img_dir}favicon.ico" />
 	<link rel="shortcut icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
 {if isset($displayBackOfficeHeader)}
@@ -91,16 +90,15 @@
 	<!--[if IE]>
 	<link type="text/css" rel="stylesheet" href="{$base_url}css/admin-ie.css" />
 	<![endif]-->
-	{if isset($brightness)}
+{if isset($brightness)}
 	<style type="text/css">
 		div#header_infos, div#header_infos a#header_shopname, div#header_infos a#header_logout, div#header_infos a#header_foaccess {ldelim}color:{$brightness}{rdelim}
 	</style>
-	{/if}
+{/if}
 </head>
 <body style="{if isset($bo_color) && $bo_color}background:{$bo_color};{/if}{if isset($bo_width) && $bo_width > 0}text-align:center;{/if}">
 {if $display_header}
 <div id="ajax_running"><img src="../img/admin/ajax-loader-yellow.gif" alt="" /> {l s='Loading...'}</div>
-
 <div id="top_container" {if $bo_width > 0}style="margin:auto;width:{$bo_width}px"{/if}>
 <div id="container">
 {* begin  HEADER *}
@@ -108,7 +106,7 @@
 		<div id="header_infos">
 			<a id="header_shopname" href="{$link->getAdminLink('AdminHome')|escape:'htmlall':'UTF-8'}"><span>{$shop_name}</span></a>
 			<div id="notifs_icon_wrapper">
-				{if {$show_new_orders} == 1}
+{if {$show_new_orders} == 1}
 					<div id="orders_notif" class="notifs">
 							<span id="orders_notif_number_wrapper" class="number_wrapper">
 								<span id="orders_notif_value">0</span>
@@ -120,8 +118,8 @@
 							<p><a href="index.php?controller=AdminOrders&amp;token={getAdminToken tab='AdminOrders'}">{l s='Show all orders'}</a></p>
 						</div>
 					</div>
-				{/if}
-				{if ($show_new_customers == 1)}
+{/if}
+{if ($show_new_customers == 1)}
 					<div id="customers_notif" class="notifs notifs_alternate">
 							<span id="customers_notif_number_wrapper" class="number_wrapper">
 								<span id="customers_notif_value">0</span>
@@ -133,8 +131,8 @@
 							<p><a href="index.php?controller=AdminCustomers&amp;token={getAdminToken tab='AdminCustomers'}">{l s='Show all customers'}</a></p>
 						</div>
 					</div>
-				{/if}
-				{if {$show_new_messages} == 1}
+{/if}
+{if {$show_new_messages} == 1}
 					<div id="customer_messages_notif" class="notifs">
 							<span id="customer_messages_notif_number_wrapper" class="number_wrapper">
 								<span id="customer_messages_notif_value">0</span>
@@ -146,9 +144,8 @@
 							<p><a href="index.php?tab=AdminCustomerThreads&amp;token={getAdminToken tab='AdminCustomerThreads'}">{l s='Show all messages'}</a></p>
 						</div>
 					</div>
-				{/if}
+{/if}
 			</div>
-		
 			<div id="employee_box">
 				<div id="employee_infos">
 					<div class="employee_name">{l s='Welcome,'} <strong>{$first_name}&nbsp;{$last_name}</strong></div>
@@ -157,14 +154,13 @@
 						<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'htmlall':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee">{l s='My preferences'}</a></li>
 						<li class="separator">&nbsp;</li>
 						<li><a id="header_logout" href="index.php?logout">{l s='logout'}</a></li>
-						{if {$base_url}}
-							<li class="separator">&nbsp;</li>
-							<a href="{$base_url}" id="header_foaccess" target="_blank" title="{l s='View my shop'}">{l s='View my shop'}</a>
-						{/if}
+{if {$base_url}}
+						<li class="separator">&nbsp;</li>
+						<a href="{$base_url}" id="header_foaccess" target="_blank" title="{l s='View my shop'}">{l s='View my shop'}</a>
+{/if}
 					</ul>
 				</div>
 			</div>
-			
 			<div id="header_search">
 				<form method="post" action="index.php?controller=AdminSearch&amp;token={getAdminToken tab='AdminSearch'}">
 					<input type="text" name="bo_query" id="bo_query" value="{$bo_query}" />
@@ -183,8 +179,7 @@
 					<input type="submit" id="bo_search_submit" class="button" value="{l s='Search'}"/>
 				</form>
 			</div>
-
-			{if count($quick_access) > 0}
+{if count($quick_access) > 0}
 			<div id="header_quick">
 				<select onchange="quickSelect(this);" id="quick_select" class="chosen no-search">
 					<option value="0">{l s='Quick Access'}</option>
@@ -193,19 +188,15 @@
 					{/foreach}
 				</select>
 			</div>
-			{/if}
-			{if isset($displayBackOfficeTop)}
-				{$displayBackOfficeTop}
-			{/if}
+{/if}
+{if isset($displayBackOfficeTop)}{$displayBackOfficeTop}{/if}
 		</div>{* end header_infos*}
-
 		<ul id="menu">
-			{if !$tab}
-				<div class="mainsubtablist" style="display:none">
-				</div>
-			{/if}
-			{foreach $tabs AS $t}
-				{if $t.active}
+{if !$tab}
+				<div class="mainsubtablist" style="display:none"></div>
+{/if}
+{foreach $tabs AS $t}
+{if $t.active}
 					<li class="submenu_size maintab {if $t.current}active{/if}" id="maintab{$t.id_tab}">
 						<a href="#" class="title">
 							<img src="{$t.img}" alt="" />{if $t.name eq ''}{$t.class_name}{else}{$t.name}{/if}
@@ -218,23 +209,20 @@
 							{/foreach}
 						</ul>
 					</li>
-				{/if}
-			{/foreach}
+{/if}
+{/foreach}
 		</ul>
-	{/if}
-	</div>{* end header*}
-	
+	</div>{* end header*}	
+{/if}
 	<div id="main">
 		<div id="content">
-		{if $display_header && $install_dir_exists}
-			<div style="background-color: #FFEBCC;border: 1px solid #F90;line-height: 20px;margin: 0px 0px 10px;padding: 10px 20px;">
-				{l s='For security reasons, you must also:'}  {l s='delete the /install folder'}
-			</div>
-		{/if}
-
-		{if $display_header && $is_multishop && $shop_list && ($multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
-			<div class="multishop_toolbar">
-				<span class="text_multishop">{l s='Multistore configuration for'}</span>
-				{$shop_list}
-			</div>
-		{/if}
+{if $display_header && $install_dir_exists}
+		<div style="background-color: #FFEBCC;border: 1px solid #F90;line-height: 20px;margin: 0px 0px 10px;padding: 10px 20px;">
+			{l s='For security reasons, you must also:'}&nbsp;{l s='delete the /install folder'}
+		</div>
+{/if}
+{if $display_header && $is_multishop && $shop_list && ($multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
+		<div class="multishop_toolbar">
+			<span class="text_multishop">{l s='Multistore configuration for'}</span> {$shop_list}
+		</div>
+{/if}

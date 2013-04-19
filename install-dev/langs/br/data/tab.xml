@@ -19,7 +19,7 @@
   <tab id="Advanced_Parameters" name="Par&#xE2;metros Avan&#xE7;ados"/>
   <tab id="Administration" name="Administra&#xE7;&#xE3;o"/>
   <tab id="Stats" name="Estat&#xED;sticas"/>
-  <tab id="Estoque" name="Estoque"/>
+  <tab id="Stock" name="Estoque"/>
   <tab id="Products" name="Products"/>
   <tab id="Categories" name="Categories"/>
   <tab id="Monitoring" name="Monitoring"/>

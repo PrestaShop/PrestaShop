@@ -47,7 +47,6 @@
 		{/if}
 	</div>
 {/if}
-
 {if isset($informations) && count($informations) && $informations}
 	<div class="hint clear" style="display:block;">
 		<span id="see_more_infos">
@@ -60,7 +59,6 @@
 		</div>
 	</div><br />
 {/if}
-
 {if isset($confirmations) && count($confirmations) && $confirmations}
 	<div class="conf" style="display:block;">
 		{foreach $confirmations as $conf}
@@ -68,7 +66,6 @@
 		{/foreach}
 	</div><br />
 {/if}
-
 {if count($warnings)}
 	<div class="warn">
 		<span style="float:right">
@@ -94,6 +91,5 @@
 		{/if}
 	</div>
 {/if}
-
 {$page}
 {include file='footer.tpl'}

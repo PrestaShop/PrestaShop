@@ -56,7 +56,7 @@ class OrderReturnCore extends ObjectModel
 		'fields' => array(
 			'id_customer' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_order' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-			'question' => 		array('type' => self::TYPE_HTML, 'validate' => 'isMessage'),
+			'question' => 		array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml'),
 			'state' => 			array('type' => self::TYPE_STRING),
 			'date_add' => 		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'date_upd' => 		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),

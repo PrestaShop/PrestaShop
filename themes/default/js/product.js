@@ -118,7 +118,7 @@ function findCombination(firstTime)
 
 			//show the large image in relation to the selected combination
 			if (combinations[combination]['image'] && combinations[combination]['image'] != -1)
-				displayImage( $('#thumb_' + combinations[combination]['image']).parent() );
+				displayImage($('#thumb_' + combinations[combination]['image']).parent());
 
 			//show discounts values according to the selected combination
 			if (combinations[combination]['idCombination'] && combinations[combination]['idCombination'] > 0)
@@ -295,17 +295,28 @@ function updateDisplay()
 		var priceTaxExclWithoutGroupReduction = '';
 
 		// retrieve price without group_reduction in order to compute the group reduction after
-		// the specific price discount (done in the JS in order to keep backward compatibility)
-		if (!displayPrice && !noTaxForThisProduct)
-		{
-			priceTaxExclWithoutGroupReduction = ps_round(productPriceTaxExcluded, 6) * (1 / group_reduction);
-		} else {
-			priceTaxExclWithoutGroupReduction = ps_round(productPriceTaxExcluded, 6) * (1 / group_reduction);
-		}
-		var combination_add_price = selectedCombination['price'] * group_reduction;
+		// the specific price discount (done in the JS in order to keep backward compatibility)		
+		priceTaxExclWithoutGroupReduction = ps_round(productPriceTaxExcluded, 6) * (1 / group_reduction);
 
 		var tax = (taxRate / 100) + 1;
+		var taxExclPrice = priceTaxExclWithoutGroupReduction + (selectedCombination['price'] * currencyRate);
 
+		if (selectedCombination.specific_price && selectedCombination.specific_price['id_product_attribute'])
+		{
+			if (selectedCombination.specific_price['price'] && selectedCombination.specific_price['price'] >=0)
+				var taxExclPrice = (specific_currency ? selectedCombination.specific_price['price'] : selectedCombination.specific_price['price'] * currencyRate);
+			else
+				var taxExclPrice = productBasePriceTaxExcluded * currencyRate + (selectedCombination['price'] * currencyRate);
+		}
+		else if (product_specific_price.price && product_specific_price.price >= 0)
+			var taxExclPrice = (specific_currency ? product_specific_price.price : product_specific_price.price * currencyRate) + (selectedCombination['price'] * currencyRate);
+
+		if (!displayPrice && !noTaxForThisProduct)
+			productPriceDisplay = taxExclPrice * tax; // Need to be global => no var
+		else
+			productPriceDisplay = ps_round(taxExclPrice, 2); // Need to be global => no var
+
+		productPriceWithoutReductionDisplay = productPriceDisplay * group_reduction;
 		var reduction = 0;
 		if (selectedCombination['specific_price'].reduction_price || selectedCombination['specific_price'].reduction_percent)
 		{
@@ -313,18 +324,26 @@ function updateDisplay()
 			reduction = productPriceDisplay * (parseFloat(selectedCombination['specific_price'].reduction_percent) / 100) + reduction_price;
 			if (reduction_price && (displayPrice || noTaxForThisProduct))
 				reduction = ps_round(reduction / tax, 6);
+
 		}
-		else if (product_specific_price.reduction_price || product_specific_price.reduction_percent)
+		else if (product_specific_price && product_specific_price.reduction)
 		{
-			reduction_price = (specific_currency ? product_specific_price.reduction_price : product_specific_price.reduction_price * currencyRate);
-			reduction = productPriceDisplay * (parseFloat(product_specific_price.reduction_percent) / 100) + reduction_price;
+			if (product_specific_price.reduction_type == 'amount')
+				reduction_price = (specific_currency ? product_specific_price.reduction : product_specific_price.reduction * currencyRate);
+			else
+				reduction_price = 0;
+
+			if (product_specific_price.reduction_type == 'percentage')
+				reduction_percent = productPriceDisplay * parseFloat(product_specific_price.reduction);
+
+			reduction = reduction_price + reduction_percent;
 			if (reduction_price && (displayPrice || noTaxForThisProduct))
 				reduction = ps_round(reduction / tax, 6);
 		}
 
 		if (selectedCombination.specific_price)
 		{
-			if (selectedCombination['specific_price'].reduction_type == 'percentage')
+			if (selectedCombination['specific_price'] && selectedCombination['specific_price'].reduction_type == 'percentage')
 			{
 				$('#reduction_amount').hide();
 				$('#reduction_percent_display').html('-' + parseFloat(selectedCombination['specific_price'].reduction_percent) + '%');
@@ -338,35 +357,19 @@ function updateDisplay()
 				$('#reduction_amount').hide();
 			}
 		}
-		else
-			if (product_specific_price['reduction_type'] == 'percentage')
-				$('#reduction_percent_display').html(product_specific_price['specific_price'].reduction_percent);
 
 		if (product_specific_price['reduction_type'] != '' || selectedCombination['specific_price'].reduction_type != '')
 			$('#discount_reduced_price,#old_price').show();
 		else
 			$('#discount_reduced_price,#old_price').hide();
-		
-		if (product_specific_price['reduction_type'] == 'percentage' || selectedCombination['specific_price'].reduction_type == 'percentage')
+		if ((product_specific_price['reduction_type'] == 'percentage' && selectedCombination['specific_price'].reduction_type == 'percentage') || selectedCombination['specific_price'].reduction_type == 'percentage')
 			$('#reduction_percent').show();
 		else
 			$('#reduction_percent').hide();
-		if (product_specific_price['price'] || selectedCombination.specific_price['price'])
+		if (product_specific_price['price'] || (selectedCombination.specific_price && selectedCombination.specific_price['price']))
 			$('#not_impacted_by_discount').show();
 		else
 			$('#not_impacted_by_discount').hide();
-
-		if (selectedCombination.specific_price['price'] && selectedCombination.specific_price['price'] >=0)
-			var taxExclPrice = (specific_currency ? selectedCombination.specific_price['price'] : selectedCombination.specific_price['price'] * currencyRate);
-		else
-			var taxExclPrice = priceTaxExclWithoutGroupReduction + (selectedCombination['price'] * currencyRate);
-
-		if (!displayPrice && !noTaxForThisProduct)
-			productPriceDisplay = taxExclPrice * tax; // Need to be global => no var
-		else
-			productPriceDisplay = ps_round(taxExclPrice, 2); // Need to be global => no var
-
-		productPriceWithoutReductionDisplay = productPriceDisplay * group_reduction;
 
 		productPriceDisplay -= reduction;
 		var tmp = productPriceDisplay * group_reduction;
@@ -414,17 +417,14 @@ function displayImage(domAAroundImgThumb, no_animation)
 {
 	if (typeof(no_animation) == 'undefined')
 		no_animation = false;
-	
 	if (domAAroundImgThumb.attr('href'))
 	{
-		var newSrc = domAAroundImgThumb.attr('href').replace('thickbox','large');
+		var newSrc = domAAroundImgThumb.attr('href').replace('thickbox', 'large');
 		if ($('#bigpic').attr('src') != newSrc)
 		{
-			$('#bigpic').fadeOut((no_animation ? 0 : 'fast'), function(){
-				$(this).attr('src', newSrc).show();
-				if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
-					$(this).attr('alt', domAAroundImgThumb.attr('href'));
-			});
+			$('#bigpic').attr('src', newSrc);
+			if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
+				$('#bigpic').attr('rel', domAAroundImgThumb.attr('href'));
 		}
 		$('#views_block li a').removeClass('shown');
 		$(domAAroundImgThumb).addClass('shown');
@@ -468,24 +468,29 @@ function serialScrollFixLock(event, targeted, scrolled, items, position)
 function refreshProductImages(id_product_attribute)
 {
 	$('#thumbs_list_frame').scrollTo('li:eq(0)', 700, {axis:'x'});
-	$('#thumbs_list li').hide();
+
 	id_product_attribute = parseInt(id_product_attribute);
 
-	if (typeof(combinationImages) != 'undefined' && typeof(combinationImages[id_product_attribute]) != 'undefined')
+	if (id_product_attribute > 0 && typeof(combinationImages) != 'undefined' && typeof(combinationImages[id_product_attribute]) != 'undefined')
 	{
+		$('#thumbs_list li').hide();
+		$('#thumbs_list').trigger('goto', 0);
 		for (var i = 0; i < combinationImages[id_product_attribute].length; i++)
 			$('#thumbnail_' + parseInt(combinationImages[id_product_attribute][i])).show();
-	}
-	if (i > 0)
-	{
-		var thumb_width = $('#thumbs_list_frame >li').width() + parseInt($('#thumbs_list_frame >li').css('marginRight'));
-		$('#thumbs_list_frame').width((parseInt((thumb_width)* i) + 3) + 'px'); //  Bug IE6, needs 3 pixels more ?
+		if (parseInt($('#thumbs_list_frame >li:visible').length) < parseInt($('#thumbs_list_frame >li').length))
+			$('#wrapResetImages').show('slow');
+		else
+			$('#wrapResetImages').hide('slow');
 	}
 	else
 	{
-		$('#thumbnail_' + idDefaultImage).show();
-		displayImage($('#thumbnail_' + idDefaultImage + ' a'));
+		$('#thumbs_list li').show();
+		if (parseInt($('#thumbs_list_frame >li').length) == parseInt($('#thumbs_list_frame >li:visible').length))
+			$('#wrapResetImages').hide('slow');
 	}
+
+	var thumb_width = $('#thumbs_list_frame >li').width() + parseInt($('#thumbs_list_frame >li').css('marginRight'));
+	$('#thumbs_list_frame').width((parseInt((thumb_width) * $('#thumbs_list_frame >li').length)) + 'px');
 	$('#thumbs_list').trigger('goto', 0);
 	serialScrollFixLock('', '', '', '', 0);// SerialScroll Bug on goto 0 ?
 }
@@ -523,6 +528,7 @@ $(document).ready(function()
 	//set jqZoom parameters if needed
 	if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
 	{
+		$('#bigpic').attr('rel', $('#bigpic').attr('src').replace('thickbox', 'large'));
 		$('img.jqzoom').jqueryzoom({
 			xzoom: 200, //zooming div default width(default width value is 200)
 			yzoom: 200, //zooming div default width(default height value is 200)
@@ -548,6 +554,11 @@ $(document).ready(function()
 		$('#customizedDatas').append(uploading_in_progress);
 	});
 
+	original_url = window.location + '';
+	first_url_check = true;
+	checkUrl();
+	initLocationChange();
+
 	//init the price in relation of the selected attributes
 	if (typeof productHasAttributes != 'undefined' && productHasAttributes)
 		findCombination(true);
@@ -563,11 +574,6 @@ $(document).ready(function()
 		'transitionIn'	: 'elastic',
 		'transitionOut'	: 'elastic'
 	});
-	original_url = window.location + '';
-	first_url_check = true;
-	checkUrl();
-	initLocationChange();
-	
 });
 
 function saveCustomization()
@@ -668,12 +674,12 @@ function getProductAttribute()
 function initLocationChange(time)
 {
 	if(!time) time = 500;
-	setInterval(checkUrl, time);
+		setInterval(checkUrl, time);
 }
 
 function checkUrl()
 {
-	if (original_url != window.url || first_url_check)
+	if (original_url != window.location || first_url_check)
 	{
 		first_url_check = false;
 		url = window.location + '';
@@ -710,7 +716,7 @@ function checkUrl()
 			if (count >= 0)
 			{
 				findCombination(false);
-				original_url = window.location + '';
+				original_url = url;
 			}
 			// no combination found = removing attributes from url
 			else
