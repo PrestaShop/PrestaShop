@@ -1451,7 +1451,7 @@ class ProductCore extends ObjectModel
 		}
 
 		if (count($id_shop_list))
-			$combination->id_shop_list = $id_shop_list;
+			$combination->id_shop_list = array_unique($id_shop_list);
 
 		$combination->add();
 
