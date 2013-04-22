@@ -38,7 +38,7 @@
 		{foreach $addresses AS $addresse}
 			<table border="0" cellpadding="0" cellspacing="0" class="table" style="width: 600px;">
 				<tr>
-					<th><strong>{$addresse.firstname} {$addresse.lastname}</strong></th>
+					<th><strong>{$addresse.firstname} {$addresse.lastname} <a href="{$link->getAdminLink('AdminManufacturers')}&id_address={$addresse.id_address}&editaddresses=1"><img src="../img/admin/edit.gif"></a></strong></th>
 				</tr>
 				<tr>
 					<td>
