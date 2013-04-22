@@ -1,105 +1,105 @@
 <?xml version="1.0"?>
 <entity_tab>
-  <tab id="Home" name="Home"/>
-  <tab id="CMS_Pages" name="CMS Pages"/>
-  <tab id="CMS_Categories" name="CMS Categories"/>
-  <tab id="Combinations_Generator" name="Combinations Generator"/>
-  <tab id="Search" name="Search"/>
-  <tab id="Login" name="Login"/>
-  <tab id="Shops" name="Shops"/>
-  <tab id="Shop_URLs" name="Shop URLs"/>
-  <tab id="Catalog" name="Catalog"/>
-  <tab id="Orders" name="Orders"/>
-  <tab id="Customers" name="Customers"/>
-  <tab id="Price_Rules" name="Price Rules"/>
-  <tab id="Shipping" name="Shipping"/>
-  <tab id="Localization" name="Localization"/>
-  <tab id="Modules" name="Modules"/>
-  <tab id="Preferences" name="Preferences"/>
-  <tab id="Advanced_Parameters" name="Advanced Parameters"/>
-  <tab id="Administration" name="Administration"/>
-  <tab id="Stats" name="Stats"/>
-  <tab id="Stock" name="Stock"/>
-  <tab id="Products" name="Products"/>
-  <tab id="Categories" name="Categories"/>
-  <tab id="Monitoring" name="Monitoring"/>
-  <tab id="Attributes_and_Values" name="Attributes and Values"/>
-  <tab id="Features" name="Features"/>
-  <tab id="Manufacturers" name="Manufacturers"/>
-  <tab id="Suppliers" name="Suppliers"/>
-  <tab id="Image_Mapping" name="Image Mapping"/>
-  <tab id="Tags" name="Tags"/>
-  <tab id="Attachments" name="Attachments"/>
-  <tab id="Orders_1" name="Orders"/>
-  <tab id="Invoices" name="Invoices"/>
-  <tab id="Merchandise_Returns" name="Merchandise Returns"/>
-  <tab id="Delivery_Slips" name="Delivery Slips"/>
-  <tab id="Credit_Slips" name="Credit Slips"/>
-  <tab id="Statuses" name="Statuses"/>
-  <tab id="Order_Messages" name="Order Messages"/>
-  <tab id="Customers_1" name="Customers"/>
-  <tab id="Addresses" name="Addresses"/>
-  <tab id="Groups" name="Groups"/>
-  <tab id="Shopping_Carts" name="Shopping Carts"/>
-  <tab id="Customer_Service" name="Customer Service"/>
-  <tab id="Contacts" name="Contacts"/>
-  <tab id="Titles" name="Titles"/>
-  <tab id="Outstanding" name="Outstanding"/>
-  <tab id="Cart_Rules" name="Cart Rules"/>
-  <tab id="Catalog_Price_Rules" name="Catalog Price Rules"/>
-  <tab id="Marketing" name="Marketing"/>
-  <tab id="Shipping_1" name="Shipping"/>
-  <tab id="Carriers" name="Carriers"/>
-  <tab id="Price_Ranges" name="Price Ranges"/>
-  <tab id="Weight_Ranges" name="Weight Ranges"/>
-  <tab id="Localization_1" name="Localization"/>
-  <tab id="Languages" name="Languages"/>
-  <tab id="Zones" name="Zones"/>
-  <tab id="Countries" name="Countries"/>
-  <tab id="States" name="States"/>
-  <tab id="Currencies" name="Currencies"/>
-  <tab id="Taxes" name="Taxes"/>
-  <tab id="Tax_Rules" name="Tax Rules"/>
-  <tab id="Translations" name="Translations"/>
-  <tab id="Modules_1" name="Modules"/>
-  <tab id="Modules_Themes_Catalog" name="Modules &amp; Themes Catalog"/>
-  <tab id="Positions" name="Positions"/>
-  <tab id="Payment" name="Payment"/>
-  <tab id="General" name="General"/>
-  <tab id="Orders_2" name="Orders"/>
-  <tab id="Products_1" name="Products"/>
-  <tab id="Customers_2" name="Customers"/>
-  <tab id="Themes" name="Themes"/>
-  <tab id="SEO_URLs" name="SEO &amp; URLs"/>
-  <tab id="CMS" name="CMS"/>
-  <tab id="Images" name="Images"/>
-  <tab id="Store_Contacts" name="Store Contacts"/>
-  <tab id="Search_1" name="Search"/>
-  <tab id="Maintenance" name="Maintenance"/>
-  <tab id="Geolocation" name="Geolocation"/>
-  <tab id="Configuration_Information" name="Configuration Information"/>
-  <tab id="Performance" name="Performance"/>
-  <tab id="E-mail" name="E-mail"/>
-  <tab id="Multistore" name="Multistore"/>
-  <tab id="CSV_Import" name="CSV Import"/>
+  <tab id="Addresses" name="&#x410;&#x434;&#x440;&#x435;&#x441;&#x430;"/>
+  <tab id="Administration" name="&#x410;&#x434;&#x43C;&#x438;&#x43D;&#x438;&#x441;&#x442;&#x440;&#x430;&#x446;&#x438;&#x44F;"/>
+  <tab id="Advanced_Parameters" name="&#x41A;&#x43E;&#x43D;&#x444;&#x438;&#x433;&#x443;&#x440;&#x430;&#x446;&#x438;&#x44F;"/>
+  <tab id="Attachments" name="&#x417;&#x430;&#x433;&#x440;&#x443;&#x437;&#x438;&#x442;&#x44C;"/>
+  <tab id="Attributes_and_Values" name="&#x410;&#x442;&#x440;&#x438;&#x431;&#x443;&#x442;&#x44B; &#x438; &#x43A;&#x43E;&#x43C;&#x431;&#x438;&#x43D;&#x430;&#x446;&#x438;&#x438;"/>
+  <tab id="Carriers" name="&#x41A;&#x443;&#x440;&#x44C;&#x435;&#x440;&#x44B;"/>
+  <tab id="Cart_Rules" name="&#x41F;&#x440;&#x430;&#x432;&#x438;&#x43B;&#x430; &#x43A;&#x43E;&#x440;&#x437;&#x438;&#x43D;&#x44B;"/>
+  <tab id="Catalog" name="&#x41A;&#x430;&#x442;&#x430;&#x43B;&#x43E;&#x433;"/>
+  <tab id="Catalog_Price_Rules" name="&#x41F;&#x440;&#x430;&#x432;&#x438;&#x43B;&#x430; &#x43A;&#x430;&#x442;&#x430;&#x43B;&#x43E;&#x433;&#x430;"/>
+  <tab id="Categories" name="&#x43A;&#x430;&#x442;&#x435;&#x433;&#x43E;&#x440;&#x438;&#x438;"/>
+  <tab id="CMS" name="&#x421;&#x442;&#x440;&#x430;&#x43D;&#x438;&#x446;&#x44B;"/>
+  <tab id="CMS_Categories" name="&#x41A;&#x430;&#x442;&#x435;&#x433;&#x43E;&#x440;&#x438;&#x438; CMS"/>
+  <tab id="CMS_Pages" name="&#x421;&#x442;&#x440;&#x430;&#x43D;&#x438;&#x446;&#x44B; CMS"/>
+  <tab id="Combinations_Generator" name="&#x41A;&#x43E;&#x43C;&#x431;&#x438;&#x43D;&#x430;&#x446;&#x438;&#x438; &#x413;&#x435;&#x43D;&#x435;&#x440;&#x430;&#x442;&#x43E;&#x440;"/>
+  <tab id="Configuration" name="&#x41A;&#x43E;&#x43D;&#x444;&#x438;&#x433;&#x443;&#x440;&#x430;&#x446;&#x438;&#x44F;"/>
+  <tab id="Configuration_Information" name="&#x418;&#x43D;&#x444;&#x43E;&#x440;&#x43C;&#x430;&#x446;&#x438;&#x44F;"/>
+  <tab id="Contacts" name="&#x41A;&#x43E;&#x43D;&#x442;&#x430;&#x43A;&#x442;&#x44B;"/>
+  <tab id="Countries" name="&#x421;&#x442;&#x440;&#x430;&#x43D;&#x44B;"/>
+  <tab id="Credit_Slips" name="&#x41A;&#x440;&#x435;&#x434;&#x438;&#x442;&#x43D;&#x44B;&#x435; &#x441;&#x447;&#x435;&#x442;&#x430;"/>
+  <tab id="CSV_Import" name="&#x418;&#x43C;&#x43F;&#x43E;&#x440;&#x442; CSV"/>
+  <tab id="Currencies" name="&#x412;&#x430;&#x43B;&#x44E;&#x442;&#x430;"/>
+  <tab id="Customer_Service" name="&#x421;&#x43B;&#x443;&#x436;&#x431;&#x430; &#x43F;&#x43E;&#x434;&#x434;&#x435;&#x440;&#x436;&#x43A;&#x438;"/>
+  <tab id="Customers" name="&#x41A;&#x43B;&#x438;&#x435;&#x43D;&#x442;&#x44B;"/>
+  <tab id="Customers_2" name="&#x41A;&#x43B;&#x438;&#x435;&#x43D;&#x442;&#x44B;"/>
+  <tab id="Customers_1" name="&#x41A;&#x43B;&#x438;&#x435;&#x43D;&#x442;&#x44B;"/>
   <tab id="DB_Backup" name="DB Backup"/>
-  <tab id="SQL_Manager" name="SQL Manager"/>
-  <tab id="Logs" name="Logs"/>
-  <tab id="Webservice" name="Webservice"/>
-  <tab id="Preferences_1" name="Preferences"/>
-  <tab id="Quick_Access" name="Quick Access"/>
-  <tab id="Employees" name="Employees"/>
-  <tab id="Profiles" name="Profiles"/>
-  <tab id="Permissions" name="Permissions"/>
-  <tab id="Menus" name="Menus"/>
-  <tab id="Stats_1" name="Stats"/>
-  <tab id="Search_Engines" name="Search Engines"/>
-  <tab id="Referrers" name="Referrers"/>
-  <tab id="Warehouses" name="Warehouses"/>
-  <tab id="Stock_Management" name="Stock Management"/>
-  <tab id="Stock_Movement" name="Stock Movement"/>
-  <tab id="Instant_Stock_Status" name="Instant Stock Status"/>
-  <tab id="Stock_Coverage" name="Stock Coverage"/>
-  <tab id="Supply_orders" name="Supply orders"/>
-  <tab id="Configuration" name="Configuration"/>
+  <tab id="Delivery_Slips" name="&#x421;&#x447;&#x435;&#x442;&#x430; &#x43D;&#x430; &#x434;&#x43E;&#x441;&#x442;&#x430;&#x432;&#x43A;&#x443;"/>
+  <tab id="E-mail" name="E-mail"/>
+  <tab id="Employees" name="&#x421;&#x43E;&#x442;&#x440;&#x443;&#x434;&#x43D;&#x438;&#x43A;&#x438;"/>
+  <tab id="Features" name="&#x421;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;&#x430;"/>
+  <tab id="General" name="&#x41E;&#x431;&#x449;&#x438;&#x435; &#x43D;&#x430;&#x441;&#x442;&#x440;&#x43E;&#x439;&#x43A;&#x438;"/>
+  <tab id="Geolocation" name="&#x413;&#x435;&#x43E;&#x43B;&#x43E;&#x43A;&#x430;&#x446;&#x438;&#x44F;"/>
+  <tab id="Groups" name="&#x413;&#x440;&#x443;&#x43F;&#x43F;&#x44B;"/>
+  <tab id="Home" name="&#x414;&#x43E;&#x43C;&#x43E;&#x439;"/>
+  <tab id="Image_Mapping" name="&#x41A;&#x430;&#x440;&#x442;&#x430; &#x43A;&#x430;&#x440;&#x442;&#x438;&#x43D;&#x43E;&#x43A;"/>
+  <tab id="Images" name="&#x438;&#x437;&#x43E;&#x431;&#x440;&#x430;&#x436;&#x435;&#x43D;&#x438;&#x44F;"/>
+  <tab id="Instant_Stock_Status" name="&#x422;&#x435;&#x43A;&#x443;&#x449;&#x435;&#x435; &#x441;&#x43E;&#x441;&#x442;&#x43E;&#x44F;&#x43D;&#x438;&#x435; &#x441;&#x43A;&#x43B;&#x430;&#x434;&#x430;"/>
+  <tab id="Invoices" name="&#x418;&#x43D;&#x432;&#x43E;&#x439;&#x441;&#x44B;"/>
+  <tab id="Languages" name="&#x42F;&#x437;&#x44B;&#x43A;&#x438;"/>
+  <tab id="Localization" name="&#x41B;&#x43E;&#x43A;&#x430;&#x43B;&#x438;&#x437;&#x430;&#x446;&#x438;&#x44F;"/>
+  <tab id="Localization_1" name="&#x41B;&#x43E;&#x43A;&#x430;&#x43B;&#x438;&#x437;&#x430;&#x446;&#x438;&#x44F;"/>
+  <tab id="Login" name="&#x41B;&#x43E;&#x433;&#x438;&#x43D;"/>
+  <tab id="Logs" name="&#x416;&#x443;&#x440;&#x43D;&#x430;&#x43B;&#x44B;"/>
+  <tab id="Maintenance" name="&#x41E;&#x431;&#x441;&#x43B;&#x443;&#x436;&#x438;&#x432;&#x430;&#x43D;&#x438;&#x435;"/>
+  <tab id="Manufacturers" name="&#x43F;&#x440;&#x43E;&#x438;&#x437;&#x432;&#x43E;&#x434;&#x438;&#x442;&#x435;&#x43B;&#x438;"/>
+  <tab id="Marketing" name="&#x41C;&#x430;&#x440;&#x43A;&#x435;&#x442;&#x438;&#x43D;&#x433;"/>
+  <tab id="Menus" name="&#x417;&#x430;&#x43A;&#x43B;&#x430;&#x434;&#x43A;&#x438;"/>
+  <tab id="Merchandise_Returns" name="&#x412;&#x43E;&#x437;&#x432;&#x440;&#x430;&#x442;&#x44B; &#x442;&#x43E;&#x432;&#x430;&#x440;&#x43E;&#x432;"/>
+  <tab id="Modules_1" name="&#x41C;&#x43E;&#x434;&#x443;&#x43B;&#x438;"/>
+  <tab id="Modules" name="&#x41C;&#x43E;&#x434;&#x443;&#x43B;&#x438;"/>
+  <tab id="Modules_Themes_Catalog" name="&#x41C;&#x43E;&#x434;&#x443;&#x43B;&#x438; &amp; &#x428;&#x430;&#x431;&#x43B;&#x43E;&#x43D;&#x44B;"/>
+  <tab id="Monitoring" name="&#x41C;&#x43E;&#x43D;&#x438;&#x442;&#x43E;&#x440;&#x438;&#x43D;&#x433;"/>
+  <tab id="Multistore" name="&#x41C;&#x443;&#x43B;&#x44C;&#x442;&#x438;-&#x43C;&#x430;&#x433;&#x430;&#x437;&#x438;&#x43D;"/>
+  <tab id="Order_Messages" name="&#x421;&#x43E;&#x43E;&#x431;&#x449;&#x435;&#x43D;&#x438;&#x44F;"/>
+  <tab id="Orders_2" name="&#x417;&#x430;&#x43A;&#x430;&#x437;&#x44B;"/>
+  <tab id="Orders" name="&#x417;&#x430;&#x43A;&#x430;&#x437;&#x44B;"/>
+  <tab id="Orders_1" name="&#x417;&#x430;&#x43A;&#x430;&#x437;&#x44B;"/>
+  <tab id="Outstanding" name="&#x41D;&#x435;&#x43E;&#x43F;&#x43B;&#x430;&#x447;&#x435;&#x43D;&#x43D;&#x44B;&#x439;(&#x435;)"/>
+  <tab id="Payment" name="&#x421;&#x43F;&#x43E;&#x441;&#x43E;&#x431; &#x43E;&#x43F;&#x43B;&#x430;&#x442;&#x44B;"/>
+  <tab id="Performance" name="&#x420;&#x435;&#x437;&#x443;&#x43B;&#x44C;&#x442;&#x430;&#x442;"/>
+  <tab id="Permissions" name="&#x41F;&#x440;&#x430;&#x432;&#x430;"/>
+  <tab id="Positions" name="&#x420;&#x430;&#x441;&#x43F;&#x43E;&#x43B;&#x43E;&#x436;&#x435;&#x43D;&#x438;&#x435;"/>
+  <tab id="Preferences_1" name="&#x41D;&#x430;&#x441;&#x442;&#x440;&#x43E;&#x439;&#x43A;&#x438;"/>
+  <tab id="Preferences" name="&#x41D;&#x430;&#x441;&#x442;&#x440;&#x43E;&#x439;&#x43A;&#x438;"/>
+  <tab id="Price_Ranges" name="&#x428;&#x43A;&#x430;&#x43B;&#x430; &#x446;&#x435;&#x43D;"/>
+  <tab id="Price_Rules" name="&#x426;&#x435;&#x43D;&#x43E;&#x432;&#x44B;&#x435; &#x43F;&#x440;&#x430;&#x432;&#x438;&#x43B;&#x430;"/>
+  <tab id="Products_1" name="&#x442;&#x43E;&#x432;&#x430;&#x440;&#x44B;"/>
+  <tab id="Products" name="&#x442;&#x43E;&#x432;&#x430;&#x440;&#x44B;"/>
+  <tab id="Profiles" name="&#x41F;&#x440;&#x43E;&#x444;&#x438;&#x43B;&#x438;"/>
+  <tab id="Quick_Access" name="&#x411;&#x44B;&#x441;&#x442;&#x440;&#x44B;&#x439; &#x434;&#x43E;&#x441;&#x442;&#x443;&#x43F;"/>
+  <tab id="Referrers" name="&#x420;&#x435;&#x444;&#x435;&#x440;&#x44B;"/>
+  <tab id="Search_1" name="&#x41F;&#x43E;&#x438;&#x441;&#x43A;"/>
+  <tab id="Search" name="&#x41F;&#x43E;&#x438;&#x441;&#x43A;"/>
+  <tab id="Search_Engines" name="&#x41F;&#x43E;&#x438;&#x441;&#x43A;&#x43E;&#x432;&#x44B;&#x435; &#x441;-&#x43C;&#x44B;"/>
+  <tab id="SEO_URLs" name="SEO &#x438; URLs"/>
+  <tab id="Shipping" name="&#x414;&#x43E;&#x441;&#x442;&#x430;&#x432;&#x43A;&#x430;"/>
+  <tab id="Shipping_1" name="&#x414;&#x43E;&#x441;&#x442;&#x430;&#x432;&#x43A;&#x430;"/>
+  <tab id="Shop_URLs" name="URL &#x43C;&#x430;&#x433;&#x430;&#x437;&#x438;&#x43D;&#x430;"/>
+  <tab id="Shopping_Carts" name="&#x41A;&#x43E;&#x440;&#x437;&#x438;&#x43D;&#x44B;"/>
+  <tab id="Shops" name="&#x41C;&#x430;&#x433;&#x430;&#x437;&#x438;&#x43D;&#x44B;"/>
+  <tab id="SQL_Manager" name="&#x41C;&#x435;&#x43D;&#x435;&#x434;&#x436;&#x435;&#x440; SQL"/>
+  <tab id="States" name="&#x41E;&#x431;&#x43B;&#x430;&#x441;&#x442;&#x44C;"/>
+  <tab id="Stats" name="&#x421;&#x442;&#x430;&#x442;&#x438;&#x441;&#x442;&#x438;&#x43A;&#x430;"/>
+  <tab id="Stats_1" name="&#x421;&#x442;&#x430;&#x442;&#x438;&#x441;&#x442;&#x438;&#x43A;&#x430;"/>
+  <tab id="Statuses" name="&#x421;&#x442;&#x430;&#x442;&#x443;&#x441;&#x44B;"/>
+  <tab id="Stock" name="&#x417;&#x430;&#x43F;&#x430;&#x441;"/>
+  <tab id="Stock_Coverage" name="&#x41F;&#x43E;&#x43A;&#x440;&#x44B;&#x442;&#x438;&#x435; &#x437;&#x430;&#x43F;&#x430;&#x441;&#x43E;&#x432;"/>
+  <tab id="Stock_Management" name="&#x423;&#x43F;&#x440;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x435; &#x441;&#x43A;&#x43B;&#x430;&#x434;&#x43E;&#x43C;"/>
+  <tab id="Stock_Movement" name="&#x414;&#x432;&#x438;&#x436;&#x435;&#x43D;&#x438;&#x435; &#x442;&#x43E;&#x432;&#x430;&#x440;&#x43E;&#x432;"/>
+  <tab id="Store_Contacts" name="&#x41A;&#x43E;&#x43D;&#x442;&#x430;&#x43A;&#x442;&#x44B; &#x43C;&#x430;&#x433;&#x430;&#x437;&#x438;&#x43D;&#x430;"/>
+  <tab id="Suppliers" name="&#x43F;&#x43E;&#x441;&#x442;&#x430;&#x432;&#x449;&#x438;&#x43A;&#x438;"/>
+  <tab id="Supply_orders" name="&#x417;&#x430;&#x43A;&#x430;&#x437;&#x44B; &#x43F;&#x43E;&#x441;&#x442;&#x430;&#x432;&#x43A;&#x438;"/>
+  <tab id="Tags" name="&#x41C;&#x435;&#x442;&#x43A;&#x438;"/>
+  <tab id="Tax_Rules" name="&#x41D;&#x430;&#x43B;&#x43E;&#x433;&#x438;"/>
+  <tab id="Taxes" name="&#x41D;&#x430;&#x43B;&#x43E;&#x433;&#x438;"/>
+  <tab id="Themes" name="&#x428;&#x430;&#x431;&#x43B;&#x43E;&#x43D;&#x44B;"/>
+  <tab id="Titles" name="&#x424;&#x43E;&#x440;&#x43C;&#x44B; &#x43E;&#x431;&#x440;&#x430;&#x449;&#x435;&#x43D;&#x438;&#x44F;"/>
+  <tab id="Translations" name="&#x41F;&#x435;&#x440;&#x435;&#x432;&#x43E;&#x434;&#x44B;"/>
+  <tab id="Warehouses" name="&#x421;&#x43A;&#x43B;&#x430;&#x434;&#x44B;"/>
+  <tab id="Webservice" name="WEB &#x441;&#x43B;&#x443;&#x436;&#x431;&#x44B;"/>
+  <tab id="Weight_Ranges" name="&#x428;&#x43A;&#x430;&#x43B;&#x430; &#x432;&#x435;&#x441;&#x430;"/>
+  <tab id="Zones" name="&#x417;&#x43E;&#x43D;&#x44B;"/>
 </entity_tab>
