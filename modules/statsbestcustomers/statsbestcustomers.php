@@ -52,24 +52,26 @@ class StatsBestCustomers extends ModuleGrid
 		$this->_emptyMessage = $this->l('Empty recordset returned');
 		$this->_pagingMessage = sprintf($this->l('Displaying %1$s of %2$s'), '{0} - {1}', '{2}');
 
+		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+		
 		$this->_columns = array(
 			array(
 				'id' => 'lastname',
 				'header' => $this->l('Last Name'),
 				'dataIndex' => 'lastname',
-				'width' => 50
+				'width' => 80
 			),
 			array(
 				'id' => 'firstname',
 				'header' => $this->l('First Name'),
 				'dataIndex' => 'firstname',
-				'width' => 50
+				'width' => 80
 			),
 			array(
 				'id' => 'email',
 				'header' => $this->l('Email'),
 				'dataIndex' => 'email',
-				'width' => 120
+				'width' => 140
 			),
 			array(
 				'id' => 'totalVisits',
@@ -78,10 +80,16 @@ class StatsBestCustomers extends ModuleGrid
 				'width' => 80,
 				'align' => 'right'),
 			array(
-				'id' => 'totalMoneySpent',
-				'header' => $this->l('Money spent'),
-				'dataIndex' => 'totalMoneySpent',
+				'id' => 'totalValidOrders',
+				'header' => $this->l('Valid orders'),
+				'dataIndex' => 'totalValidOrders',
 				'width' => 80,
+				'align' => 'right'),
+			array(
+				'id' => 'totalMoneySpent',
+				'header' => $this->l('Money spent').' ('.Tools::safeOutput($currency->iso_code).')',
+				'dataIndex' => 'totalMoneySpent',
+				'width' => 140,
 				'align' => 'right')
 		);
 
@@ -142,7 +150,14 @@ class StatsBestCustomers extends ModuleGrid
 				WHERE o.id_customer = c.id_customer
 				AND o.invoice_date BETWEEN '.$this->getDate().'
 				AND o.valid
-			), 0) as totalMoneySpent
+			), 0) as totalMoneySpent,
+			IFNULL((
+				SELECT COUNT(*)
+				FROM `'._DB_PREFIX_.'orders` o
+				WHERE o.id_customer = c.id_customer
+				AND o.invoice_date BETWEEN '.$this->getDate().'
+				AND o.valid
+			), 0) as totalValidOrders
 		FROM `'._DB_PREFIX_.'customer` c
 		LEFT JOIN `'._DB_PREFIX_.'guest` g ON c.`id_customer` = g.`id_customer`
 		LEFT JOIN `'._DB_PREFIX_.'connections` co ON g.`id_guest` = co.`id_guest`
