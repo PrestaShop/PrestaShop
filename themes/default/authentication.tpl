@@ -315,8 +315,8 @@ $(document).ready(function() {
 							</select>
 						</p>
 						{elseif $field_name eq "phone"}
-						<p class="{if $one_phone_at_least}required {/if}text">
-							<label for="phone">{l s='Phone'}{if $one_phone_at_least} <sup>*</sup>{/if}</label>
+						<p class="{if isset($one_phone_at_least) && $one_phone_at_least}required {/if}text">
+							<label for="phone">{l s='Phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>*</sup>{/if}</label>
 							<input type="text" class="text" name="phone" id="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{/if}"/>
 						</p>
 					{/if}
@@ -544,15 +544,15 @@ $(document).ready(function() {
 			<label for="other">{l s='Additional information'}</label>
 			<textarea name="other" id="other" cols="26" rows="3">{if isset($smarty.post.other)}{$smarty.post.other}{/if}</textarea>
 		</p>
-		{if $one_phone_at_least}
+		{if isset($one_phone_at_least) && $one_phone_at_least}
 			<p class="inline-infos">{l s='You must register at least one phone number.'}</p>
 		{/if}
 		<p class="text">
 			<label for="phone">{l s='Home phone'}</label>
 			<input type="text" class="text" name="phone" id="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{/if}" />
 		</p>
-		<p class="{if $one_phone_at_least}required {/if} text">
-			<label for="phone_mobile">{l s='Mobile phone'}{if $one_phone_at_least} <sup>*</sup>{/if}</label>
+		<p class="{if isset($one_phone_at_least) && $one_phone_at_least}required {/if} text">
+			<label for="phone_mobile">{l s='Mobile phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>*</sup>{/if}</label>
 			<input type="text" class="text" name="phone_mobile" id="phone_mobile" value="{if isset($smarty.post.phone_mobile)}{$smarty.post.phone_mobile}{/if}" />
 		</p>
 		<p class="required text" id="address_alias">
