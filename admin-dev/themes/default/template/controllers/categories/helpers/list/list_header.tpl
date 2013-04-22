@@ -35,7 +35,7 @@
 		{else}
 			{assign var=params_url value="&id_category={$category.id_category}&viewcategory"}
 		{/if}
-		{if $key == 0}
+		{if $category.id_category == $categories_tree_current_id}
 			{$category.name}
 		{else}
 			<a href="{$currentIndex}{$params_url}&token={$token}">{$category.name}</a>&nbsp;>&nbsp;
