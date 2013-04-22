@@ -761,7 +761,7 @@ class AdminTranslationsControllerCore extends AdminController
 							$this->errors[] = sprintf(Tools::displayError('Cannot delete the archive %s.'), $file);
 				}
 				else
-					$this->errors[] = Tools::displayError('The server does not have permissions for writing.'. ' '.sprintf(Tools::displayError('Please check rights for %s'), dirname($file)));
+					$this->errors[] = Tools::displayError('The server does not have permissions for writing.').' '.sprintf(Tools::displayError('Please check rights for %s'), dirname($file));
 			}
 			else
 				$this->errors[] = Tools::displayError('Language not found.');
