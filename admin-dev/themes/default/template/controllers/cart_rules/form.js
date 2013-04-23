@@ -25,6 +25,7 @@
 
 function addProductRuleGroup()
 {
+	$('#product_rule_group_table').show();
 	product_rule_groups_counter += 1;
 	product_rule_counters[product_rule_groups_counter] = 0;
 

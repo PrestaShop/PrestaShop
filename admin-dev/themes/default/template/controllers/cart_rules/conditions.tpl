@@ -207,12 +207,12 @@
 <br />
 <input type="checkbox" id="product_restriction" name="product_restriction" value="1" {if $product_rule_groups|@count}checked="checked"{/if} /> <strong>{l s='Product selection'}</strong>
 <div id="product_restriction_div">
-	<table id="product_rule_group_table" style="border:1px solid #AAAAAA;margin:10px 0 10px 0;padding:10px 10px 10px 10px;background-color:#FFF5D3;width:600px" cellpadding="0" cellspacing="0">
+	<table id="product_rule_group_table" style="border:1px solid #AAAAAA;margin:10px 0 10px 0;padding:10px 10px 10px 10px;background-color:#FFF5D3;width:600px;display:none" cellpadding="0" cellspacing="0">
 		{foreach from=$product_rule_groups item='product_rule_group'}
 			{$product_rule_group}
 		{/foreach}
 	</table>
-	<a href="javascript:addProductRuleGroup();">
+	<a href="javascript:addProductRuleGroup();" style="margin-top:5px;display:block">
 		<img src="../img/admin/add.gif" alt="{l s='Add'}" title="{l s='Add'}" /> {l s='Product selection'}
 	</a>
 </div>
