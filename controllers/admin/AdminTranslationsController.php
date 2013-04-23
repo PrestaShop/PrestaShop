@@ -920,9 +920,7 @@ class AdminTranslationsControllerCore extends AdminController
 				foreach ($matches as $key)
 				{
 					$md5_key = md5($key);
-					$module_key = null;
-					if ($theme_name)
-						$module_key = '<{'.Tools::strtolower($module_name).'}'.strtolower($theme_name).'>'.Tools::strtolower($template_name).'_'.$md5_key;
+					$module_key = '<{'.Tools::strtolower($module_name).'}'.strtolower($theme_name).'>'.Tools::strtolower($template_name).'_'.$md5_key;
 					$default_key = '<{'.Tools::strtolower($module_name).'}prestashop>'.Tools::strtolower($template_name).'_'.$md5_key;
 					// to avoid duplicate entry
 					if (!in_array($module_key, $array_check_duplicate))
@@ -930,13 +928,13 @@ class AdminTranslationsControllerCore extends AdminController
 						$array_check_duplicate[] = $module_key;
 						if (!isset($this->modules_translations[$theme_name][$module_name][$template_name][$key]['trad']))
 							$this->total_expression++;
-
-						if ($module_key && array_key_exists($module_key, $GLOBALS[$name_var]))
+						if ($theme_name && array_key_exists($module_key, $GLOBALS[$name_var]))
 							$this->modules_translations[$theme_name][$module_name][$template_name][$key]['trad'] = html_entity_decode($GLOBALS[$name_var][$module_key], ENT_COMPAT, 'UTF-8');
 						elseif (array_key_exists($default_key, $GLOBALS[$name_var]))
 							$this->modules_translations[$theme_name][$module_name][$template_name][$key]['trad'] = html_entity_decode($GLOBALS[$name_var][$default_key], ENT_COMPAT, 'UTF-8');
 						else
 						{
+							//d(array($module_key, $default_key, $key, $GLOBALS[$name_var]));
 							$this->modules_translations[$theme_name][$module_name][$template_name][$key]['trad'] = '';
 							$this->missing_translations++;
 						}
