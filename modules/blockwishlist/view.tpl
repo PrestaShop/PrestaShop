@@ -30,7 +30,7 @@
 	{l s='Other wishlists of' mod='blockwishlist'} {$current_wishlist.firstname} {$current_wishlist.lastname}:
 	{foreach from=$wishlists item=wishlist name=i}
 		{if $wishlist.id_wishlist != $current_wishlist.id_wishlist}
-			<a href="{$base_dir_ssl}modules/blockwishlist/view.php?token={$wishlist.token}">{$wishlist.name}</a>
+			<a href="{$base_dir_ssl}modules/blockwishlist/view.php?token={$wishlist.token}" title="{$wishlist.name}" rel="nofollow">{$wishlist.name}</a>
 			{if !$smarty.foreach.i.last}
 				/
 			{/if}
@@ -48,7 +48,7 @@
 		<li class="address_title"><a href="{$link->getProductLink($product.id_product,
 		$product.link_rewrite, $product.category_rewrite)}" title="{l s='View' mod='blockwishlist'}">{$product.name|truncate:30:'...'|escape:'htmlall':'UTF-8'}</a></li>
 		<li class="address_name">
-			<a	href="{$link->getProductlink($product.id_product, $product.link_rewrite, $product.category_rewrite)}" title="{l s='Product detail' mod='blockwishlist'}" class="product_image">
+			<a href="{$link->getProductlink($product.id_product, $product.link_rewrite, $product.category_rewrite)}" title="{l s='Product detail' mod='blockwishlist'}" class="product_image"  title="{$product.name|escape:'htmlall':'UTF-8'}">
 				<img src="{$link->getImageLink($product.link_rewrite, $product.cover, 'medium')}" alt="{$product.name|escape:'htmlall':'UTF-8'}" />				
 			</a>
 		<span class="wishlist_product_detail">
@@ -67,7 +67,7 @@
 		</span>
 		</li>
 		<li class="address_address1 clear">
-			<a class="button_small clear" href="{$link->getProductLink($product.id_product,  $product.link_rewrite, $product.category_rewrite)}" title="{l s='View' mod='blockwishlist'}">{l s='View' mod='blockwishlist'}</a>
+			<a class="button_small clear" href="{$link->getProductLink($product.id_product,  $product.link_rewrite, $product.category_rewrite)}" title="{l s='View' mod='blockwishlist'}" rel="nofollow">{l s='View' mod='blockwishlist'}</a>
 			{if isset($product.attribute_quantity) AND $product.attribute_quantity >= 1 OR !isset($product.attribute_quantity) AND $product.product_quantity >= 1}
 			{if !$ajax}
 			<form id="addtocart_{$product.id_product|intval}_{$product.id_product_attribute|intval}" action="{$link->getPageLink('cart')}" method="post">
@@ -79,7 +79,7 @@
 			</p>
 			</form>
 			{/if}
-			<a href="javascript:;" class="exclusive" onclick="WishlistBuyProduct('{$token|escape:'htmlall':'UTF-8'}', '{$product.id_product}', '{$product.id_product_attribute}', '{$product.id_product}_{$product.id_product_attribute}', this, {$ajax});" title="{l s='Add to cart' mod='homefeatured'}">{l s='Add to cart' mod='blockwishlist'}</a>
+			<a href="javascript:;" class="exclusive" onclick="WishlistBuyProduct('{$token|escape:'htmlall':'UTF-8'}', '{$product.id_product}', '{$product.id_product_attribute}', '{$product.id_product}_{$product.id_product_attribute}', this, {$ajax});" title="{l s='Add to cart' mod='homefeatured'}" rel="nofollow">{l s='Add to cart' mod='blockwishlist'}</a>
 			{else}
 			<span class="exclusive">{l s='Add to cart' mod='blockwishlist'}</span>
 			{/if}
