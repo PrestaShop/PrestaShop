@@ -52,9 +52,6 @@ class AdminTranslationsControllerCore extends AdminController
 	/** @var array : List of theme by translation type : FRONT, BACK, ERRORS... */
 	protected $translations_informations = array();
 
-	/** @var array : List of theme by translation type : FRONT, BACK, ERRORS... */
-	protected $translations_type_for_theme = array('front', 'modules', 'pdf', 'mails');
-
 	/** @var array : List of all languages */
 	protected $languages;
 
@@ -199,7 +196,6 @@ class AdminTranslationsControllerCore extends AdminController
 			'token' => $this->token,
 			'languages' => $this->languages,
 			'translations_type' => $this->translations_informations,
-			'translations_type_for_theme' => $this->translations_type_for_theme,
 			'packs_to_install' => $packs_to_install,
 			'packs_to_update' => $packs_to_update,
 			'url_submit' => self::$currentIndex.'&token='.$this->token,
@@ -1591,7 +1587,10 @@ class AdminTranslationsControllerCore extends AdminController
 	public function initFormFront()
 	{
 		if (!$this->theme_exists(Tools::getValue('theme')))
-			throw new PrestaShopException(sprintf(Tools::displayError('Invalid theme "%s"'), Tools::getValue('theme')));
+		{
+			$this->errors[] = sprintf(Tools::displayError('Invalid theme "%s"'), Tools::getValue('theme'));
+			return;
+		}
 	
 		$missing_translations_front = array();
 		$name_var = $this->translations_informations[$this->type_selected]['var'];
