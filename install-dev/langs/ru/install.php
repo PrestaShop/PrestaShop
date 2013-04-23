@@ -209,7 +209,7 @@ return array(
 		'Installation Assistant' => 'Помощник установки',
 		'License Agreements' => 'Лицензионное соглшение',
 		'Print my login information' => 'Распечатать информацию о моем аккаунте',
-		'To use PrestaShop, you must <a href="http://doc.prestashop.com/display/PS15/Installing+PrestaShop" target="_blank">create a database</a> to collect all of your store’s data-related activities.' => 'Для использования PrestaShop, Вам следует <a href="http://doc.prestashop.com/display/PS15/Installing+PrestaShop" target="_blank">создать базу данных </a>, чтобы сгруппровать информацию Вашего магазина.',
+		'To use PrestaShop, you must <a href="http://doc.prestashop.com/display/PS15/Installing+PrestaShop#InstallingPrestaShop-Creatingadatabaseforyourshop" target="_blank">create a database</a> to collect all of your store’s data-related activities.' => 'Для использования PrestaShop, Вам следует <a href="http://doc.prestashop.com/display/PS15/Installing+PrestaShop#InstallingPrestaShop-Creatingadatabaseforyourshop" target="_blank">создать базу данных </a>, чтобы сгруппровать информацию Вашего магазина.',
 		'Please complete the fields below in order for PrestaShop to connect to your database. ' => 'Заполните поля ниже, чтобы  PrestaShop смог уствновить соединение с Вашей с базой данных ',
 		'The default port is 3306. To use a different port, add the port number at the end of your server’s address i.e ":4242".' => 'Порт по умолчанию: 3306. Если Вы используете другой порт, то введите номер порта в конце адреса Вашего сервера. пример: ":4242".',
 		'Continue the installation in:' => 'Продолжить установку:',
