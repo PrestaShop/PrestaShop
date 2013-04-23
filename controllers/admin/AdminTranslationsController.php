@@ -1194,10 +1194,7 @@ class AdminTranslationsControllerCore extends AdminController
 		// Get folder name of theme
 		if (($theme = Tools::getValue('theme')) && !is_array($theme))
 		{
-			$theme_exists = false;
-			foreach ($this->themes as $existing_theme)
-				if ($existing_theme->directory == $theme)
-					$theme_exists = true;
+			$theme_exists = $this->theme_exists($theme);
 			if (!$theme_exists)
 				throw new PrestaShopException(sprintf(Tools::displayError('Invalid theme "%s"'), $theme));
 			$this->theme_selected = Tools::safeOutput($theme);
@@ -1593,6 +1590,9 @@ class AdminTranslationsControllerCore extends AdminController
 	 */
 	public function initFormFront()
 	{
+		if (!$this->theme_exists(Tools::getValue('theme')))
+			throw new PrestaShopException(sprintf(Tools::displayError('Invalid theme "%s"'), Tools::getValue('theme')));
+	
 		$missing_translations_front = array();
 		$name_var = $this->translations_informations[$this->type_selected]['var'];
 		$GLOBALS[$name_var] = $this->fileExists();
@@ -2733,5 +2733,16 @@ class AdminTranslationsControllerCore extends AdminController
 		}
 		return $list;
 	}
+	
+	protected function theme_exists($theme)
+	{
+		if (!is_array($this->themes))
+			$this->themes = Theme::getThemes();
 
+		$theme_exists = false;
+		foreach ($this->themes as $existing_theme)
+			if ($existing_theme->directory == $theme)
+				return true;
+		return false;
+	}
 }
