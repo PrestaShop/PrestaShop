@@ -827,7 +827,7 @@ class AdminTranslationsControllerCore extends AdminController
 					}
 					else
 					{
-						$post_key = md5(strtolower($module_name).'_'.self::DEFAULT_THEME_NAME.'_'.strtolower($template_name).'_'.md5($key));
+						$post_key = md5(strtolower($module_name).'_'.strtolower($template_name).'_'.md5($key));
 						$pattern = '\'<{'.strtolower($module_name).'}prestashop>'.strtolower($template_name).'_'.md5($key).'\'';
 					}
 
