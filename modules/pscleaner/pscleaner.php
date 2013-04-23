@@ -285,9 +285,9 @@ class PSCleaner extends Module
 				continue;
 
 			$query = 'DELETE FROM `'._DB_PREFIX_.$query_array[0].'` WHERE `'.$query_array[1].'` NOT IN (SELECT `'.$query_array[3].'` FROM `'._DB_PREFIX_.$query_array[2].'`)';
-			$db->Execute($query);
-			if ($affected_rows = $db->Affected_Rows())
-				$logs[$query] = $affected_rows;
+			if ($db->Execute($query))
+				if ($affected_rows = $db->Affected_Rows())
+					$logs[$query] = $affected_rows;
 		}
 
 		// _lang table cleaning
@@ -299,14 +299,14 @@ class PSCleaner extends Module
 			$id_table = 'id_'.preg_replace('/^'._DB_PREFIX_.'/', '', $table);
 			
 			$query = 'DELETE FROM `'.bqSQL($table_lang).'` WHERE `'.bqSQL($id_table).'` NOT IN (SELECT `'.bqSQL($id_table).'` FROM `'.bqSQL($table).'`)';
-			$db->Execute($query);
-			if ($affected_rows = $db->Affected_Rows())
-				$logs[$query] = $affected_rows;
+			if ($db->Execute($query))
+				if ($affected_rows = $db->Affected_Rows())
+					$logs[$query] = $affected_rows;
 
 			$query = 'DELETE FROM `'.bqSQL($table_lang).'` WHERE `id_lang` NOT IN (SELECT `id_lang` FROM `'._DB_PREFIX_.'lang`)';
-			$db->Execute($query);
-			if ($affected_rows = $db->Affected_Rows())
-				$logs[$query] = $affected_rows;
+			if ($db->Execute($query))
+				if ($affected_rows = $db->Affected_Rows())
+					$logs[$query] = $affected_rows;
 		}
 		
 		// _shop table cleaning
@@ -321,14 +321,14 @@ class PSCleaner extends Module
 				continue;
 			
 			$query = 'DELETE FROM `'.bqSQL($table_shop).'` WHERE `'.bqSQL($id_table).'` NOT IN (SELECT `'.bqSQL($id_table).'` FROM `'.bqSQL($table).'`)';
-			$db->Execute($query);
-			if ($affected_rows = $db->Affected_Rows())
-				$logs[$query] = $affected_rows;
+			if ($db->Execute($query))
+				if ($affected_rows = $db->Affected_Rows())
+					$logs[$query] = $affected_rows;
 
 			$query = 'DELETE FROM `'.bqSQL($table_shop).'` WHERE `id_shop` NOT IN (SELECT `id_shop` FROM `'._DB_PREFIX_.'shop`)';
-			$db->Execute($query);
-			if ($affected_rows = $db->Affected_Rows())
-				$logs[$query] = $affected_rows;
+			if ($db->Execute($query))
+				if ($affected_rows = $db->Affected_Rows())
+					$logs[$query] = $affected_rows;
 		}
 
 		Category::regenerateEntireNtree();

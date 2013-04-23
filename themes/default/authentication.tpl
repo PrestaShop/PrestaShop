@@ -23,8 +23,13 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture name=path}{l s='Login'}{/capture}
-{include file="$tpl_dir./breadcrumb.tpl"}
+{capture name=path}
+	{if !isset($email_create)}{l s='Authentication'}{else}
+		<a href="{$link->getPageLink('authentication', true)}" rel="nofollow" title="{l s='Authentication'}">{l s='Authentication'}</a>
+		<span class="navigation-pipe">{$navigationPipe}</span>{l s='Create your account'}
+	{/if}
+{/capture}
+	{include file="$tpl_dir./breadcrumb.tpl"}
 
 <script type="text/javascript">
 // <![CDATA[
@@ -69,7 +74,7 @@ $(document).ready(function() {
 {/literal}
 </script>
 
-<h1>{if !isset($email_create)}{l s='Log in'}{else}{l s='Create an account'}{/if}</h1>
+<h1>{if !isset($email_create)}{l s='Authentication'}{else}{l s='Create an account'}{/if}</h1>
 {if !isset($back) || $back != 'my-account'}{assign var='current_step' value='login'}{include file="$tpl_dir./order-steps.tpl"}{/if} 
 {include file="$tpl_dir./errors.tpl"}
 {assign var='stateExist' value=false}
@@ -181,10 +186,10 @@ $(document).ready(function() {
 					<label for="passwd">{l s='Password'}</label>
 					<span><input type="password" id="passwd" name="passwd" value="{if isset($smarty.post.passwd)}{$smarty.post.passwd|stripslashes}{/if}" class="account_input" /></span>
 				</p>
-				<p class="lost_password"><a href="{$link->getPageLink('password')}">{l s='Forgot your password?'}</a></p>
+				<p class="lost_password"><a href="{$link->getPageLink('password')}" title="{l s='Recover your forgotten password'}" rel="nofollow">{l s='Forgot your password?'}</a></p>
 				<p class="submit">
 					{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'htmlall':'UTF-8'}" />{/if}
-					<input type="submit" id="SubmitLogin" name="SubmitLogin" class="button" value="{l s='Log in'}" />
+					<input type="submit" id="SubmitLogin" name="SubmitLogin" class="button" value="{l s='Authentication'}" />
 				</p>
 			</div>
 		</fieldset>
@@ -315,9 +320,9 @@ $(document).ready(function() {
 							</select>
 						</p>
 						{elseif $field_name eq "phone"}
-						<p class="required text">
-							<label for="phone">{l s='Phone'} <sup>*</sup></label>
-							<input type="text" class="text" name="phone" id="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{/if} "/>
+						<p class="{if isset($one_phone_at_least) && $one_phone_at_least}required {/if}text">
+							<label for="phone">{l s='Phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>*</sup>{/if}</label>
+							<input type="text" class="text" name="phone" id="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{/if}"/>
 						</p>
 					{/if}
 				{/foreach}
@@ -544,15 +549,15 @@ $(document).ready(function() {
 			<label for="other">{l s='Additional information'}</label>
 			<textarea name="other" id="other" cols="26" rows="3">{if isset($smarty.post.other)}{$smarty.post.other}{/if}</textarea>
 		</p>
-		{if $one_phone_at_least}
+		{if isset($one_phone_at_least) && $one_phone_at_least}
 			<p class="inline-infos">{l s='You must register at least one phone number.'}</p>
 		{/if}
 		<p class="text">
 			<label for="phone">{l s='Home phone'}</label>
 			<input type="text" class="text" name="phone" id="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{/if}" />
 		</p>
-		<p class="{if $one_phone_at_least}required {/if} text">
-			<label for="phone_mobile">{l s='Mobile phone'}{if $one_phone_at_least} <sup>*</sup>{/if}</label>
+		<p class="{if isset($one_phone_at_least) && $one_phone_at_least}required {/if} text">
+			<label for="phone_mobile">{l s='Mobile phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>*</sup>{/if}</label>
 			<input type="text" class="text" name="phone_mobile" id="phone_mobile" value="{if isset($smarty.post.phone_mobile)}{$smarty.post.phone_mobile}{/if}" />
 		</p>
 		<p class="required text" id="address_alias">

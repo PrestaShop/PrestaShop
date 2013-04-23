@@ -79,6 +79,12 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
 		$context->controller->addJqueryUI('ui.datepicker');
 
+		if ($identifier === null && Tools::getValue('module'))
+		{
+			$identifier = 'module';
+			$id = Tools::getValue('module');
+		}
+
 		$tpl->assign(array(
 			'current' => self::$currentIndex,
 			'token' => $token,

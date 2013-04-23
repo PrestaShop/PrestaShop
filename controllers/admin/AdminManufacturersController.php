@@ -569,7 +569,12 @@ class AdminManufacturersControllerCore extends AdminController
 	{
 		if (!($manufacturer = $this->loadObject()))
 			return;
-
+		
+		$this->toolbar_btn['new'] = array(
+					'href' => $this->context->link->getAdminLink('AdminManufacturers').'&addaddress=1&id_manufacturer='.(int)$manufacturer->id,
+					'desc' => $this->l('Add address')
+				);
+		
 		$addresses = $manufacturer->getAddresses($this->context->language->id);
 
 		$products = $manufacturer->getProductsLite($this->context->language->id);
