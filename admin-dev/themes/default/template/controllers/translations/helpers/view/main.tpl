@@ -60,15 +60,15 @@
 		<form method="get" action="index.php" id="typeTranslationForm">
 			<input type="hidden" name="controller" value="AdminTranslations" />
 			<input type="hidden" name="lang" id="translation_lang" value="0" />
-			<select name="type" style="float:left; margin-right:10px;">
+			<select name="type" style="float:left;margin-right:10px">
 				{foreach $translations_type as $type => $array}
-					<option value="{$type}">{$array.name} &nbsp;</option>
+					<option value="{$type}">{$array.name}</option>
 				{/foreach}
 			</select>
-			<select name="theme" style="float:left; margin-right:10px;">
+			<select name="theme" style="float:left;margin-right:10px">
+				<option value="">{l s='Core (no theme selected)'}</option>
 				{foreach $themes as $theme}
-
-					<option value="{$theme->directory}" {if $id_theme_current == $theme->id}selected=selected{/if}>{$theme->name} &nbsp;</option>
+					<option value="{$theme->directory}" {if $id_theme_current == $theme->id}selected=selected{/if}>{$theme->name}</option>
 				{/foreach}
 			</select>
 			{foreach $languages as $language}
