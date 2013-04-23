@@ -1160,6 +1160,8 @@ class AdminImportControllerCore extends AdminController
 			else if (isset($product->price_tin) && isset($product->price_tex))
 				$product->price = $product->price_tex;
 
+			if(isset($info['category']))
+				$product->category = explode($this->multiple_value_separator, $info['category']);
 			if (isset($product->category) && is_array($product->category) && count($product->category))
 			{
 				$product->id_category = array(); // Reset default values array
