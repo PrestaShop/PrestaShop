@@ -33,22 +33,29 @@
 			document.getElementById('typeTranslationForm').submit();
 		}
 
-		function addThemeSelect(el)
+		function addThemeSelect()
 		{
-			var list_type_for_theme = [{foreach $translations_type_for_theme as $type}'{$type}', {/foreach}];
-			var type = el.value;
+			var list_type_for_theme = ['front', 'modules', 'pdf', 'mails'];
+			var type = $('select[name=type]').val();
 
 			$('select[name=theme]').hide();
 			for (i=0; i < list_type_for_theme.length; i++)
 				if (list_type_for_theme[i] == type)
+				{
 					$('select[name=theme]').show();
+					if (type == 'front')
+						$('select[name=theme]').children('option[value=""]').attr('disabled', true)
+					else
+						$('select[name=theme]').children('option[value=""]').attr('disabled', false)
+				}
 				else
 					$('select[name=theme]').val('{$theme_default}');
 		}
 
 		$(document).ready(function(){
+			addThemeSelect();
 			$('select[name=type]').change(function() {
-				addThemeSelect(this);
+				addThemeSelect();
 			});
 		});
 	</script>
