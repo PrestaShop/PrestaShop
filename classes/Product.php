@@ -469,6 +469,24 @@ class ProductCore extends ObjectModel
 
 			$this->loadStockData();
 		}
+		
+		// Fix the PS_ALLOW_ACCENTED_CHARS_URL bug of Prestashop 1.5.3.0
+		if (is_array($this->link_rewrite)) {
+			foreach($this->link_rewrite as $id_lang => $link_rewrite) {
+				if (
+					$link_rewrite
+					&& !Validate::isLinkRewrite($link_rewrite)
+				) {
+					$this->link_rewrite[$id_lang] = Tools::str2url($link_rewrite);
+				}			
+			}
+		} elseif (
+			$this->link_rewrite
+			&& !Validate::isLinkRewrite($this->link_rewrite)
+		) {
+			$this->link_rewrite = Tools::str2url($this->link_rewrite);
+		}
+
 
 		if ($this->id_category_default)
 			$this->category = Category::getLinkRewrite((int)$this->id_category_default, (int)$id_lang);
@@ -5277,4 +5295,3 @@ class ProductCore extends ObjectModel
 		return Db::getInstance()->executeS('SELECT id_product_item as id, quantity FROM '._DB_PREFIX_.'pack where id_product_pack = '.(int)$this->id);
 	}
 }
-
