@@ -239,7 +239,7 @@ class MetaCore extends ObjectModel
 	 */
 	public static function getProductMetas($id_product, $id_lang, $page_name)
 	{
-		$sql = 'SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`, `description_short`
+		$sql = 'SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`, `description_short`, `description`
 				FROM `'._DB_PREFIX_.'product` p
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product`'.Shop::addSqlRestrictionOnLang('pl').')
 				'.Shop::addSqlAssociation('product', 'p').'
@@ -250,6 +250,17 @@ class MetaCore extends ObjectModel
 		{
 			if (empty($row['meta_description']))
 				$row['meta_description'] = strip_tags($row['description_short']);
+
+			// if the short description was not set, or it was too short, use description as well
+			if (empty($row['meta_description']))
+				$row['meta_description'] = strip_tags($row['description']);
+			elseif (strlen($row['meta_description']) < 100 and !empty($row['description']))
+				$row['meta_description'] = $row['meta_description'] . " - " . strip_tags($row['description']);
+
+			// the meta description should not be too long
+			if (strlen($row['meta_description']) > 200) {
+				$row['meta_description'] = preg_replace('/\s+?(\S+)?$/', '', substr($row['meta_description'], 0, 197)) . "...";
+			}
 			return Meta::completeMetaTags($row, $row['name']);
 		}
 
