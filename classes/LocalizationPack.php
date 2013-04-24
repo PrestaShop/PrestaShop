@@ -51,7 +51,6 @@ class LocalizationPackCore
 			$res &= $this->_installUnits($xml);
 			$res &= $this->installConfiguration($xml);
 			$res &= $this->installModules($xml);
-			$res &= $this->updateDefaultGroupDisplayMethod($xml);
 			$res &= $this->_installLanguages($xml, $install_mode);
 
 			if ($res && isset($this->iso_code_lang))
@@ -233,7 +232,7 @@ class LocalizationPackCore
 				}
 			}
 		}
-		return true;
+		return $this->updateDefaultGroupDisplayMethod($xml);
 	}
 
 	protected function _installCurrencies($xml, $install_mode = false)
@@ -391,10 +390,13 @@ class LocalizationPackCore
 			$attributes = $xml->group_default->attributes();
 			if (isset($attributes['price_display_method']) && in_array((int)$attributes['price_display_method'], array(0, 1)))
 			{
-				$group = new Group((int)Configuration::get('PS_CUSTOMER_GROUP'));
-				$group->price_display_method = (int)$attributes['price_display_method'];
-				if (!$group->save())
-					$this->_errors[] = Tools::displayError('An error occurred during the default group update');
+				foreach (array((int)Configuration::get('PS_CUSTOMER_GROUP'), (int)Configuration::get('PS_GUEST_GROUP'), (int)Configuration::get('PS_UNIDENTIFIED_GROUP')) as $id_group)
+				{
+					$group = new Group((int)$id_group);
+					$group->price_display_method = (int)$attributes['price_display_method'];
+					if (!$group->save())
+						$this->_errors[] = Tools::displayError('An error occurred during the default group update');
+				}
 			}
 			else
 				$this->_errors[] = Tools::displayError('An error has occurred during the default group update');
