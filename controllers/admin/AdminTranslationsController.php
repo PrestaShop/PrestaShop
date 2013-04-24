@@ -789,6 +789,8 @@ class AdminTranslationsControllerCore extends AdminController
 		{
 			$str_write = '';
 			$cache_file[$theme_name.'-'.$file_name] = true;
+			if (!Tools::file_exists_cache(dirname($file_name)))
+				mkdir(dirname($file_name), 0777, true);
 			if (!Tools::file_exists_cache($file_name))
 				file_put_contents($file_name, '');
 			if (!is_writable($file_name))
@@ -2530,12 +2532,16 @@ class AdminTranslationsControllerCore extends AdminController
 				$i18n_dir = $this->translations_informations[$this->type_selected]['dir'];
 				if (is_dir($i18n_dir.$module))
 					$root_dir = $i18n_dir;
+
 				if (Tools::file_exists_cache($root_dir.$module.'/translations/'.$lang.'.php'))
 					$lang_file = $root_dir.$module.'/translations/'.$lang.'.php';
-				else
+				elseif (Tools::file_exists_cache($root_dir.$module.'/'.$lang.'.php'))
 					$lang_file = $root_dir.$module.'/'.$lang.'.php';
 				@include($lang_file);
 				$this->getModuleTranslations();
+				// If a theme is selected, then the destination translation file must be in the theme
+				if ($this->theme_selected)
+					$lang_file = $this->translations_informations[$this->type_selected]['override']['dir'].$module.'/translations/'.$lang.'.php';
 				$this->recursiveGetModuleFiles($root_dir.$module.'/', $array_files, $module, $lang_file, $is_default);
 			}
 
@@ -2547,7 +2553,7 @@ class AdminTranslationsControllerCore extends AdminController
 					$root_dir = $i18n_dir;
 				if (Tools::file_exists_cache($root_dir.$module.'/translations/'.$lang.'.php'))
 					$lang_file = $root_dir.$module.'/translations/'.$lang.'.php';
-				else
+				elseif (Tools::file_exists_cache($root_dir.$module.'/'.$lang.'.php'))
 					$lang_file = $root_dir.$module.'/'.$lang.'.php';
 				@include($lang_file);
 				$this->getModuleTranslations();
