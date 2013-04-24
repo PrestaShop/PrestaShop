@@ -806,10 +806,10 @@ class AdminTranslationsControllerCore extends AdminController
 
 		foreach ($files as $file)
 		{
-			if (preg_match('/^(.*).(tpl|php)$/', $file) && Tools::file_exists_cache($file_path = $dir.$file) && !in_array($file, self::$ignore_folder))
+			if (preg_match('/^(.*).(tpl|php)$/', $file) && Tools::file_exists_cache($dir.$file) && !in_array($file, self::$ignore_folder))
 			{
 				// Get content for this file
-				$content = file_get_contents($file_path);
+				$content = file_get_contents($dir.$file);
 
 				// Get file type
 				$type_file = substr($file, -4) == '.tpl' ? 'tpl' : 'php';
@@ -2546,7 +2546,7 @@ class AdminTranslationsControllerCore extends AdminController
 			}
 
 			// Then we load the overriden translation file
-			if (isset($this->translations_informations[$this->type_selected]['override']))
+			if ($this->theme_selected && isset($this->translations_informations[$this->type_selected]['override']))
 			{
 				$i18n_dir = $this->translations_informations[$this->type_selected]['override']['dir'];
 				if (is_dir($i18n_dir.$module))
