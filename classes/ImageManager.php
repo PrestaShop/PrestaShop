@@ -407,6 +407,9 @@ class ImageManagerCore
 			case 'jpeg':
 			default:
 				$quality = (Configuration::get('PS_JPEG_QUALITY') === false ? 90 : Configuration::get('PS_JPEG_QUALITY'));
+				//// Activates PROGRESSIVE JPEG (images best practices)
+				//// http://calendar.perfplanet.com/2012/progressive-jpegs-a-new-best-practice/
+				imageinterlace($resource, 1);
 				$success = imagejpeg($resource, $filename, (int)$quality);
 			break;
 		}
