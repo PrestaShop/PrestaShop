@@ -26,7 +26,7 @@
 
 <!-- MODULE Block best sellers -->
 <div id="best-sellers_block_right" class="block products_block">
-	<h4 class="title_block"><a href="{$link->getPageLink('best-sales')}">{l s='Top sellers' mod='blockbestsellers'}</a></h4>
+	<h4 class="title_block"><a href="{$link->getPageLink('best-sales')}" title="{l s='View a top sellers products' mod='blockbestsellers'}">{l s='Top sellers' mod='blockbestsellers'}</a></h4>
 	<div class="block_content">
 	{if $best_sellers|@count > 0}
 		<ul class="product_images">
