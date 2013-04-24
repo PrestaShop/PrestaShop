@@ -54,7 +54,7 @@ $(document).ready(function () {
 		<ul id="first-currencies" class="currencies_ul">
 			{foreach from=$currencies key=k item=f_currency}
 				<li {if $cookie->id_currency == $f_currency.id_currency}class="selected"{/if}>
-					<a href="javascript:setCurrency({$f_currency.id_currency});" title="{$f_currency.name}">{$f_currency.sign}</a>
+					<a href="javascript:setCurrency({$f_currency.id_currency});" title="{$f_currency.name}" rel="nofollow">{$f_currency.sign}</a>
 				</li>
 			{/foreach}
 		</ul>

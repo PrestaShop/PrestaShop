@@ -27,13 +27,13 @@
 <div id="permanent_links">
 	<!-- Sitemap -->
 	<div class="sitemap">
-		<a href="{$link->getPageLink('sitemap')}"><img src="{$img_dir}icon/sitemap.gif" alt="{l s='Sitemap' mod='blockpermanentlinks'}" title="{l s='Sitemap' mod='blockpermanentlinks'}" /></a>&nbsp;
-		<a href="{$link->getPageLink('sitemap')}">{l s='Sitemap' mod='blockpermanentlinks'}</a>
+		<a href="{$link->getPageLink('sitemap')}"><img src="{$img_dir}icon/sitemap.gif" alt="{l s='Sitemap' mod='blockpermanentlinks'}"/></a>&nbsp;
+		<a href="{$link->getPageLink('sitemap')}" title="{l s='Sitemap' mod='blockpermanentlinks'}">{l s='Sitemap' mod='blockpermanentlinks'}</a>
 	</div>
 	<!-- Contact -->
 	<div class="contact">
-		<a href="{$link->getPageLink('contact', true)}"><img src="{$img_dir}icon/contact.gif" alt="{l s='Contact' mod='blockpermanentlinks'}" title="{l s='Contact' mod='blockpermanentlinks'}" /></a>&nbsp;
-		<a href="{$link->getPageLink('contact', true)}">{l s='Contact' mod='blockpermanentlinks'}</a>
+		<a href="{$link->getPageLink('contact', true)}"><img src="{$img_dir}icon/contact.gif" alt="{l s='Contact' mod='blockpermanentlinks'}"/></a>&nbsp;
+		<a href="{$link->getPageLink('contact', true)}" title="{l s='Contact' mod='blockpermanentlinks'}">{l s='Contact' mod='blockpermanentlinks'}</a>
 	</div>
 	<!-- Bookmark -->
 	<div class="add_bookmark">
