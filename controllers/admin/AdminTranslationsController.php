@@ -2533,9 +2533,8 @@ class AdminTranslationsControllerCore extends AdminController
 				if (is_dir($i18n_dir.$module))
 					$root_dir = $i18n_dir;
 
-				if (Tools::file_exists_cache($root_dir.$module.'/translations/'.$lang.'.php'))
-					$lang_file = $root_dir.$module.'/translations/'.$lang.'.php';
-				elseif (Tools::file_exists_cache($root_dir.$module.'/'.$lang.'.php'))
+				$lang_file = $root_dir.$module.'/translations/'.$lang.'.php';
+				if (!Tools::file_exists_cache($root_dir.$module.'/translations/'.$lang.'.php') && Tools::file_exists_cache($root_dir.$module.'/'.$lang.'.php'))
 					$lang_file = $root_dir.$module.'/'.$lang.'.php';
 				@include($lang_file);
 				$this->getModuleTranslations();
