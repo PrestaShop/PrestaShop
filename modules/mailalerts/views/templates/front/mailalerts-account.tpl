@@ -56,7 +56,7 @@ $('document').ready(function()
 });
 </script>
 
-{capture name=path}<a href="{$link->getPageLink('my-account', true)}">{l s='My account' mod='mailalerts'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='My alerts' mod='mailalerts'}{/capture}
+{capture name=path}<a href="{$link->getPageLink('my-account', true)}" title="{l s='Manage my account' mod='mailalerts'}" rel="nofollow">{l s='My account' mod='mailalerts'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='My alerts' mod='mailalerts'}{/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
 <div id="mailalerts_block_account">
@@ -65,12 +65,12 @@ $('document').ready(function()
 		<div>
 			{foreach from=$mailAlerts item=mailAlert}
 			<div class="mailalert clearfix">
-				<a href="{$link->getProductLink($mailAlert.id_product, null, null, null, null, $mailAlert.id_shop)}" class="product_img_link"><img src="{$link->getImageLink($mailAlert.link_rewrite, $mailAlert.cover, 'small_default')}" alt=""/></a>
-				<h3><a href="{$link->getProductLink($mailAlert.id_product, null, null, null, null, $mailAlert.id_shop)}">{$mailAlert.name}</a></h3>
+				<a href="{$link->getProductLink($mailAlert.id_product, null, null, null, null, $mailAlert.id_shop)}" title="{$mailAlert.name|escape:'htmlall':'UTF-8'}" class="product_img_link"><img src="{$link->getImageLink($mailAlert.link_rewrite, $mailAlert.cover, 'small_default')}" alt=""/></a>
+				<h3><a href="{$link->getProductLink($mailAlert.id_product, null, null, null, null, $mailAlert.id_shop)}" title="{$mailAlert.name|escape:'htmlall':'UTF-8'}">{$mailAlert.name|escape:'htmlall':'UTF-8'}</a></h3>
 				<div class="product_desc">{$mailAlert.attributes_small|escape:'htmlall':'UTF-8'}</div>
 
 				<div class="remove">
-					<img rel="ajax_id_mailalert_{$mailAlert.id_product}_{$mailAlert.id_product_attribute}" src="{$img_dir}icon/delete.gif" alt="" class="icon" />
+					<img rel="ajax_id_mailalert_{$mailAlert.id_product}_{$mailAlert.id_product_attribute}" src="{$img_dir}icon/delete.gif" alt="{l s='Remove' mod='mailalerts'}" class="icon" />
 				</div>
 			</div>
 			{/foreach}
@@ -80,6 +80,6 @@ $('document').ready(function()
 	{/if}
 
 	<ul class="footer_links">
-		<li class="fleft"><a href="{$link->getPageLink('my-account', true)}"><img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /></a><a href="{$link->getPageLink('my-account', true)}">{l s='Back to Your Account' mod='mailalerts'}</a></li>
+		<li class="fleft"><a href="{$link->getPageLink('my-account', true)}" rel="nofollow"><img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /></a><a href="{$link->getPageLink('my-account', true)}" title="{l s='Back to Your Account' mod='mailalerts'}">{l s='Back to Your Account' mod='mailalerts'}</a></li>
 	</ul>
 </div>
