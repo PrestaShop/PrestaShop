@@ -2545,6 +2545,7 @@ class AdminTranslationsControllerCore extends AdminController
 				$this->recursiveGetModuleFiles($root_dir.$module.'/', $array_files, $module, $lang_file, $is_default);
 			}
 
+			$root_dir = $initial_root_dir;
 			// Then we load the overriden translation file
 			if ($this->theme_selected && isset($this->translations_informations[$this->type_selected]['override']))
 			{
