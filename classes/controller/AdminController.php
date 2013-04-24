@@ -594,6 +594,7 @@ class AdminControllerCore extends Controller
 				
 		}
 		$this->context->smarty->assign(array(
+			'export_precontent' => "\xEF\xBB\xBF",
 			'export_headers' => $headers,
 			'export_content' => $content
 			)
