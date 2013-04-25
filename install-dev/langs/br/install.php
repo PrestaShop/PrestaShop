@@ -232,7 +232,7 @@ return array(
 		'PDO MySQL extension is not loaded' => 'Extensão PDO MySQL não está carregada',
 		'Cannot copy flag language "%s"' => 'Não é possível copiar a bandeira do idioma "%s" ',
 		'Sign-up to the newsletter' => 'Inscreva-se para a newsletter',
-		'If you are experiencing problems during the installation process, please call our team at %s and one of our experts will be happy to help.' => 'Se você está tendo problemas durante o processo de instalação, por favor ligue para o nosso time no %s e um de nossos especialistas lhe ajudará.',
+		'If you need some assistance during the installation process, please call our team at %s and one of our experts will be happy to help.' => 'Se você está tendo problemas durante o processo de instalação, por favor ligue para o nosso time no %s e um de nossos especialistas lhe ajudará.',
 		'Contact us!' => 'Contate-nos!',
 		'E-mail:' => 'E-mail:',
 		'PrestaShop requires at least 32M of memory to run, please check the memory_limit directive in php.ini or contact your host provider' => 'PrestaShop requer pelo menos 32M de memória para funcionar, por favor verifique memory_limit no php.ini ou contate seu provedor de hospedagem.',

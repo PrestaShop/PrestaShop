@@ -218,7 +218,7 @@ return array(
 		'Please complete the fields below in order for PrestaShop to connect to your database. ' => 'Compila i campi sottostanti per far sì che PrestaShop possa connettersi al tuo database.',
 		'The default port is 3306. To use a different port, add the port number at the end of your server’s address i.e ":4242".' => 'La porta di default è 3306. Per usare un\'altra porta, digita il numero della porta alla fine del tuo indirizzo di server. Per esempio: "4242".',
 		'Test your database connection now!' => 'Verifica subito la connessione al tuo database!',
-		'If you are experiencing problems during the installation process, please call our team at %s and one of our experts will be happy to help.' => 'Se si verificano problemi durante il processo di installazione, chiamaci allo %s. Uno dei nostri esperti sarà felice di aiutarti.',
+		'If you need some assistance during the installation process, please call our team at %s and one of our experts will be happy to help.' => 'Se si verificano problemi durante il processo di installazione, chiamaci allo %s. Uno dei nostri esperti sarà felice di aiutarti.',
 		'PrestaShop Installation Assistant' => 'Assistente di Installazione PrestaShop',
 		'Contact us!' => 'Contattaci!',
 		'Installation Assistant' => 'Assistente di Installazione',
