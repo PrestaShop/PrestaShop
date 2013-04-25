@@ -142,7 +142,7 @@ return array(
 		'Send me a test email!' => 'Отправить тестовое сообщение',
 		'Next' => 'Далее',
 		'Back' => 'Назад',
-		'If you are experiencing problems during the installation process, please call our team at %s and one of our experts will be happy to help.' => 'Если во время установки у Вас возникли проблемы, позвоните нашей команде %s и наши эксперты помогут Вам.',
+		'If you need some assistance during the installation process, please call our team at %s and one of our experts will be happy to help.' => 'Если во время установки у Вас возникли проблемы, позвоните нашей команде %s и наши эксперты помогут Вам.',
 		'Official forum' => 'Официальный форум',
 		'Support' => 'Поддержка',
 		'Documentation' => 'Документация',
