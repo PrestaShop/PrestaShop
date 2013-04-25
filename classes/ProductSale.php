@@ -34,7 +34,7 @@ class ProductSaleCore
 	{
 		$sql = 'REPLACE INTO '._DB_PREFIX_.'product_sale
 				(`id_product`, `quantity`, `sale_nbr`, `date_upd`)
-				SELECT od.product_id, COUNT(od.product_id), SUM(od.product_quantity), NOW()
+				SELECT od.product_id, SUM(od.product_quantity), COUNT(od.product_id), NOW()
 							FROM '._DB_PREFIX_.'order_detail od GROUP BY od.product_id';
 		return Db::getInstance()->execute($sql);
 	}
