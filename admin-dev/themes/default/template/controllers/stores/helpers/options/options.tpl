@@ -38,7 +38,7 @@
 	    if (html == 'false')
 	    {
 		$("#conf_id_PS_SHOP_STATE_ID").fadeOut();
-		$('#id_state option[value=0]').attr("selected", "selected");
+		$('#PS_SHOP_STATE_ID option[value=0]').attr("selected", "selected");
 	    }
 	    else
 	    {
