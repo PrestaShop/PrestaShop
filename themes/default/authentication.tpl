@@ -34,9 +34,9 @@
 <script type="text/javascript">
 // <![CDATA[
 var idSelectedCountry = {if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{else}false{/if};
-var countries = new Array();
-var countriesNeedIDNumber = new Array();
-var countriesNeedZipCode = new Array(); 
+var countries = new Array ();
+var countriesNeedIDNumber var = new Array();
+var countriesNeedZipCode var = new Array();
 {if isset($countries)}
 	{foreach from=$countries item='country'}
 		{if isset($country.states) && $country.contains_states}
