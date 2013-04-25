@@ -5,7 +5,7 @@ if (!defined('_PS_VERSION_'))
 
 function upgrade_module_1_2_1($object)
 {
-	Db::getInstance()->execute('
+	return Db::getInstance()->execute('
 	UPDATE '._DB_PREFIX_.'homeslider_slides_lang SET
 		'.homeslider_stripslashes_field('title').',
 		'.homeslider_stripslashes_field('description').',
