@@ -194,7 +194,7 @@ return array(
 		'Display' => 'Afficher',
 		'<b>Warning: You cannot use anymore this tool to upgrade your store.</b><br /><br />You already have <b>PrestaShop version %1$s installed</b>.<br /><br />If you want to upgrade to the latest version please read our documentation: <a href="%2$s">%2$s</a>' => '<b>Attention: Vous ne pouvez plus utiliser cet outil pour mettre à jour votre boutique.</b><br /><br />Vous avez déjà <b>PrestaShop version %1$s d\'installé.</b><br /><br />Si vous souhaitez utiliser la dernière version, merci de vous référer à notre documentation pour la mise à jour : <a href="%2$s">%2$s</a>',
 		'PrestaShop Wizard Installer' => 'Installation de PrestaShop',
-		'If you are experiencing problems during the installation process, please call our team at %s and one of our experts will be happy to help.' => 'PrestaShop peut vous accompagner si vous rencontrez un obstacle lors de l\'installation de votre boutique. Contactez notre équipe au %s et indiquez-nous l\'URL de votre boutique. Nous serons heureux de vous aider dans les dernières étapes de l\'installation !',
+		'If you need some assistance during the installation process, please call our team at %s and one of our experts will be happy to help.' => 'PrestaShop peut vous accompagner si vous avez besoin d\'aide pour finaliser l\'installation de votre boutique. Contactez notre équipe au %s et indiquez-nous l\'URL de votre boutique. Nous serons heureux de vous aider dans les dernières étapes de l\'installation !',
 		'The field %s is limited to %d characters' => 'Le champs %s est limité à %d caractères',
 		'shop name' => 'nom de la boutique',
 		'firstname' => 'prénom',

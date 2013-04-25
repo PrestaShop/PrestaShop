@@ -1633,10 +1633,10 @@ class ToolsCore
 					{
 						fwrite($write_fd, $media_domains);
 						fwrite($write_fd, $domain_rewrite_cond);
-						fwrite($write_fd, 'RewriteRule ^([a-z0-9]+)\-([a-z0-9]+)(\-[_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}'._PS_PROD_IMG_.'$1-$2$3$4.jpg [L]'."\n");
+						fwrite($write_fd, 'RewriteRule ^([a-z0-9]+)\-([a-z0-9]+)(\-[_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/$1-$2$3$4.jpg [L]'."\n");
 						fwrite($write_fd, $media_domains);
 						fwrite($write_fd, $domain_rewrite_cond);
-						fwrite($write_fd, 'RewriteRule ^([0-9]+)\-([0-9]+)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}'._PS_PROD_IMG_.'$1-$2$3.jpg [L]'."\n");
+						fwrite($write_fd, 'RewriteRule ^([0-9]+)\-([0-9]+)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/$1-$2$3.jpg [L]'."\n");
 					}
 
 					// Rewrite product images < 100 millions
@@ -1651,7 +1651,7 @@ class ToolsCore
 						$img_name .= '$'.$j;
 							fwrite($write_fd, $media_domains);
 						fwrite($write_fd, $domain_rewrite_cond);
-						fwrite($write_fd, 'RewriteRule ^'.str_repeat('([0-9])', $i).'(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}'._PS_PROD_IMG_.$img_path.$img_name.'$'.($j + 1).".jpg [L]\n");
+						fwrite($write_fd, 'RewriteRule ^'.str_repeat('([0-9])', $i).'(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/'.$img_path.$img_name.'$'.($j + 1).".jpg [L]\n");
 					}
 					fwrite($write_fd, $media_domains);
 					fwrite($write_fd, $domain_rewrite_cond);
