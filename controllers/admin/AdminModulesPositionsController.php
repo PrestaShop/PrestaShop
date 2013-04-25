@@ -301,9 +301,11 @@ class AdminModulesPositionsControllerCore extends AdminController
 	
 	public function getLiveEditUrl($live_edit_params)
 	{
-		$url = $this->context->shop->getBaseURL().Dispatcher::getInstance()->createUrl('index', (int)$this->context->language->id, $live_edit_params);
-		if (Configuration::get('PS_REWRITING_SETTINGS'))
-			$url = str_replace('index.php', ((count(Language::getLanguages(true)) > 1)? Language::getIsoById($this->context->employee->id_lang).'/' : ''), $url);
+		$lang = '';
+		if (Configuration::get('PS_REWRITING_SETTINGS') && count(Language::getLanguages(true)) > 1)
+			$lang = Language::getIsoById($this->context->employee->id_lang).'/';
+		$url = $this->context->shop->getBaseURL().$lang.Dispatcher::getInstance()->createUrl('index', (int)$this->context->language->id, $live_edit_params);
+
 		return $url;
 	}
 	
