@@ -227,7 +227,7 @@ return array(
 		'Must be alphanumeric string with at least 8 characters' => 'Sie müssen eine alphanumerische Folge aus mindestens 8 Zeichen eingegeben',
 		'Sign-up to the newsletter' => 'Für den Newsletter anmelden',
 		'Please complete the fields below in order for PrestaShop to connect to your database. ' => 'Bitte füllen Sie die untenstehenden Felder aus, damit PrestaShop sich mit Ihrer Datenbank verbinden kann.',
-		'If you are experiencing problems during the installation process, please call our team at %s and one of our experts will be happy to help.' => 'Wenn während des Installationsprozesses technische Schwierigkeiten auftreten, kontaktieren Sie bitte unser Team unter %s. Ein Experte ist Ihnen gerne behilflich!',
+		'If you need some assistance during the installation process, please call our team at %s and one of our experts will be happy to help.' => 'Wenn während des Installationsprozesses technische Schwierigkeiten auftreten, kontaktieren Sie bitte unser Team unter %s. Ein Experte ist Ihnen gerne behilflich!',
 		'E-mail:' => 'E-Mail:',
 		'Display' => 'Anzeige',
 		'PrestaShop compatibility with your system environment has been verified!' => 'Die Kompatibilität von PrestaShop mit Ihrem System wurde überprüft!',

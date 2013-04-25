@@ -227,7 +227,7 @@ return array(
 		'Cannot copy flag language "%s"' => 'No se pueden copiar las banderas de los idiomas "%s"',
 		'Must be alphanumeric string with at least 8 characters' => 'Debe ser una cadena alfanumérica de al menos 8 caracteres',
 		'Sign-up to the newsletter' => 'Suscríbete al boletín de noticias',
-		'If you are experiencing problems during the installation process, please call our team at %s and one of our experts will be happy to help.' => 'Si experimenta problemas durante la instalación, por favor llámenos al %s y uno de nuestros expertos estará encantado de ayudarte.',
+		'If you need some assistance during the installation process, please call our team at %s and one of our experts will be happy to help.' => 'Si experimenta problemas durante la instalación, por favor llámenos al %s y uno de nuestros expertos estará encantado de ayudarte.',
 		'E-mail:' => 'Correo electrónico:',
 		'Display' => 'Mostrar',
 		'PrestaShop compatibility with your system environment has been verified!' => '¡La compatibilidad de PrestaShop con su entorno del sistema ha sido verificada correctamente!',
