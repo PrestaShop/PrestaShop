@@ -127,7 +127,7 @@ class AdminTranslationsControllerCore extends AdminController
 			$this->l('%1$s (Language: %2$s, Theme: %3$s)'),
 			$this->translations_informations[$this->type_selected]['name'],
 			$this->lang_selected->name,
-			$this->theme_selected
+			$this->theme_selected ? $this->theme_selected : $this->l('none')
 		);
 
 		// Set vars for all forms
