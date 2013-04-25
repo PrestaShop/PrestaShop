@@ -74,7 +74,6 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 		if (!isset($this->tests['optional']))
 			$this->tests['optional'] = $this->model_system->checkOptionalTests();
 
-		$session_path = @ini_get('session.save_path');
 		// Generate display array
 		$this->tests_render = array(
 			'required' => array(
@@ -87,7 +86,6 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 						'system' => $this->l('Cannot create new files and folders'),
 						'gd' => $this->l('GD Library is not installed'),
 						'mysql_support' => $this->l('MySQL support is not activated'),
-						'sessions' => $this->l('Your PHP sessions path is not writable - check with your hosting provider:').' '.$session_path,
 					)
 				),
 				array(
@@ -140,4 +138,3 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 		$this->displayTemplate('system');
 	}
 }
-

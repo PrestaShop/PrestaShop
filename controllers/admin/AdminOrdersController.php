@@ -568,9 +568,9 @@ class AdminOrdersControllerCore extends AdminController
 		{
 		 	if ($this->tabAccess['delete'] === '1')
 			{
-				if (!Tools::isSubmit('id_order_detail'))
+				if (!Tools::isSubmit('id_order_detail') && !Tools::isSubmit('id_customization'))
 					$this->errors[] = Tools::displayError('You must select a product.');
-				elseif (!Tools::isSubmit('cancelQuantity'))
+				elseif (!Tools::isSubmit('cancelQuantity') && !Tools::isSubmit('cancelCustomizationQuantity'))
 					$this->errors[] = Tools::displayError('You must enter a quantity.');
 				else
 				{
@@ -597,7 +597,8 @@ class AdminOrdersControllerCore extends AdminController
 						foreach ($customizationList as $key => $id_order_detail)
 						{
 							$full_product_list[(int)$id_order_detail] = $id_order_detail;
-							$full_quantity_list[(int)$id_order_detail] += $customizationQtyList[$key];
+							if (isset($customizationQtyList[$key]))
+								$full_quantity_list[(int)$id_order_detail] += $customizationQtyList[$key];
 						}
 
 					if ($productList || $customizationList)

@@ -176,7 +176,7 @@ abstract class ControllerCore
 			if ($this->ajax)
 			{
 				$action = Tools::getValue('action');
-				if (!empty($action) && method_exists($this, 'displayAjax'.Tools::toCamelCase($action, true)))
+				if (!empty($action) && method_exists($this, 'displayAjax'.Tools::toCamelCase($action, true))) 
 					$this->{'displayAjax'.$action}();
 				elseif (method_exists($this, 'displayAjax'))
 					$this->displayAjax();

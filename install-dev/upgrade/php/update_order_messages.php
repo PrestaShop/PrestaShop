@@ -33,42 +33,38 @@ function update_order_messages()
 		$nb_loop = ceil($count_messages / $step);
 	for($i = 0; $i < $nb_loop; $i++)
 	{
-		$sql = 'SELECT id_message, message FROM '._DB_PREFIX_.'message LIMIT '.(int)$start.', '.(int)$step;
-		if ($messages = Db::getInstance()->executeS($sql))
-		{
-			if(is_array($messages))
-				foreach($messages as $message)
+		$sql = 'SELECT id_message, message FROM `'._DB_PREFIX_.'message` WHERE message REGEXP \'<br|&[^;]{1,8}\' LIMIT '.(int)$start.', '.(int)$step;
+		if ($messages = Db::getInstance()->query($sql))
+			while ($message = Db::getInstance()->nextRow($messages))
+			{
+				if(is_array($message))
 				{
-					$sql = 'UPDATE '._DB_PREFIX_.'message SET message = \''.pSQL(Tools::htmlentitiesDecodeUTF8(br2nl($message['message']))).'\' 
+					$sql = 'UPDATE `'._DB_PREFIX_.'message` SET message = \''.pSQL(Tools::htmlentitiesDecodeUTF8(br2nl($message['message']))).'\' 
 							WHERE id_message = '.(int)$message['id_message'];
 					$result = Db::getInstance()->execute($sql);
 				}
-			$start += ($step + 1);
-		}
+			}
 	}
-
-	$count_messages = Db::getInstance()->getValue('SELECT count(id_customer_message) FROM '._DB_PREFIX_.'customer_message');
 	$nb_loop = $start = 0;
 	if($count_messages > 0)
 		$nb_loop = ceil($count_messages / $step);
 	for($i = 0; $i < $nb_loop; $i++)
 	{
-		$sql = 'SELECT id_customer_message, message FROM '._DB_PREFIX_.'customer_message LIMIT '.(int)$start.', '.(int)$step;
-		if ($messages = Db::getInstance()->executeS($sql))
-		{
-			if(is_array($messages))
-				foreach($messages as $message)
-				{
-					$sql = 'UPDATE '._DB_PREFIX_.'customer_message SET message = \''.pSQL(Tools::htmlentitiesDecodeUTF8(str_replace('&amp;', '&', $message['message']))).'\' 
+		$sql = 'SELECT id_customer_message, message FROM `'._DB_PREFIX_.'customer_message` WHERE message REGEXP \'<br|&[^;]{1,8}\' LIMIT '.(int)$start.', '.(int)$step;
+		if ($messages = Db::getInstance()->query($sql))
+			while ($message = Db::getInstance()->nextRow($messages))
+			{
+				if(is_array($message))
+				{				
+					$sql = 'UPDATE `'._DB_PREFIX_.'customer_message` SET message = \''.pSQL(Tools::htmlentitiesDecodeUTF8(str_replace('&amp;', '&', $message['message']))).'\' 
 							WHERE id_customer_message = '.(int)$message['id_customer_message'];
 					Db::getInstance()->execute($sql);
 				}
-			$start += ($step + 1);
-		}
+			}
 	}
 }
 
 function br2nl($str)
 {
-	return preg_replace("/<br( \/)?>/i", "\n", $str);
+	return str_replace(array('<br>', '<br />', '<br/>'), "\n", $str);
 }

@@ -24,6 +24,135 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.5
 --------------------------------
 ####################################
+#   v1.5.4.1 - (2013-04-25)  #
+####################################
+
+	Fixed bugs:
+
+	[-] Installer: installer now work even if no settings.inc.php file is created with an installer session already here
+	[-] Installer : do not select activity if not defined
+	[-] INSTALLER : add counter loop in update_order_messages
+	[-] Installer : Fix bug #PSCFV-8606 bad performance when updating messages
+	[-] INSTALLER : fix bug #PSCFV-7688 mailalert_customer_oos not existing in database
+	[-] Installer: fix installer in PT languahe
+	[-] Installer : Missing directory separator when upgrading images types
+	[-] Installer: Switch test of session.save_path to optional test
+	[-] INSTALLER : Fix bug, can not check rights on theme folders
+	[-] INSTALLER : Fix bug #PSCFV-8167 duplicates product_sqlstock INDEX
+
+	[-] FO : do not use dispatcher routes for static files
+	[-] FO : invoice: do not display taxes table if there is not tax to display
+	[-] FO : Fixed product comparator CSS
+	[-] Fo : Remove additionnal space in phone field value
+	[-] FO : fix bug #PSCFV-8684, phone not required in guest checkout when not set in BO
+	[-] FO: send current product to some hook like displayProductTabContent on product page #PSCFV-8825
+	[-] FO : Fix bug #PSCFV-8728 context country not updated after changing delivery address in OPC
+	[-] FO: fixed some css bug for ie7
+	[-] FO: Add the protocol content to the cache id of  modules #PSCFV-8810
+	[-] FO : empty cache getContextualValue_ when updating cart quantity
+	[-] FO : Disable confirm order when already clicked
+	[-] FO : address alias lost
+	[-] FO : Undefined free_shipping in POC when updateQty
+	[-] Fo : Fix big pic alt with jqzoom
+	[-] FO : Class free order name for validateOrder
+	[-] FO : First part of fix #PSCFV-8636, cart rule on specifice carrier / all carriers
+	[-] FO : Fix bug #PSCFV-8623 : Cart rule without code is applied automatically
+	[-] FO : add cart rul when cart rul has several groups
+	[-] FO: Fix bug too much call of updateCartSummary when OPC and cart rule
+	[-] Fo : Fix undefined var in cart-summary when updating id_address_delivery
+	[-] FO : Fix login cookie issues
+	[-] FO: fixed bug #PSCFV-3238 - compareController typo
+	[-] FO: Fix #PSCFV-8722 displayed specific prices on product page was sometimes wrong
+	[-] FO : Fix bug #PSCFV-8589 do not loose max level depth when upgrading
+	[-] FO :  standardize behavior of selected country in the list when create a new address
+	[-] FO: fixed bug DOCTYPE line - #PSCFV-8602
+	[-] FO: Fix htaccess generation when disable mod_security is selected #PSCFV-8675
+	[-] FO: Don't display vat_number field if not required for the country on address.tpl
+	[-] FO: Extension test on file attachment for contact form should not be case sensitive #PSCFV-8616
+	[-] FO : Do not fade out on bigpic source change
+	[-] FO : Fix bug #PSCFV-7743 and #PSCFV-8286, bigpic source change
+	[-] FO: fixed bug Cart Summery Borders - #PSCFV-8421
+	[-] FO : Fix bug #PSCFV-8286, displayImage bad selector called
+	[-] FO: fixed bug Solved a problem with JSON.stringify problem with IE8 - #PSCFV-8340
+	[-] FO : Fix bug #PSCFV-7825 removing import of grid_prestashop.css and displaying errors in AdminPerformances
+	[-] FO: fixed bug missing <div class="clear"></div> in product.tpl - #PSCFV-8164
+	[-] FO : Add ccs and js to frontcontroller for old modules
+	[-] FO: change logo position
+	[-] FO : Fix bug #PSCFV-8183 lost order message in OPC
+
+	[-] BO: Fix htaccess generation for subfolders installation
+	[-] BO : Fix bug witth shop address and no state in country
+	[-] BO : Fix bug for csv export
+	[-] BO : Can not set PS_ORDER_OUT_OF_STOCK in one shop
+	[-] BO : Bad gender image when no gender
+	[-] BO: Fix #PSCFV-8827 fixed price of specific price rules should be a float
+	[-] BO: Fix admin carts currency prices on view and listing
+	[-] BO : Remove typo in address formating fields links
+	[-] BO : Remove undefined name when module can not be installed
+	[-] BO: Don't delete the directory of modules before upgrade them
+	[-] BO: fixed bug css - #PSCFV-8737 - AdminScenes.php ~~ remove inline css forcing a border to #large_scene_image
+	[-] BO: Fix #PSCFV-8730 display of selected dates on the backoffice listings header - thank to pitt phunsanit for the patch
+	[-] BO : Deactivate backwardcompatibility module
+	[-] BO: PSCFV-7685 parent category for root categories after upgrade
+	[-] BO : Fix bug #PSCFV-8626 rename actual admin folder
+	[-] BO: fixed bug Cart rules - Javascript error - #PSCFV-5045
+	[-] BO : Fix bug #PSCFV-8620 returns with customized product
+	[-] BO: Fix #PSCFV-8683 order_way collusion on listing between 2 tabs
+	[-] BO : Fix bug : #PSCFV-8631 no download-product.tpl in languages packs
+	[-] BO : Fix bug #PSCFV-8540 setting cookie key in cache key
+	[-] BO: fixed bug In back office, in product modification page, image pane, the image list appears broken in IE8 - #PSCFV-8024
+	[-] BO: Fix the Htaccess rewriting generation when one shop has the rewriting enabled and the last one on the same domain not
+	[-] BO: fixed bug #PSCFV-8258
+	[-] BO: Clear cart when customer is changed in back office orders #PSCFV-8520
+	[-] BO : Remove warning on ProductDownload
+	[-] BO : fixed field value saving when value is equal to 0 #PSCFV-8530
+	[-] BO : Fix bug #PSCFV-8481 no live edit on index when one language is active only
+	[-] BO : fixed bug #PSCFV-8095 now maximum weigh for carrier is float
+
+	[-] Classes : Bug fix : OrderOpcController, check instance of blocknewsletter module
+	[-] Classes : Bug fix : Mobile hooks, check PayPal for payments only
+
+	[-] Core: fix redirection loop for bugged versions of mysql using column name aliases on order by
+	[-] CORE : Fix bug #PSCFV-8636 again, cart rule with a reduction and free shipping
+	[-] CORE : Fix bug last part #PSCFV-8636, cart rule with a reduction and free shipping
+	[-] CORE : Fix bug #PSCFV-5624 set order reference to CHAR(10)
+	[-] CORE : fixed bug #PSCFV-8475 - Email templates with {shop_url} append url with index.php
+	[-] Core: Cache of Cart::getPackageList is now per cart
+	[-] Core: Local cache could never be totally cleaned
+
+	[-] MO: homefeatured - numbers are now the same
+	[-] MO: Fix product cover image on blockviewed with multishop
+	[-] MO : Fix rand parameter in favorite module js
+	[-] MO : Fix bug #PSCFV-8430 bad post type ajax request, thanks to maofree
+	[-] MO : Fix bug #PSCFV-8399 dictinct categegories in module blockcategories
+
+	Improved/changed features:
+
+	[*] Installer : Set context in upgrader
+	[*] Installer: Add PHP CLI installer
+
+	[*] FO : one_phone_at_least should be set
+	[*] FO : add steps to authentication pull request 002f468958 thanks to radovanx
+	[*] FO: use subdirectory per template for smarty cache
+	[*] FO : Check if grid_prestashop.css is available in theme before including
+	[*] FO : Retrocompat for default theme 1.4.10
+
+	[*] BO : Add block "close_td" in list_content.tpl    [*] BO : Add block "close_td" in list_content.tpl    {block name="td_content"}    .....    {/block}    {block name="close_td"}    {/block}    So now we can override "td" and "/td" tags.    So we can create    "td" "a" ... content.... "/a" "/td"    when overriding the block open-td and close-td    and we can use "a" tag with "href" rather than "onclick" to create view links in the list.    And the user can choose to open the link in another tab or window.
+	[*] BO: The translation of modules are now made in the theme if modules are overrided or directly in the module folder
+	[*] BO: List all modules with an upgrade available on AdminModules header
+
+	[*] TR : Removed hard-coded dot in history.tpl
+	[*] TR : Improved English text of installer
+	[*] TR : added russian installer tabs
+	[*] TR : Fixed wrong use of translation functions in AdminTranslationsController
+	[*] TR : Added tab translations for installer languages
+
+	Added Features:
+
+	[+] BO: show all languages in setting of employee
+
+
+####################################
 #   v1.5.4.0 - (2013-03-26)  #
 ####################################
 

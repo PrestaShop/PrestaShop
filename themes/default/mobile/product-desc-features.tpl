@@ -5,7 +5,7 @@
 		{if isset($product) && $product->description}
 		<div data-role="collapsible" data-theme="a" data-content-theme="a">
 			<h3>{l s='More info'}</h3>
-			<p>{$product->description}</p>
+			<div>{$product->description}</div>
 		</div>
 		{/if}
 		

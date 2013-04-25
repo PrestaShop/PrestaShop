@@ -953,6 +953,7 @@ class CartCore extends ObjectModel
 		$this->update(true);
 		$context = Context::getContext()->cloneContext();
 		$context->cart = $this;
+		Cache::clean('getContextualValue_*');
 		if ($auto_add_cart_rule)
 			CartRule::autoAddToCart($context);
 
@@ -1591,9 +1592,9 @@ class CartCore extends ObjectModel
 	 */
 	public function getPackageList($flush = false)
 	{
-		static $cache = false;
-		if ($cache !== false && !$flush)
-			return $cache;
+		static $cache = array();
+		if (isset($cache[(int)$this->id]) && $cache[(int)$this->id] !== false && !$flush)
+			return $cache[(int)$this->id];
 
 		$product_list = $this->getProducts();
 		// Step 1 : Get product informations (warehouse_list and carrier_list), count warehouse
@@ -1821,7 +1822,7 @@ class CartCore extends ObjectModel
 						);
 					}
 		}
-		$cache = $final_package_list;
+		$cache[(int)$this->id] = $final_package_list;
 		return $final_package_list;
 	}
 
@@ -2292,7 +2293,7 @@ class CartCore extends ObjectModel
 			$this->id_carrier = 0;
 			return;
 		}
-
+		Cache::clean('getContextualValue_*');
 		$delivery_option_list = $this->getDeliveryOptionList(null, true);
 
 		foreach ($delivery_option_list as $id_address => $options)
@@ -2869,8 +2870,12 @@ class CartCore extends ObjectModel
 			{
 				$cart_rule['value_real'] -= $total_shipping;
 				$cart_rule['value_tax_exc'] -= $total_shipping_tax_exc;
-				$total_discounts -= $total_shipping;
-				$total_discounts_tax_exc -= $total_shipping_tax_exc;
+				$cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'], (int)$context->currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
+				$cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'], (int)$context->currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
+				if ($total_discounts > $cart_rule['value_real'])
+					$total_discounts -= $total_shipping;
+				if ($total_discounts_tax_exc > $cart_rule['value_tax_exc'])
+					$total_discounts_tax_exc -= $total_shipping_tax_exc;
 
 				// Update total shipping
 				$total_shipping = 0;

@@ -303,7 +303,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 	{
 		$url = $this->context->shop->getBaseURL().Dispatcher::getInstance()->createUrl('index', (int)$this->context->language->id, $live_edit_params);
 		if (Configuration::get('PS_REWRITING_SETTINGS'))
-			$url = str_replace('index.php', Language::getIsoById($this->context->employee->id_lang).'/', $url);
+			$url = str_replace('index.php', ((count(Language::getLanguages(true)) > 1)? Language::getIsoById($this->context->employee->id_lang).'/' : ''), $url);
 		return $url;
 	}
 	
