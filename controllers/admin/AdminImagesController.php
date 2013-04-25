@@ -28,6 +28,7 @@ class AdminImagesControllerCore extends AdminController
 {
 	protected $start_time = 0;
 	protected $max_execution_time = 7200;
+	protected $display_move;
 
 	public function __construct()
 	{
@@ -50,6 +51,9 @@ class AdminImagesControllerCore extends AdminController
 			'scenes' => array('title' => $this->l('Scenes'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
 			'stores' => array('title' => $this->l('Stores'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false)
 		);
+		
+		// No need to display the old image system if the install has been made later than 2013-03-26
+		$this->display_move = (defined('_PS_CREATION_DATE_') && strtotime(_PS_CREATION_DATE_) > strtotime('2013-03-26')) ? false : true;
 
 		$this->fields_options = array(
 			'images' => array(
@@ -141,20 +145,22 @@ class AdminImagesControllerCore extends AdminController
 						'type' => 'text',
 						'height' => 'px',
 						'visibility' => Shop::CONTEXT_ALL
-					),
-					'PS_LEGACY_IMAGES' => array(
-						'title' => $this->l('Use the legacy image filesystem'),
-						'desc' => $this->l('This should be set to yes unless you successfully moved images in "Images" page under the "Preferences" menu.'),
-						'validation' => 'isBool',
-						'cast' => 'intval',
-						'required' => false,
-						'type' => 'bool',
-						'visibility' => Shop::CONTEXT_ALL
-					),
+					)
 				),
 				'submit' => array('title' => $this->l('Save   '), 'class' => 'button'),
 			),
 		);
+		
+		if ($this->display_move)
+			$this->fields_options['product_images']['fields']['PS_LEGACY_IMAGES'] = array(
+				'title' => $this->l('Use the legacy image filesystem'),
+				'desc' => $this->l('This should be set to yes unless you successfully moved images in "Images" page under the "Preferences" menu.'),
+				'validation' => 'isBool',
+				'cast' => 'intval',
+				'required' => false,
+				'type' => 'bool',
+				'visibility' => Shop::CONTEXT_ALL
+			);
 
 		$this->fields_form = array(
 			'legend' => array(
@@ -670,7 +676,7 @@ class AdminImagesControllerCore extends AdminController
 
 			$this->context->smarty->assign(array(
 				'display_regenerate' => true,
-				'display_move' => true
+				'display_move' => $this->display_move
 			));
 		}
 

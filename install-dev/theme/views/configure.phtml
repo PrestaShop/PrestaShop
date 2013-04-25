@@ -158,7 +158,7 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 	<!-- Newsletter -->
 	<div class="field clearfix" id="contentInfosNotification">
 		<div class="contentinput">
-			<input type="checkbox" name="send_informations" id="infosNotification" class="aligned" style="vertical-align:middle" <?php if ($this->session->send_informations): ?>checked="checked"<?php endif; ?> />
+			<input type="checkbox" name="send_informations" id="infosNotification" class="aligned" style="vertical-align:middle" <?php if ($this->session->send_informations === null || $this->session->send_informations): ?>checked="checked"<?php endif; ?> />
 			<label for="infosNotification"><?php echo $this->l('Sign-up to the newsletter') ?></label>
 			<br/>
 			<span id="resultInfosNotification" class="result aligned"></span>

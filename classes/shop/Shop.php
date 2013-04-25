@@ -308,7 +308,7 @@ class ShopCore extends ObjectModel
 					WHERE (su.domain = \''.$host.'\' OR su.domain_ssl = \''.$host.'\')
 						AND s.active = 1
 						AND s.deleted = 0
-					ORDER BY LENGTH(uri) DESC';
+					ORDER BY LENGTH(CONCAT(su.physical_uri, su.virtual_uri)) DESC';
 
 			$id_shop = '';
 			$found_uri = '';
