@@ -92,7 +92,7 @@
 		<br />
 
 		{foreach $modules_translations as $theme_name => $theme}
-			<h2>&gt;{l s='Theme:'} <a name="{$theme_name}">{if $theme_name === $default_theme_name}{l s='default'}{else}{$theme_name}{/if} </h2>
+			{if $theme_name}<h2>&gt;{l s='Theme:'} <a name="{$theme_name}">{$theme_name}</h2>{/if}
 			{foreach $theme as $module_name => $module}
 				<h3>{l s='Module:'} <a name="{$module_name}" style="font-style:italic">{$module_name}</a></h3>
 				{foreach $module as $template_name => $newLang}
@@ -107,7 +107,7 @@
 							{$missing_translations_module = 0}
 						{/if}
 						<fieldset>
-							<legend style="cursor : pointer" onclick="$('#{$theme_name}_{$module_name}_{$template_name|replace:'.':'_'}').slideToggle();">{if $theme_name === 'default'}{l s='default'}{else}{$theme_name}{/if} - {$template_name}
+							<legend style="cursor : pointer" onclick="$('#{$theme_name}_{$module_name}_{$template_name|replace:'.':'_'}').slideToggle();">{if $theme_name}{$theme_name} - {/if}{$template_name}
 								<font color="blue">{$newLang|count}</font> {l s='expressions'} (<font color="red">{$missing_translations_module}</font>)
 							</legend>
 							<div name="{$type}_div" id="{$theme_name}_{$module_name}_{$template_name|replace:'.':'_'}" style="display:{if $missing_translations_module}block{else}none{/if}">
