@@ -117,7 +117,7 @@
 											<td style="width: 40%">{$key|stripslashes}</td>
 											<td>= 
 												{* Prepare name string for md5() *}
-												{capture assign="name"}{strtolower($module_name)}_{strtolower($theme_name)}_{strtolower($template_name)}_{md5($key)}{/capture}
+												{capture assign="name"}{strtolower($module_name)}{if $theme_name}_{strtolower($theme_name)}{/if}_{strtolower($template_name)}_{md5($key)}{/capture}
 												{if $key|strlen < $textarea_sized}
 													<input type="text" 
 														style="width: 450px{if empty($value.trad)};background:#FBB{/if}"

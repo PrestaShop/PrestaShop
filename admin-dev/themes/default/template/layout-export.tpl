@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{foreach from=$export_headers item=header}{$header};{/foreach}
+{$export_precontent}{foreach from=$export_headers item=header}{$header};{/foreach}
 {foreach from=$export_content item=line}
 
 {foreach from=$line item=content}{$content};{/foreach}

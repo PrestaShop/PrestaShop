@@ -33,22 +33,29 @@
 			document.getElementById('typeTranslationForm').submit();
 		}
 
-		function addThemeSelect(el)
+		function addThemeSelect()
 		{
-			var list_type_for_theme = [{foreach $translations_type_for_theme as $type}'{$type}', {/foreach}];
-			var type = el.value;
+			var list_type_for_theme = ['front', 'modules', 'pdf', 'mails'];
+			var type = $('select[name=type]').val();
 
 			$('select[name=theme]').hide();
 			for (i=0; i < list_type_for_theme.length; i++)
 				if (list_type_for_theme[i] == type)
+				{
 					$('select[name=theme]').show();
+					if (type == 'front')
+						$('select[name=theme]').children('option[value=""]').attr('disabled', true)
+					else
+						$('select[name=theme]').children('option[value=""]').attr('disabled', false)
+				}
 				else
 					$('select[name=theme]').val('{$theme_default}');
 		}
 
 		$(document).ready(function(){
+			addThemeSelect();
 			$('select[name=type]').change(function() {
-				addThemeSelect(this);
+				addThemeSelect();
 			});
 		});
 	</script>
@@ -60,15 +67,15 @@
 		<form method="get" action="index.php" id="typeTranslationForm">
 			<input type="hidden" name="controller" value="AdminTranslations" />
 			<input type="hidden" name="lang" id="translation_lang" value="0" />
-			<select name="type" style="float:left; margin-right:10px;">
+			<select name="type" style="float:left;margin-right:10px">
 				{foreach $translations_type as $type => $array}
-					<option value="{$type}">{$array.name} &nbsp;</option>
+					<option value="{$type}">{$array.name}</option>
 				{/foreach}
 			</select>
-			<select name="theme" style="float:left; margin-right:10px;">
+			<select name="theme" style="float:left;margin-right:10px">
+				<option value="">{l s='Core (no theme selected)'}</option>
 				{foreach $themes as $theme}
-
-					<option value="{$theme->directory}" {if $id_theme_current == $theme->id}selected=selected{/if}>{$theme->name} &nbsp;</option>
+					<option value="{$theme->directory}" {if $id_theme_current == $theme->id}selected=selected{/if}>{$theme->name}</option>
 				{/foreach}
 			</select>
 			{foreach $languages as $language}

@@ -386,15 +386,15 @@ class DispatcherCore
 		// Load custom routes from modules
 		$modules_routes = Hook::exec('moduleRoutes', array(), null, true, false);
 		if (is_array($modules_routes) && count($modules_routes))
-		foreach($modules_routes as $module_route)
-		  foreach($module_route as $route => $route_details)
-		    if (array_key_exists('controller', $route_details) && array_key_exists('rule', $route_details) 
-		      && array_key_exists('keywords', $route_details) && array_key_exists('params', $route_details))
-		      {
-			      if (!isset($this->default_routes[$route]))
-			      	$this->default_routes[$route] = array();
-			      $this->default_routes[$route] = array_merge($this->default_routes[$route], $route_details);
-				}
+			foreach($modules_routes as $module_route)
+				foreach($module_route as $route => $route_details)
+					if (array_key_exists('controller', $route_details) && array_key_exists('rule', $route_details) 
+						&& array_key_exists('keywords', $route_details) && array_key_exists('params', $route_details))
+					{
+						if (!isset($this->default_routes[$route]))
+						$this->default_routes[$route] = array();
+						$this->default_routes[$route] = array_merge($this->default_routes[$route], $route_details);
+					}
 		
 		// Set default routes
 		foreach (Language::getLanguages() as $lang)
@@ -674,38 +674,41 @@ class DispatcherCore
 			if (!$this->request_uri)
 				return strtolower($this->controller_not_found);
 			$controller = $this->controller_not_found;
+			
+			// If the request_uri matches a static file, then there is no need to check the routes, we keep "controller_not_found" (a static file should not go through the dispatcher) 
+			if (!preg_match('/\.(gif|jpe?g|png|css|js|ico)$/i', $this->request_uri))
+			{
+				// Add empty route as last route to prevent this greedy regexp to match request uri before right time
+				if ($this->empty_route)
+					$this->addRoute($this->empty_route['routeID'], $this->empty_route['rule'], $this->empty_route['controller'], Context::getContext()->language->id);
 
-			// Add empty route as last route to prevent this greedy regexp to match request uri before right time
-			if ($this->empty_route)
-				$this->addRoute($this->empty_route['routeID'], $this->empty_route['rule'], $this->empty_route['controller'], Context::getContext()->language->id);
-
-			if (isset($this->routes[Context::getContext()->language->id]))
-				foreach ($this->routes[Context::getContext()->language->id] as $route)
-					if (preg_match($route['regexp'], $this->request_uri, $m))
-					{
-						// Route found ! Now fill $_GET with parameters of uri
-						foreach ($m as $k => $v)
-							if (!is_numeric($k))
-								$_GET[$k] = $v;
-	
-						$controller = $route['controller'] ? $route['controller'] : $_GET['controller'];
-						if (!empty($route['params']))
-							foreach ($route['params'] as $k => $v)
-								$_GET[$k] = $v;
-	
-						// A patch for module friendly urls
-						if (preg_match('#module-([a-z0-9_-]+)-([a-z0-9]+)$#i', $controller, $m))
+				if (isset($this->routes[Context::getContext()->language->id]))
+					foreach ($this->routes[Context::getContext()->language->id] as $route)
+						if (preg_match($route['regexp'], $this->request_uri, $m))
 						{
-							$_GET['module'] = $m[1];
-							$_GET['fc'] = 'module';
-							$controller = $m[2];
+							// Route found ! Now fill $_GET with parameters of uri
+							foreach ($m as $k => $v)
+								if (!is_numeric($k))
+									$_GET[$k] = $v;
+		
+							$controller = $route['controller'] ? $route['controller'] : $_GET['controller'];
+							if (!empty($route['params']))
+								foreach ($route['params'] as $k => $v)
+									$_GET[$k] = $v;
+		
+							// A patch for module friendly urls
+							if (preg_match('#module-([a-z0-9_-]+)-([a-z0-9]+)$#i', $controller, $m))
+							{
+								$_GET['module'] = $m[1];
+								$_GET['fc'] = 'module';
+								$controller = $m[2];
+							}
+		
+							if (isset($_GET['fc']) && $_GET['fc'] == 'module')
+								$this->front_controller = self::FC_MODULE;
+							break;
 						}
-	
-						if (isset($_GET['fc']) && $_GET['fc'] == 'module')
-							$this->front_controller = self::FC_MODULE;
-						break;
-					}
-
+			}
 			if ($controller == 'index' || $this->request_uri == '/index.php')
 				$controller = $this->default_controller;
 			$this->controller = $controller;
