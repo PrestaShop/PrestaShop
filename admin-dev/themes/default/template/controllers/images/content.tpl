@@ -76,7 +76,7 @@
 	</form>
 {/if}
 
-{if isset($display_move)}
+{if isset($display_move) && $display_move}
 	<br /><h2 class="space">{l s='Move images'}</h2>
 	{l s='PrestaShop now uses a new storage system for product images. It offers better performance if your shop has a large number of products.'}<br />
 	<br />
