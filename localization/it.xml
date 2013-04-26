@@ -131,7 +131,7 @@
 			<taxRule iso_code_country="uk" id_tax="3" />
 		</taxRulesGroup>
 
-		<taxRulesGroup name="FR Books Rate (4%)">
+		<taxRulesGroup name="IT Books Rate (4%)">
 			<taxRule iso_code_country="be" id_tax="3" />
 			<taxRule iso_code_country="bg" id_tax="3" />
 			<taxRule iso_code_country="cz" id_tax="3" />
