@@ -537,6 +537,9 @@ abstract class ObjectModelCore
 		if (!$res)
 			return false;
 		unset($res[$definition['primary']]);
+		foreach ($res as $field => &$value)
+			if (isset($definition['fields'][$field]))
+				$value = ObjectModel::formatValue($value, $definition['fields'][$field]['type']);
 
 		if (!Db::getInstance()->insert($definition['table'], $res))
 			return false;
@@ -553,7 +556,11 @@ abstract class ObjectModelCore
 
 			if (!$res)
 				return false;
-			
+
+			foreach ($res as $field => &$value)
+				if (isset($definition['fields'][$field]))
+					$value = ObjectModel::formatValue($value, $definition['fields'][$field]['type']);
+
 			foreach ($res as $row)
 			{
 				$row[$definition['primary']] = (int)$object_id;	
