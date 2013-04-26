@@ -120,7 +120,7 @@ class OrderHistoryCore extends ObjectModel
 							.'&id_order='.(int)$order->id
 							.'&secure_key='.$order->secure_key;
 						$assign[$key]['link'] = $dl_link;
-						if ($virtual_product['date_expiration'] != '0000-00-00 00:00:00')
+						if (isset($virtual_product['date_expiration']) && $virtual_product['date_expiration'] != '0000-00-00 00:00:00')
 							$assign[$key]['deadline'] = Tools::displayDate($virtual_product['date_expiration '], $order->id_lang);
 						if ($product_download->nb_downloadable != 0)
 							$assign[$key]['downloadable'] = (int)$product_download->nb_downloadable;
