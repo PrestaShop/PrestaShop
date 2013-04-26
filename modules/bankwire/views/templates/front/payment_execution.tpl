@@ -38,7 +38,7 @@
 <h3>{l s='Bank-wire payment.' mod='bankwire'}</h3>
 <form action="{$link->getModuleLink('bankwire', 'validation', [], true)}" method="post">
 <p>
-	<img src="{$this_path}bankwire.jpg" alt="{l s='Bank wire' mod='bankwire'}" width="86" height="49" style="float:left; margin: 0px 10px 5px 0px;" />
+	<img src="{$this_path_bw}bankwire.jpg" alt="{l s='Bank wire' mod='bankwire'}" width="86" height="49" style="float:left; margin: 0px 10px 5px 0px;" />
 	{l s='You have chosen to pay by bank wire.' mod='bankwire'}
 	<br/><br />
 	{l s='Here is a short summary of your order:' mod='bankwire'}
