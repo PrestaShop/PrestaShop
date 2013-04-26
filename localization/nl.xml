@@ -7,8 +7,8 @@
 		<language iso_code="nl" />
 	</languages>
 	<taxes>
-		<tax id="1" name="BTW NL 19%" rate="19" />
-		<tax id="2" name="BTW NL 6%" rate="6" />
+		<tax id="1" name="BTW NL 21%" rate="21" />
+		<tax id="2" name="BTW NL 6%"  rate="6"  />
 		
 		<taxRulesGroup name="NL Standard Rate (19%)">
 			<taxRule iso_code_country="be" id_tax="1" />
