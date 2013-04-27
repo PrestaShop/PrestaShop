@@ -51,7 +51,7 @@
 			<li><a href="{$link->getPageLink('history', true)}" title="{l s='View a list of my orders'}" rel="nofollow">{l s='Order history'}</a></li>
 		{else}
 			<li><a href="{$link->getPageLink('authentication', true)}" title="{l s='Authentication'}" rel="nofollow">{l s='Authentication'}</a></li>
-			<li><a href="{$link->getPageLink('authentication', true)}" title="{l s='Create new account'}"rel="nofollow">{l s='Create new account'}</a></li>
+			<li><a href="{$link->getPageLink('authentication', true)}" title="{l s='Create new account'}" rel="nofollow">{l s='Create new account'}</a></li>
 		{/if}
 		{if $logged}
 			<li><a href="{$link->getPageLink('index')}?mylogout" title="{l s='Log out'}" rel="nofollow">{l s='Log out'}</a></li>

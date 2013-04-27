@@ -187,8 +187,9 @@ class AdminCategoriesControllerCore extends AdminController
 			&& (Shop::getContext() == Shop::CONTEXT_SHOP && !Shop::isFeatureActive() && $count_categories_without_parent > 1))
 			$categories_tree = array(array('name' => $this->_category->name[$this->context->language->id]));
 
-		asort($categories_tree);
+		$categories_tree = array_reverse($categories_tree);
 		$this->tpl_list_vars['categories_tree'] = $categories_tree;
+		$this->tpl_list_vars['categories_tree_current_id'] = $this->_category->id;
 
 		if (Tools::isSubmit('submitBulkdelete'.$this->table) || Tools::isSubmit('delete'.$this->table))
 		{

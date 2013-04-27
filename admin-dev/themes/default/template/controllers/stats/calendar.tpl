@@ -25,7 +25,7 @@
 
 <div id="statsContainer">
 	<div id="calendar">
-				<form action="{$current}&token={$token}{if $action && $table}&{$action}{$table}{/if}{if $identifier && $id}&{$identifier}={$id}{/if}" method="post" id="calendar_form" name="calendar_form">
+				<form action="{$current}&token={$token}{if $action && $table}&{$action|escape}{$table|escape}{/if}{if $identifier && $id}&{$identifier|escape}={$id|escape}{/if}" method="post" id="calendar_form" name="calendar_form">
 					<input type="submit" name="submitDateDay" class="button submitDateDay" value="{$translations.Day}">
 					<input type="submit" name="submitDateMonth" class="button submitDateMonth" value="{$translations.Month}">
 					<input type="submit" name="submitDateYear" class="button submitDateYear" value="{$translations.Year}">

@@ -279,6 +279,8 @@ class SearchCore
 			$order_by = pSQL($order_by[0]).'.`'.pSQL($order_by[1]).'`';
 		}
 		$alias = '';
+		if ($order_by == 'date_upd' || $order_by == 'date_add' )
+			$alias = 'p.';	
 		if ($order_by == 'price')
 			$alias = 'product_shop.';
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, 

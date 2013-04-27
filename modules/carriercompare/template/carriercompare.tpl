@@ -67,7 +67,7 @@ PS_SE_HandleEvent();
 			<ul id="carriercompare_errors_list"></ul><br />
 		</div>		
 		<div id="SE_AjaxDisplay">
-			<img src="{$new_base_dir}loader.gif" /><br />
+			<img src="{$new_base_dir}loader.gif" alt="Loading data" /><br />
 			<p></p>
 		</div>
 		<div id="availableCarriers" style="display: none;">
