@@ -75,11 +75,10 @@ function doAjaxLogin(redirect) {
 				redirect: redirect
 			},
 			success: function(jsonData) {
-				if (jsonData.hasErrors) {
+				if (jsonData.hasErrors)
 					displayErrors(jsonData.errors);
-				} else {
-					window.location.href = jsonData.redirect;
-				}
+				else
+					window.location.assign(jsonData.redirect);
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
 				$('#error').html('<h3>TECHNICAL ERROR:</h3><p>Details: Error thrown: ' + XMLHttpRequest + '</p><p>Text status: ' + textStatus + '</p>').show();
