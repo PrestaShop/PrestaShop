@@ -1332,7 +1332,7 @@ class ToolsCore
 			$opts = stream_context_get_options($stream_context);
 			$content = curl_exec($curl);
 			curl_close($curl);
-			return file_put_contents($content, $destination);
+			return file_put_contents($destination, $content);
 		}
 		else
 			return false;
