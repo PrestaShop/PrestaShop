@@ -209,7 +209,7 @@ class AdminCartsControllerCore extends AdminController
 
 			if (!$this->context->cart->id_customer)
 				$this->context->cart->id_customer = $id_customer;
-			if ($this->context->cart->OrderExists())
+			if (Validate::isLoadedObject($this->context->cart) && $this->context->cart->OrderExists())
 				return;
 			if (!$this->context->cart->secure_key)
 				$this->context->cart->secure_key = $this->context->customer->secure_key;
