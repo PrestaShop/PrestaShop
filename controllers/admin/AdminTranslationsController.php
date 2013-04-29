@@ -1454,6 +1454,8 @@ class AdminTranslationsControllerCore extends AdminController
 						$path = $arr_mail_path[$group_name];
 						if ($module_name)
 							$path = str_replace('{module}', $module_name, $path);
+						if (!file_exists($path) && !mkdir($path, 0777, true))
+							throw new PrestaShopException(sprintf(Tools::displayError('Directory "%s" cannot be created'), dirname($file_path)));
 						file_put_contents($path.$mail_name.'.'.$type_content, $content);
 					}
 					else
