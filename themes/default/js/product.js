@@ -423,9 +423,8 @@ function displayImage(domAAroundImgThumb, no_animation)
 		if ($('#bigpic').attr('src') != newSrc)
 		{
 			$('#bigpic').attr('src', newSrc).load(function() {
-			$(this).show();
-			if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
-				$(this).attr('rel', domAAroundImgThumb.attr('href'));
+				if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
+					$(this).attr('rel', domAAroundImgThumb.attr('href'));
 			}); 
 		}
 		$('#views_block li a').removeClass('shown');
