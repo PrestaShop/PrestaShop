@@ -279,8 +279,11 @@ class SearchCore
 			$order_by = pSQL($order_by[0]).'.`'.pSQL($order_by[1]).'`';
 		}
 		$alias = '';
-		if ($order_by == 'price')
+		if ($order_by == 'price') {
 			$alias = 'product_shop.';
+        } else if ($order_by == 'date_upd') {
+			$alias = 'p.';
+        }
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, 
 				pl.`description_short`, pl.`available_now`, pl.`available_later`, pl.`link_rewrite`, pl.`name`,
 			 MAX(image_shop.`id_image`) id_image, il.`legend`, m.`name` manufacturer_name '.$score.', MAX(product_attribute_shop.`id_product_attribute`) id_product_attribute,
