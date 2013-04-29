@@ -819,7 +819,7 @@ class AdminImportControllerCore extends AdminController
 
 		// 'file_exists' doesn't work on distant file, and getimagesize make the import slower.
 		// Just hide the warning, the traitment will be the same.
-		if (@copy($url, $tmpfile))
+		if (Tools::copy($url, $tmpfile))
 		{
 			ImageManager::resize($tmpfile, $path.'.jpg');
 			$images_types = ImageType::getImagesTypes($entity);
