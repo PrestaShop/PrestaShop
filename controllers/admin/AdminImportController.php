@@ -1433,9 +1433,7 @@ class AdminImportControllerCore extends AdminController
 							$image->position = Image::getHighestPosition($product->id) + 1;
 							$image->cover = (!$key && !$product_has_images) ? true : false;
 							// file_exists doesn't work with HTTP protocol
-							if (@fopen($url, 'r') == false)
-								$error = true;
-							else if (($field_error = $image->validateFields(UNFRIENDLY_ERROR, true)) === true &&
+							if (($field_error = $image->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 								($lang_field_error = $image->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $image->add())
 							{
 								// associate image to selected shops
