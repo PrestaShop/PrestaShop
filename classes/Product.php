@@ -2476,7 +2476,6 @@ class ProductCore extends ObjectModel
 				SELECT SUM(`quantity`)
 				FROM `'._DB_PREFIX_.'cart_product`
 				WHERE `id_product` = '.(int)$id_product.'
-				AND `id_product_attribute` = '.(int)$id_product_attribute.'
 				AND `id_cart` = '.(int)$id_cart);
 			$cart_quantity = self::$_cart_quantity[$cache_name];
 		}
