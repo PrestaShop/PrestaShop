@@ -43,7 +43,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>'."\n";
 <rss version="2.0">
 	<channel>
 		<title><![CDATA[<?php echo Configuration::get('PS_SHOP_NAME') ?>]]></title>
-		<description><![CDATA[<?php echo $metas['description'] ?>]]></description
+		<description><![CDATA[<?php echo $metas['description'] ?>]]></description>
 		<link><?php echo _PS_BASE_URL_.__PS_BASE_URI__; ?></link>
 		<webMaster><?php echo Configuration::get('PS_SHOP_EMAIL') ?></webMaster>
 		<generator>PrestaShop</generator>
