@@ -30,7 +30,7 @@
 <h2>{$supplier->name}</h2>
 
 <h3>{l s='Number of products:'} {count($products)}</h3>
-<table border="0" cellpadding="0" cellspacing="0" class="table" style="">
+<table border="0" cellpadding="0" cellspacing="0" class="table" width="100%">
 	<tr>
 		<th>{l s='Product name'}</th>
 		<th>{l s='Attribute name'}</th>
@@ -47,7 +47,7 @@
 			<td><a href="?tab=AdminProducts&id_product={$product->id}&updateproduct&token={getAdminToken tab='AdminProducts'}">{$product->name}</a></td>
 			<td>{l s='N/A'}</td>
 			<td>{if empty($product->product_supplier_reference)}{l s='N/A'}{else}{$product->product_supplier_reference}{/if}</td>
-			<td>{if empty($product->product_supplier_price_te)}{l s='N/A'}{else}{$product->product_supplier_price_te}{/if}</td>
+			<td>{if empty($product->product_supplier_price_te)}0{else}{$product->product_supplier_price_te}{/if}</td>
 			<td>{if empty($product->reference)}{l s='N/A'}{else}{$product->reference}{/if}</td>
 			<td>{if empty($product->ean13)}{l s='N/A'}{else}{$product->ean13}{/if}</td>
 			<td>{if empty($product->upc)}{l s='N/A'}{else}{$product->upc}{/if}</td>
@@ -59,7 +59,7 @@
 				<td><a href="?tab=AdminProducts&id_product={$product->id}&updateproduct&token={getAdminToken tab='AdminProducts'}">{$product->name}</a></td>
 				<td>{if empty($product_attribute.attributes)}{l s='N/A'}{else}{$product_attribute.attributes}{/if}</td>
 				<td>{if empty($product_attribute.product_supplier_reference)}{l s='N/A'}{else}{$product_attribute.product_supplier_reference}{/if}</td>
-				<td>{if empty($product_attribute.product_supplier_price_te)}{l s='N/A'}{else}{$product_attribute.product_supplier_price_te}{/if}</td>
+				<td>{if empty($product_attribute.product_supplier_price_te)}0{else}{$product_attribute.product_supplier_price_te}{/if}</td>
 				<td>{if empty($product_attribute.reference)}{l s='N/A'}{else}{$product_attribute.reference}{/if}</td>
 				<td>{if empty($product_attribute.ean13)}{l s='N/A'}{else}{$product_attribute.ean13}{/if}</td>
 				<td>{if empty($product_attribute.upc)}{l s='N/A'}{else}{$product_attribute.upc}{/if}</td>
