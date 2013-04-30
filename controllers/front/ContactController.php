@@ -38,15 +38,10 @@ class ContactControllerCore extends FrontController
 	{
 		if (Tools::isSubmit('submitMessage'))
 		{
-			$fileAttachment = null;
-			if (isset($_FILES['fileUpload']['name']) && !empty($_FILES['fileUpload']['name']) && !empty($_FILES['fileUpload']['tmp_name']))
-			{
-				$extension = array('.txt', '.rtf', '.doc', '.docx', '.pdf', '.zip', '.png', '.jpeg', '.gif', '.jpg');
-				$filename = uniqid().substr($_FILES['fileUpload']['name'], -5);
-				$fileAttachment['content'] = file_get_contents($_FILES['fileUpload']['tmp_name']);
-				$fileAttachment['name'] = $_FILES['fileUpload']['name'];
-				$fileAttachment['mime'] = $_FILES['fileUpload']['type'];
-			}
+			$extension = array('.txt', '.rtf', '.doc', '.docx', '.pdf', '.zip', '.png', '.jpeg', '.gif', '.jpg');
+			
+			$fileAttachment = Tools::fileAttachment('fileUpload');
+			
 			$message = Tools::getValue('message'); // Html entities is not usefull, iscleanHtml check there is no bad html tags.
 			if (!($from = trim(Tools::getValue('from'))) || !Validate::isEmail($from))
 				$this->errors[] = Tools::displayError('Invalid e-mail address');
@@ -56,9 +51,9 @@ class ContactControllerCore extends FrontController
 				$this->errors[] = Tools::displayError('Invalid message');
 			else if (!($id_contact = (int)(Tools::getValue('id_contact'))) || !(Validate::isLoadedObject($contact = new Contact($id_contact, $this->context->language->id))))
 				$this->errors[] = Tools::displayError('Please select a subject from the list.');
-			else if (!empty($_FILES['fileUpload']['name']) && $_FILES['fileUpload']['error'] != 0)
+			else if (!empty($fileAttachment['name']) && $fileAttachment['error'] != 0)
 				$this->errors[] = Tools::displayError('An error occurred during the file upload');
-			else if (!empty($_FILES['fileUpload']['name']) && !in_array(substr($_FILES['fileUpload']['name'], -4), $extension) && !in_array(substr($_FILES['fileUpload']['name'], -5), $extension))
+			else if (!empty($fileAttachment['name']) && !in_array(substr($fileAttachment['name'], -4), $extension) && !in_array(substr($fileAttachment['name'], -5), $extension))
 				$this->errors[] = Tools::displayError('Bad file extension');
 			else
 			{
@@ -125,7 +120,7 @@ class ContactControllerCore extends FrontController
 						'{message}' => Tools::nl2br(stripslashes($message)),
 						'{id_order}' => $id_order,
 						'{order_name}' => $order->getUniqReference(),
-						'{attached_file}' => isset($_FILES['fileUpload'], $_FILES['fileUpload']['name']) ? $_FILES['fileUpload']['name'] : ''
+						'{attached_file}' => isset($fileAttachment, $fileAttachment['name']) ? $fileAttachment['name'] : ''
 					);
 
 					if (Mail::Send($this->context->language->id, 'contact', Mail::l('Message from contact form'),
@@ -174,7 +169,7 @@ class ContactControllerCore extends FrontController
 						$cm = new CustomerMessage();
 						$cm->id_customer_thread = $ct->id;
 						$cm->message = Tools::htmlentitiesUTF8($message);
-						if (isset($filename) && rename($_FILES['fileUpload']['tmp_name'], _PS_MODULE_DIR_.'../upload/'.$filename))
+						if (isset($filename) && rename($fileAttachment['tmp_name'], _PS_MODULE_DIR_.'../upload/'.$filename))
 							$cm->file_name = $filename;
 						$cm->ip_address = ip2long($_SERVER['REMOTE_ADDR']);
 						$cm->user_agent = $_SERVER['HTTP_USER_AGENT'];
@@ -193,7 +188,7 @@ class ContactControllerCore extends FrontController
 									$var_list['{order_name}'] = $order->reference;
 								}
 								if (isset($filename))
-									$var_list['{attached_file}'] = $_FILES['fileUpload']['name'];
+									$var_list['{attached_file}'] = $fileAttachment['name'];
 								Mail::Send($this->context->language->id, 'contact_form', Mail::l('Your message has been correctly sent'), $var_list, $from);
 							}
 							$this->context->smarty->assign('confirmation', 1);
