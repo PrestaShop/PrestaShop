@@ -176,8 +176,7 @@ class SEKeywords extends ModuleGraph
 					preg_match('/[^a-z]'.$varname.'=.+$'.'/', $parsedUrl['query'], $kArray);
 				if (!isset($kArray[0]) || empty($kArray[0]))
 					return false;
-				if ($kArray[0][0] == '&')
-					return false;
+				
 				return urldecode(str_replace('+', ' ', ltrim(substr(rtrim($kArray[0], '&'), strlen($varname) + 1), '=')));
 			}
 		}
