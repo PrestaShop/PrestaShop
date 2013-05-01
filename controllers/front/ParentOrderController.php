@@ -494,7 +494,7 @@ class ParentOrderControllerCore extends FrontController
 
 		// TOS
 		$cms = new CMS(Configuration::get('PS_CONDITIONS_CMS_ID'), $this->context->language->id);
-		$this->link_conditions = $this->context->link->getCMSLink($cms, $cms->link_rewrite, false);
+		$this->link_conditions = $this->context->link->getCMSLink($cms, $cms->link_rewrite);
 		if (!strpos($this->link_conditions, '?'))
 			$this->link_conditions .= '?content_only=1';
 		else

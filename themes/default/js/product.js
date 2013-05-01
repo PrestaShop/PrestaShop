@@ -422,11 +422,10 @@ function displayImage(domAAroundImgThumb, no_animation)
 		var newSrc = domAAroundImgThumb.attr('href').replace('thickbox', 'large');
 		if ($('#bigpic').attr('src') != newSrc)
 		{
-			$(this).attr('src', newSrc).load(function() {
-				$(this).show();
+			$('#bigpic').attr('src', newSrc).load(function() {
 				if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
-					$(this).attr('alt', domAAroundImgThumb.attr('href'));
-			});
+					$(this).attr('rel', domAAroundImgThumb.attr('href'));
+			}); 
 		}
 		$('#views_block li a').removeClass('shown');
 		$(domAAroundImgThumb).addClass('shown');
