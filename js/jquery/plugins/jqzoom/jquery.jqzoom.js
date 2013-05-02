@@ -31,7 +31,7 @@
 				var imageWidth = $(this).get(0).offsetWidth;
 				var imageHeight = $(this).get(0).offsetHeight;
 
-				attr = typeof($(this).attr("rel")) != 'undefined' ? "rel" : "alt";
+				attr = (typeof($(this).attr("rel")) != 'undefined' && $(this).attr("rel") != '') ? "rel" : "alt";
 				noalt = $(this).attr(attr);
 				var bigimage = noalt;
 				$(this).attr(attr, '');
