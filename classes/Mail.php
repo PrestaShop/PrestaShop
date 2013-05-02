@@ -245,7 +245,7 @@ class MailCore
 				else
 					$template_vars['{shop_logo}'] = '';
 			}
-
+			ShopUrl::cacheMainDomainForShop((int)$id_shop);
 			/* don't attach the logo as */
 			if (isset($logo))
 				$template_vars['{shop_logo}'] = $message->attach(new Swift_Message_EmbeddedFile(new Swift_File($logo), null, ImageManager::getMimeTypeByExtension($logo)));
@@ -274,6 +274,9 @@ class MailCore
 			/* Send mail */
 			$send = $swift->send($message, $to, new Swift_Address($from, $from_name));
 			$swift->disconnect();
+
+			ShopUrl::resetMainDomainCache();			
+
 			return $send;
 		}
 		catch (Swift_Exception $e) {
