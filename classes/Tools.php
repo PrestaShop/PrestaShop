@@ -720,10 +720,8 @@ class ToolsCore
 		echo '<xmp style="text-align: left;">';
 		print_r($object);
 		echo '</xmp><br />';
-
 		if ($kill)
 			die('END');
-
 		return $object;
 	}
 
@@ -741,7 +739,7 @@ class ToolsCore
 		
 		echo '
 			<script type="text/javascript">
-				console.'.$type.'('.Tools::jsonEncode($object).');
+				console.'.$type.'('.json_encode($object).');
 			</script>
 		';
 	}
@@ -984,7 +982,7 @@ class ToolsCore
 
 		if (function_exists('mb_strtolower'))
 			$str = mb_strtolower($str, 'utf-8');
-		if (!$allow_accented_chars)
+		elseif (!$allow_accented_chars)
 			$str = Tools::replaceAccentedChars($str);
 
 		// Remove all non-whitelist chars.
@@ -1313,30 +1311,9 @@ class ToolsCore
 	{
 		return @simplexml_load_string(Tools::file_get_contents($url), $class_name);
 	}
-	
-	public static function copy($source, $destination, $stream_context = null)
-	{
-		if ($stream_context == null && preg_match('/^https?:\/\//', $source))
-			$stream_context = @stream_context_create(array('http' => array('timeout' => 10)));
 
-		if (in_array(@ini_get('allow_url_fopen'), array('On', 'on', '1')) || !preg_match('/^https?:\/\//', $source))
-			return @copy($source, $destination, $stream_context);
-		elseif (function_exists('curl_init'))
-		{
-			$curl = curl_init();
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($curl, CURLOPT_URL, $source);
-			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
-			curl_setopt($curl, CURLOPT_TIMEOUT, 10);
-			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-			$opts = stream_context_get_options($stream_context);
-			$content = curl_exec($curl);
-			curl_close($curl);
-			return file_put_contents($destination, $content);
-		}
-		else
-			return false;
-	}
+
+	public static $a = 0;
 
 	/**
 	 * @deprecated as of 1.5 use Media::minifyHTML()
@@ -2453,6 +2430,37 @@ exit;
 		// No content, return false
 		return false;
 	}
+	
+	/**
+	 * Remove PHP comments from a string using PHP preprocessor
+	 * 
+	 * @param string $str
+	 * @return string
+	 */
+	public static function removePhpCommentsFromString($str)
+	{
+		// Load all PHP comments token
+		$comment_tokens = array(T_COMMENT);
+		$comment_tokens[] = T_DOC_COMMENT;
+
+		$tokens = token_get_all($str);
+
+		$result='';
+
+		foreach ($tokens as $token) {    
+		    if (is_array($token)) {
+			if (in_array($token[0], $comment_tokens))
+			    continue;
+
+			$token = $token[1];
+		    }
+
+		    $result .= $token;
+		}
+
+		return $result;    
+	}	
+	
 }
 
 /**

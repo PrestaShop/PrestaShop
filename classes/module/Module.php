@@ -1917,17 +1917,25 @@ abstract class ModuleCore
 			$override_dest = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'override'.DIRECTORY_SEPARATOR.$path;
 			if (!is_writable(dirname($override_dest)))
 				throw new Exception(sprintf(Tools::displayError('directory (%s) not writable'), dirname($override_dest)));
-			copy($override_src, $override_dest);
+
+			// Get content, remove comments potentially with '{' or '}', look for first '{' and add a mark just after, then look for last '}' and add a mark just before
+			$module_file = file_get_contents($override_src);
+			$module_file = Tools::removePhpCommentsFromString($module_file);
+			$module_file = preg_replace('/^([^{]*{)/s',"$1\n//BEGIN OF AUTOMATIC OVERRINDING OF MODULE ".strtoupper($this->name)." - DON'T TOUCH THIS LINE\n",$module_file,1);
+			$module_file = preg_replace('/(}[^}]*)$/s',"\n//END OF AUTOMATIC OVERRINDING OF MODULE ".strtoupper($this->name)." - DON'T TOUCH THIS LINE\n$1",$module_file,1);
+
+			file_put_contents($override_dest, $module_file);
+
 			// Re-generate the class index
 			Autoload::getInstance()->generateIndex();
 			return true;
 		}
-		
+
 		// Check if override file is writable
 		$override_path = _PS_ROOT_DIR_.'/'.Autoload::getInstance()->getClassPath($classname);
 		if ((!file_exists($override_path) && !is_writable(dirname($override_path))) || (file_exists($override_path) && !is_writable($override_path)))
 			throw new Exception(sprintf(Tools::displayError('file (%s) not writable'), $override_path));
-			
+
 		// Make a reflection of the override class and the module override class
 		$override_file = file($override_path);
 		eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'), array('', 'class '.$classname.'OverrideOriginal'), implode('', $override_file)));
@@ -1948,10 +1956,18 @@ abstract class ModuleCore
 				throw new Exception(sprintf(Tools::displayError('The property %1$s in the class %2$s is already defined.'), $property->getName(), $classname));
 
 		// Insert the methods from module override in override
-		$copy_from = array_slice($module_file, $module_class->getStartLine() + 1, $module_class->getEndLine() - $module_class->getStartLine() - 2);
-		array_splice($override_file, $override_class->getEndLine() - 1, 0, $copy_from);
-		$code = implode('', $override_file);
-		file_put_contents($override_path, $code);
+
+		// Get content of module ovveride, remove comments potentially with '{' or '}', remove the beginning to the first '{' and remove the last '}' to the end
+		$module_file = file_get_contents($this->getLocalPath().'override'.DIRECTORY_SEPARATOR.$path);
+		$module_file = Tools::removePhpCommentsFromString($module_file);
+		$module_file = preg_replace('/^([^{]*{)/s',"//BEGIN OF AUTOMATIC OVERRINDING OF MODULE ".strtoupper($this->name)." - DON'T TOUCH THIS LINE\n",$module_file,1);
+		$module_file = preg_replace('/(}[^}]*)$/s',"\n//END OF AUTOMATIC OVERRINDING OF MODULE ".strtoupper($this->name)." - DON'T TOUCH THIS LINE\n",$module_file,1);
+
+		// Get content of override file and add module override at the end of it
+		$override_file = file_get_contents($override_path);
+		$override_file = preg_replace('/(}[^}]*)$/s',$module_file."$1",$override_file,1);
+
+		file_put_contents($override_path, $override_file);
 
 		return true;
 	}
@@ -1974,51 +1990,60 @@ abstract class ModuleCore
 		if (!is_writable($override_path))
 			return false;
 
-		// Make a reflection of the override class and the module override class
-		$override_file = file($override_path);
-		eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'), array('', 'class '.$classname.'OverrideOriginal_remove'), implode('', $override_file)));
-		$override_class = new ReflectionClass($classname.'OverrideOriginal_remove');
+		// Remove override according to the mark we have set
+		$override_file = file_get_contents($override_path);
+		$code = preg_replace("|//BEGIN OF AUTOMATIC OVERRINDING OF MODULE ".strtoupper($this->name)." - DON'T TOUCH THIS LINE.*//END OF AUTOMATIC OVERRINDING OF MODULE ".strtoupper($this->name)." - DON'T TOUCH THIS LINE\n|s",'',$override_file);
 
-		$module_file = file($this->getLocalPath().'override/'.$path);
-		eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array('', 'class '.$classname.'Override_remove'), implode('', $module_file)));
-		$module_class = new ReflectionClass($classname.'Override_remove');
+		// Test if we are not in an old way created override
+		if ($code===$override_file)
+		{		    
+			// Make a reflection of the override class and the module override class
+			$override_file = file($override_path);
+			eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'), array('', 'class '.$classname.'OverrideOriginal_remove'), implode('', $override_file)));
+			$override_class = new ReflectionClass($classname.'OverrideOriginal_remove');
 
-		// Remove methods from override file
-		$override_file = file($override_path);
-		foreach ($module_class->getMethods() as $method)
-		{
-			if (!$override_class->hasMethod($method->getName()))
-				continue;
+			$module_file = file($this->getLocalPath().'override/'.$path);
+			eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array('', 'class '.$classname.'Override_remove'), implode('', $module_file)));
+			$module_class = new ReflectionClass($classname.'Override_remove');
 
-			$method = $override_class->getMethod($method->getName());
-			$length = $method->getEndLine() - $method->getStartLine() + 1;
-			array_splice($override_file, $method->getStartLine() - 1, $length, array_pad(array(), $length, '#--remove--#'));
+			// Remove methods from override file
+			$override_file = file($override_path);
+			foreach ($module_class->getMethods() as $method)
+			{
+				if (!$override_class->hasMethod($method->getName()))
+					continue;
+
+				$method = $override_class->getMethod($method->getName());
+				$length = $method->getEndLine() - $method->getStartLine() + 1;
+				array_splice($override_file, $method->getStartLine() - 1, $length, array_pad(array(), $length, '#--remove--#'));
+			}
+
+			// Remove properties from override file
+			foreach ($module_class->getProperties() as $property)
+			{
+				if (!$override_class->hasProperty($property->getName()))
+					continue;
+
+				// Remplacer la ligne de declaration par "remove"
+				foreach ($override_file as $line_number => &$line_content)
+					if (preg_match('/(public|private|protected)\s+(static\s+)?\$'.$property->getName().'/i', $line_content))
+					{
+						$line_content = '#--remove--#';
+						break;
+					}
+			}
+
+			// Rewrite nice code
+			$code = '';
+			foreach ($override_file as $line)
+			{
+				if ($line == '#--remove--#')
+					continue;
+
+				$code .= $line;
+			}		    
 		}
 
-		// Remove properties from override file
-		foreach ($module_class->getProperties() as $property)
-		{
-			if (!$override_class->hasProperty($property->getName()))
-				continue;
-
-			// Remplacer la ligne de declaration par "remove"
-			foreach ($override_file as $line_number => &$line_content)
-				if (preg_match('/(public|private|protected)\s+(static\s+)?\$'.$property->getName().'/i', $line_content))
-				{
-					$line_content = '#--remove--#';
-					break;
-				}
-		}
-
-		// Rewrite nice code
-		$code = '';
-		foreach ($override_file as $line)
-		{
-			if ($line == '#--remove--#')
-				continue;
-
-			$code .= $line;
-		}
 		file_put_contents($override_path, $code);
 
 		return true;
