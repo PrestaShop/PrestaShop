@@ -85,6 +85,8 @@ class OrderHistoryCore extends ObjectModel
 		else
 			return;
 
+		ShopUrl::cacheMainDomainForShop($order->id_shop);
+
 		$new_os = new OrderState((int)$new_order_state, $order->id_lang);
 		$old_os = $order->getCurrentOrderState();
 		$is_validated = $this->isValidated();
@@ -326,6 +328,8 @@ class OrderHistoryCore extends ObjectModel
 			'newOrderStatus' => $new_os,
 			'id_order' => (int)$order->id,
 		));
+
+		ShopUrl::resetMainDomainCache();
 	}
 
 	/**
@@ -377,6 +381,8 @@ class OrderHistoryCore extends ObjectModel
 			WHERE oh.`id_order_history` = '.(int)$this->id.' AND os.`send_email` = 1');
 		if (isset($result['template']) && Validate::isEmail($result['email']))
 		{
+			ShopUrl::cacheMainDomainForShop($order->id_shop);
+			
 			$topic = $result['osname'];
 			$data = array(
 				'{lastname}' => $result['lastname'],
@@ -400,6 +406,8 @@ class OrderHistoryCore extends ObjectModel
 			if (Validate::isLoadedObject($order))
 				Mail::Send((int)$order->id_lang, $result['template'], $topic, $data, $result['email'], $result['firstname'].' '.$result['lastname'],
 					null, null, null, null, _PS_MAIL_DIR_, false, (int)$order->id_shop);
+			
+			ShopUrl::resetMainDomainCache();
 		}
 
 		return true;
