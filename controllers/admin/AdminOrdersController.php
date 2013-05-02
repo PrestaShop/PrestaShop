@@ -268,6 +268,8 @@ class AdminOrdersControllerCore extends AdminController
 				throw new PrestaShopException('Can\'t load Order object');
 		}
 
+		ShopUrl::cacheMainDomainForShop((int)$order->id_shop);
+
 		/* Update shipping number */
 		if (Tools::isSubmit('submitShippingNumber') && isset($order))
 		{
