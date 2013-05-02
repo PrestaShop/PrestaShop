@@ -424,7 +424,7 @@ function displayImage(domAAroundImgThumb, no_animation)
 		{
 			$('#bigpic').attr('src', newSrc).load(function() {
 				if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
-					$(this).attr('rel', domAAroundImgThumb.attr('href'));
+					$('#bigpic').attr('alt', domAAroundImgThumb.attr('href'));
 			}); 
 		}
 		$('#views_block li a').removeClass('shown');
