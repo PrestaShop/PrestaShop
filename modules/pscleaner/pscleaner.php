@@ -491,6 +491,7 @@ class PSCleaner extends Module
 				$db->execute('DELETE FROM `'._DB_PREFIX_.'address` WHERE id_customer > 0');
 				break;
 		}
+		$this->clearAllCaches();
 	}
 	
 	public static function cleanAndOptimize()
@@ -519,5 +520,12 @@ class PSCleaner extends Module
 				}
 		}
 		return $array;
+	}
+	
+	protected function clearAllCaches()
+	{
+		$this->_clearCache('blockcategories.tpl');
+		$this->_clearCache('blockcategories_footer.tpl');
+		$this->_clearCache('blocktopmenu.tpl');
 	}
 }
