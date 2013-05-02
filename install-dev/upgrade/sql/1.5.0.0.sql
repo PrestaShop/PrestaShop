@@ -264,7 +264,7 @@ CREATE TABLE `PREFIX_module_shop` (
 PRIMARY KEY (`id_module` , `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
-INSERT INTO `PREFIX_module_shop` (`id_module`, `id_shop`) (SELECT `id_module`, 1 FROM `PREFIX_module`);
+INSERT INTO `PREFIX_module_shop` (`id_module`, `id_shop`) (SELECT `id_module`, 1 FROM `PREFIX_module` WHERE active = 1);
 
 ALTER TABLE `PREFIX_module_currency` ADD `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_module`;
 ALTER TABLE `PREFIX_module_currency` DROP PRIMARY KEY;
