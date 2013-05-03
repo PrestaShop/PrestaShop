@@ -688,6 +688,9 @@ class AuthControllerCore extends FrontController
 	 */
 	protected function sendConfirmationMail(Customer $customer)
 	{
+		if (!Configuration::get('PS_CUSTOMER_CREATION_EMAIL'))
+			return true;
+
 		return Mail::Send(
 			$this->context->language->id,
 			'account',
