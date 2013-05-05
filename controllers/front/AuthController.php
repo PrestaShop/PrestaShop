@@ -139,6 +139,9 @@ class AuthControllerCore extends FrontController
 				'HOOK_CREATE_ACCOUNT_TOP' => Hook::exec('displayCustomerAccountFormTop')
 			));
 		
+		// Just set $this->template value here in case it's used by Ajax
+		$this->setTemplate(_PS_THEME_DIR_.'authentication.tpl');
+
 		if ($this->ajax)
 		{
 			// Call a hook to display more information on form
@@ -150,12 +153,11 @@ class AuthControllerCore extends FrontController
 			$return = array(
 				'hasError' => !empty($this->errors),
 				'errors' => $this->errors,
-				'page' => $this->context->smarty->fetch(_PS_THEME_DIR_.'authentication.tpl'),
+				'page' => $this->context->smarty->fetch($this->template),
 				'token' => Tools::getToken(false)
 			);
 			die(Tools::jsonEncode($return));
 		}
-		$this->setTemplate(_PS_THEME_DIR_.'authentication.tpl');
 	}
 
 	/**
