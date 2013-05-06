@@ -1451,7 +1451,7 @@ class ProductCore extends ObjectModel
 		}
 
 		if (count($id_shop_list))
-			$combination->id_shop_list = $id_shop_list;
+			$combination->id_shop_list = array_unique($id_shop_list);
 
 		$combination->add();
 
@@ -2470,13 +2470,12 @@ class ProductCore extends ObjectModel
 		if ((int)$id_cart)
 		{
 			$condition = '';
-			$cache_name = (int)$id_cart.'_'.(int)$id_product.'_'.(int)$id_product_attribute;
+			$cache_name = (int)$id_cart.'_'.(int)$id_product;
 			if (!isset(self::$_cart_quantity[$cache_name]) || self::$_cart_quantity[$cache_name] != (int)$quantity)
 				self::$_cart_quantity[$cache_name] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT SUM(`quantity`)
 				FROM `'._DB_PREFIX_.'cart_product`
 				WHERE `id_product` = '.(int)$id_product.'
-				AND `id_product_attribute` = '.(int)$id_product_attribute.'
 				AND `id_cart` = '.(int)$id_cart);
 			$cart_quantity = self::$_cart_quantity[$cache_name];
 		}

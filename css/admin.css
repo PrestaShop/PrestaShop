@@ -498,7 +498,7 @@ select optgroup option {
 	background: #FFBABA url(../img/admin/icon-cancel.png) no-repeat scroll 6px 6px;
 	border: 1px solid #CC0000;
 	color:#D8000C;
-	padding:20px;
+	padding:20px 40px;
 	position:fixed;
 	bottom:0;
 	width:100%;

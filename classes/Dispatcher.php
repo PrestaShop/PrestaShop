@@ -206,7 +206,6 @@ class DispatcherCore
 			$this->front_controller = self::FC_ADMIN;
 			$this->controller_not_found = 'adminnotfound';
 			$this->default_controller = 'adminhome';
-			$this->use_routes = false;
 		}
 		elseif (Tools::getValue('fc') == 'module')
 		{

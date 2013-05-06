@@ -124,7 +124,7 @@ class HelperListCore extends Helper
 		// Append when we get a syntax error in SQL query
 		if ($list === false)
 		{
-			$this->displayWarning($this->l('Bad SQL query', 'Helper'));
+			$this->context->controller->warnings[] = $this->l('Bad SQL query', 'Helper');
 			return false;
 		}
 

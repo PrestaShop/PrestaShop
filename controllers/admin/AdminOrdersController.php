@@ -268,6 +268,8 @@ class AdminOrdersControllerCore extends AdminController
 				throw new PrestaShopException('Can\'t load Order object');
 		}
 
+		ShopUrl::cacheMainDomainForShop((int)$order->id_shop);
+
 		/* Update shipping number */
 		if (Tools::isSubmit('submitShippingNumber') && isset($order))
 		{
@@ -308,7 +310,7 @@ class AdminOrdersControllerCore extends AdminController
 							$customer->email, $customer->firstname.' '.$customer->lastname, null, null, null, null,
 							_PS_MAIL_DIR_, true, (int)$order->id_shop))
 						{
-							Hook::exec('actionAdminOrdersTrackingNumberUpdate', array('order' => $order));
+							Hook::exec('actionAdminOrdersTrackingNumberUpdate', array('order' => $order, 'customer' => $customer, 'carrier' => $carrier));
 							Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
 						}
 						else

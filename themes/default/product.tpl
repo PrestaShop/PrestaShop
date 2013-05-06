@@ -183,7 +183,7 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 		<div id="image-block">
 		{if $have_image}
 			<span id="view_full_size">
-				<img src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')}"{if $jqZoomEnabled} class="jqzoom"{/if} title="{$product->name|escape:'htmlall':'UTF-8'}" alt="{$product->name|escape:'htmlall':'UTF-8'}" id="bigpic" width="{$largeSize.width}" height="{$largeSize.height}"/>
+				<img src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')}"{if $jqZoomEnabled && $have_image} class="jqzoom"{/if} title="{$product->name|escape:'htmlall':'UTF-8'}" alt="{$product->name|escape:'htmlall':'UTF-8'}" id="bigpic" width="{$largeSize.width}" height="{$largeSize.height}"/>
 				<span class="span_link">{l s='Maximize'}</span>
 			</span>
 		{else}
@@ -327,7 +327,7 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 				</div>
 			{/if}
 			<p id="product_reference" {if isset($groups) OR !$product->reference}style="display: none;"{/if}>
-				<label for="product_reference">{l s='Reference:'} </label>
+				<label>{l s='Reference:'} </label>
 				<span class="editable">{$product->reference|escape:'htmlall':'UTF-8'}</span>
 			</p>
 

@@ -27,11 +27,11 @@
 <div id="permanent_links">
 	<!-- Sitemap -->
 	<div class="sitemap">
-		<a href="{$link->getPageLink('sitemap')}">{l s='Sitemap' mod='blockpermanentlinks'}</a>
+		<a href="{$link->getPageLink('sitemap')}" title="{l s='Shop sitemap' mod='blockpermanentlinks'}">{l s='Sitemap' mod='blockpermanentlinks'}</a>
 	</div>
 	<!-- Contact -->
 	<div class="contact">
-		<a href="{$link->getPageLink('contact', true)}">{l s='Contact' mod='blockpermanentlinks'}</a>
+		<a href="{$link->getPageLink('contact', true)}" title="{l s='Contact form' mod='blockpermanentlinks'}">{l s='Contact' mod='blockpermanentlinks'}</a>
 	</div>
 	<!-- Bookmark -->
 	<div class="add_bookmark" style="height:30px;">

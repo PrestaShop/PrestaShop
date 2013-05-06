@@ -70,7 +70,8 @@ class CashondeliveryValidationModuleFrontController extends ModuleFrontControlle
 
 		$this->context->smarty->assign(array(
 			'total' => $this->context->cart->getOrderTotal(true, Cart::BOTH),
-			'this_path' => $this->module->getPathUri(),
+			'this_path' => $this->module->getPathUri(),//keep for retro compat
+			'this_path_cod' => $this->module->getPathUri(),
 			'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->module->name.'/'
 		));
 

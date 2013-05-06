@@ -57,6 +57,19 @@ class BlockSupplier extends Module
 		return true;
 	}
 
+	public function uninstall()
+	{
+		if (!parent::uninstall())
+			return false;
+
+		/* remove the configuration variable */
+		$result = Configuration::deleteByName('SUPPLIER_DISPLAY_TEXT');
+		$result &= Configuration::deleteByName('SUPPLIER_DISPLAY_TEXT_NB');
+		$result &= Configuration::deleteByName('SUPPLIER_DISPLAY_FORM');
+
+		return $result;
+	}
+	
 	function hookDisplayLeftColumn($params)
 	{
 		$id_lang = (int)Context::getContext()->language->id;
