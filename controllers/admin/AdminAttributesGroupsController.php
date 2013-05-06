@@ -686,7 +686,11 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		{
 			foreach ($this->_list as &$list)
 				if (file_exists(_PS_IMG_DIR_.$this->fieldImageSettings['dir'].'/'.(int)$list['id_attribute'].'.jpg'))
+				{
+					if (!isset($list['color']) || !is_array($list['color']))
+						$list['color'] = array();
 					$list['color']['texture'] = '../img/'.$this->fieldImageSettings['dir'].'/'.(int)$list['id_attribute'].'.jpg';
+				}
 		}
 		else
 		{
