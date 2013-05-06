@@ -858,7 +858,7 @@ class AdminTranslationsControllerCore extends AdminController
 	public function clearModuleFiles($files, $type_clear = 'file', $path = '')
 	{
 		// List of directory which not must be parsed
-		$arr_exclude = array('img', 'js', 'mails');
+		$arr_exclude = array('img', 'js', 'mails','override');
 
 		// List of good extention files
 		$arr_good_ext = array('.tpl', '.php');
