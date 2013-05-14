@@ -1448,6 +1448,7 @@ class ProductCore extends ObjectModel
 			$id_shop_list_array = Product::getShopsByProduct($this->id);
 			foreach ($id_shop_list_array as $array_shop)
 				$id_shop_list[] = $array_shop['id_shop'];
+			$id_shop_list = array_unique($id_shop_list);
 		}
 
 		if (count($id_shop_list))
