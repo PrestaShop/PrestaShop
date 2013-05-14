@@ -485,7 +485,7 @@ class StockManagerCore implements StockManagerInterface
 		$client_orders_qty = 0;
 		if (count($res))
 			foreach ($res as $row)
-				$client_orders_qty += $row['product_quantity'] + $row['product_quantity_refunded'];
+				$client_orders_qty += ($row['product_quantity'] - $row['product_quantity_refunded']);
 
 		// Gets supply_orders_qty
 		$query = new DbQuery();
