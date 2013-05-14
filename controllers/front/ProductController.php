@@ -164,7 +164,7 @@ class ProductControllerCore extends FrontController
 					$id_category = (int)$id_object;
 
 				// If the product has same parent category use this category as parent category
-				if (Product::idIsOnCategoryId((int)$this->product->id, array('0' => array('id_category' => (int)$id_category))))
+				if (isset($id_category) && Product::idIsOnCategoryId((int)$this->product->id, array('0' => array('id_category' => (int)$id_category))))
 					$this->category = new Category((int)$id_category, (int)$this->context->cookie->id_lang);
 			}
 				else
