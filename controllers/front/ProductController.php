@@ -156,11 +156,11 @@ class ProductControllerCore extends FrontController
 
 				// Check previous page was a product object
 				$referer_page = new LinkCore;
-				if ($referer_page->getProductLink($id_object) == $_SERVER['HTTP_REFERER'])
+				if (($referer_page->getProductLink($id_object) == $_SERVER['HTTP_REFERER'])) || ($referer_page->getProductLink($id_object) == urldecode($_SERVER['HTTP_REFERER'])) )
 					$id_category = (int)$this->context->cookie->id_category;
 
 				// Previous page was a category object
-				if ($referer_page->getCategoryLink($id_object) == $_SERVER['HTTP_REFERER'])
+				if (($referer_page->getCategoryLink($id_object) == $_SERVER['HTTP_REFERER'])) || ($referer_page->getProductLink($id_object) == urldecode($_SERVER['HTTP_REFERER'])) )
 					$id_category = (int)$id_object;
 
 				// If the product has same parent category use this category as parent category
