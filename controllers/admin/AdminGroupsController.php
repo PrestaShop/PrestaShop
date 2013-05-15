@@ -312,36 +312,32 @@ class AdminGroupsControllerCore extends AdminController
 		return parent::renderForm();
 	}
 
-	protected function formatCategoryDiscountList($id)
+	protected function formatCategoryDiscountList($id_group)
 	{
-		$category = GroupReduction::getGroupReductions((int)$id, $this->context->language->id);
+		$group_reductions = GroupReduction::getGroupReductions((int)$id_group, $this->context->language->id);
 		$category_reductions = array();
 		$category_reduction = Tools::getValue('category_reduction');
 
-		foreach ($category as $category)
+		foreach ($group_reductions as $category)
 		{
 			if (is_array($category_reduction) && array_key_exists($category['id_category'], $category_reduction))
 				$category['reduction'] = $category_reduction[$category['id_category']];
 
-			$tmp = array();
-			$tmp['path'] = getPath(self::$currentIndex.'?tab=AdminCategories', (int)$category['id_category']);
-			$tmp['reduction'] = (float)$category['reduction'] * 100;
-			$tmp['id_category'] = (int)$category['id_category'];
-			$category_reductions[(int)$category['id_category']] = $tmp;
+			$category_reductions[(int)$category['id_category']] = array(
+				'path' => getPath(self::$currentIndex.'?tab=AdminCategories', (int)$category['id_category']),
+				'reduction' => (float)$category['reduction'] * 100,
+				'id_category' => (int)$category['id_category']
+			);
 		}
 
 		if (is_array($category_reduction))
 			foreach ($category_reduction as $key => $val)
-			{
 				if (!array_key_exists($key, $category_reductions))
-				{
-					$tmp = array();
-					$tmp['path'] = getPath(self::$currentIndex.'?tab=AdminCategories', $key);
-					$tmp['reduction'] = (float)$val * 100;
-					$tmp['id_category'] = (int)$key;
-					$category_reductions[(int)$category['id_category']] = $tmp;
-				}
-			}
+					$category_reductions[(int)$key] = array(
+						'path' => getPath(self::$currentIndex.'?tab=AdminCategories', $key),
+						'reduction' => (float)$val * 100,
+						'id_category' => (int)$key
+					);
 
 		return $category_reductions;
 	}
