@@ -1100,7 +1100,7 @@ class AdminControllerCore extends Controller
 		}
 		else
 		{
-			$this->errors[] = Tools::displayError('The object cannot be loaded (ithe dentifier is missing or invalid)');
+			$this->errors[] = Tools::displayError('The object cannot be loaded (the dentifier is missing or invalid)');
 			return false;
 		}
 
