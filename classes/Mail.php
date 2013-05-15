@@ -63,7 +63,6 @@ class MailCore
 			'PS_SHOP_NAME',
 			'PS_MAIL_SMTP_ENCRYPTION',
 			'PS_MAIL_SMTP_PORT',
-			'PS_MAIL_METHOD',
 			'PS_MAIL_TYPE'
 		), null, null, $id_shop);
 		
