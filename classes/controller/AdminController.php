@@ -513,37 +513,42 @@ class AdminControllerCore extends Controller
 	 */
 	public function postProcess()
 	{
-		if ($this->ajax)
-		{
-			// from ajax-tab.php
-			$action = Tools::getValue('action');
-			// no need to use displayConf() here
-			if (!empty($action) && method_exists($this, 'ajaxProcess'.Tools::toCamelCase($action)))
-				return $this->{'ajaxProcess'.Tools::toCamelCase($action)}();
-			elseif (method_exists($this, 'ajaxProcess'))
-				return $this->ajaxProcess();
-		}
-		else
-		{
-			// Process list filtering
-			if ($this->filter)
-				$this->processFilter();
-
-			// If the method named after the action exists, call "before" hooks, then call action method, then call "after" hooks
-			if (!empty($this->action) && method_exists($this, 'process'.ucfirst(Tools::toCamelCase($this->action))))
+		try {
+			if ($this->ajax)
 			{
-				// Hook before action
-				Hook::exec('actionAdmin'.ucfirst($this->action).'Before', array('controller' => $this));
-				Hook::exec('action'.get_class($this).ucfirst($this->action).'Before', array('controller' => $this));
-				// Call process
-				$return = $this->{'process'.Tools::toCamelCase($this->action)}();
-				// Hook After Action
-				Hook::exec('actionAdmin'.ucfirst($this->action).'After', array('controller' => $this, 'return' => $return));
-				Hook::exec('action'.get_class($this).ucfirst($this->action).'After', array('controller' => $this, 'return' => $return));
-
-				return $return;
+				// from ajax-tab.php
+				$action = Tools::getValue('action');
+				// no need to use displayConf() here
+				if (!empty($action) && method_exists($this, 'ajaxProcess'.Tools::toCamelCase($action)))
+					return $this->{'ajaxProcess'.Tools::toCamelCase($action)}();
+				elseif (method_exists($this, 'ajaxProcess'))
+					return $this->ajaxProcess();
 			}
-		}
+			else
+			{
+				// Process list filtering
+				if ($this->filter)
+					$this->processFilter();
+
+				// If the method named after the action exists, call "before" hooks, then call action method, then call "after" hooks
+				if (!empty($this->action) && method_exists($this, 'process'.ucfirst(Tools::toCamelCase($this->action))))
+				{
+					// Hook before action
+					Hook::exec('actionAdmin'.ucfirst($this->action).'Before', array('controller' => $this));
+					Hook::exec('action'.get_class($this).ucfirst($this->action).'Before', array('controller' => $this));
+					// Call process
+					$return = $this->{'process'.Tools::toCamelCase($this->action)}();
+					// Hook After Action
+					Hook::exec('actionAdmin'.ucfirst($this->action).'After', array('controller' => $this, 'return' => $return));
+					Hook::exec('action'.get_class($this).ucfirst($this->action).'After', array('controller' => $this, 'return' => $return));
+
+					return $return;
+				}
+			}
+		} catch (PrestaShopException $e) {
+			$this->errors[] = $e->getMessage();
+		};
+		return false;
 	}
 
 	/**
@@ -1161,6 +1166,7 @@ class AdminControllerCore extends Controller
 		header('Location: '.$this->redirect_after);
 		exit;
 	}
+
 	public function display()
 	{
 		$this->context->smarty->assign(array(
