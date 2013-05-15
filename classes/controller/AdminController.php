@@ -513,37 +513,42 @@ class AdminControllerCore extends Controller
 	 */
 	public function postProcess()
 	{
-		if ($this->ajax)
-		{
-			// from ajax-tab.php
-			$action = Tools::getValue('action');
-			// no need to use displayConf() here
-			if (!empty($action) && method_exists($this, 'ajaxProcess'.Tools::toCamelCase($action)))
-				return $this->{'ajaxProcess'.Tools::toCamelCase($action)}();
-			elseif (method_exists($this, 'ajaxProcess'))
-				return $this->ajaxProcess();
-		}
-		else
-		{
-			// Process list filtering
-			if ($this->filter)
-				$this->processFilter();
-
-			// If the method named after the action exists, call "before" hooks, then call action method, then call "after" hooks
-			if (!empty($this->action) && method_exists($this, 'process'.ucfirst(Tools::toCamelCase($this->action))))
+		try {
+			if ($this->ajax)
 			{
-				// Hook before action
-				Hook::exec('actionAdmin'.ucfirst($this->action).'Before', array('controller' => $this));
-				Hook::exec('action'.get_class($this).ucfirst($this->action).'Before', array('controller' => $this));
-				// Call process
-				$return = $this->{'process'.Tools::toCamelCase($this->action)}();
-				// Hook After Action
-				Hook::exec('actionAdmin'.ucfirst($this->action).'After', array('controller' => $this, 'return' => $return));
-				Hook::exec('action'.get_class($this).ucfirst($this->action).'After', array('controller' => $this, 'return' => $return));
-
-				return $return;
+				// from ajax-tab.php
+				$action = Tools::getValue('action');
+				// no need to use displayConf() here
+				if (!empty($action) && method_exists($this, 'ajaxProcess'.Tools::toCamelCase($action)))
+					return $this->{'ajaxProcess'.Tools::toCamelCase($action)}();
+				elseif (method_exists($this, 'ajaxProcess'))
+					return $this->ajaxProcess();
 			}
-		}
+			else
+			{
+				// Process list filtering
+				if ($this->filter)
+					$this->processFilter();
+
+				// If the method named after the action exists, call "before" hooks, then call action method, then call "after" hooks
+				if (!empty($this->action) && method_exists($this, 'process'.ucfirst(Tools::toCamelCase($this->action))))
+				{
+					// Hook before action
+					Hook::exec('actionAdmin'.ucfirst($this->action).'Before', array('controller' => $this));
+					Hook::exec('action'.get_class($this).ucfirst($this->action).'Before', array('controller' => $this));
+					// Call process
+					$return = $this->{'process'.Tools::toCamelCase($this->action)}();
+					// Hook After Action
+					Hook::exec('actionAdmin'.ucfirst($this->action).'After', array('controller' => $this, 'return' => $return));
+					Hook::exec('action'.get_class($this).ucfirst($this->action).'After', array('controller' => $this, 'return' => $return));
+
+					return $return;
+				}
+			}
+		} catch (PrestaShopException $e) {
+			$this->errors[] = $e->getMessage();
+		};
+		return false;
 	}
 
 	/**
@@ -583,16 +588,27 @@ class AdminControllerCore extends Controller
 		$headers = array();
 		foreach ($this->fields_list as $datas)
 			$headers[] = Tools::htmlentitiesDecodeUTF8($datas['title']);
-
 		$content = array();
 		foreach ($this->_list as $i => $row)
 		{
 			$content[$i] = array();
-			foreach ($this->fields_list as $key => $value)
-				if (isset($row[$key]))
-					$content[$i][] = Tools::htmlentitiesDecodeUTF8($row[$key]);
-				
+			$path_to_image = false;
+			foreach ($this->fields_list as $key => $params)
+			{
+				$field_value = isset($row[$key]) ? Tools::htmlentitiesDecodeUTF8($row[$key]) : '';
+				if ($key == 'image')
+				{
+					if ($params['image'] != 'p' || Configuration::get('PS_LEGACY_IMAGES'))
+						$path_to_image = Tools::getShopDomain(true)._PS_IMG_.$params['image'].'/'.$row['id_'.$this->table].(isset($row['id_image']) ? '-'.(int)$row['id_image'] : '').'.'.$this->imageType;
+					else
+						$path_to_image = Tools::getShopDomain(true)._PS_IMG_.$params['image'].'/'.Image::getImgFolderStatic($row['id_image']).(int)$row['id_image'].'.'.$this->imageType;
+					if ($path_to_image)
+						$field_value = $path_to_image;  
+				}
+				$content[$i][] = $field_value;
+			}
 		}
+
 		$this->context->smarty->assign(array(
 			'export_precontent' => "\xEF\xBB\xBF",
 			'export_headers' => $headers,
@@ -1161,6 +1177,7 @@ class AdminControllerCore extends Controller
 		header('Location: '.$this->redirect_after);
 		exit;
 	}
+
 	public function display()
 	{
 		$this->context->smarty->assign(array(
