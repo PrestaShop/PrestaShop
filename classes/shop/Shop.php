@@ -349,12 +349,16 @@ class ShopCore extends ObjectModel
 			}
 		}
 
-		if (!$id_shop && defined('_PS_ADMIN_DIR_'))
+		if ((!$id_shop && defined('_PS_ADMIN_DIR_')) || Tools::isPHPCLI())
 		{
 			// If in admin, we can access to the shop without right URL
-			$shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+			$shop = new Shop((int)Configuration::get('PS_SHOP_DEFAULT'));
 			$shop->physical_uri = preg_replace('#/+#', '/', str_replace('\\', '/', dirname(dirname($_SERVER['SCRIPT_NAME']))).'/');
 			$shop->virtual_uri = '';
+			
+			// Define HTTP_HOST if PHP is launched with php-cli
+			if (Tools::isPHPCLI() && !isset($_SERVER['HTTP_HOST']) || empty($_SERVER['HTTP_HOST']))
+				$_SERVER['HTTP_HOST'] = $shop->domain;
 		}
 		else
 		{
