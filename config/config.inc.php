@@ -53,6 +53,9 @@ require_once(dirname(__FILE__).'/settings.inc.php');
 
 require_once(dirname(__FILE__).'/autoload.php');
 
+if (Tools::isPHPCLI())
+	Tools::argvToGET($argc, $argv);
+
 if (_PS_DEBUG_PROFILING_)
 {
 	include_once(_PS_TOOL_DIR_.'profiling/Controller.php');
