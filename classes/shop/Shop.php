@@ -356,12 +356,20 @@ class ShopCore extends ObjectModel
 				$id_shop = (int)Configuration::get('PS_SHOP_DEFAULT');
 
 			$shop = new Shop((int)$id_shop);
+			if (!Validate::isLoadedObject($shop))
+				$shop = new Shop((int)Configuration::get('PS_SHOP_DEFAULT'));
+
 			$shop->physical_uri = preg_replace('#/+#', '/', str_replace('\\', '/', dirname(dirname($_SERVER['SCRIPT_NAME']))).'/');
 			$shop->virtual_uri = '';
 			
-			// Define HTTP_HOST if PHP is launched with php-cli
-			if (Tools::isPHPCLI() && !isset($_SERVER['HTTP_HOST']) || empty($_SERVER['HTTP_HOST']))
-				$_SERVER['HTTP_HOST'] = $shop->domain;
+			// Define some $_SERVER variables like HTTP_HOST if PHP is launched with php-cli
+			if (Tools::isPHPCLI())
+			{
+				if(!isset($_SERVER['HTTP_HOST']) || empty($_SERVER['HTTP_HOST']))
+					$_SERVER['HTTP_HOST'] = $shop->domain;
+				if(!isset($_SERVER['SERVER_NAME']) || empty($_SERVER['SERVER_NAME']))
+					$_SERVER['SERVER_NAME'] = $shop->domain;
+			}
 		}
 		else
 		{
