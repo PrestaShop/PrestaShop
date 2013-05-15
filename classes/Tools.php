@@ -2217,6 +2217,7 @@ exit;
 		if (!is_array($args) || !count($args))
 			return;
 		$_GET = array_merge($args, $_GET);
+		$_SERVER['QUERY_STRING'] = $argv[1];
 	}
 
 	/**
