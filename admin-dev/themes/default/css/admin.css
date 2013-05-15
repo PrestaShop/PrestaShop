@@ -114,9 +114,10 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 #header #menu li.maintab:hover, #header #menu li.active {border-left:1px solid #49B2FF;border-right:1px solid #49B2FF;}
 #header #menu li.active a.title, #header #menu li:hover a.title {color:#fff; text-shadow: -1px -1px 0 #3293D6;}
 #header #menu .withLeftBorder{background:transparent url('../img/separator_subnav.png') no-repeat 0 5px}
-#header #menu .submenu{background:#f8f8f8;clear:both;margin:0;padding:0;border:1px solid #d9d9d9;z-index:9999; box-shadow: 1px 5px 5px #CCCCCC; -moz-box-shadow:1px 5px 10px #CCCCCC; -webkit-box-shadow:1px 5px 10px #CCCCCC;}
+#header #menu .submenu{background:#f8f8f8;clear:both;margin:3px 0 0 -2px;padding:0;border:1px solid #d9d9d9;z-index:9999; box-shadow: 2px 3px 3px rgba(0,0,0,0.3); -moz-box-shadow: 2px 3px 3px rgba(0,0,0,0.3); -webkit-box-shadow:2px 3px 3px rgba(0,0,0,0.3);}
 #header #menu .submenu li{list-style:none;margin:0;padding:0;display:block;min-width:150px;}
 #header #menu .submenu li a{ font-size:12px;display:block;padding: 5px 15px 5px 10px; color:#666666;border-top:1px solid #fff; border-bottom:1px solid #ccc;}
+#header #menu .submenu li:last-child a{ border-bottom:0;}
 #header #menu .submenu li a:hover { background-color:#eee; text-shadow:0 1px 0 #fff;}
 
 /*SEPARATION*/
