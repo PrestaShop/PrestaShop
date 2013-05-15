@@ -670,7 +670,7 @@ class DispatcherCore
 			$controller = false;
 	
 		// Use routes ? (for url rewriting)
-		if ($this->use_routes && !$controller)
+		if ($this->use_routes && !$controller && !defined('_PS_ADMIN_DIR_'))
 		{
 			if (!$this->request_uri)
 				return strtolower($this->controller_not_found);
@@ -711,8 +711,7 @@ class DispatcherCore
 						}
 			}
 			
-			$request_uri = str_replace(str_replace(realpath(dirname(_PS_ADMIN_DIR_)), '', _PS_ADMIN_DIR_).DIRECTORY_SEPARATOR, '', $this->request_uri);
-			if (in_array($controller, array('index', 'adminnotfound')) || in_array($request_uri, array('', 'index', 'index.php')))
+			if ($controller == 'index' || $this->request_uri == '/index.php') 
 				$controller = $this->default_controller;
 			$this->controller = $controller;
 		}
