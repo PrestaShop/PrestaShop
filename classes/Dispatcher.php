@@ -648,7 +648,8 @@ class DispatcherCore
 	 */
 	public function getController()
 	{	
-		$_GET['controllerUri'] = Tools::getvalue('controller');		
+		if (defined('_PS_ADMIN_DIR_'))
+			$_GET['controllerUri'] = Tools::getvalue('controller');		
 		if ($this->controller)
 		{
 			$_GET['controller'] = $this->controller;
