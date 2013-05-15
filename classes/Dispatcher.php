@@ -647,7 +647,8 @@ class DispatcherCore
 	 * @return string
 	 */
 	public function getController()
-	{		
+	{	
+		$_GET['controllerUri'] = Tools::getvalue('controller');		
 		if ($this->controller)
 		{
 			$_GET['controller'] = $this->controller;
@@ -709,7 +710,9 @@ class DispatcherCore
 							break;
 						}
 			}
-			if ($controller == 'index' || $this->request_uri == '/index.php')
+			
+			$request_uri = str_replace(str_replace(realpath(dirname(_PS_ADMIN_DIR_)), '', _PS_ADMIN_DIR_).DIRECTORY_SEPARATOR, '', $this->request_uri);
+			if (in_array($controller, array('index', 'adminnotfound')) || in_array($request_uri, array('', 'index', 'index.php')))
 				$controller = $this->default_controller;
 			$this->controller = $controller;
 		}
