@@ -2199,6 +2199,27 @@ exit;
 	}
 
 	/**
+	 *
+	 * @return bool true if php-cli is used
+	 */
+	public static function isPHPCLI()
+	{
+		return (defined('STDIN') || (Tools::strtolower(php_sapi_name()) == 'cli' && (!isset($_SERVER['REMOTE_ADDR']) || empty($_SERVER['REMOTE_ADDR']))));
+	}
+
+	public static function argvToGET($argc, $argv)
+	{
+		if ($argc <= 1)
+			return;
+
+		// get the first argument and parse it like a query string
+		parse_str($argv[1], $args);
+		if (!is_array($args) || !count($args))
+			return;
+		$_GET = array_merge($args, $_GET);
+	}
+
+	/**
 	 * Get max file upload size considering server settings and optional max value
 	 *
 	 * @param int $max_size optional max file size
