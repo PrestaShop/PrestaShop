@@ -588,16 +588,27 @@ class AdminControllerCore extends Controller
 		$headers = array();
 		foreach ($this->fields_list as $datas)
 			$headers[] = Tools::htmlentitiesDecodeUTF8($datas['title']);
-
 		$content = array();
 		foreach ($this->_list as $i => $row)
 		{
 			$content[$i] = array();
-			foreach ($this->fields_list as $key => $value)
-				if (isset($row[$key]))
-					$content[$i][] = Tools::htmlentitiesDecodeUTF8($row[$key]);
-				
+			$path_to_image = false;
+			foreach ($this->fields_list as $key => $params)
+			{
+				$field_value = isset($row[$key]) ? Tools::htmlentitiesDecodeUTF8($row[$key]) : '';
+				if ($key == 'image')
+				{
+					if ($params['image'] != 'p' || Configuration::get('PS_LEGACY_IMAGES'))
+						$path_to_image = Tools::getShopDomain(true)._PS_IMG_.$params['image'].'/'.$row['id_'.$this->table].(isset($row['id_image']) ? '-'.(int)$row['id_image'] : '').'.'.$this->imageType;
+					else
+						$path_to_image = Tools::getShopDomain(true)._PS_IMG_.$params['image'].'/'.Image::getImgFolderStatic($row['id_image']).(int)$row['id_image'].'.'.$this->imageType;
+					if ($path_to_image)
+						$field_value = $path_to_image;  
+				}
+				$content[$i][] = $field_value;
+			}
 		}
+
 		$this->context->smarty->assign(array(
 			'export_precontent' => "\xEF\xBB\xBF",
 			'export_headers' => $headers,
