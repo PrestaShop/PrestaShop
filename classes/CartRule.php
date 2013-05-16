@@ -530,14 +530,21 @@ class CartRuleCore extends ObjectModel
 				return (!$display_error) ? false : Tools::displayError('You have not reached the minimum amount required to use this voucher');
 		}
 		
-		// Check if the voucher is already in the cart of if a non compatible voucher is in the cart
-		// Important note: this MUST be the last check, because if the tested cart rule has priority over a non combinable one in the cart, we will switch them
+		/* This loop checks:
+			- if the voucher is already in the cart
+			- if a non compatible voucher is in the cart
+			- if there are products in the cart (gifts excluded)
+			Important note: this MUST be the last check, because if the tested cart rule has priority over a non combinable one in the cart, we will switch them
+		*/
+		$nb_products = Cart::getNbProducts($context->cart->id);
 		$otherCartRules = $context->cart->getCartRules();
 		if (count($otherCartRules))
 			foreach ($otherCartRules as $otherCartRule)
 			{
 				if ($otherCartRule['id_cart_rule'] == $this->id && !$alreadyInCart)
 					return (!$display_error) ? false : Tools::displayError('This voucher is already in your cart');
+				if ($otherCartRule['gift_product'])
+					--$nb_products;
 				if ($this->cart_rule_restriction && $otherCartRule['cart_rule_restriction'] && $otherCartRule['id_cart_rule'] != $this->id)
 				{
 					$combinable = Db::getInstance()->getValue('
@@ -557,6 +564,9 @@ class CartRuleCore extends ObjectModel
 					}
 				}
 			}
+		
+		if (!$nb_products)
+			return (!$display_error) ? false : Tools::displayError('Cart is empty');
 		
 		if (!$display_error)
 			return true;
