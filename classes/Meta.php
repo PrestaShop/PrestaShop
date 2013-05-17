@@ -168,7 +168,7 @@ class MetaCore extends ObjectModel
 			$result = $result && $this->delete();
 		}
 
-		return Tools::generateHtaccess();
+		return $result && Tools::generateHtaccess();
 	}
 
 	public static function getEquivalentUrlRewrite($new_id_lang, $id_lang, $url_rewrite)
