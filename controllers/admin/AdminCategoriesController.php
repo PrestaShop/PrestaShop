@@ -415,6 +415,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'type' => 'textarea',
 					'label' => $this->l('Description:'),
 					'name' => 'description',
+					'autoload_rte' => true,
 					'lang' => true,
 					'rows' => 10,
 					'cols' => 100,
