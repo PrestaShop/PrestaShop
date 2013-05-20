@@ -961,7 +961,7 @@ class ToolsCore
 	 * @param bool $utf8_decode (deprecated)
 	 * @return string
 	 */
-	public static function link_rewrite($str, $utf8_decode = false)
+	public static function link_rewrite($str, $utf8_decode = null)
 	{
 		if ($utf8_decode !== null)
 			Tools::displayParameterAsDeprecated('utf8_decode');
