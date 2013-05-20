@@ -670,8 +670,9 @@ $(document).ready(function(){
 	ajaxCart.overrideButtonsInThePage();
 
 	var cart_qty = 0;
+	var current_timestamp = parseInt(new Date().getTime() / 1000);
 
-	if (typeof $('.ajax_cart_quantity').html() == 'undefined')
+	if (typeof $('.ajax_cart_quantity').html() == 'undefined' || (generated_date != null && (parseInt(generated_date) + 30) < current_timestamp))
 		ajaxCart.refresh();
 	else
 		cart_qty = parseInt($('.ajax_cart_quantity').html());
