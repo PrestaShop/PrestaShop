@@ -215,7 +215,7 @@ class ManufacturerCore extends ObjectModel
 
 		for ($i = 0; $i < $total_manufacturers; $i++)
 			if ($rewrite_settings)
-				$manufacturers[$i]['link_rewrite'] = Tools::link_rewrite($manufacturers[$i]['name'], false);
+				$manufacturers[$i]['link_rewrite'] = Tools::link_rewrite($manufacturers[$i]['name']);
 			else
 				$manufacturers[$i]['link_rewrite'] = 0;
 
@@ -258,7 +258,7 @@ class ManufacturerCore extends ObjectModel
 
 	public function getLink()
 	{
-		return Tools::link_rewrite($this->name, false);
+		return Tools::link_rewrite($this->name);
 	}
 
 	public static function getProducts($id_manufacturer, $id_lang, $p, $n, $order_by = null, $order_way = null,
