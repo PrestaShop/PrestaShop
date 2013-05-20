@@ -472,7 +472,7 @@ class AuthControllerCore extends FrontController
 							Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? url_encode($this->authRedirection) : 'my-account'));
 					}
 					else
-						$this->errors[] = Tools::displayError('An error occurred while creating your account..');
+						$this->errors[] = Tools::displayError('An error occurred while creating your account.');
 				}
 			}
 
@@ -545,7 +545,7 @@ class AuthControllerCore extends FrontController
 					else
 						$customer->is_guest = 0;
 					if (!$customer->add())
-						$this->errors[] = Tools::displayError('An error occurred while creating your account..');
+						$this->errors[] = Tools::displayError('An error occurred while creating your account.');
 					else
 					{
 						$address->id_customer = (int)$customer->id;
