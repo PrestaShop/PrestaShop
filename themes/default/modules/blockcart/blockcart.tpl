@@ -38,6 +38,7 @@ var removingLinkText = '{l s='remove this product from my cart' mod='blockcart' 
 var freeShippingTranslation = '{l s='Free shipping!' mod='blockcart' js=1}';
 var freeProductTranslation = '{l s='Free!' mod='blockcart' js=1}';
 var delete_txt = '{l s='Delete' mod='blockcart' js=1}';
+var generated_date = {$smarty.now|intval};
 </script>
 
 
