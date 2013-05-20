@@ -598,7 +598,7 @@ class ToolsCore
 	*/
 	public static function dateFormat($params, &$smarty)
 	{
-		return Tools::displayDate($params['date'], Context::getContext()->language->id, (isset($params['full']) ? $params['full'] : false));
+		return Tools::displayDate($params['date'], null, (isset($params['full']) ? $params['full'] : false));
 	}
 
 	/**
@@ -1852,7 +1852,7 @@ exit;
 	{
 		$backtrace = debug_backtrace();
 		$callee = next($backtrace);
-		$error = 'Parameter <b>'.$parameter.'</b> in function <b>'.$callee['function'].'()</b> is deprecated in <b>'.$callee['file'].'</b> on line <b>'.$callee['Line'].'</b><br />';
+		$error = 'Parameter <b>'.$parameter.'</b> in function <b>'.(isset($callee['function']) ? $callee['function'] : '').'()</b> is deprecated in <b>'.$callee['file'].'</b> on line <b>'.$callee['Line'].'</b><br />';
 		$message = 'The parameter '.$parameter.' in function '.$callee['function'].' (Line '.$callee['Line'].') is deprecated and will be removed in the next major version.';
 		$class = isset($callee['class']) ? $callee['class'] : null;
 

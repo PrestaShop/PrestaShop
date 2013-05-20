@@ -555,7 +555,7 @@ class AdminCustomersControllerCore extends AdminController
 		$total_orders = count($orders);
 		for ($i = 0; $i < $total_orders; $i++)
 		{
-			$orders[$i]['date_add'] = Tools::displayDate($orders[$i]['date_add'], $this->context->language->id);
+			$orders[$i]['date_add'] = Tools::displayDate($orders[$i]['date_add']);
 			$orders[$i]['total_paid_real_not_formated'] = $orders[$i]['total_paid_real'];
 			$orders[$i]['total_paid_real'] = Tools::displayPrice($orders[$i]['total_paid_real'], new Currency((int)$orders[$i]['id_currency']));
 		}
@@ -565,7 +565,7 @@ class AdminCustomersControllerCore extends AdminController
 		for ($i = 0; $i < $total_messages; $i++)
 		{
 			$messages[$i]['message'] = substr(strip_tags(html_entity_decode($messages[$i]['message'], ENT_NOQUOTES, 'UTF-8')), 0, 75);
-			$messages[$i]['date_add'] = Tools::displayDate($messages[$i]['date_add'], $this->context->language->id, true);
+			$messages[$i]['date_add'] = Tools::displayDate($messages[$i]['date_add'], null, true);
 		}
 
 		$groups = $customer->getGroups();
@@ -598,7 +598,7 @@ class AdminCustomersControllerCore extends AdminController
 		$products = $customer->getBoughtProducts();
 		$total_products = count($products);
 		for ($i = 0; $i < $total_products; $i++)
-			$products[$i]['date_add'] = Tools::displayDate($products[$i]['date_add'], $this->default_form_language, true);
+			$products[$i]['date_add'] = Tools::displayDate($products[$i]['date_add'], null, true);
 
 		$carts = Cart::getCustomerCarts($customer->id);
 		$total_carts = count($carts);
@@ -610,7 +610,7 @@ class AdminCustomersControllerCore extends AdminController
 			$currency = new Currency((int)$carts[$i]['id_currency']);
 			$carrier = new Carrier((int)$carts[$i]['id_carrier']);
 			$carts[$i]['id_cart'] = sprintf('%06d', $carts[$i]['id_cart']);
-			$carts[$i]['date_add'] = Tools::displayDate($carts[$i]['date_add'], $this->default_form_language, true);
+			$carts[$i]['date_add'] = Tools::displayDate($carts[$i]['date_add'], null, true);
 			$carts[$i]['total_price'] = Tools::displayPrice($summary['total_price'], $currency);
 			$carts[$i]['name'] = $carrier->name;
 		}
@@ -646,7 +646,7 @@ class AdminCustomersControllerCore extends AdminController
 		$total_connections = count($connections);
 		for ($i = 0; $i < $total_connections; $i++)
 		{
-			$connections[$i]['date_add'] = Tools::displayDate($connections[$i]['date_add'], $this->default_form_language, true);
+			$connections[$i]['date_add'] = Tools::displayDate($connections[$i]['date_add'],null , true);
 			$connections[$i]['http_referer'] = $connections[$i]['http_referer'] ?
 													preg_replace('/^www./', '', parse_url($connections[$i]['http_referer'], PHP_URL_HOST)) :
 														$this->l('Direct link');
@@ -655,7 +655,7 @@ class AdminCustomersControllerCore extends AdminController
 		$referrers = Referrer::getReferrers($customer->id);
 		$total_referrers = count($referrers);
 		for ($i = 0; $i < $total_referrers; $i++)
-			$referrers[$i]['date_add'] = Tools::displayDate($referrers[$i]['date_add'], $this->default_form_language, true);
+			$referrers[$i]['date_add'] = Tools::displayDate($referrers[$i]['date_add'],null , true);
 
 		$shop = new Shop($customer->id_shop);
 		$this->tpl_view_vars = array(
@@ -663,14 +663,14 @@ class AdminCustomersControllerCore extends AdminController
 			'gender_image' => $gender_image,
 
 			// General information of the customer
-			'registration_date' => Tools::displayDate($customer->date_add, $this->default_form_language, true),
+			'registration_date' => Tools::displayDate($customer->date_add,null , true),
 			'customer_stats' => $customer_stats,
-			'last_visit' => Tools::displayDate($customer_stats['last_visit'], $this->default_form_language, true),
+			'last_visit' => Tools::displayDate($customer_stats['last_visit'],null , true),
 			'count_better_customers' => $count_better_customers,
 			'shop_is_feature_active' => Shop::isFeatureActive(),
 			'name_shop' => $shop->name,
 			'customer_birthday' => Tools::displayDate($customer->birthday, $this->default_form_language),
-			'last_update' => Tools::displayDate($customer->date_upd, $this->default_form_language, true),
+			'last_update' => Tools::displayDate($customer->date_upd,null , true),
 			'customer_exists' => Customer::customerExists($customer->email),
 			'id_lang' => $customer->id_lang,
 			'customerLanguage' => (new Language($customer->id_lang)),
