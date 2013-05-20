@@ -610,7 +610,7 @@ class ToolsCore
 	* @param string $separator DEPRECATED
 	* @return string Date
 	*/
-	public static function displayDate($date, $id_lang, $full = false, $separator = '-')
+	public static function displayDate($date, $id_lang = null, $full = false, $separator = null)
 	{
 		if ($id_lang !== null)
 			Tools::displayParameterAsDeprecated('id_lang');
