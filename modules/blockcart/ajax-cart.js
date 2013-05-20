@@ -671,10 +671,10 @@ $(document).ready(function(){
 
 	var cart_qty = 0;
 
-	if (typeof $('.ajax_cart_quantity').val() == 'undefined')
+	if (typeof $('.ajax_cart_quantity').html() == 'undefined')
 		ajaxCart.refresh();
 	else
-		cart_qty = $('.ajax_cart_quantity').val();
+		cart_qty = parseInt($('.ajax_cart_quantity').html());
 
 	/* roll over cart */
 	var cart_block = new HoverWatcher('#cart_block');
