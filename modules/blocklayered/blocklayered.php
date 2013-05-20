@@ -1757,7 +1757,7 @@ class BlockLayered extends Module
 					<td>'.(int)$filters_template['id_layered_filter'].'</td>
 					<td style="text-align: left; padding-left: 10px; width: 270px;">'.$filters_template['name'].'</td>
 					<td style="text-align: center;">'.(int)$filters_template['n_categories'].'</td>
-					<td>'.Tools::displayDate($filters_template['date_add'], (int)$cookie->id_lang, true).'</td>
+					<td>'.Tools::displayDate($filters_template['date_add'],null , true).'</td>
 					<td>
 						<a href="#" onclick="return updElements('.($filters_template['n_categories'] ? 0 : 1).', '.(int)$filters_template['id_layered_filter'].');">
 						<img src="../img/admin/edit.gif" alt="" title="'.$this->l('Edit').'" /></a> 
