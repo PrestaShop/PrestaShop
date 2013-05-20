@@ -554,7 +554,7 @@ class Blocktopmenu extends Module
 					if (!is_null($manufacturer->id))
 					{
 						if (intval(Configuration::get('PS_REWRITING_SETTINGS')))
-							$manufacturer->link_rewrite = Tools::link_rewrite($manufacturer->name, false);
+							$manufacturer->link_rewrite = Tools::link_rewrite($manufacturer->name);
 						else
 							$manufacturer->link_rewrite = 0;
 						$link = new Link;
