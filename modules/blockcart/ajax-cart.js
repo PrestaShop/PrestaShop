@@ -668,7 +668,13 @@ $(document).ready(function(){
 			ajaxCart.expand();
 	});
 	ajaxCart.overrideButtonsInThePage();
-	ajaxCart.refresh();
+
+	var cart_qty = 0;
+
+	if (typeof $('.cart_qties').val() == 'undefined')
+		ajaxCart.refresh();
+	else
+		cart_qty = $('.cart_qties').val();
 
 	/* roll over cart */
 	var cart_block = new HoverWatcher('#cart_block');
@@ -677,7 +683,7 @@ $(document).ready(function(){
 	$("#shopping_cart a:first").hover(
 		function() {
 			$(this).css('border-radius', '3px 3px 0px 0px');
-			if (ajaxCart.nb_total_products > 0)
+			if (ajaxCart.nb_total_products > 0 || cart_qty > 0)
 				$("#cart_block").stop(true, true).slideDown(450);
 		},
 		function() {
