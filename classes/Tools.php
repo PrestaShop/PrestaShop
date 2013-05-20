@@ -963,11 +963,13 @@ class ToolsCore
 	 * Return the friendly url from the provided string
 	 *
 	 * @param string $str
-	 * @param bool $utf8_decode => needs to be marked as deprecated
+	 * @param bool $utf8_decode (deprecated)
 	 * @return string
 	 */
-	public static function link_rewrite($str, $utf8_decode = false)
+	public static function link_rewrite($str, $utf8_decode = null)
 	{
+		if ($utf8_decode !== null)
+			Tools::displayParameterAsDeprecated('utf8_decode');
 		return Tools::str2url($str);
 	}
 
