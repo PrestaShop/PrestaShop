@@ -605,13 +605,18 @@ class ToolsCore
 	* Display date regarding to language preferences
 	*
 	* @param string $date Date to display format UNIX
-	* @param integer $id_lang Language id
+	* @param integer $id_lang Language id DEPRECATED
 	* @param boolean $full With time or not (optional)
 	* @param string $separator DEPRECATED
 	* @return string Date
 	*/
-	public static function displayDate($date, $id_lang, $full = false, $separator = '-')
+	public static function displayDate($date, $id_lang = null, $full = false, $separator = null)
 	{
+		if ($id_lang !== null)
+			Tools::displayParameterAsDeprecated('id_lang');
+		if ($separator !== null)
+			Tools::displayParameterAsDeprecated('separator');	
+			
 		if (!$date || !($time = strtotime($date)))
 			return $date;
 
