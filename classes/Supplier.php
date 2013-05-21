@@ -156,7 +156,7 @@ class SupplierCore extends ObjectModel
 		$rewrite_settings = (int)Configuration::get('PS_REWRITING_SETTINGS');
 		for ($i = 0; $i < $nb_suppliers; $i++)
 			if ($rewrite_settings)
-				$suppliers[$i]['link_rewrite'] = Tools::link_rewrite($suppliers[$i]['name'], false);
+				$suppliers[$i]['link_rewrite'] = Tools::link_rewrite($suppliers[$i]['name']);
 			else
 				$suppliers[$i]['link_rewrite'] = 0;
 		return $suppliers;
