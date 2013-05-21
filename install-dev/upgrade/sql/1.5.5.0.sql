@@ -6,3 +6,5 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VAL
 
 ALTER TABLE `PREFIX_webservice_account` CHANGE `class_name` `class_name` VARCHAR(64) NOT NULL DEFAULT 'WebserviceRequest',
 CHANGE `module_name` `module_name` VARCHAR(64) NULL DEFAULT NULL;
+
+/* PHP:add_module_to_hook(blockcart, actionCartListOverride); */;

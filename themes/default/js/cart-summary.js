@@ -106,6 +106,8 @@ function changeAddressDelivery(obj)
 					if ($('#product_'+id_product+'_'+id_product_attribute+'_0_'+new_id_address_delivery).length)
 					{
 						updateCartSummary(jsonData.summary);
+						if (window.ajaxCart != undefined)
+							ajaxCart.updateCart(jsonData);
 						updateCustomizedDatas(jsonData.customizedDatas);
 						updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
 						updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
@@ -119,9 +121,8 @@ function changeAddressDelivery(obj)
 						// @todo improve customization upgrading
 						$('.product_'+id_product+'_'+id_product_attribute+'_0_'+old_id_address_delivery).remove();
 					}
-					
 					if (window.ajaxCart != undefined)
-						ajaxCart.refresh();
+						ajaxCart.updateCart(jsonData);
 					updateAddressId(id_product, id_product_attribute, old_id_address_delivery, new_id_address_delivery);
 					cleanSelectAddressDelivery();
 				}
@@ -190,9 +191,8 @@ function changeAddressDelivery(obj)
 				cleanSelectAddressDelivery();
 				
 				updateCartSummary(jsonData.summary);
-				
 				if (window.ajaxCart !== undefined)
-					ajaxCart.refresh();
+					ajaxCart.updateCart(jsonData);
 			}
 		});
 	}
@@ -370,6 +370,8 @@ function deleteProductFromSummary(id)
 						});
 				}
 				updateCartSummary(jsonData.summary);
+				if (window.ajaxCart != undefined)
+					ajaxCart.updateCart(jsonData);
 				updateCustomizedDatas(jsonData.customizedDatas);
 				updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
 				updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
@@ -461,6 +463,8 @@ function upQuantity(id, qty)
 				if (jsonData.refresh)
 					location.reload();
 				updateCartSummary(jsonData.summary);
+				if (window.ajaxCart != undefined)
+					ajaxCart.updateCart(jsonData);
 				if (customizationId !== 0)
 					updateCustomizedDatas(jsonData.customizedDatas);
 				updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
@@ -544,6 +548,8 @@ function downQuantity(id, qty)
 					if (jsonData.refresh)
 						location.reload();
 					updateCartSummary(jsonData.summary);
+					if (window.ajaxCart !== undefined)
+						ajaxCart.updateCart(jsonData);
 					if (customizationId !== 0)					
 						updateCustomizedDatas(jsonData.customizedDatas);
 					updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
@@ -754,8 +760,6 @@ function updateCartSummary(json)
 		$('#total_wrapping').html(formatCurrency(json.total_wrapping, currencyFormat, currencySign, currencyBlank));
 		$('#total_wrapping').parent().hide();
 	}
-	if (window.ajaxCart !== undefined)
-		ajaxCart.refresh();
 }
 
 function updateCustomizedDatas(json)
