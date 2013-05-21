@@ -56,11 +56,21 @@ require_once(dirname(__FILE__).'/autoload.php');
 
 if (_PS_DEBUG_PROFILING_)
 {
-	include_once(_PS_TOOL_DIR_.'profiling/Controller.php');
+	include_once(_PS_TOOL_DIR_.'profiling/FrontController.php');
 	include_once(_PS_TOOL_DIR_.'profiling/ObjectModel.php');
 	include_once(_PS_TOOL_DIR_.'profiling/Hook.php');
 	include_once(_PS_TOOL_DIR_.'profiling/Db.php');
+	include_once(_PS_TOOL_DIR_.'profiling/Tools.php');
 }
+if (_PS_DEBUG_PROFILING_BO_)
+{
+	include_once(_PS_TOOL_DIR_.'profiling/AdminController.php');
+	include_once(_PS_TOOL_DIR_.'profiling/ObjectModel.php');
+	include_once(_PS_TOOL_DIR_.'profiling/Hook.php');
+	include_once(_PS_TOOL_DIR_.'profiling/Db.php');
+	include_once(_PS_TOOL_DIR_.'profiling/Tools.php');
+}
+
 
 /* Redefine REQUEST_URI if empty (on some webservers...) */
 if (!isset($_SERVER['REQUEST_URI']) || empty($_SERVER['REQUEST_URI']))

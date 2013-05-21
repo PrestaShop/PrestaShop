@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -25,63 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-//
-// IMPORTANT : don't forget to delete the underscore _ in the file name if you want to use it !
-//
-
-function developpementErrorHandler($errno, $errstr, $errfile, $errline)
-{
-	if (!(error_reporting() & $errno))
-		return;
-	switch($errno)
-	{
-		case E_ERROR:
-			echo '[PHP Error #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_WARNING:
-			echo '[PHP Warning #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_PARSE:
-			echo '[PHP Parse #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_NOTICE:
-			echo '[PHP Notice #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_CORE_ERROR:
-			echo '[PHP Core #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_CORE_WARNING:
-			echo '[PHP Core warning #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_COMPILE_ERROR:
-			echo '[PHP Compile #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_COMPILE_WARNING:
-			echo '[PHP Compile warning #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_USER_ERROR:
-			echo '[PHP Error #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_USER_WARNING:
-			echo '[PHP User warning #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_USER_NOTICE:
-			echo '[PHP User notice #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_STRICT:
-			echo '[PHP Strict #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_RECOVERABLE_ERROR:
-			echo '[PHP Recoverable error #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		default:
-			echo '[PHP Unknown error #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-	}
-	die;
-	return true;
-}
-
-abstract class Controller extends ControllerCore
+abstract class AdminController extends AdminControllerCore
 {
 	public $_memory = array();
 	public $_time = array();

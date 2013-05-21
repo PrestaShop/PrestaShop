@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -24,10 +24,6 @@
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-
-//
-// IMPORTANT : don't forget to delete the underscore _ in the file name if you want to use it !
-//
 
 abstract class ObjectModel extends ObjectModelCore
 {
