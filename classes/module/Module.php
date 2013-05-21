@@ -215,7 +215,7 @@ abstract class ModuleCore
 				}
 
 		// Check if module is installed
-		$result = Db::getInstance()->getRow('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($this->name).'\'');
+		$result = Module::isInstalled($this->name);
 		if ($result)
 		{
 			$this->_errors[] = $this->l('This module has already been installed.');
