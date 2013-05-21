@@ -164,6 +164,7 @@ class BlockCart extends Module
 			parent::install() == false
 			|| $this->registerHook('top') == false
 			|| $this->registerHook('header') == false
+			|| $this->registerHook('actionCartListOverride') == false
 			|| Configuration::updateValue('PS_BLOCK_CART_AJAX', 1) == false)
 			return false;
 		return true;
@@ -195,10 +196,20 @@ class BlockCart extends Module
 		return $res;
 	}
 
+	public function hookActionCartListOverride($params)
+	{
+		if (!Configuration::get('PS_BLOCK_CART_AJAX'))
+			return;
+
+		$this->assignContentVars(array('cookie' => $this->context->cookie, 'cart' => $this->context->cart));
+		$params['json'] = $this->display(__FILE__, 'blockcart-json.tpl');
+	}
+
 	public function hookHeader()
 	{
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return;
+
 		$this->context->controller->addCSS(($this->_path).'blockcart.css', 'all');
 		if ((int)(Configuration::get('PS_BLOCK_CART_AJAX')))
 			$this->context->controller->addJS(($this->_path).'ajax-cart.js');
