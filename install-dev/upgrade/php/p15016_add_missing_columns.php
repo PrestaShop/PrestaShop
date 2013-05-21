@@ -34,7 +34,10 @@ function p15016_add_missing_columns()
 		$list_fields = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'reinsurance`');
 		foreach ($list_fields as $k => $field)
 			$list_fields[$k] = $field['Field'];
-
+			
+		if (in_array('id_contactinfos', $list_fields))
+			if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'reinsurance` CHANGE `id_contactinfos` `id_reinsurance` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT'))
+				$errors[] = Db::getInstance()->getMsgError();			
 		if (!in_array('id_shop', $list_fields))
 			if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'reinsurance` ADD `id_shop` INT(10) NOT NULL default "1" AFTER id_reinsurance'))
 				$errors[] = Db::getInstance()->getMsgError();
