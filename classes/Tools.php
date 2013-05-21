@@ -267,6 +267,9 @@ class ToolsCore
 		// $_SERVER['SSL'] exists only in some specific configuration
 		if (isset($_SERVER['SSL']))
 			return ($_SERVER['SSL'] == 1 || strtolower($_SERVER['SSL']) == 'on');
+		// $_SERVER['REDIRECT_HTTPS'] exists only in some specific configuration (e.g. Gandi's simple hosting)
+		if (isset($_SERVER['REDIRECT_HTTPS']))
+			return ($_SERVER['REDIRECT_HTTPS'] == 1 || strtolower($_SERVER['REDIRECT_HTTPS']) == 'on');
 
 		return false;
 	}
