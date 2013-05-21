@@ -43,7 +43,7 @@ class BlockCart extends Module
 		$this->description = $this->l('Adds a block containing the customer\'s shopping cart.');
 	}
 
-	public function assignContentVars(&$params)
+	public function assignContentVars($params)
 	{
 		global $errors;
 
