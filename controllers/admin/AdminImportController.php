@@ -1378,6 +1378,7 @@ class AdminImportControllerCore extends AdminController
 				{
 					// Delete tags for this id product, for no duplicating error
 					Tag::deleteTagsForProduct($product->id);
+					//multilang error
 
 					if (!is_array($product->tags))
 					{
