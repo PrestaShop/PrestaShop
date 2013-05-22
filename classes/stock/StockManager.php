@@ -479,8 +479,8 @@ class StockManagerCore implements StockManagerInterface
 		$query->where('o.valid = 1 OR (os.id_order_state != '.(int)Configuration::get('PS_OS_ERROR').'
 					   AND os.id_order_state != '.(int)Configuration::get('PS_OS_CANCELED').')');
 		$query->groupBy('od.id_order_detail');
-		//if (count($ids_warehouse))
-			//$query->where('od.id_warehouse IN('.implode(', ', $ids_warehouse).')');
+		if (count($ids_warehouse))
+			$query->where('od.id_warehouse IN('.implode(', ', $ids_warehouse).')');
 		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 		$client_orders_qty = 0;
 		if (count($res))
