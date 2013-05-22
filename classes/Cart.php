@@ -2958,12 +2958,8 @@ class CartCore extends ObjectModel
 			return false;
 
 		foreach ($this->getProducts() as $product)
-
-			if (!$product['active']
-				|| (
-					!$product['allow_oosp'] && $product['stock_quantity'] < $product['cart_quantity']
-				)
-				|| !$product['available_for_order'])
+			if (!$product['active'] || !$product['available_for_order']
+				|| (!$product['allow_oosp'] && $product['stock_quantity'] < $product['cart_quantity']))
 				return false;
 
 		return true;

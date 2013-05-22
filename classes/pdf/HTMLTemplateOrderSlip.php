@@ -211,6 +211,8 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 		if ($ecotax)
 			foreach ($tmp_tax_infos as $rate => &$row)
 			{
+				if (!isset($ecotax[$rate]))
+					continue
 				$row['total_price_tax_excl'] -= $ecotax[$rate]['ecotax_tax_excl'];
 				$row['total_amount'] -= ($ecotax[$rate]['ecotax_tax_incl'] - $ecotax[$rate]['ecotax_tax_excl']);
 			}

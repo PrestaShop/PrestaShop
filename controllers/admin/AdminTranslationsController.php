@@ -127,7 +127,7 @@ class AdminTranslationsControllerCore extends AdminController
 			$this->l('%1$s (Language: %2$s, Theme: %3$s)'),
 			$this->translations_informations[$this->type_selected]['name'],
 			$this->lang_selected->name,
-			$this->theme_selected
+			$this->theme_selected ? $this->theme_selected : $this->l('none')
 		);
 
 		// Set vars for all forms
@@ -815,7 +815,7 @@ class AdminTranslationsControllerCore extends AdminController
 				$type_file = substr($file, -4) == '.tpl' ? 'tpl' : 'php';
 
 				// Parse this content
-				$matches = $this->userParseFile($content, $this->type_selected, $type_file);
+				$matches = $this->userParseFile($content, $this->type_selected, $type_file, $module_name);
 
 				// Write each translation on its module file
 				$template_name = substr(basename($file), 0, -4);
@@ -858,7 +858,7 @@ class AdminTranslationsControllerCore extends AdminController
 	public function clearModuleFiles($files, $type_clear = 'file', $path = '')
 	{
 		// List of directory which not must be parsed
-		$arr_exclude = array('img', 'js', 'mails');
+		$arr_exclude = array('img', 'js', 'mails','override');
 
 		// List of good extention files
 		$arr_good_ext = array('.tpl', '.php');
@@ -914,7 +914,7 @@ class AdminTranslationsControllerCore extends AdminController
 				$type_file = substr($file, -4) == '.tpl' ? 'tpl' : 'php';
 
 				// Parse this content
-				$matches = $this->userParseFile($content, $this->type_selected, $type_file);
+				$matches = $this->userParseFile($content, $this->type_selected, $type_file, $module_name);
 
 				// Write each translation on its module file
 				$template_name = substr(basename($file), 0, -4);
@@ -1057,9 +1057,10 @@ class AdminTranslationsControllerCore extends AdminController
 	 * @param $content
 	 * @param $type_translation : front, back, errors, modules...
 	 * @param string|bool $type_file : (tpl|php)
+	 * @param string $module_name : name of the module
 	 * @return return $matches
 	 */
-	protected function userParseFile($content, $type_translation, $type_file = false)
+	protected function userParseFile($content, $type_translation, $type_file = false, $module_name = '')
 	{
 		switch ($type_translation)
 		{
@@ -1088,7 +1089,8 @@ class AdminTranslationsControllerCore extends AdminController
 					if ($type_file == 'php')
 						$regex = '/->l\(\''._PS_TRANS_PATTERN_.'\'(, ?\'(.+)\')?(, ?(.+))?\)/U';
 					else
-						$regex = '/\{l\s*s=[\'\"]'._PS_TRANS_PATTERN_.'[\'\"](\s*sprintf=.*)?(\s*mod=\'.+\')?(\s*js=1)?\s*\}/U';
+						// In tpl file look for something that should contain mod='module_name' according to the documentation
+						$regex = '/\{l\s*s=[\'\"]'._PS_TRANS_PATTERN_.'[\'\"].*\s+mod=\''.$module_name.'\'.*\}/U';
 				break;
 
 			case 'pdf':
@@ -1454,6 +1456,8 @@ class AdminTranslationsControllerCore extends AdminController
 						$path = $arr_mail_path[$group_name];
 						if ($module_name)
 							$path = str_replace('{module}', $module_name, $path);
+						if (!file_exists($path) && !mkdir($path, 0777, true))
+							throw new PrestaShopException(sprintf(Tools::displayError('Directory "%s" cannot be created'), dirname($file_path)));
 						file_put_contents($path.$mail_name.'.'.$type_content, $content);
 					}
 					else
@@ -2453,6 +2457,9 @@ class AdminTranslationsControllerCore extends AdminController
 
 	protected function writeSubjectTranslationFile($sub, $path)
 	{
+		if (!Tools::file_exists_cache(dirname(path)))
+			if (!mkdir(dirname(path), 0700))
+				throw new PrestaShopException('Directory '.dirname(path).' cannot be created.');
 		if ($fd = @fopen($path, 'w'))
 		{
 			$tab = 'LANGMAIL';

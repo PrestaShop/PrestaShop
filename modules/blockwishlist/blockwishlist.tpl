@@ -25,7 +25,7 @@
 
 <div id="wishlist_block" class="block account">
 	<h4 class="title_block">
-		<a href="{$wishlist_link}">{l s='Wishlist' mod='blockwishlist'}</a>
+		<a href="{$wishlist_link}" title="{l s='My wishlists' mod='blockwishlist'}" rel="nofollow">{l s='Wishlist' mod='blockwishlist'}</a>
 	</h4>
 	<div class="block_content">
 		<div id="wishlist_block_list" class="expanded">
@@ -36,7 +36,7 @@
 					<span class="quantity-formated"><span class="quantity">{$product.quantity|intval}</span>x</span>
 					<a class="cart_block_product_name"
 					href="{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category_rewrite)}" title="{$product.name|escape:'htmlall':'UTF-8'}">{$product.name|truncate:30:'...'|escape:'htmlall':'UTF-8'}</a>
-					<a class="ajax_cart_block_remove_link" href="javascript:;" onclick="javascript:WishlistCart('wishlist_block_list', 'delete', '{$product.id_product}', {$product.id_product_attribute}, '0', '{$token}');" title="{l s='remove this product from my wishlist' mod='blockwishlist'}"><img src="{$img_dir}icon/delete.gif" width="12" height="12" alt="{l s='Delete'}" class="icon" /></a>
+					<a class="ajax_cart_block_remove_link" href="javascript:;" onclick="javascript:WishlistCart('wishlist_block_list', 'delete', '{$product.id_product}', {$product.id_product_attribute}, '0', '{$token}');" title="{l s='remove this product from my wishlist' mod='blockwishlist'}" rel="nofollow"><img src="{$img_dir}icon/delete.gif" width="12" height="12" alt="{l s='Delete'}" class="icon" /></a>
 				</dt>
 				{if isset($product.attributes_small)}
 				<dd class="{if $smarty.foreach.i.first}first_item{elseif $smarty.foreach.i.last}last_item{else}item{/if}">

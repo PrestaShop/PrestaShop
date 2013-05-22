@@ -206,7 +206,6 @@ class DispatcherCore
 			$this->front_controller = self::FC_ADMIN;
 			$this->controller_not_found = 'adminnotfound';
 			$this->default_controller = 'adminhome';
-			$this->use_routes = false;
 		}
 		elseif (Tools::getValue('fc') == 'module')
 		{
@@ -648,7 +647,9 @@ class DispatcherCore
 	 * @return string
 	 */
 	public function getController()
-	{		
+	{	
+		if (defined('_PS_ADMIN_DIR_'))
+			$_GET['controllerUri'] = Tools::getvalue('controller');		
 		if ($this->controller)
 		{
 			$_GET['controller'] = $this->controller;
@@ -670,7 +671,7 @@ class DispatcherCore
 			$controller = false;
 	
 		// Use routes ? (for url rewriting)
-		if ($this->use_routes && !$controller)
+		if ($this->use_routes && !$controller && !defined('_PS_ADMIN_DIR_'))
 		{
 			if (!$this->request_uri)
 				return strtolower($this->controller_not_found);
@@ -710,7 +711,8 @@ class DispatcherCore
 							break;
 						}
 			}
-			if ($controller == 'index' || $this->request_uri == '/index.php')
+			
+			if ($controller == 'index' || $this->request_uri == '/index.php') 
 				$controller = $this->default_controller;
 			$this->controller = $controller;
 		}

@@ -74,7 +74,7 @@
 						{if $logged}
 							<a href="{$link->getPageLink('my-account', true)}" class="link_account" data-ajax="false">{l s='My account'}</a>
 						{else}
-							<a href="{$link->getPageLink('authentication', true)}" class="link_account" data-ajax="false">{l s='Log in'}</a>
+							<a href="{$link->getPageLink('authentication', true)}" class="link_account" data-ajax="false">{l s='Authentication'}</a>
 						{/if}
 					</div>
 					{hook h="displayMobileTop"}

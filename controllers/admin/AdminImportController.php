@@ -819,7 +819,7 @@ class AdminImportControllerCore extends AdminController
 
 		// 'file_exists' doesn't work on distant file, and getimagesize make the import slower.
 		// Just hide the warning, the traitment will be the same.
-		if (@copy($url, $tmpfile))
+		if (Tools::copy($url, $tmpfile))
 		{
 			ImageManager::resize($tmpfile, $path.'.jpg');
 			$images_types = ImageType::getImagesTypes($entity);
@@ -1378,6 +1378,7 @@ class AdminImportControllerCore extends AdminController
 				{
 					// Delete tags for this id product, for no duplicating error
 					Tag::deleteTagsForProduct($product->id);
+					//multilang error
 
 					if (!is_array($product->tags))
 					{
@@ -1433,9 +1434,7 @@ class AdminImportControllerCore extends AdminController
 							$image->position = Image::getHighestPosition($product->id) + 1;
 							$image->cover = (!$key && !$product_has_images) ? true : false;
 							// file_exists doesn't work with HTTP protocol
-							if (@fopen($url, 'r') == false)
-								$error = true;
-							else if (($field_error = $image->validateFields(UNFRIENDLY_ERROR, true)) === true &&
+							if (($field_error = $image->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 								($lang_field_error = $image->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $image->add())
 							{
 								// associate image to selected shops

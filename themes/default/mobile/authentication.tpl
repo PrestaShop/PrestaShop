@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture assign='page_title'}{if !isset($email_create)}{l s='Log in'}{else}{l s='Create an account'}{/if}{/capture}
+{capture assign='page_title'}{if !isset($email_create)}{l s='Authentication'}{else}{l s='Create an account'}{/if}{/capture}
 {include file='./page-title.tpl'}
 {include file="./errors.tpl"}
 
