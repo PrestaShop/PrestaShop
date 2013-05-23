@@ -8,3 +8,9 @@ ALTER TABLE `PREFIX_webservice_account` CHANGE `class_name` `class_name` VARCHAR
 CHANGE `module_name` `module_name` VARCHAR(64) NULL DEFAULT NULL;
 
 /* PHP:add_module_to_hook(blockcart, actionCartListOverride); */;
+/* PHP:add_module_to_hook(blockmanufacturer, actionObjectManufacturerDeleteAfter); */;
+/* PHP:add_module_to_hook(blockmanufacturer, actionObjectManufacturerAddAfter); */;
+/* PHP:add_module_to_hook(blockmanufacturer, actionObjectManufacturerUpdateAfter); */;
+/* PHP:add_module_to_hook(blocksupplier, actionObjectSupplierDeleteAfter); */;
+/* PHP:add_module_to_hook(blocksupplier, actionObjectSupplierAddAfter); */;
+/* PHP:add_module_to_hook(blocksupplier, actionObjectSupplierUpdateAfter); */;
