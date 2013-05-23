@@ -187,7 +187,7 @@ return array(
 		'menu_license' => 'Лицензионное соглашение',
 		'PrestaShop core is released under the OSL 3.0 while PrestaShop modules and themes are released under the AFL 3.0.' => 'Ядро PrestaShop разработано на  OSL 3.0, а модули и шаблоны PrestaShop разработаны на AFL 3.0.',
 		'I agree to the above terms and conditions.' => 'Я принимаю правила и условия.',
-		'I agree to participate in improving the solution by sending anonymous information about my configuration.' => 'Внесите свой вклад в улучшение программного обеспечения, отравив анонимное сообщене о Вашей конфгурации.',
+		'I agree to participate in improving the solution by sending anonymous information about my configuration.' => 'Внесите свой вклад в улучшение программного обеспечения, отправив анонимное сообщение о Вашей конфигурации.',
 		'PHP 5.1.2 or later is not enabled' => 'PHP 5.1.2 или более поздняя версия не активирована',
 		'Cannot upload files' => 'Невозможно загрузить файлы',
 		'Cannot create new files and folders' => 'Невозможно создать новые файлы и папки',
