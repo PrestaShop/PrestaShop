@@ -29,7 +29,7 @@ abstract class InstallControllerHttp
 	/**
 	 * @var array List of installer steps
 	 */
-	protected static $steps = array('welcome', 'license', 'system', 'database', 'configure', 'process');
+	protected static $steps = array('welcome', 'license', 'system', 'configure', 'database', 'process');
 
 	protected static $instances = array();
 

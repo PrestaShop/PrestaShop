@@ -215,7 +215,7 @@ abstract class ModuleCore
 				}
 
 		// Check if module is installed
-		$result = Db::getInstance()->getRow('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($this->name).'\'');
+		$result = Module::isInstalled($this->name);
 		if ($result)
 		{
 			$this->_errors[] = $this->l('This module has already been installed.');
@@ -1543,7 +1543,7 @@ abstract class ModuleCore
 	{
 		if (!Cache::isStored('Module::isInstalled'.$module_name))
 		{
-			$id_module = Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($module_name).'\'');
+			$id_module = Module::getModuleIdByName($module_name);
 			Cache::store('Module::isInstalled'.$module_name, (bool)$id_module);
 		}
 		return Cache::retrieve('Module::isInstalled'.$module_name);
@@ -1554,7 +1554,7 @@ abstract class ModuleCore
 		if (!Cache::isStored('Module::isEnabled'.$module_name))
 		{
 			$active = false;
-			$id_module = Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($module_name).'\'');
+			$id_module = Module::getModuleIdByName($module_name);
 			if (Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module_shop` WHERE `id_module` = '.(int)$id_module.' AND `id_shop` = '.(int)Context::getContext()->shop->id))
 				$active = true;
 			Cache::store('Module::isEnabled'.$module_name, (bool)$active);
