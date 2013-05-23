@@ -724,7 +724,7 @@ class ValidateCore
 	 */
 	public static function isTrackingNumber($tracking_number)
 	{
-		return preg_match('/^[~:#,%&_=\(\)\.\? \+\-@\/a-zA-Z0-9]+$/', $tracking_number);
+		return preg_match('/^[~:#,%&_=\(\)\[\]\.\? \+\-@\/a-zA-Z0-9]+$/', $tracking_number);
 	}
 
 	/**
@@ -747,7 +747,7 @@ class ValidateCore
 	public static function isAbsoluteUrl($url)
 	{
 		if (!empty($url))
-			return preg_match('/^https?:\/\/[,:#%&_=\(\)\.\? \+\-@\/a-zA-Z0-9]+$/', $url);
+			return preg_match('/^https?:\/\/[~:#,%&_=\(\)\[\]\.\? \+\-@\/a-zA-Z0-9]+$/', $url);
 		return true;
 	}
 
