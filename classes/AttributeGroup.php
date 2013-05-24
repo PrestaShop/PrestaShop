@@ -119,7 +119,7 @@ class AttributeGroupCore extends ObjectModel
 
 	public function delete()
 	{
-		if (!$this->hasMultishopEntries())
+		if (!$this->hasMultishopEntries() || Shop::getContext() == Shop::CONTEXT_ALL)
 		{
 			/* Select children in order to find linked combinations */
 			$attribute_ids = Db::getInstance()->executeS('
