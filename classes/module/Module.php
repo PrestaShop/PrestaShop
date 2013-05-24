@@ -311,6 +311,12 @@ abstract class ModuleCore
 	 */
 	public static function initUpgradeModule($module)
 	{
+		if (((int)$module->installed == 1) & (empty($module->database_version) === true))
+		{
+			Module::upgradeModuleVersion($module->name, $module->version);
+			$module->database_version = $module->version;
+		}
+		
 		// Init cache upgrade details
 		self::$modules_cache[$module->name]['upgrade'] = array(
 			'success' => false, // bool to know if upgrade succeed or not

@@ -466,7 +466,7 @@ class LanguageCore extends ObjectModel
 
 	public function delete()
 	{
-		if (!$this->hasMultishopEntries())
+		if (!$this->hasMultishopEntries() || Shop::getContext() == Shop::CONTEXT_ALL)
 		{
 			if (empty($this->iso_code))
 				$this->iso_code = Language::getIsoById($this->id);
@@ -514,7 +514,7 @@ class LanguageCore extends ObjectModel
 		
 		if (!parent::delete())
 			return false;
-		if (!$this->hasMultishopEntries())
+		if (!$this->hasMultishopEntries() || Shop::getContext() == Shop::CONTEXT_ALL)
 		{
 			// delete images
 			$files_copy = array(
