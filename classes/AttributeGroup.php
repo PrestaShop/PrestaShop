@@ -70,6 +70,11 @@ class AttributeGroupCore extends ObjectModel
 
 	public function add($autodate = true, $nullValues = false)
 	{
+		if ($this->group_type == 'color')
+			$this->is_color_group = 1;
+		else
+			$this->is_color_group = 0;
+		
 		if ($this->position <= 0)
 			$this->position = AttributeGroup::getHigherPosition() + 1;
 
@@ -80,11 +85,16 @@ class AttributeGroupCore extends ObjectModel
 
 	public function update($nullValues = false)
 	{
+		if ($this->group_type == 'color')
+			$this->is_color_group = 1;
+		else
+			$this->is_color_group = 0;
+		
 		$return = parent::update($nullValues);
 		Hook::exec('actionAttributeGroupSave', array('id_attribute_group' => $this->id));
 		return $return;
 	}
-
+	
 	public static function cleanDeadCombinations()
 	{
 		$attribute_combinations = Db::getInstance()->executeS('
