@@ -224,10 +224,13 @@ class InstallXmlLoader
 			return;
 		}
 
+		if (substr($entity, 0, 1) == '.' || substr($entity, 0, 1) == '_')
+			return;		
+
 		$xml = $this->loadEntity($entity);
 
 		// Read list of fields
-		if (!$xml->fields)
+		if (!is_object($xml) || !$xml->fields)
 			throw new PrestashopInstallerException('List of fields not found for entity '.$entity);
 
 		if ($this->isMultilang($entity))
