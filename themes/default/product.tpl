@@ -297,8 +297,8 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 								<ul id="color_to_pick_list" class="clearfix">
 									{assign var="default_colorpicker" value=""}
 									{foreach from=$group.attributes key=id_attribute item=group_attribute}
-									<li class="js-attribute_color {if $group.default == $id_attribute} selected{/if}">
-										<a id="color_{$id_attribute|intval}" class="color_pick" style="background: {$colors.$id_attribute.value};" title="{$colors.$id_attribute.name}">
+									<li class="js-attribute_color {if $group.default == $id_attribute} selected{/if}" id="color_{$id_attribute|intval}">
+										<a class="color_pick" style="background: {$colors.$id_attribute.value};" title="{$colors.$id_attribute.name}">
 											{if file_exists($col_img_dir|cat:$id_attribute|cat:'.jpg')}
 												<img src="{$img_col_dir}{$id_attribute}.jpg" alt="{$colors.$id_attribute.name}" width="20" height="20" /><br />
 											{/if}
