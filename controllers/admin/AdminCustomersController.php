@@ -669,7 +669,7 @@ class AdminCustomersControllerCore extends AdminController
 			'count_better_customers' => $count_better_customers,
 			'shop_is_feature_active' => Shop::isFeatureActive(),
 			'name_shop' => $shop->name,
-			'customer_birthday' => Tools::displayDate($customer->birthday, $this->default_form_language),
+			'customer_birthday' => Tools::displayDate($customer->birthday),
 			'last_update' => Tools::displayDate($customer->date_upd,null , true),
 			'customer_exists' => Customer::customerExists($customer->email),
 			'id_lang' => $customer->id_lang,

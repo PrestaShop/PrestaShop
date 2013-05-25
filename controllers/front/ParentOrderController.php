@@ -399,10 +399,11 @@ class ParentOrderControllerCore extends FrontController
 
 			// Getting a list of formated address fields with associated values
 			$formatedAddressFieldsValuesList = array();
-			foreach ($customerAddresses as $address)
+			foreach ($customerAddresses as $i => $address)
 			{
+				if (!Address::isCountryActiveById((int)($address['id_address'])))
+					unset($customerAddresses[$i]);										
 				$tmpAddress = new Address($address['id_address']);
-
 				$formatedAddressFieldsValuesList[$address['id_address']]['ordered_fields'] = AddressFormat::getOrderedAddressFields($address['id_country']);
 				$formatedAddressFieldsValuesList[$address['id_address']]['formated_fields_values'] = AddressFormat::getFormattedAddressFieldsValues(
 					$tmpAddress,
@@ -459,6 +460,8 @@ class ParentOrderControllerCore extends FrontController
 	{	
 		$address = new Address($this->context->cart->id_address_delivery);
 		$id_zone = Address::getZoneById($address->id);
+		if (!Address::isCountryActiveById((int)($this->context->cart->id_address_delivery)) || !Address::isCountryActiveById((int)($this->context->cart->id_address_invoice)))
+			Tools::redirect('index.php?controller=order&step=1');					
 		$carriers = $this->context->cart->simulateCarriersOutput();
 		$checked = $this->context->cart->simulateCarrierSelectedOutput();
 		$delivery_option_list = $this->context->cart->getDeliveryOptionList();

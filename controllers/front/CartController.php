@@ -335,7 +335,8 @@ class CartControllerCore extends FrontController
 			if ($result['customizedDatas'])
 				Product::addCustomizationPrice($result['summary']['products'], $result['customizedDatas']);
 
-			die(Tools::jsonEncode($result));
+			Hook::exec('actionCartListOverride', array('summary' => $result, 'json' => &$json));
+			die(Tools::jsonEncode(array_merge($result, (array)Tools::jsonDecode($json, true))));
 		}
 		// @todo create a hook
 		elseif (file_exists(_PS_MODULE_DIR_.'/blockcart/blockcart-ajax.php'))

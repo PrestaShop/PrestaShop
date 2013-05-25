@@ -267,6 +267,9 @@ class ToolsCore
 		// $_SERVER['SSL'] exists only in some specific configuration
 		if (isset($_SERVER['SSL']))
 			return ($_SERVER['SSL'] == 1 || strtolower($_SERVER['SSL']) == 'on');
+		// $_SERVER['REDIRECT_HTTPS'] exists only in some specific configuration
+		if (isset($_SERVER['REDIRECT_HTTPS']))
+			return ($_SERVER['REDIRECT_HTTPS'] == 1 || strtolower($_SERVER['REDIRECT_HTTPS']) == 'on');
 
 		return false;
 	}
@@ -1520,7 +1523,7 @@ class ToolsCore
 
 		if (self::$_cache_nb_media_servers && ($id_media_server = (abs(crc32($filename)) % self::$_cache_nb_media_servers + 1)))
 			return constant('_MEDIA_SERVER_'.$id_media_server.'_');
-		return Tools::getHttpHost();
+		return Tools::getShopDomain();
 	}
 
 	public static function generateHtaccess($path = null, $rewrite_settings = null, $cache_control = null, $specific = '', $disable_multiviews = null, $medias = false, $disable_modsec = null)
