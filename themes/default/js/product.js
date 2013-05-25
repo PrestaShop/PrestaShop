@@ -709,8 +709,7 @@ function checkUrl()
 				tabValues.push(tabParams[i].split('-'));
 			product_id = $('#product_page_product_id').val();
 			// fill html with values
-			$('.color_pick').removeClass('selected');
-			$('.color_pick').parent().parent().children().removeClass('selected');
+			$('.js-attribute_color').removeClass('selected');
 			count = 0;
 			for (var z in tabValues)
 				for (var a in attributesCombinations)
@@ -720,7 +719,6 @@ function checkUrl()
 						count++;
 						// add class 'selected' to the selected color
 						$('#color_' + attributesCombinations[a]['id_attribute']).addClass('selected');
-						$('#color_' + attributesCombinations[a]['id_attribute']).parent().addClass('selected');
 						$('input:radio[value=' + attributesCombinations[a]['id_attribute'] + ']').attr('checked', true);
 						$('input:hidden[name=group_' + attributesCombinations[a]['id_attribute_group'] + ']').val(attributesCombinations[a]['id_attribute']);
 						$('select[name=group_' + attributesCombinations[a]['id_attribute_group'] + ']').val(attributesCombinations[a]['id_attribute']);
