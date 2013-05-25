@@ -126,7 +126,7 @@ function findCombination(firstTime)
 
 			//get available_date for combination product
 			selectedCombination['available_date'] = combinations[combination]['available_date'];
-			
+
 			//update the display
 			updateDisplay();
 
@@ -161,7 +161,7 @@ function updateDisplay()
 
 		//hide the hook out of stock
 		$('#oosHook').hide();
-		
+
 		$('#availability_date').fadeOut();
 
 		//availability value management
@@ -295,7 +295,7 @@ function updateDisplay()
 		var priceTaxExclWithoutGroupReduction = '';
 
 		// retrieve price without group_reduction in order to compute the group reduction after
-		// the specific price discount (done in the JS in order to keep backward compatibility)		
+		// the specific price discount (done in the JS in order to keep backward compatibility)
 		priceTaxExclWithoutGroupReduction = ps_round(productPriceTaxExcluded, 6) * (1 / group_reduction);
 
 		var tax = (taxRate / 100) + 1;
@@ -398,7 +398,7 @@ function updateDisplay()
 		else
 			productPricePretaxed = productPriceDisplay;
 		$('#pretaxe_price_display').text(formatCurrency(productPricePretaxed, currencyFormat, currencySign, currencyBlank));
-		// Unit price 
+		// Unit price
 		productUnitPriceRatio = parseFloat(productUnitPriceRatio);
 		if (productUnitPriceRatio > 0 )
 		{
@@ -425,7 +425,7 @@ function displayImage(domAAroundImgThumb, no_animation)
 			$('#bigpic').attr('src', newSrc).load(function() {
 				if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
 					$(this).attr('rel', domAAroundImgThumb.attr('href'));
-			}); 
+			});
 		}
 		$('#views_block li a').removeClass('shown');
 		$(domAAroundImgThumb).addClass('shown');
@@ -575,6 +575,33 @@ $(document).ready(function()
 		'transitionIn'	: 'elastic',
 		'transitionOut'	: 'elastic'
 	});
+
+	var attributes_container = $('.js-attributes');
+	var selectCombination = function() {
+		var elt = $(this);
+
+		if (elt.is('.js-attribute_color')) {
+			var id_attribute = parseInt(elt.attr('id').replace('color_', ''), 10);
+			attributes_container
+				.find('.js-attribute_color_hidden')
+					.val(id_attribute);
+			// Show color selection
+			$('.js-attribute_color').removeClass('selected');
+			elt.fadeTo('fast', 1, function(){
+				elt.fadeTo('fast', 0, function(){
+					elt.fadeTo('fast', 1, function(){
+						elt.addClass('selected');
+					});
+				});
+			});
+		}
+
+		findCombination();
+		getProductAttribute();
+	}
+	attributes_container
+		.on('change', '.js-attribute_select, .js-attribute_radio', selectCombination)
+		.on('click', '.js-attribute_color', selectCombination);
 });
 
 function saveCustomization()
@@ -595,8 +622,8 @@ function submitPublishProduct(url, redirect, token)
 	$.ajaxSetup({async: false});
 	$.post(url + '/index.php', {
 		action:'publishProduct',
-		id_product: id_product, 
-		status: 1, 
+		id_product: id_product,
+		status: 1,
 		redirect: redirect,
 		ajax: 1,
 		tab: 'AdminProducts',
@@ -623,21 +650,6 @@ function checkMinimalQuantity(minimal_quantity)
 		$('#quantity_wanted').css('border', '1px solid #BDC2C9');
 		$('#minimal_quantity_wanted_p').css('color', '#374853');
 	}
-}
-
-function colorPickerClick(elt)
-{
-	id_attribute = $(elt).attr('id').replace('color_', '');
-	$(elt).parent().parent().children().removeClass('selected');
-	$(elt).fadeTo('fast', 1, function(){
-								$(this).fadeTo('fast', 0, function(){
-									$(this).fadeTo('fast', 1, function(){
-										$(this).parent().addClass('selected');
-										});
-									});
-								});
-	$(elt).parent().parent().parent().children('.color_pick_hidden,#color_pick_hidden').val(id_attribute);
-	findCombination(false);
 }
 
 

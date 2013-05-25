@@ -279,7 +279,7 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 			<div class="product_attributes">
 				{if isset($groups)}
 				<!-- attributes -->
-				<div id="attributes">
+				<div id="attributes" class="js-attributes">
 				<div class="clear"></div>
 				{foreach from=$groups key=id_attribute_group item=group}
 					{if $group.attributes|@count}
@@ -288,7 +288,7 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 							{assign var="groupName" value="group_$id_attribute_group"}
 							<div class="attribute_list">
 							{if ($group.group_type == 'select')}
-								<select name="{$groupName}" id="group_{$id_attribute_group|intval}" class="attribute_select" onchange="findCombination();getProductAttribute();">
+								<select name="{$groupName}" id="group_{$id_attribute_group|intval}" class="attribute_select js-attribute_select">
 									{foreach from=$group.attributes key=id_attribute item=group_attribute}
 										<option value="{$id_attribute|intval}"{if (isset($smarty.get.$groupName) && $smarty.get.$groupName|intval == $id_attribute) || $group.default == $id_attribute} selected="selected"{/if} title="{$group_attribute|escape:'htmlall':'UTF-8'}">{$group_attribute|escape:'htmlall':'UTF-8'}</option>
 									{/foreach}
@@ -297,8 +297,8 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 								<ul id="color_to_pick_list" class="clearfix">
 									{assign var="default_colorpicker" value=""}
 									{foreach from=$group.attributes key=id_attribute item=group_attribute}
-									<li{if $group.default == $id_attribute} class="selected"{/if}>
-										<a id="color_{$id_attribute|intval}" class="color_pick{if ($group.default == $id_attribute)} selected{/if}" style="background: {$colors.$id_attribute.value};" title="{$colors.$id_attribute.name}" onclick="colorPickerClick(this);getProductAttribute();">
+									<li class="js-attribute_color {if $group.default == $id_attribute} selected{/if}">
+										<a id="color_{$id_attribute|intval}" class="color_pick" style="background: {$colors.$id_attribute.value};" title="{$colors.$id_attribute.name}">
 											{if file_exists($col_img_dir|cat:$id_attribute|cat:'.jpg')}
 												<img src="{$img_col_dir}{$id_attribute}.jpg" alt="{$colors.$id_attribute.name}" width="20" height="20" /><br />
 											{/if}
@@ -309,12 +309,12 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 									{/if}
 									{/foreach}
 								</ul>
-								<input type="hidden" class="color_pick_hidden" name="{$groupName}" value="{$default_colorpicker}" />
+								<input type="hidden" class="js-attribute_color_hidden" name="{$groupName}" value="{$default_colorpicker}" />
 							{elseif ($group.group_type == 'radio')}
 								<ul>
 									{foreach from=$group.attributes key=id_attribute item=group_attribute}
 										<li>
-											<input type="radio" class="attribute_radio" name="{$groupName}" value="{$id_attribute}" {if ($group.default == $id_attribute)} checked="checked"{/if} onclick="findCombination();getProductAttribute();" />
+											<input type="radio" class="attribute_radio js-attribute_radio" name="{$groupName}" value="{$id_attribute}" {if ($group.default == $id_attribute)} checked="checked"{/if} />
 											<span>{$group_attribute|escape:'htmlall':'UTF-8'}</span>
 										</li>
 									{/foreach}
@@ -350,7 +350,7 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 			<!-- availability -->
 			<p id="availability_statut"{if ($product->quantity <= 0 && !$product->available_later && $allow_oosp) OR ($product->quantity > 0 && !$product->available_now) OR !$product->available_for_order OR $PS_CATALOG_MODE} style="display: none;"{/if}>
 				<span id="availability_label">{l s='Availability:'}</span>
-				<span id="availability_value"{if $product->quantity <= 0} class="warning_inline"{/if}>{if $product->quantity <= 0}{if $allow_oosp}{$product->available_later}{else}{l s='This product is no longer in stock'}{/if}{else}{$product->available_now}{/if}</span>				
+				<span id="availability_value"{if $product->quantity <= 0} class="warning_inline"{/if}>{if $product->quantity <= 0}{if $allow_oosp}{$product->available_later}{else}{l s='This product is no longer in stock'}{/if}{else}{$product->available_now}{/if}</span>
 			</p>
 			<p id="availability_date"{if ($product->quantity > 0) OR !$product->available_for_order OR $PS_CATALOG_MODE OR !isset($product->available_date) OR $product->available_date < $smarty.now|date_format:'%Y-%m-%d'} style="display: none;"{/if}>
 				<span id="availability_date_label">{l s='Availability date:'}</span>
@@ -555,14 +555,14 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 									</div>
 									<div class="clear_product_desc">&nbsp;</div>
 								</div>
-								
+
 								<p class="clearfix" style="margin-top:5px">
 									<a class="button" href="{$accessoryLink|escape:'htmlall':'UTF-8'}" title="{l s='View'}">{l s='View'}</a>
 									{if !$PS_CATALOG_MODE && ($accessory.allow_oosp || $accessory.quantity > 0)}
 									<a class="exclusive button ajax_add_to_cart_button" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$accessory.id_product|intval}&amp;token={$static_token}&amp;add")}" rel="ajax_id_product_{$accessory.id_product|intval}" title="{l s='Add to cart'}">{l s='Add to cart'}</a>
 									{/if}
 								</p>
-								
+
 							</li>
 						{/if}
 					{/foreach}
