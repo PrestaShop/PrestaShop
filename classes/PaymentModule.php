@@ -118,6 +118,16 @@ abstract class PaymentModuleCore extends Module
 		return Country::addModuleRestrictions($shops, $countries, array(array('id_module' => (int)$this->id)));
 	}
 	
+	//see Order::setProductCustomizedDatas()
+	protected function setProductCustomizedDatas(&$product, $customized_datas)
+	{
+		$product['customizedDatas'] = null;
+		if (isset($customized_datas[$product['id_product']][$product['id_product_attribute']]))
+			$product['customizedDatas'] = $customized_datas[$product['id_product']][$product['id_product_attribute']];
+		else
+			$product['customizationQuantityTotal'] = 0;
+	}
+	
 	/**
 	* Validate an order in database
 	* Function called from a payment module
@@ -357,26 +367,30 @@ abstract class PaymentModuleCore extends Module
 					{
 						$price = Product::getPriceStatic((int)$product['id_product'], false, ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : null), 6, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 						$price_wt = Product::getPriceStatic((int)$product['id_product'], true, ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : null), 2, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
-
+						
+						$customized_datas = Product::getAllCustomizedDatas($order->id_cart);
+						//same function as Order::setProductCustomizedDatas => make it a static function ?
+						$this->setProductCustomizedDatas($product, $customized_datas);
+						
 						$customization_quantity = 0;
-						if (isset($customized_datas[$product['id_product']][$product['id_product_attribute']]))
+						if (isset($product['customizedDatas'][$product['id_address_delivery']][$product['id_customization']]))
 						{
 							$customization_text = '';
-							foreach ($customized_datas[$product['id_product']][$product['id_product_attribute']] as $customization)
+							foreach ($product['customizedDatas'][$product['id_address_delivery']][$product['id_customization']] as $customization)
 							{
-								if (isset($customization['datas'][Product::CUSTOMIZE_TEXTFIELD]))
-									foreach ($customization['datas'][Product::CUSTOMIZE_TEXTFIELD] as $text)
+								if (isset($customization[Product::CUSTOMIZE_TEXTFIELD]))
+									foreach ($customization[Product::CUSTOMIZE_TEXTFIELD] as $text)
 										$customization_text .= $text['name'].': '.$text['value'].'<br />';
 
-								if (isset($customization['datas'][Product::CUSTOMIZE_FILE]))
-									$customization_text .= sprintf(Tools::displayError('%d image(s)'), count($customization['datas'][Product::CUSTOMIZE_FILE])).'<br />';
+								if (isset($customization[Product::CUSTOMIZE_FILE]))
+									$customization_text .= sprintf(Tools::displayError('%d image(s)'), count($customization[Product::CUSTOMIZE_FILE])).'<br />';
 
 								$customization_text .= '---<br />';
 							}
 
 							$customization_text = rtrim($customization_text, '---<br />');
 
-							$customization_quantity = (int)$product['customizationQuantityTotal'];
+							$customization_quantity = (int)$product['customization_quantity'];
 							$products_list .=
 							'<tr style="background-color: '.($key % 2 ? '#DDE2E6' : '#EBECEE').';">
 								<td style="padding: 0.6em 0.4em;">'.$product['reference'].'</td>
