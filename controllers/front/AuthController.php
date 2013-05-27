@@ -489,7 +489,11 @@ class AuthControllerCore extends FrontController
 			$this->errors = array_unique(array_merge($this->errors, $address->validateController()));
 
 			// US customer: normalize the address
+<<<<<<< HEAD
+			if ($address->id_country == Country::getByIso('US') && Configuration::get('PS_TAASC'))
+=======
 			if ($address->id_country == Country::getByIso('US'))
+>>>>>>> a04e6b1a67fc34bd1049e546283cb5a938fd2279
 			{
 				include_once(_PS_TAASC_PATH_.'AddressStandardizationSolution.php');
 				$normalize = new AddressStandardizationSolution;
