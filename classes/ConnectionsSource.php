@@ -86,10 +86,12 @@ class ConnectionsSourceCore extends ObjectModel
 		
 		$source->id_connections = (int)$cookie->id_connections;
 		$source->request_uri = Tools::getHttpHost(false, false);
-		if (isset($_SERVER['REDIRECT_URL']))
-			$source->request_uri .= $_SERVER['REDIRECT_URL'];
-		elseif (isset($_SERVER['REQUEST_URI']))
+
+		if (isset($_SERVER['REQUEST_URI']))
 			$source->request_uri .= $_SERVER['REQUEST_URI'];
+		elseif (isset($_SERVER['REDIRECT_URL']))
+			$source->request_uri .= $_SERVER['REDIRECT_URL'];
+
 		if (!Validate::isUrl($source->request_uri))
 			$source->request_uri = '';
 		$source->request_uri = substr($source->request_uri, 0, ConnectionsSource::$uri_max_size);
