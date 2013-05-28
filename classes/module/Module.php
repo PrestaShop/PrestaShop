@@ -1980,6 +1980,11 @@ abstract class ModuleCore
 		if (!is_writable($override_path))
 			return false;
 
+		// Remove comments from override file
+		$code = file_get_contents($override_path);
+		$code = $this->stripComments($code);
+		file_put_contents($override_path, $code);
+
 		// Make a reflection of the override class and the module override class
 		$override_file = file($override_path);
 		eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'), array('', 'class '.$classname.'OverrideOriginal_remove'), implode('', $override_file)));
@@ -2016,6 +2021,21 @@ abstract class ModuleCore
 				}
 		}
 
+		// Remove constants from override file
+		foreach ($module_class->getConstants() as $constant => $value)
+		{
+			if (!$override_class->hasConstant($constant))
+				continue;
+
+			// Remplacer la ligne de déclaration par "remove"
+			foreach ($override_file as $line_number => &$line_content)
+				if (preg_match('/const\s+?'.$constant.'/i', $line_content))
+				{
+					$line_content = '#--remove--#';
+					break;
+				}
+		}
+
 		// Rewrite nice code
 		$code = '';
 		foreach ($override_file as $line)
@@ -2029,6 +2049,212 @@ abstract class ModuleCore
 
 		return true;
 	}
+
+	/****************************************************************************************/
+	/** StripComments Methods ***************************************************************/
+	/****************************************************************************************/
+
+	/**
+	 * stripComments
+	 *
+	 * Supprime les commentaires
+	 * dans les fichier surchargé
+	 *
+	 * @access private
+	 * @param string source Fichier source
+	 * @return string
+	 */
+
+		private function stripComments($source)
+		{
+			if (!defined('T_ML_COMMENT'))
+				define('T_ML_COMMENT', T_COMMENT);
+			else
+				define('T_DOC_COMMENT', T_ML_COMMENT);
+			
+			$tokens = token_get_all($source);
+			$output = "";
+			foreach ($tokens as $token) {
+				if (is_string($token)) {
+					$output .= $token;
+				} else {
+					list($id, $str) = $token;
+					switch ($id) {
+						// case T_WHITESPACE:
+						case T_COMMENT:
+						case T_ML_COMMENT:
+						case T_DOC_COMMENT:
+							break;
+
+						default:
+							$output .= $str;
+							break;
+					}
+				}
+			}
+			$output = trim($output);
+			return $output;
+		}
+
+	/****************************************************************************************/
+	/** AddOverrideTpl Methods **************************************************************/
+	/****************************************************************************************/
+
+	/**
+	 * addOverrideTpl
+	 *
+	 * Ajoute les fichiers template
+	 * dans le dossier override
+	 *
+	 * @access public
+	 * @return array
+	 */
+		public function addOverrideTpl()
+		{
+			// Stockage des erreurs
+			$output = array();
+
+			// Template module directory
+			$moduleFiles = self::recursiveGlob(
+				_PS_MODULE_DIR_.$this->name.DS."override".DS,
+				'*{tpl}',
+				GLOB_BRACE, _PS_MODULE_DIR_.$this->name
+			);
+
+			// Template override directory
+			$overrideFiles = $this->recursiveGlob(
+				_PS_OVERRIDE_DIR_."controllers".DS."admin".DS."templates".DS,
+				'*{tpl}',
+				GLOB_BRACE, _PS_ROOT_DIR_
+			);
+
+			foreach ($moduleFiles as $key => $file)
+				if(in_array($file, $overrideFiles))
+					$output[]["file_exist"] = $file;
+				else
+					if(self::makePath(_PS_ROOT_DIR_.$file)){
+						if(!copy(_PS_MODULE_DIR_.$this->name.$file, _PS_ROOT_DIR_.$file))
+							$output[]["copy_fail"] = $file;
+					}
+
+			if(sizeof($output)) :
+				foreach ($output as $k => $v)
+					if(isset($output[$k]['copy_fail']))
+						$this->_errors[] = sprintf($this->l('An error occurred while copying the file : "%s".<br><br>'), $output[$k]['copy_fail']);
+					elseif(isset($output[$k]['file_exist']))
+						$this->_errors[] = sprintf($this->l('This file already exists in the "override" folder, please contact your webmaster to install the module. <br>"%s"<br><br>'), $output[$k]['file_exist']);
+
+				return false;
+			endif;
+
+			return true;
+		}
+
+
+
+	/****************************************************************************************/
+	/** DelOverrideTpl Methods **************************************************************/
+	/****************************************************************************************/
+
+	/**
+	 * delOverrideTpl
+	 *
+	 * Supprime les fichiers template
+	 * dans le dossier override
+	 *
+	 * @access public
+	 * @return array
+	 */
+		public function delOverrideTpl()
+		{
+			// Stockage des erreurs
+			$output = array();
+
+			// Template module directory
+			$moduleFiles = self::recursiveGlob(
+				_PS_MODULE_DIR_.$this->name.DS."override".DS,
+				'*{tpl}',
+				GLOB_BRACE, _PS_MODULE_DIR_.$this->name
+			);
+
+			// Template override directory
+			$overrideFiles = $this->recursiveGlob(
+				_PS_OVERRIDE_DIR_."controllers".DS."admin".DS."templates".DS,
+				'*{tpl}',
+				GLOB_BRACE, _PS_ROOT_DIR_
+			);
+
+			foreach ($moduleFiles as $key => $file)
+				if(in_array($file, $overrideFiles))
+					if(!unlink(_PS_ROOT_DIR_.$file))
+						$output[]["unlink_fail"] = $file;
+
+			if(sizeof($output)) :
+				foreach ($output as $k => $v)
+					if(isset($output[$k]['unlink_fail']))
+						$this->_errors[] = sprintf($this->l('An error occurred while remove the file : "%s".<br><br>'), $output[$k]['unlink_fail']);
+				return false;
+			endif;
+
+			return true;
+		}
+
+
+
+	/****************************************************************************************/
+	/** RecursiveGlob Methods ***************************************************************/
+	/****************************************************************************************/
+
+	/**
+	 * recursiveGlob
+	 *
+	 * Parse l'ensemble du dossier en paramètre
+	 * et retourne les fichiers correspondant au pattern
+	 *
+	 * @access public
+	 * @param string path Chemin du dossier source
+	 * @param string pattern Masque à rechercher
+	 * @param string flags Drapeau
+	 * @param string subpath Chaine à supprimer
+	 * @return array
+	 */
+		public function recursiveGlob($path = '', $pattern = '*', $flags = 0, $subpath = '')
+		{
+			if(empty($path))
+				return false;
+
+			$paths = glob($path.'*', GLOB_MARK|GLOB_ONLYDIR|GLOB_NOSORT);
+			$files = ((glob($path.$pattern, $flags) === false) ? array() : glob($path.$pattern, $flags));
+			foreach ($paths as $p)
+				if(is_array($files))
+					$files = array_merge($files, str_replace($subpath, '', self::recursiveGlob($p, $pattern, $flags)));
+
+			return $files;
+		}
+
+
+	/****************************************************************************************/
+	/** MakePath Methods ********************************************************************/
+	/****************************************************************************************/
+
+	/**
+	 * makePath
+	 *
+	 * Créer l'arborescence de dossier
+	 *
+	 * @access public
+	 * @param string path Chemin du dossier cible
+	 * @param string is_filename La cible est un fichier
+	 * @return bool
+	 */
+		public function makePath($path, $is_filename = true) {
+			if($is_filename)
+				$path = substr($path, 0, strrpos($path, '/'));
+
+			if (is_dir($path) || file_exists($path))
+				return true;
+			return mkdir($path, 0777, true);
+		}
 }
 
 function ps_module_version_sort($a, $b)
