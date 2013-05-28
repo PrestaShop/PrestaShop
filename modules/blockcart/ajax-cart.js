@@ -313,7 +313,7 @@ var ajaxCart = {
 								// If the cart is now empty, show the 'no product in the cart' message and close detail
 								if($('#cart_block dl.products dt').length == 0)
 								{
-									$("#header #cart_block").stop(true, true).slideUp(200);
+									$("#cart_block").stop(true, true).slideUp(200);
 									$('#cart_block_no_products:hidden').slideDown(450);
 									$('#cart_block dl.products').remove();
 								}
@@ -377,7 +377,7 @@ var ajaxCart = {
 		else
 		{
 			$('#vouchers tbody').html('');
-		
+
 			for (i=0;i<jsonData.discounts.length;i++)
 			{
 				if (parseFloat(jsonData.discounts[i].price_float) > 0)
@@ -428,7 +428,7 @@ var ajaxCart = {
 			if (this.id != undefined)
 			{
 				//create a container for listing the products and hide the 'no product in the cart' message (only if the cart was empty)
-				
+
 				if ($('#cart_block dl.products').length == 0)
 				{
 					$('#cart_block_no_products').before('<dl class="products"></dl>');
@@ -445,7 +445,7 @@ var ajaxCart = {
 					content += '<span class="quantity-formated"><span class="quantity">' + this.quantity + '</span>x</span>';
 					var name = (this.name.length > 12 ? this.name.substring(0, 10) + '...' : this.name);
 					content += '<a href="' + this.link + '" title="' + this.name + '" class="cart_block_product_name">' + name + '</a>';
-					
+
 					if (parseFloat(this.price_float) > 0)
 						content += '<span class="remove_link"><a rel="nofollow" class="ajax_cart_block_remove_link" href="' + baseUri + '?controller=cart&amp;delete=1&amp;id_product=' + productId + '&amp;token=' + static_token + (this.hasAttributes ? '&amp;ipa=' + parseInt(this.idCombination) : '') + '"> </a></span>';
 					else
@@ -595,7 +595,7 @@ var ajaxCart = {
 	//update general cart informations everywhere in the page
 	updateCartEverywhere : function(jsonData) {
 		$('.ajax_cart_total').text($.trim(jsonData.productTotal));
-		
+
 		if (parseFloat(jsonData.shippingCostFloat) > 0 || jsonData.nbTotalProducts < 1)
 			$('.ajax_cart_shipping_cost').text(jsonData.shippingCost);
 		else if (typeof(freeShippingTranslation) != 'undefined')
@@ -605,7 +605,7 @@ var ajaxCart = {
 		$('.ajax_block_cart_total').text(jsonData.total);
 
 		this.nb_total_products = jsonData.nbTotalProducts;
-		
+
 		if (parseInt(jsonData.nbTotalProducts) > 0)
 		{
 			$('.ajax_cart_no_product').hide();
@@ -689,10 +689,10 @@ $(document).ready(function(){
 				$("#cart_block").stop(true, true).slideDown(450);
 		},
 		function() {
-			$('#header #shopping_cart a').css('border-radius', '3px');
+			$('#shopping_cart a').css('border-radius', '3px');
 			setTimeout(function() {
 				if (!shopping_cart.isHoveringOver() && !cart_block.isHoveringOver())
-					$("#header #cart_block").stop(true, true).slideUp(450);
+					$("#cart_block").stop(true, true).slideUp(450);
 			}, 200);
 		}
 	);
@@ -705,17 +705,17 @@ $(document).ready(function(){
 			$('#shopping_cart a').css('border-radius', '3px');
 			setTimeout(function() {
 				if (!shopping_cart.isHoveringOver())
-					$("#header #cart_block").stop(true, true).slideUp(450);
+					$("#cart_block").stop(true, true).slideUp(450);
 			}, 200);
 		}
 	);
-	
+
 	$('.delete_voucher').live('click', function() {
 		$.ajax({
-			type: 'POST',			
+			type: 'POST',
 			headers: { "cache-control": "no-cache" },
 			async: true,
-			cache: false,			
+			cache: false,
 			url:$(this).attr('href') + '?rand=' + new Date().getTime()
 		});
 		$(this).parent().parent().remove();
