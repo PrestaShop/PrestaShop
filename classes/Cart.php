@@ -2736,8 +2736,7 @@ class CartCore extends ObjectModel
 
 			if (Validate::isLoadedObject($module))
 			{
-				if (array_key_exists('id_carrier', $module))
-					$module->id_carrier = $carrier->id;
+ 				$module->id_carrier = $carrier->id;
 				if ($carrier->need_range)
 					if (method_exists($module, 'getPackageShippingCost'))
 						$shipping_cost = $module->getPackageShippingCost($this, $shipping_cost, $products);

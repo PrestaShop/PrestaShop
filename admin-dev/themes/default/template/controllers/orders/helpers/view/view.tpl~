@@ -119,7 +119,7 @@
 					{/if}
 					{else}
                                             <option  value="{$state['id_order_state']}">{$state['name']|stripslashes}</option>
-                                       {/if}
+                                        {/if}
 				{/foreach}
 				</select>
 				<input type="hidden" name="id_order" value="{$order->id}" />
