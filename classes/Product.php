@@ -3347,33 +3347,57 @@ class ProductCore extends ObjectModel
 			WHERE pa.`id_product` = '.(int)$id_product_old
 		);
 
+		$combinations = array();
 		foreach ($result as $row)
 		{
 			$id_product_attribute_old = (int)$row['id_product_attribute'];
-			$result2 = Db::getInstance()->executeS('
-			SELECT *
-			FROM `'._DB_PREFIX_.'product_attribute_combination`
-				WHERE `id_product_attribute` = '.$id_product_attribute_old
-			);
+			if (!isset($combinations[$id_product_attribute_old]))
+			{
+				$id_combination = null;
+				$id_shop = null;
+				$result2 = Db::getInstance()->executeS('
+				SELECT *
+				FROM `'._DB_PREFIX_.'product_attribute_combination`
+					WHERE `id_product_attribute` = '.$id_product_attribute_old
+				);
+			}
+			else
+			{
+				$id_combination = (int)$combinations[$id_product_attribute_old];
+				$id_shop = (int)$row['id_shop'];
+				$context_old = Shop::getContext();
+				$context_shop_id_old = Shop::getContextShopID();
+				Shop::setContext(Shop::CONTEXT_SHOP, $id_shop);
+
+			}
 
 			$row['id_product'] = $id_product_new;
 			unset($row['id_product_attribute']);
-			$combination = new Combination();
+
+			$combination = new Combination($id_combination, null, $id_shop);
 			foreach ($row as $k => $v)
 				$combination->$k = $v;
-			$return &= $combination->add();
+			$return &= $combination->save();
 
 			$id_product_attribute_new = (int)$combination->id;
+
 			if ($result_images = Product::_getAttributeImageAssociations($id_product_attribute_old))
 			{
 				$combination_images['old'][$id_product_attribute_old] = $result_images;
 				$combination_images['new'][$id_product_attribute_new] = $result_images;
 			}
-			foreach ($result2 as $row2)
+
+			if (!isset($combinations[$id_product_attribute_old]))
 			{
-				$row2['id_product_attribute'] = $id_product_attribute_new;
-				$return &= Db::getInstance()->insert('product_attribute_combination', $row2);
+				$combinations[$id_product_attribute_old] = (int)$id_product_attribute_new;			
+				foreach ($result2 as $row2)
+				{
+					$row2['id_product_attribute'] = $id_product_attribute_new;
+					$return &= Db::getInstance()->insert('product_attribute_combination', $row2);
+				}
 			}
+			else
+				Shop::setContext($context_old, $context_shop_id_old);
 		}
 		return !$return ? false : $combination_images;
 	}
@@ -5277,4 +5301,3 @@ class ProductCore extends ObjectModel
 		return Db::getInstance()->executeS('SELECT id_product_item as id, quantity FROM '._DB_PREFIX_.'pack where id_product_pack = '.(int)$this->id);
 	}
 }
-
