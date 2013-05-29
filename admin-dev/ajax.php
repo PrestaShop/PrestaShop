@@ -155,6 +155,8 @@ if (Tools::isSubmit('toggleScreencast'))
 
 if (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category_parent'))
 {
+	if (Shop::getTotalShops(false, null) < 2)
+		$context->shop = new Shop( (int) $context->employee->getDefaultShopID() );
 	$children_categories = Category::getChildrenWithNbSelectedSubCat(Tools::getValue('id_category_parent'), Tools::getValue('selectedCat'), Context::getContext()->language->id, null, Tools::getValue('use_shop_context'));
 	die(Tools::jsonEncode($children_categories));
 }
