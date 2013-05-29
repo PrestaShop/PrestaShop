@@ -157,10 +157,12 @@ class ProductControllerCore extends FrontController
 							$this->category = new Category($regs[5], (int)$this->context->cookie->id_lang);
 					}
 				}
-				else
-					// Set default product category
-					$this->category = new Category($this->product->id_category_default, (int)$this->context->cookie->id_lang);
 			}
+			// If no category set, use the default product category
+			// Set default product category
+			if (!isset($this->category))			
+				$this->category = new Category($this->product->id_category_default, (int)$this->context->cookie->id_lang);
+			
 		}
 	}
 
