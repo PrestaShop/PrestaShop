@@ -497,8 +497,7 @@ class CustomerCore extends ObjectModel
 				WHERE (
 						`email` LIKE \'%'.pSQL($query).'%\'
 						OR `id_customer` LIKE \'%'.pSQL($query).'%\'
-						OR `lastname` LIKE \'%'.pSQL($query).'%\'
-						OR `firstname` LIKE \'%'.pSQL($query).'%\'
+						OR CONCAT(`firstname`,CONCAT(\' \',`lastname`)) LIKE \'%'.pSQL($query).'%\'
 					)'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER);
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
