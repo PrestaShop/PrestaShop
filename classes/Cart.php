@@ -577,8 +577,9 @@ class CartCore extends ObjectModel
 				);
 
 				$tax_rate = Tax::getProductTaxRate((int)$row['id_product'], (int)$address_id);
-
-				$row['total_wt'] = Tools::ps_round($row['price'] * (float)$row['cart_quantity'] * (1 + (float)$tax_rate / 100), 2);
+				
+				$row['total_wt'] = Tools::ps_round($row['price'] * (1 + (float)$tax_rate / 100), 2);
+				$row['total_wt'] = $row['total_wt'] *(float)$row['cart_quantity'];
 				$row['total'] = $row['price'] * (int)$row['cart_quantity'];
 			}
 			else
