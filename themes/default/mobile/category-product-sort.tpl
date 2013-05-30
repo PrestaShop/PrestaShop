@@ -61,7 +61,7 @@
 				{/if}
 				<option value="name:asc" {if $orderby eq 'name' AND $orderway eq 'asc'}selected="selected"{/if}>{l s='Product Name: A to Z'}</option>
 				<option value="name:desc" {if $orderby eq 'name' AND $orderway eq 'desc'}selected="selected"{/if}>{l s='Product Name: Z to A'}</option>
-				{if !$PS_CATALOG_MODE}
+				{if $PS_STOCK_MANAGEMENT and !$PS_CATALOG_MODE}	
 					<option value="quantity:desc" {if $orderby eq 'quantity' AND $orderway eq 'desc'}selected="selected"{/if}>{l s='In stock'}</option>
 				{/if}
 			</select>
