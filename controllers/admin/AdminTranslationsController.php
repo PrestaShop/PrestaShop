@@ -983,8 +983,6 @@ class AdminTranslationsControllerCore extends AdminController
 							'header.inc.php',
 							'footer.inc.php',
 							'index.php',
-							'login.php',
-							'password.php',
 							'functions.php'
 						)
 					)
