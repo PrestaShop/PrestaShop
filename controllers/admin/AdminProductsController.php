@@ -914,7 +914,9 @@ class AdminProductsControllerCore extends AdminController
 		$tos = Tools::getValue('spm_to');
 
 		foreach ($id_specific_prices as $key => $id_specific_price)
-			if ($this->_validateSpecificPrice($id_shops[$key], $id_currencies[$key], $id_countries[$key], $id_groups[$key], $id_customers[$key], $prices[$key], $from_quantities[$key], $reductions[$key], $reduction_types[$key], $froms[$key], $tos[$key], $id_combinations[$key]))
+			if ($reduction_types[$key] == 'percentage' && ((float)$reductions[$key] <= 0 || (float)$reductions[$key] > 100))
+				$this->errors[] = Tools::displayError('Submitted reduction value (0-100) is out-of-range');
+			elseif ($this->_validateSpecificPrice($id_shops[$key], $id_currencies[$key], $id_countries[$key], $id_groups[$key], $id_customers[$key], $prices[$key], $from_quantities[$key], $reductions[$key], $reduction_types[$key], $froms[$key], $tos[$key], $id_combinations[$key]))
 			{
 				$specific_price = new SpecificPrice((int)($id_specific_price));
 				$specific_price->id_shop = (int)$id_shops[$key];
@@ -930,7 +932,7 @@ class AdminProductsControllerCore extends AdminController
 				$specific_price->from = !$froms[$key] ? '0000-00-00 00:00:00' : $froms[$key];
 				$specific_price->to = !$tos[$key] ? '0000-00-00 00:00:00' : $tos[$key];
 				if (!$specific_price->update())
-					$this->errors = Tools::displayError('An error occurred while updating the specific price.');
+					$this->errors[] = Tools::displayError('An error occurred while updating the specific price.');
 			}
 		if (!count($this->errors))
 			$this->redirect_after = self::$currentIndex.'&id_product='.(int)(Tools::getValue('id_product')).(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&update'.$this->table.'&action=Prices&token='.$this->token;
@@ -960,7 +962,10 @@ class AdminProductsControllerCore extends AdminController
 		$to = Tools::getValue('sp_to');
 		if (!$to)
 			$to = '0000-00-00 00:00:00';
-		if ($this->_validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_product_attribute))
+									
+		if ($reduction_type == 'percentage' && ((float)$reduction <= 0 || (float)$reduction > 100))
+			$this->errors[] = Tools::displayError('Submitted reduction value (0-100) is out-of-range');
+		elseif ($this->_validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_product_attribute))
 		{
 			$specificPrice = new SpecificPrice();
 			$specificPrice->id_product = (int)$id_product;
@@ -977,7 +982,7 @@ class AdminProductsControllerCore extends AdminController
 			$specificPrice->from = $from;
 			$specificPrice->to = $to;
 			if (!$specificPrice->add())
-				$this->errors = Tools::displayError('An error occurred while updating the specific price.');
+				$this->errors[] = Tools::displayError('An error occurred while updating the specific price.');
 		}
 	}
 
