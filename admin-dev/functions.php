@@ -223,17 +223,6 @@ function checkPSVersion()
 	return $upgrader->checkPSVersion();
 }
 
-function translate($string)
-{
-	global $_LANGADM;
-	if (!is_array($_LANGADM))
-		return str_replace('"', '&quot;', $string);
-	$key = md5(str_replace('\'', '\\\'', $string));
-	$str = (key_exists('index'.$key, $_LANGADM)) ? $_LANGADM['index'.$key] : ((key_exists('index'.$key, $_LANGADM)) ? $_LANGADM['index'.$key] : $string);
-	return str_replace('"', '&quot;', stripslashes($str));
-}
-
-
 /**
  * Returns a new Tab object
  *
@@ -461,7 +450,7 @@ function runAdminTab($tab, $ajaxMode = false)
 				echo '<div class="path_bar">
 			<div id="help-button" class="floatr" style="display: none; font-family: Verdana; font-size: 10px; margin-right: 4px; margin-top: 4px;">
 			</div>
-				<a href="?token='.Tools::getAdminToken($tab.intval(Tab::getIdFromClassName($tab)).(int)Context::getContext()->employee->id).'">'.translate('Back Office').'</a>
+				<a href="?token='.Tools::getAdminToken($tab.intval(Tab::getIdFromClassName($tab)).(int)Context::getContext()->employee->id).'">'.Translate::getAdminTranslation('Back Office').'</a>
 				'.$bread.'</div>';
 
 			if (!$ajaxMode && Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && Context::getContext()->controller->multishop_context != Shop::CONTEXT_ALL)
@@ -470,10 +459,10 @@ function runAdminTab($tab, $ajaxMode = false)
 				if (Shop::getContext() == Shop::CONTEXT_GROUP)
 				{
 					$shop_group = new ShopGroup((int)Shop::getContextShopGroupID());
-					printf(translate('You are configuring your store for group shop %s'), '<b>'.$shop_group->name.'</b>');
+					printf(Translate::getAdminTranslation('You are configuring your store for group shop %s'), '<b>'.$shop_group->name.'</b>');
 				}
 				elseif (Shop::getContext() == Shop::CONTEXT_SHOP)
-					printf(translate('You are configuring your store for shop %s'), '<b>'.Context::getContext()->shop->name.'</b>');
+					printf(Translate::getAdminTranslation('You are configuring your store for shop %s'), '<b>'.Context::getContext()->shop->name.'</b>');
 				echo '</div>';
 			}
 			if (Validate::isLoadedObject($adminObj))
@@ -546,8 +535,8 @@ function runAdminTab($tab, $ajaxMode = false)
 
 
 						// we can display the correct url
-						// die(Tools::jsonEncode(array(translate('Invalid security token'),$url)));
-						die(Tools::jsonEncode(translate('Invalid security token')));
+						// die(Tools::jsonEncode(array(Translate::getAdminTranslation('Invalid security token'),$url)));
+						die(Tools::jsonEncode(Translate::getAdminTranslation('Invalid security token')));
 					}
 					else
 					{
@@ -559,17 +548,17 @@ function runAdminTab($tab, $ajaxMode = false)
 						if (false === strpos($url, '?token=') AND false === strpos($url, '&token='))
 							$url .= '&token='.$adminObj->token;
 
-						$message = translate('Invalid security token');
+						$message = Translate::getAdminTranslation('Invalid security token');
 						echo '<html><head><title>'.$message.'</title></head><body style="font-family:Arial,Verdana,Helvetica,sans-serif;background-color:#EC8686">
 							<div style="background-color:#FAE2E3;border:1px solid #000000;color:#383838;font-weight:700;line-height:20px;margin:0 0 10px;padding:10px 15px;width:500px">
 								<img src="../img/admin/error2.png" style="margin:-4px 5px 0 0;vertical-align:middle">
 								'.$message.'
 							</div>';
 						echo '<a href="'.htmlentities($url).'" method="get" style="float:left;margin:10px">
-								<input type="button" value="'.Tools::htmlentitiesUTF8(translate('I understand the risks and I really want to display this page')).'" style="height:30px;margin-top:5px" />
+								<input type="button" value="'.Tools::htmlentitiesUTF8(Translate::getAdminTranslation('I understand the risks and I really want to display this page')).'" style="height:30px;margin-top:5px" />
 							</a>
 							<a href="index.php" method="get" style="float:left;margin:10px">
-								<input type="button" value="'.Tools::htmlentitiesUTF8(translate('Take me out of here!')).'" style="height:40px" />
+								<input type="button" value="'.Tools::htmlentitiesUTF8(Translate::getAdminTranslation('Take me out of here!')).'" style="height:40px" />
 							</a>
 						</body></html>';
 						die;
