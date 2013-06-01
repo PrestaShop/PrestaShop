@@ -117,6 +117,7 @@ class AdminPPreferencesControllerCore extends AdminController
 							array('id' => '4', 'name' => $this->l('Position inside category')),
 							array('id' => '5', 'name' => $this->l('Manufacturer')),
 							array('id' => '6', 'name' => $this->l('Product quantity'))
+							array('id' => '7', 'name' => $this->l('Prodct reference'))
 						),
 						'identifier' => 'id'
 					),

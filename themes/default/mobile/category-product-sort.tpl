@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {if isset($orderby) AND isset($orderway)}
-	{if !isset($sort_already_display)} 
+	{if !isset($sort_already_display)}
 		{assign var='sort_already_display' value='true' scope="global"}
 		<!-- Sort products -->
 		{if isset($smarty.get.id_category) && $smarty.get.id_category}
@@ -35,7 +35,7 @@
 		{else}
 			{assign var='request' value=$link->getPaginationLink(false, false, false, true)}
 		{/if}
-		
+
 		<script type="text/javascript">
 		//<![CDATA[
 		$(document).ready(function()
@@ -64,6 +64,8 @@
 				{if !$PS_CATALOG_MODE}
 					<option value="quantity:desc" {if $orderby eq 'quantity' AND $orderway eq 'desc'}selected="selected"{/if}>{l s='In stock'}</option>
 				{/if}
+				<option value="reference:asc" {if $orderby eq 'reference' AND $orderway eq 'asc'}selected="selected"{/if}>{l s='Reference: Lowest first'}</option>
+				<option value="reference:desc" {if $orderby eq 'reference' AND $orderway eq 'desc'}selected="selected"{/if}>{l s='Reference: Highest first'}</option>
 			</select>
 		</form>
 	</div> <!-- .{$container_class} -->
