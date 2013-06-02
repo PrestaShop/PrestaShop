@@ -669,6 +669,7 @@ class Blocktopmenu extends Module
 		if (is_null($category->id))
 			return false;
 
+		$selected = ($this->page_name == 'category' && ((int)Tools::getValue('id_category') == $id_category));
 		$item = array(
 			'selected' => $selected,
 			'href' => $category_link,
@@ -676,8 +677,6 @@ class Blocktopmenu extends Module
 		);
 
 		$children = Category::getChildren((int)$id_category, (int)$id_lang, true, (int)$id_shop);
-		$selected = ($this->page_name == 'category' && ((int)Tools::getValue('id_category') == $id_category)) ? ' class="sfHoverForce"' : '';
-
 		$is_intersected = array_intersect($category->getGroups(), $this->user_groups);
 		// filter the categories that the user is allowed to see and browse
 		if (!empty($is_intersected))
@@ -687,8 +686,9 @@ class Blocktopmenu extends Module
 				$submenu = array();
 				foreach ($children as $child)
 					$submenu[] = $this->getCategory((int)$child['id_category'], (int)$id_lang, (int)$child['id_shop']);
+
+				$item['submenu'] = $submenu;
 			}
-			$item['submenu'] = $submenu;
 		}
 
 		return $item;
@@ -767,7 +767,7 @@ class Blocktopmenu extends Module
 		{
 			$this->makeMenu();
 			$this->smarty->assign('MENU_SEARCH', Configuration::get('MOD_BLOCKTOPMENU_SEARCH'));
-			$this->smarty->assign('MENU', $this->_menu);
+			$this->smarty->assign('MENU', $this->menu_items);
 			$this->smarty->assign('this_path', $this->_path);
 		}
 
