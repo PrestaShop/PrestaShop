@@ -684,9 +684,8 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	public function setPageNumber($page_number)
 	{
 		$page_number = (int)$page_number;
-		if ($page_number > 0) {
+		if ($page_number > 0)
 			$page_number--;
-		}
 		
 		$this->page_number = $page_number;
 		return $this;
