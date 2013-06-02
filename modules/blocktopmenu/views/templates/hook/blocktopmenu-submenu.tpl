@@ -5,7 +5,7 @@
 				{$link.label}
 			</a>
 			{if isset($link.submenu) && is_array($link.submenu) && count($link.submenu) > 0}
-				{include file="blocktopmenu-submenu.tpl" items=$link.submenu}
+				{include file="$self/blocktopmenu-submenu.tpl" items=$link.submenu}
 			{/if}
 		</li>
 	{/foreach}
