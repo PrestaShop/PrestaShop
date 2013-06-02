@@ -766,9 +766,12 @@ class Blocktopmenu extends Module
 		if (!$this->isCached('blocktopmenu.tpl', $this->getCacheId()))
 		{
 			$this->makeMenu();
-			$this->smarty->assign('MENU_SEARCH', Configuration::get('MOD_BLOCKTOPMENU_SEARCH'));
-			$this->smarty->assign('MENU', $this->menu_items);
-			$this->smarty->assign('this_path', $this->_path);
+			$this->smarty->assign(array(
+				'MENU_SEARCH' => Configuration::get('MOD_BLOCKTOPMENU_SEARCH'),
+				'MENU' => $this->menu_items,
+				'this_path' => $this->_path,
+				'self' => dirname(__FILE__)
+			));
 		}
 
 		$this->context->controller->addJS($this->_path.'js/hoverIntent.js');
