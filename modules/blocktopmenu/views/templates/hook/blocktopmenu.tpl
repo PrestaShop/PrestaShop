@@ -3,7 +3,7 @@
 	<div class="sf-contener clearfix">
 		<ul class="sf-menu clearfix">
 			{foreach from=$MENU item="link"}
-				<li {if $link.selected}class="sfHover"{/if}>
+				<li {if $link.selected}class="sfHoverForce"{/if}>
 					<a href="{$link.href}" {if isset($link.new_window) && $link.new_window}target="_blank"{/if}>
 						{$link.label}
 					</a>

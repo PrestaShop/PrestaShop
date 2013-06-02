@@ -1,6 +1,6 @@
 <ul>
 	{foreach from=$links item="link"}
-		<li {if $link.selected}class="sfHover"{/if}>
+		<li {if $link.selected}class="sfHoverForce"{/if}>
 			<a href="{$link.href}" {if isset($link.new_window) && $link.new_window}target="_blank"{/if}>
 				{$link.label}
 			</a>
