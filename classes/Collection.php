@@ -83,7 +83,7 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	/**
 	 * @var int Size of a page
 	 */
-	protected $page_size = 10;
+	protected $page_size = 0;
 
 	protected $fields = array();
 	protected $alias = array();
