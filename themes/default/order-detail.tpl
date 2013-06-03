@@ -100,7 +100,7 @@
 		{elseif $field_item eq "address2" && $address_delivery->address2}<li class="address_address2">{$address_delivery->address2|escape:'htmlall':'UTF-8'}</li>
 		{elseif $field_item eq "phone_mobile" && $address_delivery->phone_mobile}<li class="address_phone_mobile">{$address_delivery->phone_mobile|escape:'htmlall':'UTF-8'}</li>
 		{else}
-				{assign var=address_words value=" "|explode:$field_item} 
+				{assign var=address_words value=" "|explode:$field_item}
 				<li>{foreach from=$address_words item=word_item name="word_loop"}{if !$smarty.foreach.word_loop.first} {/if}<span class="address_{$word_item|replace:',':''}">{$deliveryAddressFormatedValues[$word_item|replace:',':'']|escape:'htmlall':'UTF-8'}</span>{/foreach}</li>
 		{/if}
 	{/foreach}
@@ -325,7 +325,7 @@
 		<tbody>
 			{foreach from=$order->getShipping() item=line}
 			<tr class="item">
-				<td>{$line.date_add}</td>
+				<td>{dateFormat date=$line.date_add full=0}</td>
 				<td>{$line.carrier_name}</td>
 				<td>{if $line.weight > 0}{$line.weight|string_format:"%.3f"} {Configuration::get('PS_WEIGHT_UNIT')}{else}-{/if}</td>
 				<td>{if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}{displayPrice price=$line.shipping_cost_tax_incl currency=$currency->id}{else}{displayPrice price=$line.shipping_cost_tax_excl currency=$currency->id}{/if}</td>
