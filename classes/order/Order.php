@@ -1627,7 +1627,7 @@ class OrderCore extends ObjectModel
 		return Db::getInstance()->getValue('
 			SELECT SUM(total_paid_tax_incl)
 			FROM `'._DB_PREFIX_.'orders`
-			WHERE `reference` = '.(int)$this->reference.'
+			WHERE `reference` = \''.pSQL($this->reference).'\'
 			AND `id_cart` = '.(int)$this->id_cart
 		);
 	}
