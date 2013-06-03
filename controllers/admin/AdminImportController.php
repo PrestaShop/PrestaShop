@@ -1410,6 +1410,10 @@ class AdminImportControllerCore extends AdminController
 						}
 					}
 				}
+				//Load images
+				if(isset($info['image']))
+					$product->image = explode($this->multiple_value_separator, $info['image']);
+				
 				//delete existing images if "delete_existing_images" is set to 1
 				if (isset($product->delete_existing_images))
 					if ((bool)$product->delete_existing_images)
