@@ -12,7 +12,6 @@
 					{/if}
 				</li>
 			{/foreach}
-			{$MENU}
 			{if $MENU_SEARCH}
 				<li class="sf-search noBack" style="float:right">
 					<form id="searchbox" action="{$link->getPageLink('search')}" method="get">
