@@ -632,6 +632,39 @@ class Blocktopmenu extends Module
 		}
 	}
 
+	/*
+	 * This method builds a legacy "MENU" variable for Smarty, to keep backward compatibility with old templates
+	 */
+	public function makeMenuDeprecated()
+	{
+		$MENU = '';
+
+		foreach ($this->menu_items as $item)
+		{
+			$MENU .= '<li ' . ($item['selected']?'class="sfHoverForce"':'') . '>' . PHP_EOL .
+				'<a href="' . $item['href'] . '" '. ((isset($item['new_window']) && $item['new_window'])?'target="_blank"':'') . '>' . PHP_EOL .
+					$item['label'] . PHP_EOL .
+				'</a>' . PHP_EOL;
+			if (isset($item['submenu']) && is_array($item['submenu']) && count($item['submenu']) > 0)
+			{
+				$MENU .= '<ul>' . PHP_EOL;
+				foreach ($item['submenu'] as $sub_item)
+				{
+					$MENU .= '<li ' . ($sub_item['selected']?'class="sfHoverForce"':'') . '>' . PHP_EOL .
+						'<a href="' . $sub_item['href'] . '" '. ((isset($sub_item['new_window']) && $sub_item['new_window'])?'target="_blank"':'') .'>' . PHP_EOL .
+							$sub_item['label'] . PHP_EOL .
+						'</a>' . PHP_EOL .
+					'</li>' . PHP_EOL;
+				}
+				$MENU .= '</ul>' . PHP_EOL;
+			}
+
+			$MENU .= '</li>' . PHP_EOL;
+		}
+
+		$this->smarty->assign(compact('MENU'));
+	}
+
 	private function getCategoryOption($id_category = 1, $id_lang = false, $id_shop = false, $recursive = true)
 	{
 		$id_lang = $id_lang ? (int)$id_lang : (int)Context::getContext()->language->id;
@@ -768,10 +801,12 @@ class Blocktopmenu extends Module
 			$this->makeMenu();
 			$this->smarty->assign(array(
 				'MENU_SEARCH' => Configuration::get('MOD_BLOCKTOPMENU_SEARCH'),
-				'MENU' => $this->menu_items,
+				'menu_items' => $this->menu_items,
 				'this_path' => $this->_path,
 				'self' => dirname(__FILE__)
 			));
+			// Old MENU assign
+			$this->makeMenuDeprecated();
 		}
 
 		$this->context->controller->addJS($this->_path.'js/hoverIntent.js');

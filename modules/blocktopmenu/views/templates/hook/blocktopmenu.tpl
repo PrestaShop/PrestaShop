@@ -1,8 +1,8 @@
-{if count($MENU) > 0}
+{if count($menu_items) > 0}
 	<!-- Menu -->
 	<div class="sf-contener clearfix">
 		<ul class="sf-menu clearfix">
-			{foreach from=$MENU item="link"}
+			{foreach from=$menu_items item="link"}
 				<li {if $link.selected}class="sfHoverForce"{/if}>
 					<a href="{$link.href}" {if isset($link.new_window) && $link.new_window}target="_blank"{/if}>
 						{$link.label}
@@ -12,6 +12,7 @@
 					{/if}
 				</li>
 			{/foreach}
+			{$MENU}
 			{if $MENU_SEARCH}
 				<li class="sf-search noBack" style="float:right">
 					<form id="searchbox" action="{$link->getPageLink('search')}" method="get">
