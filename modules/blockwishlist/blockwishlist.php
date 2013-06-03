@@ -212,7 +212,10 @@ class BlockWishList extends Module
 	{
 		return $this->hookRightColumn($params);
 	}
-
+	public function hookTop($params)
+	{
+		return $this->hookRightColumn($params);
+	}
 	public function hookProductActions($params)
 	{
 		$this->smarty->assign('id_product', (int)(Tools::getValue('id_product')));
