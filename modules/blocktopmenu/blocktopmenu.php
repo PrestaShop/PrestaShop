@@ -647,22 +647,30 @@ class Blocktopmenu extends Module
 				'</a>' . PHP_EOL;
 			if (isset($item['submenu']) && is_array($item['submenu']) && count($item['submenu']) > 0)
 			{
-				$MENU .= '<ul>' . PHP_EOL;
-				foreach ($item['submenu'] as $sub_item)
-				{
-					$MENU .= '<li ' . ($sub_item['selected']?'class="sfHoverForce"':'') . '>' . PHP_EOL .
-						'<a href="' . $sub_item['href'] . '" '. ((isset($sub_item['new_window']) && $sub_item['new_window'])?'target="_blank"':'') .'>' . PHP_EOL .
-							$sub_item['label'] . PHP_EOL .
-						'</a>' . PHP_EOL .
-					'</li>' . PHP_EOL;
-				}
-				$MENU .= '</ul>' . PHP_EOL;
+				$MENU .= $this->makeSubMenuDeprecated($item['submenu']);
 			}
 
 			$MENU .= '</li>' . PHP_EOL;
 		}
 
 		$this->smarty->assign(compact('MENU'));
+	}
+	public function makeSubMenuDeprecated($items) {
+		$html = '<ul>' . PHP_EOL;
+		foreach ($items as $item)
+		{
+			$html .= '<li ' . ($item['selected']?'class="sfHoverForce"':'') . '>' . PHP_EOL .
+				'<a href="' . $item['href'] . '" '. ((isset($item['new_window']) && $item['new_window'])?'target="_blank"':'') .'>' . PHP_EOL .
+					$item['label'] . PHP_EOL .
+				'</a>' . PHP_EOL;
+			if (isset($item['submenu']) && is_array($item['submenu']) && count($item['submenu']) > 0)
+			{
+				$html .= $this->makeSubMenuDeprecated($item['submenu']);
+			}
+			$html .= '</li>' . PHP_EOL;
+		}
+		$html .= '</ul>' . PHP_EOL;
+		return $html;
 	}
 
 	private function getCategoryOption($id_category = 1, $id_lang = false, $id_shop = false, $recursive = true)
