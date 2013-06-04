@@ -108,7 +108,7 @@ class FrontControllerCore extends Controller
 
 		// If current URL use SSL, set it true (used a lot for module redirect)
 		if (Tools::usingSecureMode())
-			$useSSL = $this->ssl = true;
+			$useSSL = true;
 
 		// For compatibility with globals, DEPRECATED as of version 1.5
 		$css_files = $this->css_files;
