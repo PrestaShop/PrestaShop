@@ -601,7 +601,7 @@ class Loyalty extends Module
 		$html = '
 		<br /><h2>'.sprintf($this->l('Loyalty points (%d points)'), $points).'</h2>';
 
-		if (!$points)
+		if (!isset($points) || count($details) == 0)
 			return $html.' '.$this->l('This customer has no points');
 
 		$html .= '
@@ -619,7 +619,7 @@ class Loyalty extends Module
 			$html .= '
 			<tr style="background-color: '.($key % 2 != 0 ? '#FFF6CF' : '#FFFFFF').';">
 				<td>'.((int)$loyalty['id'] > 0 ? '<a style="color: #268CCD; font-weight: bold; text-decoration: underline;" href="'.$url.'">'.sprintf($this->l('#%d'), $loyalty['id']).'</a>' : '--').'</td>
-				<td>'.Tools::displayDate($loyalty['date'], (int)$params['cookie']->id_lang).'</td>
+				<td>'.Tools::displayDate($loyalty['date']).'</td>
 				<td>'.((int)$loyalty['id'] > 0 ? $loyalty['total_without_shipping'] : '--').'</td>
 				<td>'.(int)$loyalty['points'].'</td>
 				<td>'.$loyalty['state'].'</td>
