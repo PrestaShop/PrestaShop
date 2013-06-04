@@ -110,8 +110,9 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 			$this->printErrors();
 		if (!$this->processInstallTheme())
 			$this->printErrors();
-		if (!$this->processSendEmail())
-			$this->printErrors();
+		if ($this->datas->send_email)
+			if (!$this->processSendEmail())
+				$this->printErrors();
 
 		if ($this->datas->newsletter)
 		{
@@ -288,4 +289,3 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 		return $this->model_install->installModulesAddons();
 	}
 }
-
