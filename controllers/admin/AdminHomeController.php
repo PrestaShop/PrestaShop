@@ -71,7 +71,7 @@ class AdminHomeControllerCore extends AdminController
 			$indexRebuiltAfterUpdate = 2;
 
 		$smartyOptimized = 0;
-		if (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_NO_COMPILE_)
+		if (in_array(Configuration::get('PS_SMARTY_FORCE_COMPILE'), array(_PS_SMARTY_CHECK_COMPILE_, _PS_SMARTY_NO_COMPILE_)))
 			++$smartyOptimized;
 		if (Configuration::get('PS_SMARTY_CACHE'))
 			++$smartyOptimized;
