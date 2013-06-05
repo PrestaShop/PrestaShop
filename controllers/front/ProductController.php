@@ -143,23 +143,44 @@ class ProductControllerCore extends FrontController
 				// Load category
 				if (isset($_SERVER['HTTP_REFERER'])
 					&& strstr($_SERVER['HTTP_REFERER'], Tools::getHttpHost()) // Assure us the previous page was one of the shop
-					&& preg_match('!^(.*)\/([0-9]+)\-(.*[^\.])|(.*)id_category=([0-9]+)(.*)$!', $_SERVER['HTTP_REFERER'], $regs))
+					&& preg_match('!^(.*)\/([0-9]+)\-(.*[^\.])|(.*)id_\w*=([0-9]+)(.*)$!', $_SERVER['HTTP_REFERER'], $regs))
 				{
-					// If the previous page was a category and is a parent category of the product use this category as parent category
-					if (isset($regs[2]) && is_numeric($regs[2]))
-					{
-						if (Product::idIsOnCategoryId((int)$this->product->id, array('0' => array('id_category' => (int)$regs[2]))))
-							$this->category = new Category($regs[2], (int)$this->context->cookie->id_lang);
-					}
-					else if (isset($regs[5]) && is_numeric($regs[5]))
-					{
-						if (Product::idIsOnCategoryId((int)$this->product->id, array('0' => array('id_category' => (int)$regs[5]))))
-							$this->category = new Category($regs[5], (int)$this->context->cookie->id_lang);
+					// Get previous id object : product, category, ...
+					// URL rewriting
+					if (isset($regs[2]) && is_numeric($regs[2]) && !isset($regs[5]))
+						$id_object = (int)$regs[2];
+
+					// Standard url case
+					if (isset($regs[5]) && is_numeric($regs[5]) && !is_numeric($regs[2]))
+						$id_object = (int)$regs[5];
+
+					//Search referer information only if one id_object is provided
+					if (isset($id_object)) {
+						//Consider url with(out) entity data
+						$referers = array($_SERVER['HTTP_REFERER'],urldecode($_SERVER['HTTP_REFERER']));
+
+						$referer_page = new LinkCore;
+						// Previous page was a product object
+						if ( in_array($referer_page->getProductLink($id_object), $referers)
+							&& isset($this->context->cookie->id_category))
+							$id_category = (int)$this->context->cookie->id_category;
+
+						// Previous page was a category object
+						if ( in_array($referer_page->getCategoryLink($id_object), $referers) )
+							$id_category = (int)$id_object;
+
+						// If the product has same parent category use this category as parent category
+						if (isset($id_category) && Product::idIsOnCategoryId((int)$this->product->id, array('0' => array('id_category' => (int)$id_category))))
+							$this->category = new Category((int)$id_category, (int)$this->context->cookie->id_lang);
 					}
 				}
 				else
 					// Set default product category
 					$this->category = new Category($this->product->id_category_default, (int)$this->context->cookie->id_lang);
+
+				// Set category id cookie, used wether come from product page
+				if (isset($this->context->cookie) && isset($this->category->id_category))
+					$this->context->cookie->id_category = $this->category->id_category;
 			}
 		}
 	}
