@@ -389,6 +389,13 @@ class MailAlerts extends Module
 
 		if (file_exists(dirname(__FILE__).'/mails/'.$iso.'/'.$template.'.txt') &&
 			file_exists(dirname(__FILE__).'/mails/'.$iso.'/'.$template.'.html'))
+                $dir_mail = dirname(__FILE__).'/mails/';
+
+                if (file_exists('../../mails/'.$iso.'/'.$template.'.txt') &&
+                        file_exists('../../mails/'.$iso.'/'.$template.'.html'))
+                $dir_mail = '../../mails/';
+
+                if ($dir_mail)
 			Mail::Send(
 				$id_lang,
 				$template,
@@ -400,7 +407,7 @@ class MailAlerts extends Module
 				$configuration['PS_SHOP_NAME'],
 				null,
 				null,
-				dirname(__FILE__).'/mails/'
+				$dir_mail
 			);
 	}
 
