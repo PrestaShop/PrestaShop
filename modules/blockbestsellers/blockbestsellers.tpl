@@ -32,12 +32,12 @@
 		<ul class="product_images">
 			{foreach from=$best_sellers item=product name=myLoop}
 			<li class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if} clearfix">
-				<a href="{$product.link}" title="{$product.legend|escape:'htmlall':'UTF-8'}" class="content_img clearfix">
+				<a href="{$product.link|escape:'html'}" title="{$product.legend|escape:'htmlall':'UTF-8'}" class="content_img clearfix">
 					<span class="number">{$smarty.foreach.myLoop.iteration}</span>
 					<img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'small_default')|escape:'html'}" height="{$smallSize.height}" width="{$smallSize.width}" alt="{$product.legend|escape:'htmlall':'UTF-8'}" />
 				
 				</a>
-				<p><a href="{$product.link}" title="{$product.legend|escape:'htmlall':'UTF-8'}">
+				<p><a href="{$product.link|escape:'html'}" title="{$product.legend|escape:'htmlall':'UTF-8'}">
 					{$product.name|strip_tags:'UTF-8'|escape:'htmlall':'UTF-8'}<br />
 					<span class="price">{$product.price}</span>
 				</a></p>
