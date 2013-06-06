@@ -55,7 +55,7 @@ $(function () {ldelim}
 						{/if}
 					</div>
 					{/if}
-					<img src="{$link->getImageLink($product.id_product, $imageIds, 'medium_default')}" alt="" width="{$mediumSize.width}" height="{$mediumSize.height}" />
+					<img src="{$link->getImageLink($product.id_product, $imageIds, 'medium_default')|escape:'html'}" alt="" width="{$mediumSize.width}" height="{$mediumSize.height}" />
 					<p class="title_block"><span class="product_name">{$product.details->name}</span></p>
 					<p class="description">{$product.details->description_short|strip_tags|truncate:170:'...'}</p>
 				</div>

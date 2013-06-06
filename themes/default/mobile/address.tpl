@@ -84,7 +84,7 @@ $(document).ready(function() {
 		{/if}
 		</p>
 		
-		<form action="{$link->getPageLink('address', true)}" method="post" id="add_address" data-ajax="false">
+		<form action="{$link->getPageLink('address', true)|escape:'html'}" method="post" id="add_address" data-ajax="false">
 			<legend><h3>{if isset($id_address) && $id_address != 0}{l s='Your address'}{else}{l s='New address'}{/if}</h3></legend>
 			<div class="required text dni">
 				<label for="dni">{l s='Identification number'}</label>

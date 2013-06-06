@@ -31,7 +31,7 @@
 	{if isset($msg) && $msg}
 		<p class="{if $nw_error}warning_inline{else}success_inline{/if}">{$msg}</p>
 	{/if}
-		<form action="{$link->getPageLink('index')}" method="post">
+		<form action="{$link->getPageLink('index')|escape:'html'}" method="post">
 			<p>
 				<input class="inputNew" id="newsletter-input" type="text" name="email" size="18" value="{if isset($value) && $value}{$value}{else}{l s='your e-mail' mod='blocknewsletter'}{/if}">
 				<input type="submit" value="ok" class="button_mini" name="submitNewsletter" />

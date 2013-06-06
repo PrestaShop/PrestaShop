@@ -186,7 +186,7 @@ $("#multishop-tree").jstree({
 	'plugins': ["themes","json_data","cookies","contextmenu"],
 	'json_data': {
 		'ajax': {
-			'url': "{$link->getAdminLink('AdminShop')}",
+			'url': "{$link->getAdminLink('AdminShop')|escape:'html'}",
 			'data': function(n)
 			{
 				return {

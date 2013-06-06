@@ -27,7 +27,7 @@
 
 {block name="override_tpl"}
 	<script type="text/javascript">
-	var admin_order_tab_link = "{$link->getAdminLink('AdminOrders')}";
+	var admin_order_tab_link = "{$link->getAdminLink('AdminOrders')|escape:'html'}";
 	var id_order = {$order->id};
 	var id_lang = {$current_id_lang};
 	var id_currency = {$order->id_currency};

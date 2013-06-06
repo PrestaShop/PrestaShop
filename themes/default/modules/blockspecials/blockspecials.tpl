@@ -25,13 +25,13 @@
 
 <!-- MODULE Block specials -->
 <div id="special_block_right" class="block products_block exclusive blockspecials">
-	<p class="title_block"><a href="{$link->getPageLink('prices-drop')}" title="{l s='Specials' mod='blockspecials'}">{l s='Specials' mod='blockspecials'}</a></p>
+	<p class="title_block"><a href="{$link->getPageLink('prices-drop')|escape:'html'}" title="{l s='Specials' mod='blockspecials'}">{l s='Specials' mod='blockspecials'}</a></p>
 	<div class="block_content">
 
 {if $special}
 		<ul class="products clearfix">
 			<li class="product_image">
-				<a href="{$special.link}"><img src="{$link->getImageLink($special.link_rewrite, $special.id_image, 'medium_default')}" alt="{$special.legend|escape:html:'UTF-8'}" height="{$mediumSize.height}" width="{$mediumSize.width}" title="{$special.name|escape:html:'UTF-8'}" /></a>
+				<a href="{$special.link}"><img src="{$link->getImageLink($special.link_rewrite, $special.id_image, 'medium_default')|escape:'html'}" alt="{$special.legend|escape:html:'UTF-8'}" height="{$mediumSize.height}" width="{$mediumSize.width}" title="{$special.name|escape:html:'UTF-8'}" /></a>
 			</li>
 			<li>
 				{if !$PS_CATALOG_MODE}
@@ -51,7 +51,7 @@
 			</li>
 		</ul>
 		<p>
-			<a href="{$link->getPageLink('prices-drop')}" title="{l s='All specials' mod='blockspecials'}">&raquo; {l s='All specials' mod='blockspecials'}</a>
+			<a href="{$link->getPageLink('prices-drop')|escape:'html'}" title="{l s='All specials' mod='blockspecials'}">&raquo; {l s='All specials' mod='blockspecials'}</a>
 		</p>
 {else}
 		<p>{l s='No specials at this time' mod='blockspecials'}</p>

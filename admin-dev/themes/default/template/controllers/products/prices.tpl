@@ -25,7 +25,7 @@
 
 <script type="text/javascript">
 var Customer = new Object();
-var product_url = '{$link->getAdminLink('AdminProducts', true)}';
+var product_url = '{$link->getAdminLink('AdminProducts', true)|escape:'html'}';
 var ecotax_tax_excl = parseFloat({$ecotax_tax_excl});
 $(document).ready(function () {
 	Customer = {
@@ -56,7 +56,7 @@ $(document).ready(function () {
 			Customer.showLoader();
 			jQuery.ajax({
 				"type": "POST",
-				"url": "{$link->getAdminLink('AdminCustomers')}",
+				"url": "{$link->getAdminLink('AdminCustomers')|escape:'html'}",
 				"async": true,
 				"dataType": "json",
 				"data": {
