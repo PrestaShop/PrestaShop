@@ -1218,6 +1218,11 @@ class WebserviceRequestCore
 	{
 		$objects = array();
 		$filters = $this->manageFilters();
+
+		/* If we only need to display the synopsis, analyzing the first row is sufficient */
+		if (isset($this->urlFragments['schema']) && $this->urlFragments['schema'] == 'synopsis')
+			$filters = array('sql_join' => '', 'sql_filter' => '', 'sql_sort' => '', 'sql_limit' => ' LIMIT 1');
+			
 		$this->resourceConfiguration['retrieveData']['params'][] = $filters['sql_join'];
 		$this->resourceConfiguration['retrieveData']['params'][] = $filters['sql_filter'];
 		$this->resourceConfiguration['retrieveData']['params'][] = $filters['sql_sort'];
