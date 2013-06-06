@@ -27,7 +27,7 @@
 {include file='./page-title.tpl'}
 
 <div data-role="content" id="content">
-<a data-role="button" data-icon="arrow-l" data-theme="a" data-mini="true" data-inline="true" href="{$link->getPageLink('my-account', true)}" data-ajax="false">{l s='My account'}</a>
+<a data-role="button" data-icon="arrow-l" data-theme="a" data-mini="true" data-inline="true" href="{$link->getPageLink('my-account', true)|escape:'html'}" data-ajax="false">{l s='My account'}</a>
 
 {include file="./errors.tpl"}
 
@@ -39,7 +39,7 @@
 {else}
 	<h3>{l s='Please be sure to update your personal information if it has changed.'}</h3>
 	<p class="required bold"><sup>*</sup>{l s='Required field'}</p>
-	<form action="{$link->getPageLink('identity', true)}" method="post" class="std">
+	<form action="{$link->getPageLink('identity', true)|escape:'html'}" method="post" class="std">
 		<label>{l s='Title'}</label>
 		<fieldset data-role="controlgroup">
 		{foreach from=$genders key=k item=gender}
