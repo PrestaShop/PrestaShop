@@ -75,6 +75,7 @@ function  addNotification() {
 }
 
 $(document).ready(function() {
+	oosHookJsCodeMailAlert();
 	$('#oos_customer_email').bind('keypress', function(e) {
 		if(e.keyCode == 13)
 		{
