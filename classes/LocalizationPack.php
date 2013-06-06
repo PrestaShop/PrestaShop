@@ -294,7 +294,7 @@ class LocalizationPackCore
 				// if we are not in an installation context or if the pack is not available in the local directory
 				if (Language::getIdByIso($attributes['iso_code']) && !$install_mode)
 					continue;
-				$errors = Language::downloadAndInstallLanguagePack($attributes['iso_code'], $attributes['version']);
+				$errors = Language::downloadAndInstallLanguagePack($attributes['iso_code'], $attributes['version'], $attributes);
 				if ($errors !== true && is_array($errors))
 					$this->_errors = array_merge($this->_errors, $errors);
 			}
