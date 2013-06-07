@@ -60,7 +60,7 @@
 			ifSuperAdmin($(this));
 
 			$.ajax({
-				url: "{$link->getAdminLink('AdminEmployees')|escape:'html'}",
+				url: "{$link->getAdminLink('AdminEmployees')|addslashes}",
 				cache: false,
 				data : {
 					ajax : '1',
