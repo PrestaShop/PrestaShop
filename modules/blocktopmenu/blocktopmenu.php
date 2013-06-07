@@ -642,7 +642,7 @@ class Blocktopmenu extends Module
 		if (!empty($is_intersected))
 		{
 			$this->_menu .= '<li '.$selected.'>';
-			$this->_menu .= '<a href="'.$category_link.'">'.$category->name.'</a>';
+			$this->_menu .= '<a href="'.htmlentities($category_link).'">'.$category->name.'</a>';
 
 			if (count($children))
 			{
