@@ -112,10 +112,11 @@ class LoyaltyDefaultModuleFrontController extends ModuleFrontController
 				$cart_rule->add();
 
 			// Register order(s) which contributed to create this voucher
-			LoyaltyModule::registerDiscount($cart_rule);
-
-			Tools::redirect($this->context->link->getModuleLink('loyalty', 'default', array('process' => 'summary')));
+			if (!LoyaltyModule::registerDiscount($cart_rule))
+				$cart_rule->delete();
 		}
+
+		Tools::redirect($this->context->link->getModuleLink('loyalty', 'default', array('process' => 'summary')));
 	}
 
 	/**
