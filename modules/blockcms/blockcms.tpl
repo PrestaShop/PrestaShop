@@ -54,7 +54,7 @@
 			<li class="item"><a href="{$link->getPageLink($contact_url, true)|escape:'html'}" title="{l s='Contact us' mod='blockcms'}">{l s='Contact us' mod='blockcms'}</a></li>
 			{foreach from=$cmslinks item=cmslink}
 				{if $cmslink.meta_title != ''}
-					<li class="item"><a href="{$cmslink.link|addslashes}" title="{$cmslink.meta_title|escape:'htmlall':'UTF-8'}">{$cmslink.meta_title|escape:'htmlall':'UTF-8'}</a></li>
+					<li class="item"><a href="{$cmslink.link|addslashes|escape:'html'}" title="{$cmslink.meta_title|escape:'htmlall':'UTF-8'}">{$cmslink.meta_title|escape:'htmlall':'UTF-8'}</a></li>
 				{/if}
 			{/foreach}
 			<li><a href="{$link->getPageLink('sitemap')|escape:'html'}" title="{l s='Sitemap' mod='blockcms'}">{l s='Sitemap' mod='blockcms'}</a></li>
