@@ -14,3 +14,6 @@ CHANGE `module_name` `module_name` VARCHAR(64) NULL DEFAULT NULL;
 /* PHP:add_module_to_hook(blocksupplier, actionObjectSupplierDeleteAfter); */;
 /* PHP:add_module_to_hook(blocksupplier, actionObjectSupplierAddAfter); */;
 /* PHP:add_module_to_hook(blocksupplier, actionObjectSupplierUpdateAfter); */;
+/* PHP:fix_download_product_feature_active(); */;
+
+
