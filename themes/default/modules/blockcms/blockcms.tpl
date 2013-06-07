@@ -27,15 +27,15 @@
 	<!-- Block CMS module -->
 	{foreach from=$cms_titles key=cms_key item=cms_title}
 		<div id="informations_block_left_{$cms_key}" class="block informations_block_left">
-			<p class="title_block"><a href="{$cms_title.category_link}">{if !empty($cms_title.name)}{$cms_title.name}{else}{$cms_title.category_name}{/if}</a></p>
+			<p class="title_block"><a href="{$cms_title.category_link|escape:'html'}">{if !empty($cms_title.name)}{$cms_title.name}{else}{$cms_title.category_name}{/if}</a></p>
 			<ul class="block_content">
 				{foreach from=$cms_title.categories item=cms_page}
 					{if isset($cms_page.link)}<li class="bullet"><b style="margin-left:2em;">
-					<a href="{$cms_page.link}" title="{$cms_page.name|escape:html:'UTF-8'}">{$cms_page.name|escape:html:'UTF-8'}</a>
+					<a href="{$cms_page.link|escape:'html'}" title="{$cms_page.name|escape:html:'UTF-8'}">{$cms_page.name|escape:html:'UTF-8'}</a>
 					</b></li>{/if}
 				{/foreach}
 				{foreach from=$cms_title.cms item=cms_page}
-					{if isset($cms_page.link)}<li><a href="{$cms_page.link}" title="{$cms_page.meta_title|escape:html:'UTF-8'}">{$cms_page.meta_title|escape:html:'UTF-8'}</a></li>{/if}
+					{if isset($cms_page.link)}<li><a href="{$cms_page.link|escape:'html'}" title="{$cms_page.meta_title|escape:html:'UTF-8'}">{$cms_page.meta_title|escape:html:'UTF-8'}</a></li>{/if}
 				{/foreach}
 				{if $cms_title.display_store}<li><a href="{$link->getPageLink('stores')|escape:'html'}" title="{l s='Our stores' mod='blockcms'}">{l s='Our stores' mod='blockcms'}</a></li>{/if}
 			</ul>
