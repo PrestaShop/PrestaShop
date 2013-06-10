@@ -637,7 +637,8 @@ class CartRuleCore extends ObjectModel
 							FROM `'._DB_PREFIX_.'cart_product` cp
 							LEFT JOIN `'._DB_PREFIX_.'category_product` catp ON cp.id_product = catp.id_product
 							WHERE cp.`id_cart` = '.(int)$context->cart->id.'
-							AND cp.`id_product` IN ('.implode(array_map('intval', $eligibleProductsList), ',').')');
+							AND cp.`id_product` IN ('.implode(array_map('intval', $eligibleProductsList), ',').')
+							AND cp.`id_product` <> '.(int)$this->gift_product);
 							$countMatchingProducts = 0;
 							$matchingProductsList = array();
 							foreach ($cartCategories as $cartCategory)
