@@ -180,10 +180,12 @@
 				{$stateExist = false}
 				{foreach from=$dlv_all_fields item=field_name}
 				{if $field_name eq "company"}
-				<p class="text">
-					<label for="company">{l s='Company'}</label>
-					<input type="text" class="text" id="company" name="company" value="{if isset($guestInformations) && $guestInformations.company}{$guestInformations.company}{/if}" />
-				</p>
+				{if $b2b_enable}
+					<p class="text">
+						<label for="company">{l s='Company'}</label>
+						<input type="text" class="text" id="company" name="company" value="{if isset($guestInformations) && $guestInformations.company}{$guestInformations.company}{/if}" />
+					</p>
+				{/if}
 				{elseif $field_name eq "firstname"}
 				<p class="required text">
 					<label for="firstname">{l s='First name'} <sup>*</sup></label>
