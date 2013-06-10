@@ -470,10 +470,12 @@ $(document).ready(function() {
 		<h3>{l s='Your address'}</h3>
 		{foreach from=$dlv_all_fields item=field_name}
 			{if $field_name eq "company"}
-				<p class="text">
-					<label for="company">{l s='Company'}</label>
-					<input type="text" class="text" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{/if}" />
-				</p>
+				{if !$b2b_enable}
+					<p class="text">
+						<label for="company">{l s='Company'}</label>
+						<input type="text" class="text" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{/if}" />
+					</p>
+				{/if}
 			{elseif $field_name eq "vat_number"}
 				<div id="vat_number" style="display:none;">
 					<p class="text">
