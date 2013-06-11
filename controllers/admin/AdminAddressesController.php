@@ -479,6 +479,6 @@ class AdminAddressesControllerCore extends AdminController
 			$this->deleted = $deleted;
 		}
 
-		parent::processBulkDelete();
+		return parent::processBulkDelete();
 	}
 }
