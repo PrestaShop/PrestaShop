@@ -444,4 +444,41 @@ class AdminAddressesControllerCore extends AdminController
 		}
 		die;
 	}
+
+	/**
+	 * Object Delete
+	 */
+	public function processDelete()
+	{
+		if (Validate::isLoadedObject($object = $this->loadObject()))
+			if (!$object->isUsed())
+				$this->deleted = false;
+
+		return parent::processDelete();
+	}
+
+	/**
+	 * Delete multiple items
+	 *
+	 * @return boolean true if succcess
+	 */
+	protected function processBulkDelete()
+	{
+		if (is_array($this->boxes) && !empty($this->boxes))
+		{
+			$deleted = false;
+			foreach ($this->boxes as $id)
+			{
+				$to_delete = new Address((int)$id);
+				if ($to_delete->isUsed())
+				{
+					$deleted = true;
+					break;
+				}
+			}
+			$this->deleted = $deleted;
+		}
+
+		parent::processBulkDelete();
+	}
 }
