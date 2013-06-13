@@ -1277,6 +1277,11 @@ abstract class ObjectModelCore
 	{
 		return Shop::isTableAssociated($this->def['table']) || !empty($this->def['multilang_shop']);
 	}
+	
+	public function isMultiShopField($field)
+	{
+		return (isset($this->def['fields'][$field]) && isset($this->def['fields'][$field]['shop']) && $this->def['fields'][$field]['shop']);
+	}
 
 	public function isLangMultishop()
 	{
