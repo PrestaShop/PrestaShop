@@ -59,7 +59,7 @@
 
 	{assign var="hook_invoice" value={hook h="displayInvoice" id_order=$order->id}}
 	{if ($hook_invoice)}
-	<div style="float: right; margin: -40px 40px 10px 0;">{$hook_invoice}</div><br class="clear" />';
+	<div style="float: right; margin: -40px 40px 10px 0;">{$hook_invoice}</div><br class="clear" />
 	{/if}
 
 <div class="bloc-command">
