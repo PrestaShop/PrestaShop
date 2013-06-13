@@ -48,8 +48,7 @@ class InstallSession
 			InstallSession::$_cookie_mode = true;
 			InstallSession::$_cookie = new Cookie('ps_install', null, time() + 7200, null, true);
 		}
-		else
-			$_SESSION['session_mode'] = 'session';
+		$_SESSION['session_mode'] = 'session';
 	}
 
 	public function clean()
