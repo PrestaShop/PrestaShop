@@ -44,7 +44,7 @@
 			</li>
 		</ul>
 		<div class="page-header">
-  			<h1>{$title|end}</h1>
+  			<h1>{if is_array($title)}{$title|end}{else}{$title}{/if}</h1>
 		</div>
 	{/block}
 
