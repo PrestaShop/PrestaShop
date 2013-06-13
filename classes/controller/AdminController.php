@@ -1705,6 +1705,8 @@ class AdminControllerCore extends Controller
 
 	public function setMedia()
 	{
+		$this->addCSS(_PS_CSS_DIR_.'bootstrap.css', 'all');
+		$this->addCSS(_PS_CSS_DIR_.'bootstrap_admin_reset.css', 'all');
 		$this->addCSS(_PS_CSS_DIR_.'admin.css', 'all');
 		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
 		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
