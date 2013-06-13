@@ -409,7 +409,7 @@ class DispatcherCore
 				);
 		
 		// Load the custom routes prior the defaults to avoid infinite loops
-		if ($this->use_routes)
+		if ($this->use_routes || defined('_PS_ADMIN_DIR_'))
 		{
 			// Get iso lang
 			$iso_lang = Tools::getValue('isolang');
