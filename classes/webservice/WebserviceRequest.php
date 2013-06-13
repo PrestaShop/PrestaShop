@@ -1184,7 +1184,14 @@ class WebserviceRequestCore
 					$sql_sort .= 'main_i18n.`'.pSQL($this->resourceConfiguration['fields'][$fieldName]['sqlId']).'` '.$direction.', ';// ORDER BY main_i18n.`field` ASC|DESC
 				}
 				else
-					$sql_sort .= (isset($this->resourceConfiguration['retrieveData']['tableAlias']) ? $this->resourceConfiguration['retrieveData']['tableAlias'].'.' : '').'`'.pSQL($this->resourceConfiguration['fields'][$fieldName]['sqlId']).'` '.$direction.', ';// ORDER BY `field` ASC|DESC
+				{
+					$object = new $this->resourceConfiguration['retrieveData']['className']();
+					if ($object->isMultiShopField($this->resourceConfiguration['fields'][$fieldName]['sqlId']))
+						$table_alias = 'multi_shop_'.$this->resourceConfiguration['retrieveData']['table'];
+					else
+						$table_alias = '';
+					$sql_sort .= (isset($this->resourceConfiguration['retrieveData']['tableAlias']) ? '`'.bqSQL($this->resourceConfiguration['retrieveData']['tableAlias']).'`.' : '`'.bqSQL($table_alias).'`.').'`'.pSQL($this->resourceConfiguration['fields'][$fieldName]['sqlId']).'` '.$direction.', ';// ORDER BY `field` ASC|DESC
+				}
 			}
 			$sql_sort = rtrim($sql_sort, ', ')."\n";
 		}
