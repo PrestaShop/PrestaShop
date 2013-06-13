@@ -53,9 +53,6 @@ require_once(dirname(__FILE__).'/settings.inc.php');
 
 require_once(dirname(__FILE__).'/autoload.php');
 
-if (Tools::isPHPCLI())
-	Tools::argvToGET($argc, $argv);
-
 if (_PS_DEBUG_PROFILING_)
 {
 	include_once(_PS_TOOL_DIR_.'profiling/Controller.php');
@@ -64,6 +61,9 @@ if (_PS_DEBUG_PROFILING_)
 	include_once(_PS_TOOL_DIR_.'profiling/Db.php');
 	include_once(_PS_TOOL_DIR_.'profiling/Tools.php');
 }
+
+if (Tools::isPHPCLI())
+	Tools::argvToGET($argc, $argv);
 
 /* Redefine REQUEST_URI if empty (on some webservers...) */
 if (!isset($_SERVER['REQUEST_URI']) || empty($_SERVER['REQUEST_URI']))

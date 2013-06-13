@@ -78,7 +78,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 	public function process()
 	{
 		if (file_exists(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE))
-			@require_once _PS_ROOT_DIR_.'/'.self::SETTINGS_FILE;
+			require_once _PS_ROOT_DIR_.'/'.self::SETTINGS_FILE;
 
 		if (!$this->session->process_validated)
 			$this->session->process_validated = array();
