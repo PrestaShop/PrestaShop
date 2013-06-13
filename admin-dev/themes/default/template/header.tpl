@@ -77,6 +77,7 @@
 		<link href="{$css_uri}" rel="stylesheet" type="text/css" media="{$media}" />
 	{/foreach}
 {/if}
+
 {if isset($js_files)}
 	{foreach from=$js_files item=js_uri}
 		<script type="text/javascript" src="{$js_uri}"></script>
@@ -96,133 +97,159 @@
 	</style>
 {/if}
 </head>
-<body style="{if isset($bo_color) && $bo_color}background:{$bo_color};{/if}{if isset($bo_width) && $bo_width > 0}text-align:center;{/if}">
+<body class="fixed-top">
+
+
 {if $display_header}
 <div id="ajax_running"><img src="../img/admin/ajax-loader-yellow.gif" alt="" /> {l s='Loading...'}</div>
-<div id="top_container" {if $bo_width > 0}style="margin:auto;width:{$bo_width}px"{/if}>
-<div id="container">
+
 {* begin  HEADER *}
-	<div id="header">
-		<div id="header_infos">
-			<a id="header_shopname" href="{$link->getAdminLink('AdminHome')|escape:'htmlall':'UTF-8'}"><span>{$shop_name}</span></a>
-			<div id="notifs_icon_wrapper">
-{if {$show_new_orders} == 1}
-					<div id="orders_notif" class="notifs">
-							<span id="orders_notif_number_wrapper" class="number_wrapper">
-								<span id="orders_notif_value">0</span>
-							</span>
-						<div id="orders_notif_wrapper" class="notifs_wrapper">
-							<h3>{l s='Last orders'}</h3>
-							<p class="no_notifs">{l s='No new orders has been placed on your shop'}</p>
-							<ul id="list_orders_notif"></ul>
-							<p><a href="index.php?controller=AdminOrders&amp;token={getAdminToken tab='AdminOrders'}">{l s='Show all orders'}</a></p>
+<div id="header" class="navbar navbar-fixed-top table-bordered" >
+	<div class="navbar-inner">
+		<div class="container-fluid">
+			<div id="header_infos">
+				<a id="header_shopname" class="brand" href="{$link->getAdminLink('AdminHome')|escape:'htmlall':'UTF-8'}">{$shop_name}</a>
+				<ul id="notifs_icon_wrapper" class="nav nav-pills">
+	{if {$show_new_orders} == 1}
+						<li id="orders_notif" class="notifs dropdown" >
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								<i class="icon-shopping-cart"></i>
+								<span id="orders_notif_number_wrapper">
+									<span id="orders_notif_value" class="number_wrapper badge">0</span>
+								</span>
+							</a>
+
+							<ul id="orders_notif_wrapper" class="notifs_wrapper dropdown-menu notification">
+								<li><p>{l s='Last orders'}</p></li>
+								<li><p class="no_notifs">{l s='No new orders has been placed on your shop'}</p></li>
+								<li><ul id="list_orders_notif"></ul></li>
+								<li><a href="index.php?controller=AdminOrders&amp;token={getAdminToken tab='AdminOrders'}">{l s='Show all orders'} <i class="icon-circle-arrow-right"></i></a></li>
+							</ul>
+						</li>
+	{/if}
+	{if ($show_new_customers == 1)}
+						<li id="customers_notif" class="notifs dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								<i class="icon-user"></i>
+								<span id="customers_notif_number_wrapper">
+									<span id="customers_notif_value" class="number_wrapper badge">0</span>
+								</span>
+							</a>
+
+							<ul id="customers_notif_wrapper" class="notifs_wrapper dropdown-menu notification">
+								<li><p>{l s='Last customers'}</p></li>
+								<li><p class="no_notifs">{l s='No new customers registered on your shop'}</p></li>
+								<li><ul id="list_customers_notif"></ul></li>
+								<li><a href="index.php?controller=AdminCustomers&amp;token={getAdminToken tab='AdminCustomers'}">{l s='Show all customers'} <i class="icon-circle-arrow-right"></i></a></li>
+							</ul>
+						</li>
+	{/if}
+	{if {$show_new_messages} == 1}
+						<li id="customer_messages_notif" class="notifs dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								<i class="icon-envelope-alt"></i>
+								<span id="customer_messages_notif_number_wrapper" >
+									<span id="customer_messages_notif_value" class="number_wrapper badge">0</span>
+								</span>
+							</a>
+
+							<ul id="customer_messages_notif_wrapper" class="notifs_wrapper dropdown-menu notification">
+								<li>{l s='Last messages'}</li>
+								<li><p class="no_notifs">{l s='No new messages posted on your shop'}</p></li>
+								<li><ul id="list_customer_messages_notif"></ul></li>
+								<li><a href="index.php?tab=AdminCustomerThreads&amp;token={getAdminToken tab='AdminCustomerThreads'}">{l s='Show all messages'} <i class="icon-circle-arrow-right"></i></a></li>
+							</ul>
+						</li>
+	{/if}
+				</ul>
+
+				<ul id="employee_box" class="nav pull-right">
+					<li id="employee_infos" class="dropdown">
+						<a href='#' class="employee_name dropdown-toggle" data-toggle="dropdown">{$first_name}&nbsp;{$last_name} <i class="icon-angle-down"></i></a>
+						<ul id="employee_links" class="dropdown-menu">
+							<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'htmlall':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee">{l s='My preferences'}</a></li>
+							<li><a id="header_logout" href="index.php?logout">{l s='logout'}</a></li>
+	{if {$base_url}}
+							<li><a href="{$base_url}" id="header_foaccess" target="_blank" title="{l s='View my shop'}">{l s='View my shop'}</a></li>
+	{/if}
+						</ul>
+					</li>
+				</ul>
+
+				<div id="header_search" class="pull-left">
+					<form class="navbar-form" method="post" action="index.php?controller=AdminSearch&amp;token={getAdminToken tab='AdminSearch'}">
+						<div class="input-append">
+							<input type="text" name="bo_query" id="bo_query" value="{$bo_query}" class="input-medium" palceholder="{l s='Search'}"/>
+							<button type="submit" id="bo_search_submit" class="btn"><i class="icon-search"></i>&nbsp;</button>
 						</div>
-					</div>
-{/if}
-{if ($show_new_customers == 1)}
-					<div id="customers_notif" class="notifs notifs_alternate">
-							<span id="customers_notif_number_wrapper" class="number_wrapper">
-								<span id="customers_notif_value">0</span>
-							</span>
-						<div id="customers_notif_wrapper" class="notifs_wrapper">
-							<h3>{l s='Last customers'}</h3>
-							<p class="no_notifs">{l s='No new customers registered on your shop'}</p>
-							<ul id="list_customers_notif"></ul>
-							<p><a href="index.php?controller=AdminCustomers&amp;token={getAdminToken tab='AdminCustomers'}">{l s='Show all customers'}</a></p>
-						</div>
-					</div>
-{/if}
-{if {$show_new_messages} == 1}
-					<div id="customer_messages_notif" class="notifs">
-							<span id="customer_messages_notif_number_wrapper" class="number_wrapper">
-								<span id="customer_messages_notif_value">0</span>
-							</span>
-						<div id="customer_messages_notif_wrapper" class="notifs_wrapper">
-							<h3>{l s='Last messages'}</h3>
-							<p class="no_notifs">{l s='No new messages posted on your shop'}</p>
-							<ul id="list_customer_messages_notif"></ul>
-							<p><a href="index.php?tab=AdminCustomerThreads&amp;token={getAdminToken tab='AdminCustomerThreads'}">{l s='Show all messages'}</a></p>
-						</div>
-					</div>
-{/if}
-			</div>
-			<div id="employee_box">
-				<div id="employee_infos">
-					<div class="employee_name">{l s='Welcome,'} <strong>{$first_name}&nbsp;{$last_name}</strong></div>
-					<div class="clear"></div>
-					<ul id="employee_links">
-						<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'htmlall':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee">{l s='My preferences'}</a></li>
-						<li class="separator">&nbsp;</li>
-						<li><a id="header_logout" href="index.php?logout">{l s='logout'}</a></li>
-{if {$base_url}}
-						<li class="separator">&nbsp;</li>
-						<a href="{$base_url}" id="header_foaccess" target="_blank" title="{l s='View my shop'}">{l s='View my shop'}</a>
-{/if}
+	<!-- 					<select name="bo_search_type" id="bo_search_type" class="chosen no-search">
+							<option value="0">{l s='everywhere'}</option>
+							<option value="1" {if {$search_type} == 1} selected="selected" {/if}>{l s='catalog'}</option>
+							<optgroup label="{l s='customers'}:">
+								<option value="2" {if {$search_type} == 2} selected="selected" {/if}>{l s='by name'}</option>
+								<option value="6" {if {$search_type} == 6} selected="selected" {/if}>{l s='by ip address'}</option>
+							</optgroup>
+							<option value="3" {if {$search_type} == 3} selected="selected" {/if}>{l s='orders'}</option>
+							<option value="4" {if {$search_type} == 4} selected="selected" {/if}>{l s='invoices'}</option>
+							<option value="5" {if {$search_type} == 5} selected="selected" {/if}>{l s='carts'}</option>
+							<option value="7" {if {$search_type} == 7} selected="selected" {/if}>{l s='modules'}</option>
+						</select> -->
+					</form>
+				</div>
+
+	{if count($quick_access) > 0}
+				<div id="header_quick" class="pull-left btn-group">
+					<a href="#" id="quick_select" class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-bolt"></i> {l s='Quick Access'} <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					{foreach $quick_access as $quick}
+						<li><a href="{$quick.link|escape:'htmlall':'UTF-8'}{if $quick.new_window}_blank{/if}"><i class="icon-chevron-right"></i> {$quick.name}</a></li>
+					{/foreach}
 					</ul>
 				</div>
-			</div>
-			<div id="header_search">
-				<form method="post" action="index.php?controller=AdminSearch&amp;token={getAdminToken tab='AdminSearch'}">
-					<input type="text" name="bo_query" id="bo_query" value="{$bo_query}" />
-					<select name="bo_search_type" id="bo_search_type" class="chosen no-search">
-						<option value="0">{l s='everywhere'}</option>
-						<option value="1" {if {$search_type} == 1} selected="selected" {/if}>{l s='catalog'}</option>
-						<optgroup label="{l s='customers'}:">
-							<option value="2" {if {$search_type} == 2} selected="selected" {/if}>{l s='by name'}</option>
-							<option value="6" {if {$search_type} == 6} selected="selected" {/if}>{l s='by ip address'}</option>
-						</optgroup>
-						<option value="3" {if {$search_type} == 3} selected="selected" {/if}>{l s='orders'}</option>
-						<option value="4" {if {$search_type} == 4} selected="selected" {/if}>{l s='invoices'}</option>
-						<option value="5" {if {$search_type} == 5} selected="selected" {/if}>{l s='carts'}</option>
-						<option value="7" {if {$search_type} == 7} selected="selected" {/if}>{l s='modules'}</option>
-					</select>
-					<input type="submit" id="bo_search_submit" class="button" value="{l s='Search'}"/>
-				</form>
-			</div>
-{if count($quick_access) > 0}
-			<div id="header_quick">
-				<select onchange="quickSelect(this);" id="quick_select" class="chosen no-search">
-					<option value="0">{l s='Quick Access'}</option>
-					{foreach $quick_access as $quick}
-						<option value="{$quick.link|escape:'htmlall':'UTF-8'}{if $quick.new_window}_blank{/if}">&raquo; {$quick.name}</option>
-					{/foreach}
-				</select>
-			</div>
+	{/if}
+	{if isset($displayBackOfficeTop)}{$displayBackOfficeTop}{/if}
+			</div>{* end header_infos*}
+		</div>
+	</div>
+</div>{* end header*}	
 {/if}
-{if isset($displayBackOfficeTop)}{$displayBackOfficeTop}{/if}
-		</div>{* end header_infos*}
-		<ul id="menu">
+
+	<div id="main" class="page-container row-fluid">
+      <div class="page-sidebar nav-collapse collapse">
+			<ul id="menu nav nav-tabs nav-stacked">
 {if !$tab}
 				<div class="mainsubtablist" style="display:none"></div>
 {/if}
 {foreach $tabs AS $t}
-{if $t.active}
-					<li class="submenu_size maintab {if $t.current}active{/if}" id="maintab{$t.id_tab}">
-						<a href="#" class="title">
-							<img src="{$t.img}" alt="" />{if $t.name eq ''}{$t.class_name}{else}{$t.name}{/if}
-						</a>
-						<ul class="submenu">
-							{foreach from=$t.sub_tabs item=t2}
-								{if $t2.active}
-									<li><a href="{$t2.href|escape:'htmlall':'UTF-8'}">{if $t2.name eq ''}{$t2.class_name}{else}{$t2.name|escape:'htmlall':'UTF-8'}{/if}</a></li>
-								{/if}
-							{/foreach}
-						</ul>
-					</li>
-{/if}
+	{if $t.active}
+				<li class="submenu_size maintab {if $t.current}active{/if}" id="maintab{$t.id_tab}">
+					<a href="javascript:adminNav('#maintab{$t.id_tab}');" class="title">
+						<img src="{$t.img}" alt="" />{if $t.name eq ''}{$t.class_name}{else}{$t.name}{/if}
+					</a>
+					<ul class="submenu">
+						{foreach from=$t.sub_tabs item=t2}
+							{if $t2.active}
+								<li><a href="{$t2.href|escape:'htmlall':'UTF-8'}">{if $t2.name eq ''}{$t2.class_name}{else}{$t2.name|escape:'htmlall':'UTF-8'}{/if}</a></li>
+							{/if}
+						{/foreach}
+					</ul>
+				</li>
+	{/if}
 {/foreach}
-		</ul>
-	</div>{* end header*}	
-{/if}
-	<div id="main">
-		<div id="content">
-{if $display_header && $install_dir_exists}
-		<div style="background-color: #FFEBCC;border: 1px solid #F90;line-height: 20px;margin: 0px 0px 10px;padding: 10px 20px;">
-			{l s='For security reasons, you must also:'}&nbsp;{l s='delete the /install folder'}
+			</ul>
 		</div>
-{/if}
-{if $display_header && $is_multishop && $shop_list && ($multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
-		<div class="multishop_toolbar">
-			<span class="text_multishop">{l s='Multistore configuration for'}</span> {$shop_list}
-		</div>
-{/if}
+		<div id="content" class="page-content no-min-height">
+			<div class="container-fluid">
+            	<div class="row-fluid">
+
+			{if $display_header && $install_dir_exists}
+					<div style="background-color: #FFEBCC;border: 1px solid #F90;line-height: 20px;margin: 0px 0px 10px;padding: 10px 20px;">
+						{l s='For security reasons, you must also:'}&nbsp;{l s='delete the /install folder'}
+					</div>
+			{/if}
+
+			{if $display_header && $is_multishop && $shop_list && ($multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
+					<div class="multishop_toolbar">
+						<span class="text_multishop">{l s='Multistore configuration for'}</span> {$shop_list}
+					</div>
+			{/if}

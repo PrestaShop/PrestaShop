@@ -77,147 +77,139 @@
 	{hook h=$hookName}
 {/if}
 
-
 {if !$simple_header}
 <form method="post" action="{$action}" class="form">
-
-	{block name="override_form_extra"}{/block}
-
 	<input type="hidden" id="submitFilter{$table}" name="submitFilter{$table}" value="0"/>
 {/if}
-	<table class="table_grid" name="list_table">
+	<div class="well">
 		{if !$simple_header}
-			<tr>
-				<td style="vertical-align: bottom;">
-					<span style="float: left;">
-						{if $page > 1}
-							<input type="image" src="../img/admin/list-prev2.gif" onclick="getE('submitFilter{$table}').value=1"/>&nbsp;
-							<input type="image" src="../img/admin/list-prev.gif" onclick="getE('submitFilter{$table}').value={$page - 1}"/>
-						{/if}
-						{l s='Page'} <b>{$page}</b> / {$total_pages}
-						{if $page < $total_pages}
-							<input type="image" src="../img/admin/list-next.gif" onclick="getE('submitFilter{$table}').value={$page + 1}"/>&nbsp;
-							<input type="image" src="../img/admin/list-next2.gif" onclick="getE('submitFilter{$table}').value={$total_pages}"/>
-						{/if}
-						| {l s='Display'}
-						<select name="pagination" onchange="submit()">
-							{* Choose number of results per page *}
-							{foreach $pagination AS $value}
-								<option value="{$value|intval}"{if $selected_pagination == $value} selected="selected" {elseif $selected_pagination == NULL && $value == $pagination[1]} selected="selected2"{/if}>{$value|intval}</option>
-							{/foreach}
-						</select>
-						/ {$list_total} {l s='result(s)'}
-					</span>
-					<span style="float: right;">
-						<input type="submit" name="submitReset{$table}" value="{l s='Reset'}" class="button" />
-						<input type="submit" id="submitFilterButton{$table}" name="submitFilter" value="{l s='Filter'}" class="button" />
-					</span>
-					<span class="clear"></span>
-				</td>
-			</tr>
+		<span>
+			{if $page > 1}
+				<input type="image" src="../img/admin/list-prev2.gif" onclick="getE('submitFilter{$table}').value=1"/>&nbsp;
+				<input type="image" src="../img/admin/list-prev.gif" onclick="getE('submitFilter{$table}').value={$page - 1}"/>
+			{/if}
+
+			{l s='Page'} <b>{$page}</b> / {$total_pages}
+			{if $page < $total_pages}
+				<input type="image" src="../img/admin/list-next.gif" onclick="getE('submitFilter{$table}').value={$page + 1}"/>&nbsp;
+				<input type="image" src="../img/admin/list-next2.gif" onclick="getE('submitFilter{$table}').value={$total_pages}"/>
+			{/if}
+
+			| {l s='Display'}
+
+			<select class="input-mini" name="pagination" onchange="submit()">
+				{* Choose number of results per page *}
+				{foreach $pagination AS $value}
+					<option value="{$value|intval}"{if $selected_pagination == $value} selected="selected" {elseif $selected_pagination == NULL && $value == $pagination[1]} selected="selected2"{/if}>{$value|intval}</option>
+				{/foreach}
+			</select>
+
+			/ {$list_total} {l s='result(s)'}
+		</span>
+		<span>
+			<input type="submit" name="submitReset{$table}" value="{l s='Reset'}" class="btn" />
+			<input type="submit" id="submitFilterButton{$table}" name="submitFilter" value="{l s='Filter'}" class="btn" />
+		</span>
 		{/if}
-		<tr>
-			<td{if $simple_header} style="border:none;"{/if}>
-				<table
-				{if $table_id} id={$table_id}{/if}
-				class="table {if $table_dnd}tableDnD{/if} {$table}"
-				cellpadding="0" cellspacing="0"
-				style="width: 100%; margin-bottom:10px;">
-					<col width="10px" />
+		</div>
+		<table 
+		class="table table-striped table-bordered"
+		{if $table_id} id={$table_id}{/if}
+		class="table {if $table_dnd}tableDnD{/if} {$table}"
+		cellpadding="0" cellspacing="0">
+			<!-- <col width="10px" />
+			{foreach $fields_display AS $key => $params}
+				<col {if isset($params.width) && $params.width != 'auto'}width="{$params.width}px"{/if}/>
+			{/foreach}
+			{if $shop_link_type}
+				<col width="80px" />
+			{/if}
+			{if $has_actions}
+				<col width="52px" />
+			{/if} -->
+			<thead>
+				<tr class="nodrag nodrop">
+					<th class="center">
+						{if $has_bulk_actions}
+							<input type="checkbox" name="checkme" class="noborder" onclick="checkDelBoxes(this.form, '{$table}Box[]', this.checked)" />
+						{/if}
+					</th>
 					{foreach $fields_display AS $key => $params}
-						<col {if isset($params.width) && $params.width != 'auto'}width="{$params.width}px"{/if}/>
+						<th {if isset($params.align)} class="{$params.align}"{/if}>
+							{if isset($params.hint)}<span class="hint" name="help_box">{$params.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
+							<span class="title_box">
+								{$params.title}
+							</span>
+							{if (!isset($params.orderby) || $params.orderby) && !$simple_header}
+								<a href="{$currentIndex}&{$table}Orderby={$key|urlencode}&{$table}Orderway=desc&token={$token}{if isset($smarty.get.$identifier)}&{$identifier}={$smarty.get.$identifier|intval}{/if}">
+								<img border="0" src="../img/admin/down{if isset($order_by) && ($key == $order_by) && ($order_way == 'DESC')}_d{/if}.gif" /></a>
+								<a href="{$currentIndex}&{$table}Orderby={$key|urlencode}&{$table}Orderway=asc&token={$token}{if isset($smarty.get.$identifier)}&{$identifier}={$smarty.get.$identifier|intval}{/if}">
+								<img border="0" src="../img/admin/up{if isset($order_by) && ($key == $order_by) && ($order_way == 'ASC')}_d{/if}.gif" /></a>
+							{elseif !$simple_header}
+							{/if}
+						</th>
 					{/foreach}
 					{if $shop_link_type}
-						<col width="80px" />
+						<th>
+							{if $shop_link_type == 'shop'}
+								{l s='Shop'}
+							{else}
+								{l s='Group shop'}
+							{/if}
+							<br />&nbsp;
+						</th>
 					{/if}
 					{if $has_actions}
-						<col width="52px" />
+						<th class="center">{l s='Actions'}{if !$simple_header}{/if}</th>
 					{/if}
-					<thead>
-						<tr class="nodrag nodrop" style="height: 40px">
-							<th class="center">
-								{if $has_bulk_actions}
-									<input type="checkbox" name="checkme" class="noborder" onclick="checkDelBoxes(this.form, '{$table}Box[]', this.checked)" />
-								{/if}
-							</th>
-							{foreach $fields_display AS $key => $params}
-								<th {if isset($params.align)} class="{$params.align}"{/if}>
-									{if isset($params.hint)}<span class="hint" name="help_box">{$params.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
-									<span class="title_box">
-										{$params.title}
-									</span>
-									{if (!isset($params.orderby) || $params.orderby) && !$simple_header}
-										<br />
-										<a href="{$currentIndex}&{$table}Orderby={$key|urlencode}&{$table}Orderway=desc&token={$token}{if isset($smarty.get.$identifier)}&{$identifier}={$smarty.get.$identifier|intval}{/if}">
-										<img border="0" src="../img/admin/down{if isset($order_by) && ($key == $order_by) && ($order_way == 'DESC')}_d{/if}.gif" /></a>
-										<a href="{$currentIndex}&{$table}Orderby={$key|urlencode}&{$table}Orderway=asc&token={$token}{if isset($smarty.get.$identifier)}&{$identifier}={$smarty.get.$identifier|intval}{/if}">
-										<img border="0" src="../img/admin/up{if isset($order_by) && ($key == $order_by) && ($order_way == 'ASC')}_d{/if}.gif" /></a>
-									{elseif !$simple_header}
-										<br />&nbsp;
-									{/if}
-								</th>
-							{/foreach}
-							{if $shop_link_type}
-								<th>
-									{if $shop_link_type == 'shop'}
-										{l s='Shop'}
-									{else}
-										{l s='Group shop'}
-									{/if}
-									<br />&nbsp;
-								</th>
-							{/if}
-							{if $has_actions}
-								<th class="center">{l s='Actions'}{if !$simple_header}<br />&nbsp;{/if}</th>
-							{/if}
-						</tr>
- 						{if !$simple_header}
-						<tr class="nodrag nodrop filter {if $row_hover}row_hover{/if}" style="height: 35px;">
-							<td class="center">
-								{if $has_bulk_actions}
-									--
-								{/if}
-							</td>
-
-							{* Filters (input, select, date or bool) *}
-							{foreach $fields_display AS $key => $params}
-								<td {if isset($params.align)} class="{$params.align}" {/if}>
-									{if isset($params.search) && !$params.search}
-										--
-									{else}
-										{if $params.type == 'bool'}
-											<select onchange="$('#submitFilterButton{$table}').focus();$('#submitFilterButton{$table}').click();" name="{$table}Filter_{$key}">
-												<option value="">--</option>
-												<option value="1" {if $params.value == 1} selected="selected" {/if}>{l s='Yes'}</option>
-												<option value="0" {if $params.value == 0 && $params.value != ''} selected="selected" {/if}>{l s='No'}</option>
-											</select>
-										{elseif $params.type == 'date' || $params.type == 'datetime'}
-											{l s='From'} <input type="text" class="filter datepicker" id="{$params.id_date}_0" name="{$params.name_date}[0]" value="{if isset($params.value.0)}{$params.value.0}{/if}"{if isset($params.width)} style="width:70px"{/if}/><br />
-											{l s='To'} <input type="text" class="filter datepicker" id="{$params.id_date}_1" name="{$params.name_date}[1]" value="{if isset($params.value.1)}{$params.value.1}{/if}"{if isset($params.width)} style="width:70px"{/if}/>
-										{elseif $params.type == 'select'}
-											{if isset($params.filter_key)}
-												<select onchange="$('#submitFilterButton{$table}').focus();$('#submitFilterButton{$table}').click();" name="{$table}Filter_{$params.filter_key}" {if isset($params.width)} style="width:{$params.width}px"{/if}>
-													<option value="" {if $params.value == ''} selected="selected" {/if}>--</option>
-													{if isset($params.list) && is_array($params.list)}
-														{foreach $params.list AS $option_value => $option_display}
-															<option value="{$option_value}" {if $option_display == $params.value ||  $option_value == $params.value} selected="selected"{/if}>{$option_display}</option>
-														{/foreach}
-													{/if}
-												</select>
-											{/if}
-										{else}
-											<input type="text" class="filter" name="{$table}Filter_{if isset($params.filter_key)}{$params.filter_key}{else}{$key}{/if}" value="{$params.value|escape:'htmlall':'UTF-8'}" {if isset($params.width) && $params.width != 'auto'} style="width:{$params.width}px"{else}style="width:95%"{/if} />
-										{/if}
-									{/if}
-								</td>
-							{/foreach}
-
-							{if $shop_link_type}
-								<td>--</td>
-							{/if}
-							{if $has_actions}
-								<td class="center">--</td>
-							{/if}
-							</tr>
+				</tr>
+					{if !$simple_header}
+				<tr class="nodrag nodrop filter {if $row_hover}row_hover{/if}">
+					<td class="center">
+						{if $has_bulk_actions}
+							--
 						{/if}
-						</thead>
+					</td>
+
+					{* Filters (input, select, date or bool) *}
+					{foreach $fields_display AS $key => $params}
+						<td {if isset($params.align)} class="{$params.align}" {/if}>
+							{if isset($params.search) && !$params.search}
+								--
+							{else}
+								{if $params.type == 'bool'}
+									<select class="input-mini" onchange="$('#submitFilterButton{$table}').focus();$('#submitFilterButton{$table}').click();" name="{$table}Filter_{$key}">
+										<option value="">--</option>
+										<option value="1" {if $params.value == 1} selected="selected" {/if}>{l s='Yes'}</option>
+										<option value="0" {if $params.value == 0 && $params.value != ''} selected="selected" {/if}>{l s='No'}</option>
+									</select>
+								{elseif $params.type == 'date' || $params.type == 'datetime'}
+									{l s='From'} <input type="text" class="filter datepicker" id="{$params.id_date}_0" name="{$params.name_date}[0]" value="{if isset($params.value.0)}{$params.value.0}{/if}"{if isset($params.width)} style="width:70px"{/if}/><br />
+									{l s='To'} <input type="text" class="filter datepicker" id="{$params.id_date}_1" name="{$params.name_date}[1]" value="{if isset($params.value.1)}{$params.value.1}{/if}"{if isset($params.width)} style="width:70px"{/if}/>
+								{elseif $params.type == 'select'}
+									{if isset($params.filter_key)}
+										<select onchange="$('#submitFilterButton{$table}').focus();$('#submitFilterButton{$table}').click();" name="{$table}Filter_{$params.filter_key}" {if isset($params.width)} style="width:{$params.width}px"{/if}>
+											<option value="" {if $params.value == ''} selected="selected" {/if}>--</option>
+											{if isset($params.list) && is_array($params.list)}
+												{foreach $params.list AS $option_value => $option_display}
+													<option value="{$option_value}" {if $option_display == $params.value ||  $option_value == $params.value} selected="selected"{/if}>{$option_display}</option>
+												{/foreach}
+											{/if}
+										</select>
+									{/if}
+								{else}
+									<input type="text" class="filter input-small" name="{$table}Filter_{if isset($params.filter_key)}{$params.filter_key}{else}{$key}{/if}" value="{$params.value|escape:'htmlall':'UTF-8'}" {if isset($params.width) && $params.width != 'auto'} style="width:{$params.width}px"{/if} />
+								{/if}
+							{/if}
+						</td>
+					{/foreach}
+
+					{if $shop_link_type}
+						<td>--</td>
+					{/if}
+					{if $has_actions}
+						<td class="center">--</td>
+					{/if}
+					</tr>
+				{/if}
+				</thead>

@@ -38,9 +38,9 @@ class AdminCartRulesControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_cart_rule' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'name' => array('title' => $this->l('Name')),
-			'priority' => array('title' => $this->l('Priority')),
+			'priority' => array('title' => $this->l('Priority'), 'width' => 25),
 			'code' => array('title' => $this->l('Code')),
-			'quantity' => array('title' => $this->l('Quantity')),
+			'quantity' => array('title' => $this->l('Quantity'), 'width' => 25),
 			'date_to' => array('title' => $this->l('Until')),
 			'active' => array('title' => $this->l('Status'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false),
 		);
