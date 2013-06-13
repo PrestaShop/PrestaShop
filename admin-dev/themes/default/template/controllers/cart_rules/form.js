@@ -303,16 +303,16 @@ $('#customerFilter')
 function displayCartRuleTab(tab)
 {
 	$('.cart_rule_tab').hide();
-	$('.tab-page').removeClass('selected');
+	$('.tab-row.active').removeClass('active');
 	$('#cart_rule_' + tab).show();
-	$('#cart_rule_link_' + tab).addClass('selected');
+	$('#cart_rule_link_' + tab).parent().addClass('active');
 	$('#currentFormTab').val(tab);
 }
 
 $('.cart_rule_tab').hide();
-$('.tab-page').removeClass('selected');
+$('.tab-row.active').removeClass('active');
 $('#cart_rule_' + currentFormTab).show();
-$('#cart_rule_link_' + currentFormTab).addClass('selected');
+$('#cart_rule_link_' + currentFormTab).parent().addClass('active');
 
 var date = new Date();
 var hours = date.getHours();

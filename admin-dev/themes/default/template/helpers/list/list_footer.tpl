@@ -27,15 +27,13 @@
 			{if $bulk_actions}
 				<p>
 					{foreach $bulk_actions as $key => $params}
-						<input type="submit" class="button" name="submitBulk{$key}{$table}" value="{$params.text}" {if isset($params.confirm)}onclick="return confirm('{$params.confirm}');"{/if} />
+						<input type="submit" class="btn" name="submitBulk{$key}{$table}" value="{$params.text}" {if isset($params.confirm)}onclick="return confirm('{$params.confirm}');"{/if} />
 					{/foreach}
 				</p>
 			{/if}
-		</td>
-	</tr>
-</table>
+
 {if !$simple_header}
-	<input type="hidden" name="token" value="{$token}" />
+		<input type="hidden" name="token" value="{$token}" />
 	</form>
 {/if}
 
