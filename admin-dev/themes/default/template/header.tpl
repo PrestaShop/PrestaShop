@@ -96,7 +96,7 @@
 	</style>
 {/if}
 </head>
-<body style="{if isset($bo_color) && $bo_color}background:{$bo_color};{/if}{if isset($bo_width) && $bo_width > 0}text-align:center;{/if}">
+<body style="{if isset($bo_color) && $bo_color}background:{$bo_color};{/if}{if isset($bo_width) && $bo_width > 0}text-align:center;{/if}" class="no_bootstrap">
 {if $display_header}
 <div id="ajax_running"><img src="../img/admin/ajax-loader-yellow.gif" alt="" /> {l s='Loading...'}</div>
 <div id="top_container" {if $bo_width > 0}style="margin:auto;width:{$bo_width}px"{/if}>
