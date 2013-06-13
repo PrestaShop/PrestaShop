@@ -65,8 +65,12 @@
 					{if isset($params.active)}
 						{$tr.$key}
 					{elseif isset($params.activeVisu)}
-						<img src="../img/admin/{if $tr.$key}enabled.gif{else}disabled.gif{/if}"
-						alt="{if $tr.$key}{l s='Enabled'}{else}{l s='Disabled'}{/if}" title="{if $tr.$key}{l s='Enabled'}{else}{l s='Disabled'}{/if}" />
+						{if $tr.$key}
+							<span class="label label-success"><i class="icon-check-sign"></i> {l s='Enabled'}</span>
+						{else}
+							<span class="label label-important"><i class="icon-ban-circle"></i> {l s='Disabled'}</span>
+						{/if}
+
 					{elseif isset($params.position)}
 						{if $order_by == 'position' && $order_way != 'DESC'}
 							<a href="{$tr.$key.position_url_down}" {if !($tr.$key.position != $positions[count($positions) - 1])}style="display: none;"{/if}>
@@ -131,12 +135,19 @@
 			{/if}</td>
 	{/if}
 	{if $has_actions}
-		<td class="center" style="white-space: nowrap;">
-			{foreach $actions AS $action}
-				{if isset($tr.$action)}
-					{$tr.$action}
-				{/if}
-			{/foreach}
+		<td>
+			<div class="btn-group">
+				<a href="#" class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-cog"></i> {l s='Actions'} <span class="caret"></span></a>
+				<ul class="dropdown-menu">
+				{foreach $actions AS $action}
+					<li>
+					{if isset($tr.$action)}
+						{$tr.$action}
+					{/if}
+					</li>
+				{/foreach}
+				</ul>
+			</div>
 		</td>
 	{/if}
 	</tr>

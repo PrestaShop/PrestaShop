@@ -1,0 +1,94 @@
+.no_bootstrap {
+	line-height:normal;
+	font-size:12px;
+	font-family:Arial,Verdana,Helvetica,sans-serif;
+}
+
+.no_bootstrap a {
+	line-height:normal;
+}
+
+.no_bootstrap .categorieList a {
+	line-height:20px;
+}
+
+.no_bootstrap p {
+	line-height:normal;
+}
+
+.no_bootstrap legend {
+	font-size:13px;
+	line-height:20px;
+	width:auto!important;
+}
+
+.no_bootstrap label {
+	font-size:13px;
+	display:inline;
+	line-height:normal;
+}
+
+.no_bootstrap .breadcrumb {
+	padding:0;
+}
+
+.no_bootstrap li {
+	line-height:normal;
+}
+
+.no_bootstrap select,.no_bootstrap textarea,input {
+	height:auto!important;
+	font-size:12px!important;
+	line-height:normal;
+	margin-bottom:auto;
+	-webkit-border-radius:0!important;
+	-moz-border-radius:0!important;
+	border-radius:0!important;
+	font-family:Arial,Verdana,Helvetica,sans-serif;
+	margin-bottom:0!important;
+	width:auto;
+}
+
+.no_bootstrap label,input,button,select,textarea {
+	font-size:12px;
+	line-height:13px;
+}
+
+.no_bootstrap input[type="radio"],.no_bootstrap input[type="checkbox"] {
+	margin:0;
+}
+
+.no_bootstrap input[type="text"] {
+	height:14px!important;
+}
+
+.no_bootstrap .table {
+	margin:0;
+	padding:0;
+	width:auto;
+}
+
+.no_bootstrap table.widthfull {
+	width:100%;
+}
+
+.no_bootstrap table {
+	border-collapse:separate!important;
+}
+
+.no_bootstrap .table thead th {
+	vertical-align:top;
+}
+
+.no_bootstrap .table th,.no_bootstrap .table td {
+	line-height:normal;
+	vertical-align:middle;
+	border-top:none;
+}
+
+.no_bootstrap #header #header_search #bo_search_submit {
+	height:25px!important;
+}
+
+
+.no_bootstrap [class^="icon-"], .no_bootstrap [class*=" icon-"] { width: auto}

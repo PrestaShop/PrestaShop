@@ -23,5 +23,5 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <a href="{$href}" title="{$action}" >
-	<img src="../img/admin/details.gif" alt="{$action}" />
+	<i class="icon-eye-open"></i> {$action}
 </a>
