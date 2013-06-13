@@ -373,7 +373,7 @@ class AdminProductsControllerCore extends AdminController
 				$default_product = new Product((int)$this->object->id, false, null, (int)$this->object->id_shop_default);
 				$def = ObjectModel::getDefinition($this->object);
 				foreach ($def['fields'] as $field_name => $row)
-					$this->object->$field_name = $default_product->$field_name;
+					$this->object->$field_name = ObjectModel::formatValue($default_product->$field_name, $def['fields'][$field_name]['type']);
 			}
 			$this->object->loadStockData();
 		}
@@ -1802,6 +1802,29 @@ class AdminProductsControllerCore extends AdminController
 				if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP)
 					$object->setFieldsToUpdate((array)Tools::getValue('multishop_check'));
 
+				// Duplicate combinations if not associated to shop
+				if ($this->context->shop->getContext() == Shop::CONTEXT_SHOP && !$object->isAssociatedToShop())
+				{
+					$is_associated_to_shop = false;
+					$combinations = Product::getProductAttributesIds($object->id);
+					if ($combinations)
+					{
+						foreach ($combinations as $id_combination)
+						{
+							$combination = new Combination((int)$id_combination['id_product_attribute']);
+							$default_combination = new Combination((int)$id_combination['id_product_attribute'], null, (int)$this->object->id_shop_default);
+
+							$def = ObjectModel::getDefinition($default_combination);
+							foreach ($def['fields'] as $field_name => $row)
+								$combination->$field_name = ObjectModel::formatValue($default_combination->$field_name, $def['fields'][$field_name]['type']);
+
+							$combination->save();
+						}
+					}
+				}
+				else
+					$is_associated_to_shop = true;
+
 				if ($object->update())
 				{
 					if (in_array($this->context->shop->getContext(), array(Shop::CONTEXT_SHOP, Shop::CONTEXT_ALL)))
@@ -1892,7 +1915,15 @@ class AdminProductsControllerCore extends AdminController
 						$this->display = 'edit';
 				}
 				else
+				{
+					if (!$is_associated_to_shop && $combinations)
+						foreach ($combinations as $id_combination)
+						{
+							$combination = new Combination((int)$id_combination['id_product_attribute']);
+							$combination->delete();
+						}
 					$this->errors[] = Tools::displayError('An error occurred while updating an object.').' <b>'.$this->table.'</b> ('.Db::getInstance()->getMsgError().')';
+				}
 			}
 			else
 				$this->errors[] = Tools::displayError('An error occurred while updating an object.').' <b>'.$this->table.'</b> ('.Tools::displayError('The object cannot be loaded. ').')';
