@@ -1710,7 +1710,9 @@ class AdminControllerCore extends Controller
 		$this->addCSS(_PS_CSS_DIR_.'admin.css', 'all');
 		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
 		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
+		$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/ps-admin-bootstrap.css', 'all');
 		$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/admin.css', 'all');
+
 		if ($this->context->language->is_rtl)
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
 
@@ -1722,7 +1724,8 @@ class AdminControllerCore extends Controller
 			_PS_JS_DIR_.'toggle.js',
 			_PS_JS_DIR_.'tools.js',
 			_PS_JS_DIR_.'ajax.js',
-			_PS_JS_DIR_.'toolbar.js'
+			_PS_JS_DIR_.'toolbar.js',
+			_PS_JS_DIR_.'vendor/bootstrap-ck.js'
 		));
 
 		if (!Tools::getValue('submitFormAjax'))

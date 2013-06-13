@@ -23,5 +23,5 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <a href="{$href}" class="delete" {if isset($confirm)}onclick="if (confirm('{$confirm}')){ return true; }else{ event.stopPropagation(); event.preventDefault();};"{/if} title="{$action}">
-	<img src="../img/admin/delete.gif" alt="{$action}" />
+	<i class="icon-minus-sign-alt"></i> {$action}
 </a>

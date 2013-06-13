@@ -1,0 +1,92 @@
+@import "bootstrap/bootstrap"
+
+body.fixed-top
+	position: relative
+	top: 42px
+	margin-bottom: 42px
+
+.page-sidebar 
+	position: fixed
+	top: 82px
+	width: 225px
+	> ul
+		margin: 0
+		padding: 0
+		li
+			list-style: none
+		> li
+			&.active
+				> a
+					color: white
+					background-color: #2D94C9
+				> ul li a
+					background-color: #D7E9F2
+
+			> a
+				text-transform: uppercase
+				font-size: 13px
+				color: #777
+				display: block
+				padding: 8px 0 8px 15px
+				border-bottom: 1px solid #ccc
+				&:hover
+					text-decoration: none
+			img
+				margin-right: 10px
+			ul
+				margin: 0
+				padding: 0
+				border-bottom: 1px solid #ccc
+				li
+					a
+						display: block
+						padding: 5px 0 5px 40px
+						border: none
+						border-bottom: 1px solid #F6F6F6
+		li:not(.active) ul
+			display: none
+		li.expanded ul
+			display: block !important
+
+.page-sidebar > ul > li > ul.sub-menu
+	display: none
+	list-style: none
+	clear: both
+	margin: 8px 0px 8px 0px
+
+
+.page-content
+	margin-left: 225px
+	margin-top: 0px
+	min-height: 860px
+	padding-top: 20px
+
+#footer
+	padding: 8px 20px 5px 20px
+	font-size: 12px
+	color: #999
+	background-color: #272822
+	.go-top
+		display: block
+		text-decoration: none
+		color: #fff
+		cursor: pointer
+		margin-top: -2px
+		margin-right: 0px
+		margin-bottom: 0px
+		font-size: 16px
+		background-color: #111
+		padding: 0px 6px 0px 6px
+	.go-top i
+		color: #666
+		font-size: 22px
+		margin-bottom: 5px
+
+.table
+	word-wrap: break-word
+	input, select
+		margin: 0
+	td.center, th.center
+		text-align: center
+	tr:hover
+		background-color

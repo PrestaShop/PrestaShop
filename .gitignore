@@ -35,4 +35,4 @@ modules/*/mails/*
 !modules/*/mails/en
 translations/*
 !translations/*.gzip
-
+.sass-cache

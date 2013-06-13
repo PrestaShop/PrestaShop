@@ -998,3 +998,11 @@ function quickSelect(elt)
 	else
 		location.href = eltVal;
 }
+
+
+function adminNav(navId)
+{
+	$(".expanded").removeClass("expanded");
+	$(navId).addClass("expanded");
+	console.log($(navId));
+}
