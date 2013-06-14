@@ -157,7 +157,7 @@ class AdminAccessControllerCore extends AdminController
 				$sql = '
 					UPDATE `'._DB_PREFIX_.'access` a
 					SET `view` = '.(int)$enabled.', `add` = '.(int)$enabled.', `edit` = '.(int)$enabled.', `delete` = '.(int)$enabled.'
-					WHERE `id_profile` = '.(int)$id_profile.' AND `id_tab` != '.(int)$this->id_tab_access;
+					WHERE `id_profile` = '.(int)$id_profile;
 			else if ($id_tab == -1 && $perm == 'all')
 				$sql = '
 					UPDATE `'._DB_PREFIX_.'access` a
