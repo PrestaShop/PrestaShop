@@ -30,7 +30,13 @@
 </ul>
 <script type="text/javascript">
 	if (typeof psuser_assistance != 'undefined')
-		psuser_assistance.setStep('install_<?php echo addslashes($this->step) ?>');
+	{
+		var errors = new Array();
+		$.each($('li.fail'), function(i, item){
+			errors.push($(this).text().trim());
+		});
+		psuser_assistance.setStep('install_<?php echo addslashes($this->step) ?>', {'error':errors});
+	}
 </script>
 </body>
 </html>
