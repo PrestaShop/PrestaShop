@@ -154,8 +154,6 @@ class AdminTrackingControllerCore extends AdminController
 
 		$this->tpl_list_vars = array('sub_title' => $this->l('List of products with attributes but without available quantities for sale:'));
 
-
-
 		return $this->renderList();
 	}
 

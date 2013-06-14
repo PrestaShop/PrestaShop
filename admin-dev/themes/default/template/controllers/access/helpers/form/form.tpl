@@ -49,8 +49,10 @@
 
 			if (perm == 'all' && $(this).parent().parent().hasClass('parent'))
 			{
-				checked = enabled ? 'checked': '';
-				$(this).parent().parent().parent().find('.child-'+id_tab+' input[type=checkbox]').attr('checked', checked);
+				if (enabled)
+					$(this).parent().parent().parent().find('.child-'+id_tab+' input[type=checkbox]').attr('checked', 'checked');
+				else
+					$(this).parent().parent().parent().find('.child-'+id_tab+' input[type=checkbox]').removeAttr('checked');
 				$.ajax({
 					url: "{$link->getAdminLink('AdminAccess')|addslashes}",
 					cache: false,
@@ -68,15 +70,12 @@
 					},
 					success : function(res,textStatus,jqXHR)
 					{
-						try
-						{
+						try {
 							if (res == 'ok')
 								showSuccessMessage("{l s='Update successful'}");
 							else
 								showErrorMessage("{l s='Update error'}");
-						}
-						catch(e)
-						{
+						} catch(e) {
 							jAlert('Technical error');
 						}
 					}
