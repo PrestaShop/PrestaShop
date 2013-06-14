@@ -10,18 +10,18 @@
     <name>Bestellung</name>
   </stock_mvt_reason>
   <stock_mvt_reason id="Regulation_following_an_inventory_of_stock">
-    <name>Regulation following an inventory of stock</name>
+    <name>Bestandsberichtigung nach Inventur</name>
   </stock_mvt_reason>
   <stock_mvt_reason id="Regulation_following_an_inventory_of_stock_1">
-    <name>Regulation following an inventory of stock</name>
+    <name>Bestandsberichtigung nach Inventur</name>
   </stock_mvt_reason>
   <stock_mvt_reason id="Transfer_to_another_warehouse">
-    <name>Transfer to another warehouse</name>
+    <name>Übertragung in anderes Lager</name>
   </stock_mvt_reason>
   <stock_mvt_reason id="Transfer_from_another_warehouse">
-    <name>Transfer from another warehouse</name>
+    <name>Übertragung von anderem Lager</name>
   </stock_mvt_reason>
   <stock_mvt_reason id="Supply_Order">
-    <name>Supply Order</name>
+    <name>Lieferbestellung</name>
   </stock_mvt_reason>
 </entity_stock_mvt_reason>
