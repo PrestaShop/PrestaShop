@@ -631,8 +631,8 @@ class CartCore extends ObjectModel
 			{
 				$row2 = Db::getInstance()->getRow('
 					SELECT image_shop.`id_image` id_image, il.`legend`
-					FROM `'._DB_PREFIX_.'image` i'.
-					Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
+					FROM `'._DB_PREFIX_.'image` i
+					JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (i.id_image = image_shop.id_image AND image_shop.cover=1 AND image_shop.id_shop='.(int)$row['id_shop'].')
 					LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$this->id_lang.')
 					WHERE i.`id_product` = '.(int)$row['id_product'].' AND image_shop.`cover` = 1'
 				);
@@ -2958,12 +2958,8 @@ class CartCore extends ObjectModel
 			return false;
 
 		foreach ($this->getProducts() as $product)
-
-			if (!$product['active']
-				|| (
-					!$product['allow_oosp'] && $product['stock_quantity'] < $product['cart_quantity']
-				)
-				|| !$product['available_for_order'])
+			if (!$product['active'] || !$product['available_for_order']
+				|| (!$product['allow_oosp'] && $product['stock_quantity'] < $product['cart_quantity']))
 				return false;
 
 		return true;

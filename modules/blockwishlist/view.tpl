@@ -48,12 +48,12 @@
 		<li class="address_title"><a href="{$link->getProductLink($product.id_product,
 		$product.link_rewrite, $product.category_rewrite)}" title="{l s='View' mod='blockwishlist'}">{$product.name|truncate:30:'...'|escape:'htmlall':'UTF-8'}</a></li>
 		<li class="address_name">
-			<a href="{$link->getProductlink($product.id_product, $product.link_rewrite, $product.category_rewrite)}" title="{l s='Product detail' mod='blockwishlist'}" class="product_image"  title="{$product.name|escape:'htmlall':'UTF-8'}">
-				<img src="{$link->getImageLink($product.link_rewrite, $product.cover, 'medium')}" alt="{$product.name|escape:'htmlall':'UTF-8'}" />				
+			<a href="{$link->getProductlink($product.id_product, $product.link_rewrite, $product.category_rewrite)|escape:'html'}" title="{l s='Product detail' mod='blockwishlist'}" class="product_image"  title="{$product.name|escape:'htmlall':'UTF-8'}">
+				<img src="{$link->getImageLink($product.link_rewrite, $product.cover, 'medium')|escape:'html'}" alt="{$product.name|escape:'htmlall':'UTF-8'}" />				
 			</a>
 		<span class="wishlist_product_detail">
 		{if isset($product.attributes_small)}
-			<br /><a href="{$link->getProductlink($product.id_product, $product.link_rewrite, $product.category_rewrite)}" title="{l s='Product detail' mod='blockwishlist'}">{$product.attributes_small|escape:'htmlall':'UTF-8'}</a>
+			<br /><a href="{$link->getProductlink($product.id_product, $product.link_rewrite, $product.category_rewrite)|escape:'html'}" title="{l s='Product detail' mod='blockwishlist'}">{$product.attributes_small|escape:'htmlall':'UTF-8'}</a>
 		{/if}
 			<br />{l s='Quantity:' mod='blockwishlist'}<input type="text" id="{$product.id_product}_{$product.id_product_attribute}" size="3" value="{$product.quantity|intval}" readonly/>
 			<br />{l s='Priority:' mod='blockwishlist'}
@@ -67,10 +67,10 @@
 		</span>
 		</li>
 		<li class="address_address1 clear">
-			<a class="button_small clear" href="{$link->getProductLink($product.id_product,  $product.link_rewrite, $product.category_rewrite)}" title="{l s='View' mod='blockwishlist'}" rel="nofollow">{l s='View' mod='blockwishlist'}</a>
+			<a class="button_small clear" href="{$link->getProductLink($product.id_product,  $product.link_rewrite, $product.category_rewrite)|escape:'html'}" title="{l s='View' mod='blockwishlist'}" rel="nofollow">{l s='View' mod='blockwishlist'}</a>
 			{if isset($product.attribute_quantity) AND $product.attribute_quantity >= 1 OR !isset($product.attribute_quantity) AND $product.product_quantity >= 1}
 			{if !$ajax}
-			<form id="addtocart_{$product.id_product|intval}_{$product.id_product_attribute|intval}" action="{$link->getPageLink('cart')}" method="post">
+			<form id="addtocart_{$product.id_product|intval}_{$product.id_product_attribute|intval}" action="{$link->getPageLink('cart')|escape:'html'}" method="post">
 			<p class="hidden">
 				<input type="hidden" name="id_product" value="{$product.id_product|intval}" id="product_page_product_id"  />
 				<input type="hidden" name="add" value="1" />

@@ -40,11 +40,11 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 		<label class="aligned"><?php echo $this->l('Install demo products:') ?></label>
 		<div class="contentinput">
 			<label>
-				<input value="full" type="radio" name="db_mode" style="vertical-align: middle;" <?php if ($this->install_type == 'full'): ?>checked="checked"<?php endif; ?> />
+				<input value="full" type="radio" name="db_mode" style="vertical-align: middle;" <?php if ($this->install_type == 'full'): ?>checked="checked"<?php endif; ?> autocomplete="off" />
 				<?php echo $this->l('Yes') ?>
 			</label>
 			<label>
-				<input value="lite" type="radio" name="db_mode" style="vertical-align: middle;" <?php if ($this->install_type == 'lite'): ?>checked="checked"<?php endif; ?> />
+				<input value="lite" type="radio" name="db_mode" style="vertical-align: middle;" <?php if ($this->install_type == 'lite'): ?>checked="checked"<?php endif; ?> autocomplete="off" />
 				<?php echo $this->l('No'); ?>
 			</label>
 		</div>

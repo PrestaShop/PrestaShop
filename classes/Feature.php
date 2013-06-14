@@ -81,7 +81,7 @@ class FeatureCore extends ObjectModel
 	public static function getFeatures($id_lang, $with_shop = true)
 	{
 		return Db::getInstance()->executeS('
-		SELECT *
+		SELECT DISTINCT f.id_feature, f.*, fl.*
 		FROM `'._DB_PREFIX_.'feature` f
 		'.($with_shop ? Shop::addSqlAssociation('feature', 'f') : '').'
 		LEFT JOIN `'._DB_PREFIX_.'feature_lang` fl ON (f.`id_feature` = fl.`id_feature` AND fl.`id_lang` = '.(int)$id_lang.')

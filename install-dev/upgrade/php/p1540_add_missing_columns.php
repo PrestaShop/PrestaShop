@@ -52,9 +52,14 @@ function p1540_add_missing_columns()
 	}
 	
 	$key_exists = Db::getInstance()->executeS('SHOW INDEX FROM `'._DB_PREFIX_.'stock_available` WHERE KEY_NAME = "product_sqlstock"');;
-	if (is_array($key_exists))
+	if (is_array($key_exists) && count($key_exists))
 		if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'stock_available` DROP INDEX `product_sqlstock`'))
 			$errors[] = Db::getInstance()->getMsgError();
+			
+	$key_exists = Db::getInstance()->executeS('SHOW INDEX FROM `'._DB_PREFIX_.'stock_available` WHERE KEY_NAME = "id_product_2"');;
+	if (is_array($key_exists) && count($key_exists))
+		if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'stock_available` DROP INDEX `id_product_2`'))
+			$errors[] = Db::getInstance()->getMsgError();			
 
 	if (count($errors))
 		return array('error' => 1, 'msg' => implode(',', $errors)) ;	

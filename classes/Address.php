@@ -222,7 +222,7 @@ class AddressCore extends ObjectModel
 	public function validateController($htmlentities = true)
 	{
 		$errors = parent::validateController($htmlentities);
-		if (!Configuration::get('VATNUMBER_CHECKING'))
+		if (!Configuration::get('VATNUMBER_MANAGEMENT') || !Configuration::get('VATNUMBER_CHECKING'))
 			return $errors;
 		include_once(_PS_MODULE_DIR_.'vatnumber/vatnumber.php');
 		if (class_exists('VatNumber', false))
@@ -237,6 +237,8 @@ class AddressCore extends ObjectModel
 	 */
 	public static function getZoneById($id_address)
 	{
+		if(!isset($id_address) || empty($id_address))
+			return false;
 		if (isset(self::$_idZones[$id_address]))
 			return self::$_idZones[$id_address];
 
@@ -259,6 +261,9 @@ class AddressCore extends ObjectModel
 	 */
 	public static function isCountryActiveById($id_address)
 	{
+		if(!isset($id_address) || empty($id_address))
+			return false;
+
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT c.`active`
 		FROM `'._DB_PREFIX_.'address` a

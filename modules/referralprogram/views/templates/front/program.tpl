@@ -31,7 +31,7 @@
 	//]]>
 </script>
 
-{capture name=path}<a href="{$link->getPageLink('my-account', true)}" title="{l s='Manage my account' mod='referralprogram'}" rel="nofollow">{l s='My account' mod='referralprogram'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Referral Program' mod='referralprogram'}{/capture}
+{capture name=path}<a href="{$link->getPageLink('my-account', true)|escape:'html'}" title="{l s='Manage my account' mod='referralprogram'}" rel="nofollow">{l s='My account' mod='referralprogram'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Referral Program' mod='referralprogram'}{/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
 <h2>{l s='Referral program' mod='referralprogram'}</h2>
@@ -95,7 +95,7 @@
 				{/if},
 				{l s='he or she will receive a %1$d voucher and you will receive your own voucher worth %2$d.' sprintf=[$discount,$discount] mod='referralprogram'}
 			</p>
-			<form method="post" action="{$link->getModuleLink('referralprogram', 'program', [], true)}" class="std">
+			<form method="post" action="{$link->getModuleLink('referralprogram', 'program', [], true)|escape:'html'}" class="std">
 				<table class="std">
 				<thead>
 					<tr>
@@ -122,12 +122,12 @@
 				<p class="checkbox">
 					<input type="checkbox" name="conditionsValided" id="conditionsValided" value="1" {if isset($smarty.post.conditionsValided) AND $smarty.post.conditionsValided eq 1}checked="checked"{/if} />
 					<label for="conditionsValided">{l s='I agree to the terms of service and adhere to them unconditionally.' mod='referralprogram'}</label>
-					<a href="{$link->getModuleLink('referralprogram', 'rules', ['height' => '500', 'width' => '400'], true)}" class="thickbox" title="{l s='Conditions of the referral program' mod='referralprogram'}" rel="nofollow">{l s='Read conditions.' mod='referralprogram'}</a>
+					<a href="{$link->getModuleLink('referralprogram', 'rules', ['height' => '500', 'width' => '400'], true)|escape:'html'}" class="thickbox" title="{l s='Conditions of the referral program' mod='referralprogram'}" rel="nofollow">{l s='Read conditions.' mod='referralprogram'}</a>
 				</p>
 				<p class="see_email">
 					{l s='Preview' mod='referralprogram'} 
 					{assign var="file" value="{$lang_iso}/referralprogram-invitation.html"}
-					<a href="{$link->getModuleLink('referralprogram', 'email', ['height' => '500', 'width' => '600', 'mail' => {$file}], true)}" class="thickbox" title="{l s='Invitation e-mail' mod='referralprogram'}" rel="nofollow">{l s='the default e-mail' mod='referralprogram'}</a> {l s='that will be sent to your friend(s).' mod='referralprogram'}
+					<a href="{$link->getModuleLink('referralprogram', 'email', ['height' => '500', 'width' => '600', 'mail' => {$file}], true)|escape:'html'}" class="thickbox" title="{l s='Invitation e-mail' mod='referralprogram'}" rel="nofollow">{l s='the default e-mail' mod='referralprogram'}</a> {l s='that will be sent to your friend(s).' mod='referralprogram'}
 				</p>
 				<p class="submit">
 					<input type="submit" id="submitSponsorFriends" name="submitSponsorFriends" class="button_large" value="{l s='Validate' mod='referralprogram'}" />
@@ -145,7 +145,7 @@
 		<p>
 			{l s='These friends have not yet placed an order on this Website since you sponsored them, but you can try again! To do so, mark the checkboxes of the friend(s) you want to remind, then click on the button "Remind my friend(s)"' mod='referralprogram'}
 		</p>
-		<form method="post" action="{$link->getModuleLink('referralprogram', 'program', [], true)}" class="std">
+		<form method="post" action="{$link->getModuleLink('referralprogram', 'program', [], true)|escape:'html'}" class="std">
 			<table class="std">
 			<thead>
 				<tr>
@@ -218,7 +218,7 @@
 
 <ul class="footer_links">
 	<li>
-		<a href="{$link->getPageLink('my-account', true)}" title="{l s='Back to Your Account' mod='referralprogram'}" rel="nofollow">
+		<a href="{$link->getPageLink('my-account', true)|escape:'html'}" title="{l s='Back to Your Account' mod='referralprogram'}" rel="nofollow">
 		<img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /> {l s='Back to Your Account' mod='referralprogram'}</a>
 	</li>
 	<li class="f_right"><a href="{$base_dir}" title="{l s='Home' mod='referralprogram'}"><img src="{$img_dir}icon/home.gif" alt="" class="icon" /> {l s='Home' mod='referralprogram'}</a></li>

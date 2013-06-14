@@ -36,7 +36,7 @@
 {else}
 
 <h3>{l s='Check payment' mod='cheque'}</h3>
-<form action="{$link->getModuleLink('cheque', 'validation', [], true)}" method="post">
+<form action="{$link->getModuleLink('cheque', 'validation', [], true)|escape:'html'}" method="post">
 	<p>
 		<img src="{$this_path_cheque}cheque.jpg" alt="{l s='Check' mod='cheque'}" width="86" height="49" style="float:left; margin: 0px 10px 5px 0px;" />
 		{l s='You have chosen to pay by check.' mod='cheque'}
@@ -73,7 +73,7 @@
 	</p>
 	<p class="cart_navigation">
 		<input type="submit" name="submit" value="{l s='I confirm my order' mod='cheque'}" class="exclusive_large" />
-		<a href="{$link->getPageLink('order', true, NULL, "step=3")}" class="button_large">{l s='Other payment methods' mod='cheque'}</a>
+		<a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'html'}" class="button_large">{l s='Other payment methods' mod='cheque'}</a>
 	</p>
 </form>
 {/if}
