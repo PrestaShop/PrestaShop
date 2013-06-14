@@ -440,6 +440,7 @@ class AdminManufacturersControllerCore extends AdminController
 			'type' => 'text',
 			'label' => $this->l('Zip Code/Postal Code'),
 			'name' => 'postcode',
+			'required' => true,
 			'size' => 33,
 			'required' => false,
 		);
