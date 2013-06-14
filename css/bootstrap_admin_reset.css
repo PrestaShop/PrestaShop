@@ -1,42 +1,36 @@
-.no_bootstrap {
-	line-height:normal;
-	font-size:12px;
-	font-family:Arial,Verdana,Helvetica,sans-serif;
-}
-
-.no_bootstrap a {
+#nobootstrap a {
 	line-height:normal;
 }
 
-.no_bootstrap .categorieList a {
+#nobootstrap .categorieList a {
 	line-height:20px;
 }
 
-.no_bootstrap p {
+#nobootstrap p {
 	line-height:normal;
 }
 
-.no_bootstrap legend {
+#nobootstrap legend {
 	font-size:13px;
 	line-height:20px;
 	width:auto!important;
 }
 
-.no_bootstrap label {
+#nobootstrap label {
 	font-size:13px;
 	display:inline;
 	line-height:normal;
 }
 
-.no_bootstrap .breadcrumb {
+#nobootstrap .breadcrumb {
 	padding:0;
 }
 
-.no_bootstrap li {
+#nobootstrap li {
 	line-height:normal;
 }
 
-.no_bootstrap select,.no_bootstrap textarea,input {
+#nobootstrap select,#nobootstrap textarea,input {
 	height:auto!important;
 	font-size:12px!important;
 	line-height:normal;
@@ -49,46 +43,54 @@
 	width:auto;
 }
 
-.no_bootstrap label,input,button,select,textarea {
+#nobootstrap label,input,button,select,textarea {
 	font-size:12px;
 	line-height:13px;
 }
 
-.no_bootstrap input[type="radio"],.no_bootstrap input[type="checkbox"] {
+#nobootstrap input[type="radio"],#nobootstrap input[type="checkbox"] {
 	margin:0;
 }
 
-.no_bootstrap input[type="text"] {
+#nobootstrap input[type="text"] {
 	height:14px!important;
 }
 
-.no_bootstrap .table {
+#nobootstrap table.table {
 	margin:0;
 	padding:0;
-	width:auto;
+	width:100%;
+	border: solid 1px black;
 }
 
-.no_bootstrap table.widthfull {
+#nobootstrap table.table-bordered {
+	border: none;
+}
+#nobootstrap table.table-stripped {
+	border: none;
+}
+
+#nobootstrap table.widthfull {
 	width:100%;
 }
 
-.no_bootstrap table {
+#nobootstrap table {
 	border-collapse:separate!important;
 }
 
-.no_bootstrap .table thead th {
+#nobootstrap .table thead th {
 	vertical-align:top;
 }
 
-.no_bootstrap .table th,.no_bootstrap .table td {
+#nobootstrap .table th,#nobootstrap .table td {
 	line-height:normal;
 	vertical-align:middle;
 	border-top:none;
 }
 
-.no_bootstrap #header #header_search #bo_search_submit {
+#nobootstrap #header #header_search #bo_search_submit {
 	height:25px!important;
 }
 
 
-.no_bootstrap [class^="icon-"], .no_bootstrap [class*=" icon-"] { width: auto}
+#nobootstrap [class^="icon-"], #nobootstrap [class*=" icon-"] { width: auto}

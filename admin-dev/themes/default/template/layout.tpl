@@ -91,5 +91,8 @@
 		{/if}
 	</div>
 {/if}
+
+<div {if !$bootstrap} id="nobootstrap" {/if}>
 {$page}
+</div>
 {include file='footer.tpl'}

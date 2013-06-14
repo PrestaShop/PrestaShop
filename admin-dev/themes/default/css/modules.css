@@ -1,13 +1,4 @@
-
 .path_bar {display:none;}
-#notifs_icon_wrapper {float: left;position: relative;margin:15px 10px 0; width:90px;}
-.notifs { float: left;position: relative;cursor: pointer;margin:0; padding:5px; width: 18px;height: 16px;}
-#orders_notif {background: url('../img/notif_order.png') no-repeat center top;}
-#customers_notif {background: url('../img/notif_customer.png') no-repeat center top;}
-#messages_notif {background: url('../img/notif_message.png') no-repeat center top;}
-#orders_notif.open_notifs,
-#customers_notif.open_notifs,
-#messages_notif.open_notifs { background-color: #FFFFFF;border: 1px solid #000000; position: relative; display: block; background-position:center bottom; }
 
 /*toolbarBox*/
 .toolbarBox { background-color: #F8F8F8; border: 1px solid #CCCCCC; margin-bottom:10px; padding: 10px 0; border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px;}
