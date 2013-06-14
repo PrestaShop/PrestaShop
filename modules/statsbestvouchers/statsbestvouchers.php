@@ -54,6 +54,13 @@ class StatsBestVouchers extends ModuleGrid
 
 		$this->_columns = array(
 			array(
+				'id' => 'code',
+				'header' => $this->l('Code'),
+				'dataIndex' => 'code',
+				'align' => 'left',
+				'width' => 300
+			),
+			array(
 				'id' => 'name',
 				'header' => $this->l('Name'),
 				'dataIndex' => 'name',
@@ -110,9 +117,10 @@ class StatsBestVouchers extends ModuleGrid
 
 	public function getData()
 	{
-		$this->_query = 'SELECT SQL_CALC_FOUND_ROWS ocr.name as name, COUNT(ocr.id_cart_rule) as total, ROUND(SUM(o.total_paid_real) / o.conversion_rate, 2) as ca
+		$this->_query = 'SELECT SQL_CALC_FOUND_ROWS cr.code, ocr.name, COUNT(ocr.id_cart_rule) as total, ROUND(SUM(o.total_paid_real) / o.conversion_rate,2) as ca
 				FROM '._DB_PREFIX_.'order_cart_rule ocr
 				LEFT JOIN '._DB_PREFIX_.'orders o ON o.id_order = ocr.id_order
+				LEFT JOIN '._DB_PREFIX_.'cart_rule cr ON cr.id_cart_rule = ocr.id_cart_rule
 				WHERE o.valid = 1
 					'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 					AND o.invoice_date BETWEEN '.$this->getDate().'
@@ -125,6 +133,7 @@ class StatsBestVouchers extends ModuleGrid
 		}
 		if (($this->_start === 0 || Validate::IsUnsignedInt($this->_start)) && Validate::IsUnsignedInt($this->_limit))
 			$this->_query .= ' LIMIT '.$this->_start.', '.($this->_limit);
+
 		$this->_values = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query);
 		$this->_totalCount = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT FOUND_ROWS()');
 	}

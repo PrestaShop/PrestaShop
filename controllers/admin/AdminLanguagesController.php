@@ -489,7 +489,7 @@ class AdminLanguagesControllerCore extends AdminController
 		}
 
 		// Get all iso code available
-		if ($lang_packs = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.Tools::getValue('ps_version').'&iso_lang='.Tools::getValue('iso_lang')))
+		if ($lang_packs = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.Tools::getValue('ps_version').'&iso_lang='.Tools::strtolower(Tools::getValue('iso_lang'))))
 		{
 			$result = Tools::jsonDecode($lang_packs);
 			if ($lang_packs !== '' && $result && !isset($result->error))

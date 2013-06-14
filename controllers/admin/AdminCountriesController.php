@@ -253,6 +253,26 @@ class AdminCountriesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
+					'label' => $this->l('Address Standardization:'),
+					'name' => 'standardization',
+					'required' => false,
+					'class' => 't',
+					'is_bool' => true,
+					'values' => array(
+						array(
+							'id' => 'standardization_on',
+							'value' => 1,
+							'label' => $this->l('Enabled')
+						),
+						array(
+							'id' => 'standardization_off',
+							'value' => 0,
+							'label' => $this->l('Disabled')
+						)
+					),
+				),					
+				array(
+					'type' => 'radio',
 					'label' => $this->l('Active:'),
 					'name' => 'active',
 					'required' => false,
@@ -271,7 +291,7 @@ class AdminCountriesControllerCore extends AdminController
 						)
 					),
 					'desc' => $this->l('Display this country to your customers (the selected country will always be displayed in the Back Office)')
-				),
+				),			
 				array(
 					'type' => 'radio',
 					'label' => $this->l('Contains following  states:'),
@@ -330,6 +350,7 @@ class AdminCountriesControllerCore extends AdminController
 					)
 				)
 			)
+			
 		);
 
 		if (Shop::isFeatureActive())
@@ -345,7 +366,10 @@ class AdminCountriesControllerCore extends AdminController
 			'title' => $this->l('Save   '),
 			'class' => 'button'
 		);
-
+		
+		if ($this->object->iso_code == 'US')
+			$this->object->standardization = Configuration::get('PS_TAASC');
+		
 		return parent::renderForm();
 	}
 
@@ -362,6 +386,9 @@ class AdminCountriesControllerCore extends AdminController
 			if (!is_null($id_country) && $id_country != Tools::getValue('id_'.$this->table))
 				$this->errors[] = Tools::displayError('This ISO code already exists.You cannot create two countries with the same ISO code.');
 		}
+		
+		if (Tools::isSubmit('standardization'))
+			Configuration::updateValue('PS_TAASC', (bool)Tools::getValue('standardization', false));	
 
 		if (!count($this->errors))
 			$res = parent::postProcess();

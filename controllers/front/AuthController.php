@@ -139,6 +139,9 @@ class AuthControllerCore extends FrontController
 				'HOOK_CREATE_ACCOUNT_TOP' => Hook::exec('displayCustomerAccountFormTop')
 			));
 		
+		// Just set $this->template value here in case it's used by Ajax
+		$this->setTemplate(_PS_THEME_DIR_.'authentication.tpl');
+
 		if ($this->ajax)
 		{
 			// Call a hook to display more information on form
@@ -150,12 +153,11 @@ class AuthControllerCore extends FrontController
 			$return = array(
 				'hasError' => !empty($this->errors),
 				'errors' => $this->errors,
-				'page' => $this->context->smarty->fetch(_PS_THEME_DIR_.'authentication.tpl'),
+				'page' => $this->context->smarty->fetch($this->template),
 				'token' => Tools::getToken(false)
 			);
 			die(Tools::jsonEncode($return));
 		}
-		$this->setTemplate(_PS_THEME_DIR_.'authentication.tpl');
 	}
 
 	/**
@@ -472,7 +474,7 @@ class AuthControllerCore extends FrontController
 							Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? url_encode($this->authRedirection) : 'my-account'));
 					}
 					else
-						$this->errors[] = Tools::displayError('An error occurred while creating your account..');
+						$this->errors[] = Tools::displayError('An error occurred while creating your account.');
 				}
 			}
 
@@ -487,7 +489,7 @@ class AuthControllerCore extends FrontController
 			$this->errors = array_unique(array_merge($this->errors, $address->validateController()));
 
 			// US customer: normalize the address
-			if ($address->id_country == Country::getByIso('US'))
+			if ($address->id_country == Country::getByIso('US') && Configuration::get('PS_TAASC'))
 			{
 				include_once(_PS_TAASC_PATH_.'AddressStandardizationSolution.php');
 				$normalize = new AddressStandardizationSolution;
@@ -545,7 +547,7 @@ class AuthControllerCore extends FrontController
 					else
 						$customer->is_guest = 0;
 					if (!$customer->add())
-						$this->errors[] = Tools::displayError('An error occurred while creating your account..');
+						$this->errors[] = Tools::displayError('An error occurred while creating your account.');
 					else
 					{
 						$address->id_customer = (int)$customer->id;
@@ -688,6 +690,9 @@ class AuthControllerCore extends FrontController
 	 */
 	protected function sendConfirmationMail(Customer $customer)
 	{
+		if (!Configuration::get('PS_CUSTOMER_CREATION_EMAIL'))
+			return true;
+
 		return Mail::Send(
 			$this->context->language->id,
 			'account',

@@ -75,7 +75,7 @@ $(function(){ldelim}
 	{if isset($smarty.post.alias)}
 		"{$smarty.post.alias}"
 	{else}
-		{if isset($address->alias)}"{$address->alias}"{/if}
+		{if isset($address->alias)}"{$address->alias|escape:'html'}"{/if}
 	{/if}
 {else}
 	{l s='To add a new address, please fill out the form below.'}
@@ -86,12 +86,12 @@ $(function(){ldelim}
 
 <p class="required"><sup>*</sup> {l s='Required field'}</p>
 
-<form action="{$link->getPageLink('address', true)}" method="post" class="std" id="add_address">
+<form action="{$link->getPageLink('address', true)|escape:'html'}" method="post" class="std" id="add_address">
 	<fieldset>
 		<h3>{if isset($id_address)}{l s='Your address'}{else}{l s='New address'}{/if}</h3>
 		<p class="required text dni">
 			<label for="dni">{l s='Identification number'} <sup>*</sup></label>
-			<input type="text" class="text" name="dni" id="dni" value="{if isset($smarty.post.dni)}{$smarty.post.dni}{else}{if isset($address->dni)}{$address->dni}{/if}{/if}" />
+			<input type="text" class="text" name="dni" id="dni" value="{if isset($smarty.post.dni)}{$smarty.post.dni}{else}{if isset($address->dni)}{$address->dni|escape:'html'}{/if}{/if}" />
 			<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 		</p>
 	{assign var="stateExist" value="false"}
@@ -100,7 +100,7 @@ $(function(){ldelim}
 			<p class="text">
 			<input type="hidden" name="token" value="{$token}" />
 			<label for="company">{l s='Company'}</label>
-			<input type="text" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{else}{if isset($address->company)}{$address->company}{/if}{/if}" />
+			<input type="text" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{else}{if isset($address->company)}{$address->company|escape:'html'}{/if}{/if}" />
 		</p>
 		{/if}
 		{if $field_name eq 'vat_number'}
@@ -108,7 +108,7 @@ $(function(){ldelim}
 				<div id="vat_number">
 					<p class="text">
 						<label for="vat_number">{l s='VAT number'}</label>
-						<input type="text" class="text" name="vat_number" value="{if isset($smarty.post.vat_number)}{$smarty.post.vat_number}{else}{if isset($address->vat_number)}{$address->vat_number}{/if}{/if}" />
+						<input type="text" class="text" name="vat_number" value="{if isset($smarty.post.vat_number)}{$smarty.post.vat_number}{else}{if isset($address->vat_number)}{$address->vat_number|escape:'html'}{/if}{/if}" />
 					</p>
 				</div>
 			</div>
@@ -116,37 +116,37 @@ $(function(){ldelim}
 		{if $field_name eq 'firstname'}
 		<p class="required text">
 			<label for="firstname">{l s='First name'} <sup>*</sup></label>
-			<input type="text" name="firstname" id="firstname" value="{if isset($smarty.post.firstname)}{$smarty.post.firstname}{else}{if isset($address->firstname)}{$address->firstname}{/if}{/if}" />
+			<input type="text" name="firstname" id="firstname" value="{if isset($smarty.post.firstname)}{$smarty.post.firstname}{else}{if isset($address->firstname)}{$address->firstname|escape:'html'}{/if}{/if}" />
 		</p>
 		{/if}
 		{if $field_name eq 'lastname'}
 		<p class="required text">
 			<label for="lastname">{l s='Last name'} <sup>*</sup></label>
-			<input type="text" id="lastname" name="lastname" value="{if isset($smarty.post.lastname)}{$smarty.post.lastname}{else}{if isset($address->lastname)}{$address->lastname}{/if}{/if}" />
+			<input type="text" id="lastname" name="lastname" value="{if isset($smarty.post.lastname)}{$smarty.post.lastname}{else}{if isset($address->lastname)}{$address->lastname|escape:'html'}{/if}{/if}" />
 		</p>
 		{/if}
 		{if $field_name eq 'address1'}
 		<p class="required text">
 			<label for="address1">{l s='Address'} <sup>*</sup></label>
-			<input type="text" id="address1" name="address1" value="{if isset($smarty.post.address1)}{$smarty.post.address1}{else}{if isset($address->address1)}{$address->address1}{/if}{/if}" />
+			<input type="text" id="address1" name="address1" value="{if isset($smarty.post.address1)}{$smarty.post.address1}{else}{if isset($address->address1)}{$address->address1|escape:'html'}{/if}{/if}" />
 		</p>
 		{/if}
 		{if $field_name eq 'address2'}
 		<p class="required text">
 			<label for="address2">{l s='Address (Line 2)'}</label>
-			<input type="text" id="address2" name="address2" value="{if isset($smarty.post.address2)}{$smarty.post.address2}{else}{if isset($address->address2)}{$address->address2}{/if}{/if}" />
+			<input type="text" id="address2" name="address2" value="{if isset($smarty.post.address2)}{$smarty.post.address2}{else}{if isset($address->address2)}{$address->address2|escape:'html'}{/if}{/if}" />
 		</p>
 		{/if}
 		{if $field_name eq 'postcode'}
 		<p class="required postcode text">
 			<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
-			<input type="text" id="postcode" name="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{else}{if isset($address->postcode)}{$address->postcode}{/if}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
+			<input type="text" id="postcode" name="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{else}{if isset($address->postcode)}{$address->postcode|escape:'html'}{/if}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
 		</p>
 		{/if}
 		{if $field_name eq 'city'}
 		<p class="required text">
 			<label for="city">{l s='City'} <sup>*</sup></label>
-			<input type="text" name="city" id="city" value="{if isset($smarty.post.city)}{$smarty.post.city}{else}{if isset($address->city)}{$address->city}{/if}{/if}" maxlength="64" />
+			<input type="text" name="city" id="city" value="{if isset($smarty.post.city)}{$smarty.post.city}{else}{if isset($address->city)}{$address->city|escape:'html'}{/if}{/if}" maxlength="64" />
 		</p>
 		{*
 			if customer hasn't update his layout address, country has to be verified
@@ -205,22 +205,22 @@ $(function(){ldelim}
 		{/if}
 		<p class="textarea">
 			<label for="other">{l s='Additional information'}</label>
-			<textarea id="other" name="other" cols="26" rows="3">{if isset($smarty.post.other)}{$smarty.post.other}{else}{if isset($address->other)}{$address->other}{/if}{/if}</textarea>
+			<textarea id="other" name="other" cols="26" rows="3">{if isset($smarty.post.other)}{$smarty.post.other}{else}{if isset($address->other)}{$address->other|escape:'html'}{/if}{/if}</textarea>
 		</p>
 		{if isset($one_phone_at_least) && $one_phone_at_least}
 			<p class="inline-infos required">{l s='You must register at least one phone number.'}</p>
 		{/if}
 		<p class="text">
 			<label for="phone">{l s='Home phone'}</label>
-			<input type="text" id="phone" name="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{else}{if isset($address->phone)}{$address->phone}{/if}{/if}" />
+			<input type="text" id="phone" name="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{else}{if isset($address->phone)}{$address->phone|escape:'html'}{/if}{/if}" />
 		</p>
 		<p class="{if isset($one_phone_at_least) && $one_phone_at_least}required {/if}text">
 			<label for="phone_mobile">{l s='Mobile phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>*</sup>{/if}</label>
-			<input type="text" id="phone_mobile" name="phone_mobile" value="{if isset($smarty.post.phone_mobile)}{$smarty.post.phone_mobile}{else}{if isset($address->phone_mobile)}{$address->phone_mobile}{/if}{/if}" />
+			<input type="text" id="phone_mobile" name="phone_mobile" value="{if isset($smarty.post.phone_mobile)}{$smarty.post.phone_mobile}{else}{if isset($address->phone_mobile)}{$address->phone_mobile|escape:'html'}{/if}{/if}" />
 		</p>
 		<p class="required text" id="adress_alias">
 			<label for="alias">{l s='Please assign an address title for future reference.'} <sup>*</sup></label>
-			<input type="text" id="alias" name="alias" value="{if isset($smarty.post.alias)}{$smarty.post.alias}{else if isset($address->alias)}{$address->alias}{elseif !$select_address}{l s='My address'}{/if}" />
+			<input type="text" id="alias" name="alias" value="{if isset($smarty.post.alias)}{$smarty.post.alias}{else if isset($address->alias)}{$address->alias|escape:'html'}{elseif !$select_address}{l s='My address'}{/if}" />
 		</p>
 	</fieldset>
 	<p class="submit2">

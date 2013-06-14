@@ -55,7 +55,7 @@
 			{/if}
 		</td>
 		<td>
-			<span id="shipping_number_show">{if $line.url && $line.tracking_number}<a href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{else}{$line.tracking_number}{/if}</span>
+			<span id="shipping_number_show">{if $line.url && $line.tracking_number}<a target="_blank" href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{else}{$line.tracking_number}{/if}</span>
 			{if $line.can_edit}
 				<form style="display: inline;" method="post" action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$order->id|escape:'htmlall':'UTF-8'}">
 					<span class="shipping_number_edit" style="display:none;">

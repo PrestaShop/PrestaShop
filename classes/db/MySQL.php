@@ -168,13 +168,27 @@ class MySQLCore extends Db
 
 		if (strtolower($engine) == 'innodb')
 		{
+			$value = 0;
+			
 			$sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
 			$result = mysql_query($sql);
 			if (!$result)
-				return 4;
+				$value = 4;
 			$row = mysql_fetch_assoc($result);
 			if (!$row || strtolower($row['Value']) != 'yes')
-				return 4;
+				$value = 4;
+			
+			/* MySQL >= 5.6 */
+			$sql = 'SHOW ENGINES';
+			$result = mysql_query($sql);
+			while ($row = mysql_fetch_assoc($result))
+				if ($row['Engine'] == 'InnoDB')
+				{
+					if (in_array($row['Support'], array('DEFAULT', 'YES')))
+						$value = 0;
+					break;
+				}
+			return $value;
 		}
 		@mysql_close($link);
 		return 0;

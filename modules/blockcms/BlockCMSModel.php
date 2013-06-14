@@ -335,7 +335,7 @@ class BlockCMSModel extends ObjectModel
 			ON (bc.`id_cms_category` = ccl.`id_cms_category`)
 			INNER JOIN `'._DB_PREFIX_.'cms_block_lang` bcl
 			ON (bc.`id_cms_block` = bcl.`id_cms_block`)
-			WHERE bc.`location` = '.(int)($location).'
+			WHERE bc.`location` = '.(int)$location.'
 			AND ccl.`id_lang` = '.(int)$context->language->id.'
 			AND bcl.`id_lang` = '.(int)$context->language->id.'
 			AND bcs.id_shop = '.($id_shop ? (int)$id_shop : (int)$context->shop->id).'
@@ -540,7 +540,7 @@ class BlockCMSModel extends ObjectModel
 				{
 					foreach ($content[$key]['cms'] as $row)
 					{
-						$row['link'] = $context->link->getCMSLink((int)($row['id_cms']), $row['link_rewrite']);
+						$row['link'] = $context->link->getCMSLink((int)$row['id_cms'], $row['link_rewrite']);
 						$links[] = $row;
 					}
 				}

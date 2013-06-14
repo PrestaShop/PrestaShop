@@ -31,7 +31,7 @@
 //]]>
 </script>
 
-	<form method="post" action="{$link->getPageLink('products-comparison')}" onsubmit="true">
+	<form method="post" action="{$link->getPageLink('products-comparison')|escape:'html'}" onsubmit="true">
 		<p>
 		<input type="submit" id="bt_compare" class="button" value="{l s='Compare'}" />
 		<input type="hidden" name="compare_product_list" class="compare_product_list" value="" />

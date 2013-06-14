@@ -394,6 +394,7 @@ class ProductCore extends ObjectModel
 				'resource' => 'product_feature',
 				'fields' => array(
 					'id' => array('required' => true),
+					'custom' => array('required' => false),
 					'id_feature_value' => array(
 						'required' => true,
 						'xlink_resource' => 'product_feature_values'
@@ -1448,6 +1449,7 @@ class ProductCore extends ObjectModel
 			$id_shop_list_array = Product::getShopsByProduct($this->id);
 			foreach ($id_shop_list_array as $array_shop)
 				$id_shop_list[] = $array_shop['id_shop'];
+			$id_shop_list = array_unique($id_shop_list);
 		}
 
 		if (count($id_shop_list))
@@ -3213,8 +3215,9 @@ class ProductCore extends ObjectModel
 			return array();
 		if (!array_key_exists($id_product, self::$_cacheFeatures))
 			self::$_cacheFeatures[$id_product] = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-				SELECT id_feature, id_product, id_feature_value
-				FROM `'._DB_PREFIX_.'feature_product`
+				SELECT fp.id_feature, fp.id_product, fp.id_feature_value, custom
+				FROM `'._DB_PREFIX_.'feature_product` fp
+				LEFT JOIN `'._DB_PREFIX_.'feature_value` fv ON (fp.id_feature_value = fv.id_feature_value)
 				WHERE `id_product` = '.(int)$id_product
 			);
 		return self::$_cacheFeatures[$id_product];
@@ -3262,6 +3265,7 @@ class ProductCore extends ObjectModel
 		LEFT JOIN '._DB_PREFIX_.'feature_lang fl ON (fl.id_feature = pf.id_feature AND fl.id_lang = '.(int)$id_lang.')
 		LEFT JOIN '._DB_PREFIX_.'feature_value_lang fvl ON (fvl.id_feature_value = pf.id_feature_value AND fvl.id_lang = '.(int)$id_lang.')
 		LEFT JOIN '._DB_PREFIX_.'feature f ON (f.id_feature = pf.id_feature)
+		'.Shop::addSqlAssociation('feature', 'f').'
 		WHERE `id_product` IN ('.implode($product_implode, ',').')
 		ORDER BY f.position ASC');
 
@@ -3346,33 +3350,57 @@ class ProductCore extends ObjectModel
 			WHERE pa.`id_product` = '.(int)$id_product_old
 		);
 
+		$combinations = array();
 		foreach ($result as $row)
 		{
 			$id_product_attribute_old = (int)$row['id_product_attribute'];
-			$result2 = Db::getInstance()->executeS('
-			SELECT *
-			FROM `'._DB_PREFIX_.'product_attribute_combination`
-				WHERE `id_product_attribute` = '.$id_product_attribute_old
-			);
+			if (!isset($combinations[$id_product_attribute_old]))
+			{
+				$id_combination = null;
+				$id_shop = null;
+				$result2 = Db::getInstance()->executeS('
+				SELECT *
+				FROM `'._DB_PREFIX_.'product_attribute_combination`
+					WHERE `id_product_attribute` = '.$id_product_attribute_old
+				);
+			}
+			else
+			{
+				$id_combination = (int)$combinations[$id_product_attribute_old];
+				$id_shop = (int)$row['id_shop'];
+				$context_old = Shop::getContext();
+				$context_shop_id_old = Shop::getContextShopID();
+				Shop::setContext(Shop::CONTEXT_SHOP, $id_shop);
+
+			}
 
 			$row['id_product'] = $id_product_new;
 			unset($row['id_product_attribute']);
-			$combination = new Combination();
+
+			$combination = new Combination($id_combination, null, $id_shop);
 			foreach ($row as $k => $v)
 				$combination->$k = $v;
-			$return &= $combination->add();
+			$return &= $combination->save();
 
 			$id_product_attribute_new = (int)$combination->id;
+
 			if ($result_images = Product::_getAttributeImageAssociations($id_product_attribute_old))
 			{
 				$combination_images['old'][$id_product_attribute_old] = $result_images;
 				$combination_images['new'][$id_product_attribute_new] = $result_images;
 			}
-			foreach ($result2 as $row2)
+
+			if (!isset($combinations[$id_product_attribute_old]))
 			{
-				$row2['id_product_attribute'] = $id_product_attribute_new;
-				$return &= Db::getInstance()->insert('product_attribute_combination', $row2);
+				$combinations[$id_product_attribute_old] = (int)$id_product_attribute_new;			
+				foreach ($result2 as $row2)
+				{
+					$row2['id_product_attribute'] = $id_product_attribute_new;
+					$return &= Db::getInstance()->insert('product_attribute_combination', $row2);
+				}
 			}
+			else
+				Shop::setContext($context_old, $context_shop_id_old);
 		}
 		return !$return ? false : $combination_images;
 	}
@@ -3848,6 +3876,7 @@ class ProductCore extends ObjectModel
 				LEFT JOIN '._DB_PREFIX_.'feature_lang fl ON (fl.id_feature = pf.id_feature AND fl.id_lang = '.(int)$id_lang.')
 				LEFT JOIN '._DB_PREFIX_.'feature_value_lang fvl ON (fvl.id_feature_value = pf.id_feature_value AND fvl.id_lang = '.(int)$id_lang.')
 				LEFT JOIN '._DB_PREFIX_.'feature f ON (f.id_feature = pf.id_feature AND fl.id_lang = '.(int)$id_lang.')
+				'.Shop::addSqlAssociation('feature', 'f').'
 				WHERE pf.id_product = '.(int)$id_product.'
 				ORDER BY f.position ASC'
 			);
@@ -4400,12 +4429,51 @@ class ProductCore extends ObjectModel
 	*/
 	public function setWsProductFeatures($product_features)
 	{
-		$this->deleteProductFeatures();
-		foreach ($product_features as $product_feature)
-			$this->addFeaturesToDB($product_feature['id'], $product_feature['id_feature_value']);
-		return true;
-	}
+	
+	$db_features = Db::getInstance()->executeS('
+							SELECT p.*, f.`custom`
+							FROM `'._DB_PREFIX_.'feature_product` p
+							LEFT JOIN `'._DB_PREFIX_.'feature_value` f ON (f.`id_feature_value` = p.`id_feature_value`)
+							WHERE `id_product` = '.(int)$this->id
+						);
 
+
+		$pfa = array();
+		foreach ($product_features as $product_feature)
+			$pfa[$product_feature['id']] = 1;
+
+		foreach ($db_features as $db_feature)
+		{
+			// test if feature should stay in db (if it is part of updated product)
+			if (!isset($pfa[$db_feature['id_feature']]))
+			{
+					// delete only custom features
+					if ($db_feature['custom'])
+					{
+						Db::getInstance()->execute('
+							DELETE FROM `'._DB_PREFIX_.'feature_value_lang`
+							WHERE `id_feature_value` = '.(int)$db_feature['id_feature_value']
+						);
+						Db::getInstance()->execute('
+							DELETE FROM `'._DB_PREFIX_.'feature_value`
+							WHERE `id_feature_value` = '.(int)$db_feature['id_feature_value']
+						);
+
+					}
+			}
+		}
+
+		Db::getInstance()->execute('
+			DELETE FROM `'._DB_PREFIX_.'feature_product`
+			WHERE `id_product` = '.(int)$this->id
+		);
+
+ 		foreach ($product_features as $product_feature)
+ 			$this->addFeaturesToDB($product_feature['id'], $product_feature['id_feature_value'], $product_feature['custom']);
+
+ 		return true;
+	}
+	/*
 	/**
 	* Webservice getter : get virtual field default combination
 	*
@@ -5276,4 +5344,3 @@ class ProductCore extends ObjectModel
 		return Db::getInstance()->executeS('SELECT id_product_item as id, quantity FROM '._DB_PREFIX_.'pack where id_product_pack = '.(int)$this->id);
 	}
 }
-

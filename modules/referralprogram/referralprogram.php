@@ -580,7 +580,7 @@ class ReferralProgram extends Module
 						<td class="center">'.((int)($friend['id_customer']) ? $friend['id_customer'] : '--').'</td>
 						<td>'.$friend['firstname'].' '.$friend['lastname'].'</td>
 						<td>'.$friend['email'].'</td>
-						<td>'.Tools::displayDate($friend['date_add'], $this->context->language->id, true).'</td>
+						<td>'.Tools::displayDate($friend['date_add'],null , true).'</td>
 						<td align="right">'.sizeof(ReferralProgramModule::getSponsorFriend($friend['id_customer'])).'</td>
 						<td align="right">'.($orders ? sizeof($orders) : 0).'</td>
 						<td align="center">'.((int)$friend['id_customer'] ? '<img src="'._PS_ADMIN_IMG_.'enabled.gif" />' : '<img src="'._PS_ADMIN_IMG_.'disabled.gif" />').'</td>

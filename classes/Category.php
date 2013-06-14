@@ -510,7 +510,7 @@ class CategoryCore extends ObjectModel
 	 		die(Tools::displayError());
 
 		$groups = FrontController::getCurrentCustomerGroups();
-		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
+		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '='.(int)Group::getCurrent()->id);
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT c.*, cl.id_lang, cl.name, cl.description, cl.link_rewrite, cl.meta_title, cl.meta_keywords, cl.meta_description
@@ -684,8 +684,7 @@ class CategoryCore extends ObjectModel
 		else
 			return new Category($shop->getCategory(), $id_lang);
 		$is_more_than_one_root_category = count(Category::getCategoriesWithoutParent()) > 1;
-		if ((!Shop::isFeatureActive() && $is_more_than_one_root_category) ||
-			Shop::isFeatureActive() && $is_more_than_one_root_category && Shop::getContext() != Shop::CONTEXT_SHOP)
+		if (Shop::isFeatureActive() && $is_more_than_one_root_category && Shop::getContext() != Shop::CONTEXT_SHOP)
 			$category = Category::getTopCategory($id_lang);
 		else
 			$category = new Category($shop->getCategory(), $id_lang);

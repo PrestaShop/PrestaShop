@@ -47,9 +47,12 @@ class BlockSupplier extends Module
 	{
 		if (!parent::install())
 			return false;
-		if (!$this->registerHook('displayLeftColumn'))
-			return false;
-		if (!$this->registerHook('displayHeader'))
+		if (!$this->registerHook('displayLeftColumn') ||
+				!$this->registerHook('displayHeader') ||
+				!$this->registerHook('actionObjectSupplierDeleteAfter') ||
+				!$this->registerHook('actionObjectSupplierAddAfter') ||
+				!$this->registerHook('actionObjectSupplierUpdateAfter')
+			)
 			return false;
 		Configuration::updateValue('SUPPLIER_DISPLAY_TEXT', true);
 		Configuration::updateValue('SUPPLIER_DISPLAY_TEXT_NB', 5);
@@ -73,16 +76,16 @@ class BlockSupplier extends Module
 	function hookDisplayLeftColumn($params)
 	{
 		$id_lang = (int)Context::getContext()->language->id;
-
-		$this->smarty->assign(array(
-			'suppliers' => Supplier::getSuppliers(false, $id_lang),
-			'link' => $this->context->link,
-			'text_list' => Configuration::get('SUPPLIER_DISPLAY_TEXT'),
-			'text_list_nb' => Configuration::get('SUPPLIER_DISPLAY_TEXT_NB'),
-			'form_list' => Configuration::get('SUPPLIER_DISPLAY_FORM'),
-			'display_link_supplier' => Configuration::get('PS_DISPLAY_SUPPLIERS')
-		));
-		return $this->display(__FILE__, 'blocksupplier.tpl');
+		if (!$this->isCached('blocksupplier.tpl', $this->getCacheId()))
+			$this->smarty->assign(array(
+				'suppliers' => Supplier::getSuppliers(false, $id_lang),
+				'link' => $this->context->link,
+				'text_list' => Configuration::get('SUPPLIER_DISPLAY_TEXT'),
+				'text_list_nb' => Configuration::get('SUPPLIER_DISPLAY_TEXT_NB'),
+				'form_list' => Configuration::get('SUPPLIER_DISPLAY_FORM'),
+				'display_link_supplier' => Configuration::get('PS_DISPLAY_SUPPLIERS')
+			));
+		return $this->display(__FILE__, 'blocksupplier.tpl', $this->getCacheId());
 	}
 
 	function getContent()
@@ -102,6 +105,7 @@ class BlockSupplier extends Module
 				Configuration::updateValue('SUPPLIER_DISPLAY_TEXT', $text_list);
 				Configuration::updateValue('SUPPLIER_DISPLAY_TEXT_NB', $text_nb);
 				Configuration::updateValue('SUPPLIER_DISPLAY_FORM', $form_list);
+				$this->_clearCache('blocksupplier.tpl');
 			}
 			if (isset($errors) AND sizeof($errors))
 				$output .= $this->displayError(implode('<br />', $errors));
@@ -139,14 +143,29 @@ class BlockSupplier extends Module
 		return $output;
 	}
 
-	function hookDisplayRightColumn($params)
+	public function hookDisplayRightColumn($params)
 	{
 		return $this->hookDisplayLeftColumn($params);
 	}
 
-	function hookDisplayHeader($params)
+	public function hookDisplayHeader($params)
 	{
 		$this->context->controller->addCSS(($this->_path).'blocksupplier.css', 'all');
+	}
+	
+	public function hookActionObjectSupplierUpdateAfter($params)
+	{
+		$this->_clearCache('blocksupplier.tpl');
+	}
+
+	public function hookActionObjectSupplierAddAfter($params)
+	{
+		$this->_clearCache('blocksupplier.tpl');
+	}
+
+	public function hookActionObjectSupplierDeleteAfter($params)
+	{
+		$this->_clearCache('blocksupplier.tpl');
 	}
 }
 

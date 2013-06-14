@@ -266,9 +266,8 @@ class AdminOrdersControllerCore extends AdminController
 			$order = new Order(Tools::getValue('id_order'));
 			if (!Validate::isLoadedObject($order))
 				throw new PrestaShopException('Can\'t load Order object');
+			ShopUrl::cacheMainDomainForShop((int)$order->id_shop);
 		}
-
-		ShopUrl::cacheMainDomainForShop((int)$order->id_shop);
 
 		/* Update shipping number */
 		if (Tools::isSubmit('submitShippingNumber') && isset($order))
@@ -1971,8 +1970,8 @@ class AdminOrdersControllerCore extends AdminController
 	{
 		$res = true;
 
-		$order_detail = new OrderDetail(Tools::getValue('id_order_detail'));
-		$order = new Order(Tools::getValue('id_order'));
+		$order_detail = new OrderDetail((int)Tools::getValue('id_order_detail'));
+		$order = new Order((int)Tools::getValue('id_order'));
 
 		$this->doDeleteProductLineValidation($order_detail, $order);
 
@@ -1995,6 +1994,9 @@ class AdminOrdersControllerCore extends AdminController
 		$order->total_products_wt -= $order_detail->total_price_tax_incl;
 
 		$res &= $order->update();
+		
+		// Reinject quantity in stock
+		$this->reinjectQuantity($order_detail, $order_detail->product_quantity);
 
 		// Delete OrderDetail
 		$res &= $order_detail->delete();

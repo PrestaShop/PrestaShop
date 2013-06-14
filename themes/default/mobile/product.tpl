@@ -49,7 +49,7 @@
 			<h3>{l s='Pack content'}</h3>
 			{foreach from=$packItems item=packItem}
 			<div class="pack_content">
-				{$packItem.pack_quantity} x <a href="{$link->getProductLink($packItem.id_product, $packItem.link_rewrite, $packItem.category)}" data-ajax="false">{$packItem.name|escape:'htmlall':'UTF-8'}</a>
+				{$packItem.pack_quantity} x <a href="{$link->getProductLink($packItem.id_product, $packItem.link_rewrite, $packItem.category)|escape:'html'}" data-ajax="false">{$packItem.name|escape:'htmlall':'UTF-8'}</a>
 				<p>{$packItem.description_short}</p>
 			</div>
 			{/foreach}
@@ -57,7 +57,7 @@
 	{/if}
 	
 	{if ($product->show_price AND !isset($restricted_country_mode)) OR isset($groups) OR $product->reference}
-	<form id="buy_block" {if $PS_CATALOG_MODE AND !isset($groups) AND $product->quantity > 0}class="hidden"{/if} action="{$link->getPageLink('cart')}" method="post" data-ajax="false">
+	<form id="buy_block" {if $PS_CATALOG_MODE AND !isset($groups) AND $product->quantity > 0}class="hidden"{/if} action="{$link->getPageLink('cart')|escape:'html'}" method="post" data-ajax="false">
 
 			<!-- hidden datas -->
 			<p class="hidden">
