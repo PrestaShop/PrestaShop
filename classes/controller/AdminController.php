@@ -39,6 +39,7 @@ class AdminControllerCore extends Controller
 	public $allow_employee_form_lang;
 
 	public $layout = 'layout.tpl';
+	public $bootstrap = false ;
 
 	protected $meta_title;
 
@@ -1397,7 +1398,8 @@ class AdminControllerCore extends Controller
 			'install_dir_exists' => file_exists(_PS_ADMIN_DIR_.'/../install'),
 			'pic_dir' => _THEME_PROD_PIC_DIR_,
 			'controller_name' => htmlentities(Tools::getValue('controller')),
-			'currentIndex' => self::$currentIndex
+			'currentIndex' => self::$currentIndex,
+			'bootstrap' => $this->bootstrap,
 		));
 	}
 
@@ -1705,13 +1707,14 @@ class AdminControllerCore extends Controller
 
 	public function setMedia()
 	{
-		$this->addCSS(_PS_CSS_DIR_.'bootstrap.css', 'all');
-		$this->addCSS(_PS_CSS_DIR_.'bootstrap_admin_reset.css', 'all');
-		$this->addCSS(_PS_CSS_DIR_.'admin.css', 'all');
+
 		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
 		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
-		$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/ps-admin-bootstrap.css', 'all');
+		$this->addCSS(_PS_CSS_DIR_.'admin.css', 'all');
 		$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/admin.css', 'all');
+		$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/ps-admin-bootstrap.css', 'all');
+		// Reset bootstrap style for the #nobootstrap field - Backward compatibility
+		$this->addCSS(_PS_CSS_DIR_.'bootstrap_admin_reset.css', 'all');
 
 		if ($this->context->language->is_rtl)
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
