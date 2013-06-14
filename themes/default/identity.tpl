@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture name=path}<a href="{$link->getPageLink('my-account', true)}">{l s='My account'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Your personal information'}{/capture}
+{capture name=path}<a href="{$link->getPageLink('my-account', true)|escape:'html'}">{l s='My account'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Your personal information'}{/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
 <h1>{l s='Your personal information'}</h1>
@@ -38,7 +38,7 @@
 {else}
 	<h3>{l s='Please be sure to update your personal information if it has changed.'}</h3>
 	<p class="required"><sup>*</sup>{l s='Required field'}</p>
-	<form action="{$link->getPageLink('identity', true)}" method="post" class="std">
+	<form action="{$link->getPageLink('identity', true)|escape:'html'}" method="post" class="std">
 		<fieldset>
 			<p class="radio">
 				<span>{l s='Title'}</span>
@@ -127,6 +127,6 @@
 {/if}
 
 <ul class="footer_links">
-	<li><a href="{$link->getPageLink('my-account', true)}"><img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /></a><a href="{$link->getPageLink('my-account', true)}">{l s='Back to your account'}</a></li>
+	<li><a href="{$link->getPageLink('my-account', true)}"><img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /></a><a href="{$link->getPageLink('my-account', true)|escape:'html'}">{l s='Back to your account'}</a></li>
 	<li class="f_right"><a href="{$base_dir}"><img src="{$img_dir}icon/home.gif" alt="" class="icon" /> {l s='Home'}</a></li>
 </ul>

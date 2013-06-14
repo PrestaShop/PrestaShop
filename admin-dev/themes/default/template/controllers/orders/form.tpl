@@ -28,7 +28,7 @@
 	var changed_shipping_price = false;
 	var shipping_price_selected_carrier = '';
 	var current_index = '{$current}&token={$token}';
-	var admin_cart_link = '{$link->getAdminLink('AdminCarts')}';
+	var admin_cart_link = '{$link->getAdminLink('AdminCarts')|escape:'html'}';
 	var cart_quantity = new Array();
 	var currencies = new Array();
 	var id_currency = '';
@@ -100,7 +100,7 @@
 		$('#show_old_carts').click();
 		$('#payment_module_name').change();
 		$.ajaxSetup({ type:"post" });
-		$("#voucher").autocomplete('{$link->getAdminLink('AdminCartRules')}', {
+		$("#voucher").autocomplete('{$link->getAdminLink('AdminCartRules')|escape:'html'}', {
 					minChars: 3,
 					max: 15,
 					width: 250,
@@ -157,7 +157,7 @@
 				free_shipping = 1;
 			$.ajax({
 				type:"POST",
-				url: "{$link->getAdminLink('AdminCarts')}",
+				url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 				async: true,
 				dataType: "json",
 				data : {
@@ -217,7 +217,7 @@
 			e.preventDefault();
 			$.ajax({
 				type:"POST",
-				url: "{$link->getAdminLink('AdminCarts')}",
+				url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 				async: true,
 				dataType: "json",
 				data : {
@@ -254,7 +254,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -288,7 +288,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -324,7 +324,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -351,7 +351,7 @@
 		$('#id_cart').val(id_cart);
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: false,
 			dataType: "json",
 			data : {
@@ -378,7 +378,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -401,7 +401,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -426,7 +426,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url : "{$link->getAdminLink('AdminOrders')}",
+			url : "{$link->getAdminLink('AdminOrders')|escape:'html'}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -468,7 +468,7 @@
 		$('#new_address').attr('href', address_link.replace(/id_customer=[0-9]+/, 'id_customer='+id_customer));
 		$.ajax({
 			type:"POST",
-			url : "{$link->getAdminLink('AdminCarts')}",
+			url : "{$link->getAdminLink('AdminCarts')|escape:'html'}",
 			async: false,
 			dataType: "json",
 			data : {
@@ -534,7 +534,7 @@
 		$('#products_part').show();
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminOrders')}",
+			url: "{$link->getAdminLink('AdminOrders')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -766,7 +766,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -822,7 +822,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -845,7 +845,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -868,7 +868,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -899,7 +899,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminOrders')}",
+			url: "{$link->getAdminLink('AdminOrders')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -957,7 +957,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {

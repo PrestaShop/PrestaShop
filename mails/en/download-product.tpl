@@ -1,7 +1,7 @@
 <ul>
 {foreach from=$virtualProducts item=product}
 	<li>
-		<a href="{$product.link}">{$product.name}</a>
+		<a href="{$product.link|escape:'html'}">{$product.name}</a>
 		{if isset($product.deadline)}
 			expires on {$product.deadline}
 		{/if}

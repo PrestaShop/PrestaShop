@@ -633,7 +633,7 @@ abstract class ObjectModelCore
 				$shop_exists = ObjectModel::$db->getValue('SELECT '.$this->def['primary'].' FROM '._DB_PREFIX_.$this->def['table'].'_shop WHERE '.$where);
 				if ($shop_exists)
 					$result &= ObjectModel::$db->update($this->def['table'].'_shop', $fields, $where, 0, $null_values);
-				else if (Shop::getContext() == Shop::CONTEXT_SHOP)
+				elseif (Shop::getContext() == Shop::CONTEXT_SHOP)
 					$result &= ObjectModel::$db->insert($this->def['table'].'_shop', $all_fields, $null_values);
 			}
 		}
@@ -1276,6 +1276,11 @@ abstract class ObjectModelCore
 	public function isMultishop()
 	{
 		return Shop::isTableAssociated($this->def['table']) || !empty($this->def['multilang_shop']);
+	}
+	
+	public function isMultiShopField($field)
+	{
+		return (isset($this->def['fields'][$field]) && isset($this->def['fields'][$field]['shop']) && $this->def['fields'][$field]['shop']);
 	}
 
 	public function isLangMultishop()
