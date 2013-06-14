@@ -52,7 +52,7 @@
 				checked = enabled ? 'checked': '';
 				$(this).parent().parent().parent().find('.child-'+id_tab+' input[type=checkbox]').attr('checked', checked);
 				$.ajax({
-					url: "{$link->getAdminLink('AdminAccess')}",
+					url: "{$link->getAdminLink('AdminAccess')|addslashes}",
 					cache: false,
 					data : {
 						ajaxMode : '1',
@@ -85,7 +85,7 @@
 			perfect_access_js_gestion(this, perm, id_tab, tabsize, tabnumber, table);
 
 			$.ajax({
-				url: "{$link->getAdminLink('AdminAccess')}",
+				url: "{$link->getAdminLink('AdminAccess')|addslashes}",
 				cache: false,
 				data : {
 					ajaxMode : '1',
@@ -134,7 +134,7 @@
 				});
 
 			$.ajax({
-				url: "{$link->getAdminLink('AdminAccess')}",
+				url: "{$link->getAdminLink('AdminAccess')|addslashes}",
 				cache: false,
 				data : {
 					ajaxMode: '1',

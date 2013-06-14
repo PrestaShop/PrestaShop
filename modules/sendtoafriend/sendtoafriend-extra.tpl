@@ -66,7 +66,7 @@ $('document').ready(function(){
 	<div id="send_friend_form">
 			<h2 class="title">{l s='Send to a friend' mod='sendtoafriend'}</h2>
 			<div class="product clearfix">
-				<img src="{$link->getImageLink($stf_product->link_rewrite, $stf_product_cover, 'home_default')}" height="{$homeSize.height}" width="{$homeSize.width}" alt="{$stf_product->name|escape:html:'UTF-8'}" />
+				<img src="{$link->getImageLink($stf_product->link_rewrite, $stf_product_cover, 'home_default')|escape:'html'}" height="{$homeSize.height}" width="{$homeSize.width}" alt="{$stf_product->name|escape:html:'UTF-8'}" />
 				<div class="product_desc">
 					<p class="product_name"><strong>{$stf_product->name}</strong></p>
 					{$stf_product->description_short}

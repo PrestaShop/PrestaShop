@@ -136,7 +136,7 @@ class AdminReturnControllerCore extends AdminController
 		$this->tpl_form_vars = array(
 			'customer' => new Customer($this->object->id_customer),
 			'url_customer' => 'index.php?tab=AdminCustomers&id_customer='.(int)$this->object->id_customer.'&viewcustomer&token='.Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$this->context->employee->id),
-			'text_order' => sprintf($this->l('Order #%1$d from %2$s'), $order->id, Tools::displayDate($order->date_upd, $order->id_lang)),
+			'text_order' => sprintf($this->l('Order #%1$d from %2$s'), $order->id, Tools::displayDate($order->date_upd)),
 			'url_order' => 'index.php?tab=AdminOrders&id_order='.(int)$order->id.'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)Tab::getIdFromClassName('AdminOrders').(int)$this->context->employee->id),
 			'picture_folder' => _THEME_PROD_PIC_DIR_,
 			'type_file' => Product::CUSTOMIZE_FILE,

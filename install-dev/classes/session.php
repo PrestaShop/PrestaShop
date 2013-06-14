@@ -30,6 +30,8 @@
 class InstallSession
 {
 	protected static $_instance;
+	protected static $_cookie_mode = false;
+	protected static $_cookie = false;
 
 	public static function getInstance()
 	{
@@ -41,39 +43,71 @@ class InstallSession
 	public function __construct()
 	{
 		session_name('install_'.md5(__PS_BASE_URI__));
-		session_start();
+		if (!session_start() || (!isset($_SESSION['session_mode']) && (count($_POST) || count($_GET))))
+		{
+			InstallSession::$_cookie_mode = true;
+			InstallSession::$_cookie = new Cookie('ps_install', null, time() + 7200, null, true);
+		}
+		$_SESSION['session_mode'] = 'session';
 	}
 
 	public function clean()
 	{
-		foreach ($_SESSION as $k => $v)
-			unset($_SESSION[$k]);
+		if (InstallSession::$_cookie_mode)
+			InstallSession::$_cookie->logout();
+		else
+			foreach ($_SESSION as $k => $v)
+				unset($_SESSION[$k]);
 	}
 
 	public function &__get($varname)
 	{
-		if (isset($_SESSION[$varname]))
-			$ref = &$_SESSION[$varname];
+		if (InstallSession::$_cookie_mode)
+		{
+			$ref = InstallSession::$_cookie->{$varname};
+			if (0 === strncmp($ref, 'serialized_array:', strlen('serialized_array:')))
+				$ref = unserialize(substr($ref, strlen('serialized_array:')));
+		}
 		else
 		{
-			$null = null;
-			$ref = &$null;
+			if (isset($_SESSION[$varname]))
+				$ref = &$_SESSION[$varname];
+			else
+			{
+				$null = null;
+				$ref = &$null;
+			}
 		}
 		return $ref;
 	}
 
 	public function __set($varname, $value)
 	{
-		$_SESSION[$varname] = $value;
+		if (InstallSession::$_cookie_mode)
+		{
+			if ($varname == 'xml_loader_ids')
+				return;
+			if (is_array($value))
+				$value = 'serialized_array:'.serialize($value);
+			InstallSession::$_cookie->{$varname} = $value;
+		}
+		else
+			$_SESSION[$varname] = $value;
 	}
 
 	public function __isset($varname)
 	{
-		return isset($_SESSION[$varname]);
+		if (InstallSession::$_cookie_mode)
+			return isset(InstallSession::$_cookie->{$varname});
+		else
+			return isset($_SESSION[$varname]);
 	}
 
 	public function __unset($varname)
 	{
-		unset($_SESSION[$varname]);
+		if (InstallSession::$_cookie_mode)
+			unset(InstallSession::$_cookie->{$varname});
+		else
+			unset($_SESSION[$varname]);
 	}
 }

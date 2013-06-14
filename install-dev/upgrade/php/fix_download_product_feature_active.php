@@ -24,6 +24,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-define('_PS_ADMIN_DIR_', getcwd());
-require(_PS_ADMIN_DIR_.'/../config/config.inc.php');
-Controller::getController('GetFileController')->run();
+function fix_download_product_feature_active()
+{
+	if (Db::getInstance()->getValue('SELECT COUNT(id_product_download) FROM `'._DB_PREFIX_.'product_download` WHERE `active` = 1 ;') > 0)
+		Configuration::updateGlobaleValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE');
+}
