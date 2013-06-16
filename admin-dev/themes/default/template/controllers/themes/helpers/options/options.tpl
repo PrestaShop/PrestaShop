@@ -42,19 +42,21 @@
 {/block}
 
 {block name="after"}
-	<br/><br/>
-	<fieldset id="prestastore-content" class="width3"></fieldset>
-	<script type="text/javascript">
-		$.post(
-			"ajax-tab.php",
-			{
-				tab: 'AdminThemes',
-				token: '{$token}',
-				ajax: '1',
-				action:'getAddonsThemes',
-				page:'themes'
-			}, function(a){
-				$("#prestastore-content").html("<legend><img src='../img/admin/prestastore.gif' class='middle' />{l s='Live from PrestaShop Addons!'}</legend>"+a);
-			});
-	</script>
+	{if $show_addons_themes}
+		<br/><br/>
+		<fieldset id="prestastore-content" class="width3"></fieldset>
+		<script type="text/javascript">
+			$.post(
+				"ajax-tab.php",
+				{
+					tab: 'AdminThemes',
+					token: '{$token}',
+					ajax: '1',
+					action:'getAddonsThemes',
+					page:'themes'
+				}, function(a){
+					$("#prestastore-content").html("<legend><img src='../img/admin/prestastore.gif' class='middle' />{l s='Live from PrestaShop Addons!'}</legend>"+a);
+				});
+		</script>
+	{/if}
 {/block}

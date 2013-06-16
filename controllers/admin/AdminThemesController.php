@@ -197,7 +197,9 @@ class AdminThemesControllerCore extends AdminController
 				'title' => $this->l('Directory'),
 				'width' => 'auto',
 			),
-		);
+		);		
+		
+		$this->context->smarty->assign('show_addons_themes', (int)Configuration::get('PS_SHOW_ADDONS_THEMES'));
 	}
 
 	protected function checkMobileNeeds()

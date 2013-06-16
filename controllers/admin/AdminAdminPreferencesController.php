@@ -54,6 +54,14 @@ class AdminAdminPreferencesControllerCore extends AdminController
 						'type' => 'bool',
 						'visibility' => Shop::CONTEXT_ALL
 					),
+					'PS_SHOW_ADDONS_THEMES' => array(
+						'title' => $this->l('Show PrestaShop Addons themes'),
+						'desc' => $this->l('Addons themes are displayed on the themes settings page.'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool',
+						'visibility' => Shop::CONTEXT_ALL
+					),
 					'PS_COOKIE_CHECKIP' => array(
 						'title' => $this->l('Check IP on the cookie'),
 						'desc' => $this->l('Check the IP address of the cookie in order to avoid your cookie being stolen'),
