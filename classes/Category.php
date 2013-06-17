@@ -796,7 +796,7 @@ class CategoryCore extends ObjectModel
 				)).')';
 
 		$flag = Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'category_product` (`id_product`, `id_category`, `position`)
+			INSERT IGNORE INTO `'._DB_PREFIX_.'category_product` (`id_product`, `id_category`, `position`)
 			VALUES '.implode(',', $row)
 		);
 		return $flag;
