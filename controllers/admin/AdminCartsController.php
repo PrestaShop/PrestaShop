@@ -273,15 +273,15 @@ class AdminCartsControllerCore extends AdminController
 					$field_id = 'customization_'.$id_product.'_'.$customization_field['id_customization_field'];
 					if ($customization_field['type'] == Product::CUSTOMIZE_TEXTFIELD)
 					{
-						if (!isset($_POST[$field_id]) || empty($_POST[$field_id]))
+						if (!Tools::getValue($field_id))
 						{
 							if ($customization_field['required'])
 								$errors[] = Tools::displayError('Please fill in all the required fields.');
 							continue;
 						}
-						if (!Validate::isMessage($_POST[$field_id]) || empty($_POST[$field_id]))
+						if (!Validate::isMessage(Tools::getValue($field_id)))
 							$errors[] = Tools::displayError('Invalid message');
-						$this->context->cart->addTextFieldToProduct((int)$product->id, (int)$customization_field['id_customization_field'], Product::CUSTOMIZE_TEXTFIELD, $_POST[$field_id]);
+						$this->context->cart->addTextFieldToProduct((int)$product->id, (int)$customization_field['id_customization_field'], Product::CUSTOMIZE_TEXTFIELD, Tools::getValue($field_id));
 					}
 					elseif ($customization_field['type'] == Product::CUSTOMIZE_FILE)
 					{
