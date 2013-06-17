@@ -28,13 +28,13 @@
 	var changed_shipping_price = false;
 	var shipping_price_selected_carrier = '';
 	var current_index = '{$current}&token={$token}';
-	var admin_cart_link = '{$link->getAdminLink('AdminCarts')|escape:'html'}';
+	var admin_cart_link = '{$link->getAdminLink('AdminCarts')|addslashes}';
 	var cart_quantity = new Array();
 	var currencies = new Array();
 	var id_currency = '';
 	var id_lang = '';
-	var txt_show_carts = '{l s='Show carts and orders for this customer.'}';
-	var txt_hide_carts = '{l s='Hide carts and orders for this customer.'}';
+	var txt_show_carts = '{l s='Show carts and orders for this customer.' js='1'}';
+	var txt_hide_carts = '{l s='Hide carts and orders for this customer.' js='1'}';
 	var defaults_order_state = new Array();
 	var customization_errors = false;
 	var pic_dir = '{$pic_dir}';
@@ -661,17 +661,17 @@
 			{
 				$.each(this.customized_datas[this.id_product][this.id_product_attribute][id_address_delivery], function() {
 					var customized_desc = '';
-					if(this.datas[1].length)
+					if (this.datas[1].length)
 					{
 						$.each(this.datas[1],function() {
-							customized_desc += this.name+':'+this.value+'<br />';
+							customized_desc += this.name + ': ' + this.value + '<br />';
 							id_customization = this.id_customization;
 						});
 					}
-					if(this.datas[0] && this.datas[0].length)
+					if (this.datas[0] && this.datas[0].length)
 					{
 						$.each(this.datas[0],function() {
-							customized_desc += this.name+':<img src="'+pic_dir+this.value+'_small" /><br />';
+							customized_desc += this.name + ': <img src="' + pic_dir + this.value + '_small" /><br />';
 							id_customization = this.id_customization;
 						});
 					}
