@@ -1,6 +1,20 @@
 // Mixins
 // --------------------------
 
+@mixin icon($icon) {
+  @include icon-FontAwesome();
+  content: $icon;
+}
+
+@mixin icon-FontAwesome() {
+  font-family: FontAwesome;
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: inherit;
+  -webkit-font-smoothing: antialiased;
+  *margin-right: .3em; // fixes ie7 issues
+}
+
 @mixin border-radius($radius) {
   -webkit-border-radius: $radius;
   -moz-border-radius: $radius;
@@ -28,7 +42,7 @@
     }
     .icon-stack-base {
       font-size: $base-font-size;
-      *line-height: $height / $base-font-size;
+      *line-height: #{$height / $base-font-size}em;
     }
   }
 }

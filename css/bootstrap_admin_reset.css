@@ -30,20 +30,17 @@
 	line-height:normal;
 }
 
-#nobootstrap select,#nobootstrap textarea,input {
+#nobootstrap select,#nobootstrap textarea, #nobootstrap input {
 	height:auto!important;
 	font-size:12px!important;
 	line-height:normal;
 	margin-bottom:auto;
-	-webkit-border-radius:0!important;
-	-moz-border-radius:0!important;
-	border-radius:0!important;
 	font-family:Arial,Verdana,Helvetica,sans-serif;
 	margin-bottom:0!important;
 	width:auto;
 }
 
-#nobootstrap label,input,button,select,textarea {
+#nobootstrap label, #nobootstrap input, #nobootstrap button, #nobootstrap select, #nobootstrap textarea {
 	font-size:12px;
 	line-height:13px;
 }

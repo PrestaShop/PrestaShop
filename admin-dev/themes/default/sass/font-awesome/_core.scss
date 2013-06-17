@@ -3,32 +3,28 @@
 
 [class^="icon-"],
 [class*=" icon-"] {
-  font-family: FontAwesome;
-  font-weight: normal;
-  font-style: normal;
-  text-decoration: inherit;
-  -webkit-font-smoothing: antialiased;
-  *margin-right: .3em; // fixes ie7 issues
+  @include icon-FontAwesome();
 }
 
 [class^="icon-"]:before,
 [class*=" icon-"]:before {
   text-decoration: inherit;
   display: inline-block;
+  cursor: default;
   speak: none;
 }
 
 /* makes the font 33% larger relative to the icon container */
 .icon-large:before {
   vertical-align: -10%;
-  font-size: 4/3em;
+  font-size: (4em/3);
 }
 
 /* makes sure icons active on rollover in links */
 a {
   [class^="icon-"],
   [class*=" icon-"] {
-    &, &:before { display: inline; }
+    display: inline;
   }
 }
 
@@ -37,25 +33,27 @@ a {
 [class*=" icon-"] {
   &.icon-fixed-width {
     display: inline-block;
-    width: 18/14em;
-    text-align: center;
+    width: (16em/14);
+    text-align: right;
+    padding-right: (4em/14);
     &.icon-large {
-      width: 22/14em;
+      width: (20em/14);
     }
   }
 }
 
-ul.icons-ul {
+.icons-ul {
+  margin-left: $icons-li-width;
   list-style-type: none;
-  text-indent: -10/14em;
-  margin-left: 30/14em;
 
-  > li {
-    .icon-li {
-      width: 10/14em;
-      display: inline-block;
-      text-align: center;
-    }
+  > li { position: relative; }
+
+  .icon-li {
+    position: absolute;
+    left: -$icons-li-width;
+    width: $icons-li-width;
+    text-align: center;
+    line-height: inherit;
   }
 }
 

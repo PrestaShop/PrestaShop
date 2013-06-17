@@ -98,7 +98,7 @@
     color: #123456;
     margin: 2px;
     padding: 2px; }
-  #nobootstrap .button {
+  #nobootstrap .button, #nobootstrap .btn {
     background: #e3e3e3 url("../img/bg-button-degrade.png") repeat-x scroll left top;
     background: -moz-linear-gradient(center top, #f9f9f9, #e3e3e3) repeat scroll 0 0 transparent;
     background: -webkit-gradient(linear, center top, center bottom, from(#f9f9f9), to(#e3e3e3)) repeat scroll 0 0 transparent;
@@ -116,20 +116,20 @@
     vertical-align: middle;
     white-space: nowrap;
     text-shadow: 0 1px 0 #fff; }
-  #nobootstrap .button[disabled=disabled] {
+  #nobootstrap .button[disabled=disabled], #nobootstrap .btn[disabled=disabled] {
     color: #8C8C8C; }
-  #nobootstrap .button.bt-icon {
+  #nobootstrap .button.bt-icon, #nobootstrap .btn.bt-icon {
     display: inline-block;
     margin-bottom: 7px; }
-  #nobootstrap .button.bt-icon span {
+  #nobootstrap .button.bt-icon span, #nobootstrap .btn.bt-icon span {
     padding-left: 5px; }
-  #nobootstrap input.button[disabled=disabled]:hover {
+  #nobootstrap input.button[disabled=disabled]:hover, #nobootstrap input.btn[disabled=disabled]:hover {
     background-color: #FFF6D3; }
-  #nobootstrap .button:hover {
+  #nobootstrap .button:hover, #nobootstrap .btn:hover {
     border: 1px solid #939393; }
-  #nobootstrap .button:active {
+  #nobootstrap .button:active, #nobootstrap .btn:active {
     border: 1px solid #939393; }
-  #nobootstrap .button.export-csv span {
+  #nobootstrap .button.export-csv span, #nobootstrap .btn.export-csv {
     background: transparent url("../img/export-csv.png") no-repeat scroll left top;
     padding: 1px 0 1px 20px; }
   #nobootstrap .separation {
