@@ -147,7 +147,7 @@
 	{if {$show_new_messages} == 1}
 						<li id="customer_messages_notif" class="notifs dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-								<i class="icon-envelope-alt"></i>
+								<i class="icon-envelope"></i>
 								<span id="customer_messages_notif_number_wrapper" >
 									<span id="customer_messages_notif_value" class="number_wrapper badge">0</span>
 								</span>
@@ -224,12 +224,14 @@
 	{if $t.active}
 				<li class="submenu_size maintab {if $t.current}active{/if}" id="maintab{$t.id_tab}">
 					<a href="javascript:adminNav('#maintab{$t.id_tab}');" class="title">
-						<img src="{$t.img}" alt="" />{if $t.name eq ''}{$t.class_name}{else}{$t.name}{/if}
+						<i class="icon-{$t.class_name}"></i> {if $t.name eq ''}{$t.class_name}{else}{$t.name}{/if}
 					</a>
 					<ul class="submenu">
 						{foreach from=$t.sub_tabs item=t2}
 							{if $t2.active}
-								<li><a href="{$t2.href|escape:'htmlall':'UTF-8'}">{if $t2.name eq ''}{$t2.class_name}{else}{$t2.name|escape:'htmlall':'UTF-8'}{/if}</a></li>
+								<li><a href="{$t2.href|escape:'htmlall':'UTF-8'}">{if $t2.name eq ''}{$t2.class_name}{else}{$t2.name|escape:'htmlall':'UTF-8'}{/if}
+								<i class="icon-chevron-sign-right pull-right"></i>
+								</a></li>
 							{/if}
 						{/foreach}
 					</ul>
@@ -238,12 +240,12 @@
 {/foreach}
 			</ul>
 		</div>
-		<div id="content" class="page-content no-min-height">
+		<div id="content" class="page-content">
 			<div class="container-fluid">
             	<div class="row-fluid">
 
 			{if $display_header && $install_dir_exists}
-					<div style="background-color: #FFEBCC;border: 1px solid #F90;line-height: 20px;margin: 0px 0px 10px;padding: 10px 20px;">
+					<div class="warning">
 						{l s='For security reasons, you must also:'}&nbsp;{l s='delete the /install folder'}
 					</div>
 			{/if}

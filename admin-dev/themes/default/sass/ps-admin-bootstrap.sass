@@ -1,5 +1,8 @@
 @import "bootstrap/bootstrap"
 
+html, body
+	height: 100%
+
 body.fixed-top
 	position: relative
 	top: 42px
@@ -41,7 +44,7 @@ body.fixed-top
 					a
 						font-size: 12px
 						display: block
-						padding: 3px 0 3px 40px
+						padding: 3px 5px 3px 20px
 						border: none
 						border-bottom: 1px solid #F6F6F6
 		li:not(.active) ul
@@ -63,7 +66,10 @@ body.fixed-top
 	padding-top: 20px
 
 #footer
-	padding: 8px 20px 5px 20px
+	width: 100%
+	position: fixed
+	bottom: 0
+	padding: 0
 	font-size: 12px
 	color: #999
 	background-color: #272822
@@ -91,3 +97,71 @@ body.fixed-top
 		text-align: center
 	tr:hover
 		background-color
+
+.icon-AdminCatalog
+	@extend .icon-book
+	background-color: #7A0928
+	color: white
+	padding: 6px
+
+.icon-AdminParentCustomer
+	@extend .icon-group
+	background-color: #C4004E
+	color: white
+	padding: 6px
+
+.icon-AdminParentLocalization
+	@extend .icon-globe
+	background-color: #1C6DEE
+	color: white
+	padding: 6px
+
+.icon-AdminParentModules
+	@extend .icon-puzzle-piece
+	background-color: #00C337
+	color: white
+	padding: 6px
+
+.icon-AdminParentOrders
+	@extend .icon-credit-card
+	background-color: #004888
+	color: white
+	padding: 6px
+
+.icon-AdminParentPreferences
+	@extend .icon-wrench
+	background-color: #009A00
+	color: white
+	padding: 6px
+
+.icon-AdminParentShipping
+	@extend .icon-truck
+	background-color: #4EC3FF
+	color: white
+	padding: 6px
+
+.icon-AdminParentStats
+	@extend .icon-bar-chart
+	background-color: #00A5A6
+	color: white
+	padding: 6px
+
+.icon-AdminPriceRule
+	@extend .icon-tags
+	background-color: #7400AF
+	color: white
+	padding: 6px
+
+.icon-AdminTools
+	@extend .icon-cogs
+	background-color: #AF0D3A
+	color: white
+	padding: 6px
+
+.icon-AdminAdmin
+	@extend .icon-cog
+	background-color: #1C6DEE
+	color: white
+	padding: 6px
+
+
