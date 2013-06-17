@@ -297,7 +297,7 @@ class AdminEmployeesControllerCore extends AdminController
 					}
 			$this->fields_form['input'][] = array(
 				'type' => 'select',
-				'label' => $this->l('Profile:'),
+				'label' => $this->l('Profile Permission:'),
 				'name' => 'id_profile',
 				'required' => true,
 				'options' => array(

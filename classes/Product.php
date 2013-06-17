@@ -4565,6 +4565,7 @@ class ProductCore extends ObjectModel
 	*/
 	public function setWsAccessories($accessories)
 	{
+		$this->deleteAccessories();
 		foreach ($accessories as $accessory) 
 			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'accessory` (`id_product_1`, `id_product_2`) VALUES ('.(int)$this->id.', '.(int)$accessory['id'].')');
 		

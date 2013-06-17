@@ -1048,16 +1048,17 @@ class AdminOrdersControllerCore extends AdminController
 					}
 
 					$cart_rules = array();
+					$discount_value = (float)str_replace(',', '.', Tools::getValue('discount_value'));
 					switch (Tools::getValue('discount_type'))
 					{
 						// Percent type
 						case 1:
-							if (Tools::getValue('discount_value') < 100)
+							if ($discount_value < 100)
 							{
 								if (isset($order_invoice))
 								{
-									$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($order_invoice->total_paid_tax_incl * Tools::getValue('discount_value') / 100, 2);
-									$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($order_invoice->total_paid_tax_excl * Tools::getValue('discount_value') / 100, 2);
+									$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($order_invoice->total_paid_tax_incl * $discount_value / 100, 2);
+									$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($order_invoice->total_paid_tax_excl * $discount_value / 100, 2);
 
 									// Update OrderInvoice
 									$this->applyDiscountOnInvoice($order_invoice, $cart_rules[$order_invoice->id]['value_tax_incl'], $cart_rules[$order_invoice->id]['value_tax_excl']);
@@ -1067,8 +1068,8 @@ class AdminOrdersControllerCore extends AdminController
 									$order_invoices_collection = $order->getInvoicesCollection();
 									foreach ($order_invoices_collection as $order_invoice)
 									{
-										$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($order_invoice->total_paid_tax_incl * Tools::getValue('discount_value') / 100, 2);
-										$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($order_invoice->total_paid_tax_excl * Tools::getValue('discount_value') / 100, 2);
+										$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($order_invoice->total_paid_tax_incl * $discount_value / 100, 2);
+										$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($order_invoice->total_paid_tax_excl * $discount_value / 100, 2);
 
 										// Update OrderInvoice
 										$this->applyDiscountOnInvoice($order_invoice, $cart_rules[$order_invoice->id]['value_tax_incl'], $cart_rules[$order_invoice->id]['value_tax_excl']);
@@ -1076,8 +1077,8 @@ class AdminOrdersControllerCore extends AdminController
 								}
 								else
 								{
-									$cart_rules[0]['value_tax_incl'] = Tools::ps_round($order->total_paid_tax_incl * Tools::getValue('discount_value') / 100, 2);
-									$cart_rules[0]['value_tax_excl'] = Tools::ps_round($order->total_paid_tax_excl * Tools::getValue('discount_value') / 100, 2);
+									$cart_rules[0]['value_tax_incl'] = Tools::ps_round($order->total_paid_tax_incl * $discount_value / 100, 2);
+									$cart_rules[0]['value_tax_excl'] = Tools::ps_round($order->total_paid_tax_excl * $discount_value / 100, 2);
 								}
 							}
 							else
@@ -1087,12 +1088,12 @@ class AdminOrdersControllerCore extends AdminController
 						case 2:
 							if (isset($order_invoice))
 							{
-								if (Tools::getValue('discount_value') > $order_invoice->total_paid_tax_incl)
+								if ($discount_value > $order_invoice->total_paid_tax_incl)
 									$this->errors[] = Tools::displayError('The discount value is greater than the order invoice total.');
 								else
 								{
-									$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round(Tools::getValue('discount_value'), 2);
-									$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round(Tools::getValue('discount_value') / (1 + ($order->getTaxesAverageUsed() / 100)), 2);
+									$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($discount_value, 2);
+									$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($discount_value / (1 + ($order->getTaxesAverageUsed() / 100)), 2);
 
 									// Update OrderInvoice
 									$this->applyDiscountOnInvoice($order_invoice, $cart_rules[$order_invoice->id]['value_tax_incl'], $cart_rules[$order_invoice->id]['value_tax_excl']);
@@ -1103,12 +1104,12 @@ class AdminOrdersControllerCore extends AdminController
 								$order_invoices_collection = $order->getInvoicesCollection();
 								foreach ($order_invoices_collection as $order_invoice)
 								{
-									if (Tools::getValue('discount_value') > $order_invoice->total_paid_tax_incl)
+									if ($discount_value > $order_invoice->total_paid_tax_incl)
 										$this->errors[] = Tools::displayError('The discount value is greater than the order invoice total.').$order_invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int)$order->id_shop).')';
 									else
 									{
-										$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round(Tools::getValue('discount_value'), 2);
-										$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round(Tools::getValue('discount_value') / (1 + ($order->getTaxesAverageUsed() / 100)), 2);
+										$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($discount_value, 2);
+										$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($discount_value / (1 + ($order->getTaxesAverageUsed() / 100)), 2);
 
 										// Update OrderInvoice
 										$this->applyDiscountOnInvoice($order_invoice, $cart_rules[$order_invoice->id]['value_tax_incl'], $cart_rules[$order_invoice->id]['value_tax_excl']);
@@ -1117,12 +1118,12 @@ class AdminOrdersControllerCore extends AdminController
 							}
 							else
 							{
-								if (Tools::getValue('discount_value') > $order->total_paid_tax_incl)
+								if ($discount_value > $order->total_paid_tax_incl)
 									$this->errors[] = Tools::displayError('The discount value is greater than the order total.');
 								else
 								{
-									$cart_rules[0]['value_tax_incl'] = Tools::ps_round(Tools::getValue('discount_value'), 2);
-									$cart_rules[0]['value_tax_excl'] = Tools::ps_round(Tools::getValue('discount_value') / (1 + ($order->getTaxesAverageUsed() / 100)), 2);
+									$cart_rules[0]['value_tax_incl'] = Tools::ps_round($discount_value, 2);
+									$cart_rules[0]['value_tax_excl'] = Tools::ps_round($discount_value / (1 + ($order->getTaxesAverageUsed() / 100)), 2);
 								}
 							}
 							break;
@@ -1173,7 +1174,7 @@ class AdminOrdersControllerCore extends AdminController
 						$cartRuleObj->quantity = 0;
 						$cartRuleObj->quantity_per_user = 1;
 						if (Tools::getValue('discount_type') == 1)
-							$cartRuleObj->reduction_percent = Tools::getValue('discount_value');
+							$cartRuleObj->reduction_percent = $discount_value;
 						elseif (Tools::getValue('discount_type') == 2)
 							$cartRuleObj->reduction_amount = $cart_rule['value_tax_excl'];
 						elseif (Tools::getValue('discount_type') == 3)

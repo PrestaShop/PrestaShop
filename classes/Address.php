@@ -222,7 +222,7 @@ class AddressCore extends ObjectModel
 	public function validateController($htmlentities = true)
 	{
 		$errors = parent::validateController($htmlentities);
-		if (!Configuration::get('VATNUMBER_CHECKING'))
+		if (!Configuration::get('VATNUMBER_MANAGEMENT') || !Configuration::get('VATNUMBER_CHECKING'))
 			return $errors;
 		include_once(_PS_MODULE_DIR_.'vatnumber/vatnumber.php');
 		if (class_exists('VatNumber', false))
