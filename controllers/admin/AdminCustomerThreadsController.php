@@ -549,7 +549,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 						$orders_ok[] = $order;
 						$total_ok += $order['total_paid_real'];
 					}
-					$orders[$key]['date_add'] = Tools::displayDate($order['date_add'], $this->context->language->id);
+					$orders[$key]['date_add'] = Tools::displayDate($order['date_add']);
 					$orders[$key]['total_paid_real'] = Tools::displayPrice($order['total_paid_real'], new Currency((int)$order['id_currency']));
 				}
 			}
@@ -557,7 +557,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			$products = $customer->getBoughtProducts();
 			if ($products && count($products))
 				foreach ($products as $key => $product)
-					$products[$key]['date_add'] = Tools::displayDate($product['date_add'],null , true);
+					$products[$key]['date_add'] = Tools::displayDate($product['date_add'], null, true);
 		}
 
 		foreach ($messages as $key => $message)
@@ -595,7 +595,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			if (!empty($message['id_product']) && empty($message['employee_name']))
 				$id_order_product = Order::getIdOrderProduct((int)$message['id_customer'], (int)$message['id_product']);
 		}
-		$message['date_add'] = Tools::displayDate($message['date_add'],null , true);
+		$message['date_add'] = Tools::displayDate($message['date_add'], null, true);
 		$message['user_agent'] = strip_tags($message['user_agent']);
 		$message['message'] = preg_replace(
 			'/(https?:\/\/[a-z0-9#%&_=\(\)\.\? \+\-@\/]{6,1000})([\s\n<])/Uui',

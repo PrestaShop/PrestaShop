@@ -24,7 +24,7 @@
 *}
 
 <!-- Block user information module HEADER -->
-<div id="header_user">
+<div id="header_user" {if $PS_CATALOG_MODE}class="header_user_catalog"{/if}>
 	<ul id="header_nav">
 		{if !$PS_CATALOG_MODE}
 		<li id="shopping_cart">

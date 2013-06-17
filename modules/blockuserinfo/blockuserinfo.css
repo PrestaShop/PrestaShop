@@ -6,6 +6,11 @@
 	margin-top:8px;
 }
 
+#header_right #header_user.header_user_catalog {
+	margin-top: 15px;
+    min-height: 60px;
+}
+
 #header_user #header_nav {
 	list-style-type:none;
 	float:right;
