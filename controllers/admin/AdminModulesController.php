@@ -673,6 +673,10 @@ class AdminModulesControllerCore extends AdminController
 
 							// Get the return value of current method
 							$echo = $module->{$method}();
+							
+							// After a successful install of a single module that has a configuration method, to the configuration page
+							if ($key == 'install' && $echo === true && strpos(Tools::getValue('install'), '|') === false && method_exists($module, 'getContent'))
+								Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&configure='.$module->name.'&conf=12');
 						}
 						
 						// If the method called is "configure" (getContent method), we show the html code of configure page
