@@ -532,7 +532,7 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 	margin:0;
 	white-space: nowrap;
 	overflow: auto;
-	height: 335px;
+	height: 365px;
 }
 #modules_list_container_tab #modules_list_container_content li{display:inline-block;}
 #modules_list_container_tab table tr th { height:40px;}
@@ -548,7 +548,7 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 #modules_list_container_tab .moduleDesc .metadata dl dd { padding-right:10px;}
 #modules_list_container_tab .moduleDesc .metadata dl dt { font-weight:bold; padding-right:5px;}
 #modules_list_container_tab .moduleDesc p.desc { color:#666; font-family: Georgia; font-style: italic;  font-size:12px; text-align: left;white-space: normal;}
-#modules_list_container_tab .setup  {background-color:#6db300; font-weight:bold; font-size:10px; color:#fff; text-transform:uppercase; padding:2px 10px; display: inline-block; border-radius:3px;}
+#modules_list_container_tab .setup  {background-color:#6db300; font-weight:bold; font-size:10px; color:#fff; text-transform:uppercase; padding:0 10px; display: inline-block; border-radius:3px;}
 #modules_list_container_tab .row-actions-module {float: right;}
 #modules_list_container_tab .setup.non-install { background-color:#ec7000;}
 #modules_list_container_tab .setup.must-have { background-color: #ec7000;}
@@ -562,7 +562,7 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 #modules_list_container_tab ul.listing-grid-module li select { position:absolute; top:0; right:0px; }
 
 .default_modules_list_display_type #modules_list_container_content li table tr td{border: none}
-.default_modules_list_display_type #modules_list_container_content li table {border: solid 1px #ccc; height: 140px;width: 100%;margin-bottom:15px}
+.default_modules_list_display_type #modules_list_container_content li table {border: solid 1px #ccc; height: 100px;width: 100%;margin-bottom:15px}
 #modules_list_container_tab ul li {height:140px}
 
 		/******** ie7 ******/
