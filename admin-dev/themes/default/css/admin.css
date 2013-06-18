@@ -118,6 +118,8 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 #header #menu .submenu li{list-style:none;margin:0;padding:0;display:block;min-width:150px;}
 #header #menu .submenu li a{ font-size:12px;display:block;padding: 5px 15px 5px 10px; color:#666666;border-top:1px solid #fff; border-bottom:1px solid #ccc;}
 #header #menu .submenu li a:hover { background-color:#eee; text-shadow:0 1px 0 #fff;}
+#header #menu .submenu li.active a { color: #fff;}
+#header #menu .submenu li.active a:hover { color:#666666}
 
 /*SEPARATION*/
 .separation { background-color:#ccc;border-bottom:1px solid #fff; width:100%; height:1px; margin:10px 0;}
