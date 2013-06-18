@@ -488,11 +488,10 @@ class AdminHomeControllerCore extends AdminController
 
 		// DISCOVER PRESTASHOP
 		$result['discover_prestashop'] = '<div id="block_tips">'.$this->getBlockDiscover().'</div>';
-
 		$result['discover_prestashop'] .= '<div class="row-news"><div id="block_discover"><iframe frameborder="no" style="margin: 0px; padding: 0px; width: 100%; height:300px; overflow:hidden;" src="'.$protocol.'://api.prestashop.com/rss2/news2.php?v='._PS_VERSION_.'&lang='.$isoUser.'"></iframe></div>';
 
 		// SHOW TIPS OF THE DAY
-		$content = @file_get_contents($protocol.'://api.prestashop.com/partner/tipsoftheday/?protocol='.$protocol.'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser), false, $stream_context);
+		$content = Tools::file_get_contents($protocol.'://api.prestashop.com/partner/tipsoftheday/?protocol='.$protocol.'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser), false, $stream_context);
 		$content = explode('|', $content);
 		if ($content[0] == 'OK' && Validate::isCleanHtml($content[1]))
 			$result['discover_prestashop'] .= '<div id="block_partner_tips">'.$content[1].'</div></div>';
@@ -540,7 +539,7 @@ class AdminHomeControllerCore extends AdminController
 				// Cache the logo
 				if (!file_exists('../img/tmp/preactivation_'.htmlentities((string)$partner->module).'.png'))
 				{
-					$logo = @Tools::file_get_contents(htmlentities((string)$partner->logo));
+					$logo = Tools::file_get_contents(htmlentities((string)$partner->logo));
 					if (sizeof($logo) > 0)
 						file_put_contents('../img/tmp/preactivation_'.htmlentities((string)$partner->module).'.png', $logo);
 				}
@@ -566,12 +565,12 @@ class AdminHomeControllerCore extends AdminController
 							if (empty($optional_final) && (string)$optional->attributes()->iso == $isoUser)
 								$optional_final = (string)$optional;
 
-					$link = 'index.php?controller=adminmodules&install='.htmlentities((string)$partner->module).'&token='.Tools::getAdminTokenLite('AdminModules').'&module_name='.htmlentities((string)$partner->module).'&redirect=config';
+					$link = 'index.php?controller=adminmodules&install='.Tools::htmlentitiesUTF8((string)$partner->module).'&token='.Tools::getAdminTokenLite('AdminModules').'&module_name='.Tools::htmlentitiesUTF8((string)$partner->module).'&redirect=config';
 					$return .= '<div style="width:46.5%;min-height:85px;border:1px solid #cccccc;background-color:white;padding-left:5px;padding-right:5px;'.(empty($return) ? 'float:left' : 'float:right').'">
 						<p align="center">
-							<a href="'.$link.'" class="preactivationLink" rel="'.htmlentities((string)$partner->module).'"><img src="../img/tmp/preactivation_'.htmlentities((string)$partner->module).'.png" alt="'.htmlentities((string)$partner->name).'" border="0" /></a><br />
-							<b><a href="'.$link.'" class="preactivationLink" rel="'.htmlentities((string)$partner->module).'">'.htmlentities(utf8_decode((string)$label_final)).'</a></b>
-							'.(($optional_final != '') ? '<a href="'.$link.'" class="preactivationLink" rel="'.htmlentities((string)$partner->module).'"><img src="'.htmlentities((string)$optional_final).'" /></a>' : '').'
+							<a href="'.$link.'" class="preactivationLink" rel="'.Tools::htmlentitiesUTF8((string)$partner->module).'"><img src="../img/tmp/preactivation_'.Tools::htmlentitiesUTF8((string)$partner->module).'.png" alt="'.htmlentities((string)$partner->name).'" border="0" /></a><br />
+							<b><a href="'.$link.'" class="preactivationLink" rel="'.Tools::htmlentitiesUTF8((string)$partner->module).'">'.Tools::htmlentitiesUTF8($label_final).'</a></b>
+							'.(($optional_final != '') ? '<a href="'.$link.'" class="preactivationLink" rel="'.Tools::htmlentitiesUTF8((string)$partner->module).'"><img src="'.Tools::htmlentitiesUTF8((string)$optional_final).'" /></a>' : '').'
 						</p>
 					</div>';
 					$count++;
