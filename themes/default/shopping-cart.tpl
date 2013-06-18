@@ -219,11 +219,12 @@
 			</tr>
 		</tfoot>
 		<tbody>
+		{assign var='odd' value=0}
 		{foreach $products as $product}
 			{assign var='productId' value=$product.id_product}
 			{assign var='productAttributeId' value=$product.id_product_attribute}
 			{assign var='quantityDisplayed' value=0}
-			{assign var='odd' value=$product@iteration%2}
+			{assign var='odd' value=($odd+1)%2}
 			{assign var='ignoreProductLast' value=isset($customizedDatas.$productId.$productAttributeId) || count($gift_products)}
 			{* Display the product line *}
 			{include file="./shopping-cart-product-line.tpl" productLast=$product@last productFirst=$product@first}
