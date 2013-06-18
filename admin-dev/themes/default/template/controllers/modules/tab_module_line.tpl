@@ -52,7 +52,7 @@
 						</h3>
 						<p class="desc">
 							{if isset($module->description) && $module->description ne ''}
-								{$module->description|truncate:90:'…'}
+								{$module->description|truncate:86:'…'}
 							{else}
 								&nbsp;
 							{/if}
