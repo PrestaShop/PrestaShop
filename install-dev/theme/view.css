@@ -257,12 +257,16 @@ div.field {
 }
 
 .infosBlock {
-	padding:14px 25px 14px 35px;
+	padding:14px 25px 14px 20px;
 	font-weight:normal;
 	font-size:13px;
 	line-height:18px;
-	background:#f8f8f8 url(img/pict_h3_infos.png) no-repeat 10px 13px;
-	border:1px solid #ccc;
+	background:#f8f8f8;
+	border:1px solid #ccc
+}
+
+.infosBlock img {
+	vertical-align:middle
 }
 
 .warnBlock {
