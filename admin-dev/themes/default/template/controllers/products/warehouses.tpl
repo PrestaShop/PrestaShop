@@ -28,7 +28,7 @@
 	<input type="hidden" name="submitted_tabs[]" value="Warehouses" />
 	<h4>{l s='Product location in warehouses'}</h4>
 				<div class="separation"></div>
-				<div class="hint" style="display:block; position:'auto';">
+				<div class="alert alert-info" style="display:block; position:'auto';">
 		<p>{l s='This interface allows you to specify the warehouse in which the product is stocked.'}</p>
 		<p>{l s='You can also specify product/product combinations as it relates to warehouse location. '}</p>
 	</div>

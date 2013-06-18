@@ -28,7 +28,7 @@
 	<input type="hidden" name="submitted_tabs[]" value="Suppliers" />
 	<h4>{l s='Suppliers of the current product'}</h4>
 	<div class="separation"></div>
-	<div class="hint" style="display:block; position:'auto';">
+	<div class="alert alert-info" style="display:block; position:'auto';">
 		<p>{l s='This interface allows you to specify the suppliers of the current product and eventually its combinations.'}</p>
 		<p>{l s='It is also possible to specify supplier references according to previously associated suppliers.'}</p>
 		<br />

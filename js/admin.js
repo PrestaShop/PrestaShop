@@ -999,10 +999,24 @@ function quickSelect(elt)
 		location.href = eltVal;
 }
 
-
 function adminNav(navId)
 {
-	$(".expanded").removeClass("expanded");
-	$(navId).addClass("expanded");
-	console.log($(navId));
+	if($(".expanded").length ){
+		$(".expanded > ul").slideUp(
+			"fast",
+			function(){
+				var $target = $(".expanded").not(".active");
+				$target.removeClass("expanded");
+				$(navId).not(".active").not($target).addClass("expanded");
+			}
+		);
+	}
+	else{
+		$(navId).not(".active").addClass("expanded");
+	}	
 }
+
+$( document ).ready(function() {
+	$('.label-tooltip').tooltip({
+	})
+});

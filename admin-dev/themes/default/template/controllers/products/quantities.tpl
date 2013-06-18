@@ -28,10 +28,10 @@
 	<h4>{l s='Available quantities for sale'}</h4>
 	<div class="separation"></div>
 	{if !$ps_stock_management}
-		<div class="hint" style="display:block; position:auto;">{l s='The stock management is disabled'}</div>
+		<div class="alert alert-info" style="display:block; position:auto;">{l s='The stock management is disabled'}</div>
 	{else}
 		{include file="controllers/products/multishop/check_fields.tpl" product_tab="Quantities"}
-		<div class="hint" style="display:block; position:'auto';">
+		<div class="alert alert-info" style="display:block; position:'auto';">
 			<p>{l s='This interface allows you to manage available quantities for sale for products. It also allows you to manage product combinations in the current shop.'}</p>
 			<p>{l s='You can choose whether or not to use the advanced stock management system for this product.'}</p>
 			<p>{l s='You can manually specify the quantities for the product/each product combination, or you can choose to automatically determine these quantities based on your stock (if advanced stock management is activated).'}</p>
@@ -42,7 +42,7 @@
 		</div>
 		<br />
 		{if $show_quantities == true}
-			<div class="warn" id="available_quantity_ajax_msg" style="display: none;"></div>
+			<div class="alert alert-block" id="available_quantity_ajax_msg" style="display: none;"></div>
 			<div class="error" id="available_quantity_ajax_error_msg" style="display: none;"></div>
 			<div class="conf" id="available_quantity_ajax_success_msg" style="display: none;"></div>
 
@@ -181,7 +181,7 @@
 				</tbody>
 			</table>
 		{else}
-			<div class="warn">
+			<div class="alert alert-block">
 				<p>{l s='It is not possible to manage quantities when:'}</p>
 				<ul>
 					<li>{l s='You are currently managing all of your shops.'}</li>
@@ -214,7 +214,7 @@
 							languages=$languages
 							input_value=$product->available_now
 							input_name='available_now'}
-					<span class="hint" name="help_box">{l s='Forbidden characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
+					<span class="alert alert-info" name="help_box">{l s='Forbidden characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
 			</td>
 			</tr>
 			<tr>
@@ -227,7 +227,7 @@
 							languages=$languages
 							input_value=$product->available_later
 							input_name='available_later'}
-					<span class="hint" name="help_box">{l s='Forbidden characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
+					<span class="alert alert-info" name="help_box">{l s='Forbidden characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
 				</td>
 			</tr>
 			{if !$countAttributes}

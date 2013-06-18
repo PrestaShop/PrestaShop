@@ -30,7 +30,7 @@
 		name="{$input_name}_{$language.id_lang}" 
 		class="autoload_rte" >{if isset($input_value[$language.id_lang])}{$input_value[$language.id_lang]|htmlentitiesUTF8}{/if}</textarea>
 	<span class="counter" max="{if isset($max)}{$max}{else}none{/if}"></span>
-	<span class="hint">{$hint|default:''}<span class="hint-pointer">&nbsp;</span></span>
+	<span class="alert alert-info">{$hint|default:''}<span class="hint-pointer">&nbsp;</span></span>
 </div>
 {/foreach}
 </div>

@@ -27,7 +27,7 @@
 {block name="label"}
 	{if $input.type == 'text' && $input.name == 'ps_cache_fs_directory_depth'}
 		<div id="directory_depth">
-			<div class="warn">{l s='The CacheFS system should be used only when the infrastructure contains one front-end server. If you are not sure, ask your hosting company.'}</div>
+			<div class="alert alert-block">{l s='The CacheFS system should be used only when the infrastructure contains one front-end server. If you are not sure, ask your hosting company.'}</div>
 	{else}
 		{$smarty.block.parent}
 	{/if}
@@ -35,7 +35,7 @@
 
 {block name="input"}
 	{if $input.type == 'radio' && $input.name == 'combination' && $input.disabled}
-		<div class="warn">
+		<div class="alert alert-block">
 			{l s='This feature cannot be disabled because it is currently in use.'}
 		</div>
 	{/if}

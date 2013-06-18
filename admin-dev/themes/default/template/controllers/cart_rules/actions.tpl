@@ -122,6 +122,6 @@
 				</div>
 			</div>
 		</div>
-		<div id="gift_products_err" class="warn" style="display:none"></div>
+		<div id="gift_products_err" class="alert alert-block" style="display:none"></div>
 	</div>
 </div>

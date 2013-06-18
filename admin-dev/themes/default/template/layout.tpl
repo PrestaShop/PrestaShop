@@ -48,7 +48,7 @@
 	</div>
 {/if}
 {if isset($informations) && count($informations) && $informations}
-	<div class="hint clear" style="display:block;">
+	<div class="alert alert-info" style="display:block;">
 		<span id="see_more_infos">
 			<b><a href="#" style="color:#00529B;" onclick="$('#see_more_infos').hide(); $('#infos_block').show();return false;">{l s='Click here to see more informations'}</a></b>
 		</span>
@@ -67,10 +67,8 @@
 	</div><br />
 {/if}
 {if count($warnings)}
-	<div class="warn">
-		<span style="float:right">
-			<a id="hideWarn" href=""><img alt="X" src="../img/admin/close.png" /></a>
-		</span>
+	<div class="alert alert-block">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
 		{if count($warnings) > 1}
 			{l s='There are %d warnings.' sprintf=count($warnings)}
 			<span style="margin-left:20px;" id="labelSeeMore">

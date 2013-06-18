@@ -57,7 +57,7 @@
 	{/if}
 
 	{if isset($informations) && count($informations) && $informations}
-		<div class="hint clear" style="display:block;">
+		<div class="alert alert-info" style="display:block;">
 			{foreach $informations as $info}
 				{$info}<br />
 			{/foreach}
@@ -73,7 +73,7 @@
 	{/if}
 
 	{if count($warnings)}
-		<div class="warn">
+		<div class="warning">
 			<span style="float:right">
 				<a id="hideWarn" href=""><img alt="X" src="../img/admin/close.png" /></a>
 			</span>

@@ -41,7 +41,7 @@
 				</div>
 				<br />
 {if isset($warningSslMessage)}
-				<div class="warn">{$warningSslMessage}</div>
+				<div class="alert alert-block">{$warningSslMessage}</div>
 {/if}
 				<div id="login">
 					<h1>{$shop_name}</h1>

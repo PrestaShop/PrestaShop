@@ -75,7 +75,7 @@
 			</div>
 		</div>
 		<div style="float: left; width: 570px;">
-			<div class="hint" style="width: 570px; padding-left: 45px; margin-bottom: 15px; display: block; position: inherit;">{l s='The Combinations Generator is a tool that allows you to easily create a series of combinations by selecting the related attributes. For example, if you\'re selling t-shirts in three different sizes and two different colors, the generator will create six combinations for you.'}</div>
+			<div class="alert alert-info" style="width: 570px; padding-left: 45px; margin-bottom: 15px; display: block; position: inherit;">{l s='The Combinations Generator is a tool that allows you to easily create a series of combinations by selecting the related attributes. For example, if you\'re selling t-shirts in three different sizes and two different colors, the generator will create six combinations for you.'}</div>
 			<p>{l s='You\'re currently generating combinations for the following product:'} <b>{$product_name|escape:'htmlall':'UTF-8'}</b></p>
 			<h4>{l s='Step 1: On the left side, select the attributes you want to use (Hold down the "Ctrl" key on your keyboard and validate by clicking on "Add")'}</h4>
 			<div>

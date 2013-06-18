@@ -57,23 +57,17 @@
 	margin:0;
 	padding:0;
 	width:100%;
-	border: solid 1px black;
+	border-collapse: collapse;
+}
 }
 
-#nobootstrap table.table-bordered {
-	border: none;
-}
-#nobootstrap table.table-stripped {
-	border: none;
-}
+
+
 
 #nobootstrap table.widthfull {
 	width:100%;
 }
 
-#nobootstrap table {
-	border-collapse:separate!important;
-}
 
 #nobootstrap .table thead th {
 	vertical-align:top;

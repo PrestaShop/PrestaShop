@@ -448,7 +448,7 @@
 					html += '</ul>';
 				}
 				else
-					html = '<div class="warn">{l s='No customers found'}</div>';
+					html = '<div class="alert alert-block">{l s='No customers found'}</div>';
 				$('#customers').html(html);
 				resetBind();
 			}
@@ -1027,7 +1027,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="products_err" class="warn" style="display:none;"></div>
+	<div id="products_err" class="alert alert-block" style="display:none;"></div>
 	<div>
 		<table cellspacing="0" cellpadding="0" class="table width5" id="customer_cart">
 				<colgroup>
@@ -1152,12 +1152,12 @@
 			</tbody>
 		</table>
 	</div>
-	<div id="vouchers_err" class="warn"></div>
+	<div id="vouchers_err" class="alert alert-block"></div>
 </fieldset>
 <br />
 <fieldset id="address_part" style="display:none;">
 	<legend><img src="../img/t/AdminAddresses.gif" />{l s='Addresses'}</legend>
-	<div id="addresses_err" class="warn" style="display:none;"></div>
+	<div id="addresses_err" class="alert alert-block" style="display:none;"></div>
 	<div id="address_delivery">
 		<h3>{l s='Delivery'}</h3>
 		<select id="id_address_delivery" name="id_address_delivery">
@@ -1177,7 +1177,7 @@
 <br />
 <fieldset id="carriers_part" style="display:none;">
 	<legend><img src="../img/t/AdminCarriers.gif" />{l s='Shipping'}</legend>
-	<div id="carriers_err" style="display:none;" class="warn"></div>
+	<div id="carriers_err" style="display:none;" class="alert alert-block"></div>
 	<div id="carrier_form">
 		<div>
 			<p>

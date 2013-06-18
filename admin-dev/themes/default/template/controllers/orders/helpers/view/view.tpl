@@ -266,7 +266,7 @@
 
 				{if (!$order->valid && sizeof($currencies) > 1)}
 				<form method="post" action="{$currentIndex}&vieworder&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
-					<p class="warn">{l s='Don\'t forget to update your conversion rate before making this change.'}</p>
+					<p class="alert alert-block">{l s='Don\'t forget to update your conversion rate before making this change.'}</p>
 					<label>{l s='Don\'t forget to update your conversion rate before making this change.'}</label>
 					<select name="new_currency">
 						{foreach from=$currencies item=currency_change}

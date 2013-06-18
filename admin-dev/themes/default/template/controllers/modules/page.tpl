@@ -27,7 +27,7 @@
 	{include file='controllers/modules/header.tpl'}
 	{include file='controllers/modules/filters.tpl'}
 	{if $upgrade_available|@count}
-		<div class="hint" style="display:block;">
+		<div class="alert alert-info" style="display:block;">
 			{l s='An upgrade is available for some of your modules!'}
 			<ul>
 			{foreach from=$upgrade_available item='module'}
