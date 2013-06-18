@@ -534,7 +534,7 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 	margin:0;
 	white-space: nowrap;
 	overflow: auto;
-	height: 365px;
+	height: 370px;
 }
 #modules_list_container_tab #modules_list_container_content li{display:inline-block;}
 #modules_list_container_tab table tr th { height:40px;}
@@ -564,8 +564,8 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 #modules_list_container_tab ul.listing-grid-module li select { position:absolute; top:0; right:0px; }
 
 .default_modules_list_display_type #modules_list_container_content li table tr td{border: none}
-.default_modules_list_display_type #modules_list_container_content li table {border: solid 1px #ccc; height: 100px;width: 100%;margin-bottom:15px}
-#modules_list_container_tab ul li {height:140px}
+.default_modules_list_display_type #modules_list_container_content li table {border:solid 1px #ccc;height:105px;width:100%;margin-bottom:10px}
+#modules_list_container_tab ul li {height:105px}
 
 		/******** ie7 ******/
 		.ie7 #modules_list_container_tab #modules_list_container_content li{zoom:1;display:inline;}
