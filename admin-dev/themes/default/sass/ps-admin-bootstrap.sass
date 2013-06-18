@@ -1,4 +1,5 @@
 @import "bootstrap/bootstrap"
+@import "import/toggle-switch.css"
 
 html, body
 	height: 100%
@@ -22,9 +23,6 @@ body.fixed-top
 				> a
 					color: white
 					background-color: #2D94C9
-				> ul li a
-					background-color: #D7E9F2
-
 			> a
 				text-transform: uppercase
 				font-size: 12px
@@ -47,16 +45,23 @@ body.fixed-top
 						padding: 3px 5px 3px 20px
 						border: none
 						border-bottom: 1px solid #F6F6F6
+						&:hover
+							background-color: #D7E9F2
+							text-decoration: none
+					&.active
+						a
+							background-color: #D7E9F2
+
 		li:not(.active) ul
 			display: none
 		li.expanded ul
 			display: block !important
 
-.page-sidebar > ul > li > ul.sub-menu
-	display: none
-	list-style: none
-	clear: both
-	margin: 8px 0px 8px 0px
+	> ul > li > ul.sub-menu
+		display: none
+		list-style: none
+		clear: both
+		margin: 8px 0px 8px 0px
 
 
 .page-content
@@ -64,6 +69,7 @@ body.fixed-top
 	margin-top: 0px
 	min-height: 860px
 	padding-top: 20px
+	margin-bottom: 90px
 
 #footer
 	width: 100%
@@ -98,70 +104,68 @@ body.fixed-top
 	tr:hover
 		background-color
 
+#menu .maintab > a [class^="icon-"], #menu .maintab > a [class*=" icon-"]
+	font-size: 18px
+	border-radius: 35px
+	height: 30px
+	width: 30px
+	color: white
+	display: inline-block
+	text-align: center
+	line-height: 30px
+
+label span.label-tooltip
+	color: #647858
+	text-decoration: none
+	border-bottom: dashed 1px #647858
+
+label.required:before
+	content: '*'
+	color: red
+	font-size: 14px
+
+
+
 .icon-AdminCatalog
 	@extend .icon-book
 	background-color: #7A0928
-	color: white
-	padding: 6px
 
 .icon-AdminParentCustomer
 	@extend .icon-group
 	background-color: #C4004E
-	color: white
-	padding: 6px
 
 .icon-AdminParentLocalization
 	@extend .icon-globe
 	background-color: #1C6DEE
-	color: white
-	padding: 6px
 
 .icon-AdminParentModules
 	@extend .icon-puzzle-piece
 	background-color: #00C337
-	color: white
-	padding: 6px
 
 .icon-AdminParentOrders
 	@extend .icon-credit-card
 	background-color: #004888
-	color: white
-	padding: 6px
 
 .icon-AdminParentPreferences
 	@extend .icon-wrench
 	background-color: #009A00
-	color: white
-	padding: 6px
 
 .icon-AdminParentShipping
 	@extend .icon-truck
 	background-color: #4EC3FF
-	color: white
-	padding: 6px
 
 .icon-AdminParentStats
 	@extend .icon-bar-chart
 	background-color: #00A5A6
-	color: white
-	padding: 6px
 
 .icon-AdminPriceRule
 	@extend .icon-tags
 	background-color: #7400AF
-	color: white
-	padding: 6px
 
 .icon-AdminTools
 	@extend .icon-cogs
 	background-color: #AF0D3A
-	color: white
-	padding: 6px
 
 .icon-AdminAdmin
 	@extend .icon-cog
 	background-color: #1C6DEE
-	color: white
-	padding: 6px
-
-

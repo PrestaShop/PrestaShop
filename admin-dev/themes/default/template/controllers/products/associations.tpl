@@ -29,7 +29,7 @@
 
 	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Associations"}
 	<div class="separation"></div>
-		<div id="no_default_category" class="hint">
+		<div id="no_default_category" class="alert alert-info">
 		{l s='Please select a default category.'}
 	</div>
 	<table>
@@ -67,7 +67,7 @@
 						<option value="{$cat.id_category}" {if $id_category_default == $cat.id_category}selected="selected"{/if} >{$cat.name}</option>
 					{/foreach}
 				</select>
-				<div class="hint" style="display:block;">{l s='The default category is the category displayed by default.'}</div>
+				<div class="alert alert-info" style="display:block;">{l s='The default category is the category displayed by default.'}</div>
 			</td>
 		</tr>
 	</table>

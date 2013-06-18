@@ -185,7 +185,7 @@
 					{l s='Caution: The discount applied to a category does not stack with the overall reduction but instead replaces it.'}
 				</div>
 				{$categoryTreeView}
-				<div class="warn">{l s='Only products that have this category as the default category will be affected.'}</div>
+				<div class="alert alert-block">{l s='Only products that have this category as the default category will be affected.'}</div>
 				<div class="clear">&nbsp;</div>
 				<label>{l s='Discount (%):'}</label>
 				<input type="text" name="category_reduction_fancybox" id="category_reduction_fancybox" value="0.00" size="33">

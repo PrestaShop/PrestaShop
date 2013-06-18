@@ -81,7 +81,7 @@ $(document).ready(function () {
 				html += '</ul>';
 			}
 			else
-				html = '<div class="warn">{l s='No customers found'}</div>';
+				html = '<div class="alert alert-block">{l s='No customers found'}</div>';
 			Customer.hideLoader();
 			Customer.container.html(html);
 			jQuery('.fancybox', Customer.container).fancybox();
@@ -107,7 +107,7 @@ $(document).ready(function () {
 {* END CUSTOMER AUTO-COMPLETE / TO REFACTO *}
 <input type="hidden" name="submitted_tabs[]" value="Prices" />
 <h4>{l s='Product price'}</h4>
-<div class="hint" style="display:block;min-height:0;">
+<div class="alert alert-info" style="display:block;min-height:0;">
 	{l s='You must enter either the pre-tax retail price, or the retail price with tax. The input field will be automatically calculated.'}
 </div>
 
@@ -239,7 +239,7 @@ $(document).ready(function () {
 
 {if isset($specificPriceModificationForm)}
 	<h4>{l s='Specific prices'}</h4>
-	<div class="hint" style="display:block;min-height:0;">
+	<div class="alert alert-info" style="display:block;min-height:0;">
 		{l s='You can set specific prices for clients belonging to different groups, different countries, etc...'}
 	</div>
 	<br />

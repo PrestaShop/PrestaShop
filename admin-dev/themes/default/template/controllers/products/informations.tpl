@@ -86,13 +86,13 @@
 	</script>
 
 	{if isset($display_common_field) && $display_common_field}
-		<div class="warn" style="display: block">{l s='Warning, if you change the value of fields with an orange bullet %s, the value will be changed for all other shops for this product' sprintf=$bullet_common_field}</div>
+		<div class="alert alert-block" style="display: block">{l s='Warning, if you change the value of fields with an orange bullet %s, the value will be changed for all other shops for this product' sprintf=$bullet_common_field}</div>
 	{/if}
 
 	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Informations"}
 
 	<div class="separation"></div>
-	<div id="warn_virtual_combinations" class="warn" style="display:none">{l s='You cannot use combinations with a virtual product.'}</div>
+	<div id="warn_virtual_combinations" class="alert alert-block" style="display:none">{l s='You cannot use combinations with a virtual product.'}</div>
 	<div>
 		<label class="text">{$bullet_common_field} {l s='Type:'}</label>
 		<input type="radio" name="type_product" id="simple_product" value="{Product::PTYPE_SIMPLE}" {if $product_type == Product::PTYPE_SIMPLE}checked="checked"{/if} />
@@ -118,7 +118,7 @@
 						<input class="{$class_input_ajax}{if !$product->id}copy2friendlyUrl{/if} updateCurrentText" size="43" type="text" {if !$product->id}disabled="disabled"{/if}
 						id="name_{$language.id_lang}" name="name_{$language.id_lang}"
 						value="{$product->name[$language.id_lang]|htmlentitiesUTF8|default:''}"/><sup> *</sup>
-					<span class="hint" name="help_box">{l s='Invalid characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span>
+					<span class="alert alert-info" name="help_box">{l s='Invalid characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span>
 					</span>
 				</div>
 			{/foreach}
@@ -128,7 +128,7 @@
 			<td class="col-left"><label>{$bullet_common_field} {l s='Reference:'}</label></td>
 			<td style="padding-bottom:5px;">
 				<input size="55" type="text" name="reference" value="{$product->reference|htmlentitiesUTF8}" style="width: 130px; margin-right: 44px;" />
-				<span class="hint" name="help_box">{l s='Special characters allowed:'}.-_#\<span class="hint-pointer">&nbsp;</span></span>
+				<span class="alert alert-info" name="help_box">{l s='Special characters allowed:'}.-_#\<span class="hint-pointer">&nbsp;</span></span>
 			</td>
 		</tr>
 		<tr>
@@ -175,7 +175,7 @@
 				<option value="301" {if $product->redirect_type == '301'} selected="selected" {/if}>{l s='Redirect permanently (301)'}</option>
 				<option value="302" {if $product->redirect_type == '302'} selected="selected" {/if}>{l s='Redirect temporarily (302)'}</option>
 			</select>
-			<span class="hint" name="help_box">
+			<span class="alert alert-info" name="help_box">
 				{l s='404 : Not Found = Product does not exist and no redirect'}<br/>
 				{l s='301 : Moved Permanently = Product Moved Permanently'}<br/>
 				{l s='302 : Moved Temporarily = Product moved temporarily'}
@@ -300,7 +300,7 @@
 			<tr>
 				<td class="col-left"><label></label></td>
 				<td style="padding-bottom:5px;">
-					<div style="display:block;width:620px;" class="hint clear">
+					<div style="display:block;width:620px;" class="alert alert-info">
 						{l s='Do you want an image associated with the product in your description?'}
 						<span class="addImageDescription" style="cursor:pointer">{l s='Click here'}</span>.
 					</div>
@@ -377,7 +377,7 @@
 					<div class="lang_{$language.id_lang}" style="{if !$language.is_default}display: none;{/if}float: left;">
 						<input size="55" type="text" id="tags_{$language.id_lang}" name="tags_{$language.id_lang}"
 							value="{$product->getTags($language.id_lang, true)|htmlentitiesUTF8}" />
-						<span class="hint" name="help_box">{l s='Forbidden characters:'} !&lt;;&gt;;?=+#&quot;&deg;{}_$%<span class="hint-pointer">&nbsp;</span></span>
+						<span class="alert alert-info" name="help_box">{l s='Forbidden characters:'} !&lt;;&gt;;?=+#&quot;&deg;{}_$%<span class="hint-pointer">&nbsp;</span></span>
 					</div>
 				{/foreach}
 				<p class="preference_description clear">{l s='Tags separated by commas (e.g. dvd, dvd player, hifi)'}</p>

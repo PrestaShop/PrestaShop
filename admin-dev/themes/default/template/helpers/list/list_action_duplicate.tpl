@@ -23,5 +23,5 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <a class="pointer" title="{$action}" onclick="if (confirm('{$confirm}')) document.location = '{$location_ok}'; else document.location = '{$location_ko}';">
-	<img src="../img/admin/duplicate.png" alt="{$action}" />
+	<i class="icon-copy"></i> {$action}
 </a>

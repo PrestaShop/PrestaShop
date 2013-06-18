@@ -1,3 +1,4 @@
+@import url(import/toggle-switch.css);
 /*
  * Bootstrap v2.3.2
  *
@@ -5866,8 +5867,6 @@ body.fixed-top {
     .page-sidebar > ul > li.active > a {
       color: white;
       background-color: #2d94c9; }
-    .page-sidebar > ul > li.active > ul li a {
-      background-color: #d7e9f2; }
     .page-sidebar > ul > li > a {
       text-transform: uppercase;
       font-size: 12px;
@@ -5889,22 +5888,27 @@ body.fixed-top {
         padding: 3px 5px 3px 20px;
         border: none;
         border-bottom: 1px solid #f6f6f6; }
+        .page-sidebar > ul > li ul li a:hover {
+          background-color: #d7e9f2;
+          text-decoration: none; }
+      .page-sidebar > ul > li ul li.active a {
+        background-color: #d7e9f2; }
     .page-sidebar > ul li:not(.active) ul {
       display: none; }
     .page-sidebar > ul li.expanded ul {
       display: block !important; }
-
-.page-sidebar > ul > li > ul.sub-menu {
-  display: none;
-  list-style: none;
-  clear: both;
-  margin: 8px 0px 8px 0px; }
+  .page-sidebar > ul > li > ul.sub-menu {
+    display: none;
+    list-style: none;
+    clear: both;
+    margin: 8px 0px 8px 0px; }
 
 .page-content {
   margin-left: 225px;
   margin-top: 0px;
   min-height: 860px;
-  padding-top: 20px; }
+  padding-top: 20px;
+  margin-bottom: 90px; }
 
 #footer {
   width: 100%;
@@ -5937,57 +5941,55 @@ body.fixed-top {
   .table td.center, .table th.center {
     text-align: center; }
 
-.icon-AdminCatalog {
-  background-color: #7a0928;
+#menu .maintab > a [class^="icon-"], #menu .maintab > a [class*=" icon-"] {
+  font-size: 18px;
+  border-radius: 35px;
+  height: 30px;
+  width: 30px;
   color: white;
-  padding: 6px; }
+  display: inline-block;
+  text-align: center;
+  line-height: 30px; }
+
+label span.label-tooltip {
+  color: #647858;
+  text-decoration: none;
+  border-bottom: dashed 1px #647858; }
+
+label.required:before {
+  content: "*";
+  color: red;
+  font-size: 14px; }
+
+.icon-AdminCatalog {
+  background-color: #7a0928; }
 
 .icon-AdminParentCustomer {
-  background-color: #c4004e;
-  color: white;
-  padding: 6px; }
+  background-color: #c4004e; }
 
 .icon-AdminParentLocalization {
-  background-color: #1c6dee;
-  color: white;
-  padding: 6px; }
+  background-color: #1c6dee; }
 
 .icon-AdminParentModules {
-  background-color: #00c337;
-  color: white;
-  padding: 6px; }
+  background-color: #00c337; }
 
 .icon-AdminParentOrders {
-  background-color: #004888;
-  color: white;
-  padding: 6px; }
+  background-color: #004888; }
 
 .icon-AdminParentPreferences {
-  background-color: #009a00;
-  color: white;
-  padding: 6px; }
+  background-color: #009a00; }
 
 .icon-AdminParentShipping {
-  background-color: #4ec3ff;
-  color: white;
-  padding: 6px; }
+  background-color: #4ec3ff; }
 
 .icon-AdminParentStats {
-  background-color: #00a5a6;
-  color: white;
-  padding: 6px; }
+  background-color: #00a5a6; }
 
 .icon-AdminPriceRule {
-  background-color: #7400af;
-  color: white;
-  padding: 6px; }
+  background-color: #7400af; }
 
 .icon-AdminTools {
-  background-color: #af0d3a;
-  color: white;
-  padding: 6px; }
+  background-color: #af0d3a; }
 
 .icon-AdminAdmin {
-  background-color: #1c6dee;
-  color: white;
-  padding: 6px; }
+  background-color: #1c6dee; }

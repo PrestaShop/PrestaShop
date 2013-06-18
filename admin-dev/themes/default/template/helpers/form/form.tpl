@@ -87,7 +87,7 @@
 															{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if}
 															{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
 															{if isset($input.autocomplete) && !$input.autocomplete}autocomplete="off"{/if} />
-													{if !empty($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
+													{if !empty($input.hint)}<span class="alert alert-info" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
 												</div>
 											{/foreach}
 										</div>
@@ -119,7 +119,7 @@
 												{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
 												{if isset($input.autocomplete) && !$input.autocomplete}autocomplete="off"{/if} />
 										{if isset($input.suffix)}{$input.suffix}{/if}
-										{if !empty($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
+										{if !empty($input.hint)}<span class="alert alert-info" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
 									{/if}
 								{elseif $input.type == 'select'}
 									{if isset($input.options.query) && !$input.options.query && isset($input.empty_message)}
@@ -188,7 +188,7 @@
 												{/foreach}
 											{/if}
 										</select>
-										{if !empty($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
+										{if !empty($input.hint)}<span class="alert alert-info" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
 									{/if}
 								{elseif $input.type == 'radio'}
 									{foreach $input.values as $value}
@@ -245,7 +245,7 @@
 										{/if}
 									{/if}
 									<input type="file" name="{$input.name}" {if isset($input.id)}id="{$input.id}"{/if} />
-									{if !empty($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
+									{if !empty($input.hint)}<span class="alert alert-info" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
 								{elseif $input.type == 'password'}
 									<input type="password"
 											name="{$input.name}"

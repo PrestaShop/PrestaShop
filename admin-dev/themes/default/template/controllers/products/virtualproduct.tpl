@@ -224,11 +224,11 @@
 						{*</td>*}
 						{*<td class="col-right">*}
 							{*<input type="checkbox" id="virtual_product_is_shareable" name="virtual_product_is_shareable" value="1" {if $product->productDownload->is_shareable}checked="checked"{/if} />*}
-							{*<span class="hint" name="help_box" style="display:none">{l s='Please specify if the file can be shared.'}</span>*}
+							{*<span class="alert alert-info" name="help_box" style="display:none">{l s='Please specify if the file can be shared.'}</span>*}
 						{*</td>*}
 					{*</tr>*}
 				{else}
-					<div class="hint clear" style="display: block;width: 70%;">{l s='You cannot edit your file here because you used combinations. Please edit this file in the Combinations tab.'}</div>
+					<div class="alert alert-info" style="display: block;width: 70%;">{l s='You cannot edit your file here because you used combinations. Please edit this file in the Combinations tab.'}</div>
 					<br />
 					{if isset($error_product_download)}{$error_product_download}{/if}
 				{/if}

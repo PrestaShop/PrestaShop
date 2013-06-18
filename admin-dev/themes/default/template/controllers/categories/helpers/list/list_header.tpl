@@ -44,7 +44,7 @@
 </div>
 	{if isset($delete_category) && $delete_category}
 		<form action="{$REQUEST_URI}" method="post">
-			<div class="warn">
+			<div class="alert alert-block">
 				<h2>
 					{if $need_delete_mode}
 						{l s='Do you want to delete the products too?'}

@@ -50,7 +50,7 @@
 		&nbsp;<a class="button bt-icon confirm_leave" href="index.php?tab=AdminAttributeGenerator&id_product={$product->id}&attributegenerator&token={$token_generator}"><img src="../img/admin/appearance.gif" alt="combinations_generator" class="middle" title="{l s='Product combinations generator'}" /><span>{l s='Product combinations generator'}</span></a> 
 		{l s='in order to automatically create a set of combinations.'}
 	{if $combination_exists}
-	<div class="warn" style="display:block">
+	<div class="alert alert-block" style="display:block">
 		<ul>
 			<li>{l s='Some combinations already exist. If you want to generate new combinations, the quantities for the existing combinations will be lost.'}</li>
 			<li>{l s='You can add a combination by clicking the link "Add new combination" on the toolbar.'}</li>
@@ -113,7 +113,7 @@
 					<input size="55" type="text" id="attribute_reference" name="attribute_reference" value="" style="width: 130px; margin-right: 44px;" />
 					{l s='EAN13:'}<input size="55" maxlength="13" type="text" id="attribute_ean13" name="attribute_ean13" value="" style="width: 110px; margin-left: 10px; margin-right: 44px;" />
 					{l s='UPC:'}<input size="55" maxlength="12" type="text" id="attribute_upc" name="attribute_upc" value="" style="width: 110px; margin-left: 10px; margin-right: 44px;" />
-					<span class="hint" name="help_box">{l s='Special characters allowed:'} .-_#<span class="hint-pointer">&nbsp;</span></span>
+					<span class="alert alert-info" name="help_box">{l s='Special characters allowed:'} .-_#<span class="hint-pointer">&nbsp;</span></span>
 				</td>
 			</tr>
 			<tr>

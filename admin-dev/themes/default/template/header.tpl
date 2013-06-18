@@ -104,7 +104,7 @@
 <div id="ajax_running"><img src="../img/admin/ajax-loader-yellow.gif" alt="" /> {l s='Loading...'}</div>
 
 {* begin  HEADER *}
-<div id="header" class="navbar navbar-fixed-top table-bordered" >
+<div id="header" class="navbar navbar-fixed-top" >
 	<div class="navbar-inner">
 		<div class="container-fluid">
 			<div id="header_infos">
@@ -215,23 +215,26 @@
 {/if}
 
 	<div id="main" class="page-container row-fluid">
-      <div class="page-sidebar nav-collapse collapse">
-			<ul id="menu nav nav-tabs nav-stacked">
+      <div class="page-sidebar">
+			<ul id="menu">
 {if !$tab}
 				<div class="mainsubtablist" style="display:none"></div>
 {/if}
 {foreach $tabs AS $t}
 	{if $t.active}
-				<li class="submenu_size maintab {if $t.current}active{/if}" id="maintab{$t.id_tab}">
+				<li class="maintab {if $t.current}active{/if}" id="maintab{$t.id_tab}">
 					<a href="javascript:adminNav('#maintab{$t.id_tab}');" class="title">
 						<i class="icon-{$t.class_name}"></i> {if $t.name eq ''}{$t.class_name}{else}{$t.name}{/if}
 					</a>
 					<ul class="submenu">
 						{foreach from=$t.sub_tabs item=t2}
 							{if $t2.active}
-								<li {if $t2.current} class="active"{/if}><a href="{$t2.href|escape:'htmlall':'UTF-8'}">{if $t2.name eq ''}{$t2.class_name}{else}{$t2.name|escape:'htmlall':'UTF-8'}{/if}
-								<i class="icon-chevron-sign-right pull-right"></i>
-								</a></li>
+								<li {if $t2.current} class="active"{/if}>
+									<a href="{$t2.href|escape:'htmlall':'UTF-8'}">
+										{if $t2.name eq ''}{$t2.class_name}{else}{$t2.name|escape:'htmlall':'UTF-8'}{/if}
+										<i class="icon-chevron-sign-right pull-right"></i>
+									</a>
+								</li>
 							{/if}
 						{/foreach}
 					</ul>
@@ -245,7 +248,7 @@
             	<div class="row-fluid">
 
 			{if $display_header && $install_dir_exists}
-					<div class="warning">
+					<div class="alert alert-block">
 						{l s='For security reasons, you must also:'}&nbsp;{l s='delete the /install folder'}
 					</div>
 			{/if}

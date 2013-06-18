@@ -29,7 +29,7 @@
 	<h2 class="space">{l s='Regenerate thumbnails'}</h2>
 	{l s='Regenerates thumbnails for all existing images'}<br /><br />
 	<div  class="width4">
-		<div class="warn">
+		<div class="alert alert-block">
 			{l s='Please be patient. This can take several minutes.'}<br />
 			{l s='Be careful! Manually uploaded thumbnails will be erased and replaced by automatically generated thumbnails.'}
 		</div>
@@ -81,7 +81,7 @@
 	{l s='PrestaShop now uses a new storage system for product images. It offers better performance if your shop has a large number of products.'}<br />
 	<br />
 	{if $safe_mode}
-		<div class="warn">
+		<div class="alert alert-block">
 			{l s='PrestaShop has detected that your server configuration is not compatible with the new storage system (directive "safe_mode" is activated). You should therefore continue to use the existing system.'}
 		</div>
 	{else}
@@ -91,7 +91,7 @@
 				{l s='You can choose to keep your images stored in the previous system. There\'s nothing wrong with that.'}<br />
 				{l s='You can also decide to move your images to the new storage system. In this case, click on the "Move images" button below. Please be patient. This can take several minutes.'}
 				<br /><br />
-				<div class="hint clear" style="display: block;">&nbsp;
+				<div class="alert alert-info" style="display: block;">&nbsp;
 					{l s='After moving all of your product images, set the "Use the legacy image filesystem" option above to "No" for best performance.'}
 				</div>
 				<center><input type="Submit" name="submitMoveImages{$table}" value="{l s='Move images'}" class="button space" onclick="return confirm('{l s='Are you sure?'}');" /></center>

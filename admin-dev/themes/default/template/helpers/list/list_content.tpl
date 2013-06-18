@@ -136,16 +136,24 @@
 	{/if}
 	{if $has_actions}
 		<td>
-			<div class="btn-group">
-				<a href="#" class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-cog"></i> {l s='Actions'} <span class="caret"></span></a>
+			<div class="btn-group">	
+			{foreach $actions AS $key => $action}
+				{if $key==0}
+				<span class="btn">
+					{$tr.$action}
+				</span>
+				<button class="btn dropdown-toggle" data-toggle="dropdown">
+					<span class="caret"></span>&nbsp;
+				</button>
 				<ul class="dropdown-menu">
-				{foreach $actions AS $action}
+				{else}
 					<li>
 					{if isset($tr.$action)}
 						{$tr.$action}
 					{/if}
 					</li>
-				{/foreach}
+				{/if}
+			{/foreach}
 				</ul>
 			</div>
 		</td>

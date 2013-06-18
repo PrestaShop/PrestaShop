@@ -185,10 +185,10 @@
 						{if isset($field['required']) && $field['required'] && $field['type'] != 'radio'}
 							<sup>*</sup>
 						{/if}
-						{if isset($field['hint'])}<span class="hint" name="help_box">{$field['hint']}<span class="hint-pointer">&nbsp;</span></span>{/if}
+						{if isset($field['hint'])}<span class="alert alert-info" name="help_box">{$field['hint']}<span class="hint-pointer">&nbsp;</span></span>{/if}
 					{/block}{* end block input *}
 					{if isset($field['desc'])}<p class="preference_description">{$field['desc']}</p>{/if}
-					{if $field['is_invisible']}<p class="warn">{l s='You can\'t change the value of this configuration field in the context of this shop.'}</p>{/if}
+					{if $field['is_invisible']}<p class="alert alert-block">{l s='You can\'t change the value of this configuration field in the context of this shop.'}</p>{/if}
 					</div>
 					</div>
 					<div class="clear"></div>

@@ -28,7 +28,7 @@
 {block name="override_tpl"}
 
 	{if !empty($limit_warning)}
-	<div class="warn">
+	<div class="alert alert-block">
 		{if $limit_warning['error_type'] == 'suhosin'}
 			{l s='Warning: Your hosting provider is using the suhosin patch for PHP, which limits the maximum number of fields allowed in a form:'}
 
@@ -44,7 +44,7 @@
 	</div>
 	{else}
 
-		<div class="hint" style="display:block;">
+		<div class="alert alert-info" style="display:block;">
 			<ul style="margin-left:30px;list-style-type:disc;">
 				<li>{l s='Click on titles to open fieldsets'}.</li>
 				<li>{l s='Some sentences to translate use this syntax: %s... These are variables, and PrestaShop take care of replacing them before displaying your translation. You must leave these in your translations, and place them appropriately in your sentence.' sprintf='%d, %s, %1$s, %2$d'}</li>
@@ -77,7 +77,7 @@
 		</script>
 
 		<div id="BoxUseSpecialSyntax">
-			<div class="warn">
+			<div class="alert alert-block">
 				<p class="syntax">
 					{l s='This expression uses this special syntax:'} <span>%d.</span><br />
 					{l s='You must use this syntax in your translations. Here are several examples:'}

@@ -192,15 +192,15 @@
 				<input type="submit" name="submitImportFile" value="{l s='Next step'}" class="button" {if empty($files_to_import)}disabled{/if}/>
 				{if empty($files_to_import)}<span style="color:red;">{l s='You must upload a file in order to proceed to the next step'}</span>{/if}
 			</div>
-			<div class="warn import_products_categories" style="margin-top: 20px;">
+			<div class="alert alert-block import_products_categories" style="margin-top: 20px;">
 				<p>{l s='Note that the category import does not support categories of the same name.'}</p>
 				<p>{l s='Note that you can have several products with the same reference.'}</p>
 			</div>
-			<div class="warn import_supply_orders_details" style="margin-top: 20px; display:none">
+			<div class="alert alert-block import_supply_orders_details" style="margin-top: 20px; display:none">
 				<p>{l s='Importing Supply Order Details will reset products ordered, if there are any.'}</p>
 			</div>
 		{if !count($files_to_import)}
-			<div class="warn" style="margin-top: 20px;">
+			<div class="alert alert-block" style="margin-top: 20px;">
 				<p>{l s='There is no CSV file available. Please upload one using the \'Upload\' button above.'}</p>
 				<ul>
 					<li>{l s='You can read information on CSV import at:'} <a href="http://doc.prestashop.com/display/PS14/Troubleshooting#Troubleshooting-HowtocorrectlyimportaccentuatedcontentusingaCSVfile%3F" target="_blank">http://doc.prestashop.com/display/PS14/Troubleshooting</a></li>
