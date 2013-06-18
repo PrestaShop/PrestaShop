@@ -56,7 +56,7 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 
 	<!-- Country list -->
 	<div class="field clearfix">
-		<label for="infosCountry" class="aligned"><?php echo $this->l('Default country:') ?></label>
+		<label for="infosCountry" class="aligned"><?php echo $this->l('Country:') ?></label>
 		<div class="contentinput">
 			<select name="shop_country" id="infosCountry" class="chosen">
 				<option value="0" style="font-weight: bold"><?php echo $this->l('Select your country') ?></option>
@@ -84,7 +84,7 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 		<?php echo $this->displayError('shop_timezone') ?>
 	</div>
 
-	<!-- Shop logo -->
+	<!-- Shop logo
 	<div class="field clearfix">
 		<label for="uploadedImage" class="aligned logo"><?php echo $this->l('Shop logo:') ?></label>
 		<div class="contentinput">
@@ -97,6 +97,7 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 		</div>
 		<span id="resultInfosLogo" class="result"></span>
 	</div>
+	 -->
 	
 	<h2 style="margin-top:20px"><?php echo $this->l('Your Account') ?></h2>
 
@@ -141,7 +142,7 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 		<?php if ($this->displayError('admin_password')): ?>
 			<?php echo $this->displayError('admin_password') ?>
 		<?php else: ?>
-			<p class="userInfos aligned"><?php echo $this->l('Must be alphanumeric string with at least 8 characters') ?></p>
+			<p class="userInfos aligned"><?php echo $this->l('Must be letters and numbers with at least 8 characters') ?></p>
 		<?php endif; ?>
 	</div>
 
