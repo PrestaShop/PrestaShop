@@ -249,14 +249,15 @@ class AdminProductsControllerCore extends AdminController
 			'havingFilter' => true,
 			'orderby' => false
 		);
-		$this->fields_list['sav_quantity'] = array(
-			'title' => $this->l('Quantity'),
-			'width' => 90,
-			'align' => 'right',
-			'filter_key' => 'sav!quantity',
-			'orderby' => true,
-			'hint' => $this->l('This is the quantity available in the current shop/group.'),
-		);
+		if (Configuration::get('PS_STOCK_MANAGEMENT'))
+			$this->fields_list['sav_quantity'] = array(
+				'title' => $this->l('Quantity'),
+				'width' => 90,
+				'align' => 'right',
+				'filter_key' => 'sav!quantity',
+				'orderby' => true,
+				'hint' => $this->l('This is the quantity available in the current shop/group.'),
+			);
 		$this->fields_list['active'] = array(
 			'title' => $this->l('Status'),
 			'width' => 70,
