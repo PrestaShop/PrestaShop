@@ -1022,6 +1022,33 @@ class AdminImportControllerCore extends AdminController
 
 		$this->closeCsvFile($handle);
 	}
+	public function productImportCreateCat($default_language_id,$category_name,$id_parent_category=null) {
+		$category_to_create = new Category();
+		if (!Shop::isFeatureActive())
+		 $category_to_create->id_shop_default = 1;
+		else
+		 $category_to_create->id_shop_default = (int)Context::getContext()->shop->id;
+		$category_to_create->name = AdminImportController::createMultiLangField(trim($category_name));
+		$category_to_create->active = 1;
+		if ($id_parent_category==null)
+		 $category_to_create->id_parent = (int)Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
+		else 
+		 $category_to_create->id_parent = (int)$id_parent_category;
+		$category_link_rewrite = Tools::link_rewrite($category_to_create->name[$default_language_id]);
+		$category_to_create->link_rewrite = AdminImportController::createMultiLangField($category_link_rewrite);
+		if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
+		 ($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $category_to_create->add())
+		 $product->id_category[] = (int)$category_to_create->id;
+		else {
+		 $this->errors[] = sprintf(
+		  Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+		  $category_to_create->name[$default_language_id],
+		  (isset($category_to_create->id) ? $category_to_create->id : 'null')
+		 );
+		 $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
+		  Db::getInstance()->getMsgError();
+		}
+	}
 
 	public function productImport()
 	{
@@ -1192,37 +1219,17 @@ class AdminImportControllerCore extends AdminController
 									Db::getInstance()->getMsgError();
 							}
 						}
-					}
+					}	
 					else if (is_string($value) && !empty($value))
 					{
-						$category = Category::searchByName($default_language_id, trim($value), true);
+						// param : default language,path,$this,methode
+						$category = Category::searchByPath($default_language_id, trim($value), $this,"productImportCreateCat");
+						//$category = Category::searchByName($default_language_id, trim($value), true);
 						if ($category['id_category'])
 							$product->id_category[] = (int)$category['id_category'];
 						else
 						{
-							$category_to_create = new Category();
-							if (!Shop::isFeatureActive())
-								$category_to_create->id_shop_default = 1;
-							else
-								$category_to_create->id_shop_default = (int)Context::getContext()->shop->id;
-							$category_to_create->name = AdminImportController::createMultiLangField(trim($value));
-							$category_to_create->active = 1;
-							$category_to_create->id_parent = (int)Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
-							$category_link_rewrite = Tools::link_rewrite($category_to_create->name[$default_language_id]);
-							$category_to_create->link_rewrite = AdminImportController::createMultiLangField($category_link_rewrite);
-							if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-								($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $category_to_create->add())
-								$product->id_category[] = (int)$category_to_create->id;
-							else
-							{
-								$this->errors[] = sprintf(
-									Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-									$category_to_create->name[$default_language_id],
-									(isset($category_to_create->id) ? $category_to_create->id : 'null')
-								);
-								$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-									Db::getInstance()->getMsgError();
-							}
+						  // errors...
 						}
 					}
 				}
