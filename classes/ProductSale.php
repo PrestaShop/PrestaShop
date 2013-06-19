@@ -68,8 +68,8 @@ class ProductSaleCore
 		$final_order_by = $order_by;
 		$order_table = '';
 		if (is_null($order_by) || $order_by == 'position' || $order_by == 'price') $order_by = 'sales';
-                if($order_by == 'date_add' || $order_by == 'date_upd')
-			$order_table = 'p';
+		if ($order_by == 'date_add' || $order_by == 'date_upd')
+			$order_table = 'product_shop';
 		if (is_null($order_way) || $order_by == 'sales') $order_way == 'DESC';
 		$groups = FrontController::getCurrentCustomerGroups();
 		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
