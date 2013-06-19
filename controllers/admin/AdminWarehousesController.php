@@ -424,7 +424,7 @@ class AdminWarehousesControllerCore extends AdminController
 		$address = new Address($object->id_address);
 		if (Validate::isLoadedObject($address))
 		{
-			$address->id_warehouse = $object->id_address;
+			$address->id_warehouse = (int)$object->id;
 			$address->save();
 		}
 

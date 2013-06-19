@@ -577,6 +577,14 @@ function disableZipFormat()
 		$('.zip_code_format').show();
 }
 
+function disableTAASC()
+{
+	if ($('#iso_code').val() == 'US')
+		$('#TAASC').show();
+	else
+		$('#TAASC').hide();
+}
+
 function spreadFees(id_range)
 {
 	newVal = $('#fees_all_'+id_range).val().replace(/,/g, '.');

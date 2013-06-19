@@ -138,7 +138,7 @@ class AddressControllerCore extends FrontController
 				$this->errors[] = Tools::displayError('This country requires you to chose a State.');
 
 			// US customer: normalize the address
-			if ($address->id_country == Country::getByIso('US'))
+			if ($address->id_country == Country::getByIso('US') && Configuration::get('PS_TAASC'))
 			{
 				include_once(_PS_TAASC_PATH_.'AddressStandardizationSolution.php');
 				$normalize = new AddressStandardizationSolution;

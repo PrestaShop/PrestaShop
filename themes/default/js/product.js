@@ -668,7 +668,7 @@ function getProductAttribute()
 		url = url.substring(0, url.indexOf('#'));
 
 	// set ipa to the customization form
-	$('#customizationForm').attr('action', $('#customizationForm').attr('action') + request)
+	$('#customizationForm').attr('action', $('#customizationForm').attr('action') + request);
 	window.location = url + request;
 }
 

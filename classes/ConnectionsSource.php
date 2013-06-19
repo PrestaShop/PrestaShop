@@ -61,38 +61,41 @@ class ConnectionsSourceCore extends ObjectModel
 			$cookie = Context::getContext()->cookie;
 		if (!isset($cookie->id_connections) || !Validate::isUnsignedId($cookie->id_connections))
 			return false;
+			
+		// If the referrer is not correct, we drop the connection
+		if (isset($_SERVER['HTTP_REFERER']) && !Validate::isAbsoluteUrl($_SERVER['HTTP_REFERER']))
+			return false;
+		// If there is no referrer and we do not want to save direct traffic (as opposed to referral traffic), we drop the connection			
 		if (!isset($_SERVER['HTTP_REFERER']) && !Configuration::get('TRACKING_DIRECT_TRAFFIC'))
 			return false;
-		if(Configuration::get('TRACKING_DIRECT_TRAFFIC'))
-		{		
-			$source = new ConnectionsSource();
-			if (isset($_SERVER['HTTP_REFERER']) && Validate::isAbsoluteUrl($_SERVER['HTTP_REFERER']))
-			{
-				$parsed = parse_url($_SERVER['HTTP_REFERER']);
-				$parsed_host = parse_url(Tools::getProtocol().Tools::getHttpHost(false, false).__PS_BASE_URI__);
-				if ((!isset($parsed['path']) ||!isset($parsed_host['path'])) || (preg_replace('/^www./', '', $parsed['host']) == preg_replace('/^www./', '', Tools::getHttpHost(false, false))) 
-					&& !strncmp($parsed['path'], $parsed_host['path'], strlen(__PS_BASE_URI__)))
-					return false;
-				if (Validate::isAbsoluteUrl(strval($_SERVER['HTTP_REFERER'])))
-				{
-					$source->http_referer = substr(strval($_SERVER['HTTP_REFERER']), 0, ConnectionsSource::$uri_max_size);
-					$source->keywords = substr(trim(SearchEngine::getKeywords(strval($_SERVER['HTTP_REFERER']))), 0, ConnectionsSource::$uri_max_size);
-					if (!Validate::isMessage($source->keywords))
-						return false;
-				}
-			}
-			
-			$source->id_connections = (int)$cookie->id_connections;
-			$source->request_uri = Tools::getHttpHost(false, false);
-			if (isset($_SERVER['REDIRECT_URL']))
-				$source->request_uri .= strval($_SERVER['REDIRECT_URL']);
-			elseif (isset($_SERVER['REQUEST_URI']))
-				$source->request_uri .= strval($_SERVER['REQUEST_URI']);
-			if (!Validate::isUrl($source->request_uri))
-				$source->request_uri = '';
-			$source->request_uri = substr($source->request_uri, 0, ConnectionsSource::$uri_max_size);
-			return $source->add();
+		
+		$source = new ConnectionsSource();
+
+		// There are a few more operations if there is a referrer
+		if (isset($_SERVER['HTTP_REFERER']))
+		{
+			// If the referrer is internal (i.e. from your own website), then we drop the connection		
+			$parsed = parse_url($_SERVER['HTTP_REFERER']);
+			$parsed_host = parse_url(Tools::getProtocol().Tools::getHttpHost(false, false).__PS_BASE_URI__);
+			if ((!isset($parsed['path']) ||!isset($parsed_host['path'])) || (preg_replace('/^www./', '', $parsed['host']) == preg_replace('/^www./', '', Tools::getHttpHost(false, false))) && !strncmp($parsed['path'], $parsed_host['path'], strlen(__PS_BASE_URI__)))
+				return false;
+
+			$source->http_referer = substr($_SERVER['HTTP_REFERER'], 0, ConnectionsSource::$uri_max_size);
+			$source->keywords = substr(trim(SearchEngine::getKeywords($_SERVER['HTTP_REFERER'])), 0, ConnectionsSource::$uri_max_size);
 		}
+		
+		$source->id_connections = (int)$cookie->id_connections;
+		$source->request_uri = Tools::getHttpHost(false, false);
+
+		if (isset($_SERVER['REQUEST_URI']))
+			$source->request_uri .= $_SERVER['REQUEST_URI'];
+		elseif (isset($_SERVER['REDIRECT_URL']))
+			$source->request_uri .= $_SERVER['REDIRECT_URL'];
+
+		if (!Validate::isUrl($source->request_uri))
+			$source->request_uri = '';
+		$source->request_uri = substr($source->request_uri, 0, ConnectionsSource::$uri_max_size);
+		return $source->add();
 	}
 	
 	public static function getOrderSources($id_order)

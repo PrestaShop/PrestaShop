@@ -78,7 +78,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 	public function process()
 	{
 		if (file_exists(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE))
-			@require_once _PS_ROOT_DIR_.'/'.self::SETTINGS_FILE;
+			require_once _PS_ROOT_DIR_.'/'.self::SETTINGS_FILE;
 
 		if (!$this->session->process_validated)
 			$this->session->process_validated = array();
@@ -241,7 +241,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 	public function processInstallAddonsModules()
 	{
 		$this->initializeContext();
-		if ($module = Tools::getValue('module') && $id_module = Tools::getValue('id_module'))
+		if (($module = Tools::getValue('module')) && $id_module = Tools::getValue('id_module'))
 			$result = $this->model_install->installModulesAddons(array('name' => $module, 'id_module' => $id_module));
 		else
 			$result = $this->model_install->installModulesAddons();

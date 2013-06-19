@@ -52,6 +52,9 @@ class AdminTrackingControllerCore extends AdminController
 
 	public function initContent()
 	{
+		if ($id_category = Tools::getValue('id_category') && Tools::getIsset('viewcategory'))
+			Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts').'&id_category='.(int)$id_category.'&viewcategory');
+
 		$this->_helper_list = new HelperList();
 		
 		if (!Configuration::get('PS_STOCK_MANAGEMENT'))
@@ -150,8 +153,6 @@ class AdminTrackingControllerCore extends AdminController
 		)';
 
 		$this->tpl_list_vars = array('sub_title' => $this->l('List of products with attributes but without available quantities for sale:'));
-
-
 
 		return $this->renderList();
 	}

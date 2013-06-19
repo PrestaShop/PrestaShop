@@ -1303,14 +1303,16 @@ class ToolsCore
 			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
 			curl_setopt($curl, CURLOPT_TIMEOUT, $curl_timeout);
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-			$opts = stream_context_get_options($stream_context);
-			if (isset($opts['http']['method']) && Tools::strtolower($opts['http']['method']) == 'post')
-			{
-				curl_setopt($curl, CURLOPT_POST, true);
-				if (isset($opts['http']['content']))
+			if ($stream_context != null) {
+				$opts = stream_context_get_options($stream_context);
+				if (isset($opts['http']['method']) && Tools::strtolower($opts['http']['method']) == 'post')
 				{
-					parse_str($opts['http']['content'], $datas);
-					curl_setopt($curl, CURLOPT_POSTFIELDS, $datas);
+					curl_setopt($curl, CURLOPT_POST, true);
+					if (isset($opts['http']['content']))
+					{
+						parse_str($opts['http']['content'], $datas);
+						curl_setopt($curl, CURLOPT_POSTFIELDS, $datas);
+					}
 				}
 			}
 			$content = curl_exec($curl);
@@ -1855,8 +1857,8 @@ exit;
 	{
 		$backtrace = debug_backtrace();
 		$callee = next($backtrace);
-		$error = 'Parameter <b>'.$parameter.'</b> in function <b>'.(isset($callee['function']) ? $callee['function'] : '').'()</b> is deprecated in <b>'.$callee['file'].'</b> on line <b>'.$callee['Line'].'</b><br />';
-		$message = 'The parameter '.$parameter.' in function '.$callee['function'].' (Line '.$callee['Line'].') is deprecated and will be removed in the next major version.';
+		$error = 'Parameter <b>'.$parameter.'</b> in function <b>'.(isset($callee['function']) ? $callee['function'] : '').'()</b> is deprecated in <b>'.$callee['file'].'</b> on line <b>'.(isset($callee['line']) ? $callee['line'] : '(undefined)').'</b><br />';
+		$message = 'The parameter '.$parameter.' in function '.$callee['function'].' (Line '.(isset($callee['line']) ? $callee['line'] : 'undefined').') is deprecated and will be removed in the next major version.';
 		$class = isset($callee['class']) ? $callee['class'] : null;
 
 		Tools::throwDeprecated($error, $message, $class);

@@ -416,8 +416,8 @@ class HomeSlider extends Module
 		/* Save */
 		$this->_html .= '
 		<p class="center">
-			<input type="submit" class="button" name="submitSlide" value="'.$this->l('Save').'" />
-			<a class="button" style="position:relative; padding:3px 3px 4px 3px; top:1px" href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'">'.$this->l('Cancel').'</a>
+			<input style="min-height:26px" type="submit" class="button" name="submitSlide" value="'.$this->l('Save').'" />
+			<a class="button" style="position:relative; padding:4px 3px;" href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'">'.$this->l('Cancel').'</a>
 		</p>';
 
 		/* End of fieldset & form */

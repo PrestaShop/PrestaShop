@@ -200,7 +200,7 @@ return array(
 		'firstname' => 'prénom',
 		'lastname' => 'nom de famille',
 		'Installation Assistant' => 'Assistant d\'installation',
-		'To enjoy the many features that are offered by PrestaShop, please read the license terms below. PrestaShop core is licensed under OSL 3.0, while the modules and themes are licensed under AFL 3.0.' => 'Afin de profiter des nombreuses fonctionnalités qu\'offre PrestaShop, merci de prendre connaissance des termes des licences ci-dessous. Le coeur de PrestaShop est publié sous licence OSL 3.0 tandis que les modules et thèmes sont publiés sous licence AFL 3.0.',
+		'To enjoy the many features that are offered for free by PrestaShop, please read the license terms below. PrestaShop core is licensed under OSL 3.0, while the modules and themes are licensed under AFL 3.0.' => 'Afin de profiter gratuitement des nombreuses fonctionnalités qu\'offre PrestaShop, merci de prendre connaissance des termes des licences ci-dessous. Le coeur de PrestaShop est publié sous licence OSL 3.0 tandis que les modules et thèmes sont publiés sous licence AFL 3.0.',
 		'PrestaShop Installation Assistant' => 'Assistant d\'installation',
 		'Contact us!' => 'Contactez-nous !',
 		'E-mail:' => 'E-mail :',
