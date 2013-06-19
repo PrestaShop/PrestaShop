@@ -66,7 +66,10 @@ class ProductSaleCore
 		if ($page_number < 0) $page_number = 0;
 		if ($nb_products < 1) $nb_products = 10;
 		$final_order_by = $order_by;
+		$order_table = '';
 		if (is_null($order_by) || $order_by == 'position' || $order_by == 'price') $order_by = 'sales';
+                if($order_by == 'date_add' || $order_by == 'date_upd')
+			$order_table = 'p';
 		if (is_null($order_way) || $order_by == 'sales') $order_way == 'DESC';
 		$groups = FrontController::getCurrentCustomerGroups();
 		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
@@ -104,7 +107,7 @@ class ProductSaleCore
 						WHERE cg.`id_group` '.$sql_groups.'
 					)
 				GROUP BY product_shop.id_product
-				ORDER BY `'.pSQL($order_by).'` '.pSQL($order_way).'
+				ORDER BY '.( !empty($order_table) ? '`'.pSQL($order_table).'`.' : '').'`'.pSQL($order_by).'` '.pSQL($order_way).'
 				LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
