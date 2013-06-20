@@ -653,7 +653,7 @@ class AdminOrdersControllerCore extends AdminController
 								
 								// Delete product
 								$order_detail = new OrderDetail((int)$id_order_detail);
-								if (!$order->deleteProduct($order, $order_detail, $qtyCancelProduct))
+								if (!$order->deleteProduct($order, $order_detail, $qty_cancel_product))
 									$this->errors[] = Tools::displayError('An error occurred while attempting to delete the product.').' <span class="bold">'.$order_detail->product_name.'</span>';
 								Hook::exec('actionProductCancel', array('order' => $order, 'id_order_detail' => (int)$id_order_detail));
 							}
