@@ -30,7 +30,7 @@
 
 {if $products}
 	<div class="content_sortPagiBar">
-		{include file="$tpl_dir./pagination.tpl" id="_btom"}
+		{include file="$tpl_dir./pagination.tpl" id="_top"}
 
 		<div class="sortPagiBar clearfix">
 			{include file="./product-sort.tpl"}
