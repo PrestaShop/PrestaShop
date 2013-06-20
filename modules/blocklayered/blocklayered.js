@@ -145,19 +145,10 @@ $(document).ready(function()
 		reloadContent();
 	});
 	
-	// To be sure there is no other events attached to the nb_item, change the ID
-	var id = 1;
-	while ($('#nb_item').length) { // Because ids are duplicated
-		// Unbind event change on #nb_item
-		$('#nb_item').unbind('change');
-		$('#nb_item').attr('onchange', '');
-		$('#nb_item').addClass('nb_item');
-		$('#nb_item').attr('id', 'nb_item'+id);
-		$('label[for=nb_item]').attr('for', 'nb_item'+id);
-		id++;
-	}
-	$('.nb_item').live('change', function(event) {
-		$('.nb_item').val($(this).val());
+$('.js-nb_item').unbind('change').attr('onchange', '');
+
+	$('.js-nb_item').live('change', function(event) {
+		$('.js-nb_item').val($(this).val());
 		reloadContent();
 	});
 	
@@ -375,9 +366,9 @@ function reloadContent(params_plus)
 		}
 		data += '&orderby='+splitData[0]+'&orderway='+splitData[1];
 	}
-	if ($('.nb_item').length)
+	if ($('.js-nb_item').length)
 	{
-		data += '&n='+$('.nb_item').val();
+		data += '&n='+$('.js-nb_item').val();
 	}
 	
 	var slideUp = true;
@@ -389,7 +380,7 @@ function reloadContent(params_plus)
 	
 	// Get nb items per page
 	var n = '';
-	$('.js-pagination_wrap #nb_item').children().each(function(it, option) {
+	$('.js-pagination_wrap .js-nb_item').children().each(function(it, option) {
 		if (option.selected)
 			n = '&n='+option.value;
 	});
@@ -448,8 +439,8 @@ function reloadContent(params_plus)
 			
 			// On submiting nb items form, relaod with the good nb of items
 			$('.js-pagination_wrap form').submit(function() {
-				val = $('.js-pagination_wrap #nb_item').val();
-				$('.js-pagination_wrap #nb_item').children().each(function(it, option) {
+				val = $('.js-pagination_wrap .js-nb_item').val();
+				$('.js-pagination_wrap .js-nb_item').children().each(function(it, option) {
 					if (option.value == val)
 						$(option).attr('selected', true);
 					else
