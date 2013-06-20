@@ -290,7 +290,7 @@ class OrderCore extends ObjectModel
 	/* Does NOT delete a product but "cancel" it (which means return/refund/delete it depending of the case) */
 	public function deleteProduct($order, $orderDetail, $quantity)
 	{
-		if (!(int)($this->getCurrentState()))
+		if (!(int)($this->getCurrentState()) || !validate::isLoadedObject($orderDetail))
 			return false;
 
 		if ($this->hasBeenDelivered())
