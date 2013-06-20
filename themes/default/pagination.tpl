@@ -48,7 +48,7 @@
 		{assign var='requestNb' value=$link->getPaginationLink(false, false, true, false, false, true)}
 	{/if}
 	<!-- Pagination -->
-	<div id="pagination" class="pagination">
+	<div id="pagination{$id}" class="pagination js-pagination_wrap">
 	{if $start!=$stop}
 		<ul class="pagination">
 		{if $p != 1}

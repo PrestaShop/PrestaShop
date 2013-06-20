@@ -229,7 +229,7 @@ function initLayered()
 }
 
 function paginationButton() {
-	$('#pagination a').not(':hidden').each(function () {
+	$('.js-pagination_wrap a').not(':hidden').each(function () {
 		if ($(this).attr('href').search('&p=') == -1) {
 			var page = 1;
 		}
@@ -239,12 +239,12 @@ function paginationButton() {
 		var location = window.location.href.replace(/#.*$/, '');
 		$(this).attr('href', location+current_friendly_url.replace(/\/page-(\d+)/, '')+'/page-'+page);
 	});
-	$('#pagination li').not('.current, .disabled').each(function () {
+	$('.js-pagination_wrap li').not('.current, .disabled').each(function () {
 		var nbPage = 0;
 		if ($(this).attr('id') == 'pagination_next')
-			nbPage = parseInt($('#pagination li.current').children().html())+ 1;
+			nbPage = parseInt($('.js-pagination_wrap li.current').children().html())+ 1;
 		else if ($(this).attr('id') == 'pagination_previous')
-			nbPage = parseInt($('#pagination li.current').children().html())- 1;
+			nbPage = parseInt($('.js-pagination_wrap li.current').children().html())- 1;
 	
 		$(this).children().click(function () {
 			if (nbPage == 0)
@@ -389,7 +389,7 @@ function reloadContent(params_plus)
 	
 	// Get nb items per page
 	var n = '';
-	$('#pagination #nb_item').children().each(function(it, option) {
+	$('.js-pagination_wrap #nb_item').children().each(function(it, option) {
 		if (option.selected)
 			n = '&n='+option.value;
 	});
@@ -419,37 +419,37 @@ function reloadContent(params_plus)
 			if (result.pagination.search(/[^\s]/) >= 0) {
 				if ($(result.pagination).find('ul.pagination').length)
 				{
-					$('div#pagination').show();
+					$('div.js-pagination_wrap').show();
 					$('ul.pagination').each(function () {
 						$(this).replaceWith($(result.pagination).find('ul.pagination'));
 					});
 				}
 				else if (!$('ul.pagination').length)
 				{
-					$('div#pagination').show();
-					$('div#pagination').each(function () {
+					$('div.js-pagination_wrap').show();
+					$('div.js-pagination_wrap').each(function () {
 						$(this).html($(result.pagination));
 					});
 				}
 				else
 				{
 					$('ul.pagination').html('');
-					$('div#pagination').hide();
+					$('div.js-pagination_wrap').hide();
 				}
 			}
 			else
 			{
 				$('ul.pagination').html('');
-				$('div#pagination').hide();
+				$('div.js-pagination_wrap').hide();
 			}
 			
 			paginationButton();
 			ajaxLoaderOn = 0;
 			
 			// On submiting nb items form, relaod with the good nb of items
-			$('#pagination form').submit(function() {
-				val = $('#pagination #nb_item').val();
-				$('#pagination #nb_item').children().each(function(it, option) {
+			$('.js-pagination_wrap form').submit(function() {
+				val = $('.js-pagination_wrap #nb_item').val();
+				$('.js-pagination_wrap #nb_item').children().each(function(it, option) {
 					if (option.value == val)
 						$(option).attr('selected', true);
 					else

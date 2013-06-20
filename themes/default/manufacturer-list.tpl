@@ -80,6 +80,6 @@
 			</li>
 		{/foreach}
 		</ul>
-		{include file="$tpl_dir./pagination.tpl"}
+		{include file="$tpl_dir./pagination.tpl" id="_btom"}
 	{/if}
 {/if}

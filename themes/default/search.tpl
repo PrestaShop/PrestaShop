@@ -52,6 +52,6 @@
 	{/if}
 	
 	{include file="$tpl_dir./product-list.tpl" products=$search_products}
-	{if !isset($instantSearch) || (isset($instantSearch) && !$instantSearch)}{include file="$tpl_dir./pagination.tpl"}{/if}
+	{if !isset($instantSearch) || (isset($instantSearch) && !$instantSearch)}{include file="$tpl_dir./pagination.tpl" id="_btom"}{/if}
 	{include file="./product-compare.tpl"}
 {/if}
