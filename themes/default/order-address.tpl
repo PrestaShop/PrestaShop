@@ -85,12 +85,12 @@
 		{ldelim}
 			'ordered_fields':[
 				{foreach from=$type.ordered_fields key=num_field item=field_name name=inv_loop}
-					{if !$smarty.foreach.inv_loop.first},{/if}"{$field_name}"
+					{if !$smarty.foreach.inv_loop.first},{/if}{$field_name|json_encode}
 				{/foreach}
 			],
 			'formated_fields_values':{ldelim}
 					{foreach from=$type.formated_fields_values key=pattern_name item=field_name name=inv_loop}
-						{if !$smarty.foreach.inv_loop.first},{/if}"{$pattern_name}":"{$field_name}"
+						{if !$smarty.foreach.inv_loop.first},{/if}{$pattern_name|json_encode}:{$field_name|json_encode}
 					{/foreach}
 				{rdelim}
 		{rdelim}
@@ -99,10 +99,9 @@
 	function getAddressesTitles()
 	{
 		return {
-						'invoice': "{l s='Your billing address' js=1}",
-						'delivery': "{l s='Your delivery address' js=1}"
-			};
-
+			'invoice': "{l s='Your billing address' js=1}",
+			'delivery': "{l s='Your delivery address' js=1}"
+		};
 	}
 
 
