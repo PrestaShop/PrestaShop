@@ -696,6 +696,9 @@ function init()
 
 						$('.standard_refund_fields').hide();
 						$('.partial_refund_fields').hide();
+						$('.add_product_fields').hide();
+						$('.add_product_fields').hide();
+						$('td.product_action').attr('colspan', 3);
 					}
 					else
 						jAlert(data.error);
