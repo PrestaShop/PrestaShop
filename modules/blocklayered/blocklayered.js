@@ -241,9 +241,9 @@ function paginationButton() {
 	});
 	$('.js-pagination_wrap li').not('.current, .disabled').each(function () {
 		var nbPage = 0;
-		if ($(this).attr('id') == 'pagination_next')
+		if ($(this).hasClass('pagination_previous'))
 			nbPage = parseInt($('.js-pagination_wrap li.current').children().html())+ 1;
-		else if ($(this).attr('id') == 'pagination_previous')
+		else if ($(this).hasClass('pagination_previous'))
 			nbPage = parseInt($('.js-pagination_wrap li.current').children().html())- 1;
 	
 		$(this).children().click(function () {
