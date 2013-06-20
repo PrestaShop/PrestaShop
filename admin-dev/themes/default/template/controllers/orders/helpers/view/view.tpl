@@ -113,9 +113,7 @@
 			<form action="{$currentIndex}&vieworder&token={$smarty.get.token}" method="post">
 				<select id="id_order_state" name="id_order_state">
 				{foreach from=$states item=state}
-					{if $state['id_order_state'] != $currentState->id}
-					<option value="{$state['id_order_state']}">{$state['name']|stripslashes}</option>
-					{/if}
+					<option value="{$state['id_order_state']}"{if $state['id_order_state'] == $currentState->id} selected="selected" disabled="disabled"{/if}>{$state['name']|stripslashes}</option>
 				{/foreach}
 				</select>
 				<input type="hidden" name="id_order" value="{$order->id}" />
