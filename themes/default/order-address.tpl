@@ -104,7 +104,6 @@
 		};
 	}
 
-
 	function buildAddressBlock(id_address, address_type, dest_comp)
 	{
 		var adr_titles_vals = getAddressesTitles();
