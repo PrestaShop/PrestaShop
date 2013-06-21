@@ -37,11 +37,11 @@
 
 	{if $products}
 	<div class="content_sortPagiBar">
-		{include file="$tpl_dir./pagination.tpl"}
+		{include file="$tpl_dir./pagination.tpl" id="_top"}
 
 		<div class="sortPagiBar clearfix">
-			{include file="./product-sort.tpl"}
-			{include file="./product-compare.tpl"}
+			{include file="./product-sort.tpl" id="_top"}
+			{include file="./product-compare.tpl" id="_top"}
 			{include file="./nbr-product-page.tpl" id="_top"}
 		</div>
 	</div>
@@ -50,11 +50,11 @@
 
 	<div class="content_sortPagiBar">
 		<div class="sortPagiBar clearfix">
-			{include file="./product-sort.tpl"}
-			{include file="./product-compare.tpl"}
+			{include file="./product-sort.tpl" id="_btom"}
+			{include file="./product-compare.tpl" id="_btom"}
 			{include file="./nbr-product-page.tpl" id="_btom"}
 		</div>
-		{include file="./pagination.tpl"}
+		{include file="./pagination.tpl" id="_btom"}
 	</div>
 	{else}
 	<p class="warning">{l s='No products for this supplier.'}</p>

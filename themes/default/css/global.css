@@ -355,7 +355,7 @@ ul.footer_links li .icon {
 		border:1px solid #ccc
 	}
 
-.sortPagiBar #bt_compare {
+.sortPagiBar .bt_compare {
 	padding:3px 7px;
 	border:none;
 	color:#fff;
