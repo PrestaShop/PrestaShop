@@ -24,53 +24,35 @@
 *}
 
 
-<div class="toolbarBox {if $toolbar_scroll}toolbarHead{/if} ">
-	
+<div class="row-fluid page-head">
 	{block name=pageTitle}
-		<ul class="breadcrumb">
-			<li>
-				{if $title}
-					{foreach $title as $key => $item name=title}
-						{* Use strip_tags because if the string already has been through htmlentities using escape will break it *}
-						<span class="item-{$key} ">{$item|strip_tags}
-							{if !$smarty.foreach.title.last}
-								<img alt="&gt;" style="margin-right:5px" src="../img/admin/separator_breadcrumb.png" />
-							{/if}
-						</span>
-					{/foreach}
-				{else}
-					&nbsp;
-				{/if}
-			</li>
-		</ul>
-		<div class="page-header">
-  			<h1>{if is_array($title)}{$title|end}{else}{$title}{/if}</h1>
-		</div>
+	<h2 class="page-title">
+		{if is_array($title)}{$title|end}{else}{$title}{/if}
+	</h2>
 	{/block}
 
-
-	{block name=toolbarBox}
-		<div class="well">
-			<ul class="cc_button nav nav-pills">
+	<div class="page-bar toolbarBox">
+		<div class="btn-toolbar">
+			{block name=toolbarBox}
+			<ul class="cc_button nav nav-pills pull-right">
 				{foreach from=$toolbar_btn item=btn key=k}
 					<li>
-						<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="btn" {if isset($btn.href)}href="{$btn.href}"{/if} title="{$btn.desc}" {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
-							<span class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if} {if isset($btn.class)}{$btn.class}{/if}" ></span>
+						<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="toolbar_btn" {if isset($btn.href)}href="{$btn.href}"{/if} title="{$btn.desc}" {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
+							<i class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if} {if isset($btn.class)}{$btn.class}{/if}" ></i>
 							<div {if isset($btn.force_desc) && $btn.force_desc == true } class="locked" {/if}>{$btn.desc}</div>
 						</a>
 						{if $k == 'modules-list'}
 							<div id="modules_list_container" style="display:none">
-							<div style="float:right;margin:5px">
-								<a href="#" onclick="$('#modules_list_container').slideUp();return false;"><img alt="X" src="../img/admin/close.png"></a>
-							</div>
-							<div id="modules_list_loader"><img src="../img/loader.gif" alt="" border="0"></div>
-							<div id="modules_list_container_tab" style="display:none;"></div>
+								<div style="float:right;margin:5px">
+									<a href="#" onclick="$('#modules_list_container').slideUp();return false;"><img alt="X" src="../img/admin/close.png"></a>
+								</div>
+								<div id="modules_list_loader"><img src="../img/loader.gif" alt="" border="0"></div>
+								<div id="modules_list_container_tab" style="display:none;"></div>
 							</div>
 						{/if}
 					</li>
 				{/foreach}
 			</ul>
-		</div>
 
 		<script language="javascript" type="text/javascript">
 		//<![CDATA[
@@ -188,6 +170,26 @@
 		//]]>
 		</script>
 	{/block}
-
-
+		</div>
+	</div>
 </div>
+
+
+	{block name=pageBreadcrumb}
+	<ul class="breadcrumb hide">
+		<li>
+			{if $title}
+				{foreach $title as $key => $item name=title}
+					{* Use strip_tags because if the string already has been through htmlentities using escape will break it *}
+					<span class="item-{$key} ">{$item|strip_tags}
+						{if !$smarty.foreach.title.last}
+							<img alt="&gt;" style="margin-right:5px" src="../img/admin/separator_breadcrumb.png" />
+						{/if}
+					</span>
+				{/foreach}
+			{else}
+				&nbsp;
+			{/if}
+		</li>
+	</ul>
+	{/block}

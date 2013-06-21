@@ -3,16 +3,31 @@
 
 html, body
 	height: 100%
+	background: #EBEFF8
 
 body.fixed-top
 	position: relative
-	top: 42px
-	margin-bottom: 42px
+	top: 41px
+	margin-bottom: 50px
+
+#main
+	position: relative
+	min-height: 100%
+	height: 100%
+
+#content
+	background-color: white
+	//width: 1060px
+	margin-left: 240px
+	margin-top: 0px
+	height: 100%
+	margin-bottom: 90px
+	border-left: 1px solid black
 
 .page-sidebar
+	top: 52px
 	position: fixed
-	top: 82px
-	width: 225px
+	width: 240px
 	> ul
 		margin: 0
 		padding: 0
@@ -22,14 +37,14 @@ body.fixed-top
 			&.active
 				> a
 					color: white
-					background-color: #2D94C9
+					background-color: #1A1A1A
 			> a
 				text-transform: uppercase
 				font-size: 12px
 				color: #777
 				display: block
 				padding: 8px 0 8px 15px
-				border-bottom: 1px solid #ccc
+				border-bottom: 1px solid #CECECE
 				&:hover
 					text-decoration: none
 			img
@@ -37,39 +52,41 @@ body.fixed-top
 			ul
 				margin: 0
 				padding: 0
-				border-bottom: 1px solid #ccc
+				border-bottom: 1px solid #CECECE
+				background-color: white
 				li
 					a
 						font-size: 12px
 						display: block
-						padding: 3px 5px 3px 20px
+						padding: 3px 15px 3px 20px
 						border: none
-						border-bottom: 1px solid #F6F6F6
+						border-bottom: 1px solid #F5F5F5
+						i
+							margin-top: 4px
+							color: #CECECE
 						&:hover
-							background-color: #D7E9F2
+							background-color: #F5F5F5
 							text-decoration: none
+							i
+								color: #004D7B
 					&.active
 						a
-							background-color: #D7E9F2
+							color: #1A1A1A
+							background-color: #ADB0B8
+							i
+								color: black
 
 		li:not(.active) ul
 			display: none
 		li.expanded ul
-			display: block !important
+			display: block
+			background-color: white
 
 	> ul > li > ul.sub-menu
 		display: none
 		list-style: none
 		clear: both
 		margin: 8px 0px 8px 0px
-
-
-.page-content
-	margin-left: 225px
-	margin-top: 0px
-	min-height: 860px
-	padding-top: 20px
-	margin-bottom: 90px
 
 #footer
 	width: 100%
@@ -102,7 +119,7 @@ body.fixed-top
 	td.center, th.center
 		text-align: center
 	tr:hover
-		background-color
+		background-color: #777
 
 #menu .maintab > a [class^="icon-"], #menu .maintab > a [class*=" icon-"]
 	font-size: 18px
@@ -124,48 +141,123 @@ label.required:before
 	color: red
 	font-size: 14px
 
-
+//variables 
+$icon-color: #7A0928
 
 .icon-AdminCatalog
 	@extend .icon-book
-	background-color: #7A0928
-
-.icon-AdminParentCustomer
-	@extend .icon-group
-	background-color: #C4004E
-
-.icon-AdminParentLocalization
-	@extend .icon-globe
-	background-color: #1C6DEE
-
-.icon-AdminParentModules
-	@extend .icon-puzzle-piece
-	background-color: #00C337
-
+	background-color: adjust-hue($icon-color, 20)
 .icon-AdminParentOrders
 	@extend .icon-credit-card
-	background-color: #004888
-
-.icon-AdminParentPreferences
-	@extend .icon-wrench
-	background-color: #009A00
-
-.icon-AdminParentShipping
-	@extend .icon-truck
-	background-color: #4EC3FF
-
-.icon-AdminParentStats
-	@extend .icon-bar-chart
-	background-color: #00A5A6
-
+	background-color: adjust-hue($icon-color, 40)
+.icon-AdminParentCustomer
+	@extend .icon-group
+	background-color: adjust-hue($icon-color, 60)
 .icon-AdminPriceRule
 	@extend .icon-tags
-	background-color: #7400AF
-
+	background-color: adjust-hue($icon-color, 80)
+.icon-AdminParentShipping
+	@extend .icon-truck
+	background-color: adjust-hue($icon-color, 100)
+.icon-AdminParentLocalization
+	@extend .icon-globe
+	background-color: adjust-hue($icon-color, 120)
+.icon-AdminParentModules
+	@extend .icon-puzzle-piece
+	background-color: adjust-hue($icon-color, 140)
+.icon-AdminParentPreferences
+	@extend .icon-wrench
+	background-color: adjust-hue($icon-color, 160)
 .icon-AdminTools
 	@extend .icon-cogs
-	background-color: #AF0D3A
-
+	background-color: adjust-hue($icon-color, 180)
 .icon-AdminAdmin
 	@extend .icon-cog
-	background-color: #1C6DEE
+	background-color: adjust-hue($icon-color, 200)
+.icon-AdminParentStats
+	@extend .icon-bar-chart
+	background-color: adjust-hue($icon-color, 220)
+
+.navbar-inner
+	box-shadow: none!important
+	.input-append
+		margin-bottom: 0
+
+// Tool bar
+.toolbar_btn
+	@extend .btn
+
+[class^="process-icon-"], [class*=" process-icon-"]
+	height: 32px
+	min-width: 32px
+	background-position: center
+	background-repeat: no-repeat
+	display: block
+	font-family: FontAwesome
+	font-weight: normal
+	font-style: normal
+	font-size: 30px
+	line-height: 32px
+	text-decoration: inherit
+	-webkit-font-smoothing: antialiased
+	*margin-right: .3em
+
+.process-icon-new
+	@extend .icon-plus-sign-alt
+.process-icon-save
+	@extend .icon-save
+.process-icon-back
+	@extend .icon-arrow-left
+.process-icon-save-and-stay
+	@extend .icon-save
+.process-icon-help
+	@extend .icon-question-sign
+.process-icon-export
+	@extend .icon-cloud-download
+.process-icon-import
+	@extend .icon-cloud-upload
+.process-icon-help-new
+	@extend .icon-question-sign
+.process-icon-edit	
+	@extend .icon-edit
+.process-icon-newAttributes
+	@extend .icon-plus-sign-alt
+.process-icon-modules-list
+	@extend .icon-puzzle-piece
+.process-icon-save-date
+	@extend .icon-download
+.process-icon-save-status 	
+	@extend .icon-download
+.process-icon-new-module	
+	@extend .icon-plus
+
+.page-head
+	position: relative
+	margin: 0 -20px 20px -20px
+	padding: 0 20px
+	min-height: 68px
+	border-bottom: 1px solid black
+	background: #ADB0B8
+	.page-title 
+		margin: 0
+		float: left
+		padding: 0
+		line-height: 68px
+		color: #272822
+		font-weight: normal
+		text-transform: uppercase
+
+.page-bar
+	float: right
+	padding: 0
+	height: 68px
+
+.btn-toolbar
+	margin: 0
+	.nav-tabs
+		margin: 0
+	.nav-tabs > li > a
+		color: #333
+		> .active > a, > .active > a:hover
+			color: #3399ff
+			background: #f5f5f5

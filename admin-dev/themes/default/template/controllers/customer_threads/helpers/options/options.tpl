@@ -32,7 +32,7 @@
 				<p>{l s='Click to synchronize mail automatically'}</p>
 				<div id="ajax_loader"></div>
 				<div class="error" style="display:none" id="ajax_error"></div>
-				<div class="conf" style="display:none" id="ajax_conf"></div>
+				<div class="alert" style="display:none" id="ajax_conf"></div>
 			</div>
 		</fieldset><br/>
 		<script type="text/javascript"> 

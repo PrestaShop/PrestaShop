@@ -18,31 +18,31 @@
 // -------------------------
 // Required since we compile the responsive stuff separately
 
-@import "bootstrap/variables"; // Modify this for custom colors, font-sizes, etc
-@import "bootstrap/mixins";
+@import "variables"; // Modify this for custom colors, font-sizes, etc
+@import "mixins";
 
 
 // RESPONSIVE CLASSES
 // ------------------
 
-@import "bootstrap/responsive-utilities";
+@import "responsive-utilities";
 
 
 // MEDIA QUERIES
 // ------------------
 
 // Large desktops
-@import "bootstrap/responsive-1200px-min";
+@import "responsive-1200px-min";
 
 // Tablets to regular desktops
-@import "bootstrap/responsive-768px-979px";
+@import "responsive-768px-979px";
 
 // Phones to portrait tablets and narrow desktops
-@import "bootstrap/responsive-767px-max";
+@import "responsive-767px-max";
 
 
 // RESPONSIVE NAVBAR
 // ------------------
 
 // From 979px and below, show a button to toggle navbar contents
-@import "bootstrap/responsive-navbar";
+@import "responsive-navbar";

@@ -59,15 +59,10 @@
 	width:100%;
 	border-collapse: collapse;
 }
-}
-
-
-
 
 #nobootstrap table.widthfull {
 	width:100%;
 }
-
 
 #nobootstrap .table thead th {
 	vertical-align:top;
@@ -83,5 +78,9 @@
 	height:25px!important;
 }
 
-
 #nobootstrap [class^="icon-"], #nobootstrap [class*=" icon-"] { width: auto}
+
+#nobootstrap .toolbarBox [class^="process-icon-"], #nobootstrap .toolbarBox  [class*=" process-icon-"] {
+	text-indent: -9000px;
+	overflow: hidden
+}

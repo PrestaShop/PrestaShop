@@ -1715,6 +1715,7 @@ class AdminControllerCore extends Controller
 		$this->addCSS(_PS_CSS_DIR_.'admin.css', 'all');
 		$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/admin.css', 'all');
 		$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/ps-admin-bootstrap.css', 'all');
+		//$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/ps-admin-bootstrap-responsive.css', 'screen');
 		// Reset bootstrap style for the #nobootstrap field - Backward compatibility
 		$this->addCSS(_PS_CSS_DIR_.'bootstrap_admin_reset.css', 'all');
 

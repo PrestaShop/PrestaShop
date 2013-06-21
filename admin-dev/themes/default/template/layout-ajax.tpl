@@ -34,14 +34,14 @@
 {else}
 
 	{if isset($conf)}
-		<div class="conf">
+		<div class="alert">
 			{$conf}
 		</div>
 	{/if}
 
 	{if count($errors)} {* @todo what is ??? AND $this->_includeContainer *}
-		<div class="error">
-			<span style="float:right"><a id="hideError" href=""><img alt="X" src="../img/admin/close.png" /></a></span>
+		<div class="alert alert-error">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
 			{if count($errors) == 1}
 				{$errors[0]}
 			{else}
@@ -65,7 +65,7 @@
 	{/if}
 
 	{if isset($confirmations) && count($confirmations) && $confirmations}
-		<div class="conf" style="display:block;">
+		<div class="alert" style="display:block;">
 			{foreach $confirmations as $confirm}
 				{$confirm}<br />
 			{/foreach}
@@ -73,10 +73,8 @@
 	{/if}
 
 	{if count($warnings)}
-		<div class="warning">
-			<span style="float:right">
-				<a id="hideWarn" href=""><img alt="X" src="../img/admin/close.png" /></a>
-			</span>
+		<div class="alert alert-block">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
 			{if count($warnings) > 1}
 				{l s='There are %d warnings.' sprintf=count($warnings)}
 				<span style="margin-left:20px;" id="labelSeeMore">

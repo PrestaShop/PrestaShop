@@ -1,14 +1,23 @@
 <div class="control-group">
-	<label class="control-label">{l s='Limit to a single customer'}</label>
+	<label class="control-label">
+		<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='Optional: The cart rule will be available to everyone if you leave this field blank.'}">
+			{l s='Limit to a single customer'}
+		</span>
+	</label>
 	<div class="controls">
 		<input type="hidden" id="id_customer" name="id_customer" value="{$currentTab->getFieldValue($currentObject, 'id_customer')|intval}" />
-		<input type="text" id="customerFilter" class="input-large" name="customerFilter" value="{$customerFilter|escape:'htmlall':'UTF-8'}" />
-		<span class="help-block">{l s='Optional: The cart rule will be available to everyone if you leave this field blank.'}</span>
+		<input type="text" id="customerFilter" class="input-xlarge" name="customerFilter" value="{$customerFilter|escape:'htmlall':'UTF-8'}" />
 	</div>
 </div>
 
 <div class="control-group">
-	<label class="control-label">{l s='Valid'}</label>
+	<label class="control-label">
+		<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='The default period is one month.'}">
+			{l s='Valid'}
+		</span>
+	</label>
 	<div class="controls">
 		<div class="input-prepend">
   			<span class="add-on">{l s='From'}</span>
@@ -20,12 +29,16 @@
 			<input type="text" class="datepicker input-medium" name="date_to"
 			value="{if $currentTab->getFieldValue($currentObject, 'date_to')}{$currentTab->getFieldValue($currentObject, 'date_to')|escape}{else}{$defaultDateTo}{/if}" />
 		</div>
-		<span class="help-block">{l s='The default period is one month.'}</span>
 	</div>
 </div>
 
 <div class="control-group">
-	<label class="control-label">{l s='Minimum amount'}</label>
+	<label class="control-label">
+		<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='You can choose a minimum amount for the cart either with or without the taxes and shipping.'}">
+			{l s='Minimum amount'}
+		</span>
+	</label>
 	<div class="controls">
 		<input type="text" class="input-mini" name="minimum_amount" value="{$currentTab->getFieldValue($currentObject, 'minimum_amount')|floatval}" />
 		<select name="minimum_amount_currency" class="input-small">
@@ -40,7 +53,7 @@
 			</option>
 		{/foreach}
 		</select>
-		<select name="minimum_amount_tax" class="input-medium">
+		<select name="minimum_amount_tax" class="input-small">
 			<option value="0" {if $currentTab->getFieldValue($currentObject, 'minimum_amount_tax') == 0}selected="selected"{/if}>{l s='Tax excluded'}</option>
 			<option value="1" {if $currentTab->getFieldValue($currentObject, 'minimum_amount_tax') == 1}selected="selected"{/if}>{l s='Tax included'}</option>
 		</select>
@@ -48,29 +61,35 @@
 			<option value="0" {if $currentTab->getFieldValue($currentObject, 'minimum_amount_shipping') == 0}selected="selected"{/if}>{l s='Shipping excluded'}</option>
 			<option value="1" {if $currentTab->getFieldValue($currentObject, 'minimum_amount_shipping') == 1}selected="selected"{/if}>{l s='Shipping included'}</option>
 		</select>
-		<span class="help-block">{l s='You can choose a minimum amount for the cart either with or without the taxes and shipping.'}</span>
 	</div>
 </div>
 
 <div class="control-group">
-	<label class="control-label">{l s='Total available'}</label>
+	<label class="control-label">
+		<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='The cart rule will be applied to the first "X" customers only.'}">
+			{l s='Total available'}
+		</span>
+	</label>
 	<div class="controls">
 		<input type="text" class="input-mini" name="quantity" value="{$currentTab->getFieldValue($currentObject, 'quantity')|intval}" />
-		<span class="help-inline">{l s='The cart rule will be applied to the first "X" customers only.'}</span>
 	</div>
 </div>
 
 <div class="control-group">
-	<label class="control-label">{l s='Total available for each user.'}</label>
+	<label class="control-label">
+		<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='A customer will only be able to use the cart rule "X" time(s).'}">
+			{l s='Total available for each user.'}
+		</span>
+	</label>
 	<div class="controls">
 		<input type="text" class="input-mini" name="quantity_per_user" value="{$currentTab->getFieldValue($currentObject, 'quantity_per_user')|intval}" />
-		<span class="help-inline">{l s='A customer will only be able to use the cart rule "X" time(s).'}</span>
 	</div>
 </div>
 
 
 <div class="control-group">
-
 	{if $countries.unselected|@count + $countries.selected|@count > 1}
 	<div class="controls well">
 		<label class="checkbox">
