@@ -48,14 +48,14 @@
 		{assign var='requestNb' value=$link->getPaginationLink(false, false, true, false, false, true)}
 	{/if}
 	<!-- Pagination -->
-	<div id="pagination" class="pagination">
+	<div id="pagination{$id}" class="pagination js-pagination_wrap">
 	{if $start!=$stop}
 		<ul class="pagination">
 		{if $p != 1}
 			{assign var='p_previous' value=$p-1}
-			<li id="pagination_previous"><a {$no_follow_text} href="{$link->goPage($requestPage, $p_previous)|escape:'html'}">&laquo;&nbsp;{l s='Previous'}</a></li>
+			<li class="pagination_previous"><a {$no_follow_text} href="{$link->goPage($requestPage, $p_previous)|escape:'html'}">&laquo;&nbsp;{l s='Previous'}</a></li>
 		{else}
-			<li id="pagination_previous" class="disabled"><span>&laquo;&nbsp;{l s='Previous'}</span></li>
+			<li class="disabled pagination_previous"><span>&laquo;&nbsp;{l s='Previous'}</span></li>
 		{/if}
 		{if $start==3}
 			<li><a {$no_follow_text}  href="{$link->goPage($requestPage, 1)|escape:'html'}">1</a></li>
@@ -88,9 +88,9 @@
 		{/if}
 		{if $pages_nb > 1 AND $p != $pages_nb}
 			{assign var='p_next' value=$p+1}
-			<li id="pagination_next"><a {$no_follow_text} href="{$link->goPage($requestPage, $p_next)|escape:'html'}">{l s='Next'}&nbsp;&raquo;</a></li>
+			<li class="pagination_next"><a {$no_follow_text} href="{$link->goPage($requestPage, $p_next)|escape:'html'}">{l s='Next'}&nbsp;&raquo;</a></li>
 		{else}
-			<li id="pagination_next" class="disabled"><span>{l s='Next'}&nbsp;&raquo;</span></li>
+			<li class="disabled pagination_next"><span>{l s='Next'}&nbsp;&raquo;</span></li>
 		{/if}
 		</ul>
 	{/if}
@@ -100,8 +100,8 @@
 				{if isset($search_query) AND $search_query}<input type="hidden" name="search_query" value="{$search_query|escape:'htmlall':'UTF-8'}" />{/if}
 				{if isset($tag) AND $tag AND !is_array($tag)}<input type="hidden" name="tag" value="{$tag|escape:'htmlall':'UTF-8'}" />{/if}
 				<input type="submit" class="button_mini" value="{l s='OK'}" />
-				<label for="nb_item">{l s='items:'}</label>
-				<select name="n" id="nb_item">
+				<label for="nb_item{$id}">{l s='items:'}</label>
+				<select name="n" id="nb_item{$id}" class="js-nb_item">
 				{assign var="lastnValue" value="0"}
 				{foreach from=$nArray item=nValue}
 					{if $lastnValue <= $nb_products}

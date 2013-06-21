@@ -348,14 +348,14 @@ ul.footer_links li .icon {
 
 .ie7 #center_column .sortPagiBar form {display:inline;}
 
-.sortPagiBar #productsSortForm {float:right;}
-	.sortPagiBar select#selectPrductSort {
+.sortPagiBar .productsSortForm {float:right;}
+	.sortPagiBar .selectPrductSort {
 		margin:0 0 0 10px;
 		color:#000;
 		border:1px solid #ccc
 	}
 
-.sortPagiBar #bt_compare {
+.sortPagiBar .bt_compare {
 	padding:3px 7px;
 	border:none;
 	color:#fff;
@@ -407,19 +407,19 @@ ul.pagination .current span {
 }
 ul.pagination li.disabled span {color:#ccc}
 
-#pagination_previous {float:left}
-#pagination_next {float:right}
+.pagination_previous {float:left}
+.pagination_next {float:right}
 
-.ie7 #pagination_previous,
-.ie7 #pagination_next {float:none}
+.ie7 .pagination_previous,
+.ie7 .pagination_next {float:none}
 
-#pagination_previous a, #pagination_previous span,
-#pagination_next a, #pagination_next span {
+ul.pagination .pagination_previous a,ul.pagination .pagination_previous span,
+ul.pagination .pagination_next a, ul.pagination .pagination_next span {
 	padding:0 8px;
 	width:auto;
 }
-#pagination_previous span,
-#pagination_next span {
+.pagination_previous span,
+.pagination_next span {
 	color:#ccc;
 	border:1px solid #eee
 }

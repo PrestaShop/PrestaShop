@@ -44,14 +44,14 @@
 	</p>
 {else}
 	<h3 class="nbresult"><span class="big">{if $nbProducts == 1}{l s='%d result has been found.' sprintf=$nbProducts|intval}{else}{l s='%d results have been found.' sprintf=$nbProducts|intval}{/if}</span></h3>
-	{include file="./product-compare.tpl"}
+	{include file="./product-compare.tpl" id="_top"}
 	{if !isset($instantSearch) || (isset($instantSearch) && !$instantSearch)}
 	<div class="sortPagiBar clearfix">
-		{include file="$tpl_dir./product-sort.tpl"}
+		{include file="$tpl_dir./product-sort.tpl" id="_top"}
 	</div>
 	{/if}
 	
 	{include file="$tpl_dir./product-list.tpl" products=$search_products}
-	{if !isset($instantSearch) || (isset($instantSearch) && !$instantSearch)}{include file="$tpl_dir./pagination.tpl"}{/if}
-	{include file="./product-compare.tpl"}
+	{if !isset($instantSearch) || (isset($instantSearch) && !$instantSearch)}{include file="$tpl_dir./pagination.tpl" id="_btom"}{/if}
+	{include file="./product-compare.tpl" id="_btom"}
 {/if}

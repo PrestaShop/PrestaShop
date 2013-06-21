@@ -122,42 +122,24 @@ $(document).ready(function()
 	$('.hide-action').each(function() {
 		hideFilterValueAction(this);
 	});
-
-	// To be sure there is no other events attached to the selectPrductSort, change the ID
-	var id = 1;
-	while ($('#selectPrductSort').length) { // Because ids are duplicated
-		// Unbind event change on #selectPrductSort
-		$('#selectPrductSort').unbind('change');
-		$('#selectPrductSort').attr('onchange', '');
-		$('#selectPrductSort').addClass('selectProductSort');
-		$('#selectPrductSort').attr('id', 'selectPrductSort'+id);
-		$('label[for=selectPrductSort]').attr('for', 'selectPrductSort'+id);
-		id++;
-	}
 	
 	// Since 1.5, event is add to .selectProductSort and not to #selectPrductSort
 	setTimeout(function() {
 		$('.selectProductSort').unbind('change');
 	}, 100);
 	
+	$('.selectProductSort').unbind('change').attr('onchange', '');
+
+
 	$('.selectProductSort').live('change', function(event) {
 		$('.selectProductSort').val($(this).val());
 		reloadContent();
 	});
 	
-	// To be sure there is no other events attached to the nb_item, change the ID
-	var id = 1;
-	while ($('#nb_item').length) { // Because ids are duplicated
-		// Unbind event change on #nb_item
-		$('#nb_item').unbind('change');
-		$('#nb_item').attr('onchange', '');
-		$('#nb_item').addClass('nb_item');
-		$('#nb_item').attr('id', 'nb_item'+id);
-		$('label[for=nb_item]').attr('for', 'nb_item'+id);
-		id++;
-	}
-	$('.nb_item').live('change', function(event) {
-		$('.nb_item').val($(this).val());
+	$('.js-nb_item').unbind('change').attr('onchange', '');
+
+	$('.js-nb_item').live('change', function(event) {
+		$('.js-nb_item').val($(this).val());
 		reloadContent();
 	});
 	
@@ -229,7 +211,7 @@ function initLayered()
 }
 
 function paginationButton() {
-	$('#pagination a').not(':hidden').each(function () {
+	$('.js-pagination_wrap a').not(':hidden').each(function () {
 		if ($(this).attr('href').search('&p=') == -1) {
 			var page = 1;
 		}
@@ -239,12 +221,12 @@ function paginationButton() {
 		var location = window.location.href.replace(/#.*$/, '');
 		$(this).attr('href', location+current_friendly_url.replace(/\/page-(\d+)/, '')+'/page-'+page);
 	});
-	$('#pagination li').not('.current, .disabled').each(function () {
+	$('.js-pagination_wrap li').not('.current, .disabled').each(function () {
 		var nbPage = 0;
-		if ($(this).attr('id') == 'pagination_next')
-			nbPage = parseInt($('#pagination li.current').children().html())+ 1;
-		else if ($(this).attr('id') == 'pagination_previous')
-			nbPage = parseInt($('#pagination li.current').children().html())- 1;
+		if ($(this).hasClass('pagination_previous'))
+			nbPage = parseInt($('.js-pagination_wrap li.current').children().html())+ 1;
+		else if ($(this).hasClass('pagination_previous'))
+			nbPage = parseInt($('.js-pagination_wrap li.current').children().html())- 1;
 	
 		$(this).children().click(function () {
 			if (nbPage == 0)
@@ -375,9 +357,9 @@ function reloadContent(params_plus)
 		}
 		data += '&orderby='+splitData[0]+'&orderway='+splitData[1];
 	}
-	if ($('.nb_item').length)
+	if ($('.js-nb_item').length)
 	{
-		data += '&n='+$('.nb_item').val();
+		data += '&n='+$('.js-nb_item').val();
 	}
 	
 	var slideUp = true;
@@ -389,7 +371,7 @@ function reloadContent(params_plus)
 	
 	// Get nb items per page
 	var n = '';
-	$('#pagination #nb_item').children().each(function(it, option) {
+	$('.js-pagination_wrap .js-nb_item').children().each(function(it, option) {
 		if (option.selected)
 			n = '&n='+option.value;
 	});
@@ -419,37 +401,37 @@ function reloadContent(params_plus)
 			if (result.pagination.search(/[^\s]/) >= 0) {
 				if ($(result.pagination).find('ul.pagination').length)
 				{
-					$('div#pagination').show();
+					$('div.js-pagination_wrap').show();
 					$('ul.pagination').each(function () {
 						$(this).replaceWith($(result.pagination).find('ul.pagination'));
 					});
 				}
 				else if (!$('ul.pagination').length)
 				{
-					$('div#pagination').show();
-					$('div#pagination').each(function () {
+					$('div.js-pagination_wrap').show();
+					$('div.js-pagination_wrap').each(function () {
 						$(this).html($(result.pagination));
 					});
 				}
 				else
 				{
 					$('ul.pagination').html('');
-					$('div#pagination').hide();
+					$('div.js-pagination_wrap').hide();
 				}
 			}
 			else
 			{
 				$('ul.pagination').html('');
-				$('div#pagination').hide();
+				$('div.js-pagination_wrap').hide();
 			}
 			
 			paginationButton();
 			ajaxLoaderOn = 0;
 			
 			// On submiting nb items form, relaod with the good nb of items
-			$('#pagination form').submit(function() {
-				val = $('#pagination #nb_item').val();
-				$('#pagination #nb_item').children().each(function(it, option) {
+			$('.js-pagination_wrap form').submit(function() {
+				val = $('.js-pagination_wrap .js-nb_item').val();
+				$('.js-pagination_wrap .js-nb_item').children().each(function(it, option) {
 					if (option.value == val)
 						$(option).attr('selected', true);
 					else
