@@ -24,15 +24,13 @@
 *}
 {include file='header.tpl'}
 {if isset($conf)}
-	<div class="conf">
+	<div class="alert">
 		{$conf}
 	</div>
 {/if}
 {if count($errors) && (!isset($disableDefaultErrorOutPut) || $disableDefaultErrorOutPut == false)}
-	<div class="error">
-		<span style="float:right">
-			<a id="hideError" href="#"><img alt="X" src="../img/admin/close.png" /></a>
-		</span>
+	<div class="alert alert-error">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
 		
 		{if count($errors) == 1}
 			{$errors[0]}
@@ -48,7 +46,7 @@
 	</div>
 {/if}
 {if isset($informations) && count($informations) && $informations}
-	<div class="alert alert-info" style="display:block;">
+	<div class="alert alert-info">
 		<span id="see_more_infos">
 			<b><a href="#" style="color:#00529B;" onclick="$('#see_more_infos').hide(); $('#infos_block').show();return false;">{l s='Click here to see more informations'}</a></b>
 		</span>
@@ -60,7 +58,7 @@
 	</div><br />
 {/if}
 {if isset($confirmations) && count($confirmations) && $confirmations}
-	<div class="conf" style="display:block;">
+	<div class="alert" style="display:block;">
 		{foreach $confirmations as $conf}
 			{$conf}<br />
 		{/foreach}
@@ -71,7 +69,7 @@
 		<button type="button" class="close" data-dismiss="alert">&times;</button>
 		{if count($warnings) > 1}
 			{l s='There are %d warnings.' sprintf=count($warnings)}
-			<span style="margin-left:20px;" id="labelSeeMore">
+			<span id="labelSeeMore">
 				<a id="linkSeeMore" href="#" style="text-decoration:underline">{l s='Click here to see more'}</a>
 				<a id="linkHide" href="#" style="text-decoration:underline;display:none">{l s='Hide warning'}</a>
 			</span>
@@ -81,7 +79,7 @@
 			{/foreach}
 			</ul>
 		{else}
-			<ul style="margin-top: 3px">
+			<ul >
 			{foreach $warnings as $warning}
 				<li>{$warning}</li>
 			{/foreach}

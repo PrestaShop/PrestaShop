@@ -52,8 +52,10 @@
 		</span>
 	</label>
 	<div class="controls">
-		<input class="input-medium" type="text" id="code" name="code" value="{$currentTab->getFieldValue($currentObject, 'code')|escape}" />
-		<a href="javascript:gencode(8);" class="btn"><i class="icon-random"></i>  {l s='Generate random code'}</a>
+		<div class="input-append">
+			<input class="input-medium" type="text" id="code" name="code" value="{$currentTab->getFieldValue($currentObject, 'code')|escape}" />
+			<a href="javascript:gencode(8);" class="btn"><i class="icon-random"></i>  {l s='Generate'}</a>
+		</div>
 	</div>
 </div>
 

@@ -101,14 +101,18 @@
 <body class="fixed-top">
 
 {if $display_header}
-<div id="ajax_running"><img src="../img/admin/ajax-loader-yellow.gif" alt="" /> {l s='Loading...'}</div>
 
 {* begin  HEADER *}
-<div id="header" class="navbar navbar-fixed-top" >
+<div id="header" class="navbar navbar-fixed-top navbar-inverse" >
 	<div class="navbar-inner">
 		<div class="container-fluid">
 			<div id="header_infos">
 				<a id="header_shopname" class="brand" href="{$link->getAdminLink('AdminHome')|escape:'htmlall':'UTF-8'}">{$shop_name}</a>
+
+				<span id="ajax_running">
+					<img src="../img/admin/ajax-loader-yellow.gif" alt="" /> {l s='Loading...'}
+				</span>
+
 				<ul id="notifs_icon_wrapper" class="nav nav-pills">
 	{if {$show_new_orders} == 1}
 						<li id="orders_notif" class="notifs dropdown" >

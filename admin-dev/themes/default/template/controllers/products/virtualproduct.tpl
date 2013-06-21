@@ -158,7 +158,7 @@
 							{if $up_filename}
 								<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="{$up_filename}" />
 							{/if}
-							<div class="conf">
+							<div class="alert">
 							<script>
 								delete_this_file = '{l s='Delete this file'}';
 							</script>

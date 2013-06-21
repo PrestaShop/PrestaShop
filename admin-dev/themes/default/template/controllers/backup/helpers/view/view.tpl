@@ -27,7 +27,7 @@
 
 {block name="override_tpl"}
 
-	<div class="conf">{l s='Beginning the download ...'}</div>
+	<div class="alert">{l s='Beginning the download ...'}</div>
 
 	<p>{l s='Backup files should automatically download.'}</p>
 

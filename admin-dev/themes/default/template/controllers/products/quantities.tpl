@@ -44,7 +44,7 @@
 		{if $show_quantities == true}
 			<div class="alert alert-block" id="available_quantity_ajax_msg" style="display: none;"></div>
 			<div class="error" id="available_quantity_ajax_error_msg" style="display: none;"></div>
-			<div class="conf" id="available_quantity_ajax_success_msg" style="display: none;"></div>
+			<div class="alert" id="available_quantity_ajax_success_msg" style="display: none;"></div>
 
 			<table cellpadding="5" style="width:100%">
 				<tbody>
