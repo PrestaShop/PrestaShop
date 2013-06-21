@@ -514,6 +514,7 @@ class AdminOrdersControllerCore extends AdminController
 							$now = time();
 							$cart_rule->date_from = date('Y-m-d H:i:s', $now);
 							$cart_rule->date_to = date('Y-m-d H:i:s', $now + (3600 * 24 * 365.25)); /* 1 year */
+							$cart_rule->partial_use = 1;
 							$cart_rule->active = 1;
 
 							$cart_rule->reduction_amount = $amount;
