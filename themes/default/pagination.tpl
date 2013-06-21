@@ -55,7 +55,7 @@
 			{assign var='p_previous' value=$p-1}
 			<li class="pagination_previous"><a {$no_follow_text} href="{$link->goPage($requestPage, $p_previous)|escape:'html'}">&laquo;&nbsp;{l s='Previous'}</a></li>
 		{else}
-			<li id="pagination_previous" class="disabled"><span>&laquo;&nbsp;{l s='Previous'}</span></li>
+			<li class="disabled pagination_previous"><span>&laquo;&nbsp;{l s='Previous'}</span></li>
 		{/if}
 		{if $start==3}
 			<li><a {$no_follow_text}  href="{$link->goPage($requestPage, 1)|escape:'html'}">1</a></li>

@@ -413,8 +413,8 @@ ul.pagination li.disabled span {color:#ccc}
 .ie7 .pagination_previous,
 .ie7 .pagination_next {float:none}
 
-.pagination_previous a, .pagination_previous span,
-.pagination_next a, .pagination_next span {
+ul.pagination .pagination_previous a,ul.pagination .pagination_previous span,
+ul.pagination .pagination_next a, ul.pagination .pagination_next span {
 	padding:0 8px;
 	width:auto;
 }
