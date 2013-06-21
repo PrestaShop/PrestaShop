@@ -45,6 +45,17 @@ class Autoload
 	protected $root_dir;
 
 	/**
+	 * True if index is regenerated
+	 * @var boolean
+	 */
+	protected $is_index_regenerated = false;
+
+	/**
+	 * True if index is changed
+	 * @var boolean
+	 */
+	protected $is_index_changed = false;
+	/**
 	 *  @var array array('classname' => 'path/to/override', 'classnamecore' => 'path/to/class/core')
 	 */
 	public $index = array();
@@ -55,6 +66,18 @@ class Autoload
 		if (file_exists($this->root_dir.Autoload::INDEX_FILE))
 			$this->index = include($this->root_dir.Autoload::INDEX_FILE);
 	}
+
+
+	/**
+	 * Regenerates class index if index was regenerated
+	 */
+	public function __destruct()
+	{
+		if ($this->is_index_changed)
+			if (!$this->saveClassIndex())
+				error_log(sprintf('Error writing class index file into %s', self::INDEX_FILE));
+	}
+
 
 	/**
 	 * Get instance of autoload (singleton)
@@ -113,18 +136,39 @@ class Autoload
 	}
 
 	/**
-	 * Generate classes index
+	 * Generates classes index
+	 * @return boolean True if index was regenerated and changed, false otherwise (ie. index was regenerated earlier)
 	 */
 	public function generateIndex()
 	{
-		$classes = array_merge(
-			$this->getClassesFromDir('classes/'),
-			$this->getClassesFromDir('override/classes/'),
-			$this->getClassesFromDir('controllers/'),
-			$this->getClassesFromDir('override/controllers/')
-		);
-		ksort($classes);
-		$content = '<?php return '.var_export($classes, true).'; ?>';
+		if (!$this->is_index_regenerated){
+			$this->is_index_regenerated = true;
+
+			$classes = array_merge(
+				$this->getClassesFromDir('classes/'),
+				$this->getClassesFromDir('override/classes/'),
+				$this->getClassesFromDir('controllers/'),
+				$this->getClassesFromDir('override/controllers/')
+			);
+			ksort($classes);
+
+			if (!$this->index || ($this->index != $classes)){
+				$this->index = $classes;
+				$this->is_index_changed = true;
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Saves class index to disk
+	 * @return boolean True on success, false on failure
+	 */
+	protected function saveClassIndex(){
+
+		$content = '<?php return '.var_export($this->index, true).'; ?>';
 
 		// Write classes index on disc to cache it
 		$filename = $this->root_dir.Autoload::INDEX_FILE;
@@ -138,7 +182,7 @@ class Autoload
 		{
 			$filename_tmp = tempnam(dirname($filename), basename($filename.'.'));
 			if($filename_tmp !== FALSE and file_put_contents($filename_tmp, $content, LOCK_EX) !== FALSE) {
-				rename($filename_tmp, $filename);
+				return rename($filename_tmp, $filename);
 			} else {
 				// $filename_tmp couldn't be written. $filename should be there anyway (even if outdated),
 				// no need to die.
@@ -146,7 +190,8 @@ class Autoload
 			}
 		}
 
-		$this->index = $classes;
+		return false;
+
 	}
 
 	/**
