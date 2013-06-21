@@ -348,8 +348,8 @@ ul.footer_links li .icon {
 
 .ie7 #center_column .sortPagiBar form {display:inline;}
 
-.sortPagiBar #productsSortForm {float:right;}
-	.sortPagiBar select#selectPrductSort {
+.sortPagiBar .productsSortForm {float:right;}
+	.sortPagiBar .selectPrductSort {
 		margin:0 0 0 10px;
 		color:#000;
 		border:1px solid #ccc

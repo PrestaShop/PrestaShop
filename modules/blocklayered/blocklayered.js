@@ -122,30 +122,21 @@ $(document).ready(function()
 	$('.hide-action').each(function() {
 		hideFilterValueAction(this);
 	});
-
-	// To be sure there is no other events attached to the selectPrductSort, change the ID
-	var id = 1;
-	while ($('#selectPrductSort').length) { // Because ids are duplicated
-		// Unbind event change on #selectPrductSort
-		$('#selectPrductSort').unbind('change');
-		$('#selectPrductSort').attr('onchange', '');
-		$('#selectPrductSort').addClass('selectProductSort');
-		$('#selectPrductSort').attr('id', 'selectPrductSort'+id);
-		$('label[for=selectPrductSort]').attr('for', 'selectPrductSort'+id);
-		id++;
-	}
 	
 	// Since 1.5, event is add to .selectProductSort and not to #selectPrductSort
 	setTimeout(function() {
 		$('.selectProductSort').unbind('change');
 	}, 100);
 	
+	$('.selectProductSort').unbind('change').attr('onchange', '');
+
+
 	$('.selectProductSort').live('change', function(event) {
 		$('.selectProductSort').val($(this).val());
 		reloadContent();
 	});
 	
-$('.js-nb_item').unbind('change').attr('onchange', '');
+	$('.js-nb_item').unbind('change').attr('onchange', '');
 
 	$('.js-nb_item').live('change', function(event) {
 		$('.js-nb_item').val($(this).val());

@@ -47,7 +47,7 @@
 	{include file="./product-compare.tpl" id="_top"}
 	{if !isset($instantSearch) || (isset($instantSearch) && !$instantSearch)}
 	<div class="sortPagiBar clearfix">
-		{include file="$tpl_dir./product-sort.tpl"}
+		{include file="$tpl_dir./product-sort.tpl" id="_top"}
 	</div>
 	{/if}
 	
