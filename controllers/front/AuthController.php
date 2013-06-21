@@ -537,7 +537,7 @@ class AuthControllerCore extends FrontController
 				$contains_state = isset($country) && is_object($country) ? (int)$country->contains_states: 0;
 				$id_state = isset($address) && is_object($address) ? (int)$address->id_state: 0;
 				if ((Configuration::get('PS_REGISTRATION_PROCESS_TYPE') || Tools::isSubmit('submitGuestAccount')) && $contains_state && !$id_state)
-					$this->errors[] = Tools::displayError('This country requires you to chose a State.');
+					$this->errors[] = Tools::displayError('This country requires you to choose a State.');
 				else
 				{
 					$customer->active = 1;

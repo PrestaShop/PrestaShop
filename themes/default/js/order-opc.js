@@ -445,6 +445,7 @@ $(function() {
 				$('#is_new_customer').val('0');
 				$('#opc_account_choice, #opc_invoice_address').hide();
 				$('#new_account_title').html(txtInstantCheckout);
+				$('#submitAccount').prop({id : 'submitGuestAccount', name : 'submitGuestAccount'});
 				updateState();
 				updateNeedIDNumber();
 				updateZipCode();
