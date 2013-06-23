@@ -137,9 +137,13 @@ class Autoload
 		else
 		{
 			$filename_tmp = tempnam(dirname($filename), basename($filename.'.'));
-			if($filename_tmp !== FALSE and file_put_contents($filename_tmp, $content, LOCK_EX) !== FALSE) {
+			if($filename_tmp !== FALSE and file_put_contents($filename_tmp, $content, LOCK_EX) !== FALSE)
+            {
 				rename($filename_tmp, $filename);
-			} else {
+                @chmod($filename, 0664);
+			}
+            else
+            {
 				// $filename_tmp couldn't be written. $filename should be there anyway (even if outdated),
 				// no need to die.
 				error_log('Cannot write temporary file '.$filename_tmp);
