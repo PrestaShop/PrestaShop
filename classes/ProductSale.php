@@ -71,7 +71,11 @@ class ProductSaleCore
 		$groups = FrontController::getCurrentCustomerGroups();
 		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
 		$interval = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
-
+		
+		$prefix = '';
+		if ($order_by == 'date_add')
+			$prefix = 'p.';
+		
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
 					pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
 					pl.`meta_keywords`, pl.`meta_title`, pl.`name`,
@@ -104,7 +108,7 @@ class ProductSaleCore
 						WHERE cg.`id_group` '.$sql_groups.'
 					)
 				GROUP BY product_shop.id_product
-				ORDER BY `'.pSQL($order_by).'` '.pSQL($order_way).'
+				ORDER BY '.$prefix.'`'.pSQL($order_by).'` '.pSQL($order_way).'
 				LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
