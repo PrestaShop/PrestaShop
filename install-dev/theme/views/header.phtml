@@ -72,7 +72,7 @@
 		<?php endforeach; ?>
 	</ol>
 	<?php if (@fsockopen('api.prestashop.com', 80, $errno, $errst, 3)): ?>
-		<iframe scrolling="no" style="height:200px;width:160px;border:none;margin-top:20px"
+		<iframe scrolling="no" style="height:160px;width:160px;border:none;margin-top:20px"
 			src="https://api.prestashop.com/iframe/install.php?step=<?php echo $this->step ?>&lang=<?php echo $this->language->getLanguageIso() ?>&country=<?php echo $this->session->shop_country ?>">
 			<p><?php echo $this->l('Contact us!') ?><br /><?php echo $this->getPhone() ?></p>
 		</iframe>
@@ -85,7 +85,6 @@
 	<div id="sheet_<?php echo $this->step ?>" class="sheet shown clearfix">
 	<div class="contentTitle">
 		<h1><?php echo $this->l('Installation Assistant') ?></h1>
-
 		<ul id="stepList_1" class="stepList clearfix">
 			<?php foreach ($this->getSteps() as $step): ?>
 				<li <?php if ($this->isStepFinished($step)): ?>class="ok"<?php endif; ?>><?php echo $this->l('menu_'.$this->step) ?></li>
