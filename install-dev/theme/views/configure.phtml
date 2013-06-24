@@ -70,7 +70,7 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 	</div>
 
 	<!-- Timezone list -->
-	<div class="field clearfix">
+	<div id="timezone_div" class="field clearfix" <?php if (!in_array($this->session->shop_timezone, array('us','ca','au','ru','me','id'))) echo 'style="display:none"'; ?>>
 		<label for="infosTimezone" class="aligned"><?php echo $this->l('Shop timezone:') ?></label>
 		<div class="contentinput">
 			<select name="shop_timezone" id="infosTimezone" class="chosen">

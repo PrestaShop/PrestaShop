@@ -14,14 +14,27 @@ $(document).ready(function()
 			data: 'timezoneByIso=true&iso='+iso,
 			dataType: 'json',
 			cache: true,
-			success: function(json)
-			{
-				if (json.success)
+			success: function(json) {
+				if (json.success) {
 					$('#infosTimezone').val(json.message).trigger("liszt:updated");
+					if (in_array(iso, ['us','ca','ru','me','au','id']))
+						$('#timezone_div').show();
+					else
+						$('#timezone_div').hide();
+				}
 			}
 		});
 	});
 });
+
+function in_array(needle, haystack) {
+    var length = haystack.length;
+    for (var i = 0; i < length; i++) {
+        if (haystack[i] == needle)
+			return true;
+    }
+    return false;
+}
 
 /**
  * Upload a new logo
