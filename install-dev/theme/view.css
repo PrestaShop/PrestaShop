@@ -76,7 +76,7 @@ div#leftpannel{
 	div#sheets {
 		float:left;
 		margin-top:65px;
-		min-height:400px;
+		min-height:360px;
 		width:700px;
 		background-color:#fff;
 }
@@ -92,7 +92,7 @@ div#leftpannel{
 	div#buttons{
 		clear:both;
 		margin:0 0 0 295px;
-		height:70px;
+		height:60px;
 		width:650px;
 }
 	* html div#buttons {
