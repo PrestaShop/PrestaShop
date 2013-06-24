@@ -43,12 +43,11 @@ a {cursor:pointer;}
 	width:990px;
 	background :#fff;
 }
-	#header {
-		padding:6px 16px 16px 16px;
-		height:68px;/* 90 */
-		background:#394049;
-	}
-
+#header {
+	padding:6px 16px 16px 16px;
+	height:50px;
+	background:#394049;
+}
 #loaderSpace{
 		display:none;
 		z-index: 100;
@@ -407,7 +406,7 @@ ul#footer a:link, ul#footer a:active, ul#footer a:visited {
 }
 	.sheet .contentTitle {
 		position:absolute;
-		top:90px;
+		top:72px;
 		left:0;
 		padding:15px 25px 10px 38px;
 		height:28px;/* 53 */
