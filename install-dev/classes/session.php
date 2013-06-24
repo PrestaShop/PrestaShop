@@ -43,7 +43,8 @@ class InstallSession
 	public function __construct()
 	{
 		session_name('install_'.md5(__PS_BASE_URI__));
-		if (!session_start() || (!isset($_SESSION['session_mode']) && (count($_POST) || count($_GET))))
+		if (!session_start()
+			|| (!isset($_SESSION['session_mode']) && (isset($_POST['submitNext']) || isset($_POST['submitPrevious']) || isset($_POST['language']))))
 		{
 			InstallSession::$_cookie_mode = true;
 			InstallSession::$_cookie = new Cookie('ps_install', null, time() + 7200, null, true);
