@@ -129,7 +129,7 @@ class LinkCore
 			$params['tags'] = Tools::str2url($product->getTags($id_lang));
 		
 		if ($dispatcher->hasKeyword('product_rule', $id_lang, 'category'))
-			$params['category'] = !is_null($product->category) ? Tools::str2url($product->category) : Tools::str2url($category);
+			$params['category'] = !$category ? Tools::str2url($product->category) : Tools::str2url($category);
 
 		if ($dispatcher->hasKeyword('product_rule', $id_lang, 'reference'))
 			$params['reference'] = Tools::str2url($product->reference);
