@@ -176,6 +176,35 @@
 					<label for="optin">{l s='Receive special offers from our partners!'}</label>
 				</p>
 				{/if}
+				{if $b2b_enable}
+					<h3>{l s='Your company information'}</h3>
+					<p class="text">
+						<label for="">{l s='Company'}</label>
+						<input type="text" class="text" id="companyb2b" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{/if}" onkeyup="$('#company').val(this.value);" />
+					</p>
+					{if $b2b_siret}
+					<p class="text">
+						<label for="siret">{l s='SIRET'}</label>
+						<input type="text" class="text" id="siret" name="siret" value="{if isset($smarty.post.siret)}{$smarty.post.siret}{/if}" />
+					</p>
+					{/if}
+					{if $b2b_ape}
+					<p class="text">
+						<label for="ape">{l s='APE'}</label>
+						<input type="text" class="text" id="ape" name="ape" value="{if isset($smarty.post.ape)}{$smarty.post.ape}{/if}" />
+					</p>
+					{/if}
+					{if $b2b_compnr}
+					<p class="text">
+						<label for="compnr">{l s='Company Nr'}</label>
+						<input type="text" class="text" id="compnr" name="compnr" value="{if isset($smarty.post.compnr)}{$smarty.post.compnr}{/if}" />
+					</p>
+					{/if}
+					<p class="text">
+						<label for="website">{l s='Website'}</label>
+						<input type="text" class="text" id="website" name="website" value="{if isset($smarty.post.website)}{$smarty.post.website}{/if}" />
+					</p>
+				{/if}
 				<h3>{l s='Delivery address'}</h3>
 				{$stateExist = false}
 				{foreach from=$dlv_all_fields item=field_name}

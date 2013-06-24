@@ -336,6 +336,9 @@ class FrontControllerCore extends Controller
 			'opc' => (bool)Configuration::get('PS_ORDER_PROCESS_TYPE'),
 			'PS_CATALOG_MODE' => (bool)Configuration::get('PS_CATALOG_MODE') || !(bool)Group::getCurrent()->show_prices,
 			'b2b_enable' => (bool)Configuration::get('PS_B2B_ENABLE'),
+			'b2b_ape' => (bool)Configuration::get('PS_B2B_APE'),
+			'b2b_siret' => (bool)Configuration::get('PS_B2B_SIRET'),
+			'b2b_compnr' => (bool)Configuration::get('PS_B2B_COMPNR'),
 			'request' => $link->getPaginationLink(false, false, false, true)
 		));
 

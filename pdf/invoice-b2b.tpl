@@ -66,12 +66,12 @@
 
 <div style="line-height: 1pt">&nbsp;</div>
 
-{if $customer->siret or $customer->ape}
+{if $customer->siret or $customer->ape or $customer->compnr or $customer->company}
 <table style="width: 100%">
 	<tr>
 		<td style="width: 15%"></td>
 		<td style="width: 85%">
-		{if $customer->siret}
+		{if $customer->company}
 		<b>{l s='Company:'}</b> {$customer->company}
 		{/if}
 		{if $customer->siret}
@@ -81,6 +81,10 @@
 		{if $customer->ape}
 		<br />
 		<b>{l s='APE:'}</b> {$customer->ape}
+		{/if}
+		{if $customer->compnr}
+		<br />
+		<b>{l s='Company Nr:'}</b> {$customer->compnr}
 		{/if}
 		</td>
 		<td style="width: 15%"></td>

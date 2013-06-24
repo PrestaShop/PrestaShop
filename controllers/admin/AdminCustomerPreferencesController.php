@@ -89,6 +89,13 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 						'type' => 'text',
 						'suffix' => $this->l('minutes')
 					),
+				),
+				'submit' => array('title' => $this->l('Save'), 'class' => 'button'),
+			),
+			'b2b' => array(
+				'title' =>	$this->l('B2B Configuration'),
+				'icon' =>	'tab-preferences',
+				'fields' => array (
 					'PS_B2B_ENABLE' => array(
 						'title' => $this->l('Enable B2B mode'),
 						'desc' => $this->l('Activate or deactivate B2B mode. When this option is enabled, B2B features will be made available.'),
@@ -96,10 +103,47 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
+					'PS_B2B_APE' => array(
+						'title' => $this->l('Enable APE'),
+						'desc' => $this->l('Enables APE field on frontend.'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
+					'PS_B2B_SIRET' => array(
+						'title' => $this->l('Enable SIRET'),
+						'desc' => $this->l('Enables SIRET field on frontend.'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
+					'PS_B2B_COMPNR' => array(
+						'title' => $this->l('Enable Company Nr'),
+						'desc' => $this->l('Enables Company Nr field on frontend.'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
 				),
-				'submit' => array('title' => $this->l('Save'), 'class' => 'button'),
+				'submit' => array('title' => $this->l('Siret -> Company Nr'), 'class' => 'button', "name" => "submitSiretCompany"),
 			),
 		);
+	}
+
+	public function postProcess()
+	{
+		// If Copying Siret to Company Nr value
+		if (Tools::getValue('submitSiretCompany')) {
+			$result = Db::getInstance()->executeS('SELECT `id_customer`,`siret` FROM `' ._DB_PREFIX_.'customer`');
+			foreach($result as $customer) {
+				if($customer["siret"] != "") {
+					Db::getInstance()->update('customer',array('compnr' => $customer["siret"]), 'id_customer = ' . $customer["id_customer"]);
+				}
+			}
+			$this->confirmations[] = $this->l('Siret copied to Company Nr.');
+
+		}
+		return parent::postProcess();
 	}
 
 	/**

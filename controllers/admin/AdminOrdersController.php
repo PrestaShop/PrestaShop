@@ -42,7 +42,7 @@ class AdminOrdersControllerCore extends AdminController
 		$this->_select = '
 		a.id_currency,
 		a.id_order AS id_pdf,
-		CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) AS `customer`,
+		CONCAT(c.`company`, \' - \', LEFT(c.`firstname`, 1), \'. \', c.`lastname`) AS `customer`,
 		osl.`name` AS `osname`,
 		os.`color`,
 		IF((SELECT COUNT(so.id_order) FROM `'._DB_PREFIX_.'orders` so WHERE so.id_customer = a.id_customer) > 1, 0, 1) as new';
@@ -331,49 +331,73 @@ class AdminOrdersControllerCore extends AdminController
 				$order_state = new OrderState(Tools::getValue('id_order_state'));
 
 				if (!Validate::isLoadedObject($order_state))
+				{
 					$this->errors[] = Tools::displayError('The new order status is invalid.');
+				}
 				else
 				{
 					$current_order_state = $order->getCurrentOrderState();
-					if ($current_order_state->id != $order_state->id)
-					{
-						// Create new OrderHistory
-						$history = new OrderHistory();
-						$history->id_order = $order->id;
-						$history->id_employee = (int)$this->context->employee->id;
-
-						$use_existings_payment = false;
-						if (!$order->hasInvoice())
-							$use_existings_payment = true;
-						$history->changeIdOrderState((int)$order_state->id, $order, $use_existings_payment);
-
-						$carrier = new Carrier($order->id_carrier, $order->id_lang);
-						$templateVars = array();
-						if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') && $order->shipping_number)
-							$templateVars = array('{followup}' => str_replace('@', $order->shipping_number, $carrier->url));
-						// Save all changes
-						if ($history->addWithemail(true, $templateVars))
+					if ($current_order_state->id != $order_state->id) {
+						$customer = new Customer((int)$order->id_customer);
+						$out_amount = $customer->getOutstanding() + $order->total_paid_tax_incl;
+						$days = floor( (strtotime( date("Y-m-d H:i:s") ) - strtotime($order->date_add)) / (60*60*24) );
+						if( Configuration::get('PS_B2B_ENABLE') &&
+							$customer->getOutstanding() > 0 && ($days > $customer->max_payment_days) )
 						{
-							// synchronizes quantities if needed..
-							if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-							{
-								foreach ($order->getProducts() as $product)
-								{
-									if (StockAvailable::dependsOnStock($product['product_id']))
-										StockAvailable::synchronize($product['product_id'], (int)$product['id_shop']);
-								}
-							}
-
-							Tools::redirectAdmin(self::$currentIndex.'&id_order='.(int)$order->id.'&vieworder&token='.$this->token);
+							$this->errors[] = Tools::displayError('Can not deliver order. Maximum number of payment days exceeded');
 						}
-						$this->errors[] = Tools::displayError('An error occurred while changing order status, or we were unable to send an email to the customer.');
-					}
-					else
+						elseif( Configuration::get('PS_B2B_ENABLE') &&
+							$order_state->delivery && ($order_state->paid == 0) && ($out_amount > $customer->outstanding_allow_amount) )
+						{
+							$this->errors[] = Tools::displayError('Outstanding amount is too high. Can not deliver order');
+						}
+						elseif( Configuration::get('PS_B2B_ENABLE') &&
+							$order_state->delivery && ($order_state->paid == 1) && ( $customer->getOutstanding() > $customer->outstanding_allow_amount) )
+						{
+							$this->errors[] = Tools::displayError('Outstanding amount is too high. Can not deliver order');
+						}
+						else
+						{
+							// Create new OrderHistory
+							$history = new OrderHistory();
+							$history->id_order = $order->id;
+							$history->id_employee = (int)$this->context->employee->id;
+
+							$use_existings_payment = false;
+							if (!$order->hasInvoice())
+								$use_existings_payment = true;
+							$history->changeIdOrderState((int)$order_state->id, $order, $use_existings_payment);
+
+							$carrier = new Carrier($order->id_carrier, $order->id_lang);
+							$templateVars = array();
+							if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') && $order->shipping_number)
+								$templateVars = array('{followup}' => str_replace('@', $order->shipping_number, $carrier->url));
+							// Save all changes
+							if ($history->addWithemail(true, $templateVars))
+							{
+								// synchronizes quantities if needed..
+								if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+								{
+									foreach ($order->getProducts() as $product)
+									{
+										if (StockAvailable::dependsOnStock($product['product_id']))
+											StockAvailable::synchronize($product['product_id'], (int)$product['id_shop']);
+									}
+								}
+
+								Tools::redirectAdmin(self::$currentIndex.'&id_order='.(int)$order->id.'&vieworder&token='.$this->token);
+							}
+							$this->errors[] = Tools::displayError('An error occurred while changing order status, or we were unable to send an email to the customer.');
+						}
+					} else {
 						$this->errors[] = Tools::displayError('The order has already been assigned this status.');
+					}
 				}
 			}
 			else
+			{
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
+			}
 		}
 
 		/* Add a new message for the current order and send an e-mail to the customer if needed */

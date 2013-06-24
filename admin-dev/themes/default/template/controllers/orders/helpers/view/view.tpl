@@ -41,6 +41,10 @@
 	var use_taxes = {if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}true{else}false{/if};
 	var token = "{$smarty.get.token|escape:'htmlall':'UTF-8'}";
 	var stock_management = {$stock_management|intval};
+	{assign var=b2b_enable value=Configuration::get('PS_B2B_ENABLE')}
+	{assign var=b2b_siret value=Configuration::get('PS_B2B_SIRET')}
+	{assign var=b2b_ape value=Configuration::get('PS_B2B_APE')}
+	{assign var=b2b_compnr value=Configuration::get('PS_B2B_COMPNR')}
 
 	var txt_add_product_stock_issue = "{l s='Are you sure you want to add this quantity?' js=1}";
 	var txt_add_product_new_invoice = "{l s='Are you sure you want to create a new invoice?' js=1}";
@@ -155,8 +159,23 @@
 			<br />
 			<fieldset>
 				<legend><img src="../img/admin/tab-customers.gif" /> {l s='Customer information'}</legend>
+				{if $b2b_enable}
+					<span style="font-weight: bold; font-size: 14px; color: #000000;"> {$customer->company}</span><br />
+				{/if}
 				<span style="font-weight: bold; font-size: 14px;"><a href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={getAdminToken tab='AdminCustomers'}"> {$customer->firstname} {$customer->lastname}</a></span> ({l s='#'}{$customer->id})<br />
-				(<a href="mailto:{$customer->email}">{$customer->email}</a>)<br /><br />
+				(<a href="mailto:{$customer->email}">{$customer->email}</a>)<br />
+				{if $b2b_enable}
+					{if $b2b_siret}
+						<b>{l s='SIRET:'}</b> {$customer->siret}<br />
+					{/if}
+					{if $b2b_ape}
+						<b>{l s='APE:'}</b> {$customer->ape}<br />
+					{/if}
+					{if $b2b_compnr}
+						<b>{l s='Company Nr:'}</b> {$customer->compnr}<br />
+					{/if}
+				{/if}
+				<br />
 				{if ($customer->isGuest())}
 					{l s='This order has been placed by a guest.'}
 					{if (!Customer::customerExists($customer->email))}
