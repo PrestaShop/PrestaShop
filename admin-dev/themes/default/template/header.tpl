@@ -69,6 +69,7 @@
 		var token_admin_customers = '{getAdminToken tab='AdminCustomers' slashes=1}';
 		var token_admin_customer_threads = '{getAdminToken tab='AdminCustomerThreads' slashes=1}';
 		var currentIndex = '{$currentIndex}';
+		var choose_language_translate = "{l s='Choose language' slashes=1 }";
 	</script>
 {/if}
 
