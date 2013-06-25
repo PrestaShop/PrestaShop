@@ -374,7 +374,14 @@ class AdminProductsControllerCore extends AdminController
 				$default_product = new Product((int)$this->object->id, false, null, (int)$this->object->id_shop_default);
 				$def = ObjectModel::getDefinition($this->object);
 				foreach ($def['fields'] as $field_name => $row)
-					$this->object->$field_name = ObjectModel::formatValue($default_product->$field_name, $def['fields'][$field_name]['type']);
+				{
+					$fields_array = array();
+					if(is_array($default_product->$field_name))
+						foreach ($fields_array as $key => $fields_name)
+							$this->object->$field_name[$key] = ObjectModel::formatValue($fields_name, $def['fields'][$field_name]['type']);
+					else
+						$this->object->$field_name = ObjectModel::formatValue($this->object->$field_name, $def['fields'][$field_name]['type']);
+				}
 			}
 			$this->object->loadStockData();
 		}
