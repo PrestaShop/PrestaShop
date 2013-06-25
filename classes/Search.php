@@ -224,7 +224,7 @@ class SearchCore
 					AND product_shop.`active` = 1
 					AND product_shop.`visibility` IN ("both", "search")
 					AND product_shop.indexed = 1
-					AND cg.`id_group` '.(!$id_customer ?  '= 1' : 'IN (
+					AND cg.`id_group` '.(!$id_customer ?  '= '.(int)Configuration::get('PS_UNIDENTIFIED_GROUP') : 'IN (
 						SELECT id_group FROM '._DB_PREFIX_.'customer_group
 						WHERE id_customer = '.(int)$id_customer.'
 					)');
@@ -622,7 +622,7 @@ class SearchCore
 					LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)
 					WHERE product_shop.`active` = 1
 						AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
-						AND cg.`id_group` '.(!$id_customer ?  '= 1' : 'IN (
+						AND cg.`id_group` '.(!$id_customer ?  '= '.(int)Configuration::get('PS_UNIDENTIFIED_GROUP') : 'IN (
 							SELECT id_group FROM '._DB_PREFIX_.'customer_group
 							WHERE id_customer = '.(int)$id_customer.')').'
 						AND t.`name` LIKE \'%'.pSQL($tag).'%\'';
@@ -656,7 +656,7 @@ class SearchCore
 				'.Product::sqlStock('p', 0).'
 				WHERE product_shop.`active` = 1
 					AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
-					AND cg.`id_group` '.(!$id_customer ?  '= 1' : 'IN (
+					AND cg.`id_group` '.(!$id_customer ?  '= '.(int)Configuration::get('PS_UNIDENTIFIED_GROUP') : 'IN (
 						SELECT id_group FROM '._DB_PREFIX_.'customer_group
 						WHERE id_customer = '.(int)$id_customer.')').'
 					AND t.`name` LIKE \'%'.pSQL($tag).'%\'
