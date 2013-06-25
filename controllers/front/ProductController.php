@@ -510,9 +510,12 @@ class ProductControllerCore extends FrontController
 	protected function assignAttributesCombinations()
 	{
 		$attributes_combinations = Product::getAttributesInformationsByProduct($this->product->id);
-		foreach ($attributes_combinations as &$ac)
-			foreach ($ac as &$val)
-				$val = str_replace('-', '_', Tools::link_rewrite(str_replace(array(',', '.'), '-', $val)));
+		if (is_array($attributes_combinations) && count($attributes_combinations))
+			foreach ($attributes_combinations as &$ac)
+				foreach ($ac as &$val)
+					$val = str_replace('-', '_', Tools::link_rewrite(str_replace(array(',', '.'), '-', $val)));
+		else
+			$attributes_combinations = array();
 		$this->context->smarty->assign('attributesCombinations', $attributes_combinations);
 	}
 
