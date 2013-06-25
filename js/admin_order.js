@@ -324,8 +324,9 @@ function init()
 			},
 			parse: function(data) {
 				var products = new Array();
-				for (var i = 0; i < data.products.length; i++)
-					products[i] = { data: data.products[i], value: data.products[i].name };
+				if (typeof(data.products) != 'undefined')
+					for (var i = 0; i < data.products.length; i++)
+						products[i] = { data: data.products[i], value: data.products[i].name };
 				return products;
 			},
 			extraParams: {
