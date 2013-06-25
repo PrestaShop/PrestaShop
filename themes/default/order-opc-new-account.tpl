@@ -178,6 +178,7 @@
 				{/if}
 				<h3>{l s='Delivery address'}</h3>
 				{$stateExist = false}
+				{$postCodeExist = false}
 				{foreach from=$dlv_all_fields item=field_name}
 				{if $field_name eq "company"}
 				{if $b2b_enable}
@@ -207,6 +208,7 @@
 					<input type="text" class="text" name="address2" id="address2" value="" />
 				</p>
 				{elseif $field_name eq "postcode"}
+				{$postCodeExist = true}
 				<p class="required postcode text">
 					<label for="postcode">{l s='Zip / Postal code'} <sup>*</sup></label>
 					<input type="text" class="text" name="postcode" id="postcode" value="{if isset($guestInformations) && $guestInformations.postcode}{$guestInformations.postcode}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
@@ -248,14 +250,20 @@
 					<input type="text" class="text" name="dni" id="dni" value="{if isset($guestInformations) && $guestInformations.dni}{$guestInformations.dni}{/if}" />
 					<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 				</p>
+				{if !$postCodeExist}
+				<p class="required postcode text hidden">
+					<label for="postcode">{l s='Zip / Postal code'} <sup>*</sup></label>
+					<input type="text" class="text" name="postcode" id="postcode" value="{if isset($guestInformations) && $guestInformations.postcode}{$guestInformations.postcode}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
+				</p>
+				{/if}				
 				{if !$stateExist}
-				<p class="required id_state select">
+				<p class="required id_state select hidden">
 					<label for="id_state">{l s='State'} <sup>*</sup></label>
 					<select name="id_state" id="id_state">
 						<option value="">-</option>
 					</select>
 				</p>
-				{/if}
+				{/if}				
 				<p class="textarea is_customer_param">
 					<label for="other">{l s='Additional information'}</label>
 					<textarea name="other" id="other" cols="26" rows="3"></textarea>
@@ -280,6 +288,7 @@
 
 				<div id="opc_invoice_address" class="is_customer_param">
 					{assign var=stateExist value=false}
+					{assign var=postCodeExist value=false}
 					<h3>{l s='Invoice address'}</h3>
 					{foreach from=$inv_all_fields item=field_name}
 					{if $field_name eq "company"}
@@ -320,7 +329,8 @@
 						<input type="text" class="text" name="address2_invoice" id="address2_invoice" value="" />
 					</p>
 					{elseif $field_name eq "postcode"}
-					<p class="required postcode text">
+					{$postCodeExist = true}
+					<p class="required postcode_invoice text">
 						<label for="postcode_invoice">{l s='Zip / Postal Code'} <sup>*</sup></label>
 						<input type="text" class="text" name="postcode_invoice" id="postcode_invoice" value="" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
 					</p>
@@ -349,8 +359,14 @@
 					</p>
 					{/if}
 					{/foreach}
+					{if !$postCodeExist}
+					<p class="required postcode_invoice text hidden">
+						<label for="postcode_invoice">{l s='Zip / Postal Code'} <sup>*</sup></label>
+						<input type="text" class="text" name="postcode_invoice" id="postcode_invoice" value="" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
+					</p>
+					{/if}					
 					{if !$stateExist}
-					<p class="required id_state_invoice select" style="display:none;">
+					<p class="required id_state_invoice select hidden">
 						<label for="id_state_invoice">{l s='State'} <sup>*</sup></label>
 						<select name="id_state_invoice" id="id_state_invoice">
 							<option value="">-</option>

@@ -433,8 +433,11 @@ class ToolsCore
 				{
 					// get currency from context
 					$currency = Shop::getEntityIds('currency', Context::getContext()->shop->id);
-					$cookie->id_currency = $currency[0]['id_currency'];
-					return Currency::getCurrencyInstance((int)$cookie->id_currency);
+					if (isset($currency[0]) && $currency[0]['id_currency'])
+					{
+						$cookie->id_currency = $currency[0]['id_currency'];
+						return Currency::getCurrencyInstance((int)$cookie->id_currency);
+					}
 				}
 		}
 		$currency = Currency::getCurrencyInstance(Configuration::get('PS_CURRENCY_DEFAULT'));
