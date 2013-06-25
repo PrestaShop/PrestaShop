@@ -404,7 +404,7 @@ class AuthControllerCore extends FrontController
 					$error_phone = true;
 			}
 			elseif (((Configuration::get('PS_REGISTRATION_PROCESS_TYPE') || Configuration::get('PS_ORDER_PROCESS_TYPE')) 
-					&& (Configuration::get('PS_ORDER_PROCESS_TYPE') && !Tools::getValue('email_create')))
+					|| (Configuration::get('PS_ORDER_PROCESS_TYPE') && !Tools::getValue('email_create')))
 					&& (!Tools::getValue('phone') && !Tools::getValue('phone_mobile')))
 				$error_phone = true;
 			elseif (((Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && Configuration::get('PS_ORDER_PROCESS_TYPE') && Tools::getValue('email_create')))
