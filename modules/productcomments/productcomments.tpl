@@ -71,6 +71,9 @@ var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
 			</div>
 			{/if}
 		{/foreach}
+		<p class="align_center">
+			<a id="new_comment_tab_btn" class="open-comment-form" href="#new_comment_form">{l s='Write your review' mod='productcomments'} !</a>
+		</p>
 	{else}
 		{if ($too_early == false AND ($logged OR $allow_guests))}
 		<p class="align_center">
