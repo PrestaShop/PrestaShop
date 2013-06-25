@@ -178,7 +178,7 @@ function displayFlags(languages, defaultLanguageID, employee_cookie)
 					);
 				var languagesFlags = $('<div></div>')
 					.addClass('language_flags')
-					.html('Choose language:<br /><br />');
+					.html(choose_language_translate+':<br /><br />');
 				$.each(languages, function(key, language) {
 					var img = $('<img>')
 						.addClass('pointer')
