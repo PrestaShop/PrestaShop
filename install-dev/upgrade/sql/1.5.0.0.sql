@@ -92,7 +92,6 @@ UPDATE PREFIX_stock_mvt sm SET sm.id_stock = IFNULL((
 	WHERE s.id_product = sm.id_product
 	AND s.id_product_attribute = sm.id_product_attribute
 	ORDER BY s.id_shop
-	LIMIT 1
 ), 0);
 DELETE FROM PREFIX_stock_mvt WHERE id_stock = 0;
 ALTER TABLE PREFIX_stock_mvt DROP id_product, DROP id_product_attribute;

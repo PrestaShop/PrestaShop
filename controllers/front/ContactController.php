@@ -170,12 +170,15 @@ class ContactControllerCore extends FrontController
 									'{attached_file}' => '-',
 									'{message}' => Tools::nl2br(stripslashes($message)),
 									'{email}' =>  $from,
+									'{product_name}' => '',
 								);
 
 					if (isset($filename))
 						$var_list['{attached_file}'] = $_FILES['fileUpload']['name'];
 
 					$id_order = (int)Tools::getValue('id_order');
+					
+					$id_product = (int)Tools::getValue('id_product');
 					
 					if (isset($ct) && Validate::isLoadedObject($ct))
 					{
@@ -193,6 +196,13 @@ class ContactControllerCore extends FrontController
 						$var_list['{id_order}'] = $id_order;
 					}
 					
+					if ($id_product)
+					{
+						$product = new Product((int)$id_product);
+						if (Validate::isLoadedObject($product) && isset($product->name[Context::getContext()->language->id]))
+							$var_list['{product_name}'] = $product->name[Context::getContext()->language->id];
+					}
+
 					if (empty($contact->email))
 						Mail::Send($this->context->language->id, 'contact_form', $subject, $var_list, $from, null, null, null, $fileAttachment);
 					else
