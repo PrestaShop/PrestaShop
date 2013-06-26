@@ -56,7 +56,6 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
 		$this->session->database_login = trim(Tools::getValue('dbLogin'));
 		$this->session->database_password = trim(Tools::getValue('dbPassword'));
 		$this->session->database_prefix = trim(Tools::getValue('db_prefix'));
-		$this->session->database_engine = Tools::getValue('dbEngine');
 		$this->session->database_clear = Tools::getValue('database_clear');
 
 		// Save email config
@@ -81,13 +80,15 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
 			$this->session->database_login,
 			$this->session->database_password,
 			$this->session->database_prefix,
-			$this->session->database_engine,
-
 			// We do not want to validate table prefix if we are already in install process
 			($this->session->step == 'process') ? true : $this->session->database_clear
 		);
-
-		return count($this->errors) ? false : true;
+		if (count($this->errors))
+			return false;
+		
+		if (!isset($this->session->database_engine))
+			$this->session->database_engine = $this->model_database->getBestEngine($this->session->database_server, $this->session->database_name, $this->session->database_login, $this->session->database_password);
+		return true;
 	}
 
 	public function process()
@@ -108,10 +109,9 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
 		$login = Tools::getValue('dbLogin');
 		$password = Tools::getValue('dbPassword');
 		$prefix = Tools::getValue('db_prefix');
-		$engine = Tools::getValue('dbEngine');
 		$clear = Tools::getValue('clear');
 
-		$errors = $this->model_database->testDatabaseSettings($server, $database, $login, $password, $prefix, $engine, $clear);
+		$errors = $this->model_database->testDatabaseSettings($server, $database, $login, $password, $prefix, $clear);
 
 		$this->ajaxJsonAnswer(
 			(count($errors)) ? false : true,
