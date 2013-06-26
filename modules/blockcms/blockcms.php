@@ -740,10 +740,38 @@ class BlockCms extends Module
 	
 	public function hookActionShopDataDuplication($params)
 	{
-		Db::getInstance()->execute('
-		INSERT IGNORE INTO '._DB_PREFIX_.'cms_block_shop (id_cms_block, id_shop)
-		SELECT id_cms_block, '.(int)$params['new_id_shop'].'
-		FROM '._DB_PREFIX_.'cms_block_shop
-		WHERE id_shop = '.(int)$params['old_id_shop']);
+		//get all cmd block to duplicate in new shop
+		$cms_blocks = Db::getInstance()->executeS('
+			SELECT * FROM `'._DB_PREFIX_.'cms_block` cb 
+			LEFT JOIN `'._DB_PREFIX_.'cms_block_shop` cbf 
+				ON (cb.`id_cms_block` = cbf.`id_cms_block` AND cbf.`id_shop` = '.(int)$params['old_id_shop'].') ');
+
+		if (count($cms_blocks))
+		{
+			foreach ($cms_blocks as $cms_block)
+			{
+				Db::getInstance()->execute('
+					INSERT IGNORE INTO '._DB_PREFIX_.'cms_block (`id_cms_block`, `id_cms_category`, `location`, `position`, `display_store`) 
+					VALUES (NULL, '.(int)$cms_block['id_cms_category'].', '.(int)$cms_block['location'].', '.(int)$cms_block['position'].', '.(int)$cms_block['display_store'].');');
+
+				$id_block_cms =  Db::getInstance()->Insert_ID();
+				
+				Db::getInstance()->execute('INSERT IGNORE INTO '._DB_PREFIX_.'cms_block_shop (`id_cms_block`, `id_shop`) VALUES ('.(int)$id_block_cms.', '.(int)$params['new_id_shop'].');');
+				
+				$langs = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'cms_block_lang` WHERE `id_cms_block` = '.(int)$cms_block['id_cms_block']);
+				
+				foreach($langs as $lang)
+					Db::getInstance()->execute('
+						INSERT IGNORE INTO `'._DB_PREFIX_.'cms_block_lang` (`id_cms_block`, `id_lang`, `name`) 
+						VALUES ('.(int)$id_block_cms.', '.(int)$lang['id_lang'].', \''.pSQL($lang['name']).'\');');
+				
+				$pages =  Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'cms_block_page` WHERE `id_cms_block` = '.(int)$cms_block['id_cms_block']);
+				
+				foreach($pages as $page)
+					Db::getInstance()->execute('
+						INSERT IGNORE INTO `'._DB_PREFIX_.'cms_block_page` (`id_cms_block_page`, `id_cms_block`, `id_cms`, `is_category`) 
+						VALUES (NULL, '.(int)$id_block_cms.', '.(int)$page['id_cms'].', '.(int)$page['is_category'].');');
+			}
+		}
 	}
 }

@@ -470,8 +470,7 @@ function init()
 					cache: false,
 					dataType: 'json',
 					data : query,
-					success : function(data)
-					{
+					success : function(data) {
 						if (data.result)
 						{
 							go = false;
@@ -491,8 +490,7 @@ function init()
 						else
 							jAlert(data.error);
 					},
-					error : function(XMLHttpRequest, textStatus, errorThrown)
-					{
+					error : function(XMLHttpRequest, textStatus, errorThrown) {
 						jAlert("Impossible to add the product to the cart.\n\ntextStatus: '" + textStatus + "'\nerrorThrown: '" + errorThrown + "'\nresponseText:\n" + XMLHttpRequest.responseText);
 					}
 				});
