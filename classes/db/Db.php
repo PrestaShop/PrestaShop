@@ -169,6 +169,8 @@ abstract class DbCore
 
 	/* do not remove, useful for some modules */
 	abstract public function set_db($db_name);
+	
+	abstract public function getBestEngine();
 
 	/**
 	 * Get Db object instance
@@ -674,7 +676,7 @@ abstract class DbCore
 		return call_user_func_array(array(Db::getClass(), 'hasTableWithSamePrefix'), array($server, $user, $pwd, $db, $prefix));
 	}
 
-	public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine)
+	public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
 	{
 		return call_user_func_array(array(Db::getClass(), 'checkCreatePrivilege'), array($server, $user, $pwd, $db, $prefix, $engine));
 	}
