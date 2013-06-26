@@ -50,14 +50,14 @@
 				console.log(truncateAuthorized);
 				if (truncateAuthorized)
 				{
-					if (!confirm('{l s='Are you sure that you would like to delete this' js=1}' + ' ' + $.trim($('#entity > option:selected').text().toLowerCase()) + '{l s='?' js=1}'))
+					if (!confirm('{l s='Are you sure that you would like to delete this' js=1}' + ' ' + $.trim($('#entity > option:selected').text().toLowerCase()) + '?'))
 					{
 						e.preventDefault();
 					}
 				}
 				else
 				{
-					jAlert('{l s='You do not have permission to delete here. When the multistore is enabled, only a SuperAdmin can delete all items before an import.'}');
+					jAlert('{l s='You do not have permission to delete here. When the multistore is enabled, only a SuperAdmin can delete all items before an import.' js='1'}');
 					return false;
 				}
 			}
