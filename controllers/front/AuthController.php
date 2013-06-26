@@ -414,11 +414,11 @@ class AuthControllerCore extends FrontController
 
 		if ($error_phone)
 			$this->errors[] = Tools::displayError('You must register at least one phone number.');
-		
+
 		$this->errors = array_unique(array_merge($this->errors, $customer->validateController()));
 
 		// Check the requires fields which are settings in the BO
-		$this->errors = array_merge($this->errors, $customer->validateFieldsRequiredDatabase());
+		$this->errors = $this->errors + $customer->validateFieldsRequiredDatabase();
 
 		if (!Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && !$this->ajax && !Tools::isSubmit('submitGuestAccount'))
 		{

@@ -172,21 +172,36 @@ class DbMySQLiCore extends Db
 		if (!$link->real_connect($server, $user, $pwd, $db))
 			return (mysqli_connect_errno() == 1049) ? 2 : 1;
 
-		if (strtolower($engine) == 'innodb')
-		{
-			$sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
-			$result = $link->query($sql);
-			if (!$result)
-				return 4;
-			$row = $result->fetch_assoc();
-			if (!$row || strtolower($row['Value']) != 'yes')
-				return 4;
-		}
 		$link->close();
 		return 0;
 	}
 	
-	public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine)
+	public function getBestEngine()
+	{
+		$value = 'InnoDB';
+		
+		$sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
+		$result = $this->link->query($sql);
+		if (!$result)
+			$value = 'MyISAM';
+		$row = $result->fetch_assoc();
+		if (!$row || strtolower($row['Value']) != 'yes')
+			$value = 'MyISAM';
+			
+		/* MySQL >= 5.6 */
+		$sql = 'SHOW ENGINES';
+		$result = $this->link->query($sql);
+		while ($row = $result->fetch_assoc())
+			if ($row['Engine'] == 'InnoDB')
+			{
+				if (in_array($row['Support'], array('DEFAULT', 'YES')))
+					$value = 'InnoDB';
+				break;
+			}
+		return $value;
+	}
+	
+	public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
 	{
 		$link = @new mysqli($server, $user, $pwd, $db);
 		if (mysqli_connect_error())

@@ -174,7 +174,7 @@ class DbPDOCore extends Db
 		return (bool)$result->fetch();
 	}
 
-	public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine)
+	public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
 	{
 		try {
 			$link = DbPDO::_getPDO($server, $user, $pwd, $db, 5);
@@ -206,33 +206,33 @@ class DbPDOCore extends Db
 		} catch (PDOException $e) {
 			return ($e->getCode() == 1049) ? 2 : 1;
 		}
-
-		if (strtolower($engine) == 'innodb')
-		{
-			$value = 0;
-			
-			$sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
-			$result = $link->query($sql);
-			if (!$result)
-				$value = 4;
-			$row = $result->fetch();
-			if (!$row || strtolower($row['Value']) != 'yes')
-				$value = 4;
-			
-			/* MySQL >= 5.6 */
-			$sql = 'SHOW ENGINES';
-			$result = $link->query($sql);
-			while ($row = $result->fetch())
-				if ($row['Engine'] == 'InnoDB')
-				{
-					if (in_array($row['Support'], array('DEFAULT', 'YES')))
-						$value = 0;
-					break;
-				}
-			return $value;
-		}
 		unset($link);
 		return 0;
+	}
+	
+	public function getBestEngine()
+	{
+		$value = 'InnoDB';
+		
+		$sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
+		$result = $this->link->query($sql);
+		if (!$result)
+			$value = 'MyISAM';
+		$row = $result->fetch();
+		if (!$row || strtolower($row['Value']) != 'yes')
+			$value = 'MyISAM';
+		
+		/* MySQL >= 5.6 */
+		$sql = 'SHOW ENGINES';
+		$result = $this->link->query($sql);
+		while ($row = $result->fetch())
+			if ($row['Engine'] == 'InnoDB')
+			{
+				if (in_array($row['Support'], array('DEFAULT', 'YES')))
+					$value = 'InnoDB';
+				break;
+			}
+		return $value;
 	}
 
 	/**

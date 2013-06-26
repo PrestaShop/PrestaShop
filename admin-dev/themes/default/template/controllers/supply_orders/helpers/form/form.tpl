@@ -138,7 +138,7 @@
 			// check if it's possible to add the product
 			if (product_infos == null || $('#cur_product_name').val() == '')
 			{
-				jAlert('{l s='Please select at least one product.'}');
+				jAlert('{l s='Please select at least one product.' js='1'}');
 				return false;
 			}
 
