@@ -130,10 +130,10 @@
 					if (jsonData.hasError)
 					{
 						var errors = '';
-						for(error in jsonData.errors)
+						for (error in jsonData.errors)
 							//IE6 bug fix
-							if(error != 'indexOf')
-								errors += jsonData.errors[error] + "\n";
+							if (error != 'indexOf')
+								errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
 						jAlert(errors);
 					}
 					else
