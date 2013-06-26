@@ -955,7 +955,8 @@ class AdminControllerCore extends Controller
 					continue;
 
 				// Check if field is required
-				if (isset($values['required']) && $values['required'] && !empty($_POST['multishopOverrideOption'][$field]))
+				if ((!Shop::isFeatureActive() && isset($values['required']) && $values['required']) 
+					|| (Shop::isFeatureActive() && isset($_POST['multishopOverrideOption'][$field]) && isset($values['required']) && $values['required']))
 					if (isset($values['type']) && $values['type'] == 'textLang')
 					{
 						foreach ($languages as $language)
