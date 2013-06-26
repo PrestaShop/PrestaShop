@@ -215,7 +215,7 @@ class DbPDOCore extends Db
 		$value = 'InnoDB';
 		
 		$sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
-		$result = $link->query($sql);
+		$result = $this->link->query($sql);
 		if (!$result)
 			$value = 'MyISAM';
 		$row = $result->fetch();
@@ -224,7 +224,7 @@ class DbPDOCore extends Db
 		
 		/* MySQL >= 5.6 */
 		$sql = 'SHOW ENGINES';
-		$result = $link->query($sql);
+		$result = $this->link->query($sql);
 		while ($row = $result->fetch())
 			if ($row['Engine'] == 'InnoDB')
 			{
