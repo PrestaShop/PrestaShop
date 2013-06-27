@@ -36,7 +36,7 @@ function smartyTranslate($params, &$smarty)
 {
 	$htmlentities = !isset($params['js']);
 	$pdf = isset($params['pdf']);
-	$addslashes = isset($params['slashes']);
+	$addslashes = (isset($params['slashes']) || isset($params['js']));
 	$sprintf = isset($params['sprintf']) ? $params['sprintf'] : false;
 
 	if ($pdf)
