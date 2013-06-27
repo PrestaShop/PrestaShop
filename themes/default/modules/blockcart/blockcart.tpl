@@ -29,7 +29,7 @@
 {if $ajax_allowed}
 <script type="text/javascript">
 var CUSTOMIZE_TEXTFIELD = {$CUSTOMIZE_TEXTFIELD};
-var img_dir = '{$img_dir}';
+var img_dir = '{$img_dir|addslashes}';
 </script>
 {/if}
 <script type="text/javascript">
