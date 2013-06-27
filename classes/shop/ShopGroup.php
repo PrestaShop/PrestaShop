@@ -153,4 +153,15 @@ class ShopGroupCore extends ObjectModel
 
 		return false;
 	}
+
+	public function shopNameExists($name, $id_shop = false)
+	{
+		return Db::getInstance()->getValue('
+			SELECT id_shop
+			FROM '._DB_PREFIX_.'shop
+			WHERE name = "'.pSQL($name).'"
+			AND id_shop_group = '.(int)$this->id.'
+			'.($id_shop ? 'AND id_shop != '.(int)$id_shop : '')
+		);
+	}
 }
