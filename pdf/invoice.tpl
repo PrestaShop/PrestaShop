@@ -92,6 +92,11 @@
 			{/foreach}
 			</table>
 			<br />
+			{if isset($carrier)}
+			<b>{l s='Carrier:' pdf='true'}</b><br />
+			{$carrier->name}<br />
+			<br />
+			{/if}				
 			<!-- / CUSTOMER INFORMATION -->
 		</td>
 		<td style="width: 85%; text-align: right">
