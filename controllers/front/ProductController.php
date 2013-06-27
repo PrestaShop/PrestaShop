@@ -454,7 +454,7 @@ class ProductControllerCore extends FrontController
 					{
 						if (isset($this->context->smarty->tpl_vars['images']->value))
 							$product_images = $this->context->smarty->tpl_vars['images']->value;
-						if (is_array($product_images) && isset($product_images[$id_image]))
+						if (isset($product_images) && is_array($product_images) && isset($product_images[$id_image]))
 						{
 							$product_images[$id_image]['cover'] = 1;
 							$this->context->smarty->assign('mainImage', $product_images[$id_image]);
@@ -463,7 +463,7 @@ class ProductControllerCore extends FrontController
 						}
 						if (isset($this->context->smarty->tpl_vars['cover']->value))
 							$cover = $this->context->smarty->tpl_vars['cover']->value;
-						if (is_array($cover) && is_array($product_images))
+						if (isset($cover) && is_array($cover) && isset($product_images) && is_array($product_images))
 						{
 							$product_images[$cover['id_image']]['cover'] = 0;
 							if (isset($product_images[$id_image]))
