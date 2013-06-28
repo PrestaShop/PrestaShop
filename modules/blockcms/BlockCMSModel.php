@@ -38,6 +38,7 @@ class BlockCMSModel extends ObjectModel
 
 	const LEFT_COLUMN = 0;
 	const RIGHT_COLUMN = 1;
+	const FOOTER = 2;
 
 	/**
 	 * @see ObjectModel::$definition
