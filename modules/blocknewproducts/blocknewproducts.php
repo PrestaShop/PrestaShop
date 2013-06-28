@@ -109,12 +109,9 @@ class BlockNewProducts extends Module
 
 	public function hookRightColumn($params)
 	{
-		if (!Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY'))
-			return;
-
 		if (!$this->isCached('blocknewproducts.tpl', $this->getCacheId()))
 		{
-			if (!($newProducts = Product::getNewProducts((int)($params['cookie']->id_lang), 0, (int)Configuration::get('NEW_PRODUCTS_NBR'))))
+			if (!Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY') && !($newProducts = Product::getNewProducts((int)$params['cookie']->id_lang, 0, (int)Configuration::get('NEW_PRODUCTS_NBR'))))
 				return;
 
 			$this->smarty->assign(array(
