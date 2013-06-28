@@ -56,8 +56,24 @@ class NewProductsControllerCore extends FrontController
 
 		$this->pagination($nbProducts);
 
+		$newProducts = Product::getNewProducts($this->context->language->id, (int)($this->p) - 1, (int)($this->n), false, $this->orderBy, $this->orderWay);
+		if((count($newProducts) < Configuration::get('PS_NB_QTY_LATEST_PRODUCT')) && Configuration::get('PS_NB_LATEST_PRODUCT') ) {
+			$latestProducts = Product::getLatestProducts($this->context->language->id, (int)($this->p) - 1, (Configuration::get('PS_NB_QTY_LATEST_PRODUCT')-count($newProducts)), false, $this->orderBy, $this->orderWay);
+			foreach($latestProducts as $key => $lProduct) {
+				$is_new = false;
+				foreach($newProducts as $key => $nProduct) {
+					if($nProduct['id_product'] == $lProduct['id_product']) { // if product from latestProducts exist in newProducts
+						$is_new = true;
+					}
+				}
+				if(!$is_new) { // if product isn't in new products, add it
+					$newProducts[] = $lProduct;
+				}
+			}
+		}
+
 		$this->context->smarty->assign(array(
-			'products' => Product::getNewProducts($this->context->language->id, (int)($this->p) - 1, (int)($this->n), false, $this->orderBy, $this->orderWay),
+			'products' => $newProducts,
 			'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
 			'nbProducts' => (int)($nbProducts),
 			'homeSize' => Image::getSize(ImageType::getFormatedName('home')),
