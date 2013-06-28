@@ -49,8 +49,9 @@ class HomeFeatured extends Module
 	function install()
 	{
 		$this->_clearCache('homefeatured.tpl');
-		if (!Configuration::updateValue('HOME_FEATURED_NBR', 8)
-			|| !parent::install()
+		Configuration::updateValue('HOME_FEATURED_NBR', 8);
+
+		if (!parent::install()
 			|| !$this->registerHook('displayHome')
 			|| !$this->registerHook('header')
 			|| !$this->registerHook('addproduct')
@@ -117,7 +118,6 @@ class HomeFeatured extends Module
 	{
 		if (!$this->isCached('homefeatured.tpl', $this->getCacheId('homefeatured')))
 		{
-			p('no cache');
 			$category = new Category(Context::getContext()->shop->getCategory(), (int)Context::getContext()->language->id);
 			$nb = (int)Configuration::get('HOME_FEATURED_NBR');
 			$products = $category->getProducts((int)Context::getContext()->language->id, 1, ($nb ? $nb : 10));
