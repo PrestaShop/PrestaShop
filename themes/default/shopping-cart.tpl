@@ -226,7 +226,7 @@
 			{assign var='odd' value=$product@iteration%2}
 			{assign var='ignoreProductLast' value=isset($customizedDatas.$productId.$productAttributeId) || count($gift_products)}
 			{* Display the product line *}
-			{include file="./shopping-cart-product-line.tpl" productLast=$product@last productFirst=$product@first}
+			{include file="$tpl_dir/shopping-cart-product-line.tpl" productLast=$product@last productFirst=$product@first}
 			{* Then the customized datas ones*}
 			{if isset($customizedDatas.$productId.$productAttributeId)}
 				{foreach $customizedDatas.$productId.$productAttributeId[$product.id_address_delivery] as $id_customization=>$customization}
