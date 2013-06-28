@@ -35,7 +35,7 @@ $('document').ready(function()
 		var parent = $(this).parent().parent();
 
 		$.ajax({
-			url: "{$link->getModuleLink('mailalerts', 'actions', ['process' => 'remove'])|escape:'html'}",
+			url: "{$link->getModuleLink('mailalerts', 'actions', ['process' => 'remove'])|addslashes}",
 			type: "POST",
 			data: {
 				'id_product': id_product_mail_alert,
