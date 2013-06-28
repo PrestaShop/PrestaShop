@@ -1,5 +1,6 @@
-@import "bootstrap/bootstrap"
-@import "import/toggle-switch.css"
+@import "_bootstrap.scss"
+@import "_font-awesome.scss"
+@import "_toggle-switch.scss"
 
 html, body
 	height: 100%
@@ -7,7 +8,7 @@ html, body
 
 body.fixed-top
 	position: relative
-	top: 41px
+	top: 56px
 	margin-bottom: 50px
 
 #main
@@ -16,13 +17,11 @@ body.fixed-top
 	height: 100%
 
 #content
-	background-color: white
-	//width: 1060px
-	margin-left: 240px
-	margin-top: 0px
 	height: 100%
-	margin-bottom: 90px
+	padding: 20px
+	margin: 0 0 90px 240px
 	border-left: 1px solid black
+	background-color: white
 
 .page-sidebar
 	top: 52px
@@ -132,7 +131,7 @@ body.fixed-top
 	line-height: 30px
 
 label span.label-tooltip
-	color: #647858
+	color: #0086CE
 	text-decoration: none
 	border-bottom: dashed 1px #647858
 
@@ -186,6 +185,10 @@ $icon-color: #7A0928
 // Tool bar
 .toolbar_btn
 	@extend .btn
+	@extend .btn-primary
+	&:hover
+		color: #474949
+		border-color: #474949
 
 [class^="process-icon-"], [class*=" process-icon-"]
 	height: 32px
@@ -218,7 +221,7 @@ $icon-color: #7A0928
 	@extend .icon-cloud-upload
 .process-icon-help-new
 	@extend .icon-question-sign
-.process-icon-edit	
+.process-icon-edit
 	@extend .icon-edit
 .process-icon-newAttributes
 	@extend .icon-plus-sign-alt
@@ -226,23 +229,22 @@ $icon-color: #7A0928
 	@extend .icon-puzzle-piece
 .process-icon-save-date
 	@extend .icon-download
-.process-icon-save-status 	
+.process-icon-save-status
 	@extend .icon-download
-.process-icon-new-module	
+.process-icon-new-module
 	@extend .icon-plus
 
 .page-head
 	position: relative
-	margin: 0 -20px 20px -20px
-	padding: 0 20px
-	min-height: 68px
-	border-bottom: 1px solid black
-	background: #ADB0B8
+	padding: 5px 5px 0 20px
+	min-height: 84px
+	margin-bottom: 20px
+	background: #EBEFF8
 	.page-title 
 		margin: 0
 		float: left
 		padding: 0
-		line-height: 68px
+		line-height: 80px
 		color: #272822
 		font-weight: normal
 		text-transform: uppercase

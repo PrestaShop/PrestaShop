@@ -1712,10 +1712,14 @@ class AdminControllerCore extends Controller
 
 		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
 		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
+
+		//Deprecated stylesheets
 		$this->addCSS(_PS_CSS_DIR_.'admin.css', 'all');
 		$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/admin.css', 'all');
-		$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/ps-admin-bootstrap.css', 'all');
-		//$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/ps-admin-bootstrap-responsive.css', 'screen');
+
+		//Bootstrap v3.00 + Specific Admin Theme
+		$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/admin-theme.css', 'all');
+
 		// Reset bootstrap style for the #nobootstrap field - Backward compatibility
 		$this->addCSS(_PS_CSS_DIR_.'bootstrap_admin_reset.css', 'all');
 
@@ -1731,8 +1735,11 @@ class AdminControllerCore extends Controller
 			_PS_JS_DIR_.'tools.js',
 			_PS_JS_DIR_.'ajax.js',
 			_PS_JS_DIR_.'toolbar.js',
-			_PS_JS_DIR_.'vendor/bootstrap-ck.js'
 		));
+
+		//loads specific javascripts for the admin theme, bootstrap.js should be moved into /js root directory
+		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/bootstrap.js');
+		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/admin-theme.js');
 
 		if (!Tools::getValue('submitFormAjax'))
 		{
