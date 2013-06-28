@@ -278,6 +278,7 @@ class AdminImportControllerCore extends AdminController
 					'firstname' => array('label' => $this->l('First Name *')),
 					'newsletter' => array('label' => $this->l('Newsletter (0/1)')),
 					'optin' => array('label' => $this->l('Opt-in (0/1)')),
+					'group' => array('label' => $this->l('Groupe Name')),
 					'id_shop' => array(
 						'label' => $this->l('ID / Name of shop'),
 						'help' => $this->l('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.'),
@@ -1813,6 +1814,7 @@ class AdminImportControllerCore extends AdminController
 		$customer_exist = false;
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
+		$default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');
 		AdminImportController::setLocale();
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
@@ -1843,6 +1845,20 @@ class AdminImportControllerCore extends AdminController
 				foreach ($customer_groups as $key => $group)
 					if ($group == $customer->id_default_group)
 						unset($customer_groups[$key]);
+			}
+
+			// Group Importation
+			if (isset($info["group"]) && $info["group"]!="") {
+				if (!isset($customer_groups)) $customer_groups=array();
+				$myGroup=Group::searchByName($default_language_id,$info["group"]);
+				if (!$myGroup) {
+					$myGroup=new Group();
+					$myGroup->name=Array($default_language_id => $info["group"]);
+					$myGroup->price_display_method=1;
+					$myGroup->add();
+					$myGroup=Group::searchByName($default_language_id,$info["group"]);
+				}
+				$customer_groups[]=$myGroup["0"]["id_group"];
 			}
 
 			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $customer);

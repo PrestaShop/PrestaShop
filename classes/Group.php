@@ -309,6 +309,35 @@ class GroupCore extends ObjectModel
 
 		return $groups[$id_group];
 	}
+	/**
+	  * Light back office search for Group
+	  *
+	  * @param integer $id_lang Language ID
+	  * @param string $query Searched string
+	  * @param boolean $unrestricted allows search without lang and includes first group and exact match
+	  * @return array Corresponding groupes
+	  */
+	public static function searchByName($id_lang, $query, $unrestricted = false)
+	{
+		if ($unrestricted === true)
+			return Db::getInstance()->getRow('
+				SELECT g.*, gl.*
+				FROM `'._DB_PREFIX_.'group` g
+				LEFT JOIN `'._DB_PREFIX_.'group_lang` gl
+					ON (g.`id_group` = gl.`id_group`)
+				WHERE `name` LIKE \''.pSQL($query).'\'
+			');
+		else
+			return Db::getInstance()->executeS('
+				SELECT g.*, gl.*
+				FROM `'._DB_PREFIX_.'group` g
+				LEFT JOIN `'._DB_PREFIX_.'group_lang` gl
+					ON (g.`id_group` = gl.`id_group`
+					AND `id_lang` = '.(int)$id_lang.')
+				WHERE `name` LIKE \'%'.pSQL($query).'%\'
+				AND g.`id_group` != '.(int)Configuration::get('PS_HOME_CATEGORY')
+			);
+	}
 }
 
 
