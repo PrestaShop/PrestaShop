@@ -871,6 +871,43 @@ class CategoryCore extends ObjectModel
 	  * Light back office search for categories
 	  *
 	  * @param integer $id_lang Language ID
+	  * @param string $path of category
+	  * @param boolean $create or not parent and category
+	  * @return array Corresponding categories
+	  */
+	public static function searchByPath($id_lang, $path,$objectToCreate = null, $MethodetoCreate = null)
+	{
+		$categories=explode('/', trim($path));
+		$id_parent_category=null;
+                foreach($categories as $category_name) {
+                 if ($id_parent_category==null)
+                  $thisCategorie=Category::searchByName($id_lang,$category_name,true);
+                 else {
+                  $thisCategorie=Category::searchByNameAndParentCategoryId($id_lang, $category_name, $id_parent_category);
+		 }
+		 if (!$thisCategorie && $objectToCreate && $MethodetoCreate) {
+                  call_user_func_array(
+		   array($objectToCreate, $MethodetoCreate)
+		  ,array(
+		    $id_lang
+		   ,$category_name
+		   ,$id_parent_category
+		   )
+		  );
+                  if ($id_parent_category==null)
+                   $thisCategorie=Category::searchByName($id_lang,$category_name,true);
+                  else {
+                   $thisCategorie=Category::searchByNameAndParentCategoryId($id_lang, $category_name, $id_parent_category);
+		  }
+		 }
+                 $id_parent_category=$thisCategorie["id_category"];
+                }
+		return $thisCategorie;
+	}
+	/**
+	  * Light back office search for categories
+	  *
+	  * @param integer $id_lang Language ID
 	  * @param string $query Searched string
 	  * @param boolean $unrestricted allows search without lang and includes first category and exact match
 	  * @return array Corresponding categories
