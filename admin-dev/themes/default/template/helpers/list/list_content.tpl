@@ -139,10 +139,10 @@
 			<div class="btn-group">	
 			{foreach $actions AS $key => $action}
 				{if $key==0}
-				<span class="btn">
+				<span class="btn btn-default">
 					{$tr.$action}
 				</span>
-				<button class="btn dropdown-toggle" data-toggle="dropdown">
+				<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 					<span class="caret"></span>&nbsp;
 				</button>
 				<ul class="dropdown-menu">
