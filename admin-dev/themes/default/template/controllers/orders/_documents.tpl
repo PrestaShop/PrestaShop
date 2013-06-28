@@ -110,7 +110,7 @@
 		{if !isset($document->is_delivery)}
 	<tr id="invoiceNote{$document->id}" style="display:none" class="current-edit">
 		<td colspan="5">
-			<form action="{$current_index}&viewOrder&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}" method="post">
+			<form action="{$current_index}&viewOrder&id_order={$order->id}{if isset($smarty.get.token)}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}{/if}" method="post">
 				<p>
 					<label for="editNote{$document->id}" class="t">{l s='Note'}</label>
 					<input type="hidden" name="id_order_invoice" value="{$document->id}" />
@@ -130,7 +130,7 @@
 		<td colspan="5" class="center">
 			<h3>{l s='No documents are available'}</h3>
 			{if isset($invoice_management_active) && $invoice_management_active}
-			<p><a class="button" href="{$current_index}&viewOrder&submitGenerateInvoice&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">{l s='Generate invoice'}</a></p>
+			<p><a class="button" href="{$current_index}&viewOrder&submitGenerateInvoice&id_order={$order->id}{if isset($smarty.get.token)}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}{/if}">{l s='Generate invoice'}</a></p>
 			{/if}
 		</td>
 	</tr>
