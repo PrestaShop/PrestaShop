@@ -680,19 +680,20 @@ class ToolsCore
 	public static function deleteDirectory($dirname, $delete_self = true)
 	{
 		$dirname = rtrim($dirname, '/').'/';
-		if ($files = scandir($dirname))
-		{
-			foreach ($files as $file)
-			if ($file != '.' && $file != '..' && $file != '.svn')
+		if (file_exists($dirname))
+			if ($files = scandir($dirname))
 			{
-				if (is_dir($dirname.$file))
-					Tools::deleteDirectory($dirname.$file, true);
-				elseif (file_exists($dirname.$file))
-					unlink($dirname.$file);
+				foreach ($files as $file)
+				if ($file != '.' && $file != '..' && $file != '.svn')
+				{
+					if (is_dir($dirname.$file))
+						Tools::deleteDirectory($dirname.$file, true);
+					elseif (file_exists($dirname.$file))
+						unlink($dirname.$file);
+				}
+				if ($delete_self)
+					rmdir($dirname);
 			}
-			if ($delete_self)
-				rmdir($dirname);
-		}
 	}
 
 	/**
