@@ -36,7 +36,7 @@ class BlockSpecials extends Module
     {
         $this->name = 'blockspecials';
         $this->tab = 'pricing_promotion';
-        $this->version = '0.8';
+        $this->version = '1.0';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -48,7 +48,23 @@ class BlockSpecials extends Module
 
 	public function install()
 	{
-		return (parent::install() AND $this->registerHook('rightColumn')  AND $this->registerHook('header'));
+		if (!Configuration::get('BLOCKSPECIALS_NB_CACHES'))
+			Configuration::updateValue('BLOCKSPECIALS_NB_CACHES', 20);
+		$this->_clearCache('blockspecials.tpl');
+
+		return (parent::install()
+			&& $this->registerHook('rightColumn')
+			&& $this->registerHook('header')
+			&& $this->registerHook('addproduct')
+			&& $this->registerHook('updateproduct')
+			&& $this->registerHook('deleteproduct')
+		);
+	}
+	
+	public function uninstall()
+	{
+		$this->_clearCache('blockspecials.tpl');
+		return parent::uninstall();
 	}
 
 	public function getContent()
@@ -56,7 +72,8 @@ class BlockSpecials extends Module
 		$output = '<h2>'.$this->displayName.'</h2>';
 		if (Tools::isSubmit('submitSpecials'))
 		{
-			Configuration::updateValue('PS_BLOCK_SPECIALS_DISPLAY', (int)(Tools::getValue('always_display')));
+			Configuration::updateValue('PS_BLOCK_SPECIALS_DISPLAY', (int)Tools::getValue('always_display'));
+			Configuration::updateValue('BLOCKSPECIALS_NB_CACHES', (int)Tools::getValue('BLOCKSPECIALS_NB_CACHES'));
 			$output .= '<div class="conf confirm">'.$this->l('Settings updated').'</div>';
 		}
 		return $output.$this->displayForm();
@@ -76,6 +93,11 @@ class BlockSpecials extends Module
 					<label class="t" for="display_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
 					<p class="clear">'.$this->l('Show the block even if no product is available.').'</p>
 				</div>
+				<label>'.$this->l('Number of cache files.').'</label>
+				<div class="margin-form">
+					<input type="text" name="BLOCKSPECIALS_NB_CACHES" value="'.(int)Configuration::get('BLOCKSPECIALS_NB_CACHES').'" />
+					<p class="clear">'.$this->l('Specials are displayed randomly on the front end, but since it takes a lot of ressources, it is better to cache the results. Cache is reset everyday. 0 will disable the cache.').'</p>
+				</div>
 				<center><input type="submit" name="submitSpecials" value="'.$this->l('Save').'" class="button" /></center>
 			</fieldset>
 		</form>';
@@ -84,18 +106,24 @@ class BlockSpecials extends Module
 	public function hookRightColumn($params)
 	{
 		if (Configuration::get('PS_CATALOG_MODE'))
-			return ;
-
-		if (!($special = Product::getRandomSpecial((int)$params['cookie']->id_lang)) && !Configuration::get('PS_BLOCK_SPECIALS_DISPLAY'))
 			return;
+		
+		// We need to create multiple caches because the products are sorted randomly
+		$random = date('Ymd').'|'.round(rand(1, max(Configuration::get('BLOCKSPECIALS_NB_CACHES'), 1)));
 
-		$this->smarty->assign(array(
-			'special' => $special,
-			'priceWithoutReduction_tax_excl' => Tools::ps_round($special['price_without_reduction'], 2),
-			'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
-		));
+		if (!Configuration::get('BLOCKSPECIALS_NB_CACHES') || !$this->isCached('blockspecials.tpl', $this->getCacheId('blockspecials|'.$random)))
+		{
+			if (!($special = Product::getRandomSpecial((int)$params['cookie']->id_lang)) && !Configuration::get('PS_BLOCK_SPECIALS_DISPLAY'))
+				return;
 
-		return $this->display(__FILE__, 'blockspecials.tpl');
+			$this->smarty->assign(array(
+				'special' => $special,
+				'priceWithoutReduction_tax_excl' => Tools::ps_round($special['price_without_reduction'], 2),
+				'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
+			));
+		}
+
+		return $this->display(__FILE__, 'blockspecials.tpl', $this->getCacheId('blockspecials|'.$random));
 	}
 
 	public function hookLeftColumn($params)
@@ -109,5 +137,19 @@ class BlockSpecials extends Module
 			return ;
 		$this->context->controller->addCSS(($this->_path).'blockspecials.css', 'all');
 	}
-}
 
+	public function hookAddProduct($params)
+	{
+		$this->_clearCache('blockspecials.tpl');
+	}
+
+	public function hookUpdateProduct($params)
+	{
+		$this->_clearCache('blockspecials.tpl');
+	}
+
+	public function hookDeleteProduct($params)
+	{
+		$this->_clearCache('blockspecials.tpl');
+	}
+}

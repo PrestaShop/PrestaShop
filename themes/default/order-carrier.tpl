@@ -32,7 +32,7 @@
 	var currencyBlank = '{$currencyBlank|intval}';
 	var txtProduct = "{l s='Product' js=1}";
 	var txtProducts = "{l s='Products' js=1}";
-	var orderUrl = '{$link->getPageLink("order", true)|escape:'html'}';
+	var orderUrl = '{$link->getPageLink("order", true)|addslashes}';
 
 	var msg = "{l s='You must agree to the terms of service before continuing.' js=1}";
 	{literal}

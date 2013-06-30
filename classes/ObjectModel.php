@@ -546,7 +546,7 @@ abstract class ObjectModelCore
 		
 		$object_id = Db::getInstance()->Insert_ID();
 		
-		if ($definition['multilang'])
+		if (isset($definition['multilang']) && $definition['multilang'])
 		{
 			$res = Db::getInstance()->executeS('
 						SELECT * 

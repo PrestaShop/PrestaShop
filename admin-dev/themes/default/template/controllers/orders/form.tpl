@@ -100,7 +100,7 @@
 		$('#show_old_carts').click();
 		$('#payment_module_name').change();
 		$.ajaxSetup({ type:"post" });
-		$("#voucher").autocomplete('{$link->getAdminLink('AdminCartRules')|escape:'html'}', {
+		$("#voucher").autocomplete('{$link->getAdminLink('AdminCartRules')|addslashes}', {
 					minChars: 3,
 					max: 15,
 					width: 250,
@@ -468,7 +468,7 @@
 		$('#new_address').attr('href', address_link.replace(/id_customer=[0-9]+/, 'id_customer='+id_customer));
 		$.ajax({
 			type:"POST",
-			url : "{$link->getAdminLink('AdminCarts')|escape:'html'}",
+			url : "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: false,
 			dataType: "json",
 			data : {

@@ -61,7 +61,8 @@ class Blocknewsletter extends Module
 
 	public function install()
 	{
-		if (parent::install() == false || $this->registerHook('leftColumn') == false || $this->registerHook('header') == false)
+		if (parent::install() == false || $this->registerHook('leftColumn') == false || $this->registerHook('header') == false
+			|| $this->registerHook('actionCustomerAccountAdd') == false)
 			return false;
 
 		Configuration::updateValue('NW_SALT', Tools::passwdGen(16));
@@ -520,5 +521,21 @@ class Blocknewsletter extends Module
 	public function hookDisplayHeader($params)
 	{
 		$this->context->controller->addCSS($this->_path.'blocknewsletter.css', 'all');
+	}
+
+	/**
+	* Deletes duplicates email in newsletter table
+	* @param $params
+	* @return bool
+	*/
+	public function hookActionCustomerAccountAdd($params)
+	{
+		//if e-mail of the created user address has already been added to the newsletter through the blocknewsletter module,
+		//we delete it from blocknewsletter table to prevent duplicates
+		$id_shop = $params['newCustomer']->id_shop;
+		$email = $params['newCustomer']->email;
+		if (Validate::isEmail($email))
+			return (bool)Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'newsletter WHERE id_shop='.(int)$id_shop.' AND email=\''.pSQL($email)."'");
+		return false;
 	}
 }
