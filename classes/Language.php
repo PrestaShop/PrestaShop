@@ -273,7 +273,7 @@ class LanguageCore extends ObjectModel
 			'contact.html', 'contact.txt',
 			'contact_form.html', 'contact_form.txt',
 			'credit_slip.html', 'credit_slip.txt',
-			'download_product.html', 'download_product.txt', 'download-product.tpl',
+			'download_product.html', 'download_product.txt',
 			'employee_password.html', 'employee_password.txt',
 			'forward_msg.html', 'forward_msg.txt',
 			'guest_to_customer.html', 'guest_to_customer.txt',
