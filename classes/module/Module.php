@@ -731,11 +731,16 @@ abstract class ModuleCore
 		// Get hook id if a name is given as argument
 		if (!is_numeric($hook_id))
 		{
+			$hook_name = (int)$hook_id;
 			// Retrocompatibility
 			$hook_id = Hook::getIdByName($hook_id);
 			if (!$hook_id)
 				return false;
 		}
+		else
+			$hook_name = Hook::getNameById((int)$hook_id);
+
+		Hook::exec('actionModuleUnRegisterHookBefore', array('object' => $this, 'hook_name' => $hook_name));
 
 		// Unregister module on hook by id
 		$sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module`
@@ -745,6 +750,8 @@ abstract class ModuleCore
 
 		// Clean modules position
 		$this->cleanPositions($hook_id, $shop_list);
+
+		Hook::exec('actionModuleUnRegisterHookAfter', array('object' => $this, 'hook_name' => $hook_name));
 
 		return $result;
 	}

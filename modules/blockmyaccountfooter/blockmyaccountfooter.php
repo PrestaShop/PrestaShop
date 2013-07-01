@@ -45,9 +45,20 @@ class Blockmyaccountfooter extends Module
 
 	public function install()
 	{
-		if (!$this->addMyAccountBlockHook() || !parent::install() || !$this->registerHook('footer') || !$this->registerHook('header') || !$this->registerHook('actionModuleRegisterHookAfter'))
+		if (!$this->addMyAccountBlockHook() 
+			|| !parent::install() 
+			|| !$this->registerHook('footer') 
+			|| !$this->registerHook('header') 
+			|| !$this->registerHook('actionModuleRegisterHookAfter')
+			|| !$this->registerHook('actionModuleUnRegisterHookAfter')
+		)
 			return false;
 		return true;
+	}
+
+	public function hookActionUnModuleRegisterHookAfter($params)
+	{
+		return $this->hookActionModuleRegisterHookAfter($params);
 	}
 
 	public function uninstall()

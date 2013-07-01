@@ -17,3 +17,5 @@ CHANGE `module_name` `module_name` VARCHAR(64) NULL DEFAULT NULL;
 /* PHP:fix_download_product_feature_active(); */;
 /* PHP:add_module_to_hook(blockmyaccount, actionModuleRegisterHookAfter); */;
 /* PHP:add_module_to_hook(blockmyaccountfooter, actionModuleRegisterHookAfter); */;
+/* PHP:add_module_to_hook(blockmyaccount, actionModuleUnRegisterHookAfter); */;
+/* PHP:add_module_to_hook(blockmyaccountfooter, actionModuleUnRegisterHookAfter); */;
