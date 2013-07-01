@@ -7,8 +7,6 @@
 .DS_Store
 robots.txt
 sitemap.xml
-cache/cachefs/*
-!cache/cachefs/index.php
 cache/smarty/cache/*
 !cache/smarty/cache/index.php
 cache/smarty/compile/*
