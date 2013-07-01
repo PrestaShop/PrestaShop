@@ -49,7 +49,8 @@ class BlockMyAccount extends Module
 			|| !parent::install() 
 			|| !$this->registerHook('displayLeftColumn') 
 			|| !$this->registerHook('displayHeader')
-			|| !$this->registerHook('actionModuleRegisterHookAfter'))
+			|| !$this->registerHook('actionModuleRegisterHookAfter')
+			|| !$this->registerHook('actionModuleUnRegisterUnHookAfter'))
 			return false;
 		return true;
 	}
@@ -57,6 +58,11 @@ class BlockMyAccount extends Module
 	public function uninstall()
 	{
 		return (parent::uninstall() && $this->removeMyAccountBlockHook());
+	}
+
+	public function hookActionUnModuleRegisterHookAfter($params)
+	{
+		return $this->hookActionModuleRegisterHookAfter($params);
 	}
 
 	public function hookActionModuleRegisterHookAfter($params)
