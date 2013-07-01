@@ -1,4 +1,4 @@
-<form action="{$link->getPageLink('authentication', true)|escape:'html'}" method="post" id="account-creation_form" class="std">
+<form action="{$link->getPageLink('authentication', true)|escape:'html'}" method="post" id="account-creation_form" class="std" data-ajax="false">
 	{$HOOK_CREATE_ACCOUNT_TOP}
 	<fieldset class="account_creation">
 		<h3>{l s='Your personal information'}</h3>
