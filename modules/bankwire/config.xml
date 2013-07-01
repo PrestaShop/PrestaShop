@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>bankwire</name>
-            <displayName><![CDATA[Virement Bancaire]]></displayName>
+            <displayName><![CDATA[Bank Wire]]></displayName>
             <version><![CDATA[0.6]]></version>
-            <description><![CDATA[Accepter les paiements par virement.]]></description>
+            <description><![CDATA[Accept payments for your products via bank wire.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[payments_gateways]]></tab>
-	<confirmUninstall>Êtes-vous certain de vouloir effacer vos données ?</confirmUninstall>
+	<confirmUninstall>Are you sure about removing these details?</confirmUninstall>
             <is_configurable>1</is_configurable>
             <need_instance>1</need_instance>
 	<limited_countries></limited_countries>
