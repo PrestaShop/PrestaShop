@@ -1237,12 +1237,11 @@ class OrderCore extends ObjectModel
 
 	public function getTotalWeight()
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT SUM(product_weight * product_quantity) weight
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT SUM(product_weight * product_quantity)
 		FROM '._DB_PREFIX_.'order_detail
 		WHERE id_order = '.(int)($this->id));
-
-		return (float)($result['weight']);
+		return (float)($result);
 	}
 
 	/**
@@ -1881,5 +1880,21 @@ class OrderCore extends ObjectModel
 		$order = new Order($id_order);
 		return $order->getUniqReference();
 	}
+	
+	/**
+	 * Return a unique reference like : GWJTHMZUN#2
+	 * 
+	 * With multishipping, order reference are the same for all orders made with the same cart
+	 * in this case this method suffix the order reference by a # and the order number
+	 * 
+	 * @since 1.5.5.0
+	 */	
+	public function getIdOrderCarrier()	
+	{
+		return (int)Db::getInstance()->getValue('
+				SELECT `id_order_carrier`
+				FROM `'._DB_PREFIX_.'order_carrier`
+				WHERE `id_order` = '.(int)$this->id);
+	}		
 }
 

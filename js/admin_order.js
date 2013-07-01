@@ -268,6 +268,10 @@ function updateAmounts(order)
 		$(this).html(old_quantity + 1);
 		$(this).fadeIn('slow');
 	});
+	$('#shipping_table .weight').fadeOut('slow', function() {
+		$(this).html(order.weight);
+		$(this).fadeIn('slow');
+	});
 }
 
 function closeAddProduct()
