@@ -25,6 +25,9 @@ select[disabled="disabled"], input[disabled="disabled"],textarea[disabled="disab
 .double_select select{width:300px;height:160px;}
 .double_select a{text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px}
 
+.icon {vertical-align:middle}
+.icon-top {vertical-align:top}
+
 /*BUTTON*/
 .button{
 	background: #e3e3e3 url('../img/bg-button-degrade.png') repeat-x scroll left top;

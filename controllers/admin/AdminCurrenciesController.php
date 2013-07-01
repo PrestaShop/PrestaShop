@@ -38,7 +38,7 @@ class AdminCurrenciesControllerCore extends AdminController
 			'iso_code' => array('title' => $this->l('ISO code'), 'align' => 'center', 'width' => 80),
 			'iso_code_num' => array('title' => $this->l('ISO code number'), 'align' => 'center', 'width' => 120),
 			'sign' => array('title' => $this->l('Symbol'), 'width' => 20, 'align' => 'center', 'orderby' => false, 'search' => false),
-			'conversion_rate' => array('title' => $this->l('Conversion rate'), 'type' => 'float', 'align' => 'center', 'width' => 130, 'search' => false),
+			'conversion_rate' => array('title' => $this->l('Exchange rate'), 'type' => 'float', 'align' => 'center', 'width' => 130, 'search' => false),
 			'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false),
 		);
 
@@ -130,12 +130,12 @@ class AdminCurrenciesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Conversion rate:'),
+					'label' => $this->l('Exchange rate:'),
 					'name' => 'conversion_rate',
 					'size' => 3,
 					'maxlength' => 11,
 					'required' => true,
-					'desc' => $this->l('Conversion rates are calculated from one unit of your shop\'s default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20"').' 1&euro; = $1.20',
+					'desc' => $this->l('Exchange rates are calculated from one unit of your shop\'s default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20"').' 1&euro; = $1.20',
 				),
 				array(
 					'type' => 'select',

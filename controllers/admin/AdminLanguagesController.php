@@ -144,7 +144,7 @@ class AdminLanguagesControllerCore extends AdminController
 					'required' => true,
 					'size' => 2,
 					'maxlength' => 5,
-					'desc' => $this->l('Full language code (e.g. EN-US, PT-BR)')
+					'desc' => $this->l('IETF language tag (e.g. en-US, pt-BR).').' '.sprintf('<a href="http://en.wikipedia.org/wiki/IETF_language_tag" target="_blank">%s <img src="../img/admin/external_link.png" class="icon-top" /></a>', $this->l('IETF on Wikipedia'))
 				),
 				array(
 					'type' => 'text',

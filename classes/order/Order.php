@@ -63,7 +63,7 @@ class OrderCore extends ObjectModel
 	/** @var string Payment module */
 	public $module;
 
-	/** @var float Currency conversion rate */
+	/** @var float Currency exchange rate */
 	public $conversion_rate;
 
 	/** @var boolean Customer is ok for a recyclable package */

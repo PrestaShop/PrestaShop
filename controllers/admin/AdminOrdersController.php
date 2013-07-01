@@ -976,7 +976,7 @@ class AdminOrdersControllerCore extends AdminController
 
 					// Update currency in order
 					$order->id_currency = $currency->id;
-					// Update conversion rate
+					// Update exchange rate
 					$order->conversion_rate = (float)$currency->conversion_rate;
 					$order->update();
 				}
