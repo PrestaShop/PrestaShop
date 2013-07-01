@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>mailalerts</name>
-            <displayName><![CDATA[Mail alerts]]></displayName>
+            <displayName><![CDATA[Alertes email]]></displayName>
             <version><![CDATA[2.4]]></version>
-            <description><![CDATA[Sends e-mail notifications to customers and merchants.]]></description>
+            <description><![CDATA[Envoie des notifications par e-mail aux clients et aux marchands.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[administration]]></tab>
-	<confirmUninstall>Are you sure you want to delete all customer notifications?</confirmUninstall>
+	<confirmUninstall>Etes-vous sûr de vouloir supprimer toutes les notifications clients ?</confirmUninstall>
             <is_configurable>1</is_configurable>
             <need_instance>0</need_instance>
 	<limited_countries></limited_countries>
