@@ -34,7 +34,7 @@ function add_order_reference_in_order_payment()
 	ON o.id_order = op.id_order');
 	
 	if (!is_object($payments))
-		return false;
+		return true;
 	
 	$errors = array();
 	// Populate "order_reference"
@@ -62,7 +62,7 @@ function add_order_reference_in_order_payment()
 	HAVING COUNT(*) > 1');
 	
 	if (!is_object($duplicate_lines))
-		return false;
+		return true;
 
 	$order_payments_to_remove = array();
 	while ($order_payments = Db::getInstance()->nextRow($duplicate_lines))

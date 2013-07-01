@@ -1,5 +1,8 @@
 SET NAMES 'utf8';
 
+ALTER TABLE `PREFIX_delivery` ADD `id_shop` INT UNSIGNED NULL DEFAULT NULL AFTER `id_delivery`;
+ALTER TABLE `PREFIX_delivery` ADD `id_group_shop` INT UNSIGNED NULL DEFAULT NULL AFTER `id_shop`;
+
 CREATE TABLE IF NOT EXISTS `PREFIX_module_access` (
   `id_profile` int(10) unsigned NOT NULL,
   `id_module` int(10) unsigned NOT NULL,
