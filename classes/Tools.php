@@ -692,7 +692,7 @@ class ToolsCore
     						unlink($dirname.$file);
     				}
 				if ($delete_self)
-					if (!rmdir($dirname)
+					if (!rmdir($dirname))
                         return false;
                 return true;                    
 			}
