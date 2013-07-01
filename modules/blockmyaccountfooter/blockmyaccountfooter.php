@@ -33,7 +33,7 @@ class Blockmyaccountfooter extends Module
 	{
 		$this->name = 'blockmyaccountfooter';
 		$this->tab = 'front_office_features';
-		$this->version = '1.2';
+		$this->version = '1.3';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -45,7 +45,7 @@ class Blockmyaccountfooter extends Module
 
 	public function install()
 	{
-		if (!$this->addMyAccountBlockHook() || !parent::install() || !$this->registerHook('footer') || !$this->registerHook('header'))
+		if (!$this->addMyAccountBlockHook() || !parent::install() || !$this->registerHook('footer') || !$this->registerHook('header') || !$this->registerHook('actionModuleRegisterHookAfter'))
 			return false;
 		return true;
 	}
@@ -53,6 +53,12 @@ class Blockmyaccountfooter extends Module
 	public function uninstall()
 	{
 		return parent::uninstall() && $this->removeMyAccountBlockHook();
+	}
+
+	public function hookActionModuleRegisterHookAfter($params)
+	{
+		if ($params['hook_name'] == 'displayMyAccountBlock')
+			$this->_clearCache('blockmyaccountfooter.tpl');
 	}
 
 	public function hookLeftColumn($params)
@@ -97,7 +103,7 @@ class Blockmyaccountfooter extends Module
 			$smarty->assign(array(
 				'voucherAllowed' => CartRule::isFeatureActive(),
 				'returnAllowed' => (int)(Configuration::get('PS_ORDER_RETURN')),
-				'HOOK_BLOCK_MY_ACCOUNT' => Hook::exec('displayMyAccountBlock')
+				'HOOK_BLOCK_MY_ACCOUNT' => Hook::exec('displayMyAccountBlockfooter')
 			));
 		return $this->display(__FILE__, 'blockmyaccountfooter.tpl', $this->getCacheId());
 	}

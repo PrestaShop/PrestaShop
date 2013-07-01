@@ -668,6 +668,7 @@ abstract class ModuleCore
 		if ($alias = Hook::getRetroHookName($hook_name))
 			$hook_name = $alias;
 
+		Hook::exec('actionModuleRegisterHookBefore', array('object' => $this, 'hook_name' => $hook_name));
 		// Get hook id
 		$id_hook = Hook::getIdByName($hook_name);
 
@@ -714,6 +715,7 @@ abstract class ModuleCore
 			));
 		}
 
+		Hook::exec('actionModuleRegisterHookAfter', array('object' => $this, 'hook_name' => $hook_name));
 		return $return;
 	}
 
