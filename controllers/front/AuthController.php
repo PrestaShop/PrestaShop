@@ -85,11 +85,7 @@ class AuthControllerCore extends FrontController
 
 		$this->assignCountries();
 
-		$active_module_newsletter = false;
-		if ($module_newsletter = Module::getInstanceByName('blocknewsletter'))
-			$active_module_newsletter = $module_newsletter->active;
-
-		$this->context->smarty->assign('newsletter', (int)$active_module_newsletter);
+		$this->context->smarty->assign('newsletter', 1);
 
 		$back = Tools::getValue('back');
 		$key = Tools::safeOutput(Tools::getValue('key'));
