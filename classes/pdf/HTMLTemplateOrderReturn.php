@@ -39,7 +39,7 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
 		$this->order = new Order($order_return->id_order);
 
 		// header informations
-		$this->date = Tools::displayDate($this->order->invoice_date, (int)$this->order->id_lang);
+		$this->date = Tools::displayDate($this->order->invoice_date);
 		$this->title = HTMLTemplateOrderReturn::l('Order Return ').sprintf('%06d', $this->order_return->id);
 
 		// footer informations

@@ -267,6 +267,9 @@ class ToolsCore
 		// $_SERVER['SSL'] exists only in some specific configuration
 		if (isset($_SERVER['SSL']))
 			return ($_SERVER['SSL'] == 1 || strtolower($_SERVER['SSL']) == 'on');
+		// $_SERVER['REDIRECT_HTTPS'] exists only in some specific configuration
+		if (isset($_SERVER['REDIRECT_HTTPS']))
+			return ($_SERVER['REDIRECT_HTTPS'] == 1 || strtolower($_SERVER['REDIRECT_HTTPS']) == 'on');
 
 		return false;
 	}
@@ -598,20 +601,25 @@ class ToolsCore
 	*/
 	public static function dateFormat($params, &$smarty)
 	{
-		return Tools::displayDate($params['date'], Context::getContext()->language->id, (isset($params['full']) ? $params['full'] : false));
+		return Tools::displayDate($params['date'], null, (isset($params['full']) ? $params['full'] : false));
 	}
 
 	/**
 	* Display date regarding to language preferences
 	*
 	* @param string $date Date to display format UNIX
-	* @param integer $id_lang Language id
+	* @param integer $id_lang Language id DEPRECATED
 	* @param boolean $full With time or not (optional)
 	* @param string $separator DEPRECATED
 	* @return string Date
 	*/
-	public static function displayDate($date, $id_lang, $full = false, $separator = '-')
+	public static function displayDate($date, $id_lang = null, $full = false, $separator = null)
 	{
+		if ($id_lang !== null)
+			Tools::displayParameterAsDeprecated('id_lang');
+		if ($separator !== null)
+			Tools::displayParameterAsDeprecated('separator');	
+			
 		if (!$date || !($time = strtotime($date)))
 			return $date;
 
@@ -958,11 +966,13 @@ class ToolsCore
 	 * Return the friendly url from the provided string
 	 *
 	 * @param string $str
-	 * @param bool $utf8_decode => needs to be marked as deprecated
+	 * @param bool $utf8_decode (deprecated)
 	 * @return string
 	 */
-	public static function link_rewrite($str, $utf8_decode = false)
+	public static function link_rewrite($str, $utf8_decode = null)
 	{
+		if ($utf8_decode !== null)
+			Tools::displayParameterAsDeprecated('utf8_decode');
 		return Tools::str2url($str);
 	}
 
@@ -1019,11 +1029,12 @@ class ToolsCore
 			'/[\x{010F}]/u',
 			'/[\x{00E8}\x{00E9}\x{00EA}\x{00EB}\x{011B}\x{0119}]/u',
 			'/[\x{00EC}\x{00ED}\x{00EE}\x{00EF}]/u',
+			'/[\x{011F}]/u',
 			'/[\x{0142}\x{013E}\x{013A}]/u',
 			'/[\x{00F1}\x{0148}]/u',
 			'/[\x{00F2}\x{00F3}\x{00F4}\x{00F5}\x{00F6}\x{00F8}]/u',
 			'/[\x{0159}\x{0155}]/u',
-			'/[\x{015B}\x{0161}]/u',
+			'/[\x{015B}\x{0161}\x{015F}]/u',
 			'/[\x{00DF}]/u',
 			'/[\x{0165}]/u',
 			'/[\x{00F9}\x{00FA}\x{00FB}\x{00FC}\x{016F}]/u',
@@ -1037,11 +1048,12 @@ class ToolsCore
 			'/[\x{00C7}\x{010C}\x{0106}]/u',
 			'/[\x{010E}]/u',
 			'/[\x{00C8}\x{00C9}\x{00CA}\x{00CB}\x{011A}\x{0118}]/u',
+			'/[\x{011E}]/u',
 			'/[\x{0141}\x{013D}\x{0139}]/u',
 			'/[\x{00D1}\x{0147}]/u',
 			'/[\x{00D3}]/u',
 			'/[\x{0158}\x{0154}]/u',
-			'/[\x{015A}\x{0160}]/u',
+			'/[\x{015A}\x{0160}\x{015E}]/u',
 			'/[\x{0164}]/u',
 			'/[\x{00D9}\x{00DA}\x{00DB}\x{00DC}\x{016E}]/u',
 			'/[\x{017B}\x{0179}\x{017D}]/u',
@@ -1049,8 +1061,8 @@ class ToolsCore
 			'/[\x{0152}]/u');
 
 		$replacements = array(
-				'a', 'c', 'd', 'e', 'i', 'l', 'n', 'o', 'r', 's', 'ss', 't', 'u', 'y', 'z', 'ae', 'oe',
-				'A', 'C', 'D', 'E', 'L', 'N', 'O', 'R', 'S', 'T', 'U', 'Z', 'AE', 'OE'
+				'a', 'c', 'd', 'e', 'i', 'g', 'l', 'n', 'o', 'r', 's', 'ss', 't', 'u', 'y', 'z', 'ae', 'oe',
+				'A', 'C', 'D', 'E', 'G', 'L', 'N', 'O', 'R', 'S', 'T', 'U', 'Z', 'AE', 'OE'
 			);
 
 		return preg_replace($patterns, $replacements, $str);
@@ -1313,9 +1325,30 @@ class ToolsCore
 	{
 		return @simplexml_load_string(Tools::file_get_contents($url), $class_name);
 	}
+	
+	public static function copy($source, $destination, $stream_context = null)
+	{
+		if ($stream_context == null && preg_match('/^https?:\/\//', $source))
+			$stream_context = @stream_context_create(array('http' => array('timeout' => 10)));
 
-
-	public static $a = 0;
+		if (in_array(@ini_get('allow_url_fopen'), array('On', 'on', '1')) || !preg_match('/^https?:\/\//', $source))
+			return @copy($source, $destination, $stream_context);
+		elseif (function_exists('curl_init'))
+		{
+			$curl = curl_init();
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($curl, CURLOPT_URL, $source);
+			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
+			curl_setopt($curl, CURLOPT_TIMEOUT, 10);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+			$opts = stream_context_get_options($stream_context);
+			$content = curl_exec($curl);
+			curl_close($curl);
+			return file_put_contents($destination, $content);
+		}
+		else
+			return false;
+	}
 
 	/**
 	 * @deprecated as of 1.5 use Media::minifyHTML()
@@ -1490,7 +1523,7 @@ class ToolsCore
 
 		if (self::$_cache_nb_media_servers && ($id_media_server = (abs(crc32($filename)) % self::$_cache_nb_media_servers + 1)))
 			return constant('_MEDIA_SERVER_'.$id_media_server.'_');
-		return Tools::getHttpHost();
+		return Tools::getShopDomain();
 	}
 
 	public static function generateHtaccess($path = null, $rewrite_settings = null, $cache_control = null, $specific = '', $disable_multiviews = null, $medias = false, $disable_modsec = null)
@@ -1822,7 +1855,7 @@ exit;
 	{
 		$backtrace = debug_backtrace();
 		$callee = next($backtrace);
-		$error = 'Parameter <b>'.$parameter.'</b> in function <b>'.$callee['function'].'()</b> is deprecated in <b>'.$callee['file'].'</b> on line <b>'.$callee['Line'].'</b><br />';
+		$error = 'Parameter <b>'.$parameter.'</b> in function <b>'.(isset($callee['function']) ? $callee['function'] : '').'()</b> is deprecated in <b>'.$callee['file'].'</b> on line <b>'.$callee['Line'].'</b><br />';
 		$message = 'The parameter '.$parameter.' in function '.$callee['function'].' (Line '.$callee['Line'].') is deprecated and will be removed in the next major version.';
 		$class = isset($callee['class']) ? $callee['class'] : null;
 
@@ -2173,6 +2206,28 @@ exit;
 	public static function isX86_64arch()
 	{
 		return (PHP_INT_MAX == '9223372036854775807');
+	}
+
+	/**
+	 *
+	 * @return bool true if php-cli is used
+	 */
+	public static function isPHPCLI()
+	{
+		return (defined('STDIN') || (Tools::strtolower(php_sapi_name()) == 'cli' && (!isset($_SERVER['REMOTE_ADDR']) || empty($_SERVER['REMOTE_ADDR']))));
+	}
+
+	public static function argvToGET($argc, $argv)
+	{
+		if ($argc <= 1)
+			return;
+
+		// get the first argument and parse it like a query string
+		parse_str($argv[1], $args);
+		if (!is_array($args) || !count($args))
+			return;
+		$_GET = array_merge($args, $_GET);
+		$_SERVER['QUERY_STRING'] = $argv[1];
 	}
 
 	/**

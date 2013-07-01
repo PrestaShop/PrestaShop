@@ -1676,9 +1676,9 @@ abstract class AdminTabCore
 					elseif (isset($params['float']))
 						echo rtrim(rtrim($tr[$key], '0'), '.');
 					elseif (isset($params['type']) && $params['type'] == 'date')
-						echo Tools::displayDate($tr[$key], $this->context->language->id);
+						echo Tools::displayDate($tr[$key]);
 					elseif (isset($params['type']) && $params['type'] == 'datetime')
-						echo Tools::displayDate($tr[$key], $this->context->language->id, true);
+						echo Tools::displayDate($tr[$key],null , true);
 					elseif (isset($tr[$key]))
 					{
 						if ($key == 'price')

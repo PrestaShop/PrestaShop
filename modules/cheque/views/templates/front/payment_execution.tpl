@@ -38,7 +38,7 @@
 <h3>{l s='Check payment' mod='cheque'}</h3>
 <form action="{$link->getModuleLink('cheque', 'validation', [], true)}" method="post">
 	<p>
-		<img src="{$this_path}cheque.jpg" alt="{l s='Check' mod='cheque'}" width="86" height="49" style="float:left; margin: 0px 10px 5px 0px;" />
+		<img src="{$this_path_cheque}cheque.jpg" alt="{l s='Check' mod='cheque'}" width="86" height="49" style="float:left; margin: 0px 10px 5px 0px;" />
 		{l s='You have chosen to pay by check.' mod='cheque'}
 		<br/><br />
 		{l s='Here is a short summary of your order:' mod='cheque'}

@@ -38,6 +38,7 @@ var removingLinkText = '{l s='remove this product from my cart' mod='blockcart' 
 var freeShippingTranslation = '{l s='Free shipping!' mod='blockcart' js=1}';
 var freeProductTranslation = '{l s='Free!' mod='blockcart' js=1}';
 var delete_txt = '{l s='Delete' mod='blockcart' js=1}';
+var generated_date = {$smarty.now|intval};
 </script>
 
 
@@ -100,7 +101,7 @@ var delete_txt = '{l s='Delete' mod='blockcart' js=1}';
 						<li name="customization">
 							<div class="deleteCustomizableProduct" id="deleteCustomizableProduct_{$id_customization|intval}_{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}"><a class="ajax_cart_block_remove_link" href="{$link->getPageLink('cart', true, NULL, "delete=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_customization={$id_customization}&amp;token={$static_token}", true)}" rel="nofollow"> </a></div>
 							<span class="quantity-formated"><span class="quantity">{$customization.quantity}</span>x</span>{if isset($customization.datas.$CUSTOMIZE_TEXTFIELD.0)}
-							{$customization.datas.$CUSTOMIZE_TEXTFIELD.0.value|escape:html:'UTF-8'|replace:"<br />":" "|truncate:28}
+							{$customization.datas.$CUSTOMIZE_TEXTFIELD.0.value|replace:"<br />":" "|truncate:28:'...'|escape:html:'UTF-8'}
 							{else}
 							{l s='Customization #%d:' sprintf=$id_customization|intval mod='blockcart'}
 							{/if}

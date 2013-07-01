@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture name=path}{l s='Guest tracking'}{/capture}
+{capture name=path}{l s='Guest Tracking'}{/capture}
 {include file="./breadcrumb.tpl"}
 
 <h1>{l s='Guest Tracking'}</h1>

@@ -493,7 +493,7 @@ class OrderOpcControllerCore extends ParentOrderController
 		$address_delivery = new Address($this->context->cart->id_address_delivery);
 		
 		$cms = new CMS(Configuration::get('PS_CONDITIONS_CMS_ID'), $this->context->language->id);
-		$link_conditions = $this->context->link->getCMSLink($cms, $cms->link_rewrite, true);
+		$link_conditions = $this->context->link->getCMSLink($cms, $cms->link_rewrite);
 		if (!strpos($link_conditions, '?'))
 			$link_conditions .= '?content_only=1';
 		else

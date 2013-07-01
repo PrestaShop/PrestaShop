@@ -85,13 +85,15 @@ class OrderHistoryCore extends ObjectModel
 		else
 			return;
 
+		ShopUrl::cacheMainDomainForShop($order->id_shop);
+
 		$new_os = new OrderState((int)$new_order_state, $order->id_lang);
 		$old_os = $order->getCurrentOrderState();
 		$is_validated = $this->isValidated();
 		
 
 		// executes hook
-		if ($new_os->id == Configuration::get('PS_OS_PAYMENT'))
+		if (in_array($new_os->id, array(Configuration::get('PS_OS_PAYMENT'), Configuration::get('PS_OS_WS_PAYMENT'))))
 			Hook::exec('actionPaymentConfirmation', array('id_order' => (int)$order->id));
 
 		// executes hook
@@ -120,8 +122,8 @@ class OrderHistoryCore extends ObjectModel
 							.'&id_order='.(int)$order->id
 							.'&secure_key='.$order->secure_key;
 						$assign[$key]['link'] = $dl_link;
-						if ($virtual_product['date_expiration'] != '0000-00-00 00:00:00')
-							$assign[$key]['deadline'] = Tools::displayDate($virtual_product['date_expiration '], $order->id_lang);
+						if (isset($virtual_product['date_expiration']) && $virtual_product['date_expiration'] != '0000-00-00 00:00:00')
+							$assign[$key]['deadline'] = Tools::displayDate($virtual_product['date_expiration ']);
 						if ($product_download->nb_downloadable != 0)
 							$assign[$key]['downloadable'] = (int)$product_download->nb_downloadable;
 					}
@@ -326,6 +328,8 @@ class OrderHistoryCore extends ObjectModel
 			'newOrderStatus' => $new_os,
 			'id_order' => (int)$order->id,
 		));
+
+		ShopUrl::resetMainDomainCache();
 	}
 
 	/**
@@ -377,6 +381,8 @@ class OrderHistoryCore extends ObjectModel
 			WHERE oh.`id_order_history` = '.(int)$this->id.' AND os.`send_email` = 1');
 		if (isset($result['template']) && Validate::isEmail($result['email']))
 		{
+			ShopUrl::cacheMainDomainForShop($order->id_shop);
+			
 			$topic = $result['osname'];
 			$data = array(
 				'{lastname}' => $result['lastname'],
@@ -400,6 +406,8 @@ class OrderHistoryCore extends ObjectModel
 			if (Validate::isLoadedObject($order))
 				Mail::Send((int)$order->id_lang, $result['template'], $topic, $data, $result['email'], $result['firstname'].' '.$result['lastname'],
 					null, null, null, null, _PS_MAIL_DIR_, false, (int)$order->id_shop);
+			
+			ShopUrl::resetMainDomainCache();
 		}
 
 		return true;

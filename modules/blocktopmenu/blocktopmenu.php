@@ -351,14 +351,14 @@ class Blocktopmenu extends Module
 					<div id="link_label_'.(int)$language['id_lang'].'" style="display: '.($language['id_lang'] == $id_lang ? 'block' : 'none').';">
 				<label>'.$this->l('Label').'</label>
 				<div class="margin-form">
-						<input type="text" name="label['.(int)$language['id_lang'].']" id="label_'.(int)$language['id_lang'].'" size="70" value="'.(isset($labels_edit[$language['id_lang']]) ? Tools::safeOutput($labels_edit[$language['id_lang']]) : '').'" />
+						<input type="text" name="label['.(int)$language['id_lang'].']" id="label_'.(int)$language['id_lang'].'" size="70" value="'.(isset($labels_edit[$language['id_lang']]) ? $labels_edit[$language['id_lang']] : '').'" />
 			  </div>
 					';
 
 			$this->_html .= '
 				  <label>'.$this->l('Link').'</label>
 				<div class="margin-form">
-					<input type="text" name="link['.(int)$language['id_lang'].']" id="link_'.(int)$language['id_lang'].'" value="'.(isset($links_label_edit[$language['id_lang']]) ? Tools::safeOutput($links_label_edit[$language['id_lang']]) : '').'" size="70" />
+					<input type="text" name="link['.(int)$language['id_lang'].']" id="link_'.(int)$language['id_lang'].'" value="'.(isset($links_label_edit[$language['id_lang']]) ? $links_label_edit[$language['id_lang']] : '').'" size="70" />
 				</div>
 				</div>';
 		}
@@ -554,7 +554,7 @@ class Blocktopmenu extends Module
 					if (!is_null($manufacturer->id))
 					{
 						if (intval(Configuration::get('PS_REWRITING_SETTINGS')))
-							$manufacturer->link_rewrite = Tools::link_rewrite($manufacturer->name, false);
+							$manufacturer->link_rewrite = Tools::link_rewrite($manufacturer->name);
 						else
 							$manufacturer->link_rewrite = 0;
 						$link = new Link;

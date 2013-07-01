@@ -53,5 +53,3 @@ UPDATE `PREFIX_customer` SET `id_gender` = 1 WHERE `email` LIKE 'pub@prestashop.
 UPDATE `PREFIX_cart_rule_carrier` crc INNER JOIN `PREFIX_carrier` c ON crc.`id_carrier` = c.`id_carrier` SET crc.`id_carrier` = c.`id_reference`;
 
 UPDATE `PREFIX_order_payment` SET `order_reference` = LPAD(order_reference, 9 , '0');
-
-/* PHP:p1540_add_missing_columns(); */;
