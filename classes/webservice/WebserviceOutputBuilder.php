@@ -376,7 +376,7 @@ class WebserviceOutputBuilderCore
 			{
 				if ($key !== 'empty')
 				{
-					if ($this->fieldsToDisplay  === 'minimum')
+					if ($this->fieldsToDisplay === 'minimum')
 						$output .= $this->renderEntityMinimum($object, $depth);
 					else
 						$output .= $this->renderEntity($object, $depth);
