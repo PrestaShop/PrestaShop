@@ -2717,7 +2717,7 @@ class AdminProductsControllerCore extends AdminController
 						
 						if (!$product_supplier_id)
 						{
-							$product->addSupplierReference($supplier->id_supplier, (int)$attribute['id_product_attribute'], $reference, (float)Tools::convertPrice($price, $id_currency), (int)$id_currency);
+							$product->addSupplierReference($supplier->id_supplier, (int)$attribute['id_product_attribute'], $reference, (float)$price, (int)$id_currency);
 							if ($product->id_supplier == $supplier->id_supplier)
 							{
 								if ((int)$attribute['id_product_attribute'] > 0)
@@ -2743,7 +2743,7 @@ class AdminProductsControllerCore extends AdminController
 						{
 							$product_supplier = new ProductSupplier($product_supplier_id);
 							$product_supplier->id_currency = (int)$id_currency;
-							$product_supplier->product_supplier_price_te = (float)Tools::convertPrice($price, $id_currency); //converted in the default currency
+							$product_supplier->product_supplier_price_te = (float)$price;
 							$product_supplier->product_supplier_reference = pSQL($reference);
 							$product_supplier->update();
 
