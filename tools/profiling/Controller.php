@@ -264,7 +264,11 @@ abstract class Controller extends ControllerCore
 	private function sizeofvar($var)
 	{
 		$start_memory = memory_get_usage();
-		$tmp = Tools::unSerialize(serialize($var));
+		try {
+			$tmp = Tools::unSerialize(serialize($var));
+		} catch (Exception $e) {
+			$tmp = strlen((string)$var);
+		}
 		$size = memory_get_usage() - $start_memory;
 		return $size;
 	}
