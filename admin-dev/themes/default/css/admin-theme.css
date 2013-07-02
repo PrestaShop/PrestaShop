@@ -6768,7 +6768,8 @@ https://github.com/ghinda/css-toggle-switch
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\0000319}}
 .switch label {
-  padding: 0; }
+  padding: 0;
+  cursor: pointer; }
 
 /* Toggle Switches */
 /* We can't test for a specific feature,
@@ -6777,7 +6778,7 @@ https://github.com/ghinda/css-toggle-switch
 @media only screen {
   /* Checkbox
    */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\0000332}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\0000333}}
   .toggle {
     position: relative;
     padding: 0;
@@ -6786,7 +6787,7 @@ https://github.com/ghinda/css-toggle-switch
   /* Position the label over all the elements, except the slide-button
    * Clicking anywhere on the label will change the switch-state
    */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\0000341}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\0000342}}
   .toggle label {
     position: relative;
     z-index: 3;
@@ -6795,13 +6796,13 @@ https://github.com/ghinda/css-toggle-switch
 
   /* Don't hide the input from screen-readers and keyboard access
    */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\0000351}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\0000352}}
   .toggle input {
     position: absolute;
     opacity: 0;
     z-index: 5; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\0000357}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\0000358}}
   .toggle p {
     position: absolute;
     left: -100px;
@@ -6810,7 +6811,7 @@ https://github.com/ghinda/css-toggle-switch
     padding-right: 100px;
     text-align: left; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\0000368}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\0000369}}
   .toggle p span {
     position: absolute;
     top: 0;
@@ -6821,11 +6822,11 @@ https://github.com/ghinda/css-toggle-switch
     margin-left: 100px;
     text-align: center; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\0000381}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\0000382}}
   .toggle p span:last-child {
     left: 50%; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\0000385}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\0000386}}
   .toggle .slide-button {
     position: absolute;
     right: 0;
@@ -6838,17 +6839,17 @@ https://github.com/ghinda/css-toggle-switch
 
   /* Radio Switch
    */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\0000399}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003100}}
   .switch {
     position: relative;
     padding: 0; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003104}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003105}}
   .switch input {
     position: absolute;
     opacity: 0; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003109}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003110}}
   .switch label {
     position: relative;
     z-index: 2;
@@ -6858,7 +6859,7 @@ https://github.com/ghinda/css-toggle-switch
     margin: 0;
     text-align: center; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003121}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003122}}
   .switch .slide-button {
     position: absolute;
     top: 0;
@@ -6868,72 +6869,72 @@ https://github.com/ghinda/css-toggle-switch
     width: 50%;
     height: 100%; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003132}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003133}}
   .switch input:last-of-type:checked ~ .slide-button {
     left: 50%; }
 
   /* Switch with 3 items */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003138}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003139}}
   .switch.switch-three label,
   .switch.switch-three .slide-button {
     width: 33.3%; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003142}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003143}}
   .switch.switch-three input:checked:nth-of-type(2) ~ .slide-button {
     left: 33.3%; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003146}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003147}}
   .switch.switch-three input:checked:last-of-type ~ .slide-button {
     left: 66.6%; }
 
   /* Switch with 4 items */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003152}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003153}}
   .switch.switch-four label,
   .switch.switch-four .slide-button {
     width: 25%; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003156}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003157}}
   .switch.switch-four input:checked:nth-of-type(2) ~ .slide-button {
     left: 25%; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003160}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003161}}
   .switch.switch-four input:checked:nth-of-type(3) ~ .slide-button {
     left: 50%; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003164}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003165}}
   .switch.switch-four input:checked:last-of-type ~ .slide-button {
     left: 75%; }
 
   /* Switch with 5 items */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003170}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003171}}
   .switch.switch-five label,
   .switch.switch-five .slide-button {
     width: 20%; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003174}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003175}}
   .switch.switch-five input:checked:nth-of-type(2) ~ .slide-button {
     left: 20%; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003178}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003179}}
   .switch.switch-five input:checked:nth-of-type(3) ~ .slide-button {
     left: 40%; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003182}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003183}}
   .switch.switch-five input:checked:nth-of-type(4) ~ .slide-button {
     left: 60%; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003186}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003187}}
   .switch.switch-five input:checked:last-of-type ~ .slide-button {
     left: 80%; }
 
   /* Shared */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003192}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003193}}
   .toggle,
   .switch {
     display: block;
-    height: 30px; }
+    height: 38px; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003198}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003199}}
   .switch *,
   .toggle * {
     -webkit-box-sizing: border-box;
@@ -6942,7 +6943,7 @@ https://github.com/ghinda/css-toggle-switch
     -o-box-sizing: border-box;
     box-sizing: border-box; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003207}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003208}}
   .switch .slide-button,
   .toggle .slide-button {
     display: block;
@@ -6952,19 +6953,19 @@ https://github.com/ghinda/css-toggle-switch
     -o-transition: all 0.3s ease-out;
     transition: all 0.3s ease-out; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003219}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003220}}
   .toggle label,
   .toggle p,
   .switch label {
-    line-height: 30px;
+    line-height: 38px;
     vertical-align: middle; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003224}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003225}}
   .toggle input:checked ~ .slide-button {
     right: 50%; }
 
   /* Outline the toggles when the inputs are focused */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003230}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003231}}
   .toggle input:focus ~ .slide-button,
   .switch input:focus + label {
     outline: 1px dotted #888; }
@@ -6972,7 +6973,7 @@ https://github.com/ghinda/css-toggle-switch
   /* Bugfix for older Webkit, including mobile Webkit. Adapted from:
    * http://css-tricks.com/webkit-sibling-bug/
    */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003237}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003238}}
   .switch, .toggle {
     -webkit-animation: bugfix infinite 1s; }
 
@@ -6984,78 +6985,75 @@ https://github.com/ghinda/css-toggle-switch
       position: relative; } }
 
   /* Standalone Themes */
-  /* Candy Theme
-   * Based on the "Sort Switches / Toggles (PSD)" by Ormal Clarck
-   * http://www.premiumpixels.com/freebies/sort-switches-toggles-psd/
-   */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003251}}
-  .candy {
-    background-color: #C0C0C0;
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003245}}
+  .prestashop-switch {
+    min-width: 150px;
     color: #474949;
     font-weight: 500;
     text-align: center;
     border-radius: 3px; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003259}}
-  .candy input:checked + label {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003252}}
+  .prestashop-switch input:checked + label {
     color: #fff;
     text-shadow: none; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003264}}
-  .candy .slide-button {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003256}}
+  .prestashop-switch .slide-button {
     background-color: #3D89CC;
     border-radius: 3px;
     border: none; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003271}}
-  .candy p {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003262}}
+  .prestashop-switch p {
     color: #333; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003275}}
-  .candy span {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/_toggle-switch\.scss}line{font-family:\00003265}}
+  .prestashop-switch span {
     color: #fff; } }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\000035}}
 html, body {
   height: 100%;
-  background: #ebeff8; }
+  background: #eeeeee; }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\000039}}
 body.fixed-top {
   position: relative;
   top: 56px;
-  margin-bottom: 50px; }
+  margin-bottom: 50px;
+  font-family: "Open Sans", sans-serif; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000314}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000315}}
 #main {
   position: relative;
   min-height: 100%;
   height: 100%; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000319}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000320}}
 #content {
   height: 100%;
   padding: 20px;
   margin: 0 0 90px 240px;
-  border-left: 1px solid black;
+  border-left: 1px solid #cecece;
   background-color: white; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000326}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000327}}
 .page-sidebar {
-  top: 52px;
+  top: 65px;
   position: fixed;
   width: 240px; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000330}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000331}}
   .page-sidebar > ul {
     margin: 0;
     padding: 0; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000333}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000334}}
     .page-sidebar > ul li {
       list-style: none; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000337}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000338}}
     .page-sidebar > ul > li.active > a {
       color: white;
       background-color: #1a1a1a; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000340}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000341}}
     .page-sidebar > ul > li > a {
       text-transform: uppercase;
       font-size: 12px;
@@ -7063,58 +7061,58 @@ body.fixed-top {
       display: block;
       padding: 8px 0 8px 15px;
       border-bottom: 1px solid #cecece; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000347}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000348}}
       .page-sidebar > ul > li > a:hover {
         text-decoration: none; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000349}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000350}}
     .page-sidebar > ul > li img {
       margin-right: 10px; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000351}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000352}}
     .page-sidebar > ul > li ul {
       margin: 0;
       padding: 0;
       border-bottom: 1px solid #cecece;
       background-color: white; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000357}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000358}}
       .page-sidebar > ul > li ul li a {
         font-size: 12px;
         display: block;
         padding: 3px 15px 3px 20px;
         border: none;
         border-bottom: 1px solid whitesmoke; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000363}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000364}}
         .page-sidebar > ul > li ul li a i {
           margin-top: 4px;
           color: #cecece; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000366}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000367}}
         .page-sidebar > ul > li ul li a:hover {
           background-color: whitesmoke;
           text-decoration: none; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000369}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000370}}
           .page-sidebar > ul > li ul li a:hover i {
             color: #004d7b; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000372}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000373}}
       .page-sidebar > ul > li ul li.active a {
         color: #1a1a1a;
         background-color: #adb0b8; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000375}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000376}}
         .page-sidebar > ul > li ul li.active a i {
           color: black; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000378}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000379}}
     .page-sidebar > ul li:not(.active) ul {
       display: none; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000380}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000381}}
     .page-sidebar > ul li.expanded ul {
       display: block;
       background-color: white; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000384}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000385}}
   .page-sidebar > ul > li > ul.sub-menu {
     display: none;
     list-style: none;
     clear: both;
     margin: 8px 0px 8px 0px; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000390}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000391}}
 #footer {
   width: 100%;
   position: fixed;
@@ -7123,7 +7121,7 @@ body.fixed-top {
   font-size: 12px;
   color: #999999;
   background-color: #272822; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000398}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\0000399}}
   #footer .go-top {
     display: block;
     text-decoration: none;
@@ -7135,26 +7133,13 @@ body.fixed-top {
     font-size: 16px;
     background-color: #111111;
     padding: 0px 6px 0px 6px; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003109}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003110}}
   #footer .go-top i {
     color: #666666;
     font-size: 22px;
     margin-bottom: 5px; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003114}}
-.table {
-  word-wrap: break-word; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003116}}
-  .table input, .table select {
-    margin: 0; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003118}}
-  .table td.center, .table th.center {
-    text-align: center; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003120}}
-  .table tr:hover {
-    background-color: #777777; }
-
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003123}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003115}}
 #menu .maintab > a [class^="icon-"], #menu .maintab > a [class*=" icon-"] {
   font-size: 18px;
   border-radius: 35px;
@@ -7165,75 +7150,81 @@ body.fixed-top {
   text-align: center;
   line-height: 30px; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003133}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003125}}
 label span.label-tooltip {
   color: #0086ce;
   text-decoration: none;
   border-bottom: dashed 1px #647858; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003138}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003130}}
 label.required:before {
   content: "*";
   color: red;
   font-size: 14px; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003146}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003138}}
 .icon-AdminCatalog {
   background-color: #7a1009; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003149}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003141}}
 .icon-AdminParentOrders {
   background-color: #7a3509; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003152}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003144}}
 .icon-AdminParentCustomer {
   background-color: #7a5b09; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003155}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003147}}
 .icon-AdminPriceRule {
   background-color: #737a09; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003158}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003150}}
 .icon-AdminParentShipping {
   background-color: #4e7a09; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003161}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003153}}
 .icon-AdminParentLocalization {
   background-color: #287a09; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003164}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003156}}
 .icon-AdminParentModules {
   background-color: #097a10; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003167}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003159}}
 .icon-AdminParentPreferences {
   background-color: #097a35; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003170}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003162}}
 .icon-AdminTools {
   background-color: #097a5b; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003173}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003165}}
 .icon-AdminAdmin {
   background-color: #09737a; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003176}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003168}}
 .icon-AdminParentStats {
   background-color: #094e7a; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003180}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003172}}
 .navbar-inner {
   box-shadow: none !important; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003182}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003174}}
   .navbar-inner .input-append {
     margin-bottom: 0; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003189}}
-.toolbar_btn:hover {
-  color: #474949;
-  border-color: #474949; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003178}}
+.toolbar_btn {
+  padding: 2px 5px !important;
+  font-size: 11px;
+  margin-right: 3px; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003184}}
+  .toolbar_btn:hover {
+    color: #3d89cc;
+    border-color: #3d89cc;
+    background-color: white !important; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003193}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003189}}
 [class^="process-icon-"], [class*=" process-icon-"] {
   height: 32px;
   min-width: 32px;
@@ -7249,39 +7240,130 @@ label.required:before {
   -webkit-font-smoothing: antialiased;
   *margin-right: 0.3em; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003237}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003233}}
 .page-head {
   position: relative;
   padding: 5px 5px 0 20px;
-  min-height: 84px;
+  min-height: 63px;
   margin-bottom: 20px;
-  background: #ebeff8; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003243}}
+  background: #eeeeee; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003239}}
   .page-head .page-title {
     margin: 0;
     float: left;
     padding: 0;
-    line-height: 80px;
+    font-size: 20px;
+    line-height: 55px;
     color: #272822;
-    font-weight: normal;
-    text-transform: uppercase; }
+    font-weight: 300;
+    text-transform: uppercase;
+    font-family: "Ubuntu", sans-serif; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003252}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003250}}
 .page-bar {
   float: right;
   padding: 0;
   height: 68px; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003257}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003255}}
 .btn-toolbar {
   margin: 0; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003259}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003257}}
   .btn-toolbar .nav-tabs {
     margin: 0; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003261}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003259}}
   .btn-toolbar .nav-tabs > li > a {
     color: #333333; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003263}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003261}}
     .btn-toolbar .nav-tabs > li > a > .active > a, .btn-toolbar .nav-tabs > li > a > .active > a:hover {
       color: #3399ff;
       background: whitesmoke; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003267}}
+select.input-tiny,
+input[type="text"].input-tiny,
+input[type="password"].input-tiny {
+  width: 80px;
+  float: left; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003274}}
+form legend {
+  font-family: "Ubuntu", sans-serif;
+  padding: 0 0 0 10px;
+  margin: 20px 0;
+  float: left;
+  color: #cccccc;
+  font-weight: 300; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003283}}
+.fixed-width-XS {
+  width: 40px; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003285}}
+.fixed-width-S {
+  width: 80px; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003287}}
+.fixed-width-M {
+  width: 120px; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003289}}
+.fixed-width-L {
+  width: 160px; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003291}}
+.fixed-width-XL {
+  width: 200px; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003295}}
+tr.filter {
+  background-color: #eeeeee; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003298}}
+input[type="text"].filter, input[type="password"].filter, select.filter {
+  min-height: 30px;
+  height: 30px;
+  font-size: 12px; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003303}}
+.btn, .toolbar_btn {
+  text-transform: uppercase; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003306}}
+.btn-group-action {
+  white-space: nowrap; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003308}}
+  .btn-group-action a {
+    color: white;
+    text-decoration: none; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003314}}
+.table thead > tr > th {
+  font-weight: normal;
+  vertical-align: top; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003317}}
+  .table thead > tr > th span.title_box {
+    display: block;
+    word-wrap: nowrap;
+    white-space: nowrap; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003321}}
+    .table thead > tr > th span.title_box.active {
+      font-weight: bold; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003323}}
+    .table thead > tr > th span.title_box a {
+      text-decoration: none; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003325}}
+    .table thead > tr > th span.title_box a.active {
+      color: black; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003327}}
+.table input, .table select {
+  margin: 0; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003329}}
+.table td.center, .table th.center {
+  text-align: center; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/AMPPS\/www\/checkout\.kg\/PS_BOOTSTRAP\/admin-dev\/themes\/default\/css\/admin-theme\.sass}line{font-family:\00003331}}
+.table tbody > tr > td {
+  vertical-align: middle;
+  word-wrap: nowrap;
+  font-size: 12px;
+  padding: 3px 7px 3px 7px; }

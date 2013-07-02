@@ -58,6 +58,7 @@ class AdminProductsControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->table = 'product';
 		$this->className = 'Product';
 		$this->lang = true;
@@ -201,7 +202,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->fields_list['id_product'] = array(
 			'title' => $this->l('ID'),
 			'align' => 'center',
-			'width' => 20
+			'width' => 40
 		);
 		$this->fields_list['image'] = array(
 			'title' => $this->l('Photo'),
@@ -255,7 +256,7 @@ class AdminProductsControllerCore extends AdminController
 			'align' => 'right',
 			'filter_key' => 'sav!quantity',
 			'orderby' => true,
-			'hint' => $this->l('This is the quantity available in the current shop/group.'),
+			//'hint' => $this->l('This is the quantity available in the current shop/group.'),
 		);
 		$this->fields_list['active'] = array(
 			'title' => $this->l('Status'),

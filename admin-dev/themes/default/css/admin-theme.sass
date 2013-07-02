@@ -4,12 +4,13 @@
 
 html, body
 	height: 100%
-	background: #EBEFF8
+	background: #EEEEEE
 
 body.fixed-top
 	position: relative
 	top: 56px
 	margin-bottom: 50px
+	font-family: 'Open Sans', sans-serif
 
 #main
 	position: relative
@@ -20,11 +21,11 @@ body.fixed-top
 	height: 100%
 	padding: 20px
 	margin: 0 0 90px 240px
-	border-left: 1px solid black
+	border-left: 1px solid #CECECE
 	background-color: white
 
 .page-sidebar
-	top: 52px
+	top: 65px
 	position: fixed
 	width: 240px
 	> ul
@@ -111,15 +112,6 @@ body.fixed-top
 		font-size: 22px
 		margin-bottom: 5px
 
-.table
-	word-wrap: break-word
-	input, select
-		margin: 0
-	td.center, th.center
-		text-align: center
-	tr:hover
-		background-color: #777
-
 #menu .maintab > a [class^="icon-"], #menu .maintab > a [class*=" icon-"]
 	font-size: 18px
 	border-radius: 35px
@@ -186,9 +178,13 @@ $icon-color: #7A0928
 .toolbar_btn
 	@extend .btn
 	@extend .btn-primary
+	padding: 2px 5px !important
+	font-size: 11px
+	margin-right: 3px
 	&:hover
-		color: #474949
-		border-color: #474949
+		color: #3D89CC
+		border-color: #3D89CC
+		background-color: white !important
 
 [class^="process-icon-"], [class*=" process-icon-"]
 	height: 32px
@@ -237,17 +233,19 @@ $icon-color: #7A0928
 .page-head
 	position: relative
 	padding: 5px 5px 0 20px
-	min-height: 84px
+	min-height: 63px
 	margin-bottom: 20px
-	background: #EBEFF8
+	background: #EEEEEE
 	.page-title 
 		margin: 0
 		float: left
 		padding: 0
-		line-height: 80px
+		font-size: 20px
+		line-height: 55px
 		color: #272822
-		font-weight: normal
+		font-weight: 300
 		text-transform: uppercase
+		font-family: 'Ubuntu', sans-serif
 
 .page-bar
 	float: right
@@ -263,3 +261,76 @@ $icon-color: #7A0928
 		> .active > a, > .active > a:hover
 			color: #3399ff
 			background: #f5f5f5
+
+/////////////////////// WIP DRAFT
+//form
+select.input-tiny,
+input[type="text"].input-tiny,
+input[type="password"].input-tiny
+	width: 80px
+	float: left
+
+//fieldset title
+form legend
+	font-family: 'Ubuntu', sans-serif
+	padding: 0 0 0 10px
+	margin: 20px 0
+	float: left
+	color: #ccc
+	font-weight: 300
+
+//some helpers to get fixed width
+.fixed-width-XS
+	width: 40px
+.fixed-width-S
+	width: 80px
+.fixed-width-M
+	width: 120px
+.fixed-width-L
+	width: 160px
+.fixed-width-XL
+	width: 200px
+
+//filter table
+tr.filter
+	background-color: #EEEEEE
+
+input[type="text"].filter, input[type="password"].filter, select.filter
+	min-height: 30px
+	height: 30px
+	font-size: 12px
+
+.btn
+	text-transform: uppercase
+
+.btn-group-action
+	white-space: nowrap
+	a
+		color: white
+		text-decoration: none
+
+.table
+	//word-wrap: break-word
+	thead > tr > th
+		font-weight: normal
+		vertical-align: top
+		span.title_box
+			display: block
+			word-wrap: nowrap
+			white-space: nowrap
+			&.active
+				font-weight: bold
+			a
+				text-decoration: none
+			a.active
+				color: black
+	input, select
+		margin: 0
+	td.center, th.center
+		text-align: center
+	tbody > tr > td
+		vertical-align: middle
+		word-wrap: nowrap
+		font-size: 12px
+		padding: 3px 7px 3px 7px
+

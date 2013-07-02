@@ -24,22 +24,21 @@
 	<form action="{$currentIndex|escape}&token={$currentToken|escape}&addcart_rule" id="cart_rule_form" class="form-horizontal" method="post">
 		{if $currentObject->id}<input type="hidden" name="id_cart_rule" value="{$currentObject->id|intval}" />{/if}
 		<input type="hidden" id="currentFormTab" name="currentFormTab" value="informations" />
-		<div id="cart_rule_informations" class="cart_rule_tab">
-			<h2>{l s='Cart-rule information'}</h2>
+		<fieldset id="cart_rule_informations" class="cart_rule_tab">
+			<legend>{l s='Cart-rule information'}</legend>
 			{include file='controllers/cart_rules/informations.tpl'}
-		</div>
-		<div id="cart_rule_conditions" class="cart_rule_tab">
-			<h2>{l s='Cart-rule conditions'}</h2>
+		</fieldset>
+		<fieldset id="cart_rule_conditions" class="cart_rule_tab">
+			<legend>{l s='Cart-rule conditions'}</legend>
 			{include file='controllers/cart_rules/conditions.tpl'}
-		</div>
-		<div id="cart_rule_actions" class="cart_rule_tab">
-			<h2>{l s='Cart-rule actions'}</h2>
+		</fieldset>
+		<fieldset id="cart_rule_actions" class="cart_rule_tab">
+			<legend>{l s='Cart-rule actions'}</legend>
 			{include file='controllers/cart_rules/actions.tpl'}
-		</div>
-		<div>
-			<input type="submit" value="{l s='Save'}" class="btn" name="submitAddcart_rule" id="{$table|escape}_form_submit_btn" />
-			<!--<input type="submit" value="{l s='Save and stay'}" class="button" name="submitAddcart_ruleAndStay" id="" />-->
-		</div>
+		</fieldset>
+		<hr/>
+		<button type="submit" class="btn btn-primary btn-large pull-right" name="submitAddcart_rule" id="{$table|escape}_form_submit_btn"><i class="icon-save"></i> {l s='Save'}</button>
+		<!--<input type="submit" value="{l s='Save and stay'}" class="button" name="submitAddcart_ruleAndStay" id="" />-->
 	</form>
 </div>
 
