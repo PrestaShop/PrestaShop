@@ -530,9 +530,10 @@ class WebserviceRequestCore
 				}
 			}
 		}
-		return $this->returnOutput();
+		$return = $this->returnOutput();
 		unset($webservice_call);
-		unset ($display_errors);
+		unset($display_errors);
+		return $return;
 	}
 
 	protected function webserviceChecks()
@@ -1158,6 +1159,7 @@ class WebserviceRequestCore
 				$sorts = array($this->urlFragments['sort']);
 
 			$sql_sort .= ' ORDER BY ';
+
 			foreach ($sorts as $sort)
 			{
 				$delimiterPosition = strrpos($sort, '_');
@@ -1219,8 +1221,6 @@ class WebserviceRequestCore
 		return $filters;
 	}
 
-
-
 	public function getFilteredObjectList()
 	{
 		$objects = array();
@@ -1241,7 +1241,16 @@ class WebserviceRequestCore
 		if ($sqlObjects)
 		{
 			foreach ($sqlObjects as $sqlObject)
-				$objects[] = new $this->resourceConfiguration['retrieveData']['className']((int)$sqlObject[$this->resourceConfiguration['fields']['id']['sqlId']]);
+			{
+				if ($this->fieldsToDisplay == 'minimum')
+				{
+					$obj = new $this->resourceConfiguration['retrieveData']['className']();
+					$obj->id = (int)$sqlObject[$this->resourceConfiguration['fields']['id']['sqlId']];
+					$objects[] = $obj;
+				}
+				else
+					$objects[] = new $this->resourceConfiguration['retrieveData']['className']((int)$sqlObject[$this->resourceConfiguration['fields']['id']['sqlId']]);
+			}
 			return $objects;
 		}
 	}
