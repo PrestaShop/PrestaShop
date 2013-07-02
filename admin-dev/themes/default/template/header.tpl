@@ -103,6 +103,8 @@
 	</style>
 {/if}
 
+<link href='http://fonts.googleapis.com/css?family=Ubuntu:300|Open+Sans' rel='stylesheet' type='text/css'>
+
 </head>
 
 <body class="fixed-top">
@@ -120,7 +122,7 @@
 					<li id="orders_notif" class="dropdown" >
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 							<i class="icon-shopping-cart"></i>&nbsp;<span class="caret"></span>
-							<span id="orders_notif_number_wrapper" class="badge pull-right">
+							<span id="orders_notif_number_wrapper" class="badge">
 								<span id="orders_notif_value">0</span>
 							</span>
 						</a>
@@ -137,7 +139,7 @@
 					<li id="customers_notif" class="notifs dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 							<i class="icon-user"></i>&nbsp;<span class="caret"></span>
-							<span id="customers_notif_number_wrapper" class="badge pull-right">
+							<span id="customers_notif_number_wrapper" class="badge">
 								<span id="customers_notif_value">0</span>
 							</span>
 						</a>
@@ -154,7 +156,7 @@
 					<li id="customer_messages_notif" class="notifs dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 							<i class="icon-envelope"></i>&nbsp;<span class="caret"></span>
-							<span id="customer_messages_notif_number_wrapper" class="badge pull-right">
+							<span id="customer_messages_notif_number_wrapper" class="badge">
 								<span id="customer_messages_notif_value" >0</span>
 							</span>
 						</a>
@@ -173,10 +175,11 @@
 				<li id="employee_infos" class="dropdown">
 					<a href='#' class="employee_name dropdown-toggle" data-toggle="dropdown">{$first_name}&nbsp;{$last_name} <i class="icon-angle-down"></i></a>
 					<ul id="employee_links" class="dropdown-menu">
-						<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'htmlall':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee">{l s='My preferences'}</a></li>
-						<li><a id="header_logout" href="index.php?logout">{l s='logout'}</a></li>
+						<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'htmlall':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences'}</a></li>
+						<li><a id="header_logout" href="index.php?logout"><i class="icon-signout"></i> {l s='logout'}</a></li>
 {if {$base_url}}
-						<li><a href="{$base_url}" id="header_foaccess" target="_blank" title="{l s='View my shop'}">{l s='View my shop'}</a></li>
+						<li class="divider"></li>
+						<li><a href="{$base_url}" id="header_foaccess" target="_blank" title="{l s='View my shop'}"><i class="icon-eye-open"></i> {l s='View my shop'}</a></li>
 {/if}
 					</ul>
 				</li>
@@ -219,7 +222,7 @@
 {/if}
 
 			<span id="ajax_running" class="navbar-text">
-				<img src="../img/admin/ajax-loader-yellow.gif" alt="" /> {l s='Loading...'}
+				<i class="icon-refresh icon-spin"></i> {l s='Loading...'}
 			</span>
 
 

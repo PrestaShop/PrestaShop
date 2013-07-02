@@ -136,13 +136,13 @@
 	{/if}
 	{if $has_actions}
 		<td>
-			<div class="btn-group">	
+			<div class="btn-group btn-group-action">
 			{foreach $actions AS $key => $action}
 				{if $key==0}
-				<span class="btn btn-default">
+				<span class="btn btn-default btn-small">
 					{$tr.$action}
 				</span>
-				<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+				<button class="btn btn-default btn-small dropdown-toggle" data-toggle="dropdown">
 					<span class="caret"></span>&nbsp;
 				</button>
 				<ul class="dropdown-menu">
@@ -161,6 +161,6 @@
 	</tr>
 {/foreach}
 {else}
-	<tr><td class="center" colspan="{count($fields_display) + 2}">{l s='No items found'}</td></tr>
+	<tr><td class="center" colspan="{count($fields_display) + 2}"><i class="icon-warning-sign"></i> {l s='No items found'}</td></tr>
 {/if}
 </tbody>

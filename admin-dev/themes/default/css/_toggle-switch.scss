@@ -17,7 +17,8 @@ https://github.com/ghinda/css-toggle-switch
 }
 
 .switch label {
-	padding: 0
+	padding: 0;
+	cursor: pointer;
 }
 
 /* Toggle Switches */
@@ -191,7 +192,7 @@ https://github.com/ghinda/css-toggle-switch
 	.toggle,
 	.switch {
 		display: block;
-		height: 30px;
+		height: 38px;
 	}
 	
 	.switch *,
@@ -217,7 +218,7 @@ https://github.com/ghinda/css-toggle-switch
 	.toggle label,
 	.toggle p,
 	.switch label {
-		line-height: 30px;
+		line-height: 38px;
 		vertical-align: middle;
 	}
 	
@@ -240,40 +241,28 @@ https://github.com/ghinda/css-toggle-switch
 	
 	@-webkit-keyframes bugfix { from { position: relative; } to { position: relative; } }
 
-	/* Standalone Themes */
-
-
-	/* Candy Theme
-	 * Based on the "Sort Switches / Toggles (PSD)" by Ormal Clarck
-	 * http://www.premiumpixels.com/freebies/sort-switches-toggles-psd/
-	 */
-	 
-	.candy {
-		background-color: #C0C0C0;
+	/* Standalone Themes */ 
+	.prestashop-switch {
+		min-width: 150px;
 		color: #474949;
 		font-weight: 500;
 		text-align: center;
-		border-radius: 3px;	
+		border-radius: 3px;
 	}
-
-	.candy input:checked + label {
+	.prestashop-switch input:checked + label {
 		color: #fff;
 		text-shadow: none;
 	}
-		
-	.candy .slide-button {
+	.prestashop-switch .slide-button {
 
 		background-color: #3D89CC;
 		border-radius: 3px;
 		border: none;
 	}
-
-	.candy p {
+	.prestashop-switch p {
 		color: #333;
 	}
-
-	.candy span {
+	.prestashop-switch span {
 		color: #fff;
 	}
-
 }

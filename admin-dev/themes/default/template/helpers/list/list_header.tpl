@@ -77,47 +77,61 @@
 	{hook h=$hookName}
 {/if}
 
+
 {if !$simple_header}
-<form method="post" action="{$action}" class="form">
+<form method="post" action="{$action}" class="form-inline">
 	<input type="hidden" id="submitFilter{$table}" name="submitFilter{$table}" value="0"/>
 {/if}
-	<div class="well">
-		{if !$simple_header}
+
+	{if !$simple_header}
+	<fieldset class="well">
 		<span>
-			{if $page > 1}
-				<input type="image" src="../img/admin/list-prev2.gif" onclick="getE('submitFilter{$table}').value=1"/>&nbsp;
-				<input type="image" src="../img/admin/list-prev.gif" onclick="getE('submitFilter{$table}').value={$page - 1}"/>
-			{/if}
+		{if $page > 1}
+			<input type="image" src="../img/admin/list-prev2.gif" onclick="getE('submitFilter{$table}').value=1"/>&nbsp;
+			<input type="image" src="../img/admin/list-prev.gif" onclick="getE('submitFilter{$table}').value={$page - 1}"/>
+		{/if}
 
 			{l s='Page'} <b>{$page}</b> / {$total_pages}
-			{if $page < $total_pages}
-				<input type="image" src="../img/admin/list-next.gif" onclick="getE('submitFilter{$table}').value={$page + 1}"/>&nbsp;
-				<input type="image" src="../img/admin/list-next2.gif" onclick="getE('submitFilter{$table}').value={$total_pages}"/>
-			{/if}
 
-			| {l s='Display'}
+		{if $page < $total_pages}
+			<input type="image" src="../img/admin/list-next.gif" onclick="getE('submitFilter{$table}').value={$page + 1}"/>&nbsp;
+			<input type="image" src="../img/admin/list-next2.gif" onclick="getE('submitFilter{$table}').value={$total_pages}"/>
+		{/if}
+		</span>
 
-			<select class="input-mini" name="pagination" onchange="submit()">
+		<span>
+			&nbsp;|&nbsp;
+			<label >
+			{l s='Display'}
+			</label>
+			
+			<select class="filter fixed-width-S" name="pagination" onchange="submit()">
 				{* Choose number of results per page *}
 				{foreach $pagination AS $value}
 					<option value="{$value|intval}"{if $selected_pagination == $value} selected="selected" {elseif $selected_pagination == NULL && $value == $pagination[1]} selected="selected2"{/if}>{$value|intval}</option>
 				{/foreach}
 			</select>
+		</span>
 
-			/ {$list_total} {l s='result(s)'}
+		<span> / {$list_total} {l s='result(s)'}</span>
+		
+		<span class="pull-right">
+			<button type="submit" name="submitReset{$table}" class="btn btn-small">
+				<i class="icon-eraser"></i> {l s='Reset'}
+			</button>
+			<button type="submit" id="submitFilterButton{$table}" name="submitFilter" class="btn btn-default btn-small" />
+				<i class="icon-filter"></i> {l s='Filter'}
+			</button>
 		</span>
-		<span>
-			<input type="submit" name="submitReset{$table}" value="{l s='Reset'}" class="btn" />
-			<input type="submit" id="submitFilterButton{$table}" name="submitFilter" value="{l s='Filter'}" class="btn" />
-		</span>
-		{/if}
-		</div>
-		<table 
-		class="table table-striped table-bordered"
+	</fieldset>
+	{/if}
+	
+	<table 
+		class="table table-striped table-bordered table-hover"
 		{if $table_id} id={$table_id}{/if}
 		class="table {if $table_dnd}tableDnD{/if} {$table}"
 		cellpadding="0" cellspacing="0">
-			<!-- <col width="10px" />
+			{* <col width="10px" />
 			{foreach $fields_display AS $key => $params}
 				<col {if isset($params.width) && $params.width != 'auto'}width="{$params.width}px"{/if}/>
 			{/foreach}
@@ -125,8 +139,8 @@
 				<col width="80px" />
 			{/if}
 			{if $has_actions}
-				<col width="52px" />
-			{/if} -->
+				<col width="200px" />
+			{/if} *}
 			<thead>
 				<tr class="nodrag nodrop">
 					<th class="center">
@@ -136,15 +150,20 @@
 					</th>
 					{foreach $fields_display AS $key => $params}
 						<th {if isset($params.align)} class="{$params.align}"{/if}>
-							{if isset($params.hint)}<span class="alert alert-info" name="help_box">{$params.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
-							<span class="title_box">
+							{if isset($params.hint)}
+								<span class="alert alert-info" name="help_box">{$params.hint}<span class="hint-pointer">&nbsp;</span></span>
+							{/if}
+							<span class="title_box {if isset($order_by) && ($key == $order_by)} active{/if}">
 								{$params.title}
-							</span>
 							{if (!isset($params.orderby) || $params.orderby) && !$simple_header}
-								<a href="{$currentIndex}&{$table}Orderby={$key|urlencode}&{$table}Orderway=desc&token={$token}{if isset($smarty.get.$identifier)}&{$identifier}={$smarty.get.$identifier|intval}{/if}">
-								<img border="0" src="../img/admin/down{if isset($order_by) && ($key == $order_by) && ($order_way == 'DESC')}_d{/if}.gif" /></a>
-								<a href="{$currentIndex}&{$table}Orderby={$key|urlencode}&{$table}Orderway=asc&token={$token}{if isset($smarty.get.$identifier)}&{$identifier}={$smarty.get.$identifier|intval}{/if}">
-								<img border="0" src="../img/admin/up{if isset($order_by) && ($key == $order_by) && ($order_way == 'ASC')}_d{/if}.gif" /></a>
+								<a {if isset($order_by) && ($key == $order_by) && ($order_way == 'DESC')}class="active"{/if}  href="{$currentIndex}&{$table}Orderby={$key|urlencode}&{$table}Orderway=desc&token={$token}{if isset($smarty.get.$identifier)}&{$identifier}={$smarty.get.$identifier|intval}{/if}">
+								<i class="icon-caret-down"></i>
+								</a>
+
+								<a {if isset($order_by) && ($key == $order_by) && ($order_way == 'ASC')}class="active"{/if} href="{$currentIndex}&{$table}Orderby={$key|urlencode}&{$table}Orderway=asc&token={$token}{if isset($smarty.get.$identifier)}&{$identifier}={$smarty.get.$identifier|intval}{/if}">
+								<i class="icon-caret-up"></i>
+								</a>
+							</span>
 							{elseif !$simple_header}
 							{/if}
 						</th>
@@ -178,7 +197,7 @@
 								--
 							{else}
 								{if $params.type == 'bool'}
-									<select class="input-mini" onchange="$('#submitFilterButton{$table}').focus();$('#submitFilterButton{$table}').click();" name="{$table}Filter_{$key}">
+									<select class="filter" onchange="$('#submitFilterButton{$table}').focus();$('#submitFilterButton{$table}').click();" name="{$table}Filter_{$key}">
 										<option value="">--</option>
 										<option value="1" {if $params.value == 1} selected="selected" {/if}>{l s='Yes'}</option>
 										<option value="0" {if $params.value == 0 && $params.value != ''} selected="selected" {/if}>{l s='No'}</option>
@@ -188,7 +207,7 @@
 									{l s='To'} <input type="text" class="filter datepicker" id="{$params.id_date}_1" name="{$params.name_date}[1]" value="{if isset($params.value.1)}{$params.value.1}{/if}"{if isset($params.width)} style="width:70px"{/if}/>
 								{elseif $params.type == 'select'}
 									{if isset($params.filter_key)}
-										<select onchange="$('#submitFilterButton{$table}').focus();$('#submitFilterButton{$table}').click();" name="{$table}Filter_{$params.filter_key}" {if isset($params.width)} style="width:{$params.width}px"{/if}>
+										<select class="filter" onchange="$('#submitFilterButton{$table}').focus();$('#submitFilterButton{$table}').click();" name="{$table}Filter_{$params.filter_key}" {if isset($params.width)} style="width:{$params.width}px"{/if}>
 											<option value="" {if $params.value == ''} selected="selected" {/if}>--</option>
 											{if isset($params.list) && is_array($params.list)}
 												{foreach $params.list AS $option_value => $option_display}
@@ -198,7 +217,7 @@
 										</select>
 									{/if}
 								{else}
-									<input type="text" class="filter input-small" name="{$table}Filter_{if isset($params.filter_key)}{$params.filter_key}{else}{$key}{/if}" value="{$params.value|escape:'htmlall':'UTF-8'}" {if isset($params.width) && $params.width != 'auto'} style="width:{$params.width}px"{/if} />
+									<input type="text" class="filter" name="{$table}Filter_{if isset($params.filter_key)}{$params.filter_key}{else}{$key}{/if}" value="{$params.value|escape:'htmlall':'UTF-8'}" {if isset($params.width) && $params.width != 'auto'} style="width:{$params.width}px"{/if} />
 								{/if}
 							{/if}
 						</td>

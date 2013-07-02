@@ -29,25 +29,23 @@
 {if $display_footer}
 {hook h="displayBackOfficeFooter"}
 	<div id="footer">
-		<div class="footerLeft">
+		<div class="footerLeft col-lg-4">
 			<a href="http://www.prestashop.com/" target="_blank">PrestaShop&trade; {$ps_version}</a><br />
-			<span>{l s='Load time: '}{number_format(microtime(true) - $timer_start, 3, '.', '')}s</span>
+			<span>{l s='Load time: '} {number_format(microtime(true) - $timer_start, 3, '.', '')}s</span>
 		</div>
-		<div class="footerRight">
-			{if $iso_is_fr}
-				<span>Questions / Renseignements / Formations :</span> <strong>+33 (0)1.40.18.30.04</strong> de 09h &agrave; 18h
-			{/if}
-			|&nbsp;<a href="http://www.prestashop.com/en/contact_us/" target="_blank" class="footer_link">{l s='Contact'}</a>
+		<div class="footerRight col-lg-8">
+			<a href="http://www.prestashop.com/en/contact_us/" target="_blank" class="footer_link">{l s='Contact'}</a>
 			|&nbsp;<a href="http://forge.prestashop.com" target="_blank" class="footer_link">{l s='Bug Tracker'}</a>
-			|&nbsp;<a href="http://www.prestashop.com/forums/" target="_blank" class="footer_link">{l s='Forum'}</a>	
+			|&nbsp;<a href="http://www.prestashop.com/forums/" target="_blank" class="footer_link">{l s='Forum'}</a>
+			{if $iso_is_fr}
+			<p>Questions / Renseignements / Formations : 
+				<strong>+33 (0)1.40.18.30.04</strong> de 09h &agrave; 18h
+			<p>
+			{/if}
 		</div>
-		<div class="span pull-right">
-			<span class="go-top"><i class="icon-angle-up"></i></span>
-      	</div>
 	</div>
 	<div id="ajax_confirmation" style="display:none"></div>
 {* ajaxBox allows*}	<div id="ajaxBox" style="display:none"></div>
 {/if}
-	<div id="scrollTop"><a href="#top"></a></div>
 </body>
 </html>

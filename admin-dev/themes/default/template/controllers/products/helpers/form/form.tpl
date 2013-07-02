@@ -63,9 +63,9 @@
 {/block}
 
 {block name="defaultForm"}
-	<div>
+	<div class="row-fluid">
 		<div class="productTabs" style="display:none;">
-			<ul class="tab">
+			<ul class="tab nav nav-tabs">
 			{*todo href when nojs*}
 			{foreach $product_tabs key=numStep item=tab}
 				<li class="tab-row">
