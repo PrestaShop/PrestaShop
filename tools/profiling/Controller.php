@@ -101,6 +101,16 @@ abstract class Controller extends ControllerCore
 		return '<span style="color:green">'.round($n, 2).' Mb</span>';
 	}
 
+	private function displayPeakMemoryColor($n)
+	{
+		$n /= 1048576;
+		if ($n > 16)
+			return '<span style="color:red">'.round($n, 1).' Mb</span>';
+		if ($n > 12)
+			return '<span style="color:orange">'.round($n, 1).' Mb</span>';
+		return '<span style="color:green">'.round($n, 1).' Mb</span>';
+	}
+
 	private function displaySQLQueries($n)
 	{
 		if ($n > 150)
@@ -178,10 +188,12 @@ abstract class Controller extends ControllerCore
 			return;
 
 		$this->_memory['config'] = memory_get_usage();
+		$this->_mempeak['config'] = memory_get_peak_usage();
 		$this->_time['config'] = microtime(true);
 
 		parent::__construct();
 		$this->_memory['constructor'] = memory_get_usage();
+		$this->_mempeak['constructor'] = memory_get_peak_usage();
 		$this->_time['constructor'] = microtime(true);
 	}
 
@@ -189,21 +201,25 @@ abstract class Controller extends ControllerCore
 	{
 		$this->init();
 		$this->_memory['init'] = memory_get_usage();
+		$this->_mempeak['init'] = memory_get_peak_usage();
 		$this->_time['init'] = microtime(true);
 
 		if ($this->checkAccess())
 		{
 			$this->_memory['checkAccess'] = memory_get_usage();
+			$this->_mempeak['checkAccess'] = memory_get_peak_usage();
 			$this->_time['checkAccess'] = microtime(true);
 
 			if (!$this->content_only && ($this->display_header || (isset($this->className) && $this->className)))
 				$this->setMedia();
 			$this->_memory['setMedia'] = memory_get_usage();
+			$this->_mempeak['setMedia'] = memory_get_peak_usage();
 			$this->_time['setMedia'] = microtime(true);
 
 			// postProcess handles ajaxProcess
 			$this->postProcess();
 			$this->_memory['postProcess'] = memory_get_usage();
+			$this->_mempeak['postProcess'] = memory_get_peak_usage();
 			$this->_time['postProcess'] = microtime(true);
 
 			if (!empty($this->redirect_after))
@@ -212,15 +228,18 @@ abstract class Controller extends ControllerCore
 			if (!$this->content_only && ($this->display_header || (isset($this->className) && $this->className)))
 				$this->initHeader();
 			$this->_memory['initHeader'] = memory_get_usage();
+			$this->_mempeak['initHeader'] = memory_get_peak_usage();
 			$this->_time['initHeader'] = microtime(true);
 
 			$this->initContent();
 			$this->_memory['initContent'] = memory_get_usage();
+			$this->_mempeak['initContent'] = memory_get_peak_usage();
 			$this->_time['initContent'] = microtime(true);
 
 			if (!$this->content_only && ($this->display_footer || (isset($this->className) && $this->className)))
 				$this->initFooter();
 			$this->_memory['initFooter'] = memory_get_usage();
+			$this->_mempeak['initFooter'] = memory_get_peak_usage();
 			$this->_time['initFooter'] = microtime(true);
 
 			// default behavior for ajax process is to use $_POST[action] or $_GET[action]
@@ -264,7 +283,11 @@ abstract class Controller extends ControllerCore
 	private function sizeofvar($var)
 	{
 		$start_memory = memory_get_usage();
-		$tmp = Tools::unSerialize(serialize($var));
+		try {
+			$tmp = Tools::unSerialize(serialize($var));
+		} catch (Exception $e) {
+			$tmp = strlen((string)$var);
+		}
 		$size = memory_get_usage() - $start_memory;
 		return $size;
 	}
@@ -275,11 +298,14 @@ abstract class Controller extends ControllerCore
 
 		$this->display();
 		$this->_memory['display'] = memory_get_usage();
+		$this->_mempeak['display'] = memory_get_peak_usage();
 		$this->_time['display'] = microtime(true);
 
 		if (!$this->ini_get_display_errors())
 			return;
 
+		$memory_peak_usage = memory_get_peak_usage();
+			
 		$hr = '<hr style="color:#F5F5F5;margin:2px" />';
 
 		$totalSize = 0;
@@ -337,14 +363,14 @@ abstract class Controller extends ControllerCore
 		echo '</ul>
 		</div>
 		<div class="rte" style="text-align:left;padding:8px;float:left;margin-left:20px">
-			<b>Memory peak usage</b>: '.$this->displayMemoryColor(memory_get_peak_usage());
+			<b>Memory peak usage</b>: '.$this->displayPeakMemoryColor($memory_peak_usage);
 		if (self::$_footer)
 		{
 			echo '<ul>';
 			$last_memory = 0;
 			foreach ($this->_memory as $k => $memory)
 			{
-				echo '<li>'.$k.': '.$this->displayMemoryColor($memory - $last_memory).'</li>';
+				echo '<li>'.$k.': '.$this->displayMemoryColor($memory - $last_memory).' ('.$this->displayPeakMemoryColor($this->_mempeak[$k]).')</li>';
 				$last_memory = $memory;
 			}
 			echo '</ul>';
