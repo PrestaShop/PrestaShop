@@ -101,7 +101,7 @@ class LinkCore
 		if (!is_object($product))
 		{
 			if (is_array($product) && isset($product['id_product']))
-					$product = new Product($product['id_product'], false, $id_lang);
+				$product = new Product($product['id_product'], false, $id_lang);
 			else if (is_numeric($product) || !$product)
 				$product = new Product($product, false, $id_lang);
 			else
@@ -195,24 +195,28 @@ class LinkCore
 	 * @param int $id_lang
 	 * @return string
 	 */
-	public function getCMSCategoryLink($category, $alias = null, $id_lang = null)
+	public function getCMSCategoryLink($cms_category, $alias = null, $id_lang = null)
 	{
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
-						
 		$url = _PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink($id_lang);
 
-		if (!is_object($category))
-			$category = new CMSCategory($category, $id_lang);
+		$dispatcher = Dispatcher::getInstance();
+		if (!is_object($cms_category))
+		{
+			if ($alias !== null && !$dispatcher->hasKeyword('cms_category_rule', $id_lang, 'meta_keywords') && !$dispatcher->hasKeyword('cms_category_rule', $id_lang, 'meta_title'))
+				return $url.$dispatcher->createUrl('cms_category_rule', $id_lang, array('id' => (int)$cms_category, 'rewrite' => (string)$alias), $this->allow);
+			$cms_category = new CMSCategory($cms_category, $id_lang);
+		}
 
 		// Set available keywords
 		$params = array();
-		$params['id'] = $category->id;
-		$params['rewrite'] = (!$alias) ? $category->link_rewrite : $alias;
-		$params['meta_keywords'] =	Tools::str2url($category->meta_keywords);
-		$params['meta_title'] = Tools::str2url($category->meta_title);
+		$params['id'] = $cms_category->id;
+		$params['rewrite'] = (!$alias) ? $cms_category->link_rewrite : $alias;
+		$params['meta_keywords'] =	Tools::str2url($cms_category->meta_keywords);
+		$params['meta_title'] = Tools::str2url($cms_category->meta_title);
 
-		return $url.Dispatcher::getInstance()->createUrl('cms_category_rule', $id_lang, $params, $this->allow);
+		return $url.$dispatcher->createUrl('cms_category_rule', $id_lang, $params, $this->allow);
 	}
 
 	/**
@@ -232,25 +236,28 @@ class LinkCore
 			$id_lang = Context::getContext()->language->id;
 		$url = $base.__PS_BASE_URI__.$this->getLangLink($id_lang);
 
+		$dispatcher = Dispatcher::getInstance();
 		if (!is_object($cms))
+		{
+			if ($alias !== null && !$dispatcher->hasKeyword('cms_rule', $id_lang, 'meta_keywords') && !$dispatcher->hasKeyword('cms_rule', $id_lang, 'meta_title'))
+				return $url.$dispatcher->createUrl('cms_rule', $id_lang, array('id' => (int)$cms, 'rewrite' => (string)$alias), $this->allow);
 			$cms = new CMS($cms, $id_lang);
+		}
 
 		// Set available keywords
 		$params = array();
 		$params['id'] = $cms->id;
 		$params['rewrite'] = (!$alias) ? (is_array($cms->link_rewrite) ? $cms->link_rewrite[(int)$id_lang] : $cms->link_rewrite) : $alias;
 
+		$params['meta_keywords'] = '';
 		if (isset($cms->meta_keywords) && !empty($cms->meta_keywords))
 			$params['meta_keywords'] = is_array($cms->meta_keywords) ?  Tools::str2url($cms->meta_keywords[(int)$id_lang]) :  Tools::str2url($cms->meta_keywords);
-		else
-			$params['meta_keywords'] = '';
 
+		$params['meta_title'] = '';
 		if (isset($cms->meta_title) && !empty($cms->meta_title))
 			$params['meta_title'] = is_array($cms->meta_title) ? Tools::str2url($cms->meta_title[(int)$id_lang]) : Tools::str2url($cms->meta_title);
-		else
-			$params['meta_title'] = '';
 
-		return $url.Dispatcher::getInstance()->createUrl('cms_rule', $id_lang, $params, $this->allow);
+		return $url.$dispatcher->createUrl('cms_rule', $id_lang, $params, $this->allow);
 	}
 
 	/**
@@ -266,9 +273,14 @@ class LinkCore
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
 		$url = _PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink($id_lang);
-
+		
+		$dispatcher = Dispatcher::getInstance();
 		if (!is_object($supplier))
+		{
+			if ($alias !== null && !$dispatcher->hasKeyword('supplier_rule', $id_lang, 'meta_keywords') && !$dispatcher->hasKeyword('supplier_rule', $id_lang, 'meta_title'))
+				$url.$dispatcher->createUrl('supplier_rule', $id_lang, array('id' => (int)$supplier, 'rewrite' => (string)$alias), $this->allow);
 			$supplier = new Supplier($supplier, $id_lang);
+		}
 
 		// Set available keywords
 		$params = array();
@@ -277,7 +289,7 @@ class LinkCore
 		$params['meta_keywords'] =	Tools::str2url($supplier->meta_keywords);
 		$params['meta_title'] = Tools::str2url($supplier->meta_title);
 
-		return $url.Dispatcher::getInstance()->createUrl('supplier_rule', $id_lang, $params, $this->allow);
+		return $url.$dispatcher->createUrl('supplier_rule', $id_lang, $params, $this->allow);
 	}
 
 	/**
@@ -294,8 +306,13 @@ class LinkCore
 			$id_lang = Context::getContext()->language->id;
 		$url = _PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink($id_lang);
 
+		$dispatcher = Dispatcher::getInstance();
 		if (!is_object($manufacturer))
+		{
+			if ($alias !== null && !$dispatcher->hasKeyword('manufacturer_rule', $id_lang, 'meta_keywords') && !$dispatcher->hasKeyword('manufacturer_rule', $id_lang, 'meta_title'))
+				return $url.$dispatcher->createUrl('manufacturer_rule', $id_lang, array('id' => (int)$manufacturer, 'rewrite' => (string)$alias), $this->allow);
 			$manufacturer = new Manufacturer($manufacturer, $id_lang);
+		}
 
 		// Set available keywords
 		$params = array();
@@ -304,7 +321,7 @@ class LinkCore
 		$params['meta_keywords'] =	Tools::str2url($manufacturer->meta_keywords);
 		$params['meta_title'] = Tools::str2url($manufacturer->meta_title);
 
-		return $url.Dispatcher::getInstance()->createUrl('manufacturer_rule', $id_lang, $params, $this->allow);
+		return $url.$dispatcher->createUrl('manufacturer_rule', $id_lang, $params, $this->allow);
 	}
 
 	/**
