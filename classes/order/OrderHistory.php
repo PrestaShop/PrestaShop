@@ -142,7 +142,7 @@ class OrderHistoryCore extends ObjectModel
 						$links .= '&nbsp;'.Tools::htmlentitiesUTF8(sprintf(Tools::displayError('downloadable %d time(s)'), (int)$product['downloadable']));	
 					$links .= '</li>';
 				}
-				$links .= '<ul>';
+				$links .= '</ul>';
 				$data = array(
 						'{lastname}' => $customer->lastname,
 						'{firstname}' => $customer->firstname,
