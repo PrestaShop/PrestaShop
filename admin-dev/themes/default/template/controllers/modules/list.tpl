@@ -77,7 +77,7 @@
 							</dl>
 						</div>
 						<p class="desc">{if isset($module->description) && $module->description ne ''}{l s='Description'} : {$module->description}{else}&nbsp;{/if}</p>
-						{if isset($module->message) && $module->type !== 'addonsNative' && $module->type != 'addonsMustHave'}<div class="conf">{$module->message}</div>{/if}
+						{if isset($module->message) && (!isset($module->type) || ($module->type != 'addonsMustHave' || $module->type !== 'addonsNative'))}<div class="conf">{$module->message}</div>{/if}
 						<div class="row-actions-module">
 							{if !isset($module->not_on_disk)}
 								{$module->optionsHtml}
