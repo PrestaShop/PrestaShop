@@ -831,20 +831,15 @@ class CategoryCore extends ObjectModel
 		if (!Validate::isUnsignedId($id_category) || !Validate::isUnsignedId($id_lang))
 			return false;
 
-		if (isset(self::$_links[$id_category.'-'.$id_lang]))
-			return self::$_links[$id_category.'-'.$id_lang];
-
-		$result = Db::getInstance()->getRow('
-			SELECT cl.`link_rewrite`
-			FROM `'._DB_PREFIX_.'category_lang` cl
-			WHERE `id_lang` = '.(int)$id_lang.'
-			'.Shop::addSqlRestrictionOnLang('cl').'
-			AND cl.`id_category` = '.(int)$id_category
-		);
-
-		self::$_links[$id_category.'-'.$id_lang] = $result['link_rewrite'];
-
-		return $result['link_rewrite'];
+		if (!isset(self::$_links[$id_category.'-'.$id_lang]))
+			self::$_links[$id_category.'-'.$id_lang] = Db::getInstance()->getValue('
+				SELECT cl.`link_rewrite`
+				FROM `'._DB_PREFIX_.'category_lang` cl
+				WHERE `id_lang` = '.(int)$id_lang.'
+				'.Shop::addSqlRestrictionOnLang('cl').'
+				AND cl.`id_category` = '.(int)$id_category
+			);
+		return self::$_links[$id_category.'-'.$id_lang];
 	}
 
 	public function getLink(Link $link = null)
