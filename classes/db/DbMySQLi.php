@@ -63,8 +63,8 @@ class DbMySQLiCore extends Db
 		else
 			$link = @new mysqli($host, $user, $password);
 		$success = $link->query('CREATE DATABASE `'.bqSQL($dbname).'`');
-		if ($dropit)
-			$success &= $link->query('DROP DATABASE `'.bqSQL($dbname).'`');
+		if ($dropit && ($link->exec('DROP DATABASE `'.bqSQL($dbname).'`') !== false))
+			return true;
 		return $success;
 	}
 

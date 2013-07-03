@@ -51,10 +51,10 @@ class DbPDOCore extends Db
 		try {
 			$link = DbPDO::_getPDO($host, $user, $password, false);
 			$success = $link->exec('CREATE DATABASE `'.bqSQL($dbname).'`');
-			if ($dropit)
-				$success &= $link->exec('DROP DATABASE `'.bqSQL($dbname).'`');
+			if ($dropit && ($link->exec('DROP DATABASE `'.bqSQL($dbname).'`') !== false))
+				return true;
 		} catch (PDOException $e) {
-			$success = false;
+			return false;
 		}
 		return $success;
 	}
