@@ -53,7 +53,7 @@ class DbMySQLiCore extends Db
 		return $this->link;
 	}
 	
-	public static function createDatabase($host, $user, $password, $dbname)
+	public static function createDatabase($host, $user, $password, $dbname, $dropit = false)
 	{
 		if (strpos($host, ':') !== false)
 		{
@@ -62,7 +62,10 @@ class DbMySQLiCore extends Db
 		}
 		else
 			$link = @new mysqli($host, $user, $password);
-		return $link->query('CREATE DATABASE `'.bqSQL($dbname).'`');
+		$success = $link->query('CREATE DATABASE `'.bqSQL($dbname).'`');
+		if ($dropit)
+			$success &= $link->query('DROP DATABASE `'.bqSQL($dbname).'`');
+		return $success;
 	}
 
 	/**
