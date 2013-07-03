@@ -46,6 +46,16 @@ class DbPDOCore extends Db
 		return new PDO($dsn, $user, $password, array(PDO::ATTR_TIMEOUT => $timeout, PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true));
 	}
 	
+	public static function createDatabase($host, $user, $password, $dbname)
+	{
+		try {
+			$link = DbPDO::_getPDO($host, $user, $password, false);
+			return $link->exec('CREATE DATABASE `'.bqSQL($dbname).'`');
+		} catch (PDOException $e) {
+			return false;
+		}
+	}
+	
 	/**
 	 * @see DbCore::connect()
 	 */

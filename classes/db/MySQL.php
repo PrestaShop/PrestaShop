@@ -46,6 +46,12 @@ class MySQLCore extends Db
 
 		return $this->link;
 	}
+	
+	public static function createDatabase($host, $user, $password, $dbname)
+	{
+		$link = mysql_connect($host, $user, $password);
+		return mysql_query('CREATE DATABASE `'.bqSQL($dbname).'`');
+	}
 
 	/**
 	 * @see DbCore::disconnect()
