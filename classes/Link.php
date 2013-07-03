@@ -278,7 +278,7 @@ class LinkCore
 		if (!is_object($supplier))
 		{
 			if ($alias !== null && !$dispatcher->hasKeyword('supplier_rule', $id_lang, 'meta_keywords') && !$dispatcher->hasKeyword('supplier_rule', $id_lang, 'meta_title'))
-				$url.$dispatcher->createUrl('supplier_rule', $id_lang, array('id' => (int)$supplier, 'rewrite' => (string)$alias), $this->allow);
+				return $url.$dispatcher->createUrl('supplier_rule', $id_lang, array('id' => (int)$supplier, 'rewrite' => (string)$alias), $this->allow);
 			$supplier = new Supplier($supplier, $id_lang);
 		}
 
