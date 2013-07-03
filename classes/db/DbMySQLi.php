@@ -52,6 +52,21 @@ class DbMySQLiCore extends Db
 
 		return $this->link;
 	}
+	
+	public static function createDatabase($host, $user, $password, $dbname, $dropit = false)
+	{
+		if (strpos($host, ':') !== false)
+		{
+			list($host, $port) = explode(':', $host);
+			$link = @new mysqli($host, $this->user, $this->password, null, $port);
+		}
+		else
+			$link = @new mysqli($host, $user, $password);
+		$success = $link->query('CREATE DATABASE `'.bqSQL($dbname).'`');
+		if ($dropit && ($link->exec('DROP DATABASE `'.bqSQL($dbname).'`') !== false))
+			return true;
+		return $success;
+	}
 
 	/**
 	 * @see DbCore::disconnect()
@@ -169,7 +184,8 @@ class DbMySQLiCore extends Db
 		if (!$link->options(MYSQLI_OPT_CONNECT_TIMEOUT, $timeout))
 			return 1;
 
-		if (!$link->real_connect($server, $user, $pwd, $db))
+		// There is an @ because mysqli throw a warning when the database does not exists
+		if (!@$link->real_connect($server, $user, $pwd, $db))
 			return (mysqli_connect_errno() == 1049) ? 2 : 1;
 
 		$link->close();
