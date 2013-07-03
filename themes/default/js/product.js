@@ -575,6 +575,10 @@ $(document).ready(function()
 		'transitionIn'	: 'elastic',
 		'transitionOut'	: 'elastic'
 	});
+
+	$('.js-attribute')
+  .on('change', 'select,radio', selectCombination)
+  .on('click', '.js-attribute_color', selectCombination);
 });
 
 function saveCustomization()
@@ -625,19 +629,29 @@ function checkMinimalQuantity(minimal_quantity)
 	}
 }
 
-function colorPickerClick(elt)
-{
-	id_attribute = $(elt).attr('id').replace('color_', '');
-	$(elt).parent().parent().children().removeClass('selected');
-	$(elt).fadeTo('fast', 1, function(){
-								$(this).fadeTo('fast', 0, function(){
-									$(this).fadeTo('fast', 1, function(){
-										$(this).parent().addClass('selected');
-										});
-									});
-								});
-	$(elt).parent().parent().parent().children('.color_pick_hidden,#color_pick_hidden').val(id_attribute);
-	findCombination(false);
+function selectCombination(event) {
+	var elt = $(this);
+	var parent = event.delegateTarget;
+
+	if (elt.hasClass('js-attribute_color')) {
+		var id_attribute = parseInt(elt.attr('id').replace('color_', ''), 10);
+		console.log('id_attribute '+id_attribute);
+		
+		$('.js-attribute_color_hidden',parent).val(id_attribute);
+
+    // Show color selection
+    $('.js-attribute_color',parent).removeClass('selected');
+    elt.fadeTo('fast', 1, function(){
+    	elt.fadeTo('fast', 0, function(){
+    		elt.fadeTo('fast', 1, function(){
+    			elt.addClass('selected');
+    		});
+    	});
+    });
+}
+
+findCombination();
+getProductAttribute();
 }
 
 
@@ -697,8 +711,7 @@ function checkUrl()
 				tabValues.push(tabParams[i].split('-'));
 			product_id = $('#product_page_product_id').val();
 			// fill html with values
-			$('.color_pick').removeClass('selected');
-			$('.color_pick').parent().parent().children().removeClass('selected');
+			$('.js-attribute_color.selected').removeClass('selected');
 			count = 0;
 			for (var z in tabValues)
 				for (var a in attributesCombinations)
@@ -708,7 +721,6 @@ function checkUrl()
 						count++;
 						// add class 'selected' to the selected color
 						$('#color_' + attributesCombinations[a]['id_attribute']).addClass('selected');
-						$('#color_' + attributesCombinations[a]['id_attribute']).parent().addClass('selected');
 						$('input:radio[value=' + attributesCombinations[a]['id_attribute'] + ']').attr('checked', true);
 						$('input:hidden[name=group_' + attributesCombinations[a]['id_attribute_group'] + ']').val(attributesCombinations[a]['id_attribute']);
 						$('select[name=group_' + attributesCombinations[a]['id_attribute_group'] + ']').val(attributesCombinations[a]['id_attribute']);
