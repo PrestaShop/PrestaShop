@@ -88,6 +88,7 @@ class CrossSelling extends Module
 			{			
 				Configuration::updateValue('CROSSSELLING_DISPLAY_PRICE', (int)Tools::getValue('displayPrice'));
 				Configuration::updateValue('CROSSSELLING_NBR', (int)Tools::getValue('productNbr'));
+				$this->_clearCache('crossselling.tpl');
 				$this->_html .= $this->displayConfirmation($this->l('Settings updated successfully'));
 			}
 		}
