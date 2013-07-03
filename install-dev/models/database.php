@@ -81,12 +81,21 @@ class InstallModelDatabase extends InstallAbstractModel
 					break;
 
 				case 2:
-					$errors[] = $this->language->l('Connection to MySQL server succeeded, but database "%s" not found', $database).$dbtype;
+					$errors[] = $this->language->l('Connection to MySQL server succeeded, but database "%s" not found', $database).$dbtype.'<br /><br />
+					'.sprintf('<input type="button" value="%s" class="button" id="btCreateDB">
+					<script type="text/javascript">bindCreateDB();</script>',
+					$this->language->l('Attempt to create the database automatically'));
 					break;
 			}
 		}
 
 		return $errors;
+	}
+	
+	public function createDatabase($server, $database, $login, $password)
+	{
+		$class = Db::getClass();
+		return $class::createDatabase($server, $login, $password, $database);
 	}
 	
 	public function getBestEngine($server, $database, $login, $password)
