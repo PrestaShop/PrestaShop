@@ -2233,7 +2233,7 @@ class AdminControllerCore extends Controller
 		
 		$all_modules = Module::getModulesOnDisk(true);
 		$this->modules_list = array();
-		foreach($all_modules as $module)
+		foreach ($all_modules as $module)
 		{
 			$perm = true;
 			if ($module->id)
@@ -2252,6 +2252,7 @@ class AdminControllerCore extends Controller
 				$this->modules_list[] = $module;
 			}		
 		}
+
 		if (count($this->modules_list))
 			return true;
 
