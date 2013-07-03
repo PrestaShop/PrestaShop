@@ -348,11 +348,16 @@ var ajaxCart = {
 				});
 			});
 		}
-		var removeLinks = $('#cart_block_product_' + domIdProduct).find('a.ajax_cart_block_remove_link');
+		console.log(domIdProduct);
+		var removeLinks = $('#cart_block_product_' + domIdProduct).find('.ajax_cart_block_remove_link');
 		if (!product.hasCustomizedDatas && !removeLinks.length)
-			$('#' + domIdProduct + ' span.remove_link').html('<a class="ajax_cart_block_remove_link" rel="nofollow" href="' + baseUri + '?controller=cart&amp;delete=1&amp;id_product=' + product['id'] + '&amp;ipa=' + product['idCombination'] + '&amp;token=' + static_token + '"> </a>');
+		{
+			console.log($('#cart_block_product_' + domIdProduct + ' span.remove_link'));
+			$('#cart_block_product_' + domIdProduct + ' span.remove_link').html('<a class="ajax_cart_block_remove_link" rel="nofollow" href="' + baseUri + '?controller=cart&amp;delete=1&amp;id_product=' + product['id'] + '&amp;ipa=' + product['idCombination'] + '&amp;token=' + static_token + '"> </a>');
+			console.log('passe');
+		}
 		if (product.is_gift)
-			$('#' + domIdProduct + ' span.remove_link').html('');
+			$('#cart_block_product_' + domIdProduct + ' span.remove_link').html('');
 	},
 
 	doesCustomizationStillExist : function (product, customizationId)
