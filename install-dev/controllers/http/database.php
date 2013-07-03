@@ -95,8 +95,8 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
 	{
 		if (Tools::getValue('checkDb'))
 			$this->processCheckDb();
-		else if (Tools::getValue('sendMail'))
-			$this->processSendMail();
+		elseif (Tools::getValue('createDb'))
+			$this->processCreateDb();
 	}
 
 	/**
@@ -120,28 +120,20 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
 	}
 
 	/**
-	 * Send a test email
+	 * Attempt to create the database
 	 */
-	public function processSendMail()
+	public function processCreateDb()
 	{
-		$smtp_checked = (Tools::getValue('smtpChecked') == 'true');
-		$server = Tools::getValue('smtpSrv');
-		$encryption = Tools::getValue('smtpEnc');
-		$port = Tools::getValue('smtpPort');
-		$login = Tools::getValue('smtpLogin');
-		$password = Tools::getValue('smtpPassword');
-		$email = Tools::getValue('testEmail');
+		$server = Tools::getValue('dbServer');
+		$database = Tools::getValue('dbName');
+		$login = Tools::getValue('dbLogin');
+		$password = Tools::getValue('dbPassword');
 
-		require_once _PS_INSTALL_MODELS_PATH_.'mail.php';
-		$this->model_mail = new InstallModelMail($smtp_checked, $server, $login, $password, $port, $encryption, $email);
-		$result = $this->model_mail->send(
-			$this->l('Test message from PrestaShop'),
-			$this->l('This is a test message, your server is now available to send email')
-		);
+		$success = $this->model_database->createDatabase($server, $database, $login, $password);
 
 		$this->ajaxJsonAnswer(
-			$result === false,
-			($result === false) ? $this->l('A test e-mail has been sent to %s', $email) : $this->l('An error occurred while sending email, please verify your parameters')
+			$success,
+			$success ? $this->l('Database is created') : $this->l('Cannot create the database automatically')
 		);
 	}
 
