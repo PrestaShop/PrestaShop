@@ -51,8 +51,8 @@ class MySQLCore extends Db
 	{
 		$link = mysql_connect($host, $user, $password);
 		$success = mysql_query('CREATE DATABASE `'.bqSQL($dbname).'`', $link);
-		if ($dropit)
-			$success &= mysql_query('DROP DATABASE `'.bqSQL($dbname).'`', $link);
+		if ($dropit && ($link->exec('DROP DATABASE `'.bqSQL($dbname).'`') !== false))
+			return true;
 		return $success;
 	}
 
