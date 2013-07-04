@@ -182,7 +182,7 @@
 				</td>
 				<td colspan="2" class="price total_price_container" id="total_price_container">
 					<p>{l s='Total'}</p>
-					<span>{displayPrice price=$total_price}</span>
+					<span id="total_price">{displayPrice price=$total_price}</span>
 				</td>
 			</tr>
 			{else}
