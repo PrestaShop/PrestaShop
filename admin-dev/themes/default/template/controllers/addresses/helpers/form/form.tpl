@@ -27,13 +27,7 @@
 
 {block name="label"}
 	{if $input.name == 'vat_number'}
-		{if $vat == 'is_applicable'}
-			<div id="vat_area" style="display: visible">
-		{else if $vat == 'management'}
-			<div id="vat_area" style="display: hidden">
-		{else}
-			<div style="display: none;">
-		{/if}
+		<div id="vat_area" style="display: visible">
 	{/if}
 
 	{if $input.type == 'text_customer' && !isset($customer)}
