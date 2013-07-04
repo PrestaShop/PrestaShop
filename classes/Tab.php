@@ -538,11 +538,10 @@ class TabCore extends ObjectModel
 					foreach($tab->attributes() as $key => $value)
 						if ($key == 'display_type')
 							$display_type = (string)$value;
-							
+
 					foreach ($tab->children() as $module)
-						foreach ($module->attributes() as $k => $v)
-							if ($k == 'name')
-								$modules_list[$display_type][] = (string)$v;
+						$modules_list[$display_type][(int)$module['position']] = (string)$module['name'];
+					ksort($modules_list[$display_type]);
 				}
 			}
 		
