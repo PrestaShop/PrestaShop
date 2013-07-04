@@ -348,7 +348,6 @@ var ajaxCart = {
 				});
 			});
 		}
-		console.log(domIdProduct);
 		var removeLinks = $('#cart_block_product_' + domIdProduct).find('.ajax_cart_block_remove_link');
 		if (!product.hasCustomizedDatas && !removeLinks.length)
 		{
