@@ -1534,7 +1534,6 @@ class AdminControllerCore extends Controller
 	
 	public function renderModulesList()
 	{
-		
 		if ($this->getModulesList($this->filter_modules_list))
 		{
 			$helper = new Helper();
@@ -2249,9 +2248,10 @@ class AdminControllerCore extends Controller
 			if (in_array($module->name, $filter_modules_list) && $perm)
 			{
 				$this->fillModuleData($module, 'select');
-				$this->modules_list[] = $module;
+				$this->modules_list[array_search($module->name, $filter_modules_list)] = $module;
 			}		
 		}
+		ksort($this->modules_list);
 
 		if (count($this->modules_list))
 			return true;
