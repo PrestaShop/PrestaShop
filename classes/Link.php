@@ -445,7 +445,11 @@ class LinkCore
 
 	public function getCatImageLink($name, $id_category, $type = null)
 	{
-		$uri_path = ($this->allow == 1) ? (__PS_BASE_URI__.'c/'.$id_category.($type ? '-'.$type : '').'/'.$name.'.jpg') : (_THEME_CAT_DIR_.$id_category.($type ? '-'.$type : '').'.jpg');
+		if($this->allow == 1 && $type) {
+			$uri_path = __PS_BASE_URI__.'c/'.$id_category.'-'.$type.'/'.$name.'.jpg';
+		} else {
+			$uri_path = _THEME_CAT_DIR_.$id_category.($type ? '-'.$type : '').'.jpg';
+		}
 		return $this->protocol_content.Tools::getMediaServer($uri_path).$uri_path;
 	}
 
