@@ -444,7 +444,7 @@ function handleSaveButtons(e)
 			{
 				if (do_not_save == false)
 				{
-					$(".leadin").append('<div id="disableSaveMessage" class="warn"></div>');
+					$(".leadin").append('<div id="disableSaveMessage" class="alert"></div>');
 					warnDiv = $("#disableSaveMessage");
 					do_not_save = true;
 				}

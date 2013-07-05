@@ -24,16 +24,18 @@
 *}
 
 <div class="translatable">
-{foreach from=$languages item=language}
-<div class="lang_{$language.id_lang}" style="{if !$language.is_default}display:none;{/if}float: left;">
-	<textarea cols="100" rows="10" id="{$input_name}_{$language.id_lang}" 
-		name="{$input_name}_{$language.id_lang}" 
-		class="autoload_rte" >{if isset($input_value[$language.id_lang])}{$input_value[$language.id_lang]|htmlentitiesUTF8}{/if}</textarea>
-	<span class="counter" max="{if isset($max)}{$max}{else}none{/if}"></span>
-	<span class="alert alert-info">{$hint|default:''}<span class="hint-pointer">&nbsp;</span></span>
+	{foreach from=$languages item=language}
+	<div class="lang_{$language.id_lang}" style="{if !$language.is_default}display:none;{/if}">
+		<textarea id="{$input_name}_{$language.id_lang}" 
+			name="{$input_name}_{$language.id_lang}" 
+			class="autoload_rte" >{if isset($input_value[$language.id_lang])}{$input_value[$language.id_lang]|htmlentitiesUTF8}{/if}
+		</textarea>
+		<span class="counter" max="{if isset($max)}{$max}{else}none{/if}"></span>
+		<span class="help-block">{$hint|default:''}</span>
+	</div>
+	{/foreach}
 </div>
-{/foreach}
-</div>
+
 <script type="text/javascript">
 	var iso = '{$iso_tiny_mce}';
 	var pathCSS = '{$smarty.const._THEME_CSS_DIR_}';

@@ -233,46 +233,48 @@
 {/if}
 
 	<div id="main" class="page-container row-fluid">
-      <div class="page-sidebar">
+
+		<div class="page-sidebar">
+      	{if !$tab}
+			<div class="mainsubtablist" style="display:none"></div>
+		{/if}
 			<ul id="menu">
-{if !$tab}
-				<div class="mainsubtablist" style="display:none"></div>
-{/if}
-{foreach $tabs AS $t}
-	{if $t.active}
+			{foreach $tabs AS $t}
+				{if $t.active}
 				<li class="maintab {if $t.current}active{/if}" id="maintab{$t.id_tab}">
 					<a href="javascript:adminNav('#maintab{$t.id_tab}');" class="title">
 						<i class="icon-{$t.class_name}"></i> {if $t.name eq ''}{$t.class_name}{else}{$t.name}{/if}
 					</a>
 					<ul class="submenu">
-						{foreach from=$t.sub_tabs item=t2}
-							{if $t2.active}
-								<li {if $t2.current} class="active"{/if}>
-									<a href="{$t2.href|escape:'htmlall':'UTF-8'}">
-										{if $t2.name eq ''}{$t2.class_name}{else}{$t2.name|escape:'htmlall':'UTF-8'}{/if}
-										<i class="icon-chevron-sign-right pull-right"></i>
-									</a>
-								</li>
-							{/if}
-						{/foreach}
+					{foreach from=$t.sub_tabs item=t2}
+						{if $t2.active}
+						<li {if $t2.current} class="active"{/if}>
+							<a href="{$t2.href|escape:'htmlall':'UTF-8'}">
+								{if $t2.name eq ''}{$t2.class_name}{else}{$t2.name|escape:'htmlall':'UTF-8'}{/if}
+								<i class="icon-chevron-sign-right pull-right"></i>
+							</a>
+						</li>
+						{/if}
+					{/foreach}
 					</ul>
 				</li>
-	{/if}
-{/foreach}
+				{/if}
+			{/foreach}
 			</ul>
 		</div>
+
 		<div id="content" class="page-content">
 			<div class="container-fluid">
             	<div class="row-fluid">
 
-			{if $display_header && $install_dir_exists}
+				{if $display_header && $install_dir_exists}
 					<div class="alert alert-block">
 						{l s='For security reasons, you must also:'}&nbsp;{l s='delete the /install folder'}
 					</div>
-			{/if}
+				{/if}
 
-			{if $display_header && $is_multishop && $shop_list && ($multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
+				{if $display_header && $is_multishop && $shop_list && ($multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
 					<div class="multishop_toolbar">
 						<span class="text_multishop">{l s='Multistore configuration for'}</span> {$shop_list}
 					</div>
-			{/if}
+				{/if}
