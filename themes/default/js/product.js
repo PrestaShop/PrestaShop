@@ -328,7 +328,6 @@ function updateDisplay()
 		}
 		else if (product_specific_price && product_specific_price.reduction && !selectedCombination.specific_price)
 		{
-			console.log('qsdqsd');
 			if (product_specific_price.reduction_type == 'amount')
 				reduction_price = (specific_currency ? product_specific_price.reduction : product_specific_price.reduction * currencyRate);
 			else
