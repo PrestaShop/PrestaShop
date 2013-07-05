@@ -23,14 +23,13 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {if $check_product_association_ajax}
-{assign var=class_input_ajax value='check_product_name '}
+	{assign var=class_input_ajax value='check_product_name '}
 {else}
-{assign var=class_input_ajax value=''}
+	{assign var=class_input_ajax value=''}
 {/if}
-<input type="hidden" name="submitted_tabs[]" value="Informations" />
-<div id="step1">
-	<h4 class="tab">1. {l s='Info.'}</h4>
-	<h4>{l s='Product global information'}</h4>
+	<input type="hidden" name="submitted_tabs[]" value="Informations" />
+	<h4 class="tab">{l s='Info.'}</h4>
+	<p>{l s='Product global information'}</p>
 	<script type="text/javascript">
 		{if isset($PS_ALLOW_ACCENTED_CHARS_URL) && $PS_ALLOW_ACCENTED_CHARS_URL}
 			var PS_ALLOW_ACCENTED_CHARS_URL = 1;
@@ -91,299 +90,263 @@
 
 	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Informations"}
 
-	<div class="separation"></div>
-	<div id="warn_virtual_combinations" class="alert alert-block" style="display:none">{l s='You cannot use combinations with a virtual product.'}</div>
-	<div>
-		<label class="text">{$bullet_common_field} {l s='Type:'}</label>
-		<input type="radio" name="type_product" id="simple_product" value="{Product::PTYPE_SIMPLE}" {if $product_type == Product::PTYPE_SIMPLE}checked="checked"{/if} />
-		<label class="radioCheck" for="simple_product">{l s='Product'}</label>
-		<input type="radio" name="type_product" {if $is_in_pack}disabled="disabled"{/if} id="pack_product" value="{Product::PTYPE_PACK}" {if $product_type == Product::PTYPE_PACK}checked="checked"{/if} />
-		<label class="radioCheck" for="pack_product">{l s='Pack'}</label>
-		<input type="radio" name="type_product" id="virtual_product" {if $is_in_pack}disabled="disabled"{/if} value="{Product::PTYPE_VIRTUAL}" {if $product_type == Product::PTYPE_VIRTUAL}checked="checked"{/if} />
-		<label class="radioCheck" for="virtual_product">{l s='Virtual Product (services, booking or downloadable products)'}</label>
+<div id="warn_virtual_combinations" class="alert alert-block" style="display:none">{l s='You cannot use combinations with a virtual product.'}</div>
+
+<div class="row">
+	<label class="control-label col-lg-3">{$bullet_common_field} {l s='Type:'}</label>
+	<div class="col-lg-5">
+		<div class="radio">
+			<label for="simple_product">
+				<input type="radio" name="type_product" id="simple_product" value="{Product::PTYPE_SIMPLE}" {if $product_type == Product::PTYPE_SIMPLE}checked="checked"{/if} />
+				{l s='Product'}
+			</label>
+		</div>
+		<div class="radio">
+			<label for="pack_product">
+				<input type="radio" name="type_product" {if $is_in_pack}disabled="disabled"{/if} id="pack_product" value="{Product::PTYPE_PACK}" {if $product_type == Product::PTYPE_PACK}checked="checked"{/if} />
+				{l s='Pack'}
+			</label>
+		</div>
+		<div class="radio">
+			<label for="virtual_product">
+				<input type="radio" name="type_product" id="virtual_product" {if $is_in_pack}disabled="disabled"{/if} value="{Product::PTYPE_VIRTUAL}" {if $product_type == Product::PTYPE_VIRTUAL}checked="checked"{/if} />
+				{l s='Virtual Product (services, booking or downloadable products)'}
+			</label>
+		</div>
+	</div>
+</div>
+
+{* global information *}
+
+{include file="controllers/products/multishop/checkbox.tpl" field="name" type="default" multilang="true"}
+
+<div class="row">
+	<label class="control-label col-lg-3 required">{l s='Name:'}</label>
+	<div class="col-lg-5 translatable">
+		{foreach from=$languages item=language}
+		<div class="lang_{$language.id_lang}">
+			<input class="{$class_input_ajax}{if !$product->id}copy2friendlyUrl{/if} updateCurrentText" type="text" {if !$product->id}disabled="disabled"{/if}
+			id="name_{$language.id_lang}" name="name_{$language.id_lang}"
+			value="{$product->name[$language.id_lang]|htmlentitiesUTF8|default:''}"
+			/>
+		</div>
+		{/foreach}
+		<span class="help-block" name="help_box">{l s='Invalid characters:'} &lt;&gt;;=#{}</span>
+	</div>
+</div>
+
+<div class="row">
+	<label class="control-label col-lg-3">{$bullet_common_field} {l s='Reference:'}</label>
+	<div class="col-lg-5">
+		<input type="text" name="reference" value="{$product->reference|htmlentitiesUTF8}" />
+		<span class="help-block" name="help_box">{l s='Special characters allowed:'} .-_#\</span>
+	</div>
+</div>
+
+<div class="row">
+	<label class="control-label col-lg-3">{$bullet_common_field} {l s='EAN13 or JAN:'}</label>
+	<div class="col-lg-5">
+		<input maxlength="13" type="text" name="ean13" value="{$product->ean13|htmlentitiesUTF8}" />
+		<span class="help-block">{l s='(Europe, Japan)'}</span>
+	</div>
+</div>
+
+<div class="row">
+	<label class="control-label col-lg-3">{$bullet_common_field} {l s='UPC:'}</label>
+	<div class="col-lg-5">
+		<input maxlength="12" type="text" name="upc" value="{$product->upc|escape:html:'UTF-8'}" />
+		<span class="help-block">{l s='(US, Canada)'}</span>
+	</div>
+</div>
+
+{* status informations *}
+{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
+<div class="row">
+	<label class="control-label col-lg-3">{l s='Status:'}</label>
+	<div class="input-group col-lg-3">
+		<span class="switch prestashop-switch">
+			<input onclick="toggleDraftWarning(false);showOptions(true);showRedirectProductOptions(false);" type="radio" name="active" id="active_on" value="1" {if $product->active || !$product->isAssociatedToShop()}checked="checked" {/if} />
+			<label for="active_on" class="radioCheck">
+				<i class="icon-check-sign"></i> {l s='Enabled'}
+			</label>
+			<input onclick="toggleDraftWarning(true);showOptions(false);showRedirectProductOptions(true);"  type="radio" name="active" id="active_off" value="0" {if !$product->active && $product->isAssociatedToShop()}checked="checked"{/if} />
+			<label for="active_off" class="radioCheck">
+				<i class="icon-ban-circle"></i> {l s='Disabled'}
+			</label>
+			<span class="slide-button btn btn-default"></span>
+		</span>
+	</div>
+</div>
+
+<div class="row redirect_product_options" style="display:none">
+	{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
+	<label class="control-label col-lg-3">{l s='Redirect:'}</label>
+	<div class="col-lg-5">
+		<select name="redirect_type" id="redirect_type">
+			<option value="404" {if $product->redirect_type == '404'} selected="selected" {/if}>{l s='No redirect (404)'}</option>
+			<option value="301" {if $product->redirect_type == '301'} selected="selected" {/if}>{l s='Redirect permanently (301)'}</option>
+			<option value="302" {if $product->redirect_type == '302'} selected="selected" {/if}>{l s='Redirect temporarily (302)'}</option>
+		</select>
+	
+		<div class="help-block" name="help_box">
+			<ul>
+				<li>{l s='404 : Not Found = Product does not exist and no redirect'}</li>
+				<li>{l s='301 : Moved Permanently = Product Moved Permanently'}</li>
+				<li>{l s='302 : Moved Temporarily = Product moved temporarily'}</li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="row redirect_product_options redirect_product_options_product_choise" xstyle="display:none">
+	{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
+	<label class="control-label col-lg-3">{l s='Related product:'}</label>
+	<div class="col-lg-5">
+		<input type="hidden" value="" name="id_product_redirected" />
+		<input value="" id="related_product_autocomplete_input" autocomplete="off" class="ac_input" />
+	</div>
+	<p>
+		<script>
+			var no_related_product = '{l s='No related product'}';
+			var id_product_redirected = {$product->id_product_redirected|intval};
+			var product_name_redirected = '{$product_name_redirected|escape:html:'UTF-8'}';
+		</script>
+		<span id="related_product_name">{l s='No related product'}</span>
+		<span id="related_product_remove" style="display:none">
+			<a hre="#" onclick="removeRelatedProduct(); return false" id="related_product_remove_link">
+				<img src="../img/admin/delete.gif" class="middle" alt="" />
+			</a>
+		</span>
+	</p>
+</div>
+
+<div class="row">
+	{include file="controllers/products/multishop/checkbox.tpl" field="visibility" type="default"}
+	<label class="control-label col-lg-3">{l s='Visibility:'}</label>
+	<div class="col-lg-5">
+		<select name="visibility" id="visibility">
+			<option value="both" {if $product->visibility == 'both'}selected="selected"{/if} >{l s='Everywhere'}</option>
+			<option value="catalog" {if $product->visibility == 'catalog'}selected="selected"{/if} >{l s='Catalog only'}</option>
+			<option value="search" {if $product->visibility == 'search'}selected="selected"{/if} >{l s='Search only'}</option>
+			<option value="none" {if $product->visibility == 'none'}selected="selected"{/if}>{l s='Nowhere'}</option>
+		</select>
+	</div>
+</div>
+
+
+<div id="product_options" class="row" {if !$product->active}style="display:none"{/if} >
+	<div class="col-lg-12">
+		{if isset($display_multishop_checkboxes) && $display_multishop_checkboxes}
+		<div class="row multishop_product_checkbox">
+			{include file="controllers/products/multishop/checkbox.tpl" only_checkbox="true" field="available_for_order" type="default"}
+			{include file="controllers/products/multishop/checkbox.tpl" only_checkbox="true" field="show_price" type="show_price"}
+			{include file="controllers/products/multishop/checkbox.tpl" only_checkbox="true" field="online_only" type="default"}
+		</div>
+		{/if}
+		<div class="row">
+			<label class="control-label col-lg-3">{l s='Options:'}</label>
+			<div class="col-lg-5">
+				<p class="checkbox">
+					<input type="checkbox" name="available_for_order" id="available_for_order" value="1" {if $product->available_for_order}checked="checked"{/if}  />
+					<label for="available_for_order" class="t">{l s='Available for order'}</label>
+				</p>
+				<p class="checkbox">	
+					<input type="checkbox" name="show_price" id="show_price" value="1" {if $product->show_price}checked="checked"{/if} {if $product->available_for_order}disabled="disabled"{/if}/>
+					<label for="show_price" class="t">{l s='show price'}</label>
+				</p>
+				<p class="checkbox">
+					<input type="checkbox" name="online_only" id="online_only" value="1" {if $product->online_only}checked="checked"{/if} />
+					<label for="online_only" class="t">{l s='Online only (not sold in store)'}</label>
+				</p>
+			</div>
+		</div>
+		<div class="row">
+			{include file="controllers/products/multishop/checkbox.tpl" field="condition" type="default"}
+			<label class="control-label col-lg-3">{l s='Condition:'}</label>
+			<div class="col-lg-5">
+				<select name="condition" id="condition">
+					<option value="new" {if $product->condition == 'new'}selected="selected"{/if} >{l s='New'}</option>
+					<option value="used" {if $product->condition == 'used'}selected="selected"{/if} >{l s='Used'}</option>
+					<option value="refurbished" {if $product->condition == 'refurbished'}selected="selected"{/if}>{l s='Refurbished'}</option>
+				</select>
+			</div>	
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	{include file="controllers/products/multishop/checkbox.tpl" field="description_short" type="tinymce" multilang="true"}
+	<label class="control-label col-lg-3">{l s='Short description:'}</label>
+	<div class="col-lg-5">
+		{include file="controllers/products/textarea_lang.tpl" languages=$languages input_name='description_short' input_value=$product->description_short max=$PS_PRODUCT_SHORT_DESC_LIMIT}
+		<p class="help-block">({l s='Appears in the product list(s), and on the top of the product page.'})</p>
+	</div>
+</div>
+
+<div class="row">
+	{include file="controllers/products/multishop/checkbox.tpl" field="description" type="tinymce" multilang="true"}
+	<label class="control-label col-lg-3">{l s='Description:'}</label>
+	<div class="col-lg-5">
+		{include file="controllers/products/textarea_lang.tpl" languages=$languages input_name='description' input_value=$product->description}
+		<p class="help-block">({l s='Appears in the body of the product page'})</p>
+	</div>
+</div>
+
+
+{if $images}
+	<div class="alert alert-info">
+		{l s='Do you want an image associated with the product in your description?'}
+		<span class="addImageDescription" style="cursor:pointer">{l s='Click here'}</span>.
 	</div>
 
-	<div class="separation"></div>
-	<br />
-	<table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #CCCCCC;">
-	{* global information *}
-		<tr>
-			<td class="col-left">
-				{include file="controllers/products/multishop/checkbox.tpl" field="name" type="default" multilang="true"}
-				<label>{l s='Name:'}</label>
-			</td>
-			<td style="padding-bottom:5px;" class="translatable">
-			{foreach from=$languages item=language}
-				<div class="lang_{$language.id_lang}" style="{if !$language.is_default}display: none;{/if} float: left;">
-						<input class="{$class_input_ajax}{if !$product->id}copy2friendlyUrl{/if} updateCurrentText" size="43" type="text" {if !$product->id}disabled="disabled"{/if}
-						id="name_{$language.id_lang}" name="name_{$language.id_lang}"
-						value="{$product->name[$language.id_lang]|htmlentitiesUTF8|default:''}"/><sup> *</sup>
-					<span class="alert alert-info" name="help_box">{l s='Invalid characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span>
-					</span>
-				</div>
-			{/foreach}
-			</td>
-		</tr>
-		<tr>
-			<td class="col-left"><label>{$bullet_common_field} {l s='Reference:'}</label></td>
-			<td style="padding-bottom:5px;">
-				<input size="55" type="text" name="reference" value="{$product->reference|htmlentitiesUTF8}" style="width: 130px; margin-right: 44px;" />
-				<span class="alert alert-info" name="help_box">{l s='Special characters allowed:'}.-_#\<span class="hint-pointer">&nbsp;</span></span>
-			</td>
-		</tr>
-		<tr>
-			<td class="col-left"><label>{$bullet_common_field} {l s='EAN13 or JAN:'}</label></td>
-			<td style="padding-bottom:5px;">
-				<input size="55" maxlength="13" type="text" name="ean13" value="{$product->ean13|htmlentitiesUTF8}" style="width: 130px; margin-right: 5px;" /> <span class="small">{l s='(Europe, Japan)'}</span>
-			</td>
-		</tr>
-		<tr>
-			<td class="col-left"><label>{$bullet_common_field} {l s='UPC:'}</label></td>
-			<td style="padding-bottom:5px;">
-				<input size="55" maxlength="12" type="text" name="upc" value="{$product->upc|escape:html:'UTF-8'}" style="width: 130px; margin-right: 5px;" /> <span class="small">{l s='(US, Canada)'}</span>
-			</td>
-		</tr>
-	</table>
-	{* status informations *}
-	<table cellpadding="5" style="width: 40%; float: left; margin-left: 10px;">
-	<tr>
-		<td class="col-left">
-			{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
-			<label class="text">{l s='Status:'}</label>
-		</td>
-		<td style="padding-bottom:5px;">
-			<ul class="listForm">
-				<li>
-					<input onclick="toggleDraftWarning(false);showOptions(true);showRedirectProductOptions(false);" type="radio" name="active" id="active_on" value="1" {if $product->active || !$product->isAssociatedToShop()}checked="checked" {/if} />
-					<label for="active_on" class="radioCheck">{l s='Enabled'}</label>
-				</li>
-				<li>
-					<input onclick="toggleDraftWarning(true);showOptions(false);showRedirectProductOptions(true);"  type="radio" name="active" id="active_off" value="0" {if !$product->active && $product->isAssociatedToShop()}checked="checked"{/if} />
-					<label for="active_off" class="radioCheck">{l s='Disabled'}</label>
-				</li>
-			</ul>
-		</td>
-	</tr>
-	<tr class="redirect_product_options" style="display:none">
-		<td class="col-left">
-			{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
-			<label class="text">{l s='Redirect:'}</label>
-		</td>
-		<td style="padding-bottom:5px;">
-			<select name="redirect_type" id="redirect_type">
-				<option value="404" {if $product->redirect_type == '404'} selected="selected" {/if}>{l s='No redirect (404)'}</option>
-				<option value="301" {if $product->redirect_type == '301'} selected="selected" {/if}>{l s='Redirect permanently (301)'}</option>
-				<option value="302" {if $product->redirect_type == '302'} selected="selected" {/if}>{l s='Redirect temporarily (302)'}</option>
-			</select>
-			<span class="alert alert-info" name="help_box">
-				{l s='404 : Not Found = Product does not exist and no redirect'}<br/>
-				{l s='301 : Moved Permanently = Product Moved Permanently'}<br/>
-				{l s='302 : Moved Temporarily = Product moved temporarily'}
-			</span>
-		</td>
-	</tr>
-	<tr class="redirect_product_options redirect_product_options_product_choise" style="display:none">
-		<td class="col-left">
-			{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
-			<label class="text">{l s='Related product:'}</label>
-		</td>
-		<td style="padding-bottom:5px;">
-			<input type="hidden" value="" name="id_product_redirected" />
-			<input value="" id="related_product_autocomplete_input" autocomplete="off" class="ac_input" />
-			<p>
-				<script>
-					var no_related_product = '{l s='No related product'}';
-					var id_product_redirected = {$product->id_product_redirected|intval};
-					var product_name_redirected = '{$product_name_redirected|escape:html:'UTF-8'}';
-				</script>
-				<span id="related_product_name">{l s='No related product'}</span>
-				<span id="related_product_remove" style="display:none">
-					<a hre="#" onclick="removeRelatedProduct(); return false" id="related_product_remove_link">
-						<img src="../img/admin/delete.gif" class="middle" alt="" />
-					</a>
-				</span>
-			</p>
-		</td>
-	</tr>
-	<tr>
-		<td class="col-left">
-			{include file="controllers/products/multishop/checkbox.tpl" field="visibility" type="default"}
-			<label>{l s='Visibility:'}</label>
-		</td>
-		<td style="padding-bottom:5px;">
-			<select name="visibility" id="visibility">
-				<option value="both" {if $product->visibility == 'both'}selected="selected"{/if} >{l s='Everywhere'}</option>
-				<option value="catalog" {if $product->visibility == 'catalog'}selected="selected"{/if} >{l s='Catalog only'}</option>
-				<option value="search" {if $product->visibility == 'search'}selected="selected"{/if} >{l s='Search only'}</option>
-				<option value="none" {if $product->visibility == 'none'}selected="selected"{/if}>{l s='Nowhere'}</option>
-			</select>
-		</td>
-	</tr>
-	<tr id="product_options" {if !$product->active}style="display:none"{/if} >
-		<td class="col-left">
-			{if isset($display_multishop_checkboxes) && $display_multishop_checkboxes}
-				<div class="multishop_product_checkbox">
-					<ul class="listForm">
-						<li>{include file="controllers/products/multishop/checkbox.tpl" only_checkbox="true" field="available_for_order" type="default"}</li>
-						<li>{include file="controllers/products/multishop/checkbox.tpl" only_checkbox="true" field="show_price" type="show_price"}</li>
-						<li>{include file="controllers/products/multishop/checkbox.tpl" only_checkbox="true" field="online_only" type="default"}</li>
-					</ul>
-				</div>
-			{/if}
+	<div id="createImageDescription" style="display:none">
+		<label>{l s='Select your image:'}</label>
 
-			<label>{l s='Options:'}</label>
-		</td>
-		<td style="padding-bottom:5px;">
-			<ul class="listForm">
-				<li>
-					<input  type="checkbox" name="available_for_order" id="available_for_order" value="1" {if $product->available_for_order}checked="checked"{/if}  />
-					<label for="available_for_order" class="t">{l s='Available for order'}</label>
-				</li>
+		<ul class="smallImage">
+		{foreach from=$images item=image key=key}
 			<li>
-				<input type="checkbox" name="show_price" id="show_price" value="1" {if $product->show_price}checked="checked"{/if} {if $product->available_for_order}disabled="disabled"{/if}/>
-				<label for="show_price" class="t">{l s='show price'}</label>
+				<input type="radio" name="smallImage" id="smallImage_{$key}" value="{$image.id_image}" {if $key == 0}checked="checked"{/if} >
+				<label for="smallImage_{$key}" class="t">
+					<img src="{$image.src}" alt="{$image.legend}" />
+				</label>
 			</li>
-			<li>
-				<input type="checkbox" name="online_only" id="online_only" value="1" {if $product->online_only}checked="checked"{/if} />
-				<label for="online_only" class="t">{l s='Online only (not sold in store)'}</label>
-			</li>
-			</ul>
-		</td>
-	</tr>
-	<tr>
-		<td class="col-left">
-			{include file="controllers/products/multishop/checkbox.tpl" field="condition" type="default"}
-			<label>{l s='Condition:'}</label>
-		</td>
-		<td style="padding-bottom:5px;">
-			<select name="condition" id="condition">
-				<option value="new" {if $product->condition == 'new'}selected="selected"{/if} >{l s='New'}</option>
-				<option value="used" {if $product->condition == 'used'}selected="selected"{/if} >{l s='Used'}</option>
-				<option value="refurbished" {if $product->condition == 'refurbished'}selected="selected"{/if}>{l s='Refurbished'}</option>
-			</select>
-		</td>
-	</tr>
-</table>
+		{/foreach}
+		</ul>
 
-<table cellpadding="5" cellspacing="0" border="0" style="width: 100%;"><tr><td><div class="separation"></div></td></tr></table>
-		<table cellspacing="0" cellpadding="5" border="0">
-			<tr>
-				<td class="col-left">
-					{include file="controllers/products/multishop/checkbox.tpl" field="description_short" type="tinymce" multilang="true"}
-					<label>{l s='Short description:'}<br /></label>
-					<p class="product_description">({l s='Appears in the product list(s), and on the top of the product page.'})</p>
-				</td>
-				<td style="padding-bottom:5px;">
-						{include file="controllers/products/textarea_lang.tpl"
-						languages=$languages
-						input_name='description_short'
-						input_value=$product->description_short
-						max=$PS_PRODUCT_SHORT_DESC_LIMIT}
-					<p class="clear"></p>
-				</td>
-			</tr>
-			<tr>
-				<td class="col-left">
-					{include file="controllers/products/multishop/checkbox.tpl" field="description" type="tinymce" multilang="true"}
-					<label>{l s='Description:'}<br /></label>
-					<p class="product_description">({l s='Appears in the body of the product page'})</p>
-				</td>
-				<td style="padding-bottom:5px;">
-						{include file="controllers/products/textarea_lang.tpl" languages=$languages
-						input_name='description'
-						input_value=$product->description
-						}
-					<p class="clear"></p>
-				</td>
-			</tr>
-		{if $images}
-			<tr>
-				<td class="col-left"><label></label></td>
-				<td style="padding-bottom:5px;">
-					<div style="display:block;width:620px;" class="alert alert-info">
-						{l s='Do you want an image associated with the product in your description?'}
-						<span class="addImageDescription" style="cursor:pointer">{l s='Click here'}</span>.
-					</div>
-					<p class="clear"></p>
-				</td>
-			</tr>
-			</table>
-				<table id="createImageDescription" style="display:none;width:100%">
-					<tr>
-						<td colspan="2" height="10"></td>
-					</tr>
-					<tr>
-						<td class="col-left"><label>{l s='Select your image:'}</label></td>
-						<td style="padding-bottom:5px;">
-							<ul class="smallImage">
-							{foreach from=$images item=image key=key}
-									<li>
-										<input type="radio" name="smallImage" id="smallImage_{$key}" value="{$image.id_image}" {if $key == 0}checked="checked"{/if} >
-										<label for="smallImage_{$key}" class="t">
-											<img src="{$image.src}" alt="{$image.legend}" />
-										</label>
-									</li>
-							{/foreach}
-							</ul>
-							<p class="clear"></p>
-						</td>
-					</tr>
-					<tr>
-						<td class="col-left"><label>{l s='Position:'}</label></td>
-						<td style="padding-bottom:5px;">
-							<ul class="listForm">
-								<li><input type="radio" name="leftRight" id="leftRight_1" value="left" checked>
-									<label for="leftRight_1" class="t">{l s='left'}</label>
-								</li>
-								<li>
-									<input type="radio" name="leftRight" id="leftRight_2" value="right">
-									<label for="leftRight_2" class="t">{l s='right'}</label>
-								</li>
-							</ul>
-						</td>
-					</tr>
-					<tr>
-						<td class="col-left"><label>{l s='Select the type of picture:'}</label></td>
-						<td style="padding-bottom:5px;">
-							<ul class="listForm">
-							{foreach from=$imagesTypes key=key item=type}
-								<li><input type="radio" name="imageTypes" id="imageTypes_{$key}" value="{$type.name}" {if $key == 0}checked="checked"{/if}>
-									<label for="imageTypes_{$key}" class="t">{$type.name} <span>({$type.width}px {l s='by'} {$type.height}px)</span></label>
-								</li>
-							{/foreach}
-							</ul>
-							<p class="clear"></p>
-						</td>
-					</tr>
-					<tr>
-						<td class="col-left"><label>{l s='Image tag to insert:'}</label></td>
-						<td style="padding-bottom:5px;">
-							<input type="text" id="resultImage" name="resultImage" />
-							<p class="preference_description">{l s='The tag to copy/paste into the description.'}</p>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="2">
-							<div class="separation"></div>
-						</td>
-					</tr>
-				</table>
-		{/if}
-		<table>
-		<tr>
-			<td class="col-left"><label>{l s='Tags:'}</label></td>
-			<td style="padding-bottom:5px;" class="translatable">
-				{foreach from=$languages item=language}
-					<div class="lang_{$language.id_lang}" style="{if !$language.is_default}display: none;{/if}float: left;">
-						<input size="55" type="text" id="tags_{$language.id_lang}" name="tags_{$language.id_lang}"
-							value="{$product->getTags($language.id_lang, true)|htmlentitiesUTF8}" />
-						<span class="alert alert-info" name="help_box">{l s='Forbidden characters:'} !&lt;;&gt;;?=+#&quot;&deg;{}_$%<span class="hint-pointer">&nbsp;</span></span>
-					</div>
-				{/foreach}
-				<p class="preference_description clear">{l s='Tags separated by commas (e.g. dvd, dvd player, hifi)'}</p>
-			</td>
-		</tr>
-		</table>
-	</table>
-	<br />
+
+		<label>{l s='Position:'}</label>
+		<input type="radio" name="leftRight" id="leftRight_1" value="left" checked>
+											
+		<label for="leftRight_1" class="t">{l s='left'}</label>
+		<input type="radio" name="leftRight" id="leftRight_2" value="right">
+											
+		<label for="leftRight_2" class="t">{l s='right'}</label>
+
+		<label>{l s='Select the type of picture:'}</label>
+
+		{foreach from=$imagesTypes key=key item=type}
+			<input type="radio" name="imageTypes" id="imageTypes_{$key}" value="{$type.name}" {if $key == 0}checked="checked"{/if}>
+			<label for="imageTypes_{$key}" class="t">
+				{$type.name} <span>({$type.width}px {l s='by'} {$type.height}px)</span>
+			</label>
+		{/foreach}
+
+		<label>{l s='Image tag to insert:'}</label>
+		<input type="text" id="resultImage" name="resultImage" />
+		<p class="help-block">{l s='The tag to copy/paste into the description.'}</p>
+	</div>
+{/if}
+
+<div class="row">
+	<label class="control-label col-lg-3">{l s='Tags:'}</label>
+	<div class="col-lg-5 translatable">
+		{foreach from=$languages item=language}
+		<div class="lang_{$language.id_lang}" style="{if !$language.is_default}display: none;{/if}">
+			<input type="text" id="tags_{$language.id_lang}" name="tags_{$language.id_lang}"
+				value="{$product->getTags($language.id_lang, true)|htmlentitiesUTF8}" />
+			<p class="help-block" name="help_box">{l s='Forbidden characters:'} !&lt;;&gt;;?=+#&quot;&deg;{}_$%</p>
+		</div>
+		{/foreach}
+		<p class="help-block">{l s='Tags separated by commas (e.g. dvd, dvd player, hifi)'}</p>
+	</div>
 </div>

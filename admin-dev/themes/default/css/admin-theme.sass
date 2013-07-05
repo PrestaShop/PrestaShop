@@ -18,9 +18,11 @@ body.fixed-top
 	height: 100%
 
 #content
-	height: 100%
-	padding: 20px
-	margin: 0 0 90px 240px
+	float: left
+	width: 1280px
+	min-height: 100%
+	padding: 20px 20px 90px 20px
+	margin: 0 0 0 240px
 	border-left: 1px solid #CECECE
 	background-color: white
 
@@ -169,6 +171,8 @@ $icon-color: #7A0928
 	@extend .icon-bar-chart
 	background-color: adjust-hue($icon-color, 220)
 
+
+
 .navbar-inner
 	box-shadow: none!important
 	.input-append
@@ -229,6 +233,20 @@ $icon-color: #7A0928
 	@extend .icon-download
 .process-icon-new-module
 	@extend .icon-plus
+.process-icon-delete
+	@extend .icon-trash
+.process-icon-update
+	@extend icon-refresh
+.process-icon-preview
+	@extend .icon-eye-open
+.process-icon-previewURL
+	@extend .icon-eye-open
+.process-icon-stats
+	@extend .icon-bar-chart
+.process-icon-duplicate
+	@extend .icon-copy
+.process-icon-newCombination
+	@extend .icon-plus-sign
 
 .page-head
 	position: relative

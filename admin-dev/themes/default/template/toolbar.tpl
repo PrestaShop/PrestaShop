@@ -60,7 +60,7 @@
 			var modules_list_loaded = false;
 			$(function() {
 				//get reference on save link
-				btn_save = $('span[class~="process-icon-save"]').parent();
+				btn_save = $('i[class~="process-icon-save"]').parent();
 
 				//get reference on form submit button
 				btn_submit = $('#{$table}_form_submit_btn');
@@ -68,7 +68,7 @@
 				if (btn_save.length > 0 && btn_submit.length > 0)
 				{
 					//get reference on save and stay link
-					btn_save_and_stay = $('span[class~="process-icon-save-and-stay"]').parent();
+					btn_save_and_stay = $('i[class~="process-icon-save-and-stay"]').parent();
 
 					//get reference on current save link label
 					lbl_save = $('#desc-{$table}-save div');

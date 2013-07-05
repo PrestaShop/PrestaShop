@@ -5,31 +5,26 @@
 			{l s='Name'}
 		</span>
 	</label>
-
-	<!-- For demo -->
-	<div class="input-group col-lg-8">
+	<div class="col-lg-8">	
 		{foreach from=$languages item=language}
-		<input id="name_{$language.id_lang|intval}" type="text"  name="name_{$language.id_lang|intval}" value="{$currentTab->getFieldValue($currentObject, 'name', $language.id_lang|intval)|escape:html:'UTF-8'}">
-		<div class="input-group-btn">
-			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-				<img src="http://checkout.kg/PS_BOOTSTRAP/img/l/1.jpg" alt=""> English
-				<span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu">
-					<li class="active"><a href="#"><img src="http://checkout.kg/PS_BOOTSTRAP/img/l/1.jpg" alt=""> English</a></li>
-					<li><a href="#"><img src="http://checkout.kg/PS_BOOTSTRAP/img/l/2.jpg" alt=""> Français</a></li>
-			</ul>
+		<div class="row">
+		<div class="input-group col-lg-12">
+			<input id="name_{$language.id_lang|intval}" type="text"  name="name_{$language.id_lang|intval}" value="{$currentTab->getFieldValue($currentObject, 'name', $language.id_lang|intval)|escape:html:'UTF-8'}">
+			<div class="input-group-btn">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+					<img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt="">
+					{$language.iso_code} 
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+					{foreach from=$languages item=language}
+					<li><a href="#"><img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt=""> {$language.iso_code}</a></li>
+					{/foreach}
+				</ul>
+			</div>
+		</div>
 		</div>
 		{/foreach}
-		
-		<!-- Original component commented for demo 
-		<div class="translatable">			
-		{foreach from=$languages item=language}
-			<div class="lang_{$language.id_lang|intval}">
-				<input type="text" id="name_{$language.id_lang|intval}" name="name_{$language.id_lang|intval}" value="{$currentTab->getFieldValue($currentObject, 'name', $language.id_lang|intval)|escape:html:'UTF-8'}"/>
-			</div>
-		{/foreach}
-		</div>-->
 	</div>
 </div>
 
@@ -55,7 +50,7 @@
 	<div class="input-group col-lg-4">
 		<input type="text" id="code" name="code" value="{$currentTab->getFieldValue($currentObject, 'code')|escape}" />
 		<span class="input-group-btn">
-			<a href="javascript:gencode(8);" class="btn btn-default"><i class="icon-random"></i>  {l s='Generate'}</a>
+			<a href="javascript:gencode(8);" class="btn btn-default"><i class="icon-random"></i> {l s='Generate'}</a>
 		</span>
 	</div>
 </div>
