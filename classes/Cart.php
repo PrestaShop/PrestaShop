@@ -2543,6 +2543,7 @@ class CartCore extends ObjectModel
 		if (empty($id_carrier) && $this->isCarrierInRange((int)Configuration::get('PS_CARRIER_DEFAULT'), (int)$id_zone))
 			$id_carrier = (int)Configuration::get('PS_CARRIER_DEFAULT');
 
+		$total_package_without_shipping_tax_inc = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, $product_list);
 		if (empty($id_carrier))
 		{
 			if ((int)$this->id_customer)
@@ -2577,7 +2578,7 @@ class CartCore extends ObjectModel
 				{
 					$check_delivery_price_by_weight = Carrier::checkDeliveryPriceByWeight($row['id_carrier'], $this->getTotalWeight(), (int)$id_zone);
 
-					$total_order = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, $product_list);
+					$total_order = $total_package_without_shipping_tax_inc;
 					$check_delivery_price_by_price = Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $total_order, (int)$id_zone, (int)$this->id_currency);
 
 					// Get only carriers that have a range compatible with cart
@@ -2680,26 +2681,8 @@ class CartCore extends ObjectModel
 					$id_zone = (int)$default_country->id_zone;
 			}
 
-			$check_delivery_price_by_weight = Carrier::checkDeliveryPriceByWeight((int)$carrier->id, $this->getTotalWeight(), (int)$id_zone);
-
-			// Code Review V&V TO FINISH
-			$check_delivery_price_by_price = Carrier::checkDeliveryPriceByPrice(
-				$carrier->id,
-				$this->getOrderTotal(
-					true,
-					Cart::BOTH_WITHOUT_SHIPPING,
-					$product_list
-				),
-				$id_zone,
-				(int)$this->id_currency
-			);
-
-			if ((
-					$carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_WEIGHT
-					&& !$check_delivery_price_by_weight
-				) || (
-					$carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_PRICE
-					&& !$check_delivery_price_by_price
+			if (($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_WEIGHT && !Carrier::checkDeliveryPriceByWeight($carrier->id, $this->getTotalWeight(), (int)$id_zone))
+			|| ($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_PRICE && !Carrier::checkDeliveryPriceByPrice($carrier->id, $total_package_without_shipping_tax_inc, $id_zone, (int)$this->id_currency)
 			))
 				$shipping_cost += 0;
 			else
@@ -2846,7 +2829,10 @@ class CartCore extends ObjectModel
 		$formatted_addresses['delivery'] = AddressFormat::getFormattedLayoutData($delivery);		
 		$formatted_addresses['invoice'] = AddressFormat::getFormattedLayoutData($invoice);
 
-		$total_tax = $this->getOrderTotal() - $this->getOrderTotal(false);
+		$base_total_tax_inc = $this->getOrderTotal(true);
+		$base_total_tax_exc = $this->getOrderTotal(false);
+		
+		$total_tax = $base_total_tax_inc - $base_total_tax_exc;
 
 		if ($total_tax < 0)
 			$total_tax = 0;
@@ -2944,9 +2930,9 @@ class CartCore extends ObjectModel
 			'total_shipping_tax_exc' => $total_shipping_tax_exc,
 			'total_products_wt' => $total_products_wt,
 			'total_products' => $total_products,
-			'total_price' => $this->getOrderTotal(),
+			'total_price' => $base_total_tax_inc,
 			'total_tax' => $total_tax,
-			'total_price_without_tax' => $this->getOrderTotal(false),
+			'total_price_without_tax' => $base_total_tax_exc,
 			'is_multi_address_delivery' => $this->isMultiAddressDelivery() || ((int)Tools::getValue('multi-shipping') == 1),
 			'free_ship' => $total_shipping ? 0 : 1,
 			'carrier' => new Carrier($this->id_carrier, $id_lang),
