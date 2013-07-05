@@ -534,8 +534,9 @@ class Blocknewsletter extends Module
 		//we delete it from blocknewsletter table to prevent duplicates
 		$id_shop = $params['newCustomer']->id_shop;
 		$email = $params['newCustomer']->email;
-		if (Validate::isEmail($email))
+		$newsletter = $params['newCustomer']->newsletter;
+		if ($newsletter && Validate::isEmail($email))
 			return (bool)Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'newsletter WHERE id_shop='.(int)$id_shop.' AND email=\''.pSQL($email)."'");
-		return false;
+		return true;
 	}
 }
