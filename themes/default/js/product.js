@@ -326,7 +326,7 @@ function updateDisplay()
 				reduction = ps_round(reduction / tax, 6);
 
 		}
-		else if (product_specific_price && product_specific_price.reduction)
+		else if (product_specific_price && product_specific_price.reduction && selectedCombination['specific_price'] > 0)
 		{
 			if (product_specific_price.reduction_type == 'amount')
 				reduction_price = (specific_currency ? product_specific_price.reduction : product_specific_price.reduction * currencyRate);
@@ -387,6 +387,7 @@ function updateDisplay()
 		}
 		$('#our_price_display').text(our_price);
 		$('#old_price_display').text(formatCurrency(productPriceWithoutReductionDisplay, currencyFormat, currencySign, currencyBlank));
+
 		if (productPriceWithoutReductionDisplay > productPriceDisplay)
 			$('#old_price,#old_price_display,#old_price_display_taxes').show();
 		else
