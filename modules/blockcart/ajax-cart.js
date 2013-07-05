@@ -348,13 +348,10 @@ var ajaxCart = {
 				});
 			});
 		}
-		console.log(domIdProduct);
 		var removeLinks = $('#cart_block_product_' + domIdProduct).find('.ajax_cart_block_remove_link');
 		if (!product.hasCustomizedDatas && !removeLinks.length)
 		{
-			console.log($('#cart_block_product_' + domIdProduct + ' span.remove_link'));
 			$('#cart_block_product_' + domIdProduct + ' span.remove_link').html('<a class="ajax_cart_block_remove_link" rel="nofollow" href="' + baseUri + '?controller=cart&amp;delete=1&amp;id_product=' + product['id'] + '&amp;ipa=' + product['idCombination'] + '&amp;token=' + static_token + '"> </a>');
-			console.log('passe');
 		}
 		if (product.is_gift)
 			$('#cart_block_product_' + domIdProduct + ' span.remove_link').html('');
