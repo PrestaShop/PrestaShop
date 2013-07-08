@@ -3410,62 +3410,59 @@ class CartCore extends ObjectModel
 	 */
 	public function setNoMultishipping()
 	{
-		// Upgrading quantities
-		$sql = 'SELECT sum(`quantity`) as quantity, id_product, id_product_attribute, count(*) as count
-				FROM `'._DB_PREFIX_.'cart_product`
-				WHERE `id_cart` = '.(int)$this->id.'
-					AND `id_shop` = '.(int)$this->id_shop.'
-				GROUP BY id_product, id_product_attribute
-				HAVING count > 1';
-
-		foreach (Db::getInstance()->executeS($sql) as $product)
+		if (Configuration::get('PS_ALLOW_MULTISHIPPING'))
 		{
-			$sql = 'UPDATE `'._DB_PREFIX_.'cart_product`
-				SET `quantity` = '.$product['quantity'].'
-				WHERE  `id_cart` = '.(int)$this->id.'
-					AND `id_shop` = '.(int)$this->id_shop.'
-					AND id_product = '.$product['id_product'].'
-					AND id_product_attribute = '.$product['id_product_attribute'];
-				Db::getInstance()->execute($sql);
+			// Upgrading quantities
+			$sql = 'SELECT sum(`quantity`) as quantity, id_product, id_product_attribute, count(*) as count
+					FROM `'._DB_PREFIX_.'cart_product`
+					WHERE `id_cart` = '.(int)$this->id.'
+						AND `id_shop` = '.(int)$this->id_shop.'
+					GROUP BY id_product, id_product_attribute
+					HAVING count > 1';
+
+			foreach (Db::getInstance()->executeS($sql) as $product)
+			{
+				$sql = 'UPDATE `'._DB_PREFIX_.'cart_product`
+					SET `quantity` = '.$product['quantity'].'
+					WHERE  `id_cart` = '.(int)$this->id.'
+						AND `id_shop` = '.(int)$this->id_shop.'
+						AND id_product = '.$product['id_product'].'
+						AND id_product_attribute = '.$product['id_product_attribute'];
+					Db::getInstance()->execute($sql);
+			}
+
+			// Merging multiple lines
+			$sql = 'DELETE cp1
+				FROM `'._DB_PREFIX_.'cart_product` cp1
+					INNER JOIN `'._DB_PREFIX_.'cart_product` cp2
+					ON (
+						(cp1.id_cart = cp2.id_cart)
+						AND (cp1.id_product = cp2.id_product)
+						AND (cp1.id_product_attribute = cp2.id_product_attribute)
+						AND (cp1.id_address_delivery <> cp2.id_address_delivery)
+						AND (cp1.date_add > cp2.date_add)
+					)';
+					Db::getInstance()->execute($sql);
 		}
-
-		// Merging multiple lines
-		$sql = 'DELETE cp1
-			FROM `'._DB_PREFIX_.'cart_product` cp1
-				INNER JOIN `'._DB_PREFIX_.'cart_product` cp2
-				ON (
-					(cp1.id_cart = cp2.id_cart)
-					AND (cp1.id_product = cp2.id_product)
-					AND (cp1.id_product_attribute = cp2.id_product_attribute)
-					AND (cp1.id_address_delivery <> cp2.id_address_delivery)
-					AND (cp1.date_add > cp2.date_add)
-				)';
-				Db::getInstance()->execute($sql);
-
-		// Upgrading address delivery
-		$sql = 'UPDATE `'._DB_PREFIX_.'cart_product`
-			SET `id_address_delivery` =
-			(
-				SELECT `id_address_delivery`
-				FROM `'._DB_PREFIX_.'cart`
-				WHERE `id_cart` = '.(int)$this->id.'
-					AND `id_shop` = '.(int)$this->id_shop.'
-			)
-			WHERE `id_cart` = '.(int)$this->id.'
-			'.(Configuration::get('PS_ALLOW_MULTISHIPPING') ? ' AND `id_shop` = '.(int)$this->id_shop : '');
-
-		Db::getInstance()->execute($sql);
-
-		$sql = 'UPDATE `'._DB_PREFIX_.'customization`
-			SET `id_address_delivery` =
-			(
-				SELECT `id_address_delivery`
-				FROM `'._DB_PREFIX_.'cart`
+		
+		// Update delivery address for each product line
+		Db::getInstance()->execute('
+		UPDATE `'._DB_PREFIX_.'cart_product`
+		SET `id_address_delivery` = (
+			SELECT `id_address_delivery` FROM `'._DB_PREFIX_.'cart`
+			WHERE `id_cart` = '.(int)$this->id.' AND `id_shop` = '.(int)$this->id_shop.'
+		)
+		WHERE `id_cart` = '.(int)$this->id.'
+		'.(Configuration::get('PS_ALLOW_MULTISHIPPING') ? ' AND `id_shop` = '.(int)$this->id_shop : ''));
+		
+		if (Customization::isFeatureActive())
+			Db::getInstance()->execute('
+			UPDATE `'._DB_PREFIX_.'customization`
+			SET `id_address_delivery` = (
+				SELECT `id_address_delivery` FROM `'._DB_PREFIX_.'cart`
 				WHERE `id_cart` = '.(int)$this->id.'
 			)
-			WHERE `id_cart` = '.(int)$this->id;
-
-		Db::getInstance()->execute($sql);
+			WHERE `id_cart` = '.(int)$this->id);
 	}
 
 	/**
