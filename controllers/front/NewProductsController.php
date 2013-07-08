@@ -58,8 +58,13 @@ class NewProductsControllerCore extends FrontController
 
 		$newProducts = Product::getNewProducts($this->context->language->id, (int)($this->p) - 1, (int)($this->n), false, $this->orderBy, $this->orderWay);
 		if((count($newProducts) < Configuration::get('PS_NB_QTY_LATEST_PRODUCT')) && Configuration::get('PS_NB_LATEST_PRODUCT') ) {
-			$latestProducts = Product::getLatestProducts($this->context->language->id, (int)($this->p) - 1, (Configuration::get('PS_NB_QTY_LATEST_PRODUCT')-count($newProducts)), false, $this->orderBy, $this->orderWay);
+		$latestProducts = Product::getLatestProducts($this->context->language->id, (int)($this->p) - 1, Configuration::get('PS_NB_QTY_LATEST_PRODUCT'), false, $this->orderBy, $this->orderWay);
+			$limit = Configuration::get('PS_NB_QTY_LATEST_PRODUCT')-count($newProducts);
+			$count = 0;
 			foreach($latestProducts as $key => $lProduct) {
+				if($count >= $limit) {
+					break;
+				}
 				$is_new = false;
 				foreach($newProducts as $key => $nProduct) {
 					if($nProduct['id_product'] == $lProduct['id_product']) { // if product from latestProducts exist in newProducts
@@ -67,10 +72,12 @@ class NewProductsControllerCore extends FrontController
 					}
 				}
 				if(!$is_new) { // if product isn't in new products, add it
+					$count++;
 					$newProducts[] = $lProduct;
 				}
 			}
 		}
+		
 
 		$this->context->smarty->assign(array(
 			'products' => $newProducts,
