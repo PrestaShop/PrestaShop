@@ -105,7 +105,7 @@ $(document).ready(function () {
 </script>
 
 <input type="hidden" name="submitted_tabs[]" value="Prices" />
-<h3>{l s='Product price'}</h3>
+<legend>{l s='Product price'}</legend>
 <div class="alert alert-info">
 	{l s='You must enter either the pre-tax retail price, or the retail price with tax. The input field will be automatically calculated.'}
 </div>
@@ -117,7 +117,7 @@ $(document).ready(function () {
 	<label class="control-label col-lg-3">{l s='Pre-tax wholesale price:'}</label>
 	<div class="input-group col-lg-2">
 		<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
-		<input size="11" maxlength="14" name="wholesale_price" id="wholesale_price" type="text" value="{{toolsConvertPrice price=$product->wholesale_price}|string_format:'%.2f'}" onchange="this.value = this.value.replace(/,/g, '.');" />
+		<input maxlength="14" name="wholesale_price" id="wholesale_price" type="text" value="{{toolsConvertPrice price=$product->wholesale_price}|string_format:'%.2f'}" onchange="this.value = this.value.replace(/,/g, '.');" />
 	</div>
 	<p class="help-block">{l s='Wholesale price'}</p>
 </div>
@@ -172,7 +172,7 @@ $(document).ready(function () {
 
 {if $tax_exclude_taxe_option}
 <div class="row">
-	<div class="col-lg-12">
+	<div class="col-lg-9 col-offset-3">
 		<div class="alert">
 			{l s='Taxes are currently disabled'} : 
 			<a href="{$link->getAdminLink('AdminTaxes')|escape:'htmlall':'UTF-8'}">{l s='Tax options'}</a>
@@ -182,7 +182,7 @@ $(document).ready(function () {
 </div>
 {/if}
 
-<div class="row" {if !$ps_use_ecotax} style="display:xnone;"{/if}>
+<div class="row" {if !$ps_use_ecotax} style="display:none;"{/if}>
 	{include file="controllers/products/multishop/checkbox.tpl" field="ecot" type="default"}
 	<label class="control-label col-lg-3">{l s='Eco-tax (tax incl.):'}</label>
 	<div class="input-group col-lg-2">
@@ -192,7 +192,7 @@ $(document).ready(function () {
 	<span class="help-block">{l s='already included in price'}</span>
 </div>
 
-<div class="row" {if !$country_display_tax_label || $tax_exclude_taxe_option}style="display:xnone;"{/if} >
+<div class="row" {if !$country_display_tax_label || $tax_exclude_taxe_option}style="display:none;"{/if} >
 	<label class="control-label col-lg-3">{l s='Retail price with tax:'}</label>
 	<div class="input-group col-lg-2">
 		<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
@@ -213,22 +213,23 @@ $(document).ready(function () {
 	<span class="help-block">{l s='e.g. per lb.'}</span>
 </div>
 
+{if $ps_tax && $country_display_tax_label}
 <div class="row">
-	<div class="col-lg-12">
+	<div class="col-lg-9 col-offset-3">
 		<div class="alert">
-		{*if $ps_tax && $country_display_tax_label*}
 			<span>{l s='or'}
 				{$currency->prefix}<span id="unit_price_with_tax">0.00</span>{$currency->suffix}
 				{l s='per'} <span id="unity_second">{$product->unity}</span> {l s='with tax'}
 			</span>
-		{*/if*}
+		
 		</div>
 	</div>
 </div>
+{/if}
 
 <div class="row">
 	{include file="controllers/products/multishop/checkbox.tpl" field="on_sale" type="default"}
-	<div class="col-lg-12">
+	<div class="col-lg-9 col-offset-3">
 		<div class="checkbox">
 			<label class="control-label" for="on_sale" >
 				<input type="checkbox" name="on_sale" id="on_sale" {if $product->on_sale}checked="checked"{/if} value="1" />
@@ -239,7 +240,7 @@ $(document).ready(function () {
 </div>
 
 <div class="row">
-	<div class="col-lg-12">
+	<div class="col-lg-9 col-offset-3">
 		<div class="alert">
 			<strong>{l s='Final retail price:'}</strong>
 			<span {if !$country_display_tax_label}style="display:none"{/if} >
@@ -264,17 +265,21 @@ $(document).ready(function () {
 
 {if isset($specificPriceModificationForm)}
 <hr/>
-<h3>{l s='Specific prices'}</h3>
+<legend>{l s='Specific prices'}</legend>
 <div class="alert alert-info">
 	{l s='You can set specific prices for clients belonging to different groups, different countries, etc...'}
 </div>
 
-<a class="btn btn-default" href="#" id="show_specific_price">
-	<i class="icon-plus-sign"></i> {l s='Add a new specific price'}
-</a>
-<a class="btn btn-default" href="#" id="hide_specific_price" style="display:none">
-	<i class="icon-remove"></i> {l s='Cancel new specific price'}
-</a>
+<div class="row">
+	<div class="col-lg-12">
+		<a class="btn btn-default" href="#" id="show_specific_price">
+			<i class="icon-plus-sign"></i> {l s='Add a new specific price'}
+		</a>
+		<a class="btn btn-default" href="#" id="hide_specific_price" style="display:none">
+			<i class="icon-remove"></i> {l s='Cancel new specific price'}
+		</a>
+	</div>
+</div>
 
 <script type="text/javascript">
 	var product_prices = new Array();
@@ -283,7 +288,7 @@ $(document).ready(function () {
 	{/foreach}
 </script>
 
-<div id="add_specific_price" class="row" style="display: none;">
+<div id="add_specific_price" class="well" style="display: none;">
 	<div class="col-lg-12">
 
 		<div class="row">
@@ -372,40 +377,47 @@ $(document).ready(function () {
 		</div>
 
 		<div class="row">
-			<label>{l s='Product price'}
+			<label class="control-label col-lg-3">{l s='Product price'}
 				{if $country_display_tax_label}
 					{l s='(tax excl.):'}
 				{/if}
 			</label>
-
+			<div class="col-lg-9">
+				<div class="row">
+					<div class="input-group col-lg-4">
+						<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
+						<input type="text" disabled="disabled" name="sp_price" id="sp_price" value="{$product->price|string_format:'%.2f'}" />
+					</div>
+					<div class="col-lg-8">
+						<p class="checkbox">
+							<label>{l s='Leave base price:'}</label>
+							<input id="leave_bprice" type="checkbox" value="1" checked="checked" name="leave_bprice" />
+						</p>
+					</div>
+				</div>
+			</div>
 		</div>
-	</div>
 
-
-<!-- WIP -->
-
-	<span id="spm_currency_sign_pre_0">{$currency->prefix}</span>
-	<span id="spm_currency_sign_post_0">{$currency->suffix}</span>
-	<input type="text" disabled="disabled" name="sp_price" id="sp_price" value="{$product->price|string_format:'%.2f'}" size="11" />
-
-	<label>{l s='Leave base price:'}</label>
-	<input id="leave_bprice" type="checkbox" value="1" checked="checked" name="leave_bprice" />
-
-	<label>{l s='Apply a discount of:'}</label>
-	<input type="text" name="sp_reduction" value="0.00"/>
-
-	<select name="sp_reduction_type">
-		<option selected="selected">---</option>
-		<option value="amount">{l s='Amount'}</option>
-		<option value="percentage">{l s='Percentage'}</option>
-	</select>
-
-	<p class="help-block">{l s='The discount is applied after the tax'}</p>
-
-<!-- // WIP -->
-
-
-
+		<div class="row">
+			<label class="control-label col-lg-3">{l s='Apply a discount of:'}</label>
+			<div class="col-lg-4">
+				<div class="row">
+					<div class="col-lg-6">
+						<input type="text" name="sp_reduction" value="0.00"/>
+					</div>
+					<div class="col-lg-6">
+						<select name="sp_reduction_type">
+							<option selected="selected">---</option>
+							<option value="amount">{l s='Amount'}</option>
+							<option value="percentage">{l s='Percentage'}</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<p class="help-block">{l s='The discount is applied after the tax'}</p>
+		</div>
+	
+	</div>	
 </div>
 
 <script type="text/javascript">
@@ -440,30 +452,29 @@ $(document).ready(function () {
 	});
 </script>
 
-
-	<table id="specific_prices_list">
-		<thead>
-			<tr>
-				<th class="cell border" >{l s='Rule'}</th>
-				<th class="cell border" >{l s='Combination'}</th>
-				{if $multi_shop}<th>{l s='Shop'}</th>{/if}
-				<th class="cell border">{l s='Currency'}</th>
-				<th class="cell border">{l s='Country'}</th>
-				<th class="cell border">{l s='Group'}</th>
-				<th class="cell border">{l s='Customer'}</th>
-				<th class="cell border">{l s='Fixed price'}</th>
-				<th class="cell border">{l s='Impact'}</th>
-				<th class="cell border">{l s='Period'}</th>
-				<th class="cell border">{l s='From (quantity)'}</th>
-				<th class="cell border">{l s='Action'}</th>
-			</tr>
-		</thead>
-		<tbody>
-			{$specificPriceModificationForm}
-				<script type="text/javascript">
-					$(document).ready(function() {
-						calcPriceTI();
-						unitPriceWithTax('unit');
-						});
-				</script>
-			{/if}
+<table id="specific_prices_list" class="table">
+	<thead>
+		<tr>
+			<th class="cell border" >{l s='Rule'}</th>
+			<th class="cell border" >{l s='Combination'}</th>
+			{if $multi_shop}<th>{l s='Shop'}</th>{/if}
+			<th class="cell border">{l s='Currency'}</th>
+			<th class="cell border">{l s='Country'}</th>
+			<th class="cell border">{l s='Group'}</th>
+			<th class="cell border">{l s='Customer'}</th>
+			<th class="cell border">{l s='Fixed price'}</th>
+			<th class="cell border">{l s='Impact'}</th>
+			<th class="cell border">{l s='Period'}</th>
+			<th class="cell border">{l s='From (quantity)'}</th>
+			<th class="cell border">{l s='Action'}</th>
+		</tr>
+	</thead>
+	<tbody>
+		{$specificPriceModificationForm}
+			<script type="text/javascript">
+				$(document).ready(function() {
+					calcPriceTI();
+					unitPriceWithTax('unit');
+					});
+			</script>
+		{/if}

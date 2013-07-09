@@ -25,95 +25,81 @@
 
 <input type="hidden" name="submitted_tabs[]" value="Associations" />
 <div class="Associations">
-	<h4>{l s='Associations'}</h4>
+
+	<legend>{l s='Associations'}</legend>
 
 	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Associations"}
-	<div class="separation"></div>
-		<div id="no_default_category" class="alert alert-info">
-		{l s='Please select a default category.'}
+	<div id="no_default_category" class="alert alert-info">
+	{l s='Please select a default category.'}
 	</div>
-	<table>
-		<tr>
-			<td class="col-left">
-				{include file="controllers/products/multishop/checkbox.tpl" field="category_box" type="category_box"}
-				<label for="category_block">{l s='Associated categories:'}</label>
-			</td>
-			<td class="col-right">
-				<div id="category_block">
-					{$category_tree}
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<td colspan="2">&nbsp;</td>
-		</tr>
-		<tr>
-			<td></td>
-			<td class="col-right">
-					<a class="button bt-icon confirm_leave" href="{$link->getAdminLink('AdminCategories')|escape:'htmlall':'UTF-8'}&addcategory">
-						<img src="../img/admin/add.gif" alt="{l s='Create new category'}" title="{l s='Create new category'}" />
-						<span>{l s='Create new category'}</span>
-					</a>
-			</td>
-		</tr>
-		<tr>
-			<td class="col-left">
-				{include file="controllers/products/multishop/checkbox.tpl" field="id_category_default" type="default"}
-				<label for="id_category_default">{l s='Default category:'}</label>
-			</td>
-			<td class="col-right">
-				<select id="id_category_default" name="id_category_default">
-					{foreach from=$selected_cat item=cat}
-						<option value="{$cat.id_category}" {if $id_category_default == $cat.id_category}selected="selected"{/if} >{$cat.name}</option>
-					{/foreach}
-				</select>
-				<div class="alert alert-info" style="display:block;">{l s='The default category is the category displayed by default.'}</div>
-			</td>
-		</tr>
-	</table>
-<div class="separation"></div>
-	<table>
-		<tr>
-			<td class="col-left"><label>{l s='Accessories:'}</label></td>
-			<td style="padding-bottom:5px;">
-				<input type="hidden" name="inputAccessories" id="inputAccessories" value="{foreach from=$accessories item=accessory}{$accessory.id_product}-{/foreach}" />
-				<input type="hidden" name="nameAccessories" id="nameAccessories" value="{foreach from=$accessories item=accessory}{$accessory.name|escape:'htmlall':'UTF-8'}¤{/foreach}" />
 
-				<div id="ajax_choose_product">
-					<p style="clear:both;margin-top:0;">
-						<input type="text" value="" id="product_autocomplete_input" />
-						{l s='Begin typing the first letters of the product name, then select the product from the drop-down list.'}
-					</p>
-					<p class="preference_description">{l s='(Do not forget to save the product afterward)'}</p>
-					<!--<img onclick="$(this).prev().search();" style="cursor: pointer;" src="../img/admin/add.gif" alt="{l s='Add an accessory'}" title="{l s='Add an accessory'}" />-->
-				</div>
-				<div id="divAccessories">
-					{* @todo : donot use 3 foreach, but assign var *}
-					{foreach from=$accessories item=accessory}
-						{$accessory.name|escape:'htmlall':'UTF-8'}{if !empty($accessory.reference)}{$accessory.reference}{/if}
-						<span class="delAccessory" name="{$accessory.id_product}" style="cursor: pointer;">
-							<img src="../img/admin/delete.gif" class="middle" alt="" />
-						</span><br />
-					{/foreach}
-				</div>
-			</td>
-		</tr>
-		<tr>
-		<br />
-		<td class="col-left"><label>{l s='Manufacturer:'}</label></td>
-		<td style="padding-bottom:5px;">
-			<select name="id_manufacturer" id="id_manufacturer">
-				<option value="0">-- {l s='Choose (optional)'} --</option>
-				{if $product->id_manufacturer}
-				<option value="{$product->id_manufacturer}" selected="selected">{$product->manufacturer_name}</option>
-				{/if}
-				<option disabled="disabled">----------</option>
-			</select>&nbsp;&nbsp;&nbsp;
-			<a class="button bt-icon confirm_leave" style="margin-bottom:0" href="{$link->getAdminLink('AdminManufacturers')|escape:'htmlall':'UTF-8'}&addmanufacturer">
-				<img src="../img/admin/add.gif" alt="{l s='Create new manufacturer'}" title="{l s='Create new manufacturer'}" />
-				<span>{l s='Create new manufacturer'}</span>
-			</a>
-		</td>
-		</tr>
-	</table>
+<div class="row">
+	{include file="controllers/products/multishop/checkbox.tpl" field="category_box" type="category_box"}
+	<label class="control-label col-lg-3" for="category_block">{l s='Associated categories:'}</label>
+	<div class="col-lg-4">
+		<div id="category_block">
+			{$category_tree}
+		</div>
+		<a class="btn btn-default bt-icon confirm_leave" href="{$link->getAdminLink('AdminCategories')|escape:'htmlall':'UTF-8'}&addcategory">
+			<i class="icon-plus-sign"></i> {l s='Create new category'}
+		</a>
+	</div>
+</div>
+
+<div class="row">
+	{include file="controllers/products/multishop/checkbox.tpl" field="id_category_default" type="default"}
+	<label class="control-label col-lg-3" for="id_category_default">{l s='Default category:'}</label>
+	<div class="col-lg-5">
+		<select id="id_category_default" name="id_category_default">
+			{foreach from=$selected_cat item=cat}
+				<option value="{$cat.id_category}" {if $id_category_default == $cat.id_category}selected="selected"{/if} >{$cat.name}</option>
+			{/foreach}
+		</select>
+		<div class="alert alert-info" style="display:block;">{l s='The default category is the category displayed by default.'}</div>
+	</div>
+</div>
+
+<div class="row">
+	<label class="control-label col-lg-3">{l s='Accessories:'}</label>
+	<div class="col-lg-5">
+		<input type="hidden" name="inputAccessories" id="inputAccessories" value="{foreach from=$accessories item=accessory}{$accessory.id_product}-{/foreach}" />
+		<input type="hidden" name="nameAccessories" id="nameAccessories" value="{foreach from=$accessories item=accessory}{$accessory.name|escape:'htmlall':'UTF-8'}¤{/foreach}" />
+
+		<div id="ajax_choose_product">
+			<p style="clear:both;margin-top:0;">
+				<input type="text" value="" id="product_autocomplete_input" />
+				{l s='Begin typing the first letters of the product name, then select the product from the drop-down list.'}
+			</p>
+			<p class="preference_description">{l s='(Do not forget to save the product afterward)'}</p>
+			<!--<img onclick="$(this).prev().search();" style="cursor: pointer;" src="../img/admin/add.gif" alt="{l s='Add an accessory'}" title="{l s='Add an accessory'}" />-->
+		</div>
+		<div id="divAccessories">
+		{* @todo : donot use 3 foreach, but assign var *}
+		{foreach from=$accessories item=accessory}
+			{$accessory.name|escape:'htmlall':'UTF-8'}{if !empty($accessory.reference)}{$accessory.reference}{/if}
+			<span class="delAccessory" name="{$accessory.id_product}" style="cursor: pointer;">
+				<img src="../img/admin/delete.gif" class="middle" alt="" />
+			</span><br />
+		{/foreach}
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<label class="control-label col-lg-3">{l s='Manufacturer:'}</label>
+	<div class="col-lg-5">
+		<select name="id_manufacturer" id="id_manufacturer">
+			<option value="0">-- {l s='Choose (optional)'} --</option>
+			{if $product->id_manufacturer}
+			<option value="{$product->id_manufacturer}" selected="selected">{$product->manufacturer_name}</option>
+			{/if}
+			<option disabled="disabled">----------</option>
+		</select>
+
+		<a class="btn btn-default bt-icon confirm_leave" style="margin-bottom:0" href="{$link->getAdminLink('AdminManufacturers')|escape:'htmlall':'UTF-8'}&addmanufacturer">
+			<i class="icon-plus-sign"></i> {l s='Create new manufacturer'}
+		</a>
+	</div>
+</div>
+
 </div>
