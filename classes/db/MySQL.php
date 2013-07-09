@@ -50,8 +50,8 @@ class MySQLCore extends Db
 	public static function createDatabase($host, $user, $password, $dbname, $dropit = false)
 	{
 		$link = mysql_connect($host, $user, $password);
-		$success = mysql_query('CREATE DATABASE `'.bqSQL($dbname).'`', $link);
-		if ($dropit && ($link->exec('DROP DATABASE `'.bqSQL($dbname).'`') !== false))
+		$success = mysql_query('CREATE DATABASE `'.str_replace('`', '\\`', $dbname).'`', $link);
+		if ($dropit && (mysql_query('DROP DATABASE `'.str_replace('`', '\\`', $dbname).'`', $link) !== false))
 			return true;
 		return $success;
 	}

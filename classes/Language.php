@@ -704,10 +704,8 @@ class LanguageCore extends ObjectModel
 					$lang->name = $lang_pack->name;
 		}
 		elseif ($params_lang !== null && is_array($params_lang))
-		{
 			foreach ($params_lang as $key => $value)
 				$lang->$key = $value;
-		}
 		else
 			return false;
 		
