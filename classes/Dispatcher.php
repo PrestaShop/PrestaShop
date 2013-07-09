@@ -534,7 +534,7 @@ class DispatcherCore
 	 */
 	public function hasKeyword($route_id, $id_lang, $keyword)
 	{
-		if (!isset($this->routes[$id_lang]) && !isset($this->routes[$id_lang][$route_id]))
+		if (!isset($this->routes[$id_lang]) || !isset($this->routes[$id_lang][$route_id]))
 			return false;
 
 		return preg_match('#\{([^{}]*:)?'.preg_quote($keyword, '#').'(:[^{}]*)?\}#', $this->routes[$id_lang][$route_id]['rule']);
