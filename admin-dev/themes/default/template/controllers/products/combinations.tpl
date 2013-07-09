@@ -45,23 +45,24 @@
 		);
 	{/foreach}
 	</script>
-	<h4>{l s='Add or modify combinations for this product.'}</h4>
-	<div class="separation"></div> {l s='Or use the'}
-		&nbsp;<a class="button bt-icon confirm_leave" href="index.php?tab=AdminAttributeGenerator&id_product={$product->id}&attributegenerator&token={$token_generator}"><img src="../img/admin/appearance.gif" alt="combinations_generator" class="middle" title="{l s='Product combinations generator'}" /><span>{l s='Product combinations generator'}</span></a> 
-		{l s='in order to automatically create a set of combinations.'}
+
+	<legend>{l s='Add or modify combinations for this product.'}</legend>
+	<div class="alert alert-info">
+		<p>
+		{l s='Or use the'}&nbsp;<a class="btn btn-default bt-icon confirm_leave" href="index.php?tab=AdminAttributeGenerator&id_product={$product->id}&attributegenerator&token={$token_generator}"><i class="icon-magic"></i> <span>{l s='Product combinations generator'}</span></a> {l s='in order to automatically create a set of combinations.'}</p>
+	</div>
+	
 	{if $combination_exists}
-	<div class="alert alert-block" style="display:block">
-		<ul>
-			<li>{l s='Some combinations already exist. If you want to generate new combinations, the quantities for the existing combinations will be lost.'}</li>
-			<li>{l s='You can add a combination by clicking the link "Add new combination" on the toolbar.'}</li>
-		</ul>
+	<div class="alert alert-info" style="display:block">
+		<p>{l s='Some combinations already exist. If you want to generate new combinations, the quantities for the existing combinations will be lost.'}</p>
+		<p>{l s='You can add a combination by clicking the link "Add new combination" on the toolbar.'}</p>
 	</div>
 	{/if}
 	{if isset($display_multishop_checkboxes) && $display_multishop_checkboxes}
 		<br />
 		{include file="controllers/products/multishop/check_fields.tpl" product_tab="Combinations"}
 	{/if}
-	<div class="separation"></div>
+
 	
 	<div id="add_new_combination" style="display: none;">
 		<table cellpadding="5" style="width:100%">

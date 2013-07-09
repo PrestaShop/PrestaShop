@@ -28,8 +28,8 @@
 	{assign var=class_input_ajax value=''}
 {/if}
 	<input type="hidden" name="submitted_tabs[]" value="Informations" />
-	<h4 class="tab">{l s='Info.'}</h4>
-	<p>{l s='Product global information'}</p>
+	<legend class="tab">{l s='Info.'}</legend>
+	<div class="alert alert-info">{l s='Product global information'}</div>
 	<script type="text/javascript">
 		{if isset($PS_ALLOW_ACCENTED_CHARS_URL) && $PS_ALLOW_ACCENTED_CHARS_URL}
 			var PS_ALLOW_ACCENTED_CHARS_URL = 1;
@@ -116,9 +116,6 @@
 	</div>
 </div>
 
-{* global information *}
-
-{include file="controllers/products/multishop/checkbox.tpl" field="name" type="default" multilang="true"}
 
 <div class="row">
 	<label class="control-label col-lg-3 required">{l s='Name:'}</label>
@@ -187,9 +184,8 @@
 			<option value="301" {if $product->redirect_type == '301'} selected="selected" {/if}>{l s='Redirect permanently (301)'}</option>
 			<option value="302" {if $product->redirect_type == '302'} selected="selected" {/if}>{l s='Redirect temporarily (302)'}</option>
 		</select>
-	
 		<div class="help-block" name="help_box">
-			<ul>
+			<ul class="list-unstyled">
 				<li>{l s='404 : Not Found = Product does not exist and no redirect'}</li>
 				<li>{l s='301 : Moved Permanently = Product Moved Permanently'}</li>
 				<li>{l s='302 : Moved Temporarily = Product moved temporarily'}</li>
@@ -198,27 +194,29 @@
 	</div>
 </div>
 
-<div class="row redirect_product_options redirect_product_options_product_choise" xstyle="display:none">
+<div class="row redirect_product_options redirect_product_options_product_choise" style="display:none">
 	{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
+	
 	<label class="control-label col-lg-3">{l s='Related product:'}</label>
 	<div class="col-lg-5">
 		<input type="hidden" value="" name="id_product_redirected" />
-		<input value="" id="related_product_autocomplete_input" autocomplete="off" class="ac_input" />
-	</div>
-	<p>
-		<script>
-			var no_related_product = '{l s='No related product'}';
-			var id_product_redirected = {$product->id_product_redirected|intval};
-			var product_name_redirected = '{$product_name_redirected|escape:html:'UTF-8'}';
-		</script>
-		<span id="related_product_name">{l s='No related product'}</span>
+		<input type="text" id="related_product_autocomplete_input" autocomplete="off" class="ac_input" />
 		<span id="related_product_remove" style="display:none">
-			<a hre="#" onclick="removeRelatedProduct(); return false" id="related_product_remove_link">
-				<img src="../img/admin/delete.gif" class="middle" alt="" />
+			<a class="btn btn-default" href="#" onclick="removeRelatedProduct(); return false" id="related_product_remove_link">
+				<i class="icon-trash"></i>
 			</a>
 		</span>
-	</p>
+		<span id="related_product_name">{l s='No related product'}</span>
+	</div>
+	<script>
+		var no_related_product = '{l s='No related product'}';
+		var id_product_redirected = {$product->id_product_redirected|intval};
+		var product_name_redirected = '{$product_name_redirected|escape:html:'UTF-8'}';
+	</script>
 </div>
+
+
+
 
 <div class="row">
 	{include file="controllers/products/multishop/checkbox.tpl" field="visibility" type="default"}
@@ -293,48 +291,66 @@
 </div>
 
 
+
 {if $images}
-	<div class="alert alert-info">
-		{l s='Do you want an image associated with the product in your description?'}
-		<span class="addImageDescription" style="cursor:pointer">{l s='Click here'}</span>.
-	</div>
+<div class="alert">
+	{l s='Do you want an image associated with the product in your description?'}
+	<a class="addImageDescription" href="javascript:void(0);">{l s='Click here'}</a>.
+</div>
 
-	<div id="createImageDescription" style="display:none">
-		<label>{l s='Select your image:'}</label>
+<div id="createImageDescription" class="well" style="display:none">
 
-		<ul class="smallImage">
-		{foreach from=$images item=image key=key}
-			<li>
+	<div class="row">
+		<label class="control-label col-lg-3">{l s='Select your image:'}</label>
+		<div class="col-lg-5">
+			{foreach from=$images item=image key=key}
+			<p class="checkbox-inline">
 				<input type="radio" name="smallImage" id="smallImage_{$key}" value="{$image.id_image}" {if $key == 0}checked="checked"{/if} >
 				<label for="smallImage_{$key}" class="t">
 					<img src="{$image.src}" alt="{$image.legend}" />
 				</label>
-			</li>
-		{/foreach}
-		</ul>
+			</p>
+			{/foreach}
+		</div>
+	</div>
 
+	<div class="row">
+		<label class="control-label col-lg-3">{l s='Position:'}</label>
+		<div class="col-lg-5">
+			<p class="checkbox">
+				<input type="radio" name="leftRight" id="leftRight_1" value="left" checked>							
+				<label for="leftRight_1" class="t">{l s='left'}</label>
+			</p>
+			<p class="checkbox">
+				<input type="radio" name="leftRight" id="leftRight_2" value="right">
+				<label for="leftRight_2" class="t">{l s='right'}</label>
+			</p>
+		</div>
+	</div>
 
-		<label>{l s='Position:'}</label>
-		<input type="radio" name="leftRight" id="leftRight_1" value="left" checked>
-											
-		<label for="leftRight_1" class="t">{l s='left'}</label>
-		<input type="radio" name="leftRight" id="leftRight_2" value="right">
-											
-		<label for="leftRight_2" class="t">{l s='right'}</label>
+	<div class="row">
+		<label class="control-label col-lg-3">{l s='Select the type of picture:'}</label>
+		<div class="col-lg-5">
+			{foreach from=$imagesTypes key=key item=type}
+			<p class="checkbox">
+				<input type="radio" name="imageTypes" id="imageTypes_{$key}" value="{$type.name}" {if $key == 0}checked="checked"{/if}>
+				<label for="imageTypes_{$key}" class="t">
+					{$type.name} <span>({$type.width}px {l s='by'} {$type.height}px)</span>
+				</label>
+			</p>
+			{/foreach}
+		</div>
+	</div>
 
-		<label>{l s='Select the type of picture:'}</label>
-
-		{foreach from=$imagesTypes key=key item=type}
-			<input type="radio" name="imageTypes" id="imageTypes_{$key}" value="{$type.name}" {if $key == 0}checked="checked"{/if}>
-			<label for="imageTypes_{$key}" class="t">
-				{$type.name} <span>({$type.width}px {l s='by'} {$type.height}px)</span>
-			</label>
-		{/foreach}
-
-		<label>{l s='Image tag to insert:'}</label>
-		<input type="text" id="resultImage" name="resultImage" />
+	<div class="row">
+		<label class="control-label col-lg-3">{l s='Image tag to insert:'}</label>
+		<div class="col-lg-4">
+			<input type="text" id="resultImage" name="resultImage" />
+		</div>
 		<p class="help-block">{l s='The tag to copy/paste into the description.'}</p>
 	</div>
+
+</div>
 {/if}
 
 <div class="row">

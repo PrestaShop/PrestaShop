@@ -23,13 +23,23 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div class="translatable">
 {foreach from=$languages item=language}
-<div class="lang_{$language.id_lang}" style="{if !$language.is_default}display:none;{/if}float: left;">
-	<input size="30" type="text" id="{$input_name}_{$language.id_lang}" 
-	name="{$input_name}_{$language.id_lang}"
+	<div class="input-group col-lg-12 translatable-field lang-{$language.id_lang}">
+		<input id="{$input_name}_{$language.id_lang}" type="text"
+		name="{$input_name}_{$language.id_lang}"
 		value="{$input_value[$language.id_lang]|htmlentitiesUTF8|default:''}"
-		onkeyup="if (isArrowKey(event)) return ;updateFriendlyURL();"/>
-</div>
+		onkeyup="if (isArrowKey(event)) return ;updateFriendlyURL();">
+		<div class="input-group-btn">
+			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+				<img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt="">
+				{$language.iso_code}
+				<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu">
+				{foreach from=$languages item=language}
+				<li><a href="javascript:hideOtherLanguage({$language.id_lang});"><img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt=""> {$language.iso_code}</a></li>
+				{/foreach}
+			</ul>
+		</div>
+	</div>
 {/foreach}
-</div>

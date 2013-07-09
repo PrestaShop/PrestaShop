@@ -60,5 +60,3 @@ if ($option)
 	
 $grid->create($render, $type, $width, $height, $start, $limit, $sort, $dir);
 $grid->render();
-
-

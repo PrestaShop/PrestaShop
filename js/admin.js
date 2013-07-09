@@ -132,6 +132,12 @@ function changeLanguage(field, fieldsString, id_language_new, iso_code)
 	id_language = id_language_new;
 }
 
+
+
+
+
+
+
 function changeFormLanguage(id_language_new, iso_code, employee_cookie)
 {
 	$('.translatable').each(function() {
@@ -998,3 +1004,12 @@ function quickSelect(elt)
 	else
 		location.href = eltVal;
 }
+
+
+//bootstrap BO New fonctions
+function hideOtherLanguage(id){
+	$('.translatable-field').hide();
+	$('.lang-'+id).show();
+}
+
+
