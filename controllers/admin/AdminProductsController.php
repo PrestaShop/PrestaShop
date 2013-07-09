@@ -772,6 +772,26 @@ class AdminProductsControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('The price attribute is required.');
 			if (!Tools::getIsset('attribute_combination_list') || Tools::isEmpty(Tools::getValue('attribute_combination_list')))
 				$this->errors[] = Tools::displayError('You must add at least one attribute.');
+				
+			$array_checks = array(
+				'reference' => 'isReference',
+				'supplier_reference' => 'isReference',
+				'location' => 'isReference',
+				'ean13' => 'isEan13',
+				'upc' => 'isUpc',
+				'wholesale_price' => 'isPrice',
+				'price' => 'isPrice',
+				'ecotax' => 'isPrice',
+				'quantity' => 'isInt',
+				'weight' => 'isUnsignedFloat',
+				'unit_price_impact' => 'isPrice',
+				'default_on' => 'isBool',
+				'minimal_quantity' => 'isUnsignedInt',
+				'available_date' => 'isDateFormat'
+			);
+			foreach ($array_checks as $property => $check)
+				if (Tools::getValue('attribute_'.$property) !== false && !call_user_func(array('Validate', $check), Tools::getValue('attribute_'.$property)))
+					$this->errors[] = sprintf(Tools::displayError('Field %s is not valid'), $property);
 
 			if (!count($this->errors))
 			{
