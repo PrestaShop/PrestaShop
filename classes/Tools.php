@@ -338,11 +338,9 @@ class ToolsCore
 		/* If language does not exist or is disabled, erase it */
 		if ($cookie->id_lang)
 		{
-			//echo $cookie->id_lang;exit;
 			$lang = new Language((int)$cookie->id_lang);
 			if (!Validate::isLoadedObject($lang) || !$lang->active || !$lang->isAssociatedToShop())
 				$cookie->id_lang = null;
-
 		}
 
 		/* Automatically detect language if not already defined */
@@ -399,7 +397,7 @@ class ToolsCore
 		{
 			$context->cookie->id_lang = $id_lang;
 			$language = new Language($id_lang);
-			if (Validate::isLoadedObject($language))
+			if (Validate::isLoadedObject($language) && $language->active)
 				$context->language = $language;
 
 			$params = $_GET;
