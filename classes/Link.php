@@ -112,6 +112,7 @@ class LinkCore
 		$params = array();
 		$params['id'] = $product->id;
 		$params['rewrite'] = (!$alias) ? $product->getFieldByLang('link_rewrite') : $alias;
+
 		$params['ean13'] = (!$ean13) ? $product->ean13 : $ean13;
 		$params['meta_keywords'] =	Tools::str2url($product->getFieldByLang('meta_keywords'));
 		$params['meta_title'] = Tools::str2url($product->getFieldByLang('meta_title'));
@@ -129,7 +130,7 @@ class LinkCore
 			$params['tags'] = Tools::str2url($product->getTags($id_lang));
 		
 		if ($dispatcher->hasKeyword('product_rule', $id_lang, 'category'))
-			$params['category'] = !is_null($product->category) ? Tools::str2url($product->category) : Tools::str2url($category);
+			$params['category'] = (!is_null($product->category) && !empty($product->category)) ? Tools::str2url($product->category) : Tools::str2url($category);
 
 		if ($dispatcher->hasKeyword('product_rule', $id_lang, 'reference'))
 			$params['reference'] = Tools::str2url($product->reference);
