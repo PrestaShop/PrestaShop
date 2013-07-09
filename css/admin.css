@@ -1872,6 +1872,7 @@ div.progressBarImage
 	height: 15px;
 	margin-left: 3px;
 	width: 233px;
+	position:relative;
 }
 #showCounter
 {
