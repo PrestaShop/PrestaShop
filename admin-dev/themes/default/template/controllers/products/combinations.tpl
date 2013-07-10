@@ -65,88 +65,81 @@
 
 	
 	<div id="add_new_combination" style="display: none;">
-		<table cellpadding="5" style="width:100%">
-			<tr>
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" valign="top">
-					<label>{l s='Attribute:'}</label>
-				</td>
-				<td style="padding-bottom:5px;">
-					<select name="attribute_group" id="attribute_group" style="width: 200px;" onchange="populate_attrs();">
-						{if isset($attributes_groups)}
-							{foreach from=$attributes_groups key=k item=attribute_group}
-								<option value="{$attribute_group.id_attribute_group}">{$attribute_group.name|escape:'htmlall':'UTF-8'}&nbsp;&nbsp;</option>
-							{/foreach}
-						{/if}
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" valign="top">
-					<label>{l s='Value:'}</label>
-				</td>
-				<td style="padding-bottom:5px;">
-					<select name="attribute" id="attribute" style="width: 200px;">
-						<option value="0">---</option>
-					</select>
-					<script type="text/javascript">
-					$(document).ready(function(){
-						populate_attrs();
-					});
-					</script>
-				</td>
-			</tr>
-			<tr>
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" valign="top">
-				<input style="width: 140px; margin-bottom: 10px;" type="button" value="{l s='Add'}" class="button" onclick="add_attr();"/><br />
-				<input style="width: 140px;" type="button" value="{l s='Delete'}" class="button" onclick="del_attr()"/></td>
-				<td align="left">
-					<select id="product_att_list" name="attribute_combination_list[]" multiple="multiple" size="4" style="width: 320px;"></select>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<div class="separation"></div>
-				</td>
-			</tr>
-			<tr>
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;"><label>{l s='Reference:'}</label></td>
-				<td style="padding-bottom:5px;">
-					<input size="55" type="text" id="attribute_reference" name="attribute_reference" value="" style="width: 130px; margin-right: 44px;" />
-					{l s='EAN13:'}<input size="55" maxlength="13" type="text" id="attribute_ean13" name="attribute_ean13" value="" style="width: 110px; margin-left: 10px; margin-right: 44px;" />
-					{l s='UPC:'}<input size="55" maxlength="12" type="text" id="attribute_upc" name="attribute_upc" value="" style="width: 110px; margin-left: 10px; margin-right: 44px;" />
-					<span class="alert alert-info" name="help_box">{l s='Special characters allowed:'} .-_#<span class="hint-pointer">&nbsp;</span></span>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<div class="separation"></div>
-				</td>
-			</tr>
-		</table>
-		<table>
-			<tr>
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">
+
+
+	<div class="row">
+		<label class="control-label col-lg-3">{l s='Attribute:'}</label>
+		<div class="col-lg-5">
+			<select name="attribute_group" id="attribute_group" onchange="populate_attrs();">
+				{if isset($attributes_groups)}
+					{foreach from=$attributes_groups key=k item=attribute_group}
+					<option value="{$attribute_group.id_attribute_group}">{$attribute_group.name|escape:'htmlall':'UTF-8'}&nbsp;&nbsp;</option>
+					{/foreach}
+				{/if}
+			</select>
+		</div>
+	</div>
+
+	<div class="row">
+		<label class="control-label col-lg-3">{l s='Value:'}</label>
+		<div class="col-lg-5">
+			<select name="attribute" id="attribute">
+				<option value="0">---</option>
+			</select>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			populate_attrs();
+		});
+	</script>
+
+	<div class="row">
+		<label class="control-label col-lg-3"></label>
+		<div class="col-lg-5">
+			<input type="button" value="{l s='Add'}" class="button" onclick="add_attr();"/>
+			<input type="button" value="{l s='Delete'}" class="button" onclick="del_attr()"/>
+			<select id="product_att_list" name="attribute_combination_list[]" multiple="multiple" ></select>
+		</div>
+	</div>
+
+
+	<div class="row">
+		<label class="control-label col-lg-3">{l s='Reference:'}</label>
+		<div class="col-lg-5">
+			<input type="text" id="attribute_reference" name="attribute_reference" value="" />
+				{l s='EAN13:'}
+			<input maxlength="13" type="text" id="attribute_ean13" name="attribute_ean13" value="" />
+				{l s='UPC:'}
+			<input maxlength="12" type="text" id="attribute_upc" name="attribute_upc" value="" />
+		</div>
+		<p class="help-block" name="help_box">{l s='Special characters allowed:'} .-_#</p>
+	</div>		
+	
+
+					
+
+
 					{include file="controllers/products/multishop/checkbox.tpl" field="attribute_wholesale_price" type="default"}
 					<label>{l s='Wholesale price:'}</label>
-				</td>
-				<td style="padding-bottom:5px;">
+
+
 					{if $currency->format % 2 != 0}{$currency->sign}{/if}
 					<input type="text" size="6"  name="attribute_wholesale_price" id="attribute_wholesale_price" value="" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
 					{if $currency->format % 2 == 0} {$currency->sign} {/if}<span id="attribute_wholesale_price_blank">({l s='Leave blank if the price does not change'})</span>
 					<span style="display:none" id="attribute_wholesale_price_full">({l s='Overrides wholesale price on "Information" tab'})</span>
-				</td>
-			</tr>
-			<tr>
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">
+
+
 					{include file="controllers/products/multishop/checkbox.tpl" field="attribute_price_impact" type="attribute_price_impact"}
 					<label>{l s='Impact on price:'}</label>
-				</td>
-				<td colspan="2" style="padding-bottom:5px;">
-					<select name="attribute_price_impact" id="attribute_price_impact" style="width: 140px;" onchange="check_impact(); calcImpactPriceTI();">
+
+
+					<select name="attribute_price_impact" id="attribute_price_impact" onchange="check_impact(); calcImpactPriceTI();">
 						<option value="0">{l s='None'}</option>
 						<option value="1">{l s='Increase'}</option>
 						<option value="-1">{l s='Reduction'}</option>
 					</select>
+
 					<span id="span_impact">&nbsp;&nbsp;{l s='of'}&nbsp;&nbsp;{if $currency->format % 2 != 0}{$currency->sign} {/if}
 						<input type="hidden"  id="attribute_priceTEReal" name="attribute_price" value="0.00" />
 						<input type="text" size="6" id="attribute_price" value="0.00" onkeyup="$('#attribute_priceTEReal').val(this.value.replace(/,/g, '.')); if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); calcImpactPriceTI();"/>{if $currency->format % 2 == 0} {$currency->sign}{/if}
@@ -162,14 +155,11 @@
 							{if $currency->format % 2 == 0}{$currency->sign} {/if}
 						{/if}
 					</span>
-				</td>
-			</tr>
-			<tr>
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">
+
+
 					{include file="controllers/products/multishop/checkbox.tpl" field="attribute_weight_impact" type="attribute_weight_impact"}
 					<label>{l s='Impact on weight:'}</label>
-				</td>
-				<td colspan="2" style="padding-bottom:5px;">
+
 					<select name="attribute_weight_impact" id="attribute_weight_impact" style="width: 140px;" onchange="check_weight_impact();">
 						<option value="0">{l s='None'}</option>
 						<option value="1">{l s='Increase'}</option>

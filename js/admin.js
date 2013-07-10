@@ -1007,9 +1007,9 @@ function quickSelect(elt)
 
 
 //bootstrap BO New fonctions
+
 function hideOtherLanguage(id){
 	$('.translatable-field').hide();
-	$('.lang-'+id).show();
+	$('.lang-' + id).show();
 }
-
 

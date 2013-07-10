@@ -40,6 +40,7 @@
 		<p class="help-block">{l s='Product page title: Leave blank to use the product name'}</p>
 	</div>
 </div>
+
 <div class="row">
 	{include file="controllers/products/multishop/checkbox.tpl" field="meta_description" type="default" multilang="true"}
 	<label class="control-label col-lg-3">{l s='Meta description:'}</label>
@@ -51,10 +52,10 @@
 			input_value=$product->meta_description
 		}
 		</div>
-		<p class="help-block">{l s='A single sentence for the HTML header is needed. '}</p>
+		<div class="help-block">{l s='A single sentence for the HTML header is needed. '}</div>
 	</div>
-	
 </div>
+
 <div class="row">
 	{include file="controllers/products/multishop/checkbox.tpl" field="meta_keywords" type="default" multilang="true"}
 	<label class="control-label col-lg-3">{l s='Meta keywords:'}</label>
@@ -67,6 +68,7 @@
 		<p class="help-block">{l s='Keywords for HTML header, separated by commas.'}</p>
 	</div>
 </div>
+
 <div class="row">
 	{include file="controllers/products/multishop/checkbox.tpl" field="link_rewrite" type="default" multilang="true"}
 	<label class="control-label col-lg-3">{l s='Friendly URL:'}</label>
@@ -85,19 +87,15 @@
 				<a class="btn btn-default" onmousedown="updateFriendlyURLByName();"><i class="icon-random"></i> {l s='Generate'}</a>
 			</div>
 		</div>
-		<p class="help-block">{l s='friendly URL from the product name.'}</p>
+		<div class="help-block">{l s='friendly URL from the product name.'}</div>
 	</div>
 </div>
 
 <div class="row">
 	<div class="col-lg-9 col-offset-3">
-		<div class="alert">
+		<div class="alert alert-block">
 			<i class="icon-link"></i> {l s='The product link will look like this:'}
-			{$curent_shop_url|escape:'htmlall':'UTF-8'}lang/{if isset($product->id)}{$product->id}{else}<b>id_product</b>{/if}-<span id="friendly-url">{$product->link_rewrite[$default_language]}</span>.html</p>
+			{$curent_shop_url|escape:'htmlall':'UTF-8'}lang/{if isset($product->id)}{$product->id}{else}<b>id_product</b>{/if}-<span id="friendly-url">{$product->link_rewrite[$default_language]}</span>.html
 		</div>
 	</div>
 </div>
-
-<script type="text/javascript">
-	hideOtherLanguage('{{$default_language}}');
-</script>
