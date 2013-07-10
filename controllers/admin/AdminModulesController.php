@@ -65,6 +65,7 @@ class AdminModulesControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		parent::__construct();
 
 		register_shutdown_function('displayFatalError');
