@@ -281,7 +281,7 @@
 				</p>
 				<input type="hidden" name="alias" id="alias" value="{l s='My address'}" />
 
-				<p class="checkbox is_customer_param">
+				<p class="checkbox">
 					<input type="checkbox" name="invoice_address" id="invoice_address" />
 					<label for="invoice_address"><b>{l s='Please use another address for invoice'}</b></label>
 				</p>
