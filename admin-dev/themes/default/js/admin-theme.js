@@ -43,7 +43,6 @@ function adminNav(navId)
   } 
 }
 
-
 $( document ).ready(function() {
   $('.label-tooltip').tooltip();
 });

@@ -1402,6 +1402,7 @@ class AdminControllerCore extends Controller
 			'controller_name' => htmlentities(Tools::getValue('controller')),
 			'currentIndex' => self::$currentIndex,
 			'bootstrap' => $this->bootstrap,
+			'default_language' => (int)Configuration::get('PS_LANG_DEFAULT')
 		));
 	}
 

@@ -44,39 +44,34 @@
 			</div>
 		{else}
 			<!--start addons login-->
-			<div id="addons_login_div">
-				<div class="row">
-					<div class="col-12 col-lg-12">
-						<p>{l s='Do you have a %s account?' sprintf='<a href="http://addons.prestashop.com/">PrestaShop Addons</a>'}</p>
-						<form id="addons_login_form" method="post" class="form-horizontal">
-							<div class="row">
-								<div class="col-lg-10 col-offset-2">
-									<div id="addons_loading">
-										<div class="alert"></div>
-									</div>
-								</div>
+			<div id="addons_login_div" class="row">
+				<div class="col-lg-12">
+					<form id="addons_login_form" method="post" class="form-horizontal">
+						<legend>{l s='Do you have a %s account?' sprintf='<a href="http://addons.prestashop.com/">PrestaShop Addons</a>'}</legend>
+						<div class="row">
+							<label class="control-label col-lg-3">{l s='Addons Login'} :</label> 
+							<div class="input-group col-lg-4">
+								<span class="input-group-addon"><i class="icon-user"></i></span>
+								<input type="text" value="" id="username_addons" autocomplete="off" class="ac_input">
 							</div>
-							<div class="row">
-								<label class="col-lg-2 control-label">{l s='Addons Login'} :</label> 
-								<div class="col-lg-5">
-									<input type="text" value="" id="username_addons" autocomplete="off" class="ac_input">
-								</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-lg-3">{l s= 'Password Addons'} :</label>
+							<div class="input-group col-lg-4">
+								<span class="input-group-addon"><i class="icon-key"></i></span>
+								<input type="password" value="" id="password_addons" autocomplete="off" class="ac_input">
 							</div>
-							<div class="row">
-								<label class="col-lg-2 control-label">{l s= 'Password Addons'} :</label>
-								<div class="col-lg-5"> 
-									<input type="password" value="" id="password_addons" autocomplete="off" class="ac_input">
-								</div>
+						</div>
+						<div class="row">
+							<div class="col-lg-10 col-offset-3">
+								<button class="btn btn-default" id="addons_login_button" type="submit">
+									<i class="icon-unlock"></i> {l s='Log in'}
+								</button>
+								<div id="addons_loading" class="help-block"></div>
 							</div>
-							<div class="row">
-								<div class="col-lg-10 col-offset-2">
-									<button class="btn btn-default btn-small" id="addons_login_button" type="submit">
-										{l s='Log in'}
-									</button>
-								</div>
-							</div>
-						</form>
-					</div>
+
+						</div>
+					</form>
 				</div>
 			</div>
 			<!--end addons login-->
@@ -86,8 +81,6 @@
 {/if}
 
 <!--start filter module-->
-
-
 <div class="well">
 	<form id="filternameForm" method="post" class="form-horizontal">
 		<div class="row">

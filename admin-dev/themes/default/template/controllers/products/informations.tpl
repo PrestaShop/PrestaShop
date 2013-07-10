@@ -94,7 +94,7 @@
 
 <div class="row">
 	<label class="control-label col-lg-3">{$bullet_common_field} {l s='Type:'}</label>
-	<div class="col-lg-5">
+	<div class="col-lg-9">
 		<div class="radio">
 			<label for="simple_product">
 				<input type="radio" name="type_product" id="simple_product" value="{Product::PTYPE_SIMPLE}" {if $product_type == Product::PTYPE_SIMPLE}checked="checked"{/if} />
@@ -116,18 +116,17 @@
 	</div>
 </div>
 
-
 <div class="row">
 	<label class="control-label col-lg-3 required">{l s='Name:'}</label>
-	<div class="col-lg-5 translatable">
-		{foreach from=$languages item=language}
-		<div class="lang_{$language.id_lang}">
-			<input class="{$class_input_ajax}{if !$product->id}copy2friendlyUrl{/if} updateCurrentText" type="text" {if !$product->id}disabled="disabled"{/if}
-			id="name_{$language.id_lang}" name="name_{$language.id_lang}"
-			value="{$product->name[$language.id_lang]|htmlentitiesUTF8|default:''}"
-			/>
+	<div class="col-lg-5">
+		<div class="row">
+			{include file="controllers/products/input_text_lang.tpl"
+				languages=$languages
+				input_class="{$class_input_ajax}{if !$product->id}copy2friendlyUrl{/if} updateCurrentText"
+				input_value=$product->name
+				input_name="name"
+			}
 		</div>
-		{/foreach}
 		<span class="help-block" name="help_box">{l s='Invalid characters:'} &lt;&gt;;=#{}</span>
 	</div>
 </div>

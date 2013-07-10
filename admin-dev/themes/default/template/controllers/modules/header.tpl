@@ -23,20 +23,22 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div class="toolbar-placeholder">
-	<div class="toolbarBox toolbarHead">
-		<ul class="cc_button">
-			{if $add_permission eq '1'}
-			<li>
-				<a id="desc-module-new" class="toolbar_btn" href="#top_container" onclick="$('#module_install').slideToggle();" title="{l s='Add a new module'}">
-					<span class="process-icon-new-module" ></span>
-					<div>{l s='Add a new module'}</div>
-				</a>
-			</li>
-			{/if}
-		</ul>
-		<div class="pageTitle">
-			<h3><span id="current_obj" style="font-weight: normal;"><span class="breadcrumb item-0">Module</span> : <span class="breadcrumb item-1">{l s='List of modules'}</span></span></h3>
+<div class="row-fluid page-head">
+	<h2 class="page-title">
+		{l s='List of modules'}
+	</h2>
+	<div class="page-bar toolbarBox">
+		<div class="btn-toolbar">
+			<ul class="cc_button nav nav-pills pull-right">
+				{if $add_permission eq '1'}
+				<li>
+					<a id="desc-module-new" class="toolbar_btn" href="#top_container" onclick="$('#module_install').slideToggle();" title="{l s='Add a new module'}">
+						<i class="process-icon-new-module" ></i>
+						<div>{l s='Add a new module'}</div>
+					</a>
+				</li>
+				{/if}
+			</ul>
 		</div>
 	</div>
 </div>

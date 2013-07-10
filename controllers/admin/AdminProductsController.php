@@ -2989,7 +2989,6 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign(array(
 			'product' => $product,
 			'languages' => $this->_languages,
-			'default_language' => (int)Configuration::get('PS_LANG_DEFAULT'),
 			'ps_ssl_enabled' => Configuration::get('PS_SSL_ENABLED'),
 			'curent_shop_url' => $this->context->shop->getBaseURL()
 		));

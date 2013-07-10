@@ -105,6 +105,8 @@
 
 			$(document).ready(function()
 			{
+				hideOtherLanguage(default_language);
+				
 				$('#product-tab-content-wait').show();
 
 				if (product_type == product_type_pack)
@@ -130,7 +132,7 @@
 
 					// currentId is the current product tab id
 					currentId = $(".productTabs .tab-row.active a").attr('id').substr(5);
-					console.log(currentId);
+					//console.log(currentId);
 					// id is the wanted producttab id
 					id = $(this).attr('id').substr(5);
 
@@ -174,6 +176,7 @@
 						// if pack is enabled, save button are visible only if pack is valid
 						handleSaveButtons();
 					}
+					hideOtherLanguage(default_language);
 				});
 
 				$(".productTabs .tab-row.active").click();

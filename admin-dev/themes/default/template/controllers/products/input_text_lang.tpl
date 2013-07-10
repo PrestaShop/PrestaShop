@@ -25,7 +25,9 @@
 
 {foreach from=$languages item=language}
 	<div class="input-group col-lg-12 translatable-field lang-{$language.id_lang}">
-		<input id="{$input_name}_{$language.id_lang}" type="text"
+		<input type="text"
+		id="{$input_name}_{$language.id_lang}" 
+		class="{$input_class}"
 		name="{$input_name}_{$language.id_lang}"
 		value="{$input_value[$language.id_lang]|htmlentitiesUTF8|default:''}"
 		onkeyup="if (isArrowKey(event)) return ;updateFriendlyURL();">

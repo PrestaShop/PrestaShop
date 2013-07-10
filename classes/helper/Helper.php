@@ -239,13 +239,18 @@ class HelperCore
 
 		$html .= '
 		<div class="category-filter">
-			<span><a href="#" id="collapse_all">'.$translations['Collapse All'].'</a>|&nbsp;</span>
-			<span><a href="#" id="expand_all">'.$translations['Expand All'].'</a>|&nbsp;</span>
+			<a class="btn btn-link" href="#" id="collapse_all"><i class="icon-collapse"></i> '.$translations['Collapse All'].'</a>
+			<a class="btn btn-link" href="#" id="expand_all"><i class="icon-expand"></i> '.$translations['Expand All'].'</a>
 			'.(!$use_radio ? '
-				<span><a href="#" id="check_all">'.$translations['Check All'].'</a>|&nbsp;</span>
-				<span><a href="#" id="uncheck_all">'.$translations['Uncheck All'].'</a>|&nbsp;</span>' : '')
+				<a class="btn btn-link" href="#" id="check_all"><i class="icon-check"></i> '.$translations['Check All'].'</a>
+				<a class="btn btn-link" href="#" id="uncheck_all"><i class="icon-check-empty"></i> '.$translations['Uncheck All'].'</a>' : '')
 			.($use_search ? '
-				<span>'.$translations['search'].': <input type="text" name="search_cat" id="search_cat"/></span>' : '')
+				<div class="row">
+					<label class="control-label col-lg-6">'.$translations['search'].' :</label>
+					<div class="col-lg-6">
+						<input type="text" name="search_cat" id="search_cat"/>
+					</div>
+				</div>' : '')
 		.'</div>';
 
 		$home_is_selected = false;
@@ -269,23 +274,28 @@ class HelperCore
 			}
 		}
 
-		$root_input = '&nbsp;';
+		$root_input = '';
 		if ($root['id_category'] != $top_category->id || (Tools::isSubmit('ajax') && Tools::getValue('action') == 'getCategoriesFromRootCategory'))
-			$root_input = '<input type="'.(!$use_radio ? 'checkbox' : 'radio').'" name="'
-									.$input_name.'" value="'.$root['id_category'].'" '
-									.($home_is_selected ? 'checked' : '').' onclick="clickOnCategoryBox($(this));" />
-							<span class="category_label">'
-								.$root['name'].
-							'</span>';
+			$root_input = '
+				<p class="checkbox"><i class="icon-folder-open"></i><label>
+					<input type="'.(!$use_radio ? 'checkbox' : 'radio').'" name="'
+						.$input_name.'" value="'.$root['id_category'].'" '
+						.($home_is_selected ? 'checked' : '').' onclick="clickOnCategoryBox($(this));" />'
+					.$root['name'].
+				'</label></p>';
 		$html .= '
-			<ul id="categories-treeview" class="filetree">
-				<li id="'.$root['id_category'].'" class="hasChildren">
-					<span class="folder">'.$root_input.' </span>
-					<ul>
-						<li><span class="placeholder">&nbsp;</span></li>
-				  </ul>
-				</li>
-			</ul>';
+			<div class="container">
+				<div class="well">
+					<ul id="categories-treeview">
+						<li id="'.$root['id_category'].'" class="hasChildren">
+							<span class="folder">'.$root_input.' </span>
+							<ul>
+								<li><span class="placeholder">&nbsp;</span></li>
+						  	</ul>
+						</li>
+					</ul>
+				</div>
+			</div>';
 
 		if ($use_search)
 			$html .= '<script type="text/javascript">searchCategory();</script>';
