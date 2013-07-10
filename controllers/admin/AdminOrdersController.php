@@ -30,6 +30,7 @@ class AdminOrdersControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->table = 'order';
 		$this->className = 'Order';
 		$this->lang = false;
