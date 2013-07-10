@@ -25,13 +25,12 @@
 
 {if isset($product->id)}
 	<input type="hidden" name="submitted_tabs[]" value="Quantities" />
-	<h4>{l s='Available quantities for sale'}</h4>
-	<div class="separation"></div>
+	<legend>{l s='Available quantities for sale'}</legend>
 	{if !$ps_stock_management}
-		<div class="alert alert-info" style="display:block; position:auto;">{l s='The stock management is disabled'}</div>
+		<div class="alert alert-info">{l s='The stock management is disabled'}</div>
 	{else}
 		{include file="controllers/products/multishop/check_fields.tpl" product_tab="Quantities"}
-		<div class="alert alert-info" style="display:block; position:'auto';">
+		<div class="alert alert-info">
 			<p>{l s='This interface allows you to manage available quantities for sale for products. It also allows you to manage product combinations in the current shop.'}</p>
 			<p>{l s='You can choose whether or not to use the advanced stock management system for this product.'}</p>
 			<p>{l s='You can manually specify the quantities for the product/each product combination, or you can choose to automatically determine these quantities based on your stock (if advanced stock management is activated).'}</p>
@@ -40,17 +39,19 @@
 			<p>{l s='For packs: If it has products that use advanced stock management, you have to specify a common warehouse for these products in the pack.'}</p>
 			<p>{l s='Also, please note that when a product has combinations, its default combination will be used in stock movements.'}</p>
 		</div>
-		<br />
+
 		{if $show_quantities == true}
 			<div class="alert alert-block" id="available_quantity_ajax_msg" style="display: none;"></div>
 			<div class="error" id="available_quantity_ajax_error_msg" style="display: none;"></div>
 			<div class="alert" id="available_quantity_ajax_success_msg" style="display: none;"></div>
 
-			<table cellpadding="5" style="width:100%">
-				<tbody>
-					<tr {if $product->is_virtual || $product->cache_is_pack}style="display:none;"{/if} class="stockForVirtualProduct">
-						<td valign="top" style="vertical-align:top;">
-							<input 
+			
+				
+			<div {if $product->is_virtual || $product->cache_is_pack}style="display:none;"{/if} class="row stockForVirtualProduct">
+				<div class="col-lg-12">
+					<p class="checkbox">
+						<label for="advanced_stock_management">
+							<input type="checkbox" name="advanced_stock_management" class="advanced_stock_management" id="advanced_stock_management" 
 								{if $product->advanced_stock_management == 1 && $stock_management_active == 1}
 									value="1" checked="checked"
 								{else}
@@ -59,127 +60,109 @@
 								{if $stock_management_active == 0 || $product->cache_is_pack}
 									disabled="disabled" 
 								{/if} 
-								type="checkbox" name="advanced_stock_management" class="advanced_stock_management" id="advanced_stock_management" />
-							<label style="float:none;font-weight:normal" for="advanced_stock_management">
-								{l s='I want to use the advanced stock management system for this product.'} 
-								{if $stock_management_active == 0 && !$product->cache_is_pack}
-								&nbsp;-&nbsp;<b>{l s='This requires you to enable advanced stock management.'}</b>
-								{else if $product->cache_is_pack}
-								&nbsp;-&nbsp;<b>{l s='This parameter depends on the product(s) in the pack.'}</b>
-								{/if}
-							</label>
-							<br /><br />
-						</td>
-					</tr>
-					<tr {if $product->is_virtual || $product->cache_is_pack}style="display:none;"{/if} class="stockForVirtualProduct">
-						<td valign="top" style="vertical-align:top;">
-							<input 
+							/>
+							{l s='I want to use the advanced stock management system for this product.'} 
+							{if $stock_management_active == 0 && !$product->cache_is_pack}&nbsp;-&nbsp;{l s='This requires you to enable advanced stock management.'}
+							{else if $product->cache_is_pack}&nbsp;-&nbsp;{l s='This parameter depends on the product(s) in the pack.'}
+							{/if}
+						</label>
+					</p>
+				</div>
+			</div>
+
+			<div {if $product->is_virtual || $product->cache_is_pack}style="display:none;"{/if} class="row stockForVirtualProduct">
+				<label class="control-label col-lg-3">{l s='Available quantities:'}</label>
+				<div class="col-lg-9">
+					<p class="radio">
+						<label for="depends_on_stock_1">
+							<input type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_1" value="1"
 								{if $product->depends_on_stock == 1 && $stock_management_active == 1}
 									checked="checked" 
 								{/if} 
 								{if $stock_management_active == 0 || $product->advanced_stock_management == 0 || $product->cache_is_pack}
 									disabled="disabled" 
 								{/if} 
-								type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_1" value="1"/>
-							<label style="float:none;font-weight:normal" for="depends_on_stock_1">
-								{l s='Available quantities for current product and its combinations are based on warehouse stock. '} 
-								{if ($stock_management_active == 0 || $product->advanced_stock_management == 0) && !$product->cache_is_pack}
-								&nbsp;-&nbsp;<b>{l s='This requires you to enable advanced stock management globally or for this product.'}</b>
-								{else if $product->cache_is_pack}
-								&nbsp;-&nbsp;<b>{l s='This parameter depends on the product(s) in the pack.'}</b>
-								{/if}
-							</label>
-							<br /><br />
-						</td>
-					</tr>
-				
-					<tr {if $product->is_virtual || $product->cache_is_pack}style="display:none;"{/if} class="stockForVirtualProduct">
-						<td valign="top" style="vertical-align:top;">
-							<input 
+							/>
+							{l s='Available quantities for current product and its combinations are based on warehouse stock. '} 
+							{if ($stock_management_active == 0 || $product->advanced_stock_management == 0) && !$product->cache_is_pack} &nbsp;-&nbsp;{l s='This requires you to enable advanced stock management globally or for this product.'}
+							{else if $product->cache_is_pack} &nbsp;-&nbsp;{l s='This parameter depends on the product(s) in the pack.'}
+							{/if}
+						</label>
+					</p>
+					<p class="radio">
+						<label for="depends_on_stock_0">
+							<input type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_0" value="0"
 								{if $product->depends_on_stock == 0 || $stock_management_active == 0}
 									checked="checked" 
 								{/if} 
-								type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_0" value="0"/>
-							<label style="float:none;font-weight:normal" for="depends_on_stock_0">
-								{l s='I want to specify available quantities manually.'}
-							</label>
-							<br /><br />
-						</td>
-					</tr>
-					{if isset($pack_quantity)}
+							/>
+							{l s='I want to specify available quantities manually.'}
+						</label>
+					</p>
+				</div>
+			</div>
+
+			{if isset($pack_quantity)}
+				<div class="alert alert-info">
+					<p>{l s='When a product has combinations, quantities will be based on the default combination.'}</p>
+					<p>{l s='Given the quantities of the products in this pack, the maximum quantity should be:'} {$pack_quantity}</p>
+				</div>	
+			{/if}
+
+			<table class="table table-hover">
+				<colgroup>
+					<col width="50">
+					<col>
+				</colgroup>
+				<thead>
 					<tr>
-						<td valign="top" style="text-align:left;vertical-align:top;">
-							<p><b>{l s='When a product has combinations, quantities will be based on the default combination.'}</b></p>
-							<p><b>{l s='Given the quantities of the products in this pack, the maximum quantity should be:'} {$pack_quantity}</b></p>
-						</td>
+						<th>{l s='Quantity'}</th>
+						<th>{l s='Designation'}</th>
 					</tr>
-					{/if}
+				</thead>
+				{foreach from=$attributes item=attribute}
 					<tr>
-						<td valign="top" style="text-align:left;vertical-align:top;">
-							<table class="table" cellpadding="0" cellspacing="0" style="width:100%;">
-									<colgroup>
-										<col width="50">
-										<col>
-									</colgroup>
-								<thead>
-									<tr>
-										<th>{l s='Quantity'}</th>
-										<th>{l s='Designation'}</th>
-									</tr>
-								</thead>
-								<tbody>
-								{foreach from=$attributes item=attribute}
-									<tr>
-										<td  class="available_quantity" id="qty_{$attribute['id_product_attribute']}">
-											<span>{$available_quantity[$attribute['id_product_attribute']]}</span>
-											<input type="text" value="{$available_quantity[$attribute['id_product_attribute']]|htmlentities}"/>
-										</td>
-										<td>{$product_designation[$attribute['id_product_attribute']]}</td>
-									</tr>
-								{/foreach}
-								</tbody>
-							</table>
+						<td class="available_quantity" id="qty_{$attribute['id_product_attribute']}">
+							<span>{$available_quantity[$attribute['id_product_attribute']]}</span>
+							<input type="text" value="{$available_quantity[$attribute['id_product_attribute']]|htmlentities}"/>
 						</td>
+						<td>{$product_designation[$attribute['id_product_attribute']]}</td>
 					</tr>
-					<tr id="when_out_of_stock">
-						<td>
-							<table style="margin-top: 15px;">
-								<tbody>
-									<tr>
-										<td class="col-left"><label>{l s='When out of stock:'}</label></td>
-										<td style="padding-bottom:5px;">
-											<ul class="listForm">
-												<li>
-											<input {if $product->out_of_stock == 0} checked="checked" {/if} id="out_of_stock_1" type="radio" checked="checked" value="0" class="out_of_stock" name="out_of_stock">
-											<label id="label_out_of_stock_1" class="t" for="out_of_stock_1">{l s='Deny orders'}</label>
-												</li>
-												<li>
-											<input {if $product->out_of_stock == 1} checked="checked" {/if} id="out_of_stock_2" type="radio" value="1" class="out_of_stock" name="out_of_stock">
-											<label id="label_out_of_stock_2" class="t" for="out_of_stock_2">{l s='Allow orders'}</label>
-											</li>
-											<li>
-											<input {if $product->out_of_stock == 2} checked="checked" {/if} id="out_of_stock_3" type="radio" value="2" class="out_of_stock" name="out_of_stock">
-											<label id="label_out_of_stock_3" class="t" for="out_of_stock_3">
-												{l s='Default'}:
-												{if $order_out_of_stock == 1}
-												<i>{l s='Allow orders'}</i>
-												{else}
-												<i>{l s='Deny orders'}</i>
-												{/if} 
-												<a class="confirm_leave" href="index.php?tab=AdminPPreferences&token={$token_preferences}">
-													{l s='as set in Preferences'}
-												</a>
-											</label>
-											</li>
-											</ul>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</td>
-					</tr>
-				</tbody>
+				{/foreach}
 			</table>
+
+			<div id="when_out_of_stock" class="row">
+				<label class="control-label col-lg-3">{l s='When out of stock:'}</label>
+				<div class="col-lg-9">
+					<p class="checkbox">
+						<label id="label_out_of_stock_1" for="out_of_stock_1">
+							<input {if $product->out_of_stock == 0} checked="checked" {/if} id="out_of_stock_1" type="radio" checked="checked" value="0" class="out_of_stock" name="out_of_stock">
+							{l s='Deny orders'}
+						</label>
+					</p>
+					<p class="checkbox">
+						<label id="label_out_of_stock_2" for="out_of_stock_2">
+							<input {if $product->out_of_stock == 1} checked="checked" {/if} id="out_of_stock_2" type="radio" value="1" class="out_of_stock" name="out_of_stock">
+							{l s='Allow orders'}
+						</label>
+					</p>
+					<p class="checkbox">
+						<label id="label_out_of_stock_3" for="out_of_stock_3">
+							<input {if $product->out_of_stock == 2} checked="checked" {/if} id="out_of_stock_3" type="radio" value="2" class="out_of_stock" name="out_of_stock">
+							{l s='Default'}:
+							{if $order_out_of_stock == 1}
+							{l s='Allow orders'}
+							{else}
+							{l s='Deny orders'}
+							{/if} 
+							<a class="confirm_leave" href="index.php?tab=AdminPPreferences&token={$token_preferences}">
+								{l s='as set in Preferences'}
+							</a>
+						</label>
+					</p>
+				</div>
+			</div>
+
 		{else}
 			<div class="alert alert-block">
 				<p>{l s='It is not possible to manage quantities when:'}</p>
@@ -191,60 +174,60 @@
 			</div>
 		{/if}
 	{/if}
-	<div class="separation"></div>
-	<h4>{l s='Availability settings'}</h4>
-	<table cellpadding="5">
-			{if !$has_attribute}
-			<tr>
-				<td class="col-left"><label>{l s='Minimum quantity:'}</label></td>
-				<td style="padding-bottom:5px;">
-					<input size="3" maxlength="6" name="minimal_quantity" id="minimal_quantity" type="text" value="{$product->minimal_quantity|default:1}" />
-					<p class="preference_description">{l s='The minimum quantity to buy this product (set to 1 to disable this feature)'}</p>
-				</td>
-			</tr>
-			{/if}
-		{if $ps_stock_management}
-			<tr>
-				<td class="col-left">
-				{include file="controllers/products/multishop/checkbox.tpl" field="available_now" type="default" multilang="true"}
-					<label>{l s='Displayed text when in-stock:'}</label>
-				</td>
-				<td style="padding-bottom:5px;" class="col-right">
-						{include file="controllers/products/input_text_lang.tpl"
-							languages=$languages
-							input_value=$product->available_now
-							input_name='available_now'}
-					<span class="alert alert-info" name="help_box">{l s='Forbidden characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
-			</td>
-			</tr>
-			<tr>
-				<td class="col-left">
-					{include file="controllers/products/multishop/checkbox.tpl" field="available_later" type="default" multilang="true"}
-					<label>{l s='Displayed text when back-ordereding is allowed:'}</label>
-				</td>
-				<td style="padding-bottom:5px;" class="col-right">
-						{include file="controllers/products/input_text_lang.tpl"
-							languages=$languages
-							input_value=$product->available_later
-							input_name='available_later'}
-					<span class="alert alert-info" name="help_box">{l s='Forbidden characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
-				</td>
-			</tr>
-			{if !$countAttributes}
-				<tr>
-					<td class="col-left"><label>{l s='Available date:'}</label></td>
-					<td style="padding-bottom:5px;">
-						<input id="available_date" name="available_date" value="{$product->available_date}" class="datepicker"
-							style="text-align: center;" type="text" />
-						<p>{l s='The available date when this product is out of stock.'}</p>
-					</td>
-				</tr>
-			{/if}
+
+	<hr>
+	<legend>{l s='Availability settings'}</legend>
+
+	{if !$has_attribute}
+		<div class="row">
+			<label class="control-label col-lg-3">{l s='Minimum quantity:'}</label>
+			<div class="col-lg-1">
+				<input maxlength="6" name="minimal_quantity" id="minimal_quantity" type="text" value="{$product->minimal_quantity|default:1}" />
+			</div>
+			<p class="help-block">{l s='The minimum quantity to buy this product (set to 1 to disable this feature)'}</p>
+		</div>
+	{/if}
+
+	{if $ps_stock_management}
+		{include file="controllers/products/multishop/checkbox.tpl" field="available_now" type="default" multilang="true"}
+		<div class="row">
+			<label class="control-label col-lg-3">{l s='Displayed text when in-stock:'}</label>
+			<div class="col-lg-8">
+				<div class="row">
+					{include file="controllers/products/input_text_lang.tpl"
+						languages=$languages
+						input_value=$product->available_now
+						input_name='available_now'}
+				</div>
+			</div>
+			<p class="help-block" name="help_box">{l s='Forbidden characters:'} &#60;&#62;;&#61;#&#123;&#125;</p>
+		</div>
+		<div class="row">
+			{include file="controllers/products/multishop/checkbox.tpl" field="available_later" type="default" multilang="true"}
+			<label class="control-label col-lg-3">{l s='Displayed text when back-ordereding is allowed:'}</label>
+			<div class="col-lg-8">
+				<div class="row">
+					{include file="controllers/products/input_text_lang.tpl"
+						languages=$languages
+						input_value=$product->available_later
+						input_name='available_later'}
+				</div>
+			</div>
+			<p class="help-block" name="help_box">{l s='Forbidden characters:'} &#60;&#62;;&#61;#&#123;&#125;</p>
+		</div>
+		
+
+
+		{if !$countAttributes}
+			<label>{l s='Available date:'}</label>
+			<input id="available_date" name="available_date" value="{$product->available_date}" class="datepicker" type="text" />
+			<p>{l s='The available date when this product is out of stock.'}</p>
 		{/if}
-	</table>
+	{/if}
 
 	<script type="text/javascript">
 		var quantities_ajax_success = '{l s='Data saved'}';
 		var quantities_ajax_waiting = '{l s='Saving data...'}';
 	</script>
 {/if}
+{*$default_language*}

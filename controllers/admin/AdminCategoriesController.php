@@ -40,6 +40,7 @@ class AdminCategoriesControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->table = 'category';
 		$this->className = 'Category';
 		$this->lang = true;

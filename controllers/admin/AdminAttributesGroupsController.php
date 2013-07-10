@@ -31,6 +31,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->context = Context::getContext();
 		$this->table = 'attribute_group';
 		$this->identifier = 'id_attribute_group';
