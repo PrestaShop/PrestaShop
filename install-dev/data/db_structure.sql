@@ -1924,6 +1924,7 @@ CREATE TABLE `PREFIX_log` (
 	`message` text NOT NULL,
 	`object_type` varchar(32) DEFAULT NULL,
 	`object_id` int(10) unsigned DEFAULT NULL,
+	`id_employee` int(10) unsigned DEFAULT NULL,
 	`date_add` datetime NOT NULL,
 	`date_upd` datetime NOT NULL,
 	PRIMARY KEY (`id_log`)
