@@ -571,7 +571,8 @@ class AdminModulesControllerCore extends AdminController
 					else
 					{
 						// Uninstall the module before deleting the files, but do not block the process if uninstall returns false
-						$module->uninstall();
+						if (Module::isInstalled($module->name))
+							$module->uninstall();
 						$moduleDir = _PS_MODULE_DIR_.str_replace(array('.', '/', '\\'), array('', '', ''), Tools::getValue('module_name'));
 						$this->recursiveDeleteOnDisk($moduleDir);
 						Tools::redirectAdmin(self::$currentIndex.'&conf=22&token='.$this->token.'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name'));
@@ -1106,6 +1107,7 @@ class AdminModulesControllerCore extends AdminController
 		}
 		if (count($module_success))
 		{
+			die ('kik');
 			$html = $this->generateHtmlMessage($module_success);
 			$this->confirmations[] = sprintf($this->l('The following module(s) were upgraded successfully:').' %s', $html);
 		}
