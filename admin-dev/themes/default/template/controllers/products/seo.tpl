@@ -29,7 +29,12 @@
 
 <div class="row">
 	{include file="controllers/products/multishop/checkbox.tpl" field="meta_title" type="default" multilang="true"}
-	<label class="control-label col-lg-3">{l s='Meta title:'}</label>
+	<label class="control-label col-lg-3">
+		<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='Product page title: Leave blank to use the product name'}">
+			{l s='Meta title:'}
+		</span>
+	</label>
 	<div class="col-lg-8">
 		<div class="row">
 			{include file="controllers/products/input_text_lang.tpl"
@@ -37,13 +42,17 @@
 				input_name='meta_title'
 				input_value=$product->meta_title}
 		</div>
-		<p class="help-block">{l s='Product page title: Leave blank to use the product name'}</p>
 	</div>
 </div>
 
 <div class="row">
 	{include file="controllers/products/multishop/checkbox.tpl" field="meta_description" type="default" multilang="true"}
-	<label class="control-label col-lg-3">{l s='Meta description:'}</label>
+	<label class="control-label col-lg-3">
+		<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='A single sentence for the HTML header is needed. '}">
+			{l s='Meta description:'}
+		</span>
+	</label>
 	<div class="col-lg-8">
 		<div class="row">
 		{include file="controllers/products/input_text_lang.tpl"
@@ -52,26 +61,35 @@
 			input_value=$product->meta_description
 		}
 		</div>
-		<div class="help-block">{l s='A single sentence for the HTML header is needed. '}</div>
 	</div>
 </div>
 
 <div class="row">
 	{include file="controllers/products/multishop/checkbox.tpl" field="meta_keywords" type="default" multilang="true"}
-	<label class="control-label col-lg-3">{l s='Meta keywords:'}</label>
+	<label class="control-label col-lg-3">
+		<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='Keywords for HTML header, separated by commas.'}">
+			{l s='Meta keywords:'}
+		</span>
+	</label>
 	<div class="col-lg-8">
 		<div class="row">
 		{include file="controllers/products/input_text_lang.tpl" languages=$languages
 			input_value=$product->meta_keywords
 			input_name='meta_keywords'}
 		</div>
-		<p class="help-block">{l s='Keywords for HTML header, separated by commas.'}</p>
 	</div>
 </div>
 
 <div class="row">
 	{include file="controllers/products/multishop/checkbox.tpl" field="link_rewrite" type="default" multilang="true"}
-	<label class="control-label col-lg-3">{l s='Friendly URL:'}</label>
+	<label class="control-label col-lg-3">
+		<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='friendly URL from the product name.'}">
+			{l s='Friendly URL:'}
+		</span>
+		
+	</label>
 	<div class="col-lg-9">
 		<div class="row">
 			<div class="col-lg-9">
@@ -82,12 +100,10 @@
 					input_name='link_rewrite'}
 				</div>
 			</div>
-
-			<div class="col-lg-3">
+			<div class="col-lg-2">
 				<a class="btn btn-default" onmousedown="updateFriendlyURLByName();"><i class="icon-random"></i> {l s='Generate'}</a>
 			</div>
 		</div>
-		<div class="help-block">{l s='friendly URL from the product name.'}</div>
 	</div>
 </div>
 

@@ -31,7 +31,7 @@
 {/if}
 
 <div class="row">
-	<label class="control-label col-lg-3">{l s='Width (package):'}</label>
+	<label class="control-label col-lg-5">{l s='Width (package):'}</label>
 	<div class="input-group col-lg-2">
 		<span class="input-group-addon">{$ps_dimension_unit}</span>
 		<input maxlength="6" name="width" type="text" value="{$product->width}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
@@ -40,7 +40,7 @@
 </div>
 
 <div class="row">
-	<label class="control-label col-lg-3">{l s='Height (package):'}</label>
+	<label class="control-label col-lg-5">{l s='Height (package):'}</label>
 	<div class="input-group col-lg-2">
 		<span class="input-group-addon">{$ps_dimension_unit}</span>
 		<input maxlength="6" name="height" type="text" value="{$product->height}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
@@ -49,7 +49,7 @@
 </div>
 
 <div class="row">
-	<label class="control-label col-lg-3">{l s='Depth (package):'}</label>
+	<label class="control-label col-lg-5">{l s='Depth (package):'}</label>
 	<div class="input-group col-lg-2">
 		<span class="input-group-addon">{$ps_dimension_unit}</span>
 		<input maxlength="6" name="depth" type="text" value="{$product->depth}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
@@ -58,7 +58,7 @@
 </div>
 
 <div class="row">
-	<label class="control-label col-lg-3">{l s='Weight (package):'}</label>
+	<label class="control-label col-lg-5">{l s='Weight (package):'}</label>
 	<div class="input-group col-lg-2">
 		<span class="input-group-addon">{$ps_weight_unit}</span>
 		<input maxlength="6" name="weight" type="text" value="{$product->weight}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
@@ -67,16 +67,27 @@
 </div>
 
 <div class="row">
-	<label class="control-label col-lg-3">{l s='Additional shipping cost (per quantity):'}</label>
+	<label class="control-label col-lg-5">
+		<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='A carrier tax will be applied.'}">
+			{l s='Additional shipping cost (per quantity):'}
+		</span>
+		
+	</label>
 	<div class="input-group col-lg-2">
 		<span class="input-group-addon">{$currency->prefix}{$currency->suffix} {if $country_display_tax_label}({l s='tax excl.'}){/if}</span>
 		<input type="text" name="additional_shipping_cost" onchange="this.value = this.value.replace(/,/g, '.');" value="{$product->additional_shipping_cost|htmlentities}" />
 	</div>
-	<p class="help-block">{l s='A carrier tax will be applied.'}</p>
 </div>
 
 <div class="row">
-	<label class="control-label col-lg-3">{l s='Carriers:'}</label>
+	<label class="control-label col-lg-5">
+		<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='If no carrier selected, all carriers can be used to ship this product.'}">
+			{l s='Carriers:'}
+		</span>
+		
+	</label>
 	<div class="col-lg-3">
 		<select name="carriers[]" id="carriers_restriction" multiple="multiple">
 			{foreach $carrier_list as $carrier}
@@ -85,7 +96,6 @@
 		</select>
 		<button class="btn btn-default" onclick="unselectAllCarriers(); return false;">{l s='Unselect all'}</button>
 	</div>
-	<p class="help-block">{l s='If no carrier selected, all carriers can be used to ship this product.'}</p>
 </div>
 
 <script>

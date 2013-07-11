@@ -177,6 +177,7 @@
 						handleSaveButtons();
 					}
 					hideOtherLanguage(default_language);
+					$('.label-tooltip').tooltip();
 				});
 
 				$(".productTabs .tab-row.active").click();

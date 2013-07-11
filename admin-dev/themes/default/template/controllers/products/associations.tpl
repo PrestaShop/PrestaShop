@@ -48,19 +48,28 @@
 
 	<div class="row">
 		{include file="controllers/products/multishop/checkbox.tpl" field="id_category_default" type="default"}
-		<label class="control-label col-lg-3" for="id_category_default">{l s='Default category:'}</label>
+		<label class="control-label col-lg-3" for="id_category_default">
+			<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='The default category is the category displayed by default.'}">
+				{l s='Default category:'}
+			</span>
+		</label>
 		<div class="col-lg-5">
 			<select id="id_category_default" name="id_category_default">
 				{foreach from=$selected_cat item=cat}
 					<option value="{$cat.id_category}" {if $id_category_default == $cat.id_category}selected="selected"{/if} >{$cat.name}</option>
 				{/foreach}
 			</select>
-			<div class="help-block">{l s='The default category is the category displayed by default.'}</div>
 		</div>
 	</div>
 
 	<div class="row">
-		<label class="control-label col-lg-3">{l s='Accessories:'}</label>
+		<label class="control-label col-lg-3">
+			<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='Begin typing the first letters of the product name, then select the product from the drop-down list.'}{l s='(Do not forget to save the product afterward)'}">
+			{l s='Accessories:'}
+			</span>
+		</label>
 		<div class="col-lg-5">
 			<input type="hidden" name="inputAccessories" id="inputAccessories" value="{foreach from=$accessories item=accessory}{$accessory.id_product}-{/foreach}" />
 			<input type="hidden" name="nameAccessories" id="nameAccessories" value="{foreach from=$accessories item=accessory}{$accessory.name|escape:'htmlall':'UTF-8'}¤{/foreach}" />
@@ -68,8 +77,7 @@
 			<div id="ajax_choose_product">
 				<input type="text" value="" id="product_autocomplete_input" />				
 				<div class="help-block">
-					{l s='Begin typing the first letters of the product name, then select the product from the drop-down list.'}
-					{l s='(Do not forget to save the product afterward)'}
+					
 				</div>
 			</div>
 			<div id="divAccessories">

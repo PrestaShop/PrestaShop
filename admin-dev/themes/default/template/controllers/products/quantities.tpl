@@ -31,13 +31,12 @@
 	{else}
 		{include file="controllers/products/multishop/check_fields.tpl" product_tab="Quantities"}
 		<div class="alert alert-info">
-			<p>{l s='This interface allows you to manage available quantities for sale for products. It also allows you to manage product combinations in the current shop.'}</p>
-			<p>{l s='You can choose whether or not to use the advanced stock management system for this product.'}</p>
-			<p>{l s='You can manually specify the quantities for the product/each product combination, or you can choose to automatically determine these quantities based on your stock (if advanced stock management is activated).'}</p>
-			<p>{l s='In this case, quantities correspond to the real-stock quantities in the warehouses connected with the current shop, or current group of shops.'}</p>
-			<br/>
-			<p>{l s='For packs: If it has products that use advanced stock management, you have to specify a common warehouse for these products in the pack.'}</p>
-			<p>{l s='Also, please note that when a product has combinations, its default combination will be used in stock movements.'}</p>
+			{l s='This interface allows you to manage available quantities for sale for products. It also allows you to manage product combinations in the current shop.'}<br/>
+			{l s='You can choose whether or not to use the advanced stock management system for this product.'}<br/>
+			{l s='You can manually specify the quantities for the product/each product combination, or you can choose to automatically determine these quantities based on your stock (if advanced stock management is activated).'}<br/>
+			{l s='In this case, quantities correspond to the real-stock quantities in the warehouses connected with the current shop, or current group of shops.'}<br/>
+			{l s='For packs: If it has products that use advanced stock management, you have to specify a common warehouse for these products in the pack.'}<br/>
+			{l s='Also, please note that when a product has combinations, its default combination will be used in stock movements.'}
 		</div>
 
 		{if $show_quantities == true}
@@ -62,7 +61,7 @@
 								{/if} 
 							/>
 							{l s='I want to use the advanced stock management system for this product.'} 
-							{if $stock_management_active == 0 && !$product->cache_is_pack}&nbsp;-&nbsp;{l s='This requires you to enable advanced stock management.'}
+							{if $stock_management_active == 0 && !$product->cache_is_pack}&nbsp;-&nbsp;<strong>{l s='This requires you to enable advanced stock management.'}</strong>
 							{else if $product->cache_is_pack}&nbsp;-&nbsp;{l s='This parameter depends on the product(s) in the pack.'}
 							{/if}
 						</label>
@@ -175,7 +174,6 @@
 		{/if}
 	{/if}
 
-	<hr>
 	<legend>{l s='Availability settings'}</legend>
 
 	{if !$has_attribute}
@@ -191,8 +189,13 @@
 	{if $ps_stock_management}
 		{include file="controllers/products/multishop/checkbox.tpl" field="available_now" type="default" multilang="true"}
 		<div class="row">
-			<label class="control-label col-lg-3">{l s='Displayed text when in-stock:'}</label>
-			<div class="col-lg-8">
+			<label class="control-label col-lg-5">
+				<span class="label-tooltip" data-toggle="tooltip"
+					title="{l s='Forbidden characters:'} &#60;&#62;;&#61;#&#123;&#125;">
+					{l s='Displayed text when in-stock:'}
+				</span>
+			</label>
+			<div class="col-lg-5">
 				<div class="row">
 					{include file="controllers/products/input_text_lang.tpl"
 						languages=$languages
@@ -200,12 +203,17 @@
 						input_name='available_now'}
 				</div>
 			</div>
-			<p class="help-block" name="help_box">{l s='Forbidden characters:'} &#60;&#62;;&#61;#&#123;&#125;</p>
 		</div>
 		<div class="row">
 			{include file="controllers/products/multishop/checkbox.tpl" field="available_later" type="default" multilang="true"}
-			<label class="control-label col-lg-3">{l s='Displayed text when back-ordereding is allowed:'}</label>
-			<div class="col-lg-8">
+			<label class="control-label col-lg-5">
+				<span class="label-tooltip" data-toggle="tooltip"
+					title="{l s='Forbidden characters:'} &#60;&#62;;&#61;#&#123;&#125;">
+					{l s='Displayed text when back-ordereding is allowed:'}
+				</span>
+				
+			</label>
+			<div class="col-lg-5">
 				<div class="row">
 					{include file="controllers/products/input_text_lang.tpl"
 						languages=$languages
@@ -213,11 +221,8 @@
 						input_name='available_later'}
 				</div>
 			</div>
-			<p class="help-block" name="help_box">{l s='Forbidden characters:'} &#60;&#62;;&#61;#&#123;&#125;</p>
 		</div>
 		
-
-
 		{if !$countAttributes}
 			<label>{l s='Available date:'}</label>
 			<input id="available_date" name="available_date" value="{$product->available_date}" class="datepicker" type="text" />
