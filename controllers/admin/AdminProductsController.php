@@ -201,7 +201,8 @@ class AdminProductsControllerCore extends AdminController
 		$this->fields_list['id_product'] = array(
 			'title' => $this->l('ID'),
 			'align' => 'center',
-			'width' => 20
+			'type' => 'int',
+			'width' => 40
 		);
 		$this->fields_list['image'] = array(
 			'title' => $this->l('Photo'),
@@ -253,6 +254,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->fields_list['sav_quantity'] = array(
 				'title' => $this->l('Quantity'),
 				'width' => 90,
+				'type' => 'int',
 				'align' => 'right',
 				'filter_key' => 'sav!quantity',
 				'orderby' => true,
