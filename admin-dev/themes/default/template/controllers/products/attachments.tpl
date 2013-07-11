@@ -24,43 +24,51 @@
 *}
 
 {if isset($obj->id)}
-	<input type="hidden" name="submitted_tabs[]" value="Attachments" />
-	<h4>{l s='Attachment'}</h4>
-	<div class="separation"></div>
-	<fieldset style="border:none;">
-		<label>{l s='Filename:'} </label>
-		<div class="margin-form translatable">
-			{foreach $languages as $language}
-				<div class="lang_{$language.id_lang}" style="{if $language.id_lang != $default_form_language}display:none;{/if}float: left;">
-					<input type="text" name="attachment_name_{$language.id_lang}" value="{$attachment_name[$language.id_lang]|escape:'htmlall':'UTF-8'}" />
-				</div>
-			{/foreach}
-			<sup>&nbsp;*</sup>
-		</div>
-		<p class="margin-form preference_description">{l s='Maximum 32 characters.'}</p>
-		<div class="clear">&nbsp;</div>
-		<label>{l s='Description:'} </label>
-		<div class="margin-form translatable">
-			{foreach $languages as $language}
-				<div class="lang_{$language.id_lang}" style="display: {if $language.id_lang == $default_form_language}block{else}none{/if}; float: left;">
-					<textarea name="attachment_description_{$language.id_lang}">{$attachment_description[$language.id_lang]|escape:'htmlall':'UTF-8'}</textarea>
-				</div>
-			{/foreach}
-		</div>
-		<div class="clear">&nbsp;</div>
-		<label>{l s='File:'}</label>
-		<div class="margin-form">
-			<p><input type="file" name="attachment_file" /></p>
-			<p class="preference_description">{l s='Upload a file from your computer'} ({$PS_ATTACHMENT_MAXIMUM_SIZE|string_format:"%.2f"} {l s='MB max.'})</p>
-		</div>
-		<div class="clear">&nbsp;</div>
-		<div class="margin-form">
-			<input type="submit" value="{l s='Upload attachment file'}" name="submitAddAttachments" class="button" />
-		</div>
-		<div class="small"><sup>*</sup> {l s='Required field'}</div>
-	</fieldset>
-	<div class="separation"></div>
-	<div class="clear">&nbsp;</div>
+<input type="hidden" name="submitted_tabs[]" value="Attachments" />
+<legend>{l s='Attachment'}</legend>
+
+<div class="row">
+	<label class="control-label col-lg-3 required">
+		<span class="label-tooltip" data-toggle="tooltip"
+		title="{l s='Maximum 32 characters.'}">
+		{l s='Filename:'}
+		</span>
+	</label>
+	<div class="col-lg-7 translatable">
+		{foreach $languages as $language}
+			<div class="lang_{$language.id_lang}" style="{if $language.id_lang != $default_form_language}display:none;{/if}">
+				<input type="text" name="attachment_name_{$language.id_lang}" value="{$attachment_name[$language.id_lang]|escape:'htmlall':'UTF-8'}" />
+			</div>
+		{/foreach}
+	</div>
+</div>
+	
+<div class="row">
+	<label class="control-label col-lg-3">{l s='Description:'} </label>
+	<div class="col-lg-7 translatable">
+		{foreach $languages as $language}
+			<div class="lang_{$language.id_lang}" style="display: {if $language.id_lang == $default_form_language}block{else}none{/if};">
+				<textarea name="attachment_description_{$language.id_lang}">{$attachment_description[$language.id_lang]|escape:'htmlall':'UTF-8'}</textarea>
+			</div>
+		{/foreach}
+	</div>
+</div>
+
+
+<div class="row">
+	<label class="control-label col-lg-3">
+		<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='Upload a file from your computer'} ({$PS_ATTACHMENT_MAXIMUM_SIZE|string_format:'%.2f'} {l s='MB max.'})">
+			{l s='File:'}
+		</span>
+	</label>
+	<div class="input-group col-lg-7">
+		<input type="file" name="attachment_file" />
+		<input type="submit" value="{l s='Upload attachment file'}" name="submitAddAttachments" class="btn btn-default" />
+	</div>
+</div>
+
+
 	<table>
 		<tr>
 			<td>

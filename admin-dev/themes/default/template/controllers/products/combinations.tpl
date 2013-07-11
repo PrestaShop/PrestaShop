@@ -48,8 +48,7 @@
 
 	<legend>{l s='Add or modify combinations for this product.'}</legend>
 	<div class="alert alert-info">
-		<p>
-		{l s='Or use the'}&nbsp;<a class="btn btn-default bt-icon confirm_leave" href="index.php?tab=AdminAttributeGenerator&id_product={$product->id}&attributegenerator&token={$token_generator}"><i class="icon-magic"></i> <span>{l s='Product combinations generator'}</span></a> {l s='in order to automatically create a set of combinations.'}</p>
+		{l s='Or use the'}&nbsp;<a class="btn btn-link bt-icon confirm_leave" href="index.php?tab=AdminAttributeGenerator&id_product={$product->id}&attributegenerator&token={$token_generator}"><i class="icon-magic"></i> {l s='Product combinations generator'} <i class="icon-external-link-sign"></i></a> {l s='in order to automatically create a set of combinations.'}
 	</div>
 	
 	{if $combination_exists}
@@ -71,11 +70,11 @@
 		<label class="control-label col-lg-3">{l s='Attribute:'}</label>
 		<div class="col-lg-5">
 			<select name="attribute_group" id="attribute_group" onchange="populate_attrs();">
-				{if isset($attributes_groups)}
-					{foreach from=$attributes_groups key=k item=attribute_group}
-					<option value="{$attribute_group.id_attribute_group}">{$attribute_group.name|escape:'htmlall':'UTF-8'}&nbsp;&nbsp;</option>
-					{/foreach}
-				{/if}
+			{if isset($attributes_groups)}
+				{foreach from=$attributes_groups key=k item=attribute_group}
+				<option value="{$attribute_group.id_attribute_group}">{$attribute_group.name|escape:'htmlall':'UTF-8'}&nbsp;&nbsp;</option>
+				{/foreach}
+			{/if}
 			</select>
 		</div>
 	</div>
@@ -103,91 +102,127 @@
 		</div>
 	</div>
 
+	<hr/>
 
 	<div class="row">
-		<label class="control-label col-lg-3">{l s='Reference:'}</label>
+		<label class="control-label col-lg-3">
+			<span class="label-tooltip" data-toggle="tooltip"
+				title="{l s='Special characters allowed:'} .-_#">
+				{l s='Reference:'}
+			</span>
+		</label>
 		<div class="col-lg-5">
 			<input type="text" id="attribute_reference" name="attribute_reference" value="" />
-				{l s='EAN13:'}
+		</div>
+	</div>		
+
+	<div class="row">
+		<label class="control-label col-lg-3">
+			{l s='EAN13:'}
+		</label>
+		<div class="col-lg-5">
 			<input maxlength="13" type="text" id="attribute_ean13" name="attribute_ean13" value="" />
-				{l s='UPC:'}
+		</div>
+	</div>		
+
+	<div class="row">
+		<label class="control-label col-lg-3">
+			{l s='UPC:'}
+		</label>
+		<div class="col-lg-5">
 			<input maxlength="12" type="text" id="attribute_upc" name="attribute_upc" value="" />
 		</div>
-		<p class="help-block" name="help_box">{l s='Special characters allowed:'} .-_#</p>
 	</div>		
 	
+	<hr/>
 
-					
+	<div class="row">
+		{include file="controllers/products/multishop/checkbox.tpl" field="attribute_wholesale_price" type="default"}
+		<label class="control-label col-lg-3">
+			<span class="label-tooltip" data-toggle="tooltip"
+				title="{l s='Leave blank if the price does not change'}">
+				{l s='Wholesale price:'}
+			</span>
+		</label>
+		<div class="input-group col-lg-5">
+			<span class="input-group-addon">
+				{if $currency->format % 2 != 0}{$currency->sign}{/if}
+				{if $currency->format % 2 == 0}{$currency->sign}{/if}
+			</span>
+			<input type="text" name="attribute_wholesale_price" id="attribute_wholesale_price" value="" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
+		</div>
+		<span style="display:none;" id="attribute_wholesale_price_full">({l s='Overrides wholesale price on "Information" tab'})</span>
+	</div>
+
+	<div class="row">
+		{include file="controllers/products/multishop/checkbox.tpl" field="attribute_price_impact" type="attribute_price_impact"}
+		<label class="control-label col-lg-3">
+			{l s='Impact on price:'}
+		</label>
+		<div class="col-lg-5">
+			<select name="attribute_price_impact" id="attribute_price_impact" onchange="check_impact(); calcImpactPriceTI();">
+				<option value="0">{l s='None'}</option>
+				<option value="1">{l s='Increase'}</option>
+				<option value="-1">{l s='Reduction'}</option>
+			</select>
+		</div>
+	</div>
+
+	<div id="span_impact" class="row">
+		&nbsp;&nbsp;{l s='of'}&nbsp;&nbsp;{if $currency->format % 2 != 0}{$currency->sign} {/if}
+		<input type="hidden"  id="attribute_priceTEReal" name="attribute_price" value="0.00" />
+		<input type="text" id="attribute_price" value="0.00" onkeyup="$('#attribute_priceTEReal').val(this.value.replace(/,/g, '.')); if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); calcImpactPriceTI();"/>{if $currency->format % 2 == 0} {$currency->sign}{/if}
+		{if $country_display_tax_label}
+			{l s='(tax excl.)'}
+			<span {if $tax_exclude_option}style="display:none"{/if}> {l s='or'}
+			{if $currency->format % 2 != 0}{$currency->sign} {/if}
+			<input type="text" size="6" name="attribute_priceTI" id="attribute_priceTI" value="0.00" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); calcImpactPriceTE();"/>
+			{if $currency->format % 2 == 0} {$currency->sign}{/if} {l s='(tax incl.)'}
+			</span> {l s='final product price will be set to'}
+			{if $currency->format % 2 != 0}{$currency->sign} {/if}
+			<span id="attribute_new_total_price">0.00</span>
+			{if $currency->format % 2 == 0}{$currency->sign} {/if}
+		{/if}
+	</div>
 
 
-					{include file="controllers/products/multishop/checkbox.tpl" field="attribute_wholesale_price" type="default"}
-					<label>{l s='Wholesale price:'}</label>
+	<div class="row">
+		{include file="controllers/products/multishop/checkbox.tpl" field="attribute_weight_impact" type="attribute_weight_impact"}
+		<label class="control-label col-lg-3">
+			{l s='Impact on weight:'}
+		</label>
+		<div class="col-lg-5">
+			<select name="attribute_weight_impact" id="attribute_weight_impact" onchange="check_weight_impact();">
+				<option value="0">{l s='None'}</option>
+				<option value="1">{l s='Increase'}</option>
+				<option value="-1">{l s='Reduction'}</option>
+			</select>
+		</div>
+		<span id="span_weight_impact">&nbsp;&nbsp;{l s='of'}&nbsp;&nbsp;
+			<input type="text" name="attribute_weight" id="attribute_weight" value="0.00" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
+			{$ps_weight_unit}
+		</span>
+	</div>	
 
 
-					{if $currency->format % 2 != 0}{$currency->sign}{/if}
-					<input type="text" size="6"  name="attribute_wholesale_price" id="attribute_wholesale_price" value="" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
-					{if $currency->format % 2 == 0} {$currency->sign} {/if}<span id="attribute_wholesale_price_blank">({l s='Leave blank if the price does not change'})</span>
-					<span style="display:none" id="attribute_wholesale_price_full">({l s='Overrides wholesale price on "Information" tab'})</span>
+	<div id="tr_unit_impact" class="row">
+		{include file="controllers/products/multishop/checkbox.tpl" field="attribute_unit_impact" type="attribute_unit_impact"}
+		<label class="control-label col-lg-3">{l s='Impact on unit price :'}</label>
+		<div class="col-lg-5">
+			<select name="attribute_unit_impact" id="attribute_unit_impact" onchange="check_unit_impact();">
+				<option value="0">{l s='None'}</option>
+				<option value="1">{l s='Increase'}</option>
+				<option value="-1">{l s='Reduction'}</option>
+			</select>
+		</div>
+		<span id="span_weight_impact">&nbsp;&nbsp;{l s='of'}&nbsp;&nbsp;&nbsp;&nbsp;
+			{if $currency->format % 2 != 0} {$currency->sign} {/if}
+			<input type="text" size="6" name="attribute_unity" id="attribute_unity" value="0.00" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />{if $currency->format % 2 == 0} {$currency->sign}{/if} / <span id="unity_third">{$field_value_unity}</span>
+		</span>
+	</div>
 
 
-					{include file="controllers/products/multishop/checkbox.tpl" field="attribute_price_impact" type="attribute_price_impact"}
-					<label>{l s='Impact on price:'}</label>
 
-
-					<select name="attribute_price_impact" id="attribute_price_impact" onchange="check_impact(); calcImpactPriceTI();">
-						<option value="0">{l s='None'}</option>
-						<option value="1">{l s='Increase'}</option>
-						<option value="-1">{l s='Reduction'}</option>
-					</select>
-
-					<span id="span_impact">&nbsp;&nbsp;{l s='of'}&nbsp;&nbsp;{if $currency->format % 2 != 0}{$currency->sign} {/if}
-						<input type="hidden"  id="attribute_priceTEReal" name="attribute_price" value="0.00" />
-						<input type="text" size="6" id="attribute_price" value="0.00" onkeyup="$('#attribute_priceTEReal').val(this.value.replace(/,/g, '.')); if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); calcImpactPriceTI();"/>{if $currency->format % 2 == 0} {$currency->sign}{/if}
-						{if $country_display_tax_label}
-							{l s='(tax excl.)'}
-							<span {if $tax_exclude_option}style="display:none"{/if}> {l s='or'}
-							{if $currency->format % 2 != 0}{$currency->sign} {/if}
-							<input type="text" size="6" name="attribute_priceTI" id="attribute_priceTI" value="0.00" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); calcImpactPriceTE();"/>
-							{if $currency->format % 2 == 0} {$currency->sign}{/if} {l s='(tax incl.)'}
-							</span> {l s='final product price will be set to'}
-							{if $currency->format % 2 != 0}{$currency->sign} {/if}
-							<span id="attribute_new_total_price">0.00</span>
-							{if $currency->format % 2 == 0}{$currency->sign} {/if}
-						{/if}
-					</span>
-
-
-					{include file="controllers/products/multishop/checkbox.tpl" field="attribute_weight_impact" type="attribute_weight_impact"}
-					<label>{l s='Impact on weight:'}</label>
-
-					<select name="attribute_weight_impact" id="attribute_weight_impact" style="width: 140px;" onchange="check_weight_impact();">
-						<option value="0">{l s='None'}</option>
-						<option value="1">{l s='Increase'}</option>
-						<option value="-1">{l s='Reduction'}</option>
-					</select>
-					<span id="span_weight_impact">&nbsp;&nbsp;{l s='of'}&nbsp;&nbsp;
-						<input type="text" size="6" name="attribute_weight" id="attribute_weight" value="0.00" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
-						{$ps_weight_unit}
-					</span>
-				</td>
-			</tr>
-			<tr id="tr_unit_impact">
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">
-					{include file="controllers/products/multishop/checkbox.tpl" field="attribute_unit_impact" type="attribute_unit_impact"}
-					<label style="width: 100px; float: right">{l s='Impact on unit price :'}</label>
-				</td>
-				<td colspan="2" style="padding-bottom:5px;">
-					<select name="attribute_unit_impact" id="attribute_unit_impact" style="width: 140px;" onchange="check_unit_impact();">
-						<option value="0">{l s='None'}</option>
-						<option value="1">{l s='Increase'}</option>
-						<option value="-1">{l s='Reduction'}</option>
-					</select>
-					<span id="span_weight_impact">&nbsp;&nbsp;{l s='of'}&nbsp;&nbsp;&nbsp;&nbsp;
-						{if $currency->format % 2 != 0} {$currency->sign} {/if}
-						<input type="text" size="6" name="attribute_unity" id="attribute_unity" value="0.00" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />{if $currency->format % 2 == 0} {$currency->sign}{/if} / <span id="unity_third">{$field_value_unity}</span>
-					</span>
-				</td>
-			</tr>
 			{if $ps_use_ecotax}
 				<tr>
 					<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">

@@ -23,7 +23,7 @@ body.fixed-top
 	min-height: 100%
 	padding: 20px 20px 90px 20px
 	margin: 0 0 0 240px
-	border-left: 1px solid #CECECE
+	border-left: 2px solid black
 	background-color: white
 
 .page-sidebar
@@ -34,7 +34,10 @@ body.fixed-top
 		margin: 0
 		padding: 0
 		li
+			background-color: white
 			list-style: none
+			&:hover
+				background-color: #eee
 		> li
 			&.active
 				> a
@@ -80,9 +83,10 @@ body.fixed-top
 
 		li:not(.active) ul
 			display: none
-		li.expanded ul
-			display: block
-			background-color: white
+		li.expanded
+			ul
+				display: block
+				background-color: white
 
 	> ul > li > ul.sub-menu
 		display: none
@@ -170,7 +174,6 @@ $icon-color: #7A0928
 .icon-AdminParentStats
 	@extend .icon-bar-chart
 	background-color: adjust-hue($icon-color, 220)
-
 
 
 .navbar-inner
@@ -312,10 +315,7 @@ form legend
 //filter table
 tr.filter
 	background-color: #EEEEEE
-
 input[type="text"].filter, input[type="password"].filter, select.filter
-	min-height: 30px
-	height: 30px
 	font-size: 12px
 
 .btn

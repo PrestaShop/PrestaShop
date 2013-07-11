@@ -114,23 +114,32 @@ $(document).ready(function () {
 
 {include file="controllers/products/multishop/checkbox.tpl" field="wholesale_price" type="default"}
 <div class="row">
-	<label class="control-label col-lg-3">{l s='Pre-tax wholesale price:'}</label>
+	<label class="control-label col-lg-3">
+		<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='Wholesale price'}">
+			{l s='Pre-tax wholesale price:'}
+		</span>
+		
+	</label>
 	<div class="input-group col-lg-2">
 		<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
 		<input maxlength="14" name="wholesale_price" id="wholesale_price" type="text" value="{{toolsConvertPrice price=$product->wholesale_price}|string_format:'%.2f'}" onchange="this.value = this.value.replace(/,/g, '.');" />
 	</div>
-	<p class="help-block">{l s='Wholesale price'}</p>
 </div>
 
 <div class="row">
 	{include file="controllers/products/multishop/checkbox.tpl" field="price" type="price"}
-	<label class="control-label col-lg-3">{l s='Pre-tax retail price:'}</label>
+	<label class="control-label col-lg-3">
+		<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='The pre-tax retail price to sell this product'}">
+			{l s='Pre-tax retail price:'}
+		</span>
+	</label>
 	<div class="input-group col-lg-2">
 		<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
 		<input type="hidden"  id="priceTEReal" name="price" value="{toolsConvertPrice price=$product->price}" />
 		<input size="11" maxlength="14" id="priceTE" name="price_displayed" type="text" value="{{toolsConvertPrice price=$product->price}|string_format:'%.2f'}" onchange="noComma('priceTE'); $('#priceTEReal').val(this.value);" onkeyup="$('#priceType').val('TE'); $('#priceTEReal').val(this.value.replace(/,/g, '.')); if (isArrowKey(event)) return; calcPriceTI();" />
 	</div>
-	<p class="help-block">{l s='The pre-tax retail price to sell this product'}</p>
 </div>
 
 <div class="row">
@@ -162,9 +171,9 @@ $(document).ready(function () {
 				</select>
 			</div>
 			<div class="col-lg-2">
-				<button type="button" class="btn btn-default" onclick="{$link->getAdminLink('AdminTaxRulesGroup')|escape:'htmlall':'UTF-8'}&addtax_rules_group&id_product={$product->id}" class="confirm_leave" {if $tax_exclude_taxe_option}disabled="disabled"{/if}>
-					<i class="icon-plus-sign"></i>  {l s='Create'}
-				</button>
+				<a class="btn btn-link confirm_leave" href="{$link->getAdminLink('AdminTaxRulesGroup')|escape:'htmlall':'UTF-8'}&addtax_rules_group&id_product={$product->id}" {if $tax_exclude_taxe_option}disabled="disabled"{/if}>
+					<i class="icon-plus-sign"></i>  {l s='Create new taxe'} <i class="icon-external-link-sign"></i>
+				</a>
 			</div>
 		</div>
 	</div>
@@ -184,12 +193,16 @@ $(document).ready(function () {
 
 <div class="row" {if !$ps_use_ecotax} style="display:none;"{/if}>
 	{include file="controllers/products/multishop/checkbox.tpl" field="ecot" type="default"}
-	<label class="control-label col-lg-3">{l s='Eco-tax (tax incl.):'}</label>
+	<label class="control-label col-lg-3">
+		<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='already included in price'}">
+			{l s='Eco-tax (tax incl.):'}
+		</span>
+	</label>
 	<div class="input-group col-lg-2">
 		<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
 		<input maxlength="14" id="ecotax" name="ecotax" type="text" value="{$product->ecotax|string_format:'%.2f'}" onkeyup="$('#priceType').val('TI');if (isArrowKey(event))return; calcPriceTE(); this.value = this.value.replace(/,/g, '.'); if (parseInt(this.value) > getE('priceTE').value) this.value = getE('priceTE').value; if (isNaN(this.value)) this.value = 0;" />
 	</div>
-	<span class="help-block">{l s='already included in price'}</span>
 </div>
 
 <div class="row" {if !$country_display_tax_label || $tax_exclude_taxe_option}style="display:none;"{/if} >
@@ -203,14 +216,18 @@ $(document).ready(function () {
 
 <div class="row">
 	{include file="controllers/products/multishop/checkbox.tpl" field="unit_price" type="unit_price"}
-	<label class="control-label col-lg-3">{l s='Unit price:'}</label>
+	<label class="control-label col-lg-3">
+		<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='e.g. per lb.'}">
+			{l s='Unit price:'}
+		</span>
+	</label>
 	<div class="input-group col-lg-4">
 		<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
 		<input maxlength="14" id="unit_price" name="unit_price" type="text" value="{$unit_price|string_format:'%.2f'}" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); unitPriceWithTax('unit');"/>
 		<span class="input-group-addon">{l s='per'}</span>
 		<input maxlength="10" id="unity" name="unity" type="text" value="{$product->unity|htmlentitiesUTF8}" onkeyup="if (isArrowKey(event)) return ;unitySecond();" onchange="unitySecond();"/>
 	</div>
-	<span class="help-block">{l s='e.g. per lb.'}</span>
 </div>
 
 {if $ps_tax && $country_display_tax_label}
@@ -221,7 +238,6 @@ $(document).ready(function () {
 				{$currency->prefix}<span id="unit_price_with_tax">0.00</span>{$currency->suffix}
 				{l s='per'} <span id="unity_second">{$product->unity}</span> {l s='with tax'}
 			</span>
-		
 		</div>
 	</div>
 </div>
@@ -263,8 +279,8 @@ $(document).ready(function () {
 </div>
 
 
+
 {if isset($specificPriceModificationForm)}
-<hr/>
 <legend>{l s='Specific prices'}</legend>
 <div class="alert alert-info">
 	{l s='You can set specific prices for clients belonging to different groups, different countries, etc...'}

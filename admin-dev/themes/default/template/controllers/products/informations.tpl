@@ -116,8 +116,15 @@
 	</div>
 </div>
 
+<hr/>
+
 <div class="row">
-	<label class="control-label col-lg-3 required">{l s='Name:'}</label>
+	<label class="control-label col-lg-3 required">
+		<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='Invalid characters:'} &lt;&gt;;=#{}">
+			{l s='Name:'}
+		</span>
+	</label>
 	<div class="col-lg-5">
 		<div class="row">
 			{include file="controllers/products/input_text_lang.tpl"
@@ -127,33 +134,46 @@
 				input_name="name"
 			}
 		</div>
-		<span class="help-block" name="help_box">{l s='Invalid characters:'} &lt;&gt;;=#{}</span>
 	</div>
 </div>
 
 <div class="row">
-	<label class="control-label col-lg-3">{$bullet_common_field} {l s='Reference:'}</label>
+	<label class="control-label col-lg-3">
+		<span class="label-tooltip" data-toggle="tooltip"
+		title="{l s='Special characters allowed:'} .-_#\">
+			{$bullet_common_field} {l s='Reference:'}
+		</span>
+	</label>
 	<div class="col-lg-5">
 		<input type="text" name="reference" value="{$product->reference|htmlentitiesUTF8}" />
-		<span class="help-block" name="help_box">{l s='Special characters allowed:'} .-_#\</span>
 	</div>
 </div>
 
 <div class="row">
-	<label class="control-label col-lg-3">{$bullet_common_field} {l s='EAN13 or JAN:'}</label>
-	<div class="col-lg-5">
+	<label class="control-label col-lg-3">
+		<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='(Europe, Japan)'}">
+			{$bullet_common_field} {l s='EAN13 or JAN:'}
+		</span>
+	</label>
+	<div class="col-lg-3">
 		<input maxlength="13" type="text" name="ean13" value="{$product->ean13|htmlentitiesUTF8}" />
-		<span class="help-block">{l s='(Europe, Japan)'}</span>
 	</div>
 </div>
 
 <div class="row">
-	<label class="control-label col-lg-3">{$bullet_common_field} {l s='UPC:'}</label>
-	<div class="col-lg-5">
+	<label class="control-label col-lg-3">
+		<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='(US, Canada)'}">
+			{$bullet_common_field} {l s='UPC:'}
+		</span>
+	</label>
+	<div class="col-lg-3">
 		<input maxlength="12" type="text" name="upc" value="{$product->upc|escape:html:'UTF-8'}" />
-		<span class="help-block">{l s='(US, Canada)'}</span>
 	</div>
 </div>
+
+<hr/>
 
 {* status informations *}
 {include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
@@ -220,7 +240,7 @@
 <div class="row">
 	{include file="controllers/products/multishop/checkbox.tpl" field="visibility" type="default"}
 	<label class="control-label col-lg-3">{l s='Visibility:'}</label>
-	<div class="col-lg-5">
+	<div class="col-lg-3">
 		<select name="visibility" id="visibility">
 			<option value="both" {if $product->visibility == 'both'}selected="selected"{/if} >{l s='Everywhere'}</option>
 			<option value="catalog" {if $product->visibility == 'catalog'}selected="selected"{/if} >{l s='Catalog only'}</option>
@@ -260,7 +280,7 @@
 		<div class="row">
 			{include file="controllers/products/multishop/checkbox.tpl" field="condition" type="default"}
 			<label class="control-label col-lg-3">{l s='Condition:'}</label>
-			<div class="col-lg-5">
+			<div class="col-lg-3">
 				<select name="condition" id="condition">
 					<option value="new" {if $product->condition == 'new'}selected="selected"{/if} >{l s='New'}</option>
 					<option value="used" {if $product->condition == 'used'}selected="selected"{/if} >{l s='Used'}</option>
@@ -271,30 +291,42 @@
 	</div>
 </div>
 
+<hr/>
+
 <div class="row">
 	{include file="controllers/products/multishop/checkbox.tpl" field="description_short" type="tinymce" multilang="true"}
-	<label class="control-label col-lg-3">{l s='Short description:'}</label>
-	<div class="col-lg-5">
+	<label class="control-label col-lg-3">
+		<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='Appears in the product list(s), and on the top of the product page.'}">
+			{l s='Short description:'}
+		</span>
+	</label>
+	<div class="col-lg-8">
 		{include file="controllers/products/textarea_lang.tpl" languages=$languages input_name='description_short' input_value=$product->description_short max=$PS_PRODUCT_SHORT_DESC_LIMIT}
-		<p class="help-block">({l s='Appears in the product list(s), and on the top of the product page.'})</p>
 	</div>
 </div>
 
 <div class="row">
 	{include file="controllers/products/multishop/checkbox.tpl" field="description" type="tinymce" multilang="true"}
-	<label class="control-label col-lg-3">{l s='Description:'}</label>
-	<div class="col-lg-5">
+	<label class="control-label col-lg-3">
+		<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='Appears in the body of the product page'}">
+			{l s='Description:'}
+		</span>
+	</label>
+	<div class="col-lg-8">
 		{include file="controllers/products/textarea_lang.tpl" languages=$languages input_name='description' input_value=$product->description}
-		<p class="help-block">({l s='Appears in the body of the product page'})</p>
 	</div>
 </div>
 
-
-
 {if $images}
-<div class="alert">
-	{l s='Do you want an image associated with the product in your description?'}
-	<a class="addImageDescription" href="javascript:void(0);">{l s='Click here'}</a>.
+<div class="row">
+	<div class="col-lg-9 col-offset-3">
+		<div class="alert">
+			{l s='Do you want an image associated with the product in your description?'}
+			<a class="addImageDescription" href="javascript:void(0);">{l s='Click here'}</a>.
+		</div>
+	</div>
 </div>
 
 <div id="createImageDescription" class="well" style="display:none">
@@ -342,26 +374,35 @@
 	</div>
 
 	<div class="row">
-		<label class="control-label col-lg-3">{l s='Image tag to insert:'}</label>
+		<label class="control-label col-lg-3">
+			<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='The tag to copy/paste into the description.'}">
+				{l s='Image tag to insert:'}
+			</span>
+		</label>
 		<div class="col-lg-4">
 			<input type="text" id="resultImage" name="resultImage" />
 		</div>
-		<p class="help-block">{l s='The tag to copy/paste into the description.'}</p>
+		<p class="help-block"></p>
 	</div>
-
 </div>
 {/if}
 
+
+
 <div class="row">
-	<label class="control-label col-lg-3">{l s='Tags:'}</label>
+	<label class="control-label col-lg-3">
+		<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='Tags separated by commas (e.g. dvd, dvd player, hifi)'} - {l s='Forbidden characters:'} !&lt;;&gt;;?=+#&quot;&deg;{}_$%">
+			{l s='Tags:'}
+		</span>
+	</label>
 	<div class="col-lg-5 translatable">
 		{foreach from=$languages item=language}
 		<div class="lang_{$language.id_lang}" style="{if !$language.is_default}display: none;{/if}">
 			<input type="text" id="tags_{$language.id_lang}" name="tags_{$language.id_lang}"
 				value="{$product->getTags($language.id_lang, true)|htmlentitiesUTF8}" />
-			<p class="help-block" name="help_box">{l s='Forbidden characters:'} !&lt;;&gt;;?=+#&quot;&deg;{}_$%</p>
 		</div>
 		{/foreach}
-		<p class="help-block">{l s='Tags separated by commas (e.g. dvd, dvd player, hifi)'}</p>
 	</div>
 </div>
