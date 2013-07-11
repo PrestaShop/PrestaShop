@@ -474,7 +474,7 @@ class LinkCore
 			$shop = new Shop($id_shop);
 
 		$uri_path = Dispatcher::getInstance()->createUrl($controller, $id_lang, $request, false, '', $id_shop);
-		$url = ($ssl && $this->ssl_enable) ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true);
+		$url = ($ssl && $this->ssl_enable) ? 'https://' : 'http://';
 		$url .= $shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang).ltrim($uri_path, '/');
 
 		return $url;
