@@ -26,12 +26,19 @@
 {if $add_permission eq '1'}
 	{if isset($logged_on_addons)}
 			<!--start addons login-->
-			<div class="filter-module" id="addons_login_div">
-				<p>{l s='You are logged into PrestaShop Addons.'}</p>
-				<div style="float:right">				
-					<label><img src="themes/default/img/module-profile.png" /> {l s='Welcome'} {$username_addons}</label>
-					<label>|</label>
-					<label><a href="#" id="addons_logout_button"><img src="themes/default/img/module-logout.png" /> {l s='Log out from PrestaShop Addons.'}</a></label>
+			<div id="addons_login_div" class="row" >
+				<div class="col-lg-12">
+					<legend>{l s='You are logged into PrestaShop Addons.'}</legend>
+					<div class="row">		
+						<label class="control-label col-lg-9">
+							<i class="icon-user"></i> {l s='Welcome'} {$username_addons}
+						</label>
+						<label class="control-label col-lg-3">
+							<a href="#" id="addons_logout_button">
+								<i class="icon-signout"></i> {l s='Log out from PrestaShop Addons.'}
+							</a>
+						</label>
+					</div>
 				</div>
 			</div>
 			<!--end addons login-->
@@ -88,7 +95,7 @@
 				<input type="text" value="" name="filtername" autocomplete="off" class="ac_input">
 				<span class="input-group-btn">
 					<button class="btn btn-default" type="submit">
-						{l s='Search'}
+						<i class="icon-search"></i> {l s='Search'}
 					</button>
 				</span>
 			</div>

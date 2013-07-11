@@ -2964,6 +2964,7 @@ class AdminControllerCore extends Controller
 				'title' => '',
 				'text' => $this->translationsTab['Configure'],
 				'cond' => $module->id && isset($module->is_configurable) && $module->is_configurable,
+				'icon' => 'wrench',
 				),
 			'desactive-module' => array(
 				'href' => $link_admin_modules.'&module_name='.urlencode($module->name).'&'.($module->active ? 'enable=0' : 'enable=1').'&tab_module='.$module->tab,
@@ -2971,6 +2972,7 @@ class AdminControllerCore extends Controller
 				'title' => Shop::isFeatureActive() ? htmlspecialchars($module->active ? $this->translationsTab['Disable this module'] : $this->translationsTab['Enable this module for all shops']) : '',
 				'text' => $module->active ? $this->translationsTab['Disable'] : $this->translationsTab['Enable'],
 				'cond' => $module->id,
+				'icon' => 'off',
 				),
 			'reset-module' => array(
 				'href' => $link_admin_modules.'&module_name='.urlencode($module->name).'&reset&tab_module='.$module->tab,
@@ -2978,6 +2980,7 @@ class AdminControllerCore extends Controller
 				'title' => '',
 				'text' => $this->translationsTab['Reset'],
 				'cond' => $module->id && $module->active,
+				'icon' => 'share-alt',
 				),
 			'delete-module' => array(
 				'href' => $link_admin_modules.'&delete='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.urlencode($module->name),
@@ -2985,6 +2988,7 @@ class AdminControllerCore extends Controller
 				'title' => '',
 				'text' => $this->translationsTab['Delete'],
 				'cond' => true,
+				'icon' => 'remove',
 				),
 		);
 
@@ -2995,7 +2999,9 @@ class AdminControllerCore extends Controller
 			{
 				if ($output_type == 'link')
 					$return .= '<span class="'.$option_name.'">
-						<a class="action_module" href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'">'.$option['text'].'</a>
+						<a class="btn btn-default btn-small action_module" href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'">
+							<i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog' ).'"></i> '.$option['text'].'
+						</a>
 						</span>';
 				elseif ($output_type == 'select')
 					$return .= '<option id="'.$option_name.'" data-href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" data-onclick="'.$option['onclick'].'">'.$option['text'].'</option>';
