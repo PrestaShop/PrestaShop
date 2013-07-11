@@ -297,7 +297,7 @@ abstract class PaymentModuleCore extends Module
 				$this->context->country = $context_country;
 
 			// Register Payment only if the order status validate the order
-			if ($order_status->logable)
+			if ($order_status->logable && $id_order_state == Configuration::get('PS_OS_ERROR'))
 			{
 				// $order is the last order loop in the foreach
 				// The method addOrderPayment of the class Order make a create a paymentOrder
