@@ -647,12 +647,14 @@ class AdminControllerCore extends Controller
 						$this->errors[] = Tools::displayError('Unable to delete associated images.');
 
 					$object->deleted = 1;
-					if ($object->update())
+					if ($res = $object->update())
 						$this->redirect_after = self::$currentIndex.'&conf=1&token='.$this->token;
 				}
-				elseif ($object->delete())
+				elseif ($res = $object->delete())
 					$this->redirect_after = self::$currentIndex.'&conf=1&token='.$this->token;
 				$this->errors[] = Tools::displayError('An error occurred during deletion.');
+				if ($res)
+					Logger::addLog(sprintf($this->l('%s deletion'), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
 			}
 		}
 		else
@@ -701,6 +703,7 @@ class AdminControllerCore extends Controller
 			/* voluntary do affectation here */
 			elseif (($_POST[$this->identifier] = $this->object->id) && $this->postImage($this->object->id) && !count($this->errors) && $this->_redirect)
 			{
+				Logger::addLog(sprintf($this->l('%s addition'), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
 				$parent_id = (int)Tools::getValue('id_parent', 1);
 				$this->afterAdd($this->object);
 				$this->updateAssoShop($this->object->id);
@@ -735,7 +738,6 @@ class AdminControllerCore extends Controller
 	{
 		/* Checking fields validity */
 		$this->validateRules();
-
 		if (empty($this->errors))
 		{
 			$id = (int)Tools::getValue($this->identifier);
@@ -801,6 +803,7 @@ class AdminControllerCore extends Controller
 						if (empty($this->redirect_after))
 							$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=4&token='.$this->token;
 					}
+					Logger::addLog(sprintf($this->l('%s edition'), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
 				}
 				else
 					$this->errors[] = Tools::displayError('An error occurred while updating an object.').
