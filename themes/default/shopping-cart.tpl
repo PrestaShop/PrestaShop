@@ -84,12 +84,14 @@
 			</tr>
 		</thead>
 		<tfoot>
+			{if $cart_singel_update}
 			<tr>
 				<td colspan="5">&nbsp;</td>
 				<td colspan="2" class="update_cart">
 						<input type="submit" name="submitUpdateCart" value="{l s='Update Cart'}" class="button"/>
 				</td>
 			</tr>
+			{/if}
 		{if $use_taxes}
 			{if $priceDisplay}
 				<tr class="cart_total_price">
