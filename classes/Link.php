@@ -241,7 +241,7 @@ class LinkCore
 	 */
 	public function getCMSLink($cms, $alias = null, $ssl = false, $id_lang = null, $id_shop = null)
 	{
-		$base = (($ssl && $this->ssl_enable) ? _PS_BASE_URL_SSL_ : _PS_BASE_URL_);
+		$base = (($ssl && $this->ssl_enable) ? 'https://' : 'http://');
 
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
@@ -362,7 +362,7 @@ class LinkCore
 	 */
 	public function getModuleLink($module, $controller = 'default', array $params = array(), $ssl = false, $id_lang = null, $id_shop = null)
 	{
-		$base = (($ssl && $this->ssl_enable) ? _PS_BASE_URL_SSL_ : _PS_BASE_URL_);
+		$base = (($ssl && $this->ssl_enable) ? 'https://' : 'http://');
 
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
