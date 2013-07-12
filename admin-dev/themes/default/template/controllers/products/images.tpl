@@ -99,7 +99,7 @@
 				{/foreach}
 			{/if}
 			<td class="center cover"><a href="#">
-				<img class="covered" src="../img/admin/blank.gif" alt="e" /></a>
+				<i class="covered icon-check-empty"></i>
 			</td>
 			<td class="center">
 				<a href="#" class="btn btn-default delete_product_image" >
@@ -135,7 +135,7 @@
 				}
 				else
 					assoc = false;
-				imageLine({$image->id}, "{$image->getExistingImgPath()}", {$image->position}, "{if $image->cover}enabled{else}forbbiden{/if}", assoc);
+				imageLine({$image->id}, "{$image->getExistingImgPath()}", {$image->position}, "{if $image->cover}icon-check-sign{else}icon-check-empty{/if}", assoc);
 			{/foreach}
 			{literal}
 			$("#imageTable").tableDnD(
@@ -189,9 +189,9 @@
 					}
 					if (responseJSON.status == 'ok')
 					{
-						cover = "forbbiden";
+						cover = "icon-check-empty";
 						if (responseJSON.cover == "1")
-							cover = "enabled";
+							cover = "icon-check-sign";
 						imageLine(responseJSON.id, responseJSON.path, responseJSON.position, cover, responseJSON.shops)
 						$("#imageTable tr:last").after(responseJSON.html);
 						$("#countImage").html(parseInt($("#countImage").html()) + 1);
@@ -220,19 +220,17 @@
 				{
 					cover = 0;
 					id = data.content.id;
-					if(data.status == 'ok')
+					if (data.status == 'ok')
 					{
-						if ($("#" + id).find(".covered").attr("src") == "../img/admin/enabled.gif")
+						if ($("#" + id + ' .covered').hasClass('icon-check-sign'))
 							cover = 1;
 						$("#" + id).remove();
 					}
 					if (cover)
-						$("#imageTable tr").eq(1).find(".covered").attr("src", "../img/admin/enabled.gif");
+						$("#imageTable tr").eq(1).find(".covered").addClass('icon-check-sign');
 					$("#countImage").html(parseInt($("#countImage").html()) - 1);
 					refreshImagePositions($("#imageTable"));
-					
 					showSuccessMessage(data.confirmations);
-
 				}
 			}
 
@@ -256,13 +254,13 @@
 			{
 				e.preventDefault();
 				id = $(this).parent().parent().parent().attr('id');
-				$("#imageList .cover img").each( function(i){
-					$(this).attr("src", $(this).attr("src").replace("enabled", "forbbiden"));
+				$("#imageList .cover i").each( function(i){
+					$(this).removeClass('icon-check-sign').addClass('icon-check-empty');
 				});
-				$(this).attr("src", $(this).attr("src").replace("forbbiden", "enabled"));
+				$(this).removeClass('icon-check-empty').addClass('icon-check-sign');
 
 				if (current_shop_id != 0)
-					$('#'+current_shop_id+id).attr('check', true);
+					$('#' + current_shop_id + id).attr('check', true);
 				else
 					$(this).parent().parent().parent().children('td input').attr('check', true);
 				doAdminAjax({
@@ -320,10 +318,10 @@
 			{
 				line = $("#lineType").html();
 				line = line.replace(/image_id/g, id);
-			line = line.replace(/en-default/g, path);
-			line = line.replace(/image_path/g, path);
+				line = line.replace(/en-default/g, path);
+				line = line.replace(/image_path/g, path);
 				line = line.replace(/image_position/g, position);
-				line = line.replace(/blank/g, cover);
+				line = line.replace(/icon-check-empty/g, cover);
 				line = line.replace(/<tbody>/gi, "");
 				line = line.replace(/<\/tbody>/gi, "");
 				if (shops != false)
