@@ -49,38 +49,38 @@
 					{l s='Favorites view'}
 				</a>
 			</span>
-		</span>
-	</div>
+		</div>
 	
-	<div id="container">
-		<!--start sidebar module-->
-		<div class="row-fluid">
-			<div class="categorieTitle col-lg-3">
-				<legend>{l s='Categories'}</legend>
-				<ul class="tab nav nav-pills nav-stacked">
-					<li class="tab-row {if isset($categoryFiltered.favorites)}active{/if}">
-						<a class="tab-page" href="{$currentIndex}&token={$token}&filterCategory=favorites">
-							{l s='Favorites'} <span class="badge pull-right">{$nb_modules_favorites}</span>
-						</a>
-					</li>
-					<li class="tab-row {if count($categoryFiltered) lte 0}active{/if}">
-						<a class="tab-page" href="{$currentIndex}&token={$token}&unfilterCategory=yes">
-							{l s='Total'} <span class="badge pull-right">{$nb_modules}</span>
-						</a>
-					</li>
-					{foreach from=$list_modules_categories item=module_category key=module_category_key}
-						<li class="tab-row {if isset($categoryFiltered[$module_category_key])}active{/if}">
-							<a class="tab-page" href="{$currentIndex}&token={$token}&{if isset($categoryFiltered[$module_category_key])}un{/if}filterCategory={$module_category_key}">
-								{$module_category.name} <span class="badge pull-right">{$module_category.nb}</span>
+		<div id="container">
+			<!--start sidebar module-->
+			<div class="row-fluid">
+				<div class="categorieTitle col-lg-3">
+					<legend>{l s='Categories'}</legend>
+					<ul class="tab nav nav-pills nav-stacked">
+						<li class="tab-row {if isset($categoryFiltered.favorites)}active{/if}">
+							<a class="tab-page" href="{$currentIndex}&token={$token}&filterCategory=favorites">
+								{l s='Favorites'} <span class="badge pull-right">{$nb_modules_favorites}</span>
 							</a>
 						</li>
-					{/foreach}
-				</ul>
+						<li class="tab-row {if count($categoryFiltered) lte 0}active{/if}">
+							<a class="tab-page" href="{$currentIndex}&token={$token}&unfilterCategory=yes">
+								{l s='Total'} <span class="badge pull-right">{$nb_modules}</span>
+							</a>
+						</li>
+						{foreach from=$list_modules_categories item=module_category key=module_category_key}
+							<li class="tab-row {if isset($categoryFiltered[$module_category_key])}active{/if}">
+								<a class="tab-page" href="{$currentIndex}&token={$token}&{if isset($categoryFiltered[$module_category_key])}un{/if}filterCategory={$module_category_key}">
+									{$module_category.name} <span class="badge pull-right">{$module_category.nb}</span>
+								</a>
+							</li>
+						{/foreach}
+					</ul>
+				</div>
 			</div>
-		</div>
-		<div id="moduleContainer" class="col-lg-9">
-			<legend>{l s='Modules list'}</legend>
-			{include file='controllers/modules/list.tpl'}
+			<div id="moduleContainer" class="col-lg-9">
+				<legend>{l s='Modules list'}</legend>
+				{include file='controllers/modules/list.tpl'}
+			</div>
 		</div>
 	</div>
 </div>

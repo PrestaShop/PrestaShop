@@ -83,4 +83,4 @@
 	{/if}
 	</div>
 {/if}
-<p style="text-align:right;text-decoration:underline;padding-right:10px"><a href="{$admin_module_favorites_view}" style="color:#666">{l s='More options'}</a></p>
+<p><a href="{$admin_module_favorites_view}">{l s='More options'}</a></p>
