@@ -86,8 +86,8 @@
 		<tfoot>
 			<tr>
 				<td colspan="5">&nbsp;</td>
-				<td colspan="2">
-						<input type="submit" name="submitUpdateCart" value="{l s='Update Cart'}"/>
+				<td colspan="2" class="update_cart">
+						<input type="submit" name="submitUpdateCart" value="{l s='Update Cart'}" class="button"/>
 				</td>
 			</tr>
 		{if $use_taxes}
@@ -287,7 +287,7 @@
 								</div>
 								{/if}
 								<input type="hidden" value="{$customization.quantity}" name="quantity_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}_hidden"/>
-								<input size="2" type="text" value="{$customization.quantity}" class="cart_quantity_input" name="quantity_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}"/>
+								<input size="2" type="text" value="{$customization.quantity}" class="cart_quantity_input" name="quantity_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}"  style="{if $cart_singel_update}border:1px solid #b7b7b7;{/if}"/>
 							{/if}
 						</td>
 						<td class="cart_delete">
