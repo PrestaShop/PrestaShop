@@ -41,7 +41,7 @@
 				{$category_tree}
 			</div>
 			<a class="btn btn-link bt-icon confirm_leave" href="{$link->getAdminLink('AdminCategories')|escape:'htmlall':'UTF-8'}&addcategory">
-				<i class="icon-plus-sign"></i> {l s='Create new category'} <i class="icon-external-link-sign"></i> 
+				<i class="icon-plus-sign"></i> {l s='Create new category'} <i class="icon-external-link-sign"></i>
 			</a>
 		</div>
 	</div>

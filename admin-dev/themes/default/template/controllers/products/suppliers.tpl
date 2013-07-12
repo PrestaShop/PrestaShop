@@ -35,60 +35,62 @@
 	</div>
 
 	<label>{l s='Please choose the suppliers associated with this product. Please select a default supplier, as well.'}</label>
-	<a class="button bt-icon confirm_leave" href="{$link->getAdminLink('AdminSuppliers')|escape:'htmlall':'UTF-8'}&addsupplier">
-		<img src="../img/admin/add.gif" alt="{l s='Create a new supplier'}" title="{l s='Create a new supplier'}" /><span>{l s='Create a new supplier'}</span>
-	</a>
+
 
 	<table class="table">
-		<tbody>
+		<thead>
 			<tr>
-				<td valign="top" style="text-align:left;vertical-align:top;">
-					<table class="table" cellpadding="0" cellspacing="0" style="width:50%;">
-						<thead>
-							<tr>
-								<th>{l s='Selected'}</th>
-								<th>{l s='Supplier Name'}</th>
-								<th>{l s='Default'}</th>
-							</tr>
-						</thead>
-						<tbody>
-						{foreach from=$suppliers item=supplier}
-							<tr>
-								<td><input type="checkbox" class="supplierCheckBox" name="check_supplier_{$supplier['id_supplier']}" {if $supplier['is_selected'] == true}checked="checked"{/if} value="{$supplier['id_supplier']}" /></td>
-								<td>{$supplier['name']}</td>
-								<td><input type="radio" id="default_supplier_{$supplier['id_supplier']}" name="default_supplier" value="{$supplier['id_supplier']}" {if $supplier['is_selected'] == false}disabled="disabled"{/if} {if $supplier['is_default'] == true}checked="checked"{/if} /></td>
-							</tr>
-						{/foreach}
-						</tbody>
-					</table>
-				</td>
+				<th>{l s='Selected'}</th>
+				<th>{l s='Supplier Name'}</th>
+				<th>{l s='Default'}</th>
 			</tr>
+		</thead>
+		<tbody>
+		{foreach from=$suppliers item=supplier}
+			<tr>
+				<td><input type="checkbox" class="supplierCheckBox" name="check_supplier_{$supplier['id_supplier']}" {if $supplier['is_selected'] == true}checked="checked"{/if} value="{$supplier['id_supplier']}" /></td>
+				<td>{$supplier['name']}</td>
+				<td><input type="radio" id="default_supplier_{$supplier['id_supplier']}" name="default_supplier" value="{$supplier['id_supplier']}" {if $supplier['is_selected'] == false}disabled="disabled"{/if} {if $supplier['is_default'] == true}checked="checked"{/if} /></td>
+			</tr>
+		{/foreach}
 		</tbody>
 	</table>
-	<p>&nbsp;</p>
-					<h4>{l s='Product reference(s)'}</h4>
-	<div class="separation"></div>
-	{if $associated_suppliers|@count == 0}
-		<p>{l s='You must specify the suppliers associated with this product. You must also select the default product supplier before setting references.'}</p>
-	{else}
-		<p>{l s='You can specify product reference(s) for each associated supplier.'}</p>
-	{/if}
-	<p>{l s='Click "Save and Stay" after changing selected suppliers to display the associated product references.'}</p>
-	<div id="suppliers_accordion" style="margin-top:10px; display:block;">
-		{foreach from=$associated_suppliers item=supplier}
-		    <h3 style="margin-bottom:0;"><a href="#">{$supplier->name}</a></h3>
-		    <div style="display:block;">
 
-				<table cellpadding="10" cellspacing="0" class="table">
+
+	<a class="btn btn-link bt-icon confirm_leave" href="{$link->getAdminLink('AdminSuppliers')|escape:'htmlall':'UTF-8'}&addsupplier">
+		<i class="icon-plus"></i> {l s='Create a new supplier'} <i class="icon-external-link-sign"></i>
+	</a>
+
+	<legend>{l s='Product reference(s)'}</legend>
+
+	<div class="alert alert-info">
+		{if $associated_suppliers|@count == 0}
+			{l s='You must specify the suppliers associated with this product. You must also select the default product supplier before setting references.'}
+		{else}
+			{l s='You can specify product reference(s) for each associated supplier.'}
+		{/if}
+		{l s='Click "Save and Stay" after changing selected suppliers to display the associated product references.'}
+	</div>
+
+	<div id="suppliers_accordion">
+		{foreach from=$associated_suppliers item=supplier}
+		    <h3>
+		    	<a href="#">{$supplier->name}</a>
+		    </h3>
+
+		    <div>
+
+				<table class="table">
 
 					<thead>
 						<tr>
 							<th>{l s='Product name'}</th>
-							<th width="150">{l s='Supplier reference'}</th>
-							<th width="150">{l s='Unit price tax excluded'}</th>
-							<th width="150">{l s='Unit price currency'}</th>
+							<th>{l s='Supplier reference'}</th>
+							<th>{l s='Unit price tax excluded'}</th>
+							<th>{l s='Unit price currency'}</th>
 						</tr>
 					</thead>
+
 					<tbody>
 					{foreach $attributes AS $index => $attribute}
 						{assign var=reference value=''}
