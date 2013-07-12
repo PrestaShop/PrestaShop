@@ -42,8 +42,9 @@ class InstallSession
 
 	public function __construct()
 	{
-		session_name('install_'.md5(__PS_BASE_URI__));
-		if (!($session_started = session_start())
+		session_name('install_'.md5($_SERVER['HTTP_HOST']));
+		$session_started = session_start();
+		if (!($session_started)
 			|| (!isset($_SESSION['session_mode']) && (isset($_POST['submitNext']) || isset($_POST['submitPrevious']) || isset($_POST['language']))))
 		{
 			InstallSession::$_cookie_mode = true;

@@ -696,7 +696,7 @@ class HomeSlider extends Module
 			color:#000;
 		}
 		</style>
-		<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery-ui.will.be.removed.in.1.6.js"></script>
+		
 		<script type="text/javascript">
 			$(function() {
 				var $mySlides = $("#slides");

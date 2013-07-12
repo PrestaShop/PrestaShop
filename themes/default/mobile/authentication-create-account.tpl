@@ -1,4 +1,4 @@
-<form action="{$link->getPageLink('authentication', true)|escape:'html'}" method="post" id="account-creation_form" class="std">
+<form action="{$link->getPageLink('authentication', true)|escape:'html'}" method="post" id="account-creation_form" class="std" data-ajax="false">
 	{$HOOK_CREATE_ACCOUNT_TOP}
 	<fieldset class="account_creation">
 		<h3>{l s='Your personal information'}</h3>
@@ -132,6 +132,7 @@
 					<span class="inline-infos">{l s='Apartment, suite, unit, building, floor, etc...'}</span>
 				</p>
 			{elseif $field_name eq "postcode"}
+				{assign var='postCodeExist' value=true}
 				<p class="required postcode text">
 					<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
 					<input type="text" class="text" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
@@ -165,14 +166,20 @@
 				</p>
 			{/if}
 		{/foreach}
+		{if $postCodeExist eq false}
+				<p class="required postcode text hidden">
+					<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
+					<input type="text" class="text" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
+				</p>
+		{/if}		
 		{if $stateExist eq false}
-			<p class="required id_state select">
+			<p class="required id_state select hidden">
 				<label for="id_state">{l s='State'} <sup>*</sup></label>
 				<select name="id_state" id="id_state">
 					<option value="">-</option>
 				</select>
 			</p>
-		{/if}
+		{/if}		
 		<p class="textarea">
 			<label for="other">{l s='Additional information'}</label>
 			<textarea name="other" id="other" cols="26" rows="3">{if isset($smarty.post.other)}{$smarty.post.other}{/if}</textarea>

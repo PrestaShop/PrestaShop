@@ -78,6 +78,7 @@ $(document).ready(function() {
 {if !isset($back) || $back != 'my-account'}{assign var='current_step' value='login'}{include file="$tpl_dir./order-steps.tpl"}{/if} 
 {include file="$tpl_dir./errors.tpl"}
 {assign var='stateExist' value=false}
+{assign var="postCodeExist" value=false}
 {if !isset($email_create)}
 	<script type="text/javascript">
 	{literal}
@@ -287,6 +288,7 @@ $(document).ready(function() {
 							<input type="text" class="text" name="address1" id="address1" value="{if isset($smarty.post.address1)}{$smarty.post.address1}{/if}" />
 						</p>
 						{elseif $field_name eq "postcode"}
+						{assign var='postCodeExist' value=true}
 						<p class="required postcode text">
 							<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
 							<input type="text" class="text" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onblur="$('#postcode').val($('#postcode').val().toUpperCase());" />
@@ -312,7 +314,6 @@ $(document).ready(function() {
 						</p>
 						{elseif $field_name eq "State:name"}
 						{assign var='stateExist' value=true}
-
 						<p class="required id_state select">
 							<label for="id_state">{l s='State'} <sup>*</sup></label>
 							<select name="id_state" id="id_state">
@@ -327,13 +328,19 @@ $(document).ready(function() {
 					{/if}
 				{/foreach}
 				{if $stateExist eq false}
-					<p class="required id_state select">
+					<p class="required id_state select hidden">
 						<label for="id_state">{l s='State'} <sup>*</sup></label>
 						<select name="id_state" id="id_state">
 							<option value="">-</option>
 						</select>
 					</p>
 				{/if}
+				{if $postCodeExist eq false}
+					<p class="required postcode text hidden">
+						<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
+						<input type="text" class="text" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onblur="$('#postcode').val($('#postcode').val().toUpperCase());" />
+					</p>
+				{/if}				
 				<input type="hidden" name="alias" id="alias" value="{l s='My address'}" />
 				<input type="hidden" name="is_new_customer" id="is_new_customer" value="0" />
 				<!-- END Account -->
@@ -506,6 +513,7 @@ $(document).ready(function() {
 					<span class="inline-infos">{l s='Apartment, suite, unit, building, floor, etc...'}</span>
 				</p>
 			{elseif $field_name eq "postcode"}
+			{assign var='postCodeExist' value=true}
 				<p class="required postcode text">
 					<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
 					<input type="text" class="text" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
@@ -539,8 +547,14 @@ $(document).ready(function() {
 				</p>
 			{/if}
 		{/foreach}
+		{if $postCodeExist eq false}
+			<p class="required postcode text hidden">
+				<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
+				<input type="text" class="text" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
+			</p>
+		{/if}		
 		{if $stateExist eq false}
-			<p class="required id_state select">
+			<p class="required id_state select hidden">
 				<label for="id_state">{l s='State'} <sup>*</sup></label>
 				<select name="id_state" id="id_state">
 					<option value="">-</option>

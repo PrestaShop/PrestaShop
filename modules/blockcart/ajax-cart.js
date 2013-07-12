@@ -348,11 +348,13 @@ var ajaxCart = {
 				});
 			});
 		}
-		var removeLinks = $('#cart_block_product_' + domIdProduct).find('a.ajax_cart_block_remove_link');
+		var removeLinks = $('#cart_block_product_' + domIdProduct).find('.ajax_cart_block_remove_link');
 		if (!product.hasCustomizedDatas && !removeLinks.length)
-			$('#' + domIdProduct + ' span.remove_link').html('<a class="ajax_cart_block_remove_link" rel="nofollow" href="' + baseUri + '?controller=cart&amp;delete=1&amp;id_product=' + product['id'] + '&amp;ipa=' + product['idCombination'] + '&amp;token=' + static_token + '"> </a>');
+		{
+			$('#cart_block_product_' + domIdProduct + ' span.remove_link').html('<a class="ajax_cart_block_remove_link" rel="nofollow" href="' + baseUri + '?controller=cart&amp;delete=1&amp;id_product=' + product['id'] + '&amp;ipa=' + product['idCombination'] + '&amp;token=' + static_token + '"> </a>');
+		}
 		if (product.is_gift)
-			$('#' + domIdProduct + ' span.remove_link').html('');
+			$('#cart_block_product_' + domIdProduct + ' span.remove_link').html('');
 	},
 
 	doesCustomizationStillExist : function (product, customizationId)
@@ -446,7 +448,7 @@ var ajaxCart = {
 					var name = (this.name.length > 12 ? this.name.substring(0, 10) + '...' : this.name);
 					content += '<a href="' + this.link + '" title="' + this.name + '" class="cart_block_product_name">' + name + '</a>';
 
-					if (parseFloat(this.price_float) > 0)
+					if (this.is_gift != undefined && this.is_gift == 1)
 						content += '<span class="remove_link"><a rel="nofollow" class="ajax_cart_block_remove_link" href="' + baseUri + '?controller=cart&amp;delete=1&amp;id_product=' + productId + '&amp;token=' + static_token + (this.hasAttributes ? '&amp;ipa=' + parseInt(this.idCombination) : '') + '"> </a></span>';
 					else
 						content += '<span class="remove_link"></span>';
@@ -568,10 +570,10 @@ var ajaxCart = {
 		if (jsonData.hasError)
 		{
 			var errors = '';
-			for(error in jsonData.errors)
+			for (error in jsonData.errors)
 				//IE6 bug fix
-				if(error != 'indexOf')
-					errors += jsonData.errors[error] + "\n";
+				if (error != 'indexOf')
+					errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
 			alert(errors);
 		}
 		else

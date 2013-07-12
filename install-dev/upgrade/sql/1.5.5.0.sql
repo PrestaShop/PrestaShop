@@ -15,5 +15,9 @@ CHANGE `module_name` `module_name` VARCHAR(64) NULL DEFAULT NULL;
 /* PHP:add_module_to_hook(blocksupplier, actionObjectSupplierAddAfter); */;
 /* PHP:add_module_to_hook(blocksupplier, actionObjectSupplierUpdateAfter); */;
 /* PHP:fix_download_product_feature_active(); */;
+/* PHP:add_module_to_hook(blockmyaccount, actionModuleRegisterHookAfter); */;
+/* PHP:add_module_to_hook(blockmyaccountfooter, actionModuleRegisterHookAfter); */;
+/* PHP:add_module_to_hook(blockmyaccount, actionModuleUnRegisterHookAfter); */;
+/* PHP:add_module_to_hook(blockmyaccountfooter, actionModuleUnRegisterHookAfter); */;
 
-
+ALTER TABLE `PREFIX_log` ADD `id_employee` INT(10) UNSIGNED NULL AFTER `object_id`;

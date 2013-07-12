@@ -85,11 +85,7 @@ class AuthControllerCore extends FrontController
 
 		$this->assignCountries();
 
-		$active_module_newsletter = false;
-		if ($module_newsletter = Module::getInstanceByName('blocknewsletter'))
-			$active_module_newsletter = $module_newsletter->active;
-
-		$this->context->smarty->assign('newsletter', (int)$active_module_newsletter);
+		$this->context->smarty->assign('newsletter', 1);
 
 		$back = Tools::getValue('back');
 		$key = Tools::safeOutput(Tools::getValue('key'));
@@ -403,8 +399,8 @@ class AuthControllerCore extends FrontController
 				if (!Tools::getValue('phone') && !Tools::getValue('phone_mobile'))
 					$error_phone = true;
 			}
-			elseif (((Configuration::get('PS_REGISTRATION_PROCESS_TYPE') || Configuration::get('PS_ORDER_PROCESS_TYPE')) 
-					&& (Configuration::get('PS_ORDER_PROCESS_TYPE') && !Tools::getValue('email_create')))
+			elseif (((Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && Configuration::get('PS_ORDER_PROCESS_TYPE')) 
+					|| (Configuration::get('PS_ORDER_PROCESS_TYPE') && !Tools::getValue('email_create')))
 					&& (!Tools::getValue('phone') && !Tools::getValue('phone_mobile')))
 				$error_phone = true;
 			elseif (((Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && Configuration::get('PS_ORDER_PROCESS_TYPE') && Tools::getValue('email_create')))
@@ -414,11 +410,11 @@ class AuthControllerCore extends FrontController
 
 		if ($error_phone)
 			$this->errors[] = Tools::displayError('You must register at least one phone number.');
-		
+
 		$this->errors = array_unique(array_merge($this->errors, $customer->validateController()));
 
 		// Check the requires fields which are settings in the BO
-		$this->errors = array_merge($this->errors, $customer->validateFieldsRequiredDatabase());
+		$this->errors = $this->errors + $customer->validateFieldsRequiredDatabase();
 
 		if (!Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && !$this->ajax && !Tools::isSubmit('submitGuestAccount'))
 		{

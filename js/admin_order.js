@@ -268,6 +268,10 @@ function updateAmounts(order)
 		$(this).html(old_quantity + 1);
 		$(this).fadeIn('slow');
 	});
+	$('#shipping_table .weight').fadeOut('slow', function() {
+		$(this).html(order.weight);
+		$(this).fadeIn('slow');
+	});
 }
 
 function closeAddProduct()
@@ -324,8 +328,9 @@ function init()
 			},
 			parse: function(data) {
 				var products = new Array();
-				for (var i = 0; i < data.products.length; i++)
-					products[i] = { data: data.products[i], value: data.products[i].name };
+				if (typeof(data.products) != 'undefined')
+					for (var i = 0; i < data.products.length; i++)
+						products[i] = { data: data.products[i], value: data.products[i].name };
 				return products;
 			},
 			extraParams: {
@@ -469,8 +474,7 @@ function init()
 					cache: false,
 					dataType: 'json',
 					data : query,
-					success : function(data)
-					{
+					success : function(data) {
 						if (data.result)
 						{
 							go = false;
@@ -490,8 +494,7 @@ function init()
 						else
 							jAlert(data.error);
 					},
-					error : function(XMLHttpRequest, textStatus, errorThrown)
-					{
+					error : function(XMLHttpRequest, textStatus, errorThrown) {
 						jAlert("Impossible to add the product to the cart.\n\ntextStatus: '" + textStatus + "'\nerrorThrown: '" + errorThrown + "'\nresponseText:\n" + XMLHttpRequest.responseText);
 					}
 				});

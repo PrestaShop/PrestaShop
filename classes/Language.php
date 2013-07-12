@@ -273,7 +273,7 @@ class LanguageCore extends ObjectModel
 			'contact.html', 'contact.txt',
 			'contact_form.html', 'contact_form.txt',
 			'credit_slip.html', 'credit_slip.txt',
-			'download_product.html', 'download_product.txt', 'download-product.tpl',
+			'download_product.html', 'download_product.txt',
 			'employee_password.html', 'employee_password.txt',
 			'forward_msg.html', 'forward_msg.txt',
 			'guest_to_customer.html', 'guest_to_customer.txt',
@@ -704,10 +704,8 @@ class LanguageCore extends ObjectModel
 					$lang->name = $lang_pack->name;
 		}
 		elseif ($params_lang !== null && is_array($params_lang))
-		{
 			foreach ($params_lang as $key => $value)
 				$lang->$key = $value;
-		}
 		else
 			return false;
 		

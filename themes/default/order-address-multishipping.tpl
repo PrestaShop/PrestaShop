@@ -112,7 +112,7 @@
 		dest_comp.html('');
 
 		li_content['title'] = adr_titles_vals[address_type];
-		li_content['update'] = '<a href="{$link->getPageLink('address', true, NULL, "id_address")|escape:'html'}'+id_address+'&amp;back=order?step=1{if $back}&mod={$back}{/if}" title="{l s='Update' js=1}">{l s='Update' js=1}</a>';
+		li_content['update'] = '<a href="{$link->getPageLink('address', true, NULL, "id_address")|addslashes}'+id_address+'&amp;back=order?step=1{if $back}&mod={$back}{/if}" title="{l s='Update' js=1}">{l s='Update' js=1}</a>';
 
 		appendAddressList(dest_comp, li_content, ordered_fields_name);
 	}

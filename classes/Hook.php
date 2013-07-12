@@ -129,6 +129,22 @@ class HookCore extends ObjectModel
 	}
 
 	/**
+	 * Return hook ID from name
+	 */
+	public static function getNameById($hook_id)
+	{
+		$cache_id = 'hook_namebyid_'.$hook_id;
+		if (!Cache::isStored($cache_id))
+			Cache::store($cache_id, Db::getInstance()->getValue('
+				SELECT `name`
+				FROM `'._DB_PREFIX_.'hook`
+				WHERE `id_hook` = '.(int)$hook_id)
+			);
+
+		return Cache::retrieve($cache_id);
+	}
+
+	/**
 	 * Get list of hook alias
 	 *
 	 * @since 1.5.0

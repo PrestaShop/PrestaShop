@@ -96,7 +96,7 @@
     <access id="access_2_85" id_profile="Administrator" id_tab="Webservice" view="1" add="1" edit="1" delete="1"/>
     <access id="access_2_86" id_profile="Administrator" id_tab="Preferences_1" view="1" add="1" edit="1" delete="1"/>
     <access id="access_2_87" id_profile="Administrator" id_tab="Quick_Access" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_2_88" id_profile="Administrator" id_tab="Employees" view="1" add="1" edit="1" delete="1"/>
+    <access id="access_2_88" id_profile="Administrator" id_tab="Employees" view="1" add="0" edit="0" delete="0"/>
     <access id="access_2_89" id_profile="Administrator" id_tab="Profiles" view="1" add="1" edit="1" delete="1"/>
     <access id="access_2_90" id_profile="Administrator" id_tab="Permissions" view="1" add="1" edit="1" delete="1"/>
     <access id="access_2_91" id_profile="Administrator" id_tab="Tabs" view="1" add="1" edit="1" delete="1"/>

@@ -175,9 +175,9 @@ class PSCleaner extends Module
 			array('delivery', 'id_carrier', 'carrier', 'id_carrier'),
 			array('delivery', 'id_zone', 'zone', 'id_zone'),
 			array('editorial', 'id_shop', 'shop', 'id_shop', 'editorial'),
-			array('favorite_product', 'id_product', 'product', 'id_product'),
-			array('favorite_product', 'id_customer', 'customer', 'id_customer'),
-			array('favorite_product', 'id_shop', 'shop', 'id_shop'),
+			array('favorite_product', 'id_product', 'product', 'id_product','favoriteproducts'),
+			array('favorite_product', 'id_customer', 'customer', 'id_customer','favoriteproducts'),
+			array('favorite_product', 'id_shop', 'shop', 'id_shop','favoriteproducts'),
 			array('feature_product', 'id_feature', 'feature', 'id_feature'),
 			array('feature_product', 'id_product', 'product', 'id_product'),
 			array('feature_value', 'id_feature', 'feature', 'id_feature'),
@@ -487,6 +487,8 @@ class PSCleaner extends Module
 				foreach ($tables as $table)
 					$db->execute('TRUNCATE TABLE `'._DB_PREFIX_.bqSQL($table).'`');
 				$db->execute('DELETE FROM `'._DB_PREFIX_.'address` WHERE id_customer > 0');
+				$db->execute('UPDATE `'._DB_PREFIX_.'employee` SET `id_last_order` = 0,`id_last_customer_message` = 0,`id_last_customer` = 0');
+
 				break;
 		}
 		$this->clearAllCaches();

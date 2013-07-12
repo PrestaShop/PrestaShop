@@ -170,6 +170,7 @@ class ContactControllerCore extends FrontController
 									'{attached_file}' => '-',
 									'{message}' => Tools::nl2br(stripslashes($message)),
 									'{email}' =>  $from,
+									'{product_name}' => '',
 								);
 
 					if (isset($filename))
@@ -177,14 +178,10 @@ class ContactControllerCore extends FrontController
 
 					$id_order = (int)Tools::getValue('id_order');
 					
-					if (isset($ct) && Validate::isLoadedObject($ct))
-					{
-						if ($ct->id_order)
-							$id_order = $ct->id_order;
-						$subject = sprintf(Mail::l('Your message has been correctly sent #ct%1$s #tc%2$s'), $ct->id, $ct->token);
-					}
-					else
-						$subject = Mail::l('Your message has been correctly sent');
+					$id_product = (int)Tools::getValue('id_product');
+					
+					if (isset($ct) && Validate::isLoadedObject($ct) && $ct->id_order)
+						$id_order = $ct->id_order;
 
 					if ($id_order)
 					{
@@ -193,14 +190,25 @@ class ContactControllerCore extends FrontController
 						$var_list['{id_order}'] = $id_order;
 					}
 					
+					if ($id_product)
+					{
+						$product = new Product((int)$id_product);
+						if (Validate::isLoadedObject($product) && isset($product->name[Context::getContext()->language->id]))
+							$var_list['{product_name}'] = $product->name[Context::getContext()->language->id];
+					}
+
+					
+					
+					
+					
 					if (empty($contact->email))
-						Mail::Send($this->context->language->id, 'contact_form', $subject, $var_list, $from, null, null, null, $fileAttachment);
+						Mail::Send($this->context->language->id, 'contact_form', ((isset($ct) && Validate::isLoadedObject($ct)) ? sprintf(Mail::l('Your message has been correctly sent #ct%1$s #tc%2$s'), $ct->id, $ct->token) : Mail::l('Your message has been correctly sent')), $var_list, $from, null, null, null, $fileAttachment);
 					else
 					{					
 						if (!Mail::Send($this->context->language->id, 'contact', Mail::l('Message from contact form').' [no_sync]',
 							$var_list, $contact->email, $contact->name, $from, ($customer->id ? $customer->firstname.' '.$customer->lastname : ''),
 									$fileAttachment) ||
-								!Mail::Send($this->context->language->id, 'contact_form', $subject, $var_list, $from, null, $contact->email, $contact->name, $fileAttachment))
+								!Mail::Send($this->context->language->id, 'contact_form', ((isset($ct) && Validate::isLoadedObject($ct)) ? sprintf(Mail::l('Your message has been correctly sent #ct%1$s #tc%2$s'), $ct->id, $ct->token) : Mail::l('Your message has been correctly sent')), $var_list, $from, null, $contact->email, $contact->name, $fileAttachment))
 									$this->errors[] = Tools::displayError('An error occurred while sending the message.');
 					}
 				}

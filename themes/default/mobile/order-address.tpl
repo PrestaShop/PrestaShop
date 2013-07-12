@@ -16,8 +16,8 @@
 	var txtProducts = "{l s='products' js=1}";
 	{/if}
 	
-	var addressMultishippingUrl = "{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{'&multi-shipping=1'|urlencode}{if $back}&mod={$back|urlencode}{/if}")|escape:'html'}";
-	var addressUrl = "{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{if $back}&mod={$back}{/if}")|escape:'html'}";
+	var addressMultishippingUrl = "{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{'&multi-shipping=1'|urlencode}{if $back}&mod={$back|urlencode}{/if}")|addslashes}";
+	var addressUrl = "{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{if $back}&mod={$back|urlencode}{/if}")|addslashes}";
 
 	var formatedAddressFieldsValuesList = new Array();
 
@@ -59,7 +59,7 @@
 		dest_comp.html('');
 
 		li_content['title'] = adr_titles_vals[address_type];
-		li_content['update'] = '<a href="{$link->getPageLink('address', true, NULL, "id_address")|escape:'html'}'+id_address+'&amp;back={$back_order_page}?step=1{if $back}&mod={$back}{/if}" title="{l s='Update' js=1}" style="font-size:.9em;font-weight:normal;padding:8px 0;display:block;text-align:right">&raquo; {l s='Update' js=1}</a>';
+		li_content['update'] = '<a href="{$link->getPageLink('address', true, NULL, "id_address")|addslashes}'+id_address+'&amp;back={$back_order_page}?step=1{if $back}&mod={$back}{/if}" title="{l s='Update' js=1}" style="font-size:.9em;font-weight:normal;padding:8px 0;display:block;text-align:right">&raquo; {l s='Update' js=1}</a>';
 
 		appendAddressList(dest_comp, li_content, ordered_fields_name);
 	}

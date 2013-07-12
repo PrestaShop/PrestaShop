@@ -165,19 +165,22 @@ class AdminTabsControllerCore extends AdminController
 				'class' => 'button'
 			)
 		);
-		
-		if (!Validate::isLoadedObject($this->object) || $this->object->id_parent > 0)
-		
-		$this->fields_form['input'][] = array(
-			'type' => 'select',
-			'label' => $this->l('Parent:'),
-			'name' => 'id_parent',
-			'options' => array(
-				'query' => $tabs,
-				'id' => 'id_tab',
-				'name' => 'name'
-			)
-		);
+
+		$display_parent = true;
+		if (Validate::isLoadedObject($this->object) && !class_exists($this->object->class_name.'Controller'))
+			$display_parent = false;
+
+		if ($display_parent)
+			$this->fields_form['input'][] = array(
+				'type' => 'select',
+				'label' => $this->l('Parent:'),
+				'name' => 'id_parent',
+				'options' => array(
+					'query' => $tabs,
+					'id' => 'id_tab',
+					'name' => 'name'
+				)
+			);
 
 		return parent::renderForm();
 	}
