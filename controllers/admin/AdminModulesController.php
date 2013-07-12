@@ -1107,7 +1107,6 @@ class AdminModulesControllerCore extends AdminController
 		}
 		if (count($module_success))
 		{
-			die ('kik');
 			$html = $this->generateHtmlMessage($module_success);
 			$this->confirmations[] = sprintf($this->l('The following module(s) were upgraded successfully:').' %s', $html);
 		}
