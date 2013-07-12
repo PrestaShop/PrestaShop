@@ -24,6 +24,18 @@
 *}
 
 {if count($modules)}
+	<div class="row-fluid">
+		<span class="pull-right">
+			<button type="button" class="btn btn-default" onclick="modules_management('install')">
+				<i class="icon-plus-sign-alt"></i>
+				{l s='Install the selection'}
+			</button>
+			<button type="button" class="btn btn-default" onclick="modules_management('uninstall')">
+				<i class="icon-minus-sign-alt"></i>
+				{l s='Uninstall the selection'}
+			</button>
+		</span>
+	</div>
 	<table cellspacing="0" cellpadding="0" class="table table-striped table-hover">
 		<thead>
 			<tr class="nodrag nodrop">
@@ -84,7 +96,7 @@
 						<div class="row-fluid">
 							{if !isset($module->not_on_disk)}
 								{$module->optionsHtml}
-								{if isset($module->preferences) && $module->preferences['favorite'] == 1}
+								{if isset($module->preferences) && isset($module->preferences['favorite']) && $module->preferences['favorite'] == 1}
 									<a class="btn btn-default btn-small action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#">
 										<i class="icon-star"></i> {l s='Remove from Favorites'}
 									</a>
@@ -152,9 +164,17 @@
 		</tbody>
 	</table>
 
-	<div style="margin-top: 12px;">
-		<input type="button" class="button big" value="{l s='Install the selection'}" onclick="modules_management('install')"/>
-		<input type="button" class="button big" value="{l s='Uninstall the selection'}" onclick="modules_management('uninstall')" />
+	<div class="row-fluid">
+		<span class="pull-right">
+			<button type="button" class="btn btn-default" onclick="modules_management('install')">
+				<i class="icon-plus-sign-alt"></i>
+				{l s='Install the selection'}
+			</button>
+			<button type="button" class="btn btn-default" onclick="modules_management('uninstall')">
+				<i class="icon-minus-sign-alt"></i>
+				{l s='Uninstall the selection'}
+			</button>
+		</span>
 	</div>
 {else}
 	<p class="help-block">{l s='No modules available in this section.'}</p>
