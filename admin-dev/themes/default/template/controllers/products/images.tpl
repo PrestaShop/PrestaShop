@@ -25,38 +25,46 @@
 
 {if isset($id_product) && isset($product)}
 	<input type="hidden" name="submitted_tabs[]" value="Images" />
-	<h4 class="tab" >2. {l s='Images'} (<span id="countImage">{$countImages}</span>)</h4>
-	<h4>{if isset($id_image)}{l s='Edit this product image'}{else}{l s='Add a new image to this product'}{/if}</h4>	<div class="separation"></div><br />
+	
+	<legend class="tab" >
+		{l s='Images'}
+		<span class="badge" id="countImage">{$countImages}</span>
+	</legend>
 
-	<table cellpadding="5" style="width:100%">
-		<tr>
-			<td class="col-left"><label class="file_upload_label">{l s='File:'}</label></td>
-			<td style="padding-bottom:5px;">
-				<div id="file-uploader">
-					<noscript>
-						<p>{l s='Please enable JavaScript to use file uploader:'}</p>
-					</noscript>
-				</div>
-				<div id="progressBarImage" class="progressBarImage"></div>
-				<div id="showCounter" style="display:none;"><span id="imageUpload">0</span><span id="imageTotal">0</span></div>
-					<p class="preference_description" style="clear: both;">
-						{l s='Format:'} JPG, GIF, PNG. {l s='Filesize:'} {$max_image_size|string_format:"%.2f"} {l s='MB max.'}
-					</p>
-			</td>
-		</tr>
-		<tr>
-			<td colspan="2" style="text-align:center;">
-				<input type="hidden" name="resizer" value="auto" />
-					{if Tools::getValue('id_image')}<input type="hidden" name="id_image" value="{Tools::getValue('id_image')|intval}" />{/if}
-			</td>
-		</tr>
-		<tr><td colspan="2" style="padding-bottom:10px;"><div class="separation"></div></td></tr>
-		<tr>
-			<td colspan="2">
-				<table cellspacing="0" cellpadding="0" class="table tableDnD" id="imageTable">
+	
+
+	<div class="row">
+		<label class="control-label col-lg-3 file_upload_label">
+			<span class="label-tooltip" data-toggle="tooltip"
+				title="{l s='Format:'} JPG, GIF, PNG. {l s='Filesize:'} {$max_image_size|string_format:"%.2f"} {l s='MB max.'}">
+				{if isset($id_image)}{l s='Edit this product image'}{else}{l s='Add a new image to this product'}{/if}
+			</span>
+		</label>
+		<div class="col-lg-5">
+			{l s='File:'}
+			<div id="file-uploader">
+				<noscript>
+					<p>{l s='Please enable JavaScript to use file uploader:'}</p>
+				</noscript>
+			</div>
+			<div id="progressBarImage" class="progressBarImage"></div>
+			<div id="showCounter" style="display:none;">
+				<span id="imageUpload">0</span><span id="imageTotal">0</span>
+			</div>
+			<input type="hidden" name="resizer" value="auto" />
+		{if Tools::getValue('id_image')}
+			<input type="hidden" name="id_image" value="{Tools::getValue('id_image')|intval}" />
+		{/if}
+		</div>
+	</div>
+
+	
+
+
+				<table class="table tableDnD" id="imageTable">
 						<thead>
 						<tr class="nodrag nodrop"> 
-							<th style="width: 100px;">{l s='Image'}</th>
+							<th>{l s='Image'}</th>
 							<th>{l s='Position'}</th>
 							{if $shops}
 							{foreach from=$shops item=shop}
@@ -70,9 +78,8 @@
 						<tbody id="imageList">
 						</tbody>
 				</table>
-			</td>
-		</tr>
-	</table>
+
+
 
 	<table id="lineType" style="display:none;">
 		<tr id="image_id">
@@ -95,8 +102,8 @@
 				<img class="covered" src="../img/admin/blank.gif" alt="e" /></a>
 			</td>
 			<td class="center">
-				<a href="#" class="delete_product_image" >
-					<img src="../img/admin/delete.gif" alt="{l s='Delete this image'}" title="{l s='Delete this image'}" />
+				<a href="#" class="btn btn-default delete_product_image" >
+					<i class="icon-trash"></i> {l s='Delete this image'}
 				</a>
 			</td>
 		</tr>

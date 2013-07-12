@@ -127,7 +127,8 @@
 	{/if}
 	
 	<table 
-		class="table table-striped table-bordered table-hover"
+		class="table table-striped table-hover"
+		name="list_table"
 		{if $table_id} id={$table_id}{/if}
 		class="table {if $table_dnd}tableDnD{/if} {$table}"
 		cellpadding="0" cellspacing="0">
