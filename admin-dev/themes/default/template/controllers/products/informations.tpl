@@ -194,6 +194,7 @@
 	</div>
 </div>
 
+
 <div class="row redirect_product_options" style="display:none">
 	{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
 	<label class="control-label col-lg-3">{l s='Redirect:'}</label>
@@ -203,19 +204,20 @@
 			<option value="301" {if $product->redirect_type == '301'} selected="selected" {/if}>{l s='Redirect permanently (301)'}</option>
 			<option value="302" {if $product->redirect_type == '302'} selected="selected" {/if}>{l s='Redirect temporarily (302)'}</option>
 		</select>
-		<div class="help-block" name="help_box">
-			<ul class="list-unstyled">
-				<li>{l s='404 : Not Found = Product does not exist and no redirect'}</li>
-				<li>{l s='301 : Moved Permanently = Product Moved Permanently'}</li>
-				<li>{l s='302 : Moved Temporarily = Product moved temporarily'}</li>
-			</ul>
-		</div>
+	</div>
+</div>
+<div class="row redirect_product_options" style="display:none">
+	<div class="col-lg-9 col-offset-3">
+		<div class="alert alert-info">
+			{l s='404 : Not Found = Product does not exist and no redirect'}<br/>
+			{l s='301 : Moved Permanently = Product Moved Permanently'}<br/>
+			{l s='302 : Moved Temporarily = Product moved temporarily'}
+		</div>	
 	</div>
 </div>
 
 <div class="row redirect_product_options redirect_product_options_product_choise" style="display:none">
 	{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
-	
 	<label class="control-label col-lg-3">{l s='Related product:'}</label>
 	<div class="col-lg-5">
 		<input type="hidden" value="" name="id_product_redirected" />
@@ -234,9 +236,6 @@
 	</script>
 </div>
 
-
-
-
 <div class="row">
 	{include file="controllers/products/multishop/checkbox.tpl" field="visibility" type="default"}
 	<label class="control-label col-lg-3">{l s='Visibility:'}</label>
@@ -249,7 +248,6 @@
 		</select>
 	</div>
 </div>
-
 
 <div id="product_options" class="row" {if !$product->active}style="display:none"{/if} >
 	<div class="col-lg-12">
@@ -388,8 +386,6 @@
 </div>
 {/if}
 
-
-
 <div class="row">
 	<label class="control-label col-lg-3">
 		<span class="label-tooltip" data-toggle="tooltip"
@@ -397,7 +393,7 @@
 			{l s='Tags:'}
 		</span>
 	</label>
-	<div class="col-lg-5 translatable">
+	<div class="col-lg-8 translatable">
 		{foreach from=$languages item=language}
 		<div class="lang_{$language.id_lang}" style="{if !$language.is_default}display: none;{/if}">
 			<input type="text" id="tags_{$language.id_lang}" name="tags_{$language.id_lang}"
