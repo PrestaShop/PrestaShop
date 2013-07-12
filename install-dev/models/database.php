@@ -38,7 +38,7 @@ class InstallModelDatabase extends InstallAbstractModel
 	 * @param bool $clear
 	 * @return array List of errors
 	 */
-	public function testDatabaseSettings($server, $database, $login, $password, $prefix, $engine, $clear = false)
+	public function testDatabaseSettings($server, $database, $login, $password, $prefix, $clear = false)
 	{
 		$errors = array();
 
@@ -55,14 +55,11 @@ class InstallModelDatabase extends InstallAbstractModel
 		if ($prefix && !Validate::isTablePrefix($prefix))
 			$errors[] = $this->language->l('Tables prefix is invalid');
 
-		if (!Validate::isMySQLEngine($engine))
-			$errors[] = $this->language->l('Wrong engine chosen for MySQL');
-
 		if (!$errors)
 		{
 			$dbtype = ' ('.Db::getClass().')';
 			// Try to connect to database
-			switch (Db::checkConnection($server, $login, $password, $database, true, $engine))
+			switch (Db::checkConnection($server, $login, $password, $database, true))
 			{
 				case 0:
 					if (!Db::checkEncoding($server, $login, $password))
@@ -71,28 +68,43 @@ class InstallModelDatabase extends InstallAbstractModel
 					// Check if a table with same prefix already exists
 					if (!$clear && Db::hasTableWithSamePrefix($server, $login, $password, $database, $prefix))
 						$errors[] = $this->language->l('At least one table with same prefix was already found, please change your prefix or drop your database');
-					if (($create_error = Db::checkCreatePrivilege($server, $login, $password, $database, $prefix, $engine)) !== true)
+					if (($create_error = Db::checkCreatePrivilege($server, $login, $password, $database, $prefix)) !== true)
 					{
 						$errors[] = $this->language->l(sprintf('Your database login don\'t have the privileges to create table on the database "%s". Ask your hosting provider:', $database));
 						if ($create_error != false)
 							$errors[] = $create_error;
 					}
-				break;
+					break;
 
 				case 1:
 					$errors[] = $this->language->l('Database Server is not found. Please verify the login, password and server fields').$dbtype;
-				break;
+					break;
 
 				case 2:
-					$errors[] = $this->language->l('Connection to MySQL server succeeded, but database "%s" not found', $database).$dbtype;
-				break;
-
-				case 4:
-					$errors[] = $this->language->l('Engine innoDB is not supported by your MySQL server, please use MyISAM').$dbtype;
-				break;
+					$error = $this->language->l('Connection to MySQL server succeeded, but database "%s" not found', $database).$dbtype;
+					if ($this->createDatabase($server, $database, $login, $password, true))
+						$error .= '<p>'.sprintf('<input type="button" value="%s" class="button" id="btCreateDB">', $this->language->l('Attempt to create the database automatically')).'</p>
+						<script type="text/javascript">bindCreateDB();</script>';
+					$errors[] = $error;
+					break;
 			}
 		}
 
 		return $errors;
+	}
+	
+	public function createDatabase($server, $database, $login, $password, $dropit = false)
+	{
+		$class = Db::getClass();
+		return $class::createDatabase($server, $login, $password, $database, $dropit);
+	}
+	
+	public function getBestEngine($server, $database, $login, $password)
+	{
+		$class = Db::getClass();
+		$instance = new $class($server, $login, $password, $database, true);
+		$engine = $instance->getBestEngine();
+		unset($instance);
+		return $engine;
 	}
 }

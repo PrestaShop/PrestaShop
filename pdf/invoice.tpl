@@ -31,8 +31,8 @@
 <!-- ADDRESSES -->
 <table style="width: 100%">
 	<tr>
-		<td style="width: 15%"></td>
-		<td style="width: 85%">
+		<td style="width: 17%"></td>
+		<td style="width: 83%">
 			{if !empty($delivery_address)}
 				<table style="width: 100%">
 					<tr>
@@ -92,12 +92,17 @@
 			{/foreach}
 			</table>
 			<br />
+			{if isset($carrier)}
+			<b>{l s='Carrier:' pdf='true'}</b><br />
+			{$carrier->name}<br />
+			<br />
+			{/if}				
 			<!-- / CUSTOMER INFORMATION -->
 		</td>
-		<td style="width: 85%; text-align: right">
+		<td style="width: 83%; text-align: right">
 			<table style="width: 100%; font-size: 8pt;">
 				<tr style="line-height:4px;">
-					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 45%">{l s='Product / Reference' pdf='true'}</td>
+					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: {if !$tax_excluded_display}35%{else}45%{/if}">{l s='Product / Reference' pdf='true'}</td>
 					<!-- unit price tax excluded is mandatory -->
 					{if !$tax_excluded_display}
 						<td style="background-color: #4D4D4D; color: #FFF; text-align: right; font-weight: bold; width: 20%">{l s='Unit Price' pdf='true'} <br />{l s='(Tax Excl.)' pdf='true'}</td>
@@ -110,7 +115,7 @@
 							 {l s='(Tax Incl.)' pdf='true'}
 						{/if}
 					</td>
-					<td style="background-color: #4D4D4D; color: #FFF; text-align: right; font-weight: bold; width: 10%">{l s='Discount' pdf='true'}</td>
+					<td style="background-color: #4D4D4D; color: #FFF; text-align: right; font-weight: bold; width: 10%; white-space: nowrap;">{l s='Discount' pdf='true'}</td>
 					<td style="background-color: #4D4D4D; color: #FFF; text-align: center; font-weight: bold; width: 10%">{l s='Qty' pdf='true'}</td>
 					<td style="background-color: #4D4D4D; color: #FFF; text-align: right; font-weight: bold; width: {if !$tax_excluded_display}15%{else}25%{/if}">
 						{l s='Total' pdf='true'}
@@ -125,10 +130,10 @@
 				{foreach $order_details as $order_detail}
 				{cycle values='#FFF,#DDD' assign=bgcolor}
 				<tr style="line-height:6px;background-color:{$bgcolor};">
-					<td style="text-align: left; width: 45%">{$order_detail.product_name}</td>
+					<td style="text-align: left; width: {if !$tax_excluded_display}35%{else}45%{/if}">{$order_detail.product_name}</td>
 					<!-- unit price tax excluded is mandatory -->
 					{if !$tax_excluded_display}
-						<td style="text-align: right; width: 10%">
+						<td style="text-align: right; width: 20%">
 						{displayPrice currency=$order->id_currency price=$order_detail.unit_price_tax_excl}
 						</td>
 					{/if}
@@ -149,7 +154,7 @@
 					{/if}
 					</td>
 					<td style="text-align: center; width: 10%">{$order_detail.product_quantity}</td>
-					<td style="width: 15%; text-align: right;  width: {if !$tax_excluded_display}15%{else}25%{/if}">
+					<td style="text-align: right;  width: {if !$tax_excluded_display}15%{else}25%{/if}">
 					{if $tax_excluded_display}
 						{displayPrice currency=$order->id_currency price=$order_detail.total_price_tax_excl}
 					{else}
@@ -160,7 +165,7 @@
 					{foreach $order_detail.customizedDatas as $customizationPerAddress}
 						{foreach $customizationPerAddress as $customizationId => $customization}
 							<tr style="line-height:6px;background-color:{$bgcolor}; ">
-								<td style="line-height:3px; text-align: left; width: 60%; vertical-align: top">
+								<td style="line-height:3px; text-align: left; width: 45%; vertical-align: top">
 
 										<blockquote>
 											{if isset($customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_]) && count($customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_]) > 0}
@@ -178,7 +183,10 @@
 											{/if}
 										</blockquote>
 								</td>
-								<td style="text-align: right; width: 15%"></td>
+								{if !$tax_excluded_display}
+									<td style="text-align: right;"></td>
+								{/if}
+								<td style="text-align: right; width: 10%"></td>
 								<td style="text-align: center; width: 10%; vertical-align: top">({$customization.quantity})</td>
 								<td style="width: 15%; text-align: right;"></td>
 							</tr>
@@ -211,32 +219,32 @@
 			<table style="width: 100%">
 				{if (($order_invoice->total_paid_tax_incl - $order_invoice->total_paid_tax_excl) > 0)}
 				<tr style="line-height:5px;">
-					<td style="width: 85%; text-align: right; font-weight: bold">{l s='Product Total (Tax Excl.)' pdf='true'}</td>
-					<td style="width: 15%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_products}</td>
+					<td style="width: 83%; text-align: right; font-weight: bold">{l s='Product Total (Tax Excl.)' pdf='true'}</td>
+					<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_products}</td>
 				</tr>
 
 				<tr style="line-height:5px;">
-					<td style="width: 85%; text-align: right; font-weight: bold">{l s='Product Total (Tax Incl.)' pdf='true'}</td>
-					<td style="width: 15%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_products_wt}</td>
+					<td style="width: 83%; text-align: right; font-weight: bold">{l s='Product Total (Tax Incl.)' pdf='true'}</td>
+					<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_products_wt}</td>
 				</tr>
 				{else}
 				<tr style="line-height:5px;">
-					<td style="width: 85%; text-align: right; font-weight: bold">{l s='Product Total' pdf='true'}</td>
-					<td style="width: 15%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_products}</td>
+					<td style="width: 83%; text-align: right; font-weight: bold">{l s='Product Total' pdf='true'}</td>
+					<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_products}</td>
 				</tr>
 				{/if}
 
 				{if $order_invoice->total_discount_tax_incl > 0}
 				<tr style="line-height:5px;">
 					<td style="text-align: right; font-weight: bold">{l s='Total Vouchers' pdf='true'}</td>
-					<td style="width: 15%; text-align: right;">-{displayPrice currency=$order->id_currency price=($order_invoice->total_discount_tax_incl + $shipping_discount_tax_incl)}</td>
+					<td style="width: 17%; text-align: right;">-{displayPrice currency=$order->id_currency price=($order_invoice->total_discount_tax_incl + $shipping_discount_tax_incl)}</td>
 				</tr>
 				{/if}
 
 				{if $order_invoice->total_wrapping_tax_incl > 0}
 				<tr style="line-height:5px;">
 					<td style="text-align: right; font-weight: bold">{l s='Wrapping Cost' pdf='true'}</td>
-					<td style="width: 15%; text-align: right;">
+					<td style="width: 17%; text-align: right;">
 					{if $tax_excluded_display}
 						{displayPrice currency=$order->id_currency price=$order_invoice->total_wrapping_tax_excl}
 					{else}
@@ -249,7 +257,7 @@
 				{if $order_invoice->total_shipping_tax_incl > 0}
 				<tr style="line-height:5px;">
 					<td style="text-align: right; font-weight: bold">{l s='Shipping Cost' pdf='true'}</td>
-					<td style="width: 15%; text-align: right;">
+					<td style="width: 17%; text-align: right;">
 						{if $tax_excluded_display}
 							{displayPrice currency=$order->id_currency price=$order_invoice->total_shipping_tax_excl}
 							{else}
@@ -262,13 +270,13 @@
 				{if ($order_invoice->total_paid_tax_incl - $order_invoice->total_paid_tax_excl) > 0}
 				<tr style="line-height:5px;">
 					<td style="text-align: right; font-weight: bold">{l s='Total Tax' pdf='true'}</td>
-					<td style="width: 15%; text-align: right;">{displayPrice currency=$order->id_currency price=($order_invoice->total_paid_tax_incl - $order_invoice->total_paid_tax_excl)}</td>
+					<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=($order_invoice->total_paid_tax_incl - $order_invoice->total_paid_tax_excl)}</td>
 				</tr>
 				{/if}
 
 				<tr style="line-height:5px;">
 					<td style="text-align: right; font-weight: bold">{l s='Total' pdf='true'}</td>
-					<td style="width: 15%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_paid_tax_incl}</td>
+					<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_paid_tax_incl}</td>
 				</tr>
 
 			</table>
@@ -286,8 +294,8 @@
 <div style="line-height: 1pt">&nbsp;</div>
 <table style="width: 100%">
 	<tr>
-		<td style="width: 15%"></td>
-		<td style="width: 85%">{$order_invoice->note|nl2br}</td>
+		<td style="width: 17%"></td>
+		<td style="width: 83%">{$order_invoice->note|nl2br}</td>
 	</tr>
 </table>
 {/if}
@@ -296,8 +304,8 @@
 <div style="line-height: 1pt">&nbsp;</div>
 <table style="width: 100%">
 	<tr>
-		<td style="width: 15%"></td>
-		<td style="width: 85%">{$HOOK_DISPLAY_PDF}</td>
+		<td style="width: 17%"></td>
+		<td style="width: 83%">{$HOOK_DISPLAY_PDF}</td>
 	</tr>
 </table>
 {/if}

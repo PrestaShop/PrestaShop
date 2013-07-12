@@ -307,8 +307,8 @@ class InstallModelInstall extends InstallAbstractModel
 			if (!$xml = @simplexml_load_file(_PS_INSTALL_LANGS_PATH_.$iso.'/language.xml'))
 				throw new PrestashopInstallerException($this->language->l('File "language.xml" not valid for language iso "%s"', $iso));
 			
-			$params_lang = array('name' => (string)$xml->name, 'iso_code' => (string)$xml->language_code);
-
+			$params_lang = array('name' => (string)$xml->name, 'iso_code' => substr((string)$xml->language_code, 0, 2));
+			
 			if (InstallSession::getInstance()->safe_mode)
 				Language::checkAndAddLanguage($iso, false, true, $params_lang);
 			else

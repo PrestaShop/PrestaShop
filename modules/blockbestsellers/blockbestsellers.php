@@ -36,7 +36,7 @@ class BlockBestSellers extends Module
 	{
 		$this->name = 'blockbestsellers';
 		$this->tab = 'front_office_features';
-		$this->version = '1.1';
+		$this->version = '1.2';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -51,13 +51,52 @@ class BlockBestSellers extends Module
 	 */
 	public function install()
 	{
-		if (!parent::install() ||
-				!$this->registerHook('rightColumn') ||
-				!$this->registerHook('header') ||
-				!$this->registerHook('updateOrderStatus') ||
-				!ProductSale::fillProductSales())
+		$this->_clearCache('blockbestsellers.tpl');
+		$this->_clearCache('blockbestsellers-home.tpl');
+		
+		if (!parent::install()
+			|| !$this->registerHook('rightColumn')
+			|| !$this->registerHook('header')
+			|| !$this->registerHook('actionOrderStatusPostUpdate')
+			|| !$this->registerHook('addproduct')
+			|| !$this->registerHook('updateproduct')
+			|| !$this->registerHook('deleteproduct')
+			|| !ProductSale::fillProductSales()
+		)
 			return false;
 		return true;
+	}
+	
+	public function uninstall()
+	{
+		$this->_clearCache('blockbestsellers.tpl');
+		$this->_clearCache('blockbestsellers-home.tpl');
+		
+		return parent::uninstall();
+	}
+
+	public function hookAddProduct($params)
+	{
+		$this->_clearCache('blockbestsellers.tpl');
+		$this->_clearCache('blockbestsellers-home.tpl');
+	}
+
+	public function hookUpdateProduct($params)
+	{
+		$this->_clearCache('blockbestsellers.tpl');
+		$this->_clearCache('blockbestsellers-home.tpl');
+	}
+
+	public function hookDeleteProduct($params)
+	{
+		$this->_clearCache('blockbestsellers.tpl');
+		$this->_clearCache('blockbestsellers-home.tpl');
+	}
+
+	public function hookActionOrderStatusPostUpdate($params)
+	{
+		$this->_clearCache('blockbestsellers.tpl');
+		$this->_clearCache('blockbestsellers-home.tpl');
 	}
 
 	/**
@@ -102,28 +141,34 @@ class BlockBestSellers extends Module
 
 	public function hookHome($params)
 	{
-		$best_sellers = $this->getBestSellers($params);
-		if ($best_sellers === false)
-			return;
+		if (!$this->isCached('blockbestsellers-home.tpl', $this->getCacheId('blockbestsellers-home')))
+		{
+			$best_sellers = $this->getBestSellers($params);
+			if ($best_sellers === false)
+				return;
 
-		$this->smarty->assign(array(
-			'best_sellers' => $best_sellers,
-			'homeSize' => Image::getSize(ImageType::getFormatedName('home'))));
-		return $this->display(__FILE__, 'blockbestsellers-home.tpl');
+			$this->smarty->assign(array(
+				'best_sellers' => $best_sellers,
+				'homeSize' => Image::getSize(ImageType::getFormatedName('home'))));
+		}
+		return $this->display(__FILE__, 'blockbestsellers-home.tpl', $this->getCacheId('blockbestsellers-home'));
 	}
 
 	public function hookRightColumn($params)
 	{
-		$best_sellers = $this->getBestSellers($params);
-		if ($best_sellers === false)
-			return;
+		if (!$this->isCached('blockbestsellers.tpl', $this->getCacheId('blockbestsellers')))
+		{
+			$best_sellers = $this->getBestSellers($params);
+			if ($best_sellers === false)
+				return;
 
-		$this->smarty->assign(array(
-			'best_sellers' => $best_sellers,
-			'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
-			'smallSize' => Image::getSize(ImageType::getFormatedName('small'))
-		));
-		return $this->display(__FILE__, 'blockbestsellers.tpl');
+			$this->smarty->assign(array(
+				'best_sellers' => $best_sellers,
+				'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
+				'smallSize' => Image::getSize(ImageType::getFormatedName('small'))
+			));
+		}
+		return $this->display(__FILE__, 'blockbestsellers.tpl', $this->getCacheId('blockbestsellers'));
 	}
 		
 	public function hookLeftColumn($params)
@@ -136,7 +181,7 @@ class BlockBestSellers extends Module
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return false;
 
-		if (!($result = ProductSale::getBestSalesLight((int)($params['cookie']->id_lang), 0, 5)))
+		if (!($result = ProductSale::getBestSalesLight((int)$params['cookie']->id_lang, 0, 5)))
 			return (Configuration::get('PS_BLOCK_BESTSELLERS_DISPLAY') ? array() : false);
 
 		$bestsellers = array();

@@ -38,11 +38,11 @@
 <script type="text/javascript">
 	// <![CDATA[
 	var imgDir = '{$img_dir}';
-	var authenticationUrl = '{$link->getPageLink("authentication", true)|escape:'html'}';
-	var orderOpcUrl = '{$link->getPageLink("order-opc", true)|escape:'html'}';
-	var historyUrl = '{$link->getPageLink("history", true)|escape:'html'}';
-	var guestTrackingUrl = '{$link->getPageLink("guest-tracking", true)|escape:'html'}';
-	var addressUrl = '{$link->getPageLink("address", true, NULL, "back={$back_order_page}")|escape:'html'}';
+	var authenticationUrl = '{$link->getPageLink("authentication", true)|addslashes}';
+	var orderOpcUrl = '{$link->getPageLink("order-opc", true)|addslashes}';
+	var historyUrl = '{$link->getPageLink("history", true)|addslashes}';
+	var guestTrackingUrl = '{$link->getPageLink("guest-tracking", true)|addslashes}';
+	var addressUrl = '{$link->getPageLink("address", true, NULL, "back={$back_order_page}")|addslashes}';
 	var orderProcess = 'order-opc';
 	var guestCheckoutEnabled = {$PS_GUEST_CHECKOUT_ENABLED|intval};
 	var currencySign = '{$currencySign|html_entity_decode:2:"UTF-8"}';

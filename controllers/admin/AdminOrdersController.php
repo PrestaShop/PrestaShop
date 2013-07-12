@@ -489,6 +489,14 @@ class AdminOrdersControllerCore extends AdminController
 					if ($shipping_cost_amount > 0)
 						$amount += $shipping_cost_amount;
 
+					$order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
+					if (Validate::isLoadedObject($order_carrier))
+					{
+						$order_carrier->weight = (float)$order->getTotalWeight();
+						if ($order_carrier->update())
+							$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);							
+					}																		
+
 					if ($amount > 0)
 					{
 						if (!OrderSlip::createPartialOrderSlip($order, $amount, $shipping_cost_amount, $order_detail_list))
@@ -656,6 +664,14 @@ class AdminOrdersControllerCore extends AdminController
 								$order_detail = new OrderDetail((int)$id_order_detail);
 								if (!$order->deleteProduct($order, $order_detail, $qty_cancel_product))
 									$this->errors[] = Tools::displayError('An error occurred while attempting to delete the product.').' <span class="bold">'.$order_detail->product_name.'</span>';
+								// Update weight SUM
+								$order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
+								if (Validate::isLoadedObject($order_carrier))
+								{
+									$order_carrier->weight = (float)$order->getTotalWeight();
+									if ($order_carrier->update())
+										$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);									
+								}
 								Hook::exec('actionProductCancel', array('order' => $order, 'id_order_detail' => (int)$id_order_detail));
 							}
 						if (!count($this->errors) && $customizationList)
@@ -914,13 +930,10 @@ class AdminOrdersControllerCore extends AdminController
 						$order_detail->updateTaxAmount($order);
 					}
 
-					$id_order_carrier = Db::getInstance()->getValue('
-						SELECT `id_order_carrier`
-						FROM `'._DB_PREFIX_.'order_carrier`
-						WHERE `id_order` = '.(int)$order->id);
+					$id_order_carrier = (int)$order->getIdOrderCarrier();
 					if ($id_order_carrier)
 					{
-						$order_carrier = new OrderCarrier($id_order_carrier);
+						$order_carrier = $order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
 						$order_carrier->shipping_cost_tax_excl = (float)Tools::convertPriceFull($order_carrier->shipping_cost_tax_excl, $old_currency, $currency);
 						$order_carrier->shipping_cost_tax_incl = (float)Tools::convertPriceFull($order_carrier->shipping_cost_tax_incl, $old_currency, $currency);
 						$order_carrier->update();
@@ -963,7 +976,7 @@ class AdminOrdersControllerCore extends AdminController
 
 					// Update currency in order
 					$order->id_currency = $currency->id;
-					// Update conversion rate
+					// Update exchange rate
 					$order->conversion_rate = (float)$currency->conversion_rate;
 					$order->update();
 				}
@@ -1697,6 +1710,15 @@ class AdminOrdersControllerCore extends AdminController
 
 		// Save changes of order
 		$order->update();
+		
+		// Update weight SUM
+		$order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
+		if (Validate::isLoadedObject($order_carrier))
+		{
+			$order_carrier->weight = (float)$order->getTotalWeight();			
+			if ($order_carrier->update())
+				$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);	
+		}		
 
 		// Update Tax lines
 		$order_detail->updateTaxAmount($order);
@@ -1904,6 +1926,17 @@ class AdminOrdersControllerCore extends AdminController
 	
 		// Save order detail
 		$res &= $order_detail->update();
+		
+		// Update weight SUM
+		$order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
+		if (Validate::isLoadedObject($order_carrier))
+		{
+			$order_carrier->weight = (float)$order->getTotalWeight();
+			$res &= $order_carrier->update();
+			if ($res)
+				$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);	
+		}
+		
 		// Save order invoice
 		if (isset($order_invoice))
 			 $res &= $order_invoice->update();
@@ -1996,12 +2029,22 @@ class AdminOrdersControllerCore extends AdminController
 		$order->total_products_wt -= $order_detail->total_price_tax_incl;
 
 		$res &= $order->update();
-		
+
 		// Reinject quantity in stock
 		$this->reinjectQuantity($order_detail, $order_detail->product_quantity);
 
 		// Delete OrderDetail
 		$res &= $order_detail->delete();
+		
+		// Update weight SUM
+		$order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
+		if (Validate::isLoadedObject($order_carrier))
+		{
+			$order_carrier->weight = (float)$order->getTotalWeight();
+			$res &= $order_carrier->update();
+			if ($res)
+				$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);				
+		}
 
 		if (!$res)
 			die(Tools::jsonEncode(array(

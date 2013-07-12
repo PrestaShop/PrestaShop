@@ -546,7 +546,7 @@ abstract class ObjectModelCore
 		
 		$object_id = Db::getInstance()->Insert_ID();
 		
-		if ($definition['multilang'])
+		if (isset($definition['multilang']) && $definition['multilang'])
 		{
 			$res = Db::getInstance()->executeS('
 						SELECT * 
@@ -763,6 +763,9 @@ abstract class ObjectModelCore
 	 	if (!array_key_exists('active', $this))
 			throw new PrestaShopException('property "active" is missing in object '.get_class($this));
 
+		// Update only active field
+		$this->setFieldsToUpdate(array('active' => true));
+
 	 	// Update active status on object
 	 	$this->active = !(int)$this->active;
 
@@ -977,11 +980,11 @@ abstract class ObjectModelCore
 			// Checking for required fields
 			if (isset($data['required']) && $data['required'] && ($value = Tools::getValue($field, $this->{$field})) == false && (string)$value != '0')
 				if (!$this->id || $field != 'passwd')
-					$errors[] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is required.');
+					$errors[$field] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is required.');
 
 			// Checking for maximum fields sizes
 			if (isset($data['size']) && ($value = Tools::getValue($field, $this->{$field})) && Tools::strlen($value) > $data['size'])
-				$errors[] = sprintf(
+				$errors[$field] = sprintf(
 					Tools::displayError('%1$s is too long. Maximum length: %2$d'),
 					self::displayFieldName($field, get_class($this), $htmlentities),
 					$data['size']
@@ -992,7 +995,7 @@ abstract class ObjectModelCore
 			if (($value = Tools::getValue($field, $this->{$field})) || ($field == 'postcode' && $value == '0'))
 			{
 				if (isset($data['validate']) && !Validate::$data['validate']($value) && (!empty($value) || $data['required']))
-					$errors[] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is invalid.');
+					$errors[$field] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is invalid.');
 				else
 				{
 					if (isset($data['copy_post']) && !$data['copy_post'])
@@ -1136,7 +1139,7 @@ abstract class ObjectModelCore
 			$value = Tools::getValue($field);
 
 			if (empty($value))
-				$errors[] = sprintf(Tools::displayError('The field %s is required.'), self::displayFieldName($field, get_class($this), $htmlentities));
+				$errors[$field] = sprintf(Tools::displayError('The field %s is required.'), self::displayFieldName($field, get_class($this), $htmlentities));
 		}
 
 		return $errors;
