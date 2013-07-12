@@ -325,7 +325,7 @@
 								<td>{displayPrice price=$payment->amount currency=$payment->id_currency}</td>
 								<td>
 								{if $invoice = $payment->getOrderInvoice($order->id)}
-									{$invoice->getInvoiceNumberFormatted($current_id_lang)}
+									{$invoice->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}
 								{else}
 									{l s='No invoice'}
 								{/if}
@@ -404,7 +404,7 @@
 								<td>
 									<select name="payment_invoice" id="payment_invoice">
 									{foreach from=$invoices_collection item=invoice}
-										<option value="{$invoice->id}" selected="selected">{$invoice->getInvoiceNumberFormatted($current_id_lang)}</option>
+										<option value="{$invoice->id}" selected="selected">{$invoice->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}</option>
 									{/foreach}
 									</select>
 								</td>
