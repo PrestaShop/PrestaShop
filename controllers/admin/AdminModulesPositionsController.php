@@ -30,6 +30,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 
 	public function postProcess()
 	{
+		$this->bootstrap = true;
 		// Getting key value for display
 		if (Tools::getValue('show_modules') && strval(Tools::getValue('show_modules')) != 'all')
 			$this->display_key = (int)Tools::getValue('show_modules');
