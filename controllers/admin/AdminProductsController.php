@@ -739,7 +739,12 @@ class AdminProductsControllerCore extends AdminController
 									$this->errors[] = sprintf(Tools::displayError('You cannot delete the product #%d because there is physical stock left.'), $product->id);
 							}
 							if (!count($this->errors))
-								$success &= $product->delete();
+							{
+								if ($product->delete())
+									Logger::addLog(sprintf($this->l('%s deletion'), $this->className), 1, null, $this->className, (int)$product->id, true, (int)$this->context->employee->id);
+								else
+									$success = false;
+							}
 							else
 								$success = 0;
 						}

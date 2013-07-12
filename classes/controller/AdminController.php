@@ -2714,18 +2714,31 @@ class AdminControllerCore extends Controller
 			else
 			{
 				$result = true;
-				if ($this->deleted)
+				foreach ($this->boxes as $id)
 				{
-					foreach ($this->boxes as $id)
+					$to_delete = new $this->className($id);
+					$delete_ok = true;
+					if ($this->deleted)
 					{
-						$to_delete = new $this->className($id);
 						$to_delete->deleted = 1;
-						$result = $result && $to_delete->update();
+						if (!$to_delete->update())
+						{
+							$result = false;
+							$delete_ok = false;
+						}
 					}
+					else
+						if (!$to_delete->delete())
+						{
+							$result = false;
+							$delete_ok = false;
+						}
+					
+					if ($delete_ok)
+						Logger::addLog(sprintf($this->l('%s deletion'), $this->className), 1, null, $this->className, (int)$to_delete->id, true, (int)$this->context->employee->id);
+					else
+						$this->errors[] = sprintf(Tools::displayError('Can\'t delete #%d'), $id);
 				}
-				else
-					$result = $object->deleteSelection(Tools::getValue($this->table.'Box'));
-
 				if ($result)
 					$this->redirect_after = self::$currentIndex.'&conf=2&token='.$this->token;
 				$this->errors[] = Tools::displayError('An error occurred while deleting this selection.');
