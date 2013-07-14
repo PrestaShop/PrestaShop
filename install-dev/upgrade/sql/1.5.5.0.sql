@@ -7,6 +7,7 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VAL
 ALTER TABLE `PREFIX_webservice_account` CHANGE `class_name` `class_name` VARCHAR(64) NOT NULL DEFAULT 'WebserviceRequest',
 CHANGE `module_name` `module_name` VARCHAR(64) NULL DEFAULT NULL;
 
+/* PHP:add_accounting_tab(); */;
 /* PHP:add_module_to_hook(blockcart, actionCartListOverride); */;
 /* PHP:add_module_to_hook(blockmanufacturer, actionObjectManufacturerDeleteAfter); */;
 /* PHP:add_module_to_hook(blockmanufacturer, actionObjectManufacturerAddAfter); */;
@@ -20,4 +21,4 @@ CHANGE `module_name` `module_name` VARCHAR(64) NULL DEFAULT NULL;
 /* PHP:add_module_to_hook(blockmyaccount, actionModuleUnRegisterHookAfter); */;
 /* PHP:add_module_to_hook(blockmyaccountfooter, actionModuleUnRegisterHookAfter); */;
 
-ALTER TABLE `PREFIX_log` ADD `id_employee` INT(10) UNSIGNED NULL AFTER `object_id`;
+ALTER TABLE `PREFIX_log` ADD `id_employee` INT(10) UNSIGNED NULL DEFAULT NULL AFTER `object_id`;
