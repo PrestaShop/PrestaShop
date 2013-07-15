@@ -49,6 +49,16 @@ class AdminShippingControllerCore extends AdminController
 						'cast' => 'floatval',
 						'type' => 'text',
 						'validation' => 'isPrice'),
+					'PS_SHIPPING_FREE_TYPE' => array(
+						'title' => $this->l('Free shiping type'),
+						'desc' => $this->l('How to determin free shipping'),
+						'type' => 'select',
+						'list' => array(
+							array('id' => '0', 'name' => $this->l('Price or Weight ')),
+							array('id' => '1', 'name' => $this->l('Price and Weight ')),
+						),
+						'identifier' => 'id'
+					),
 					'PS_SHIPPING_FREE_PRICE' => array(
 						'title' => $this->l('Free shipping starts at'),
 						'suffix' => $this->context->currency->getSign(),

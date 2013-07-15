@@ -2643,26 +2643,45 @@ class CartCore extends ObjectModel
 			'PS_SHIPPING_FREE_PRICE',
 			'PS_SHIPPING_HANDLING',
 			'PS_SHIPPING_METHOD',
-			'PS_SHIPPING_FREE_WEIGHT'
+			'PS_SHIPPING_FREE_WEIGHT',
+			'PS_SHIPPING_FREE_TYPE'
 		));
 
 		// Free fees
 		$free_fees_price = 0;
-		if (isset($configuration['PS_SHIPPING_FREE_PRICE']))
-			$free_fees_price = Tools::convertPrice((float)$configuration['PS_SHIPPING_FREE_PRICE'], Currency::getCurrencyInstance((int)$this->id_currency));
-		$orderTotalwithDiscounts = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, null, null, false);
-		if ($orderTotalwithDiscounts >= (float)($free_fees_price) && (float)($free_fees_price) > 0)
-		{
-			Cache::store($cache_id, $shipping_cost);
-			return $shipping_cost;
+               // Use free shipping only if price AND weight is matched
+		if($configuration['PS_SHIPPING_FREE_TYPE'] == 1) {
+			if (isset($configuration['PS_SHIPPING_FREE_PRICE']))
+				$free_fees_price = Tools::convertPrice((float)$configuration['PS_SHIPPING_FREE_PRICE'], Currency::getCurrencyInstance((int)$this->id_currency));
+			$orderTotalwithDiscounts = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, null, null, false);
+			if ($orderTotalwithDiscounts >= (float)($free_fees_price) &&
+			(float)($free_fees_price) > 0 &&
+			isset($configuration['PS_SHIPPING_FREE_WEIGHT']) &&
+			$this->getTotalWeight() >= (float)$configuration['PS_SHIPPING_FREE_WEIGHT'] &&
+			(float)$configuration['PS_SHIPPING_FREE_WEIGHT'] > 0)
+			{
+				Cache::store($cache_id, $shipping_cost);
+				return $shipping_cost;
+			}
 		}
 
-		if (isset($configuration['PS_SHIPPING_FREE_WEIGHT'])
-			&& $this->getTotalWeight() >= (float)$configuration['PS_SHIPPING_FREE_WEIGHT']
-			&& (float)$configuration['PS_SHIPPING_FREE_WEIGHT'] > 0)
-		{
-			Cache::store($cache_id, $shipping_cost);
-			return $shipping_cost;
+		if($configuration['PS_SHIPPING_FREE_TYPE'] == 0) {
+			if (isset($configuration['PS_SHIPPING_FREE_PRICE']))
+				$free_fees_price = Tools::convertPrice((float)$configuration['PS_SHIPPING_FREE_PRICE'], Currency::getCurrencyInstance((int)$this->id_currency));
+			$orderTotalwithDiscounts = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, null, null, false);
+			if ($orderTotalwithDiscounts >= (float)($free_fees_price) && (float)($free_fees_price) > 0)
+			{
+				Cache::store($cache_id, $shipping_cost);
+				return $shipping_cost;
+			}
+
+			if (isset($configuration['PS_SHIPPING_FREE_WEIGHT'])
+				&& $this->getTotalWeight() >= (float)$configuration['PS_SHIPPING_FREE_WEIGHT']
+				&& (float)$configuration['PS_SHIPPING_FREE_WEIGHT'] > 0)
+			{
+				Cache::store($cache_id, $shipping_cost);
+				return $shipping_cost;
+			}
 		}
 
 		// Get shipping cost using correct method
