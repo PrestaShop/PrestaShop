@@ -1414,7 +1414,7 @@ product_tabs['Warehouses'] = new function(){
 		// Resize the accordion once the page is visible because of the bug with accordions initialized
 		// inside a display:none block not having the correct size.
 		$('#warehouse_accordion').parents('.product-tab-content').bind('displayed', function(){
-			$('#warehouse_accordion').accordion("resize");
+			$('#warehouse_accordion').accordion("refresh");
 		});
 	};
 }
