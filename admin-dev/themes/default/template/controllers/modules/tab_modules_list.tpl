@@ -63,7 +63,7 @@
 			<ul class="nav">
 				{if count($tab_modules_list.installed)}
 					<li>
-						<a id="nav_tabs_modules_installed" class="btn btn-default" href="#" onclick="">
+						<a id="nav_tabs_modules_installed" class="panel-content" href="#" onclick="">
 							<i class="icon-plus-sign-alt"></i>
 							{l s='Installed'}
 						</a>
@@ -71,7 +71,7 @@
 				{/if}
 				{if count($tab_modules_list.not_installed)}
 					<li>
-						<a href="#" id="nav_tabs_modules_not_installed" class="btn btn-default">
+						<a href="#" id="nav_tabs_modules_not_installed" class="panel-content">
 							<i class="icon-minus-sign-alt"></i>
 							{l s='Not Installed'}
 						</a>
@@ -82,14 +82,14 @@
 	</div>
 	<div id="modules_list_container_content">
 		{if count($tab_modules_list.installed)}
-		<table id="tab_modules_list_installed">
+		<table id="tab_modules_list_installed" class="table table-striped table-hover">
 			{foreach from=$tab_modules_list.installed item=module}
 				{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",rowalt"}}
 			{/foreach}
 		</table>
 		{/if}
 		{if count($tab_modules_list.not_installed)}
-		<table id="tab_modules_list_not_installed">
+		<table id="tab_modules_list_not_installed" class="table table-striped table-hover">
 			{foreach from=$tab_modules_list.not_installed item=module}
 				{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",rowalt"}}
 			{/foreach}
