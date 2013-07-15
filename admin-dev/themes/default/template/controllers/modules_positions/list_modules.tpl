@@ -120,10 +120,10 @@
 											<td colspan="3">
 												<div class="lab_modules_positions" for="mod{$hook['id_hook']}_{$module['instance']->id}">
 										{/if}
-													<h3>
+													<h4>
 														<img src="../modules/{$module['instance']->name}/logo.png" alt="{$module['instance']->name|stripslashes}" /> 
 														{$module['instance']->displayName|stripslashes}
-													</h3>
+													</h4>
 													<dl class="dl-horizontal">
 														<dt>{l s='Version:'}</dt>
 														<dd>
@@ -170,7 +170,14 @@
 						</table>
 					</div>
 				{/foreach}
-				<div id="unhook_button_position_bottom"><input class="button floatr" type="submit" name="unhookform" value="{l s='Unhook the selection'}"/></div>
+				<div id="unhook_button_position_bottom">
+					<span class="pull-right">
+					<button type="submit" class="btn btn-default" name="unhookform">
+						<i class="icon-minus-sign-alt"></i>
+						{l s='Unhook the selection'}
+					</button>
+					</span>
+				</div>
 			</form>
 		</div>
 		<div class="col-lg-3">
