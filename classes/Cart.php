@@ -2641,10 +2641,12 @@ class CartCore extends ObjectModel
 
 		$configuration = Configuration::getMultiple(array(
 			'PS_SHIPPING_FREE_PRICE',
+			'PS_SHIPPING_FREE_PRICE_END',
 			'PS_SHIPPING_HANDLING',
 			'PS_SHIPPING_METHOD',
 			'PS_SHIPPING_FREE_WEIGHT',
-			'PS_SHIPPING_FREE_TYPE'
+			'PS_SHIPPING_FREE_WEIGHT_END',
+			'PS_SHIPPING_FREE_TYPE',
 		));
 
 		// Free fees
@@ -2660,6 +2662,27 @@ class CartCore extends ObjectModel
 			$this->getTotalWeight() >= (float)$configuration['PS_SHIPPING_FREE_WEIGHT'] &&
 			(float)$configuration['PS_SHIPPING_FREE_WEIGHT'] > 0)
 			{
+				if( ($configuration['PS_SHIPPING_FREE_PRICE_END'] > 0) || ($configuration['PS_SHIPPING_FREE_WEIGHT_END'] > 0)) {
+
+					if ($configuration['PS_SHIPPING_FREE_PRICE_END'] > 0)
+						$free_fees_price = Tools::convertPrice((float)$configuration['PS_SHIPPING_FREE_PRICE_END'], Currency::getCurrencyInstance((int)$this->id_currency));
+					// This is not working, figuer it out!
+					if( ($configuration['PS_SHIPPING_FREE_WEIGHT_END'] > 0)
+					&& $this->getTotalWeight() <= $configuration['PS_SHIPPING_FREE_WEIGHT_END']
+					) {
+						Cache::store($cache_id, $shipping_cost);
+						return $shipping_cost;
+					}
+					if(isset($free_fees_price)
+					&& $orderTotalwithDiscounts <= $configuration['PS_SHIPPING_FREE_PRICE_END']
+					) {
+						Cache::store($cache_id, $shipping_cost);
+						return $shipping_cost;
+					}
+// 					Cache::store($cache_id, $shipping_cost);
+// 					return $shipping_cost;
+				}
+				// Set freeshipping if no end is set
 				Cache::store($cache_id, $shipping_cost);
 				return $shipping_cost;
 			}
