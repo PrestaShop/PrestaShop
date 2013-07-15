@@ -64,22 +64,18 @@
 	{if $input.type == 'checkboxStatuses'}
 		{foreach $input.values.query as $value}
 			{assign var=id_checkbox value=$input.name|cat:'_'|cat:intval($value[$input.values.id])}
-			<input type="checkbox"
-				name="{$input.name}[]"
-				id="{$id_checkbox}"
-				value="{$value[$input.values.id]|intval}"
-				{if isset($fields_value[$id_checkbox]) && $fields_value[$id_checkbox]}checked="checked"{/if} />
-			<label for="{$id_checkbox}"
-				style="float:none;{if !(isset($statusStats[$value['id_order_state']]) && $statusStats[$value['id_order_state']])}font-weight:normal;{/if}padding:0;text-align:left;width:100%;color:#000">
-					<img src="../img/admin/charged_{if $value['invoice']}ok{else}ko{/if}.gif" alt="" />
-					{$value[$input.values.name]}
-					({if isset($statusStats[$value['id_order_state']]) && $statusStats[$value['id_order_state']]}{$statusStats[$value['id_order_state']]}{else}0{/if})
-			</label><br />
+			<p class="checkbox">
+				<label for="{$id_checkbox}" class="control-label">
+					<input type="checkbox" name="{$input.name}[]" id="{$id_checkbox}" value="{$value[$input.values.id]|intval}" {if isset($fields_value[$id_checkbox]) && $fields_value[$id_checkbox]}checked="checked"{/if} />
+						<img src="../img/admin/charged_{if $value['invoice']}ok{else}ko{/if}.gif" alt="" />
+						{$value[$input.values.name]}
+						({if isset($statusStats[$value['id_order_state']]) && $statusStats[$value['id_order_state']]}{$statusStats[$value['id_order_state']]}{else}0{/if})
+				</label>
+			</p>
 		{/foreach}
 	{else}
 		{$smarty.block.parent}
 	{/if}
 {/block}
 
-{block name="after"}<div style="clear:both">&nbsp;</div>{/block}
 

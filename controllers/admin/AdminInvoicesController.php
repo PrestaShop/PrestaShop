@@ -28,6 +28,7 @@ class AdminInvoicesControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->table = 'invoice';
 
 		parent::__construct();
