@@ -275,7 +275,7 @@ class AdminProductsControllerCore extends AdminController
 			'orderby' => false
 		);
 
-		if ((int)$this->id_current_category)
+		if ($join_category && (int)$this->id_current_category)
 			$this->fields_list['position'] = array(
 				'title' => $this->l('Position'),
 				'width' => 70,
