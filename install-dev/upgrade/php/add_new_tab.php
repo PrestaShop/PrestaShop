@@ -24,8 +24,13 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-function add_new_tab($className, $name, $id_parent, $returnId = false)
+function add_new_tab($className, $name, $id_parent, $returnId = false, $parentTab)
 {
+	if (isset($parentTab) && !empty($parentTab) && (is_null($id_parent) || empty($id_parent)))
+		$id_parent = (int)Db::getInstance()->getValue('SELECT `id_tab` FROM `'._DB_PREFIX_.'tab` WHERE `class_name` = \''.pSQL($parentTab).'\'');
+	if (!$id_parent)
+		return false;
+	
 	$array = array();
 	foreach (explode('|', $name) AS $item)
 	{
