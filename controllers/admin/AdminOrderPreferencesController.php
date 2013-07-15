@@ -74,6 +74,13 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
+					'PS_CART_SINGLE_UPDATE' => array(
+						'title' => $this->l('Enable Update Cart button'),
+						'desc' => $this->l('Update cart with one single button'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
 					'PS_PURCHASE_MINIMUM' => array(
 						'title' => $this->l('Minimum purchase total required in order to validate the order'),
 						'desc' => $this->l('Set to 0 to disable this feature'),

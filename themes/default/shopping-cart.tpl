@@ -25,6 +25,7 @@
 
 {capture name=path}{l s='Your shopping cart'}{/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
+{assign var='cart_single_update' value=Configuration::get('PS_CART_SINGLE_UPDATE')}
 
 <h1 id="cart_title">{l s='Shopping-cart summary'}</h1>
 
@@ -69,6 +70,7 @@
 {/if}
 <p>{l s='Your shopping cart contains:'} <span id="summary_products_quantity">{$productNumber} {if $productNumber == 1}{l s='product'}{else}{l s='products'}{/if}</span></p>
 <div id="order-detail-content" class="table_block">
+<form method="post">
 	<table id="cart_summary" class="std">
 		<thead>
 			<tr>
@@ -82,6 +84,14 @@
 			</tr>
 		</thead>
 		<tfoot>
+			{if $cart_single_update}
+			<tr>
+				<td colspan="5">&nbsp;</td>
+				<td colspan="2" class="update_cart">
+						<input type="submit" name="submitUpdateCart" value="{l s='Update Cart'}" class="button"/>
+				</td>
+			</tr>
+			{/if}
 		{if $use_taxes}
 			{if $priceDisplay}
 				<tr class="cart_total_price">
@@ -265,6 +275,7 @@
 							{if isset($cannotModify) AND $cannotModify == 1}
 								<span style="float:left">{if $quantityDisplayed == 0 AND isset($customizedDatas.$productId.$productAttributeId)}{$customizedDatas.$productId.$productAttributeId|@count}{else}{$product.cart_quantity-$quantityDisplayed}{/if}</span>
 							{else}
+								{if !$cart_single_update}
 								<div class="cart_quantity_button">
 								<a rel="nofollow" class="cart_quantity_up" id="cart_quantity_up_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}" href="{$link->getPageLink('cart', true, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery}&amp;id_customization={$id_customization}&amp;token={$token_cart}")|escape:'html'}" title="{l s='Add'}"><img src="{$img_dir}icon/quantity_up.gif" alt="{l s='Add'}" width="14" height="9" /></a><br />
 								{if $product.minimal_quantity < ($customization.quantity -$quantityDisplayed) OR $product.minimal_quantity <= 1}
@@ -277,8 +288,9 @@
 								</a>
 								{/if}
 								</div>
+								{/if}
 								<input type="hidden" value="{$customization.quantity}" name="quantity_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}_hidden"/>
-								<input size="2" type="text" value="{$customization.quantity}" class="cart_quantity_input" name="quantity_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}"/>
+								<input size="2" type="text" value="{$customization.quantity}" class="cart_quantity_input" name="quantity_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}"  style="{if $cart_single_update}border:1px solid #b7b7b7;{/if}"/>
 							{/if}
 						</td>
 						<td class="cart_delete">
@@ -328,6 +340,7 @@
 		</tbody>
 	{/if}
 	</table>
+	</form>
 </div>
 
 {if $show_option_allow_separate_package}
