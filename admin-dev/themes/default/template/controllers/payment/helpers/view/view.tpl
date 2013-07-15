@@ -33,7 +33,7 @@
 		{/if}
 	
 		{if $display_restrictions}
-			<h2 class="space">{l s='Payment module restrictions'}</h2>
+			<legend>{l s='Payment module restrictions'}</legend>
 			{foreach $lists as $list}
 				{include file='controllers/payment/restrictions.tpl'}
 			{/foreach}

@@ -30,6 +30,7 @@ class AdminPaymentControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		parent::__construct();
 
 		$shop_id = Context::getContext()->shop->id;

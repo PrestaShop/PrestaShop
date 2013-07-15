@@ -24,64 +24,71 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<tr class="{$class_row}">
-	<td>
-		<table border="0" cellpadding="0" cellspacing="5">
-			<tr>
-				<td valign="top" width="32" align="center">
-					<img width="57" alt="" src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}">
-				</td>
-				<td height="60" valign="top">
-					<div id="anchor{$module->name|ucfirst}">
-						<h4>
-							{$module->displayName|truncate:40:'…'} {$module->version}
-							{if isset($module->id) && $module->id gt 0 }
-								{if $module->active}
-									<span class="label label-success">{l s='Enabled'}</span>
-								{else}
-									<span class="label label-warning">{l s='Disabled'}</span>
-								{/if}
-							{else}
-								{if isset($module->type) && $module->type == 'addonsMustHave'}
-									<span class="label label-danger">{l s='Must Have'}</span>
-								{else}
-									<span class="label label-warning">{l s='Not installed'}</span>
-								{/if}
-								
-							{/if}
-						</h4>
-						<p>
-							{if isset($module->description) && $module->description ne ''}
-								{$module->description|truncate:100:'…'}
-							{else}
-								&nbsp;
-							{/if}
-						</p>
-					</div>
-				</td>
-				<td border="0" valign="middle" align="right">
-					<div id="list-action-button" class="row-light">
-						{if isset($module->type) && $module->type == 'addonsMustHave'}
-							<p>
-								<a href="{$module->addons_buy_url}" target="_blank" class="button updated">
-									<span class="btn btn-default">
-										<i class="icon-shopping-cart"></i> &nbsp;&nbsp;{displayPrice price=$module->price currency=$module->id_currency}
-									</span>
-								</a>
-							</p>
-						{else if !isset($module->not_on_disk)}
-							{$module->optionsHtml}
-							<p>
-								<a href="#" class="btn btn-default action_tab_module" data-option="select_{$module->name}">{l s='Submit'}</a>
-							</p>
-						{else}
-							<p>
-								<a href="{$module->options.install_url}" class="btn btn-default">{l s='Install'}</a>
-							</p>
-						{/if}
-					</div>
-				</td>
-			</tr>
-		</table>
+
+<tr>
+	<td class="center">
+		<img width="57" alt="" src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}">
 	</td>
+	<td>
+		<div id="anchor{$module->name|ucfirst}">
+			<h4>
+				{$module->displayName|truncate:40:'…'} {$module->version}
+				{if isset($module->id) && $module->id gt 0 }
+					{if $module->active}
+						<span class="label label-success">{l s='Enabled'}</span>
+					{else}
+						<span class="label label-warning">{l s='Disabled'}</span>
+					{/if}
+				{else}
+					{if isset($module->type) && $module->type == 'addonsMustHave'}
+						<span class="label label-danger">{l s='Must Have'}</span>
+					{else}
+						<span class="label label-warning">{l s='Not installed'}</span>
+					{/if}
+					
+				{/if}
+			</h4>
+			<p>
+				{if isset($module->description) && $module->description ne ''}
+					{$module->description|truncate:100:'…'}
+				{else}
+					&nbsp;
+				{/if}
+			</p>
+		</div>
+	</td>
+	{if isset($module->type) && $module->type == 'addonsMustHave'}
+		<td>&nbsp;</td>
+		<td align="right">
+			<p>
+				<a href="{$module->addons_buy_url}" target="_blank" class="button updated">
+					<span class="btn btn-default">
+						<i class="icon-shopping-cart"></i> &nbsp;&nbsp;{displayPrice price=$module->price currency=$module->id_currency}
+					</span>
+				</a>
+			</p>
+		</td>
+	{else if !isset($module->not_on_disk)}
+		<td>
+			<p>{$module->optionsHtml}</p>
+		</td>
+		<td align="right">
+			<p>
+				<a href="#" class="btn btn-default action_tab_module" data-option="select_{$module->name}">
+					<i class="icon-ok"></i>
+					{l s='Submit'}
+				</a>
+			</p>
+		</td>
+	{else}
+		<td>&nbsp;</td>
+		<td align="right">
+			<p>
+				<a href="{$module->options.install_url}" class="btn btn-default">
+					<i class="icon-plus-sign-alt"></i>
+					{l s='Install'}
+				</a>
+			</p>
+		</td>
+	{/if}
 </tr>
