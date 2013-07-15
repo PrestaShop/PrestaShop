@@ -74,7 +74,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
-					'PS_CART_SINGEL_UPDATE' => array(
+					'PS_CART_SINGLE_UPDATE' => array(
 						'title' => $this->l('Enable Update Cart button'),
 						'desc' => $this->l('Update cart with one single button'),
 						'validation' => 'isBool',
