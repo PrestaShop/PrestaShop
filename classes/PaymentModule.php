@@ -135,6 +135,8 @@ abstract class PaymentModuleCore extends Module
 		$this->context->customer = new Customer($this->context->cart->id_customer);
 		$this->context->language = new Language($this->context->cart->id_lang);
 		$this->context->shop = ($shop ? $shop : new Shop($this->context->cart->id_shop));
+		ShopUrl::resetMainDomainCache();
+
 		$id_currency = $currency_special ? (int)$currency_special : (int)$this->context->cart->id_currency;
 		$this->context->currency = new Currency($id_currency, null, $this->context->shop->id);
 		if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_delivery')
@@ -593,7 +595,7 @@ abstract class PaymentModuleCore extends Module
 						'{invoice_phone}' => ($invoice->phone) ? $invoice->phone : $invoice->phone_mobile,
 						'{invoice_other}' => $invoice->other,
 						'{order_name}' => $order->getUniqReference(),
-						'{date}' => Tools::displayDate(date('Y-m-d H:i:s'), (int)$order->id_lang, 1),
+						'{date}' => Tools::displayDate(date('Y-m-d H:i:s'),null , 1),
 						'{carrier}' => $virtual_product ? Tools::displayError('No carrier') : $carrier->name,
 						'{payment}' => Tools::substr($order->payment, 0, 32),
 						'{products}' => $this->formatProductAndVoucherForEmail($products_list),

@@ -467,10 +467,15 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
             }
         }
         if ($cache) {
+            // CACHING_LIFETIME_SAVED cache expiry has to be validated here since otherwise we'd define the unifunc
+            if ($this->caching === Smarty::CACHING_LIFETIME_SAVED &&
+                $this->properties['cache_lifetime'] >= 0 &&
+                (time() > ($this->cached->timestamp + $this->properties['cache_lifetime']))) {
+                $is_valid = false;
+            }
             $this->cached->valid = $is_valid;
         } else {
-            $this->mustCompile = !$is_valid;
-        }
+            $this->mustCompile = !$is_valid;        }
         // store data in reusable Smarty_Template_Compiled
         if (!$cache) {
             $this->compiled->_properties = $properties;

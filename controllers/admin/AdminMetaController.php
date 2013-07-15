@@ -529,6 +529,7 @@ class AdminMetaControllerCore extends AdminController
 			{
 				$this->url->domain = $value;
 				$this->url->update();
+				Configuration::updateGlobalValue('PS_SHOP_DOMAIN', $value);
 			}
 			else
 				$this->errors[] = Tools::displayError('This domain is not valid.');
@@ -546,6 +547,7 @@ class AdminMetaControllerCore extends AdminController
 			{
 				$this->url->domain_ssl = $value;
 				$this->url->update();
+				Configuration::updateGlobalValue('PS_SHOP_DOMAIN_SSL', $value);
 			}
 			else
 				$this->errors[] = Tools::displayError('The SSL domain is not valid.');
@@ -648,7 +650,7 @@ class AdminMetaControllerCore extends AdminController
 		}
 
 		$tab['GB'] = array(
-			'orderby=','orderway=','tag=','id_currency=','search_query=','back=','utm_source=','utm_medium=','utm_campaign=','n='
+			'orderby=','orderway=','tag=','id_currency=','search_query=','back=','n='
 		);
 
 		foreach ($disallow_controllers as $controller)

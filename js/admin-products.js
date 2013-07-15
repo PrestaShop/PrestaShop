@@ -1299,14 +1299,14 @@ product_tabs['Suppliers'] = new function(){
 			$('#suppliers_accordion').accordion();
 			// If one second was not enough to display page, another resize is needed
 			setTimeout(function() {
-				$('#suppliers_accordion').accordion('resize');
+				$('#suppliers_accordion').accordion({ heightStyle: "fill" });
 			}, 3000);
 		}, 1000);
 
 		// Resize the accordion once the page is visible because of the bug with accordions initialized
 		// inside a display:none block not having the correct size.
 		$('#suppliers_accordion').parents('.product-tab-content').bind('displayed', function(){
-			$('#suppliers_accordion').accordion("resize");
+			$('#suppliers_accordion').accordion({ heightStyle: "fill" });
 		});
 	};
 }
@@ -1356,23 +1356,27 @@ product_tabs['VirtualProduct'] = new function(){
 		// Bind file deletion
 		$(('#product-tab-content-VirtualProduct')).delegate('a.delete_virtual_product', 'click', function(e){
 			e.preventDefault();
-			if (!$('#virtual_product_id').val())
+			if (confirm(delete_this_file))
 			{
-				$('#upload_input').show();
-				$('#virtual_product_name').val('');
-				$('#virtual_product_file').val('');
-				$('#upload-confirmation').hide().find('span').remove();
-			}
-			else
-			{
-				var object = this;
-				ajaxAction(this.href, 'deleteVirtualProduct', function(){
-					$(object).closest('tr').remove();
+				if (!$('#virtual_product_id').val())
+				{
 					$('#upload_input').show();
 					$('#virtual_product_name').val('');
 					$('#virtual_product_file').val('');
-					$('#virtual_product_id').remove();
-				});
+					$('#upload-confirmation').hide().find('span').remove();
+				}
+				else
+				{
+					var object = this;
+					ajaxAction(this.href, 'deleteVirtualProduct', function(){
+						$(object).closest('tr').remove();
+						$('#upload_input').show();
+						$('#virtual_product_name').val('');
+						$('#virtual_product_file').val('');
+						$('#virtual_product_id').remove();
+					});
+				}
+
 			}
 		});
 	}
@@ -1410,7 +1414,7 @@ product_tabs['Warehouses'] = new function(){
 		// Resize the accordion once the page is visible because of the bug with accordions initialized
 		// inside a display:none block not having the correct size.
 		$('#warehouse_accordion').parents('.product-tab-content').bind('displayed', function(){
-			$('#warehouse_accordion').accordion("resize");
+			$('#warehouse_accordion').accordion("refresh");
 		});
 	};
 }

@@ -144,7 +144,7 @@ class AdminLanguagesControllerCore extends AdminController
 					'required' => true,
 					'size' => 2,
 					'maxlength' => 5,
-					'desc' => $this->l('Full language code (e.g. EN-US, PT-BR)')
+					'desc' => $this->l('IETF language tag (e.g. en-US, pt-BR).').' '.sprintf('<a href="http://en.wikipedia.org/wiki/IETF_language_tag" target="_blank">%s <img src="../img/admin/external_link.png" class="icon-top" /></a>', $this->l('IETF on Wikipedia'))
 				),
 				array(
 					'type' => 'text',
@@ -152,7 +152,7 @@ class AdminLanguagesControllerCore extends AdminController
 					'name' => 'date_format_lite',
 					'required' => true,
 					'size' => 15,
-					'desc' => $this->l('Short date format (e.g. YY-MM-DD)')
+					'desc' => sprintf($this->l('Short date format (e.g., %s)'), '<a href="http://php.net/date" target="_blank">Y-m-d</a>')
 				),
 				array(
 					'type' => 'text',
@@ -160,7 +160,7 @@ class AdminLanguagesControllerCore extends AdminController
 					'name' => 'date_format_full',
 					'required' => true,
 					'size' => 25,
-					'desc' => $this->l('Full date format (e.g., YYYY-MM-DD)')
+					'desc' => sprintf($this->l('Full date format (e.g., %s)'), '<a href="http://php.net/date" target="_blank">Y-m-d H:i:s</a>')
 				),
 				array(
 					'type' => 'file',
@@ -475,19 +475,21 @@ class AdminLanguagesControllerCore extends AdminController
 	public function ajaxProcessCheckLangPack()
 	{
 		$this->json = true;
-		if (empty($_GET['iso_lang']))
+		if (!Tools::getValue('iso_lang') || !Validate::isLanguageIsoCode(Tools::getValue('iso_lang')))
 		{
 			$this->status = 'error';
-			$this->errors[] = '[TECHNICAL ERROR] iso_lang not set or empty';
+			$this->errors[] = $this->l('Iso code is not valid');
+			return;
 		}
-		if (empty($_GET['ps_version']))
+		if (!Tools::getValue('ps_version') || !Validate::isPrestaShopVersion(Tools::getValue('ps_version')))
 		{
 			$this->status = 'error';
-			$this->errors[] = '[TECHNICAL ERROR] ps_version not set or empty';
+			$this->errors[] = $this->l('Technical Error: ps_version is not valid');
+			return;
 		}
 
 		// Get all iso code available
-		if($lang_packs = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.(string)$_GET['ps_version'].'&iso_lang='.(string)$_GET['iso_lang']))
+		if ($lang_packs = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.Tools::getValue('ps_version').'&iso_lang='.Tools::strtolower(Tools::getValue('iso_lang'))))
 		{
 			$result = Tools::jsonDecode($lang_packs);
 			if ($lang_packs !== '' && $result && !isset($result->error))
@@ -498,16 +500,13 @@ class AdminLanguagesControllerCore extends AdminController
 			else
 			{
 				$this->status = 'error';
-				$msg = $this->l('Wrong ISO code, or the selected language pack is unavailable.');
-				if ($result)
-					$msg = $result->msg;
-				$this->errors[] = $msg;
+				$this->errors[] = $this->l('Wrong ISO code, or the selected language pack is unavailable.');
 			}
 		}
 		else
 		{
 			$this->status = 'error';
-			$this->errors[] = '[TECHNICAL ERROR] Server unreachable';
+			$this->errors[] = $this->l('Technical Error: translation server unreachable');
 		}
 	}
 

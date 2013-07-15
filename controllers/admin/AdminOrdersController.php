@@ -266,6 +266,7 @@ class AdminOrdersControllerCore extends AdminController
 			$order = new Order(Tools::getValue('id_order'));
 			if (!Validate::isLoadedObject($order))
 				throw new PrestaShopException('Can\'t load Order object');
+			ShopUrl::cacheMainDomainForShop((int)$order->id_shop);
 		}
 
 		/* Update shipping number */
@@ -308,7 +309,7 @@ class AdminOrdersControllerCore extends AdminController
 							$customer->email, $customer->firstname.' '.$customer->lastname, null, null, null, null,
 							_PS_MAIL_DIR_, true, (int)$order->id_shop))
 						{
-							Hook::exec('actionAdminOrdersTrackingNumberUpdate', array('order' => $order));
+							Hook::exec('actionAdminOrdersTrackingNumberUpdate', array('order' => $order, 'customer' => $customer, 'carrier' => $carrier));
 							Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
 						}
 						else
@@ -488,6 +489,14 @@ class AdminOrdersControllerCore extends AdminController
 					if ($shipping_cost_amount > 0)
 						$amount += $shipping_cost_amount;
 
+					$order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
+					if (Validate::isLoadedObject($order_carrier))
+					{
+						$order_carrier->weight = (float)$order->getTotalWeight();
+						if ($order_carrier->update())
+							$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);							
+					}																		
+
 					if ($amount > 0)
 					{
 						if (!OrderSlip::createPartialOrderSlip($order, $amount, $shipping_cost_amount, $order_detail_list))
@@ -513,6 +522,7 @@ class AdminOrdersControllerCore extends AdminController
 							$now = time();
 							$cart_rule->date_from = date('Y-m-d H:i:s', $now);
 							$cart_rule->date_to = date('Y-m-d H:i:s', $now + (3600 * 24 * 365.25)); /* 1 year */
+							$cart_rule->partial_use = 1;
 							$cart_rule->active = 1;
 
 							$cart_rule->reduction_amount = $amount;
@@ -652,8 +662,16 @@ class AdminOrdersControllerCore extends AdminController
 								
 								// Delete product
 								$order_detail = new OrderDetail((int)$id_order_detail);
-								if (!$order->deleteProduct($order, $order_detail, $qtyCancelProduct))
+								if (!$order->deleteProduct($order, $order_detail, $qty_cancel_product))
 									$this->errors[] = Tools::displayError('An error occurred while attempting to delete the product.').' <span class="bold">'.$order_detail->product_name.'</span>';
+								// Update weight SUM
+								$order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
+								if (Validate::isLoadedObject($order_carrier))
+								{
+									$order_carrier->weight = (float)$order->getTotalWeight();
+									if ($order_carrier->update())
+										$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);									
+								}
 								Hook::exec('actionProductCancel', array('order' => $order, 'id_order_detail' => (int)$id_order_detail));
 							}
 						if (!count($this->errors) && $customizationList)
@@ -912,13 +930,10 @@ class AdminOrdersControllerCore extends AdminController
 						$order_detail->updateTaxAmount($order);
 					}
 
-					$id_order_carrier = Db::getInstance()->getValue('
-						SELECT `id_order_carrier`
-						FROM `'._DB_PREFIX_.'order_carrier`
-						WHERE `id_order` = '.(int)$order->id);
+					$id_order_carrier = (int)$order->getIdOrderCarrier();
 					if ($id_order_carrier)
 					{
-						$order_carrier = new OrderCarrier($id_order_carrier);
+						$order_carrier = $order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
 						$order_carrier->shipping_cost_tax_excl = (float)Tools::convertPriceFull($order_carrier->shipping_cost_tax_excl, $old_currency, $currency);
 						$order_carrier->shipping_cost_tax_incl = (float)Tools::convertPriceFull($order_carrier->shipping_cost_tax_incl, $old_currency, $currency);
 						$order_carrier->update();
@@ -961,7 +976,7 @@ class AdminOrdersControllerCore extends AdminController
 
 					// Update currency in order
 					$order->id_currency = $currency->id;
-					// Update conversion rate
+					// Update exchange rate
 					$order->conversion_rate = (float)$currency->conversion_rate;
 					$order->update();
 				}
@@ -1047,16 +1062,17 @@ class AdminOrdersControllerCore extends AdminController
 					}
 
 					$cart_rules = array();
+					$discount_value = (float)str_replace(',', '.', Tools::getValue('discount_value'));
 					switch (Tools::getValue('discount_type'))
 					{
 						// Percent type
 						case 1:
-							if (Tools::getValue('discount_value') < 100)
+							if ($discount_value < 100)
 							{
 								if (isset($order_invoice))
 								{
-									$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($order_invoice->total_paid_tax_incl * Tools::getValue('discount_value') / 100, 2);
-									$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($order_invoice->total_paid_tax_excl * Tools::getValue('discount_value') / 100, 2);
+									$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($order_invoice->total_paid_tax_incl * $discount_value / 100, 2);
+									$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($order_invoice->total_paid_tax_excl * $discount_value / 100, 2);
 
 									// Update OrderInvoice
 									$this->applyDiscountOnInvoice($order_invoice, $cart_rules[$order_invoice->id]['value_tax_incl'], $cart_rules[$order_invoice->id]['value_tax_excl']);
@@ -1066,8 +1082,8 @@ class AdminOrdersControllerCore extends AdminController
 									$order_invoices_collection = $order->getInvoicesCollection();
 									foreach ($order_invoices_collection as $order_invoice)
 									{
-										$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($order_invoice->total_paid_tax_incl * Tools::getValue('discount_value') / 100, 2);
-										$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($order_invoice->total_paid_tax_excl * Tools::getValue('discount_value') / 100, 2);
+										$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($order_invoice->total_paid_tax_incl * $discount_value / 100, 2);
+										$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($order_invoice->total_paid_tax_excl * $discount_value / 100, 2);
 
 										// Update OrderInvoice
 										$this->applyDiscountOnInvoice($order_invoice, $cart_rules[$order_invoice->id]['value_tax_incl'], $cart_rules[$order_invoice->id]['value_tax_excl']);
@@ -1075,8 +1091,8 @@ class AdminOrdersControllerCore extends AdminController
 								}
 								else
 								{
-									$cart_rules[0]['value_tax_incl'] = Tools::ps_round($order->total_paid_tax_incl * Tools::getValue('discount_value') / 100, 2);
-									$cart_rules[0]['value_tax_excl'] = Tools::ps_round($order->total_paid_tax_excl * Tools::getValue('discount_value') / 100, 2);
+									$cart_rules[0]['value_tax_incl'] = Tools::ps_round($order->total_paid_tax_incl * $discount_value / 100, 2);
+									$cart_rules[0]['value_tax_excl'] = Tools::ps_round($order->total_paid_tax_excl * $discount_value / 100, 2);
 								}
 							}
 							else
@@ -1086,12 +1102,12 @@ class AdminOrdersControllerCore extends AdminController
 						case 2:
 							if (isset($order_invoice))
 							{
-								if (Tools::getValue('discount_value') > $order_invoice->total_paid_tax_incl)
+								if ($discount_value > $order_invoice->total_paid_tax_incl)
 									$this->errors[] = Tools::displayError('The discount value is greater than the order invoice total.');
 								else
 								{
-									$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round(Tools::getValue('discount_value'), 2);
-									$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round(Tools::getValue('discount_value') / (1 + ($order->getTaxesAverageUsed() / 100)), 2);
+									$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($discount_value, 2);
+									$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($discount_value / (1 + ($order->getTaxesAverageUsed() / 100)), 2);
 
 									// Update OrderInvoice
 									$this->applyDiscountOnInvoice($order_invoice, $cart_rules[$order_invoice->id]['value_tax_incl'], $cart_rules[$order_invoice->id]['value_tax_excl']);
@@ -1102,12 +1118,12 @@ class AdminOrdersControllerCore extends AdminController
 								$order_invoices_collection = $order->getInvoicesCollection();
 								foreach ($order_invoices_collection as $order_invoice)
 								{
-									if (Tools::getValue('discount_value') > $order_invoice->total_paid_tax_incl)
+									if ($discount_value > $order_invoice->total_paid_tax_incl)
 										$this->errors[] = Tools::displayError('The discount value is greater than the order invoice total.').$order_invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int)$order->id_shop).')';
 									else
 									{
-										$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round(Tools::getValue('discount_value'), 2);
-										$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round(Tools::getValue('discount_value') / (1 + ($order->getTaxesAverageUsed() / 100)), 2);
+										$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($discount_value, 2);
+										$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($discount_value / (1 + ($order->getTaxesAverageUsed() / 100)), 2);
 
 										// Update OrderInvoice
 										$this->applyDiscountOnInvoice($order_invoice, $cart_rules[$order_invoice->id]['value_tax_incl'], $cart_rules[$order_invoice->id]['value_tax_excl']);
@@ -1116,12 +1132,12 @@ class AdminOrdersControllerCore extends AdminController
 							}
 							else
 							{
-								if (Tools::getValue('discount_value') > $order->total_paid_tax_incl)
+								if ($discount_value > $order->total_paid_tax_incl)
 									$this->errors[] = Tools::displayError('The discount value is greater than the order total.');
 								else
 								{
-									$cart_rules[0]['value_tax_incl'] = Tools::ps_round(Tools::getValue('discount_value'), 2);
-									$cart_rules[0]['value_tax_excl'] = Tools::ps_round(Tools::getValue('discount_value') / (1 + ($order->getTaxesAverageUsed() / 100)), 2);
+									$cart_rules[0]['value_tax_incl'] = Tools::ps_round($discount_value, 2);
+									$cart_rules[0]['value_tax_excl'] = Tools::ps_round($discount_value / (1 + ($order->getTaxesAverageUsed() / 100)), 2);
 								}
 							}
 							break;
@@ -1172,7 +1188,7 @@ class AdminOrdersControllerCore extends AdminController
 						$cartRuleObj->quantity = 0;
 						$cartRuleObj->quantity_per_user = 1;
 						if (Tools::getValue('discount_type') == 1)
-							$cartRuleObj->reduction_percent = Tools::getValue('discount_value');
+							$cartRuleObj->reduction_percent = $discount_value;
 						elseif (Tools::getValue('discount_type') == 2)
 							$cartRuleObj->reduction_amount = $cart_rule['value_tax_excl'];
 						elseif (Tools::getValue('discount_type') == 3)
@@ -1298,7 +1314,7 @@ class AdminOrdersControllerCore extends AdminController
 		// display warning if there are products out of stock
 		$display_out_of_stock_warning = false;
 		$current_order_state = $order->getCurrentOrderState();
-		if (configuration::get('PS_STOCK_MANAGEMENT') && (!Validate::isLoadedObject($current_order_state) || ($current_order_state->delivery != 1 && $current_order_state->shipped != 1)))
+		if (Configuration::get('PS_STOCK_MANAGEMENT') && (!Validate::isLoadedObject($current_order_state) || ($current_order_state->delivery != 1 && $current_order_state->shipped != 1)))
 			$display_out_of_stock_warning = true;
 
 		// products current stock (from stock_available)
@@ -1694,6 +1710,15 @@ class AdminOrdersControllerCore extends AdminController
 
 		// Save changes of order
 		$order->update();
+		
+		// Update weight SUM
+		$order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
+		if (Validate::isLoadedObject($order_carrier))
+		{
+			$order_carrier->weight = (float)$order->getTotalWeight();			
+			if ($order_carrier->update())
+				$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);	
+		}		
 
 		// Update Tax lines
 		$order_detail->updateTaxAmount($order);
@@ -1901,6 +1926,17 @@ class AdminOrdersControllerCore extends AdminController
 	
 		// Save order detail
 		$res &= $order_detail->update();
+		
+		// Update weight SUM
+		$order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
+		if (Validate::isLoadedObject($order_carrier))
+		{
+			$order_carrier->weight = (float)$order->getTotalWeight();
+			$res &= $order_carrier->update();
+			if ($res)
+				$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);	
+		}
+		
 		// Save order invoice
 		if (isset($order_invoice))
 			 $res &= $order_invoice->update();
@@ -1969,8 +2005,8 @@ class AdminOrdersControllerCore extends AdminController
 	{
 		$res = true;
 
-		$order_detail = new OrderDetail(Tools::getValue('id_order_detail'));
-		$order = new Order(Tools::getValue('id_order'));
+		$order_detail = new OrderDetail((int)Tools::getValue('id_order_detail'));
+		$order = new Order((int)Tools::getValue('id_order'));
 
 		$this->doDeleteProductLineValidation($order_detail, $order);
 
@@ -1994,8 +2030,21 @@ class AdminOrdersControllerCore extends AdminController
 
 		$res &= $order->update();
 
+		// Reinject quantity in stock
+		$this->reinjectQuantity($order_detail, $order_detail->product_quantity);
+
 		// Delete OrderDetail
 		$res &= $order_detail->delete();
+		
+		// Update weight SUM
+		$order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
+		if (Validate::isLoadedObject($order_carrier))
+		{
+			$order_carrier->weight = (float)$order->getTotalWeight();
+			$res &= $order_carrier->update();
+			if ($res)
+				$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);				
+		}
 
 		if (!$res)
 			die(Tools::jsonEncode(array(

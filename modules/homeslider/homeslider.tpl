@@ -46,7 +46,7 @@ var homeslider_pause = {$homeslider.pause};
 	{if $slide.active}
 		<li>
 			<a href="{$slide.url|escape:'htmlall':'UTF-8'}" title="{$slide.description|escape:'htmlall':'UTF-8'}">
-			<img src="{$smarty.const._MODULE_DIR_}/homeslider/images/{$slide.image|escape:'htmlall':'UTF-8'}" alt="{$slide.legend|escape:'htmlall':'UTF-8'}" height="{$homeslider.height|intval}" width="{$homeslider.width|intval}" />
+			<img src="{$smarty.const._MODULE_DIR_}homeslider/images/{$slide.image|escape:'htmlall':'UTF-8'}" alt="{$slide.legend|escape:'htmlall':'UTF-8'}" height="{$homeslider.height|intval}" width="{$homeslider.width|intval}" />
 			</a>
 		</li>
 	{/if}

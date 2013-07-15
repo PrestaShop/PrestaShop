@@ -140,7 +140,11 @@ class TabCore extends ObjectModel
 	public function delete()
 	{
 	 	if (Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'access WHERE `id_tab` = '.(int)$this->id) && parent::delete())
+		{
+			if (is_array(self::$_getIdFromClassName) && isset(self::$_getIdFromClassName[strtolower($this->class_name)]))
+				unset(self::$_getIdFromClassName[strtolower($this->class_name)]);
 			return $this->cleanPositions($this->id_parent);
+		}
 		return false;
 	}
 
@@ -534,11 +538,10 @@ class TabCore extends ObjectModel
 					foreach($tab->attributes() as $key => $value)
 						if ($key == 'display_type')
 							$display_type = (string)$value;
-							
+
 					foreach ($tab->children() as $module)
-						foreach ($module->attributes() as $k => $v)
-							if ($k == 'name')
-								$modules_list[$display_type][] = (string)$v;
+						$modules_list[$display_type][(int)$module['position']] = (string)$module['name'];
+					ksort($modules_list[$display_type]);
 				}
 			}
 		

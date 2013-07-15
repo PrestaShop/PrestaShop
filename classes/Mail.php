@@ -63,7 +63,6 @@ class MailCore
 			'PS_SHOP_NAME',
 			'PS_MAIL_SMTP_ENCRYPTION',
 			'PS_MAIL_SMTP_PORT',
-			'PS_MAIL_METHOD',
 			'PS_MAIL_TYPE'
 		), null, null, $id_shop);
 		
@@ -245,10 +244,13 @@ class MailCore
 				else
 					$template_vars['{shop_logo}'] = '';
 			}
-
+			ShopUrl::cacheMainDomainForShop((int)$id_shop);
 			/* don't attach the logo as */
 			if (isset($logo))
 				$template_vars['{shop_logo}'] = $message->attach(new Swift_Message_EmbeddedFile(new Swift_File($logo), null, ImageManager::getMimeTypeByExtension($logo)));
+
+			if ((Context::getContext()->link instanceof Link) === false)
+				Context::getContext()->link = new Link();
 
 			$template_vars['{shop_name}'] = Tools::safeOutput(Configuration::get('PS_SHOP_NAME', null, null, $id_shop));
 			$template_vars['{shop_url}'] = Context::getContext()->link->getPageLink('index', true, Context::getContext()->language->id);
@@ -274,6 +276,9 @@ class MailCore
 			/* Send mail */
 			$send = $swift->send($message, $to, new Swift_Address($from, $from_name));
 			$swift->disconnect();
+
+			ShopUrl::resetMainDomainCache();			
+
 			return $send;
 		}
 		catch (Swift_Exception $e) {

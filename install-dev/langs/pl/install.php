@@ -1,5 +1,9 @@
 <?php
 return array(
+	'informations' => array(
+		'phone' => '+33 (0)1.40.18.30.04',
+		'support' => 'https://www.prestashop.com/pl/wsparcie-techniczne',
+	),
 	'translations' => array(
 		'An SQL error occured for entity <i>%1$s</i>: <i>%2$s</i>' => 'Wystąpił błąd SQL w rekordzie <i>%1$s</i>: <i>%2$s</i>',
 		'Cannot create image "%1$s" for entity "%2$s"' => 'Nie można utworzyć obrazu "%1$s" dla rekordu "%2$s"',

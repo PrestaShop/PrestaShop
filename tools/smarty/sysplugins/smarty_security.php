@@ -77,7 +77,7 @@ class Smarty_Security {
         'nl2br',
     );
     /**
-     * This is an array of trusted PHP modifers.
+     * This is an array of trusted PHP modifiers.
      *
      * If empty all modifiers are allowed.
      * To disable all modifier set $modifiers = null.

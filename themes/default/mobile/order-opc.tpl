@@ -33,11 +33,11 @@
 <script type="text/javascript">
 	// <![CDATA[
 	var imgDir = '{$img_dir}';
-	var authenticationUrl = '{$link->getPageLink("authentication", true)}';
-	var orderOpcUrl = '{$link->getPageLink("order-opc", true)}';
-	var historyUrl = '{$link->getPageLink("history", true)}';
-	var guestTrackingUrl = '{$link->getPageLink("guest-tracking", true)}';
-	var addressUrl = '{$link->getPageLink("address", true)}';
+	var authenticationUrl = '{$link->getPageLink("authentication", true)|addslashes}';
+	var orderOpcUrl = '{$link->getPageLink("order-opc", true)|addslashes}';
+	var historyUrl = '{$link->getPageLink("history", true)|addslashes}';
+	var guestTrackingUrl = '{$link->getPageLink("guest-tracking", true)|addslashes}';
+	var addressUrl = '{$link->getPageLink("address", true)|addslashes}';
 	var orderProcess = 'order-opc';
 	var guestCheckoutEnabled = {$PS_GUEST_CHECKOUT_ENABLED|intval};
 	var currencySign = '{$currencySign|html_entity_decode:2:"UTF-8"}';

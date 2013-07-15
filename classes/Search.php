@@ -224,7 +224,7 @@ class SearchCore
 					AND product_shop.`active` = 1
 					AND product_shop.`visibility` IN ("both", "search")
 					AND product_shop.indexed = 1
-					AND cg.`id_group` '.(!$id_customer ?  '= 1' : 'IN (
+					AND cg.`id_group` '.(!$id_customer ?  '= '.(int)Configuration::get('PS_UNIDENTIFIED_GROUP') : 'IN (
 						SELECT id_group FROM '._DB_PREFIX_.'customer_group
 						WHERE id_customer = '.(int)$id_customer.'
 					)');
@@ -281,6 +281,8 @@ class SearchCore
 		$alias = '';
 		if ($order_by == 'price')
 			$alias = 'product_shop.';
+		else if ($order_by == 'date_upd')
+			$alias = 'p.';
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, 
 				pl.`description_short`, pl.`available_now`, pl.`available_later`, pl.`link_rewrite`, pl.`name`,
 			 MAX(image_shop.`id_image`) id_image, il.`legend`, m.`name` manufacturer_name '.$score.', MAX(product_attribute_shop.`id_product_attribute`) id_product_attribute,
@@ -620,7 +622,7 @@ class SearchCore
 					LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)
 					WHERE product_shop.`active` = 1
 						AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
-						AND cg.`id_group` '.(!$id_customer ?  '= 1' : 'IN (
+						AND cg.`id_group` '.(!$id_customer ?  '= '.(int)Configuration::get('PS_UNIDENTIFIED_GROUP') : 'IN (
 							SELECT id_group FROM '._DB_PREFIX_.'customer_group
 							WHERE id_customer = '.(int)$id_customer.')').'
 						AND t.`name` LIKE \'%'.pSQL($tag).'%\'';
@@ -654,7 +656,7 @@ class SearchCore
 				'.Product::sqlStock('p', 0).'
 				WHERE product_shop.`active` = 1
 					AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
-					AND cg.`id_group` '.(!$id_customer ?  '= 1' : 'IN (
+					AND cg.`id_group` '.(!$id_customer ?  '= '.(int)Configuration::get('PS_UNIDENTIFIED_GROUP') : 'IN (
 						SELECT id_group FROM '._DB_PREFIX_.'customer_group
 						WHERE id_customer = '.(int)$id_customer.')').'
 					AND t.`name` LIKE \'%'.pSQL($tag).'%\'

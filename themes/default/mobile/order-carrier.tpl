@@ -14,7 +14,7 @@
 		var currencyBlank = '{$currencyBlank|intval}';
 		var txtProduct = "{l s='product' js=1}";
 		var txtProducts = "{l s='products' js=1}";
-		var orderUrl = '{$link->getPageLink("order", true)}';
+		var orderUrl = '{$link->getPageLink("order", true)|addslashes}';
 	
 		var msg = "{l s='You must agree to the terms of service before continuing.' js=1}";
 		{literal}
@@ -67,7 +67,7 @@
 			{assign var='current_step' value='shipping'}
 			{include file="$tpl_dir./errors.tpl"}
 			
-			<form id="form" action="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")}" method="post" onsubmit="return acceptCGV();" data-ajax="false">
+			<form id="form" action="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")|escape:'html'}" method="post" onsubmit="return acceptCGV();" data-ajax="false">
 		{else}
 			<div id="opc_delivery_methods" class="opc-main-block">
 			<div id="opc_delivery_methods-overlay" class="opc-overlay" style="display: none;"></div>
@@ -237,7 +237,7 @@
 			<fieldset class="cart_navigation submit ui-grid-a">
 				<input type="hidden" class="hidden" name="step" value="3" />
 				<input type="hidden" name="back" value="{$back}" />
-				<div class="ui-block-a"><a href="{$link->getPageLink($back_order_page, true, NULL, "step=1{if $back}&back={$back}{/if}")}" title="{l s='Previous'}" data-role="button" data-icon="back" data-ajax="false">&laquo; {l s='Previous'}</a></div>
+				<div class="ui-block-a"><a href="{$link->getPageLink($back_order_page, true, NULL, "step=1{if $back}&back={$back}{/if}")|escape:'html'}" title="{l s='Previous'}" data-role="button" data-icon="back" data-ajax="false">&laquo; {l s='Previous'}</a></div>
 				<div class="ui-block-b"><input type="submit" name="processCarrier" value="{l s='Next'}" class="exclusive" data-icon="check" data-iconpos="right" data-theme="b" data-ajax="false" /></div>
 			</fieldset>
 		</form>

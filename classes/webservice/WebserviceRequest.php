@@ -530,9 +530,10 @@ class WebserviceRequestCore
 				}
 			}
 		}
-		return $this->returnOutput();
+		$return = $this->returnOutput();
 		unset($webservice_call);
-		unset ($display_errors);
+		unset($display_errors);
+		return $return;
 	}
 
 	protected function webserviceChecks()
@@ -1158,6 +1159,7 @@ class WebserviceRequestCore
 				$sorts = array($this->urlFragments['sort']);
 
 			$sql_sort .= ' ORDER BY ';
+
 			foreach ($sorts as $sort)
 			{
 				$delimiterPosition = strrpos($sort, '_');
@@ -1184,7 +1186,14 @@ class WebserviceRequestCore
 					$sql_sort .= 'main_i18n.`'.pSQL($this->resourceConfiguration['fields'][$fieldName]['sqlId']).'` '.$direction.', ';// ORDER BY main_i18n.`field` ASC|DESC
 				}
 				else
-					$sql_sort .= (isset($this->resourceConfiguration['retrieveData']['tableAlias']) ? $this->resourceConfiguration['retrieveData']['tableAlias'].'.' : '').'`'.pSQL($this->resourceConfiguration['fields'][$fieldName]['sqlId']).'` '.$direction.', ';// ORDER BY `field` ASC|DESC
+				{
+					$object = new $this->resourceConfiguration['retrieveData']['className']();
+					if ($object->isMultiShopField($this->resourceConfiguration['fields'][$fieldName]['sqlId']))
+						$table_alias = 'multi_shop_'.$this->resourceConfiguration['retrieveData']['table'];
+					else
+						$table_alias = '';
+					$sql_sort .= (isset($this->resourceConfiguration['retrieveData']['tableAlias']) ? '`'.bqSQL($this->resourceConfiguration['retrieveData']['tableAlias']).'`.' : '`'.bqSQL($table_alias).'`.').'`'.pSQL($this->resourceConfiguration['fields'][$fieldName]['sqlId']).'` '.$direction.', ';// ORDER BY `field` ASC|DESC
+				}
 			}
 			$sql_sort = rtrim($sql_sort, ', ')."\n";
 		}
@@ -1212,12 +1221,15 @@ class WebserviceRequestCore
 		return $filters;
 	}
 
-
-
 	public function getFilteredObjectList()
 	{
 		$objects = array();
 		$filters = $this->manageFilters();
+
+		/* If we only need to display the synopsis, analyzing the first row is sufficient */
+		if (isset($this->urlFragments['schema']) && in_array($this->urlFragments['schema'], array('blank', 'synopsis')))
+			$filters = array('sql_join' => '', 'sql_filter' => '', 'sql_sort' => '', 'sql_limit' => ' LIMIT 1');
+			
 		$this->resourceConfiguration['retrieveData']['params'][] = $filters['sql_join'];
 		$this->resourceConfiguration['retrieveData']['params'][] = $filters['sql_filter'];
 		$this->resourceConfiguration['retrieveData']['params'][] = $filters['sql_sort'];
@@ -1229,7 +1241,16 @@ class WebserviceRequestCore
 		if ($sqlObjects)
 		{
 			foreach ($sqlObjects as $sqlObject)
-				$objects[] = new $this->resourceConfiguration['retrieveData']['className']((int)$sqlObject[$this->resourceConfiguration['fields']['id']['sqlId']]);
+			{
+				if ($this->fieldsToDisplay == 'minimum')
+				{
+					$obj = new $this->resourceConfiguration['retrieveData']['className']();
+					$obj->id = (int)$sqlObject[$this->resourceConfiguration['fields']['id']['sqlId']];
+					$objects[] = $obj;
+				}
+				else
+					$objects[] = new $this->resourceConfiguration['retrieveData']['className']((int)$sqlObject[$this->resourceConfiguration['fields']['id']['sqlId']]);
+			}
 			return $objects;
 		}
 	}

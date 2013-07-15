@@ -49,7 +49,7 @@ class PSCleaner extends Module
 	{
 		$html = '<h2>'.$this->l('Be really careful with this tool - There is no possible rollback!').'</h2>';
 		if (Tools::isSubmit('submitCheckAndFix'))
-			$html .= (count($logs = self::checkAndFix()) ? print_r($logs, true) : $this->l('Nothing that need to be cleaned')).'<br /><br />';
+			$html .= $this->displayConfirmation((count($logs = self::checkAndFix()) ? '<pre>'.print_r($logs, true).'</pre>' : $this->l('Nothing that need to be cleaned')).'<br /><br />');
 		if (Tools::isSubmit('submitTruncateCatalog'))
 		{
 			self::truncate('catalog');
@@ -175,9 +175,9 @@ class PSCleaner extends Module
 			array('delivery', 'id_carrier', 'carrier', 'id_carrier'),
 			array('delivery', 'id_zone', 'zone', 'id_zone'),
 			array('editorial', 'id_shop', 'shop', 'id_shop', 'editorial'),
-			array('favorite_product', 'id_product', 'product', 'id_product'),
-			array('favorite_product', 'id_customer', 'customer', 'id_customer'),
-			array('favorite_product', 'id_shop', 'shop', 'id_shop'),
+			array('favorite_product', 'id_product', 'product', 'id_product','favoriteproducts'),
+			array('favorite_product', 'id_customer', 'customer', 'id_customer','favoriteproducts'),
+			array('favorite_product', 'id_shop', 'shop', 'id_shop','favoriteproducts'),
 			array('feature_product', 'id_feature', 'feature', 'id_feature'),
 			array('feature_product', 'id_product', 'product', 'id_product'),
 			array('feature_value', 'id_feature', 'feature', 'id_feature'),
@@ -291,7 +291,7 @@ class PSCleaner extends Module
 		}
 
 		// _lang table cleaning
-		$tables = Db::getInstance()->executeS('SHOW TABLES LIKE "'._DB_PREFIX_.'%_\\_lang"');
+		$tables = Db::getInstance()->executeS('SHOW TABLES LIKE "'.preg_replace('/([%_])/', '\\$1', _DB_PREFIX_).'%_\\_lang"');
 		foreach ($tables as $table)
 		{
 			$table_lang = current($table);
@@ -310,7 +310,7 @@ class PSCleaner extends Module
 		}
 		
 		// _shop table cleaning
-		$tables = Db::getInstance()->executeS('SHOW TABLES LIKE "'._DB_PREFIX_.'%_\\_shop"');
+		$tables = Db::getInstance()->executeS('SHOW TABLES LIKE "'.preg_replace('/([%_])/', '\\$1', _DB_PREFIX_).'%_\\_shop"');
 		foreach ($tables as $table)
 		{
 			$table_shop = current($table);
@@ -348,9 +348,9 @@ class PSCleaner extends Module
 			case 'catalog':
 				$id_home = Configuration::get('PS_HOME_CATEGORY');
 				$id_root = Configuration::get('PS_ROOT_CATEGORY');
-				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category` WHERE id_category NOT IN ('.(int)$id_home.', '.(int)$id_root.')');
-				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_lang` WHERE id_category NOT IN ('.(int)$id_home.', '.(int)$id_root.')');
-				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_shop` WHERE id_category NOT IN ('.(int)$id_home.', '.(int)$id_root.')');
+				$db->execute('DELETE FROM `'._DB_PREFIX_.'category` WHERE id_category NOT IN ('.(int)$id_home.', '.(int)$id_root.')');
+				$db->execute('DELETE FROM `'._DB_PREFIX_.'category_lang` WHERE id_category NOT IN ('.(int)$id_home.', '.(int)$id_root.')');
+				$db->execute('DELETE FROM `'._DB_PREFIX_.'category_shop` WHERE id_category NOT IN ('.(int)$id_home.', '.(int)$id_root.')');
 				foreach (scandir(_PS_CAT_IMG_DIR_) as $dir)
 					if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $dir))
 						unlink(_PS_CAT_IMG_DIR_.$dir);
@@ -475,8 +475,6 @@ class PSCleaner extends Module
 					'order_payment',
 					'order_return',
 					'order_return_detail',
-					'order_return_state',
-					'order_return_state_lang',
 					'order_slip',
 					'order_slip_detail',
 					'page',
@@ -489,13 +487,17 @@ class PSCleaner extends Module
 				foreach ($tables as $table)
 					$db->execute('TRUNCATE TABLE `'._DB_PREFIX_.bqSQL($table).'`');
 				$db->execute('DELETE FROM `'._DB_PREFIX_.'address` WHERE id_customer > 0');
+				$db->execute('UPDATE `'._DB_PREFIX_.'employee` SET `id_last_order` = 0,`id_last_customer_message` = 0,`id_last_customer` = 0');
+
 				break;
 		}
+		$this->clearAllCaches();
 	}
 	
+	// Not called yet
 	public static function cleanAndOptimize()
 	{
-		// Clean (carts...)
+		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart` WHERE id_cart NOT IN (SELECT id_cart FROM `'._DB_PREFIX_.'cart`) AND date_add < "'.pSQL(date('Y-m-d', strtotime('-1 month'))).'"');
 	}
 	
 	protected static function bulle($array)
@@ -507,17 +509,21 @@ class PSCleaner extends Module
 			$sorted = true;
 			for ($i = 0; $i < $size - 1; ++$i)
 				for ($j = $i + 1; $j < $size; ++$j)
-				{
 					if ($array[$i][2] == $array[$j][0])
 					{
-						// var_dump(array($array[$i], $array[$j]));
 						$tmp = $array[$i];
 						$array[$i] = $array[$j];
 						$array[$j] = $tmp;
 						$sorted = false;
 					}
-				}
 		}
 		return $array;
+	}
+	
+	protected function clearAllCaches()
+	{
+		$this->_clearCache('blockcategories.tpl');
+		$this->_clearCache('blockcategories_footer.tpl');
+		$this->_clearCache('blocktopmenu.tpl');
 	}
 }

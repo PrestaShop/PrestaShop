@@ -189,7 +189,7 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->_join .= '
 			LEFT JOIN `'._DB_PREFIX_.'manufacturer` m
 				ON (a.`id_manufacturer` = m.`id_manufacturer`)';
-		$this->_where = 'AND a.`id_customer` = 0 AND a.`id_supplier` = 0 AND a.`id_warehouse` = 0';
+		$this->_where = 'AND a.`id_customer` = 0 AND a.`id_supplier` = 0 AND a.`id_warehouse` = 0 AND a.`deleted`=0';
 
 		$this->context->smarty->assign('title_list', $this->l('Manufacturers addresses:'));
 
@@ -406,6 +406,12 @@ class AdminManufacturersControllerCore extends AdminController
 			'type' => 'hidden',
 			'name' => 'alias',
 		);
+		
+		$form['input'][] = array(
+			'type' => 'hidden',
+			'name' => 'id_address',
+		);
+		
 		$form['input'][] = array(
 			'type' => 'text',
 			'label' => $this->l('Last name:'),
@@ -440,6 +446,7 @@ class AdminManufacturersControllerCore extends AdminController
 			'type' => 'text',
 			'label' => $this->l('Zip Code/Postal Code'),
 			'name' => 'postcode',
+			'required' => true,
 			'size' => 33,
 			'required' => false,
 		);
@@ -711,6 +718,9 @@ class AdminManufacturersControllerCore extends AdminController
 
 		return $res;
 	}
+	
+	protected function beforeDelete($object)
+	{
+		return true;
+	}
 }
-
-

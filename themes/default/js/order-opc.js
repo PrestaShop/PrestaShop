@@ -93,7 +93,7 @@ function updateAddressSelection()
 				for(var error in jsonData.errors)
 					//IE6 bug fix
 					if(error !== 'indexOf')
-						errors += jsonData.errors[error] + "\n";
+						errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
 				alert(errors);
 			}
 			else
@@ -186,7 +186,7 @@ function getCarrierListAndUpdate()
 				for(var error in jsonData.errors)
 					//IE6 bug fix
 					if(error !== 'indexOf')
-						errors += jsonData.errors[error] + "\n";
+						errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
 				alert(errors);
 			}
 			else
@@ -236,7 +236,7 @@ function updateCarrierSelectionAndGift()
 				for(var error in jsonData.errors)
 					//IE6 bug fix
 					if(error !== 'indexOf')
-						errors += jsonData.errors[error] + "\n";
+						errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
 				alert(errors);
 			}
 			else
@@ -445,6 +445,7 @@ $(function() {
 				$('#is_new_customer').val('0');
 				$('#opc_account_choice, #opc_invoice_address').hide();
 				$('#new_account_title').html(txtInstantCheckout);
+				$('#submitAccount').prop({id : 'submitGuestAccount', name : 'submitGuestAccount'});
 				updateState();
 				updateNeedIDNumber();
 				updateZipCode();
@@ -702,7 +703,7 @@ function bindInputs()
 					for(var error in jsonData.errors)
 						//IE6 bug fix
 						if(error !== 'indexOf')
-							errors += jsonData.errors[error] + "\n";
+							errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
 					alert(errors);
 				}
 			else

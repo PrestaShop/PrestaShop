@@ -34,7 +34,7 @@ function checkLangPack(token){
 				action:'checkLangPack',
 				token:token,
 				ajax:1,
-				iso_lang:$('#iso_code').val(), 
+				iso_lang:($('#iso_code').val()).toLowerCase(), 
 				ps_version:$('#ps_version').val()
 			},
 			function(ret)
@@ -47,7 +47,7 @@ function checkLangPack(token){
 					message = langPackOk + ' <b>'+content['name'] + '</b>) :'
 						+'<br />' + langPackVersion + ' ' + content['version']
 						+ ' <a href="http://www.prestashop.com/download/lang_packs/gzip/' + content['version'] + '/'
-						+ $('#iso_code').val()+'.gzip" target="_blank" class="link">'+download+'</a><br />' + langPackInfo;
+						+ ($('#iso_code').val()).toLowerCase()+'.gzip" target="_blank" class="link">'+download+'</a><br />' + langPackInfo;
 					$('#lang_pack_msg').html(message);
 					$('#lang_pack_msg').show();
 				}

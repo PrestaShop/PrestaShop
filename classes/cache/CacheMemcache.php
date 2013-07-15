@@ -65,8 +65,9 @@ class CacheMemcacheCore extends Cache
 					        {
 					           foreach ($dump as $entries)
 					           {
-					                if ($entries)
-					                    $this->keys = array_merge($this->keys, array_keys($entries));
+									if($entries)
+										foreach ($entries as $key => $data)
+											$this->keys[$key] = $data[1];
 					           }
 					        }
 					    }

@@ -467,7 +467,9 @@ class CarrierCore extends ObjectModel
 		ORDER BY s.`name` ASC');
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT cl.*,c.*, cl.`name` AS country, zz.`name` AS zone FROM `'._DB_PREFIX_.'country` c
+			SELECT cl.*,c.*, cl.`name` AS country, zz.`name` AS zone 
+			FROM `'._DB_PREFIX_.'country` c'.
+			Shop::addSqlAssociation('country', 'c').'
 			LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = '.(int)$id_lang.')
 			INNER JOIN (`'._DB_PREFIX_.'carrier_zone` cz INNER JOIN `'._DB_PREFIX_.'carrier` cr ON ( cr.id_carrier = cz.id_carrier AND cr.deleted = 0 '.
 			($active_carriers ? 'AND cr.active = 1) ' : ') ').'
@@ -565,8 +567,8 @@ class CarrierCore extends ObjectModel
 			}
 
 			$row['name'] = (strval($row['name']) != '0' ? $row['name'] : Configuration::get('PS_SHOP_NAME'));
-			$row['price'] = ($shipping_method == Carrier::SHIPPING_METHOD_FREE ? 0 : $cart->getPackageShippingCost((int)$row['id_carrier'], true, null, null, $id_zone));
-			$row['price_tax_exc'] = ($shipping_method == Carrier::SHIPPING_METHOD_FREE ? 0 : $cart->getPackageShippingCost((int)$row['id_carrier'], false, null, null, $id_zone));
+			$row['price'] = (($shipping_method == Carrier::SHIPPING_METHOD_FREE) ? 0 : $cart->getPackageShippingCost((int)$row['id_carrier'], true, null, null, $id_zone));
+			$row['price_tax_exc'] = (($shipping_method == Carrier::SHIPPING_METHOD_FREE) ? 0 : $cart->getPackageShippingCost((int)$row['id_carrier'], false, null, null, $id_zone));
 			$row['img'] = file_exists(_PS_SHIP_IMG_DIR_.(int)$row['id_carrier']).'.jpg' ? _THEME_SHIP_DIR_.(int)$row['id_carrier'].'.jpg' : '';
 
 			// If price is false, then the carrier is unavailable (carrier module)

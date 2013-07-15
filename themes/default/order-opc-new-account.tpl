@@ -1,7 +1,7 @@
 <div id="opc_new_account" class="opc-main-block">
 	<div id="opc_new_account-overlay" class="opc-overlay" style="display: none;"></div>
 	<h2><span>1</span> {l s='Account'}</h2>
-	<form action="{$link->getPageLink('authentication', true, NULL, "back=order-opc")}" method="post" id="login_form" class="std">
+	<form action="{$link->getPageLink('authentication', true, NULL, "back=order-opc")|escape:'html'}" method="post" id="login_form" class="std">
 		<fieldset>
 			<h3>{l s='Already registered?'}</h3>
 			<p><a href="#" id="openLoginFormBlock">&raquo; {l s='Click here'}</a></p>
@@ -16,7 +16,7 @@
 				<div style="margin-left:40px;margin-bottom:5px;float:left;width:40%;">
 					<label for="login_passwd">{l s='Password'}</label>
 					<span><input type="password" id="login_passwd" name="login_passwd" /></span>
-					<a href="{$link->getPageLink('password', true)}" class="lost_password">{l s='Forgot your password?'}</a>
+					<a href="{$link->getPageLink('password', true)|escape:'html'}" class="lost_password">{l s='Forgot your password?'}</a>
 				</div>
 				<p class="submit">
 					{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'htmlall':'UTF-8'}" />{/if}
@@ -178,12 +178,13 @@
 				{/if}
 				<h3>{l s='Delivery address'}</h3>
 				{$stateExist = false}
+				{$postCodeExist = false}
 				{foreach from=$dlv_all_fields item=field_name}
-				{if $field_name eq "company"}
-				<p class="text">
-					<label for="company">{l s='Company'}</label>
-					<input type="text" class="text" id="company" name="company" value="{if isset($guestInformations) && $guestInformations.company}{$guestInformations.company}{/if}" />
-				</p>
+				{if $field_name eq "company" && $b2b_enable}
+					<p class="text">
+						<label for="company">{l s='Company'}</label>
+						<input type="text" class="text" id="company" name="company" value="{if isset($guestInformations) && $guestInformations.company}{$guestInformations.company}{/if}" />
+					</p>
 				{elseif $field_name eq "firstname"}
 				<p class="required text">
 					<label for="firstname">{l s='First name'} <sup>*</sup></label>
@@ -205,6 +206,7 @@
 					<input type="text" class="text" name="address2" id="address2" value="" />
 				</p>
 				{elseif $field_name eq "postcode"}
+				{$postCodeExist = true}
 				<p class="required postcode text">
 					<label for="postcode">{l s='Zip / Postal code'} <sup>*</sup></label>
 					<input type="text" class="text" name="postcode" id="postcode" value="{if isset($guestInformations) && $guestInformations.postcode}{$guestInformations.postcode}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
@@ -213,7 +215,6 @@
 				<p class="required text">
 					<label for="city">{l s='City'} <sup>*</sup></label>
 					<input type="text" class="text" name="city" id="city" value="{if isset($guestInformations) && $guestInformations.city}{$guestInformations.city}{/if}" />
-					
 				</p>
 				{elseif $field_name eq "country" || $field_name eq "Country:name"}
 				<p class="required select">
@@ -221,7 +222,7 @@
 					<select name="id_country" id="id_country">
 						<option value="">-</option>
 						{foreach from=$countries item=v}
-						<option value="{$v.id_country}" {if (isset($guestInformations) AND $guestInformations.id_country == $v.id_country) OR (!isset($guestInformations) && $sl_country == $v.id_country)} selected="selected"{/if}>{$v.name|escape:'htmlall':'UTF-8'}</option>
+						<option value="{$v.id_country}"{if (isset($guestInformations) AND $guestInformations.id_country == $v.id_country) OR (!isset($guestInformations) && $sl_country == $v.id_country)} selected="selected"{/if}>{$v.name|escape:'htmlall':'UTF-8'}</option>
 						{/foreach}
 					</select>
 				</p>
@@ -247,14 +248,20 @@
 					<input type="text" class="text" name="dni" id="dni" value="{if isset($guestInformations) && $guestInformations.dni}{$guestInformations.dni}{/if}" />
 					<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 				</p>
+				{if !$postCodeExist}
+				<p class="required postcode text hidden">
+					<label for="postcode">{l s='Zip / Postal code'} <sup>*</sup></label>
+					<input type="text" class="text" name="postcode" id="postcode" value="{if isset($guestInformations) && $guestInformations.postcode}{$guestInformations.postcode}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
+				</p>
+				{/if}				
 				{if !$stateExist}
-				<p class="required id_state select">
+				<p class="required id_state select hidden">
 					<label for="id_state">{l s='State'} <sup>*</sup></label>
 					<select name="id_state" id="id_state">
 						<option value="">-</option>
 					</select>
 				</p>
-				{/if}
+				{/if}				
 				<p class="textarea is_customer_param">
 					<label for="other">{l s='Additional information'}</label>
 					<textarea name="other" id="other" cols="26" rows="3"></textarea>
@@ -268,20 +275,21 @@
 				</p>
 				<p class="{if isset($one_phone_at_least) && $one_phone_at_least}required {/if}text">
 					<label for="phone_mobile">{l s='Mobile phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>*</sup>{/if}</label>
-					<input type="text" class="text" name="phone_mobile" id="phone_mobile" value="" />
+					<input type="text" class="text" name="phone_mobile" id="phone_mobile" value="{if isset($guestInformations) && $guestInformations.phone_mobile}{$guestInformations.phone_mobile}{/if}" />
 				</p>
 				<input type="hidden" name="alias" id="alias" value="{l s='My address'}" />
 
-				<p class="checkbox is_customer_param">
+				<p class="checkbox">
 					<input type="checkbox" name="invoice_address" id="invoice_address" />
 					<label for="invoice_address"><b>{l s='Please use another address for invoice'}</b></label>
 				</p>
 
 				<div id="opc_invoice_address" class="is_customer_param">
 					{assign var=stateExist value=false}
+					{assign var=postCodeExist value=false}
 					<h3>{l s='Invoice address'}</h3>
 					{foreach from=$inv_all_fields item=field_name}
-					{if $field_name eq "company"}
+					{if $field_name eq "company" &&  $b2b_enable}
 					<p class="text is_customer_param">
 						<label for="company_invoice">{l s='Company'}</label>
 						<input type="text" class="text" id="company_invoice" name="company_invoice" value="" />
@@ -295,38 +303,39 @@
 					</div>
 					<p class="required text dni_invoice">
 						<label for="dni">{l s='Identification number'}</label>
-						<input type="text" class="text" name="dni_invoice" id="dni_invoice" value="{if isset($guestInformations) && $guestInformations.dni}{$guestInformations.dni}{/if}" />
+						<input type="text" class="text" name="dni_invoice" id="dni_invoice" value="{if isset($guestInformations) && $guestInformations.dni_invoice}{$guestInformations.dni_invoice}{/if}" />
 						<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 					</p>
 					{elseif $field_name eq "firstname"}
 					<p class="required text">
 						<label for="firstname_invoice">{l s='First name'} <sup>*</sup></label>
-						<input type="text" class="text" id="firstname_invoice" name="firstname_invoice" value="" />
+						<input type="text" class="text" id="firstname_invoice" name="firstname_invoice" value="{if isset($guestInformations) && $guestInformations.firstname_invoice}{$guestInformations.firstname_invoice}{/if}" />
 					</p>
 					{elseif $field_name eq "lastname"}
 					<p class="required text">
 						<label for="lastname_invoice">{l s='Last name'} <sup>*</sup></label>
-						<input type="text" class="text" id="lastname_invoice" name="lastname_invoice" value="" />
+						<input type="text" class="text" id="lastname_invoice" name="lastname_invoice" value="{if isset($guestInformations) && $guestInformations.firstname_invoice}{$guestInformations.firstname_invoice}{/if}" />
 					</p>
 					{elseif $field_name eq "address1"}
 					<p class="required text">
 						<label for="address1_invoice">{l s='Address'} <sup>*</sup></label>
-						<input type="text" class="text" name="address1_invoice" id="address1_invoice" value="" />
+						<input type="text" class="text" name="address1_invoice" id="address1_invoice" value="{if isset($guestInformations) && $guestInformations.address1_invoice}{$guestInformations.address1_invoice}{/if}" />
 					</p>
 					{elseif $field_name eq "address2"}
 					<p class="text is_customer_param">
 						<label for="address2_invoice">{l s='Address (Line 2)'}</label>
-						<input type="text" class="text" name="address2_invoice" id="address2_invoice" value="" />
+						<input type="text" class="text" name="address2_invoice" id="address2_invoice" value="{if isset($guestInformations) && $guestInformations.address2_invoice}{$guestInformations.address2_invoice}{/if}" />
 					</p>
 					{elseif $field_name eq "postcode"}
-					<p class="required postcode text">
+					{$postCodeExist = true}
+					<p class="required postcode_invoice text">
 						<label for="postcode_invoice">{l s='Zip / Postal Code'} <sup>*</sup></label>
-						<input type="text" class="text" name="postcode_invoice" id="postcode_invoice" value="" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
+						<input type="text" class="text" name="postcode_invoice" id="postcode_invoice" value="{if isset($guestInformations) && $guestInformations.postcode_invoice}{$guestInformations.postcode_invoice}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
 					</p>
 					{elseif $field_name eq "city"}
 					<p class="required text">
 						<label for="city_invoice">{l s='City'} <sup>*</sup></label>
-						<input type="text" class="text" name="city_invoice" id="city_invoice" value="" />
+						<input type="text" class="text" name="city_invoice" id="city_invoice" value="{if isset($guestInformations) && $guestInformations.city_invoice}{$guestInformations.city_invoice}{/if}" />
 					</p>
 					{elseif $field_name eq "country" || $field_name eq "Country:name"}
 					<p class="required select">
@@ -334,7 +343,7 @@
 						<select name="id_country_invoice" id="id_country_invoice">
 							<option value="">-</option>
 							{foreach from=$countries item=v}
-							<option value="{$v.id_country}" {if ($sl_country == $v.id_country)} selected="selected"{/if}>{$v.name|escape:'htmlall':'UTF-8'}</option>
+							<option value="{$v.id_country}"{if (isset($guestInformations) AND $guestInformations.id_country_invoice == $v.id_country) OR (!isset($guestInformations) && $sl_country == $v.id_country)} selected="selected"{/if}>{$v.name|escape:'htmlall':'UTF-8'}</option>
 							{/foreach}
 						</select>
 					</p>
@@ -348,8 +357,14 @@
 					</p>
 					{/if}
 					{/foreach}
+					{if !$postCodeExist}
+					<p class="required postcode_invoice text hidden">
+						<label for="postcode_invoice">{l s='Zip / Postal Code'} <sup>*</sup></label>
+						<input type="text" class="text" name="postcode_invoice" id="postcode_invoice" value="" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
+					</p>
+					{/if}					
 					{if !$stateExist}
-					<p class="required id_state_invoice select" style="display:none;">
+					<p class="required id_state_invoice select hidden">
 						<label for="id_state_invoice">{l s='State'} <sup>*</sup></label>
 						<select name="id_state_invoice" id="id_state_invoice">
 							<option value="">-</option>
@@ -365,11 +380,11 @@
 					{/if}					
 					<p class="text">
 						<label for="phone_invoice">{l s='Home phone'}</label>
-						<input type="text" class="text" name="phone_invoice" id="phone_invoice" value="" />
+						<input type="text" class="text" name="phone_invoice" id="phone_invoice" value="{if isset($guestInformations) && $guestInformations.phone_invoice}{$guestInformations.phone_invoice}{/if}" />
 					</p>
 					<p class="{if isset($one_phone_at_least) && $one_phone_at_least}required {/if}text is_customer_param">
 						<label for="phone_mobile_invoice">{l s='Mobile phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>*</sup>{/if}</label>
-						<input type="text" class="text" name="phone_mobile_invoice" id="phone_mobile_invoice" value="" />
+						<input type="text" class="text" name="phone_mobile_invoice" id="phone_mobile_invoice" value="{if isset($guestInformations) && $guestInformations.phone_mobile_invoice}{$guestInformations.phone_mobile_invoice}{/if}" />
 					</p>
 					<input type="hidden" name="alias_invoice" id="alias_invoice" value="{l s='My Invoice address'}" />
 				</div>

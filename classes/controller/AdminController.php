@@ -513,37 +513,42 @@ class AdminControllerCore extends Controller
 	 */
 	public function postProcess()
 	{
-		if ($this->ajax)
-		{
-			// from ajax-tab.php
-			$action = Tools::getValue('action');
-			// no need to use displayConf() here
-			if (!empty($action) && method_exists($this, 'ajaxProcess'.Tools::toCamelCase($action)))
-				return $this->{'ajaxProcess'.Tools::toCamelCase($action)}();
-			elseif (method_exists($this, 'ajaxProcess'))
-				return $this->ajaxProcess();
-		}
-		else
-		{
-			// Process list filtering
-			if ($this->filter)
-				$this->processFilter();
-
-			// If the method named after the action exists, call "before" hooks, then call action method, then call "after" hooks
-			if (!empty($this->action) && method_exists($this, 'process'.ucfirst(Tools::toCamelCase($this->action))))
+		try {
+			if ($this->ajax)
 			{
-				// Hook before action
-				Hook::exec('actionAdmin'.ucfirst($this->action).'Before', array('controller' => $this));
-				Hook::exec('action'.get_class($this).ucfirst($this->action).'Before', array('controller' => $this));
-				// Call process
-				$return = $this->{'process'.Tools::toCamelCase($this->action)}();
-				// Hook After Action
-				Hook::exec('actionAdmin'.ucfirst($this->action).'After', array('controller' => $this, 'return' => $return));
-				Hook::exec('action'.get_class($this).ucfirst($this->action).'After', array('controller' => $this, 'return' => $return));
-
-				return $return;
+				// from ajax-tab.php
+				$action = Tools::getValue('action');
+				// no need to use displayConf() here
+				if (!empty($action) && method_exists($this, 'ajaxProcess'.Tools::toCamelCase($action)))
+					return $this->{'ajaxProcess'.Tools::toCamelCase($action)}();
+				elseif (method_exists($this, 'ajaxProcess'))
+					return $this->ajaxProcess();
 			}
-		}
+			else
+			{
+				// Process list filtering
+				if ($this->filter)
+					$this->processFilter();
+
+				// If the method named after the action exists, call "before" hooks, then call action method, then call "after" hooks
+				if (!empty($this->action) && method_exists($this, 'process'.ucfirst(Tools::toCamelCase($this->action))))
+				{
+					// Hook before action
+					Hook::exec('actionAdmin'.ucfirst($this->action).'Before', array('controller' => $this));
+					Hook::exec('action'.get_class($this).ucfirst($this->action).'Before', array('controller' => $this));
+					// Call process
+					$return = $this->{'process'.Tools::toCamelCase($this->action)}();
+					// Hook After Action
+					Hook::exec('actionAdmin'.ucfirst($this->action).'After', array('controller' => $this, 'return' => $return));
+					Hook::exec('action'.get_class($this).ucfirst($this->action).'After', array('controller' => $this, 'return' => $return));
+
+					return $return;
+				}
+			}
+		} catch (PrestaShopException $e) {
+			$this->errors[] = $e->getMessage();
+		};
+		return false;
 	}
 
 	/**
@@ -583,16 +588,27 @@ class AdminControllerCore extends Controller
 		$headers = array();
 		foreach ($this->fields_list as $datas)
 			$headers[] = Tools::htmlentitiesDecodeUTF8($datas['title']);
-
 		$content = array();
 		foreach ($this->_list as $i => $row)
 		{
 			$content[$i] = array();
-			foreach ($this->fields_list as $key => $value)
-				if (isset($row[$key]))
-					$content[$i][] = Tools::htmlentitiesDecodeUTF8($row[$key]);
-				
+			$path_to_image = false;
+			foreach ($this->fields_list as $key => $params)
+			{
+				$field_value = isset($row[$key]) ? Tools::htmlentitiesDecodeUTF8($row[$key]) : '';
+				if ($key == 'image')
+				{
+					if ($params['image'] != 'p' || Configuration::get('PS_LEGACY_IMAGES'))
+						$path_to_image = Tools::getShopDomain(true)._PS_IMG_.$params['image'].'/'.$row['id_'.$this->table].(isset($row['id_image']) ? '-'.(int)$row['id_image'] : '').'.'.$this->imageType;
+					else
+						$path_to_image = Tools::getShopDomain(true)._PS_IMG_.$params['image'].'/'.Image::getImgFolderStatic($row['id_image']).(int)$row['id_image'].'.'.$this->imageType;
+					if ($path_to_image)
+						$field_value = $path_to_image;  
+				}
+				$content[$i][] = $field_value;
+			}
 		}
+
 		$this->context->smarty->assign(array(
 			'export_precontent' => "\xEF\xBB\xBF",
 			'export_headers' => $headers,
@@ -631,12 +647,14 @@ class AdminControllerCore extends Controller
 						$this->errors[] = Tools::displayError('Unable to delete associated images.');
 
 					$object->deleted = 1;
-					if ($object->update())
+					if ($res = $object->update())
 						$this->redirect_after = self::$currentIndex.'&conf=1&token='.$this->token;
 				}
-				elseif ($object->delete())
+				elseif ($res = $object->delete())
 					$this->redirect_after = self::$currentIndex.'&conf=1&token='.$this->token;
 				$this->errors[] = Tools::displayError('An error occurred during deletion.');
+				if ($res)
+					Logger::addLog(sprintf($this->l('%s deletion'), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
 			}
 		}
 		else
@@ -685,6 +703,7 @@ class AdminControllerCore extends Controller
 			/* voluntary do affectation here */
 			elseif (($_POST[$this->identifier] = $this->object->id) && $this->postImage($this->object->id) && !count($this->errors) && $this->_redirect)
 			{
+				Logger::addLog(sprintf($this->l('%s addition'), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
 				$parent_id = (int)Tools::getValue('id_parent', 1);
 				$this->afterAdd($this->object);
 				$this->updateAssoShop($this->object->id);
@@ -719,7 +738,6 @@ class AdminControllerCore extends Controller
 	{
 		/* Checking fields validity */
 		$this->validateRules();
-
 		if (empty($this->errors))
 		{
 			$id = (int)Tools::getValue($this->identifier);
@@ -785,6 +803,7 @@ class AdminControllerCore extends Controller
 						if (empty($this->redirect_after))
 							$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=4&token='.$this->token;
 					}
+					Logger::addLog(sprintf($this->l('%s edition'), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
 				}
 				else
 					$this->errors[] = Tools::displayError('An error occurred while updating an object.').
@@ -939,7 +958,8 @@ class AdminControllerCore extends Controller
 					continue;
 
 				// Check if field is required
-				if (isset($values['required']) && $values['required'] && !empty($_POST['multishopOverrideOption'][$field]))
+				if ((!Shop::isFeatureActive() && isset($values['required']) && $values['required']) 
+					|| (Shop::isFeatureActive() && isset($_POST['multishopOverrideOption'][$field]) && isset($values['required']) && $values['required']))
 					if (isset($values['type']) && $values['type'] == 'textLang')
 					{
 						foreach ($languages as $language)
@@ -1100,7 +1120,7 @@ class AdminControllerCore extends Controller
 		}
 		else
 		{
-			$this->errors[] = Tools::displayError('The object cannot be loaded (ithe dentifier is missing or invalid)');
+			$this->errors[] = Tools::displayError('The object cannot be loaded (the dentifier is missing or invalid)');
 			return false;
 		}
 
@@ -1161,6 +1181,7 @@ class AdminControllerCore extends Controller
 		header('Location: '.$this->redirect_after);
 		exit;
 	}
+
 	public function display()
 	{
 		$this->context->smarty->assign(array(
@@ -1318,11 +1339,13 @@ class AdminControllerCore extends Controller
 			foreach ($sub_tabs as $index2 => $sub_tab)
 			{
 				// class_name is the name of the class controller
-				if (Tab::checkTabRights($sub_tab['id_tab']) === true
-					&& (bool)$sub_tab['active'])
+				if (Tab::checkTabRights($sub_tab['id_tab']) === true && (bool)$sub_tab['active'])
+				{
 					$sub_tabs[$index2]['href'] = $this->context->link->getAdminLink($sub_tab['class_name']);
+					$sub_tabs[$index2]['current'] = ($sub_tab['class_name'].'Controller' == get_class($this));
+				}
 				else
-					unset($sub_tabs[$index2]);
+					unset($sub_tabs[$index2]);					
 			}
 			$tabs[$index]['sub_tabs'] = $sub_tabs;
 
@@ -1514,7 +1537,6 @@ class AdminControllerCore extends Controller
 	
 	public function renderModulesList()
 	{
-		
 		if ($this->getModulesList($this->filter_modules_list))
 		{
 			$helper = new Helper();
@@ -1760,7 +1782,7 @@ class AdminControllerCore extends Controller
 			$this->context->employee->logout();
 
 		if ($this->controller_name != 'AdminLogin' && (!isset($this->context->employee) || !$this->context->employee->isLoggedBack()))
-			Tools::redirectAdmin($this->context->link->getAdminLink('AdminLogin').(!isset($_GET['logout']) ? '&redirect='.$this->controller_name : ''));
+			Tools::redirectAdmin($this->context->link->getAdminLink('AdminLogin').((!isset($_GET['logout']) && $this->controller_name != 'AdminNotFound') ? '&redirect='.$this->controller_name : ''));
 
 		// Set current index
 		$current_index = 'index.php'.(($controller = Tools::getValue('controller')) ? '?controller='.$controller : '');
@@ -2213,7 +2235,7 @@ class AdminControllerCore extends Controller
 		
 		$all_modules = Module::getModulesOnDisk(true);
 		$this->modules_list = array();
-		foreach($all_modules as $module)
+		foreach ($all_modules as $module)
 		{
 			$perm = true;
 			if ($module->id)
@@ -2229,9 +2251,11 @@ class AdminControllerCore extends Controller
 			if (in_array($module->name, $filter_modules_list) && $perm)
 			{
 				$this->fillModuleData($module, 'select');
-				$this->modules_list[] = $module;
+				$this->modules_list[array_search($module->name, $filter_modules_list)] = $module;
 			}		
 		}
+		ksort($this->modules_list);
+
 		if (count($this->modules_list))
 			return true;
 
@@ -2690,18 +2714,31 @@ class AdminControllerCore extends Controller
 			else
 			{
 				$result = true;
-				if ($this->deleted)
+				foreach ($this->boxes as $id)
 				{
-					foreach ($this->boxes as $id)
+					$to_delete = new $this->className($id);
+					$delete_ok = true;
+					if ($this->deleted)
 					{
-						$to_delete = new $this->className($id);
 						$to_delete->deleted = 1;
-						$result = $result && $to_delete->update();
+						if (!$to_delete->update())
+						{
+							$result = false;
+							$delete_ok = false;
+						}
 					}
+					else
+						if (!$to_delete->delete())
+						{
+							$result = false;
+							$delete_ok = false;
+						}
+					
+					if ($delete_ok)
+						Logger::addLog(sprintf($this->l('%s deletion'), $this->className), 1, null, $this->className, (int)$to_delete->id, true, (int)$this->context->employee->id);
+					else
+						$this->errors[] = sprintf(Tools::displayError('Can\'t delete #%d'), $id);
 				}
-				else
-					$result = $object->deleteSelection(Tools::getValue($this->table.'Box'));
-
 				if ($result)
 					$this->redirect_after = self::$currentIndex.'&conf=2&token='.$this->token;
 				$this->errors[] = Tools::displayError('An error occurred while deleting this selection.');

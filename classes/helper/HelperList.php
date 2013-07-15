@@ -282,9 +282,9 @@ class HelperListCore extends Helper
 					$this->_list[$index][$key] = Tools::displayPrice($tr[$key], $currency, false);
 				}
 				elseif (isset($params['type']) && $params['type'] == 'date')
-					$this->_list[$index][$key] = Tools::displayDate($tr[$key], $this->context->language->id);
+					$this->_list[$index][$key] = Tools::displayDate($tr[$key]);
 				elseif (isset($params['type']) && $params['type'] == 'datetime')
-					$this->_list[$index][$key] = Tools::displayDate($tr[$key], $this->context->language->id, true);
+					$this->_list[$index][$key] = Tools::displayDate($tr[$key],null , true);
 				elseif (isset($tr[$key]))
 				{
 					$echo = $tr[$key];
@@ -535,7 +535,7 @@ class HelperListCore extends Helper
 		{
 			if (!isset($params['type']))
 				$params['type'] = 'text';
-			$value = Context::getContext()->cookie->{$prefix.$this->table.'Filter_'.(array_key_exists('filter_key', $params) ? $params['filter_key'] : $key)};
+			$value = Context::getContext()->cookie->{$prefix.$this->table.'Filter_'.(array_key_exists('filter_key', $params) && $key != 'active' ? $params['filter_key'] : $key)};
 			switch ($params['type'])
 			{
 				case 'bool':

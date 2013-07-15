@@ -510,7 +510,7 @@ class CategoryCore extends ObjectModel
 	 		die(Tools::displayError());
 
 		$groups = FrontController::getCurrentCustomerGroups();
-		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
+		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '='.(int)Group::getCurrent()->id);
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT c.*, cl.id_lang, cl.name, cl.description, cl.link_rewrite, cl.meta_title, cl.meta_keywords, cl.meta_description
@@ -684,8 +684,7 @@ class CategoryCore extends ObjectModel
 		else
 			return new Category($shop->getCategory(), $id_lang);
 		$is_more_than_one_root_category = count(Category::getCategoriesWithoutParent()) > 1;
-		if ((!Shop::isFeatureActive() && $is_more_than_one_root_category) ||
-			Shop::isFeatureActive() && $is_more_than_one_root_category && Shop::getContext() != Shop::CONTEXT_SHOP)
+		if (Shop::isFeatureActive() && $is_more_than_one_root_category && Shop::getContext() != Shop::CONTEXT_SHOP)
 			$category = Category::getTopCategory($id_lang);
 		else
 			$category = new Category($shop->getCategory(), $id_lang);
@@ -797,7 +796,7 @@ class CategoryCore extends ObjectModel
 				)).')';
 
 		$flag = Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'category_product` (`id_product`, `id_category`, `position`)
+			INSERT IGNORE INTO `'._DB_PREFIX_.'category_product` (`id_product`, `id_category`, `position`)
 			VALUES '.implode(',', $row)
 		);
 		return $flag;
@@ -832,20 +831,15 @@ class CategoryCore extends ObjectModel
 		if (!Validate::isUnsignedId($id_category) || !Validate::isUnsignedId($id_lang))
 			return false;
 
-		if (isset(self::$_links[$id_category.'-'.$id_lang]))
-			return self::$_links[$id_category.'-'.$id_lang];
-
-		$result = Db::getInstance()->getRow('
-			SELECT cl.`link_rewrite`
-			FROM `'._DB_PREFIX_.'category_lang` cl
-			WHERE `id_lang` = '.(int)$id_lang.'
-			'.Shop::addSqlRestrictionOnLang('cl').'
-			AND cl.`id_category` = '.(int)$id_category
-		);
-
-		self::$_links[$id_category.'-'.$id_lang] = $result['link_rewrite'];
-
-		return $result['link_rewrite'];
+		if (!isset(self::$_links[$id_category.'-'.$id_lang]))
+			self::$_links[$id_category.'-'.$id_lang] = Db::getInstance()->getValue('
+				SELECT cl.`link_rewrite`
+				FROM `'._DB_PREFIX_.'category_lang` cl
+				WHERE `id_lang` = '.(int)$id_lang.'
+				'.Shop::addSqlRestrictionOnLang('cl').'
+				AND cl.`id_category` = '.(int)$id_category
+			);
+		return self::$_links[$id_category.'-'.$id_lang];
 	}
 
 	public function getLink(Link $link = null)
@@ -871,6 +865,44 @@ class CategoryCore extends ObjectModel
 	  * Light back office search for categories
 	  *
 	  * @param integer $id_lang Language ID
+	  * @param string $path of category
+	  * @param boolean $create or not parent and category
+	  * @return array Corresponding categories
+	  */
+	public static function searchByPath($id_lang, $path,$objectToCreate = null, $MethodetoCreate = null)
+	{
+		$categories=explode('/', trim($path));
+		$id_parent_category=null;
+		foreach($categories as $category_name) {
+			if ($id_parent_category==null)
+				$thisCategorie=Category::searchByName($id_lang,$category_name,true);
+			else
+				$thisCategorie=Category::searchByNameAndParentCategoryId($id_lang, $category_name, $id_parent_category);
+			// if category doesn't exist and need to create by param obbject and methode
+			if (!$thisCategorie && $objectToCreate && $MethodetoCreate)
+			{
+				// may be an try catch?
+				call_user_func_array(
+					array($objectToCreate, $MethodetoCreate)
+					,array(
+						$id_lang
+						,$category_name
+						,$id_parent_category
+					)
+				);
+				if ($id_parent_category==null)
+					$thisCategorie=Category::searchByName($id_lang,$category_name,true);
+				else
+					$thisCategorie=Category::searchByNameAndParentCategoryId($id_lang, $category_name, $id_parent_category);
+	     		}
+			$id_parent_category=$thisCategorie["id_category"];
+		}
+		return $thisCategorie;
+	}
+	/**
+	  * Light back office search for categories
+	  *
+	  * @param integer $id_lang Language ID 
 	  * @param string $query Searched string
 	  * @param boolean $unrestricted allows search without lang and includes first category and exact match
 	  * @return array Corresponding categories

@@ -498,7 +498,7 @@ select optgroup option {
 	background: #FFBABA url(../img/admin/icon-cancel.png) no-repeat scroll 6px 6px;
 	border: 1px solid #CC0000;
 	color:#D8000C;
-	padding:20px;
+	padding:20px 40px;
 	position:fixed;
 	bottom:0;
 	width:100%;
@@ -509,7 +509,7 @@ select optgroup option {
 	background: #DFF2BF url(../img/admin/icon-valid.png) no-repeat scroll 6px 6px;
 	border: 1px solid #4F8A10;
 	color:#4F8A10;
-	padding:20px;
+	padding:20px 40px;
 	position:fixed;
 	bottom:0;
 	width:100%;

@@ -819,7 +819,7 @@ class AdminImportControllerCore extends AdminController
 
 		// 'file_exists' doesn't work on distant file, and getimagesize make the import slower.
 		// Just hide the warning, the traitment will be the same.
-		if (@copy($url, $tmpfile))
+		if (Tools::copy($url, $tmpfile))
 		{
 			ImageManager::resize($tmpfile, $path.'.jpg');
 			$images_types = ImageType::getImagesTypes($entity);
@@ -1022,6 +1022,35 @@ class AdminImportControllerCore extends AdminController
 
 		$this->closeCsvFile($handle);
 	}
+	public function productImportCreateCat($default_language_id,$category_name,$id_parent_category=null)
+	{
+		$category_to_create = new Category();
+		if (!Shop::isFeatureActive())
+			$category_to_create->id_shop_default = 1;
+		else
+			$category_to_create->id_shop_default = (int)Context::getContext()->shop->id;
+		$category_to_create->name = AdminImportController::createMultiLangField(trim($category_name));
+		$category_to_create->active = 1;
+		if ($id_parent_category==null)
+			$category_to_create->id_parent = (int)Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
+		else
+			$category_to_create->id_parent = (int)$id_parent_category;
+		$category_link_rewrite = Tools::link_rewrite($category_to_create->name[$default_language_id]);
+		$category_to_create->link_rewrite = AdminImportController::createMultiLangField($category_link_rewrite);
+		if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
+			($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $category_to_create->add())
+			$product->id_category[] = (int)$category_to_create->id;
+		else
+		{
+			$this->errors[] = sprintf(
+				Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+				$category_to_create->name[$default_language_id],
+				(isset($category_to_create->id) ? $category_to_create->id : 'null')
+			);
+			$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
+			Db::getInstance()->getMsgError();
+		}
+	}
 
 	public function productImport()
 	{
@@ -1195,34 +1224,19 @@ class AdminImportControllerCore extends AdminController
 					}
 					else if (is_string($value) && !empty($value))
 					{
-						$category = Category::searchByName($default_language_id, trim($value), true);
+						// param : default language,path,create and create parent if doesn't existe
+						$category = Category::searchByPath($default_language_id, trim($value), $this,"productImportCreateCat");
+						//$category = Category::searchByName($default_language_id, trim($value), true);
 						if ($category['id_category'])
 							$product->id_category[] = (int)$category['id_category'];
 						else
 						{
-							$category_to_create = new Category();
-							if (!Shop::isFeatureActive())
-								$category_to_create->id_shop_default = 1;
-							else
-								$category_to_create->id_shop_default = (int)Context::getContext()->shop->id;
-							$category_to_create->name = AdminImportController::createMultiLangField(trim($value));
-							$category_to_create->active = 1;
-							$category_to_create->id_parent = (int)Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
-							$category_link_rewrite = Tools::link_rewrite($category_to_create->name[$default_language_id]);
-							$category_to_create->link_rewrite = AdminImportController::createMultiLangField($category_link_rewrite);
-							if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-								($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $category_to_create->add())
-								$product->id_category[] = (int)$category_to_create->id;
-							else
-							{
-								$this->errors[] = sprintf(
-									Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-									$category_to_create->name[$default_language_id],
-									(isset($category_to_create->id) ? $category_to_create->id : 'null')
-								);
-								$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-									Db::getInstance()->getMsgError();
-							}
+							$this->errors[] = sprintf(
+								Tools::displayError('categ :%1$s cannot be saved'),
+								trim($value)
+							);
+							$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
+							Db::getInstance()->getMsgError();
 						}
 					}
 				}
@@ -1433,9 +1447,7 @@ class AdminImportControllerCore extends AdminController
 							$image->position = Image::getHighestPosition($product->id) + 1;
 							$image->cover = (!$key && !$product_has_images) ? true : false;
 							// file_exists doesn't work with HTTP protocol
-							if (@fopen($url, 'r') == false)
-								$error = true;
-							else if (($field_error = $image->validateFields(UNFRIENDLY_ERROR, true)) === true &&
+							if (($field_error = $image->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 								($lang_field_error = $image->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $image->add())
 							{
 								// associate image to selected shops
@@ -2712,42 +2724,50 @@ class AdminImportControllerCore extends AdminController
 				// If i am a superadmin, i can truncate table
 				if (((Shop::isFeatureActive() && $this->context->employee->isSuperAdmin()) || !Shop::isFeatureActive()) && Tools::getValue('truncate'))
 					$this->truncateTables((int)Tools::getValue('entity'));
-
+				$import_type = false;
 				switch ((int)Tools::getValue('entity'))
 				{
-					case $this->entities[$this->l('Categories')]:
+					case $this->entities[$import_type = $this->l('Categories')]:
 						$this->categoryImport();
 						break;
-					case $this->entities[$this->l('Products')]:
+					case $this->entities[$import_type = $this->l('Products')]:
+					$import_type = $this->l('Categories');
 						$this->productImport();
 						break;
-					case $this->entities[$this->l('Customers')]:
+					case $this->entities[$import_type = $this->l('Customers')]:
 						$this->customerImport();
 						break;
-					case $this->entities[$this->l('Addresses')]:
+					case $this->entities[$import_type = $this->l('Addresses')]:
 						$this->addressImport();
 						break;
-					case $this->entities[$this->l('Combinations')]:
+					case $this->entities[$import_type = $this->l('Combinations')]:
 						$this->attributeImport();
 						break;
-					case $this->entities[$this->l('Manufacturers')]:
+					case $this->entities[$import_type = $this->l('Manufacturers')]:
 						$this->manufacturerImport();
 						break;
-					case $this->entities[$this->l('Suppliers')]:
+					case $this->entities[$import_type = $this->l('Suppliers')]:
 						$this->supplierImport();
 						break;
 					// @since 1.5.0
-					case $this->entities[$this->l('Supply Orders')]:
+					case $this->entities[$import_type = $this->l('Supply Orders')]:
 						if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 							$this->supplyOrdersImport();
 						break;
 					// @since 1.5.0
-					case $this->entities[$this->l('Supply Order Details')]:
+					case $this->entities[$import_type = $this->l('Supply Order Details')]:
 						if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 							$this->supplyOrdersDetailsImport();
 						break;
 					default:
 						$this->errors[] = $this->l('Please select what you would like to import');
+				}
+				if ($import_type !== false)
+				{
+					$log_message = sprintf($this->l('%s import'), $import_type);
+					if (Tools::getValue('truncate'))
+						$log_message .= ' '.$this->l('with truncate');
+					Logger::addLog($log_message, 1, null, $import_type, null, true, (int)$this->context->employee->id);
 				}
 			}
 			else

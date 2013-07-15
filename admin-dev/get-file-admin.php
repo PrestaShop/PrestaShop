@@ -25,5 +25,5 @@
 */
 
 define('_PS_ADMIN_DIR_', getcwd());
-require(_PS_ADMIN_DIR_.'/config/config.inc.php');
+require(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 Controller::getController('GetFileController')->run();
