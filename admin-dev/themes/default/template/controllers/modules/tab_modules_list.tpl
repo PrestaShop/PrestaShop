@@ -58,29 +58,45 @@
 		return false;
 	}
 </script>
-	<ul class="nav-tabs-modules">
-	{if count($tab_modules_list.installed)}
-		<li><a id="nav_tabs_modules_installed" href="#" onclick="">{l s='Installed'}</a></li>
-	{/if}
-	{if count($tab_modules_list.not_installed)}
-		<li><a href="#" id="nav_tabs_modules_not_installed" >{l s='Not Installed'}</a></li>
-	{/if}
-	</ul>
-	<div id="modules_list_container_content" style="clear:both">
-	{if count($tab_modules_list.installed)}
-	<table id="tab_modules_list_installed" style="clear:both">
-		{foreach from=$tab_modules_list.installed item=module}
-			{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",rowalt"}}
-		{/foreach}
-	</table>
-	{/if}
-	{if count($tab_modules_list.not_installed)}
-	<table id="tab_modules_list_not_installed" style="display:none;clear:both">
-		{foreach from=$tab_modules_list.not_installed item=module}
-			{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",rowalt"}}
-		{/foreach}
-	</table>
-	{/if}
+	<div class="row">
+		<div class="col-lg-12">
+			<ul class="nav">
+				{if count($tab_modules_list.installed)}
+					<li>
+						<a id="nav_tabs_modules_installed" class="btn btn-default" href="#" onclick="">
+							<i class="icon-plus-sign-alt"></i>
+							{l s='Installed'}
+						</a>
+					</li>
+				{/if}
+				{if count($tab_modules_list.not_installed)}
+					<li>
+						<a href="#" id="nav_tabs_modules_not_installed" class="btn btn-default">
+							<i class="icon-minus-sign-alt"></i>
+							{l s='Not Installed'}
+						</a>
+					</li>
+				{/if}
+			</ul>
+		</div>
+	</div>
+	<div id="modules_list_container_content">
+		{if count($tab_modules_list.installed)}
+		<table id="tab_modules_list_installed">
+			{foreach from=$tab_modules_list.installed item=module}
+				{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",rowalt"}}
+			{/foreach}
+		</table>
+		{/if}
+		{if count($tab_modules_list.not_installed)}
+		<table id="tab_modules_list_not_installed">
+			{foreach from=$tab_modules_list.not_installed item=module}
+				{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",rowalt"}}
+			{/foreach}
+		</table>
+		{/if}
 	</div>
 {/if}
-<p><a href="{$admin_module_favorites_view}">{l s='More options'}</a></p>
+<div class="alert alert-block">
+	<a href="{$admin_module_favorites_view}">{l s='More options'}</a>
+</div>
