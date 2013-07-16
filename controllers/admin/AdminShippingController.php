@@ -60,19 +60,19 @@ class AdminShippingControllerCore extends AdminController
 						'identifier' => 'id'
 					),
 					'PS_SHIPPING_FREE_PRICE' => array(
-						'title' => $this->l('Free shipping starts at'),
+						'title' => $this->l('Free shipping starts at (tax incl)'),
 						'suffix' => $this->context->currency->getSign(),
 						'cast' => 'floatval',
 						'type' => 'text',
 						'validation' => 'isPrice'),
 					'PS_SHIPPING_FREE_PRICE_END' => array(
-						'title' => $this->l('Free shipping ends at'),
+						'title' => $this->l('Free shipping ends at (tax incl)'),
 						'suffix' => $this->context->currency->getSign(),
 						'cast' => 'floatval',
 						'type' => 'text',
 						'validation' => 'isPrice'),
 					'PS_SHIPPING_FREE_WEIGHT' => array(
-						'title' => $this->l('Free shipping starts at'),
+						'title' => $this->l('Free shipping starts at)'),
 						'suffix' => Configuration::get('PS_WEIGHT_UNIT'),
 						'cast' => 'floatval',
 						'type' => 'text',
@@ -88,6 +88,7 @@ class AdminShippingControllerCore extends AdminController
 					'<ul>
 						<li>'.$this->l('If you set these parameters to 0, they will be disabled.').'</li>
 						<li>'.$this->l('Coupons are not taken into account when calculating free shipping').'</li>
+						<li>'.$this->l('End Price and Weight is included in calculation of free shipping').'</li>
 					</ul>',
 				'submit' => array()
 			),
