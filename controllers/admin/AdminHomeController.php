@@ -377,12 +377,13 @@ class AdminHomeControllerCore extends AdminController
 		$chart = new Chart();
 		$chart->getCurve(1)->setType('bars');
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT total_paid / conversion_rate as total_converted, left(invoice_date, 10) as invoice_date
+			SELECT SUM(total_paid / conversion_rate) as total_converted, left(invoice_date, 10) as invoice_date
 			FROM '._DB_PREFIX_.'orders o
 			WHERE valid = 1
 			AND total_paid > 0
 			AND invoice_date BETWEEN \''.date('Y-m-d', strtotime('-7 DAYS', time())).' 00:00:00\' AND \''.date('Y-m-d H:i:s').'\'
-			'.Shop::addSqlRestriction(Shop::SHARE_ORDER).'
+			'.Shop::addSqlRestriction(Shop::SHARE_ORDER).' 
+			GROUP BY DATE(invoice_date)
 		');
 		foreach ($result as $row)
 			$chart->getCurve(1)->setPoint(strtotime($row['invoice_date'].' 02:00:00'), $row['total_converted']);
