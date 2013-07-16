@@ -410,12 +410,15 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 				{/if}
 				</span>
 			</p>
-			<p id="old_price"{if !$product->specificPrice || !$product->specificPrice.reduction} class="hidden"{/if}>
-			{if $priceDisplay >= 0 && $priceDisplay <= 2}
-					<span id="old_price_display">{if $productPriceWithoutReduction > $productPrice}{convertPrice price=$productPriceWithoutReduction}{/if}</span>
-					<!-- {if $tax_enabled && $display_tax_label == 1}{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}{/if} -->
-			{/if}
+			
+			<p id="old_price" {if !$product->specificPrice OR (!$product->specificPrice.reduction || $product->specificPrice.reduction <= 0)}class="hidden"{/if}>
+				<span class="bold">
+					{if $priceDisplay >= 0 && $priceDisplay <= 2}
+						<span id="old_price_display">{convertPrice price=$productPriceWithoutReduction}</span>
+					{/if}
+				</span>
 			</p>
+
 			{if $packItems|@count && $productPrice < $product->getNoPackPrice()}
 				<p class="pack_price">{l s='Instead of'} <span style="text-decoration: line-through;">{convertPrice price=$product->getNoPackPrice()}</span></p>
 				<br class="clear" />
