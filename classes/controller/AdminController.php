@@ -2204,9 +2204,9 @@ class AdminControllerCore extends Controller
 		}
 		else
 			$this->_listsql .= ($this->lang ? 'b.*,' : '').' a.*';
-		
+
 		$this->_listsql .= '
-		'.(isset($this->_select) ? ', '.$this->_select : '').$select_shop.'
+		'.(isset($this->_select) ? ', '.rtrim($this->_select, ', ') : '').$select_shop.'
 		FROM `'._DB_PREFIX_.$sql_table.'` a
 		'.$lang_join.'
 		'.(isset($this->_join) ? $this->_join.' ' : '').'

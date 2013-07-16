@@ -1612,7 +1612,7 @@ abstract class ModuleCore
 	{
 		if ($name === null)
 			$name = $this->name;
-		return $name.'|'.(int)Tools::usingSecureMode().'|'.(int)$this->context->shop->id.'|'.(int)Group::getCurrent()->id.'|'.(int)$this->context->language->id;
+		return $name.'|'.(int)Tools::usingSecureMode().'|'.(int)$this->context->shop->id.'|'.(int)Group::getCurrent()->id.'|'.(int)$this->context->language->id.'|'.(int)$this->context->currency->id;
 	}
 
 	public function display($file, $template, $cacheId = null, $compileId = null)
