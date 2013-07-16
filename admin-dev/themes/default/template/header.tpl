@@ -37,7 +37,7 @@
 	<meta name="robots" content="NOFOLLOW, NOINDEX">
 
 	<title>{$meta_title} - PrestaShop&trade;</title>
-{if $display_header}
+	{if $display_header}
 	<script type="text/javascript">
 		var help_class_name = '{$controller_name}';
 		var iso_user = '{$iso_user}';
@@ -76,35 +76,40 @@
 		var currentIndex = '{$currentIndex}';
 		var default_language = '{$default_language|intval}';
 	</script>
-{/if}
+	{/if}
 
-{if isset($css_files)}
-	{foreach from=$css_files key=css_uri item=media}
+	{if isset($css_files)}
+		{foreach from=$css_files key=css_uri item=media}
 		<link href="{$css_uri}" rel="stylesheet" type="text/css" media="{$media}" />
-	{/foreach}
-{/if}
+		{/foreach}
+	{/if}
 
-{if isset($js_files)}
+	{if isset($js_files)}
 	{foreach from=$js_files item=js_uri}
 		<script type="text/javascript" src="{$js_uri}"></script>
 	{/foreach}
-{/if}
+	{/if}
+
 	<link rel="icon" type="image/vnd.microsoft.icon" href="{$img_dir}favicon.ico" />
 	<link rel="shortcut icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
-{if isset($displayBackOfficeHeader)}
-	{$displayBackOfficeHeader}
-{/if}
+
+	{if isset($displayBackOfficeHeader)}
+		{$displayBackOfficeHeader}
+	{/if}
 	<!--[if IE]>
 	<link type="text/css" rel="stylesheet" href="{$base_url}css/admin-ie.css" />
 	<![endif]-->
 
-{if isset($brightness)}
-	<style type="text/css">
-		div#header_infos, div#header_infos a#header_shopname, div#header_infos a#header_logout, div#header_infos a#header_foaccess {ldelim}color:{$brightness}{rdelim}
-	</style>
-{/if}
+	{*if isset($brightness)*}
+	<!--
+		/// multishop
+		<style type="text/css">
+			div#header_infos, div#header_infos a#header_shopname, div#header_infos a#header_logout, div#header_infos a#header_foaccess {ldelim}color:{$brightness}{rdelim}
+		</style>
+	-->
+	{*/if*}
 
-<link href='http://fonts.googleapis.com/css?family=Ubuntu:300|Open+Sans' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Ubuntu:300|Open+Sans' rel='stylesheet' type='text/css'>
 
 </head>
 
@@ -114,8 +119,8 @@
 
 {* begin  HEADER *}
 <div class="container-fluid">
-	<div id="header" class="navbar navbar-fixed-top navbar-inverse" >
-		<div id="header_infos">
+	<div id="header">
+		<div id="header_infos" class="navbar navbar-fixed-top navbar-inverse">
 			<a id="header_shopname" class="navbar-brand" href="{$link->getAdminLink('AdminHome')|escape:'htmlall':'UTF-8'}">{$shop_name}</a>
 
 			<ul id="notifs_icon_wrapper" class="nav navbar-nav nav-pills">
@@ -196,7 +201,8 @@
 							</button>
 						</span>
 					</div>
-<!-- 					<select name="bo_search_type" id="bo_search_type" class="chosen no-search">
+<!-- 	// Search in section 
+					<select name="bo_search_type" id="bo_search_type" class="chosen no-search">
 						<option value="0">{l s='everywhere'}</option>
 						<option value="1" {if {$search_type} == 1} selected="selected" {/if}>{l s='catalog'}</option>
 						<optgroup label="{l s='customers'}:">
@@ -240,6 +246,11 @@
 			<div class="mainsubtablist" style="display:none"></div>
 		{/if}
 			<ul id="menu">
+				<li class="maintab {if $t.current}active{/if}">
+					<a href="{$link->getAdminLink('AdminHome')|escape:'htmlall':'UTF-8'}" class="title">
+						<i class="icon-AdminDashboard"></i> Dashboard
+					</a>
+				</li>
 			{foreach $tabs AS $t}
 				{if $t.active}
 				<li class="maintab {if $t.current}active{/if}" id="maintab{$t.id_tab}">

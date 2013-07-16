@@ -1019,8 +1019,8 @@ product_tabs['Pack'] = new function(){
 			var lineDisplay = curPackItemQty+ 'x ' +curPackItemName;
 
 			var divContent = $('#divPackItems').html();
-			divContent += lineDisplay;
-			divContent += '<span class="delPackItem" name="' + curPackItemId + '" style="cursor: pointer;"><img src="../img/admin/delete.gif" /></span><br />';
+			divContent += '<li><button class="btn btn-default delPackItem" name="' + curPackItemId + '" ><i class="icon-trash"></i></button>'+
+			lineDisplay+'</li>';
 
 			// QTYxID-QTYxID
 			// @todo : it should be better to create input for each items and each qty
@@ -1071,7 +1071,7 @@ product_tabs['Pack'] = new function(){
 					{
 						input.value += inputCut[i] + '-';
 						name.value += nameCut[i] + '¤';
-						div.innerHTML += nameCut[i] + ' <span class="delPackItem" name="' + inputQty[1] + '" style="cursor: pointer;"><img src="../img/admin/delete.gif" /></span><br />';
+						div.innerHTML += nameCut[i] + '<li><button class="btn btn-default delPackItem" name="' + inputQty[1] + '"><i class="icon-trash"></i></button></li>';
 					}
 				}
 

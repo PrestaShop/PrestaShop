@@ -72,61 +72,62 @@
 		{l s='Click "Save and Stay" after changing selected suppliers to display the associated product references.'}
 	</div>
 
-	<div id="suppliers_accordion">
+	<div id="accordion-supplier">
 		{foreach from=$associated_suppliers item=supplier}
-		    <h3>
-		    	<a href="#">{$supplier->name}</a>
-		    </h3>
-
-		    <div>
-
-				<table class="table">
-
-					<thead>
-						<tr>
-							<th>{l s='Product name'}</th>
-							<th>{l s='Supplier reference'}</th>
-							<th>{l s='Unit price tax excluded'}</th>
-							<th>{l s='Unit price currency'}</th>
-						</tr>
-					</thead>
-
-					<tbody>
-					{foreach $attributes AS $index => $attribute}
-						{assign var=reference value=''}
-						{assign var=price_te value=''}
-						{assign var=id_currency value=$id_default_currency}
-						{foreach from=$associated_suppliers_collection item=asc}
-							{if $asc->id_product == $attribute['id_product'] && $asc->id_product_attribute == $attribute['id_product_attribute'] && $asc->id_supplier == $supplier->id_supplier}
-								{assign var=reference value=$asc->product_supplier_reference}
-								{assign var=price_te value=Tools::ps_round($asc->product_supplier_price_te, 2)}
-								{if $asc->id_currency}
-									{assign var=id_currency value=$asc->id_currency}
-								{/if}
-							{/if}
-						{/foreach}
-						<tr {if $index is odd}class="alt_row"{/if}>
-							<td>{$product_designation[$attribute['id_product_attribute']]}</td>
-							<td>
-								<input type="text" size="10" value="{$reference|escape:'htmlall':'UTF-8'}" name="supplier_reference_{$attribute['id_product']}_{$attribute['id_product_attribute']}_{$supplier->id_supplier}" />
-							</td>
-							<td>
-								<input type="text" size="10" value="{$price_te|htmlentities}" name="product_price_{$attribute['id_product']}_{$attribute['id_product_attribute']}_{$supplier->id_supplier}" />
-							</td>
-							<td>
-								<select name="product_price_currency_{$attribute['id_product']}_{$attribute['id_product_attribute']}_{$supplier->id_supplier}">
-									{foreach $currencies AS $currency}
-										<option value="{$currency['id_currency']}"
-											{if $currency['id_currency'] == $id_currency}selected="selected"{/if}
-										>{$currency['name']}</option>
-									{/foreach}
-								</select>
-							</td>
-						</tr>
-					{/foreach}
-					</tbody>
-				</table>
+		<div class="accordion-group">
+			<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#supplier-{$supplier->id}">{$supplier->name}</a>
 			</div>
+			<div id="supplier-{$supplier->id}" class="accordion-body collapse in">
+				<div class="accordion-inner">
+					<table class="table">
+						<thead>
+							<tr>
+								<th>{l s='Product name'}</th>
+								<th>{l s='Supplier reference'}</th>
+								<th>{l s='Unit price tax excluded'}</th>
+								<th>{l s='Unit price currency'}</th>
+							</tr>
+						</thead>
+
+						<tbody>
+						{foreach $attributes AS $index => $attribute}
+							{assign var=reference value=''}
+							{assign var=price_te value=''}
+							{assign var=id_currency value=$id_default_currency}
+							{foreach from=$associated_suppliers_collection item=asc}
+								{if $asc->id_product == $attribute['id_product'] && $asc->id_product_attribute == $attribute['id_product_attribute'] && $asc->id_supplier == $supplier->id_supplier}
+									{assign var=reference value=$asc->product_supplier_reference}
+									{assign var=price_te value=Tools::ps_round($asc->product_supplier_price_te, 2)}
+									{if $asc->id_currency}
+										{assign var=id_currency value=$asc->id_currency}
+									{/if}
+								{/if}
+							{/foreach}
+							<tr {if $index is odd}class="alt_row"{/if}>
+								<td>{$product_designation[$attribute['id_product_attribute']]}</td>
+								<td>
+									<input type="text" value="{$reference|escape:'htmlall':'UTF-8'}" name="supplier_reference_{$attribute['id_product']}_{$attribute['id_product_attribute']}_{$supplier->id_supplier}" />
+								</td>
+								<td>
+									<input type="text" value="{$price_te|htmlentities}" name="product_price_{$attribute['id_product']}_{$attribute['id_product_attribute']}_{$supplier->id_supplier}" />
+								</td>
+								<td>
+									<select name="product_price_currency_{$attribute['id_product']}_{$attribute['id_product_attribute']}_{$supplier->id_supplier}">
+										{foreach $currencies AS $currency}
+											<option value="{$currency['id_currency']}"
+												{if $currency['id_currency'] == $id_currency}selected="selected"{/if}
+											>{$currency['name']}</option>
+										{/foreach}
+									</select>
+								</td>
+							</tr>
+						{/foreach}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
 		{/foreach}
 	</div>
 {/if}

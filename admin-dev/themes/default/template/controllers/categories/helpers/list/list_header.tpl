@@ -26,22 +26,23 @@
 {extends file="helpers/list/list_header.tpl"}
 
 {block name=leadin}
-<div class="cat_bar2">
+<ul class="breadcrumb cat_bar2">
 	{assign var=i value=0}
 	{foreach $categories_tree key=key item=category}
 		{if $i++ == 0}
-			&nbsp;<img src="../img/admin/home.gif" alt="" />
+			<li><i class="icon-home"></i>
 			{assign var=params_url value=""}
 		{else}
-			{assign var=params_url value="&id_category={$category.id_category}&viewcategory"}
+			<li>{assign var=params_url value="&id_category={$category.id_category}&viewcategory"}
 		{/if}
 		{if $category.id_category == $categories_tree_current_id}
-			{$category.name}
+			{$category.name}</li>
 		{else}
-			<a href="{$currentIndex}{$params_url}&token={$token}">{$category.name}</a>&nbsp;>&nbsp;
+			<a href="{$currentIndex}{$params_url}&token={$token}">{$category.name}</a></li>
 		{/if}
 	{/foreach}
-</div>
+</ul>
+
 	{if isset($delete_category) && $delete_category}
 		<form action="{$REQUEST_URI}" method="post">
 			<div class="alert alert-block">

@@ -6,7 +6,8 @@
     "modernizr": "~2.6.2",
     "jquery": "~1.9.1",
     "bootstrap": "https://github.com/twitter/bootstrap/archive/3.0.0-wip.zip",
-    "font-awesome": "~3.2.1-wip"
+    "font-awesome": "~3.2.1-wip",
+    "sass-twitter-bootstrap": "https://github.com/jlong/sass-twitter-bootstrap/archive/3.0.0-wip.zip"
   },
   "devDependencies": {}
 }

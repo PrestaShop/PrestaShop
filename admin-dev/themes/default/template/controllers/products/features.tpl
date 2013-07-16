@@ -32,18 +32,18 @@
 		{l s='You can either create a specific value, or select among the existing pre-defined values you\'ve previously added.'}
 	</div>
 
-	<table class="table">
+	<table class="table table-striped">
 		<thead>
 			<tr>
 				<th>{l s='Feature'}</th>
 				<th>{l s='Pre-defined value'}</th>
-				<th>{l s='or'} {l s='Customized value'}</th>
+				<th><u>{l s='or'}</u> {l s='Customized value'}</th>
 			</tr>
 		</thead>
 
-
-		{foreach from=$available_features item=available_feature}
 		<tbody>
+		{foreach from=$available_features item=available_feature}
+		
 			<tr>
 				<td>{$available_feature.name}</td>
 				<td>
@@ -59,23 +59,47 @@
 					</select>
 				{else}
 					<input type="hidden" name="feature_{$available_feature.id_feature}_value" value="0" />
-						<span>{l s='N/A'} -
+					<span>{l s='N/A'} - 
 						<a href="{$link->getAdminLink('AdminFeatures')|escape:'htmlall':'UTF-8'}&amp;addfeature_value&id_feature={$available_feature.id_feature}"
-						 class="confirm_leave button"><i class="icon-plus-sign"></i> {l s='Add pre-defined values first'}</a>
+					 	class="confirm_leave btn btn-link btn-small"><i class="icon-plus-sign"></i> {l s='Add pre-defined values first'} <i class="icon-external-link-sign"></i></a>
 					</span>
 				{/if}
 				</td>
-				<td class="translatable">
-				{foreach from=$languages key=k item=language}
-					<div class="lang_{$language.id_lang}" style="{if $language.id_lang != $default_form_language}display:none;{/if}float: left;">
-					<textarea class="custom_{$available_feature.id_feature}_" name="custom_{$available_feature.id_feature}_{$language.id_lang}" cols="40" rows="1"
-						onkeyup="if (isArrowKey(event)) return ;$('#feature_{$available_feature.id_feature}_value').val(0);" >{$available_feature.val[$k].value|escape:'htmlall':'UTF-8'|default:""}</textarea>
+				<td>
+					{foreach from=$languages key=k item=language}
+					<div class="row translatable-field lang-{$language.id_lang}">
+						<div class="col-lg-9">
+							<textarea
+								class="custom_{$available_feature.id_feature}_{$language.id_lang}"
+								name="custom_{$available_feature.id_feature}_{$language.id_lang}"
+								cols="40"
+								rows="1"
+								onkeyup="if (isArrowKey(event)) return ;$('#feature_{$available_feature.id_feature}_value').val(0);" >{$available_feature.val[$k].value|escape:'htmlall':'UTF-8'|default:""}</textarea>
+						</div>
+						<div class="col-lg-3">
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+								<img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt="">
+								{$language.iso_code}
+								<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+								{foreach from=$languages item=language}
+								<li>
+									<a href="javascript:hideOtherLanguage({$language.id_lang});">
+									<img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt=""> {$language.iso_code}</a>
+								</li>
+								{/foreach}
+							</ul>
+						</div>
 					</div>
-				{/foreach}
+					{/foreach}
 				</td>
+
 			</tr>
 			{foreachelse}
-				<tr><td colspan="3" style="text-align:center;"><i class="icon-warning-sign"></i> {l s='No features have been defined'}</td></tr>
+			<tr>
+				<td colspan="3" style="text-align:center;"><i class="icon-warning-sign"></i> {l s='No features have been defined'}</td>
+			</tr>
 			{/foreach}
 		</tbody>
 	</table>

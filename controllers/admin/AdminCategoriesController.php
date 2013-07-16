@@ -58,33 +58,26 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_category' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center',
-				'width' => 20
+				'align' => 'center'
 			),
 			'name' => array(
-				'title' => $this->l('Name'),
-				'width' => 'auto'
+				'title' => $this->l('Name')
 			),
 			'description' => array(
 				'title' => $this->l('Description'),
-				'width' => 500,
-				'maxlength' => 90,
 				'callback' => 'getDescriptionClean',
 				'orderby' => false
 			),
 			'position' => array(
 				'title' => $this->l('Position'),
-				'width' => 40,
 				'filter_key' => 'sa!position',
-				'align' => 'center',
-				'position' => 'position'
+				'position' => 'position',
+				'align' => 'center'
 			),
 			'active' => array(
 				'title' => $this->l('Displayed'),
 				'active' => 'status',
-				'align' => 'center',
 				'type' => 'bool',
-				'width' => 70,
 				'orderby' => false
 			)
 		);
@@ -338,7 +331,7 @@ class AdminCategoriesControllerCore extends AdminController
 			'tinymce' => true,
 			'legend' => array(
 				'title' => $this->l('Category'),
-				'image' => '../img/admin/tab-categories.gif'
+				'icon' => 'icon-tags'
 			),
 			'input' => array(
 				array(
@@ -346,13 +339,12 @@ class AdminCategoriesControllerCore extends AdminController
 					'label' => $this->l('Name:'),
 					'name' => 'name',
 					'lang' => true,
-					'size' => 48,
 					'required' => true,
 					'class' => 'copy2friendlyUrl',
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Displayed:'),
 					'name' => 'active',
 					'required' => false,
@@ -392,7 +384,7 @@ class AdminCategoriesControllerCore extends AdminController
 					)
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Root Category:'),
 					'name' => 'is_root_category',
 					'required' => false,
