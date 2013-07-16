@@ -377,6 +377,8 @@ function deleteProductFromSummary(id)
 				updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
 				if (typeof(getCarrierListAndUpdate) !== 'undefined' && jsonData.summary.products.length > 0)
 					getCarrierListAndUpdate();
+				if (typeof(updatePaymentMethodsDisplay) !== 'undefined')
+					updatePaymentMethodsDisplay();
 			}
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {

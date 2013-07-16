@@ -49,7 +49,19 @@ class PSCleaner extends Module
 	{
 		$html = '<h2>'.$this->l('Be really careful with this tool - There is no possible rollback!').'</h2>';
 		if (Tools::isSubmit('submitCheckAndFix'))
-			$html .= $this->displayConfirmation((count($logs = self::checkAndFix()) ? '<pre>'.print_r($logs, true).'</pre>' : $this->l('Nothing that need to be cleaned')).'<br /><br />');
+		{
+			$logs = self::checkAndFix();
+			if (count($logs))
+			{
+				$conf = $this->l('The following queries successfuly fixed broken data:').'<br /><ul>';
+				foreach ($logs as $query => $entries)
+					$conf .= '<li>'.Tools::htmlentitiesUTF8($query).'<br />'.sprintf($this->l('%d line(s)'), $entries).'</li>';
+				$conf .= '</ul>';
+			}
+			else
+				$conf = $this->l('Nothing that need to be cleaned');
+			$html .= $this->displayConfirmation($conf);
+		}
 		if (Tools::isSubmit('submitTruncateCatalog'))
 		{
 			self::truncate('catalog');
@@ -330,7 +342,7 @@ class PSCleaner extends Module
 				if ($affected_rows = $db->Affected_Rows())
 					$logs[$query] = $affected_rows;
 		}
-
+		
 		Category::regenerateEntireNtree();
 
 		// @Todo: Remove attachment files, images...
@@ -522,8 +534,6 @@ class PSCleaner extends Module
 	
 	protected function clearAllCaches()
 	{
-		$this->_clearCache('blockcategories.tpl');
-		$this->_clearCache('blockcategories_footer.tpl');
-		$this->_clearCache('blocktopmenu.tpl');
+		Context::getContext()->smarty->clearAllCache();
 	}
 }

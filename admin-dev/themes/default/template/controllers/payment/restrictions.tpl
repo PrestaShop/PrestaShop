@@ -64,7 +64,7 @@
 								{$type = 'checkbox'}
 							{/if}
 							{if $type != 'null'}
-								<input type="checkbox" name="{$module->name}_{$list['name_id']}[]" value="{$item[$list['identifier']]}" {if $item['check_list'][$key_module] == 'checked'}checked="checked"{/if}/>
+								<input type="{$type}" name="{$module->name}_{$list['name_id']}[]" value="{$item[$list['identifier']]}" {if $item['check_list'][$key_module] == 'checked'}checked="checked"{/if}/>
 							{else}
                                 <input type="hidden" name="{$module->name}_{$list['name_id']}[]" value="{$item[$list['identifier']]}"/>--
 							{/if}

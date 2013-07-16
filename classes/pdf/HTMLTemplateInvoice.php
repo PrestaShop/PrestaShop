@@ -139,7 +139,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 	 */
 	public function getFilename()
 	{
-		return Configuration::get('PS_INVOICE_PREFIX').sprintf('%06d', $this->order_invoice->number).'.pdf';
+		return Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_invoice->number).'.pdf';
 	}
 }
 

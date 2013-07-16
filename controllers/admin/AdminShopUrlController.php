@@ -394,6 +394,42 @@ class AdminShopUrlControllerCore extends AdminController
 		if ($this->redirect_shop_url)
 			$this->redirect_after = $object->getBaseURI().basename(_PS_ADMIN_DIR_).'/'.$this->context->link->getAdminLink('AdminShopUrl');
 	}
+	
+	/**
+	 * @param string $token
+	 * @param integer $id
+	 * @param string $name
+	 * @return mixed
+	 */
+	public function displayDeleteLink($token = null, $id, $name = null)
+	{
+		$tpl = $this->createTemplate('helpers/list/list_action_delete.tpl');
+
+		if (!array_key_exists('Delete', self::$cache_lang))
+			self::$cache_lang['Delete'] = $this->l('Delete', 'Helper');
+
+		if (!array_key_exists('DeleteItem', self::$cache_lang))
+			self::$cache_lang['DeleteItem'] = $this->l('Delete selected item?', 'Helper');
+
+		if (!array_key_exists('Name', self::$cache_lang))
+			self::$cache_lang['Name'] = $this->l('Name:', 'Helper');
+
+		if (!is_null($name))
+			$name = '\n\n'.self::$cache_lang['Name'].' '.$name;
+
+		$data = array(
+			$this->identifier => $id,
+			'href' => Tools::safeOutput(self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&id_shop='.$this->id_shop.'&token='.($token != null ? $token : $this->token)),
+			'action' => self::$cache_lang['Delete'],
+		);
+		
+		if ($this->specificConfirmDelete !== false)
+			$data['confirm'] = !is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : self::$cache_lang['DeleteItem'].$name;
+		
+		$tpl->assign(array_merge($this->tpl_delete_link_vars, $data));
+
+		return $tpl->fetch();
+	}
 }
 
 
