@@ -72,7 +72,7 @@ class AdminShippingControllerCore extends AdminController
 						'type' => 'text',
 						'validation' => 'isPrice'),
 					'PS_SHIPPING_FREE_WEIGHT' => array(
-						'title' => $this->l('Free shipping starts at)'),
+						'title' => $this->l('Free shipping starts at'),
 						'suffix' => Configuration::get('PS_WEIGHT_UNIT'),
 						'cast' => 'floatval',
 						'type' => 'text',

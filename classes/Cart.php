@@ -2669,10 +2669,14 @@ class CartCore extends ObjectModel
 					// If end not set, then shipping is free
 					Cache::store($cache_id, $shipping_cost);
 					return $shipping_cost;
-				} elseif($orderTotalwithDiscounts > $PE || $this->getTotalWeight() > $WE) {
+				} elseif(($orderTotalwithDiscounts > $PE && $PE > 0) || ($this->getTotalWeight() > $WE && $WE > 0)) {
 					// if price or weight is over the limit, don't return anything, beacuse shipping is not free
 				} elseif($orderTotalwithDiscounts <= $PE && $this->getTotalWeight() <= $WE) {
 					// if price and weight is still within limit, then shipping is free
+					Cache::store($cache_id, $shipping_cost);
+					return $shipping_cost;
+				} elseif (($PE == 0 && $this->getTotalWeight() <= $WE) || ($WE == 0 && $orderTotalwithDiscounts <= $PE) ) {
+					// if price end not set, but weight under limit OR weight end not set, but price under limit
 					Cache::store($cache_id, $shipping_cost);
 					return $shipping_cost;
 				}
