@@ -61,7 +61,7 @@ class TrackingFront extends Module
 		{
 			unset($this->context->cookie->tracking_id);
 			unset($this->context->cookie->tracking_passwd);
-			Tools::redirect('modules/trackingfront/stats.php');
+			Tools::redirect(Tools::getShopDomain(true, false).__PS_BASE_URI__.'modules/trackingfront/stats.php');
 		}
 		elseif (Tools::isSubmit('submitLoginTracking'))
 		{
@@ -89,7 +89,7 @@ class TrackingFront extends Module
 				{
 					$this->context->cookie->tracking_id = $tracking_id;
 					$this->context->cookie->tracking_passwd = $passwd;
-					Tools::redirect('modules/trackingfront/stats.php');
+					Tools::redirect(Tools::getShopDomain(true, false).__PS_BASE_URI__.'modules/trackingfront/stats.php');
 				}
 			}
 			$this->smarty->assign('errors', $errors);

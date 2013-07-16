@@ -2,7 +2,7 @@
         <module>
             <name>bankwire</name>
             <displayName><![CDATA[Bank Wire]]></displayName>
-            <version><![CDATA[0.5]]></version>
+            <version><![CDATA[0.6]]></version>
             <description><![CDATA[Accept payments for your products via bank wire.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[payments_gateways]]></tab>

@@ -57,13 +57,14 @@ class IdentityControllerCore extends FrontController
 			{
 				$email = trim(Tools::getValue('email'));
 				$this->customer->birthday = (empty($_POST['years']) ? '' : (int)$_POST['years'].'-'.(int)$_POST['months'].'-'.(int)$_POST['days']);
-				$_POST['old_passwd'] = trim($_POST['old_passwd']);
+				if (isset($_POST['old_passwd']))
+					$_POST['old_passwd'] = trim($_POST['old_passwd']);
 				
 				if (!Validate::isEmail($email))
 					$this->errors[] = Tools::displayError('This email address is not valid');
 				elseif ($this->customer->email != $email && Customer::customerExists($email, true))
 					$this->errors[] = Tools::displayError('An account using this email address has already been registered.');
-				elseif (empty($_POST['old_passwd']) || (Tools::encrypt($_POST['old_passwd']) != $this->context->cookie->passwd))
+				elseif ((!isset($_POST['old_passwd']) || empty($_POST['old_passwd'])) || (Tools::encrypt($_POST['old_passwd']) != $this->context->cookie->passwd))
 					$this->errors[] = Tools::displayError('The password you entered is incorrect.');
 				elseif ($_POST['passwd'] != $_POST['confirmation'])
 					$this->errors[] = Tools::displayError('The password and confirmation do not match.');

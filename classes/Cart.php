@@ -424,9 +424,10 @@ class CartCore extends ObjectModel
 		// Build SELECT
 		$sql->select('cp.`id_product_attribute`, cp.`id_product`, cp.`quantity` AS cart_quantity, cp.id_shop, pl.`name`, p.`is_virtual`,
 						pl.`description_short`, pl.`available_now`, pl.`available_later`, p.`id_product`, product_shop.`id_category_default`, p.`id_supplier`,
-						p.`id_manufacturer`, product_shop.`on_sale`, product_shop.`ecotax`, product_shop.`additional_shipping_cost`, product_shop.`available_for_order`, product_shop.`price`, p.`weight`,
-						stock.`quantity` quantity_available, p.`width`, p.`height`, p.`depth`, stock.`out_of_stock`, product_shop.`active`, p.`date_add`,
-						p.`date_upd`, IFNULL(stock.quantity, 0) as quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
+						p.`id_manufacturer`, product_shop.`on_sale`, product_shop.`ecotax`, product_shop.`additional_shipping_cost`,
+						product_shop.`available_for_order`, product_shop.`price`, product_shop.`active`, product_shop.`unity`, product_shop.`unit_price_ratio`, 
+						stock.`quantity` AS quantity_available, p.`width`, p.`height`, p.`depth`, stock.`out_of_stock`, p.`weight`,
+						p.`date_add`, p.`date_upd`, IFNULL(stock.quantity, 0) as quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
 						CONCAT(cp.`id_product`, IFNULL(cp.`id_product_attribute`, 0), IFNULL(cp.`id_address_delivery`, 0)) AS unique_id, cp.id_address_delivery,
 						product_shop.`wholesale_price`, product_shop.advanced_stock_management, ps.product_supplier_reference supplier_reference');
 
@@ -2542,6 +2543,7 @@ class CartCore extends ObjectModel
 		if (empty($id_carrier) && $this->isCarrierInRange((int)Configuration::get('PS_CARRIER_DEFAULT'), (int)$id_zone))
 			$id_carrier = (int)Configuration::get('PS_CARRIER_DEFAULT');
 
+		$total_package_without_shipping_tax_inc = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, $product_list);
 		if (empty($id_carrier))
 		{
 			if ((int)$this->id_customer)
@@ -2576,7 +2578,7 @@ class CartCore extends ObjectModel
 				{
 					$check_delivery_price_by_weight = Carrier::checkDeliveryPriceByWeight($row['id_carrier'], $this->getTotalWeight(), (int)$id_zone);
 
-					$total_order = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, $product_list);
+					$total_order = $total_package_without_shipping_tax_inc;
 					$check_delivery_price_by_price = Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $total_order, (int)$id_zone, (int)$this->id_currency);
 
 					// Get only carriers that have a range compatible with cart
@@ -2679,26 +2681,8 @@ class CartCore extends ObjectModel
 					$id_zone = (int)$default_country->id_zone;
 			}
 
-			$check_delivery_price_by_weight = Carrier::checkDeliveryPriceByWeight((int)$carrier->id, $this->getTotalWeight(), (int)$id_zone);
-
-			// Code Review V&V TO FINISH
-			$check_delivery_price_by_price = Carrier::checkDeliveryPriceByPrice(
-				$carrier->id,
-				$this->getOrderTotal(
-					true,
-					Cart::BOTH_WITHOUT_SHIPPING,
-					$product_list
-				),
-				$id_zone,
-				(int)$this->id_currency
-			);
-
-			if ((
-					$carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_WEIGHT
-					&& !$check_delivery_price_by_weight
-				) || (
-					$carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_PRICE
-					&& !$check_delivery_price_by_price
+			if (($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_WEIGHT && !Carrier::checkDeliveryPriceByWeight($carrier->id, $this->getTotalWeight(), (int)$id_zone))
+			|| ($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_PRICE && !Carrier::checkDeliveryPriceByPrice($carrier->id, $total_package_without_shipping_tax_inc, $id_zone, (int)$this->id_currency)
 			))
 				$shipping_cost += 0;
 			else
@@ -2845,7 +2829,10 @@ class CartCore extends ObjectModel
 		$formatted_addresses['delivery'] = AddressFormat::getFormattedLayoutData($delivery);		
 		$formatted_addresses['invoice'] = AddressFormat::getFormattedLayoutData($invoice);
 
-		$total_tax = $this->getOrderTotal() - $this->getOrderTotal(false);
+		$base_total_tax_inc = $this->getOrderTotal(true);
+		$base_total_tax_exc = $this->getOrderTotal(false);
+		
+		$total_tax = $base_total_tax_inc - $base_total_tax_exc;
 
 		if ($total_tax < 0)
 			$total_tax = 0;
@@ -2943,9 +2930,9 @@ class CartCore extends ObjectModel
 			'total_shipping_tax_exc' => $total_shipping_tax_exc,
 			'total_products_wt' => $total_products_wt,
 			'total_products' => $total_products,
-			'total_price' => $this->getOrderTotal(),
+			'total_price' => $base_total_tax_inc,
 			'total_tax' => $total_tax,
-			'total_price_without_tax' => $this->getOrderTotal(false),
+			'total_price_without_tax' => $base_total_tax_exc,
 			'is_multi_address_delivery' => $this->isMultiAddressDelivery() || ((int)Tools::getValue('multi-shipping') == 1),
 			'free_ship' => $total_shipping ? 0 : 1,
 			'carrier' => new Carrier($this->id_carrier, $id_lang),
@@ -3423,62 +3410,59 @@ class CartCore extends ObjectModel
 	 */
 	public function setNoMultishipping()
 	{
-		// Upgrading quantities
-		$sql = 'SELECT sum(`quantity`) as quantity, id_product, id_product_attribute, count(*) as count
-				FROM `'._DB_PREFIX_.'cart_product`
-				WHERE `id_cart` = '.(int)$this->id.'
-					AND `id_shop` = '.(int)$this->id_shop.'
-				GROUP BY id_product, id_product_attribute
-				HAVING count > 1';
-
-		foreach (Db::getInstance()->executeS($sql) as $product)
+		if (Configuration::get('PS_ALLOW_MULTISHIPPING'))
 		{
-			$sql = 'UPDATE `'._DB_PREFIX_.'cart_product`
-				SET `quantity` = '.$product['quantity'].'
-				WHERE  `id_cart` = '.(int)$this->id.'
-					AND `id_shop` = '.(int)$this->id_shop.'
-					AND id_product = '.$product['id_product'].'
-					AND id_product_attribute = '.$product['id_product_attribute'];
-				Db::getInstance()->execute($sql);
+			// Upgrading quantities
+			$sql = 'SELECT sum(`quantity`) as quantity, id_product, id_product_attribute, count(*) as count
+					FROM `'._DB_PREFIX_.'cart_product`
+					WHERE `id_cart` = '.(int)$this->id.'
+						AND `id_shop` = '.(int)$this->id_shop.'
+					GROUP BY id_product, id_product_attribute
+					HAVING count > 1';
+
+			foreach (Db::getInstance()->executeS($sql) as $product)
+			{
+				$sql = 'UPDATE `'._DB_PREFIX_.'cart_product`
+					SET `quantity` = '.$product['quantity'].'
+					WHERE  `id_cart` = '.(int)$this->id.'
+						AND `id_shop` = '.(int)$this->id_shop.'
+						AND id_product = '.$product['id_product'].'
+						AND id_product_attribute = '.$product['id_product_attribute'];
+					Db::getInstance()->execute($sql);
+			}
+
+			// Merging multiple lines
+			$sql = 'DELETE cp1
+				FROM `'._DB_PREFIX_.'cart_product` cp1
+					INNER JOIN `'._DB_PREFIX_.'cart_product` cp2
+					ON (
+						(cp1.id_cart = cp2.id_cart)
+						AND (cp1.id_product = cp2.id_product)
+						AND (cp1.id_product_attribute = cp2.id_product_attribute)
+						AND (cp1.id_address_delivery <> cp2.id_address_delivery)
+						AND (cp1.date_add > cp2.date_add)
+					)';
+					Db::getInstance()->execute($sql);
 		}
-
-		// Merging multiple lines
-		$sql = 'DELETE cp1
-			FROM `'._DB_PREFIX_.'cart_product` cp1
-				INNER JOIN `'._DB_PREFIX_.'cart_product` cp2
-				ON (
-					(cp1.id_cart = cp2.id_cart)
-					AND (cp1.id_product = cp2.id_product)
-					AND (cp1.id_product_attribute = cp2.id_product_attribute)
-					AND (cp1.id_address_delivery <> cp2.id_address_delivery)
-					AND (cp1.date_add > cp2.date_add)
-				)';
-				Db::getInstance()->execute($sql);
-
-		// Upgrading address delivery
-		$sql = 'UPDATE `'._DB_PREFIX_.'cart_product`
-			SET `id_address_delivery` =
-			(
-				SELECT `id_address_delivery`
-				FROM `'._DB_PREFIX_.'cart`
-				WHERE `id_cart` = '.(int)$this->id.'
-					AND `id_shop` = '.(int)$this->id_shop.'
-			)
-			WHERE `id_cart` = '.(int)$this->id.'
-			'.(Configuration::get('PS_ALLOW_MULTISHIPPING') ? ' AND `id_shop` = '.(int)$this->id_shop : '');
-
-		Db::getInstance()->execute($sql);
-
-		$sql = 'UPDATE `'._DB_PREFIX_.'customization`
-			SET `id_address_delivery` =
-			(
-				SELECT `id_address_delivery`
-				FROM `'._DB_PREFIX_.'cart`
+		
+		// Update delivery address for each product line
+		Db::getInstance()->execute('
+		UPDATE `'._DB_PREFIX_.'cart_product`
+		SET `id_address_delivery` = (
+			SELECT `id_address_delivery` FROM `'._DB_PREFIX_.'cart`
+			WHERE `id_cart` = '.(int)$this->id.' AND `id_shop` = '.(int)$this->id_shop.'
+		)
+		WHERE `id_cart` = '.(int)$this->id.'
+		'.(Configuration::get('PS_ALLOW_MULTISHIPPING') ? ' AND `id_shop` = '.(int)$this->id_shop : ''));
+		
+		if (Customization::isFeatureActive())
+			Db::getInstance()->execute('
+			UPDATE `'._DB_PREFIX_.'customization`
+			SET `id_address_delivery` = (
+				SELECT `id_address_delivery` FROM `'._DB_PREFIX_.'cart`
 				WHERE `id_cart` = '.(int)$this->id.'
 			)
-			WHERE `id_cart` = '.(int)$this->id;
-
-		Db::getInstance()->execute($sql);
+			WHERE `id_cart` = '.(int)$this->id);
 	}
 
 	/**

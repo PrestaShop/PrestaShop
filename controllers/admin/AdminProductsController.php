@@ -76,7 +76,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->allow_export = true;
 
 		// @since 1.5 : translations for tabs
-		$this->available_tabs_lang = array (
+		$this->available_tabs_lang = array(
 			'Informations' => $this->l('Information'),
 			'Pack' => $this->l('Pack'),
 			'VirtualProduct' => $this->l('Virtual Product'),
@@ -160,7 +160,11 @@ class AdminProductsControllerCore extends AdminController
 		if (Validate::isLoadedObject($this->_category) && empty($this->_filter))
 			$join_category = true;
 
-		$this->_join .= 'LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = a.`id_product` '.(!Shop::isFeatureActive() ? ' AND i.cover=1' : '').')';
+		$this->_join .= '
+		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = a.`id_product` '.(!Shop::isFeatureActive() ? ' AND i.cover=1' : '').')
+		LEFT JOIN `'._DB_PREFIX_.'stock_available` sav ON (sav.`id_product` = a.`id_product` AND sav.`id_product_attribute` = 0
+		'.StockAvailable::addSqlShopRestriction(null, null, 'sav').') ';
+
 		if (Shop::isFeatureActive())
 		{
 			$alias = 'sa';
@@ -188,12 +192,13 @@ class AdminProductsControllerCore extends AdminController
 			$this->_join .= 'LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = 1)';
 		}
 
-		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image,';
+		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`, ';
 		
-		$this->_join .= ($join_category ? 'INNER JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product` AND cp.`id_category` = '.(int)$this->_category->id.')' : '').'
-		LEFT JOIN `'._DB_PREFIX_.'stock_available` sav ON (sav.`id_product` = a.`id_product` AND sav.`id_product_attribute` = 0
-		'.StockAvailable::addSqlShopRestriction(null, null, 'sav').') ';
-		$this->_select .= 'cl.name `name_category` '.($join_category ? ', cp.`position`' : '').', '.$alias.'.`price`, 0 AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`';
+		if ($join_category)
+		{
+			$this->_join .= ' INNER JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product` AND cp.`id_category` = '.(int)$this->_category->id.') ';
+			$this->_select .= ' cp.`position`, ';
+		}
 
 		$this->_group = 'GROUP BY '.$alias.'.id_product';
 
@@ -201,7 +206,8 @@ class AdminProductsControllerCore extends AdminController
 		$this->fields_list['id_product'] = array(
 			'title' => $this->l('ID'),
 			'align' => 'center',
-			'width' => 20
+			'type' => 'int',
+			'width' => 40
 		);
 		$this->fields_list['image'] = array(
 			'title' => $this->l('Photo'),
@@ -249,14 +255,16 @@ class AdminProductsControllerCore extends AdminController
 			'havingFilter' => true,
 			'orderby' => false
 		);
-		$this->fields_list['sav_quantity'] = array(
-			'title' => $this->l('Quantity'),
-			'width' => 90,
-			'align' => 'right',
-			'filter_key' => 'sav!quantity',
-			'orderby' => true,
-			'hint' => $this->l('This is the quantity available in the current shop/group.'),
-		);
+		if (Configuration::get('PS_STOCK_MANAGEMENT'))
+			$this->fields_list['sav_quantity'] = array(
+				'title' => $this->l('Quantity'),
+				'width' => 90,
+				'type' => 'int',
+				'align' => 'right',
+				'filter_key' => 'sav!quantity',
+				'orderby' => true,
+				'hint' => $this->l('This is the quantity available in the current shop/group.'),
+			);
 		$this->fields_list['active'] = array(
 			'title' => $this->l('Status'),
 			'width' => 70,
@@ -267,7 +275,7 @@ class AdminProductsControllerCore extends AdminController
 			'orderby' => false
 		);
 
-		if ((int)$this->id_current_category)
+		if ($join_category && (int)$this->id_current_category)
 			$this->fields_list['position'] = array(
 				'title' => $this->l('Position'),
 				'width' => 70,
@@ -373,7 +381,14 @@ class AdminProductsControllerCore extends AdminController
 				$default_product = new Product((int)$this->object->id, false, null, (int)$this->object->id_shop_default);
 				$def = ObjectModel::getDefinition($this->object);
 				foreach ($def['fields'] as $field_name => $row)
-					$this->object->$field_name = ObjectModel::formatValue($default_product->$field_name, $def['fields'][$field_name]['type']);
+				{
+					$fields_array = array();
+					if(is_array($default_product->$field_name))
+						foreach ($fields_array as $key => $fields_name)
+							$this->object->$field_name[$key] = ObjectModel::formatValue($fields_name, $def['fields'][$field_name]['type']);
+					else
+						$this->object->$field_name = ObjectModel::formatValue($this->object->$field_name, $def['fields'][$field_name]['type']);
+				}
 			}
 			$this->object->loadStockData();
 		}
@@ -729,7 +744,12 @@ class AdminProductsControllerCore extends AdminController
 									$this->errors[] = sprintf(Tools::displayError('You cannot delete the product #%d because there is physical stock left.'), $product->id);
 							}
 							if (!count($this->errors))
-								$success &= $product->delete();
+							{
+								if ($product->delete())
+									Logger::addLog(sprintf($this->l('%s deletion'), $this->className), 1, null, $this->className, (int)$product->id, true, (int)$this->context->employee->id);
+								else
+									$success = false;
+							}
 							else
 								$success = 0;
 						}
@@ -764,6 +784,26 @@ class AdminProductsControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('The price attribute is required.');
 			if (!Tools::getIsset('attribute_combination_list') || Tools::isEmpty(Tools::getValue('attribute_combination_list')))
 				$this->errors[] = Tools::displayError('You must add at least one attribute.');
+				
+			$array_checks = array(
+				'reference' => 'isReference',
+				'supplier_reference' => 'isReference',
+				'location' => 'isReference',
+				'ean13' => 'isEan13',
+				'upc' => 'isUpc',
+				'wholesale_price' => 'isPrice',
+				'price' => 'isPrice',
+				'ecotax' => 'isPrice',
+				'quantity' => 'isInt',
+				'weight' => 'isUnsignedFloat',
+				'unit_price_impact' => 'isPrice',
+				'default_on' => 'isBool',
+				'minimal_quantity' => 'isUnsignedInt',
+				'available_date' => 'isDateFormat'
+			);
+			foreach ($array_checks as $property => $check)
+				if (Tools::getValue('attribute_'.$property) !== false && !call_user_func(array('Validate', $check), Tools::getValue('attribute_'.$property)))
+					$this->errors[] = sprintf(Tools::displayError('Field %s is not valid'), $property);
 
 			if (!count($this->errors))
 			{
@@ -1686,6 +1726,7 @@ class AdminProductsControllerCore extends AdminController
 
 		if ($this->object->add())
 		{
+			Logger::addLog(sprintf($this->l('%s addition'), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
 			$this->addCarriers();
 			$this->updateAccessories($this->object);
 			$this->updatePackItems($this->object);
@@ -1827,6 +1868,7 @@ class AdminProductsControllerCore extends AdminController
 
 				if ($object->update())
 				{
+					Logger::addLog(sprintf($this->l('%s edition'), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
 					if (in_array($this->context->shop->getContext(), array(Shop::CONTEXT_SHOP, Shop::CONTEXT_ALL)))
 					{
 						if ($this->isTabSubmitted('Shipping'))
@@ -2709,7 +2751,7 @@ class AdminProductsControllerCore extends AdminController
 						
 						if (!$product_supplier_id)
 						{
-							$product->addSupplierReference($supplier->id_supplier, (int)$attribute['id_product_attribute'], $reference, (float)Tools::convertPrice($price, $id_currency), (int)$id_currency);
+							$product->addSupplierReference($supplier->id_supplier, (int)$attribute['id_product_attribute'], $reference, (float)$price, (int)$id_currency);
 							if ($product->id_supplier == $supplier->id_supplier)
 							{
 								if ((int)$attribute['id_product_attribute'] > 0)
@@ -2735,7 +2777,7 @@ class AdminProductsControllerCore extends AdminController
 						{
 							$product_supplier = new ProductSupplier($product_supplier_id);
 							$product_supplier->id_currency = (int)$id_currency;
-							$product_supplier->product_supplier_price_te = (float)Tools::convertPrice($price, $id_currency); //converted in the default currency
+							$product_supplier->product_supplier_price_te = (float)$price;
 							$product_supplier->product_supplier_reference = pSQL($reference);
 							$product_supplier->update();
 

@@ -208,9 +208,10 @@ class ProductSupplierCore extends ObjectModel
 	 *
 	 * @param int $id_product
 	 * @param int $id_product_attribute Optional
+	 * @param bool $converted_price Optional
 	 * @return Array keys: price_te, id_currency
 	 */
-	public static function getProductPrice($id_supplier, $id_product, $id_product_attribute = 0)
+	public static function getProductPrice($id_supplier, $id_product, $id_product_attribute = 0, $converted_price = false)
 	{
 		if (is_null($id_supplier) || is_null($id_product))
 			return;
@@ -222,6 +223,9 @@ class ProductSupplierCore extends ObjectModel
 		$query->where('id_supplier = '.(int)$id_supplier);
 
 		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
+		if ($converted_price)
+			return Tools::convertPrice($row['price_te'], $row['id_currency']);
+
 		return $row['price_te'];
 	}
 }

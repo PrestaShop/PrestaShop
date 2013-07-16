@@ -60,13 +60,16 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 			$invoice_address = new Address((int)$this->order->id_address_invoice);
 			$formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
 		}
-
+		
+		$carrier = new Carrier($this->order->id_carrier);
+		$carrier->name = ($carrier->name == '0' ? Configuration::get('PS_SHOP_NAME') : $carrier->name);
 		$this->smarty->assign(array(
 			'order' => $this->order,
 			'order_details' => $this->order_invoice->getProducts(),
 			'delivery_address' => $formatted_delivery_address,
 			'invoice_address' => $formatted_invoice_address,
-			'order_invoice' => $this->order_invoice
+			'order_invoice' => $this->order_invoice,
+			'carrier' => $carrier
 		));
 
 		return $this->smarty->fetch($this->getTemplate('delivery-slip'));
@@ -87,7 +90,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 	 */
 	public function getFilename()
 	{
-		return Configuration::get('PS_DELIVERY_PREFIX').sprintf('%06d', $this->order->invoice_number).'.pdf';
+		return Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order->invoice_number).'.pdf';
 	}
 }
 

@@ -269,7 +269,7 @@ class MailAlerts extends Module
 		$customer = $params['customer'];
 		$delivery = new Address((int)$order->id_address_delivery);
 		$invoice = new Address((int)$order->id_address_invoice);
-		$order_date_text = Tools::displayDate($order->date_add, (int)$id_lang);
+		$order_date_text = Tools::displayDate($order->date_add);
 		$carrier = new Carrier((int)$order->id_carrier);
 		$message = $order->getFirstMessage();
 

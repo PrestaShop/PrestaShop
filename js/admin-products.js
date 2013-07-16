@@ -1299,14 +1299,14 @@ product_tabs['Suppliers'] = new function(){
 			$('#suppliers_accordion').accordion();
 			// If one second was not enough to display page, another resize is needed
 			setTimeout(function() {
-				$('#suppliers_accordion').accordion('resize');
+				$('#suppliers_accordion').accordion({ heightStyle: "fill" });
 			}, 3000);
 		}, 1000);
 
 		// Resize the accordion once the page is visible because of the bug with accordions initialized
 		// inside a display:none block not having the correct size.
 		$('#suppliers_accordion').parents('.product-tab-content').bind('displayed', function(){
-			$('#suppliers_accordion').accordion("resize");
+			$('#suppliers_accordion').accordion({ heightStyle: "fill" });
 		});
 	};
 }
@@ -1414,7 +1414,7 @@ product_tabs['Warehouses'] = new function(){
 		// Resize the accordion once the page is visible because of the bug with accordions initialized
 		// inside a display:none block not having the correct size.
 		$('#warehouse_accordion').parents('.product-tab-content').bind('displayed', function(){
-			$('#warehouse_accordion').accordion("resize");
+			$('#warehouse_accordion').accordion("refresh");
 		});
 	};
 }

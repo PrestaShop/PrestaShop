@@ -377,6 +377,8 @@ function deleteProductFromSummary(id)
 				updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
 				if (typeof(getCarrierListAndUpdate) !== 'undefined' && jsonData.summary.products.length > 0)
 					getCarrierListAndUpdate();
+				if (typeof(updatePaymentMethodsDisplay) !== 'undefined')
+					updatePaymentMethodsDisplay();
 			}
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -454,7 +456,7 @@ function upQuantity(id, qty)
 				for(var error in jsonData.errors)
 					//IE6 bug fix
 					if(error !== 'indexOf')
-						errors += jsonData.errors[error] + "\n";
+						errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
 				alert(errors);
 				$('input[name=quantity_'+ id +']').val($('input[name=quantity_'+ id +'_hidden]').val());
 			}
@@ -539,7 +541,7 @@ function downQuantity(id, qty)
 					for(var error in jsonData.errors)
 						//IE6 bug fix
 						if(error !== 'indexOf')
-							errors += jsonData.errors[error] + "\n";
+							errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
 					alert(errors);
 					$('input[name=quantity_'+ id +']').val($('input[name=quantity_'+ id +'_hidden]').val());
 				}

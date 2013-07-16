@@ -89,7 +89,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			$tax_exempt = Configuration::get('VATNUMBER_MANAGEMENT')
 								&& !empty($address->vat_number)
 								&& $address->id_country != Configuration::get('VATNUMBER_COUNTRY');
-
+			$carrier = new Carrier($this->order->id_carrier);
+			
 			$this->smarty->assign(array(
 				'tax_exempt' => $tax_exempt,
 				'use_one_after_another_method' => $this->order_invoice->useOneAfterAnotherTaxComputationMethod(),
@@ -98,7 +99,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 				'ecotax_tax_breakdown' => $this->order_invoice->getEcoTaxTaxesBreakdown(),
 				'wrapping_tax_breakdown' => $this->order_invoice->getWrappingTaxesBreakdown(),
 				'order' => $this->order,
-				'order_invoice' => $this->order_invoice
+				'order_invoice' => $this->order_invoice,
+				'carrier' => $carrier
 			));
 
 			return $this->smarty->fetch($this->getTemplate('invoice.tax-tab'));
@@ -137,7 +139,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 	 */
 	public function getFilename()
 	{
-		return Configuration::get('PS_INVOICE_PREFIX').sprintf('%06d', $this->order_invoice->number).'.pdf';
+		return Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_invoice->number).'.pdf';
 	}
 }
 
