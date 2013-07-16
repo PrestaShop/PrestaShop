@@ -2127,6 +2127,9 @@ exit;
 		}
 	}
 
+	/**
+	* @deprecated as of 1.5 use Controller::getController('PageNotFoundController')->run();
+   	*/
 	public static function display404Error()
 	{
 		header('HTTP/1.1 404 Not Found');
