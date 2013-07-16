@@ -19,7 +19,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2013 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  @license	   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
@@ -324,9 +324,8 @@ function updateDisplay()
 			reduction = productPriceDisplay * (parseFloat(selectedCombination['specific_price'].reduction_percent) / 100) + reduction_price;
 			if (reduction_price && (displayPrice || noTaxForThisProduct))
 				reduction = ps_round(reduction / tax, 6);
-
 		}
-		else if (product_specific_price && product_specific_price.reduction && !selectedCombination.specific_price)
+		else if (product_specific_price && product_specific_price.reduction && product_specific_price.id_product_attribute == 0)
 		{
 			if (product_specific_price.reduction_type == 'amount')
 				reduction_price = (specific_currency ? product_specific_price.reduction : product_specific_price.reduction * currencyRate);
@@ -574,7 +573,7 @@ $(document).ready(function()
 	$('.thickbox').fancybox({
 		'hideOnContentClick': true,
 		'transitionIn'	: 'elastic',
-		'transitionOut'	: 'elastic'
+		'transitionOut' : 'elastic'
 	});
 });
 
