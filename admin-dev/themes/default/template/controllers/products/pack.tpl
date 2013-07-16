@@ -28,51 +28,68 @@
 	var msg_set_quantity = "{l s="Please set a quantity to add a product." js=1}";
 </script>
 <input type="hidden" name="submitted_tabs[]" value="Pack" />
-<h4>{l s='Pack'}</h4>
-<div class="separation"></div>
+<legend>{l s='Pack'}</legend>
+<div class="alert alert-info">{l s='You cannot add combinations to a pack.'}</div>
 
-<table>
-	<tr>
-		<td>
-			<div class="ppack">
-				<input type="checkbox" name="ppack" id="ppack" value="1" {if $product_type == Product::PTYPE_PACK}checked="checked"{/if} onclick="$('#ppackdiv').slideToggle();" />
-				<label class="t" for="ppack">{l s='Pack'}</label>
-			</div>
-		</td>
-		<td>
-			<div id="ppackdiv" {if !($product_type == Product::PTYPE_PACK)}style="display: none;"{/if}>
+<div class="ppack">
+	<input type="checkbox" name="ppack" id="ppack" value="1" {if $product_type == Product::PTYPE_PACK}checked="checked"{/if} onclick="$('#ppackdiv').slideToggle();" />
+	<label class="t" for="ppack">{l s='Pack'}</label>
+</div>
 
-				<label for="curPackItemName" style="width:560px;text-align:left;">
-					{l s='Begin typing the first letters of the product name. Then select the product from the drop-down list:'}
-				</label><br /><br />
+<div id="ppackdiv" {if !($product_type == Product::PTYPE_PACK)}style="display: none;"{/if}>
 
-				<input type="text" size="25" id="curPackItemName" />
-				<input type="text" name="curPackItemQty" id="curPackItemQty" value="1" size="1" />
-				<input type="hidden" name="inputPackItems" id="inputPackItems" value="{$input_pack_items}" />
-				<input type="hidden" name="namePackItems" id="namePackItems" value="{$input_namepack_items}" />
-				<input type="hidden" size="2" id="curPackItemId" />
+<div class="row">
+	<label class="control-label col-lg-3" for="curPackItemName">
+		<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='Begin typing the first letters of the product name. Then select the product from the drop-down list:'}">
+			{l s='Product'}
+		</span>
+	</label>
+	<div class="input-group col-lg-6">
+		<input type="text" id="curPackItemName" />
+		<span class="input-group-addon"><i class="icon-search"></i></span>
+	</div>
+</div>
+	
+<div class="row">
+	<label class="control-label col-lg-3" for="curPackItemQty">
+		{l s='Quantity'}
+	</label>
+	<div class="input-group col-lg-2">
+		<span class="input-group-addon">&times;</span>
+		<input type="text" name="curPackItemQty" id="curPackItemQty" value="1"/>
+	</div>
+</div>
 
-				<span id="add_pack_item" class="button" style="cursor: pointer;">
-					{l s='Add this product to the pack'}
-				</span>
+<div class="row">
+	<div class="col-lg-9 col-offset-3">
+		<button type="button" id="add_pack_item" class="btn btn-default">
+			<i class="icon-plus-sign-alt"></i> {l s='Add this product to the pack'}
+		</button>	
+	</div>
+</div>
 
-				<p class="product_description listOfPack" style="display:{if count($pack_items) > 0}block{else}none{/if};text-align: left;">
-					<br />{l s='List of products for that pack:'}
-				</p>
+<input type="hidden" name="inputPackItems" id="inputPackItems" value="{$input_pack_items}" />
+<input type="hidden" name="namePackItems" id="namePackItems" value="{$input_namepack_items}" />
+<input type="hidden" id="curPackItemId" />
 
-				<div id="divPackItems">
-					{foreach $pack_items as $pack_item}
-						{$pack_item.pack_quantity} x {$pack_item.name}
-						<span class="delPackItem" name="{$pack_item.id}" style="cursor: pointer;">
-							<img src="../img/admin/delete.gif" />
-						</span><br />
-					{/foreach}
-				</div>
+<hr/>
 
-				<br />
-				<p class="alert alert-info" style="display:block">{l s='You cannot add combinations to a pack.'}</p>
+<div class="row">
+	<label class="control-label col-lg-3 product_description listOfPack" style="display:{if count($pack_items) > 0}block{else}none{/if};">
+		{l s='List of products for that pack:'}
+	</label>
+	<div class="col-lg-9">
+		<ul id="divPackItems">
+			{foreach $pack_items as $pack_item}
+			<li>
+				<button type="button" class="btn btn-default delPackItem" name="{$pack_item.id}">
+					<i class="icon-trash"></i>
+				</button>
+				{$pack_item.pack_quantity} x {$pack_item.name}
+			</li>
+			{/foreach}
+		</ul>
+	</div>
+</div>
 
-			</td>
-		</div>
-	</tr>
-</table>

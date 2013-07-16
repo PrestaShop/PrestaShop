@@ -219,9 +219,14 @@
 <div class="row redirect_product_options redirect_product_options_product_choise" style="display:none">
 	{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
 	<label class="control-label col-lg-3">{l s='Related product:'}</label>
-	<div class="col-lg-5">
+	<div class="col-lg-7">
 		<input type="hidden" value="" name="id_product_redirected" />
-		<input type="text" id="related_product_autocomplete_input" autocomplete="off" class="ac_input" />
+
+		<div class="input-group">
+			<input type="text" id="related_product_autocomplete_input" autocomplete="off" class="ac_input" />
+			<span class="input-group-addon"><i class="icon-search"></i></span>
+		</div>
+		
 		<span id="related_product_remove" style="display:none">
 			<a class="btn btn-default" href="#" onclick="removeRelatedProduct(); return false" id="related_product_remove_link">
 				<i class="icon-trash"></i>
@@ -299,8 +304,13 @@
 			{l s='Short description:'}
 		</span>
 	</label>
-	<div class="col-lg-8">
-		{include file="controllers/products/textarea_lang.tpl" languages=$languages input_name='description_short' input_value=$product->description_short max=$PS_PRODUCT_SHORT_DESC_LIMIT}
+	<div class="col-lg-9">
+		{include
+			file="controllers/products/textarea_lang.tpl"
+			languages=$languages
+			input_name='description_short'
+			input_value=$product->description_short
+			max=$PS_PRODUCT_SHORT_DESC_LIMIT}
 	</div>
 </div>
 
@@ -312,8 +322,11 @@
 			{l s='Description:'}
 		</span>
 	</label>
-	<div class="col-lg-8">
-		{include file="controllers/products/textarea_lang.tpl" languages=$languages input_name='description' input_value=$product->description}
+	<div class="col-lg-9">
+		{include
+			file="controllers/products/textarea_lang.tpl"
+			languages=$languages input_name='description'
+			input_value=$product->description}
 	</div>
 </div>
 
@@ -327,19 +340,21 @@
 	</div>
 </div>
 
-<div id="createImageDescription" class="well" style="display:none">
+<div id="createImageDescription" class="panel" style="display:none">
 
 	<div class="row">
 		<label class="control-label col-lg-3">{l s='Select your image:'}</label>
-		<div class="col-lg-5">
-			{foreach from=$images item=image key=key}
-			<p class="checkbox-inline">
-				<input type="radio" name="smallImage" id="smallImage_{$key}" value="{$image.id_image}" {if $key == 0}checked="checked"{/if} >
-				<label for="smallImage_{$key}" class="t">
-					<img src="{$image.src}" alt="{$image.legend}" />
-				</label>
-			</p>
-			{/foreach}
+		<div class="col-lg-9">
+			<ul class="list-inline">
+				{foreach from=$images item=image key=key}
+				<li>
+					<input type="radio" name="smallImage" id="smallImage_{$key}" value="{$image.id_image}" {if $key == 0}checked="checked"{/if} >
+					<label for="smallImage_{$key}" class="t">
+						<img src="{$image.src}" alt="{$image.legend}" />
+					</label>
+				</li>
+				{/foreach}
+			</ul>
 		</div>
 	</div>
 

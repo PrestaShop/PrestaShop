@@ -30,7 +30,7 @@
 
 {if isset($fields.title)}<h2>{$fields.title}</h2>{/if}
 {block name="defaultForm"}
-<form id="{$table}_form" class="defaultForm {$name_controller}" action="{$current}&{if !empty($submit_action)}{$submit_action}=1{/if}&token={$token}" method="post" enctype="multipart/form-data" {if isset($style)}style="{$style}"{/if}>
+<form id="{$table}_form" class="form-horizontal defaultForm {$name_controller}" action="{$current}&{if !empty($submit_action)}{$submit_action}=1{/if}&token={$token}" method="post" enctype="multipart/form-data" {if isset($style)}style="{$style}"{/if}>
 	{if $form_id}
 		<input type="hidden" name="{$identifier}" id="{$identifier}" value="{$form_id}" />
 	{/if}
@@ -40,12 +40,14 @@
 				{if $key == 'legend'}
 					<legend>
 						{if isset($field.image)}<img src="{$field.image}" alt="{$field.title|escape:'htmlall':'UTF-8'}" />{/if}
+						{if isset($field.icon)}<i class="{$field.icon}"/></i>{/if}
 						{$field.title}
 					</legend>
 				{elseif $key == 'description' && $field}
-					<p class="description">{$field}</p>
+					<div class="alert alert-info">{$field}</div>
 				{elseif $key == 'input'}
 					{foreach $field as $input}
+						<div class="row">
 						{if $input.type == 'hidden'}
 							<input type="hidden" name="{$input.name}" id="{$input.name}" value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" />
 						{else}
@@ -53,10 +55,20 @@
 								<div id="contains_states" {if !$contains_states}style="display:none;"{/if}>
 							{/if}
 							{block name="label"}
-								{if isset($input.label)}<label>{$input.label} </label>{/if}
+								{if isset($input.label)}
+									<label for="" class="control-label col-lg-3 {if isset($input.required) && $input.required && $input.type != 'radio'}required{/if}">
+										{if isset($input.hint)}
+										<span class="label-tooltip" data-toggle="tooltip"
+											title="{$input.hint}">
+										{/if}
+											{$input.label}
+										{if isset($input.hint)}
+										</span>
+										{/if}
+									</label>{/if}
 							{/block}
 							{block name="field"}
-								<div class="margin-form">
+								<div class="col-lg-9">
 								{block name="input"}
 								{if $input.type == 'text' || $input.type == 'tags'}
 									{if isset($input.lang) AND $input.lang}
@@ -87,7 +99,6 @@
 															{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if}
 															{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
 															{if isset($input.autocomplete) && !$input.autocomplete}autocomplete="off"{/if} />
-													{if !empty($input.hint)}<span class="alert alert-info" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
 												</div>
 											{/foreach}
 										</div>
@@ -209,6 +220,40 @@
 										{if isset($input.br) && $input.br}<br />{/if}
 										{if isset($value.p) && $value.p}<p>{$value.p}</p>{/if}
 									{/foreach}
+								{elseif $input.type == 'switch'}
+									<div class="input-group col-lg-2">
+										<span class="switch prestashop-switch">
+											{foreach $input.values as $value}
+											<input
+												type="radio"
+												name="{$input.name}"
+												{if $value.value == 1}
+													id="{$input.name}_on"
+												{else}
+													id="{$input.name}_off"
+												{/if}
+												value="$value.value"
+												{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
+												{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
+											/>
+											<label
+												class="t radio"
+												{if $value.value == 1}
+													for="{$input.name}_on"
+												{else}
+													for="{$input.name}_off"
+												{/if}
+											>
+												{if $value.value == 1}
+													<i class="icon-check-sign"></i> {l s='Yes'}
+												{else}
+													<i class="icon-ban-circle"></i> {l s='No'}
+												{/if}
+											</label>
+											{/foreach}
+											<span class="slide-button btn btn-default"></span>
+										</span>
+									</div>
 								{elseif $input.type == 'textarea'}
 									{if isset($input.lang) AND $input.lang}
 										<div class="translatable">
@@ -315,7 +360,7 @@
 								{elseif $input.type == 'free'}
 									{$fields_value[$input.name]}
 								{/if}
-								{if isset($input.required) && $input.required && $input.type != 'radio'} <sup>*</sup>{/if}
+<!-- {if isset($input.required) && $input.required && $input.type != 'radio'} <sup>*</sup>{/if} -->
 								{/block}{* end block input *}
 								{block name="description"}
 									{if isset($input.desc) && !empty($input.desc)}
@@ -334,14 +379,13 @@
 										</p>
 									{/if}
 								{/block}
-								{if isset($input.lang) && isset($languages)}<div class="clear"></div>{/if}
 								</div>
-								<div class="clear"></div>
 							{/block}{* end block field *}
 							{if $input.name == 'id_state'}
 								</div>
 							{/if}
 						{/if}
+						</div>
 					{/foreach}
 					{hook h='displayAdminForm'}
 					{if isset($name_controller)}
@@ -377,9 +421,9 @@
 				{/if}
 				{block name="other_input"}{/block}
 			{/foreach}
-			{if $required_fields}
-				<div class="small"><sup>*</sup> {l s='Required field'}</div>
-			{/if}
+<!-- {if $required_fields}
+	<div class="small"><sup>*</sup> {l s='Required field'}</div>
+{/if} -->
 		</fieldset>
 		{block name="other_fieldsets"}{/block}
 		{if isset($fields[$f+1])}<br />{/if}

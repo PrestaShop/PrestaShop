@@ -34,26 +34,28 @@
 		{l s='Filename:'}
 		</span>
 	</label>
-	<div class="col-lg-7 translatable">
-		{foreach $languages as $language}
-			<div class="lang_{$language.id_lang}" style="{if $language.id_lang != $default_form_language}display:none;{/if}">
-				<input type="text" name="attachment_name_{$language.id_lang}" value="{$attachment_name[$language.id_lang]|escape:'htmlall':'UTF-8'}" />
-			</div>
-		{/foreach}
+	<div class="col-lg-7">
+		<div class="row">
+			{include file="controllers/products/input_text_lang.tpl"
+				languages=$languages
+				input_value=$attachment_name
+				input_name="attachment_name"
+			}
+		</div>
 	</div>
 </div>
 	
 <div class="row">
 	<label class="control-label col-lg-3">{l s='Description:'} </label>
-	<div class="col-lg-7 translatable">
-		{foreach $languages as $language}
-			<div class="lang_{$language.id_lang}" style="display: {if $language.id_lang == $default_form_language}block{else}none{/if};">
-				<textarea name="attachment_description_{$language.id_lang}">{$attachment_description[$language.id_lang]|escape:'htmlall':'UTF-8'}</textarea>
-			</div>
-		{/foreach}
+	<div class="col-lg-9">
+		{include
+			file="controllers/products/textarea_lang.tpl"
+			languages=$languages
+			input_name="attachment_description"
+			input_value=$attachment_description
+		}
 	</div>
 </div>
-
 
 <div class="row">
 	<label class="control-label col-lg-3">
@@ -62,45 +64,73 @@
 			{l s='File:'}
 		</span>
 	</label>
-	<div class="input-group col-lg-7">
-		<input type="file" name="attachment_file" />
-		<input type="submit" value="{l s='Upload attachment file'}" name="submitAddAttachments" class="btn btn-default" />
+	<div class="col-lg-7">
+		<div class="row">
+			<div class="col-lg-8">
+				<input id="attachement_file" type="file" name="attachment_file" class="hide" />
+				<div class="dummyfile input-group">
+					<span class="input-group-addon"><i class="icon-file"></i></span>
+					<input id="attachement_filename" type="text" class="disabled" name="filename" readonly />
+					<span class="input-group-btn">
+						<button id="attachement_fileselectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
+							{l s='Choose a file'}
+						</button>
+					</span>
+				</div>
+			</div>
+			<div class="col-lg-4">
+				<button type="submit" name="submitAddAttachments" class="btn btn-default">
+					<i class="icon-cloud-upload"></i> {l s='Upload attachment file'}
+				</button>
+			</div>
+		</div>
+	</div>
+	<script>
+		$(document).ready(function(){
+			$('#attachement_fileselectbutton').click(function(e){
+				$('#attachement_file').trigger('click');
+			});
+			$('#attachement_file').change(function(e){
+				var val = $(this).val();
+				var file = val.split(/[\\/]/);
+				$('#attachement_filename').val(file[file.length-1]);
+			});
+		});
+	</script>
+</div>
+
+<hr/>
+
+<div class="row">
+	<div class="col-lg-9 col-offset-3">
+		<div class="row">
+			<div class="col-lg-6">
+				<p>{l s='Available attachments:'}</p>
+				<select multiple id="selectAttachment2">
+					{foreach $attach2 as $attach}
+						<option value="{$attach.id_attachment}">{$attach.name}</option>
+					{/foreach}
+				</select>
+				<a href="#" id="addAttachment" class="btn btn-default btn-block">{l s='Add'} <i class="icon-arrow-right"></i></a>
+			</div>
+			<div class="col-lg-6">
+				<p>{l s='Attachments for this product:'}</p>
+				<select multiple id="selectAttachment1" name="attachments[]">
+					{foreach $attach1 as $attach}
+						<option value="{$attach.id_attachment}">{$attach.name}</option>
+					{/foreach}
+				</select>
+				<a href="#" id="removeAttachment" class="btn btn-default btn-block"><i class="icon-arrow-left"></i> {l s='Remove'}</a>
+			</div>
+		</div>
 	</div>
 </div>
 
+<input type="hidden" name="arrayAttachments" id="arrayAttachments" value="{foreach $attach1 as $attach}{$attach.id_attachment},{/foreach}" />
 
-	<table>
-		<tr>
-			<td>
-                <p>{l s='Available attachments:'}</p>
-                <select multiple id="selectAttachment2" style="width:300px;height:160px;">
-                    {foreach $attach2 as $attach}
-                        <option value="{$attach.id_attachment}">{$attach.name}</option>
-                    {/foreach}
-                </select><br /><br />
-                <a href="#" id="addAttachment" style="text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px">
-                    {l s='Add'} &gt;&gt;
-                </a>
-            </td>
-            <td style="padding-left:20px;">
-                <p>{l s='Attachments for this product:'}</p>
-                <select multiple id="selectAttachment1" name="attachments[]" style="width:300px;height:160px;">
-                    {foreach $attach1 as $attach}
-                        <option value="{$attach.id_attachment}">{$attach.name}</option>
-                    {/foreach}
-                </select><br /><br />
-                <a href="#" id="removeAttachment" style="text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px">
-                    &lt;&lt; {l s='Remove'}
-                </a>
-			</td>
-		</tr>
-	</table>
-	<div class="clear">&nbsp;</div>
-	<input type="hidden" name="arrayAttachments" id="arrayAttachments" value="{foreach $attach1 as $attach}{$attach.id_attachment},{/foreach}" />
-
-	<script type="text/javascript">
-		var iso = '{$iso_tiny_mce}';
-		var pathCSS = '{$smarty.const._THEME_CSS_DIR_}';
-		var ad = '{$ad}';
-	</script>
+<script type="text/javascript">
+	var iso = '{$iso_tiny_mce}';
+	var pathCSS = '{$smarty.const._THEME_CSS_DIR_}';
+	var ad = '{$ad}';
+</script>
 {/if}
