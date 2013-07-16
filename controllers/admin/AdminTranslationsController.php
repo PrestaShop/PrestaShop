@@ -937,7 +937,6 @@ class AdminTranslationsControllerCore extends AdminController
 							$this->modules_translations[$theme_name][$module_name][$template_name][$key]['trad'] = html_entity_decode($GLOBALS[$name_var][$default_key], ENT_COMPAT, 'UTF-8');
 						else
 						{
-							//d(array($module_key, $default_key, $key, $GLOBALS[$name_var]));
 							$this->modules_translations[$theme_name][$module_name][$template_name][$key]['trad'] = '';
 							$this->missing_translations++;
 						}
@@ -984,8 +983,6 @@ class AdminTranslationsControllerCore extends AdminController
 							'header.inc.php',
 							'footer.inc.php',
 							'index.php',
-							'login.php',
-							'password.php',
 							'functions.php'
 						)
 					)
@@ -1471,12 +1468,10 @@ class AdminTranslationsControllerCore extends AdminController
 		$array_subjects = array();
 		if (($subjects = Tools::getValue('subject')) && is_array($subjects))
 		{
-			$array_subjects['core_and_modules'] = array('translations'=>array(), 'path'=>$arr_mail_path['core_mail'].'lang.php');
-
+			$array_subjects['core_and_modules'] = array('translations' => array(), 'path' => $arr_mail_path['core_mail'].'lang.php');
 			foreach ($subjects as $subject_translation)
 				$array_subjects['core_and_modules']['translations'] = array_merge($array_subjects['core_and_modules']['translations'], $subject_translation);
 		}
-
 		if (!empty($array_subjects))
 			foreach ($array_subjects as $infos)
 				$this->writeSubjectTranslationFile($infos['translations'], $infos['path']);
@@ -1776,12 +1771,14 @@ class AdminTranslationsControllerCore extends AdminController
 
 					if (preg_match('#controllers#', $tmp))
 					{
-						$parent_class = explode(DIRECTORY_SEPARATOR, $tmp);
+						$parent_class = explode(DIRECTORY_SEPARATOR, str_replace('/', DIRECTORY_SEPARATOR, $tmp));
 						$override = array_search('override', $parent_class);
 						if ($override !== false)
-							$prefix_key = 'Admin'.ucfirst($parent_class[count($parent_class) - 1]);
+							// case override/controllers/admin/templates/controller_name
+							$prefix_key = 'Admin'.ucfirst($parent_class[$override + 4]);
 						else
 						{
+							// case admin_name/themes/theme_name/template/controllers/controller_name
 							$key = array_search('controllers', $parent_class);
 							$prefix_key = 'Admin'.ucfirst($parent_class[$key + 1]);
 						}
@@ -2147,32 +2144,37 @@ class AdminTranslationsControllerCore extends AdminController
 			<div name="mails_div" id="'.$id_html.'">';
 		if (!empty($mails['files']))
 		{
+			$topic_already_displayed = array();
 			foreach ($mails['files'] as $mail_name => $mail_files)
 			{
 				if (array_key_exists('html', $mail_files) || array_key_exists('txt', $mail_files))
 				{
 					if (array_key_exists($mail_name, $all_subject_mail))
 					{
-						$subject_mail = $all_subject_mail[$mail_name];
-						$value_subject_mail = isset($mails['subject'][$subject_mail]) ? $mails['subject'][$subject_mail] : '';
-						$str_return .= '
-						<div class="label-subject" style="text-align:center;">
-							<label style="text-align:right">'.sprintf($this->l('Subject for %s:'), '<em>'.$mail_name.'</em>').'</label>
-							<div class="mail-form" style="text-align:left">
-								<b>'.$subject_mail.'</b><br />';
-								if (isset($value_subject_mail['trad']) && $value_subject_mail['trad'])
-									$str_return .= '<input type="text" name="subject['.$group_name.']['.$subject_mail.']" value="'.$value_subject_mail['trad'].'" />';
-								else
-									$str_return .= '<input type="text" name="subject['.$group_name.']['.$subject_mail.']" value="" />';
+						foreach ($all_subject_mail[$mail_name] as $subject_mail)
+						{
+							$subject_key = 'subject['.Tools::htmlentitiesUTF8($group_name).']['.Tools::htmlentitiesUTF8($subject_mail).']';
+							if (in_array($subject_key, $topic_already_displayed))
+								continue;
+							$topic_already_displayed[] = $subject_key;
+							$value_subject_mail = isset($mails['subject'][$subject_mail]) ? $mails['subject'][$subject_mail] : '';
+							$str_return .= '
+							<div class="label-subject" style="text-align:center;">
+								<label style="text-align:right">'.sprintf($this->l('Subject for %s:'), '<em>'.$mail_name.'</em>').'</label>
+								<div class="mail-form" style="text-align:left">
+									<b>'.$subject_mail.'</b><br />';
+							if (isset($value_subject_mail['trad']) && $value_subject_mail['trad'])
+								$str_return .= '<input type="text" name="subject['.Tools::htmlentitiesUTF8($group_name).']['.Tools::htmlentitiesUTF8($subject_mail).']" value="'.$value_subject_mail['trad'].'" />';
+							else
+								$str_return .= '<input type="text" name="subject['.Tools::htmlentitiesUTF8($group_name).']['.Tools::htmlentitiesUTF8($subject_mail).']" value="" />';
 
-								if (isset($value_subject_mail['use_sprintf']) && $value_subject_mail['use_sprintf'])
-								{
-									$str_return .= '<a class="useSpecialSyntax" title="'.$this->l('This expression uses a special syntax:').' '.$value_subject_mail['use_sprintf'].'" style="cursor:pointer">
-										<img src="'._PS_IMG_.'admin/error.png" alt="'.$value_subject_mail['use_sprintf'].'" />
-									</a>';
-								}
+							if (isset($value_subject_mail['use_sprintf']) && $value_subject_mail['use_sprintf'])
+								$str_return .= '<a class="useSpecialSyntax" title="'.$this->l('This expression uses a special syntax:').' '.$value_subject_mail['use_sprintf'].'" style="cursor:pointer">
+									<img src="'._PS_IMG_.'admin/error.png" alt="'.$value_subject_mail['use_sprintf'].'" />
+								</a>';
 							$str_return .= '</div>
-						</div>';
+							</div>';
+						}
 					}
 					else
 					{
@@ -2194,12 +2196,11 @@ class AdminTranslationsControllerCore extends AdminController
 			}
 		}
 		else
-		{
-			$str_return .= '
-				<p class="error">'.$this->l('There was a problem getting the mail files.').'<br />'
-				.sprintf($this->l('English language files must exist in %s folder'), '<em>'.$mails['directory'].'en</em>')
-				.'</p>';
-		}
+			$str_return .= '<p class="error">
+				'.$this->l('There was a problem getting the mail files.').'<br />
+				'.sprintf($this->l('English language files must exist in %s folder'), '<em>'.preg_replace('@/[a-z]{2}(/?)$@', '/en$1', $mails['directory']).'</em>').'
+			</p>';
+
 		$str_return .= '
 			</div><!-- #'.$id_html.' -->
 			<div class="clear"></div>
@@ -2410,21 +2411,27 @@ class AdminTranslationsControllerCore extends AdminController
 		$content = file_get_contents($dir.'/'.$file);
 		$content = str_replace("\n", ' ', $content);
 
+		// Subject must match with a template, therefor we first grep the Mail::Send() function then the Mail::l() inside.
 		if (preg_match_all('/Mail::Send([^;]*);/si', $content, $tab))
 			for ($i = 0; isset($tab[1][$i]); $i++)
 			{
 				$tab2 = explode(',', $tab[1][$i]);
-				if (is_array($tab2))
-					if ($tab2 && isset($tab2[1]))
-					{
-						$tab2[1] = trim(str_replace('\'', '', $tab2[1]));
-						if (preg_match('/Mail::l\(\''._PS_TRANS_PATTERN_.'\'/s', $tab2[2], $matches))
-							$subject_mail[$tab2[1]] = $matches[1];
-					}
+				if (is_array($tab2) && isset($tab2[1]))
+				{
+					$template = trim(str_replace('\'', '', $tab2[1]));
+					foreach ($tab2 as $tab3)
+						if (preg_match('/Mail::l\(\''._PS_TRANS_PATTERN_.'\'\)/Us', $tab3.')', $matches))
+						{
+							if (!isset($subject_mail[$template]))
+								$subject_mail[$template] = array();
+							if (!in_array($matches[1], $subject_mail[$template]))
+								$subject_mail[$template][] = $matches[1];
+						}
+				}
 			}
 
 		if (!in_array($file, self::$ignore_folder) && is_dir($dir.'/'.$file))
-			 $subject_mail = $this->getSubjectMail($dir, $file, $subject_mail);
+			$subject_mail = $this->getSubjectMail($dir, $file, $subject_mail);
 
 		return $subject_mail;
 	}

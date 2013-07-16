@@ -211,7 +211,7 @@ function displayFlags(languages, defaultLanguageID, employee_cookie)
 				$.each(languages, function(key, language) {
 					var img = $('<img>')
 						.addClass('pointer')
-						.css('margin', '0 2px')
+						.css('margin', '2px 2px')
 						.attr('src', '../img/l/' + language['id_lang'] + '.jpg')
 						.attr('alt', language['name'])
 						.click(function() {

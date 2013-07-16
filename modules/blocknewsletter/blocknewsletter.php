@@ -94,9 +94,6 @@ class Blocknewsletter extends Module
 
 		if (Tools::isSubmit('submitUpdate'))
 		{
-			if (isset($_POST['new_page']) && Validate::isBool((int)$_POST['new_page']))
-				Configuration::updateValue('NW_CONFIRMATION_NEW_PAGE', $_POST['new_page']);
-
 			if (isset($_POST['conf_email']) && Validate::isBool((int)$_POST['conf_email']))
 				Configuration::updateValue('NW_CONFIRMATION_EMAIL', pSQL($_POST['conf_email']));
 
@@ -120,12 +117,6 @@ class Blocknewsletter extends Module
 		<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'">
 			<fieldset>
 				<legend><img src="'.$this->_path.'logo.gif" />'.$this->l('Settings').'</legend>
-				<label>'.$this->l('Woulld you like to display configuration in a new page?').'</label>
-				<div class="margin-form">
-					<input type="radio" name="new_page" value="1" '.(Configuration::get('NW_CONFIRMATION_NEW_PAGE') ? 'checked="checked" ' : '').'/>'.$this->l('Yes').'
-					<input type="radio" name="new_page" value="0" '.(!Configuration::get('NW_CONFIRMATION_NEW_PAGE') ? 'checked="checked" ' : '').'/>'.$this->l('No').'
-				</div>
-				<div class="clear"></div>
 				<label>'.$this->l('Would you like to send a verification email after subscription?').'</label>
 				<div class="margin-form">
 					<input type="radio" name="verif_email" value="1" '.(Configuration::get('NW_VERIFICATION_EMAIL') ? 'checked="checked" ' : '').'/>'.$this->l('Yes').'
@@ -534,8 +525,9 @@ class Blocknewsletter extends Module
 		//we delete it from blocknewsletter table to prevent duplicates
 		$id_shop = $params['newCustomer']->id_shop;
 		$email = $params['newCustomer']->email;
-		if (Validate::isEmail($email))
+		$newsletter = $params['newCustomer']->newsletter;
+		if ($newsletter && Validate::isEmail($email))
 			return (bool)Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'newsletter WHERE id_shop='.(int)$id_shop.' AND email=\''.pSQL($email)."'");
-		return false;
+		return true;
 	}
 }

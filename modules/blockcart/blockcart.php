@@ -63,8 +63,9 @@ class BlockCart extends Module
 			$nbTotalProducts += (int)$product['cart_quantity'];
 		$cart_rules = $params['cart']->getCartRules();
 
-		$shipping_cost = Tools::displayPrice($params['cart']->getOrderTotal($useTax, Cart::ONLY_SHIPPING), $currency);
-		$shipping_cost_float = Tools::convertPrice($params['cart']->getOrderTotal($useTax, Cart::ONLY_SHIPPING), $currency);
+		$base_shipping = $params['cart']->getOrderTotal($useTax, Cart::ONLY_SHIPPING);
+		$shipping_cost = Tools::displayPrice($base_shipping, $currency);
+		$shipping_cost_float = Tools::convertPrice($base_shipping, $currency);
 		$wrappingCost = (float)($params['cart']->getOrderTotal($useTax, Cart::ONLY_WRAPPING));
 		$totalToPay = $params['cart']->getOrderTotal($useTax);
 

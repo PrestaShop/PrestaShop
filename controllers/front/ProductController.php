@@ -143,7 +143,8 @@ class ProductControllerCore extends FrontController
 				// Load category
 				if (isset($_SERVER['HTTP_REFERER'])
 					&& strstr($_SERVER['HTTP_REFERER'], Tools::getHttpHost()) // Assure us the previous page was one of the shop
-					&& preg_match('!^(.*)\/([0-9]+)\-(.*[^\.])|(.*)id_category=([0-9]+)(.*)$!', $_SERVER['HTTP_REFERER'], $regs))
+					&& (stripos($_SERVER['HTTP_REFERER'], '.html') === false)
+					&& preg_match('~^(.*)\/([0-9]+)\-((?![.]+html).*)|(.*)id_category=([0-9]+)(.*)$~', $_SERVER['HTTP_REFERER'], $regs))
 				{
 					// If the previous page was a category and is a parent category of the product use this category as parent category
 					if (isset($regs[2]) && is_numeric($regs[2]))
