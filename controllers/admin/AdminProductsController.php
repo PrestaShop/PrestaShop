@@ -3001,7 +3001,7 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign(array(
 			'link' => $this->context->link,
 			'currency' => $currency = $this->context->currency,
-			'tax_rules_groups' => TaxRulesGroup::getTaxRulesGroups(true),
+			'tax_rules_groups' => TaxRulesGroup::getTaxRulesGroups(true, true),
 			'taxesRatesByGroup' => TaxRulesGroup::getAssociatedTaxRatesByIdCountry($this->context->country->id),
 			'ecotaxTaxRate' => Tax::getProductEcotaxRate(),
 			'tax_exclude_taxe_option' => Tax::excludeTaxeOption(),
