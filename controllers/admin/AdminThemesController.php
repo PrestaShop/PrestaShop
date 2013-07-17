@@ -614,7 +614,7 @@ class AdminThemesControllerCore extends AdminController
 
 			$ext = ($field_name == 'PS_STORES_ICON') ? '.gif' : '.jpg';
 			$logo_name = $logo_prefix.'-'.(int)$id_shop.$ext;
-			if (Context::getContext()->shop->getContext() == Shop::CONTEXT_ALL || $id_shop == 0 || Shop::isFeatureActive()==false)
+			if (Context::getContext()->shop->getContext() == Shop::CONTEXT_ALL || $id_shop == 0 || Shop::isFeatureActive() == false)
 				$logo_name = $logo_prefix.$ext;
 
 			if ($field_name == 'PS_STORES_ICON')
