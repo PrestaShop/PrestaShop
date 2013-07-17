@@ -2849,7 +2849,7 @@ class AdminControllerCore extends Controller
 		// If view access is denied, we want to use the default template that will be used to display an error
 		if ($this->viewAccess() && $this->override_folder)
 		{
-			if (file_exists($this->context->smarty->getTemplateDir(1).DIRECTORY_SEPARATOR.$this->override_folder.$tpl_name))
+			if (file_exists($this->context->smarty->getTemplateDir(1).$this->override_folder.$tpl_name))
 				return $this->context->smarty->createTemplate($this->override_folder.$tpl_name, $this->context->smarty);
 			else if (file_exists($this->context->smarty->getTemplateDir(0).'controllers'.DIRECTORY_SEPARATOR.$this->override_folder.$tpl_name))
 				return $this->context->smarty->createTemplate('controllers'.DIRECTORY_SEPARATOR.$this->override_folder.$tpl_name, $this->context->smarty);
