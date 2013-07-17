@@ -567,6 +567,12 @@ select optgroup option {
 	background: url(../img/admin/warning.gif) no-repeat 0 0;
 }
 
+#blockNewVersionCheck .warn h3 {
+	padding: 0 0 0 5px;
+	margin: 0px;
+	background: none;
+}
+
 #content .error h3 {
 	padding: 0 0 0 20px;
 	background: url(../img/admin/warning.gif) no-repeat 0 0;
