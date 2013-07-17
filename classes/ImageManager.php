@@ -76,7 +76,7 @@ class ImageManagerCore
 		}
 		// Relative link will always work, whatever the base uri set in the admin
 		if (Context::getContext()->controller->controller_type == 'admin')
-			return '<img src="../img/tmp/'.$cache_image.(!$disable_cache ? '?time='.time() : '').'" alt="" class="imgm" />';
+			return '<img src="..'.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.''.$cache_image.(!$disable_cache ? '?time='.time() : '').'" alt="" class="imgm" />';
 		else
 			return '<img src="'._PS_TMP_IMG_.$cache_image.(!$disable_cache ? '?time='.time() : '').'" alt="" class="imgm" />';
 	}
