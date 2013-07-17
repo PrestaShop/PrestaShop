@@ -332,8 +332,9 @@ class AdminControllerCore extends Controller
 
 		if (!Shop::isFeatureActive())
 			$this->shopLinkType = '';
-
+		
 		//$this->base_template_folder = _PS_BO_ALL_THEMES_DIR_.$this->bo_theme.'/template';
+		//Why is truncated the Controller Name String from 5 character until the end ????????
 		$this->override_folder = Tools::toUnderscoreCase(substr($this->controller_name, 5)).'/';
 		// Get the name of the folder containing the custom tpl files
 		$this->tpl_folder = Tools::toUnderscoreCase(substr($this->controller_name, 5)).'/';
