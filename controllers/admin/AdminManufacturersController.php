@@ -511,7 +511,7 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->fields_value = array(
 			'name' => Manufacturer::getNameById($address->id_manufacturer),
 			'alias' => 'manufacturer',
-			'id_country' => Configuration::get('PS_COUNTRY_DEFAULT')
+			'id_country' => $address->id_country
 		);
 
 		$this->initToolbar();
@@ -670,6 +670,8 @@ class AdminManufacturersControllerCore extends AdminController
 		parent::init();
 
 		if (Tools::isSubmit('editaddresses'))
+			$this->display = 'editaddresses';
+		else if (Tools::isSubmit('updateaddress'))
 			$this->display = 'editaddresses';
 		else if (Tools::isSubmit('addaddress'))
 			$this->display = 'addaddress';
