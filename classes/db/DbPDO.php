@@ -25,8 +25,6 @@
 */
 
 /**
- * This class is currently only here for tests
- *
  * @since 1.5.0
  */
 class DbPDOCore extends Db
