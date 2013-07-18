@@ -431,9 +431,9 @@ abstract class PaymentModuleCore extends Module
 
 							// Set the new voucher value
 							if ($voucher->reduction_tax)
-								$voucher->reduction_amount = $values['tax_incl'] - $order->total_products_wt - $order->total_shipping_tax_incl;
+								$voucher->reduction_amount = $values['tax_incl'] - $order->total_products_wt - ($voucher->free_shipping == 1 ? $order->total_shipping_tax_incl : 0);
 							else
-								$voucher->reduction_amount = $values['tax_excl'] - $order->total_products - $order->total_shipping_tax_excl;
+								$voucher->reduction_amount = $values['tax_excl'] - $order->total_products - ($voucher->free_shipping == 1 ? $order->total_shipping_tax_excl : 0);
 
 							$voucher->id_customer = $order->id_customer;
 							$voucher->quantity = 1;
