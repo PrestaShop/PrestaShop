@@ -939,8 +939,23 @@ abstract class ObjectModelCore
 			if (!method_exists('Validate', $data['validate']))
 				throw new PrestaShopException('Validation function not found. '.$data['validate']);
 
-			if (!empty($value) && !call_user_func(array('Validate', $data['validate']), $value))
-				return 'Property '.get_class($this).'->'.$field.' is not valid';
+			if (!empty($value))
+			{
+				$res = true;
+				if (Tools::strtolower($data['validate']) == 'isCleanHtml')
+				{
+					d('in');
+					if (!call_user_func(array('Validate', $data['validate']), $value, (int)Configuration::get('PS_ALLOW_HTML_IFRAME')))
+						$res = false;
+				}
+				else
+				{
+					if (!call_user_func(array('Validate', $data['validate']), $value))
+						$res = false;
+				}
+				if (!$res)
+					return 'Property '.get_class($this).'->'.$field.' is not valid';
+			}
 		}
 
 		return true;
