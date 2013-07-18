@@ -78,8 +78,8 @@ class ManufacturerCore extends ObjectModel
 			'date_upd' => 			array('type' => self::TYPE_DATE),
 
 			// Lang fields
-			'description' => 		array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isString'),
-			'short_description' => 	array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isString', 'size' => 254),
+			'description' => 		array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
+			'short_description' => 	array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 254),
 			'meta_title' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
 			'meta_description' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
 			'meta_keywords' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName'),
