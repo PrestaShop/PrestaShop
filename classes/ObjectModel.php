@@ -942,9 +942,8 @@ abstract class ObjectModelCore
 			if (!empty($value))
 			{
 				$res = true;
-				if (Tools::strtolower($data['validate']) == 'isCleanHtml')
+				if (Tools::strtolower($data['validate']) == 'iscleanhtml')
 				{
-					d('in');
 					if (!call_user_func(array('Validate', $data['validate']), $value, (int)Configuration::get('PS_ALLOW_HTML_IFRAME')))
 						$res = false;
 				}
