@@ -29,7 +29,7 @@
 	</div>
 {/if}
 {if count($errors) && (!isset($disableDefaultErrorOutPut) || $disableDefaultErrorOutPut == false)}
-	<div class="alert alert-error">
+	<div class="alert alert-danger">
 		<button type="button" class="close" data-dismiss="alert">&times;</button>
 		
 		{if count($errors) == 1}
@@ -48,7 +48,7 @@
 {if isset($informations) && count($informations) && $informations}
 	<div class="alert alert-info">
 		<span id="see_more_infos">
-			<b><a href="#" style="color:#00529B;" onclick="$('#see_more_infos').hide(); $('#infos_block').show();return false;">{l s='Click here to see more informations'}</a></b>
+			<b><a href="#" onclick="$('#see_more_infos').hide(); $('#infos_block').show();return false;">{l s='Click here to see more informations'}</a></b>
 		</span>
 		<div id="infos_block" style="display:none;">
 			{foreach $informations as $info}

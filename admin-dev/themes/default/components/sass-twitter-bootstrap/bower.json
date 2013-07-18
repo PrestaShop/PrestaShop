@@ -1,0 +1,9 @@
+{
+  "name": "sass-twitter-bootstrap",
+  "main": "",
+  "version": "0.0.0",
+  "repository": {
+    "type": "asset",
+    "url": "https://github.com/jlong/sass-twitter-bootstrap/archive/3.0.0-wip.zip"
+  }
+}

@@ -348,7 +348,6 @@ class AdminCategoriesControllerCore extends AdminController
 					'label' => $this->l('Displayed:'),
 					'name' => 'active',
 					'required' => false,
-					'class' => 't',
 					'is_bool' => true,
 					'values' => array(
 						array(
@@ -389,7 +388,6 @@ class AdminCategoriesControllerCore extends AdminController
 					'name' => 'is_root_category',
 					'required' => false,
 					'is_bool' => true,
-					'class' => 't',
 					'values' => array(
 						array(
 							'id' => 'is_root_on',

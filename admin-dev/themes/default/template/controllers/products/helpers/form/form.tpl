@@ -65,13 +65,11 @@
 {block name="defaultForm"}
 	<div class="row-fluid">
 		<div class="productTabs col-lg-2">
-			<ul class="tab nav nav-pills nav-stacked">
+			<div class="list-group">
 			{foreach $product_tabs key=numStep item=tab}
-				<li class="tab-row {if $tab.selected}active{/if}">
-					<a class="tab-page" id="link-{$tab.id}" href="{$tab.href}&amp;updateproduct">{$tab.name}</a>
-				</li>
+				<a class="list-group-item {if $tab.selected}active{/if}" id="link-{$tab.id}" href="{$tab.href}&amp;updateproduct">{$tab.name}</a>
 			{/foreach}
-			</ul>
+			</div>
 		</div>
 
 		<script type="text/javascript">
@@ -111,17 +109,17 @@
 
 				if (product_type == product_type_pack)
 				{
-					$('li.tab-row a[id*="VirtualProduct"]').hide();
+					$('a[id*="VirtualProduct"]').hide();
 				}
 				else if (product_type == product_type_virtual)
 				{
-					$('li.tab-row a[id*="Pack"]').hide();
-					$('li.tab-row a[id*="Shipping"]').hide();
+					$('a[id*="Pack"]').hide();
+					$('a[id*="Shipping"]').hide();
 				}
 				else
 				{
-					$('li.tab-row a[id*="Pack"]').hide();
-					$('li.tab-row a[id*="VirtualProduct"]').hide();
+					$('a[id*="Pack"]').hide();
+					$('a[id*="VirtualProduct"]').hide();
 				}
 
 				$('#desc-product-newCombination').hide();
@@ -131,7 +129,7 @@
 					e.preventDefault();
 
 					// currentId is the current product tab id
-					currentId = $(".productTabs .tab-row.active a").attr('id').substr(5);
+					currentId = $(".productTabs a.active").attr('id').substr(5);
 					//console.log(currentId);
 					// id is the wanted producttab id
 					id = $(this).attr('id').substr(5);
@@ -142,9 +140,9 @@
 
 					$('#key_tab').val(btn_name);
 
-					if ($(this).attr("id") != $(".productTabs .tab-row.active a").attr('id'))
+					if ($(this).attr("id") != $(".productTabs a.active ").attr('id'))
 					{
-						$(".productTabs .tab-row").removeClass('active');
+						$(".productTabs a").removeClass('active');
 						$("#product-tab-content-"+currentId).hide();
 					}
 
@@ -156,7 +154,7 @@
 							$(this).trigger('displayed');
 							//console.log('show tab'+id);
 						});
-						$("#link-"+id).parent().addClass('active');
+						$("#link-"+id).addClass('active');
 					});
 
 					var languages = new Array();
@@ -180,7 +178,7 @@
 					$('.label-tooltip').tooltip();
 				});
 
-				$(".productTabs .tab-row.active").click();
+				$(".productTabs a.active").click();
 
 				// disable save if Associations tab is not loaded
 				if ($('#product-tab-content-Associations').hasClass('not-loaded'))
@@ -244,23 +242,24 @@
 			{if !$product->active && $product->isAssociatedToShop()}
 			<div class="alert draft" >
 				<p>
-					<span style="float: left">
+					<span >
 					{l s='Your product will be saved as a draft.'}</span>
 					<span style="float:right"><a href="#" class="button" style="display: block" onclick="submitAddProductAndPreview()" >{l s='Save and preview.'}</a></span>
 					<input type="hidden" name="fakeSubmitAddProductAndPreview" id="fakeSubmitAddProductAndPreview" />
-					<br />
 				</p>
 			</div>
 			{/if}
 
 			{* all input are here *}
+			<div class="row">
 			{foreach $product_tabs key=numStep item=tab}
-			<div id="product-tab-content-{$tab.id}" class="{if !$tab.selected}not-loaded{/if} product-tab-content" {if !$tab.selected}style="display:none"{/if}>
+			<fieldset id="product-tab-content-{$tab.id}" class="{if !$tab.selected}not-loaded{/if} product-tab-content col-lg-12" {if !$tab.selected}style="display:none"{/if}>
 				{if $tab.selected}
 					{$custom_form}
 				{/if}
-			</div>
+			</fieldset>
 			{/foreach}
+			</div>
 
 			<input type="hidden" name="id_product_attribute" id="id_product_attribute" value="0" />
 			<input type="hidden" name="key_tab" id="key_tab" value="Informations" />

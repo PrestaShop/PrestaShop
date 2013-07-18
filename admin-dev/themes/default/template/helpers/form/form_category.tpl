@@ -35,15 +35,16 @@
 			buildTreeView(use_context);
 		});
 	</script>
-	<div class="category-filter">
-		<span><a href="#" id="collapse_all">{$categories.trads['Collapse All']}</a>|&nbsp;</span>
-	 	<span><a href="#" id="expand_all">{$categories.trads['Expand All']}</a>|&nbsp;</span>		 
+<div class="panel">
+	<div class="category-filter panel-heading">
+		<a href="#" id="collapse_all" class="btn btn-link"><i class="icon-collapse-alt icon-large"></i> {$categories.trads['Collapse All']}</a>
+	 	<a href="#" id="expand_all" class="btn btn-link"><i class="icon-expand-alt icon-large"></i> {$categories.trads['Expand All']}</a> 
 		{if !$categories.use_radio}
-		<span><a href="#" id="check_all">{$categories.trads['Check All']}</a>|&nbsp;</span>
-		<span><a href="#" id="uncheck_all">{$categories.trads['Uncheck All']}</a>|&nbsp;</span>
+		<a href="#" id="check_all" class="btn btn-link"><i class="icon-check-sign"></i> {$categories.trads['Check All']}</a>
+		<a href="#" id="uncheck_all" class="btn btn-link"><i class="icon-check-empty"></i> {$categories.trads['Uncheck All']}</a>
 		{/if}
 		{if $categories.use_search}
-			<span style="margin-left:20px">
+			<span>
 				{$categories.trads.search}:&nbsp;
 				<form method="post" id="filternameForm">
 					<input type="text" name="search_cat" id="search_cat"/>
@@ -91,4 +92,5 @@
 		searchCategory();
 	</script>
 	{/if}
+</div>
 {/if}

@@ -1,15 +1,30 @@
+//variables 
+$icon-color: #7A0928
+$bg-content-color: #F6F5F3
+$bg-head-color: #3B7D99
+
 @import "bootstrap/variables"
 @import "bootstrap"
 @import "font-awesome"
 @import "toggle-switch"
+@import "compass"
 
 html, body
 	height: 100%
 
 body.fixed-top
 	position: relative
-	top: 56px
+	top: 53px
 	margin-bottom: 50px
+	background-color: darken($brand-primary,20%)
+	background-image: url('../img/patterns/classy_fabric.png')
+
+#header_infos
+	background-color: darken($brand-primary,10%)
+	z-index: 9999
+	border-bottom: solid 2px black
+	height: 53px
+	@include box-shadow(rgba(black,0.15) 0 2px 0)
 
 #main
 	position: relative
@@ -20,35 +35,99 @@ body.fixed-top
 	float: left
 	width: 1280px
 	min-height: 100%
-	padding: 10px 20px 90px
+	padding: 90px 20px 90px
 	margin: 0 0 0 240px
 	border-left: 2px solid black
-	background-color: white
+	background-color: $bg-content-color
+	background-image: url('../img/patterns/bedge_grunge.png')
+	fieldset
+		background-color: $bg-content-color
+		border: solid 1px darken($bg-content-color,20%)
+		@include border-radius(5px)
+		@include box-shadow(rgba(black,0.10) 0 0 7px, white 0 0 0 4px inset)
+		padding-bottom: 20px
+		margin-bottom: 10px
+	form legend
+		padding: 0 0 0 10px
+		margin: 20px 0 15px 0
+		float: left
+		color: darken(#D6D2CF,10%)
+		font-weight: 300
+	form .alert
+		clear: both
+		color: darken(#D6D2CF,40%)
+		border: solid 1px darken(#D6D2CF,5%)
+		background-color: lighten(#D6D2CF,5%)
+
+		&.alert-info
+			background-color: white
+			color: darken(#D6D2CF,30%)
+			border: solid 1px darken($bg-content-color,10%)
+		
+
+.page-head
+	position: relative
+	padding: 4px 3px 0 20px
+	height: 69px
+	margin: 0
+	background-color: $bg-head-color
+	border-bottom: 4px solid darken($bg-head-color,10%)
+	position: fixed
+	top: 53px
+	left: 242px
+	width: 1278px
+	z-index: 9000
+	//@include box-shadow(rgba(black,0.15) 0 7px 0)
+	@include box-shadow(rgba(black,0.15) 0 7px 0, rgba(white,0.15) 0 -1px 0 inset)
+	h2.page-title
+		@extend .pull-left
+		padding: 0
+		font-size: 20px
+		line-height: 25px
+		color: lighten($bg-head-color,30%)
+		text-transform: uppercase
+	.btn-toolbar
+		margin: 0
+		.nav-tabs
+			margin: 0
+		.nav-tabs > li > a
+			color: #333
+			> .active > a, > .active > a:hover
+				color: #3399ff
+				background: #f5f5f5
 
 .page-sidebar
-	top: 56px
+	top: 53px
 	position: fixed
 	width: 240px
+	> ul > li > ul.sub-menu
+		display: none
+		list-style: none
+		clear: both
+		margin: 8px 0px 8px 0px
 	> ul
 		margin: 0
 		padding: 0
 		li
-			background-color: white
+			background-color: darken($bg-content-color,10%)
 			list-style: none
-			&:hover
-				background-color: #eee
+			&:hover, &.expanded
+				background-color: white
 		> li
-			&.active
-				> a
-					color: white
-					background-color: #1A1A1A
+			&.active > a
+				color: white
+				background-color: $brand-primary
+				border-top: 1px solid darken($brand-primary,40%)
+				border-bottom: 1px solid darken($brand-primary,40%)
 			> a
 				text-transform: uppercase
 				font-size: 12px
 				color: #777
 				display: block
-				padding: 8px 0 8px 15px
-				border-bottom: 1px solid #CECECE
+				padding: 5px 0 5px 15px
+				line-height: 20px
+				border-top: 1px solid $bg-content-color
+				border-bottom: 1px solid darken($bg-content-color,20%)
 				&:hover
 					text-decoration: none
 			img
@@ -58,27 +137,28 @@ body.fixed-top
 				padding: 0
 				border-bottom: 1px solid #CECECE
 				background-color: white
-				li
+				li 
 					a
 						font-size: 12px
 						display: block
 						padding: 3px 15px 3px 20px
 						border: none
 						border-bottom: 1px solid #F5F5F5
+						background-color: white
 						i
 							margin-top: 4px
 							color: #CECECE
 						&:hover
-							background-color: #F5F5F5
+							background-color: lighten($brand-primary,50%)
 							text-decoration: none
 							i
-								color: #004D7B
+								color: $brand-primary
 					&.active
 						a
 							color: #1A1A1A
-							background-color: #ADB0B8
+							background-color: lighten($brand-primary,30%)
 							i
-								color: black
+								color: $brand-primary
 
 		li:not(.active) ul
 			display: none
@@ -87,20 +167,12 @@ body.fixed-top
 				display: block
 				background-color: white
 
-	> ul > li > ul.sub-menu
-		display: none
-		list-style: none
-		clear: both
-		margin: 8px 0px 8px 0px
-
 #footer
 	width: 100%
 	position: fixed
 	bottom: 0
 	padding: 0
-	font-size: 12px
-	color: #999
-	background-color: #272822
+	background-color: darken($brand-primary,10%)
 	.go-top
 		display: block
 		text-decoration: none
@@ -119,26 +191,32 @@ body.fixed-top
 
 #menu .maintab > a [class^="icon-"], #menu .maintab > a [class*=" icon-"]
 	font-size: 22px
-	border-radius: 35px
-	height: 30px
-	width: 30px
+	border-radius: 40px
+	height: 35px
+	width: 35px
 	color: white
 	display: inline-block
 	text-align: center
-	line-height: 30px
+	line-height: 35px
 
-label span.label-tooltip
-	color: $brand-primary
-	text-decoration: none
-	border-bottom: dotted 1px $brand-primary
-
-label.required:before
-	content: '*'
-	color: red
-	font-size: 14px
-
-//variables 
-$icon-color: #7A0928
+// Tool bar
+.toolbar_btn
+	@extend .btn
+	@extend .btn-primary
+	padding: 2px 5px !important
+	font-size: 11px
+	margin-right: 3px
+	border-bottom: 4px solid darken($brand-primary,10%)
+	position: relative
+	@include box-shadow(rgba(black,0.15) 0 3px 0)
+	&:hover
+		border-color: $brand-primary
+		color: darken($brand-primary,15%)
+		text-shadow: 1px 1px 0 lighten($brand-primary,30%)
+		border-bottom: 2px solid darken($brand-primary,10%)
+		top: 2px
+		background-color: white
+		@include box-shadow(rgba(black,0.3) 0 1px 3px)
 
 .icon-AdminDashboard
 	@extend .icon-dashboard
@@ -176,27 +254,6 @@ $icon-color: #7A0928
 .icon-AdminParentStats
 	@extend .icon-bar-chart
 	background-color: adjust-hue($icon-color, 220)
-
-.navbar-inner
-	box-shadow: none!important
-	.input-append
-		margin-bottom: 0
-
-// Tool bar
-.toolbar_btn
-	@extend .btn
-	@extend .btn-primary
-	padding: 2px 5px !important
-	font-size: 11px
-	margin-right: 3px
-	border-bottom: 3px solid darken($brand-primary,10%)
-	position: relative
-	&:hover
-		color: $brand-primary
-		border-color: $brand-primary
-		background-color: white !important
-		border-bottom: 1px solid darken($brand-primary,10%)
-		top: 2px
 
 [class^="process-icon-"], [class*=" process-icon-"]
 	height: 32px
@@ -256,52 +313,38 @@ $icon-color: #7A0928
 .process-icon-newCombination
 	@extend .icon-plus-sign
 
-.page-head
-	position: relative
-	padding: 4px 5px 0 20px
-	min-height: 65px
-	margin-bottom: 20px
-	background: lighten($brand-primary,30%)
-	border-bottom: 3px solid $brand-primary
-	h2.page-title 
-		margin: 0
-		float: left
-		padding: 0
-		font-size: 20px
-		line-height: 60px
-		color: $brand-primary
-		text-transform: uppercase
-	.btn-toolbar
-		margin: 0
-		.nav-tabs
-			margin: 0
-		.nav-tabs > li > a
-			color: #333
-			> .active > a, > .active > a:hover
-				color: #3399ff
-				background: #f5f5f5
-		
-.page-bar
-	float: right
-	padding: 0
-	height: 68px
 
-/////////////////////// WIP DRAFT
+.navbar-inner
+	box-shadow: none!important
+	.input-append
+		margin-bottom: 0
+
 //form
+label.control-label
+	font-size: 13px
+	font-weight: normal
+	color: #666
+
+label.control-label span.label-tooltip
+	text-decoration: none
+	font-size: 13px
+	border-bottom: dotted 1px darken(#F6F5F3,15%)
+	background-color: darken(#F6F5F3,5%)
+	padding: 0 5px
+	@include border-radius(3px)
+
+label.required:before
+	content: '*'
+	color: red
+	font-size: 14px
+	position: relative
+	line-height: 12px
+
 select.input-tiny,
 input[type="text"].input-tiny,
 input[type="password"].input-tiny
 	width: 80px
 	float: left
-
-//fieldset title
-form legend
-	font-family: 'Ubuntu', sans-serif
-	padding: 0 0 0 10px
-	margin: 20px 0
-	float: left
-	color: #ccc
-	font-weight: 300
 
 //some helpers to get fixed width
 .fixed-width-XS
@@ -315,23 +358,29 @@ form legend
 .fixed-width-XL
 	width: 200px
 
-//filter table
-tr.filter
-	background-color: #EEEEEE
-input[type="text"].filter, input[type="password"].filter, select.filter
-	font-size: 12px
-
 .btn
 	text-transform: uppercase
 
 .btn-group-action
+	display: inline-block
 	white-space: nowrap
 	a
 		color: white
 		text-decoration: none
 
+hr
+	border-color: darken($bg-content-color,10%)
+	border-bottom: 1px solid white
+
+//table 
 .table
-	//word-wrap: break-word
+	border-collapse: separate
+	border-spacing: 0 4px
+	thead th
+		background-color: lighten($brand-primary,20%)
+		color: white
+		border-bottom: solid 2px $brand-primary
+		@include box-shadow(rgba(black,0.15) 0 2px 3px)
 	thead > tr > th
 		font-weight: normal
 		vertical-align: top
@@ -350,18 +399,32 @@ input[type="text"].filter, input[type="password"].filter, select.filter
 	td.center, th.center
 		text-align: center
 	tbody > tr > td
+		border-top: none
+		background-color: white
+	tbody > tr > td
 		vertical-align: middle
 		word-wrap: nowrap
 		font-size: 12px
 		padding: 3px 7px 3px 7px
+		@include box-shadow(rgba(black,0.15) 0 2px 0)
 	tbody > tr:hover > td
 		cursor: pointer
+		background-color: #FFF2B2
+	tr td:first-child,
+	tr th:first-child 
+		border-top-left-radius: 3px
+		border-bottom-left-radius: 3px
+	tr td:last-child,
+	tr th:last-child 
+		border-top-right-radius: 3px
+		border-bottom-right-radius: 3px
 
-//fix ?
-form .alert
-	clear: both
+//filter table
+tr.filter
+	background-color: rgba(#A39F95,0.5)
+	input[type="text"].filter, input[type="password"].filter, select.filter
+		font-size: 12px
+		border-color: #A39F95
 
-#notifs_icon_wrapper i
-	font-size: 1.5em
-	color: white
-
+.breadcrumb
+	background-color: lighten($bg-content-color,7%)
