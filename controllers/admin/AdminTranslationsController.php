@@ -353,13 +353,15 @@ class AdminTranslationsControllerCore extends AdminController
 		$items = Language::getFilesList($from_lang, $from_theme, $to_lang, $to_theme, false, false, true);
 		foreach ($items as $source => $dest)
 		{
-			$bool &= $this->checkDirAndCreate($dest);
-			$bool &= @copy($source, $dest);
-
-			if (strpos($dest, 'modules') && basename($source) === $from_lang.'.php' && $bool !== false)
-				$bool &= $this->changeModulesKeyTranslation($dest, $from_theme, $to_theme);
+			if (!$this->checkDirAndCreate($dest))
+				$this->errors[] = sprintf($this->l('Impossible to create the directory "%s".'), $dest);
+			elseif (!copy($source, $dest))
+				$this->errors[] = sprintf($this->l('Impossible to copy "%s" to "%s".'), $source, $dest);
+			elseif (strpos($dest, 'modules') && basename($source) === $from_lang.'.php' && $bool !== false)
+				if (!$this->changeModulesKeyTranslation($dest, $from_theme, $to_theme))
+					$this->errors[] = sprintf($this->l('Impossible to translate "$dest".'), $dest);
 		}
-		if ($bool)
+		if (!count($this->errors))
 			$this->redirect(false, 14);
 		$this->errors[] = $this->l('A part of the data has been copied but some of the language files could not be found.');
 	}
