@@ -2060,7 +2060,7 @@ class AdminProductsControllerCore extends AdminController
 			if ($this->isProductFieldUpdated($field) && ($value = Tools::getValue($field)))
 			{
 				$res = true;
-				if (Tools::strtolower($function) == 'isCleanHtml')
+				if (Tools::strtolower($function) == 'iscleanhtml')
 				{
 					if (!Validate::$function($value, (int)Configuration::get('PS_ALLOW_HTML_IFRAME')))
 						$res = false;
