@@ -64,10 +64,10 @@ class HookCore extends ObjectModel
 		'primary' => 'id_hook',
 		'fields' => array(
 			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isHookName', 'required' => true, 'size' => 64),
-			'title' => 			array('type' => self::TYPE_STRING),
-			'description' => 	array('type' => self::TYPE_HTML),
-			'position' => 		array('type' => self::TYPE_BOOL),
-			'live_edit' => 		array('type' => self::TYPE_BOOL),
+			'title' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
+			'description' => 	array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml'),
+			'position' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'live_edit' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 		),
 	);
 

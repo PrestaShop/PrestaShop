@@ -2058,17 +2058,28 @@ class AdminProductsControllerCore extends AdminController
 		// Check fields validity
 		foreach ($rules['validate'] as $field => $function)
 			if ($this->isProductFieldUpdated($field) && ($value = Tools::getValue($field)))
-				if (!Validate::$function($value))
+			{
+				$res = true;
+				if (Tools::strtolower($function) == 'isCleanHtml')
+				{
+					if (!Validate::$function($value, (int)Configuration::get('PS_ALLOW_HTML_IFRAME')))
+						$res = false;
+				}
+				else
+					if (!Validate::$function($value))
+						$res = false;
+
+				if (!$res)
 					$this->errors[] = sprintf(
 						Tools::displayError('The %s field is invalid.'),
 						call_user_func(array($className, 'displayFieldName'), $field, $className)
 					);
-
+			}
 		// Check multilingual fields validity
 		foreach ($rules['validateLang'] as $fieldLang => $function)
 			foreach ($languages as $language)
 				if ($this->isProductFieldUpdated('description_short', $language['id_lang']) && ($value = Tools::getValue($fieldLang.'_'.$language['id_lang'])))
-					if (!Validate::$function($value))
+					if (!Validate::$function($value, (int)Configuration::get('PS_ALLOW_HTML_IFRAME')))
 						$this->errors[] = sprintf(
 							Tools::displayError('The %1$s field (%2$s) is invalid.'),
 							call_user_func(array($className, 'displayFieldName'), $fieldLang, $className),
