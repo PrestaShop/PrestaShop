@@ -198,7 +198,7 @@ class ManufacturerCore extends ObjectModel
 					LEFT JOIN `'._DB_PREFIX_.'manufacturer` as m ON (m.`id_manufacturer`= p.`id_manufacturer`)
 					WHERE m.`id_manufacturer` = '.(int)$manufacturer['id_manufacturer'].
 					($active ? ' AND product_shop.`active` = 1 ' : '').
-					' AND p.visibility NOT IN (\'none\')'.
+					' AND product_shop.`visibility` NOT IN ("none")'.
 					($all_group ? '' : ' AND p.`id_product` IN (
 						SELECT cp.`id_product`
 						FROM `'._DB_PREFIX_.'category_group` cg

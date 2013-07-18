@@ -140,6 +140,7 @@ class SupplierCore extends ObjectModel
 					WHERE ps.`id_supplier` = '.(int)$supplier['id_supplier'].'
 					AND ps.id_product_attribute = 0'.
 					($active ? ' AND product_shop.`active` = 1' : '').
+					' AND product_shop.`visibility` NOT IN ("none")'.
 					($all_groups ? '' :'
 					AND ps.`id_product` IN (
 						SELECT cp.`id_product`
