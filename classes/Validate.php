@@ -380,7 +380,7 @@ class ValidateCore
 	 */
 	public static function isGenericName($name)
 	{
-		return empty($name) || preg_match('/^[^<>=#{}]*$/u', $name);
+		return empty($name) || preg_match('/^[^<>={}]*$/u', $name);
 	}
 
 	/**
