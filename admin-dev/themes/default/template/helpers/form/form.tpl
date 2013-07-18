@@ -28,14 +28,14 @@
 	<div class="leadin">{block name="leadin"}{/block}</div>
 {/if}
 
-{if isset($fields.title)}<h2>{$fields.title}</h2>{/if}
+{if isset($fields.title)}<legend>{$fields.title}</legend>{/if}
 {block name="defaultForm"}
 <form id="{$table}_form" class="form-horizontal defaultForm {$name_controller}" action="{$current}&{if !empty($submit_action)}{$submit_action}=1{/if}&token={$token}" method="post" enctype="multipart/form-data" {if isset($style)}style="{$style}"{/if}>
 	{if $form_id}
 		<input type="hidden" name="{$identifier}" id="{$identifier}" value="{$form_id}" />
 	{/if}
 	{foreach $fields as $f => $fieldset}
-		<fieldset id="fieldset_{$f}">
+		<fieldset id="fieldset_{$f}" class="col-lg-12">
 			{foreach $fieldset.form as $key => $field}
 				{if $key == 'legend'}
 					<legend>
@@ -67,15 +67,50 @@
 										{/if}
 									</label>{/if}
 							{/block}
+
 							{block name="field"}
 								<div class="col-lg-9">
 								{block name="input"}
 								{if $input.type == 'text' || $input.type == 'tags'}
 									{if isset($input.lang) AND $input.lang}
-										<div class="translatable">
+									<div class="row">
+									{foreach $languages as $language}
+										{assign var='value_text' value=$fields_value[$input.name][$language.id_lang]}
+										<div class="input-group col-lg-12 translatable-field lang-{$language.id_lang}" style="{if $language.id_lang != $defaultFormLanguage}display:none{/if}">
+											{if $input.type == 'tags'}
+												tags
+											{/if}
+											<input type="text"
+												id="{$input_name}_{$language.id_lang}"
+												class="{if $input.type == 'tags'}tagify {/if}{if isset($input.class)}{$input.class}{/if}"
+												name="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}"
+												value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'htmlall':'UTF-8'}{else}{$value_text|escape:'htmlall':'UTF-8'}{/if}"
+												onkeyup="if (isArrowKey(event)) return ;updateFriendlyURL();"
+												{if isset($input.size)}size="{$input.size}"{/if}
+												{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
+												{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if}
+												{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
+												{if isset($input.autocomplete) && !$input.autocomplete}autocomplete="off"{/if} />
+											<div class="input-group-btn">
+												<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+													<img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt="">
+													{$language.iso_code}
+													<span class="caret"></span>
+												</button>
+												<ul class="dropdown-menu">
+													{foreach from=$languages item=language}
+													<li><a href="javascript:hideOtherLanguage({$language.id_lang});"><img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt=""> {$language.iso_code}</a></li>
+													{/foreach}
+												</ul>
+											</div>
+										</div>
+									{/foreach}
+									</div>
+
+<!--										<div class="translatable">
 											{foreach $languages as $language}
-												<div class="lang_{$language.id_lang}" style="display:{if $language.id_lang == $defaultFormLanguage}block{else}none{/if}; float: left;">
-													{if $input.type == 'tags'}
+												<div class="lang_{$language.id_lang}" style="display:{if $language.id_lang == $defaultFormLanguage}block{else}none{/if}">
+ 												{if $input.type == 'tags'}
 														{literal}
 														<script type="text/javascript">
 															$().ready(function () {
@@ -101,7 +136,8 @@
 															{if isset($input.autocomplete) && !$input.autocomplete}autocomplete="off"{/if} />
 												</div>
 											{/foreach}
-										</div>
+										</div> -->
+
 									{else}
 										{if $input.type == 'tags'}
 											{literal}
@@ -199,7 +235,7 @@
 												{/foreach}
 											{/if}
 										</select>
-										{if !empty($input.hint)}<span class="alert alert-info" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
+										{if !empty($input.hint)}<div class="alert alert-info" name="help_box">{$input.hint}</div>{/if}
 									{/if}
 								{elseif $input.type == 'radio'}
 									{foreach $input.values as $value}
@@ -221,44 +257,46 @@
 										{if isset($value.p) && $value.p}<p>{$value.p}</p>{/if}
 									{/foreach}
 								{elseif $input.type == 'switch'}
-									<div class="input-group col-lg-2">
-										<span class="switch prestashop-switch">
-											{foreach $input.values as $value}
-											<input
-												type="radio"
-												name="{$input.name}"
-												{if $value.value == 1}
-													id="{$input.name}_on"
-												{else}
-													id="{$input.name}_off"
-												{/if}
-												value="$value.value"
-												{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
-												{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
-											/>
-											<label
-												class="t radio"
-												{if $value.value == 1}
-													for="{$input.name}_on"
-												{else}
-													for="{$input.name}_off"
-												{/if}
-											>
-												{if $value.value == 1}
-													<i class="icon-check-sign"></i> {l s='Yes'}
-												{else}
-													<i class="icon-ban-circle"></i> {l s='No'}
-												{/if}
-											</label>
-											{/foreach}
-											<span class="slide-button btn btn-default"></span>
-										</span>
+									<div class="row">
+										<div class="input-group col-lg-2">
+											<span class="switch prestashop-switch">
+												{foreach $input.values as $value}
+												<input
+													type="radio"
+													name="{$input.name}"
+													{if $value.value == 1}
+														id="{$input.name}_on"
+													{else}
+														id="{$input.name}_off"
+													{/if}
+													value="$value.value"
+													{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
+													{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
+												/>
+												<label
+													class="t radio"
+													{if $value.value == 1}
+														for="{$input.name}_on"
+													{else}
+														for="{$input.name}_off"
+													{/if}
+												>
+													{if $value.value == 1}
+														<i class="icon-check-sign"></i> {l s='Yes'}
+													{else}
+														<i class="icon-ban-circle"></i> {l s='No'}
+													{/if}
+												</label>
+												{/foreach}
+												<span class="slide-button btn btn-default"></span>
+											</span>
+										</div>
 									</div>
 								{elseif $input.type == 'textarea'}
 									{if isset($input.lang) AND $input.lang}
 										<div class="translatable">
 											{foreach $languages as $language}
-												<div class="lang_{$language.id_lang}" id="{$input.name}_{$language.id_lang}" style="display:{if $language.id_lang == $defaultFormLanguage}block{else}none{/if}; float: left;">
+												<div class="lang_{$language.id_lang}" id="{$input.name}_{$language.id_lang}" style="display:{if $language.id_lang == $defaultFormLanguage}block{else}none{/if};">
 													<textarea cols="{$input.cols}" rows="{$input.rows}" name="{$input.name}_{$language.id_lang}" {if isset($input.autoload_rte) && $input.autoload_rte}class="rte autoload_rte {if isset($input.class)}{$input.class}{/if}"{/if} >{$fields_value[$input.name][$language.id_lang]|escape:'htmlall':'UTF-8'}</textarea>
 												</div>
 											{/foreach}
@@ -283,9 +321,11 @@
 											<div id="image">
 												{$fields_value.image}
 												<p align="center">{l s='File size'} {$fields_value.size}kb</p>
-												<a href="{$current}&{$identifier}={$form_id}&token={$token}&deleteImage=1">
-													<img src="../img/admin/delete.gif" alt="{l s='Delete'}" /> {l s='Delete'}
+
+												<a class="btn btn-default" href="{$current}&{$identifier}={$form_id}&token={$token}&deleteImage=1">
+													<i class="icon-trash"></i> {l s='Delete'}
 												</a>
+
 											</div><br />
 										{/if}
 									{/if}

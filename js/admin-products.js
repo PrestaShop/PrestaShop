@@ -444,7 +444,7 @@ function handleSaveButtons(e)
 			{
 				if (do_not_save == false)
 				{
-					$(".leadin").append('<div id="disableSaveMessage" class="alert"></div>');
+					$(".leadin").append('<div id="disableSaveMessage" class="alert alert-danger"></div>');
 					warnDiv = $("#disableSaveMessage");
 					do_not_save = true;
 				}
@@ -856,8 +856,8 @@ product_tabs['Informations'] = new function(){
 		$('input[name="type_product"]').live('click', function()
 		{
 			// Reset settings
-			$('li.tab-row a[id*="Pack"]').hide();
-			$('li.tab-row a[id*="VirtualProduct"]').hide();
+			$('a[id*="Pack"]').hide();
+			$('a[id*="VirtualProduct"]').hide();
 			$('div.ppack').hide();
 			$('div.is_virtual_good').hide();
 			$('#is_virtual').val(0);
@@ -872,7 +872,7 @@ product_tabs['Informations'] = new function(){
 			if (product_type == product_type_pack)
 			{
 				//when you change the type of the product, directly go to the pack tab
-				$('li.tab-row a[id*="Pack"]').show().click();
+				$('a[id*="Pack"]').show().click();
 				$('#ppack').val(1).attr('checked', true).attr('disabled', true);
 				$('#ppackdiv').show();
 				// If the pack tab has not finished loaded the changes will be made when the loading event is triggered
@@ -884,7 +884,7 @@ product_tabs['Informations'] = new function(){
 					$('.stockForVirtualProduct').show();
 				});
 
-				$('li.tab-row a[id*="Shipping"]').show();
+				$('a[id*="Shipping"]').show();
 				$('#condition').removeAttr('disabled');
 				$('#condition option[value=new]').removeAttr('selected');
 				$('.stockForVirtualProduct').show();
@@ -899,7 +899,7 @@ product_tabs['Informations'] = new function(){
 				}
 				else
 				{
-					$('li.tab-row a[id*="VirtualProduct"]').show().click();
+					$('a[id*="VirtualProduct"]').show().click();
 					$('#is_virtual').val(1);
 
 					tabs_manager.onLoad('VirtualProduct', function(){
@@ -911,7 +911,7 @@ product_tabs['Informations'] = new function(){
 						$('.stockForVirtualProduct').hide();
 					});
 
-					$('li.tab-row a[id*="Shipping"]').hide();
+					$('a[id*="Shipping"]').hide();
 
 					tabs_manager.onLoad('Informations', function(){
 						$('#condition').attr('disabled', true);
@@ -923,7 +923,7 @@ product_tabs['Informations'] = new function(){
 			else
 			{
 				// 3rd case : product_type is PTYPE_SIMPLE (0)
-				$('li.tab-row a[id*="Shipping"]').show();
+				$('a[id*="Shipping"]').show();
 				$('#condition').removeAttr('disabled');
 				$('#condition option[value=new]').removeAttr('selected');
 				$('.stockForVirtualProduct').show();

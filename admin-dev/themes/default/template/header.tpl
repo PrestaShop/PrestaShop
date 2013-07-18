@@ -193,11 +193,11 @@
 
 			<div id="header_search">
 				<form class="navbar-form" method="post" action="index.php?controller=AdminSearch&amp;token={getAdminToken tab='AdminSearch'}">
-					<div class="input-group col-lg-3">
+					<div class="input-group col-lg-2">
 						<input type="text" name="bo_query" id="bo_query" value="{$bo_query}" class="input-medium" palceholder="{l s='Search'}"/>
 						<span class="input-group-btn">
 							<button type="submit" id="bo_search_submit" class="btn btn-default">
-								<i class="icon-search"></i>&nbsp;{l s='Search'}
+								<i class="icon-search"></i>
 							</button>
 						</span>
 					</div>
@@ -219,7 +219,7 @@
 
 {if count($quick_access) > 0}
 			<div id="header_quick" class="btn-group navbar-nav">
-				<a href="#" id="quick_select" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="icon-bolt"></i> {l s='Quick Access'} <b class="caret"></b></a>
+				<a href="#" id="quick_select" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{l s='Quick Access'} <b class="caret"></b></a>
 				<ul class="dropdown-menu">
 				{foreach $quick_access as $quick}
 					<li><a href="{$quick.link|escape:'htmlall':'UTF-8'}{if $quick.new_window}_blank{/if}"><i class="icon-chevron-right"></i> {$quick.name}</a></li>

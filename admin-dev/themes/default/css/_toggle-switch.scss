@@ -12,8 +12,8 @@ https://github.com/ghinda/css-toggle-switch
 }
 
 .switch {
-	background-color: #eee;
-	border-radius: 4px;
+	background-color: darken($bg-content-color,15%);
+	border-radius: 3px;
 }
 
 .switch label {
@@ -192,7 +192,7 @@ https://github.com/ghinda/css-toggle-switch
 	.toggle,
 	.switch {
 		display: block;
-		height: 38px;
+		height: $input-height-base;
 	}
 	
 	.switch *,
@@ -218,7 +218,7 @@ https://github.com/ghinda/css-toggle-switch
 	.toggle label,
 	.toggle p,
 	.switch label {
-		line-height: 38px;
+		line-height: $input-height-base;
 		vertical-align: middle;
 	}
 	
@@ -244,8 +244,8 @@ https://github.com/ghinda/css-toggle-switch
 	/* Standalone Themes */ 
 	.prestashop-switch {
 		min-width: 150px;
-		color: #474949;
-		font-weight: 500;
+		color: #999;
+		font-weight: 300;
 		text-align: center;
 		border-radius: 3px;
 	}
@@ -254,8 +254,7 @@ https://github.com/ghinda/css-toggle-switch
 		text-shadow: none;
 	}
 	.prestashop-switch .slide-button {
-
-		background-color: #3D89CC;
+		background-color: $btn-default-bg;
 		border-radius: 3px;
 		border: none;
 	}

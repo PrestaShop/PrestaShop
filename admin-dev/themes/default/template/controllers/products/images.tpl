@@ -31,7 +31,7 @@
 	<span class="badge" id="countImage">{$countImages}</span>
 </legend>
 
-<div class="row panel">
+<div class="row">
 	<label class="control-label col-lg-5 file_upload_label">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='Format:'} JPG, GIF, PNG. {l s='Filesize:'} {$max_image_size|string_format:"%.2f"} {l s='MB max.'}">

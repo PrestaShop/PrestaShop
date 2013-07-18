@@ -1,0 +1,9 @@
+{
+    "name": "jlong/sass-twitter-bootstrap"
+  , "description": "A sass port of the sleek, intuitive, and powerful front-end framework for faster and easier web development."
+  , "keywords": ["bootstrap", "css", "sass"]
+  , "homepage": "http://github.com/jlong/sass-twitter-bootstrap/"
+  , "author": "John W. Long"
+  , "license": "Apache-2.0"
+
+}

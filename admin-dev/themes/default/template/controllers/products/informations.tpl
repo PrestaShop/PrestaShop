@@ -27,68 +27,69 @@
 {else}
 	{assign var=class_input_ajax value=''}
 {/if}
-	<input type="hidden" name="submitted_tabs[]" value="Informations" />
-	<legend class="tab">{l s='Info.'}</legend>
-	<div class="alert alert-info">{l s='Product global information'}</div>
-	<script type="text/javascript">
-		{if isset($PS_ALLOW_ACCENTED_CHARS_URL) && $PS_ALLOW_ACCENTED_CHARS_URL}
-			var PS_ALLOW_ACCENTED_CHARS_URL = 1;
-		{else}
-			var PS_ALLOW_ACCENTED_CHARS_URL = 0;
-		{/if}
-		{$combinationImagesJs}
-		{if $check_product_association_ajax}
-				var search_term = '';
-				$('document').ready( function() {
-					$(".check_product_name")
-						.autocomplete(
-							'{$link->getAdminLink('AdminProducts', true)|escape:'html'}', {
-								minChars: 3,
-								max: 10,
-								width: $(".check_product_name").width(),
-								selectFirst: false,
-								scroll: false,
-								dataType: "json",
-								formatItem: function(data, i, max, value, term) {
-									search_term = term;
-									// adding the little
-									if ($('.ac_results').find('.separation').length == 0)
-										$('.ac_results').css('background-color', '#EFEFEF')
-											.prepend('<div style="color:#585A69; padding:2px 5px">{l s='Use a product from the list'}<div class="separation"></div></div>');
-									return value;
-								},
-								parse: function(data) {
-									var mytab = new Array();
-									for (var i = 0; i < data.length; i++)
-										mytab[mytab.length] = { data: data[i], value: data[i].name };
-									return mytab;
-								},
-								extraParams: {
-									ajax: 1,
-									action: 'checkProductName',
-									id_lang: {$id_lang}
-								}
-							}
-						)
-						.result(function(event, data, formatted) {
-							// keep the searched term in the input
-							$('#name_{$id_lang}').val(search_term);
-							jConfirm('{l s='Do you want to use this product?'}&nbsp;<strong>'+data.name+'</strong>', '{l s='Confirmation'}', function(confirm){
-								if (confirm == true)
-									document.location.href = '{$link->getAdminLink('AdminProducts', true)}&updateproduct&id_product='+data.id_product;
-								else
-									return false;
-							});
-						});
-				});
-		{/if}
-	</script>
 
-	{if isset($display_common_field) && $display_common_field}
-		<div class="alert alert-block" style="display: block">{l s='Warning, if you change the value of fields with an orange bullet %s, the value will be changed for all other shops for this product' sprintf=$bullet_common_field}</div>
+<input type="hidden" name="submitted_tabs[]" value="Informations" />
+<legend class="tab">{l s='Info.'}</legend>
+<div class="alert alert-info">{l s='Product global information'}</div>
+<script type="text/javascript">
+	{if isset($PS_ALLOW_ACCENTED_CHARS_URL) && $PS_ALLOW_ACCENTED_CHARS_URL}
+		var PS_ALLOW_ACCENTED_CHARS_URL = 1;
+	{else}
+		var PS_ALLOW_ACCENTED_CHARS_URL = 0;
 	{/if}
+	{$combinationImagesJs}
+	{if $check_product_association_ajax}
+			var search_term = '';
+			$('document').ready( function() {
+				$(".check_product_name")
+					.autocomplete(
+						'{$link->getAdminLink('AdminProducts', true)|escape:'html'}', {
+							minChars: 3,
+							max: 10,
+							width: $(".check_product_name").width(),
+							selectFirst: false,
+							scroll: false,
+							dataType: "json",
+							formatItem: function(data, i, max, value, term) {
+								search_term = term;
+								// adding the little
+								if ($('.ac_results').find('.separation').length == 0)
+									$('.ac_results').css('background-color', '#EFEFEF')
+										.prepend('<div style="color:#585A69; padding:2px 5px">{l s='Use a product from the list'}<div class="separation"></div></div>');
+								return value;
+							},
+							parse: function(data) {
+								var mytab = new Array();
+								for (var i = 0; i < data.length; i++)
+									mytab[mytab.length] = { data: data[i], value: data[i].name };
+								return mytab;
+							},
+							extraParams: {
+								ajax: 1,
+								action: 'checkProductName',
+								id_lang: {$id_lang}
+							}
+						}
+					)
+					.result(function(event, data, formatted) {
+						// keep the searched term in the input
+						$('#name_{$id_lang}').val(search_term);
+						jConfirm('{l s='Do you want to use this product?'}&nbsp;<strong>'+data.name+'</strong>', '{l s='Confirmation'}', function(confirm){
+							if (confirm == true)
+								document.location.href = '{$link->getAdminLink('AdminProducts', true)}&updateproduct&id_product='+data.id_product;
+							else
+								return false;
+						});
+					});
+			});
+	{/if}
+</script>
 
-	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Informations"}
+{if isset($display_common_field) && $display_common_field}
+<div class="alert alert-block" style="display: block">{l s='Warning, if you change the value of fields with an orange bullet %s, the value will be changed for all other shops for this product' sprintf=$bullet_common_field}</div>
+{/if}
+
+{include file="controllers/products/multishop/check_fields.tpl" product_tab="Informations"}
 
 <div id="warn_virtual_combinations" class="alert alert-block" style="display:none">{l s='You cannot use combinations with a virtual product.'}</div>
 
@@ -193,7 +194,6 @@
 		</span>
 	</div>
 </div>
-
 
 <div class="row redirect_product_options" style="display:none">
 	{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
@@ -341,7 +341,6 @@
 </div>
 
 <div id="createImageDescription" class="panel" style="display:none">
-
 	<div class="row">
 		<label class="control-label col-lg-3">{l s='Select your image:'}</label>
 		<div class="col-lg-9">
@@ -357,7 +356,6 @@
 			</ul>
 		</div>
 	</div>
-
 	<div class="row">
 		<label class="control-label col-lg-3">{l s='Position:'}</label>
 		<div class="col-lg-5">
@@ -371,7 +369,6 @@
 			</p>
 		</div>
 	</div>
-
 	<div class="row">
 		<label class="control-label col-lg-3">{l s='Select the type of picture:'}</label>
 		<div class="col-lg-5">
@@ -385,7 +382,6 @@
 			{/foreach}
 		</div>
 	</div>
-
 	<div class="row">
 		<label class="control-label col-lg-3">
 			<span class="label-tooltip" data-toggle="tooltip"
