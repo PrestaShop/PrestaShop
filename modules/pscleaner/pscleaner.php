@@ -372,6 +372,7 @@ class PSCleaner extends Module
 
 		// @Todo: Remove attachment files, images...
 		Image::clearTmpDir();
+		$this->clearAllCaches();
 		
 		return $logs;
 	}
@@ -559,6 +560,9 @@ class PSCleaner extends Module
 	
 	protected function clearAllCaches()
 	{
+		$index = file_get_contents(_PS_TMP_IMG_DIR_.'index.php');
+		Tools::deleteDirectory(_PS_TMP_IMG_DIR_, false);
+		file_put_contents(_PS_TMP_IMG_DIR_.'index.php', $index);
 		Context::getContext()->smarty->clearAllCache();
 	}
 }
