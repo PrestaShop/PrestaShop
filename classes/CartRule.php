@@ -1104,29 +1104,30 @@ class CartRuleCore extends ObjectModel
 			'.($context->customer->id ? 'OR cr.id_customer = '.(int)$context->cart->id_customer : '').'
 		)
 		AND (
-			cr.carrier_restriction = 0
+			cr.`carrier_restriction` = 0
 			'.($context->cart->id_carrier ? 'OR c.id_carrier = '.(int)$context->cart->id_carrier : '').'
 		)
 		AND (
-			cr.shop_restriction = 0
+			cr.`shop_restriction` = 0
 			'.((Shop::isFeatureActive() && $context->shop->id) ? 'OR crs.id_shop = '.(int)$context->shop->id : '').'
 		)
 		AND (
-			cr.group_restriction = 0
+			cr.`group_restriction` = 0
 			'.($context->customer->id ? 'OR 0 < (
-				SELECT cg.id_group
-				FROM '._DB_PREFIX_.'customer_group cg
-				LEFT JOIN '._DB_PREFIX_.'cart_rule_group crg ON (cg.id_group = crg.id_group AND cg.id_group = '.(int)$context->customer->id_default_group.')
-				WHERE cr.id_cart_rule = crg.id_cart_rule
-				AND cg.id_customer = '.(int)$context->customer->id.' LIMIT 1
+				SELECT cg.`id_group`
+				FROM `'._DB_PREFIX_.'customer_group` cg
+				INNER JOIN `'._DB_PREFIX_.'cart_rule_group` crg ON cg.id_group = crg.id_group
+				WHERE cr.`id_cart_rule` = crg.`id_cart_rule`
+				AND cg.`id_customer` = '.(int)$context->customer->id.'
+				LIMIT 1
 			)' : '').'
 		)
 		AND (
-			cr.reduction_product <= 0
-			OR cr.reduction_product IN (
-				SELECT id_product
-				FROM '._DB_PREFIX_.'cart_product
-				WHERE id_cart = '.(int)$context->cart->id.'
+			cr.`reduction_product` <= 0
+			OR cr.`reduction_product` IN (
+				SELECT `id_product`
+				FROM `'._DB_PREFIX_.'cart_product`
+				WHERE `id_cart` = '.(int)$context->cart->id.'
 			)
 		)
 		AND cr.id_cart_rule NOT IN (SELECT id_cart_rule	FROM '._DB_PREFIX_.'cart_cart_rule WHERE id_cart = '.(int)$context->cart->id.')
