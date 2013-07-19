@@ -1,13 +1,14 @@
 //variables 
-$icon-color: #7A0928
+$icon-color: #87C795
 $bg-content-color: #F6F5F3
-$bg-head-color: #3B7D99
+$bg-head-color: #9ED072
 
+@import "compass"
 @import "bootstrap/variables"
 @import "bootstrap"
 @import "font-awesome"
 @import "toggle-switch"
-@import "compass"
+
 
 html, body
 	height: 100%
@@ -16,41 +17,45 @@ body.fixed-top
 	position: relative
 	top: 53px
 	margin-bottom: 50px
-	background-color: darken($brand-primary,20%)
-	background-image: url('../img/patterns/classy_fabric.png')
+	background-color: #C5C3BF
 
 #header_infos
+	height: 53px
+	border-bottom: solid 2px black
 	background-color: darken($brand-primary,10%)
 	z-index: 9999
-	border-bottom: solid 2px black
-	height: 53px
 	@include box-shadow(rgba(black,0.15) 0 2px 0)
-
+	#header_shopname
+		font-size: 1.6em
+		font-family: "ubuntu"
+		font-weight: 300
 #main
-	position: relative
 	min-height: 100%
 	height: 100%
+	position: relative
 
 #content
 	float: left
-	width: 1280px
 	min-height: 100%
+	width: 1282px
 	padding: 90px 20px 90px
 	margin: 0 0 0 240px
 	border-left: 2px solid black
+	border-right: 2px solid black
 	background-color: $bg-content-color
 	background-image: url('../img/patterns/bedge_grunge.png')
+	@include box-shadow(darken($bg-content-color,30%) 0 0 0 4px)
 	fieldset
-		background-color: $bg-content-color
-		border: solid 1px darken($bg-content-color,20%)
-		@include border-radius(5px)
-		@include box-shadow(rgba(black,0.10) 0 0 7px, white 0 0 0 4px inset)
 		padding-bottom: 20px
 		margin-bottom: 10px
+		border: solid 1px darken($bg-content-color,20%)
+		background-color: $bg-content-color
+		@include border-radius(5px)
+		@include box-shadow(rgba(black,0.10) 0 0 7px, white 0 0 0 4px inset)
 	form legend
+		float: left
 		padding: 0 0 0 10px
 		margin: 20px 0 15px 0
-		float: left
 		color: darken(#D6D2CF,10%)
 		font-weight: 300
 	form .alert
@@ -58,33 +63,29 @@ body.fixed-top
 		color: darken(#D6D2CF,40%)
 		border: solid 1px darken(#D6D2CF,5%)
 		background-color: lighten(#D6D2CF,5%)
-
 		&.alert-info
 			background-color: white
 			color: darken(#D6D2CF,30%)
 			border: solid 1px darken($bg-content-color,10%)
 		
-
 .page-head
-	position: relative
-	padding: 4px 3px 0 20px
+	width: 1278px
 	height: 69px
+	padding: 4px 3px 0 20px
 	margin: 0
-	background-color: $bg-head-color
-	border-bottom: 4px solid darken($bg-head-color,10%)
+	border-bottom: 4px solid darken($bg-head-color,30%)
 	position: fixed
 	top: 53px
 	left: 242px
-	width: 1278px
 	z-index: 9000
-	//@include box-shadow(rgba(black,0.15) 0 7px 0)
+	background-color: $bg-head-color
 	@include box-shadow(rgba(black,0.15) 0 7px 0, rgba(white,0.15) 0 -1px 0 inset)
 	h2.page-title
 		@extend .pull-left
 		padding: 0
 		font-size: 20px
 		line-height: 25px
-		color: lighten($bg-head-color,30%)
+		color: white
 		text-transform: uppercase
 	.btn-toolbar
 		margin: 0
@@ -100,6 +101,8 @@ body.fixed-top
 	top: 53px
 	position: fixed
 	width: 240px
+	border-bottom: solid 1px black
+	@include box-shadow(darken($bg-content-color,30%) 0 4px 0)
 	> ul > li > ul.sub-menu
 		display: none
 		list-style: none
@@ -109,27 +112,32 @@ body.fixed-top
 		margin: 0
 		padding: 0
 		li
-			background-color: darken($bg-content-color,10%)
+			background-color: #48525F
 			list-style: none
-			&:hover, &.expanded
+		li:not(.active) ul
+			display: none
+		li.expanded
+			ul
+				display: block
 				background-color: white
 		> li
-			&.active > a
+			@include transition-property(background-color)
+			&:hover > a, &.active > a
 				color: white
-				background-color: $brand-primary
-				border-top: 1px solid darken($brand-primary,40%)
-				border-bottom: 1px solid darken($brand-primary,40%)
+				background-color: darken(#48525F,15%)
+				border-top: 1px solid darken($brand-primary,15%)
+				border-bottom: 1px solid darken($brand-primary,10%)
+
+				@include box-shadow(darken($brand-primary,15%) -4px 0 0 inset)
 			> a
-				text-transform: uppercase
-				font-size: 12px
-				color: #777
 				display: block
-				padding: 5px 0 5px 15px
-				line-height: 20px
-				border-top: 1px solid $bg-content-color
-				border-bottom: 1px solid darken($bg-content-color,20%)
-				&:hover
-					text-decoration: none
+				padding: 5px 0 5px 5px
+				border-top: 1px solid lighten(#48525F,5%)
+				border-bottom: 1px solid darken(#48525F,10%)
+				color: lighten(#48525F,35%)
+				text-transform: uppercase
+				text-decoration: none
+				@include box-shadow(darken(#48525F,5%) -4px 0 0 inset)
 			img
 				margin-right: 10px
 			ul
@@ -139,51 +147,43 @@ body.fixed-top
 				background-color: white
 				li 
 					a
-						font-size: 12px
 						display: block
 						padding: 3px 15px 3px 20px
+						font-size: 12px
 						border: none
 						border-bottom: 1px solid #F5F5F5
 						background-color: white
 						i
-							margin-top: 4px
+							margin-top: 3px
 							color: #CECECE
 						&:hover
-							background-color: lighten($brand-primary,50%)
+							background-color: lighten(#48525F,15%)
 							text-decoration: none
 							i
 								color: $brand-primary
 					&.active
 						a
 							color: #1A1A1A
-							background-color: lighten($brand-primary,30%)
+							background-color: $bg-head-color
 							i
 								color: $brand-primary
 
-		li:not(.active) ul
-			display: none
-		li.expanded
-			ul
-				display: block
-				background-color: white
-
 #footer
-	width: 100%
 	position: fixed
+	width: 100%
 	bottom: 0
 	padding: 0
 	background-color: darken($brand-primary,10%)
 	.go-top
 		display: block
+		padding: 0px 6px 0px 6px
+		margin: -2px 0px 0px
 		text-decoration: none
 		color: #fff
 		cursor: pointer
-		margin-top: -2px
-		margin-right: 0px
-		margin-bottom: 0px
 		font-size: 16px
 		background-color: #111
-		padding: 0px 6px 0px 6px
+		
 	.go-top i
 		color: #666
 		font-size: 22px
@@ -203,57 +203,65 @@ body.fixed-top
 .toolbar_btn
 	@extend .btn
 	@extend .btn-primary
-	padding: 2px 5px !important
-	font-size: 11px
-	margin-right: 3px
-	border-bottom: 4px solid darken($brand-primary,10%)
 	position: relative
-	@include box-shadow(rgba(black,0.15) 0 3px 0)
+	padding: 2px 5px !important
+	margin-right: 3px
+	border-bottom: 4px solid darken($brand-primary,7%)
+	font-size: 11px
+	color: lighten($brand-primary,50%)
+	text-shadow: -1px -1px 0 rgba(black,0.6)
+	@include background(linear-gradient(top, lighten($brand-primary,15%), $brand-primary))
+	@include box-shadow(rgba(black,0.15) 0 3px 0, rgba(white,0.1) 0 0 0 1px inset)
 	&:hover
-		border-color: $brand-primary
-		color: darken($brand-primary,15%)
-		text-shadow: 1px 1px 0 lighten($brand-primary,30%)
-		border-bottom: 2px solid darken($brand-primary,10%)
 		top: 2px
-		background-color: white
-		@include box-shadow(rgba(black,0.3) 0 1px 3px)
+		border-color: $brand-primary
+		border-bottom: 2px solid lighten($brand-primary,10%)
+		color: $brand-primary
+		text-shadow: 1px 1px 0 rgba(white,0.6)
+		background-color: lighten($brand-primary,40%)!important
+		@include background(linear-gradient(top left, lighten($brand-primary,75%), lighten($brand-primary,55%)))
+		@include box-shadow(rgba(black,0.3) 0 1px 3px, rgba(white,0.4) 0 0 0 1px inset)
 
 .icon-AdminDashboard
 	@extend .icon-dashboard
-	background-color: adjust-hue($icon-color, -20)
+	background-color: adjust-hue($icon-color, 0)
 .icon-AdminCatalog
 	@extend .icon-book
-	background-color: adjust-hue($icon-color, 20)
+	background-color: adjust-hue($icon-color, 30)
 .icon-AdminParentOrders
 	@extend .icon-credit-card
-	background-color: adjust-hue($icon-color, 40)
+	background-color: adjust-hue($icon-color, 60)
 .icon-AdminParentCustomer
 	@extend .icon-group
-	background-color: adjust-hue($icon-color, 60)
+	background-color: adjust-hue($icon-color, 90)
 .icon-AdminPriceRule
 	@extend .icon-tags
-	background-color: adjust-hue($icon-color, 80)
+	background-color: adjust-hue($icon-color, 120)
 .icon-AdminParentShipping
 	@extend .icon-truck
-	background-color: adjust-hue($icon-color, 100)
+	background-color: adjust-hue($icon-color, 150)
 .icon-AdminParentLocalization
 	@extend .icon-globe
-	background-color: adjust-hue($icon-color, 120)
+	background-color: adjust-hue($icon-color, 180)
 .icon-AdminParentModules
 	@extend .icon-puzzle-piece
-	background-color: adjust-hue($icon-color, 140)
+	background-color: adjust-hue($icon-color, 210)
 .icon-AdminParentPreferences
 	@extend .icon-wrench
-	background-color: adjust-hue($icon-color, 160)
+	background-color: adjust-hue($icon-color, 240)
 .icon-AdminTools
 	@extend .icon-cogs
-	background-color: adjust-hue($icon-color, 180)
+	background-color: adjust-hue($icon-color, 270)
 .icon-AdminAdmin
 	@extend .icon-cog
-	background-color: adjust-hue($icon-color, 200)
+	background-color: adjust-hue($icon-color, 300)
 .icon-AdminParentStats
 	@extend .icon-bar-chart
-	background-color: adjust-hue($icon-color, 220)
+	background-color: adjust-hue($icon-color, 330)
+
+[class^="icon-Admin"]
+	//background-color: #9ED072
+	margin-right: 6px
 
 [class^="process-icon-"], [class*=" process-icon-"]
 	height: 32px
@@ -313,7 +321,6 @@ body.fixed-top
 .process-icon-newCombination
 	@extend .icon-plus-sign
 
-
 .navbar-inner
 	box-shadow: none!important
 	.input-append
@@ -367,7 +374,6 @@ input[type="password"].input-tiny
 	a
 		color: white
 		text-decoration: none
-
 hr
 	border-color: darken($bg-content-color,10%)
 	border-bottom: 1px solid white
@@ -396,20 +402,20 @@ hr
 				color: black
 	input, select
 		margin: 0
-	td.center, th.center
-		text-align: center
 	tbody > tr > td
 		border-top: none
 		background-color: white
 	tbody > tr > td
+		padding: 3px 7px 3px 7px
 		vertical-align: middle
 		word-wrap: nowrap
 		font-size: 12px
-		padding: 3px 7px 3px 7px
 		@include box-shadow(rgba(black,0.15) 0 2px 0)
 	tbody > tr:hover > td
 		cursor: pointer
 		background-color: #FFF2B2
+	td.center, th.center
+		text-align: center
 	tr td:first-child,
 	tr th:first-child 
 		border-top-left-radius: 3px
