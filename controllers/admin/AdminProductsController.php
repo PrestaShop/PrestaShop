@@ -3659,12 +3659,15 @@ class AdminProductsControllerCore extends AdminController
 					$current_shop_id = (int)$this->context->shop->id;
 				else
 					$current_shop_id = 0;
+
+				$languages = Language::getLanguages(true);
 					
 				$data->assign(array(
 						'countImages' => $count_images,
 						'id_product' => (int)Tools::getValue('id_product'),
 						'id_category_default' => (int)$this->_category->id,
 						'images' => $images,
+						'iso_lang' => $languages[0]['iso_code'],
 						'token' =>  $this->token,
 						'table' => $this->table,
 						'max_image_size' => $this->max_image_size / 1024 / 1024,
