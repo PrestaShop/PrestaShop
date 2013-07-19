@@ -649,9 +649,7 @@ class ReferralProgram extends Module
 		{
 			$cartRule = new CartRule((int)$referralprogram->id_cart_rule_sponsor);
 			$currency = new Currency((int)$order->id_currency);
-			$discount_display = ReferralProgram::displayDiscount( (float) $cartRule->reduction_percent ? (float) $cartRule->reduction_percent : (int) $cartRule->reduction_amount,  (float) $cartRule->reduction_percent ? 1 : 2, $currency);
-
-			$data = array('{sponsored_firstname}' => $customer->firstname, '{sponsored_lastname}' => $customer->lastname, '{discount_display}' => $discount_display, '{discount_name}' => $cartRule->code);
+			$discount_display = ReferralProgram::displayDiscount( (float) $cartRule->reduction_percent ? (float) $cartRule->reduction_percent : (int) $cartRule->reduction_amount,  (float) $cartRule->reduction_percent ? 1 : 2, $currency);			$data = array('{sponsored_firstname}' => $customer->firstname, '{sponsored_lastname}' => $customer->lastname, '{discount_display}' => $discount_display, '{discount_name}' => $cartRule->code);
 			Mail::Send((int)$order->id_lang, 'referralprogram-congratulations', Mail::l('Congratulations!', (int)$order->id_lang), $data, $sponsor->email, $sponsor->firstname.' '.$sponsor->lastname, strval(Configuration::get('PS_SHOP_EMAIL')), strval(Configuration::get('PS_SHOP_NAME')), NULL, NULL, dirname(__FILE__).'/mails/');
 			return true;
 		}
