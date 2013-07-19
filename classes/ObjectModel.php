@@ -242,16 +242,6 @@ abstract class ObjectModelCore
 						$this->{$key} = $value;	
 			}
 		}
-
-		if (!is_array(self::$fieldsRequiredDatabase))
-		{
-			$fields = $this->getfieldsRequiredDatabase(true);
-			if ($fields)
-				foreach ($fields as $row)
-					self::$fieldsRequiredDatabase[$row['object_name']][(int)$row['id_required_field']] = pSQL($row['field_name']);
-			else
-				self::$fieldsRequiredDatabase = array();
-		}
 	}
 
 	/**
@@ -901,6 +891,7 @@ abstract class ObjectModelCore
 	 */
 	public function validateField($field, $value, $id_lang = null)
 	{
+		$this->cacheFieldsRequiredDatabase();
 		$data = $this->def['fields'][$field];
 
 		// Check if field is required
@@ -983,6 +974,7 @@ abstract class ObjectModelCore
 
 	public function validateController($htmlentities = true)
 	{
+		$this->cacheFieldsRequiredDatabase();
 		$errors = array();
 		$required_fields_database = (isset(self::$fieldsRequiredDatabase[get_class($this)])) ? self::$fieldsRequiredDatabase[get_class($this)] : array();
 		foreach ($this->def['fields'] as $field => $data)
@@ -1029,6 +1021,7 @@ abstract class ObjectModelCore
 
 	public function getWebserviceParameters($ws_params_attribute_name = null)
 	{
+		$this->cacheFieldsRequiredDatabase();
 		$default_resource_parameters = array(
 			'objectSqlId' => $this->def['primary'],
 			'retrieveData' => array(
@@ -1139,6 +1132,7 @@ abstract class ObjectModelCore
 
 	public function validateFieldsRequiredDatabase($htmlentities = true)
 	{
+		$this->cacheFieldsRequiredDatabase();
 		$errors = array();
 		$required_fields = (isset(self::$fieldsRequiredDatabase[get_class($this)])) ? self::$fieldsRequiredDatabase[get_class($this)] : array();
 
@@ -1165,6 +1159,19 @@ abstract class ObjectModelCore
 		SELECT id_required_field, object_name, field_name
 		FROM '._DB_PREFIX_.'required_field
 		'.(!$all ? 'WHERE object_name = \''.pSQL(get_class($this)).'\'' : ''));
+	}
+	
+	public function cacheFieldsRequiredDatabase()
+	{
+		if (!is_array(self::$fieldsRequiredDatabase))
+		{
+			$fields = $this->getfieldsRequiredDatabase(true);
+			if ($fields)
+				foreach ($fields as $row)
+					self::$fieldsRequiredDatabase[$row['object_name']][(int)$row['id_required_field']] = pSQL($row['field_name']);
+			else
+				self::$fieldsRequiredDatabase = array();
+		}
 	}
 
 	public function addFieldsRequiredDatabase($fields)
