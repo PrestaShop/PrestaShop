@@ -207,7 +207,6 @@ https://github.com/ghinda/css-toggle-switch
 	.switch .slide-button,
 	.toggle .slide-button {
 		display: block;
-		
 		-webkit-transition: all 0.3s ease-out;
 		-moz-transition: all 0.3s ease-out;
 		-ms-transition: all 0.3s ease-out;
@@ -248,15 +247,23 @@ https://github.com/ghinda/css-toggle-switch
 		font-weight: 300;
 		text-align: center;
 		border-radius: 3px;
+		@include box-shadow(rgba(#48525F,0.3) 0 0 6px 1px inset)
 	}
 	.prestashop-switch input:checked + label {
 		color: #fff;
 		text-shadow: none;
 	}
 	.prestashop-switch .slide-button {
-		background-color: $btn-default-bg;
+		@extend .btn;
+		@extend .btn-primary;
 		border-radius: 3px;
-		border: none;
+		position: relative;
+		margin-right: 3px;
+		border-bottom: 2px solid darken($brand-primary,7%);
+		color: lighten($brand-primary,50%);
+		text-shadow: 1px 1px 0 rgba(black,0.6);
+		@include background(linear-gradient(top, lighten($brand-primary,15%), $brand-primary));
+		@include box-shadow(rgba(black,0.15) 0 3px 0, rgba(white,0.1) 0 0 0 1px inset);
 	}
 	.prestashop-switch p {
 		color: #333;

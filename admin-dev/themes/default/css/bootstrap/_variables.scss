@@ -19,7 +19,7 @@
 // Brand colors
 // -------------------------
 
-$brand-primary:         #214250 ;
+$brand-primary:         #313A45 ;
 $brand-success:         #5cb85c ;
 
 // $brand-warning:         #f0ad4e ;
@@ -55,7 +55,7 @@ $line-height-base:        1.428571429 ;
 $line-height-computed:    floor($font-size-base * $line-height-base) ;
 
 $headings-font-family:    'Ubuntu', sans-serif ;
-$headings-font-weight:    400 ;
+$headings-font-weight:    300 ;
 // $headings-line-height:    1.1 ;
 
 
@@ -93,7 +93,7 @@ $table-bg-hover:                     lighten($brand-primary,40%) ;
 // -------------------------
 
 // $btn-default-color:              #fff ;
-$btn-default-bg:                 	#627B83 ;
+$btn-default-bg:                 	#48525F ;
 // $btn-default-border:             $btn-default-bg ;
 
 // $btn-primary-color:              $btn-default-color ;

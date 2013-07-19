@@ -32,7 +32,7 @@
 		{l s='You can either create a specific value, or select among the existing pre-defined values you\'ve previously added.'}
 	</div>
 
-	<table class="table table-striped">
+	<table class="table">
 		<thead>
 			<tr>
 				<th>{l s='Feature'}</th>
