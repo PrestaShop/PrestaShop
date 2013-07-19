@@ -149,8 +149,12 @@ class ProductControllerCore extends FrontController
 					// If the previous page was a category and is a parent category of the product use this category as parent category
 					if (isset($regs[2]) && is_numeric($regs[2]))
 					{
-						if (Product::idIsOnCategoryId((int)$this->product->id, array('0' => array('id_category' => (int)$regs[2]))))
+						if (Product::idIsOnCategoryId((int)$this->product->id, array('0' => array('id_category' => (int)$regs[2])))){
 							$this->category = new Category($regs[2], (int)$this->context->cookie->id_lang);
+						}elseif(Product::idIsOnCategoryId((int)$this->product->id, array('0' => array('id_category' => (int)$this->product->id_category_default)))){
+							// fixed bug with url_rewrite is ON
+							$this->category = new Category($this->product->id_category_default, (int)$this->context->cookie->id_lang);
+						}
 					}
 					else if (isset($regs[5]) && is_numeric($regs[5]))
 					{
