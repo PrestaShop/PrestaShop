@@ -83,7 +83,7 @@ class HookCore extends ObjectModel
 
 	public function add($autodate = true, $null_values = false)
 	{
-		Cache::clean('hook_idbyname_'.$this->name);
+		Cache::clean('hook_idsbyname');
 		return parent::add($autodate, $null_values);
 	}
 
