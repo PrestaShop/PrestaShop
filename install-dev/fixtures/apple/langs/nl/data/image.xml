@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<entity_image>
+  <image id="MacBook_Air">
+    <legend>MacBook Air</legend>
+  </image>
+  <image id="MacBook_Air_1">
+    <legend>MacBook Air</legend>
+  </image>
+  <image id="MacBook_Air_2">
+    <legend>MacBook Air</legend>
+  </image>
+  <image id="MacBook_Air_3">
+    <legend>MacBook Air</legend>
+  </image>
+  <image id="MacBook_Air_4">
+    <legend>MacBook Air</legend>
+  </image>
+  <image id="MacBook_Air_SuperDrive">
+    <legend> MacBook Air SuperDrive</legend>
+  </image>
+  <image id="iPod_touch">
+    <legend>iPod touch</legend>
+  </image>
+  <image id="iPod_touch_1">
+    <legend>iPod touch</legend>
+  </image>
+  <image id="iPod_touch_2">
+    <legend>iPod touch</legend>
+  </image>
+  <image id="iPod_touch_3">
+    <legend>iPod touch</legend>
+  </image>
+  <image id="iPod_touch_4">
+    <legend>iPod touch</legend>
+  </image>
+  <image id="iPod_touch_5">
+    <legend>iPod touch</legend>
+  </image>
+  <image id="housse-portefeuille-en-cuir">
+    <legend>housse-portefeuille-en-cuir</legend>
+  </image>
+  <image id="Shure_SE210_Sound-Isolating_Earphones_for_iPod_and_iPhone">
+    <legend>Shure SE210 Sound-Isolating Earphones for iPod and iPhone</legend>
+  </image>
+  <image id="iPod_Nano">
+    <legend>iPod Nano</legend>
+  </image>
+  <image id="iPod_Nano_1">
+    <legend>iPod Nano</legend>
+  </image>
+  <image id="iPod_Nano_2">
+    <legend>iPod Nano</legend>
+  </image>
+  <image id="iPod_Nano_3">
+    <legend>iPod Nano</legend>
+  </image>
+  <image id="iPod_Nano_4">
+    <legend>iPod Nano</legend>
+  </image>
+  <image id="iPod_Nano_5">
+    <legend>iPod Nano</legend>
+  </image>
+  <image id="iPod_Nano_6">
+    <legend>iPod Nano</legend>
+  </image>
+  <image id="iPod_Nano_7">
+    <legend>iPod Nano</legend>
+  </image>
+  <image id="iPod_shuffle">
+    <legend>iPod shuffle</legend>
+  </image>
+  <image id="iPod_shuffle_1">
+    <legend>iPod shuffle</legend>
+  </image>
+  <image id="iPod_shuffle_2">
+    <legend>iPod shuffle</legend>
+  </image>
+  <image id="iPod_shuffle_3">
+    <legend>iPod shuffle</legend>
+  </image>
+</entity_image>
