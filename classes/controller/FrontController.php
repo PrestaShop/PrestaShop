@@ -849,8 +849,8 @@ class FrontControllerCore extends Controller
 
 		$range = 2; /* how many pages around page selected */
 
-		if ($this->p < 0)
-			$this->p = 0;
+		if ($this->p < 1)
+			$this->p = 1;
 
 		if (isset($this->context->cookie->nb_item_per_page) && $this->n != $this->context->cookie->nb_item_per_page && in_array($this->n, $nArray))
 			$this->context->cookie->nb_item_per_page = $this->n;
