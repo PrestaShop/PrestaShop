@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	// Focus on email address field
-	$('#email').select();
+	$('#email').focus();
 
 	// Initialize events
 	$('#login_form').submit(function(e) {
