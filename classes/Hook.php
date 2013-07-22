@@ -123,8 +123,8 @@ class HookCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'hook`
 			UNION
 			SELECT `id_hook`, ha.`alias` as name
-			FROM `ps_hook_alias` ha
-			INNER JOIN `ps_hook` h ON ha.name = h.name');
+			FROM `'._DB_PREFIX_.'hook_alias` ha
+			INNER JOIN `'._DB_PREFIX_.'hook` h ON ha.name = h.name');
 			foreach ($result as $row)
 				$hook_ids[$row['name']] = $row['id_hook'];
 			Cache::store($cache_id, $hook_ids);
