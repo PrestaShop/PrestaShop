@@ -2430,7 +2430,7 @@ exit;
 			return $pattern;
 		return preg_replace('/\\\[px]\{[a-z]\}{1,2}|(\/[a-z]*)u([a-z]*)$/i', "$1$2", $pattern);
 	}
-	
+
 	public static function addonsRequest($request, $params = array())
 	{
 		$addons_url = 'api.addons.prestashop.com';
@@ -2515,6 +2515,21 @@ exit;
 
 		// No content, return false
 		return false;
+	}
+
+	public static function fileAttachment($input = 'fileUpload')
+	{
+		$fileAttachment = null;
+		if (isset($_FILES[$input]['name']) && !empty($_FILES[$input]['name']) && !empty($_FILES[$input]['tmp_name']))
+		{
+			$fileAttachment['rename'] = uniqid(). self::strtolower(substr($_FILES[$input]['name'], -5));	
+			$fileAttachment['content'] = file_get_contents($_FILES[$input]['tmp_name']);
+			$fileAttachment['tmp_name'] = $_FILES[$input]['tmp_name'];
+			$fileAttachment['name'] = $_FILES[$input]['name'];
+			$fileAttachment['mime'] = $_FILES[$input]['type'];
+			$fileAttachment['error'] = $_FILES[$input]['error'];
+		}
+		return $fileAttachment;
 	}
 }
 

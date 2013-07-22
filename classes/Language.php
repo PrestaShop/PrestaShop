@@ -262,7 +262,7 @@ class LanguageCore extends ObjectModel
 			$mPath_to = _PS_MAIL_DIR_.(string)$iso_to.'/';
 		}
 
-		$lFiles = array('admin.php', 'errors.php', 'fields.php', 'pdf.php', 'tabs.php', 'index.php');
+		$lFiles = array('admin.php', 'errors.php', 'fields.php', 'pdf.php', 'tabs.php');
 
 		// Added natives mails files
 		$mFiles = array(
@@ -297,7 +297,7 @@ class LanguageCore extends ObjectModel
 			'test.html', 'test.txt',
 			'voucher.html', 'voucher.txt',
 			'voucher_new.html', 'voucher_new.txt',
-			'order_changed.html', 'order_changed.txt', 'index.php'
+			'order_changed.html', 'order_changed.txt'
 		);
 
 		$number = -1;
