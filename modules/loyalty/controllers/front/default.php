@@ -89,6 +89,7 @@ class LoyaltyDefaultModuleFrontController extends ModuleFrontController
 			$cart_rule->date_to = date('Y-m-d H:i:s', strtotime($cart_rule->date_from.' +1 year'));
 
 			$cart_rule->minimum_amount = (float)Configuration::get('PS_LOYALTY_MINIMAL');
+			$cart_rule->minimum_amount_currency = (int)$this->context->currency->id;
 			$cart_rule->active = 1;
 
 			$categories = Configuration::get('PS_LOYALTY_VOUCHER_CATEGORY');
