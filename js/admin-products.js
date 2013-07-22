@@ -1238,7 +1238,7 @@ product_tabs['Suppliers'] = new function(){
 	var self = this;
 
 	this.manageDefaultSupplier = function() {
-		var default_is_ok = false;
+		var default_is_set = false;
 		var availables_radio_buttons = [];
 		var radio_buttons = $('input[name="default_supplier"]');
 
@@ -1251,27 +1251,25 @@ product_tabs['Suppliers'] = new function(){
 				if (item.is(':checked'))
 				{
 					item.removeAttr("checked");
-					default_is_ok = false;
 				}
 			}
-			else
+
+			if (item.is(':checked'))
 			{
-				availables_radio_buttons.push(item);
+				default_is_set = true;
 			}
 		}
 
-		if (default_is_ok == false)
+		if (!default_is_set)
 		{
-			for (i=0; i<availables_radio_buttons.length; i++)
+			for (i=0; i<radio_buttons.length; i++)
 			{
-				var item = $(availables_radio_buttons[i]);
+				var item = $(radio_buttons[i]);
 
 				if (item.is(':disabled') == false)
 				{
 					item.attr("checked", true);
-					default_is_ok = true;
 				}
-				break;
 			}
 		}
 	};
@@ -1280,6 +1278,7 @@ product_tabs['Suppliers'] = new function(){
 		$('.supplierCheckBox').live('click', function() {
 			var check = $(this);
 			var checkbox = $('#default_supplier_'+check.val());
+
 			if (this.checked)
 			{
 				// enable default radio button associated
@@ -1290,6 +1289,7 @@ product_tabs['Suppliers'] = new function(){
 				// disable default radio button associated
 				checkbox.attr('disabled', true);
 			}
+
 			//manage default supplier check
 			self.manageDefaultSupplier();
 		});
