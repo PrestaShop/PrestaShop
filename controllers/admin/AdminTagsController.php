@@ -26,6 +26,8 @@
 
 class AdminTagsControllerCore extends AdminController
 {
+	public $bootstrap = true ;
+
 	public function __construct()
 	{
 		$this->table = 'tag';
@@ -35,7 +37,6 @@ class AdminTagsControllerCore extends AdminController
 			'id_tag' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
-				'width' => 25,
 			),
 			'lang' => array(
 				'title' => $this->l('Language'),
@@ -43,7 +44,6 @@ class AdminTagsControllerCore extends AdminController
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
-				'width' => 200,
 				'filter_key' => 'a!name'
 			),
 			'products' => array(

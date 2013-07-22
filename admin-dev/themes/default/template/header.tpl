@@ -246,7 +246,7 @@
 			<div class="mainsubtablist" style="display:none"></div>
 		{/if}
 			<ul id="menu">
-				<li class="maintab {if $t.current}active{/if}">
+				<li class="maintab">
 					<a href="{$link->getAdminLink('AdminHome')|escape:'htmlall':'UTF-8'}" class="title">
 						<i class="icon-AdminDashboard"></i> Dashboard
 					</a>

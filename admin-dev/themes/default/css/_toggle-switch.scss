@@ -241,29 +241,28 @@ https://github.com/ghinda/css-toggle-switch
 	@-webkit-keyframes bugfix { from { position: relative; } to { position: relative; } }
 
 	/* Standalone Themes */ 
+	.prestashop-switch label{
+		font-weight: 500;
+	}
+
 	.prestashop-switch {
 		min-width: 150px;
 		color: #999;
-		font-weight: 300;
 		text-align: center;
 		border-radius: 3px;
 		@include box-shadow(rgba(#48525F,0.3) 0 0 6px 1px inset)
 	}
 	.prestashop-switch input:checked + label {
-		color: #fff;
-		text-shadow: none;
+		color: lighten($brand-primary,10%);
+		@include text-shadow(rgba(white,0.7) 1px 1px 0);
 	}
 	.prestashop-switch .slide-button {
-		@extend .btn;
-		@extend .btn-primary;
-		border-radius: 3px;
 		position: relative;
 		margin-right: 3px;
-		border-bottom: 2px solid darken($brand-primary,7%);
-		color: lighten($brand-primary,50%);
-		text-shadow: 1px 1px 0 rgba(black,0.6);
-		@include background(linear-gradient(top, lighten($brand-primary,15%), $brand-primary));
-		@include box-shadow(rgba(black,0.15) 0 3px 0, rgba(white,0.1) 0 0 0 1px inset);
+		border-color: darken($bg-content-color,20%);
+		color: lighten($bg-content-color,50%);
+		@include background(linear-gradient(top,$bg-content-color, darken($bg-content-color,10%)));
+		@include box-shadow(rgba(white,1) 0 0 0 1px inset);
 	}
 	.prestashop-switch p {
 		color: #333;

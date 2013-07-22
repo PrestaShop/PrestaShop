@@ -9,7 +9,6 @@ $bg-head-color: #9ED072
 @import "font-awesome"
 @import "toggle-switch"
 
-
 html, body
 	height: 100%
 
@@ -29,6 +28,7 @@ body.fixed-top
 		font-size: 1.6em
 		font-family: "ubuntu"
 		font-weight: 300
+
 #main
 	min-height: 100%
 	height: 100%
@@ -65,9 +65,11 @@ body.fixed-top
 		background-color: lighten(#D6D2CF,5%)
 		&.alert-info
 			background-color: white
-			color: darken(#D6D2CF,30%)
-			border: solid 1px darken($bg-content-color,10%)
-		
+			color: darken(#DAEAF8,30%)
+			border: none
+			border-bottom: solid 1px darken($bg-content-color,10%)
+			@include box-shadow(white 0 0 0 1px inset)
+
 .page-head
 	width: 1278px
 	height: 69px
@@ -102,7 +104,8 @@ body.fixed-top
 	position: fixed
 	width: 240px
 	border-bottom: solid 1px black
-	@include box-shadow(darken($bg-content-color,30%) 0 4px 0)
+	@include box-shadow(darken($bg-content-color,30%) 0 4px 0)	
+
 	> ul > li > ul.sub-menu
 		display: none
 		list-style: none
@@ -121,14 +124,15 @@ body.fixed-top
 				display: block
 				background-color: white
 		> li
-			@include transition-property(background-color)
 			&:hover > a, &.active > a
 				color: white
 				background-color: darken(#48525F,15%)
 				border-top: 1px solid darken($brand-primary,15%)
 				border-bottom: 1px solid darken($brand-primary,10%)
-
 				@include box-shadow(darken($brand-primary,15%) -4px 0 0 inset)
+				@include transition-property(background-color, border)
+				@include transition-duration(0.4s)
+				@include transition-timing-function(ease-out)
 			> a
 				display: block
 				padding: 5px 0 5px 5px
@@ -262,6 +266,7 @@ body.fixed-top
 [class^="icon-Admin"]
 	//background-color: #9ED072
 	margin-right: 6px
+	color: $brand-primary!important
 
 [class^="process-icon-"], [class*=" process-icon-"]
 	height: 32px
@@ -335,10 +340,14 @@ label.control-label
 label.control-label span.label-tooltip
 	text-decoration: none
 	font-size: 13px
-	border-bottom: dotted 1px darken(#F6F5F3,15%)
-	background-color: darken(#F6F5F3,5%)
+	background-color: #D7E1ED
+	border: none
+	border-bottom: solid 1px darken($bg-content-color,20%)
 	padding: 0 5px
 	@include border-radius(3px)
+
+.tooltip
+	font-size: 12px
 
 label.required:before
 	content: '*'
@@ -368,12 +377,24 @@ input[type="password"].input-tiny
 .btn
 	text-transform: uppercase
 
+.btn-default
+	border-color: darken($bg-content-color,20%)
+	color: lighten($brand-primary,15%)
+	@include background(linear-gradient(top,$bg-content-color, darken($bg-content-color,10%)))
+	@include box-shadow(rgba(white,1) 0 0 0 1px inset)
+	&:hover, &:focus
+		border-color: darken($bg-content-color,30%)
+		color: lighten($brand-primary,15%)
+		@include background(linear-gradient(top, darken($bg-content-color,10%), darken($bg-content-color,20%)))
+		@include box-shadow(rgba(white,0.7) 0 0 0 1px inset)
+
 .btn-group-action
 	display: inline-block
 	white-space: nowrap
 	a
-		color: white
 		text-decoration: none
+.btn .caret
+	border-top-color: lighten($brand-primary,15%)!important
 hr
 	border-color: darken($bg-content-color,10%)
 	border-bottom: 1px solid white
@@ -413,7 +434,8 @@ hr
 		@include box-shadow(rgba(black,0.15) 0 2px 0)
 	tbody > tr:hover > td
 		cursor: pointer
-		background-color: #FFF2B2
+		background-color: lighten(#C6C2BB,10%)
+		@include box-shadow(rgba(black,0.30) 0 2px 0)
 	td.center, th.center
 		text-align: center
 	tr td:first-child,

@@ -26,5 +26,5 @@
 {extends file="helpers/list/list_header.tpl"}
 
 {block name="override_header"}
-	<h2>{$sub_title}</h2>
+	<legend>{$sub_title}</legend>
 {/block}

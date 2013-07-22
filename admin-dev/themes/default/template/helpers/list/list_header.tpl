@@ -65,7 +65,7 @@
 	<div class="leadin">{block name="leadin"}{/block}</div>
 {/if}
 
-{block name="override_header"}{/block}
+
 
 
 {hook h='displayAdminListBefore'}
@@ -80,11 +80,15 @@
 
 {if !$simple_header}
 <form method="post" action="{$action}" class="form-inline">
+	<fieldset class="col-lg-12">
+	{block name="override_header"}{/block}
+	
+
 	<input type="hidden" id="submitFilter{$table}" name="submitFilter{$table}" value="0"/>
 {/if}
 
 	{if !$simple_header}
-	<fieldset class="well">
+
 		<span>
 		{if $page > 1}
 			<input type="image" src="../img/admin/list-prev2.gif" onclick="getE('submitFilter{$table}').value=1"/>&nbsp;
@@ -116,14 +120,14 @@
 		<span> / {$list_total} {l s='result(s)'}</span>
 		
 		<span class="pull-right">
-			<button type="submit" name="submitReset{$table}" class="btn btn-small">
+			<button type="submit" name="submitReset{$table}" class="btn btn-default btn-small">
 				<i class="icon-eraser"></i> {l s='Reset'}
 			</button>
 			<button type="submit" id="submitFilterButton{$table}" name="submitFilter" class="btn btn-default btn-small" />
 				<i class="icon-filter"></i> {l s='Filter'}
 			</button>
 		</span>
-	</fieldset>
+
 	{/if}
 	
 	<table 
