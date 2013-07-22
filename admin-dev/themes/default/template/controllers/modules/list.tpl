@@ -131,7 +131,7 @@
 							{if $module->id && isset($module->version_addons) && $module->version_addons}
 								<p>
 									<a href="{$module->options.update_url}">
-										<span class="btn btn-default btn-warning">
+										<span class="btn btn-warning">
 											<i class="icon-refresh"></i> {l s='Update it!'}
 										</span>
 									</a>
@@ -141,14 +141,14 @@
 								<a {if isset($module->id) && $module->id gt 0 && !empty($module->options.uninstall_onclick)}onclick="{$module->options.uninstall_onclick}"{/if} href="{if isset($module->id) && $module->id gt 0}{$module->options.uninstall_url}{else}{$module->options.install_url}{/if}" class="button installed">
 									{if isset($module->id) && $module->id gt 0}
 										<p>
-											<span class="btn btn-default btn-danger">
+											<span class="btn btn-danger">
 												<i class="icon-minus-sign-alt"></i> 
 												{l s='Uninstall'}
 											</span>
 										</p>
 									{else}
 										<p>
-											<span class="btn btn-default btn-success">
+											<span class="btn btn-success">
 												<i class="icon-plus-sign-alt"></i> 
 												{l s='Install'}
 											</span>
