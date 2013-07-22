@@ -528,27 +528,28 @@ class ProductControllerCore extends FrontController
 		// Assign category to the template
 		if ($this->category !== false && Validate::isLoadedObject($this->category) && $this->category->inShop() && $this->category->isAssociatedToShop())
 		{
-			$path = Tools::getPath($this->category->id, $this->product->name, true);
-			$this->context->smarty->assign(array(
-				'category' => $this->category,
-				'subCategories' => $this->category->getSubCategories($this->context->language->id, true),
-				'id_category_current' => (int)$this->category->id,
-				'id_category_parent' => (int)$this->category->id_parent,
-				'return_category_name' => Tools::safeOutput($this->category->name)
-			));
+			$path = Tools::getPath((int)$this->category->id, $this->product->name, true);
 		}
 		elseif (Category::inShopStatic($this->product->id_category_default, $this->context->shop))
 		{
-			$cat_default = new Category((int)$this->product->id_category_default);
-			if (Validate::isLoadedObject($cat_default) && $cat_default->active && $cat_default->isAssociatedToShop())
-				$path = Tools::getPath((int)$this->product->id_category_default, $this->product->name);
+			$this->category = new Category((int)$this->product->id_category_default, $this->context->language->id, $this->context->shop);
+			if (Validate::isLoadedObject($this->category) && $this->category->active && $this->category->isAssociatedToShop())
+				$path = Tools::getPath((int)$this->category->id, $this->product->name);
 		}
+
 		if (!isset($path) || !$path)
 			$path = Tools::getPath((int)$this->context->shop->id_category, $this->product->name);
-		$this->context->smarty->assign('path', $path);
 		
-		$this->context->smarty->assign('categories', Category::getHomeCategories($this->context->language->id));
-		$this->context->smarty->assign(array('HOOK_PRODUCT_FOOTER' => Hook::exec('displayFooterProduct', array('product' => $this->product, 'category' => $this->category))));
+		$this->context->smarty->assign(array(
+			'path' => $path,
+			'category' => $this->category,
+			'subCategories' => $this->category->getSubCategories($this->context->language->id, true),
+			'id_category_current' => (int)$this->category->id,
+			'id_category_parent' => (int)$this->category->id_parent,
+			'return_category_name' => Tools::safeOutput($this->category->name),
+			'categories' => Category::getHomeCategories($this->context->language->id),
+			'HOOK_PRODUCT_FOOTER' => Hook::exec('displayFooterProduct', array('product' => $this->product, 'category' => $this->category))
+		));
 	}
 
 	protected function transformDescriptionWithImg($desc)
