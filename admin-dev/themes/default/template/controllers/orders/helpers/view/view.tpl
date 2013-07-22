@@ -162,33 +162,40 @@
 	<!-- Customer informations -->
 
 	<div class="col-lg-6">
-		<fieldset>
-			<legend><img src="../img/admin/tab-customers.gif" /> {l s='Customer information'}</legend>
-			<span style="font-weight: bold; font-size: 14px;"><a href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={getAdminToken tab='AdminCustomers'}"> {$customer->firstname} {$customer->lastname}</a></span> ({l s='#'}{$customer->id})<br />
-			(<a href="mailto:{$customer->email}">{$customer->email}</a>)<br /><br />
-			{if ($customer->isGuest())}
-				{l s='This order has been placed by a guest.'}
-				{if (!Customer::customerExists($customer->email))}
-				<form method="post" action="index.php?tab=AdminCustomers&id_customer={$customer->id}&token={getAdminToken tab='AdminCustomers'}">
-					<input type="hidden" name="id_lang" value="{$order->id_lang}" />
-					<p class="center"><input class="button" type="submit" name="submitGuestToCustomer" value="{l s='Transform a guest into a customer'}" /></p>
-					{l s='This feature will generate a random password and send an email to the customer.'}
-				</form>
+		<form action="" method="post">
+			<fieldset class="well">
+				<legend>
+					<i class="icon-user"></i>
+					{l s='Customer information'}
+				</legend>
+				<span style="font-weight: bold; font-size: 14px;"><a href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={getAdminToken tab='AdminCustomers'}"> {$customer->firstname} {$customer->lastname}</a></span> ({l s='#'}{$customer->id})<br />
+				(<a href="mailto:{$customer->email}">{$customer->email}</a>)<br /><br />
+				{if ($customer->isGuest())}
+					{l s='This order has been placed by a guest.'}
+					{if (!Customer::customerExists($customer->email))}
+					<form method="post" action="index.php?tab=AdminCustomers&id_customer={$customer->id}&token={getAdminToken tab='AdminCustomers'}">
+						<input type="hidden" name="id_lang" value="{$order->id_lang}" />
+						<p class="center"><input class="button" type="submit" name="submitGuestToCustomer" value="{l s='Transform a guest into a customer'}" /></p>
+						{l s='This feature will generate a random password and send an email to the customer.'}
+					</form>
+					{else}
+						<div><b style="color:red;">{l s='A registered customer account has already claimed this email address'}</b></div>
+					{/if}
 				{else}
-					<div><b style="color:red;">{l s='A registered customer account has already claimed this email address'}</b></div>
-				{/if}
-			{else}
-				{l s='Account registered:'} <b>{dateFormat date=$customer->date_add full=true}</b><br />
-				{l s='Valid orders placed:'} <b>{$customerStats['nb_orders']}</b><br />
-				{l s='Total spent since registration:'} <b>{displayPrice price=Tools::ps_round(Tools::convertPrice($customerStats['total_orders'], $currency), 2) currency=$currency->id}</b><br />
-		</fieldset>
+					{l s='Account registered:'} <b>{dateFormat date=$customer->date_add full=true}</b><br />
+					{l s='Valid orders placed:'} <b>{$customerStats['nb_orders']}</b><br />
+					{l s='Total spent since registration:'} <b>{displayPrice price=Tools::ps_round(Tools::convertPrice($customerStats['total_orders'], $currency), 2) currency=$currency->id}</b><br />
+			</fieldset>
 			{/if}
 		{/if}
 
 		<!-- Sources block -->
 		{if (sizeof($sources))}
 		<fieldset>
-			<legend><img src="../img/admin/tab-stats.gif" /> {l s='Sources'}</legend>
+			<legend>
+				<i class="icon-signal"></i>
+				{l s='Sources'}
+			</legend>
 			<ul {if sizeof($sources) > 3}style="height: 200px; overflow-y: scroll;"{/if}>
 			{foreach from=$sources item=source}
 				<li>
@@ -204,33 +211,50 @@
 
 		<!-- Admin order hook -->
 		{hook h="displayAdminOrder" id_order=$order->id}
+		</form>
 	</div>
 	
 	<div class="col-lg-6">
 		<form action="{$smarty.server.REQUEST_URI}&token={$smarty.get.token}" method="post" onsubmit="if (getE('visibility').checked == true) return confirm('{l s='Do you want to send this message to the customer?'}');">
-		<fieldset>
-			<legend onclick="$('#message').slideToggle();$('#message_m').slideToggle();return false"><img src="../img/admin/email_edit.gif" /> {l s='New message'}</legend>
-			<div id="message_m" style="display: {if Tools::getValue('message')}none{else}block{/if}; overflow: auto; width: 400px;">
-				<a href="#" onclick="$('#message').slideToggle();$('#message_m').slideToggle();return false"><b>{l s='Click here'}</b> {l s='to add a comment or send a message to the customer.'}</a>
-			</div>
-			<a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'htmlall':'UTF-8'}"><b>{l s='Click here'}</b> {l s='to see all messages.'}</a><br>
-			<div id="message" style="display: {if Tools::getValue('message')}block{else}none{/if}">
-						<select name="order_message" id="order_message" onchange="orderOverwriteMessage(this, '{l s='Do you want to overwrite your existing message?'}')">
-							<option value="0" selected="selected">-- {l s='Choose a standard message'} --</option>
-			{foreach from=$orderMessages item=orderMessage}
-				<option value="{$orderMessage['message']|escape:'htmlall':'UTF-8'}">{$orderMessage['name']}</option>
-			{/foreach}
-						</select><br /><br />
-						<b>{l s='Display to customer?'}</b>
-						<input type="radio" name="visibility" id="visibility" value="0" /> {l s='Yes'}
-						<input type="radio" name="visibility" value="1" checked="checked" /> {l s='No'}
-						<p id="nbchars" style="display:inline;font-size:10px;color:#666;"></p><br /><br />
-				<textarea id="txt_msg" name="message" cols="50" rows="8" onKeyUp="var length = document.getElementById('txt_msg').value.length; if (length > 600) length = '600+'; document.getElementById('nbchars').innerHTML = '{l s='600 characters, max.'} (' + length + ')';">{Tools::getValue('message')|escape:'htmlall':'UTF-8'}</textarea><br /><br />
-				<input type="hidden" name="id_order" value="{$order->id}" />
-				<input type="hidden" name="id_customer" value="{$order->id_customer}" />
-				<input type="submit" class="button" name="submitMessage" value="{l s='Send'}" />
-			</div>
-		</fieldset>
+			<fieldset class="well">
+				<legend onclick="$('#message').slideToggle();$('#message_m').slideToggle();return false">
+					<i class="icon-envelope"></i>
+					{l s='New message'}
+				</legend>
+				<div id="message_m" style="display: {if Tools::getValue('message')}none{else}block{/if};">
+					<a href="#" onclick="$('#message').slideToggle();$('#message_m').slideToggle();return false">
+						<b>{l s='Click here'}</b> {l s='to add a comment or send a message to the customer.'}
+					</a>
+				</div>
+				<a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'htmlall':'UTF-8'}"><b>{l s='Click here'}</b> {l s='to see all messages.'}</a>
+				<div id="message" style="display: {if Tools::getValue('message')}block{else}none{/if}">
+					<select name="order_message" id="order_message" onchange="orderOverwriteMessage(this, '{l s='Do you want to overwrite your existing message?'}')">
+						<option value="0" selected="selected">-- {l s='Choose a standard message'} --</option>
+						{foreach from=$orderMessages item=orderMessage}
+							<option value="{$orderMessage['message']|escape:'htmlall':'UTF-8'}">{$orderMessage['name']}</option>
+						{/foreach}
+					</select>
+					<div class="row">
+						<label class="control-label col-lg-4 text-right">{l s='Display to customer?'}</label>
+						<div class="col-lg-8">
+							<label for="visibility" class="radio-inline">
+								<input type="radio" name="visibility" id="visibility" value="0" /> {l s='Yes'}
+							</label>
+							<label for="visibility" class="radio-inline">
+								<input type="radio" name="visibility" value="1" checked="checked" /> {l s='No'}
+							</label>
+						</div>
+					</div>
+
+					<p id="nbchars" style="display:inline;font-size:10px;color:#666;"></p>
+					<textarea id="txt_msg" name="message" cols="50" rows="8" onKeyUp="var length = document.getElementById('txt_msg').value.length; if (length > 600) length = '600+'; document.getElementById('nbchars').innerHTML = '{l s='600 characters, max.'} (' + length + ')';">{Tools::getValue('message')|escape:'htmlall':'UTF-8'}</textarea><br /><br />
+					<input type="hidden" name="id_order" value="{$order->id}" />
+					<input type="hidden" name="id_customer" value="{$order->id_customer}" />
+					<button type="submit" class="btn btn-default pull-right" name="submitMessage">
+						{l s='Send'}
+					</button>
+				</div>
+			</fieldset>
 		</form>
 
 	{if (sizeof($messages))}
