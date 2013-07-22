@@ -26,6 +26,7 @@
 
 class AdminAttachmentsControllerCore extends AdminController
 {
+	public $bootstrap = true ;
 
 	protected $product_attachements = array();
 
@@ -41,8 +42,7 @@ class AdminAttachmentsControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_attachment' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center',
-				'width' => 25
+				'align' => 'center'
 			),
 			'name' => array(
 				'title' => $this->l('Name')

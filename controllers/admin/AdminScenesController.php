@@ -26,6 +26,8 @@
 
 class AdminScenesControllerCore extends AdminController
 {
+	public $bootstrap = true ;
+
 	public function __construct()
 	{
 	 	$this->table = 'scene';
@@ -44,7 +46,6 @@ class AdminScenesControllerCore extends AdminController
 			'id_scene' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
-				'width' => 25
 			),
 			'name' => array(
 				'title' => $this->l('Image Maps'),
@@ -52,7 +53,6 @@ class AdminScenesControllerCore extends AdminController
 			),
 			'active' => array(
 				'title' => $this->l('Activated'),
-				'width' => 70,
 				'align' => 'center',
 				'active' => 'status',
 				'type' => 'bool',

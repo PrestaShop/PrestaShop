@@ -202,13 +202,11 @@ class AdminProductsControllerCore extends AdminController
 		$this->fields_list['id_product'] = array(
 			'title' => $this->l('ID'),
 			'align' => 'center',
-			'width' => 40
 		);
 		$this->fields_list['image'] = array(
 			'title' => $this->l('Photo'),
 			'align' => 'center',
 			'image' => 'p',
-			'width' => 70,
 			'orderby' => false,
 			'filter' => false,
 			'search' => false
@@ -220,13 +218,11 @@ class AdminProductsControllerCore extends AdminController
 		$this->fields_list['reference'] = array(
 			'title' => $this->l('Reference'),
 			'align' => 'left',
-			'width' => 80
 		);
 
 		if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP)
 			$this->fields_list['shopname'] = array(
 				'title' => $this->l('Default shop:'),
-				'width' => 230,
 				'filter_key' => 'shop!name',
 			);
 		else
@@ -237,14 +233,12 @@ class AdminProductsControllerCore extends AdminController
 			);
 		$this->fields_list['price'] = array(
 			'title' => $this->l('Base price'),
-			'width' => 90,
 			'type' => 'price',
 			'align' => 'right',
 			'filter_key' => 'a!price'
 		);
 		$this->fields_list['price_final'] = array(
 			'title' => $this->l('Final price'),
-			'width' => 90,
 			'type' => 'price',
 			'align' => 'right',
 			'havingFilter' => true,
@@ -252,7 +246,6 @@ class AdminProductsControllerCore extends AdminController
 		);
 		$this->fields_list['sav_quantity'] = array(
 			'title' => $this->l('Quantity'),
-			'width' => 90,
 			'align' => 'right',
 			'filter_key' => 'sav!quantity',
 			'orderby' => true,
@@ -260,7 +253,6 @@ class AdminProductsControllerCore extends AdminController
 		);
 		$this->fields_list['active'] = array(
 			'title' => $this->l('Status'),
-			'width' => 70,
 			'active' => 'status',
 			'filter_key' => $alias.'!active',
 			'align' => 'center',
@@ -271,7 +263,6 @@ class AdminProductsControllerCore extends AdminController
 		if ((int)$this->id_current_category)
 			$this->fields_list['position'] = array(
 				'title' => $this->l('Position'),
-				'width' => 70,
 				'filter_key' => 'cp!position',
 				'align' => 'center',
 				'position' => 'position'

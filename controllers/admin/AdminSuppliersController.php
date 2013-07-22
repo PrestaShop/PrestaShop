@@ -26,6 +26,8 @@
 
 class AdminSuppliersControllerCore extends AdminController
 {
+	public $bootstrap = true ;
+
 	public function __construct()
 	{
 		$this->table = 'supplier';

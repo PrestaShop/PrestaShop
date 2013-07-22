@@ -22,8 +22,8 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 			</table>
+			
 			{if $bulk_actions}
 				<p>
 					{foreach $bulk_actions as $key => $params}
@@ -34,9 +34,9 @@
 
 {if !$simple_header}
 		<input type="hidden" name="token" value="{$token}" />
+		</fieldset>
 	</form>
 {/if}
-
 
 {hook h='displayAdminListAfter'}
 {if isset($name_controller)}

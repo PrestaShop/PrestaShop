@@ -25,6 +25,8 @@
 */
 class AdminFeaturesControllerCore extends AdminController
 {
+	public $bootstrap = true ;
+	
 	protected $position_identifier = 'id_feature';
 
 	public function __construct()
@@ -35,8 +37,7 @@ class AdminFeaturesControllerCore extends AdminController
 
 		$this->fields_list = array(
 			'id_feature' => array(
-				'title' => $this->l('ID'),
-				'width' => 25
+				'title' => $this->l('ID')
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
@@ -45,13 +46,11 @@ class AdminFeaturesControllerCore extends AdminController
 			),
 			'value' => array(
 				'title' => $this->l('Values'),
-				'width' => 255,
 				'orderby' => false,
 				'search' => false
 			),
 			'position' => array(
 				'title' => $this->l('Position'),
-				'width' => 40,
 				'filter_key' => 'a!position',
 				'align' => 'center',
 				'position' => 'position'

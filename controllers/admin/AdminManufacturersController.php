@@ -26,6 +26,7 @@
 
 class AdminManufacturersControllerCore extends AdminController
 {
+	public $bootstrap = true ;
 	/** @var array countries list */
 	protected $countries_array = array();
 
@@ -49,14 +50,12 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_manufacturer' => array(
 				'title' => $this->l('ID'),
-				'width' => 25
 			),
 			'logo' => array(
 				'title' => $this->l('Logo'),
 				'image' => 'm',
 				'orderby' => false,
 				'search' => false,
-				'width' => 150,
 				'align' => 'center',
 			),
 			'name' => array(
@@ -65,19 +64,16 @@ class AdminManufacturersControllerCore extends AdminController
 			),
 			'addresses' => array(
 				'title' => $this->l('Addresses'),
-				'width' => 20,
 				'align' => 'center',
 				'havingFilter' => true
 			),
 			'products' => array(
 				'title' => $this->l('Products:'),
 				'havingFilter' => true,
-				'width' => 20,
 				'align' => 'center',
 			),
 			'active' => array(
 				'title' => $this->l('Enabled'),
-				'width' => 70,
 				'active' => 'status',
 				'type' => 'bool',
 				'align' => 'center',
