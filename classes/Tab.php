@@ -169,12 +169,18 @@ class TabCore extends ObjectModel
 	 */
 	public static function getCurrentParentId()
 	{
-	 	if ($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-	 		SELECT `id_parent`
-	 		FROM `'._DB_PREFIX_.'tab`
-	 		WHERE LOWER(class_name) = \''.pSQL(Tools::strtolower(Tools::getValue('controller'))).'\''))
-		 	return $result['id_parent'];
- 		return -1;
+		$cache_id = 'getCurrentParentId_'.Tools::strtolower(Tools::getValue('controller'));
+		if (!Cache::isStored($cache_id))
+		{
+			$value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT `id_parent`
+			FROM `'._DB_PREFIX_.'tab`
+			WHERE LOWER(class_name) = \''.pSQL(Tools::strtolower(Tools::getValue('controller'))).'\'');
+			if (!$value)
+				$value = -1;
+			Cache::store($cache_id, $value);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**
