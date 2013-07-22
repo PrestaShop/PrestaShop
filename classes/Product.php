@@ -868,11 +868,12 @@ class ProductCore extends ObjectModel
 			AND cp.id_product = '.$this->id
 		);
 
-		foreach ($result as $categ_to_delete)
-			$this->deleteCategory($categ_to_delete['id_category']);
 		// if none are found, it's an error
 		if (!is_array($result))
 			return false;
+
+		foreach ($result as $categ_to_delete)
+			$this->deleteCategory($categ_to_delete['id_category']);
 
 		if (!$this->addToCategories($categories))
 			return false;
