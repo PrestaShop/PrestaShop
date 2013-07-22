@@ -197,7 +197,7 @@ class AdminProductsControllerCore extends AdminController
 		if ($join_category)
 		{
 			$this->_join .= ' INNER JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product` AND cp.`id_category` = '.(int)$this->_category->id.') ';
-			$this->_select .= ' cp.`position`, ';
+			$this->_select .= ', cp.`position`, ';
 		}
 
 		$this->_group = 'GROUP BY '.$alias.'.id_product';
