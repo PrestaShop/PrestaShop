@@ -254,10 +254,10 @@ class OrderCore extends ObjectModel
 	public function __construct($id = null, $id_lang = null)
 	{
 		parent::__construct($id, $id_lang);
-		if ($this->id_customer)
+		if ($this->id_customer && Context::getContext()->controller->controller_type != 'admin')
 		{
 			$customer = new Customer((int)($this->id_customer));
-			$this->_taxCalculationMethod = Group::getPriceDisplayMethod((int)($customer->id_default_group));
+			$this->_taxCalculationMethod = Group::getPriceDisplayMethod((int)$customer->id_default_group);
 		}
 		else
 			$this->_taxCalculationMethod = Group::getDefaultPriceDisplayMethod();
