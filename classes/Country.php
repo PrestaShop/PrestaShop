@@ -137,7 +137,7 @@ class CountryCore extends ObjectModel
 			foreach ($result as $row)
 				if (isset($countries[$row['id_country']]) && $row['active'] == 1) /* Does not keep the state if its country has been disabled and not selected */
 						$countries[$row['id_country']]['states'][] = $row;
-
+		}
 		return $countries;
 	}
 
