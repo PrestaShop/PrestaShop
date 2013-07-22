@@ -131,6 +131,31 @@ class PSCleaner extends Module
 		$db = Db::getInstance();
 		$logs = array();
 		
+		// Remove doubles in the configuration
+		$filtered_configuration = array();
+		$result = $db->ExecuteS('SELECT * FROM '._DB_PREFIX_.'configuration');
+		foreach ($result as $row)
+		{
+			$key = $row['id_shop_group'].'-|-'.$row['id_shop'].'-|-'.$row['name'];
+			if (in_array($key, $filtered_configuration))
+			{
+				$query = 'DELETE FROM '._DB_PREFIX_.'configuration WHERE id_configuration = '.(int)$row['id_configuration'];
+				$db->Execute($query);
+				$logs[$query] = 1;
+			}
+			else
+				$filtered_configuration[] = $key;
+		}
+		unset($filtered_configuration);
+		
+		// Remove inexisting or monolanguage configuration value from configuration_lang
+		$query = 'DELETE FROM `'._DB_PREFIX_.'configuration_lang`
+		WHERE `id_configuration` NOT IN (SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration`)
+		OR `id_configuration` IN (SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE name IS NOT NULL AND name != "")';
+		if ($db->Execute($query))
+			if ($affected_rows = $db->Affected_Rows())
+				$logs[$query] = $affected_rows;
+
 		// Simple Cascade Delete
 		$queries = array(
 			// 0 => DELETE FROM __table__, 1 => WHERE __id__ NOT IN, 2 => NOT IN __table__, 3 => __id__ used in the "NOT IN" table, 4 => module_name
@@ -347,6 +372,7 @@ class PSCleaner extends Module
 
 		// @Todo: Remove attachment files, images...
 		Image::clearTmpDir();
+		$this->clearAllCaches();
 		
 		return $logs;
 	}
@@ -534,6 +560,9 @@ class PSCleaner extends Module
 	
 	protected function clearAllCaches()
 	{
+		$index = file_get_contents(_PS_TMP_IMG_DIR_.'index.php');
+		Tools::deleteDirectory(_PS_TMP_IMG_DIR_, false);
+		file_put_contents(_PS_TMP_IMG_DIR_.'index.php', $index);
 		Context::getContext()->smarty->clearAllCache();
 	}
 }

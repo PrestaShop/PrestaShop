@@ -86,7 +86,7 @@
       <name>displayCustomerAccount</name><title>Customer account displayed in Front Office</title><description>This hook displays new elements on the customer account page</description>
     </hook>
     <hook id="actionOrderSlipAdd" live_edit="0">
-      <name>actionOrderSlipAdd</name><title>Order slip creation</title><description>This hook is called when a product's quantity is modified</description>
+      <name>actionOrderSlipAdd</name><title>Order slip creation</title><description>This hook is called when a new credit slip is added regarding client order</description>
     </hook>
     <hook id="displayProductTab" live_edit="0">
       <name>displayProductTab</name><title>Tabs on product page</title><description>This hook is called on the product page's tab</description>

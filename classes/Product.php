@@ -297,8 +297,8 @@ class ProductCore extends ObjectModel
 			'meta_title' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
 			'link_rewrite' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 128),
 			'name' => 						array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 128),
-			'description' => 				array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isString'),
-			'description_short' => 			array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isString'),
+			'description' => 				array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
+			'description_short' => 			array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
 			'available_now' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
 			'available_later' => 			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'IsGenericName', 'size' => 255),
 		),
@@ -2699,8 +2699,10 @@ class ProductCore extends ObjectModel
 		// Group reduction
 		if ($use_group_reduction)
 		{
-			if ($reduction_from_category = (float)GroupReduction::getValueForProduct($id_product, $id_group))
-				$price -= $price * $reduction_from_category;
+			$reduction_from_category = GroupReduction::getValueForProduct($id_product, $id_group);
+
+			if (!empty($reduction_from_category) && (float)$reduction_from_category == 0)
+				$price -= $price * (float)$reduction_from_category;
 			else // apply group reduction if there is no group reduction for this category
 				$price *= ((100 - Group::getReductionByIdGroup($id_group)) / 100);
 		}

@@ -380,7 +380,7 @@ class ValidateCore
 	 */
 	public static function isGenericName($name)
 	{
-		return empty($name) || preg_match('/^[^<>=#{}]*$/u', $name);
+		return empty($name) || preg_match('/^[^<>={}]*$/u', $name);
 	}
 
 	/**
@@ -389,7 +389,7 @@ class ValidateCore
 	 * @param string $html HTML field to validate
 	 * @return boolean Validity is ok or not
 	 */
-	public static function isCleanHtml($html)
+	public static function isCleanHtml($html, $allow_iframe = false)
 	{
 		$events = 'onmousedown|onmousemove|onmmouseup|onmouseover|onmouseout|onload|onunload|onfocus|onblur|onchange';
 		$events .= '|onsubmit|ondblclick|onclick|onkeydown|onkeyup|onkeypress|onmouseenter|onmouseleave|onerror|onselect|onreset|onabort|ondragdrop|onresize|onactivate|onafterprint|onmoveend';
@@ -398,7 +398,14 @@ class ValidateCore
 		$events .= '|ondragleave|ondragover|ondragstart|ondrop|onerrorupdate|onfilterchange|onfinish|onfocusin|onfocusout|onhashchange|onhelp|oninput|onlosecapture|onmessage|onmouseup|onmovestart';
 		$events .= '|onoffline|ononline|onpaste|onpropertychange|onreadystatechange|onresizeend|onresizestart|onrowenter|onrowexit|onrowsdelete|onrowsinserted|onscroll|onsearch|onselectionchange';
 		$events .= '|onselectstart|onstart|onstop';
-		return (!preg_match('/<[ \t\n]*script/ims', $html) && !preg_match('/('.$events.')[ \t\n]*=/ims', $html) && !preg_match('/.*script\:/ims', $html) && !preg_match('/<[ \t\n]*i?frame/ims', $html));
+
+		if (preg_match('/<[ \t\n]*script/ims', $html) || preg_match('/('.$events.')[ \t\n]*=/ims', $html) || preg_match('/.*script\:/ims', $html))
+			return false;
+
+		if (!$allow_iframe && preg_match('/<[ \t\n]*(i?frame|form|input|embed|object)/ims', $html))
+			return false;
+
+		return true;
 	}
 
 	/**

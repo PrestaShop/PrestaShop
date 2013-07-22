@@ -571,6 +571,14 @@ class SearchCore
 		return true;
 	}
 
+	public static function removeProductsSearchIndex($products)
+	{
+		if (count($products)) {
+			Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'search_index WHERE id_product IN ('.implode(',', $products).')');
+			ObjectModel::updateMultishopTable('Product', array('indexed' => 0), 'a.id_product IN ('.implode(',', $products).')');
+		}
+	}
+
 	protected static function setProductsAsIndexed(&$products)
 	{
 		if (count($products))

@@ -375,6 +375,7 @@ class AdminImagesControllerCore extends AdminController
 					|| !Configuration::updateValue('PS_PNG_QUALITY', Tools::getValue('PS_PNG_QUALITY')))
 					$this->errors[] = Tools::displayError('Unknown error.');
 				else
+					$this->confirmations[] = $this->_conf[6];
 					return parent::postProcess();
 			}
 			else
