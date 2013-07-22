@@ -192,12 +192,12 @@ class AdminProductsControllerCore extends AdminController
 			$this->_join .= 'LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = 1)';
 		}
 
-		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`, ';
+		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active` ';
 		
 		if ($join_category)
 		{
 			$this->_join .= ' INNER JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product` AND cp.`id_category` = '.(int)$this->_category->id.') ';
-			$this->_select .= ' cp.`position`, ';
+			$this->_select .= ', cp.`position`, ';
 		}
 
 		$this->_group = 'GROUP BY '.$alias.'.id_product';
