@@ -1390,8 +1390,7 @@ class CategoryCore extends ObjectModel
 		SELECT DISTINCT c.*
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND cl.`id_lang` = '.(int)Context::getContext()->language->id.')
-		WHERE `level_depth` = 1
-		');
+		WHERE `level_depth` = 1');
 	}
 
 	public function isRootCategoryForAShop()
