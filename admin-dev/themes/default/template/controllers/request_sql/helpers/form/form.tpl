@@ -90,7 +90,7 @@
 			var table = $('#selectTables select').val();
 
 			if (!table)
-				jAlert("{l s='Please choose a table.' js='1'}");
+				jAlert("{l s='Please choose a table.' js=1}");
 			else
 				AddRequestSql(table);
 		});
