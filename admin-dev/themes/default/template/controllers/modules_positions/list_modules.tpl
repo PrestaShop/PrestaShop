@@ -138,19 +138,20 @@
 											</td>
 											<td>
 												<div class="btn-group btn-group-action">
+													<span class="btn btn-default btn-small">{l s='Choose an action'}</span>
 													<button class="btn btn-default btn-small dropdown-toggle" data-toggle="dropdown">
 														<span class="caret"></span>&nbsp;
 													</button>
 													<ul class="dropdown-menu">
 														<li>
 															<a href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&editGraft{if $display_key}&show_modules={$display_key}{/if}&token={$token}">
-																<i class="icon-edit"></i>
+																<i class="icon-pencil"></i>
 																{l s='Edit'}
 															</a>
 														</li>
 														<li>
 															<a href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&deleteGraft{if $display_key}&show_modules={$display_key}{/if}&token={$token}">
-																<i class="icon-remove"></i>
+																<i class="icon-trash"></i>
 																{l s='Delete'}
 															</a>
 														</li>
