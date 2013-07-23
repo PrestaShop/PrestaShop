@@ -313,7 +313,7 @@ class AdminControllerCore extends Controller
 			19 => $this->l('Duplication was completed successfully.'), 20 => $this->l('The translation was added successfully, but the language has not been created.'),
 			21 => $this->l('Module reset successfully.'), 22 => $this->l('Module deleted successfully.'),
 			23 => $this->l('Localization pack imported successfully.'), 24 => $this->l('Localization pack imported successfully.'),
-			25 => $this->l('The selcted images have successfully been moved.'),
+			25 => $this->l('The selected images have successfully been moved.'),
 			26 => $this->l('Your cover selection has been saved.'),
 			27 => $this->l('The image shop association has been modified.'),
 			28 => $this->l('A zone has been assigned to the selection successfully.'),
