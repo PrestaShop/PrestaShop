@@ -401,7 +401,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 						),
 					);
 					//#ct == id_customer_thread    #tc == token of thread   <== used in the synchronization imap
-					$contact = new Contact((int)$ct->id_contact);
+					$contact = new Contact((int)$ct->id_contact, (int)$ct->id_lang);
 					if (Validate::isLoadedObject($contact))
 					{
 						$from_name = $contact->name[(int)$ct->id_lang];
