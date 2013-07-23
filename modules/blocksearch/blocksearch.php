@@ -90,13 +90,19 @@ public function hookDisplayMobileHeader($params)
 
 	public function hookTop($params)
 	{
-		if (!$this->isCached('blocksearch-top.tpl', $this->getCacheId('blocksearch-top')))
+		$id_cache = 'blocksearch-top';
+		$search_word = Tools::getValue('search_query');
+		if($search_word!==false){
+			$id_cache .= '-'.$search_word;
+		}
+		
+		if (!$this->isCached('blocksearch-top.tpl', $this->getCacheId($id_cache)))
 		{
 			$this->calculHookCommon($params);
 			$this->smarty->assign('blocksearch_type', 'top');
 		}
-
-		return $this->display(__FILE__, 'blocksearch-top.tpl', $this->getCacheId('blocksearch-top'));
+		
+		return $this->display(__FILE__, 'blocksearch-top.tpl', $this->getCacheId($id_cache));
 	}
 
 	/**
