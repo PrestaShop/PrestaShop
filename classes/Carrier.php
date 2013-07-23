@@ -852,8 +852,7 @@ class CarrierCore extends ObjectModel
 												(SELECT '.(int)$this->id.', `id_tax_rules_group`, `id_shop`
 													FROM `'._DB_PREFIX_.'carrier_tax_rules_group_shop`
 													WHERE `id_carrier`='.(int)$old_id.')');
-		// Update warehouse_carriers
-		Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'warehouse_carrier SET id_carrier='.(int)$this->id.' WHERE id_carrier='.(int)$old_id);
+
 	}
 
 	/**
