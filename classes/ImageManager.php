@@ -407,6 +407,7 @@ class ImageManagerCore
 			case 'jpeg':
 			default:
 				$quality = (Configuration::get('PS_JPEG_QUALITY') === false ? 90 : Configuration::get('PS_JPEG_QUALITY'));
+				imageinterlace($resource, 1);
 				$success = imagejpeg($resource, $filename, (int)$quality);
 			break;
 		}
