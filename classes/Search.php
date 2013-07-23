@@ -102,11 +102,11 @@ class SearchCore
 		$string = preg_replace('/['.PREG_CLASS_SEARCH_EXCLUDE.']+/u', ' ', $string);
 
 		if ($indexation)
-			$string = preg_replace('/[._-]+/', '', $string);
+			$string = preg_replace('/[._-]+/', ' ', $string);
 		else
 		{
 			$string = preg_replace('/[._]+/', '', $string);
-			$string = ltrim(preg_replace('/([^ ])-/', '$1', ' '.$string));
+			$string = ltrim(preg_replace('/([^ ])-/', '$1 ', ' '.$string));
 			$string = preg_replace('/[._]+/', '', $string);
 			$string = preg_replace('/[^\s]-+/', '', $string);
 		}
