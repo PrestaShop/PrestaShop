@@ -53,7 +53,9 @@ class ModuleFrontControllerCore extends FrontController
 	 */
 	public function setTemplate($template)
 	{
-		if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$this->module->name.'/'.$template))
+		if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/front/'.$template))
+			$this->template = _PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/front/'.$template;
+		elseif (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$this->module->name.'/'.$template))
 			$this->template = _PS_THEME_DIR_.'modules/'.$this->module->name.'/'.$template;
 		elseif (Tools::file_exists_cache($this->getTemplatePath().$template))
 			$this->template = $this->getTemplatePath().$template;

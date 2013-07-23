@@ -1661,6 +1661,8 @@ abstract class ModuleCore
 		$overloaded = $this->_isTemplateOverloaded($template);
 		if ($overloaded === null)
 			return null;
+		if(file_exists(_PS_THEME_DIR_.'modules/'.$this->name.'/views/templates/hook/'.$template))
+			return _PS_THEME_DIR_.'modules/'.$this->name.'/views/templates/hook/'.$template;
 		if ($overloaded)
 			return _PS_THEME_DIR_.'modules/'.$this->name.'/'.$template;
 		else if (file_exists(_PS_MODULE_DIR_.$this->name.'/views/templates/hook/'.$template))
