@@ -50,7 +50,8 @@ class OrderDetailControllerCore extends FrontController
 		if (Tools::isSubmit('submitMessage'))
 		{
 			$idOrder = (int)(Tools::getValue('id_order'));
-			$msgText = Tools::getValue('msgText');
+			$msgText = utf8_encode(Tools::getValue('msgText'));
+
 
 			if (!$idOrder || !Validate::isUnsignedId($idOrder))
 				$this->errors[] = Tools::displayError('The order is no longer valid.');
