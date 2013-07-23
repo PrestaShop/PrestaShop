@@ -279,6 +279,8 @@ class SearchCore
 			$order_by = pSQL($order_by[0]).'.`'.pSQL($order_by[1]).'`';
 		}
 		$alias = '';
+		if ($order_by == 'date_add' || $order_by == 'date_upd')
+			$alias = 'p.';
 		if ($order_by == 'price')
 			$alias = 'product_shop.';
 		else if ($order_by == 'date_upd')
