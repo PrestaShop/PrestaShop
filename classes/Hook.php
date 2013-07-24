@@ -315,27 +315,21 @@ class HookCore extends ObjectModel
 
 			$sql->orderBy('hm.`position`');
 
-			// Store results per hook name
-			$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 			$list = array();
-			
-			// Get all available payment module
-			$payment_modules = array();
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+			foreach ($result as $row)
+			{
+				$row['hook'] = strtolower($row['hook']);
+				if (!isset($list[$row['hook']]))
+					$list[$row['hook']] = array();
 
-			if ($results)
-				foreach ($results as $row)
-				{
-					$row['hook'] = strtolower($row['hook']);
-					if (!isset($list[$row['hook']]))
-						$list[$row['hook']] = array();
-
-					$list[$row['hook']][] = array(
-						'id_hook' => $row['id_hook'],
-						'module' => $row['module'],
-						'id_module' => $row['id_module'],
-						'live_edit' => $row['live_edit'],
-					);
-				}
+				$list[$row['hook']][] = array(
+					'id_hook' => $row['id_hook'],
+					'module' => $row['module'],
+					'id_module' => $row['id_module'],
+					'live_edit' => $row['live_edit'],
+				);
+			}
 			if ($hook_name != 'displayPayment')
 			{
 				Cache::store($cache_id, $list);
@@ -353,14 +347,17 @@ class HookCore extends ObjectModel
 			$hook_name = strtolower($hook_name);
 
 			$return = array();
+			$inserted_modules = array();
 			if (isset($list[$hook_name]))
 				$return = $list[$hook_name];
+			foreach ($return as $module)
+				$inserted_modules[] = $module['id_module'];
 			if (isset($list[$retro_hook_name]))
-				$return = array_merge($return, $list[$retro_hook_name]);
+				foreach ($list[$retro_hook_name] as $retro_module_call)
+					if (!in_array($retro_module_call['id_module'], $inserted_modules))
+						$return[] = $retro_module_call;
 
-			if (count($return) > 0)
-				return $return;
-			return false;
+			return (count($return) > 0 ? $return : false);
 		}
 		else
 			return $list;
@@ -417,7 +414,7 @@ class HookCore extends ObjectModel
 			{
 				$exceptions = $moduleInstance->getExceptions($array['id_hook']);
 				$controller = Dispatcher::getInstance()->getController();
-								
+
 				if (in_array($controller, $exceptions))
 					continue;
 				
@@ -425,7 +422,7 @@ class HookCore extends ObjectModel
 				$matching_name = array(
 					'authentication' => 'auth',
 					'compare' => 'products-comparison',
-					);
+				);
 				if (isset($matching_name[$controller]) && in_array($matching_name[$controller], $exceptions))
 					continue;
 				if (Validate::isLoadedObject($context->employee) && !$moduleInstance->getPermission('view', $context->employee))
