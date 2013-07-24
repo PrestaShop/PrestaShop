@@ -291,28 +291,41 @@
 		{
 			doAdminAjax(
 			{
-				line = $("#lineType").html();
-				line = line.replace(/image_id/g, id);
-				line = line.replace(/[a-z]{2}-default/g, path);
-				line = line.replace(/image_path/g, path);
-				line = line.replace(/image_position/g, position);
-				line = line.replace(/blank/g, cover);
-				line = line.replace(/<tbody>/gi, "");
-				line = line.replace(/<\/tbody>/gi, "");
-
-				if (shops != false)
-				{
-					$.each(shops, function(key, value){
-						if (value == 1)
-							line = line.replace('id="' + key + '' + id + '"','id="' + key + '' + id + '" checked=checked');
-					});
-				}
-
-				$("#imageList").append(line);
+				"action":"updateImagePosition",
+				"json":json,
+				"token" : "{/literal}{$token}{literal}",
+				"tab" : "AdminProducts",
+				"ajax" : 1
+			});
+		}
+		
+		function delQueue(id)
+		{
+			$("#img" + id).fadeOut("slow");
+			$("#img" + id).remove();
+		}
+		
+		function imageLine(id, path, position, cover, shops)
+		{
+			line = $("#lineType").html();
+			line = line.replace(/image_id/g, id);
+			line = line.replace(/[a-z]{2}-default/g, path);
+			line = line.replace(/image_path/g, path);
+			line = line.replace(/image_position/g, position);
+			line = line.replace(/icon-check-empty/g, cover);
+			line = line.replace(/<tbody>/gi, "");
+			line = line.replace(/<\/tbody>/gi, "");
+			if (shops != false)
+			{
+				$.each(shops, function(key, value){
+					if (value == 1)
+						line = line.replace('id="' + key + '' + id + '"','id="' + key + '' + id + '" checked=checked');
+				});
 			}
-
-			$('.fancybox').fancybox();
-		});
-		{/literal}
-	</script>
+			$("#imageList").append(line);
+		}
+		$('.fancybox').fancybox();
+	});
+	{/literal}
+</script>
 {/if}

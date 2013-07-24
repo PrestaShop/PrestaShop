@@ -1,4 +1,16 @@
 #nobootstrap{
+	/* CSS Admin PrestaShop */
+	* {font-family: Arial,Verdana,Helvetica,sans-serif}
+
+	body {
+		margin: 0;
+		padding: 0;
+		font-size: 12px;
+		color: #000;
+		/*	text-align: center;
+		behavior: url(csshover.htc); */
+	}
+
 	.float {float:left}
 	.floatr {float:right}
 
@@ -57,6 +69,14 @@
 		font-weight: bold;
 	}
 
+	legend, th {
+		font-family : Arial,Helvetica,sans-serif;
+	}
+
+	h1, h2, h3, h4, h5, h6 {
+		font-family : Arial,Helvetica,sans-serif;
+	}
+
 	h1 {
 		font-size: 1.6em;
 		margin: 0 0 .67em 0;
@@ -75,7 +95,7 @@
 	h6 {
 		font-size: 0.67em;
 	}
-	
+
 	h3.blue {
 		color: #268CCD;
 	}
@@ -255,8 +275,8 @@
 	input, textarea, option {
 		color: #000;
 		font-size: 12px;
-		margin: 0 10px 0 0;
-		padding: 0 8px;
+		margin: 0;
+		padding: 0;
 	}
 
 	input[type="text"], input[type="password"], input[type="file"], textarea {
@@ -546,6 +566,12 @@
 	#content .warn h3 {
 		padding: 0 0 0 20px;
 		background: url(../img/admin/warning.gif) no-repeat 0 0;
+	}
+
+	#blockNewVersionCheck .warn h3 {
+		padding: 0 0 0 5px;
+		margin: 0px;
+		background: none;
 	}
 
 	#content .error h3 {
@@ -2374,5 +2400,5 @@
 	.id_customization .customization_field {
 		min-width: 205px;
 		width: 205px;
-	}
+}
 }
