@@ -100,7 +100,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$this->fields_list = array(
 				'id_attribute' => array(
 					'title' => $this->l('ID'),
-					'width' => 40,
 					'align' => 'center'
 				),
 				'name' => array(
@@ -113,13 +112,11 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			if ($obj->group_type == 'color')
 				$this->fields_list['color'] = array(
 					'title' => $this->l('Color'),
-					'width' => 40,
 					'filter_key' => 'b!color'
 				);
 
 			$this->fields_list['position'] = array(
 				'title' => $this->l('Position'),
-				'width' => 40,
 				'filter_key' => 'a!position',
 				'position' => 'position'
 			);
@@ -187,7 +184,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Attributes'),
-				'image' => '../img/admin/asterisk.gif'
+				'icon' => 'icon-info-sign'
 			),
 			'input' => array(
 				array(
@@ -195,7 +192,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'label' => $this->l('Name:'),
 					'name' => 'name',
 					'lang' => true,
-					'size' => 33,
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}'
 				),
@@ -204,7 +200,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'label' => $this->l('Public name:'),
 					'name' => 'public_name',
 					'lang' => true,
-					'size' => 33,
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
 					'desc' => $this->l('Group name displayed to the customer')
@@ -254,7 +249,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Values'),
-				'image' => '../img/admin/asterisk.gif',
+				'icon' => 'icon-info-sign'
 			),
 			'input' => array(
 				array(
@@ -274,7 +269,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'label' => $this->l('Value:'),
 					'name' => 'name',
 					'lang' => true,
-					'size' => 33,
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}'
 				)
@@ -306,7 +300,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			'type' => 'color',
 			'label' => $this->l('Color:'),
 			'name' => 'color',
-			'size' => 33,
 			'desc' => $this->l('Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600")')
 		);
 

@@ -5075,7 +5075,7 @@ body.fixed-top {
   -webkit-box-shadow: #b4ac9c 0 0 0 4px;
   box-shadow: #b4ac9c 0 0 0 4px; }
   #content fieldset {
-    padding-bottom: 20px;
+    padding: 20px;
     margin-bottom: 10px;
     border: solid 1px #cac4b9;
     background-color: #f6f5f3;
@@ -5088,8 +5088,8 @@ body.fixed-top {
     box-shadow: rgba(0, 0, 0, 0.1) 0 0 7px, white 0 0 0 4px inset; }
   #content form legend {
     float: left;
-    padding: 0 0 0 10px;
-    margin: 20px 0 15px 0;
+    padding: 0 0 0 0;
+    margin: 5px 0 15px 0;
     color: #bfb8b3;
     font-weight: 300; }
   #content form .alert {
