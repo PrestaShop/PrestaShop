@@ -316,20 +316,20 @@ class HookCore extends ObjectModel
 			$sql->orderBy('hm.`position`');
 
 			$list = array();
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-			foreach ($result as $row)
-			{
-				$row['hook'] = strtolower($row['hook']);
-				if (!isset($list[$row['hook']]))
-					$list[$row['hook']] = array();
+			if ($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
+				foreach ($result as $row)
+				{
+					$row['hook'] = strtolower($row['hook']);
+					if (!isset($list[$row['hook']]))
+						$list[$row['hook']] = array();
 
-				$list[$row['hook']][] = array(
-					'id_hook' => $row['id_hook'],
-					'module' => $row['module'],
-					'id_module' => $row['id_module'],
-					'live_edit' => $row['live_edit'],
-				);
-			}
+					$list[$row['hook']][] = array(
+						'id_hook' => $row['id_hook'],
+						'module' => $row['module'],
+						'id_module' => $row['id_module'],
+						'live_edit' => $row['live_edit'],
+					);
+				}
 			if ($hook_name != 'displayPayment')
 			{
 				Cache::store($cache_id, $list);
