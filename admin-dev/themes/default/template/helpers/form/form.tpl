@@ -78,12 +78,22 @@
 										{assign var='value_text' value=$fields_value[$input.name][$language.id_lang]}
 										<div class="input-group col-lg-12 translatable-field lang-{$language.id_lang}" style="{if $language.id_lang != $defaultFormLanguage}display:none{/if}">
 											{if $input.type == 'tags'}
-												tags
+												{literal}
+													<script type="text/javascript">
+														$().ready(function () {
+															var input_id = '{/literal}{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}{literal}';
+															$('#'+input_id).tagify({addTagPrompt: '{/literal}{l s='Add tag' js=1}{literal}'});
+															$({/literal}'#{$table}{literal}_form').submit( function() {
+																$(this).find('#'+input_id).val($('#'+input_id).tagify('serialize'));
+															});
+														});
+													</script>
+												{/literal}
 											{/if}
 											<input type="text"
-												id="{$input_name}_{$language.id_lang}"
+												name="{$input_name}_{$language.id_lang}"
 												class="{if $input.type == 'tags'}tagify {/if}{if isset($input.class)}{$input.class}{/if}"
-												name="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}"
+												id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}"
 												value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'htmlall':'UTF-8'}{else}{$value_text|escape:'htmlall':'UTF-8'}{/if}"
 												onkeyup="if (isArrowKey(event)) return ;updateFriendlyURL();"
 												{if isset($input.size)}size="{$input.size}"{/if}
@@ -106,38 +116,6 @@
 										</div>
 									{/foreach}
 									</div>
-
-<!--										<div class="translatable">
-											{foreach $languages as $language}
-												<div class="lang_{$language.id_lang}" style="display:{if $language.id_lang == $defaultFormLanguage}block{else}none{/if}">
- 												{if $input.type == 'tags'}
-														{literal}
-														<script type="text/javascript">
-															$().ready(function () {
-																var input_id = '{/literal}{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}{literal}';
-																$('#'+input_id).tagify({addTagPrompt: '{/literal}{l s='Add tag' js=1}{literal}'});
-																$({/literal}'#{$table}{literal}_form').submit( function() {
-																	$(this).find('#'+input_id).val($('#'+input_id).tagify('serialize'));
-																});
-															});
-														</script>
-														{/literal}
-													{/if}
-													{assign var='value_text' value=$fields_value[$input.name][$language.id_lang]}
-													<input type="text"
-															name="{$input.name}_{$language.id_lang}"
-															id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}"
-															value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'htmlall':'UTF-8'}{else}{$value_text|escape:'htmlall':'UTF-8'}{/if}"
-															class="{if $input.type == 'tags'}tagify {/if}{if isset($input.class)}{$input.class}{/if}"
-															{if isset($input.size)}size="{$input.size}"{/if}
-															{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
-															{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if}
-															{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
-															{if isset($input.autocomplete) && !$input.autocomplete}autocomplete="off"{/if} />
-												</div>
-											{/foreach}
-										</div> -->
-
 									{else}
 										{if $input.type == 'tags'}
 											{literal}

@@ -248,7 +248,7 @@
 			<ul id="menu">
 				<li class="maintab">
 					<a href="{$link->getAdminLink('AdminHome')|escape:'htmlall':'UTF-8'}" class="title">
-						<i class="icon-AdminDashboard"></i> Dashboard
+						<i class="icon-AdminDashboard"></i> {l s='Dashboard'}
 					</a>
 				</li>
 			{foreach $tabs AS $t}
