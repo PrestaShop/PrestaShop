@@ -4751,7 +4751,7 @@ class ProductCore extends ObjectModel
 	{
 		return ObjectModel::updateMultishopTable('product', array(
 			'ecotax' => 0,
-		), '');
+		));
 	}
 
 	/**
