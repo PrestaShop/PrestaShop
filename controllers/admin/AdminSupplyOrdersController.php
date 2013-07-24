@@ -1362,7 +1362,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						// first, converts the price to the default currency
 						$price_converted_to_default_currency = Tools::convertPrice($supply_order_detail->unit_price_te, $supply_order->id_currency, false);
 
-						// then, converts the newly calculated price from the default currency to the needed currency
+						// then, converts the newly calculated pri-ce from the default currency to the needed currency
 						$price = Tools::ps_round(Tools::convertPrice($price_converted_to_default_currency,
 																	 $warehouse->id_currency,
 																	 true),
@@ -1378,14 +1378,27 @@ class AdminSupplyOrdersControllerCore extends AdminController
 										 		$price,
 										 		true,
 										 		$supply_order->id);
-					if ($res) // if product has been added
+
+					if (!$res)
+						$this->errors[] = Tools::displayError($this->l('Something went wrong when adding products to the warehouse.'));
+
+					$location = Warehouse::getProductLocation($supply_order_detail->id_product,
+										 					  $supply_order_detail->id_product_attribute,
+									 						  $warehouse->id);
+
+					$res = Warehouse::setProductlocation($supply_order_detail->id_product,
+														 $supply_order_detail->id_product_attribute,
+									 					 $warehouse->id,
+									 					 $location ? $location : '');
+
+					if ($res)
 					{
 						$supplier_receipt_history->add();
 						$supply_order_detail->save();
 						$supply_order->save();
 					}
 					else
-						$this->errors[] = Tools::displayError($this->l('Something went wrong when adding products to the warehouse.'));
+						$this->errors[] = Tools::displayError($this->l('Something went wrong when setting warehouse on product record'));
 				}
 			}
 		}
