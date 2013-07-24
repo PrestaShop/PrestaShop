@@ -106,6 +106,7 @@ $(document).ready(function() {
 				</div>
 			</div>
 			{assign var="stateExist" value="false"}
+			{assign var="postCodeExist" value="false"}
 			{foreach from=$ordered_adr_fields item=field_name}
 				{if $field_name eq 'company'}
 				<div class="text">
@@ -139,6 +140,7 @@ $(document).ready(function() {
 				</div>
 				{/if}
 				{if $field_name eq 'postcode'}
+				{assign var="postCodeExist" value="true"}				
 				<div class="required postcode text">
 					<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
 					<input type="text" id="postcode" name="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{else}{if isset($address->postcode)}{$address->postcode|escape:'htmlall':'UTF-8'}{/if}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
@@ -192,14 +194,20 @@ $(document).ready(function() {
 				</div>
 				{/if}
 			{/foreach}
+			{if $postCodeExist eq "false"}
+			<div class="required postcode text hidden">
+				<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
+				<input type="text" id="postcode" name="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{else}{if isset($address->postcode)}{$address->postcode|escape:'htmlall':'UTF-8'}{/if}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
+			</div>
+			{/if}
 			{if $stateExist eq "false"}
-			<div class="required id_state select">
+			<div class="required id_state select hidden">
 				<label for="id_state">{l s='State'} <sup>*</sup></label>
 				<select name="id_state" id="id_state">
 					<option value="">-</option>
 				</select>
 			</div>
-			{/if}
+			{/if}			
 			<div class="textarea">
 				<label for="other">{l s='Additional information'}</label>
 				<textarea id="other" name="other" cols="26" rows="3">{if isset($smarty.post.other)}{$smarty.post.other}{else}{if isset($address->other)}{$address->other|escape:'htmlall':'UTF-8'}{/if}{/if}</textarea>

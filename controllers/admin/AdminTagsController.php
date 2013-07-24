@@ -77,8 +77,23 @@ class AdminTagsControllerCore extends AdminController
 	public function postProcess()
 	{
 		if ($this->tabAccess['edit'] === '1' && Tools::getValue('submitAdd'.$this->table))
+		{
 			if (($id = (int)Tools::getValue($this->identifier)) && ($obj = new $this->className($id)) && Validate::isLoadedObject($obj))
+			{
+				$previousProducts = $obj->getProducts();
+				$removedProducts = array();
+
+				foreach ($previousProducts as $product)
+					if (!in_array($product['id_product'], $_POST['products']))
+						$removedProducts[] = $product['id_product'];
+
+				if (Configuration::get('PS_SEARCH_INDEXATION'))
+					Search::removeProductsSearchIndex($removedProducts);
+
 				$obj->setProducts($_POST['products']);
+			}
+		}
+
 		return parent::postProcess();
 	}
 

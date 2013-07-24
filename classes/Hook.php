@@ -64,10 +64,10 @@ class HookCore extends ObjectModel
 		'primary' => 'id_hook',
 		'fields' => array(
 			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isHookName', 'required' => true, 'size' => 64),
-			'title' => 			array('type' => self::TYPE_STRING),
-			'description' => 	array('type' => self::TYPE_HTML),
-			'position' => 		array('type' => self::TYPE_BOOL),
-			'live_edit' => 		array('type' => self::TYPE_BOOL),
+			'title' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
+			'description' => 	array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml'),
+			'position' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'live_edit' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 		),
 	);
 
@@ -83,7 +83,7 @@ class HookCore extends ObjectModel
 
 	public function add($autodate = true, $null_values = false)
 	{
-		Cache::clean('hook_idbyname_'.$this->name);
+		Cache::clean('hook_idsbyname');
 		return parent::add($autodate, $null_values);
 	}
 
@@ -113,17 +113,40 @@ class HookCore extends ObjectModel
 		if (!Validate::isHookName($hook_name))
 			return false;
 
-		$cache_id = 'hook_idbyname_'.$hook_name;
+		$cache_id = 'hook_idsbyname';
 		if (!Cache::isStored($cache_id))
 		{
-			$retro_hook_name = Hook::getRetroHookName($hook_name);
-			Cache::store($cache_id, Db::getInstance()->getValue('
-				SELECT `id_hook`
-				FROM `'._DB_PREFIX_.'hook`
-				WHERE `name` = \''.pSQL($hook_name).'\'
-					OR `name` = \''.pSQL($retro_hook_name).'\'
-			'));
+			// Get all hook ID by name and alias
+			$hook_ids = array();
+			$result = Db::getInstance()->ExecuteS('
+			SELECT `id_hook`, `name`
+			FROM `'._DB_PREFIX_.'hook`
+			UNION
+			SELECT `id_hook`, ha.`alias` as name
+			FROM `'._DB_PREFIX_.'hook_alias` ha
+			INNER JOIN `'._DB_PREFIX_.'hook` h ON ha.name = h.name');
+			foreach ($result as $row)
+				$hook_ids[$row['name']] = $row['id_hook'];
+			Cache::store($cache_id, $hook_ids);
 		}
+		else
+			$hook_ids = Cache::retrieve($cache_id);
+
+		return (isset($hook_ids[$hook_name]) ? $hook_ids[$hook_name] : false);
+	}
+
+	/**
+	 * Return hook ID from name
+	 */
+	public static function getNameById($hook_id)
+	{
+		$cache_id = 'hook_namebyid_'.$hook_id;
+		if (!Cache::isStored($cache_id))
+			Cache::store($cache_id, Db::getInstance()->getValue('
+				SELECT `name`
+				FROM `'._DB_PREFIX_.'hook`
+				WHERE `id_hook` = '.(int)$hook_id)
+			);
 
 		return Cache::retrieve($cache_id);
 	}

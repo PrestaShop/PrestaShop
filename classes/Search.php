@@ -102,11 +102,11 @@ class SearchCore
 		$string = preg_replace('/['.PREG_CLASS_SEARCH_EXCLUDE.']+/u', ' ', $string);
 
 		if ($indexation)
-			$string = preg_replace('/[._-]+/', '', $string);
+			$string = preg_replace('/[._-]+/', ' ', $string);
 		else
 		{
 			$string = preg_replace('/[._]+/', '', $string);
-			$string = ltrim(preg_replace('/([^ ])-/', '$1', ' '.$string));
+			$string = ltrim(preg_replace('/([^ ])-/', '$1 ', ' '.$string));
 			$string = preg_replace('/[._]+/', '', $string);
 			$string = preg_replace('/[^\s]-+/', '', $string);
 		}
@@ -224,7 +224,7 @@ class SearchCore
 					AND product_shop.`active` = 1
 					AND product_shop.`visibility` IN ("both", "search")
 					AND product_shop.indexed = 1
-					AND cg.`id_group` '.(!$id_customer ?  '= 1' : 'IN (
+					AND cg.`id_group` '.(!$id_customer ?  '= '.(int)Configuration::get('PS_UNIDENTIFIED_GROUP') : 'IN (
 						SELECT id_group FROM '._DB_PREFIX_.'customer_group
 						WHERE id_customer = '.(int)$id_customer.'
 					)');
@@ -571,6 +571,14 @@ class SearchCore
 		return true;
 	}
 
+	public static function removeProductsSearchIndex($products)
+	{
+		if (count($products)) {
+			Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'search_index WHERE id_product IN ('.implode(',', $products).')');
+			ObjectModel::updateMultishopTable('Product', array('indexed' => 0), 'a.id_product IN ('.implode(',', $products).')');
+		}
+	}
+
 	protected static function setProductsAsIndexed(&$products)
 	{
 		if (count($products))
@@ -622,7 +630,7 @@ class SearchCore
 					LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)
 					WHERE product_shop.`active` = 1
 						AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
-						AND cg.`id_group` '.(!$id_customer ?  '= 1' : 'IN (
+						AND cg.`id_group` '.(!$id_customer ?  '= '.(int)Configuration::get('PS_UNIDENTIFIED_GROUP') : 'IN (
 							SELECT id_group FROM '._DB_PREFIX_.'customer_group
 							WHERE id_customer = '.(int)$id_customer.')').'
 						AND t.`name` LIKE \'%'.pSQL($tag).'%\'';
@@ -656,7 +664,7 @@ class SearchCore
 				'.Product::sqlStock('p', 0).'
 				WHERE product_shop.`active` = 1
 					AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
-					AND cg.`id_group` '.(!$id_customer ?  '= 1' : 'IN (
+					AND cg.`id_group` '.(!$id_customer ?  '= '.(int)Configuration::get('PS_UNIDENTIFIED_GROUP') : 'IN (
 						SELECT id_group FROM '._DB_PREFIX_.'customer_group
 						WHERE id_customer = '.(int)$id_customer.')').'
 					AND t.`name` LIKE \'%'.pSQL($tag).'%\'

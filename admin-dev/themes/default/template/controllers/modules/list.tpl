@@ -92,8 +92,11 @@
 								{/if}
 							</dl>
 						</div>
-						{if isset($module->message)}<div class="alert">{$module->message}</div>{/if}
+
+						<p class="desc">{if isset($module->description) && $module->description ne ''}{l s='Description'} : {$module->description}{else}&nbsp;{/if}</p>
+						{if isset($module->message) && (!isset($module->type) || ($module->type != 'addonsMustHave' || $module->type !== 'addonsNative'))}<div class="alert">{$module->message}</div>{/if}
 						<div class="row-fluid">
+
 							{if !isset($module->not_on_disk)}
 								{$module->optionsHtml}
 								{if isset($module->preferences) && isset($module->preferences['favorite']) && $module->preferences['favorite'] == 1}

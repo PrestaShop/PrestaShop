@@ -314,7 +314,7 @@ class AdminControllerCore extends Controller
 			19 => $this->l('Duplication was completed successfully.'), 20 => $this->l('The translation was added successfully, but the language has not been created.'),
 			21 => $this->l('Module reset successfully.'), 22 => $this->l('Module deleted successfully.'),
 			23 => $this->l('Localization pack imported successfully.'), 24 => $this->l('Localization pack imported successfully.'),
-			25 => $this->l('The selcted images have successfully been moved.'),
+			25 => $this->l('The selected images have successfully been moved.'),
 			26 => $this->l('Your cover selection has been saved.'),
 			27 => $this->l('The image shop association has been modified.'),
 			28 => $this->l('A zone has been assigned to the selection successfully.'),
@@ -648,12 +648,14 @@ class AdminControllerCore extends Controller
 						$this->errors[] = Tools::displayError('Unable to delete associated images.');
 
 					$object->deleted = 1;
-					if ($object->update())
+					if ($res = $object->update())
 						$this->redirect_after = self::$currentIndex.'&conf=1&token='.$this->token;
 				}
-				elseif ($object->delete())
+				elseif ($res = $object->delete())
 					$this->redirect_after = self::$currentIndex.'&conf=1&token='.$this->token;
 				$this->errors[] = Tools::displayError('An error occurred during deletion.');
+				if ($res)
+					Logger::addLog(sprintf($this->l('%s deletion'), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
 			}
 		}
 		else
@@ -702,6 +704,7 @@ class AdminControllerCore extends Controller
 			/* voluntary do affectation here */
 			elseif (($_POST[$this->identifier] = $this->object->id) && $this->postImage($this->object->id) && !count($this->errors) && $this->_redirect)
 			{
+				Logger::addLog(sprintf($this->l('%s addition'), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
 				$parent_id = (int)Tools::getValue('id_parent', 1);
 				$this->afterAdd($this->object);
 				$this->updateAssoShop($this->object->id);
@@ -736,7 +739,6 @@ class AdminControllerCore extends Controller
 	{
 		/* Checking fields validity */
 		$this->validateRules();
-
 		if (empty($this->errors))
 		{
 			$id = (int)Tools::getValue($this->identifier);
@@ -802,6 +804,7 @@ class AdminControllerCore extends Controller
 						if (empty($this->redirect_after))
 							$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=4&token='.$this->token;
 					}
+					Logger::addLog(sprintf($this->l('%s edition'), $this->className), 1, null, $this->className, (int)$object->id, true, (int)$this->context->employee->id);
 				}
 				else
 					$this->errors[] = Tools::displayError('An error occurred while updating an object.').
@@ -956,7 +959,8 @@ class AdminControllerCore extends Controller
 					continue;
 
 				// Check if field is required
-				if (isset($values['required']) && $values['required'] && !empty($_POST['multishopOverrideOption'][$field]))
+				if ((!Shop::isFeatureActive() && isset($values['required']) && $values['required']) 
+					|| (Shop::isFeatureActive() && isset($_POST['multishopOverrideOption'][$field]) && isset($values['required']) && $values['required']))
 					if (isset($values['type']) && $values['type'] == 'textLang')
 					{
 						foreach ($languages as $language)
@@ -1194,8 +1198,7 @@ class AdminControllerCore extends Controller
 
 		$tpl_action = $this->tpl_folder.$this->display.'.tpl';
 
-		// Check if action template has been override
-
+		// Check if action template has been overriden
 		foreach ($this->context->smarty->getTemplateDir() as $template_dir)
 			if (file_exists($template_dir.DIRECTORY_SEPARATOR.$tpl_action) && $this->display != 'view' && $this->display != 'options')
 			{
@@ -1214,26 +1217,14 @@ class AdminControllerCore extends Controller
 			$page = $this->content;
 
 		if ($conf = Tools::getValue('conf'))
-			if ($this->json)
-				$this->context->smarty->assign('conf', Tools::jsonEncode($this->_conf[(int)$conf]));
-			else
-				$this->context->smarty->assign('conf', $this->_conf[(int)$conf]);
-		
-		$notifications_type = array('errors', 'warnings', 'informations', 'confirmations');
-		foreach($notifications_type as $type)
-			if ($this->json)
-				$this->context->smarty->assign($type, Tools::jsonEncode(array_unique($this->$type)));
-			else
-				$this->context->smarty->assign($type, array_unique($this->$type));
+			$this->context->smarty->assign('conf', $this->json ? Tools::jsonEncode($this->_conf[(int)$conf]) : $this->_conf[(int)$conf]);
 
-		if ($this->json)
-			$this->context->smarty->assign('page', Tools::jsonEncode($page));
-		else
-			$this->context->smarty->assign('page', $page);
-		
+		foreach (array('errors', 'warnings', 'informations', 'confirmations') as $type)
+				$this->context->smarty->assign($type, $this->json ? Tools::jsonEncode(array_unique($this->$type)) : array_unique($this->$type));
+
+		$this->context->smarty->assign('page', $this->json ? Tools::jsonEncode($page) : $page);
 		$this->smartyOutputContent($this->layout);
 	}
-
 
 	/**
 	 * add a warning message to display at the top of the page
@@ -1536,7 +1527,6 @@ class AdminControllerCore extends Controller
 	
 	public function renderModulesList()
 	{
-		
 		if ($this->getModulesList($this->filter_modules_list))
 		{
 			$helper = new Helper();
@@ -2218,9 +2208,9 @@ class AdminControllerCore extends Controller
 		}
 		else
 			$this->_listsql .= ($this->lang ? 'b.*,' : '').' a.*';
-		
+
 		$this->_listsql .= '
-		'.(isset($this->_select) ? ', '.$this->_select : '').$select_shop.'
+		'.(isset($this->_select) ? ', '.rtrim($this->_select, ', ') : '').$select_shop.'
 		FROM `'._DB_PREFIX_.$sql_table.'` a
 		'.$lang_join.'
 		'.(isset($this->_join) ? $this->_join.' ' : '').'
@@ -2249,7 +2239,7 @@ class AdminControllerCore extends Controller
 		
 		$all_modules = Module::getModulesOnDisk(true);
 		$this->modules_list = array();
-		foreach($all_modules as $module)
+		foreach ($all_modules as $module)
 		{
 			$perm = true;
 			if ($module->id)
@@ -2265,9 +2255,11 @@ class AdminControllerCore extends Controller
 			if (in_array($module->name, $filter_modules_list) && $perm)
 			{
 				$this->fillModuleData($module, 'select');
-				$this->modules_list[] = $module;
+				$this->modules_list[array_search($module->name, $filter_modules_list)] = $module;
 			}		
 		}
+		ksort($this->modules_list);
+
 		if (count($this->modules_list))
 			return true;
 
@@ -2726,18 +2718,31 @@ class AdminControllerCore extends Controller
 			else
 			{
 				$result = true;
-				if ($this->deleted)
+				foreach ($this->boxes as $id)
 				{
-					foreach ($this->boxes as $id)
+					$to_delete = new $this->className($id);
+					$delete_ok = true;
+					if ($this->deleted)
 					{
-						$to_delete = new $this->className($id);
 						$to_delete->deleted = 1;
-						$result = $result && $to_delete->update();
+						if (!$to_delete->update())
+						{
+							$result = false;
+							$delete_ok = false;
+						}
 					}
+					else
+						if (!$to_delete->delete())
+						{
+							$result = false;
+							$delete_ok = false;
+						}
+					
+					if ($delete_ok)
+						Logger::addLog(sprintf($this->l('%s deletion'), $this->className), 1, null, $this->className, (int)$to_delete->id, true, (int)$this->context->employee->id);
+					else
+						$this->errors[] = sprintf(Tools::displayError('Can\'t delete #%d'), $id);
 				}
-				else
-					$result = $object->deleteSelection(Tools::getValue($this->table.'Box'));
-
 				if ($result)
 					$this->redirect_after = self::$currentIndex.'&conf=2&token='.$this->token;
 				$this->errors[] = Tools::displayError('An error occurred while deleting this selection.');

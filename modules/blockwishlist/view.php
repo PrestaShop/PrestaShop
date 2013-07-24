@@ -31,6 +31,8 @@ require_once(dirname(__FILE__).'/../../config/config.inc.php');
 require_once(dirname(__FILE__).'/../../header.php');
 require_once(dirname(__FILE__).'/WishList.php');
 
+error_reporting(0);
+
 $context = Context::getContext();
 $token = Tools::getValue('token');
 
@@ -44,34 +46,45 @@ if (empty($token) === false)
 		$errors[] = $module->l('Invalid wishlist token', 'view');
 	WishList::refreshWishList($wishlist['id_wishlist']);
 	$products = WishList::getProductByIdCustomer((int)($wishlist['id_wishlist']), (int)($wishlist['id_customer']), $context->language->id, null, true);
+	
 	for ($i = 0; $i < sizeof($products); ++$i)
 	{
-		$obj = new Product($products[$i]['id_product'], false, $context->language->id);
+		$obj = new Product((int)($products[$i]['id_product']), false, $context->language->id);
 		if (!Validate::isLoadedObject($obj))
 			continue;
 		else
 		{
-			if ($products[$i]['id_product_attribute'] != 0 && isset($combination_imgs[$products[$i]['id_product_attribute']][0]))
+			$quantity = Product::getQuantity((int)$products[$i]['id_product'], $products[$i]['id_product_attribute']);
+			$products[$i]['attribute_quantity'] = $quantity;
+			$products[$i]['product_quantity'] = $quantity;
+			if ($products[$i]['id_product_attribute'] != 0)
 			{
 				$combination_imgs = $obj->getCombinationImages($context->language->id);
-				$products[$i]['cover'] = $obj->id.'-'.$combination_imgs[$products[$i]['id_product_attribute']][0]['id_image'];
+				if (isset($combination_imgs[$products[$i]['id_product_attribute']][0]))
+					$products[$i]['cover'] = $obj->id.'-'.$combination_imgs[$products[$i]['id_product_attribute']][0]['id_image'];
 			}
 			else
 			{
 				$images = $obj->getImages($context->language->id);
 				foreach ($images AS $k => $image)
-				{
 					if ($image['cover'])
 					{
 						$products[$i]['cover'] = $obj->id.'-'.$image['id_image'];
 						break;
 					}
-				}
-				if (!isset($products[$i]['cover']))
-					$products[$i]['cover'] = $context->language->iso_code.'-default';
 			}
+			if (!isset($products[$i]['cover']))
+				$products[$i]['cover'] = $context->language->iso_code.'-default';
+		}
+		$products[$i]['bought'] = false;
+		for ($j = 0, $k = 0; $j < sizeof($bought); ++$j)
+		{
+			if ($bought[$j]['id_product'] == $products[$i]['id_product'] AND
+				$bought[$j]['id_product_attribute'] == $products[$i]['id_product_attribute'])
+				$products[$i]['bought'][$k++] = $bought[$j];
 		}
 	}
+	
 	WishList::incCounter((int)($wishlist['id_wishlist']));
 	$ajax = Configuration::get('PS_BLOCK_CART_AJAX');
 	$context->smarty->assign(array (

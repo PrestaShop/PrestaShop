@@ -27,6 +27,7 @@ $(document).ready(function () {
 	$('select[name=id_order]').change(function () {
 		showProductSelect($(this).attr('value'));
 	});
+	showProductSelect($('select[name=id_order]').attr('value'));
 });
 
 function showProductSelect(id_order)

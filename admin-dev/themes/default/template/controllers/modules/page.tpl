@@ -36,7 +36,6 @@
 			</ul>
 		</div>
 	{/if}
-
 	<div class="row">
 		<div class="col-lg-12">
 			<span class="pull-right">
@@ -50,7 +49,6 @@
 				</a>
 			</span>
 		</div>
-	
 		<div id="container">
 			<!--start sidebar module-->
 			<div class="row-fluid">

@@ -53,13 +53,22 @@ class TaxRulesGroupCore extends ObjectModel
 
 	protected static $_taxes = array();
 
-	public static function getTaxRulesGroups($only_active = true)
+	public static function getTaxRulesGroups($only_active = true, $multiShop = false)
 	{
-		return Db::getInstance()->executeS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'tax_rules_group` g'
-		.($only_active ? ' WHERE g.`active` = 1' : '').'
-		ORDER BY name ASC');
+		if ((bool)$multiShop) {
+			return Db::getInstance()->executeS('
+			SELECT *
+			FROM `'._DB_PREFIX_.'tax_rules_group` g'
+			.Shop::addSqlAssociation('tax_rules_group', 'g')
+			.($only_active ? ' WHERE g.`active` = 1' : '').'
+			ORDER BY name ASC');
+		} else {
+			return Db::getInstance()->executeS('
+			SELECT *
+			FROM `'._DB_PREFIX_.'tax_rules_group` g'
+			.($only_active ? ' WHERE g.`active` = 1' : '').'
+			ORDER BY name ASC');
+		}
 	}
 
 	/**
@@ -113,11 +122,11 @@ class TaxRulesGroupCore extends ObjectModel
 	    );
 	}
 	
-	public function hasUniqueTaxRuleForCountry($id_country, $id_state)
+	public function hasUniqueTaxRuleForCountry($id_country, $id_state, $id_tax_rule = false)
 	{
 		$rules = TaxRule::getTaxRulesByGroupId((int)Context::getContext()->language->id, (int)$this->id);
 		foreach ($rules as $rule)
-			if ($rule['id_country'] == $id_country && $id_state == $rule['id_state'] && !$rule['behavior'])
+			if ($rule['id_country'] == $id_country && $id_state == $rule['id_state'] && !$rule['behavior'] && (int)$id_tax_rule != $rule['id_tax_rule'])
 				return true;
 
 		return false;

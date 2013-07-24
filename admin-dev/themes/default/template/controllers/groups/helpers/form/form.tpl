@@ -106,63 +106,61 @@
 				if ($(this).attr('name') == 'category_reduction['+$('[name="id_category"]:checked').val()+']')
 				{
 					exist = true;
-					jAlert('{l s='This category already exists for this group.'}');
+					jAlert('{l s='This category already exists for this group.' js=1}');
 					return false;
 				}
-				
 			});
 			
 			if (exist)
 				return;
 			$.ajax({
-					type:"POST",
-					url: "ajax-tab.php",
-					async: true,
-					dataType: "json",
-					data : {
-						ajax: "1",
-						token: "{getAdminToken tab='AdminGroups'}",
-						controller: "AdminGroups",
-						action: "addCategoryReduction",
-						category_reduction: $('#category_reduction_fancybox').val() ,
-						id_category: $('[name="id_category"]:checked').val()
-						},
-					success : function(jsonData)
+				type:"POST",
+				url: "ajax-tab.php",
+				async: true,
+				dataType: "json",
+				data : {
+					ajax: "1",
+					token: "{getAdminToken tab='AdminGroups'}",
+					controller: "AdminGroups",
+					action: "addCategoryReduction",
+					category_reduction: $('#category_reduction_fancybox').val() ,
+					id_category: $('[name="id_category"]:checked').val()
+				},
+				success : function(jsonData) {
+					if (jsonData.hasError)
 					{
-						if (jsonData.hasError)
-						{
-							var errors = '';
-							for(error in jsonData.errors)
-								//IE6 bug fix
-								if(error != 'indexOf')
-									errors += jsonData.errors[error] + "\n";
-							jAlert(errors);
-						}
-						else
-						{
-							$('#group_discount_category_table').append('<tr class="alt_row" id="'+jsonData.id_category+'"><td>'+jsonData.catPath+'</td><td>{l s='Discount:'}'+jsonData.discount+'{l s='%'}</td><td><a href="#" onclick="deleteCategoryReduction('+jsonData.id_category+');"><img src="../img/admin/delete.gif"></a></td></tr>');
-							
-							var input_hidden = document.createElement("input");
-							input_hidden.setAttribute('type', 'hidden');
-							input_hidden.setAttribute('value', jsonData.discount);
-							input_hidden.setAttribute('name', 'category_reduction['+jsonData.id_category+']');
-							input_hidden.setAttribute('class', 'category_reduction');
-							
-							$('#group_discount_category_table tr#'+jsonData.id_category+' > td:last').append(input_hidden);
-							$.fancybox.close();
-						}
+						var errors = '';
+						for (error in jsonData.errors)
+							//IE6 bug fix
+							if (error != 'indexOf')
+								errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
+						jAlert(errors);
 					}
-				});
+					else
+					{
+						$('#group_discount_category_table').append('<tr class="alt_row" id="'+jsonData.id_category+'"><td>'+jsonData.catPath+'</td><td>{l s='Discount:'}'+jsonData.discount+'{l s='%'}</td><td><a href="#" onclick="deleteCategoryReduction('+jsonData.id_category+');"><img src="../img/admin/delete.gif"></a></td></tr>');
+						
+						var input_hidden = document.createElement("input");
+						input_hidden.setAttribute('type', 'hidden');
+						input_hidden.setAttribute('value', jsonData.discount);
+						input_hidden.setAttribute('name', 'category_reduction['+jsonData.id_category+']');
+						input_hidden.setAttribute('class', 'category_reduction');
+						
+						$('#group_discount_category_table tr#'+jsonData.id_category+' > td:last').append(input_hidden);
+						$.fancybox.close();
+					}
+				}
+			});
 			
 			return false;
 		}
 			
-			function initFancyBox()
-			{
-				$('[name="id_category"]:checked').removeAttr('checked');
-				collapseAllCategories();
-				$('#category_reduction_fancybox').val('0.00');
-			}
+		function initFancyBox()
+		{
+			$('[name="id_category"]:checked').removeAttr('checked');
+			collapseAllCategories();
+			$('#category_reduction_fancybox').val('0.00');
+		}
 		</script>
 		<div class="margin-form">
 			<a class="button" href="#group_discount_category_fancybox" id="group_discount_category">{l s='Add a category discount'}</a>

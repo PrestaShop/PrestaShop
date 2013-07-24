@@ -35,8 +35,7 @@ ul.address .address_alias {
 	font-weight: normal;
 	text-transform: none;
 }
-ul.address li.address_firstname,
-ul.address li.address_company {
+ul.address >li:first-child + li {
 	margin-top:8px
 }
 

@@ -49,14 +49,14 @@
 						<form action="#" id="login_form" method="post">
 							<div class="field">
 								<label for="email">{l s='Email address:'}</label>
-								<input type="text" id="email" name="email" class="input email_field" value="{if isset($email)}{$email|escape:'htmlall':'UTF-8'}{/if}" />
+								<input type="text" id="email" name="email" class="input email_field" tabindex="1" value="{if isset($email)}{$email|escape:'htmlall':'UTF-8'}{/if}" />
 							</div>					
 							<div class="field">
 								<label for="passwd">{l s='Password:'}</label>
-								<input id="passwd" type="password" name="passwd" class="input password_field" value="{if isset($password)}{$password}{/if}"/>
+								<input id="passwd" type="password" name="passwd" class="input password_field" tabindex="2" value="{if isset($password)}{$password}{/if}"/>
 							</div>					
 							<div class="field">
-								<input type="submit" name="submitLogin" value="{l s='Log in'}" class="button fl margin-right-5" />					
+								<input type="submit" name="submitLogin" value="{l s='Log in'}" tabindex="3" class="button fl margin-right-5" />					
 								<p class="fl no-margin hide ajax-loader">
 									<img src="../img/loader.gif" alt="" />
 								</p>					

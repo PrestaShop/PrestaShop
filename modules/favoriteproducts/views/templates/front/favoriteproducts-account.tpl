@@ -32,7 +32,7 @@ $('document').ready(function()
 		var parent = $(this).parent().parent();
 
 		$.ajax({
-			url: "{$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'remove'], true)|escape:'html'}",
+			url: "{$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'remove'], true)|addslashes}",
 			type: "POST",
 			data: {
 				'id_product': idFavoriteProduct,

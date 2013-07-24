@@ -85,7 +85,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 						'upload' => $this->l('Cannot upload files'),
 						'system' => $this->l('Cannot create new files and folders'),
 						'gd' => $this->l('GD Library is not installed'),
-						'mysql_support' => $this->l('MySQL support is not activated'),
+						'mysql_support' => $this->l('MySQL support is not activated')
 					)
 				),
 				array(
@@ -103,8 +103,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 						'theme_cache_dir' => '~/themes/default/cache/',
 						'translations_dir' => '~/translations/',
 						'customizable_products_dir' => '~/upload/',
-						'virtual_products_dir' => '~/download/',
-						'sitemap' => '~/sitemap.xml',
+						'virtual_products_dir' => '~/download/'
 					)
 				),
 			),
@@ -120,7 +119,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 						'mbstring' => $this->l('Mbstring extension is not enabled'),
 						'magicquotes' => $this->l('PHP magic quotes option is enabled'),
 						'dom' => $this->l('Dom extension is not loaded'),
-						'pdo_mysql' => $this->l('PDO MySQL extension is not loaded'),
+						'pdo_mysql' => $this->l('PDO MySQL extension is not loaded')
 					)
 				),
 			),

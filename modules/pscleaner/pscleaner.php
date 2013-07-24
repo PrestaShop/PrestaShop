@@ -49,7 +49,19 @@ class PSCleaner extends Module
 	{
 		$html = '<h2>'.$this->l('Be really careful with this tool - There is no possible rollback!').'</h2>';
 		if (Tools::isSubmit('submitCheckAndFix'))
-			$html .= $this->displayConfirmation((count($logs = self::checkAndFix()) ? '<pre>'.print_r($logs, true).'</pre>' : $this->l('Nothing that need to be cleaned')).'<br /><br />');
+		{
+			$logs = self::checkAndFix();
+			if (count($logs))
+			{
+				$conf = $this->l('The following queries successfuly fixed broken data:').'<br /><ul>';
+				foreach ($logs as $query => $entries)
+					$conf .= '<li>'.Tools::htmlentitiesUTF8($query).'<br />'.sprintf($this->l('%d line(s)'), $entries).'</li>';
+				$conf .= '</ul>';
+			}
+			else
+				$conf = $this->l('Nothing that need to be cleaned');
+			$html .= $this->displayConfirmation($conf);
+		}
 		if (Tools::isSubmit('submitTruncateCatalog'))
 		{
 			self::truncate('catalog');
@@ -119,6 +131,31 @@ class PSCleaner extends Module
 		$db = Db::getInstance();
 		$logs = array();
 		
+		// Remove doubles in the configuration
+		$filtered_configuration = array();
+		$result = $db->ExecuteS('SELECT * FROM '._DB_PREFIX_.'configuration');
+		foreach ($result as $row)
+		{
+			$key = $row['id_shop_group'].'-|-'.$row['id_shop'].'-|-'.$row['name'];
+			if (in_array($key, $filtered_configuration))
+			{
+				$query = 'DELETE FROM '._DB_PREFIX_.'configuration WHERE id_configuration = '.(int)$row['id_configuration'];
+				$db->Execute($query);
+				$logs[$query] = 1;
+			}
+			else
+				$filtered_configuration[] = $key;
+		}
+		unset($filtered_configuration);
+		
+		// Remove inexisting or monolanguage configuration value from configuration_lang
+		$query = 'DELETE FROM `'._DB_PREFIX_.'configuration_lang`
+		WHERE `id_configuration` NOT IN (SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration`)
+		OR `id_configuration` IN (SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE name IS NOT NULL AND name != "")';
+		if ($db->Execute($query))
+			if ($affected_rows = $db->Affected_Rows())
+				$logs[$query] = $affected_rows;
+
 		// Simple Cascade Delete
 		$queries = array(
 			// 0 => DELETE FROM __table__, 1 => WHERE __id__ NOT IN, 2 => NOT IN __table__, 3 => __id__ used in the "NOT IN" table, 4 => module_name
@@ -175,9 +212,9 @@ class PSCleaner extends Module
 			array('delivery', 'id_carrier', 'carrier', 'id_carrier'),
 			array('delivery', 'id_zone', 'zone', 'id_zone'),
 			array('editorial', 'id_shop', 'shop', 'id_shop', 'editorial'),
-			array('favorite_product', 'id_product', 'product', 'id_product'),
-			array('favorite_product', 'id_customer', 'customer', 'id_customer'),
-			array('favorite_product', 'id_shop', 'shop', 'id_shop'),
+			array('favorite_product', 'id_product', 'product', 'id_product','favoriteproducts'),
+			array('favorite_product', 'id_customer', 'customer', 'id_customer','favoriteproducts'),
+			array('favorite_product', 'id_shop', 'shop', 'id_shop','favoriteproducts'),
 			array('feature_product', 'id_feature', 'feature', 'id_feature'),
 			array('feature_product', 'id_product', 'product', 'id_product'),
 			array('feature_value', 'id_feature', 'feature', 'id_feature'),
@@ -330,11 +367,12 @@ class PSCleaner extends Module
 				if ($affected_rows = $db->Affected_Rows())
 					$logs[$query] = $affected_rows;
 		}
-
+		
 		Category::regenerateEntireNtree();
 
 		// @Todo: Remove attachment files, images...
 		Image::clearTmpDir();
+		$this->clearAllCaches();
 		
 		return $logs;
 	}
@@ -487,6 +525,8 @@ class PSCleaner extends Module
 				foreach ($tables as $table)
 					$db->execute('TRUNCATE TABLE `'._DB_PREFIX_.bqSQL($table).'`');
 				$db->execute('DELETE FROM `'._DB_PREFIX_.'address` WHERE id_customer > 0');
+				$db->execute('UPDATE `'._DB_PREFIX_.'employee` SET `id_last_order` = 0,`id_last_customer_message` = 0,`id_last_customer` = 0');
+
 				break;
 		}
 		$this->clearAllCaches();
@@ -520,8 +560,9 @@ class PSCleaner extends Module
 	
 	protected function clearAllCaches()
 	{
-		$this->_clearCache('blockcategories.tpl');
-		$this->_clearCache('blockcategories_footer.tpl');
-		$this->_clearCache('blocktopmenu.tpl');
+		$index = file_get_contents(_PS_TMP_IMG_DIR_.'index.php');
+		Tools::deleteDirectory(_PS_TMP_IMG_DIR_, false);
+		file_put_contents(_PS_TMP_IMG_DIR_.'index.php', $index);
+		Context::getContext()->smarty->clearAllCache();
 	}
 }

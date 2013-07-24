@@ -25,13 +25,12 @@
 
 {extends file="helpers/view/view.tpl"}
 {block name="override_tpl"}
-{if !$shop_context}
-	<div class="alert alert-block">{l s='You have more than one shop and must select one to configure payment.'}</div>
-{else}
+	{if !$shop_context}
+		<div class="alert alert-block">{l s='You have more than one shop and must select one to configure payment.'}</div>
+	{else}
 		{if isset($modules_list)}
 			{$modules_list}
 		{/if}
-	
 		{if $display_restrictions}
 			<legend>{l s='Payment module restrictions'}</legend>
 			{foreach $lists as $list}
@@ -40,5 +39,5 @@
 		{else}
 			<div class="alert alert-block">{l s='No payment module installed'}</div>
 		{/if}
-{/if}
+	{/if}
 {/block}

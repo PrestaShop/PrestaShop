@@ -231,7 +231,7 @@ class AdminPPreferencesControllerCore extends AdminController
 
 		// if advanced stock management is disabled, updates concerned tables
 		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 1 &&
-			(int)Tools::getValue('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
+			(int)Tools::getValue('PS_ADVANCED_STOCK_MANAGEMENT') == 0 && Context::getContext()->shop->getContext() == Shop::CONTEXT_ALL)
 		{
 			ObjectModel::updateMultishopTable('Product', array('advanced_stock_management' => 0), 'product_shop.`advanced_stock_management` = 1');
 

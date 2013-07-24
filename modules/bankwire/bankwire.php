@@ -40,7 +40,7 @@ class BankWire extends PaymentModule
 	{
 		$this->name = 'bankwire';
 		$this->tab = 'payments_gateways';
-		$this->version = '0.5';
+		$this->version = '0.6';
 		$this->author = 'PrestaShop';
 		
 		$this->currencies = true;
@@ -112,7 +112,7 @@ class BankWire extends PaymentModule
 
 	private function _displayBankWire()
 	{
-		$this->_html .= '<img src="../modules/bankwire/bankwire.jpg" style="float:left; margin-right:15px;"><b>'.$this->l('This module allows you to accept secure payments by bank wire.').'</b><br /><br />
+		$this->_html .= '<img src="../modules/bankwire/bankwire.jpg" style="float:left; margin-right:15px;" width="86" height="49"><b>'.$this->l('This module allows you to accept secure payments by bank wire.').'</b><br /><br />
 		'.$this->l('If the client chooses to pay by bank wire, the order\'s status will change to "Waiting for Payment."').'<br />
 		'.$this->l('That said, you must manually confirm the order upon receiving the bank wire. ').'<br /><br /><br />';
 	}

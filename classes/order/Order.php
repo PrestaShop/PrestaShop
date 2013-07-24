@@ -63,7 +63,7 @@ class OrderCore extends ObjectModel
 	/** @var string Payment module */
 	public $module;
 
-	/** @var float Currency conversion rate */
+	/** @var float Currency exchange rate */
 	public $conversion_rate;
 
 	/** @var boolean Customer is ok for a recyclable package */
@@ -254,10 +254,12 @@ class OrderCore extends ObjectModel
 	public function __construct($id = null, $id_lang = null)
 	{
 		parent::__construct($id, $id_lang);
-		if ($this->id_customer)
+		
+		$is_admin = (is_object(Context::getContext()->controller) && Context::getContext()->controller->controller_type == 'admin');
+		if ($this->id_customer && !$is_admin)
 		{
 			$customer = new Customer((int)($this->id_customer));
-			$this->_taxCalculationMethod = Group::getPriceDisplayMethod((int)($customer->id_default_group));
+			$this->_taxCalculationMethod = Group::getPriceDisplayMethod((int)$customer->id_default_group);
 		}
 		else
 			$this->_taxCalculationMethod = Group::getDefaultPriceDisplayMethod();
@@ -290,7 +292,7 @@ class OrderCore extends ObjectModel
 	/* Does NOT delete a product but "cancel" it (which means return/refund/delete it depending of the case) */
 	public function deleteProduct($order, $orderDetail, $quantity)
 	{
-		if (!(int)($this->getCurrentState()))
+		if (!(int)($this->getCurrentState()) || !validate::isLoadedObject($orderDetail))
 			return false;
 
 		if ($this->hasBeenDelivered())
@@ -1146,13 +1148,14 @@ class OrderCore extends ObjectModel
 			if ($use_existing_payment)
 			{
 				$id_order_payments = Db::getInstance()->executeS('
-					SELECT op.id_order_payment 
+					SELECT DISTINCT op.id_order_payment 
 					FROM `'._DB_PREFIX_.'order_payment` op
 					INNER JOIN `'._DB_PREFIX_.'orders` o ON (o.reference = op.order_reference)
 					LEFT JOIN `'._DB_PREFIX_.'order_invoice_payment` oip ON (oip.id_order_payment = op.id_order_payment)					
-					WHERE oip.id_order_payment IS NULL AND o.id_order = '.(int)$order_invoice->id_order);
-				
+					WHERE (oip.id_order != '.(int)$order_invoice->id_order.' OR oip.id_order IS NULL) AND o.id_order = '.(int)$order_invoice->id_order);
+
 				if (count($id_order_payments))
+				{
 					foreach ($id_order_payments as $order_payment)
 						Db::getInstance()->execute('
 							INSERT INTO `'._DB_PREFIX_.'order_invoice_payment`
@@ -1160,6 +1163,9 @@ class OrderCore extends ObjectModel
 								`id_order_invoice` = '.(int)$order_invoice->id.',
 								`id_order_payment` = '.(int)$order_payment['id_order_payment'].',
 								`id_order` = '.(int)$order_invoice->id_order);
+					// Clear cache
+					Cache::clean('order_invoice_paid_*');
+				}
 			}
 
 			// Update order cart rule
@@ -1237,12 +1243,11 @@ class OrderCore extends ObjectModel
 
 	public function getTotalWeight()
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT SUM(product_weight * product_quantity) weight
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT SUM(product_weight * product_quantity)
 		FROM '._DB_PREFIX_.'order_detail
 		WHERE id_order = '.(int)($this->id));
-
-		return (float)($result['weight']);
+		return (float)($result);
 	}
 
 	/**
@@ -1466,6 +1471,9 @@ class OrderCore extends ObjectModel
 			$res = Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'order_invoice_payment`
 			VALUES('.(int)$order_invoice->id.', '.(int)$order_payment->id.', '.(int)$this->id.')');
+
+			// Clear cache
+			Cache::clean('order_invoice_paid_*');
 		}
 		
 		return $res;
@@ -1881,5 +1889,21 @@ class OrderCore extends ObjectModel
 		$order = new Order($id_order);
 		return $order->getUniqReference();
 	}
+	
+	/**
+	 * Return a unique reference like : GWJTHMZUN#2
+	 * 
+	 * With multishipping, order reference are the same for all orders made with the same cart
+	 * in this case this method suffix the order reference by a # and the order number
+	 * 
+	 * @since 1.5.5.0
+	 */	
+	public function getIdOrderCarrier()	
+	{
+		return (int)Db::getInstance()->getValue('
+				SELECT `id_order_carrier`
+				FROM `'._DB_PREFIX_.'order_carrier`
+				WHERE `id_order` = '.(int)$this->id);
+	}		
 }
 

@@ -2,6 +2,10 @@
   /*LIST*/
   /*FORM*/
   /*BUTTON*/
+  /*HEADER*/
+  /* Portrait orientation targeting */
+  /* Portrait orientation targeting */
+  /*MENU*/
   /*SEPARATION*/
   /*TABLE*/
   /*UI ACCORDEON*/
@@ -23,10 +27,14 @@
   /*TAB MODULES LIST*/
   /******** ie7 ******/
   /*MODULE POSITION*/
+  /*FOOTER*/
   /*DASHBOARD*/
   /******** CREATE AN ORDER **************/
   /************** SCENE *****************/ }
+  #nobootstrap body {
+    font-family: Arial, Helvetica, sans-serif; }
   #nobootstrap h1, #nobootstrap h2, #nobootstrap h3, #nobootstrap h4 {
+    font-family: Arial, Helvetica, sans-serif;
     margin-bottom: .5em;
     line-height: 1.4em; }
   #nobootstrap h2 {
@@ -98,7 +106,11 @@
     color: #123456;
     margin: 2px;
     padding: 2px; }
-  #nobootstrap .button, #nobootstrap .btn {
+  #nobootstrap .icon {
+    vertical-align: middle; }
+  #nobootstrap .icon-top {
+    vertical-align: top; }
+  #nobootstrap .button {
     background: #e3e3e3 url("../img/bg-button-degrade.png") repeat-x scroll left top;
     background: -moz-linear-gradient(center top, #f9f9f9, #e3e3e3) repeat scroll 0 0 transparent;
     background: -webkit-gradient(linear, center top, center bottom, from(#f9f9f9), to(#e3e3e3)) repeat scroll 0 0 transparent;
@@ -116,22 +128,321 @@
     vertical-align: middle;
     white-space: nowrap;
     text-shadow: 0 1px 0 #fff; }
-  #nobootstrap .button[disabled=disabled], #nobootstrap .btn[disabled=disabled] {
+  #nobootstrap .button[disabled=disabled] {
     color: #8C8C8C; }
-  #nobootstrap .button.bt-icon, #nobootstrap .btn.bt-icon {
+  #nobootstrap .button.bt-icon {
     display: inline-block;
     margin-bottom: 7px; }
-  #nobootstrap .button.bt-icon span, #nobootstrap .btn.bt-icon span {
+  #nobootstrap .button.bt-icon span {
     padding-left: 5px; }
-  #nobootstrap input.button[disabled=disabled]:hover, #nobootstrap input.btn[disabled=disabled]:hover {
+  #nobootstrap input.button[disabled=disabled]:hover {
     background-color: #FFF6D3; }
-  #nobootstrap .button:hover, #nobootstrap .btn:hover {
+  #nobootstrap .button:hover {
     border: 1px solid #939393; }
-  #nobootstrap .button:active, #nobootstrap .btn:active {
+  #nobootstrap .button:active {
     border: 1px solid #939393; }
-  #nobootstrap .button.export-csv span, #nobootstrap .btn.export-csv {
+  #nobootstrap .button.export-csv span {
     background: transparent url("../img/export-csv.png") no-repeat scroll left top;
     padding: 1px 0 1px 20px; }
+  #nobootstrap #top_container {
+    margin: 0;
+    padding: 0; }
+  #nobootstrap #header {
+    background-color: #394049;
+    height: 90px; }
+  @media screen and (orientation: portrait) {
+    #nobootstrap #header {
+      min-width: 1250px; } }
+  @media screen and (orientation: landscape) {
+    #nobootstrap #header {
+      min-width: 1250px; } }
+  #nobootstrap #header #header_infos {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    height: 60px; }
+  #nobootstrap #header #header_shopname {
+    float: left;
+    margin: 10px 15px 0 10px; }
+  #nobootstrap #header #employee_box {
+    float: right;
+    display: block; }
+  #nobootstrap #header #employee_infos {
+    display: block;
+    margin: 5px 15px 0 10px; }
+  #nobootstrap #header #employee_infos a {
+    color: #BABABA;
+    text-transform: capitalize;
+    margin-right: 5px; }
+  #nobootstrap #header #employee_infos a:hover {
+    color: #fff; }
+  #nobootstrap #header #employee_infos .employee_name {
+    float: left;
+    color: #fff;
+    padding: 0 20px 0 0; }
+  #nobootstrap #header .separator {
+    background: transparent url("../img/separator.png") no-repeat scroll center top;
+    height: 19px;
+    width: 16px;
+    margin-right: 5px; }
+  #nobootstrap #header ul#employee_links {
+    list-style: none;
+    display: block;
+    text-align: left; }
+  #nobootstrap #header ul#employee_links li {
+    display: inline;
+    line-height: 20px; }
+  #nobootstrap #header #header_infos #header_shopname span {
+    display: block;
+    font-size: 24px;
+    height: 28px;
+    overflow: hidden;
+    margin: 0;
+    color: #fff;
+    text-shadow: 0 1px 0 #000000; }
+  #nobootstrap #header #header_infos a#header_logout {
+    background: transparent url("../img/logout.png") no-repeat scroll left top;
+    padding-left: 20px;
+    color: #bababa; }
+  #nobootstrap #header #header_infos a#header_logout:hover {
+    color: #fff; }
+  #nobootstrap #header #header_infos #header_logout a span {
+    color: #bababa; }
+  #nobootstrap #header #header_infos #header_foaccess {
+    text-decoration: none;
+    color: #bababa; }
+  #nobootstrap #header #header_infos #header_foaccess a {
+    color: #bababa !important; }
+  #nobootstrap #header #header_infos a#header_foaccess:hover {
+    color: #fff; }
+  #nobootstrap #header #header_search {
+    background-color: #fff;
+    border: 2px solid #000;
+    float: left;
+    margin-top: 15px;
+    position: relative;
+    height: 25px;
+    box-shadow: 0 1px 0 #666666; }
+  #nobootstrap #header #header_search #bo_query {
+    font: 13px Arial,sans-serif;
+    float: left;
+    background: none repeat scroll 0 0 transparent;
+    border: none;
+    box-shadow: none;
+    padding: 5px 0px 5px 4px;
+    width: 160px; }
+  #nobootstrap #header #header_search #bo_search_type_chzn {
+    font-size: 13px;
+    float: left;
+    margin: 0 23px 0 0;
+    padding: 0 4px;
+    vertical-align: middle;
+    width: 80px !important;
+    height: 27px;
+    border: none; }
+  #nobootstrap #header #header_search #bo_search_type_chzn.chzn-container-single .chzn-single {
+    box-shadow: none;
+    border-radius: 0px;
+    border: none;
+    border-left: 1px dotted #ccc; }
+  #nobootstrap #header #header_search #bo_search_submit {
+    background: url("../img/icon-search2.png") no-repeat scroll center;
+    border: none;
+    width: 27px;
+    height: 25px;
+    float: left;
+    font-weight: normal;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    text-indent: -9999em;
+    position: absolute;
+    right: 0;
+    display: block;
+    border-left: 1px solid #3079ED;
+    border-radius: 0px;
+    /*hacking ie7font-size: 0!ie7; color: transparent!ie;*/ }
+  #nobootstrap #header #header_quick {
+    float: right;
+    display: block;
+    margin-top: 15px; }
+  #nobootstrap #header #header_quick #quick_select_chzn {
+    font-size: 13px;
+    margin: 0 10px 0 0;
+    padding: 0px 0 4px; }
+  #nobootstrap #header #header_myaccount {
+    background: url("../img/bg-lang.png") no-repeat;
+    display: block;
+    float: right;
+    height: 16px;
+    margin: 8px 1px 0 0;
+    width: 16px; }
+  #nobootstrap .path_bar {
+    display: none; }
+  #nobootstrap #notifs_icon_wrapper {
+    float: left;
+    position: relative;
+    margin: 15px 10px 0;
+    width: 95px; }
+  #nobootstrap .notifs {
+    float: left;
+    position: relative;
+    cursor: pointer;
+    margin: 0;
+    padding: 5px;
+    width: 18px;
+    height: 16px; }
+  #nobootstrap #orders_notif {
+    background: url("../img/notif_order.png") no-repeat center top; }
+  #nobootstrap #customers_notif {
+    background: url("../img/notif_customer.png") no-repeat center top; }
+  #nobootstrap #customer_messages_notif {
+    background: url("../img/notif_message.png") no-repeat center top; }
+  #nobootstrap #orders_notif.open_notifs,
+  #nobootstrap #customers_notif.open_notifs,
+  #nobootstrap #customer_messages_notif.open_notifs {
+    background-color: #FFFFFF;
+    border: 1px solid #000000;
+    position: relative;
+    display: block;
+    background-position: center bottom; }
+  #nobootstrap .number_wrapper {
+    color: white;
+    display: none;
+    font-size: 13px;
+    font-weight: bold;
+    position: absolute;
+    right: -8px;
+    top: -10px;
+    z-index: 101;
+    padding: 2px 5px; }
+  #nobootstrap .number_wrapper span {
+    background-color: #F03D25;
+    font-size: 11px;
+    display: block;
+    padding: 1px 3px;
+    border-color: -moz-use-text-color #DD3822 #DD3822;
+    border-radius: 2px 2px 2px 2px;
+    border-right: 1px solid #DD3822;
+    border-style: none solid solid;
+    border-width: 0 0px; }
+  #nobootstrap .notifs_wrapper {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #000;
+    border-top: none;
+    display: none;
+    cursor: auto;
+    position: absolute;
+    top: 25px;
+    left: -1px;
+    width: 300px;
+    padding: 10px;
+    color: black;
+    z-index: 9999; }
+  #nobootstrap .notifs_wrapper h3 {
+    font-size: 14px;
+    padding-bottom: 8px;
+    margin: 0;
+    border-bottom: 1px solid #E5E5E5; }
+  #nobootstrap .notifs_wrapper ul {
+    padding: 6px 0;
+    margin: 0; }
+  #nobootstrap .notifs_wrapper ul li {
+    text-decoration: none;
+    list-style: none;
+    font-size: 12px;
+    padding: 5px 0; }
+  #nobootstrap #header_infos .notifs_wrapper a {
+    font-weight: bold;
+    font-size: 11px;
+    color: black;
+    float: right; }
+  #nobootstrap .notifs_wrapper p {
+    font-size: 12px;
+    padding-top: 8px;
+    margin: 0;
+    border-top: 1px solid #E5E5E5; }
+  #nobootstrap .notifs_wrapper p.no_notifs {
+    border: none; }
+  #nobootstrap #header #menu {
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #e5e5e5;
+    float: left;
+    line-height: normal;
+    margin: 0;
+    padding: 0;
+    width: 100%; }
+  #nobootstrap #header #menu li.maintab {
+    float: left;
+    height: 29px;
+    list-style: none;
+    list-style: none;
+    display: block;
+    border-left: 1px solid #fff;
+    border-right: 1px solid #ccc; }
+  #nobootstrap #header #menu li.submenu_size .title {
+    cursor: default;
+    color: #000;
+    display: block;
+    padding: 8px 3px 4px 0;
+    font-weight: normal;
+    font-size: 12px; }
+  #nobootstrap #header #menu li.submenu_size .title {
+    _display: inline;
+    _padding: 6px 5px 4px 0; }
+  #nobootstrap #header #menu li {
+    _height: 32px;
+    _padding-top: 3px; }
+  #nobootstrap #header #menu img {
+    display: inline;
+    padding: 0 3px 0 6px;
+    margin-top: -4px;
+    vertical-align: middle;
+    width: 16px;
+    height: 16px; }
+  #nobootstrap #header #menu li.active, #nobootstrap #header #menu li:hover {
+    background-position: 0 -38px;
+    white-space: nowrap; }
+  #nobootstrap #header #menu li:hover, #nobootstrap #header #menu li.active {
+    background-color: #49B2FF; }
+  #nobootstrap #header #menu li.maintab:hover, #nobootstrap #header #menu li.active {
+    border-left: 1px solid #49B2FF;
+    border-right: 1px solid #49B2FF; }
+  #nobootstrap #header #menu li.active a.title, #nobootstrap #header #menu li:hover a.title {
+    color: #fff;
+    text-shadow: -1px -1px 0 #3293D6; }
+  #nobootstrap #header #menu .withLeftBorder {
+    background: transparent url("../img/separator_subnav.png") no-repeat 0 5px; }
+  #nobootstrap #header #menu .submenu {
+    background: #f8f8f8;
+    clear: both;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #d9d9d9;
+    z-index: 9999;
+    box-shadow: 1px 5px 5px #CCCCCC;
+    -moz-box-shadow: 1px 5px 10px #CCCCCC;
+    -webkit-box-shadow: 1px 5px 10px #CCCCCC; }
+  #nobootstrap #header #menu .submenu li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: block;
+    min-width: 150px; }
+  #nobootstrap #header #menu .submenu li a {
+    font-size: 12px;
+    display: block;
+    padding: 5px 15px 5px 10px;
+    color: #666666;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #ccc; }
+  #nobootstrap #header #menu .submenu li a:hover {
+    background-color: #eee;
+    text-shadow: 0 1px 0 #fff; }
+  #nobootstrap #header #menu .submenu li.active a {
+    color: #fff; }
+  #nobootstrap #header #menu .submenu li.active a:hover {
+    color: #666666; }
   #nobootstrap .separation {
     background-color: #ccc;
     border-bottom: 1px solid #fff;
@@ -222,6 +533,7 @@
   #nobootstrap .path_bar {
     background-color: #E2EBEE;
     border: 1px solid #999999;
+    font-family: Trebuchet,Arial,Helvetica,sans-serif;
     font-size: 13px;
     margin-bottom: 20px;
     padding: 5px; }
@@ -230,6 +542,7 @@
   #nobootstrap .cat_bar {
     background-color: #F4E8CD;
     border: 1px solid #999999;
+    font-family: Trebuchet,Arial,Helvetica,sans-serif;
     font-size: 12px;
     font-weight: 700;
     margin-bottom: 20px;
@@ -344,6 +657,14 @@
   #nobootstrap .toolbar-placeholder {
     position: relative; }
   #nobootstrap .toolbarBox {
+    background-color: #F8F8F8;
+    border: 1px solid #CCCCCC;
+    margin-bottom: 10px;
+    padding: 5px 0;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -o-border-radius: 3px;
     position: relative; }
   #nobootstrap .toolbarBox .pageTitle {
     margin-left: 10px;
@@ -389,7 +710,8 @@
     float: none;
     height: 32px;
     margin: 0 auto;
-    width: 32px; }
+    width: 32px;
+    /*hacking ie7margin:0 !ie; position:relative !ie;*/ }
   #nobootstrap .toolbarBox .process-icon-delete {
     background-image: url("../img/process-icon-delete.png"); }
   #nobootstrap .toolbarBox .process-icon-duplicate {
@@ -892,7 +1214,8 @@
     font-weight: bold; }
   #nobootstrap #statsContainer .blocStats .blocConversion {
     display: block;
-    display: inline-table; }
+    display: inline-table;
+    min-height: 80px; }
   #nobootstrap #moduleContainer {
     margin-left: 220px;
     padding: 13px 0 0 20px; }
@@ -996,7 +1319,7 @@
     margin: 0;
     white-space: nowrap;
     overflow: auto;
-    height: 335px; }
+    height: 370px; }
   #nobootstrap #modules_list_container_tab #modules_list_container_content li {
     display: inline-block; }
   #nobootstrap #modules_list_container_tab table tr th {
@@ -1050,7 +1373,7 @@
     font-size: 10px;
     color: #fff;
     text-transform: uppercase;
-    padding: 2px 10px;
+    padding: 0 10px;
     display: inline-block;
     border-radius: 3px; }
   #nobootstrap #modules_list_container_tab .row-actions-module {
@@ -1093,11 +1416,11 @@
     border: none; }
   #nobootstrap .default_modules_list_display_type #modules_list_container_content li table {
     border: solid 1px #ccc;
-    height: 140px;
+    height: 105px;
     width: 100%;
-    margin-bottom: 15px; }
+    margin-bottom: 10px; }
   #nobootstrap #modules_list_container_tab ul li {
-    height: 140px; }
+    height: 105px; }
   #nobootstrap .ie7 #modules_list_container_tab #modules_list_container_content li {
     zoom: 1;
     display: inline; }
@@ -1165,6 +1488,20 @@
     margin: 0 1em 0 0.25em; }
   #nobootstrap ul.listForm li {
     padding-bottom: 3px; }
+  #nobootstrap #footer {
+    height: 40px;
+    font-size: 12px;
+    clear: both;
+    font-size: 0.9em;
+    color: #666666; }
+  #nobootstrap #footer .footerLeft {
+    float: left;
+    margin-left: 10px; }
+  #nobootstrap #footer .footerRight {
+    float: right;
+    margin-right: 10px; }
+  #nobootstrap #footer .footer_link, #nobootstrap #footer .footer_link:hover {
+    color: #268CCD; }
   #nobootstrap .pageTitleHome {
     font-size: 1.6em;
     font-weight: normal;

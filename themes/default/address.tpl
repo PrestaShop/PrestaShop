@@ -95,6 +95,7 @@ $(function(){ldelim}
 			<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 		</p>
 	{assign var="stateExist" value="false"}
+	{assign var="postCodeExist" value="false"}
 	{foreach from=$ordered_adr_fields item=field_name}
 		{if $field_name eq 'company'}
 			<p class="text">
@@ -138,6 +139,7 @@ $(function(){ldelim}
 		</p>
 		{/if}
 		{if $field_name eq 'postcode'}
+		{assign var="postCodeExist" value="true"}
 		<p class="required postcode text">
 			<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
 			<input type="text" id="postcode" name="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{else}{if isset($address->postcode)}{$address->postcode|escape:'html'}{/if}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
@@ -195,6 +197,12 @@ $(function(){ldelim}
 		</p>
 		{/if}
 		{/foreach}
+		{if $postCodeExist eq "false"}
+		<p class="required postcode text hidden">
+			<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
+			<input type="text" id="postcode" name="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{else}{if isset($address->postcode)}{$address->postcode|escape:'html'}{/if}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
+		</p>
+		{/if}		
 		{if $stateExist eq "false"}
 		<p class="required id_state select">
 			<label for="id_state">{l s='State'} <sup>*</sup></label>

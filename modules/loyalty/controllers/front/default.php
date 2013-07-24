@@ -89,6 +89,7 @@ class LoyaltyDefaultModuleFrontController extends ModuleFrontController
 			$cart_rule->date_to = date('Y-m-d H:i:s', strtotime($cart_rule->date_from.' +1 year'));
 
 			$cart_rule->minimum_amount = (float)Configuration::get('PS_LOYALTY_MINIMAL');
+			$cart_rule->minimum_amount_currency = (int)$this->context->currency->id;
 			$cart_rule->active = 1;
 
 			$categories = Configuration::get('PS_LOYALTY_VOUCHER_CATEGORY');
@@ -106,10 +107,39 @@ class LoyaltyDefaultModuleFrontController extends ModuleFrontController
 				$cart_rule->name[(int)$language['id_lang']] = $text ? strval($text) : strval($default_text);
 			}
 
-			if (is_array($categories) && count($categories))
-				$cart_rule->add(true, false, $categories);
-			else
-				$cart_rule->add();
+
+			$contains_categories = is_array($categories) && count($categories);
+			if ($contains_categories)
+				$cart_rule->product_restriction = 1;
+			$cart_rule->add();
+
+			//Restrict cartRules with categories
+			if ($contains_categories)
+			{
+				
+				//Creating rule group
+				$id_cart_rule = (int)$cart_rule->id;
+				$sql = "INSERT INTO "._DB_PREFIX_."cart_rule_product_rule_group (id_cart_rule, quantity) VALUES ('$id_cart_rule', 1)";
+				Db::getInstance()->execute($sql);
+				$id_group = (int)Db::getInstance()->Insert_ID();
+				
+				//Creating product rule
+				$sql = "INSERT INTO "._DB_PREFIX_."cart_rule_product_rule (id_product_rule_group, type) VALUES ('$id_group', 'categories')";
+				Db::getInstance()->execute($sql);
+				$id_product_rule = (int)Db::getInstance()->Insert_ID();
+				
+				//Creating restrictions
+				$values = array();
+				foreach ($categories as $category) {
+					$category = (int)$category;
+					$values[] = "('$id_product_rule', '$category')";
+				}
+				$values = implode(',', $values);
+				$sql = "INSERT INTO "._DB_PREFIX_."cart_rule_product_rule_value (id_product_rule, id_item) VALUES $values";
+				Db::getInstance()->execute($sql);
+			}
+				
+				
 
 			// Register order(s) which contributed to create this voucher
 			if (!LoyaltyModule::registerDiscount($cart_rule))

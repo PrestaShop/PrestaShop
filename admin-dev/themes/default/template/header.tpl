@@ -75,6 +75,8 @@
 		var token_admin_customer_threads = '{getAdminToken tab='AdminCustomerThreads' slashes=1}';
 		var currentIndex = '{$currentIndex}';
 		var default_language = '{$default_language|intval}';
+		var choose_language_translate = "{l s='Choose language' slashes=1}";
+
 	</script>
 	{/if}
 
@@ -201,7 +203,7 @@
 							</button>
 						</span>
 					</div>
-<!-- 	// Search in section 
+<!-- 	//todo Search in section 
 					<select name="bo_search_type" id="bo_search_type" class="chosen no-search">
 						<option value="0">{l s='everywhere'}</option>
 						<option value="1" {if {$search_type} == 1} selected="selected" {/if}>{l s='catalog'}</option>
@@ -251,7 +253,7 @@
 						<i class="icon-AdminDashboard"></i> {l s='Dashboard'}
 					</a>
 				</li>
-			{foreach $tabs AS $t}
+			{foreach $tabs as $t}
 				{if $t.active}
 				<li class="maintab {if $t.current}active{/if}" id="maintab{$t.id_tab}">
 					<a href="javascript:adminNav('#maintab{$t.id_tab}');" class="title">

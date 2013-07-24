@@ -33,7 +33,7 @@
 			<li><i class="icon-home"></i>
 			{assign var=params_url value=""}
 		{else}
-			<li>{assign var=params_url value="&id_category={$category.id_category}&viewcategory"}
+			{assign var=params_url value="&id_category={$category.id_category|intval}&viewcategory"}
 		{/if}
 		{if $category.id_category == $categories_tree_current_id}
 			{$category.name}</li>
@@ -75,10 +75,10 @@
 					{if $key != 'deleteMode'}
 						{if is_array($value)}
 							{foreach $value as $val}
-								<input type="hidden" name="{$key}[]" value="{$val}" />
+								<input type="hidden" name="{$key|escape:'htmlall':'UTF-8'}[]" value="{$val|escape:'htmlall':'UTF-8'}" />
 							{/foreach}
 						{else}
-							<input type="hidden" name="{$key}" value="{$value}" />
+							<input type="hidden" name="{$key|escape:'htmlall':'UTF-8'}" value="{$value|escape:'htmlall':'UTF-8'}" />
 						{/if}
 					{/if}
 				{/foreach}

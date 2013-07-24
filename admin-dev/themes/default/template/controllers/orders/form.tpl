@@ -33,8 +33,8 @@
 	var currencies = new Array();
 	var id_currency = '';
 	var id_lang = '';
-	var txt_show_carts = '{l s='Show carts and orders for this customer.' js='1'}';
-	var txt_hide_carts = '{l s='Hide carts and orders for this customer.' js='1'}';
+	var txt_show_carts = '{l s='Show carts and orders for this customer.' js=1}';
+	var txt_hide_carts = '{l s='Hide carts and orders for this customer.' js=1}';
 	var defaults_order_state = new Array();
 	var customization_errors = false;
 	var pic_dir = '{$pic_dir}';
@@ -100,7 +100,7 @@
 		$('#show_old_carts').click();
 		$('#payment_module_name').change();
 		$.ajaxSetup({ type:"post" });
-		$("#voucher").autocomplete('{$link->getAdminLink('AdminCartRules')|escape:'html'}', {
+		$("#voucher").autocomplete('{$link->getAdminLink('AdminCartRules')|addslashes}', {
 					minChars: 3,
 					max: 15,
 					width: 250,
@@ -468,7 +468,7 @@
 		$('#new_address').attr('href', address_link.replace(/id_customer=[0-9]+/, 'id_customer='+id_customer));
 		$.ajax({
 			type:"POST",
-			url : "{$link->getAdminLink('AdminCarts')|escape:'html'}",
+			url : "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: false,
 			dataType: "json",
 			data : {

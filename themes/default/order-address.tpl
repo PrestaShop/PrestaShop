@@ -75,8 +75,8 @@
 	var txtProducts = "{l s='products' js=1}";
 	{/if}
 	
-	var addressMultishippingUrl = "{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{'&multi-shipping=1'|urlencode}{if $back}&mod={$back|urlencode}{/if}")|escape:'html'}";
-	var addressUrl = "{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{if $back}&mod={$back}{/if}")|escape:'html'}";
+	var addressMultishippingUrl = "{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{'&multi-shipping=1'|urlencode}{if $back}&mod={$back|urlencode}{/if}")|addslashes}";
+	var addressUrl = "{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{if $back}&mod={$back}{/if}")|addslashes}";
 
 	var formatedAddressFieldsValuesList = new Array();
 
@@ -85,12 +85,12 @@
 		{ldelim}
 			'ordered_fields':[
 				{foreach from=$type.ordered_fields key=num_field item=field_name name=inv_loop}
-					{if !$smarty.foreach.inv_loop.first},{/if}"{$field_name}"
+					{if !$smarty.foreach.inv_loop.first},{/if}{$field_name|json_encode}
 				{/foreach}
 			],
 			'formated_fields_values':{ldelim}
 					{foreach from=$type.formated_fields_values key=pattern_name item=field_name name=inv_loop}
-						{if !$smarty.foreach.inv_loop.first},{/if}"{$pattern_name}":"{$field_name}"
+						{if !$smarty.foreach.inv_loop.first},{/if}{$pattern_name|json_encode}:{$field_name|json_encode}
 					{/foreach}
 				{rdelim}
 		{rdelim}
@@ -99,12 +99,10 @@
 	function getAddressesTitles()
 	{
 		return {
-						'invoice': "{l s='Your billing address' js=1}",
-						'delivery': "{l s='Your delivery address' js=1}"
-			};
-
+			'invoice': "{l s='Your billing address' js=1}",
+			'delivery': "{l s='Your delivery address' js=1}"
+		};
 	}
-
 
 	function buildAddressBlock(id_address, address_type, dest_comp)
 	{
@@ -118,7 +116,7 @@
 		dest_comp.html('');
 
 		li_content['title'] = adr_titles_vals[address_type];
-		li_content['update'] = '<a href="{$link->getPageLink('address', true, NULL, "id_address")|escape:'html'}'+id_address+'&amp;back={$back_order_page}?step=1{if $back}&mod={$back}{/if}" title="{l s='Update' js=1}">&raquo; {l s='Update' js=1}</a>';
+		li_content['update'] = '<a href="{$link->getPageLink('address', true, NULL, "id_address")|addslashes}'+id_address+'&amp;back={$back_order_page}?step=1{if $back}&mod={$back}{/if}" title="{l s='Update' js=1}">&raquo; {l s='Update' js=1}</a>';
 
 		appendAddressList(dest_comp, li_content, ordered_fields_name);
 	}
