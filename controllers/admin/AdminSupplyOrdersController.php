@@ -1074,9 +1074,12 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				$this->errors[] = Tools::displayError($this->l('The date you specified cannot be in the past.'));
 
 			// gets threshold
-			$quantity_threshold = null;
-			if (Tools::getValue('load_products') && Validate::isInt(Tools::getValue('load_products')))
-				$quantity_threshold = (int)Tools::getValue('load_products');
+			$quantity_threshold = Tools::getValue('load_products');
+
+			if (is_numeric($quantity_threshold))
+				$quantity_threshold = (int)$quantity_threshold;
+			else
+				$quantity_threshold = null;
 
 			if (!count($this->errors))
 			{
@@ -1095,15 +1098,15 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 				//specific discount check
 				$_POST['discount_rate'] = (float)str_replace(array(' ', ','), array('', '.'), Tools::getValue('discount_rate', 0));
-
 			}
 
 			// manage each associated product
 			$this->manageOrderProducts();
 
 			// if the threshold is defined and we are saving the order
-			if (Tools::isSubmit('submitAddsupply_order') && $quantity_threshold != null)
-				$this->loadProducts($quantity_threshold);
+			if (Tools::isSubmit('submitAddsupply_order') && Validate::isInt($quantity_threshold)){
+				$this->loadProducts((int)$quantity_threshold);
+			}
 		}
 
 		// Manage state change
@@ -1993,7 +1996,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	 */
 	protected function afterAdd($object)
 	{
-		if (Tools::getValue('load_products') && Validate::isInt(Tools::getValue('load_products')))
+		if (is_numeric(Tools::getValue('load_products')))
 			$this->loadProducts((int)Tools::getValue('load_products'));
 
 		$this->object = $object;
@@ -2066,7 +2069,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				$diff = (int)$threshold - (int)$real_quantity;
 			}
 
-			if ($diff > 0)
+			if ($diff >= 0)
 			{
 				// sets supply_order_detail
 				$supply_order_detail = new SupplyOrderDetail();
@@ -2079,7 +2082,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				$supply_order_detail->name = Product::getProductName($item['id_product'], $item['id_product_attribute'], $supply_order->id_lang);
 				$supply_order_detail->ean13 = $item['ean13'];
 				$supply_order_detail->upc = $item['upc'];
-				$supply_order_detail->quantity_expected = (int)$diff;
+				$supply_order_detail->quantity_expected = ((int)$diff == 0) ? 1 : (int)$diff;
 				$supply_order_detail->exchange_rate = $order_currency->conversion_rate;
 
 				$product_currency = new Currency($item['id_currency']);
