@@ -397,6 +397,11 @@
 			</ol>
 		</div>
 	{/if}
+	{if isset($message_confirmation) && $message_confirmation}
+	<p class="success">
+		{l s='Message successfully sent'}
+	</p>
+	{/if}
 	<form action="{$link->getPageLink('order-detail', true)|escape:'html'}" method="post" class="std" id="sendOrderMessage">
 		<h3>{l s='Add a message'}</h3>
 		<p>{l s='If you would like to add a comment about your order, please write it in the field below.'}</p>
