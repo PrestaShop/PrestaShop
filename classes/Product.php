@@ -364,7 +364,7 @@ class ProductCore extends ObjectModel
 			),
 			'type' => array(
 				'getter' => 'getWsType',
-				'setter' => false,
+				'setter' => 'setWsType',
 			),
 		),
 		'associations' => array(
@@ -5345,5 +5345,39 @@ class ProductCore extends ObjectModel
 	public function getWsProductBundle()
 	{
 		return Db::getInstance()->executeS('SELECT id_product_item as id, quantity FROM '._DB_PREFIX_.'pack WHERE id_product_pack = '.(int)$this->id);
+	}
+	
+	public function setWsType($type_str)
+	{
+		$reverse_type_information = array(
+			'simple' => Product::PTYPE_SIMPLE,
+			'pack' => Product::PTYPE_PACK,
+			'virtual' => Product::PTYPE_VIRTUAL,
+		);
+	
+		if (!isset($reverse_type_information[$type_str]))
+			return false;
+		
+		$type = $reverse_type_information[$type_str];
+	
+		if (Pack::isPack((int)$this->id) && $type != Product::PTYPE_PACK)
+			Pack::deleteItems($this->id);
+			
+		$this->cache_is_pack = ($type == Product::PTYPE_PACK);
+		$this->is_virtual = ($type == Product::PTYPE_VIRTUAL);
+	
+		return true;
+	}
+
+	public function setWsProductBundle($items)
+	{
+		if($this->is_virtual)
+			return false;
+	
+		Pack::deleteItems($this->id);
+		
+		foreach ($items as $item)
+			Pack::addItem($this->id, (int)$item['id'], (int)$item['quantity']);
+		return true;
 	}
 }
