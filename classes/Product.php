@@ -5344,6 +5344,6 @@ class ProductCore extends ObjectModel
 
 	public function getWsProductBundle()
 	{
-		return Db::getInstance()->executeS('SELECT id_product_item as id, quantity FROM '._DB_PREFIX_.'pack where id_product_pack = '.(int)$this->id);
+		return Db::getInstance()->executeS('SELECT id_product_item as id, quantity FROM '._DB_PREFIX_.'pack WHERE id_product_pack = '.(int)$this->id);
 	}
 }
