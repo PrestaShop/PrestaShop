@@ -262,7 +262,7 @@ class LanguageCore extends ObjectModel
 			$mPath_to = _PS_MAIL_DIR_.(string)$iso_to.'/';
 		}
 
-		$lFiles = array('admin.php', 'errors.php', 'fields.php', 'pdf.php', 'tabs.php', 'index.php');
+		$lFiles = array('admin.php', 'errors.php', 'fields.php', 'pdf.php', 'tabs.php');
 
 		// Added natives mails files
 		$mFiles = array(
@@ -273,7 +273,7 @@ class LanguageCore extends ObjectModel
 			'contact.html', 'contact.txt',
 			'contact_form.html', 'contact_form.txt',
 			'credit_slip.html', 'credit_slip.txt',
-			'download_product.html', 'download_product.txt', 'download-product.tpl',
+			'download_product.html', 'download_product.txt',
 			'employee_password.html', 'employee_password.txt',
 			'forward_msg.html', 'forward_msg.txt',
 			'guest_to_customer.html', 'guest_to_customer.txt',
@@ -297,7 +297,7 @@ class LanguageCore extends ObjectModel
 			'test.html', 'test.txt',
 			'voucher.html', 'voucher.txt',
 			'voucher_new.html', 'voucher_new.txt',
-			'order_changed.html', 'order_changed.txt', 'index.php'
+			'order_changed.html', 'order_changed.txt'
 		);
 
 		$number = -1;
@@ -704,10 +704,8 @@ class LanguageCore extends ObjectModel
 					$lang->name = $lang_pack->name;
 		}
 		elseif ($params_lang !== null && is_array($params_lang))
-		{
 			foreach ($params_lang as $key => $value)
 				$lang->$key = $value;
-		}
 		else
 			return false;
 		

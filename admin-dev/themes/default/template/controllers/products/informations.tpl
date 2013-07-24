@@ -43,7 +43,7 @@
 			$('document').ready( function() {
 				$(".check_product_name")
 					.autocomplete(
-						'{$link->getAdminLink('AdminProducts', true)|escape:'html'}', {
+						'{$link->getAdminLink('AdminProducts', true)|addslashes}', {
 							minChars: 3,
 							max: 10,
 							width: $(".check_product_name").width(),

@@ -295,13 +295,20 @@
 									{/foreach}
 								{elseif $input.type == 'file'}
 									{if isset($input.display_image) && $input.display_image}
-										{if isset($fields_value.image) && $fields_value.image}
+										{if isset($fields_value[$input.name].image) && $fields_value[$input.name].image}
 											<div id="image">
+<<<<<<< HEAD
 												{$fields_value.image}
 												<p align="center">{l s='File size'} {$fields_value.size}kb</p>
 
 												<a class="btn btn-default" href="{$current}&{$identifier}={$form_id}&token={$token}&deleteImage=1">
 													<i class="icon-trash"></i> {l s='Delete'}
+=======
+												{$fields_value[$input.name].image}
+												<p align="center">{l s='File size'} {$fields_value[$input.name].size}kb</p>
+												<a href="{$current}&{$identifier}={$form_id}&token={$token}&deleteImage=1">
+													<img src="../img/admin/delete.gif" alt="{l s='Delete'}" /> {l s='Delete'}
+>>>>>>> 6ac3f1133ae7547ff92964c47ec141c3ab5bf5c4
 												</a>
 
 											</div><br />
@@ -405,13 +412,13 @@
 						{/if}
 						</div>
 					{/foreach}
-					{hook h='displayAdminForm'}
+					{hook h='displayAdminForm' fieldset=$f}
 					{if isset($name_controller)}
 						{capture name=hookName assign=hookName}display{$name_controller|ucfirst}Form{/capture}
-						{hook h=$hookName}
+						{hook h=$hookName fieldset=$f}
 					{elseif isset($smarty.get.controller)}
 						{capture name=hookName assign=hookName}display{$smarty.get.controller|ucfirst|htmlentities}Form{/capture}
-						{hook h=$hookName}
+						{hook h=$hookName fieldset=$f}
 					{/if}
 				{elseif $key == 'submit'}
 					<div class="margin-form">

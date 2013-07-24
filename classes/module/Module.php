@@ -153,18 +153,22 @@ abstract class ModuleCore
 			// If cache is not generated, we generate it
 			if (self::$modules_cache == null && !is_array(self::$modules_cache))
 			{
-				// Join clause is done to check if the module is activated in current shop context												
-				$sql_limit_shop = 'SELECT COUNT(*) FROM `'._DB_PREFIX_.'module_shop` ms WHERE m.`id_module` = ms.`id_module` AND ms.`id_shop` = '.((is_object(Context::getContext()->shop) && $id = (int)Context::getContext()->shop->id) ? $id : 1);
-									
-				$sql = 'SELECT m.`id_module`, m.`name`, ('.$sql_limit_shop.') as total FROM `'._DB_PREFIX_.'module` m';
-
-				// Result is cached
+				$id_shop = (Validate::isLoadedObject($this->context->shop) ? $this->context->shop->id : 1);
 				self::$modules_cache = array();
-				$result = Db::getInstance()->executeS($sql);
+				// Join clause is done to check if the module is activated in current shop context
+				$result = Db::getInstance()->executeS('
+				SELECT m.`id_module`, m.`name`, (
+					SELECT id_module
+					FROM `'._DB_PREFIX_.'module_shop` ms
+					WHERE m.`id_module` = ms.`id_module`
+					AND ms.`id_shop` = '.(int)$id_shop.'
+					LIMIT 1
+				) as mshop
+				FROM `'._DB_PREFIX_.'module` m');
 				foreach ($result as $row)
 				{
 					self::$modules_cache[$row['name']] = $row;
-					self::$modules_cache[$row['name']]['active'] = ($row['total'] > 0) ? 1 : 0;
+					self::$modules_cache[$row['name']]['active'] = ($row['mshop'] > 0) ? 1 : 0;
 				}
 			}
 
@@ -668,6 +672,7 @@ abstract class ModuleCore
 		if ($alias = Hook::getRetroHookName($hook_name))
 			$hook_name = $alias;
 
+		Hook::exec('actionModuleRegisterHookBefore', array('object' => $this, 'hook_name' => $hook_name));
 		// Get hook id
 		$id_hook = Hook::getIdByName($hook_name);
 
@@ -714,6 +719,7 @@ abstract class ModuleCore
 			));
 		}
 
+		Hook::exec('actionModuleRegisterHookAfter', array('object' => $this, 'hook_name' => $hook_name));
 		return $return;
 	}
 
@@ -729,11 +735,16 @@ abstract class ModuleCore
 		// Get hook id if a name is given as argument
 		if (!is_numeric($hook_id))
 		{
+			$hook_name = (int)$hook_id;
 			// Retrocompatibility
 			$hook_id = Hook::getIdByName($hook_id);
 			if (!$hook_id)
 				return false;
 		}
+		else
+			$hook_name = Hook::getNameById((int)$hook_id);
+
+		Hook::exec('actionModuleUnRegisterHookBefore', array('object' => $this, 'hook_name' => $hook_name));
 
 		// Unregister module on hook by id
 		$sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module`
@@ -743,6 +754,8 @@ abstract class ModuleCore
 
 		// Clean modules position
 		$this->cleanPositions($hook_id, $shop_list);
+
+		Hook::exec('actionModuleUnRegisterHookAfter', array('object' => $this, 'hook_name' => $hook_name));
 
 		return $result;
 	}
@@ -1341,7 +1354,7 @@ abstract class ModuleCore
 		elseif (isset($context->customer))
 		{
 			$groups = $context->customer->getGroups();
-			if (empty($groups))
+			if (!count($groups))
 				$groups = array(Configuration::get('PS_UNIDENTIFIED_GROUP'));
 		}
 
@@ -1364,7 +1377,7 @@ abstract class ModuleCore
 		'.(isset($billing) && $frontend ? 'AND mc.id_country = '.(int)$billing->id_country : '').'
 		AND (SELECT COUNT(*) FROM '._DB_PREFIX_.'module_shop ms WHERE ms.id_module = m.id_module AND ms.id_shop IN('.implode(', ', $list).')) = '.count($list).'
 		AND hm.id_shop IN('.implode(', ', $list).')
-		'.(count($groups) && $frontend ? 'AND (mg.`id_group` IN('.implode(', ', $groups).'))' : '').$paypal_condition.'
+		'.((count($groups) && $frontend) ? 'AND (mg.`id_group` IN ('.implode(', ', $groups).'))' : '').$paypal_condition.'
 		GROUP BY hm.id_hook, hm.id_module
 		ORDER BY hm.`position`, m.`name` DESC');
 	}
@@ -1502,12 +1515,12 @@ abstract class ModuleCore
 	 * @param int $id_hook Hook ID
 	 * @return array Exceptions
 	 */
-	protected static $exceptionsCache = null;
-	public function getExceptions($hookID, $dispatch = false)
+	public function getExceptions($id_hook, $dispatch = false)
 	{
-		if (self::$exceptionsCache === null)
+		$cache_id = 'exceptionsCache';
+		if (!Cache::isStored($cache_id))
 		{
-			self::$exceptionsCache = array();
+			$exceptionsCache = array();
 			$sql = 'SELECT * FROM `'._DB_PREFIX_.'hook_module_exceptions`
 				WHERE `id_shop` IN ('.implode(', ', Shop::getContextListShopID()).')';
 			$result = Db::getInstance()->executeS($sql);
@@ -1516,33 +1529,34 @@ abstract class ModuleCore
 				if (!$row['file_name'])
 					continue;
 				$key = $row['id_hook'].'-'.$row['id_module'];
-				if (!isset(self::$exceptionsCache[$key]))
-					self::$exceptionsCache[$key] = array();
-				if (!isset(self::$exceptionsCache[$key][$row['id_shop']]))
-					self::$exceptionsCache[$key][$row['id_shop']] = array();
-				self::$exceptionsCache[$key][$row['id_shop']][] = $row['file_name'];
+				if (!isset($exceptionsCache[$key]))
+					$exceptionsCache[$key] = array();
+				if (!isset($exceptionsCache[$key][$row['id_shop']]))
+					$exceptionsCache[$key][$row['id_shop']] = array();
+				$exceptionsCache[$key][$row['id_shop']][] = $row['file_name'];
 			}
+			Cache::store($cache_id, $exceptionsCache);
 		}
+		else
+			$exceptionsCache = !Cache::retrieve($cache_id);
 
-		$key = $hookID.'-'.$this->id;
-		if (!$dispatch)
+		$key = $id_hook.'-'.$this->id;
+		$array_return = array();
+		if ($dispatch)
 		{
-			$files = array();
 			foreach (Shop::getContextListShopID() as $shop_id)
-				if (isset(self::$exceptionsCache[$key], self::$exceptionsCache[$key][$shop_id]))
-					foreach (self::$exceptionsCache[$key][$shop_id] as $file)
-						if (!in_array($file, $files))
-							$files[] = $file;
-			return $files;
+				if (isset($exceptionsCache[$key], $exceptionsCache[$key][$shop_id]))
+					$array_return[$shop_id] = $exceptionsCache[$key][$shop_id];
 		}
 		else
 		{
-			$list = array();
 			foreach (Shop::getContextListShopID() as $shop_id)
-				if (isset(self::$exceptionsCache[$key], self::$exceptionsCache[$key][$shop_id]))
-					$list[$shop_id] = self::$exceptionsCache[$key][$shop_id];
-			return $list;
+				if (isset($exceptionsCache[$key], $exceptionsCache[$key][$shop_id]))
+					foreach ($exceptionsCache[$key][$shop_id] as $file)
+						if (!in_array($file, $array_return))
+							$array_return[] = $file;
 		}
+		return $array_return;
 	}
 
 	public static function isInstalled($module_name)
@@ -1603,7 +1617,7 @@ abstract class ModuleCore
 	{
 		if ($name === null)
 			$name = $this->name;
-		return $name.'|'.(int)Tools::usingSecureMode().'|'.(int)$this->context->shop->id.'|'.(int)Group::getCurrent()->id.'|'.(int)$this->context->language->id;
+		return $name.'|'.(int)Tools::usingSecureMode().'|'.(int)$this->context->shop->id.'|'.(int)Group::getCurrent()->id.'|'.(int)$this->context->language->id.'|'.(int)$this->context->currency->id;
 	}
 
 	public function display($file, $template, $cacheId = null, $compileId = null)

@@ -32,10 +32,9 @@ class AdminCartRulesControllerCore extends AdminController
 		$this->table = 'cart_rule';
 	 	$this->className = 'CartRule';
 	 	$this->lang = true;
-	 	
-	 	$this->addRowAction('edit');
+		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-		
+
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->fields_list = array(

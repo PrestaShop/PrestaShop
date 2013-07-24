@@ -2710,42 +2710,50 @@ class AdminImportControllerCore extends AdminController
 				// If i am a superadmin, i can truncate table
 				if (((Shop::isFeatureActive() && $this->context->employee->isSuperAdmin()) || !Shop::isFeatureActive()) && Tools::getValue('truncate'))
 					$this->truncateTables((int)Tools::getValue('entity'));
-
+				$import_type = false;
 				switch ((int)Tools::getValue('entity'))
 				{
-					case $this->entities[$this->l('Categories')]:
+					case $this->entities[$import_type = $this->l('Categories')]:
 						$this->categoryImport();
 						break;
-					case $this->entities[$this->l('Products')]:
+					case $this->entities[$import_type = $this->l('Products')]:
+					$import_type = $this->l('Categories');
 						$this->productImport();
 						break;
-					case $this->entities[$this->l('Customers')]:
+					case $this->entities[$import_type = $this->l('Customers')]:
 						$this->customerImport();
 						break;
-					case $this->entities[$this->l('Addresses')]:
+					case $this->entities[$import_type = $this->l('Addresses')]:
 						$this->addressImport();
 						break;
-					case $this->entities[$this->l('Combinations')]:
+					case $this->entities[$import_type = $this->l('Combinations')]:
 						$this->attributeImport();
 						break;
-					case $this->entities[$this->l('Manufacturers')]:
+					case $this->entities[$import_type = $this->l('Manufacturers')]:
 						$this->manufacturerImport();
 						break;
-					case $this->entities[$this->l('Suppliers')]:
+					case $this->entities[$import_type = $this->l('Suppliers')]:
 						$this->supplierImport();
 						break;
 					// @since 1.5.0
-					case $this->entities[$this->l('Supply Orders')]:
+					case $this->entities[$import_type = $this->l('Supply Orders')]:
 						if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 							$this->supplyOrdersImport();
 						break;
 					// @since 1.5.0
-					case $this->entities[$this->l('Supply Order Details')]:
+					case $this->entities[$import_type = $this->l('Supply Order Details')]:
 						if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 							$this->supplyOrdersDetailsImport();
 						break;
 					default:
 						$this->errors[] = $this->l('Please select what you would like to import');
+				}
+				if ($import_type !== false)
+				{
+					$log_message = sprintf($this->l('%s import'), $import_type);
+					if (Tools::getValue('truncate'))
+						$log_message .= ' '.$this->l('with truncate');
+					Logger::addLog($log_message, 1, null, $import_type, null, true, (int)$this->context->employee->id);
 				}
 			}
 			else

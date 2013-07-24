@@ -77,9 +77,9 @@
 						{/if}
 						{if get_class($document) eq 'OrderInvoice'}
 							{if isset($document->is_delivery)}
-								#{Configuration::get('PS_DELIVERY_PREFIX', $current_id_lang)}{'%06d'|sprintf:$document->delivery_number}
+								#{Configuration::get('PS_DELIVERY_PREFIX', $current_id_lang, null, $order->id_shop)}{'%06d'|sprintf:$document->delivery_number}
 							{else}
-								{$document->getInvoiceNumberFormatted($current_id_lang)}
+								{$document->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}
 							{/if}
 						{elseif get_class($document) eq 'OrderSlip'}
 							#{Configuration::get('PS_CREDIT_SLIP_PREFIX', $current_id_lang)}{'%06d'|sprintf:$document->id}
@@ -123,7 +123,7 @@
 				{if !isset($document->is_delivery)}
 				<tr id="invoiceNote{$document->id}" style="display:none">
 					<td colspan="5">
-						<form action="{$current_index}&viewOrder&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}" method="post">
+						<form action="{$current_index}&viewOrder&id_order={$order->id}{if isset($smarty.get.token)}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}{/if}" method="post">
 							<p>
 								<label for="editNote{$document->id}" class="t">{l s='Note'}</label>
 								<input type="hidden" name="id_order_invoice" value="{$document->id}" />
@@ -149,7 +149,7 @@
 				<td colspan="5" class="center">
 					<h4>{l s='No documents are available'}</h4>
 					{if isset($invoice_management_active) && $invoice_management_active}
-					<a class="btn btn-default" href="{$current_index}&viewOrder&submitGenerateInvoice&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
+					<a class="button" href="{$current_index}&viewOrder&submitGenerateInvoice&id_order={$order->id}{if isset($smarty.get.token)}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}{/if}">{l s='Generate invoice'}</a>
 						<i class="icon-repeat"></i>
 						{l s='Generate invoice'}
 					</a>

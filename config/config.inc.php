@@ -90,7 +90,21 @@ if (!isset($_SERVER['HTTP_HOST']) || empty($_SERVER['HTTP_HOST']))
 $context = Context::getContext();
 
 /* Initialize the current Shop */
-$context->shop = Shop::initialize();
+try 
+{
+	$context->shop = Shop::initialize();
+}
+catch(Exception $e)
+{
+	header('HTTP/1.1 503 temporarily overloaded');
+
+	define('_PS_SMARTY_DIR_', _PS_TOOL_DIR_.'smarty/');
+	require_once(_PS_SMARTY_DIR_.'Smarty.class.php');
+	$context->smarty = new Smarty();		
+	$context->smarty->display('error500.html');
+	
+	exit;
+}
 define('_THEME_NAME_', $context->shop->getTheme());
 define('__PS_BASE_URI__', $context->shop->getBaseURI());
 

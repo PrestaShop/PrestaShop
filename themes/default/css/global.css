@@ -708,7 +708,9 @@ ul.idTabs li {
 /*p.cart_navigation .multishipping-button { margin-right: 10px }*/
 
 #order-detail-content {margin-bottom:20px}
-
+#order-detail-content .customizationUploaded li,#order-detail-content .typedText li {
+	list-style: none;
+}
 table#cart_summary th {
 	padding:14px 12px;
 	color:#fff;

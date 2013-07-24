@@ -169,12 +169,18 @@ class TabCore extends ObjectModel
 	 */
 	public static function getCurrentParentId()
 	{
-	 	if ($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-	 		SELECT `id_parent`
-	 		FROM `'._DB_PREFIX_.'tab`
-	 		WHERE LOWER(class_name) = \''.pSQL(Tools::strtolower(Tools::getValue('controller'))).'\''))
-		 	return $result['id_parent'];
- 		return -1;
+		$cache_id = 'getCurrentParentId_'.Tools::strtolower(Tools::getValue('controller'));
+		if (!Cache::isStored($cache_id))
+		{
+			$value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT `id_parent`
+			FROM `'._DB_PREFIX_.'tab`
+			WHERE LOWER(class_name) = \''.pSQL(Tools::strtolower(Tools::getValue('controller'))).'\'');
+			if (!$value)
+				$value = -1;
+			Cache::store($cache_id, $value);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**
@@ -538,11 +544,10 @@ class TabCore extends ObjectModel
 					foreach($tab->attributes() as $key => $value)
 						if ($key == 'display_type')
 							$display_type = (string)$value;
-							
+
 					foreach ($tab->children() as $module)
-						foreach ($module->attributes() as $k => $v)
-							if ($k == 'name')
-								$modules_list[$display_type][] = (string)$v;
+						$modules_list[$display_type][(int)$module['position']] = (string)$module['name'];
+					ksort($modules_list[$display_type]);
 				}
 			}
 		

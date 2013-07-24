@@ -269,7 +269,7 @@ class MailAlerts extends Module
 		$customer = $params['customer'];
 		$delivery = new Address((int)$order->id_address_delivery);
 		$invoice = new Address((int)$order->id_address_invoice);
-		$order_date_text = Tools::displayDate($order->date_add, (int)$id_lang);
+		$order_date_text = Tools::displayDate($order->date_add);
 		$carrier = new Carrier((int)$order->id_carrier);
 		$message = $order->getFirstMessage();
 
@@ -540,8 +540,7 @@ class MailAlerts extends Module
 		$coverage = StockManagerFactory::getManager()->getProductCoverage($id_product, $id_product_attribute, $warning_coverage, $id_warehouse);
 
 		// if we need to send a notification
-		if ($product->active == 1 &&
-			($coverage < $warning_coverage) && !empty($this->_merchant_mails) &&
+		if ($product->active == 1 && $coverage !== -1 && ($coverage < $warning_coverage) && !empty($this->_merchant_mails) &&
 			Configuration::getGlobalValue('MA_MERCHANT_COVERAGE'))
 		{
 			$id_lang = (int)Context::getContext()->language->id;

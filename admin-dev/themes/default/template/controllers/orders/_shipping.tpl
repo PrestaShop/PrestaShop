@@ -22,14 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<table class="table table-hover" width="100%" cellspacing="0" cellpadding="0" id="shipping_table">
-	<colgroup>
-		<col width="15%">
-		<col width="15%">
-		<col width="">
-		<col width="20%">
-		<col width="1%">
-	</colgroup>
+<table class="table" id="shipping_table">
 	<thead>
 		<tr>
 			<th>
@@ -58,7 +51,7 @@
 			<td>{dateFormat date=$line.date_add full=true}</td>
 			<td>{$line.type}</td>
 			<td>{$line.carrier_name}</td>
-			<td>{$line.weight|string_format:"%.3f"} {Configuration::get('PS_WEIGHT_UNIT')}</td>
+			<td class="weight">{$line.weight|string_format:"%.3f"} {Configuration::get('PS_WEIGHT_UNIT')}</td>
 			<td class="center">
 				{if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}
 					{displayPrice price=$line.shipping_cost_tax_incl currency=$currency->id}

@@ -144,7 +144,7 @@
                         <td>
                             <strong>{$cms_category['id_cms_category']}</strong>
                         </td>
-                        <td><label for="{$id_checkbox}" class="t"><strong>{str_repeat('&nbsp;', ($cms_category['level_depth'] - 1) * 4)|cat:$cms_category['name']}</strong></label></td>
+                        <td><label for="{$id_checkbox}" class="t"><strong>{if $cms_category['level_depth'] > 0}{str_repeat('&nbsp;', ($cms_category['level_depth'] - 1) * 4)}{/if}{$cms_category['name']|escape}</strong></label></td>
                     </tr>
 
                     {foreach $cms_category['cms_pages'] as $subkey => $cms_page}

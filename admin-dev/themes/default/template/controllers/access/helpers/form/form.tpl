@@ -302,7 +302,7 @@
 											{assign var=is_child value=true}
 											{assign var=result_accesses value=0}
 											<tr class="child-{$child.id_parent}">
-												<td{if !$is_child} class="bold"{/if}>{if $is_child} &raquo; {/if}<strong>{$child.name}</strong></td>
+												<td{if !$is_child} class="bold"{/if}>{if $is_child} &raquo; {/if}{$child.name}</td>
 												{foreach $perms as $perm}
 													{if $access_edit == 1}
 														<td>

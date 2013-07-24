@@ -38,6 +38,7 @@ class AdminLogsControllerCore extends AdminController
 
 		$this->fields_list = array(
 			'id_log' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+			'employee' => array('title' => $this->l('Employee'), 'align' => 'center', 'width' => 100),
 			'severity' => array('title' => $this->l('Severity (1-4)'), 'align' => 'center', 'width' => 50),
 			'message' => array('title' => $this->l('Message')),
 			'object_type' => array('title' => $this->l('Object type'), 'width' => 75),
@@ -62,6 +63,8 @@ class AdminLogsControllerCore extends AdminController
 			)
 		);
 		$this->list_no_link = true;
+		$this->_select .= 'CONCAT(LEFT(e.firstname, 1), \'. \', e.lastname) employee';
+		$this->_join .= ' LEFT JOIN '._DB_PREFIX_.'employee e ON (a.id_employee = e.id_employee)';
 		parent::__construct();
 	}
 

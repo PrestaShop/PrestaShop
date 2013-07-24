@@ -78,7 +78,7 @@
 	<tr id="image_id">
 		<td style="padding: 4px;">
 			<a href="{$smarty.const._THEME_PROD_DIR_}image_path.jpg" class="fancybox">
-				<img src="{$smarty.const._THEME_PROD_DIR_}en-default-small_default.jpg" alt="image_id" title="image_id" />
+				<img src="{$smarty.const._THEME_PROD_DIR_}{$iso_lang}-default-small_default.jpg" alt="image_id" title="image_id" />
 			</a>
 		</td>
 		<td id="td_image_id" class="pointer dragHandle center positionImage">
@@ -291,41 +291,28 @@
 		{
 			doAdminAjax(
 			{
-				"action":"updateImagePosition",
-				"json":json,
-				"token" : "{/literal}{$token}{literal}",
-				"tab" : "AdminProducts",
-				"ajax" : 1
-			});
-		}
-		
-		function delQueue(id)
-		{
-			$("#img" + id).fadeOut("slow");
-			$("#img" + id).remove();
-		}
-		
-		function imageLine(id, path, position, cover, shops)
-		{
-			line = $("#lineType").html();
-			line = line.replace(/image_id/g, id);
-			line = line.replace(/en-default/g, path);
-			line = line.replace(/image_path/g, path);
-			line = line.replace(/image_position/g, position);
-			line = line.replace(/icon-check-empty/g, cover);
-			line = line.replace(/<tbody>/gi, "");
-			line = line.replace(/<\/tbody>/gi, "");
-			if (shops != false)
-			{
-				$.each(shops, function(key, value){
-					if (value == 1)
-						line = line.replace('id="' + key + '' + id + '"','id="' + key + '' + id + '" checked=checked');
-				});
+				line = $("#lineType").html();
+				line = line.replace(/image_id/g, id);
+				line = line.replace(/[a-z]{2}-default/g, path);
+				line = line.replace(/image_path/g, path);
+				line = line.replace(/image_position/g, position);
+				line = line.replace(/blank/g, cover);
+				line = line.replace(/<tbody>/gi, "");
+				line = line.replace(/<\/tbody>/gi, "");
+
+				if (shops != false)
+				{
+					$.each(shops, function(key, value){
+						if (value == 1)
+							line = line.replace('id="' + key + '' + id + '"','id="' + key + '' + id + '" checked=checked');
+					});
+				}
+
+				$("#imageList").append(line);
 			}
-			$("#imageList").append(line);
-		}
-		$('.fancybox').fancybox();
-	});
-	{/literal}
-</script>
+
+			$('.fancybox').fancybox();
+		});
+		{/literal}
+	</script>
 {/if}

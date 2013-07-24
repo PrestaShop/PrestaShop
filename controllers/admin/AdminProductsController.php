@@ -77,7 +77,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->allow_export = true;
 
 		// @since 1.5 : translations for tabs
-		$this->available_tabs_lang = array (
+		$this->available_tabs_lang = array(
 			'Informations' => $this->l('Information'),
 			'Pack' => $this->l('Pack'),
 			'VirtualProduct' => $this->l('Virtual Product'),
@@ -161,40 +161,28 @@ class AdminProductsControllerCore extends AdminController
 		if (Validate::isLoadedObject($this->_category) && empty($this->_filter))
 			$join_category = true;
 
-		$this->_join .= 'LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = a.`id_product` '.(!Shop::isFeatureActive() ? ' AND i.cover=1' : '').')';
-		if (Shop::isFeatureActive())
-		{
-			$alias = 'sa';
-			$alias_image = 'image_shop';
-			if (Shop::getContext() == Shop::CONTEXT_SHOP)
-			{
-				$this->_join .= ' JOIN `'._DB_PREFIX_.'product_shop` sa ON (a.`id_product` = sa.`id_product` AND sa.id_shop = '.(int)$this->context->shop->id.')
-				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = '.(int)$this->context->shop->id.')
-				LEFT JOIN `'._DB_PREFIX_.'shop` shop ON (shop.id_shop = '.(int)$this->context->shop->id.') 
-				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (image_shop.`id_image` = i.`id_image` AND image_shop.`cover` = 1 AND image_shop.id_shop='.(int)$this->context->shop->id.')';
-			}
-			else
-			{
-				$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_shop` sa ON (a.`id_product` = sa.`id_product` AND sa.id_shop = a.id_shop_default)
-				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = a.id_shop_default)
-				LEFT JOIN `'._DB_PREFIX_.'shop` shop ON (shop.id_shop = a.id_shop_default) 
-				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (image_shop.`id_image` = i.`id_image` AND image_shop.`cover` = 1 AND image_shop.id_shop=a.id_shop_default)';
-			}
-			$this->_select .= 'shop.name as shopname, ';
-		}
-		else
-		{
-			$alias = 'a';
-			$alias_image = 'i';
-			$this->_join .= 'LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = 1)';
-		}
-
-		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image,';
-		
-		$this->_join .= ($join_category ? 'INNER JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product` AND cp.`id_category` = '.(int)$this->_category->id.')' : '').'
+		$this->_join .= '
+		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = a.`id_product`)
 		LEFT JOIN `'._DB_PREFIX_.'stock_available` sav ON (sav.`id_product` = a.`id_product` AND sav.`id_product_attribute` = 0
 		'.StockAvailable::addSqlShopRestriction(null, null, 'sav').') ';
-		$this->_select .= 'cl.name `name_category` '.($join_category ? ', cp.`position`' : '').', '.$alias.'.`price`, 0 AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`';
+		
+		$alias = 'sa';
+		$alias_image = 'image_shop';
+				
+		$id_shop = Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP? (int)$this->context->shop->id : 'a.id_shop_default';
+		$this->_join .= ' JOIN `'._DB_PREFIX_.'product_shop` sa ON (a.`id_product` = sa.`id_product` AND sa.id_shop = '.$id_shop.')
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = '.$id_shop.')
+				LEFT JOIN `'._DB_PREFIX_.'shop` shop ON (shop.id_shop = '.$id_shop.') 
+				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (image_shop.`id_image` = i.`id_image` AND image_shop.`cover` = 1 AND image_shop.id_shop = '.$id_shop.')';
+		
+		$this->_select .= 'shop.name as shopname, ';
+		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`';
+		
+		if ($join_category)
+		{
+			$this->_join .= ' INNER JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product` AND cp.`id_category` = '.(int)$this->_category->id.') ';
+			$this->_select .= ' , cp.`position`, ';
+		}
 
 		$this->_group = 'GROUP BY '.$alias.'.id_product';
 
@@ -202,6 +190,8 @@ class AdminProductsControllerCore extends AdminController
 		$this->fields_list['id_product'] = array(
 			'title' => $this->l('ID'),
 			'align' => 'center',
+			'type' => 'int',
+			'width' => 40
 		);
 		$this->fields_list['image'] = array(
 			'title' => $this->l('Photo'),
@@ -244,13 +234,17 @@ class AdminProductsControllerCore extends AdminController
 			'havingFilter' => true,
 			'orderby' => false
 		);
-		$this->fields_list['sav_quantity'] = array(
-			'title' => $this->l('Quantity'),
-			'align' => 'right',
-			'filter_key' => 'sav!quantity',
-			'orderby' => true,
-			//'hint' => $this->l('This is the quantity available in the current shop/group.'),
-		);
+
+		if (Configuration::get('PS_STOCK_MANAGEMENT'))
+			$this->fields_list['sav_quantity'] = array(
+				'title' => $this->l('Quantity'),
+				'type' => 'int',
+				'align' => 'right',
+				'filter_key' => 'sav!quantity',
+				'orderby' => true,
+				//'hint' => $this->l('This is the quantity available in the current shop/group.'),
+			);
+
 		$this->fields_list['active'] = array(
 			'title' => $this->l('Status'),
 			'active' => 'status',
@@ -260,7 +254,7 @@ class AdminProductsControllerCore extends AdminController
 			'orderby' => false
 		);
 
-		if ((int)$this->id_current_category)
+		if ($join_category && (int)$this->id_current_category)
 			$this->fields_list['position'] = array(
 				'title' => $this->l('Position'),
 				'filter_key' => 'cp!position',
@@ -365,7 +359,14 @@ class AdminProductsControllerCore extends AdminController
 				$default_product = new Product((int)$this->object->id, false, null, (int)$this->object->id_shop_default);
 				$def = ObjectModel::getDefinition($this->object);
 				foreach ($def['fields'] as $field_name => $row)
-					$this->object->$field_name = ObjectModel::formatValue($default_product->$field_name, $def['fields'][$field_name]['type']);
+				{
+					$fields_array = array();
+					if(is_array($default_product->$field_name))
+						foreach ($fields_array as $key => $fields_name)
+							$this->object->$field_name[$key] = ObjectModel::formatValue($fields_name, $def['fields'][$field_name]['type']);
+					else
+						$this->object->$field_name = ObjectModel::formatValue($this->object->$field_name, $def['fields'][$field_name]['type']);
+				}
 			}
 			$this->object->loadStockData();
 		}
@@ -721,7 +722,12 @@ class AdminProductsControllerCore extends AdminController
 									$this->errors[] = sprintf(Tools::displayError('You cannot delete the product #%d because there is physical stock left.'), $product->id);
 							}
 							if (!count($this->errors))
-								$success &= $product->delete();
+							{
+								if ($product->delete())
+									Logger::addLog(sprintf($this->l('%s deletion'), $this->className), 1, null, $this->className, (int)$product->id, true, (int)$this->context->employee->id);
+								else
+									$success = false;
+							}
 							else
 								$success = 0;
 						}
@@ -756,6 +762,26 @@ class AdminProductsControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('The price attribute is required.');
 			if (!Tools::getIsset('attribute_combination_list') || Tools::isEmpty(Tools::getValue('attribute_combination_list')))
 				$this->errors[] = Tools::displayError('You must add at least one attribute.');
+				
+			$array_checks = array(
+				'reference' => 'isReference',
+				'supplier_reference' => 'isReference',
+				'location' => 'isReference',
+				'ean13' => 'isEan13',
+				'upc' => 'isUpc',
+				'wholesale_price' => 'isPrice',
+				'price' => 'isPrice',
+				'ecotax' => 'isPrice',
+				'quantity' => 'isInt',
+				'weight' => 'isUnsignedFloat',
+				'unit_price_impact' => 'isPrice',
+				'default_on' => 'isBool',
+				'minimal_quantity' => 'isUnsignedInt',
+				'available_date' => 'isDateFormat'
+			);
+			foreach ($array_checks as $property => $check)
+				if (Tools::getValue('attribute_'.$property) !== false && !call_user_func(array('Validate', $check), Tools::getValue('attribute_'.$property)))
+					$this->errors[] = sprintf(Tools::displayError('Field %s is not valid'), $property);
 
 			if (!count($this->errors))
 			{
@@ -1678,6 +1704,7 @@ class AdminProductsControllerCore extends AdminController
 
 		if ($this->object->add())
 		{
+			Logger::addLog(sprintf($this->l('%s addition'), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
 			$this->addCarriers();
 			$this->updateAccessories($this->object);
 			$this->updatePackItems($this->object);
@@ -1819,6 +1846,7 @@ class AdminProductsControllerCore extends AdminController
 
 				if ($object->update())
 				{
+					Logger::addLog(sprintf($this->l('%s edition'), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
 					if (in_array($this->context->shop->getContext(), array(Shop::CONTEXT_SHOP, Shop::CONTEXT_ALL)))
 					{
 						if ($this->isTabSubmitted('Shipping'))
@@ -2008,17 +2036,28 @@ class AdminProductsControllerCore extends AdminController
 		// Check fields validity
 		foreach ($rules['validate'] as $field => $function)
 			if ($this->isProductFieldUpdated($field) && ($value = Tools::getValue($field)))
-				if (!Validate::$function($value))
+			{
+				$res = true;
+				if (Tools::strtolower($function) == 'iscleanhtml')
+				{
+					if (!Validate::$function($value, (int)Configuration::get('PS_ALLOW_HTML_IFRAME')))
+						$res = false;
+				}
+				else
+					if (!Validate::$function($value))
+						$res = false;
+
+				if (!$res)
 					$this->errors[] = sprintf(
 						Tools::displayError('The %s field is invalid.'),
 						call_user_func(array($className, 'displayFieldName'), $field, $className)
 					);
-
+			}
 		// Check multilingual fields validity
 		foreach ($rules['validateLang'] as $fieldLang => $function)
 			foreach ($languages as $language)
 				if ($this->isProductFieldUpdated('description_short', $language['id_lang']) && ($value = Tools::getValue($fieldLang.'_'.$language['id_lang'])))
-					if (!Validate::$function($value))
+					if (!Validate::$function($value, (int)Configuration::get('PS_ALLOW_HTML_IFRAME')))
 						$this->errors[] = sprintf(
 							Tools::displayError('The %1$s field (%2$s) is invalid.'),
 							call_user_func(array($className, 'displayFieldName'), $fieldLang, $className),
@@ -2493,7 +2532,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['currentIndex'] = self::$currentIndex;
 		$this->tpl_form_vars['display_multishop_checkboxes'] = (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP && $this->display == 'edit');
 		$this->fields_form = array('');
-		$this->display = 'edit';
+	
 		$this->tpl_form_vars['token'] = $this->token;
 		$this->tpl_form_vars['combinationImagesJs'] = $this->getCombinationImagesJs();
 		$this->tpl_form_vars['PS_ALLOW_ACCENTED_CHARS_URL'] = (int)Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
@@ -2523,8 +2562,8 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['upload_max_filesize'] = $upload_max_filesize;
 		$this->tpl_form_vars['country_display_tax_label'] = $this->context->country->display_tax_label;
 		$this->tpl_form_vars['has_combinations'] = $this->object->hasAttributes();
-
 		$this->product_exists_in_shop = true;
+		
 		if ($this->display == 'edit' && Validate::isLoadedObject($product) && Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP && !$product->isAssociatedToShop($this->context->shop->id))
 		{
 			$this->product_exists_in_shop = false;
@@ -2552,12 +2591,14 @@ class AdminProductsControllerCore extends AdminController
 			$this->initPack($this->object);
 			$this->{'initForm'.$this->tab_display}($this->object);
 			$this->tpl_form_vars['product'] = $this->object;
+
 			if ($this->ajax)
 				if (!isset($this->tpl_form_vars['custom_form']))
 					throw new PrestaShopException('custom_form empty for action '.$this->tab_display);
 				else
 					return $this->tpl_form_vars['custom_form'];
 		}
+		
 		$parent = parent::renderForm();
 		$this->addJqueryPlugin(array('autocomplete', 'fancybox', 'typewatch'));
 		return $parent;
@@ -2701,7 +2742,7 @@ class AdminProductsControllerCore extends AdminController
 						
 						if (!$product_supplier_id)
 						{
-							$product->addSupplierReference($supplier->id_supplier, (int)$attribute['id_product_attribute'], $reference, (float)Tools::convertPrice($price, $id_currency), (int)$id_currency);
+							$product->addSupplierReference($supplier->id_supplier, (int)$attribute['id_product_attribute'], $reference, (float)$price, (int)$id_currency);
 							if ($product->id_supplier == $supplier->id_supplier)
 							{
 								if ((int)$attribute['id_product_attribute'] > 0)
@@ -2727,7 +2768,7 @@ class AdminProductsControllerCore extends AdminController
 						{
 							$product_supplier = new ProductSupplier($product_supplier_id);
 							$product_supplier->id_currency = (int)$id_currency;
-							$product_supplier->product_supplier_price_te = (float)Tools::convertPrice($price, $id_currency); //converted in the default currency
+							$product_supplier->product_supplier_price_te = (float)$price;
 							$product_supplier->product_supplier_reference = pSQL($reference);
 							$product_supplier->update();
 
@@ -2949,7 +2990,7 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign(array(
 			'link' => $this->context->link,
 			'currency' => $currency = $this->context->currency,
-			'tax_rules_groups' => TaxRulesGroup::getTaxRulesGroups(true),
+			'tax_rules_groups' => TaxRulesGroup::getTaxRulesGroups(true, true),
 			'taxesRatesByGroup' => TaxRulesGroup::getAssociatedTaxRatesByIdCountry($this->context->country->id),
 			'ecotaxTaxRate' => Tax::getProductEcotaxRate(),
 			'tax_exclude_taxe_option' => Tax::excludeTaxeOption(),
@@ -3446,7 +3487,7 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign('languages', $this->_languages);
 		$data->assign('currency', $currency);
 		$this->object = $product;
-		$this->display = 'edit';
+		//$this->display = 'edit';
 		$data->assign('product_name_redirected', Product::getProductName((int)$product->id_product_redirected, null, (int)$this->context->language->id));
 		/*
 		* Form for adding a virtual product like software, mp3, etc...
@@ -3602,12 +3643,15 @@ class AdminProductsControllerCore extends AdminController
 					$current_shop_id = (int)$this->context->shop->id;
 				else
 					$current_shop_id = 0;
+
+				$languages = Language::getLanguages(true);
 					
 				$data->assign(array(
 						'countImages' => $count_images,
 						'id_product' => (int)Tools::getValue('id_product'),
 						'id_category_default' => (int)$this->_category->id,
 						'images' => $images,
+						'iso_lang' => $languages[0]['iso_code'],
 						'token' =>  $this->token,
 						'table' => $this->table,
 						'max_image_size' => $this->max_image_size / 1024 / 1024,

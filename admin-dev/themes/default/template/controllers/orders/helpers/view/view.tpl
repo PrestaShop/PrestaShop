@@ -27,7 +27,7 @@
 
 {block name="override_tpl"}
 	<script type="text/javascript">
-	var admin_order_tab_link = "{$link->getAdminLink('AdminOrders')|escape:'html'}";
+	var admin_order_tab_link = "{$link->getAdminLink('AdminOrders')|addslashes}";
 	var id_order = {$order->id};
 	var id_lang = {$current_id_lang};
 	var id_currency = {$order->id_currency};
@@ -134,11 +134,9 @@
 			</label>
 			<div class="col-lg-10">
 				<select id="id_order_state" name="id_order_state">
-					{foreach from=$states item=state}
-						{if $state['id_order_state'] != $currentState->id}
-						<option value="{$state['id_order_state']}">{$state['name']|stripslashes}</option>
-						{/if}
-					{/foreach}
+				{foreach from=$states item=state}
+					<option value="{$state['id_order_state']}"{if $state['id_order_state'] == $currentState->id} selected="selected" disabled="disabled"{/if}>{$state['name']|stripslashes}</option>
+				{/foreach}
 				</select>
 			</div>
 			<input type="hidden" name="id_order" value="{$order->id}" />
@@ -561,7 +559,7 @@
 								<td>{displayPrice price=$payment->amount currency=$payment->id_currency}</td>
 								<td>
 								{if $invoice = $payment->getOrderInvoice($order->id)}
-									{$invoice->getInvoiceNumberFormatted($current_id_lang)}
+									{$invoice->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}
 								{else}
 									{l s='No invoice'}
 								{/if}
@@ -644,7 +642,7 @@
 								<td>
 									<select name="payment_invoice" id="payment_invoice">
 									{foreach from=$invoices_collection item=invoice}
-										<option value="{$invoice->id}" selected="selected">{$invoice->getInvoiceNumberFormatted($current_id_lang)}</option>
+										<option value="{$invoice->id}" selected="selected">{$invoice->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}</option>
 									{/foreach}
 									</select>
 								</td>

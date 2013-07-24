@@ -361,7 +361,6 @@ class HelperCore
 	public function renderModulesList($modules_list)
 	{
 		$this->tpl_vars = array('modules_list' => $modules_list);
-		
 		$tpl = $this->createTemplate('helpers/modules_list/list.tpl');
 		$tpl->assign($this->tpl_vars);
 

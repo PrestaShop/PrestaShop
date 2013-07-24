@@ -236,7 +236,7 @@ class StockMvtCore extends ObjectModel
 		$query->innerJoin('stock', 's', 's.id_stock = sm.id_stock');
 		$query->innerJoin('warehouse', 'w', 'w.id_warehouse = s.id_warehouse');
 		$query->where('sm.sign = 1');
-		$query->where('s.id_product = '.(int)$id_product.' AND s.id_product_attribute = '.(int)$id_product_attribute);
+		$query->where('s.id_product = '.(int)$id_product.' OR s.id_product_attribute = '.(int)$id_product_attribute);
 		$query->orderBy('date_add DESC');
 
 		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);

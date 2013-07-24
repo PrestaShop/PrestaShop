@@ -23,7 +23,7 @@
 			if($(this).val().length > 0){
 				stopInstantSearchQueries();
 				instantSearchQuery = $.ajax({
-					url: '{if $search_ssl == 1}{$link->getPageLink('search', true)}{else}{$link->getPageLink('search')}{/if}',
+					url: '{if $search_ssl == 1}{$link->getPageLink('search', true)|addslashes}{else}{$link->getPageLink('search')|addslashes}{/if}',
 					data: {
 						instantSearch: 1,
 						id_lang: {$cookie->id_lang},
@@ -64,7 +64,7 @@
 		$('document').ready( function() {
 			$("#search_query_{$blocksearch_type}")
 				.autocomplete(
-					'{if $search_ssl == 1}{$link->getPageLink('search', true)}{else}{$link->getPageLink('search')}{/if}', {
+					'{if $search_ssl == 1}{$link->getPageLink('search', true)|addslashes}{else}{$link->getPageLink('search')|addslashes}{/if}', {
 						minChars: 3,
 						max: 10,
 						width: 500,

@@ -433,10 +433,10 @@ class AdminCountriesControllerCore extends AdminController
 	
 	public function processStatus()
 	{
-		if (Validate::isLoadedObject($object = $this->loadObject()))
-			Country::addModuleRestrictions(array(), array(array('id_country' => $object->id)), array());
-		
 		parent::processStatus();
+		if (Validate::isLoadedObject($object = $this->loadObject()) &&  $object->active == 1)
+			return Country::addModuleRestrictions(array(), array(array('id_country' => $object->id)), array());				
+		return false;
 	}
 	
 	public function processBulkStatusSelection($way)

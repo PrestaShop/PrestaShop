@@ -376,6 +376,9 @@ class OrderOpcControllerCore extends ParentOrderController
 		$customer = $this->context->customer;
 		$address_delivery = new Address($this->context->cart->id_address_delivery);
 
+		$id_address_invoice = $this->context->cart->id_address_invoice != $this->context->cart->id_address_delivery ? (int)$this->context->cart->id_address_invoice : 0;
+		$address_invoice = new Address($id_address_invoice);
+
 		if ($customer->birthday)
 			$birthday = explode('-', $customer->birthday);
 		else
@@ -404,7 +407,21 @@ class OrderOpcControllerCore extends ParentOrderController
 			'id_gender' => (int)$customer->id_gender,
 			'sl_year' => $birthday[0],
 			'sl_month' => $birthday[1],
-			'sl_day' => $birthday[2]
+			'sl_day' => $birthday[2],
+			'id_address_invoice' => $id_address_invoice,
+			'company_invoice' => Tools::htmlentitiesUTF8($address_invoice->company),
+			'lastname_invoice' => Tools::htmlentitiesUTF8($address_invoice->lastname),
+			'firstname_invoice' => Tools::htmlentitiesUTF8($address_invoice->firstname),
+			'vat_number_invoice' => Tools::htmlentitiesUTF8($address_invoice->vat_number),
+			'dni_invoice' => Tools::htmlentitiesUTF8($address_invoice->dni),
+			'address1_invoice' => Tools::htmlentitiesUTF8($address_invoice->address1),
+			'address2_invoice' => Tools::htmlentitiesUTF8($address_invoice->address2),
+			'postcode_invoice' => Tools::htmlentitiesUTF8($address_invoice->postcode),
+			'city_invoice' => Tools::htmlentitiesUTF8($address_invoice->city),
+			'phone_invoice' => Tools::htmlentitiesUTF8($address_invoice->phone),
+			'phone_mobile_invoice' => Tools::htmlentitiesUTF8($address_invoice->phone_mobile),
+			'id_country_invoice' => (int)($address_invoice->id_country),
+			'id_state_invoice' => (int)($address_invoice->id_state),
 		);
 	}
 

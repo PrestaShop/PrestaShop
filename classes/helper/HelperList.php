@@ -173,13 +173,13 @@ class HelperListCore extends Helper
 
 	public function displayListContent()
 	{
-		if ($this->position_identifier)
-			$id_category = (int)Tools::getValue('id_'.($this->is_cms ? 'cms_' : '').'category', ($this->is_cms ? '1' : Category::getRootCategory()->id ));
-		else
-			$id_category = Category::getRootCategory()->id;
-
 		if (isset($this->fields_list['position']))
 		{
+			if ($this->position_identifier)
+				$id_category = (int)Tools::getValue('id_'.($this->is_cms ? 'cms_' : '').'category', ($this->is_cms ? '1' : Category::getRootCategory()->id ));
+			else
+				$id_category = Category::getRootCategory()->id;
+
 			$positions = array_map(create_function('$elem', 'return (int)($elem[\'position\']);'), $this->_list);
 			sort($positions);
 		}
@@ -307,7 +307,7 @@ class HelperListCore extends Helper
 			'table' => $this->table,
 			'token' => $this->token,
 			'color_on_bg' => $this->colorOnBackground,
-			'id_category' => $id_category,
+			'id_category' => isset($id_category) ? $id_category : false,
 			'bulk_actions' => $this->bulk_actions,
 			'positions' => isset($positions) ? $positions : null,
 			'order_by' => $this->orderBy,
@@ -456,7 +456,7 @@ class HelperListCore extends Helper
 		);
 		
 		if ($this->specificConfirmDelete !== false)
-			$data['confirm'] = !is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : self::$cache_lang['DeleteItem'].$name;
+			$data['confirm'] = !is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : addcslashes(Tools::htmlentitiesDecodeUTF8(self::$cache_lang['DeleteItem'].$name), '\'');
 		
 		$tpl->assign(array_merge($this->tpl_delete_link_vars, $data));
 
@@ -535,7 +535,7 @@ class HelperListCore extends Helper
 		{
 			if (!isset($params['type']))
 				$params['type'] = 'text';
-			$value = Context::getContext()->cookie->{$prefix.$this->table.'Filter_'.(array_key_exists('filter_key', $params) ? $params['filter_key'] : $key)};
+			$value = Context::getContext()->cookie->{$prefix.$this->table.'Filter_'.(array_key_exists('filter_key', $params) && $key != 'active' ? $params['filter_key'] : $key)};
 			switch ($params['type'])
 			{
 				case 'bool':

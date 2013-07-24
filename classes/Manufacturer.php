@@ -78,8 +78,8 @@ class ManufacturerCore extends ObjectModel
 			'date_upd' => 			array('type' => self::TYPE_DATE),
 
 			// Lang fields
-			'description' => 		array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isString'),
-			'short_description' => 	array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isString', 'size' => 254),
+			'description' => 		array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
+			'short_description' => 	array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 254),
 			'meta_title' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
 			'meta_description' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
 			'meta_keywords' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName'),
@@ -198,6 +198,7 @@ class ManufacturerCore extends ObjectModel
 					LEFT JOIN `'._DB_PREFIX_.'manufacturer` as m ON (m.`id_manufacturer`= p.`id_manufacturer`)
 					WHERE m.`id_manufacturer` = '.(int)$manufacturer['id_manufacturer'].
 					($active ? ' AND product_shop.`active` = 1 ' : '').
+					' AND product_shop.`visibility` NOT IN ("none")'.
 					($all_group ? '' : ' AND p.`id_product` IN (
 						SELECT cp.`id_product`
 						FROM `'._DB_PREFIX_.'category_group` cg
