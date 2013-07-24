@@ -410,7 +410,7 @@ class SearchCore
 		{
 			$db->execute('TRUNCATE '._DB_PREFIX_.'search_index');
 			$db->execute('TRUNCATE '._DB_PREFIX_.'search_word');
-			ObjectModel::updateMultishopTable('Product', array('indexed' => 0), '1');
+			ObjectModel::updateMultishopTable('Product', array('indexed' => 0));
 		}
 		else
 		{
