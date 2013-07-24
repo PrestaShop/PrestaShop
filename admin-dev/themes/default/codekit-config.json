@@ -24,6 +24,15 @@
       "initialSize" : 1704,
       "fileType" : 8192
     },
+    "\/template\/controllers\/geolocation\/helpers\/options\/index.php" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/template\/controllers\/geolocation\/helpers\/options\/index.php",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 2048
+    },
     "\/img\/patterns\/classy_fabric.png" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
@@ -35,16 +44,14 @@
       "initialSize" : 8856,
       "fileType" : 8192
     },
-    "\/img\/icon-cancel.png" : {
+    "\/template\/controllers\/preferences\/helpers\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/img\/icon-cancel.png",
-      "processed" : 0,
-      "outputAbbreviatedPath" : "\/img\/icon-cancel.png",
-      "initialSize" : 4340,
-      "fileType" : 8192
+      "inputAbbreviatedPath" : "\/template\/controllers\/preferences\/helpers\/index.php",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 2048
     },
     "\/template\/controllers\/languages\/helpers\/index.php" : {
       "ignoreWasSetByUser" : 0,
@@ -64,23 +71,16 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
-    "\/template\/controllers\/preferences\/helpers\/index.php" : {
+    "\/img\/icon-cancel.png" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/preferences\/helpers\/index.php",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 2048
-    },
-    "\/template\/controllers\/geolocation\/helpers\/options\/index.php" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/geolocation\/helpers\/options\/index.php",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 2048
+      "inputAbbreviatedPath" : "\/img\/icon-cancel.png",
+      "processed" : 0,
+      "outputAbbreviatedPath" : "\/img\/icon-cancel.png",
+      "initialSize" : 4340,
+      "fileType" : 8192
     },
     "\/template\/controllers\/attributes\/helpers\/list\/index.php" : {
       "ignoreWasSetByUser" : 0,
@@ -297,30 +297,12 @@
       "initialSize" : 1586,
       "fileType" : 8192
     },
-    "\/template\/controllers\/tags\/index.php" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/tags\/index.php",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 2048
-    },
     "\/template\/controllers\/categories\/helpers\/list\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/template\/controllers\/categories\/helpers\/list\/index.php",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 2048
-    },
-    "\/template\/controllers\/stats\/index.php" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/stats\/index.php",
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
@@ -336,16 +318,23 @@
       "fileType" : 4,
       "debugStyle" : 2
     },
-    "\/img\/header_module.png" : {
+    "\/template\/controllers\/stats\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/img\/header_module.png",
-      "processed" : 0,
-      "outputAbbreviatedPath" : "\/img\/header_module.png",
-      "initialSize" : 218,
-      "fileType" : 8192
+      "inputAbbreviatedPath" : "\/template\/controllers\/stats\/index.php",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 2048
+    },
+    "\/template\/controllers\/tags\/index.php" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/template\/controllers\/tags\/index.php",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 2048
     },
     "\/img\/bg_loaderSpace.png" : {
       "ignoreWasSetByUser" : 0,
@@ -356,6 +345,17 @@
       "processed" : 0,
       "outputAbbreviatedPath" : "\/img\/bg_loaderSpace.png",
       "initialSize" : 109,
+      "fileType" : 8192
+    },
+    "\/img\/header_module.png" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/img\/header_module.png",
+      "processed" : 0,
+      "outputAbbreviatedPath" : "\/img\/header_module.png",
+      "initialSize" : 218,
       "fileType" : 8192
     },
     "\/template\/controllers\/import\/index.php" : {
@@ -548,6 +548,24 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
+    "\/template\/controllers\/supply_orders\/helpers\/list\/index.php" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/template\/controllers\/supply_orders\/helpers\/list\/index.php",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 2048
+    },
+    "\/css\/modules.css" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/css\/modules.css",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 16
+    },
     "\/template\/controllers\/meta\/helpers\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
@@ -563,24 +581,6 @@
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/template\/controllers\/manufacturers\/helpers\/index.php",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 2048
-    },
-    "\/css\/modules.css" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/css\/modules.css",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 16
-    },
-    "\/template\/controllers\/supply_orders\/helpers\/list\/index.php" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/supply_orders\/helpers\/list\/index.php",
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
@@ -642,15 +642,6 @@
       "initialSize" : 3767,
       "fileType" : 8192
     },
-    "\/template\/controllers\/addons_catalog\/index.php" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/addons_catalog\/index.php",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 2048
-    },
     "\/template\/controllers\/slip\/helpers\/form\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
@@ -660,12 +651,12 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
-    "\/template\/helpers\/form\/index.php" : {
+    "\/template\/controllers\/addons_catalog\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/helpers\/form\/index.php",
+      "inputAbbreviatedPath" : "\/template\/controllers\/addons_catalog\/index.php",
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
@@ -700,6 +691,15 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
+    "\/template\/helpers\/form\/index.php" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/template\/helpers\/form\/index.php",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 2048
+    },
     "\/template\/controllers\/meta\/helpers\/options\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
@@ -727,6 +727,15 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
+    "\/template\/controllers\/return\/helpers\/index.php" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/template\/controllers\/return\/helpers\/index.php",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 2048
+    },
     "\/img\/module-logout.png" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
@@ -749,15 +758,6 @@
       "initialSize" : 2264,
       "fileType" : 8192
     },
-    "\/template\/controllers\/outstanding\/index.php" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/outstanding\/index.php",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 2048
-    },
     "\/template\/controllers\/countries\/helpers\/list\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
@@ -776,21 +776,23 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
+    "\/img\/process-icon-partial-refund.png" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/img\/process-icon-partial-refund.png",
+      "processed" : 0,
+      "outputAbbreviatedPath" : "\/img\/process-icon-partial-refund.png",
+      "initialSize" : 1773,
+      "fileType" : 8192
+    },
     "\/template\/controllers\/tracking\/helpers\/list\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/template\/controllers\/tracking\/helpers\/list\/index.php",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 2048
-    },
-    "\/template\/controllers\/return\/helpers\/index.php" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/return\/helpers\/index.php",
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
@@ -825,16 +827,14 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
-    "\/img\/process-icon-partial-refund.png" : {
+    "\/template\/controllers\/outstanding\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/img\/process-icon-partial-refund.png",
-      "processed" : 0,
-      "outputAbbreviatedPath" : "\/img\/process-icon-partial-refund.png",
-      "initialSize" : 1773,
-      "fileType" : 8192
+      "inputAbbreviatedPath" : "\/template\/controllers\/outstanding\/index.php",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 2048
     },
     "\/template\/controllers\/login\/index.php" : {
       "ignoreWasSetByUser" : 0,
@@ -874,21 +874,21 @@
       "initialSize" : 1569,
       "fileType" : 8192
     },
-    "\/template\/controllers\/stock_mvt\/helpers\/list\/index.php" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/stock_mvt\/helpers\/list\/index.php",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 2048
-    },
     "\/template\/helpers\/list\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/template\/helpers\/list\/index.php",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 2048
+    },
+    "\/template\/controllers\/stock_mvt\/helpers\/list\/index.php" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/template\/controllers\/stock_mvt\/helpers\/list\/index.php",
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
@@ -1000,12 +1000,30 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
+    "\/template\/controllers\/countries\/helpers\/form\/index.php" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/template\/controllers\/countries\/helpers\/form\/index.php",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 2048
+    },
     "\/template\/controllers\/states\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/template\/controllers\/states\/index.php",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 2048
+    },
+    "\/template\/controllers\/supply_orders_change_state\/helpers\/form\/index.php" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/template\/controllers\/supply_orders_change_state\/helpers\/form\/index.php",
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
@@ -1019,24 +1037,6 @@
       "outputAbbreviatedPath" : "\/img\/process-icon-edit.png",
       "initialSize" : 3761,
       "fileType" : 8192
-    },
-    "\/template\/controllers\/supply_orders_change_state\/helpers\/form\/index.php" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/supply_orders_change_state\/helpers\/form\/index.php",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 2048
-    },
-    "\/template\/controllers\/countries\/helpers\/form\/index.php" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/countries\/helpers\/form\/index.php",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 2048
     },
     "\/img\/process-icon-delete.png" : {
       "ignoreWasSetByUser" : 0,
@@ -1067,15 +1067,6 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
-    "\/template\/controllers\/shop\/helpers\/form\/index.php" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/shop\/helpers\/form\/index.php",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 2048
-    },
     "\/template\/controllers\/feature_value\/helpers\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
@@ -1100,6 +1091,15 @@
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/template\/controllers\/request_sql\/helpers\/index.php",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 2048
+    },
+    "\/template\/controllers\/shop\/helpers\/form\/index.php" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/template\/controllers\/shop\/helpers\/form\/index.php",
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
@@ -1226,6 +1226,15 @@
       "initialSize" : 2616,
       "fileType" : 8192
     },
+    "\/template\/controllers\/webservice\/helpers\/form\/index.php" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/template\/controllers\/webservice\/helpers\/form\/index.php",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 2048
+    },
     "\/img\/process-icon-duplicate.png" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
@@ -1236,15 +1245,6 @@
       "outputAbbreviatedPath" : "\/img\/process-icon-duplicate.png",
       "initialSize" : 1413,
       "fileType" : 8192
-    },
-    "\/template\/controllers\/webservice\/helpers\/form\/index.php" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/webservice\/helpers\/form\/index.php",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 2048
     },
     "\/template\/controllers\/order_preferences\/helpers\/options\/index.php" : {
       "ignoreWasSetByUser" : 0,
@@ -1484,15 +1484,6 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
-    "\/template\/controllers\/stores\/helpers\/index.php" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/stores\/helpers\/index.php",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 2048
-    },
     "\/img\/process-icon-export-csv.png" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
@@ -1503,6 +1494,15 @@
       "outputAbbreviatedPath" : "\/img\/process-icon-export-csv.png",
       "initialSize" : 1176,
       "fileType" : 8192
+    },
+    "\/template\/controllers\/stores\/helpers\/index.php" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/template\/controllers\/stores\/helpers\/index.php",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 2048
     },
     "\/template\/controllers\/categories\/helpers\/index.php" : {
       "ignoreWasSetByUser" : 0,
@@ -1535,6 +1535,15 @@
       "initialSize" : 930,
       "fileType" : 8192
     },
+    "\/template\/controllers\/tax_rules_group\/index.php" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/template\/controllers\/tax_rules_group\/index.php",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 2048
+    },
     "\/img\/icon-valid-green.png" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
@@ -1546,12 +1555,12 @@
       "initialSize" : 4447,
       "fileType" : 8192
     },
-    "\/template\/controllers\/tax_rules_group\/index.php" : {
+    "\/template\/controllers\/tags\/helpers\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/tax_rules_group\/index.php",
+      "inputAbbreviatedPath" : "\/template\/controllers\/tags\/helpers\/index.php",
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
@@ -1566,15 +1575,6 @@
       "initialSize" : 1763,
       "fileType" : 8192
     },
-    "\/template\/controllers\/tags\/helpers\/index.php" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/tags\/helpers\/index.php",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 2048
-    },
     "\/template\/controllers\/payment\/helpers\/view\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
@@ -1584,12 +1584,12 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
-    "\/template\/controllers\/supply_orders_change_state\/index.php" : {
+    "\/template\/controllers\/customers\/helpers\/view\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/supply_orders_change_state\/index.php",
+      "inputAbbreviatedPath" : "\/template\/controllers\/customers\/helpers\/view\/index.php",
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
@@ -1599,6 +1599,15 @@
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/template\/controllers\/preferences\/helpers\/options\/index.php",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 2048
+    },
+    "\/template\/controllers\/supply_orders_change_state\/index.php" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/template\/controllers\/supply_orders_change_state\/index.php",
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
@@ -1613,12 +1622,12 @@
       "initialSize" : 1538,
       "fileType" : 8192
     },
-    "\/template\/controllers\/logs\/helpers\/list\/index.php" : {
+    "\/template\/controllers\/shop_url\/helpers\/list\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/logs\/helpers\/list\/index.php",
+      "inputAbbreviatedPath" : "\/template\/controllers\/shop_url\/helpers\/list\/index.php",
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
@@ -1628,15 +1637,6 @@
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/template\/controllers\/search\/helpers\/view\/index.php",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 2048
-    },
-    "\/template\/controllers\/shop_url\/helpers\/list\/index.php" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/shop_url\/helpers\/list\/index.php",
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
@@ -1660,12 +1660,12 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
-    "\/template\/controllers\/webservice\/helpers\/index.php" : {
+    "\/template\/controllers\/logs\/helpers\/list\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/webservice\/helpers\/index.php",
+      "inputAbbreviatedPath" : "\/template\/controllers\/logs\/helpers\/list\/index.php",
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
@@ -1681,21 +1681,21 @@
       "fileType" : 4,
       "debugStyle" : 2
     },
-    "\/template\/controllers\/customers\/helpers\/view\/index.php" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/customers\/helpers\/view\/index.php",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 2048
-    },
     "\/template\/controllers\/employees\/helpers\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/template\/controllers\/employees\/helpers\/index.php",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 2048
+    },
+    "\/template\/controllers\/attribute_generator\/index.php" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/template\/controllers\/attribute_generator\/index.php",
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
@@ -1719,12 +1719,12 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
-    "\/template\/controllers\/products\/combination\/index.php" : {
+    "\/template\/controllers\/referrers\/helpers\/view\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/products\/combination\/index.php",
+      "inputAbbreviatedPath" : "\/template\/controllers\/referrers\/helpers\/view\/index.php",
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
@@ -1743,27 +1743,27 @@
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/css\/admin-theme.sass",
-      "outputStyle" : 3,
+      "outputStyle" : 0,
       "shouldRunBless" : 0,
       "outputAbbreviatedPath" : "\/css\/admin-theme.css",
       "fileType" : 2,
-      "debugStyle" : 0
+      "debugStyle" : 2
     },
-    "\/template\/controllers\/attribute_generator\/index.php" : {
+    "\/template\/controllers\/products\/combination\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/attribute_generator\/index.php",
+      "inputAbbreviatedPath" : "\/template\/controllers\/products\/combination\/index.php",
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
-    "\/template\/controllers\/referrers\/helpers\/view\/index.php" : {
+    "\/template\/controllers\/webservice\/helpers\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/referrers\/helpers\/view\/index.php",
+      "inputAbbreviatedPath" : "\/template\/controllers\/webservice\/helpers\/index.php",
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
@@ -1800,7 +1800,7 @@
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/config.rb",
-      "outputAbbreviatedPath" : "No Output Path",
+      "outputAbbreviatedPath" : "\/config.rb",
       "fileType" : 32768
     },
     "\/img\/button-bg.png" : {
@@ -1842,7 +1842,7 @@
       "fileType" : 2048
     },
     "\/css\/admin.css" : {
-      "ignoreWasSetByUser" : 0,
+      "ignoreWasSetByUser" : 1,
       "ignore" : 1,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
@@ -2006,13 +2006,13 @@
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
       "hidden" : 0,
-      "outputPathIsSetByUser" : 1,
+      "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/css\/admin.scss",
       "outputStyle" : 0,
       "shouldRunBless" : 0,
       "outputAbbreviatedPath" : "\/css\/admin.css",
       "fileType" : 4,
-      "debugStyle" : 0
+      "debugStyle" : 2
     },
     "\/template\/controllers\/supply_orders\/index.php" : {
       "ignoreWasSetByUser" : 0,
@@ -2041,21 +2041,21 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
-    "\/template\/controllers\/feature_value\/helpers\/form\/index.php" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/feature_value\/helpers\/form\/index.php",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 2048
-    },
     "\/template\/controllers\/translations\/helpers\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/template\/controllers\/translations\/helpers\/index.php",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 2048
+    },
+    "\/template\/controllers\/feature_value\/helpers\/form\/index.php" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/template\/controllers\/feature_value\/helpers\/form\/index.php",
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
@@ -2180,12 +2180,12 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
-    "\/template\/controllers\/customer_threads\/helpers\/index.php" : {
+    "\/template\/controllers\/attributes_groups\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/customer_threads\/helpers\/index.php",
+      "inputAbbreviatedPath" : "\/template\/controllers\/attributes_groups\/index.php",
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
@@ -2207,12 +2207,12 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
-    "\/template\/controllers\/attributes_groups\/index.php" : {
+    "\/template\/controllers\/customer_threads\/helpers\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/attributes_groups\/index.php",
+      "inputAbbreviatedPath" : "\/template\/controllers\/customer_threads\/helpers\/index.php",
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
@@ -2274,6 +2274,15 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
+    "\/template\/controllers\/carriers\/index.php" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/template\/controllers\/carriers\/index.php",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 2048
+    },
     "\/template\/controllers\/maintenance\/helpers\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
@@ -2291,17 +2300,8 @@
       "inputAbbreviatedPath" : "\/img\/patterns\/bedge_grunge.png",
       "processed" : 0,
       "outputAbbreviatedPath" : "\/img\/patterns\/bedge_grunge.png",
-      "initialSize" : 87957,
+      "initialSize" : 145677,
       "fileType" : 8192
-    },
-    "\/template\/controllers\/attributes_groups\/helpers\/form\/index.php" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/attributes_groups\/helpers\/form\/index.php",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 2048
     },
     "\/template\/controllers\/search\/helpers\/index.php" : {
       "ignoreWasSetByUser" : 0,
@@ -2348,15 +2348,6 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
-    "\/template\/controllers\/carriers\/index.php" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/carriers\/index.php",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 2048
-    },
     "\/img\/notif_message.png" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
@@ -2367,6 +2358,15 @@
       "outputAbbreviatedPath" : "\/img\/notif_message.png",
       "initialSize" : 1605,
       "fileType" : 8192
+    },
+    "\/template\/controllers\/attributes_groups\/helpers\/form\/index.php" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/template\/controllers\/attributes_groups\/helpers\/form\/index.php",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 2048
     },
     "\/img\/export-csv.png" : {
       "ignoreWasSetByUser" : 0,
@@ -2424,6 +2424,15 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
+    "\/img\/index.php" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/img\/index.php",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 2048
+    },
     "\/img\/separator_subnav.png" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
@@ -2434,15 +2443,6 @@
       "outputAbbreviatedPath" : "\/img\/separator_subnav.png",
       "initialSize" : 120,
       "fileType" : 8192
-    },
-    "\/img\/index.php" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/img\/index.php",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 2048
     },
     "\/template\/controllers\/suppliers\/helpers\/index.php" : {
       "ignoreWasSetByUser" : 0,
@@ -2509,17 +2509,6 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
-    "\/img\/bg-top.png" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/img\/bg-top.png",
-      "processed" : 0,
-      "outputAbbreviatedPath" : "\/img\/bg-top.png",
-      "initialSize" : 9503,
-      "fileType" : 8192
-    },
     "\/img\/bullet_orange.png" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
@@ -2529,6 +2518,17 @@
       "processed" : 0,
       "outputAbbreviatedPath" : "\/img\/bullet_orange.png",
       "initialSize" : 321,
+      "fileType" : 8192
+    },
+    "\/img\/bg-top.png" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/img\/bg-top.png",
+      "processed" : 0,
+      "outputAbbreviatedPath" : "\/img\/bg-top.png",
+      "initialSize" : 9503,
       "fileType" : 8192
     },
     "\/template\/controllers\/attributes_groups\/helpers\/index.php" : {
@@ -2567,6 +2567,15 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
+    "\/template\/controllers\/specific_price_rule\/helpers\/index.php" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/template\/controllers\/specific_price_rule\/helpers\/index.php",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 2048
+    },
     "\/template\/controllers\/products\/helpers\/list\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
@@ -2585,15 +2594,6 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
-    "\/template\/controllers\/specific_price_rule\/helpers\/index.php" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/specific_price_rule\/helpers\/index.php",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 2048
-    },
     "\/template\/controllers\/payment\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
@@ -2603,21 +2603,21 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
-    "\/template\/controllers\/carriers\/helpers\/form\/index.php" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/carriers\/helpers\/form\/index.php",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 2048
-    },
     "\/template\/controllers\/logs\/index.php" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/template\/controllers\/logs\/index.php",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 2048
+    },
+    "\/template\/controllers\/carriers\/helpers\/form\/index.php" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/template\/controllers\/carriers\/helpers\/form\/index.php",
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
@@ -2905,6 +2905,15 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
+    "\/template\/controllers\/payment\/helpers\/index.php" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/template\/controllers\/payment\/helpers\/index.php",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 2048
+    },
     "\/img\/process-icon-back.png" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
@@ -2915,15 +2924,6 @@
       "outputAbbreviatedPath" : "\/img\/process-icon-back.png",
       "initialSize" : 1184,
       "fileType" : 8192
-    },
-    "\/template\/controllers\/payment\/helpers\/index.php" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/payment\/helpers\/index.php",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 2048
     },
     "\/template\/controllers\/shop\/helpers\/index.php" : {
       "ignoreWasSetByUser" : 0,
@@ -2963,15 +2963,6 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
     },
-    "\/template\/controllers\/cms_categories\/helpers\/form\/index.php" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/template\/controllers\/cms_categories\/helpers\/form\/index.php",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 2048
-    },
     "\/img\/process-icon-new-url.png" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
@@ -2982,6 +2973,15 @@
       "outputAbbreviatedPath" : "\/img\/process-icon-new-url.png",
       "initialSize" : 1642,
       "fileType" : 8192
+    },
+    "\/template\/controllers\/cms_categories\/helpers\/form\/index.php" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/template\/controllers\/cms_categories\/helpers\/form\/index.php",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 2048
     },
     "\/template\/controllers\/addresses\/helpers\/index.php" : {
       "ignoreWasSetByUser" : 0,
