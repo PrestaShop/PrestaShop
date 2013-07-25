@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {if $product['customizedDatas']}
-	<tbody>
+	
 		<tr class="customized customized-{$product['id_order_detail']|intval}">
 			<td align="center">
 				<input type="hidden" class="edit_product_id_order_detail" value="{$product['id_order_detail']|intval}" />
@@ -152,5 +152,5 @@
 				</tr>
 			{/foreach}
 		{/foreach}
-	</tbody>
+	
 {/if}

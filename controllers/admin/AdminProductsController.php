@@ -3603,8 +3603,9 @@ class AdminProductsControllerCore extends AdminController
 		{
 			$carriers = array();
 			
-			if (Tools::getValue('carriers'))
-				$carriers = Tools::getValue('carriers');
+			if (Tools::getValue('selectedCarriers'))
+				$carriers = Tools::getValue('selectedCarriers');
+
 			$product->setCarriers($carriers);
 		}
 	}
