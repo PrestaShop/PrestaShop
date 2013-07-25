@@ -81,26 +81,31 @@
 </div>
 
 <div class="row">
-	<label class="control-label col-lg-5" for="carriers_restriction">
-		<span class="label-tooltip" data-toggle="tooltip"
-			title="{l s='If no carrier selected, all carriers can be used to ship this product.'}">
-			{l s='Carriers:'}
-		</span>
-		
-	</label>
-	<div class="col-lg-3">
-		<select name="carriers[]" id="carriers_restriction" multiple="multiple">
-			{foreach $carrier_list as $carrier}
-				<option value="{$carrier.id_reference}" {if isset($carrier.selected) && $carrier.selected}selected="selected"{/if}>{$carrier.name}</option>
-			{/foreach}
-		</select>
-		<button class="btn btn-default" onclick="unselectAllCarriers(); return false;">{l s='Unselect all'}</button>
+	<label class="control-label col-lg-5" for="availableCarriers">{l s='Carriers:'}</label>
+	<div class="input-group col-lg-7">
+		<div class="row">
+			<div class="col-lg-6">
+				<label for="availableCarriers">{l s='Available carriers'}</label>
+				<select multiple id="availableCarriers" name="availableCarriers">
+					{foreach $carrier_list as $carrier}
+						{if !isset($carrier.selected) || !$carrier.selected}
+							<option value="{$carrier.id_reference}">{$carrier.name}</option>
+						{/if}
+					{/foreach}
+				</select>
+				<a href="#" id="addCarrier" class="btn btn-default btn-block">{l s='Add'} <i class="icon-arrow-right"></i></a>
+			</div>
+			<div class="col-lg-6">
+				<label for="selectedCarriers">{l s='Selected carriers'}</label>
+				<select multiple id="selectedCarriers" name="selectedCarriers[]">
+					{foreach $carrier_list as $carrier}
+						{if isset($carrier.selected) && $carrier.selected}
+							<option value="{$carrier.id_reference}">{$carrier.name}</option>
+						{/if}
+					{/foreach}
+				</select>
+				<a href="#" id="removeCarrier" class="btn btn-default btn-block"><i class="icon-arrow-left"></i> {l s='Remove'}</a>
+			</div>
+		</div>
 	</div>
 </div>
-
-<script>
-	function unselectAllCarriers()
-	{ $('#carriers_restriction option').each(function () { $(this).removeAttr('selected')});
-		return false;
-	}
-</script>

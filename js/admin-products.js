@@ -760,6 +760,32 @@ product_tabs['Attachments'] = new function(){
 	};
 }
 
+product_tabs['Shipping'] = new function(){
+	var self = this;
+
+	this.bindCarriersEvents = function (){
+		$("#addCarrier").live('click', function() {
+			$('#availableCarriers option:selected').each( function() {
+	                $('#selectedCarriers').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
+	            $(this).remove();
+	        });
+	        $('#selectedCarriers option').prop('selected', true);
+		});
+
+		$("#removeCarrier").live('click', function() {
+			$('#selectedCarriers option:selected').each( function() {
+	            $('#availableCarriers').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
+	            $(this).remove();
+	        });
+			$('#selectedCarriers option').prop('selected', true);
+		});
+	};
+
+	this.onReady = function(){
+		self.bindCarriersEvents();
+	};
+}
+
 product_tabs['Informations'] = new function(){
 	var self = this;
 	this.bindAvailableForOrder = function (){
