@@ -31,43 +31,43 @@
 {/if}
 
 <div class="row">
-	<label class="control-label col-lg-5">{l s='Width (package):'}</label>
+	<label class="control-label col-lg-5" for="width">{l s='Width (package):'}</label>
 	<div class="input-group col-lg-2">
 		<span class="input-group-addon">{$ps_dimension_unit}</span>
-		<input maxlength="6" name="width" type="text" value="{$product->width}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
+		<input maxlength="6" id="width" name="width" type="text" value="{$product->width}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
 		{$bullet_common_field}
 	</div>
 </div>
 
 <div class="row">
-	<label class="control-label col-lg-5">{l s='Height (package):'}</label>
+	<label class="control-label col-lg-5" for="height">{l s='Height (package):'}</label>
 	<div class="input-group col-lg-2">
 		<span class="input-group-addon">{$ps_dimension_unit}</span>
-		<input maxlength="6" name="height" type="text" value="{$product->height}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
+		<input maxlength="6" id="height" name="height" type="text" value="{$product->height}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
 		{$bullet_common_field}
 	</div>
 </div>
 
 <div class="row">
-	<label class="control-label col-lg-5">{l s='Depth (package):'}</label>
+	<label class="control-label col-lg-5" for="depth">{l s='Depth (package):'}</label>
 	<div class="input-group col-lg-2">
 		<span class="input-group-addon">{$ps_dimension_unit}</span>
-		<input maxlength="6" name="depth" type="text" value="{$product->depth}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
+		<input maxlength="6" id="depth" name="depth" type="text" value="{$product->depth}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
 		{$bullet_common_field}
 	</div>
 </div>
 
 <div class="row">
-	<label class="control-label col-lg-5">{l s='Weight (package):'}</label>
+	<label class="control-label col-lg-5" for="weight">{l s='Weight (package):'}</label>
 	<div class="input-group col-lg-2">
 		<span class="input-group-addon">{$ps_weight_unit}</span>
-		<input maxlength="6" name="weight" type="text" value="{$product->weight}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
+		<input maxlength="6" id="weight" name="weight" type="text" value="{$product->weight}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
 		{$bullet_common_field}
 	</div>
 </div>
 
 <div class="row">
-	<label class="control-label col-lg-5">
+	<label class="control-label col-lg-5" for="additional_shipping_cost">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='A carrier tax will be applied.'}">
 			{l s='Additional shipping cost (per quantity):'}
@@ -76,12 +76,12 @@
 	</label>
 	<div class="input-group col-lg-2">
 		<span class="input-group-addon">{$currency->prefix}{$currency->suffix} {if $country_display_tax_label}({l s='tax excl.'}){/if}</span>
-		<input type="text" name="additional_shipping_cost" onchange="this.value = this.value.replace(/,/g, '.');" value="{$product->additional_shipping_cost|htmlentities}" />
+		<input type="text" id="additional_shipping_cost" name="additional_shipping_cost" onchange="this.value = this.value.replace(/,/g, '.');" value="{$product->additional_shipping_cost|htmlentities}" />
 	</div>
 </div>
 
 <div class="row">
-	<label class="control-label col-lg-5">
+	<label class="control-label col-lg-5" for="carriers_restriction">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='If no carrier selected, all carriers can be used to ship this product.'}">
 			{l s='Carriers:'}
