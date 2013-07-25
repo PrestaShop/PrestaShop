@@ -145,7 +145,8 @@ class AdminCountriesControllerCore extends AdminController
 			array('address2'),
 			array('postcode', 'city'),
 			array('Country:name'),
-			array('phone'));
+			array('phone'),
+			array('phone_mobile'));
 
 		foreach ($default_layout_tab as $line)
 			$default_layout .= implode(' ', $line)."\r\n";
