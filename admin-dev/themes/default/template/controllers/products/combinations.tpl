@@ -373,7 +373,7 @@
 	
 	<div class="panel-footer">
 		<span id="ResetSpan">
-			<button type="reset" name="ResetBtn" id="ResetBtn" onclick="getE('id_product_attribute').value = 0;" class="btn btn-default">
+			<button type="reset" name="ResetBtn" id="ResetBtn" onclick="$('#desc-product-newCombination').click();" class="btn btn-default">
 				<i class="icon-undo"></i> {l s='Cancel modification'}
 			</button>
 		</span>
