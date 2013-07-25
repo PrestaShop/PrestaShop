@@ -34,14 +34,13 @@
 					{if $shared_category}
 						<p class="alert alert-block">{l s='If you delete this picture, it will be deleted in all of your shared shops!'}</p>
 					{/if}
-					<a href="{$current}&{$identifier}={$form_id}&token={$token}&{if $shared_category}forcedeleteImage=1{else}deleteImage=1{/if}">
-						<img src="../img/admin/delete.gif" alt="{l s='Delete'}" /> {l s='Delete'}
+					<a class="btn btn-default" href="{$current}&{$identifier}={$form_id}&token={$token}&{if $shared_category}forcedeleteImage=1{else}deleteImage=1{/if}">
+						<i class="icon-trash"></i> {l s='Delete'}
 					</a>
 				</div>
 			{/if}
 		{/if}
 		<input type="file" name="{$input.name}" {if isset($input.id)}id="{$input.id}"{/if} />
-		{if !empty($input.hint)}<span class="alert alert-info" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
 	{else}
 		{$smarty.block.parent}
 	{/if}
@@ -63,7 +62,7 @@
 {block name="description"}
 	{$smarty.block.parent}
 	{if ($input.name == 'groupBox')}
-		<p class="alert alert-info" style="display:block; position:relative; display:inline-block;">
+		<p class="alert alert-info">
 			<span>{$input.info_introduction}</span><br />
 			<span>{$input.unidentified}</span><br />
 			<span>{$input.guest}</span><br />

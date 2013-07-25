@@ -24,14 +24,15 @@
 *}
 
 {if count($groups) && isset($groups)}
-<table cellspacing="0" cellpadding="0" class="table" style="width:28em;">
-	<tr>
+<table class="table">
+	<thead>
 		<th>
 			<input type="checkbox" name="checkme" id="checkme" class="noborder" onclick="checkDelBoxes(this.form, 'groupBox[]', this.checked)" />
 		</th>
 		<th>{l s='ID'}</th>
 		<th>{l s='Group name'}</th>
-	</tr>
+	</thead>
+	<tbody>
 	{foreach $groups as $key => $group}
 		<tr {if $key %2}class="alt_row"{/if}>
 			<td>
@@ -42,6 +43,7 @@
 			<td><label for="{$id_checkbox}" class="t">{$group['name']}</label></td>
 		</tr>
 	{/foreach}
+	</tbody>
 </table>
 {else}
 <p>{l s='No group created'}</p>

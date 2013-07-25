@@ -407,8 +407,6 @@ class AdminCategoriesControllerCore extends AdminController
 					'name' => 'description',
 					'autoload_rte' => true,
 					'lang' => true,
-					'rows' => 10,
-					'cols' => 100,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}'
 				),
 				array(
@@ -416,7 +414,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'label' => $this->l('Image:'),
 					'name' => 'image',
 					'display_image' => true,
-					'desc' => $this->l('Upload a category logo from your computer.')
+					'hint' => $this->l('Upload a category logo from your computer.')
 				),
 				array(
 					'type' => 'text',
@@ -437,8 +435,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'label' => $this->l('Meta keywords:'),
 					'name' => 'meta_keywords',
 					'lang' => true,
-					'hint' => $this->l('Forbidden characters:').' <>;=#{}',
-					'desc' => $this->l('To add "tags," click in the field, write something, and then press "Enter."')
+					'hint' => $this->l('To add "tags," click in the field, write something, and then press "Enter."').'&nbsp;'.$this->l('Forbidden characters:').' <>;=#{}'
 				),
 				array(
 					'type' => 'text',
@@ -457,12 +454,12 @@ class AdminCategoriesControllerCore extends AdminController
 					'unidentified' => $unidentified_group_information,
 					'guest' => $guest_group_information,
 					'customer' => $default_group_information,
-					'desc' => $this->l('Mark all of the customer groups you;d like to have access to this category.')
+					'hint' => $this->l('Mark all of the customer groups you;d like to have access to this category.')
 				)
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
-				'class' => 'button'
+				'class' => 'btn-primary'
 			)
 		);
 		
