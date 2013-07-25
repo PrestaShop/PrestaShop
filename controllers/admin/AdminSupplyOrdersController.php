@@ -1104,9 +1104,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$this->manageOrderProducts();
 
 			// if the threshold is defined and we are saving the order
-			if (Tools::isSubmit('submitAddsupply_order') && Validate::isInt($quantity_threshold)){
+			if (Tools::isSubmit('submitAddsupply_order') && Validate::isInt($quantity_threshold))
 				$this->loadProducts((int)$quantity_threshold);
-			}
 		}
 
 		// Manage state change
