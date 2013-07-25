@@ -191,7 +191,7 @@ product_tabs['Combinations'] = new function(){
 	};
 
 	this.removeButtonCombination = function(item)
-	{
+	{		
 		$('#add_new_combination').show();
 		$('.process-icon-newCombination').removeClass('toolbar-new');
 		$('.process-icon-newCombination').addClass('toolbar-cancel');
