@@ -3307,9 +3307,9 @@ class AdminProductsControllerCore extends AdminController
 
 		$content .= '
 		<div class="row">
-			<label class="control-label col-lg-3">'.$this->l('Priorities:').'</label>
+			<label class="control-label col-lg-3" for="specificPricePriority1">'.$this->l('Priorities:').'</label>
 			<div class="input-group col-lg-9">
-				<select name="specificPricePriority[]">
+				<select id="specificPricePriority1" name="specificPricePriority[]">
 					<option value="id_shop"'.($specific_price_priorities[0] == 'id_shop' ? ' selected="selected"' : '').'>'.$this->l('Shop').'</option>
 					<option value="id_currency"'.($specific_price_priorities[0] == 'id_currency' ? ' selected="selected"' : '').'>'.$this->l('Currency').'</option>
 					<option value="id_country"'.($specific_price_priorities[0] == 'id_country' ? ' selected="selected"' : '').'>'.$this->l('Country').'</option>
