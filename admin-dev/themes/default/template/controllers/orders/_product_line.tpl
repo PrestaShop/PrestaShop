@@ -39,7 +39,7 @@
 			{if $product.product_reference}{l s='Ref:'} {$product.product_reference}<br />{/if}
 			{if $product.product_supplier_reference}{l s='Ref Supplier:'} {$product.product_supplier_reference}{/if}
 		</a></td>
-		<td align="center">
+		<td>
 			<span class="product_price_show">{displayPrice price=$product_price currency=$currency->id}</span>
 			{if $can_edit}
 			<span class="product_price_edit" style="display:none;">
@@ -90,7 +90,7 @@
 			</td>
 		{/if}
 		{if $stock_management}<td align="center" class="productQuantity product_stock">{$product['current_stock']}</td>{/if}
-		<td align="center" class="total_product">
+		<td class="total_product text-right">
 			{displayPrice price=(Tools::ps_round($product_price, 2) * ($product['product_quantity'] - $product['customizationQuantityTotal'])) currency=$currency->id}
 		</td>
 		<td colspan="2" style="display: none;" class="add_product_fields">&nbsp;</td>
@@ -125,11 +125,20 @@
 			0/{$productQuantity}
 		{/if}
 		</td>
-		<td class="partial_refund_fields current-edit" style="text-align:left;display:none">
-			<div style="width:40%;margin-top:5px;float:left">{l s='Quantity:'}</div> <div style="width:60%;margin-top:2px;float:left"><input onchange="checkPartialRefundProductQuantity(this)" type="text" size="3" name="partialRefundProductQuantity[{{$product['id_order_detail']}}]" value="0" /> 0/{$productQuantity-$product['product_quantity_refunded']}</div>
-			<div style="width:40%;margin-top:5px;float:left">{l s='Amount:'}</div> <div style="width:60%;margin-top:2px;float:left">{$currency->prefix}<input onchange="checkPartialRefundProductAmount(this)" type="text" size="3" name="partialRefundProduct[{$product['id_order_detail']}]" /> {$currency->suffix}</div> {if !empty($product['amount_refund']) && $product['amount_refund'] > 0}({l s='%s refund' sprintf=$product['amount_refund']}){/if}
-			<input type="hidden" value="{$product['quantity_refundable']}" class="partialRefundProductQuantity" />
-			<input type="hidden" value="{$product['amount_refundable']}" class="partialRefundProductAmount" />
+		<td class="partial_refund_fields current-edit" style="display:none">
+			<label class="text-center">
+				{l s='Quantity:'}
+				<input onchange="checkPartialRefundProductQuantity(this)" type="text" size="3" name="partialRefundProductQuantity[{{$product['id_order_detail']}}]" value="0" /> 
+				0/{$productQuantity-$product['product_quantity_refunded']}
+			</label>
+			<label class="text-center">
+				{l s='Amount:'}
+				{$currency->prefix}<input onchange="checkPartialRefundProductAmount(this)" type="text" size="3" name="partialRefundProduct[{$product['id_order_detail']}]" /> 
+				{$currency->suffix}
+				{if !empty($product['amount_refund']) && $product['amount_refund'] > 0}({l s='%s refund' sprintf=$product['amount_refund']}){/if}
+				<input type="hidden" value="{$product['quantity_refundable']}" class="partialRefundProductQuantity" />
+				<input type="hidden" value="{$product['amount_refundable']}" class="partialRefundProductAmount" />
+			</label>
 		</td>
 		{if ($can_edit && !$order->hasBeenDelivered())}
 		<td class="product_invoice" colspan="2" style="display: none;text-align:center;">

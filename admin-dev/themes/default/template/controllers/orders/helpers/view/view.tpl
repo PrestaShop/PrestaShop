@@ -27,7 +27,7 @@
 
 {block name="override_tpl"}
 	<script type="text/javascript">
-	var admin_order_tab_link = "{$link->getAdminLink('AdminOrders')|addslashes}";
+	var admin_order_tab_link = "{$link->getAdminLink('AdminOrders')|escape:'html'}";
 	var id_order = {$order->id};
 	var id_lang = {$current_id_lang};
 	var id_currency = {$order->id_currency};
@@ -129,61 +129,70 @@
 	<div class="col-lg-12">
 		<!-- Change status form -->
 		<form action="{$currentIndex}&vieworder&token={$smarty.get.token}" method="post">
-			<label class="control-label col-lg-1 text-right">
-				{l s='Status:'}
-			</label>
-			<div class="col-lg-10">
-				<select id="id_order_state" name="id_order_state">
-				{foreach from=$states item=state}
-					<option value="{$state['id_order_state']}"{if $state['id_order_state'] == $currentState->id} selected="selected" disabled="disabled"{/if}>{$state['name']|stripslashes}</option>
-				{/foreach}
-				</select>
-			</div>
-			<input type="hidden" name="id_order" value="{$order->id}" />
-			<button type="submit" name="submitState" class="btn btn-default"> 
-				{l s='Add'}
-			</button>
-		</form>
-		<!-- History of status -->
-		<table cellspacing="0" cellpadding="0" class="table table-hover">
-			<colgroup>
-				<col width="1%">
-				<col width="">
-				<col width="20%">
-				<col width="20%">
-			</colgroup>
-			{foreach from=$history item=row key=key}
-				{if ($key == 0)}
-				<thead>
-					<tr>
-						<th>
-							<img src="../img/os/{$row['id_order_state']}.gif" />
-						</th>
-						<th>
-							<span class="title_box ">{$row['ostate_name']|stripslashes}</span>
-						</th>
-						<th>
-							<span class="title_box ">{if $row['employee_lastname']}{$row['employee_firstname']|stripslashes} {$row['employee_lastname']|stripslashes}{/if}</span>
-						</th>
-						<th>
-							<span class="title_box ">{dateFormat date=$row['date_add'] full=true}</span>
-						</th>
-					</tr>
-				</thead>
-				{else}
-				<tbody>
-					<tr class="{if ($key % 2)}alt_row{/if}">
-						<td><img src="../img/os/{$row['id_order_state']}.gif" /></td>
-						<td>{$row['ostate_name']|stripslashes}</td>
-						<td>{if $row['employee_lastname']}{$row['employee_firstname']|stripslashes} {$row['employee_lastname']|stripslashes}{else}&nbsp;{/if}</td>
-						<td>{dateFormat date=$row['date_add'] full=true}</td>
-					</tr>
-				</tbody>
-				{/if}
-			{/foreach}
-		</table>
+			<fieldset class="well">
+				<legend>
+					<i class="icon-table"></i>
+					{l s='Order status'}
+				</legend>
+				<label class="control-label col-lg-1 text-right">
+					{l s='Status:'}
+				</label>
+				<div class="col-lg-10">
+					<select id="id_order_state" name="id_order_state">
+						{foreach from=$states item=state}
+							{if $state['id_order_state'] != $currentState->id}
+							<option value="{$state['id_order_state']}">{$state['name']|stripslashes}</option>
+							{/if}
+						{/foreach}
+					</select>
+				</div>
+				<input type="hidden" name="id_order" value="{$order->id}" />
+				<button type="submit" name="submitState" class="btn btn-default"> 
+					{l s='Add'}
+				</button>
 
-		{if $customer->id}
+				<!-- History of status -->
+				<table cellspacing="0" cellpadding="0" class="table table-hover">
+					<colgroup>
+						<col width="1%">
+						<col width="">
+						<col width="20%">
+						<col width="20%">
+					</colgroup>
+					{foreach from=$history item=row key=key}
+						{if ($key == 0)}
+						<thead>
+							<tr>
+								<th>
+									<img src="../img/os/{$row['id_order_state']}.gif" />
+								</th>
+								<th>
+									<span class="title_box ">{$row['ostate_name']|stripslashes}</span>
+								</th>
+								<th>
+									<span class="title_box ">{if $row['employee_lastname']}{$row['employee_firstname']|stripslashes} {$row['employee_lastname']|stripslashes}{/if}</span>
+								</th>
+								<th>
+									<span class="title_box ">{dateFormat date=$row['date_add'] full=true}</span>
+								</th>
+							</tr>
+						</thead>
+						{else}
+						<tbody>
+							<tr class="{if ($key % 2)}alt_row{/if}">
+								<td><img src="../img/os/{$row['id_order_state']}.gif" /></td>
+								<td>{$row['ostate_name']|stripslashes}</td>
+								<td>{if $row['employee_lastname']}{$row['employee_firstname']|stripslashes} {$row['employee_lastname']|stripslashes}{else}&nbsp;{/if}</td>
+								<td>{dateFormat date=$row['date_add'] full=true}</td>
+							</tr>
+						</tbody>
+						{/if}
+					{/foreach}
+				</table>
+
+				{if $customer->id}
+			</fieldset>
+		</form>
 	</div>
 
 	<!-- Customer informations -->
@@ -201,7 +210,7 @@
 					{if (!Customer::customerExists($customer->email))}
 					<form method="post" action="index.php?tab=AdminCustomers&id_customer={$customer->id}&token={getAdminToken tab='AdminCustomers'}">
 						<input type="hidden" name="id_lang" value="{$order->id_lang}" />
-						<p class="center"><input class="button" type="submit" name="submitGuestToCustomer" value="{l s='Transform a guest into a customer'}" /></p>
+						<p class="text-center"><input class="button" type="submit" name="submitGuestToCustomer" value="{l s='Transform a guest into a customer'}" /></p>
 						{l s='This feature will generate a random password and send an email to the customer.'}
 					</form>
 					{else}
@@ -559,12 +568,12 @@
 								<td>{displayPrice price=$payment->amount currency=$payment->id_currency}</td>
 								<td>
 								{if $invoice = $payment->getOrderInvoice($order->id)}
-									{$invoice->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}
+									{$invoice->getInvoiceNumberFormatted($current_id_lang)}
 								{else}
 									{l s='No invoice'}
 								{/if}
 								</td>
-								<td class="right">
+								<td class="text-right">
 									<a href="#" class="open_payment_information">
 										<i class="icon-search"></i>
 									</a>
@@ -611,7 +620,7 @@
 							</tr>
 							{foreachelse}
 							<tr>
-								<td colspan="6" class="center">
+								<td colspan="6" class="text-center">
 									<h4>{l s='No payments are available'}</h4>
 								</td>
 							</tr>
@@ -642,7 +651,7 @@
 								<td>
 									<select name="payment_invoice" id="payment_invoice">
 									{foreach from=$invoices_collection item=invoice}
-										<option value="{$invoice->id}" selected="selected">{$invoice->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}</option>
+										<option value="{$invoice->id}" selected="selected">{$invoice->getInvoiceNumberFormatted($current_id_lang)}</option>
 									{/foreach}
 									</select>
 								</td>
@@ -807,61 +816,64 @@
 						{l s='Add a product'}
 					</a>
 				{/if}
-				<!--<div style="float: right; margin-right: 10px" id="refundForm">
+				<div style="float: right; margin-right: 10px" id="refundForm">
 				
-					<a href="#" class="standard_refund"><img src="../img/admin/add.gif" alt="{l s='Process a standard refund'}" /> {l s='Process a standard refund'}</a>
-					<a href="#" class="partial_refund"><img src="../img/admin/add.gif" alt="{l s='Process a partial refund'}" /> {l s='Process a partial refund'}</a>
+					<!--<a href="#" class="standard_refund"><img src="../img/admin/add.gif" alt="{l s='Process a standard refund'}" /> {l s='Process a standard refund'}</a>
+					<a href="#" class="partial_refund"><img src="../img/admin/add.gif" alt="{l s='Process a partial refund'}" /> {l s='Process a partial refund'}</a>-->
 				
-				</div>-->
+				</div>
 				{/if}
 				<div class="col-lg-12">
 					<table cellspacing="0" cellpadding="0" class="table table-hover" id="orderProducts">
 						<thead>
 							<tr>
-								<th height="39" class="center" width="7%">&nbsp;</th>
+								<th height="39" width="7%">&nbsp;</th>
 								<th>
 									<span class="title_box ">{l s='Product'}</span>
 								</th>
-								<th width="15%" class="center">
+								<th width="15%">
 									<span class="title_box ">{l s='Unit Price'} <sup>*</sup></span>
 								</th>
-								<th width="4%" class="center">
+								<th width="4%">
 									<span class="title_box ">{l s='Qty'}</span>
 								</th>
 								{if ($order->hasBeenPaid())}
-									<th width="3%" class="center">
+									<th width="3%">
 										<span class="title_box ">{l s='Refunded'}</span>
 									</th>
 								{/if}
 								{if ($order->hasBeenDelivered() || $order->hasProductReturned())}
-									<th width="3%" class="center">
+									<th width="3%">
 										<span class="title_box ">{l s='Returned'}</span>
 									</th>
 								{/if}
 								{if $stock_management}
-									<th width="10%" class="center">
+									<th width="10%">
 										<span class="title_box ">{l s='Available quantity'}</span>
 									</th>
 								{/if}
-								<th width="10%" class="center">
+								<th width="10%" class="text-right">
 									<span class="title_box ">{l s='Total'} <sup>*</sup></span>
 								</th>
 								<th colspan="2" style="display: none;" class="add_product_fields">&nbsp;</th>
 								<th colspan="2" style="display: none;" class="edit_product_fields">&nbsp;</th>
-								<th colspan="2" style="display: none;" class="standard_refund_fields"><img src="../img/admin/delete.gif" alt="{l s='Products:'}" />
-									{if ($order->hasBeenDelivered() || $order->hasBeenShipped())}
-										<span class="title_box ">{l s='Return'}</span>
-									{elseif ($order->hasBeenPaid())}
-										<span class="title_box ">{l s='Refund'}</span>
-									{else}
-										<span class="title_box ">{l s='Cancel'}</span>
-									{/if}
+								<th colspan="2" style="display: none;" class="standard_refund_fields">
+									<span class="title_box ">
+										<i class="icon-remove"></i>
+										{if ($order->hasBeenDelivered() || $order->hasBeenShipped())}
+											{l s='Return'}
+										{elseif ($order->hasBeenPaid())}
+											{l s='Refund'}
+										{else}
+											{l s='Cancel'}
+										{/if}
+									</span>
 								</th>
 								<th widht="12%" style="display:none" class="partial_refund_fields right">
 									<span class="title_box ">{l s='Partial refund'}</span>
 								</th>
 								{if !$order->hasBeenDelivered()}
-								<th width="8%" class="center">
+								<th width="8%" class="text-center">
 									<span class="title_box ">{l s='Action'}</span>
 								</th>
 								{/if}
@@ -880,43 +892,68 @@
 					</table>
 				</div>
 				<div class="col-lg-12">
-					<sup>*</sup> {l s='For this customer group, prices are displayed as:'}
-					{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
-						{l s='tax excluded.'}
-					{else}
-						{l s='tax included.'}
-					{/if}
-
-					{if !Configuration::get('PS_ORDER_RETURN')}
-						<br /><br />{l s='Merchandise returns are disabled'}
-					{/if}
+					<p class="text-muted">
+						<sup>*</sup> {l s='For this customer group, prices are displayed as:'}
+						{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
+							{l s='tax excluded.'}
+						{else}
+							{l s='tax included.'}
+						{/if}
+					</p>
+					<p class="text-danger">
+						{if !Configuration::get('PS_ORDER_RETURN')}
+							{l s='Merchandise returns are disabled'}
+						{/if}
+					</p>
 				</div>
 				<div class="col-lg-7 pull-right">
-					<table class="table table-hover" width="450px;" style="border-radius:0px;"cellspacing="0" cellpadding="0">
+					<table class="table table-hover" cellspacing="0" cellpadding="0">
 						<tr id="total_products">
-							<td width="150px;"><strong>{l s='Products:'}</strong></td>
-							<td class="amount" align="right">{displayPrice price=$order->total_products_wt currency=$currency->id}</td>
+							<td width="150">
+								<span><strong>{l s='Products:'}</strong></span>
+							</td>
+							<td class="text-right">
+								<span>{displayPrice price=$order->total_products_wt currency=$currency->id}</span>
+							</td>
 							<td class="partial_refund_fields current-edit" style="display:none;">&nbsp;</td>
 						</tr>
 						<tr id="total_discounts" {if $order->total_discounts_tax_incl == 0}style="display: none;"{/if}>
-							<td><strong>{l s='Discounts'}</strong></td>
-							<td class="amount" align="right">-{displayPrice price=$order->total_discounts_tax_incl currency=$currency->id}</td>
+							<td>
+								<span><strong>{l s='Discounts'}</strong></span>
+							</td>
+							<td class="text-right">
+								<span>-{displayPrice price=$order->total_discounts_tax_incl currency=$currency->id}</span>
+							</td>
 							<td class="partial_refund_fields current-edit" style="display:none;">&nbsp;</td>
 						</tr>
 						<tr id="total_wrapping" {if $order->total_wrapping_tax_incl == 0}style="display: none;"{/if}>
-							<td><strong>{l s='Wrapping'}</strong></td>
-							<td class="amount" align="right">{displayPrice price=$order->total_wrapping_tax_incl currency=$currency->id}</td>
+							<td>
+								<span><strong>{l s='Wrapping'}</strong></span>
+							</td>
+							<td class="text-right">
+								<span>{displayPrice price=$order->total_wrapping_tax_incl currency=$currency->id}</span>
+							</td>
 							<td class="partial_refund_fields current-edit" style="display:none;">&nbsp;</td>
 						</tr>
 						<tr id="total_shipping">
-							<td><strong>{l s='Shipping'}</strong></td>
-							<td class="amount" align="right">{displayPrice price=$order->total_shipping_tax_incl currency=$currency->id}</td>
-							<td class="partial_refund_fields current-edit" style="display:none;">{$currency->prefix}<input type="text" size="3" name="partialRefundShippingCost" value="0" />{$currency->suffix}</td>
+							<td>
+								<span><strong>{l s='Shipping'}</strong></span>
+							</td>
+							<td class="text-right">
+								<span>{displayPrice price=$order->total_shipping_tax_incl currency=$currency->id}</span>
+							</td>
+							<td class="partial_refund_fields current-edit" style="display:none;">
+								<span class="col-lg-2">{$currency->prefix}</span>
+								<span class="col-lg-8"><input type="text" size="3" name="partialRefundShippingCost" value="0" /></span>
+								<span class="col-lg-2">{$currency->suffix}</span>
+							</td>
 						</tr>
-						<tr style="font-size: 20px" id="total_order">
-							<td style="font-size: 20px">{l s='Total'}</td>
-							<td class="amount" style="font-size: 20px" align="right">
-								{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}
+						<tr id="total_order">
+							<td>
+								<span>{l s='Total'}</span>
+							</td>
+							<td class="text-right">
+								<span>{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}</span>
 							</td>
 							<td class="partial_refund_fields current-edit" style="display:none;">&nbsp;</td>
 						</tr>
@@ -941,7 +978,7 @@
 							{displayPrice price=$discount['value'] currency=$currency->id}
 							</td>
 							{if $can_edit}
-							<td class="center">
+							<td class="text-center">
 								<a href="{$current_index}&submitDeleteVoucher&id_order_cart_rule={$discount['id_order_cart_rule']}&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}"><img src="../img/admin/delete.gif" alt="{l s='Delete voucher'}" /></a>
 							</td>
 							{/if}
@@ -949,7 +986,7 @@
 						{/foreach}
 					{if $can_edit}
 						<tr>
-							<td colspan="3" class="center">
+							<td colspan="3" class="text-center">
 								<a class="button" href="#" id="add_voucher"><img src="../img/admin/add.gif" alt="{l s='Add'}" /> {l s='Add a new discount'}</a>
 							</td>
 						</tr>
@@ -978,10 +1015,23 @@
 						</div>
 					{/if}
 				</div>
-				<div style="float: right; width: 160px; display:none;" class="partial_refund_fields">
-					<input type="checkbox" name="reinjectQuantities" class="button" />&nbsp;<label for="reinjectQuantities" style="float:none; font-weight:normal;">{l s='Re-stock products'}</label><br />
-					<input type="checkbox" id="generateDiscountRefund" name="generateDiscountRefund" class="button" onclick="toggleShippingCost(this)" />&nbsp;<label for="generateDiscount" style="float:none; font-weight:normal;">{l s='Generate a voucher'}</label><br />
-					<input type="submit" name="partialRefund" value="{l s='Partial refund'}" class="button" style="margin-top:8px;" />
+				<div style="display:none;" class="partial_refund_fields col-lg-7 pull-right">
+					<div class="checkbox">
+						<label for="reinjectQuantities" class="control-label">
+							<input type="checkbox" name="reinjectQuantities" class="button" />
+							{l s='Re-stock products'}
+						</label>
+					</div>
+					<div class="checkbox">
+						<label for="generateDiscount" class="control-label">
+							<input type="checkbox" id="generateDiscountRefund" name="generateDiscountRefund" class="button" onclick="toggleShippingCost(this)" />
+							{l s='Generate a voucher'}
+						</label>
+					</div>
+					<button type="submit" name="partialRefund" class="btn btn-default"> 
+						{l s='Partial refund'}
+					</button>
+					
 				</div>
 			</fieldset>
 		</form>
