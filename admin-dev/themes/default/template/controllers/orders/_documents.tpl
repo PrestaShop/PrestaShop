@@ -83,7 +83,10 @@
 							{/if}
 						{elseif get_class($document) eq 'OrderSlip'}
 							#{Configuration::get('PS_CREDIT_SLIP_PREFIX', $current_id_lang)}{'%06d'|sprintf:$document->id}
-						{/if} <i class="icon-search"></i>
+						{/if} 	<span class="btn btn-default btn-small">
+									<i class="icon-search"></i>
+									{l s='See the document'}
+								</span>
 							</a>
 					</td>
 					<td>
@@ -106,14 +109,23 @@
 						{displayPrice price=$document->amount currency=$currency->id}
 					{/if}
 					</td>
-					<td>
+					<td class="text-right document_action">
 					{if get_class($document) eq 'OrderInvoice'}
 						{if !isset($document->is_delivery)}
 							{if $document->getRestPaid()}
-								<a href="#" class="js-set-payment" data-amount="{$document->getRestPaid()}" data-id-invoice="{$document->id}" title="{l s='Set payment form'}"><img src="../img/admin/money_add.png" alt="{l s='Set payment form'}" /></a>
+								<a href="#" class="js-set-payment btn btn-default btn-small" data-amount="{$document->getRestPaid()}" data-id-invoice="{$document->id}" title="{l s='Set payment form'}">
+									<i class="icon-pencil"></i>
+									{l s='Set payment form'}
+								</a>
 							{/if}
-							<a href="#" onclick="$('#invoiceNote{$document->id}').show(); return false;" title="{if $document->note eq ''}{l s='Add note'}{else}{l s='Edit note'}{/if}">
-								<i class="icon-pencil"></i>
+							<a href="#" class="btn btn-default btn-small" onclick="$('#invoiceNote{$document->id}').show(); return false;" title="{if $document->note eq ''}{l s='Add note'}{else}{l s='Edit note'}{/if}">
+								{if $document->note eq ''}
+									<i class="icon-plus-sign-alt"></i>
+									{l s='Add note'}
+								{else}
+									<i class="icon-pencil"></i>
+									{l s='Edit note'}
+								{/if}
 							</a>
 						{/if}
 					{/if}
@@ -146,13 +158,13 @@
 			{/if}
 		{foreachelse}
 			<tr>
-				<td colspan="5" class="center">
+				<td colspan="5" class="text-center">
 					<h4>{l s='No documents are available'}</h4>
 					{if isset($invoice_management_active) && $invoice_management_active}
-					<a class="button" href="{$current_index}&viewOrder&submitGenerateInvoice&id_order={$order->id}{if isset($smarty.get.token)}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}{/if}">{l s='Generate invoice'}</a>
-						<i class="icon-repeat"></i>
-						{l s='Generate invoice'}
-					</a>
+						<a class="btn btn-default" href="{$current_index}&viewOrder&submitGenerateInvoice&id_order={$order->id}{if isset($smarty.get.token)}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}{/if}">
+							<i class="icon-repeat"></i>
+							{l s='Generate invoice'}
+						</a>
 					{/if}
 				</td>
 			</tr>
