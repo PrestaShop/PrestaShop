@@ -156,7 +156,7 @@
 												{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
 												{if isset($input.autocomplete) && !$input.autocomplete}autocomplete="off"{/if} />
 										{if isset($input.suffix)}{$input.suffix}{/if}
-										{if !empty($input.hint)}<span class="alert alert-info" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
+										{if !empty($input.desc)}<div class="alert alert-info">{$input.desc}</div>{/if}
 									{/if}
 								{elseif $input.type == 'select'}
 									{if isset($input.options.query) && !$input.options.query && isset($input.empty_message)}

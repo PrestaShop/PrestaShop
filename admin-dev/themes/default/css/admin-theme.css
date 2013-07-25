@@ -3739,7 +3739,7 @@ a .icon-flip-vertical:before {
 .icon-ok:before {
   content: "\f00c"; }
 
-.icon-remove:before {
+.icon-remove:before, .process-icon-cancel:before {
   content: "\f00d"; }
 
 .icon-zoom-in:before {
@@ -3944,10 +3944,10 @@ a .icon-flip-vertical:before {
 .icon-chevron-right:before {
   content: "\f054"; }
 
-.icon-plus-sign:before, .process-icon-newCombination:before {
+.icon-plus-sign:before, .process-icon-newCombination.toolbar-new:before {
   content: "\f055"; }
 
-.icon-minus-sign:before {
+.icon-minus-sign:before, .process-icon-newCombination.toolbar-cancel:before {
   content: "\f056"; }
 
 .icon-remove-sign:before {
@@ -4340,7 +4340,7 @@ a .icon-flip-vertical:before {
 .icon-lightbulb:before {
   content: "\f0eb"; }
 
-.icon-exchange:before {
+.icon-exchange:before, .process-icon-partial_refund:before {
   content: "\f0ec"; }
 
 .icon-cloud-download:before, .process-icon-export:before {
