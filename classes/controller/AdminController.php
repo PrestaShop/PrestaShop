@@ -313,7 +313,7 @@ class AdminControllerCore extends Controller
 			19 => $this->l('Duplication was completed successfully.'), 20 => $this->l('The translation was added successfully, but the language has not been created.'),
 			21 => $this->l('Module reset successfully.'), 22 => $this->l('Module deleted successfully.'),
 			23 => $this->l('Localization pack imported successfully.'), 24 => $this->l('Localization pack imported successfully.'),
-			25 => $this->l('The selcted images have successfully been moved.'),
+			25 => $this->l('The selected images have successfully been moved.'),
 			26 => $this->l('Your cover selection has been saved.'),
 			27 => $this->l('The image shop association has been modified.'),
 			28 => $this->l('A zone has been assigned to the selection successfully.'),
@@ -1197,8 +1197,7 @@ class AdminControllerCore extends Controller
 
 		$tpl_action = $this->tpl_folder.$this->display.'.tpl';
 
-		// Check if action template has been override
-
+		// Check if action template has been overriden
 		foreach ($this->context->smarty->getTemplateDir() as $template_dir)
 			if (file_exists($template_dir.DIRECTORY_SEPARATOR.$tpl_action) && $this->display != 'view' && $this->display != 'options')
 			{
@@ -1217,26 +1216,14 @@ class AdminControllerCore extends Controller
 			$page = $this->content;
 
 		if ($conf = Tools::getValue('conf'))
-			if ($this->json)
-				$this->context->smarty->assign('conf', Tools::jsonEncode($this->_conf[(int)$conf]));
-			else
-				$this->context->smarty->assign('conf', $this->_conf[(int)$conf]);
-		
-		$notifications_type = array('errors', 'warnings', 'informations', 'confirmations');
-		foreach($notifications_type as $type)
-			if ($this->json)
-				$this->context->smarty->assign($type, Tools::jsonEncode(array_unique($this->$type)));
-			else
-				$this->context->smarty->assign($type, array_unique($this->$type));
+			$this->context->smarty->assign('conf', $this->json ? Tools::jsonEncode($this->_conf[(int)$conf]) : $this->_conf[(int)$conf]);
 
-		if ($this->json)
-			$this->context->smarty->assign('page', Tools::jsonEncode($page));
-		else
-			$this->context->smarty->assign('page', $page);
-		
+		foreach (array('errors', 'warnings', 'informations', 'confirmations') as $type)
+				$this->context->smarty->assign($type, $this->json ? Tools::jsonEncode(array_unique($this->$type)) : array_unique($this->$type));
+
+		$this->context->smarty->assign('page', $this->json ? Tools::jsonEncode($page) : $page);
 		$this->smartyOutputContent($this->layout);
 	}
-
 
 	/**
 	 * add a warning message to display at the top of the page

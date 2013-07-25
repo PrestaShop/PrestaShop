@@ -1322,7 +1322,7 @@ abstract class ObjectModelCore
 	 * @param string $specific_where Only executed for common table
 	 * @return bool
 	 */
-	public static function updateMultishopTable($classname, $data, $where, $specific_where = '')
+	public static function updateMultishopTable($classname, $data, $where = '', $specific_where = '')
 	{
 		$def = ObjectModel::getDefinition($classname);
 		$update_data = array();
@@ -1342,8 +1342,8 @@ abstract class ObjectModelCore
 
 		$sql = 'UPDATE '._DB_PREFIX_.$def['table'].' a
 				'.Shop::addSqlAssociation($def['table'], 'a', true, null, true).'
-				SET '.implode(', ', $update_data).'
-				WHERE '.$where;
+				SET '.implode(', ', $update_data).
+				(!empty($where) ? ' WHERE '.$where : '');
 		return Db::getInstance()->execute($sql);
 	}
 

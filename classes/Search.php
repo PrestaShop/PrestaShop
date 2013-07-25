@@ -102,11 +102,11 @@ class SearchCore
 		$string = preg_replace('/['.PREG_CLASS_SEARCH_EXCLUDE.']+/u', ' ', $string);
 
 		if ($indexation)
-			$string = preg_replace('/[._-]+/', '', $string);
+			$string = preg_replace('/[._-]+/', ' ', $string);
 		else
 		{
 			$string = preg_replace('/[._]+/', '', $string);
-			$string = ltrim(preg_replace('/([^ ])-/', '$1', ' '.$string));
+			$string = ltrim(preg_replace('/([^ ])-/', '$1 ', ' '.$string));
 			$string = preg_replace('/[._]+/', '', $string);
 			$string = preg_replace('/[^\s]-+/', '', $string);
 		}
@@ -410,7 +410,7 @@ class SearchCore
 		{
 			$db->execute('TRUNCATE '._DB_PREFIX_.'search_index');
 			$db->execute('TRUNCATE '._DB_PREFIX_.'search_word');
-			ObjectModel::updateMultishopTable('Product', array('indexed' => 0), '1');
+			ObjectModel::updateMultishopTable('Product', array('indexed' => 0));
 		}
 		else
 		{
