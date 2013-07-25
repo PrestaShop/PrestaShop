@@ -3944,10 +3944,10 @@ a .icon-flip-vertical:before {
 .icon-chevron-right:before {
   content: "\f054"; }
 
-.icon-plus-sign:before, .process-icon-newCombination:before {
+.icon-plus-sign:before, .toolbar-new:before {
   content: "\f055"; }
 
-.icon-minus-sign:before {
+.icon-minus-sign:before, .toolbar-cancel:before {
   content: "\f056"; }
 
 .icon-remove-sign:before {
