@@ -115,7 +115,6 @@ class OrderDetailControllerCore extends FrontController
 						Tools::redirect('index.php?controller=order-detail&id_order='.(int)$idOrder);
 
 					$this->context->smarty->assign('message_confirmation', true);
-
 				}
 				else
 					$this->errors[] = Tools::displayError('Order not found');
