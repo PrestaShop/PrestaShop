@@ -29,7 +29,7 @@
 
 <div class="row">
 	{include file="controllers/products/multishop/checkbox.tpl" field="meta_title" type="default" multilang="true"}
-	<label class="control-label col-lg-3">
+	<label class="control-label col-lg-3" for="meta_title_{$id_lang}">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='Product page title: Leave blank to use the product name'}">
 			{l s='Meta title:'}
@@ -47,7 +47,7 @@
 
 <div class="row">
 	{include file="controllers/products/multishop/checkbox.tpl" field="meta_description" type="default" multilang="true"}
-	<label class="control-label col-lg-3">
+	<label class="control-label col-lg-3" for="meta_description_{$id_lang}">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='A single sentence for the HTML header is needed. '}">
 			{l s='Meta description:'}
@@ -66,7 +66,7 @@
 
 <div class="row">
 	{include file="controllers/products/multishop/checkbox.tpl" field="meta_keywords" type="default" multilang="true"}
-	<label class="control-label col-lg-3">
+	<label class="control-label col-lg-3" for="meta_keywords_{$id_lang}">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='Keywords for HTML header, separated by commas.'}">
 			{l s='Meta keywords:'}
@@ -83,7 +83,7 @@
 
 <div class="row">
 	{include file="controllers/products/multishop/checkbox.tpl" field="link_rewrite" type="default" multilang="true"}
-	<label class="control-label col-lg-3">
+	<label class="control-label col-lg-3" for="link_rewrite_{$id_lang}">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='friendly URL from the product name.'}">
 			{l s='Friendly URL:'}
