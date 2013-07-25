@@ -49,7 +49,7 @@
 			{if ($order->hasBeenPaid())}<td align="center" class="productQuantity">{$product['customizationQuantityRefunded']}</td>{/if}
 			{if ($order->hasBeenDelivered() || $order->hasProductReturned())}<td align="center" class="productQuantity">{$product['customizationQuantityReturned']}</td>{/if}
 			{if $stock_management}<td align="center" class=""> - </td>{/if}
-			<td align="center" class="total_product">
+			<td class="total_product text-right">
 			{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
 				{displayPrice price=Tools::ps_round($product['product_price'] * $product['customizationQuantityTotal'], 2) currency=$currency->id|intval}
 			{else}
@@ -109,7 +109,7 @@
 					<td align="center">
 					-
 					</td>
-					<td align="center" class="total_product">
+					<td class="total_product text-right">
 						{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
 							{displayPrice price=Tools::ps_round($product['product_price'] * $customization['quantity'], 2) currency=$currency->id|intval}
 						{else}
@@ -133,15 +133,21 @@
 						<input type="text" id="cancelQuantity_{$customizationId|intval}" name="cancelCustomizationQuantity[{$customizationId|intval}]" size="2" onclick="selectCheckbox(this);" value="" />0/{$customization['quantity']-$customization['quantity_refunded']}
 					{/if}
 					</td>
-					<td class="partial_refund_fields current-edit" style="text-align:left;display:none">
-						<div style="width:40%;margin-top:5px;float:left">{l s='Quantity:'}</div> <div style="width:60%;margin-top:2px;float:left"><input type="text" size="3" name="partialRefundProductQuantity[{$product['id_order_detail']|intval}]" value="0" />		
-						0/{$customization['quantity']-$customization['quantity_refunded']}
-						</div>
-						<div style="width:40%;margin-top:5px;float:left">{l s='Amount:'}</div> <div style="width:60%;margin-top:2px;float:left">{$currency->prefix}<input type="text" size="3" name="partialRefundProduct[{$product['id_order_detail']|intval}]" />{$currency->suffix}</div>
+					<td class="partial_refund_fields current-edit" style="display:none">
+						<label class="text-center">
+							{l s='Quantity:'}
+							<input type="text" size="3" name="partialRefundProductQuantity[{$product['id_order_detail']|intval}]" value="0" />		
+							0/{$customization['quantity']-$customization['quantity_refunded']}
+						</label>
+						<label class="text-center">
+							{l s='Amount:'}
+							{$currency->prefix}
+							<input type="text" size="3" name="partialRefundProduct[{$product['id_order_detail']|intval}]" />{$currency->suffix}
+						</label>
 					</td>
 					{if ($can_edit && !$order->hasBeenDelivered())}
 						<td class="edit_product_fields" colspan="2" style="display:none"></td>
-						<td class="product_action" style="text-align:right"></td>
+						<td class="product_action" class="text-right"></td>
 					{/if}
 				</tr>
 			{/foreach}
