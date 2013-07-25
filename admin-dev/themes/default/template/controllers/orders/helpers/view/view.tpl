@@ -152,7 +152,7 @@
 				</button>
 
 				<!-- History of status -->
-				<table cellspacing="0" cellpadding="0" class="table table-hover">
+				<table class="table">
 					<colgroup>
 						<col width="1%">
 						<col width="">
@@ -432,7 +432,7 @@
 						<i class="icon-shopping-cart"></i>
 						{l s='Linked orders'}
 					</legend>
-					<table class="table table-hover" width="100%;" cellspacing="0" cellpadding="0">
+					<table class="table">
 						<thead>
 							<tr>
 								<th width="15%">
@@ -473,7 +473,7 @@
 	{/if}
 
 	<!-- Documents block -->
-	<div class="col-lg-6">
+	<div class="col-lg-12">
 		<form action="" method="">
 			<fieldset class="well">
 				<legend>
@@ -487,7 +487,7 @@
 	</div>
 
 	<!-- Payments block -->
-	<div class="col-lg-6">
+	<div class="col-lg-12">
 		<form action="" method="">
 			<fieldset class="well">
 				<legend>
@@ -507,9 +507,7 @@
 							{/foreach}
 						</select>
 					</div>
-					<button type="submit" class="btn btn-default" name="submitChangeCurrency"> 
-						{l s='Change'}
-					</button>
+					<input type="submit" class="btn btn-default" name="submitChangeCurrency" value="{l s='Change'}" />
 				</form>
 				<hr/>
 				{/if}
@@ -530,7 +528,7 @@
 				</p>
 				{/if}
 				<form id="formAddPayment" method="post" action="{$current_index}&vieworder&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
-					<table class="table table-hover" width="100%" cellspacing="0" cellpadding="0">
+					<table class="table">
 						<colgroup>
 							<col width="15%">
 							<col width="39%">
@@ -574,8 +572,9 @@
 								{/if}
 								</td>
 								<td class="text-right">
-									<a href="#" class="open_payment_information">
+									<a href="#" class="open_payment_information btn btn-default">
 										<i class="icon-search"></i>
+										{l s='See payment information'}
 									</a>
 								</td>
 							</tr>
@@ -657,9 +656,7 @@
 								</td>
 								{/if}
 								<td>
-									<button class="btn btn-default" type="submit" name="submitAddPayment"> 
-										{l s='Add'}
-									</button>
+									<input class="btn btn-default" type="submit" name="submitAddPayment" value="{l s='Add'}" />
 								</td>
 							</tr>
 						</tbody>
@@ -738,7 +735,7 @@
 					</legend>
 
 					{if $order->getReturn()|count > 0}
-					<table class="table table-hover" width="100%" cellspacing="0" cellpadding="0">
+					<table class="table">
 						<thead>
 							<tr>
 								<th width="30%">
@@ -773,11 +770,13 @@
 											<input type="text" name="tracking_number" value="{$line.tracking_number|htmlentities}" />
 											<input type="submit" class="button" name="submitShippingNumber" value="{l s='Update'}" />
 										</span>
-										<a href="#" class="edit_shipping_number_link">
+										<a href="#" class="edit_shipping_number_link btn btn-default">
 											<i class="icon-pencil"></i>
+											{l s='Edit'}
 										</a>
-										<a href="#" class="cancel_shipping_number_link" style="display: none;">
+										<a href="#" class="cancel_shipping_number_link btn btn-default" style="display: none;">
 											<i class="icon-remove"></i>
+											{l s='Cancel'}
 										</a>
 									</form>
 									{/if}
@@ -809,22 +808,22 @@
 					<i class="icon-shopping-cart"></i>
 					{l s='Products:'}
 				</legend>
-				{if $can_edit}
-				{if !$order->hasBeenDelivered()}
-					<a href="#" class="add_product btn btn-default">
-						<i class="icon-plus-sign-alt"></i>
-						{l s='Add a product'}
-					</a>
-				{/if}
-				<div style="float: right; margin-right: 10px" id="refundForm">
-				
-					<!--<a href="#" class="standard_refund"><img src="../img/admin/add.gif" alt="{l s='Process a standard refund'}" /> {l s='Process a standard refund'}</a>
-					<a href="#" class="partial_refund"><img src="../img/admin/add.gif" alt="{l s='Process a partial refund'}" /> {l s='Process a partial refund'}</a>-->
-				
-				</div>
-				{/if}
 				<div class="col-lg-12">
-					<table cellspacing="0" cellpadding="0" class="table table-hover" id="orderProducts">
+					{if $can_edit}
+						{if !$order->hasBeenDelivered()}
+							<a href="#" class="add_product btn btn-default">
+								<i class="icon-plus-sign-alt"></i>
+								{l s='Add a product'}
+							</a>
+						{/if}
+						<div id="refundForm">
+							<!--<a href="#" class="standard_refund"><img src="../img/admin/add.gif" alt="{l s='Process a standard refund'}" /> {l s='Process a standard refund'}</a>
+							<a href="#" class="partial_refund"><img src="../img/admin/add.gif" alt="{l s='Process a partial refund'}" /> {l s='Process a partial refund'}</a>-->
+						</div>
+					{/if}
+				</div>
+				<div class="col-lg-12">
+					<table class="table" id="orderProducts">
 						<thead>
 							<tr>
 								<th height="39" width="7%">&nbsp;</th>
@@ -879,16 +878,18 @@
 								{/if}
 							</tr>
 						</thead>
-						{foreach from=$products item=product key=k}
-							{* Include customized datas partial *}
-							{include file='controllers/orders/_customized_data.tpl'}
+						<tbody>
+							{foreach from=$products item=product key=k}
+								{* Include customized datas partial *}
+								{include file='controllers/orders/_customized_data.tpl'}
 
-							{* Include product line partial *}
-							{include file='controllers/orders/_product_line.tpl'}
-						{/foreach}
-						{if $can_edit}
-							{include file='controllers/orders/_new_product.tpl'}
-						{/if}
+								{* Include product line partial *}
+								{include file='controllers/orders/_product_line.tpl'}
+							{/foreach}
+							{if $can_edit}
+								{include file='controllers/orders/_new_product.tpl'}
+							{/if}
+						</tbody>
 					</table>
 				</div>
 				<div class="col-lg-12">
@@ -907,7 +908,7 @@
 					</p>
 				</div>
 				<div class="col-lg-7 pull-right">
-					<table class="table table-hover" cellspacing="0" cellpadding="0">
+					<table class="table">
 						<tr id="total_products">
 							<td width="150">
 								<span><strong>{l s='Products:'}</strong></span>
@@ -959,62 +960,8 @@
 						</tr>
 					</table>
 				</div>
-
-				{if (sizeof($discounts) || $can_edit)}
-				<div class="col-lg-7 pull-right">
-					<table cellspacing="0" cellpadding="0" class="table table-hover" style="width:100%;">
-						<tr>
-							<th><img src="../img/admin/coupon.gif" alt="{l s='Discounts'}" />{l s='Discount name'}</th>
-							<th align="center" style="width: 100px">{l s='Value'}</th>
-							{if $can_edit}<th align="center" style="width: 30px">{l s='Action'}</th>{/if}
-						</tr>
-						{foreach from=$discounts item=discount}
-						<tr>
-							<td>{$discount['name']}</td>
-							<td align="center">
-							{if $discount['value'] != 0.00}
-								-
-							{/if}
-							{displayPrice price=$discount['value'] currency=$currency->id}
-							</td>
-							{if $can_edit}
-							<td class="text-center">
-								<a href="{$current_index}&submitDeleteVoucher&id_order_cart_rule={$discount['id_order_cart_rule']}&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}"><img src="../img/admin/delete.gif" alt="{l s='Delete voucher'}" /></a>
-							</td>
-							{/if}
-						</tr>
-						{/foreach}
-					{if $can_edit}
-						<tr>
-							<td colspan="3" class="text-center">
-								<a class="button" href="#" id="add_voucher"><img src="../img/admin/add.gif" alt="{l s='Add'}" /> {l s='Add a new discount'}</a>
-							</td>
-						</tr>
-						<tr style="display: none" >
-							<td colspan="3" class="current-edit" id="voucher_form">
-								{include file='controllers/orders/_discount_form.tpl'}
-							</td>
-						</tr>
-					{/if}
-					</table>
-				</div>
-				{/if}
-
-				<div style="display: none;" class="standard_refund_fields">
-					{if ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN'))}
-						<input type="checkbox" name="reinjectQuantities" class="button" />&nbsp;<label for="reinjectQuantities" style="float:none; font-weight:normal;">{l s='Re-stock products'}</label><br />
-					{/if}
-					{if ((!$order->hasBeenDelivered() && $order->hasBeenPaid()) || ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN')))}
-						<input type="checkbox" id="generateCreditSlip" name="generateCreditSlip" class="button" onclick="toggleShippingCost(this)" />&nbsp;<label for="generateCreditSlip" style="float:none; font-weight:normal;">{l s='Generate a credit card slip'}</label><br />
-						<input type="checkbox" id="generateDiscount" name="generateDiscount" class="button" onclick="toggleShippingCost(this)" />&nbsp;<label for="generateDiscount" style="float:none; font-weight:normal;">{l s='Generate a voucher'}</label><br />
-						<span id="spanShippingBack" style="display:none;"><input type="checkbox" id="shippingBack" name="shippingBack" class="button" />&nbsp;<label for="shippingBack" style="float:none; font-weight:normal;">{l s='Repay shipping costs'}</label><br /></span>
-					{/if}
-					{if (!$order->hasBeenDelivered() || ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN')))}
-						<div style="text-align:center; margin-top:5px;">
-							<input type="submit" name="cancelProduct" value="{if $order->hasBeenDelivered()}{l s='Return products'}{elseif $order->hasBeenPaid()}{l s='Refund products'}{else}{l s='Cancel products'}{/if}" class="button" style="margin-top:8px;" />
-						</div>
-					{/if}
-				</div>
+				
+				<!-- Partial refund -->
 				<div style="display:none;" class="partial_refund_fields col-lg-7 pull-right">
 					<div class="checkbox">
 						<label for="reinjectQuantities" class="control-label">
@@ -1028,14 +975,115 @@
 							{l s='Generate a voucher'}
 						</label>
 					</div>
-					<button type="submit" name="partialRefund" class="btn btn-default"> 
-						{l s='Partial refund'}
-					</button>
-					
+					<input type="submit" name="partialRefund" value="{l s='Partial refund'}" class="btn btn-default"/>
 				</div>
+				
+				<!-- Standard refund -->
+				<div style="display: none;" class="standard_refund_fields col-lg-7 pull-right">
+					{if ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN'))}
+						<div class="checkbox">
+							<label for="reinjectQuantities" class="control-label">
+								<input type="checkbox" name="reinjectQuantities" class="button" />
+								{l s='Re-stock products'}
+							</label>
+						</div>
+					{/if}
+					{if ((!$order->hasBeenDelivered() && $order->hasBeenPaid()) || ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN')))}
+							
+						<input type="checkbox" id="generateCreditSlip" name="generateCreditSlip" onclick="toggleShippingCost(this)" />
+						<label for="generateCreditSlip" class="control-label">{l s='Generate a credit card slip'}</label><br />
+
+						<input type="checkbox" id="generateDiscount" name="generateDiscount" onclick="toggleShippingCost(this)" />
+						<label for="generateCreditSlip" class="control-label">{l s='Generate a voucher'}</label><br />
+
+						<span id="spanShippingBack" style="display:none;">
+							<input type="checkbox" id="shippingBack" name="shippingBack" />
+							<label for="shippingBack" class="control-label">{l s='Repay shipping costs'}</label>
+						</span>
+					{/if}
+					{if (!$order->hasBeenDelivered() || ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN')))}
+						<div>
+							<input type="submit" name="cancelProduct" value="{if $order->hasBeenDelivered()}{l s='Return products'}{elseif $order->hasBeenPaid()}{l s='Refund products'}{else}{l s='Cancel products'}{/if}" class="btn btn-default" />
+						</div>
+					{/if}
+				</div>
+
+				<!-- Discount block -->
+				{if (sizeof($discounts) || $can_edit)}
+				<div class="col-lg-12">
+					<legend>
+						<i class="icon-tag"></i>
+						{l s='Discounts'}
+					</legend>
+					{*
+						TO DO - Je voudrais placer le bouton ici mais l'apparition du formulaire ne fonctionne plus....
+						<a class="btn btn-default" href="#" id="add_voucher">
+							<i class="icon-plus-sign-alt"></i>
+							{l s='Add a new discount'}
+						</a>
+		
+					*}
+					<table class="table">
+						<thead>
+							<tr>
+								<th>
+									<span class="title_box ">{l s='Discount name'}</span>
+								</th>
+								<th class="text-center" width="100">
+									<span class="title_box ">{l s='Value'}</span>
+								</th>
+								{if $can_edit}
+									<th class="text-center" width="30">
+										<span class="title_box ">{l s='Action'}</span>
+									</th>
+								{/if}
+							</tr>
+						</thead>
+						<tbody>
+							{foreach from=$discounts item=discount}
+								<tr>
+									<td>{$discount['name']}</td>
+									<td class="text-center">
+										{if $discount['value'] != 0.00}
+											-
+										{/if}
+										{displayPrice price=$discount['value'] currency=$currency->id}
+									</td>
+									{if $can_edit}
+									<td class="text-center">
+										<a class="btn btn-default btn-small" href="{$current_index}&submitDeleteVoucher&id_order_cart_rule={$discount['id_order_cart_rule']}&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
+											<i class="icon-remove"></i>
+											{l s='Delete voucher'}
+										</a>
+									</td>
+									{/if}
+								</tr>
+							{/foreach}
+							{if $can_edit}
+								<tr>
+									<td colspan="3" class="text-right">
+										<a class="btn btn-default" href="#" id="add_voucher">
+											<i class="icon-plus-sign-alt"></i>
+											{l s='Add a new discount'}
+										</a>
+									</td>
+								</tr>
+								<tr style="display: none" >
+									<td colspan="3" class="current-edit" id="voucher_form">
+										{include file='controllers/orders/_discount_form.tpl'}
+									</td>
+								</tr>
+							{/if}
+						</tbody>
+					</table>
+				</div>
+				{/if}
 			</fieldset>
 		</form>
 	</div>
 </div>
-<a href="{$current_index}&token={$smarty.get.token}"><img src="../img/admin/arrow2.gif" /> {l s='Back to list'}</a><br />
+<a class="btn btn-default" href="{$current_index}&token={$smarty.get.token}">
+	<i class="icon-arrow-left"></i>
+	{l s='Back to list'}
+</a>
 {/block}

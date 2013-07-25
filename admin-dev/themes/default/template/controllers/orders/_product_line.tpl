@@ -31,25 +31,27 @@
 {/if}
 
 {if ($product['product_quantity'] > $product['customizationQuantityTotal'])}
-<tbody>
+
 	<tr{if isset($product.image) && $product.image->id && isset($product.image_size)} height="{$product['image_size'][1] + 7}"{/if}>
 		<td align="center">{if isset($product.image) && $product.image->id}{$product.image_tag}{/if}</td>
-		<td><a href="index.php?controller=adminproducts&id_product={$product['product_id']}&updateproduct&token={getAdminToken tab='AdminProducts'}">
-			<span class="productName">{$product['product_name']}</span><br />
-			{if $product.product_reference}{l s='Ref:'} {$product.product_reference}<br />{/if}
-			{if $product.product_supplier_reference}{l s='Ref Supplier:'} {$product.product_supplier_reference}{/if}
-		</a></td>
+		<td>
+			<a href="index.php?controller=adminproducts&id_product={$product['product_id']}&updateproduct&token={getAdminToken tab='AdminProducts'}">
+				<span class="productName">{$product['product_name']}</span><br />
+				{if $product.product_reference}{l s='Ref:'} {$product.product_reference}<br />{/if}
+				{if $product.product_supplier_reference}{l s='Ref Supplier:'} {$product.product_supplier_reference}{/if}
+			</a>
+		</td>
 		<td>
 			<span class="product_price_show">{displayPrice price=$product_price currency=$currency->id}</span>
 			{if $can_edit}
-			<span class="product_price_edit" style="display:none;">
-				<input type="hidden" name="product_id_order_detail" class="edit_product_id_order_detail" value="{$product['id_order_detail']}" />
-				{if $currency->sign % 2}{$currency->sign}{/if}<input type="text" name="product_price_tax_excl" class="edit_product_price_tax_excl edit_product_price" value="{Tools::ps_round($product['unit_price_tax_excl'], 2)}" size="5" /> {if !($currency->sign % 2)}{$currency->sign}{/if} {l s='tax excl.'}<br />
-				{if $currency->sign % 2}{$currency->sign}{/if}<input type="text" name="product_price_tax_incl" class="edit_product_price_tax_incl edit_product_price" value="{Tools::ps_round($product['unit_price_tax_incl'], 2)}" size="5" /> {if !($currency->sign % 2)}{$currency->sign}{/if} {l s='tax incl.'}
-			</span>
+				<span class="product_price_edit" style="display:none;">
+					<input type="hidden" name="product_id_order_detail" class="edit_product_id_order_detail" value="{$product['id_order_detail']}" />
+					{if $currency->sign % 2}{$currency->sign}{/if}<input type="text" name="product_price_tax_excl" class="edit_product_price_tax_excl edit_product_price" value="{Tools::ps_round($product['unit_price_tax_excl'], 2)}" size="5" /> {if !($currency->sign % 2)}{$currency->sign}{/if} {l s='tax excl.'}<br />
+					{if $currency->sign % 2}{$currency->sign}{/if}<input type="text" name="product_price_tax_incl" class="edit_product_price_tax_incl edit_product_price" value="{Tools::ps_round($product['unit_price_tax_incl'], 2)}" size="5" /> {if !($currency->sign % 2)}{$currency->sign}{/if} {l s='tax incl.'}
+				</span>
 			{/if}
 		</td>
-		<td align="center" class="productQuantity">
+		<td class="text-center" class="productQuantity">
 			<span class="product_quantity_show{if (int)$product['product_quantity'] > 1} red bold{/if}">{$product['product_quantity']}</span>
 			{if $can_edit}
 			<span class="product_quantity_edit" style="display:none;">
@@ -58,23 +60,19 @@
 			{/if}
 		</td>
 		{if ($order->hasBeenPaid())}
-			<td align="center" class="productQuantity">
+			<td class="text-center" class="productQuantity">
 				{$product['product_quantity_refunded']}
 				{if count($product['refund_history'])}
-					<span class="tooltip">
-						<span class="tooltip_label tooltip_button">+</span>
-						<div class="tooltip_content">
-						<span class="title">{l s='Refund history'}</span>
-						{foreach $product['refund_history'] as $refund}
-							{l s='%1s - %2s' sprintf=[{dateFormat date=$refund.date_add}, {displayPrice price=$refund.amount_tax_incl}]}<br />
-						{/foreach}
-						</div>
-					</span>
+					<label class="control-label">
+						<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Refund history:'} {foreach $product['refund_history'] as $refund}{l s='%1s - %2s' sprintf=[{dateFormat date=$refund.date_add}, {displayPrice price=$refund.amount_tax_incl}]}{/foreach}">
+							+
+						</span>
+					</label>
 				{/if}
 			</td>
 		{/if}
 		{if $order->hasBeenDelivered() || $order->hasProductReturned()}
-			<td align="center" class="productQuantity">
+			<td class="text-center" class="productQuantity">
 				{$product['product_quantity_return']}
 				{if count($product['return_history'])}
 					<span class="tooltip">
@@ -89,12 +87,12 @@
 				{/if}
 			</td>
 		{/if}
-		{if $stock_management}<td align="center" class="productQuantity product_stock">{$product['current_stock']}</td>{/if}
+		{if $stock_management}<td class="text-center" class="productQuantity product_stock">{$product['current_stock']}</td>{/if}
 		<td class="total_product text-right">
 			{displayPrice price=(Tools::ps_round($product_price, 2) * ($product['product_quantity'] - $product['customizationQuantityTotal'])) currency=$currency->id}
 		</td>
 		<td colspan="2" style="display: none;" class="add_product_fields">&nbsp;</td>
-		<td align="center" class="cancelCheck standard_refund_fields current-edit" style="display:none">
+		<td class="text-center" class="cancelCheck standard_refund_fields current-edit" style="display:none">
 			<input type="hidden" name="totalQtyReturn" id="totalQtyReturn" value="{$product['product_quantity_return']}" />
 			<input type="hidden" name="totalQty" id="totalQty" value="{$product['product_quantity']}" />
 			<input type="hidden" name="productName" id="productName" value="{$product['product_name']}" />
@@ -152,13 +150,38 @@
 			&nbsp;
 			{/if}
 		</td>
-		<td class="product_action" style="text-align:right">
-			<a href="#" class="edit_product_change_link"><img src="../img/admin/edit.gif" alt="{l s='Edit'}" /></a>
-			<input type="submit" class="button" name="submitProductChange" value="{l s='Update'}"  style="display: none;" />
-			<a href="#" class="cancel_product_change_link" style="display: none;"><img src="../img/admin/disabled.gif" alt="{l s='Cancel'}" /></a>
-			<a href="#" class="delete_product_line"><img src="../img/admin/delete.gif" alt="{l s='Delete'}" /></a>
+		<td class="product_action">
+			<div class="btn-group btn-group-action">
+				<span class="btn btn-default btn-small">{l s='Choose an action'}</span>
+				<button class="btn btn-default btn-small dropdown-toggle" data-toggle="dropdown">
+					<span class="caret"></span>&nbsp;
+				</button>
+				<ul class="dropdown-menu">
+					<li>
+						<a href="#" class="edit_product_change_link">
+							<i class="icon-pencil"></i>
+							{l s='Edit'}
+						</a>
+					</li>
+					<li>
+						<input type="submit" class="btn btn-default" name="submitProductChange" value="{l s='Update'}"  style="display: none;" />
+					</li>
+					<li>
+						<a href="#" class="cancel_product_change_link" style="display: none;">
+							<i class="icon-remove"></i>
+							{l s='Cancel'}
+						</a>
+					</li>
+					<li>
+						<a href="#" class="delete_product_line">
+							<i class="icon-trash"></i>
+							{l s='Delete'}
+						</a>
+					</li>
+				</ul>
+			</div>
 		</td>
 		{/if}
 	</tr>
-</tbody>
+
 {/if}

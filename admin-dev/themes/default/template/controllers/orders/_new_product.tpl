@@ -22,29 +22,47 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<tbody>
-	<tr id="new_product" height="52" style="display:none;background-color:#e9f1f6">
-		<td style="display:none;" colspan="2">
+
+	<tr id="new_product" style="display:none;">
+		<td colspan="2">
 			<input type="hidden" id="add_product_product_id" name="add_product[product_id]" value="0" />
-			{l s='Product:'} <input type="text" id="add_product_product_name" value="" size="42" />
-			<div id="add_product_product_attribute_area" style="margin-top: 5px;display: none;">
-				{l s='Combinations'} <select name="add_product[product_attribute_id]" id="add_product_product_attribute_id"></select>
+			<label class="control-label col-lg-8">
+				{l s='Product:'} 
+				<input type="text" id="add_product_product_name" value="" />
+			</label>
+			<div id="add_product_product_attribute_area" style="display:none;">
+				<label class="control-label col-lg-8">
+					{l s='Combinations'} 
+					<select name="add_product[product_attribute_id]" id="add_product_product_attribute_id"></select>
+				</label>
 			</div>
-			<div id="add_product_product_warehouse_area" style="margin-top: 5px; display: none;">
-				{l s='Warehouse'} <select  id="add_product_warehouse" name="add_product_warehouse">
-				</select>
+			<div id="add_product_product_warehouse_area" style="display:none;">
+				<label class="control-label col-lg-8">
+					{l s='Warehouse'} 
+					<select  id="add_product_warehouse" name="add_product_warehouse"></select>
+				</label>
 			</div>
 		</td>
-		<td style="display:none;">
-			{if $currency->sign % 2}{$currency->sign}{/if}<input type="text" name="add_product[product_price_tax_excl]" id="add_product_product_price_tax_excl" value="" size="4" disabled="disabled" /> {if !($currency->sign % 2)}{$currency->sign}{/if} {l s='tax excl.'}<br />
-			{if $currency->sign % 2}{$currency->sign}{/if}<input type="text" name="add_product[product_price_tax_incl]" id="add_product_product_price_tax_incl" value="" size="4" disabled="disabled" /> {if !($currency->sign % 2)}{$currency->sign}{/if} {l s='tax incl.'}<br />
+		<td>
+			{if $currency->sign % 2}<span class="col-lg-2">{$currency->sign}</span>{/if}
+			<input class="col-lg-5" type="text" name="add_product[product_price_tax_excl]" id="add_product_product_price_tax_excl" value="" size="4" disabled="disabled" /> 
+			{if !($currency->sign % 2)}<span class="col-lg-2">{$currency->sign}</span>{/if} 
+			<span>{l s='tax excl.'}</span>
+			<span class="col-lg-12"></span>
+			{if $currency->sign % 2}<span class="col-lg-2">{$currency->sign}</span>{/if}
+			<input class="col-lg-5" type="text" name="add_product[product_price_tax_incl]" id="add_product_product_price_tax_incl" value="" size="4" disabled="disabled" /> 
+			{if !($currency->sign % 2)}<span class="col-lg-2">{$currency->sign}</span>{/if} 
+			<span>{l s='tax incl.'}</span>
 		</td>
-		<td style="display:none;" align="center" class="productQuantity"><input type="text" name="add_product[product_quantity]" id="add_product_product_quantity" value="1" size="3" disabled="disabled" /></td>
-		{if ($order->hasBeenPaid())}<td style="display:none;" align="center" class="productQuantity">&nbsp;</td>{/if}
-		{if ($order->hasBeenDelivered())}<td style="display:none;" align="center" class="productQuantity">&nbsp;</td>{/if}
-		<td style="display:none;" align="center" class="productQuantity" id="add_product_product_stock">0</td>
-		<td style="display:none;" align="center" id="add_product_product_total">{displayPrice price=0 currency=$currency->id}</td>
-		<td style="display:none;" align="center" colspan="2">
+		<td class="text-center" class="productQuantity">
+			<input type="text" name="add_product[product_quantity]" id="add_product_product_quantity" value="1" size="3" disabled="disabled" />
+		</td>
+
+		{if ($order->hasBeenPaid())}<td align="center" class="productQuantity">&nbsp;</td>{/if}
+		{if ($order->hasBeenDelivered())}<td align="center" class="productQuantity">&nbsp;</td>{/if}
+		<td class="text-center" class="productQuantity" id="add_product_product_stock">0</td>
+		<td class="text-right" id="add_product_product_total">{displayPrice price=0 currency=$currency->id}</td>
+		<td class="text-center" colspan="2">
 			{if sizeof($invoices_collection)}
 			<select name="add_product[invoice]" id="add_product_product_invoice" disabled="disabled">
 				<optgroup class="existing" label="{l s='Existing'}">
@@ -58,8 +76,8 @@
 			</select>
 			{/if}
 		</td>
-		<td style="display:none;">
-			<input type="button" class="button" id="submitAddProduct" value="{l s='Add product'}" disabled="disabled" />
+		<td>
+			<input type="button" class="btn btn-default" id="submitAddProduct" value="{l s='Add product'}" disabled="disabled" />
 		</td>
 	</tr>
 	<tr id="new_invoice" style="display:none;background-color:#e9f1f6;">
@@ -76,4 +94,3 @@
 			</div>
 		</td>
 	</tr>
-</tbody>
