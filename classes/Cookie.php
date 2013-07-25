@@ -296,10 +296,28 @@ class CookieCore
 		else
 			$this->_content['date_add'] = date('Y-m-d H:i:s');
 
+		/* Automatically detect language if not already defined */
+		if (!$this->id_lang && isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
+		{
+			$array = explode(',', Tools::strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
+			if (Tools::strlen($array[0]) > 2)
+			{
+				$tab = explode('-', $array[0]);
+				$string = $tab[0];
+			}
+			else
+				$string = $array[0];
+			if (Validate::isLanguageIsoCode($string))
+			{
+				$lang = new Language(Language::getIdByIso($string));
+				if (Validate::isLoadedObject($lang) && $lang->active)
+					$this->id_lang = (int)$lang->id;
+			}
+		}
+
 		//checks if the language exists, if not choose the default language
 		if (!$this->_standalone && !Language::getLanguage((int)$this->id_lang))
 			$this->id_lang = Configuration::get('PS_LANG_DEFAULT');
-
 	}
 
 	/**
