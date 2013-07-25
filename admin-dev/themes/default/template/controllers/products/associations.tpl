@@ -64,7 +64,7 @@
 	</div>
 
 	<div class="row">
-		<label class="control-label col-lg-3">
+		<label class="control-label col-lg-3" for="product_autocomplete_input">
 			<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='Begin typing the first letters of the product name, then select the product from the drop-down list.'}{l s='(Do not forget to save the product afterward)'}">
 			{l s='Accessories:'}
@@ -93,7 +93,7 @@
 	</div>
 
 	<div class="row">
-		<label class="control-label col-lg-3">{l s='Manufacturer:'}</label>
+		<label class="control-label col-lg-3" for="id_manufacturer">{l s='Manufacturer:'}</label>
 		<div class="col-lg-9">
 			<div class="row">
 				<div class="col-lg-7">

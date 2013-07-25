@@ -144,7 +144,7 @@ $(document).ready(function () {
 
 <div class="row">
 	{include file="controllers/products/multishop/checkbox.tpl" field="id_tax_rules_group" type="default"}
-	<label class="control-label col-lg-3">{l s='Tax rule:'}</label>
+	<label class="control-label col-lg-3" for="id_tax_rules_group">{l s='Tax rule:'}</label>
 	<div class="col-lg-8">
 		<script type="text/javascript">
 			noTax = {if $tax_exclude_taxe_option}true{else}false{/if};
@@ -193,7 +193,7 @@ $(document).ready(function () {
 
 <div class="row" {if !$ps_use_ecotax} style="display:none;"{/if}>
 	{include file="controllers/products/multishop/checkbox.tpl" field="ecot" type="default"}
-	<label class="control-label col-lg-3">
+	<label class="control-label col-lg-3" for="ecotax">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='already included in price'}">
 			{l s='Eco-tax (tax incl.):'}
@@ -206,7 +206,7 @@ $(document).ready(function () {
 </div>
 
 <div class="row" {if !$country_display_tax_label || $tax_exclude_taxe_option}style="display:none;"{/if} >
-	<label class="control-label col-lg-3">{l s='Retail price with tax:'}</label>
+	<label class="control-label col-lg-3" for="priceTI">{l s='Retail price with tax:'}</label>
 	<div class="input-group col-lg-2">
 		<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
 		<input id="priceType" name="priceType" type="hidden" value="TE" />
@@ -308,7 +308,7 @@ $(document).ready(function () {
 	<div class="col-lg-12">
 
 		<div class="row">
-			<label class="control-label col-lg-3">{l s='For:'}</label>
+			<label class="control-label col-lg-3" for="{if !$multi_shop}spm_currency_0{else}sp_id_shop{/if}">{l s='For:'}</label>
 			<div class="col-lg-9">
 				<div class="row">
 				{if !$multi_shop}
@@ -352,7 +352,7 @@ $(document).ready(function () {
 		</div>
 
 		<div class="row">
-			<label class="control-label col-lg-3">{l s='Customer:'}</label>
+			<label class="control-label col-lg-3" for="customer">{l s='Customer:'}</label>
 			<div class="col-lg-9">
 				<input type="hidden" name="sp_id_customer" id="id_customer" value="0" />
 				<input type="text" name="customer" value="{l s='All customers'}" id="customer" autocomplete="off" />
@@ -363,7 +363,7 @@ $(document).ready(function () {
 
 		{if $combinations|@count != 0}
 		<div class="row">
-			<label class="control-label col-lg-3">{l s='Combination:'}</label>
+			<label class="control-label col-lg-3" for="sp_id_product_attribute">{l s='Combination:'}</label>
 			<div class="col-lg-4">
 				<select id="sp_id_product_attribute" name="sp_id_product_attribute">
 					<option value="0">{l s='Apply to all combinations'}</option>
@@ -376,7 +376,7 @@ $(document).ready(function () {
 		{/if}
 
 		<div class="row">
-			<label class="control-label col-lg-3">{l s='Available from:'}</label>
+			<label class="control-label col-lg-3" for="sp_from">{l s='Available from:'}</label>
 			<div class="input-group col-lg-4">
 				<input class="datepicker" type="text" name="sp_from" value="" style="text-align: center" id="sp_from" />
 				<span class="input-group-addon">{l s='to'}</span>
@@ -385,15 +385,15 @@ $(document).ready(function () {
 		</div>
 		
 		<div class="row">
-			<label class="control-label col-lg-3">{l s='Starting at'}</label>
+			<label class="control-label col-lg-3" for="sp_from_quantity">{l s='Starting at'}</label>
 			<div class="input-group col-lg-4">
 				<span class="input-group-addon">{l s='unit'}</span>
-				<input type="text" name="sp_from_quantity" value="1" />
+				<input type="text" name="sp_from_quantity" id="sp_from_quantity" value="1" />
 			</div>
 		</div>
 
 		<div class="row">
-			<label class="control-label col-lg-3">{l s='Product price'}
+			<label class="control-label col-lg-3" for="sp_price">{l s='Product price'}
 				{if $country_display_tax_label}
 					{l s='(tax excl.):'}
 				{/if}
@@ -406,7 +406,7 @@ $(document).ready(function () {
 					</div>
 					<div class="col-lg-8">
 						<p class="checkbox">
-							<label>{l s='Leave base price:'}</label>
+							<label for="leave_bprice">{l s='Leave base price:'}</label>
 							<input id="leave_bprice" type="checkbox" value="1" checked="checked" name="leave_bprice" />
 						</p>
 					</div>
@@ -415,14 +415,14 @@ $(document).ready(function () {
 		</div>
 
 		<div class="row">
-			<label class="control-label col-lg-3">{l s='Apply a discount of:'}</label>
+			<label class="control-label col-lg-3" for="sp_reduction">{l s='Apply a discount of:'}</label>
 			<div class="col-lg-4">
 				<div class="row">
 					<div class="col-lg-6">
-						<input type="text" name="sp_reduction" value="0.00"/>
+						<input type="text" name="sp_reduction" id="sp_reduction" value="0.00"/>
 					</div>
 					<div class="col-lg-6">
-						<select name="sp_reduction_type">
+						<select name="sp_reduction_type" id="sp_reduction_type">
 							<option selected="selected">---</option>
 							<option value="amount">{l s='Amount'}</option>
 							<option value="percentage">{l s='Percentage'}</option>

@@ -94,7 +94,7 @@
 <div id="warn_virtual_combinations" class="alert alert-block" style="display:none">{l s='You cannot use combinations with a virtual product.'}</div>
 
 <div class="row">
-	<label class="control-label col-lg-3">{$bullet_common_field} {l s='Type:'}</label>
+	<label class="control-label col-lg-3" for="simple_product">{$bullet_common_field} {l s='Type:'}</label>
 	<div class="col-lg-9">
 		<div class="radio">
 			<label for="simple_product">
@@ -197,7 +197,7 @@
 
 <div class="row redirect_product_options" style="display:none">
 	{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
-	<label class="control-label col-lg-3">{l s='Redirect:'}</label>
+	<label class="control-label col-lg-3" for="redirect_type">{l s='Redirect:'}</label>
 	<div class="col-lg-5">
 		<select name="redirect_type" id="redirect_type">
 			<option value="404" {if $product->redirect_type == '404'} selected="selected" {/if}>{l s='No redirect (404)'}</option>
@@ -218,7 +218,7 @@
 
 <div class="row redirect_product_options redirect_product_options_product_choise" style="display:none">
 	{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
-	<label class="control-label col-lg-3">{l s='Related product:'}</label>
+	<label class="control-label col-lg-3" for="related_product_autocomplete_input">{l s='Related product:'}</label>
 	<div class="col-lg-7">
 		<input type="hidden" value="" name="id_product_redirected" />
 
@@ -243,7 +243,7 @@
 
 <div class="row">
 	{include file="controllers/products/multishop/checkbox.tpl" field="visibility" type="default"}
-	<label class="control-label col-lg-3">{l s='Visibility:'}</label>
+	<label class="control-label col-lg-3" for="visibility">{l s='Visibility:'}</label>
 	<div class="col-lg-3">
 		<select name="visibility" id="visibility">
 			<option value="both" {if $product->visibility == 'both'}selected="selected"{/if} >{l s='Everywhere'}</option>
@@ -264,7 +264,7 @@
 		</div>
 		{/if}
 		<div class="row">
-			<label class="control-label col-lg-3">{l s='Options:'}</label>
+			<label class="control-label col-lg-3" for="available_for_order">{l s='Options:'}</label>
 			<div class="col-lg-5">
 				<p class="checkbox">
 					<input type="checkbox" name="available_for_order" id="available_for_order" value="1" {if $product->available_for_order}checked="checked"{/if}  />
@@ -282,7 +282,7 @@
 		</div>
 		<div class="row">
 			{include file="controllers/products/multishop/checkbox.tpl" field="condition" type="default"}
-			<label class="control-label col-lg-3">{l s='Condition:'}</label>
+			<label class="control-label col-lg-3" for="condition">{l s='Condition:'}</label>
 			<div class="col-lg-3">
 				<select name="condition" id="condition">
 					<option value="new" {if $product->condition == 'new'}selected="selected"{/if} >{l s='New'}</option>
@@ -342,12 +342,12 @@
 
 <div id="createImageDescription" class="panel" style="display:none">
 	<div class="row">
-		<label class="control-label col-lg-3">{l s='Select your image:'}</label>
+		<label class="control-label col-lg-3" for="smallImage_{$key}">{l s='Select your image:'}</label>
 		<div class="col-lg-9">
 			<ul class="list-inline">
 				{foreach from=$images item=image key=key}
 				<li>
-					<input type="radio" name="smallImage" id="smallImage_{$key}" value="{$image.id_image}" {if $key == 0}checked="checked"{/if} >
+					<input type="radio" name="smallImage" id=" for="smallImage_{$key}"" value="{$image.id_image}" {if $key == 0}checked="checked"{/if} >
 					<label for="smallImage_{$key}" class="t">
 						<img src="{$image.src}" alt="{$image.legend}" />
 					</label>
@@ -357,7 +357,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<label class="control-label col-lg-3">{l s='Position:'}</label>
+		<label class="control-label col-lg-3" for="leftRight_1">{l s='Position:'}</label>
 		<div class="col-lg-5">
 			<p class="checkbox">
 				<input type="radio" name="leftRight" id="leftRight_1" value="left" checked>							
@@ -370,7 +370,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<label class="control-label col-lg-3">{l s='Select the type of picture:'}</label>
+		<label class="control-label col-lg-3" for="imageTypes_{$key}">{l s='Select the type of picture:'}</label>
 		<div class="col-lg-5">
 			{foreach from=$imagesTypes key=key item=type}
 			<p class="checkbox">
