@@ -246,7 +246,7 @@ class HelperCore
 				<a class="btn btn-link" href="#" id="uncheck_all"><i class="icon-check-empty"></i> '.$translations['Uncheck All'].'</a>' : '')
 			.($use_search ? '
 				<div class="row">
-					<label class="control-label col-lg-6">'.$translations['search'].' :</label>
+					<label class="control-label col-lg-6" for="search_cat">'.$translations['search'].' :</label>
 					<div class="col-lg-6">
 						<input type="text" name="search_cat" id="search_cat"/>
 					</div>
