@@ -314,7 +314,6 @@
 										{if isset($input.class)}class="{$input.class}"
 										{else}class="color mColorPickerInput"{/if}
 										name="{$input.name}"
-										class="{if isset($input.class)}{$input.class}{/if}"
 										value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" />
 								{elseif $input.type == 'date'}
 									<input type="text"
