@@ -27,18 +27,18 @@
 
 {block name="label"}
 	{if $input.type == 'color'}
-		<div id="colorAttributeProperties" style="display:{if $colorAttributeProperties}block{else}none{/if};">
+		<div id="colorAttributeProperties" "{if !$colorAttributeProperties}style="display:none"{/if};">
 	{/if}
 	{$smarty.block.parent}
 {/block}
 
 {block name="field"}
 	{if $input.name == 'current_texture'}
-		<div class="margin-form">
+		<div class="col-lg-9">
 			{if isset($imageTextureExists) && $imageTextureExists}
 				<img src="{$imageTexture}" alt="{l s='Texture'}" />
 			{else}
-				{l s='None'}
+				<p>{l s='None'}</p>
 			{/if}
 		</div>
 	{else}

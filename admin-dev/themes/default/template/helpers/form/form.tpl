@@ -59,7 +59,19 @@
 									<label for="" class="control-label col-lg-3 {if isset($input.required) && $input.required && $input.type != 'radio'}required{/if}">
 										{if isset($input.hint)}
 										<span class="label-tooltip" data-toggle="tooltip"
-											title="{$input.hint}">
+											title="
+												{if is_array($input.hint)}
+													{foreach $input.hint as $hint}
+														{if is_array($hint)}
+															{$hint.text}
+														{else}
+															{$hint}
+														{/if}
+													{/foreach}
+												{else}
+													{$input.hint}
+												{/if}
+											">
 										{/if}
 											{$input.label}
 										{if isset($input.hint)}
@@ -213,7 +225,6 @@
 												{/foreach}
 											{/if}
 										</select>
-										{if !empty($input.hint)}<div class="alert alert-info" name="help_box">{$input.hint}</div>{/if}
 									{/if}
 								{elseif $input.type == 'radio'}
 									{foreach $input.values as $value}
@@ -373,6 +384,7 @@
 								{elseif $input.type == 'asso_shop' && isset($asso_shop) && $asso_shop}
 										{$asso_shop}
 								{elseif $input.type == 'color'}
+
 									<input type="color"
 										data-hex="true"
 										{if isset($input.class)}class="{$input.class}"
@@ -380,6 +392,7 @@
 										name="{$input.name}"
 										class="{if isset($input.class)}{$input.class}{/if}"
 										value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" />
+
 								{elseif $input.type == 'date'}
 									<input type="text"
 										data-hex="true"
