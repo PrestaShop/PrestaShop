@@ -28,6 +28,7 @@
 	var msg_combination_2 = '{l s='Please choose a value.'}';
 	var msg_combination_3 = '{l s='You can only add one combination per attribute type.'}';
 	var msg_new_combination = '{l s='New combination'}';
+	var msg_cancel_combination = '{l s='Cancel combination'}';
 </script>
 
 {if isset($product->id) && !$product->is_virtual}
