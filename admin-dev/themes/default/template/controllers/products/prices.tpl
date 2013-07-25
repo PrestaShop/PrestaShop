@@ -114,7 +114,7 @@ $(document).ready(function () {
 
 {include file="controllers/products/multishop/checkbox.tpl" field="wholesale_price" type="default"}
 <div class="row">
-	<label class="control-label col-lg-3">
+	<label class="control-label col-lg-3" for="wholesale_price">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='Wholesale price'}">
 			{l s='Pre-tax wholesale price:'}
@@ -129,7 +129,7 @@ $(document).ready(function () {
 
 <div class="row">
 	{include file="controllers/products/multishop/checkbox.tpl" field="price" type="price"}
-	<label class="control-label col-lg-3">
+	<label class="control-label col-lg-3" for="priceTE">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='The pre-tax retail price to sell this product'}">
 			{l s='Pre-tax retail price:'}
@@ -216,7 +216,7 @@ $(document).ready(function () {
 
 <div class="row">
 	{include file="controllers/products/multishop/checkbox.tpl" field="unit_price" type="unit_price"}
-	<label class="control-label col-lg-3">
+	<label class="control-label col-lg-3" for="unit_price">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='e.g. per lb.'}">
 			{l s='Unit price:'}

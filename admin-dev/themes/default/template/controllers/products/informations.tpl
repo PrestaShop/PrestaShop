@@ -120,7 +120,7 @@
 <hr/>
 
 <div class="row">
-	<label class="control-label col-lg-3 required">
+	<label class="control-label col-lg-3 required" for="name_{$id_lang}">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='Invalid characters:'} &lt;&gt;;=#{}">
 			{l s='Name:'}
@@ -139,38 +139,38 @@
 </div>
 
 <div class="row">
-	<label class="control-label col-lg-3">
+	<label class="control-label col-lg-3" for="reference">
 		<span class="label-tooltip" data-toggle="tooltip"
 		title="{l s='Special characters allowed:'} .-_#\">
 			{$bullet_common_field} {l s='Reference:'}
 		</span>
 	</label>
 	<div class="col-lg-5">
-		<input type="text" name="reference" value="{$product->reference|htmlentitiesUTF8}" />
+		<input type="text" id="reference" name="reference" value="{$product->reference|htmlentitiesUTF8}" />
 	</div>
 </div>
 
 <div class="row">
-	<label class="control-label col-lg-3">
+	<label class="control-label col-lg-3" for="ean13">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='(Europe, Japan)'}">
 			{$bullet_common_field} {l s='EAN13 or JAN:'}
 		</span>
 	</label>
 	<div class="col-lg-3">
-		<input maxlength="13" type="text" name="ean13" value="{$product->ean13|htmlentitiesUTF8}" />
+		<input maxlength="13" type="text" id="ean13" name="ean13" value="{$product->ean13|htmlentitiesUTF8}" />
 	</div>
 </div>
 
 <div class="row">
-	<label class="control-label col-lg-3">
+	<label class="control-label col-lg-3" for="upc">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='(US, Canada)'}">
 			{$bullet_common_field} {l s='UPC:'}
 		</span>
 	</label>
 	<div class="col-lg-3">
-		<input maxlength="12" type="text" name="upc" value="{$product->upc|escape:html:'UTF-8'}" />
+		<input maxlength="12" type="text" id="upc" name="upc" value="{$product->upc|escape:html:'UTF-8'}" />
 	</div>
 </div>
 
@@ -298,7 +298,7 @@
 
 <div class="row">
 	{include file="controllers/products/multishop/checkbox.tpl" field="description_short" type="tinymce" multilang="true"}
-	<label class="control-label col-lg-3">
+	<label class="control-label col-lg-3" for="description_short_{$id_lang}">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='Appears in the product list(s), and on the top of the product page.'}">
 			{l s='Short description:'}
@@ -316,7 +316,7 @@
 
 <div class="row">
 	{include file="controllers/products/multishop/checkbox.tpl" field="description" type="tinymce" multilang="true"}
-	<label class="control-label col-lg-3">
+	<label class="control-label col-lg-3" for="description_{$id_lang}">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='Appears in the body of the product page'}">
 			{l s='Description:'}
@@ -383,7 +383,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<label class="control-label col-lg-3">
+		<label class="control-label col-lg-3" for="resultImage">
 			<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='The tag to copy/paste into the description.'}">
 				{l s='Image tag to insert:'}
@@ -398,7 +398,7 @@
 {/if}
 
 <div class="row">
-	<label class="control-label col-lg-3">
+	<label class="control-label col-lg-3" for="tags_{$id_lang}">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='Tags separated by commas (e.g. dvd, dvd player, hifi)'} - {l s='Forbidden characters:'} !&lt;;&gt;;?=+#&quot;&deg;{}_$%">
 			{l s='Tags:'}
