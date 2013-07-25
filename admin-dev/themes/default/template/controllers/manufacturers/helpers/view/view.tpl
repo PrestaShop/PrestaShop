@@ -27,80 +27,102 @@
 
 {block name="override_tpl"}
 
-	<h2>{$manufacturer->name}</h2>
+	<legend>{$manufacturer->name}</legend>
 
-	<h3>{l s='Total addresses'} {count($addresses)}</h3>
+	<span>{l s='Total addresses'} {count($addresses)}</span>
 	<hr />
 
 	{if !count($addresses)}
 		{l s='No address has been found for this manufacturer.'}
 	{else}
 		{foreach $addresses AS $addresse}
-			<table border="0" cellpadding="0" cellspacing="0" class="table" style="width: 600px;">
-				<tr>
-					<th><strong>{$addresse.firstname} {$addresse.lastname} <a href="{$link->getAdminLink('AdminManufacturers')}&id_address={$addresse.id_address}&editaddresses=1"><img src="../img/admin/edit.gif"></a></strong></th>
-				</tr>
-				<tr>
-					<td>
-						<div style="padding:5px; float:left; width:350px;">
-							{$addresse.address1}<br />
-							{if $addresse.address2}{$addresse.address2}<br />{/if}
-							{$addresse.postcode} {$addresse.city}<br />
-							{if $addresse.state}{$addresse.state}<br />{/if}
-							<b>{$addresse.country}</b><br />
-						</div>
-						<div style="padding:5px; float:left;">
-							{if $addresse.phone}{$addresse.phone}<br />{/if}
-							{if $addresse.phone_mobile}{$addresse.phone_mobile}<br />{/if}
-						</div>
-						{if $addresse.other}<div style="padding:5px; clear:both;"><br /><i>{$addresse.other}</i></div>{/if}
-					</td>
-				</tr>
-			</table><br />
+			<table class="table">
+				<thead>
+					<tr>
+						<th>{$addresse.firstname} {$addresse.lastname}
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+								{$addresse.address1}<br />
+								{if $addresse.address2}{$addresse.address2}<br />{/if}
+								{$addresse.postcode} {$addresse.city}<br />
+								{if $addresse.state}{$addresse.state}<br />{/if}
+								<b>{$addresse.country}</b><br />
+								{if $addresse.phone}{$addresse.phone}<br />{/if}
+								{if $addresse.phone_mobile}{$addresse.phone_mobile}<br />{/if}
+								{if $addresse.other}<div ><br />
+									<i>{$addresse.other}</i></div>
+								{/if}
+						</td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td><a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminManufacturers')}&id_address={$addresse.id_address}&editaddresses=1">
+							<i class="icon-edit"></i> {l s='Edit'}</a></td>
+					</tr>
+				</tfoot>
+			</table>
 		{/foreach}
 	{/if}
 
-	<h3>{l s='Total products'} {count($products)}</h3>
+	<span>{l s='Total products'} {count($products)}</span>
+
 	{foreach $products AS $product}
 		<hr />
 		{if !$product->hasAttributes()}
-			<div style="float:right;">
-				<a href="?tab=AdminProducts&id_product={$product->id}&updateproduct&token={getAdminToken tab='AdminProducts'}" class="button">{l s='Edit'}</a>
-				<a href="?tab=AdminProducts&id_product={$product->id}&deleteproduct&token={getAdminToken tab='AdminProducts'}" class="button" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');">{l s='Delete'}</a>
+			<div>
+				<a href="?tab=AdminProducts&id_product={$product->id}&updateproduct&token={getAdminToken tab='AdminProducts'}" class="btn btn-default"><i class="icon-edit"></i> {l s='Edit'}</a>
+				<a href="?tab=AdminProducts&id_product={$product->id}&deleteproduct&token={getAdminToken tab='AdminProducts'}" class="btn btn-default" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');"><i class="icon-trash"></i> {l s='Delete'}</a>
 			</div>
-			<br/><br/>
-			<table border="0" cellpadding="0" cellspacing="0" class="table" style="width:100%;">
-				<tr>
-					<th height="39">{$product->name}</th>
-					{if !empty($product->reference)}<th width="150">{l s='Ref:'} {$product->reference}</th>{/if}
-					{if !empty($product->ean13)}<th width="120">{l s='EAN13:'} {$product->ean13}</th>{/if}
-					{if !empty($product->upc)}<th width="120">{l s='UPC:'} {$product->upc}</th>{/if}
-					{if $stock_management}<th class="right" width="50">{l s='Qty:'} {$product->quantity}</th>{/if}
-				</tr>
+
+			<table class="table">
+				<thead>
+					<tr>
+						<th >{$product->name}</th>
+						{if !empty($product->reference)}<th>{l s='Ref:'} {$product->reference}</th>{/if}
+						{if !empty($product->ean13)}<th>{l s='EAN13:'} {$product->ean13}</th>{/if}
+						{if !empty($product->upc)}<th>{l s='UPC:'} {$product->upc}</th>{/if}
+						{if $stock_management}<th>{l s='Qty:'} {$product->quantity}</th>{/if}
+					</tr>
+				</thead>
 			</table>
 		{else}
-			<div style="float:right;">
-				<a href="?tab=AdminProducts&id_product={$product->id}&updateproduct&token={getAdminToken tab='AdminProducts'}" class="button">{l s='Edit'}</a>
-				<a href="?tab=AdminProducts&id_product={$product->id}&deleteproduct&token={getAdminToken tab='AdminProducts'}" class="button" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');">{l s='Delete'}</a>
+			<div>
+				<a href="?tab=AdminProducts&id_product={$product->id}&updateproduct&token={getAdminToken tab='AdminProducts'}" class="btn btn-default"><i class="icon-edit"></i> {l s='Edit'}</a>
+				<a href="?tab=AdminProducts&id_product={$product->id}&deleteproduct&token={getAdminToken tab='AdminProducts'}" class="btn btn-default" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');"><i class="icon-trash"></i> {l s='Delete'}</a>
 			</div>
-			<h3><a href="?tab=AdminProducts&id_product={$product->id}&updateproduct&token={getAdminToken tab='AdminProducts'}">{$product->name}</a></h3>
-			<table border="0" cellpadding="0" cellspacing="0" class="table" style="width:100%;">
-				<tr>
-					<th height="39">{l s='Attribute name'}</th>
-					<th width="80">{l s='Reference'}</th>
-					<th width="80">{l s='EAN13'}</th>
-					<th width="80">{l s='UPC'}</th>
-					{if $stock_management && $shopContext != Shop::CONTEXT_ALL}<th class="right" width="150">{l s='Available Quantity'}</th>{/if}
-				</tr>
+
+			<span><a href="?tab=AdminProducts&id_product={$product->id}&updateproduct&token={getAdminToken tab='AdminProducts'}">{$product->name}</a></span>
+
+			<table class="table">
+				<thead>
+					<tr>
+						<th>{l s='Attribute name'}</th>
+						<th>{l s='Reference'}</th>
+						<th>{l s='EAN13'}</th>
+						<th>{l s='UPC'}</th>
+						{if $stock_management && $shopContext != Shop::CONTEXT_ALL}
+							<th>{l s='Available Quantity'}</th>
+						{/if}
+					</tr>
+				</thead>
+				<tbody>
 				{foreach $product->combination AS $id_product_attribute => $product_attribute}
 					<tr {if $id_product_attribute %2}class="alt_row"{/if} >
 						<td>{$product_attribute.attributes}</td>
 						<td>{$product_attribute.reference}</td>
 						<td>{$product_attribute.ean13}</td>
 						<td>{$product_attribute.upc}</td>
-						{if $stock_management && $shopContext != Shop::CONTEXT_ALL}<td class="right">{$product_attribute.quantity}</td>{/if}
+						{if $stock_management && $shopContext != Shop::CONTEXT_ALL}
+							<td class="right">{$product_attribute.quantity}</td>
+						{/if}
 					</tr>
 				{/foreach}
+				</tbody>
 			</table>
 		{/if}
 	{/foreach}

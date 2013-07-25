@@ -144,34 +144,27 @@ class AdminManufacturersControllerCore extends AdminController
 
 		$this->fields_list = array(
 			'id_address' => array(
-				'title' => $this->l('ID'),
-				'width' => 25
+				'title' => $this->l('ID')
 			),
 			'manufacturer_name' => array(
-				'title' => $this->l('Manufacturer'),
-				'width' => 'auto'
+				'title' => $this->l('Manufacturer')
 			),
 			'firstname' => array(
-				'title' => $this->l('First name'),
-				'width' => 80
+				'title' => $this->l('First name')
 			),
 			'lastname' => array(
 				'title' => $this->l('Last name'),
-				'width' => 100,
 				'filter_key' => 'a!name'
 			),
 			'postcode' => array(
 				'title' => $this->l('Zip Code/Postal Code'),
-				'align' => 'right',
-				'width' => 50
+				'align' => 'right'
 			),
 			'city' => array(
-				'title' => $this->l('City'),
-				'width' => 150
+				'title' => $this->l('City')
 			),
 			'country' => array(
 				'title' => $this->l('Country'),
-				'width' => 100,
 				'type' => 'select',
 				'list' => $this->countries_array,
 				'filter_key' => 'cl!id_country'
@@ -237,7 +230,6 @@ class AdminManufacturersControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Name:'),
 					'name' => 'name',
-					'size' => 40,
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}'
 				),
@@ -246,8 +238,6 @@ class AdminManufacturersControllerCore extends AdminController
 					'label' => $this->l('Short description:'),
 					'name' => 'short_description',
 					'lang' => true,
-					'cols' => 60,
-					'rows' => 10,
 					'class' => 'rte',
 					'hint' => $this->l('Invalid characters:').' <>;=#{}'
 				),
@@ -256,8 +246,6 @@ class AdminManufacturersControllerCore extends AdminController
 					'label' => $this->l('Description:'),
 					'name' => 'description',
 					'lang' => true,
-					'cols' => 60,
-					'rows' => 10,
 					'class' => 'rte',
 					'hint' => $this->l('Invalid characters:').' <>;=#{}'
 				),
@@ -266,7 +254,7 @@ class AdminManufacturersControllerCore extends AdminController
 					'label' => $this->l('Logo:'),
 					'name' => 'logo',
 					'display_image' => true,
-					'desc' => $this->l('Upload a manufacturer logo from your computer.')
+					'hint' => $this->l('Upload a manufacturer logo from your computer.')
 				),
 				array(
 					'type' => 'text',
@@ -412,7 +400,6 @@ class AdminManufacturersControllerCore extends AdminController
 			'type' => 'text',
 			'label' => $this->l('Last name:'),
 			'name' => 'lastname',
-			'size' => 33,
 			'required' => true,
 			'hint' => $this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:'
 		);
@@ -420,7 +407,6 @@ class AdminManufacturersControllerCore extends AdminController
 			'type' => 'text',
 			'label' => $this->l('First name:'),
 			'name' => 'firstname',
-			'size' => 33,
 			'required' => true,
 			'hint' => $this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:'
 		);
@@ -428,14 +414,12 @@ class AdminManufacturersControllerCore extends AdminController
 			'type' => 'text',
 			'label' => $this->l('Address:'),
 			'name' => 'address1',
-			'size' => 33,
 			'required' => true,
 		);
 		$form['input'][] = array(
 			'type' => 'text',
 			'label' => $this->l('Address (2):'),
 			'name' => 'address2',
-			'size' => 33,
 			'required' => false,
 		);
 		$form['input'][] = array(
@@ -443,14 +427,12 @@ class AdminManufacturersControllerCore extends AdminController
 			'label' => $this->l('Zip Code/Postal Code'),
 			'name' => 'postcode',
 			'required' => true,
-			'size' => 33,
 			'required' => false,
 		);
 		$form['input'][] = array(
 			'type' => 'text',
 			'label' => $this->l('City:'),
 			'name' => 'city',
-			'size' => 33,
 			'required' => true,
 		);
 		$form['input'][] = array(
@@ -480,22 +462,18 @@ class AdminManufacturersControllerCore extends AdminController
 			'type' => 'text',
 			'label' => $this->l('Home phone:'),
 			'name' => 'phone',
-			'size' => 33,
 			'required' => false,
 		);
 		$form['input'][] = array(
 			'type' => 'text',
 			'label' => $this->l('Mobile phone:'),
 			'name' => 'phone_mobile',
-			'size' => 33,
 			'required' => false,
 		);
 		$form['input'][] = array(
 			'type' => 'textarea',
 			'label' => $this->l('Other:'),
 			'name' => 'other',
-			'cols' => 36,
-			'rows' => 4,
 			'required' => false,
 			'hint' => $this->l('Forbidden characters:').' <>;=#{}'
 		);
