@@ -91,7 +91,7 @@
 												{/literal}
 											{/if}
 											<input type="text"
-												name="{$input_name}_{$language.id_lang}"
+												name="{$input.name}_{$language.id_lang}"
 												class="{if $input.type == 'tags'}tagify {/if}{if isset($input.class)}{$input.class}{/if}"
 												id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}"
 												value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'htmlall':'UTF-8'}{else}{$value_text|escape:'htmlall':'UTF-8'}{/if}"
@@ -247,7 +247,7 @@
 													{else}
 														id="{$input.name}_off"
 													{/if}
-													value="$value.value"
+													value="{$value.value}"
 													{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
 													{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
 												/>
@@ -270,15 +270,33 @@
 											</span>
 										</div>
 									</div>
+
 								{elseif $input.type == 'textarea'}
 									{if isset($input.lang) AND $input.lang}
-										<div class="translatable">
-											{foreach $languages as $language}
-												<div class="lang_{$language.id_lang}" id="{$input.name}_{$language.id_lang}" style="display:{if $language.id_lang == $defaultFormLanguage}block{else}none{/if};">
-													<textarea cols="{$input.cols}" rows="{$input.rows}" name="{$input.name}_{$language.id_lang}" {if isset($input.autoload_rte) && $input.autoload_rte}class="rte autoload_rte {if isset($input.class)}{$input.class}{/if}"{/if} >{$fields_value[$input.name][$language.id_lang]|escape:'htmlall':'UTF-8'}</textarea>
-												</div>
-											{/foreach}
+									{foreach $languages as $language}
+									<div class="row translatable-field lang-{$language.id_lang}"  {if $language.id_lang != $defaultFormLanguage}style="display:none;"{/if}>
+										<div class="col-lg-10">
+											<textarea name="{$input.name}_{$language.id_lang}" {if isset($input.autoload_rte) && $input.autoload_rte}class="rte autoload_rte {if isset($input.class)}{$input.class}{/if}"{/if} >{$fields_value[$input.name][$language.id_lang]|escape:'htmlall':'UTF-8'}</textarea>
 										</div>
+										<div class="col-lg-2">
+											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+												<img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt="">
+												{$language.iso_code}
+												<span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu">
+												{foreach from=$languages item=language}
+												<li>
+													<a href="javascript:hideOtherLanguage({$language.id_lang});">
+														<img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt=""> {$language.iso_code}
+													</a>
+												</li>
+												{/foreach}
+											</ul>
+										</div>
+									</div>
+									{/foreach}
+
 									{else}
 										<textarea name="{$input.name}" id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}" cols="{$input.cols}" rows="{$input.rows}" {if isset($input.autoload_rte) && $input.autoload_rte}class="rte autoload_rte {if isset($input.class)}{$input.class}{/if}"{/if}>{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}</textarea>
 									{/if}
@@ -297,29 +315,18 @@
 									{if isset($input.display_image) && $input.display_image}
 										{if isset($fields_value[$input.name].image) && $fields_value[$input.name].image}
 											<div id="image">
-<<<<<<< HEAD
-												{$fields_value.image}
-												<p align="center">{l s='File size'} {$fields_value.size}kb</p>
-
+												{$fields_value[$input.name].image}
+												<p>{l s='File size'} {$fields_value[$input.name].size}kb</p>
 												<a class="btn btn-default" href="{$current}&{$identifier}={$form_id}&token={$token}&deleteImage=1">
 													<i class="icon-trash"></i> {l s='Delete'}
-=======
-												{$fields_value[$input.name].image}
-												<p align="center">{l s='File size'} {$fields_value[$input.name].size}kb</p>
-												<a href="{$current}&{$identifier}={$form_id}&token={$token}&deleteImage=1">
-													<img src="../img/admin/delete.gif" alt="{l s='Delete'}" /> {l s='Delete'}
->>>>>>> 6ac3f1133ae7547ff92964c47ec141c3ab5bf5c4
 												</a>
-
-											</div><br />
+											</div>
 										{/if}
 									{/if}
 									<input type="file" name="{$input.name}" {if isset($input.id)}id="{$input.id}"{/if} />
-									{if !empty($input.hint)}<span class="alert alert-info" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
 								{elseif $input.type == 'password'}
 									<input type="password"
 											name="{$input.name}"
-											size="{$input.size}"
 											class="{if isset($input.class)}{$input.class}{/if}"
 											value=""
 											{if isset($input.autocomplete) && !$input.autocomplete}autocomplete="off"{/if} />
@@ -367,7 +374,6 @@
 										{$asso_shop}
 								{elseif $input.type == 'color'}
 									<input type="color"
-										size="{$input.size}"
 										data-hex="true"
 										{if isset($input.class)}class="{$input.class}"
 										{else}class="color mColorPickerInput"{/if}
@@ -376,7 +382,6 @@
 										value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" />
 								{elseif $input.type == 'date'}
 									<input type="text"
-										size="{$input.size}"
 										data-hex="true"
 										{if isset($input.class)}class="{$input.class}"
 										{else}class="datepicker"{/if}
