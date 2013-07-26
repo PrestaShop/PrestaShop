@@ -126,7 +126,9 @@ class HookCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'hook_alias` ha
 			INNER JOIN `'._DB_PREFIX_.'hook` h ON ha.name = h.name');
 			foreach ($result as $row)
+			{
 				$hook_ids[$row['name']] = $row['id_hook'];
+			}				
 			Cache::store($cache_id, $hook_ids);
 		}
 		else
@@ -147,9 +149,23 @@ class HookCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'hook`
 				WHERE `id_hook` = '.(int)$hook_id)
 			);
-
 		return Cache::retrieve($cache_id);
 	}
+	
+	/**
+	 * Return hook live edit bool from ID
+	 */
+	public static function getLiveEditById($hook_id)
+	{
+		$cache_id = 'hook_live_editbyid_'.$hook_id;
+		if (!Cache::isStored($cache_id))
+			Cache::store($cache_id, Db::getInstance()->getValue('
+				SELECT `live_edit`
+				FROM `'._DB_PREFIX_.'hook`
+				WHERE `id_hook` = '.(int)$hook_id)
+			);
+		return Cache::retrieve($cache_id);
+	}	
 
 	/**
 	 * Get list of hook alias
@@ -401,6 +417,7 @@ class HookCore extends ObjectModel
 		// Look on modules list
 		$altern = 0;
 		$output = '';
+						
 		foreach ($module_list as $array)
 		{
 			// Check errors
@@ -456,7 +473,7 @@ class HookCore extends ObjectModel
 		if ($array_return)
 			return $output;
 		else
-			return ($live_edit ? '<script type="text/javascript">hooks_list.push(\''.$hook_name.'\'); </script>
+			return ($live_edit ? '<script type="text/javascript">hooks_list.push(\''.$hook_name.'\');</script>
 				<div id="'.$hook_name.'" class="dndHook" style="min-height:50px">' : '').$output.($live_edit ? '</div>' : '');// Return html string
 	}
 
@@ -465,13 +482,13 @@ class HookCore extends ObjectModel
 		return '<script type="text/javascript"> modules_list.push(\''.Tools::safeOutput($moduleInstance->name).'\');</script>
 				<div id="hook_'.(int)$id_hook.'_module_'.(int)$moduleInstance->id.'_moduleName_'.str_replace('_', '-', Tools::safeOutput($moduleInstance->name)).'"
 				class="dndModule" style="border: 1px dotted red;'.(!strlen($display) ? 'height:50px;' : '').'">
-				<span style="font-family: Georgia;font-size:13px;font-style:italic;">
-				<img style="padding-right:5px;" src="'._MODULE_DIR_.Tools::safeOutput($moduleInstance->name).'/logo.gif">'
+					<span style="font-family: Georgia;font-size:13px;font-style:italic;">
+						<img style="padding-right:5px;" src="'._MODULE_DIR_.Tools::safeOutput($moduleInstance->name).'/logo.gif">'
 			 	.Tools::safeOutput($moduleInstance->displayName).'<span style="float:right">
 			 	<a href="#" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="moveModule">
 			 		<img src="'._PS_ADMIN_IMG_.'arrow_out.png"></a>
 			 	<a href="#" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="unregisterHook">
-			 		<img src="'._PS_ADMIN_IMG_.'delete.gif"></span></a>
+			 		<img src="'._PS_ADMIN_IMG_.'delete.gif"></a></span>
 			 	</span>'.$display.'</div>';
 	}
 
