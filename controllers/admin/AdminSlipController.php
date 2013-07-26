@@ -28,6 +28,7 @@ class AdminSlipControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 	 	$this->table = 'order_slip';
 		$this->className = 'OrderSlip';
 		$this->fields_list = array(
