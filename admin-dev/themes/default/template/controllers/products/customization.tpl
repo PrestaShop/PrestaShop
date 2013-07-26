@@ -31,7 +31,7 @@
 
 <div class="row">
 	{include file="controllers/products/multishop/checkbox.tpl" field="uploadable_files" type="default"}
-	<label class="control-label col-lg-3">
+	<label class="control-label col-lg-3" for="uploadable_files">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='Number of upload file fields displayed'}">
 			{l s='File fields:'}
@@ -44,7 +44,7 @@
 
 <div class="row">
 	{include file="controllers/products/multishop/checkbox.tpl" field="text_fields" type="default"}
-	<label class="control-label col-lg-3">
+	<label class="control-label col-lg-3" for="text_fields">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='Number of text fields displayed'}">
 			{l s='Text fields:'}
