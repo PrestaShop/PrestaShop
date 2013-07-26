@@ -345,7 +345,6 @@ function validateRange(index)
 		if (index > 2)
 		{
 			previous_range_sup = parseInt($('tr.range_sup td:eq('+(index -1)+')').children('input:text').val().trim());
-			console.log(range_inf+' < '+previous_range_sup);
 			if (range_inf < previous_range_sup)
 			{
 				$('tr.range_inf td:eq('+index+')').children('input:text').addClass('field_error');
