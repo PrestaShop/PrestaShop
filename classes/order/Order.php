@@ -254,7 +254,7 @@ class OrderCore extends ObjectModel
 	public function __construct($id = null, $id_lang = null)
 	{
 		parent::__construct($id, $id_lang);
-		
+
 		$is_admin = (is_object(Context::getContext()->controller) && Context::getContext()->controller->controller_type == 'admin');
 		if ($this->id_customer && !$is_admin)
 		{

@@ -165,6 +165,14 @@ class CarrierCore extends ObjectModel
 	public function __construct($id = null, $id_lang = null)
 	{
 		parent::__construct($id, $id_lang);
+
+		/**
+		 * keep retrocompatibility SHIPPING_METHOD_DEFAULT
+		 * @deprecated 1.5.5
+		 */
+		if ($this->shipping_method == Carrier::SHIPPING_METHOD_DEFAULT)
+			$this->shipping_method = ((int)Configuration::get('PS_SHIPPING_METHOD') ? Carrier::SHIPPING_METHOD_WEIGHT : Carrier::SHIPPING_METHOD_PRICE);
+
 		/**
 		 * keep retrocompatibility id_tax_rules_group
 		 * @deprecated 1.5.0
@@ -370,13 +378,12 @@ class CarrierCore extends ObjectModel
 	 */
 	public static function getDeliveryPriceByRanges($range_table, $id_carrier)
 	{
-		$range_table = pSQL($range_table);
-		$sql = 'SELECT d.id_'.$range_table.', d.id_carrier, d.id_zone, d.price
+		$sql = 'SELECT d.`id_'.bqSQL($range_table).'`, d.id_carrier, d.id_zone, d.price
 				FROM '._DB_PREFIX_.'delivery d
-				LEFT JOIN '._DB_PREFIX_.$range_table.' r ON r.id_'.$range_table.' = d.id_'.$range_table.'
+				LEFT JOIN `'._DB_PREFIX_.bqSQL($range_table).'` r ON r.`id_'.bqSQL($range_table).'` = d.`id_'.bqSQL($range_table).'`
 				WHERE d.id_carrier = '.(int)$id_carrier.'
-					AND d.id_'.$range_table.' IS NOT NULL
-					AND d.id_'.$range_table.' != 0
+					AND d.`id_'.bqSQL($range_table).'` IS NOT NULL
+					AND d.`id_'.bqSQL($range_table).'` != 0
 					'.Carrier::sqlDeliveryRangeShop($range_table).'
 				ORDER BY r.delimiter1';
 		return Db::getInstance()->executeS($sql);
@@ -454,6 +461,22 @@ class CarrierCore extends ObjectModel
 			$carriers = array();
 
 		return $carriers;
+	}
+
+	public static function getIdTaxRulesGroupMostUsed()
+	{
+		return Db::getInstance()->getValue('
+					SELECT id_tax_rules_group
+					FROM (
+						SELECT COUNT(*) n, c.id_tax_rules_group
+						FROM '._DB_PREFIX_.'carrier c
+						JOIN '._DB_PREFIX_.'tax_rules_group trg ON (c.id_tax_rules_group = trg.id_tax_rules_group)
+						WHERE trg.active = 1
+						GROUP BY c.id_tax_rules_group
+						ORDER BY n DESC
+						LIMIT 1
+					) most_used'
+				);
 	}
 
 	public static function getDeliveredCountries($id_lang, $active_countries = false, $active_carriers = false, $contain_states = null)
@@ -712,7 +735,7 @@ class CarrierCore extends ObjectModel
 	 */
 	public function deleteDeliveryPrice($range_table)
 	{
-		$where = '`id_carrier` = '.(int)$this->id.' AND (`id_'.$range_table.'` IS NOT NULL OR `id_'.$range_table.'` = 0) ';
+		$where = '`id_carrier` = '.(int)$this->id.' AND (`id_'.bqSQL($range_table).'` IS NOT NULL OR `id_'.bqSQL($range_table).'` = 0) ';
 
 		if (Shop::getContext() == Shop::CONTEXT_ALL)
 			$where .= 'AND id_shop IS NULL AND id_shop_group IS NULL';
@@ -912,9 +935,11 @@ class CarrierCore extends ObjectModel
 		return false;
 	}
 
-	public function getRangeObject()
+	public function getRangeObject($shipping_method = false)
 	{
-		$shipping_method = $this->getShippingMethod();
+		if (!$shipping_method)
+			$shipping_method = $this->getShippingMethod();
+
 		if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT)
 			return new RangeWeight();
 		elseif ($shipping_method == Carrier::SHIPPING_METHOD_PRICE)
@@ -1032,9 +1057,9 @@ class CarrierCore extends ObjectModel
 		$sql = 'AND '.$alias.'.id_delivery = (
 					SELECT d2.id_delivery
 					FROM '._DB_PREFIX_.'delivery d2
-					WHERE d2.id_carrier = '.$alias.'.id_carrier
-						AND d2.id_zone = '.$alias.'.id_zone
-						AND d2.id_'.$range_table.' = '.$alias.'.id_'.$range_table.'
+					WHERE d2.id_carrier = `'.bqSQL($alias).'`.id_carrier
+						AND d2.id_zone = `'.bqSQL($alias).'`.id_zone
+						AND d2.`id_'.bqSQL($range_table).'` = `'.bqSQL($alias).'`.`id_'.bqSQL($range_table).'`
 						'.$where.'
 					ORDER BY d2.id_shop DESC, d2.id_shop_group DESC
 					LIMIT 1
