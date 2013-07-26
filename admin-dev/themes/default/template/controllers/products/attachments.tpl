@@ -28,7 +28,7 @@
 <legend>{l s='Attachment'}</legend>
 
 <div class="row">
-	<label class="control-label col-lg-3 required">
+	<label class="control-label col-lg-3 required" for="attachment_name_{$id_lang}">
 		<span class="label-tooltip" data-toggle="tooltip"
 		title="{l s='Maximum 32 characters.'}">
 		{l s='Filename:'}
@@ -46,7 +46,7 @@
 </div>
 	
 <div class="row">
-	<label class="control-label col-lg-3">{l s='Description:'} </label>
+	<label class="control-label col-lg-3" for="attachment_description_{$id_lang}">{l s='Description:'} </label>
 	<div class="col-lg-9">
 		{include
 			file="controllers/products/textarea_lang.tpl"
@@ -58,7 +58,7 @@
 </div>
 
 <div class="row">
-	<label class="control-label col-lg-3">
+	<label class="control-label col-lg-3" for="attachement_filename">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='Upload a file from your computer'} ({$PS_ATTACHMENT_MAXIMUM_SIZE|string_format:'%.2f'} {l s='MB max.'})">
 			{l s='File:'}

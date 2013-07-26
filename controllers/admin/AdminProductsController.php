@@ -3463,6 +3463,7 @@ class AdminProductsControllerCore extends AdminController
 					'ad' => dirname($_SERVER['PHP_SELF']),
 					'iso_tiny_mce' => $iso_tiny_mce,
 					'languages' => $this->_languages,
+					'id_lang' => $this->context->language->id,
 					'attach1' => Attachment::getAttachments($this->context->language->id, $obj->id, true),
 					'attach2' => Attachment::getAttachments($this->context->language->id, $obj->id, false),
 					'default_form_language' => (int)Configuration::get('PS_LANG_DEFAULT'),
