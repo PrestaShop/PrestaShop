@@ -439,11 +439,11 @@
 			{
 				if(res.found)
 				{
-					var html = '<ul>';
+					var html = '<ul class="nav">';
 					$.each(res.customers, function() {
 						html += '<li class="customerCard"><div class="customerName"><a class="fancybox" href="{$link->getAdminLink('AdminCustomers')}&id_customer='+this.id_customer+'&viewcustomer&liteDisplaying=1">'+this.firstname+' '+this.lastname+'</a><span class="customerBirthday"> '+((this.birthday != '0000-00-00') ? this.birthday : '')+'</span></div>';
 						html += '<div class="customerEmail"><a href="mailto:'+this.email+'">'+this.email+'</div>';
-						html += '<a onclick="setupCustomer('+ this.id_customer+');return false;" href="#" class="id_customer button">{l s='Choose'}</a></li>';
+						html += '<div class="col-lg-3"><a onclick="setupCustomer('+ this.id_customer+');return false;" href="#" class="id_customer btn btn-default">{l s='Choose'}</a></div></li>';
 					});
 					html += '</ul>';
 				}
@@ -560,8 +560,8 @@
 					else
 						customization_errors = false;
 					$('#products_found').show();
-					products_found += '<label>{l s='Product:'}</label><select id="id_product" onclick="display_product_attributes();display_product_customizations();">';
-					attributes_html += '<label>{l s='Combination'}</label>';
+					products_found += '<label class="control-label col-lg-3">{l s='Product:'}</label><div class="col-lg-6"><select id="id_product" onclick="display_product_attributes();display_product_customizations();"></div>';
+					attributes_html += '<label class="control-label col-lg-3">{l s='Combination'}</label><div class="col-lg-6">';
 					$.each(res.products, function() {
 						products_found += '<option '+(this.combinations.length > 0 ? 'rel="'+this.qty_in_stock+'"' : '')+' value="'+this.id_product+'">'+this.name+(this.combinations.length == 0 ? ' - '+this.formatted_price : '')+'</option>';
 						attributes_html += '<select class="id_product_attribute" id="ipa_'+this.id_product+'" style="display:none;">';
@@ -597,7 +597,7 @@
 						stock[this.id_product][0] = this.stock[0];
 						attributes_html += '</select>';
 					});
-					products_found += '</select>';
+					products_found += '</select></div>';
 					$('#products_found #product_list').html(products_found);
 					$('#products_found #attributes_list').html(attributes_html);		
 					$('link[rel="stylesheet"]').each(function (i, element) {
@@ -981,275 +981,400 @@
 {include file="toolbar.tpl" toolbar_btn=$toolbar_btn toolbar_scroll=$toolbar_scroll title=$title}
 <div class="leadin">{block name="leadin"}{/block}</div>
 
-<fieldset id="customer_part">
-	<legend><img src="../img/admin/tab-customers.gif" />{l s='Customer'}</legend>
-	<label>{l s='Search customers'}</label>
-	<div class="margin-form">
-		<input type="text" id="customer" value="" />
-		<p>{l s='Search a customer by tapping the first letters of his/her name'}</p>
-		<a class="fancybox button" href="{$link->getAdminLink('AdminCustomers')|escape:'htmlall':'UTF-8'}&addcustomer&liteDisplaying=1&submitFormAjax=1#">
-			<img src="../img/admin/add.gif" title="new"/><span>{l s='Add new customer'}</span>
-		</a>
-	</div>
-	<div id="customers">
-	</div>
-</fieldset><br />
-<form action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&submitAdd{$table}=1" method="post" autocomplete="off">
-<fieldset id="products_part" style="display:none;"><legend><img src="../img/t/AdminCatalog.gif" />{l s='Cart'}</legend>
-	<div>
-		<label>{l s='Search for a product'} </label>
-		<div class="margin-form">
-			<input type="hidden" value="" id="id_cart" name="id_cart" />
-			<input type="text" id="product" value="" />
-			<p>{l s='Search a product by tapping the first letters of his/her name.'}</p>
-		</div>
-		<div id="products_found">
-			<div id="product_list">
+<form action="" method="" class="form-horizontal">
+	<fieldset id="customer_part">
+		<legend>
+			<i class="icon-user"></i>
+			{l s='Customer'}
+		</legend>
+		<div class="row">
+			<div class="col-lg-12">
+				<a class="fancybox btn btn-default" href="{$link->getAdminLink('AdminCustomers')|escape:'htmlall':'UTF-8'}&addcustomer&liteDisplaying=1&submitFormAjax=1#">
+					<i class="icon-plus-sign-alt"></i>
+					{l s='Add new customer'}
+				</a>
 			</div>
-			<div id="attributes_list">
-			</div>
-			<iframe id="customization_list" style="border:0px;overflow:hidden;width:100%">
-				<html>
-				<head>
-					{if isset($css_files_orders)}
-						{foreach from=$css_files_orders key=css_uri item=media}
-							<link href="{$css_uri}" rel="stylesheet" type="text/css" media="{$media}" />
-						{/foreach}
-					{/if}
-				</head>
-				<body>
-				</body>
-				</html>
-			</iframe>
-			<p><label for="qty">{l s='Quantity:'}</label><input type="text" name="qty" id="qty" value="1" />&nbsp;<b>{l s='In stock'}</b>&nbsp;<span id="qty_in_stock"></span></p>
-			<div class="margin-form">
-				<p><input type="submit" onclick="addProduct();return false;" class="button" id="submitAddProduct" value="{l s='Add to cart'}"/></p>
+			<label class="control-label col-lg-3">
+				<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Search a customer by tapping the first letters of his/her name'}">
+					{l s='Search customers'}
+				</span>
+			</label>
+			<div class="col-lg-6">
+				<input type="text" id="customer" value="" />
 			</div>
 		</div>
-	</div>
-	<div id="products_err" class="alert alert-block" style="display:none;"></div>
-	<div>
-		<table cellspacing="0" cellpadding="0" class="table width5" id="customer_cart">
-				<colgroup>
-					<col width="50px">
-					<col width="">
-					<col width="90px">
-					<col width="100px">
-					<col width="50px">
-					<col width="50px">
-				</colgroup>
-			<thead>
-				<tr>
-					<th height="39px">{l s='Product'}</th>
-					<th>{l s='Description'}</th>
-					<th>{l s='Ref'}</th>
-					<th>{l s='Unit price'}</th>
-					<th style="width: 80px;">{l s='Qty'}</th>
-					<th style="width: 80px;">{l s='Price'}</th>
-				</tr>
-			</thead>
-			<tbody>
-			</tbody>
-		</table>
-		<p><b>{l s='The prices are without taxes.'}</b></p>
-	</div>
-	<div>
-		<p><label for="id_currency">{l s='Currency'}</label>
-			<script type="text/javascript">
-				{foreach from=$currencies item='currency'}
-					currencies['{$currency.id_currency}'] = '{$currency.sign}';
-				{/foreach}
-			</script>
-			<select id="id_currency" name="id_currency">
-			{foreach from=$currencies item='currency'}
-				<option rel="{$currency.iso_code}" value="{$currency.id_currency}">{$currency.name}</option>
-			{/foreach}
-			</select>
-		</p>
-		<p>
-		<label for="id_lang">{l s='Language'}</label>
-		<select id="id_lang" name="id_lang">
-			{foreach from=$langs item='lang'}
-				<option value="{$lang.id_lang}">{$lang.name}</option>
-			{/foreach}
-		</select>
-		</p>
-	</div>
-	<div class="separation"></div>
-	<div id="carts">
-		<p><a href="#" id="show_old_carts" class="button"></a></p>
-		<div id="old_carts_orders">
-			<div id="nonOrderedCarts">
-				<h3>{l s='Carts'}</h3>
-				<table cellspacing="0" cellpadding="0" class="table  width5">
-					<colgroup>
-						<col width="10px">
-						<col width="">
-						<col width="70px">
-						<col width="50px">
-					</colgroup>
-				<thead>
-					<tr>
-						<th height="39px" class="left">{l s='ID'}</th>
-						<th class="left">{l s='Date'}</th>
-						<th class="left">{l s='Total'}</th>
-						<th class="left">{l s='Action'}</th>
-					</tr>
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
+		<div class="row">
+			<div id="customers" class="col-lg-9 pull-right"></div>
+		</div>
+	</fieldset>
+</form>
+<form class="form-horizontal" action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&submitAdd{$table}=1" method="post" autocomplete="off">
+	<fieldset id="products_part" style="display:none;">
+		<legend>
+			<i class="icon-folder-close"></i>
+			{l s='Cart'}
+		</legend>
+		<div class="row">
+			<label class="control-label col-lg-3">
+				<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Search a product by tapping the first letters of his/her name.'}">
+					{l s='Search for a product'}
+				</span>
+			</label>
+			<div class="col-lg-6">
+				<input type="hidden" value="" id="id_cart" name="id_cart" />
+				<input type="text" id="product" value="" />
 			</div>
-			<div id="lastOrders">
-				<h3>{l s='Orders'}</h3>
-				<table cellspacing="0" cellpadding="0" class="table  width5">
+		</div>
+		<div class="row">
+			<div id="products_found" class="col-lg-12">
+				<div class="row">
+					<div id="product_list" class="col-lg-12"></div>
+				</div>
+				<div class="row">
+					<div id="attributes_list" class="col-lg-12"></div>
+				</div>
+				<iframe id="customization_list" style="border:0px;overflow:hidden;width:100%">
+					<html>
+					<head>
+						{if isset($css_files_orders)}
+							{foreach from=$css_files_orders key=css_uri item=media}
+								<link href="{$css_uri}" rel="stylesheet" type="text/css" media="{$media}" />
+							{/foreach}
+						{/if}
+					</head>
+					<body>
+					</body>
+					</html>
+				</iframe>
+				<div class="row">
+					<div class="col-lg-12">
+						<label class="control-label col-lg-3" for="qty">
+							{l s='Quantity:'}
+						</label>
+						<div class="col-lg-6">
+							<input type="text" name="qty" id="qty" value="1" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-12">
+						<label class="control-label col-lg-3">
+							{l s='In stock:'}
+							<span id="qty_in_stock"></span>
+						</label>
+					</div>
+				</div>
+				<input type="submit" onclick="addProduct();return false;" class="btn btn-default" id="submitAddProduct" value="{l s='Add to cart'}"/></p>
+			</div>
+		</div>
+		<div id="products_err" class="alert alert-block" style="display:none;"></div>
+		<div class="row">
+			<div class="col-lg-12">
+				<table class="table" id="customer_cart">
 					<colgroup>
-						<col width="10px">
-						<col width="50px">
+						<col width="50">
 						<col width="">
-						<col width="90px">
-						<col width="100px">
-						<col width="250px">
-						<col width="50px">
+						<col width="90">
+						<col width="100">
+						<col width="50">
+						<col width="50">
 					</colgroup>
 					<thead>
 						<tr>
-							<th height=39px" class="left">{l s='ID'}</th>
-							<th class="left">{l s='Date'}</th>
-							<th class="left">{l s='Products:'}</th>
-							<th class="left">{l s='Total paid'}</th>
-							<th class="left">{l s='Payment: '}</th>
-							<th class="left">{l s='Status'}</th>
-							<th class="left">{l s='Action'}</th>
+							<th height="39">{l s='Product'}</th>
+							<th>{l s='Description'}</th>
+							<th>{l s='Ref'}</th>
+							<th>{l s='Unit price'}</th>
+							<th width="80">{l s='Qty'}</th>
+							<th width="80">{l s='Price'}</th>
 						</tr>
 					</thead>
 					<tbody>
 					</tbody>
 				</table>
+				<p class="alert alert-block">{l s='The prices are without taxes.'}</p>
 			</div>
 		</div>
-	</div>
-</fieldset>
-<br />
-<fieldset id="vouchers_part" style="display:none;">
-	<legend><img src="../img/t/AdminCartRules.gif" />{l s='Vouchers'}</legend>
-	<p>
-		<label>{l s='Search for a voucher:'} </label>
-		<input type="text" id="voucher" value="" />
-		<a class="fancybox button" href="{$link->getAdminLink('AdminCartRules')|escape:'htmlall':'UTF-8'}&addcart_rule&liteDisplaying=1&submitFormAjax=1#"><img src="../img/admin/add.gif" title="new"/>{l s='Add new voucher'}</a>
-	</p>
-	<div class="margin-form">
-		<table cellspacing="0" cellpadding="0" class="table" id="voucher_list">
-			<thead>
-				<tr>
-					<th class="left">{l s='Name'}</th>
-					<th class="left">{l s='Description'}</th>
-					<th class="left">{l s='Value'}</th>
-					<th class="left">{l s='Action'}</th>
-				</tr>
-			</thead>
-			<tbody>
-			</tbody>
-		</table>
-	</div>
-	<div id="vouchers_err" class="alert alert-block"></div>
-</fieldset>
-<br />
-<fieldset id="address_part" style="display:none;">
-	<legend><img src="../img/t/AdminAddresses.gif" />{l s='Addresses'}</legend>
-	<div id="addresses_err" class="alert alert-block" style="display:none;"></div>
-	<div id="address_delivery">
-		<h3>{l s='Delivery'}</h3>
-		<select id="id_address_delivery" name="id_address_delivery">
-		</select>
-		<div id="address_delivery_detail">
+		<div class="row">
+			<div class="col-lg-12">
+				<label class="control-label col-lg-3" for="id_currency">
+					{l s='Currency'}
+				</label>
+				<script type="text/javascript">
+					{foreach from=$currencies item='currency'}
+						currencies['{$currency.id_currency}'] = '{$currency.sign}';
+					{/foreach}
+				</script>
+				<div class="col-lg-6">
+					<select id="id_currency" name="id_currency">
+						{foreach from=$currencies item='currency'}
+							<option rel="{$currency.iso_code}" value="{$currency.id_currency}">{$currency.name}</option>
+						{/foreach}
+					</select>
+				</div>
+			</div>
+			<div class="col-lg-12">
+				<label class="control-label col-lg-3" for="id_lang">
+					{l s='Language'}
+				</label>
+				<div class="col-lg-6">
+					<select id="id_lang" name="id_lang">
+						{foreach from=$langs item='lang'}
+							<option value="{$lang.id_lang}">{$lang.name}</option>
+						{/foreach}
+					</select>
+				</div>
+			</div>
 		</div>
-	</div>
-	<div id="address_invoice">
-		<h3>{l s='Invoice'}</h3>
-		<select id="id_address_invoice" name="id_address_invoice">
-		</select>
-		<div id="address_invoice_detail">
+		<div class="row">
+			<div id="carts" class="col-lg-12">
+				<a href="#" id="show_old_carts" class="btn btn-default"></a>
+				<div id="old_carts_orders">
+					<div id="nonOrderedCarts" class="col-lg-6">
+						<h4>
+							<i class="icon-folder-close"></i>
+							{l s='Carts'}
+						</h4>
+						<table cellspacing="0" cellpadding="0" class="table  width5">
+							<colgroup>
+								<col width="10">
+								<col width="200">
+								<col width="70">
+								<col width="50">
+							</colgroup>
+							<thead>
+								<tr>
+									<th height="39">{l s='ID'}</th>
+									<th>{l s='Date'}</th>
+									<th>{l s='Total'}</th>
+									<th>{l s='Action'}</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+					<div id="lastOrders" class="col-lg-6">
+						<h4>
+							<i class="icon-align-justify"></i>
+							{l s='Orders'}
+						</h4>
+						<table class="table">
+							<colgroup>
+								<col width="10">
+								<col width="200">
+								<col width="">
+								<col width="100">
+								<col width="100">
+								<col width="200">
+								<col width="50">
+							</colgroup>
+							<thead>
+								<tr>
+									<th height="39">{l s='ID'}</th>
+									<th>{l s='Date'}</th>
+									<th>{l s='Products:'}</th>
+									<th>{l s='Total paid'}</th>
+									<th>{l s='Payment: '}</th>
+									<th>{l s='Status'}</th>
+									<th>{l s='Action'}</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
 		</div>
-	</div>
-<a class="fancybox button" id="new_address" href="{$link->getAdminLink('AdminAddresses')|escape:'htmlall':'UTF-8'}&addaddress&id_customer=42&liteDisplaying=1&submitFormAjax=1#"><img src="../img/admin/add.gif" title="new"/>{l s='Add a new address'}</a>
-</fieldset>
-<br />
-<fieldset id="carriers_part" style="display:none;">
-	<legend><img src="../img/t/AdminCarriers.gif" />{l s='Shipping'}</legend>
-	<div id="carriers_err" style="display:none;" class="alert alert-block"></div>
-	<div id="carrier_form">
-		<div>
-			<p>
-				<label>{l s='Delivery option'} </label>
-				<select name="delivery_option" id="delivery_option">
+	</fieldset>
+	<fieldset id="vouchers_part" style="display:none;">
+		<legend>
+			<i class="icon-table"></i>
+			{l s='Vouchers'}
+		</legend>
+		<div class="row">
+			<div class="col-lg-12">
+				<a class="fancybox btn btn-default" href="{$link->getAdminLink('AdminCartRules')|escape:'htmlall':'UTF-8'}&addcart_rule&liteDisplaying=1&submitFormAjax=1#">
+					<i class="icon-plus-sign-alt"></i>
+					{l s='Add new voucher'}
+				</a>
+			</div>
+			<label class="control-label col-lg-3">
+				{l s='Search for a voucher:'} 
+			</label>
+			<div class="col-lg-6">
+				<input type="text" id="voucher" value="" />
+			</div>
+		</div>
+
+		<div class="margin-form">
+			<table cellspacing="0" cellpadding="0" class="table" id="voucher_list">
+				<thead>
+					<tr>
+						<th class="left">{l s='Name'}</th>
+						<th class="left">{l s='Description'}</th>
+						<th class="left">{l s='Value'}</th>
+						<th class="left">{l s='Action'}</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+		<div id="vouchers_err" class="alert alert-block" style="display:none;"></div>
+	</fieldset>
+	<fieldset id="address_part" style="display:none;">
+		<legend>
+			<i class="icon-envelope"></i>
+			{l s='Addresses'}
+		</legend>
+		<div id="addresses_err" class="alert alert-block" style="display:none;"></div>
+
+		<div class="row">
+			<div class="col-lg-12">
+				<a class="fancybox btn btn-default" id="new_address" href="{$link->getAdminLink('AdminAddresses')|escape:'htmlall':'UTF-8'}&addaddress&id_customer=42&liteDisplaying=1&submitFormAjax=1#">
+					<i class="icon-plus-sign-alt"></i>
+					{l s='Add a new address'}
+				</a>
+			</div>
+			<div id="address_delivery" class="col-lg-6">
+				<h4>
+					<i class="icon-truck"></i>
+					{l s='Delivery'}
+				</h4>
+				<select id="id_address_delivery" name="id_address_delivery">
 				</select>
-			</p>
-			<p>
-				<label for="shipping_price">{l s='Shipping price'}</label> <span id="shipping_price"  name="shipping_price"></span>&nbsp;<span class="currency_sign"></span>&nbsp;
-			</p>
-			<p>
-				<label for="free_shipping">{l s='Free shipping'}</label>
-				<input type="checkbox" id="free_shipping" name="free_shipping" value="1" />
-			</p>
+				<div id="address_delivery_detail">
+				</div>
+			</div>
+			<div id="address_invoice" class="col-lg-6">
+				<h4>
+					<i class="icon-file-text"></i>
+					{l s='Invoice'}
+				</h4>
+				<select id="id_address_invoice" name="id_address_invoice">
+				</select>
+				<div id="address_invoice_detail">
+				</div>
+			</div>
 		</div>
-		<div id="float:left;">
-			{if $recyclable_pack}
-				<p><input type="checkbox" name="carrier_recycled_package" value="1" id="carrier_recycled_package" />  <label for="carrier_recycled_package">{l s='Recycled package'}</label></p>
-			{/if}
-			{if $gift_wrapping}
-				<p><input type="checkbox" name="order_gift" id="order_gift" value="1" /> <label for="order_gift">{l s='Gift'}</label></p>
-				<p><label for="gift_message">{l s='Gift message'}</label><textarea id="gift_message" cols="40" rows="4"></textarea></p>
-			{/if}
+	</fieldset>
+	<fieldset id="carriers_part" style="display:none;">
+		<legend>
+			<i class="icon-truck"></i>
+			{l s='Shipping'}
+		</legend>
+		<div id="carriers_err" style="display:none;" class="alert alert-block"></div>
+		<div id="carrier_form">
+			<div class="row">
+				<label class="control-label col-lg-3">
+					{l s='Delivery option'} 
+				</label>
+				<div class="col-lg-6">
+					<select name="delivery_option" id="delivery_option">
+					</select>
+				</div>
+			</div>
+			<div class="row">
+				<label class="control-label col-lg-3" for="shipping_price">
+					{l s='Shipping price:'}
+				</label>
+				<div class="col-lg-6">
+					<span id="shipping_price" name="shipping_price"></span>&nbsp;<span class="currency_sign"></span>&nbsp;
+				</div>
+			</div>
+			<div class="row">
+				<label class="control-label col-lg-3" for="free_shipping">
+					{l s='Free shipping'}
+				</label>
+				<div class="col-lg-6">
+					<input type="checkbox" id="free_shipping" name="free_shipping" value="1" />
+				</div>
+			</div>
+			<div id="float:left;">
+				{if $recyclable_pack}
+					<p><input type="checkbox" name="carrier_recycled_package" value="1" id="carrier_recycled_package" />  <label for="carrier_recycled_package">{l s='Recycled package'}</label></p>
+				{/if}
+				{if $gift_wrapping}
+					<p><input type="checkbox" name="order_gift" id="order_gift" value="1" /> <label for="order_gift">{l s='Gift'}</label></p>
+					<p><label for="gift_message">{l s='Gift message'}</label><textarea id="gift_message" cols="40" rows="4"></textarea></p>
+				{/if}
+			</div>
 		</div>
-	</div>
-</fieldset>
-<br />
-<fieldset id="summary_part" style="display:none;">
-	<legend><img src="../img/t/AdminPayment.gif" />{l s='Summary'}</legend>
-	<div id="send_email_feedback"></div>
-	<div id="cart_summary" style="clear:both;float:left;">
-		<ul>
-			<li><span class="total_cart">{l s='Total products'}</span><span id="total_products"></span><span class="currency_sign"></span></li>
-			<li><span class="total_cart">{l s='Total vouchers'}</span><span id="total_vouchers"></span><span class="currency_sign"></span></li>
-			<li><span class="total_cart">{l s='Total shipping'}</span><span id="total_shipping"></span><span class="currency_sign"></span></li>
-			<li><span class="total_cart">{l s='Total taxes'}</span><span id="total_taxes"></span><span class="currency_sign"></span></li>
-			<li><span class="total_cart">{l s='Total without taxes'}</span><span id="total_without_taxes"></span><span class="currency_sign"></span></li>
-			<li><span class="total_cart">{l s='Total with taxes'}</span><span id="total_with_taxes"></span><span class="currency_sign"></span></li>
-		</ul>
-	</div>
-	<div class="order_message_right">
-		<label for="order_message">{l s='Order message'}</label>
-		<div class="margin-form">
-			<textarea name="order_message" id="order_message" rows="3" cols="45"></textarea>
+	</fieldset>
+	<fieldset id="summary_part" style="display:none;">
+		<legend>
+			<i class="icon-align-justify"></i>
+			{l s='Summary'}
+		</legend>
+		<div class="row">
+			<div id="send_email_feedback" class="col-lg-12"></div>
 		</div>
-		<div class="margin-form">
-			<a href="#" id="send_email_to_customer" class="button">{l s='Send an email to the customer with the link to process the payment.'}</a>
+		<div class="row">
+			<div id="cart_summary" class="col-lg-12">
+				<ul class="nav navbar-nav">
+					<li><span>{l s='Total products:'}</span>&nbsp;<span id="total_products"></span><span class="currency_sign"></span> |</li>
+					<li><span>{l s='Total vouchers:'}</span>&nbsp;<span id="total_vouchers"></span><span class="currency_sign"></span> |</li>
+					<li><span>{l s='Total shipping:'}</span>&nbsp;<span id="total_shipping"></span><span class="currency_sign"></span> |</li>
+					<li><span>{l s='Total taxes:'}</span>&nbsp;<span id="total_taxes"></span><span class="currency_sign"></span> |</li>
+					<li><span>{l s='Total without taxes:'}</span>&nbsp;<span id="total_without_taxes"></span><span class="currency_sign"></span> |</li>
+					<li><span>{l s='Total with taxes'}</span>&nbsp;<span id="total_with_taxes"></span><span class="currency_sign"></span></li>
+				</ul>
+			</div>
 		</div>
-		<div class="margin-form">
-			<a target="_blank" id="go_order_process" href="" class="button">{l s='Go on payment page to process the payment.'}</a>
+		<div class="row">
+			<div class="order_message_right col-lg-12">
+				<div class="row">
+					<label class="control-label col-lg-3" for="order_message">{l s='Order message'}</label>
+					<div class="col-lg-6">
+						<textarea name="order_message" id="order_message" rows="3" cols="45"></textarea>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-12">
+						<p>
+							<a href="#" id="send_email_to_customer" class="btn btn-default">
+								<i class="icon-envelope"></i>
+								{l s='Send an email to the customer with the link to process the payment.'}
+							</a>
+						</p>
+						<p>
+							<a target="_blank" id="go_order_process" href="" class="btn btn-default">
+								<i class="icon-external-link-sign"></i>
+								{l s='Go on payment page to process the payment.'}
+							</a>
+						</p>
+					</div>
+				</div>
+				<div class="row">
+					<label class="control-label col-lg-3">{l s='Payment'}</label>
+					<div class="col-lg-6">
+						<select name="payment_module_name" id="payment_module_name">
+							{foreach from=$payment_modules item='module'}
+								<option value="{$module->name}" {if isset($smarty.post.payment_module_name) && $module->name == $smarty.post.payment_module_name}selected="selected"{/if}>{$module->displayName}</option>
+							{/foreach}
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<label class="control-label col-lg-3">{l s='Order status'}</label>
+					<div class="col-lg-6">
+						<select name="id_order_state" id="id_order_state">
+							{foreach from=$order_states item='order_state'}
+								<option value="{$order_state.id_order_state}" {if isset($smarty.post.id_order_state) && $order_state.id_order_state == $smarty.post.id_order_state}selected="selected"{/if}>{$order_state.name}</option>
+							{/foreach}
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-12 pull-right">
+						<input type="submit" name="submitAddOrder" class="btn btn-default" value="{l s='Create the order'}" />
+					</div>
+				</div>
+			</div>
 		</div>
-		<label>{l s='Payment'}</label>
-		<div class="margin-form">
-			<select name="payment_module_name" id="payment_module_name">
-				{foreach from=$payment_modules item='module'}
-					<option value="{$module->name}" {if isset($smarty.post.payment_module_name) && $module->name == $smarty.post.payment_module_name}selected="selected"{/if}>{$module->displayName}</option>
-				{/foreach}
-			</select>
-		</div>
-		<label>{l s='Order status'}</label>
-		<div class="margin-form">
-			<select name="id_order_state" id="id_order_state">
-				{foreach from=$order_states item='order_state'}
-					<option value="{$order_state.id_order_state}" {if isset($smarty.post.id_order_state) && $order_state.id_order_state == $smarty.post.id_order_state}selected="selected"{/if}>{$order_state.name}</option>
-				{/foreach}
-			</select>
-		</div>
-		<div class="margin-form">
-			<input type="submit" name="submitAddOrder" class="button" value="{l s='Create the order'}" />
-		</div>
-	</div>
-</fieldset>
+	</fieldset>
 </form>
 <div id="loader_container">
 	<div id="loader">
