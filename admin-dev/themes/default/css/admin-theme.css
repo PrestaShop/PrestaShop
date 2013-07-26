@@ -5089,7 +5089,7 @@ body.fixed-top {
     border-radius: 5px;
     -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0 0 7px, white 0 0 0 4px inset;
     box-shadow: rgba(0, 0, 0, 0.1) 0 0 7px, white 0 0 0 4px inset; }
-  #content form legend {
+  #content legend {
     float: left;
     padding: 0 0 0 0;
     margin: 5px 0 15px 0;

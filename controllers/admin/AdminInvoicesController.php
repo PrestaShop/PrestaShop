@@ -132,7 +132,7 @@ class AdminInvoicesControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('By order status'),
-				'icon' => 'icon-pushpin'
+				'icon' => 'icon-time'
 			),
 			'input' => array(
 				array(

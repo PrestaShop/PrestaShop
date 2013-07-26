@@ -46,16 +46,13 @@ class AdminOrderMessageControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_order_message' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center',
-				'width' => 25
+				'align' => 'center'
 			),
 			'name' => array(
-				'title' => $this->l('Name'),
-				'width' => 140
+				'title' => $this->l('Name')
 			),
 			'message' => array(
 				'title' => $this->l('Message'),
-				'width' => 600,
 				'maxlength' => 300
 			)
 		);
@@ -63,7 +60,7 @@ class AdminOrderMessageControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Order messages'),
-				'image' => '../img/admin/email.gif'
+				'icon' => 'icon-mail'
 			),
 			'input' => array(
 				array(
@@ -79,8 +76,6 @@ class AdminOrderMessageControllerCore extends AdminController
 					'lang' => true,
 					'label' => $this->l('Message:'),
 					'name' => 'message',
-					'cols' => 50,
-					'rows' => 15,
 					'required' => true
 				)
 			),

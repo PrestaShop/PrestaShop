@@ -283,6 +283,7 @@
 										</div>
 									</div>
 
+
 								{elseif $input.type == 'textarea'}
 									{if isset($input.lang) AND $input.lang}
 									{foreach $languages as $language}
@@ -312,6 +313,7 @@
 									{else}
 										<textarea name="{$input.name}" id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}" cols="{$input.cols}" rows="{$input.rows}" {if isset($input.autoload_rte) && $input.autoload_rte}class="rte autoload_rte {if isset($input.class)}{$input.class}{/if}"{/if}>{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}</textarea>
 									{/if}
+
 								{elseif $input.type == 'checkbox'}
 									{foreach $input.values.query as $value}
 										{assign var=id_checkbox value=$input.name|cat:'_'|cat:$value[$input.values.id]}
@@ -395,12 +397,20 @@
 										value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" />
 
 								{elseif $input.type == 'date'}
-									<input type="text"
-										data-hex="true"
-										{if isset($input.class)}class="{$input.class}"
-										{else}class="datepicker"{/if}
-										name="{$input.name}"
-										value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" />
+									<div class="row">
+										<div class="input-group col-lg-4">
+											<input type="text"
+												data-hex="true"
+												{if isset($input.class)}class="{$input.class}"
+												{else}class="datepicker"{/if}
+												name="{$input.name}"
+												value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" />
+											<span class="input-group-addon">
+												<i class="icon-calendar-empty"></i>
+											</span>
+										</div>
+									</div>
+
 								{elseif $input.type == 'free'}
 									{$fields_value[$input.name]}
 								{/if}

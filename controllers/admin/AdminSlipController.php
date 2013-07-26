@@ -35,7 +35,6 @@ class AdminSlipControllerCore extends AdminController
 			'id_order_slip' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
-				'width' => 25
  			),
 			'id_order' => array(
 				'title' => $this->l('ID Order'),
@@ -43,13 +42,11 @@ class AdminSlipControllerCore extends AdminController
  			),
 			'date_add' => array(
 				'title' => $this->l('Date issued'),
-				'width' => 150,
 				'type' => 'date',
 				'align' => 'right'
  			),
  			'id_pdf' => array(
 				'title' => $this->l('PDF'),
-				'width' => 35,
 				'align' => 'center',
 				'callback' => 'printPDFIcons',
 				'orderby' => false,
@@ -83,32 +80,31 @@ class AdminSlipControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Print a PDF'),
-				'image' => '../img/admin/pdf.gif'
+				'icon' => 'icon-print'
 			),
 			'input' => array(
 				array(
 					'type' => 'date',
 					'label' => $this->l('From:'),
 					'name' => 'date_from',
-					'size' => 20,
 					'maxlength' => 10,
 					'required' => true,
-					'desc' => $this->l('Format: 2011-12-31 (inclusive)')
+					'hint' => $this->l('Format: 2011-12-31 (inclusive)')
 				),
 				array(
 					'type' => 'date',
 					'label' => $this->l('To:'),
 					'name' => 'date_to',
-					'size' => 20,
 					'maxlength' => 10,
 					'required' => true,
-					'desc' => $this->l('Format: 2012-12-31 (inclusive)')
+					'hint' => $this->l('Format: 2012-12-31 (inclusive)')
 				)
 			),
 			'submit' => array(
 				'title' => $this->l('Generate PDF file'),
-				'class' => 'button',
-				'id' => 'submitPrint'
+				'class' => 'btn btn-primary',
+				'id' => 'submitPrint',
+				'icon' => 'icon-download-alt'
 			)
 		);
 

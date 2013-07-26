@@ -40,13 +40,11 @@ class AdminDeliverySlipControllerCore extends AdminController
 					'PS_DELIVERY_PREFIX' => array(
 						'title' => $this->l('Delivery prefix:'),
 						'desc' => $this->l('Prefix used for delivery slips'),
-						'size' => 6,
 						'type' => 'textLang'
 					),
 					'PS_DELIVERY_NUMBER' => array(
 						'title' => $this->l('Delivery number:'),
 						'desc' => $this->l('The next delivery slip will begin with this number and then increase with each additional slip.'),
-						'size' => 6,
 						'cast' => 'intval',
 						'type' => 'text'
 					)
@@ -63,31 +61,30 @@ class AdminDeliverySlipControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Print PDF delivery slips'),
-				'image' => '../img/admin/AdminPdf.gif'
+				'icon' => 'icon-print'
 			),
 			'input' => array(
 				array(
 					'type' => 'date',
 					'label' => $this->l('From:'),
 					'name' => 'date_from',
-					'size' => 20,
 					'maxlength' => 10,
 					'required' => true,
-					'desc' => $this->l('Format: 2011-12-31 (inclusive)')
+					'hint' => $this->l('Format: 2011-12-31 (inclusive)')
 				),
 				array(
 					'type' => 'date',
 					'label' => $this->l('To:'),
 					'name' => 'date_to',
-					'size' => 20,
 					'maxlength' => 10,
 					'required' => true,
-					'desc' => $this->l('Format: 2012-12-31 (inclusive)')
+					'hint' => $this->l('Format: 2012-12-31 (inclusive)')
 				)
 			),
 			'submit' => array(
 				'title' => $this->l('Generate PDF file'),
-				'class' => 'button'
+				'class' => 'btn btn-primary',
+				'icon' => 'icon-download-alt'	
 			)
 		);
 
