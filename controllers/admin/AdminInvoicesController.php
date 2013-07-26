@@ -198,19 +198,6 @@ class AdminInvoicesControllerCore extends AdminController
 		));
 	}
 
-	public function initToolbar()
-	{
-		$this->toolbar_btn['save-date'] = array(
-			'href' => '#',
-			'desc' => $this->l('Generate PDF file by date')
-		);
-
-		$this->toolbar_btn['save-status'] = array(
-			'href' => '#',
-			'desc' => $this->l('Generate PDF file by status.')
-		);
-	}
-
 	public function postProcess()
 	{
 		if (Tools::isSubmit('submitAddinvoice_date'))
