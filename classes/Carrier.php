@@ -753,7 +753,7 @@ class CarrierCore extends ObjectModel
 	 * @param array $priceList Prices list in multiple arrays (changed to array since 1.5.0)
 	 * @return boolean Insertion result
 	 */
-	public function addDeliveryPrice($price_list)
+	public function addDeliveryPrice($price_list, $delete = false)
 	{
 		if (!$price_list)
 			return false;
@@ -771,6 +771,17 @@ class CarrierCore extends ObjectModel
 				$values['id_shop'] = (Shop::getContext() == Shop::CONTEXT_SHOP) ? Shop::getContextShopID() : null;
 			if (!isset($values['id_shop_group']))
 				$values['id_shop_group'] = (Shop::getContext() != Shop::CONTEXT_ALL) ? Shop::getContextShopGroupID() : null;
+
+			if ($delete)
+				Db::getInstance()->execute('
+					DELETE FROM `'._DB_PREFIX_.'delivery` 
+					WHERE id_shop = '.(int)$values['id_shop'].' 
+					AND id_shop_group='.(int)$values['id_shop_group'].' 
+					AND id_carrier='.(int)$values['id_carrier'].
+					($values['id_range_price'] !== null ? ' AND id_range_price='.(int)$values['id_range_price'] : '').
+					($values['id_range_weight'] !== null ? ' AND id_range_weight='.(int)$values['id_range_weight'] : '').'
+					AND id_zone='.(int)$values['id_zone']
+				);
 
 			$sql .= '(';
 			foreach ($values as $v)
@@ -1280,10 +1291,8 @@ class CarrierCore extends ObjectModel
 	{
 		if ($delete)
 			Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'carrier_group WHERE id_carrier = '.(int)$id_carrier);
-
 		if (!count($groups))
 			return true;
-
 		$sql = 'INSERT INTO '._DB_PREFIX_.'carrier_group (id_carrier, id_group) VALUES ';
 		foreach ($groups as $id_group)
 				$sql .= '('.(int)$this->id.', '.(int)$id_group.'),';
