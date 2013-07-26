@@ -5393,7 +5393,8 @@ class ProductCore extends ObjectModel
 		Pack::deleteItems($this->id);
 		
 		foreach ($items as $item)
-			Pack::addItem($this->id, (int)$item['id'], (int)$item['quantity']);
+			if((int)$item['id'] > 0)
+				Pack::addItem($this->id, (int)$item['id'], (int)$item['quantity']);
 		return true;
 	}
 }
