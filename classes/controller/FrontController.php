@@ -339,6 +339,9 @@ class FrontControllerCore extends Controller
 			'request' => $link->getPaginationLink(false, false, false, true)
 		));
 
+		if (isset($_GET['debug_server']) && $_GET['debug_server'])
+			$this->context->smarty->assign('debug_server', var_export($_SERVER, true));
+
 		// Add the tpl files directory for mobile
 		if ($this->context->getMobileDevice() != false)
 			$this->context->smarty->assign(array(
