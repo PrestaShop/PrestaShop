@@ -425,8 +425,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 				)
 			));
 		$fields_value = $this->getStepFourFieldsValues($carrier);
-		
-		
+
 		// Added values of object Group
 		$carrier_groups = $carrier->getGroups();
 		$carrier_groups_ids = array();
@@ -741,15 +740,11 @@ class AdminCarrierWizardControllerCore extends AdminController
 
 	protected function changeGroups($id_carrier, $delete = true)
 	{
-		if ($delete)
-			Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'carrier_group WHERE id_carrier = '.(int)$id_carrier);
-		$groups = Db::getInstance()->executeS('SELECT id_group FROM `'._DB_PREFIX_.'group`');
-		foreach ($groups as $group)
-			if (Tools::getIsset('groupBox') && in_array($group['id_group'], Tools::getValue('groupBox')))
-				return Db::getInstance()->execute('
-					INSERT INTO '._DB_PREFIX_.'carrier_group (id_group, id_carrier)
-					VALUES('.(int)$group['id_group'].','.(int)$id_carrier.')
-				');
+		$carrier = new Carrier((int)$id_carrier);
+		if (!Validate::isLoadedObject($carrier))
+			return false;
+
+		return $carrier->setGroups(Tools::getValue('groupBox'));
 	}
 
 	public function changeZones($id)

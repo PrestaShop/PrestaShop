@@ -1275,5 +1275,20 @@ class CarrierCore extends ObjectModel
 		
 		return true;
 	}
+	
+	public function setGroups($groups, $delete = true)
+	{
+		if ($delete)
+			Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'carrier_group WHERE id_carrier = '.(int)$id_carrier);
+
+		if (!count($groups))
+			return true;
+
+		$sql = 'INSERT INTO '._DB_PREFIX_.'carrier_group (id_carrier, id_group) VALUES ';
+		foreach ($groups as $id_group)
+				$sql .= '('.(int)$this->id.', '.(int)$id_group.'),';
+
+		return Db::getInstance()->execute(rtrim($sql, ','));
+	}
 }
 
