@@ -1477,6 +1477,34 @@ class AdminImportControllerCore extends AdminController
 				// clean feature positions to avoid conflict
 				Feature::cleanPositions();
 			}
+			
+			// set advanced stock managment
+			if($product->advanced_stock_managment) {
+				$product->setAdvancedStockManagement($product->advanced_stock_managment);
+			}
+			
+/*
+	Add these checks andd also create a warning messeage
+			case 'advanced_stock_management' :
+				if (Tools::getValue('value') === false)
+					die (Tools::jsonEncode(array('error' =>  $this->l('Undefined value'))));
+				if ((int)Tools::getValue('value') != 1 && (int)Tools::getValue('value') != 0)
+					die (Tools::jsonEncode(array('error' =>  $this->l('Uncorrect value'))));
+				if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && (int)Tools::getValue('value') == 1)
+					die (Tools::jsonEncode(array('error' =>  $this->l('Not possible if advanced stock management is disabled. '))));
+				if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && Pack::isPack($product->id))
+					die (Tools::jsonEncode(array('error' =>  $this->l('Not possible if the product is a pack.'))));
+
+				$product->setAdvancedStockManagement((int)Tools::getValue('value'));
+				if (StockAvailable::dependsOnStock($product->id) == 1 && (int)Tools::getValue('value') == 0)
+					StockAvailable::setProductDependsOnStock($product->id, 0);
+				break;
+
+		}
+*/
+// 				if (StockAvailable::dependsOnStock($product->id) == 1 && (int)Tools::getValue('value') == 0)
+// 					StockAvailable::setProductDependsOnStock($product->id, 0);
+// 				break;
 
 			// stock available
 			if (Shop::isFeatureActive())
