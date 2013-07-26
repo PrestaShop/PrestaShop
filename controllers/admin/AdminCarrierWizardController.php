@@ -335,8 +335,8 @@ class AdminCarrierWizardControllerCore extends AdminController
 			$range_table = $carrier->getRangeTable();
 			$range_obj = $carrier->getRangeObject();
 			$price_by_range = Carrier::getDeliveryPriceByRanges($range_table, (int)$carrier->id);
-
 		}
+
 		$zones = Zone::getZones(false);
 		foreach ($zones as $zone)
 			$fields_value['zones'][$zone['id_zone']] = Tools::getValue('zone_'.$zone['id_zone'], (in_array($zone['id_zone'], $carrier_zones_ids)));
@@ -614,7 +614,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 						'price' => (float)$fee[$key]
 					);
 
-				if (!$carrier->addDeliveryPrice($price_list))
+				if (!$carrier->addDeliveryPrice($price_list, true))
 					return false;
 			}
 		}
@@ -758,11 +758,11 @@ class AdminCarrierWizardControllerCore extends AdminController
 			if (count($carrier->getZone($zone['id_zone'])))
 			{
 				if (!isset($_POST['zone_'.$zone['id_zone']]) || !$_POST['zone_'.$zone['id_zone']])
-					$return &= $carrier->deleteZone($zone['id_zone']);
+					$return &= $carrier->deleteZone((int)$zone['id_zone']);
 			}
 			else
 				if (isset($_POST['zone_'.$zone['id_zone']]) && $_POST['zone_'.$zone['id_zone']])
-					$return &= $carrier->addZone($zone['id_zone']);
+					$return &= $carrier->addZone((int)$zone['id_zone']);
 
 		return $return;
 	}
