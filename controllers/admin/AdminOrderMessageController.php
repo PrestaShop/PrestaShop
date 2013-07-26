@@ -28,6 +28,7 @@ class AdminOrderMessageControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 	 	$this->table = 'order_message';
 		$this->className = 'OrderMessage';
 	 	$this->lang = true;

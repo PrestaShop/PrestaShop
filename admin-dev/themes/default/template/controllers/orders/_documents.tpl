@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<table class="table table-hover" width="100%;" cellspacing="0" cellpadding="0" id="documents_table">
+<table class="table" id="documents_table">
 	<thead>
 		<tr>
 			<th width="10%">

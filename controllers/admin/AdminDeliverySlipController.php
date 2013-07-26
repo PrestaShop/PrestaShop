@@ -28,6 +28,7 @@ class AdminDeliverySlipControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 	 	$this->table = 'delivery';
 
 		$this->context = Context::getContext();

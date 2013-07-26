@@ -29,6 +29,7 @@ class AdminPreferencesControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->context = Context::getContext();
 		$this->className = 'Configuration';
 		$this->table = 'configuration';

@@ -28,6 +28,7 @@ class AdminReturnControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->context = Context::getContext();
 	 	$this->table = 'order_return';
 	 	$this->className = 'OrderReturn';
