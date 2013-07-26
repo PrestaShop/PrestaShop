@@ -574,24 +574,28 @@ class HelperListCore extends Helper
 			$this->fields_list[$key] = $params;
 		}
 
-		$this->header_tpl->assign(array_merge($this->tpl_vars, array(
-			'title' => $this->title,
-			'show_toolbar' => $this->show_toolbar,
-			'toolbar_scroll' => $this->toolbar_scroll,
-			'toolbar_btn' => $this->toolbar_btn,
-			'table' => $this->table,
-			'currentIndex' => $this->currentIndex,
-			'action' => $action,
+		Context::getContext()->smarty->assign(array(
 			'page' => $page,
 			'simple_header' => $this->simple_header,
 			'total_pages' => $total_pages,
 			'selected_pagination' => $selected_pagination,
 			'pagination' => $this->_pagination,
 			'list_total' => $this->listTotal,
+			'token' => $this->token,
+			'table' => $this->table,
+			'bulk_actions' => $this->bulk_actions
+		));
+
+		$this->header_tpl->assign(array_merge($this->tpl_vars, array(
+			'title' => $this->title,
+			'show_toolbar' => $this->show_toolbar,
+			'toolbar_scroll' => $this->toolbar_scroll,
+			'toolbar_btn' => $this->toolbar_btn,
+			'currentIndex' => $this->currentIndex,
+			'action' => $action,
 			'is_order_position' => $this->position_identifier && $this->orderBy == 'position',
 			'order_way' => $this->orderWay,
 			'order_by' => $this->orderBy,
-			'token' => $this->token,
 			'fields_display' => $this->fields_list,
 			'delete' => in_array('delete', $this->actions),
 			'identifier' => $this->identifier,
@@ -599,12 +603,11 @@ class HelperListCore extends Helper
 			'shop_link_type' => $this->shopLinkType,
 			'has_actions' => !empty($this->actions),
 			'has_bulk_actions' => !empty($this->bulk_actions),
-			'bulk_actions' => $this->bulk_actions,
 			'table_id' => isset($table_id) ? $table_id : null,
 			'table_dnd' => isset($table_dnd) ? $table_dnd : null,
 			'name' => isset($name) ? $name : null,
 			'name_id' => isset($name_id) ? $name_id : null,
-			'row_hover' => $this->row_hover,
+			'row_hover' => $this->row_hover
 		)));
 
 		return $this->header_tpl->fetch();
@@ -616,11 +619,7 @@ class HelperListCore extends Helper
 	public function displayListFooter()
 	{
 		$this->footer_tpl->assign(array_merge($this->tpl_vars, array(
-			'token' => $this->token,
-			'table' => $this->table,
-			'current' => $this->currentIndex,
-			'bulk_actions' => $this->bulk_actions,
-			'simple_header' => $this->simple_header
+			'current' => $this->currentIndex
 		)));
 		return $this->footer_tpl->fetch();
 	}
