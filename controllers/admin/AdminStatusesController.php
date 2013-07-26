@@ -73,8 +73,7 @@ class AdminStatusesControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_order_state' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center',
-				'width' => 25
+				'align' => 'center'
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
@@ -85,7 +84,6 @@ class AdminStatusesControllerCore extends AdminController
 				'title' => $this->l('Icon'),
 				'align' => 'center',
 				'image' => 'os',
-				'width' => 25,
 				'orderby' => false,
 				'search' => false
 			),
@@ -96,14 +94,12 @@ class AdminStatusesControllerCore extends AdminController
 					'1' => 'enabled.gif',
 					'0' => 'disabled.gif'
 				),
-				'width' => 190,
 				'type' => 'bool',
 				'orderby' => false
 			),
 			'delivery' => array(
 				'title' => $this->l('Delivery'),
 				'align' => 'center',
-				'width' => 25,
 				'icon' => array(
 					'1' => 'enabled.gif',
 					'0' => 'disabled.gif'
@@ -115,7 +111,6 @@ class AdminStatusesControllerCore extends AdminController
 			'invoice' => array(
 				'title' => $this->l('Invoice'),
 				'align' => 'center',
-				'width' => 25,
 				'icon' => array(
 					'1' => 'enabled.gif',
 					'0' => 'disabled.gif'
@@ -124,8 +119,7 @@ class AdminStatusesControllerCore extends AdminController
 				'orderby' => false
 			),
 			'template' => array(
-				'title' => $this->l('Email template'),
-				'width' => 120
+				'title' => $this->l('Email template')
 			)
 		);
 	}
@@ -146,8 +140,7 @@ class AdminStatusesControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_order_return_state' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center',
-				'width' => 25
+				'align' => 'center'
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
@@ -245,7 +238,7 @@ class AdminStatusesControllerCore extends AdminController
 			'tinymce' => true,
 			'legend' => array(
 				'title' => $this->l('Order status'),
-				'image' => '../img/admin/time.gif'
+				'icon' => 'icon-time'
 			),
 			'input' => array(
 				array(
@@ -253,23 +246,23 @@ class AdminStatusesControllerCore extends AdminController
 					'label' => $this->l('Status name:'),
 					'name' => 'name',
 					'lang' => true,
-					'size' => 40,
 					'required' => true,
-					'hint' => $this->l('Invalid characters: numbers and').' !<>,;?=+()@#"�{}_$%:',
-					'desc' => $this->l('Order status (e.g. \'Pending\')')
+					'hint' => array(
+						$this->l('Order status (e.g. \'Pending\')'),
+						$this->l('Invalid characters: numbers and').' !<>,;?=+()@#"�{}_$%:'
+					)
 				),
 				array(
 					'type' => 'file',
 					'label' => $this->l('Icon:'),
 					'name' => 'icon',
-					'desc' => $this->l('Upload an icon from your computer (File type: .gif, suggested size: 16x16)')
+					'hint' => $this->l('Upload an icon from your computer (File type: .gif, suggested size: 16x16)')
 				),
 				array(
 					'type' => 'color',
 					'label' => $this->l('Color:'),
 					'name' => 'color',
-					'size' => 30,
-					'desc' => $this->l('Status will be highlighted in this color. (HTML colors only)').' "lightblue", "#CC6600")'
+					'hint' => $this->l('Status will be highlighted in this color. (HTML colors only)').' "lightblue", "#CC6600")'
 				),
 				array(
 					'type' => 'checkbox',
@@ -358,8 +351,10 @@ class AdminStatusesControllerCore extends AdminController
 						'id' => 'id',
 						'name' => 'name'
 					),
-					'hint' => $this->l('Only letters, number and hashtags are allowed.'),
-					'desc' => $this->l('Email template for both .html and .txt')
+					'hint' => array(
+						$this->l('Only letters, number and hashtags are allowed.'),
+						$this->l('Email template for both .html and .txt')
+					)
 				)
 			),
 			'submit' => array(
@@ -392,7 +387,7 @@ class AdminStatusesControllerCore extends AdminController
 			'tinymce' => true,
 			'legend' => array(
 				'title' => $this->l('Order status'),
-				'image' => '../img/admin/time.gif'
+				'icon' => 'icon-time'
 			),
 			'input' => array(
 				array(
@@ -400,17 +395,17 @@ class AdminStatusesControllerCore extends AdminController
 					'label' => $this->l('Status name:'),
 					'name' => 'name',
 					'lang' => true,
-					'size' => 40,
 					'required' => true,
-					'hint' => $this->l('Invalid characters: numbers and').' !<>,;?=+()@#"�{}_$%:',
-					'desc' => $this->l('Order\'s return status name')
+					'hint' => array(
+						$this->l('Order\'s return status name'),
+						$this->l('Invalid characters: numbers and').' !<>,;?=+()@#"�{}_$%:'
+					)
 				),
 				array(
 					'type' => 'color',
 					'label' => $this->l('Color:'),
 					'name' => 'color',
-					'size' => 30,
-					'desc' => $this->l('Status will be highlighted in this color. (HTML colors only)').' "lightblue", "#CC6600")'
+					'hint' => $this->l('Status will be highlighted in this color. (HTML colors only)').' "lightblue", "#CC6600")'
 				)
 			),
 			'submit' => array(

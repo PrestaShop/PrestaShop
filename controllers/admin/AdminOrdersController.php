@@ -64,17 +64,14 @@ class AdminOrdersControllerCore extends AdminController
 		$this->fields_list = array(
 		'id_order' => array(
 			'title' => $this->l('ID'),
-			'align' => 'center',
-			'width' => 25
+			'align' => 'center'
 		),
 		'reference' => array(
 			'title' => $this->l('Reference'),
-			'align' => 'center',
-			'width' => 65
+			'align' => 'center'
 		),
 		'new' => array(
 			'title' => $this->l('New'),
-			'width' => 25,
 			'align' => 'center',
 			'type' => 'bool',
 			'tmpTableFilter' => true,
@@ -93,7 +90,6 @@ class AdminOrdersControllerCore extends AdminController
 		),
 		'total_paid_tax_incl' => array(
 			'title' => $this->l('Total'),
-			'width' => 70,
 			'align' => 'right',
 			'prefix' => '<b>',
 			'suffix' => '</b>',
@@ -101,13 +97,11 @@ class AdminOrdersControllerCore extends AdminController
 			'currency' => true
 		),
 		'payment' => array(
-			'title' => $this->l('Payment: '),
-			'width' => 100
+			'title' => $this->l('Payment: ')
 		),
 		'osname' => array(
 			'title' => $this->l('Status'),
 			'color' => 'color',
-			'width' => 280,
 			'type' => 'select',
 			'list' => $statuses_array,
 			'filter_key' => 'os!id_order_state',
@@ -115,14 +109,12 @@ class AdminOrdersControllerCore extends AdminController
 		),
 		'date_add' => array(
 			'title' => $this->l('Date'),
-			'width' => 130,
 			'align' => 'right',
 			'type' => 'datetime',
 			'filter_key' => 'a!date_add'
 		),
 		'id_pdf' => array(
 			'title' => $this->l('PDF'),
-			'width' => 35,
 			'align' => 'center',
 			'callback' => 'printPDFIcons',
 			'orderby' => false,
@@ -2258,4 +2250,3 @@ class AdminOrdersControllerCore extends AdminController
 		$order_invoice->update();
 	}
 }
-
