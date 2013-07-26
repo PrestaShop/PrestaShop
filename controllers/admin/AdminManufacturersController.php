@@ -223,7 +223,7 @@ class AdminManufacturersControllerCore extends AdminController
 			'tinymce' => true,
 			'legend' => array(
 				'title' => $this->l('Manufacturers:'),
-				'image' => '../img/admin/manufacturers.gif'
+				'icon' => 'icon-certificate'
 			),
 			'input' => array(
 				array(
@@ -275,11 +275,13 @@ class AdminManufacturersControllerCore extends AdminController
 					'label' => $this->l('Meta keywords:'),
 					'name' => 'meta_keywords',
 					'lang' => true,
-					'hint' => $this->l('Forbidden characters:').' <>;=#{}',
-					'desc' => $this->l('To add "tags," click inside the field, write something, and then press "Enter."')
+					'hint' => array(
+						$this->l('Forbidden characters:').' <>;=#{}',
+						$this->l('To add "tags," click inside the field, write something, and then press "Enter."')
+					)
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Enable:'),
 					'name' => 'active',
 					'required' => false,
@@ -356,7 +358,7 @@ class AdminManufacturersControllerCore extends AdminController
 		$form = array(
 			'legend' => array(
 				'title' => $this->l('Addresses'),
-				'image' => '../img/admin/contact.gif'
+				'icon' => 'icon-building'
 			)
 		);
 

@@ -47,7 +47,8 @@
 					<div class="alert alert-info">{$field}</div>
 				{elseif $key == 'input'}
 					{foreach $field as $input}
-						<div class="row">
+
+						<div class="row {if $input.type == 'hidden'}hide{/if}">
 						{if $input.type == 'hidden'}
 							<input type="hidden" name="{$input.name}" id="{$input.name}" value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" />
 						{else}
