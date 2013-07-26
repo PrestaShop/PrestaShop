@@ -115,38 +115,15 @@ class AdminManufacturersControllerCore extends AdminController
 
 		$this->content .= parent::renderList();
 	}
-
-	public function initListManufacturerAddresses()
+	
+	protected function getAddressFieldsList()
 	{
-		$this->toolbar_title = $this->l('Addresses');
-		// reset actions and query vars
-		$this->actions = array();
-		unset($this->fields_list, $this->_select, $this->_join, $this->_group, $this->_filterHaving, $this->_filter);
-
-		$this->table = 'address';
-		$this->identifier = 'id_address';
-		$this->deleted = true;
-		$this->_orderBy = null;
-
-		$this->addRowAction('editaddresses');
-		$this->addRowAction('delete');
-
-		// test if a filter is applied for this list
-		if (Tools::isSubmit('submitFilter'.$this->table) || $this->context->cookie->{'submitFilter'.$this->table} !== false)
-			$this->filter = true;
-
-		// test if a filter reset request is required for this list
-		if (isset($_POST['submitReset'.$this->table]))
-			$this->action = 'reset_filters';
-		else
-			$this->action = '';
-
 		// Sub tab addresses
 		$countries = Country::getCountries($this->context->language->id);
 		foreach ($countries as $country)
 			$this->countries_array[$country['id_country']] = $country['name'];
 
-		$this->fields_list = array(
+		return array(
 			'id_address' => array(
 				'title' => $this->l('ID'),
 				'width' => 25
@@ -181,6 +158,31 @@ class AdminManufacturersControllerCore extends AdminController
 				'filter_key' => 'cl!id_country'
 			)
 		);
+	}
+
+	public function initListManufacturerAddresses()
+	{
+		$this->toolbar_title = $this->l('Addresses');
+		// reset actions and query vars
+		$this->actions = array();
+		unset($this->fields_list, $this->_select, $this->_join, $this->_group, $this->_filterHaving, $this->_filter);
+
+		$this->table = 'address';
+		$this->identifier = 'id_address';
+		$this->deleted = true;
+		$this->_orderBy = null;
+
+		$this->addRowAction('editaddresses');
+		$this->addRowAction('delete');
+
+		// test if a filter is applied for this list
+		if (Tools::isSubmit('submitFilter'.$this->table) || $this->context->cookie->{'submitFilter'.$this->table} !== false)
+			$this->filter = true;
+
+		// test if a filter reset request is required for this list
+		$this->action = (isset($_POST['submitReset'.$this->table]) ? 'reset_filters' : '');
+
+		$this->fields_list = $this->getAddressFieldsList();
 
 		$this->_select = 'cl.`name` as country, m.`name` AS manufacturer_name';
 		$this->_join = '
@@ -683,12 +685,13 @@ class AdminManufacturersControllerCore extends AdminController
 
 	public function initProcess()
 	{
-		if (Tools::getValue('submitAddaddress') || Tools::isSubmit('deleteaddress') || Tools::isSubmit('submitBulkdeleteaddress'))
+		if (Tools::getValue('submitAddaddress') || Tools::isSubmit('deleteaddress') || Tools::isSubmit('submitBulkdeleteaddress') || Tools::isSubmit('exportaddress'))
 		{
 			$this->table = 'address';
 			$this->className = 'Address';
 			$this->identifier = 'id_address';
 			$this->deleted = true;
+			$this->fields_list = $this->getAddressFieldsList();
 		}
 		parent::initProcess();
 	}
