@@ -89,32 +89,31 @@ class AdminInvoicesControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('By date'),
-				'image' => '../img/admin/pdf.gif'
+				'icon' => 'icon-calendar'
 			),
 			'input' => array(
 				array(
 					'type' => 'date',
 					'label' => $this->l('From:'),
 					'name' => 'date_from',
-					'size' => 20,
 					'maxlength' => 10,
 					'required' => true,
-					'desc' => $this->l('Format: 2011-12-31 (inclusive)')
+					'hint' => $this->l('Format: 2011-12-31 (inclusive)')
 				),
 				array(
 					'type' => 'date',
 					'label' => $this->l('To:'),
 					'name' => 'date_to',
-					'size' => 20,
 					'maxlength' => 10,
 					'required' => true,
-					'desc' => $this->l('Format: 2012-12-31 (inclusive)')
+					'hint' => $this->l('Format: 2012-12-31 (inclusive)')
 				)
 			),
 			'submit' => array(
 				'title' => $this->l('Generate PDF file by date'),
-				'class' => 'button',
-				'id' => 'submitPrint'
+				'class' => 'btn btn-primary',
+				'id' => 'submitPrint',
+				'icon' => 'icon-download-alt'
 			)
 		);
 
@@ -133,7 +132,7 @@ class AdminInvoicesControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('By order status'),
-				'image' => '../img/admin/pdf.gif'
+				'icon' => 'icon-pushpin'
 			),
 			'input' => array(
 				array(
@@ -145,13 +144,14 @@ class AdminInvoicesControllerCore extends AdminController
 						'id' => 'id_order_state',
 						'name' => 'name'
 					),
-					'desc' => $this->l('You can also export orders which have not been charged yet.').' (<img src="../img/admin/charged_ko.gif" alt="" />).'
+					'hint' => $this->l('You can also export orders which have not been charged yet.')
 				)
 			),
 			'submit' => array(
 				'title' => $this->l('Generate PDF file by status.'),
-				'class' => 'button',
-				'id' => 'submitPrint2'
+				'class' => 'btn btn-primary',
+				'id' => 'submitPrint2',
+				'icon' => 'icon-download-alt'
 			)
 		);
 

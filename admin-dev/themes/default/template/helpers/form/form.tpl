@@ -440,12 +440,17 @@
 						{hook h=$hookName fieldset=$f}
 					{/if}
 				{elseif $key == 'submit'}
-					<div class="margin-form">
-						<input type="submit"
-							id="{if isset($field.id)}{$field.id}{else}{$table}_form_submit_btn{/if}"
-							value="{$field.title}"
-							name="{if isset($field.name)}{$field.name}{else}{$submit_action}{/if}{if isset($field.stay) && $field.stay}AndStay{/if}"
-							{if isset($field.class)}class="{$field.class}"{/if} />
+					<div class="row">
+						<div class="col-lg-9 col-offset-3">
+							<button
+								type="submit"
+								id="{if isset($field.id)}{$field.id}{else}{$table}_form_submit_btn{/if}"
+								name="{if isset($field.name)}{$field.name}{else}{$submit_action}{/if}{if isset($field.stay) && $field.stay}AndStay{/if}"
+								{if isset($field.class)}class="{$field.class}"{/if}
+								>
+								{if isset($field.icon)}<i class="{$field.icon}"></i>{/if} {$field.title}
+							</button>
+						</div>
 					</div>
 				{elseif $key == 'desc'}
 					<p class="clear">

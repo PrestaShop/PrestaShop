@@ -1748,7 +1748,7 @@ input[type="button"].btn-block {
     margin-bottom: 0;
     border-bottom-right-radius: 3px;
     border-bottom-left-radius: 3px; }
-  .list-group-item > .badge {
+  .list-group-item > .badge, .list-group-item > .badge-success, .list-group-item > .badge-error {
     float: right;
     margin-right: -15px; }
 
@@ -2938,7 +2938,7 @@ a.thumbnail:focus {
   .label-info[href]:hover, .label-info[href]:focus {
     background-color: #31b0d5; }
 
-.badge {
+.badge, .badge-success, .badge-error {
   display: inline-block;
   min-width: 10px;
   padding: 3px 7px;
@@ -2951,24 +2951,26 @@ a.thumbnail:focus {
   text-align: center;
   background-color: #999999;
   border-radius: 10px; }
-  .badge:empty {
+  .badge:empty, .badge-success:empty, .badge-error:empty {
     display: none; }
 
-a.badge:hover, a.badge:focus {
+a.badge:hover, a.badge-success:hover, a.badge-error:hover, a.badge:focus, a.badge-success:focus, a.badge-error:focus {
   color: #fff;
   text-decoration: none;
   cursor: pointer; }
 
-.btn .badge, .toolbar_btn .badge {
+.btn .badge, .toolbar_btn .badge, .btn .badge-success, .toolbar_btn .badge-success, .btn .badge-error, .toolbar_btn .badge-error {
   position: relative;
   top: -1px; }
 
-a.list-group-item.active > .badge,
-.nav-pills > .active > a > .badge {
+a.list-group-item.active > .badge, a.list-group-item.active > .badge-success, a.list-group-item.active > .badge-error,
+.nav-pills > .active > a > .badge,
+.nav-pills > .active > a > .badge-success,
+.nav-pills > .active > a > .badge-error {
   color: #313a45;
   background-color: #fff; }
 
-.nav-pills > li > a > .badge {
+.nav-pills > li > a > .badge, .nav-pills > li > a > .badge-success, .nav-pills > li > a > .badge-error {
   margin-left: 3px; }
 
 @-webkit-keyframes progress-bar-stripes {
@@ -5037,7 +5039,8 @@ https://github.com/ghinda/css-toggle-switch
   .prestashop-switch span {
     color: #fff; } }
 html, body {
-  height: 100%; }
+  height: 100%;
+  min-height: 700px; }
 
 body.fixed-top {
   position: relative;
@@ -5140,15 +5143,20 @@ body.fixed-top {
   width: 240px;
   border-bottom: solid 1px black;
   -webkit-box-shadow: #b4ac9c 0 4px 0;
-  box-shadow: #b4ac9c 0 4px 0; }
+  box-shadow: #b4ac9c 0 4px 0;
+  min-height: 700px;
+  height: 100%; }
   .page-sidebar > ul > li > ul.sub-menu {
     display: none;
     list-style: none;
     clear: both;
     margin: 8px 0px 8px 0px; }
   .page-sidebar > ul {
+    height: 100%;
+    overflow: scroll;
     margin: 0;
-    padding: 0; }
+    padding: 0;
+    padding-bottom: 100px; }
     .page-sidebar > ul li {
       background-color: #48525f;
       list-style: none; }
@@ -5478,3 +5486,9 @@ tr.filter {
 
 .breadcrumb {
   background-color: white; }
+
+.badge-success {
+  background-color: #5cb85c; }
+
+.badge-error {
+  background-color: #d9534f; }

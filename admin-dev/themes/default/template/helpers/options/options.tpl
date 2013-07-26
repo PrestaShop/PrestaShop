@@ -44,7 +44,7 @@
 		<fieldset {if isset($categoryData['class'])}class="{$categoryData['class']}"{/if} class="col-lg-12">
 			{* Options category title *}
 			<legend>
-				<img src="{$categoryData['image']}"/>
+				<i class="icon-cogs"></i>
 				{if isset($categoryData['title'])}{$categoryData['title']}{else}{l s='Options'}{/if}
 			</legend>
 
@@ -226,9 +226,18 @@
 				{/if}
 			{/foreach}
 			{if isset($categoryData['submit'])}
-				<div class="col-lg-12 text-right">
-					<input type="submit" value="{if isset($categoryData['submit']['title'])}{$categoryData['submit']['title']}{else}{l s='Save'}{/if}" name="{if isset($categoryData['submit']['name'])}{$categoryData['submit']['name']}{else}submitOptions{$table}{/if}" class="{if isset($categoryData['submit']['class'])}{$categoryData['submit']['class']}{else}btn btn-default{/if}" id="{$table}_form_submit_btn"
-					/>
+				<div class="row">
+					<div class="col-lg-9 col-offset-3">
+						<button
+							type="submit"
+							id="{$table}_form_submit_btn"
+							name="{if isset($categoryData['submit']['name'])}{$categoryData['submit']['name']}{else}submitOptions{$table}{/if}"
+							class="{if isset($categoryData['submit']['class'])}{$categoryData['submit']['class']}{else}btn btn-primary{/if}"
+							>
+							<i class="{if isset($categoryData['submit']['icon'])}{$categoryData['submit']['icon']}{else}icon-save{/if}"></i>
+							{if isset($categoryData['submit']['title'])}{$categoryData['submit']['title']}{else}{l s='Save'}{/if}
+						</button>
+					</div>
 				</div>
 			{/if}
 			{if isset($categoryData['required_fields']) && $categoryData['required_fields']}

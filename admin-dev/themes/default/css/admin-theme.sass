@@ -11,6 +11,7 @@ $bg-head-color: #9ED072
 
 html, body
 	height: 100%
+	min-height: 700px
 
 body.fixed-top
 	position: relative
@@ -105,15 +106,19 @@ body.fixed-top
 	width: 240px
 	border-bottom: solid 1px black
 	@include box-shadow(darken($bg-content-color,30%) 0 4px 0)	
-
+	min-height: 700px
+	height: 100%
 	> ul > li > ul.sub-menu
 		display: none
 		list-style: none
 		clear: both
 		margin: 8px 0px 8px 0px
 	> ul
+		height: 100%
+		overflow: scroll
 		margin: 0
 		padding: 0
+		padding-bottom: 100px
 		li
 			background-color: #48525F
 			list-style: none
@@ -465,3 +470,14 @@ tr.filter
 
 .breadcrumb
 	background-color: lighten($bg-content-color,7%)
+
+
+.badge-success
+	@extend .badge
+	background-color: $brand-success
+
+.badge-error
+	@extend .badge
+	background-color: $brand-danger
+
+
