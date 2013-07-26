@@ -3980,6 +3980,7 @@ class AdminProductsControllerCore extends AdminController
 					'token_preferences' => Tools::getAdminTokenLite('AdminPPreferences'),
 					'token' => $this->token,
 					'languages' => $this->_languages,
+					'id_lang' => $this->context->language->id
 				));
 			}
 			else
