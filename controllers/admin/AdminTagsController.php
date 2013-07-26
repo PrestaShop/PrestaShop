@@ -104,7 +104,8 @@ class AdminTagsControllerCore extends AdminController
 
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Tag')
+				'title' => $this->l('Tag'),
+				'icon' => 'icon-tag'
 			),
 			'input' => array(
 				array(

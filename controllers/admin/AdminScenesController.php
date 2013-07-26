@@ -140,7 +140,7 @@ class AdminScenesControllerCore extends AdminController
 		$fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Image Maps'),
-				'image' => '../img/admin/photo.gif',
+				'icon' => 'icon-picture',
 				),
 			'submit' => array(
 				'title' => $this->l('Save'),
@@ -164,12 +164,11 @@ class AdminScenesControllerCore extends AdminController
 					'label' => $this->l('Image map name:'),
 					'name' => 'name',
 					'lang' => true,
-					'size' => 48,
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}'
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Status:'),
 					'name' => 'active',
 					'required' => false,

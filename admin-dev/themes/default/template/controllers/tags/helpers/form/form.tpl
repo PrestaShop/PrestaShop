@@ -25,40 +25,36 @@
 {extends file="helpers/form/form.tpl"}
 
 {block name="other_input"}
-	{if $key eq 'selects'}
-	<div class="margin-form">
-	<h3>{l s='Products:'}</h3>
-	<table class="double_select">
-		<tr>
-			<td style="padding-left:20px;">
+{if $key eq 'selects'}
+<div class="row">
+	<label class="control-label col-lg-3">{l s='Products:'}</label>
+
+	<div class="col-lg-9">
+		<div class="row">
+			<div class="col-lg-6">
 				<select multiple id="select_left">
 					{foreach from=$field.products_unselected item='product'}
 					<option value="{$product.id_product}">{$product.name}</option>
 					{/foreach}
 				</select>
-				<span class="alert alert-info" name="help_box">{l s='Double click to move the item to another column'}<span class="hint-pointer">&nbsp;</span></span>
-				<br /><br />
-				<a href="#" id="move_to_right" class="multiple_select_add">
-					{l s='Add'} &gt;&gt;
+				<a href="#" id="move_to_right" class="btn btn-default btn-block multiple_select_add">
+					{l s='Add'} <i class="icon-arrow-right"></i>
 				</a>
 			</div>
-			</td>
-			<td>
+			<div class="col-lg-6">
 				<select multiple id="select_right" name="products[]">
 					{foreach from=$field.products item='product'}
 					<option selected="selected" value="{$product.id_product}">{$product.name}</option>
 					{/foreach}
 				</select>
-				<span class="alert alert-info" name="help_box">{l s='Double click to move the item to another column'}<span class="hint-pointer">&nbsp;</span></span>
-				<br /><br />
-				<a href="#" id="move_to_left" class="multiple_select_remove">
-					&lt;&lt; {l s='Remove'}
+				<a href="#" id="move_to_left" class="btn btn-default btn-block multiple_select_remove">
+					<i class="icon-arrow-left"></i> {l s='Remove'}
 				</a>
-			</td>
-		</tr>
-	</table>
+			</div>
+		</div>
 	</div>
-	<div class="clear">&nbsp;</div>
+</div>
+
 
 	<script type="text/javascript">
 	$(document).ready(function(){

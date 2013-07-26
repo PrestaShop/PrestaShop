@@ -60,14 +60,13 @@ class AdminAttachmentsControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Attachment'),
-				'image' => '../img/t/AdminAttachments.gif'
+				'icon' => 'icon-paper-clip'
 			),
 			'input' => array(
 				array(
 					'type' => 'text',
 					'label' => $this->l('Filename:'),
 					'name' => 'name',
-					'size' => 33,
 					'required' => true,
 					'lang' => true,
 				),
@@ -75,15 +74,13 @@ class AdminAttachmentsControllerCore extends AdminController
 					'type' => 'textarea',
 					'label' => $this->l('Description:'),
 					'name' => 'description',
-					'cols' => 40,
-					'rows' => 10,
 					'lang' => true,
 				),
 				array(
 					'type' => 'file',
 					'label' => $this->l('File:'),
 					'name' => 'file',
-					'desc' => $this->l('Upload a file from your computer.')
+					'hint' => $this->l('Upload a file from your computer.')
 				),
 			),
 			'submit' => array(
