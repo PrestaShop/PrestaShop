@@ -19,6 +19,8 @@ CHANGE `module_name` `module_name` VARCHAR(64) NULL DEFAULT NULL;
 /* PHP:add_module_to_hook(blockmyaccountfooter, actionModuleRegisterHookAfter); */;
 /* PHP:add_module_to_hook(blockmyaccount, actionModuleUnRegisterHookAfter); */;
 /* PHP:add_module_to_hook(blockmyaccountfooter, actionModuleUnRegisterHookAfter); */;
+/* PHP:remove_tab(AdminRangePrice); */;
+/* PHP:remove_tab(AdminRangeWeight); */;
 
 ALTER TABLE `PREFIX_log` ADD `id_employee` INT(10) UNSIGNED NULL DEFAULT NULL AFTER `object_id`;
 

@@ -64,7 +64,6 @@
   <tab id="Positions" name="Positionen"/>
   <tab id="Preferences_1" name="Voreinstellungen"/>
   <tab id="Preferences" name="Voreinstellungen"/>
-  <tab id="Price_Ranges" name="Preisspannen"/>
   <tab id="Price_Rules" name="Preisregeln"/>
   <tab id="Products_1" name="Produkte"/>
   <tab id="Products" name="Produkte"/>
@@ -100,6 +99,5 @@
   <tab id="Translations" name="&#xDC;bersetzungen"/>
   <tab id="Warehouses" name="Lagerort"/>
   <tab id="Webservice" name="Webdienste"/>
-  <tab id="Weight_Ranges" name="Gewichtsspannen"/>
   <tab id="Zones" name="Zonen"/>
 </entity_tab>

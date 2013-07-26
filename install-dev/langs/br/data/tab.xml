@@ -64,7 +64,6 @@
   <tab id="Positions" name="Posi&#xE7;&#xF5;es"/>
   <tab id="Preferences_1" name="Prefer&#xEA;ncias"/>
   <tab id="Preferences" name="Prefer&#xEA;ncias"/>
-  <tab id="Price_Ranges" name="Faixas de pre&#xE7;os"/>
   <tab id="Price_Rules" name="Regras de Pre&#xE7;os"/>
   <tab id="Products_1" name="Produtos"/>
   <tab id="Products" name="Produtos"/>
@@ -100,6 +99,5 @@
   <tab id="Translations" name="Tradu&#xE7;&#xF5;es"/>
   <tab id="Warehouses" name="Armaz&#xE9;ns"/>
   <tab id="Webservice" name="Servi&#xE7;o Web"/>
-  <tab id="Weight_Ranges" name="Faixas de peso"/>
   <tab id="Zones" name="Regi&#xF5;es"/>
 </entity_tab>
