@@ -213,7 +213,7 @@ class AdminInvoicesControllerCore extends AdminController
 
 	public function postProcess()
 	{
-		if (Tools::getValue('submitAddinvoice_date'))
+		if (Tools::isSubmit('submitAddinvoice_date'))
 		{
 			if (!Validate::isDate(Tools::getValue('date_from')))
 				$this->errors[] = $this->l('Invalid "From" date');
