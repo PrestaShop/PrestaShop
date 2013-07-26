@@ -70,7 +70,7 @@
 			</div>
 
 			<div {if $product->is_virtual || $product->cache_is_pack}style="display:none;"{/if} class="row stockForVirtualProduct">
-				<label class="control-label col-lg-3">{l s='Available quantities:'}</label>
+				<label class="control-label col-lg-3" for="depends_on_stock_1">{l s='Available quantities:'}</label>
 				<div class="col-lg-9">
 					<p class="radio">
 						<label for="depends_on_stock_1">
@@ -89,7 +89,7 @@
 						</label>
 					</p>
 					<p class="radio">
-						<label for="depends_on_stock_0">
+						<label for="depends_on_stock_0" for="depends_on_stock_0">
 							<input type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_0" value="0"
 								{if $product->depends_on_stock == 0 || $stock_management_active == 0}
 									checked="checked" 
@@ -178,7 +178,7 @@
 
 	{if !$has_attribute}
 		<div class="row">
-			<label class="control-label col-lg-3">{l s='Minimum quantity:'}</label>
+			<label class="control-label col-lg-3" for="minimal_quantity">{l s='Minimum quantity:'}</label>
 			<div class="col-lg-1">
 				<input maxlength="6" name="minimal_quantity" id="minimal_quantity" type="text" value="{$product->minimal_quantity|default:1}" />
 			</div>
@@ -189,7 +189,7 @@
 	{if $ps_stock_management}
 		{include file="controllers/products/multishop/checkbox.tpl" field="available_now" type="default" multilang="true"}
 		<div class="row">
-			<label class="control-label col-lg-5">
+			<label class="control-label col-lg-5" for="available_now_{$id_lang}">
 				<span class="label-tooltip" data-toggle="tooltip"
 					title="{l s='Forbidden characters:'} &#60;&#62;;&#61;#&#123;&#125;">
 					{l s='Displayed text when in-stock:'}
@@ -206,7 +206,7 @@
 		</div>
 		<div class="row">
 			{include file="controllers/products/multishop/checkbox.tpl" field="available_later" type="default" multilang="true"}
-			<label class="control-label col-lg-5">
+			<label class="control-label col-lg-5" for="available_later_{$id_lang}">
 				<span class="label-tooltip" data-toggle="tooltip"
 					title="{l s='Forbidden characters:'} &#60;&#62;;&#61;#&#123;&#125;">
 					{l s='Displayed text when back-ordereding is allowed:'}
@@ -224,7 +224,7 @@
 		</div>
 		
 		{if !$countAttributes}
-			<label>{l s='Available date:'}</label>
+			<label for="available_date">{l s='Available date:'}</label>
 			<input id="available_date" name="available_date" value="{$product->available_date}" class="datepicker" type="text" />
 			<p>{l s='The available date when this product is out of stock.'}</p>
 		{/if}

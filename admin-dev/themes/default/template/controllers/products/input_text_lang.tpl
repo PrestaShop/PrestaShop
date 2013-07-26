@@ -27,7 +27,7 @@
 	<div class="input-group col-lg-12 translatable-field lang-{$language.id_lang}">
 		<input type="text"
 		id="{$input_name}_{$language.id_lang}" 
-		class="{$input_class}"
+		{if isset($input_class)}class="{$input_class}"{/if}
 		name="{$input_name}_{$language.id_lang}"
 		value="{$input_value[$language.id_lang]|htmlentitiesUTF8|default:''}"
 		onkeyup="if (isArrowKey(event)) return ;updateFriendlyURL();">
