@@ -28,3 +28,5 @@ UPDATE `PREFIX_tab` SET id_parent = @id_parent WHERE `id_parent` = 1 AND `class_
 UPDATE `PREFIX_hook` SET `description` = 'This hook is called when a new credit slip is added regarding client order' WHERE `name` = 'actionOrderSlipAdd';
 
 ALTER TABLE `PREFIX_product_shop` DROP INDEX `date_add`, ADD INDEX `date_add` (`date_add` , `active` , `visibility`);
+
+UPDATE `PREFIX_hook` SET `live_edit` = '1' WHERE `name` LIKE 'leftcolumn';
