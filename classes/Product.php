@@ -668,6 +668,45 @@ class ProductCore extends ObjectModel
 		return false;
 	}
 
+	/**
+	 * For a given id_product and id_product_attribute, return available date
+	 *
+	 * @param int $id_product
+	 * @param int $id_product_attribute Optional
+	 * @return string/null
+	 */
+	public static function getAvailableDate($id_product, $id_product_attribute = null)
+	{
+		$sql = 'SELECT';
+
+		if ($id_product_attribute === null)
+			$sql .= ' p.`available_date`';
+		else
+			$sql .= ' IF(pa.`available_date` = "0000-00-00", p.`available_date`, pa.`available_date`) AS available_date';
+
+		$sql .= ' FROM `'._DB_PREFIX_.'product` p';
+
+		if ($id_product_attribute !== null)
+			$sql .= ' LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.`id_product` = p.`id_product`)';
+
+		$sql .= Shop::addSqlAssociation('product', 'p');
+
+		if ($id_product_attribute !== null)
+			$sql .= Shop::addSqlAssociation('product_attribute', 'pa');
+
+		$sql .= ' WHERE p.`id_product` = '.(int)$id_product;
+
+		if ($id_product_attribute !== null)
+			$sql .= ' AND pa.`id_product` = '.(int)$id_product.' AND pa.`id_product_attribute` = '.(int)$id_product_attribute;
+
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+
+		if ($result == '0000-00-00')
+			$result = null;
+
+		return $result;
+	}
+
 	public static function updateIsVirtual($id_product)
 	{
 		Db::getInstance()->update('product', array(
@@ -5393,7 +5432,8 @@ class ProductCore extends ObjectModel
 		Pack::deleteItems($this->id);
 		
 		foreach ($items as $item)
-			Pack::addItem($this->id, (int)$item['id'], (int)$item['quantity']);
+			if((int)$item['id'] > 0)
+				Pack::addItem($this->id, (int)$item['id'], (int)$item['quantity']);
 		return true;
 	}
 }
