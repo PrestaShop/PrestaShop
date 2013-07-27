@@ -1,4 +1,4 @@
-<form action="{$link->getPageLink('authentication', true)}" method="post" id="account-creation_form" class="std">
+<form action="{$link->getPageLink('authentication', true)|escape:'html'}" method="post" id="account-creation_form" class="std" data-ajax="false">
 	{$HOOK_CREATE_ACCOUNT_TOP}
 	<fieldset class="account_creation">
 		<h3>{l s='Your personal information'}</h3>
@@ -18,7 +18,7 @@
 			<input onkeyup="$('#lastname').val(this.value);" type="text" class="text" id="customer_lastname" name="customer_lastname" value="{if isset($smarty.post.customer_lastname)}{$smarty.post.customer_lastname}{/if}" />
 		</p>
 		<p class="required">
-			<label for="email">{l s='E-mail'} <sup>*</sup></label>
+			<label for="email">{l s='E-Mail:'} <sup>*</sup></label>
 			<input type="text" class="text" id="email" name="email" value="{if isset($smarty.post.email)}{$smarty.post.email}{/if}" />
 		</p>
 		<p class="required">
@@ -63,18 +63,18 @@
 		</p>
 		{if $newsletter}
 		<p class="checkbox" >
-			<input type="checkbox" name="newsletter" id="newsletter" value="1" {if isset($smarty.post.newsletter) AND $smarty.post.newsletter == 1} checked="checked"{/if} />
-			<label for="newsletter">{l s='Sign up for our newsletter'}</label>
+			<input type="checkbox" name="newsletter" id="newsletter" value="1" {if isset($smarty.post.newsletter) AND $smarty.post.newsletter == 1} checked="checked"{/if} autocomplete="off"/>
+			<label for="newsletter">{l s='Sign up for our newsletter!'}</label>
 		</p>
 		<p class="checkbox" >
-			<input type="checkbox"name="optin" id="optin" value="1" {if isset($smarty.post.optin) AND $smarty.post.optin == 1} checked="checked"{/if} />
-			<label for="optin">{l s='Receive special offers from our partners'}</label>
+			<input type="checkbox"name="optin" id="optin" value="1" {if isset($smarty.post.optin) AND $smarty.post.optin == 1} checked="checked"{/if} autocomplete="off"/>
+			<label for="optin">{l s='Receive special offers from our partners!'}</label>
 		</p>
 		{/if}
 	</fieldset>
 	{if $b2b_enable}
 	<fieldset class="account_creation">
-		<h3>{l s='Your company informations'}</h3>
+		<h3>{l s='Your company information'}</h3>
 		<p class="text">
 			<label for="">{l s='Company'}</label>
 			<input type="text" class="text" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{/if}" />
@@ -123,15 +123,16 @@
 				<p class="required text">
 					<label for="address1">{l s='Address'} <sup>*</sup></label>
 					<input type="text" class="text" name="address1" id="address1" value="{if isset($smarty.post.address1)}{$smarty.post.address1}{/if}" />
-					<span class="inline-infos">{l s='Street address, P.O. box, compagny name, c/o'}</span>
+					<span class="inline-infos">{l s='Street address, P.O. Box, company name, etc.'}</span>
 				</p>
 			{elseif $field_name eq "address2"}
 				<p class="text">
 					<label for="address2">{l s='Address (Line 2)'}</label>
 					<input type="text" class="text" name="address2" id="address2" value="{if isset($smarty.post.address2)}{$smarty.post.address2}{/if}" />
-					<span class="inline-infos">{l s='Apartment, suite, unit, building, floor, etc.'}</span>
+					<span class="inline-infos">{l s='Apartment, suite, unit, building, floor, etc...'}</span>
 				</p>
 			{elseif $field_name eq "postcode"}
+				{assign var='postCodeExist' value=true}
 				<p class="required postcode text">
 					<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
 					<input type="text" class="text" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
@@ -165,14 +166,20 @@
 				</p>
 			{/if}
 		{/foreach}
+		{if $postCodeExist eq false}
+				<p class="required postcode text hidden">
+					<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
+					<input type="text" class="text" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
+				</p>
+		{/if}		
 		{if $stateExist eq false}
-			<p class="required id_state select">
+			<p class="required id_state select hidden">
 				<label for="id_state">{l s='State'} <sup>*</sup></label>
 				<select name="id_state" id="id_state">
 					<option value="">-</option>
 				</select>
 			</p>
-		{/if}
+		{/if}		
 		<p class="textarea">
 			<label for="other">{l s='Additional information'}</label>
 			<textarea name="other" id="other" cols="26" rows="3">{if isset($smarty.post.other)}{$smarty.post.other}{/if}</textarea>
@@ -187,7 +194,7 @@
 			<input type="text" class="text" name="phone_mobile" id="phone_mobile" value="{if isset($smarty.post.phone_mobile)}{$smarty.post.phone_mobile}{/if}" />
 		</p>
 		<p class="required text" id="address_alias">
-			<label for="alias">{l s='Assign an address title for future reference'} <sup>*</sup></label>
+			<label for="alias">{l s='Assign an address alias for future reference'} <sup>*</sup></label>
 			<input type="text" class="text" name="alias" id="alias" value="{if isset($smarty.post.alias)}{$smarty.post.alias}{else}{l s='My address'}{/if}" />
 		</p>
 	</fieldset>

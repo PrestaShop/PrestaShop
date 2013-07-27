@@ -46,6 +46,6 @@
   </order_state>
   <order_state id="Payment_remotely_accepted">
     <name>Paiement &#xE0; distance accept&#xE9;</name>
-    <template/>
+    <template>payment</template>
   </order_state>
 </entity_order_state>

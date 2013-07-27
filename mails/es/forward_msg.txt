@@ -1,8 +1,0 @@
-{employee} en espera para seguir esta conversación contigo:.
-Comentario: {comment}
-
-Historial de charla:
-{messages}
-
-Saludos,
-{shop_name} powered by PrestaShop�

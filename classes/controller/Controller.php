@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -176,7 +176,7 @@ abstract class ControllerCore
 			if ($this->ajax)
 			{
 				$action = Tools::getValue('action');
-				if (!empty($action) && method_exists($this, 'displayAjax'.Tools::toCamelCase($action, true)))
+				if (!empty($action) && method_exists($this, 'displayAjax'.Tools::toCamelCase($action, true))) 
 					$this->{'displayAjax'.$action}();
 				elseif (method_exists($this, 'displayAjax'))
 					$this->displayAjax();
@@ -187,7 +187,7 @@ abstract class ControllerCore
 		else
 		{
 			$this->initCursedPage();
-			$this->display();
+			$this->smartyOutputContent($this->layout);
 		}
 	}
 
@@ -327,15 +327,19 @@ abstract class ControllerCore
 			foreach ($name as $plugin)
 			{
 				$plugin_path = Media::getJqueryPluginPath($plugin, $folder);
-				$this->addJS($plugin_path['js']);
-				$this->addCSS($plugin_path['css']);
+				if(!empty($plugin_path['js']))
+					$this->addJS($plugin_path['js']);
+				if(!empty($plugin_path['css']))		
+					$this->addCSS($plugin_path['css']);
 			}
 		}
 		else
 			$plugin_path = Media::getJqueryPluginPath($name, $folder);
 
-		$this->addCSS($plugin_path['css']);
-		$this->addJS($plugin_path['js']);
+		if(!empty($plugin_path['css']))
+			$this->addCSS($plugin_path['css']);
+		if(!empty($plugin_path['js']))
+			$this->addJS($plugin_path['js']);
 	}
 
 	/**

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -38,6 +38,7 @@ class AdminLogsControllerCore extends AdminController
 
 		$this->fields_list = array(
 			'id_log' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+			'employee' => array('title' => $this->l('Employee'), 'align' => 'center', 'width' => 100),
 			'severity' => array('title' => $this->l('Severity (1-4)'), 'align' => 'center', 'width' => 50),
 			'message' => array('title' => $this->l('Message')),
 			'object_type' => array('title' => $this->l('Object type'), 'width' => 75),
@@ -48,11 +49,11 @@ class AdminLogsControllerCore extends AdminController
 
 		$this->fields_options = array(
 			'general' => array(
-				'title' =>	$this->l('Logs by e-mail'),
+				'title' =>	$this->l('Logs by email'),
 				'fields' =>	array(
 					'PS_LOGS_BY_EMAIL' => array(
 						'title' => $this->l('Minimum severity level'),
-						'desc' => $this->l('Enter "5" if you do not want to receive any e-mails.').'<br />'.$this->l('E-mails will be sent to the shop owner.'),
+						'desc' => $this->l('Enter "5" if you do not want to receive any emails.').'<br />'.$this->l('Emails will be sent to the shop owner.'),
 						'cast' => 'intval',
 						'type' => 'text',
 						'size' => 5
@@ -61,7 +62,9 @@ class AdminLogsControllerCore extends AdminController
 				'submit' => array()
 			)
 		);
-
+		$this->list_no_link = true;
+		$this->_select .= 'CONCAT(LEFT(e.firstname, 1), \'. \', e.lastname) employee';
+		$this->_join .= ' LEFT JOIN '._DB_PREFIX_.'employee e ON (a.id_employee = e.id_employee)';
 		parent::__construct();
 	}
 

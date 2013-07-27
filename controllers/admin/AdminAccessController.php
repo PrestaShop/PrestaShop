@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -86,7 +86,7 @@ class AdminAccessControllerCore extends AdminController
 				if ($m)
 					$module['name'] = $m->displayName;
 				else
-					$this->warnings[] = sprintf($this->l('%s: module is installed in database, but its files are missing or incompatible.'), '<b>'.$module['name'].'</b>');
+					$this->warnings[] = sprintf($this->l('%s module is installed in the database but its files are missing/incompatible.'), '<b>'.$module['name'].'</b>');
 			}
 		}
 
@@ -134,7 +134,7 @@ class AdminAccessControllerCore extends AdminController
 		if (_PS_MODE_DEMO_)
 			throw new PrestaShopException(Tools::displayError('This functionality has been disabled.'));
 		if ($this->tabAccess['edit'] != '1')
-			throw new PrestaShopException(Tools::displayError('You do not have permission to edit here.'));
+			throw new PrestaShopException(Tools::displayError('You do not have permission to edit this.'));
 
 		if (Tools::isSubmit('submitAddAccess'))
 		{
@@ -153,35 +153,32 @@ class AdminAccessControllerCore extends AdminController
 				$join = 'LEFT JOIN `'._DB_PREFIX_.'tab` t ON (t.`id_tab` = a.`id_tab`)';
 			}
 
-			if ($id_tab == -1 && $perm == 'all' && $enabled == 0)
-				$sql = '
-					UPDATE `'._DB_PREFIX_.'access` a
-					SET `view` = '.(int)$enabled.', `add` = '.(int)$enabled.', `edit` = '.(int)$enabled.', `delete` = '.(int)$enabled.'
-					WHERE `id_profile` = '.(int)$id_profile.' AND `id_tab` != '.(int)$this->id_tab_access;
-			else if ($id_tab == -1 && $perm == 'all')
-				$sql = '
+			if ($id_tab == -1)
+			{
+				if ($perm == 'all')
+					$sql = '
 					UPDATE `'._DB_PREFIX_.'access` a
 					SET `view` = '.(int)$enabled.', `add` = '.(int)$enabled.', `edit` = '.(int)$enabled.', `delete` = '.(int)$enabled.'
 					WHERE `id_profile` = '.(int)$id_profile;
-			else if ($id_tab == -1)
-				$sql = '
+				else
+					$sql = '
 					UPDATE `'._DB_PREFIX_.'access` a
 					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
 					WHERE `id_profile` = '.(int)$id_profile;
-			else if ($perm == 'all')
-				$sql = '
-					UPDATE `'._DB_PREFIX_.'access` a
-					'.$join.'
-					SET `view` = '.(int)$enabled.', `add` = '.(int)$enabled.', `edit` = '.(int)$enabled.', `delete` = '.(int)$enabled.'
-					WHERE '.$where.'  = '.(int)$id_tab.'
-						AND `id_profile` = '.(int)$id_profile;
+			}
 			else
-				$sql = '
-					UPDATE `'._DB_PREFIX_.'access` a
-					'.$join.'
+			{
+				if ($perm == 'all')
+					$sql = '
+					UPDATE `'._DB_PREFIX_.'access` a '.$join.'
+					SET `view` = '.(int)$enabled.', `add` = '.(int)$enabled.', `edit` = '.(int)$enabled.', `delete` = '.(int)$enabled.'
+					WHERE '.$where.' = '.(int)$id_tab.' AND `id_profile` = '.(int)$id_profile;
+				else
+					$sql = '
+					UPDATE `'._DB_PREFIX_.'access` a '.$join.'
 					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
-					WHERE '.$where.' = '.(int)$id_tab.'
-						AND `id_profile` = '.(int)$id_profile;
+					WHERE '.$where.' = '.(int)$id_tab.' AND `id_profile` = '.(int)$id_profile;
+			}
 
 			$res = Db::getInstance()->execute($sql) ? 'ok' : 'error';
 
@@ -194,7 +191,7 @@ class AdminAccessControllerCore extends AdminController
 		if (_PS_MODE_DEMO_)
 			throw new PrestaShopException(Tools::displayError('This functionality has been disabled.'));
 		if ($this->tabAccess['edit'] != '1')
-			throw new PrestaShopException(Tools::displayError('You do not have permission to edit here.'));
+			throw new PrestaShopException(Tools::displayError('You do not have permission to edit this.'));
 
 		if (Tools::isSubmit('changeModuleAccess'))
 		{

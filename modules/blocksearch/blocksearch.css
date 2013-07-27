@@ -1,8 +1,8 @@
 /* block top search */
 #search_block_top {
 	position:absolute;
-	top:44px;
-	left:0;
+	right: 26%;
+    top: 34px;
 }
 #search_block_top p {padding:0;}
 #search_block_top #search_query_top {
@@ -25,4 +25,16 @@
 	float: left;
 	height: 25px;
 }
+
+form#searchbox{padding-top:5px}
+form#searchbox label{color:#333;margin-bottom:1px}
+form#searchbox input#search_query_block{
+	border: 1px solid #CCCCCC;
+	-webkit-border-radius:3px !important;
+	-moz-border-radius:3px !important;
+	border-radius:3px !important;
+    height: 18px;
+	margin-top:10px;
+}
+form#searchbox input#search_button{padding: 1px 4px;}
 

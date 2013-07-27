@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -43,8 +43,9 @@ $('document').ready(function(){
 		{
 			$.ajax({
 				{/literal}url: "{$module_dir}sendtoafriend_ajax.php",{literal}
-				post: "POST",
-				data: {action: 'sendToMyFriend', secure_key: '{/literal}{$stf_secure_key}{literal}', friend: JSON.stringify(datas)},{/literal}{literal}
+				type: "POST",
+				headers: {"cache-control": "no-cache"},
+				data: {action: 'sendToMyFriend', secure_key: '{/literal}{$stf_secure_key}{literal}', friend: unescape(JSON.stringify(datas).replace(/\\u/g, '%u'))},{/literal}{literal}
 				dataType: "json",
 				success: function(result){
 					$.fancybox.close();
@@ -65,7 +66,7 @@ $('document').ready(function(){
 	<div id="send_friend_form">
 			<h2 class="title">{l s='Send to a friend' mod='sendtoafriend'}</h2>
 			<div class="product clearfix">
-				<img src="{$link->getImageLink($stf_product->link_rewrite, $stf_product_cover, 'home_default')}" height="{$homeSize.height}" width="{$homeSize.width}" alt="{$stf_product->name|escape:html:'UTF-8'}" />
+				<img src="{$link->getImageLink($stf_product->link_rewrite, $stf_product_cover, 'home_default')|escape:'html'}" height="{$homeSize.height}" width="{$homeSize.width}" alt="{$stf_product->name|escape:html:'UTF-8'}" />
 				<div class="product_desc">
 					<p class="product_name"><strong>{$stf_product->name}</strong></p>
 					{$stf_product->description_short}

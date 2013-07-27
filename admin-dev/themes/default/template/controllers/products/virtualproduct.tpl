@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -106,7 +106,7 @@
 </script>
 
 <input type="hidden" name="submitted_tabs[]" value="VirtualProduct" />
-<h4>{l s='Virtual Product (services, booking and downloadable products)'}</h4>
+<h4>{l s='Virtual Product (services, booking or downloadable products)'}</h4>
 <div class="separation"></div>
 <div>
 	<div class="is_virtual_good">
@@ -147,7 +147,7 @@
 						</td>
 						<td class="col-right">
 							<input type="file" id="virtual_product_file" name="virtual_product_file" onchange="uploadFile();" maxlength="{$upload_max_filesize}" />
-							<p class="preference_description">{l s='Your server\'s maximum upload file size is'}:&nbsp;{$upload_max_filesize} {l s='MB'}</p>
+							<p class="preference_description">{l s='Your server\'s maximum file-upload size is'}:&nbsp;{$upload_max_filesize} {l s='MB'}</p>
 						</td>
 					</tr>
 					<tr id="upload-error" style="display:none">
@@ -159,7 +159,10 @@
 								<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="{$up_filename}" />
 							{/if}
 							<div class="conf">
-								<a class="delete_virtual_product" id="delete_downloadable_product" onclick="return confirm('{l s='Delete this file'}')" href="{$currentIndex}&deleteVirtualProduct=true&token={$token}&id_product={$product->id}" class="red">
+							<script>
+								delete_this_file = '{l s='Delete this file'}';
+							</script>
+								<a class="delete_virtual_product" id="delete_downloadable_product" href="{$currentIndex}&deleteVirtualProduct=true&token={$token}&id_product={$product->id}" class="red">
 									<img src="../img/admin/delete.gif" alt="{l s='Delete this file'}"/>
 								</a>
 							</div>
@@ -173,7 +176,7 @@
 							</td>
 							 <td class="col-right">
 								{$product->productDownload->getHtmlLink(false, true)}
-								<a onclick="return confirm('{l s='Delete this file'})')" href="{$currentIndex}&deleteVirtualProduct=true&token={$token}&id_product={$product->id}" class="red delete_virtual_product">
+								<a href="{$currentIndex}&deleteVirtualProduct=true&token={$token}&id_product={$product->id}" class="red delete_virtual_product">
 									<img src="../img/admin/delete.gif" alt="{l s='Delete this file'}"/>
 								</a>
 							</td>
@@ -194,7 +197,7 @@
 						</td>
 						<td class="col-right">
 							<input type="text" id="virtual_product_nb_downloable" name="virtual_product_nb_downloable" value="{$product->productDownload->nb_downloadable|htmlentities}" class="" size="6" />
-							<p class="preference_description">{l s='Number of allowed downloads per customer - (Set to 0 for unlimited downloads)'}</p>
+							<p class="preference_description">{l s='Number of downloads allowed per customer. (Set to 0 for unlimited downloads)'}</p>
 						</td>
 					</tr>
 					<tr>
@@ -203,7 +206,7 @@
 						</td>
 						<td class="col-right">
 							<input class="datepicker" type="text" id="virtual_product_expiration_date" name="virtual_product_expiration_date" value="{$product->productDownload->date_expiration}" size="11" maxlength="10" autocomplete="off" /> {l s='Format: YYYY-MM-DD'}
-							<p class="preference_description">{l s='If set, the file will not be downloadable anymore after this date. Leave this blank for no expiration date'}</p>
+							<p class="preference_description">{l s='If set, the file will not be downloadable after this date. Leave blank if you do not wish to attach an expiration date.'}</p>
 						</td>
 					</tr>
 						<td class="col-left">
@@ -211,7 +214,7 @@
 						</td>
 						<td class="col-right">
 							<input type="text" id="virtual_product_nb_days" name="virtual_product_nb_days" value="{$product->productDownload->nb_days_accessible|htmlentities}" class="" size="4" /><sup> *</sup>
-							<p class="preference_description">{l s='How many days this file can be accessed by customers'} - <em>({l s='Set to zero for unlimited access'})</em></p>
+							<p class="preference_description">{l s='Number of days this file can be accessed by customers'} - <em>({l s='Set to zero for unlimited access.'})</em></p>
 						</td>
 					</tr>
 					{* Feature not implemented *}
@@ -221,13 +224,13 @@
 						{*</td>*}
 						{*<td class="col-right">*}
 							{*<input type="checkbox" id="virtual_product_is_shareable" name="virtual_product_is_shareable" value="1" {if $product->productDownload->is_shareable}checked="checked"{/if} />*}
-							{*<span class="hint" name="help_box" style="display:none">{l s='Specify if the file can be shared'}</span>*}
+							{*<span class="hint" name="help_box" style="display:none">{l s='Please specify if the file can be shared.'}</span>*}
 						{*</td>*}
 					{*</tr>*}
 				{else}
-					<div class="hint clear" style="display: block;width: 70%;">{l s='You cannot edit your file here because you used combinations. Please edit it in the Combinations tab'}</div>
+					<div class="hint clear" style="display: block;width: 70%;">{l s='You cannot edit your file here because you used combinations. Please edit this file in the Combinations tab.'}</div>
 					<br />
-					{$error_product_download}
+					{if isset($error_product_download)}{$error_product_download}{/if}
 				{/if}
 			</table>
 		</div>

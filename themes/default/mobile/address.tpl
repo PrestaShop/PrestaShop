@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -51,23 +51,21 @@ countriesNeedZipCode = new Array();
 $(function(){ldelim}
 	$('.id_state option[value={if isset($smarty.post.id_state)}{$smarty.post.id_state}{else}{if isset($address->id_state)}{$address->id_state|escape:'htmlall':'UTF-8'}{/if}{/if}]').attr('selected', 'selected');
 {rdelim});
-{if $vat_management}
 {literal}
-	$(document).ready(function() {
-		$('#company').blur(function(){
-			vat_number();
-		});
+$(document).ready(function() {
+	$('#company').blur(function(){
 		vat_number();
-		function vat_number()
-		{
-			if ($('#company').val() != '')
-				$('#vat_number').show();
-			else
-				$('#vat_number').hide();
-		}
 	});
+	vat_number();
+	function vat_number()
+	{
+		if ($('#company').val() != '')
+			$('#vat_number').show();
+		else
+			$('#vat_number').hide();
+	}
+});
 {/literal}
-{/if}
 //]]>
 </script>
 
@@ -86,7 +84,7 @@ $(function(){ldelim}
 		{/if}
 		</p>
 		
-		<form action="{$link->getPageLink('address', true)}" method="post" id="add_adress">
+		<form action="{$link->getPageLink('address', true)|escape:'html'}" method="post" id="add_address" data-ajax="false">
 			<legend><h3>{if isset($id_address) && $id_address != 0}{l s='Your address'}{else}{l s='New address'}{/if}</h3></legend>
 			<div class="required text dni">
 				<label for="dni">{l s='Identification number'}</label>
@@ -108,6 +106,7 @@ $(function(){ldelim}
 				</div>
 			</div>
 			{assign var="stateExist" value="false"}
+			{assign var="postCodeExist" value="false"}
 			{foreach from=$ordered_adr_fields item=field_name}
 				{if $field_name eq 'company'}
 				<div class="text">
@@ -141,6 +140,7 @@ $(function(){ldelim}
 				</div>
 				{/if}
 				{if $field_name eq 'postcode'}
+				{assign var="postCodeExist" value="true"}				
 				<div class="required postcode text">
 					<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
 					<input type="text" id="postcode" name="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{else}{if isset($address->postcode)}{$address->postcode|escape:'htmlall':'UTF-8'}{/if}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
@@ -194,20 +194,26 @@ $(function(){ldelim}
 				</div>
 				{/if}
 			{/foreach}
+			{if $postCodeExist eq "false"}
+			<div class="required postcode text hidden">
+				<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
+				<input type="text" id="postcode" name="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{else}{if isset($address->postcode)}{$address->postcode|escape:'htmlall':'UTF-8'}{/if}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
+			</div>
+			{/if}
 			{if $stateExist eq "false"}
-			<div class="required id_state select">
+			<div class="required id_state select hidden">
 				<label for="id_state">{l s='State'} <sup>*</sup></label>
 				<select name="id_state" id="id_state">
 					<option value="">-</option>
 				</select>
 			</div>
-			{/if}
+			{/if}			
 			<div class="textarea">
 				<label for="other">{l s='Additional information'}</label>
 				<textarea id="other" name="other" cols="26" rows="3">{if isset($smarty.post.other)}{$smarty.post.other}{else}{if isset($address->other)}{$address->other|escape:'htmlall':'UTF-8'}{/if}{/if}</textarea>
 			</div>
 			
-			<p>{l s='You must register at least one phone number'} <sup class="required">*</sup></p>
+			<p>{l s='You must register at least one phone number.'} <sup class="required">*</sup></p>
 			<div class="text">
 				<label for="phone">{l s='Home phone'}</label>
 				<input type="text" id="phone" name="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{else}{if isset($address->phone)}{$address->phone|escape:'htmlall':'UTF-8'}{/if}{/if}" />
@@ -217,7 +223,7 @@ $(function(){ldelim}
 				<input type="text" id="phone_mobile" name="phone_mobile" value="{if isset($smarty.post.phone_mobile)}{$smarty.post.phone_mobile}{else}{if isset($address->phone_mobile)}{$address->phone_mobile|escape:'htmlall':'UTF-8'}{/if}{/if}" />
 			</div>
 			<p class="required text" id="adress_alias">
-				<label for="alias">{l s='Assign an address title for future reference'} <sup>*</sup></label>
+				<label for="alias">{l s='Please assign an address title for future reference.'} <sup>*</sup></label>
 				<input type="text" id="alias" name="alias" value="{if isset($smarty.post.alias)}{$smarty.post.alias}{else if isset($address->alias)}{$address->alias|escape:'htmlall':'UTF-8'}{else if isset($select_address)}{l s='My address'}{/if}" />
 			</p>
 			<div>

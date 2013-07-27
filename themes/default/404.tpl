@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,19 +18,19 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div class="pagenotfound">
-	<h1>{l s='Page not available'}</h1>
+	<h1>{l s='This page is not available'}</h1>
 
 	<p>
-		{l s='We\'re sorry, but the Web address you entered is no longer available'}
+		{l s='We\'re sorry, but the Web address you\'ve entered is no longer available.'}
 	</p>
 
-	<h3>{l s='To find a product, please type its name in the field below'}</h3>
-	<form action="{$link->getPageLink('search')}" method="post" class="std">
+	<h3>{l s='To find a product, please type its name in the field below.'}</h3>
+	<form action="{$link->getPageLink('search')|escape:'html'}" method="post" class="std">
 		<fieldset>
 			<p>
 				<label for="search">{l s='Search our product catalog:'}</label>

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -124,8 +124,8 @@ class AddressCore extends ObjectModel
 			'postcode' => 			array('type' => self::TYPE_STRING, 'validate' => 'isPostCode', 'size' => 12),
 			'city' => 				array('type' => self::TYPE_STRING, 'validate' => 'isCityName', 'required' => true, 'size' => 64),
 			'other' => 				array('type' => self::TYPE_STRING, 'validate' => 'isMessage', 'size' => 300),
-			'phone' => 				array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16),
-			'phone_mobile' => 		array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16),
+			'phone' => 				array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 32),
+			'phone_mobile' => 		array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 32),
 			'dni' => 				array('type' => self::TYPE_STRING, 'validate' => 'isDniLite', 'size' => 16),
 			'deleted' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false),
 			'date_add' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat', 'copy_post' => false),
@@ -222,7 +222,7 @@ class AddressCore extends ObjectModel
 	public function validateController($htmlentities = true)
 	{
 		$errors = parent::validateController($htmlentities);
-		if (!Configuration::get('VATNUMBER_CHECKING'))
+		if (!Configuration::get('VATNUMBER_MANAGEMENT') || !Configuration::get('VATNUMBER_CHECKING'))
 			return $errors;
 		include_once(_PS_MODULE_DIR_.'vatnumber/vatnumber.php');
 		if (class_exists('VatNumber', false))
@@ -237,6 +237,8 @@ class AddressCore extends ObjectModel
 	 */
 	public static function getZoneById($id_address)
 	{
+		if(!isset($id_address) || empty($id_address))
+			return false;
 		if (isset(self::$_idZones[$id_address]))
 			return self::$_idZones[$id_address];
 
@@ -259,6 +261,9 @@ class AddressCore extends ObjectModel
 	 */
 	public static function isCountryActiveById($id_address)
 	{
+		if(!isset($id_address) || empty($id_address))
+			return false;
+
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT c.`active`
 		FROM `'._DB_PREFIX_.'address` a
@@ -337,12 +342,6 @@ class AddressCore extends ObjectModel
 	*/
 	public static function initialize($id_address = null)
 	{
-		// set the default address
-		$address = new Address();
-		$address->id_country = (int)Context::getContext()->country->id;
-		$address->id_state = 0;
-		$address->postcode = 0;
-
 		// if an id_address has been specified retrieve the address
 		if ($id_address)
 		{
@@ -350,6 +349,14 @@ class AddressCore extends ObjectModel
 
 			if (!Validate::isLoadedObject($address))
 				throw new PrestaShopException('Invalid address');
+		}
+		else
+		{
+			// set the default address
+			$address = new Address();
+			$address->id_country = (int)Context::getContext()->country->id;
+			$address->id_state = 0;
+			$address->postcode = 0;
 		}
 
 		return $address;

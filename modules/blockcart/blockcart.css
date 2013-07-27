@@ -1,7 +1,7 @@
 /* Special style for block cart*/
 #left_column #cart_block, #right_column #cart_block {
 }
-#header  #cart_block h4 {
+#header  #cart_block .title_block, #header  #cart_block h4 {
 	display: none;
 }
 #header #cart_block {
@@ -22,7 +22,7 @@
 	background:#eee
 }
 #cart_block.cart_block_hover {display:block}
-#cart_block h4 span {
+#cart_block .title_block  span, #header  #cart_block h4 {
 	float: right;
 	padding-left: 10px;
 	text-transform: none;
@@ -40,14 +40,14 @@
 	min-width:18px;
 }
 #cart_block .cart_block_product_name {font-weight:bold}
-#cart_block .remove_link {
+#cart_block .remove_link, #cart_block .deleteCustomizableProduct {
 	float:right;
 	display:inline-block;
 	margin:1px 0 0 5px;
 	height:12px;
 	width:12px
 }
-#cart_block .remove_link a {
+#cart_block .remove_link a, #cart_block .ajax_cart_block_remove_link {
 	display:inline-block;
 	height:12px;
 	width:12px;

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -42,6 +42,8 @@ class TabCore extends ObjectModel
 
 	/** @var integer active */
 	public $active = true;
+	
+	const TAB_MODULE_LIST_URL = 'api.prestashop.com/xml/tab_modules_list.xml';
 
 	/**
 	 * @see ObjectModel::$definition
@@ -138,7 +140,11 @@ class TabCore extends ObjectModel
 	public function delete()
 	{
 	 	if (Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'access WHERE `id_tab` = '.(int)$this->id) && parent::delete())
+		{
+			if (is_array(self::$_getIdFromClassName) && isset(self::$_getIdFromClassName[strtolower($this->class_name)]))
+				unset(self::$_getIdFromClassName[strtolower($this->class_name)]);
 			return $this->cleanPositions($this->id_parent);
+		}
 		return false;
 	}
 
@@ -163,12 +169,18 @@ class TabCore extends ObjectModel
 	 */
 	public static function getCurrentParentId()
 	{
-	 	if ($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-	 		SELECT `id_parent`
-	 		FROM `'._DB_PREFIX_.'tab`
-	 		WHERE LOWER(class_name) = \''.pSQL(Tools::strtolower(Tools::getValue('controller'))).'\''))
-		 	return $result['id_parent'];
- 		return -1;
+		$cache_id = 'getCurrentParentId_'.Tools::strtolower(Tools::getValue('controller'));
+		if (!Cache::isStored($cache_id))
+		{
+			$value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT `id_parent`
+			FROM `'._DB_PREFIX_.'tab`
+			WHERE LOWER(class_name) = \''.pSQL(Tools::strtolower(Tools::getValue('controller'))).'\'');
+			if (!$value)
+				$value = -1;
+			Cache::store($cache_id, $value);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**
@@ -502,5 +514,49 @@ class TabCore extends ObjectModel
 	public static function getClassNameById($id_tab)
 	{
 		return Db::getInstance()->getValue('SELECT class_name FROM '._DB_PREFIX_.'tab WHERE id_tab = '.(int)$id_tab);
+	}
+	
+	public static function getTabModulesList($id_tab)
+	{
+		$modules_list = array('default_list' => array(), 'slider_list' => array());
+		$xml_tab_modules_list = false;
+		$db_tab_module_list = Db::getInstance()->executeS('
+			SELECT module
+			FROM '._DB_PREFIX_.'tab_module_preference
+			WHERE `id_tab` = '.(int)$id_tab.'
+			AND `id_employee` = '.(int)Context::getContext()->employee->id
+			);
+
+		if (file_exists(_PS_ROOT_DIR_.Module::CACHE_FILE_TAB_MODULES_LIST))
+			$xml_tab_modules_list = @simplexml_load_file(_PS_ROOT_DIR_.Module::CACHE_FILE_TAB_MODULES_LIST);
+		
+		$class_name = null;
+		$display_type = 'default_list';
+		if ($xml_tab_modules_list)
+			foreach($xml_tab_modules_list->tab as $tab)
+			{
+				foreach($tab->attributes() as $key => $value)
+					if ($key == 'class_name')
+						$class_name = (string)$value;
+
+				if (Tab::getIdFromClassName((string)$class_name) == $id_tab)
+				{
+					foreach($tab->attributes() as $key => $value)
+						if ($key == 'display_type')
+							$display_type = (string)$value;
+
+					foreach ($tab->children() as $module)
+						$modules_list[$display_type][(int)$module['position']] = (string)$module['name'];
+					ksort($modules_list[$display_type]);
+				}
+			}
+		
+		//merge tab modules preferences from db with xml
+		if (is_array($db_tab_module_list))		
+			foreach($db_tab_module_list as $m)
+				if (!in_array($m, $modules_list))
+					$modules_list['slider_list'][] = $m['module'];
+
+		return $modules_list;	
 	}
 }

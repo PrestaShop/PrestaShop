@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -26,7 +26,7 @@
 {capture name=path}{l s='Contact'}{/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
-<h1>{l s='Customer Service'} - {if isset($customerThread) && $customerThread}{l s='Your reply'}{else}{l s='Contact us'}{/if}</h1>
+<h1>{l s='Customer service'} - {if isset($customerThread) && $customerThread}{l s='Your reply'}{else}{l s='Contact us'}{/if}</h1>
 
 {if isset($confirmation)}
 	<p>{l s='Your message has been successfully sent to our team.'}</p>
@@ -43,7 +43,7 @@
 	{include file="$tpl_dir./errors.tpl"}
 	<form action="{$request_uri|escape:'htmlall':'UTF-8'}" method="post" class="std" enctype="multipart/form-data">
 		<fieldset>
-			<h3>{l s='Send a message'}</h3>
+			<h3>{l s='send a message'}</h3>
 			<p class="select">
 				<label for="id_contact">{l s='Subject Heading'}</label>
 			{if isset($customerThread.id_contact)}
@@ -70,7 +70,7 @@
 				{/foreach}
 			{/if}
 			<p class="text">
-				<label for="email">{l s='E-mail address'}</label>
+				<label for="email">{l s='Email address'}</label>
 				{if isset($customerThread.email)}
 					<input type="text" id="email" name="from" value="{$customerThread.email|escape:'htmlall':'UTF-8'}" readonly="readonly" />
 				{else}
@@ -80,7 +80,7 @@
 		{if !$PS_CATALOG_MODE}
 			{if (!isset($customerThread.id_order) || $customerThread.id_order > 0)}
 			<p class="text select">
-				<label for="id_order">{l s='Order Reference'}</label>
+				<label for="id_order">{l s='Order reference'}</label>
 				{if !isset($customerThread.id_order) && isset($isLogged) && $isLogged == 1}
 					<select name="id_order" >
 						<option value="0">{l s='-- Choose --'}</option>
@@ -89,8 +89,8 @@
 						{/foreach}
 					</select>
 				{elseif !isset($customerThread.id_order) && !isset($isLogged)}
-					<input type="text" name="id_order" id="id_order" value="{if isset($customerThread.id_order) && $customerThread.id_order > 0}{$customerThread.id_order|intval}{else}{if isset($smarty.post.id_order)}{$smarty.post.id_order|intval}{/if}{/if}" />
-				{elseif $customerThread.id_order > 0}
+					<input type="text" name="id_order" id="id_order" value="{if isset($customerThread.id_order) && $customerThread.id_order|intval > 0}{$customerThread.id_order|intval}{else}{if isset($smarty.post.id_order) && !empty($smarty.post.id_order)}{$smarty.post.id_order|intval}{/if}{/if}" />
+				{elseif $customerThread.id_order|intval > 0}
 					<input type="text" name="id_order" id="id_order" value="{$customerThread.id_order|intval}" readonly="readonly" />
 				{/if}
 			</p>
@@ -125,7 +125,7 @@
 			 <textarea id="message" name="message" rows="15" cols="10">{if isset($message)}{$message|escape:'htmlall':'UTF-8'|stripslashes}{/if}</textarea>
 		</p>
 		<p class="submit">
-			<input type="submit" name="submitMessage" id="submitMessage" value="{l s='Send'}" class="button_large" onclick="$(this).hide();" />
+			<input type="submit" name="submitMessage" id="submitMessage" value="{l s='Send'}" class="button_large" />
 		</p>
 	</fieldset>
 </form>

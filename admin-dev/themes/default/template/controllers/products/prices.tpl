@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,14 +18,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <script type="text/javascript">
 var Customer = new Object();
-var product_url = '{$link->getAdminLink('AdminProducts', true)}';
+var product_url = '{$link->getAdminLink('AdminProducts', true)|addslashes}';
 var ecotax_tax_excl = parseFloat({$ecotax_tax_excl});
 $(document).ready(function () {
 	Customer = {
@@ -56,7 +56,7 @@ $(document).ready(function () {
 			Customer.showLoader();
 			jQuery.ajax({
 				"type": "POST",
-				"url": "{$link->getAdminLink('AdminCustomers')}",
+				"url": "{$link->getAdminLink('AdminCustomers')|addslashes}",
 				"async": true,
 				"dataType": "json",
 				"data": {
@@ -122,7 +122,7 @@ $(document).ready(function () {
 		</td>
 		<td style="padding-bottom:5px;">
 			{$currency->prefix}<input size="11" maxlength="14" name="wholesale_price" id="wholesale_price" type="text" value="{{toolsConvertPrice price=$product->wholesale_price}|string_format:'%.2f'}" onchange="this.value = this.value.replace(/,/g, '.');" />{$currency->suffix}
-			<p class="preference_description">{l s='The wholesale price at which you bought this product'}</p>
+			<p class="preference_description">{l s='Wholesale price'}</p>
 		</td>
 	</tr>
 
@@ -208,7 +208,7 @@ $(document).ready(function () {
 					{l s='per'} <span id="unity_second">{$product->unity}</span> {l s='with tax'}
 				</span>
 			{/if}
-			<p>{l s='e.g. per lb'}</p>
+			<p>{l s='e.g. per lb.'}</p>
 		</td>
 	</tr>
 	<tr>
@@ -217,7 +217,7 @@ $(document).ready(function () {
 			<label>&nbsp;</label>
 		</td>
 		<td>
-			<input type="checkbox" name="on_sale" id="on_sale" style="padding-top: 5px;" {if $product->on_sale}checked="checked"{/if} value="1" />&nbsp;<label for="on_sale" class="t">{l s='Display "on sale" icon on product page and text on product listing'}</label>
+			<input type="checkbox" name="on_sale" id="on_sale" style="padding-top: 5px;" {if $product->on_sale}checked="checked"{/if} value="1" />&nbsp;<label for="on_sale" class="t">{l s='Display the "on sale" icon on the product page, and in the text found within the product listing.'}</label>
 		</td>
 	</tr>
 	<tr>
@@ -240,7 +240,7 @@ $(document).ready(function () {
 {if isset($specificPriceModificationForm)}
 	<h4>{l s='Specific prices'}</h4>
 	<div class="hint" style="display:block;min-height:0;">
-		{l s='You can set specific prices for clients belonging to different groups, different countries, etc.'}
+		{l s='You can set specific prices for clients belonging to different groups, different countries, etc...'}
 	</div>
 	<br />
 	<a class="button bt-icon" href="#" id="show_specific_price"><img src="../img/admin/add.gif" alt="" /><span>{l s='Add a new specific price'}</span></a>

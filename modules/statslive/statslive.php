@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -57,18 +57,37 @@ class StatsLive extends Module
 	 */
 	private function getCustomersOnline()
 	{
-		$sql = 'SELECT u.id_customer, u.firstname, u.lastname, pt.name as page
-				FROM `'._DB_PREFIX_.'connections` c
-				LEFT JOIN `'._DB_PREFIX_.'connections_page` cp ON c.id_connections = cp.id_connections
-				LEFT JOIN `'._DB_PREFIX_.'page` p ON p.id_page = cp.id_page
-				LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON p.id_page_type = pt.id_page_type
-				INNER JOIN `'._DB_PREFIX_.'guest` g ON c.id_guest = g.id_guest
-				INNER JOIN `'._DB_PREFIX_.'customer` u ON u.id_customer = g.id_customer
-				WHERE cp.`time_end` IS NULL
-					'.Shop::addSqlRestriction(false, 'c').'
-					AND TIME_TO_SEC(TIMEDIFF(NOW(), cp.`time_start`)) < 900
-				GROUP BY c.id_connections
-				ORDER BY u.firstname, u.lastname';
+		if ($maintenance_ips = Configuration::get('PS_MAINTENANCE_IP'))
+			$maintenance_ips = implode(',', array_map('ip2long', array_map('trim', explode(',', $maintenance_ips))));
+		
+		if (Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS'))
+		{
+			$sql = 'SELECT u.id_customer, u.firstname, u.lastname, pt.name as page
+					FROM `'._DB_PREFIX_.'connections` c
+					LEFT JOIN `'._DB_PREFIX_.'connections_page` cp ON c.id_connections = cp.id_connections
+					LEFT JOIN `'._DB_PREFIX_.'page` p ON p.id_page = cp.id_page
+					LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON p.id_page_type = pt.id_page_type
+					INNER JOIN `'._DB_PREFIX_.'guest` g ON c.id_guest = g.id_guest
+					INNER JOIN `'._DB_PREFIX_.'customer` u ON u.id_customer = g.id_customer
+					WHERE cp.`time_end` IS NULL
+						'.Shop::addSqlRestriction(false, 'c').'
+						AND TIME_TO_SEC(TIMEDIFF(NOW(), cp.`time_start`)) < 900
+					'.($maintenance_ips ? 'AND c.ip_address NOT IN ('.preg_replace('/[^,0-9]/', '', $maintenance_ips).')' : '').'
+					GROUP BY u.id_customer
+					ORDER BY u.firstname, u.lastname';
+		}
+		else
+		{
+			$sql = 'SELECT u.id_customer, u.firstname, u.lastname, "-" as page
+					FROM `'._DB_PREFIX_.'connections` c
+					INNER JOIN `'._DB_PREFIX_.'guest` g ON c.id_guest = g.id_guest
+					INNER JOIN `'._DB_PREFIX_.'customer` u ON u.id_customer = g.id_customer
+					WHERE TIME_TO_SEC(TIMEDIFF(NOW(), c.`date_add`)) < 900
+						'.Shop::addSqlRestriction(false, 'c').'
+					'.($maintenance_ips ? 'AND c.ip_address NOT IN ('.preg_replace('/[^,0-9]/', '', $maintenance_ips).')' : '').'
+					GROUP BY u.id_customer
+					ORDER BY u.firstname, u.lastname';
+		}
 		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		return array($results, Db::getInstance()->NumRows());
 	}
@@ -80,6 +99,9 @@ class StatsLive extends Module
 	 */
 	private function getVisitorsOnline()
 	{
+		if ($maintenance_ips = Configuration::get('PS_MAINTENANCE_IP'))
+			$maintenance_ips = implode(',', array_map('ip2long', array_map('trim', explode(',', $maintenance_ips))));
+
 		if (Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS'))
 		{
 			$sql = 'SELECT c.id_guest, c.ip_address, c.date_add, c.http_referer, pt.name as page
@@ -91,18 +113,20 @@ class StatsLive extends Module
 					WHERE (g.id_customer IS NULL OR g.id_customer = 0)
 						'.Shop::addSqlRestriction(false, 'c').'
 						AND cp.`time_end` IS NULL
-			AND TIME_TO_SEC(TIMEDIFF(NOW(), cp.`time_start`)) < 900
+					AND TIME_TO_SEC(TIMEDIFF(NOW(), cp.`time_start`)) < 900
+					'.($maintenance_ips ? 'AND c.ip_address NOT IN ('.preg_replace('/[^,0-9]/', '', $maintenance_ips).')' : '').'
 					GROUP BY c.id_connections
 					ORDER BY c.date_add DESC';
 		}
 		else
 		{
-			$sql = 'SELECT c.id_guest, c.ip_address, c.date_add, c.http_referer
+			$sql = 'SELECT c.id_guest, c.ip_address, c.date_add, c.http_referer, "-" as page
 					FROM `'._DB_PREFIX_.'connections` c
 					INNER JOIN `'._DB_PREFIX_.'guest` g ON c.id_guest = g.id_guest
 					WHERE (g.id_customer IS NULL OR g.id_customer = 0)
 						'.Shop::addSqlRestriction(false, 'c').'
 						AND TIME_TO_SEC(TIMEDIFF(NOW(), c.`date_add`)) < 900
+					'.($maintenance_ips ? 'AND c.ip_address NOT IN ('.preg_replace('/[^,0-9]/', '', $maintenance_ips).')' : '').'
 					ORDER BY c.date_add DESC';
 		}
 
@@ -121,7 +145,7 @@ class StatsLive extends Module
 		</script>';
 		if (!Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS'))
 			$this->html .= '<div class="warn">'.
-				$this->l('You must activate the option "pages views for each customer" in the "Stats datamining" module in order to see the pages currently viewed by your customers.').'
+				$this->l('You must activate the option "pages viewed for each customer" in the "Stats data-mining" module in order to see the pages viewed by your customers.').'
 			</div>';
 		$this->html .= '
 		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->l('Customers online').'</legend>';
@@ -146,7 +170,7 @@ class StatsLive extends Module
 			$this->html .= '</table>';
 		}
 		else
-			$this->html .= $this->l('There are no customers online.');
+			$this->html .= $this->l('Currently, there are no customers online.');
 		$this->html .= '</fieldset>
 		<br />
 		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->l('Visitors online').'</legend>';
@@ -162,13 +186,18 @@ class StatsLive extends Module
 					<td style="width: 80px;">'.long2ip($visitor['ip_address']).'</td>
 					<td style="width: 100px;">'.substr($visitor['date_add'], 11).'</td>
 					<td style="width: 200px;">'.(isset($visitor['page']) ? $visitor['page'] : $this->l('Undefined')).'</td>
-					<td style="width: 200px;">'.(empty($visitor['http_referer']) ? $this->l('none') : parse_url($visitor['http_referer'], PHP_URL_HOST)).'</td>
+					<td style="width: 200px;">'.(empty($visitor['http_referer']) ? $this->l('None') : parse_url($visitor['http_referer'], PHP_URL_HOST)).'</td>
 				</tr>';
 			$this->html .= '</table></div>';
 		}
 		else
 			$this->html .= $this->l('There are no visitors online.');
-		$this->html .= '</fieldset>';
+		$this->html .= '</fieldset>
+		<br />
+		<fieldset><legend>'.$this->l('Notice').'</legend>
+			'.$this->l('Maintenance IP(s) are excluded from the online visitors.').'<br />
+			<a href="index.php?controller=AdminMaintenance&token='.Tools::getAdminTokenLite('AdminMaintenance').'">'.$this->l('Add or remove an IP address.').'</a>
+		</fieldset>';
 
 		return $this->html;
 	}

@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -31,7 +31,7 @@
 {if !isset($errors) OR !sizeof($errors)}
 
 <div data-role="content" id="content">
-	<p><a data-role="button" data-icon="arrow-l" data-theme="a" data-mini="true" data-inline="true" href="{$link->getPageLink('manufacturer', true)}" data-ajax="false">{l s='Manufacturers'}</a></p>
+	<p><a data-role="button" data-icon="arrow-l" data-theme="a" data-mini="true" data-inline="true" href="{$link->getPageLink('manufacturer', true)|escape:'html'}" data-ajax="false">{l s='Manufacturers:'}</a></p>
 	{if !empty($manufacturer->description) || !empty($manufacturer->short_description)}
 		<div class="category_desc clearfix">
 			{if !empty($manufacturer->short_description)}
@@ -48,7 +48,7 @@
 			<div class="clearfix">
 				{include file="./category-product-sort.tpl" container_class="container-sort"}
 			</div>
-			<hr width="99%" align="center" size="2"/>
+			<hr/>
 			{include file="./pagination.tpl"}
 			{include file="./category-product-list.tpl" products=$products}
 			{include file="./pagination.tpl"}

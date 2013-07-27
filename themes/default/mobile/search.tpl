@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -42,7 +42,7 @@
 		</div>
 		{/if}
 		
-		<hr width="99%" align="center" size="2"/>
+		<hr/>
 		{if !isset($instantSearch) || (isset($instantSearch) && !$instantSearch)}
 			{include file="./pagination.tpl"}
 		{/if}
@@ -57,11 +57,11 @@
 {else}
 	<p class="warning">
 		{if isset($search_query) && $search_query}
-			{l s='No results found for your search'}&nbsp;"{if isset($search_query)}{$search_query|escape:'htmlall':'UTF-8'}{/if}"
+			{l s='No results were found for your search'}&nbsp;"{if isset($search_query)}{$search_query|escape:'htmlall':'UTF-8'}{/if}"
 		{elseif isset($search_tag) && $search_tag}
-			{l s='No results found for your search'}&nbsp;"{$search_tag|escape:'htmlall':'UTF-8'}"
+			{l s='No results were found for your search'}&nbsp;"{$search_tag|escape:'htmlall':'UTF-8'}"
 		{else}
-			{l s='Please type a search keyword'}
+			{l s='Please enter a search keyword'}
 		{/if}
 	</p>
 {/if}

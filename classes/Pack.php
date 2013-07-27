@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -113,8 +113,7 @@ class PackCore extends Product
 		foreach ($items as $item)
 		{
 			// Updated for 1.5.0
-			if (Product::getQuantity($item->id) < $item->pack_quantity
-				|| (Product::getQuantity($item->id) < $item->pack_quantity && !$item->isAvailableWhenOutOfStock((int)$item->out_of_stock)))
+			if (Product::getQuantity($item->id) < $item->pack_quantity && !$item->isAvailableWhenOutOfStock((int)$item->out_of_stock))
 				return false;
 		}
 		return true;
@@ -125,7 +124,7 @@ class PackCore extends Product
 		if (!Pack::isFeatureActive())
 			return array();
 
-		$sql = 'SELECT p.*, product_shop.*, pl.*, image_shop.`id_image`, il.`legend`, cl.`name` AS category_default, a.quantity AS pack_quantity, product_shop.`id_category_default`, a.id_product_pack
+		$sql = 'SELECT p.*, product_shop.*, pl.*, MAX(image_shop.`id_image`) id_image, il.`legend`, cl.`name` AS category_default, a.quantity AS pack_quantity, product_shop.`id_category_default`, a.id_product_pack
 				FROM `'._DB_PREFIX_.'pack` a
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.id_product = a.id_product_item
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
@@ -139,20 +138,20 @@ class PackCore extends Product
 					ON product_shop.`id_category_default` = cl.`id_category`
 					AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').'
 				WHERE product_shop.`id_shop` = '.(int)Context::getContext()->shop->id.'
-				AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))
-				AND a.`id_product_pack` = '.(int)$id_product;
+				AND a.`id_product_pack` = '.(int)$id_product.'
+				GROUP BY product_shop.id_product';
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
-		foreach ($result as &$row)
-			$row = Product::getTaxesInformations($row);
+		foreach ($result as &$line)
+			$line = Product::getTaxesInformations($line);
 			
 		if (!$full)
 			return $result;
 
 		$array_result = array();
-		foreach ($result as $row)
-			if (!Pack::isPack($row['id_product']))
-				$array_result[] = Product::getProductProperties($id_lang, $row);
+		foreach ($result as $prow)
+			if (!Pack::isPack($prow['id_product']))
+				$array_result[] = Product::getProductProperties($id_lang, $prow);
 		return $array_result;
 	}
 
@@ -170,7 +169,7 @@ class PackCore extends Product
 			return array();
 
 		$sql = '
-		SELECT p.*, product_shop.*, pl.*, image_shop.`id_image`, il.`legend`
+		SELECT p.*, product_shop.*, pl.*, MAX(image_shop.`id_image`) id_image, il.`legend`
 		FROM `'._DB_PREFIX_.'product` p
 		NATURAL LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 		'.Shop::addSqlAssociation('product', 'p').'
@@ -180,7 +179,7 @@ class PackCore extends Product
 		WHERE pl.`id_lang` = '.(int)$id_lang.'
 			'.Shop::addSqlRestrictionOnLang('pl').'
 			AND p.`id_product` IN ('.$packs.')
-			AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))';
+		GROUP BY product_shop.id_product';
 		if ($limit)
 			$sql .= ' LIMIT '.(int)$limit;
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);

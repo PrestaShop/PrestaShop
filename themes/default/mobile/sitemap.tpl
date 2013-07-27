@@ -25,19 +25,22 @@
 <div id="hook_mobile_top_site_map">
 {hook h="displayMobileTopSiteMap"}
 </div>
-<hr width="99%" align="center" size="2" class=""/>
-
+<hr/>
 {if isset($categoriesTree.children)}
 	<h2>{l s='Our offers'}</h2>
 
 	<ul data-role="listview" data-inset="true">
 		{for $i=0 to 4}
 			{if isset($categoriesTree.children.$i)}
+				{if isset($categoriesTree.children.$i.children) && ($categoriesTree.children.$i.children|@count > 0)}
+						{include file="./category-tree-branch.tpl" node=$categoriesTree.children.$i}
+				{else}
 				<li data-icon="arrow-d">
 					<a href="{$categoriesTree.children.$i.link|escape:'htmlall':'UTF-8'}" title="{$categoriesTree.children.$i.desc|escape:'htmlall':'UTF-8'}">
 						{$categoriesTree.children.$i.name|escape:'htmlall':'UTF-8'}
 					</a>
 				</li>
+				{/if}
 			{/if}
 		{/for}
 		<li>
@@ -51,28 +54,28 @@
 	</ul>
 {/if}
 
-<hr width="99%" align="center" size="2" class=""/>
+<hr/>
 <h2>{l s='Sitemap'}</h2>
 <ul data-role="listview" data-inset="true" id="category">
-	{if $controller_name != 'index'}<li><a href="{$link->getPageLink('index', true)}">{l s='Home'}</a></li>{/if}
+	{if $controller_name != 'index'}<li><a href="{$link->getPageLink('index', true)|escape:'html'}">{l s='Home'}</a></li>{/if}
 	<li>{l s='Our offers'}
 		<ul data-role="listview" data-inset="true">
-			<li><a href="{$link->getPageLink('new-products')}" title="{l s='New products'}">{l s='New products'}</a></li>
+			<li><a href="{$link->getPageLink('new-products')|escape:'html'}" title="{l s='New products'}">{l s='New products'}</a></li>
 			{if !$PS_CATALOG_MODE}
-			<li><a href="{$link->getPageLink('prices-drop')}" title="{l s='Price drop'}">{l s='Price drop'}</a></li>
-			<li><a href="{$link->getPageLink('best-sales', true)}" title="{l s='Top sellers'}">{l s='Top sellers'}</a></li>
+			<li><a href="{$link->getPageLink('prices-drop')|escape:'html'}" title="{l s='Price drop'}">{l s='Price drop'}</a></li>
+			<li><a href="{$link->getPageLink('best-sales', true)|escape:'html'}" title="{l s='Best sellers'}">{l s='Best sellers'}</a></li>
 			{/if}
-			{if $display_manufacturer_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('manufacturer')}">{l s='Manufacturers'}</a></li>{/if}
-			{if $display_supplier_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('supplier')}">{l s='Suppliers'}</a></li>{/if}
+			{if $display_manufacturer_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('manufacturer')|escape:'html'}">{l s='Manufacturers:'}</a></li>{/if}
+			{if $display_supplier_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('supplier')|escape:'html'}">{l s='Suppliers:'}</a></li>{/if}
 		</ul>
 	</li>
 	<li>{l s='Your Account'}
 		<ul data-role="listview" data-inset="true">
-			<li><a href="{$link->getPageLink('my-account', true)}">{l s='Your Account'}</a></li>
-			<li><a href="{$link->getPageLink('identity', true)}">{l s='Personal information'}</a></li>
-			<li><a href="{$link->getPageLink('addresses', true)}">{l s='Addresses'}</a></li>
-			{if $voucherAllowed}<li><a href="{$link->getPageLink('discount', true)}">{l s='Discounts'}</a></li>{/if}
-			<li><a href="{$link->getPageLink('history', true)}">{l s='Order history'}</a></li>
+			<li><a href="{$link->getPageLink('my-account', true)|escape:'html'}">{l s='Your Account'}</a></li>
+			<li><a href="{$link->getPageLink('identity', true)|escape:'html'}">{l s='Personal information'}</a></li>
+			<li><a href="{$link->getPageLink('addresses', true)|escape:'html'}">{l s='Addresses'}</a></li>
+			{if $voucherAllowed}<li><a href="{$link->getPageLink('discount', true)|escape:'html'}">{l s='Discounts'}</a></li>{/if}
+			<li><a href="{$link->getPageLink('history', true)|escape:'html'}">{l s='Order history'}</a></li>
 		</ul>
 	</li>
 	<li>{l s='Pages'}
@@ -87,8 +90,8 @@
 			{foreach from=$categoriescmsTree.cms item=cms name=cmsTree}
 				<li><a href="{$cms.link|escape:'htmlall':'UTF-8'}" title="{$cms.meta_title|escape:'htmlall':'UTF-8'}">{$cms.meta_title|escape:'htmlall':'UTF-8'}</a></li>
 			{/foreach}
-			<li><a href="{$link->getPageLink('contact', true)}" title="{l s='Contact'}">{l s='Contact'}</a></li>
-			{if $display_store}<li><a href="{$link->getPageLink('stores')}" title="{l s='Our stores'}">{l s='Our stores'}</a></li>{/if}
+			<li><a href="{$link->getPageLink('contact', true)|escape:'html'}" title="{l s='Contact'}">{l s='Contact'}</a></li>
+			{if $display_store}<li><a href="{$link->getPageLink('stores')|escape:'html'}" title="{l s='Our stores'}">{l s='Our stores'}</a></li>{/if}
 		</ul>
 	</li>
 </ul>

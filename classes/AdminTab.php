@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -1676,9 +1676,9 @@ abstract class AdminTabCore
 					elseif (isset($params['float']))
 						echo rtrim(rtrim($tr[$key], '0'), '.');
 					elseif (isset($params['type']) && $params['type'] == 'date')
-						echo Tools::displayDate($tr[$key], $this->context->language->id);
+						echo Tools::displayDate($tr[$key]);
 					elseif (isset($params['type']) && $params['type'] == 'datetime')
-						echo Tools::displayDate($tr[$key], $this->context->language->id, true);
+						echo Tools::displayDate($tr[$key],null , true);
 					elseif (isset($tr[$key]))
 					{
 						if ($key == 'price')

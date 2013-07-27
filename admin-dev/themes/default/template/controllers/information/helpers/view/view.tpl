@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -32,7 +32,7 @@
 		{
 			$.ajax({
 				type: 'GET',
-				url: '{$link->getAdminLink('AdminInformation')}',
+				url: '{$link->getAdminLink('AdminInformation')|addslashes}',
 				data: {
 					'action': 'checkFiles',
 					'ajax': 1
@@ -46,7 +46,7 @@
 					};
 
 					if (json.missing.length || json.updated.length)
-						$('#changedFiles').html('<div class="warn">{l s='Changed/missing files have been detected'}</div>');
+						$('#changedFiles').html('<div class="warn">{l s='Changed/missing files have been detected.'}</div>');
 					else
 						$('#changedFiles').html('<div class="conf">{l s='No change has been detected in your files'}</div>');
 
@@ -70,12 +70,12 @@
 	</script>
 
 	<fieldset>
-		<legend><img src="../img/t/AdminInformation.gif" alt="" />{l s='Configuration Information'}</legend>
+		<legend><img src="../img/t/AdminInformation.gif" alt="" />{l s='Configuration information'}</legend>
 		<p>{l s='This information must be provided when you report an issue on our bug tracker or forum.'}</p>
 	</fieldset>
 	<br />
 	<fieldset>
-		<legend><img src="../img/t/AdminInformation.gif" alt="" /> {l s='Information about your configuration'}</legend>
+		<legend><img src="../img/t/AdminInformation.gif" alt="" /> {l s='Information about your configuration.'}</legend>
 		<h3>{l s='Server information'}</h3>	
 		{if count($uname)}
 		<p>
@@ -113,7 +113,7 @@
 		<hr />
 		<h3>{l s='Store information'}</h3>
 		<p>
-			<b>{l s='Prestashop version'}:</b> {$shop.ps|escape:'htmlall':'UTF-8'}
+			<b>{l s='PrestaShop version'}:</b> {$shop.ps|escape:'htmlall':'UTF-8'}
 		</p>
 		<p>
 			<b>{l s='Shop URL'}:</b> {$shop.url|escape:'htmlall':'UTF-8'}
@@ -127,7 +127,7 @@
 			<b>{l s='Mail method'}:</b>
 	
 	{if $mail}
-		{l s='You are using the PHP mail() function.'}</p>
+		{l s='You are using the PHP mail function.'}</p>
 	{else}
 		{l s='You are using your own SMTP parameters.'}</p>
 		<p>

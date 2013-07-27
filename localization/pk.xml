@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <localizationPack name="Pakistan" version="1.0">
+	
+	<languages>
+		<language iso_code="ur"/>
+		<language iso_code="en"/>
+	</languages>
+	
 	<currencies>
 		<currency name="Rupee" iso_code="PKR" iso_code_num="586" sign="₨" blank="1" conversion_rate="117.289" format="2" decimals="1" />
 	</currencies>

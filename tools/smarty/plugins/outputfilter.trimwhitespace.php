@@ -40,6 +40,7 @@ function smarty_outputfilter_trimwhitespace($source, Smarty_Internal_Template $s
     }
 
     // Strip all HTML-Comments
+    // yes, even the ones in <script> - see http://stackoverflow.com/a/808850/515124
     $source = preg_replace( '#<!--.*?-->#ms', '', $source );
 
     // capture html elements not to be messed with

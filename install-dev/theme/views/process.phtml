@@ -41,19 +41,26 @@ var process_steps = <?php echo Tools::jsonEncode($this->process_steps) ?>;
 			<tr class="odd">
 				<td class="label"><?php echo $this->l('E-mail:') ?></td>
 				<td class="resultEnd"><?php echo htmlspecialchars($this->session->admin_email) ?></td>
+				<td rowspan="2" class="print" onclick="$('#password_content').html('<?php echo htmlspecialchars(addslashes($this->session->admin_password)) ?>'); $('#password_display').hide(); window.print();">
+					<img src="theme/img/print.png" alt="" style="vertical-align:top">
+					<?php echo $this->l('Print my login information') ?>
+				</td>
 			</tr>
 			<tr>
 				<td class="label"><?php echo $this->l('Password:') ?></td>
 				<td class="resultEnd">
 					<span id="password_content"><?php echo preg_replace('#.#', '*', $this->session->admin_password) ?></span>
 					<span id="password_display">
-						(<a href="#" onclick="$('#password_content').html('<?php echo htmlspecialchars($this->session->admin_password) ?>'); $('#password_display').hide(); return false"><?php echo $this->l('Display') ?></a>)
+						(<a href="#" onclick="$('#password_content').html('<?php echo htmlspecialchars(addslashes($this->session->admin_password)) ?>'); $('#password_display').hide(); return false"><?php echo $this->l('Display') ?></a>)
 					</span>
 				</td>
 			</tr>
 		</table>
 
-		<h3 class="infosBlock"><?php echo $this->l('WARNING: For security purposes, you must delete the "install" folder.') ?></h3>
+		<h3 class="infosBlock">
+			<?php echo $this->l('For security purposes, you must delete the "install" folder.') ?>
+			<a href="<?php echo $this->l('http://doc.prestashop.com/display/PS15/Installing+PrestaShop#InstallingPrestaShop-Completingtheinstallation') ?>" target="_blank"><img src="theme/img/help.png" /></a>
+		</h3>
 
 		<div id="boBlock" class="blockInfoEnd clearfix" onclick="window.open('../admin')">
 			<img src="theme/img/visu_boBlock.png" alt="" />
@@ -71,7 +78,7 @@ var process_steps = <?php echo Tools::jsonEncode($this->process_steps) ?>;
 </div>
 
 <?php if (@fsockopen('addons.prestashop.com', 80, $errno, $errst, 3)): ?>
-	<iframe src="http://addons.prestashop.com/psinstall.php?lang=<?php echo $this->language->getLanguageIso() ?>" scrolling="no" id="prestastore">
+	<iframe src="https://addons.prestashop.com/psinstall1541.php?version=2&lang=<?php echo $this->language->getLanguageIso() ?>&email=<?php echo $this->session->admin_email ?>&activity=<?php echo $this->session->shop_activity ?>&country=<?php echo $this->session->shop_country ?>" scrolling="no" id="prestastore">
 		<p>Your browser does not support iframes.</p>
 	</iframe>
 <?php endif; ?>

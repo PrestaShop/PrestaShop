@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -42,7 +42,7 @@ class StatsOrigin extends ModuleGraph
 		parent::__construct();
 
 		$this->displayName = $this->l('Visitors origin');
-		$this->description = $this->l('Display the websites your visitors come from.');
+		$this->description = $this->l('Display the website(s) your visitors came from.');
 	}
 
 	public function install()
@@ -87,7 +87,7 @@ class StatsOrigin extends ModuleGraph
 		if (count($websites))
 		{
 			$this->_html .= '
-			<p><img src="../img/admin/down.gif" />'.$this->l('Here is the percentage of the 10 most popular referrer websites by which visitors went through to get to your shop.').'</p>
+			<p><img src="../img/admin/down.gif" />'.$this->l('Here we break down the 10 most popular referral websites that call customers to your e-store.').'</p>
 			<div>'.$this->engine(array('type' => 'pie')).'</div><br />
 			<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=top"><span>'.$this->l('CSV Export').'</span></a></p><br />
 			
@@ -106,14 +106,14 @@ class StatsOrigin extends ModuleGraph
 			$this->_html .= '<p><strong>'.$this->l('Direct links only').'</strong></p>';
 		$this->_html .= '</div><br />
 		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</h2>
-		<h2>'.$this->l('What is a referrer website?').'</h2>
+		<h2>'.$this->l('What is a referral website?').'</h2>
 			<p>
 				'.$this->l('When visiting a webpage, the referrer is the URL of the previous webpage from which a link was followed.').'<br />
-				'.$this->l('A referrer enables you to know which keywords are entered by visitors in search engines when getting to your shop and allows you to optimize web promotion.').'<br /><br />
+				'.$this->l('A referrer enables you to know which keywords visitors use in search engines when browsing for your online store.').'<br /><br />
 				'.$this->l('A referrer can be:').'
 				<ul>
-					<li class="bullet">'.$this->l('Someone who put a link on their website for your shop').'</li>
-					<li class="bullet">'.$this->l('A partner with whom you made a link exchange in order to bring in sales or attract new customers').'</li>
+					<li class="bullet">'.$this->l('Someone who posts a link to your shop.').'</li>
+					<li class="bullet">'.$this->l('A partner who has agreed to a link exchange in order to attract new customers.').'</li>
 				</ul>
 			</p>
 		</div>';
@@ -122,7 +122,7 @@ class StatsOrigin extends ModuleGraph
 
 	protected function getData($layers)
 	{
-		$this->_titles['main'] = $this->l('First 10 websites');
+		$this->_titles['main'] = $this->l('Top ten referral websites');
 		$websites = $this->getOrigins($this->getDate());
 		$total = 0;
 		$total2 = 0;

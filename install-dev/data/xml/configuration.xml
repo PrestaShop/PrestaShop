@@ -633,7 +633,7 @@
       <value>http://www.twitter.com/prestashop</value>
     </configuration>
     <configuration id="blocksocial_rss" name="blocksocial_rss">
-      <value>RSS</value>
+      <value>http://www.prestashop.com/blog/en/feed/</value>
     </configuration>
     <configuration id="blockcontactinfos_company" name="blockcontactinfos_company">
       <value>Your company</value>
@@ -707,7 +707,7 @@ Country</value>
       <value>PrestaShop</value>
     </configuration>
     <configuration id="PS_SHOP_EMAIL" name="PS_SHOP_EMAIL">
-      <value>raphael.malie@gmail.com</value>
+      <value>pub@prestashop.com</value>
     </configuration>
     <configuration id="PS_MAIL_METHOD" name="PS_MAIL_METHOD">
       <value>1</value>
@@ -748,6 +748,9 @@ Country</value>
     <configuration id="PS_MAIL_SMTP_PORT" name="PS_MAIL_SMTP_PORT">
       <value>25</value>
     </configuration>
+    <configuration id="PS_MAIL_COLOR" name="PS_MAIL_COLOR">
+      <value>#db3484</value>
+    </configuration>
     <configuration id="NW_SALT" name="NW_SALT">
       <value>nK4KJP7jOsnzWMpo</value>
     </configuration>
@@ -764,6 +767,9 @@ Country</value>
       <value/>
     </configuration>
     <configuration id="PS_ALLOW_MOBILE_DEVICE" name="PS_ALLOW_MOBILE_DEVICE">
+      <value>1</value>
+    </configuration>
+    <configuration id="PS_CUSTOMER_CREATION_EMAIL" name="PS_CUSTOMER_CREATION_EMAIL">
       <value>1</value>
     </configuration>
   </entities>

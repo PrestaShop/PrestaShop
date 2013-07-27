@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>statsbestproducts</name>
-            <displayName><![CDATA[Best products]]></displayName>
+            <displayName><![CDATA[Best-selling products.]]></displayName>
             <version><![CDATA[1]]></version>
-            <description><![CDATA[A list of the best products]]></description>
+            <description><![CDATA[A list of the best-selling products.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[analytics_stats]]></tab>
             <is_configurable>0</is_configurable>

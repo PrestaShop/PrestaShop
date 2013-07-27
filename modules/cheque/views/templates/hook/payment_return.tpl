@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -26,22 +26,22 @@
 {if $status == 'ok'}
 	<p>{l s='Your order on %s is complete.' sprintf=$shop_name mod='cheque'}
 		<br /><br />
-		{l s='Please send us a cheque with:' mod='cheque'}
-		<br /><br />- {l s='an amount of' mod='cheque'} <span class="price"><strong>{$total_to_pay}</strong></span>
-		<br /><br />- {l s='payable to the order of' mod='cheque'} <strong>{if $chequeName}{$chequeName}{else}___________{/if}</strong>
-		<br /><br />- {l s='mail to' mod='cheque'} <strong>{if $chequeAddress}{$chequeAddress}{else}___________{/if}</strong>
+		{l s='Your check must include:' mod='cheque'}
+		<br /><br />- {l s='Payment ammount.' mod='cheque'} <span class="price"><strong>{$total_to_pay}</strong></span>
+		<br /><br />- {l s='Payable to the order of' mod='cheque'} <strong>{if $chequeName}{$chequeName}{else}___________{/if}</strong>
+		<br /><br />- {l s='Mail to' mod='cheque'} <strong>{if $chequeAddress}{$chequeAddress}{else}___________{/if}</strong>
 		{if !isset($reference)}
 			<br /><br />- {l s='Do not forget to insert your order number #%d.' sprintf=$id_order mod='cheque'}
 		{else}
 			<br /><br />- {l s='Do not forget to insert your order reference %s.' sprintf=$reference mod='cheque'}
 		{/if}
-		<br /><br />{l s='An e-mail has been sent to you with this information.' mod='cheque'}
+		<br /><br />{l s='An email has been sent to you with this information.' mod='cheque'}
 		<br /><br /><strong>{l s='Your order will be sent as soon as we receive your payment.' mod='cheque'}</strong>
-		<br /><br />{l s='For any questions or for further information, please contact our' mod='cheque'} <a href="{$link->getPageLink('contact', true)}">{l s='customer support' mod='cheque'}</a>.
+		<br /><br />{l s='For any questions or for further information, please contact our' mod='cheque'} <a href="{$link->getPageLink('contact', true)|escape:'html'}">{l s='customer service department.' mod='cheque'}</a>.
 	</p>
 {else}
 	<p class="warning">
-		{l s='We noticed a problem with your order. If you think this is an error, you can contact our' mod='cheque'} 
-		<a href="{$link->getPageLink('contact', true)}">{l s='customer support' mod='cheque'}</a>.
+		{l s='We have noticed that there is a problem with your order. If you think this is an error, you can contact our' mod='cheque'} 
+		<a href="{$link->getPageLink('contact', true)|escape:'html'}">{l s='customer service department.' mod='cheque'}</a>.
 	</p>
 {/if}

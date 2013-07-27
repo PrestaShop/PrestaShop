@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -35,6 +35,7 @@ class AdminCartsControllerCore extends AdminController
 
 		$this->addRowAction('view');
 		$this->addRowAction('delete');
+		$this->allow_export = true;
 
 		$this->_select = 'CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) `customer`, a.id_cart total, ca.name carrier, o.id_order, IF(co.id_guest, 1, 0) id_guest';
 		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'customer c ON (c.id_customer = a.id_customer)
@@ -100,21 +101,31 @@ class AdminCartsControllerCore extends AdminController
 	{
 		if (!($cart = $this->loadObject(true)))
 			return;
-
 		$customer = new Customer($cart->id_customer);
+		$currency = new Currency($cart->id_currency);
 		$this->context->cart = $cart;
+		$this->context->currency = $currency;
 		$this->context->customer = $customer;
 		$products = $cart->getProducts();
 		$customized_datas = Product::getAllCustomizedDatas((int)$cart->id);
 		Product::addCustomizationPrice($products, $customized_datas);
 		$summary = $cart->getSummaryDetails();
-		$currency = new Currency($cart->id_currency);
 
 		/* Display order information */
 		$id_order = (int)Order::getOrderByCartId($cart->id);
 		$order = new Order($id_order);
-
-		if ($order->getTaxCalculationMethod() == PS_TAX_EXC)
+		if (Validate::isLoadedObject($order))
+		{
+			$tax_calculation_method = $order->getTaxCalculationMethod();
+			$id_shop = (int)$order->id_shop;
+		}
+		else
+		{
+			$id_shop = (int)$cart->id_shop;
+			$tax_calculation_method = Group::getPriceDisplayMethod(Group::getCurrent()->id);
+		}
+		
+		if ($tax_calculation_method == PS_TAX_EXC)
 		{
 			$total_products = $summary['total_products'];
 			$total_discounts = $summary['total_discounts_tax_exc'];
@@ -132,7 +143,7 @@ class AdminCartsControllerCore extends AdminController
 		}
 		foreach ($products as $k => &$product)
 		{
-			if ($order->getTaxCalculationMethod() == PS_TAX_EXC)
+			if ($tax_calculation_method == PS_TAX_EXC)
 			{
 				$product['product_price'] = $product['price'];
 				$product['product_total'] = $product['total'];
@@ -153,7 +164,7 @@ class AdminCartsControllerCore extends AdminController
 																WHERE id_product = '.(int)$product['id_product'].' AND cover = 1');
 
 			$product_obj = new Product($product['id_product']);
-			$product['qty_in_stock'] = StockAvailable::getQuantityAvailableByProduct($product['id_product'], isset($product['id_product_attribute']) ? $product['id_product_attribute'] : null, (int)$order->id_shop);
+			$product['qty_in_stock'] = StockAvailable::getQuantityAvailableByProduct($product['id_product'], isset($product['id_product_attribute']) ? $product['id_product_attribute'] : null, (int)$id_shop);
 
 			$image_product = new Image($image['id_image']);
 			$product['image'] = (isset($image['id_image']) ? ImageManager::thumbnail(_PS_IMG_DIR_.'p/'.$image_product->getExistingImgPath().'.jpg', 'product_mini_'.(int)$product['id_product'].(isset($product['id_product_attribute']) ? '_'.(int)$product['id_product_attribute'] : '').'.jpg', 45, 'jpg') : '--');
@@ -189,9 +200,16 @@ class AdminCartsControllerCore extends AdminController
 			if (!$id_cart)
 				$id_cart = $customer->getLastCart(false);
 			$this->context->cart = new Cart((int)$id_cart);
+
+			if (!$this->context->cart->id)
+			{
+				$this->context->cart->recyclable = 0;
+				$this->context->cart->gift = 0;
+			}
+
 			if (!$this->context->cart->id_customer)
 				$this->context->cart->id_customer = $id_customer;
-			if ($this->context->cart->OrderExists())
+			if (Validate::isLoadedObject($this->context->cart) && $this->context->cart->OrderExists())
 				return;
 			if (!$this->context->cart->secure_key)
 				$this->context->cart->secure_key = $this->context->customer->secure_key;
@@ -255,35 +273,35 @@ class AdminCartsControllerCore extends AdminController
 					$field_id = 'customization_'.$id_product.'_'.$customization_field['id_customization_field'];
 					if ($customization_field['type'] == Product::CUSTOMIZE_TEXTFIELD)
 					{
-						if (!isset($_POST[$field_id]) || empty($_POST[$field_id]))
+						if (!Tools::getValue($field_id))
 						{
 							if ($customization_field['required'])
-								$errors[] = Tools::displayError('Please fill in all required fields');
+								$errors[] = Tools::displayError('Please fill in all the required fields.');
 							continue;
 						}
-						if (!Validate::isMessage($_POST[$field_id]) || empty($_POST[$field_id]))
+						if (!Validate::isMessage(Tools::getValue($field_id)))
 							$errors[] = Tools::displayError('Invalid message');
-						$this->context->cart->addTextFieldToProduct((int)$product->id, (int)$customization_field['id_customization_field'], Product::CUSTOMIZE_TEXTFIELD, $_POST[$field_id]);
+						$this->context->cart->addTextFieldToProduct((int)$product->id, (int)$customization_field['id_customization_field'], Product::CUSTOMIZE_TEXTFIELD, Tools::getValue($field_id));
 					}
 					elseif ($customization_field['type'] == Product::CUSTOMIZE_FILE)
 					{
 						if (!isset($_FILES[$field_id]) || !isset($_FILES[$field_id]['tmp_name']) || empty($_FILES[$field_id]['tmp_name']))
 						{
 							if ($customization_field['required'])
-								$errors[] = Tools::displayError('Please fill in all required fields');
+								$errors[] = Tools::displayError('Please fill in all the required fields.');
 							continue;
 						}
 						if ($error = ImageManager::validateUpload($_FILES[$field_id], (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE')))
 							$errors[] = $error;
 						if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES[$field_id]['tmp_name'], $tmp_name))
-							$errors[] = Tools::displayError('An error occurred during the image upload.');
+							$errors[] = Tools::displayError('An error occurred during the image upload process.');
 						$file_name = md5(uniqid(rand(), true));
 						if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name))
 							continue;
 						elseif (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name.'_small', (int)Configuration::get('PS_PRODUCT_PICTURE_WIDTH'), (int)Configuration::get('PS_PRODUCT_PICTURE_HEIGHT')))
-							$errors[] = Tools::displayError('An error occurred during the image upload.');
+							$errors[] = Tools::displayError('An error occurred during the image upload process.');
 						elseif (!chmod(_PS_UPLOAD_DIR_.$file_name, 0777) || !chmod(_PS_UPLOAD_DIR_.$file_name.'_small', 0777))
-							$errors[] = Tools::displayError('An error occurred during the image upload.');
+							$errors[] = Tools::displayError('An error occurred during the image upload process.');
 						else
 							$this->context->cart->addPictureToProduct((int)$product->id, (int)$customization_field['id_customization_field'], Product::CUSTOMIZE_FILE, $file_name);
 						unlink($tmp_name);
@@ -306,7 +324,7 @@ class AdminCartsControllerCore extends AdminController
 			if (!$this->context->cart->id)
 				return;
 			if ($this->context->cart->OrderExists())
-				$errors[] = Tools::displayError('An order has already been placed with this cart');
+				$errors[] = Tools::displayError('An order has already been placed with this cart.');
 			elseif (!($id_product = (int)Tools::getValue('id_product')) || !($product = new Product((int)$id_product, true, $this->context->language->id)))
 				$errors[] = Tools::displayError('Invalid product');
 			elseif (!($qty = Tools::getValue('qty')) || $qty == 0)
@@ -318,17 +336,17 @@ class AdminCartsControllerCore extends AdminController
 				if (($id_product_attribute = Tools::getValue('id_product_attribute')) != 0)
 				{
 					if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty((int)$id_product_attribute, (int)$qty))
-						$errors[] = Tools::displayError('There is not enough product in stock');
+						$errors[] = Tools::displayError('There is not enough product in stock.');
 				}
 				else
 					if (!$product->checkQty((int)$qty))
-						$errors[] = Tools::displayError('There is not enough product in stock');
+						$errors[] = Tools::displayError('There is not enough product in stock.');
 				if (!($id_customization = (int)Tools::getValue('id_customization', 0)) && !$product->hasAllRequiredCustomizableFields())
-					$errors[] = Tools::displayError('Please fill in all required fields');
+					$errors[] = Tools::displayError('Please fill in all the required fields.');
 				$this->context->cart->save();
 			}
 			else
-				$errors[] = Tools::displayError('Product can\'t be added to the cart');
+				$errors[] = Tools::displayError('This product cannot be added to the cart');
 
 			if (!count($errors))
 			{
@@ -345,7 +363,7 @@ class AdminCartsControllerCore extends AdminController
 				elseif ($qty_upd < 0)
 				{
 					$minimal_qty = $id_product_attribute ? Attribute::getAttributeMinimalQty((int)$id_product_attribute) : $product->minimal_quantity;
-					$errors[] = sprintf(Tools::displayError('You must add a minimum of %d quantity', false), $minimal_qty);
+					$errors[] = sprintf(Tools::displayError('You must add a minimum quantity of %d', false), $minimal_qty);
 				}
 			}
 
@@ -434,9 +452,9 @@ class AdminCartsControllerCore extends AdminController
 			$cart = Cart::getCartByOrderId($id_order);
 			$new_cart = $cart->duplicate();
 			if (!$new_cart || !Validate::isLoadedObject($new_cart['cart']))
-				$errors[] = Tools::displayError('The order cannot be renewed');
+				$errors[] = Tools::displayError('The order cannot be renewed.');
 			else if (!$new_cart['success'])
-				$errors[] = Tools::displayError('The order cannot be renewed');
+				$errors[] = Tools::displayError('The order cannot be renewed.');
 			else
 			{
 				$this->context->cart = $new_cart['cart'];
@@ -461,8 +479,8 @@ class AdminCartsControllerCore extends AdminController
 			if (!$id_cart_rule = CartRule::getIdByCode('BO_ORDER_'.(int)$this->context->cart->id))
 			{
 				$cart_rule = new CartRule();
-				$cart_rule->code = 'BO_ORDER_'.(int)$this->context->cart->id;
-				$cart_rule->name = array(Configuration::get('PS_LANG_DEFAULT') => $this->l('Free Shipping'));
+				$cart_rule->code = CartRule::BO_ORDER_CODE_PREFIX.(int)$this->context->cart->id;
+				$cart_rule->name = array(Configuration::get('PS_LANG_DEFAULT') => $this->l('Free Shipping', 'AdminTab', false, false));
 				$cart_rule->id_customer = (int)$this->context->cart->id_customer;
 				$cart_rule->free_shipping = true;
 				$cart_rule->quantity = 1;
@@ -535,7 +553,7 @@ class AdminCartsControllerCore extends AdminController
 			{
 				$product['price'] = str_replace($currency->sign, '', Tools::displayPrice($product['price'], $currency));
 				$product['total'] = str_replace($currency->sign, '', Tools::displayPrice($product['total'], $currency));
-				$product['image_link'] = $this->context->link->getImageLink($product['link_rewrite'], $product['id_image'], 'small');
+				$product['image_link'] = $this->context->link->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default');
 				if (!isset($product['attributes_small']))
 					$product['attributes_small'] = '';
 				$product['customized_datas'] = Product::getAllCustomizedDatas((int)$this->context->cart->id, null, true);
@@ -570,7 +588,7 @@ class AdminCartsControllerCore extends AdminController
 		if (isset($summary['gift_products']) && count($summary['gift_products']))
 			foreach ($summary['gift_products'] as &$product)
 			{
-				$product['image_link'] = $this->context->link->getImageLink($product['link_rewrite'], $product['id_image'], 'small');
+				$product['image_link'] = $this->context->link->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default');
 				if (!isset($product['attributes_small']))
 					$product['attributes_small'] = '';
 			}
@@ -721,6 +739,7 @@ class AdminCartsControllerCore extends AdminController
 	{
 		$context = Context::getContext();
 		$context->cart = new Cart($id_cart);
+		$context->currency = new Currency((int)$context->cart->id_currency);
 		$context->customer = new Customer((int)$context->cart->id_customer);
 		return Cart::getTotalCart($id_cart, true, Cart::BOTH_WITHOUT_SHIPPING);
 	}
@@ -728,5 +747,15 @@ class AdminCartsControllerCore extends AdminController
 	public static function replaceZeroByShopName($echo, $tr)
 	{
 		return ($echo == '0' ? Configuration::get('PS_SHOP_NAME') : $echo);
+	}
+	
+	public function displayDeleteLink($token = null, $id, $name = null)
+	{
+		// don't display ordered carts
+		foreach ($this->_list as $row)
+			if ($row['id_cart'] == $id && isset($row['id_order']) && $row['id_order'])
+				return ;
+		
+		return $this->helper->displayDeleteLink($token, $id, $name);
 	}
 }

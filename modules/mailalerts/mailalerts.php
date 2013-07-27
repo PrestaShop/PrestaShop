@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -269,7 +269,7 @@ class MailAlerts extends Module
 		$customer = $params['customer'];
 		$delivery = new Address((int)$order->id_address_delivery);
 		$invoice = new Address((int)$order->id_address_invoice);
-		$order_date_text = Tools::displayDate($order->date_add, (int)$id_lang);
+		$order_date_text = Tools::displayDate($order->date_add);
 		$carrier = new Carrier((int)$order->id_carrier);
 		$message = $order->getFirstMessage();
 
@@ -339,11 +339,11 @@ class MailAlerts extends Module
 			'{delivery_block_txt}' => MailAlert::getFormatedAddress($delivery, "\n"),
 			'{invoice_block_txt}' => MailAlert::getFormatedAddress($invoice, "\n"),
 			'{delivery_block_html}' => MailAlert::getFormatedAddress($delivery, '<br />', array(
-			'firstname' => '<span style="color:#DB3484; font-weight:bold;">%s</span>',
-			'lastname' => '<span style="color:#DB3484; font-weight:bold;">%s</span>')),
+			'firstname' => '<span style="color:'.Configuration::get('PS_MAIL_COLOR').'; font-weight:bold;">%s</span>',
+			'lastname' => '<span style="color:'.Configuration::get('PS_MAIL_COLOR').'; font-weight:bold;">%s</span>')),
 			'{invoice_block_html}' => MailAlert::getFormatedAddress($invoice, '<br />', array(
-			'firstname' => '<span style="color:#DB3484; font-weight:bold;">%s</span>',
-			'lastname' => '<span style="color:#DB3484; font-weight:bold;">%s</span>')),
+			'firstname' => '<span style="color:'.Configuration::get('PS_MAIL_COLOR').' font-weight:bold;">%s</span>',
+			'lastname' => '<span style="color:'.Configuration::get('PS_MAIL_COLOR').'; font-weight:bold;">%s</span>')),
 			'{delivery_company}' => $delivery->company,
 			'{delivery_firstname}' => $delivery->firstname,
 			'{delivery_lastname}' => $delivery->lastname,
@@ -354,6 +354,8 @@ class MailAlerts extends Module
 			'{delivery_country}' => $delivery->country,
 			'{delivery_state}' => $delivery->id_state ? $delivery_state->name : '',
 			'{delivery_phone}' => $delivery->phone,
+			'{delivery_phone_mobile}' => $delivery->phone_mobile,
+			'{delivery_vat_number}' => $delivery->vat_number,
 			'{delivery_other}' => $delivery->other,
 			'{invoice_company}' => $invoice->company,
 			'{invoice_firstname}' => $invoice->firstname,
@@ -365,6 +367,8 @@ class MailAlerts extends Module
 			'{invoice_country}' => $invoice->country,
 			'{invoice_state}' => $invoice->id_state ? $invoice_state->name : '',
 			'{invoice_phone}' => $invoice->phone,
+			'{invoice_phone_mobile}' => $invoice->phone_mobile,
+			'{invoice_vat_number}' => $invoice->vat_number,
 			'{invoice_other}' => $invoice->other,
 			'{order_name}' => sprintf('%06d', $order->id),
 			'{shop_name}' => Configuration::get('PS_SHOP_NAME'),
@@ -431,7 +435,7 @@ class MailAlerts extends Module
 		$product = new Product($id_product, true, $id_lang, $id_shop, Context::getContext());
 		$ma_last_qties = (int)Configuration::get('MA_LAST_QTIES');
 
-		if ($product->active == 1 && (int)$quantity <= $ma_last_qties && !(!$this->_merchant_oos || empty($this->_merchant_mails)))
+		if ($product->active == 1 && (int)$quantity <= $ma_last_qties && !(!$this->_merchant_oos || empty($this->_merchant_mails)) && Configuration::get('PS_STOCK_MANAGEMENT'))
 		{
 			$iso = Language::getIsoById($id_lang);
 			$product_name = Product::getProductName($id_product, $id_product_attribute, $id_lang);
@@ -536,8 +540,7 @@ class MailAlerts extends Module
 		$coverage = StockManagerFactory::getManager()->getProductCoverage($id_product, $id_product_attribute, $warning_coverage, $id_warehouse);
 
 		// if we need to send a notification
-		if ($product->active == 1 &&
-			($coverage < $warning_coverage) && !empty($this->_merchant_mails) &&
+		if ($product->active == 1 && $coverage !== -1 && ($coverage < $warning_coverage) && !empty($this->_merchant_mails) &&
 			Configuration::getGlobalValue('MA_MERCHANT_COVERAGE'))
 		{
 			$id_lang = (int)Context::getContext()->language->id;

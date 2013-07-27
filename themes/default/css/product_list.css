@@ -57,16 +57,13 @@ ul#product_list {
 			-moz-transform: rotate(45deg);
 			-webkit-transform: rotate(45deg);
 			-o-transform:rotate(45deg);
-			-ms-transform: rotate(45deg);
 			background-color: #990000;
-			transform: rotate(45deg);  /* Newer browsers */
-			filter: progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=0.7071067811865476, M12=-0.7071067811865475, M21=0.7071067811865475, M22=0.7071067811865476); /* IE6,IE7 */
-			-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(SizingMethod='auto expand', M11=0.7071067811865476, M12=-0.7071067811865475, M21=0.7071067811865475, M22=0.7071067811865476)"; /* IE8 */
+			transform: rotate(45deg); 
+			-ms-transform: rotate(45deg);			/* Newer browsers */
 		}
 		
-		.ie8 #product_list li span.new{top:-17px;}
-		.ie7 #product_list li span.new {top:-30px;right:-25px}
-		.lt-ie6 #featured-products_block_center .product_image span.new {top:-30px;right:-25px}
+		.ie8 #product_list li span.new{top:111px;right:0;width:94%}
+		.ie7 #product_list li span.new {top:111px;right:0;width:94%}
 	#product_list li h3 {
 		padding:0 0 10px 0;
 		font-size:13px;
@@ -117,17 +114,16 @@ ul#product_list {
 	#product_list li .content_price {
 		margin:26px 0 15px 0;
 	}
-		#product_list li .price {
-			display: block;
-			margin-bottom: 15px;
-			font-weight:bold;
-			font-size: 18px;
-			color:#990000
-		}
-		#product_list li span.availability {
-			display:none;
+	#product_list li .price {
+		display: block;
+		margin-bottom: 15px;
+		font-weight:bold;
+		font-size: 18px;
+		color:#990000
+	}
+	#product_list li span.availability {
 			color: #488C40
-		}
+	}
 	#product_list li .ajax_add_to_cart_button {
 		padding-left: 20px
 	}

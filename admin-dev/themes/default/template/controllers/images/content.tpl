@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -30,14 +30,14 @@
 	{l s='Regenerates thumbnails for all existing images'}<br /><br />
 	<div  class="width4">
 		<div class="warn">
-			{l s='Please be patient, this can take several minutes'}<br />
+			{l s='Please be patient. This can take several minutes.'}<br />
 			{l s='Be careful! Manually uploaded thumbnails will be erased and replaced by automatically generated thumbnails.'}
 		</div>
 	</div>
 	<form action="{$current}&token={$token}" method="post">
 		<fieldset class="width4">
 			<legend><img src="../img/admin/picture.gif" /> {l s='Regenerate thumbnails'}</legend><br />
-			<label>{l s='Select image'}</label>
+			<label>{l s='Select an image'}</label>
 			<div class="margin-form">
 				<select name="type" onchange="changeFormat(this)">
 					<option value="all">{l s='All'}</option>
@@ -48,7 +48,7 @@
 			</div>
 
 			{foreach $types AS $k => $type}
-				<label class="second-select format_{$k}" style="display:none;">{l s='Select format'}</label>
+				<label class="second-select format_{$k}" style="display:none;">{l s='Select a format'}</label>
 				<div class="second-select margin-form format_{$k}" style="display:none;">
 					<select class="second-select format_{$k}" name="format_{$k}">
 						<option value="all">{l s='All'}</option>
@@ -76,23 +76,23 @@
 	</form>
 {/if}
 
-{if isset($display_move)}
+{if isset($display_move) && $display_move}
 	<br /><h2 class="space">{l s='Move images'}</h2>
-	{l s='PrestaShop now uses a new storage system for product images. It offers better performance if your shop has a very large number of products.'}<br />
+	{l s='PrestaShop now uses a new storage system for product images. It offers better performance if your shop has a large number of products.'}<br />
 	<br />
 	{if $safe_mode}
 		<div class="warn">
-			{l s='PrestaShop has detected that your server configuration is not compatible with the new storage system (directive "safe_mode" is activated). You should continue to use the existing system.'}
+			{l s='PrestaShop has detected that your server configuration is not compatible with the new storage system (directive "safe_mode" is activated). You should therefore continue to use the existing system.'}
 		</div>
 	{else}
 		<form action="{$current}&token={$token}" method="post">
 			<fieldset class="width4">
 				<legend><img src="../img/admin/picture.gif" /> {l s='Move images'}</legend><br />
-				{l s='You can choose to keep your images stored in the previous system - there is nothing wrong with that.'}<br />
-				{l s='You can also decide to move your images to the new storage system: in this case, click on the "Move images" button below. Please be patient, this can take several minutes.'}
+				{l s='You can choose to keep your images stored in the previous system. There\'s nothing wrong with that.'}<br />
+				{l s='You can also decide to move your images to the new storage system. In this case, click on the "Move images" button below. Please be patient. This can take several minutes.'}
 				<br /><br />
 				<div class="hint clear" style="display: block;">&nbsp;
-					{l s='After moving all your product images, for best performance, set the "Use the legacy image filesystem" option above to "No".'}
+					{l s='After moving all of your product images, set the "Use the legacy image filesystem" option above to "No" for best performance.'}
 				</div>
 				<center><input type="Submit" name="submitMoveImages{$table}" value="{l s='Move images'}" class="button space" onclick="return confirm('{l s='Are you sure?'}');" /></center>
 			</fieldset>

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,8 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision$
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -90,6 +89,7 @@ class LoyaltyDefaultModuleFrontController extends ModuleFrontController
 			$cart_rule->date_to = date('Y-m-d H:i:s', strtotime($cart_rule->date_from.' +1 year'));
 
 			$cart_rule->minimum_amount = (float)Configuration::get('PS_LOYALTY_MINIMAL');
+			$cart_rule->minimum_amount_currency = (int)$this->context->currency->id;
 			$cart_rule->active = 1;
 
 			$categories = Configuration::get('PS_LOYALTY_VOUCHER_CATEGORY');
@@ -107,16 +107,46 @@ class LoyaltyDefaultModuleFrontController extends ModuleFrontController
 				$cart_rule->name[(int)$language['id_lang']] = $text ? strval($text) : strval($default_text);
 			}
 
-			if (is_array($categories) && count($categories))
-				$cart_rule->add(true, false, $categories);
-			else
-				$cart_rule->add();
+
+			$contains_categories = is_array($categories) && count($categories);
+			if ($contains_categories)
+				$cart_rule->product_restriction = 1;
+			$cart_rule->add();
+
+			//Restrict cartRules with categories
+			if ($contains_categories)
+			{
+				
+				//Creating rule group
+				$id_cart_rule = (int)$cart_rule->id;
+				$sql = "INSERT INTO "._DB_PREFIX_."cart_rule_product_rule_group (id_cart_rule, quantity) VALUES ('$id_cart_rule', 1)";
+				Db::getInstance()->execute($sql);
+				$id_group = (int)Db::getInstance()->Insert_ID();
+				
+				//Creating product rule
+				$sql = "INSERT INTO "._DB_PREFIX_."cart_rule_product_rule (id_product_rule_group, type) VALUES ('$id_group', 'categories')";
+				Db::getInstance()->execute($sql);
+				$id_product_rule = (int)Db::getInstance()->Insert_ID();
+				
+				//Creating restrictions
+				$values = array();
+				foreach ($categories as $category) {
+					$category = (int)$category;
+					$values[] = "('$id_product_rule', '$category')";
+				}
+				$values = implode(',', $values);
+				$sql = "INSERT INTO "._DB_PREFIX_."cart_rule_product_rule_value (id_product_rule, id_item) VALUES $values";
+				Db::getInstance()->execute($sql);
+			}
+				
+				
 
 			// Register order(s) which contributed to create this voucher
-			LoyaltyModule::registerDiscount($cart_rule);
-
-			Tools::redirect($this->context->link->getModuleLink('loyalty', 'default', array('process' => 'summary')));
+			if (!LoyaltyModule::registerDiscount($cart_rule))
+				$cart_rule->delete();
 		}
+
+		Tools::redirect($this->context->link->getModuleLink('loyalty', 'default', array('process' => 'summary')));
 	}
 
 	/**
@@ -184,7 +214,8 @@ class LoyaltyDefaultModuleFrontController extends ModuleFrontController
 			'page' => ((int)Tools::getValue('p') > 0 ? (int)Tools::getValue('p') : 1),
 			'nbpagination' => ((int)Tools::getValue('n') > 0 ? (int)Tools::getValue('n') : 10),
 			'nArray' => array(10, 20, 50),
-			'max_page' => floor(count($orders) / ((int)Tools::getValue('n') > 0 ? (int)Tools::getValue('n') : 10))
+			'max_page' => floor(count($orders) / ((int)Tools::getValue('n') > 0 ? (int)Tools::getValue('n') : 10)),
+			'pagination_link' => $this->getSummaryPaginationLink(array(), $this->context->smarty)
 		));
 
 		/* Discounts */

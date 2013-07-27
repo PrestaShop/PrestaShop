@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -34,7 +34,8 @@ class PrestaShopExceptionCore extends Exception
 	 */
 	public function displayMessage()
 	{
-		if (_PS_MODE_DEV_)
+		header('HTTP/1.1 500 Internal Server Error');
+		if (_PS_MODE_DEV_ || defined('_PS_ADMIN_DIR_'))
 		{
 			// Display error message
 			echo '<style>
@@ -50,12 +51,7 @@ class PrestaShopExceptionCore extends Exception
 			</style>';
 			echo '<div id="psException">';
 			echo '<h2>['.get_class($this).']</h2>';
-			printf(
-				'<p><b>%s</b><br /><i>at line </i><b>%d</b><i> in file </i><b>%s</b></p>',
-				$this->getMessage(),
-				$this->getLine(),
-				ltrim(str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $this->getFile()), '/')
-			);
+			echo $this->getExentedMessage();
 
 			$this->displayFileDebug($this->getFile(), $this->getLine());
 
@@ -85,11 +81,12 @@ class PrestaShopExceptionCore extends Exception
 		}
 		else
 		{
-			// If not in mode dev, launch a http 500 error
-			header('HTTP/1.1 500 Internal Server Error');
+			// If not in mode dev, display an error page
 			if (file_exists(_PS_ROOT_DIR_.'/error500.html'))
 				echo file_get_contents(_PS_ROOT_DIR_.'/error500.html');
 		}
+		// Log the error in the disk
+		$this->logError();
 		exit;
 	}
 
@@ -140,4 +137,33 @@ class PrestaShopExceptionCore extends Exception
 		}
 		echo '</pre>';
 	}
+	
+	/**
+	 * Log the error on the disk
+	 */
+	protected function logError()
+	{
+		$logger = new FileLogger();
+		$logger->setFilename(_PS_ROOT_DIR_.'/log/'.date('Ymd').'_exception.log');
+		$logger->logError($this->getExentedMessage(false));
+	}
+	
+	/**
+	 * Return the content of the Exception
+	 * @return string content of the exception
+	 */
+	protected function getExentedMessage($html = true)
+	{
+		$format = '<p><b>%s</b><br /><i>at line </i><b>%d</b><i> in file </i><b>%s</b></p>';
+		if (!$html)
+			$format = strip_tags(str_replace('<br />', ' ', $format));
+
+		return sprintf(
+					$format,
+					$this->getMessage(),
+					$this->getLine(),
+					ltrim(str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $this->getFile()), '/')
+				);
+	}
+	
 }

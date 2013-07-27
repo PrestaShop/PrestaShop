@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,14 +18,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <br/>
 <div class="blocEngine">
-	<form action="{$current}&token={$token}" method="post" id="settings_form" name="settings_form">
+	<form action="{$smarty.server.REQUEST_URI|escape}" method="post" id="settings_form" name="settings_form">
 		<h3 class="icon-{l s='Settings'}">{l s='Settings'}</h3>
 
 		<div class="rowForm">
@@ -38,7 +38,7 @@
 				</select>
 
 			{else}
-				{l s='No graph engine module installed'}
+				{l s='No graph engine module has been installed.'}
 			{/if}
 		</div>
 
@@ -51,7 +51,7 @@
 					{/foreach}
 				</select>
 			{else}
-				{l s='No grid engine module installed'}
+				{l s='No grid engine module has been installed.'}
 			{/if}
 		</div>
 

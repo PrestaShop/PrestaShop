@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -84,7 +84,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 				'title' =>	$this->l('Options'),
 				'fields' =>	array(
 					'PS_STOCK_MVT_INC_REASON_DEFAULT' => array(
-						'title' => $this->l('Default label when increasing stock:'),
+						'title' => $this->l('Default label for increasing stock:'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'list' => $reasons_inc,
@@ -92,7 +92,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_STOCK_MVT_DEC_REASON_DEFAULT' => array(
-						'title' => $this->l('Default label when decreasing stock:'),
+						'title' => $this->l('Default label for decreasing stock:'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'list' => $reasons_dec,
@@ -100,7 +100,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_STOCK_CUSTOMER_ORDER_REASON' => array(
-						'title' => $this->l('Default label when decreasing stock when a customer order is shipped:'),
+						'title' => $this->l('Default label for decreasing stock when a customer order is shipped:'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'list' => $reasons_dec,
@@ -108,7 +108,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_STOCK_MVT_SUPPLY_ORDER' => array(
-						'title' => $this->l('Default label when increasing stock when a supply order is received:'),
+						'title' => $this->l('Default label for increasing stock when a supply order is received:'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'list' => $reasons_inc,
@@ -155,7 +155,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 
 			$this->fields_form = array(
 				'legend' => array(
-					'title' => $this->l('Stock Movement Label'),
+					'title' => $this->l('Stock Movement label'),
 					'image' => '../img/admin/edit.gif'
 				),
 				'input' => array(
@@ -186,7 +186,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 							'id' => 'id',
 							'name' => 'name'
 						),
-						'desc' => $this->l('Select the corresponding action: increase or decrease stock.')
+						'desc' => $this->l('Select the corresponding action: Increase or decrease stock?')
 					),
 				),
 				'submit' => array(
@@ -220,7 +220,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 							'label' => $this->l('Color:'),
 							'name' => 'color',
 							'size' => 20,
-							'desc' => $this->l('Back Office background will be displayed in this color. HTML colors only.'),
+							'desc' => $this->l('The background of the PrestaShop Back Office will be displayed in this color (HTML colors only, please).'),
 						),
 						array(
 							'type' => 'radio',
@@ -241,7 +241,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 									'label' => $this->l('No')
 								)
 							),
-							'desc' => $this->l('Define if it is possible to edit the order. An editable order is not valid to send to the supplier.')
+							'desc' => $this->l('Is it is possible to edit the order? Keep in mind that an editable order can not be sent to the supplier.')
 						),
 						array(
 							'type' => 'radio',
@@ -262,7 +262,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 									'label' => $this->l('No')
 								)
 							),
-							'desc' => $this->l('Define if it is possible to generate a delivery note of the order.')
+							'desc' => $this->l('Is it possible to generate a delivery note for the order?')
 						),
 						array(
 							'type' => 'radio',
@@ -283,7 +283,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 									'label' => $this->l('No')
 								)
 							),
-							'desc' => $this->l('Define if products have been partially/completely received. This allows you to know if the products ordered have to be added to the corresponding warehouse.'),
+							'desc' => $this->l('Define if products have been either partially or completely received. This will allow you to know if ordered products have to be added to the corresponding warehouse.'),
 						),
 						array(
 							'type' => 'radio',
@@ -304,7 +304,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 									'label' => $this->l('No')
 								)
 							),
-							'desc' => $this->l('Customer is awaiting delivery')
+							'desc' => $this->l('The customer is awaiting delivery.')
 						),
 					),
 					'submit' => array(
@@ -317,7 +317,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 					$this->toolbar_title = $this->l('Stock: Add supply order status');
 				else
 				{
-					$this->toolbar_title = $this->l('Stock: Update Supply order status');
+					$this->toolbar_title = $this->l('Stock: Update supply order status');
 
 					$id_supply_order_state = Tools::getValue('id_supply_order_state', 0);
 
@@ -326,7 +326,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 					{
 						$this->fields_form = array(
 							'legend' => array(
-								'title' => $this->l('Supply Order status'),
+								'title' => $this->l('Supply order status'),
 								'image' => '../img/admin/edit.gif'
 							),
 							'input' => array(
@@ -343,7 +343,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 									'label' => $this->l('Back Office color:'),
 									'name' => 'color',
 									'size' => 20,
-									'desc' => $this->l('Back Office background will be displayed in this color. HTML colors only'),
+									'desc' => $this->l('The background of PrestaShop\'s Back Office will be displayed in this color (HTML colors only, please).'),
 								),
 							),
 							'submit' => array(
@@ -380,7 +380,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 		/**
 		 * General messages displayed for all lists
 		 */
-		$this->displayInformation($this->l('This interface allows you to configure your supply order statuses and stock movement labels.').'<br />');
+		$this->displayInformation($this->l('This interface allows you to configure your supply order status and stock movement labels.').'<br />');
 
 		// Checks access
 		if (!($this->tabAccess['add'] === '1'))
@@ -433,7 +433,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 		$this->list_no_link = true;
 		$this->_orderBy = null;
 		$this->addRowActionSkipList('delete', array(1, 2, 3, 4, 5, 6));
-		$this->toolbar_title = $this->l('Stock: Supply Order status');
+		$this->toolbar_title = $this->l('Stock: Supply order status');
 		$this->initToolbar();
 
 		$this->fields_list = array(
@@ -453,7 +453,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 				'orderby' => false
 			),
 			'delivery_note' => array(
-				'title' => $this->l('Delivery note available?'),
+				'title' => $this->l('Is there a delivery note available?'),
 				'align' => 'center',
 				'icon' => array(
 					'1' => 'enabled.gif',
@@ -464,7 +464,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 				'orderby' => false
 			),
 			'pending_receipt' => array(
-				'title' => $this->l('Is a pending receipt state?'),
+				'title' => $this->l('Is there a pending receipt?'),
 				'align' => 'center',
 				'icon' => array(
 					'1' => 'enabled.gif',
@@ -475,7 +475,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 				'orderby' => false
 			),
 			'receipt_state' => array(
-				'title' => $this->l('Is a delivery state?'),
+				'title' => $this->l('Delivery state?'),
 				'align' => 'center',
 				'icon' => array(
 					'1' => 'enabled.gif',
@@ -486,7 +486,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 				'orderby' => false
 			),
 			'enclosed' => array(
-				'title' => $this->l('Is an enclosed order state?'),
+				'title' => $this->l('Enclosed order state?'),
 				'align' => 'center',
 				'icon' => array(
 					'1' => 'enabled.gif',
@@ -547,7 +547,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 					$item = &$this->_list[$i];
 
 					if (empty($item['product_name']))
-						$item['product_name'] = $this->l('The name of this product is not available. It may been deleted from the system.');
+						$item['product_name'] = $this->l('The name of this product is not available. It may have been deleted from the system.');
 				}
 			}
 	}
@@ -556,7 +556,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 		{
-			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management prior to use this feature.');
+			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management before using this feature.');
 			return false;
 		}
 		parent::initContent();
@@ -566,7 +566,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 		{
-			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management prior to use this feature.');
+			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management before using this feature.');
 			return false;
 		}
 		parent::initProcess();	

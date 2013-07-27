@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -74,13 +74,13 @@ function initProductPage()
 	
 	{if !$priceDisplay || $priceDisplay == 2}
 		{assign var='productPrice' value=$product->getPrice(true, $smarty.const.NULL, 2)}
-		{assign var='productPriceWithoutRedution' value=$product->getPriceWithoutReduct(false, $smarty.const.NULL)}
+		{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(false, $smarty.const.NULL)}
 	{elseif $priceDisplay == 1}
 		{assign var='productPrice' value=$product->getPrice(false, $smarty.const.NULL, 2)}
-		{assign var='productPriceWithoutRedution' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
+		{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
 	{/if}
 	
-	ProductFn.productPriceWithoutRedution = '{$productPriceWithoutRedution}';
+	ProductFn.productPriceWithoutReduction = '{$productPriceWithoutReduction}';
 	ProductFn.productPrice = '{$productPrice}';
 	
 	// Customizable field
@@ -114,11 +114,11 @@ function initProductPage()
 	{/if}
 	
 	// Translations
-	ProductFn.doesntExist = '{l s='The product does not exist in this model. Please choose another.' js=1}';
+	ProductFn.doesntExist = '{l s='The combination does not exist for this product. Please choose another.' js=1}';
 	ProductFn.doesntExistNoMore = '{l s='This product is no longer in stock' js=1}';
 	ProductFn.doesntExistNoMoreBut = '{l s='with those attributes but is available with others' js=1}';
 	ProductFn.uploading_in_progress = '{l s='Uploading in progress, please wait...' js=1}';
-	ProductFn.fieldRequired = '{l s='Please fill in all required fields, then save the customization.' js=1}';
+	ProductFn.fieldRequired = '{l s='Please fill in all required fields, then save your customization.' js=1}';
 	
 	{if isset($groups)}
 		// Combinations

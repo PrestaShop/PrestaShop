@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -95,7 +95,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				'width' => 140
 			),
 			'zipcode' => array(
-				'title' => $this->l('Zip Codes'),
+				'title' => $this->l('Zip Code'),
 				'width' => 25,
 			),
 			'behavior' => array(
@@ -131,6 +131,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		$this->_where = 'AND `id_tax_rules_group` = '.(int)$id_group;
 
 		$this->show_toolbar = false;
+		$this->tpl_list_vars = array('id_tax_rules_group' => (int)$id_group);
 
 		return parent::renderList();
 	}
@@ -191,7 +192,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			$this->no_back = true;
 			$this->toolbar_btn['new'] = array(
 				'href' => '#',
-				'desc' => $this->l('Add new tax rule')
+				'desc' => $this->l('Add a new tax rule')
 			);
 			$content = parent::renderForm();
 			$this->tpl_folder = 'tax_rules/';
@@ -257,7 +258,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 					'label' => $this->l('Zip Code range:'),
 					'name' => 'zipcode',
 					'required' => false,
-					'hint' => $this->l('You can define a range (eg: 75000-75015) or a simple zipcode')
+					'hint' => $this->l('You can define a range of zipcodes (eg: 75000-75015) or simply use one zipcode.')
 				),
 				array(
 					'type' => 'select',
@@ -276,7 +277,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 							),
 							array(
 								'id' => 2,
-								'name' => $this->l('One After Another')
+								'name' => $this->l('One after another')
 							)
 						),
 						'id' => 'id',
@@ -285,8 +286,8 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 					'hint' =>
 						$this->l('Define the behavior if an address matches multiple rules:').'<br />
 						<b>'.$this->l('This Tax Only:').'</b> '.$this->l('Will apply only this tax').'<br />
-						<b>'.$this->l('Combine:').'</b> '.$this->l('Combine taxes (eg: 10% + 5% => 15%)').'<br />
-						<b>'.$this->l('One After Another:').'</b> '.$this->l('Apply taxes one after another (eg: 100€ + 10% => 110€ + 5% => 115.5€)')
+						<b>'.$this->l('Combine:').'</b> '.$this->l('Combine taxes (eg: 10% + 5% = 15%)').'<br />
+						<b>'.$this->l('One After Another:').'</b> '.$this->l('Apply taxes one after another (eg: 0 + 10% = 0 + 5% = 5.5)')
 				),
 				array(
 					'type' => 'select',
@@ -298,7 +299,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 						'id' => 'id_tax',
 						'name' => 'name',
 						'default' => array(
-							'value' => 'name',
+							'value' => 0,
 							'label' => $this->l('No Tax')
 						)
 					),
@@ -355,21 +356,21 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			if ($this->tabAccess['delete'] === '1')
 				$this->action = 'delete_tax_rule';
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 		}
 		else if (Tools::isSubmit('submitBulkdeletetax_rule'))
 		{
 			if ($this->tabAccess['delete'] === '1')
 				$this->action = 'bulk_delete_tax_rules';
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 		}
 		else if (Tools::getValue('action') == 'create_rule')
 		{
 			if ($this->tabAccess['add'] === '1')
 				$this->action = 'create_rule';
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to add here.');
+				$this->errors[] = Tools::displayError('You do not have permission to add this.');
 		}
 		else
 			parent::initProcess();
@@ -398,11 +399,16 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
 		if (empty($this->selected_states) || count($this->selected_states) == 0)
 			$this->selected_states = array(0);
-
+		$tax_rules_group = new TaxRulesGroup((int)$id_tax_rules_group);
 		foreach ($this->selected_countries as $id_country)
 		{
 			foreach ($this->selected_states as $id_state)
 			{
+				if ($tax_rules_group->hasUniqueTaxRuleForCountry($id_country, $id_state, $id_rule))
+				{
+					$this->errors[] = Tools::displayError('A tax rule already exists for this country/state with tax only behavior');
+					continue;
+				}
 				$tr = new TaxRule();
 
 				// update or creation?
@@ -416,7 +422,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				list($tr->zipcode_from, $tr->zipcode_to) = $tr->breakDownZipCode($zip_code);
 
 				// Construct Object Country
-				$country = new Country((int)$id_country);
+				$country = new Country((int)$id_country, (int)$this->context->language->id);
 
 				if ($zip_code && $country->need_zip_code)
 				{
@@ -427,8 +433,8 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 								if (!$country->checkZipCode($zip_code))
 								{
 									$this->errors[] = sprintf(
-										Tools::displayError('Zip/Postal code is invalid. Must be typed as follows: %s'),
-										str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)))
+										Tools::displayError('Zip/Postal code is invalid. Must be typed as follows: %s for %s'),
+										str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format))), $country->name
 									);
 								}
 					}
@@ -443,7 +449,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
 				if (count($this->errors) == 0)
 					if (!$tr->save())
-						$this->errors[] = Tools::displayError('An error has occurred: Can\'t save the current tax rule');
+						$this->errors[] = Tools::displayError('An error has occurred: Cannot save the current tax rule.');
 			}
 		}
 

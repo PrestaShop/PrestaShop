@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -39,10 +39,10 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 		$this->smarty = $smarty;
 
 		// header informations
-		$this->date = Tools::displayDate($order_invoice->date_add, (int)$this->order->id_lang);
+		$this->date = Tools::displayDate($order_invoice->date_add);
 
 		$id_lang = Context::getContext()->language->id;
-		$this->title = HTMLTemplateInvoice::l('Invoice ').' #'.Configuration::get('PS_INVOICE_PREFIX', $id_lang).sprintf('%06d', $order_invoice->number);
+		$this->title = HTMLTemplateInvoice::l('Invoice ').' #'.Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, (int)$this->order->id_shop).sprintf('%06d', $order_invoice->number);
 		// footer informations
 		$this->shop = new Shop((int)$this->order->id_shop);
 	}
@@ -85,11 +85,12 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 	 */
 	public function getTaxTabContent()
 	{
-			$invoice_address = new Address((int)$this->order->id_address_invoice);
+			$address = new Address((int)$this->order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 			$tax_exempt = Configuration::get('VATNUMBER_MANAGEMENT')
-								&& !empty($invoice_address->vat_number)
-								&& $invoice_address->id_country != Configuration::get('VATNUMBER_COUNTRY');
-
+								&& !empty($address->vat_number)
+								&& $address->id_country != Configuration::get('VATNUMBER_COUNTRY');
+			$carrier = new Carrier($this->order->id_carrier);
+			
 			$this->smarty->assign(array(
 				'tax_exempt' => $tax_exempt,
 				'use_one_after_another_method' => $this->order_invoice->useOneAfterAnotherTaxComputationMethod(),
@@ -98,7 +99,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 				'ecotax_tax_breakdown' => $this->order_invoice->getEcoTaxTaxesBreakdown(),
 				'wrapping_tax_breakdown' => $this->order_invoice->getWrappingTaxesBreakdown(),
 				'order' => $this->order,
-				'order_invoice' => $this->order_invoice
+				'order_invoice' => $this->order_invoice,
+				'carrier' => $carrier
 			));
 
 			return $this->smarty->fetch($this->getTemplate('invoice.tax-tab'));
@@ -137,7 +139,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 	 */
 	public function getFilename()
 	{
-		return Configuration::get('PS_INVOICE_PREFIX').sprintf('%06d', $this->order_invoice->number).'.pdf';
+		return Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_invoice->number).'.pdf';
 	}
 }
 

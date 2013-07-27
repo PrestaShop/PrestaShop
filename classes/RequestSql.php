@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -37,7 +37,7 @@ class RequestSqlCore extends ObjectModel
 		'primary' => 'id_request_sql',
 		'fields' => array(
 			'name' => 	array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 200),
-			'sql' => 	array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 1000),
+			'sql' => 	array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true),
 		),
 	);
 
@@ -232,8 +232,6 @@ class RequestSqlCore extends ObjectModel
 		{
 			if ($attribut = $this->cutAttribute(trim($attr), $from))
 				$tab[] = $attribut;
-			else
-				return false;
 		}
 		return $tab;
 	}
@@ -247,7 +245,7 @@ class RequestSqlCore extends ObjectModel
 	 */
 	public function cutAttribute($attr, $from)
 	{
-		if (preg_match('#^((`(\()?([a-z_])+`(\))?)|((\()?([a-z_])+(\))?))\.((`(\()?([a-z_])+`(\))?)|((\()?([a-z_])+(\))?))$#i', $attr))
+		if (preg_match('#^((`(\()?([a-z0-9_])+`(\))?)|((\()?([a-z0-9_])+(\))?))\.((`(\()?([a-z0-9_])+`(\))?)|((\()?([a-z0-9_])+(\))?))$#i', $attr))
 		{
 			$tab = explode('.', str_replace(array('`', '(', ')'), '', $attr));
 			if (!$table = $this->returnNameTable($tab[0], $from))
@@ -258,7 +256,7 @@ class RequestSqlCore extends ObjectModel
 							'attribut' => $tab[1],
 							'string' => $attr);
 		}
-		else if (preg_match('#^((`(\()?([a-z_])+`(\))?)|((\()?([a-z_])+(\))?))$#i', $attr))
+		elseif (preg_match('#^((`(\()?([a-z0-9_])+`(\))?)|((\()?([a-z0-9_])+(\))?))$#i', $attr))
 		{
 			$attribut = str_replace(array('`', '(', ')'), '', $attr);
 			if (!$table = $this->returnNameTable(false, $from))

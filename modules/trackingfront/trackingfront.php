@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop 
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -61,7 +61,7 @@ class TrackingFront extends Module
 		{
 			unset($this->context->cookie->tracking_id);
 			unset($this->context->cookie->tracking_passwd);
-			Tools::redirect('modules/trackingfront/stats.php');
+			Tools::redirect(Tools::getShopDomain(true, false).__PS_BASE_URI__.'modules/trackingfront/stats.php');
 		}
 		elseif (Tools::isSubmit('submitLoginTracking'))
 		{
@@ -89,7 +89,7 @@ class TrackingFront extends Module
 				{
 					$this->context->cookie->tracking_id = $tracking_id;
 					$this->context->cookie->tracking_passwd = $passwd;
-					Tools::redirect('modules/trackingfront/stats.php');
+					Tools::redirect(Tools::getShopDomain(true, false).__PS_BASE_URI__.'modules/trackingfront/stats.php');
 				}
 			}
 			$this->smarty->assign('errors', $errors);

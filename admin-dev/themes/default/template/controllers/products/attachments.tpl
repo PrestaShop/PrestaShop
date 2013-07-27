@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -48,7 +48,7 @@
 			{/foreach}
 		</div>
 		<div class="clear">&nbsp;</div>
-		<label>{l s='File'}</label>
+		<label>{l s='File:'}</label>
 		<div class="margin-form">
 			<p><input type="file" name="attachment_file" /></p>
 			<p class="preference_description">{l s='Upload a file from your computer'} ({$PS_ATTACHMENT_MAXIMUM_SIZE|string_format:"%.2f"} {l s='MB max.'})</p>

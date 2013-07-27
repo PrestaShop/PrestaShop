@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,16 +18,16 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture assign='page_title'}{l s='My Vouchers'}{/capture}
+{capture assign='page_title'}{l s='My vouchers'}{/capture}
 {include file='./page-title.tpl'}
 
 <div data-role="content" id="content">
-	<a data-role="button" data-icon="arrow-l" data-theme="a" data-mini="true" data-inline="true" href="{$link->getPageLink('my-account', true)}" data-ajax="false">{l s='My account'}</a>
+	<a data-role="button" data-icon="arrow-l" data-theme="a" data-mini="true" data-inline="true" href="{$link->getPageLink('my-account', true)|escape:'html'}" data-ajax="false">{l s='My account'}</a>
 	
 	{if isset($discount) && count($discount) && $nbDiscounts}
 	<table class="discount std table_block">
@@ -59,7 +59,7 @@
 				</td>
 				<td class="discount_minimum">
 					{if $discountDetail.minimal == 0}
-						{l s='none'}
+						{l s='None'}
 					{else}
 						{convertPrice price=$discountDetail.minimal}
 					{/if}
@@ -80,7 +80,7 @@
 		*{l s='Tax included'}
 	</p>
 	{else}
-		<p class="warning">{l s='You do not possess any vouchers.'}</p>
+		<p class="warning">{l s='You do not have any vouchers.'}</p>
 	{/if}
 	
 </div><!-- /content -->

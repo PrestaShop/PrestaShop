@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -55,7 +55,7 @@ function update_order_canada()
 
 		$id_order_list = Db::getInstance()->executeS($sql);
 		$default_price_display_method = Db::getInstance()->getValue('SELECT price_display_method
-			FROM `'._DB_PREFIX_.'group WHERE id_group=1`');
+			FROM `'._DB_PREFIX_.'group` WHERE id_group=1');
 		$values = '';
 		foreach ($id_order_list as $order)
 		{

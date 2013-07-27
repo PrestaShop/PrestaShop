@@ -92,7 +92,6 @@ UPDATE PREFIX_stock_mvt sm SET sm.id_stock = IFNULL((
 	WHERE s.id_product = sm.id_product
 	AND s.id_product_attribute = sm.id_product_attribute
 	ORDER BY s.id_shop
-	LIMIT 1
 ), 0);
 DELETE FROM PREFIX_stock_mvt WHERE id_stock = 0;
 ALTER TABLE PREFIX_stock_mvt DROP id_product, DROP id_product_attribute;
@@ -264,7 +263,7 @@ CREATE TABLE `PREFIX_module_shop` (
 PRIMARY KEY (`id_module` , `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
-INSERT INTO `PREFIX_module_shop` (`id_module`, `id_shop`) (SELECT `id_module`, 1 FROM `PREFIX_module`);
+INSERT INTO `PREFIX_module_shop` (`id_module`, `id_shop`) (SELECT `id_module`, 1 FROM `PREFIX_module` WHERE active = 1);
 
 ALTER TABLE `PREFIX_module_currency` ADD `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_module`;
 ALTER TABLE `PREFIX_module_currency` DROP PRIMARY KEY;
@@ -313,6 +312,6 @@ PRIMARY KEY (`id_scene`, `id_shop`),
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 INSERT INTO `PREFIX_scene_shop` (id_shop, id_scene) (SELECT 1, id_scene FROM PREFIX_scene);
 
-ALTER TABLE `PREFIX_delivery` ADD `id_shop` INT UNSIGNED NULL DEFAULT NULL AFTER `id_delivery`, ADD `id_group_shop` INT UNSIGNED NULL DEFAULT NULL AFTER `id_shop`;
-
 /* PHP:create_multistore(); */;
+
+UPDATE `PREFIX_customization` INNER JOIN `PREFIX_orders` USING(id_cart) SET in_cart = 1;

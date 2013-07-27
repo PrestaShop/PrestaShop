@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -44,7 +44,7 @@ class AdminDeliverySlipControllerCore extends AdminController
 					),
 					'PS_DELIVERY_NUMBER' => array(
 						'title' => $this->l('Delivery number:'),
-						'desc' => $this->l('The next delivery slip will begin with this number, and then increase with each additional slip'),
+						'desc' => $this->l('The next delivery slip will begin with this number and then increase with each additional slip.'),
 						'size' => 6,
 						'cast' => 'intval',
 						'type' => 'text'
@@ -111,7 +111,7 @@ class AdminDeliverySlipControllerCore extends AdminController
 				if (count(OrderInvoice::getByDeliveryDateInterval(Tools::getValue('date_from'), Tools::getValue('date_to'))))
 					Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf').'&submitAction=generateDeliverySlipsPDF&date_from='.urlencode(Tools::getValue('date_from')).'&date_to='.urlencode(Tools::getValue('date_to')));
 				else
-					$this->errors[] = Tools::displayError('No delivery slip found for this period');
+					$this->errors[] = Tools::displayError('No delivery slip was found for this period.');
 			}
 		}
 		else

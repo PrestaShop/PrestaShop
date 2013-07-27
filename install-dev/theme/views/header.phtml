@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-	<title><?php echo $this->l('PrestaShop Wizard Installer') ?></title>
+	<title><?php echo $this->l('PrestaShop Installation Assistant') ?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 	<meta http-equiv="Pragma" content="no-cache" />
@@ -17,6 +17,7 @@
 	<script type="text/javascript" src="theme/js/jquery.ajaxfileupload.js"></script>
 	<script type="text/javascript" src="theme/js/jquery.chosen/jquery.chosen.js"></script>
 	<script type="text/javascript" src="theme/js/install.js"></script>
+	<script type="text/javascript" src="//www.prestashop.com/js/user-assistance.js"></script>
 	<?php if (file_exists(_PS_INSTALL_PATH_.'theme/js/'.$this->step.'.js')): ?>
 		<script type="text/javascript" src="theme/js/<?php echo $this->step ?>.js"></script>
 	<?php endif; ?>
@@ -38,11 +39,13 @@
 		<li class="lnk_forum"><a href="<?php echo $this->getSupportLink() ?>" target="_blank"><?php echo $this->l('Support') ?></a></li>
 		<li class="lnk_forum"><a href="<?php echo $this->getDocumentationLink() ?>" target="_blank"><?php echo $this->l('Documentation') ?></a></li>
 		<li class="lnk_blog last"><a href="<?php echo $this->getBlogLink() ?>" target="_blank"><?php echo $this->l('Blog') ?></a></li>
+		<!--
 		<?php if ($this->getPhone()): ?>
 			<li id="phone_block" class="last">
 				<div><span><?php echo $this->l('Contact us!') ?></span><br /><?php echo $this->getPhone() ?></div>
 			</li>
 		<?php endif; ?>
+		-->
 	</ul>
 
 	<div id="PrestaShopLogo">PrestaShop</div>
@@ -68,6 +71,12 @@
 			<?php endif; ?>
 		<?php endforeach; ?>
 	</ol>
+	<?php if (@fsockopen('api.prestashop.com', 80, $errno, $errst, 3)): ?>
+		<iframe scrolling="no" style="height:160px;width:160px;border:none;margin-top:20px"
+			src="https://api.prestashop.com/iframe/install.php?step=<?php echo $this->step ?>&lang=<?php echo $this->language->getLanguageIso() ?>&country=<?php echo $this->session->shop_country ?>">
+			<p><?php echo $this->l('Contact us!') ?><br /><?php echo $this->getPhone() ?></p>
+		</iframe>
+	<?php endif; ?>
 </div>
 
 <!-- Page content -->
@@ -75,12 +84,18 @@
 <div id="sheets" class="sheet shown">
 	<div id="sheet_<?php echo $this->step ?>" class="sheet shown clearfix">
 	<div class="contentTitle">
-		<h1><?php echo $this->l('menu_'.$this->step) ?></h1>
-
+		<h1><?php echo $this->l('Installation Assistant') ?></h1>
 		<ul id="stepList_1" class="stepList clearfix">
 			<?php foreach ($this->getSteps() as $step): ?>
 				<li <?php if ($this->isStepFinished($step)): ?>class="ok"<?php endif; ?>><?php echo $this->l('menu_'.$this->step) ?></li>
 			<?php endforeach; ?>
 		</ul>
 	</div>
-
+	<noscript>
+		<h4 class="errorBlock" style="margin-bottom:10px">
+			<?php echo $this->l('To install PrestaShop, you need to have JavaScript enabled in your browser.') ?>
+			<a href="<?php echo $this->l('http://doc.prestashop.com/display/PS15/What+you+need+to+get+started#HowtoenableJavaScript-HowtoenableJavaScript') ?>" target="_blank">
+				<img src="theme/img/help.png" style="height:16px;width:16px" />
+			</a>
+		</h4>
+	</noscript>

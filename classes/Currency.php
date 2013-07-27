@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -43,7 +43,7 @@ class CurrencyCore extends ObjectModel
 	/** @var int bool used for displaying blank between sign and price */
 	public $blank;
 
-	/** @var string Conversion rate from euros */
+	/** @var string exchange rate from euros */
 	public $conversion_rate;
 
 	/** @var boolean True if currency has been deleted (staying in database as deleted) */
@@ -73,7 +73,7 @@ class CurrencyCore extends ObjectModel
 			'sign' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 8),
 			'format' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'decimals' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
-			'conversion_rate' =>array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
+			'conversion_rate' =>array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true, 'shop' => true),
 			'deleted' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'active' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 		),
@@ -326,23 +326,23 @@ class CurrencyCore extends ObjectModel
 	}
 
 	/**
-	 * Refresh the currency conversion rate
-	 * The XML file define conversion rate for each from a default currency ($isoCodeSource).
+	 * Refresh the currency exchange rate
+	 * The XML file define exchange rate for each from a default currency ($isoCodeSource).
 	 *
-	 * @param $data XML content which contains all the conversion rates
+	 * @param $data XML content which contains all the exchange rates
 	 * @param $isoCodeSource The default currency used in the XML file
 	 * @param $defaultCurrency The default currency object
 	 */
 	public function refreshCurrency($data, $isoCodeSource, $defaultCurrency)
 	{
-		// fetch the conversion rate of the default currency
-		$conversion_rate = 1;
+		// fetch the exchange rate of the default currency
+		$exchange_rate = 1;
 		if ($defaultCurrency->iso_code != $isoCodeSource)
 		{
 			foreach ($data->currency as $currency)
 				if ($currency['iso_code'] == $defaultCurrency->iso_code)
 				{
-					$conversion_rate = round((float)$currency['rate'], 6);
+					$exchange_rate = round((float)$currency['rate'], 6);
 					break;
 				}
 		}
@@ -364,7 +364,7 @@ class CurrencyCore extends ObjectModel
 			}
 
 			if (isset($rate))
-				$this->conversion_rate = round($rate / $conversion_rate, 6);
+				$this->conversion_rate = round($rate / $exchange_rate, 6);
 		}
 		$this->update();
 	}

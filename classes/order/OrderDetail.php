@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -249,7 +249,17 @@ class OrderDetailCore extends ObjectModel
 			$context = Context::getContext();
 		$this->context = $context->cloneContext();
 	}
-	
+
+	public function delete()
+	{
+		if(!$res = parent::delete())
+			return false;
+
+		Db::getInstance()->delete('order_detail_tax', 'id_order_detail='.(int)$this->id);
+
+		return $res;
+	}
+
 	protected function setContext($id_shop)
 	{
 		if ($this->context->shop->id != $id_shop)
@@ -498,7 +508,7 @@ class OrderDetailCore extends ObjectModel
 
         $this->purchase_supplier_price = (float)$product['wholesale_price'];
         if ($product['id_supplier'] > 0)
-            $this->purchase_supplier_price = (float)ProductSupplier::getProductPrice((int)$product['id_supplier'], $product['id_product'], $product['id_product_attribute']);
+            $this->purchase_supplier_price = (float)ProductSupplier::getProductPrice((int)$product['id_supplier'], $product['id_product'], $product['id_product_attribute'], true);
 
 		$this->setSpecificPrice($order, $product);
 

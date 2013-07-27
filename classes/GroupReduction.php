@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -216,13 +216,18 @@ class GroupReductionCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'product_group_reduction_cache` pgr
 			WHERE pgr.`id_product` = '.(int)$id_product_old
 		);
+
 		if (!$res)
 			return true;
+
+		$query = '';
+
 		foreach ($res as $row)
 		{
-			$query = 'INSERT INTO `'._DB_PREFIX_.'product_group_reduction_cache` (`id_product`, `id_group`, `reduction`) VALUES ';
-			$query .= '('.(int)$id_product.', '.(int)$row['id_group'].', '.(float)$row['reduction'].')';
+			$query .= 'INSERT INTO `'._DB_PREFIX_.'product_group_reduction_cache` (`id_product`, `id_group`, `reduction`) VALUES ';
+			$query .= '('.(int)$id_product.', '.(int)$row['id_group'].', '.(float)$row['reduction'].') ON DUPLICATE KEY UPDATE `reduction` = '.(float)$row['reduction'].';';
 		}
+
 		return Db::getInstance()->execute($query);
 	}
 

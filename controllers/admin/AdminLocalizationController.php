@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -130,7 +130,7 @@ class AdminLocalizationControllerCore extends AdminController
 
 		if (function_exists('date_default_timezone_set'))
 			$this->fields_options['general']['fields']['PS_TIMEZONE'] = array(
-				'title' => $this->l('Time Zone.'),
+				'title' => $this->l('Time zone:'),
 				'validation' => 'isAnything',
 				'type' => 'select',
 				'list' => Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT name FROM '._DB_PREFIX_.'timezone'),
@@ -152,7 +152,7 @@ class AdminLocalizationControllerCore extends AdminController
 				$pack = @Tools::file_get_contents('http://api.prestashop.com/localization/'.$version.'/'.Tools::getValue('iso_localization_pack').'.xml');
 
 				if (!$pack && !($pack = @Tools::file_get_contents(dirname(__FILE__).'/../../localization/'.Tools::getValue('iso_localization_pack').'.xml')))
-					$this->errors[] = Tools::displayError('Cannot load localization pack (from prestashop.com and from your local folder "localization")');
+					$this->errors[] = Tools::displayError('Cannot load the localization pack.');
 
 				if (!$selection = Tools::getValue('selection'))
 					$this->errors[] = Tools::displayError('Please select at least one item to import.');
@@ -243,7 +243,7 @@ class AdminLocalizationControllerCore extends AdminController
 		$this->fields_form = array(
 			'tinymce' => true,
 			'legend' => array(
-				'title' => $this->l('Import localization pack'),
+				'title' => $this->l('Import a localization pack'),
 				'image' => '../img/admin/localization.gif'
 			),
 			'input' => array(
@@ -270,7 +270,7 @@ class AdminLocalizationControllerCore extends AdminController
 				)
 			),
 			'submit' => array(
-				'title' => $this->l('   Import   '),
+				'title' => $this->l('Import   '),
 				'class' => 'button',
 				'name' => 'submitLocalizationPack'
 			)
@@ -323,6 +323,10 @@ class AdminLocalizationControllerCore extends AdminController
 	public function updateOptionPsCurrencyDefault($value)
 	{
 		Configuration::updateValue('PS_CURRENCY_DEFAULT', $value);
+
+		/* Set conversion rate of default currency to 1 */
+		ObjectModel::updateMultishopTable('Currency', array('conversion_rate' => 1), 'a.id_currency');
+
 		Currency::refreshCurrencies();
 	}
 }

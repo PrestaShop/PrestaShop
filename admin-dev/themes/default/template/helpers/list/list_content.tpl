@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -61,49 +61,50 @@
 				{if isset($params.color) && isset($tr[$params.color])}
 					<span class="color_field" style="background-color:{$tr.color};color:{if Tools::getBrightness($tr.color) < 128}white{else}#383838{/if}">
 				{/if}
+				{if isset($tr.$key)}
+					{if isset($params.active)}
+						{$tr.$key}
+					{elseif isset($params.activeVisu)}
+						<img src="../img/admin/{if $tr.$key}enabled.gif{else}disabled.gif{/if}"
+						alt="{if $tr.$key}{l s='Enabled'}{else}{l s='Disabled'}{/if}" title="{if $tr.$key}{l s='Enabled'}{else}{l s='Disabled'}{/if}" />
+					{elseif isset($params.position)}
+						{if $order_by == 'position' && $order_way != 'DESC'}
+							<a href="{$tr.$key.position_url_down}" {if !($tr.$key.position != $positions[count($positions) - 1])}style="display: none;"{/if}>
+								<img src="../img/admin/{if $order_way == 'ASC'}down{else}up{/if}.gif" alt="{l s='Down'}" title="{l s='Down'}" />
+							</a>
 
-				{if isset($params.active)}
-					{$tr.$key}
-				{elseif isset($params.activeVisu)}
-					<img src="../img/admin/{if $tr.$key}enabled.gif{else}disabled.gif{/if}"
-					alt="{if $tr.$key}{l s='Enabled'}{else}{l s='Disabled'}{/if}" title="{if $tr.$key}{l s='Enabled'}{else}{l s='Disabled'}{/if}" />
-				{elseif isset($params.position)}
-					{if $order_by == 'position' && $order_way != 'DESC'}
-						<a href="{$tr.$key.position_url_down}" {if !($tr.$key.position != $positions[count($positions) - 1])}style="display: none;"{/if}>
-							<img src="../img/admin/{if $order_way == 'ASC'}down{else}up{/if}.gif" alt="{l s='Down'}" title="{l s='Down'}" />
-						</a>
-
-						<a href="{$tr.$key.position_url_up}" {if !($tr.$key.position != $positions.0)}style="display: none;"{/if}>
-							<img src="../img/admin/{if $order_way == 'ASC'}up{else}down{/if}.gif" alt="{l s='Up'}" title="{l s='Up'}" />
-						</a>
-					{else}
-						{$tr.$key.position + 1}
-					{/if}
-				{elseif isset($params.image)}
-					{$tr.$key}
-				{elseif isset($params.icon)}
-					<img src="../img/admin/{$tr[$key]['src']}" alt="{$tr[$key]['alt']}" title="{$tr[$key]['alt']}" />
-				{elseif isset($params.price)}
-					{$tr.$key}
-				{elseif isset($params.float)}
-					{$tr.$key}
-				{elseif isset($params.type) && $params.type == 'date'}
-					{$tr.$key}
-				{elseif isset($params.type) && $params.type == 'datetime'}
-					{$tr.$key}
-				{elseif isset($params.type) && $params.type == 'decimal'}
-					{$tr.$key|string_format:"%.2f"}
-				{elseif isset($params.type) && $params.type == 'percent'}
-					{$tr.$key} {l s='%'}
-				{* If type is 'editable', an input is created *}
-				{elseif isset($params.type) && $params.type == 'editable' && isset($tr.id)}
-					<input type="text" name="{$key}_{$tr.id}" value="{$tr.$key|escape:'htmlall':'UTF-8'}" class="{$key}" />
-				{elseif isset($params.callback)}
-					{$tr.$key}
-				{elseif isset($tr.$key) && $key == 'color'}
-					<div style="float: left; width: 18px; height: 12px; border: 1px solid #996633; background-color: {$tr.$key}; margin-right: 4px;"></div>
-				{elseif isset($tr.$key)}
-					{if isset($params.maxlength) && Tools::strlen($tr.$key) > $params.maxlength}
+							<a href="{$tr.$key.position_url_up}" {if !($tr.$key.position != $positions.0)}style="display: none;"{/if}>
+								<img src="../img/admin/{if $order_way == 'ASC'}up{else}down{/if}.gif" alt="{l s='Up'}" title="{l s='Up'}" />
+							</a>
+						{else}
+							{$tr.$key.position + 1}
+						{/if}
+					{elseif isset($params.image)}
+						{$tr.$key}
+					{elseif isset($params.icon)}
+						{if is_array($tr[$key])}
+							<img src="../img/admin/{$tr[$key]['src']}" alt="{$tr[$key]['alt']}" title="{$tr[$key]['alt']}" />
+						{/if}
+					{elseif isset($params.price)}
+						{$tr.$key}
+					{elseif isset($params.float)}
+						{$tr.$key}
+					{elseif isset($params.type) && $params.type == 'date'}
+						{$tr.$key}
+					{elseif isset($params.type) && $params.type == 'datetime'}
+						{$tr.$key}
+					{elseif isset($params.type) && $params.type == 'decimal'}
+						{$tr.$key|string_format:"%.2f"}
+					{elseif isset($params.type) && $params.type == 'percent'}
+						{$tr.$key} {l s='%'}
+					{* If type is 'editable', an input is created *}
+					{elseif isset($params.type) && $params.type == 'editable' && isset($tr.id)}
+						<input type="text" name="{$key}_{$tr.id}" value="{$tr.$key|escape:'htmlall':'UTF-8'}" class="{$key}" />
+					{elseif isset($params.callback)}
+						{$tr.$key}
+					{elseif $key == 'color'}
+						<div style="float: left; width: 18px; height: 12px; border: 1px solid #996633; background-color: {$tr.$key}; margin-right: 4px;"></div>
+					{elseif isset($params.maxlength) && Tools::strlen($tr.$key) > $params.maxlength}
 						<span title="{$tr.$key|escape:'htmlall':'UTF-8'}">{$tr.$key|truncate:$params.maxlength:'...'|escape:'htmlall':'UTF-8'}</span>
 					{else}
 						{$tr.$key|escape:'htmlall':'UTF-8'}
@@ -115,6 +116,8 @@
 				{if isset($params.color) && isset($tr.color)}
 					</span>
 				{/if}
+			{/block}
+			{block name="close_td"}
 				</td>
 			{/block}
 		{/foreach}

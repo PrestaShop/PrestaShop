@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -710,7 +710,7 @@ class ProductComments extends Module
 			'logged' => (int)$this->context->customer->isLogged(true),
 			'allow_guests' => (int)Configuration::get('PRODUCT_COMMENTS_ALLOW_GUESTS'),
 			'productcomment_cover' => (int)Tools::getValue('id_product').'-'.(int)$image['id_image'],
-			'mediumSize' => Image::getSize('medium_default'),
+			'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
 			'criterions' => ProductCommentCriterion::getByProduct((int)Tools::getValue('id_product'), $this->context->language->id),
 			'action_url' => '',
 			'averageTotal' => (int)$average['grade'],
@@ -752,7 +752,7 @@ class ProductComments extends Module
 			'id_product_comment_form' => (int)Tools::getValue('id_product'),
 			'secure_key' => $this->secure_key,
 			'productcomment_cover' => (int)Tools::getValue('id_product').'-'.(int)$image['id_image'],
-			'mediumSize' => Image::getSize('medium_default'),
+			'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
 			'nbComments' => (int)ProductComment::getCommentNumber((int)Tools::getValue('id_product')),
 			'productcomments_controller_url' => $this->context->link->getModuleLink('productcomments'),
 			'productcomments_url_rewriting_activated' => Configuration::get('PS_REWRITING_SETTINGS', 0)

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -65,11 +65,20 @@ class MetaCore extends ObjectModel
 		);
 
 		foreach ($files as $file)
-			if ($file != 'index.php' && preg_match('/^[a-z0-9_.-]*\.php$/i', $file) && !in_array(strtolower(str_replace('Controller.php', '', $file)), $exlude_pages))
-				$selected_pages[strtolower(str_replace('Controller.php', '', $file))] = strtolower(str_replace('Controller.php', '', $file));
-			else if ($file != 'index.php' && preg_match('/^([a-z0-9_.-]*\/)?[a-z0-9_.-]*\.php$/i', $file) && !in_array(strtolower(str_replace('Controller.php', '', $file)), $exlude_pages))
-				$selected_pages[strtolower(sprintf(Tools::displayError('%2$s (in %1$s)'), dirname($file), str_replace('Controller.php', '', basename($file))))] = strtolower(str_replace('Controller.php', '', basename($file)));
-
+		{
+			if ($file != 'index.php' && !in_array(strtolower(str_replace('Controller.php', '', $file)), $exlude_pages))
+			{
+				$reflection = new ReflectionClass(str_replace('.php', '', $file));
+				$properties = $reflection->getDefaultProperties();
+				if (isset($properties['php_self']))
+					$selected_pages[$properties['php_self']] = $properties['php_self'];
+				else if (preg_match('/^[a-z0-9_.-]*\.php$/i', $file))
+					$selected_pages[strtolower(str_replace('Controller.php', '', $file))] = strtolower(str_replace('Controller.php', '', $file));
+				else if (preg_match('/^([a-z0-9_.-]*\/)?[a-z0-9_.-]*\.php$/i', $file))
+					$selected_pages[strtolower(sprintf(Tools::displayError('%2$s (in %1$s)'), dirname($file), str_replace('Controller.php', '', basename($file))))] = strtolower(str_replace('Controller.php', '', basename($file)));
+			}	
+		}
+		
 		// Add modules controllers to list (this function is cool !)
 		foreach (glob(_PS_MODULE_DIR_.'*/controllers/front/*.php') as $file)
 		{
@@ -126,7 +135,7 @@ class MetaCore extends ObjectModel
 		$sql = 'SELECT *
 				FROM '._DB_PREFIX_.'meta m
 				LEFT JOIN '._DB_PREFIX_.'meta_lang ml on (m.id_meta = ml.id_meta)
-				WHERE (m.page = \''.pSQL($page).'\' OR m.page=\''.str_replace('-', '', strtolower($page)).'\')
+				WHERE (m.page = \''.pSQL($page).'\' OR m.page=\''.pSQL(str_replace('-', '', strtolower($page))).'\')
 					AND ml.id_lang = '.(int)$id_lang
 					.Shop::addSqlRestrictionOnLang('ml');
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
@@ -159,7 +168,7 @@ class MetaCore extends ObjectModel
 			$result = $result && $this->delete();
 		}
 
-		return Tools::generateHtaccess();
+		return $result && Tools::generateHtaccess();
 	}
 
 	public static function getEquivalentUrlRewrite($new_id_lang, $id_lang, $url_rewrite)

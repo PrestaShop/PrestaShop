@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -39,8 +39,8 @@ class BlockStore extends Module
 
 		parent::__construct();
 
-		$this->displayName = $this->l('Stores block');
-		$this->description = $this->l('Displays a block with a link to the store locator.');
+		$this->displayName = $this->l('Store locator block');
+		$this->description = $this->l('Displays a store locator link directly on your webiste.');
 	}
 
 	public function install()
@@ -62,14 +62,19 @@ class BlockStore extends Module
 
 	public function hookRightColumn($params)
 	{
-		$this->smarty->assign('store_img', Configuration::get('BLOCKSTORE_IMG'));
-		$sql = 'SELECT COUNT(*)
-				FROM '._DB_PREFIX_.'store s'
-				.Shop::addSqlAssociation('store', 's');
-		$total = Db::getInstance()->getValue($sql);
+		if (!$this->isCached('blockstore.tpl', $this->getCacheId()))
+		{
+			$this->smarty->assign('store_img', Configuration::get('BLOCKSTORE_IMG'));
+			$sql = 'SELECT COUNT(*)
+					FROM '._DB_PREFIX_.'store s'
+					.Shop::addSqlAssociation('store', 's');
+			$total = Db::getInstance()->getValue($sql);
+			
+			if ($total <= 0)
+				return;
+		}
+		return $this->display(__FILE__, 'blockstore.tpl', $this->getCacheId());
 
-		if ($total > 0)
-			return $this->display(__FILE__, 'blockstore.tpl');
 	}
 
 	public function hookHeader($params)
@@ -84,17 +89,18 @@ class BlockStore extends Module
 			if (isset($_FILES['store_img']) && isset($_FILES['store_img']['tmp_name']) && !empty($_FILES['store_img']['tmp_name']))
 			{
 				if ($error = ImageManager::validateUpload($_FILES['store_img'], 4000000))
-					return $this->displayError($this->l('invalid image'));
+					return $this->displayError($this->l('Invalid image'));
 				else
 				{
 					if (!move_uploaded_file($_FILES['store_img']['tmp_name'], dirname(__FILE__).'/'.$_FILES['store_img']['name']))
-						return $this->displayError($this->l('an error occurred on uploading file'));
+						return $this->displayError($this->l('An error occurred while attempting to upload the file.'));
 					else
 					{
 						if (Configuration::hasContext('BLOCKSTORE_IMG', null, Shop::getContext()) && Configuration::get('BLOCKSTORE_IMG') != $_FILES['store_img']['name'])
 							@unlink(dirname(__FILE__).'/'.Configuration::get('BLOCKSTORE_IMG'));
 						Configuration::updateValue('BLOCKSTORE_IMG', $_FILES['store_img']['name']);
-						return $this->displayConfirmation($this->l('Settings are updated'));
+						$this->_clearCache('blockstore.tpl');
+						return $this->displayConfirmation($this->l('The settings have been updated.'));
 					}
 				}
 			}
@@ -107,13 +113,13 @@ class BlockStore extends Module
 		$output = $this->postProcess().'
 		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" enctype="multipart/form-data">
 			<fieldset>
-				<legend>'.$this->l('Store block configuration').'</legend>';
+				<legend>'.$this->l('Store locator block configuration').'</legend>';
 		if (Configuration::get('BLOCKSTORE_IMG'))
 			$output .= '<div class="margin-form"><img src="'.Tools::getProtocol().Tools::getMediaServer($this->name)._MODULE_DIR_.$this->name.'/'.Configuration::get('BLOCKSTORE_IMG').'" alt="'.$this->l('Store image').'" style="height:115px;margin-left: 100px;width:174px"/></div>';
 		$output .= '
 				<label for="store_img">'.$this->l('Change image').'</label>
 				<div class="margin-form">
-					<input id="store_img" type="file" name="store_img" /> ( '.$this->l('image will be displayed as 174x115').' )
+					<input id="store_img" type="file" name="store_img" /> ( '.$this->l('The selected image will be displayed as 174x115').' )
 				</div>
 
 				<p class="center">

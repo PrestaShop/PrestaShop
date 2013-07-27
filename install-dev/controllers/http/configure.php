@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -37,25 +37,39 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 	 */
 	public function processNextStep()
 	{
-		// Save shop configuration
-		$this->session->shop_name = trim(Tools::getValue('shop_name'));
-		$this->session->shop_activity = Tools::getValue('shop_activity');
-		$this->session->install_type = Tools::getValue('db_mode');
-		$this->session->shop_country = Tools::getValue('shop_country');
-		$this->session->shop_timezone = Tools::getValue('shop_timezone');
+		if (Tools::isSubmit('shop_name'))
+		{
+			// Save shop configuration
+			$this->session->shop_name = trim(Tools::getValue('shop_name'));
+			$this->session->shop_activity = Tools::getValue('shop_activity');
+			$this->session->install_type = Tools::getValue('db_mode');
+			$this->session->shop_country = Tools::getValue('shop_country');
+			$this->session->shop_timezone = Tools::getValue('shop_timezone');
 
-		// Save admin configuration
-		$this->session->admin_firstname = trim(Tools::getValue('admin_firstname'));
-		$this->session->admin_lastname = trim(Tools::getValue('admin_lastname'));
-		$this->session->admin_email = trim(Tools::getValue('admin_email'));
-		$this->session->send_informations = Tools::getValue('send_informations');
+			// Save admin configuration
+			$this->session->admin_firstname = trim(Tools::getValue('admin_firstname'));
+			$this->session->admin_lastname = trim(Tools::getValue('admin_lastname'));
+			$this->session->admin_email = trim(Tools::getValue('admin_email'));
+			$this->session->send_informations = Tools::getValue('send_informations');
+			if ($this->session->send_informations)
+			{
+				$params = http_build_query(array(
+					'email' => $this->session->admin_email,
+					'method' => 'addMemberToNewsletter',
+					'language' => $this->session->lang,
+					'visitorType' => 1,
+					'source' => 'installer'
+				));
+				Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
+			}
 
-		// If password fields are empty, but are already stored in session, do not fill them again
-		if (!$this->session->admin_password || trim(Tools::getValue('admin_password')))
-			$this->session->admin_password = trim(Tools::getValue('admin_password'));
+			// If password fields are empty, but are already stored in session, do not fill them again
+			if (!$this->session->admin_password || trim(Tools::getValue('admin_password')))
+				$this->session->admin_password = trim(Tools::getValue('admin_password'));
 
-		if (!$this->session->admin_password_confirm || trim(Tools::getValue('admin_password_confirm')))
-			$this->session->admin_password_confirm = trim(Tools::getValue('admin_password_confirm'));
+			if (!$this->session->admin_password_confirm || trim(Tools::getValue('admin_password_confirm')))
+				$this->session->admin_password_confirm = trim(Tools::getValue('admin_password_confirm'));
+		}
 	}
 
 	/**
@@ -72,14 +86,20 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 		// Check shop name
 		if ($this->session->shop_name && !Validate::isGenericName($this->session->shop_name))
 			$this->errors['shop_name'] = $this->l('Invalid shop name');
-
+		else if (strlen($this->session->shop_name) > 64)
+			$this->errors['shop_name'] = $this->l('The field %s is limited to %d characters', $this->l('shop name'), 64);
+			
 		// Check admin name
 		if ($this->session->admin_firstname && !Validate::isName($this->session->admin_firstname))
 			$this->errors['admin_firstname'] = $this->l('Your firstname contains some invalid characters');
-
+		else if (strlen($this->session->admin_firstname) > 32)
+			$this->errors['admin_firstname'] = $this->l('The field %s is limited to %d characters', $this->l('firstname'), 32);
+		
 		if ($this->session->admin_lastname && !Validate::isName($this->session->admin_lastname))
 			$this->errors['admin_lastname'] = $this->l('Your lastname contains some invalid characters');
-
+		else if (strlen($this->session->admin_lastname) > 32)
+			$this->errors['admin_lastname'] = $this->l('The field %s is limited to %d characters', $this->l('lastname'), 32);
+		
 		// Check passwords
 		if ($this->session->admin_password)
 		{
@@ -207,28 +227,29 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 	{
 		// List of activities
 		$list_activities = array(
-			$this->l('Lingerie and Adult'),
-			$this->l('Animals and Pets'),
-			$this->l('Art and Culture'),
-			$this->l('Babies'),
-			$this->l('Beauty and Personal Care'),
-			$this->l('Cars'),
-			$this->l('Computer Hardware and Software'),
-			$this->l('Download'),
-			$this->l('Fashion and accessories'),
-			$this->l('Flowers, Gifts and Crafts'),
-			$this->l('Food and beverage'),
-			$this->l('HiFi, Photo and Video'),
-			$this->l('Home and Garden'),
-			$this->l('Home Appliances'),
-			$this->l('Jewelry'),
-			$this->l('Mobile and Telecom'),
-			$this->l('Services'),
-			$this->l('Shoes and accessories'),
-			$this->l('Sports and Entertainment'),
-			$this->l('Travel'),
+			1 => $this->l('Lingerie and Adult'),
+			2 => $this->l('Animals and Pets'),
+			3 => $this->l('Art and Culture'),
+			4 => $this->l('Babies'),
+			5 => $this->l('Beauty and Personal Care'),
+			6 => $this->l('Cars'),
+			7 => $this->l('Computer Hardware and Software'),
+			8 => $this->l('Download'),
+			9 => $this->l('Fashion and accessories'),
+			10 => $this->l('Flowers, Gifts and Crafts'),
+			11 => $this->l('Food and beverage'),
+			12 => $this->l('HiFi, Photo and Video'),
+			13 => $this->l('Home and Garden'),
+			14 => $this->l('Home Appliances'),
+			15 => $this->l('Jewelry'),
+			16 => $this->l('Mobile and Telecom'),
+			17 => $this->l('Services'),
+			18 => $this->l('Shoes and accessories'),
+			19 => $this->l('Sports and Entertainment'),
+			20 => $this->l('Travel'),
 		);
-		sort($list_activities);
+
+		asort($list_activities);
 		$this->list_activities = $list_activities;
 
 		// Countries list
@@ -244,7 +265,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 
 		foreach ($top_countries as $iso)
 			$this->list_countries[] = array('iso' => $iso, 'name' => $countries[$iso]);
-		$this->list_countries[] = array('name' => '-----------------');
+		$this->list_countries[] = array('iso' => 0, 'name' => '-----------------');
 
 		foreach ($countries as $iso => $lang)
 			if (!in_array($iso, $top_countries))

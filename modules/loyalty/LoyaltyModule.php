@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -197,20 +197,23 @@ class LoyaltyModule extends ObjectModel
 		if (!Validate::isLoadedObject($cartRule))
 			die(Tools::displayError('Incorrect object CartRule.'));
 		$items = self::getAllByIdCustomer((int)$cartRule->id_customer, NULL, true);
+		$associated = false;
 		foreach ($items AS $item)
 		{
-			$f = new LoyaltyModule((int)$item['id_loyalty']);
+			$lm = new LoyaltyModule((int)$item['id_loyalty']);
 			
 			/* Check for negative points for this order */
 			$negativePoints = (int)Db::getInstance()->getValue('SELECT SUM(points) points FROM '._DB_PREFIX_.'loyalty WHERE id_order = '.(int)$f->id_order.' AND id_loyalty_state = '.(int)LoyaltyStateModule::getCancelId().' AND points < 0');
 			
-			if ($f->points + $negativePoints <= 0)
+			if ($lm->points + $negativePoints <= 0)
 				continue;
 			
-			$f->id_cart_rule = (int)$cartRule->id;
-			$f->id_loyalty_state = (int)LoyaltyStateModule::getConvertId();
-			$f->save();
+			$lm->id_cart_rule = (int)$cartRule->id;
+			$lm->id_loyalty_state = (int)LoyaltyStateModule::getConvertId();
+			$lm->save();
+			$associated = true;
 		}
+		return $associated;
 	}
 
 	public static function getOrdersByIdDiscount($id_cart_rule)

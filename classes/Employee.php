@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -244,12 +244,15 @@ class EmployeeCore extends ObjectModel
 	  */
 	public function isLoggedBack()
 	{
-		/* Employee is valid only if it can be load and if cookie password is the same as database one */
-	 	return ($this->id
-			&& Validate::isUnsignedId($this->id)
-			&& Employee::checkPassword($this->id, $this->passwd)
-			&& (!isset($this->remote_addr) || $this->remote_addr == ip2long(Tools::getRemoteAddr()) || !Configuration::get('PS_COOKIE_CHECKIP'))
-		);
+		if (!Cache::isStored('isLoggedBack'.$this->id))
+		{
+			/* Employee is valid only if it can be load and if cookie password is the same as database one */
+			Cache::store('isLoggedBack'.$this->id, (
+				$this->id && Validate::isUnsignedId($this->id) && Employee::checkPassword($this->id, $this->passwd)
+				&& (!isset($this->remote_addr) || $this->remote_addr == ip2long(Tools::getRemoteAddr()) || !Configuration::get('PS_COOKIE_CHECKIP'))
+			));
+		}
+		return Cache::retrieve('isLoggedBack'.$this->id);
 	}
 
 	/**

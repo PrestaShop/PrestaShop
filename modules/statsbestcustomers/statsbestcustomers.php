@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -52,24 +52,26 @@ class StatsBestCustomers extends ModuleGrid
 		$this->_emptyMessage = $this->l('Empty recordset returned');
 		$this->_pagingMessage = sprintf($this->l('Displaying %1$s of %2$s'), '{0} - {1}', '{2}');
 
+		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+		
 		$this->_columns = array(
 			array(
 				'id' => 'lastname',
-				'header' => $this->l('Lastname'),
+				'header' => $this->l('Last Name'),
 				'dataIndex' => 'lastname',
-				'width' => 50
+				'width' => 80
 			),
 			array(
 				'id' => 'firstname',
-				'header' => $this->l('Firstname'),
+				'header' => $this->l('First Name'),
 				'dataIndex' => 'firstname',
-				'width' => 50
+				'width' => 80
 			),
 			array(
 				'id' => 'email',
 				'header' => $this->l('Email'),
 				'dataIndex' => 'email',
-				'width' => 120
+				'width' => 140
 			),
 			array(
 				'id' => 'totalVisits',
@@ -78,15 +80,21 @@ class StatsBestCustomers extends ModuleGrid
 				'width' => 80,
 				'align' => 'right'),
 			array(
-				'id' => 'totalMoneySpent',
-				'header' => $this->l('Money spent'),
-				'dataIndex' => 'totalMoneySpent',
+				'id' => 'totalValidOrders',
+				'header' => $this->l('Valid orders'),
+				'dataIndex' => 'totalValidOrders',
 				'width' => 80,
+				'align' => 'right'),
+			array(
+				'id' => 'totalMoneySpent',
+				'header' => $this->l('Money spent').' ('.Tools::safeOutput($currency->iso_code).')',
+				'dataIndex' => 'totalMoneySpent',
+				'width' => 140,
 				'align' => 'right')
 		);
 
 		$this->displayName = $this->l('Best customers');
-		$this->description = $this->l('A list of the best customers');
+		$this->description = $this->l('A list of best customers.');
 	}
 
 	public function install()
@@ -115,16 +123,16 @@ class StatsBestCustomers extends ModuleGrid
 		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</h2>
 			<h2 >'.$this->l('Develop clients\' loyalty').'</h2>
 			<p class="space">
-				'.$this->l('Keeping a client is more profitable than gaining a new one. Thus, it is necessary to develop their loyalty, in other words to make them want to come back to your webshop.').' <br />
-				'.$this->l('Word of mouth is also a means to of getting new, satisfied clients; a dissatisfied one won\'t attract new clients.').'<br />
-				'.$this->l('In order to achieve this goal you can organize: ').'
+				'.$this->l('Keeping a client is more profitable than gaining a new one. That is one of the many reasons it is necessary to cultivate customer loyalty.').' <br />
+				'.$this->l('Word of mouth is also a means for getting new, satisfied clients. A dissatisfied customer can hurt your e-reputation and obstruct future sales goals.').'<br />
+				'.$this->l('In order to achieve this goal, you can organize: ').'
 				<ul>
 					<li>'.$this->l('Punctual operations: commercial rewards (personalized special offers, product or service offered),
 						non commercial rewards (priority handling of an order or a product), pecuniary rewards (bonds, discount coupons, payback).').'</li>
 					<li>'.$this->l('Sustainable operations: loyalty points or cards, which not only justify communication between merchant and client,
 						 but also offer advantages to clients (private offers, discounts).').'</li>
 				</ul>
-				'.$this->l('These operations encourage clients to buy products and visit your webshop regularly.').' <br />
+				'.$this->l('These operations encourage clients to buy products and visit your e-store regularly.').' <br />
 			</p><br />
 		</div>';
 		return $this->_html;
@@ -142,7 +150,14 @@ class StatsBestCustomers extends ModuleGrid
 				WHERE o.id_customer = c.id_customer
 				AND o.invoice_date BETWEEN '.$this->getDate().'
 				AND o.valid
-			), 0) as totalMoneySpent
+			), 0) as totalMoneySpent,
+			IFNULL((
+				SELECT COUNT(*)
+				FROM `'._DB_PREFIX_.'orders` o
+				WHERE o.id_customer = c.id_customer
+				AND o.invoice_date BETWEEN '.$this->getDate().'
+				AND o.valid
+			), 0) as totalValidOrders
 		FROM `'._DB_PREFIX_.'customer` c
 		LEFT JOIN `'._DB_PREFIX_.'guest` g ON c.`id_customer` = g.`id_customer`
 		LEFT JOIN `'._DB_PREFIX_.'connections` co ON g.`id_guest` = co.`id_guest`

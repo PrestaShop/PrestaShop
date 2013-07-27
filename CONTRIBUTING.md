@@ -8,5 +8,5 @@ All core files you commit in your pull request must have Open Software License (
 All modules files you commit in your pull request must have Academic Free License (AFL 3.0)  
 
 [1]: https://help.github.com/articles/using-pull-requests
-[2]: http://docs.prestashop.com/display/PS15/Coding+Standard
-[3]: http://docs.prestashop.com/display/PS15/Commit+norme
+[2]: http://docs.prestashop.com/display/PS15/Coding+Standards
+[3]: http://docs.prestashop.com/display/PS15/How+to+write+a+commit+message

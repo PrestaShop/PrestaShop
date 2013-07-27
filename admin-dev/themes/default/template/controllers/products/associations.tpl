@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -67,7 +67,7 @@
 						<option value="{$cat.id_category}" {if $id_category_default == $cat.id_category}selected="selected"{/if} >{$cat.name}</option>
 					{/foreach}
 				</select>
-				<div class="hint" style="display:block;">{l s='The default category is the category which is displayed by default.'}</div>
+				<div class="hint" style="display:block;">{l s='The default category is the category displayed by default.'}</div>
 			</td>
 		</tr>
 	</table>
@@ -82,7 +82,7 @@
 				<div id="ajax_choose_product">
 					<p style="clear:both;margin-top:0;">
 						<input type="text" value="" id="product_autocomplete_input" />
-						{l s='Begin typing the first letters of the product name, then select the product from the drop-down list'}
+						{l s='Begin typing the first letters of the product name, then select the product from the drop-down list.'}
 					</p>
 					<p class="preference_description">{l s='(Do not forget to save the product afterward)'}</p>
 					<!--<img onclick="$(this).prev().search();" style="cursor: pointer;" src="../img/admin/add.gif" alt="{l s='Add an accessory'}" title="{l s='Add an accessory'}" />-->

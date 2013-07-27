@@ -1,8 +1,9 @@
 $('document').ready(function(){
 	$('#favoriteproducts_block_extra_add').click(function(){
 		$.ajax({
-			url: favorite_products_url_add,
+			url: favorite_products_url_add + '&rand=' + new Date().getTime(),
 			type: "POST",
+			headers: { "cache-control": "no-cache" },
 			data: {
 				"id_product": favorite_products_id_product
 			},
@@ -19,8 +20,9 @@ $('document').ready(function(){
 	});
 	$('#favoriteproducts_block_extra_remove').click(function(){
 		$.ajax({
-			url: favorite_products_url_remove,
+			url: favorite_products_url_remove + '&rand=' + new Date().getTime(),
 			type: "POST",
+			headers: { "cache-control": "no-cache" },
 			data: {
 				"id_product": favorite_products_id_product
 			},
@@ -37,8 +39,9 @@ $('document').ready(function(){
 	});
 	$('#favoriteproducts_block_extra_added').click(function(){
 		$.ajax({
-			url: favorite_products_url_remove,
+			url: favorite_products_url_remove + '&rand=' + new Date().getTime(),
 			type: "POST",
+			headers: { "cache-control": "no-cache" },
 			data: {
 				"id_product": favorite_products_id_product
 			},
@@ -55,8 +58,9 @@ $('document').ready(function(){
 	});
 	$('#favoriteproducts_block_extra_removed').click(function(){
 		$.ajax({
-			url: favorite_products_url_add,
+			url: favorite_products_url_add + '&rand=' + new Date().getTime(),
 			type: "POST",
+			headers: { "cache-control": "no-cache" },
 			data: {
 				"id_product": favorite_products_id_product
 			},

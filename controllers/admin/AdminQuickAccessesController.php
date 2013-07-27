@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -88,7 +88,7 @@ class AdminQuickAccessesControllerCore extends AdminController
 					'size' => 60,
 					'maxlength' => 128,
 					'required' => true,
-					'desc' => $this->l('If it\'s an URL that comes from your Back Office, you must NOT put a security token.')
+					'desc' => $this->l('If it\'s a URL that comes from your Back Office, you must NOT use a security token.')
 				),
 				array(
 					'type' => 'radio',

@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -28,7 +28,7 @@
 {block name="override_tpl"}
 	
 	<div id="container-customer">
-		<h2><img src="../img/admin/basket.png" /><span>{if $customer->id}{$customer->firstname} {$customer->lastname}{else}{l s='Guest'}{/if} - {l s='Cart #'}{$cart->id|string_format:"%06d"}</span><span style="color:#585A69;padding-left:10px;">{l s='on'} {$cart->date_upd}</span></h2>
+		<h2><img src="../img/admin/basket.png" /><span>{if $customer->id}{$customer->firstname} {$customer->lastname}{else}{l s='Guest'}{/if} - {l s='Cart #'}{$cart->id|string_format:"%06d"}</span><span style="color:#585A69;padding-left:10px;">{l s='On'} {$cart->date_upd}</span></h2>
 				<div class="separation"></div>
 	
 	<div class="info-customer-left">
@@ -54,15 +54,15 @@
 			<br /><br />
 			{l s='Made on:'} {dateFormat date=$order->date_add}<br /><br /><br /><br />
 		{else}
-			{l s='No order created from this cart'}</span>
-			{if $customer->id}<p><a class="button" href="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&id_cart={$cart->id}&addorder">{l s='Create an order with from cart'}</a></p>{/if}
+			{l s='No order was created from this cart.'}</span>
+			{if $customer->id}<p><a class="button" href="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&id_cart={$cart->id}&addorder">{l s='Create an order from this cart.'}</a></p>{/if}
 		{/if}
 	</div>
 	<br style="clear:both;" />
 				<div class="separation"></div>
 				
 
-	<h2><img src="../img/admin/cart.gif" alt="{l s='Products'}" />{l s='Cart summary'}</h2>
+	<h2><img src="../img/admin/cart.gif" alt="{l s='Products:'}" />{l s='Cart summary'}</h2>
 	<br/>
 		<table style="width:100%;" cellspacing="0" cellpadding="0" class="table" id="orderProducts">
 		<thead>
@@ -138,25 +138,25 @@
 			{/if}
 		{/foreach}
 		<tr class="cart_total_product">
-			<td colspan="5">{l s='Total products:'}</td>
+			<td colspan="5">{l s='Total cost of products:'}</td>
 			<td class="price bold right">{displayWtPriceWithCurrency price=$total_products currency=$currency}</td>
 		</tr>
 	
 		{if $total_discounts != 0}
 			<tr class="cart_total_voucher">
-				<td colspan="5">{l s='Total vouchers:'}</td>
+				<td colspan="5">{l s='Total value of vouchers:'}</td>
 				<td class="price-discount bold right">{displayWtPriceWithCurrency price=$total_discounts currency=$currency}</td>
 			</tr>
 		{/if}
 		{if $total_wrapping > 0}
 			<tr class="cart_total_voucher">
-				<td colspan="5">{l s='Total gift-wrapping:'}</td>
+				<td colspan="5">{l s='Total cost of gift wrapping:'}</td>
 				<td class="price-discount bold right">{displayWtPriceWithCurrency price=$total_wrapping currency=$currency}</td>
 			</tr>
 		{/if}
 		{if $cart->getOrderTotal(true, Cart::ONLY_SHIPPING) > 0}
 			<tr class="cart_total_delivery">
-				<td colspan="5">{l s='Total shipping:'}</td>
+				<td colspan="5">{l s='Total cost of shipping:'}</td>
 				<td class="price bold right">{displayWtPriceWithCurrency price=$total_shipping currency=$currency}</td>
 			</tr>
 		{/if}
@@ -181,7 +181,7 @@
 	</table>
 	{/if}
 	<div style="float:left; margin-top:15px;">
-	{l s='For this customer\'s group, prices are displayed as:'} <b>{if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC}{l s='tax excluded'}{else}{l s='tax included'}{/if}</b>
+	{l s='For this particular customer group, prices are displayed as:'} <b>{if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC}{l s='Tax excluded'}{else}{l s='Tax included'}{/if}</b>
 </div>
 	
 	<div class="clear" style="height:20px;">&nbsp;</div>

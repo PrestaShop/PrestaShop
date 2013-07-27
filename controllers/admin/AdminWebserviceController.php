@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -70,17 +70,17 @@ class AdminWebserviceControllerCore extends AdminController
 				'general' => array(
 					'title' =>	$this->l('Configuration'),
 					'fields' =>	array(
-						'PS_WEBSERVICE' => array('title' => $this->l('Enable PrestaShop Webservice'),
+						'PS_WEBSERVICE' => array('title' => $this->l('Enable PrestaShop\'s webservice'),
 							'desc' => $this->l('Before activating the webservice, you must be sure to: ').
 												'<ol>
-													<li>'.$this->l('be certain that URL rewriting is available on this server').'</li>
-													<li>'.$this->l('be certain that the 5 methods GET, POST, PUT, DELETE and HEAD are supported by this server').'</li>
+													<li>'.$this->l('Check that URL rewriting is available on this server').'</li>
+													<li>'.$this->l('Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.').'</li>
 												</ol>',
 							'cast' => 'intval',
 							'type' => 'bool'),
 						'PS_WEBSERVICE_CGI_HOST' => array(
 							'title' => $this->l('Active mode CGI for PHP'),
-							'desc' => $this->l('Be sure PHP is not configured as an Apache module on your server'),
+							'desc' => $this->l('Be sure PHP is not configured as an Apache module on your server.'),
 							'cast' => 'intval',
 							'type' => 'bool'
 						),
@@ -113,7 +113,7 @@ class AdminWebserviceControllerCore extends AdminController
 					'id' => 'code',
 					'size' => 32,
 					'required' => true,
-					'desc' => $this->l('Webservice account key'),
+					'desc' => $this->l('Webservice account key.'),
 				),
 				array(
 					'type' => 'textarea',
@@ -161,7 +161,7 @@ class AdminWebserviceControllerCore extends AdminController
 		}
 
 		$this->fields_form['submit'] = array(
-			'title' => $this->l('   Save   '),
+			'title' => $this->l('Save   '),
 			'class' => 'button'
 		);
 
@@ -220,9 +220,9 @@ class AdminWebserviceControllerCore extends AdminController
 	public function postProcess()
 	{
 		if (Tools::getValue('key') && strlen(Tools::getValue('key')) < 32)
-			$this->errors[] = Tools::displayError($this->l('Key length must be 32 character long'));
+			$this->errors[] = Tools::displayError($this->l('Key length must be 32 character long.'));
 		if (WebserviceKey::keyExists(Tools::getValue('key')) && !Tools::getValue('id_webservice_account'))
-			$this->errors[] = Tools::displayError($this->l('Key already exists'));
+			$this->errors[] = Tools::displayError($this->l('This key already exists.'));
 		return parent::postProcess();
 	}
 
@@ -247,17 +247,17 @@ class AdminWebserviceControllerCore extends AdminController
 			{
 				$apache_modules = apache_get_modules();
 				if (!in_array('mod_auth_basic', $apache_modules))
-					$this->warnings[] = $this->l('Please activate the Apache module \'mod_auth_basic\' to allow authentication of PrestaShop webservice.');
+					$this->warnings[] = $this->l('Please activate the Apache module \'mod_auth_basic\' to allow authentication of PrestaShop\'s webservice.');
 				if (!in_array('mod_rewrite', $apache_modules))
 					$this->warnings[] = $this->l('Please activate the Apache module \'mod_rewrite\' to allow the PrestaShop webservice.');
 			}
 			else
-				$this->warnings[] = $this->l('We could not check if basic authentication and rewrite extensions are activated. Please manually check if they are activated in order to use the PrestaShop webservice.');
+				$this->warnings[] = $this->l('We could not check to see if basic authentication and rewrite extensions have been activated. Please manually check if they\'ve been activated in order to use the PrestaShop webservice.');
 		}
 		if (!extension_loaded('SimpleXML'))
-			$this->warnings[] = $this->l('Please activate the PHP extension \'SimpleXML\' to allow testing of PrestaShop webservice.');
+			$this->warnings[] = $this->l('Please activate the PHP extension \'SimpleXML\' to allow testing of PrestaShop\'s webservice.');
 		if (!configuration::get('PS_SSL_ENABLED'))
-			$this->warnings[] = $this->l('If possible, it is preferable to use SSL (https) for webservice calls, as it avoids the security issues of type "man in the middle".');
+			$this->warnings[] = $this->l('It is preferable to use SSL (https:) for webservice calls, as it avoids the "man in the middle" type security issues. ');
 
 		foreach ($this->_list as $k => $item)
 			if ($item['is_module'] && $item['class_name'] && $item['module_name'] &&

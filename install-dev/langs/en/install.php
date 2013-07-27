@@ -6,13 +6,14 @@ return array(
 		'documentation_upgrade' => 'http://docs.prestashop.com/display/PS15/Updating+PrestaShop',
 		'forum' => 'http://www.prestashop.com/forums/',
 		'blog' => 'http://www.prestashop.com/blog/',
-		'support' => 'http://support.prestashop.com/en/',
+		'support' => 'https://www.prestashop.com/en/support',
 	),
 	'translations' => array(
-		'menu_welcome' => 'Welcome!',
+		'menu_welcome' => 'Choose your language',
+		'menu_license' => 'License agreements',
 		'menu_system' => 'System Compatibility',
 		'menu_database' => 'System Configuration',
-		'menu_configure' => 'Shop Configuration',
-		'menu_process' => 'Installation process',
+		'menu_configure' => 'Store information',
+		'menu_process' => 'Store installation',
 	),
 );

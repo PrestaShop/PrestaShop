@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -33,21 +33,35 @@ class BlockNewProducts extends Module
 	{
 		$this->name = 'blocknewproducts';
 		$this->tab = 'front_office_features';
-		$this->version = 0.9;
+		$this->version = '1.4';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
 		parent::__construct();
 
 		$this->displayName = $this->l('New products block');
-		$this->description = $this->l('Displays a block featuring newly added products.');
+		$this->description = $this->l('Displays a block featuring your store\'s newest products.');
 	}
 
 	public function install()
 	{
-			if (parent::install() == false || $this->registerHook('rightColumn') == false || $this->registerHook('header') == false || Configuration::updateValue('NEW_PRODUCTS_NBR', 5) == false)
-					return false;
-			return true;
+		if (!parent::install()
+			|| !$this->registerHook('rightColumn')
+			|| !$this->registerHook('header')
+			|| !$this->registerHook('addproduct')
+			|| !$this->registerHook('updateproduct')
+			|| !$this->registerHook('deleteproduct')
+			|| !Configuration::updateValue('NEW_PRODUCTS_NBR', 5)
+		)
+			return false;
+		$this->_clearCache('blocknewproducts.tpl');
+		return true;
+	}
+	
+	public function uninstall()
+	{
+		$this->_clearCache('blocknewproducts.tpl');
+		return parent::uninstall();
 	}
 
 	public function getContent()
@@ -56,7 +70,7 @@ class BlockNewProducts extends Module
 		if (Tools::isSubmit('submitBlockNewProducts'))
 		{
 			if (!($productNbr = Tools::getValue('productNbr')) || empty($productNbr))
-				$output .= '<div class="alert error">'.$this->l('Please fill in the "products displayed" field.').'</div>';
+				$output .= '<div class="alert error">'.$this->l('Please complete the "products to display" field.').'</div>';
 			elseif ((int)($productNbr) == 0)
 				$output .= '<div class="alert error">'.$this->l('Invalid number.').'</div>';
 			else
@@ -74,12 +88,12 @@ class BlockNewProducts extends Module
 		$output = '
 		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
 		<fieldset><legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
-				<label>'.$this->l('Products displayed').'</label>
+				<label>'.$this->l('Products to display.').'</label>
 					<div class="margin-form">
 						<input type="text" name="productNbr" value="'.(int)(Configuration::get('NEW_PRODUCTS_NBR')).'" />
-						<p class="clear">'.$this->l('Set the number of products to be displayed in this block').'</p>
+						<p class="clear">'.$this->l('Define the number of products to be displayed in this block.').'</p>
 					</div>
-					<label>'.$this->l('Always display block').'</label>
+					<label>'.$this->l('Always display this block.').'</label>
 					<div class="margin-form">
 						<input type="radio" name="always_display" id="display_on" value="1" '.(Tools::getValue('always_display', Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY')) ? 'checked="checked" ' : '').'/>
 						<label class="t" for="display_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>
@@ -95,16 +109,22 @@ class BlockNewProducts extends Module
 
 	public function hookRightColumn($params)
 	{
-		$newProducts = Product::getNewProducts((int)($params['cookie']->id_lang), 0, (int)(Configuration::get('NEW_PRODUCTS_NBR')));
-		if (!$newProducts && !Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY'))
-			return;
+		if (!$this->isCached('blocknewproducts.tpl', $this->getCacheId()))
+		{
+			if (!Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY') && !($newProducts = Product::getNewProducts((int)$params['cookie']->id_lang, 0, (int)Configuration::get('NEW_PRODUCTS_NBR'))))
+				return;
 
-		$this->smarty->assign(array(
-			'new_products' => $newProducts,
-			'mediumSize' => Image::getSize('medium_default'),
-		));
+			$this->smarty->assign(array(
+				'new_products' => $newProducts,
+				'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
+			));
+		}
+		return $this->display(__FILE__, 'blocknewproducts.tpl', $this->getCacheId());
+	}
 
-		return $this->display(__FILE__, 'blocknewproducts.tpl');
+	protected function getCacheId($name = null)
+	{
+		return parent::getCacheId('blocknewproducts|'.date('Ymd'));
 	}
 
 	public function hookLeftColumn($params)
@@ -117,6 +137,18 @@ class BlockNewProducts extends Module
 		$this->context->controller->addCSS(($this->_path).'blocknewproducts.css', 'all');
 	}
 
+	public function hookAddProduct($params)
+	{
+		$this->_clearCache('blocknewproducts.tpl');
+	}
+
+	public function hookUpdateProduct($params)
+	{
+		$this->_clearCache('blocknewproducts.tpl');
+	}
+
+	public function hookDeleteProduct($params)
+	{
+		$this->_clearCache('blocknewproducts.tpl');
+	}
 }
-
-

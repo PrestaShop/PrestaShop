@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -236,7 +236,7 @@ class StockMvtCore extends ObjectModel
 		$query->innerJoin('stock', 's', 's.id_stock = sm.id_stock');
 		$query->innerJoin('warehouse', 'w', 'w.id_warehouse = s.id_warehouse');
 		$query->where('sm.sign = 1');
-		$query->where('s.id_product = '.(int)$id_product.' AND s.id_product_attribute = '.(int)$id_product_attribute);
+		$query->where('s.id_product = '.(int)$id_product.' OR s.id_product_attribute = '.(int)$id_product_attribute);
 		$query->orderBy('date_add DESC');
 
 		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);

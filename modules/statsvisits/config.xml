@@ -3,7 +3,7 @@
             <name>statsvisits</name>
             <displayName><![CDATA[Visits and Visitors]]></displayName>
             <version><![CDATA[1]]></version>
-            <description><![CDATA[Display statistics about your visits and visitors.]]></description>
+            <description><![CDATA[Displays statistics about your visits and visitors.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[analytics_stats]]></tab>
             <is_configurable>0</is_configurable>

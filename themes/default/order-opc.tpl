@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -38,11 +38,11 @@
 <script type="text/javascript">
 	// <![CDATA[
 	var imgDir = '{$img_dir}';
-	var authenticationUrl = '{$link->getPageLink("authentication", true)}';
-	var orderOpcUrl = '{$link->getPageLink("order-opc", true)}';
-	var historyUrl = '{$link->getPageLink("history", true)}';
-	var guestTrackingUrl = '{$link->getPageLink("guest-tracking", true)}';
-	var addressUrl = '{$link->getPageLink("address", true, NULL, "back={$back_order_page}")}';
+	var authenticationUrl = '{$link->getPageLink("authentication", true)|addslashes}';
+	var orderOpcUrl = '{$link->getPageLink("order-opc", true)|addslashes}';
+	var historyUrl = '{$link->getPageLink("history", true)|addslashes}';
+	var guestTrackingUrl = '{$link->getPageLink("guest-tracking", true)|addslashes}';
+	var addressUrl = '{$link->getPageLink("address", true, NULL, "back={$back_order_page}")|addslashes}';
 	var orderProcess = 'order-opc';
 	var guestCheckoutEnabled = {$PS_GUEST_CHECKOUT_ENABLED|intval};
 	var currencySign = '{$currencySign|html_entity_decode:2:"UTF-8"}';
@@ -57,21 +57,21 @@
 	var countriesNeedZipCode = new Array();
 	var vat_management = {$vat_management|intval};
 	
-	var txtWithTax = "{l s='(tax incl.)'}";
-	var txtWithoutTax = "{l s='(tax excl.)'}";
-	var txtHasBeenSelected = "{l s='has been selected'}";
-	var txtNoCarrierIsSelected = "{l s='No carrier has been selected'}";
-	var txtNoCarrierIsNeeded = "{l s='No carrier is needed for this order'}";
-	var txtConditionsIsNotNeeded = "{l s='No terms of service must be accepted'}";
-	var txtTOSIsAccepted = "{l s='Terms of Service have been accepted'}";
-	var txtTOSIsNotAccepted = "{l s='Terms of service have not been accepted'}";
-	var txtThereis = "{l s='There is'}";
-	var txtErrors = "{l s='error(s)'}";
-	var txtDeliveryAddress = "{l s='Delivery address'}";
-	var txtInvoiceAddress = "{l s='Invoice address'}";
-	var txtModifyMyAddress = "{l s='Modify my address'}";
-	var txtInstantCheckout = "{l s='Instant checkout'}";
-	var txtSelectAnAddressFirst = "{l s='Please start by selecting an address'}";
+	var txtWithTax = "{l s='(tax incl.)' js=1}";
+	var txtWithoutTax = "{l s='(tax excl.)' js=1}";
+	var txtHasBeenSelected = "{l s='has been selected' js=1}";
+	var txtNoCarrierIsSelected = "{l s='No carrier has been selected' js=1}";
+	var txtNoCarrierIsNeeded = "{l s='No carrier is needed for this order' js=1}";
+	var txtConditionsIsNotNeeded = "{l s='You do not need to accept the Terms of Service for this order.' js=1}";
+	var txtTOSIsAccepted = "{l s='The service terms have been accepted' js=1}";
+	var txtTOSIsNotAccepted = "{l s='The service terms have not been accepted' js=1}";
+	var txtThereis = "{l s='There is' js=1}";
+	var txtErrors = "{l s='Error(s)' js=1}";
+	var txtDeliveryAddress = "{l s='Delivery address' js=1}";
+	var txtInvoiceAddress = "{l s='Invoice address' js=1}";
+	var txtModifyMyAddress = "{l s='Modify my address' js=1}";
+	var txtInstantCheckout = "{l s='Instant checkout' js=1}";
+	var txtSelectAnAddressFirst = "{l s='Please start by selecting an address.' js=1}";
 	var errorCarrier = "{$errorCarrier}";
 	var errorTOS = "{$errorTOS}";
 	var checkedCarrier = "{if isset($checked)}{$checked}{else}0{/if}";

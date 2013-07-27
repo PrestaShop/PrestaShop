@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -66,8 +66,8 @@ class GenderCore extends ObjectModel
 
 	public function getImage($use_unknown = false)
 	{
-		if (!file_exists(_PS_GENDERS_DIR_.$this->id.'.jpg'))
-			return ($use_unknown) ?  _PS_ADMIN_IMG_.'unknown.gif' : false;
+		if (!isset($this->id) || empty($this->id) || !file_exists(_PS_GENDERS_DIR_.$this->id.'.jpg'))
+			return _THEME_GENDERS_DIR_.'Unknown.jpg';
 		return _THEME_GENDERS_DIR_.$this->id.'.jpg';
 	}
 }

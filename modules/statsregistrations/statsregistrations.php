@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -43,7 +43,7 @@ class StatsRegistrations extends ModuleGraph
 		parent::__construct();
 		
 		$this->displayName = $this->l('Customer accounts');
-		$this->description = $this->l('Display the progress of customer registration.');
+		$this->description = $this->l('Display registration progress.');
 	}
 
 	/**
@@ -111,8 +111,8 @@ class StatsRegistrations extends ModuleGraph
 		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
 		<ul>
 			<li>
-				'.$this->l('Visitors who have stopped at the registering step:').' <span class="totalStats">'.(int)($totalBlocked).($totalRegistrations ? ' ('.number_format(100*$totalBlocked/($totalRegistrations+$totalBlocked), 2).'%)' : '').'</span><li/>
-				'.$this->l('Visitors who have placed an order directly after registration:').' <span class="totalStats">'.(int)($totalBuyers).($totalRegistrations ? ' ('.number_format(100*$totalBuyers/($totalRegistrations), 2).'%)' : '').'</span>
+				'.$this->l('Number of visitors who stopped at the registering step:').' <span class="totalStats">'.(int)($totalBlocked).($totalRegistrations ? ' ('.number_format(100*$totalBlocked/($totalRegistrations+$totalBlocked), 2).'%)' : '').'</span><li/>
+				'.$this->l('Number of visitors who placed an order directly after registration:').' <span class="totalStats">'.(int)($totalBuyers).($totalRegistrations ? ' ('.number_format(100*$totalBuyers/($totalRegistrations), 2).'%)' : '').'</span>
 			<li>'.$this->l('Total customer accounts:').' <span class="totalStats">'.$totalRegistrations.'</span></li>
 			</ul>
 			<div>'.$this->engine(array('type' => 'line')).'</div>
@@ -120,16 +120,16 @@ class StatsRegistrations extends ModuleGraph
 		</div><br />
 		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</legend>
 			<h2>'.$this->l('Number of customer accounts created').'</h2>
-			<p>'.$this->l('The total number of accounts created is not in itself important information. However, it is beneficial to analyze the number created over time. This will indicate whether or not things are on the right track.').'</p>
+			<p>'.$this->l('The total number of accounts created is not in itself important information. However, it is beneficial to analyze the number created over time. This will indicate whether or not things are on the right track. You feel me?').'</p>
 			<br /><h3>'.$this->l('How to act on the registrations\' evolution?').'</h3>
 			<p>
-				'.$this->l('If you let your shop run without changing anything, the number of customer registrations should stay stable or may slightly decline.').'
-				'.$this->l('A significant increase or decrease shows that there has probably been a change to your shop.Therefore, you have to identify it in order to backtrack if this change makes the number of registrations decrease, or continue with it if it increases registration.').'<br />
-				'.$this->l('Here is summary of what may affect the creation of customer accounts:').'
+				'.$this->l('If you let your shop run without changing anything, the number of customer registrations should stay stable or slightly decline.').'
+				'.$this->l('A significant increase or decrease in customer registration shows that there has probably been a change to your shop.With that in mind, we suggest that you identify the cause, correct the issue and get back in the business of making money!').'<br />
+				'.$this->l('Here is a summary of what may affect the creation of customer accounts:').'
 				<ul>
-					<li>'.$this->l('An advertising campaign can attract a greater number of visitors. An increase in customer accounts will ensue, which will depend on their "quality". Well-targeted advertising can be more effective than large-scale advertising.').'</li>
-					<li>'.$this->l('Specials, sales, or contests draw greater attention and curiosity, not only keeping your shop lively but also increasing its traffic. This way, you can push impulsive buyers to take the plunge.').'</li>
-					<li>'.$this->l('Design and user-friendliness are more important than ever: an ill-chosen or hard-to-follow graphical theme can turn off visitors. You should strike the right balance between an innovative design and letting visitors move around easily. Proper spelling and clarity also inspire more customer confidence in your shop.').'</li>
+					<li>'.$this->l('An advertising campaign can attract an increased number of visitors to your online store. This will likely be followed by an increase in customer accounts, and profit margins, which will depend on customer "quality." Well-targeted advertising is typically more effective than large-scale advertising... and it\'s cheaper too!').'</li>
+					<li>'.$this->l('Specials, sales, promotions and/or contests typically demand a shoppers\' attentions. Offering such things will not only keep your business lively,  it will also increase traffic, build customer loyalty and genuine change your current e-commerce philosophy.').'</li>
+					<li>'.$this->l('Design and user-friendliness are more important than ever in the world of online sales. An ill-chosen or hard-to-follow graphical theme can keep shoppers at bay. This means that you should aspire to find the right balance between beauty and functionality for your online store.').'</li>
 				</ul>
 			</p><br />
 		</div>';

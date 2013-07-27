@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>blockcontactinfos</name>
-            <displayName><![CDATA[Block contact infos]]></displayName>
+            <displayName><![CDATA[Block contact info]]></displayName>
             <version><![CDATA[1.0]]></version>
-            <description><![CDATA[Add a block to add some information about contacting the shop]]></description>
+            <description><![CDATA[This module will allow you to display your e-store&#039;s contact information in a customizable block.]]></description>
             <author><![CDATA[]]></author>
             <tab><![CDATA[front_office_features]]></tab>
             <is_configurable>1</is_configurable>

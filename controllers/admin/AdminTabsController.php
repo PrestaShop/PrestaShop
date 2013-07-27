@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -31,6 +31,7 @@ class AdminTabsControllerCore extends AdminController
 	public function __construct()
 	{
 		$this->context = Context::getContext();
+		$this->multishop_context = Shop::CONTEXT_ALL;
 		$this->table = 'tab';
 		$this->className = 'Tab';
 		$this->lang = true;
@@ -135,7 +136,7 @@ class AdminTabsControllerCore extends AdminController
 					'type' => 'file',
 					'label' => $this->l('Icon:'),
 					'name' => 'icon',
-					'desc' => $this->l('Upload logo from your computer (.gif, .jpg, .jpeg or .png).')
+					'desc' => $this->l('Upload a logo from your computer (.gif, .jpg, .jpeg or .png).')
 				),
 				array(
 					'type' => 'radio',
@@ -158,22 +159,28 @@ class AdminTabsControllerCore extends AdminController
 					),
 					'desc' => $this->l('Show or hide menu.')
 				),
-				array(
-					'type' => 'select',
-					'label' => $this->l('Parent:'),
-					'name' => 'id_parent',
-					'options' => array(
-						'query' => $tabs,
-						'id' => 'id_tab',
-						'name' => 'name'
-					)
-				)
 			),
 			'submit' => array(
 				'title' => $this->l('   Save   '),
 				'class' => 'button'
 			)
 		);
+
+		$display_parent = true;
+		if (Validate::isLoadedObject($this->object) && !class_exists($this->object->class_name.'Controller'))
+			$display_parent = false;
+
+		if ($display_parent)
+			$this->fields_form['input'][] = array(
+				'type' => 'select',
+				'label' => $this->l('Parent:'),
+				'name' => 'id_parent',
+				'options' => array(
+					'query' => $tabs,
+					'id' => 'id_tab',
+					'name' => 'name'
+				)
+			);
 
 		return parent::renderForm();
 	}
@@ -261,9 +268,9 @@ class AdminTabsControllerCore extends AdminController
 		elseif (Tools::getValue('position') && !Tools::isSubmit('submitAdd'.$this->table))
 		{
 			if ($this->tabAccess['edit'] !== '1')
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 			elseif (!Validate::isLoadedObject($object = new Tab((int)Tools::getValue($this->identifier))))
-				$this->errors[] = Tools::displayError('An error occurred while updating status for object.').
+				$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').
 					' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 			if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
 				$this->errors[] = Tools::displayError('Failed to update the position.');
@@ -271,7 +278,7 @@ class AdminTabsControllerCore extends AdminController
 				Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.Tools::getAdminTokenLite('AdminTabs'));
 		}
 		elseif (Tools::isSubmit('submitAddtab') && Tools::getValue('id_tab') === Tools::getValue('id_parent'))
-			$this->errors[] = Tools::displayError('You can\'t put this menu in itself');
+			$this->errors[] = Tools::displayError('You can\'t put this menu inside itself. ');
 		else
 		{
 			// Temporary add the position depend of the selection of the parent category

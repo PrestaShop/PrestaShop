@@ -1,5 +1,5 @@
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -268,6 +268,10 @@ function updateAmounts(order)
 		$(this).html(old_quantity + 1);
 		$(this).fadeIn('slow');
 	});
+	$('#shipping_table .weight').fadeOut('slow', function() {
+		$(this).html(order.weight);
+		$(this).fadeIn('slow');
+	});
 }
 
 function closeAddProduct()
@@ -284,7 +288,8 @@ function closeAddProduct()
 	$('#add_product_product_quantity').val('1');
 	$('#add_product_product_attribute_id option').remove();
 	$('#add_product_product_attribute_area').hide();
-	$('#add_product_product_stock').html('0');
+	if (stock_management)
+		$('#add_product_product_stock').html('0');
 	current_product = null;
 }
 
@@ -323,8 +328,9 @@ function init()
 			},
 			parse: function(data) {
 				var products = new Array();
-				for (var i = 0; i < data.products.length; i++)
-					products[i] = { data: data.products[i], value: data.products[i].name };
+				if (typeof(data.products) != 'undefined')
+					for (var i = 0; i < data.products.length; i++)
+						products[i] = { data: data.products[i], value: data.products[i].name };
 				return products;
 			},
 			extraParams: {
@@ -334,6 +340,7 @@ function init()
 				id_lang: id_lang,
 				id_currency: id_currency,
 				id_address: id_address,
+				id_customer: id_customer,
 				product_search: function() { return $('#add_product_product_name').val(); }
 			}
 		}
@@ -356,7 +363,8 @@ function init()
 			$('#add_product_product_price_tax_incl').val(data.price_tax_incl);
 			$('#add_product_product_price_tax_excl').val(data.price_tax_excl);
 			addProductRefreshTotal();
-			$('#add_product_product_stock').html(data.stock[0]);
+			if (stock_management)
+				$('#add_product_product_stock').html(data.stock[0]);
 
 			if (current_product.combinations.length !== 0)
 			{
@@ -367,7 +375,8 @@ function init()
 					$('select#add_product_product_attribute_id').append('<option value="'+this.id_product_attribute+'"'+(this.default_on == 1 ? ' selected="selected"' : '')+'>'+this.attributes+'</option>');
 					if (this.default_on == 1)
 					{
-						$('#add_product_product_stock').html(this.qty_in_stock);
+						if (stock_management)
+							$('#add_product_product_stock').html(this.qty_in_stock);
 						defaultAttribute = this.id_product_attribute;
 					}
 				});
@@ -396,24 +405,26 @@ function init()
 		populateWarehouseList(current_product.warehouse_list[$(this).val()]);
 
 		addProductRefreshTotal();
-
-		$('#add_product_product_stock').html(current_product.combinations[$(this).val()].qty_in_stock);
+		if (stock_management)
+			$('#add_product_product_stock').html(current_product.combinations[$(this).val()].qty_in_stock);
 	});
 
 	$('input#add_product_product_quantity').unbind('keyup');
 	$('input#add_product_product_quantity').keyup(function() {
-		var quantity = parseInt($(this).val());
-		if (quantity < 1 || isNaN(quantity))
-			quantity = 1;
-		var stock_available = parseInt($('#add_product_product_stock').html());
+		if (stock_management)
+		{
+			var quantity = parseInt($(this).val());
+			if (quantity < 1 || isNaN(quantity))
+				quantity = 1;
+			var stock_available = parseInt($('#add_product_product_stock').html());
+			// stock status update
+			if (quantity > stock_available)
+				$('#add_product_product_stock').css('font-weight', 'bold').css('color', 'red').css('font-size', '1.2em');
+			else
+				$('#add_product_product_stock').css('font-weight', 'normal').css('color', 'black').css('font-size', '1em');
+		}
 		// total update
 		addProductRefreshTotal();
-
-		// stock status update
-		if (quantity > stock_available)
-			$('#add_product_product_stock').css('font-weight', 'bold').css('color', 'red').css('font-size', '1.2em');
-		else
-			$('#add_product_product_stock').css('font-weight', 'normal').css('color', 'black').css('font-size', '1em');
 	});
 
 	$('#submitAddProduct').unbind('click');
@@ -463,8 +474,7 @@ function init()
 					cache: false,
 					dataType: 'json',
 					data : query,
-					success : function(data)
-					{
+					success : function(data) {
 						if (data.result)
 						{
 							go = false;
@@ -484,8 +494,7 @@ function init()
 						else
 							jAlert(data.error);
 					},
-					error : function(XMLHttpRequest, textStatus, errorThrown)
-					{
+					error : function(XMLHttpRequest, textStatus, errorThrown) {
 						jAlert("Impossible to add the product to the cart.\n\ntextStatus: '" + textStatus + "'\nerrorThrown: '" + errorThrown + "'\nresponseText:\n" + XMLHttpRequest.responseText);
 					}
 				});
@@ -690,6 +699,9 @@ function init()
 
 						$('.standard_refund_fields').hide();
 						$('.partial_refund_fields').hide();
+						$('.add_product_fields').hide();
+						$('.add_product_fields').hide();
+						$('td.product_action').attr('colspan', 3);
 					}
 					else
 						jAlert(data.error);

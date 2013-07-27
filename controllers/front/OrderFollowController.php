@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -40,11 +40,12 @@ class OrderFollowControllerCore extends FrontController
 		if (Tools::isSubmit('submitReturnMerchandise'))
 		{
 			$customizationQtyInput = Tools::getValue('customization_qty_input');
+			$order_qte_input = Tools::getValue('order_qte_input');
+			$customizationIds = Tools::getValue('customization_ids');
+
 			if (!$id_order = (int)(Tools::getValue('id_order')))
 				Tools::redirect('index.php?controller=history');
-			if (!$order_qte_input = Tools::getValue('order_qte_input'))
-				Tools::redirect('index.php?controller=order-follow&errorDetail1');
-			if (!$customizationQtyInput && $customizationIds = Tools::getValue('customization_ids'))
+			if (!$order_qte_input && !$customizationQtyInput && !$customizationIds)
 				Tools::redirect('index.php?controller=order-follow&errorDetail1');
 			if (!$customizationIds && !$ids_order_detail = Tools::getValue('ids_order_detail'))
 				Tools::redirect('index.php?controller=order-follow&errorDetail2');
@@ -113,7 +114,7 @@ class OrderFollowControllerCore extends FrontController
 		parent::setMedia();
 		$this->addCSS(array(_THEME_CSS_DIR_.'history.css', _THEME_CSS_DIR_.'addresses.css'));
 		$this->addJqueryPlugin('scrollTo');
-		$this->addJS(_THEME_JS_DIR_.'history.js', _THEME_JS_DIR_.'tools.js');
+		$this->addJS(array(_THEME_JS_DIR_.'history.js', _THEME_JS_DIR_.'tools.js'));
 	}
 }
 

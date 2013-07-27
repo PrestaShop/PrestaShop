@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -28,7 +28,7 @@
 {if isset($warehouse)}
 	<div>
 			<fieldset>
-				<legend><img src="../img/t/AdminPreferences.gif" alt="" />  {l s='General informations'}</legend>
+				<legend><img src="../img/t/AdminPreferences.gif" alt="" />  {l s='General information'}</legend>
 				<table style="width: 400px;" classe="table">
 					<tr>
 						<td>{l s='Reference:'}</td>
@@ -59,7 +59,7 @@
 						<td>{$currency->name} ({$currency->sign})</td>
 					</tr>
 					<tr>
-						<td>{l s='Products:'}</td>
+						<td>{l s='Products'}</td>
 						<td>{$warehouse_num_products} {l s='References:'}</td>
 					</tr>
 					<tr>
@@ -75,7 +75,7 @@
 		</div>
 		<div style="margin-top: 30px">
 			<fieldset>
-				<legend><img src="../img/t/AdminShop.gif" alt="" /> {l s='Shops'}</legend>
+				<legend><img src="../img/t/AdminShop.gif" alt="" /> {l s='Shops:'}</legend>
 				{l s='The following are the shops associated with this warehouse.'}
 				<table style="width: 400px; margin-top:20px" classe="table">
 					<tr>
@@ -99,10 +99,10 @@
 		<div style="margin-top: 30px">
 		<fieldset>
 			<legend><img src="../img/t/AdminLogs.gif" alt="" /> {l s='History'}</legend>
-			<a href="index.php?controller=adminstockmvt&id_warehouse={$warehouse->id}&token={getAdminToken tab='AdminStockMvt'}">{l s='Click here if you want details on what happened in this warehouse'}</a>
+			<a href="index.php?controller=adminstockmvt&id_warehouse={$warehouse->id}&token={getAdminToken tab='AdminStockMvt'}">{l s='Click here if you want details about this warehouse\'s activity.'}</a>
 		</fieldset>
 		</div>
 {else}
-	{l s='This warehouse does not exist'}
+	{l s='This warehouse does not exist.'}
 {/if}
 {/block}

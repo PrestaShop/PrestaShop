@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,11 +18,15 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <!-- MODULE Loyalty -->
-<li class="loyalty"><a href="{$link->getModuleLink('loyalty', 'default', ['process' => 'summary'])}" title="{l s='My loyalty points' mod='loyalty'}"><img src="{$module_template_dir}images/loyalty.gif" alt="{l s='My loyalty points' mod='loyalty'}" class="icon" /> {l s='My loyalty points' mod='loyalty'}</a></li>
+<li class="loyalty">
+	<a href="{$link->getModuleLink('loyalty', 'default', ['process' => 'summary'])|escape:'html'}" title="{l s='My loyalty points' mod='loyalty'}" rel="nofollow">
+		<img src="{$module_template_dir}images/loyalty.gif" alt="{l s='My loyalty points' mod='loyalty'}" class="icon" /> {l s='My loyalty points' mod='loyalty'}
+	</a>
+</li>
 <!-- END : MODULE Loyalty -->

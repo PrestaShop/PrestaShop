@@ -1,5 +1,5 @@
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -34,7 +34,7 @@ function checkLangPack(token){
 				action:'checkLangPack',
 				token:token,
 				ajax:1,
-				iso_lang:$('#iso_code').val(), 
+				iso_lang:($('#iso_code').val()).toLowerCase(), 
 				ps_version:$('#ps_version').val()
 			},
 			function(ret)
@@ -47,7 +47,7 @@ function checkLangPack(token){
 					message = langPackOk + ' <b>'+content['name'] + '</b>) :'
 						+'<br />' + langPackVersion + ' ' + content['version']
 						+ ' <a href="http://www.prestashop.com/download/lang_packs/gzip/' + content['version'] + '/'
-						+ $('#iso_code').val()+'.gzip" target="_blank" class="link">'+download+'</a><br />' + langPackInfo;
+						+ ($('#iso_code').val()).toLowerCase()+'.gzip" target="_blank" class="link">'+download+'</a><br />' + langPackInfo;
 					$('#lang_pack_msg').html(message);
 					$('#lang_pack_msg').show();
 				}

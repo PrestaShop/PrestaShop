@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -179,7 +179,7 @@ class ShopCore extends ObjectModel
 			'supplier' => array('type' => 'shop'),
 		);
 		
-		foreach($asso_tables as $table_name => $table_details)
+		foreach ($asso_tables as $table_name => $table_details)
 			Shop::addTableAssociation($table_name, $table_details);
 
 		Shop::$initialized = true;
@@ -308,7 +308,7 @@ class ShopCore extends ObjectModel
 					WHERE (su.domain = \''.$host.'\' OR su.domain_ssl = \''.$host.'\')
 						AND s.active = 1
 						AND s.deleted = 0
-					ORDER BY LENGTH(uri) DESC';
+					ORDER BY LENGTH(CONCAT(su.physical_uri, su.virtual_uri)) DESC';
 
 			$id_shop = '';
 			$found_uri = '';
@@ -330,10 +330,6 @@ class ShopCore extends ObjectModel
 				}
 			}
 
-			// Optimization - don't redirect and allow WS and other script to work
-			if (!$id_shop)
-				$id_shop = Configuration::get('PS_SHOP_DEFAULT');
-
 			// If an URL was found but is not the main URL, redirect to main URL
 			if ($id_shop && !$is_main_uri)
 			{
@@ -353,12 +349,27 @@ class ShopCore extends ObjectModel
 			}
 		}
 
-		if (!$id_shop && defined('_PS_ADMIN_DIR_'))
+		if ((!$id_shop && defined('_PS_ADMIN_DIR_')) || Tools::isPHPCLI())
 		{
 			// If in admin, we can access to the shop without right URL
-			$shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+			if ((!$id_shop && Tools::isPHPCLI()) || defined('_PS_ADMIN_DIR_'))
+				$id_shop = (int)Configuration::get('PS_SHOP_DEFAULT');
+
+			$shop = new Shop((int)$id_shop);
+			if (!Validate::isLoadedObject($shop))
+				$shop = new Shop((int)Configuration::get('PS_SHOP_DEFAULT'));
+
 			$shop->physical_uri = preg_replace('#/+#', '/', str_replace('\\', '/', dirname(dirname($_SERVER['SCRIPT_NAME']))).'/');
 			$shop->virtual_uri = '';
+			
+			// Define some $_SERVER variables like HTTP_HOST if PHP is launched with php-cli
+			if (Tools::isPHPCLI())
+			{
+				if(!isset($_SERVER['HTTP_HOST']) || empty($_SERVER['HTTP_HOST']))
+					$_SERVER['HTTP_HOST'] = $shop->domain;
+				if(!isset($_SERVER['SERVER_NAME']) || empty($_SERVER['SERVER_NAME']))
+					$_SERVER['SERVER_NAME'] = $shop->domain;
+			}
 		}
 		else
 		{
@@ -947,7 +958,10 @@ class ShopCore extends ObjectModel
 	public static function addSqlRestrictionOnLang($alias = null, $id_shop = null)
 	{
 		if (is_null($id_shop))
-			$id_shop = Context::getContext()->shop->id;
+			$id_shop = (int)Context::getContext()->shop->id;
+		if (!$id_shop)
+			$id_shop = (int)Configuration::get('PS_SHOP_DEFAULT');
+
 		return ' AND '.(($alias) ? $alias.'.' : '').'id_shop = '.$id_shop.' ';
 	}
 
@@ -979,6 +993,10 @@ class ShopCore extends ObjectModel
 	{
 		// If we duplicate some specific data, automatically duplicate other data linked to the first
 		// E.g. if carriers are duplicated for the shop, duplicate carriers langs too
+
+		if (!$old_id)
+			$old_id = Configuration::get('PS_SHOP_DEFAULT');
+
 		if (isset($tables_import['carrier']))
 		{
 			$tables_import['carrier_tax_rules_group_shop'] = true;

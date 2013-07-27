@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -58,6 +58,21 @@ class AdminSlipControllerCore extends AdminController
 
 		$this->_select = 'a.id_order_slip AS id_pdf';
 		$this->optionTitle = $this->l('Slip');
+
+		$this->fields_options = array(
+			'general' => array(
+				'title' =>	$this->l('Credit slip options'),
+				'fields' =>	array(
+					'PS_CREDIT_SLIP_PREFIX' => array(
+						'title' => $this->l('Credit slip prefix:'),
+						'desc' => $this->l('Prefix used for credit slips'),
+						'size' => 6,
+						'type' => 'textLang'
+					)
+				),
+				'submit' => array()
+			)
+		);
 
 		parent::__construct();
 	}
@@ -118,7 +133,7 @@ class AdminSlipControllerCore extends AdminController
 				$order_slips = OrderSlip::getSlipsIdByDate(Tools::getValue('date_from'), Tools::getValue('date_to'));
 				if (count($order_slips))
 					Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf').'&submitAction=generateOrderSlipsPDF&date_from='.urlencode(Tools::getValue('date_from')).'&date_to='.urlencode(Tools::getValue('date_to')));
-				$this->errors[] = $this->l('No order slips found for this period');
+				$this->errors[] = $this->l('No order slips were found for this period.');
 			}
 		}
 		else
@@ -130,6 +145,7 @@ class AdminSlipControllerCore extends AdminController
 		$this->initToolbar();
 		$this->content .= $this->renderList();
 		$this->content .= $this->renderForm();
+		$this->content .= '<br>'.$this->renderOptions();
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,

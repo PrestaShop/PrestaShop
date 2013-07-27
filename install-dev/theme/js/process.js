@@ -19,7 +19,10 @@ function start_install()
 	$('#progress_bar .installing').show();
 	$('.stepList li:last-child').removeClass('ok').removeClass('ko');
 	process_pixel = parseInt($('#progress_bar .total').css('width')) / process_steps.length;
-
+	$('#tabs li a').each(function() {
+		 this.rel = $(this).attr('href');
+		 this.href = '#';
+	});
 	process_install();
 }
 
@@ -28,11 +31,11 @@ function process_install(step)
 	if (!step)
 		step = process_steps[0];
 
-	$('.installing').hide().html(step.lang+' ...').fadeIn('slow');
+	$('.installing').hide().html(step.lang + ' ...').fadeIn('slow');
 
 	$.ajax({
 		url: 'index.php',
-		data: step.key+'=true',
+		data: step.key + '=true',
 		dataType: 'json',
 		cache: false,
 		success: function(json)
@@ -48,10 +51,7 @@ function process_install(step)
 					$('#progress_bar .total span').html('100%');
 
 					// Installation finished
-					setTimeout(function()
-					{
-						install_success();
-					}, 700)
+					setTimeout(function(){install_success();}, 700);
 				}
 				else
 				{
@@ -156,11 +156,19 @@ function install_error(step, errors)
 		var display = '<ol>';
 		$.each(list_errors, function(k, v)
 		{
+			if (typeof psuser_assistance != 'undefined')
+				psuser_assistance.setStep('install_process_error', {'error':v});
 			display += '<li>'+v+'</li>';
 		});
 		display += '</ol>';
 		$('#process_step_'+step.key+' .error_log').html(display).show();
 	}
+	if (typeof psuser_assistance != 'undefined')
+		psuser_assistance.setStep('install_process_error');
+
+	$('#tabs li a').each(function() {
+		 this.href=this.rel;
+	});
 }
 
 function install_success()
@@ -171,4 +179,10 @@ function install_success()
 	$('#install_process_form').slideUp();
 	$('#install_process_success').slideDown();
 	$('.stepList li:last-child').addClass('ok');
+	if (typeof psuser_assistance != 'undefined')
+		psuser_assistance.setStep('install_process_success');
+
+	$('#tabs li a').each(function() {
+		 this.href=this.rel;
+	});
 }

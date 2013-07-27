@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -176,7 +176,7 @@ class InstallModelInstall extends InstallAbstractModel
 		// Install languages
 		try
 		{
-			$languages = $this->installLanguages();
+			$languages = $this->installLanguages(array($this->language->getLanguageIso()));
 		}
 		catch (PrestashopInstallerException $e)
 		{
@@ -197,7 +197,7 @@ class InstallModelInstall extends InstallAbstractModel
 	public function populateDatabase($entity = null)
 	{
 		$languages = array();
-		foreach (Language::getLanguages(false) as $lang)
+		foreach (Language::getLanguages(true) as $lang)
 			$languages[$lang['id_lang']] = $lang['iso_code'];
 
 		// Install XML data (data/xml/ folder)
@@ -293,34 +293,35 @@ class InstallModelInstall extends InstallAbstractModel
 	 *
 	 * @return array Association between ID and iso array(id_lang => iso, ...)
 	 */
-	public function installLanguages()
+	public function installLanguages($languages_list = null)
 	{
+		if ($languages_list == null || !is_array($languages_list) || !count($languages_list))
+			$languages_list = $this->language->getIsoList();
+
 		$languages = array();
-		foreach ($this->language->getIsoList() as $iso)
+		foreach ($languages_list as $iso)
 		{
 			if (!file_exists(_PS_INSTALL_LANGS_PATH_.$iso.'/language.xml'))
 				throw new PrestashopInstallerException($this->language->l('File "language.xml" not found for language iso "%s"', $iso));
 
 			if (!$xml = @simplexml_load_file(_PS_INSTALL_LANGS_PATH_.$iso.'/language.xml'))
 				throw new PrestashopInstallerException($this->language->l('File "language.xml" not valid for language iso "%s"', $iso));
+			
+			$params_lang = array('name' => (string)$xml->name, 'iso_code' => substr((string)$xml->language_code, 0, 2));
+			
+			if (InstallSession::getInstance()->safe_mode)
+				Language::checkAndAddLanguage($iso, false, true, $params_lang);
+			else
+				Language::downloadAndInstallLanguagePack($iso, _PS_INSTALL_VERSION_, $params_lang);
 
-			// Add language in database
-			$language = new Language();
-			$language->iso_code = $iso;
-			$language->active = ($iso == $this->language->getLanguageIso()) ? true : false;
-			$language->name = ($xml->name) ? (string)$xml->name : 'Unknown (Unknown)';
-			$language->language_code = ($xml->language_code) ? (string)$xml->language_code : $iso;
-			$language->date_format_lite = ($xml->date_format_lite) ? (string)$xml->date_format_lite : 'm/j/Y';
-			$language->date_format_full = ($xml->date_format_full) ? (string)$xml->date_format_full : 'm/j/Y H:i:s';
-			$language->is_rtl = ($xml->is_rtl && ($xml->is_rtl == 'true' || $xml->is_rtl == '1')) ? 1 : 0;
-			if (!$language->add())
+			if (!$id_lang = Language::getIdByIso($iso))
 				throw new PrestashopInstallerException($this->language->l('Cannot install language "%s"', ($xml->name) ? $xml->name : $iso));
-			$languages[$language->id] = $iso;
+			$languages[$id_lang] = $iso;
 
 			// Copy language flag
 			if (is_writable(_PS_IMG_DIR_.'l/'))
-				if (!copy(_PS_INSTALL_LANGS_PATH_.$iso.'/flag.jpg', _PS_IMG_DIR_.'l/'.$language->id.'.jpg'))
-					throw new PrestashopInstallerException($this->language->l('Cannot copy flag language "%s"', _PS_INSTALL_LANGS_PATH_.$iso.'/flag.jpg => '._PS_IMG_DIR_.'l/'.$language->id.'.jpg'));
+				if (!copy(_PS_INSTALL_LANGS_PATH_.$iso.'/flag.jpg', _PS_IMG_DIR_.'l/'.$id_lang.'.jpg'))
+					throw new PrestashopInstallerException($this->language->l('Cannot copy flag language "%s"', _PS_INSTALL_LANGS_PATH_.$iso.'/flag.jpg => '._PS_IMG_DIR_.'l/'.$id_lang.'.jpg'));
 		}
 
 		return $languages;
@@ -391,6 +392,11 @@ class InstallModelInstall extends InstallAbstractModel
 
 		Context::getContext()->shop = new Shop(1);
 		Configuration::loadConfiguration();
+
+		// use the old image system if the safe_mod is enabled otherwise the installer will fail with the fixtures installation
+		if (InstallSession::getInstance()->safe_mode)
+			Configuration::updateGlobalValue('PS_LEGACY_IMAGES', 				1);
+	
 		$id_country = Country::getByIso($data['shop_country']);
 
 		// Set default configuration
@@ -551,10 +557,8 @@ class InstallModelInstall extends InstallAbstractModel
 				'graphvisifire',
 				'graphxmlswfcharts',
 				'gridhtml',
-				'gsitemap',
 				'homefeatured',
 				'homeslider',
-				'moneybookers',
 				'pagesnotfound',
 				'sekeywords',
 				'statsbestcategories',
@@ -578,21 +582,62 @@ class InstallModelInstall extends InstallAbstractModel
 				'statssearch',
 				'statsstock',
 				'statsvisits',
-				'themeinstallator',
 			);
 		}
-
 		return $modules;
 	}
-
+	
+	public function getAddonsModulesList($params = array())
+	{
+		$addons_modules = array();
+		$content = Tools::addonsRequest('install-modules', $params);
+		$xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
+			
+		if ($xml !== false and isset($xml->module))
+			foreach ($xml->module as $modaddons)
+				$addons_modules[] = array('id_module' => $modaddons->id, 'name' => $modaddons->name);
+		
+		return $addons_modules;
+	}
+	
 	/**
 	 * PROCESS : installModules
-	 * Install all modules in ~/modules/ directory
+	 * Download module from addons and Install all modules in ~/modules/ directory
+	 */
+	public function installModulesAddons($module = null)
+	{
+		$addons_modules = $module ? array($module) : $this->getAddonsModulesList();
+		$modules = array();	
+		if (!InstallSession::getInstance()->safe_mode)
+		{
+			foreach($addons_modules as $addons_module)
+				if (file_put_contents(_PS_MODULE_DIR_.$addons_module['name'].'.zip', Tools::addonsRequest('module', array('id_module' => $addons_module['id_module']))))
+					if (Tools::ZipExtract(_PS_MODULE_DIR_.$addons_module['name'].'.zip', _PS_MODULE_DIR_))
+					{
+						$modules[] = (string)$addons_module['name'];//if the module has been unziped we add the name in the modules list to install
+						unlink(_PS_MODULE_DIR_.$addons_module['name'].'.zip');
+					}
+		}		
+		$errors = array();
+		foreach ($modules as $module_name)
+			$this->installModules($module_name);
+
+		if ($errors)
+		{
+			$this->setError($errors);
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * PROCESS : installModules
+	 * Download module from addons and Install all modules in ~/modules/ directory
 	 */
 	public function installModules($module = null)
 	{
 		$modules = $module ? array($module) : $this->getModulesList();
-
+	
 		$errors = array();
 		foreach ($modules as $module_name)
 		{
@@ -605,7 +650,7 @@ class InstallModelInstall extends InstallAbstractModel
 		}
 
 		if ($errors)
-		{
+		{	
 			$this->setError($errors);
 			return false;
 		}

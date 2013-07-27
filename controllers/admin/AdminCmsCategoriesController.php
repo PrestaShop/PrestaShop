@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -33,6 +33,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->is_cms = true;
 		$this->table = 'cms_category';
 		$this->className = 'CMSCategory';
 		$this->lang = true;
@@ -69,6 +70,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 	public function renderList()
 	{
 		$this->initToolbar();
+        $this->toolbar_btn['new']['href'] .= '&amp;id_parent='.(int)Tools::getValue('id_cms_category');
 		return parent::renderList();
 	}
 
@@ -96,10 +98,14 @@ class AdminCmsCategoriesControllerCore extends AdminController
 				$this->id_object = $id_cms_category;
 				if (!CMSCategory::checkBeforeMove($id_cms_category, (int)Tools::getValue('id_parent')))
 				{
-					$this->errors[] = Tools::displayError('CMS Category cannot be moved here');
+					$this->errors[] = Tools::displayError('The CMS Category cannot be moved here.');
 					return false;
 				}
 			}
+            $object = parent::postProcess();
+            if ($object !== false)
+                Tools::redirectAdmin(self::$currentIndex.'&conf=3&id_cms_category='.(int)$object->id.'&token='.Tools::getValue('token'));
+            return $object;
 		}
 		/* Change object statuts (active, inactive) */
 		elseif (Tools::isSubmit('statuscms_category') && Tools::getValue($this->identifier))
@@ -114,14 +120,14 @@ class AdminCmsCategoriesControllerCore extends AdminController
 						Tools::redirectAdmin(self::$currentIndex.'&conf=5'.$identifier.'&token='.Tools::getValue('token'));
 					}
 					else
-						$this->errors[] = Tools::displayError('An error occurred while updating status.');
+						$this->errors[] = Tools::displayError('An error occurred while updating the status.');
 				}
 				else
-					$this->errors[] = Tools::displayError('An error occurred while updating status for object.')
+					$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.')
 						.' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 		/* Delete object */
 		elseif (Tools::isSubmit('delete'.$this->table))
@@ -136,41 +142,39 @@ class AdminCmsCategoriesControllerCore extends AdminController
 							.' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
 					else
 					{
+                        $identifier = ((int)$object->id_parent ? '&'.$this->identifier.'='.(int)$object->id_parent : '');
 						if ($this->deleted)
 						{
 							$object->deleted = 1;
 							if ($object->update())
-								Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.Tools::getValue('token'));
+								Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.Tools::getValue('token').$identifier);
 						}
 						elseif ($object->delete())
-							Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.Tools::getValue('token'));
+							Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.Tools::getValue('token').$identifier);
 						$this->errors[] = Tools::displayError('An error occurred during deletion.');
 					}
 				}
 				else
-					$this->errors[] = Tools::displayError('An error occurred while deleting object.')
+					$this->errors[] = Tools::displayError('An error occurred while deleting the object.')
 						.' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 		}
 		elseif (Tools::isSubmit('position'))
 		{
 			$object = new CMSCategory((int)Tools::getValue($this->identifier, Tools::getValue('id_cms_category_to_move', 1)));
 			if ($this->tabAccess['edit'] !== '1')
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 			elseif (!Validate::isLoadedObject($object))
-				$this->errors[] = Tools::displayError('An error occurred while updating status for object.')
+				$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.')
 					.' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 			elseif (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
 				$this->errors[] = Tools::displayError('Failed to update the position.');
 			else
 			{
-				$identifier = '';
-				if ($id_category = (int)Tools::getValue($this->identifier, Tools::getValue('id_cms_category_parent', 1)))
-					$identifier = '&'.$this->identifier.'='.$id_category;
+				$identifier = ((int)$object->id_parent ? '&'.$this->identifier.'='.(int)$object->id_parent : '');
 				$token = Tools::getAdminTokenLite('AdminCmsContent');
-
 				Tools::redirectAdmin(
 					self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.$identifier.'&token='.$token
 				);
@@ -190,16 +194,16 @@ class AdminCmsCategoriesControllerCore extends AdminController
 					{
 						$cms_category->cleanPositions((int)Tools::getValue('id_cms_category'));
 						$token = Tools::getAdminTokenLite('AdminCmsContent');
-						Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.$token.'&id_category='.(int)Tools::getValue('id_cms_category'));
+						Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.$token.'&id_cms_category='.(int)Tools::getValue('id_cms_category'));
 					}
-					$this->errors[] = Tools::displayError('An error occurred while deleting selection.');
+					$this->errors[] = Tools::displayError('An error occurred while deleting this selection.');
 
 				}
 				else
 					$this->errors[] = Tools::displayError('You must select at least one element to delete.');
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 		}
 		parent::postProcess();
 	}
@@ -294,7 +298,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 					'name' => 'link_rewrite',
 					'required' => true,
 					'lang' => true,
-					'hint' => $this->l('Only letters and the minus (-) character are allowed')
+					'hint' => $this->l('Only letters and the minus (-) character are allowed.')
 				),
 			),
 			'submit' => array(
@@ -302,7 +306,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 				'class' => 'button'
 			)
 		);
-
+		$this->tpl_form_vars['PS_ALLOW_ACCENTED_CHARS_URL'] = (int)Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
 		return parent::renderForm();
 	}
 }

@@ -3,7 +3,7 @@
             <name>statsorigin</name>
             <displayName><![CDATA[Visitors origin]]></displayName>
             <version><![CDATA[1]]></version>
-            <description><![CDATA[Display the websites your visitors come from.]]></description>
+            <description><![CDATA[Display the website(s) your visitors came from.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[analytics_stats]]></tab>
             <is_configurable>0</is_configurable>

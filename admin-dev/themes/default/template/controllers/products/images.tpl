@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -78,7 +78,7 @@
 		<tr id="image_id">
 			<td style="padding: 4px;">
 				<a href="{$smarty.const._THEME_PROD_DIR_}image_path.jpg" class="fancybox">
-					<img src="{$smarty.const._THEME_PROD_DIR_}en-default-small_default.jpg" alt="image_id" title="image_id" />
+					<img src="{$smarty.const._THEME_PROD_DIR_}{$iso_lang}-default-small_default.jpg" alt="image_id" title="image_id" />
 				</a>
 			</td>
 			<td id="td_image_id" class="pointer dragHandle center positionImage">
@@ -106,7 +106,7 @@
 		var upbutton = '{l s='Upload an image'}';
 		var token = '{$token}';
 		var come_from = '{$table}';
-		var success_add =  '{l s='image has been successfully added'}';
+		var success_add =  '{l s='The image has been successfully added.'}';
 		var id_tmp = 0;
 		var current_shop_id = {$current_shop_id|intval};
 		{literal}
@@ -280,6 +280,7 @@
 				{
 					"action":"UpdateProductImageShopAsso",
 					"id_image":id,
+					"id_product":id_product,
 					"id_shop": id_shop,
 					"active":active,
 					"token" : "{/literal}{$token}{literal}",
@@ -312,12 +313,13 @@
 			{
 				line = $("#lineType").html();
 				line = line.replace(/image_id/g, id);
-			line = line.replace(/en-default/g, path);
-			line = line.replace(/image_path/g, path);
+				line = line.replace(/[a-z]{2}-default/g, path);
+				line = line.replace(/image_path/g, path);
 				line = line.replace(/image_position/g, position);
 				line = line.replace(/blank/g, cover);
-				line = line.replace("<tbody>", "");
-				line = line.replace("</tbody>", "");
+				line = line.replace(/<tbody>/gi, "");
+				line = line.replace(/<\/tbody>/gi, "");
+
 				if (shops != false)
 				{
 					$.each(shops, function(key, value){
@@ -325,8 +327,10 @@
 							line = line.replace('id="' + key + '' + id + '"','id="' + key + '' + id + '" checked=checked');
 					});
 				}
+
 				$("#imageList").append(line);
 			}
+
 			$('.fancybox').fancybox();
 		});
 		{/literal}

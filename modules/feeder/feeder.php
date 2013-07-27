@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -35,32 +35,27 @@ class Feeder extends Module
 	{
 		$this->name = 'feeder';
 		$this->tab = 'front_office_features';
-		$this->version = 0.2;
+		$this->version = 0.3;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		
 		$this->_directory = dirname(__FILE__).'/../../';
 		parent::__construct();
 		
-		$this->displayName = $this->l('RSS products feed');
-		$this->description = $this->l('Generate a RSS products feed');
+		$this->displayName = $this->l('RSS products feed.');
+		$this->description = $this->l('Generate an RSS products feed.');
 	}
 	
 	function install()
 	{
-		if (!parent::install())
-			return false;
-		if (!$this->registerHook('header'))
-			return false;
-		return true;
+		return (parent::install() && $this->registerHook('header'));
 	}
 	
 	function hookHeader($params)
 	{
-		$id_category = (int)(Tools::getValue('id_category'));
-		if (!$id_category)
+		if (!($id_category = (int)Tools::getValue('id_category')))
 		{
-			if (isset($_SERVER['HTTP_REFERER']) && preg_match('!^(.*)\/([0-9]+)\-(.*[^\.])|(.*)id_category=([0-9]+)(.*)$!', $_SERVER['HTTP_REFERER'], $regs) && !strstr($_SERVER['HTTP_REFERER'], '.html'))
+			if (isset($_SERVER['HTTP_REFERER']) && strstr($_SERVER['HTTP_REFERER'], Tools::getHttpHost()) && preg_match('!^(.*)\/([0-9]+)\-(.*[^\.])|(.*)id_category=([0-9]+)(.*)$!', $_SERVER['HTTP_REFERER'], $regs))
 			{
 				if (isset($regs[2]) && is_numeric($regs[2]))
 					$id_category = (int)($regs[2]);

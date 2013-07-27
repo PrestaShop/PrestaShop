@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,14 +18,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <!-- MODULE ReferralProgram -->
 <li class="referralprogram">
-	<a href="{$link->getModuleLink('referralprogram', 'program', [], true)}" title="{l s='Referral program' mod='referralprogram'}">
+	<a href="{$link->getModuleLink('referralprogram', 'program', [], true)|escape:'html'}" title="{l s='Referral program' mod='referralprogram'}" rel="nofollow">
 		<img src="{$module_template_dir}referralprogram.gif" alt="{l s='Referral program' mod='referralprogram'}" class="icon" /> 
 			{l s='Referral program' mod='referralprogram'}
 	</a>

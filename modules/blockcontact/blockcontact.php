@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -37,8 +37,8 @@ class Blockcontact extends Module
 
 		parent::__construct();
 
-		$this->displayName = $this->l('Block contact');
-		$this->description = $this->l('Allows you to add extra information about customer service');
+		$this->displayName = $this->l('Contact Block');
+		$this->description = $this->l('Allows you to add additional information about your store\'s customer service.');
 	}
 	
 	public function install()
@@ -64,7 +64,8 @@ class Blockcontact extends Module
 		{				
 			Configuration::updateValue('blockcontact_telnumber', Tools::getValue('telnumber'));
 			Configuration::updateValue('blockcontact_email', Tools::getValue('email'));
-			$html .= '<div class="confirm">'.$this->l('Configuration updated').'</div>';
+			$this->_clearCache('blockcontact.tpl');
+			$html .= '<div class="conf confirm">'.$this->l('Configuration updated').'</div>';
 		}
 
 		$html .= '
@@ -74,7 +75,7 @@ class Blockcontact extends Module
 				<label for="telnumber">'.$this->l('Telephone number:').'</label>
 				<input type="text" id="telnumber" name="telnumber" value="'.((Configuration::get('blockcontact_telnumber') != '') ? Tools::safeOutput(Configuration::get('blockcontact_telnumber')) : '').'" />
 				<div class="clear">&nbsp;</div>
-				<label for="email">'.$this->l('Email:').'</label>
+				<label for="email">'.$this->l('Email').'</label>
 				<input type="text" id="email" name="email" value="'.((Configuration::get('blockcontact_email') != '') ? Tools::safeOutput(Configuration::get('blockcontact_email')) : '').'" />
 				<div class="clear">&nbsp;</div>
 				<div class="margin-form">
@@ -94,12 +95,12 @@ class Blockcontact extends Module
 	public function hookDisplayRightColumn()
 	{
 		global $smarty;
-
-		$smarty->assign(array(
-			'telnumber' => Configuration::get('blockcontact_telnumber'),
-			'email' => Configuration::get('blockcontact_email')
-		));
-		return $this->display(__FILE__, 'blockcontact.tpl');
+		if (!$this->isCached('blockcontact.tpl', $this->getCacheId()))
+			$smarty->assign(array(
+				'telnumber' => Configuration::get('blockcontact_telnumber'),
+				'email' => Configuration::get('blockcontact_email')
+			));
+		return $this->display(__FILE__, 'blockcontact.tpl', $this->getCacheId());
 	}
 	
 	public function hookDisplayLeftColumn()

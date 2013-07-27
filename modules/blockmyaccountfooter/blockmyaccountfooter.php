@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -33,26 +33,43 @@ class Blockmyaccountfooter extends Module
 	{
 		$this->name = 'blockmyaccountfooter';
 		$this->tab = 'front_office_features';
-		$this->version = '1.2';
+		$this->version = '1.3';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
 		parent::__construct();
 
-		$this->displayName = $this->l('My Account block on footer');
-		$this->description = $this->l('Displays a block with links relative to user account.');
+		$this->displayName = $this->l('My account block for your website\'s footer');
+		$this->description = $this->l('Displays a block with links relative to user accounts.');
 	}
 
 	public function install()
 	{
-		if (!$this->addMyAccountBlockHook() || !parent::install() || !$this->registerHook('footer') || !$this->registerHook('header'))
+		if (!$this->addMyAccountBlockHook() 
+			|| !parent::install() 
+			|| !$this->registerHook('footer') 
+			|| !$this->registerHook('header') 
+			|| !$this->registerHook('actionModuleRegisterHookAfter')
+			|| !$this->registerHook('actionModuleUnRegisterHookAfter')
+		)
 			return false;
 		return true;
+	}
+
+	public function hookActionUnModuleRegisterHookAfter($params)
+	{
+		return $this->hookActionModuleRegisterHookAfter($params);
 	}
 
 	public function uninstall()
 	{
 		return parent::uninstall() && $this->removeMyAccountBlockHook();
+	}
+
+	public function hookActionModuleRegisterHookAfter($params)
+	{
+		if ($params['hook_name'] == 'displayMyAccountBlock')
+			$this->_clearCache('blockmyaccountfooter.tpl');
 	}
 
 	public function hookLeftColumn($params)
@@ -93,11 +110,12 @@ class Blockmyaccountfooter extends Module
 	{
 		global $smarty;
 		
-		$smarty->assign(array(
-			'voucherAllowed' => CartRule::isFeatureActive(),
-			'returnAllowed' => (int)(Configuration::get('PS_ORDER_RETURN')),
-			'HOOK_BLOCK_MY_ACCOUNT' => Hook::exec('displayMyAccountBlock')
-		));
-		return $this->display(__FILE__, $this->name.'.tpl');
+		if (!$this->isCached('blockmyaccountfooter.tpl', $this->getCacheId()))
+			$smarty->assign(array(
+				'voucherAllowed' => CartRule::isFeatureActive(),
+				'returnAllowed' => (int)(Configuration::get('PS_ORDER_RETURN')),
+				'HOOK_BLOCK_MY_ACCOUNT' => Hook::exec('displayMyAccountBlockfooter')
+			));
+		return $this->display(__FILE__, 'blockmyaccountfooter.tpl', $this->getCacheId());
 	}
 }

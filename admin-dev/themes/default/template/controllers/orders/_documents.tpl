@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -68,12 +68,12 @@
 			{/if}
 			{if get_class($document) eq 'OrderInvoice'}
 				{if isset($document->is_delivery)}
-					#{Configuration::get('PS_DELIVERY_PREFIX', $current_id_lang)}{'%06d'|sprintf:$document->delivery_number}
+					#{Configuration::get('PS_DELIVERY_PREFIX', $current_id_lang, null, $order->id_shop)}{'%06d'|sprintf:$document->delivery_number}
 				{else}
-					{$document->getInvoiceNumberFormatted($current_id_lang)}
+					{$document->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}
 				{/if}
 			{elseif get_class($document) eq 'OrderSlip'}
-				{l s='#%d' sprintf=$document->id}
+				#{Configuration::get('PS_CREDIT_SLIP_PREFIX', $current_id_lang)}{'%06d'|sprintf:$document->id}
 			{/if} <img src="../img/admin/details.gif" alt="{l s='See the document'}" /></a></td>
 		<td class="document_amount">
 		{if get_class($document) eq 'OrderInvoice'}
@@ -110,7 +110,7 @@
 		{if !isset($document->is_delivery)}
 	<tr id="invoiceNote{$document->id}" style="display:none" class="current-edit">
 		<td colspan="5">
-			<form action="{$current_index}&viewOrder&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}" method="post">
+			<form action="{$current_index}&viewOrder&id_order={$order->id}{if isset($smarty.get.token)}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}{/if}" method="post">
 				<p>
 					<label for="editNote{$document->id}" class="t">{l s='Note'}</label>
 					<input type="hidden" name="id_order_invoice" value="{$document->id}" />
@@ -128,9 +128,9 @@
 	{foreachelse}
 	<tr>
 		<td colspan="5" class="center">
-			<h3>{l s='No document is available'}</h3>
+			<h3>{l s='No documents are available'}</h3>
 			{if isset($invoice_management_active) && $invoice_management_active}
-			<p><a class="button" href="{$current_index}&viewOrder&submitGenerateInvoice&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">{l s='Generate invoice'}</a></p>
+			<p><a class="button" href="{$current_index}&viewOrder&submitGenerateInvoice&id_order={$order->id}{if isset($smarty.get.token)}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}{/if}">{l s='Generate invoice'}</a></p>
 			{/if}
 		</td>
 	</tr>

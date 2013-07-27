@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,10 +19,11 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
+
 abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCore
 {
 	public function init()
@@ -35,8 +36,9 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
 	public function initContent()
 	{
+		$this->initTabModuleList();
+		$this->addToolBarModulesListButton();
 		$this->toolbar_title = $this->l('Stats', 'AdminStatsTab');
-
 		if ($this->display == 'view')
 		{
 			// Some controllers use the view action without an object
@@ -76,6 +78,12 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 		$tpl = $context->controller->createTemplate('calendar.tpl');
 
 		$context->controller->addJqueryUI('ui.datepicker');
+
+		if ($identifier === null && Tools::getValue('module'))
+		{
+			$identifier = 'module';
+			$id = Tools::getValue('module');
+		}
 
 		$tpl->assign(array(
 			'current' => self::$currentIndex,
@@ -182,7 +190,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 		if (Tools::isSubmit('submitDatePicker'))
 		{
 			if (!Validate::isDate($from = Tools::getValue('datepickerFrom')) || !Validate::isDate($to = Tools::getValue('datepickerTo')))
-				$this->errors[] = Tools::displayError('Specified date is invalid');
+				$this->errors[] = Tools::displayError('The specified date is invalid.');
 		}
 		if (Tools::isSubmit('submitDateDay'))
 		{
@@ -234,7 +242,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 				Configuration::updateValue('PS_STATS_OLD_CONNECT_AUTO_CLEAN', Tools::getValue('PS_STATS_OLD_CONNECT_AUTO_CLEAN', Configuration::get('PS_STATS_OLD_CONNECT_AUTO_CLEAN')));
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 	}
 

@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,14 +18,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <div id="statsContainer">
 	<div id="calendar">
-				<form action="{$current}&token={$token}{if $action && $table}&{$action}{$table}{/if}{if $identifier && $id}&{$identifier}={$id}{/if}" method="post" id="calendar_form" name="calendar_form">
+				<form action="{$current}&token={$token}{if $action && $table}&{$action|escape}{$table|escape}{/if}{if $identifier && $id}&{$identifier|escape}={$id|escape}{/if}" method="post" id="calendar_form" name="calendar_form">
 					<input type="submit" name="submitDateDay" class="button submitDateDay" value="{$translations.Day}">
 					<input type="submit" name="submitDateMonth" class="button submitDateMonth" value="{$translations.Month}">
 					<input type="submit" name="submitDateYear" class="button submitDateYear" value="{$translations.Year}">

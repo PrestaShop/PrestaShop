@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -128,7 +128,7 @@ class CartControllerCore extends FrontController
 		if (!count(Carrier::getAvailableCarrierList(new Product($this->id_product), null, $new_id_address_delivery)))
 			die(Tools::jsonEncode(array(
 				'hasErrors' => true,
-				'error' => Tools::displayError('It\'s not possible to deliver this product to the selected address.', false),
+				'error' => Tools::displayError('It is not possible to deliver this product to the selected address.', false),
 			)));
 		
 		$this->context->cart->setProductAddressDelivery(
@@ -177,14 +177,14 @@ class CartControllerCore extends FrontController
 		$mode = (Tools::getIsset('update') && $this->id_product) ? 'update' : 'add';
 
 		if ($this->qty == 0)
-			$this->errors[] = Tools::displayError('Null quantity');
+			$this->errors[] = Tools::displayError('Null quantity.');
 		else if (!$this->id_product)
 			$this->errors[] = Tools::displayError('Product not found');
 
 		$product = new Product($this->id_product, true, $this->context->language->id);
 		if (!$product->id || !$product->active)
 		{
-			$this->errors[] = Tools::displayError('Product is no longer available.', false);
+			$this->errors[] = Tools::displayError('This product is no longer available.', false);
 			return;
 		}
 
@@ -192,7 +192,7 @@ class CartControllerCore extends FrontController
 		if ($this->id_product_attribute)
 		{
 			if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $this->qty))
-				$this->errors[] = Tools::displayError('There is not enough product in stock.');
+				$this->errors[] = Tools::displayError('There isn\'t enough product in stock.');
 		}
 		else if ($product->hasAttributes())
 		{
@@ -202,10 +202,10 @@ class CartControllerCore extends FrontController
 			if (!$this->id_product_attribute)
 				Tools::redirectAdmin($this->context->link->getProductLink($product));
 			else if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $this->qty))
-				$this->errors[] = Tools::displayError('There is not enough product in stock.');
+				$this->errors[] = Tools::displayError('There isn\'t enough product in stock.');
 		}
 		else if (!$product->checkQty($this->qty))
-			$this->errors[] = Tools::displayError('There is not enough product in stock.');
+			$this->errors[] = Tools::displayError('There isn\'t enough product in stock.');
 
 		// If no errors, process product addition
 		if (!$this->errors && $mode == 'add')
@@ -213,6 +213,11 @@ class CartControllerCore extends FrontController
 			// Add cart if no cart found
 			if (!$this->context->cart->id)
 			{
+				if (Context::getContext()->cookie->id_guest)
+				{
+					$guest = new Guest(Context::getContext()->cookie->id_guest);
+					$this->context->cart->mobile_theme = $guest->mobile_theme;
+				}
 				$this->context->cart->add();
 				if ($this->context->cart->id)
 					$this->context->cookie->id_cart = (int)$this->context->cart->id;
@@ -220,7 +225,7 @@ class CartControllerCore extends FrontController
 
 			// Check customizable fields
 			if (!$product->hasAllRequiredCustomizableFields() && !$this->customization_id)
-				$this->errors[] = Tools::displayError('Please fill in all required fields, then save the customization.');
+				$this->errors[] = Tools::displayError('Please fill in all of the required fields, and then save your customizations.');
 
 			if (!$this->errors)
 			{
@@ -257,6 +262,7 @@ class CartControllerCore extends FrontController
 		}
 
 		$removed = CartRule::autoRemoveFromCart();
+		CartRule::autoAddToCart();
 		if (count($removed) && (int)Tools::getValue('allow_refresh'))
 			$this->ajax_refresh = true;
 	}
@@ -310,7 +316,7 @@ class CartControllerCore extends FrontController
 			foreach ($result['summary']['products'] as $key => &$product)
 			{
 				$product['quantity_without_customization'] = $product['quantity'];
-				if ($result['customizedDatas'])
+				if ($result['customizedDatas'] && isset($result['customizedDatas'][(int)$product['id_product']][(int)$product['id_product_attribute']]))
 				{
 					foreach ($result['customizedDatas'][(int)$product['id_product']][(int)$product['id_product_attribute']] as $addresses)
 						foreach ($addresses as $customization)
@@ -329,7 +335,8 @@ class CartControllerCore extends FrontController
 			if ($result['customizedDatas'])
 				Product::addCustomizationPrice($result['summary']['products'], $result['customizedDatas']);
 
-			die(Tools::jsonEncode($result));
+			Hook::exec('actionCartListOverride', array('summary' => $result, 'json' => &$json));
+			die(Tools::jsonEncode(array_merge($result, (array)Tools::jsonDecode($json, true))));
 		}
 		// @todo create a hook
 		elseif (file_exists(_PS_MODULE_DIR_.'/blockcart/blockcart-ajax.php'))

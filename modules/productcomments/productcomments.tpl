@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -52,7 +52,7 @@ var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
 					</div>
 				</div>
 				<div class="comment_details">
-					<h4>{$comment.title}</h4>
+					<h4 class="title_block">{$comment.title}</h4>
 					<p>{$comment.content|escape:'html':'UTF-8'|nl2br}</p>
 					<ul>
 						{if $comment.total_advice > 0}
@@ -71,6 +71,9 @@ var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
 			</div>
 			{/if}
 		{/foreach}
+		<p class="align_center">
+			<a id="new_comment_tab_btn" class="open-comment-form" href="#new_comment_form">{l s='Write your review' mod='productcomments'} !</a>
+		</p>
 	{else}
 		{if ($too_early == false AND ($logged OR $allow_guests))}
 		<p class="align_center">
@@ -89,7 +92,7 @@ var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
 		<form action="#">
 			<h2 class="title">{l s='Write your review' mod='productcomments'}</h2>
 			<div class="product clearfix">
-				<img src="{$link->getImageLink($product->link_rewrite, $productcomment_cover, 'home_default')}" height="{$homeSize.height}" width="{$homeSize.width}" alt="{$product->name|escape:html:'UTF-8'}" />
+				<img src="{$link->getImageLink($product->link_rewrite, $productcomment_cover, 'home_default')|escape:'html'}" height="{$homeSize.height}" width="{$homeSize.width}" alt="{$product->name|escape:html:'UTF-8'}" />
 				<div class="product_desc">
 					<p class="product_name"><strong>{$product->name}</strong></p>
 					{$product->description_short}

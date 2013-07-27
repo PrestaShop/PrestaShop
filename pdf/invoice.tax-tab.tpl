@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,10 +18,12 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+
+{if $tax_exempt || ((isset($product_tax_breakdown) && $product_tax_breakdown|@count > 0) || (isset($ecotax_tax_breakdown) && $ecotax_tax_breakdown|@count > 0))}
 <!--  TAX DETAILS -->
 <table style="width: 100%">
 	<tr>
@@ -41,46 +43,56 @@
 				</tr>
 
 				{if isset($product_tax_breakdown)}
-				{foreach $product_tax_breakdown as $rate => $product_tax_infos}
-				<tr style="line-height:6px;background-color:{cycle values='#FFF,#DDD'};">
-				 <td style="width: 30%">{l s='Products' pdf='true'}</td>
-				 <td style="width: 20%; text-align: right;">{$rate} %</td>
-				{if !$use_one_after_another_method}
-				 <td style="width: 20%; text-align: right;">
-					 {if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=$product_tax_infos.total_price_tax_excl}
-				 </td>
-				{/if}
-				 <td style="width: 20%; text-align: right;">{if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=$product_tax_infos.total_amount}</td>
-				</tr>
-				{/foreach}
-				{/if}
+					{foreach $product_tax_breakdown as $rate => $product_tax_infos}
+					<tr style="line-height:6px;background-color:{cycle values='#FFF,#DDD'};">
+					 <td style="width: 30%">
+						{if !isset($pdf_product_tax_written)}
+							{l s='Products' pdf='true'}
+							{assign var=pdf_product_tax_written value=1}
+						{/if}
+					</td>
+					 <td style="width: 20%; text-align: right;">{$rate} %</td>
+					{if !$use_one_after_another_method}
+					 <td style="width: 20%; text-align: right;">
+						 {if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=$product_tax_infos.total_price_tax_excl}
+					 </td>
+					{/if}
+					 <td style="width: 20%; text-align: right;">{if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=$product_tax_infos.total_amount}</td>
+					</tr>
+					{/foreach}
+					{/if}
 
-				{if isset($shipping_tax_breakdown)}
-				{foreach $shipping_tax_breakdown as $shipping_tax_infos}
-				<tr style="line-height:6px;background-color:{cycle values='#FFF,#DDD'};">
-				 <td style="width: 30%">{l s='Shipping' pdf='true'}</td>
-				 <td style="width: 20%; text-align: right;">{$shipping_tax_infos.rate} %</td>
- 				{if !$use_one_after_another_method}
-					 <td style="width: 20%; text-align: right;">{if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=$shipping_tax_infos.total_tax_excl}</td>
-				{/if}
-				 <td style="width: 20%; text-align: right;">{if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=$shipping_tax_infos.total_amount}</td>
-				</tr>
-				{/foreach}
+					{if isset($shipping_tax_breakdown)}
+					{foreach $shipping_tax_breakdown as $shipping_tax_infos}
+					<tr style="line-height:6px;background-color:{cycle values='#FFF,#DDD'};">
+					 <td style="width: 30%">
+						{if !isset($pdf_shipping_tax_written)}
+							{l s='Shipping' pdf='true'}
+							{assign var=pdf_shipping_tax_written value=1}
+						{/if}
+					 </td>
+					 <td style="width: 20%; text-align: right;">{$shipping_tax_infos.rate} %</td>
+					{if !$use_one_after_another_method}
+						 <td style="width: 20%; text-align: right;">{if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=$shipping_tax_infos.total_tax_excl}</td>
+					{/if}
+					 <td style="width: 20%; text-align: right;">{if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=$shipping_tax_infos.total_amount}</td>
+					</tr>
+					{/foreach}
 				{/if}
 
 				{if isset($ecotax_tax_breakdown)}
-				{foreach $ecotax_tax_breakdown as $ecotax_tax_infos}
-					{if $ecotax_tax_infos.ecotax_tax_excl > 0}
-					<tr style="line-height:6px;background-color:{cycle values='#FFF,#DDD'};">
-						<td style="width: 30%">{l s='Ecotax' pdf='true'}</td>
-						<td style="width: 20%; text-align: right;">{$ecotax_tax_infos.rate  } %</td>
-						{if !$use_one_after_another_method}
-							<td style="width: 20%; text-align: right;">{if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=$ecotax_tax_infos.ecotax_tax_excl}</td>
+					{foreach $ecotax_tax_breakdown as $ecotax_tax_infos}
+						{if $ecotax_tax_infos.ecotax_tax_excl > 0}
+						<tr style="line-height:6px;background-color:{cycle values='#FFF,#DDD'};">
+							<td style="width: 30%">{l s='Ecotax' pdf='true'}</td>
+							<td style="width: 20%; text-align: right;">{$ecotax_tax_infos.rate  } %</td>
+							{if !$use_one_after_another_method}
+								<td style="width: 20%; text-align: right;">{if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=$ecotax_tax_infos.ecotax_tax_excl}</td>
+							{/if}
+							<td style="width: 20%; text-align: right;">{if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=($ecotax_tax_infos.ecotax_tax_incl - $ecotax_tax_infos.ecotax_tax_excl)}</td>
+						</tr>
 						{/if}
-						<td style="width: 20%; text-align: right;">{if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=($ecotax_tax_infos.ecotax_tax_incl - $ecotax_tax_infos.ecotax_tax_excl)}</td>
-					</tr>
-					{/if}
-				{/foreach}
+					{/foreach}
 				{/if}
 			</table>
 			{/if}
@@ -88,4 +100,4 @@
 	</tr>
 </table>
 <!--  / TAX DETAILS -->
-
+{/if}

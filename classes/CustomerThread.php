@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -59,16 +59,65 @@ class CustomerThreadCore extends ObjectModel
 			'date_upd' => 	array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
 	);
+	
+	protected $webserviceParameters = array(
+		'fields' => array(
+			'id_lang' => array(
+				'xlink_resource' => 'languages'
+			),
+			'id_shop' => array(
+				'xlink_resource' => 'shops'
+			),
+			'id_customer' => array(
+				'xlink_resource' => 'customers'
+			),
+			'id_order' => array(
+				'xlink_resource' => 'orders'
+			),
+			'id_product' => array(
+				'xlink_resource' => 'products'
+			),
+		),
+		'associations' => array(
+			'customer_messages' => array(
+				'resource' => 'customer_message',
+				'id' => array('required' => true)),
+		)
+	);
+	
+	public function getWsCustomerMessages()
+	{
+		return Db::getInstance()->executeS('
+		SELECT `id_customer_message` id
+		FROM `'._DB_PREFIX_.'customer_message`
+		WHERE `id_customer_thread` = '.(int)$this->id);
+	}
 
 	public function delete()
 	{
 		if (!Validate::isUnsignedId($this->id))
 			return false;
-		Db::getInstance()->execute('
-			DELETE FROM `'._DB_PREFIX_.'customer_message`
+ 		
+		$return = true;			
+		$result = Db::getInstance()->executeS('
+			SELECT `id_customer_message` 
+			FROM `'._DB_PREFIX_.'customer_message`
 			WHERE `id_customer_thread` = '.(int)$this->id
 		);
-		return (parent::delete());
+
+		if( count($result))
+		{
+			foreach ($result AS $res)
+			{
+			    $message = new CustomerMessage((int)$res['id_customer_message']);
+			    if (!Validate::isLoadedObject($message))
+					$return = false;
+			    else
+			        $return &= $message->delete();
+			}
+		}
+		$return &= parent::delete();
+		return $return;
 	}
 
 	public static function getCustomerMessages($id_customer, $read = null)
@@ -102,6 +151,7 @@ class CustomerThreadCore extends ObjectModel
 				SELECT id_customer_thread
 				FROM '._DB_PREFIX_.'customer_thread ct2
 				WHERE status = "open" AND ct.id_contact = ct2.id_contact
+				'.Shop::addSqlRestriction().'
 				ORDER BY date_upd ASC
 				LIMIT 1
 			) as id_customer_thread
@@ -111,6 +161,7 @@ class CustomerThreadCore extends ObjectModel
 			WHERE ct.status = "open"
 				AND ct.id_contact IS NOT NULL
 				AND cl.id_contact IS NOT NULL
+				'.Shop::addSqlRestriction().'
 			GROUP BY ct.id_contact HAVING COUNT(*) > 0
 		');
 	}
@@ -170,4 +221,3 @@ class CustomerThreadCore extends ObjectModel
 		');
 	}
 }
-

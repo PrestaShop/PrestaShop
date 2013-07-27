@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -45,7 +45,7 @@ class StatsCarrier extends ModuleGraph
 		parent::__construct();
 
 		$this->displayName = $this->l('Carrier distribution');
-		$this->description = $this->l('Display the carriers distribution');
+		$this->description = $this->l('Display each carriers\' distribution. ');
 	}
 
 	public function install()
@@ -75,8 +75,8 @@ class StatsCarrier extends ModuleGraph
 		$this->_html .= '</select>
 				<input type="submit" name="submitState" value="'.$this->l('Filter').'" class="button" />
 			</form>
-			<p><img src="../img/admin/down.gif" />'.$this->l('This graph represents the carrier distribution for your orders. You can also limit it to orders in one state.').'</p>
-			'.($result['total'] ? $this->engine(array('type' => 'pie', 'option' => Tools::getValue('id_order_state'))).'<br /><br /> <a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=language"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a>' : $this->l('No valid orders for this period.')).'
+			<p><img src="../img/admin/down.gif" />'.$this->l('This graph represents the carrier distribution for your orders. You can also narrow the focus of the graph to display distribution for a particular state.').'</p>
+			'.($result['total'] ? $this->engine(array('type' => 'pie', 'option' => Tools::getValue('id_order_state'))).'<br /><br /> <a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=language"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a>' : $this->l('No valid orders have been received for this period.')).'
 		</div>';
 		return $this->_html;
 	}
@@ -95,7 +95,7 @@ class StatsCarrier extends ModuleGraph
 				WHERE o.id_order = oh.id_order
 				ORDER BY oh.date_add DESC, oh.id_order_history DESC
 				LIMIT 1) = '.(int)$this->_option;
-		$this->_titles['main'] = $this->l('Percentage of orders by carrier');
+		$this->_titles['main'] = $this->l('Percentage of orders listed by carrier.');
 
 		$sql = 'SELECT c.name, COUNT(DISTINCT o.`id_order`) as total
 				FROM `'._DB_PREFIX_.'carrier` c

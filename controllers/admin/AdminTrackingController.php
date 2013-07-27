@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -52,6 +52,9 @@ class AdminTrackingControllerCore extends AdminController
 
 	public function initContent()
 	{
+		if ($id_category = Tools::getValue('id_category') && Tools::getIsset('viewcategory'))
+			Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts').'&id_category='.(int)$id_category.'&viewcategory');
+
 		$this->_helper_list = new HelperList();
 		
 		if (!Configuration::get('PS_STOCK_MANAGEMENT'))
@@ -149,9 +152,7 @@ class AdminTrackingControllerCore extends AdminController
 			AND IFNULL(stock.quantity, 0) <= 0
 		)';
 
-		$this->tpl_list_vars = array('sub_title' => $this->l('List of products with attributes and without available quantities for sale:'));
-
-
+		$this->tpl_list_vars = array('sub_title' => $this->l('List of products with attributes but without available quantities for sale:'));
 
 		return $this->renderList();
 	}

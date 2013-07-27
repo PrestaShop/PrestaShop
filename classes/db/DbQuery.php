@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -67,7 +67,7 @@ class DbQueryCore
 	public function from($table, $alias = null)
 	{
 		if (!empty($table))
-			$this->query['from'] = '`'._DB_PREFIX_.$table.'`'.($alias ? ' '.$alias : '');
+			$this->query['from'][] = '`'._DB_PREFIX_.$table.'`'.($alias ? ' '.$alias : '');
 		return $this;
 	}
 
@@ -220,7 +220,7 @@ class DbQueryCore
 
 		if (!$this->query['from'])
 			die('DbQuery->build() missing from clause');
-		$sql .= 'FROM '.$this->query['from']."\n";
+		$sql .= 'FROM '.implode(', ', $this->query['from'])."\n";
 
 		if ($this->query['join'])
 			$sql .= implode("\n", $this->query['join'])."\n";

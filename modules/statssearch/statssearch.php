@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -54,7 +54,7 @@ class StatsSearch extends ModuleGraph
 				ORDER BY occurences DESC';
 
 		$this->displayName = $this->l('Shop search');
-		$this->description = $this->l('Display which keywords have been searched by your visitors.');
+		$this->description = $this->l('Display which keywords have been searched by your store\'s visitors.');
 	}
 
 	public function install()
@@ -124,14 +124,14 @@ class StatsSearch extends ModuleGraph
 									<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
 									<br class="clear" />'.$table;
 		else
-			$this->_html .= '<p>'.$this->l('No keywords searched more than once found.').'</p>';
+			$this->_html .= '<p>'.$this->l('No keywords searched more than once have been found.').'</p>';
 		$this->_html .= '</div>';
 		return $this->_html;
 	}
 
 	protected function getData($layers)
 	{
-		$this->_titles['main'] = $this->l('First 10 keywords');
+		$this->_titles['main'] = $this->l('Top 10 keywords');
 		$totalResult = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.$this->getDate().$this->_query2);
 		$total = 0;
 		$total2 = 0;

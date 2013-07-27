@@ -44,7 +44,7 @@
 					<option value="{$contact.id_contact|intval}" {if isset($smarty.post.id_contact) && $smarty.post.id_contact == $contact.id_contact}selected="selected"{/if}>{$contact.name|escape:'htmlall':'UTF-8'}</option>
 				{/foreach}
 				</select>
-			</p>
+
 			<p id="desc_contact0" class="desc_contact">&nbsp;</p>
 				{foreach from=$contacts item=contact}
 					<p id="desc_contact{$contact.id_contact|intval}" class="desc_contact" style="display:none;">
@@ -55,9 +55,9 @@
 			
 			<fieldset>
 				{if isset($customerThread.email)}
-					<input class="ui-input-text ui-body-c ui-corner-all ui-shadow-inset" type="email" id="email" name="from" value="{$customerThread.email}" placeholder="{l s='E-mail address'}" readonly="readonly" />
+					<input class="ui-input-text ui-body-c ui-corner-all ui-shadow-inset" type="email" id="email" name="from" value="{$customerThread.email}" placeholder="{l s='Email address'}" readonly="readonly" />
 				{else}
-					<input class="ui-input-text ui-body-c ui-corner-all ui-shadow-inset" type="email" id="email" name="from" value="{$email}" placeholder="{l s='E-mail address'}"/>
+					<input class="ui-input-text ui-body-c ui-corner-all ui-shadow-inset" type="email" id="email" name="from" value="{$email}" placeholder="{l s='Email address'}"/>
 				{/if}
 			</fieldset>
 			
@@ -65,7 +65,11 @@
 				{if (!isset($customerThread.id_order) || $customerThread.id_order > 0)}
 				<fieldset>
 					{if !isset($customerThread.id_order) && isset($isLogged) && $isLogged == 1}
-						<select name="id_order" ><option value="0">-- {l s='Order ID'} --</option>{$orderList}</select>
+						<select name="id_order" ><option value="0">-- {l s='Order ID'} --</option>
+						{foreach from=$orderList item=order}
+							<option value="{$order.value|intval}" {if $order.selected|intval}selected="selected"{/if}>{$order.label|escape:'htmlall':'UTF-8'}</option>
+						{/foreach}
+						</select>
 					{elseif !isset($customerThread.id_order) && !isset($isLogged)}
 						<input type="text" placeholder="{l s='Order ID'}" name="id_order" id="id_order" value="{if isset($customerThread.id_order) && $customerThread.id_order > 0}{$customerThread.id_order|intval}{else}{if isset($smarty.post.id_order)}{$smarty.post.id_order|intval}{/if}{/if}" />
 					{elseif $customerThread.id_order > 0}
@@ -75,8 +79,15 @@
 				{/if}
 				{if isset($isLogged) && $isLogged}
 				<fieldset>
+
 					{if !isset($customerThread.id_product)}
-						<select name="id_product" style="width:300px;"><option value="0">-- {l s='Product'} --</option>{$orderedProductList}</select>
+						{foreach from=$orderedProductList key=id_order item=products name=products}
+							<select name="id_product"><option value="0">-- {l s='Product'} --</option>
+								{foreach from=$products item=product}
+									<option value="{$product.value|intval}">{$product.label|escape:'htmlall':'UTF-8'}</option>
+								{/foreach}
+							</select>
+						{/foreach}
 					{elseif $customerThread.id_product > 0}
 						<input type="text" name="id_product" id="id_product" value="{$customerThread.id_product|intval}" readonly="readonly" />
 					{/if}

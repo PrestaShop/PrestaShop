@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -43,7 +43,7 @@
 				$('document').ready( function() {
 					$(".check_product_name")
 						.autocomplete(
-							'{$link->getAdminLink('AdminProducts', true)}', {
+							'{$link->getAdminLink('AdminProducts', true)|addslashes}', {
 								minChars: 3,
 								max: 10,
 								width: $(".check_product_name").width(),
@@ -97,10 +97,10 @@
 		<label class="text">{$bullet_common_field} {l s='Type:'}</label>
 		<input type="radio" name="type_product" id="simple_product" value="{Product::PTYPE_SIMPLE}" {if $product_type == Product::PTYPE_SIMPLE}checked="checked"{/if} />
 		<label class="radioCheck" for="simple_product">{l s='Product'}</label>
-		<input type="radio" name="type_product" id="pack_product" value="{Product::PTYPE_PACK}" {if $product_type == Product::PTYPE_PACK}checked="checked"{/if} />
+		<input type="radio" name="type_product" {if $is_in_pack}disabled="disabled"{/if} id="pack_product" value="{Product::PTYPE_PACK}" {if $product_type == Product::PTYPE_PACK}checked="checked"{/if} />
 		<label class="radioCheck" for="pack_product">{l s='Pack'}</label>
-		<input type="radio" name="type_product" id="virtual_product" value="{Product::PTYPE_VIRTUAL}" {if $product_type == Product::PTYPE_VIRTUAL}checked="checked"{/if} />
-		<label class="radioCheck" for="virtual_product">{l s='Virtual Product (services, booking and downloadable products)'}</label>
+		<input type="radio" name="type_product" id="virtual_product" {if $is_in_pack}disabled="disabled"{/if} value="{Product::PTYPE_VIRTUAL}" {if $product_type == Product::PTYPE_VIRTUAL}checked="checked"{/if} />
+		<label class="radioCheck" for="virtual_product">{l s='Virtual Product (services, booking or downloadable products)'}</label>
 	</div>
 
 	<div class="separation"></div>
@@ -154,14 +154,55 @@
 		<td style="padding-bottom:5px;">
 			<ul class="listForm">
 				<li>
-					<input onclick="toggleDraftWarning(false);showOptions(true);" type="radio" name="active" id="active_on" value="1" {if $product->active || !$product->isAssociatedToShop()}checked="checked" {/if} />
+					<input onclick="toggleDraftWarning(false);showOptions(true);showRedirectProductOptions(false);" type="radio" name="active" id="active_on" value="1" {if $product->active || !$product->isAssociatedToShop()}checked="checked" {/if} />
 					<label for="active_on" class="radioCheck">{l s='Enabled'}</label>
 				</li>
 				<li>
-					<input onclick="toggleDraftWarning(true);showOptions(false);"  type="radio" name="active" id="active_off" value="0" {if !$product->active && $product->isAssociatedToShop()}checked="checked"{/if} />
+					<input onclick="toggleDraftWarning(true);showOptions(false);showRedirectProductOptions(true);"  type="radio" name="active" id="active_off" value="0" {if !$product->active && $product->isAssociatedToShop()}checked="checked"{/if} />
 					<label for="active_off" class="radioCheck">{l s='Disabled'}</label>
 				</li>
 			</ul>
+		</td>
+	</tr>
+	<tr class="redirect_product_options" style="display:none">
+		<td class="col-left">
+			{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
+			<label class="text">{l s='Redirect:'}</label>
+		</td>
+		<td style="padding-bottom:5px;">
+			<select name="redirect_type" id="redirect_type">
+				<option value="404" {if $product->redirect_type == '404'} selected="selected" {/if}>{l s='No redirect (404)'}</option>
+				<option value="301" {if $product->redirect_type == '301'} selected="selected" {/if}>{l s='Redirect permanently (301)'}</option>
+				<option value="302" {if $product->redirect_type == '302'} selected="selected" {/if}>{l s='Redirect temporarily (302)'}</option>
+			</select>
+			<span class="hint" name="help_box">
+				{l s='404 : Not Found = Product does not exist and no redirect'}<br/>
+				{l s='301 : Moved Permanently = Product Moved Permanently'}<br/>
+				{l s='302 : Moved Temporarily = Product moved temporarily'}
+			</span>
+		</td>
+	</tr>
+	<tr class="redirect_product_options redirect_product_options_product_choise" style="display:none">
+		<td class="col-left">
+			{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
+			<label class="text">{l s='Related product:'}</label>
+		</td>
+		<td style="padding-bottom:5px;">
+			<input type="hidden" value="" name="id_product_redirected" />
+			<input value="" id="related_product_autocomplete_input" autocomplete="off" class="ac_input" />
+			<p>
+				<script>
+					var no_related_product = '{l s='No related product'}';
+					var id_product_redirected = {$product->id_product_redirected|intval};
+					var product_name_redirected = '{$product_name_redirected|escape:html:'UTF-8'}';
+				</script>
+				<span id="related_product_name">{l s='No related product'}</span>
+				<span id="related_product_remove" style="display:none">
+					<a hre="#" onclick="removeRelatedProduct(); return false" id="related_product_remove_link">
+						<img src="../img/admin/delete.gif" class="middle" alt="" />
+					</a>
+				</span>
+			</p>
 		</td>
 	</tr>
 	<tr>
@@ -196,7 +237,7 @@
 			<ul class="listForm">
 				<li>
 					<input  type="checkbox" name="available_for_order" id="available_for_order" value="1" {if $product->available_for_order}checked="checked"{/if}  />
-					<label for="available_for_order" class="t">{l s='available for order'}</label>
+					<label for="available_for_order" class="t">{l s='Available for order'}</label>
 				</li>
 			<li>
 				<input type="checkbox" name="show_price" id="show_price" value="1" {if $product->show_price}checked="checked"{/if} {if $product->available_for_order}disabled="disabled"{/if}/>
@@ -204,7 +245,7 @@
 			</li>
 			<li>
 				<input type="checkbox" name="online_only" id="online_only" value="1" {if $product->online_only}checked="checked"{/if} />
-				<label for="online_only" class="t">{l s='online only (not sold in store)'}</label>
+				<label for="online_only" class="t">{l s='Online only (not sold in store)'}</label>
 			</li>
 			</ul>
 		</td>
@@ -230,7 +271,7 @@
 				<td class="col-left">
 					{include file="controllers/products/multishop/checkbox.tpl" field="description_short" type="tinymce" multilang="true"}
 					<label>{l s='Short description:'}<br /></label>
-					<p class="product_description">({l s='appears in the product lists and on the top of the product page'})</p>
+					<p class="product_description">({l s='Appears in the product list(s), and on the top of the product page.'})</p>
 				</td>
 				<td style="padding-bottom:5px;">
 						{include file="controllers/products/textarea_lang.tpl"
@@ -245,7 +286,7 @@
 				<td class="col-left">
 					{include file="controllers/products/multishop/checkbox.tpl" field="description" type="tinymce" multilang="true"}
 					<label>{l s='Description:'}<br /></label>
-					<p class="product_description">({l s='appears in the body of the product page'})</p>
+					<p class="product_description">({l s='Appears in the body of the product page'})</p>
 				</td>
 				<td style="padding-bottom:5px;">
 						{include file="controllers/products/textarea_lang.tpl" languages=$languages

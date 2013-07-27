@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>statspersonalinfos</name>
-            <displayName><![CDATA[Registered Customer Info]]></displayName>
+            <displayName><![CDATA[Registered customer information]]></displayName>
             <version><![CDATA[1]]></version>
             <description><![CDATA[Display characteristics such as gender and age.]]></description>
             <author><![CDATA[PrestaShop]]></author>

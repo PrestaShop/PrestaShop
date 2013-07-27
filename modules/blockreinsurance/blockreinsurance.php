@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,8 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
+
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -42,8 +43,8 @@ class Blockreinsurance extends Module
 
 		parent::__construct();
 
-		$this->displayName = $this->l('Block reinsurance');
-		$this->description = $this->l('Add a block to display more infos to reassure your customers');
+		$this->displayName = $this->l('Customer reassurance block');
+		$this->description = $this->l('Adds an information block aimed at offering helpful information to reassure customers that your store is trustworthy.');
 	}
 
 	public function install()
@@ -133,6 +134,7 @@ class Blockreinsurance extends Module
 	{
 		$html = '';
 		$id_reinsurance = (int)Tools::getValue('id_reinsurance');
+
 		if (Tools::isSubmit('saveblockreinsurance'))
 		{
 			if ($id_reinsurance = Tools::getValue('id_reinsurance'))
@@ -157,9 +159,10 @@ class Blockreinsurance extends Module
 					$reinsurance->file_name = 'reinsurance-'.(int)$reinsurance->id.'-'.(int)$reinsurance->id_shop.'.jpg';
 					$reinsurance->save();
 				}
+				$this->_clearCache('blockreinsurance.tpl');
 			}
 			else
-				$html .= '<div class="conf error">'.$this->l('An error occurred during the save').'</div>';
+				$html .= '<div class="conf error">'.$this->l('An error occurred while attempting to save.').'</div>';
 		}
 		
 		if (Tools::isSubmit('updateblockreinsurance') || Tools::isSubmit('addblockreinsurance'))
@@ -187,6 +190,7 @@ class Blockreinsurance extends Module
 			if (file_exists(dirname(__FILE__).'/img/'.$reinsurance->file_name))
 				unlink(dirname(__FILE__).'/img/'.$reinsurance->file_name);
 			$reinsurance->delete();
+			$this->_clearCache('blockreinsurance.tpl');
 			Tools::redirectAdmin(AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'));
 		}
 		else
@@ -199,9 +203,12 @@ class Blockreinsurance extends Module
 		{
 			Configuration::updateValue('blockreinsurance_nbblocks', ((isset($_POST['nbblocks']) && $_POST['nbblocks'] != '') ? (int)$_POST['nbblocks'] : ''));
 			if ($this->removeFromDB() && $this->addToDB())
-				$output = '<div class="conf confirm">'.$this->l('Configuration updated').'</div>';
+			{
+				$this->_clearCache('blockreinsurance.tpl');
+				$output = '<div class="conf confirm">'.$this->l('The block configuration has been updated.').'</div>';
+			}
 			else
-				$output = '<div class="conf error"><img src="../img/admin/disabled.gif"/>'.$this->l('An error occurred during the save').'</div>';
+				$output = '<div class="conf error"><img src="../img/admin/disabled.gif"/>'.$this->l('An error occurred while attempting to save.').'</div>';
 		}
 	}
 
@@ -220,7 +227,7 @@ class Blockreinsurance extends Module
 
 		$this->fields_form[0]['form'] = array(
 			'legend' => array(
-				'title' => $this->l('Reinsurance new block'),
+				'title' => $this->l('New reassurance block.'),
 			),
 			'input' => array(
 				array(
@@ -239,7 +246,7 @@ class Blockreinsurance extends Module
 				)
 			),
 			'submit' => array(
-				'title' => $this->l('   Save   '),
+				'title' => $this->l('Save'),
 				'class' => 'button'
 			)
 		);
@@ -323,20 +330,23 @@ class Blockreinsurance extends Module
 			return false;
 
 		$this->context->controller->addCSS($this->_path.'style.css', 'all');
-		$infos = $this->getListContent($this->context->language->id);
-		$this->context->smarty->assign(array('infos' => $infos, 'nbblocks' => count($infos)));
-		return $this->display(__FILE__, 'blockreinsurance.tpl');
+		if (!$this->isCached('blockreinsurance.tpl', $this->getCacheId()))
+		{
+			$infos = $this->getListContent($this->context->language->id);
+			$this->context->smarty->assign(array('infos' => $infos, 'nbblocks' => count($infos)));
+		}
+		return $this->display(__FILE__, 'blockreinsurance.tpl', $this->getCacheId());
 	}
 
 	public function installFixtures()
 	{
 		$return = true;
 		$tab_texts = array(
-			array('text' => $this->l('Money back'), 'file_name' => 'reinsurance-1-1.jpg'),
-			array('text' => $this->l('Exchange in-store'), 'file_name' => 'reinsurance-2-1.jpg'),
-			array('text' => $this->l('Payment upon shipment'), 'file_name' => 'reinsurance-3-1.jpg'),
-			array('text' => $this->l('Free Shipping'), 'file_name' => 'reinsurance-4-1.jpg'),
-			array('text' => $this->l('100% secured payment'), 'file_name' => 'reinsurance-5-1.jpg')
+			array('text' => $this->l('Money back guarantee.'), 'file_name' => 'reinsurance-1-1.jpg'),
+			array('text' => $this->l('In-store exchange.'), 'file_name' => 'reinsurance-2-1.jpg'),
+			array('text' => $this->l('Payment upon shipment.'), 'file_name' => 'reinsurance-3-1.jpg'),
+			array('text' => $this->l('Free Shipping.'), 'file_name' => 'reinsurance-4-1.jpg'),
+			array('text' => $this->l('100% secure payment processing.'), 'file_name' => 'reinsurance-5-1.jpg')
 		);
 		
 		foreach($tab_texts as $tab)

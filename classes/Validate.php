@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -229,7 +229,7 @@ class ValidateCore
 	 */
 	public static function isPrice($price)
 	{
-		return preg_match('/^[0-9]{1,10}(\.[0-9]{1,9})?$/', $price);
+		return preg_match('/^[0-9]{1,10}(\.[0-9]{1,9})?$/', sprintf('%f', $price));
 	}
 
 	/**
@@ -240,7 +240,7 @@ class ValidateCore
 	*/
 	public static function isNegativePrice($price)
 	{
-		return preg_match('/^[-]?[0-9]{1,10}(\.[0-9]{1,9})?$/', $price);
+		return preg_match('/^[-]?[0-9]{1,10}(\.[0-9]{1,9})?$/', sprintf('%f', $price));
 	}
 
 	/**
@@ -380,7 +380,7 @@ class ValidateCore
 	 */
 	public static function isGenericName($name)
 	{
-		return empty($name) || preg_match('/^[^<>=#{}]*$/u', $name);
+		return empty($name) || preg_match('/^[^<>={}]*$/u', $name);
 	}
 
 	/**
@@ -389,7 +389,7 @@ class ValidateCore
 	 * @param string $html HTML field to validate
 	 * @return boolean Validity is ok or not
 	 */
-	public static function isCleanHtml($html)
+	public static function isCleanHtml($html, $allow_iframe = false)
 	{
 		$events = 'onmousedown|onmousemove|onmmouseup|onmouseover|onmouseout|onload|onunload|onfocus|onblur|onchange';
 		$events .= '|onsubmit|ondblclick|onclick|onkeydown|onkeyup|onkeypress|onmouseenter|onmouseleave|onerror|onselect|onreset|onabort|ondragdrop|onresize|onactivate|onafterprint|onmoveend';
@@ -398,7 +398,14 @@ class ValidateCore
 		$events .= '|ondragleave|ondragover|ondragstart|ondrop|onerrorupdate|onfilterchange|onfinish|onfocusin|onfocusout|onhashchange|onhelp|oninput|onlosecapture|onmessage|onmouseup|onmovestart';
 		$events .= '|onoffline|ononline|onpaste|onpropertychange|onreadystatechange|onresizeend|onresizestart|onrowenter|onrowexit|onrowsdelete|onrowsinserted|onscroll|onsearch|onselectionchange';
 		$events .= '|onselectstart|onstart|onstop';
-		return (!preg_match('/<[ \t\n]*script/ims', $html) && !preg_match('/('.$events.')[ \t\n]*=/ims', $html) && !preg_match('/.*script\:/ims', $html) && !preg_match('/<[ \t\n]*i?frame/ims', $html));
+
+		if (preg_match('/<[ \t\n]*script/ims', $html) || preg_match('/('.$events.')[ \t\n]*=/ims', $html) || preg_match('/.*script\:/ims', $html))
+			return false;
+
+		if (!$allow_iframe && preg_match('/<[ \t\n]*(i?frame|form|input|embed|object)/ims', $html))
+			return false;
+
+		return true;
 	}
 
 	/**
@@ -472,9 +479,9 @@ class ValidateCore
 	 */
 	public static function isDate($date)
 	{
-		if (!preg_match('/^([0-9]{4})-((0?[0-9])|(1[0-2]))-((0?[0-9])|([1-2][0-9])|(3[01]))( [0-9]{2}:[0-9]{2}:[0-9]{2})?$/', $date, $matches))
+		if (!preg_match('/^([0-9]{4})-((?:0?[0-9])|(?:1[0-2]))-((?:0?[0-9])|(?:[1-2][0-9])|(?:3[01]))( [0-9]{2}:[0-9]{2}:[0-9]{2})?$/', $date, $matches))
 			return false;
-		return checkdate((int)$matches[2], (int)$matches[5], (int)$matches[0]);
+		return checkdate((int)$matches[2], (int)$matches[3], (int)$matches[1]);
 	}
 
 	/**
@@ -487,9 +494,9 @@ class ValidateCore
 	{
 		if (empty($date) || $date == '0000-00-00')
 			return true;
-		if (preg_match('/^([0-9]{4})-((0?[1-9])|(1[0-2]))-((0?[1-9])|([1-2][0-9])|(3[01]))( [0-9]{2}:[0-9]{2}:[0-9]{2})?$/', $date, $birth_date))
+		if (preg_match('/^([0-9]{4})-((?:0?[1-9])|(?:1[0-2]))-((?:0?[1-9])|(?:[1-2][0-9])|(?:3[01]))([0-9]{2}:[0-9]{2}:[0-9]{2})?$/', $date, $birth_date))
 		{
-			if ($birth_date[1] > date('Y') || $birth_date[2] > date('m') || $birth_date[3] > date('d'))
+			if ($birth_date[1] > date('Y') && $birth_date[2] > date('m') && $birth_date[3] > date('d'))
 				return false;
 			return true;
 		}
@@ -724,7 +731,7 @@ class ValidateCore
 	 */
 	public static function isTrackingNumber($tracking_number)
 	{
-		return preg_match('/^[~:#,%&_=\(\)\.\? \+\-@\/a-zA-Z0-9]+$/', $tracking_number);
+		return preg_match('/^[~:#,%&_=\(\)\[\]\.\? \+\-@\/a-zA-Z0-9]+$/', $tracking_number);
 	}
 
 	/**
@@ -747,7 +754,7 @@ class ValidateCore
 	public static function isAbsoluteUrl($url)
 	{
 		if (!empty($url))
-			return preg_match('/^https?:\/\/[,:#%&_=\(\)\.\? \+\-@\/a-zA-Z0-9]+$/', $url);
+			return preg_match('/^https?:\/\/[~:#,%&_=\(\)\[\]\.\? \+\-@\/a-zA-Z0-9]+$/', $url);
 		return true;
 	}
 
@@ -802,12 +809,12 @@ class ValidateCore
 
 	public static function isWeightUnit($unit)
 	{
-		return preg_match('/^[a-zA-Z]{1,3}$/', $unit);
+		return (Validate::isGenericName($unit) & (Tools::strlen($unit) < 5));
 	}
 
 	public static function isDistanceUnit($unit)
 	{
-		return preg_match('/^[a-zA-Z]{1,2}$/', $unit);
+		return (Validate::isGenericName($unit) & (Tools::strlen($unit) < 5));
 	}
 
 	public static function isSubDomainName($domain)
@@ -1055,6 +1062,9 @@ class ValidateCore
 	{
 		return (bool)(is_string($name) && preg_match('/^[0-9a-zA-Z-_]*$/u', $name));
 	}
-
+	
+	public static function isPrestaShopVersion($version)
+	{
+		return (preg_match('/^[0-1]\.[0-9]{1,2}(\.[0-9]{1,2}){0,2}$/', $version) && ip2long($version));
+	}
 }
-

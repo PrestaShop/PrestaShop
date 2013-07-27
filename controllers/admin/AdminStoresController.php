@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -163,7 +163,7 @@ class AdminStoresControllerCore extends AdminController
 					'size' => 33,
 					'required' => false,
 					'hint' => sprintf($this->l('Allowed characters: letters, spaces and %s'), '().-'),
-					'desc' => $this->l('Store name (e.g. Citycentre Mall Store)')
+					'desc' => $this->l('Store name (e.g. City Center Mall Store)')
 				),
 				array(
 					'type' => 'text',
@@ -238,7 +238,7 @@ class AdminStoresControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('E-mail address'),
+					'label' => $this->l('Email address'),
 					'name' => 'email',
 					'size' => 33
 				),
@@ -296,8 +296,12 @@ class AdminStoresControllerCore extends AdminController
 
 		if (!($obj = $this->loadObject(true)))
 			return;
+		
+		if (file_exists(_PS_TMP_IMG_DIR_.$this->table.'_'.(int)$obj->id.'.'.$this->imageType)) {
+			@unlink(_PS_TMP_IMG_DIR_.$this->table.'_'.(int)$obj->id.'.'.$this->imageType);
+		}
 
-		$image = ImageManager::thumbnail(_PS_STORE_IMG_DIR_.'/'.$obj->id.'.jpg', $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 350, $this->imageType, true);
+		$image = ImageManager::thumbnail(_PS_STORE_IMG_DIR_.DIRECTORY_SEPARATOR.$obj->id.'.jpg', $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 350, $this->imageType, true, true);
 
 		$days = array();
 		$days[1] = $this->l('Monday');
@@ -316,7 +320,7 @@ class AdminStoresControllerCore extends AdminController
 			'latitude' => $this->getFieldValue($obj, 'latitude') ? $this->getFieldValue($obj, 'latitude') : Configuration::get('PS_STORES_CENTER_LAT'),
 			'longitude' => $this->getFieldValue($obj, 'longitude') ? $this->getFieldValue($obj, 'longitude') : Configuration::get('PS_STORES_CENTER_LONG'),
 			'image' => $image ? $image : false,
-			'size' => $image ? filesize(_PS_STORE_IMG_DIR_.'/'.$obj->id.'.jpg') / 1000 : false,
+			'size' => $image ? filesize(_PS_STORE_IMG_DIR_.DIRECTORY_SEPARATOR.$obj->id.'.jpg') / 1000 : false,
 			'days' => $days,
 			'hours' => isset($hours_unserialized) ? $hours_unserialized : false
 		);
@@ -343,7 +347,7 @@ class AdminStoresControllerCore extends AdminController
 			$country = new Country((int)$id_country);
 
 			if ($id_country && $country && !(int)$country->contains_states && $id_state)
-				$this->errors[] = Tools::displayError('You have selected a state for a country that does not contain states.');
+				$this->errors[] = Tools::displayError('You\'ve selected a state for a country that does not contain states.');
 
 			/* If the selected country contains states, then a state have to be selected */
 			if ((int)$country->contains_states && !$id_state)
@@ -354,40 +358,15 @@ class AdminStoresControllerCore extends AdminController
 
 			if (empty($latitude) || empty($longitude))
 			   $this->errors[] = Tools::displayError('Latitude and longitude are required.');
-
-			/* Check zip code */
-			if ($country->need_zip_code)
-			{
-				$zip_code_format = $country->zip_code_format;
-				if (($postcode = Tools::getValue('postcode')) && $zip_code_format)
-				{
-					$zip_regexp = '/^'.$zip_code_format.'$/ui';
-					$zip_regexp = str_replace(' ', '( |)', $zip_regexp);
-					$zip_regexp = str_replace('-', '(-|)', $zip_regexp);
-					$zip_regexp = str_replace('N', '[0-9]', $zip_regexp);
-					$zip_regexp = str_replace('L', '[a-zA-Z]', $zip_regexp);
-					$zip_regexp = str_replace('C', $country->iso_code, $zip_regexp);
-					if (!preg_match($zip_regexp, $postcode))
-						$this->errors[] = Tools::displayError('Your Postal Code/Zip Code is incorrect.').'<br />'.Tools::displayError('Must be typed as follows:').' '.
-											str_replace(
-												'C',
-												$country->iso_code,
-												str_replace(
-													'N',
-													'0',
-													str_replace(
-														'L',
-														'A',
-														$zip_code_format
-													)
-												)
-											);
-				}
-				else if ($zip_code_format)
-					$this->errors[] = Tools::displayError('Postal Code/Zip Code required.');
-				else if ($postcode && !preg_match('/^[0-9a-zA-Z -]{4,9}$/ui', $postcode))
-					$this->errors[] = Tools::displayError('Your Postal Code/Zip Code is incorrect.');
-			}
+			
+			$postcode = Tools::getValue('postcode');		
+			/* Check zip code format */
+			if ($country->zip_code_format && !$country->checkZipCode($postcode))
+				$this->errors[] = Tools::displayError('Your Postal / Zip Code is incorrect.').'<br />'.Tools::displayError('It must be entered as follows:').' '.str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
+			elseif(empty($postcode) && $country->need_zip_code)
+				$this->errors[] = Tools::displayError('A Zip / Postal code is required.');
+			elseif ($postcode && !Validate::isPostCode($postcode))
+				$this->errors[] = Tools::displayError('The Zip / Postal code is invalid.');
 
 			/* Store hours */
 			$_POST['hours'] = array();
@@ -434,14 +413,14 @@ class AdminStoresControllerCore extends AdminController
 		$formFields = array(
 			'PS_SHOP_NAME' => array(
 				'title' => $this->l('Shop name'),
-				'desc' => $this->l('Displayed in e-mails and page titles'),
+				'desc' => $this->l('Displayed in emails and page titles'),
 				'validation' => 'isGenericName',
 				'required' => true,
 				'size' => 30,
 				'type' => 'text'
 			),
-			'PS_SHOP_EMAIL' => array('title' => $this->l('Shop e-mail'),
-				'desc' => $this->l('Displayed in e-mails sent to customers'),
+			'PS_SHOP_EMAIL' => array('title' => $this->l('Shop email'),
+				'desc' => $this->l('Displayed in emails sent to customers'),
 				'validation' => 'isEmail',
 				'required' => true,
 				'size' => 30,
@@ -557,7 +536,7 @@ class AdminStoresControllerCore extends AdminController
 						AND `id_state` = '.(int)Tools::getValue('PS_SHOP_STATE_ID');
 			$isStateOk = Db::getInstance()->getValue($sql);
 			if ($isStateOk != 1)
-				$this->errors[] = Tools::displayError('This state is not in this country.');
+				$this->errors[] = Tools::displayError('The state specified is not located in this country.');
 		}
 	}
 

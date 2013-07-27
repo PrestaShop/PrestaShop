@@ -1,16 +1,12 @@
 #orderopc  #left_column {display:none}
 #orderopc #center_column{width:757px}
-
 #orderopc  #left_column h2 {margin-top:20px}
-
 #opc_account_choice {padding:0 15px;}
 #opc_account_choice .opc_float {
 	float:left;
 	width:350px
 }
 #opc_account_choice .opc_float ul {margin:0 0 20px 30px}
-
-form#new_account_form {}
 #new_account_form  fieldset {
 		padding:0 0 15px 0;
 		border:1px solid #ccc;
@@ -73,12 +69,14 @@ form#new_account_form {}
 	font-size: 12px;
 	color:#666
 }
-
 #new_account_form span.form_info,
-#new_account_form span.inline-infos {
+#new_account_form span.inline-infos, #new_account_form p.inline-infos {
 	display:block;
-	margin:5px 0 0 265px;
+	margin:5px 0 0 265px!important;
 	color:#666
+}
+#new_account_form .id_state, #new_account_form .dni, #new_account_form .postcode {
+	display: none;
 }
 #opc_account_errors {
 	margin: 10px;
@@ -89,4 +87,7 @@ form#new_account_form {}
 	float: right;
 	margin-right: 20px;
 	padding: 0;
+}
+#address_invoice_form {
+	padding: 0px;
 }

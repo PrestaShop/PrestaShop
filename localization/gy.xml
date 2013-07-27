@@ -4,8 +4,7 @@
 		<currency name="Dollar" iso_code="GYD" iso_code_num="328" sign="$" blank="0" conversion_rate="276.712" format="1" decimals="1" />
 	</currencies>
 	<languages>
-		<language iso_code="es" />
-		<language iso_code="pt" />
+		<language iso_code="en" />
 	</languages>
 	<taxes>
 		<tax id="1" name="VAT GY 16%" rate="16" />

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -28,6 +28,7 @@ class CategoryControllerCore extends FrontController
 {
 	public $php_self = 'category';
 	protected $category;
+	public $customer_access = true;
 
 	/**
 	 * Set default medias for this controller
@@ -76,14 +77,30 @@ class CategoryControllerCore extends FrontController
 		$this->category = new Category($id_category, $this->context->language->id);
 
 		parent::init();
-
+		//check if the category is active and return 404 error if is disable.
+		if (!$this->category->active)
+		{
+			header('HTTP/1.1 404 Not Found');
+			header('Status: 404 Not Found');
+		}
+		//check if category can be accessible by current customer and return 403 if not
 		if (!$this->category->checkAccess($this->context->customer->id))
+		{
+			header('HTTP/1.1 403 Forbidden');
+			header('Status: 403 Forbidden');
 			$this->errors[] = Tools::displayError('You do not have access to this category.');
+			$this->customer_access = false;
+		}
 	}
-
+	
 	public function initContent()
 	{
 		parent::initContent();
+		
+		$this->setTemplate(_PS_THEME_DIR_.'category.tpl');
+		
+		if (!$this->customer_access)
+			return;
 
 		if (isset($this->context->cookie->id_compare))
 			$this->context->smarty->assign('compareProducts', CompareProduct::getCompareProducts((int)$this->context->cookie->id_compare));
@@ -103,17 +120,14 @@ class CategoryControllerCore extends FrontController
 			'return_category_name' => Tools::safeOutput($this->category->name),
 			'path' => Tools::getPath($this->category->id),
 			'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
-			'categorySize' => Image::getSize('category_default'),
-			'mediumSize' => Image::getSize('medium_default'),
-			'thumbSceneSize' => Image::getSize('m_scene_default'),
-			'homeSize' => Image::getSize('home_default'),
+			'categorySize' => Image::getSize(ImageType::getFormatedName('category')),
+			'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
+			'thumbSceneSize' => Image::getSize(ImageType::getFormatedName('m_scene')),
+			'homeSize' => Image::getSize(ImageType::getFormatedName('home')),
 			'allow_oosp' => (int)Configuration::get('PS_ORDER_OUT_OF_STOCK'),
 			'comparator_max_item' => (int)Configuration::get('PS_COMPARATOR_MAX_ITEM'),
 			'suppliers' => Supplier::getSuppliers()
 		));
-
-
-		$this->setTemplate(_PS_THEME_DIR_.'category.tpl');
 	}
 
 	/**
@@ -130,9 +144,9 @@ class CategoryControllerCore extends FrontController
 		{
 			foreach ($sceneImageTypes as $sceneImageType)
 			{
-				if ($sceneImageType['name'] == 'm_scene_default')
+				if ($sceneImageType['name'] == ImageType::getFormatedName('m_scene'))
 					$thumbSceneImageType = $sceneImageType;
-				elseif ($sceneImageType['name'] == 'scene_default')
+				elseif ($sceneImageType['name'] == ImageType::getFormatedName('scene'))
 					$largeSceneImageType = $sceneImageType;
 			}
 
@@ -185,7 +199,7 @@ class CategoryControllerCore extends FrontController
 
 		foreach ($this->cat_products as &$product)
 		{
-			if ($product['id_product_attribute'])
+			if ($product['id_product_attribute'] && isset($product['product_attribute_minimal_quantity']))
 				$product['minimal_quantity'] = $product['product_attribute_minimal_quantity'];
 		}
 

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -40,7 +40,7 @@ class BlockMyAccount extends Module
 		parent::__construct();
 
 		$this->displayName = $this->l('My Account block');
-		$this->description = $this->l('Displays a block with links relative to user account.');
+		$this->description = $this->l('Displays a block with links relative to a user\'s account.');
 	}
 
 	public function install()
@@ -48,7 +48,9 @@ class BlockMyAccount extends Module
 		if (!$this->addMyAccountBlockHook() 
 			|| !parent::install() 
 			|| !$this->registerHook('displayLeftColumn') 
-			|| !$this->registerHook('displayHeader'))
+			|| !$this->registerHook('displayHeader')
+			|| !$this->registerHook('actionModuleRegisterHookAfter')
+			|| !$this->registerHook('actionModuleUnRegisterUnHookAfter'))
 			return false;
 		return true;
 	}
@@ -56,6 +58,17 @@ class BlockMyAccount extends Module
 	public function uninstall()
 	{
 		return (parent::uninstall() && $this->removeMyAccountBlockHook());
+	}
+
+	public function hookActionUnModuleRegisterHookAfter($params)
+	{
+		return $this->hookActionModuleRegisterHookAfter($params);
+	}
+
+	public function hookActionModuleRegisterHookAfter($params)
+	{
+		if ($params['hook_name'] == 'displayMyAccountBlock')
+			$this->_clearCache('blockmyaccount.tpl');
 	}
 
 	public function hookDisplayLeftColumn($params)

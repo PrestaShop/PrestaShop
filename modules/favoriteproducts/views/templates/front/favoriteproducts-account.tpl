@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -32,7 +32,7 @@ $('document').ready(function()
 		var parent = $(this).parent().parent();
 
 		$.ajax({
-			url: "{$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'remove'], true)}",
+			url: "{$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'remove'], true)|addslashes}",
 			type: "POST",
 			data: {
 				'id_product': idFavoriteProduct,
@@ -56,12 +56,12 @@ $('document').ready(function()
 {capture name=path}
 	<a href="{$link->getPageLink('my-account', true)|escape:'htmlall':'UTF-8'}">
 		{l s='My account' mod='favoriteproducts'}</a>
-		<span class="navigation-pipe">{$navigationPipe}</span>{l s='My favorite products' mod='favoriteproducts'}
+		<span class="navigation-pipe">{$navigationPipe}</span>{l s='My favorite products.' mod='favoriteproducts'}
 {/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
 <div id="favoriteproducts_block_account">
-	<h2>{l s='My favorite products' mod='favoriteproducts'}</h2>
+	<h2>{l s='My favorite products.' mod='favoriteproducts'}</h2>
 	{if $favoriteProducts}
 		<div>
 			{foreach from=$favoriteProducts item=favoriteProduct}
@@ -78,12 +78,12 @@ $('document').ready(function()
 			{/foreach}
 		</div>
 	{else}
-		<p class="warning">{l s='No favorite products yet.' mod='favoriteproducts'}</p>
+		<p class="warning">{l s='No favorite products have been determined just yet. ' mod='favoriteproducts'}</p>
 	{/if}
 
 	<ul class="footer_links">
 		<li class="fleft">
 			<a href="{$link->getPageLink('my-account', true)|escape:'htmlall':'UTF-8'}"><img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /></a>
-			<a href="{$link->getPageLink('my-account', true)|escape:'htmlall':'UTF-8'}">{l s='Back to Your Account' mod='favoriteproducts'}</a></li>
+			<a href="{$link->getPageLink('my-account', true)|escape:'htmlall':'UTF-8'}">{l s='Back to your account.' mod='favoriteproducts'}</a></li>
 	</ul>
 </div>

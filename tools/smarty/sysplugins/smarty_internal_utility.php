@@ -58,7 +58,7 @@ class Smarty_Internal_Utility {
      * @param Smarty $smarty        Smarty instance
      * @return integer number of template files compiled
      */
-    public static function compileAllTemplates($extention, $force_compile, $time_limit, $max_errors, Smarty $smarty)
+    public static function compileAllTemplates($extension, $force_compile, $time_limit, $max_errors, Smarty $smarty)
     {
         // switch off time limit
         if (function_exists('set_time_limit')) {
@@ -72,9 +72,9 @@ class Smarty_Internal_Utility {
             $_compileDirs = new RecursiveDirectoryIterator($_dir);
             $_compile = new RecursiveIteratorIterator($_compileDirs);
             foreach ($_compile as $_fileinfo) {
-                if (substr($_fileinfo->getBasename(),0,1) == '.' || strpos($_fileinfo, '.svn') !== false) continue;
                 $_file = $_fileinfo->getFilename();
-                if (!substr_compare($_file, $extention, - strlen($extention)) == 0) continue;
+                if (substr(basename($_fileinfo->getPathname()),0,1) == '.' || strpos($_file, '.svn') !== false) continue;
+                if (!substr_compare($_file, $extension, - strlen($extension)) == 0) continue;
                 if ($_fileinfo->getPath() == substr($_dir, 0, -1)) {
                    $_template_file = $_file;
                 } else {
@@ -87,6 +87,7 @@ class Smarty_Internal_Utility {
                     $_tpl = $smarty->createTemplate($_template_file,null,null,null,false);
                     if ($_tpl->mustCompile()) {
                         $_tpl->compileTemplateSource();
+                        $_count++;
                         echo ' compiled in  ', microtime(true) - $_start_time, ' seconds';
                         flush();
                     } else {
@@ -121,7 +122,7 @@ class Smarty_Internal_Utility {
      * @param Smarty $smarty        Smarty instance
      * @return integer number of config files compiled
      */
-    public static function compileAllConfig($extention, $force_compile, $time_limit, $max_errors, Smarty $smarty)
+    public static function compileAllConfig($extension, $force_compile, $time_limit, $max_errors, Smarty $smarty)
     {
         // switch off time limit
         if (function_exists('set_time_limit')) {
@@ -135,9 +136,9 @@ class Smarty_Internal_Utility {
             $_compileDirs = new RecursiveDirectoryIterator($_dir);
             $_compile = new RecursiveIteratorIterator($_compileDirs);
             foreach ($_compile as $_fileinfo) {
-                if (substr($_fileinfo->getBasename(),0,1) == '.' || strpos($_fileinfo, '.svn') !== false) continue;
                 $_file = $_fileinfo->getFilename();
-                if (!substr_compare($_file, $extention, - strlen($extention)) == 0) continue;
+                if (substr(basename($_fileinfo->getPathname()),0,1) == '.' || strpos($_file, '.svn') !== false) continue;
+                if (!substr_compare($_file, $extension, - strlen($extension)) == 0) continue;
                 if ($_fileinfo->getPath() == substr($_dir, 0, -1)) {
                     $_config_file = $_file;
                 } else {
@@ -150,6 +151,7 @@ class Smarty_Internal_Utility {
                     $_config = new Smarty_Internal_Config($_config_file, $smarty);
                     if ($_config->mustCompile()) {
                         $_config->compileConfigSource();
+                        $_count++;
                         echo ' compiled in  ', microtime(true) - $_start_time, ' seconds';
                         flush();
                     } else {
@@ -229,7 +231,7 @@ class Smarty_Internal_Utility {
         }
         $_compile = new RecursiveIteratorIterator($_compileDirs, RecursiveIteratorIterator::CHILD_FIRST);
         foreach ($_compile as $_file) {
-            if (substr($_file->getBasename(), 0, 1) == '.' || strpos($_file, '.svn') !== false)
+            if (substr(basename($_file->getPathname()), 0, 1) == '.' || strpos($_file, '.svn') !== false)
                 continue;
 
             $_filepath = (string) $_file;
@@ -299,14 +301,14 @@ class Smarty_Internal_Utility {
             echo "Smarty Installation test...\n";
             echo "Testing template directory...\n";
         }
-        
+
         $_stream_resolve_include_path = function_exists('stream_resolve_include_path');
 
         // test if all registered template_dir are accessible
         foreach($smarty->getTemplateDir() as $template_dir) {
             $_template_dir = $template_dir;
             $template_dir = realpath($template_dir);
-            // resolve include_path or fail existance
+            // resolve include_path or fail existence
             if (!$template_dir) {
                 if ($smarty->use_include_path && !preg_match('/^([\/\\\\]|[a-zA-Z]:[\/\\\\])/', $_template_dir)) {
                     // try PHP include_path
@@ -315,7 +317,7 @@ class Smarty_Internal_Utility {
                     } else {
                         $template_dir = Smarty_Internal_Get_Include_Path::getIncludePath($_template_dir);
                     }
-                    
+
                     if ($template_dir !== false) {
                         if ($errors === null) {
                             echo "$template_dir is OK.\n";
@@ -427,7 +429,7 @@ class Smarty_Internal_Utility {
         foreach($smarty->getPluginsDir() as $plugin_dir) {
             $_plugin_dir = $plugin_dir;
             $plugin_dir = realpath($plugin_dir);
-            // resolve include_path or fail existance
+            // resolve include_path or fail existence
             if (!$plugin_dir) {
                 if ($smarty->use_include_path && !preg_match('/^([\/\\\\]|[a-zA-Z]:[\/\\\\])/', $_plugin_dir)) {
                     // try PHP include_path
@@ -436,7 +438,7 @@ class Smarty_Internal_Utility {
                     } else {
                         $plugin_dir = Smarty_Internal_Get_Include_Path::getIncludePath($_plugin_dir);
                     }
-                    
+
                     if ($plugin_dir !== false) {
                         if ($errors === null) {
                             echo "$plugin_dir is OK.\n";
@@ -559,7 +561,7 @@ class Smarty_Internal_Utility {
         foreach($smarty->getConfigDir() as $config_dir) {
             $_config_dir = $config_dir;
             $config_dir = realpath($config_dir);
-            // resolve include_path or fail existance
+            // resolve include_path or fail existence
             if (!$config_dir) {
                 if ($smarty->use_include_path && !preg_match('/^([\/\\\\]|[a-zA-Z]:[\/\\\\])/', $_config_dir)) {
                     // try PHP include_path
@@ -568,7 +570,7 @@ class Smarty_Internal_Utility {
                     } else {
                         $config_dir = Smarty_Internal_Get_Include_Path::getIncludePath($_config_dir);
                     }
-                    
+
                     if ($config_dir !== false) {
                         if ($errors === null) {
                             echo "$config_dir is OK.\n";

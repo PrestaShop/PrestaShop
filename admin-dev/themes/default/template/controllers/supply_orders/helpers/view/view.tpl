@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -63,7 +63,7 @@
 
 	<div style="margin-top: 20px;">
 		<fieldset>
-			<legend>{if isset($is_template) && $is_template == 1} {l s='Template'} {/if}{l s='Products'}</legend>
+			<legend>{if isset($is_template) && $is_template == 1} {l s='Template'} {/if}{l s='Products:'}</legend>
 			{$supply_order_detail_content}
 		</fieldset>
 	</div>
@@ -109,7 +109,7 @@
 					<td bgcolor="#000000"></td>
 				</tr>
 				<tr>
-					<td>{l s='TOTAL TO PAY'}</td>
+					<td>{l s='Total to pay.'}</td>
 					<td align="right">{$supply_order_total_ti}</td>
 				</tr>
 			</table>

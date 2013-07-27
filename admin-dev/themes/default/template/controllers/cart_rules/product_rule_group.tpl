@@ -8,7 +8,7 @@
 		<input type="hidden" name="product_rule_group[]" value="{$product_rule_group_id|intval}" />
 		{l s='The cart must contain at least'}
 		<input type="text" name="product_rule_group_{$product_rule_group_id|intval}_quantity" value="{$product_rule_group_quantity|intval}" style="width:30px" />
-		{l s='product(s) matching the following rules:'}
+		{l s='Product(s) matching the following rules:'}
 		<br />
 		<a href="javascript:addProductRule({$product_rule_group_id|intval});">
 			<img src="../img/admin/add.gif" alt="{l s='Add'}" title="{l s='Add'}" />
@@ -16,10 +16,10 @@
 		</a>
 		<select id="product_rule_type_{$product_rule_group_id|intval}">
 			<option value="">{l s='-- Choose --'}</option>
-			<option value="products">{l s='Products'}</option>
+			<option value="products">{l s='Products:'}</option>
 			<option value="attributes">{l s='Attributes'}</option>
-			<option value="categories">{l s='Categories'}</option>
-			<option value="manufacturers">{l s='Manufacturers'}</option>
+			<option value="categories">{l s='Categories:'}</option>
+			<option value="manufacturers">{l s='Manufacturers:'}</option>
 			<option value="suppliers">{l s='Suppliers'}</option>
 		</select>
 		<a href="javascript:addProductRule({$product_rule_group_id|intval});">

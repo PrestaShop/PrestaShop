@@ -1,5 +1,5 @@
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -35,9 +35,10 @@ reloadProductComparison = function() {
 		$.ajax({
   			url: 'index.php?controller=products-comparison&ajax=1&action=remove&id_product=' + idProduct,
  			async: false,
+ 			cache: false,
   			success: function(){
-	return true;
-}
+				return true;
+			}
 		});	
 	});
 
@@ -51,12 +52,13 @@ reloadProductComparison = function() {
 			$.ajax({
 	  			url: 'index.php?controller=products-comparison&ajax=1&action=add&id_product=' + idProduct,
 	 			async: true,
+	 			cache: false,
 	  			success: function(data){
-	  				if (data == '0')
+	  				if (data === '0')
 	  				{
 	  					checkbox.attr('checked', false);
-		alert(max_item);
-}
+						alert(max_item);
+					}
 	  			},
 	    		error: function(){
 	    			checkbox.attr('checked', false);
@@ -68,8 +70,9 @@ reloadProductComparison = function() {
 			$.ajax({
 	  			url: 'index.php?controller=products-comparison&ajax=1&action=remove&id_product=' + idProduct,
 	 			async: true,
+	 			cache: false,
 	  			success: function(data){
-	  				if (data == '0')
+	  				if (data === '0')
 	  					checkbox.attr('checked', true);
 	    		},
 	    		error: function(){

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -367,6 +367,18 @@ class ImageCore extends ObjectModel
 			');
 	 	return self::$_cacheGetSize[$type];
 	}
+	
+	public static function getWidth($params, &$smarty)
+	{
+		$result = self::getSize($params['type']);
+		return $result['width'];
+	}
+	
+	public static function getHeight($params, &$smarty)
+	{
+		$result = self::getSize($params['type']);
+		return $result['height'];
+	}
 
 	/**
 	 * Clear all images in tmp dir
@@ -409,9 +421,8 @@ class ImageCore extends ObjectModel
 		// Delete auto-generated images
 		$image_types = ImageType::getImagesTypes();
 		foreach ($image_types as $image_type)
-		{
 			$files_to_delete[] = $this->image_dir.$this->getExistingImgPath().'-'.$image_type['name'].'.'.$this->image_format;
-		}
+
 		// Delete watermark image
 		$files_to_delete[] = $this->image_dir.$this->getExistingImgPath().'-watermark.'.$this->image_format;
 		// delete index.php
@@ -533,11 +544,11 @@ class ImageCore extends ObjectModel
 		if (!file_exists(_PS_PROD_IMG_DIR_.$this->getImgFolder()))
 		{
 			// Apparently sometimes mkdir cannot set the rights, and sometimes chmod can't. Trying both.
-			$success = @mkdir(_PS_PROD_IMG_DIR_.$this->getImgFolder(), self::$access_rights, true)
-						|| @chmod(_PS_PROD_IMG_DIR_.$this->getImgFolder(), self::$access_rights);
+			$success = @mkdir(_PS_PROD_IMG_DIR_.$this->getImgFolder(), self::$access_rights, true);
+			$chmod = @chmod(_PS_PROD_IMG_DIR_.$this->getImgFolder(), self::$access_rights);
 
 			// Create an index.php file in the new folder
-			if ($success
+			if (($success || $chmod)
 				&& !file_exists(_PS_PROD_IMG_DIR_.$this->getImgFolder().'index.php')
 				&& file_exists($this->source_index))
 				return @copy($this->source_index, _PS_PROD_IMG_DIR_.$this->getImgFolder().'index.php');

@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -33,42 +33,49 @@
 			document.getElementById('typeTranslationForm').submit();
 		}
 
-		function addThemeSelect(el)
+		function addThemeSelect()
 		{
-			var list_type_for_theme = [{foreach $translations_type_for_theme as $type}'{$type}', {/foreach}];
-			var type = el.value;
+			var list_type_for_theme = ['front', 'modules', 'pdf', 'mails'];
+			var type = $('select[name=type]').val();
 
 			$('select[name=theme]').hide();
 			for (i=0; i < list_type_for_theme.length; i++)
 				if (list_type_for_theme[i] == type)
+				{
 					$('select[name=theme]').show();
+					if (type == 'front')
+						$('select[name=theme]').children('option[value=""]').attr('disabled', true)
+					else
+						$('select[name=theme]').children('option[value=""]').attr('disabled', false)
+				}
 				else
 					$('select[name=theme]').val('{$theme_default}');
 		}
 
 		$(document).ready(function(){
+			addThemeSelect();
 			$('select[name=type]').change(function() {
-				addThemeSelect(this);
+				addThemeSelect();
 			});
 		});
 	</script>
 	
 	<fieldset>
 		<legend><img src="../img/admin/translation.gif" />{l s='Modify translations'}</legend>
-		{l s='Here you can modify translations for all text input in PrestaShop.'}<br />
-		{l s='First, select a section (such as Back Office or Modules), then click the flag representing the language you want to edit.'}<br /><br />
+		{l s='Here you can modify translations for every line of code inside PrestaShop.'}<br />
+		{l s='First, select a section (such as Back Office or Installed modules), and then click the flag representing the language you want to edit.'}<br /><br />
 		<form method="get" action="index.php" id="typeTranslationForm">
 			<input type="hidden" name="controller" value="AdminTranslations" />
 			<input type="hidden" name="lang" id="translation_lang" value="0" />
-			<select name="type" style="float:left; margin-right:10px;">
+			<select name="type" style="float:left;margin-right:10px">
 				{foreach $translations_type as $type => $array}
-					<option value="{$type}">{$array.name} &nbsp;</option>
+					<option value="{$type}">{$array.name}</option>
 				{/foreach}
 			</select>
-			<select name="theme" style="float:left; margin-right:10px;">
+			<select name="theme" style="float:left;margin-right:10px">
+				<option value="">{l s='Core (no theme selected)'}</option>
 				{foreach $themes as $theme}
-
-					<option value="{$theme->directory}" {if $id_theme_current == $theme->id}selected=selected{/if}>{$theme->name} &nbsp;</option>
+					<option value="{$theme->directory}" {if $id_theme_current == $theme->id}selected=selected{/if}>{$theme->name}</option>
 				{/foreach}
 			</select>
 			{foreach $languages as $language}
@@ -87,12 +94,12 @@
 				<img src="../img/admin/import.gif" />{l s='Add / Update a language'}
 			</legend>
 			<div id="submitAddLangContent" style="float:left;">
-				<p>{l s='You can add or update a language directly from prestashop.com here'}</p>
+				<p>{l s='You can add or update a language directly from the PrestaShop website here:'}</p>
 				<div class="warn">
-					{l s='If you choose to update an existing language pack, all your previous customization in the theme named "Default" will be lost. This includes Front Office expressions and default e-mail templates.'}
+					{l s='If you choose to update an existing language pack, all of your previous customization\'s in the theme named "Default" will be lost. This includes Front Office expressions and default email templates.'}
 				</div>
 				{if $packs_to_update || $packs_to_install}
-					<div style="font-weight:bold; float:left;">{l s='Language you want to add or update:'}
+					<div style="font-weight:bold; float:left;">{l s='Please select the language you want to add or update:'}
 						<select id="params_import_language" name="params_import_language">
 							<optgroup label="{l s='Update a language'}">
 								{foreach $packs_to_update as $lang_pack}
@@ -108,7 +115,7 @@
 						<input type="submit" value="{l s='Add or update a language'}" name="submitAddLanguage" class="button" />
 					</div>
 				{else}
-					<br /><br /><p class="error">{l s='Cannot connect to prestashop.com to get language list.'}</p></div>
+					<br /><br /><p class="error">{l s='Cannot connect to the PrestaShop website to get the language list.'}</p></div>
 				{/if}
 			</div>
 		</fieldset>
@@ -121,8 +128,8 @@
 			</legend>
 			<div id="submitImportContent">
 				<p>
-					{l s='If the name format is: isocode.gzip (e.g. us.gzip) and the language corresponding to this package does not exist, it will automatically be created.'}
-					{l s='Be careful, as this will replace all existing data for the destination language!'}
+					{l s='If the language file format is: isocode.gzip (e.g. us.gzip), and the language corresponding to this package does not exist, it will automatically be created.'}
+					{l s='Warning: This will replace all of the existing data inside the destination language.'}
 				</p>
 				<p><label for="importLanguage">{l s='Language pack to import:'}</label><input type="file" name="file" id="importLanguage"/>&nbsp;</p>
 				<p>
@@ -133,7 +140,7 @@
 						{/foreach}
 					</select>
 				</p>
-				<p class="margin-form"><input type="submit" value="{l s='Import'}" name="submitImport" class="button" /></p>
+				<p class="margin-form"><input type="submit" value="{l s='   Import   '}" name="submitImport" class="button" /></p>
 			</div>
 		</fieldset>
 	</form>
@@ -143,7 +150,7 @@
 		<fieldset>
 			<legend><img src="../img/admin/export.gif" />{l s='Export a language'}</legend>
 			<p>{l s='Export data from one language to a file (language pack).'}<br />
-			{l s='Choose the theme from which you want to export translations.'}<br />
+			{l s='Choose which theme you\'d like to export your translations to. '}<br />
 			<select name="iso_code" style="margin-top:10px;">
 				{foreach $languages as $language}
 					<option value="{$language['iso_code']}">{$language['name']}</option>
@@ -163,8 +170,8 @@
 		<fieldset>
 			<legend><img src="../img/admin/copy_files.gif" />{l s='Copy'}</legend>
 			<p>{l s='Copies data from one language to another.'}<br />
-			{l s='Be careful, as this will replace all existing data for the destination language!'}<br />
-			{l s='If necessary'}, <b><a href="{$url_create_language}">{l s='first create a new language'}</a></b>.</p>
+			{l s='Warning: This will replace all of the existing data inside the destination language.'}<br />
+			{l s='If necessary'}, <b><a href="{$url_create_language}">{l s='you must first create a new language.'}</a></b>.</p>
 			<div style="float:left;">
 				<p>
 					<div style="width:75px; font-weight:bold; float:left;">{l s='From:'}</div>
@@ -198,7 +205,7 @@
 			<div style="float:left;">
 				<input type="submit" value="{l s='   Copy   '}" name="submitCopyLang" class="button" style="margin:25px 0px 0px 25px;" />
 			</div>
-			<p style="clear: left; padding: 16px 0px 0px 0px;"><span style="font-style: bold; color: red;">*</span> {l s='Language files must be complete to allow copying of translations'}</p>
+			<p style="clear: left; padding: 16px 0px 0px 0px;"><span style="font-style: bold; color: red;">*</span> {l s='Language files must be complete to allow copying of translations.'}</p>
 		</fieldset>
 	</form>
 {/block}

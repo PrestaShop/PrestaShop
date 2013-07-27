@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -38,7 +38,7 @@ class AdminContactsControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_contact' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'name' => array('title' => $this->l('Title'), 'width' => 130),
-			'email' => array('title' => $this->l('E-mail address'), 'width' => 130),
+			'email' => array('title' => $this->l('Email address'), 'width' => 130),
 			'description' => array('title' => $this->l('Description'), 'width' => 150),
 		);
 
@@ -55,20 +55,20 @@ class AdminContactsControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Title:'),
+					'label' => $this->l('Title'),
 					'name' => 'name',
 					'size' => 33,
 					'required' => true,
 					'lang' => true,
-					'desc' => $this->l('Contact name (e.g. Technical Support)'),
+					'desc' => $this->l('Contact name (e.g. Customer Support)'),
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('E-mail address'),
+					'label' => $this->l('Email address'),
 					'name' => 'email',
 					'size' => 33,
 					'required' => false,
-					'desc' => $this->l('E-mails will be sent to this address'),
+					'desc' => $this->l('Emails will be sent to this address'),
 				),
 				array(
 					'type' => 'radio',
@@ -77,7 +77,7 @@ class AdminContactsControllerCore extends AdminController
 					'required' => false,
 					'class' => 't',
 					'is_bool' => true,
-					'desc' => $this->l('If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu'),
+					'desc' => $this->l('If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.'),
 					'values' => array(
 						array(
 							'id' => 'customer_service_on',
@@ -99,11 +99,11 @@ class AdminContactsControllerCore extends AdminController
 					'lang' => true,
 					'cols' => 36,
 					'rows' => 5,
-					'desc' => $this->l('Additional information about this contact'),
+					'desc' => $this->l('Further information regarding this contact'),
 				),
 			),
 			'submit' => array(
-				'title' => $this->l('   Save   '),
+				'title' => $this->l('Save   '),
 				'class' => 'button'
 			)
 		);
