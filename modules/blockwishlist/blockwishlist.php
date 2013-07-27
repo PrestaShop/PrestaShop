@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -169,7 +169,9 @@ class BlockWishList extends Module
 	public function hookHeader($params)
 	{
 		$this->context->controller->addCSS(($this->_path).'blockwishlist.css', 'all');
-		return $this->display(__FILE__, 'blockwishlist-header.tpl');
+		$this->context->controller->addJS(($this->_path).'js/ajax-wishlist.js');
+		
+		$this->smarty->assign(array('wishlist_link' => $this->context->link->getModuleLink('blockwishlist', 'mywishlist')));
 	}
 
 	public function hookRightColumn($params)
@@ -202,8 +204,6 @@ class BlockWishList extends Module
 		}
 		else
 			$this->smarty->assign(array('wishlist_products' => false, 'wishlists' => false));
-		
-		$this->smarty->assign(array('wishlist_link' => $this->context->link->getModuleLink('blockwishlist', 'mywishlist')));
 		
 		return ($this->display(__FILE__, 'blockwishlist.tpl'));
 	}

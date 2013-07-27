@@ -149,7 +149,8 @@ class Smarty_Internal_Compile_Functionclose extends Smarty_Internal_CompileBase 
             $compiler->has_code = false;
             $output = true;
         } else {
-            $output = $plugins_string . $compiler->parser->current_buffer->to_smarty_php() . "<?php \$_smarty_tpl->tpl_vars = \$saved_tpl_vars;}}?>\n";
+            $output = $plugins_string . $compiler->parser->current_buffer->to_smarty_php() . "<?php \$_smarty_tpl->tpl_vars = \$saved_tpl_vars;
+foreach (Smarty::\$global_tpl_vars as \$key => \$value) if(!isset(\$_smarty_tpl->tpl_vars[\$key])) \$_smarty_tpl->tpl_vars[\$key] = \$value;}}?>\n";
         }
         // reset flag that we are compiling a template function
         $compiler->compiles_template_function = false;

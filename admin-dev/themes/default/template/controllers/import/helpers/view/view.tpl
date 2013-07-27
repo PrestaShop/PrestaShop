@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -33,7 +33,7 @@
 	<div id="container-customer">
 	<h2>{l s='View your data'}</h2>
 	<div>
-		<b>{l s='Save and load your matching configuration'} : </b><br><br>
+		<b>{l s='Save and load your configuration for importing files'} : </b><br><br>
 		<input type="text" name="newImportMatchs" id="newImportMatchs">
 		<a id="saveImportMatchs" class="button" href="#">{l s='Save'}</a><br><br>
 		<div id="selectDivImportMatchs" {if !$import_matchs}style="display:none"{/if}>

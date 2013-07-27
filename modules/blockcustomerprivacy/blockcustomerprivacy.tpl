@@ -1,4 +1,4 @@
-{* 2007-2012 PrestaShop
+{* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -17,7 +17,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -26,7 +26,7 @@
 <fieldset class="account_creation customerprivacy">
 	<h3>{l s='Customer data privacy' mod='blockcustomerprivacy'}</h3>
 	<p class="required">
-		<input type="checkbox" value="1" id="customer_privacy" name="customer_privacy" style="float:left;margin: 15px;" />				
+		<input type="checkbox" value="1" id="customer_privacy" name="customer_privacy" style="float:left;margin: 15px;" autocomplete="off"/>				
 	</p>
 	<label for="customer_privacy">{$privacy_message}</label>		
 </fieldset>

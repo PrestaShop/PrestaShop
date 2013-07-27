@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <localizationPack name="India" version="1.0">
+	
+	<languages>
+	    <language iso_code="en" />
+        </languages>
+	
 	<currencies>
 		<currency name="Indian Rupee" iso_code="INR" iso_code_num="356" sign="₹" blank="1" conversion_rate="60.748205" format="2" decimals="1" />
 	</currencies>

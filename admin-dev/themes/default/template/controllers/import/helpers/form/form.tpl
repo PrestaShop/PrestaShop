@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -50,14 +50,14 @@
 				console.log(truncateAuthorized);
 				if (truncateAuthorized)
 				{
-					if (!confirm('{l s='Are you sure you want to delete' js=1}' + ' ' + $.trim($('#entity > option:selected').text().toLowerCase()) + '{l s='?' js=1}'))
+					if (!confirm('{l s='Are you sure that you would like to delete this' js=1}' + ' ' + $.trim($('#entity > option:selected').text().toLowerCase()) + '?'))
 					{
 						e.preventDefault();
 					}
 				}
 				else
 				{
-					jAlert('{l s='You do not have permission to delete here. When the multi-store is enable, only a SuperAdmin can delete all items before import.'}');
+					jAlert('{l s='You do not have permission to delete here. When the multistore is enabled, only a SuperAdmin can delete all items before an import.' js=1}');
 					return false;
 				}
 			}
@@ -95,25 +95,6 @@
 				</p>
 			</div>
 		</form>
-		<div class="clear">&nbsp;</div>
-		<div style="width:50%; margin: 0 auto;">
-			{l s='Note that our samples are available below.'}
-			<div class="clear">&nbsp;</div>
-			<ul id="sample_files_import">
-				<li><a href="../docs/csv_import/categories_import.csv">{l s='Sample Categories file'}</a></li>
-				<li><a href="../docs/csv_import/products_import.csv">{l s='Sample Products file'}</a></li>
-				<li><a href="../docs/csv_import/combinations_import.csv">{l s='Sample Combinations file'}</a></li>
-				<li><a href="../docs/csv_import/customers_import.csv">{l s='Sample Customers file'}</a></li>
-				<li><a href="../docs/csv_import/addresses_import.csv">{l s='Sample Addresses file'}</a></li>
-				<li><a href="../docs/csv_import/manufacturers_import.csv">{l s='Sample Manufacturers file'}</a></li>
-				<li><a href="../docs/csv_import/suppliers_import.csv">{l s='Sample Suppliers file'}</a></li>
-				{if $PS_ADVANCED_STOCK_MANAGEMENT}
-					<li><a href="../docs/csv_import/supply_orders_import.csv">{l s='Supply Orders sample file'}</a></li>
-					<li><a href="../docs/csv_import/supply_orders_details_import.csv">{l s='Supply Orders Details sample file'}</a></li>
-				{/if}
-			</ul>
-		</div>
-		<div class="clear">&nbsp;</div>
 	</div>
 </div>
 
@@ -130,7 +111,7 @@
 	class="clear">
 	
 	<fieldset style="float: left; margin: 0pt 20px 0pt 0pt; width: 70%;">
-		<legend><img src="../img/admin/import.gif" />{l s='Import'}</legend>
+		<legend><img src="../img/admin/import.gif" />{l s='Import   '}</legend>
 
 			<label class="clear">{if count($files_to_import) > 1}{l s='Your CSV file (%d files):' sprintf=count($files_to_import)}{else}{l s='Your CSV file (%d file):' sprintf=count($files_to_import)}{/if}</label>
 			<div class="margin-form">
@@ -144,8 +125,24 @@
 				&nbsp;
 				<a href="#upload_file_import" id="upload_file_import_link" class="button"><img src="../img/admin/add.gif" alt="Uplaod" title="Upload" />{l s='Upload'}</a>
 			</div>
-
-			<label class="clear">{l s='What kind of Entity would you like to import?'} </label>
+			<div style="width:50%; margin: 0 auto;">
+				<a href="#" onclick="$('#sample_files_import').slideToggle(); return false;">{l s='Click to view our sample import csv files.'}</a>
+				<ul id="sample_files_import" style="display:none">
+					<li><a href="../docs/csv_import/categories_import.csv">{l s='Sample Categories file'}</a></li>
+					<li><a href="../docs/csv_import/products_import.csv">{l s='Sample Products file'}</a></li>
+					<li><a href="../docs/csv_import/combinations_import.csv">{l s='Sample Combinations file'}</a></li>
+					<li><a href="../docs/csv_import/customers_import.csv">{l s='Sample Customers file'}</a></li>
+					<li><a href="../docs/csv_import/addresses_import.csv">{l s='Sample Addresses file'}</a></li>
+					<li><a href="../docs/csv_import/manufacturers_import.csv">{l s='Sample Manufacturers file'}</a></li>
+					<li><a href="../docs/csv_import/suppliers_import.csv">{l s='Sample Suppliers file'}</a></li>
+					{if $PS_ADVANCED_STOCK_MANAGEMENT}
+						<li><a href="../docs/csv_import/supply_orders_import.csv">{l s='Supply Orders sample file'}</a></li>
+						<li><a href="../docs/csv_import/supply_orders_details_import.csv">{l s='Supply Orders Details sample file'}</a></li>
+					{/if}
+				</ul>
+				<div class="clear">&nbsp;</div>
+			</div>
+			<label class="clear">{l s='What kind of entity would you like to import?'} </label>
 			<div class="margin-form">
 				<select name="entity" id="entity">
 					{foreach $entities AS $entity => $i}
@@ -187,26 +184,26 @@
 			<div class="margin-form">
 				<input name="match_ref" id="match_ref" type="checkbox" style="margin-top: 6px; display:none"/>
 			</div>
-			<label for="forceIDs" class="clear">{l s='Force all ids during import?'} </label>
+			<label for="forceIDs" class="clear">{l s='Force all ID\'s during import?'} </label>
 			<div class="margin-form">
-				<input name="forceIDs" id="forceIDs" type="checkbox"/> {l s='If you don\'t use this option, all IDs will be auto-incremented.'}
+				<input name="forceIDs" id="forceIDs" type="checkbox"/> {l s='If you don\'t use this option, all ID\'s will be auto-incremented.'}
 			</div>
 			<div class="space margin-form">
 				<input type="submit" name="submitImportFile" value="{l s='Next step'}" class="button" {if empty($files_to_import)}disabled{/if}/>
-				{if empty($files_to_import)}<span style="color:red;">{l s='You must upload a file for go to the next step.'}</span>{/if}
+				{if empty($files_to_import)}<span style="color:red;">{l s='You must upload a file in order to proceed to the next step'}</span>{/if}
 			</div>
 			<div class="warn import_products_categories" style="margin-top: 20px;">
 				<p>{l s='Note that the category import does not support categories of the same name.'}</p>
 				<p>{l s='Note that you can have several products with the same reference.'}</p>
 			</div>
 			<div class="warn import_supply_orders_details" style="margin-top: 20px; display:none">
-				<p>{l s='Importing Supply Order Details will first reset the products ordered, if any.'}</p>
+				<p>{l s='Importing Supply Order Details will reset products ordered, if there are any.'}</p>
 			</div>
 		{if !count($files_to_import)}
 			<div class="warn" style="margin-top: 20px;">
-				<p>{l s='There is no CSV file available, please upload one using the \'Upload\' button above.'}</p>
+				<p>{l s='There is no CSV file available. Please upload one using the \'Upload\' button above.'}</p>
 				<ul>
-					<li>{l s='You can read informations on CSV import at:'} <a href="http://doc.prestashop.com/display/PS14/Troubleshooting#Troubleshooting-HowtocorrectlyimportaccentuatedcontentusingaCSVfile%3F" target="_blank">http://doc.prestashop.com/display/PS14/Troubleshooting</a></li>
+					<li>{l s='You can read information on CSV import at:'} <a href="http://doc.prestashop.com/display/PS14/Troubleshooting#Troubleshooting-HowtocorrectlyimportaccentuatedcontentusingaCSVfile%3F" target="_blank">http://doc.prestashop.com/display/PS14/Troubleshooting</a></li>
 					<li>{l s='Read more about CSV format at:'} <a href="http://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">http://en.wikipedia.org/wiki/Comma-separated_values</a></li>
 				</ul>
 			</div>
@@ -225,7 +222,7 @@
 	</div>
 
 	<div class="clear">
-		<br /><br />{l s='*Required field'}
+		<br /><br />{l s='* Required field'}
 	</div>
 
 </fieldset>

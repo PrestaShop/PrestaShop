@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -40,7 +40,7 @@ class Editorial extends Module
 		parent::__construct();
 
 		$this->displayName = $this->l('Home text editor');
-		$this->description = $this->l('A text editor module for your homepage.');
+		$this->description = $this->l('A text-edit module for your homepage.');
 		$path = dirname(__FILE__);
 		if (strpos(__FILE__, 'Module.php') !== false)
 			$path .= '/../modules/'.$this->name;
@@ -138,7 +138,7 @@ class Editorial extends Module
 			),
 			'submit' => array(
 				'name' => 'submitUpdateEditorial',
-				'title' => $this->l('   Save   '),
+				'title' => $this->l('Save '),
 				'class' => 'button'
 			),
 			'input' => array(
@@ -148,7 +148,7 @@ class Editorial extends Module
 					'name' => 'body_title',
 					'lang' => true,
 					'size' => 64,
-					'hint' => $this->l('Appears along top of homepage'),
+					'hint' => $this->l('Appears along top of your homepage'),
 				),
 				array(
 					'type' => 'text',
@@ -163,7 +163,7 @@ class Editorial extends Module
 					'name' => 'body_paragraph',
 					'lang' => true,
 					'autoload_rte' => true,
-					'hint' => $this->l('Text of your choice; for example, explain your mission, highlight a new product, or describe a recent event.'),
+					'hint' => $this->l('For example... explain your mission, highlight a new product, or describe a recent event.'),
 					'cols' => 60,
 					'rows' => 30
 				),
@@ -214,7 +214,7 @@ class Editorial extends Module
 		if (!$editorial) //if editorial ddo not exist for this shop => create a new example one
 			$this->createExampleEditorial($id_shop);
 		
-		foreach($this->fields_form[0]['form']['input'] as $input) //fill all form fields
+		foreach ($this->fields_form[0]['form']['input'] as $input) //fill all form fields
 			if ($input['name'] != 'body_homepage_logo')
 				$helper->fields_value[$input['name']] = $editorial->{$input['name']};
 		
@@ -234,11 +234,12 @@ class Editorial extends Module
 		if (Tools::isSubmit('deleteImage'))
 		{
 			if (!file_exists(dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg'))
-				$errors .= $this->displayError($this->l('This action cannot be taken.'));
+				$errors .= $this->displayError($this->l('This action cannot be made.'));
 			else
 			{
 				unlink(dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg');
 				Configuration::updateValue('EDITORIAL_IMAGE_DISABLE', 1);
+				$this->_clearCache('editorial.tpl');
 				Tools::redirectAdmin('index.php?tab=AdminModules&configure='.$this->name.'&token='.Tools::getAdminToken('AdminModules'.(int)(Tab::getIdFromClassName('AdminModules')).(int)$this->context->employee->id));
 			}
 			$this->_html .= $errors;
@@ -262,11 +263,11 @@ class Editorial extends Module
 				elseif (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES['body_homepage_logo']['tmp_name'], $tmpName))
 					return false;
 				elseif (!ImageManager::resize($tmpName, dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg'))
-					$errors .= $this->displayError($this->l('An error occurred during the image upload.'));
+					$errors .= $this->displayError($this->l('An error occurred while attempting to upload the image.'));
 				if (isset($tmpName))
 					unlink($tmpName);
 			}
-			$this->_html .= $errors == '' ? $this->displayConfirmation($this->l('Settings updated successfully')) : $errors;
+			$this->_html .= $errors == '' ? $this->displayConfirmation($this->l('Settings updated successfully.')) : $errors;
 			if (file_exists(dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg'))
 			{
 				list($width, $height, $type, $attr) = getimagesize(dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg');
@@ -274,26 +275,32 @@ class Editorial extends Module
 				Configuration::updateValue('EDITORIAL_IMAGE_HEIGHT', (int)round($height));
 				Configuration::updateValue('EDITORIAL_IMAGE_DISABLE', 0);
 			}
+			$this->_clearCache('editorial.tpl');
 		}
 	}
 
 	public function hookDisplayHome($params)
 	{
-		$id_shop = (int)$this->context->shop->id;
-		$editorial = EditorialClass::getByIdShop($id_shop);
-		$editorial = new EditorialClass((int)$editorial->id, $this->context->language->id);
-		if (!$editorial)
-			return;
-		$this->smarty->assign(array(
-				'editorial' => $editorial,
-				'default_lang' => (int)$this->context->language->id,
-				'image_width' => Configuration::get('EDITORIAL_IMAGE_WIDTH'),
-				'image_height' => Configuration::get('EDITORIAL_IMAGE_HEIGHT'),
-				'id_lang' => $this->context->language->id,
-				'homepage_logo' => !Configuration::get('EDITORIAL_IMAGE_DISABLE') && file_exists('modules/editorial/homepage_logo_'.(int)$id_shop.'.jpg'),
-				'image_path' => $this->_path.'homepage_logo_'.(int)$id_shop.'.jpg'
-			));
-		return $this->display(__FILE__, 'editorial.tpl');
+		if (!$this->isCached('editorial.tpl', $this->getCacheId()))
+		{
+			$id_shop = (int)$this->context->shop->id;
+			$editorial = EditorialClass::getByIdShop($id_shop);
+			if (!$editorial)
+				return;			
+			$editorial = new EditorialClass((int)$editorial->id, $this->context->language->id);
+			if (!$editorial)
+				return;
+			$this->smarty->assign(array(
+					'editorial' => $editorial,
+					'default_lang' => (int)$this->context->language->id,
+					'image_width' => Configuration::get('EDITORIAL_IMAGE_WIDTH'),
+					'image_height' => Configuration::get('EDITORIAL_IMAGE_HEIGHT'),
+					'id_lang' => $this->context->language->id,
+					'homepage_logo' => !Configuration::get('EDITORIAL_IMAGE_DISABLE') && file_exists('modules/editorial/homepage_logo_'.(int)$id_shop.'.jpg'),
+					'image_path' => $this->_path.'homepage_logo_'.(int)$id_shop.'.jpg'
+				));
+		}
+		return $this->display(__FILE__, 'editorial.tpl', $this->getCacheId());
 	}
 
 	public function hookDisplayHeader()

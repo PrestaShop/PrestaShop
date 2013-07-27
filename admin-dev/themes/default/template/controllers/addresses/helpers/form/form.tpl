@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -27,17 +27,11 @@
 
 {block name="label"}
 	{if $input.name == 'vat_number'}
-		{if $vat == 'is_applicable'}
-			<div id="vat_area" style="display: visible">
-		{else if $vat == 'management'}
-			<div id="vat_area" style="display: hidden">
-		{else}
-			<div style="display: none;">
-		{/if}
+		<div id="vat_area" style="display: visible">
 	{/if}
 
 	{if $input.type == 'text_customer' && !isset($customer)}
-		<label>{l s='Customer e-mail'}</label>
+		<label>{l s='Customer email'}</label>
 	{else}
 		{$smarty.block.parent}
 	{/if}

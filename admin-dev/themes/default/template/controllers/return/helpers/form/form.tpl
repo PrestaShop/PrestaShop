@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -29,12 +29,12 @@
 	{if $input.type == 'text_customer'}
 		<span class="normal-text">{$customer->firstname} {$customer->lastname}</span>
 		<p style="clear: both">
-			<a href="{$url_customer}">{l s='View details on customer page'}</a>
+			<a href="{$url_customer}">{l s='View details on the customer page'}</a>
 		</p>
 	{elseif $input.type == 'text_order'}
 		<span class="normal-text">{$text_order}</span>
 		<p style="clear: both">
-			<a href="{$url_order}">{l s='View details on order page'}</a>
+			<a href="{$url_order}">{l s='View details on the order page'}</a>
 		</p>
 	{elseif $input.type == 'list_products'}
 		<table cellpadding="0" cellspacing="0">

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop 
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -40,7 +40,7 @@ class StatsData extends Module
         parent::__construct();
 		
         $this->displayName = $this->l('Data mining for statistics');
-        $this->description = $this->l('This module must be enabled if you want to use Statistics.');
+        $this->description = $this->l('This module must be enabled if you want to use statistics.');
     }
 
 	public function install()
@@ -50,15 +50,16 @@ class StatsData extends Module
 	
 	public function getContent()
 	{
+		$html = '';
 		if (Tools::isSubmit('submitStatsData'))
 		{
 			Configuration::updateValue('PS_STATSDATA_CUSTOMER_PAGESVIEWS', (int)Tools::getValue('PS_STATSDATA_CUSTOMER_PAGESVIEWS'));
 			Configuration::updateValue('PS_STATSDATA_PAGESVIEWS', (int)Tools::getValue('PS_STATSDATA_PAGESVIEWS'));
 			Configuration::updateValue('PS_STATSDATA_PLUGINS', (int)Tools::getValue('PS_STATSDATA_PLUGINS'));
-			echo '<div class="conf">'.$this->l('Configuration updated').'</div>';
+			$html .= '<div class="conf">'.$this->l('Configuration updated').'</div>';
 		}
 	
-		return '<form action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'" method="post">
+		$html .=  '<form action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'" method="post">
 		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->l('Settings').'</legend>
 			<label>'.$this->l('Save page views for each customer').'</label>
 			<div class="margin-form">
@@ -66,29 +67,31 @@ class StatsData extends Module
 				<label class="t" for="PS_STATSDATA_CUSTOMER_PAGESVIEWS_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" /></label>
 				<input type="radio" name="PS_STATSDATA_CUSTOMER_PAGESVIEWS" id="PS_STATSDATA_CUSTOMER_PAGESVIEWS_off" value="0" '.(Tools::getValue('PS_STATSDATA_CUSTOMER_PAGESVIEWS', Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS')) ? '' : 'checked="checked"').' />
 				<label class="t" for="PS_STATSDATA_CUSTOMER_PAGESVIEWS_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" /></label>
-				<p>'.$this->l('Customer page views uses a lot of CPU resources and database space.').'</p>
+				<p>'.$this->l('Stored customer page views uses a lot of CPU resources and database space.').'</p>
 			</div>
 			<div class="clear">&nbsp;</div>
-			<label>'.$this->l('Save global page views').'</label>
+			<label>'.$this->l('Save global page views.').'</label>
 			<div class="margin-form">
 				<input type="radio" name="PS_STATSDATA_PAGESVIEWS" id="PS_STATSDATA_PAGESVIEWS_on" value="1" '.(Tools::getValue('PS_STATSDATA_PAGESVIEWS', Configuration::get('PS_STATSDATA_PAGESVIEWS')) ? 'checked="checked"' : '').' />
 				<label class="t" for="PS_STATSDATA_PAGESVIEWS_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" /></label>
 				<input type="radio" name="PS_STATSDATA_PAGESVIEWS" id="PS_STATSDATA_PAGESVIEWS_off" value="0" '.(Tools::getValue('PS_STATSDATA_PAGESVIEWS', Configuration::get('PS_STATSDATA_PAGESVIEWS')) ? '' : 'checked="checked"').' />
 				<label class="t" for="PS_STATSDATA_PAGESVIEWS_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" /></label>
-				<p>'.$this->l('Global page views uses less resources than customer\'s, but uses resources nonetheless.').'</p>
+				<p>'.$this->l('Global page views uses fewer resources than customer\'s, but it uses resources nonetheless.').'</p>
 			</div>
 			<div class="clear">&nbsp;</div>
-			<label>'.$this->l('Plug-ins detection').'</label>
+			<label>'.$this->l('Plugins detection').'</label>
 			<div class="margin-form">
 				<input type="radio" name="PS_STATSDATA_PLUGINS" id="PS_STATSDATA_PLUGINS_on" value="1" '.(Tools::getValue('PS_STATSDATA_PLUGINS', Configuration::get('PS_STATSDATA_PLUGINS')) ? 'checked="checked"' : '').' />
 				<label class="t" for="PS_STATSDATA_PLUGINS_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" /></label>
 				<input type="radio" name="PS_STATSDATA_PLUGINS" id="PS_STATSDATA_PLUGINS_off" value="0" '.(Tools::getValue('PS_STATSDATA_PLUGINS', Configuration::get('PS_STATSDATA_PLUGINS')) ? '' : 'checked="checked"').' />
 				<label class="t" for="PS_STATSDATA_PLUGINS_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" /></label>
-				<p>'.$this->l('Plug-ins detection loads an extra 20kb javascript file for new visitors.').'</p>
+				<p>'.$this->l('Plugins detection loads an extra 20kb javascript file for new visitors.').'</p>
 			</div>
 			<div class="clear">&nbsp;</div>
 			<input type="submit" class="button" name="submitStatsData" value="'.$this->l('Update').'" />
 		</fieldset>';
+
+		return $html;
 	}
 
 	public function hookFooter($params)

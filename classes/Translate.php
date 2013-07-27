@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -51,7 +51,10 @@ class TranslateCore
 		if ($_LANGADM == null)
 		{
 			$iso = Context::getContext()->language->iso_code;
-			include_once(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
+			if (empty($iso))
+				$iso = Language::getIsoById((int)(Configuration::get('PS_LANG_DEFAULT')));			
+			if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php'))
+				include_once(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
 		}
 
 		if (isset($modules_tabs[strtolower($class)]))
@@ -116,7 +119,7 @@ class TranslateCore
 	 * @param string $source
 	 * @return string
 	 */
-	public static function getModuleTranslation($module, $string, $source, $sprintf = null)
+	public static function getModuleTranslation($module, $string, $source, $sprintf = null, $js = false)
 	{
 		global $_MODULES, $_MODULE, $_LANGADM;
 
@@ -126,8 +129,7 @@ class TranslateCore
 		static $translations_merged = array();
 
 		$name = $module instanceof Module ? $module->name : $module;
-		
-		if (!isset($translations_merged[$name]))
+		if (!isset($translations_merged[$name]) && isset(Context::getContext()->language))
 		{
 			$filesByPriority = array(
 				// Translations in theme
@@ -175,7 +177,16 @@ class TranslateCore
 			if ($sprintf !== null)
 				$ret = Translate::checkAndReplaceArgs($ret, $sprintf);
 
-			$lang_cache[$cache_key] = str_replace('"', '&quot;', $ret);
+			if ($js)
+				$ret = addslashes($ret);
+
+                        $ret = str_replace('"', '&quot;', $ret);
+
+                        if ($sprintf === null)
+                                $lang_cache[$cache_key] = $ret; 
+                        else    
+                                return $ret;
+
 		}
 		return $lang_cache[$cache_key];
 	}

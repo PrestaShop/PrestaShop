@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -34,6 +34,8 @@ class AdminSuppliersControllerCore extends AdminController
 		$this->addRowAction('view');
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
+		$this->allow_export = true;
+		
 		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->_select = 'COUNT(DISTINCT ps.`id_product`) AS products';
@@ -78,7 +80,7 @@ class AdminSuppliersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name:'),
+					'label' => $this->l('Name'),
 					'name' => 'name',
 					'size' => 40,
 					'required' => true,
@@ -92,7 +94,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'rows' => 10,
 					'lang' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'desc' => $this->l('Will appear in supplier list')
+					'desc' => $this->l('Will appear in the supplier list')
 				),
 				array(
 					'type' => 'text',
@@ -100,7 +102,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'name' => 'phone',
 					'size' => 15,
 					'maxlength' => 16,
-					'desc' => $this->l('Phone number of this supplier')
+					'desc' => $this->l('Phone number for this supplier')
 				),
 				array(
 					'type' => 'text',
@@ -144,7 +146,6 @@ class AdminSuppliersControllerCore extends AdminController
 						'id' => 'id_country',
 						'name' => 'name',
 					),
-					'desc' => $this->l('Country where the state, region or city is located')
 				),
 				array(
 					'type' => 'select',
@@ -161,7 +162,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'label' => $this->l('Logo:'),
 					'name' => 'logo',
 					'display_image' => true,
-					'desc' => $this->l('Upload supplier logo from your computer')
+					'desc' => $this->l('Upload a supplier logo from your computer')
 				),
 				array(
 					'type' => 'text',
@@ -183,7 +184,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'name' => 'meta_keywords',
 					'lang' => true,
 					'hint' => $this->l('Forbidden characters:').' <>;=#{}',
-					'desc' => $this->l('To add "tags" click in the field, write something, then press "Enter"')
+					'desc' => $this->l('To add "tags" click in the field, write something and then press "Enter"')
 				),
 				array(
 					'type' => 'radio',
@@ -347,7 +348,7 @@ class AdminSuppliersControllerCore extends AdminController
 		// checks access
 		if (Tools::isSubmit('submitAdd'.$this->table) && !($this->tabAccess['add'] === '1'))
 		{
-			$this->errors[] = Tools::displayError('You do not have the required permissions to add suppliers.');
+			$this->errors[] = Tools::displayError('You do not have permission to add suppliers.');
 			return parent::postProcess();
 		}
 
@@ -380,7 +381,7 @@ class AdminSuppliersControllerCore extends AdminController
 			{
 				foreach ($validation as $item)
 					$this->errors[] = $item;
-				$this->errors[] = Tools::displayError('The address is not correct. Check if all required fields are filled.');
+				$this->errors[] = Tools::displayError('The address is not correct. Please make sure all of the required fields are completed.');
 			}
 			else
 			{
@@ -399,7 +400,7 @@ class AdminSuppliersControllerCore extends AdminController
 			if (!($obj = $this->loadObject(true)))
 				return;
 			else if (SupplyOrder::supplierHasPendingOrders($obj->id))
-				$this->errors[] = $this->l('It is not possible to delete a supplier if there are any pending supplier orders.');
+				$this->errors[] = $this->l('It is not possible to delete a supplier if there are pending supplier orders.');
 			else
 			{
 				//delete all product_supplier linked to this supplier

@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	// Focus on email address field
-	$('#email').select();
+	$('#email').focus();
 
 	// Initialize events
 	$('#login_form').submit(function(e) {
@@ -61,7 +61,8 @@ function doAjaxLogin(redirect) {
 	$('#login_form .ajax-loader').fadeIn('slow', function() {
 		$.ajax({
 			type: "POST",
-			url: "ajax-tab.php",
+			headers: { "cache-control": "no-cache" },
+			url: "ajax-tab.php" + '?rand=' + new Date().getTime(),
 			async: true,
 			dataType: "json",
 			data: {
@@ -74,11 +75,10 @@ function doAjaxLogin(redirect) {
 				redirect: redirect
 			},
 			success: function(jsonData) {
-				if (jsonData.hasErrors) {
+				if (jsonData.hasErrors)
 					displayErrors(jsonData.errors);
-				} else {
-					window.location.href = jsonData.redirect;
-				}
+				else
+					window.location.assign(jsonData.redirect);
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
 				$('#error').html('<h3>TECHNICAL ERROR:</h3><p>Details: Error thrown: ' + XMLHttpRequest + '</p><p>Text status: ' + textStatus + '</p>').show();
@@ -92,7 +92,8 @@ function doAjaxForgot() {
 	$('#forgot_password_form .ajax-loader').fadeIn('slow', function() {
 		$.ajax({
 			type: "POST",
-			url: "ajax-tab.php",
+			headers: { "cache-control": "no-cache" },
+			url: "ajax-tab.php" + '?rand=' + new Date().getTime(),
 			async: true,
 			dataType: "json",
 			data: {

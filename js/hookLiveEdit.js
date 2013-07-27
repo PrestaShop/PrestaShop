@@ -23,7 +23,7 @@ $(document).ready(function() {
 	$('a').each(function() {
 		var href = this.href;
 		var search = this.search;
-		var hrefAdd = 'live_edit&liveToken=' + get('liveToken') + '&ad=' + get('ad') + '&id_shop=' + get('id_shop');
+		var hrefAdd = 'live_edit&liveToken=' + get('liveToken') + '&ad=' + get('ad') + '&id_shop=' + get('id_shop') + '&id_employee=' + get('id_employee');
 		if (href != undefined && href != '#' && href.substr(0, baseDir.length) == baseDir)
 		{
 			if (search.length == 0)
@@ -66,7 +66,7 @@ $(document).ready(function() {
 	});
 	$('.add_module_live_edit').unbind('click').click(function()
 	{
-		$("#live_edit_feedback_str").html('<div style="padding:10px"><img src="img/loadingAnimation.gif"></div>');
+		$("#live_edit_feedback_str").html('<div style="text-align:center; padding: 30px;"><img src="' + baseDir + 'img/loadingAnimation.gif"></div>');
 		$("#fancy").attr('href', '#live_edit_feedback');
 		$("#fancy").trigger("click");
 		var id = $(this).attr('id');
@@ -161,14 +161,14 @@ function getHookableList() {
 	        	var errors = '';
 				for (error in jsonData.errors) //IE6 bug fix
 				if (error != 'indexOf')
-					errors += jsonData.errors[error] + "\n";
+					errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
 				alert(errors);
         }
         else
         	hookable_list = jsonData;// create and fill input array
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
-            $('#live_edit_feedback_str').html('<div class="live_edit_feed_back_ko"><img src="img/admin/error.png"><h3>TECHNICAL ERROR:</h3>' + loadFail + '<br><br><a style="margin:auto" class="button" href="#" onclick="closeFancybox();">' + close + '</a></div>');
+            $('#live_edit_feedback_str').html('<div class="live_edit_feed_back_ko" style="text-align:center; padding-top: 33px;"><img src="' + baseDir + 'img/admin/error.png"><h3>TECHNICAL ERROR:</h3>' + loadFail + '<br><br><a style="margin:auto" class="button" href="#" onclick="closeFancybox();">' + close + '</a></div>');
             $("#fancy").attr('href', '#live_edit_feedback');
             $("#fancy").trigger("click");
         }
@@ -204,7 +204,7 @@ function getHookableModuleList(hook) {
 function saveModulePosition()
 {
     $("input.dynamic-input-save-position").remove();
-    $("#live_edit_feedback_str").html('<div style="padding:10px"><img src="img/loadingAnimation.gif"></div>');
+    $("#live_edit_feedback_str").html('<div style="text-align:center; padding: 30px;"><img src="' + baseDir + 'img/loadingAnimation.gif"></div>');
     $("#fancy").attr('href', '#live_edit_feedback');
     $("#fancy").trigger("click");
     var str = '';
@@ -228,12 +228,12 @@ function saveModulePosition()
         dataType: 'json',
         data: datas,
         success: function(jsonData) {
-        $('#live_edit_feedback_str').html('<div class="live_edit_feed_back_ok"><img src="img/admin/ok2.png"><h3>' + saveOK + '</h3><a style="margin:auto" class="exclusive" href="#" onclick="closeFancybox();">' + close + '</a></div>');
+        $('#live_edit_feedback_str').html('<div class="live_edit_feed_back_ok" style="text-align:center; padding-top: 33px;"><img src="' + baseDir + 'img/admin/ok2.png"><h3>' + saveOK + '</h3><a style="margin:auto" class="exclusive" href="#" onclick="closeFancybox();">' + close + '</a></div>');
             timer = setTimeout("hideFeedback()", 3000);
             has_been_moved = false;
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
-            $('#live_edit_feedback_str').html('<div class="live_edit_feed_back_ko"><img src="img/admin/error.png"><h3>TECHNICAL ERROR:</h3>' + unableToSaveModulePosition + '<br><br><a style="margin:auto" class="button" href="#" onclick="closeFancybox();">' + close + '</a></div>');
+            $('#live_edit_feedback_str').html('<div class="live_edit_feed_back_ko" style="text-align:center; padding-top: 33px;"><img src="' + baseDir + 'img/admin/error.png"><h3>TECHNICAL ERROR:</h3>' + unableToSaveModulePosition + '<br><br><a style="margin:auto" class="button" href="#" onclick="closeFancybox();">' + close + '</a></div>');
         }
 }
 )

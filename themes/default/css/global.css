@@ -2,8 +2,6 @@
 	PRESTASHOP CSS
 ################################################################################################## */
 
-@import url("grid_prestashop.css");
-
 /* ****************************************************************************
 		reset
 **************************************************************************** */
@@ -22,6 +20,8 @@ sub{vertical-align:baseline}
 legend{color:#000}
 input,button,textarea,select,optgroup,option{font-family:inherit;font-size:inherit;font-style:inherit;font-weight:inherit}
 input,button,textarea,select{font-size:100%}
+
+.ie7 input, .ie7 select{line-height:18px}
 a {cursor:pointer}
 
 .clearfix:before,
@@ -61,6 +61,7 @@ body.content_only {
 
 /* positionnement ****************************************************************************** */
 .hidden {display:none}
+.f_left {float:left}
 .f_right {float:right}
 p.center {text-align:center}
 .clearBoth {clear:both}
@@ -79,7 +80,7 @@ h3 {
 	padding-bottom:20px;
 	font-size:16px
 }
-h4 {
+.title_block {
 	padding-bottom:20px;
 	font-size:14px
 }
@@ -104,7 +105,7 @@ p em {font-style:italic}
 	padding:10px;
 	border:1px solid #5cff74;
 	font-size:13px;
-	background: #d3ffab
+	background: #d3ffab;
 }
 .error {
 	margin:0 0 10px 0;
@@ -129,6 +130,17 @@ a, a:active, a:visited {
 }
 	a:hover {text-decoration:underline}
 
+	
+/* HACK IOS ipad, iphone */
+input[type="text"], input[type="email"], input[type="search"], input[type="password"], input[type="submit"], input[type="image"] {
+	-webkit-appearance:none;
+	-moz-appearance:none;
+	appearance:none;
+	-webkit-border-radius:0px !important;
+	-moz-border-radius:0px !important;
+	border-radius:0px !important;
+}
+	
 /*buttons ************************************************************************************** */
 input.button_mini, input.button_small, input.button, input.button_large,
 input.button_mini_disabled, input.button_small_disabled, input.button_disabled, input.button_large_disabled,
@@ -142,9 +154,9 @@ span.exclusive_mini, span.exclusive_small, span.exclusive, span.exclusive_large,
 	display:inline-block;
 	padding:5px 7px;
 	border:1px solid #cc9900;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	border-radius: 3px;
+	-moz-border-radius: 3px !important;
+	-webkit-border-radius: 3px !important;
+	border-radius: 3px !important;
 	font-weight:bold;
 	color:#000;
 	background:url(../img/bg_bt.gif) repeat-x 0 0 #f4b61b;
@@ -223,7 +235,7 @@ input.button_small, input.button_small_disabled, input.exclusive_small, input.ex
 input.button_disabled, input.exclusive_disabled, span.exclusive {
 	border:1px solid #ccc;
 	color:#999;
-	background:url(../img/bg_bt_2.gif) repeat-x 0 0 #f4b61b;
+	background:url(../img/bg_bt_2.gif) repeat-x 0 0 #CCCCCC;
 	cursor:default;
 }
 input.button_large, input.button_large_disabled, input.exclusive_large, input.exclusive_large_disabled, a.button_large, a.exclusive_large, span.button_large, span.exclusive_large, span.exclusive_large_disabled {
@@ -251,6 +263,7 @@ table.table_block {
 	border:1px solid #999;
 	border-bottom:none;
 	background:white;
+	border-collapse:inherit
 }
 table.std th,
 table.table_block th {
@@ -276,15 +289,16 @@ table.table_block  td {
 /* BLOCK .block ******************************************************************************** */
 .block {margin-bottom:20px}
 #footer .block {margin-bottom:0}
-	.block h4 {
+	.block .title_block, .block h4 {
 		padding:6px 11px;
 		font-size:12px;
 		color:#fff;
 		text-shadow:0 1px 0 #000;
 		text-transform:uppercase;
-		background:#383838
+		background:#383838;
+		font-weight: bold;
 	}
-		.block h4 a {color:#fff}
+		.block .title_block a, .block h4 a {color:#fff}
 	.block ul {list-style-type:none}
 		.block li.last {	border:none}
 			.block li a {
@@ -331,6 +345,8 @@ ul.footer_links li .icon {
 	#center_column .sortPagiBar strong {color:#000;}
 #center_column .sortPagiBar p {padding:0;}
 #center_column .sortPagiBar form {display:inline-block;}
+
+.ie7 #center_column .sortPagiBar form {display:inline;}
 
 .sortPagiBar #productsSortForm {float:right;}
 	.sortPagiBar select#selectPrductSort {
@@ -393,6 +409,10 @@ ul.pagination li.disabled span {color:#ccc}
 
 #pagination_previous {float:left}
 #pagination_next {float:right}
+
+.ie7 #pagination_previous,
+.ie7 #pagination_next {float:none}
+
 #pagination_previous a, #pagination_previous span,
 #pagination_next a, #pagination_next span {
 	padding:0 8px;
@@ -525,9 +545,10 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 ************************************************************************************************ */
 #header {position:relative}
 #header_logo {
-	float:left;
-	display:block;
-	margin-top:30px;
+	position: absolute;
+	left:0;
+	top: 30px;
+	z-index: 1;
 }
 
 #header_right {
@@ -566,12 +587,12 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 		width:175px
 	}
 	.blockcategories_footer {margin-left:0}
-#footer h4 {
+#footer .title_block {
 	padding-bottom: 10px;
 	text-transform:uppercase
 }
-#footer h4,
-#footer h4 a {
+#footer .title_block ,
+#footer .title_block  a {
 	font-weight:normal;
 	font-size:14px;
 	color:#fff
@@ -583,7 +604,7 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 #footer li a {color:#fff}
 
 #footer .myaccount {padding: 15px 10px}
-#footer .myaccount h4 {
+#footer .myaccount .title_block, #footer .myaccount h4 {
 	padding:0 0 10px 0;
 	background:none;
 	text-shadow:none
@@ -599,7 +620,6 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 .idTabs {
 	list-style-type: none;
 	margin-top: 20px;
-	padding:0 5px;
 	border-bottom: 8px solid #f7b900
 }
 ul.idTabs li {
@@ -688,7 +708,9 @@ ul.idTabs li {
 /*p.cart_navigation .multishipping-button { margin-right: 10px }*/
 
 #order-detail-content {margin-bottom:20px}
-
+#order-detail-content .customizationUploaded li,#order-detail-content .typedText li {
+	list-style: none;
+}
 table#cart_summary th {
 	padding:14px 12px;
 	color:#fff;
@@ -734,8 +756,12 @@ table#cart_summary tr ul {
 table#cart_summary .cart_product {
 	width:80px;
 	text-align:center
-}table#cart_summary tbody tr:last-child td {
+}
+table#cart_summary tbody tr:last-child td {
 	border-bottom: 1px solid #999;
+}
+table#cart_summary tbody tr td.cart_discount_delete {
+	padding-left: 34px;
 }
 table#cart_summary  .cart_product  img {border:1px solid #ccc}
 table#cart_summary .cart_description {
@@ -788,25 +814,35 @@ table#cart_summary .cart_total_price td.cart_voucher {
 
 table#cart_summary #total_price_container {
 	border-bottom:1px solid #999;
+	border-right: none;
 }
 
-.cart_voucher h4,
+.cart_voucher .title_block, .cart_voucher h4
 .cart_voucher p {float:left;}
-.cart_voucher h4 {
+.cart_voucher .title_block, .cart_voucher h4 {
 	margin-right:12px;
 	padding:5px 0;
 	font-size:13px
 }
 .cart_voucher p {padding-bottom:0;}
+
+.cart_voucher p.discount_name_block {float:left;}
 .cart_voucher #display_cart_vouchers {
 	clear:both;
-	line-height: 16px;
+	line-height: 20px;
 	color:#666;
+	padding-top:2px;
 	font-weight:normal;
 	border-top:1px dotted #ccc
 }
-.cart_voucher .title_offers {margin-top:10px}
-.cart_voucher #display_cart_vouchers span {font-weight:bold}
+.cart_voucher .title_offers {
+	margin-top:15px;
+	margin-bottom:5px
+}
+.cart_voucher #display_cart_vouchers span {
+	font-weight:bold;
+	cursor:pointer;
+}
 .cart_voucher input.discount_name {
 	padding:0 5px;
 	height:22px;
@@ -863,7 +899,7 @@ table#cart_summary .cart_total_price .total_price_container {
 	border:1px solid #999;
 	background:#fff
 }
-#order_carrier h4 {
+#order_carrier .title_block  {
 	padding:0 15px;
 	height: 29px;
 	font-weight: bold;
@@ -904,7 +940,7 @@ table#cart_summary .gift-icon {
 
 #authentication #create-account_form fieldset,
 #authentication #login_form fieldset {
-	height: 200px
+	min-height: 200px
 }
 
 #authentication #create-account_form .form_content,
@@ -922,7 +958,7 @@ table#cart_summary .gift-icon {
 	text-transform:uppercase;
 	background:url(../img/bg_form_h3.png) repeat-x 0 0 #989898
 }
-#create-account_form h4 {
+#create-account_form .title_block  {
 	padding-bottom:22px;
 	font-size:11px;
 	color:#333
@@ -950,7 +986,8 @@ table#cart_summary .gift-icon {
 	width:220px;/* 230 */
 	border:1px solid #ccc;
 	color:#666;
-	background:url(../img/bg_discount_name.png) repeat-x 0 0 #fff
+	background:url(../img/bg_discount_name.png) repeat-x 0 0 #fff;
+	line-height:20px;
 }
 
 #create-account_form #SubmitCreate,
@@ -1236,13 +1273,14 @@ a.iframe {font-weight:bold}
 #order-opc #opc_delivery_methods h3 {margin-top:20px;}
 #order-opc #opc_delivery_methods textarea {
 	height:60px;
-	width:755px;
+	width:723px;
 	border:1px solid #ccc
 }
-
+#order-opc #opc_delivery_methods #message {
+	width: 757px;
+}
 #order-opc #opc_payment_methods {margin-bottom:20px}
 #order-opc #opc_payment_methods #opc_payment_methods-content p{margin:0}
-
 .delivery_option_carrier td {width:200px}
 .delivery_option_carrier td + td {width:280px;}
 .delivery_option_carrier td + td + td {width:200px}
@@ -1375,7 +1413,7 @@ a.iframe {font-weight:bold}
 #addresses #center_column{width:757px}
 
 #address p.inline-infos {
-	margin:0 0 0 100px !important;
+	margin:0 0 0 265px !important;
 	font-size:12px;
 	color:#666;
 }
@@ -1387,13 +1425,13 @@ a.iframe {font-weight:bold}
 #address #left_column {display:none}
 #address #center_column{width:757px}
 
-form#add_adress {}
-#add_adress fieldset {
+form#add_address {}
+#add_address fieldset {
 	margin:0;
 	border:1px solid #ccc;
 	background:#F8F8F8
 }
-#add_adress h3 {
+#add_address h3 {
 	margin:0 0 15px 0;
 	padding:8px;
 	font-size:14px;
@@ -1401,55 +1439,56 @@ form#add_adress {}
 	text-transform:uppercase;
 	background:url(../img/bg_form_h3.png) repeat-x 0 0 #989898
 }
-#center_column #add_adress p {margin:0; padding:0 0 10px 0}
-#add_adress p.required {color:#222}
-#add_adress p.required  sup {color:#990000}
+#center_column #add_address p {margin:0; padding:0 0 10px 0}
+#add_address p.required {color:#222}
+#add_address p.required  sup {color:#990000}
 
-#add_adress p.text label,
-#add_adress p.password label,
-#add_adress p.select label,
-#add_adress p.select span,
-#add_adress p.textarea label {
+#add_address p.text label,
+#add_address p.password label,
+#add_address p.select label,
+#add_address p.select span,
+#add_address p.textarea label {
 	display:inline-block;
 	padding:6px 15px;
 	width:230px;/* 260 */
 	font-size:14px;
 	text-align:right
 }
-#add_adress p.text input,
-#add_adress p.password input,
-#add_adress p.select input {
+#add_address p.text input,
+#add_address p.password input,
+#add_address p.select input {
 	padding:0 5px;
 	height:22px;
 	width:360px;/* 370 */
 	border:1px solid #ccc;
 	font-size: 12px;
-	color:#666
+	color:#666;
+	line-height:22px
 }
-#add_adress p.checkbox input {
+#add_address p.checkbox input {
 	margin-left:260px;
 }
-#add_adress p.select select {
+#add_address p.select select {
 	margin-right:10px;
 	border:1px solid #ccc;
 	font-size: 12px;
 	color:#666
 }
-#add_adress p.textarea label {vertical-align:top}
-#add_adress p.textarea textarea {
+#add_address p.textarea label {vertical-align:top}
+#add_address p.textarea textarea {
 	height:80px;
 	width:370px;
 	border:1px solid #ccc;
 	font-size: 12px;
 	color:#666
 }
-#center_column  #add_adress p.submit2 {
+#center_column  #add_address p.submit2 {
 	margin-top:20px;
 	text-align:right
 }
 
-#add_adress span.form_info,
-#add_adress span.inline-infos {
+#add_address span.form_info,
+#add_address span.inline-infos {
 	display:block;
 	margin:5px 0 0 265px;
 	color:#666
@@ -1748,7 +1787,7 @@ ul#suppliers_list li .right_side {float:right;}
 /* ************************************************************************************************
 		addon customer privacy
 ************************************************************************************************ */
-#account-creation_form fieldset.customerprivacy label{
+#account-creation_form fieldset.customerprivacy label, fieldset.customerprivacy label{
 	padding-bottom:0;
 	font-size:14px;
 	text-align:left;
@@ -1938,6 +1977,7 @@ div.star_hover a, div.star a:hover { background-position: 0 -12px }
 .blockcategories_footer {
 	padding:15px 10px;
 }
+.blockcategories_footer .category_footer {float:left;clear:none;}
 .blockcategories_footer ul ul {display:none !important}
 
 
@@ -2000,10 +2040,13 @@ tr.subitem > td:first-child + td {
 	}
 
 
-.blockmanufacturer form {margin-top:10px;}
+.blockmanufacturer form {
+	margin-top: 10px;
+    text-align: center;
+    width: 200px;
+}
 .blockmanufacturer p {
 	padding:0;
-	text-align:center
 }
 
 /*************** Block LOGO PAYMENT ***************/
@@ -2061,8 +2104,15 @@ tr.subitem > td:first-child + td {
 		background:url(../../../modules/blocksupplier/img/arrow_right_2.png) no-repeat 10px 10px transparent
 	}
 
-.blocksupplier form {margin-top:10px;}
+.blocksupplier form {
+	margin-top: 10px;
+    text-align: center;
+    width: 200px;
+}
 .blocksupplier p {
 	padding:0;
-	text-align:center
 }
+
+.ie7 #featured-products_block_center .product_image span.new {top:110px;right:0;width:94%}
+.ie8 #featured-products_block_center .product_image span.new{top:110px;right:0;width:94%}
+.lt-ie6 #featured-products_block_center .product_image span.new {top:110px;right:0;width:94%}

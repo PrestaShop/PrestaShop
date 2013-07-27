@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,14 +19,12 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 /**
- * This class is currently only here for tests
- *
  * @since 1.5.0
  */
 class DbPDOCore extends Db
@@ -46,6 +44,19 @@ class DbPDOCore extends Db
 		return new PDO($dsn, $user, $password, array(PDO::ATTR_TIMEOUT => $timeout, PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true));
 	}
 	
+	public static function createDatabase($host, $user, $password, $dbname, $dropit = false)
+	{
+		try {
+			$link = DbPDO::_getPDO($host, $user, $password, false);
+			$success = $link->exec('CREATE DATABASE `'.str_replace('`', '\\`', $dbname).'`');
+			if ($dropit && ($link->exec('DROP DATABASE `'.str_replace('`', '\\`', $dbname).'`') !== false))
+				return true;
+		} catch (PDOException $e) {
+			return false;
+		}
+		return $success;
+	}
+	
 	/**
 	 * @see DbCore::connect()
 	 */
@@ -54,12 +65,12 @@ class DbPDOCore extends Db
 		try {
 			$this->link = $this->_getPDO($this->server, $this->user, $this->password, $this->database, 5);
 		} catch (PDOException $e) {
-			throw new PrestaShopDatabaseException(sprintf(Tools::displayError('Link to database cannot be established: %s'), $e->getMessage()));
+			die(sprintf(Tools::displayError('Link to database cannot be established: %s'), utf8_encode($e->getMessage())));
 		}
 
 		// UTF-8 support
 		if ($this->link->exec('SET NAMES \'utf8\'') === false)
-			throw new PrestaShopDatabaseException(Tools::displayError('PrestaShop Fatal error: no utf-8 support. Please check your server configuration.'));
+			die(Tools::displayError('PrestaShop Fatal error: no utf-8 support. Please check your server configuration.'));
 
 		return $this->link;
 	}
@@ -174,6 +185,28 @@ class DbPDOCore extends Db
 		return (bool)$result->fetch();
 	}
 
+	public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
+	{
+		try {
+			$link = DbPDO::_getPDO($server, $user, $pwd, $db, 5);
+		} catch (PDOException $e) {
+			return false;
+		}
+
+		$sql = '
+			CREATE TABLE `'.$prefix.'test` (
+			`test` tinyint(1) unsigned NOT NULL
+			) ENGINE=MyISAM';
+		$result = $link->query($sql);
+		if (!$result)
+		{
+			$error = $link->errorInfo();
+			return $error[2];
+		}
+		$link->query('DROP TABLE `'.$prefix.'test`');
+		return true;
+	}
+
 	/**
 	 * @see Db::checkConnection()
 	 */
@@ -184,19 +217,33 @@ class DbPDOCore extends Db
 		} catch (PDOException $e) {
 			return ($e->getCode() == 1049) ? 2 : 1;
 		}
-
-		if (strtolower($engine) == 'innodb')
-		{
-			$sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
-			$result = $link->query($sql);
-			if (!$result)
-				return 4;
-			$row = $result->fetch();
-			if (!$row || strtolower($row['Value']) != 'yes')
-				return 4;
-		}
 		unset($link);
 		return 0;
+	}
+	
+	public function getBestEngine()
+	{
+		$value = 'InnoDB';
+		
+		$sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
+		$result = $this->link->query($sql);
+		if (!$result)
+			$value = 'MyISAM';
+		$row = $result->fetch();
+		if (!$row || strtolower($row['Value']) != 'yes')
+			$value = 'MyISAM';
+		
+		/* MySQL >= 5.6 */
+		$sql = 'SHOW ENGINES';
+		$result = $this->link->query($sql);
+		while ($row = $result->fetch())
+			if ($row['Engine'] == 'InnoDB')
+			{
+				if (in_array($row['Support'], array('DEFAULT', 'YES')))
+					$value = 'InnoDB';
+				break;
+			}
+		return $value;
 	}
 
 	/**

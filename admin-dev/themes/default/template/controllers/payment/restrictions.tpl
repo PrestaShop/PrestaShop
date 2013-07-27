@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -34,10 +34,10 @@
 					{if $module->active}
 						<th>
 							{if $list['name_id'] != 'currency' || $module->currencies_mode == 'checkbox'}
-								<input type="hidden" id="checkedBox_{$list['name_id']}_{$module->name}" value="checked">
+								<input type="hidden" id="checkedBox_{$list['name_id']}_{$module->name}" value="checked"/>
 								<a href="javascript:checkPaymentBoxes('{$list['name_id']}', '{$module->name}')" style="text-decoration:none;">
 							{/if}
-							&nbsp;<img src="{$ps_base_uri}modules/{$module->name}/logo.gif" alt="{$module->name}" title="{$module->displayName}" />
+							&nbsp;<img src="{$ps_base_uri}modules/{$module->name}/logo.gif" alt="{$module->name}" title="{$module->displayName}"/>
 							{if $list['name_id'] != 'currency' || $module->currencies_mode == 'checkbox'}
 								</a>
 							{/if}
@@ -64,11 +64,9 @@
 								{$type = 'checkbox'}
 							{/if}
 							{if $type != 'null'}
-								<input type="checkbox" name="{$module->name}_{$list['name_id']}[]" value="{$item[$list['identifier']]}"
-									{if $item['check_list'][$key_module] == 'checked'}checked="checked"{/if} 
-								/>
+								<input type="{$type}" name="{$module->name}_{$list['name_id']}[]" value="{$item[$list['identifier']]}" {if $item['check_list'][$key_module] == 'checked'}checked="checked"{/if}/>
 							{else}
-								--
+                                <input type="hidden" name="{$module->name}_{$list['name_id']}[]" value="{$item[$list['identifier']]}"/>--
 							{/if}
 						</td>
 					{/if}

@@ -2,7 +2,7 @@
         <module>
             <name>watermark</name>
             <displayName><![CDATA[Watermark]]></displayName>
-            <version><![CDATA[0.2]]></version>
+            <version><![CDATA[0.3]]></version>
             <description><![CDATA[Protect image by watermark.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[administration]]></tab>

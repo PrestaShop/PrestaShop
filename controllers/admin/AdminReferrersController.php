@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -204,7 +204,7 @@ class AdminReferrersControllerCore extends AdminController
 				)
 			),
 			'desc' => array(
-				$this->l('Affiliates can access their own data with this name and password.'),
+				$this->l('Affiliates can access their data with this name and password.'),
 				$this->l('Front access:').' <a href="'.$uri.'modules/trackingfront/stats.php" style="font-style: italic;">'.$uri.'modules/trackingfront/stats.php</a>'
 			)
 		));
@@ -250,7 +250,7 @@ class AdminReferrersControllerCore extends AdminController
 
 		$this->fields_form[2] = array('form' => array(
 			'legend' => array(
-				'title' => $this->l('Technical information - Simple mode'),
+				'title' => $this->l('Technical information -- Simple mode.'),
 				'image' => '../img/admin/affiliation.png'
 			),
 			'help' => true,
@@ -296,7 +296,7 @@ class AdminReferrersControllerCore extends AdminController
 
 		$this->fields_form[3] = array('form' => array(
 			'legend' => array(
-				'title' => $this->l('Technical information - Expert mode'),
+				'title' => $this->l('Technical information -- Expert mode'),
 				'image' => '../img/admin/affiliation.png'
 			),
 			'input' => array(

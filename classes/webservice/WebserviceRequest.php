@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2010 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -55,7 +55,7 @@ class WebserviceRequestCore
 	 * PrestaShop Webservice Documentation URL
 	 * @var string
 	 */
-	protected $_docUrl = 'http://doc.prestashop.com/display/PS14/Using+the+REST+webservice';
+	protected $_docUrl = 'http://doc.prestashop.com/display/PS15/Using+the+PrestaShop+Web+Service';
 
 	/**
 	 * Set if the authentication key was checked
@@ -228,9 +228,12 @@ class WebserviceRequestCore
 			'categories' => array('description' => 'The product categories','class' => 'Category'),
 			'combinations' => array('description' => 'The product combinations','class' => 'Combination'),
 			'configurations' => array('description' => 'Shop configuration', 'class' => 'Configuration'),
+			'contacts' => array('description' => 'Shop contacts','class' => 'Contact'),
 			'countries' => array('description' => 'The countries','class' => 'Country'),
 			'currencies' => array('description' => 'The currencies', 'class' => 'Currency'),
 			'customers' => array('description' => 'The e-shop\'s customers','class' => 'Customer'),
+			'customer_threads' => array('description' => 'Customer services threads','class' => 'CustomerThread'),
+			'customer_messages' => array('description' => 'Customer services messages','class' => 'CustomerMessage'),
 			'deliveries' => array('description' => 'Product delivery', 'class' => 'Delivery'),
 			'groups' => array('description' => 'The customer\'s groups','class' => 'Group'),
 			'guests' => array('description' => 'The guests', 'class' => 'Guest'),
@@ -333,7 +336,7 @@ class WebserviceRequestCore
 			$id_country = (int)(isset($value['country']) ? $value['country'] : (Configuration::get('PS_COUNTRY_DEFAULT')));
 			$id_state = (int)(isset($value['state']) ? $value['state'] : 0);
 			$id_currency = (int)(isset($value['currency']) ? $value['currency'] : Configuration::get('PS_CURRENCY_DEFAULT'));
-			$id_group = (int)(isset($value['group']) ? $value['group'] : Configuration::get('_PS_DEFAULT_CUSTOMER_GROUP_'));
+			$id_group = (int)(isset($value['group']) ? $value['group'] : (int)Configuration::get('PS_CUSTOMER_GROUP'));
 			$quantity = (int)(isset($value['quantity']) ? $value['quantity'] : 1);
 			$use_tax = (int)(isset($value['use_tax']) ? $value['use_tax'] : Configuration::get('PS_TAX'));
 			$decimals = (int)(isset($value['decimals']) ? $value['decimals'] : Configuration::get('PS_PRICE_ROUND_MODE'));
@@ -527,9 +530,10 @@ class WebserviceRequestCore
 				}
 			}
 		}
-		return $this->returnOutput();
+		$return = $this->returnOutput();
 		unset($webservice_call);
-		unset ($display_errors);
+		unset($display_errors);
+		return $return;
 	}
 
 	protected function webserviceChecks()
@@ -1155,6 +1159,7 @@ class WebserviceRequestCore
 				$sorts = array($this->urlFragments['sort']);
 
 			$sql_sort .= ' ORDER BY ';
+
 			foreach ($sorts as $sort)
 			{
 				$delimiterPosition = strrpos($sort, '_');
@@ -1181,7 +1186,14 @@ class WebserviceRequestCore
 					$sql_sort .= 'main_i18n.`'.pSQL($this->resourceConfiguration['fields'][$fieldName]['sqlId']).'` '.$direction.', ';// ORDER BY main_i18n.`field` ASC|DESC
 				}
 				else
-					$sql_sort .= (isset($this->resourceConfiguration['retrieveData']['tableAlias']) ? $this->resourceConfiguration['retrieveData']['tableAlias'].'.' : '').'`'.pSQL($this->resourceConfiguration['fields'][$fieldName]['sqlId']).'` '.$direction.', ';// ORDER BY `field` ASC|DESC
+				{
+					$object = new $this->resourceConfiguration['retrieveData']['className']();
+					if ($object->isMultiShopField($this->resourceConfiguration['fields'][$fieldName]['sqlId']))
+						$table_alias = 'multi_shop_'.$this->resourceConfiguration['retrieveData']['table'];
+					else
+						$table_alias = '';
+					$sql_sort .= (isset($this->resourceConfiguration['retrieveData']['tableAlias']) ? '`'.bqSQL($this->resourceConfiguration['retrieveData']['tableAlias']).'`.' : '`'.bqSQL($table_alias).'`.').'`'.pSQL($this->resourceConfiguration['fields'][$fieldName]['sqlId']).'` '.$direction.', ';// ORDER BY `field` ASC|DESC
+				}
 			}
 			$sql_sort = rtrim($sql_sort, ', ')."\n";
 		}
@@ -1209,12 +1221,15 @@ class WebserviceRequestCore
 		return $filters;
 	}
 
-
-
 	public function getFilteredObjectList()
 	{
 		$objects = array();
 		$filters = $this->manageFilters();
+
+		/* If we only need to display the synopsis, analyzing the first row is sufficient */
+		if (isset($this->urlFragments['schema']) && in_array($this->urlFragments['schema'], array('blank', 'synopsis')))
+			$filters = array('sql_join' => '', 'sql_filter' => '', 'sql_sort' => '', 'sql_limit' => ' LIMIT 1');
+			
 		$this->resourceConfiguration['retrieveData']['params'][] = $filters['sql_join'];
 		$this->resourceConfiguration['retrieveData']['params'][] = $filters['sql_filter'];
 		$this->resourceConfiguration['retrieveData']['params'][] = $filters['sql_sort'];
@@ -1226,7 +1241,16 @@ class WebserviceRequestCore
 		if ($sqlObjects)
 		{
 			foreach ($sqlObjects as $sqlObject)
-				$objects[] = new $this->resourceConfiguration['retrieveData']['className']((int)$sqlObject[$this->resourceConfiguration['fields']['id']['sqlId']]);
+			{
+				if ($this->fieldsToDisplay == 'minimum')
+				{
+					$obj = new $this->resourceConfiguration['retrieveData']['className']();
+					$obj->id = (int)$sqlObject[$this->resourceConfiguration['fields']['id']['sqlId']];
+					$objects[] = $obj;
+				}
+				else
+					$objects[] = new $this->resourceConfiguration['retrieveData']['className']((int)$sqlObject[$this->resourceConfiguration['fields']['id']['sqlId']]);
+			}
 			return $objects;
 		}
 	}

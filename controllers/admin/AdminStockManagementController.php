@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -61,7 +61,7 @@ class AdminStockManagementControllerCore extends AdminController
 			),
 			'stock' => array(
 				'title' => $this->l('Quantity'),
-				'hint' => $this->l('Sum of quantities for all warehouses'),
+				'hint' => $this->l('Quantitity total for all warehouses.'),
 				'width' => 100,
 				'orderby' => false,
 				'filter' => false,
@@ -73,9 +73,9 @@ class AdminStockManagementControllerCore extends AdminController
 
 		// overrides confirmation messages specifically for this controller
 		$this->_conf = array(
-			1 => $this->l('The product was successfully added to stock'),
-			2 => $this->l('The product was successfully removed from the stock'),
-			3 => $this->l('The transfer was successfully completed'),
+			1 => $this->l('The product was successfully added to your stock.'),
+			2 => $this->l('The product was successfully removed from your stock.'),
+			3 => $this->l('The transfer was successfully completed.'),
 		);
 	}
 
@@ -104,11 +104,11 @@ class AdminStockManagementControllerCore extends AdminController
 		$this->_group = 'GROUP BY a.id_product';
 
 		// displays informations
-		$this->displayInformation($this->l('This interface allows you to manage the stocks of each of your products and their variations.').'<br />');
-		$this->displayInformation($this->l('Through this interface, you can increase quantities (add) and decrease quantities (delete) of products for a given warehouse.'));
-		$this->displayInformation($this->l('Furthermore, you can move quantities of (transfer) products between warehouses, or within one warehouse.').'<br />');
-		$this->displayInformation($this->l('Note that if you want to increase quantities of multiple products at once, you can use the "Supply orders" page under the "Stock" menu.').'<br />');
-		$this->displayInformation($this->l('Finally, you will be asked to specify the state of the quantity you will add:'));
+		$this->displayInformation($this->l('This interface allows you to manage product stock and their variations.').'<br />');
+		$this->displayInformation($this->l('Through this interface, you can increase and decrease product stock for an given warehouse.'));
+		$this->displayInformation($this->l('Furthermore, you can alter product quantities between warehouses, or within one warehouse.').'<br />');
+		$this->displayInformation($this->l('If you want to increase quantities of multiple products at once, you can use the "Supply orders" page under the "Stock" menu.').'<br />');
+		$this->displayInformation($this->l('Finally, you need to provide the quantity that you\'ll be adding:'));
 		$this->displayInformation($this->l('Usable for sale means that this quantity will be available in your shop(s),'));
 		$this->displayInformation($this->l('otherwise it will be considered reserved (i.e. for other purposes).'));
 
@@ -131,7 +131,7 @@ class AdminStockManagementControllerCore extends AdminController
 
 		// displays warning if no warehouses
 		if (!$warehouses_add)
-			$this->displayWarning($this->l('You have to have Warehouses before adding stock. See Stock/Warehouses'));
+			$this->displayWarning($this->l('You must choose a warehouses before adding stock. See Stock/Warehouses'));
 
 		//get currencies list
         $currencies = Currency::getCurrencies();
@@ -160,12 +160,12 @@ class AdminStockManagementControllerCore extends AdminController
 						$last_sm_unit_price_te = Tools::displayPrice((float)$last_sm['price_te'], $last_sm_currency);
 				}
 
-				$this->displayInformation($this->l('Note that rolling over the quantity and price fields will give you the details of the last stock movement.'));
+				$this->displayInformation($this->l('Rolling over the quantity and price fields will give you the details about the last stock movement.'));
 
 				// fields in the form
 				$this->fields_form[]['form'] = array(
 					'legend' => array(
-						'title' => $this->l('Add product to stock'),
+						'title' => $this->l('Add a product to your stock.'),
 						'image' => '../img/admin/add_stock.png'
 					),
 					'input' => array(
@@ -224,7 +224,7 @@ class AdminStockManagementControllerCore extends AdminController
 							'hint' => sprintf(
 										$this->l('Last physical quantity added : %s (%s)'),
 										($last_sm_quantity > 0 ? $last_sm_quantity : $this->l('N/A')),
-										($last_sm_quantity > 0 ? ($last_sm_quantity_is_usable >= 0 ? $this->l('usable') : $this->l('not usable')) : $this->l('N/A'))),
+										($last_sm_quantity > 0 ? ($last_sm_quantity_is_usable >= 0 ? $this->l('Usable') : $this->l('Not usable')) : $this->l('N/A'))),
 						),
 						array(
 							'type' => 'radio',
@@ -245,7 +245,7 @@ class AdminStockManagementControllerCore extends AdminController
 									'label' => $this->l('Disabled')
 								)
 							),
-							'desc' => $this->l('Is this quantity usable for sale on shops, or reserved in the warehouse for other purposes?')
+							'desc' => $this->l('Is this quantity ready to be displayed in your shop, or is it reserved in the warehouse for other purposes?')
 						),
 						array(
 							'type' => 'select',
@@ -257,7 +257,7 @@ class AdminStockManagementControllerCore extends AdminController
 								'id' => 'id_warehouse',
 								'name' => 'name'
 							),
-							'desc' => $this->l('Select the warehouse where you want to add the product into')
+							'desc' => $this->l('Please select the warehouse that you\'ll be adding products to. ')
 						),
 						array(
 							'type' => 'text',
@@ -279,7 +279,7 @@ class AdminStockManagementControllerCore extends AdminController
 								'id' => 'id_currency',
 								'name' => 'name'
 							),
-							'desc' => $this->l('The currency associated to the product unit price'),
+							'desc' => $this->l('The currency associated to the product unit price.'),
 						),
 						array(
 							'type' => 'select',
@@ -307,7 +307,7 @@ class AdminStockManagementControllerCore extends AdminController
 			case 'removestock' :
 				$this->fields_form[]['form'] = array(
 					'legend' => array(
-						'title' => $this->l('Remove product from stock'),
+						'title' => $this->l('Remove the product from your stock.'),
 						'image' => '../img/admin/remove_stock.png'
 					),
 					'input' => array(
@@ -388,7 +388,7 @@ class AdminStockManagementControllerCore extends AdminController
 								'id' => 'id_warehouse',
 								'name' => 'name'
 							),
-							'desc' => $this->l('Select the warehouse from where you want to remove the product')
+							'desc' => $this->l('Select the warehouse you\'d like to remove the product from.')
 						),
 						array(
 							'type' => 'select',
@@ -415,7 +415,7 @@ class AdminStockManagementControllerCore extends AdminController
 			case 'transferstock' :
 				$this->fields_form[]['form'] = array(
 					'legend' => array(
-						'title' => $this->l('Transfer product from one warehouse to another'),
+						'title' => $this->l('Transfer a product from one warehouse to another'),
 						'image' => '../img/admin/transfer_stock.png'
 					),
 					'input' => array(
@@ -475,11 +475,11 @@ class AdminStockManagementControllerCore extends AdminController
 								'id' => 'id_warehouse',
 								'name' => 'name'
 							),
-							'desc' => $this->l('Select the warehouse from which you want to transfer the product.')
+							'desc' => $this->l('Select the warehouse you\'d like to transfer the product from.')
 						),
 						array(
 							'type' => 'radio',
-							'label' => $this->l('Usable for sale in source warehouse?'),
+							'label' => $this->l('Is this product usable in your source warehouse?'),
 							'name' => 'usable_from',
 							'required' => true,
 							'class' => 't',
@@ -496,11 +496,11 @@ class AdminStockManagementControllerCore extends AdminController
 									'label' => $this->l('Disabled')
 								)
 							),
-							'desc' => $this->l('Is this a usable quantity for sale?')
+							'desc' => $this->l('Is this the usable quantity for sale?')
 						),
 						array(
 							'type' => 'select',
-							'label' => $this->l('Destination Warehouse:'),
+							'label' => $this->l('Destination warehouse:'),
 							'name' => 'id_warehouse_to',
 							'required' => true,
 							'options' => array(
@@ -508,11 +508,11 @@ class AdminStockManagementControllerCore extends AdminController
 								'id' => 'id_warehouse',
 								'name' => 'name'
 							),
-							'desc' => $this->l('Select the warehouse to which to transfer the product.')
+							'desc' => $this->l('Select the warehouse you\'d like to transfer your product(s) to. ')
 						),
 						array(
 							'type' => 'radio',
-							'label' => $this->l('Usable for sale in destination warehouse?'),
+							'label' => $this->l('Is this product for sale in your destination warehouse?'),
 							'name' => 'usable_to',
 							'required' => true,
 							'class' => 't',
@@ -529,7 +529,7 @@ class AdminStockManagementControllerCore extends AdminController
 									'label' => $this->l('Disabled')
 								)
 							),
-							'desc' => $this->l('Do you want it to be usable for sale?')
+							'desc' => $this->l('Do you want it to be for sale/useable?')
 						),
 					),
 					'submit' => array(
@@ -555,7 +555,7 @@ class AdminStockManagementControllerCore extends AdminController
 		if (Tools::isSubmit('addStock') && !($this->tabAccess['add'] === '1'))
 			$this->errors[] = Tools::displayError('You do not have the required permission to add stock.');
 		if (Tools::isSubmit('removeStock') && !($this->tabAccess['delete'] === '1'))
-			$this->errors[] = Tools::displayError('You do not have the required permission to delete stock.');
+			$this->errors[] = Tools::displayError('You do not have the required permission to delete stock');
 		if (Tools::isSubmit('transferStock') && !($this->tabAccess['edit'] === '1'))
 			$this->errors[] = Tools::displayError('You do not have the required permission to transfer stock.');
 
@@ -680,11 +680,11 @@ class AdminStockManagementControllerCore extends AdminController
 					$usable_quantity_in_stock = (int)$stock_manager->getProductPhysicalQuantities($id_product, $id_product_attribute, array($warehouse->id), true);
 					$not_usable_quantity = ($physical_quantity_in_stock - $usable_quantity_in_stock);
 					if ($usable_quantity_in_stock < $quantity)
-						$this->errors[] = sprintf(Tools::displayError('You don\'t have enough usable quantity. Could not remove %d out of %d.'), (int)$quantity, (int)$usable_quantity_in_stock);
+						$this->errors[] = sprintf(Tools::displayError('You don\'t have enough usable quantity. Cannot remove %d out of %d.'), (int)$quantity, (int)$usable_quantity_in_stock);
 					else if ($not_usable_quantity < $quantity)
-						$this->errors[] = sprintf(Tools::displayError('You don\'t have enough quantity (not usable). Could not remove %d out of %d.'), (int)$quantity, (int)$not_usable_quantity);
+						$this->errors[] = sprintf(Tools::displayError('You don\'t have enough usable quantity. Cannot remove %d out of %d.'), (int)$quantity, (int)$not_usable_quantity);
 					else
-						$this->errors[] = Tools::displayError('It is not possible to remove the specified quantity or an error occurred. No stock was removed.');
+						$this->errors[] = Tools::displayError('It is not possible to remove the specified quantity. Therefore no stock was removed.');
 				}
 			}
 		}
@@ -704,13 +704,13 @@ class AdminStockManagementControllerCore extends AdminController
 			// get usable flag for source warehouse
 			$usable_from = Tools::getValue('usable_from', null);
 			if (is_null($usable_from))
-				$this->errors[] = Tools::displayError('You have to specify if the product quantity is usable for sale on shops in source warehouse.');
+				$this->errors[] = Tools::displayError('You have to specify if the product quantity in your source warehous(es) is ready for sale.');
 			$usable_from = (bool)$usable_from;
 
 			// get usable flag for destination warehouse
 			$usable_to = Tools::getValue('usable_to', null);
 			if (is_null($usable_to))
-				$this->errors[] = Tools::displayError('You have to specify if the product quantity is usable for sale on shops in destination warehouse.');
+				$this->errors[] = Tools::displayError('You have to specify if the product quantity in your destination warehous(es) is ready for sale.');
 			$usable_to = (bool)$usable_to;
 
 			// if we can process stock transfers
@@ -732,7 +732,7 @@ class AdminStockManagementControllerCore extends AdminController
 				if ($is_transfer)
 					Tools::redirectAdmin($redirect.'&conf=3');
 				else
-					$this->errors[] = Tools::displayError('It is not possible to transfer the specified quantity, or an error occurred. No stock was transferred.');
+					$this->errors[] = Tools::displayError('It is not possible to transfer the specified quantity. No stock was transferred.');
 			}
 		}
 	}
@@ -786,19 +786,19 @@ class AdminStockManagementControllerCore extends AdminController
 		if (Tools::isSubmit('addstock'))
 		{
 			$this->display = 'addstock';
-			$this->toolbar_title = $this->l('Stock: Add product');
+			$this->toolbar_title = $this->l('Stock: Add a product');
 		}
 
 		if (Tools::isSubmit('removestock'))
 		{
 			$this->display = 'removestock';
-			$this->toolbar_title = $this->l('Stock: Remove product');
+			$this->toolbar_title = $this->l('Stock: Remove a product');
 		}
 
 		if (Tools::isSubmit('transferstock'))
 		{
 			$this->display = 'transferstock';
-			$this->toolbar_title = $this->l('Stock: Transfer product');
+			$this->toolbar_title = $this->l('Stock: Transfer a product');
 		}
 	}
 
@@ -952,7 +952,7 @@ class AdminStockManagementControllerCore extends AdminController
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 		{
-			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management prior to use this feature.');
+			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management prior to using this feature.');
 			return false;
 		}
 		
@@ -1060,8 +1060,8 @@ class AdminStockManagementControllerCore extends AdminController
 					{
 						$helper->fields_value['id_warehouse_from'] = Tools::getValue('id_warehouse_from', '');
 						$helper->fields_value['id_warehouse_to'] = Tools::getValue('id_warehouse_to', '');
-						$helper->fields_value['usable_from'] = Tools::getValue('usable_from', '');
-						$helper->fields_value['usable_to'] = Tools::getValue('usable_to', '');
+						$helper->fields_value['usable_from'] = Tools::getValue('usable_from', '1');
+						$helper->fields_value['usable_to'] = Tools::getValue('usable_to', '1');
 					}
 
 					$this->content .= $helper->generateForm($this->fields_form);
@@ -1071,7 +1071,7 @@ class AdminStockManagementControllerCore extends AdminController
 					));
 				}
 				else
-					$this->errors[] = Tools::displayError('The specified product is not valid');
+					$this->errors[] = Tools::displayError('The product specified is not valid.');
 			}
 		}
 		else
@@ -1148,7 +1148,7 @@ class AdminStockManagementControllerCore extends AdminController
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 		{
-			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management prior to use this feature.');
+			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management prior to using this feature.');
 			return false;
 		}
 		parent::initProcess();	

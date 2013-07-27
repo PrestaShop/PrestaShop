@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -32,11 +32,36 @@
 	{hook h=$hookName}
 {/if}
 
-
-
-<form method="post" action="{$action}" class="form">
-
+<form method="post" action="{$currentIndex}&{$identifier}&token={$token}&id_tax_rules_group={$id_tax_rules_group}&updatetax_rules_group#{$table}" class="form">
+	<input type="hidden" id="submitFilter{$table}" name="submitFilter{$table}" value="0"/>
 	<table class="table_grid">
+		<tr>
+			<td style="vertical-align: bottom;">
+				<span style="float: left;">
+					{if $page > 1}
+						<input type="image" src="../img/admin/list-prev2.gif" onclick="getE('submitFilter{$table}').value=1"/>&nbsp;
+						<input type="image" src="../img/admin/list-prev.gif" onclick="getE('submitFilter{$table}').value={$page - 1}"/>
+					{/if}
+					{l s='Page'} <b>{$page}</b> / {$total_pages}
+					{if $page < $total_pages}
+						<input type="image" src="../img/admin/list-next.gif" onclick="getE('submitFilter{$table}').value={$page + 1};"/>&nbsp;
+						<input type="image" src="../img/admin/list-next2.gif" onclick="getE('submitFilter{$table}').value={$total_pages}"/>
+					{/if}
+					| {l s='Display'}
+					<select name="pagination" onchange="submit()">
+						{* Choose number of results per page *}
+						{foreach $pagination AS $value}
+							<option value="{$value|intval}"{if $selected_pagination == $value} selected="selected" {elseif $selected_pagination == NULL && $value == $pagination[1]} selected="selected2"{/if}>{$value|intval}</option>
+						{/foreach}
+					</select>
+					/ {$list_total} {l s='result(s)'}
+				</span>
+				<span style="float: right;">
+					<input type="submit" name="submitReset{$table}" value="{l s='Reset'}" class="button" />
+				</span>
+				<span class="clear"></span>
+			</td>
+		</tr>
 		<tr>
 			<td>
 				<table

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop 
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -60,7 +60,7 @@ class EditorialClass extends ObjectModel
 			// Lang fields
 			'body_title' =>				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName'),
 			'body_subheading' =>		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName'),
-			'body_paragraph' =>			array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
+			'body_paragraph' =>			array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isString'),
 			'body_logo_subheading' =>	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName'),
 		)
 	);
@@ -68,10 +68,7 @@ class EditorialClass extends ObjectModel
 	static public function getByIdShop($id_shop)
 	{
 		$id = Db::getInstance()->getValue('SELECT `id_editorial` FROM `'._DB_PREFIX_.'editorial` WHERE `id_shop` ='.(int)$id_shop);
-		if ($id)
-			return new EditorialClass((int)$id);
-		else
-			return false;
+		return new EditorialClass($id);
 	}
 
 	public function copyFromPost()

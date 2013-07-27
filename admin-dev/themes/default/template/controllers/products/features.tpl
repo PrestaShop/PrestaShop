@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -28,8 +28,8 @@
 	<h4>{l s='Assign features to this product:'}</h4>
 	<div class="separation"></div>
 				<ul>
-					<li>{l s='You can specify a value for each relevant feature regarding this product, empty fields will not be displayed.'}</li>
-					<li>{l s='You can either create a specific value or select among existing pre-defined values you added previously.'}</li>
+					<li>{l s='You can specify a value for each relevant feature regarding this product. Empty fields will not be displayed.'}</li>
+					<li>{l s='You can either create a specific value, or select among the existing pre-defined values you\'ve previously added.'}</li>
 				</ul>
 			</td>
 		</tr>
@@ -87,7 +87,7 @@
 	</tr>
 	
 	{foreachelse}
-		<tr><td colspan="3" style="text-align:center;">{l s='No features defined'}</td></tr>
+		<tr><td colspan="3" style="text-align:center;">{l s='No features have been defined'}</td></tr>
 	{/foreach}
 	
 	</table>

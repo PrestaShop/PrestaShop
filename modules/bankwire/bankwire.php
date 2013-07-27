@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -40,7 +40,7 @@ class BankWire extends PaymentModule
 	{
 		$this->name = 'bankwire';
 		$this->tab = 'payments_gateways';
-		$this->version = '0.5';
+		$this->version = '0.6';
 		$this->author = 'PrestaShop';
 		
 		$this->currencies = true;
@@ -57,12 +57,12 @@ class BankWire extends PaymentModule
 		parent::__construct();
 
 		$this->displayName = $this->l('Bank Wire');
-		$this->description = $this->l('Accept payments by bank wire.');
-		$this->confirmUninstall = $this->l('Are you sure you want to delete your details?');
+		$this->description = $this->l('Accept payments for your products via bank wire.');
+		$this->confirmUninstall = $this->l('Are you sure about removing these details?');
 		if (!isset($this->owner) || !isset($this->details) || !isset($this->address))
-			$this->warning = $this->l('Account owner and details must be configured in order to use this module correctly.');
+			$this->warning = $this->l('Account owner and account details must be configured before using this module.');
 		if (!count(Currency::checkPaymentCurrencies($this->id)))
-			$this->warning = $this->l('No currency set for this module');
+			$this->warning = $this->l('No currency has been set for this module.');
 
 		$this->extra_mail_vars = array(
 										'{bankwire_owner}' => Configuration::get('BANK_WIRE_OWNER'),
@@ -112,9 +112,9 @@ class BankWire extends PaymentModule
 
 	private function _displayBankWire()
 	{
-		$this->_html .= '<img src="../modules/bankwire/bankwire.jpg" style="float:left; margin-right:15px;"><b>'.$this->l('This module allows you to accept payments by bank wire.').'</b><br /><br />
-		'.$this->l('If the client chooses this payment mode, the order will change its status into a \'Waiting for payment\' status.').'<br />
-		'.$this->l('Therefore, you must manually confirm the order as soon as you receive the wire.').'<br /><br /><br />';
+		$this->_html .= '<img src="../modules/bankwire/bankwire.jpg" style="float:left; margin-right:15px;" width="86" height="49"><b>'.$this->l('This module allows you to accept secure payments by bank wire.').'</b><br /><br />
+		'.$this->l('If the client chooses to pay by bank wire, the order\'s status will change to "Waiting for Payment."').'<br />
+		'.$this->l('That said, you must manually confirm the order upon receiving the bank wire. ').'<br /><br /><br />';
 	}
 
 	private function _displayForm()
@@ -124,13 +124,13 @@ class BankWire extends PaymentModule
 			<fieldset>
 			<legend><img src="../img/admin/contact.gif" />'.$this->l('Contact details').'</legend>
 				<table border="0" width="500" cellpadding="0" cellspacing="0" id="form">
-					<tr><td colspan="2">'.$this->l('Please specify the bank wire account details for customers').'.<br /><br /></td></tr>
+					<tr><td colspan="2">'.$this->l('Please specify the bank wire account details for customers.').'.<br /><br /></td></tr>
 					<tr><td width="130" style="height: 35px;">'.$this->l('Account owner').'</td><td><input type="text" name="owner" value="'.htmlentities(Tools::getValue('owner', $this->owner), ENT_COMPAT, 'UTF-8').'" style="width: 300px;" /></td></tr>
 					<tr>
 						<td width="130" style="vertical-align: top;">'.$this->l('Details').'</td>
 						<td style="padding-bottom:15px;">
 							<textarea name="details" rows="4" cols="53">'.htmlentities(Tools::getValue('details', $this->details), ENT_COMPAT, 'UTF-8').'</textarea>
-							<p>'.$this->l('Such as bank branch, IBAN number, BIC, etc.').'</p>
+							<p>'.$this->l('Such as bank branch, IBAN number, BIC, etc...').'</p>
 						</td>
 					</tr>
 					<tr>
@@ -177,6 +177,7 @@ class BankWire extends PaymentModule
 
 		$this->smarty->assign(array(
 			'this_path' => $this->_path,
+			'this_path_bw' => $this->_path,
 			'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'
 		));
 		return $this->display(__FILE__, 'payment.tpl');

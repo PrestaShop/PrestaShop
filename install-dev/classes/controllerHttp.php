@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -29,7 +29,7 @@ abstract class InstallControllerHttp
 	/**
 	 * @var array List of installer steps
 	 */
-	protected static $steps = array('welcome', 'system', 'database', 'configure', 'process');
+	protected static $steps = array('welcome', 'license', 'system', 'configure', 'database', 'process');
 
 	protected static $instances = array();
 
@@ -95,6 +95,11 @@ abstract class InstallControllerHttp
 
 	final public static function execute()
 	{
+		if (Tools::getValue('compile_templates'))
+		{
+			require_once (_PS_INSTALL_CONTROLLERS_PATH_.'http/smarty_compile.php');
+			exit;
+		}
 		// Include all controllers
 		foreach (self::$steps as $step)
 		{
@@ -269,7 +274,10 @@ abstract class InstallControllerHttp
 	 */
 	public function findNextStep()
 	{
-		return (isset(self::$steps[$this->getStepOffset($this->step) + 1])) ? self::$steps[$this->getStepOffset($this->step) + 1] : false;
+		$nextStep = (isset(self::$steps[$this->getStepOffset($this->step) + 1])) ? self::$steps[$this->getStepOffset($this->step) + 1] : false;
+		if ($nextStep == 'system' && self::$instances[$nextStep]->validate())
+			$nextStep = self::$instances[$nextStep]->findNextStep();
+		return $nextStep;
 	}
 
 	/**

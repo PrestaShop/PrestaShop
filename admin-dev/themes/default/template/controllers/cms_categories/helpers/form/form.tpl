@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,13 +18,26 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 {extends file="helpers/form/form.tpl"}
-
+{block name="input"}
+	{if $input.name == "link_rewrite"}
+		<script type="text/javascript">
+		{if isset($PS_ALLOW_ACCENTED_CHARS_URL) && $PS_ALLOW_ACCENTED_CHARS_URL}
+			var PS_ALLOW_ACCENTED_CHARS_URL = 1;
+		{else}
+			var PS_ALLOW_ACCENTED_CHARS_URL = 0;
+		{/if}
+		</script>
+		{$smarty.block.parent}
+	{else}
+		{$smarty.block.parent}
+	{/if}
+{/block}
 {block name="input"}
 	{if $input.type == 'select_category'}
 		<select name="id_parent">

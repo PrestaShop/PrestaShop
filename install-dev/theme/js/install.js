@@ -19,4 +19,20 @@ $(document).ready(function()
 	});
 
 	$('select.chosen').chosen();
+	
+	// try to pre-compile the smarty templates	
+	function compile_smarty_templates(bo)
+	{
+		$.ajax(
+		{
+			url: 'index.php',
+			data: {
+				'compile_templates': 1,
+				'bo':bo
+			},
+			global: false
+		});
+	}
+	compile_smarty_templates(1);
+	compile_smarty_templates(0);
 });

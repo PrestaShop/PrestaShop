@@ -1,5 +1,5 @@
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -38,9 +38,9 @@ function loadScene(id_scene){
 function onSceneMove(){
 	if (next_scene_is_at_right) current_move++;
 	else current_move--;
-	if (current_move == nb_move_available - 1)	$('#scenes .next').fadeOut();
+	if (current_move === nb_move_available - 1)	$('#scenes .next').fadeOut();
 	else $('#scenes .next:hidden').fadeIn().css('display','block');
-	if (current_move == 0) $('#scenes .prev').fadeOut().css('display','block');
+	if (current_move === 0) $('#scenes .prev').fadeOut().css('display','block');
 	else $('#scenes .prev').fadeIn().css('display','block');
 	return true;
 }

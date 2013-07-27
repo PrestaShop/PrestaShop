@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,37 +19,26 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 /**
- * Step 1 : display agrement form
+ * Step 1 : display language form
  */
 class InstallControllerHttpWelcome extends InstallControllerHttp
 {
-	/**
-	 * Process welcome form
-	 *
-	 * @see InstallAbstractModel::process()
-	 */
 	public function processNextStep()
 	{
-		$this->session->licence_agrement = Tools::getValue('licence_agrement');
-		$this->session->configuration_agrement = Tools::getValue('configuration_agrement');
+
 	}
 
-	/**
-	 * Licence agrement must be checked to validate this step
-	 *
-	 * @see InstallAbstractModel::validate()
-	 */
 	public function validate()
 	{
-		return $this->session->licence_agrement;
+		return true;
 	}
-
+	
 	/**
 	 * Change language
 	 */

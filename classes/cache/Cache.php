@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -144,7 +144,7 @@ abstract class CacheCore
 	 */
 	public function set($key, $value, $ttl = 0)
 	{
-		if ($this->_set($key, $value))
+		if ($this->_set($key, $value, $ttl))
 		{
 			if ($ttl < 0)
 				$ttl = 0;
@@ -205,7 +205,6 @@ abstract class CacheCore
 			foreach ($this->keys as $k => $ttl)
 				if (preg_match('#^'.$pattern.'$#', $k))
 					$keys[] = $k;
-
 		}
 
 		// Delete keys
@@ -235,13 +234,13 @@ abstract class CacheCore
 
 		if (is_null($this->sql_tables_cached))
 		{
-			$this->sql_tables_cached = $this->get(self::SQL_TABLES_NAME);
+			$this->sql_tables_cached = $this->get(_COOKIE_IV_.self::SQL_TABLES_NAME);
 			if (!is_array($this->sql_tables_cached))
 				$this->sql_tables_cached = array();
 		}
 
 		// Store query results in cache if this query is not already cached
-		$key = md5($query);
+		$key = md5(_COOKIE_IV_.$query);
 		if ($this->exists($key))
 			return true;
 		$this->set($key, $result);
@@ -251,7 +250,7 @@ abstract class CacheCore
 			foreach ($tables as $table)
 				if (!isset($this->sql_tables_cached[$table][$key]))
 					$this->sql_tables_cached[$table][$key] = true;
-		$this->set(self::SQL_TABLES_NAME, $this->sql_tables_cached);
+		$this->set(_COOKIE_IV_.self::SQL_TABLES_NAME, $this->sql_tables_cached);
 	}
 
 	protected function getTables($string)
@@ -271,7 +270,7 @@ abstract class CacheCore
 	{
 		if (is_null($this->sql_tables_cached))
 		{
-			$this->sql_tables_cached = $this->get(self::SQL_TABLES_NAME);
+			$this->sql_tables_cached = $this->get(_COOKIE_IV_.self::SQL_TABLES_NAME);
 			if (!is_array($this->sql_tables_cached))
 				$this->sql_tables_cached = array();
 		}
@@ -287,7 +286,7 @@ abstract class CacheCore
 					}
 					unset($this->sql_tables_cached[$table]);
 				}
-		$this->set(self::SQL_TABLES_NAME, $this->sql_tables_cached);
+		$this->set(_COOKIE_IV_.self::SQL_TABLES_NAME, $this->sql_tables_cached);
 	}
 
 	/**
@@ -326,7 +325,7 @@ abstract class CacheCore
 
 	public static function clean($key)
 	{
-		if (strpos($key, '*'))
+		if (strpos($key, '*') !== false)
 		{
 			$regexp = str_replace('\\*', '.*', preg_quote($key, '#'));
 			foreach (array_keys(Cache::$local) as $key)

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -145,7 +145,8 @@ class AdminCountriesControllerCore extends AdminController
 			array('address2'),
 			array('postcode', 'city'),
 			array('Country:name'),
-			array('phone'));
+			array('phone'),
+			array('phone_mobile'));
 
 		foreach ($default_layout_tab as $line)
 			$default_layout .= implode(' ', $line)."\r\n";
@@ -174,7 +175,7 @@ class AdminCountriesControllerCore extends AdminController
 					'maxlength' => 3,
 					'class' => 'uppercase',
 					'required' => true,
-					'desc' => $this->l('2- or 3-letter ISO code (e.g. US for United States)').'.
+					'desc' => $this->l('Two -- or three -- letter ISO code (e.g. U.S. for United States)').'.
 							<a href="http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm" target="_blank">'.
 								$this->l('Official list here').'
 							</a>.'
@@ -212,11 +213,11 @@ class AdminCountriesControllerCore extends AdminController
 						'id' => 'id_zone',
 						'name' => 'name'
 					),
-					'desc' => $this->l('Geographical zone where country is located')
+					'desc' => $this->l('Geographical region')
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Need zip code:'),
+					'label' => $this->l('Need zip/postal code:'),
 					'name' => 'need_zip_code',
 					'required' => false,
 					'class' => 't',
@@ -236,11 +237,11 @@ class AdminCountriesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Zip code format:'),
+					'label' => $this->l('Zip/post code format:'),
 					'name' => 'zip_code_format',
 					'class' => 'uppercase',
 					'required' => true,
-					'desc' => $this->l('Zip Code format (L for a letter, N for a number and C for the Iso code), e.g. NNNNN for the United States. No verification if undefined')
+					'desc' => $this->l('Zip Code format (L for a letter, N for a number and C for the ISO code). For example, NNNNN for the United States. No verification if undefined.')
 				),
 				array(
 					'type' => 'address_layout',
@@ -251,6 +252,26 @@ class AdminCountriesControllerCore extends AdminController
 					'encoding_default_layout' => urlencode($default_layout),
 					'display_valid_fields' => $this->displayValidFields()
 				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Address Standardization:'),
+					'name' => 'standardization',
+					'required' => false,
+					'class' => 't',
+					'is_bool' => true,
+					'values' => array(
+						array(
+							'id' => 'standardization_on',
+							'value' => 1,
+							'label' => $this->l('Enabled')
+						),
+						array(
+							'id' => 'standardization_off',
+							'value' => 0,
+							'label' => $this->l('Disabled')
+						)
+					),
+				),					
 				array(
 					'type' => 'radio',
 					'label' => $this->l('Active:'),
@@ -270,11 +291,11 @@ class AdminCountriesControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Display this country to your customer (the country will always be displayed in the back office)')
-				),
+					'desc' => $this->l('Display this country to your customers (the selected country will always be displayed in the Back Office)')
+				),			
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Contains states:'),
+					'label' => $this->l('Contains following  states:'),
 					'name' => 'contains_states',
 					'required' => false,
 					'class' => 't',
@@ -293,7 +314,7 @@ class AdminCountriesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Need Tax identification number?'),
+					'label' => $this->l('Do you need a tax identification number?'),
 					'name' => 'need_identification_number',
 					'required' => false,
 					'class' => 't',
@@ -330,6 +351,7 @@ class AdminCountriesControllerCore extends AdminController
 					)
 				)
 			)
+			
 		);
 
 		if (Shop::isFeatureActive())
@@ -342,10 +364,13 @@ class AdminCountriesControllerCore extends AdminController
 		}
 
 		$this->fields_form['submit'] = array(
-			'title' => $this->l('   Save   '),
+			'title' => $this->l('Save   '),
 			'class' => 'button'
 		);
-
+		
+		if ($this->object->iso_code == 'US')
+			$this->object->standardization = Configuration::get('PS_TAASC');
+		
 		return parent::renderForm();
 	}
 
@@ -354,14 +379,17 @@ class AdminCountriesControllerCore extends AdminController
 		if (!Tools::getValue('id_'.$this->table))
 		{
 			if (Validate::isLanguageIsoCode(Tools::getValue('iso_code')) && Country::getByIso(Tools::getValue('iso_code')))
-				$this->errors[] = Tools::displayError('This ISO code already exists, you cannot create two country with the same ISO code');
+				$this->errors[] = Tools::displayError('This ISO code already exists.You cannot create two countries with the same ISO code.');
 		}
 		else if (Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
 		{
 			$id_country = Country::getByIso(Tools::getValue('iso_code'));
 			if (!is_null($id_country) && $id_country != Tools::getValue('id_'.$this->table))
-				$this->errors[] = Tools::displayError('This ISO code already exists, you cannot create two country with the same ISO code');
+				$this->errors[] = Tools::displayError('This ISO code already exists.You cannot create two countries with the same ISO code.');
 		}
+		
+		if (Tools::isSubmit('standardization'))
+			Configuration::updateValue('PS_TAASC', (bool)Tools::getValue('standardization', false));	
 
 		if (!count($this->errors))
 			$res = parent::postProcess();
@@ -396,7 +424,7 @@ class AdminCountriesControllerCore extends AdminController
 				}
 
 				if (!$save_status)
-					$this->errors[] = Tools::displayError('Invalid address layout'.Db::getInstance()->getMsgError());
+					$this->errors[] = Tools::displayError('Invalid address layout '.Db::getInstance()->getMsgError());
 			}
 			unset($tmp_addr_format);
 		}
@@ -406,10 +434,10 @@ class AdminCountriesControllerCore extends AdminController
 	
 	public function processStatus()
 	{
-		if (Validate::isLoadedObject($object = $this->loadObject()))
-			Country::addModuleRestrictions(array(), array(array('id_country' => $object->id)), array());
-		
 		parent::processStatus();
+		if (Validate::isLoadedObject($object = $this->loadObject()) &&  $object->active == 1)
+			return Country::addModuleRestrictions(array(), array(array('id_country' => $object->id)), array());				
+		return false;
 	}
 	
 	public function processBulkStatusSelection($way)
@@ -442,7 +470,7 @@ class AdminCountriesControllerCore extends AdminController
 			$html .= '<li>
 				<a href="javascript:void(0);" onClick="displayAvailableFields(\''.$class_name.'\')">'.$class_name.'</a>';
 			foreach (AddressFormat::getValidateFields($class_name) as $name)
-				$fields[] = '<a style="color:#4B8;" href="javascript:void(0);" class="addPattern" id="'.$class_name.':'.$name.'">
+				$fields[] = '<a style="color:#4B8;" href="javascript:void(0);" class="addPattern" id="'.($class_name == 'Address' ? $name : $class_name.':'.$name).'">
 					'.$name.'</a>';
 			$html .= '
 				<div class="availableFieldsList" id="availableListFieldsFor_'.$class_name.'" style="width:300px;">

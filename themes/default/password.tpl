@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,12 +18,12 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture name=path}<a href="{$link->getPageLink('authentication', true)}" title="{l s='Authentication'}" rel="nofollow">{l s='Authentication'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Forgot your password'}{/capture}
+{capture name=path}<a href="{$link->getPageLink('authentication', true)|escape:'html'}" title="{l s='Authentication'}" rel="nofollow">{l s='Authentication'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Forgot your password'}{/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
 <h1>{l s='Forgot your password?'}</h1>
@@ -31,15 +31,15 @@
 {include file="$tpl_dir./errors.tpl"}
 
 {if isset($confirmation) && $confirmation == 1}
-<p class="success">{l s='Your password has been successfully reset and a confirmation has been sent to your e-mail address:'} {$smarty.post.email|escape:'htmlall':'UTF-8'|stripslashes}</p>
+<p class="success">{l s='Your password has been successfully reset and a confirmation has been sent to your email address:'} {if isset($email)}{$email|escape:'htmlall':'UTF-8'|stripslashes}{/if}</p>
 {elseif isset($confirmation) && $confirmation == 2}
-<p class="success">{l s='A confirmation e-mail has been sent to your address:'} {$smarty.post.email|escape:'htmlall':'UTF-8'|stripslashes}</p>
+<p class="success">{l s='A confirmation email has been sent to your address:'} {if isset($email)}{$email|escape:'htmlall':'UTF-8'|stripslashes}{/if}</p>
 {else}
-<p>{l s='Please enter the e-mail address used to register. We will send your new password to that address.'}</p>
+<p>{l s='Please enter the email address you used to register. We will then send you a new password. '}</p>
 <form action="{$request_uri|escape:'htmlall':'UTF-8'}" method="post" class="std" id="form_forgotpassword">
 	<fieldset>
 		<p class="text">
-			<label for="email">{l s='E-mail:'}</label>
+			<label for="email">{l s='Email'}</label>
 			<input type="text" id="email" name="email" value="{if isset($smarty.post.email)}{$smarty.post.email|escape:'htmlall':'UTF-8'|stripslashes}{/if}" />
 		</p>
 		<p class="submit">
@@ -49,5 +49,5 @@
 </form>
 {/if}
 <p class="clear">
-	<a href="{$link->getPageLink('authentication', true)}" title="{l s='Return to Login'}" rel="nofollow"><img src="{$img_dir}icon/my-account.gif" alt="{l s='Return to Login'}" class="icon" /></a><a href="{$link->getPageLink('authentication')}" title="{l s='Back to Login'}" rel="nofollow">{l s='Back to Login'}</a>
+	<a href="{$link->getPageLink('authentication', true)}" title="{l s='Return to Login'}" rel="nofollow"><img src="{$img_dir}icon/my-account.gif" alt="{l s='Return to Login'}" class="icon" /></a><a href="{$link->getPageLink('authentication')|escape:'html'}" title="{l s='Back to Login'}" rel="nofollow">{l s='Back to Login'}</a>
 </p>

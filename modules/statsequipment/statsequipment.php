@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop 
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -44,7 +44,7 @@ class StatsEquipment extends ModuleGraph
 		parent::__construct();
 
 		$this->displayName = $this->l('Software');
-		$this->description = $this->l('Display the software used by your visitors.');
+		$this->description = $this->l('Display the software used by visitors.');
 	}
 
 	public function install()
@@ -122,17 +122,17 @@ class StatsEquipment extends ModuleGraph
 		$equipment = $this->getEquipment();
 		$this->html = '
 		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
-			<p><img src="../img/admin/down.gif" />'.$this->l('Determine the percentage of web browsers used by your customers.').'</p>
+			<p><img src="../img/admin/down.gif" />'.$this->l('Determine the percentage of web browsers used by customers.').'</p>
 			'.$this->engine(array('type' => 'pie', 'option' => 'wb')).'<br /><br />
 			<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=browser"><span>'.$this->l('CSV Export').'</span></a></p>
-			<p><img src="../img/admin/down.gif" />'.$this->l('Determine the percentage of operating systems used by your customers.').'</p>
+			<p><img src="../img/admin/down.gif" />'.$this->l('Determine the percentage of operating systems used by customers.').'</p>
 			'.$this->engine(array('type' => 'pie', 'option' => 'os')).'
 			<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=os"><span>'.$this->l('CSV Export').'</span></a></p>';
 
 			if ($equipment)
 			{
 				$this->html .= '<table class="table space" border="0" cellspacing="0" cellpadding="0">
-				<tr><th style="width: 200px">'.$this->l('Plug-ins').'</th><th></th></tr>';
+				<tr><th style="width: 200px">'.$this->l('Plugins').'</th><th></th></tr>';
 				foreach ($equipment as $name => $value)	
 					$this->html .= '<tr><td>'.$name.'</td><td>'.number_format(100 * $value, 2).'%</td></tr>';
 				$this->html .= '</table>';
@@ -158,7 +158,7 @@ class StatsEquipment extends ModuleGraph
 		switch ($option)
 		{
 			case 'wb':
-				$this->_titles['main'] = $this->l('Web browser use');
+				$this->_titles['main'] = $this->l('Web browser used.');
 				$this->_query = 'SELECT wb.`name`, COUNT(g.`id_web_browser`) AS total
 						FROM `'._DB_PREFIX_.'web_browser` wb
 						LEFT JOIN `'._DB_PREFIX_.'guest` g ON g.`id_web_browser` = wb.`id_web_browser`
@@ -170,7 +170,7 @@ class StatsEquipment extends ModuleGraph
 			break;
 
 			case 'os':
-				$this->_titles['main'] = $this->l('Operating systems use');
+				$this->_titles['main'] = $this->l('Operating system used.');
 				$this->_query = 'SELECT os.`name`, COUNT(g.`id_operating_system`) AS total
 						FROM `'._DB_PREFIX_.'operating_system` os
 						LEFT JOIN `'._DB_PREFIX_.'guest` g ON g.`id_operating_system` = os.`id_operating_system`

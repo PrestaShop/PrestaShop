@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -35,14 +35,14 @@ class Pagesnotfound extends Module
 	{
 		$this->name = 'pagesnotfound';
 		$this->tab = 'analytics_stats';
-		$this->version = 1.0;
+		$this->version = 1.1;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
 		parent::__construct();
 
 		$this->displayName = $this->l('Pages not found');
-		$this->description = $this->l('Display the pages requested by your visitors but not found.');
+		$this->description = $this->l('Display the pages requested by your visitors that have not been found.');
 	}
 
 	public function install()
@@ -96,7 +96,7 @@ class Pagesnotfound extends Module
 		if (Tools::isSubmit('submitTruncatePNF'))
 		{
 			Db::getInstance()->execute('TRUNCATE `'._DB_PREFIX_.'pagenotfound`');
-			$this->_html .= '<div class="conf confirm"> '.$this->l('Pages not found has been emptied.').'</div>';
+			$this->_html .= '<div class="conf confirm"> '.$this->l('The pages not found cache has been emptied.').'</div>';
 		}
 		else if (Tools::isSubmit('submitDeletePNF'))
 		{
@@ -108,7 +108,7 @@ class Pagesnotfound extends Module
 
 		$this->_html .= '<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>';
 		if (!file_exists(dirname(__FILE__).'/../../.htaccess'))
-			$this->_html .= '<br/><div class="warning warn">'.$this->l('You <b>must</b> use a .htaccess file to redirect 404 errors to the page "404.php"').'</div>';
+			$this->_html .= '<br/><div class="warning warn">'.$this->l('You must use a .htaccess file to redirect 404 errors to the page "404.php"').'</div>';
 
 		$pages = $this->getPages();
 		if (count($pages))
@@ -140,7 +140,7 @@ class Pagesnotfound extends Module
 			$this->_html .= '<div class="clear">&nbsp;</div>
 			<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->l('Empty database').'</h2>
 				<form action="'.Tools::htmlEntitiesUtf8($_SERVER['REQUEST_URI']).'" method="post">
-					<input type="submit" class="button" name="submitDeletePNF" value="'.$this->l('Empty ALL pages not found in this period').'">
+					<input type="submit" class="button" name="submitDeletePNF" value="'.$this->l('Empty ALL pages not found for this period').'">
 					<input type="submit" class="button" name="submitTruncatePNF" value="'.$this->l('Empty ALL pages not found').'">
 				</form>	
 			</div>';
@@ -152,10 +152,10 @@ class Pagesnotfound extends Module
 				When it is available, the referrer is shown so you can find the page which contains the dead link. 
 				If not, it means generally that it is a direct access, so someone may have bookmarked a link which doesn\'t exist anymore.').'</p>
 			<h3>'.$this->l('How to catch these errors?').'</h3>
-			<p>'.$this->l('If your webhost supports the <i>.htaccess</i> file, you can create it in the root directory of PrestaShop and insert the following line inside:').' 
+			<p>'.$this->l('If your webhost supports .htaccess files, you can create one in the root directory of PrestaShop and insert the following line inside:').' 
 				<i>ErrorDocument 404 '.__PS_BASE_URI__.'404.php</i>. '.
-				$this->l('A user requesting a page which doesn\'t exist will be redirected to the page.').' <i>'.__PS_BASE_URI__.'404.php</i>. '.
-				$this->l('This module logs the accesses to this page: the page requested, the referrer and the number of times that it occurred.').'</p><br />
+				$this->l('A user requesting a page which doesn\'t exist will be redirected to the following page.').' <i>'.__PS_BASE_URI__.'404.php</i>. '.
+				$this->l('This module logs access to this page.').'</p><br />
 		</div>';
 
 		return $this->_html;
@@ -167,14 +167,17 @@ class Pagesnotfound extends Module
 			$_SERVER['REQUEST_URI'] = $_SERVER['REDIRECT_URL'];
 		if (!Validate::isUrl($request_uri = $_SERVER['REQUEST_URI']) || strstr($_SERVER['REQUEST_URI'], '-admin404'))
 			return;
-		if (strstr($_SERVER['PHP_SELF'], '404.php') && !strstr($_SERVER['REQUEST_URI'], '404.php'))
+
+		if (get_class(Context::getContext()->controller) == 'PageNotFoundController')
 		{
 			$http_referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
 			if (empty($http_referer) || Validate::isAbsoluteUrl($http_referer))
+			{
 				Db::getInstance()->execute('
 					INSERT INTO `'._DB_PREFIX_.'pagenotfound` (`request_uri`, `http_referer`, `date_add`, `id_shop`, `id_shop_group`)
 					VALUES (\''.pSQL($request_uri).'\', \''.pSQL($http_referer).'\', NOW(), '.(int)$this->context->shop->id.', '.(int)$this->context->shop->id_shop_group.')
 				');
+			}
 		}
 	}
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<entity_profile>
+  <profile id="Administrator">
+    <name>Administrator</name>
+  </profile>
+  <profile id="Logistician">
+    <name>Logistyk</name>
+  </profile>
+  <profile id="Translator">
+    <name>Tłumacz</name>
+  </profile>
+  <profile id="Salesman">
+    <name>Sprzedawca</name>
+  </profile>
+</entity_profile>

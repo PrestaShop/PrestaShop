@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -35,32 +35,37 @@
 {/block}
 {block name=leadin}
 	{if isset($delete_customer) && $delete_customer}
-		<form action="{$REQUEST_URI}" method="post">
+		<form action="{$REQUEST_URI|escape:'htmlall':'UTF-8'}" method="post">
 			<div class="warn">
-				<h2>{l s='How do you want to delete your customer(s)?'}</h2>
-				<p>{l s='You have two ways to delete a customer, please choose what you want to do.'}</p>
+				<h2>{l s='How do you want to delete these customer(s)?'}</h2>
+				<p>{l s='There are two ways of deleting a customer. Please choose your preferred method.'}</p>
 				<ul class="listForm">
 				<li>
 					<input type="radio" name="deleteMode" value="real" id="deleteMode_real" />
-					<label for="deleteMode_real" style="float:none;">{l s='I want to delete my customer(s) for real. All data will be removed from the database. A customer with the same e-mail address will be able to register again.'}</label>
+					<label for="deleteMode_real" style="float:none;">{l s='I want to delete my customer(s) (All data will be removed from the database, and customers with the same e-mail address will be able to re-register.'}</label>
 				</li>
 				<li>
 					<input type="radio" name="deleteMode" value="deleted" id="deleteMode_deleted" />
-					<label for="deleteMode_deleted" style="float:none">{l s='I don\'t want my customer(s) to register again. The customer(s) will be removed from this list but all data will be kept in the database.'}</label>
+					<label for="deleteMode_deleted" style="float:none">{l s='I don\'t want my customer(s) to register again. Therefore, each customer(s) will be removed from this list but all corresponding data will be kept in the database.'}</label>
 				</li>
 				</ul>
 				{foreach $POST as $key => $value}
 					{if is_array($value)}
 						{foreach $value as $val}
-							<input type="hidden" name="{$key}[]" value="{$val}" />
+							<input type="hidden" name="{$key|escape:'htmlall':'UTF-8'}[]" value="{$val|escape:'htmlall':'UTF-8'}" />
 						{/foreach}
 					{else}
-						<input type="hidden" name="{$key}" value="{$value}" />
+						<input type="hidden" name="{$key|escape:'htmlall':'UTF-8'}" value="{$value|escape:'htmlall':'UTF-8'}" />
 					{/if}
 				{/foreach}
 				<br /><input type="submit" class="button" value="{l s='Delete'}" />
 			</div>
 		</form>
 		<div class="clear">&nbsp;</div>
+		<script>
+			$(document).ready(function() {
+				$('table[name=\'list_table\']').hide();
+			});
+		</script>
 	{/if}
 {/block}

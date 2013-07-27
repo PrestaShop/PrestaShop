@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -69,7 +69,7 @@ function customMenu(node)
 			"add_shop_group" : {
 				"separator_before"	: false,
 				"separator_after"	: false,
-				"label"				: "{l s='Add new shop group'}",
+				"label"				: "{l s='Add a new shop group'}",
 				"icon"				: "../img/admin/add.gif",
 				"action"			: function (obj){
 					location.href = '{$link->getAdminLink('AdminShopGroup')}&addshop_group';
@@ -154,7 +154,7 @@ function customMenu(node)
 			"add_shop_group" : {
 				"separator_before"	: false,
 				"separator_after"	: false,
-				"label"				: "{l s='Add new shop group'}",
+				"label"				: "{l s='Add a new shop group'}",
 				"icon"				: "../img/admin/add.gif",
 				"action"			: function (obj){
 					location.href = '{$link->getAdminLink('AdminShopGroup')}&addshop_group';
@@ -186,7 +186,7 @@ $("#multishop-tree").jstree({
 	'plugins': ["themes","json_data","cookies","contextmenu"],
 	'json_data': {
 		'ajax': {
-			'url': "{$link->getAdminLink('AdminShop')}",
+			'url': "{$link->getAdminLink('AdminShop')|addslashes}",
 			'data': function(n)
 			{
 				return {

@@ -33,8 +33,8 @@ CREATE TABLE `PREFIX_address` (
   `postcode` varchar(12) default NULL,
   `city` varchar(64) NOT NULL,
   `other` text,
-  `phone` varchar(16) default NULL,
-  `phone_mobile` varchar(16) default NULL,
+  `phone` varchar(32) default NULL,
+  `phone_mobile` varchar(32) default NULL,
   `vat_number` varchar(32) default NULL,
   `dni` varchar(16) DEFAULT NULL,
   `date_add` datetime NOT NULL,
@@ -144,7 +144,7 @@ CREATE TABLE `PREFIX_carrier` (
   `max_width` int(10) DEFAULT 0,
   `max_height` int(10)  DEFAULT 0,
   `max_depth` int(10)  DEFAULT 0,
-  `max_weight` int(10)  DEFAULT 0,
+  `max_weight` DECIMAL(20,6) DEFAULT 0,
   `grade` int(10)  DEFAULT 0,
   PRIMARY KEY (`id_carrier`),
   KEY `deleted` (`deleted`,`active`),
@@ -170,7 +170,7 @@ CREATE TABLE `PREFIX_cart` (
   `id_shop_group` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_carrier` int(10) unsigned NOT NULL,
-  `delivery_option` varchar(100),
+  `delivery_option` TEXT NOT NULL,
   `id_lang` int(10) unsigned NOT NULL,
   `id_address_delivery` int(10) unsigned NOT NULL,
   `id_address_invoice` int(10) unsigned NOT NULL,
@@ -181,6 +181,7 @@ CREATE TABLE `PREFIX_cart` (
   `recyclable` tinyint(1) unsigned NOT NULL default '1',
   `gift` tinyint(1) unsigned NOT NULL default '0',
   `gift_message` text,
+  `mobile_theme` tinyint(1) NOT NULL default 0,
   `allow_seperated_package` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
@@ -225,6 +226,7 @@ CREATE TABLE `PREFIX_cart_rule` (
 	`reduction_product` int(10) NOT NULL default 0,
 	`gift_product` int(10) unsigned NOT NULL default 0,
 	`gift_product_attribute` int(10) unsigned NOT NULL default 0,
+	`highlight` tinyint(1) unsigned NOT NULL default 0,
 	`active` tinyint(1) unsigned NOT NULL default 0,
 	`date_add` datetime NOT NULL,
 	`date_upd` datetime NOT NULL,
@@ -536,6 +538,7 @@ CREATE TABLE `PREFIX_customer` (
   `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_gender` int(10) unsigned NOT NULL,
   `id_default_group` int(10) unsigned NOT NULL DEFAULT '1',
+  `id_lang` int(10) unsigned NULL,
   `id_risk` int(10) unsigned NOT NULL DEFAULT '1',
   `company` varchar(64),
   `siret` varchar(14),
@@ -825,6 +828,7 @@ CREATE TABLE `PREFIX_guest` (
   `real_player` tinyint(1) default NULL,
   `windows_media` tinyint(1) default NULL,
   `accept_language` varchar(8) default NULL,
+  `mobile_theme` tinyint(1) NOT NULL default 0,
   PRIMARY KEY (`id_guest`),
   KEY `id_customer` (`id_customer`),
   KEY `id_operating_system` (`id_operating_system`),
@@ -893,7 +897,7 @@ CREATE TABLE `PREFIX_image_lang` (
 
 CREATE TABLE `PREFIX_image_type` (
   `id_image_type` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(16) NOT NULL,
+  `name` varchar(64) NOT NULL,
   `width` int(10) unsigned NOT NULL,
   `height` int(10) unsigned NOT NULL,
   `products` tinyint(1) NOT NULL default '1',
@@ -1047,6 +1051,7 @@ CREATE TABLE `PREFIX_orders` (
   `recyclable` tinyint(1) unsigned NOT NULL default '0',
   `gift` tinyint(1) unsigned NOT NULL default '0',
   `gift_message` text,
+  `mobile_theme` tinyint(1) NOT NULL default 0,
   `shipping_number` varchar(32) default NULL,
   `total_discounts` decimal(17,2) NOT NULL default '0.00',
   `total_discounts_tax_incl` decimal(17,2) NOT NULL default '0.00',
@@ -1177,9 +1182,10 @@ CREATE TABLE `PREFIX_order_cart_rule` (
   `id_order` int(10) unsigned NOT NULL,
   `id_cart_rule` int(10) unsigned NOT NULL,
   `id_order_invoice` int(10) unsigned DEFAULT 0,
-  `name` varchar(32) NOT NULL,
+  `name` varchar(254) NOT NULL,
   `value` decimal(17,2) NOT NULL default '0.00',
   `value_tax_excl` decimal(17,2) NOT NULL default '0.00',
+  `free_shipping` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id_order_cart_rule`),
   KEY `id_order` (`id_order`),
   KEY `id_cart_rule` (`id_cart_rule`)
@@ -1376,6 +1382,8 @@ CREATE TABLE `PREFIX_product` (
   `uploadable_files` tinyint(4) NOT NULL default '0',
   `text_fields` tinyint(4) NOT NULL default '0',
   `active` tinyint(1) unsigned NOT NULL default '0',
+  `redirect_type` ENUM('', '404', '301', '302') NOT NULL DEFAULT '',
+  `id_product_redirected` int(10) unsigned NOT NULL default '0',
   `available_for_order` tinyint(1) NOT NULL default '1',
   `available_date` date NOT NULL,
   `condition` ENUM('new', 'used', 'refurbished') NOT NULL DEFAULT 'new',
@@ -1415,6 +1423,8 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `uploadable_files` tinyint(4) NOT NULL default '0',
   `text_fields` tinyint(4) NOT NULL DEFAULT '0',
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `redirect_type` ENUM('', '404', '301', '302') NOT NULL DEFAULT '',
+  `id_product_redirected` int(10) unsigned NOT NULL default '0',
   `available_for_order` tinyint(1) NOT NULL DEFAULT '1',
   `available_date` date NOT NULL,
   `condition` enum('new','used','refurbished') NOT NULL DEFAULT 'new',
@@ -1427,7 +1437,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `date_upd` datetime NOT NULL,
   PRIMARY KEY (`id_product`, `id_shop`),
   KEY `id_category_default` (`id_category_default`),
-  KEY `date_add` (`date_add`)
+  KEY `date_add` (`date_add` , `active` , `visibility`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_product_attribute` (
@@ -1809,8 +1819,8 @@ CREATE TABLE `PREFIX_store` (
   `address2` varchar(128) DEFAULT NULL,
   `city` varchar(64) NOT NULL,
   `postcode` varchar(12) NOT NULL,
-  `latitude` decimal(11,8) DEFAULT NULL,
-  `longitude` decimal(11,8) DEFAULT NULL,
+  `latitude` decimal(13,8) DEFAULT NULL,
+  `longitude` decimal(13,8) DEFAULT NULL,
   `hours` varchar(254) DEFAULT NULL,
   `phone` varchar(16) DEFAULT NULL,
   `fax` varchar(16) DEFAULT NULL,
@@ -1914,6 +1924,7 @@ CREATE TABLE `PREFIX_log` (
 	`message` text NOT NULL,
 	`object_type` varchar(32) DEFAULT NULL,
 	`object_id` int(10) unsigned DEFAULT NULL,
+	`id_employee` int(10) unsigned DEFAULT NULL,
 	`date_add` datetime NOT NULL,
 	`date_upd` datetime NOT NULL,
 	PRIMARY KEY (`id_log`)
@@ -2019,6 +2030,7 @@ CREATE TABLE `PREFIX_lang_shop` (
 CREATE TABLE `PREFIX_currency_shop` (
 `id_currency` INT( 11 ) UNSIGNED NOT NULL,
 `id_shop` INT( 11 ) UNSIGNED NOT NULL,
+`conversion_rate` decimal(13,6) NOT NULL,
   PRIMARY KEY (`id_currency`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
@@ -2228,7 +2240,7 @@ CREATE TABLE `PREFIX_stock_available` (
   KEY `id_shop_group` (`id_shop_group`),
   KEY `id_product` (`id_product`),
   KEY `id_product_attribute` (`id_product_attribute`),
-  UNIQUE `product_sqlstock` ( `id_product` , `id_product_attribute` , `id_shop` )
+  UNIQUE `product_sqlstock` (`id_product` , `id_product_attribute` , `id_shop`, `id_shop_group`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_supply_order` (
@@ -2424,6 +2436,15 @@ CREATE TABLE `PREFIX_module_preference` (
   `favorite` tinyint(1) default NULL,
   PRIMARY KEY (`id_module_preference`),
   UNIQUE KEY `employee_module` (`id_employee`, `module`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_tab_module_preference` (
+  `id_tab_module_preference` int(11) NOT NULL auto_increment,
+  `id_employee` int(11) NOT NULL,
+  `id_tab` int(11) NOT NULL,
+  `module` varchar(255) NOT NULL,
+  PRIMARY KEY (`id_tab_module_preference`),
+  UNIQUE KEY `employee_module` (`id_employee`, `id_tab`, `module`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
  CREATE TABLE `PREFIX_carrier_tax_rules_group_shop` (

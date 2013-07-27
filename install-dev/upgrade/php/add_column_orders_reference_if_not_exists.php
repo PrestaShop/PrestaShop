@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -28,5 +28,5 @@ function add_column_orders_reference_if_not_exists()
 {
 	$column = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'orders` LIKE "reference"');
 	if (empty($column))
-		return Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'orders` ADD COLUMN `reference` varchar(9) AFTER `id_order`');
+		return Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'orders` ADD COLUMN `reference` varchar(10) AFTER `id_order`');
 }

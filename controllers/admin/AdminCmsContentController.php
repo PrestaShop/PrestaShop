@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -113,6 +113,7 @@ class AdminCmsContentControllerCore extends AdminController
 		if (Tools::isSubmit('submitDelcms')
 			|| Tools::isSubmit('previewSubmitAddcmsAndPreview')
 			|| Tools::isSubmit('submitAddcms')
+            || Tools::isSubmit('submitBulkdeletecms')
 			|| Tools::isSubmit('deletecms')
 			|| Tools::isSubmit('viewcms')
 			|| (Tools::isSubmit('statuscms') && Tools::isSubmit('id_cms'))
@@ -126,6 +127,8 @@ class AdminCmsContentControllerCore extends AdminController
 			|| (Tools::isSubmit('statuscms_category') && Tools::isSubmit('id_cms_category'))
 			|| (Tools::isSubmit('position') && Tools::isSubmit('id_cms_category_to_move')))
 				$this->admin_cms_categories->postProcess();
+        else
+            parent::postProcess();
 
 		if (((Tools::isSubmit('submitAddcms_category') || Tools::isSubmit('submitAddcms_categoryAndStay')) && count($this->admin_cms_categories->errors))
 			|| Tools::isSubmit('updatecms_category')
@@ -146,8 +149,6 @@ class AdminCmsContentControllerCore extends AdminController
 
 		if (isset($this->admin_cms_categories->errors))
 			$this->errors = array_merge($this->errors, $this->admin_cms_categories->errors);
-
-		parent::postProcess();
 	}
 
 	public function setMedia()

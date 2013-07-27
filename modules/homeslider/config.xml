@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>homeslider</name>
-            <displayName><![CDATA[Image slider for your homepage]]></displayName>
-            <version><![CDATA[1.2]]></version>
+            <displayName><![CDATA[Image slider for your homepage.]]></displayName>
+            <version><![CDATA[1.2.1]]></version>
             <description><![CDATA[Adds an image slider to your homepage.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>

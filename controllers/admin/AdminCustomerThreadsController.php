@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -35,6 +35,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
 		$contact_array = array();
 		$contacts = Contact::getContacts($this->context->language->id);
+
 		foreach ($contacts as $contact)
 			$contact_array[$contact['id_contact']] = $contact['name'];
 
@@ -66,7 +67,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				'tmpTableFilter' => true,
 			),
 			'email' => array(
-				'title' => $this->l('E-mail'),
+				'title' => $this->l('Email'),
 				'width' => 100,
 				'filter_key' => 'a!email',
 			),
@@ -130,13 +131,13 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				'title' =>	$this->l('Contact options'),
 				'fields' =>	array(
 					'PS_CUSTOMER_SERVICE_FILE_UPLOAD' => array(
-							'title' => $this->l('Allow file upload'),
-							'desc' => $this->l('Allow customers to upload file using contact page'),
+							'title' => $this->l('Allow file uploading'),
+							'desc' => $this->l('Allow customers to upload files using the contact page.'),
 							'type' => 'bool'
 						),
 					'PS_CUSTOMER_SERVICE_SIGNATURE' => array(
 							'title' => $this->l('Default message'),
-							'desc' => $this->l('Please fill the message that appears by default when you answer a thread on the customer service page'),
+							'desc' => $this->l('Please fill out the message fields that appear by default when you answer a thread on the customer service page.'),
 							'type' => 'textareaLang',
 							'lang' => true,
 							'rows' => 10,
@@ -167,44 +168,49 @@ class AdminCustomerThreadsControllerCore extends AdminController
 					),
 					'PS_SAV_IMAP_PWD' => array(
 						'title' => $this->l('IMAP password'),
-						'desc' => $this->l('Password to use to connect IMAP server'),
+						'desc' => $this->l('Password used to connect IMAP server'),
 						'type' => 'text',
 						'size' => 40,
 					),
 					'PS_SAV_IMAP_DELETE_MSG' => array(
 						'title' => $this->l('Delete messages'),
-						'desc' => $this->l('Delete messages after sync. If you do not active this option, the sync will be longer'),
+						'desc' => $this->l('Delete messages after sync. If you do not active this option, the sync will take more time.'),
+						'type' => 'bool',
+					),
+					'PS_SAV_IMAP_CREATE_THREADS' => array(
+						'title' => $this->l('Create new threads'),
+						'desc' => $this->l('Create new threads for unrecognized emails'),
 						'type' => 'bool',
 					),
 					'PS_SAV_IMAP_OPT_NORSH' => array(
 						'title' => $this->l('IMAP options').' (/norsh)',
 						'type' => 'bool',
-						'desc' => $this->l('Do not use RSH or SSH to establish a preauthenticated IMAP session'),
+						'desc' => $this->l('Do not use RSH or SSH to establish a preauthenticated IMAP sessions.'),
 					),
 					'PS_SAV_IMAP_OPT_SSL' => array(
 						'title' => $this->l('IMAP options').' (/ssl)',
 						'type' => 'bool',
-						'desc' => $this->l('Use the Secure Socket Layer to encrypt the session'),
+						'desc' => $this->l('Use the Secure Socket Layer to encrypt the session.'),
 					),
 					'PS_SAV_IMAP_OPT_VALIDATE-CERT' => array(
 						'title' => $this->l('IMAP options').' (/validate-cert)',
 						'type' => 'bool',
-						'desc' => $this->l('Validate certificates from TLS/SSL server'),
+						'desc' => $this->l('Validate certificates from the TLS/SSL server'),
 					),
 					'PS_SAV_IMAP_OPT_NOVALIDATE-CERT' => array(
 						'title' => $this->l('IMAP options').' (/novalidate-cert)',
 						'type' => 'bool',
-						'desc' => $this->l('Do not validate certificates from TLS/SSL server, needed if server uses self-signed certificates'),
+						'desc' => $this->l('Do not validate certificates from the TLS/SSL server. This is only needed if a server uses self-signed certificates'),
 					),
 					'PS_SAV_IMAP_OPT_TLS' => array(
 						'title' => $this->l('IMAP options').' (/tls)',
 						'type' => 'bool',
-						'desc' => $this->l('Force use of start-TLS to encrypt the session, and reject connection to servers that do not support it'),
+						'desc' => $this->l('Force use of start-TLS to encrypt the session, and reject connection to servers that do not support it.'),
 					),
 					'PS_SAV_IMAP_OPT_NOTLS' => array(
 						'title' => $this->l('IMAP options').' (/notls)',
 						'type' => 'bool',
-						'desc' => $this->l('Do not use start-TLS to encrypt the session, even with servers that support it'),
+						'desc' => $this->l('Do not use start-TLS to encrypt the session, even with servers that support it.'),
 					),
 				),
 				'submit' => array('title' => $this->l('Save'), 'class' => 'button'),
@@ -250,8 +256,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$params = array(
 			$this->l('Total threads') => $all = CustomerThread::getTotalCustomerThreads(),
 			$this->l('Threads pending') => $pending = CustomerThread::getTotalCustomerThreads('status LIKE "%pending%"'),
-			$this->l('Total customer messages') => CustomerMessage::getTotalCustomerMessages('id_employee = 0'),
-			$this->l('Total employee messages') => CustomerMessage::getTotalCustomerMessages('id_employee != 0'),
+			$this->l('Total number of customer messages') => CustomerMessage::getTotalCustomerMessages('id_employee = 0'),
+			$this->l('Total number of employee messages') => CustomerMessage::getTotalCustomerMessages('id_employee != 0'),
 			$this->l('Unread threads') => $unread = CustomerThread::getTotalCustomerThreads('status = "open"'),
 			$this->l('Closed threads') => $all - ($unread + $pending)
 		);
@@ -342,7 +348,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 						$cm->add();
 					}
 				}
-				else if ($email && Validate::isEmail($email))
+				elseif ($email && Validate::isEmail($email))
 				{
 					$params = array(
 					'{messages}' => Tools::nl2br(stripslashes($output)),
@@ -362,19 +368,23 @@ class AdminCustomerThreadsControllerCore extends AdminController
 					}
 				}
 				else
-					$this->errors[] = '<div class="alert error">'.Tools::displayError('E-mail invalid.').'</div>';
+					$this->errors[] = '<div class="alert error">'.Tools::displayError('The email address is invalid.').'</div>';
 			}
 			if (Tools::isSubmit('submitReply'))
 			{
 				$ct = new CustomerThread($id_customer_thread);
+
+				ShopUrl::cacheMainDomainForShop((int)$ct->id_shop);
+
 				$cm = new CustomerMessage();
 				$cm->id_employee = (int)$this->context->employee->id;
 				$cm->id_customer_thread = $ct->id;
-				$cm->message = Tools::nl2br(Tools::htmlentitiesutf8(Tools::getValue('reply_message')));
+				
+				$cm->message = Tools::htmlentitiesutf8(Tools::getValue('reply_message'));
 				$cm->ip_address = ip2long($_SERVER['REMOTE_ADDR']);
 				if (isset($_FILES) && !empty($_FILES['joinFile']['name']) && $_FILES['joinFile']['error'] != 0)
-					$this->errors[] = Tools::displayError('An error occurred with the file upload.');
-				else if ($cm->add())
+					$this->errors[] = Tools::displayError('An error occurred during the file upload process.');
+				elseif ($cm->add())
 				{
 					$file_attachment = null;
 					if (!empty($_FILES['joinFile']['name']))
@@ -391,11 +401,22 @@ class AdminCustomerThreadsControllerCore extends AdminController
 						),
 					);
 					//#ct == id_customer_thread    #tc == token of thread   <== used in the synchronization imap
+					$contact = new Contact((int)$ct->id_contact, (int)$ct->id_lang);
+					if (Validate::isLoadedObject($contact))
+					{
+						$from_name = $contact->name[(int)$ct->id_lang];
+						$from_email = $contact->email;
+					}
+					else
+					{
+						$from_name = null;
+						$from_email = null;
+					}
 					if (Mail::Send(
 						(int)$ct->id_lang,
 						'reply_msg',
 						sprintf(Mail::l('An answer to your message is available #ct%1$s #tc%2$s', $ct->id_lang), $ct->id, $ct->token),
-						$params, Tools::getValue('msg_email'), null, null, null, $file_attachment, null,
+						$params, Tools::getValue('msg_email'), null, $from_email, $from_name, $file_attachment, null,
 						_PS_MAIL_DIR_, true))
 					{
 						$ct->status = 'closed';
@@ -406,7 +427,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 					);
 				}
 				else
-					$this->errors[] = Tools::displayError('An error occurred, your message was not sent. Please contact your system administrator.');
+					$this->errors[] = Tools::displayError('An error occurred. Your message was not sent. Please contact your system administrator.');
 			}
 		}
 
@@ -440,7 +461,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
 		$extension = false;
 		foreach ($extensions as $key => $val)
-			if (substr($filename, -4) == $key || substr($filename, -5) == $key)
+			if (substr(Tools::strtolower($filename), -4) == $key || substr(Tools::strtolower($filename), -5) == $key)
 			{
 				$extension = $val;
 				break;
@@ -477,40 +498,40 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		if ($next_thread)
 			$actions['next_thread'] = array(
 				'href' => self::$currentIndex.'&id_customer_thread='.(int)$next_thread.'&viewcustomer_thread&token='.$this->token,
-				'name' => $this->l('Reply to the next unanswered message in this category')
+				'name' => $this->l('Reply to the next unanswered message in this category.')
 			);
 		else
 			$actions['next_thread'] = array(
 				'href' => false,
-				'name' => $this->l('All other messages in this category have been answered')
+				'name' => $this->l('All other messages in this category have been answered.')
 			);
 
 		if ($thread->status != 'closed')
 			$actions['closed'] = array(
 				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=2&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-				'name' => $this->l('Mark this message as handled')
+				'name' => $this->l('Mark this message as handled.')
 			);
 
 		if ($thread->status != 'pending1')
 			$actions['pending1'] = array(
 				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=3&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-				'name' => $this->l('Mark this message as "pending 1" (will be answered later)')
+				'name' => $this->l('Mark this message as "pending 1" (will be answered later).')
 			);
 		else
 			$actions['pending1'] = array(
 				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=1&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-				'name' => $this->l('Disable pending status')
+				'name' => $this->l('Disable pending status.')
 			);
 
 		if ($thread->status != 'pending2')
 			$actions['pending2'] = array(
 				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=4&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-				'name' => $this->l('Mark this message as "pending 2" (will be answered later)')
+				'name' => $this->l('Mark this message as "pending 2" (will be answered later).')
 			);
 		else
 			$actions['pending2'] = array(
 				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=1&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-				'name' => $this->l('Disable pending status')
+				'name' => $this->l('Disable pending status.')
 			);
 
 		if ($thread->id_customer)
@@ -528,7 +549,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 						$orders_ok[] = $order;
 						$total_ok += $order['total_paid_real'];
 					}
-					$orders[$key]['date_add'] = Tools::displayDate($order['date_add'], $this->context->language->id);
+					$orders[$key]['date_add'] = Tools::displayDate($order['date_add']);
 					$orders[$key]['total_paid_real'] = Tools::displayPrice($order['total_paid_real'], new Currency((int)$order['id_currency']));
 				}
 			}
@@ -536,7 +557,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			$products = $customer->getBoughtProducts();
 			if ($products && count($products))
 				foreach ($products as $key => $product)
-					$products[$key]['date_add'] = Tools::displayDate($product['date_add'], $this->context->language->id, true);
+					$products[$key]['date_add'] = Tools::displayDate($product['date_add'], null, true);
 		}
 
 		foreach ($messages as $key => $message)
@@ -565,14 +586,16 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$tpl = $this->createTemplate('message.tpl');
 
 		$contacts = Contact::getContacts($this->context->language->id);
-
+		foreach ($contacts as $contact)
+			$contact_array[$contact['id_contact']] = array('id_contact' => $contact['id_contact'], 'name' => $contact['name']);
+		$contacts = $contact_array;
+		
 		if (!$email)
 		{
 			if (!empty($message['id_product']) && empty($message['employee_name']))
 				$id_order_product = Order::getIdOrderProduct((int)$message['id_customer'], (int)$message['id_product']);
 		}
-
-		$message['date_add'] = Tools::displayDate($message['date_add'], $this->context->language->id, true);
+		$message['date_add'] = Tools::displayDate($message['date_add'], null, true);
 		$message['user_agent'] = strip_tags($message['user_agent']);
 		$message['message'] = preg_replace(
 			'/(https?:\/\/[a-z0-9#%&_=\(\)\.\? \+\-@\/]{6,1000})([\s\n<])/Uui',
@@ -638,15 +661,148 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
 	public function updateOptionPsSavImapOpt($value)
 	{
+		if ($this->tabAccess['edit'] != '1')
+			throw new PrestaShopException(Tools::displayError('You do not have permission to edit this.'));
+
 		if (!$this->errors && $value)
 			Configuration::updateValue('PS_SAV_IMAP_OPT', implode('', $value));
 	}
 	
 	public function ajaxProcessMarkAsRead()
 	{
+		if ($this->tabAccess['edit'] != '1')
+			throw new PrestaShopException(Tools::displayError('You do not have permission to edit this.'));
+
 		$id_thread = Tools::getValue('id_thread');
 		$messages = CustomerThread::getMessageCustomerThreads($id_thread);		
 		if (count($messages))
 			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'customer_message set `read` = 1');
+	}
+	
+	public function ajaxProcessSyncImap()
+	{
+		if ($this->tabAccess['edit'] != '1')
+			throw new PrestaShopException(Tools::displayError('You do not have permission to edit this.'));
+
+		if (Tools::isSubmit('syncImapMail'))
+		{
+			if (!($url = Configuration::get('PS_SAV_IMAP_URL'))
+			|| !($port = Configuration::get('PS_SAV_IMAP_PORT'))
+			|| !($user = Configuration::get('PS_SAV_IMAP_USER'))
+			|| !($password = Configuration::get('PS_SAV_IMAP_PWD')))
+			die('{"hasError" : true, "errors" : ["Configuration is not correct"]}');
+
+			$conf = Configuration::getMultiple(array(
+				'PS_SAV_IMAP_OPT_NORSH', 'PS_SAV_IMAP_OPT_SSL',
+				'PS_SAV_IMAP_OPT_VALIDATE-CERT', 'PS_SAV_IMAP_OPT_NOVALIDATE-CERT',
+				'PS_SAV_IMAP_OPT_TLS', 'PS_SAV_IMAP_OPT_NOTLS'));
+	
+			$conf_str = '';
+			if ($conf['PS_SAV_IMAP_OPT_NORSH'])
+				$conf_str .= '/norsh';
+			if ($conf['PS_SAV_IMAP_OPT_SSL'])
+				$conf_str .= '/ssl';
+			if ($conf['PS_SAV_IMAP_OPT_VALIDATE-CERT'])
+				$conf_str .= '/validate-cert';
+			if ($conf['PS_SAV_IMAP_OPT_NOVALIDATE-CERT'])
+				$conf_str .= '/novalidate-cert';
+			if ($conf['PS_SAV_IMAP_OPT_TLS'])
+				$conf_str .= '/tls';
+			if ($conf['PS_SAV_IMAP_OPT_NOTLS'])
+				$conf_str .= '/notls';
+
+			if (!function_exists('imap_open'))
+				die('{"hasError" : true, "errors" : ["imap is not installed on this server"]}');
+
+			$mbox = @imap_open('{'.$url.':'.$port.$conf_str.'}', $user, $password);
+
+			//checks if there is no error when connecting imap server
+			$errors = imap_errors();
+			$str_errors = '';
+			$str_error_delete = '';
+			if (sizeof($errors) && is_array($errors))
+			{
+				$str_errors = '';
+				foreach($errors as $error)
+					$str_errors .= '"'.$error.'",';
+				$str_errors = rtrim($str_errors, ',').'';
+			}
+			//checks if imap connexion is active
+			if (!$mbox)
+				die('{"hasError" : true, "errors" : ["Cannot connect to the mailbox:.<br />'.addslashes($str_errors).'"]}');
+
+			//Returns information about the current mailbox. Returns FALSE on failure.
+			$check = imap_check($mbox);
+			if (!$check)
+				die('{"hasError" : true, "errors" : ["Fail to get information about the current mailbox"]}');
+
+			if ($check->Nmsgs == 0)
+				die('{"hasError" : true, "errors" : ["NO message to sync"]}');
+
+			$result = imap_fetch_overview($mbox,"1:{$check->Nmsgs}",0);
+			foreach ($result as $overview)
+			{
+				 //check if message exist in database
+				 if (isset($overview->subject))
+						$subject = $overview->subject;
+					else
+						$subject = '';
+				//Creating an md5 to check if message has been allready processed
+				 $md5 = md5($overview->date.$overview->from.$subject.$overview->msgno);
+				 $exist = Db::getInstance()->getValue(
+						 'SELECT `md5_header`
+						 FROM `'._DB_PREFIX_.'customer_message_sync_imap`
+						 WHERE `md5_header` = \''.pSQL($md5).'\'');
+				 if ($exist)
+				 {
+					if (Configuration::get('PS_SAV_IMAP_DELETE_MSG'))
+						if (!imap_delete($mbox, $overview->msgno))
+							$str_error_delete = ', "Fail to delete message"';
+				 }
+				 else
+				 {
+				 	//check if subject has id_order
+				 	preg_match('/\#ct([0-9]*)/', $subject, $matches1);
+				 	preg_match('/\#tc([0-9-a-z-A-Z]*)/', $subject, $matches2);
+					$new_ct = (Configuration::get('PS_SAV_IMAP_CREATE_THREADS') && !isset($matches1[1]) && !isset($matches2[1]) && !preg_match('/[no_sync]/', $subject));
+					if (isset($matches1[1]) && isset($matches2[1]) || $new_ct)
+					{
+						if ($new_ct)
+						{
+							if (!preg_match('/<('.Tools::cleanNonUnicodeSupport('[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+').')>/', $overview->from, $result)
+								|| !Validate::isEmail($from = $result[1]))
+									continue;
+							
+							$contacts = Contact::getCategoriesContacts();
+							if (!$contacts)
+								continue;
+							$id_contact = $contacts[0]['id_contact'];
+							
+							$ct = new CustomerThread();
+							$ct->email = $from;
+							$ct->id_contact = $id_contact;
+							$ct->id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+							$ct->status = 'open';
+							$ct->token = Tools::passwdGen(12);
+							$ct->add();	
+						}
+						else
+							$ct = new CustomerThread((int)$matches1[1]); //check if order exist in database
+
+						if (Validate::isLoadedObject($ct) && ((isset($matches2[1]) && $ct->token == $matches2[1]) || $new_ct))
+						{
+							$cm = new CustomerMessage();
+							$cm->id_customer_thread = $ct->id;
+							$cm->message = imap_fetchbody($mbox, $overview->msgno, 1);
+							$cm->add();
+						}
+					}
+					Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customer_message_sync_imap` (`md5_header`) VALUES (\''.pSQL($md5).'\')');
+				}
+			}
+			imap_expunge($mbox);
+			imap_close($mbox);
+			die('{"hasError" : false, "errors" : ["'.$str_errors.$str_error_delete.'"]}');
+		}
 	}
 }

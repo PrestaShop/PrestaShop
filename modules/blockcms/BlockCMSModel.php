@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -38,6 +38,7 @@ class BlockCMSModel extends ObjectModel
 
 	const LEFT_COLUMN = 0;
 	const RIGHT_COLUMN = 1;
+	const FOOTER = 2;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -335,7 +336,7 @@ class BlockCMSModel extends ObjectModel
 			ON (bc.`id_cms_category` = ccl.`id_cms_category`)
 			INNER JOIN `'._DB_PREFIX_.'cms_block_lang` bcl
 			ON (bc.`id_cms_block` = bcl.`id_cms_block`)
-			WHERE bc.`location` = '.(int)($location).'
+			WHERE bc.`location` = '.(int)$location.'
 			AND ccl.`id_lang` = '.(int)$context->language->id.'
 			AND bcl.`id_lang` = '.(int)$context->language->id.'
 			AND bcs.id_shop = '.($id_shop ? (int)$id_shop : (int)$context->shop->id).'
@@ -540,7 +541,7 @@ class BlockCMSModel extends ObjectModel
 				{
 					foreach ($content[$key]['cms'] as $row)
 					{
-						$row['link'] = $context->link->getCMSLink((int)($row['id_cms']), $row['link_rewrite']);
+						$row['link'] = $context->link->getCMSLink((int)$row['id_cms'], $row['link_rewrite']);
 						$links[] = $row;
 					}
 				}

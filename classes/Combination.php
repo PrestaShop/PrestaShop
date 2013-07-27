@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -102,7 +102,14 @@ class CombinationCore extends ObjectModel
 			
 		// Removes the product from StockAvailable, for the current shop
 		StockAvailable::removeProductFromStockAvailable((int)$this->id_product, (int)$this->id);
-		
+
+		if ($specific_prices = SpecificPrice::getByProductId((int)$this->id_product, (int)$this->id))
+			foreach ($specific_prices as $specific_price)
+				{
+					$price = new SpecificPrice((int)$specific_price['id_specific_price']);
+					$price->delete();
+				}
+
 		if (!$this->hasMultishopEntries() && !$this->deleteAssociations())
 			return false;
 		return true;
@@ -134,7 +141,8 @@ class CombinationCore extends ObjectModel
 
 	public function setAttributes($ids_attribute)
 	{
-		if ($this->deleteAssociations())
+		$result = $this->deleteAssociations();
+		if ($result && !empty($ids_attribute)) 
 		{
 			$sql_values = array();
 			foreach ($ids_attribute as $value)
@@ -144,10 +152,8 @@ class CombinationCore extends ObjectModel
 				INSERT INTO `'._DB_PREFIX_.'product_attribute_combination` (`id_attribute`, `id_product_attribute`)
 				VALUES '.implode(',', $sql_values)
 			);
-
-			return $result;
 		}
-		return false;
+		return $result;
 	}
 
 	public function setWsProductOptionValues($values)

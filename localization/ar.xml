@@ -5,6 +5,7 @@
 	</currencies>
 	<languages>
 		<language iso_code="ag" />
+		<language iso_code="es" />
 	</languages>
 	<taxes>
 		<tax id="1" name="IVA AR 21%" rate="21" />
@@ -16,8 +17,8 @@
 	<units>
 		<unit type="weight" value="libra" />
 		<unit type="volume" value="L" />
-		<unit type="short_distance" value="pie" />
-		<unit type="base_distance" value="cuadra" />
-		<unit type="long_distance" value="braza" />
+		<unit type="short_distance" value="centimetro" />
+		<unit type="base_distance" value="metro" />
+		<unit type="long_distance" value="kilometro" />
 	</units>
 </localizationPack>

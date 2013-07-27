@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -31,7 +31,7 @@
 //]]>
 </script>
 
-	<form method="post" action="{$link->getPageLink('products-comparison')}" onsubmit="true">
+	<form method="post" action="{$link->getPageLink('products-comparison')|escape:'html'}" onsubmit="true">
 		<p>
 		<input type="submit" id="bt_compare" class="button" value="{l s='Compare'}" />
 		<input type="hidden" name="compare_product_list" class="compare_product_list" value="" />

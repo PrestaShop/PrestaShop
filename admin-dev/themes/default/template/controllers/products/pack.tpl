@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -43,7 +43,7 @@
 			<div id="ppackdiv" {if !($product_type == Product::PTYPE_PACK)}style="display: none;"{/if}>
 
 				<label for="curPackItemName" style="width:560px;text-align:left;">
-					{l s='Begin typing the first letters of the product name, then select the product from the drop-down list:'}
+					{l s='Begin typing the first letters of the product name. Then select the product from the drop-down list:'}
 				</label><br /><br />
 
 				<input type="text" size="25" id="curPackItemName" />

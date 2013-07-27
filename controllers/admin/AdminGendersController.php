@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -139,14 +139,14 @@ class AdminGendersControllerCore extends AdminController
 					'label' => $this->l('Image Width:'),
 					'name' => 'img_width',
 					'size' => 4,
-					'desc' => $this->l('Image width in pixels. Enter "0" to use original size')
+					'desc' => $this->l('Image width in pixels. Enter "0" to use the original size.')
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Image Height:'),
 					'name' => 'img_height',
 					'size' => 4,
-					'desc' => $this->l('Image height in pixels. Enter "0" to use original size')
+					'desc' => $this->l('Image height in pixels. Enter "0" to use the original size.')
 				)
 			),
 			'submit' => array(
@@ -177,7 +177,7 @@ class AdminGendersControllerCore extends AdminController
 		if (isset($this->fieldImageSettings['name']) && isset($this->fieldImageSettings['dir']))
 		{
 			if (!Validate::isInt(Tools::getValue('img_width')) || !Validate::isInt(Tools::getValue('img_height')))
-				$this->errors[] = Tools::displayError('Width and height must be numeric values');
+				$this->errors[] = Tools::displayError('Width and height must be numeric values.');
 			else
 			{
 				if ((int)Tools::getValue('img_width') > 0 && (int)Tools::getValue('img_height') > 0)

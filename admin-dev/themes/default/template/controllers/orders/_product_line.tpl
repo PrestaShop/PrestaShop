@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -49,7 +49,7 @@
 		{/if}
 	</td>
 	<td align="center" class="productQuantity">
-		<span class="product_quantity_show">{$product['product_quantity']}</span>
+		<span class="product_quantity_show{if (int)$product['product_quantity'] > 1} red bold{/if}">{$product['product_quantity']}</span>
 		{if $can_edit}
 		<span class="product_quantity_edit" style="display:none;">
 			<input type="text" name="product_quantity" class="edit_product_quantity" value="{$product['product_quantity']|htmlentities}" size="2" />
@@ -88,7 +88,7 @@
 			{/if}
 		</td>
 	{/if}
-	<td align="center" class="productQuantity product_stock">{$product['current_stock']}</td>
+	{if $stock_management}<td align="center" class="productQuantity product_stock">{$product['current_stock']}</td>{/if}
 	<td align="center" class="total_product">
 		{displayPrice price=(Tools::ps_round($product_price, 2) * ($product['product_quantity'] - $product['customizationQuantityTotal'])) currency=$currency->id}
 	</td>
@@ -98,7 +98,7 @@
 		<input type="hidden" name="totalQty" id="totalQty" value="{$product['product_quantity']}" />
 		<input type="hidden" name="productName" id="productName" value="{$product['product_name']}" />
 	{if ((!$order->hasBeenDelivered() OR Configuration::get('PS_ORDER_RETURN')) AND (int)($product['product_quantity_return']) < (int)($product['product_quantity']))}
-		<input type="checkbox" name="id_order_detail[{$product['id_order_detail']}]" id="id_order_detail[{$product['id_order_detail']}]" value="{$product['id_order_detail']}" onchange="setCancelQuantity(this, {$product['id_order_detail']}, {$product['product_quantity_in_stock'] - $product['customizationQuantityTotal'] - $product['product_quantity_reinjected']})" {if ($product['product_quantity_return'] + $product['product_quantity_refunded'] >= $product['product_quantity'])}disabled="disabled" {/if}/>
+		<input type="checkbox" name="id_order_detail[{$product['id_order_detail']}]" id="id_order_detail[{$product['id_order_detail']}]" value="{$product['id_order_detail']}" onchange="setCancelQuantity(this, {$product['id_order_detail']}, {$product['product_quantity'] - $product['customizationQuantityTotal'] - $product['product_quantity_return']})" {if ($product['product_quantity_return'] + $product['product_quantity_refunded'] >= $product['product_quantity'])}disabled="disabled" {/if}/>
 	{else}
 		--
 	{/if}
@@ -135,7 +135,7 @@
 		{if sizeof($invoices_collection)}
 		<select name="product_invoice" class="edit_product_invoice">
 			{foreach from=$invoices_collection item=invoice}
-			<option value="{$invoice->id}" {if $invoice->id == $product['id_order_invoice']}selected="selected"{/if}>#{Configuration::get('PS_INVOICE_PREFIX', $current_id_lang)}{'%06d'|sprintf:$invoice->number}</option>
+			<option value="{$invoice->id}" {if $invoice->id == $product['id_order_invoice']}selected="selected"{/if}>#{Configuration::get('PS_INVOICE_PREFIX', $current_id_lang, null, $order->id_shop)}{'%06d'|sprintf:$invoice->number}</option>
 			{/foreach}
 		</select>
 		{else}

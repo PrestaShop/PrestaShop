@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -39,8 +39,8 @@ class BlockSearch extends Module
 
 		parent::__construct();
 
-		$this->displayName = $this->l('Quick Search block');
-		$this->description = $this->l('Adds a block with a quick search field.');
+		$this->displayName = $this->l('Quick search block');
+		$this->description = $this->l('Adds a quick search field to your website.');
 	}
 
 	public function install()
@@ -80,16 +80,23 @@ public function hookDisplayMobileHeader($params)
 
 	public function hookRightColumn($params)
 	{
-		$this->calculHookCommon($params);
-		$this->smarty->assign('blocksearch_type', 'block');
-		return $this->display(__FILE__, 'blocksearch.tpl');
+		if (!$this->isCached('blocksearch.tpl', $this->getCacheId()))
+		{
+			$this->calculHookCommon($params);
+			$this->smarty->assign('blocksearch_type', 'block');
+		}
+		return $this->display(__FILE__, 'blocksearch.tpl', $this->getCacheId());
 	}
 
 	public function hookTop($params)
 	{
-		$this->calculHookCommon($params);
-		$this->smarty->assign('blocksearch_type', 'top');
-		return $this->display(__FILE__, 'blocksearch-top.tpl');
+		if (!$this->isCached('blocksearch-top.tpl', $this->getCacheId('blocksearch-top')))
+		{
+			$this->calculHookCommon($params);
+			$this->smarty->assign('blocksearch_type', 'top');
+		}
+
+		return $this->display(__FILE__, 'blocksearch-top.tpl', $this->getCacheId('blocksearch-top'));
 	}
 
 	/**

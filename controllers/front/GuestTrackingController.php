@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -50,17 +50,18 @@ class GuestTrackingControllerCore extends FrontController
 		if (Tools::isSubmit('submitGuestTracking') || Tools::isSubmit('submitTransformGuestToCustomer'))
 		{
 			// These lines are here for retrocompatibility with old theme
-			$id_order = (int)Tools::getValue('id_order');
+			$id_order = Tools::getValue('id_order');
 			$order_collection = array();
 			if ($id_order)
 			{
 				if (is_numeric($id_order))
+				{
 					$order = new Order((int)$id_order);
+					if (Validate::isLoadedObject($order))
+						$order_collection[] = $order;
+				}
 				else
-					$order = Order::getByReference($id_order);
-
-				if (Validate::isLoadedObject($order))
-					$order_collection[] = $order;
+					$order_collection = Order::getByReference($id_order);
 			}
 
 			// Get order reference, ignore package reference (after the #, on the order reference)
@@ -72,23 +73,23 @@ class GuestTrackingControllerCore extends FrontController
 			$email = Tools::getValue('email');
 
 			if (empty($order_reference) && empty($id_order))
-				$this->errors[] = Tools::displayError('Please provide your Order Reference');
+				$this->errors[] = Tools::displayError('Please provide your order\'s reference number.');
 			else if (empty($email))
-				$this->errors[] = Tools::displayError('Please provide your e-mail address');
+				$this->errors[] = Tools::displayError('Please provide a valid email address.');
 			else if (!Validate::isEmail($email))
-				$this->errors[] = Tools::displayError('Please provide a valid e-mail address');
+				$this->errors[] = Tools::displayError('Please provide a valid email address.');
 			else if (!Customer::customerExists($email, false, false))
-				$this->errors[] = Tools::displayError('There is no account associated with this e-mail address');
+				$this->errors[] = Tools::displayError('There is no account associated with this email address.');
 			else if (Customer::customerExists($email, false, true))
 			{
 				$this->errors[] = Tools::displayError('Your guest account has already been transformed into a customer account.').' '.
-					Tools::displayError('Please login to your customer account to view this order, this section is reserved for guest accounts');
+					Tools::displayError('Please login to your customer account to view this order. This section is reserved for guest accounts.');
 				$this->context->smarty->assign('show_login_link', true);
 			}
 			else if (!count($order_collection))
-				$this->errors[] = Tools::displayError('Invalid Order Reference');
+				$this->errors[] = Tools::displayError('Invalid order reference');
 			else if (!$order_collection->getFirst()->isAssociatedAtGuest($email))
-				$this->errors[] = Tools::displayError('Invalid Order Reference');
+				$this->errors[] = Tools::displayError('Invalid order reference');
 			else
 			{
 				$this->assignOrderTracking($order_collection);
@@ -97,11 +98,11 @@ class GuestTrackingControllerCore extends FrontController
 					$customer = new Customer((int)$order->id_customer);
 					if (!Validate::isLoadedObject($customer))
 						$this->errors[] = Tools::displayError('Invalid customer');
+					else if (!Tools::getValue('password'))
+						$this->errors[] = Tools::displayError('Invalid password.');
 					else if (!$customer->transformToCustomer($this->context->language->id, Tools::getValue('password')))
 						// @todo clarify error message
-						$this->errors[] = Tools::displayError('An error occurred while transforming guest to customer.');
-					else if (!Tools::getValue('password'))
-						$this->errors[] = Tools::displayError('Invalid password');
+						$this->errors[] = Tools::displayError('An error occurred while transforming a guest into a registered customer.');
 					else
 						$this->context->smarty->assign('transformSuccess', true);
 				}
@@ -155,8 +156,8 @@ class GuestTrackingControllerCore extends FrontController
 			$order->deliveryAddressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($order->address_delivery, $order->dlv_adr_fields);
 			$order->currency = new Currency($order->id_currency);
 			$order->discounts = $order->getCartRules();
-			$order->invoiceState = (Validate::isLoadedObject($order->address_invoice) && $order->address_invoice->id_state) ? new State((int)$order->addressInvoice->id_state) : false;
-			$order->deliveryState = (Validate::isLoadedObject($order->address_delivery) && $order->address_delivery->id_state) ? new State((int)$order->addressDelivery->id_state) : false;
+			$order->invoiceState = (Validate::isLoadedObject($order->address_invoice) && $order->address_invoice->id_state) ? new State((int)$order->address_invoice->id_state) : false;
+			$order->deliveryState = (Validate::isLoadedObject($order->address_delivery) && $order->address_delivery->id_state) ? new State((int)$order->address_delivery->id_state) : false;
 			$order->products = $order->getProducts();
 			$order->customizedDatas = Product::getAllCustomizedDatas((int)$order->id_cart);
 			Product::addCustomizationPrice($order->products, $order->customizedDatas);

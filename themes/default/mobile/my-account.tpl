@@ -27,52 +27,52 @@
 {include file='./page-title.tpl'}
 
 <div data-role="content" id="content">
-		<p>{l s='Welcome to your account. Here, you can manage your addresses and orders.'}</p>
+		<p>{l s='Welcome to your account. Here you can manage al of your personal information and orders. '}</p>
 		
 		<ul data-role="listview" data-inset="true" id="list_myaccount">
 			{if $has_customer_an_address}
 			<li>
-				<a href="{$link->getPageLink('address', true)}" title="{l s='Add my first address'}" data-ajax="false">
+				<a href="{$link->getPageLink('address', true)|escape:'html'}" title="{l s='Add my first address'}" data-ajax="false">
 					<img src="{$img_mobile_dir}icon/addrbook.png" alt="{l s='Addresses'}" class="ui-li-icon ui-li-thumb" />
 					{l s='Add my first address'}
 				</a>
 			</li>
 			{/if}
 			<li>
-				<a href="{$link->getPageLink('history', true)}" title="{l s='Orders'}" data-ajax="false">
+				<a href="{$link->getPageLink('history', true)|escape:'html'}" title="{l s='Orders'}" data-ajax="false">
 					<img src="{$img_mobile_dir}icon/order.png" alt="{l s='Orders'}" class="ui-li-icon ui-li-thumb" />
-					{l s='History and details of my orders'}
+					{l s='Order history and details '}
 				</a>
 			</li>
 			{if $returnAllowed}
 			<li>
-				<a href="{$link->getPageLink('order-follow', true)}" title="{l s='Merchandise returns'}" data-ajax="false">
+				<a href="{$link->getPageLink('order-follow', true)|escape:'html'}" title="{l s='Merchandise returns'}" data-ajax="false">
 					<img src="{$img_mobile_dir}icon/return.png" alt="{l s='Merchandise returns'}" class="ui-li-icon ui-li-thumb" />
 					{l s='My merchandise returns'}
 				</a>
 			</li>
 			{/if}
 			<li>
-				<a href="{$link->getPageLink('order-slip', true)}" title="{l s='Credit slips'}" data-ajax="false">
+				<a href="{$link->getPageLink('order-slip', true)|escape:'html'}" title="{l s='Credit slips'}" data-ajax="false">
 					<img src="{$img_mobile_dir}icon/slip.png" alt="{l s='Credit slips'}" class="ui-li-icon ui-li-thumb" />
 					{l s='My credit slips'}
 				</a>
 			</li>
 			<li>
-				<a href="{$link->getPageLink('addresses', true)}" title="{l s='Addresses'}" data-ajax="false">
+				<a href="{$link->getPageLink('addresses', true)|escape:'html'}" title="{l s='Addresses'}" data-ajax="false">
 					<img src="{$img_mobile_dir}icon/addrbook.png" alt="{l s='Addresses'}" class="ui-li-icon ui-li-thumb" />
 					{l s='My addresses'}
 				</a>
 			</li>
 			<li>
-				<a href="{$link->getPageLink('identity', true)}" title="{l s='Information'}" data-ajax="false">
+				<a href="{$link->getPageLink('identity', true)|escape:'html'}" title="{l s='Information'}" data-ajax="false">
 					<img src="{$img_mobile_dir}icon/userinfos.png" alt="{l s='Information'}" class="ui-li-icon ui-li-thumb" />
 					{l s='My personal information'}
 				</a>
 			</li>
 			{if $voucherAllowed}
 			<li>
-				<a href="{$link->getPageLink('discount', true)}" title="{l s='Vouchers'}" data-ajax="false">
+				<a href="{$link->getPageLink('discount', true)|escape:'html'}" title="{l s='Vouchers'}" data-ajax="false">
 					<img src="{$img_mobile_dir}icon/voucher.png" alt="{l s='Vouchers'}" class="ui-li-icon ui-li-thumb" />
 					{l s='My vouchers'}
 				</a>

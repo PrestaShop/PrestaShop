@@ -96,7 +96,6 @@
    height:20px;
    width:288px;
    border:1px solid #ccc;
-   background:url(../img/bg_input.png) repeat-x 0 0 #fff
 }
 #module-blockwishlist-mywishlist #mywishlist  p.submit {
 	margin-right:25px;
@@ -222,7 +221,7 @@ ul.wlp_bought_list li .product_infos {
 	margin-left:10px;
 	width:126px
 }
-ul.wlp_bought_list li .product_infos h5.product_name {
+ul.wlp_bought_list li .product_infos .s_title_block.product_name {
    padding:5px 0;
    font-size:12px;
    color:#222

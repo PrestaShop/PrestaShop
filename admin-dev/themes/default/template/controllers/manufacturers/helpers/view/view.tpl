@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -29,16 +29,16 @@
 
 	<h2>{$manufacturer->name}</h2>
 
-	<h3>{l s='Total addresses:'} {count($addresses)}</h3>
+	<h3>{l s='Total addresses'} {count($addresses)}</h3>
 	<hr />
 
 	{if !count($addresses)}
-		{l s='No address for this manufacturer'}
+		{l s='No address has been found for this manufacturer.'}
 	{else}
 		{foreach $addresses AS $addresse}
 			<table border="0" cellpadding="0" cellspacing="0" class="table" style="width: 600px;">
 				<tr>
-					<th><strong>{$addresse.firstname} {$addresse.lastname}</strong></th>
+					<th><strong>{$addresse.firstname} {$addresse.lastname} <a href="{$link->getAdminLink('AdminManufacturers')}&id_address={$addresse.id_address}&editaddresses=1"><img src="../img/admin/edit.gif"></a></strong></th>
 				</tr>
 				<tr>
 					<td>
@@ -60,7 +60,7 @@
 		{/foreach}
 	{/if}
 
-	<h3>{l s='Total products:'} {count($products)}</h3>
+	<h3>{l s='Total products'} {count($products)}</h3>
 	{foreach $products AS $product}
 		<hr />
 		{if !$product->hasAttributes()}

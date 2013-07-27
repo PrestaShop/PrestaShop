@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -94,7 +94,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 				'width' => 80,
 				'orderby' => true,
 				'search' => false,
-				'hint' => $this->l('Pysical qty (usable) - Clients orders + Supply Orders'),
+				'hint' => $this->l('Pysical quantity (usable) - Client orders + Supply Orders'),
 			),
 		);
 
@@ -152,7 +152,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 		$this->ajax_params = array('id_warehouse' => $this->getCurrentCoverageWarehouse());
 
 		// displays help information
-		$this->displayInformation($this->l('This interface allows you to display detailed information on your stock per warehouse.'));
+		$this->displayInformation($this->l('This interface allows you to display detailed information about your stock per warehouse.'));
 
 		// sets toolbar
 		$this->initToolbar();
@@ -181,11 +181,13 @@ class AdminStockInstantStateControllerCore extends AdminController
 	 */
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
-		if (Tools::isSubmit('csv') && (int)Tools::getValue('id_warehouse') != -1)
+		if ((Tools::isSubmit('csv_quantities') || Tools::isSubmit('csv_prices')) &&
+			(int)Tools::getValue('id_warehouse') != -1)
 			$limit = false;
 
 		$order_by_valuation = false;
 		$order_by_real_quantity = false;
+
 		if ($this->context->cookie->{$this->table.'Orderby'} == 'valuation')
 		{
 			unset($this->context->cookie->{$this->table.'Orderby'});
@@ -200,6 +202,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 
 		$nb_items = count($this->_list);
+
 		for ($i = 0; $i < $nb_items; ++$i)
 		{
 			$item = &$this->_list[$i];
@@ -446,7 +449,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 		{
-			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management prior to use this feature.');
+			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management before using this feature.');
 			return false;
 		}
 		parent::initContent();
@@ -456,7 +459,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 		{
-			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management prior to use this feature.');
+			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management before using this feature.');
 			return false;
 		}
 		parent::initProcess();	

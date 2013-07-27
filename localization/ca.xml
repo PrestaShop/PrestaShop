@@ -25,7 +25,7 @@
 		<tax id="2" name="7%" rate="7" />
 		<tax id="3" name="8%" rate="8" />
 		<tax id="4" name="10%" rate="10" />
-		<tax id="5" name="9.5%" rate="9.5" />
+		<tax id="5" name="9.975%" rate="9.975" />
 		<tax id="8" name="5%" rate="5" />
 
 		<taxRulesGroup name="CA Standard Rate">
@@ -37,7 +37,7 @@
 			<taxRule iso_code_country="ca" iso_code_state="ns" id_tax="4" behavior="1" />
 			<taxRule iso_code_country="ca" iso_code_state="on" id_tax="3" behavior="1" />
 			<taxRule iso_code_country="ca" iso_code_state="pe" id_tax="4" behavior="2" />
-			<taxRule iso_code_country="ca" iso_code_state="qc" id_tax="5" behavior="2" />
+			<taxRule iso_code_country="ca" iso_code_state="qc" id_tax="5" behavior="1" />
 			<taxRule iso_code_country="ca" iso_code_state="sk" id_tax="1" behavior="1" />
 		</taxRulesGroup>
 	</taxes>

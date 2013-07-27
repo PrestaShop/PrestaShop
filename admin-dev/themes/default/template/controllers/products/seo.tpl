@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -41,7 +41,7 @@
 				languages=$languages
 				input_name='meta_title'
 				input_value=$product->meta_title}
-			<p class="preference_description">{l s='Product page title; leave blank to use product name'}</p>
+			<p class="preference_description">{l s='Product page title: Leave blank to use the product name'}</p>
 		</td>
 	</tr>
 	<tr>
@@ -55,7 +55,7 @@
 				input_name='meta_description'
 				input_value=$product->meta_description
 				input_hint='{l s=\'Forbidden characters:\'\} <>;=#{\}'}
-			<p class="preference_description">{l s='A single sentence for HTML header'}</p>
+			<p class="preference_description">{l s='A single sentence for the HTML header is needed. '}</p>
 		</td>
 	</tr>
 	<tr>
@@ -67,7 +67,7 @@
 			{include file="controllers/products/input_text_lang.tpl" languages=$languages
 				input_value=$product->meta_keywords
 				input_name='meta_keywords'}
-			<p class="preference_description">{l s='Keywords for HTML header, separated by commas'}</p>
+			<p class="preference_description">{l s='Keywords for HTML header, separated by commas.'}</p>
 		</td>
 	</tr>
 	<tr>
@@ -84,8 +84,8 @@
 			<p class="clear" style="padding:10px 0 0 0">
 			<a style="cursor:pointer" class="button"
 			onmousedown="updateFriendlyURLByName();">{l s='Generate'}</a>&nbsp;
-			{l s='Friendly URL from product name.'}<br /><br />
-			{l s='Product link will look like this:'}
+			{l s='friendly URL from the product name.'}<br /><br />
+			{l s='The product link will look like this:'}
 			{$curent_shop_url|escape:'htmlall':'UTF-8'}lang/{if isset($product->id)}{$product->id}{else}<b>id_product</b>{/if}-<span id="friendly-url">{$product->link_rewrite[$default_language]}</span>.html</p>
 		</td>
 	</tr>

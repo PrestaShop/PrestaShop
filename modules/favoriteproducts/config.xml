@@ -3,7 +3,7 @@
             <name>favoriteproducts</name>
             <displayName><![CDATA[Favorite Products]]></displayName>
             <version><![CDATA[1]]></version>
-            <description><![CDATA[Display a page with the favorite products of the customer]]></description>
+            <description><![CDATA[Display a page featuring the customer&#039;s favorite products.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>
             <is_configurable>0</is_configurable>

@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -50,7 +50,7 @@
 	<!-- Pagination -->
 <div class="clearfix">
 	<div class="pagination_mobile wrapper_pagination_mobile">
-	{if $start!=$stop}
+	{if $start!=$stop && $pages_nb >= 1}
 		<ul class="pagination_mobile" data-role="controlgroup" data-type="horizontal">
 		{if $p != 1}
 			{assign var='p_previous' value=$p-1}
@@ -59,19 +59,19 @@
 			<a {$no_follow_text} class="button_prev{if $p == 1} disabled{/if}" data-role="button" data-icon="arrow-l" data-iconpos="left" href="{if isset($p_previous)}{$link->goPage($requestPage, $p_previous)}{/if}" data-ajax="false">{l s='Previous'}</a>
 		</li>
 		{if $start>3}
-			<li><a {$no_follow_text}  href="{$link->goPage($requestPage, 1)}" data-ajax="false">1</a></li>
+			<li><a {$no_follow_text}  href="{$link->goPage($requestPage, 1)|escape:'html'}" data-ajax="false">1</a></li>
 			<li class="truncate">...</li>
 		{/if}
 		{section name=pagination start=$start loop=$stop+1 step=1}
 			{if $p == $smarty.section.pagination.index}
 				<li class="current"><a href="#" data-role="button" class="ui-btn-active" data-ajax="false">{$p|escape:'htmlall':'UTF-8'}</a></li>
 			{else}
-				<li><a data-role="button" {$no_follow_text} href="{$link->goPage($requestPage, $smarty.section.pagination.index)}" data-ajax="false">{$smarty.section.pagination.index|escape:'htmlall':'UTF-8'}</a></li>
+				<li><a data-role="button" {$no_follow_text} href="{$link->goPage($requestPage, $smarty.section.pagination.index)|escape:'html'}" data-ajax="false">{$smarty.section.pagination.index|escape:'htmlall':'UTF-8'}</a></li>
 			{/if}
 		{/section}
 		{if $pages_nb>$stop+2}
 			<li class="truncate">...</li>
-			<li><a href="{$link->goPage($requestPage, $pages_nb)}" data-ajax="false">{$pages_nb|intval}</a></li>
+			<li><a href="{$link->goPage($requestPage, $pages_nb)|escape:'html'}" data-ajax="false">{$pages_nb|intval}</a></li>
 		{/if}
 		{if $pages_nb > 1 AND $p != $pages_nb}
 			{assign var='p_next' value=$p+1}

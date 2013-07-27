@@ -144,7 +144,52 @@ abstract class Smarty_Resource {
 
         $compiled->filepath = $_compile_dir . $_filepath . '.' . $compiled->source->type . $_basename . $_cache . '.php';
     }
-
+    
+    /**
+     * Normalize Paths "foo/../bar" to "bar" 
+     *
+     * @param string $_path path to normalize
+     * @param boolean $ds respect windows directory separator
+     * @return string normalized path
+     */
+    protected function normalizePath($_path, $ds=true)
+    {
+        if ($ds) {
+            // don't we all just love windows?
+            $_path = str_replace('\\', '/', $_path);
+        }
+        
+        $offset = 0;
+        
+        // resolve simples
+        $_path = preg_replace('#(/\./(\./)*)|/{2,}#', '/', $_path);
+        // resolve parents
+        while (true) {
+            $_parent = strpos($_path, '/../', $offset);
+            if (!$_parent) {
+                break;
+            } else if ($_path[$_parent - 1] === '.') {
+                $offset = $_parent + 3;
+                continue;
+            }
+            
+            $_pos = strrpos($_path, '/', $_parent - strlen($_path) - 1);
+            if ($_pos === false) {
+                // don't we all just love windows?
+                $_pos = $_parent;
+            }
+            
+            $_path = substr_replace($_path, '', $_pos, $_parent + 3 - $_pos);
+        }
+        
+        if ($ds && DS != '/') {
+            // don't we all just love windows?
+            $_path = str_replace('/', '\\', $_path);
+        }
+        
+        return $_path;
+    }
+    
     /**
      * build template filepath by traversing the template_dir array
      *
@@ -181,43 +226,22 @@ abstract class Smarty_Resource {
 
         // resolve relative path
         if (!preg_match('/^([\/\\\\]|[a-zA-Z]:[\/\\\\])/', $file)) {
-            $_was_relative_prefix = $file[0] == '.' ? substr($file, 0, strpos($file, '|')) : null;
-            $_path = DS . trim($file, '/\\');
+            // don't we all just love windows?
+            $_path = str_replace('\\', '/', $file);
+            $_path = DS . trim($file, '/');
             $_was_relative = true;
         } else {
-            $_path = $file;
+            // don't we all just love windows?
+            $_path = str_replace('\\', '/', $file);
         }
-        // don't we all just love windows?
-        $_path = str_replace('\\', '/', $_path);
-        // resolve simples
-        $_path = preg_replace('#(/\./(\./)*)|/{2,}#', '/', $_path);
-        // resolve parents
-        while (true) {
-            $_parent = strpos($_path, '/../');
-            if ($_parent === false) {
-                break;
-            } else if ($_parent === 0) {
-                $_path = substr($_path, 3);
-                break;
-            }
-            $_pos = strrpos($_path, '/', $_parent - strlen($_path) - 1);
-            if ($_pos === false) {
-                // don't we all just love windows?
-                $_pos = $_parent;
-            }
-            $_path = substr_replace($_path, '', $_pos, $_parent + 3 - $_pos);
-        }
+        $_path = $this->normalizePath($_path, false);
         if (DS != '/') {
             // don't we all just love windows?
             $_path = str_replace('/', '\\', $_path);
         }
         // revert to relative
         if (isset($_was_relative)) {
-            if (isset($_was_relative_prefix)){
-                $_path = $_was_relative_prefix . $_path;
-            } else {
-                $_path = substr($_path, 1);
-            }
+            $_path = substr($_path, 1);
         }
 
         // this is only required for directories
@@ -254,7 +278,7 @@ abstract class Smarty_Resource {
                 }
             }
         }
-        
+
         $_stream_resolve_include_path = function_exists('stream_resolve_include_path');
 
         // relative file name?
@@ -262,7 +286,7 @@ abstract class Smarty_Resource {
             foreach ($_directories as $_directory) {
                 $_filepath = $_directory . $file;
                 if ($this->fileExists($source, $_filepath)) {
-                    return $_filepath;
+                    return $this->normalizePath($_filepath);
                 }
                 if ($source->smarty->use_include_path && !preg_match('/^([\/\\\\]|[a-zA-Z]:[\/\\\\])/', $_directory)) {
                     // try PHP include_path
@@ -271,10 +295,10 @@ abstract class Smarty_Resource {
                     } else {
                         $_filepath = Smarty_Internal_Get_Include_Path::getIncludePath($_filepath);
                     }
-                    
+
                     if ($_filepath !== false) {
                         if ($this->fileExists($source, $_filepath)) {
-                            return $_filepath;
+                            return $this->normalizePath($_filepath);
                         }
                     }
                 }
@@ -493,6 +517,9 @@ abstract class Smarty_Resource {
 
         // check runtime cache
         $_cache_key = 'template|' . $unique_resource_name;
+        if ($smarty->compile_id) {
+            $_cache_key .= '|'.$smarty->compile_id;
+        }
         if (isset(self::$sources[$_cache_key])) {
             return self::$sources[$_cache_key];
         }
@@ -557,7 +584,7 @@ abstract class Smarty_Resource {
  * @author Rodney Rehm
  *
  * @property integer $timestamp Source Timestamp
- * @property boolean $exists    Source Existance
+ * @property boolean $exists    Source Existence
  * @property boolean $template  Extended Template reference
  * @property string  $content   Source Content
  */
@@ -784,7 +811,7 @@ class Smarty_Template_Compiled {
     public $timestamp = null;
 
     /**
-     * Compiled Existance
+     * Compiled Existence
      * @var boolean
      */
     public $exists = false;

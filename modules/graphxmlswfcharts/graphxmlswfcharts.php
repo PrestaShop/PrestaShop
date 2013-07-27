@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop 
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -63,7 +63,7 @@ class GraphXmlSwfCharts extends ModuleGraphEngine
 			Module::__construct();
 			
 			$this->displayName = $this->l('XML/SWF Charts');
-			$this->description = $this->l('XML/SWF Charts is a simple, yet powerful tool using Adobe Flash to create attractive web charts and graphs from dynamic data.');
+			$this->description = $this->l('XML/SWF Charts are simple, yet powerful tools using Adobe Flash to create attractive web charts and graphs from dynamic data.');
 		}
 	}
 

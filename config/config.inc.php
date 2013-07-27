@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -59,7 +59,11 @@ if (_PS_DEBUG_PROFILING_)
 	include_once(_PS_TOOL_DIR_.'profiling/ObjectModel.php');
 	include_once(_PS_TOOL_DIR_.'profiling/Hook.php');
 	include_once(_PS_TOOL_DIR_.'profiling/Db.php');
+	include_once(_PS_TOOL_DIR_.'profiling/Tools.php');
 }
+
+if (Tools::isPHPCLI())
+	Tools::argvToGET($argc, $argv);
 
 /* Redefine REQUEST_URI if empty (on some webservers...) */
 if (!isset($_SERVER['REQUEST_URI']) || empty($_SERVER['REQUEST_URI']))
@@ -82,11 +86,21 @@ if (!isset($_SERVER['REQUEST_URI']) || empty($_SERVER['REQUEST_URI']))
 /* Trying to redefine HTTP_HOST if empty (on some webservers...) */
 if (!isset($_SERVER['HTTP_HOST']) || empty($_SERVER['HTTP_HOST']))
 	$_SERVER['HTTP_HOST'] = @getenv('HTTP_HOST');
+	
+$context = Context::getContext();
 
 /* Initialize the current Shop */
-Context::getContext()->shop = Shop::initialize();
-define('_THEME_NAME_', Context::getContext()->shop->getTheme());
-define('__PS_BASE_URI__', Context::getContext()->shop->getBaseURI());
+try 
+{
+	$context->shop = Shop::initialize();
+}
+catch (PrestaShopException $e)
+{
+	$e->displayMessage();
+}
+
+define('_THEME_NAME_', $context->shop->getTheme());
+define('__PS_BASE_URI__', $context->shop->getBaseURI());
 
 /* Include all defines related to base uri and theme name */
 require_once(dirname(__FILE__).'/defines_uri.inc.php');
@@ -102,10 +116,17 @@ Language::loadLanguages();
 
 /* Loading default country */
 $defaultCountry = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
-Context::getContext()->country = $defaultCountry;
+$context->country = $defaultCountry;
 
 /* It is not safe to rely on the system's timezone settings, and this would generate a PHP Strict Standards notice. */
 @date_default_timezone_set(Configuration::get('PS_TIMEZONE'));
+
+/* Set locales */
+$locale = strtolower(Configuration::get('PS_LOCALE_LANGUAGE')).'_'.strtoupper(Configuration::get('PS_LOCALE_COUNTRY').'.UTF-8');
+setlocale(LC_COLLATE, $locale);
+setlocale(LC_CTYPE, $locale);
+setlocale(LC_TIME, $locale);
+setlocale(LC_NUMERIC, 'en_US.UTF-8');
 
 /* Instantiate cookie */
 
@@ -117,24 +138,25 @@ if (defined('_PS_ADMIN_DIR_'))
 	$cookie = new Cookie('psAdmin', '', $cookie_lifetime);
 else
 {
-	if (Context::getContext()->shop->getGroup()->share_order)
-		$cookie = new Cookie('ps-sg'.Context::getContext()->shop->getGroup()->id, '', $cookie_lifetime, Context::getContext()->shop->getUrlsSharedCart());
+	if ($context->shop->getGroup()->share_order)
+		$cookie = new Cookie('ps-sg'.$context->shop->getGroup()->id, '', $cookie_lifetime, $context->shop->getUrlsSharedCart());
 	else
 	{
 		$domains = null;
-		if(Context::getContext()->shop->domain != Context::getContext()->shop->domain_ssl)
-		  $domains = array(Context::getContext()->shop->domain_ssl, Context::getContext()->shop->domain);
+		if ($context->shop->domain != $context->shop->domain_ssl)
+		  $domains = array($context->shop->domain_ssl, $context->shop->domain);
 		
-		$cookie = new Cookie('ps-s'.Context::getContext()->shop->id, '', $cookie_lifetime, $domains);
+		$cookie = new Cookie('ps-s'.$context->shop->id, '', $cookie_lifetime, $domains);
 	}
 }
 
-Context::getContext()->cookie = $cookie;
+$context->cookie = $cookie;
+
 /* Create employee if in BO, customer else */
 if (defined('_PS_ADMIN_DIR_'))
 {
 	$employee = new Employee($cookie->id_employee);
-	Context::getContext()->employee = $employee;
+	$context->employee = $employee;
 
 	/* Auth on shops are recached after employee assignation */
 	if ($employee->id_profile != _PS_ADMIN_PROFILE_)
@@ -142,31 +164,48 @@ if (defined('_PS_ADMIN_DIR_'))
 
 	$cookie->id_lang = (int)$employee->id_lang;
 }
-else
-{
-	if (isset($cookie->id_customer) && (int)$cookie->id_customer)
-	{
-		$customer = new Customer($cookie->id_customer);
-		$customer->logged = $cookie->logged;
-	}
-	else
-	{
-		$customer = new Customer();
-		
-		// Change the default group 
-		if (Group::isFeatureActive())
-			$customer->id_default_group = Configuration::get('PS_UNIDENTIFIED_GROUP');
-	}
-	$customer->id_guest = $cookie->id_guest;
-	Context::getContext()->customer = $customer;
-}
 
 /* if the language stored in the cookie is not available language, use default language */
 if (isset($cookie->id_lang) && $cookie->id_lang)
 	$language = new Language($cookie->id_lang);
 if (!isset($language) || !Validate::isLoadedObject($language))
 	$language = new Language(Configuration::get('PS_LANG_DEFAULT'));
-Context::getContext()->language = $language;
+$context->language = $language;
+
+if (!defined('_PS_ADMIN_DIR_'))
+{
+	if (isset($cookie->id_customer) && (int)$cookie->id_customer)
+	{
+		$customer = new Customer($cookie->id_customer);
+		if(!Validate::isLoadedObject($customer))
+			$customer->logout();
+		else
+		{
+			$customer->logged = $cookie->logged;
+
+			if ($customer->id_lang != $context->language->id)
+			{
+				$customer->id_lang = $context->language->id;
+				$customer->update();
+			}
+		}
+	}
+
+	if (!isset($customer) || !Validate::isLoadedObject($customer))
+	{
+		$customer = new Customer();
+		
+		// Change the default group
+		if (Group::isFeatureActive())
+			$customer->id_default_group = Configuration::get('PS_UNIDENTIFIED_GROUP');
+	}
+	$customer->id_guest = $cookie->id_guest;
+	$context->customer = $customer;
+}
+
+/* Link should also be initialized in the context here for retrocompatibility */
+$https_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+$context->link = new Link($https_link, $https_link);
 
 /**
  * @deprecated : these defines are going to be deleted on 1.6 version of Prestashop
@@ -187,4 +226,4 @@ define('_PS_OS_WS_PAYMENT_', Configuration::get('PS_OS_WS_PAYMENT'));
 
 /* Get smarty */
 require_once(dirname(__FILE__).'/smarty.config.inc.php');
-Context::getContext()->smarty = $smarty;
+$context->smarty = $smarty;

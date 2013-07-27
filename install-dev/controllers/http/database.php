@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -56,7 +56,6 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
 		$this->session->database_login = trim(Tools::getValue('dbLogin'));
 		$this->session->database_password = trim(Tools::getValue('dbPassword'));
 		$this->session->database_prefix = trim(Tools::getValue('db_prefix'));
-		$this->session->database_engine = Tools::getValue('dbEngine');
 		$this->session->database_clear = Tools::getValue('database_clear');
 
 		// Save email config
@@ -81,21 +80,23 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
 			$this->session->database_login,
 			$this->session->database_password,
 			$this->session->database_prefix,
-			$this->session->database_engine,
-
 			// We do not want to validate table prefix if we are already in install process
 			($this->session->step == 'process') ? true : $this->session->database_clear
 		);
-
-		return count($this->errors) ? false : true;
+		if (count($this->errors))
+			return false;
+		
+		if (!isset($this->session->database_engine))
+			$this->session->database_engine = $this->model_database->getBestEngine($this->session->database_server, $this->session->database_name, $this->session->database_login, $this->session->database_password);
+		return true;
 	}
 
 	public function process()
 	{
 		if (Tools::getValue('checkDb'))
 			$this->processCheckDb();
-		else if (Tools::getValue('sendMail'))
-			$this->processSendMail();
+		elseif (Tools::getValue('createDb'))
+			$this->processCreateDb();
 	}
 
 	/**
@@ -108,10 +109,9 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
 		$login = Tools::getValue('dbLogin');
 		$password = Tools::getValue('dbPassword');
 		$prefix = Tools::getValue('db_prefix');
-		$engine = Tools::getValue('dbEngine');
 		$clear = Tools::getValue('clear');
 
-		$errors = $this->model_database->testDatabaseSettings($server, $database, $login, $password, $prefix, $engine, $clear);
+		$errors = $this->model_database->testDatabaseSettings($server, $database, $login, $password, $prefix, $clear);
 
 		$this->ajaxJsonAnswer(
 			(count($errors)) ? false : true,
@@ -120,28 +120,20 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
 	}
 
 	/**
-	 * Send a test email
+	 * Attempt to create the database
 	 */
-	public function processSendMail()
+	public function processCreateDb()
 	{
-		$smtp_checked = (Tools::getValue('smtpChecked') == 'true');
-		$server = Tools::getValue('smtpSrv');
-		$encryption = Tools::getValue('smtpEnc');
-		$port = Tools::getValue('smtpPort');
-		$login = Tools::getValue('smtpLogin');
-		$password = Tools::getValue('smtpPassword');
-		$email = Tools::getValue('testEmail');
+		$server = Tools::getValue('dbServer');
+		$database = Tools::getValue('dbName');
+		$login = Tools::getValue('dbLogin');
+		$password = Tools::getValue('dbPassword');
 
-		require_once _PS_INSTALL_MODELS_PATH_.'mail.php';
-		$this->model_mail = new InstallModelMail($smtp_checked, $server, $login, $password, $port, $encryption, $email);
-		$result = $this->model_mail->send(
-			$this->l('Test message from PrestaShop'),
-			$this->l('This is a test message, your server is now available to send email')
-		);
+		$success = $this->model_database->createDatabase($server, $database, $login, $password);
 
 		$this->ajaxJsonAnswer(
-			$result === false,
-			($result === false) ? $this->l('A test e-mail has been sent to %s', $email) : $this->l('An error occurred while sending email, please verify your parameters')
+			$success,
+			$success ? $this->l('Database is created') : $this->l('Cannot create the database automatically')
 		);
 	}
 

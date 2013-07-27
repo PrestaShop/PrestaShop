@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture assign='page_title'}{if !isset($email_create)}{l s='Log in'}{else}{l s='Create your account'}{/if}{/capture}
+{capture assign='page_title'}{if !isset($email_create)}{l s='Authentication'}{else}{l s='Create an account'}{/if}{/capture}
 {include file='./page-title.tpl'}
 {include file="./errors.tpl"}
 
@@ -53,26 +53,25 @@ $(function(){ldelim}
 	$('.id_state option[value={if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{else}{if isset($address)}{$address->id_state|escape:'htmlall':'UTF-8'}{/if}{/if}]').attr('selected', 'selected');
 {rdelim});
 //]]>
-{if $vat_management}
-	{literal}
-	$(document).ready(function() {
-		$('#company').blur(function(){
-			vat_number();
-		});
+{literal}
+$(document).ready(function() {
+	$('#company').blur(function(){
 		vat_number();
-		function vat_number()
-		{
-			if ($('#company').val() != '')
-				$('#vat_number').show();
-			else
-				$('#vat_number').hide();
-		}
 	});
-	{/literal}
-{/if}
+	vat_number();
+	function vat_number()
+	{
+		if ($('#company').val() != '')
+			$('#vat_number').show();
+		else
+			$('#vat_number').hide();
+	}
+});
+{/literal}
 </script>
 
 {assign var='stateExist' value=false}
+{assign var='postCodeExist' value=false}
 {if !isset($email_create)}
 	{include file="./authentication-choice.tpl"}
 {else}

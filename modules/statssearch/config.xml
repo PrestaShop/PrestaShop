@@ -3,7 +3,7 @@
             <name>statssearch</name>
             <displayName><![CDATA[Shop search]]></displayName>
             <version><![CDATA[1]]></version>
-            <description><![CDATA[Display which keywords have been searched by your visitors.]]></description>
+            <description><![CDATA[Display which keywords have been searched by your store&#039;s visitors.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[analytics_stats]]></tab>
             <is_configurable>0</is_configurable>

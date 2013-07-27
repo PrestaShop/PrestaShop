@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -294,8 +294,8 @@ class ReferralProgram extends Module
 
 			foreach ($languages AS $language)
 				$this->_html .= '
-				<div id="dd_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $id_lang_default ? 'block' : 'none').'; float: left; margin-left: 4px;">
-					<input type="text" name="discount_description['.$language['id_lang'].']" id="discount_description['.$language['id_lang'].']" value="'.(isset($_POST['discount_description'][(int)($language['id_lang'])]) ? $_POST['discount_description'][(int)($language['id_lang'])] : $this->_configuration['REFERRAL_DISCOUNT_DESCRIPTION'][(int)($language['id_lang'])]).'" style="width: 200px;" />
+				<div  class="lang_'.(int)$language['id_lang'].'"  id="dd_'.(int)$language['id_lang'].'" style="display: '.($language['id_lang'] == $id_lang_default ? 'block' : 'none').'; float: left; margin-left: 4px;">
+					<input type="text" name="discount_description['.(int)$language['id_lang'].']" id="discount_description['.$language['id_lang'].']" value="'.(isset($_POST['discount_description'][(int)($language['id_lang'])]) ? $_POST['discount_description'][(int)($language['id_lang'])] : $this->_configuration['REFERRAL_DISCOUNT_DESCRIPTION'][(int)($language['id_lang'])]).'" style="width: 200px;" />
 				</div>';
 			$this->_html .= $this->displayFlags($languages, $id_lang_default, $divLangName, 'dd', true);
 			$this->_html .= '
@@ -308,7 +308,7 @@ class ReferralProgram extends Module
 	private function _displayFormRules()
 	{
 		// Languages preliminaries
-		$languages = Language::getLanguages();
+		$languages = Language::getLanguages(false);
 		$iso = $this->context->language->iso_code;
 		$divLangName = 'cpara¤dd';
 
@@ -319,30 +319,67 @@ class ReferralProgram extends Module
 				$this->_html .= $this->displayError($this->l('Your text is empty.'));
 
 		// TinyMCE
-		$isoTinyMCE = (file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en');
-		$ad = dirname($_SERVER["PHP_SELF"]);
-		$this->_html .= '
-			<script type="text/javascript">
-			var iso = \''.$isoTinyMCE.'\' ;
-			var pathCSS = \''._THEME_CSS_DIR_.'\' ;
-			var ad = \''.$ad.'\' ;
+		if (version_compare(_PS_VERSION_, '1.4.0.0') >= 0)
+			$this->_html .= '
+			<script type="text/javascript">	
+				var iso = \''.(file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en').'\' ;
+				var pathCSS = \''._THEME_CSS_DIR_.'\' ;
+				var ad = \''.dirname($_SERVER['PHP_SELF']).'\' ;
 			</script>
 			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tiny_mce/tiny_mce.js"></script>
 			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tinymce.inc.js"></script>
-			<script language="javascript" type="text/javascript">id_language = Number('.$this->context->language->id.');</script>
-		<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" enctype="multipart/form-data">
+			<script language="javascript" type="text/javascript">
+				id_language = Number('.(int)$this->context->language->id.');
+				tinySetup();
+			</script>';
+		else
+		{
+			$this->_html .= '
+			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+			<script type="text/javascript">
+				tinyMCE.init({
+					mode : "textareas",
+					theme : "advanced",
+					plugins : "safari,pagebreak,style,layer,table,advimage,advlink,inlinepopups,media,searchreplace,contextmenu,paste,directionality,fullscreen",
+					theme_advanced_buttons1 : "newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
+					theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,,|,forecolor,backcolor",
+					theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,media,|,ltr,rtl,|,fullscreen",
+					theme_advanced_buttons4 : "insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,del,ins,attribs,|,pagebreak",
+					theme_advanced_toolbar_location : "top",
+					theme_advanced_toolbar_align : "left",
+					theme_advanced_statusbar_location : "bottom",
+					theme_advanced_resizing : false,
+					content_css : "'.__PS_BASE_URI__.'themes/'._THEME_NAME_.'/css/global.css",
+					document_base_url : "'.__PS_BASE_URI__.'",
+					width: "600",
+					height: "auto",
+					font_size_style_values : "8pt, 10pt, 12pt, 14pt, 18pt, 24pt, 36pt",
+					template_external_list_url : "lists/template_list.js",
+					external_link_list_url : "lists/link_list.js",
+					external_image_list_url : "lists/image_list.js",
+					media_external_list_url : "lists/media_list.js",
+					elements : "nourlconvert",
+					entity_encoding: "raw",
+					convert_urls : false,
+					language : "'.(file_exists(_PS_ROOT_DIR_.'/js/tinymce/jscripts/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en').'"
+				});
+				id_language = Number('.(int)$this->context->language->id.');
+			</script>';
+		}
+		$this->_html .= '<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" enctype="multipart/form-data">
 			<fieldset>
-				<legend><img src="'.$this->_path.'logo.gif" alt="" title="" /> '.$this->l('Conditions of the referral program').'</legend>';
+				<legend><img src="'.$this->_path.'logo.gif" alt="" title="" /> '.$this->l('Conditions of the referral program').'</legend>
+				<div class="translatable">';
 		foreach ($languages AS $language)
 		{
 			$this->_html .= '
-			<div id="cpara_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->context->language->id ? 'block' : 'none').';float: left;">
-				<textarea class="rte" cols="120" rows="25" id="body_paragraph_'.$language['id_lang'].'" name="body_paragraph_'.$language['id_lang'].'">'.($xml ? stripslashes(htmlspecialchars($xml->body->{'paragraph_'.$language['id_lang']})) : '').'</textarea>
+			<div class="lang_'.(int)$language['id_lang'].'" id="cpara_'.(int)$language['id_lang'].'" style="display: '.($language['id_lang'] == (int)$this->context->language->id ? 'block' : 'none').';float: left;">
+				<textarea class="rte" cols="120" rows="25" id="body_paragraph_'.(int)$language['id_lang'].'" name="body_paragraph_'.(int)$language['id_lang'].'">'.($xml ? stripslashes(htmlspecialchars($xml->body->{'paragraph_'.(int)$language['id_lang']})) : '').'</textarea>
 			</div>';
 		}
 		$this->_html .= $this->displayFlags($languages, $this->context->language->id, $divLangName, 'cpara', true);
 
-		$this->_html .= '
+		$this->_html .= '</div>
 				<div class="clear center"><input type="submit" name="submitText" value="'.$this->l('Update text').'" class="button" style="margin-top: 10px" /></div>
 			</fieldset>
 		</form>';
@@ -543,7 +580,7 @@ class ReferralProgram extends Module
 						<td class="center">'.((int)($friend['id_customer']) ? $friend['id_customer'] : '--').'</td>
 						<td>'.$friend['firstname'].' '.$friend['lastname'].'</td>
 						<td>'.$friend['email'].'</td>
-						<td>'.Tools::displayDate($friend['date_add'], $this->context->language->id, true).'</td>
+						<td>'.Tools::displayDate($friend['date_add'],null , true).'</td>
 						<td align="right">'.sizeof(ReferralProgramModule::getSponsorFriend($friend['id_customer'])).'</td>
 						<td align="right">'.($orders ? sizeof($orders) : 0).'</td>
 						<td align="center">'.((int)$friend['id_customer'] ? '<img src="'._PS_ADMIN_IMG_.'enabled.gif" />' : '<img src="'._PS_ADMIN_IMG_.'disabled.gif" />').'</td>
@@ -612,8 +649,7 @@ class ReferralProgram extends Module
 		{
 			$cartRule = new CartRule((int)$referralprogram->id_cart_rule_sponsor);
 			$currency = new Currency((int)$order->id_currency);
-			$discount_display = ReferralProgram::displayDiscount($cartRule->reduction_percent ? $cartRule->reduction_percent : $cartRule->reduction_amount, $cartRule->reduction_percent ? 1 : 2, $currency);
-			$data = array('{sponsored_firstname}' => $customer->firstname, '{sponsored_lastname}' => $customer->lastname, '{discount_display}' => $discount_display, '{discount_name}' => $cartRule->code);
+			$discount_display = ReferralProgram::displayDiscount( (float) $cartRule->reduction_percent ? (float) $cartRule->reduction_percent : (int) $cartRule->reduction_amount,  (float) $cartRule->reduction_percent ? 1 : 2, $currency);			$data = array('{sponsored_firstname}' => $customer->firstname, '{sponsored_lastname}' => $customer->lastname, '{discount_display}' => $discount_display, '{discount_name}' => $cartRule->code);
 			Mail::Send((int)$order->id_lang, 'referralprogram-congratulations', Mail::l('Congratulations!', (int)$order->id_lang), $data, $sponsor->email, $sponsor->firstname.' '.$sponsor->lastname, strval(Configuration::get('PS_SHOP_EMAIL')), strval(Configuration::get('PS_SHOP_NAME')), NULL, NULL, dirname(__FILE__).'/mails/');
 			return true;
 		}

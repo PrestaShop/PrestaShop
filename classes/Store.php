@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -91,8 +91,8 @@ class StoreCore extends ObjectModel
 			'address2' => 		array('type' => self::TYPE_STRING, 'validate' => 'isAddress', 'size' => 128),
 			'postcode' => 		array('type' => self::TYPE_STRING, 'size' => 12),
 			'city' => 			array('type' => self::TYPE_STRING, 'validate' => 'isCityName', 'required' => true, 'size' => 64),
-			'latitude' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isCoordinate', 'size' => 12),
-			'longitude' =>		array('type' => self::TYPE_FLOAT, 'validate' => 'isCoordinate', 'size' => 12),
+			'latitude' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isCoordinate', 'size' => 13),
+			'longitude' =>		array('type' => self::TYPE_FLOAT, 'validate' => 'isCoordinate', 'size' => 13),
 			'hours' => 			array('type' => self::TYPE_STRING, 'validate' => 'isSerializedArray', 'size' => 254),
 			'phone' => 			array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16),
 			'fax' => 			array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16),

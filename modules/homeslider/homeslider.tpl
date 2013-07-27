@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -44,7 +44,11 @@ var homeslider_pause = {$homeslider.pause};
 <ul id="homeslider">
 {foreach from=$homeslider_slides item=slide}
 	{if $slide.active}
-		<li><a href="{$slide.url}" title="{$slide.description}"><img src="{$smarty.const._MODULE_DIR_}/homeslider/images/{$slide.image}" alt="{$slide.legend}" title="{$slide.description}" height="{$homeslider.height}" width="{$homeslider.width}" /></a></li>
+		<li>
+			<a href="{$slide.url|escape:'htmlall':'UTF-8'}" title="{$slide.description|escape:'htmlall':'UTF-8'}">
+			<img src="{$smarty.const._MODULE_DIR_}homeslider/images/{$slide.image|escape:'htmlall':'UTF-8'}" alt="{$slide.legend|escape:'htmlall':'UTF-8'}" height="{$homeslider.height|intval}" width="{$homeslider.width|intval}" />
+			</a>
+		</li>
 	{/if}
 {/foreach}
 </ul>

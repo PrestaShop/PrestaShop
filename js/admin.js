@@ -17,7 +17,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -27,16 +27,67 @@ var ajax_running_timeout = null;
 if (!id_language)
 	var id_language = Number(1);
 
-function str2url(str,encoding,ucfirst)
+function str2url(str, encoding, ucfirst)
 {
 	str = str.toUpperCase();
 	str = str.toLowerCase();
 	if (PS_ALLOW_ACCENTED_CHARS_URL)
 		str = str.replace(/[^a-z0-9\s\'\:\/\[\]-]\\u00A1-\\uFFFF/g,'');
-	else		
+	else
+	{
+		/* Lowercase */
+		str = str.replace(/[\u00E0\u00E1\u00E2\u00E3\u00E4\u00E5\u0101\u0103\u0105]/g, 'a');
+		str = str.replace(/[\u00E7\u0107\u0109\u010D]/g, 'c');
+		str = str.replace(/[\u010F\u0111]/g, 'd');
+		str = str.replace(/[\u00E8\u00E9\u00EA\u00EB\u0113\u0115\u0117\u0119\u011B]/g, 'e');
+		str = str.replace(/[\u011F\u0121\u0123]/g, 'g');
+		str = str.replace(/[\u0125\u0127]/g, 'h');
+		str = str.replace(/[\u00EC\u00ED\u00EE\u00EF\u0129\u012B\u012D\u012F\u0131]/g, 'i');
+		str = str.replace(/[\u0135]/g, 'j');
+		str = str.replace(/[\u0137\u0138]/g, 'k');
+		str = str.replace(/[\u013A\u013C\u013E\u0140\u0142]/g, 'l');
+		str = str.replace(/[\u00F1\u0144\u0146\u0148\u0149\u014B]/g, 'n');
+		str = str.replace(/[\u00F2\u00F3\u00F4\u00F5\u00F6\u00F8\u014D\u014F\u0151]/g, 'o');
+		str = str.replace(/[\u0155\u0157\u0159]/g, 'r');
+		str = str.replace(/[\u015B\u015D\u015F\u0161]/g, 's');
+		str = str.replace(/[\u00DF]/g, 'ss');
+		str = str.replace(/[\u0163\u0165\u0167]/g, 't');
+		str = str.replace(/[\u00F9\u00FA\u00FB\u00FC\u0169\u016B\u016D\u016F\u0171\u0173]/g, 'u');
+		str = str.replace(/[\u0175]/g, 'w');
+		str = str.replace(/[\u00FF\u0177\u00FD]/g, 'y');
+		str = str.replace(/[\u017A\u017C\u017E]/g, 'z');
+		str = str.replace(/[\u00E6]/g, 'ae');
+		str = str.replace(/[\u0153]/g, 'oe');
+
+		/* Uppercase */
+		str = str.replace(/[\u0100\u0102\u0104\u00C0\u00C1\u00C2\u00C3\u00C4\u00C5]/g, 'A');
+		str = str.replace(/[\u00C7\u0106\u0108\u010A\u010C]/g, 'C');
+		str = str.replace(/[\u010E\u0110]/g, 'D');
+		str = str.replace(/[\u00C8\u00C9\u00CA\u00CB\u0112\u0114\u0116\u0118\u011A]/g, 'E');
+		str = str.replace(/[\u011C\u011E\u0120\u0122]/g, 'G');
+		str = str.replace(/[\u0124\u0126]/g, 'H');
+		str = str.replace(/[\u0128\u012A\u012C\u012E\u0130]/g, 'I');
+		str = str.replace(/[\u0134]/g, 'J');
+		str = str.replace(/[\u0136]/g, 'K');
+		str = str.replace(/[\u0139\u013B\u013D\u0139\u0141]/g, 'L');
+		str = str.replace(/[\u00D1\u0143\u0145\u0147\u014A]/g, 'N');
+		str = str.replace(/[\u00D3\u014C\u014E\u0150]/g, 'O');
+		str = str.replace(/[\u0154\u0156\u0158]/g, 'R');
+		str = str.replace(/[\u015A\u015C\u015E\u0160]/g, 'S');
+		str = str.replace(/[\u0162\u0164\u0166]/g, 'T');
+		str = str.replace(/[\u00D9\u00DA\u00DB\u00DC\u0168\u016A\u016C\u016E\u0170\u0172]/g, 'U');
+		str = str.replace(/[\u0174]/g, 'W');
+		str = str.replace(/[\u0176]/g, 'Y');
+		str = str.replace(/[\u0179\u017B\u017D]/g, 'Z');
+		str = str.replace(/[\u00C6]/g, 'AE');
+		str = str.replace(/[\u0152]/g, 'OE');
+
+		str = str.toLowerCase();
+
 		str = str.replace(/[^a-z0-9\s\'\:\/\[\]-]/g,'');
-	str = str.replace(/[\u0028\u0029\u0021\u003F\u002E\u0026\u005E\u007E\u002B\u002A\u002F\u003A\u003B\u003C\u003D\u003E]/g,'');
-	str = str.replace(/[\s\'\:\/\[\]-]+/g,' ');
+	}
+	str = str.replace(/[\u0028\u0029\u0021\u003F\u002E\u0026\u005E\u007E\u002B\u002A\u002F\u003A\u003B\u003C\u003D\u003E]/g, '');
+	str = str.replace(/[\s\'\:\/\[\]-]+/g, ' ');
 
 	// Add special char not used for url rewrite
 	str = str.replace(/[ ]/g, '-');
@@ -52,7 +103,10 @@ function str2url(str,encoding,ucfirst)
 
 function copy2friendlyURL()
 {
-	if (!$('#link_rewrite_' + id_language).val().length)//check if user didn't type anything in rewrite field, to prevent overwriting
+	if (typeof(id_product) == 'undefined')
+		id_product = false;
+	
+	if (!$('#link_rewrite_' + id_language).val().length || !id_product)//check if user didn't type anything in rewrite field, to prevent overwriting
 	{
 		$('#link_rewrite_' + id_language).val(str2url($('#name_' + id_language).val().replace(/^[0-9]+\./, ''), 'UTF-8').replace('%', ''));
 		if ($('#friendly-url'))
@@ -153,11 +207,11 @@ function displayFlags(languages, defaultLanguageID, employee_cookie)
 					);
 				var languagesFlags = $('<div></div>')
 					.addClass('language_flags')
-					.html('Choose language:<br /><br />');
+					.html(choose_language_translate+':<br /><br />');
 				$.each(languages, function(key, language) {
 					var img = $('<img>')
 						.addClass('pointer')
-						.css('margin', '0 2px')
+						.css('margin', '2px 2px')
 						.attr('src', '../img/l/' + language['id_lang'] + '.jpg')
 						.attr('alt', language['name'])
 						.click(function() {
@@ -552,6 +606,14 @@ function disableZipFormat()
 		$('.zip_code_format').show();
 }
 
+function disableTAASC()
+{
+	if ($('#iso_code').val() == 'US')
+		$('#TAASC').show();
+	else
+		$('#TAASC').hide();
+}
+
 function spreadFees(id_range)
 {
 	newVal = $('#fees_all_'+id_range).val().replace(/,/g, '.');
@@ -569,6 +631,56 @@ function toggleDraftWarning(show)
 		$('.draft').hide();
 	else
 		$('.draft').show();
+}
+
+function showRedirectProductOptions(show)
+{
+	if (show)
+		$('.redirect_product_options').fadeIn();
+	else
+		$('.redirect_product_options').fadeOut();
+	
+	redirectSelectChange();
+}
+
+function redirectSelectChange()
+{
+	if ($('#redirect_type :selected').val() == '404')
+		showRedirectProductSelectOptions(false);
+	else
+		showRedirectProductSelectOptions(true);
+}
+
+function addRelatedProduct(id_product_to_add, product_name)
+{
+	if (!id_product_to_add || id_product == id_product_to_add)
+		return;
+	$('#related_product_name').html(product_name);
+	$('#related_product_name').parent('p').css('margin-top', 0);
+	$('input[name=id_product_redirected]').val(id_product_to_add);
+	$('#related_product_autocomplete_input').hide();
+	$('#related_product_remove').show();
+}
+
+function removeRelatedProduct()
+{
+	$('#related_product_name').html(no_related_product);
+	$('#related_product_name').parent('p').css('margin-top', '0.5em');
+	$('input[name=id_product_redirected]').val(0);
+	$('#related_product_remove').hide();
+	$('#related_product_autocomplete_input').fadeIn();
+}
+
+function showRedirectProductSelectOptions(show)
+{
+	if (show)
+		$('.redirect_product_options_product_choise').show();
+	else
+	{
+		$('.redirect_product_options_product_choise').hide();
+		removeRelatedProduct();
+	}
+		
 }
 
 function showOptions(show)
@@ -666,6 +778,7 @@ function showErrorMessage(msg, delay)
 $(document).ready(function()
 {
 	$('select.chosen').each(function(k, item){
+		$(item).val($(this).find('option[selected=selected]').val());
 		$(item).chosen();
 		if ($(item).hasClass('no-search'))
 			$(item).next().find('.chzn-search').hide();
@@ -734,7 +847,30 @@ $(document).ready(function()
 		$(this).slideUp('fast');
 		clearTimeout(ajax_running_timeout);
 	});
+	
+	bindTabModuleListAction();
+	
 });
+
+
+function bindTabModuleListAction()
+{
+	$('.action_tab_module').each( function (){
+		$(this).click(function () {
+			option = $('#'+$(this).data('option')+' :selected');
+			if ($(option).data('onclick') != '')
+			{
+				
+				var f = eval("(function(){ "+$(option).data('onclick')+"})");
+				if (f.call())
+					window.location.href = $(option).data('href');
+			}
+			else
+				window.location.href = $(option).data('href');
+			return false;
+		});			
+	});
+}
 
 // Delete all tags HTML
 function stripHTML(oldString)
@@ -771,7 +907,8 @@ function showAjaxOverlay()
 	clearTimeout(ajax_running_timeout);
 }
 
-function display_action_details(row_id, controller, token, action, params) {
+function display_action_details(row_id, controller, token, action, params)
+{
 	var id = action+'_'+row_id;
 	var current_element = $('#details_'+id);
 	if (!current_element.data('dataMaped')) {
@@ -878,4 +1015,15 @@ function display_action_details(row_id, controller, token, action, params) {
 		current_element.parent().parent().parent().find('.details_'+id).show('fast');
 		current_element.data('opened', true);
 	}
+}
+
+function quickSelect(elt)
+{
+	var eltVal = $(elt).val();
+	if (eltVal == "0")
+		return false;
+	else if (eltVal.substr(eltVal.length - 6) == '_blank')
+		window.open(eltVal.substr(0, eltVal.length - 6), '_blank');
+	else
+		location.href = eltVal;
 }

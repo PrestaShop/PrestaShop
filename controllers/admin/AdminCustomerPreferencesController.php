@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -51,7 +51,7 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_REGISTRATION_PROCESS_TYPE' => array(
 						'title' => $this->l('Registration process type'),
-						'desc' => $this->l('The "Only account creation" registration option allows the customer to register faster, and create his address later.'),
+						'desc' => $this->l('The "Only account creation" registration option allows the customer to register faster, and create his/her address later.'),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'select',
@@ -67,14 +67,22 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 					),
 					'PS_CART_FOLLOWING' => array(
 						'title' => $this->l('Cart re-display at login'),
-						'desc' => $this->l('After customer logs in, recall and display contents of his/her last shopping cart'),
+						'desc' => $this->l('After customer logs in, you can recall and display the content of his/her last shopping cart.'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
+					'PS_CUSTOMER_CREATION_EMAIL' => array(
+						'title' => $this->l('Send an email after registration'),
+						'desc' => $this->l('Send an email with summary account (email, password) after registration.'),
+						'validation' => 'isUnsignedInt',
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
 					'PS_PASSWD_TIME_FRONT' => array(
 						'title' => $this->l('Regenerate password'),
-						'desc' => $this->l('Security minimum time to wait to regenerate the password'),
+						'desc' => $this->l('Minimum time required to regenerate a password.'),
 						'validation' => 'isUnsignedInt',
 						'cast' => 'intval',
 						'size' => 5,
@@ -83,7 +91,7 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 					),
 					'PS_B2B_ENABLE' => array(
 						'title' => $this->l('Enable B2B mode'),
-						'desc' => $this->l('Activate or deactivate B2B mode. When this option is enabled, some B2B features are available.'),
+						'desc' => $this->l('Activate or deactivate B2B mode. When this option is enabled, B2B features will be made available.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'

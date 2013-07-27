@@ -1,9 +1,9 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
-ing*
+*
 * This source file is subject to the Open Software License (OSL 3.0)
 * that is bundled with this package in the file LICENSE.txt.
 * It is also available through the world-wide-web at this URL:
@@ -19,7 +19,7 @@ ing*
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -41,7 +41,7 @@ class AdminPdfControllerCore extends AdminController
 		if ($access['view'] === '1' && ($action = Tools::getValue('submitAction')))
 			$this->action = $action;
 		else
-			$this->errors[] = Tools::displayError('You do not have permission to view here.');
+			$this->errors[] = Tools::displayError('You do not have permission to view this.');
 	}
 
 	public function processGenerateInvoicePdf()
@@ -51,7 +51,7 @@ class AdminPdfControllerCore extends AdminController
 		elseif (Tools::isSubmit('id_order_invoice'))
 			$this->generateInvoicePDFByIdOrderInvoice(Tools::getValue('id_order_invoice'));
 		else
-			die (Tools::displayError('Missing order ID or invoice order ID'));
+			die (Tools::displayError('The order ID -- or the invoice order ID -- is missing.'));
 	}
 
 	public function processGenerateOrderSlipPDF()
@@ -59,7 +59,7 @@ class AdminPdfControllerCore extends AdminController
 		$orderSlip = new OrderSlip((int)Tools::getValue('id_order_slip'));
 		$order = new Order((int)$orderSlip->id_order);
 		if (!Validate::isLoadedObject($order))
-			die(Tools::displayError('Cannot find order in database'));
+			die(Tools::displayError('The order cannot be found within your database.'));
 		$order->products = OrderSlip::getOrdersSlipProducts($orderSlip->id, $order);
 
 		$this->generatePDF($orderSlip, PDF::TEMPLATE_ORDER_SLIP);
@@ -77,7 +77,7 @@ class AdminPdfControllerCore extends AdminController
 			$this->generateDeliverySlipPDFByIdOrder((int)$order->id);
 		}
 		else
-			die (Tools::displayError('Missing order ID or invoice order ID'));
+			die (Tools::displayError('The order ID -- or the invoice order ID -- is missing.'));
 	}
 
 	public function processGenerateInvoicesPDF()
@@ -85,7 +85,7 @@ class AdminPdfControllerCore extends AdminController
 		$order_invoice_collection = OrderInvoice::getByDateInterval(Tools::getValue('date_from'), Tools::getValue('date_to'));
 
 		if (!count($order_invoice_collection))
-			die(Tools::displayError('No invoices found'));
+			die(Tools::displayError('No invoice was found.'));
 
 		$this->generatePDF($order_invoice_collection, PDF::TEMPLATE_INVOICE);
 	}
@@ -98,7 +98,7 @@ class AdminPdfControllerCore extends AdminController
 				$order_invoice_collection = array_merge($order_invoices, $order_invoice_collection);
 
 		if (!count($order_invoice_collection))
-			die(Tools::displayError('No invoices found'));
+			die(Tools::displayError('No invoice was found.'));
 
 		$this->generatePDF($order_invoice_collection, PDF::TEMPLATE_INVOICE);
 	}
@@ -107,7 +107,7 @@ class AdminPdfControllerCore extends AdminController
 	{
 		$id_order_slips_list = OrderSlip::getSlipsIdByDate(Tools::getValue('date_from'), Tools::getValue('date_to'));
 		if (!count($id_order_slips_list))
-			die (Tools::displayError('No order slips found'));
+			die (Tools::displayError('No order slips were found.'));
 
 		$order_slips = array();
 		foreach ($id_order_slips_list as $id_order_slips)
@@ -121,7 +121,7 @@ class AdminPdfControllerCore extends AdminController
 		$order_invoice_collection = OrderInvoice::getByDeliveryDateInterval(Tools::getValue('date_from'), Tools::getValue('date_to'));
 
 		if (!count($order_invoice_collection))
-			die(Tools::displayError('No invoices found'));
+			die(Tools::displayError('No invoice was found.'));
 
 		$this->generatePDF($order_invoice_collection, PDF::TEMPLATE_DELIVERY_SLIP);
 	}
@@ -129,13 +129,13 @@ class AdminPdfControllerCore extends AdminController
 	public function processGenerateSupplyOrderFormPDF()
 	{
 		if (!Tools::isSubmit('id_supply_order'))
-			die (Tools::displayError('Missing supply order ID'));
+			die (Tools::displayError('The supply order ID is missing.'));
 
 		$id_supply_order = (int)Tools::getValue('id_supply_order');
 		$supply_order = new SupplyOrder($id_supply_order);
 
 		if (!Validate::isLoadedObject($supply_order))
-			die(Tools::displayError('Cannot find this supply order in the database'));
+			die(Tools::displayError('The supply order cannot be found within your database.'));
 
 		$this->generatePDF($supply_order, PDF::TEMPLATE_SUPPLY_ORDER_FORM);
 	}
@@ -163,7 +163,7 @@ class AdminPdfControllerCore extends AdminController
 	{
 		$order = new Order((int)$id_order);
 		if (!Validate::isLoadedObject($order))
-			die(Tools::displayError('Cannot find order in database'));
+			die(Tools::displayError('The order cannot be found within your database.'));
 
 		$order_invoice_list = $order->getInvoicesCollection();
 		Hook::exec('actionPDFInvoiceRender', array('order_invoice_list' => $order_invoice_list));
@@ -174,7 +174,7 @@ class AdminPdfControllerCore extends AdminController
 	{
 		$order_invoice = new OrderInvoice((int)$id_order_invoice);
 		if (!Validate::isLoadedObject($order_invoice))
-			die(Tools::displayError('Cannot find order invoice in database'));
+			die(Tools::displayError('The order invoice cannot be found within your database.'));
 
 		Hook::exec('actionPDFInvoiceRender', array('order_invoice_list' => array($order_invoice)));
 		$this->generatePDF($order_invoice, PDF::TEMPLATE_INVOICE);

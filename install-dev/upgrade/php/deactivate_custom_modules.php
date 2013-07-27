@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -66,18 +66,21 @@ function deactivate_custom_modules()
 
 	$uninstallMe = array("undefined-modules");
 	if (is_array($arrNonNative))
-		foreach($arrNonNative as $aModule)
-			$uninstallMe[] = $aModule['name'];
+		foreach($arrNonNative as $k => $aModule)
+			$uninstallMe[(int)$aModule['id_module']] = $aModule['name'];
 
 	if (!is_array($uninstallMe))
 		$uninstallMe = array($uninstallMe);
 
-	foreach ($uninstallMe as $k=>$v)
+	foreach ($uninstallMe as $k => $v)
 		$uninstallMe[$k] = '"'.pSQL($v).'"';
 
-	return Db::getInstance()->execute('
-	UPDATE `'._DB_PREFIX_.'module`
-	SET `active`= 0
-	WHERE `name` IN ('.implode(',',$uninstallMe).')');
-}
+	$return = Db::getInstance()->execute('
+	UPDATE `'._DB_PREFIX_.'module` SET `active` = 0 WHERE `name` IN ('.implode(',', $uninstallMe).')');
 
+	if (count(Db::getInstance()->executeS('SHOW TABLES LIKE \''._DB_PREFIX_.'module_shop\''))> 0)
+		foreach($uninstallMe as $k => $uninstall)
+			$return &= Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_shop` WHERE `id_module` = '.(int)$k);
+
+	return $return;
+}

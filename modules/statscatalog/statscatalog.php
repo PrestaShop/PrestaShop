@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -203,7 +203,7 @@ class StatsCatalog extends Module
 			</table>
 			<div style="margin-top: 20px;">
 				<span style="color:red;font-weight:bold">*</span> 
-				'.$this->l('Average conversion rate for the product page. It is possible to purchase a product without viewing the product page, so this rate can be greater than 1.').'
+				'.$this->l('Define the average conversion rate for the product page (It is possible to purchase a product without viewing the product page, so this rate can be greater than 1).').'
 			</div>
 		</div>';
 

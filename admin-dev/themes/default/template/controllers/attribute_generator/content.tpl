@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,14 +18,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <script type="text/javascript">
-	i18n_tax_exc = '{l s='Tax Excl.:'} ';
-	i18n_tax_inc = '{l s='Tax Incl.:'} ';
+	i18n_tax_exc = '{l s='Tax Excluded'} ';
+	i18n_tax_inc = '{l s='Tax Included'} ';
 
 	var product_tax = '{$tax_rates}';
 	function calcPrice(element, element_has_tax)
@@ -75,9 +75,9 @@
 			</div>
 		</div>
 		<div style="float: left; width: 570px;">
-			<div class="hint" style="width: 570px; padding-left: 45px; margin-bottom: 15px; display: block; position: inherit;">{l s='The Combinations Generator is a tool which allows you to easily create a series of combinations by selecting the related attributes. For example, if you are selling T-Shirts in 3 different sizes and 2 different colors, the Generator will create 6 combinations for you.'}</div>
-			<p>{l s='You are currently generating combinations for the following product:'} <b>{$product_name|escape:'htmlall':'UTF-8'}</b></p>
-			<h4>{l s='Step 1: On the left side, Select the attributes you want to use (Hold down the "CTRL" Key on your keyboard and validate by clicking on "Add")'}</h4>
+			<div class="hint" style="width: 570px; padding-left: 45px; margin-bottom: 15px; display: block; position: inherit;">{l s='The Combinations Generator is a tool that allows you to easily create a series of combinations by selecting the related attributes. For example, if you\'re selling t-shirts in three different sizes and two different colors, the generator will create six combinations for you.'}</div>
+			<p>{l s='You\'re currently generating combinations for the following product:'} <b>{$product_name|escape:'htmlall':'UTF-8'}</b></p>
+			<h4>{l s='Step 1: On the left side, select the attributes you want to use (Hold down the "Ctrl" key on your keyboard and validate by clicking on "Add")'}</h4>
 			<div>
 			{foreach $attribute_groups as $k => $attribute_group}
 				{if isset($attribute_js[$attribute_group['id_attribute_group']])}
@@ -85,8 +85,8 @@
 						<thead>
 							<tr>
 								<th id="tab_h1" style="width: 150px">{$attribute_group['name']|escape:'htmlall':'UTF-8'}</th>
-								<th id="tab_h2" style="width: 350px" colspan="2">{l s='Impact on the Product Price'} ({$currency_sign})</th>
-								<th style="width: 150px">{l s='Impact on the Product Weight'} ({$weight_unit})</th>
+								<th id="tab_h2" style="width: 350px" colspan="2">{l s='Impact on the product price'} ({$currency_sign})</th>
+								<th style="width: 150px">{l s='Impact on the product weight'} ({$weight_unit})</th>
 							</tr>
 						</thead>
 						<tbody id="table_{$attribute_group['id_attribute_group']}" name="result_table">
@@ -103,7 +103,7 @@
 				{/if}
 			{/foreach}
             </div>
-			<h4>{l s='Step 2 (optional): Select a default Quantity and Reference for all the combinations that the Generator will create for this product'}</h4>
+			<h4>{l s='Select a default quantity, and reference, for each combination the generator will create for this product.'}</h4>
 			<table border="0" class="table" cellpadding="0" cellspacing="0">
 				<tr>
 					<td>{l s='Default Quantity:'}</td>
@@ -114,8 +114,8 @@
 					<td><input type="text" size="20" name="reference" value="{$product_reference|escape:'htmlall':'UTF-8'}" /></td>
 				</tr>
 			</table>
-			<h4>{l s='Finally, click on "Generate these combinations"'}</h4>
-			<p><input type="submit" class="button" style="margin-bottom:5px;" name="generate" value="{l s='Generate these combinations'}" /></p>
+			<h4>{l s='Please click on "Generate these Combinations"'}</h4>
+			<p><input type="submit" class="button" style="margin-bottom:5px;" name="generate" value="{l s='Generate these Combinations'}" /></p>
 		</div>
 	</fieldset>
 </form>

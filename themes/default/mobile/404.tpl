@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,22 +18,22 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture assign='page_title'}{l s='Page not available'}{/capture}
+{capture assign='page_title'}{l s='This page is not available'}{/capture}
 {include file='./page-title.tpl'}
 
 	{* Submit à tester sur téléphone *}
 	{* ===================================== *}
 	<div data-role="content" id="content">
 		<div id="not_found">
-			<p>{l s='We\'re sorry, but the Web address you entered is no longer available'}</p>
-			<p>{l s='To find a product, please type its name in the field below'}</p>
+			<p>{l s='We\'re sorry, but the Web address you\'ve entered is no longer available.'}</p>
+			<p>{l s='To find a product, please type its name in the field below.'}</p>
 			<div data-role="fieldcontain" class="input_search_404">
-				<form action="{$link->getPageLink('search')}" method="post" class="std">
+				<form action="{$link->getPageLink('search')|escape:'html'}" method="post" class="std">
 				<input type="search" name="search_query" id="search_query" value="{l s='Search'}" />
 				</form>
 			</div>

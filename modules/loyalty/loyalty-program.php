@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -42,7 +42,7 @@ if (!$context->customer->isLogged())
 
 $context->controller->addJqueryPlugin(array('dimensions', 'cluetip'));
 
-$customerPoints = (int)(LoyaltyModule::getPointsByCustomer((int)($cookie->id_customer)));
+$customerPoints = (int)LoyaltyModule::getPointsByCustomer((int)$cookie->id_customer);
 
 /* transform point into voucher if needed */
 if (Tools::getValue('transform-points') == 'true' AND $customerPoints > 0)
@@ -99,7 +99,8 @@ if (Tools::getValue('transform-points') == 'true' AND $customerPoints > 0)
 		$cartRule->add();
 
 	/* Register order(s) which contributed to create this voucher */
-	LoyaltyModule::registerDiscount($cartRule);
+	if (!LoyaltyModule::registerDiscount($cartRule))
+		$cartRule->delete();
 
 	Tools::redirect('modules/loyalty/loyalty-program.php');
 }

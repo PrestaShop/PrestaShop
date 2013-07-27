@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -129,29 +129,24 @@ class Autoload
 		// Write classes index on disc to cache it
 		$filename = $this->root_dir.Autoload::INDEX_FILE;
 		if ((file_exists($filename) && !is_writable($filename)) || !is_writable(dirname($filename)))
-			throw new PrestaShopException($filename.' is not writable, please give write permissions (chmod 666) on this file.');
+		{
+			header('HTTP/1.1 503 temporarily overloaded');
+			// Cannot use PrestaShopException in this context
+			die('/cache/class_index.php is not writable, please give write permissions (chmod 666) on this file.');
+		}
 		else
 		{
-			// Let's write index content in cache file
-			// In order to be sure that this file is correctly written, a check is done on the file content
-			$loop_protection = 0;
-			do
-			{
-				$integrity_is_ok = false;
-				file_put_contents($filename, $content);
-				if ($loop_protection++ > 10)
-					break;
-
-				// If the file content end with PHP tag, integrity of the file is ok
-				if (preg_match('#\?>\s*$#', file_get_contents($filename)))
-					$integrity_is_ok = true;
+			$filename_tmp = tempnam(dirname($filename), basename($filename.'.'));
+			if($filename_tmp !== FALSE and file_put_contents($filename_tmp, $content, LOCK_EX) !== FALSE)
+            {
+				rename($filename_tmp, $filename);
+                @chmod($filename, 0664);
 			}
-			while (!$integrity_is_ok);
-
-			if (!$integrity_is_ok)
-			{
-				file_put_contents($filename, '<?php return array(); ?>');
-				throw new PrestaShopException('Your file '.$filename.' is corrupted. Please remove this file, a new one will be regenerated automatically');
+            else
+            {
+				// $filename_tmp couldn't be written. $filename should be there anyway (even if outdated),
+				// no need to die.
+				error_log('Cannot write temporary file '.$filename_tmp);
 			}
 		}
 

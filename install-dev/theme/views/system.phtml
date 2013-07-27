@@ -1,24 +1,19 @@
 <?php $this->displayTemplate('header') ?>
 
-<h2><?php echo $this->l('Required set-up. Please verify the following checklist items are true.') ?></h2>
+<h2><?php echo $this->l('We are currently checking PrestaShop compatibility with your system environment') ?></h2>
 
 <p><?php echo $this->l('If you have any questions, please visit our <a href="%1$s" target="_blank">documentation</a> and <a href="%2$s" target="_blank">community forum</a>.', $this->getDocumentationLink(), $this->getForumLink()); ?></p>
 
+<?php if ($this->tests['required']['success']): ?>
+	<h3 class="okBlock"><?php echo $this->l('PrestaShop compatibility with your system environment has been verified!') ?></h3>
+<?php else: ?>
+	<h3 class="errorBlock"><?php echo $this->l('Oops! Please correct the item(s) below, and then click "Refresh information" to test the compatibility of your new system.') ?></h3>
+<?php endif; ?>
 <!-- Display tests results -->
 <?php foreach ($this->tests_render as $type => $categories): ?>
-	<?php if ($type == 'required'): ?>
-		<?php if ($this->tests['required']['success']): ?>
-			<h3 class="okBlock"><?php echo $this->l('Your configuration is valid, click next to continue!') ?></h3>
-		<?php else: ?>
-			<h3 class="errorBlock"><?php echo $this->l('Your configuration is invalid. Please fix the issues below:') ?></h3>
-		<?php endif; ?>
-	<?php else: ?>
-		<h3><?php echo $this->l('Optional set-up') ?></h3>
-	<?php endif; ?>
-
 	<ul id="<?php echo $type ?>">
 	<?php foreach ($categories as $category): ?>
-		<li class="title"><?php echo $category['title'] ?></li>
+		<li class="title <?php if ($category['success'] == 1): ?>ok<?php endif;?>"><?php echo $category['title'] ?></li>
 		<?php $i = 0; foreach ($category['checks'] as $id => $lang): ?>
 			<li class="required <?php if ($i == 0): ?>first<?php endif;?> <?php echo $this->tests[$type]['checks'][$id] ?>">
 				<?php echo $lang ?>

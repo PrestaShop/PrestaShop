@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,13 +19,11 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-
 require_once(dirname(__FILE__).'/../images.inc.php');
-
 function bindDatepicker($id, $time)
 {
 	if ($time)
@@ -96,6 +94,8 @@ function	rewriteSettingsFile($baseUrls = NULL, $theme = NULL, $arrayDB = NULL)
 	$defines['_DB_PASSWD_'] = (($arrayDB AND isset($arrayDB['_DB_PASSWD_'])) ? $arrayDB['_DB_PASSWD_'] : _DB_PASSWD_);
 	$defines['_COOKIE_KEY_'] = addslashes(_COOKIE_KEY_);
 	$defines['_COOKIE_IV_'] = addslashes(_COOKIE_IV_);
+	$defines['_PS_CREATION_DATE_'] = addslashes(_PS_CREATION_DATE_);
+	
 	if (defined('_RIJNDAEL_KEY_'))
 		$defines['_RIJNDAEL_KEY_'] = addslashes(_RIJNDAEL_KEY_);
 	if (defined('_RIJNDAEL_IV_'))
@@ -223,8 +223,16 @@ function checkPSVersion()
 	return $upgrader->checkPSVersion();
 }
 
+/**
+ * Deprecated since > 1.5.4.1
+ * Use Translate::getAdminTranslation($string) instead
+ *
+ * @param string $string
+ */
 function translate($string)
 {
+	Tools::displayAsDeprecated();
+	
 	global $_LANGADM;
 	if (!is_array($_LANGADM))
 		return str_replace('"', '&quot;', $string);
@@ -232,7 +240,6 @@ function translate($string)
 	$str = (key_exists('index'.$key, $_LANGADM)) ? $_LANGADM['index'.$key] : ((key_exists('index'.$key, $_LANGADM)) ? $_LANGADM['index'.$key] : $string);
 	return str_replace('"', '&quot;', stripslashes($str));
 }
-
 
 /**
  * Returns a new Tab object
@@ -252,7 +259,7 @@ function checkingTab($tab)
 	{
 		if (isset(AdminTab::$tabParenting[$tab]))
 			Tools::redirectAdmin('?tab='.AdminTab::$tabParenting[$tab].'&token='.Tools::getAdminTokenLite(AdminTab::$tabParenting[$tab]));
-		echo sprintf(Tools::displayError('Page %s cannot be found.'),$tab);
+		echo sprintf(Tools::displayError('Page %s cannot be found..'),$tab);
 		return false;
 	}
 
@@ -265,7 +272,7 @@ function checkingTab($tab)
 	$adminObj = new $tab;
 	if (!$adminObj->viewAccess() AND ($adminObj->table != 'employee' OR Context::getContext()->employee->id != Tools::getValue('id_employee') OR !Tools::isSubmit('updateemployee')))
 	{
-		$adminObj->_errors = array(Tools::displayError('Access denied'));
+		$adminObj->_errors = array(Tools::displayError('Access denied.'));
 		echo $adminObj->displayErrors();
 		return false;
 	}
@@ -431,7 +438,7 @@ function runAdminTab($tab, $ajaxMode = false)
 			$bread = '';
 			foreach ($tabs AS $key => $item)
 			{
-				$bread .= ' <img src="../img/admin/separator_breadcrum.png" style="margin-right:5px" alt="&gt;" />';
+				$bread .= ' <img src="../img/admin/separator_breadcrumb.png" style="margin-right:5px" alt="&gt;" />';
 				if (count($tabs) - 1 > $key)
 					$bread .= '<a href="?tab='.$item['class_name'].'&token='.Tools::getAdminToken($item['class_name'].intval($item['id_tab']).(int)Context::getContext()->employee->id).'">';
 
@@ -461,7 +468,7 @@ function runAdminTab($tab, $ajaxMode = false)
 				echo '<div class="path_bar">
 			<div id="help-button" class="floatr" style="display: none; font-family: Verdana; font-size: 10px; margin-right: 4px; margin-top: 4px;">
 			</div>
-				<a href="?token='.Tools::getAdminToken($tab.intval(Tab::getIdFromClassName($tab)).(int)Context::getContext()->employee->id).'">'.translate('Back Office').'</a>
+				<a href="?token='.Tools::getAdminToken($tab.intval(Tab::getIdFromClassName($tab)).(int)Context::getContext()->employee->id).'">'.Translate::getAdminTranslation('Back Office').'</a>
 				'.$bread.'</div>';
 
 			if (!$ajaxMode && Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && Context::getContext()->controller->multishop_context != Shop::CONTEXT_ALL)
@@ -470,10 +477,10 @@ function runAdminTab($tab, $ajaxMode = false)
 				if (Shop::getContext() == Shop::CONTEXT_GROUP)
 				{
 					$shop_group = new ShopGroup((int)Shop::getContextShopGroupID());
-					printf(translate('You are configuring your store for group shop %s'), '<b>'.$shop_group->name.'</b>');
+					printf(Translate::getAdminTranslation('You are configuring your store for group shop %s'), '<b>'.$shop_group->name.'</b>');
 				}
 				elseif (Shop::getContext() == Shop::CONTEXT_SHOP)
-					printf(translate('You are configuring your store for shop %s'), '<b>'.Context::getContext()->shop->name.'</b>');
+					printf(Translate::getAdminTranslation('You are configuring your store for shop %s'), '<b>'.Context::getContext()->shop->name.'</b>');
 				echo '</div>';
 			}
 			if (Validate::isLoadedObject($adminObj))
@@ -546,8 +553,8 @@ function runAdminTab($tab, $ajaxMode = false)
 
 
 						// we can display the correct url
-						// die(Tools::jsonEncode(array(translate('Invalid security token'),$url)));
-						die(Tools::jsonEncode(translate('Invalid security token')));
+						// die(Tools::jsonEncode(array(Translate::getAdminTranslation('Invalid security token'),$url)));
+						die(Tools::jsonEncode(Translate::getAdminTranslation('Invalid security token')));
 					}
 					else
 					{
@@ -559,17 +566,17 @@ function runAdminTab($tab, $ajaxMode = false)
 						if (false === strpos($url, '?token=') AND false === strpos($url, '&token='))
 							$url .= '&token='.$adminObj->token;
 
-						$message = translate('Invalid security token');
+						$message = Translate::getAdminTranslation('Invalid security token');
 						echo '<html><head><title>'.$message.'</title></head><body style="font-family:Arial,Verdana,Helvetica,sans-serif;background-color:#EC8686">
 							<div style="background-color:#FAE2E3;border:1px solid #000000;color:#383838;font-weight:700;line-height:20px;margin:0 0 10px;padding:10px 15px;width:500px">
 								<img src="../img/admin/error2.png" style="margin:-4px 5px 0 0;vertical-align:middle">
 								'.$message.'
 							</div>';
 						echo '<a href="'.htmlentities($url).'" method="get" style="float:left;margin:10px">
-								<input type="button" value="'.Tools::htmlentitiesUTF8(translate('I understand the risks and I really want to display this page')).'" style="height:30px;margin-top:5px" />
+								<input type="button" value="'.Tools::htmlentitiesUTF8(Translate::getAdminTranslation('I understand the risks and I really want to display this page')).'" style="height:30px;margin-top:5px" />
 							</a>
 							<a href="index.php" method="get" style="float:left;margin:10px">
-								<input type="button" value="'.Tools::htmlentitiesUTF8(translate('Take me out of here!')).'" style="height:40px" />
+								<input type="button" value="'.Tools::htmlentitiesUTF8(Translate::getAdminTranslation('Take me out of here!')).'" style="height:40px" />
 							</a>
 						</body></html>';
 						die;

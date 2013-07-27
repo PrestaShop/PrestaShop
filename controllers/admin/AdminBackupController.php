@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -58,8 +58,8 @@ class AdminBackupControllerCore extends AdminController
 						'type' => 'bool'
 					),
 					'PS_BACKUP_DROP_TABLE' => array(
-						'title' => $this->l('Drop existing tables during import:'),
-						'desc' => $this->l('If enabled, the backup script will drop your tables prior to restoring the backed up data').
+						'title' => $this->l('Drop existing tables during import'),
+						'desc' => $this->l('If enabled, the backup script will drop your tables prior to restoring data.').
 							'<br />(ie. "DROP TABLE IF EXISTS")',
 						'cast' => 'intval',
 						'type' => 'bool'
@@ -154,7 +154,7 @@ class AdminBackupControllerCore extends AdminController
 
 		// Test if the backup dir is writable
 		if (!is_writable(_PS_ADMIN_DIR_.'/backups/'))
-			$this->warnings[] = $this->l('"Backups" Directory in admin directory must be writeable (CHMOD 755 / 777)');
+			$this->warnings[] = $this->l('The "Backups" directory located in the admin directory must be writeable (CHMOD 755 / 777)');
 
 		if ($this->display == 'add' && is_writable(_PS_ADMIN_DIR_.'/backups/'))
 		{
@@ -164,7 +164,7 @@ class AdminBackupControllerCore extends AdminController
 					$this->errors[] = $object->error;
 				else
 					$this->context->smarty->assign(array(
-						'conf' => $this->l('It appears that the Backup was successful, however, you must download and carefully verify the Backup file.'),
+						'conf' => $this->l('It appears the backup was successful, however you must download and carefully verify the backup file before proceeding. '),
 						'backup_url' => $object->getBackupURL(),
 						'backup_weight' => number_format((filesize($object->id) * 0.000001), 2, '.', '')
 					));
@@ -234,16 +234,16 @@ class AdminBackupControllerCore extends AdminController
 			$date = date('Y-m-d H:i:s', $timestamp);
 			$age = time() - $timestamp;
 			if ($age < 3600)
-				$age = '< 1 '.$this->l('hour');
+				$age = '< 1 '.$this->l('Hour');
 			else if ($age < 86400)
 			{
 				$age = floor($age / 3600);
-				$age = $age.' '.(($age == 1) ? $this->l('hour') : $this->l('hours'));
+				$age = $age.' '.(($age == 1) ? $this->l('Hour') : $this->l('Hours'));
 			}
 			else
 			{
 				$age = floor($age / 86400);
-				$age = $age.' '.(($age == 1) ? $this->l('day') : $this->l('days'));
+				$age = $age.' '.(($age == 1) ? $this->l('Day') : $this->l('Days'));
 			}
 			$size = filesize(_PS_ADMIN_DIR_.'/backups/'.$file);
 			$this->_list[] = array(

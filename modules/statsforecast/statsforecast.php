@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -112,7 +112,7 @@ class StatsForecast extends Module
 		SELECT
 			'.$dateFromGInvoice.' as fix_date,
 			COUNT(*) as countOrders,
-			(SELECT SUM(od.product_quantity) FROM '._DB_PREFIX_.'order_detail od WHERE o.id_order = od.id_order) as countProducts,
+			SUM((SELECT SUM(od.product_quantity) FROM '._DB_PREFIX_.'order_detail od WHERE o.id_order = od.id_order)) as countProducts,
 			SUM(o.total_paid_tax_excl / o.conversion_rate) as totalSales
 		FROM '._DB_PREFIX_.'orders o
 		WHERE o.valid = 1
@@ -123,8 +123,9 @@ class StatsForecast extends Module
 			$dataTable[$row['fix_date']] = $row;
 
 		$this->_html .= '<div>
-		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
-			<p>'.$this->l('All amounts are without taxes.').'</p>
+			<div class="blocStats">
+			<h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
+			<p>'.$this->l('All amounts listed do not include tax.').'</p>
 			<form id="granularity" action="'.Tools::safeOutput($ru).'#granularity" method="post">
 				<input type="hidden" name="submitGranularity" value="1" />
 				'.$this->l('Mode:').' <select name="stats_granularity" onchange="this.form.submit();" style="width:100px">
@@ -140,7 +141,7 @@ class StatsForecast extends Module
 					<th style="width:70px;text-align:center"></th>
 					<th style="text-align:center">'.$this->l('Visits').'</th>
 					<th style="text-align:center">'.$this->l('Reg.').'</th>
-					<th style="text-align:center">'.$this->l('Orders').'</th>
+					<th style="text-align:center">'.$this->l('orders').'</th>
 					<th style="text-align:center">'.$this->l('Items').'</th>
 					<th style="text-align:center">'.$this->l('% Reg.').'</th>
 					<th style="text-align:center">'.$this->l('% Orders').'</th>
@@ -195,7 +196,7 @@ class StatsForecast extends Module
 					<th style="width:70px;text-align:center"></th>
 					<th style="text-align:center">'.$this->l('Visits').'</th>
 					<th style="text-align:center">'.$this->l('Reg.').'</th>
-					<th style="text-align:center">'.$this->l('Orders').'</th>
+					<th style="text-align:center">'.$this->l('orders').'</th>
 					<th style="text-align:center">'.$this->l('Items').'</th>
 					<th style="text-align:center">'.$this->l('% Reg.').'</th>
 					<th style="text-align:center">'.$this->l('% Orders').'</th>
@@ -296,34 +297,32 @@ class StatsForecast extends Module
 			</span>
 			<span style="float:left;text-align:center;margin-right:10px;padding-top:15px">'.$this->l('Full carts').'<br />'.$fullcarts.'</span>
 			<span style="float:left;text-align:center;margin-right:10px;padding-top:15px"><img src="../modules/'.$this->name.'/next.png"><br />'.round(100 * $orders / max(1, $fullcarts)).' %</span>
-			<span style="float:left;text-align:center;margin-right:10px;padding-top:15px">'.$this->l('Orders').'<br />'.$orders.'</span>
+			<span style="float:left;text-align:center;margin-right:10px;padding-top:15px">'.$this->l('orders').'<br />'.$orders.'</span>
 			</div>
 			
 			<div class="separation"></div>
-		<div class="blocConversion">
-			<span style="float:left;text-align:center;margin-right:10px; width:100px;">'.$this->l('Registered visitors').'</span>
-			<span style="float:left;text-align:center;margin-right:10px">
-				<img src="../modules/'.$this->name.'/next.png"> '.round(100 * $orders / max(1, $customers), 2).' % <img src="../modules/'.$this->name.'/next.png">
-			</span>
-			<span style="float:left;text-align:center;margin-right:10px">'.$this->l('Orders').'</span>
-			</div>
-			
-						<div class="separation"></div>
-			
 			<div class="blocConversion">
-			<span style="float:left;text-align:center;margin-right:10px; width:100px;">'.$this->l('Visitors').'</span>
-			<span style="float:left;text-align:center;margin-right:10px">
-				<img src="../modules/'.$this->name.'/next.png"> '.round(100 * $orders / max(1, $visitors), 2).' % <img src="../modules/'.$this->name.'/next.png">
-			</span>
-			<span style="float:left;text-align:center;margin-right:10px">'.$this->l('Orders').'</span>
-			
+				<span style="float:left;text-align:center;margin-right:10px; width:100px;">'.$this->l('Registered visitors').'</span>
+				<span style="float:left;text-align:center;margin-right:10px">
+					<img src="../modules/'.$this->name.'/next.png"> '.round(100 * $orders / max(1, $customers), 2).' % <img src="../modules/'.$this->name.'/next.png">
+				</span>
+				<span style="float:left;text-align:center;margin-right:10px">'.$this->l('orders').'</span>
 			</div>
-					<div class="separation"></div>
-					<p>
-			'.$this->l('Turn your visitors into money:').'
-			<br />'.$this->l('Each visitor yields').' <b style="color:#000;">'.Tools::displayPrice($ca['ventil']['total'] / max(1, $visitors), $currency).'.</b>
-			<br />'.$this->l('Each registered visitor yields').' <b style="color:#000;">'.Tools::displayPrice($ca['ventil']['total'] / max(1, $customers), $currency).'</b>.
-		</p></div>';
+			<div class="separation"></div>
+			<div class="blocConversion">
+				<span style="float:left;text-align:center;margin-right:10px; width:100px;">'.$this->l('Visitors').'</span>
+				<span style="float:left;text-align:center;margin-right:10px">
+					<img src="../modules/'.$this->name.'/next.png"> '.round(100 * $orders / max(1, $visitors), 2).' % <img src="../modules/'.$this->name.'/next.png">
+				</span>
+				<span style="float:left;text-align:center;margin-right:10px">'.$this->l('orders').'</span>
+			</div>
+			<div class="separation"></div>
+			<p>
+				'.$this->l('Turn your visitors into money:').'
+				<br />'.$this->l('Each visitor yields').' <b style="color:#000;">'.Tools::displayPrice($ca['ventil']['total'] / max(1, $visitors), $currency).'.</b>
+				<br />'.$this->l('Each registered visitor yields').' <b style="color:#000;">'.Tools::displayPrice($ca['ventil']['total'] / max(1, $customers), $currency).'</b>.
+			</p>
+		</div>';
 
 		$from = strtotime($employee->stats_date_from.' 00:00:00');
 		$to = strtotime($employee->stats_date_to.' 23:59:59');
@@ -332,7 +331,10 @@ class StatsForecast extends Module
 
 		$this->_html .= '
 		<br />';
-		$this->_html .= '<div class="blocStats"><h2 class="icon-payment"><span></span>'.$this->l('Payment distribution').'</h2>
+		$this->_html .= '
+		<div class="blocStats">
+			<h2 class="icon-payment"><span></span>'.$this->l('Payment distribution').'</h2>
+			<p>'.$this->l('The amounts are <b>with</b> taxes, so you can get an estimation of the commission due to the payment method.').'</p>
 			<form id="cat" action="'.$ru.'#payment" method="post" >
 				<input type="hidden" name="submitIdZone" value="1" />
 				'.$this->l('Zone:').' <select name="stats_id_zone" onchange="this.form.submit();">
@@ -346,9 +348,9 @@ class StatsForecast extends Module
 			foreach ($ca['payment'] as $payment)
 				$this->_html .= '
 					<tr>
-						<td>'.$payment['module'].'</td>
-						<td style="text-align:center;padding:4px">'.(int)$payment['nb'].'<br />'.($ca['ventil']['nb'] ? number_format((100 * $payment['nb'] / $ca['ventil']['nb']), 1, '.', ' ') : '0').' %</td>
-						<td style="text-align:center;padding:4px">'.Tools::displayPrice($payment['total'], $currency).'<br />'.((int)$ca['ventil']['total'] ? number_format((100 * $payment['total'] / $ca['ventil']['total']), 1, '.', ' ') : '0').' %</td>
+						<td>'.$payment['payment_method'].'</td>
+						<td style="text-align:center;padding:4px">'.(int)$payment['nb'].'</td>
+						<td style="text-align:center;padding:4px">'.Tools::displayPrice($payment['total'], $currency).'</td>
 						<td style="text-align:center;padding:4px">'.Tools::displayPrice($payment['cart'], $currency).'</td>
 					</tr>';
 			$this->_html .= '
@@ -365,7 +367,7 @@ class StatsForecast extends Module
 		$this->_html .= '	</select>
 			</form>
 			<table class="table" border="0" cellspacing="0" cellspacing="0">
-				<tr><th style="width:50px">'.$this->l('Category').'</th><th>'.$this->l('Count').'</th><th>'.$this->l('Sales').'</th><th>'.$this->l('% Count').'</th><th>'.$this->l('% Sales').'</th><th>'.$this->l('Avg price').'</th></tr>';
+				<tr><th style="width:50px">'.$this->l('Category').'</th><th>'.$this->l('Count').'</th><th>'.$this->l('Sales').'</th><th>'.$this->l('% Count').'</th><th>'.$this->l('% Sales').'</th><th>'.$this->l('Avgerage price').'</th></tr>';
 			foreach ($ca['cat'] as $catrow)
 				$this->_html .= '
 				<tr>
@@ -382,7 +384,7 @@ class StatsForecast extends Module
 		<br />
 		<div class="blocStats"><h2 class="icon-language"><span></span>'.$this->l('Language distribution').'</h2>
 			<table class="table" border="0" cellspacing="0" cellspacing="0">
-				<tr><th>'.$this->l('Customers').'</th><th>'.$this->l('Sales').'</th><th>'.$this->l('%').'</th><th colspan="2">'.$this->l('Growth').'</th></tr>';
+				<tr><th>'.$this->l('customers').'</th><th>'.$this->l('Sales').'</th><th>'.$this->l('%').'</th><th colspan="2">'.$this->l('Growth').'</th></tr>';
 		foreach ($ca['lang'] as $ophone => $amount)
 		{
 			$percent = (int)($ca['langprev'][$ophone]) ? number_format((100 * $amount / $ca['langprev'][$ophone]) - 100, 1, '.', ' ') : '&#x221e;';
@@ -468,7 +470,7 @@ class StatsForecast extends Module
 			$where = ' AND co.id_zone = '.(int)$this->context->cookie->stats_id_zone.' ';
 		}
 
-		$sql = 'SELECT SUM(od.`product_price` * od.`product_quantity` / o.conversion_rate) as orderSum, COUNT(*) AS orderQty, cl.name, AVG(od.`product_price` / o.conversion_rate) as priveAvg
+		$sql = 'SELECT SUM(od.`product_price` * od.`product_quantity` / o.conversion_rate) as orderSum, SUM(od.product_quantity) as orderQty, cl.name, AVG(od.`product_price` / o.conversion_rate) as priveAvg
 				FROM `'._DB_PREFIX_.'orders` o
 				LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.id_product = od.product_id
@@ -490,7 +492,7 @@ class StatsForecast extends Module
 				WHERE l.active = 1';
 		$languages = Db::getInstance()->executeS($sql);
 		foreach ($languages as $language)
-			$langValues .= 'SUM(IF(o.id_lang = '.(int)$language['id_lang'].', total_products / o.conversion_rate, 0)) as '.pSQL($language['iso_code']).',';
+			$langValues .= 'SUM(IF(o.id_lang = '.(int)$language['id_lang'].', total_paid_tax_excl / o.conversion_rate, 0)) as '.pSQL($language['iso_code']).',';
 		$langValues = rtrim($langValues, ',');
 
 		if ($langValues)
@@ -516,18 +518,19 @@ class StatsForecast extends Module
 			$ca['langprev'] = array();
 		}
 
-		$sql = 'SELECT module, SUM(total_products / o.conversion_rate) as total, COUNT(*) as nb, AVG(total_products / o.conversion_rate) as cart
+		$sql = 'SELECT op.payment_method, SUM(amount / o.conversion_rate) as total, COUNT(*) as nb, AVG(amount / o.conversion_rate) as cart
 				FROM `'._DB_PREFIX_.'orders` o
+				LEFT JOIN `'._DB_PREFIX_.'order_payment` op ON o.reference = op.order_reference
 				'.$join.'
 				WHERE o.valid = 1
-					AND o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'
-					'.$where.'
-					'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
-				GROUP BY o.module
+				AND o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'
+				'.$where.'
+				'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
+				GROUP BY op.payment_method
 				ORDER BY total DESC';
 		$ca['payment'] = Db::getInstance()->executeS($sql);
 
-		$sql = 'SELECT z.name, SUM(o.total_products / o.conversion_rate) as total, COUNT(*) as nb
+		$sql = 'SELECT z.name, SUM(o.total_paid_tax_excl / o.conversion_rate) as total, COUNT(*) as nb
 				FROM `'._DB_PREFIX_.'orders` o
 				LEFT JOIN `'._DB_PREFIX_.'address` a ON o.id_address_invoice = a.id_address
 				LEFT JOIN `'._DB_PREFIX_.'country` c ON c.id_country = a.id_country
@@ -539,7 +542,7 @@ class StatsForecast extends Module
 				ORDER BY total DESC';
 		$ca['zones'] = Db::getInstance()->executeS($sql);
 
-		$sql = 'SELECT cu.name, SUM(o.total_products / o.conversion_rate) as total, COUNT(*) as nb
+		$sql = 'SELECT cu.name, SUM(o.total_paid_tax_excl / o.conversion_rate) as total, COUNT(*) as nb
 				FROM `'._DB_PREFIX_.'orders` o
 				LEFT JOIN `'._DB_PREFIX_.'currency` cu ON o.id_currency = cu.id_currency
 				'.$join.'
@@ -551,7 +554,7 @@ class StatsForecast extends Module
 				ORDER BY total DESC';
 		$ca['currencies'] = Db::getInstance()->executeS($sql);
 
-		$sql = 'SELECT SUM(total_products / o.conversion_rate) as total, COUNT(*) AS nb
+		$sql = 'SELECT SUM(total_paid_tax_excl / o.conversion_rate) as total, COUNT(*) AS nb
 				FROM `'._DB_PREFIX_.'orders` o
 				WHERE o.valid = 1
 					AND o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'

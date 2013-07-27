@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -46,26 +46,34 @@ class CacheMemcacheCore extends Cache
 
 		// Get keys (this code comes from Doctrine 2 project)
         $this->keys = array();
-        $all_slabs = $this->memcache->getExtendedStats('slabs');
-
-        foreach ($all_slabs as $server => $slabs)
-        {
-            if (is_array($slabs))
-            {
-                foreach (array_keys($slabs) as $slab_id)
-                {
-                    $dump = $this->memcache->getExtendedStats('cachedump', (int)$slab_id);
-                    if ($dump)
-                    {
-                       foreach ($dump as $entries)
-                       {
-                            if ($entries)
-                                $this->keys = array_merge($this->keys, array_keys($entries));
-                       }
-                    }
-                }
-            }
-        }
+        $servers = self::getMemcachedServers();
+       
+        if(is_array($servers) && count($servers) > 0 && method_exists('Memcache', 'getStats'))
+        	$all_slabs = $this->memcache->getStats('slabs');
+	    	        	
+		if(isset($all_slabs) && is_array($all_slabs))
+			foreach ($all_slabs as $server => $slabs)
+			{
+			    if (is_array($slabs))
+			    {
+					foreach (array_keys($slabs) as $slab_id)
+					{
+						if(is_int($slab_id))
+						{				        	
+					        $dump = $this->memcache->getStats('cachedump', (int)$slab_id);
+					        if ($dump)
+					        {
+					           foreach ($dump as $entries)
+					           {
+									if($entries)
+										foreach ($entries as $key => $data)
+											$this->keys[$key] = $data[1];
+					           }
+					        }
+					    }
+					}
+			    }
+			}
 	}
 
 	public function __destruct()
@@ -78,12 +86,16 @@ class CacheMemcacheCore extends Cache
 	 */
 	public function connect()
 	{
-		$this->memcache = new Memcache();
-		$servers = CacheMemcache::getMemcachedServers();
+		if (class_exists('Memcache') && extension_loaded('memcache'))
+			$this->memcache = new Memcache();
+		else
+			return false;
+		
+		$servers = self::getMemcachedServers();
 		if (!$servers)
 			return false;
 		foreach ($servers as $server)
-			$this->memcache->addServer($server['ip'], $server['port'], $server['weight']);
+			$this->memcache->addServer($server['ip'], $server['port'], true, (int) $server['weight']);
 
 		$this->is_connected = true;
 	}

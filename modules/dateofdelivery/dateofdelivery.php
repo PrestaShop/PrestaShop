@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -128,8 +128,9 @@ class DateOfDelivery extends Module
 								$oos = true;
 								break;
 							}
-						
-						$date_range = $this->_getDatesOfDelivery($id_carrier, $oos);
+
+						$available_date = Product::getAvailableDate($product['id_product'], $product['id_product_attribute']);
+						$date_range = $this->_getDatesOfDelivery($id_carrier, $oos, $available_date);
 						if (is_null($date_from) || $date_from < $date_range[0])
 						{
 							$date_from = $date_range[0][1];
@@ -493,9 +494,9 @@ class DateOfDelivery extends Module
 	}
 
 	/**
-	 * @param $id_carrier
-	 * @param bool $product_oos
-	 * @param null $date
+	 * @param int    $id_carrier
+	 * @param bool   $product_oos
+	 * @param string $date
 	 *
 	 * @return array|bool returns the min & max delivery date
 	 */

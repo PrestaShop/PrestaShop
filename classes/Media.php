@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop 
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -30,35 +30,36 @@ class MediaCore
 		'ui.core' => array('fileName' => 'jquery.ui.core.min.js', 'dependencies' => array(), 'theme' => true),
 		'ui.widget' => array('fileName' => 'jquery.ui.widget.min.js', 'dependencies' => array(), 'theme' => false),
 		'ui.mouse' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('ui.core', 'ui.widget'), 'theme' => false),
-		'ui.position' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array(), 'theme' => false),
-		'ui.draggable' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.mouse'), 'theme' => false),
-		'ui.droppable' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('uicore', 'ui.widget', 'ui.mouse', 'ui.draggable'), 'theme' => false),
-		'ui.resizable' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.mouse'), 'theme' => true),
-		'ui.selectable' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.mouse'), 'theme' => true),
-		'ui.sortable' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.mouse'), 'theme' => true),
-		'ui.accordion' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('ui.core', 'ui.widget'), 'theme' => true),
-		'ui.autocomplete' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.position'), 'theme' => true),
-		'ui.button' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('ui.core', 'ui.widget'), 'theme' => true),
-		'ui.dialog' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.position'), 'theme' => true),
-		'ui.slider' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.mouse'), 'theme' => true),
-		'ui.tabs' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('ui.core', 'ui.widget'), 'theme' => true),
-		'ui.datepicker' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('ui.core'), 'theme' => true),
-		'ui.progressbar' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('ui.core', 'ui.widget'), 'theme' => true),
-		'effects.core' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array(), 'theme' => false),
-		'effects.blind' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('effects.core'), 'theme' => false),
-		'effects.bounce' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('effects.core'), 'theme' => false),
-		'effects.clip' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('effects.core'), 'theme' => false),
-		'effects.drop' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('effects.core'), 'theme' => false),
-		'effects.explode' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('effects.core'), 'theme' => false),
-		'effects.fade' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('effects.core'), 'theme' => false),
-		'effects.fold' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('effects.core'), 'theme' => false),
-		'effects.highlight' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('effects.core'), 'theme' => false),
-		'effects.pulsate' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('effects.core'), 'theme' => false),
-		'effects.scale' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('effects.core'), 'theme' => false),
-		'effects.shake' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('effects.core'), 'theme' => false),
-		'effects.slide' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('effects.core'), 'theme' => false),
-		'effects.transfer' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('effects.core'), 'theme' => false)
+		'ui.position' => array('fileName' => 'jquery.ui.position.min.js', 'dependencies' => array(), 'theme' => false),
+		'ui.draggable' => array('fileName' => 'jquery.ui.draggable.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.mouse'), 'theme' => false),
+		'ui.droppable' => array('fileName' => 'jquery.ui.droppable.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.mouse', 'ui.draggable'), 'theme' => false),
+		'ui.resizable' => array('fileName' => 'jquery.ui.resizable.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.mouse'), 'theme' => true),
+		'ui.selectable' => array('fileName' => 'jquery.ui.selectable.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.mouse'), 'theme' => true),
+		'ui.sortable' => array('fileName' => 'jquery.ui.sortable.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.mouse'), 'theme' => true),
+		'ui.accordion' => array('fileName' => 'jquery.ui.accordion.min.js', 'dependencies' => array('ui.core', 'ui.widget'), 'theme' => true),
+		'ui.autocomplete' => array('fileName' => 'jquery.ui.autocomplete.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.position'), 'theme' => true),
+		'ui.button' => array('fileName' => 'jquery.ui.button.min.js', 'dependencies' => array('ui.core', 'ui.widget'), 'theme' => true),
+		'ui.dialog' => array('fileName' => 'jquery.ui.dialog.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.position'), 'theme' => true),
+		'ui.slider' => array('fileName' => 'jquery.ui.slider.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.mouse'), 'theme' => true),
+		'ui.tabs' => array('fileName' => 'jquery.ui.tabs.min.js', 'dependencies' => array('ui.core', 'ui.widget'), 'theme' => true),
+		'ui.datepicker' => array('fileName' => 'jquery.ui.datepicker.min.js', 'dependencies' => array('ui.core'), 'theme' => true),
+		'ui.progressbar' => array('fileName' => 'jquery.ui.progressbar.min.js', 'dependencies' => array('ui.core', 'ui.widget'), 'theme' => true),
+		'effects.core' => array('fileName' => 'jquery.effects.core.min.js', 'dependencies' => array(), 'theme' => false),
+		'effects.blind' => array('fileName' => 'jquery.effects.blind.min.js', 'dependencies' => array('effects.core'), 'theme' => false),
+		'effects.bounce' => array('fileName' => 'jquery.effects.bounce.min.js', 'dependencies' => array('effects.core'), 'theme' => false),
+		'effects.clip' => array('fileName' => 'jquery.effects.clip.min.js', 'dependencies' => array('effects.core'), 'theme' => false),
+		'effects.drop' => array('fileName' => 'jquery.effects.drop.min.js', 'dependencies' => array('effects.core'), 'theme' => false),
+		'effects.explode' => array('fileName' => 'jquery.effects.explode.min.js', 'dependencies' => array('effects.core'), 'theme' => false),
+		'effects.fade' => array('fileName' => 'jquery.effects.fade.min.js', 'dependencies' => array('effects.core'), 'theme' => false),
+		'effects.fold' => array('fileName' => 'jquery.effects.fold.min.js', 'dependencies' => array('effects.core'), 'theme' => false),
+		'effects.highlight' => array('fileName' => 'jquery.effects.highlight.min.js', 'dependencies' => array('effects.core'), 'theme' => false),
+		'effects.pulsate' => array('fileName' => 'jquery.effects.pulsate.min.js', 'dependencies' => array('effects.core'), 'theme' => false),
+		'effects.scale' => array('fileName' => 'jquery.effects.scale.min.js', 'dependencies' => array('effects.core'), 'theme' => false),
+		'effects.shake' => array('fileName' => 'jquery.effects.shake.min.js', 'dependencies' => array('effects.core'), 'theme' => false),
+		'effects.slide' => array('fileName' => 'jquery.effects.slide.min.js', 'dependencies' => array('effects.core'), 'theme' => false),
+		'effects.transfer' => array('fileName' => 'jquery.effects.transfer.min.js', 'dependencies' => array('effects.core'), 'theme' => false)
 	);
+
 
 	public static function minifyHTML($html_content)
 	{
@@ -68,30 +69,13 @@ class MediaCore
 			$html_content = preg_replace_callback(
 				'/(<[a-zA-Z0-9]+)((\s?[a-zA-Z0-9]+=[\"\\\'][^\"\\\']*[\"\\\']\s?)*)>/',
 				array('Media', 'minifyHTMLpregCallback'),
-				$html_content);
+				$html_content,
+				Media::getBackTrackLimit());
 
 			require_once(_PS_TOOL_DIR_.'minify_html/minify_html.class.php');
 			$html_content = str_replace(chr(194).chr(160), '&nbsp;', $html_content);
-			$html_content = Minify_HTML::minify($html_content, array('xhtml', 'cssMinifier', 'jsMinifier'));
-
-			if (Configuration::get('PS_HIGH_HTML_THEME_COMPRESSION'))
-			{
-				//$html_content = preg_replace('/"([^\>\s"]*)"/i', '$1', $html_content);//FIXME create a js bug
-				$html_content = preg_replace('/<!DOCTYPE \w[^\>]*dtd\">/is', '', $html_content);
-				$html_content = preg_replace('/\s\>/is', '>', $html_content);
-				$html_content = str_replace('</li>', '', $html_content);
-				$html_content = str_replace('</dt>', '', $html_content);
-				$html_content = str_replace('</dd>', '', $html_content);
-				$html_content = str_replace('</head>', '', $html_content);
-				$html_content = str_replace('<head>', '', $html_content);
-				$html_content = str_replace('</html>', '', $html_content);
-				$html_content = str_replace('</body>', '', $html_content);
-				//$html_content = str_replace('</p>', '', $html_content);//FIXME doesnt work...
-				$html_content = str_replace("</option>\n", '', $html_content);//TODO with bellow
-				$html_content = str_replace('</option>', '', $html_content);
-				$html_content = str_replace('<script type=text/javascript>', '<script>', $html_content);//Do a better expreg
-				$html_content = str_replace("<script>\n", '<script>', $html_content);//Do a better expreg
-			}
+			if (trim($minified_content = Minify_HTML::minify($html_content, array('xhtml', 'cssMinifier', 'jsMinifier'))) !=  '')
+				$html_content = $minified_content;
 
 			return $html_content;
 		}
@@ -120,7 +104,8 @@ class MediaCore
 			$html_content = preg_replace_callback(
 				'/\\s*(<script\\b[^>]*?>)([\\s\\S]*?)(<\\/script>)\\s*/i',
 				array('Media', 'packJSinHTMLpregCallback'),
-				$html_content);
+				$html_content,
+				Media::getBackTrackLimit());
 
 			// If the string is too big preg_replace return an error
 			// In this case, we don't compress the content
@@ -147,12 +132,18 @@ class MediaCore
 
 	public static function packJS($js_content)
 	{
-		if (strlen($js_content) > 0)
+		if (!empty($js_content))
 		{
 			require_once(_PS_TOOL_DIR_.'js_minify/jsmin.php');
-			return JSMin::minify($js_content);
+			try {
+				$js_content = JSMin::minify($js_content);
+			} catch (Exception $e) {
+				if (_PS_MODE_DEV_)
+					echo $e->getMessage();
+				return $js_content;
+			}
 		}
-		return false;
+		return $js_content;
 	}
 
 	public static function minifyCSS($css_content, $fileuri = false, &$import_url = array())
@@ -162,31 +153,20 @@ class MediaCore
 		$current_css_file = $fileuri;
 		if (strlen($css_content) > 0)
 		{
-			$css_content = preg_replace('#/\*.*?\*/#s', '', $css_content);
-			$css_content = preg_replace_callback('#url\((?:\'|")?([^\)\'"]*)(?:\'|")?\)#s', array('Tools', 'replaceByAbsoluteURL'), $css_content);
-
-			$css_content = preg_replace('#\s+#', ' ', $css_content);
-			$css_content = str_replace("\t", '', $css_content);
-			$css_content = str_replace("\n", '', $css_content);
-			//$css_content = str_replace('}', "}\n", $css_content);
-
-			$css_content = str_replace('; ', ';', $css_content);
-			$css_content = str_replace(': ', ':', $css_content);
-			$css_content = str_replace(' {', '{', $css_content);
-			$css_content = str_replace('{ ', '{', $css_content);
+			$limit  = Media::getBackTrackLimit();
+			$css_content = preg_replace('#/\*.*?\*/#s', '', $css_content, $limit);
+			$css_content = preg_replace_callback('#(url\((?!data:)(?:\'|")?)([^\)\'"]*(?:\'|")?\))#s', array('Tools', 'replaceByAbsoluteURL'), $css_content, $limit); 
+			$css_content = preg_replace('#\s+#', ' ', $css_content, $limit);		
+			$css_content = str_replace(array("\t", "\n", "\r"), '', $css_content);
+			$css_content = str_replace(array('; ', ': '), array(';', ':'), $css_content);
+			$css_content = str_replace(array(' {', '{ '), '{', $css_content);
 			$css_content = str_replace(', ', ',', $css_content);
-			$css_content = str_replace('} ', '}', $css_content);
-			$css_content = str_replace(' }', '}', $css_content);
-			$css_content = str_replace(';}', '}', $css_content);
-			$css_content = str_replace(':0px', ':0', $css_content);
-			$css_content = str_replace(' 0px', ' 0', $css_content);
-			$css_content = str_replace(':0em', ':0', $css_content);
-			$css_content = str_replace(' 0em', ' 0', $css_content);
-			$css_content = str_replace(':0pt', ':0', $css_content);
-			$css_content = str_replace(' 0pt', ' 0', $css_content);
-			$css_content = str_replace(':0%', ':0', $css_content);
-			$css_content = str_replace(' 0%', ' 0', $css_content);
-
+			$css_content = str_replace(array('} ', ' }', ';}'), '}', $css_content);
+			$css_content = str_replace(array(':0px', ':0em', ':0pt', ':0%'), ':0', $css_content);
+			$css_content = str_replace(array(' 0px', ' 0em', ' 0pt', ' 0%'), ' 0', $css_content);
+			$css_content = str_replace('\'images_ie/', '\'images/', $css_content);
+			$css_content = preg_replace_callback('#(AlphaImageLoader\(src=\')([^\']*\',)#s', array('Tools', 'replaceByAbsoluteURL'), $css_content);
+						
 			// Store all import url
 			preg_match_all('#@import .*?;#i', $css_content, $m);
 			for ($i = 0, $total = count($m[0]); $i < $total; $i++)
@@ -356,7 +336,7 @@ class MediaCore
 	 * @param mixed $name
 	 * @return void
 	 */
-	public static function getJqueryPluginPath($name, $folder)
+	public static function getJqueryPluginPath($name, $folder = null)
 	{
 		$plugin_path = array('js' => array(), 'css' => array());
 		if ($folder === null)
@@ -365,13 +345,13 @@ class MediaCore
 		$file = 'jquery.'.$name.'.js';
 		$url_data = parse_url($folder);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
-		if (@filemtime($file_uri.$file))
+		if (@file_exists($file_uri.$file))
 			$plugin_path['js'] = Media::getJSPath($folder.$file);
-		elseif (@filemtime($file_uri.$name.'/'.$file))
+		elseif (@file_exists($file_uri.$name.'/'.$file))
 			$plugin_path['js'] = Media::getJSPath($folder.$name.'/'.$file);
 		else
 			return false;
-		$plugin_path['css'] = Media::getJqueryPluginCSSPath($name);
+		$plugin_path['css'] = Media::getJqueryPluginCSSPath($name, $folder);
 		return $plugin_path;
 	}
 
@@ -381,15 +361,16 @@ class MediaCore
 	 * @param mixed $name
 	 * @return void
 	 */
-	public static function getJqueryPluginCSSPath($name)
+	public static function getJqueryPluginCSSPath($name, $folder = null)
 	{
-		$folder = _PS_JS_DIR_.'jquery/plugins/';
+		if ($folder === null)
+			$folder = _PS_JS_DIR_.'jquery/plugins/'; //set default folder
 		$file = 'jquery.'.$name.'.css';
 		$url_data = parse_url($folder);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
-		if (@filemtime($file_uri.$file))
+		if (@file_exists($file_uri.$file))
 			return Media::getCSSPath($folder.$file);
-		elseif (@filemtime($file_uri.$name.'/'.$file))
+		elseif (@file_exists($file_uri.$name.'/'.$file))
 			return Media::getCSSPath($folder.$name.'/'.$file);
 		else
 			return false;
@@ -483,6 +464,18 @@ class MediaCore
 		return $css_files;
 	}
 
+	public static function getBackTrackLimit()
+	{
+		static $limit = null;
+		if ($limit === null)
+		{
+			$limit = @ini_get('pcre.backtrack_limit');
+			if (!$limit)
+				$limit = -1;
+		}
+
+		return $limit;
+	}
 
 	/**
 	* Combine Compress and Cache (ccc) JS calls

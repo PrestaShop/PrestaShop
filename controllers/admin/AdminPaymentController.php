@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -101,7 +101,7 @@ class AdminPaymentControllerCore extends AdminController
 				$this->action = 'group';
 		}
 		else
-			$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+			$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 	}
 
 
@@ -143,7 +143,7 @@ class AdminPaymentControllerCore extends AdminController
 
 	public function renderView()
 	{
-		$this->toolbar_title = $this->l('Payment');
+		$this->toolbar_title = $this->l('Payment: ');
 		unset($this->toolbar_btn['back']);
 		
 		$shop_context = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP);
@@ -168,21 +168,21 @@ class AdminPaymentControllerCore extends AdminController
 		$lists = array(
 					array('items' => Currency::getCurrencies(),
 						  'title' => $this->l('Currency restrictions'),
-						  'desc' => $this->l('Please mark the checkbox(es) for the currency or currencies for which you want the payment module(s) to be available.'),
+						  'desc' => $this->l('Please mark each checkbox for the currency, or currencies, in which you want the payment module(s) to be available.'),
 						  'name_id' => 'currency',
 						  'identifier' => 'id_currency',
 						  'icon' => 'dollar',
 					),
 					array('items' => Group::getGroups($this->context->language->id),
 						  'title' => $this->l('Group restrictions'),
-						  'desc' => $this->l('Please mark the checkbox(es) for the groups for which you want the payment module(s) available.'),
+						  'desc' => $this->l('Please mark each checkbox for the currency, or currencies, in which you want the payment module(s) to be available.'),
 						  'name_id' => 'group',
 						  'identifier' => 'id_group',
 						  'icon' => 'group',
 					),
 					array('items' =>Country::getCountries($this->context->language->id),
 						  'title' => $this->l('Country restrictions'),
-						  'desc' => $this->l('Please mark the checkbox(es) for the country or countries for which you want the payment module(s) to be available.'),
+						  'desc' => $this->l('Please mark each checkbox for the country, or countries, in which you want the payment module(s) to be available.'),
 						  'name_id' => 'country',
 						  'identifier' => 'id_country',
 						  'icon' => 'world',
@@ -222,7 +222,7 @@ class AdminPaymentControllerCore extends AdminController
 		}
 
 		$this->tpl_view_vars = array(
-			'url_modules' => isset($token_modules) ? 'index.php?tab=AdminModules&token='.$token_modules.'&&filterCategory=payments_gateways' : null,
+			'modules_list' => $this->renderModulesList(),
 			'display_restrictions' => $display_restrictions,
 			'lists' => $lists,
 			'ps_base_uri' => __PS_BASE_URI__,

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -79,12 +79,7 @@ abstract class DbCore
 	/**
 	 * @var array Object instance for singleton
 	 */
-	protected static $_servers = array(
-		array('server' => _DB_SERVER_, 'user' => _DB_USER_, 'password' => _DB_PASSWD_, 'database' => _DB_NAME_), /* MySQL Master server */
-		// Add here your slave(s) server(s)
-			// array('server' => '192.168.0.15', 'user' => 'rep', 'password' => '123456', 'database' => 'rep'),
-			// array('server' => '192.168.0.3', 'user' => 'myuser', 'password' => 'mypassword', 'database' => 'mydatabase'),
-	);
+	protected static $_servers = array();
 
 	/**
 	 * Store last executed query
@@ -169,6 +164,8 @@ abstract class DbCore
 
 	/* do not remove, useful for some modules */
 	abstract public function set_db($db_name);
+	
+	abstract public function getBestEngine();
 
 	/**
 	 * Get Db object instance
@@ -179,6 +176,15 @@ abstract class DbCore
 	public static function getInstance($master = true)
 	{
 		static $id = 0;
+
+		// This MUST not be declared with the class members because some defines (like _DB_SERVER_) may not exist yet (the constructor can be called directly with params)
+		if (!self::$_servers)
+			self::$_servers = array(
+				array('server' => _DB_SERVER_, 'user' => _DB_USER_, 'password' => _DB_PASSWD_, 'database' => _DB_NAME_), /* MySQL Master server */
+				// Add here your slave(s) server(s)
+					// array('server' => '192.168.0.15', 'user' => 'rep', 'password' => '123456', 'database' => 'rep'),
+					// array('server' => '192.168.0.3', 'user' => 'myuser', 'password' => 'mypassword', 'database' => 'mydatabase'),
+			);
 
 		$total_servers = count(self::$_servers);
 		if ($master || $total_servers == 1)
@@ -211,7 +217,7 @@ abstract class DbCore
 	public static function getClass()
 	{
 		$class = 'MySQL';
-		if (extension_loaded('pdo_mysql'))
+		if (PHP_VERSION_ID >= 50200 && extension_loaded('pdo_mysql'))
 			$class = 'DbPDO';
 		else if (extension_loaded('mysqli'))
 			$class = 'DbMySQLi';
@@ -581,6 +587,8 @@ abstract class DbCore
 		$result = $this->query($sql);
 		if ($use_cache && $this->is_cache_enabled)
 			Cache::getInstance()->deleteQuery($sql);
+		if (_PS_DEBUG_SQL_)
+			$this->displayError($sql);
 		return $result;
 	}
 
@@ -670,6 +678,11 @@ abstract class DbCore
 	public static function hasTableWithSamePrefix($server, $user, $pwd, $db, $prefix)
 	{
 		return call_user_func_array(array(Db::getClass(), 'hasTableWithSamePrefix'), array($server, $user, $pwd, $db, $prefix));
+	}
+
+	public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
+	{
+		return call_user_func_array(array(Db::getClass(), 'checkCreatePrivilege'), array($server, $user, $pwd, $db, $prefix, $engine));
 	}
 
 	/**

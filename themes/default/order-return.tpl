@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,17 +18,17 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {include file="./errors.tpl"}
 {if isset($orderRet)}
-	<h4>{l s='RE#'}<span class="color-myaccount">{$orderRet->id|string_format:"%06d"}</span> {l s='on'} {dateFormat date=$order->date_add full=0}</h4>
+	<p class="title_block">{l s='RE#'}<span class="color-myaccount">{$orderRet->id|string_format:"%06d"}</span> {l s='on'} {dateFormat date=$order->date_add full=0}</p>
 	<div>
 		<p class="bold">{l s='We have logged your return request.'}</p>
 		<p>{l s='Your package must be returned to us within'} {$nbdaysreturn} {l s='days of receiving your order.'}</p>
-		<p>{l s='Current status of your merchandise return:'} <span class="bold">{$state_name|escape:'htmlall':'UTF-8'}</span></p>
+		<p>{l s='The current status of your merchandise return is:'} <span class="bold">{$state_name|escape:'htmlall':'UTF-8'}</span></p>
 		<p>{l s='List of items to be returned:'}</p>
 	</div>
 	<div id="order-detail-content" class="table_block">
@@ -60,7 +60,7 @@
 									{if $type == $smarty.const._CUSTOMIZE_FILE_}
 									<ul class="customizationUploaded">
 										{foreach from=$datas item='data'}
-											<li>WAHOU<img src="{$pic_dir}{$data.value}_small" alt="" class="customizationUploaded" /></li>
+											<li><img src="{$pic_dir}{$data.value}_small" alt="" class="customizationUploaded" /></li>
 										{/foreach}
 									</ul>
 									{elseif $type == $smarty.const._CUSTOMIZE_TEXTFIELD_}
@@ -91,19 +91,19 @@
 	</div>
 
 	{if $orderRet->state == 2}
-	<p class="bold">{l s='REMINDER:'}</p>
+	<p class="bold">{l s='Reminder:'}</p>
 	<div>
-		- {l s='All products must be returned in their original packaging without damage or wear.'}
-		<br />- {l s='Please print out the'} <a href="{$link->getPageLink('pdf-order-return', true, NULL, "id_order_return={$orderRet->id|intval}")}">{l s='PDF return slip'}</a> {l s='and include it with your package.'}
-		<br />- {l s='Please see PDF return slip'} (<a href="{$link->getPageLink('pdf-order-return', true, NULL, "id_order_return={$orderRet->id|intval}")}">{l s='for the correct address'}</a>)
+		- {l s='All merchandise must be returned in its original packaging and in its original state.'}
+		<br />- {l s='Please print out the'} <a href="{$link->getPageLink('pdf-order-return', true, NULL, "id_order_return={$orderRet->id|intval}")|escape:'html'}">{l s='PDF return slip'}</a> {l s='and include it with your package.'}
+		<br />- {l s='Please see the PDF return slip'} (<a href="{$link->getPageLink('pdf-order-return', true, NULL, "id_order_return={$orderRet->id|intval}")|escape:'html'}">{l s='for the correct address'}</a>)
 		<br /><br />
-		{l s='Upon receiving your package, we will notify you by e-mail. We will then begin processing the reimbursement of your order total.'}
-		<br /><br /><a href="{$link->getPageLink('contact', true)}">{l s='Please let us know if you have any questions.'}</a>
+		{l s='When we receive your package, we will notify you by email. We will then begin processing order reimbursement.'}
+		<br /><br /><a href="{$link->getPageLink('contact', true)|escape:'html'}">{l s='Please let us know if you have any questions.'}</a>
 		<br />
 		<p class="bold">{l s='If the conditions of return listed above are not respected, we reserve the right to refuse your package and/or reimbursement.'}</p>
 	</div>
 	{elseif $orderRet->state == 1}
-		<p class="bold">{l s='You must wait for our confirmation before returning any merchandise.'}</p>
+		<p class="bold">{l s='You must wait for confirmation before returning any merchandise.'}</p>
 	{/if}
 {/if}
 

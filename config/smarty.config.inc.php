@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -32,6 +32,8 @@ global $smarty;
 $smarty = new Smarty();
 $smarty->setCompileDir(_PS_CACHE_DIR_.'smarty/compile');
 $smarty->setCacheDir(_PS_CACHE_DIR_.'smarty/cache');
+if (!Tools::getSafeModeStatus())
+	$smarty->use_sub_dirs = true;
 $smarty->setConfigDir(_PS_SMARTY_DIR_.'configs');
 $smarty->caching = false;
 $smarty->force_compile = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_FORCE_COMPILE_) ? true : false;
@@ -55,11 +57,6 @@ if (defined('_PS_ADMIN_DIR_'))
 else
 	require_once (dirname(__FILE__).'/smartyfront.config.inc.php');
 
-if (Configuration::get('PS_HTML_THEME_COMPRESSION'))
-	$smarty->registerFilter('output', 'smartyMinifyHTML');
-if (Configuration::get('PS_JS_HTML_THEME_COMPRESSION'))
-	$smarty->registerFilter('output', 'smartyPackJSinHTML');
-
 smartyRegisterFunction($smarty, 'modifier', 'truncate', 'smarty_modifier_truncate');
 smartyRegisterFunction($smarty, 'modifier', 'secureReferrer', array('Tools', 'secureReferrer'));
 
@@ -80,6 +77,9 @@ smartyRegisterFunction($smarty, 'function', 'displayPrice', array('Tools', 'disp
 smartyRegisterFunction($smarty, 'modifier', 'convertAndFormatPrice', array('Product', 'convertAndFormatPrice')); // used twice
 smartyRegisterFunction($smarty, 'function', 'getAdminToken', array('Tools', 'getAdminTokenLiteSmarty'));
 smartyRegisterFunction($smarty, 'function', 'displayAddressDetail', array('AddressFormat', 'generateAddressSmarty'));
+smartyRegisterFunction($smarty, 'function', 'getWidthSize', array('Image', 'getWidth'));
+smartyRegisterFunction($smarty, 'function', 'getHeightSize', array('Image', 'getHeight'));
+
 
 function smartyDieObject($params, &$smarty)
 {
@@ -228,7 +228,17 @@ class SmartyLazyRegister
 		if (is_array($item[1]))
 			return call_user_func_array($item[1].'::'.$item[0], array($arguments[0], &$arguments[1]));
 		else
-			return call_user_func_array($item, array($arguments[0], &$arguments[1]));
+		{
+			$args = array();
+			
+			foreach($arguments as $a => $argument)
+				if($a == 0)
+					$args[] = $arguments[0]; 
+				else
+					$args[] = &$arguments[$a]; 
+			
+			return call_user_func_array($item, $args);
+		}
 	}
 
 	public static function getInstance()

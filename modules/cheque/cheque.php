@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -54,14 +54,14 @@ class Cheque extends PaymentModule
 
 		parent::__construct();
 
-		$this->displayName = $this->l('Check');
-		$this->description = $this->l('Module for accepting payments by check.');
-		$this->confirmUninstall = $this->l('Are you sure you want to delete your details ?');
+		$this->displayName = $this->l('Payments by check');
+		$this->description = $this->l('This module allows you to accept payments by check.');
+		$this->confirmUninstall = $this->l('Are you sure you want to delete these details?');
 
 		if ((!isset($this->chequeName) || !isset($this->address) || empty($this->chequeName) || empty($this->address)))
-			$this->warning = $this->l('\'To the order of\' and address must be configured in order to use this module correctly.');
+			$this->warning = $this->l('"To the order of" and "address" must be configured before using this module.');
 		if (!count(Currency::checkPaymentCurrencies($this->id)))
-			$this->warning = $this->l('No currency set for this module');
+			$this->warning = $this->l('No currency has been set for this module');
 	
 		$this->extra_mail_vars = array(
 											'{cheque_name}' => Configuration::get('CHEQUE_NAME'),
@@ -89,7 +89,7 @@ class Cheque extends PaymentModule
 		if (Tools::isSubmit('btnSubmit'))
 		{
 			if (!Tools::getValue('name'))
-				$this->_postErrors[] = $this->l('\'To the order of\' field is required.');
+				$this->_postErrors[] = $this->l('\'The "To the order of" field is required.');
 			elseif (!Tools::getValue('address'))
 				$this->_postErrors[] = $this->l('Address is required.');
 		}
@@ -108,8 +108,8 @@ class Cheque extends PaymentModule
 	private function _displayCheque()
 	{
 		$this->_html .= '<img src="../modules/cheque/cheque.jpg" style="float:left; margin-right:15px;"><b>'.$this->l('This module allows you to accept payments by check.').'</b><br /><br />
-		'.$this->l('If the client chooses this payment mode, the order status will change to \'Waiting for payment\'.').'<br />
-		'.$this->l('Therefore, you will need to manually confirm the order as soon as you receive a check.').'<br /><br /><br />';
+		'.$this->l('If the client chooses this payment method, the order status will change to "Waiting for payment."').'<br />
+		'.$this->l('You will need to manually confirm the order as soon as you receive a check.').'<br /><br /><br />';
 	}
 
 	private function _displayForm()
@@ -119,7 +119,7 @@ class Cheque extends PaymentModule
 			<fieldset>
 			<legend><img src="../img/admin/contact.gif" />'.$this->l('Contact details').'</legend>
 				<table border="0" width="500" cellpadding="0" cellspacing="0" id="form">
-					<tr><td colspan="2">'.$this->l('Please specify the name and address to which customers must send their check.').'.<br /><br /></td></tr>
+					<tr><td colspan="2">'.$this->l('Please specify the name and address required for the customer to send payment.').'.<br /><br /></td></tr>
 					<tr><td width="130" style="height: 35px;">'.$this->l('To the order of').'</td><td><input type="text" name="name" value="'.Tools::htmlentitiesUTF8(Tools::getValue('name', $this->chequeName)).'" style="width: 300px;" /></td></tr>
 					<tr>
 						<td width="130" style="vertical-align: top;">'.$this->l('Address').'</td>
@@ -162,6 +162,7 @@ class Cheque extends PaymentModule
 
 		$this->smarty->assign(array(
 			'this_path' => $this->_path,
+			'this_path_cheque' => $this->_path,
 			'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'
 		));
 		return $this->display(__FILE__, 'payment.tpl');

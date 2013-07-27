@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -34,8 +34,8 @@ $engineType = 'ENGINE_TYPE';
 // setting the memory limit to 128M only if current is lower
 $memory_limit = ini_get('memory_limit');
 if (substr($memory_limit,-1) != 'G'
-	AND ((substr($memory_limit,-1) == 'M' AND substr($memory_limit,0,-1) < 128)
-	OR is_numeric($memory_limit) AND (intval($memory_limit) < 131072))
+	AND ((substr($memory_limit,-1) == 'M' AND substr($memory_limit,0, -1) < 128)
+	OR is_numeric($memory_limit) AND (intval($memory_limit) < 131072) AND $memory_limit > 0)
 )
 	@ini_set('memory_limit','128M');
 
@@ -66,7 +66,7 @@ else
 
 // need for upgrade before 1.5
 if (!defined('__PS_BASE_URI__'))
-	define('__PS_BASE_URI__', str_replace('//', '/', '/'.trim(preg_replace('#/(install(-dev)?)$#', '/', str_replace('\\', '/', dirname($_SERVER['REQUEST_URI']))), '/').'/'));
+	define('__PS_BASE_URI__', str_replace('//', '/', '/'.trim(preg_replace('#/(install(-dev)?/upgrade)$#', '/', str_replace('\\', '/', dirname($_SERVER['REQUEST_URI']))), '/').'/'));
 
 // need for upgrade before 1.5
 if (!defined('_THEME_NAME_'))
@@ -246,6 +246,28 @@ if(!defined('_PS_CACHE_ENABLED_'))
 	define('_PS_CACHE_ENABLED_', '0');
 if(!defined('_MYSQL_ENGINE_'))
 	define('_MYSQL_ENGINE_', 'MyISAM');
+	
+global $smarty;
+// Clean all cache values
+Cache::clean('*');
+
+Context::getContext()->shop = new Shop(1);
+Shop::setContext(Shop::CONTEXT_SHOP, 1);
+Configuration::loadConfiguration();
+if (!isset(Context::getContext()->language) || !Validate::isLoadedObject(Context::getContext()->language))
+	if ($id_lang = (int)Configuration::get('PS_LANG_DEFAULT'))
+		Context::getContext()->language = new Language($id_lang);
+if (!isset(Context::getContext()->country) || !Validate::isLoadedObject(Context::getContext()->country))
+	if ($id_country = (int)Configuration::get('PS_COUNTRY_DEFAULT'))
+		Context::getContext()->country = new Country((int)$id_country);
+
+Context::getContext()->cart = new Cart();
+Context::getContext()->employee = new Employee(1);
+if (!defined('_PS_SMARTY_FAST_LOAD_'))
+	define('_PS_SMARTY_FAST_LOAD_', true);
+require_once _PS_ROOT_DIR_.'/config/smarty.config.inc.php';
+
+Context::getContext()->smarty = $smarty;	
 
 if(isset($_GET['customModule']) AND $_GET['customModule'] == 'desactivate')
 {

@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,15 +18,15 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <script type="text/javascript">
-	var msg_combination_1 = '{l s='Please choose an attribute'}';
-	var msg_combination_2 = '{l s='Please choose a value'}';
-	var msg_combination_3 = '{l s='You can only add one combination per type of attribute'}';
+	var msg_combination_1 = '{l s='Please choose an attribute.'}';
+	var msg_combination_2 = '{l s='Please choose a value.'}';
+	var msg_combination_3 = '{l s='You can only add one combination per attribute type.'}';
 	var msg_new_combination = '{l s='New combination'}';
 </script>
 
@@ -34,7 +34,7 @@
 	<input type="hidden" name="submitted_tabs[]" value="Combinations" />
 	<script type="text/javascript">
 		var attrs = new Array();
-		var modifyattributegroup = "{l s='Modify this attribute combination' js=1}";
+		var modifyattributegroup = "{l s='Modify this attribute combination.' js=1}";
 		attrs[0] = new Array(0, "---");
 	{foreach from=$attributeJs key=idgrp item=group}
 		attrs[{$idgrp}] = new Array(0
@@ -45,15 +45,15 @@
 		);
 	{/foreach}
 	</script>
-	<h4>{l s='Add or modify combinations for this product'}</h4>
-	<div class="separation"></div> {l s='or use the'}
+	<h4>{l s='Add or modify combinations for this product.'}</h4>
+	<div class="separation"></div> {l s='Or use the'}
 		&nbsp;<a class="button bt-icon confirm_leave" href="index.php?tab=AdminAttributeGenerator&id_product={$product->id}&attributegenerator&token={$token_generator}"><img src="../img/admin/appearance.gif" alt="combinations_generator" class="middle" title="{l s='Product combinations generator'}" /><span>{l s='Product combinations generator'}</span></a> 
-		{l s='in order to create automatically a set of combinations'}
+		{l s='in order to automatically create a set of combinations.'}
 	{if $combination_exists}
 	<div class="warn" style="display:block">
 		<ul>
-			<li>{l s='Some combinations already exist. If you want to generate some new combinations, the quantities for the actual combinations will be lost.'}</li>
-			<li>{l s='You still can add a combination by clicking the link "Add new combination" on the toolbar.'}</li>
+			<li>{l s='Some combinations already exist. If you want to generate new combinations, the quantities for the existing combinations will be lost.'}</li>
+			<li>{l s='You can add a combination by clicking the link "Add new combination" on the toolbar.'}</li>
 		</ul>
 	</div>
 	{/if}
@@ -131,7 +131,7 @@
 				<td style="padding-bottom:5px;">
 					{if $currency->format % 2 != 0}{$currency->sign}{/if}
 					<input type="text" size="6"  name="attribute_wholesale_price" id="attribute_wholesale_price" value="" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
-					{if $currency->format % 2 == 0} {$currency->sign} {/if}<span id="attribute_wholesale_price_blank">({l s='leave blank if the price does not change'})</span>
+					{if $currency->format % 2 == 0} {$currency->sign} {/if}<span id="attribute_wholesale_price_blank">({l s='Leave blank if the price does not change'})</span>
 					<span style="display:none" id="attribute_wholesale_price_full">({l s='Overrides wholesale price on "Information" tab'})</span>
 				</td>
 			</tr>
@@ -206,7 +206,7 @@
 					<td style="padding-bottom:5px;">{if $currency->format % 2 != 0}{$currency->sign}{/if}
 						<input type="text" size="3" name="attribute_ecotax" id="attribute_ecotax" value="0.00" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
 						{if $currency->format % 2 == 0} {$currency->sign}{/if} 
-						({l s='overrides Eco-tax on "Information" tab'})
+						({l s='overrides Eco-tax in the "Information" tab'})
 					</td>
 				</tr>
 			{/if}
@@ -227,7 +227,7 @@
 				</td>
 				<td style="padding-bottom:5px;">
 					<input class="datepicker" id="available_date_attribute" name="available_date_attribute" value="{$available_date}" style="text-align: center;" type="text" />
-					<p>{l s='The available date when this product is out of stock'}</p>
+					<p>{l s='The available date when this product is out of stock.'}</p>
 					<script type="text/javascript">
 						$(document).ready(function(){
 							$(".datepicker").datepicker({
@@ -267,7 +267,7 @@
 				</td>
 				<td style="padding-bottom:5px;">
 					<input type="checkbox" name="attribute_default" id="attribute_default" value="1" />
-					&nbsp;{l s='Make this the default combination for this product'}<br /><br />
+					&nbsp;<label for="attribute_default" style="float:none;">{l s='Make this combination the default combination for this product'}</label><br /><br />
 				</td>
 			</tr>
 			<tr>

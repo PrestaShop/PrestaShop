@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -30,10 +30,6 @@
 	tabs_manager.onLoad('Informations', function(){
 		tinySetup({
 			editor_selector :"autoload_rte",
-			theme_advanced_buttons1 : "newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
-			theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,,|,forecolor,backcolor",
-			theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,media,|,ltr,rtl,|,fullscreen",
-			theme_advanced_buttons4 : "styleprops,|,cite,abbr,acronym,del,ins,attribs,pagebreak",
 			setup : function(ed) {
 				ed.onInit.add(function(ed)
 				{
@@ -90,11 +86,11 @@
 		var has_combinations = {$has_combinations};
 
 		var toload = new Array();
-		var empty_pack_msg = '{l s='Pack is empty. You need to add at least one product to the pack before you can save the pack.' slashes=1}';
-		var empty_name_msg = '{l s='Product name is empty. You need to enter a name at least for the default language before you can save the product.' slashes=1}';
-		var empty_link_rewrite_msg = '{l s='Friendly URL is empty. You need to enter a friendly URL at least for the default language before you can save the product.' slashes=1}';
+		var empty_pack_msg = '{l s='This pack is empty. You will need to add at least one product to the pack before you can save.' slashes=1}';
+		var empty_name_msg = '{l s='The product name is empty. You will at least need to enter a name for the default language before you can save the product.' slashes=1}';
+		var empty_link_rewrite_msg = '{l s='The friendly URL is empty. You will at least need to enter a friendly URL for the default language before you can save the product.' slashes=1}';
 		var reload_tab_title = '{l s='Confirmation' slashes=1}';
-		var reload_tab_description = '{l s='Some tabs was not loaded correctly, do you want to reload them?' slashes=1}';
+		var reload_tab_description = '{l s='Some tabs was not loaded correctly. Would you like to reload them?' slashes=1}';
 
 		$('#product-tab-content-wait').show();
 		var post_data = {$post_data};
@@ -191,7 +187,7 @@
 
 			$('.confirm_leave').live('click', function(){
 				// Double quotes are necessary when the translated string has single quotes
-				return confirm("{l s='You will lose all unsaved modifications, do you want to proceed?' js=1}");
+				return confirm("{l s='You will lose all unsaved modifications. Are you sure that you\'d like to proceed?' js=1}");
 			});
 
 		});
@@ -242,8 +238,8 @@
 			<div class="warn draft" >
 				<p>
 					<span style="float: left">
-					{l s='Your product will be saved as a draft'}</span>
-					<span style="float:right"><a href="#" class="button" style="display: block" onclick="submitAddProductAndPreview()" >{l s='Save and preview'}</a></span>
+					{l s='Your product will be saved as a draft.'}</span>
+					<span style="float:right"><a href="#" class="button" style="display: block" onclick="submitAddProductAndPreview()" >{l s='Save and preview.'}</a></span>
 					<input type="hidden" name="fakeSubmitAddProductAndPreview" id="fakeSubmitAddProductAndPreview" />
 					<br />
 				</p>

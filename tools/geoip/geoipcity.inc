@@ -67,9 +67,9 @@ class geoipdnsrecord {
 
 function getrecordwithdnsservice($str){
   $record = new geoipdnsrecord;
-  $keyvalue = split(";",$str);
+  $keyvalue = explode(";",$str);
   foreach ($keyvalue as $keyvalue2){
-    list($key,$value) = split("=",$keyvalue2);
+    list($key,$value) = explode("=",$keyvalue2);
     if ($key == "co"){
       $record->country_code = $value;
     }
@@ -115,12 +115,16 @@ function getrecordwithdnsservice($str){
   return $record;
 }
 
-function _get_record($gi,$ipnum){
-  $seek_country = _geoip_seek_country($gi,$ipnum);
+
+function _get_record_v6($gi,$ipnum){
+  $seek_country = _geoip_seek_country_v6($gi,$ipnum);
   if ($seek_country == $gi->databaseSegments) {
     return NULL;
   }
-  
+  return _common_get_record($gi, $seek_country);
+}
+
+function _common_get_record($gi, $seek_country){
   // workaround php's broken substr, strpos, etc handling with
   // mbstring.func_overload and mbstring.internal_encoding
   $enc = mb_internal_encoding();
@@ -204,6 +208,22 @@ function _get_record($gi,$ipnum){
   }
   mb_internal_encoding($enc);
   return $record;
+}
+
+function GeoIP_record_by_addr_v6 ($gi,$addr){
+  if ($addr == NULL){
+     return 0;
+  }
+  $ipnum = inet_pton($addr);
+  return _get_record_v6($gi, $ipnum);
+}
+
+function _get_record($gi,$ipnum){
+  $seek_country = _geoip_seek_country($gi,$ipnum);
+  if ($seek_country == $gi->databaseSegments) {
+    return NULL;
+  }
+  return _common_get_record($gi, $seek_country);
 }
 
 function GeoIP_record_by_addr ($gi,$addr){

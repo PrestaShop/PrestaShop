@@ -3,7 +3,7 @@
             <name>blockcurrencies</name>
             <displayName><![CDATA[Currency block]]></displayName>
             <version><![CDATA[0.1]]></version>
-            <description><![CDATA[Adds a block for selecting a currency.]]></description>
+            <description><![CDATA[Adds a block allowing customers to choose their preferred shopping currency.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>
             <is_configurable>0</is_configurable>

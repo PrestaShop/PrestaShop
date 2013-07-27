@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -28,7 +28,8 @@
 define('_PS_MODE_DEV_', true);
 if (_PS_MODE_DEV_)
 {
-	@ini_set('display_errors', 'on');	
+	@ini_set('display_errors', 'on');
+	@error_reporting(E_ALL | E_STRICT);
 	define('_PS_DEBUG_SQL_', true);
 	/* Compatibility warning */
 	define('_PS_DISPLAY_COMPATIBILITY_WARNING_', true);
@@ -142,7 +143,7 @@ define('_STOCK_MOVEMENT_MISSING_REASON_', 4);
 
 /**
  * @deprecated 1.5.0.1
- * @see const PS_CUSTOMER_GROUP
+ * @see Configuration::get('PS_CUSTOMER_GROUP')
  */
 define('_PS_DEFAULT_CUSTOMER_GROUP_', 3);
 

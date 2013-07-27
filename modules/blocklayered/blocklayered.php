@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registred Trademark & Property of PrestaShop SA
 */
@@ -523,7 +523,7 @@ class BlockLayered extends Module
 			$id_lang = (int)$language['id_lang'];
 			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_feature_lang_value
 			VALUES ('.(int)$params['id_feature'].', '.$id_lang.', \''.pSQL(Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang))).'\',
-			\''.pSQL(Tools::safeOutput(Tools::getValue('meta_title_'.$id_lang), true)).'\')');
+			\''.pSQL(Tools::getValue('meta_title_'.$id_lang), true).'\')');
 		}
 	}
 
@@ -539,7 +539,7 @@ class BlockLayered extends Module
 			$id_lang = (int)$language['id_lang'];
 			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_feature_value_lang_value
 			VALUES ('.(int)$params['id_feature_value'].', '.$id_lang.', \''.pSQL(Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang))).'\',
-			\''.pSQL(Tools::safeOutput(Tools::getValue('meta_title_'.$id_lang), true)).'\')');
+			\''.pSQL(Tools::getValue('meta_title_'.$id_lang), true).'\')');
 		}
 	}
 	
@@ -626,7 +626,7 @@ class BlockLayered extends Module
 			$id_lang = (int)$language['id_lang'];
 			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_attribute_lang_value
 			VALUES ('.(int)$params['id_attribute'].', '.$id_lang.', \''.pSQL(Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang))).'\',
-			\''.pSQL(Tools::safeOutput(Tools::getValue('meta_title_'.$id_lang), true)).'\')');
+			\''.pSQL(Tools::getValue('meta_title_'.$id_lang), true).'\')');
 		}
 	}
 	
@@ -727,7 +727,7 @@ class BlockLayered extends Module
 			$id_lang = (int)$language['id_lang'];
 			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_attribute_group_lang_value
 			VALUES ('.(int)$params['id_attribute_group'].', '.$id_lang.', \''.pSQL(Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang))).'\',
-			\''.pSQL(Tools::safeOutput(Tools::getValue('meta_title_'.$id_lang), true)).'\')');
+			\''.pSQL(Tools::getValue('meta_title_'.$id_lang), true).'\')');
 		}
 	}
 	
@@ -1373,7 +1373,7 @@ class BlockLayered extends Module
 	public function hookCategoryUpdate($params)
 	{
 		/* The category status might (active, inactive) have changed, we have to update the layered cache table structure */
-		if (!$params['category']->active)
+		if (isset($params['category']) && !$params['category']->active)
 			$this->hookCategoryDeletion($params);
 	}
 
@@ -1757,7 +1757,7 @@ class BlockLayered extends Module
 					<td>'.(int)$filters_template['id_layered_filter'].'</td>
 					<td style="text-align: left; padding-left: 10px; width: 270px;">'.$filters_template['name'].'</td>
 					<td style="text-align: center;">'.(int)$filters_template['n_categories'].'</td>
-					<td>'.Tools::displayDate($filters_template['date_add'], (int)$cookie->id_lang, true).'</td>
+					<td>'.Tools::displayDate($filters_template['date_add'],null , true).'</td>
 					<td>
 						<a href="#" onclick="return updElements('.($filters_template['n_categories'] ? 0 : 1).', '.(int)$filters_template['id_layered_filter'].');">
 						<img src="../img/admin/edit.gif" alt="" title="'.$this->l('Edit').'" /></a> 
@@ -2508,6 +2508,7 @@ class BlockLayered extends Module
 		else
 		{
 			$n = (int)Tools::getValue('n', Configuration::get('PS_PRODUCTS_PER_PAGE'));
+			$nb_day_new_product = (Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20);
 			$join = '';
 			if (version_compare(_PS_VERSION_,'1.5','>'))
 				$join = Shop::addSqlAssociation('product', 'p');
@@ -2520,12 +2521,12 @@ class BlockLayered extends Module
 				i.id_image,
 				il.legend, 
 				m.name manufacturer_name,
-				DATEDIFF('.$alias_where.'.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new
+				DATEDIFF('.$alias_where.'.`date_add`, DATE_SUB(NOW(), INTERVAL '.(int)$nb_day_new_product.' DAY)) > 0 AS new
 			FROM `'._DB_PREFIX_.'category_product` cp
 			LEFT JOIN '._DB_PREFIX_.'category c ON (c.id_category = cp.id_category)
 			LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = cp.`id_product`
 			'.$join.'
-			LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = p.id_product)
+			LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = p.id_product'.Shop::addSqlRestrictionOnLang('pl').' AND pl.id_lang = '.(int)$cookie->id_lang.')
 			LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = p.id_product AND i.cover = 1)
 			LEFT JOIN '._DB_PREFIX_.'image_lang il ON (i.id_image = il.id_image AND il.id_lang = '.(int)($cookie->id_lang).')
 			LEFT JOIN '._DB_PREFIX_.'manufacturer m ON (m.id_manufacturer = p.id_manufacturer)
@@ -2533,9 +2534,9 @@ class BlockLayered extends Module
 			'.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'c.nleft >= '.(int)$parent->nleft.'
 			AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
 			AND c.active = 1
-			AND pl.id_lang = '.(int)$cookie->id_lang.'
-			AND p.id_product IN ('.implode(',', $product_id_list).')'
-			.' GROUP BY p.id_product ORDER BY '.Tools::getProductsOrder('by', Tools::getValue('orderby'), true).' '.Tools::getProductsOrder('way', Tools::getValue('orderway')).
+			AND p.id_product IN ('.implode(',', $product_id_list).')
+			GROUP BY cp.id_product
+			ORDER BY '.Tools::getProductsOrder('by', Tools::getValue('orderby'), true).' '.Tools::getProductsOrder('way', Tools::getValue('orderway')).
 			' LIMIT '.(((int)$this->page - 1) * $n.','.$n));
 		}
 		
@@ -2706,7 +2707,7 @@ class BlockLayered extends Module
 					AND c.active = 1)) ';
 					$sql_query['group'] = '
 					GROUP BY lpa.id_attribute
-					ORDER BY id_attribute_group, id_attribute ';
+					ORDER BY ag.`position` ASC, a.`position` ASC';
 					
 					if (!Configuration::get('PS_LAYERED_HIDE_0_VALUES'))
 					{
@@ -3868,7 +3869,7 @@ class BlockLayered extends Module
 		
 		$smarty->assign(
 			array(
-				'homeSize' => Image::getSize('home_default'),
+				'homeSize' => Image::getSize(ImageType::getFormatedName('home')),
 				'nb_products' => $nb_products,
 				'category' => (object)array('id' => Tools::getValue('id_category_layered', 1)),
 				'pages_nb' => (int)($pages_nb),

@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop 
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,15 +18,15 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <script type="text/javascript">
 $(document).ready(function() {ldelim}
-	{if isset($nb_people)}$.jGrowl('{if $nb_people == 1}{l s='%d person is currently watching this product' sprintf=$nb_people mod='producttooltip'}{else}{l s='%d people are currently watching this product' sprintf=$nb_people mod='producttooltip'}{/if}', {literal}{ life: 3500 }{/literal});{/if}
-	{if isset($date_last_order)}$.jGrowl('{l s='This product was bought last' mod='producttooltip'} {dateFormat date=$date_last_order full=1}', {literal}{ life: 3500 }{/literal});{/if}
-	{if isset($date_last_cart)}$.jGrowl('{l s='This product was added to cart last' mod='producttooltip'} {dateFormat date=$date_last_cart full=1}', {literal}{ life: 3500 }{/literal});{/if}
+	{if isset($nb_people)}$.jGrowl('{if $nb_people == 1}{l s='%d person is currently watching this product' sprintf=$nb_people mod='producttooltip' js=1}{else}{l s='%d people are currently watching this product' sprintf=$nb_people mod='producttooltip' js=1}{/if}', {literal}{ life: 3500 }{/literal});{/if}
+	{if isset($date_last_order)}$.jGrowl('{l s='This product was bought last' mod='producttooltip' js=1} {dateFormat date=$date_last_order full=1}', {literal}{ life: 3500 }{/literal});{/if}
+	{if isset($date_last_cart)}$.jGrowl('{l s='This product was added to cart last' mod='producttooltip' js=1} {dateFormat date=$date_last_cart full=1}', {literal}{ life: 3500 }{/literal});{/if}
 {rdelim});
 </script>

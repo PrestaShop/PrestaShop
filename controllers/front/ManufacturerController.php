@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -59,7 +59,7 @@ class ManufacturerControllerCore extends FrontController
 			{
 				header('HTTP/1.1 404 Not Found');
 				header('Status: 404 Not Found');
-				$this->errors[] = Tools::displayError('Manufacturer does not exist.');
+				$this->errors[] = Tools::displayError('The manufacturer does not exist.');
 			}
 			else
 				$this->canonicalRedirection();
@@ -92,6 +92,7 @@ class ManufacturerControllerCore extends FrontController
 	 */
 	protected function assignOne()
 	{
+		$this->manufacturer->description = Tools::nl2br(trim($this->manufacturer->description));
 		$nbProducts = $this->manufacturer->getProducts($this->manufacturer->id, null, null, null, $this->orderBy, $this->orderWay, true);
 		$this->pagination((int)$nbProducts);
 		$this->context->smarty->assign(array(
@@ -99,8 +100,8 @@ class ManufacturerControllerCore extends FrontController
 			'products' => $this->manufacturer->getProducts($this->manufacturer->id, $this->context->language->id, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay),
 			'path' => ($this->manufacturer->active ? Tools::safeOutput($this->manufacturer->name) : ''),
 			'manufacturer' => $this->manufacturer,
-			'comparator_max_item' => Configuration::get('PS_COMPARATOR_MAX_ITEM'))
-			);
+			'comparator_max_item' => Configuration::get('PS_COMPARATOR_MAX_ITEM')
+		));
 	}
 
 	/**
@@ -112,15 +113,18 @@ class ManufacturerControllerCore extends FrontController
 		{
 			$data = Manufacturer::getManufacturers(true, $this->context->language->id, true, false, false, false);
 			$nbProducts = count($data);
+			$this->n = abs((int)(Tools::getValue('n', Configuration::get('PS_PRODUCTS_PER_PAGE'))));
+			$this->p = abs((int)(Tools::getValue('p', 1)));
+			$data = Manufacturer::getManufacturers(true, $this->context->language->id, true, $this->p, $this->n, false);
 			$this->pagination($nbProducts);
 
 			foreach ($data as &$item)
-				$item['image'] = (!file_exists(_PS_MANU_IMG_DIR_.'/'.$item['id_manufacturer'].'-medium_default.jpg')) ? $this->context->language->iso_code.'-default' : $item['id_manufacturer'];
+				$item['image'] = (!file_exists(_PS_MANU_IMG_DIR_.$item['id_manufacturer'].'-'.ImageType::getFormatedName('medium').'.jpg')) ? $this->context->language->iso_code.'-default' : $item['id_manufacturer'];
 
 			$this->context->smarty->assign(array(
 				'pages_nb' => ceil($nbProducts / (int)($this->n)),
 				'nbManufacturers' => $nbProducts,
-				'mediumSize' => Image::getSize('medium_default'),
+				'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
 				'manufacturers' => $data,
 				'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
 			));

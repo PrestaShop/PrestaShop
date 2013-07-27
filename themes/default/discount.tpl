@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,11 +18,11 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{capture name=path}<a href="{$link->getPageLink('my-account', true)}">{l s='My account'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='My vouchers'}{/capture}
+{capture name=path}<a href="{$link->getPageLink('my-account', true)|escape:'html'}">{l s='My account'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='My vouchers'}{/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
 <h1>{l s='My vouchers'}</h1>
@@ -50,7 +50,7 @@
 				{if $discountDetail.id_discount_type == 1}
 					{$discountDetail.value|escape:'htmlall':'UTF-8'}%
 				{elseif $discountDetail.id_discount_type == 2}
-					{convertPrice price=$discountDetail.value}
+					{convertPrice price=$discountDetail.value} ({if $discountDetail.reduction_tax == 1}{l s='Tax included'}{else}{l s='Tax excluded'}{/if})
 				{elseif $discountDetail.id_discount_type == 3}
 					{l s='Free shipping'}
 				{else}
@@ -76,14 +76,11 @@
 	{/foreach}
 	</tbody>
 </table>
-<p>
-	*{l s='Tax included'}
-</p>
 {else}
 	<p class="warning">{l s='You do not have any vouchers.'}</p>
 {/if}
 
 <ul class="footer_links">
-	<li><a href="{$link->getPageLink('my-account', true)}"><img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /> {l s='Back to your account'}</a></li>
+	<li><a href="{$link->getPageLink('my-account', true)|escape:'html'}"><img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /> {l s='Back to your account'}</a></li>
 	<li class="f_right"><a href="{$base_dir}"><img src="{$img_dir}icon/home.gif" alt="" class="icon" /> {l s='Home'}</a></li>
 </ul>

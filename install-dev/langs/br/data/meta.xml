@@ -150,4 +150,10 @@
     <keywords/>
     <url_rewrite>guest-tracking</url_rewrite>
   </meta>
+  <meta id="order-confirmation" id_shop="1">
+    <title>Confirma&#xE7;&#xE3;o da encomenda</title>
+    <description/>
+    <keywords/>
+    <url_rewrite>confirmacao-encomenda</url_rewrite>
+  </meta>
 </entity_meta>

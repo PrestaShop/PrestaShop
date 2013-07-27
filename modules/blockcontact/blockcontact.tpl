@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop 
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,16 +18,16 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <div id="contact_block" class="block">
-	<h4>{l s='Contact us' mod='blockcontact'}</h4>
+	<h4 class="title_block">{l s='Contact us' mod='blockcontact'}</h4>
 	<div class="block_content clearfix">
-			<p>{l s='Our hotline is available 24/7' mod='blockcontact'}</p>
+			<p>{l s='Our support hotline is available 24/7.' mod='blockcontact'}</p>
 			{if $telnumber != ''}<p class="tel"><span class="label">{l s='Phone:' mod='blockcontact'}</span>{$telnumber|escape:'htmlall':'UTF-8'}</p>{/if}
-			{if $email != ''}<a href="mailto:{$email|escape:'htmlall':'UTF-8'}">{l s='Contact our hotline' mod='blockcontact'}</a>{/if}
+			{if $email != ''}<a href="mailto:{$email|escape:'htmlall':'UTF-8'}">{l s='Contact our expert support team!' mod='blockcontact'}</a>{/if}
 	</div>
 </div>

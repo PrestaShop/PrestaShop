@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -49,7 +49,7 @@
 			<h3>{l s='Pack content'}</h3>
 			{foreach from=$packItems item=packItem}
 			<div class="pack_content">
-				{$packItem.pack_quantity} x <a href="{$link->getProductLink($packItem.id_product, $packItem.link_rewrite, $packItem.category)}" data-ajax="false">{$packItem.name|escape:'htmlall':'UTF-8'}</a>
+				{$packItem.pack_quantity} x <a href="{$link->getProductLink($packItem.id_product, $packItem.link_rewrite, $packItem.category)|escape:'html'}" data-ajax="false">{$packItem.name|escape:'htmlall':'UTF-8'}</a>
 				<p>{$packItem.description_short}</p>
 			</div>
 			{/foreach}
@@ -57,7 +57,7 @@
 	{/if}
 	
 	{if ($product->show_price AND !isset($restricted_country_mode)) OR isset($groups) OR $product->reference}
-	<form id="buy_block" {if $PS_CATALOG_MODE AND !isset($groups) AND $product->quantity > 0}class="hidden"{/if} action="{$link->getPageLink('cart')}" method="post" data-ajax="false">
+	<form id="buy_block" {if $PS_CATALOG_MODE AND !isset($groups) AND $product->quantity > 0}class="hidden"{/if} action="{$link->getPageLink('cart')|escape:'html'}" method="post" data-ajax="false">
 
 			<!-- hidden datas -->
 			<p class="hidden">
@@ -72,7 +72,7 @@
 			
 			<div id="product_reference" {if isset($groups) OR !$product->reference}style="display: none;"{/if}>
 				<br />
-				<label for="product_reference">{l s='Reference:'} </label>
+				<label>{l s='Reference:'} </label>
 				<span class="editable">{$product->reference|escape:'htmlall':'UTF-8'}</span>
 				<br />
 			</div>
@@ -106,8 +106,8 @@
 			{if ($display_qties == 1 && !$PS_CATALOG_MODE && $product->available_for_order)}
 			<p id="pQuantityAvailable"{if $product->quantity <= 0} style="display: none;"{/if}>
 				<span id="quantityAvailable">{$product->quantity|intval}</span>
-				<span {if $product->quantity > 1} style="display: none;"{/if} id="quantityAvailableTxt">{l s='item in stock'}</span>
-				<span {if $product->quantity == 1} style="display: none;"{/if} id="quantityAvailableTxtMultiple">{l s='items in stock'}</span>
+				<span {if $product->quantity > 1} style="display: none;"{/if} id="quantityAvailableTxt">{l s='Item in stock'}</span>
+				<span {if $product->quantity == 1} style="display: none;"{/if} id="quantityAvailableTxtMultiple">{l s='Items in stock'}</span>
 			</p>
 			{/if}
 			
@@ -119,10 +119,10 @@
 		</div><!-- .clearfix -->
 		
 		{if $product->show_price AND !isset($restricted_country_mode) AND !$PS_CATALOG_MODE}
-			<hr width="99%" align="center" size="2" class="margin_less"/>
+			<hr class="margin_less"/>
 			{include file="./product-prices.tpl"}
 		{else}
-			<hr width="99%" align="center" size="2" class="margin_bottom"/>
+			<hr class="margin_bottom"/>
 		{/if}
 		<div id="displayMobileAddToCartTop">
 			{hook h="displayMobileAddToCartTop"}
@@ -147,13 +147,13 @@
 	{include file="./product-quantity-discount.tpl"}
 	{* ================================== *}
 	
-	<hr width="99%" align="center" size="2" class=""/>
+	<hr/>
 	<!-- description and features -->
 	{include file="./product-desc-features.tpl"}
 	
 	{if isset($packItems) && $packItems|@count > 0}
 	<!-- pack list -->
-	<hr width="99%" align="center" size="2" class="margin_less"/>
+	<hr class="margin_less"/>
 	<div id="blockpack">
 		<h2>{l s='Pack content'}</h2>
 		{include file="./category-product-list.tpl" products=$packItems}

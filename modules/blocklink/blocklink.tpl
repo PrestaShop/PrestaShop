@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,16 +18,16 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <!-- Block links module -->
 <div id="links_block_left" class="block">
-	<h4>
+	<h4 class="title_block">
 	{if $url}
-		<a href="{$url|escape}">{$title|escape}</a>
+		<a href="{$url|escape}" title="{$title|escape}">{$title|escape}</a>
 	{else}
 		{$title|escape}
 	{/if}
@@ -35,7 +35,8 @@
 	<ul class="block_content bullet">
 	{foreach from=$blocklink_links item=blocklink_link}
 		{if isset($blocklink_link.$lang)} 
-			<li><a href="{$blocklink_link.url|escape}"{if $blocklink_link.newWindow} onclick="window.open(this.href);return false;"{/if}>{$blocklink_link.$lang|escape}</a></li>
+			<li>
+			<a href="{$blocklink_link.url|escape}" title="{$blocklink_link.$lang|escape}" {if $blocklink_link.newWindow} onclick="window.open(this.href);return false;"{/if}>{$blocklink_link.$lang|escape}</a></li>
 		{/if}
 	{/foreach}
 	</ul>

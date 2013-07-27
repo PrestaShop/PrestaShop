@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -39,8 +39,8 @@ class BlockPaymentLogo extends Module
 
 		parent::__construct();
 
-		$this->displayName = $this->l('Block payment logo');
-		$this->description = $this->l('Adds a block to display all payment logos.');
+		$this->displayName = $this->l('Payment logo block.');
+		$this->description = $this->l('This block will display all of your payment logos.');
 	}
 
 	public function install()
@@ -64,20 +64,21 @@ class BlockPaymentLogo extends Module
 	public function getContent()
 	{
 		$html = '
-		<h2>'.$this->l('Payment logo').'</h2>
+		<h2>'.$this->l('Payment logo.').'</h2>
 		';
 
 		if (Tools::isSubmit('submitConfiguration'))
 			if (Validate::isUnsignedInt(Tools::getValue('id_cms')))
 			{
 				Configuration::updateValue('PS_PAYMENT_LOGO_CMS_ID', (int)(Tools::getValue('id_cms')));
-				$html .= $this->displayConfirmation($this->l('Settings are updated'));
+				$this->_clearCache('blockpaymentlogo.tpl');
+				$html .= $this->displayConfirmation($this->l('The settings have been updated.'));
 			}
 
 		$cmss = CMS::listCms($this->context->language->id);
 
 		if (!count($cmss))
-			$html .= $this->displayError($this->l('No CMS page is available'));
+			$html .= $this->displayError($this->l('No CMS page is available.'));
 		else
 		{
 			$html .= '
@@ -110,14 +111,17 @@ class BlockPaymentLogo extends Module
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return;
 
+		if (!$this->isCached('blockpaymentlogo.tpl', $this->getCacheId()))
+		{
+			if (!Configuration::get('PS_PAYMENT_LOGO_CMS_ID'))
+				return;
+			$cms = new CMS(Configuration::get('PS_PAYMENT_LOGO_CMS_ID'), $this->context->language->id);
+			if (!Validate::isLoadedObject($cms))
+				return;
+			$this->smarty->assign('cms_payement_logo', $cms);
+		}
 
-		if (!Configuration::get('PS_PAYMENT_LOGO_CMS_ID'))
-			return;
-		$cms = new CMS(Configuration::get('PS_PAYMENT_LOGO_CMS_ID'), $this->context->language->id);
-		if (!Validate::isLoadedObject($cms))
-			return;
-		$this->smarty->assign('cms_payement_logo', $cms);
-		return $this->display(__FILE__, 'blockpaymentlogo.tpl');
+		return $this->display(__FILE__, 'blockpaymentlogo.tpl', $this->getCacheId());
 	}
 
 	public function hookRightColumn($params)

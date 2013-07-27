@@ -8,6 +8,7 @@ table#product_comparison {
 	padding:6px;
 	border-top:1px solid #ccc;
 	border-left:1px solid #ccc;
+	border-right:1px solid #ccc;
 	vertical-align:top
 }
 #product_comparison td.td_empty{
@@ -22,10 +23,12 @@ table#product_comparison {
 	text-align:center
 }
 #product_comparison .product_image img {border:1px solid #ccc}
-#product_comparison h5 {
+#product_comparison .s_title_block {
 	margin-bottom:10px;
 	font-size:12px;
-	color:#000
+	color:#000;
+	font-weight:bold;
+	 padding-bottom: 0;
 }
 #product_comparison .product_desc {
 	padding-bottom:5px;
@@ -37,7 +40,7 @@ table#product_comparison {
 	margin-bottom:10px;
 	padding-left:10px;
 	color:#0088cc;
-	background:url(../../img/arrow_right_1.png) no-repeat 0 4px transparent;
+	background:url(../img/arrow_right_1.png) no-repeat 0 4px transparent;
 }
 
 .prices_container {height:50px}
@@ -65,7 +68,7 @@ table#product_comparison {
 	padding-right:16px;
    font-weight:bold;
 	text-align:right;
-	background:url(../../img/icon/delete.gif) no-repeat 100% 1px transparent;
+	background:url(../img/icon/delete.gif) no-repeat 100% 1px transparent;
 }
 
 .ajax_add_to_cart_button {
@@ -79,7 +82,7 @@ table#product_comparison {
    height: 26px;
    left: -12px;
    width: 26px;
-	background: url(../../img/icon/pict_add_cart.png) no-repeat 0 0 transparent
+	background: url(../img/icon/pict_add_cart.png) no-repeat 0 0 transparent
 }
 
 

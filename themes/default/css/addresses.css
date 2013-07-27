@@ -31,9 +31,11 @@ ul.address li.address_title {
     text-shadow:0 1px 0 #666;
    background:url(../img/bg_table_th.png) repeat-x 0 -10px #999
 }
-
-ul.address li.address_firstname,
-ul.address li.address_company {
+ul.address .address_alias {
+	font-weight: normal;
+	text-transform: none;
+}
+ul.address >li:first-child + li {
 	margin-top:8px
 }
 
@@ -45,11 +47,9 @@ ul.address li.address_delete {
 	font-size:11px;
    text-transform:none
 }
-
 .address_add {
    padding:20px 0
 }
-
 .address_select {
 	border:1px solid #ccc;
 	width: 200px;
@@ -68,7 +68,6 @@ label[for=id_address_delivery], label[for=id_address_invoice] {
 p.address_delivery, p.addressesAreEquals {
 	padding-bottom: 14px
 }
-
 /* PAGE ADRESSES ******************************************************************************* */
 .addresses ul.address {
    list-style-type:none;

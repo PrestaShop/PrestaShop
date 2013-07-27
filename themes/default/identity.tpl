@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,12 +18,12 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture name=path}<a href="{$link->getPageLink('my-account', true)}">{l s='My account'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Your personal information'}{/capture}
+{capture name=path}<a href="{$link->getPageLink('my-account', true)|escape:'html'}">{l s='My account'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Your personal information'}{/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
 <h1>{l s='Your personal information'}</h1>
@@ -33,12 +33,12 @@
 {if isset($confirmation) && $confirmation}
 	<p class="success">
 		{l s='Your personal information has been successfully updated.'}
-		{if isset($pwd_changed)}<br />{l s='Your password has been sent to your e-mail:'} {$email}{/if}
+		{if isset($pwd_changed)}<br />{l s='Your password has been sent to your email:'} {$email}{/if}
 	</p>
 {else}
 	<h3>{l s='Please be sure to update your personal information if it has changed.'}</h3>
 	<p class="required"><sup>*</sup>{l s='Required field'}</p>
-	<form action="{$link->getPageLink('identity', true)}" method="post" class="std">
+	<form action="{$link->getPageLink('identity', true)|escape:'html'}" method="post" class="std">
 		<fieldset>
 			<p class="radio">
 				<span>{l s='Title'}</span>
@@ -56,7 +56,7 @@
 				<input type="text" name="lastname" id="lastname" value="{$smarty.post.lastname}" />
 			</p>
 			<p class="required text">
-				<label for="email">{l s='E-mail'} <sup>*</sup></label>
+				<label for="email">{l s='Email'} <sup>*</sup></label>
 				<input type="text" name="email" id="email" value="{$smarty.post.email}" />
 			</p>
 			<p class="required text">
@@ -108,25 +108,25 @@
 			</p>
 			{if $newsletter}
 			<p class="checkbox">
-				<input type="checkbox" id="newsletter" name="newsletter" value="1" {if isset($smarty.post.newsletter) && $smarty.post.newsletter == 1} checked="checked"{/if} />
-				<label for="newsletter">{l s='Sign up for our newsletter'}</label>
+				<input type="checkbox" id="newsletter" name="newsletter" value="1" {if isset($smarty.post.newsletter) && $smarty.post.newsletter == 1} checked="checked"{/if} autocomplete="off"/>
+				<label for="newsletter">{l s='Sign up for our newsletter!'}</label>
 			</p>
 			<p class="checkbox">
-				<input type="checkbox" name="optin" id="optin" value="1" {if isset($smarty.post.optin) && $smarty.post.optin == 1} checked="checked"{/if} />
-				<label for="optin">{l s='Receive special offers from our partners'}</label>
+				<input type="checkbox" name="optin" id="optin" value="1" {if isset($smarty.post.optin) && $smarty.post.optin == 1} checked="checked"{/if} autocomplete="off"/>
+				<label for="optin">{l s='Receive special offers from our partners!'}</label>
 			</p>
 			{/if}
 			<p class="submit">
 				<input type="submit" class="button" name="submitIdentity" value="{l s='Save'}" />
 			</p>
 			<p id="security_informations">
-				{l s='[Insert customer data privacy clause or law here, if applicable]'}
+				{l s='[Insert customer data privacy clause here, if applicable]'}
 			</p>
 		</fieldset>
 	</form>
 {/if}
 
 <ul class="footer_links">
-	<li><a href="{$link->getPageLink('my-account', true)}"><img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /></a><a href="{$link->getPageLink('my-account', true)}">{l s='Back to your account'}</a></li>
+	<li><a href="{$link->getPageLink('my-account', true)}"><img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /></a><a href="{$link->getPageLink('my-account', true)|escape:'html'}">{l s='Back to your account'}</a></li>
 	<li class="f_right"><a href="{$base_dir}"><img src="{$img_dir}icon/home.gif" alt="" class="icon" /> {l s='Home'}</a></li>
 </ul>

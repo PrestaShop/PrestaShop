@@ -1,27 +1,18 @@
-/*
-* 2007-2012 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * http://github.com/Valums-File-Uploader/file-uploader
+ *
+ * Multiple file upload component with progress-bar, drag-and-drop.
+ *
+ * Have ideas for improving this JS for the general community?
+ * Submit your changes at: https://github.com/Valums-File-Uploader/file-uploader
+ * Readme at https://github.com/valums/file-uploader/blob/2.1.2/readme.md
+ *
+ * VERSION 2.1.2
+ * Original version: 1.0 © 2010 Andrew Valums ( andrew(at)valums.com )
+ * Current Maintainer (2.0+): © 2012, Ray Nicholus ( fineuploader(at)garstasio.com )
+ *
+ * Licensed under MIT license, GNU GPL 2 or later, GNU LGPL 2 or later, see license.txt.
+ */
 
 var qq = qq || {};
 var nbfile = 1;

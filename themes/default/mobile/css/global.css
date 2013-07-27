@@ -29,12 +29,20 @@
 	clear:both;
 }
 
+.width-15 {
+	width:15%;
+}
+
 .width-20 {
 	width:20%;
 }
 
 .width-40 {
 	width:40%;
+}
+
+.width-60 {
+	width:60%;
 }
 
 .width-70 {
@@ -68,6 +76,11 @@
 /* JQUERY MOBILE */
 .ui-content {
 	overflow-y:hidden;
+	background:none !important;
+}
+
+.ui-page > .ui-content {
+	padding:15px !important;
 }
 
 section .ui-content {
@@ -360,18 +373,6 @@ ul.pagination_mobile {
 
 .invalid {
 	border:1px solid red;
-}
-
-#account-creation_form p .ui-radio-on .ui-icon {
-	width:0;
-	height:18px;
-	background:none;
-	background-image:url(../img/icons-18-white.png);
-	background-position:-720px 50%;
-	background-repeat:no-repeat;
-	-moz-border-radius:9px;
-	-webkit-border-radius:9px;
-	border-radius:9px;
 }
 
 #account-creation_form p.select .ui-select .ui-icon {
@@ -949,12 +950,12 @@ h2.site_map {
 	margin:0 0 0 78px;
 }
 
-.accessories_block li .col-right .inner p,.accessories_block li .col-right .inner h5 {
+.accessories_block li .col-right .inner p,.accessories_block li .col-right .inner .s_title_block {
 	margin:0;
 	color:#fff;
 }
 
-.accessories_block li .col-right .inner h5 {
+.accessories_block li .col-right .inner .s_title_block {
 	font-size:10pt;
 }
 

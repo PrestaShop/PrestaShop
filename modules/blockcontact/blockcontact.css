@@ -9,6 +9,12 @@
 	font-size: 13px;
 	line-height: 18px
 }
+
+#contact_block .title_block,   #contact_block h4 {
+	padding:6px 11px;
+	font-size: 12px;
+	line-height: auto
+}
 #contact_block p.tel {
 	margin:0 0 0 60px;
 	padding-left: 26px;

@@ -420,8 +420,11 @@ class Swift_Message_Headers
       
       if (false !== $p = strpos($encoded_value[$key], $this->LE))
       {
-        $cb = 'str_replace("' . $this->LE . '", "", "<$1>");';
-        $encoded_value[$key] = preg_replace("/<([^>]+)>/e", $cb, $encoded_value[$key]);
+        $encoded_value[$key] = preg_replace_callback("/<([^>]+)>/",
+          function ($matches)
+          {
+            return str_replace("' . $this->LE . '", "", "<$matches[1]>");
+          }, $encoded_value[$key]);
       }
       
       //Turn our header into an array of lines ready for wrapping around the encoding specification

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -47,7 +47,7 @@ class AdminTagsControllerCore extends AdminController
 				'filter_key' => 'a!name'
 			),
 			'products' => array(
-				'title' => $this->l('Products'),
+				'title' => $this->l('Products:'),
 				'align' => 'right',
 				'havingFilter' => true
 			)
@@ -77,8 +77,23 @@ class AdminTagsControllerCore extends AdminController
 	public function postProcess()
 	{
 		if ($this->tabAccess['edit'] === '1' && Tools::getValue('submitAdd'.$this->table))
+		{
 			if (($id = (int)Tools::getValue($this->identifier)) && ($obj = new $this->className($id)) && Validate::isLoadedObject($obj))
+			{
+				$previousProducts = $obj->getProducts();
+				$removedProducts = array();
+
+				foreach ($previousProducts as $product)
+					if (!in_array($product['id_product'], $_POST['products']))
+						$removedProducts[] = $product['id_product'];
+
+				if (Configuration::get('PS_SEARCH_INDEXATION'))
+					Search::removeProductsSearchIndex($removedProducts);
+
 				$obj->setProducts($_POST['products']);
+			}
+		}
+
 		return parent::postProcess();
 	}
 

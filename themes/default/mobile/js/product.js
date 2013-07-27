@@ -1,5 +1,5 @@
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -64,7 +64,7 @@ var ProductFn = (function()
 		productShowPrice: '0',
 		productUnitPriceRatio: '',
 		
-		productPriceWithoutRedution: '',
+		productPriceWithoutReduction: '',
 		productPrice: '',
 		
 		// Customizable field
@@ -96,7 +96,7 @@ var ProductFn = (function()
 				return true;
 			}
 			ProductFn.already_init = true;
-			if ($('.attributes_group select').length) {
+			if ($('.attributes_group select').length || $('.attributes_group input[type=radio]').length) {
 				initAttrSelector();
 			}
 			ProductFn.checkMinimalQuantity();
@@ -219,7 +219,8 @@ var ProductFn = (function()
 	
 		$.ajax({
 			type: 'POST',
-			url: customAction,
+			headers: { "cache-control": "no-cache" },
+			url: customAction + '?rand=' + new Date().getTime(),
 			data: 'ajax=true&'+$('#customizationForm').serialize(),
 			dataType: 'json',
 			async : true,

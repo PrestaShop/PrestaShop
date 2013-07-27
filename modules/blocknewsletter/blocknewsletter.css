@@ -4,7 +4,7 @@
 	border:1px solid #ccc;
 	background:#eee;
 }
-#newsletter_block_left h4 {
+#newsletter_block_left .title_block, #newsletter_block_left h4  {
 	padding:0 0 12px 28px;
 	color:#666;
 	text-shadow:0 1px 0 #fff;
@@ -43,7 +43,7 @@
 *:first-child+html #newsletter_block_left input.inputNew {position:static;}/* hack ie 7 */
 
 #newsletter_block_left input.button_mini {
-	postion:relative;
+	position:relative;
 	left:-2px;
 	height:23px;
 	width:24px;
@@ -53,9 +53,4 @@
 	cursor:pointer
 }
 *:first-child+html #newsletter_block_left input.button_mini {padding-left:24px !important;}/* hack ie 7 */
-/*\*//*/div.madiv {
-#newsletter_block_left input.button_mini {
-	position:relative;
-	top: 4px;
-}/* hack ie 8 */
-}/* */
+

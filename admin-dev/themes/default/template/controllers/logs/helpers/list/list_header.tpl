@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -34,7 +34,7 @@
 			<li style="color: green;">{l s='Informative only'}</li>
 			<li style="color: orange;">{l s='Warning'}</li>
 			<li style="color: orange;">{l s='Error'}</li>
-			<li style="color: red;">{l s='Major issue (crash)'}</li>
+			<li style="color: red;">{l s='Major issue (crash)!'}</li>
 		</ol>
 	</fieldset><br />
 

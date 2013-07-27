@@ -1,5 +1,5 @@
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -53,7 +53,7 @@ function searchLocations()
 	var address = document.getElementById('addressInput').value;
 	var geocoder = new google.maps.Geocoder();
 	geocoder.geocode({address: address}, function(results, status) {
-		if (status == google.maps.GeocoderStatus.OK)
+		if (status === google.maps.GeocoderStatus.OK)
 			searchLocationsNear(results[0].geometry.location);
 		else
 			alert(address+' '+translation_6);
@@ -76,7 +76,7 @@ function clearLocations(n)
 		option.innerHTML = translation_1;
 	else
 	{
-		if (n == 1)
+		if (n === 1)
 			option.innerHTML = '1'+' '+translation_2;
 		else
 			option.innerHTML = n+' '+translation_3;
@@ -113,7 +113,7 @@ function searchLocationsNear(center)
 			createMarker(latlng, name, address, other, id_store, has_store_picture);
 			bounds.extend(latlng);
 
-			$('#stores-table tr:last').after('<tr class="node"><td class="num">'+parseInt(i + 1)+'</td><td><b>'+name+'</b>'+(has_store_picture == 1 ? '<br /><img src="'+img_store_dir+parseInt(id_store)+'-medium.jpg" alt="" />' : '')+'</td><td>'+address+(phone != '' ? '<br /><br />'+translation_4+' '+phone : '')+'</td><td class="distance">'+distance+' '+distance_unit+'</td></tr>');
+			$('#stores-table tr:last').after('<tr class="node"><td class="num">'+parseInt(i + 1)+'</td><td><b>'+name+'</b>'+(has_store_picture === 1 ? '<br /><img src="'+img_store_dir+parseInt(id_store)+'-medium.jpg" alt="" />' : '')+'</td><td>'+address+(phone !== '' ? '<br /><br />'+translation_4+' '+phone : '')+'</td><td class="distance">'+distance+' '+distance_unit+'</td></tr>');
 			$('#stores-table').show();
 		}
 
@@ -135,12 +135,14 @@ function searchLocationsNear(center)
 
 function createMarker(latlng, name, address, other, id_store, has_store_picture)
 {
-	var html = '<b>'+name+'</b><br/>'+address+(has_store_picture == 1 ? '<br /><br /><img src="'+img_store_dir+parseInt(id_store)+'-medium.jpg" alt="" />' : '')+other+'<br /><a href="http://maps.google.com/maps?saddr=&daddr='+latlng+'" target="_blank">'+translation_5+'<\/a>';
+	var html = '<b>'+name+'</b><br/>'+address+(has_store_picture === 1 ? '<br /><br /><img src="'+img_store_dir+parseInt(id_store)+'-medium.jpg" alt="" />' : '')+other+'<br /><a href="http://maps.google.com/maps?saddr=&daddr='+latlng+'" target="_blank">'+translation_5+'<\/a>';
 	var image = new google.maps.MarkerImage(img_ps_dir+logo_store);
+	var marker = '';
+
 	if (hasStoreIcon)
-		var marker = new google.maps.Marker({ map: map, icon: image, position: latlng });
+		marker = new google.maps.Marker({ map: map, icon: image, position: latlng });
 	else
-		var marker = new google.maps.Marker({ map: map, position: latlng });
+		marker = new google.maps.Marker({ map: map, position: latlng });
 	google.maps.event.addListener(marker, 'click', function() {
 		infoWindow.setContent(html);
 		infoWindow.open(map, marker);
@@ -160,10 +162,10 @@ function downloadUrl(url, callback)
 {
 	var request = window.ActiveXObject ?
 	new ActiveXObject('Microsoft.XMLHTTP') :
-	new XMLHttpRequest;
+	new XMLHttpRequest();
 
 	request.onreadystatechange = function() {
-		if (request.readyState == 4) {
+		if (request.readyState === 4) {
 			request.onreadystatechange = doNothing;
 			callback(request.responseText, request.status);
 		}
@@ -181,7 +183,7 @@ function parseXml(str)
 		return doc;
 	}
 	else if (window.DOMParser) {
-		return (new DOMParser).parseFromString(str, 'text/xml');
+		return (new DOMParser()).parseFromString(str, 'text/xml');
 	}
 }
 
@@ -200,13 +202,13 @@ $(document).ready(function()
 	locationSelect = document.getElementById('locationSelect');
 		locationSelect.onchange = function() {
 		var markerNum = locationSelect.options[locationSelect.selectedIndex].value;
-		if (markerNum != 'none')
+		if (markerNum !== 'none')
 		google.maps.event.trigger(markers[markerNum], 'click');
 	};
 	
 	$('#addressInput').keypress(function(e) {
 		code = e.keyCode ? e.keyCode : e.which;
-		if(code.toString() == 13)
+		if(code.toString() === 13)
 			searchLocations();
 	});
 

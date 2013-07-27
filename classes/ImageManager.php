@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -119,6 +119,11 @@ class ImageManagerCore
 	 */
 	public static function resize($src_file, $dst_file, $dst_width = null, $dst_height = null, $file_type = 'jpg', $force_type = false)
 	{
+		if (PHP_VERSION_ID < 50300)
+			clearstatcache();
+		else
+			clearstatcache(true, $src_file);
+		
 		if (!file_exists($src_file) || !filesize($src_file))
 			return false;
 		list($src_width, $src_height, $type) = getimagesize($src_file);
@@ -163,6 +168,9 @@ class ImageManagerCore
 			}
 		}
 
+		if (!ImageManager::checkImageMemoryLimit($src_file))
+			return false;
+		
 		$dest_image = imagecreatetruecolor($dst_width, $dst_height);
 
 		// If image is a PNG and the output is PNG, fill with transparency. Else fill with white background.
@@ -262,11 +270,7 @@ class ImageManagerCore
 	public static function validateUpload($file, $max_file_size = 0)
 	{
 		if ((int)$max_file_size > 0 && $file['size'] > (int)$max_file_size)
-			return sprintf(
-				Tools::displayError('Image is too large (%1$d kB). Maximum allowed: %2$d kB'),
-				$file['size'] / 1000,
-				$max_file_size / 1000
-			);
+			return sprintf(Tools::displayError('Image is too large (%1$d kB). Maximum allowed: %2$d kB'), $file['size'] / 1024, $max_file_size / 1024);
 		if (!ImageManager::isRealImage($file['tmp_name'], $file['type']) || !ImageManager::isCorrectImageFileExt($file['name']))
 			return Tools::displayError('Image format not recognized, allowed formats are: .gif, .jpg, .png');
 		if ($file['error'])
@@ -409,5 +413,34 @@ class ImageManagerCore
 		imagedestroy($resource);
 		@chmod($filename, 0664);
 		return $success;
+	}
+
+	/**
+	 * Return the mime type by the file extension
+	 *
+	 * @param string $file_name
+	 * @return string
+	 */
+	public static function getMimeTypeByExtension($file_name)
+	{
+		$types = array(
+						'image/gif' => array('gif'),
+						'image/jpeg' => array('jpg', 'jpeg'),
+						'image/png' => array('png')
+					);	
+		$extension = substr($file_name, strrpos($file_name, '.') + 1);
+
+		$mime_type = null;
+		foreach ($types as $mime => $exts)
+			if (in_array($extension, $exts))
+			{
+				$mime_type = $mime;
+				break;
+			}
+
+		if ($mime_type === null)
+			$mime_type = 'image/jpeg';
+
+		return $mime_type;
 	}
 }

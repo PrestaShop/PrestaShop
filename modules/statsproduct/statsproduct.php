@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -169,7 +169,7 @@ class StatsProduct extends ModuleGraph
 			$totalViewed = $this->getTotalViewed($product->id);
 			$this->html .= '<h3>'.$product->name.' - '.$this->l('Details').'</h3>
 			<p>'.$this->l('Total bought:').' '.$totalBought.'</p>
-			<p>'.$this->l('Sales (-Tx):').' '.Tools::displayprice($totalSales, $currency).'</p>
+			<p>'.$this->l('Sales ( Figure does not include tax):').' '.Tools::displayprice($totalSales, $currency).'</p>
 			<p>'.$this->l('Total viewed:').' '.$totalViewed.'</p>
 			<p>'.$this->l('Conversion rate:').' '.number_format($totalViewed ? $totalBought / $totalViewed : 0, 2).'</p>
 			<center>'.$this->engine(array('layers' => 2, 'type' => 'line', 'option' => '1-'.$id_product)).'</center>
@@ -191,7 +191,7 @@ class StatsProduct extends ModuleGraph
 						<th>'.$this->l('Order').'</th>
 						<th>'.$this->l('Customer').'</th>
 						'.($hasAttribute ? '<th>'.$this->l('Attribute').'</th>' : '').'
-						<th>'.$this->l('Qty').'</th>
+						<th>'.$this->l('Quantity').'</th>
 						<th>'.$this->l('Price').'</th>
 					</tr>
 				</thead><tbody>';
@@ -200,7 +200,7 @@ class StatsProduct extends ModuleGraph
 				foreach ($sales as $sale)
 					$this->html .= '
 					<tr>
-						<td>'.Tools::displayDate($sale['date_add'], (int)$this->context->language->id, false).'</td>
+						<td>'.Tools::displayDate($sale['date_add'],null , false).'</td>
 						<td align="center"><a href="?tab=AdminOrders&id_order='.$sale['id_order'].'&vieworder&token='.$tokenOrder.'">'.(int)($sale['id_order']).'</a></td>
 						<td align="center"><a href="?tab=AdminCustomers&id_customer='.$sale['id_customer'].'&viewcustomer&token='.$tokenCustomer.'">'.(int)($sale['id_customer']).'</a></td>
 						'.($hasAttribute ? '<td>'.$sale['product_name'].'</td>' : '').'
@@ -213,7 +213,7 @@ class StatsProduct extends ModuleGraph
 				if (count($crossSelling))
 				{
 					$this->html .= '<br class="clear" />
-					<h3>'.$this->l('Cross Selling').'</h3>
+					<h3>'.$this->l('Cross selling').'</h3>
 					<div style="overflow-y: scroll; height: 200px;">
 					<table class="table" border="0" cellspacing="0" cellspacing="0">
 					<thead>
@@ -250,7 +250,7 @@ class StatsProduct extends ModuleGraph
 					</select>
 				</form>
 			</div>
-						<p>'.$this->l('Click on a product to access its statistics.').'</p>
+						<p>'.$this->l('Click on a product to access its statistics!').'</p>
 				
 			<h2>'.$this->l('Products available').'</h2>
 			<div>
@@ -279,11 +279,11 @@ class StatsProduct extends ModuleGraph
 
 		$this->html .= '</div><br />
 		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</h2>
-		<h2>'.$this->l('Number of purchases compared to number of viewings').'</h2>
+		<h2>'.$this->l('Number of purchases compared to number of views.').'</h2>
 			<p>
-				'.$this->l('After choosing a category and selecting a product, informational graphs will appear. Then, you will be able to analyze them.').'
+				'.$this->l('After choosing a category and selecting a product, informational graphs will appear.').'
 				<ul>
-					<li class="bullet">'.$this->l('If you notice that a product is successful and often purchased, but viewed infrequently, you should put it more prominently on your webshop front-office.').'</li>
+					<li class="bullet">'.$this->l('If you notice that a product is often purchased but viewed infrequently, you should display it more prominently in your Front Office. ').'</li>
 					<li class="bullet">'.$this->l('On the other hand, if a product has many viewings but is not often purchased,
 						we advise you to check or modify this product\'s information, description and photography again.').'
 					</li>

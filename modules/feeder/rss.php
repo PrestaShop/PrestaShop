@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -34,6 +34,7 @@ $id_category = ((int)(Tools::getValue('id_category')) ? (int)(Tools::getValue('i
 $products = Product::getProducts((int)Context::getContext()->language->id, 0, ($number > 10 ? 10 : $number), $orderBy, $orderWay, $id_category, true);
 $currency = new Currency((int)Context::getContext()->currency->id);
 $affiliate = (Tools::getValue('ac') ? '?ac='.(int)(Tools::getValue('ac')) : '');
+$metas = Meta::getMetaByPage('index', (int)Context::getContext()->language->id);
 
 // Send feed
 header("Content-Type:text/xml; charset=utf-8");
@@ -42,8 +43,9 @@ echo '<?xml version="1.0" encoding="UTF-8"?>'."\n";
 <rss version="2.0">
 	<channel>
 		<title><![CDATA[<?php echo Configuration::get('PS_SHOP_NAME') ?>]]></title>
+		<description><![CDATA[<?php echo $metas['description'] ?>]]></description>
 		<link><?php echo _PS_BASE_URL_.__PS_BASE_URI__; ?></link>
-		<mail><?php echo Configuration::get('PS_SHOP_EMAIL') ?></mail>
+		<webMaster><?php echo Configuration::get('PS_SHOP_EMAIL') ?></webMaster>
 		<generator>PrestaShop</generator>
 		<language><?php echo Context::getContext()->language->iso_code; ?></language>
 		<image>
@@ -69,7 +71,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>'."\n";
 			echo "<![CDATA[";
 		echo $product['description_short']."]]></description>\n";
 
-		echo "\t\t\t<link><![CDATA[".htmlspecialchars($link->getproductLink($product['id_product'], $product['link_rewrite'], Category::getLinkRewrite((int)($product['id_category_default']), $cookie->id_lang))).$affiliate."]]></link>\n";
+		echo "\t\t\t<link><![CDATA[".str_replace('&amp;', '&', htmlspecialchars($link->getproductLink($product['id_product'], $product['link_rewrite'], Category::getLinkRewrite((int)($product['id_category_default']), $cookie->id_lang)))).$affiliate."]]></link>\n";
 		echo "\t\t</item>\n";
 	}
 ?>

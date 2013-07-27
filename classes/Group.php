@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -70,6 +70,13 @@ class GroupCore extends ObjectModel
 
 	protected $webserviceParameters = array();
 
+	public function __construct($id = null, $id_lang = null, $id_shop = null)
+	{
+		parent::__construct($id, $id_lang, $id_shop);
+		if ($this->id && !isset(Group::$group_price_display_method[$this->id]))
+			self::$group_price_display_method[$this->id] = $this->price_display_method;
+	}
+	
 	public static function getGroups($id_lang, $id_shop = false)
 	{
 		$shop_criteria = '';
@@ -84,7 +91,7 @@ class GroupCore extends ObjectModel
 		ORDER BY g.`id_group` ASC');
 	}
 
-	public function getCustomers($count = false, $start = 0, $limit = 0)
+	public function getCustomers($count = false, $start = 0, $limit = 0, $shop_filtering = false)
 	{
 		if ($count)
 			return Db::getInstance()->getValue('
@@ -92,6 +99,7 @@ class GroupCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'customer_group` cg
 			LEFT JOIN `'._DB_PREFIX_.'customer` c ON (cg.`id_customer` = c.`id_customer`)
 			WHERE cg.`id_group` = '.(int)$this->id.'
+			'.($shop_filtering ? Shop::addSqlRestriction(Shop::SHARE_CUSTOMER) : '').'
 			AND c.`deleted` != 1');
 		return Db::getInstance()->executeS('
 		SELECT cg.`id_customer`, c.*
@@ -99,6 +107,7 @@ class GroupCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (cg.`id_customer` = c.`id_customer`)
 		WHERE cg.`id_group` = '.(int)$this->id.'
 		AND c.`deleted` != 1
+		'.($shop_filtering ? Shop::addSqlRestriction(Shop::SHARE_CUSTOMER) : '').'
 		ORDER BY cg.`id_customer` ASC
 		'.($limit > 0 ? 'LIMIT '.(int)$start.', '.(int)$limit : ''));
 	}
@@ -106,10 +115,10 @@ class GroupCore extends ObjectModel
 	public static function getReduction($id_customer = null)
 	{
 		if (!isset(self::$cache_reduction['customer'][(int)$id_customer]))
-        {
-            $id_group = $id_customer ? Customer::getDefaultGroupId((int)$id_customer) : (int)Configuration::get('PS_CUSTOMER_GROUP');
-			self::$cache_reduction['customer'][(int)$id_customer] = Group::getReductionByIdGroup($id_group);
-        }
+		{
+				$id_group = $id_customer ? Customer::getDefaultGroupId((int)$id_customer) : (int)Group::getCurrent()->id;
+				self::$cache_reduction['customer'][(int)$id_customer] = Group::getReductionByIdGroup($id_group);
+		}
 		return self::$cache_reduction['customer'][(int)$id_customer];
 	}
 
@@ -157,7 +166,7 @@ class GroupCore extends ObjectModel
 
 	public function delete()
 	{
-		if ($this->id == _PS_DEFAULT_CUSTOMER_GROUP_)
+		if ($this->id == (int)Configuration::get('PS_CUSTOMER_GROUP'))
 			return false;
 		if (parent::delete())
 		{
@@ -295,13 +304,17 @@ class GroupCore extends ObjectModel
 	 */
 	public static function getCurrent()
 	{
+		static $groups = array();
 		$customer = Context::getContext()->customer;
-		$id_group = (int)Configuration::get('PS_UNIDENTIFIED_GROUP');
-
 		if (Validate::isLoadedObject($customer))
 			$id_group = (int)$customer->id_default_group;
+		else
+			$id_group = (int)Configuration::get('PS_UNIDENTIFIED_GROUP');
+		
+		if (!isset($groups[$id_group]))
+			$groups[$id_group] = new Group($id_group);
 
-		return new self($id_group);
+		return $groups[$id_group];
 	}
 }
 

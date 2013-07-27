@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -34,7 +34,7 @@ class ProductSaleCore
 	{
 		$sql = 'REPLACE INTO '._DB_PREFIX_.'product_sale
 				(`id_product`, `quantity`, `sale_nbr`, `date_upd`)
-				SELECT od.product_id, COUNT(od.product_id), SUM(od.product_quantity), NOW()
+				SELECT od.product_id, SUM(od.product_quantity), COUNT(od.product_id), NOW()
 							FROM '._DB_PREFIX_.'order_detail od GROUP BY od.product_id';
 		return Db::getInstance()->execute($sql);
 	}
@@ -65,20 +65,22 @@ class ProductSaleCore
 	{
 		if ($page_number < 0) $page_number = 0;
 		if ($nb_products < 1) $nb_products = 10;
-
 		$final_order_by = $order_by;
-		if (empty($order_by) || $order_by == 'position' || $order_by = 'price') $order_by = 'sales';
-		if (empty($order_way)) $order_way = 'DESC';
-
+		if (is_null($order_by) || $order_by == 'position' || $order_by == 'price') $order_by = 'sales';
+		if (is_null($order_way) || $order_by == 'sales') $order_way == 'DESC';
 		$groups = FrontController::getCurrentCustomerGroups();
 		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
 		$interval = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
-
+		
+		$prefix = '';
+		if ($order_by == 'date_add')
+			$prefix = 'p.';
+		
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
 					pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
 					pl.`meta_keywords`, pl.`meta_title`, pl.`name`,
 					m.`name` AS manufacturer_name, p.`id_manufacturer` as id_manufacturer,
-					image_shop.`id_image`, il.`legend`,
+					MAX(image_shop.`id_image`) id_image, il.`legend`,
 					ps.`quantity` AS sales, t.`rate`, pl.`meta_keywords`, pl.`meta_title`, pl.`meta_description`,
 					DATEDIFF(p.`date_add`, DATE_SUB(NOW(),
 					INTERVAL '.$interval.' DAY)) > 0 AS new
@@ -98,14 +100,15 @@ class ProductSaleCore
 				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 				'.Product::sqlStock('p').'
 				WHERE product_shop.`active` = 1
+					AND p.`visibility` != \'none\'
 					AND p.`id_product` IN (
 						SELECT cp.`id_product`
 						FROM `'._DB_PREFIX_.'category_group` cg
 						LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
 						WHERE cg.`id_group` '.$sql_groups.'
 					)
-					AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))
-				ORDER BY `'.pSQL($order_by).'` '.pSQL($order_way).'
+				GROUP BY product_shop.id_product
+				ORDER BY '.$prefix.'`'.pSQL($order_by).'` '.pSQL($order_way).'
 				LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
@@ -135,7 +138,7 @@ class ProductSaleCore
 		$groups = FrontController::getCurrentCustomerGroups();
 		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
 
-		$sql = 'SELECT p.id_product, pl.`link_rewrite`, pl.`name`, pl.`description_short`, image_shop.`id_image`, il.`legend`,
+		$sql = 'SELECT p.id_product, pl.`link_rewrite`, pl.`name`, pl.`description_short`, MAX(image_shop.`id_image`) id_image, il.`legend`,
 					ps.`quantity` AS sales, p.`ean13`, p.`upc`, cl.`link_rewrite` AS category
 				FROM `'._DB_PREFIX_.'product_sale` ps
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON ps.`id_product` = p.`id_product`
@@ -150,13 +153,14 @@ class ProductSaleCore
 					ON cl.`id_category` = product_shop.`id_category_default`
 					AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').'
 				WHERE product_shop.`active` = 1
+					AND p.`visibility` != \'none\'
 					AND p.`id_product` IN (
 						SELECT cp.`id_product`
 						FROM `'._DB_PREFIX_.'category_group` cg
 						LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
 						WHERE cg.`id_group` '.$sql_groups.'
 					)
-					AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))
+				GROUP BY product_shop.id_product
 				ORDER BY sales DESC
 				LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))

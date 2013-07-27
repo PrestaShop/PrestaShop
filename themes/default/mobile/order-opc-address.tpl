@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -29,7 +29,7 @@
 <div data-role="content" id="address-section">
 	<div class="ui-grid-a margin-bottom-10px">
 		<div class="ui-block-a">
-			<h3 class="bg">{l s='Delivery address:'}</h3>
+			<h3 class="bg">{l s='Delivery address'}</h3>
 			{if isset($delivery)}
 				<ul class="adress">
 					<li class="address_name">{$delivery->firstname|escape:'htmlall':'UTF-8'} {$delivery->lastname|escape:'htmlall':'UTF-8'}</li>
@@ -58,7 +58,7 @@
 			</select>
 		</div>
 		<div class="ui-block-b">
-			<h3 class="bg">{l s='Invoice address:'}</h3>
+			<h3 class="bg">{l s='Invoice address'}</h3>
 			{if isset($invoice)}
 				<ul class="adress">
 					<li class="address_name">{$invoice->firstname|escape:'htmlall':'UTF-8'} {$invoice->lastname|escape:'htmlall':'UTF-8'}</li>
@@ -73,7 +73,7 @@
 					<li class="address_country">{$invoice->country|escape:'htmlall':'UTF-8'} {if $invoice_state}({$invoice_state|escape:'htmlall':'UTF-8'}){/if}</li>
 				</ul>
 			{else}
-				<p class="warning">{l s='You have to specify your delivery and invoice address.'}</p>
+				<p class="warning">{l s='You must specify your delivery and invoice address'}</p>
 			{/if}
 			<label for="invoice-address-choice" class="select">{l s='Change address:'}</label>
 			<select
@@ -96,6 +96,6 @@
 		{assign var="back_order_page" value="order.php"}
 	{/if}
 
-	<p><a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{if $back}&mod={$back}{/if}")}" title="{l s='Add a new address'}" data-role="button" data-theme="e" data-icon="plus" data-ajax="false">{l s='Add a new address'}</a><br /></p>
+	<p><a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{if $back}&mod={$back}{/if}")|escape:'html'}" title="{l s='Add a new address'}" data-role="button" data-theme="e" data-icon="plus" data-ajax="false">{l s='Add a new address'}</a><br /></p>
 
 </div>

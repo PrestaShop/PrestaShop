@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -119,10 +119,16 @@
 	{/foreach}
 	$(document).ready(function() {
 		$('input[name=useImportData]').click(function()	{
-		if ($(this).attr('id') == 'useImportData_on')
-			$('#shop_list, #data_list').slideDown('slow');
-		else
-			$('#shop_list, #data_list').slideUp('slow');
+			if ($(this).attr('id') == 'useImportData_on')
+			{
+				$('input[name^="importData["]').prop('checked', true);
+				$('#shop_list, #data_list').slideDown('slow');
+			}	
+			else
+			{
+				$('input[name^="importData["]').prop('checked', false);
+				$('#shop_list, #data_list').slideUp('slow');
+			}
 		});
 		$('#id_category, #importFromShop').change(function(){
 			shop_id = $('#importFromShop').val();

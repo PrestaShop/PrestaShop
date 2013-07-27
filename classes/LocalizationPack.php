@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,8 +19,8 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
-*  @license	http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+*  @copyright  2007-2013 PrestaShop SA
+*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
@@ -51,7 +51,6 @@ class LocalizationPackCore
 			$res &= $this->_installUnits($xml);
 			$res &= $this->installConfiguration($xml);
 			$res &= $this->installModules($xml);
-			$res &= $this->updateDefaultGroupDisplayMethod($xml);
 			$res &= $this->_installLanguages($xml, $install_mode);
 
 			if ($res && isset($this->iso_code_lang))
@@ -233,7 +232,7 @@ class LocalizationPackCore
 				}
 			}
 		}
-		return true;
+		return $this->updateDefaultGroupDisplayMethod($xml);
 	}
 
 	protected function _installCurrencies($xml, $install_mode = false)
@@ -292,59 +291,18 @@ class LocalizationPackCore
 			foreach ($xml->languages->language as $data)
 			{
 				$attributes = $data->attributes();
-				if (Language::getIdByIso($attributes['iso_code']))
-					continue;
-				$native_lang = Language::getLanguages();
-				$native_iso_code = array();
-				foreach ($native_lang as $lang)
-					$native_iso_code[] = $lang['iso_code'];
 				// if we are not in an installation context or if the pack is not available in the local directory
-				if (!$install_mode || !in_array((string)$attributes['iso_code'], $native_iso_code))
-				{
-					$errno = 0;
-					$errstr = '';
-					if (!@fsockopen('api.prestashop.com', 80, $errno, $errstr, 5))
-						$this->_errors[] = Tools::displayError('Archive cannot be downloaded from prestashop.com.');
-					elseif (!($lang_pack = Tools::jsonDecode(Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='._PS_VERSION_.'&iso_lang='.$attributes['iso_code']))))
-						$this->_errors[] = Tools::displayError('Error occurred when language was checked according to your Prestashop version.');
-					elseif ($content = Tools::file_get_contents('http://translations.prestashop.com/download/lang_packs/gzip/'.$lang_pack->version.'/'.$attributes['iso_code'].'.gzip'))
-					{
-						$file = _PS_TRANSLATIONS_DIR_.$attributes['iso_code'].'.gzip';
-						if (file_put_contents($file, $content))
-						{
-							$gz = new Archive_Tar($file, true);
-							$files_list = $gz->listContent();
-
-							if (!$gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
-							{
-								$this->_errors[] = Tools::displayError('Cannot decompress the translation file for the following language: ').(string)$attributes['iso_code'];
-								return false;
-							}
-							else
-							{
-								AdminTranslationsController::checkAndAddMailsFiles($attributes['iso_code'], $files_list);
-								AdminTranslationsController::addNewTabs($attributes['iso_code'], $files_list);
-							}
-
-							if (!Language::checkAndAddLanguage((string)$attributes['iso_code']))
-							{
-								$this->_errors[] = Tools::displayError('An error occurred while creating the language: ').(string)$attributes['iso_code'];
-								return false;
-							}
-
-							@unlink($file);
-						}
-						else
-							$this->_errors[] = Tools::displayError('Server does not have permissions for writing.');
-					}
-				}
+				if (Language::getIdByIso($attributes['iso_code']) && !$install_mode)
+					continue;
+				$errors = Language::downloadAndInstallLanguagePack($attributes['iso_code'], $attributes['version'], $attributes);
+				if ($errors !== true && is_array($errors))
+					$this->_errors = array_merge($this->_errors, $errors);
 			}
-
 		// change the default language if there is only one language in the localization pack
 		if (!count($this->_errors) && $install_mode && isset($attributes['iso_code']) && count($xml->languages->language) == 1)
 			$this->iso_code_lang = $attributes['iso_code'];
 
-		return true;
+		return !count($this->_errors);
 	}
 
 	protected function _installUnits($xml)
@@ -432,10 +390,13 @@ class LocalizationPackCore
 			$attributes = $xml->group_default->attributes();
 			if (isset($attributes['price_display_method']) && in_array((int)$attributes['price_display_method'], array(0, 1)))
 			{
-				$group = new Group((int)_PS_DEFAULT_CUSTOMER_GROUP_);
-				$group->price_display_method = (int)$attributes['price_display_method'];
-				if (!$group->save())
-					$this->_errors[] = Tools::displayError('An error occurred during the default group update');
+				foreach (array((int)Configuration::get('PS_CUSTOMER_GROUP'), (int)Configuration::get('PS_GUEST_GROUP'), (int)Configuration::get('PS_UNIDENTIFIED_GROUP')) as $id_group)
+				{
+					$group = new Group((int)$id_group);
+					$group->price_display_method = (int)$attributes['price_display_method'];
+					if (!$group->save())
+						$this->_errors[] = Tools::displayError('An error occurred during the default group update');
+				}
 			}
 			else
 				$this->_errors[] = Tools::displayError('An error has occurred during the default group update');

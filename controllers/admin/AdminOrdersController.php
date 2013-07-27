@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -35,7 +35,7 @@ class AdminOrdersControllerCore extends AdminController
 		$this->lang = false;
 		$this->addRowAction('view');
 		$this->explicitSelect = true;
-
+		$this->allow_export = true;
 		$this->deleted = false;
 		$this->context = Context::getContext();
 
@@ -100,7 +100,7 @@ class AdminOrdersControllerCore extends AdminController
 			'currency' => true
 		),
 		'payment' => array(
-			'title' => $this->l('Payment'),
+			'title' => $this->l('Payment: '),
 			'width' => 100
 		),
 		'osname' => array(
@@ -148,7 +148,7 @@ class AdminOrdersControllerCore extends AdminController
 	public function renderForm()
 	{
 		if (Context::getContext()->shop->getContext() != Shop::CONTEXT_SHOP && Shop::isFeatureActive())
-			$this->errors[] = $this->l('You have to select a shop in order to create new orders.');
+			$this->errors[] = $this->l('You have to select a shop before creating new orders.');
 
 		$id_cart = (int)Tools::getValue('id_cart');
 		$cart = new Cart((int)$id_cart);
@@ -183,7 +183,7 @@ class AdminOrdersControllerCore extends AdminController
 			'show_toolbar' => $this->show_toolbar,
 			'toolbar_btn' => $this->toolbar_btn,
 			'toolbar_scroll' => $this->toolbar_scroll,
-			'title' => array($this->l('Orders'), $this->l('create order'))
+			'title' => array($this->l('Orders'), $this->l('Create order'))
 		));
 		$this->content .= $this->createTemplate('form.tpl')->fetch();
 	}
@@ -266,6 +266,7 @@ class AdminOrdersControllerCore extends AdminController
 			$order = new Order(Tools::getValue('id_order'));
 			if (!Validate::isLoadedObject($order))
 				throw new PrestaShopException('Can\'t load Order object');
+			ShopUrl::cacheMainDomainForShop((int)$order->id_shop);
 		}
 
 		/* Update shipping number */
@@ -275,9 +276,9 @@ class AdminOrdersControllerCore extends AdminController
 			{
 				$order_carrier = new OrderCarrier(Tools::getValue('id_order_carrier'));
 				if (!Validate::isLoadedObject($order_carrier))
-					$this->errors[] = Tools::displayError('Order carrier ID is invalid');
+					$this->errors[] = Tools::displayError('The order carrier ID is invalid.');
 				elseif (!Validate::isTrackingNumber(Tools::getValue('tracking_number')))
-					$this->errors[] = Tools::displayError('Tracking number is incorrect');
+					$this->errors[] = Tools::displayError('The tracking number is incorrect.');
 				else
 				{
 					// update shipping number
@@ -301,24 +302,25 @@ class AdminOrdersControllerCore extends AdminController
 							'{firstname}' => $customer->firstname,
 							'{lastname}' => $customer->lastname,
 							'{id_order}' => $order->id,
+							'{shipping_number}' => $order->shipping_number,
 							'{order_name}' => $order->getUniqReference()
 						);
 						if (@Mail::Send((int)$order->id_lang, 'in_transit', Mail::l('Package in transit', (int)$order->id_lang), $templateVars,
 							$customer->email, $customer->firstname.' '.$customer->lastname, null, null, null, null,
 							_PS_MAIL_DIR_, true, (int)$order->id_shop))
 						{
-							Hook::exec('actionAdminOrdersTrackingNumberUpdate', array('order' => $order));
+							Hook::exec('actionAdminOrdersTrackingNumberUpdate', array('order' => $order, 'customer' => $customer, 'carrier' => $carrier));
 							Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
 						}
 						else
-							$this->errors[] = Tools::displayError('An error occurred while sending e-mail to the customer.');
+							$this->errors[] = Tools::displayError('An error occurred while sending an email to the customer.');
 					}
 					else
-						$this->errors[] = Tools::displayError('Order carrier can\'t be updated');
+						$this->errors[] = Tools::displayError('The order carrier cannot be updated.');
 				}
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 
 		/* Change order state, add a new entry in order history and send an e-mail to the customer if needed */
@@ -329,7 +331,7 @@ class AdminOrdersControllerCore extends AdminController
 				$order_state = new OrderState(Tools::getValue('id_order_state'));
 
 				if (!Validate::isLoadedObject($order_state))
-					$this->errors[] = Tools::displayError('Invalid new order status');
+					$this->errors[] = Tools::displayError('The new order status is invalid.');
 				else
 				{
 					$current_order_state = $order->getCurrentOrderState();
@@ -364,14 +366,14 @@ class AdminOrdersControllerCore extends AdminController
 
 							Tools::redirectAdmin(self::$currentIndex.'&id_order='.(int)$order->id.'&vieworder&token='.$this->token);
 						}
-						$this->errors[] = Tools::displayError('An error occurred while changing the status or was unable to send e-mail to the customer.');
+						$this->errors[] = Tools::displayError('An error occurred while changing order status, or we were unable to send an email to the customer.');
 					}
 					else
-						$this->errors[] = Tools::displayError('This order is already assigned this status');
+						$this->errors[] = Tools::displayError('The order has already been assigned this status.');
 				}
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 
 		/* Add a new message for the current order and send an e-mail to the customer if needed */
@@ -381,9 +383,9 @@ class AdminOrdersControllerCore extends AdminController
 			{
 				$customer = new Customer(Tools::getValue('id_customer'));
 				if (!Validate::isLoadedObject($customer))
-					$this->errors[] = Tools::displayError('Customer is invalid');
+					$this->errors[] = Tools::displayError('The customer is invalid.');
 				elseif (!Tools::getValue('message'))
-					$this->errors[] = Tools::displayError('Message cannot be blank');
+					$this->errors[] = Tools::displayError('The message cannot be blank.');
 				else
 				{
 					/* Get message rules and and check fields validity */
@@ -427,13 +429,13 @@ class AdminOrdersControllerCore extends AdminController
 						$customer_message->private = Tools::getValue('visibility');
 
 						if (!$customer_message->add())
-							$this->errors[] = Tools::displayError('An error occurred while saving message');
+							$this->errors[] = Tools::displayError('An error occurred while saving the message.');
 						elseif ($customer_message->private)
 							Tools::redirectAdmin(self::$currentIndex.'&id_order='.(int)$order->id.'&vieworder&conf=11&token='.$this->token);
 						else
 						{
 							$message = $customer_message->message;
-							if (Configuration::get('PS_MAIL_TYPE') != Mail::TYPE_TEXT)
+							if (Configuration::get('PS_MAIL_TYPE', null, null, $order->id_shop) != Mail::TYPE_TEXT)
 								$message = Tools::nl2br($customer_message->message);
 
 							$varsTpl = array(
@@ -448,12 +450,12 @@ class AdminOrdersControllerCore extends AdminController
 								$customer->firstname.' '.$customer->lastname, null, null, null, null, _PS_MAIL_DIR_, true, (int)$order->id_shop))
 								Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=11'.'&token='.$this->token);
 						}
-						$this->errors[] = Tools::displayError('An error occurred while sending e-mail to the customer.');
+						$this->errors[] = Tools::displayError('An error occurred while sending an email to the customer.');
 					}
 				}
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 		}
 
 		/* Partial refund from order */
@@ -487,16 +489,24 @@ class AdminOrdersControllerCore extends AdminController
 					if ($shipping_cost_amount > 0)
 						$amount += $shipping_cost_amount;
 
+					$order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
+					if (Validate::isLoadedObject($order_carrier))
+					{
+						$order_carrier->weight = (float)$order->getTotalWeight();
+						if ($order_carrier->update())
+							$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);							
+					}																		
+
 					if ($amount > 0)
 					{
 						if (!OrderSlip::createPartialOrderSlip($order, $amount, $shipping_cost_amount, $order_detail_list))
-							$this->errors[] = Tools::displayError('Cannot generate partial credit slip');
+							$this->errors[] = Tools::displayError('You cannot generate a partial credit slip.');
 
 						// Generate voucher
 						if (Tools::isSubmit('generateDiscountRefund') && !count($this->errors))
 						{
 							$cart_rule = new CartRule();
-							$cart_rule->description = sprintf($this->l('Credit Slip for order #%d'), $order->id);
+							$cart_rule->description = sprintf($this->l('Credit card slip for order #%d'), $order->id);
 							$languages = Language::getLanguages(false);
 							foreach ($languages as $language)
 								// Define a temporary name
@@ -512,6 +522,7 @@ class AdminOrdersControllerCore extends AdminController
 							$now = time();
 							$cart_rule->date_from = date('Y-m-d H:i:s', $now);
 							$cart_rule->date_to = date('Y-m-d H:i:s', $now + (3600 * 24 * 365.25)); /* 1 year */
+							$cart_rule->partial_use = 1;
 							$cart_rule->active = 1;
 
 							$cart_rule->reduction_amount = $amount;
@@ -520,7 +531,7 @@ class AdminOrdersControllerCore extends AdminController
 							$cart_rule->reduction_currency = $order->id_currency;
 
 							if (!$cart_rule->add())
-								$this->errors[] = Tools::displayError('Cannot generate voucher');
+								$this->errors[] = Tools::displayError('You cannot generate a voucher.');
 							else
 							{
 								// Update the voucher code and name
@@ -529,7 +540,7 @@ class AdminOrdersControllerCore extends AdminController
 								$cart_rule->code = sprintf('V%1$dC%2$dO%3$d', $cart_rule->id, $order->id_customer, $order->id);
 
 								if (!$cart_rule->update())
-									$this->errors[] = Tools::displayError('Cannot generate voucher');
+									$this->errors[] = Tools::displayError('You cannot generate a voucher.');
 								else
 								{
 									$currency = $this->context->currency;
@@ -549,17 +560,17 @@ class AdminOrdersControllerCore extends AdminController
 						}
 					}
 					else
-						$this->errors[] = Tools::displayError('You have to write an amount if you want to do a partial credit slip');
+						$this->errors[] = Tools::displayError('You have to enter an amount if you want to create a partial credit slip.');
 
 					// Redirect if no errors
 					if (!count($this->errors))
 						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=30&token='.$this->token);
 				}
 				else
-					$this->errors[] = Tools::displayError('Partial refund data is incorrect');
+					$this->errors[] = Tools::displayError('The partial refund data is incorrect.');
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 		}
 
 		/* Cancel product from order */
@@ -567,10 +578,10 @@ class AdminOrdersControllerCore extends AdminController
 		{
 		 	if ($this->tabAccess['delete'] === '1')
 			{
-				if (!Tools::isSubmit('id_order_detail'))
-					$this->errors[] = Tools::displayError('You must select a product');
-				elseif (!Tools::isSubmit('cancelQuantity'))
-					$this->errors[] = Tools::displayError('You must enter a quantity');
+				if (!Tools::isSubmit('id_order_detail') && !Tools::isSubmit('id_customization'))
+					$this->errors[] = Tools::displayError('You must select a product.');
+				elseif (!Tools::isSubmit('cancelQuantity') && !Tools::isSubmit('cancelCustomizationQuantity'))
+					$this->errors[] = Tools::displayError('You must enter a quantity.');
 				else
 				{
 					$productList = Tools::getValue('id_order_detail');
@@ -596,7 +607,8 @@ class AdminOrdersControllerCore extends AdminController
 						foreach ($customizationList as $key => $id_order_detail)
 						{
 							$full_product_list[(int)$id_order_detail] = $id_order_detail;
-							$full_quantity_list[(int)$id_order_detail] += $customizationQtyList[$key];
+							if (isset($customizationQtyList[$key]))
+								$full_quantity_list[(int)$id_order_detail] += $customizationQtyList[$key];
 						}
 
 					if ($productList || $customizationList)
@@ -610,7 +622,7 @@ class AdminOrdersControllerCore extends AdminController
 							{
 								$qtyCancelProduct = abs($qtyList[$key]);
 								if (!$qtyCancelProduct)
-									$this->errors[] = Tools::displayError('No quantity selected for product.');
+									$this->errors[] = Tools::displayError('No quantity has been selected for this product.');
 
 								$order_detail = new OrderDetail($id_order_detail);
 								$customization_quantity = 0;
@@ -618,7 +630,7 @@ class AdminOrdersControllerCore extends AdminController
 									$customization_quantity = (int)$customization_quantities[$order_detail->product_id][$order_detail->product_attribute_id];
 
 								if (($order_detail->product_quantity - $customization_quantity - $order_detail->product_quantity_refunded - $order_detail->product_quantity_return) < $qtyCancelProduct)
-									$this->errors[] = Tools::displayError('Invalid quantity selected for product.');
+									$this->errors[] = Tools::displayError('An invalid quantity was selected for this product.');
 
 							}
 						}
@@ -632,10 +644,10 @@ class AdminOrdersControllerCore extends AdminController
 								$customization_quantity = $customization_quantities[$id_customization];
 
 								if (!$qtyCancelProduct)
-									$this->errors[] = Tools::displayError('No quantity selected for product.');
+									$this->errors[] = Tools::displayError('No quantity has been selected for this product.');
 
 								if ($qtyCancelProduct > ($customization_quantity['quantity'] - ($customization_quantity['quantity_refunded'] + $customization_quantity['quantity_returned'])))
-									$this->errors[] = Tools::displayError('Invalid quantity selected for product.');
+									$this->errors[] = Tools::displayError('An invalid quantity was selected for this product.');
 							}
 						}
 
@@ -650,8 +662,16 @@ class AdminOrdersControllerCore extends AdminController
 								
 								// Delete product
 								$order_detail = new OrderDetail((int)$id_order_detail);
-								if (!$order->deleteProduct($order, $order_detail, $qtyCancelProduct))
-									$this->errors[] = Tools::displayError('An error occurred during deletion of the product.').' <span class="bold">'.$order_detail->product_name.'</span>';
+								if (!$order->deleteProduct($order, $order_detail, $qty_cancel_product))
+									$this->errors[] = Tools::displayError('An error occurred while attempting to delete the product.').' <span class="bold">'.$order_detail->product_name.'</span>';
+								// Update weight SUM
+								$order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
+								if (Validate::isLoadedObject($order_carrier))
+								{
+									$order_carrier->weight = (float)$order->getTotalWeight();
+									if ($order_carrier->update())
+										$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);									
+								}
 								Hook::exec('actionProductCancel', array('order' => $order, 'id_order_detail' => (int)$id_order_detail));
 							}
 						if (!count($this->errors) && $customizationList)
@@ -660,7 +680,7 @@ class AdminOrdersControllerCore extends AdminController
 								$order_detail = new OrderDetail((int)($id_order_detail));
 								$qtyCancelProduct = abs($customizationQtyList[$id_customization]);
 								if (!$order->deleteCustomization($id_customization, $qtyCancelProduct, $order_detail))
-									$this->errors[] = Tools::displayError('An error occurred during deletion of product customization.').' '.$id_customization;
+									$this->errors[] = Tools::displayError('An error occurred while attempting to delete product customization.').' '.$id_customization;
 							}
 						// E-mail params
 						if ((Tools::isSubmit('generateCreditSlip') || Tools::isSubmit('generateDiscount')) && !count($this->errors))
@@ -676,7 +696,7 @@ class AdminOrdersControllerCore extends AdminController
 						if (Tools::isSubmit('generateCreditSlip') && !count($this->errors))
 						{
 							if (!OrderSlip::createOrderSlip($order, $full_product_list, $full_quantity_list, Tools::isSubmit('shippingBack')))
-								$this->errors[] = Tools::displayError('Cannot generate credit slip');
+								$this->errors[] = Tools::displayError('A credit slip cannot be generated. ');
 							else
 							{
 								Hook::exec('actionOrderSlipAdd', array('order' => $order, 'productList' => $full_product_list, 'qtyList' => $full_quantity_list));
@@ -703,7 +723,7 @@ class AdminOrdersControllerCore extends AdminController
 						{
 							$cartrule = new CartRule();
 							$languages = Language::getLanguages($order);
-							$cartrule->description = sprintf($this->l('Credit Slip for order #%d'), $order->id);
+							$cartrule->description = sprintf($this->l('Credit card slip for order #%d'), $order->id);
 							foreach ($languages as $language)
 							{
 								// Define a temporary name
@@ -736,7 +756,7 @@ class AdminOrdersControllerCore extends AdminController
 							$cartrule->reduction_currency = $order->id_currency;
 
 							if (!$cartrule->add())
-								$this->errors[] = Tools::displayError('Cannot generate voucher');
+								$this->errors[] = Tools::displayError('You cannot generate a voucher.');
 							else
 							{
 								// Update the voucher code and name
@@ -744,7 +764,7 @@ class AdminOrdersControllerCore extends AdminController
 									$cartrule->name[$language['id_lang']] = 'V'.(int)($cartrule->id).'C'.(int)($order->id_customer).'O'.$order->id;
 								$cartrule->code = 'V'.(int)($cartrule->id).'C'.(int)($order->id_customer).'O'.$order->id;
 								if (!$cartrule->update())
-									$this->errors[] = Tools::displayError('Cannot generate voucher');
+									$this->errors[] = Tools::displayError('You cannot generate a voucher.');
 								else
 								{
 									$currency = $this->context->currency;
@@ -758,7 +778,7 @@ class AdminOrdersControllerCore extends AdminController
 						}
 					}
 					else
-						$this->errors[] = Tools::displayError('No product or quantity selected.');
+						$this->errors[] = Tools::displayError('No product or quantity has been selected.');
 
 					// Redirect if no errors
 					if (!count($this->errors))
@@ -766,7 +786,7 @@ class AdminOrdersControllerCore extends AdminController
 				}
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 		}
 		elseif (Tools::isSubmit('messageReaded'))
 			Message::markAsReaded(Tools::getValue('messageReaded'), $this->context->employee->id);
@@ -783,29 +803,29 @@ class AdminOrdersControllerCore extends AdminController
 					$order_invoice = null;
 
 				if (!Validate::isLoadedObject($order))
-					$this->errors[] = Tools::displayError('Order can\'t be found');
+					$this->errors[] = Tools::displayError('The order cannot be found');
 				elseif (!Validate::isNegativePrice($amount))
-					$this->errors[] = Tools::displayError('Amount is invalid');
+					$this->errors[] = Tools::displayError('The amount is invalid.');
 				elseif (!Validate::isString(Tools::getValue('payment_method')))
-					$this->errors[] = Tools::displayError('Payment method is invalid');
+					$this->errors[] = Tools::displayError('The selected payment method is invalid.');
 				elseif (!Validate::isString(Tools::getValue('payment_transaction_id')))
-					$this->errors[] = Tools::displayError('Transaction ID is invalid');
+					$this->errors[] = Tools::displayError('The transaction ID is invalid.');
 				elseif (!Validate::isLoadedObject($currency))
-					$this->errors[] = Tools::displayError('Currency is invalid');
+					$this->errors[] = Tools::displayError('The selected currency is invalid.');
 				elseif ($order_has_invoice && !Validate::isLoadedObject($order_invoice))
-					$this->errors[] = Tools::displayError('Invoice is invalid');
+					$this->errors[] = Tools::displayError('The invoice is invalid.');
 				elseif (!Validate::isDate(Tools::getValue('payment_date')))
-					$this->errors[] = Tools::displayError('Date is invalid');
+					$this->errors[] = Tools::displayError('The date is invalid');
 				else
 				{
 					if (!$order->addOrderPayment($amount, Tools::getValue('payment_method'), Tools::getValue('payment_transaction_id'), $currency, Tools::getValue('payment_date'), $order_invoice))
-						$this->errors[] = Tools::displayError('An error occurred on adding order payment');
+						$this->errors[] = Tools::displayError('An error occurred during payment.');
 					else
 						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
 				}
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 		elseif (Tools::isSubmit('submitEditNote'))
 		{
@@ -819,13 +839,13 @@ class AdminOrdersControllerCore extends AdminController
 					if ($order_invoice->save())
 						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order_invoice->id_order.'&vieworder&conf=4&token='.$this->token);
 					else
-						$this->errors[] = Tools::displayError('Unable to save invoice note.');
+						$this->errors[] = Tools::displayError('The invoice note was not saved.');
 				}
 				else
-					$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+					$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 			}
 			else
-				$this->errors[] = Tools::displayError('Unable to load invoice for edit note.');
+				$this->errors[] = Tools::displayError('The invoice for edit note was unable to load. ');
 		}
 		elseif (Tools::isSubmit('submitAddOrder') && ($id_cart = Tools::getValue('id_cart')) &&
 			($module_name = Tools::getValue('payment_module_name')) &&
@@ -840,14 +860,14 @@ class AdminOrdersControllerCore extends AdminController
 				$employee = new Employee((int)Context::getContext()->cookie->id_employee);
 				$payment_module->validateOrder(
 					(int)$cart->id, (int)$id_order_state,
-					$cart->getOrderTotal(true, Cart::BOTH), $payment_module->displayName, $this->l('Manual order - Employee:').
+					$cart->getOrderTotal(true, Cart::BOTH), $payment_module->displayName, $this->l('Manual order -- Employee:').
 					Tools::safeOutput(substr($employee->firstname, 0, 1).'. '.$employee->lastname), array(), null, false, $cart->secure_key
 				);
 				if ($payment_module->currentOrder)
 					Tools::redirectAdmin(self::$currentIndex.'&id_order='.$payment_module->currentOrder.'&vieworder'.'&token='.$this->token);
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to add here.');
+				$this->errors[] = Tools::displayError('You do not have permission to add this.');
 		}
 		elseif ((Tools::isSubmit('submitAddressShipping') || Tools::isSubmit('submitAddressInvoice')) && isset($order))
 		{
@@ -868,7 +888,7 @@ class AdminOrdersControllerCore extends AdminController
 					$this->errors[] = Tools::displayErrror('This address can\'t be loaded');
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 		elseif (Tools::isSubmit('submitChangeCurrency') && isset($order))
 		{
@@ -910,13 +930,10 @@ class AdminOrdersControllerCore extends AdminController
 						$order_detail->updateTaxAmount($order);
 					}
 
-					$id_order_carrier = Db::getInstance()->getValue('
-						SELECT `id_order_carrier`
-						FROM `'._DB_PREFIX_.'order_carrier`
-						WHERE `id_order` = '.(int)$order->id);
+					$id_order_carrier = (int)$order->getIdOrderCarrier();
 					if ($id_order_carrier)
 					{
-						$order_carrier = new OrderCarrier($id_order_carrier);
+						$order_carrier = $order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
 						$order_carrier->shipping_cost_tax_excl = (float)Tools::convertPriceFull($order_carrier->shipping_cost_tax_excl, $old_currency, $currency);
 						$order_carrier->shipping_cost_tax_incl = (float)Tools::convertPriceFull($order_carrier->shipping_cost_tax_incl, $old_currency, $currency);
 						$order_carrier->update();
@@ -959,22 +976,22 @@ class AdminOrdersControllerCore extends AdminController
 
 					// Update currency in order
 					$order->id_currency = $currency->id;
-					// Update conversion rate
+					// Update exchange rate
 					$order->conversion_rate = (float)$currency->conversion_rate;
 					$order->update();
 				}
 				else
-					$this->errors[] = Tools::displayError('You cannot change the currency');
+					$this->errors[] = Tools::displayError('You cannot change the currency.');
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 		elseif (Tools::isSubmit('submitGenerateInvoice') && isset($order))
 		{
-			if (!Configuration::get('PS_INVOICE'))
-				$this->errors[] = Tools::displayError('Invoice management has been disabled');
+			if (!Configuration::get('PS_INVOICE', null, null, $order->id_shop))
+				$this->errors[] = Tools::displayError('Invoice management has been disabled.');
 			elseif ($order->hasInvoice())
-				$this->errors[] = Tools::displayError('This order already has an invoice');
+				$this->errors[] = Tools::displayError('This order already has an invoice.');
 			else
 			{
 				$order->setInvoice(true);
@@ -1020,17 +1037,17 @@ class AdminOrdersControllerCore extends AdminController
 					Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
 				}
 				else
-					$this->errors[] = Tools::displayError('Cannot edit this Order Cart Rule');
+					$this->errors[] = Tools::displayError('You cannot edit this cart rule.');
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 		elseif (Tools::getValue('submitNewVoucher') && isset($order))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
 				if (!Tools::getValue('discount_name'))
-					$this->errors[] = Tools::displayError('You must specify a name in order to create a new discount');
+					$this->errors[] = Tools::displayError('You must specify a name in order to create a new discount.');
 				else
 				{
 					if ($order->hasInvoice())
@@ -1045,16 +1062,17 @@ class AdminOrdersControllerCore extends AdminController
 					}
 
 					$cart_rules = array();
+					$discount_value = (float)str_replace(',', '.', Tools::getValue('discount_value'));
 					switch (Tools::getValue('discount_type'))
 					{
 						// Percent type
 						case 1:
-							if (Tools::getValue('discount_value') < 100)
+							if ($discount_value < 100)
 							{
 								if (isset($order_invoice))
 								{
-									$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($order_invoice->total_paid_tax_incl * Tools::getValue('discount_value') / 100, 2);
-									$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($order_invoice->total_paid_tax_excl * Tools::getValue('discount_value') / 100, 2);
+									$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($order_invoice->total_paid_tax_incl * $discount_value / 100, 2);
+									$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($order_invoice->total_paid_tax_excl * $discount_value / 100, 2);
 
 									// Update OrderInvoice
 									$this->applyDiscountOnInvoice($order_invoice, $cart_rules[$order_invoice->id]['value_tax_incl'], $cart_rules[$order_invoice->id]['value_tax_excl']);
@@ -1064,8 +1082,8 @@ class AdminOrdersControllerCore extends AdminController
 									$order_invoices_collection = $order->getInvoicesCollection();
 									foreach ($order_invoices_collection as $order_invoice)
 									{
-										$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($order_invoice->total_paid_tax_incl * Tools::getValue('discount_value') / 100, 2);
-										$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($order_invoice->total_paid_tax_excl * Tools::getValue('discount_value') / 100, 2);
+										$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($order_invoice->total_paid_tax_incl * $discount_value / 100, 2);
+										$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($order_invoice->total_paid_tax_excl * $discount_value / 100, 2);
 
 										// Update OrderInvoice
 										$this->applyDiscountOnInvoice($order_invoice, $cart_rules[$order_invoice->id]['value_tax_incl'], $cart_rules[$order_invoice->id]['value_tax_excl']);
@@ -1073,23 +1091,23 @@ class AdminOrdersControllerCore extends AdminController
 								}
 								else
 								{
-									$cart_rules[0]['value_tax_incl'] = Tools::ps_round($order->total_paid_tax_incl * Tools::getValue('discount_value') / 100, 2);
-									$cart_rules[0]['value_tax_excl'] = Tools::ps_round($order->total_paid_tax_excl * Tools::getValue('discount_value') / 100, 2);
+									$cart_rules[0]['value_tax_incl'] = Tools::ps_round($order->total_paid_tax_incl * $discount_value / 100, 2);
+									$cart_rules[0]['value_tax_excl'] = Tools::ps_round($order->total_paid_tax_excl * $discount_value / 100, 2);
 								}
 							}
 							else
-								$this->errors[] = Tools::displayError('Discount value is invalid');
+								$this->errors[] = Tools::displayError('The discount value is invalid.');
 							break;
 						// Amount type
 						case 2:
 							if (isset($order_invoice))
 							{
-								if (Tools::getValue('discount_value') > $order_invoice->total_paid_tax_incl)
-									$this->errors[] = Tools::displayError('Discount value is greater than the order invoice total');
+								if ($discount_value > $order_invoice->total_paid_tax_incl)
+									$this->errors[] = Tools::displayError('The discount value is greater than the order invoice total.');
 								else
 								{
-									$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round(Tools::getValue('discount_value'), 2);
-									$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round(Tools::getValue('discount_value') / (1 + ($order->getTaxesAverageUsed() / 100)), 2);
+									$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($discount_value, 2);
+									$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($discount_value / (1 + ($order->getTaxesAverageUsed() / 100)), 2);
 
 									// Update OrderInvoice
 									$this->applyDiscountOnInvoice($order_invoice, $cart_rules[$order_invoice->id]['value_tax_incl'], $cart_rules[$order_invoice->id]['value_tax_excl']);
@@ -1100,12 +1118,12 @@ class AdminOrdersControllerCore extends AdminController
 								$order_invoices_collection = $order->getInvoicesCollection();
 								foreach ($order_invoices_collection as $order_invoice)
 								{
-									if (Tools::getValue('discount_value') > $order_invoice->total_paid_tax_incl)
-										$this->errors[] = Tools::displayError('Discount value is greater than the order invoice total (Invoice:').$order_invoice->getInvoiceNumberFormatted(Context::getContext()->language->id).')';
+									if ($discount_value > $order_invoice->total_paid_tax_incl)
+										$this->errors[] = Tools::displayError('The discount value is greater than the order invoice total.').$order_invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int)$order->id_shop).')';
 									else
 									{
-										$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round(Tools::getValue('discount_value'), 2);
-										$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round(Tools::getValue('discount_value') / (1 + ($order->getTaxesAverageUsed() / 100)), 2);
+										$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($discount_value, 2);
+										$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($discount_value / (1 + ($order->getTaxesAverageUsed() / 100)), 2);
 
 										// Update OrderInvoice
 										$this->applyDiscountOnInvoice($order_invoice, $cart_rules[$order_invoice->id]['value_tax_incl'], $cart_rules[$order_invoice->id]['value_tax_excl']);
@@ -1114,12 +1132,12 @@ class AdminOrdersControllerCore extends AdminController
 							}
 							else
 							{
-								if (Tools::getValue('discount_value') > $order->total_paid_tax_incl)
-									$this->errors[] = Tools::displayError('Discount value is greater than the order total');
+								if ($discount_value > $order->total_paid_tax_incl)
+									$this->errors[] = Tools::displayError('The discount value is greater than the order total.');
 								else
 								{
-									$cart_rules[0]['value_tax_incl'] = Tools::ps_round(Tools::getValue('discount_value'), 2);
-									$cart_rules[0]['value_tax_excl'] = Tools::ps_round(Tools::getValue('discount_value') / (1 + ($order->getTaxesAverageUsed() / 100)), 2);
+									$cart_rules[0]['value_tax_incl'] = Tools::ps_round($discount_value, 2);
+									$cart_rules[0]['value_tax_excl'] = Tools::ps_round($discount_value / (1 + ($order->getTaxesAverageUsed() / 100)), 2);
 								}
 							}
 							break;
@@ -1157,7 +1175,7 @@ class AdminOrdersControllerCore extends AdminController
 							}
 							break;
 						default:
-							$this->errors[] = Tools::displayError('Discount type is invalid');
+							$this->errors[] = Tools::displayError('The discount type is invalid.');
 					}
 
 					$res = true;
@@ -1170,7 +1188,7 @@ class AdminOrdersControllerCore extends AdminController
 						$cartRuleObj->quantity = 0;
 						$cartRuleObj->quantity_per_user = 1;
 						if (Tools::getValue('discount_type') == 1)
-							$cartRuleObj->reduction_percent = Tools::getValue('discount_value');
+							$cartRuleObj->reduction_percent = $discount_value;
 						elseif (Tools::getValue('discount_type') == 2)
 							$cartRuleObj->reduction_amount = $cart_rule['value_tax_excl'];
 						elseif (Tools::getValue('discount_type') == 3)
@@ -1211,11 +1229,11 @@ class AdminOrdersControllerCore extends AdminController
 					if ($res)
 						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
 					else
-						$this->errors[] = Tools::displayError('An error occurred on OrderCartRule creation');
+						$this->errors[] = Tools::displayError('An error occurred during the OrderCartRule creation');
 				}
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 
 		parent::postProcess();
@@ -1259,6 +1277,11 @@ class AdminOrdersControllerCore extends AdminController
 		}
 
 		$this->toolbar_title = sprintf($this->l('Order #%1$d (%2$s) - %3$s %4$s'), $order->id, $order->reference, $customer->firstname, $customer->lastname);
+		if (Shop::isFeatureActive())
+		{
+			$shop = new Shop((int)$order->id_shop);
+			$this->toolbar_title .= ' - '.sprintf($this->l('Shop: %s'), $shop->name);
+		}
 
 		// gets warehouses to ship products, if and only if advanced stock management is activated
 		$warehouse_list = null;
@@ -1284,14 +1307,14 @@ class AdminOrdersControllerCore extends AdminController
 		foreach (PaymentModule::getInstalledPaymentModules() as $payment)
 		{
 			$module = Module::getInstanceByName($payment['name']);
-			if (Validate::isLoadedObject($module))
+			if (Validate::isLoadedObject($module) && $module->active)
 				$payment_methods[] = $module->displayName;
 		}
 
 		// display warning if there are products out of stock
 		$display_out_of_stock_warning = false;
 		$current_order_state = $order->getCurrentOrderState();
-		if ($current_order_state->delivery != 1 && $current_order_state->shipped != 1)
+		if (Configuration::get('PS_STOCK_MANAGEMENT') && (!Validate::isLoadedObject($current_order_state) || ($current_order_state->delivery != 1 && $current_order_state->shipped != 1)))
 			$display_out_of_stock_warning = true;
 
 		// products current stock (from stock_available)
@@ -1351,7 +1374,7 @@ class AdminOrdersControllerCore extends AdminController
 			'invoices_collection' => $order->getInvoicesCollection(),
 			'not_paid_invoices_collection' => $order->getNotPaidInvoicesCollection(),
 			'payment_methods' => $payment_methods,
-			'invoice_management_active' => Configuration::get('PS_INVOICE')
+			'invoice_management_active' => Configuration::get('PS_INVOICE', null, null, $order->id_shop)
 		);
 
 		return parent::renderView();
@@ -1463,10 +1486,10 @@ class AdminOrdersControllerCore extends AdminController
 					);
 					if (Mail::Send((int)$cart->id_lang, 'backoffice_order', Mail::l('Process the payment of your order', (int)$cart->id_lang), $mailVars, $customer->email,
 							$customer->firstname.' '.$customer->lastname, null, null, null, null, _PS_MAIL_DIR_, true, $cart->id_shop))
-						die(Tools::jsonEncode(array('errors' => false, 'result' => $this->l('The mail was sent to your customer.'))));
+						die(Tools::jsonEncode(array('errors' => false, 'result' => $this->l('The email was sent to your customer.'))));
 				}
 			}
-			$this->content = Tools::jsonEncode(array('errors' => true, 'result' => $this->l('Error in sending the e-mail to your customer.')));
+			$this->content = Tools::jsonEncode(array('errors' => true, 'result' => $this->l('Error in sending the email to your customer.')));
 		}
 	}
 
@@ -1477,13 +1500,13 @@ class AdminOrdersControllerCore extends AdminController
 		if (!Validate::isLoadedObject($order))
 			die(Tools::jsonEncode(array(
 				'result' => false,
-				'error' => Tools::displayError('Can\'t load Order object')
+				'error' => Tools::displayError('The order object cannot be loaded.')
 			)));
 
 		if ($order->hasBeenShipped())
 			die(Tools::jsonEncode(array(
 				'result' => false,
-				'error' => Tools::displayError('Can\'t add a product on delivered order')
+				'error' => Tools::displayError('You cannot add products to delivered orders. ')
 			)));
 
 		$product_informations = $_POST['add_product'];
@@ -1495,7 +1518,7 @@ class AdminOrdersControllerCore extends AdminController
 		if (!Validate::isLoadedObject($product))
 			die(Tools::jsonEncode(array(
 				'result' => false,
-				'error' => Tools::displayError('Can\'t load Product object')
+				'error' => Tools::displayError('The product object cannot be loaded.')
 			)));
 
 		if (isset($product_informations['product_attribute_id']) && $product_informations['product_attribute_id'])
@@ -1504,7 +1527,7 @@ class AdminOrdersControllerCore extends AdminController
 			if (!Validate::isLoadedObject($combination))
 				die(Tools::jsonEncode(array(
 				'result' => false,
-				'error' => Tools::displayError('Can\'t load Combination object')
+				'error' => Tools::displayError('The combination object cannot be loaded.')
 			)));
 		}
 
@@ -1520,9 +1543,7 @@ class AdminOrdersControllerCore extends AdminController
 		$cart->id_address_delivery = $order->id_address_delivery;
 		$cart->id_address_invoice = $order->id_address_invoice;
 		$cart->id_currency = $order->id_currency;
-		$cart->id_customer = $order->id_customer;
 		$cart->id_lang = $order->id_lang;
-		$cart->id_carrier = $order->id_carrier;
 		$cart->secure_key = $order->secure_key;
 
 		// Save new cart
@@ -1536,7 +1557,7 @@ class AdminOrdersControllerCore extends AdminController
 		$use_taxes = true;
 
 		$initial_product_price_tax_incl = Product::getPriceStatic($product->id, $use_taxes, isset($combination) ? $combination->id : null, 2, null, false, true, 1,
-			false, $order->id_customer, $cart->id, $order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+			false, $order->id_customer, $cart->id, $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
 
 		// Creating specific price if needed
 		if ($product_informations['product_price_tax_incl'] != $initial_product_price_tax_incl)
@@ -1613,11 +1634,11 @@ class AdminOrdersControllerCore extends AdminController
 
 				$order_invoice->id_order = $order->id;
 				if ($order_invoice->number)
-					Configuration::updateValue('PS_INVOICE_START_NUMBER', false);
+					Configuration::updateValue('PS_INVOICE_START_NUMBER', false, false, null, $order->id_shop);
 				else
 					$order_invoice->number = Order::getLastInvoiceNumber() + 1;
 
-				$invoice_address = new Address((int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+				$invoice_address = new Address((int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
 				$carrier = new Carrier((int)$order->id_carrier);
 				$tax_calculator = $carrier->getTaxCalculator($invoice_address);
 
@@ -1689,6 +1710,15 @@ class AdminOrdersControllerCore extends AdminController
 
 		// Save changes of order
 		$order->update();
+		
+		// Update weight SUM
+		$order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
+		if (Validate::isLoadedObject($order_carrier))
+		{
+			$order_carrier->weight = (float)$order->getTotalWeight();			
+			if ($order_carrier->update())
+				$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);	
+		}		
 
 		// Update Tax lines
 		$order_detail->updateTaxAmount($order);
@@ -1714,7 +1744,7 @@ class AdminOrdersControllerCore extends AdminController
 		$invoice_array = array();
 		foreach ($invoice_collection as $invoice)
 		{
-			$invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id);
+			$invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int)$order->id_shop);
 			$invoice_array[] = $invoice;
 		}
 
@@ -1772,21 +1802,21 @@ class AdminOrdersControllerCore extends AdminController
 		if (!Validate::isLoadedObject($order_detail))
 			die(Tools::jsonEncode(array(
 				'result' => false,
-				'error' => Tools::displayError('Can\'t load OrderDetail object')
+				'error' => Tools::displayError('The OrderDetail object cannot be loaded.')
 			)));
 
 		$product = new Product($order_detail->product_id);
 		if (!Validate::isLoadedObject($product))
 			die(Tools::jsonEncode(array(
 				'result' => false,
-				'error' => Tools::displayError('Can\'t load Product object')
+				'error' => Tools::displayError('The product object cannot be loaded.')
 			)));
 
 		$address = new Address(Tools::getValue('id_address'));
 		if (!Validate::isLoadedObject($address))
 			die(Tools::jsonEncode(array(
 				'result' => false,
-				'error' => Tools::displayError('Can\'t load Address object')
+				'error' => Tools::displayError('The address object cannot be loaded.')
 			)));
 
 		die(Tools::jsonEncode(array(
@@ -1896,6 +1926,17 @@ class AdminOrdersControllerCore extends AdminController
 	
 		// Save order detail
 		$res &= $order_detail->update();
+		
+		// Update weight SUM
+		$order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
+		if (Validate::isLoadedObject($order_carrier))
+		{
+			$order_carrier->weight = (float)$order->getTotalWeight();
+			$res &= $order_carrier->update();
+			if ($res)
+				$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);	
+		}
+		
 		// Save order invoice
 		if (isset($order_invoice))
 			 $res &= $order_invoice->update();
@@ -1910,14 +1951,14 @@ class AdminOrdersControllerCore extends AdminController
 		$product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
 		$product['amount_refundable'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
 		$product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl']);
-
+		$product['refund_history'] = OrderSlip::getProductSlipDetail($order_detail->id);
 		// Get invoices collection
 		$invoice_collection = $order->getInvoicesCollection();
 
 		$invoice_array = array();
 		foreach ($invoice_collection as $invoice)
 		{
-			$invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id);
+			$invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int)$order->id_shop);
 			$invoice_array[] = $invoice;
 		}
 
@@ -1936,7 +1977,7 @@ class AdminOrdersControllerCore extends AdminController
 		if (!$res)
 			die(Tools::jsonEncode(array(
 				'result' => $res,
-				'error' => Tools::displayError('Error occurred while editing this product line')
+				'error' => Tools::displayError('An error occurred while editing the product line.')
 			)));
 
 
@@ -1964,8 +2005,8 @@ class AdminOrdersControllerCore extends AdminController
 	{
 		$res = true;
 
-		$order_detail = new OrderDetail(Tools::getValue('id_order_detail'));
-		$order = new Order(Tools::getValue('id_order'));
+		$order_detail = new OrderDetail((int)Tools::getValue('id_order_detail'));
+		$order = new Order((int)Tools::getValue('id_order'));
 
 		$this->doDeleteProductLineValidation($order_detail, $order);
 
@@ -1989,13 +2030,26 @@ class AdminOrdersControllerCore extends AdminController
 
 		$res &= $order->update();
 
+		// Reinject quantity in stock
+		$this->reinjectQuantity($order_detail, $order_detail->product_quantity);
+
 		// Delete OrderDetail
 		$res &= $order_detail->delete();
+		
+		// Update weight SUM
+		$order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
+		if (Validate::isLoadedObject($order_carrier))
+		{
+			$order_carrier->weight = (float)$order->getTotalWeight();
+			$res &= $order_carrier->update();
+			if ($res)
+				$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);				
+		}
 
 		if (!$res)
 			die(Tools::jsonEncode(array(
 				'result' => $res,
-				'error' => Tools::displayError('Error occurred on deletion of this product line')
+				'error' => Tools::displayError('An error occurred while attempting to delete the product line.')
 			)));
 
 		// Get invoices collection
@@ -2004,7 +2058,7 @@ class AdminOrdersControllerCore extends AdminController
 		$invoice_array = array();
 		foreach ($invoice_collection as $invoice)
 		{
-			$invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id);
+			$invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int)$order->id_shop);
 			$invoice_array[] = $invoice;
 		}
 
@@ -2034,38 +2088,38 @@ class AdminOrdersControllerCore extends AdminController
 		if (!Validate::isLoadedObject($order_detail))
 			die(Tools::jsonEncode(array(
 				'result' => false,
-				'error' => Tools::displayError('Can\'t load Order Detail object')
+				'error' => Tools::displayError('The Order Detail object could not be loaded.')
 			)));
 
 		if (!empty($order_invoice) && !Validate::isLoadedObject($order_invoice))
 			die(Tools::jsonEncode(array(
 				'result' => false,
-				'error' => Tools::displayError('Can\'t load Invoice object')
+				'error' => Tools::displayError('The invoice object cannot be loaded.')
 			)));
 
 		if (!Validate::isLoadedObject($order))
 			die(Tools::jsonEncode(array(
 				'result' => false,
-				'error' => Tools::displayError('Can\'t load Order object')
+				'error' => Tools::displayError('The order object cannot be loaded.')
 			)));
 
 		if ($order_detail->id_order != $order->id)
 			die(Tools::jsonEncode(array(
 				'result' => false,
-				'error' => Tools::displayError('Can\'t edit this Order Detail for this order')
+				'error' => Tools::displayError('You cannot edit the order detail for this order.')
 			)));
 
 		// We can't edit a delivered order
 		if ($order->hasBeenDelivered())
 			die(Tools::jsonEncode(array(
 				'result' => false,
-				'error' => Tools::displayError('Can\'t edit a delivered order')
+				'error' => Tools::displayError('You cannot edit a delivered order.')
 			)));
 
 		if (!empty($order_invoice) && $order_invoice->id_order != Tools::getValue('id_order'))
 			die(Tools::jsonEncode(array(
 				'result' => false,
-				'error' => Tools::displayError('Can\'t use this invoice for this order')
+				'error' => Tools::displayError('You cannot use this invoice for the order')
 			)));
 
 		// Clean price
@@ -2097,26 +2151,26 @@ class AdminOrdersControllerCore extends AdminController
 		if (!Validate::isLoadedObject($order_detail))
 			die(Tools::jsonEncode(array(
 				'result' => false,
-				'error' => Tools::displayError('Can\'t load Order Detail object')
+				'error' => Tools::displayError('The Order Detail object could not be loaded.')
 			)));
 
 		if (!Validate::isLoadedObject($order))
 			die(Tools::jsonEncode(array(
 				'result' => false,
-				'error' => Tools::displayError('Can\'t load Order object')
+				'error' => Tools::displayError('The order object cannot be loaded.')
 			)));
 
 		if ($order_detail->id_order != $order->id)
 			die(Tools::jsonEncode(array(
 				'result' => false,
-				'error' => Tools::displayError('Can\'t delete this Order Detail for this order')
+				'error' => Tools::displayError('You cannot delete the order detail.')
 			)));
 
 		// We can't edit a delivered order
 		if ($order->hasBeenDelivered())
 			die(Tools::jsonEncode(array(
 				'result' => false,
-				'error' => Tools::displayError('Can\'t edit a delivered order')
+				'error' => Tools::displayError('You cannot edit a delivered order.')
 			)));
 	}
 
@@ -2190,7 +2244,7 @@ class AdminOrdersControllerCore extends AdminController
 				);
 			}
 			else
-				$this->errors[] = Tools::displayError('Cannot re-stock product');
+				$this->errors[] = Tools::displayError('This product cannot be re-stocked.');
 	}
 
 	protected function applyDiscountOnInvoice($order_invoice, $value_tax_incl, $value_tax_excl)

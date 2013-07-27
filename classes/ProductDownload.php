@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -175,7 +175,7 @@ class ProductDownloadCore extends ObjectModel
 	{
 		if (!ProductDownload::isFeatureActive())
 			return false;
-		if (array_key_exists($id_product, self::$_productIds))
+		if (array_key_exists((int)$id_product, self::$_productIds))
 			return self::$_productIds[$id_product];
 		self::$_productIds[$id_product] = (int)Db::getInstance()->getValue('
 		SELECT `id_product_download`

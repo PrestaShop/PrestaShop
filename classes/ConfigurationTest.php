@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -54,9 +54,9 @@ class ConfigurationTestCore
 			'img_dir' => 'img',
 			'mails_dir' => 'mails',
 			'module_dir' => 'modules',
-			'theme_lang_dir' => 'themes/'._THEME_NAME_.'/lang',
+			'theme_lang_dir' => 'themes/'._THEME_NAME_.'/lang/',
 			'theme_pdf_lang_dir' => 'themes/'._THEME_NAME_.'/pdf/lang/',
-			'theme_cache_dir' => 'themes/'._THEME_NAME_.'/cache',
+			'theme_cache_dir' => 'themes/'._THEME_NAME_.'/cache/',
 			'translations_dir' => 'translations',
 			'customizable_products_dir' => 'upload',
 			'virtual_products_dir' => 'download'
@@ -76,6 +76,7 @@ class ConfigurationTestCore
 			'register_globals' => false,
 			'gz' => false,
 			'mcrypt' => false,
+			'mbstring' => false,
 			'magicquotes' => false,
 			'dom' => false,
 			'pdo_mysql' => false,
@@ -265,21 +266,24 @@ class ConfigurationTestCore
 
 	public static function test_theme_lang_dir($dir)
 	{
-		if (!file_exists($dir))
-			return true;
+		$absoluteDir = rtrim(_PS_ROOT_DIR_, '\\/').DIRECTORY_SEPARATOR.trim($dir, '\\/');
+		if (!file_exists($absoluteDir))
+			return true;		
 		return ConfigurationTest::test_dir($dir, true);
 	}
 
 	public static function test_theme_pdf_lang_dir($dir)
 	{
-		if (!file_exists($dir))
+		$absoluteDir = rtrim(_PS_ROOT_DIR_, '\\/').DIRECTORY_SEPARATOR.trim($dir, '\\/');
+		if (!file_exists($absoluteDir))
 			return true;
 		return ConfigurationTest::test_dir($dir, true);
 	}
 
 	public static function test_theme_cache_dir($dir)
 	{
-		if (!file_exists($dir))
+		$absoluteDir = rtrim(_PS_ROOT_DIR_, '\\/').DIRECTORY_SEPARATOR.trim($dir, '\\/');
+		if (!file_exists($absoluteDir))
 			return true;
 		return ConfigurationTest::test_dir($dir, true);
 	}
@@ -294,11 +298,23 @@ class ConfigurationTestCore
 		return ConfigurationTest::test_dir($dir);
 	}
 
+	public static function test_mbstring()
+	{
+		return function_exists('mb_strtolower');
+	}
+
 	public static function test_mcrypt()
 	{
 		return function_exists('mcrypt_encrypt');
 	}
 
+	public static function test_sessions()
+	{
+		if (!$path = @ini_get('session.save_path'))
+			return true;
+
+		return is_writable($path);
+	}
 	public static function test_dom()
 	{
 		return extension_loaded('Dom');

@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -106,63 +106,61 @@
 				if ($(this).attr('name') == 'category_reduction['+$('[name="id_category"]:checked').val()+']')
 				{
 					exist = true;
-					jAlert('{l s='This category already exist for this group'}');
+					jAlert('{l s='This category already exists for this group.' js=1}');
 					return false;
 				}
-				
 			});
 			
 			if (exist)
 				return;
 			$.ajax({
-					type:"POST",
-					url: "ajax-tab.php",
-					async: true,
-					dataType: "json",
-					data : {
-						ajax: "1",
-						token: "{getAdminToken tab='AdminGroups'}",
-						controller: "AdminGroups",
-						action: "addCategoryReduction",
-						category_reduction: $('#category_reduction_fancybox').val() ,
-						id_category: $('[name="id_category"]:checked').val()
-						},
-					success : function(jsonData)
+				type:"POST",
+				url: "ajax-tab.php",
+				async: true,
+				dataType: "json",
+				data : {
+					ajax: "1",
+					token: "{getAdminToken tab='AdminGroups'}",
+					controller: "AdminGroups",
+					action: "addCategoryReduction",
+					category_reduction: $('#category_reduction_fancybox').val() ,
+					id_category: $('[name="id_category"]:checked').val()
+				},
+				success : function(jsonData) {
+					if (jsonData.hasError)
 					{
-						if (jsonData.hasError)
-						{
-							var errors = '';
-							for(error in jsonData.errors)
-								//IE6 bug fix
-								if(error != 'indexOf')
-									errors += jsonData.errors[error] + "\n";
-							jAlert(errors);
-						}
-						else
-						{
-							$('#group_discount_category_table').append('<tr class="alt_row" id="'+jsonData.id_category+'"><td>'+jsonData.catPath+'</td><td>{l s='Discount:'}'+jsonData.discount+'{l s='%'}</td><td><a href="#" onclick="deleteCategoryReduction('+jsonData.id_category+');"><img src="../img/admin/delete.gif"></a></td></tr>');
-							
-							var input_hidden = document.createElement("input");
-							input_hidden.setAttribute('type', 'hidden');
-							input_hidden.setAttribute('value', jsonData.discount);
-							input_hidden.setAttribute('name', 'category_reduction['+jsonData.id_category+']');
-							input_hidden.setAttribute('class', 'category_reduction');
-							
-							$('#group_discount_category_table tr#'+jsonData.id_category+' > td:last').append(input_hidden);
-							$.fancybox.close();
-						}
+						var errors = '';
+						for (error in jsonData.errors)
+							//IE6 bug fix
+							if (error != 'indexOf')
+								errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
+						jAlert(errors);
 					}
-				});
+					else
+					{
+						$('#group_discount_category_table').append('<tr class="alt_row" id="'+jsonData.id_category+'"><td>'+jsonData.catPath+'</td><td>{l s='Discount:'}'+jsonData.discount+'{l s='%'}</td><td><a href="#" onclick="deleteCategoryReduction('+jsonData.id_category+');"><img src="../img/admin/delete.gif"></a></td></tr>');
+						
+						var input_hidden = document.createElement("input");
+						input_hidden.setAttribute('type', 'hidden');
+						input_hidden.setAttribute('value', jsonData.discount);
+						input_hidden.setAttribute('name', 'category_reduction['+jsonData.id_category+']');
+						input_hidden.setAttribute('class', 'category_reduction');
+						
+						$('#group_discount_category_table tr#'+jsonData.id_category+' > td:last').append(input_hidden);
+						$.fancybox.close();
+					}
+				}
+			});
 			
 			return false;
 		}
 			
-			function initFancyBox()
-			{
-				$('[name="id_category"]:checked').removeAttr('checked');
-				collapseAllCategories();
-				$('#category_reduction_fancybox').val('0.00');
-			}
+		function initFancyBox()
+		{
+			$('[name="id_category"]:checked').removeAttr('checked');
+			collapseAllCategories();
+			$('#category_reduction_fancybox').val('0.00');
+		}
 		</script>
 		<div class="margin-form">
 			<a class="button" href="#group_discount_category_fancybox" id="group_discount_category">{l s='Add a category discount'}</a>
@@ -182,10 +180,10 @@
 		<div style="display:none" id="group_discount_category_fancybox">
 			<fieldset style="text-align:left"><legend><img src="../img/admin/tab-groups.gif" />{l s='New group category discount'}</legend>
 				<div class="hintGroup" style="font-size: 13px;">
-					{l s='Caution: the discount applied to a category does not stack with the overall reduction but instead replaces it.'}
+					{l s='Caution: The discount applied to a category does not stack with the overall reduction but instead replaces it.'}
 				</div>
 				{$categoryTreeView}
-				<div class="warn">{l s='Only products that have this category as the default category will be affected'}</div>
+				<div class="warn">{l s='Only products that have this category as the default category will be affected.'}</div>
 				<div class="clear">&nbsp;</div>
 				<label>{l s='Discount (%):'}</label>
 				<input type="text" name="category_reduction_fancybox" id="category_reduction_fancybox" value="0.00" size="33">

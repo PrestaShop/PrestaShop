@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -104,14 +104,14 @@ class AdminRequestSqlControllerCore extends AdminController
 		$this->display = null;
 		$this->initToolbar();
 
-		$this->displayWarning($this->l('When saving the query, only the request type "SELECT" are allowed.'));
+		$this->displayWarning($this->l('When saving the query, only the request type "SELECT" is allowed.'));
 		$this->displayInformation('
-		<strong>'.$this->l('How to create a new sql query?').'</strong><br />
+		<strong>'.$this->l('How do I create a new sql query?').'</strong><br />
 		<ul>
-			<li>'.$this->l('Click "Add new".').'</li>
+			<li>'.$this->l('Click "Add New".').'</li>
 			<li>'.$this->l('Fill in the fields and click "Save".').'</li>
 			<li>'.$this->l('You can then view the query results by clicking on the tab:').' <img src="../img/admin/details.gif" /></li>
-			<li>'.$this->l('You can then export the query results as CSV file by clicking on the tab:').' <img src="../img/admin/export.gif" /></li>
+			<li>'.$this->l('You can also export the query results as CSV file by clicking on the tab:').' <img src="../img/admin/export.gif" /></li>
 		</ul>');
 
 		$this->addRowAction('export');
@@ -323,7 +323,7 @@ class AdminRequestSqlControllerCore extends AdminController
 				if (file_exists(_PS_ADMIN_DIR_.'/export/'.$file))
 				{
 					$filesize = filesize(_PS_ADMIN_DIR_.'/export/'.$file);
-					$upload_max_filesize = $this->returnBytes(ini_get('upload_max_filesize'));
+					$upload_max_filesize = Tools::convertBytes(ini_get('upload_max_filesize'));
 					if ($filesize < $upload_max_filesize)
 					{
 						if (Configuration::get('PS_ENCODING_FILE_MANAGER_SQL'))
@@ -343,28 +343,6 @@ class AdminRequestSqlControllerCore extends AdminController
 				}
 			}
 		}
-	}
-
-	/**
-	 * Get number of bytes
-	 *
-	 * @param $val
-	 * @return int|string
-	 */
-	public function returnBytes($val)
-	{
-	    $val = trim($val);
-	    $last = strtolower($val[strlen($val) - 1]);
-	    switch ($last)
-	    {
-	        case 'g':
-	            $val *= 1024;
-	        case 'm':
-	            $val *= 1024;
-	        case 'k':
-	            $val *= 1024;
-	    }
-	    return $val;
 	}
 
 	/**
@@ -408,7 +386,7 @@ class AdminRequestSqlControllerCore extends AdminController
 
 				case 'checkedWhere':
 					if (isset($e[$key]['operator']))
-						$this->errors[] = sprintf(Tools::displayError('The operator "%s" used is incorrect.'), $e[$key]['operator']);
+						$this->errors[] = sprintf(Tools::displayError('The operator "%s" is incorrect.'), $e[$key]['operator']);
 					else if (isset($e[$key]['attribut']))
 						$this->errors[] = sprintf(
 							Tools::displayError('The attribute "%1$s" does not exist in the table: %2$s.'),
@@ -421,7 +399,7 @@ class AdminRequestSqlControllerCore extends AdminController
 
 				case 'checkedHaving':
 					if (isset($e[$key]['operator']))
-						$this->errors[] = sprintf(Tools::displayError('The operator "%s" used is incorrect.'), $e[$key]['operator']);
+						$this->errors[] = sprintf(Tools::displayError('The operator "%s" is incorrect.'), $e[$key]['operator']);
 					else if (isset($e[$key]['attribut']))
 						$this->errors[] = sprintf(
 							Tools::displayError('The attribute "%1$s" does not exist in the table: %2$s.'),
@@ -466,7 +444,7 @@ class AdminRequestSqlControllerCore extends AdminController
 								$e[$key]['attribut'][1]
 							);
 						else
-							$this->errors[] = Tools::displayError('When multiple tables are used, each attribute must refer to a table.');
+							$this->errors[] = Tools::displayError('When multiple tables are used, each attribute must refer back to a table.');
 				break;
 
 				case 'testedRequired':
@@ -474,7 +452,7 @@ class AdminRequestSqlControllerCore extends AdminController
 					break;
 
 				case 'testedUnauthorized':
-						$this->errors[] = sprintf(Tools::displayError('is an unauthorized keyword.'), $e[$key]);
+						$this->errors[] = sprintf(Tools::displayError('Is an unauthorized keyword.'), $e[$key]);
 				break;
 			}
 		}

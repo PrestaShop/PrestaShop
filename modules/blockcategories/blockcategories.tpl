@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,14 +18,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <!-- Block categories module -->
 <div id="categories_block_left" class="block">
-	<h4>{l s='Categories' mod='blockcategories'}</h4>
+	<h4 class="title_block">{l s='Categories' mod='blockcategories'}</h4>
 	<div class="block_content">
 		<ul class="tree {if $isDhtml}dhtml{/if}">
 		{foreach from=$blockCategTree.children item=child name=blockCategTree}

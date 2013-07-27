@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -41,7 +41,7 @@ function add_default_restrictions_modules_groups()
 		FROM `'._DB_PREFIX_.'shop`');
 	foreach ($groups as $group)
 	{
-		if (!is_array($modules))
+		if (!is_array($modules) || !is_array($shops))
 			return false;
 		else
 		{
@@ -49,9 +49,9 @@ function add_default_restrictions_modules_groups()
 			foreach ($modules as $mod)
 				foreach ($shops as $s)
 					$sql .= '("'.(int)$mod['id_module'].'", "'.(int)$s.'", "'.(int)$group['id_group'].'"),';
-			// removing last comma to avoid SQL error
-			$sql = substr($sql, 0, strlen($sql) - 1);
-			$res &= Db::getInstance()->execute($sql);
+				// removing last comma to avoid SQL error
+				$sql = substr($sql, 0, strlen($sql) - 1);
+				$res &= Db::getInstance()->execute($sql);
 		}
 	}
 	return $res;

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -37,8 +37,8 @@ class blocksocial extends Module
 
 		parent::__construct();
 
-		$this->displayName = $this->l('Block social');
-		$this->description = $this->l('Allows you to add extra information about social networks');
+		$this->displayName = $this->l('Social networking block');
+		$this->description = $this->l('Allows you to add information about your brand\'s social networking sites.');
 	}
 	
 	public function install()
@@ -61,6 +61,7 @@ class blocksocial extends Module
 			Configuration::updateValue('blocksocial_facebook', (($_POST['facebook_url'] != '') ? $_POST['facebook_url']: ''));
 			Configuration::updateValue('blocksocial_twitter', (($_POST['twitter_url'] != '') ? $_POST['twitter_url']: ''));		
 			Configuration::updateValue('blocksocial_rss', (($_POST['rss_url'] != '') ? $_POST['rss_url']: ''));				
+			$this->_clearCache('blocksocial.tpl');
 			$output = '<div class="conf confirm">'.$this->l('Configuration updated').'</div>';
 		}
 		
@@ -90,14 +91,14 @@ class blocksocial extends Module
 		
 	public function hookDisplayFooter()
 	{
-		global $smarty;
+		if (!$this->isCached('blocksocial.tpl', $this->getCacheId()))
+			$this->smarty->assign(array(
+				'facebook_url' => Configuration::get('blocksocial_facebook'),
+				'twitter_url' => Configuration::get('blocksocial_twitter'),
+				'rss_url' => Configuration::get('blocksocial_rss')
+			));
 
-		$smarty->assign(array(
-			'facebook_url' => Configuration::get('blocksocial_facebook'),
-			'twitter_url' => Configuration::get('blocksocial_twitter'),
-			'rss_url' => Configuration::get('blocksocial_rss')
-		));
-		return $this->display(__FILE__, 'blocksocial.tpl');
+		return $this->display(__FILE__, 'blocksocial.tpl', $this->getCacheId());
 	}
 }
 ?>

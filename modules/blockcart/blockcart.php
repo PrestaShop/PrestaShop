@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -43,7 +43,7 @@ class BlockCart extends Module
 		$this->description = $this->l('Adds a block containing the customer\'s shopping cart.');
 	}
 
-	public function assignContentVars(&$params)
+	public function assignContentVars($params)
 	{
 		global $errors;
 
@@ -53,13 +53,7 @@ class BlockCart extends Module
 		else
 			$currency = $this->context->currency;
 
-		if ($params['cart']->id_customer)
-		{
-			$customer = new Customer((int)$params['cart']->id_customer);
-			$taxCalculationMethod = Group::getPriceDisplayMethod((int)$customer->id_default_group);
-		}
-		else
-			$taxCalculationMethod = Group::getDefaultPriceDisplayMethod();
+		$taxCalculationMethod = Group::getPriceDisplayMethod((int)Group::getCurrent()->id);
 
 		$useTax = !($taxCalculationMethod == PS_TAX_EXC);
 
@@ -69,8 +63,9 @@ class BlockCart extends Module
 			$nbTotalProducts += (int)$product['cart_quantity'];
 		$cart_rules = $params['cart']->getCartRules();
 
-		$shipping_cost = Tools::displayPrice($params['cart']->getOrderTotal($useTax, Cart::ONLY_SHIPPING), $currency);
-		$shipping_cost_float = Tools::convertPrice($params['cart']->getOrderTotal($useTax, Cart::ONLY_SHIPPING), $currency);
+		$base_shipping = $params['cart']->getOrderTotal($useTax, Cart::ONLY_SHIPPING);
+		$shipping_cost = Tools::displayPrice($base_shipping, $currency);
+		$shipping_cost_float = Tools::convertPrice($base_shipping, $currency);
 		$wrappingCost = (float)($params['cart']->getOrderTotal($useTax, Cart::ONLY_WRAPPING));
 		$totalToPay = $params['cart']->getOrderTotal($useTax);
 
@@ -95,6 +90,7 @@ class BlockCart extends Module
 				foreach ($products as &$product)
 					if ($product['id_product'] == $cart_rule['gift_product'] && $product['id_product_attribute'] == $cart_rule['gift_product_attribute'])
 					{
+						$product['is_gift'] = 1;
 						$product['total_wt'] = Tools::ps_round($product['total_wt'] - $product['price_wt'], (int)$currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
 						$product['total'] = Tools::ps_round($product['total'] - $product['price'], (int)$currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
 						$cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'] - $product['price_wt'], (int)$currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
@@ -169,6 +165,7 @@ class BlockCart extends Module
 			parent::install() == false
 			|| $this->registerHook('top') == false
 			|| $this->registerHook('header') == false
+			|| $this->registerHook('actionCartListOverride') == false
 			|| Configuration::updateValue('PS_BLOCK_CART_AJAX', 1) == false)
 			return false;
 		return true;
@@ -200,10 +197,20 @@ class BlockCart extends Module
 		return $res;
 	}
 
+	public function hookActionCartListOverride($params)
+	{
+		if (!Configuration::get('PS_BLOCK_CART_AJAX'))
+			return;
+
+		$this->assignContentVars(array('cookie' => $this->context->cookie, 'cart' => $this->context->cart));
+		$params['json'] = $this->display(__FILE__, 'blockcart-json.tpl');
+	}
+
 	public function hookHeader()
 	{
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return;
+
 		$this->context->controller->addCSS(($this->_path).'blockcart.css', 'all');
 		if ((int)(Configuration::get('PS_BLOCK_CART_AJAX')))
 			$this->context->controller->addJS(($this->_path).'ajax-cart.js');

@@ -1,10 +1,6 @@
 <?php
-
-require_once(_PS_TOOL_DIR_.'tcpdf/config/lang/eng.php');
-require_once(_PS_TOOL_DIR_.'tcpdf/tcpdf.php');
-
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -23,10 +19,13 @@ require_once(_PS_TOOL_DIR_.'tcpdf/tcpdf.php');
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
+
+require_once(_PS_TOOL_DIR_.'tcpdf/config/lang/eng.php');
+require_once(_PS_TOOL_DIR_.'tcpdf/tcpdf.php');
 
 /**
  * @since 1.5
@@ -40,7 +39,37 @@ class PDFGeneratorCore extends TCPDF
 	public $content;
 	public $font;
 
-	public $font_by_lang = array('jp' => 'cid0jp');
+	public $font_by_lang = array(
+		'ja' => 'cid0jp', 
+		'bg' => 'freeserif', 
+		'ru' => 'freeserif', 
+		'uk' => 'freeserif', 
+		'mk' => 'freeserif', 
+		'el' => 'freeserif', 
+		'en' => 'dejavusans',		
+		'vn' => 'dejavusans', 
+		'pl' => 'dejavusans',
+		'ar' => 'dejavusans',
+		'fa' => 'dejavusans',
+		'ur' => 'dejavusans',
+		'az' => 'dejavusans',
+		'ca' => 'dejavusans',
+		'gl' => 'dejavusans',
+		'hr' => 'dejavusans',
+		'sr' => 'dejavusans',
+		'si' => 'dejavusans',
+		'cs' => 'dejavusans',
+		'sk' => 'dejavusans',
+		'ka' => 'dejavusans',
+		'he' => 'dejavusans',
+		'lo' => 'dejavusans',
+		'lv' => 'dejavusans',
+		'tr' => 'dejavusans',
+		'ko' => 'cid0kr',
+		'zh' => 'cid0cs',
+		'tw' => 'cid0cs',
+		'th' => 'freeserif'
+		);
 
 
 	public function __construct($use_cache = false)
@@ -94,10 +123,11 @@ class PDFGeneratorCore extends TCPDF
 	public function setFontForLang($iso_lang)
 	{
 		$this->font = PDFGenerator::DEFAULT_FONT;
-		$this->setHeaderFont(array(PDFGenerator::DEFAULT_FONT, '', PDF_FONT_SIZE_MAIN));
-		$this->setFooterFont(array(PDFGenerator::DEFAULT_FONT, '', PDF_FONT_SIZE_MAIN));
 		if (array_key_exists($iso_lang, $this->font_by_lang))
 			$this->font = $this->font_by_lang[$iso_lang];
+
+		$this->setHeaderFont(array($this->font, '', PDF_FONT_SIZE_MAIN));
+		$this->setFooterFont(array($this->font, '', PDF_FONT_SIZE_MAIN));
 
 		$this->setFont($this->font);
 	}
@@ -122,7 +152,7 @@ class PDFGeneratorCore extends TCPDF
 	 * Render the pdf file
 	 *
 	 * @param string $filename
-     * @param boolean $inline
+         * @param  $display :  true:display to user, false:save, 'I','D','S' as fpdf display
 	 * @throws PrestaShopException
 	 */
 	public function render($filename, $display = true)
@@ -132,7 +162,17 @@ class PDFGeneratorCore extends TCPDF
 
 		$this->lastPage();
 
-		$output = $display ? 'I' : 'S';
+		if ($display === true)
+			$output = 'D';
+		elseif ($display === false)
+			$output = 'S';
+		elseif ($display == 'D')
+			$output = 'D';
+		elseif ($display == 'S')
+			$output = 'S';
+		else 	
+			$output = 'I';
+			
 		return $this->output($filename, $output);
 	}
 
@@ -149,5 +189,47 @@ class PDFGeneratorCore extends TCPDF
 		$this->AddPage();
 
 		$this->writeHTML($this->content, true, false, true, false, '');
+	}
+	
+	/**
+	 * Override of TCPDF::getRandomSeed() - getmypid() is blocked on several hosting
+	*/
+	protected function getRandomSeed($seed='') 
+	{
+		$seed .= microtime();
+		if (function_exists('openssl_random_pseudo_bytes') AND (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN')) {
+			// this is not used on windows systems because it is very slow for a know bug
+			$seed .= openssl_random_pseudo_bytes(512);
+		} else {
+			for ($i = 0; $i < 23; ++$i) {
+				$seed .= uniqid('', true);
+			}
+		}
+		$seed .= uniqid('', true);
+		$seed .= rand();
+		$seed .= __FILE__;
+		$seed .= $this->bufferlen;
+		if (isset($_SERVER['REMOTE_ADDR'])) {
+			$seed .= $_SERVER['REMOTE_ADDR'];
+		}
+		if (isset($_SERVER['HTTP_USER_AGENT'])) {
+			$seed .= $_SERVER['HTTP_USER_AGENT'];
+		}
+		if (isset($_SERVER['HTTP_ACCEPT'])) {
+			$seed .= $_SERVER['HTTP_ACCEPT'];
+		}
+		if (isset($_SERVER['HTTP_ACCEPT_ENCODING'])) {
+			$seed .= $_SERVER['HTTP_ACCEPT_ENCODING'];
+		}
+		if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+			$seed .= $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+		}
+		if (isset($_SERVER['HTTP_ACCEPT_CHARSET'])) {
+			$seed .= $_SERVER['HTTP_ACCEPT_CHARSET'];
+		}
+		$seed .= rand();
+		$seed .= uniqid('', true);
+		$seed .= microtime();
+		return $seed;
 	}
 }

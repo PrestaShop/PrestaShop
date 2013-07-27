@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,14 +18,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <p class="payment_module">
-	<a href="{$link->getModuleLink('cheque', 'payment', [], true)}" title="{l s='Pay by cheque' mod='cheque'}">
-		<img src="{$this_path}cheque.jpg" alt="{l s='Pay by cheque' mod='cheque'}" width="86" height="49" />
-		{l s='Pay by cheque (order process will be longer)' mod='cheque'}
+	<a href="{$link->getModuleLink('cheque', 'payment', [], true)|escape:'html'}" title="{l s='Pay by check.' mod='cheque'}">
+		<img src="{$this_path_cheque}cheque.jpg" alt="{l s='Pay by check.' mod='cheque'}" width="86" height="49" />
+		{l s='Pay by check (order processing will take more time).' mod='cheque'}
 	</a>
 </p>

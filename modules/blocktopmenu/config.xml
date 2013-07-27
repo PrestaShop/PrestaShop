@@ -3,7 +3,7 @@
             <name>blocktopmenu</name>
             <displayName><![CDATA[Top horizontal menu]]></displayName>
             <version><![CDATA[1.5]]></version>
-            <description><![CDATA[Add a new menu on top of your shop.]]></description>
+            <description><![CDATA[Add a new horizontal menu to the top of your e-commerce website.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>
             <is_configurable>1</is_configurable>

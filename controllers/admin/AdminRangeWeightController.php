@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -82,7 +82,7 @@ class AdminRangeWeightControllerCore extends AdminController
 					'size' => 5,
 					'required' => true,
 					'suffix' => Configuration::get('PS_WEIGHT_UNIT'),
-					'desc' => $this->l('Range start (included)'),
+					'desc' => $this->l('Start range (included)'),
 				),
 				array(
 					'type' => 'text',
@@ -91,7 +91,7 @@ class AdminRangeWeightControllerCore extends AdminController
 					'size' => 5,
 					'required' => true,
 					'suffix' => Configuration::get('PS_WEIGHT_UNIT'),
-					'desc' => $this->l('Range end (excluded)'),
+					'desc' => $this->l('End range (excluded)'),
 				),
 			),
 			'submit' => array(
@@ -121,9 +121,9 @@ class AdminRangeWeightControllerCore extends AdminController
 			if (Tools::getValue('delimiter1') >= Tools::getValue('delimiter2'))
 				$this->errors[] = Tools::displayError('Invalid range');
 			else if (!$id && RangeWeight::rangeExist((int)Tools::getValue('id_carrier'), (float)Tools::getValue('delimiter1'), (float)Tools::getValue('delimiter2')))
-				$this->errors[] = Tools::displayError('Range already exists');
+				$this->errors[] = Tools::displayError('The range already exists');
 			else if (RangeWeight::isOverlapping((int)Tools::getValue('id_carrier'), (float)Tools::getValue('delimiter1'), (float)Tools::getValue('delimiter2'), ($id ? (int)$id : null)))
-				$this->errors[] = Tools::displayError('Ranges are overlapping');
+				$this->errors[] = Tools::displayError('Error: Ranges are overlapping');
 			else if (!count($this->errors))
 				parent::postProcess();
 		}

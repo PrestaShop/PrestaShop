@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -61,7 +61,6 @@ class InstallXmlLoader
 	{
 		$this->language = InstallLanguages::getInstance();
 		$this->setDefaultPath();
-		require_once _PS_ROOT_DIR_.'/images.inc.php';
 	}
 
 	/**
@@ -225,10 +224,13 @@ class InstallXmlLoader
 			return;
 		}
 
+		if (substr($entity, 0, 1) == '.' || substr($entity, 0, 1) == '_')
+			return;		
+
 		$xml = $this->loadEntity($entity);
 
 		// Read list of fields
-		if (!$xml->fields)
+		if (!is_object($xml) || !$xml->fields)
 			throw new PrestashopInstallerException('List of fields not found for entity '.$entity);
 
 		if ($this->isMultilang($entity))
@@ -238,7 +240,7 @@ class InstallXmlLoader
 			$default_lang = null;
 			foreach ($this->languages as $id_lang => $iso)
 			{
-				if ($iso == 'en')
+				if ($iso == $this->language->getLanguageIso())
 					$default_lang = $id_lang;
 
 				try

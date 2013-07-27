@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -174,7 +174,7 @@ class HelperCore
 									   $use_shop_context = false)
 	{
 		$translations = array(
-			'selected' => $this->l('selected'),
+			'selected' => $this->l('Selected'),
 			'Collapse All' => $this->l('Collapse All'),
 			'Expand All' => $this->l('Expand All'),
 			'Check All' => $this->l('Check All'),
@@ -239,17 +239,14 @@ class HelperCore
 
 		$html .= '
 		<div class="category-filter">
-			<span><a href="#" id="collapse_all" >'.$translations['Collapse All'].'</a>
-			| </span>
-			<span><a href="#" id="expand_all" >'.$translations['Expand All'].'</a>
+			<span><a href="#" id="collapse_all">'.$translations['Collapse All'].'</a>|&nbsp;</span>
+			<span><a href="#" id="expand_all">'.$translations['Expand All'].'</a>|&nbsp;</span>
 			'.(!$use_radio ? '
-			 |</span>
-			 <span> <a href="#" id="check_all" >'.$translations['Check All'].'</a>
-			 |</span>
-			 <span><a href="#" id="uncheck_all" >'.$translations['Uncheck All'].'</a>|</span>
-			 ' : '').($use_search ? '<span>'.$translations['search'].' : <input type="text" name="search_cat" id="search_cat"></span>' : '').'
-		</div>
-		';
+				<span><a href="#" id="check_all">'.$translations['Check All'].'</a>|&nbsp;</span>
+				<span><a href="#" id="uncheck_all">'.$translations['Uncheck All'].'</a>|&nbsp;</span>' : '')
+			.($use_search ? '
+				<span>'.$translations['search'].': <input type="text" name="search_cat" id="search_cat"/></span>' : '')
+		.'</div>';
 
 		$home_is_selected = false;
 		foreach ($selected_cat as $cat)
@@ -346,6 +343,15 @@ class HelperCore
 		);
 
 		$tpl = $this->createTemplate('helpers/required_fields.tpl');
+		$tpl->assign($this->tpl_vars);
+
+		return $tpl->fetch();
+	}
+	
+	public function renderModulesList($modules_list)
+	{
+		$this->tpl_vars = array('modules_list' => $modules_list);
+		$tpl = $this->createTemplate('helpers/modules_list/list.tpl');
 		$tpl->assign($this->tpl_vars);
 
 		return $tpl->fetch();

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -46,7 +46,7 @@ class StatsSales extends ModuleGraph
 		parent::__construct();
 		
 		$this->displayName = $this->l('Sales and orders');
-		$this->description = $this->l('Display the sales evolution and orders by statuses');
+		$this->description = $this->l('Display sales evolution and orders by status.');
 	}
 	
 	public function install()
@@ -76,7 +76,7 @@ class StatsSales extends ModuleGraph
 				<input type="submit" name="submitCountry" value="'.$this->l('Filter').'" class="button" />
 			</form>
 			<p><img src="../img/admin/down.gif" />
-				'.$this->l('These graphs represent the evolution of your orders and sales turnover for a given period. This tool allows for quick overview of the viability of your shop. You can also keep watch on the difference between time periods (like the holiday season). Only valid orders are included in these two graphs.').'
+				'.$this->l('The following graphs represent the evolution of your e-store\'s orders and sales turnover for a selected period. This tool is one that you should use often as it allows you to quickly monitor your store\'s viability. This feature also allows you to monitor multiple time periods, and only valid orders are graphically represented.').'
 			</p>
 			<p>'.$this->l('Orders placed:').' <span class="totalStats">'.(int)($totals['orderCount']).'</span></p>
 			<p>'.$this->l('Products bought:').' <span class="totalStats">'.(int)($totals['products']).'</span></p>
@@ -86,7 +86,7 @@ class StatsSales extends ModuleGraph
 			<div>'.$this->engine(array('type' => 'line', 'option' => '2-'.(int)Tools::getValue('id_country'))).'</div>
 			<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=2"><span>'.$this->l('CSV Export').'</span></a></p>
 			<p class="space"><img src="../img/admin/down.gif" />
-				'.$this->l('You can see the order state distribution below.').'
+				'.$this->l('You can view order distribution below.').'
 			</p><br />
 			'.($totals['orderCount'] ? $this->engine(array('type' => 'pie', 'option' => '3-'.(int)Tools::getValue('id_country'))) : $this->l('No orders for this period.')).'</center>
 			<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=3"><span>'.$this->l('CSV Export').'</span></a></p>
@@ -95,8 +95,8 @@ class StatsSales extends ModuleGraph
 		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</h2>
 			<h2>'.$this->l('Various order statuses').'</h2>
 			<p>
-				'.$this->l('In your back-office, you can find the following order statuses : Awaiting check payment, Payment accepted, Preparation in progress, Shipping, Delivered, Cancelled, Refund, Payment error, Out of stock, and Awaiting bank wire payment.').'<br />
-				'.$this->l('Statuses cannot be removed from the back-office, but you have the option to add more.').'
+				'.$this->l('In your Back Office, you can modify the following order statuses: Awaiting Check Payment, Payment Accepted, Preparation in Progress, Shipping, Delivered, Cancelled, Refund, Payment Error, Out of Stock, and Awaiting Bank Wire Payment.').'<br />
+				'.$this->l('These order statuses cannot be removed from the Back Office, however you have the option to add more.').'
 			</p>
 		</div >';
 		return $this->_html;
@@ -133,15 +133,15 @@ class StatsSales extends ModuleGraph
 		{
 			case 1:
 				$this->_titles['main'][0] = $this->l('Products and orders');
-				$this->_titles['main'][1] = $this->l('Orders');
-				$this->_titles['main'][2] = $this->l('Products');
+				$this->_titles['main'][1] = $this->l('orders');
+				$this->_titles['main'][2] = $this->l('Products:');
 				break;
 			case 2:
 				$currency = new Currency((int)Configuration::get('PS_CURRENCY_DEFAULT'));
 				$this->_titles['main'] = $this->l('Sales in').' '.$currency->iso_code;
 				break;
 			case 3:
-				$this->_titles['main'] = $this->l('Percentage of orders by status');
+				$this->_titles['main'] = $this->l('Percentage of orders by status.');
 				break;
 		}
 	}

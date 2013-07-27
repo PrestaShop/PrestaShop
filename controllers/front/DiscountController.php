@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -42,7 +42,7 @@ class DiscountControllerCore extends FrontController
 		$cart_rules = CartRule::getCustomerCartRules($this->context->language->id, $this->context->customer->id, true, false);
 		$nb_cart_rules = count($cart_rules);
 
-		$this->context->smarty->assign(array('nb_cart_rules' => (int)$nb_cart_rules, 'cart_rules' => $cart_rules));
+		$this->context->smarty->assign(array('nb_cart_rules' => (int)$nb_cart_rules, 'cart_rules' => $cart_rules, 'discount' => $cart_rules, 'nbDiscounts' => (int)$nb_cart_rules));
 		$this->setTemplate(_PS_THEME_DIR_.'discount.tpl');
 	}
 }

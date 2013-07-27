@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -111,22 +111,27 @@ class ContextCore
 			$this->mobile_device = false;
 			if ($this->checkMobileContext())
 			{
-				require_once(_PS_TOOL_DIR_.'mobile_Detect/Mobile_Detect.php');
-				$this->mobile_detect = new Mobile_Detect();
-				switch ((int)Configuration::get('PS_ALLOW_MOBILE_DEVICE'))
+				if (isset(Context::getContext()->cookie->no_mobile) && Context::getContext()->cookie->no_mobile == false AND (int)Configuration::get('PS_ALLOW_MOBILE_DEVICE') != 0)
+					$this->mobile_device = true;
+				else
 				{
-					case 1: // Only for mobile device
-						if ($this->mobile_detect->isMobile() && !$this->mobile_detect->isTablet())
-							$this->mobile_device = true;
-						break;
-					case 2: // Only for touchpads
-						if ($this->mobile_detect->isTablet() && $this->mobile_detect->isMobile())
-							$this->mobile_device = true;
-						break;
-					case 3: // For touchpad or mobile devices
-						if ($this->mobile_detect->isMobile() || $this->mobile_detect->isTablet())
-							$this->mobile_device = true;
-						break;
+					require_once(_PS_TOOL_DIR_.'mobile_Detect/Mobile_Detect.php');
+					$this->mobile_detect = new Mobile_Detect();
+					switch ((int)Configuration::get('PS_ALLOW_MOBILE_DEVICE'))
+					{
+						case 1: // Only for mobile device
+							if ($this->mobile_detect->isMobile() && !$this->mobile_detect->isTablet())
+								$this->mobile_device = true;
+							break;
+						case 2: // Only for touchpads
+							if ($this->mobile_detect->isTablet() && $this->mobile_detect->isMobile())
+								$this->mobile_device = true;
+							break;
+						case 3: // For touchpad or mobile devices
+							if ($this->mobile_detect->isMobile() || $this->mobile_detect->isTablet())
+								$this->mobile_device = true;
+							break;
+					}
 				}
 			}
 		}
@@ -138,9 +143,25 @@ class ContextCore
 	{
 		// Check mobile context
 		if (Tools::isSubmit('no_mobile_theme'))
+		{
 			Context::getContext()->cookie->no_mobile = true;
-		else if (Tools::isSubmit('mobile_theme_ok'))
+			if (Context::getContext()->cookie->id_guest)
+			{
+				$guest = new Guest(Context::getContext()->cookie->id_guest);
+				$guest->mobile_theme = false;
+				$guest->update();
+			}
+		}
+		elseif (Tools::isSubmit('mobile_theme_ok'))
+		{
 			Context::getContext()->cookie->no_mobile = false;
+			if (Context::getContext()->cookie->id_guest)
+			{
+				$guest = new Guest(Context::getContext()->cookie->id_guest);
+				$guest->mobile_theme = true;
+				$guest->update();
+			}
+		}
 
 		return isset($_SERVER['HTTP_USER_AGENT'])
 			&& isset(Context::getContext()->cookie)

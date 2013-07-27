@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -48,9 +48,9 @@ function editorial_update()
 		PRIMARY KEY (`id_editorial`, `id_lang`))
 		ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8');
 		
-		if (file_exists(dirname(__FILE__).'/../../modules/editorial/editorial.xml'))
+		if (file_exists(dirname(__FILE__).'/../../../modules/editorial/editorial.xml'))
 		{
-			$xml = simplexml_load_file(dirname(__FILE__).'/../../modules/editorial/editorial.xml');
+			$xml = simplexml_load_file(dirname(__FILE__).'/../../../modules/editorial/editorial.xml');
 			Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'editorial`(`id_editorial`, `body_home_logo_link`) VALUES(1, "'.(isset($xml->body->home_logo_link) ? pSQL($xml->body->home_logo_link) : '').'")');
 
@@ -65,7 +65,7 @@ function editorial_update()
 				"'.(isset($xml->body->{'paragraph_'.$language['id_lang']}) ? pSQL($xml->body->{'paragraph_'.$language['id_lang']}, true) : '').'", 
 				"'.(isset($xml->body->{'logo_subheading_'.$language['id_lang']}) ? pSQL($xml->body->{'logo_subheading_'.$language['id_lang']}) : '').'")');
 
-			unlink(dirname(__FILE__).'/../../modules/editorial/editorial.xml');
+			unlink(dirname(__FILE__).'/../../../modules/editorial/editorial.xml');
 		}
 	}
 }

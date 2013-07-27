@@ -1,5 +1,5 @@
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,47 +18,47 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 function ps_round(value, precision)
 {
-	if (typeof(roundMode) == 'undefined')
+	if (typeof(roundMode) === 'undefined')
 		roundMode = 2;
-	if (typeof(precision) == 'undefined')
+	if (typeof(precision) === 'undefined')
 		precision = 2;
 	
 	method = roundMode;
-	if (method == 0)
+	if (method === 0)
 		return ceilf(value, precision);
-	else if (method == 1)
+	else if (method === 1)
 		return floorf(value, precision);
-	precisionFactor = precision == 0 ? 1 : Math.pow(10, precision);
+	precisionFactor = precision === 0 ? 1 : Math.pow(10, precision);
 	return Math.round(value * precisionFactor) / precisionFactor;
 }
 
 function ceilf(value, precision)
 {
-	if (typeof(precision) == 'undefined')
+	if (typeof(precision) === 'undefined')
 		precision = 0;
-	precisionFactor = precision == 0 ? 1 : Math.pow(10, precision);
+	precisionFactor = precision === 0 ? 1 : Math.pow(10, precision);
 	tmp = value * precisionFactor;
 	tmp2 = tmp.toString();
-	if (tmp2[tmp2.length - 1] == 0)
+	if (tmp2[tmp2.length - 1] === 0)
 		return value;
 	return Math.ceil(value * precisionFactor) / precisionFactor;
 }
 
 function floorf(value, precision)
 {
-	if (typeof(precision) == 'undefined')
+	if (typeof(precision) === 'undefined')
 		precision = 0;
-	precisionFactor = precision == 0 ? 1 : Math.pow(10, precision);
+	precisionFactor = precision === 0 ? 1 : Math.pow(10, precision);
 	tmp = value * precisionFactor;
 	tmp2 = tmp.toString();
-	if (tmp2[tmp2.length - 1] == 0)
+	if (tmp2[tmp2.length - 1] === 0)
 		return value;
 	return Math.floor(value * precisionFactor) / precisionFactor;
 }
@@ -66,13 +66,13 @@ function floorf(value, precision)
 function formatedNumberToFloat(price, currencyFormat, currencySign)
 {
 	price = price.replace(currencySign, '');
-	if (currencyFormat == 1)
+	if (currencyFormat === 1)
 		return parseFloat(price.replace(',', '').replace(' ', ''));
-	else if (currencyFormat == 2)
+	else if (currencyFormat === 2)
 		return parseFloat(price.replace(' ', '').replace(',', '.'));
-	else if (currencyFormat == 3)
+	else if (currencyFormat === 3)
 		return parseFloat(price.replace('.', '').replace(' ', '').replace(',', '.'));
-	else if (currencyFormat == 4)
+	else if (currencyFormat === 4)
 		return parseFloat(price.replace(',', '').replace(' ', ''));
 	return price;
 }
@@ -105,15 +105,15 @@ function formatNumber(value, numberOfDecimal, thousenSeparator, virgule)
 	value = value.toFixed(numberOfDecimal);
 	var val_string = value+'';
 	var tmp = val_string.split('.');
-	var abs_val_string = (tmp.length == 2) ? tmp[0] : val_string;
-	var deci_string = ('0.' + (tmp.length == 2 ? tmp[1] : 0)).substr(2);
+	var abs_val_string = (tmp.length === 2) ? tmp[0] : val_string;
+	var deci_string = ('0.' + (tmp.length === 2 ? tmp[1] : 0)).substr(2);
 	var nb = abs_val_string.length;
 
 	for (var i = 1 ; i < 4; i++)
 		if (value >= Math.pow(10, (3 * i)))
 			abs_val_string = abs_val_string.substring(0, nb - (3 * i)) + thousenSeparator + abs_val_string.substring(nb - (3 * i));
 
-	if (parseInt(numberOfDecimal) == 0)
+	if (parseInt(numberOfDecimal) === 0)
 		return abs_val_string;
 	return abs_val_string + virgule + (deci_string > 0 ? deci_string : '00');
 }
@@ -121,27 +121,27 @@ function formatNumber(value, numberOfDecimal, thousenSeparator, virgule)
 //change the text of a jQuery element with a sliding effect (velocity could be a number in ms, 'slow' or 'fast', effect1 and effect2 could be slide, fade, hide, show)
 function updateTextWithEffect(jQueryElement, text, velocity, effect1, effect2, newClass)
 {
-	if(jQueryElement.text() != text)
-		if(effect1 == 'fade')
+	if(jQueryElement.text() !== text)
+		if(effect1 === 'fade')
 			jQueryElement.fadeOut(velocity, function(){
 				$(this).addClass(newClass);
-				if(effect2 == 'fade') $(this).text(text).fadeIn(velocity);
-				else if(effect2 == 'slide') $(this).text(text).slideDown(velocity);
-					else if(effect2 == 'show')	$(this).text(text).show(velocity, function(){});
+				if(effect2 === 'fade') $(this).text(text).fadeIn(velocity);
+				else if(effect2 === 'slide') $(this).text(text).slideDown(velocity);
+					else if(effect2 === 'show')	$(this).text(text).show(velocity, function(){});
 			});
-		else if(effect1 == 'slide')
+		else if(effect1 === 'slide')
 			jQueryElement.slideUp(velocity, function(){
 				$(this).addClass(newClass);
-				if(effect2 == 'fade') $(this).text(text).fadeIn(velocity);
-				else if(effect2 == 'slide') $(this).text(text).slideDown(velocity);
-					else if(effect2 == 'show')	$(this).text(text).show(velocity);
+				if(effect2 === 'fade') $(this).text(text).fadeIn(velocity);
+				else if(effect2 === 'slide') $(this).text(text).slideDown(velocity);
+					else if(effect2 === 'show')	$(this).text(text).show(velocity);
 			});
-			else if(effect1 == 'hide')
+			else if(effect1 === 'hide')
 				jQueryElement.hide(velocity, function(){
 					$(this).addClass(newClass);
-					if(effect2 == 'fade') $(this).text(text).fadeIn(velocity);
-					else if(effect2 == 'slide') $(this).text(text).slideDown(velocity);
-						else if(effect2 == 'show')	$(this).text(text).show(velocity);
+					if(effect2 === 'fade') $(this).text(text).fadeIn(velocity);
+					else if(effect2 === 'slide') $(this).text(text).slideDown(velocity);
+						else if(effect2 === 'show')	$(this).text(text).show(velocity);
 				});
 }
 
@@ -179,12 +179,12 @@ function print_r(arr, level)
 	for (var j = 0 ; j < level + 1; j++)
 		level_padding += "    ";
 
-	if (typeof(arr) == 'object')
+	if (typeof(arr) === 'object')
 	{ //Array/Hashes/Objects 
 		for (var item in arr)
 		{
 			var value = arr[item];
-			if (typeof(value) == 'object') { //If it is an array,
+			if (typeof(value) === 'object') { //If it is an array,
 				dumped_text += level_padding + "'" + item + "' ...\n";
 				dumped_text += dump(value,level+1);
 			}
@@ -205,7 +205,7 @@ function print_r(arr, level)
 function in_array(value, array)
 {
 	for (var i in array)
-		if (array[i] == value)
+		if (array[i] === value)
 			return true;
 	return false;
 }
@@ -214,7 +214,7 @@ function resizeAddressesBox(nameBox)
 {
 	maxHeight = 0;
 
-	if (typeof(nameBox) == 'undefined')
+	if (typeof(nameBox) === 'undefined')
 		nameBox = '.address';
 	$(nameBox).each(function()
 	{
@@ -235,10 +235,10 @@ $(document).ready(function() {
 		
 		if (!$(this).attr('eventCheckboxChange'))
 		{
-			$(this).live('change', function() { $(this).checkboxChange(fnChecked, fnUnchecked) });
+			$(this).live('change', function() { $(this).checkboxChange(fnChecked, fnUnchecked); });
 			$(this).attr('eventCheckboxChange', true);
 		}
-	}
+	};
 });
 
 

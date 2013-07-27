@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -49,7 +49,7 @@
 			<dl>
 				<dt>{l s='Customer ID:'}</dd> 
 				<dd><a href="index.php?tab=AdminCustomers&id_customer={$message.id_customer}&viewcustomer&token={getAdminToken tab='AdminCustomers'}" title="{l s='View customer'}">
-					{$message.id_customer} <img src="../img/admin/search.gif" alt="{l s='view'}" />
+					{$message.id_customer} <img src="../img/admin/search.gif" alt="{l s='View'}" />
 				</a>
 				</dd>
 			</dl>
@@ -73,7 +73,7 @@
 				<dt>{l s='File attachment'}</dt> 
 				<dd><a href="index.php?tab=AdminCustomerThreads&id_customer_thread={$message.id_customer_thread}&viewcustomer_thread&token={getAdminToken tab='AdminCustomerThreads'}&filename={$message.file_name}"
 					title="{l s='View file'}">
-						<img src="../img/admin/search.gif" alt="{l s='view'}" />
+						<img src="../img/admin/search.gif" alt="{l s='View'}" />
 				</a>
 				</dd>
 			</dl>
@@ -83,7 +83,7 @@
 				<dl>
 					<dt>{l s='Order #'}</dt> 
 					<dd><a href="index.php?tab=AdminOrders&id_order={$message.id_order}&vieworder&token={getAdminToken tab='AdminOrders'}" title="{l s='View order'}">
-					{$message.id_order} <img src="../img/admin/search.gif" alt="{l s='view'}" />
+					{$message.id_order} <img src="../img/admin/search.gif" alt="{l s='View'}" />
 				</a></dd>
 				</dl>
 			{/if}
@@ -92,7 +92,7 @@
 				<dl>
 					<dt>{l s='Product #'}</dt> 
 					<dd><a href="index.php?tab=AdminProducts&id_product={$message.id_product}&updateproduct&token={getAdminToken tab='AdminProducts'}" title="{l s='View order'}">
-					{$message.id_product} <img src="../img/admin/search.gif" alt="{l s='view'}" />
+					{$message.id_product} <img src="../img/admin/search.gif" alt="{l s='View'}" />
 				</a></dd>
 				</dl>
 			{/if}
@@ -163,7 +163,7 @@
 			</button>
 	{/if}
 
-	<div id="reply_to_{$message.id_customer_message}" style="display: none; margin-top: 20px;"">
+	<div id="reply_to_{$message.id_customer_message}" style="display: none; margin-top: 20px;">
 		<form action="{$current}&token={getAdminToken tab='AdminCustomerThreads'}&id_customer_thread={$message.id_customer_thread}&viewcustomer_thread" method="post" enctype="multipart/form-data">
 			<p>{l s='Please type your reply below:'}</p>
 			<textarea style="width: 450px; height: 175px;" name="reply_message">{$PS_CUSTOMER_SERVICE_SIGNATURE}</textarea>
@@ -172,7 +172,7 @@
 			</div>
 			<div style="width: 450px; margin-top: 0px;">
 				<input type="file" name="joinFile"/>
-			<div>
+			</div>
 			<div>
 				<input type="submit" class="button" name="submitReply" value="{l s='Send my reply'}" style="margin-top:20px;" />
 				<input type="hidden" name="id_customer_thread" value="{$message.id_customer_thread}" />

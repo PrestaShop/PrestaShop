@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -152,5 +152,16 @@ class ShopGroupCore extends ObjectModel
 		}
 
 		return false;
+	}
+
+	public function shopNameExists($name, $id_shop = false)
+	{
+		return Db::getInstance()->getValue('
+			SELECT id_shop
+			FROM '._DB_PREFIX_.'shop
+			WHERE name = "'.pSQL($name).'"
+			AND id_shop_group = '.(int)$this->id.'
+			'.($id_shop ? 'AND id_shop != '.(int)$id_shop : '')
+		);
 	}
 }

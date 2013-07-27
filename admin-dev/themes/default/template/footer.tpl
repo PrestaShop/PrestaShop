@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,37 +18,35 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-					<div style="clear:both;height:0;line-height:0">&nbsp;</div>
-					</div>
-					<div style="clear:both;height:0;line-height:0">&nbsp;</div>
+			<div style="clear:both;height:0;line-height:0">&nbsp;</div>
+		</div>
+		<div style="clear:both;height:0;line-height:0">&nbsp;</div>
+	</div>
+{if $display_footer}
+{hook h="displayBackOfficeFooter"}
+			<div id="footer">
+				<div class="footerLeft">
+					<a href="http://www.prestashop.com/" target="_blank">PrestaShop&trade; {$ps_version}</a><br />
+					<span>{l s='Load time: '}{number_format(microtime(true) - $timer_start, 3, '.', '')}s</span>
 				</div>
-		{if $display_footer}
-				{hook h="displayBackOfficeFooter"}
-				<div id="footer">
-					<div class="footerLeft">
-						<a href="http://www.prestashop.com/" target="_blank">PrestaShop&trade; {$ps_version}</a><br />
-						<span>{l s='Load time: '}{number_format(microtime(true) - $timer_start, 3, '.', '')}s</span>
-					</div>
-					<div class="footerRight">
-						{if $iso_is_fr}
-							<span>Questions / Renseignements / Formations :</span> <strong>+33 (0)1.40.18.30.04</strong> de 09h &agrave; 18h
-						{/if}
-						|&nbsp;<a href="http://www.prestashop.com/en/contact_us/" target="_blank" class="footer_link">{l s='Contact'}</a>
-						|&nbsp;<a href="http://forge.prestashop.com" target="_blank" class="footer_link">{l s='Bug Tracker'}</a>
-						|&nbsp;<a href="http://www.prestashop.com/forums/" target="_blank" class="footer_link">{l s='Forum'}</a>	
-					</div>
+				<div class="footerRight">
+					{if $iso_is_fr}
+						<span>Questions / Renseignements / Formations :</span> <strong>+33 (0)1.40.18.30.04</strong> de 09h &agrave; 18h
+					{/if}
+					|&nbsp;<a href="http://www.prestashop.com/en/contact_us/" target="_blank" class="footer_link">{l s='Contact'}</a>
+					|&nbsp;<a href="http://forge.prestashop.com" target="_blank" class="footer_link">{l s='Bug Tracker'}</a>
+					|&nbsp;<a href="http://www.prestashop.com/forums/" target="_blank" class="footer_link">{l s='Forum'}</a>	
 				</div>
 			</div>
 		</div>
-		<div id="ajax_confirmation" style="display:none"></div>
-		{* ajaxBox allows*}
-		<div id="ajaxBox" style="display:none"></div>
-		{/if}
-		<div id="scrollTop"><a href="#top"></a></div>
-	</body>
+	</div>
+	<div id="ajax_confirmation" style="display:none"></div>
+{* ajaxBox allows*}	<div id="ajaxBox" style="display:none"></div>
+{/if}
+	<div id="scrollTop"><a href="#top"></a></div>
+</body>
 </html>

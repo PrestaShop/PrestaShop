@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -61,7 +61,7 @@ class SupplierControllerCore extends FrontController
 			{
 				header('HTTP/1.1 404 Not Found');
 				header('Status: 404 Not Found');
-				$this->errors[] = Tools::displayError('Supplier does not exist.');
+				$this->errors[] = Tools::displayError('The chosen supplier does not exist.');
 			}
 			else
 				$this->canonicalRedirection();
@@ -94,6 +94,7 @@ class SupplierControllerCore extends FrontController
 	 */
 	protected function assignOne()
 	{
+		$this->supplier->description = Tools::nl2br(trim($this->supplier->description));
 		$nbProducts = $this->supplier->getProducts($this->supplier->id, null, null, null, $this->orderBy, $this->orderWay, true);
 		$this->pagination((int)$nbProducts);
 		$this->context->smarty->assign(array(
@@ -118,12 +119,12 @@ class SupplierControllerCore extends FrontController
 
 			$suppliers = Supplier::getSuppliers(true, $this->context->language->id, true, $this->p, $this->n);
 			foreach ($suppliers as &$row)
-				$row['image'] = (!file_exists(_PS_SUPP_IMG_DIR_.'/'.$row['id_supplier'].'-medium_default.jpg')) ? $this->context->language->iso_code.'-default' : $row['id_supplier'];
+				$row['image'] = (!file_exists(_PS_SUPP_IMG_DIR_.'/'.$row['id_supplier'].'-'.ImageType::getFormatedName('medium').'.jpg')) ? $this->context->language->iso_code.'-default' : $row['id_supplier'];
 
 			$this->context->smarty->assign(array(
 				'pages_nb' => ceil($nbProducts / (int)$this->n),
 				'nbSuppliers' => $nbProducts,
-				'mediumSize' => Image::getSize('medium_default'),
+				'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
 				'suppliers_list' => $suppliers,
 				'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
 			));

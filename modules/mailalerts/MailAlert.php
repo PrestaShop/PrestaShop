@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -188,8 +188,7 @@ class MailAlert extends ObjectModel
 				file_exists(dirname(__FILE__).'/mails/'.$iso.'/customer_qty.html'))
 				Mail::Send((int)Configuration::get('PS_LANG_DEFAULT'), 'customer_qty', Mail::l('Product available', $id_lang), $templateVars, strval($customer_email), NULL, strval(Configuration::get('PS_SHOP_EMAIL')), strval(Configuration::get('PS_SHOP_NAME')), NULL, NULL, dirname(__FILE__).'/mails/');
 
-			Hook::exec('actionModuleMailAlertSendCustomer', array('product' => (is_array($product->name) ? $product->name[$id_lang] : $product->name), 'link' => $link->getProductLink($product)));
-
+			Hook::exec('actionModuleMailAlertSendCustomer', array('product' => (is_array($product->name) ? $product->name[$id_lang] : $product->name), 'link' => $link->getProductLink($product), 'customer' => $customer, 'product_obj' => $product));
 			self::deleteAlert((int)$customer_id, strval($customer_email), (int)$id_product, (int)$id_product_attribute);
 		}
 	}

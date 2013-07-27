@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -44,7 +44,7 @@ class Blocknewsletter extends Module
 
 		$this->displayName = $this->l('Newsletter block');
 		$this->description = $this->l('Adds a block for newsletter subscription.');
-		$this->confirmUninstall = $this->l('Are you sure you want to delete all your contacts ?');
+		$this->confirmUninstall = $this->l('Are you sure that you want to delete all of your contacts?');
 
 		$this->version = '1.4';
 		$this->author = 'PrestaShop';
@@ -61,7 +61,8 @@ class Blocknewsletter extends Module
 
 	public function install()
 	{
-		if (parent::install() == false || $this->registerHook('leftColumn') == false || $this->registerHook('header') == false)
+		if (parent::install() == false || $this->registerHook('leftColumn') == false || $this->registerHook('header') == false
+			|| $this->registerHook('actionCustomerAccountAdd') == false)
 			return false;
 
 		Configuration::updateValue('NW_SALT', Tools::passwdGen(16));
@@ -93,9 +94,6 @@ class Blocknewsletter extends Module
 
 		if (Tools::isSubmit('submitUpdate'))
 		{
-			if (isset($_POST['new_page']) && Validate::isBool((int)$_POST['new_page']))
-				Configuration::updateValue('NW_CONFIRMATION_NEW_PAGE', $_POST['new_page']);
-
 			if (isset($_POST['conf_email']) && Validate::isBool((int)$_POST['conf_email']))
 				Configuration::updateValue('NW_CONFIRMATION_EMAIL', pSQL($_POST['conf_email']));
 
@@ -103,7 +101,7 @@ class Blocknewsletter extends Module
 				Configuration::updateValue('NW_VERIFICATION_EMAIL', (int)$_POST['verif_email']);
 
 			if (!empty($_POST['voucher']) && !Validate::isDiscountName($_POST['voucher']))
-				$this->_html .= '<div class="alert">'.$this->l('Voucher code is invalid').'</div>';
+				$this->_html .= '<div class="alert">'.$this->l('The coucher code is invalid.').'</div>';
 			else
 			{
 				Configuration::updateValue('NW_VOUCHER_CODE', pSQL($_POST['voucher']));
@@ -119,28 +117,22 @@ class Blocknewsletter extends Module
 		<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'">
 			<fieldset>
 				<legend><img src="'.$this->_path.'logo.gif" />'.$this->l('Settings').'</legend>
-				<label>'.$this->l('Display configuration in a new page?').'</label>
+				<label>'.$this->l('Would you like to send a verification email after subscription?').'</label>
 				<div class="margin-form">
-					<input type="radio" name="new_page" value="1" '.(Configuration::get('NW_CONFIRMATION_NEW_PAGE') ? 'checked="checked" ' : '').'/>'.$this->l('yes').'
-					<input type="radio" name="new_page" value="0" '.(!Configuration::get('NW_CONFIRMATION_NEW_PAGE') ? 'checked="checked" ' : '').'/>'.$this->l('no').'
+					<input type="radio" name="verif_email" value="1" '.(Configuration::get('NW_VERIFICATION_EMAIL') ? 'checked="checked" ' : '').'/>'.$this->l('Yes').'
+					<input type="radio" name="verif_email" value="0" '.(!Configuration::get('NW_VERIFICATION_EMAIL') ? 'checked="checked" ' : '').'/>'.$this->l('No').'
 				</div>
 				<div class="clear"></div>
-				<label>'.$this->l('Send verification e-mail after subscription?').'</label>
+				<label>'.$this->l('Would you like to send a confirmation email after subscription?').'</label>
 				<div class="margin-form">
-					<input type="radio" name="verif_email" value="1" '.(Configuration::get('NW_VERIFICATION_EMAIL') ? 'checked="checked" ' : '').'/>'.$this->l('yes').'
-					<input type="radio" name="verif_email" value="0" '.(!Configuration::get('NW_VERIFICATION_EMAIL') ? 'checked="checked" ' : '').'/>'.$this->l('no').'
-				</div>
-				<div class="clear"></div>
-				<label>'.$this->l('Send confirmation e-mail after subscription?').'</label>
-				<div class="margin-form">
-					<input type="radio" name="conf_email" value="1" '.(Configuration::get('NW_CONFIRMATION_EMAIL') ? 'checked="checked" ' : '').'/>'.$this->l('yes').'
-					<input type="radio" name="conf_email" value="0" '.(!Configuration::get('NW_CONFIRMATION_EMAIL') ? 'checked="checked" ' : '').'/>'.$this->l('no').'
+					<input type="radio" name="conf_email" value="1" '.(Configuration::get('NW_CONFIRMATION_EMAIL') ? 'checked="checked" ' : '').'/>'.$this->l('Yes').'
+					<input type="radio" name="conf_email" value="0" '.(!Configuration::get('NW_CONFIRMATION_EMAIL') ? 'checked="checked" ' : '').'/>'.$this->l('No').'
 				</div>
 				<div class="clear"></div>
 				<label>'.$this->l('Welcome voucher code').'</label>
 				<div class="margin-form">
 					<input type="text" name="voucher" value="'.Configuration::get('NW_VOUCHER_CODE').'" />
-					<p>'.$this->l('Leave blank for disabling').'</p>
+					<p>'.$this->l('Leave blank to disable by default.').'</p>
 				</div>
 				<div class="margin-form clear pspace"><input type="submit" name="submitUpdate" value="'.$this->l('Update').'" class="button" /></div>
 			</fieldset>
@@ -188,24 +180,24 @@ class Blocknewsletter extends Module
 	private function newsletterRegistration()
 	{
 		if (empty($_POST['email']) || !Validate::isEmail($_POST['email']))
-			return $this->error = $this->l('Invalid e-mail address');
+			return $this->error = $this->l('Invalid email address');
 
 		/* Unsubscription */
 		else if ($_POST['action'] == '1')
 		{
 			$register_status = $this->isNewsletterRegistered($_POST['email']);
 			if ($register_status < 1)
-				return $this->error = $this->l('E-mail address not registered');
+				return $this->error = $this->l('This email address is not registered.');
 			else if ($register_status == self::GUEST_REGISTERED)
 			{
 				if (!Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'newsletter WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->context->shop->id))
-					return $this->error = $this->l('Error during unsubscription');
+					return $this->error = $this->l('An error occurred while attempting to unsubscribe.');
 				return $this->valid = $this->l('Unsubscription successful');
 			}
 			else if ($register_status == self::CUSTOMER_REGISTERED)
 			{
 				if (!Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'customer SET `newsletter` = 0 WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->context->shop->id))
-					return $this->error = $this->l('Error during unsubscription');
+					return $this->error = $this->l('An error occurred while attempting to unsubscribe.');
 				return $this->valid = $this->l('Unsubscription successful');
 			}
 		}
@@ -214,7 +206,7 @@ class Blocknewsletter extends Module
 		{
 			$register_status = $this->isNewsletterRegistered($_POST['email']);
 			if ($register_status > 0)
-				return $this->error = $this->l('E-mail address already registered');
+				return $this->error = $this->l('This email address is already registered.');
 
 			$email = pSQL($_POST['email']);
 			if (!$this->isRegistered($register_status))
@@ -226,18 +218,18 @@ class Blocknewsletter extends Module
 						$this->registerGuest($email, false);
 
 					if (!$token = $this->getToken($email, $register_status))
-						return $this->error = $this->l('Error during subscription');
+						return $this->error = $this->l('An error occurred during the subscription process.');
 
 					$this->sendVerificationEmail($email, $token);
 
-					return $this->valid = $this->l('A verification email has been sent. Please check your email.');
+					return $this->valid = $this->l('A verification email has been sent. Please check your inbox.');
 				}
 				else
 				{
 					if ($this->register($email, $register_status))
-						$this->valid = $this->l('Subscription successful');
+						$this->valid = $this->l('You have successfully subscribed to this newsletter.');
 					else
-						return $this->error = $this->l('Error during subscription');
+						return $this->error = $this->l('An error occurred during the subscription process.');
 
 					if ($code = Configuration::get('NW_VOUCHER_CODE'))
 						$this->sendVoucher($email, $code);
@@ -410,7 +402,7 @@ class Blocknewsletter extends Module
 			$activated = $this->registerUser($email);
 
 		if (!$activated)
-			return $this->l('Email already registered or invalid');
+			return $this->l('This email is already registered and/or invalid.');
 
 		if ($discount = Configuration::get('NW_VOUCHER_CODE'))
 			$this->sendVoucher($email, $discount);
@@ -449,7 +441,7 @@ class Blocknewsletter extends Module
 	 */
 	protected function sendVoucher($email, $code)
 	{
-		return Mail::Send($this->context->language->id, 'newsletter_voucher', Mail::l('Newsletter voucher', $this->context->language->id), array('{discount}' => $code), $email, null, null, null, null, null, dirname(__FILE__).'/mails/');
+		return Mail::Send($this->context->language->id, 'newsletter_voucher', Mail::l('Newsletter voucher', $this->context->language->id), array('{discount}' => $code), $email, null, null, null, null, null, dirname(__FILE__).'/mails/', false, $this->context->shop->id);
 	}
 
 	/**
@@ -459,7 +451,7 @@ class Blocknewsletter extends Module
 	 */
 	protected function sendConfirmationEmail($email)
 	{
-		return	Mail::Send($this->context->language->id, 'newsletter_conf', Mail::l('Newsletter confirmation', $this->context->language->id), array(), pSQL($email), null, null, null, null, null, dirname(__FILE__).'/mails/');
+		return	Mail::Send($this->context->language->id, 'newsletter_conf', Mail::l('Newsletter confirmation', $this->context->language->id), array(), pSQL($email), null, null, null, null, null, dirname(__FILE__).'/mails/', false, $this->context->shop->id);
 	}
 
 	/**
@@ -473,7 +465,7 @@ class Blocknewsletter extends Module
 		$verif_url = Context::getContext()->link->getModuleLink('blocknewsletter', 'verification', array(
 			'token' => $token,
 		));
-		return Mail::Send($this->context->language->id, 'newsletter_verif', Mail::l('Email verification', $this->context->language->id), array('{verif_url}' => $verif_url), $email, null, null, null, null, null, dirname(__FILE__).'/mails/');
+		return Mail::Send($this->context->language->id, 'newsletter_verif', Mail::l('Email verification', $this->context->language->id), array('{verif_url}' => $verif_url), $email, null, null, null, null, null, dirname(__FILE__).'/mails/', false, $this->context->shop->id);
 	}
 
 	public function hookDisplayRightColumn($params)
@@ -511,9 +503,31 @@ class Blocknewsletter extends Module
 		$this->_prepareHook($params);
 		return $this->display(__FILE__, 'blocknewsletter.tpl');
 	}
+	
+	public function hookFooter($params)
+	{
+		return $this->hookDisplayLeftColumn($params);
+	}
 
 	public function hookDisplayHeader($params)
 	{
 		$this->context->controller->addCSS($this->_path.'blocknewsletter.css', 'all');
+	}
+
+	/**
+	* Deletes duplicates email in newsletter table
+	* @param $params
+	* @return bool
+	*/
+	public function hookActionCustomerAccountAdd($params)
+	{
+		//if e-mail of the created user address has already been added to the newsletter through the blocknewsletter module,
+		//we delete it from blocknewsletter table to prevent duplicates
+		$id_shop = $params['newCustomer']->id_shop;
+		$email = $params['newCustomer']->email;
+		$newsletter = $params['newCustomer']->newsletter;
+		if ($newsletter && Validate::isEmail($email))
+			return (bool)Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'newsletter WHERE id_shop='.(int)$id_shop.' AND email=\''.pSQL($email)."'");
+		return true;
 	}
 }

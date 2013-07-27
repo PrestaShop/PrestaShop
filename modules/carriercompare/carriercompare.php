@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -42,8 +42,8 @@ class CarrierCompare extends Module
 
 		parent::__construct();
 
-		$this->displayName = $this->l('Shipping Estimation');
-		$this->description = $this->l('Module to compare carrier possibilities before using  the checkout process');
+		$this->displayName = $this->l('Shipping Estimate');
+		$this->description = $this->l('Compares carrier choices before checkout.');
 		$this->template_directory = dirname(__FILE__).'/template/';
 		$this->initRetroCompatibilityVar();
 	}
@@ -104,6 +104,9 @@ class CarrierCompare extends Module
 	{
 		if (!$this->isModuleAvailable())
 			return;
+					
+		if (!isset($this->context->cart) || $this->context->cart->getProducts() == 0)
+			return;			
 		
 		$protocol = (Configuration::get('PS_SSL_ENABLED') || (!empty($_SERVER['HTTPS']) 
 			&& strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
@@ -117,12 +120,33 @@ class CarrierCompare extends Module
 		
 		$refresh_method = Configuration::get('SE_RERESH_METHOD');
 		
+		if(isset($this->context->cookie->id_country) && $this->context->cookie->id_country > 0)
+			$id_country = (int)$this->context->cookie->id_country;
+		if(!isset($id_country))
+			$id_country = (isset($this->context->customer->geoloc_id_country) ? (int)$this->context->customer->geoloc_id_country : (int)Configuration::get('PS_COUNTRY_DEFAULT'));
+		if (isset($this->context->customer->id) && $this->context->customer->id && isset($this->context->cart->id_address_delivery) && $this->context->cart->id_address_delivery)
+		{
+			$address = new Address((int)($this->context->cart->id_address_delivery));
+			$id_country = (int)$address->id_country;
+		}			
+			
+			
+		if(isset($this->context->cookie->id_state) && $this->context->cookie->id_state > 0)
+			$id_state = (int)$this->context->cookie->id_state;
+		if(!isset($id_state))
+			$id_state = (isset($this->context->customer->geoloc_id_state) ? (int)$this->context->customer->geoloc_id_state : 0);	
+			
+		if(isset($this->context->cookie->postcode) && $this->context->cookie->postcode > 0)
+			$zipcode = Tools::safeOutput($this->context->cookie->postcode);
+		if(!isset($zipcode))
+			$zipcode = (isset($this->context->customer->geoloc_postcode) ? $this->context->customer->geoloc_postcode : '');
+
 		$this->smarty->assign(array(
 			'countries' => Country::getCountries((int)$this->context->cookie->id_lang, true),
 			'id_carrier' => ($params['cart']->id_carrier ? $params['cart']->id_carrier : Configuration::get('PS_CARRIER_DEFAULT')),
-			'id_country' => (isset($this->context->customer->geoloc_id_country) ? $this->context->customer->geoloc_id_country : Configuration::get('PS_COUNTRY_DEFAULT')),
-			'id_state' => (isset($this->context->customer->geoloc_id_state) ? $this->context->customer->geoloc_id_state : 0),
-			'zipcode' => (isset($this->context->customer->geoloc_postcode) ? $this->context->customer->geoloc_postcode : ''),
+			'id_country' => $id_country,
+			'id_state' => $id_state,
+			'zipcode' => $zipcode,
 			'currencySign' => $this->context->currency->sign,
 			'currencyRate' => $this->context->currency->conversion_rate,
 			'currencyFormat' => $this->context->currency->format,
@@ -162,14 +186,14 @@ class CarrierCompare extends Module
 			$id_zone = State::getIdZone($id_state);
 		if (!$id_zone)
 			$id_zone = Country::getIdZone($id_country);
-		
+
 		// Need to set the infos for carrier module !
 		$this->context->cookie->id_country = $id_country;
 		$this->context->cookie->id_state = $id_state;
 		$this->context->cookie->postcode = $zipcode;
 
 		$carriers = Carrier::getCarriersForOrder((int)$id_zone);
-		
+
 		return (sizeof($carriers) ? $carriers : array());
 	}
 
@@ -178,13 +202,13 @@ class CarrierCompare extends Module
 		$errors = array();
 
 		if (!Validate::isInt($id_state))
-			$errors[] = $this->l('Invalid state ID');
+			$errors[] = $this->l('Invalid State ID');
 		if ($id_state != 0 && !Validate::isLoadedObject(new State($id_state)))
 			$errors[] = $this->l('Please select a state');
 		if (!Validate::isInt($id_country) || !Validate::isLoadedObject(new Country($id_country)))
 			$errors[] = $this->l('Please select a country');
 		if (!$this->checkZipcode($zipcode, $id_country))
-			$errors[] = $this->l('Please use a valid zip/postal code depending on your country selection');
+			$errors[] = $this->l('Depending on your country selection, please use a valid zip/postal code.');
 		if (!Validate::isInt($id_carrier) || !Validate::isLoadedObject(new Carrier($id_carrier)))
 			$errors[] = $this->l('Please select a carrier');
 
@@ -195,7 +219,7 @@ class CarrierCompare extends Module
 		foreach (self::getCarriersListByIdZone($id_country, $id_state, $zipcode) as $carrier)
 			$ids_carrier[] = $carrier['id_carrier'];
 		if (!in_array($id_carrier, $ids_carrier))
-			$errors[] = $this->l('This carrier ID isn\'t available for your selection');
+			$errors[] = $this->l('The carrier ID isn\'t available for your selection');
 
 		if (sizeof($errors))
 			return $errors;
@@ -204,8 +228,17 @@ class CarrierCompare extends Module
 		$this->context->cookie->id_state = $id_state;
 		$this->context->cookie->postcode = $zipcode;
 		$this->context->cart->id_carrier = $id_carrier;
+		$delivery_option_list = $this->context->cart->getDeliveryOptionList();
+
+		$delivery_option = reset($delivery_option_list);
+		$id_carrier = (string)$id_carrier;
+		$id_carrier .= ',';
+		foreach ($delivery_option_list as $id_address => $options)
+			if (isset($options[$id_carrier]))
+				$this->context->cart->setDeliveryOption(array($id_address => $id_carrier));	
+				
 		if (!$this->context->cart->update())
-			return array($this->l('Cannot update the cart'));
+			return array($this->l('Cannot update the shopping cart.'));				
 		return array();
 	}
 
@@ -254,8 +287,8 @@ class CarrierCompare extends Module
 		 * If visitor is logged, the module isn't available on Front office,
 		 * we use the account informations for carrier selection and taxes.
 		 */
-		if (Context::getContext()->customer->id)
-			return false;
+		/*if (Context::getContext()->customer->id)
+			return false;*/
 		return true;
 }
 }

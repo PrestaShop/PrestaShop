@@ -89,6 +89,11 @@ class Smarty_Internal_Resource_Extends extends Smarty_Resource {
         $this->mbstring_overload = ini_get('mbstring.func_overload') & 2;
         $_rdl = preg_quote($source->smarty->right_delimiter);
         $_ldl = preg_quote($source->smarty->left_delimiter);
+        if (!$source->smarty->auto_literal) {
+            $al = '\s*';
+        } else {
+            $al = '';
+        }
         $_components = array_reverse($source->components);
         $_first = reset($_components);
         $_last = end($_components);
@@ -105,11 +110,11 @@ class Smarty_Internal_Resource_Extends extends Smarty_Resource {
 
             // extend sources
             if ($_component != $_last) {
-                if (preg_match_all("!({$_ldl}block\s(.+?){$_rdl})!", $_content, $_open) !=
-                preg_match_all("!({$_ldl}/block{$_rdl})!", $_content, $_close)) {
+                if (preg_match_all("!({$_ldl}{$al}block\s(.+?)\s*{$_rdl})!", $_content, $_open) !=
+                preg_match_all("!({$_ldl}{$al}/block\s*{$_rdl})!", $_content, $_close)) {
                     throw new SmartyException("unmatched {block} {/block} pairs in template {$_component->type} '{$_component->name}'");
                 }
-                preg_match_all("!{$_ldl}block\s(.+?){$_rdl}|{$_ldl}/block{$_rdl}|{$_ldl}\*([\S\s]*?)\*{$_rdl}!", $_content, $_result, PREG_OFFSET_CAPTURE);
+                preg_match_all("!{$_ldl}{$al}block\s(.+?)\s*{$_rdl}|{$_ldl}{$al}/block\s*{$_rdl}|{$_ldl}\*([\S\s]*?)\*{$_rdl}!", $_content, $_result, PREG_OFFSET_CAPTURE);
                 $_result_count = count($_result[0]);
                 $_start = 0;
                 while ($_start+1 < $_result_count) {

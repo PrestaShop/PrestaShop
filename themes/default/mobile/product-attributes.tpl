@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,12 +18,12 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {if isset($groups)}
-<hr width="99%" align="center" size="2" class="margin_less"/>
+<hr class="margin_less"/>
 
 <div id="attributes">
 {foreach from=$groups key=id_attribute_group item=group}
@@ -34,13 +34,13 @@
 		{if ($group.group_type == 'select' || $group.group_type == 'color')}
 			<select name="{$groupName}" id="{$groupName}" class="attribute_select{if ($group.group_type == 'color')} select_color{/if}">
 				{foreach from=$group.attributes key=id_attribute item=group_attribute}
-					<option value="{$id_attribute|intval}" title="{$group_attribute|escape:'htmlall':'UTF-8'}">{$group_attribute|escape:'htmlall':'UTF-8'}</option>
+					<option value="{$id_attribute|intval}" title="{$group_attribute|escape:'htmlall':'UTF-8'}"{if (isset($smarty.get.$groupName) && $smarty.get.$groupName|intval == $id_attribute) || $group.default == $id_attribute} selected="selected"{/if}>{$group_attribute|escape:'htmlall':'UTF-8'}</option>
 				{/foreach}
 			</select>
 		{elseif ($group.group_type == 'radio')}
 			<fieldset data-role="controlgroup">
 			{foreach from=$group.attributes key=id_attribute item=group_attribute}
-				<input type="radio" class="attribute_radio" name="{$groupName}" id="{$groupName}_{$id_attribute}" value="{$id_attribute}">
+				<input type="radio" class="attribute_radio" name="{$groupName}" id="{$groupName}_{$id_attribute}" value="{$id_attribute}" {if ($group.default == $id_attribute)} checked="checked"{/if}>
 				<label for="{$groupName}_{$id_attribute}">{$group_attribute|escape:'htmlall':'UTF-8'}</label>
 			{/foreach}
 			</fieldset>
