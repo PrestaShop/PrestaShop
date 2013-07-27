@@ -802,7 +802,8 @@ class AdminProductsControllerCore extends AdminController
 				{
 					if ($this->tabAccess['edit'] === '1')
 					{
-						if ($this->isProductFieldUpdated('available_date_attribute') && (Tools::getValue('available_date_attribute') != '' &&!Validate::isDateFormat(Tools::getValue('available_date_attribute'))))
+
+						if ($this->isProductFieldUpdated('available_date_attribute') && !Validate::isDateFormat(Tools::getValue('available_date_attribute')))
 							$this->errors[] = Tools::displayError('Invalid date format.');
 						else
 						{

@@ -128,9 +128,8 @@ class DateOfDelivery extends Module
 								$oos = true;
 								break;
 							}
-
-						$available_date = Product::getAvailableDate($product['id_product'], $product['id_product_attribute']);
-						$date_range = $this->_getDatesOfDelivery($id_carrier, $oos, $available_date);
+						
+						$date_range = $this->_getDatesOfDelivery($id_carrier, $oos);
 						if (is_null($date_from) || $date_from < $date_range[0])
 						{
 							$date_from = $date_range[0][1];
@@ -494,9 +493,9 @@ class DateOfDelivery extends Module
 	}
 
 	/**
-	 * @param int    $id_carrier
-	 * @param bool   $product_oos
-	 * @param string $date
+	 * @param $id_carrier
+	 * @param bool $product_oos
+	 * @param null $date
 	 *
 	 * @return array|bool returns the min & max delivery date
 	 */

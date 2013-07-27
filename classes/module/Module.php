@@ -1538,7 +1538,7 @@ abstract class ModuleCore
 			Cache::store($cache_id, $exceptionsCache);
 		}
 		else
-			$exceptionsCache = Cache::retrieve($cache_id);
+			$exceptionsCache = !Cache::retrieve($cache_id);
 
 		$key = $id_hook.'-'.$this->id;
 		$array_return = array();
