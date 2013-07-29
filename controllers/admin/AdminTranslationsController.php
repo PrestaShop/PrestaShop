@@ -2353,12 +2353,10 @@ class AdminTranslationsControllerCore extends AdminController
 		$files_by_directiories = $this->getFileToParseByTypeTranslation();
 
 		foreach ($files_by_directiories['php'] as $dir => $files)
-			foreach ($files as $file) {
+			foreach ($files as $file)
 				// If file exist and is not in ignore_folder, in the next step we check if a folder or mail
-				if (Tools::file_exists_cache($dir.$file) && !in_array($file, self::$ignore_folder) ) {
+				if (Tools::file_exists_cache($dir.$file) && !in_array($file, self::$ignore_folder))
 					$subject_mail = $this->getSubjectMail($dir, $file, $subject_mail);
-				}
-			}
 
 		// Get path of directory for find a good path of translation file
 		if ($this->theme_selected && @filemtime($this->translations_informations[$this->type_selected]['override']['dir']))
@@ -2420,7 +2418,8 @@ class AdminTranslationsControllerCore extends AdminController
 			$content = str_replace("\n", ' ', $content);
 
 			// Subject must match with a template, therefor we first grep the Mail::Send() function then the Mail::l() inside.
-			if (preg_match_all('/Mail::Send([^;]*);/si', $content, $tab)) {
+			if (preg_match_all('/Mail::Send([^;]*);/si', $content, $tab))
+			{
 				for ($i = 0; isset($tab[1][$i]); $i++)
 				{
 					$tab2 = explode(',', $tab[1][$i]);
@@ -2441,12 +2440,8 @@ class AdminTranslationsControllerCore extends AdminController
 		}
 		// Of if is colder, we scan colder for check if find in folder and subfolder
 		else if (!in_array($file, self::$ignore_folder) && is_dir($dir.'/'.$file))
-		{
 			foreach( scandir($dir.'/'.$file ) as $temp )
-			{
 				$subject_mail = $this->getSubjectMail($dir.'/'.$file, $temp, $subject_mail);
-			}
-		}
 
 		return $subject_mail;
 	}
