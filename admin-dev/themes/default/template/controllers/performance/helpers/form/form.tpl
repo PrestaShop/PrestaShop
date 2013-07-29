@@ -187,7 +187,7 @@
 			return false;
 		});
 
-		$('input[name="smarty_force_compile"], input[name="smarty_cache"], input[name="smarty_console"]').change(function(){
+		$('input[name="smarty_force_compile"], input[name="smarty_cache"], input[name="smarty_console"], input[name="smarty_console_key"]').change(function(){
 			$('#smarty_up').val(1);
 		});
 
