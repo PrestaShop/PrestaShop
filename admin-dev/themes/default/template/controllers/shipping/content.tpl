@@ -25,7 +25,7 @@
 
 {$content}
 
-<form action="{$action_fees}" id="fees" name="fees" method="post">
+<form action="{$action_fees}" id="fees" name="fees" method="post" class="form-horizontal">
 	<fieldset class="col-lg-12">
 		<legend>
 			<i class="icon-truck"></i>
@@ -35,7 +35,7 @@
 			{l s='If you only have free carriers, there\'s no need to configure delivery prices.'}
 		{else}
 			<div class="row">
-				<label class="control-label col-lg-1">{l s='Carrier:'} </label>
+				<label class="control-label col-lg-3">{l s='Carrier:'} </label>
 				<div class="col-lg-6">
 					<select name="id_carrier2" onchange="$('#fees').attr('action', $('#fees').attr('action')+'&id_carrier='+$(this).attr('value')+'#fees'); $('#fees').submit();">
 						{foreach $carriers AS $carrier}
