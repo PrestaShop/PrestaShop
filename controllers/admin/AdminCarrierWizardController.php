@@ -226,26 +226,6 @@ class AdminCarrierWizardControllerCore extends AdminController
 				'input' => array(
 					array(
 						'type' => 'radio',
-						'label' => $this->l('Apply shipping cost:'),
-						'name' => 'is_free',
-						'required' => false,
-						'class' => 't',
-						'values' => array(
-							array(
-								'id' => 'is_free_off',
-								'value' => 0,
-								'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />'
-							),
-							array(
-								'id' => 'is_free_on',
-								'value' => 1,
-								'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" />'
-							)
-						),
-						'desc' => $this->l('Apply both regular shipping cost and product-specific shipping costs.')
-					),
-					array(
-						'type' => 'radio',
 						'label' => $this->l('Shipping and handling:'),
 						'name' => 'shipping_handling',
 						'required' => false,
@@ -264,6 +244,26 @@ class AdminCarrierWizardControllerCore extends AdminController
 							)
 						),
 						'desc' => $this->l('Include the shipping and handling costs in the carrier price.')
+					),
+					array(
+						'type' => 'radio',
+						'label' => $this->l('Apply shipping cost:'),
+						'name' => 'is_free',
+						'required' => false,
+						'class' => 't',
+						'values' => array(
+							array(
+								'id' => 'is_free_off',
+								'value' => 0,
+								'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />'
+							),
+							array(
+								'id' => 'is_free_on',
+								'value' => 1,
+								'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" />'
+							)
+						),
+						'desc' => $this->l('Apply both regular shipping cost and product-specific shipping costs.')
 					),
 					array(
 						'type' => 'radio',
