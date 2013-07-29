@@ -68,75 +68,11 @@ class AdminShippingControllerCore extends AdminController
 						<li>'.$this->l('Coupons are not taken into account when calculating free shipping').'</li>
 					</ul>',
 				'submit' => array()
-			),
-			'billing' => array(
-				'title' =>	$this->l('Billing'),
-				'icon' => 'money',
-				'fields' =>	array(
-					'PS_SHIPPING_METHOD' => array(
-						'title' => $this->l('Billing'),
-						'cast' => 'intval',
-						'type' => 'radio',
-						'choices' => array(
-							0 => $this->l('According to total price'),
-							1 => $this->l('According to total weight')
-						),
-						'validation' => 'isBool'
-					),
-				)
-			),
+			)
 		);
 	}
 
-	public function initContent()
-	{
-		$array_carrier = array();
-		$carriers = Carrier::getCarriers($this->context->language->id, true, false, false, null, Carrier::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
-		foreach ($carriers as $key => $carrier)
-			if ($carrier['is_free'])
-				unset($carriers[$key]);
-			else
-				$array_carrier[] = $carrier['id_carrier'];
 
-		$id_carrier = (int)Tools::getValue('id_carrier');
-
-		if (count($carriers) && isset($array_carrier[0]))
-		{
-			if (!$id_carrier)
-				$id_carrier = (int)$array_carrier[0];
-
-			$carrierSelected = new Carrier((int)$id_carrier);
-		}
-		else
-			$carrierSelected = new Carrier((int)$id_carrier);
-
-		$currency = $this->context->currency;
-		$rangeObj = $carrierSelected->getRangeObject();
-		$rangeTable = $carrierSelected->getRangeTable();
-		$suffix = $carrierSelected->getRangeSuffix();
-
-		$rangeIdentifier = 'id_'.$rangeTable;
-		$ranges = $rangeObj->getRanges($id_carrier);
-		$delivery = Carrier::getDeliveryPriceByRanges($rangeTable, $id_carrier);
-		$deliveryArray = array();
-		foreach ($delivery as $deliv)
-			$deliveryArray[$deliv['id_zone']][$deliv['id_carrier']][$deliv[$rangeIdentifier]] = $deliv['price'];
-
-		$this->context->smarty->assign(array(
-			'zones' => $carrierSelected->getZones(),
-			'carriers' => $carriers,
-			'ranges' => $ranges,
-			'currency' => $currency,
-			'deliveryArray' => $deliveryArray,
-			'carrierSelected' => $carrierSelected,
-			'id_carrier' => $id_carrier,
-			'suffix' => $suffix,
-			'rangeIdentifier' => $rangeIdentifier,
-			'action_fees' => self::$currentIndex.'&token='.$this->token
-		));
-
-		parent::initContent();
-	}
 
 	public function postProcess()
 	{

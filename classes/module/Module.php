@@ -669,12 +669,14 @@ abstract class ModuleCore
 			return false;
 
 		// Retrocompatibility
+		$hook_name_bak = $hook_name;
 		if ($alias = Hook::getRetroHookName($hook_name))
 			$hook_name = $alias;
 
 		Hook::exec('actionModuleRegisterHookBefore', array('object' => $this, 'hook_name' => $hook_name));
 		// Get hook id
 		$id_hook = Hook::getIdByName($hook_name);
+		$live_edit = Hook::getLiveEditById((int)Hook::getIdByName($hook_name_bak));
 
 		// If hook does not exist, we create it
 		if (!$id_hook)
@@ -682,6 +684,7 @@ abstract class ModuleCore
 			$new_hook = new Hook();
 			$new_hook->name = pSQL($hook_name);
 			$new_hook->title = pSQL($hook_name);
+			$new_hook->live_edit  = pSQL($live_edit);
 			$new_hook->add();
 			$id_hook = $new_hook->id;
 			if (!$id_hook)
@@ -1538,7 +1541,7 @@ abstract class ModuleCore
 			Cache::store($cache_id, $exceptionsCache);
 		}
 		else
-			$exceptionsCache = !Cache::retrieve($cache_id);
+			$exceptionsCache = Cache::retrieve($cache_id);
 
 		$key = $id_hook.'-'.$this->id;
 		$array_return = array();

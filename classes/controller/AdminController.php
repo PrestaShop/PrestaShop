@@ -1286,7 +1286,7 @@ class AdminControllerCore extends Controller
 		$current_id = Tab::getCurrentParentId();
 		foreach ($tabs as $index => $tab)
 		{
-			if ($tab['class_name'] == 'AdminStock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
+			if (($tab['class_name'] == 'AdminStock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0) || $tab['class_name'] == 'AdminCarrierWizard')
 			{
 				unset($tabs[$index]);
 				continue;
@@ -1326,7 +1326,7 @@ class AdminControllerCore extends Controller
 			foreach ($sub_tabs as $index2 => $sub_tab)
 			{
 				// class_name is the name of the class controller
-				if (Tab::checkTabRights($sub_tab['id_tab']) === true && (bool)$sub_tab['active'])
+				if (Tab::checkTabRights($sub_tab['id_tab']) === true && (bool)$sub_tab['active'] && $sub_tab['class_name'] != 'AdminCarrierWizard')
 				{
 					$sub_tabs[$index2]['href'] = $this->context->link->getAdminLink($sub_tab['class_name']);
 					$sub_tabs[$index2]['current'] = ($sub_tab['class_name'].'Controller' == get_class($this));

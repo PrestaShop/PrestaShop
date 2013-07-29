@@ -979,17 +979,18 @@ abstract class ObjectModelCore
 		$required_fields_database = (isset(self::$fieldsRequiredDatabase[get_class($this)])) ? self::$fieldsRequiredDatabase[get_class($this)] : array();
 		foreach ($this->def['fields'] as $field => $data)
 		{
+			$value = Tools::getValue($field, $this->{$field});		
 			// Check if field is required by user
 			if (in_array($field, $required_fields_database))
 				$data['required'] = true;
 			
 			// Checking for required fields
-			if (isset($data['required']) && $data['required'] && ($value = Tools::getValue($field, $this->{$field})) == false && (string)$value != '0')
+			if (isset($data['required']) && $data['required']  && empty($value) && $value !== '0')
 				if (!$this->id || $field != 'passwd')
 					$errors[$field] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is required.');
 
 			// Checking for maximum fields sizes
-			if (isset($data['size']) && ($value = Tools::getValue($field, $this->{$field})) && Tools::strlen($value) > $data['size'])
+			if (isset($data['size']) && !empty($value) && Tools::strlen($value) > $data['size'])
 				$errors[$field] = sprintf(
 					Tools::displayError('%1$s is too long. Maximum length: %2$d'),
 					self::displayFieldName($field, get_class($this), $htmlentities),
@@ -998,7 +999,7 @@ abstract class ObjectModelCore
 
 			// Checking for fields validity
 			// Hack for postcode required for country which does not have postcodes
-			if (($value = Tools::getValue($field, $this->{$field})) || ($field == 'postcode' && $value == '0'))
+			if (!empty($value) || $value === '0' || ($field == 'postcode' && $value == '0'))
 			{
 				if (isset($data['validate']) && !Validate::$data['validate']($value) && (!empty($value) || $data['required']))
 					$errors[$field] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is invalid.');

@@ -1878,6 +1878,7 @@ div.progressBarImage
 	height: 15px;
 	margin-left: 3px;
 	width: 233px;
+	position:relative;
 }
 #showCounter
 {
@@ -2400,3 +2401,120 @@ margin-bottom:7px;
 	min-width: 205px;
 	width: 205px;
 }
+
+
+/******************** CSS Carrier Wizard ************************/
+
+#carrier_wizard.swMain{width: 100%;}
+#carrier_wizard.swMain ul.anchor{width: 100%;}
+
+#carrier_wizard.swMain ul.anchor li{
+	margin-bottom:10px;
+	background: transparent url(../img/admin/steps-carrierwizard.png) no-repeat 0 0 !important;
+	border: medium none;
+    padding-left: 0;
+	width:auto;
+	padding-right: 62px;
+	padding-top:0
+}
+
+
+#carrier_wizard.swMain ul.nbr_steps_3 li{min-width: 29.9%;}
+#carrier_wizard.swMain ul.nbr_steps_4 li{min-width: 21.6%;}
+#carrier_wizard.swMain ul.nbr_steps_5 li{ min-width: 16.6%;}
+
+#carrier_wizard.swMain ul.anchor li.disabled{background: transparent url(../img/admin/steps-carrierwizard.png) no-repeat right -64px !important;}
+#carrier_wizard.swMain ul.anchor li.selected{background: transparent url(../img/admin/steps-carrierwizard.png) no-repeat right -32px !important;}
+#carrier_wizard.swMain ul.anchor li.done{background: transparent url(../img/admin/steps-carrierwizard.png) no-repeat right 0 !important;}
+
+#carrier_wizard.swMain ul.anchor li a{
+	padding: 3px 20px;
+	width: 100%;
+	height: auto;
+    min-height: 24px !important;
+	border-radius:0;
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) { /*** IE10 ***/
+	#carrier_wizard.swMain ul.anchor li a{padding: 3px 19px 3px 19px;}
+	#carrier_wizard.swMain ul.anchor li{padding-right: 60px;}
+	#carrier_wizard.swMain ul.nbr_steps_3 li{ min-width: 30%;}
+	#carrier_wizard.swMain ul.nbr_steps_4 li{ min-width: 21.7%;}
+	#carrier_wizard.swMain ul.nbr_steps_5 li{ min-width: 16.7%;}
+	
+}
+
+.ie9 #carrier_wizard.swMain ul.anchor li a, 
+.ie8 #carrier_wizard.swMain ul.anchor li a{padding: 3px 19px 3px 19px;}
+
+.ie9 #carrier_wizard.swMain ul.anchor li, 
+.ie8 #carrier_wizard.swMain ul.anchor li,
+.ie7 #carrier_wizard.swMain ul.anchor li{padding-right: 60px;}
+	
+.ie7 #carrier_wizard.swMain ul.anchor li a{padding: 3px 19px 3px 19px;}
+
+.ie9 #carrier_wizard.swMain ul.nbr_steps_3 li,
+.ie8 #carrier_wizard.swMain ul.nbr_steps_3 li{ min-width: 30%;}
+
+.ie9 #carrier_wizard.swMain ul.nbr_steps_4 li,
+.ie8 #carrier_wizard.swMain ul.nbr_steps_4 li{ min-width: 21.7%;}
+
+.ie9 #carrier_wizard.swMain ul.nbr_steps_5 li,
+.ie8 #carrier_wizard.swMain ul.nbr_steps_5 li{ min-width: 16.7%;}
+
+
+.ie7 #carrier_wizard.swMain ul.nbr_steps_3 li{ width: 312px;}
+.ie7 #carrier_wizard.swMain ul.nbr_steps_4 li{ width: 312px;}
+.ie7 #carrier_wizard.swMain ul.nbr_steps_5 li{ width: 312px;}
+
+
+#carrier_wizard.swMain ul.anchor li a.disabled {
+    background:  #CCCCCC;
+    border: none;
+    box-shadow: none;
+    cursor: text;
+}
+
+#carrier_wizard.swMain ul.anchor li a.selected, 
+#carrier_wizard.swMain ul.anchor li a.done,
+#carrier_wizard.swMain ul.anchor li a.error {
+    background: #414A56 !important;
+    border: none !important;
+    box-shadow: none;
+    color: #ffffff;
+    cursor: text;
+	margin:0
+}
+
+
+#carrier_wizard.swMain ul.anchor li a .stepNumber {font: bold 23px/21px  Verdana,Arial,Helvetica,sans-serif;color: #747C88;padding-bottom: 0;}
+#carrier_wizard.swMain ul.anchor li a.selected .stepNumber{color: #ffffff;}
+#carrier_wizard.swMain ul.anchor li a.done .stepNumber {color: #A9B6C8;text-shadow: none;}
+
+#carrier_wizard.swMain ul.anchor li a .stepDesc {
+    font: bold 13px/12px Verdana,Arial,Helvetica,sans-serif;
+	color: #747C88;
+	padding:0 5px;
+	cursor:pointer
+}
+#carrier_wizard.swMain ul.anchor li a.selected .stepDesc{color: #ffffff;}
+#carrier_wizard.swMain ul.anchor li a.done .stepDesc {color: #A9B6C8;}
+
+#carrier_wizard.swMain ul.anchor li a .stepDesc small {font: 11px Verdana,Arial,Helvetica,sans-serif;}
+
+#carrier_wizard.swMain .stepContainer div.content{width:99%}
+#carrier_wizard.swMain div.actionBar{width:99.5%}
+
+#carrier_wizard .border_top {border-top:solid 1px #C0C0C0;}
+#carrier_wizard .border_bottom {border-bottom:solid 1px #C0C0C0;}
+#carrier_wizard .border_left {border-left:solid 1px #C0C0C0;}
+#carrier_wizard .border_right {border-right:solid 1px #C0C0C0;}
+#carrier_wizard .border_all {border:solid 1px #C0C0C0;}
+#carrier_wizard input.field_error {border : solid 1px red; background-color:#FFCCCC}
+#carrier_wizard table td.center {text-align: center}
+.new_range {float: left;margin: 20px 0 0 10px;}
+#carrier_wizard tr.fees_all { background: #CCCCCC}
+
+#carrier_wizard #zones_table input[type=text] {width: 45px;}
+
+#carrier_logo_block{position: absolute;right: 15px;}

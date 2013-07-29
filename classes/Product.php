@@ -668,6 +668,45 @@ class ProductCore extends ObjectModel
 		return false;
 	}
 
+	/**
+	 * For a given id_product and id_product_attribute, return available date
+	 *
+	 * @param int $id_product
+	 * @param int $id_product_attribute Optional
+	 * @return string/null
+	 */
+	public static function getAvailableDate($id_product, $id_product_attribute = null)
+	{
+		$sql = 'SELECT';
+
+		if ($id_product_attribute === null)
+			$sql .= ' p.`available_date`';
+		else
+			$sql .= ' IF(pa.`available_date` = "0000-00-00", p.`available_date`, pa.`available_date`) AS available_date';
+
+		$sql .= ' FROM `'._DB_PREFIX_.'product` p';
+
+		if ($id_product_attribute !== null)
+			$sql .= ' LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.`id_product` = p.`id_product`)';
+
+		$sql .= Shop::addSqlAssociation('product', 'p');
+
+		if ($id_product_attribute !== null)
+			$sql .= Shop::addSqlAssociation('product_attribute', 'pa');
+
+		$sql .= ' WHERE p.`id_product` = '.(int)$id_product;
+
+		if ($id_product_attribute !== null)
+			$sql .= ' AND pa.`id_product` = '.(int)$id_product.' AND pa.`id_product_attribute` = '.(int)$id_product_attribute;
+
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+
+		if ($result == '0000-00-00')
+			$result = null;
+
+		return $result;
+	}
+
 	public static function updateIsVirtual($id_product)
 	{
 		Db::getInstance()->update('product', array(
@@ -1978,13 +2017,7 @@ class ProductCore extends ObjectModel
 					FROM `'._DB_PREFIX_.'product` p
 					'.Shop::addSqlAssociation('product', 'p').'
 					WHERE product_shop.`active` = 1
-					AND DATEDIFF(
-						product_shop.`date_add`,
-						DATE_SUB(
-							NOW(),
-							INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY
-						)
-					) > 0
+					AND product_shop.`date_add` > "'.date('Y-m-d', strtotime('-'.(Configuration::get('PS_NB_DAYS_NEW_PRODUCT') ? (int)Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY')).'"
 					'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
 					AND p.`id_product` IN (
 						SELECT cp.`id_product`
@@ -1999,13 +2032,7 @@ class ProductCore extends ObjectModel
 		$sql->select(
 			'p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
 			pl.`meta_keywords`, pl.`meta_title`, pl.`name`, MAX(image_shop.`id_image`) id_image, il.`legend`, m.`name` AS manufacturer_name,
-			DATEDIFF(
-				product_shop.`date_add`,
-				DATE_SUB(
-					NOW(),
-					INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY
-				)
-			) > 0 AS new'
+			product_shop.`date_add` > "'.date('Y-m-d', strtotime('-'.(Configuration::get('PS_NB_DAYS_NEW_PRODUCT') ? (int)Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY')).'" as new'
 		);
 
 		$sql->from('product', 'p');
@@ -2020,25 +2047,15 @@ class ProductCore extends ObjectModel
 		$sql->leftJoin('manufacturer', 'm', 'm.`id_manufacturer` = p.`id_manufacturer`');
 
 		$sql->where('product_shop.`active` = 1');
-
 		if ($front)
 			$sql->where('product_shop.`visibility` IN ("both", "catalog")');
-		$sql->where('
-			DATEDIFF(
-				product_shop.`date_add`,
-				DATE_SUB(
-					NOW(),
-					INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY
-				)
-			) > 0'
-		);
-
+		$sql->where('product_shop.`date_add` > "'.date('Y-m-d', strtotime('-'.(Configuration::get('PS_NB_DAYS_NEW_PRODUCT') ? (int)Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY')).'"');
 		$sql->where('p.`id_product` IN (
 			SELECT cp.`id_product`
 			FROM `'._DB_PREFIX_.'category_group` cg
 			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
-			WHERE cg.`id_group` '.$sql_groups.')'
-		);
+			WHERE cg.`id_group` '.$sql_groups.'
+		)');
 		$sql->groupBy('product_shop.id_product');
 
 		$sql->orderBy((isset($order_by_prefix) ? pSQL($order_by_prefix).'.' : '').'`'.pSQL($order_by).'` '.pSQL($order_way));
@@ -4740,6 +4757,44 @@ class ProductCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'product_tag`
 		WHERE `id_product` = '.(int)$this->id);
 	}
+	
+	/**
+	* Webservice setter : set tag ids of current product for association
+	*
+	* @param $tag_ids tag ids
+	*/
+	public function setWsTags($tag_ids)
+	{
+		$ids = array();
+		foreach ($tag_ids as $value)
+			$ids[] = $value['id'];
+		if ($this->deleteWsTags())
+		{
+			if ($ids)
+			{
+				$sql_values = '';
+				$ids = array_map('intval', $ids);
+				foreach ($ids as $position => $id)
+					$sql_values[] = '('.(int)$this->id.', '.(int)$id.')';
+				$result = Db::getInstance()->execute('
+					INSERT INTO `'._DB_PREFIX_.'product_tag` (`id_product`, `id_tag`)
+					VALUES '.implode(',', $sql_values)
+				);
+				return $result;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	* Delete products tags entries without delete tags for webservice usage
+	*
+	* @return array Deletion result
+	*/
+	public function deleteWsTags()
+	{
+		return Db::getInstance()->delete('product_tag', 'id_product = '.(int)$this->id);
+	}		
 
 
 	public function getWsManufacturerName()
@@ -5377,7 +5432,8 @@ class ProductCore extends ObjectModel
 		Pack::deleteItems($this->id);
 		
 		foreach ($items as $item)
-			Pack::addItem($this->id, (int)$item['id'], (int)$item['quantity']);
+			if((int)$item['id'] > 0)
+				Pack::addItem($this->id, (int)$item['id'], (int)$item['quantity']);
 		return true;
 	}
 }
