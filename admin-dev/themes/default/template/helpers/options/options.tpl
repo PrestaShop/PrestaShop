@@ -50,7 +50,7 @@
 
 			{* Category description *}
 			{if (isset($categoryData['description']) && $categoryData['description'])}
-				<div class="optionsDescription">{$categoryData['description']}</div>
+				<div>{$categoryData['description']}</div>
 			{/if}
 			{* Category info *}
 			{if (isset($categoryData['info']) && $categoryData['info'])}
@@ -58,8 +58,7 @@
 			{/if}
 
 			{if !$categoryData['hide_multishop_checkbox'] && $use_multishop}
-				<input type="checkbox" style="vertical-align: text-top" onclick="checkAllMultishopDefaultValue(this)" /> <b>{l s='Check/uncheck all'}</b> {l s='(Check boxes if you want to set a custom value for this shop or group shop context)'}
-				<div class="separation"></div>
+				<input type="checkbox" onclick="checkAllMultishopDefaultValue(this)" /> <b>{l s='Check/uncheck all'}</b> {l s='(Check boxes if you want to set a custom value for this shop or group shop context)'}
 			{/if}
 
 			{foreach $categoryData['fields'] AS $key => $field}
@@ -119,23 +118,26 @@
 										</div>
 
 									{elseif $field['type'] == 'radio'}
-										{foreach $field['choices'] AS $k => $v}
-											<div class="col-lg-9">
+										<div class="col-lg-9">
+											{foreach $field['choices'] AS $k => $v}
+
 												<p class="radio">
 													<input type="radio" name="{$key}" id="{$key}_{$k}" value="{$k}"{if $k == $field['value']} checked="checked"{/if}{if isset($field['js'][$k])} {$field['js'][$k]}{/if}/>
 													<label class="col-lg-3" for="{$key}_{$k}"> {$v}</label>
 												</p>
-											</div>
-										{/foreach}
+											{/foreach}
+										</div>
 									{elseif $field['type'] == 'checkbox'}
-										{foreach $field['choices'] AS $k => $v}
-											<div class="col-lg-9">
+
+										<div class="col-lg-9">
+											{foreach $field['choices'] AS $k => $v}
+
 												<p class="checkbox">
 													<input type="checkbox" name="{$key}" id="{$key}{$k}_on" value="{$k|intval}"{if $k == $field['value']} checked="checked"{/if}{if isset($field['js'][$k])} {$field['js'][$k]}{/if}/>
 													<label class="col-lg-3" for="{$key}{$k}_on"> {$v}</label>
 												</p>
-											</div>
-										{/foreach}
+											{/foreach}
+										</div>
 									{elseif $field['type'] == 'text'}
 										<div class="col-lg-9">
 											<input type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="{$field['value']|escape:'htmlall':'UTF-8'}" {if isset($field['autocomplete']) && !$field['autocomplete']}autocomplete="off"{/if}/>
@@ -164,8 +166,10 @@
 							              <input type="color" size="{$field['size']}" data-hex="true" {if isset($input.class)}class="{$field['class']}" {else}class="color mColorPickerInput"{/if} name="{$field['name']}" class="{if isset($field['class'])}{$field['class']}{/if}" value="{$field['value']|escape:'htmlall':'UTF-8'}" />
 							            </div>
 									{elseif $field['type'] == 'price'}
-										<div class="col-lg-9">
-											{$currency_left_sign}<input type="text" size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="{$field['value']|escape:'htmlall':'UTF-8'}" />{$currency_right_sign} {l s='(tax excl.)'}
+
+										<div class="input-group col-lg-9">
+											<span class="input-group-addon">{$currency->prefix}{$currency->suffix} {l s='(tax excl.)'}</span>
+											<input type="text" size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="{$field['value']|escape:'htmlall':'UTF-8'}" />
 										</div>
 
 									{elseif $field['type'] == 'textLang' || $field['type'] == 'textareaLang' || $field['type'] == 'selectLang'}
@@ -228,16 +232,17 @@
 
 										{elseif $field['type'] == 'selectLang'}
 											{foreach $languages as $language}
-											<div id="{$key}_{$language.id_lang}" style="display: {if $language.id_lang == $current_id_lang}block{else}none{/if};" class="col-lg-9">
-												<select name="{$key}_{$language.iso_code|upper}">
-													{foreach $field['list'] AS $k => $v}
-														<option value="{if isset($v.cast)}{$v.cast[$v[$field.identifier]]}{else}{$v[$field.identifier]}{/if}"
-															{if $field['value'][$language.id_lang] == $v['name']} selected="selected"{/if}>
-															{$v['name']}
-														</option>
-													{/foreach}
-												</select>
-											</div>
+											
+												<div id="{$key}_{$language.id_lang}" style="display: {if $language.id_lang == $current_id_lang}block{else}none{/if};" class="col-lg-9">
+													<select name="{$key}_{$language.iso_code|upper}">
+														{foreach $field['list'] AS $k => $v}
+															<option value="{if isset($v.cast)}{$v.cast[$v[$field.identifier]]}{else}{$v[$field.identifier]}{/if}"
+																{if $field['value'][$language.id_lang] == $v['name']} selected="selected"{/if}>
+																{$v['name']}
+															</option>
+														{/foreach}
+													</select>
+												</div>
 											{/foreach}
 										{/if}
 

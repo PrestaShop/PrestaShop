@@ -30,6 +30,7 @@ class AdminShippingControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		parent::__construct();
 	 	$this->table = 'delivery';
 

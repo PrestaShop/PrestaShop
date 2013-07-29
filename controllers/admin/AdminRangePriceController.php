@@ -28,6 +28,7 @@ class AdminRangePriceControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 	 	$this->table = 'range_price';
 	 	$this->className = 'RangePrice';
 	 	$this->lang = false;
@@ -81,7 +82,6 @@ class AdminRangePriceControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('From:'),
 					'name' => 'delimiter1',
-					'size' => 5,
 					'required' => true,
 					'suffix' => $currency->getSign('right').' '.$this->l('(Tax Incl.)'),
 					'desc' => $this->l('Start range (included)'),
@@ -91,7 +91,6 @@ class AdminRangePriceControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('To:'),
 					'name' => 'delimiter2',
-					'size' => 5,
 					'required' => true,
 					'suffix' => $currency->getSign('right').' '.$this->l('(Tax Incl.)'),
 					'desc' => $this->l('End range (excluded)'),
