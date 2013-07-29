@@ -34,6 +34,7 @@ class AdminCustomersControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->required_database = true;
 		$this->required_fields = array('newsletter','optin');
 		$this->table = 'customer';
@@ -78,12 +79,10 @@ class AdminCustomersControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_customer' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center',
-				'width' => 20
+				'align' => 'center'
 			),
 			'id_gender' => array(
 				'title' => $this->l('Title'),
-				'width' => 70,
 				'align' => 'center',
 				'icon' => $genders_icon,
 				'orderby' => false,
@@ -92,35 +91,28 @@ class AdminCustomersControllerCore extends AdminController
 				'filter_key' => 'a!id_gender',
 			),
 			'lastname' => array(
-				'title' => $this->l('Last name'),
-				'width' => 'auto'
+				'title' => $this->l('Last name')
 			),
 			'firstname' => array(
-				'title' => $this->l('First Name'),
-				'width' => 'auto'
+				'title' => $this->l('First Name')
 			),
 			'email' => array(
-				'title' => $this->l('Email address'),
-				'width' => 140,
+				'title' => $this->l('Email address')
 			),
 			'age' => array(
 				'title' => $this->l('Age'),
-				'width' => 20,
 				'search' => false,
 				'align' => 'center'
 			),
 			'active' => array(
 				'title' => $this->l('Enabled'),
-				'width' => 70,
 				'align' => 'center',
 				'active' => 'status',
 				'type' => 'bool',
-				'orderby' => false,
-				'filter_key' => 'a!active',
+				'orderby' => false
 			),
 			'newsletter' => array(
 				'title' => $this->l('News.'),
-				'width' => 70,
 				'align' => 'center',
 				'type' => 'bool',
 				'callback' => 'printNewsIcon',
@@ -128,7 +120,6 @@ class AdminCustomersControllerCore extends AdminController
 			),
 			'optin' => array(
 				'title' => $this->l('Opt.'),
-				'width' => 70,
 				'align' => 'center',
 				'type' => 'bool',
 				'callback' => 'printOptinIcon',
@@ -136,13 +127,11 @@ class AdminCustomersControllerCore extends AdminController
 			),
 			'date_add' => array(
 				'title' => $this->l('Registration'),
-				'width' => 150,
 				'type' => 'date',
 				'align' => 'right'
 			),
 			'connect' => array(
 				'title' => $this->l('Last visit'),
-				'width' => 100,
 				'type' => 'datetime',
 				'search' => false,
 				'havingFilter' => true
@@ -264,7 +253,7 @@ class AdminCustomersControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Customer'),
-				'image' => '../img/admin/tab-customers.gif'
+				'icon' => 'icon-user'
 			),
 			'input' => array(
 				array(
@@ -304,7 +293,7 @@ class AdminCustomersControllerCore extends AdminController
 					'name' => 'passwd',
 					'size' => 33,
 					'required' => ($obj->id ? false : true),
-					'desc' => ($obj->id ? $this->l('Leave  this field blank if there\'s no change') : $this->l('Minimum of five characters (only letters and numbers).').' -_')
+					'hint' => ($obj->id ? $this->l('Leave  this field blank if there\'s no change') : $this->l('Minimum of five characters (only letters and numbers).').' -_')
 				),
 				array(
 					'type' => 'birthday',
@@ -317,7 +306,7 @@ class AdminCustomersControllerCore extends AdminController
 					)
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Status:'),
 					'name' => 'active',
 					'required' => false,
@@ -335,10 +324,10 @@ class AdminCustomersControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Enable or disable customer login')
+					'hint' => $this->l('Enable or disable customer login')
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Newsletter:'),
 					'name' => 'newsletter',
 					'required' => false,
@@ -356,10 +345,10 @@ class AdminCustomersControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Customers will receive your newsletter via email.')
+					'hint' => $this->l('Customers will receive your newsletter via email.')
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Opt in:'),
 					'name' => 'optin',
 					'required' => false,
@@ -377,7 +366,7 @@ class AdminCustomersControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Customer will receive your ads via email.')
+					'hint' => $this->l('Customer will receive your ads via email.')
 				),
 			)
 		);
@@ -395,12 +384,12 @@ class AdminCustomersControllerCore extends AdminController
 		$this->fields_form['input'] = array_merge($this->fields_form['input'],
 				array(
 					array(
-								'type' => 'group',
-								'label' => $this->l('Group access:'),
-								'name' => 'groupBox',
-								'values' => $groups,
-								'required' => true,
-								'desc' => $this->l('Select all the groups that you would like to apply to this customer.')
+						'type' => 'group',
+						'label' => $this->l('Group access:'),
+						'name' => 'groupBox',
+						'values' => $groups,
+						'required' => true,
+						'hint' => $this->l('Select all the groups that you would like to apply to this customer.')
 							),
 					array(
 						'type' => 'select',
@@ -411,8 +400,10 @@ class AdminCustomersControllerCore extends AdminController
 							'id' => 'id_group',
 							'name' => 'name'
 						),
-						'hint' => $this->l('The group will be as applied by default.'),
-						'desc' => $this->l('Apply the discount\'s price of this group.')
+						'hint' => array(
+							$this->l('The group will be as applied by default.'),
+							$this->l('Apply the discount\'s price of this group.')
+							)
 						)
 					)
 				);

@@ -31,6 +31,7 @@ class AdminAddressesControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->required_database = true;
 		$this->required_fields = array('company','address2', 'postcode', 'other', 'phone', 'phone_mobile', 'vat_number', 'dni');
 	 	$this->table = 'address';
@@ -54,13 +55,13 @@ class AdminAddressesControllerCore extends AdminController
 			$this->countries_array[$country['id_country']] = $country['name'];
 
 		$this->fields_list = array(
-			'id_address' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'firstname' => array('title' => $this->l('First Name'), 'width' => 120, 'filter_key' => 'a!firstname'),
-			'lastname' => array('title' => $this->l('Last Name'), 'width' => 140, 'filter_key' => 'a!lastname'),
+			'id_address' => array('title' => $this->l('ID'), 'align' => 'center'),
+			'firstname' => array('title' => $this->l('First Name'), 'filter_key' => 'a!firstname'),
+			'lastname' => array('title' => $this->l('Last Name'), 'filter_key' => 'a!lastname'),
 			'address1' => array('title' => $this->l('Address')),
-			'postcode' => array('title' => $this->l('Zip/Postal Code'), 'align' => 'right', 'width' => 80),
-			'city' => array('title' => $this->l('City'), 'width' => 150),
-			'country' => array('title' => $this->l('Country'), 'width' => 100, 'type' => 'select', 'list' => $this->countries_array, 'filter_key' => 'cl!id_country'));
+			'postcode' => array('title' => $this->l('Zip/Postal Code'), 'align' => 'right'),
+			'city' => array('title' => $this->l('City')),
+			'country' => array('title' => $this->l('Country'), 'type' => 'select', 'list' => $this->countries_array, 'filter_key' => 'cl!id_country'));
 
 		parent::__construct();
 
@@ -87,29 +88,26 @@ class AdminAddressesControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Addresses'),
-				'image' => '../img/admin/contact.gif'
+				'icon' => 'icon-envelope-alt'
 			),
 			'input' => array(
 				array(
 					'type' => 'text_customer',
 					'label' => $this->l('Customer'),
 					'name' => 'id_customer',
-					'size' => 33,
 					'required' => false,
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Identification Number'),
 					'name' => 'dni',
-					'size' => 30,
 					'required' => false,
-					'desc' => $this->l('DNI / NIF / NIE')
+					'hint' => $this->l('DNI / NIF / NIE')
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Address alias'),
 					'name' => 'alias',
-					'size' => 33,
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}'
 				),
@@ -117,30 +115,26 @@ class AdminAddressesControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Home phone'),
 					'name' => 'phone',
-					'size' => 33,
 					'required' => false,
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Mobile phone'),
 					'name' => 'phone_mobile',
-					'size' => 33,
 					'required' => false,
-					'desc' => Configuration::get('PS_ONE_PHONE_AT_LEAST')? sprintf($this->l('You must register at least one phone number %s'), '<sup>*</sup>') : ''
+					'hint' => Configuration::get('PS_ONE_PHONE_AT_LEAST')? sprintf($this->l('You must register at least one phone number %s')) : ''
 				),
 				array(
 					'type' => 'textarea',
 					'label' => $this->l('Other'),
 					'name' => 'other',
-					'cols' => 36,
-					'rows' => 4,
 					'required' => false,
 					'hint' => $this->l('Forbidden characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span>'
 				),
 			),
 			'submit' => array(
 				'title' => $this->l('Save   '),
-				'class' => 'button'
+				'class' => 'btn btn-primary'
 			)
 		);
 		$id_customer = (int)Tools::getValue('id_customer');
@@ -172,15 +166,13 @@ class AdminAddressesControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Company'),
 					'name' => 'company',
-					'size' => 33,
 					'required' => false,
-					'hint' => $this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span>'
+					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
 				);
 				$temp_fields[] = array(
 					'type' => 'text',
 					'label' => $this->l('VAT number'),
-					'name' => 'vat_number',
-					'size' => 33,
+					'name' => 'vat_number'
 				);
 			}
 			else if ($addr_field_item == 'lastname')
@@ -197,9 +189,8 @@ class AdminAddressesControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Last Name'),
 					'name' => 'lastname',
-					'size' => 33,
 					'required' => true,
-					'hint' => $this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:<span class="hint-pointer">&nbsp;</span>',
+					'hint' => $this->l('Invalid characters:').' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:',
 					'default_value' => $default_value,
 				);
 			}
@@ -217,9 +208,8 @@ class AdminAddressesControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('First Name'),
 					'name' => 'firstname',
-					'size' => 33,
 					'required' => true,
-					'hint' => $this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:<span class="hint-pointer">&nbsp;</span>',
+					'hint' => $this->l('Invalid characters:').' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:',
 					'default_value' => $default_value,
 				);
 			}
@@ -229,7 +219,6 @@ class AdminAddressesControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Address'),
 					'name' => 'address1',
-					'size' => 33,
 					'required' => true,
 				);
 			}
@@ -239,7 +228,6 @@ class AdminAddressesControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Address').' (2)',
 					'name' => 'address2',
-					'size' => 33,
 					'required' => false,
 				);
 			}
@@ -249,7 +237,6 @@ class AdminAddressesControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Zip/Postal Code'),
 					'name' => 'postcode',
-					'size' => 33,
 					'required' => true,
 				);
 			}
@@ -259,7 +246,6 @@ class AdminAddressesControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('City'),
 					'name' => 'city',
-					'size' => 33,
 					'required' => true,
 				);
 			}
@@ -274,7 +260,7 @@ class AdminAddressesControllerCore extends AdminController
 					'options' => array(
 						'query' => Country::getCountries($this->context->language->id),
 						'id' => 'id_country',
-						'name' => 'name',
+						'name' => 'name'
 					)
 				);
 				$temp_fields[] = array(
@@ -285,7 +271,7 @@ class AdminAddressesControllerCore extends AdminController
 					'options' => array(
 						'query' => array(),
 						'id' => 'id_state',
-						'name' => 'name',
+						'name' => 'name'
 					)
 				);
 			}

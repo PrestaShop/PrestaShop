@@ -69,9 +69,9 @@
 						<div class="row">
 							<div id="conf_id_{$key}" {if $field['is_invisible']} class="isInvisible"{/if}>
 								{if !$categoryData['hide_multishop_checkbox'] && $field['multishop_default'] && empty($field['no_multishop_checkbox'])}
-									<div class="preference_default_multishop col-lg-6">
-										<input type="checkbox" name="multishopOverrideOption[{$key}]" value="1" {if !$field['is_disabled']}checked="checked"{/if} onclick="checkMultishopDefaultValue(this, '{$key}')" />
-									</div>
+								<div class="preference_default_multishop col-lg-9">
+									<input type="checkbox" name="multishopOverrideOption[{$key}]" value="1" {if !$field['is_disabled']}checked="checked"{/if} onclick="checkMultishopDefaultValue(this, '{$key}')" />
+								</div>
 								{/if}
 								{block name="label"}
 									{if isset($field['title']) && isset($field['desc'])}
@@ -88,7 +88,7 @@
 									
 								{block name="input"}
 									{if $field['type'] == 'select'}
-										<div class="col-lg-6">
+										<div class="col-lg-9">
 											{if $field['list']}
 												<select name="{$key}"{if isset($field['js'])} onchange="{$field['js']}"{/if} id="{$key}" {if isset($field['size'])} size="{$field['size']}"{/if}>
 													{foreach $field['list'] AS $k => $option}
@@ -120,7 +120,7 @@
 
 									{elseif $field['type'] == 'radio'}
 										{foreach $field['choices'] AS $k => $v}
-											<div class="col-lg-6">
+											<div class="col-lg-9">
 												<p class="radio">
 													<input type="radio" name="{$key}" id="{$key}_{$k}" value="{$k}"{if $k == $field['value']} checked="checked"{/if}{if isset($field['js'][$k])} {$field['js'][$k]}{/if}/>
 													<label class="col-lg-3" for="{$key}_{$k}"> {$v}</label>
@@ -129,7 +129,7 @@
 										{/foreach}
 									{elseif $field['type'] == 'checkbox'}
 										{foreach $field['choices'] AS $k => $v}
-											<div class="col-lg-6">
+											<div class="col-lg-9">
 												<p class="checkbox">
 													<input type="checkbox" name="{$key}" id="{$key}{$k}_on" value="{$k|intval}"{if $k == $field['value']} checked="checked"{/if}{if isset($field['js'][$k])} {$field['js'][$k]}{/if}/>
 													<label class="col-lg-3" for="{$key}{$k}_on"> {$v}</label>
@@ -137,52 +137,98 @@
 											</div>
 										{/foreach}
 									{elseif $field['type'] == 'text'}
-										<div class="col-lg-6">
+										<div class="col-lg-9">
 											<input type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="{$field['value']|escape:'htmlall':'UTF-8'}" {if isset($field['autocomplete']) && !$field['autocomplete']}autocomplete="off"{/if}/>
 											{if isset($field['suffix'])}&nbsp;{$field['suffix']|strval}{/if}
 										</div>
 									{elseif $field['type'] == 'password'}
-										<div class="col-lg-6">
+										<div class="col-lg-9">
 											<input type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="" {if isset($field['autocomplete']) && !$field['autocomplete']}autocomplete="off"{/if} />
 											{if isset($field['suffix'])}&nbsp;{$field['suffix']|strval}{/if}
 										</div>
 									{elseif $field['type'] == 'textarea'}
-										<div class="col-lg-6">
+										<div class="col-lg-9">
 											<textarea name={$key} cols="{$field['cols']}" rows="{$field['rows']}">{$field['value']|escape:'htmlall':'UTF-8'}</textarea>
 										</div>
 									{elseif $field['type'] == 'file'}
 										{if isset($field['thumb']) && $field['thumb']}
-											<div class="col-lg-6">
+											<div class="col-lg-9">
 												<img src="{$field['thumb']}" alt="{$field['title']}" title="{$field['title']}" />
 											</div>
 										{/if}
-										<div class="col-lg-6">
+										<div class="col-lg-9">
 											<input type="file" name="{$key}" />
 										</div>
 						            {elseif $field['type'] == 'color'}
-										<div class="col-lg-6">
+										<div class="col-lg-9">
 							              <input type="color" size="{$field['size']}" data-hex="true" {if isset($input.class)}class="{$field['class']}" {else}class="color mColorPickerInput"{/if} name="{$field['name']}" class="{if isset($field['class'])}{$field['class']}{/if}" value="{$field['value']|escape:'htmlall':'UTF-8'}" />
 							            </div>
 									{elseif $field['type'] == 'price'}
-										<div class="col-lg-6">
+										<div class="col-lg-9">
 											{$currency_left_sign}<input type="text" size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="{$field['value']|escape:'htmlall':'UTF-8'}" />{$currency_right_sign} {l s='(tax excl.)'}
 										</div>
+
 									{elseif $field['type'] == 'textLang' || $field['type'] == 'textareaLang' || $field['type'] == 'selectLang'}
+
 										{if $field['type'] == 'textLang'}
-											{foreach $field['languages'] AS $id_lang => $value}
-												<div id="{$key}_{$id_lang}" style="display: {if $id_lang == $current_id_lang}block{else}none{/if};" class="col-lg-1">
-													<input type="text" size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}_{$id_lang}" value="{$value|escape:'htmlall':'UTF-8'}" />
+											<div class="col-lg-9">
+												<div class="row">
+												{foreach $field['languages'] AS $id_lang => $value}
+													<div class="input-group col-lg-12 translatable-field lang-{$id_lang}" {if $id_lang != $current_id_lang}style="display:none;"{/if}>
+														<input type="text"
+															name="{$key}_{$id_lang}"
+															value="{$value|escape:'htmlall':'UTF-8'}"
+															{if isset($input.class)}class="{$input.class}"{/if}
+														/>
+														<div class="input-group-btn">
+															<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+																<img src="{$base_url}/img/l/{$id_lang|intval}.jpg" alt="">
+																<!-- name -->
+																<span class="caret"></span>
+															</button>
+															<ul class="dropdown-menu">
+																{foreach $languages as $language}
+																<li>
+																	<a href="javascript:hideOtherLanguage({$language.id_lang});"><img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt=""> {$language.name}</a>
+																</li>
+																{/foreach}
+															</ul>
+														</div>
+													</div>
+												{/foreach}
 												</div>
-											{/foreach}
+											</div>
+
 										{elseif $field['type'] == 'textareaLang'}
-											{foreach $field['languages'] AS $id_lang => $value}
-												<div id="{$key}_{$id_lang}" style="display: {if $id_lang == $current_id_lang}block{else}none{/if};" class="col-lg-6">
-													<textarea rows="{$field['rows']}" cols="{$field['cols']|intval}"  name="{$key}_{$id_lang}">{$value|replace:'\r\n':"\n"}</textarea>
-												</div>
-											{/foreach}
+											<div class="col-lg-9">
+												{foreach $field['languages'] AS $id_lang => $value}
+													<div class="row translatable-field lang-{$id_lang}" {if $id_lang != $current_id_lang}style="display:none;"{/if}>
+														<div id="{$key}_{$id_lang}" class="col-lg-10" >
+															<textarea name="{$key}_{$id_lang}">{$value|replace:'\r\n':"\n"}</textarea>
+														</div>
+
+														<div class="input-group-btn col-lg-2">
+															<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+																<img src="{$base_url}/img/l/{$id_lang|intval}.jpg" alt="">
+																<!-- name -->
+																<span class="caret"></span>
+															</button>
+															<ul class="dropdown-menu">
+																{foreach $languages as $language}
+																<li>
+																	<a href="javascript:hideOtherLanguage({$language.id_lang});"><img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt=""> {$language.name}</a>
+																</li>
+																{/foreach}
+															</ul>
+														</div>
+														
+													</div>
+												{/foreach}
+											</div>
+
 										{elseif $field['type'] == 'selectLang'}
 											{foreach $languages as $language}
-											<div id="{$key}_{$language.id_lang}" style="display: {if $language.id_lang == $current_id_lang}block{else}none{/if};" class="col-lg-6">
+											<div id="{$key}_{$language.id_lang}" style="display: {if $language.id_lang == $current_id_lang}block{else}none{/if};" class="col-lg-9">
 												<select name="{$key}_{$language.iso_code|upper}">
 													{foreach $field['list'] AS $k => $v}
 														<option value="{if isset($v.cast)}{$v.cast[$v[$field.identifier]]}{else}{$v[$field.identifier]}{/if}"
@@ -192,22 +238,25 @@
 													{/foreach}
 												</select>
 											</div>
-
-
 											{/foreach}
 										{/if}
-										{if count($languages) > 1}
-											{* TO DO - ajouter les langues*}
-											<div class="displayed_flag">
-												<img src="../img/l/{$current_id_lang}.jpg" class="pointer" id="language_current_{$key}" onclick="toggleLanguageFlags(this);" />
-											</div>
-											<div id="languages_{$key}" class="language_flags">
-												{l s='Choose language:'}<br /><br />
-												{foreach $languages as $language}
-														<img src="../img/l/{$language.id_lang}.jpg" class="pointer" alt="{$language.name}" title="{$language.name}" onclick="changeLanguage('{$key}', '{if isset($custom_key)}{$custom_key}{else}{$key}{/if}', {$language.id_lang}, '{$language.iso_code}');" />
-												{/foreach}
-											</div>
-										{/if}
+
+<!-- 
+{if count($languages) > 1}
+	<div class="displayed_flag">
+		<img src="../img/l/{$current_id_lang}.jpg" class="pointer" id="language_current_{$key}" onclick="toggleLanguageFlags(this);" />
+	</div>
+	<div id="languages_{$key}" class="language_flags">
+
+		{l s='Choose language:'}
+
+		{foreach $languages as $language}
+				<img src="../img/l/{$language.id_lang}.jpg" class="pointer" alt="{$language.name}" title="{$language.name}" onclick="changeLanguage('{$key}', '{if isset($custom_key)}{$custom_key}{else}{$key}{/if}', {$language.id_lang}, '{$language.iso_code}');" />
+		{/foreach}
+	</div>
+{/if}
+-->
+
 									{/if}
 
 									{if isset($field['required']) && $field['required'] && $field['type'] != 'radio'}

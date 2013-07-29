@@ -28,6 +28,7 @@ class AdminGendersControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 	 	$this->table = 'gender';
 		$this->className = 'Gender';
 		$this->lang = true;
@@ -52,17 +53,14 @@ class AdminGendersControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_gender' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center',
-				'width' => 25
+				'align' => 'center'
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
-				'width' => 'auto',
 				'filter_key' => 'b!name'
 			),
 			'type' => array(
 				'title' => $this->l('Type'),
-				'width' => 100,
 				'orderby' => false,
 				'type' => 'select',
 				'list' => array(
@@ -72,15 +70,14 @@ class AdminGendersControllerCore extends AdminController
 				),
 				'filter_key' => 'a!type',
 				'callback' => 'displayGenderType',
-				'callback_object' => $this,
+				'callback_object' => $this
 			),
 			'image' => array(
 				'title' => $this->l('Image'),
 				'align' => 'center',
 				'image' => 'genders',
 				'orderby' => false,
-				'search' => false,
-				'width' => 40
+				'search' => false
 			)
 		);
 
@@ -92,7 +89,7 @@ class AdminGendersControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Titles'),
-				'image' => '../img/admin/tab-genders.gif'
+				'icon' => 'icon-male'
 			),
 			'input' => array(
 				array(
@@ -100,7 +97,6 @@ class AdminGendersControllerCore extends AdminController
 					'label' => $this->l('Name:'),
 					'name' => 'name',
 					'lang' => true,
-					'size' => 33,
 					'hint' => $this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:',
 					'required' => true
 				),
@@ -138,15 +134,13 @@ class AdminGendersControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Image Width:'),
 					'name' => 'img_width',
-					'size' => 4,
-					'desc' => $this->l('Image width in pixels. Enter "0" to use the original size.')
+					'hint' => $this->l('Image width in pixels. Enter "0" to use the original size.')
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Image Height:'),
 					'name' => 'img_height',
-					'size' => 4,
-					'desc' => $this->l('Image height in pixels. Enter "0" to use the original size.')
+					'hint' => $this->l('Image height in pixels. Enter "0" to use the original size.')
 				)
 			),
 			'submit' => array(
