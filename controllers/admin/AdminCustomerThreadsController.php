@@ -28,6 +28,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->context = Context::getContext();
 	 	$this->table = 'customer_thread';
 		$this->className = 'CustomerThread';
@@ -57,23 +58,19 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
 		$this->fields_list = array(
 			'id_customer_thread' => array(
-				'title' => $this->l('ID'),
-				'width' => 25,
+				'title' => $this->l('ID')
 			),
 			'customer' => array(
 				'title' => $this->l('Customer'),
-				'width' => 100,
 				'filter_key' => 'customer',
 				'tmpTableFilter' => true,
 			),
 			'email' => array(
 				'title' => $this->l('Email'),
-				'width' => 100,
 				'filter_key' => 'a!email',
 			),
 			'contact' => array(
 				'title' => $this->l('Type'),
-				'width' => 75,
 				'type' => 'select',
 				'list' => $contact_array,
 				'filter_key' => 'cl!id_contact',
@@ -81,7 +78,6 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			),
 			'language' => array(
 				'title' => $this->l('Language'),
-				'width' => 60,
 				'type' => 'select',
 				'list' => $language_array,
 				'filter_key' => 'l!id_lang',
@@ -89,7 +85,6 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			),
 			'status' => array(
 				'title' => $this->l('Status'),
-				'width' => 50,
 				'type' => 'select',
 				'list' => $status_array,
 				'icon' => $images_array,
@@ -99,20 +94,17 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			),
 			'employee' => array(
 				'title' => $this->l('Employee'),
-				'width' => 100,
 				'filter_key' => 'employee',
 				'tmpTableFilter' => true,
 			),
 			'messages' => array(
 				'title' => $this->l('Messages'),
-				'width' => 50,
 				'filter_key' => 'messages',
 				'tmpTableFilter' => true,
 				'maxlength' => 40,
 			),
 			'date_upd' => array(
 				'title' => $this->l('Last message'),
-				'width' => 90,
 				'havingFilter' => true,
 			),
 		);
@@ -132,16 +124,14 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_CUSTOMER_SERVICE_FILE_UPLOAD' => array(
 							'title' => $this->l('Allow file uploading'),
-							'desc' => $this->l('Allow customers to upload files using the contact page.'),
+							'hint' => $this->l('Allow customers to upload files using the contact page.'),
 							'type' => 'bool'
 						),
 					'PS_CUSTOMER_SERVICE_SIGNATURE' => array(
 							'title' => $this->l('Default message'),
-							'desc' => $this->l('Please fill out the message fields that appear by default when you answer a thread on the customer service page.'),
+							'hint' => $this->l('Please fill out the message fields that appear by default when you answer a thread on the customer service page.'),
 							'type' => 'textareaLang',
-							'lang' => true,
-							'rows' => 10,
-							'cols' => 40
+							'lang' => true
 						)
 					),
 			),
@@ -150,67 +140,64 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_SAV_IMAP_URL' => array(
 						'title' => $this->l('IMAP URL'),
-						'desc' => $this->l('URL for IMAP server (mail.server.com)'),
-						'type' => 'text',
-						'size' => 40,
+						'hint' => $this->l('URL for IMAP server (mail.server.com)'),
+						'type' => 'text'
 					),
 					'PS_SAV_IMAP_PORT' => array(
 						'title' => $this->l('IMAP port'),
-						'desc' => $this->l('Port to use to connect to IMAP server'),
+						'hint' => $this->l('Port to use to connect to IMAP server'),
 						'type' => 'text',
 						'defaultValue' => 143,
 					),
 					'PS_SAV_IMAP_USER' => array(
 						'title' => $this->l('IMAP user'),
-						'desc' => $this->l('User to use to connect to IMAP server'),
-						'type' => 'text',
-						'size' => 40,
+						'hint' => $this->l('User to use to connect to IMAP server'),
+						'type' => 'text'
 					),
 					'PS_SAV_IMAP_PWD' => array(
 						'title' => $this->l('IMAP password'),
-						'desc' => $this->l('Password used to connect IMAP server'),
-						'type' => 'text',
-						'size' => 40,
+						'hint' => $this->l('Password used to connect IMAP server'),
+						'type' => 'text'
 					),
 					'PS_SAV_IMAP_DELETE_MSG' => array(
 						'title' => $this->l('Delete messages'),
-						'desc' => $this->l('Delete messages after sync. If you do not active this option, the sync will take more time.'),
+						'hint' => $this->l('Delete messages after sync. If you do not active this option, the sync will take more time.'),
 						'type' => 'bool',
 					),
 					'PS_SAV_IMAP_CREATE_THREADS' => array(
 						'title' => $this->l('Create new threads'),
-						'desc' => $this->l('Create new threads for unrecognized emails'),
+						'hint' => $this->l('Create new threads for unrecognized emails'),
 						'type' => 'bool',
 					),
 					'PS_SAV_IMAP_OPT_NORSH' => array(
 						'title' => $this->l('IMAP options').' (/norsh)',
 						'type' => 'bool',
-						'desc' => $this->l('Do not use RSH or SSH to establish a preauthenticated IMAP sessions.'),
+						'hint' => $this->l('Do not use RSH or SSH to establish a preauthenticated IMAP sessions.'),
 					),
 					'PS_SAV_IMAP_OPT_SSL' => array(
 						'title' => $this->l('IMAP options').' (/ssl)',
 						'type' => 'bool',
-						'desc' => $this->l('Use the Secure Socket Layer to encrypt the session.'),
+						'hint' => $this->l('Use the Secure Socket Layer to encrypt the session.'),
 					),
 					'PS_SAV_IMAP_OPT_VALIDATE-CERT' => array(
 						'title' => $this->l('IMAP options').' (/validate-cert)',
 						'type' => 'bool',
-						'desc' => $this->l('Validate certificates from the TLS/SSL server'),
+						'hint' => $this->l('Validate certificates from the TLS/SSL server'),
 					),
 					'PS_SAV_IMAP_OPT_NOVALIDATE-CERT' => array(
 						'title' => $this->l('IMAP options').' (/novalidate-cert)',
 						'type' => 'bool',
-						'desc' => $this->l('Do not validate certificates from the TLS/SSL server. This is only needed if a server uses self-signed certificates'),
+						'hint' => $this->l('Do not validate certificates from the TLS/SSL server. This is only needed if a server uses self-signed certificates'),
 					),
 					'PS_SAV_IMAP_OPT_TLS' => array(
 						'title' => $this->l('IMAP options').' (/tls)',
 						'type' => 'bool',
-						'desc' => $this->l('Force use of start-TLS to encrypt the session, and reject connection to servers that do not support it.'),
+						'hint' => $this->l('Force use of start-TLS to encrypt the session, and reject connection to servers that do not support it.'),
 					),
 					'PS_SAV_IMAP_OPT_NOTLS' => array(
 						'title' => $this->l('IMAP options').' (/notls)',
 						'type' => 'bool',
-						'desc' => $this->l('Do not use start-TLS to encrypt the session, even with servers that support it.'),
+						'hint' => $this->l('Do not use start-TLS to encrypt the session, even with servers that support it.'),
 					),
 				),
 				'submit' => array('title' => $this->l('Save'), 'class' => 'button'),

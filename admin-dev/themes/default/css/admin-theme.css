@@ -5089,12 +5089,12 @@ body.fixed-top {
     border-radius: 5px;
     -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0 0 7px, white 0 0 0 4px inset;
     box-shadow: rgba(0, 0, 0, 0.1) 0 0 7px, white 0 0 0 4px inset; }
-  #content legend {
-    float: left;
-    padding: 0 0 0 0;
-    margin: 5px 0 15px 0;
-    color: #bfb8b3;
-    font-weight: 300; }
+  #content h3 {
+    padding: 0 0 5px 0;
+    margin: 0 0 15px 0;
+    color: #cac4b9;
+    font-weight: 300;
+    border-bottom: solid 1px #e0ddd6; }
   #content form .alert {
     clear: both;
     color: #756b64;
@@ -5223,6 +5223,7 @@ body.fixed-top {
           color: #313a45; }
 
 #footer {
+  z-index: 9999;
   position: fixed;
   width: 100%;
   bottom: 0;

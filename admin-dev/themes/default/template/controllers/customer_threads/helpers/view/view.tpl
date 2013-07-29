@@ -39,9 +39,9 @@
 			</div>
 
 			<p>
-				<img src="../img/admin/email_go.png" alt="" style="vertical-align: middle;" /> 
+				<img src="../img/admin/email_go.png" alt="" /> 
 				{l s='Forward this discussion to an employee:'}
-				<select name="id_employee_forward" style="vertical-align: middle;">
+				<select name="id_employee_forward">
 					<option value="-1">{l s='-- Choose --'}</option>
 					{foreach $employees as $employee}
 						<option value="{$employee.id_employee}"> {Tools::substr($employee.firstname, 0, 1)}. {$employee.lastname}</option>
@@ -61,16 +61,16 @@
 
 		</fieldset>
 	</form>
-	<div class="clear">&nbsp;</div>
+
 
 	{if $thread->id_customer}
 
-		<div style="float:right;margin-left:20px;">
+		<div>
 		{if $orders && count($orders)}
 			{if $count_ok}
 				<div>
 					<h2>{l s='Orders'}</h2>
-					<table cellspacing="0" cellpadding="0" class="table float">
+					<table class="table">
 						<tr>
 							<th class="center">{l s='ID'}</th>
 							<th class="center">{l s='Date'}</th>
@@ -136,7 +136,7 @@
 		</div>
 	{/if}
 
-	<div style="margin-top:10px">
+	<div>
 		{foreach $messages as $message}
 			{$message}
 		{/foreach}
