@@ -24,80 +24,89 @@
 *}
 
 {$content}
-<br /><br />
-<h2>{l s='Fees by carrier, geographical zone and ranges'}</h2>
+
 <form action="{$action_fees}" id="fees" name="fees" method="post">
-	<fieldset>
-		<legend><img src="../img/admin/delivery.gif" />{l s='Fees'}</legend>
+	<fieldset class="col-lg-12">
+		<legend>
+			<i class="icon-truck"></i>
+			{l s='Fees by carrier, geographical zone and ranges'}
+		</legend>
 		{if empty($carriers)}
 			{l s='If you only have free carriers, there\'s no need to configure delivery prices.'}
 		{else}
-			<b>{l s='Carrier:'} </b>
-			<select name="id_carrier2" onchange="$('#fees').attr('action', $('#fees').attr('action')+'&id_carrier='+$(this).attr('value')+'#fees'); $('#fees').submit();">
-				{foreach $carriers AS $carrier}
-					<option value="{$carrier['id_carrier']|intval}" {if $carrier['id_carrier'] == $id_carrier} selected="selected"{/if}>{$carrier['name']}</option>
-				{/foreach}
-			</select><br />
-
-			<table class="table space" cellpadding="0" cellspacing="0">
-				<tr>
-					<th>{l s='Zone / Range'}</th>
-					{if !$carrierSelected->is_free}
-						{foreach $ranges AS $range}
-							<th style="font-size: 11px;">{$range['delimiter1']|floatval}{$suffix} {l s='to'} {$range['delimiter2']|floatval}{$suffix}</th>
+			<div class="row">
+				<label class="control-label col-lg-1">{l s='Carrier:'} </label>
+				<div class="col-lg-6">
+					<select name="id_carrier2" onchange="$('#fees').attr('action', $('#fees').attr('action')+'&id_carrier='+$(this).attr('value')+'#fees'); $('#fees').submit();">
+						{foreach $carriers AS $carrier}
+							<option value="{$carrier['id_carrier']|intval}" {if $carrier['id_carrier'] == $id_carrier} selected="selected"{/if}>{$carrier['name']}</option>
+						{/foreach}
+					</select>
+				</div>
+			</div>
+			<table class="table" cellpadding="0" cellspacing="0">
+				<thead>
+					<tr>
+						<th>{l s='Zone / Range'}</th>
+						{if !$carrierSelected->is_free}
+							{foreach $ranges AS $range}
+								<th>{$range['delimiter1']|floatval}{$suffix} {l s='to'} {$range['delimiter2']|floatval}{$suffix}</th>
+							{/foreach}
+						{/if}
+					</tr>
+				</thead>
+				<tbody>
+					{if sizeof($ranges) && !$carrierSelected->is_free}
+						{if sizeof($zones) > 1}
+							<tr>
+								<td>{l s='All'}</td>
+								{foreach $ranges AS $range}
+									<td>
+										<div class="input-group col-lg-9">
+											<span class="input-group-addon">{$currency->prefix}{$currency->suffix} {l s='(tax excl.)'}</span>
+											<input type="text" id="fees_all_{$range[$rangeIdentifier]}" onchange="this.value = this.value.replace(/,/g, '.');" onkeyup="if ((event.keyCode||event.which) != 9){ spreadFees({$range[$rangeIdentifier]})}" />
+										</div>
+									</td>
+								{/foreach}
+							</tr>
+						{/if}
+						{foreach $zones AS $zone}
+							<tr>
+								<td>{$zone['name']}</td>
+								{foreach $ranges AS $range}
+									{if isset($deliveryArray[$zone['id_zone']][$id_carrier][$range[$rangeIdentifier]])}
+										{$price = $deliveryArray[$zone['id_zone']][$id_carrier][$range[$rangeIdentifier]]}
+									{else}
+										{$price = '0.00'}
+									{/if}
+									<td>
+										<div class="input-group col-lg-9">
+											<span class="input-group-addon">{$currency->prefix}{$currency->suffix} {l s='(tax excl.)'}</span>
+											<input 
+												type="text" 
+												class="fees_{$range[$rangeIdentifier]}" 
+												onchange="this.value = this.value.replace(/,/g, '.');" name="fees_{$zone['id_zone']}_{$range[$rangeIdentifier]}" onkeyup="clearAllFees({$range[$rangeIdentifier]})" 
+												value="{$price|string_format:"%.6f"}"
+											/>
+										</div>
+									</td>
+								{/foreach}
+							</tr>
 						{/foreach}
 					{/if}
-				</tr>
-				{if sizeof($ranges) && !$carrierSelected->is_free}
-					{if sizeof($zones) > 1}
-						<tr>
-							<th style="height: 30px;">{l s='All'}</th>
-							{foreach $ranges AS $range}
-								<td class="center">
-									{$currency->getSign('left')}
-									<input type="text" id="fees_all_{$range[$rangeIdentifier]}" onchange="this.value = this.value.replace(/,/g, '.');" onkeyup="if ((event.keyCode||event.which) != 9){ spreadFees({$range[$rangeIdentifier]})}" style="width: 45px;" />
-									{$currency->getSign('right')} {l s='(tax excl.)'}
-								</td>
-							{/foreach}
-						</tr>
-					{/if}
-		
-					{foreach $zones AS $zone}
-						<tr>
-							<th style="height: 30px;">{$zone['name']}</th>
-							{foreach $ranges AS $range}
-								{if isset($deliveryArray[$zone['id_zone']][$id_carrier][$range[$rangeIdentifier]])}
-									{$price = $deliveryArray[$zone['id_zone']][$id_carrier][$range[$rangeIdentifier]]}
-								{else}
-									{$price = '0.00'}
-								{/if}
-								<td class="center">
-									{$currency->getSign('left')}
-									<input 
-										type="text" 
-										class="fees_{$range[$rangeIdentifier]}" 
-										onchange="this.value = this.value.replace(/,/g, '.');" name="fees_{$zone['id_zone']}_{$range[$rangeIdentifier]}" onkeyup="clearAllFees({$range[$rangeIdentifier]})" 
-										value="{$price|string_format:"%.6f"}"
-										style="width: 45px;" 
-									/>
-									{$currency->getSign('right')} {l s='(tax excl.)'}
-								</td>
-							{/foreach}
-						</tr>
-					{/foreach}
-				{/if}
-				<tr>
-					<td colspan="{$ranges|sizeof + 1}" class="center" style="border-bottom: none; height: 40px;">
-						<input type="hidden" name="submitFees{$table}" value="1" />
-					{if sizeof($ranges) && !$carrierSelected->is_free}
-						<input type="submit" value="{l s='   Save   '}" class="button" />
-					{else if $carrierSelected->is_free}
-						{l s='This is a free carrier'}
-					{else}
-						{l s='No ranges is set for this carrier'}
-					{/if}
-					</td>
-				</tr>
+					<tr>
+						<td colspan="{$ranges|sizeof + 1}" class="text-center">
+							<input type="hidden" name="submitFees{$table}" value="1" />
+						{if sizeof($ranges) && !$carrierSelected->is_free}
+							<input type="submit" value="{l s='Save'}" class="btn btn-default" />
+						{else if $carrierSelected->is_free}
+							<span>{l s='This is a free carrier'}</span>
+						{else}
+							<span>{l s='No ranges is set for this carrier'}</span>
+						{/if}
+						</td>
+					</tr>
+				</tbody>
 			</table>
 		{/if}
 		<input type="hidden" name="id_carrier" value="{$id_carrier}" />

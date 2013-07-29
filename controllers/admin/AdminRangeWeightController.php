@@ -28,6 +28,7 @@ class AdminRangeWeightControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 	 	$this->table = 'range_weight';
 	 	$this->className = 'RangeWeight';
 	 	$this->lang = false;

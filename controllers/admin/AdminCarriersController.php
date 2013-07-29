@@ -30,6 +30,7 @@ class AdminCarriersControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->table = 'carrier';
 		$this->className = 'Carrier';
 		$this->lang = false;
