@@ -214,6 +214,7 @@ function bind_inputs()
 		$('tr.fees').each( function () {
 			$(this).children('td:eq('+index+')').remove();
 		});
+		rebuildTabindex();
 		return false;
 	});
 	
@@ -270,7 +271,7 @@ function bind_inputs()
 		var is_free = $(this);
 		$("#step_carrier_ranges .margin-form").each(function() {
 			var field = $(this).children().attr('name');
-			if (typeof(field) != 'undefined' && field != 'is_free')
+			if (typeof(field) != 'undefined' && field != 'is_free' && field != 'shipping_handling')
 			{
 				if (parseInt(is_free.val()))
 				{
@@ -294,6 +295,7 @@ function bind_inputs()
 			$('#zones_table').show();
 			$('.new_range').show();
 		}
+		resizeWizard();
 	});
 	$('input[name="is_free"]:checked').click();
 	
@@ -400,13 +402,14 @@ function add_new_range()
 	$('tr.fees_all td:last').after('<td class="center border_top border_bottom"><input style="display:none" type="text" /> <button class="button">'+labelValidate+'</button</td>');
 
 	$('tr.fees').each( function () {
-		$(this).children('td:last').after('<td><input disabled="disabled" name="fees['+$(this).data('zoneid')+'][]" type="text" /></td>');
+		$(this).children('td:last').after('<td class="center"><input disabled="disabled" name="fees['+$(this).data('zoneid')+'][]" type="text" /></td>');
 	});
 	$('tr.delete_range td:last').after('<td class="center"><button class="button">'+labelDelete+'</button</td>');
 	
 	resizeWizard();
 	bind_inputs();
-	
+	rebuildTabindex();
+
 	return false;
 }
 
@@ -414,4 +417,25 @@ function delete_new_range()
 {
 	if ($('#new_range_form_placeholder').children('td').length = 1)
 		return false;
+}
+
+
+function rebuildTabindex()
+{
+	i = 1;
+	zones_nbr +=3; // corresponds to the third input text (max, min and all)
+	$('#zones_table tr').each( function () 
+	{
+		$(this).children('td').each( function () 
+		{
+			if ($(this).index() > 2)
+				j = i + zones_nbr;
+			else if ($(this).index() == 2)
+				j = i;
+
+			if ($(this).index() >= 2 && $(this).find('input'))
+				$(this).find('input').attr('tabindex', j);				
+		});
+		i ++;
+	});
 }

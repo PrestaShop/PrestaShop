@@ -2518,3 +2518,5 @@ margin-bottom:7px;
 #carrier_wizard #zones_table input[type=text] {width: 45px;}
 
 #carrier_logo_block{position: absolute;right: 15px;}
+
+#carrier_wizard #fieldset_form { min-height: 190px}
