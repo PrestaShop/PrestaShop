@@ -230,7 +230,7 @@ function bind_inputs()
 				
 		if($(this).is(':checked'))
 		{
-			$(this).closest('tr').children('td').each( function (){
+			$(this).closest('tr').children('td').each( function () {
 				index = $(this).index();
 				if ($('tr.fees_all td:eq('+index+')').hasClass('validated'))
 					$(this).children('input:text').removeAttr('disabled');
@@ -260,8 +260,9 @@ function bind_inputs()
 	$('tr.fees_all td input').off('change').on('change', function () {
 		index = $(this).parent('td').index();
 		val = $(this).val();
-		$('tr.fees td input:text').not('disabled').val(val);
-		
+		$('tr.fees').each( function () {
+			$(this).find('td:eq('+index+') input:text').not('disabled').val(val);
+		});
 		return false;
 	});
 	
