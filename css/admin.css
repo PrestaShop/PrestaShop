@@ -2418,6 +2418,7 @@ margin-bottom:7px;
 	padding-top:0
 }
 
+
 #carrier_wizard.swMain ul.nbr_steps_3 li{min-width: 29.9%;}
 #carrier_wizard.swMain ul.nbr_steps_4 li{min-width: 21.6%;}
 #carrier_wizard.swMain ul.nbr_steps_5 li{ min-width: 16.6%;}
@@ -2515,3 +2516,5 @@ margin-bottom:7px;
 #carrier_wizard tr.fees_all { background: #CCCCCC}
 
 #carrier_wizard #zones_table input[type=text] {width: 45px;}
+
+#carrier_logo_block{position: absolute;right: 15px;}
