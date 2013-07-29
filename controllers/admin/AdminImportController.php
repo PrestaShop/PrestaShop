@@ -248,6 +248,7 @@ class AdminImportControllerCore extends AdminController
 						'label' => $this->l('Advanced Stock Management'),
 						'help' => $this->l('Enable Advanced Stock Management on product (0 = No, 1 = Yes)')
 					),
+					'warehouse' => array('label' => $this->l('Warehouse')),
 				);
 
 				self::$default_values = array(
@@ -1484,10 +1485,10 @@ class AdminImportControllerCore extends AdminController
 			
 			// set advanced stock managment
 			if($product->advanced_stock_management) {
-				if($product->advanced_stock_management != 1 || $product->advanced_stock_management != 0) {
+				if($product->advanced_stock_management != 1 && $product->advanced_stock_management != 0) {
 					$this->warnings[] = Tools::displayError('Advanced stock management has incorrect value. Not set');
 				} elseif(!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management == 1) {
-					$this->warnings[] = Tools::displayError('Advanced stock management is not enabled, can not enable on product ');
+					$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, can not enable on product %1$s '),$product->name[$default_language_id]);
 				} else {
 					$product->setAdvancedStockManagement($product->advanced_stock_management);
 				}
@@ -1497,6 +1498,26 @@ class AdminImportControllerCore extends AdminController
 				}
 			}
 			
+			// Check if warehouse exists
+			if(Warehouse::exists($product->warehouse)) {
+				// Get already associated warehouses
+				$associated_warehouses_collection = WarehouseProductLocation::getCollection($product->id);
+				
+				// Delete any entry in warehouse for this product
+				foreach ($associated_warehouses_collection as $awc)
+				{
+					$awc->delete();
+				}
+				$warehouse_location_entity = new WarehouseProductLocation();
+				$warehouse_location_entity->id_product = $product->id;
+				$warehouse_location_entity->id_product_attribute =  0;
+				$warehouse_location_entity->id_warehouse = $product->warehouse;
+				$warehouse_location_entity->save();
+				
+				StockAvailable::synchronize($product->id); // Don't know if it is needed, but it can't hurt
+			} else {
+				$this->warnings[] = sprintf(Tools::displayError('Warehouse did not exists, can not set on product %1$s '),$product->name[$default_language_id]);
+			}
 
 			// stock available
 			if (Shop::isFeatureActive())
