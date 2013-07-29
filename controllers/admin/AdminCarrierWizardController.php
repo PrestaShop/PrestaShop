@@ -309,11 +309,11 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$tpl_vars = array();
 		$fields_value = $this->getStepThreeFieldsValues($carrier);
 
-		$this->getTplRangesVarsAndValues($carrier, &$tpl_vars, &$fields_value);		
+		$this->getTplRangesVarsAndValues($carrier, $tpl_vars, $fields_value);		
 		return $this->renderGenericForm(array('form' => $this->fields_form), $fields_value, $tpl_vars);
 	}
 	
-	protected function getTplRangesVarsAndValues($carrier, $tpl_vars, $fields_value)
+	protected function getTplRangesVarsAndValues($carrier, &$tpl_vars, &$fields_value)
 	{
 		$tpl_vars['zones'] = Zone::getZones(false);
 		$carrier_zones = $carrier->getZones();
@@ -525,7 +525,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 
 		$tpl_vars = array();
 		$fields_value = $this->getStepThreeFieldsValues($carrier);
-		$this->getTplRangesVarsAndValues($carrier, &$tpl_vars, &$fields_value);
+		$this->getTplRangesVarsAndValues($carrier, $tpl_vars, $fields_value);
 
 		$template = $this->createTemplate('controllers/carrier_wizard/helpers/form/form_ranges.tpl');
 		$template->assign($tpl_vars);
