@@ -43,10 +43,10 @@
 		{if isset($categoryData['top'])}{$categoryData['top']}{/if}
 		<fieldset {if isset($categoryData['class'])}class="{$categoryData['class']}"{/if} class="col-lg-12">
 			{* Options category title *}
-			<legend>
+			<h3>
 				<i class="icon-cogs"></i>
 				{if isset($categoryData['title'])}{$categoryData['title']}{else}{l s='Options'}{/if}
-			</legend>
+			</h3>
 
 			{* Category description *}
 
@@ -74,9 +74,9 @@
 								</div>
 								{/if}
 								{block name="label"}
-									{if isset($field['title']) && isset($field['desc'])}
+									{if isset($field['title']) && isset($field['hint'])}
 										<label class="control-label col-lg-3">
-											<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{$field['desc']}">
+											<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{$field['hint']}">
 												{$field['title']}
 											</span>
 										</label>
@@ -276,7 +276,7 @@
 									{if isset($field['required']) && $field['required'] && $field['type'] != 'radio'}
 										<sup>*</sup>
 									{/if}
-									{if isset($field['hint'])}<span class="alert alert-info" name="help_box">{$field['hint']}<span class="hint-pointer">&nbsp;</span></span>{/if}
+
 								{/block}{* end block input *}
 								{if $field['is_invisible']}
 									<p class="alert alert-block">

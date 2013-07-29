@@ -27,7 +27,7 @@
 
 {block name="override_header"}
 
-	<div id="CustomerThreadContacts">
+	<div id="CustomerThreadContacts" class="row">
 
 		{assign var=nb_categories value=count($categories)}
 		
@@ -38,64 +38,48 @@
 
 			{foreach $contacts as $tmp => $tmp2}
 				{if $val.id_contact == $tmp2.id_contact}
-
 					{assign var=total_thread value=$tmp2.total}
 					{assign var=id_customer_thread value=$tmp2.id_customer_thread}
-
 				{/if}
 			{/foreach}
 
-			<div class="blocSAV">
-
-					<h3>{$val.name}</h3>
-
-					{if $nb_categories < 6}
-						<p>{$val.description}</p>
-					{/if}
-
-					{if $total_thread == 0}
-						<span class="message-mail">{l s='No new messages'}</span>
-					{else}
-						<a href="{$currentIndex}&token={$token}&id_customer_thread={$id_customer_thread}&viewcustomer_thread" class="button">
-							{$total_thread} 
-							{if $total_thread > 1}{l s='New messages'}{else}{l s='New message'}{/if}
-						</a>
-					{/if}
+			<div class="col-lg-3">
+				<h3>{$val.name}</h3>
+				{if $nb_categories < 6}
+					<p>{$val.description}</p>
+				{/if}
+				{if $total_thread == 0}
+					<span class="message-mail">{l s='No new messages'}</span>
+				{else}
+					<a href="{$currentIndex}&token={$token}&id_customer_thread={$id_customer_thread}&viewcustomer_thread" class="button">
+						{$total_thread} 
+						{if $total_thread > 1}{l s='New messages'}{else}{l s='New message'}{/if}
+					</a>
+				{/if}
 			</div>
 		{/foreach}
 
-		<div id="MeaningStatus" class="blocSAV">
-			<h3>&nbsp;{l s='Meaning of status'}</h3>
+		<div id="MeaningStatus" class="col-lg-3">
+			<h3>{l s='Meaning of status'}</h3>
 			<ul>
-				<li><img src="../img/admin/status_green.png" alt="{l s='Open'}">{l s='Open'}</li>
-				<li><img src="../img/admin/status_red.png" alt="{l s='Closed'}">{l s='Closed'}</li>
-				<li><img src="../img/admin/status_orange.png" alt="{l s='Pending 1'}">{l s='Pending 1'}</li>
-				<li><img src="../img/admin/status_orange.png" alt="{l s='Pending 2'}">{l s='Pending 2'}</li>
+				<li class="label label-success">{l s='Open'}</li>
+				<li class="label label-danger">{l s='Closed'}</li>
+				<li class="label label-warning">{l s='Pending 1'}</li>
+				<li class="label label-warning">{l s='Pending 2'}</li>
 			</ul>
 		</div>
 	
-		<div id="CustomerService">
-			<table ccellspacing="0" cellpadding="0" class="table">
-				<thead>
-					<tr>
-						<th colspan="2">{l s='Customer service'} : {l s='Statistics'}</th>
-					</tr>
-				</thead>
-				<tbody>
-					{assign var=count value=0}
-					{foreach $params as $key => $val}
-						{assign var=count value=$count+1}
-						<tr {if $count % 2 == 0}class="alt_row"{/if}>
-							<td>{$key}</td>
-							<td><span>{$val}</span></td>
-						</tr>
-					{/foreach}
-				</tbody>
-			</table>
+		<div id="CustomerService" class="col-lg-3">
+			<h3>{l s='Statistics'}</h3>
+			<ul>
+				{assign var=count value=0}
+				{foreach $params as $key => $val}
+					{assign var=count value=$count+1}
+					<li>{$key} <span class="badge">{$val}</span></li>
+				{/foreach}
+			</ul>
 		</div>
-
 	</div>
-
-	<p class="clear">&nbsp;</p>
+	<hr/>
 
 {/block}

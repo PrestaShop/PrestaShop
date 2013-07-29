@@ -28,7 +28,7 @@
 	<div class="leadin">{block name="leadin"}{/block}</div>
 {/if}
 
-{if isset($fields.title)}<legend>{$fields.title}</legend>{/if}
+{if isset($fields.title)}<h3>{$fields.title}</h3>{/if}
 {block name="defaultForm"}
 <form id="{$table}_form" class="form-horizontal defaultForm {$name_controller}" action="{$current}&{if !empty($submit_action)}{$submit_action}=1{/if}&token={$token}" method="post" enctype="multipart/form-data" {if isset($style)}style="{$style}"{/if}>
 	{if $form_id}
@@ -38,11 +38,11 @@
 		<fieldset id="fieldset_{$f}" class="col-lg-12">
 			{foreach $fieldset.form as $key => $field}
 				{if $key == 'legend'}
-					<legend>
+					<h3>
 						{if isset($field.image)}<img src="{$field.image}" alt="{$field.title|escape:'htmlall':'UTF-8'}" />{/if}
 						{if isset($field.icon)}<i class="{$field.icon}"/></i>{/if}
 						{$field.title}
-					</legend>
+					</h3>
 				{elseif $key == 'description' && $field}
 					<div class="alert alert-info">{$field}</div>
 				{elseif $key == 'input'}
@@ -229,18 +229,19 @@
 									{/if}
 								{elseif $input.type == 'radio'}
 									{foreach $input.values as $value}
-										<input type="radio"	name="{$input.name}"id="{$value.id}" value="{$value.value|escape:'htmlall':'UTF-8'}"
+										
+										<label class="checkbox-inline" {if isset($input.class)}class="{$input.class}"{/if} for="{$value.id}">
+											<input type="radio"	name="{$input.name}"id="{$value.id}" value="{$value.value|escape:'htmlall':'UTF-8'}"
 												{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
 												{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if} />
-										<label {if isset($input.class)}class="{$input.class}"{/if} for="{$value.id}">
-										 {if isset($input.is_bool) && $input.is_bool == true}
-											{if $value.value == 1}
-												<img src="../img/admin/enabled.gif" alt="{$value.label}" title="{$value.label}" />
-											{else}
-												<img src="../img/admin/disabled.gif" alt="{$value.label}" title="{$value.label}" />
-											{/if}
-										 {else}
-											{$value.label}
+											 {if isset($input.is_bool) && $input.is_bool == true}
+												{if $value.value == 1}
+													<img src="../img/admin/enabled.gif" alt="{$value.label}" title="{$value.label}" />
+												{else}
+													<img src="../img/admin/disabled.gif" alt="{$value.label}" title="{$value.label}" />
+												{/if}
+											 {else}
+												{$value.label}
 										 {/if}
 										</label>
 										{if isset($input.br) && $input.br}<br />{/if}

@@ -25,16 +25,18 @@
 {extends file="helpers/options/options.tpl"}
 {block name="after"}
 {if $use_sync}
-		<fieldset><legend>{l s='Sync'}</legend>
+		<fieldset>
+			<legend>{l s='Sync'}</legend>
 			<label>{l s='Run sync:'}</label>
 			<div class="margin-form">
-				<button class="button" id="run_sync" onclick="run_sync();">{l s='Run sync'}</button>
+				<button class="btn" id="run_sync" onclick="run_sync();">{l s='Run sync'}</button>
 				<p>{l s='Click to synchronize mail automatically'}</p>
 				<div id="ajax_loader"></div>
 				<div class="error" style="display:none" id="ajax_error"></div>
 				<div class="alert" style="display:none" id="ajax_conf"></div>
 			</div>
-		</fieldset><br/>
+		</fieldset>
+
 		<script type="text/javascript"> 
 			var ajaxQueries = new Array();
 			function run_sync()
