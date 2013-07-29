@@ -40,7 +40,11 @@
 {block name="field"}
 	{if $input.type == 'text_customer'}
 		{if isset($customer)}
-			<div class="margin-form"><a style="display: block; padding-top: 4px;" href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={$tokenCustomer}">{$customer->lastname} {$customer->firstname} ({$customer->email})</a></div>
+			<div>
+				<a href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={$tokenCustomer}">
+					{$customer->lastname} {$customer->firstname} ({$customer->email})
+				</a>
+			</div>
 			<input type="hidden" name="id_customer" value="{$customer->id}" />
 			<input type="hidden" name="email" value="{$customer->email}" />
 		{else}
@@ -79,8 +83,10 @@
 				}
 			});
 			</script>
+
 			<div class="margin-form">
-				<input type="text" size="33" name="email" value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" style="text-transform: lowercase;" /> <sup>*</sup>
+				<input type="text" name="email" value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}"/>
+				<sup>*</sup>
 			</div>
 		{/if}
 	{else}
