@@ -28,6 +28,7 @@ class AdminGroupsControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true ;
 		$this->table = 'group';
 		$this->className = 'Group';
 		$this->lang = true;
@@ -45,8 +46,7 @@ class AdminGroupsControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_group' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center',
-				'width' => 25
+				'align' => 'center'
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
@@ -54,19 +54,16 @@ class AdminGroupsControllerCore extends AdminController
 			),
 			'reduction' => array(
 				'title' => $this->l('Discount (%)'),
-				'width' => 100,
 				'align' => 'right',
 				'type' => 'percent'
 			),
 			'nb' => array(
 				'title' => $this->l('Members'),
-				'width' => 25,
 				'align' => 'center',
 				'havingFilter' => true,
 			),
 			'show_prices' => array(
 				'title' => $this->l('Show prices'),
-				'width' => 120,
 				'align' => 'center',
 				'type' => 'bool',
 				'callback' => 'printShowPricesIcon',
@@ -74,7 +71,6 @@ class AdminGroupsControllerCore extends AdminController
 			),
 			'date_add' => array(
 				'title' => $this->l('Creation date'),
-				'width' => 150,
 				'type' => 'date',
 				'align' => 'right'
 			)
@@ -182,15 +178,15 @@ class AdminGroupsControllerCore extends AdminController
 			$genders[$gender->id] = $gender->name;
 		}
 		$customer_fields_display = (array(
-				'id_customer' => array('title' => $this->l('ID'), 'width' => 15, 'align' => 'center'),
-				'id_gender' => array('title' => $this->l('Titles'), 'align' => 'center', 'width' => 50,'icon' => $genders_icon, 'list' => $genders),
+				'id_customer' => array('title' => $this->l('ID'), 'align' => 'center'),
+				'id_gender' => array('title' => $this->l('Titles'), 'align' => 'center','icon' => $genders_icon, 'list' => $genders),
 				'firstname' => array('title' => $this->l('Name'), 'align' => 'center'),
 				'lastname' => array('title' => $this->l('Name'), 'align' => 'center'),
-				'email' => array('title' => $this->l('Email address'), 'width' => 150, 'align' => 'center'),
-				'birthday' => array('title' => $this->l('Birth date'), 'width' => 150, 'align' => 'right', 'type' => 'date'),
-				'date_add' => array('title' => $this->l('Register date'), 'width' => 150, 'align' => 'right', 'type' => 'date'),
+				'email' => array('title' => $this->l('Email address'), 'align' => 'center'),
+				'birthday' => array('title' => $this->l('Birth date'), 'align' => 'right', 'type' => 'date'),
+				'date_add' => array('title' => $this->l('Register date'), 'align' => 'right', 'type' => 'date'),
 				'orders' => array('title' => $this->l('Orders'), 'align' => 'center'),
-				'active' => array('title' => $this->l('Enabled'),'align' => 'center','width' => 20, 'active' => 'status','type' => 'bool')
+				'active' => array('title' => $this->l('Enabled'),'align' => 'center', 'active' => 'status','type' => 'bool')
 			));
 
 		$customer_list = $group->getCustomers(false, 0, 0, true);
@@ -215,34 +211,32 @@ class AdminGroupsControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Customer group'),
-				'image' => '../img/admin/tab-groups.gif'
+				'icon' => 'icon-group'
 			),
 			'submit' => array(
 				'title' => $this->l('Save   '),
-				'class' => 'button'
+				'class' => 'btn btn-primary'
 			),
 			'input' => array(
 				array(
 					'type' => 'text',
 					'label' => $this->l('Name:'),
 					'name' => 'name',
-					'size' => 33,
 					'required' => true,
 					'lang' => true,
-					'hint' => $this->l('Forbidden characters:').' 0-9!<>,;?=+()@#"�{}_$%:'
+					'hint' => $this->l('Forbidden characters:').' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:'
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Discount (%):'),
 					'name' => 'reduction',
-					'size' => 33,
 					'desc' => $this->l('Automatically apply this value as a discount on all products for members of this customer group.')
 				),
 				array(
 					'type' => 'select',
 					'label' => $this->l('Price display method:'),
 					'name' => 'price_display_method',
-					'desc' => $this->l('How prices are displayed in the order summary for this customer group.'),
+					'hint' => $this->l('How prices are displayed in the order summary for this customer group.'),
 					'options' => array(
 						'query' => array(
 							array(
@@ -259,7 +253,7 @@ class AdminGroupsControllerCore extends AdminController
 					)
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Show prices:'),
 					'name' => 'show_prices',
 					'required' => false,
@@ -277,13 +271,12 @@ class AdminGroupsControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Customers in this group can view prices')
+					'hint' => $this->l('Customers in this group can view prices')
 				),
 				array(
 					'type' => 'group_discount_category',
 					'label' => $this->l('Category discount:'),
 					'name' => 'reduction',
-					'size' => 33,
 					'values' => ($group->id ? $this->formatCategoryDiscountList((int)$group->id) : array())
 				),
 				array(
