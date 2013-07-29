@@ -532,7 +532,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$template->assign('fields_value', $fields_value);
 		$template->assign('input', array('type' => 'zone',	'name' => 'zones'	));
 
-		die ($template->fetch());
+		die($template->fetch());
 	}
 	
 	public function ajaxProcessValidateStep()
@@ -544,7 +544,6 @@ class AdminCarrierWizardControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('You do not have permission to use this wizard.');
 		else
 		{
-
 			if (Shop::isFeatureActive() && $step_number == 2)
 			{
 				if (!Tools::getValue('checkBoxShopAsso_carrier'))
@@ -657,8 +656,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 				$return['errors'][] = Tools::displayError('You do not have permission to use this wizard.')
 			);
 		else
-		{
-				
+		{				
 			if ($id_carrier = Tools::getValue('id_carrier'))
 			{
 				$current_carrier = new Carrier((int)$id_carrier);
@@ -686,6 +684,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 					$return['errors'][] = $this->l('An error occurred while saving this carrier.');
 				}
 			}
+			
 			if (Validate::isLoadedObject($carrier))
 			{
 				if (!$this->changeGroups((int)$carrier->id))
