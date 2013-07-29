@@ -24,7 +24,7 @@
 *}
 
 <div id="carrier_logo_block">
-	<img id="carrier_logo_img" src="{if $carrier_logo}{$carrier_logo}{else}../img/404.gif{/if}" />
+	<img id="carrier_logo_img" src="{if $carrier_logo}{$carrier_logo}{else}../img/admin/carrier-default.jpg{/if}" />
 	<p>
 		<input id="carrier_logo_input" type="file" onchange="uploadCarrierLogo();" name="carrier_logo_input" />
 		<input type="hidden" id="logo" name="logo" value="" />
