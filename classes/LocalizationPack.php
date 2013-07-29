@@ -70,7 +70,10 @@ class LocalizationPackCore
 			return $res;
 		}
 		foreach ($selection as $selected)
-			if (!Validate::isLocalizationPackSelection($selected) || !$this->{'_install'.ucfirst($selected)}($xml))
+			if (strtolower((string)$selected) == 'currencies')
+				if (!Validate::isLocalizationPackSelection($selected) || !$this->{'_install'.ucfirst($selected)}($xml, true))
+					return false;
+			elseif (!Validate::isLocalizationPackSelection($selected) || !$this->{'_install'.ucfirst($selected)}($xml))
 				return false;
 
 		return true;
