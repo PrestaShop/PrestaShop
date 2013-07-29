@@ -201,8 +201,12 @@
 				<i class="icon-user"></i>
 				{l s='Customer information'}
 			</legend>
-			<span><a href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={getAdminToken tab='AdminCustomers'}"> {$customer->firstname} {$customer->lastname}</a></span> ({l s='#'}{$customer->id})<br />
-			(<a href="mailto:{$customer->email}">{$customer->email}</a>)<br /><br />
+			<span>
+				<a href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={getAdminToken tab='AdminCustomers'}"> 
+					{$customer->firstname} {$customer->lastname}
+				</a>
+			</span> ({l s='#'}{$customer->id})
+			(<a href="mailto:{$customer->email}">{$customer->email}</a>)
 			{if ($customer->isGuest())}
 				{l s='This order has been placed by a guest.'}
 				{if (!Customer::customerExists($customer->email))}
@@ -215,9 +219,9 @@
 					<div><b style="color:red;">{l s='A registered customer account has already claimed this email address'}</strong></div>
 				{/if}
 			{else}
-				{l s='Account registered:'} <strong>{dateFormat date=$customer->date_add full=true}</strong><br />
-				{l s='Valid orders placed:'} <strong>{$customerStats['nb_orders']}</strong><br />
-				{l s='Total spent since registration:'} <strong>{displayPrice price=Tools::ps_round(Tools::convertPrice($customerStats['total_orders'], $currency), 2) currency=$currency->id}</strong><br />
+				{l s='Account registered:'} <strong>{dateFormat date=$customer->date_add full=true}</strong>
+				{l s='Valid orders placed:'} <strong>{$customerStats['nb_orders']}</strong>
+				{l s='Total spent since registration:'} <strong>{displayPrice price=Tools::ps_round(Tools::convertPrice($customerStats['total_orders'], $currency), 2) currency=$currency->id}</strong>
 			{/if}
 		</fieldset>
 
@@ -231,10 +235,10 @@
 				<ul {if sizeof($sources) > 3}style="height: 200px; overflow-y: scroll;"{/if}>
 				{foreach from=$sources item=source}
 					<li>
-						{dateFormat date=$source['date_add'] full=true}<br />
-						<strong>{l s='From'}</strong>{if $source['http_referer'] != ''}<a href="{$source['http_referer']}">{parse_url($source['http_referer'], $smarty.const.PHP_URL_HOST)|regex_replace:'/^www./':''}</a>{else}-{/if}<br />
-						<strong>{l s='To'}</strong> <a href="http://{$source['request_uri']}">{$source['request_uri']|truncate:100:'...'}</a><br />
-						{if $source['keywords']}<strong>{l s='Keywords'}</strong> {$source['keywords']}<br />{/if}<br />
+						{dateFormat date=$source['date_add'] full=true}
+						<strong>{l s='From'}</strong>{if $source['http_referer'] != ''}<a href="{$source['http_referer']}">{parse_url($source['http_referer'], $smarty.const.PHP_URL_HOST)|regex_replace:'/^www./':''}</a>{else}-{/if}
+						<strong>{l s='To'}</strong> <a href="http://{$source['request_uri']}">{$source['request_uri']|truncate:100:'...'}</a>
+						{if $source['keywords']}<strong>{l s='Keywords'}</strong> {$source['keywords']}{/if}
 					</li>
 				{/foreach}
 				</ul>
@@ -351,8 +355,8 @@
 				{/if}
 				<hr/>
 				<div class="col-lg-6">
-					{displayAddressDetail address=$addresses.delivery newLine='<br />'}
-					{if $addresses.delivery->other}<hr />{$addresses.delivery->other}<br />{/if}
+					{displayAddressDetail address=$addresses.delivery newLine=''}
+					{if $addresses.delivery->other}<hr />{$addresses.delivery->other}{/if}
 				</div>
 				<div class="col-lg-6 btn-group btn-group-action">
 					<span class="btn btn-default btn-small">{l s='Choose an action'}</span>
@@ -401,8 +405,8 @@
 			{/if}
 			<hr/>
 			<div class="col-lg-6">
-				{displayAddressDetail address=$addresses.invoice newLine='<br />'}
-				{if $addresses.invoice->other}<hr />{$addresses.invoice->other}<br />{/if}
+				{displayAddressDetail address=$addresses.invoice newLine=''}
+				{if $addresses.invoice->other}<hr />{$addresses.invoice->other}{/if}
 			</div>
 			<div class="col-lg-6">
 				<a class="btn btn-default"  href="?tab=AdminAddresses&id_address={$addresses.invoice->id}&addaddress&realedit=1&id_order={$order->id}{if ($addresses.delivery->id == $addresses.invoice->id)}&address_type=2{/if}&back={$smarty.server.REQUEST_URI|urlencode}&token={getAdminToken tab='AdminAddresses'}">
@@ -500,14 +504,14 @@
 			{/if}
 			
 			{if count($order->getOrderPayments()) > 0}
-			<p class="alert alert-block" style="{if round($orders_total_paid_tax_incl, 2) == round($total_paid, 2) || $currentState->id == 6}display: none;{/if}">
+			<p class="alert alert-block " style="{if round($orders_total_paid_tax_incl, 2) == round($total_paid, 2) || $currentState->id == 6}display: none;{/if} clear: both;">
 				{l s='Warning'} {displayPrice price=$total_paid currency=$currency->id} {l s='paid instead of'} <strong>{displayPrice price=$orders_total_paid_tax_incl currency=$currency->id}</strong>
 				{foreach $order->getBrother() as $brother_order}
 					{if $brother_order@first}
 						{if count($order->getBrother()) == 1}
-							<br />{l s='This warning also concerns order '}
+							{l s='This warning also concerns order '}
 						{else}
-							<br />{l s='This warning also concerns the next orders:'}
+							{l s='This warning also concerns the next orders:'}
 						{/if}
 					{/if}
 					<a href="{$current_index}&vieworder&id_order={$brother_order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">#{'%06d'|sprintf:$brother_order->id}</a>
@@ -654,6 +658,7 @@
 
 	{if !$order->isVirtual()}
 		<!-- Shipping block -->
+		<div class="col-lg-6">
 			<fieldset>
 				<legend>
 					<i class="icon-truck"></i>
