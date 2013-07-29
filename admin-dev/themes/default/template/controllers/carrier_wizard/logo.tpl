@@ -23,14 +23,14 @@
 *	International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div id="carrier_logo_block" style="position:absolute;top:15px;right:15px">
+<div id="carrier_logo_block">
 	<img id="carrier_logo_img" src="{if $carrier_logo}{$carrier_logo}{else}../img/404.gif{/if}" />
 	<p>
 		<input id="carrier_logo_input" type="file" onchange="uploadCarrierLogo();" name="carrier_logo_input" />
 		<input type="hidden" id="logo" name="logo" value="" />
 	</p>
 	<a id="carrier_logo_remove" {if !$carrier_logo}style="display:none"{/if} href="javascript:removeCarrierLogo();"><img src="../img/admin/disabled.gif" /> {l s='Remove the logo'}</a>
-	<p>
+	<p class="preference_description">
 		{l s='Format:'} JPG, GIF, PNG. {l s='Filesize:'} {$max_image_size|string_format:"%.2f"} {l s='MB max.'}
 		<br />{l s='Current size:'} <span id="carrier_logo_size">{l s='undefined'}</span>.
 	</p>
