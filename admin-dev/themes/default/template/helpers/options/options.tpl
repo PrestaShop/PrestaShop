@@ -49,8 +49,9 @@
 			</legend>
 
 			{* Category description *}
+
 			{if (isset($categoryData['description']) && $categoryData['description'])}
-				<div>{$categoryData['description']}</div>
+				<div class="alert alert-info">{$categoryData['description']}</div>
 			{/if}
 			{* Category info *}
 			{if (isset($categoryData['info']) && $categoryData['info'])}
@@ -139,9 +140,17 @@
 											{/foreach}
 										</div>
 									{elseif $field['type'] == 'text'}
-										<div class="col-lg-9">
+										<div class="col-lg-9 {if isset($field['suffix'])}input-group{/if}">
+											
+											{if isset($field['suffix'])}
+											<span class="input-group-addon">
+												{$field['suffix']|strval}
+											</span>
+											{/if}
+
 											<input type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="{$field['value']|escape:'htmlall':'UTF-8'}" {if isset($field['autocomplete']) && !$field['autocomplete']}autocomplete="off"{/if}/>
-											{if isset($field['suffix'])}&nbsp;{$field['suffix']|strval}{/if}
+											
+
 										</div>
 									{elseif $field['type'] == 'password'}
 										<div class="col-lg-9">
