@@ -51,6 +51,9 @@ class OrderStateCore extends ObjectModel
 	/** @var boolean Delivery */
 	public $delivery;
 
+	/** @var boolean Package */
+	public $package;
+
 	/** @var boolean Hidden */
 	public $hidden;
 
@@ -79,6 +82,7 @@ class OrderStateCore extends ObjectModel
 			'shipped' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'unremovable' =>array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'delivery' =>	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'package' =>	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'hidden' =>		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'paid' =>		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'deleted' =>	array('type' => self::TYPE_BOOL, 'validade' => 'isBool'),

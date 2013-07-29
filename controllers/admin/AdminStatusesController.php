@@ -348,6 +348,17 @@ class AdminStatusesControllerCore extends AdminController
 					)
 				),
 				array(
+					'type' => 'checkbox',
+					'name' => 'package',
+					'values' => array(
+						'query' => array(
+							array('id' => 'on', 'name' => $this->l('Show packing PDF'), 'val' => '1'),
+							),
+						'id' => 'id',
+						'name' => 'name'
+					)
+				),
+				array(
 					'type' => 'select_template',
 					'label' => $this->l('Template:'),
 					'name' => 'template',
@@ -377,7 +388,8 @@ class AdminStatusesControllerCore extends AdminController
 			'send_email_on' => $this->getFieldValue($obj, 'send_email'),
 			'shipped_on' => $this->getFieldValue($obj, 'shipped'),
 			'paid_on' => $this->getFieldValue($obj, 'paid'),
-			'delivery_on' => $this->getFieldValue($obj, 'delivery')
+			'delivery_on' => $this->getFieldValue($obj, 'delivery'),
+			'packing_on' => $this->getFieldValue($obj, 'package'),
 		);
 
 		return parent::renderForm();
@@ -492,6 +504,7 @@ class AdminStatusesControllerCore extends AdminController
 			$_POST['shipped'] = (int)Tools::getValue('shipped_on');
 			$_POST['paid'] = (int)Tools::getValue('paid_on');
 			$_POST['delivery'] = (int)Tools::getValue('delivery_on');
+			$_POST['package'] = (int)Tools::getValue('packing_on');
 			if (!$_POST['send_email'])
 			{
 				$languages = Language::getLanguages(false);
