@@ -243,7 +243,11 @@ class AdminImportControllerCore extends AdminController
 					'shop' => array(
 						'label' => $this->l('ID / Name of shop'),
 						'help' => $this->l('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.'),
-					)
+					),
+					'advanced_stock_management' => array(
+						'label' => $this->l('Advanced Stock Management'),
+						'help' => $this->l('Enable Advanced Stock Management on product (0 = No, 1 = Yes)')
+					),
 				);
 
 				self::$default_values = array(
@@ -1479,32 +1483,20 @@ class AdminImportControllerCore extends AdminController
 			}
 			
 			// set advanced stock managment
-			if($product->advanced_stock_managment) {
-				$product->setAdvancedStockManagement($product->advanced_stock_managment);
+			if($product->advanced_stock_management) {
+				if($product->advanced_stock_management != 1 || $product->advanced_stock_management != 0) {
+					$this->warnings[] = Tools::displayError('Advanced stock management has incorrect value. Not set');
+				} elseif(!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management == 1) {
+					$this->warnings[] = Tools::displayError('Advanced stock management is not enabled, can not enable on product ');
+				} else {
+					$product->setAdvancedStockManagement($product->advanced_stock_management);
+				}
+				// automaticly disable depends on stock, if a_s_m set to disabled
+				if (StockAvailable::dependsOnStock($product->id) == 1 && $product->advanced_stock_management == 0) {
+					StockAvailable::setProductDependsOnStock($product->id, 0);
+				}
 			}
 			
-/*
-	Add these checks andd also create a warning messeage
-			case 'advanced_stock_management' :
-				if (Tools::getValue('value') === false)
-					die (Tools::jsonEncode(array('error' =>  $this->l('Undefined value'))));
-				if ((int)Tools::getValue('value') != 1 && (int)Tools::getValue('value') != 0)
-					die (Tools::jsonEncode(array('error' =>  $this->l('Uncorrect value'))));
-				if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && (int)Tools::getValue('value') == 1)
-					die (Tools::jsonEncode(array('error' =>  $this->l('Not possible if advanced stock management is disabled. '))));
-				if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && Pack::isPack($product->id))
-					die (Tools::jsonEncode(array('error' =>  $this->l('Not possible if the product is a pack.'))));
-
-				$product->setAdvancedStockManagement((int)Tools::getValue('value'));
-				if (StockAvailable::dependsOnStock($product->id) == 1 && (int)Tools::getValue('value') == 0)
-					StockAvailable::setProductDependsOnStock($product->id, 0);
-				break;
-
-		}
-*/
-// 				if (StockAvailable::dependsOnStock($product->id) == 1 && (int)Tools::getValue('value') == 0)
-// 					StockAvailable::setProductDependsOnStock($product->id, 0);
-// 				break;
 
 			// stock available
 			if (Shop::isFeatureActive())
