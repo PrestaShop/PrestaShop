@@ -49,38 +49,10 @@
 			</select><sup> *</sup>
 		</div>
 	
-		<script type="text/javascript">
-			//<![CDATA
-			function position_exception_add(shopID)
-			{
-				var listValue = $('#em_list_'+shopID).val();
-				var inputValue = $('#em_text_'+shopID).val();
-				var r = new RegExp('(^|,) *'+listValue+' *(,|$)');
-				if (!r.test(inputValue))
-					$('#em_text_'+shopID).val(inputValue + ((inputValue.trim()) ? ', ' : '') + listValue);
-			}
-		
-			function position_exception_remove(shopID)
-			{
-				var listValue = $('#em_list_'+shopID).val();
-				var inputValue = $('#em_text_'+shopID).val();
-				var r = new RegExp('(^|,) *'+listValue+' *(,|$)');
-				if (r.test(inputValue))
-				{
-					var rep = '';
-					if (new RegExp(', *'+listValue+' *,').test(inputValue))
-						$('#em_text_'+shopID).val(inputValue.replace(r, ','));
-					else if (new RegExp(listValue+' *,').test(inputValue))
-						$('#em_text_'+shopID).val(inputValue.replace(r, ''));
-					else
-						$('#em_text_'+shopID).val(inputValue.replace(r, ''));
-				}
-			}
-			//]]>
-		</script>
-	
 		<label>{l s='Exceptions'} :</label>
 		<div class="margin-form">
+			{l s='Please specify the files for which you do not want the module to be displayed.'}<br />
+			{l s='Please input each filename, separated by a comma.'}<br />
 			{if !$except_diff}
 				{$exception_list}
 			{else}
@@ -88,9 +60,6 @@
 					{$value}
 				{/foreach}
 			{/if}
-			{l s='Please specify the files for which you do not want the module to be displayed.'}.<br />
-			{l s='Please input each filename, separated by a comma.'}.
-			<br /><br />
 		</div>
 	
 		<div class="margin-form">
@@ -103,3 +72,47 @@
 		<div class="small"><sup>*</sup> {l s='Required field'}</div>
 	</fieldset>
 </form>
+<script type="text/javascript">
+	//<![CDATA
+	function position_exception_textchange(obj)
+	{
+		// TODO : Add & Remove automatically the "custom pages" in the "em_list_x"
+		var shopID = obj.attr('id').replace(/\D/g, '');
+		var list = obj.parent().find('#em_list_' + shopID);
+		var values = obj.val().split(',');
+		var len = values.length;
+
+		list.find('option').prop('selected', false);
+		for ( var i = 0; i < len; i++ )
+		{
+			list.find('option[value="' + $.trim(values[i]) + '"]').prop('selected', true);
+		}
+	}
+	function position_exception_listchange(obj)
+	{
+		var shopID = obj.attr('id').replace(/\D/g, '');
+		var str = '';
+		obj.find('option:selected').each( function()
+		{
+				str += obj.val()+', ';
+		});
+
+		if (str.length > 2)
+			str = str.substr(0, str.length - 2);
+		obj.parent().find('#em_text_' + shopID).val(str);
+	}
+	
+	$(document).ready(function ()
+	{
+		$('form[id="hook_module_form"] input[id^="em_text_"]').each( function ()
+		{
+			$(this).change( position_exception_textchange($(this)) ).change();
+		});
+
+		$('form[id="hook_module_form"] select[id^="em_list_"]').each( function ()
+		{
+			$(this).change( position_exception_listchange($(this)) );
+		});
+	});
+	//]]>
+</script>
