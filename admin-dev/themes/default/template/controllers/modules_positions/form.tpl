@@ -90,7 +90,6 @@
 
 		function position_exception_listchange(obj)
 		{
-		 console.log(obj);
 			var shopID = obj.attr('id').replace(/\D/g, '');
 			var str = '';
 			obj.find('option:selected').each(function(){
@@ -101,17 +100,13 @@
 				str = str.substr(0, str.length - 2);
 			obj.parent().find('#em_text_' + shopID).val(str);
 		}
-	$(document).ready(function()
-	{ 			
+		
 		$('form[id="hook_module_form"] input[id^="em_text_"]').on('change', function(){
-			console.log($(this));
 				position_exception_textchange($(this));
-			}).change();
-			
+			}).change();	
+		$('form[id="hook_module_form"] select[id^="em_list_"]').on('change', function(){
+				position_exception_listchange($(this));
 		});
-		$('form[id="hook_module_form"] select[id^="em_list_"]').on('change', function(){	
-				position_exception_listchange($(this));			
-			});
 	});
 	//]]>
 </script>
