@@ -49,7 +49,7 @@
 				<li>{l s='Click on titles to open fieldsets'}.</li>
 				<li>{l s='Some sentences to translate use this syntax: %s... These are variables, and PrestaShop take care of replacing them before displaying your translation. You must leave these in your translations, and place them appropriately in your sentence.' sprintf='%d, %s, %1$s, %2$d'}</li>
 			</ul>
-		</div><br /><br />
+		</div>
 
 		<p>
 			{l s='Expressions to translate: %d.' sprintf=$count}<br />
@@ -108,7 +108,7 @@
 								{if $key|strlen < $textarea_sized}
 									<input type="text" style="width: 450px{if empty($value.trad)};background:#FBB{/if}"
 										name="{if in_array($type, array('front', 'fields'))}{$k}_{$key|md5}{else}{$k}{$key|md5}{/if}" 
-										value="{$value.trad|regex_replace:'/"/':'&quot;'|stripslashes}" />
+										value="{$value.trad|regex_replace:'/"/':'&quot;'|stripslashes}"' />
 								{else}
 									<textarea rows="{($key|strlen / $textarea_sized)|intval}" style="width: 450px{if empty($value.trad)};background:#FBB{/if}"
 									name="{if in_array($type, array('front', 'fields'))}{$k}_{$key|md5}{else}{$k}{$key|md5}{/if}"
@@ -124,7 +124,7 @@
 					{/foreach}
 					</table>
 					</div>
-				</fieldset><br />
+				</fieldset>
 			{/if}
 		{/foreach}
 		</form>
