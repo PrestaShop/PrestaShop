@@ -83,16 +83,15 @@
 		var len = values.length;
 
 		list.find('option').prop('selected', false);
-		for ( var i = 0; i < len; i++ )
+		for (var i = 0; i < len; i++)
 			list.find('option[value="' + $.trim(values[i]) + '"]').prop('selected', true);
 	}
 	function position_exception_listchange(obj)
 	{
 		var shopID = obj.attr('id').replace(/\D/g, '');
 		var str = '';
-		obj.find('option:selected').each( function()
-		{
-				str += obj.val()+', ';
+		obj.find('option:selected').each(function(){
+			str += obj.val()+', ';
 		});
 
 		if (str.length > 2)
@@ -102,14 +101,11 @@
 	
 	$(document).ready(function ()
 	{
-		$('form[id="hook_module_form"] input[id^="em_text_"]').each( function ()
-		{
-			$(this).change( position_exception_textchange($(this)) ).change();
+		$('form[id="hook_module_form"] input[id^="em_text_"]').each(function(){
+			$(this).change(position_exception_textchange($(this))).change();
 		});
-
-		$('form[id="hook_module_form"] select[id^="em_list_"]').each( function ()
-		{
-			$(this).change( position_exception_listchange($(this)) );
+		$('form[id="hook_module_form"] select[id^="em_list_"]').each(function(){
+			$(this).change(position_exception_listchange($(this)));
 		});
 	});
 	//]]>
