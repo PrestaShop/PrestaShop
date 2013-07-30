@@ -1300,4 +1300,3 @@ class CarrierCore extends ObjectModel
 		return Db::getInstance()->execute(rtrim($sql, ','));
 	}
 }
-
