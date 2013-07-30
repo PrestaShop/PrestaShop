@@ -91,10 +91,10 @@ class LinkCore
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
 
-		if ($id_shop === null)
-			$shop = Context::getContext()->shop;
-		else
+		if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && $id_shop !== null)
 			$shop = new Shop($id_shop);
+		else
+			$shop = Context::getContext()->shop;
 		
 		$url = 'http://'.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang);
 
