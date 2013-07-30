@@ -24,15 +24,15 @@
 *}
 {extends file="helpers/form/form.tpl"}
 {block name="script"}
-	var string_price = '{l s="Will be applied when the price will be:" js=1}';
-	var string_weight = '{l s="Will be applied when the weight will be:" js=1}';
+	var string_price = '{l s='Will be applied when the price is' js=1}';
+	var string_weight = '{l s='Will be applied when the weight is' js=1}';
 {/block}
 
 {block name="field"}
 	{if $input.name == 'zones'}
 		{include file='controllers/carrier_wizard/helpers/form/form_ranges.tpl'}
 		<div class="new_range">
-			<a href="#" onclick="add_new_range();return false;" class="button" id="add_new_range">{l s="Add new range"}<img src="../img/admin/add.gif"/></a>
+			<a href="#" onclick="add_new_range();return false;" class="button" id="add_new_range">{l s='Add new range'}<img src="../img/admin/add.gif"/></a>
 		</div>
 	{/if}
 	{$smarty.block.parent}

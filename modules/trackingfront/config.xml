@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>trackingfront</name>
-            <displayName><![CDATA[Tracking - Front office]]></displayName>
+            <displayName><![CDATA[Affiliation - Acc&egrave;s boutique]]></displayName>
             <version><![CDATA[1]]></version>
-            <description><![CDATA[Enable your affiliates to access their own statistics.]]></description>
+            <description><![CDATA[Permet aux affili&eacute;s de consulter leurs statistiques]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[shipping_logistics]]></tab>
             <is_configurable>0</is_configurable>
