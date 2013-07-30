@@ -44,17 +44,16 @@
 	</div>
 	{else}
 
-		<div class="alert alert-info" style="display:block;">
-			<ul style="margin-left:30px;list-style-type:disc;">
+		<div class="alert alert-info">
+			<ul class="nav">
 				<li>{l s='Click on titles to open fieldsets'}.</li>
 				<li>{l s='Some sentences to translate use this syntax: %s... These are variables, and PrestaShop take care of replacing them before displaying your translation. You must leave these in your translations, and place them appropriately in your sentence.' sprintf='%d, %s, %1$s, %2$d'}</li>
 			</ul>
-		</div><br /><br />
-
-		<p>
-			{l s='Expressions to translate: %d.' sprintf=$count}<br />
-			{l s='Total missing expresssions: %d.' sprintf=$missing_translations}<br />
-		</p>
+		</div>
+		<fieldset>
+			<p>{l s='Expressions to translate:'} <span class="badge">{l s='%d' sprintf=$count}</span></p>
+			<p>{l s='Total missing expresssions:'} <span class="badge">{l s='%d' sprintf=$missing_translations}</p>
+		</fieldset>
 
 		<script type="text/javascript">
 			$(document).ready(function(){
@@ -71,7 +70,7 @@
 
 		<div id="BoxUseSpecialSyntax">
 			<div class="alert alert-block">
-				<p class="syntax">
+				<p>
 					{l s='This expression uses this special syntax:'} <span>%d.</span><br />
 					{l s='You must use this syntax in your translations. Here are several examples:'}
 				</p>
@@ -83,66 +82,69 @@
 			</div>
 		</div>
 
-		<form method="post" id="{$table}_form" action="{$url_submit}" class="form">
-		{$toggle_button}
-		<input type="hidden" name="lang" value="{$lang}" />
-		<input type="hidden" name="type" value="{$type}" />
-		<input type="hidden" name="theme" value="{$theme}" />
-		<input type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
-		<br />
+		<form method="post" id="{$table}_form" action="{$url_submit}" class="form-horizontal">
+			{$toggle_button}
+			<input type="hidden" name="lang" value="{$lang}" />
+			<input type="hidden" name="type" value="{$type}" />
+			<input type="hidden" name="theme" value="{$theme}" />
+			<input type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
+			<br />
 
-		{foreach $modules_translations as $theme_name => $theme}
-			{if $theme_name}<h2>&gt;{l s='Theme:'} <a name="{$theme_name}">{$theme_name}</h2>{/if}
-			{foreach $theme as $module_name => $module}
-				<h3>{l s='Module:'} <a name="{$module_name}" style="font-style:italic">{$module_name}</a></h3>
-				{foreach $module as $template_name => $newLang}
-					{if !empty($newLang)}
-						{assign var=occurrences value=0}
-						{foreach $newLang as $key => $value}
-							{if empty($value['trad'])}{assign var=occurrences value=$occurrences+1}{/if}
-						{/foreach}
-						{if $occurrences > 0}
-							{$missing_translations_module = $occurrences}
-						{else}
-							{$missing_translations_module = 0}
+			{foreach $modules_translations as $theme_name => $theme}
+				{if $theme_name}<h2>&gt;{l s='Theme:'} <a name="{$theme_name}">{$theme_name}</h2>{/if}
+				{foreach $theme as $module_name => $module}
+					<h3>{l s='Module:'} <a name="{$module_name}">{$module_name}</a></h3>
+					{foreach $module as $template_name => $newLang}
+						{if !empty($newLang)}
+							{assign var=occurrences value=0}
+							{foreach $newLang as $key => $value}
+								{if empty($value['trad'])}{assign var=occurrences value=$occurrences+1}{/if}
+							{/foreach}
+							{if $occurrences > 0}
+								{$missing_translations_module = $occurrences}
+							{else}
+								{$missing_translations_module = 0}
+							{/if}
+							<fieldset>
+								<h3 onclick="$('#{$theme_name}_{$module_name}_{$template_name|replace:'.':'_'}').slideToggle();">{if $theme_name}{$theme_name} - {/if}{$template_name}
+									<span class="badge">{$newLang|count}</span> {l s='expressions'} <span class="label label-danger">{$missing_translations_module}</span>
+								</h3>
+								<div name="{$type}_div" id="{$theme_name}_{$module_name}_{$template_name|replace:'.':'_'}" style="display:{if $missing_translations_module}block{else}none{/if}">
+									<table class="table">
+										{foreach $newLang as $key => $value}
+											<tr>
+												<td width="40%">{$key|stripslashes}</td>
+												<td>=</td>
+												<td> 
+													{* Prepare name string for md5() *}
+													{capture assign="name"}{strtolower($module_name)}{if $theme_name}_{strtolower($theme_name)}{/if}_{strtolower($template_name)}_{md5($key)}{/capture}
+													{if $key|strlen < $textarea_sized}
+														<input type="text" 
+															style="width: 450px{if empty($value.trad)};background:#FBB{/if}"
+															name="{$name|md5}" 
+															value="{$value.trad|regex_replace:'#"#':'&quot;'|stripslashes}"' />
+													{else}
+														<textarea rows="{($key|strlen / $textarea_sized)|intval}" 
+															style="width: 450px{if empty($value.trad)};background:#FBB{/if}"
+															name="{$name|md5}">{$value.trad|regex_replace:'#"#':'&quot;'|stripslashes}</textarea>
+													{/if}
+												</td>
+												<td>
+													{if isset($value.use_sprintf) && $value.use_sprintf}
+														<a class="useSpecialSyntax" title="{l s='This expression uses a special syntax:'} {$value.use_sprintf}">
+															<img src="{$smarty.const._PS_IMG_}admin/error.png" alt="{$value.use_sprintf}" />
+														</a>
+													{/if}
+												</td>
+											</tr>
+										{/foreach}
+									</table>
+								</div>
+							</fieldset>
 						{/if}
-						<fieldset>
-							<legend style="cursor : pointer" onclick="$('#{$theme_name}_{$module_name}_{$template_name|replace:'.':'_'}').slideToggle();">{if $theme_name}{$theme_name} - {/if}{$template_name}
-								<font color="blue">{$newLang|count}</font> {l s='expressions'} (<font color="red">{$missing_translations_module}</font>)
-							</legend>
-							<div name="{$type}_div" id="{$theme_name}_{$module_name}_{$template_name|replace:'.':'_'}" style="display:{if $missing_translations_module}block{else}none{/if}">
-								<table cellpadding="2">
-									{foreach $newLang as $key => $value}
-										<tr>
-											<td style="width: 40%">{$key|stripslashes}</td>
-											<td>= 
-												{* Prepare name string for md5() *}
-												{capture assign="name"}{strtolower($module_name)}{if $theme_name}_{strtolower($theme_name)}{/if}_{strtolower($template_name)}_{md5($key)}{/capture}
-												{if $key|strlen < $textarea_sized}
-													<input type="text" 
-														style="width: 450px{if empty($value.trad)};background:#FBB{/if}"
-														name="{$name|md5}" 
-														value="{$value.trad|regex_replace:'#"#':'&quot;'|stripslashes}" />
-												{else}
-													<textarea rows="{($key|strlen / $textarea_sized)|intval}" 
-														style="width: 450px{if empty($value.trad)};background:#FBB{/if}"
-														name="{$name|md5}">{$value.trad|regex_replace:'#"#':'&quot;'|stripslashes}</textarea>
-												{/if}
-												{if isset($value.use_sprintf) && $value.use_sprintf}
-													<a class="useSpecialSyntax" title="{l s='This expression uses a special syntax:'} {$value.use_sprintf}" style="cursor:pointer">
-														<img src="{$smarty.const._PS_IMG_}admin/error.png" alt="{$value.use_sprintf}" />
-													</a>
-												{/if}
-											</td>
-										</tr>
-									{/foreach}
-								</table>
-							</div>
-						</fieldset><br />
-					{/if}
+					{/foreach}
 				{/foreach}
 			{/foreach}
-		{/foreach}
-	{/if}
+		{/if}
 
 {/block}

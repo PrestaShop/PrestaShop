@@ -157,7 +157,7 @@ class AdminCountriesControllerCore extends AdminController
 					'name' => 'name',
 					'lang' => true,
 					'required' => true,
-					'hint' => $this->l('Country name').' - '.$this->l('Invalid characters:'). ' <>;=#{} '
+					'hint' => $this->l('Country name').' - '.$this->l('Invalid characters:'). ' &lt;&gt;;=#{} '
 				),
 				array(
 					'type' => 'text',

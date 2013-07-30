@@ -70,9 +70,9 @@
 				{l s='Here you can modify translations for every line of code inside PrestaShop.'}<br />
 				{l s='First, select a section (such as Back Office or Installed modules), and then click the flag representing the language you want to edit.'}
 			</p>
-			<input type="hidden" name="controller" value="AdminTranslations" />
-			<input type="hidden" name="lang" id="translation_lang" value="0" />
 			<div class="row">
+				<input type="hidden" name="controller" value="AdminTranslations" />
+				<input type="hidden" name="lang" id="translation_lang" value="0" />
 				<label class="control-label col-lg-3">{l s='Type of translation:'}</label>
 				<div class="col-lg-6">
 					<select name="type">
@@ -211,8 +211,8 @@
 				{l s='Choose which theme you\'d like to export your translations to. '}
 			</p>
 			<div class="row">
-				<label class="control-label col-lg-3">{l s='Language:'}</label>
-				<div class="col-lg-6">
+				<label class="control-label col-lg-4">{l s='Language:'}</label>
+				<div class="col-lg-5">
 					<select name="iso_code">
 						{foreach $languages as $language}
 							<option value="{$language['iso_code']}">{$language['name']}</option>
@@ -221,8 +221,8 @@
 				</div>
 			</div>
 			<div class="row">
-				<label class="control-label col-lg-3">{l s='Choose your theme:'}</label>
-				<div class="col-lg-6">
+				<label class="control-label col-lg-4">{l s='Choose your theme:'}</label>
+				<div class="col-lg-5">
 					<select name="theme">
 						{foreach $themes as $theme}
 							<option value="{$theme->directory}" {if $id_theme_current == $theme->id}selected=selected{/if}>{$theme->name}</option>
@@ -231,7 +231,7 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-lg-9 pull-right">
+				<div class="col-lg-8 pull-right">
 					<input type="submit" class="btn btn-default" name="submitExport" value="{l s='Export'}" />
 				</div>
 			</div>

@@ -44,14 +44,13 @@
 	</div>
 	{else}
 
-		<div class="alert alert-info" style="display:block;">
+		<div class="alert alert-info">
 			{l s='Some sentences to translate use this syntax: %s... These are variables, and PrestaShop take care of replacing them before displaying your translation. You must leave these in your translations, and place them appropriately in your sentence.' sprintf='%d, %s, %1$s, %2$d'}
-		</div><br /><br />
-
-		<p>
-			{l s='Expressions to translate: %d.' sprintf=$count}<br />
-			{l s='Total missing expresssions: %d.' sprintf=$missing_translations|array_sum}<br />
-		</p>
+		</div>
+		<fieldset>
+			<p>{l s='Expressions to translate:'} <span class="badge">{l s='%d' sprintf=$count}</span></p>
+			<p>{l s='Total missing expresssions:'} <span class="badge">{l s='%d' sprintf=$missing_translations|array_sum}</p>
+		</fieldset>
 
 		<script type="text/javascript">
 			$(document).ready(function(){
@@ -68,11 +67,11 @@
 
 		<div id="BoxUseSpecialSyntax">
 			<div class="alert alert-block">
-				<p class="syntax">
+				<p>
 					{l s='This expression uses this special syntax:'} <span>%d.</span><br />
 					{l s='You must use this syntax in your translations. Here are several examples:'}
 				</p>
-				<ul>
+				<ul class="nav">
 					<li><em>There are <strong>%d</strong> products</em> ("<strong>%d</strong>" {l s='will be replaced by a number'}).</li>
 					<li><em>List of pages in <strong>%s</strong>:</em> ("<strong>%s</strong>" {l s='will be replaced by a string'}).</li>
 					<li><em>Feature: <strong>%1$s</strong> (<strong>%2$d</strong> values)</em> ("<strong>n$</strong>" {l s='is used for the order of the arguments'}).</li>
@@ -80,28 +79,33 @@
 			</div>
 		</div>
 
-		<form method="post" id="{$table}_form" action="{$url_submit}" class="form">
-			{*{$auto_translate}$*}
-			<input type="hidden" name="lang" value="{$lang}" />
-			<input type="hidden" name="type" value="{$type}" />
-			<input type="hidden" name="theme" value="{$theme}" />
-			<input type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
-			<br /><br />
-			<table cellpadding="0" cellspacing="0" class="table">
-			{foreach $errorsArray as $key => $value}
-				<tr {if empty($value.trad)}style="background-color:#FBB"{else}{cycle values='class="alt_row",'}{/if}>
-					<td>{$key|stripslashes}</td>
-					<td style="width: 430px">=
-						<input type="text" name="{$key|md5}" value="{$value.trad|regex_replace:'#"#':'&quot;'|stripslashes}" style="width: 380px">
-						{if isset($value.use_sprintf) && $value.use_sprintf}
-							<a class="useSpecialSyntax" title="{l s='This expression uses a special syntax:'} {$value.use_sprintf}" style="cursor:pointer">
-								<img src="{$smarty.const._PS_IMG_}admin/error.png" alt="{$value.use_sprintf}" />
-							</a>
-						{/if}
-					</td>
-				</tr>
-			{/foreach}
-			</table>
+		<form method="post" id="{$table}_form" action="{$url_submit}" class="form-horizontal">
+			<fieldset>
+				{*{$auto_translate}$*}
+				<input type="hidden" name="lang" value="{$lang}" />
+				<input type="hidden" name="type" value="{$type}" />
+				<input type="hidden" name="theme" value="{$theme}" />
+				<input type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="btn btn-default" />
+
+
+				<table class="table">
+					{foreach $errorsArray as $key => $value}
+						<tr {if empty($value.trad)}style="background-color:#FBB"{else}{cycle values='class="alt_row",'}{/if}>
+							<td width="40%">{$key|stripslashes}</td>
+							<td width="40%">
+								<input type="text" name="{$key|md5}" value="{$value.trad|regex_replace:'#"#':'&quot;'|stripslashes}"' style="width: 450px{if empty($value.trad)};background:#FBB{/if}">
+							</td>
+							<td width="18%">
+								{if isset($value.use_sprintf) && $value.use_sprintf}
+									<a class="useSpecialSyntax" title="{l s='This expression uses a special syntax:'} {$value.use_sprintf}" style="cursor:pointer">
+										<img src="{$smarty.const._PS_IMG_}admin/error.png" alt="{$value.use_sprintf}" />
+									</a>
+								{/if}
+							</td>
+						</tr>
+					{/foreach}
+				</table>
+			</fieldset>
 		</form>
 	{/if}
 
