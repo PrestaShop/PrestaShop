@@ -224,13 +224,13 @@ class AdminGroupsControllerCore extends AdminController
 					'name' => 'name',
 					'required' => true,
 					'lang' => true,
-					'hint' => $this->l('Forbidden characters:').' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:'
+					'hint' => $this->l('Forbidden characters:').' 0-9!&amp;lt;&amp;gt;,;?=+()@#"�{}_$%:'
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Discount (%):'),
 					'name' => 'reduction',
-					'desc' => $this->l('Automatically apply this value as a discount on all products for members of this customer group.')
+					'hint' => $this->l('Automatically apply this value as a discount on all products for members of this customer group.')
 				),
 				array(
 					'type' => 'select',
@@ -496,13 +496,13 @@ class AdminGroupsControllerCore extends AdminController
 	 * @param $tr array Row data
 	 * @return string HTML link and icon
 	 */
-	public static function printShowPricesIcon($id_group, $tr)
+	public function printShowPricesIcon($id_group, $tr)
 	{
 		$group = new Group($tr['id_group']);
 		if (!Validate::isLoadedObject($group))
 			return;
-		return '<a href="index.php?tab=AdminGroups&id_group='.(int)$group->id.'&changeShowPricesVal&token='.Tools::getAdminTokenLite('AdminGroups').'">
-				'.($group->show_prices ? '<img src="../img/admin/enabled.gif" />' : '<img src="../img/admin/disabled.gif" />').
+		return '<a class="label '.($group->show_prices ? 'label-success' : 'label-warning').'" href="index.php?tab=AdminGroups&id_group='.(int)$group->id.'&changeShowPricesVal&token='.Tools::getAdminTokenLite('AdminGroups').'">
+				'.($group->show_prices ? '<i class="icon-check-sign"></i> '.$this->l('Yes') : '<i class="icon-ban-circle"></i> '.$this->l('No')).
 			'</a>';
 	}
 

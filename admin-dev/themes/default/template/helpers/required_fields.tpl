@@ -23,39 +23,42 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-	<a class="btn btn-default" href="#" onclick="if ($('.requiredFieldsParameters:visible').length == 0) $('.requiredFieldsParameters').slideDown('slow'); else $('.requiredFieldsParameters').slideUp('slow'); return false;">
-		<i class="icon-plus-sign"></i> {l s='Set required fields for this section'}
-	</a>
+<a class="btn btn-default" href="#" onclick="if ($('.requiredFieldsParameters:visible').length == 0) $('.requiredFieldsParameters').slideDown('slow'); else $('.requiredFieldsParameters').slideUp('slow'); return false;">
+	<i class="icon-plus-sign"></i> {l s='Set required fields for this section'}
+</a>
 
 <fieldset style="display:none" class="requiredFieldsParameters">
 	<h3><i class="icon-asterisk"></i> {l s='Required Fields'}</h3>
 	<form name="updateFields" action="{$current}&submitFields=1&token={$token}" method="post">
-
-			<div class="alert alert-info">
-				{l s='Select the fields you would like to be required for this section.'}
-			</div>
-
-			<table class="table">
-
-				<thead>
-					<tr>
-						<th><input type="checkbox" onclick="checkDelBoxes(this.form, 'fieldsBox[]', this.checked)" class="noborder" name="checkme"></th>
-						<th>{l s='Field Name'}</th>
-					</tr>
-				</thead>
-				<tbody>
-				{foreach $table_fields as $field}
-					{if !in_array($field, $required_class_fields)}
-						<tr class="{if $irow++ % 2}alt_row{/if}">
-							<td class="noborder"><input type="checkbox" name="fieldsBox[]" value="{$field}" {if in_array($field, $required_fields)} checked="checked"{/if} /></td>
-							<td>{$field}</td>
-						</tr>
-					{/if}
-				{/foreach}
-				</tbody>
-			</table>
-
-	<button class="btn btn-primary pull-right" type="submit" name="submitFields"><i class="icon-save"></i> {l s='Save'}</button>
-
+		<div class="alert alert-info">
+			{l s='Select the fields you would like to be required for this section.'}
+		</div>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>
+						<input type="checkbox" onclick="checkDelBoxes(this.form, 'fieldsBox[]', this.checked)" class="noborder" name="checkme">
+					</th>
+					<th>
+						{l s='Field Name'}
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+			{foreach $table_fields as $field}
+				{if !in_array($field, $required_class_fields)}
+				<tr>
+					<td class="noborder">
+						<input type="checkbox" name="fieldsBox[]" value="{$field}" {if in_array($field, $required_fields)} checked="checked"{/if} />
+					</td>
+					<td>
+						{$field}
+					</td>
+				</tr>
+				{/if}
+			{/foreach}
+			</tbody>
+		</table>
+		<button class="btn btn-primary pull-right" type="submit" name="submitFields"><i class="icon-save"></i> {l s='Save'}</button>
 	</form>
 </fieldset>

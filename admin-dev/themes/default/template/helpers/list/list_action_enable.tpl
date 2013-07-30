@@ -23,10 +23,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<a href="{$url_enable}" {if isset($confirm)}onclick="return confirm('{$confirm}');"{/if} title="{if $enabled}{l s='Enabled'}{else}{l s='Disabled'}{/if}">
+<a class="label {if $enabled}label-success{else}label-warning{/if}" href="{$url_enable}" {if isset($confirm)}onclick="return confirm('{$confirm}');"{/if} title="{if $enabled}{l s='Enabled'}{else}{l s='Disabled'}{/if}">
 	{if $enabled}
-		<span class="label label-success"><i class="icon-check-sign"></i> {l s='Enabled'}</span>
+		<i class="icon-check-sign"></i> {l s='Yes'}
 	{else}
-		<span class="label label-important"><i class="icon-ban-circle"></i> {l s='Disabled'}</span>
+		<i class="icon-ban-circle"></i> {l s='No'}
 	{/if}
 </a>

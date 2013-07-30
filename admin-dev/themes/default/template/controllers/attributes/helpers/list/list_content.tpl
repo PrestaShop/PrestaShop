@@ -62,8 +62,7 @@
 			{if isset($params.active)}
 				{$tr.$key}
 			{elseif isset($params.activeVisu)}
-				<img src="../img/admin/{if $tr.$key}enabled.gif{else}disabled.gif{/if}"
-				alt="{if $tr.$key}{l s='Enabled'}{else}{l s='Disabled'}{/if}" title="{if $tr.$key}{l s='Enabled'}{else}{l s='Disabled'}{/if}" />
+				<i class="{if $tr.$key}icon-check-sign{else}icon-ban-circle{/if}"></i>
 			{elseif isset($params.position)}
 				{if $order_by == 'position' && $order_way != 'DESC'}
 					<a href="{$tr.$key.position_url_down}" {if !($tr.$key.position != $positions[count($positions) - 1])}style="display: none;"{/if}>
