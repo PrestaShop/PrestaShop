@@ -60,39 +60,78 @@
 		});
 	</script>
 	
-	<fieldset>
-		<legend><img src="../img/admin/translation.gif" />{l s='Modify translations'}</legend>
-		{l s='Here you can modify translations for every line of code inside PrestaShop.'}<br />
-		{l s='First, select a section (such as Back Office or Installed modules), and then click the flag representing the language you want to edit.'}<br /><br />
-		<form method="get" action="index.php" id="typeTranslationForm">
+	<form method="get" action="index.php" id="typeTranslationForm" class="form-horizontal">
+		<fieldset>
+			<h3>
+				<i class="icon-file-text"></i>
+				{l s='Modify translations'}
+			</h3>
+			<p class="alert alert-block">
+				{l s='Here you can modify translations for every line of code inside PrestaShop.'}<br />
+				{l s='First, select a section (such as Back Office or Installed modules), and then click the flag representing the language you want to edit.'}
+			</p>
 			<input type="hidden" name="controller" value="AdminTranslations" />
 			<input type="hidden" name="lang" id="translation_lang" value="0" />
-			<select name="type" style="float:left;margin-right:10px">
-				{foreach $translations_type as $type => $array}
-					<option value="{$type}">{$array.name}</option>
+			<div class="row">
+				<label class="control-label col-lg-3">{l s='Type of translation:'}</label>
+				<div class="col-lg-6">
+					<select name="type">
+						{foreach $translations_type as $type => $array}
+							<option value="{$type}">{$array.name}</option>
+						{/foreach}
+					</select>
+				</div>
+			</div>
+			<div class="row">
+				<label class="control-label col-lg-3">{l s='Choose your theme:'}</label>
+				<div class="col-lg-6">
+					<select name="theme">
+						<option value="">{l s='Core (no theme selected)'}</option>
+						{foreach $themes as $theme}
+							<option value="{$theme->directory}" {if $id_theme_current == $theme->id}selected=selected{/if}>{$theme->name}</option>
+						{/foreach}
+					</select>
+				</div>
+			</div>
+			{* TO DO - ajouter la langue*}
+			{*<div class="row">
+				{foreach from=$languages item=language}
+				<div class="input-group col-lg-12 translatable-field lang-{$language.id_lang}">
+					<div class="input-group-btn">
+						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+							<img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt="">
+							{$language.iso_code}
+							<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu">
+							{foreach $languages as $language}
+							<li>
+								<a href="javascript:chooseTypeTranslation('{$language['iso_code']}');">
+									<img src="{$theme_lang_dir}{$language['id_lang']}.jpg" alt="{$language['iso_code']}" title="{$language['iso_code']}" />
+									{$language['iso_code']}
+								</a>
+							</li>
+							{/foreach}
+						</ul>
+					</div>
+				</div>
 				{/foreach}
-			</select>
-			<select name="theme" style="float:left;margin-right:10px">
-				<option value="">{l s='Core (no theme selected)'}</option>
-				{foreach $themes as $theme}
-					<option value="{$theme->directory}" {if $id_theme_current == $theme->id}selected=selected{/if}>{$theme->name}</option>
+			</div>*}
+				{foreach $languages as $language}
+					<a href="javascript:chooseTypeTranslation('{$language['iso_code']}');">
+						<img src="{$theme_lang_dir}{$language['id_lang']}.jpg" alt="{$language['iso_code']}" title="{$language['iso_code']}" />
+					</a>
 				{/foreach}
-			</select>
-			{foreach $languages as $language}
-				<a href="javascript:chooseTypeTranslation('{$language['iso_code']}');">
-					<img src="{$theme_lang_dir}{$language['id_lang']}.jpg" alt="{$language['iso_code']}" title="{$language['iso_code']}" />
-				</a>
-			{/foreach}
-			<input type="hidden" name="token" value="{$token}" />
-		</form>
-	</fieldset>
-	
-	<br /><h2>{l s='Translation exchange'}</h2>
+				<input type="hidden" name="token" value="{$token}" />
+			</div>
+		</fieldset>
+	</form>
 	<form action="{$url_submit}" method="post" enctype="multipart/form-data">
 		<fieldset>
-			<legend>
-				<img src="../img/admin/import.gif" />{l s='Add / Update a language'}
-			</legend>
+			<h3>
+				<i class="icon-download"></i>
+				{l s='Add / Update a language'}
+			</h3>
 			<div id="submitAddLangContent" style="float:left;">
 				<p>{l s='You can add or update a language directly from the PrestaShop website here:'}</p>
 				<div class="alert alert-block">

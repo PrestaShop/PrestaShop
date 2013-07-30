@@ -28,6 +28,7 @@ class AdminTaxesControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 	 	$this->table = 'tax';
 	 	$this->className = 'Tax';
 	 	$this->lang = true;
@@ -81,7 +82,7 @@ class AdminTaxesControllerCore extends AdminController
 						),
 					'PS_USE_ECOTAX' => array(
 						'title' => $this->l('Use ecotax:'),
-						'desc' => $ecotax_desc,
+						'hint' => $ecotax_desc,
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
@@ -94,7 +95,7 @@ class AdminTaxesControllerCore extends AdminController
 		if (Configuration::get('PS_USE_ECOTAX'))
 			$this->fields_options['general']['fields']['PS_ECOTAX_TAX_RULES_GROUP_ID'] = array(
 				'title' => $this->l('Ecotax'),
-				'desc' => $this->l('Define the ecotax (e.g. French ecotax: 19.6%).'),
+				'hint' => $this->l('Define the ecotax (e.g. French ecotax: 19.6%).'),
 				'cast' => 'intval',
 				'type' => 'select',
 				'identifier' => 'id_tax',
@@ -161,35 +162,30 @@ class AdminTaxesControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Taxes'),
-				'image' => '../img/admin/dollar.gif'
+				'icon' => 'icon-money'
 			),
 			'input' => array(
 				array(
 					'type' => 'text',
 					'label' => $this->l('Name:'),
 					'name' => 'name',
-					'size' => 33,
 					'required' => true,
 					'lang' => true,
-					'hint' => $this->l('Invalid characters').' <>;=#{}',
-					'desc' => $this->l('Tax name to display in carts and on invoices (e.g. VAT).')
+					'hint' => $this->l('Tax name to display in carts and on invoices (e.g. VAT).').' - '.$this->l('Invalid characters').' <>;=#{}'
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Rate:'),
 					'name' => 'rate',
-					'size' => 4,
 					'maxlength' => 6,
 					'required' => true,
-					'hint' => $this->l('Invalid characters').' <>;=#{}',
-					'desc' => $this->l('Format: XX.XX or XX.XXX (e.g. 19.60 or 13.925)')
+					'hint' => $this->l('Format: XX.XX or XX.XXX (e.g. 19.60 or 13.925)').' - '.$this->l('Invalid characters').' <>;=#{}'
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Enable:'),
 					'name' => 'active',
 					'required' => false,
-					'class' => 't',
 					'is_bool' => true,
 					'values' => array(
 						array(
@@ -207,7 +203,7 @@ class AdminTaxesControllerCore extends AdminController
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
-				'class' => 'button'
+				'class' => 'btn btn-primary'
 			)
 		);
 

@@ -30,6 +30,7 @@ class AdminZonesControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 	 	$this->table = 'zone';
 		$this->className = 'Zone';
 	 	$this->lang = false;
@@ -37,16 +38,13 @@ class AdminZonesControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_zone' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center',
-				'width' => 25
+				'align' => 'center'
 			),
 			'name' => array(
 				'title' => $this->l('Zone'),
-				'width' => 'auto'
 			),
 			'active' => array(
 				'title' => $this->l('Enabled'),
-				'width' => '70',
 				'align' => 'center',
 				'active' => 'status',
 				'type' => 'bool',
@@ -75,23 +73,21 @@ class AdminZonesControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Zones'),
-				'image' => '../img/admin/world.gif'
+				'icon' => 'icon-globe'
 			),
 			'input' => array(
 				array(
 					'type' => 'text',
 					'label' => $this->l('Name:'),
 					'name' => 'name',
-					'size' => 33,
 					'required' => true,
-					'desc' => $this->l('Zone name (e.g. Africa, West Coast, Neighboring Countries)'),
+					'hint' => $this->l('Zone name (e.g. Africa, West Coast, Neighboring Countries)'),
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Active:'),
 					'name' => 'active',
 					'required' => false,
-					'class' => 't',
 					'is_bool' => true,
 					'values' => array(
 						array(
@@ -105,7 +101,7 @@ class AdminZonesControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Allow or disallow shipping to this zone')
+					'hint' => $this->l('Allow or disallow shipping to this zone')
 				)
 			)
 		);
@@ -120,8 +116,8 @@ class AdminZonesControllerCore extends AdminController
 		}
 
 		$this->fields_form['submit'] = array(
-			'title' => $this->l('Save   '),
-			'class' => 'button'
+			'title' => $this->l('Save'),
+			'class' => 'btn btn-default'
 		);
 
 		return parent::renderForm();

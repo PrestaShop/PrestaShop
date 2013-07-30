@@ -28,6 +28,7 @@ class AdminLanguagesControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 	 	$this->table = 'lang';
 		$this->className = 'Language';
 	 	$this->lang = false;
@@ -50,8 +51,7 @@ class AdminLanguagesControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_lang' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center',
-				'width' => 25
+				'align' => 'center'
 			),
 			'flag' => array(
 				'title' => $this->l('Logo'),
@@ -61,17 +61,14 @@ class AdminLanguagesControllerCore extends AdminController
 				'search' => false
 			),
 			'name' => array(
-				'title' => $this->l('Name'),
-				'width' => 120
+				'title' => $this->l('Name')
 			),
 			'iso_code' => array(
 				'title' => $this->l('ISO code'),
-				'width' => 70,
 				'align' => 'center'
 			),
 			'language_code' => array(
 				'title' => $this->l('Language code'),
-				'width' => 70,
 				'align' => 'center'
 			),
 			'date_format_lite' => array(
@@ -113,7 +110,7 @@ class AdminLanguagesControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Languages'),
-				'image' => '../img/admin/world.gif'
+				'icon' => 'icon-globe'
 			),
 			'input' => array(
 				array(
@@ -124,7 +121,6 @@ class AdminLanguagesControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Name:'),
 					'name' => 'name',
-					'size' => 32,
 					'maxlength' => 32,
 					'required' => true
 				),
@@ -133,54 +129,55 @@ class AdminLanguagesControllerCore extends AdminController
 					'label' => $this->l('ISO code:'),
 					'name' => 'iso_code',
 					'required' => true,
-					'size' => 2,
 					'maxlength' => 2,
-					'desc' => $this->l('Two-letter ISO code (e.g. FR, EN, DE)')
+					'hint' => $this->l('Two-letter ISO code (e.g. FR, EN, DE)')
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Language code:'),
 					'name' => 'language_code',
 					'required' => true,
-					'size' => 2,
 					'maxlength' => 5,
-					'desc' => $this->l('IETF language tag (e.g. en-US, pt-BR).').' '.sprintf('<a href="http://en.wikipedia.org/wiki/IETF_language_tag" target="_blank">%s <img src="../img/admin/external_link.png" class="icon-top" /></a>', $this->l('IETF on Wikipedia'))
+					'hint' => $this->l('IETF language tag (e.g. en-US, pt-BR).')
+					/* TO DO - ajouter les liens dans le hint ? */
+					/*'desc' => $this->l('IETF language tag (e.g. en-US, pt-BR).').' '.sprintf('<a href="http://en.wikipedia.org/wiki/IETF_language_tag" target="_blank">%s <img src="../img/admin/external_link.png" class="icon-top" /></a>', $this->l('IETF on Wikipedia'))*/
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Date format:'),
 					'name' => 'date_format_lite',
 					'required' => true,
-					'size' => 15,
-					'desc' => sprintf($this->l('Short date format (e.g., %s)'), '<a href="http://php.net/date" target="_blank">Y-m-d</a>')
+					'hint' => $this->l('Short date format (e.g., %s)')
+					/* TO DO - ajouter les liens dans le hint ? */
+					/*'desc' => sprintf($this->l('Short date format (e.g., %s)'), '<a href="http://php.net/date" target="_blank">Y-m-d</a>')*/
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Date format (full):'),
 					'name' => 'date_format_full',
 					'required' => true,
-					'size' => 25,
-					'desc' => sprintf($this->l('Full date format (e.g., %s)'), '<a href="http://php.net/date" target="_blank">Y-m-d H:i:s</a>')
+					'hint' => $this->l('Full date format (e.g., %s)')
+					/* TO DO - ajouter les liens dans le hint ? */
+					/*'desc' => sprintf($this->l('Full date format (e.g., %s)'), '<a href="http://php.net/date" target="_blank">Y-m-d H:i:s</a>')*/
 				),
 				array(
 					'type' => 'file',
 					'label' => $this->l('Flag:'),
 					'name' => 'flag',
 					'required' => true,
-					'desc' => $this->l('Upload the country flag from your computer')
+					'hint' => $this->l('Upload the country flag from your computer')
 				),
 				array(
 					'type' => 'file',
 					'label' => $this->l('"No-picture" image:'),
 					'name' => 'no-picture',
-					'desc' => $this->l('Image is displayed when "no picture is found"')
+					'hint' => $this->l('Image is displayed when "no picture is found"')
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Is RTL language:'),
 					'name' => 'is_rtl',
 					'required' => false,
-					'class' => 't',
 					'is_bool' => true,
 					'values' => array(
 						array(
@@ -194,15 +191,16 @@ class AdminLanguagesControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Enable if this language is read from right to left').' '.
-							$this->l('(Experimental: your theme must be compliant with RTL languages)')
+					'hint' => array(
+						$this->l('Enable if this language is read from right to left').' '.
+						$this->l('(Experimental: your theme must be compliant with RTL languages)')
+					)
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Status:'),
 					'name' => 'active',
 					'required' => false,
-					'class' => 't',
 					'is_bool' => true,
 					'values' => array(
 						array(
@@ -216,7 +214,7 @@ class AdminLanguagesControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Activate this language')
+					'hint' => $this->l('Activate this language')
 				),
 				array(
 					'type' => 'special',

@@ -33,6 +33,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->table = 'tax_rules_group';
 		$this->className = 'TaxRulesGroup';
 		$this->lang = false;
@@ -41,16 +42,13 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
 		$this->fields_list = array(
 			'id_tax_rules_group' => array(
-				'title' => $this->l('ID'),
-				'width' => 25
+				'title' => $this->l('ID')
 			),
 			'name' => array(
-				'title' => $this->l('Name'),
-				'width' => 'auto'
+				'title' => $this->l('Name')
 			),
 			'active' => array(
 				'title' => $this->l('Enabled'),
-				'width' => 25,
 				'active' => 'status',
 				'type' => 'bool',
 				'orderby' => false,
@@ -87,28 +85,22 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
 		$this->fields_list = array(
 			'country_name' => array(
-				'title' => $this->l('Country'),
-				'width' => 140
+				'title' => $this->l('Country')
 			),
 			'state_name' => array(
-				'title' => $this->l('State'),
-				'width' => 140
+				'title' => $this->l('State')
 			),
 			'zipcode' => array(
-				'title' => $this->l('Zip Code'),
-				'width' => 25,
+				'title' => $this->l('Zip Code')
 			),
 			'behavior' => array(
-				'title' => $this->l('Behavior'),
-				'width' => 25,
+				'title' => $this->l('Behavior')
 			),
 			'rate' => array(
-				'title' => $this->l('Tax'),
-				'width' => 25,
+				'title' => $this->l('Tax')
 			),
 			'description' => array(
-				'title' => $this->l('Description'),
-				'width' => 25,
+				'title' => $this->l('Description')
 			)
 		);
 
@@ -141,23 +133,21 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Tax Rules'),
-				'image' => '../img/admin/dollar.gif'
+				'icon' => 'icon-money'
 			),
 			'input' => array(
 				array(
 					'type' => 'text',
 					'label' => $this->l('Name:'),
 					'name' => 'name',
-					'size' => 33,
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}'
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Enable:'),
 					'name' => 'active',
 					'required' => false,
-					'class' => 't',
 					'is_bool' => true,
 					'values' => array(
 						array(
@@ -175,7 +165,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			),
 			'submit' => array(
 				'title' => $this->l('Save and stay'),
-				'class' => 'button',
+				'class' => 'btn btn-primary',
 				'stay' => true
 			)
 		);
@@ -210,7 +200,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		$this->fields_form[0]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('New tax rule'),
-				'image' => '../img/admin/dollar.gif'
+				'icon' => 'icon-money'
 			),
 			'input' => array(
 				array(
@@ -234,7 +224,6 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 					'name' => 'states[]',
 					'id' => 'states',
 					'multiple' => true,
-					'size' => 5,
 					'options' => array(
 						'query' => array(),
 						'id' => 'id_state',
@@ -283,11 +272,15 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 						'id' => 'id',
 						'name' => 'name'
 					),
-					'hint' =>
-						$this->l('Define the behavior if an address matches multiple rules:').'<br />
-						<b>'.$this->l('This Tax Only:').'</b> '.$this->l('Will apply only this tax').'<br />
-						<b>'.$this->l('Combine:').'</b> '.$this->l('Combine taxes (eg: 10% + 5% = 15%)').'<br />
-						<b>'.$this->l('One After Another:').'</b> '.$this->l('Apply taxes one after another (eg: 0 + 10% = 0 + 5% = 5.5)')
+					'hint' => array(
+						$this->l('Define the behavior if an address matches multiple rules:'),
+						$this->l('This Tax Only:'),
+						$this->l('Will apply only this tax'),
+						$this->l('Combine:'),
+						$this->l('Combine taxes (eg: 10% + 5% = 15%)'),
+						$this->l('One After Another:'),
+						$this->l('Apply taxes one after another (eg: 0 + 10% = 0 + 5% = 5.5)')
+					)
 				),
 				array(
 					'type' => 'select',
@@ -303,18 +296,17 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 							'label' => $this->l('No Tax')
 						)
 					),
-					'desc' => sprintf($this->l('(Total tax: %s)'), '9%')
+					'hint' => sprintf($this->l('(Total tax: %s)'), '9%')
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Description:'),
 					'name' => 'description',
-					'size' => 40,
 				)
 			),
 			'submit' => array(
 				'title' => $this->l('Save and stay'),
-				'class' => 'button',
+				'class' => 'btn btn-primary',
 				'stay' => true
 			)
 		);

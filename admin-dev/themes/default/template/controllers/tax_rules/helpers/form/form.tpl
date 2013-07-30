@@ -26,9 +26,9 @@
 
 {block name="label"}
 	{if $input.name == 'zipcode' && isset($input.label)}
-		<label id="zipcode-label">{$input.label}</label>
+		<label id="zipcode-label" class="control-label col-lg-3 ">{$input.label}</label>
 	{elseif $input.name == 'states[]'}
-		<label id="states-label">{$input.label}</label>
+		<label id="states-label" class="control-label col-lg-3 ">{$input.label}</label>
 	{else}
 		{$smarty.block.parent}
 	{/if}

@@ -33,81 +33,45 @@
 {/if}
 
 <form method="post" action="{$currentIndex}&{$identifier}&token={$token}&id_tax_rules_group={$id_tax_rules_group}&updatetax_rules_group#{$table}" class="form">
-	<input type="hidden" id="submitFilter{$table}" name="submitFilter{$table}" value="0"/>
-	<table class="table_grid">
-		<tr>
-			<td style="vertical-align: bottom;">
-				<span style="float: left;">
-					{if $page > 1}
-						<input type="image" src="../img/admin/list-prev2.gif" onclick="getE('submitFilter{$table}').value=1"/>&nbsp;
-						<input type="image" src="../img/admin/list-prev.gif" onclick="getE('submitFilter{$table}').value={$page - 1}"/>
-					{/if}
-					{l s='Page'} <b>{$page}</b> / {$total_pages}
-					{if $page < $total_pages}
-						<input type="image" src="../img/admin/list-next.gif" onclick="getE('submitFilter{$table}').value={$page + 1};"/>&nbsp;
-						<input type="image" src="../img/admin/list-next2.gif" onclick="getE('submitFilter{$table}').value={$total_pages}"/>
-					{/if}
-					| {l s='Display'}
-					<select name="pagination" onchange="submit()">
-						{* Choose number of results per page *}
-						{foreach $pagination AS $value}
-							<option value="{$value|intval}"{if $selected_pagination == $value} selected="selected" {elseif $selected_pagination == NULL && $value == $pagination[1]} selected="selected2"{/if}>{$value|intval}</option>
-						{/foreach}
-					</select>
-					/ {$list_total} {l s='result(s)'}
-				</span>
-				<span style="float: right;">
-					<input type="submit" name="submitReset{$table}" value="{l s='Reset'}" class="button" />
-				</span>
-				<span class="clear"></span>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<table
-				{if $table_id} id={$table_id}{/if}
-				class="table {if $table_dnd}tableDnD{/if} {$table}"
-				cellpadding="0" cellspacing="0"
-				style="width: 100%; margin-bottom:10px;"
-				>
-					<col width="10px" />
+	<fieldset class="col-lg-12">
+		<input type="hidden" id="submitFilter{$table}" name="submitFilter{$table}" value="0"/>
+		<table {if $table_id} id={$table_id}{/if} class="table {if $table_dnd}tableDnD{/if} {$table}">
+			<col width="10" />
+			{foreach $fields_display AS $key => $params}
+				<col {if isset($params.width) && $params.width != 'auto'}width="{$params.width}px"{/if}/>
+			{/foreach}
+			{if $shop_link_type}
+				<col width="80" />
+			{/if}
+			{if $has_actions}
+				<col width="52" />
+			{/if}
+			<thead>
+				<tr class="nodrag nodrop">
+					<th>
+						{if $has_bulk_actions}
+							<input type="checkbox" name="checkme" class="noborder" onclick="checkDelBoxes(this.form, '{$table}Box[]', this.checked)" />
+						{/if}
+					</th>
 					{foreach $fields_display AS $key => $params}
-						<col {if isset($params.width) && $params.width != 'auto'}width="{$params.width}px"{/if}/>
+						<th {if isset($params.align)} class="{$params.align}"{/if}>
+							{if isset($params.hint)}<span class="alert alert-info" name="help_box">{$params.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
+							<span class="title_box">
+								{$params.title}
+							</span>
+						</th>
 					{/foreach}
 					{if $shop_link_type}
-						<col width="80px" />
+						<th>
+							{if $shop_link_type == 'shop'}
+								{l s='Shop'}
+							{else}
+								{l s='Group shop'}
+							{/if}
+						</th>
 					{/if}
 					{if $has_actions}
-						<col width="52px" />
+						<th>{l s='Actions'}<br />&nbsp;</th>
 					{/if}
-					<thead>
-						<tr class="nodrag nodrop">
-							<th class="center">
-								{if $has_bulk_actions}
-									<input type="checkbox" name="checkme" class="noborder" onclick="checkDelBoxes(this.form, '{$table}Box[]', this.checked)" />
-								{/if}
-							</th>
-							{foreach $fields_display AS $key => $params}
-								<th {if isset($params.align)} class="{$params.align}"{/if}>
-									{if isset($params.hint)}<span class="alert alert-info" name="help_box">{$params.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
-									<span class="title_box">
-										{$params.title}
-									</span>
-										<br />&nbsp;
-								</th>
-							{/foreach}
-							{if $shop_link_type}
-								<th>
-									{if $shop_link_type == 'shop'}
-										{l s='Shop'}
-									{else}
-										{l s='Group shop'}
-									{/if}
-									<br />&nbsp;
-								</th>
-							{/if}
-							{if $has_actions}
-								<th class="center">{l s='Actions'}<br />&nbsp;</th>
-							{/if}
-						</tr>
-						</thead>
+				</tr>
+			</thead>
