@@ -681,7 +681,18 @@ class AdminCarriersControllerCore extends AdminController
 
 	public function displayEditLink($token = null, $id, $name = null)
 	{
-		return '<a href="'.$this->context->link->getAdminLink('AdminCarrierWizard').'&id_carrier='.(int)$id.'"><img src="../img/admin/edit.gif"/></a>';
+		if ($this->tabAccess['edit'] == 1)
+			return '<a href="'.$this->context->link->getAdminLink('AdminCarrierWizard').'&id_carrier='.(int)$id.'"><img src="../img/admin/edit.gif"/></a>';
+		else
+			return;
+	}
+	
+	public function displayDeleteLink($token = null, $id, $name = null)
+	{
+		if ($this->tabAccess['delete'] == 1)
+			return '<a href="'.$this->context->link->getAdminLink('AdminCarriers').'&id_carrier='.(int)$id.'&deletecarrier=1"><img src="../img/admin/delete.gif"/></a>';
+		else
+			return;
 	}
 
 }

@@ -45,7 +45,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 
 		parent::__construct();
 		
-		$this->wizard_access = Profile::getProfileAccess($this->context->employee->id_profile, Tab::getIdFromClassName('AdminCarrierWizard'));
+		$this->tabAccess = Profile::getProfileAccess($this->context->employee->id_profile, Tab::getIdFromClassName('AdminCarriers'));
 	}
 
 	public function setMedia()
@@ -95,11 +95,12 @@ class AdminCarrierWizardControllerCore extends AdminController
 	{
 		$this->initWizard();
 
-		if (Tools::getValue('id_carrier') && $this->wizard_access['edit'])
+		if (Tools::getValue('id_carrier') && $this->tabAccess['edit'])
 			$carrier = $this->loadObject();
-		elseif ($this->wizard_access['add'])
+		elseif ($this->tabAccess['add'])
 			$carrier = new Carrier();
-		else
+		
+		if ((!$this->tabAccess['edit'] && Tools::getValue('id_carrier')) ||  (!$this->tabAccess['add'] && !Tools::getValue('id_carrier')))
 		{
 			$this->errors[] = Tools::displayError('You do not have permission to use this wizard.');
 			return ;
@@ -312,50 +313,6 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$this->getTplRangesVarsAndValues($carrier, $tpl_vars, $fields_value);		
 		return $this->renderGenericForm(array('form' => $this->fields_form), $fields_value, $tpl_vars);
 	}
-	
-	protected function getTplRangesVarsAndValues($carrier, &$tpl_vars, &$fields_value)
-	{
-		$tpl_vars['zones'] = Zone::getZones(false);
-		$carrier_zones = $carrier->getZones();
-		$carrier_zones_ids = array();
-		if (is_array($carrier_zones))
-			foreach ($carrier_zones as $carrier_zone)
-				$carrier_zones_ids[] = $carrier_zone['id_zone'];
-
-		
-		$shipping_method = $carrier->getShippingMethod();
-		if ($shipping_method == Carrier::SHIPPING_METHOD_FREE)
-		{
-			$range_table = array();
-			$range_obj = $carrier->getRangeObject($carrier->shipping_method);
-			$price_by_range = array();
-		}
-		else
-		{
-			$range_table = $carrier->getRangeTable();
-			$range_obj = $carrier->getRangeObject();
-			$price_by_range = Carrier::getDeliveryPriceByRanges($range_table, (int)$carrier->id);
-		}
-
-		$zones = Zone::getZones(false);
-		foreach ($zones as $zone)
-			$fields_value['zones'][$zone['id_zone']] = Tools::getValue('zone_'.$zone['id_zone'], (in_array($zone['id_zone'], $carrier_zones_ids)));
-
-		foreach ($price_by_range as $price)
-			$tpl_vars['price_by_range'][$price['id_'.$range_table]][$price['id_zone']] = $price['price'];
-			
-		$tmp_range = $range_obj->getRanges((int)$carrier->id);
-		$tpl_vars['ranges'] = array();
-		foreach ($tmp_range as $id => $range)
-		{
-			$tpl_vars['ranges'][$range['id_'.$range_table]] = $range;
-			$tpl_vars['ranges'][$range['id_'.$range_table]]['id_range'] = $range['id_'.$range_table];
-		}
-
-		// init blank range
-		if (!count($tpl_vars['ranges']))
-			$tpl_vars['ranges'][] = array('id_range' => -1, 'delimiter1' => 0, 'delimiter2' => 100000);
-	}
 
 	public function renderStepFour($carrier)
 	{
@@ -445,6 +402,50 @@ class AdminCarrierWizardControllerCore extends AdminController
 	{
 		return $this->context->smarty->fetch('controllers/carrier_wizard/summary.tpl');
 	}
+	
+	protected function getTplRangesVarsAndValues($carrier, &$tpl_vars, &$fields_value)
+	{
+		$tpl_vars['zones'] = Zone::getZones(false);
+		$carrier_zones = $carrier->getZones();
+		$carrier_zones_ids = array();
+		if (is_array($carrier_zones))
+			foreach ($carrier_zones as $carrier_zone)
+				$carrier_zones_ids[] = $carrier_zone['id_zone'];
+
+		
+		$shipping_method = $carrier->getShippingMethod();
+		if ($shipping_method == Carrier::SHIPPING_METHOD_FREE)
+		{
+			$range_table = array();
+			$range_obj = $carrier->getRangeObject($carrier->shipping_method);
+			$price_by_range = array();
+		}
+		else
+		{
+			$range_table = $carrier->getRangeTable();
+			$range_obj = $carrier->getRangeObject();
+			$price_by_range = Carrier::getDeliveryPriceByRanges($range_table, (int)$carrier->id);
+		}
+
+		$zones = Zone::getZones(false);
+		foreach ($zones as $zone)
+			$fields_value['zones'][$zone['id_zone']] = Tools::getValue('zone_'.$zone['id_zone'], (in_array($zone['id_zone'], $carrier_zones_ids)));
+
+		foreach ($price_by_range as $price)
+			$tpl_vars['price_by_range'][$price['id_'.$range_table]][$price['id_zone']] = $price['price'];
+			
+		$tmp_range = $range_obj->getRanges((int)$carrier->id);
+		$tpl_vars['ranges'] = array();
+		foreach ($tmp_range as $id => $range)
+		{
+			$tpl_vars['ranges'][$range['id_'.$range_table]] = $range;
+			$tpl_vars['ranges'][$range['id_'.$range_table]]['id_range'] = $range['id_'.$range_table];
+		}
+
+		// init blank range
+		if (!count($tpl_vars['ranges']))
+			$tpl_vars['ranges'][] = array('id_range' => -1, 'delimiter1' => 0, 'delimiter2' => 100000);
+	}
 
 	public function renderGenericForm($fields_form, $fields_value, $tpl_vars = array())
 	{
@@ -512,7 +513,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 	
 	public function ajaxProcessChangeRanges()
 	{
-		if ((Validate::isLoadedObject($this->object) && !$this->wizard_access['edit']) || !$this->wizard_access['add'])
+		if ((Validate::isLoadedObject($this->object) && !$this->tabAccess['edit']) || !$this->tabAccess['add'])
 		{
 			$this->errors[] = Tools::displayError('You do not have permission to use this wizard.');
 			return;
@@ -540,7 +541,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$step_number = (int)Tools::getValue('step_number');
 		$return = array('has_error' => false);
 
-		if (!$this->wizard_access['edit'])
+		if (!$this->tabAccess['edit'])
 			$this->errors[] = Tools::displayError('You do not have permission to use this wizard.');
 		else
 		{
@@ -567,7 +568,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 	
 	public function processRanges($id_carrier)
 	{
-		if (!$this->wizard_access['edit'] || !$this->wizard_access['add'])
+		if (!$this->tabAccess['edit'] || !$this->tabAccess['add'])
 		{
 			$this->errors[] = Tools::displayError('You do not have permission to use this wizard.');
 			return;
@@ -624,7 +625,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 	
 	public function ajaxProcessUploadLogo()
 	{
-		if (!$this->wizard_access['edit'])
+		if (!$this->tabAccess['edit'])
 			die('<return result="error" message="'.Tools::displayError('You do not have permission to use this wizard.').'" />');
 
 		$allowedExtensions = array('jpeg', 'gif', 'png', 'jpg');
@@ -651,7 +652,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 	{
 		$return = array('has_error' => false);
 		
-		if (!$this->wizard_access['edit'])
+		if (!$this->tabAccess['edit'])
 			$return = array(
 				'has_error' =>  true,
 				$return['errors'][] = Tools::displayError('You do not have permission to use this wizard.')
