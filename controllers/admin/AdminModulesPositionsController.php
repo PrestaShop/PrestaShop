@@ -401,8 +401,8 @@ class AdminModulesPositionsControllerCore extends AdminController
 		}
 		$content .= '
 				<br />
-				<select id="em_list_'.$shop_id.'" size="45" multiple style="width:20em">
-					<option disabled="disabled">---- CUSTOM ----</option>';
+				<select id="em_list_'.$shop_id.'" size="45" multiple style="width:237px">
+					<option disabled="disabled">'.$this->l('___________ CUSTOM ___________').'</option>';
 		
 		// @todo do something better with controllers
 		$controllers = Dispatcher::getControllers(_PS_FRONT_CONTROLLER_DIR_);
@@ -414,7 +414,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 					<option value="'.$v.'">'.$v.'</option>';
 
 		$content .= '
-					<option disabled="disabled">------ CORE ------</option>';
+					<option disabled="disabled">'.$this->l('____________ CORE ____________').'</option>';
 		foreach ($controllers as $k => $v)
 			$content .= '
 					<option value="'.$k.'">'.$k.'</option>';
