@@ -401,7 +401,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 		}
 		$content .= '
 				<br />
-				<select id="em_list_'.$shop_id.'" size="45" multiple style="width:237px">
+				<select id="em_list_'.$shop_id.'" size="45" multiple="multiple" style="width:237px">
 					<option disabled="disabled">'.$this->l('___________ CUSTOM ___________').'</option>';
 		
 		// @todo do something better with controllers
