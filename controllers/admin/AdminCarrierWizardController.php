@@ -444,7 +444,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 
 		// init blank range
 		if (!count($tpl_vars['ranges']))
-			$tpl_vars['ranges'][] = array('id_range' => -1, 'delimiter1' => 0, 'delimiter2' => 100000);
+			$tpl_vars['ranges'][] = array('id_range' => -1, 'delimiter1' => 0, 'delimiter2' => 0);
 	}
 
 	public function renderGenericForm($fields_form, $fields_value, $tpl_vars = array())
