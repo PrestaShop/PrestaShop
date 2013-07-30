@@ -28,6 +28,7 @@ class AdminCurrenciesControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->table = 'currency';
 		$this->className = 'Currency';
 		$this->lang = false;
@@ -52,18 +53,18 @@ class AdminCurrenciesControllerCore extends AdminController
 			'change' => array(
 				'title' =>	$this->l('Currency rates'),
 				'image' => '../img/admin/exchangesrate.gif',
-				'description' => $this->l('Use PrestaShop\'s webservice to update your currency exchange rates. Please use caution, however, rates are provided as-is.'),
+				'description' => '<div class="alert alert-block">'.$this->l('Use PrestaShop\'s webservice to update your currency exchange rates. Please use caution, however, rates are provided as-is.').'</div>',
 				'submit' => array(
 					'title' => $this->l('Update currency rates'),
-					'class' => 'button',
+					'class' => 'btn btn-default',
 					'name' => 'SubmitExchangesRates'
 				)
 			),
 			'cron' => array(
 				'title' =>	$this->l('Automatically update currency rates'),
 				'image' => '../img/admin/tab-tools.gif',
-				'info' => $this->l('Use PrestaShop\'s webservice to update your currency exchange rates. Please use caution, rates are provided as-is. You can place this URL in the crontab,or access it manually.').':<br />
-					<b>'.Tools::getShopDomain(true, true).__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/cron_currency_rates.php?secure_key='.md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME')).'</b></p>',
+				'info' => '<div class="alert alert-block">'.$this->l('Use PrestaShop\'s webservice to update your currency exchange rates. Please use caution, rates are provided as-is. You can place this URL in the crontab,or access it manually.').':<br />
+					<b>'.Tools::getShopDomain(true, true).__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/cron_currency_rates.php?secure_key='.md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME')).'</b></div>',
 			)
 		);
 
@@ -89,7 +90,7 @@ class AdminCurrenciesControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Currencies:'),
-				'image' => '../img/admin/money.gif'
+				'icon' => 'icon-money'
 			),
 			'input' => array(
 				array(
@@ -105,46 +106,41 @@ class AdminCurrenciesControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('ISO code:'),
 					'name' => 'iso_code',
-					'size' => 30,
 					'maxlength' => 32,
 					'required' => true,
-					'desc' => $this->l('ISO code (e.g. USD for Dollars, EUR for Euros)').'...',
+					'hint' => $this->l('ISO code (e.g. USD for Dollars, EUR for Euros)').'...',
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Numeric ISO code:'),
 					'name' => 'iso_code_num',
-					'size' => 30,
 					'maxlength' => 32,
 					'required' => true,
-					'desc' => $this->l('Numeric ISO code (e.g. 840 for Dollars, 978 for Euros)').'...',
+					'hint' => $this->l('Numeric ISO code (e.g. 840 for Dollars, 978 for Euros)').'...',
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Symbol:'),
 					'name' => 'sign',
-					'size' => 3,
 					'maxlength' => 8,
 					'required' => true,
-					'desc' => $this->l('Will appear in Front Office (e.g. $, €)').'...',
+					'hint' => $this->l('Will appear in Front Office (e.g. $, €)').'...',
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Exchange rate:'),
 					'name' => 'conversion_rate',
-					'size' => 3,
 					'maxlength' => 11,
 					'required' => true,
-					'desc' => $this->l('Exchange rates are calculated from one unit of your shop\'s default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20"').' 1&euro; = $1.20',
+					'hint' => $this->l('Exchange rates are calculated from one unit of your shop\'s default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20"').' 1&euro; = $1.20',
 				),
 				array(
 					'type' => 'select',
 					'label' => $this->l('Currency format:'),
 					'name' => 'format',
-					'size' => 3,
 					'maxlength' => 11,
 					'required' => true,
-					'desc' =>$this->l('Applies to all prices, e.g.').' $1,240.15',
+					'hint' =>$this->l('Applies to all prices, e.g.').' $1,240.15',
 					'options' => array(
 						'query' => array(
 							array('key' => 1, 'name' => 'X0,000.00 ('.$this->l('as with Dollars').')'),
@@ -158,13 +154,12 @@ class AdminCurrenciesControllerCore extends AdminController
 					)
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Decimals:'),
 					'name' => 'decimals',
 					'required' => false,
-					'class' => 't',
 					'is_bool' => true,
-					'desc' => $this->l('Display decimals in prices'),
+					'hint' => $this->l('Display decimals in prices'),
 					'values' => array(
 						array(
 							'id' => 'decimals_on',
@@ -179,13 +174,12 @@ class AdminCurrenciesControllerCore extends AdminController
 					),
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Spacing:'),
 					'name' => 'blank',
 					'required' => false,
-					'class' => 't',
 					'is_bool' => true,
-					'desc' => $this->l('Include a space between symbol and price, e.g.').'<br />$1,240.15 -> $ 1,240.15',
+					'hint' => $this->l('Include a space between symbol and price, e.g.').'<br />$1,240.15 -> $ 1,240.15',
 					'values' => array(
 						array(
 							'id' => 'blank_on',
@@ -200,11 +194,10 @@ class AdminCurrenciesControllerCore extends AdminController
 					),
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Enable:'),
 					'name' => 'active',
 					'required' => false,
-					'class' => 't',
 					'is_bool' => true,
 					'values' => array(
 						array(
@@ -232,8 +225,8 @@ class AdminCurrenciesControllerCore extends AdminController
 		}
 
 		$this->fields_form['submit'] = array(
-			'title' => $this->l('Save   '),
-			'class' => 'button'
+			'title' => $this->l('Save'),
+			'class' => 'btn btn-primary'
 		);
 
 		return parent::renderForm();

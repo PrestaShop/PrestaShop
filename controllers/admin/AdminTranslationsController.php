@@ -72,6 +72,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->multishop_context = Shop::CONTEXT_ALL;
 
 		parent::__construct();
@@ -156,15 +157,15 @@ class AdminTranslationsControllerCore extends AdminController
 		$this->toolbar_btn['save-and-stay'] = array(
 			'short' => 'SaveAndStay',
 			'href' => '#',
-			'desc' => $this->l('Save and stay'),
+			'hint' => $this->l('Save and stay'),
 		);
 		$this->toolbar_btn['save'] = array(
 			'href' => '#',
-			'desc' => $this->l('Update translations')
+			'hint' => $this->l('Update translations')
 		);
 		$this->toolbar_btn['cancel'] = array(
 			'href' => self::$currentIndex.'&token='.$this->token,
-			'desc' => $this->l('Cancel')
+			'hint' => $this->l('Cancel')
 		);
 	}
 

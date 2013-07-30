@@ -28,6 +28,7 @@ class AdminCountriesControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 	 	$this->table = 'country';
 		$this->className = 'Country';
 	 	$this->lang = true;
@@ -68,28 +69,23 @@ class AdminCountriesControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_country' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center',
-				'width' => 25
+				'align' => 'center'
 			),
 			'name' => array(
 				'title' => $this->l('Country'),
-				'width' => 'auto',
 				'filter_key' => 'b!name'
 			),
 			'iso_code' => array(
 				'title' => $this->l('ISO code'),
-				'width' => 70,
 				'align' => 'center'
 			),
 			'call_prefix' => array(
 				'title' => $this->l('Call prefix'),
-				'width' => 150,
 				'align' => 'center',
 				'callback' => 'displayCallPrefix'
 			),
 			'zone' => array(
 				'title' => $this->l('Zone'),
-				'width' => 100,
 				'filter_key' => 'z!name'
 			),
 			'active' => array(
@@ -98,8 +94,7 @@ class AdminCountriesControllerCore extends AdminController
 				'active' => 'status',
 				'type' => 'bool',
 				'orderby' => false,
-				'filter_key' => 'a!active',
-				'width' => 25
+				'filter_key' => 'a!active'
 			)
 		);
 
@@ -153,7 +148,7 @@ class AdminCountriesControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Countries'),
-				'image' => '../img/admin/world.gif'
+				'icon' => 'icon-globe'
 			),
 			'input' => array(
 				array(
@@ -161,33 +156,31 @@ class AdminCountriesControllerCore extends AdminController
 					'label' => $this->l('Country:'),
 					'name' => 'name',
 					'lang' => true,
-					'size' => 30,
 					'required' => true,
-					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'desc' => $this->l('Country name')
+					'hint' => $this->l('Country name').' - '.$this->l('Invalid characters:'). ' <>;=#{} '
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('ISO code:'),
 					'name' => 'iso_code',
-					'size' => 4,
 					'maxlength' => 3,
 					'class' => 'uppercase',
 					'required' => true,
-					'desc' => $this->l('Two -- or three -- letter ISO code (e.g. U.S. for United States)').'.
+					'hint' => $this->l('Two -- or three -- letter ISO code (e.g. U.S. for United States)')
+					 /* TO DO - ajouter les liens dans le hint ? */
+					/*'desc' => $this->l('Two -- or three -- letter ISO code (e.g. U.S. for United States)').'.
 							<a href="http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm" target="_blank">'.
 								$this->l('Official list here').'
-							</a>.'
+							</a>.'*/
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Call prefix:'),
 					'name' => 'call_prefix',
-					'size' => 4,
 					'maxlength' => 3,
 					'class' => 'uppercase',
 					'required' => true,
-					'desc' => $this->l('International call prefix, (e.g. 1 for United States)')
+					'hint' => $this->l('International call prefix, (e.g. 1 for United States)')
 				),
 				array(
 					'type' => 'select',
@@ -212,14 +205,13 @@ class AdminCountriesControllerCore extends AdminController
 						'id' => 'id_zone',
 						'name' => 'name'
 					),
-					'desc' => $this->l('Geographical region')
+					'hint' => $this->l('Geographical region')
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Need zip/postal code:'),
 					'name' => 'need_zip_code',
 					'required' => false,
-					'class' => 't',
 					'is_bool' => true,
 					'values' => array(
 						array(
@@ -238,9 +230,8 @@ class AdminCountriesControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Zip/post code format:'),
 					'name' => 'zip_code_format',
-					'class' => 'uppercase',
 					'required' => true,
-					'desc' => $this->l('Zip Code format (L for a letter, N for a number and C for the ISO code). For example, NNNNN for the United States. No verification if undefined.')
+					'hint' => $this->l('Zip Code format (L for a letter, N for a number and C for the ISO code). For example, NNNNN for the United States. No verification if undefined.')
 				),
 				array(
 					'type' => 'address_layout',
@@ -252,11 +243,10 @@ class AdminCountriesControllerCore extends AdminController
 					'display_valid_fields' => $this->displayValidFields()
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Address Standardization:'),
 					'name' => 'standardization',
 					'required' => false,
-					'class' => 't',
 					'is_bool' => true,
 					'values' => array(
 						array(
@@ -272,11 +262,10 @@ class AdminCountriesControllerCore extends AdminController
 					),
 				),					
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Active:'),
 					'name' => 'active',
 					'required' => false,
-					'class' => 't',
 					'is_bool' => true,
 					'values' => array(
 						array(
@@ -290,14 +279,13 @@ class AdminCountriesControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Display this country to your customers (the selected country will always be displayed in the Back Office)')
+					'hint' => $this->l('Display this country to your customers (the selected country will always be displayed in the Back Office)')
 				),			
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Contains following  states:'),
 					'name' => 'contains_states',
 					'required' => false,
-					'class' => 't',
 					'values' => array(
 						array(
 							'id' => 'contains_states_on',
@@ -312,11 +300,10 @@ class AdminCountriesControllerCore extends AdminController
 					)
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Do you need a tax identification number?'),
 					'name' => 'need_identification_number',
 					'required' => false,
-					'class' => 't',
 					'values' => array(
 						array(
 							'id' => 'need_identification_number_on',
@@ -331,11 +318,10 @@ class AdminCountriesControllerCore extends AdminController
 					)
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Display tax label (e.g. "Tax incl."):'),
 					'name' => 'display_tax_label',
 					'required' => false,
-					'class' => 't',
 					'values' => array(
 						array(
 							'id' => 'display_tax_label_on',
@@ -364,7 +350,7 @@ class AdminCountriesControllerCore extends AdminController
 
 		$this->fields_form['submit'] = array(
 			'title' => $this->l('Save   '),
-			'class' => 'button'
+			'class' => 'btn btn-default'
 		);
 		
 		if ($this->object->iso_code == 'US')

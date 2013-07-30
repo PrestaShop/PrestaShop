@@ -28,6 +28,7 @@ class AdminStatesControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->table = 'state';
 		$this->className = 'State';
 		$this->lang = false;
@@ -51,8 +52,7 @@ class AdminStatesControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_state' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center',
-				'width' => 25
+				'align' => 'center'
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
@@ -60,17 +60,14 @@ class AdminStatesControllerCore extends AdminController
 			),
 			'iso_code' => array(
 				'title' => $this->l('ISO code'),
-				'align' => 'center',
-				'width' => 75
+				'align' => 'center'
 			),
 			'zone' => array(
 				'title' => $this->l('Zone'),
-				'width' => 100,
 				'filter_key' => 'z!name'
 			),
 			'active' => array(
 				'title' => $this->l('Enabled'),
-				'width' => 70,
 				'active' => 'status',
 				'filter_key' => 'a!active',
 				'align' => 'center',
@@ -96,27 +93,25 @@ class AdminStatesControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('States'),
-				'image' => '../img/admin/world.gif'
+				'icon' => 'icon-globe'
 			),
 			'input' => array(
 				array(
 					'type' => 'text',
 					'label' => $this->l('Name:'),
 					'name' => 'name',
-					'size' => 30,
 					'maxlength' => 32,
 					'required' => true,
-					'desc' => $this->l('Provide the State name to be display in addresses and on invoices.')
+					'hint' => $this->l('Provide the State name to be display in addresses and on invoices.')
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('ISO code:'),
 					'name' => 'iso_code',
-					'size' => 7,
 					'maxlength' => 7,
 					'required' => true,
 					'class' => 'uppercase',
-					'desc' => $this->l('1 to 4 letter ISO code')
+					'hint' => $this->l('1 to 4 letter ISO code')
 				),
 				array(
 					'type' => 'select',
@@ -141,17 +136,16 @@ class AdminStatesControllerCore extends AdminController
 						'id' => 'id_zone',
 						'name' => 'name'
 					),
-					'desc' => array(
+					'hint' => array(
 						$this->l('Geographical region where this state is located.'),
 						$this->l('Used for shipping')
 					)
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Status:'),
 					'name' => 'active',
 					'required' => false,
-					'class' => 't',
 					'values' => array(
 						array(
 							'id' => 'active_on',
@@ -164,7 +158,7 @@ class AdminStatesControllerCore extends AdminController
 							'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" />'
 						)
 					),
-					'desc' => $this->l('Enabled or disabled')
+					'hint' => $this->l('Enabled or disabled')
 				)
 			),
 			'submit' => array(

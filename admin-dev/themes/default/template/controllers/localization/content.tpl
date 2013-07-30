@@ -23,10 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div class="width4">
-	{$localization_form}
-</div>
-<br />
-<div class="width4">
-	{$localization_options}
-</div>
+
+{$localization_form}
+
+{$localization_options}
