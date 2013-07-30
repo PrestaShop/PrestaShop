@@ -29,18 +29,12 @@
 		{if count($modules_list)}
 			<table border="0" cellpadding="0" cellspacing="5" class="table table-striped table-hover">
 				{counter start=1  assign="count"}
-<<<<<<< HEAD
-				{foreach from=$modules_list item=module}	
-					{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",row alt"}}
-					{if $count %2 == 0}{/if}
-=======
 					{foreach from=$modules_list item=module}	
 						<div style="width:400px">{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",row alt"}}</div>
 						{if $count %3 == 0}
 			</li>
 			<li>
 						{/if}
->>>>>>> 6ac3f1133ae7547ff92964c47ec141c3ab5bf5c4
 					{counter}
 				{/foreach}
 			</table>
@@ -52,6 +46,6 @@
 					</td>
 				</tr>
 			</table>
-		{/if}		
+		{/if}
 	</div>
 </div>
