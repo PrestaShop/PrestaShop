@@ -26,7 +26,7 @@
 {include file="toolbar.tpl" toolbar_btn=$toolbar_btn toolbar_scroll=$toolbar_scroll title=$title}
 <div class="leadin">{block name="leadin"}{/block}</div>
 
-<form action="{$url_submit}" id={$table}_form method="post">
+<form action="{$url_submit}" id="{$table}_form" method="post">
 	{if $display_key}
 		<input type="hidden" name="show_modules" value="{$display_key}" />
 	{/if}
@@ -76,7 +76,7 @@
 	//<![CDATA
 	function position_exception_textchange(obj)
 	{
-		// TODO : Add & Remove automatically the "custom pages" in the "em_list_x"
+		// TODO : Add & Remove automatically the custom pages in the em_list_x
 		var shopID = obj.attr('id').replace(/\D/g, '');
 		var list = obj.parent().find('#em_list_' + shopID);
 		var values = obj.val().split(',');
@@ -84,8 +84,9 @@
 
 		list.find('option').prop('selected', false);
 		for (var i = 0; i < len; i++)
-			list.find('option[value="' + $.trim(values[i]) + '"]').prop('selected', true);
+			list.find('option[value="' + $.trim(values[i]) + '"]').prop('selected', true);			
 	}
+	
 	function position_exception_listchange(obj)
 	{
 		var shopID = obj.attr('id').replace(/\D/g, '');
@@ -99,13 +100,13 @@
 		obj.parent().find('#em_text_' + shopID).val(str);
 	}
 	
-	$(document).ready(function ()
+	$(document).ready(function()
 	{
-		$('form[id="hook_module_form"] input[id^="em_text_"]').each(function(){
-			$(this).change(position_exception_textchange($(this))).change();
+		$('form[id="hook_module_form"] input[id^="em_text_"]').each(function(){		
+			$(this).on('change', position_exception_textchange($(this))).change();
 		});
-		$('form[id="hook_module_form"] select[id^="em_list_"]').each(function(){
-			$(this).change(position_exception_listchange($(this)));
+		$('form[id="hook_module_form"] select[id^="em_list_"]').each(function(){				
+			$(this).on('change', position_exception_listchange($(this)));
 		});
 	});
 	//]]>
