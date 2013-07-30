@@ -23,16 +23,20 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<br />
-<p>
-	<a class="button" href="#" onclick="if ($('.requiredFieldsParameters:visible').length == 0) $('.requiredFieldsParameters').slideDown('slow'); else $('.requiredFieldsParameters').slideUp('slow'); return false;"><img src="../img/admin/duplicate.gif" alt="" /> {l s='Set required fields for this section'}</a>
-</p>
-<fieldset style="display:none" class="width1 requiredFieldsParameters">
-	<legend>{l s='Required Fields'}</legend>
+	<a class="btn btn-default" href="#" onclick="if ($('.requiredFieldsParameters:visible').length == 0) $('.requiredFieldsParameters').slideDown('slow'); else $('.requiredFieldsParameters').slideUp('slow'); return false;">
+		<i class="icon-plus-sign"></i> {l s='Set required fields for this section'}
+	</a>
+
+<fieldset style="display:none" class="requiredFieldsParameters">
+	<h3><i class="icon-asterisk"></i> {l s='Required Fields'}</h3>
 	<form name="updateFields" action="{$current}&submitFields=1&token={$token}" method="post">
-		<p>
-			<b>{l s='Select the fields you would like to be required for this section.'}</b><br />
-			<table cellspacing="0" cellpadding="0" class="table width1 clear">
+
+			<div class="alert alert-info">
+				{l s='Select the fields you would like to be required for this section.'}
+			</div>
+
+			<table class="table">
+
 				<thead>
 					<tr>
 						<th><input type="checkbox" onclick="checkDelBoxes(this.form, 'fieldsBox[]', this.checked)" class="noborder" name="checkme"></th>
@@ -49,10 +53,9 @@
 					{/if}
 				{/foreach}
 				</tbody>
-			</table><br />
-			<center>
-				<input style="margin-left:15px;" class="button" type="submit" value="{l s='Save'}" name="submitFields" />
-			</center>
-		</p>
+			</table>
+
+	<button class="btn btn-primary pull-right" type="submit" name="submitFields"><i class="icon-save"></i> {l s='Save'}</button>
+
 	</form>
 </fieldset>

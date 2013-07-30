@@ -109,27 +109,28 @@ class AdminAddressesControllerCore extends AdminController
 					'label' => $this->l('Address alias'),
 					'name' => 'alias',
 					'required' => true,
-					'hint' => $this->l('Invalid characters:').' <>;=#{}'
+					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Home phone'),
 					'name' => 'phone',
 					'required' => false,
+					'hint' => Configuration::get('PS_ONE_PHONE_AT_LEAST') ? sprintf($this->l('You must register at least one phone number')) : ''
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Mobile phone'),
 					'name' => 'phone_mobile',
 					'required' => false,
-					'hint' => Configuration::get('PS_ONE_PHONE_AT_LEAST')? sprintf($this->l('You must register at least one phone number %s')) : ''
+					'hint' => Configuration::get('PS_ONE_PHONE_AT_LEAST') ? sprintf($this->l('You must register at least one phone number')) : ''
 				),
 				array(
 					'type' => 'textarea',
 					'label' => $this->l('Other'),
 					'name' => 'other',
 					'required' => false,
-					'hint' => $this->l('Forbidden characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span>'
+					'hint' => $this->l('Forbidden characters:').' &lt;&gt;;=#{}'
 				),
 			),
 			'submit' => array(
@@ -190,7 +191,7 @@ class AdminAddressesControllerCore extends AdminController
 					'label' => $this->l('Last Name'),
 					'name' => 'lastname',
 					'required' => true,
-					'hint' => $this->l('Invalid characters:').' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:',
+					'hint' => $this->l('Invalid characters:').' 0-9!&amp;lt;&amp;gt;,;?=+()@#"�{}_$%:',
 					'default_value' => $default_value,
 				);
 			}
@@ -209,7 +210,7 @@ class AdminAddressesControllerCore extends AdminController
 					'label' => $this->l('First Name'),
 					'name' => 'firstname',
 					'required' => true,
-					'hint' => $this->l('Invalid characters:').' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:',
+					'hint' => $this->l('Invalid characters:').' 0-9!&amp;lt;&amp;gt;,;?=+()@#"�{}_$%:',
 					'default_value' => $default_value,
 				);
 			}

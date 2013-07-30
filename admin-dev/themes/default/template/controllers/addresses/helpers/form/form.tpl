@@ -40,9 +40,9 @@
 {block name="field"}
 	{if $input.type == 'text_customer'}
 		{if isset($customer)}
-			<div>
-				<a href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={$tokenCustomer}">
-					{$customer->lastname} {$customer->firstname} ({$customer->email})
+			<div class="col-lg-9">
+				<a class="btn btn-default" href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={$tokenCustomer}">
+					<i class="icon-eye-open"></i> {$customer->lastname} {$customer->firstname} ({$customer->email})
 				</a>
 			</div>
 			<input type="hidden" name="id_customer" value="{$customer->id}" />
