@@ -84,9 +84,7 @@
 
 		list.find('option').prop('selected', false);
 		for ( var i = 0; i < len; i++ )
-		{
 			list.find('option[value="' + $.trim(values[i]) + '"]').prop('selected', true);
-		}
 	}
 	function position_exception_listchange(obj)
 	{
