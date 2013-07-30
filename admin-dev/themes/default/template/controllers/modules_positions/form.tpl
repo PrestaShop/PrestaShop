@@ -73,41 +73,45 @@
 	</fieldset>
 </form>
 <script type="text/javascript">
-	//<![CDATA
-	function position_exception_textchange(obj)
-	{
-		// TODO : Add & Remove automatically the custom pages in the em_list_x
-		var shopID = obj.attr('id').replace(/\D/g, '');
-		var list = obj.parent().find('#em_list_' + shopID);
-		var values = obj.val().split(',');
-		var len = values.length;
-
-		list.find('option').prop('selected', false);
-		for (var i = 0; i < len; i++)
-			list.find('option[value="' + $.trim(values[i]) + '"]').prop('selected', true);			
-	}
-	
-	function position_exception_listchange(obj)
-	{
-		var shopID = obj.attr('id').replace(/\D/g, '');
-		var str = '';
-		obj.find('option:selected').each(function(){
-			str += obj.val()+', ';
-		});
-
-		if (str.length > 2)
-			str = str.substr(0, str.length - 2);
-		obj.parent().find('#em_text_' + shopID).val(str);
-	}
-	
+	//<![CDATA	
 	$(document).ready(function()
 	{
-		$('form[id="hook_module_form"] input[id^="em_text_"]').each(function(){		
-			$(this).on('change', position_exception_textchange($(this))).change();
+		function position_exception_textchange(obj)
+		{
+			var shopID = obj.attr('id').replace(/\D/g, '');
+			var list = obj.parent().find('#em_list_' + shopID);
+			var values = obj.val().split(',');
+			var len = values.length;
+	
+			list.find('option').prop('selected', false);
+			for (var i = 0; i < len; i++)
+				list.find('option[value="' + $.trim(values[i]) + '"]').prop('selected', true);			
+		}
+
+		function position_exception_listchange(obj)
+		{
+		 console.log(obj);
+			var shopID = obj.attr('id').replace(/\D/g, '');
+			var str = '';
+			obj.find('option:selected').each(function(){
+				str += obj.val()+', ';
+			});
+	
+			if (str.length > 2)
+				str = str.substr(0, str.length - 2);
+			obj.parent().find('#em_text_' + shopID).val(str);
+		}
+	$(document).ready(function()
+	{ 			
+		$('form[id="hook_module_form"] input[id^="em_text_"]').on('change', function(){
+			console.log($(this));
+				position_exception_textchange($(this));
+			}).change();
+			
 		});
-		$('form[id="hook_module_form"] select[id^="em_list_"]').each(function(){				
-			$(this).on('change', position_exception_listchange($(this)));
-		});
+		$('form[id="hook_module_form"] select[id^="em_list_"]').on('change', function(){	
+				position_exception_listchange($(this));			
+			});
 	});
 	//]]>
 </script>
