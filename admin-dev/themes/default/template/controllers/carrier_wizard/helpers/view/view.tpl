@@ -29,8 +29,8 @@
 	var labelNext = '{$labels.next|addslashes}';
 	var labelPrevious = '{$labels.previous|addslashes}';
 	var	labelFinish = '{$labels.finish|addslashes}';
-	var	labelDelete = '{l s="Delete" js=1}';
-	var	labelValidate = '{l s="Validate" js=1}';
+	var	labelDelete = '{l s='Delete' js=1}';
+	var	labelValidate = '{l s='Validate' js=1}';
 	var validate_url = '{$validate_url|addslashes}';
 	var carrierlist_url = '{$carrierlist_url|addslashes}';
 	var nbr_steps = {$wizard_steps.steps|count};

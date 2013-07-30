@@ -37,7 +37,7 @@
 </div>
 
 <script type="text/javascript">
-	var carrier_translation_undefined = '{l s='undefined' js='1'}';
+	var carrier_translation_undefined = '{l s='undefined' js=1}';
 
 	function removeCarrierLogo()
 	{

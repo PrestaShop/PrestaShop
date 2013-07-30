@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>blockmanufacturer</name>
-            <displayName><![CDATA[Manufacturers block]]></displayName>
+            <displayName><![CDATA[Bloc fabricant]]></displayName>
             <version><![CDATA[1]]></version>
-            <description><![CDATA[Displays a block listing product manufacturers and/or brands.]]></description>
+            <description><![CDATA[Ajoute un bloc avec les fabricants/marques]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>
             <is_configurable>1</is_configurable>

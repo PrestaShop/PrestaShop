@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>blocklayered</name>
-            <displayName><![CDATA[Layered navigation block]]></displayName>
+            <displayName><![CDATA[Bloc navigation &agrave; facettes]]></displayName>
             <version><![CDATA[1.8.9]]></version>
-            <description><![CDATA[Displays a block with layered navigation filters.]]></description>
+            <description><![CDATA[Affiche un bloc avec les filtres de la navigation &agrave; facettes]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>
             <is_configurable>1</is_configurable>

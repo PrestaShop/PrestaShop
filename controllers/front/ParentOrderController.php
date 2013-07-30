@@ -399,6 +399,7 @@ class ParentOrderControllerCore extends FrontController
 
 			// Getting a list of formated address fields with associated values
 			$formatedAddressFieldsValuesList = array();
+
 			foreach ($customerAddresses as $i => $address)
 			{
 				if (!Address::isCountryActiveById((int)($address['id_address'])))
@@ -411,6 +412,10 @@ class ParentOrderControllerCore extends FrontController
 
 				unset($tmpAddress);
 			}
+
+			if (key($customerAddresses) != 0)
+				$customerAddresses = array_values($customerAddresses);
+
 			$this->context->smarty->assign(array(
 				'addresses' => $customerAddresses,
 				'formatedAddressFieldsValuesList' => $formatedAddressFieldsValuesList));

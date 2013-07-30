@@ -61,20 +61,20 @@ class AdminCarrierWizardControllerCore extends AdminController
 			'name' => 'carrier_wizard',
 			'steps' => array(
 				array(
-					'title' => $this->l('General'),
-					'desc' => $this->l('General'),
+					'title' => $this->l('General settings'),
+					'desc' => $this->l('General settings'),
 				),
 				array(
-					'title' => $this->l('Where and how much ?'),
-					'desc' => $this->l('Where and how much ?'),
+					'title' => $this->l('Shipping locations and costs'),
+					'desc' => $this->l('Shipping locations and costs'),
 				),
 				array(
-					'title' => $this->l('What and to who ?'),
-					'desc' => $this->l('What and to who ?'),
+                    'title' => $this->l('Size, weight, and group access'),
+					'desc' => $this->l('Size, weight, and group access'),
 				),
 				array(
-					'title' => $this->l('Resume'),
-					'desc' => $this->l('Resume'),
+					'title' => $this->l('Summary'),
+					'desc' => $this->l('Summary'),
 				),
 
 			));
@@ -160,7 +160,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 				'input' => array(
 					array(
 						'type' => 'text',
-						'label' => $this->l('Company:'),
+						'label' => $this->l('Carrier name:'),
 						'name' => 'name',
 						'size' => 25,
 						'required' => true,
@@ -182,7 +182,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Speed Grade:'),
+						'label' => $this->l('Speed grade:'),
 						'name' => 'grade',
 						'required' => false,
 						'size' => 1,
@@ -190,7 +190,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('URL:'),
+						'label' => $this->l('Tracking URL:'),
 						'name' => 'url',
 						'size' => 40,
 						'desc' => $this->l('Delivery tracking URL: Type \'@\' where the tracking number should appear. It will then be automatically replaced by the tracking number.')
@@ -338,7 +338,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 							'id' => 'id',
 							'name' => 'name'
 						),
-						'desc' => $this->l('Out-of-range behavior occurs when none is defined (e.g. when a customer\'s cart weight is greater than the highest range limit)')
+						'desc' => $this->l('Out-of-range behavior occurs when no defined range matches the customer\'s cart (e.g. when the weight of the cart is greater than the highest weight limit defined by the weight ranges)')
 					),
 					array(
 						'type' => 'text',
@@ -346,7 +346,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 						'name' => 'max_height',
 						'required' => false,
 						'size' => 10,
-						'desc' => $this->l('Maximum height managed by this carrier. Set the value to "0," or leave this field blank to ignore.')
+						'desc' => $this->l('Maximum height managed by this carrier. Set the value to "0", or leave this field blank to ignore.')
 					),
 					array(
 						'type' => 'text',
@@ -354,7 +354,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 						'name' => 'max_width',
 						'required' => false,
 						'size' => 10,
-						'desc' => $this->l('Maximum width managed by this carrier. Set the value to "0," or leave this field blank to ignore.')
+						'desc' => $this->l('Maximum width managed by this carrier. Set the value to "0", or leave this field blank to ignore.')
 					),
 					array(
 						'type' => 'text',
@@ -362,7 +362,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 						'name' => 'max_depth',
 						'required' => false,
 						'size' => 10,
-						'desc' => $this->l('Maximum depth managed by this carrier. Set the value to "0," or leave this field blank to ignore.')
+						'desc' => $this->l('Maximum depth managed by this carrier. Set the value to "0", or leave this field blank to ignore.')
 					),
 					array(
 						'type' => 'text',
@@ -370,7 +370,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 						'name' => 'max_weight',
 						'required' => false,
 						'size' => 10,
-						'desc' => $this->l('Maximum weight managed by this carrier. Set the value to "0," or leave this field blank to ignore.')
+						'desc' => $this->l('Maximum weight managed by this carrier. Set the value to "0", or leave this field blank to ignore.')
 					),
 					array(
 						'type' => 'group',

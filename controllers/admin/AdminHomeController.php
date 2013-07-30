@@ -658,15 +658,12 @@ class AdminHomeControllerCore extends AdminController
 		$smarty->assign('protocol', $protocol);
 		$isoUser = $this->context->language->iso_code;
 		$smarty->assign('isoUser', $isoUser);
-		$upgrade = null;
 		$tpl_vars['refresh_check_version'] = 0;
-		if (@ini_get('allow_url_fopen'))
-		{
-			$upgrade = new Upgrader(true);
-			// if this information is outdated, the version will be checked after page loading
-			if (Configuration::get('PS_LAST_VERSION_CHECK') < time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS))
-				$tpl_vars['refresh_check_version'] = 1;
-		}
+		$upgrade = new Upgrader(true);
+		
+		// if this information is outdated, the version will be checked after page loading
+		if (Configuration::get('PS_LAST_VERSION_CHECK') < time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS))
+			$tpl_vars['refresh_check_version'] = 1;
 		
 		if (!$this->isFresh(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 86400))
 			file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, Tools::addonsRequest('native'));
