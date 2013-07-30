@@ -55,9 +55,11 @@
 		{l s='It will be displayed only for the following groups:'}
 		<ul id="summary_groups"></ul>
 	</div>
+	{if $is_multishop}
 	<div class="clear">&nbsp;</div>
 	<div>
 		{l s='It will be displayed only for the following shops:'}
 		<ul id="summary_shops"></ul>
 	</div>
+	{/if}
 </fieldset>
