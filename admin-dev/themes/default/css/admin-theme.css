@@ -5073,14 +5073,13 @@ body.fixed-top {
   margin: 0 0 0 240px;
   border-left: 2px solid black;
   border-right: 2px solid black;
-  background-color: #f6f5f3;
-  background-image: url("../img/patterns/bedge_grunge.png");
+  background-color: white;
   -webkit-box-shadow: #b4ac9c 0 0 0 4px;
   box-shadow: #b4ac9c 0 0 0 4px; }
   #content fieldset {
     padding: 20px;
     margin-bottom: 10px;
-    border: solid 1px #cac4b9;
+    border: solid 1px #e0ddd6;
     background-color: #f6f5f3;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;

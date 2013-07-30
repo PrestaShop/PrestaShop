@@ -47,15 +47,16 @@
 {/if}
 {if isset($informations) && count($informations) && $informations}
 	<div class="alert alert-info">
-		<span id="see_more_infos">
-			<b><a href="#" onclick="$('#see_more_infos').hide(); $('#infos_block').show();return false;">{l s='Click here to see more informations'}</a></b>
-		</span>
-		<div id="infos_block" style="display:none;">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+		<a id="see_more_infos" href="#" class="btn btn-link" onclick="$('#see_more_infos').hide(); $('#infos_block').show();return false;">
+			<i class="icon-info-sign"></i> {l s='Click here to see more informations'}
+		</a>
+		<ul id="infos_block" class="list-unstyled" style="display:none;">
 			{foreach $informations as $info}
-				{$info}<br />
+				<li>{$info}</li>
 			{/foreach}
-		</div>
-	</div><br />
+		</ul>
+	</div>
 {/if}
 {if isset($confirmations) && count($confirmations) && $confirmations}
 	<div class="alert" style="display:block;">

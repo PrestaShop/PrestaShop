@@ -268,30 +268,26 @@ class AdminCustomersControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('First name:'),
 					'name' => 'firstname',
-					'size' => 33,
 					'required' => true,
-					'hint' => $this->l('Forbidden characters:').' 0-9!<>,;?=+()@#"�{}_$%:'
+					'hint' => $this->l('Forbidden characters:').' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:'
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Last name:'),
 					'name' => 'lastname',
-					'size' => 33,
 					'required' => true,
-					'hint' => $this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:'
+					'hint' => $this->l('Invalid characters:').' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:'
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Email address:'),
 					'name' => 'email',
-					'size' => 33,
 					'required' => true
 				),
 				array(
 					'type' => 'password',
 					'label' => $this->l('Password:'),
 					'name' => 'passwd',
-					'size' => 33,
 					'required' => ($obj->id ? false : true),
 					'hint' => ($obj->id ? $this->l('Leave  this field blank if there\'s no change') : $this->l('Minimum of five characters (only letters and numbers).').' -_')
 				),
@@ -430,32 +426,27 @@ class AdminCustomersControllerCore extends AdminController
 			$this->fields_form['input'][] = array(
 				'type' => 'text',
 				'label' => $this->l('Company:'),
-				'name' => 'company',
-				'size' => 33
+				'name' => 'company'
 			);
 			$this->fields_form['input'][] = array(
 				'type' => 'text',
 				'label' => $this->l('SIRET:'),
-				'name' => 'siret',
-				'size' => 14
+				'name' => 'siret'
 			);
 			$this->fields_form['input'][] = array(
 				'type' => 'text',
 				'label' => $this->l('APE:'),
-				'name' => 'ape',
-				'size' => 5
+				'name' => 'ape'
 			);
 			$this->fields_form['input'][] = array(
 				'type' => 'text',
 				'label' => $this->l('Website:'),
-				'name' => 'website',
-				'size' => 33
+				'name' => 'website'
 			);
 			$this->fields_form['input'][] = array(
 				'type' => 'text',
 				'label' => $this->l('Outstanding allowed:'),
 				'name' => 'outstanding_allow_amount',
-				'size' => 10,
 				'hint' => $this->l('Valid characters:').' 0-9',
 				'suffix' => '¤'
 			);
@@ -463,7 +454,6 @@ class AdminCustomersControllerCore extends AdminController
 				'type' => 'text',
 				'label' => $this->l('Maximum number of payment days:'),
 				'name' => 'max_payment_days',
-				'size' => 10,
 				'hint' => $this->l('Valid characters:').' 0-9'
 			);
 			$this->fields_form['input'][] = array(
@@ -846,19 +836,19 @@ class AdminCustomersControllerCore extends AdminController
 		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 	}
 
-	public static function printNewsIcon($value, $customer)
+	public function printNewsIcon($value, $customer)
 	{
-		return '<a href="index.php?tab=AdminCustomers&id_customer='
+		return '<a class="label '.($value ? 'label-success' : 'label-warning').'" href="index.php?tab=AdminCustomers&id_customer='
 			.(int)$customer['id_customer'].'&changeNewsletterVal&token='.Tools::getAdminTokenLite('AdminCustomers').'">
-				'.($value ? '<img src="../img/admin/enabled.gif" />' : '<img src="../img/admin/disabled.gif" />').
+				'.($value ? '<i class="icon-check-sign"></i> '.$this->l('Yes') : '<i class="icon-ban-circle"></i> '.$this->l('No')).
 			'</a>';
 	}
 
-	public static function printOptinIcon($value, $customer)
+	public function printOptinIcon($value, $customer)
 	{
-		return '<a href="index.php?tab=AdminCustomers&id_customer='
+		return '<a class="label '.($value ? 'label-success' : 'label-warning').'" href="index.php?tab=AdminCustomers&id_customer='
 			.(int)$customer['id_customer'].'&changeOptinVal&token='.Tools::getAdminTokenLite('AdminCustomers').'">
-				'.($value ? '<img src="../img/admin/enabled.gif" />' : '<img src="../img/admin/disabled.gif" />').
+				'.($value ? '<i class="icon-check-sign"></i> '.$this->l('Yes') : '<i class="icon-ban-circle"></i> '.$this->l('No')).
 			'</a>';
 	}
 
@@ -924,5 +914,3 @@ class AdminCustomersControllerCore extends AdminController
 		}
 	}
 }
-
-
