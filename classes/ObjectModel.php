@@ -985,7 +985,7 @@ abstract class ObjectModelCore
 				$data['required'] = true;
 			
 			// Checking for required fields
-			if (isset($data['required']) && $data['required']  && empty($value) && $value !== '0')
+			if (isset($data['required']) && $data['required'] && empty($value) && $value !== '0')
 				if (!$this->id || $field != 'passwd')
 					$errors[$field] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is required.');
 
