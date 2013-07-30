@@ -29,7 +29,7 @@
 					{foreachelse}
 						<td class="center border_top border_bottom">
 							<input style="display:none" type="text" />
-							<button class="button">{l s="Validate"}</button>
+							<button class="button">{l s='Validate'}</button>
 						</td>
 					{/foreach}
 				</tr>
@@ -49,7 +49,7 @@
 						{if $smarty.foreach.ranges.first}
 							<td class="center">&nbsp;</td>
 						{else}
-							<td class="center"><button class="button">{l s="Delete"}</button</td>
+							<td class="center"><button class="button">{l s='Delete'}</button</td>
 						{/if}
 					{/foreach}
 				</tr>
