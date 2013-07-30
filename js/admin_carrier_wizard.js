@@ -262,7 +262,7 @@ function bind_inputs()
 		index = $(this).parent('td').index();
 		val = $(this).val();
 		$('tr.fees').each( function () {
-			$(this).find('td:eq('+index+') input:text').not('disabled').val(val);
+			$(this).find('td:eq('+index+') input:text:enabled').val(val);
 		});
 		return false;
 	});
@@ -316,6 +316,7 @@ function bind_inputs()
 
 function validateRange(index)
 {
+	console.log('index : '+index);
 	//reset error css
 	$('tr.range_sup td input:text').removeClass('field_error');
 	$('tr.range_inf td input:text').removeClass('field_error');
@@ -351,6 +352,7 @@ function validateRange(index)
 			if (range_inf < previous_range_sup)
 			{
 				$('tr.range_inf td:eq('+index+')').children('input:text').addClass('field_error');
+				is_ok = false;
 			}
 		}
 		//check if next range is sup only if it's not the last range
@@ -361,6 +363,7 @@ function validateRange(index)
 			if ((isNaN(range_sup) || range_sup.length === 0) && range_sup > next_range_inf)
 			{
 				$('tr.range_sup td:eq('+index+')').children('input:text').addClass('field_error');
+				is_ok = false;
 			}
 		}
 		
@@ -394,10 +397,11 @@ function disableRange(index)
 
 function add_new_range()
 {
+	last_sup_val = $('tr.range_sup td:last input').val();
 	//add new rand sup input
-	$('tr.range_sup td:last').after('<td class="center"><input name="range_sup[]" type="text" /></td>');
+	$('tr.range_sup td:last').after('<td class="center"><input name="range_sup[]" type="text" /><sup>*</sup></td>');
 	//add new rand inf input
-	$('tr.range_inf td:last').after('<td class="border_bottom center"><input name="range_inf[]" type="text" /></td>');
+	$('tr.range_inf td:last').after('<td class="border_bottom center"><input name="range_inf[]" type="text" value="'+last_sup_val+'" /><sup>*</sup></td>');
 	
 	$('tr.fees_all td:last').after('<td class="center border_top border_bottom"><input style="display:none" type="text" /> <button class="button">'+labelValidate+'</button</td>');
 
