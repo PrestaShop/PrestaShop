@@ -82,7 +82,7 @@ class AdminTaxesControllerCore extends AdminController
 						),
 					'PS_USE_ECOTAX' => array(
 						'title' => $this->l('Use ecotax:'),
-						'hint' => $ecotax_desc,
+						'desc' => $ecotax_desc,
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'

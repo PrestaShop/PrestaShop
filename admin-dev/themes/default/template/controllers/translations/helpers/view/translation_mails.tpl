@@ -46,56 +46,66 @@
 	</div>
 	{else}
 
-		<div class="alert alert-info" style="display:block;">
-			<ul style="margin-left:30px;list-style-type:disc;">
+		<div class="alert alert-info">
+			<ul class="nav">
 				<li>{l s='Click on titles to open fieldsets'}.</li>
 				<li>{l s='Some sentences to translate use this syntax: %s... These are variables, and PrestaShop take care of replacing them before displaying your translation. You must leave these in your translations, and place them appropriately in your sentence.' sprintf='%d, %s, %1$s, %2$d'}</li>
 			</ul>
-		</div><br /><br />
+		</div>
 
-		<form method="post" id="{$table}_form" action="{$url_submit}" class="form">
-			{$toggle_button}
-			<input type="hidden" name="lang" value="{$lang}" />
-			<input type="hidden" name="type" value="{$type}" />
-			<input type="hidden" name="theme" value="{$theme}" />
-			<input type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
+		<form method="post" id="{$table}_form" action="{$url_submit}" class="form-horizontal">
+			<fieldset>
+				{$toggle_button}
+				<input type="hidden" name="lang" value="{$lang}" />
+				<input type="hidden" name="type" value="{$type}" />
+				<input type="hidden" name="theme" value="{$theme}" />
+				<input type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
 
-			<script type="text/javascript">
-				$(document).ready(function(){
-					$('a.useSpecialSyntax').click(function(){
-						var syntax = $(this).find('img').attr('alt');
-						$('#BoxUseSpecialSyntax .syntax span').html(syntax+".");
-						$('#BoxUseSpecialSyntax').toggle(1000);
+				<script type="text/javascript">
+					$(document).ready(function(){
+						$('a.useSpecialSyntax').click(function(){
+							var syntax = $(this).find('img').attr('alt');
+							$('#BoxUseSpecialSyntax .syntax span').html(syntax+".");
+							$('#BoxUseSpecialSyntax').toggle(1000);
+						});
+						$('#BoxUseSpecialSyntax').click(function(){
+							$('#BoxUseSpecialSyntax').toggle(1000);
+						});
 					});
-					$('#BoxUseSpecialSyntax').click(function(){
-						$('#BoxUseSpecialSyntax').toggle(1000);
-					});
-				});
-			</script>
+				</script>
 
-			<div id="BoxUseSpecialSyntax">
-				<div class="alert alert-block">
-					<p class="syntax">
-						{l s='This expression uses this special syntax:'} <span>%d.</span><br />
-						{l s='You must use this syntax in your translations. Here are several examples:'}
-					</p>
-					<ul>
-						<li><em>There are <strong>%d</strong> products</em> ("<strong>%d</strong>" {l s='will be replaced by a number'}).</li>
-						<li><em>List of pages in <strong>%s</strong>:</em> ("<strong>%s</strong>" {l s='will be replaced by a string'}).</li>
-						<li><em>Feature: <strong>%1$s</strong> (<strong>%2$d</strong> values)</em> ("<strong>n$</strong>" {l s='is used for the order of the arguments'}).</li>
-					</ul>
+				<div id="BoxUseSpecialSyntax">
+					<div class="alert alert-block">
+						<p>
+							{l s='This expression uses this special syntax:'} <span>%d.</span><br />
+							{l s='You must use this syntax in your translations. Here are several examples:'}
+						</p>
+						<ul class="nav">
+							<li><em>There are <strong>%d</strong> products</em> ("<strong>%d</strong>" {l s='will be replaced by a number'}).</li>
+							<li><em>List of pages in <strong>%s</strong>:</em> ("<strong>%s</strong>" {l s='will be replaced by a string'}).</li>
+							<li><em>Feature: <strong>%1$s</strong> (<strong>%2$d</strong> values)</em> ("<strong>n$</strong>" {l s='is used for the order of the arguments'}).</li>
+						</ul>
+					</div>
 				</div>
-			</div>
-
-			<h2>{l s='Core emails:'}</h2>
-			<p class="preference_description">{l s='List of emails in the folder'} <strong>"mails/{$lang|strtolower}/"</strong></p>
-			{$mail_content}
-
-			<h2>{l s='Module emails:'}</h2>
-			<p class="preference_description">{l s='List of emails in the folder'} <strong>"modules/name_of_module/mails/{$lang|strtolower}/"</strong></p>
-			{foreach $module_mails as $module_name => $mails}
-				{$mails['display']}
-			{/foreach}
+			</fieldset>
+			<fieldset>
+				<h3>
+					<i class="icon-envelope"></i>
+					{l s='Core emails:'}
+				</h3>
+				<p>{l s='List of emails in the folder'} <strong>"mails/{$lang|strtolower}/"</strong></p>
+				{$mail_content}
+			</fieldset>
+			<fieldset>
+				<h3>
+					<i class="icon-envelope"></i>
+					{l s='Module emails:'}
+				</h3>
+				<p>{l s='List of emails in the folder'} <strong>"modules/name_of_module/mails/{$lang|strtolower}/"</strong></p>
+				{foreach $module_mails as $module_name => $mails}
+					{$mails['display']}
+				{/foreach}
+			</fieldset>
 		</form>
 	{/if}
 

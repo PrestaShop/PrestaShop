@@ -53,7 +53,7 @@ class AdminCurrenciesControllerCore extends AdminController
 			'change' => array(
 				'title' =>	$this->l('Currency rates'),
 				'image' => '../img/admin/exchangesrate.gif',
-				'description' => '<div class="alert alert-block">'.$this->l('Use PrestaShop\'s webservice to update your currency exchange rates. Please use caution, however, rates are provided as-is.').'</div>',
+				'description' => $this->l('Use PrestaShop\'s webservice to update your currency exchange rates. Please use caution, however, rates are provided as-is.'),
 				'submit' => array(
 					'title' => $this->l('Update currency rates'),
 					'class' => 'btn btn-default',
@@ -63,8 +63,8 @@ class AdminCurrenciesControllerCore extends AdminController
 			'cron' => array(
 				'title' =>	$this->l('Automatically update currency rates'),
 				'image' => '../img/admin/tab-tools.gif',
-				'info' => '<div class="alert alert-block">'.$this->l('Use PrestaShop\'s webservice to update your currency exchange rates. Please use caution, rates are provided as-is. You can place this URL in the crontab,or access it manually.').':<br />
-					<b>'.Tools::getShopDomain(true, true).__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/cron_currency_rates.php?secure_key='.md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME')).'</b></div>',
+				'info' => '<div class="alert alert-block"><p>'.$this->l('Use PrestaShop\'s webservice to update your currency exchange rates. Please use caution, rates are provided as-is. You can place this URL in the crontab,or access it manually.').':</p>
+					<p><strong>'.Tools::getShopDomain(true, true).__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/cron_currency_rates.php?secure_key='.md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME')).'</strong></p></div>',
 			)
 		);
 
@@ -124,7 +124,7 @@ class AdminCurrenciesControllerCore extends AdminController
 					'name' => 'sign',
 					'maxlength' => 8,
 					'required' => true,
-					'hint' => $this->l('Will appear in Front Office (e.g. $, €)').'...',
+					'hint' => $this->l('Will appear in Front Office (e.g. $, &euro;)').'...',
 				),
 				array(
 					'type' => 'text',
@@ -179,7 +179,7 @@ class AdminCurrenciesControllerCore extends AdminController
 					'name' => 'blank',
 					'required' => false,
 					'is_bool' => true,
-					'hint' => $this->l('Include a space between symbol and price, e.g.').'<br />$1,240.15 -> $ 1,240.15',
+					'hint' => $this->l('Include a space between symbol and price, e.g.').'$1,240.15 -> $ 1,240.15',
 					'values' => array(
 						array(
 							'id' => 'blank_on',

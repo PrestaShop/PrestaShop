@@ -157,15 +157,15 @@ class AdminTranslationsControllerCore extends AdminController
 		$this->toolbar_btn['save-and-stay'] = array(
 			'short' => 'SaveAndStay',
 			'href' => '#',
-			'hint' => $this->l('Save and stay'),
+			'desc' => $this->l('Save and stay'),
 		);
 		$this->toolbar_btn['save'] = array(
 			'href' => '#',
-			'hint' => $this->l('Update translations')
+			'desc' => $this->l('Update translations')
 		);
 		$this->toolbar_btn['cancel'] = array(
 			'href' => self::$currentIndex.'&token='.$this->token,
-			'hint' => $this->l('Cancel')
+			'desc' => $this->l('Cancel')
 		);
 	}
 

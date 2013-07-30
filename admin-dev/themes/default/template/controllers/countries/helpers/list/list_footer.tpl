@@ -25,27 +25,31 @@
 
 			</table>
 			{if $bulk_actions}
-				<p>
+				<div class="row">
 					{if $bulk_actions|count > 1}
-						<select id="select_submitBulk" name="select_submitBulk">
-							{foreach $bulk_actions as $key => $params}
-								<option value="{$key}">{$params.text}</option>
-							{/foreach}
-						</select>
-						<input type="submit" class="button" name="submitBulk" id="submitBulk" value="{l s='Apply'}" />
+						<div class="col-lg-11">
+							<select id="select_submitBulk" name="select_submitBulk">
+								{foreach $bulk_actions as $key => $params}
+									<option value="{$key}">{$params.text}</option>
+								{/foreach}
+							</select>
+						</div>
+						<input type="submit" class="btn btn-primary" name="submitBulk" id="submitBulk" value="{l s='Apply'}" />
 					{else}
 						{foreach $bulk_actions as $key => $params}
 							{if $key == 'affectzone'}
-								<select id="zone_to_affect" name="zone_to_affect">
-									{foreach $zones as $z}
-										<option value="{$z['id_zone']}">{$z['name']}</option>
-									{/foreach}
-								</select>
+								<div class="col-lg-11">
+									<select id="zone_to_affect" name="zone_to_affect">
+										{foreach $zones as $z}
+											<option value="{$z['id_zone']}">{$z['name']}</option>
+										{/foreach}
+									</select>
+								</div>
 							{/if}
-							<input type="submit" class="button" name="submitBulk{$key}{$table}" value="{$params.text}" {if isset($params.confirm)}onclick="return confirm('{$params.confirm}');"{/if} />
+							<input type="submit" class="btn btn-primary" name="submitBulk{$key}{$table}" value="{$params.text}" {if isset($params.confirm)}onclick="return confirm('{$params.confirm}');"{/if} />
 						{/foreach}
 					{/if}
-				</p>
+				</div>
 			{/if}
 		</td>
 	</tr>
