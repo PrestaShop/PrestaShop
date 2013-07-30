@@ -151,7 +151,7 @@ class Blockrss extends Module
 
 		// Getting data
 		$rss_links = array();
-		if ($url && ($contents = @file_get_contents($url)))
+		if ($url && ($contents = Tools::file_get_contents($url)))
 			try
 			{
 			if (@$src = new XML_Feed_Parser($contents))
