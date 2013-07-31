@@ -708,12 +708,13 @@ class AdminCarrierWizardControllerCore extends AdminController
 					$return['has_error'] = true;
 					$return['errors'][] = $this->l('An error occurred while saving carrier zones.');
 				}
-
-				if (!$this->processRanges((int)$carrier->id))
-				{
-					$return['has_error'] = true;
-					$return['errors'][] = $this->l('An error occurred while saving carrier ranges.');
-				}
+				
+				if (!$carrier->is_free)
+					if (!$this->processRanges((int)$carrier->id))
+					{
+						$return['has_error'] = true;
+						$return['errors'][] = $this->l('An error occurred while saving carrier ranges.');
+					}
 
 				if (Shop::isFeatureActive() && !$this->updateAssoShop((int)$carrier->id))
 				{
