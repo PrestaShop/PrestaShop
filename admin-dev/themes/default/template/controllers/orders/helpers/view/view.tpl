@@ -170,9 +170,9 @@
 					{l s='Account registered:'} <b>{dateFormat date=$customer->date_add full=true}</b><br />
 					{l s='Valid orders placed:'} <b>{$customerStats['nb_orders']}</b><br />
 					{l s='Total spent since registration:'} <b>{displayPrice price=Tools::ps_round(Tools::convertPrice($customerStats['total_orders'], $currency), 2) currency=$currency->id}</b><br />
-			</fieldset>
 				{/if}
 			{/if}
+			</fieldset>
 
 			<!-- Sources block -->
 			{if (sizeof($sources))}
