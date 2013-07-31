@@ -25,12 +25,11 @@
 
 {extends file="helpers/list/list_header.tpl"}
 
-{block name="override_header"}
+{block name="leadin"}
 
 	<div id="CustomerThreadContacts" class="row">
 
 		{assign var=nb_categories value=count($categories)}
-		
 		{foreach $categories as $key => $val}
 
 			{assign var=total_thread value=0}
@@ -44,42 +43,52 @@
 			{/foreach}
 
 			<div class="col-lg-3">
-				<h3>{$val.name}</h3>
-				{if $nb_categories < 6}
-					<p>{$val.description}</p>
-				{/if}
-				{if $total_thread == 0}
-					<span class="message-mail">{l s='No new messages'}</span>
-				{else}
-					<a href="{$currentIndex}&token={$token}&id_customer_thread={$id_customer_thread}&viewcustomer_thread" class="button">
-						{$total_thread} 
-						{if $total_thread > 1}{l s='New messages'}{else}{l s='New message'}{/if}
-					</a>
-				{/if}
+				<div class="panel">
+					<div class="panel-heading">
+						{$val.name}
+					</div>
+					{if $nb_categories < 6}
+						<p>{$val.description}</p>
+					{/if}
+					{if $total_thread == 0}
+						<span class="message-mail">{l s='No new messages'}</span>
+					{else}
+						<a href="{$currentIndex}&token={$token}&id_customer_thread={$id_customer_thread}&viewcustomer_thread" class="button">
+							{$total_thread} 
+							{if $total_thread > 1}{l s='New messages'}{else}{l s='New message'}{/if}
+						</a>
+					{/if}
+				</div>
 			</div>
 		{/foreach}
 
-		<div id="MeaningStatus" class="col-lg-3">
-			<h3>{l s='Meaning of status'}</h3>
-			<ul>
-				<li class="label label-success">{l s='Open'}</li>
-				<li class="label label-danger">{l s='Closed'}</li>
-				<li class="label label-warning">{l s='Pending 1'}</li>
-				<li class="label label-warning">{l s='Pending 2'}</li>
-			</ul>
+		<div class="col-lg-3">
+			<div id="MeaningStatus" class="panel">
+				<div class="panel-heading">
+					{l s='Meaning of status'}
+				</div>
+				<ul class="list-unstyled">
+					<li class="label label-success">{l s='Open'}</li>
+					<li class="label label-danger">{l s='Closed'}</li>
+					<li class="label label-warning">{l s='Pending 1'}</li>
+					<li class="label label-warning">{l s='Pending 2'}</li>
+				</ul>
+			</div>
 		</div>
-	
-		<div id="CustomerService" class="col-lg-3">
-			<h3>{l s='Statistics'}</h3>
-			<ul>
-				{assign var=count value=0}
-				{foreach $params as $key => $val}
-					{assign var=count value=$count+1}
-					<li>{$key} <span class="badge">{$val}</span></li>
-				{/foreach}
-			</ul>
+
+		<div class="col-lg-3">
+			<div id="CustomerService" class="panel">
+				<div class="panel-heading">
+					{l s='Statistics'}
+				</div>
+				<ul class="list-unstyled">
+					{assign var=count value=0}
+					{foreach $params as $key => $val}
+						{assign var=count value=$count+1}
+						<li>{$key} <span class="badge">{$val}</span></li>
+					{/foreach}
+				</ul>
+			</div>
 		</div>
 	</div>
-	<hr/>
-
 {/block}

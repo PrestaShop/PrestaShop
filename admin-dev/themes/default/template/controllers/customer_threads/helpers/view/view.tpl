@@ -142,9 +142,6 @@
 		{/foreach}
 	</div>
 
-
-
-	
 	<script type="text/javascript">
 		var timer;
 		$(document).ready(function(){

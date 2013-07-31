@@ -129,7 +129,7 @@
 {if {$show_new_orders} == 1}
 					<li id="orders_notif" class="dropdown" >
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-							<i class="icon-shopping-cart"></i>&nbsp;<span class="caret"></span>
+							<i class="icon-shopping-cart"></i>
 							<span id="orders_notif_number_wrapper" class="badge">
 								<span id="orders_notif_value">0</span>
 							</span>
@@ -146,7 +146,7 @@
 {if ($show_new_customers == 1)}
 					<li id="customers_notif" class="notifs dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-							<i class="icon-user"></i>&nbsp;<span class="caret"></span>
+							<i class="icon-user"></i>
 							<span id="customers_notif_number_wrapper" class="badge">
 								<span id="customers_notif_value">0</span>
 							</span>
@@ -163,7 +163,7 @@
 {if {$show_new_messages} == 1}
 					<li id="customer_messages_notif" class="notifs dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-							<i class="icon-envelope"></i>&nbsp;<span class="caret"></span>
+							<i class="icon-envelope"></i>
 							<span id="customer_messages_notif_number_wrapper" class="badge">
 								<span id="customer_messages_notif_value" >0</span>
 							</span>

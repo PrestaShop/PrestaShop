@@ -47,7 +47,7 @@
 		{/foreach}
 	</script>
 
-	<legend>{l s='Add or modify combinations for this product.'}</legend>
+	<h3>{l s='Add or modify combinations for this product.'}</h3>
 	<div class="alert alert-info">
 		{l s='Or use the'}&nbsp;<a class="btn btn-link bt-icon confirm_leave" href="index.php?tab=AdminAttributeGenerator&id_product={$product->id}&attributegenerator&token={$token_generator}"><i class="icon-magic"></i> {l s='Product combinations generator'} <i class="icon-external-link-sign"></i></a> {l s='in order to automatically create a set of combinations.'}
 	</div>

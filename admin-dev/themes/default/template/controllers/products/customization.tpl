@@ -25,7 +25,7 @@
 
 {if isset($obj->id)}
 	<input type="hidden" name="submitted_tabs[]" value="Customization" />
-	<legend>{l s='Add or modify customizable properties.'}</legend>
+	<h3>{l s='Add or modify customizable properties.'}</h3>
 	
 	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Customization"}
 

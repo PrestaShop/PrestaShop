@@ -1,7 +1,11 @@
 //variables 
 $icon-color: #87C795
 $bg-content-color: #F6F5F3
-$bg-head-color: #9ED072
+$bg-head-color: #97C885
+$brand-primary: #444B55
+$panel-color: $brand-primary
+$badge-panel-color: #DC315E
+
 
 @import "compass"
 @import "bootstrap/variables"
@@ -29,6 +33,11 @@ body.fixed-top
 		font-size: 1.6em
 		font-family: "ubuntu"
 		font-weight: 300
+	#notifs_icon_wrapper
+		i
+			font-size: 1.5em
+		.badge
+			background-color: $badge-panel-color
 
 #main
 	min-height: 100%
@@ -43,23 +52,46 @@ body.fixed-top
 	margin: 0 0 0 240px
 	border-left: 2px solid black
 	border-right: 2px solid black
-	background-color: white
-	//background-color: $bg-content-color
+	background-color: $bg-content-color
 	//background-image: url('../img/patterns/bedge_grunge.png')
 	@include box-shadow(darken($bg-content-color,30%) 0 0 0 4px)
-	fieldset
+	fieldset, .panel
 		padding: 20px
 		margin-bottom: 10px
 		border: solid 1px darken($bg-content-color,10%)
 		background-color: $bg-content-color
 		@include border-radius(5px)
-		@include box-shadow(rgba(black,0.10) 0 0 7px, white 0 0 0 4px inset)
-	h3
-		padding: 0 0 5px 0
-		margin: 0 0 15px 0
-		color: darken($bg-content-color,20%)
+		@include box-shadow(rgba(black,0.10) 0 2px 0, white 0 0 0 3px inset)
+	.panel-heading
+		@extend h3
+	h3, .panel-heading
+		height: 30px
+		padding: 0 5px
+		margin: -16px -16px 15px -16px
+		clear: both
+		line-height: 30px
+		color: white	
+		font-size: 1.2em
 		font-weight: 300
-		border-bottom: solid 1px darken($bg-content-color,10%)
+		text-transform: uppercase
+		background-color: lighten($panel-color,10%)
+		.badge
+			background-color: lighten($panel-color,20%)
+			border-radius: 0
+			height: 29px
+			line-height: 25px
+			font-size: 1.3em
+			margin-right: 7px
+			font-weight: 300
+			float: left
+			margin-left: -5px
+	.panel-danger .panel-heading
+		background-color: $badge-panel-color!important
+
+	.panel-heading-big
+		font-size: 2em
+		text-align: center
+
 	form .alert
 		clear: both
 		color: darken(#D6D2CF,40%)
@@ -213,15 +245,16 @@ body.fixed-top
 // Tool bar
 .toolbar_btn
 	@extend .btn
-	@extend .btn-primary
+	//@extend .btn-primary
+	background-color: $brand-primary
 	position: relative
 	padding: 2px 5px !important
 	margin-right: 3px
 	border-bottom: 4px solid darken($brand-primary,7%)
 	font-size: 11px
-	color: lighten($brand-primary,50%)
+	color: white
 	text-shadow: -1px -1px 0 rgba(black,0.6)
-	@include background(linear-gradient(top, lighten($brand-primary,15%), $brand-primary))
+	//@include background(linear-gradient(top, lighten($brand-primary,15%), $brand-primary))
 	@include box-shadow(rgba(black,0.15) 0 3px 0, rgba(white,0.1) 0 0 0 1px inset)
 	&:hover
 		top: 2px
@@ -390,6 +423,7 @@ input[type="password"].input-tiny
 .fixed-width-XL
 	width: 200px
 
+
 .btn
 	text-transform: uppercase
 
@@ -402,7 +436,16 @@ input[type="password"].input-tiny
 		border-color: darken($bg-content-color,30%)
 		color: lighten($brand-primary,15%)
 		@include background(linear-gradient(top, darken($bg-content-color,10%), darken($bg-content-color,20%)))
-		@include box-shadow(rgba(white,0.7) 0 0 0 1px inset)
+
+.btn-primary
+	border-color: $brand-primary
+	color: lighten($brand-primary,70%)
+	@include background(linear-gradient(top,lighten($brand-primary,30%),lighten($brand-primary,20%)))
+	@include box-shadow(lighten($brand-primary,40%) 0 0 0 1px inset)
+	&:hover, &:focus
+		border-color: $brand-primary
+		color: lighten($brand-primary,70%)
+		@include background(linear-gradient(top,lighten($brand-primary,20%),lighten($brand-primary,10%)))
 
 .btn-group-action
 	display: inline-block
@@ -411,6 +454,8 @@ input[type="password"].input-tiny
 		text-decoration: none
 .btn .caret
 	border-top-color: lighten($brand-primary,15%)!important
+
+
 hr
 	border-color: darken($bg-content-color,10%)
 	border-bottom: 1px solid white
@@ -418,12 +463,12 @@ hr
 //table 
 .table
 	border-collapse: separate
-	border-spacing: 0 4px
+	border-spacing: 0 2px
+	margin-bottom: 5px
 	thead th
-		background-color: lighten($brand-primary,20%)
-		color: white
-		border-bottom: solid 2px $brand-primary
-		@include box-shadow(rgba(black,0.15) 0 2px 3px)
+		background-color: darken($bg-content-color,10%)
+		//border-bottom: solid 2px lighten($brand-primary,20%)
+		//@include box-shadow(rgba(black,0.15) 0 2px 3px inset)
 	thead > tr > th
 		font-weight: normal
 		vertical-align: top
@@ -447,11 +492,11 @@ hr
 		vertical-align: middle
 		word-wrap: nowrap
 		font-size: 12px
-		@include box-shadow(rgba(black,0.15) 0 2px 0)
+		@include box-shadow(rgba(black,0.15) 0 1px 0)
 	tbody > tr:hover > td
 		cursor: pointer
-		background-color: lighten(#C6C2BB,10%)
-		@include box-shadow(rgba(black,0.30) 0 2px 0)
+		background-color: lighten($bg-head-color,15%)
+		@include box-shadow(rgba($bg-head-color,0.80) 0 2px 0)
 	td.center, th.center
 		text-align: center
 	tr td:first-child,
@@ -462,6 +507,8 @@ hr
 	tr th:last-child 
 		border-top-right-radius: 3px
 		border-bottom-right-radius: 3px
+	.btn-group
+		float: right
 
 //filter table
 tr.filter
@@ -473,7 +520,6 @@ tr.filter
 .breadcrumb
 	background-color: lighten($bg-content-color,7%)
 
-
 .badge-success
 	@extend .badge
 	background-color: $brand-success
@@ -482,4 +528,6 @@ tr.filter
 	@extend .badge
 	background-color: $brand-danger
 
-
+.icon-big
+	font-size: 4em
+	color: darken($bg-content-color,20%)

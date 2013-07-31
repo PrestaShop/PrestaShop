@@ -108,9 +108,7 @@ class AdminTrackingControllerCore extends AdminController
 		AND a.`id_category` != '.(int)Category::getTopCategory()->id;
 
 		$this->tpl_list_vars = array('sub_title' => $this->l('List of empty categories:'));
-
 		
-
 		return $this->renderList();
 	}
 

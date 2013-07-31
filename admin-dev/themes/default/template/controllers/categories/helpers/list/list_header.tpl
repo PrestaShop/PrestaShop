@@ -25,49 +25,62 @@
 
 {extends file="helpers/list/list_header.tpl"}
 
-{block name=leadin}
-<ul class="breadcrumb cat_bar2">
-	{assign var=i value=0}
-	{foreach $categories_tree key=key item=category}
-		{if $i++ == 0}
-			<li><i class="icon-home"></i>
-			{assign var=params_url value=""}
-		{else}
-			{assign var=params_url value="&id_category={$category.id_category|intval}&viewcategory"}
-		{/if}
-		{if $category.id_category == $categories_tree_current_id}
-			{$category.name}</li>
-		{else}
-			<a href="{$currentIndex}{$params_url}&token={$token}">{$category.name}</a></li>
-		{/if}
-	{/foreach}
-</ul>
 
+{block name=override_header}
+	<ul class="breadcrumb cat_bar2">
+		{assign var=i value=0}
+		{foreach $categories_tree key=key item=category}
+			{if $i++ == 0}
+				<li>
+					<i class="icon-home"></i>
+				{assign var=params_url value=""}
+			{else}
+				{assign var=params_url value="&id_category={$category.id_category|intval}&viewcategory"}
+			{/if}
+			{if $category.id_category == $categories_tree_current_id}
+				{$category.name}</li>
+			{else}
+				<a href="{$currentIndex}{$params_url}&token={$token}">{$category.name}</a></li>
+			{/if}
+		{/foreach}
+	</ul>
+{/block}
+
+
+{block name=leadin}
 	{if isset($delete_category) && $delete_category}
-		<form action="{$REQUEST_URI}" method="post">
-			<div class="alert alert-block">
-				<h2>
-					{if $need_delete_mode}
-						{l s='Do you want to delete the products too?'}
-					{else}
-						{l s='Deleting this category will remove products linked only within this category and no others. Are you sure you want to continue?'}
-					{/if}
-				</h2>
+		<div class="panel panel-danger">
+			<div class="panel-heading">
 				{if $need_delete_mode}
-				<ul class="listForm">
-				<li>
-					<input type="radio" name="deleteMode" value="linkanddisable" id="deleteMode_linkanddisable" />
-					<label for="deleteMode_linkanddisable" style="float:none;">{l s='No. I want to link products without other categories -- within the parent category -- and then disable them.'}</label>
-				</li>
-				<li>
-					<input type="radio" name="deleteMode" value="link" id="deleteMode_link" />
-					<label for="deleteMode_link" style="float:none;">{l s='No. I want to link products without other categories and within the parent category.'}</label>
-				</li>
-				<li>
-					<input type="radio" name="deleteMode" value="delete" id="deleteMode_delete" />
-					<label for="deleteMode_delete" style="float:none">{l s='Yes. I want to remove products linked only within this category and no others.'}</label>
-				</li>
-				</ul>
+					{l s='Do you want to delete the products too?'}
+				{else}
+					{l s='Deleting this category will remove products linked only within this category and no others. Are you sure you want to continue?'}
+				{/if}
+			</div>
+
+			{if $need_delete_mode}
+			<form action="{$REQUEST_URI}" method="post">
+				<div class="radio">
+					<label for="deleteMode_linkanddisable">
+						<input type="radio" name="deleteMode" value="linkanddisable" id="deleteMode_linkanddisable" />
+						{l s='No. I want to link products without other categories -- within the parent category -- and then disable them.'}
+					</label>
+				</div>
+
+				<div class="radio">
+					<label for="deleteMode_link">
+						<input type="radio" name="deleteMode" value="link" id="deleteMode_link" />
+						{l s='No. I want to link products without other categories and within the parent category.'}
+					</label>
+				</div>
+
+				<div class="radio">
+					<label for="deleteMode_delete">
+						<input type="radio" name="deleteMode" value="delete" id="deleteMode_delete" />
+						{l s='Yes. I want to remove products linked only within this category and no others.'}
+					</label>
+				</div>
+
 				{else}
 					<input type="hidden" name="deleteMode" value="delete" id="deleteMode_delete" />
 				{/if}
@@ -82,11 +95,10 @@
 						{/if}
 					{/if}
 				{/foreach}
-				<br />
-				<input type="submit" name="cancel" class="button" value="{l s='Cancel'}" />
-				<input type="submit" class="button" value="{l s='Validate'}" />
+				<hr>
+				<input type="submit" name="cancel" class="btn btn-default" value="{l s='Cancel'}" />
+				<input type="submit" class="btn btn-primary" value="{l s='Validate'}" />
+				</form>
 			</div>
-		</form>
-		<div class="clear">&nbsp;</div>
 	{/if}
 {/block}

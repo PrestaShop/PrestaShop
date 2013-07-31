@@ -105,7 +105,8 @@ $(document).ready(function () {
 </script>
 
 <input type="hidden" name="submitted_tabs[]" value="Prices" />
-<legend>{l s='Product price'}</legend>
+<h3>{l s='Product price'}</h3>
+
 <div class="alert alert-info">
 	{l s='You must enter either the pre-tax retail price, or the retail price with tax. The input field will be automatically calculated.'}
 </div>
@@ -279,9 +280,11 @@ $(document).ready(function () {
 </div>
 
 
+{*todo separate fieldset*}
 
 {if isset($specificPriceModificationForm)}
-<legend>{l s='Specific prices'}</legend>
+<h3>{l s='Specific prices'}</h3>
+
 <div class="alert alert-info">
 	{l s='You can set specific prices for clients belonging to different groups, different countries, etc...'}
 </div>
