@@ -47,7 +47,7 @@ function set_product_suppliers()
 			VALUES
 			("'.(int)$row['id_product'].'", "0", "'.(int)$row['id_supplier'].'", 
 			"'.pSQL($row['supplier_reference']).'", "'.(int)$row['wholesale_price'].'", 
-				"'.(int)$ps_currency_default.'"
+				"'.(int)$ps_currency_default.'")
 		');
 
 		//Try to get product attribues
