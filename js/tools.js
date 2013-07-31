@@ -186,7 +186,7 @@ function writeBookmarkLink(url, title, text, img)
 {
 	var insert = '';
 	if (img)
-		insert = writeBookmarkLinkObject(url, title, '<img src="' + img + '" alt="' + escape(text) + '" title="' + escape(text) + '" />') + '&nbsp';
+		insert = writeBookmarkLinkObject(url, title, '<img src="' + img + '" alt="' + escape(text) + '" title="' + removeQuotes(text) + '" />') + '&nbsp';
 	insert += writeBookmarkLinkObject(url, title, text);
 	if (window.sidebar || window.opera && window.print || (window.external && ('AddFavorite' in window.external)))	
 		document.write(insert);
@@ -195,9 +195,9 @@ function writeBookmarkLink(url, title, text, img)
 function writeBookmarkLinkObject(url, title, insert)
 {
 	if (window.sidebar || window.external)
-		return ('<a href="javascript:addBookmark(\'' + escape(url) + '\', \'' + escape(title) + '\')">' + insert + '</a>');
+		return ('<a href="javascript:addBookmark(\'' + escape(url) + '\', \'' + removeQuotes(title) + '\')">' + insert + '</a>');
 	else if (window.opera && window.print)
-		return ('<a rel="sidebar" href="' + escape(url) + '" title="' + escape(title) + '">' + insert + '</a>');
+		return ('<a rel="sidebar" href="' + escape(url) + '" title="' + removeQuotes(title) + '">' + insert + '</a>');
 	return ('');
 }
 
@@ -282,6 +282,16 @@ function isArrowKey(k_ev)
 	if (unicode >= 37 && unicode <= 40)
 		return true;
 	return false;
+}
+
+function removeQuotes(value)
+{
+	value = value.replace(/\\"/g, '');
+	value = value.replace(/"/g, '');
+	value = value.replace(/\\'/g, '');
+	value = value.replace(/'/g, '');
+
+	return value;
 }
 
 //On dom ready
