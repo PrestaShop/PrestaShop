@@ -123,10 +123,16 @@ function displaySummary()
 	$('#summary_range').html(summary_translation_range);
 	var range_inf = summary_translation_undefined;
 	var range_sup = summary_translation_undefined;
-	$('input[name$="range_inf[]"]').each(function(){
+	
+	/*
+$('input[name$="range_inf[]"]').each(function(){
 		if (!isNaN(parseFloat($(this).val())) && (range_inf == summary_translation_undefined || range_inf < $(this).val()))
 			range_inf = $(this).val();
 	});
+*/
+	range_inf = $('tr.range_inf td input:first').val(); 
+	range_sup = $('tr.range_sup td input:last').val();
+
 	$('input[name$="range_sup[]"]').each(function(){
 		if (!isNaN(parseFloat($(this).val())) && (range_sup == summary_translation_undefined || range_sup > $(this).val()))
 			range_sup = $(this).val();
@@ -255,7 +261,6 @@ function bind_inputs()
 	
 	$('tr.range_sup td input:text, tr.range_inf td input:text').off('change').on('change', function () {
 		index = $(this).parent('td').index();
-		
 		if ($('tr.fees_all td:eq('+index+')').hasClass('validated') || $('tr.fees_all td:eq('+index+')').hasClass('not_validated'))
 		{
 			if (validateRange(index))
@@ -304,8 +309,7 @@ function bind_inputs()
 		}
 		resizeWizard();
 	});
-	$('input[name="is_free"]:checked').click();
-	
+		
 	$('input[name="shipping_method"]').on('click', function() {
 		$.ajax({
 			type:"POST",
