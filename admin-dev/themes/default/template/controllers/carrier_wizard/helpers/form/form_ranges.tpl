@@ -1,5 +1,4 @@
 		<script>var zones_nbr = {$zones|count};</script>
-		
 		<div style="float:left" id="zone_ranges">
 			<table cellpadding="5" cellspacing="0" id="zones_table">
 				<tr class="range_inf">
@@ -43,7 +42,7 @@
 					</td>
 					{foreach from=$ranges key=r item=range}
 						<td class="center">
-							<input name="fees[{$zone.id_zone|intval}][{$range.id_range|intval}]" {if isset($form_id) &&  !$form_id} disabled="disabled"{/if} type="text" value="{if isset($price_by_range[$range.id_range][$zone.id_zone])} {$price_by_range[$range.id_range][$zone.id_zone]|string_format:"%.6f"} {/if}" />
+							<input name="fees[{$zone.id_zone|intval}][{$range.id_range|intval}]" {if (isset($form_id) &&  !$form_id) || isset($change_ranges)} disabled="disabled"{/if} type="text" value="{if isset($price_by_range[$range.id_range][$zone.id_zone])} {$price_by_range[$range.id_range][$zone.id_zone]|string_format:"%.6f"} {/if}" />
 						</td>
 					{/foreach}
 				</tr>

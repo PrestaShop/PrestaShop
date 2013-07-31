@@ -537,6 +537,8 @@ class AdminCarrierWizardControllerCore extends AdminController
 
 		$template = $this->createTemplate('controllers/carrier_wizard/helpers/form/form_ranges.tpl');
 		$template->assign($tpl_vars);
+		$template->assign('change_ranges', 1);
+		
 		$template->assign('fields_value', $fields_value);
 		$template->assign('input', array('type' => 'zone',	'name' => 'zones'	));
 
