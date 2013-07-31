@@ -576,7 +576,7 @@ class HelperListCore extends Helper
 
 		Context::getContext()->smarty->assign(array(
 			'page' => $page,
-			'simple_header' => $this->simple_header,
+			'simple_header' => ((count($this->_list) == 0) ? true : $this->simple_header),
 			'total_pages' => $total_pages,
 			'selected_pagination' => $selected_pagination,
 			'pagination' => $this->_pagination,
