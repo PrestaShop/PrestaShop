@@ -316,7 +316,6 @@ function bind_inputs()
 
 function validateRange(index)
 {
-	console.log('index : '+index);
 	//reset error css
 	$('tr.range_sup td input:text').removeClass('field_error');
 	$('tr.range_inf td input:text').removeClass('field_error');
