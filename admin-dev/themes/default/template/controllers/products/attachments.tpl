@@ -25,7 +25,7 @@
 
 {if isset($obj->id)}
 <input type="hidden" name="submitted_tabs[]" value="Attachments" />
-<legend>{l s='Attachment'}</legend>
+<h3>{l s='Attachment'}</h3>
 
 <div class="row">
 	<label class="control-label col-lg-3 required" for="attachment_name_{$id_lang}">

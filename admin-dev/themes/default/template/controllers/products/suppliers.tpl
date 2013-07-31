@@ -26,7 +26,7 @@
 <input type="hidden" name="supplier_loaded" value="1">
 {if isset($product->id)}
 	<input type="hidden" name="submitted_tabs[]" value="Suppliers" />
-	<legend>{l s='Suppliers of the current product'}</legend>
+	<h3>{l s='Suppliers of the current product'}</h3>
 	<div class="alert alert-info">
 		{l s='This interface allows you to specify the suppliers of the current product and eventually its combinations.'}<br />
 		{l s='It is also possible to specify supplier references according to previously associated suppliers.'}<br />
@@ -61,7 +61,7 @@
 		<i class="icon-plus"></i> {l s='Create a new supplier'} <i class="icon-external-link-sign"></i>
 	</a>
 
-	<legend>{l s='Product reference(s)'}</legend>
+	<h3>{l s='Product reference(s)'}</h3>
 
 	<div class="alert alert-info">
 		{if $associated_suppliers|@count == 0}

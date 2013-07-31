@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <input type="hidden" name="submitted_tabs[]" value="Seo" />
-<legend>{l s='SEO'}</legend>
+<h3>{l s='SEO'}</h3>
 
 {include file="controllers/products/multishop/check_fields.tpl" product_tab="Seo"}
 

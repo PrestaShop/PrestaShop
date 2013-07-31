@@ -28,6 +28,7 @@ class AdminCartsControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->table = 'cart';
 		$this->className = 'Cart';
 		$this->lang = false;
@@ -47,12 +48,11 @@ class AdminCartsControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_cart' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center',
-				'width' => 25
+				'align' => 'center'
 			),
 			'id_order' => array(
 				'title' => $this->l('Order ID'),
-				'align' => 'center', 'width' => 25
+				'align' => 'center'
 			),
 			'customer' => array(
 				'title' => $this->l('Customer'),
@@ -64,28 +64,24 @@ class AdminCartsControllerCore extends AdminController
 				'callback' => 'getOrderTotalUsingTaxCalculationMethod',
 				'orderby' => false,
 				'search' => false,
-				'width' => 80,
 				'align' => 'right',
 				'prefix' => '<b>',
 				'suffix' => '</b>',
 			),
 			'carrier' => array(
 				'title' => $this->l('Carrier'),
-				'width' => 50,
 				'align' => 'center',
 				'callback' => 'replaceZeroByShopName',
 				'filter_key' => 'ca!name'
 			),
 			'date_add' => array(
 				'title' => $this->l('Date'),
-				'width' => 150,
 				'align' => 'right',
 				'type' => 'datetime',
 				'filter_key' => 'a!date_add'
 			),
 			'id_guest' => array(
 				'title' => $this->l('Online'),
-				'width' => 40,
 				'align' => 'center',
 				'type' => 'bool',
 				'havingFilter' => true,

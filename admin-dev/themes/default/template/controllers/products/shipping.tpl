@@ -24,7 +24,7 @@
 *}
 
 <input type="hidden" name="submitted_tabs[]" value="Shipping" />
-<legend>{l s='Shipping'}</legend>
+<h3>{l s='Shipping'}</h3>
 
 {if isset($display_common_field) && $display_common_field}
 	<div class="alert alert-info">{l s='Warning, if you change the value of fields with an orange bullet %s, the value will be changed for all other shops for this product' sprintf=$bullet_common_field}</div>

@@ -26,7 +26,7 @@
 <input type="hidden" name="submitted_tabs[]" value="Associations" />
 <div class="Associations">
 
-	<legend>{l s='Associations'}</legend>
+	<h3>{l s='Associations'}</h3>
 
 	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Associations"}
 	<div id="no_default_category" class="alert alert-info">

@@ -73,12 +73,11 @@
 {/if}
 
 {if !$simple_header}
-<form method="post" action="{$action}" class="form-inline">
+<form method="post" action="{$action}" class="form-horizontal">
 	<fieldset class="col-lg-12">
 		{block name="override_header"}{/block}
 
 		<input type="hidden" id="submitFilter{$table}" name="submitFilter{$table}" value="0"/>
-
 		<span class="pull-right">
 			<button type="submit" name="submitReset{$table}" class="btn btn-default btn-small">
 				<i class="icon-eraser"></i> {l s='Reset'}

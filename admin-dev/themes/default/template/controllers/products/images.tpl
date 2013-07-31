@@ -26,10 +26,10 @@
 {if isset($id_product) && isset($product)}
 <input type="hidden" name="submitted_tabs[]" value="Images" />
 	
-<legend class="tab" >
+<h3 class="tab" >
 	{l s='Images'}
 	<span class="badge" id="countImage">{$countImages}</span>
-</legend>
+</h3>
 
 <div class="row">
 	<label class="control-label col-lg-5 file_upload_label">

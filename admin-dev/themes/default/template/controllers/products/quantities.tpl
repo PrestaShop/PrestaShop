@@ -25,7 +25,7 @@
 
 {if isset($product->id)}
 	<input type="hidden" name="submitted_tabs[]" value="Quantities" />
-	<legend>{l s='Available quantities for sale'}</legend>
+	<h3>{l s='Available quantities for sale'}</h3>
 	{if !$ps_stock_management}
 		<div class="alert alert-info">{l s='The stock management is disabled'}</div>
 	{else}
@@ -174,7 +174,7 @@
 		{/if}
 	{/if}
 
-	<legend>{l s='Availability settings'}</legend>
+	<h3>{l s='Availability settings'}</h3>
 
 	{if !$has_attribute}
 		<div class="row">
