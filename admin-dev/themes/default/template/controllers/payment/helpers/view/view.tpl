@@ -32,7 +32,6 @@
 			{$modules_list}
 		{/if}
 		{if $display_restrictions}
-			<legend>{l s='Payment module restrictions'}</legend>
 			{foreach $lists as $list}
 				{include file='controllers/payment/restrictions.tpl'}
 			{/foreach}

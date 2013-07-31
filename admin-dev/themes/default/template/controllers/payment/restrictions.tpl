@@ -24,18 +24,21 @@
 *}
 
 <form action="{$url_submit}" method="post" id="form_{$list['name_id']}" class="form-horizontal">
-	<fieldset class="well">
-		<legend><img src="../img/admin/{$list['icon']}.gif" />&nbsp;{$list['title']}</legend>
+	<fieldset>
+		<h3>
+			<i class="{$list['icon']}"></i>
+			{$list['title']}
+		</h3>
 		<p class="help-block">{$list['desc']}</p>
 		<table cellpadding="0" cellspacing="0" class="table table-striped table-hover">
 			<tr>
-				<th width="20%">{$list['title']}</th>
+				<th width="40%">{$list['title']}</th>
 				{foreach $payment_modules as $module}
 					{if $module->active}
-						<th class="center">
+						<th>
 							{if $list['name_id'] != 'currency' || $module->currencies_mode == 'checkbox'}
 								<input type="hidden" id="checkedBox_{$list['name_id']}_{$module->name}" value="checked"/>
-								<a href="javascript:checkPaymentBoxes('{$list['name_id']}', '{$module->name}')" style="text-decoration:none;">
+								<a href="javascript:checkPaymentBoxes('{$list['name_id']}', '{$module->name}')">
 							{/if}
 							&nbsp;<img src="{$ps_base_uri}modules/{$module->name}/logo.gif" alt="{$module->name}" title="{$module->displayName}"/>
 							{if $list['name_id'] != 'currency' || $module->currencies_mode == 'checkbox'}
@@ -46,13 +49,13 @@
 				{/foreach}
 			</tr>
 			{foreach $list['items'] as $item}
-				<tr class="{cycle values=",alt_row"}">
+				<tr>
 					<td>
 						<span>{$item['name']}</span>
 					</td>
 					{foreach $payment_modules as $key_module => $module}
 						{if $module->active}
-							<td class="center">
+							<td>
 								{assign var='type' value='null'}
 								{if !$item['check_list'][$key_module]}
 									{* Keep $type to null *}
@@ -76,13 +79,13 @@
 				</tr>
 			{/foreach}
 			{if $list['name_id'] === 'currency'}
-				<tr class="{cycle values=",alt_row"}">
+				<tr>
 					<td>
 						<span>{l s='Customer currency'}</span>
 					</td>
 					{foreach $payment_modules as $module}
 						{if $module->active}
-							<td class="center">
+							<td>
 								{if $module->currencies && $module->currencies_mode == 'radio'}
 									<input type="radio" name="{$module->name}_{$list['name_id']}[]" value="-1"{if in_array(-1, $module->$list['name_id'])} checked="checked"
 								{/if} />
@@ -93,13 +96,13 @@
 						{/if}
 					{/foreach}
 				</tr>
-				<tr class="{cycle values=",alt_row"}">
+				<tr>
 					<td>
 						<span>{l s='Shop default currency'}</span>
 					</td>
 					{foreach $payment_modules as $module}
 						{if $module->active}
-							<td class="center">
+							<td>
 								{if $module->currencies && $module->currencies_mode == 'radio'}
 									<input type="radio" name="{$module->name}_{$list['name_id']}[]" value="-2"{if in_array(-2, $module->$list['name_id'])} checked="checked"
 								{/if} 
@@ -114,7 +117,7 @@
 			{/if}
 		</table>
 		<p class="text-right">
-			<button type="submit" class="btn btn-default" name="submitModule{$list['name_id']}"> 
+			<button type="submit" class="btn btn-primary" name="submitModule{$list['name_id']}"> 
 				<i class="icon-ok"></i>
 				{l s='Save restrictions'}
 			</button>
