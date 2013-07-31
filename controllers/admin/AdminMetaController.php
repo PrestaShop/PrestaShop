@@ -35,6 +35,7 @@ class AdminMetaControllerCore extends AdminController
 	{
 		parent::__construct();
 
+		$this->bootstrap = true;
 		$this->ht_file = _PS_ROOT_DIR_.'/.htaccess';
 		$this->rb_file = _PS_ROOT_DIR_.'/robots.txt';
 		$this->sm_file = _PS_ROOT_DIR_.'/sitemap.xml';
@@ -58,22 +59,22 @@ class AdminMetaControllerCore extends AdminController
 		$general_fields = array(
 			'PS_REWRITING_SETTINGS' => array(
 				'title' => $this->l('Friendly URL'),
-				'desc' => ($mod_rewrite ? $this->l('Enable only if your server allows URL rewriting (recommended).') : ''),
+				'hint' => ($mod_rewrite ? $this->l('Enable only if your server allows URL rewriting (recommended).') : ''),
 				'validation' => 'isBool',
 				'cast' => 'intval',
-				'type' => 'rewriting_settings',
+				'type' => 'bool',
 				'mod_rewrite' => $mod_rewrite
 			),
 			'PS_ALLOW_ACCENTED_CHARS_URL' => array(
 				'title' => $this->l('Accented URL'),
-				'desc' => $this->l('Enable if you want to allow accented characters in your friendly URLs.').' '.$this->l('You should only activate this option if you are using non-latin characters ; for all the latin charsets, your SEO will be better without this option.'),
+				'hint' => $this->l('Enable if you want to allow accented characters in your friendly URLs.').' '.$this->l('You should only activate this option if you are using non-latin characters ; for all the latin charsets, your SEO will be better without this option.'),
 				'validation' => 'isBool',
 				'cast' => 'intval',
 				'type' => 'bool'
 			),
 			'PS_CANONICAL_REDIRECT' => array(
 				'title' => $this->l('Automatically redirect to the canonical URL'),
-				'desc' => $this->l('Recommended, but your theme must be compliant.'),
+				'hint' => $this->l('Recommended, but your theme must be compliant.'),
 				'validation' => 'isBool',
 				'cast' => 'intval',
 				'type' => 'bool'
@@ -85,7 +86,7 @@ class AdminMetaControllerCore extends AdminController
 		{
 			$general_fields['PS_HTACCESS_DISABLE_MULTIVIEWS'] = array(
 				'title' => $this->l('Disable apache multiviews'),
-				'desc' => $this->l('Enable this option only if you have problems with URL rewriting.'),
+				'hint' => $this->l('Enable this option only if you have problems with URL rewriting.'),
 				'validation' => 'isBool',
 				'cast' => 'intval',
 				'type' => 'bool',
@@ -93,7 +94,7 @@ class AdminMetaControllerCore extends AdminController
 
 			$general_fields['PS_HTACCESS_DISABLE_MODSEC'] = array(
 				'title' => $this->l('Disable apache mod security'),
-				'desc' => $this->l('Some features could not work correctly with a specific configuration of apache mod security. We recommend to turn it off.'),
+				'hint' => $this->l('Some features could not work correctly with a specific configuration of apache mod security. We recommend to turn it off.'),
 				'validation' => 'isBool',
 				'cast' => 'intval',
 				'type' => 'bool',
@@ -102,22 +103,22 @@ class AdminMetaControllerCore extends AdminController
 		else
 		{
 			$url_description = $this->l('Before being able to use this tool, you need to:');
-			$url_description .= '<br />- '.$this->l('Create a blank .htaccess in your root directory.');
-			$url_description .= '<br />- '.$this->l('Give it write permissions (CHMOD 666 on Unix system)');
+			$url_description .= $this->l('Create a blank .htaccess in your root directory.');
+			$url_description .= $this->l('Give it write permissions (CHMOD 666 on Unix system)');
 		}
 
 		// Options to generate robot.txt
 		$robots_description = $this->l('Your robots.txt file MUST be in your website\'s root directory and nowhere else (e.g. http://www.yoursite.com/robots.txt).');
 		if ($this->checkConfiguration($this->rb_file))
 		{
-			$robots_description .= '<br />'.$this->l('Generate your "robots.txt" file by clicking on the following button (this will erase the old robots.txt file)');
+			$robots_description .= $this->l('Generate your "robots.txt" file by clicking on the following button (this will erase the old robots.txt file)');
 			$robots_submit = array('name' => 'submitRobots', 'title' => $this->l('Generate robots.txt file'));
 		}
 		else
 		{
-			$robots_description .= '<br />'.$this->l('Before being able to use this tool, you need to:');
-			$robots_description .= '<br />- '.$this->l('Create a blank robots.txt file in your root directory.');
-			$robots_description .= '<br />- '.$this->l('Give it write permissions (CHMOD 666 on Unix system)');
+			$robots_description .= $this->l('Before being able to use this tool, you need to:');
+			$robots_description .= $this->l('Create a blank robots.txt file in your root directory.');
+			$robots_description .= $this->l('Give it write permissions (CHMOD 666 on Unix system)');
 		}
 
 		$robots_options = array(
@@ -145,21 +146,18 @@ class AdminMetaControllerCore extends AdminController
 						'title' =>	$this->l('Shop domain'),
 						'validation' => 'isString',
 						'type' => 'text',
-						'size' => 70,
 						'defaultValue' => $this->url->domain,
 					),
 					'domain_ssl' => array(
 						'title' =>	$this->l('SSL domain'),
 						'validation' => 'isString',
 						'type' => 'text',
-						'size' => 70,
 						'defaultValue' => $this->url->domain_ssl,
 					),
 					'uri' => array(
 						'title' =>	$this->l('Base URI'),
 						'validation' => 'isString',
 						'type' => 'text',
-						'size' => 70,
 						'defaultValue' => $this->url->physical_uri,
 					),
 				);
@@ -250,7 +248,7 @@ class AdminMetaControllerCore extends AdminController
  		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Meta tags'),
-				'image' => '../img/admin/metatags.gif'
+				'icon' => 'icon-tags'
 			),
 			'input' => array(
 				array(
@@ -273,7 +271,7 @@ class AdminMetaControllerCore extends AdminController
 							'query' => 'query',
 						),
 					),
-					'desc' => $this->l('Name of the related page'),
+					'hint' => $this->l('Name of the related page'),
 					'required' => true,
 					'empty_message' => '<p>'.$this->l('There is no page available!').'</p>',
 				),
@@ -282,27 +280,31 @@ class AdminMetaControllerCore extends AdminController
 					'label' => $this->l('Page title:'),
 					'name' => 'title',
 					'lang' => true,
-					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'desc' => $this->l('Title of this page'),
-					'size' => 30
+					'hint' => array(
+						$this->l('Title of this page.'),
+						$this->l('Invalid characters:').' &lt;&gt;;=#{}'
+					)
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Meta description:'),
 					'name' => 'description',
 					'lang' => true,
-					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'desc' => $this->l('A short description of your shop'),
-					'size' => 50
+					'hint' => array(
+						$this->l('Invalid characters:').' &lt;&gt;;=#{}',
+						$this->l('A short description of your shop')
+					)
 				),
 				array(
 					'type' => 'tags',
 					'label' => $this->l('Meta keywords:'),
 					'name' => 'keywords',
 					'lang' => true,
-					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'desc' => $this->l('List of keywords for search engines').' '.$this->l('To add "tags," click in the field, write something, and then press "Enter."'), 
-					'size' => 50
+					'hint' =>  array(
+						$this->l('Invalid characters:').' &lt;&gt;;=#{}',
+						$this->l('List of keywords for search engines'),
+						$this->l('To add "tags," click in the field, write something, and then press "Enter."')
+					)
 				),
 				array(
 					'type' => 'text',
@@ -310,14 +312,15 @@ class AdminMetaControllerCore extends AdminController
 					'name' => 'url_rewrite',
 					'lang' => true,
 					'required' => true,
-					'hint' => $this->l('Only letters and hyphens are allowed'),
-					'desc' => $this->l('e.g. "contacts" for http://mysite.com/shop/contacts to redirect to http://mysite.com/shop/contact-form.php'),
-					'size' => 50
+					'hint' => array(
+						$this->l('Only letters and hyphens are allowed'),
+						$this->l('e.g. "contacts" for http://mysite.com/shop/contacts to redirect to http://mysite.com/shop/contact-form.php'),
+					)
 				),
 			),
 			'submit' => array(
-				'title' => $this->l('   Save   '),
-				'class' => 'button'
+				'title' => $this->l('Save'),
+				'class' => 'btn btn-primary'
 			)
 		);
 		return parent::renderForm();

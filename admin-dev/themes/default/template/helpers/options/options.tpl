@@ -124,7 +124,7 @@
 
 												<p class="radio">
 													<input type="radio" name="{$key}" id="{$key}_{$k}" value="{$k}"{if $k == $field['value']} checked="checked"{/if}{if isset($field['js'][$k])} {$field['js'][$k]}{/if}/>
-													<label class="col-lg-3" for="{$key}_{$k}"> {$v}</label>
+													<label class="col-lg-6" for="{$key}_{$k}"> {$v}</label>
 												</p>
 											{/foreach}
 										</div>
@@ -163,11 +163,11 @@
 										</div>
 									{elseif $field['type'] == 'file'}
 										{if isset($field['thumb']) && $field['thumb']}
-											<div class="col-lg-9">
+											<div class="col-lg-3">
 												<img src="{$field['thumb']}" alt="{$field['title']}" title="{$field['title']}" />
 											</div>
 										{/if}
-										<div class="col-lg-9">
+										<div class="col-lg-5">
 											<input type="file" name="{$key}" />
 										</div>
 						            {elseif $field['type'] == 'color'}

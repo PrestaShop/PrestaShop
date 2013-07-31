@@ -28,6 +28,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
 
@@ -123,21 +124,21 @@ class AdminOrderPreferencesControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_GIFT_WRAPPING' => array(
 						'title' => $this->l('Offer gift wrapping'),
-						'desc' => $this->l('Suggest gift-wrapping to customers.'),
+						'hint' => $this->l('Suggest gift-wrapping to customers.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
 					'PS_GIFT_WRAPPING_PRICE' => array(
 						'title' => $this->l('Gift-wrapping price'),
-						'desc' => $this->l('Set a price for gift wrapping'),
+						'hint' => $this->l('Set a price for gift wrapping'),
 						'validation' => 'isPrice',
 						'cast' => 'floatval',
 						'type' => 'price'
 					),
 					'PS_GIFT_WRAPPING_TAX_RULES_GROUP' => array(
 						'title' => $this->l('Gift-wrapping tax'),
-						'desc' => $this->l('Set a tax for gift wrapping'),
+						'hint' => $this->l('Set a tax for gift wrapping'),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'select',
@@ -146,7 +147,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 					),
 					'PS_RECYCLABLE_PACK' => array(
 						'title' => $this->l('Offer recycled packaging'),
-						'desc' => $this->l('Suggest recycled packaging to customer'),
+						'hint' => $this->l('Suggest recycled packaging to customer'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'

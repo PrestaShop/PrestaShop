@@ -185,10 +185,10 @@ function getPath($urlBase, $id_category, $path = '', $highlight = '', $categoryT
 		$edit = '<a href="'.$urlBase.'&id_cms_category='.$category->id.'&addcategory&token=' . Tools::getAdminToken('AdminCmsContent'.(int)(Tab::getIdFromClassName('AdminCmsContent')).(int)$context->employee->id).'">
 				<img src="../img/admin/edit.gif" alt="Modify" /></a> ';
 		if ($category->id == 1)
-			$edit = '<a href="'.$urlBase.'&id_cms_category='.$category->id.'&viewcategory&token=' . Tools::getAdminToken('AdminCmsContent'.(int)(Tab::getIdFromClassName('AdminCmsContent')).(int)$context->employee->id).'">
-					<img src="../img/admin/home.gif" alt="Home" /></a> ';
-		$path = $edit.'<a href="'.$urlBase.'&id_cms_category='.$category->id.'&viewcategory&token=' . Tools::getAdminToken('AdminCmsContent'.(int)(Tab::getIdFromClassName('AdminCmsContent')).(int)$context->employee->id).'">
-		'.$name.'</a> > '.$path;
+			$edit = '<li><a href="'.$urlBase.'&id_cms_category='.$category->id.'&viewcategory&token=' . Tools::getAdminToken('AdminCmsContent'.(int)(Tab::getIdFromClassName('AdminCmsContent')).(int)$context->employee->id).'">
+					<i class="icon-home"></i></a></li> ';
+		$path = $edit.'<li><a href="'.$urlBase.'&id_cms_category='.$category->id.'&viewcategory&token=' . Tools::getAdminToken('AdminCmsContent'.(int)(Tab::getIdFromClassName('AdminCmsContent')).(int)$context->employee->id).'">
+		'.$name.'</a></li> > '.$path;
 		if ($category->id == 1)
 			return substr($path, 0, strlen($path) - 3);
 		return getPath($urlBase, $category->id_parent, $path, '', 'cms');
