@@ -776,6 +776,33 @@ class ToolsCore
 	{
 		return (Tools::dieObject($object, $kill));
 	}
+	
+	public static function debug_backtrace($start = 0, $limit = null)
+	{
+		$backtrace = debug_backtrace();
+		array_shift($backtrace);
+		for ($i = 0; $i < $start; ++$i)
+			array_shift($backtrace);
+		
+		echo '
+		<div style="margin:10px;padding:10px;border:1px solid #666666">
+			<ul>';
+		$i = 0;
+		foreach ($backtrace as $id => $trace)
+		{
+			if ((int)$limit && (++$i > $limit ))
+				break;
+			$relative_file = (isset($trace['file'])) ? 'in /'.ltrim(str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $trace['file']), '/') : '';
+			$current_line = (isset($trace['line'])) ? ':'.$trace['line'] : '';
+
+			echo '<li>
+				<b>'.((isset($trace['class'])) ? $trace['class'] : '').((isset($trace['type'])) ? $trace['type'] : '').$trace['function'].'</b>
+				'.$relative_file.$current_line.'
+			</li>';
+		}
+		echo '</ul>
+		</div>';
+	}
 
 	/**
 	* ALIAS OF dieObject() - Display an error with detailed object but don't stop the execution
