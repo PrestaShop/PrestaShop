@@ -25,6 +25,7 @@
 
 <div id="carrier_logo_block">
 	<img id="carrier_logo_img" src="{if $carrier_logo}{$carrier_logo}{else}../img/admin/carrier-default.jpg{/if}" />
+	<br/>
 	<a id="carrier_logo_remove" {if !$carrier_logo}style="display:none"{/if} href="javascript:removeCarrierLogo();"><img src="../img/admin/disabled.gif" /> {l s='Remove the logo'}</a>
 </div>
 
@@ -33,7 +34,7 @@
 
 	function removeCarrierLogo()
 	{
-		$('#carrier_logo_img').attr('src', '../img/404.gif');
+		$('#carrier_logo_img').attr('src', '../img/admin/carrier-default.jpg');
 		$('#logo').val('null');
 		fixCarrierLogoDisplay();
 		$('#carrier_logo_remove').hide();
