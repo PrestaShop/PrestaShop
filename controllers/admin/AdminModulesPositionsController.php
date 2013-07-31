@@ -402,7 +402,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 		$content .= '
 				<br />
 				<select id="em_list_'.$shop_id.'" size="45" multiple="multiple" style="width:237px">
-					<option disabled="disabled">'.$this->l('___________ CUSTOM ___________').'</option>';
+					<option disabled="disabled">'.$this->l('___________ MODULES __________').'</option>';
 		
 		// @todo do something better with controllers
 		$controllers = Dispatcher::getControllers(_PS_FRONT_CONTROLLER_DIR_);

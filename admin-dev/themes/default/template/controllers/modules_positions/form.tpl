@@ -73,39 +73,40 @@
 	</fieldset>
 </form>
 <script type="text/javascript">
-	//<![CDATA	
+	//<![CDATA
+	function position_exception_textchange()
+	{
+		// TODO : Add & Remove automatically the "custom pages" in the "em_list_x"
+		var obj = $(this);
+		var shopID = obj.attr('id').replace(/\D/g, '');
+		var list = obj.parent().find('#em_list_' + shopID);
+		var values = obj.val().split(',');
+		var len = values.length;
+		
+		list.find('option').prop('selected', false);
+		for (var i = 0; i < len; i++)
+			list.find('option[value="' + $.trim(values[i]) + '"]').prop('selected', true);
+	}
+	function position_exception_listchange()
+	{
+		var obj = $(this);
+		var shopID = obj.attr('id').replace(/\D/g, '');
+		var str = obj.val().join(', ');
+		
+		obj.parent().find('#em_text_' + shopID).val(str);
+	}
+	
 	$(document).ready(function()
 	{
-		function position_exception_textchange(obj)
+		$('form[id="hook_module_form"] input[id^="em_text_"]').each( function ()
 		{
-			var shopID = obj.attr('id').replace(/\D/g, '');
-			var list = obj.parent().find('#em_list_' + shopID);
-			var values = obj.val().split(',');
-			var len = values.length;
-	
-			list.find('option').prop('selected', false);
-			for (var i = 0; i < len; i++)
-				list.find('option[value="' + $.trim(values[i]) + '"]').prop('selected', true);			
-		}
+			$(this).change( position_exception_textchange 
+			).change();
+		});
 
-		function position_exception_listchange(obj)
+		$('form[id="hook_module_form"] select[id^="em_list_"]').each( function ()
 		{
-			var shopID = obj.attr('id').replace(/\D/g, '');
-			var str = '';
-			obj.find('option:selected').each(function(){
-				str += obj.val()+', ';
-			});
-	
-			if (str.length > 2)
-				str = str.substr(0, str.length - 2);
-			obj.parent().find('#em_text_' + shopID).val(str);
-		}
-		
-		$('form[id="hook_module_form"] input[id^="em_text_"]').on('change', function(){
-				position_exception_textchange($(this));
-			}).change();	
-		$('form[id="hook_module_form"] select[id^="em_list_"]').on('change', function(){
-				position_exception_listchange($(this));
+			$(this).change( position_exception_listchange );
 		});
 	});
 	//]]>
