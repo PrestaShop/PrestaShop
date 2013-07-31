@@ -138,20 +138,20 @@
 		<td>
 			<div class="btn-group btn-group-action">
 			{foreach $actions AS $key => $action}
-				{if $key==0}
-				<span class="btn btn-default btn-small">
-					{$tr.$action}
-				</span>
-				<button class="btn btn-default btn-small dropdown-toggle" data-toggle="dropdown">
-					<span class="caret"></span>&nbsp;
-				</button>
-				<ul class="dropdown-menu">
-				{else}
-					<li>
-					{if isset($tr.$action)}
+				{if isset($tr.$action)}
+					{if $key==0}
+					<span class="btn btn-default btn-small">
 						{$tr.$action}
+					</span>
+					<button class="btn btn-default btn-small dropdown-toggle" data-toggle="dropdown">
+						<span class="caret"></span>&nbsp;
+					</button>
+					<ul class="dropdown-menu">
+					{else}
+						<li>
+							{$tr.$action}
+						</li>
 					{/if}
-					</li>
 				{/if}
 			{/foreach}
 				</ul>
