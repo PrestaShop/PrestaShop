@@ -46,7 +46,7 @@ function set_product_suppliers()
 				`id_currency`)
 			VALUES
 			("'.(int)$row['id_product'].'", "0", "'.(int)$row['id_supplier'].'", 
-			"'.(int)$row['supplier_reference'].'", "'.(int)$row['wholesale_price'].'", 
+			"'.pSQL($row['supplier_reference']).'", "'.(int)$row['wholesale_price'].'", 
 				"'.(int)$ps_currency_default.'"
 		');
 
@@ -68,7 +68,7 @@ function set_product_suppliers()
 				`product_supplier_price_te`, `id_currency`)
 				VALUES
 				("'.(int)$row['id_product'].'", "'.(int)$attribute['id_product_attribute'].'", 
-				"'.(int)$row['id_supplier'].'", "'.(int)$attribute['supplier_reference'].'", 
+				"'.(int)$row['id_supplier'].'", "'.pSQL($attribute['supplier_reference']).'", 
 				"'.(int)$attribute['wholesale_price'].'", "'.(int)$ps_currency_default.'")
 			');
 		}
