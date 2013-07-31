@@ -23,7 +23,7 @@
 					<td class="border_top border_bottom border_bold"><span class="fees_all" {if $ranges|count == 0}style="display:none" {/if}>All</span></td>
 					<td></td>
 					{foreach from=$ranges key=r item=range}
-						<td class="center border_top border_bottom">
+						<td class="center border_top border_bottom {if $range.id_range != -1} validated {/if}"  >
 							<input type="text" {if isset($form_id) &&  !$form_id} disabled="disabled"{/if} {if $range.id_range == -1} style="display:none"{/if} />
 							{if $range.id_range == -1} <button class="button">{l s="Validate"}</button> {/if}
 						</td>

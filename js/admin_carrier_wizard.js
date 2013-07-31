@@ -208,6 +208,10 @@ function resizeWizard()
 
 function bind_inputs()
 {
+	$('input').focus( function () {
+		$(this).removeClass('field_error');
+	});
+	
 	$('tr.delete_range td button').off('click').on('click', function () {
 		if (confirm(delete_range_confirm))
 		{
@@ -316,6 +320,10 @@ function bind_inputs()
 			}
 		});
 	});
+	
+	$('#zones_table td input[type=text]').off('change').on('change', function () {
+		checkAllFieldIsNumeric();
+	});	
 }
 
 function validateRange(index)
@@ -426,27 +434,20 @@ function add_new_range()
 	return false;
 }
 
-function checkFeesForEnableZone(index)
-{
-	is_ok = true;
-	$('tr.fees').each( function () {
-		$(this).find('td:eq('+index+') input').each( function () {
-			if (!$(this).attr('disabled'))
-			{
-				if ($(this).val() == '')
-					is_ok = false;
-			}
-		});
-	});
-	return is_ok;
-}
-
 function delete_new_range()
 {
 	if ($('#new_range_form_placeholder').children('td').length = 1)
 		return false;
 }
 
+function checkAllFieldIsNumeric()
+{
+	$('#zones_table td input[type=text]').each( function () {
+		console.log(this);
+		if (!$.isNumeric($(this).val()) && $(this).val() != '')
+			$(this).addClass('field_error');
+	});
+}
 
 function rebuildTabindex()
 {
@@ -459,7 +460,6 @@ function rebuildTabindex()
 			j = zones_nbr + j;
 			if ($(this).index() >= 2 && $(this).find('input'))
 				$(this).find('input').attr('tabindex', j);
-			console.log(j);
 		});
 		i++;
 	});
