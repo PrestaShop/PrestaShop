@@ -309,6 +309,7 @@ function bind_inputs()
 			success : function(data) {
 				$('#zone_ranges').replaceWith(data);
 				displayRangeType();
+				bind_inputs();
 			}
 		});
 	});
