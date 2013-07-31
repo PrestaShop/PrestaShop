@@ -94,12 +94,13 @@ class AdminThemesControllerCore extends AdminController
 
 	public function init()
 	{
+
 		// No cache for auto-refresh uploaded logo
 		header('Cache-Control: no-cache, must-revalidate');
 		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 
 		parent::init();
-
+		$this->bootstrap = true;
 		$this->can_display_themes = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP) ? true : false;
 
 		$this->fields_options = array(
@@ -116,13 +117,15 @@ class AdminThemesControllerCore extends AdminController
 					),
 				),
 			),
+
+			/* TO DO - DESC à revoir*/
 			'appearance' => array(
 				'title' =>	$this->l('Appearance'),
 				'icon' =>	'email',
 				'fields' =>	array(
 					'PS_LOGO' => array(
 						'title' => $this->l('Header logo'),
-						'desc' => $this->l('Will appear on main page.').' '.$this->l('Recommended height: 52px. Maximum height on default theme: 65px.'),
+						'hint' => $this->l('Will appear on main page. Recommended height: 52px. Maximum height on default theme: 65px.'),
 						'type' => 'file',
 						'thumb' => _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()
 					),
@@ -153,27 +156,27 @@ class AdminThemesControllerCore extends AdminController
 					'PS_FAVICON' => array(
 						'title' => $this->l('Favicon'),
 						'hint' => $this->l('Only ICO format allowed'),
-						'desc' => $this->l('Will appear in the address bar of your web browser.'),
+						'hint' => $this->l('Will appear in the address bar of your web browser.'),
 						'type' => 'file',
 						'thumb' => _PS_IMG_.Configuration::get('PS_FAVICON').'?date='.time()
 					),
 					'PS_STORES_ICON' => array(
 						'title' => $this->l('Store icon'),
 						'hint' => $this->l('Only GIF format allowed.'),
-						'desc' => $this->l('Will appear on the store locator (inside Google Maps).').'<br />'.$this->l('Suggested size: 30x30, Transparent GIF'),
+						'hint' => $this->l('Will appear on the store locator (inside Google Maps).').'<br />'.$this->l('Suggested size: 30x30, Transparent GIF'),
 						'type' => 'file',
 						'thumb' => _PS_IMG_.Configuration::get('PS_STORES_ICON').'?date='.time()
 					),
 					'PS_NAVIGATION_PIPE' => array(
 						'title' => $this->l('Navigation pipe'),
-						'desc' => $this->l('Used for the navigation path inside categories/product.'),
+						'hint' => $this->l('Used for the navigation path inside categories/product.'),
 						'cast' => 'strval',
 						'type' => 'text',
 						'size' => 20
 					),
 					'PS_ALLOW_MOBILE_DEVICE' => array(
 						'title' => $this->l('Enable the mobile theme.'),
-						'desc' => $this->l('Allows visitors browsing on mobile devices to view a lighter version of your website.'),
+						'hint' => $this->l('Allows visitors browsing on mobile devices to view a lighter version of your website.'),
 						'type' => 'radio',
 						'required' => true,
 						'validation' => 'isGenericName',
@@ -186,7 +189,7 @@ class AdminThemesControllerCore extends AdminController
 					),
 					'PS_MAIL_COLOR' => array(
 						'title' => $this->l('Mail color'),
-						'desc' => $this->l('Your mail will be highlighted in this color. HTML colors only, please (e.g.').' "lightblue", "#CC6600")',
+						'hint' => $this->l('Your mail will be highlighted in this color. HTML colors only, please (e.g.').' "lightblue", "#CC6600")',
 						'type' => 'color',
 						'name' => 'PS_MAIL_COLOR',
 						'size' => 30,					
@@ -201,15 +204,12 @@ class AdminThemesControllerCore extends AdminController
 			'id_theme' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
-				'width' => 20,
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
-				'width' => 'auto',
 			),
 			'directory' => array(
 				'title' => $this->l('Directory'),
-				'width' => 'auto',
 			),
 		);
 	}
@@ -252,14 +252,13 @@ class AdminThemesControllerCore extends AdminController
 			'tinymce' => false,
 			'legend' => array(
 				'title' => $this->l('Theme'),
-				'image' => '../img/admin/themes.gif'
+				'icon' => 'icon-picture'
 			),
 			'input' => array(
 				array(
 					'type' => 'text',
 					'label' => $this->l('Name of the theme:'),
 					'name' => 'name',
-					'size' => 48,
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
 				),
@@ -277,7 +276,7 @@ class AdminThemesControllerCore extends AdminController
 					'label' => $this->l('Name of the theme\'s directory:'),
 					'name' => 'directory',
 					'required' => true,
-					'desc' => $this->l('If the directory does not exists, it will be created.'),
+					'hint' => $this->l('If the directory does not exists, it will be created.'),
 				);
 
 			$theme_query = Theme::getThemes();
@@ -285,7 +284,7 @@ class AdminThemesControllerCore extends AdminController
 				'type' => 'select',
 				'name' => 'based_on',
 				'label' => $this->l('Copy missing files from existing theme:'),
-				'desc' => $this->l('If you create a new theme, it\'s recommended that you use default theme files.'),
+				'hint' => $this->l('If you create a new theme, it\'s recommended that you use default theme files.'),
 				'options' => array(
 					'id' => 'id', 'name' => 'name', 
 					'default' => array('value' => 0, 'label' => '&nbsp;-&nbsp;'),
@@ -300,10 +299,9 @@ class AdminThemesControllerCore extends AdminController
 					'name' => 'directory',
 					'required' => true,
 					'br' => true,
-					'class' => 't',
 					'values' => $available_theme_dir,
 					'selected' => $selected_theme_dir,
-					'desc' => $this->l('Please select a valid theme directory.'),
+					'hint' => $this->l('Please select a valid theme directory.'),
 				);
 
 		return parent::renderForm();

@@ -28,6 +28,7 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
 
@@ -51,7 +52,7 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_REGISTRATION_PROCESS_TYPE' => array(
 						'title' => $this->l('Registration process type'),
-						'desc' => $this->l('The "Only account creation" registration option allows the customer to register faster, and create his/her address later.'),
+						'hint' => $this->l('The "Only account creation" registration option allows the customer to register faster, and create his/her address later.'),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'select',
@@ -60,21 +61,21 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 					),
 					'PS_ONE_PHONE_AT_LEAST' => array(
 						'title' => $this->l('Phone number'),
-						'desc' => $this->l('If you chose yes, your customer will have to provide at least one phone number to register.'),
+						'hint' => $this->l('If you chose yes, your customer will have to provide at least one phone number to register.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
 					'PS_CART_FOLLOWING' => array(
 						'title' => $this->l('Cart re-display at login'),
-						'desc' => $this->l('After customer logs in, you can recall and display the content of his/her last shopping cart.'),
+						'hint' => $this->l('After customer logs in, you can recall and display the content of his/her last shopping cart.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
 					'PS_CUSTOMER_CREATION_EMAIL' => array(
 						'title' => $this->l('Send an email after registration'),
-						'desc' => $this->l('Send an email with summary account (email, password) after registration.'),
+						'hint' => $this->l('Send an email with summary account (email, password) after registration.'),
 						'validation' => 'isUnsignedInt',
 						'validation' => 'isBool',
 						'cast' => 'intval',
@@ -82,7 +83,7 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 					),
 					'PS_PASSWD_TIME_FRONT' => array(
 						'title' => $this->l('Regenerate password'),
-						'desc' => $this->l('Minimum time required to regenerate a password.'),
+						'hint' => $this->l('Minimum time required to regenerate a password.'),
 						'validation' => 'isUnsignedInt',
 						'cast' => 'intval',
 						'size' => 5,
@@ -91,7 +92,7 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 					),
 					'PS_B2B_ENABLE' => array(
 						'title' => $this->l('Enable B2B mode'),
-						'desc' => $this->l('Activate or deactivate B2B mode. When this option is enabled, B2B features will be made available.'),
+						'hint' => $this->l('Activate or deactivate B2B mode. When this option is enabled, B2B features will be made available.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'

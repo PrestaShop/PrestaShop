@@ -41,8 +41,7 @@
 {/block}
 
 {block name="after"}
-	<br/><br/>
-	<fieldset id="prestastore-content" class="width3"></fieldset>
+	<fieldset id="prestastore-content" class="col-lg-12"></fieldset>
 	<script type="text/javascript">
 		$.post(
 			"ajax-tab.php",
@@ -53,7 +52,7 @@
 				action:'getAddonsThemes',
 				page:'themes'
 			}, function(a){
-				$("#prestastore-content").html("<legend><img src='../img/admin/prestastore.gif' class='middle' />{l s='Live from PrestaShop Addons!'}</legend>"+a);
+				$("#prestastore-content").html("<h3><i class='icon-puzzle-piece'></i> {l s='Live from PrestaShop Addons!'}</h3>"+a);
 			});
 	</script>
 {/block}
