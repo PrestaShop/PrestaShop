@@ -27,10 +27,10 @@
 
 <form action="{$action_fees}" id="fees" name="fees" method="post" class="form-horizontal">
 	<fieldset class="col-lg-12">
-		<legend>
+		<h3>
 			<i class="icon-truck"></i>
 			{l s='Fees by carrier, geographical zone and ranges'}
-		</legend>
+		</h3>
 		{if empty($carriers)}
 			{l s='If you only have free carriers, there\'s no need to configure delivery prices.'}
 		{else}
