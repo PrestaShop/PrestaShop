@@ -35,5 +35,15 @@
 			<a href="#" onclick="add_new_range();return false;" class="button" id="add_new_range">{l s='Add new range'}<img src="../img/admin/add.gif"/></a>
 		</div>
 	{/if}
+	{if $input.name == 'logo'}
+		<div class="margin-form">
+			<input id="carrier_logo_input" type="file" onchange="uploadCarrierLogo();" name="carrier_logo_input" />
+			<input type="hidden" id="logo" name="logo" value="" />
+			<p class="preference_description">
+				{l s='Format:'} JPG, GIF, PNG. {l s='Filesize:'} {$max_image_size|string_format:"%.2f"} {l s='MB max.'}
+				<br />{l s='Current size:'} <span id="carrier_logo_size">{l s='undefined'}</span>.
+			</p>
+		</div>
+	{/if}
 	{$smarty.block.parent}
 {/block}

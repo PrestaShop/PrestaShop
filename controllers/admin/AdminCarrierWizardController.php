@@ -125,7 +125,6 @@ class AdminCarrierWizardControllerCore extends AdminController
 			array_splice($this->tpl_view_vars['wizard_contents']['contents'], 1, 0, array(0 => $this->renderStepTwo($carrier)));
 			
 		$this->context->smarty->assign(array(
-			'max_image_size' => (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE') / 1024 / 1024,
 			'carrier_logo' => (Validate::isLoadedObject($carrier) && file_exists(_PS_SHIP_IMG_DIR_.$carrier->id.'.jpg') ? _THEME_SHIP_DIR_.$carrier->id.'.jpg' : false)
 		));
 		$this->content .= $this->createTemplate('logo.tpl')->fetch();
@@ -189,6 +188,11 @@ class AdminCarrierWizardControllerCore extends AdminController
 						'desc' => $this->l('Enter "0" for a longest shipping delay, or "9" for the shortest shipping delay.')
 					),
 					array(
+						'type' => 'logo',
+						'label' => $this->l('Logo:'),
+						'name' => 'logo',
+					),
+					array(
 						'type' => 'text',
 						'label' => $this->l('Tracking URL:'),
 						'name' => 'url',
@@ -197,9 +201,10 @@ class AdminCarrierWizardControllerCore extends AdminController
 					),
 				)),
 		);
-
+		
+		$tpl_vars = array('max_image_size' => (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE') / 1024 / 1024);
 		$fields_value = $this->getStepOneFieldsValues($carrier);
-		return $this->renderGenericForm(array('form' => $this->fields_form), $fields_value);
+		return $this->renderGenericForm(array('form' => $this->fields_form), $fields_value, $tpl_vars);
 	}
 
 	public function renderStepTwo($carrier)
@@ -488,10 +493,12 @@ class AdminCarrierWizardControllerCore extends AdminController
 	{
 		$id_tax_rules_group = (is_object($this->object) && !$this->object->id) ? Carrier::getIdTaxRulesGroupMostUsed() : $this->getFieldValue($carrier, 'id_tax_rules_group');
 		
+		$shipping_handling = (is_object($this->object) && !$this->object->id) ? 0 : $this->getFieldValue($carrier, 'shipping_handling');
+		
 		return array(
 			'is_free' => $this->getFieldValue($carrier, 'is_free'),
 			'id_tax_rules_group' => (int)$id_tax_rules_group,
-			'shipping_handling' => $this->getFieldValue($carrier, 'shipping_handling'),
+			'shipping_handling' => $shipping_handling,
 			'shipping_method' => $this->getFieldValue($carrier, 'shipping_method'),
 			'range_behavior' =>  $this->getFieldValue($carrier, 'range_behavior'),
 			'zones' =>  $this->getFieldValue($carrier, 'zones'),
