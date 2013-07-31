@@ -1,4 +1,4 @@
-		<script>var zones_nbr = {$zones|count};</script>
+		<script>var zones_nbr = {$zones|count +3} ; /*corresponds to the third input text (max, min and all)*/</script>
 		<div style="float:left" id="zone_ranges">
 			<table cellpadding="5" cellspacing="0" id="zones_table">
 				<tr class="range_inf">
