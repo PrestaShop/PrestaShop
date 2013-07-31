@@ -32,7 +32,7 @@
 		</p>
 	{/if}
 
-	{if !$simple_header}
+	{if !$simple_header && $list_total > 20}
 	<div class="table-pagination pull-right">
 		<span>
 		{if $page > 1}
