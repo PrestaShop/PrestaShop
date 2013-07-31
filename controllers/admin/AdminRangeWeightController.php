@@ -60,7 +60,7 @@ class AdminRangeWeightControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Weight ranges'),
-				'image' => '../img/t/AdminRangeWeight.gif'
+				'icon' => 'icon-suitcase'
 			),
 			'input' => array(
 				array(
@@ -68,36 +68,34 @@ class AdminRangeWeightControllerCore extends AdminController
 					'label' => $this->l('Carrier:'),
 					'name' => 'id_carrier',
 					'required' => false,
-					'desc' => $this->l('You can apply this range to a different carrier by selecting its name.'),
+					'hint' => $this->l('You can apply this range to a different carrier by selecting its name.'),
 					'options' => array(
 						'query' => $carriers,
 						'id' => 'id_carrier',
 						'name' => 'name'
 					),
-					'empty_message' => '<div style="margin:5px 0 10px 0">'.$this->l('There is no carrier available for this weight range.').'</div>'
+					'empty_message' => '<p class="alert alert-block">'.$this->l('There is no carrier available for this weight range.').'</p>'
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('From:'),
 					'name' => 'delimiter1',
-					'size' => 5,
 					'required' => true,
 					'suffix' => Configuration::get('PS_WEIGHT_UNIT'),
-					'desc' => $this->l('Start range (included)'),
+					'hint' => $this->l('Start range (included)'),
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('To:'),
 					'name' => 'delimiter2',
-					'size' => 5,
 					'required' => true,
 					'suffix' => Configuration::get('PS_WEIGHT_UNIT'),
-					'desc' => $this->l('End range (excluded)'),
+					'hint' => $this->l('End range (excluded)'),
 				),
 			),
 			'submit' => array(
 				'title' => $this->l('   Save   '),
-				'class' => 'button'
+				'class' => 'btn btn-default'
 			)
 		);
 

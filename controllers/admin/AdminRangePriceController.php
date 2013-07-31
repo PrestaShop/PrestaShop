@@ -62,7 +62,7 @@ class AdminRangePriceControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Price ranges'),
-				'image' => '../img/t/AdminRangePrice.gif'
+				'icon' => 'icon-money'
 			),
 			'input' => array(
 				array(
@@ -70,13 +70,13 @@ class AdminRangePriceControllerCore extends AdminController
 					'label' => $this->l('Carrier:'),
 					'name' => 'id_carrier',
 					'required' => false,
-					'desc' => $this->l('You can apply this range to a different carrier by selecting its name.'),
+					'hint' => $this->l('You can apply this range to a different carrier by selecting its name.'),
 					'options' => array(
 						'query' => $carriers,
 						'id' => 'id_carrier',
 						'name' => 'name'
 					),
-					'empty_message' => '<div style="margin:5px 0 10px 0">'.$this->l('There is no carrier available for this price range.').'</div>'
+					'empty_message' => '<p class="alert alert-block">'.$this->l('There is no carrier available for this price range.').'</p>'
 				),
 				array(
 					'type' => 'text',
@@ -84,7 +84,7 @@ class AdminRangePriceControllerCore extends AdminController
 					'name' => 'delimiter1',
 					'required' => true,
 					'suffix' => $currency->getSign('right').' '.$this->l('(Tax Incl.)'),
-					'desc' => $this->l('Start range (included)'),
+					'hint' => $this->l('Start range (included)'),
 					'string_format' => '%.2f'
 				),
 				array(
@@ -93,13 +93,13 @@ class AdminRangePriceControllerCore extends AdminController
 					'name' => 'delimiter2',
 					'required' => true,
 					'suffix' => $currency->getSign('right').' '.$this->l('(Tax Incl.)'),
-					'desc' => $this->l('End range (excluded)'),
+					'hint' => $this->l('End range (excluded)'),
 					'string_format' => '%.2f'
 				),
 			),
 			'submit' => array(
-				'title' => $this->l('   Save   '),
-				'class' => 'button'
+				'title' => $this->l('Save'),
+				'class' => 'btn btn-default'
 			)
 		);
 
