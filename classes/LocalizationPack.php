@@ -71,10 +71,15 @@ class LocalizationPackCore
 		}
 		foreach ($selection as $selected)
 			if (strtolower((string)$selected) == 'currencies')
+			{
 				if (!Validate::isLocalizationPackSelection($selected) || !$this->{'_install'.ucfirst($selected)}($xml, true))
 					return false;
-			elseif (!Validate::isLocalizationPackSelection($selected) || !$this->{'_install'.ucfirst($selected)}($xml))
-				return false;
+			}
+			else
+			{
+				if (!Validate::isLocalizationPackSelection($selected) || !$this->{'_install'.ucfirst($selected)}($xml))
+					return false;
+			}
 
 		return true;
 	}
@@ -242,8 +247,6 @@ class LocalizationPackCore
 	{
 		if (isset($xml->currencies->currency))
 		{
-
-
 			foreach ($xml->currencies->currency as $data)
 			{
 				$attributes = $data->attributes();
