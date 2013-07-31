@@ -394,21 +394,26 @@ class AdminModulesPositionsControllerCore extends AdminController
 		if (!is_array($file_list))
 			$file_list = ($file_list) ? array($file_list) : array();
 
-		$content = '<input type="text" name="exceptions['.$shop_id.']" size="40" value="'.implode(', ', $file_list).'" id="em_text_'.$shop_id.'">';
+		$content = '<p><input type="text" name="exceptions['.$shop_id.']" size="40" value="'.implode(', ', $file_list).'" id="em_text_'.$shop_id.'"/></p>';
 		if ($shop_id)
 		{
 			$shop = new Shop($shop_id);
 			$content .= ' ('.$shop->name.')';
 		}
-		$content .= '<br /><select id="em_list_'.$shop_id.'">';
+		$content .= '<p>
+					<select id="em_list_'.$shop_id.'">';
 
 		// @todo do something better with controllers
 		$controllers = Dispatcher::getControllers(_PS_FRONT_CONTROLLER_DIR_);
 		ksort($controllers);
 		foreach ($controllers as $k => $v)
 			$content .= '<option value="'.$k.'">'.$k.'</option>';
-		$content .= '</select> <input type="button" class="button" value="'.$this->l('Add').'" onclick="position_exception_add('.$shop_id.')" />
-				<input type="button" class="button" value="'.$this->l('Remove').'" onclick="position_exception_remove('.$shop_id.')" /><br /><br />';
+		$content .= '</select>
+					</p> 
+					<p>
+						<input type="button" class="btn btn-default" value="'.$this->l('Add').'" onclick="position_exception_add('.$shop_id.')" />
+						<input type="button" class="btn btn-default" value="'.$this->l('Remove').'" onclick="position_exception_remove('.$shop_id.')" />
+					</p>';
 
 		return $content;
 	}

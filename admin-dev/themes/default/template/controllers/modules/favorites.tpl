@@ -2,7 +2,7 @@
 	{include file='controllers/modules/header.tpl'}
 	<div class="row">
 		<div class="col-lg-12">
-			<span class="pull-right">
+			<div class="btn-group pull-right">
 				<a class="btn btn-default" href="index.php?controller={$smarty.get.controller|htmlentities}&token={$smarty.get.token|htmlentities}">
 					<i class="icon-list"></i>
 					{l s='Normal view'} 
@@ -11,7 +11,7 @@
 					<i class="icon-star"></i> 
 					{l s='Favorites view'}
 				</a>
-			</span>
+			</fiv>
 		</div>
 		<div class="col-lg-12">&nbsp;</div>
 		<div id="container" class="col-lg-12">
@@ -31,12 +31,12 @@
 				</colgroup>
 				<thead>
 					<tr class="nodrag nodrop">
-						<th class="center">{l s='Logo'}</th>
-						<th class="center">{l s='Module Name'}</th>
+						<th>{l s='Logo'}</th>
+						<th>{l s='Module Name'}</th>
 						<th>{l s='Description'}</th>
-						<th class="center">{l s='Status'}</th>
+						<th>{l s='Status'}</th>
 						<th>{l s='Tab'}</th>
-						<th class="center">{l s='Categories'}</th>
+						<th>{l s='Categories'}</th>
 						<th>{l s='Interest'}</th>
 						<th>{l s='Favorite'}</th>
 						<th>&nbsp;</th>
@@ -45,16 +45,16 @@
 				<tbody>
 				{foreach from=$modules key=km item=module}
 					<tr height="32" {if $km % 2 eq 0} class="alt_row"{/if}>
-						<td class="center">
+						<td>
 							<img src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}" width="57" height="57" />
 						</td>
-						<td class="center moduleName">
+						<td class="moduleName">
 							<h5>{$module->displayName}</h5>
 						</td>
 						<td>
 							<span class="moduleFavDesc">{$module->description|truncate:80:'...'}</span>
 						</td>
-						<td class="center setup">
+						<td class="setup">
 							{if isset($module->id) && $module->id gt 0}
 								<span class="label label-success">{l s='Installed'}</span>
 							{else}
@@ -77,7 +77,7 @@
 								{/foreach}
 							</select>
 						</td>
-						<td class="center">
+						<td>
 							<span>{$module->categoryName}</span>
 						</td>
 						<td>
@@ -94,7 +94,7 @@
 								<option value="0" {if isset($module->preferences.favorite) && $module->preferences.favorite eq '0'}selected="selected"{/if}>{l s='No'}</option>
 							</select>
 						</td>
-						<td class="center" id="r_{$module->name}">
+						<td  id="r_{$module->name}">
 							<span>&nbsp;</span>
 						</td>
 					</tr>

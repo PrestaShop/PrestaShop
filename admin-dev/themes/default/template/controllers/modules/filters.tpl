@@ -28,7 +28,10 @@
 			<!--start addons login-->
 			<div id="addons_login_div" class="row" >
 				<div class="col-lg-12">
-					<legend>{l s='You are logged into PrestaShop Addons.'}</legend>
+					<h3>
+						<i class="icon-user"></i>
+						{l s='You are logged into PrestaShop Addons.'}
+					</h3>
 					<div class="row">		
 						<label class="control-label col-lg-9">
 							<i class="icon-user"></i> {l s='Welcome'} {$username_addons}
@@ -54,7 +57,10 @@
 			<div id="addons_login_div" class="row">
 				<div class="col-lg-12">
 					<form id="addons_login_form" method="post" class="form-horizontal">
-						<legend>{l s='Do you have a %s account?' sprintf='<a href="http://addons.prestashop.com/">PrestaShop Addons</a>'}</legend>
+						<h3>
+							<i class="icon-user"></i>
+							{l s='Do you have a %s account?' sprintf='<a href="http://addons.prestashop.com/">PrestaShop Addons</a>'}
+						</h3>
 						<div class="row">
 							<label class="control-label col-lg-3">{l s='Addons Login'} :</label> 
 							<div class="input-group col-lg-4">
@@ -84,7 +90,6 @@
 			<!--end addons login-->
 		{/if}
 	{/if}
-	<div class="clear">&nbsp;</div>
 {/if}
 
 <!--start filter module-->

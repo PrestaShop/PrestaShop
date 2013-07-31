@@ -26,29 +26,67 @@
 {include file="toolbar.tpl" toolbar_btn=$toolbar_btn toolbar_scroll=$toolbar_scroll title=$title}
 <div class="leadin">{block name="leadin"}{/block}</div>
 
-<form action="{$url_submit}" id={$table}_form method="post">
+<form action="{$url_submit}" id={$table}_form method="post" class="form-horizontal">
 	{if $display_key}
 		<input type="hidden" name="show_modules" value="{$display_key}" />
 	{/if}
 	<fieldset>
-		<legend><img src="../img/t/AdminModulesPositions.gif" />{l s='Transplant a module'}</legend>
-		<label>{l s='Module'} :</label>
-		<div class="margin-form">
-			<select name="id_module" {if $edit_graft} disabled="disabled"{/if}>
-				{foreach $modules as $module}
-					<option value="{$module->id}" {if $id_module == $module->id || (!$id_module && $show_modules == $module->id)}selected="selected"{/if}>{$module->displayName|stripslashes}</option>
-				{/foreach}
-			</select><sup> *</sup>
+		<h3>
+			<i class="icon-paste"></i>
+			{l s='Transplant a module'}
+		</h3>
+		<div class="row">
+			<label class="control-label col-lg-3 required"> {l s='Module:'}</label>
+			<div class="col-lg-6">
+				<select name="id_module" {if $edit_graft} disabled="disabled"{/if}>
+					{foreach $modules as $module}
+						<option value="{$module->id}" {if $id_module == $module->id || (!$id_module && $show_modules == $module->id)}selected="selected"{/if}>{$module->displayName|stripslashes}</option>
+					{/foreach}
+				</select>
+			</div>
 		</div>
-		<label>{l s='Hook into'} :</label>
-		<div class="margin-form">
-			<select name="id_hook" {if $edit_graft} disabled="disabled"{/if}>
-				{foreach $hooks as $hook}
-					<option value="{$hook['id_hook']}" {if $id_hook == $hook['id_hook']} selected="selected"{/if}>{$hook['name']}{if $hook['name'] != $hook['title']} ({$hook['title']}){/if}</option>
-				{/foreach}
-			</select><sup> *</sup>
+		<div class="row">
+			<label class="control-label col-lg-3 required"> {l s='Hook into'} :</label>
+			<div class="col-lg-6">
+				<select name="id_hook" {if $edit_graft} disabled="disabled"{/if}>
+					{foreach $hooks as $hook}
+						<option value="{$hook['id_hook']}" {if $id_hook == $hook['id_hook']} selected="selected"{/if}>{$hook['name']}{if $hook['name'] != $hook['title']} ({$hook['title']}){/if}</option>
+					{/foreach}
+				</select>
+			</div>
 		</div>
 	
+		<div class="row">
+			<label class="control-label col-lg-3">{l s='Exceptions'} :</label>
+			<div class="col-lg-6">
+				{if !$except_diff}
+					{$exception_list}
+				{else}
+					{foreach $exception_list_diff as $value}
+						{$value}
+					{/foreach}
+				{/if}
+				<div class="alert alert-block">
+					<p>{l s='Please specify the files for which you do not want the module to be displayed.'}.</p>
+					<p>{l s='Please input each filename, separated by a comma.'}.</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-lg-12">
+				{if $edit_graft}
+					<input type="hidden" name="id_module" value="{$id_module}" />
+					<input type="hidden" name="id_hook" value="{$id_hook}" />
+				{/if}
+				<input type="submit" value="{l s='Save'}" name="{if $edit_graft}submitEditGraft{else}submitAddToHook{/if}" id="{$table}_form_submit_btn" class="btn btn-primary" />
+				<p>
+					<span class="text-danger">*</span> 
+					{l s='Required field'}
+				</p>
+			</div>
+		</div>
+
 		<script type="text/javascript">
 			//<![CDATA
 			function position_exception_add(shopID)
@@ -78,28 +116,6 @@
 			}
 			//]]>
 		</script>
-	
-		<label>{l s='Exceptions'} :</label>
-		<div class="margin-form">
-			{if !$except_diff}
-				{$exception_list}
-			{else}
-				{foreach $exception_list_diff as $value}
-					{$value}
-				{/foreach}
-			{/if}
-			{l s='Please specify the files for which you do not want the module to be displayed.'}.<br />
-			{l s='Please input each filename, separated by a comma.'}.
-			<br /><br />
-		</div>
-	
-		<div class="margin-form">
-			{if $edit_graft}
-				<input type="hidden" name="id_module" value="{$id_module}" />
-				<input type="hidden" name="id_hook" value="{$id_hook}" />
-			{/if}
-			<input type="submit" value="{l s='Save'}" name="{if $edit_graft}submitEditGraft{else}submitAddToHook{/if}" id="{$table}_form_submit_btn" class="button" />
-		</div>
-		<div class="small"><sup>*</sup> {l s='Required field'}</div>
+
 	</fieldset>
 </form>

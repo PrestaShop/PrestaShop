@@ -72,7 +72,7 @@
 				{foreach $hooks as $hook}
 					<div class="row-light clearfix">
 						<a name="{$hook['name']}"></a>
-						<table cellpadding="0" cellspacing="0" class="table table-striped table-hover {if $hook['module_count'] >= 2} tableDnD{/if}" id="{$hook['id_hook']}">
+						<table class="table {if $hook['module_count'] >= 2} tableDnD{/if}" id="{$hook['id_hook']}">
 							<colgroup>
 								<col width="10">
 								<col width="30">
@@ -80,94 +80,106 @@
 								<col width="">
 								<col width="50">
 							</colgroup>
-							<tr class="nodrag nodrop">
-								<th colspan="5">	
+							<thead>
+								<tr class="nodrag nodrop">
 									{if $hook['module_count'] && $can_move}
-										<input type="checkbox" id="Ghook{$hook['id_hook']}" style="margin-right: 2px;" onclick="hookCheckboxes({$hook['id_hook']}, 0, this)"/>
+										<th>
+											<input type="checkbox" id="Ghook{$hook['id_hook']}" style="margin-right: 2px;" onclick="hookCheckboxes({$hook['id_hook']}, 0, this)"/>
+										</th>
 									{/if}
-									<span>{$hook['title']} - </span>
-									<span class="badge">{$hook['module_count']} {if $hook['module_count'] > 1}{l s='Modules'}{else}{l s='Module'}{/if} </span>
-									{if !empty($hook['description'])}
-										<p class="text-muted">
-											[{$hook['description']}]
-										</p>
-									{/if}
-									<p>({l s='Technical name: '}{$hook['name']})</p>
-								</th>
-							</tr>
-							{if $hook['module_count']}
-								{foreach $hook['modules'] as $position => $module}
-									{if isset($module['instance'])}
-										<tr id="{$hook['id_hook']}_{$module['instance']->id}" {cycle values='class="alt_row",'}>
-											<td align="center">
-												<input type="checkbox" id="mod{$hook['id_hook']}_{$module['instance']->id}" class="hook{$hook['id_hook']}" onclick="hookCheckboxes({$hook['id_hook']}, 1, this)" name="unhooks[]" value="{$hook['id_hook']}_{$module['instance']->id}"/>
-											</td>
-											{if !$display_key}
-											<td align="center" class="positions">{$module@iteration}</td>
-											<td {if $can_move && $hook['module_count'] >= 2} align=center class="dragHandle"{/if} id="td_{$hook['id_hook']}_{$module['instance']->id}">
-												{if $can_move}
-													<a {if {$module@iteration} == 1} style="display: none;"{/if} href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&direction=0&token={$token}&changePosition#{$hook['name']}">
-														<img src="../img/admin/up.gif" alt="{l s='Up'}" title="{l s='Up'}" />
-													</a><br />
-													<a {if {$module@iteration} == count($hook['modules'])} style="display: none;"{/if} href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&direction=1&token={$token}&changePosition#{$hook['name']}">
-														<img src="../img/admin/down.gif" alt="{l s='Down'}" title="{l s='Down'}" />
-													</a>
-												{/if}
-											</td>
-											<td>
-												<div class="lab_modules_positions" for="mod{$hook['id_hook']}_{$module['instance']->id}">
-										{else}
-											<td colspan="3">
-												<div class="lab_modules_positions" for="mod{$hook['id_hook']}_{$module['instance']->id}">
-										{/if}
-													<h4>
-														<img src="../modules/{$module['instance']->name}/logo.png" alt="{$module['instance']->name|stripslashes}" /> 
-														{$module['instance']->displayName|stripslashes}
-													</h4>
-													<dl class="dl-horizontal">
-														<dt>{l s='Version:'}</dt>
-														<dd>
-															{if $module['instance']->version}v{if $module['instance']->version|intval == $module['instance']->version}{sprintf('%.1f', $module['instance']->version)}{else}{$module['instance']->version|floatval}{/if}{/if}
-														</dd>
-														<dt>{l s='Description:'}</dt>
-														<dd>
-															{$module['instance']->description}
-														</dd>
-													</dl>
-												</div>
-											</td>
-											<td>
-												<div class="btn-group btn-group-action">
-													<span class="btn btn-default btn-small">{l s='Choose an action'}</span>
-													<button class="btn btn-default btn-small dropdown-toggle" data-toggle="dropdown">
-														<span class="caret"></span>&nbsp;
-													</button>
-													<ul class="dropdown-menu">
-														<li>
-															<a href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&editGraft{if $display_key}&show_modules={$display_key}{/if}&token={$token}">
-																<i class="icon-pencil"></i>
-																{l s='Edit'}
-															</a>
-														</li>
-														<li>
-															<a href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&deleteGraft{if $display_key}&show_modules={$display_key}{/if}&token={$token}">
-																<i class="icon-trash"></i>
-																{l s='Delete'}
-															</a>
-														</li>
-													</ul>
-												</div>
-											</td>
-										</tr>
-									{/if}
-								{/foreach}
-							{else}
-								<tr>
-									<td colspan="5">
-										<p class="text-warning">{l s='No module was found for this hook.'}</p>
-									</td>
+									<th colspan="5">	
+										<h3>
+											{$hook['title']} - 
+											<span class="badge">{$hook['module_count']} {if $hook['module_count'] > 1}{l s='Modules'}{else}{l s='Module'}{/if} </span>
+											<span>({l s='Technical name: '}{$hook['name']})</span>
+										</h3>
+									</th>
 								</tr>
-							{/if}
+							</thead>
+							<tbody>
+								{if !empty($hook['description'])}
+									<tr>
+										<td colspan="5">
+											<p class="text-muted">
+												[{$hook['description']}]
+											</p>
+										</td>
+									</tr>
+								{/if}
+								{if $hook['module_count']}
+									{foreach $hook['modules'] as $position => $module}
+										{if isset($module['instance'])}
+											<tr id="{$hook['id_hook']}_{$module['instance']->id}" {cycle values='class="alt_row",'}>
+												<td align="center">
+													<input type="checkbox" id="mod{$hook['id_hook']}_{$module['instance']->id}" class="hook{$hook['id_hook']}" onclick="hookCheckboxes({$hook['id_hook']}, 1, this)" name="unhooks[]" value="{$hook['id_hook']}_{$module['instance']->id}"/>
+												</td>
+												{if !$display_key}
+												<td align="center" class="positions">{$module@iteration}</td>
+												<td {if $can_move && $hook['module_count'] >= 2} align=center class="dragHandle"{/if} id="td_{$hook['id_hook']}_{$module['instance']->id}">
+													{if $can_move}
+														<a {if {$module@iteration} == 1} style="display: none;"{/if} href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&direction=0&token={$token}&changePosition#{$hook['name']}">
+															<img src="../img/admin/up.gif" alt="{l s='Up'}" title="{l s='Up'}" />
+														</a><br />
+														<a {if {$module@iteration} == count($hook['modules'])} style="display: none;"{/if} href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&direction=1&token={$token}&changePosition#{$hook['name']}">
+															<img src="../img/admin/down.gif" alt="{l s='Down'}" title="{l s='Down'}" />
+														</a>
+													{/if}
+												</td>
+												<td>
+													<div class="lab_modules_positions" for="mod{$hook['id_hook']}_{$module['instance']->id}">
+											{else}
+												<td colspan="3">
+													<div class="lab_modules_positions" for="mod{$hook['id_hook']}_{$module['instance']->id}">
+											{/if}
+														<h4>
+															<img src="../modules/{$module['instance']->name}/logo.png" alt="{$module['instance']->name|stripslashes}" /> 
+															{$module['instance']->displayName|stripslashes}
+														</h4>
+														<dl class="dl-horizontal">
+															<dt>{l s='Version:'}</dt>
+															<dd>
+																{if $module['instance']->version}v{if $module['instance']->version|intval == $module['instance']->version}{sprintf('%.1f', $module['instance']->version)}{else}{$module['instance']->version|floatval}{/if}{/if}
+															</dd>
+															<dt>{l s='Description:'}</dt>
+															<dd>
+																{$module['instance']->description}
+															</dd>
+														</dl>
+													</div>
+												</td>
+												<td>
+													<div class="btn-group btn-group-action">
+														<span class="btn btn-default btn-small">{l s='Choose an action'}</span>
+														<button class="btn btn-default btn-small dropdown-toggle" data-toggle="dropdown">
+															<span class="caret"></span>&nbsp;
+														</button>
+														<ul class="dropdown-menu">
+															<li>
+																<a href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&editGraft{if $display_key}&show_modules={$display_key}{/if}&token={$token}">
+																	<i class="icon-pencil"></i>
+																	{l s='Edit'}
+																</a>
+															</li>
+															<li>
+																<a href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&deleteGraft{if $display_key}&show_modules={$display_key}{/if}&token={$token}">
+																	<i class="icon-trash"></i>
+																	{l s='Delete'}
+																</a>
+															</li>
+														</ul>
+													</div>
+												</td>
+											</tr>
+										{/if}
+									{/foreach}
+								{else}
+									<tr>
+										<td colspan="5">
+											<p class="text-warning">{l s='No module was found for this hook.'}</p>
+										</td>
+									</tr>
+								{/if}
+							</tbody>
 						</table>
 					</div>
 				{/foreach}

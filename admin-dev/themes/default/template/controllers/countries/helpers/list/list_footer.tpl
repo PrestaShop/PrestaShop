@@ -55,6 +55,7 @@
 	</tr>
 </table>
 <input type="hidden" name="token" value="{$token}" />
+</fieldset>
 </form>
 
 <script type="text/javascript">

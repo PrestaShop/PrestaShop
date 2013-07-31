@@ -23,29 +23,33 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<legend>{l s='Modules list'}</legend>
-<div id="modules_list_container_tab" class="row">
-	<div class="col-lg-12">
-		{if count($modules_list)}
-			<table border="0" cellpadding="0" cellspacing="5" class="table table-striped table-hover">
-				{counter start=1  assign="count"}
-					{foreach from=$modules_list item=module}	
-						<div style="width:400px">{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",row alt"}}</div>
-						{if $count %3 == 0}
-			</li>
-			<li>
-						{/if}
-					{counter}
-				{/foreach}
-			</table>
-		{else}
-			<table border="0" cellpadding="0" cellspacing="5" class="table table-striped table-hover">
-				<tr>
-					<td>
-						<div class="alert alert-block">{l s='No modules available in this section.'}</div>
-					</td>
-				</tr>
-			</table>
-		{/if}
+<fieldset>
+	<h3>
+		<i class="icon-list-ul"></i>
+		{l s='Modules list'}
+	</h3>
+	<div id="modules_list_container_tab" class="row">
+		<div class="col-lg-12">
+			{if count($modules_list)}
+				<table class="table">
+					{counter start=1  assign="count"}
+						{foreach from=$modules_list item=module}	
+							<div>{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",row alt"}}</div>
+							{if $count %3 == 0}
+							{/if}
+						{counter}
+					{/foreach}
+				</table>
+			{else}
+				<table border="0" cellpadding="0" cellspacing="5" class="table table-striped table-hover">
+					<tr>
+						<td>
+							<div class="alert alert-block">{l s='No modules available in this section.'}</div>
+						</td>
+					</tr>
+				</table>
+			{/if}
+		</div>
 	</div>
-</div>
+</fieldset>
+

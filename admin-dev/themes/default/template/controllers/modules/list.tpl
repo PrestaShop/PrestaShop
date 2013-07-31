@@ -92,32 +92,7 @@
 								{/if}
 							</dl>
 						</div>
-
-						<p class="desc">{if isset($module->description) && $module->description ne ''}{l s='Description'} : {$module->description}{else}&nbsp;{/if}</p>
 						{if isset($module->message) && (!isset($module->type) || ($module->type != 'addonsMustHave' || $module->type !== 'addonsNative'))}<div class="alert">{$module->message}</div>{/if}
-						<div class="row-fluid">
-
-							{if !isset($module->not_on_disk)}
-								{$module->optionsHtml}
-								{if isset($module->preferences) && isset($module->preferences['favorite']) && $module->preferences['favorite'] == 1}
-									<a class="btn btn-default btn-small action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#">
-										<i class="icon-star"></i> {l s='Remove from Favorites'}
-									</a>
-									<a class="btn btn-default btn-small action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#" style="display: none;">
-										<i class="icon-star"></i> {l s='Mark as Favorite'}
-									</a>
-								{else}
-									<a class="btn btn-default btn-small action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#" style="display: none;">
-										<i class="icon-star"></i> {l s='Remove from Favorites'}
-									</a>
-									<a class="btn btn-default btn-small action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#">
-										<i class="icon-star"></i> {l s='Mark as Favorite'}
-									</a>
-								{/if}
-							{else}
-								&nbsp;
-							{/if}
-						</div>
 					</div>
 				</td>
 				<td class="center">
@@ -159,6 +134,43 @@
 									{/if}
 								</a>
 							</p>
+							<div class="row-fluid btn-group btn-group-action">
+								{if !isset($module->not_on_disk)}
+									<span class="btn btn-default btn-small">
+										<i class="icon-cog"></i> {l s='Choose an action'}
+									</span>
+									<button data-toggle="dropdown" class="btn btn-default btn-small dropdown-toggle">
+										<span class="caret"></span>&nbsp;
+									</button>
+									<ul class="dropdown-menu">
+										{$module->optionsHtml}
+										{if isset($module->preferences) && isset($module->preferences['favorite']) && $module->preferences['favorite'] == 1}
+											<li>
+												<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#">
+													<i class="icon-star"></i> {l s='Remove from Favorites'}
+												</a>
+											</li>
+											<li>
+												<a class="action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#" style="display: none;">
+													<i class="icon-star"></i> {l s='Mark as Favorite'}
+												</a>
+											</li>
+										{else}
+											<li>
+												<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#" style="display: none;">
+													<i class="icon-star"></i> {l s='Remove from Favorites'}
+												</a>
+											</li>
+											<li>
+												<a class="action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#">
+													<i class="icon-star"></i> {l s='Mark as Favorite'}
+												</a>
+											</li>
+										{/if}
+								{else}
+									&nbsp;
+								{/if}
+							</div>
 						 {/if}
 					</div>
 				</td>
