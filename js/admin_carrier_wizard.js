@@ -209,12 +209,15 @@ function resizeWizard()
 function bind_inputs()
 {
 	$('tr.delete_range td button').off('click').on('click', function () {
-		index = $(this).parent('td').index();
-		$('tr.range_sup td:eq('+index+'), tr.range_inf td:eq('+index+'), tr.fees_all td:eq('+index+'), tr.delete_range td:eq('+index+')').remove();
-		$('tr.fees').each( function () {
-			$(this).children('td:eq('+index+')').remove();
-		});
-		rebuildTabindex();
+		if (confirm(delete_range_confirm))
+		{
+			index = $(this).parent('td').index();
+			$('tr.range_sup td:eq('+index+'), tr.range_inf td:eq('+index+'), tr.fees_all td:eq('+index+'), tr.delete_range td:eq('+index+')').remove();
+			$('tr.fees').each( function () {
+				$(this).children('td:eq('+index+')').remove();
+			});
+			rebuildTabindex();
+		}
 		return false;
 	});
 	
@@ -397,6 +400,12 @@ function disableRange(index)
 
 function add_new_range()
 {
+	if (!$('tr.fees_all td:last').hasClass('validated'))
+	{
+		alert(need_to_validate);
+		return false;
+	}
+	
 	last_sup_val = $('tr.range_sup td:last input').val();
 	//add new rand sup input
 	$('tr.range_sup td:last').after('<td class="center"><input name="range_sup[]" type="text" /><sup>*</sup></td>');
@@ -417,6 +426,21 @@ function add_new_range()
 	return false;
 }
 
+function checkFeesForEnableZone(index)
+{
+	is_ok = true;
+	$('tr.fees').each( function () {
+		$(this).find('td:eq('+index+') input').each( function () {
+			if (!$(this).attr('disabled'))
+			{
+				if ($(this).val() == '')
+					is_ok = false;
+			}
+		});
+	});
+	return is_ok;
+}
+
 function delete_new_range()
 {
 	if ($('#new_range_form_placeholder').children('td').length = 1)
@@ -427,19 +451,16 @@ function delete_new_range()
 function rebuildTabindex()
 {
 	i = 1;
-	zones_nbr +=3; // corresponds to the third input text (max, min and all)
 	$('#zones_table tr').each( function () 
-	{
+	{	
+		j = i;
 		$(this).children('td').each( function () 
 		{
-			if ($(this).index() > 2)
-				j = i + zones_nbr;
-			else if ($(this).index() == 2)
-				j = i;
-
+			j = zones_nbr + j;
 			if ($(this).index() >= 2 && $(this).find('input'))
-				$(this).find('input').attr('tabindex', j);				
+				$(this).find('input').attr('tabindex', j);
+			console.log(j);
 		});
-		i ++;
+		i++;
 	});
 }
