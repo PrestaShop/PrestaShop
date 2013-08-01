@@ -371,9 +371,9 @@ function SmartWizard(target, options) {
         }
 
         if (iserror){
-            $(this.steps.eq(stepnum-1), this.target).addClass('error')
+            $(this.steps.eq(stepnum-1), this.target).addClass('errorStep')
         }else{
-            $(this.steps.eq(stepnum-1), this.target).removeClass("error");
+            $(this.steps.eq(stepnum-1), this.target).removeClass("errorStep");
         }
     }
 
