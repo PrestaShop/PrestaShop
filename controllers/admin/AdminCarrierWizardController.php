@@ -26,7 +26,7 @@
 
 class AdminCarrierWizardControllerCore extends AdminController
 {
-	protected  $wizard_access;
+	protected $wizard_access;
 	
 	public function __construct()
 	{
@@ -347,7 +347,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Maximium package height:'),
+						'label' => $this->l('Maximium package height ('.Configuration::get('PS_DIMENSION_UNIT').'):'),
 						'name' => 'max_height',
 						'required' => false,
 						'size' => 10,
@@ -355,7 +355,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Maximium package width:'),
+						'label' => $this->l('Maximium package width ('.Configuration::get('PS_DIMENSION_UNIT').'):'),
 						'name' => 'max_width',
 						'required' => false,
 						'size' => 10,
@@ -363,7 +363,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Maximium package depth:'),
+						'label' => $this->l('Maximium package depth ('.Configuration::get('PS_DIMENSION_UNIT').'):'),
 						'name' => 'max_depth',
 						'required' => false,
 						'size' => 10,
@@ -371,7 +371,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Maximium package weight:'),
+						'label' => $this->l('Maximium package weight ('.Configuration::get('PS_WEIGHT_UNIT').'):'),
 						'name' => 'max_weight',
 						'required' => false,
 						'size' => 10,
