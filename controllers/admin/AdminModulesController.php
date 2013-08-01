@@ -767,6 +767,11 @@ class AdminModulesControllerCore extends AdminController
 				Tools::redirectAdmin('index.php?controller=adminmodules&configure='.Tools::getValue('module_name').'&token='.Tools::getValue('token').'&module_name='.Tools::getValue('module_name').$params);
 			Tools::redirectAdmin(self::$currentIndex.'&conf='.$return.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).(isset($modules_list_save) ? '&modules_list='.$modules_list_save : '').$params);
 		}
+
+		if(isset($_GET['update']))
+		{
+			Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&updated=1tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).(isset($modules_list_save) ? '&modules_list='.$modules_list_save : '').$params);
+		}
 	}
 	
 	public function postProcess()
@@ -1013,6 +1018,14 @@ class AdminModulesControllerCore extends AdminController
 		// Browse modules list
 		foreach ($modules as $km => $module)
 		{
+			//Add succes message for one module update
+			if (Tools::getValue('updated') && Tools::getValue('module_name'))
+			{
+				if ($module->name === (string)Tools::getValue('module_name'))
+					$module_success[] = array('name' => $module->displayName, 'message' => array(
+							0 => $this->l('Current version:').$module->version));
+			}
+
 			//if we are in favorites view we only display installed modules
 			if (Tools::getValue('select') == 'favorites' && !$module->id)
 			{
