@@ -28,6 +28,8 @@ class OrderOpcControllerCore extends ParentOrderController
 {
 	public $php_self = 'order-opc';
 	public $isLogged;
+	
+	protected $ajax_refresh = false;	
 
 	/**
 	 * Initialize order opc controller
@@ -199,8 +201,28 @@ class OrderOpcControllerCore extends ParentOrderController
 									}
 
 									// Address has changed, so we check if the cart rules still apply
+									$cart_rules = $this->context->cart->getCartRules();
 									CartRule::autoRemoveFromCart($this->context);
 									CartRule::autoAddToCart($this->context);
+									if ((int)Tools::getValue('allow_refresh'))
+									{
+										// If the cart rules has changed, we need to refresh the whole cart
+										$cart_rules2 = $this->context->cart->getCartRules();
+										if (count($cart_rules2) != count($cart_rules))
+											$this->ajax_refresh = true;
+										else
+										{
+											$rule_list = array();
+											foreach ($cart_rules2 as $rule)
+												$rule_list[] = $rule['id_cart_rule'];
+											foreach ($cart_rules as $rule)
+												if (!in_array($rule['id_cart_rule'], $rule_list))
+												{
+													$this->ajax_refresh = true;
+													break;
+												}
+										}
+									}									
 		
 									if (!$this->context->cart->isMultiAddressDelivery())
 										$this->context->cart->setNoMultishipping(); // As the cart is no multishipping, set each delivery address lines with the main delivery address
@@ -215,7 +237,8 @@ class OrderOpcControllerCore extends ParentOrderController
 											'HOOK_TOP_PAYMENT' => Hook::exec('displayPaymentTop'),
 											'HOOK_PAYMENT' => $this->_getPaymentMethods(),
 											'gift_price' => Tools::displayPrice(Tools::convertPrice(Product::getTaxCalculationMethod() == 1 ? $wrapping_fees : $wrapping_fees_tax_inc, new Currency((int)($this->context->cookie->id_currency)))),
-											'carrier_data' => $this->_getCarrierList()),
+											'carrier_data' => $this->_getCarrierList(),
+											'refresh' => (bool)$this->ajax_refresh),
 											$this->getFormatedSummaryDetail()
 										);
 										die(Tools::jsonEncode($result));
