@@ -1422,13 +1422,13 @@ class ToolsCore
 
 	/**
 	* Translates a string with underscores into camel case (e.g. first_name -> firstName)
-	* @prototype string public static function toCamelCase(string $str[, bool $catapitalise_first_char = false])
+	* @prototype string public static function toCamelCase(string $str[, bool $capitalise_first_char = false])
 	*/
 	public static function toCamelCase($str, $catapitalise_first_char = false)
 	{
-		$str = strtolower($str);
+		$str = Tools::strtolower($str);
 		if ($catapitalise_first_char)
-			$str = ucfirst($str);
+			$str = Tools::ucfirst($str);
 		return preg_replace_callback('/_+([a-z])/', create_function('$c', 'return strtoupper($c[1]);'), $str);
 	}
 
