@@ -574,31 +574,32 @@ class HelperListCore extends Helper
 			$this->fields_list[$key] = $params;
 		}
 
-		if (count($this->_list) <= 1)
+		$has_value = false;
+
+		foreach ($this->fields_list as $key => $field)
 		{
-			$simple_header = true;
-			$bulk_actions = array();
-		}
-		else
-		{
-			$simple_header = $this->simple_header;
-			$bulk_actions = $this->bulk_actions;
+			if (isset($field['value']) && $field['value'] !== false)
+			{
+				$has_value = true;
+				break;
+			}
 		}
 
 		Context::getContext()->smarty->assign(array(
 			'page' => $page,
-			'simple_header' => $simple_header,
+			'simple_header' => $this->simple_header,
 			'total_pages' => $total_pages,
 			'selected_pagination' => $selected_pagination,
 			'pagination' => $this->_pagination,
 			'list_total' => $this->listTotal,
 			'token' => $this->token,
 			'table' => $this->table,
-			'bulk_actions' => $bulk_actions
+			'bulk_actions' => (count($this->_list) <= 1 && !$has_value) ? array() : $this->bulk_actions
 		));
 
 		$this->header_tpl->assign(array_merge($this->tpl_vars, array(
 			'title' => $this->title,
+			'show_filters' => (count($this->_list) <= 1 && !$has_value) ? false : true,
 			'show_toolbar' => $this->show_toolbar,
 			'toolbar_scroll' => $this->toolbar_scroll,
 			'toolbar_btn' => $this->toolbar_btn,
@@ -613,7 +614,7 @@ class HelperListCore extends Helper
 			'id_cat' => $id_cat,
 			'shop_link_type' => $this->shopLinkType,
 			'has_actions' => !empty($this->actions),
-			'has_bulk_actions' => !empty($bulk_actions),
+			'has_bulk_actions' => (count($this->_list) <= 1 && !$has_value) ? false : !empty($this->bulk_actions),
 			'table_id' => isset($table_id) ? $table_id : null,
 			'table_dnd' => isset($table_dnd) ? $table_dnd : null,
 			'name' => isset($name) ? $name : null,
