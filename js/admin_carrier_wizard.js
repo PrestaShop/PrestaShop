@@ -282,7 +282,7 @@ function bind_inputs()
 		return false;
 	});
 	
-	$('input[name="is_free"]').off('click')..on('click', function() {
+	$('input[name="is_free"]').off('click').on('click', function() {
 		is_freeClick(this);
 	});
 		
