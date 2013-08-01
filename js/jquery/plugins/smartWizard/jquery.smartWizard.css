@@ -128,8 +128,6 @@
 }
 .swMain ul.anchor li a .stepDesc{
   position:relative;
-  display:block;
-  float:left;
   text-align: left;
   padding:5px;
 
