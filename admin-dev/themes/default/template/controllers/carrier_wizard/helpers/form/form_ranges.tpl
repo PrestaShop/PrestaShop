@@ -14,7 +14,7 @@
 					<td class="center range_type"></td>
 					<td class="border_left "><</td>
 					{foreach from=$ranges key=r item=range}
-						<td class="center"><input name="range_sup[{$range.id_range|intval}]" type="text" {if isset($form_id) && !$form_id} value="" {else} value="{$range.delimiter2|string_format:"%.6f"}" {/if}/><sup>*</sup><span class="weight_unit">&nbsp; {$PS_WEIGHT_UNIT}</span><span class="price_unit">&nbsp; {$currency_sign}</span></td>
+						<td class="center"><input name="range_sup[{$range.id_range|intval}]" type="text" {if isset($form_id) && !$form_id} value="" {else} value="{if isset($change_ranges) && $range.id_range == -1} {else}{$range.delimiter2|string_format:"%.6f"}{/if}" {/if}/><sup>*</sup><span class="weight_unit">&nbsp; {$PS_WEIGHT_UNIT}</span><span class="price_unit">&nbsp; {$currency_sign}</span></td>
 					{foreachelse}
 						<td class="center"><input name="range_sup[{$range.id_range|intval}]" type="text" /><sup>*</sup><span class="weight_unit">&nbsp; {$PS_WEIGHT_UNIT}</span><span class="price_unit">&nbsp; {$currency_sign}</span></td>
 					{/foreach}
