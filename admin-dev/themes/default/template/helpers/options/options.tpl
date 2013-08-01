@@ -80,7 +80,7 @@
 												{$field['title']}
 											</span>
 										</label>
-									{else}
+									{elseif isset($field['title'])}
 										<label class="control-label col-lg-3">{$field['title']}</label>
 									{/if}
 								{/block}
