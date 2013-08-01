@@ -64,6 +64,8 @@ abstract class ModuleAdminControllerCore extends AdminController
 	 */
 	public function getTemplatePath()
 	{
+		if (file_exists(_PS_THEME_DIR_.'modules/'.$this->name.'/views/templates/admin/'.$template))
+			return _PS_THEME_DIR_.'modules/'.$this->name.'/views/templates/admin/'.$template;
 		return _PS_MODULE_DIR_.$this->module->name.'/views/templates/admin/';
 	}
 }
