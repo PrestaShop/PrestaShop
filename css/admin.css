@@ -2521,3 +2521,4 @@ margin-bottom:7px;
 #carrier_logo_block{position: absolute;right: 15px;}
 
 #carrier_wizard #fieldset_form { min-height: 190px}
+#carrier_wizard .step_container { padding-bottom:10px }
