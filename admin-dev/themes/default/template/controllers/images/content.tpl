@@ -94,26 +94,30 @@
 {/if}
 
 {if isset($display_move) && $display_move}
-	<h2 class="space">{l s='Move images'}</h2>
-	{l s='PrestaShop now uses a new storage system for product images. It offers better performance if your shop has a large number of products.'}
-
 	{if $safe_mode}
-		<div class="alert alert-info">
-			{l s='PrestaShop has detected that your server configuration is not compatible with the new storage system (directive "safe_mode" is activated). You should therefore continue to use the existing system.'}
-		</div>
-	{else}
-		<form action="{$current}&token={$token}" method="post">
-			<fieldset class="width4">
-				<h3><img src="../img/admin/picture.gif" /> {l s='Move images'}</h3>
-	
-				<div class="alert alert-info" >
-					{l s='You can choose to keep your images stored in the previous system. There\'s nothing wrong with that.'}<br />
-					{l s='You can also decide to move your images to the new storage system. In this case, click on the "Move images" button below. Please be patient. This can take several minutes.'}<br />
-					{l s='After moving all of your product images, set the "Use the legacy image filesystem" option above to "No" for best performance.'}
-				</div>
-
-				<input type="Submit" name="submitMoveImages{$table}" value="{l s='Move images'}" class="button space" onclick="return confirm('{l s='Are you sure?'}');" />
-			</fieldset>
-		</form>
-	{/if}
+        <div class="alert alert-block">
+            <p>{l s='PrestaShop has detected that your server configuration is not compatible with the new storage system (directive "safe_mode" is activated). You should therefore continue to use the existing system.'}</p>
+        </div>
+    {else}
+        <form action="{$current}&token={$token}" method="post" class="form-horizontal">
+            <fieldset class="col-lg-12">
+                <h3>
+                    <i class="icon-picture"></i>
+                    {l s='Move images'}
+                </h3>
+                <div class="alert alert-block">
+                    <p>{l s='You can choose to keep your images stored in the previous system. There\'s nothing wrong with that.'}</p>
+                    <p>{l s='You can also decide to move your images to the new storage system. In this case, click on the "Move images" button below. Please be patient. This can take several minutes.'}</p>
+                </div>
+                <div class="alert alert-info">&nbsp;
+                    {l s='After moving all of your product images, set the "Use the legacy image filesystem" option above to "No" for best performance.'}
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 pull-right">
+                        <input type="Submit" name="submitMoveImages{$table}" value="{l s='Move images'}" class="btn btn-primary" onclick="return confirm('{l s='Are you sure?'}');" />
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    {/if}
 {/if}
