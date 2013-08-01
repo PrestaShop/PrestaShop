@@ -87,11 +87,7 @@ class AdminCarriersControllerCore extends AdminController
 			'is_free' => array(
 				'title' => $this->l('Free Shipping'),
 				'align' => 'center',
-				'icon' => array(
-					0 => 'disabled.gif',
-					1 => 'enabled.gif',
-					'default' => 'disabled.gif'
-				),
+				'active' => 'isFree',
 				'type' => 'bool',
 				'orderby' => false,
 				'width' => 150
@@ -534,6 +530,10 @@ class AdminCarriersControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
+		else if (isset($_GET['isFree'.$this->table]))
+		{
+			$this->processIsFree();
+		}
 		else
 		{
 			if ((Tools::isSubmit('submitDel'.$this->table) && in_array(Configuration::get('PS_CARRIER_DEFAULT'), Tools::getValue('carrierBox')))
@@ -564,6 +564,17 @@ class AdminCarriersControllerCore extends AdminController
 				Carrier::cleanPositions();
 			}
 		}
+	}
+
+	public function processIsFree()
+	{
+		$carrier = new Carrier($this->id_object);
+		if (!Validate::isLoadedObject($carrier))
+			$this->errors[] = Tools::displayError('An error occurred while updating carrier information.');
+		$carrier->is_free = $carrier->is_free ? 0 : 1;
+		if (!$carrier->update())
+			$this->errors[] = Tools::displayError('An error occurred while updating carrier information.');
+		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 	}
 
 	/**
