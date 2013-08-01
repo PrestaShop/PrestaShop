@@ -610,6 +610,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 					return false;
 
 				$price_list = array();
+				if (is_array($fees) && count($fees))
 				foreach ($fees as $id_zone => $fee)
 					$price_list[] = array(
 						'id_range_price' => ($range_type == Carrier::SHIPPING_METHOD_PRICE ? (int)$range->id : null),
@@ -619,7 +620,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 						'price' => (float)$fee[$key]
 					);
 
-				if (!$carrier->addDeliveryPrice($price_list, true))
+				if (count($price_list) && !$carrier->addDeliveryPrice($price_list, true))
 					return false;
 			}
 		}
