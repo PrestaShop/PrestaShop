@@ -135,6 +135,7 @@
 					<li><a href="../docs/csv_import/addresses_import.csv">{l s='Sample Addresses file'}</a></li>
 					<li><a href="../docs/csv_import/manufacturers_import.csv">{l s='Sample Manufacturers file'}</a></li>
 					<li><a href="../docs/csv_import/suppliers_import.csv">{l s='Sample Suppliers file'}</a></li>
+					<li><a href="../docs/csv_import/alias_import.csv">{l s='Sample Alias file'}</a></li>					
 					{if $PS_ADVANCED_STOCK_MANAGEMENT}
 						<li><a href="../docs/csv_import/supply_orders_import.csv">{l s='Supply Orders sample file'}</a></li>
 						<li><a href="../docs/csv_import/supply_orders_details_import.csv">{l s='Supply Orders Details sample file'}</a></li>
@@ -232,7 +233,7 @@
 <script type="text/javascript">
 	$("select#entity").change( function() {
 
-		if ($("#entity > option:selected").val() == 7 || $("#entity > option:selected").val() == 8)
+		if ($("#entity > option:selected").val() == 8 || $("#entity > option:selected").val() == 9)
 		{
 			$("label[for=truncate],#truncate").hide();
 		}
@@ -240,7 +241,7 @@
 			$("label[for=truncate],#truncate").show();
 
 
-		if ($("#entity > option:selected").val() == 8)
+		if ($("#entity > option:selected").val() == 9)
 		{
 			$(".import_supply_orders_details").show();
 			$('input[name=multiple_value_separator]').val('|');
@@ -266,7 +267,7 @@
 		else
 			$(".import_products_categories").hide();
 
-		if ($("#entity > option:selected").val() == 0 || $("#entity > option:selected").val() == 1 || $("#entity > option:selected").val() == 3 || $("#entity > option:selected").val() == 5 || $("#entity > option:selected").val() == 6)
+		if ($("#entity > option:selected").val() == 0 || $("#entity > option:selected").val() == 1 || $("#entity > option:selected").val() == 3 || $("#entity > option:selected").val() == 5 || $("#entity > option:selected").val() == 6 || $("#entity > option:selected").val() == 7)
 			$("label[for=forceIDs],#forceIDs").show();
 		else
 			$("label[for=forceIDs],#forceIDs").hide();
