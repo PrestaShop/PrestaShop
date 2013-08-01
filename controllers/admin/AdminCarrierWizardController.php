@@ -679,6 +679,8 @@ class AdminCarrierWizardControllerCore extends AdminController
 					$this->copyFromPost($carrier, $this->table);
 					$carrier->position = $current_carrier->position;
 					$carrier->update();
+					
+					$this->copyLogo($current_carrier->id, $carrier->id);
 				}
 			}
 			else
@@ -694,6 +696,8 @@ class AdminCarrierWizardControllerCore extends AdminController
 			
 			if (Validate::isLoadedObject($carrier))
 			{
+				
+				
 				if (!$this->changeGroups((int)$carrier->id))
 				{
 					$return['has_error'] = true;
@@ -743,6 +747,21 @@ class AdminCarrierWizardControllerCore extends AdminController
 			}
 		}
 		die(Tools::jsonEncode($return));
+	}
+	
+	protected function copyLogo($old_id, $new_id)
+	{
+		$old_logo = _PS_SHIP_IMG_DIR_.'/'.(int)$old_id.'.jpg';
+		if (file_exists($old_logo))
+			copy($old_logo, _PS_SHIP_IMG_DIR_.'/'.(int)$new_id.'.jpg');
+
+		$old_tmp_logo = _PS_TMP_IMG_DIR_.'/carrier_mini_'.(int)$old_id.'.jpg';
+		if (file_exists($old_tmp_logo))
+		{
+			if (!isset($_FILES['logo']))
+				copy($old_tmp_logo, _PS_TMP_IMG_DIR_.'/carrier_mini_'.$new_id.'.jpg');
+			unlink($old_tmp_logo);
+		}
 	}
 
 	protected function changeGroups($id_carrier, $delete = true)
