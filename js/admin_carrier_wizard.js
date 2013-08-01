@@ -28,6 +28,7 @@ $(document).ready(function() {
 	bind_inputs();
 	initCarrierWizard();
 	is_freeClick($('input[name="is_free"]:checked'));
+	displayRangeType();
 });
 
 function initCarrierWizard()
@@ -49,9 +50,17 @@ function initCarrierWizard()
 function displayRangeType()
 {
 	if ($('input[name="shipping_method"]:checked').val() == 1)
+	{
 		string = string_weight;
+		$('.weight_unit').show();
+		$('.price_unit').hide();
+	}
 	else
+	{
 		string = string_price;
+		$('.price_unit').show();
+		$('.weight_unit').hide();
+	}
 	
 	$('.range_type').html(string);
 }
@@ -235,7 +244,10 @@ function bind_inputs()
 	$('tr.fees_all td button').off('click').on('click', function () {
 		index = $(this).parent('td').index();
 		if (validateRange(index))
+		{
 			enableRange(index);
+			$('#currency_sign').show();
+		}
 		else
 			disableRange(index);
 		return false;
