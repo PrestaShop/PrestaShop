@@ -30,6 +30,7 @@ class AdminGeolocationControllerCore extends AdminController
 	{
 		parent::__construct();
 
+		$this->bootstrap = true;
 		$this->fields_options = array(
 			'geolocationConfiguration' => array(
 				'title' =>	$this->l('Geolocation by IP address'),
@@ -37,7 +38,7 @@ class AdminGeolocationControllerCore extends AdminController
 				'fields' =>	array(
 		 			'PS_GEOLOCATION_ENABLED' => array(
 		 				'title' => $this->l('Geolocation by IP address'),
-		 				'desc' => $this->l('This option allows you, among other things, to restrict access to your shop for certain countries. See below.'),
+		 				'hint' => $this->l('This option allows you, among other things, to restrict access to your shop for certain countries. See below.'),
 		 				'validation' => 'isUnsignedId',
 		 				'cast' => 'intval',
 		 				'type' => 'bool'

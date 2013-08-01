@@ -33,6 +33,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->is_cms = true;
 		$this->table = 'cms_category';
 		$this->className = 'CMSCategory';
@@ -221,7 +222,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('CMS Category'),
-				'image' => '../img/admin/tab-categories.gif'
+				'icon' => 'icon-folder-close'
 			),
 			'input' => array(
 				array(
@@ -230,15 +231,13 @@ class AdminCmsCategoriesControllerCore extends AdminController
 					'name' => 'name',
 					'required' => true,
 					'lang' => true,
-					'class' => 'copy2friendlyUrl',
-					'hint' => $this->l('Invalid characters:').' <>;=#{}'
+					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Displayed:'),
 					'name' => 'active',
 					'required' => false,
-					'class' => 't',
 					'is_bool' => true,
 					'values' => array(
 						array(
@@ -269,28 +268,28 @@ class AdminCmsCategoriesControllerCore extends AdminController
 					'lang' => true,
 					'rows' => 5,
 					'cols' => 40,
-					'hint' => $this->l('Invalid characters:').' <>;=#{}'
+					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Meta title:'),
 					'name' => 'meta_title',
 					'lang' => true,
-					'hint' => $this->l('Invalid characters:').' <>;=#{}'
+					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Meta description:'),
 					'name' => 'meta_description',
 					'lang' => true,
-					'hint' => $this->l('Invalid characters:').' <>;=#{}'
+					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Meta keywords:'),
 					'name' => 'meta_keywords',
 					'lang' => true,
-					'hint' => $this->l('Invalid characters:').' <>;=#{}'
+					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
 				),
 				array(
 					'type' => 'text',
@@ -303,7 +302,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
-				'class' => 'button'
+				'class' => 'btn btn-primary'
 			)
 		);
 		$this->tpl_form_vars['PS_ALLOW_ACCENTED_CHARS_URL'] = (int)Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');

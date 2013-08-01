@@ -74,7 +74,7 @@ class AdminImagesControllerCore extends AdminController
 					),
 					'PS_JPEG_QUALITY' => array(
 						'title' => $this->l('JPEG quality'),
-						'desc' => $this->l('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file).'),
+						'hint' => $this->l('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file).'),
 						'validation' => 'isUnsignedId',
 						'required' => true,
 						'cast' => 'intval',
@@ -82,7 +82,7 @@ class AdminImagesControllerCore extends AdminController
 					),
 		 			'PS_PNG_QUALITY' => array(
 						 'title' => $this->l('PNG quality'),
-						 'desc' => $this->l('Ranges from 9 (worst quality, smallest file) to 0 (best quality, biggest file).'),
+						 'hint' => $this->l('Ranges from 9 (worst quality, smallest file) to 0 (best quality, biggest file).'),
 						 'validation' => 'isUnsignedId',
 						 'required' => true,
 						 'cast' => 'intval',
@@ -119,7 +119,7 @@ class AdminImagesControllerCore extends AdminController
 					),
 					'PS_PRODUCT_PICTURE_MAX_SIZE' => array(
 						'title' => $this->l('Maximum size of product pictures'),
-						'desc' => $this->l('The maximum size of pictures uploadable by customers (in Bytes).'),
+						'hint' => $this->l('The maximum size of pictures uploadable by customers (in Bytes).'),
 						'validation' => 'isUnsignedInt',
 						'required' => true,
 						'cast' => 'intval',
@@ -129,7 +129,7 @@ class AdminImagesControllerCore extends AdminController
 					),
 					'PS_PRODUCT_PICTURE_WIDTH' => array(
 						'title' => $this->l('Product picture width'),
-						'desc' => $this->l('The maximum width of pictures uploadable by customers.'),
+						'hint' => $this->l('The maximum width of pictures uploadable by customers.'),
 						'validation' => 'isUnsignedInt',
 						'required' => true,
 						'cast' => 'intval',
@@ -139,7 +139,7 @@ class AdminImagesControllerCore extends AdminController
 					),
 					'PS_PRODUCT_PICTURE_HEIGHT' => array(
 						'title' => $this->l('Product picture height'),
-						'desc' => $this->l('The maximum height of pictures uploadable by customers.'),
+						'hint' => $this->l('The maximum height of pictures uploadable by customers.'),
 						'validation' => 'isUnsignedInt',
 						'required' => true,
 						'cast' => 'intval',
@@ -155,7 +155,7 @@ class AdminImagesControllerCore extends AdminController
 		if ($this->display_move)
 			$this->fields_options['product_images']['fields']['PS_LEGACY_IMAGES'] = array(
 				'title' => $this->l('Use the legacy image filesystem'),
-				'desc' => $this->l('This should be set to yes unless you successfully moved images in "Images" page under the "Preferences" menu.'),
+				'hint' => $this->l('This should be set to yes unless you successfully moved images in "Images" page under the "Preferences" menu.'),
 				'validation' => 'isBool',
 				'cast' => 'intval',
 				'required' => false,
@@ -166,7 +166,7 @@ class AdminImagesControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('images'),
-				'image' => '../img/admin/picture.gif'
+				'icon' => 'icon-picture'
 			),
 			'input' => array(
 				array(
@@ -174,7 +174,7 @@ class AdminImagesControllerCore extends AdminController
 					'label' => $this->l('Type name'),
 					'name' => 'name',
 					'required' => true,
-					'desc' => $this->l('Letters and hyphens only (e.g. small, medium, large, extra-large)')
+					'hint' => $this->l('Letters and hyphens only (e.g. small, medium, large, extra-large)')
 				),
 				array(
 					'type' => 'text',
@@ -182,7 +182,7 @@ class AdminImagesControllerCore extends AdminController
 					'name' => 'width',
 					'required' => true,
 					'maxlength' => 5,
-					'desc' => $this->l('Maximum image width in pixels')
+					'hint' => $this->l('Maximum image width in pixels')
 				),
 				array(
 					'type' => 'text',
@@ -190,16 +190,15 @@ class AdminImagesControllerCore extends AdminController
 					'name' => 'height',
 					'required' => true,
 					'maxlength' => 5,
-					'desc' => $this->l('Maximum image height in pixels')
+					'hint' => $this->l('Maximum image height in pixels')
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Products'),
 					'name' => 'products',
 					'required' => false,
-					'class' => 't',
 					'is_bool' => true,
-					'desc' => $this->l('This type will be used for Product images'),
+					'hint' => $this->l('This type will be used for Product images'),
 					'values' => array(
 						array(
 							'id' => 'products_on',
@@ -214,13 +213,13 @@ class AdminImagesControllerCore extends AdminController
 					)
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Categories'),
 					'name' => 'categories',
 					'required' => false,
 					'class' => 't',
 					'is_bool' => true,
-					'desc' => $this->l('This type will be applied to Category images.'),
+					'hint' => $this->l('This type will be applied to Category images.'),
 					'values' => array(
 						array(
 							'id' => 'categories_on',
@@ -235,13 +234,12 @@ class AdminImagesControllerCore extends AdminController
 					)
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Manufacturers'),
 					'name' => 'manufacturers',
 					'required' => false,
-					'class' => 't',
 					'is_bool' => true,
-					'desc' => $this->l('This type will be applied to Manufacturer images.'),
+					'hint' => $this->l('This type will be applied to Manufacturer images.'),
 					'values' => array(
 						array(
 							'id' => 'manufacturers_on',
@@ -256,13 +254,12 @@ class AdminImagesControllerCore extends AdminController
 					)
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Suppliers'),
 					'name' => 'suppliers',
 					'required' => false,
-					'class' => 't',
 					'is_bool' => true,
-					'desc' => $this->l('This type will be used for Supplier images.'),
+					'hint' => $this->l('This type will be used for Supplier images.'),
 					'values' => array(
 						array(
 							'id' => 'suppliers_on',
@@ -277,13 +274,13 @@ class AdminImagesControllerCore extends AdminController
 					)
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Scenes'),
 					'name' => 'scenes',
 					'required' => false,
 					'class' => 't',
 					'is_bool' => true,
-					'desc' => $this->l('This type will be used for Scene images.'),
+					'hint' => $this->l('This type will be used for Scene images.'),
 					'values' => array(
 						array(
 							'id' => 'scenes_on',
@@ -298,13 +295,12 @@ class AdminImagesControllerCore extends AdminController
 					)
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Stores'),
 					'name' => 'stores',
 					'required' => false,
-					'class' => 't',
 					'is_bool' => true,
-					'desc' => $this->l('This type will be used for Store images.'),
+					'hint' => $this->l('This type will be used for Store images.'),
 					'values' => array(
 						array(
 							'id' => 'stores_on',
@@ -320,8 +316,8 @@ class AdminImagesControllerCore extends AdminController
 				),
 			),
 			'submit' => array(
-				'title' => $this->l('Save   '),
-				'class' => 'button'
+				'title' => $this->l('Save'),
+				'class' => 'btn btn-primary'
 			)
 		);
 
