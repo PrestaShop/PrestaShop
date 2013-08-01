@@ -174,7 +174,7 @@ class ValidateCore
 	 */
 	public static function isMailName($mail_name)
 	{
-		return (is_string($module_name) && preg_match(Tools::cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'), $mail_name));
+		return (is_string($mail_name) && preg_match(Tools::cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'), $mail_name));
 	}
 
 	/**
