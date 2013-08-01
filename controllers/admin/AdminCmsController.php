@@ -34,6 +34,7 @@ class AdminCmsControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->table = 'cms';
 		$this->className = 'CMS';
 		$this->lang = true;
@@ -94,7 +95,7 @@ class AdminCmsControllerCore extends AdminController
 			'tinymce' => true,
 			'legend' => array(
 				'title' => $this->l('CMS Page'),
-				'image' => '../img/admin/tab-categories.gif'
+				'icon' => 'icon-folder-close'
 			),
 			'input' => array(
 				// custom template
@@ -113,26 +114,24 @@ class AdminCmsControllerCore extends AdminController
 					'id' => 'name', // for copy2friendlyUrl compatibility
 					'lang' => true,
 					'required' => true,
-					'class' => 'copy2friendlyUrl',
-					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'size' => 50
+					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Meta description'),
 					'name' => 'meta_description',
 					'lang' => true,
-					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'size' => 70
+					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
 				),
 				array(
 					'type' => 'tags',
 					'label' => $this->l('Meta keywords'),
 					'name' => 'meta_keywords',
 					'lang' => true,
-					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'size' => 70,
-					'desc' => $this->l('To add "tags" click in the field, write something, and then press "Enter."')
+					'hint' => array(
+						$this->l('Invalid characters:').' &lt;&gt;;=#{}',
+						$this->l('To add "tags" click in the field, write something, and then press "Enter."')
+					)
 				),
 				array(
 					'type' => 'text',
@@ -153,11 +152,10 @@ class AdminCmsControllerCore extends AdminController
 					'hint' => $this->l('Invalid characters:').' <>;=#{}'
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Displayed:'),
 					'name' => 'active',
 					'required' => false,
-					'class' => 't',
 					'is_bool' => true,
 					'values' => array(
 						array(
@@ -175,7 +173,7 @@ class AdminCmsControllerCore extends AdminController
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
-				'class' => 'button'
+				'class' => 'btn btn-primary'
 			)
 		);
 

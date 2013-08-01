@@ -68,12 +68,9 @@
 {/block}
 
 {block name="leadin"}
-	<div class="warn draft" style="{if $active}display:none{/if}">
-		<p>
-		<span style="float: left">
-		{l s='Your CMS page will be saved as a draft'}
-		</span>
-		<br class="clear" />
+	<div style="{if $active}display:none{/if}">
+		<p class="alert alert-block">
+			{l s='Your CMS page will be saved as a draft'}
 		</p>
 	</div>
 {/block}

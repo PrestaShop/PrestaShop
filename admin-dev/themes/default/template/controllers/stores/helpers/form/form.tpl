@@ -55,38 +55,42 @@
 	{if $key == 'rightCols'}
 		{foreach $field as $input}
 			{if $input.type == 'file'}
-				<label style="text-align: left; width: inherit;width:250px;text-align:right">{$input.label} </label>
-				<div class="margin-form">
-					<input type="file" name="{$input.name}" />
-					<p class="clear">{$input.desc}</p>
-					{if isset($fields_value.image) && $fields_value.image}
-						<div id="image" style="width:370px;">
-							{$fields_value.image}
-							<p align="center">{l s='File size'} {$fields_value.size}kb</p>
-							<a href="{$current}&id_store={$form_id}&token={$token}&deleteImage=1">
-								<img src="../img/admin/delete.gif" alt="{l s='Delete'}" /> {l s='Delete'}
-							</a>
-						</div>
-					{/if}
+				<div class="row">
+					<label class="control-label col-lg-3">{$input.label} </label>
+					<div class="col-lg-6">
+						<input type="file" name="{$input.name}" />
+						<p>{$input.desc}</p>
+						{if isset($fields_value.image) && $fields_value.image}
+							<div id="image">
+								{$fields_value.image}
+								<p>{l s='File size'} {$fields_value.size}kb</p>
+								<a href="{$current}&id_store={$form_id}&token={$token}&deleteImage=1" class="btn btn-primary">
+									<i class="icon-remove"></i>
+									{l s='Delete'}
+								</a>
+							</div>
+						{/if}
+					</div>
 				</div>
 			{/if}
-			<table cellpadding="2" cellspacing="2" style="padding: 10px; margin: 15px 0 20px 260px; border: 1px solid #BBB;">
-				<tr>
-					<th colspan="2">{l s='Hours:'}</th>
-				</tr>
-				<tr>
-					<td>&nbsp;</td>
-					<td style="font-size: 0.85em;">{l s='e.g. 10:00AM - 9:30PM'}</td>
-				</tr>
-
-				{foreach $fields_value.days as $k => $value}
-					<tr style="color: #7F7F7F; font-size: 0.85em;">
-						<td>{$value}</td>
-						<td><input type="text" size="25" name="hours_{$k}" value="{if isset($fields_value.hours[$k-1])}{$fields_value.hours[$k-1]|escape:'htmlall'}{/if}" /><br /></td>
-					</tr>
-				{/foreach}
-			</table>
-		<div class="clear"></div>
+			<div class="row">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>{l s='Hours:'}</th>
+							<th>{l s='e.g. 10:00AM - 9:30PM'}</th>
+						</tr>
+					</thead>
+					<tbody>
+						{foreach $fields_value.days as $k => $value}
+							<tr style="color: #7F7F7F; font-size: 0.85em;">
+								<td>{$value}</td>
+								<td><input type="text" size="25" name="hours_{$k}" value="{if isset($fields_value.hours[$k-1])}{$fields_value.hours[$k-1]|escape:'htmlall'}{/if}" /><br /></td>
+							</tr>
+						{/foreach}
+					</tbody>
+				</table>
+			</div>
 		{/foreach}
 	{/if}
 {/block}
