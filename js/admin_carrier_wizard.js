@@ -282,11 +282,11 @@ function bind_inputs()
 		return false;
 	});
 	
-	$('input[name="is_free"]').on('click', function() {
+	$('input[name="is_free"]').off('click')..on('click', function() {
 		is_freeClick(this);
 	});
 		
-	$('input[name="shipping_method"]').on('click', function() {
+	$('input[name="shipping_method"]').off('click').on('click', function() {
 		$.ajax({
 			type:"POST",
 			url : validate_url,
