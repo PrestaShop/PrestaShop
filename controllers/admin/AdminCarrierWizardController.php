@@ -309,6 +309,10 @@ class AdminCarrierWizardControllerCore extends AdminController
 				));
 		
 		$tpl_vars = array();
+		$tpl_vars['PS_WEIGHT_UNIT'] = Configuration::get('PS_WEIGHT_UNIT');
+		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+		$tpl_vars['currency_sign'] = $currency->sign;
+		
 		$fields_value = $this->getStepThreeFieldsValues($carrier);
 
 		$this->getTplRangesVarsAndValues($carrier, $tpl_vars, $fields_value);		
@@ -537,7 +541,11 @@ class AdminCarrierWizardControllerCore extends AdminController
 		
 		$template->assign('fields_value', $fields_value);
 		$template->assign('input', array('type' => 'zone',	'name' => 'zones'	));
-
+		
+		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+		$template->assign('currency_sign', $currency->sign);
+		$template->assign('PS_WEIGHT_UNIT', Configuration::get('PS_WEIGHT_UNIT'));
+		
 		die($template->fetch());
 	}
 	
