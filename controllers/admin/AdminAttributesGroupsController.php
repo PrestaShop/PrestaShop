@@ -54,6 +54,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				'title' => $this->l('Values count'),
 				'width' => 120,
 				'align' => 'center',
+				'search' => false
 			),
 			'position' => array(
 				'title' => $this->l('Position'),
