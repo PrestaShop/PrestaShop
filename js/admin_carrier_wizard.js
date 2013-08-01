@@ -270,12 +270,14 @@ function bind_inputs()
 		}
 	});
 	
-	$('tr.fees_all td input').off('change').on('change', function () {
-		index = $(this).parent('td').index();
+	$(document.body).off('change', 'tr.fees_all td input').on('change', 'tr.fees_all td input', function() {
+	   index = $(this).parent('td').index();
 		val = $(this).val();
+		$(this).val('');
 		$('tr.fees').each( function () {
 			$(this).find('td:eq('+index+') input:text:enabled').val(val);
 		});
+		
 		return false;
 	});
 	
@@ -397,6 +399,7 @@ function enableRange(index)
 	$('tr.fees_all td:eq('+index+')').children('input').show().removeAttr('disabled');
 	$('tr.fees_all td:eq('+index+')').addClass('validated').removeClass('not_validated');
 	$('tr.fees_all td:eq('+index+')').children('button').remove();
+	bind_inputs();
 }
 
 function disableRange(index)
@@ -447,7 +450,6 @@ function delete_new_range()
 function checkAllFieldIsNumeric()
 {
 	$('#zones_table td input[type=text]').each( function () {
-		console.log(this);
 		if (!$.isNumeric($(this).val()) && $(this).val() != '')
 			$(this).addClass('field_error');
 	});
