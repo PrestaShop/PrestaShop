@@ -53,7 +53,7 @@
 	{/foreach}
 	</ul>
 	{foreach from=$wizard_contents.contents key=step_nbr item=content}
-		<div id="step-{$step_nbr + 1}" style="padding-bottom:10px"> 	
+		<div id="step-{$step_nbr + 1}" class="step_container"> 	
 			{$content}
 		</div>
 	{/foreach}
