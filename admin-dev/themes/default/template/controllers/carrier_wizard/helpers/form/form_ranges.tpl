@@ -24,7 +24,7 @@
 					<td></td>
 					{foreach from=$ranges key=r item=range}
 						<td class="center border_top border_bottom {if $range.id_range != -1} validated {/if}"  >
-							<input type="text" {if isset($form_id) &&  !$form_id} disabled="disabled"{/if} {if $range.id_range == -1} style="display:none"{/if} /><span class="currency_sign">&nbsp; {$currency_sign}</span>
+							<input type="text" {if isset($form_id) &&  !$form_id} disabled="disabled"{/if} {if $range.id_range == -1} style="display:none"{/if} /><span class="currency_sign" {if $range.id_range == -1} style="display:none" {/if}>&nbsp; {$currency_sign}</span>
 							{if $range.id_range == -1} <button class="button">{l s="Validate"}</button> {/if}
 						</td>
 					{foreachelse}
@@ -42,7 +42,7 @@
 					</td>
 					{foreach from=$ranges key=r item=range}
 						<td class="center">
-							<input name="fees[{$zone.id_zone|intval}][{$range.id_range|intval}]" {if (isset($form_id) &&  !$form_id) || isset($change_ranges) || (isset($fields_value[$input.name][$zone.id_zone]) && !$fields_value[$input.name][$zone.id_zone])} disabled="disabled"{/if} type="text" value="{if isset($price_by_range[$range.id_range][$zone.id_zone]) && $fields_value[$input.name][$zone.id_zone]} {$price_by_range[$range.id_range][$zone.id_zone]|string_format:"%.6f"} {/if}" />&nbsp; {$currency_sign}
+							<input name="fees[{$zone.id_zone|intval}][{$range.id_range|intval}]" {if ((isset($form_id) &&  !$form_id) || isset($change_ranges) || (isset($fields_value[$input.name][$zone.id_zone]) && !$fields_value[$input.name][$zone.id_zone]))} disabled="disabled"{/if} type="text" value="{if isset($price_by_range[$range.id_range][$zone.id_zone]) && $fields_value[$input.name][$zone.id_zone]} {$price_by_range[$range.id_range][$zone.id_zone]|string_format:'%.6f'}  {/if}" />&nbsp; {$currency_sign}
 						</td>
 					{/foreach}
 				</tr>
