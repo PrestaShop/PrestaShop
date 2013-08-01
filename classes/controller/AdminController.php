@@ -2206,6 +2206,7 @@ class AdminControllerCore extends Controller
 		($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '').
 		(($use_limit === true) ? ' LIMIT '.(int)$start.','.(int)$limit : '');
 
+		$this->_listTotal = 0;
 		if (!($this->_list = Db::getInstance()->executeS($this->_listsql)))
 			$this->_list_error = Db::getInstance()->getMsgError();
 		else
