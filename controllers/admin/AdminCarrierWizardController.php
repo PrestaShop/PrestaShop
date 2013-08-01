@@ -694,10 +694,15 @@ class AdminCarrierWizardControllerCore extends AdminController
 				}
 			}
 			
+			if ($carrier->is_free)
+			{
+				//if carrier is free delete shipping cost
+				$carrier->deleteDeliveryPrice('range_weight');
+				$carrier->deleteDeliveryPrice('range_price');
+			}
+			
 			if (Validate::isLoadedObject($carrier))
 			{
-				
-				
 				if (!$this->changeGroups((int)$carrier->id))
 				{
 					$return['has_error'] = true;
