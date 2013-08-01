@@ -29,7 +29,10 @@
 
 	<form class="form-horizontal" action="{$current}&token={$token}" method="post">
 		<fieldset class="col-lg-12">
-			<h3 class="space">{l s='Regenerate thumbnails'}</h3>
+			<h3>
+                <i class="icon-picture"></i>
+                {l s='Regenerate thumbnails'}
+            </h3>
 
 			<div class="alert alert-info">
 				{l s='Regenerates thumbnails for all existing images'}<br />
