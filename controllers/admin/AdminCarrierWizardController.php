@@ -62,19 +62,15 @@ class AdminCarrierWizardControllerCore extends AdminController
 			'steps' => array(
 				array(
 					'title' => $this->l('General settings'),
-					'desc' => $this->l('General settings'),
 				),
 				array(
 					'title' => $this->l('Shipping locations and costs'),
-					'desc' => $this->l('Shipping locations and costs'),
 				),
 				array(
                     'title' => $this->l('Size, weight, and group access'),
-					'desc' => $this->l('Size, weight, and group access'),
 				),
 				array(
 					'title' => $this->l('Summary'),
-					'desc' => $this->l('Summary'),
 				),
 
 			));
@@ -677,7 +673,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 					// Set flag deteled to true for historization
 					$current_carrier->deleted = true;
 					$current_carrier->update();
-	
+					
 					// Fill the new carrier object
 					$this->copyFromPost($carrier, $this->table);
 					$carrier->position = $current_carrier->position;
