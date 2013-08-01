@@ -32,6 +32,7 @@ class AdminImagesControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->table = 'image_type';
 		$this->className = 'ImageType';
 		$this->lang = false;
@@ -40,16 +41,16 @@ class AdminImagesControllerCore extends AdminController
 		$this->addRowAction('delete');
 
 		$this->fields_list = array(
-			'id_image_type' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+			'id_image_type' => array('title' => $this->l('ID'), 'align' => 'center'),
 			'name' => array('title' => $this->l('Name'), 'width' => 'auto'),
-			'width' => array('title' => $this->l('Width'), 'align' => 'right', 'suffix' => ' px', 'width' => 50, 'size' => 5),
-			'height' => array('title' => $this->l('Height'), 'align' => 'right', 'suffix' => ' px', 'width' => 50, 'size' => 5),
-			'products' => array('title' => $this->l('Products'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
-			'categories' => array('title' => $this->l('Categories'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
-			'manufacturers' => array('title' => $this->l('Manufacturers'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
-			'suppliers' => array('title' => $this->l('Suppliers'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
-			'scenes' => array('title' => $this->l('Scenes'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
-			'stores' => array('title' => $this->l('Stores'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false)
+			'width' => array('title' => $this->l('Width'), 'align' => 'right', 'suffix' => ' px'),
+			'height' => array('title' => $this->l('Height'), 'align' => 'right', 'suffix' => ' px'),
+			'products' => array('title' => $this->l('Products'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
+			'categories' => array('title' => $this->l('Categories'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
+			'manufacturers' => array('title' => $this->l('Manufacturers'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
+			'suppliers' => array('title' => $this->l('Suppliers'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
+			'scenes' => array('title' => $this->l('Scenes'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
+			'stores' => array('title' => $this->l('Stores'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false)
 		);
 		
 		// No need to display the old image system if the install has been made later than 2013-03-26
@@ -147,7 +148,7 @@ class AdminImagesControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					)
 				),
-				'submit' => array('title' => $this->l('Save   '), 'class' => 'button'),
+				'submit' => array('title' => $this->l('Save   '), 'class' => 'btn btn-primary'),
 			),
 		);
 		
@@ -180,7 +181,6 @@ class AdminImagesControllerCore extends AdminController
 					'label' => $this->l('Width'),
 					'name' => 'width',
 					'required' => true,
-					'size' => 4,
 					'maxlength' => 5,
 					'desc' => $this->l('Maximum image width in pixels')
 				),
@@ -189,7 +189,6 @@ class AdminImagesControllerCore extends AdminController
 					'label' => $this->l('Height'),
 					'name' => 'height',
 					'required' => true,
-					'size' => 4,
 					'maxlength' => 5,
 					'desc' => $this->l('Maximum image height in pixels')
 				),

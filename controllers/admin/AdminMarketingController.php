@@ -27,6 +27,12 @@
 class AdminMarketingControllerCore extends AdminController
 {
 
+	public function __construct()
+	{
+		$this->bootstrap = true;
+		parent::__construct();
+	}
+
 	public function initContent()
 	{
 		$this->display = 'view';
@@ -51,4 +57,3 @@ class AdminMarketingControllerCore extends AdminController
 		return parent::renderView();
 	}
 }
-

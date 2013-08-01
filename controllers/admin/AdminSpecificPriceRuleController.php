@@ -30,6 +30,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 	 	$this->table = 'specific_price_rule';
 		$this->className = 'SpecificPriceRule';
 	 	$this->lang = false;
@@ -55,8 +56,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_specific_price_rule' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center',
-				'width' => 25
+				'align' => 'center'
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
@@ -142,7 +142,6 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Name'),
 					'name' => 'name',
-					'size' => 33,
 					'maxlength' => 32,
 					'required' => true,
 					'hint' => $this->l('Forbidden characters').' <>;=#{}'
@@ -193,7 +192,6 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('From quantity'),
 					'name' => 'from_quantity',
-					'size' => 6,
 					'maxlength' => 10,
 					'required' => true,
 				),
@@ -201,7 +199,6 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Price (tax excl.)'),
 					'name' => 'price',
-					'size' => 6,
 					'disabled' => ($this->object->price == -1 ? 1 : 0),
 					'maxlength' => 10,
 					'suffix' => $this->context->currency->getSign('right'),
@@ -226,14 +223,12 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 				array(
 					'type' => 'date',
 					'label' => $this->l('From'),
-					'name' => 'from',
-					'size' => 12,
+					'name' => 'from'
 				),
 				array(
 					'type' => 'date',
 					'label' => $this->l('To'),
-					'name' => 'to',
-					'size' => 12,
+					'name' => 'to'
 				),
 				array(
 					'type' => 'select',
@@ -254,7 +249,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
-				'class' => 'button'
+				'class' => 'btn btn-primary'
 			),
 		);
 		if (($value = $this->getFieldValue($this->object, 'price')) != -1)	
