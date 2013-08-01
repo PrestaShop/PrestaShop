@@ -28,7 +28,7 @@
 {if isset($display_regenerate)}
 
 	<form class="form-horizontal" action="{$current}&token={$token}" method="post">
-		<fieldset>
+		<fieldset class="col-lg-12">
 			<h3 class="space">{l s='Regenerate thumbnails'}</h3>
 
 			<div class="alert alert-info">
