@@ -1422,14 +1422,14 @@ class ToolsCore
 
 	/**
 	* Translates a string with underscores into camel case (e.g. first_name -> firstName)
-	* @prototype string public static function toCamelCase(string $str[, bool $capitalise_first_char = false])
+	* @prototype string public static function toCamelCase(string $str[, bool $catapitalise_first_char = false])
 	*/
-	public static function toCamelCase($str, $capitalise_first_char = false)
+	public static function toCamelCase($str, $catapitalise_first_char = false)
 	{
-		$str = Tools::strtolower($str);
-		if ($capitalise_first_char)
-			$str = Tools:ucfirst($str);
-		return preg_replace_callback('/_+([a-z])/', create_function('$c', 'return Tools::strtoupper($c[1]);'), $str);
+		$str = strtolower($str);
+		if ($catapitalise_first_char)
+			$str = ucfirst($str);
+		return preg_replace_callback('/_+([a-z])/', create_function('$c', 'return strtoupper($c[1]);'), $str);
 	}
 
 	/**
@@ -2557,7 +2557,7 @@ exit;
 		$fileAttachment = null;
 		if (isset($_FILES[$input]['name']) && !empty($_FILES[$input]['name']) && !empty($_FILES[$input]['tmp_name']))
 		{
-			$fileAttachment['rename'] = uniqid(). self::strtolower(substr($_FILES[$input]['name'], -5));	
+			$fileAttachment['rename'] = uniqid(). Tools::strtolower(substr($_FILES[$input]['name'], -5));	
 			$fileAttachment['content'] = file_get_contents($_FILES[$input]['tmp_name']);
 			$fileAttachment['tmp_name'] = $_FILES[$input]['tmp_name'];
 			$fileAttachment['name'] = $_FILES[$input]['name'];
