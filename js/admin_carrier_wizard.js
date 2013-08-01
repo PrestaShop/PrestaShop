@@ -246,7 +246,7 @@ function bind_inputs()
 		if (validateRange(index))
 		{
 			enableRange(index);
-			$('#currency_sign').show();
+			$('.currency_sign').show();
 		}
 		else
 			disableRange(index);
@@ -330,7 +330,7 @@ function is_freeClick(elt)
 
 function hideFees()
 {
-	$('tr.fees_all td, tr.fees td').each( function () {
+	$('tr.fees td').each( function () {
 		if ($(this).index() >= 2)
 		{
 			$(this).find('input:text, button').val('').attr('disabled', 'disabled').css('background-color', '#999999').css('border-color', '#999999');
@@ -341,7 +341,7 @@ function hideFees()
 
 function showFees()
 {
-	$('tr.fees_all td, tr.fees td').each( function () {
+	$('tr.fees td').each( function () {
 		if ($(this).index() >= 2)
 		{
 			//enable only if zone is active
