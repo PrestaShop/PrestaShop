@@ -77,6 +77,7 @@
 	<fieldset class="col-lg-12">
 		{block name="override_header"}{/block}
 
+		{if $show_filters}
 		<input type="hidden" id="submitFilter{$table}" name="submitFilter{$table}" value="0"/>
 		<span class="pull-right">
 			<button type="submit" name="submitReset{$table}" class="btn btn-default btn-small">
@@ -86,6 +87,7 @@
 				<i class="icon-filter"></i> {l s='Filter'}
 			</button>
 		</span>
+		{/if}
 {/if}
 		<table 
 			class="table table-hover"
@@ -131,7 +133,7 @@
 					<th>{l s='Actions'}{if !$simple_header}{/if}</th>
 					{/if}
 				</tr>
-					{if !$simple_header}
+			{if !$simple_header && $show_filters}
 				<tr class="nodrag nodrop filter {if $row_hover}row_hover{/if}">
 					<td class="center">
 						{if $has_bulk_actions}
