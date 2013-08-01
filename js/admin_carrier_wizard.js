@@ -421,6 +421,7 @@ function enableRange(index)
 	});
 	$('span.fees_all').show();
 	$('tr.fees_all td:eq('+index+')').children('input').show().removeAttr('disabled');
+	$('tr.fees_all td:eq('+index+')').children('.currency_sign').show();
 	$('tr.fees_all td:eq('+index+')').addClass('validated').removeClass('not_validated');
 	$('tr.fees_all td:eq('+index+')').children('button').remove();
 	bind_inputs();
