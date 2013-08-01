@@ -27,6 +27,7 @@
 $(document).ready(function() {	
 	bind_inputs();
 	initCarrierWizard();
+	is_freeClick($('input[name="is_free"]:checked'));
 });
 
 function initCarrierWizard()
@@ -282,34 +283,7 @@ function bind_inputs()
 	});
 	
 	$('input[name="is_free"]').on('click', function() {
-		var is_free = $(this);
-		$("#step_carrier_ranges .margin-form").each(function() {
-			var field = $(this).children().attr('name');
-			if (typeof(field) != 'undefined' && field != 'is_free' && field != 'shipping_handling')
-			{
-				if (parseInt(is_free.val()))
-				{
-					$(this).hide();
-					$(this).prev().hide();
-				}
-				else
-				{
-					$(this).show();
-					$(this).prev().show();
-				}
-			}
-		});
-		if (parseInt(is_free.val()))
-		{
-			$('#zones_table').hide();
-			$('.new_range').hide();
-		}
-		else
-		{
-			$('#zones_table').show();
-			$('.new_range').show();
-		}
-		resizeWizard();
+		is_freeClick(this);
 	});
 		
 	$('input[name="shipping_method"]').on('click', function() {
@@ -330,6 +304,44 @@ function bind_inputs()
 	$('#zones_table td input[type=text]').off('change').on('change', function () {
 		checkAllFieldIsNumeric();
 	});	
+}
+
+function is_freeClick(elt)
+{
+	var is_free = $(elt);
+
+	if (parseInt(is_free.val()))
+		hideFees();
+	else
+		showFees();
+}
+
+function hideFees()
+{
+	$('tr.fees_all td, tr.fees td').each( function () {
+		if ($(this).index() >= 2)
+		{
+			$(this).find('input:text, button').val('').attr('disabled', 'disabled').css('background-color', '#999999').css('border-color', '#999999');
+			$(this).css('background-color', '#999999');
+		}
+	});
+}
+
+function showFees()
+{
+	$('tr.fees_all td, tr.fees td').each( function () {
+		if ($(this).index() >= 2)
+		{
+			//enable only if zone is active
+			tr = $(this).parent('tr');
+			if ($(tr).index() > 2 && $(tr).find('td:eq(1) input').attr('checked') && $('tr.fees_all td:eq('+$(this).index()+')').hasClass('validated'))
+					$(this).find('input:text').val('').removeAttr('disabled');
+			
+			$(this).find('input:text, button').css('background-color', '').css('border-color', '');
+			$(this).find('button').css('background-color', '').css('border-color', '').removeAttr('disabled');
+			$(this).css('background-color', '');
+		}
+	});
 }
 
 function validateRange(index)
@@ -453,6 +465,12 @@ function checkAllFieldIsNumeric()
 		if (!$.isNumeric($(this).val()) && $(this).val() != '')
 			$(this).addClass('field_error');
 	});
+}
+
+function checkRangeContinuity()
+{
+	
+
 }
 
 function rebuildTabindex()
