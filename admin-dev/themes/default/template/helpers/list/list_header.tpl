@@ -80,7 +80,7 @@
 		{if $show_filters}
 		<input type="hidden" id="submitFilter{$table}" name="submitFilter{$table}" value="0"/>
 		<span class="pull-right">
-			<button type="submit" name="submitReset{$table}" class="btn btn-default btn-small">
+			<button type="submit" name="submitReset{$table}" class="btn {if !$filters_has_value}btn-default{else}btn-primary{/if} btn-small"{if !$filters_has_value} disabled="disabled"{/if}>
 				<i class="icon-eraser"></i> {l s='Reset'}
 			</button>
 			<button type="submit" id="submitFilterButton{$table}" name="submitFilter" class="btn btn-default btn-small" />
