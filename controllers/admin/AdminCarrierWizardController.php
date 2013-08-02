@@ -599,7 +599,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$range_type = Tools::getValue('shipping_method');
 
 		$fees = Tools::getValue('fees');
-
+		
 		$carrier->deleteDeliveryPrice($carrier->getRangeTable());
 		if ($range_type != Carrier::SHIPPING_METHOD_FREE)
 		{
@@ -620,23 +620,23 @@ class AdminCarrierWizardControllerCore extends AdminController
 
 				if (!Validate::isLoadedObject($range))
 					return false;
-
 				$price_list = array();
 				if (is_array($fees) && count($fees))
-				foreach ($fees as $id_zone => $fee)
-					$price_list[] = array(
-						'id_range_price' => ($range_type == Carrier::SHIPPING_METHOD_PRICE ? (int)$range->id : null),
-						'id_range_weight' => ($range_type == Carrier::SHIPPING_METHOD_WEIGHT ? (int)$range->id : null),
-						'id_carrier' => (int)$carrier->id,
-						'id_zone' => (int)$id_zone,
-						'price' => (float)$fee[$key]
-					);
-
+				{
+					foreach ($fees as $id_zone => $fee)
+						$price_list[] = array(
+							'id_range_price' => ($range_type == Carrier::SHIPPING_METHOD_PRICE ? (int)$range->id : null),
+							'id_range_weight' => ($range_type == Carrier::SHIPPING_METHOD_WEIGHT ? (int)$range->id : null),
+							'id_carrier' => (int)$carrier->id,
+							'id_zone' => (int)$id_zone,
+							'price' => (float)$fee[$key]
+						);
+				}
+				
 				if (count($price_list) && !$carrier->addDeliveryPrice($price_list, true))
 					return false;
 			}
 		}
-
 		return true;
 	}
 	
@@ -739,7 +739,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 				}
 				
 				if (!$carrier->is_free)
-					if (!Tools::getValue('id_carrier') && !$this->processRanges((int)$carrier->id))
+					if (!$this->processRanges((int)$carrier->id))
 					{
 						$return['has_error'] = true;
 						$return['errors'][] = $this->l('An error occurred while saving carrier ranges.');
