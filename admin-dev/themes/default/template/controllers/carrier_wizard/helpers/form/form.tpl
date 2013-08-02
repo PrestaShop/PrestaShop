@@ -31,8 +31,11 @@
 {block name="field"}
 	{if $input.name == 'zones'}
 		{include file='controllers/carrier_wizard/helpers/form/form_ranges.tpl'}
+		<div class="validate_range" style="display:none">
+			<a href="#" class="button" id="validate_range_button">{l s="Validate"}</a>
+		</div>
 		<div class="new_range">
-			<a href="#" onclick="add_new_range();return false;" class="button" id="add_new_range">{l s='Add new range'}<img src="../img/admin/add.gif"/></a>
+			<a href="#" onclick="add_new_range();return false;" class="button" id="add_new_range">{l s='Add new range'}</a>
 		</div>
 	{/if}
 	{if $input.name == 'logo'}
