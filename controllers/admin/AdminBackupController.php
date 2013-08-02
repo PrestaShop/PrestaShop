@@ -31,6 +31,7 @@ class AdminBackupControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->table = 'backup';
 		$this->className = 'Backup';
 		$this->identifier = 'filename';
@@ -59,8 +60,10 @@ class AdminBackupControllerCore extends AdminController
 					),
 					'PS_BACKUP_DROP_TABLE' => array(
 						'title' => $this->l('Drop existing tables during import'),
-						'desc' => $this->l('If enabled, the backup script will drop your tables prior to restoring data.').
-							'<br />(ie. "DROP TABLE IF EXISTS")',
+						'hint' => array(
+							$this->l('If enabled, the backup script will drop your tables prior to restoring data.'),
+							$this->l('(ie. "DROP TABLE IF EXISTS")'),
+						),
 						'cast' => 'intval',
 						'type' => 'bool'
 					)

@@ -28,6 +28,7 @@ class AdminLogsControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 	 	$this->table = 'log';
 	 	$this->className = 'Logger';
 	 	$this->lang = false;
@@ -53,10 +54,9 @@ class AdminLogsControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_LOGS_BY_EMAIL' => array(
 						'title' => $this->l('Minimum severity level'),
-						'desc' => $this->l('Enter "5" if you do not want to receive any emails.').'<br />'.$this->l('Emails will be sent to the shop owner.'),
+						'hint' => $this->l('Enter "5" if you do not want to receive any emails.').'<br />'.$this->l('Emails will be sent to the shop owner.'),
 						'cast' => 'intval',
-						'type' => 'text',
-						'size' => 5
+						'type' => 'text'
 					)
 				),
 				'submit' => array()

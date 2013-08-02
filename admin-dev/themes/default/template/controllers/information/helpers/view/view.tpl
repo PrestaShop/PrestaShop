@@ -70,71 +70,85 @@
 	</script>
 
 	<fieldset>
-		<legend><img src="../img/t/AdminInformation.gif" alt="" />{l s='Configuration information'}</legend>
+		<h3>
+			<i class="icon-info"></i>
+			{l s='Configuration information'}
+		</h3>
 		<p>{l s='This information must be provided when you report an issue on our bug tracker or forum.'}</p>
 	</fieldset>
-	<br />
 	<fieldset>
-		<legend><img src="../img/t/AdminInformation.gif" alt="" /> {l s='Information about your configuration.'}</legend>
-		<h3>{l s='Server information'}</h3>	
+		<h3>
+			<i class="icon-info"></i>
+			{l s='Server information'}
+		</h3>	
 		{if count($uname)}
 		<p>
-			<b>{l s='Server information'}:</b> {$uname|escape:'htmlall':'UTF-8'}
+			<strong>{l s='Server information'}:</strong> {$uname|escape:'htmlall':'UTF-8'}
 		</p>
 		{/if}
 		<p>
-			<b>{l s='Server software version'}:</b> {$version.server|escape:'htmlall':'UTF-8'}
+			<strong>{l s='Server software version'}:</strong> {$version.server|escape:'htmlall':'UTF-8'}
 		</p>
 		<p>
-			<b>{l s='PHP version'}:</b> {$version.php|escape:'htmlall':'UTF-8'}
+			<strong>{l s='PHP version'}:</strong> {$version.php|escape:'htmlall':'UTF-8'}
 		</p>
 		<p>
-			<b>{l s='Memory limit'}:</b> {$version.memory_limit|escape:'htmlall':'UTF-8'}
+			<strong>{l s='Memory limit'}:</strong> {$version.memory_limit|escape:'htmlall':'UTF-8'}
 		</p>
 		<p>
-			<b>{l s='Max execution time'}:</b> {$version.max_execution_time|escape:'htmlall':'UTF-8'}
+			<strong>{l s='Max execution time'}:</strong> {$version.max_execution_time|escape:'htmlall':'UTF-8'}
 		</p>
 		{if $apache_instaweb}
-		<p style="color:red;font-weight:700">{l s='PageSpeed module for Apache installed (mod_instaweb)'}</p>
+			<p>{l s='PageSpeed module for Apache installed (mod_instaweb)'}</p>
 		{/if}
-
-		<hr />
-		<h3>{l s='Database information'}</h3>
+	</fieldset>
+	<fieldset>
+		<h3>
+			<i class="icon-info"></i>
+			{l s='Database information'}
+		</h3>
 		<p>
-			<b>{l s='MySQL version'}:</b> {$database.version|escape:'htmlall':'UTF-8'}
+			<strong>{l s='MySQL version'}:</strong> {$database.version|escape:'htmlall':'UTF-8'}
 		</p>
 		<p>
-			<b>{l s='MySQL engine'}:</b> {$database.engine|escape:'htmlall':'UTF-8'}
+			<strong>{l s='MySQL engine'}:</strong> {$database.engine|escape:'htmlall':'UTF-8'}
 		</p>
 		<p>
-			<b>{l s='Tables prefix'}:</b> {$database.prefix|escape:'htmlall':'UTF-8'}
+			<strong>{l s='Tables prefix'}:</strong> {$database.prefix|escape:'htmlall':'UTF-8'}
 		</p>
-	
-		<hr />
-		<h3>{l s='Store information'}</h3>
+	</fieldset>
+	<fieldset>
+		<h3>
+			<i class="icon-info"></i>
+			{l s='Store information'}
+		</h3>
 		<p>
-			<b>{l s='PrestaShop version'}:</b> {$shop.ps|escape:'htmlall':'UTF-8'}
+			<strong>{l s='PrestaShop version'}:</strong> {$shop.ps|escape:'htmlall':'UTF-8'}
 		</p>
 		<p>
-			<b>{l s='Shop URL'}:</b> {$shop.url|escape:'htmlall':'UTF-8'}
+			<strong>{l s='Shop URL'}:</strong> {$shop.url|escape:'htmlall':'UTF-8'}
 		</p>
 		<p>
-			<b>{l s='Current theme in use'}:</b> {$shop.theme|escape:'htmlall':'UTF-8'}
+			<strong>{l s='Current theme in use'}:</strong> {$shop.theme|escape:'htmlall':'UTF-8'}
 		</p>
-		<hr />
-		<h3>{l s='Mail configuration'}</h3>
+	</fieldset>
+	<fieldset>
+		<h3>
+			<i class="icon-info"></i>
+			{l s='Mail configuration'}
+		</h3>
 		<p>
-			<b>{l s='Mail method'}:</b>
+			<strong>{l s='Mail method'}:</strong>
 	
 	{if $mail}
 		{l s='You are using the PHP mail function.'}</p>
 	{else}
 		{l s='You are using your own SMTP parameters.'}</p>
 		<p>
-			<b>{l s='SMTP server'}:</b> {$smtp.server|escape:'htmlall':'UTF-8'}
+			<strong>{l s='SMTP server'}:</strong> {$smtp.server|escape:'htmlall':'UTF-8'}
 		</p>
 		<p>
-			<b>{l s='SMTP user'}:</b>
+			<strong>{l s='SMTP user'}:</strong>
 			{if $smtp.user neq ''}
 				{l s='Defined'}
 			{else}
@@ -142,7 +156,7 @@
 			{/if}
 		</p>
 		<p>
-			<b>{l s='SMTP password'}:</b>
+			<strong>{l s='SMTP password'}:</strong>
 			{if $smtp.password neq ''}
 				{l s='Defined'}
 			{else}
@@ -150,30 +164,37 @@
 			{/if}
 		</p>
 		<p>
-			<b>{l s='Encryption'}:</b> {$smtp.encryption|escape:'htmlall':'UTF-8'}
+			<strong>{l s='Encryption'}:</strong> {$smtp.encryption|escape:'htmlall':'UTF-8'}
 		</p>
 		<p>
-			<b>{l s='Port'}:</b> {$smtp.port|escape:'htmlall':'UTF-8'}
+			<strong>{l s='Port'}:</strong> {$smtp.port|escape:'htmlall':'UTF-8'}
 		</p>
 	{/if}
-		<hr />
-		<h3>{l s='Your information'}</h3>
+	</fieldset>
+	<fieldset>
+		<h3>
+			<i class="icon-info"></i>
+			{l s='Your information'}
+		</h3>
 		<p>
-			<b>{l s='Your web browser'}:</b> {$user_agent|escape:'htmlall':'UTF-8'}
+			<strong>{l s='Your web browser'}:</strong> {$user_agent|escape:'htmlall':'UTF-8'}
 		</p>
 	</fieldset>
-	<br />
+
 	<fieldset id="checkConfiguration">
-		<legend><img src="../img/t/AdminInformation.gif" alt="" /> {l s='Check your configuration'}</legend>
+		<h3>
+			<i class="icon-info"></i>
+			{l s='Check your configuration'}
+		</h3>
 		<p>
-			<b>{l s='Required parameters'}:</b>
+			<strong>{l s='Required parameters'}:</strong>
 			{if !$failRequired}
-					<span style="color:green;font-weight:bold;">OK</span>
+					<span class="text-success">OK</span>
 				</p>
 			{else}
-				<span style="color:red">{l s='Please fix the following error(s)'}</span>
+				<span class="text-danger">{l s='Please fix the following error(s)'}</span>
 			</p>
-			<ul>
+			<ul class="nav">
 				{foreach from=$testsRequired item='value' key='key'}
 					{if $value eq 'fail'}
 						<li>{$testsErrors[$key]}</li>
@@ -183,14 +204,14 @@
 			{/if}
 	
 			<p>
-				<b>{l s='Optional parameters'}:</b>
+				<strong>{l s='Optional parameters'}:</strong>
 			{if !$failOptional}
-				<span style="color:green;font-weight:bold;">OK</span>
+				<span>OK</span>
 			</p>
 			{else}
-				<span style="color:red">{l s='Please fix the following error(s)'}</span>
+				<span class="text-success">{l s='Please fix the following error(s)'}</span>
 			</p>
-			<ul>
+			<ul class="nav">
 				{foreach from=$testsOptional item='value' key='key'}
 					{if $value eq 'fail'}
 						<li>{$key}</li>
@@ -198,12 +219,13 @@
 				{/foreach}
 			</ul>
 			{/if}
-	
 	</fieldset>
 
-	<br />
 	<fieldset>
-		<legend><img src="../img/t/AdminInformation.gif" alt="" /> {l s='List of changed files'}</legend>
+		<h3>
+			<i class="icon-info"></i> 
+			{l s='List of changed files'}
+		</h3>
 		<div id="changedFiles"><img src="../img/admin/ajax-loader.gif" /> {l s='Checking files...'}</div>
 	</fieldset>
 

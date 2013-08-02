@@ -80,6 +80,7 @@ class AdminImportControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->entities = array(
 			$this->l('Categories'),
 			$this->l('Products'),
@@ -553,7 +554,7 @@ class AdminImportControllerCore extends AdminController
 		// Header
 		for ($i = 0; $i < $nb_column; $i++)
 			if (MAX_COLUMNS * (int)$current_table <= $i && (int)$i < MAX_COLUMNS * ((int)$current_table + 1))
-				$html .= '<th style="width: '.(900 / MAX_COLUMNS).'px; vertical-align: top; padding: 4px">
+				$html .= '<th width:"'.(900 / MAX_COLUMNS).'" valign="top">
 							<select onchange="askFeatureName(this, '.$i.');"
 								style="width: '.(900 / MAX_COLUMNS).'px;"
 								id="type_value['.$i.']"

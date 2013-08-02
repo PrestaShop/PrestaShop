@@ -36,6 +36,7 @@ class AdminRequestSqlControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->table = 'request_sql';
 		$this->className = 'RequestSql';
 	 	$this->lang = false;
@@ -110,8 +111,8 @@ class AdminRequestSqlControllerCore extends AdminController
 		<ul>
 			<li>'.$this->l('Click "Add New".').'</li>
 			<li>'.$this->l('Fill in the fields and click "Save".').'</li>
-			<li>'.$this->l('You can then view the query results by clicking on the tab:').' <img src="../img/admin/details.gif" /></li>
-			<li>'.$this->l('You can also export the query results as CSV file by clicking on the tab:').' <img src="../img/admin/export.gif" /></li>
+			<li>'.$this->l('You can then view the query results by clicking on the tab:').' <i class="icon-pencil"></i></li>
+			<li>'.$this->l('You can also export the query results as CSV file by clicking on the tab:').' <i class="icon-upload"></i></li>
 		</ul>');
 
 		$this->addRowAction('export');

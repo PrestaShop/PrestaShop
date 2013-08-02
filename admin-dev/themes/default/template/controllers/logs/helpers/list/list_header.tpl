@@ -27,14 +27,17 @@
 
 {block name="override_header"}
 
-	<fieldset>
-		<legend>{l s='Severity levels'}</legend>
+	<fieldset class="col-lg-12">
+		<h3>
+			<i class="icon-level-up"></i>
+			{l s='Severity levels'}
+		</h3>
 		<p>{l s='Meaning of severity levels:'}</p>
-		<ol style="margin-left: 30px; list-style-type: decimal;">
-			<li style="color: green;">{l s='Informative only'}</li>
-			<li style="color: orange;">{l s='Warning'}</li>
-			<li style="color: orange;">{l s='Error'}</li>
-			<li style="color: red;">{l s='Major issue (crash)!'}</li>
+		<ol>
+			<li class="text-success">{l s='Informative only'}</li>
+			<li class="text-warning">{l s='Warning'}</li>
+			<li class="text-warning">{l s='Error'}</li>
+			<li class="text-danger">{l s='Major issue (crash)!'}</li>
 		</ol>
 	</fieldset><br />
 

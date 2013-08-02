@@ -26,6 +26,13 @@
 
 class AdminThemesControllerCore extends AdminController
 {
+	public function __construct()
+	{
+		$this->bootstrap = true;
+		parent::__construct();
+	}
+
+
 	/** This value is used in isThemeCompatible method. only version node with an
 	 * higher version number will be used in [theme]/config.xml
 	 * @since 1.4.0.11, check theme compatibility 1.4
@@ -100,7 +107,6 @@ class AdminThemesControllerCore extends AdminController
 		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 
 		parent::init();
-		$this->bootstrap = true;
 		$this->can_display_themes = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP) ? true : false;
 
 		$this->fields_options = array(

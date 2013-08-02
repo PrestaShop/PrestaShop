@@ -29,17 +29,21 @@
 
 	{if isset($backup_url) && isset($backup_weight)}
 		<fieldset>
-			<legend><img src="../img/admin/AdminBackup.gif" alt="" class="icon" /> {l s='Download'}</legend>
-			<p style="font-size: 13px;">
-				<a href="{$backup_url}"><img src="../img/admin/AdminBackup.gif" alt="" class="icon" /></a>
-				<b><a href="{$backup_url}">{l s='Download the backup file'} ({$backup_weight}{l s='MB'})</a></b><br /><br />
-				{l s='Tip: You can also download this file over to your FTP. Backup files are located in the "admin/backups" directory.'}</p>
-		</fieldset><br /><br />
+			<h3>
+				<i class="icon-download"></i>
+				{l s='Download'}
+			</h3>
+			<div class="alert alert-block">
+				<p><a href="{$backup_url}"><img src="../img/admin/AdminBackup.gif" alt="" class="icon" /></a></p>
+				<p><a href="{$backup_url}">{l s='Download the backup file'} ({$backup_weight}{l s='MB'})</a></p>
+				<p>{l s='Tip: You can also download this file over to your FTP. Backup files are located in the "admin/backups" directory.'}</p>
+			</div>
+		</fieldset>
 	{/if}
 
-	<div class="error width1" style="float: left; margin-right: 10px;">
+	<div class="row">
 		<p>{l s='Disclaimer before creating a new backup'}</p>
-		<ol style="font-size: 11px; font-weight: normal; line-height: 20px; padding-left: 10px;">
+		<ol>
 			<li>{l s='PrestaShop is not responsible for your database, its backups and/or recovery.'}</li>
 			<li>{l s='PrestaShop is open-source software. You are using it at your own risk under the license agreement.'}</li>
 			<li>{l s='You should backup your data on a regular basis (both files and database).'}</li>
@@ -50,17 +54,14 @@
 			<li>{l s='Always check your data.'}</li>
 			<li>{l s='Never restore a backup on a live site.'}</li>
 		</ol>
-		<br />
-
-		<form action="{$currentIndex}&add{$table}&token={$token}" method="post" style="text-align:center;">
-			<input type="submit" class="button" value="{l s='I have read the disclaimer. Please create a new backup.'}" style="padding:10px;font-weight:bold;border:1px solid;cursor:pointer;" />
+		<form action="{$currentIndex}&add{$table}&token={$token}" method="post" class="form-horizontal">
+			<input type="submit" class="btn btn-primary pull-right" value="{l s='I have read the disclaimer. Please create a new backup.'}" />
 		</form>
-
 	</div>
 
-	<div class="warn width2" style="float: left;">
+	<div class="row">
 		<p>{l s='How to restore a database backup in 10 easy steps:'}</p>
-		<ol style="font-size: 11px; font-weight: normal; line-height: 20px;">
+		<ol>
 			<li>{l s='Set "Enable Shop" to "No" in the "Maintenance" page under the "Preferences" menu.'}</li>
 			<li>{l s='Download the backup from the list below or from your FTP server (in the folder "admin/backups").'}</li>
 			<li>{l s='Check the backup integrity: Look for errors, incomplete file, etc... Be sure to verify all of your data.'}</li>
@@ -73,7 +74,5 @@
 			<li>{l s='Click on the "Go" button and please wait patiently for the import  process to conclude. This may take several minutes.'}</li>
 		</ol>
 	</div>
-
-	<div class="clear"></div>
 
 {/block}
