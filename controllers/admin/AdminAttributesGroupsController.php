@@ -331,7 +331,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		);
 		
 		$this->fields_form['input'][] = array(
-			'type' => 'closediv'
+			'type' => 'closediv',
+			'name' => ''
 		);
 
 		$this->fields_form['submit'] = array(
