@@ -38,6 +38,7 @@
 	var need_to_validate = '{l s='Please validate the last range before create a new one.' js=1}';
 	var delete_range_confirm = '{l s='Are you sure to delete this range ?' js=1}';
 	var currency_sign = '{$currency_sign}';
+	var PS_WEIGHT_UNIT = '{$PS_WEIGHT_UNIT}';
 </script>
 <div id="carrier_wizard" class="swMain">
 	<ul class="nbr_steps_{$wizard_steps.steps|count}">

@@ -104,6 +104,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 		$this->tpl_view_vars = array(
 			'currency_sign' => $currency->sign,
+			'PS_WEIGHT_UNIT' => Configuration::get('PS_WEIGHT_UNIT'),
 			'enableAllSteps' => Validate::isLoadedObject($carrier),
 			'wizard_steps' => $this->wizard_steps,
 			'validate_url' => $this->context->link->getAdminLink('AdminCarrierWizard'),
@@ -306,27 +307,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 					array(
 						'type' => 'zone',
 						'name' => 'zones'
-						)
-					)
-				));
-		
-		$tpl_vars = array();
-		$tpl_vars['PS_WEIGHT_UNIT'] = Configuration::get('PS_WEIGHT_UNIT');
-		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-		$tpl_vars['currency_sign'] = $currency->sign;
-		
-		$fields_value = $this->getStepThreeFieldsValues($carrier);
-
-		$this->getTplRangesVarsAndValues($carrier, $tpl_vars, $fields_value);		
-		return $this->renderGenericForm(array('form' => $this->fields_form), $fields_value, $tpl_vars);
-	}
-
-	public function renderStepFour($carrier)
-	{
-		$this->fields_form = array(
-			'form' => array(
-				'id_form' => 'step_carrier_conf',
-				'input' => array(
+					),
 					array(
 						'type' => 'select',
 						'label' => $this->l('Out-of-range behavior:'),
@@ -346,7 +327,28 @@ class AdminCarrierWizardControllerCore extends AdminController
 							'name' => 'name'
 						),
 						'desc' => $this->l('Out-of-range behavior occurs when no defined range matches the customer\'s cart (e.g. when the weight of the cart is greater than the highest weight limit defined by the weight ranges)')
+					)
 					),
+					
+				));
+		
+		$tpl_vars = array();
+		$tpl_vars['PS_WEIGHT_UNIT'] = Configuration::get('PS_WEIGHT_UNIT');
+		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+		$tpl_vars['currency_sign'] = $currency->sign;
+		
+		$fields_value = $this->getStepThreeFieldsValues($carrier);
+
+		$this->getTplRangesVarsAndValues($carrier, $tpl_vars, $fields_value);		
+		return $this->renderGenericForm(array('form' => $this->fields_form), $fields_value, $tpl_vars);
+	}
+
+	public function renderStepFour($carrier)
+	{
+		$this->fields_form = array(
+			'form' => array(
+				'id_form' => 'step_carrier_conf',
+				'input' => array(
 					array(
 						'type' => 'text',
 						'label' => $this->l('Maximium package height ('.Configuration::get('PS_DIMENSION_UNIT').'):'),
@@ -388,6 +390,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 					)
 				)
 			));
+		
 		$fields_value = $this->getStepFourFieldsValues($carrier);
 
 		// Added values of object Group
