@@ -43,8 +43,8 @@ class AdminImagesControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_image_type' => array('title' => $this->l('ID'), 'align' => 'center'),
 			'name' => array('title' => $this->l('Name'), 'width' => 'auto'),
-			'width' => array('title' => $this->l('Width'), 'align' => 'right', 'suffix' => ' px'),
-			'height' => array('title' => $this->l('Height'), 'align' => 'right', 'suffix' => ' px'),
+			'width' => array('title' => $this->l('Width'),  'suffix' => ' px'),
+			'height' => array('title' => $this->l('Height'),  'suffix' => ' px'),
 			'products' => array('title' => $this->l('Products'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
 			'categories' => array('title' => $this->l('Categories'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
 			'manufacturers' => array('title' => $this->l('Manufacturers'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),

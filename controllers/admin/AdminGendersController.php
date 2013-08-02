@@ -97,7 +97,7 @@ class AdminGendersControllerCore extends AdminController
 					'label' => $this->l('Name:'),
 					'name' => 'name',
 					'lang' => true,
-					'hint' => $this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:',
+					'hint' => $this->l('Invalid characters:').' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:',
 					'required' => true
 				),
 				array(
@@ -145,7 +145,7 @@ class AdminGendersControllerCore extends AdminController
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
-				'class' => 'button'
+				'class' => 'btn btn-primary'
 			)
 		);
 

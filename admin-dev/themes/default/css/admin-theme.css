@@ -5502,6 +5502,18 @@ hr {
   .table tbody > tr:hover > td {
     cursor: pointer;
     background-color: #c4e0ba;
+    -webkit-transition-property: background-color;
+    -moz-transition-property: background-color;
+    -o-transition-property: background-color;
+    transition-property: background-color;
+    -webkit-transition-duration: 0.4s;
+    -moz-transition-duration: 0.4s;
+    -o-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+    -webkit-transition-timing-function: ease-out;
+    -moz-transition-timing-function: ease-out;
+    -o-transition-timing-function: ease-out;
+    transition-timing-function: ease-out;
     -webkit-box-shadow: rgba(151, 200, 133, 0.8) 0 2px 0;
     box-shadow: rgba(151, 200, 133, 0.8) 0 2px 0; }
   .table td.center, .table th.center {
@@ -5515,6 +5527,10 @@ hr {
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px; }
   .table .btn-group {
+    float: right; }
+    .table .btn-group .btn, .table .btn-group .toolbar_btn {
+      float: left; }
+  .table .btn, .table .toolbar_btn {
     float: right; }
 
 tr.filter {
