@@ -287,7 +287,7 @@ function bind_inputs()
 	
 	$(document.body).off('change', 'tr.fees_all td input').on('change', 'tr.fees_all td input', function() {
 	   index = $(this).parent('td').index();
-		val = 'tototo';$(this).val();
+		val = $(this).val();
 		$(this).val('');
 		$('tr.fees').each( function () {
 			$(this).find('td:eq('+index+') input:text:enabled').val(val);
