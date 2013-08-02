@@ -365,8 +365,8 @@ function validateRange(index)
 	$('tr.range_inf td input:text').removeClass('field_error');
 	
 	is_ok = true;
-	range_sup = parseInt($('tr.range_sup td:eq('+index+')').children('input:text').val().trim());
-	range_inf = parseInt($('tr.range_inf td:eq('+index+')').children('input:text').val().trim());
+	range_sup = parseFloat($('tr.range_sup td:eq('+index+')').children('input:text').val().trim());
+	range_inf = parseFloat($('tr.range_inf td:eq('+index+')').children('input:text').val().trim());
 
 	if (isNaN(range_sup) || range_sup.length === 0)
 	{
@@ -384,6 +384,7 @@ function validateRange(index)
 	{
 		if (range_inf >= range_sup)
 		{
+			console.log('range_inf >= range_sup');
 			$('tr.range_sup td:eq('+index+')').children('input:text').addClass('field_error');
 			$('tr.range_inf td:eq('+index+')').children('input:text').addClass('field_error');
 			is_ok = false;
@@ -391,7 +392,8 @@ function validateRange(index)
 		//check if previous range is inf only if it's not the first range
 		if (index > 2)
 		{
-			previous_range_sup = parseInt($('tr.range_sup td:eq('+(index -1)+')').children('input:text').val().trim());
+			console.log('index > 2');
+			previous_range_sup = parseFloat($('tr.range_sup td:eq('+(index -1)+')').children('input:text').val().trim());
 			if (range_inf < previous_range_sup)
 			{
 				$('tr.range_inf td:eq('+index+')').children('input:text').addClass('field_error');
@@ -401,7 +403,7 @@ function validateRange(index)
 		//check if next range is sup only if it's not the last range
 		if ($('tr.range_inf td:eq('+(index + 1)+')').length)
 		{
-			next_range_inf = parseInt($('tr.range_inf td:eq('+(index +1)+')').children('input:text').val().trim());
+			next_range_inf = parseFloat($('tr.range_inf td:eq('+(index +1)+')').children('input:text').val().trim());
 
 			if ((isNaN(range_sup) || range_sup.length === 0) && range_sup > next_range_inf)
 			{
