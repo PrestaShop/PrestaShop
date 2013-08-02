@@ -30,6 +30,7 @@ class AdminTabsControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->context = Context::getContext();
 		$this->multishop_context = Shop::CONTEXT_ALL;
 		$this->table = 'tab';
@@ -45,12 +46,10 @@ class AdminTabsControllerCore extends AdminController
 
 		$this->fields_list = array(
 			'id_tab' => array(
-				'title' => $this->l('ID'),
-				'width' => 25
+				'title' => $this->l('ID')
 			),
 			'name' => array(
-				'title' => $this->l('Name'),
-				'width' => 200
+				'title' => $this->l('Name')
 			),
 			'logo' => array(
 				'title' => $this->l('Icon'),
@@ -64,7 +63,6 @@ class AdminTabsControllerCore extends AdminController
 			),
 			'active' => array(
 				'title' => $this->l('Enabled'),
-				'width' => 70,
 				'align' => 'center',
 				'active' => 'status',
 				'type' => 'bool',
@@ -72,7 +70,6 @@ class AdminTabsControllerCore extends AdminController
  			),
 			'position' => array(
 				'title' => $this->l('Position'),
-				'width' => 40,
 				'filter_key' => 'a!position',
 				'position' => 'position'
 			)
@@ -104,7 +101,7 @@ class AdminTabsControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Menus'),
-				'image' => '../img/admin/tab.gif'
+				'icon' => 'icon-list-ul'
 			),
 			'input' => array(
 				array(
@@ -117,9 +114,8 @@ class AdminTabsControllerCore extends AdminController
 					'label' => $this->l('Name:'),
 					'name' => 'name',
 					'lang' => true,
-					'size' => 33,
 					'required' => true,
-					'hint' => $this->l('Invalid characters:').' <>;=#{}'
+					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
 				),
 				array(
 					'type' => 'text',
@@ -136,14 +132,13 @@ class AdminTabsControllerCore extends AdminController
 					'type' => 'file',
 					'label' => $this->l('Icon:'),
 					'name' => 'icon',
-					'desc' => $this->l('Upload a logo from your computer (.gif, .jpg, .jpeg or .png).')
+					'hint' => $this->l('Upload a logo from your computer (.gif, .jpg, .jpeg or .png).')
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Status:'),
 					'name' => 'active',
 					'required' => false,
-					'class' => 't',
 					'is_bool' => true,
 					'values' => array(
 						array(
@@ -157,12 +152,12 @@ class AdminTabsControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Show or hide menu.')
+					'hint' => $this->l('Show or hide menu.')
 				),
 			),
 			'submit' => array(
 				'title' => $this->l('   Save   '),
-				'class' => 'button'
+				'class' => 'btn btn-default'
 			)
 		);
 

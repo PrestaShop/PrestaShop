@@ -28,6 +28,7 @@ class AdminQuickAccessesControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 	 	$this->table = 'quick_access';
 		$this->className = 'QuickAccess';
 	 	$this->lang = true;
@@ -45,20 +46,16 @@ class AdminQuickAccessesControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_quick_access' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center',
-				'width' => 25
+				'align' => 'center'
 			),
 			'name' => array(
-				'title' => $this->l('Name'),
-				'width' => 200
+				'title' => $this->l('Name')
 			),
 			'link' => array(
-				'title' => $this->l('Link'),
-				'width' => 300
+				'title' => $this->l('Link')
 			),
 			'new_window' => array(
 				'title' => $this->l('New window'),
-				'width' => 70,
 				'align' => 'center',
 				'type' => 'bool',
 				'activeVisu' => 'new_window'
@@ -68,7 +65,7 @@ class AdminQuickAccessesControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Quick Access menu'),
-				'image' => '../img/admin/quick.gif'
+				'icon' => 'icon-align-justify'
 			),
 			'input' => array(
 				array(
@@ -76,26 +73,23 @@ class AdminQuickAccessesControllerCore extends AdminController
 					'label' => $this->l('Name:'),
 					'name' => 'name',
 					'lang' => true,
-					'size' => 33,
 					'maxlength' => 32,
 					'required' => true,
-					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
+					'hint' => $this->l('Forbidden characters:').' &lt;&gt;;=#{}'
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('URL:'),
 					'name' => 'link',
-					'size' => 60,
 					'maxlength' => 128,
 					'required' => true,
-					'desc' => $this->l('If it\'s a URL that comes from your Back Office, you must NOT use a security token.')
+					'hint' => $this->l('If it\'s a URL that comes from your Back Office, you must NOT use a security token.')
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Open in new window:'),
 					'name' => 'new_window',
 					'required' => false,
-					'class' => 't',
 					'values' => array(
 						array(
 							'id' => 'new_window_on',

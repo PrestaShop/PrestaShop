@@ -31,6 +31,7 @@ class AdminAccessControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->table = 'access';
 		$this->className = 'Profile';
 		$this->multishop_context = Shop::CONTEXT_ALL;
