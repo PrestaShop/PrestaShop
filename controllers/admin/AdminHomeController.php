@@ -71,10 +71,15 @@ class AdminHomeControllerCore extends AdminController
 			$indexRebuiltAfterUpdate = 2;
 
 		$smartyOptimized = 0;
+		// Forcing compilation is not good, really slow
 		if (in_array(Configuration::get('PS_SMARTY_FORCE_COMPILE'), array(_PS_SMARTY_CHECK_COMPILE_, _PS_SMARTY_NO_COMPILE_)))
 			++$smartyOptimized;
+		// Enabling cache is better
 		if (Configuration::get('PS_SMARTY_CACHE'))
 			++$smartyOptimized;
+		// If the console is enabled, not good for production
+		if (Configuration::get('PS_SMARTY_CONSOLE') != _PS_SMARTY_CONSOLE_CLOSE_)
+			$smartyOptimized = 0;
 
 		$cccOptimized = Configuration::get('PS_CSS_THEME_CACHE');
 		$cccOptimized += Configuration::get('PS_JS_THEME_CACHE');
