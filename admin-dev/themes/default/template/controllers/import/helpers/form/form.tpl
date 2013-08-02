@@ -98,23 +98,20 @@
 	</div>
 </div>
 
-<div class="clear">&nbsp;</div>
 
 {** 
  * Import fieldset 
  *}
-<form id="preview_import"
-	action="{$current}&token={$token}"
-	method="post"
-	style="display:inline"
-	enctype="multipart/form-data"
-	class="clear">
+<form id="preview_import" action="{$current}&token={$token}" method="post" enctype="multipart/form-data" class="form-horizontal">
 	
-	<fieldset style="float: left; margin: 0pt 20px 0pt 0pt; width: 70%;">
-		<legend><img src="../img/admin/import.gif" />{l s='Import   '}</legend>
-
-			<label class="clear">{if count($files_to_import) > 1}{l s='Your CSV file (%d files):' sprintf=count($files_to_import)}{else}{l s='Your CSV file (%d file):' sprintf=count($files_to_import)}{/if}</label>
-			<div class="margin-form">
+	<fieldset class="col-lg-12">
+		<h3>
+			<i class="icon-download"></i>
+			{l s='Import'}
+		</h3>
+		<div class="row">
+			<label class="control-label col-lg-3">{if count($files_to_import) > 1}{l s='Your CSV file (%d files):' sprintf=count($files_to_import)}{else}{l s='Your CSV file (%d file):' sprintf=count($files_to_import)}{/if}</label>
+			<div class="col-lg-6">
 				{if count($files_to_import)}
 					<select name="csv">
 						{foreach $files_to_import AS $filename}
@@ -123,27 +120,35 @@
 					</select>
 				{/if}
 				&nbsp;
-				<a href="#upload_file_import" id="upload_file_import_link" class="button"><img src="../img/admin/add.gif" alt="Uplaod" title="Upload" />{l s='Upload'}</a>
+				<a href="#upload_file_import" id="upload_file_import_link" class="btn btn-primary">
+					<i class="icon-plus-sign-alt"></i>
+					{l s='Upload'}
+				</a>
 			</div>
-			<div style="width:50%; margin: 0 auto;">
-				<a href="#" onclick="$('#sample_files_import').slideToggle(); return false;">{l s='Click to view our sample import csv files.'}</a>
-				<ul id="sample_files_import" style="display:none">
-					<li><a href="../docs/csv_import/categories_import.csv">{l s='Sample Categories file'}</a></li>
-					<li><a href="../docs/csv_import/products_import.csv">{l s='Sample Products file'}</a></li>
-					<li><a href="../docs/csv_import/combinations_import.csv">{l s='Sample Combinations file'}</a></li>
-					<li><a href="../docs/csv_import/customers_import.csv">{l s='Sample Customers file'}</a></li>
-					<li><a href="../docs/csv_import/addresses_import.csv">{l s='Sample Addresses file'}</a></li>
-					<li><a href="../docs/csv_import/manufacturers_import.csv">{l s='Sample Manufacturers file'}</a></li>
-					<li><a href="../docs/csv_import/suppliers_import.csv">{l s='Sample Suppliers file'}</a></li>
-					{if $PS_ADVANCED_STOCK_MANAGEMENT}
-						<li><a href="../docs/csv_import/supply_orders_import.csv">{l s='Supply Orders sample file'}</a></li>
-						<li><a href="../docs/csv_import/supply_orders_details_import.csv">{l s='Supply Orders Details sample file'}</a></li>
-					{/if}
-				</ul>
-				<div class="clear">&nbsp;</div>
+		</div>
+		<div class="row">
+			<p class="alert alert-info col-offset-3">
+				<a href="#" onclick="$('#sample_files_import').slideToggle(); return false;">
+					{l s='Click to view our sample import csv files.'}
+				</a>
+			</p>
+			<div id="sample_files_import" style="display:none" class="list-group">
+				<a class="list-group-item" href="../docs/csv_import/categories_import.csv">{l s='Sample Categories file'}</a>
+				<a class="list-group-item" href="../docs/csv_import/products_import.csv">{l s='Sample Products file'}</a>
+				<a class="list-group-item" href="../docs/csv_import/combinations_import.csv">{l s='Sample Combinations file'}</a>
+				<a class="list-group-item" href="../docs/csv_import/customers_import.csv">{l s='Sample Customers file'}</a>
+				<a class="list-group-item" href="../docs/csv_import/addresses_import.csv">{l s='Sample Addresses file'}</a>
+				<a class="list-group-item" href="../docs/csv_import/manufacturers_import.csv">{l s='Sample Manufacturers file'}</a>
+				<a class="list-group-item" href="../docs/csv_import/suppliers_import.csv">{l s='Sample Suppliers file'}</a>
+				{if $PS_ADVANCED_STOCK_MANAGEMENT}
+					<a class="list-group-item" href="../docs/csv_import/supply_orders_import.csv">{l s='Supply Orders sample file'}</a>
+					<a class="list-group-item" href="../docs/csv_import/supply_orders_details_import.csv">{l s='Supply Orders Details sample file'}</a>
+				{/if}
 			</div>
-			<label class="clear">{l s='What kind of entity would you like to import?'} </label>
-			<div class="margin-form">
+		</div>
+		<div class="row">
+			<label class="control-label col-lg-3">{l s='What kind of entity would you like to import?'} </label>
+			<div class="col-lg-6">
 				<select name="entity" id="entity">
 					{foreach $entities AS $entity => $i}
 						<option value="{$i}" {if $entity == $i}selected="selected"{/if}>
@@ -152,82 +157,113 @@
 					{/foreach}
 				</select>
 			</div>
-				
-			<label class="clear">{l s='Language of the file'}</label>
-			<div class="margin-form">
+		</div>
+		<div class="row">
+			<label class="control-label col-lg-3">
+				<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='The locale must be installed'}">
+					{l s='Language of the file'}
+				</span>
+			</label>
+			<div class="col-lg-6">
 				<select name="iso_lang">
 					{foreach $languages AS $lang}
 						<option value="{$lang.iso_code}" {if $lang.id_lang == $id_language} selected="selected"{/if}>{$lang.name}</option>
 					{/foreach}
 				</select>
-				{l s='The locale must be installed'}
 			</div>
-			<label for="convert" class="clear">{l s='ISO-8859-1 encoded file?'} </label>
-			<div class="margin-form">
-				<input name="convert" id="convert" type="checkbox" style="margin-top: 6px;"/>
+		</div>
+		<div class="row">
+			<label for="convert" class="control-label col-lg-3">{l s='ISO-8859-1 encoded file?'} </label>
+			<div class="col-lg-6">
+				<p class="checkbox">
+					<input name="convert" id="convert" type="checkbox" />
+				</p>
 			</div>
-			<label class="clear">{l s='Field separator'} </label>
-			<div class="margin-form">
+		</div>
+		<div class="row">
+			<label class="control-label col-lg-3">{l s='Field separator'} </label>
+			<div class="col-lg-6 input-group">
 				<input type="text" size="2" value=";" name="separator"/>
-				{l s='e.g. '}"1<span class="bold" style="color: red">;</span>Ipod<span class="bold" style="color: red">;</span>129.90<span class="bold" style="color: red">;</span>5"
+				<span class="input-group-addon">{l s='e.g. '}"1; Ipod; 129.90; 5"</span>
 			</div>
-			<label class="clear">{l s='Multiple value separator'} </label>
-			<div class="margin-form">
+		</div>
+		<div class="row">
+			<label class="control-label col-lg-3">{l s='Multiple value separator'} </label>
+			<div class="col-lg-6 input-group">
 				<input type="text" size="2" value="," name="multiple_value_separator"/>
-				{l s='e.g. '}"Ipod;red.jpg<span class="bold" style="color: red">,</span>blue.jpg<span class="bold" style="color: red">,</span>green.jpg;129.90"
+				<span class="input-group-addon">{l s='e.g. '}"Ipod; red.jpg, blue.jpg, green.jpg; 129.90"</span>
 			</div>
-			<label for="truncate" class="clear">{l s='Delete all'} <span id="entitie">{l s='categories'}</span> {l s='before import?'} </label>
-			<div class="margin-form">
-				<input name="truncate" id="truncate" type="checkbox"/>
+		</div>
+		<div class="row">
+			<label for="truncate" class="control-label col-lg-3">{l s='Delete all'} <span id="entitie">{l s='categories'}</span> {l s='before import?'} </label>
+			<div class="col-lg-6">
+				<p class="checkbox">
+					<input name="truncate" id="truncate" type="checkbox"/>
+				</p>
 			</div>
-				<label for="match_ref" class="clear" style="display: none">{l s='Use product reference as key?'}</label>
-			<div class="margin-form">
-				<input name="match_ref" id="match_ref" type="checkbox" style="margin-top: 6px; display:none"/>
+		</div>
+		<div class="row">
+			<label for="match_ref" class="control-label col-lg-3" style="display: none">{l s='Use product reference as key?'}</label>
+			<div class="col-lg-6">
+				<p class="checkbox">
+					<input name="match_ref" id="match_ref" type="checkbox" style="display:none"/>
+				</p>
 			</div>
-			<label for="forceIDs" class="clear">{l s='Force all ID\'s during import?'} </label>
-			<div class="margin-form">
-				<input name="forceIDs" id="forceIDs" type="checkbox"/> {l s='If you don\'t use this option, all ID\'s will be auto-incremented.'}
+		</div>
+		<div class="row">
+			<label for="forceIDs" class="control-label col-lg-3">
+				<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='If you don\'t use this option, all ID\'s will be auto-incremented.'}">
+					{l s='Force all ID\'s during import?'} 
+				</span>
+			</label>
+			<div class="col-lg-6">
+				<p class="checkbox">
+					<input name="forceIDs" id="forceIDs" type="checkbox"/> 
+				</p>
 			</div>
-			<div class="space margin-form">
-				<input type="submit" name="submitImportFile" value="{l s='Next step'}" class="button" {if empty($files_to_import)}disabled{/if}/>
-				{if empty($files_to_import)}<span style="color:red;">{l s='You must upload a file in order to proceed to the next step'}</span>{/if}
+		</div>
+		<div class="row">
+			<div class="col-offset-3">
+				<input type="submit" name="submitImportFile" value="{l s='Next step'}" class="btn btn-primary" {if empty($files_to_import)}disabled{/if}/>
 			</div>
-			<div class="alert alert-block import_products_categories" style="margin-top: 20px;">
+			{if empty($files_to_import)}
+				<div class="col-lg-12">
+					<p class="amert alert-info">{l s='You must upload a file in order to proceed to the next step'}</p>
+				</div>
+			{/if}
+		</div>
+			<div class="alert alert-block import_products_categories">
 				<p>{l s='Note that the category import does not support categories of the same name.'}</p>
 				<p>{l s='Note that you can have several products with the same reference.'}</p>
 			</div>
-			<div class="alert alert-block import_supply_orders_details" style="margin-top: 20px; display:none">
+			<div class="alert alert-block import_supply_orders_details">
 				<p>{l s='Importing Supply Order Details will reset products ordered, if there are any.'}</p>
 			</div>
 		{if !count($files_to_import)}
-			<div class="alert alert-block" style="margin-top: 20px;">
+			<div class="alert alert-block">
 				<p>{l s='There is no CSV file available. Please upload one using the \'Upload\' button above.'}</p>
-				<ul>
-					<li>{l s='You can read information on CSV import at:'} <a href="http://doc.prestashop.com/display/PS14/Troubleshooting#Troubleshooting-HowtocorrectlyimportaccentuatedcontentusingaCSVfile%3F" target="_blank">http://doc.prestashop.com/display/PS14/Troubleshooting</a></li>
-					<li>{l s='Read more about CSV format at:'} <a href="http://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">http://en.wikipedia.org/wiki/Comma-separated_values</a></li>
+				<ul class="nav">
+					<li>{l s='You can read information on CSV import at:'} <a href="http://doc.prestashop.com/display/PS14/Troubleshooting#Troubleshooting-HowtocorrectlyimportaccentuatedcontentusingaCSVfile%3F" target="_blank">http://doc.prestashop.com/display/PS14/Troubleshooting</a>
+					<li>{l s='Read more about CSV format at:'} <a href="http://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">http://en.wikipedia.org/wiki/Comma-separated_values</a>
 				</ul>
 			</div>
 		{/if}
 	</fieldset>
 </form>
 
-<fieldset style="display:block;">
-
-	<legend>
-		<img src="../img/admin/import.gif" />{l s='Available fields'}
-	</legend>
-
-	<div id="availableFields">
+<fieldset class="col-lg-12">
+	<h3>
+		<i class="icon-download"></i>
+		{l s='Available fields'}
+	</h3>
+	<div id="availableFields" class="alert alert-block">
 		{$available_fields}
 	</div>
-
-	<div class="clear">
-		<br /><br />{l s='* Required field'}
-	</div>
+	<p>{l s='* Required field'}</p>
+	
 
 </fieldset>
-		
-<div class="clear">&nbsp;</div>
+
 
 <script type="text/javascript">
 	$("select#entity").change( function() {

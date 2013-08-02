@@ -26,6 +26,13 @@
 
 class AdminInformationControllerCore extends AdminController
 {
+
+	public function __construct()
+	{
+		$this->bootstrap = true;
+		parent::__construct();
+	}
+
 	public function initContent()
 	{
 		$this->display = 'view';

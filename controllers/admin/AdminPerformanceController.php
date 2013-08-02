@@ -29,6 +29,7 @@ class AdminPerformanceControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->className = 'Configuration';
 		parent::__construct();		
 	}
@@ -38,7 +39,7 @@ class AdminPerformanceControllerCore extends AdminController
 		$this->fields_form[0]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('Smarty'),
-				'image' => '../img/admin/prefs.gif'
+				'icon' => 'icon-briefcase'
 			),
 			'input' => array(
 				array(
@@ -49,34 +50,32 @@ class AdminPerformanceControllerCore extends AdminController
 					'type' => 'radio',
 					'label' => $this->l('Template cache'),
 					'name' => 'smarty_force_compile',
-					'class' => 't',
 					'br' => true,
 					'values' => array(
 						array(
 							'id' => 'smarty_force_compile_'._PS_SMARTY_NO_COMPILE_,
 							'value' => _PS_SMARTY_NO_COMPILE_,
 							'label' => $this->l('Never recompile template files'),
-							'desc' => $this->l('This option should be used in a production environment.')
+							'hint' => $this->l('This option should be used in a production environment.')
 						),
 						array(
 							'id' => 'smarty_force_compile_'._PS_SMARTY_CHECK_COMPILE_,
 							'value' => _PS_SMARTY_CHECK_COMPILE_,
 							'label' => $this->l('Recompile templates if the files have been updated'),
-							'desc' => $this->l('Templates are recompiled when they are updated. If you experience compilation troubles when you update your template files, you should use Force Compile instead of this option. It should never be used in a production environment.')
+							'hint' => $this->l('Templates are recompiled when they are updated. If you experience compilation troubles when you update your template files, you should use Force Compile instead of this option. It should never be used in a production environment.')
 						),
 						array(
 							'id' => 'smarty_force_compile_'._PS_SMARTY_FORCE_COMPILE_,
 							'value' => _PS_SMARTY_FORCE_COMPILE_,
 							'label' => $this->l('Force compilation'),
-							'desc' => $this->l('This forces Smarty to (re)compile templates on every invocation. This is handy for development and debugging. Note: This should never be used in a production environment.')
+							'hint' => $this->l('This forces Smarty to (re)compile templates on every invocation. This is handy for development and debugging. Note: This should never be used in a production environment.')
 						)
 					)
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Cache'),
 					'name' => 'smarty_cache',
-					'class' => 't',
 					'is_bool' => true,
 					'values' => array(
 						array(
@@ -90,13 +89,12 @@ class AdminPerformanceControllerCore extends AdminController
 							'label' => $this->l('No')
 						)
 					),
-					'desc' => $this->l('Should be enabled except for debugging.')
+					'hint' => $this->l('Should be enabled except for debugging.')
 				),
 				array(
 					'type' => 'radio',
 					'label' => $this->l('Debug console'),
 					'name' => 'smarty_console',
-					'class' => 't',
 					'br' => true,
 					'values' => array(
 						array(
@@ -108,13 +106,13 @@ class AdminPerformanceControllerCore extends AdminController
 							'id' => 'smarty_console_url',
 							'value' => 1,
 							'label' => $this->l('Open console with URL parameter (SMARTY_DEBUG)'),
-							'desc' => $this->l('To open the debug console, you simply pass the SMARTY_DEBUG parameter in the URL.')
+							'hint' => $this->l('To open the debug console, you simply pass the SMARTY_DEBUG parameter in the URL.')
 						),
 						array(
 							'id' => 'smarty_console_open',
 							'value' => 2,
 							'label' => $this->l('Always open console'),
-							'desc' => $this->l('Choose this option to always force the debug console to open.')
+							'hint' => $this->l('Choose this option to always force the debug console to open.')
 						)
 					)
 				),
@@ -131,19 +129,18 @@ class AdminPerformanceControllerCore extends AdminController
 		$this->fields_form[1]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('Optional features'),
-				'image' => '../img/admin/tab-plugins.gif'
+				'icon' => 'icon-puzzle-piece'
 			),
-			'desc' => $this->l('Some features can be disabled in order to improve performance.'),
+			'hint' => $this->l('Some features can be disabled in order to improve performance.'),
 			'input' => array(
 				array(
 					'type' => 'hidden',
 					'name' => 'features_detachables_up'
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Combinations'),
 					'name' => 'combination',
-					'class' => 't',
 					'is_bool' => true,
 					'disabled' => Combination::isCurrentlyUsed(),
 					'values' => array(
@@ -158,13 +155,12 @@ class AdminPerformanceControllerCore extends AdminController
 							'label' => $this->l('No')
 						)
 					),
-					'desc' => $this->l('These features will be disabled')
+					'hint' => $this->l('These features will be disabled')
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Features'),
 					'name' => 'feature',
-					'class' => 't',
 					'is_bool' => true,
 					'values' => array(
 						array(
@@ -178,7 +174,7 @@ class AdminPerformanceControllerCore extends AdminController
 							'label' => $this->l('No')
 						)
 					),
-					'desc' => $this->l('These features will be disabled')
+					'hint' => $this->l('These features will be disabled')
 				)
 			)
 		);
@@ -192,19 +188,18 @@ class AdminPerformanceControllerCore extends AdminController
 		$this->fields_form[2]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('CCC (Combine, Compress and Cache)'),
-				'image' => '../img/admin/arrow_in.png'
+				'icon' => 'icon-fullscreen'
 			),
-			'desc' => $this->l('CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.4+. Otherwise, CCC will cause problems.'),
+			'hint' => $this->l('CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.4+. Otherwise, CCC will cause problems.'),
 			'input' => array(
 				array(
 					'type' => 'hidden',
 					'name' => 'ccc_up',
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Smart cache for CSS'),
 					'name' => 'PS_CSS_THEME_CACHE',
-					'class' => 't',
 					'br' => true,
 					'values' => array(
 						array(
@@ -220,10 +215,9 @@ class AdminPerformanceControllerCore extends AdminController
 					)
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Smart cache for JavaScript'),
 					'name' => 'PS_JS_THEME_CACHE',
-					'class' => 't',
 					'br' => true,
 					'values' => array(
 						array(
@@ -239,10 +233,9 @@ class AdminPerformanceControllerCore extends AdminController
 					)
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Minify HTML'),
 					'name' => 'PS_HTML_THEME_COMPRESSION',
-					'class' => 't',
 					'br' => true,
 					'values' => array(
 						array(
@@ -258,10 +251,9 @@ class AdminPerformanceControllerCore extends AdminController
 					)
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Compress inline JavaScript in HTML'),
 					'name' => 'PS_JS_HTML_THEME_COMPRESSION',
-					'class' => 't',
 					'br' => true,
 					'values' => array(
 						array(
@@ -277,11 +269,10 @@ class AdminPerformanceControllerCore extends AdminController
 					)
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Apache optimization'),
 					'name' => 'PS_HTACCESS_CACHE_CONTROL',
-					'class' => 't',
-					'desc' => $this->l('This will add directives to your .htaccess file, which should improve caching and compression.'),
+					'hint' => $this->l('This will add directives to your .htaccess file, which should improve caching and compression.'),
 					'is_bool' => true,
 					'values' => array(
 						array(
@@ -312,9 +303,9 @@ class AdminPerformanceControllerCore extends AdminController
 		$this->fields_form[3]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('Media servers (use only with CCC)'),
-				'image' => '../img/admin/subdomain.gif'
+				'icon' => 'icon-link'
 			),
-			'desc' => $this->l('You must enter another domain, or subdomain, in order to use cookieless static content.'),
+			'hint' => $this->l('You must enter another domain, or subdomain, in order to use cookieless static content.'),
 			'input' => array(
 				array(
 					'type' => 'hidden',
@@ -324,22 +315,19 @@ class AdminPerformanceControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Media server #1'),
 					'name' => '_MEDIA_SERVER_1_',
-					'size' => 30,
-					'desc' => $this->l('Name of the second domain of your shop, (e.g. myshop-media-server-1.com). If you do not have another domain, leave this field blank.')
+					'hint' => $this->l('Name of the second domain of your shop, (e.g. myshop-media-server-1.com). If you do not have another domain, leave this field blank.')
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Media server #2'),
 					'name' => '_MEDIA_SERVER_2_',
-					'size' => 30,
-					'desc' => $this->l('Name of the third domain of your shop, (e.g. myshop-media-server-2.com). If you do not have another domain, leave this field blank.')
+					'hint' => $this->l('Name of the third domain of your shop, (e.g. myshop-media-server-2.com). If you do not have another domain, leave this field blank.')
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Media server #3'),
 					'name' => '_MEDIA_SERVER_3_',
-					'size' => 30,
-					'desc' => $this->l('Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank.')
+					'hint' => $this->l('Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank.')
 				),
 			)
 		);
@@ -354,7 +342,7 @@ class AdminPerformanceControllerCore extends AdminController
 		$this->fields_form[4]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('Ciphering'),
-				'image' => '../img/admin/computer_key.png'
+				'icon' => 'icon-desktop'
 			),
 			'desc' => $this->l('Mcrypt is faster than our custom BlowFish class, but requires the PHP extension "mcrypt". If you change this configuration, all cookies will be reset.'),
 			'input' => array(
@@ -366,7 +354,6 @@ class AdminPerformanceControllerCore extends AdminController
 					'type' => 'radio',
 					'label' => $this->l('Algorithm'),
 					'name' => 'PS_CIPHER_ALGORITHM',
-					'class' => 't',
 					'br' => true,
 					'values' => array(
 						array(
@@ -411,19 +398,18 @@ class AdminPerformanceControllerCore extends AdminController
 		$this->fields_form[5]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('Caching'),
-				'image' => '../img/admin/computer_key.png'
+				'icon' => 'icon-desktop'
 			),
-			'desc' => $this->l('Caching systems are used to speed up your store by caching data into the server\'s memory, avoiding the exhausting task of querying the database.'),
+			'hint' => $this->l('Caching systems are used to speed up your store by caching data into the server\'s memory, avoiding the exhausting task of querying the database.'),
 			'input' => array(
 				array(
 					'type' => 'hidden',
 					'name' => 'cache_up'
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Use cache'),
 					'name' => 'active',
-					'class' => 't',
 					'is_bool' => true,
 					'values' => array(
 						array(
@@ -437,7 +423,7 @@ class AdminPerformanceControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Enable or disable caching system.')
+					'hint' => $this->l('Enable or disable caching system.')
 				),
 				array(
 					'type' => 'select',
@@ -452,13 +438,12 @@ class AdminPerformanceControllerCore extends AdminController
 				array(
 					'type' => 'text',
 					'label' => $this->l('Directory depth'),
-					'name' => 'ps_cache_fs_directory_depth',
-					'size' => 30
+					'name' => 'ps_cache_fs_directory_depth'
 				),
 			),
 			'submit' => array(
-				'title' => $this->l('   Save   '),
-				'class' => 'button'
+				'title' => $this->l('Save'),
+				'class' => 'btn btn-default'
 			),
 			'memcachedServers' => true
 		);
@@ -477,12 +462,15 @@ class AdminPerformanceControllerCore extends AdminController
 			$this->fields_form[6]['form'] = array(
 				'legend' => array(
 					'title' => $this->l('CloudCache'),
-					'image' => '../img/admin/subdomain.gif'
+					'icon' => 'icon-cloud'
 				),
-				'desc' => $this->l('Performance matters! Improve speed and conversions the easy way.').'<br />'.
-				$this->l('CloudCache supercharges your site in minutes through its state-of-the-art content delivery network.').'<br /><br />'.
-				$this->l('Subscribe now using the code "presta25" and get an exclusive 25% monthly discount on every available package.').'<br /><br />
-			<a style="color: blue" href="index.php?controller=AdminModules&token='.Tools::getAdminTokenLite('AdminModules').'&filtername=cloudcache" id="installCloudCache">&gt; '.$this->l('Click here to install the CloudCache module for PrestaShop').'</a><br />'
+				'desc' => 
+				'<div class="alert alert-block">
+					<p>'.$this->l('Performance matters! Improve speed and conversions the easy way.').'</p>'.
+					'<p>'.$this->l('CloudCache supercharges your site in minutes through its state-of-the-art content delivery network.').'</p>'.
+					'<p>'.$this->l('Subscribe now using the code "presta25" and get an exclusive 25% monthly discount on every available package.').'</p>
+					<p><a href="index.php?controller=AdminModules&token='.Tools::getAdminTokenLite('AdminModules').'&filtername=cloudcache" id="installCloudCache">&gt; '.$this->l('Click here to install the CloudCache module for PrestaShop').'</a></p>
+			</div>'
 		);
 	}
 

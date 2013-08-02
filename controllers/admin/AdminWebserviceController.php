@@ -32,6 +32,7 @@ class AdminWebserviceControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 	 	$this->table = 'webservice_account';
 		$this->className = 'WebserviceKey';
 	 	$this->lang = false;
@@ -48,16 +49,14 @@ class AdminWebserviceControllerCore extends AdminController
 		$this->fields_list = array(
 			'key' => array(
 				'title' => $this->l('Key'),
-				'align' => 'center',
-				'width' => 32
+				'align' => 'center'
 			),
 			'active' => array(
 				'title' => $this->l('Enabled'),
 				'align' => 'center',
 				'active' => 'status',
 				'type' => 'bool',
-				'orderby' => false,
-				'width' => 32
+				'orderby' => false
 			),
 			'description' => array(
 				'title' => $this->l('Key description'),
@@ -111,9 +110,8 @@ class AdminWebserviceControllerCore extends AdminController
 					'label' => $this->l('Key:'),
 					'name' => 'key',
 					'id' => 'code',
-					'size' => 32,
 					'required' => true,
-					'desc' => $this->l('Webservice account key.'),
+					'hint' => $this->l('Webservice account key.'),
 				),
 				array(
 					'type' => 'textarea',
@@ -121,14 +119,13 @@ class AdminWebserviceControllerCore extends AdminController
 					'name' => 'description',
 					'rows' => 3,
 					'cols' => 110,
-					'desc' => $this->l('Key description'),
+					'hint' => $this->l('Key description'),
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Status:'),
 					'name' => 'active',
 					'required' => false,
-					'class' => 't',
 					'is_bool' => true,
 					'values' => array(
 						array(
@@ -162,7 +159,7 @@ class AdminWebserviceControllerCore extends AdminController
 
 		$this->fields_form['submit'] = array(
 			'title' => $this->l('Save   '),
-			'class' => 'button'
+			'class' => 'btn btn-primary'
 		);
 
 		if (!($obj = $this->loadObject(true)))

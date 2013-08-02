@@ -28,6 +28,7 @@ class AdminEmailsControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
 
@@ -83,40 +84,37 @@ class AdminEmailsControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_MAIL_DOMAIN' => array(
 						'title' => $this->l('Mail domain name:'),
-						'desc' => $this->l('Fully qualified domain name (keep this field empty if you don\'t know).'),
+						'hint' => $this->l('Fully qualified domain name (keep this field empty if you don\'t know).'),
 						'empty' => true, 'validation' =>
-						'isUrl', 'size' => 30,
+						'isUrl',
 						'type' => 'text',
 						'visibility' => Shop::CONTEXT_ALL
 						),
 					'PS_MAIL_SERVER' => array(
 						'title' => $this->l('SMTP server:'),
-						'desc' => $this->l('IP address or server name (e.g. smtp.mydomain.com)'),
+						'hint' => $this->l('IP address or server name (e.g. smtp.mydomain.com)'),
 						'validation' => 'isGenericName',
-						'size' => 30,
 						'type' => 'text',
 						'visibility' => Shop::CONTEXT_ALL
 						),
 					'PS_MAIL_USER' => array(
 						'title' => $this->l('SMTP user:'),
-						'desc' => $this->l('Leave blank if not applicable.'),
+						'hint' => $this->l('Leave blank if not applicable.'),
 						'validation' => 'isGenericName',
-						'size' => 30,
 						'type' => 'text',
 						'visibility' => Shop::CONTEXT_ALL
 						),
 					'PS_MAIL_PASSWD' => array(
 						'title' => $this->l('SMTP password:'),
-						'desc' => $this->l('Leave blank if not applicable.'),
+						'hint' => $this->l('Leave blank if not applicable.'),
 						'validation' => 'isAnything',
-						'size' => 30,
 						'type' => 'password',
 						'visibility' => Shop::CONTEXT_ALL,
 						'autocomplete' => false
 						),
 					'PS_MAIL_SMTP_ENCRYPTION' => array(
 						'title' => $this->l('Encryption:'),
-						'desc' => $this->l('Use an encrypt protocol'),
+						'hint' => $this->l('Use an encrypt protocol'),
 						'type' => 'select',
 						'cast' => 'strval',
 						'identifier' => 'mode',
@@ -138,9 +136,8 @@ class AdminEmailsControllerCore extends AdminController
 						),
 					'PS_MAIL_SMTP_PORT' => array(
 						'title' => $this->l('Port:'),
-						'desc' => $this->l('Port number to use'),
+						'hint' => $this->l('Port number to use'),
 						'validation' => 'isInt',
-						'size' => 5,
 						'type' => 'text',
 						'cast' => 'intval',
 						'visibility' => Shop::CONTEXT_ALL
@@ -155,11 +152,10 @@ class AdminEmailsControllerCore extends AdminController
 					'PS_SHOP_EMAIL' => array(
 						'title' => $this->l('Send a test email to'),
 						'type' => 'text',
-						'size' => 40,
 						'id' => 'testEmail'
 						),
 				),
-				'bottom' => '<div class="margin-form"><input type="button" class="button" name="btEmailTest" id="btEmailTest" value="'.$this->l('Send an email test').'" onclick="verifyMail();" /><br />
+				'bottom' => '<div class="row col-offset-3"><input type="button" class="btn btn-primary" name="btEmailTest" id="btEmailTest" value="'.$this->l('Send an email test').'" onclick="verifyMail();" /><br />
 					<p id="mailResultCheck" style="display:none;"></p></div>',
 			)
 		);

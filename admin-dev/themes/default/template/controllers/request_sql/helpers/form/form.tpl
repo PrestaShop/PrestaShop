@@ -26,20 +26,21 @@
 {extends file="helpers/form/form.tpl"}
 
 {block name="after"}
-	<br />
-	<fieldset>
-		<legend>{l s='List of MySQL Tables:'}</legend>
-		<div id="selectTables" style="float:left;width:200px">
+
+	<fieldset class="col-lg-12">
+		<h3>
+			<i class="icon-list"></i>
+			{l s='List of MySQL Tables:'}
+		</h3>
+		<div id="selectTables">
 			<select id="table" size="10">
 				{foreach $tables as $table}
 					<option value="{$table}">{$table}</option>
 				{/foreach}
-			</select><br />
+			</select>
 			<input type="button" id="add_table" value="{l s='Add table'}" />
 		</div>
-
-		<div id="listAttributes" style="width:300px;margin-left:250px"></div>
-
+		<div id="listAttributes"></div>
 	</fieldset>
 {/block}
 
