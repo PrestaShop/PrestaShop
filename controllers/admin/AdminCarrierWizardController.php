@@ -101,8 +101,9 @@ class AdminCarrierWizardControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('You do not have permission to use this wizard.');
 			return ;
 		}
-
+		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 		$this->tpl_view_vars = array(
+			'currency_sign' => $currency->sign,
 			'enableAllSteps' => Validate::isLoadedObject($carrier),
 			'wizard_steps' => $this->wizard_steps,
 			'validate_url' => $this->context->link->getAdminLink('AdminCarrierWizard'),
@@ -116,6 +117,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 				)),
 			'labels' => array('next' => $this->l('Next'), 'previous' => $this->l('Previous'), 'finish' => $this->l('Finish'))
 		);
+		
 		
 		if (Shop::isFeatureActive())
 			array_splice($this->tpl_view_vars['wizard_contents']['contents'], 1, 0, array(0 => $this->renderStepTwo($carrier)));
@@ -417,35 +419,35 @@ class AdminCarrierWizardControllerCore extends AdminController
 			foreach ($carrier_zones as $carrier_zone)
 				$carrier_zones_ids[] = $carrier_zone['id_zone'];
 
-		
+		$range_table = $carrier->getRangeTable();
 		$shipping_method = $carrier->getShippingMethod();
+		
+		$zones = Zone::getZones(false);
+		foreach ($zones as $zone)
+			$fields_value['zones'][$zone['id_zone']] = Tools::getValue('zone_'.$zone['id_zone'], (in_array($zone['id_zone'], $carrier_zones_ids)));
+		
 		if ($shipping_method == Carrier::SHIPPING_METHOD_FREE)
 		{
-			$range_table = array();
 			$range_obj = $carrier->getRangeObject($carrier->shipping_method);
 			$price_by_range = array();
 		}
 		else
 		{
-			$range_table = $carrier->getRangeTable();
 			$range_obj = $carrier->getRangeObject();
 			$price_by_range = Carrier::getDeliveryPriceByRanges($range_table, (int)$carrier->id);
 		}
 
-		$zones = Zone::getZones(false);
-		foreach ($zones as $zone)
-			$fields_value['zones'][$zone['id_zone']] = Tools::getValue('zone_'.$zone['id_zone'], (in_array($zone['id_zone'], $carrier_zones_ids)));
-
 		foreach ($price_by_range as $price)
 			$tpl_vars['price_by_range'][$price['id_'.$range_table]][$price['id_zone']] = $price['price'];
-			
+
 		$tmp_range = $range_obj->getRanges((int)$carrier->id);
 		$tpl_vars['ranges'] = array();
-		foreach ($tmp_range as $id => $range)
-		{
-			$tpl_vars['ranges'][$range['id_'.$range_table]] = $range;
-			$tpl_vars['ranges'][$range['id_'.$range_table]]['id_range'] = $range['id_'.$range_table];
-		}
+		if ($shipping_method != Carrier::SHIPPING_METHOD_FREE)
+			foreach ($tmp_range as $id => $range)
+			{
+				$tpl_vars['ranges'][$range['id_'.$range_table]] = $range;
+				$tpl_vars['ranges'][$range['id_'.$range_table]]['id_range'] = $range['id_'.$range_table];
+			}
 
 		// init blank range
 		if (!count($tpl_vars['ranges']))
@@ -534,7 +536,6 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$tpl_vars = array();
 		$fields_value = $this->getStepThreeFieldsValues($carrier);
 		$this->getTplRangesVarsAndValues($carrier, $tpl_vars, $fields_value);
-
 		$template = $this->createTemplate('controllers/carrier_wizard/helpers/form/form_ranges.tpl');
 		$template->assign($tpl_vars);
 		$template->assign('change_ranges', 1);
@@ -676,19 +677,30 @@ class AdminCarrierWizardControllerCore extends AdminController
 			{
 				$current_carrier = new Carrier((int)$id_carrier);
 				// if update we duplicate current Carrier
-				$carrier = $current_carrier->duplicateObject();
-				if (Validate::isLoadedObject($carrier))
+				$new_carrier = $current_carrier->duplicateObject();
+				if (Validate::isLoadedObject($new_carrier))
 				{
 					// Set flag deteled to true for historization
 					$current_carrier->deleted = true;
 					$current_carrier->update();
-					
+
 					// Fill the new carrier object
-					$this->copyFromPost($carrier, $this->table);
-					$carrier->position = $current_carrier->position;
-					$carrier->update();
-					
-					$this->copyLogo($current_carrier->id, $carrier->id);
+					$this->copyFromPost($new_carrier, $this->table);
+					$new_carrier->position = $current_carrier->position;
+					$new_carrier->update();
+
+					$this->updateAssoShop($new_carrier->id);
+					$new_carrier->copyCarrierData((int)$current_carrier->id);
+					$this->changeGroups($new_carrier->id);
+					// Call of hooks
+					Hook::exec('actionCarrierUpdate', array(
+						'id_carrier' => (int)$current_carrier->id,
+						'carrier' => $new_carrier
+					));
+					$this->postImage($new_carrier->id);
+					$this->changeZones($new_carrier->id);
+					$new_carrier->setTaxRulesGroup((int)Tools::getValue('id_tax_rules_group'));
+					$carrier = $new_carrier;
 				}
 			}
 			else
@@ -724,7 +736,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 				}
 				
 				if (!$carrier->is_free)
-					if (!$this->processRanges((int)$carrier->id))
+					if (!Tools::getValue('id_carrier') && !$this->processRanges((int)$carrier->id))
 					{
 						$return['has_error'] = true;
 						$return['errors'][] = $this->l('An error occurred while saving carrier ranges.');
@@ -762,21 +774,6 @@ class AdminCarrierWizardControllerCore extends AdminController
 		die(Tools::jsonEncode($return));
 	}
 	
-	protected function copyLogo($old_id, $new_id)
-	{
-		$old_logo = _PS_SHIP_IMG_DIR_.'/'.(int)$old_id.'.jpg';
-		if (file_exists($old_logo))
-			copy($old_logo, _PS_SHIP_IMG_DIR_.'/'.(int)$new_id.'.jpg');
-
-		$old_tmp_logo = _PS_TMP_IMG_DIR_.'/carrier_mini_'.(int)$old_id.'.jpg';
-		if (file_exists($old_tmp_logo))
-		{
-			if (!isset($_FILES['logo']))
-				copy($old_tmp_logo, _PS_TMP_IMG_DIR_.'/carrier_mini_'.$new_id.'.jpg');
-			unlink($old_tmp_logo);
-		}
-	}
-
 	protected function changeGroups($id_carrier, $delete = true)
 	{
 		$carrier = new Carrier((int)$id_carrier);

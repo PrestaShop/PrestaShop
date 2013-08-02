@@ -38,11 +38,12 @@
 				<tr class="fees {if $i is odd}alt_row{/if}" data-zoneid="{$zone.id_zone}">
 					<td>{$zone.name}</td>
 					<td class="zone">
-						<input class="input_zone" name="zone_{$zone.id_zone}" value="1" type="checkbox" {if isset($fields_value[$input.name][$zone.id_zone]) && $fields_value[$input.name][$zone.id_zone]} checked="checked"{/if}/>
+						<input class="input_zone" name="zone_{$zone.id_zone}" value="1" type="checkbox" {if isset($fields_value['zones'][$zone.id_zone]) && $fields_value['zones'][$zone.id_zone]} checked="checked"{/if}/>
 					</td>
 					{foreach from=$ranges key=r item=range}
 						<td class="center">
-							<input name="fees[{$zone.id_zone|intval}][{$range.id_range|intval}]" {if ((isset($form_id) &&  !$form_id) || isset($change_ranges) || (isset($fields_value[$input.name][$zone.id_zone]) && !$fields_value[$input.name][$zone.id_zone]))} disabled="disabled"{/if} type="text" value="{if isset($price_by_range[$range.id_range][$zone.id_zone]) && $fields_value[$input.name][$zone.id_zone]} {$price_by_range[$range.id_range][$zone.id_zone]|string_format:'%.6f'}  {/if}" />&nbsp; {$currency_sign}
+							<input name="fees[{$zone.id_zone|intval}][{$range.id_range|intval}]" type="text" 
+							{if !isset($fields_value['zones'][$zone.id_zone]) || (isset($fields_value['zones'][$zone.id_zone]) && !$fields_value['zones'][$zone.id_zone])} disabled="disabled"{/if} {if isset($price_by_range[$range.id_range][$zone.id_zone]) && $price_by_range[$range.id_range][$zone.id_zone] && isset($fields_value['zones'][$zone.id_zone]) && $fields_value['zones'][$zone.id_zone]} value="{$price_by_range[$range.id_range][$zone.id_zone]|string_format:'%.6f'}" {else} value="" {/if} /> &nbsp; {$currency_sign}
 						</td>
 					{/foreach}
 				</tr>

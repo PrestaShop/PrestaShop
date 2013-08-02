@@ -27,7 +27,8 @@
 $(document).ready(function() {	
 	bind_inputs();
 	initCarrierWizard();
-	is_freeClick($('input[name="is_free"]:checked'));
+	if (parseInt($('input[name="is_free"]:checked').val()))
+		is_freeClick($('input[name="is_free"]:checked'));
 	displayRangeType();
 });
 
@@ -262,6 +263,7 @@ function bind_inputs()
 				if ($('tr.fees_all td:eq('+index+')').hasClass('validated'))
 					$(this).children('input:text').removeAttr('disabled');
 			});
+			console.log($(this).next());
 		}
 		else
 			$(this).closest('tr').children('td').children('input:text').attr('disabled', 'disabled');
@@ -285,7 +287,7 @@ function bind_inputs()
 	
 	$(document.body).off('change', 'tr.fees_all td input').on('change', 'tr.fees_all td input', function() {
 	   index = $(this).parent('td').index();
-		val = $(this).val();
+		val = 'tototo';$(this).val();
 		$(this).val('');
 		$('tr.fees').each( function () {
 			$(this).find('td:eq('+index+') input:text:enabled').val(val);
@@ -330,7 +332,7 @@ function is_freeClick(elt)
 
 function hideFees()
 {
-	$('tr.fees td').each( function () {
+	$('tr.range_inf td, tr.range_sup td, tr.fees_all td, tr.fees td').each( function () {
 		if ($(this).index() >= 2)
 		{
 			$(this).find('input:text, button').val('').attr('disabled', 'disabled').css('background-color', '#999999').css('border-color', '#999999');
@@ -341,12 +343,12 @@ function hideFees()
 
 function showFees()
 {
-	$('tr.fees td').each( function () {
+	$('tr.range_inf td, tr.range_sup td, tr.fees_all td, tr.fees td').each( function () {
 		if ($(this).index() >= 2)
 		{
 			//enable only if zone is active
 			tr = $(this).parent('tr');
-			if ($(tr).index() > 2 && $(tr).find('td:eq(1) input').attr('checked') && $('tr.fees_all td:eq('+$(this).index()+')').hasClass('validated'))
+			if ($(tr).index() > 2 && $(tr).find('td:eq(1) input').attr('checked') && $('tr.fees_all td:eq('+$(this).index()+')').hasClass('validated') || $(tr).hasClass('range_sup') || $(tr).hasClass('range_inf'))
 					$(this).find('input:text').val('').removeAttr('disabled');
 			
 			$(this).find('input:text, button').css('background-color', '').css('border-color', '');
@@ -455,7 +457,7 @@ function add_new_range()
 	$('tr.fees_all td:last').after('<td class="center border_top border_bottom"><input style="display:none" type="text" /> <button class="button">'+labelValidate+'</button</td>');
 
 	$('tr.fees').each( function () {
-		$(this).children('td:last').after('<td class="center"><input disabled="disabled" name="fees['+$(this).data('zoneid')+'][]" type="text" /></td>');
+		$(this).children('td:last').after('<td class="center"><input disabled="disabled" name="fees['+$(this).data('zoneid')+'][]" type="text" /> &nbsp; '+currency_sign+'</td>');
 	});
 	$('tr.delete_range td:last').after('<td class="center"><button class="button">'+labelDelete+'</button</td>');
 	
