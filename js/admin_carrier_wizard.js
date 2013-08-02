@@ -384,7 +384,6 @@ function validateRange(index)
 	{
 		if (range_inf >= range_sup)
 		{
-			console.log('range_inf >= range_sup');
 			$('tr.range_sup td:eq('+index+')').children('input:text').addClass('field_error');
 			$('tr.range_inf td:eq('+index+')').children('input:text').addClass('field_error');
 			is_ok = false;
@@ -392,7 +391,6 @@ function validateRange(index)
 		//check if previous range is inf only if it's not the first range
 		if (index > 2)
 		{
-			console.log('index > 2');
 			previous_range_sup = parseFloat($('tr.range_sup td:eq('+(index -1)+')').children('input:text').val().trim());
 			if (range_inf < previous_range_sup)
 			{
