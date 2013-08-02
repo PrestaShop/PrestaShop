@@ -28,6 +28,7 @@ class AdminProfilesControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->context = Context::getContext();
 		$this->table = 'profile';
 		$this->className = 'Profile';
@@ -45,8 +46,7 @@ class AdminProfilesControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_profile' => array(
 						'title' => $this->l('ID'), 
-						'align' => 'center', 
-						'width' => 25
+						'align' => 'center'
 						),
 			'name' => array('title' => $this->l('Name'))
 			);
@@ -56,21 +56,20 @@ class AdminProfilesControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Profile'),
-				'image' => '../img/admin/profiles.png'
+				'icon' => 'icon-group'
 			),
 			'input' => array(
 				array(
 					'type' => 'text',
 					'label' => $this->l('Name:'),
 					'name' => 'name',
-					'size' => 33,
 					'required' => true,
 					'lang' => true,
 				)
 			),
 			'submit' => array(
 				'title' => $this->l('Save   '),
-				'class' => 'button'
+				'class' => 'btn btn-default'
 			)
 		);
 

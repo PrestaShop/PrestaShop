@@ -39,6 +39,7 @@ class AdminEmployeesControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 	 	$this->table = 'employee';
 		$this->className = 'Employee';
 	 	$this->lang = false;
@@ -85,16 +86,15 @@ class AdminEmployeesControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_PASSWD_TIME_BACK' => array(
 						'title' => $this->l('Password regeneration'),
-						'desc' => $this->l('Security: Minimum time to wait between two password changes.'),
+						'hint' => $this->l('Security: Minimum time to wait between two password changes.'),
 						'cast' => 'intval',
-						'size' => 5,
 						'type' => 'text',
 						'suffix' => ' '.$this->l('minutes'),
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_BO_ALLOW_EMPLOYEE_FORM_LANG' => array(
 						'title' => $this->l('Memorize the language used in Admin panel forms'),
-						'desc' => $this->l('Allow employees to select a specific language for the Admin panel form.'),
+						'hint' => $this->l('Allow employees to select a specific language for the Admin panel form.'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'identifier' => 'value',
@@ -165,21 +165,19 @@ class AdminEmployeesControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Employees'),
-				'image' => '../img/admin/nav-user.gif'
+				'icon' => 'icon-user'
 			),
 			'input' => array(
 				array(
 					'type' => 'text',
 					'label' => $this->l('First Name:'),
 					'name' => 'firstname',
-					'size' => 33,
 					'required' => true
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Last Name:'),
 					'name' => 'lastname',
-					'size' => 33,
 					'required' => true
 				),
 				array(
@@ -187,8 +185,7 @@ class AdminEmployeesControllerCore extends AdminController
 					'label' => $this->l('Password:'),
 					'name' => 'passwd',
 					'required' => true,
-					'size' => 33,
-					'desc' => ($obj->id ?
+					'hint' => ($obj->id ?
 								$this->l('Leave this field blank if you do not want to change your password.') :
 									$this->l('Minimum of eight characters (use only letters and numbers)').' -_')
 				),
@@ -196,7 +193,6 @@ class AdminEmployeesControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Email address:'),
 					'name' => 'email',
-					'size' => 33,
 					'required' => true
 				),
 				array(
@@ -204,22 +200,20 @@ class AdminEmployeesControllerCore extends AdminController
 					'label' => $this->l('Admin panel color:'),
 					'name' => 'bo_color',
 					'class' => 'color mColorPickerInput',
-					'size' => 20,
-					'desc' => $this->l('Admin panel background will be displayed in this color (HTML colors only).').' "lightblue", "#CC6600")'
+					'hint' => $this->l('Admin panel background will be displayed in this color (HTML colors only).').' "lightblue", "#CC6600")'
 				),
 				array(
 					'type' => 'default_tab',
 					'label' => $this->l('Default page:'),
 					'name' => 'default_tab',
-					'desc' => $this->l('This page will be displayed just after login'),
+					'hint' => $this->l('This page will be displayed just after login'),
 					'options' => $this->tabs_list
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Back Office width'),
 					'name' => 'bo_width',
-					'size' => 10,
-					'desc' => $this->l('Back Office width, in pixels. The value "0" means that the Back Office width will be flexible.')
+					'hint' => $this->l('Back Office width, in pixels. The value "0" means that the Back Office width will be flexible.')
 				),
 				array(
 					'type' => 'select',
@@ -237,15 +231,14 @@ class AdminEmployeesControllerCore extends AdminController
 					'label' => $this->l('Theme:'),
 					'name' => 'bo_theme',
 					'options' => array('query' => $this->themes),
-					'desc' => $this->l('Back Office theme')
+					'hint' => $this->l('Back Office theme')
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Show screencast at login:'),
 					'name' => 'bo_show_screencast',
-					'desc' => $this->l('Display the welcome video in the Admin panel dashboard at log in.'),
+					'hint' => $this->l('Display the welcome video in the Admin panel dashboard at log in.'),
 					'required' => false,
-					'class' => 't',
 					'is_bool' => true,
 					'values' => array(
 						array(
@@ -266,11 +259,10 @@ class AdminEmployeesControllerCore extends AdminController
 		if ((int)$this->tabAccess['edit'] && !$this->restrict_edition)
 		{
 			$this->fields_form['input'][] = array(
-				'type' => 'radio',
+				'type' => 'switch',
 				'label' => $this->l('Status:'),
 				'name' => 'active',
 				'required' => false,
-				'class' => 't',
 				'is_bool' => true,
 				'values' => array(
 					array(
@@ -284,7 +276,7 @@ class AdminEmployeesControllerCore extends AdminController
 						'label' => $this->l('Disabled')
 					)
 				),
-				'desc' => $this->l('Allow or disallow this employee to log into the Admin panel.')
+				'hint' => $this->l('Allow or disallow this employee to log into the Admin panel.')
 			);
 
 			// if employee is not SuperAdmin (id_profile = 1), don't make it possible to select the admin profile
@@ -317,7 +309,7 @@ class AdminEmployeesControllerCore extends AdminController
 				$this->fields_form['input'][] = array(
 					'type' => 'shop',
 					'label' => $this->l('Shop association:'),
-					'desc' => $this->l('Select the shops the employee is allowed to access'),
+					'hint' => $this->l('Select the shops the employee is allowed to access'),
 					'name' => 'checkBoxShopAsso',
 				);
 			}
@@ -325,7 +317,7 @@ class AdminEmployeesControllerCore extends AdminController
 
 		$this->fields_form['submit'] = array(
 			'title' => $this->l('Save   '),
-			'class' => 'button'
+			'class' => 'btn btn-default'
 		);
 
 		$this->fields_value['passwd'] = false;
