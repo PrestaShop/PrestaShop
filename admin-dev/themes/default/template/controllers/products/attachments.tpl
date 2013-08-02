@@ -73,7 +73,7 @@
 					<input id="attachement_filename" type="text" class="disabled" name="filename" readonly />
 					<span class="input-group-btn">
 						<button id="attachement_fileselectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
-							{l s='Choose a file'}
+							<i class="icon-folder-open"></i> {l s='Choose a file'}
 						</button>
 					</span>
 				</div>

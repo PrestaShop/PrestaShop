@@ -76,9 +76,9 @@
 
 <table id="lineType" style="display:none;">
 	<tr id="image_id">
-		<td style="padding: 4px;">
+		<td>
 			<a href="{$smarty.const._THEME_PROD_DIR_}image_path.jpg" class="fancybox">
-				<img src="{$smarty.const._THEME_PROD_DIR_}{$iso_lang}-default-small_default.jpg" alt="image_id" title="image_id" />
+				<img src="{$smarty.const._THEME_PROD_DIR_}{$iso_lang}-path-small_default.jpg" alt="image_id" title="image_id" />
 			</a>
 		</td>
 		<td id="td_image_id" class="pointer dragHandle center positionImage">
@@ -199,7 +199,7 @@
 			onSubmit: function(id, filename)
 			{
 				$("#imageTable").show();
-				$("#listImage").append("<li id='img"+id+"'><div class=\"float\" >" + filename + "</div></div><a style=\"margin-left:10px\"href=\"javascript:delQueue(" + id +");\"><img src=\"../img/admin/disabled.gif\" alt=\"\" border=\"0\"></a><p class=\"errorImg\"></p></li>");
+				$("#listImage").append("<li id='img"+id+"'><div>" + filename + "</div></div><a href=\"javascript:delQueue(" + id +");\"><img src=\"../img/admin/disabled.gif\" ></a><p class=\"errorImg\"></p></li>");
 			}
 		});
 
@@ -309,7 +309,7 @@
 		{
 			line = $("#lineType").html();
 			line = line.replace(/image_id/g, id);
-			line = line.replace(/[a-z]{2}-default/g, path);
+			line = line.replace(/[a-z]{2}-path/g, path);
 			line = line.replace(/image_path/g, path);
 			line = line.replace(/image_position/g, position);
 			line = line.replace(/icon-check-empty/g, cover);

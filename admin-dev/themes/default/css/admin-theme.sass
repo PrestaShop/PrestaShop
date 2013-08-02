@@ -496,6 +496,9 @@ hr
 	tbody > tr:hover > td
 		cursor: pointer
 		background-color: lighten($bg-head-color,15%)
+		@include transition-property(background-color)
+		@include transition-duration(0.4s)
+		@include transition-timing-function(ease-out)
 		@include box-shadow(rgba($bg-head-color,0.80) 0 2px 0)
 	td.center, th.center
 		text-align: center
@@ -508,6 +511,10 @@ hr
 		border-top-right-radius: 3px
 		border-bottom-right-radius: 3px
 	.btn-group
+		float: right
+		.btn
+			float: left
+	.btn
 		float: right
 
 //filter table

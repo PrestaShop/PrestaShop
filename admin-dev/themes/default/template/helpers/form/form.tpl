@@ -29,6 +29,7 @@
 {/if}
 
 {if isset($fields.title)}<h3>{$fields.title}</h3>{/if}
+
 {block name="defaultForm"}
 <form id="{$table}_form" class="form-horizontal defaultForm {$name_controller}" action="{$current}&{if !empty($submit_action)}{$submit_action}=1{/if}&token={$token}" method="post" enctype="multipart/form-data" {if isset($style)}style="{$style}"{/if}>
 	{if $form_id}
@@ -57,7 +58,7 @@
 							{/if}
 							{block name="label"}
 								{if isset($input.label)}
-									<label for="" class="control-label col-lg-3 {if isset($input.required) && $input.required && $input.type != 'radio'}required{/if}">
+									<label for="{if isset($input.id)}{$input.id}{if isset($input.lang) AND $input.lang}_{$language.id_lang}{/if}{else}{$input.name}{if isset($input.lang) AND $input.lang}_{$language.id_lang}{/if}{/if}" class="control-label col-lg-3 {if isset($input.required) && $input.required && $input.type != 'radio'}required{/if}">
 										{if isset($input.hint)}
 										<span class="label-tooltip" data-toggle="tooltip"
 											title="
@@ -89,7 +90,7 @@
 									<div class="row">
 									{foreach $languages as $language}
 										{assign var='value_text' value=$fields_value[$input.name][$language.id_lang]}
-										<div class="input-group col-lg-12 translatable-field lang-{$language.id_lang}" style="{if $language.id_lang != $defaultFormLanguage}display:none{/if}">
+										<div class="input-group col-lg-12 translatable-field lang-{$language.id_lang}" {if $language.id_lang != $defaultFormLanguage}style="display:none"{/if}>
 											{if $input.type == 'tags'}
 												{literal}
 													<script type="text/javascript">
@@ -104,9 +105,9 @@
 												{/literal}
 											{/if}
 											<input type="text"
+												id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}"
 												name="{$input.name}_{$language.id_lang}"
 												class="{if $input.type == 'tags'}tagify {/if}{if isset($input.class)}{$input.class}{/if}"
-												id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}"
 												value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'htmlall':'UTF-8'}{else}{$value_text|escape:'htmlall':'UTF-8'}{/if}"
 												onkeyup="if (isArrowKey(event)) return ;updateFriendlyURL();"
 												{if isset($input.size)}size="{$input.size}"{/if}
@@ -146,16 +147,16 @@
 										{/if}
 										{assign var='value_text' value=$fields_value[$input.name]}
 										<input type="text"
-												name="{$input.name}"
-												id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
-												value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'htmlall':'UTF-8'}{else}{$value_text|escape:'htmlall':'UTF-8'}{/if}"
-												class="{if $input.type == 'tags'}tagify {/if}{if isset($input.class)}{$input.class}{/if}"
-												{if isset($input.size)}size="{$input.size}"{/if}
-												{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
-												{if isset($input.class)}class="{$input.class}"{/if}
-												{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if}
-												{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
-												{if isset($input.autocomplete) && !$input.autocomplete}autocomplete="off"{/if} />
+											name="{$input.name}"
+											id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
+											value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'htmlall':'UTF-8'}{else}{$value_text|escape:'htmlall':'UTF-8'}{/if}"
+											class="{if $input.type == 'tags'}tagify {/if}{if isset($input.class)}{$input.class}{/if}"
+											{if isset($input.size)}size="{$input.size}"{/if}
+											{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
+											{if isset($input.class)}class="{$input.class}"{/if}
+											{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if}
+											{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
+											{if isset($input.autocomplete) && !$input.autocomplete}autocomplete="off"{/if} />
 										{if isset($input.suffix)}{$input.suffix}{/if}
 										{if !empty($input.desc)}<div class="alert alert-info">{$input.desc}</div>{/if}
 									{/if}
@@ -338,9 +339,40 @@
 											</div>
 										{/if}
 									{/if}
-									<input type="file" name="{$input.name}" {if isset($input.id)}id="{$input.id}"{/if} />
+
+									<div class="col-lg-7">
+										<div class="row">
+											<div class="col-lg-8">
+												<input id="{$input.name}" type="file" name="{$input.name}" class="hide" />
+												<div class="dummyfile input-group">
+													<span class="input-group-addon"><i class="icon-file"></i></span>
+													<input id="{$input.name}-name" type="text" class="disabled" name="filename" readonly />
+													<span class="input-group-btn">
+														<button id="{$input.name}-selectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
+															<i class="icon-folder-open"></i> {l s='Choose a file'}
+														</button>
+													</span>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<script>
+										$(document).ready(function(){
+											$('#{$input.name}-selectbutton').click(function(e){
+												$('#{$input.name}').trigger('click');
+											});
+											$('#{$input.name}').change(function(e){
+												var val = $(this).val();
+												var file = val.split(/[\\/]/);
+												$('#{$input.name}-name').val(file[file.length-1]);
+											});
+										});
+									</script>
+
 								{elseif $input.type == 'password'}
 									<input type="password"
+											id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
 											name="{$input.name}"
 											class="{if isset($input.class)}{$input.class}{/if}"
 											value=""
@@ -400,7 +432,9 @@
 								{elseif $input.type == 'date'}
 									<div class="row">
 										<div class="input-group col-lg-4">
-											<input type="text"
+											<input 
+												id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}"
+												type="text"
 												data-hex="true"
 												{if isset($input.class)}class="{$input.class}"
 												{else}class="datepicker"{/if}
@@ -415,7 +449,6 @@
 								{elseif $input.type == 'free'}
 									{$fields_value[$input.name]}
 								{/if}
-<!-- {if isset($input.required) && $input.required && $input.type != 'radio'} <sup>*</sup>{/if} -->
 								{/block}{* end block input *}
 								{block name="description"}
 									{if isset($input.desc) && !empty($input.desc)}
