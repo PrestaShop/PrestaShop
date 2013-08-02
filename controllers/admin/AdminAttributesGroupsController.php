@@ -329,6 +329,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			'label' => $this->l('Current texture:'),
 			'name' => 'current_texture'
 		);
+		
+		$this->fields_form['input'][] = array(
+			'type' => 'closediv'
+		);
 
 		$this->fields_form['submit'] = array(
 			'title' => $this->l('Save   '),
