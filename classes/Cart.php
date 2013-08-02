@@ -764,6 +764,9 @@ class CartCore extends ObjectModel
 		if (!Validate::isLoadedObject($cartRule))
 			return false;
 		
+		if (Db::getInstance()->getValue('SELECT id_cart_rule FROM '._DB_PREFIX_.'cart_cart_rule WHERE id_cart = '.(int)$this->id))
+			return false;
+			
 		// Add the cart rule to the cart
 		if (!Db::getInstance()->insert('cart_cart_rule', array(
 			'id_cart_rule' => (int)$id_cart_rule,
