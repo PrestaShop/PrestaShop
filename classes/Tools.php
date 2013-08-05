@@ -1281,18 +1281,30 @@ class ToolsCore
 	 * @param int $precision
 	 * @return float
 	 */
-	public static function ps_round($value, $precision = 0)
+	public static final function ps_round($value, $precision = 0)
 	{
 		static $method = null;
 
-		if ($method == null)
-			$method = (int)Configuration::get('PS_PRICE_ROUND_MODE');
-
-		if ($method == PS_ROUND_UP)
-			return Tools::ceilf($value, $precision);
-		elseif ($method == PS_ROUND_DOWN)
-			return Tools::floorf($value, $precision);
-		return round($value, $precision);
+		switch ($method){
+			case 3:
+				return round($value, $precision);
+			case 1: 
+				return Tools::ceilf($value, $precision);
+			case 2:
+				return Tools::floorf($value, $precision);
+			case NULL : 
+				$method = (int)Configuration::get('PS_PRICE_ROUND_MODE');
+			if ($method == PS_ROUND_UP){
+				$method = 1 ;
+			}
+			elseif ($method === PS_ROUND_DOWN){
+		    		$method = 2 ;//function($val, $prec){ return Tools::floorf($val, $prec);};
+			}
+			else{
+		   		$method = 3 ;//function($val, $prec){ return round($val, $prec);};
+			}
+			return Tools::ps_round($value,$precision);
+		}
 	}
 
 	/**
