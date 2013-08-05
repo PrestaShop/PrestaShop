@@ -414,8 +414,11 @@ function validateRange(index)
 				{
 					if (range_sup >= $('tr.range_inf td:eq('+curent_index+') input').val() && ($('tr.range_inf td:eq('+curent_index+1+')').length && range_sup < $('tr.range_inf td:eq('+curent_index+1+') input').val() || !$('tr.range_inf td:eq('+index+1+')').length ))
 					{
-						if ((range_sup < current_val && range_sup > $('tr.range_inf td:eq('+curent_index+') input').val()) || (range_inf > $('tr.range_inf td:eq('+curent_index+') input').val() && range_inf <= current_val)) //check if ranges is overlapping
+
+						if ((range_sup < current_val && range_inf <= current_val) || (range_sup >= $('tr.range_inf td:eq('+curent_index+') input').val() && range_inf > $('tr.range_inf td:eq('+curent_index+') input').val()))//check if ranges is overlapping
+						{
 							is_ok = true;
+						} 
 					}
 					else
 						is_ok = false;
