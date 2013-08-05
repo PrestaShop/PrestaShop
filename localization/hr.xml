@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<localizationPack name="HR">
+  <currencies>
+    <currency name="Croatian Kuna" iso_code="HRK" iso_code_num="191" sign="kn" blank="1" conversion_rate="1.000000" format="2" decimals="1"/>
+  </currencies>
+  <languages>
+    <language iso_code="hr"/>
+  </languages>
+  <taxes>
+    <taxRulesGroup name="Croatia PDV 5%">
+      <taxRule iso_code_country="hr" behavior="0" id_tax="81"/>
+    </taxRulesGroup>
+    <taxRulesGroup name="Croatia PDV 25%">
+      <taxRule iso_code_country="hr" behavior="0" id_tax="79"/>
+    </taxRulesGroup>
+    <taxRulesGroup name="Croatia PDV 10%">
+      <taxRule iso_code_country="hr" behavior="0" id_tax="80"/>
+    </taxRulesGroup>
+    <tax id="79" name="Croatia PDV 25%" rate="25.000"/>
+    <tax id="80" name="Croatia PDV 10%" rate="10.000"/>
+    <tax id="81" name="Croatia PDV 5%" rate="5.000"/>
+  </taxes>
+  <units>
+    <unit type="weight" value="kg"/>
+    <unit type="volume" value="L"/>
+    <unit type="short_distance" value="cm"/>
+    <unit type="base_distance" value="m"/>
+    <unit type="long_distance" value="km"/>
+  </units>
+</localizationPack>
