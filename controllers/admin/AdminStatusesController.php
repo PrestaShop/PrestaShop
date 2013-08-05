@@ -232,14 +232,6 @@ class AdminStatusesControllerCore extends AdminController
 	
 	public function renderForm()
 	{
-		if (Tools::isSubmit('updateorder_state') || Tools::isSubmit('addorder_state'))
-			return $this->renderOrderStatusForm();
-		else if (Tools::isSubmit('updateorder_return_state') || Tools::isSubmit('addorder_return_state'))
-			return $this->renderOrderReturnsForm();
-	}
-	
-	protected function renderOrderStatusForm()
-	{
 		$this->fields_form = array(
 			'tinymce' => true,
 			'legend' => array(
@@ -366,7 +358,17 @@ class AdminStatusesControllerCore extends AdminController
 				'class' => 'button'
 			)
 		);
-
+	
+		if (Tools::isSubmit('updateorder_state') || Tools::isSubmit('addorder_state'))
+			return $this->renderOrderStatusForm();
+		else if (Tools::isSubmit('updateorder_return_state') || Tools::isSubmit('addorder_return_state'))
+			return $this->renderOrderReturnsForm();
+		else
+			return parent::renderForm();			
+	}
+	
+	protected function renderOrderStatusForm()
+	{
 		if (!($obj = $this->loadObject(true)))
 			return;
 
