@@ -31,6 +31,7 @@ class AdminStockMvtControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->context = Context::getContext();
 	 	$this->table = 'stock_mvt';
 	 	$this->className = 'StockMvt';
@@ -44,17 +45,14 @@ class AdminStockMvtControllerCore extends AdminController
 		$this->fields_list = array(
 			'product_reference' => array(
 				'title' => $this->l('Reference'),
-				'width' => 100,
 				'havingFilter' => true
 			),
 			'product_ean13' => array(
 				'title' => $this->l('EAN 13'),
-				'width' => 75,
 				'havingFilter' => true
 			),
 			'product_upc' => array(
 				'title' => $this->l('UPC'),
-				'width' => 75,
 				'havingFilter' => true
 			),
 			'product_name' => array(
@@ -84,7 +82,6 @@ class AdminStockMvtControllerCore extends AdminController
 			),
 			'physical_quantity' => array(
 				'title' => $this->l('Quantity'),
-				'width' => 40,
 				'filter_key' => 'a!physical_quantity'
 			),
 			'price_te' => array(
@@ -97,17 +94,14 @@ class AdminStockMvtControllerCore extends AdminController
 			),
 			'reason' => array(
 				'title' => $this->l('Label'),
-				'width' => 100,
 				'havingFilter' => true
 			),
 			'employee' => array(
 				'title' => $this->l('Employee'),
-				'width' => 100,
 				'havingFilter' => true
 			),
 			'date_add' => array(
 				'title' => $this->l('Date'),
-				'width' => 150,
 				'align' => 'right',
 				'type' => 'datetime',
 				'filter_key' => 'a!date_add'

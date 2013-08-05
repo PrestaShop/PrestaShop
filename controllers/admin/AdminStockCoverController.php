@@ -34,6 +34,7 @@ class AdminStockCoverControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->context = Context::getContext();
 		$this->table = 'product';
 		$this->className = 'Product';
@@ -45,19 +46,16 @@ class AdminStockCoverControllerCore extends AdminController
 			'reference' => array(
 				'title' => $this->l('Reference'),
 				'align' => 'center',
-				'width' => 200,
 				'filter_key' => 'a!reference'
 			),
 			'ean13' => array(
 				'title' => $this->l('EAN13'),
 				'align' => 'center',
-				'width' => 100,
 				'filter_key' => 'a!ean13'
 			),
 			'upc' => array(
 				'title' => $this->l('UPC'),
 				'align' => 'center',
-				'width' => 100,
 				'filter_key' => 'a!upc'
 			),
 			'name' => array(
@@ -66,21 +64,18 @@ class AdminStockCoverControllerCore extends AdminController
 			),
 			'qty_sold' => array(
 				'title' => $this->l('Quantity sold'),
-				'width' => 160,
 				'orderby' => false,
 				'search' => false,
 				'hint' => $this->l('Quantity sold during the defined period.'),
 			),
 			'coverage' => array(
 				'title' => $this->l('Coverage'),
-				'width' => 160,
 				'orderby' => false,
 				'search' => false,
 				'hint' => $this->l('Days left before your stock runs out.'),
 			),
 			'stock' => array(
 				'title' => $this->l('Quantity'),
-				'width' => 80,
 				'orderby' => false,
 				'search' => false,
 				'hint' => $this->l('Physical (usable) quantity.')
