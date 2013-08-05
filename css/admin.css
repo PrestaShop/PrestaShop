@@ -2593,7 +2593,6 @@ margin-bottom:7px;
   padding:5px;
   border: 1px solid #FFD700; 
   background-color: #FFFFDD;  
-  font: normal 12px Verdana, Arial, Helvetica, sans-serif; 
   color:#5A5655;         
   -moz-border-radius  : 5px;
   -webkit-border-radius: 5px;
@@ -2625,9 +2624,9 @@ margin-bottom:7px;
 #carrier_wizard .border_left {border-left:solid 1px #C0C0C0;}
 #carrier_wizard .border_right {border-right:solid 1px #C0C0C0;}
 #carrier_wizard .border_all {border:solid 1px #C0C0C0;}
-#carrier_wizard input.field_error {border : solid 1px red; background-color:#FFCCCCheight: 1px;}
+#carrier_wizard input.field_error {border : solid 1px red; background-color:#FFCCCC;}
 #carrier_wizard table td.center {text-align: center}
-#carrier_wizard .new_range {float: left; margin: 20px 0 0 10px; width: 130px;}
+#carrier_wizard .new_range, #carrier_wizard .validate_range {float: left; margin: 20px 0 0 10px; width: 130px;}
 #carrier_wizard tr.fees_all { background: #CCCCCC}
 #carrier_wizard #zones_table input[type=text] {width: 45px;}
 #carrier_wizard #fieldset_form { min-height: 190px}

@@ -551,7 +551,6 @@ class InstallModelInstall extends InstallAbstractModel
 				'blockviewed',
 				'cheque',
 				'favoriteproducts',
-				'feeder',
 				'graphartichow',
 				'graphgooglechart',
 				'graphvisifire',

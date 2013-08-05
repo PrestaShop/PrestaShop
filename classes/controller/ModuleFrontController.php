@@ -68,8 +68,8 @@ class ModuleFrontControllerCore extends FrontController
 	 */
 	public function getTemplatePath()
 	{
-		if (file_exists(_PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/front/'.$template))
-			return _PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/front/'.$template;
+		if (file_exists(_PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/front/'.$this->template))
+			return _PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/front/'.$this->template;
 		return _PS_MODULE_DIR_.$this->module->name.'/views/templates/front/';
 	}
 }

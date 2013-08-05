@@ -134,6 +134,7 @@ class CartCore extends ObjectModel
 			'cart_rows' => array('resource' => 'cart_row', 'virtual_entity' => true, 'fields' => array(
 				'id_product' => array('required' => true, 'xlink_resource' => 'products'),
 				'id_product_attribute' => array('required' => true, 'xlink_resource' => 'combinations'),
+				'id_address_delivery' => array('required' => true, 'xlink_resource' => 'addresses'),
 				'quantity' => array('required' => true),
 				)
 			),
@@ -3212,25 +3213,24 @@ class CartCore extends ObjectModel
 
 	public function getWsCartRows()
 	{
-		$query = '
+		return Db::getInstance()->executeS('
 			SELECT id_product, id_product_attribute, quantity
 			FROM `'._DB_PREFIX_.'cart_product`
-			WHERE id_cart = '.(int)$this->id.'
-				AND id_shop = '.(int)Context::getContext()->shop->id;
-
-		$result = Db::getInstance()->executeS($query);
-		return $result;
+			WHERE id_cart = '.(int)$this->id.' AND id_shop = '.(int)Context::getContext()->shop->id
+		);
 	}
 
 	public function setWsCartRows($values)
 	{
 		if ($this->deleteAssociations())
 		{
-			$query = 'INSERT INTO `'._DB_PREFIX_.'cart_product`(`id_cart`, `id_product`, `id_product_attribute`, `quantity`, `date_add`, `id_shop`) VALUES ';
+			$query = 'INSERT INTO `'._DB_PREFIX_.'cart_product`(`id_cart`, `id_product`, `id_product_attribute`, `id_address_delivery`, `quantity`, `date_add`, `id_shop`) VALUES ';
 
 			foreach ($values as $value)
 				$query .= '('.(int)$this->id.', '.(int)$value['id_product'].', '.
-					(isset($value['id_product_attribute']) ? (int)$value['id_product_attribute'] : 'NULL').', '.(int)$value['quantity'].', NOW(), '.(int)Context::getContext()->shop->id.'),';
+					(isset($value['id_product_attribute']) ? (int)$value['id_product_attribute'] : 'NULL').', '.
+					(isset($value['id_address_delivery']) ? (int)$value['id_address_delivery'] : 0).', '.
+					(int)$value['quantity'].', NOW(), '.(int)Context::getContext()->shop->id.'),';
 
 			Db::getInstance()->execute(rtrim($query, ','));
 		}

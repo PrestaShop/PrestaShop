@@ -454,7 +454,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 
 		// init blank range
 		if (!count($tpl_vars['ranges']))
-			$tpl_vars['ranges'][] = array('id_range' => -1, 'delimiter1' => 0, 'delimiter2' => 0);
+			$tpl_vars['ranges'][] = array('id_range' => 0, 'delimiter1' => 0, 'delimiter2' => 0);
 	}
 
 	public function renderGenericForm($fields_form, $fields_value, $tpl_vars = array())
@@ -607,17 +607,36 @@ class AdminCarrierWizardControllerCore extends AdminController
 			{
 				if (!isset($range_sup[$key]))
 					continue;
-
+				$add_range = true;
 				if ($range_type == Carrier::SHIPPING_METHOD_WEIGHT)
-					$range = new RangeWeight((int)$key);
+				{
+					if (!RangeWeight::rangeExist((int)$carrier->id, (float)$delimiter1, (float)$range_sup[$key]))
+						$range = new RangeWeight();
+					else
+					{
+						$range = new RangeWeight((int)$key);
+						$add_range = false;	
+					}
+				}
+				
 				if ($range_type == Carrier::SHIPPING_METHOD_PRICE)
-					$range = new RangePrice((int)$key);
-
-				$range->id_carrier = (int)$carrier->id;
-				$range->delimiter1 = (float)$delimiter1;
-				$range->delimiter2 = (float)$range_sup[$key];
-				$range->save();
-
+				{
+					if (!RangePrice::rangeExist((int)$carrier->id, (float)$delimiter1, (float)$range_sup[$key]))
+						$range = new RangePrice();
+					else
+					{
+						$range = new RangePrice((int)$key);
+						$add_range = false;
+					}
+				}
+				if ($add_range)
+				{
+					$range->id_carrier = (int)$carrier->id;
+					$range->delimiter1 = (float)$delimiter1;
+					$range->delimiter2 = (float)$range_sup[$key];
+					$range->save();
+				}
+				
 				if (!Validate::isLoadedObject($range))
 					return false;
 				$price_list = array();
@@ -632,7 +651,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 							'price' => (float)$fee[$key]
 						);
 				}
-				
+
 				if (count($price_list) && !$carrier->addDeliveryPrice($price_list, true))
 					return false;
 			}
@@ -692,9 +711,9 @@ class AdminCarrierWizardControllerCore extends AdminController
 					$new_carrier->position = $current_carrier->position;
 					$new_carrier->update();
 
-					$this->updateAssoShop($new_carrier->id);
-					$new_carrier->copyCarrierData((int)$current_carrier->id);
-					$this->changeGroups($new_carrier->id);
+					$this->updateAssoShop((int)$new_carrier->id);
+					$this->duplicateLogo((int)$new_carrier->id, (int)$current_carrier->id);
+					$this->changeGroups((int)$new_carrier->id);
 					// Call of hooks
 					Hook::exec('actionCarrierUpdate', array(
 						'id_carrier' => (int)$current_carrier->id,
@@ -847,5 +866,20 @@ class AdminCarrierWizardControllerCore extends AdminController
 	public static function displayFieldName($field)
 	{
 		return $field;
+	}
+	
+	public function duplicateLogo($new_id, $old_id)
+	{
+		$old_logo = _PS_SHIP_IMG_DIR_.'/'.(int)$old_id.'.jpg';
+		if (file_exists($old_logo))
+			copy($old_logo, _PS_SHIP_IMG_DIR_.'/'.(int)$new_id.'.jpg');
+
+		$old_tmp_logo = _PS_TMP_IMG_DIR_.'/carrier_mini_'.(int)$old_id.'.jpg';
+		if (file_exists($old_tmp_logo))
+		{
+			if (!isset($_FILES['logo']))
+				copy($old_tmp_logo, _PS_TMP_IMG_DIR_.'/carrier_mini_'.$new_id.'.jpg');
+			unlink($old_tmp_logo);
+		}
 	}
 }
