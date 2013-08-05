@@ -224,7 +224,7 @@ class MediaCore
 		$url_data = parse_url($css_uri);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
 		// check if css files exists
-		if (!@filemtime($file_uri))
+		if (!@filemtime($file_uri) && !array_key_exists('host', $url_data)) 
 			return false;
 
 		if (Context::getContext()->controller->controller_type == 'admin')
@@ -386,6 +386,7 @@ class MediaCore
 	{
 		//inits
 		$css_files_by_media = array();
+		$external_css_files = array(); 
 		$compressed_css_files = array();
 		$compressed_css_files_not_found = array();
 		$compressed_css_files_infos = array();
@@ -400,6 +401,13 @@ class MediaCore
 			$infos = array();
 			$infos['uri'] = $filename;
 			$url_data = parse_url($filename);
+
+			if(array_key_exists('host', $url_data))
+			{
+				$external_css_files[$filename] = $media;
+				continue;
+			}
+
 			$infos['path'] = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, '/', $url_data['path']);
 			$css_files_by_media[$media]['files'][] = $infos;
 			if (!array_key_exists('date', $css_files_by_media[$media]))
@@ -461,7 +469,7 @@ class MediaCore
 			$url = str_replace(_PS_THEME_DIR_, _THEMES_DIR_._THEME_NAME_.'/', $filename);
 			$css_files[$protocol_link.Tools::getMediaServer($url).$url] = $media;
 		}
-		return $css_files;
+		return array_merge($external_css_files, $css_files); 
 	}
 
 	public static function getBackTrackLimit()
