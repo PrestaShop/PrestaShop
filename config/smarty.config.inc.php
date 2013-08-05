@@ -176,6 +176,7 @@ function smartyHook($params, &$smarty)
 	{
 		$id_module = null;
 		$hook_params = $params;
+        $hook_params['smarty'] = $smarty;
 		if (!empty($params['mod']))
 		{
 			$module = Module::getInstanceByName($params['mod']);
