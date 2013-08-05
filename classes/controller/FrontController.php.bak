@@ -108,7 +108,7 @@ class FrontControllerCore extends Controller
 
 		// If current URL use SSL, set it true (used a lot for module redirect)
 		if (Tools::usingSecureMode())
-			$useSSL = true;
+			$useSSL = $this->ssl = true;
 
 		// For compatibility with globals, DEPRECATED as of version 1.5
 		$css_files = $this->css_files;
@@ -147,7 +147,7 @@ class FrontControllerCore extends Controller
 		// Init cookie language
 		// @TODO This method must be moved into switchLanguage
 		Tools::setCookieLanguage($this->context->cookie);
-
+		
 		$currency = Tools::setCurrency($this->context->cookie);
 
 		$protocol_link = (Configuration::get('PS_SSL_ENABLED') || Tools::usingSecureMode()) ? 'https://' : 'http://';
@@ -405,7 +405,7 @@ class FrontControllerCore extends Controller
 		$this->context->cart = $cart;
 		$this->context->currency = $currency;
 	}
-
+	
 	public function postProcess()
 	{
 	}
@@ -525,12 +525,12 @@ class FrontControllerCore extends Controller
 			'display_header' => $this->display_header,
 			'display_footer' => $this->display_footer,
 		));
-
+		
 		$live_edit_content = '';
 		// Don't use live edit if on mobile device
 		if (!$this->context->getMobileDevice() && $this->checkLiveEditAccess())
 			$live_edit_content = $this->getLiveEditFooter();
-
+		
 		$layout = $this->getLayout();
 		if ($layout)
 		{
@@ -562,7 +562,7 @@ class FrontControllerCore extends Controller
 				$this->smartyOutputContent(_PS_THEME_DIR_.'footer.tpl');
 			// END - 1.4 retrocompatibility - will be removed in 1.6
 		}
-
+				
 		return true;
 	}
 
@@ -575,7 +575,7 @@ class FrontControllerCore extends Controller
 			if (!in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP'))))
 			{
 				header('HTTP/1.1 503 temporarily overloaded');
-
+				
 				$this->context->smarty->assign($this->initLogoAndFavicon());
 
 				$template_dir = ($this->context->getMobileDevice() == true ? _PS_THEME_MOBILE_DIR_ : _PS_THEME_DIR_);
@@ -757,7 +757,7 @@ class FrontControllerCore extends Controller
 			'priceDisplayPrecision' => _PS_PRICE_DISPLAY_PRECISION_,
 			'content_only' => (int)Tools::getValue('content_only'),
 		));
-
+				
 		$this->context->smarty->assign($this->initLogoAndFavicon());
 	}
 
@@ -772,16 +772,14 @@ class FrontControllerCore extends Controller
 		));
 
 	}
-
+	
 	public function checkLiveEditAccess()
 	{
-		if (!Tools::isSubmit('live_edit') || !Tools::getValue('ad') || !Tools::getValue('liveToken'))
-			return false;
-		if (Tools::getValue('liveToken') != Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee')))
-			return false;
-		return is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.Tools::getValue('ad'));
+		$live_token = Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee'));
+		$ad = Tools::getValue('ad');
+		return Tools::isSubmit('live_edit') && $ad && Tools::getValue('liveToken') == $live_token && is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$ad);
 	}
-
+	
 	public function getLiveEditFooter()
 	{
 		if ($this->checkLiveEditAccess())
@@ -808,7 +806,7 @@ class FrontControllerCore extends Controller
 		// 'orderwaydefault' => Tools::getProductsOrder('way'),
 
 		$stock_management = Configuration::get('PS_STOCK_MANAGEMENT') ? true : false; // no display quantity order if stock management disabled
-		$order_by_values = array(0 => 'name', 1 => 'price', 2 => 'date_add', 3 => 'date_upd', 4 => 'position', 5 => 'manufacturer_name', 6 => 'quantity', 7 => 'reference');
+		$order_by_values = array(0 => 'name', 1 => 'price', 2 => 'date_add', 3 => 'date_upd', 4 => 'position', 5 => 'manufacturer_name', 6 => 'quantity');
 		$order_way_values = array(0 => 'asc', 1 => 'desc');
 		$this->orderBy = Tools::strtolower(Tools::getValue('orderby', $order_by_values[(int)Configuration::get('PS_PRODUCTS_ORDER_BY')]));
 		$this->orderWay = Tools::strtolower(Tools::getValue('orderway', $order_way_values[(int)Configuration::get('PS_PRODUCTS_ORDER_WAY')]));
@@ -849,8 +847,8 @@ class FrontControllerCore extends Controller
 
 		$range = 2; /* how many pages around page selected */
 
-		if ($this->p < 1)
-			$this->p = 1;
+		if ($this->p < 0)
+			$this->p = 0;
 
 		if (isset($this->context->cookie->nb_item_per_page) && $this->n != $this->context->cookie->nb_item_per_page && in_array($this->n, $nArray))
 			$this->context->cookie->nb_item_per_page = $this->n;
@@ -1115,9 +1113,9 @@ class FrontControllerCore extends Controller
 		$this->context->smarty->assign($assign);
 		$this->template = $template;
 	}
-
+	
 	/**
-	 * Return an array with specific logo and favicon,
+	 * Return an array with specific logo and favicon, 
 	 * if mobile device
 	 *
 	 * @since 1.5
@@ -1127,12 +1125,12 @@ class FrontControllerCore extends Controller
 	{
 		$mobile_device = $this->context->getMobileDevice();
 		$logo = _PS_IMG_.Configuration::get('PS_LOGO').'?'.Configuration::get('PS_IMG_UPDATE_TIME');
-
+		
 		if ($mobile_device && Configuration::get('PS_LOGO_MOBILE'))
 			$logo = _PS_IMG_.Configuration::get('PS_LOGO_MOBILE').'?'.Configuration::get('PS_IMG_UPDATE_TIME');
 		else
 			$logo = _PS_IMG_.Configuration::get('PS_LOGO').'?'.Configuration::get('PS_IMG_UPDATE_TIME');
-
+		
 		return array(
  				'favicon_url' => _PS_IMG_.Configuration::get('PS_FAVICON'),
 	            'logo_image_width' => ($mobile_device == false ? Configuration::get('SHOP_LOGO_WIDTH') : Configuration::get('SHOP_LOGO_MOBILE_WIDTH')),
