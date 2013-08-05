@@ -858,8 +858,14 @@ abstract class ObjectModelCore
 
 			$values = $this->$field;
 			if (!is_array($values))
-				$values = array($this->id_lang => $values);
-			if (!isset($values[Configuration::get('PS_LANG_DEFAULT')]))
+			{
+				$value = $values;
+				$values = array();
+				$values[$this->id_lang] = $value;
+				$values[Configuration::get('PS_LANG_DEFAULT')] = $value;
+			}
+
+			if (!isset($values[Configuration::get('PS_LANG_DEFAULT')])) 
 				$values[Configuration::get('PS_LANG_DEFAULT')] = '';
 
 			foreach ($values as $id_lang => $value)
