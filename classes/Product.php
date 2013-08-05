@@ -1366,7 +1366,7 @@ class ProductCore extends ObjectModel
 				$product_supplier_entity->id_product_attribute = (int)$id_product_attribute;
 				$product_supplier_entity->id_supplier = (int)$id_supplier;
 				$product_supplier_entity->product_supplier_reference = pSQL($supplier_reference);
-				$product_supplier_entity->product_supplier_price_te = (int)$price;
+				$product_supplier_entity->product_supplier_price_te = (float)$price;
 				$product_supplier_entity->id_currency = (int)$id_currency;
 				$product_supplier_entity->save();
 			}
