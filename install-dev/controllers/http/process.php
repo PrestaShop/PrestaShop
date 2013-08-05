@@ -260,7 +260,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		$this->initializeContext();
 
 		$this->model_install->xml_loader_ids = $this->session->xml_loader_ids;
-		if (!$this->model_install->installFixtures(Tools::getValue('entity')) || $this->model_install->getErrors())
+		if (!$this->model_install->installFixtures(Tools::getValue('entity', null), array('shop_activity' => $this->session->shop_activity, 'shop_country' => $this->session->shop_country)) || $this->model_install->getErrors())
 			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
 		$this->session->xml_loader_ids = $this->model_install->xml_loader_ids;
 		$this->ajaxJsonAnswer(true);

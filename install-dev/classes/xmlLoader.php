@@ -81,12 +81,15 @@ class InstallXmlLoader
 		$this->img_path = _PS_INSTALL_DATA_PATH_.'img/';
 	}
 
-	public function setFixturesPath()
+	public function setFixturesPath($path = null)
 	{
+		if ($path === null)
+			$path = _PS_INSTALL_FIXTURES_PATH_.'apple/';
+
 		$this->path_type = 'fixture';
-		$this->data_path = _PS_INSTALL_FIXTURES_PATH_.'apple/data/';
-		$this->lang_path = _PS_INSTALL_FIXTURES_PATH_.'apple/langs/';
-		$this->img_path = _PS_INSTALL_FIXTURES_PATH_.'apple/img/';
+		$this->data_path = $path.'data/';
+		$this->lang_path = $path.'langs/';
+		$this->img_path = $path.'img/';
 	}
 
 	/**
