@@ -34,6 +34,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 	 */
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->context = Context::getContext();
 	 	$this->table = 'stock_mvt_reason';
 	 	$this->className = 'StockMvtReason';
@@ -45,12 +46,10 @@ class AdminStockConfigurationControllerCore extends AdminController
 			'id_stock_mvt_reason' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
-				'width' => 40,
 				'search' => false,
 			),
 			'sign' => array(
 				'title' => $this->l('Sign'),
-				'width' => 100,
 				'align' => 'center',
 				'type' => 'select',
 				'filter_key' => 'a!sign',
@@ -66,8 +65,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
-				'filter_key' => 'b!name',
-				'width' => 250
+				'filter_key' => 'b!name'
 			),
 		);
 
@@ -156,7 +154,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 			$this->fields_form = array(
 				'legend' => array(
 					'title' => $this->l('Stock Movement label'),
-					'image' => '../img/admin/edit.gif'
+					'icon' => 'icon-pencil'
 				),
 				'input' => array(
 					array(
@@ -164,7 +162,6 @@ class AdminStockConfigurationControllerCore extends AdminController
 						'lang' => true,
 						'label' => $this->l('Name:'),
 						'name' => 'name',
-						'size' => 50,
 						'required' => true
 					),
 					array(
@@ -186,12 +183,12 @@ class AdminStockConfigurationControllerCore extends AdminController
 							'id' => 'id',
 							'name' => 'name'
 						),
-						'desc' => $this->l('Select the corresponding action: Increase or decrease stock?')
+						'hint' => $this->l('Select the corresponding action: Increase or decrease stock?')
 					),
 				),
 				'submit' => array(
 					'title' => $this->l('Save'),
-					'class' => 'button'
+					'class' => 'btn btn-primary'
 				)
 			);
 		}
@@ -204,7 +201,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 			$this->fields_form = array(
 					'legend' => array(
 						'title' => $this->l('Supply Order Status'),
-						'image' => '../img/admin/edit.gif'
+						'icon' => 'icon-pencil'
 					),
 					'input' => array(
 						array(
@@ -212,22 +209,19 @@ class AdminStockConfigurationControllerCore extends AdminController
 							'lang' => true,
 							'label' => $this->l('Status:'),
 							'name' => 'name',
-							'size' => 50,
 							'required' => true
 						),
 						array(
 							'type' => 'color',
 							'label' => $this->l('Color:'),
 							'name' => 'color',
-							'size' => 20,
-							'desc' => $this->l('The background of the PrestaShop Back Office will be displayed in this color (HTML colors only, please).'),
+							'hint' => $this->l('The background of the PrestaShop Back Office will be displayed in this color (HTML colors only, please).'),
 						),
 						array(
-							'type' => 'radio',
+							'type' => 'switch',
 							'label' => $this->l('Editable:'),
 							'name' => 'editable',
 							'required' => true,
-							'class' => 't',
 							'is_bool' => true,
 							'values' => array(
 								array(
@@ -241,14 +235,13 @@ class AdminStockConfigurationControllerCore extends AdminController
 									'label' => $this->l('No')
 								)
 							),
-							'desc' => $this->l('Is it is possible to edit the order? Keep in mind that an editable order can not be sent to the supplier.')
+							'hint' => $this->l('Is it is possible to edit the order? Keep in mind that an editable order can not be sent to the supplier.')
 						),
 						array(
-							'type' => 'radio',
+							'type' => 'switch',
 							'label' => $this->l('Delivery note:'),
 							'name' => 'delivery_note',
 							'required' => true,
-							'class' => 't',
 							'is_bool' => true,
 							'values' => array(
 								array(
@@ -262,14 +255,13 @@ class AdminStockConfigurationControllerCore extends AdminController
 									'label' => $this->l('No')
 								)
 							),
-							'desc' => $this->l('Is it possible to generate a delivery note for the order?')
+							'hint' => $this->l('Is it possible to generate a delivery note for the order?')
 						),
 						array(
-							'type' => 'radio',
+							'type' => 'switch',
 							'label' => $this->l('Delivery state:'),
 							'name' => 'receipt_state',
 							'required' => true,
-							'class' => 't',
 							'is_bool' => true,
 							'values' => array(
 								array(
@@ -283,14 +275,13 @@ class AdminStockConfigurationControllerCore extends AdminController
 									'label' => $this->l('No')
 								)
 							),
-							'desc' => $this->l('Define if products have been either partially or completely received. This will allow you to know if ordered products have to be added to the corresponding warehouse.'),
+							'hint' => $this->l('Define if products have been either partially or completely received. This will allow you to know if ordered products have to be added to the corresponding warehouse.'),
 						),
 						array(
-							'type' => 'radio',
+							'type' => 'switch',
 							'label' => $this->l('Pending receipt:'),
 							'name' => 'pending_receipt',
 							'required' => true,
-							'class' => 't',
 							'is_bool' => true,
 							'values' => array(
 								array(
@@ -304,12 +295,12 @@ class AdminStockConfigurationControllerCore extends AdminController
 									'label' => $this->l('No')
 								)
 							),
-							'desc' => $this->l('The customer is awaiting delivery.')
+							'hint' => $this->l('The customer is awaiting delivery.')
 						),
 					),
 					'submit' => array(
 						'title' => $this->l('Save'),
-						'class' => 'button'
+						'class' => 'btn btn-primary'
 					)
 				);
 
@@ -327,7 +318,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 						$this->fields_form = array(
 							'legend' => array(
 								'title' => $this->l('Supply order status'),
-								'image' => '../img/admin/edit.gif'
+								'icon' => 'icon-pencil'
 							),
 							'input' => array(
 								array(
@@ -335,20 +326,18 @@ class AdminStockConfigurationControllerCore extends AdminController
 									'lang' => true,
 									'label' => $this->l('Status:'),
 									'name' => 'name',
-									'size' => 50,
 									'required' => true
 								),
 								array(
 									'type' => 'color',
 									'label' => $this->l('Back Office color:'),
 									'name' => 'color',
-									'size' => 20,
 									'desc' => $this->l('The background of PrestaShop\'s Back Office will be displayed in this color (HTML colors only, please).'),
 								),
 							),
 							'submit' => array(
 								'title' => $this->l('Save'),
-								'class' => 'button'
+								'class' => 'btn btn-primary'
 							)
 						);
 					}

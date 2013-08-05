@@ -41,7 +41,7 @@
 	{if count($stock_cover_warehouses) > 0}
 	<div>
 			<label for="id_warehouse">{l s='Filter by warehouse:'}</label>
-			<select name="id_warehouse" onChange="$(this).parent().parent().submit();"">
+			<select name="id_warehouse" onChange="$(this).parent().parent().submit();">
 				{foreach from=$stock_cover_warehouses key=k item=i}
 					<option {if $i.id_warehouse == $stock_cover_cur_warehouse} selected="selected"{/if} value="{$i.id_warehouse}">{$i.name}</option>
 				{/foreach}

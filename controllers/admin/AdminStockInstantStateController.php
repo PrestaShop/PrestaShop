@@ -33,6 +33,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->context = Context::getContext();
 		$this->table = 'stock';
 		$this->className = 'Stock';
@@ -43,18 +44,15 @@ class AdminStockInstantStateControllerCore extends AdminController
 			'reference' => array(
 				'title' => $this->l('Reference'),
 				'align' => 'center',
-				'width' => 200,
 				'havingFilter' => true
 			),
 			'ean13' => array(
 				'title' => $this->l('EAN13'),
 				'align' => 'center',
-				'width' => 100,
 			),
 			'upc' => array(
 				'title' => $this->l('UPC'),
 				'align' => 'center',
-				'width' => 100,
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
@@ -62,7 +60,6 @@ class AdminStockInstantStateControllerCore extends AdminController
 			),
 			'price_te' => array(
 				'title' => $this->l('Price (tax excl.)'),
-				'width' => 150,
 				'orderby' => true,
 				'search' => false,
 				'type' => 'price',
@@ -70,7 +67,6 @@ class AdminStockInstantStateControllerCore extends AdminController
 			),
 			'valuation' => array(
 				'title' => $this->l('Valuation'),
-				'width' => 150,
 				'orderby' => true,
 				'search' => false,
 				'type' => 'price',
@@ -94,7 +90,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 				'width' => 80,
 				'orderby' => true,
 				'search' => false,
-				'hint' => $this->l('Pysical quantity (usable) - Client orders + Supply Orders'),
+				'hint' => $this->l('Physical quantity (usable) - Client orders + Supply Orders'),
 			),
 		);
 

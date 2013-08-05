@@ -37,7 +37,7 @@
 			{/foreach}
 			</select>
 		</div>
-		<div style="margin-top: 5px;">
+		<div>
 			<label for="filter_status">{l s='Choose not to display completed/canceled orders:'}</label>
 			<input type="checkbox" name="filter_status" class="noborder" onChange="$(this).parent().parent().submit();" {if $filter_status == 1}value="on" checked{/if}></input>
 		</div>

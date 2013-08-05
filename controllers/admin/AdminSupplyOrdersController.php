@@ -37,6 +37,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->context = Context::getContext();
 	 	$this->table = 'supply_order';
 	 	$this->className = 'SupplyOrder';
@@ -55,28 +56,23 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$this->fields_list = array(
 			'reference' => array(
 				'title' => $this->l('Reference'),
-				'width' => 250,
 				'havingFilter' => true
 			),
 			'supplier' => array(
 				'title' => $this->l('Supplier'),
-				'width' => 130,
 				'filter_key' => 's!name'
 			),
 			'warehouse' => array(
 				'title' => $this->l('Warehouse'),
-				'width' => 130,
 				'filter_key' => 'w!name'
 			),
 			'state' => array(
 				'title' => $this->l('Status'),
-				'width' => 200,
 				'filter_key' => 'stl!name',
 				'color' => 'color',
 			),
 			'date_add' => array(
 				'title' => $this->l('Creation'),
-				'width' => 150,
 				'align' => 'left',
 				'type' => 'date',
 				'havingFilter' => true,
@@ -84,7 +80,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			),
 			'date_upd' => array(
 				'title' => $this->l('Last modification'),
-				'width' => 150,
 				'align' => 'left',
 				'type' => 'date',
 				'havingFilter' => true,
@@ -92,7 +87,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			),
 			'date_delivery_expected' => array(
 				'title' => $this->l('Delivery (expected)'),
-				'width' => 150,
 				'align' => 'left',
 				'type' => 'date',
 				'havingFilter' => true,
@@ -100,7 +94,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			),
 			'id_export' => array(
 				'title' => $this->l('Export'),
-				'width' => 80,
 				'callback' => 'printExportIcons',
 				'orderby' => false,
 				'search' => false
@@ -203,16 +196,15 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$this->fields_form = array(
 				'legend' => array(
 					'title' => $this->l('Order information'),
-					'image' => '../img/admin/edit.gif'
+					'icon' => 'icon-pencil'
 				),
 				'input' => array(
 					array(
 						'type' => 'text',
 						'label' => $this->l('Reference:'),
 						'name' => 'reference',
-						'size' => 50,
 						'required' => true,
-						'desc' => $this->l('Here\'s the reference number for your order.'),
+						'hint' => $this->l('Here\'s the reference number for your order.'),
 					),
 					array(
 						'type' => 'select',
@@ -224,8 +216,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 							'id' => 'id_supplier',
 							'name' => 'name'
 						),
-						'desc' => $this->l('Select the supplier you\'ll be purchasing from.'),
-						'hint' => $this->l('Warning: All products already added to the order will be removed.')
+						'hint' => array(
+							$this->l('Select the supplier you\'ll be purchasing from.'),
+							$this->l('Warning: All products already added to the order will be removed.')
+						)
 					),
 					array(
 						'type' => 'select',
@@ -237,7 +231,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 							'id' => 'id_warehouse',
 							'name' => 'name'
 						),
-						'desc' => $this->l('Which warehouse will the order be sent to?'),
+						'hint' => $this->l('Which warehouse will the order be sent to?'),
 					),
 					array(
 						'type' => 'select',
@@ -249,8 +243,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 							'id' => 'id_currency',
 							'name' => 'name'
 						),
-						'desc' => $this->l('The currency of the order.'),
-						'hint' => $this->l('Warning: All products already added to the order will be removed.')
+						'hint' => array(
+							$this->l('The currency of the order.'),
+							$this->l('Warning: All products already added to the order will be removed.')
+						)
 					),
 					array(
 						'type' => 'select',
@@ -262,24 +258,24 @@ class AdminSupplyOrdersControllerCore extends AdminController
 							'id' => 'id_lang',
 							'name' => 'name'
 						),
-						'desc' => $this->l('The language of the order.')
+						'hint' => $this->l('The language of the order.')
 					),
 					array(
 						'type' => 'text',
 						'label' => $this->l('Global discount rate (%):'),
 						'name' => 'discount_rate',
-						'size' => 10,
 						'required' => true,
-						'desc' => $this->l('This is the global discount rate in percent for the order.'),
+						'hint' => $this->l('This is the global discount rate in percent for the order.'),
 					),
 					array(
 						'type' => 'text',
 						'label' => $this->l('Automatically load products:'),
 						'name' => 'load_products',
-						'size' => 10,
 						'required' => false,
-						'hint' => $this->l('This will reset the order'),
-						'desc' => $this->l('If specified, each product quantity less than or equal to this value will be loaded.'),
+						'hint' => array(
+							$this->l('This will reset the order'),
+							$this->l('If specified, each product quantity less than or equal to this value will be loaded.'),
+						),
 					),
 				),
 				'submit' => array(
@@ -307,7 +303,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 					'type' => 'date',
 					'label' => $this->l('Expected delivery date:'),
 					'name' => 'date_delivery_expected',
-					'size' => 10,
 					'required' => true,
 					'desc' => $this->l('The expected delivery date for this order is...'),
 				);
@@ -695,7 +690,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			'supplier_reference' => array(
 				'title' => $this->l('Supplier Reference'),
 				'align' => 'left',
-				'width' => 50,
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
@@ -703,7 +697,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			'reference' => array(
 				'title' => $this->l('Reference'),
 				'align' => 'left',
-				'width' => 30,
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
@@ -711,7 +704,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			'ean13' => array(
 				'title' => $this->l('EAN13'),
 				'align' => 'left',
-				'width' => 30,
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
@@ -719,7 +711,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			'upc' => array(
 				'title' => $this->l('UPC'),
 				'align' => 'left',
-				'width' => 30,
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
@@ -727,7 +718,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			'name' => array(
 				'title' => $this->l('Name'),
 				'align' => 'left',
-				'width' => 300,
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
@@ -735,7 +725,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			'quantity_received_today' => array(
 				'title' => $this->l('Quantity received today?'),
 				'align' => 'left',
-				'width' => 20,
 				'type' => 'editable',
 				'orderby' => false,
 				'filter' => false,
@@ -745,7 +734,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			'quantity_received' => array(
 				'title' => $this->l('Quantity received'),
 				'align' => 'left',
-				'width' => 20,
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
@@ -762,7 +750,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			'quantity_left' => array(
 				'title' => $this->l('Quantity left'),
 				'align' => 'left',
-				'width' => 20,
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
@@ -1491,20 +1478,17 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$this->fields_list = array(
 				'history_date' => array(
 					'title' => $this->l('Last update'),
-					'width' => 50,
 					'align' => 'left',
 					'type' => 'datetime',
 					'havingFilter' => true
 				),
 				'history_employee' => array(
 					'title' => $this->l('Employee'),
-					'width' => 100,
 					'align' => 'left',
 					'havingFilter' => true
 				),
 				'history_state_name' => array(
 					'title' => $this->l('Status'),
-					'width' => 100,
 					'align' => 'left',
 					'color' => 'color',
 					'havingFilter' => true
@@ -1726,7 +1710,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'supplier_reference' => array(
 					'title' => $this->l('Supplier Reference'),
 					'align' => 'center',
-					'width' => 120,
 					'orderby' => false,
 					'filter' => false,
 					'search' => false,
@@ -1734,7 +1717,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'reference' => array(
 					'title' => $this->l('Reference'),
 					'align' => 'center',
-					'width' => 120,
 					'orderby' => false,
 					'filter' => false,
 					'search' => false,
@@ -1742,7 +1724,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'ean13' => array(
 					'title' => $this->l('EAN13'),
 					'align' => 'center',
-					'width' => 100,
 					'orderby' => false,
 					'filter' => false,
 					'search' => false,
@@ -1750,7 +1731,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'upc' => array(
 					'title' => $this->l('UPC'),
 					'align' => 'center',
-					'width' => 100,
 					'orderby' => false,
 					'filter' => false,
 					'search' => false,
@@ -1764,7 +1744,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'unit_price_te' => array(
 					'title' => $this->l('Unit price (tax excl.)'),
 					'align' => 'right',
-					'width' => 80,
 					'orderby' => false,
 					'filter' => false,
 					'search' => false,
@@ -1774,7 +1753,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'quantity_expected' => array(
 					'title' => $this->l('Quantity'),
 					'align' => 'right',
-					'width' => 80,
 					'orderby' => false,
 					'filter' => false,
 					'search' => false,
@@ -1782,7 +1760,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'price_te' => array(
 					'title' => $this->l('Price (tax excl.)'),
 					'align' => 'right',
-					'width' => 80,
 					'orderby' => false,
 					'filter' => false,
 					'search' => false,
@@ -1792,7 +1769,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'discount_rate' => array(
 					'title' => $this->l('Discount rate'),
 					'align' => 'right',
-					'width' => 80,
 					'orderby' => false,
 					'filter' => false,
 					'search' => false,
@@ -1801,7 +1777,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'discount_value_te' => array(
 					'title' => $this->l('Discount value (tax excl.)'),
 					'align' => 'right',
-					'width' => 80,
 					'orderby' => false,
 					'filter' => false,
 					'search' => false,
@@ -1811,7 +1786,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'price_with_discount_te' => array(
 					'title' => $this->l('Price with product discount (tax excl.)'),
 					'align' => 'right',
-					'width' => 80,
 					'orderby' => false,
 					'filter' => false,
 					'search' => false,
@@ -1821,7 +1795,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'tax_rate' => array(
 					'title' => $this->l('Tax rate'),
 					'align' => 'right',
-					'width' => 80,
 					'orderby' => false,
 					'filter' => false,
 					'search' => false,
@@ -1830,7 +1803,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'tax_value' => array(
 					'title' => $this->l('Tax value'),
 					'align' => 'right',
-					'width' => 80,
 					'orderby' => false,
 					'filter' => false,
 					'search' => false,
@@ -1840,7 +1812,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'price_ti' => array(
 					'title' => $this->l('Price (tax incl.)'),
 					'align' => 'right',
-					'width' => 80,
 					'orderby' => false,
 					'filter' => false,
 					'search' => false,

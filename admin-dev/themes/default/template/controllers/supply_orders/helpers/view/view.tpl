@@ -25,10 +25,13 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
-	<div style="margin-top: 20px;">
-		<fieldset>
-			<legend>{if isset($is_template) && $is_template == 1} {l s='Template'} {/if}{l s='General information'}</legend>
-			<table style="width: 400px;" classe="table">
+	<div class="row">
+		<fieldset class="col-lg-12">
+			<h3>
+				<i class="icon-info"></i>
+				{if isset($is_template) && $is_template == 1} {l s='Template'} {/if}{l s='General information'}
+			</h3>
+			<table classe="table">
 				<tr>
 					<td>{l s='Creation date:'}</td>
 					<td>{$supply_order_creation_date}</td>
@@ -61,20 +64,26 @@
 		</fieldset>
 	</div>
 
-	<div style="margin-top: 20px;">
-		<fieldset>
-			<legend>{if isset($is_template) && $is_template == 1} {l s='Template'} {/if}{l s='Products:'}</legend>
+	<div class="row">
+		<fieldset class="col-lg-12">
+			<h3>
+				<i class="icon-dropbox"></i>
+				{if isset($is_template) && $is_template == 1} {l s='Template'} {/if}{l s='Products:'}
+			</h3>
 			{$supply_order_detail_content}
 		</fieldset>
 	</div>
 
-	<div style="margin-top: 20px;">
-		<fieldset>
-			<legend>{if isset($is_template) && $is_template == 1} {l s='Template'} {/if}{l s='Summary'}</legend>
-			<table style="width: 400px;" classe="table">
+	<div class="row">
+		<fieldset class="col-lg-12">
+			<h3>
+				<i class="icon-th-list"></i>
+				{if isset($is_template) && $is_template == 1} {l s='Template'} {/if}{l s='Summary'}
+			</h3>
+			<table classe="table">
 				<tr>
 					<th>{l s='Designation'}</th>
-					<th width="100px">{l s='Value'}</th>
+					<th>{l s='Value'}</th>
 				</tr>
 				<tr>
 					<td bgcolor="#000000"></td>
@@ -82,15 +91,15 @@
 				</tr>
 				<tr>
 					<td>{l s='Total (tax excl.)'}</td>
-					<td align="right">{$supply_order_total_te}</td>
+					<td>{$supply_order_total_te}</td>
 				</tr>
 				<tr>
 					<td>{l s='Discount'}</td>
-					<td align="right">{$supply_order_discount_value_te}</td>
+					<td>{$supply_order_discount_value_te}</td>
 				</tr>
 				<tr>
 					<td>{l s='Total with discount (tax excl.)'}</td>
-					<td align="right">{$supply_order_total_with_discount_te}</td>
+					<td>{$supply_order_total_with_discount_te}</td>
 				</tr>
 				<tr>
 					<td bgcolor="#000000"></td>
@@ -98,11 +107,11 @@
 				</tr>
 				<tr>
 					<td>{l s='Total Tax'}</td>
-					<td align="right">{$supply_order_total_tax}</td>
+					<td>{$supply_order_total_tax}</td>
 				</tr>
 				<tr>
 					<td>{l s='Total (tax incl.)'}</td>
-					<td align="right">{$supply_order_total_ti}</td>
+					<td>{$supply_order_total_ti}</td>
 				</tr>
 				<tr>
 					<td bgcolor="#000000"></td>
@@ -110,7 +119,7 @@
 				</tr>
 				<tr>
 					<td>{l s='Total to pay.'}</td>
-					<td align="right">{$supply_order_total_ti}</td>
+					<td>{$supply_order_total_ti}</td>
 				</tr>
 			</table>
 		</fieldset>
