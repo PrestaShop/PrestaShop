@@ -486,14 +486,13 @@ class AdminHomeControllerCore extends AdminController
 		$result = array();
 		$content = '';
 
-		$protocol = Tools::usingSecureMode() ? 'https' : 'http';
+		$protocol = Tools::getCurrentUrlProtocolPrefix();
 		$isoUser = Context::getContext()->language->iso_code;
 		$isoCountry = Context::getContext()->country->iso_code;
 		$stream_context = @stream_context_create(array('http' => array('method'=> 'GET', 'timeout' => 2)));
 
 		// SCREENCAST
 		$result['screencast'] = 'OK';
-
 
 		// PREACTIVATION
 		$result['partner_preactivation'] = $this->getBlockPartners();
@@ -503,7 +502,7 @@ class AdminHomeControllerCore extends AdminController
 		$result['discover_prestashop'] .= '<div class="row-news"><div id="block_discover"><iframe frameborder="no" style="margin: 0px; padding: 0px; width: 100%; height:300px; overflow:hidden;" src="'.$protocol.'://api.prestashop.com/rss2/news2.php?v='._PS_VERSION_.'&lang='.$isoUser.'"></iframe></div>';
 
 		// SHOW TIPS OF THE DAY
-		$content = Tools::file_get_contents($protocol.'://api.prestashop.com/partner/tipsoftheday/?protocol='.$protocol.'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser), false, $stream_context);
+		$content = Tools::file_get_contents($protocol.'api.prestashop.com/partner/tipsoftheday/?iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser), false, $stream_context);
 		$content = explode('|', $content);
 		if ($content[0] == 'OK' && Validate::isCleanHtml($content[1]))
 			$result['discover_prestashop'] .= '<div id="block_partner_tips">'.$content[1].'</div></div>';
@@ -529,7 +528,7 @@ class AdminHomeControllerCore extends AdminController
 	{
 		// Init var
 		$return = '';
-		$protocol = Tools::getShopProtocol();
+		$protocol = Tools::getCurrentUrlProtocolPrefix();
 		$isoCountry = Context::getContext()->country->iso_code;
 		$isoUser = Context::getContext()->language->iso_code;
 
@@ -537,7 +536,7 @@ class AdminHomeControllerCore extends AdminController
 		if (is_writable('../config/xml/') && (!file_exists('../config/xml/preactivation.xml') || (time() - filemtime('../config/xml/preactivation.xml')) > 86400))
 		{
 			$stream_context = @stream_context_create(array('http' => array('method'=> 'GET', 'timeout' => AdminHomeController::TIPS_TIMEOUT)));
-			$content = Tools::file_get_contents('http://api.prestashop.com/partner/premium/get_partners.php?protocol='.$protocol.'&iso_country='.Tools::strtoupper($isoCountry).'&iso_lang='.Tools::strtolower($isoUser).'&ps_version='._PS_VERSION_.'&ps_creation='._PS_CREATION_DATE_.'&host='.urlencode($_SERVER['HTTP_HOST']).'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')), false, $stream_context);
+			$content = Tools::file_get_contents($protocol.'api.prestashop.com/partner/premium/get_partners.php?iso_country='.Tools::strtoupper($isoCountry).'&iso_lang='.Tools::strtolower($isoUser).'&ps_version='._PS_VERSION_.'&ps_creation='._PS_CREATION_DATE_.'&host='.urlencode($_SERVER['HTTP_HOST']), false, $stream_context);
 			@unlink('../config/xml/preactivation.xml');
 			file_put_contents('../config/xml/preactivation.xml', $content);
 		}
