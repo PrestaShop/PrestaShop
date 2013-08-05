@@ -130,7 +130,8 @@ class AdminManufacturersControllerCore extends AdminController
 			),
 			'manufacturer_name' => array(
 				'title' => $this->l('Manufacturer'),
-				'width' => 'auto'
+				'width' => 'auto',
+				'filter_key' => 'm!name'
 			),
 			'firstname' => array(
 				'title' => $this->l('First name'),
@@ -168,6 +169,7 @@ class AdminManufacturersControllerCore extends AdminController
 		unset($this->fields_list, $this->_select, $this->_join, $this->_group, $this->_filterHaving, $this->_filter);
 
 		$this->table = 'address';
+		$this->list_id = 'address';
 		$this->identifier = 'id_address';
 		$this->deleted = true;
 		$this->_orderBy = null;
