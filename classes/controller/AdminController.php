@@ -47,6 +47,8 @@ class AdminControllerCore extends Controller
 	/** @var string Associated table name */
 	public $table;
 
+	public $list_id;
+
 	/** @var string Object identifier inside the associated table */
 	protected $identifier = false;
 
@@ -462,29 +464,33 @@ class AdminControllerCore extends Controller
 	 */
 	public function processFilter()
 	{
+		if (!isset($this->list_id))
+			$this->list_id = $this->table;
+
 		$prefix = str_replace(array('admin', 'controller'), '', Tools::strtolower(get_class($this)));
 		// Filter memorization
-		if (isset($_POST) && !empty($_POST) && isset($this->table))
+		if (isset($_POST) && !empty($_POST) && isset($this->list_id))
 			foreach ($_POST as $key => $value)
 			{
-				if (stripos($key, $this->table.'Filter_') === 0)
+				if (stripos($key, $this->list_id.'Filter_') === 0)
 					$this->context->cookie->{$prefix.$key} = !is_array($value) ? $value : serialize($value);
 				elseif(stripos($key, 'submitFilter') === 0)
 					$this->context->cookie->$key = !is_array($value) ? $value : serialize($value);
 			}
 
-		if (isset($_GET) && !empty($_GET) && isset($this->table))
+		if (isset($_GET) && !empty($_GET) && isset($this->list_id))
 			foreach ($_GET as $key => $value)
-				if (stripos($key, $this->table.'OrderBy') === 0 || stripos($key, $this->table.'Orderway') === 0)
+				if (stripos($key, $this->list_id.'OrderBy') === 0 || stripos($key, $this->list_id.'Orderway') === 0)
 					$this->context->cookie->{$prefix.$key} = $value;
 
-		$filters = $this->context->cookie->getFamily($prefix.$this->table.'Filter_');
+		$filters = $this->context->cookie->getFamily($prefix.$this->list_id.'Filter_');
+
 		foreach ($filters as $key => $value)
 		{
 			/* Extracting filters from $_POST on key filter_ */
-			if ($value != null && !strncmp($key, $prefix.$this->table.'Filter_', 7 + Tools::strlen($prefix.$this->table)))
+			if ($value != null && !strncmp($key, $prefix.$this->list_id.'Filter_', 7 + Tools::strlen($prefix.$this->list_id)))
 			{
-				$key = Tools::substr($key, 7 + Tools::strlen($prefix.$this->table));
+				$key = Tools::substr($key, 7 + Tools::strlen($prefix.$this->list_id));
 				/* Table alias could be specified using a ! eg. alias!field */
 				$tmp_tab = explode('!', $key);
 				$filter = count($tmp_tab) > 1 ? $tmp_tab[1] : $tmp_tab[0];
@@ -920,30 +926,32 @@ class AdminControllerCore extends Controller
 	/**
 	 * Cancel all filters for this tab
 	 */
-	public function processResetFilters()
+	public function processResetFilters($list_id = null)
 	{
+		if (!isset($list_id))
+			$list_id = isset($this->list_id) ? $this->list_id : $this->table;
+
 		$prefix = str_replace(array('admin', 'controller'), '', Tools::strtolower(get_class($this)));
-		$filters = $this->context->cookie->getFamily($prefix.$this->table.'Filter_');
+		$filters = $this->context->cookie->getFamily($prefix.$list_id.'Filter_');
+
 		foreach ($filters as $cookie_key => $filter)
-			if (strncmp($cookie_key, $prefix.$this->table.'Filter_', 7 + Tools::strlen($prefix.$this->table)) == 0)
+			if (strncmp($cookie_key, $prefix.$list_id.'Filter_', 7 + Tools::strlen($prefix.$list_id)) == 0)
 			{
-				$key = substr($cookie_key, 7 + Tools::strlen($prefix.$this->table));
-				/* Table alias could be specified using a ! eg. alias!field */
-				$tmp_tab = explode('!', $key);
-				$key = (count($tmp_tab) > 1 ? $tmp_tab[1] : $tmp_tab[0]);
+				$key = substr($cookie_key, 7 + Tools::strlen($prefix.$list_id));
 
 				if (is_array($this->fields_list) && array_key_exists($key, $this->fields_list))
+					$this->context->cookie->$cookie_key = null;
 					unset($this->context->cookie->$cookie_key);
 			}
 
-		if (isset($this->context->cookie->{'submitFilter'.$this->table}))
-			unset($this->context->cookie->{'submitFilter'.$this->table});
+		if (isset($this->context->cookie->{'submitFilter'.$list_id}))
+			unset($this->context->cookie->{'submitFilter'.$list_id});
 
-		if (isset($this->context->cookie->{$prefix.$this->table.'Orderby'}))
-			unset($this->context->cookie->{$prefix.$this->table.'Orderby'});
+		if (isset($this->context->cookie->{$prefix.$list_id.'Orderby'}))
+			unset($this->context->cookie->{$prefix.$list_id.'Orderby'});
 
-		if (isset($this->context->cookie->{$prefix.$this->table.'Orderway'}))
-			unset($this->context->cookie->{$prefix.$this->table.'Orderway'});
+		if (isset($this->context->cookie->{$prefix.$list_id.'Orderway'}))
+			unset($this->context->cookie->{$prefix.$list_id.'Orderway'});
 
 		unset($_POST);
 		$this->_filter = false;
@@ -1721,6 +1729,7 @@ class AdminControllerCore extends Controller
 		$helper->row_hover = $this->row_hover;
 		$helper->position_identifier = $this->position_identifier;
 		$helper->controller_name = $this->controller_name;
+		$helper->list_id = isset($this->list_id) ? $this->list_id : $this->table;
 
 		// For each action, try to add the corresponding skip elements list
 		$helper->list_skip_actions = $this->list_skip_actions;
@@ -1915,11 +1924,14 @@ class AdminControllerCore extends Controller
 	 */
 	public function initProcess()
 	{
+		if (!isset($this->list_id))
+			$this->list_id = $this->table;
+
 		// Manage list filtering
-		if (Tools::isSubmit('submitFilter'.$this->table) 
-			|| $this->context->cookie->{'submitFilter'.$this->table} !== false
-			|| Tools::getValue($this->table.'Orderby')
-			|| Tools::getValue($this->table.'Orderway'))
+		if (Tools::isSubmit('submitFilter'.$this->list_id) 
+			|| $this->context->cookie->{'submitFilter'.$this->list_id} !== false
+			|| Tools::getValue($this->list_id.'Orderby')
+			|| Tools::getValue($this->list_id.'Orderway'))
 			$this->filter = true;
 
 		$this->id_object = (int)Tools::getValue($this->identifier);
@@ -2021,7 +2033,7 @@ class AdminControllerCore extends Controller
 				$this->action = 'export';
 		}
 		/* Cancel all filters for this tab */
-		elseif (isset($_POST['submitReset'.$this->table]))
+		elseif (isset($_POST['submitReset'.$this->list_id]))
 			$this->action = 'reset_filters';
 		/* Submit options list */
 		elseif (Tools::getValue('submitOptions'.$this->table) || Tools::getValue('submitOptions'))
@@ -2075,14 +2087,17 @@ class AdminControllerCore extends Controller
 	 */
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
+		if (!isset($this->list_id))
+			$this->list_id = $this->table;
+
 		/* Manage default params values */
 		$use_limit = true;
 		if ($limit === false)
 			$use_limit = false;
 		elseif (empty($limit))
 		{
-			if (isset($this->context->cookie->{$this->table.'_pagination'}) && $this->context->cookie->{$this->table.'_pagination'})
-				$limit = $this->context->cookie->{$this->table.'_pagination'};
+			if (isset($this->context->cookie->{$this->list_id.'_pagination'}) && $this->context->cookie->{$this->list_id.'_pagination'})
+				$limit = $this->context->cookie->{$this->list_id.'_pagination'};
 			else
 				$limit = $this->_pagination[1];
 		}
@@ -2092,8 +2107,8 @@ class AdminControllerCore extends Controller
 		$prefix = str_replace(array('admin', 'controller'), '', Tools::strtolower(get_class($this)));
 		if (empty($order_by))
 		{
-			if ($this->context->cookie->{$prefix.$this->table.'Orderby'})
-				$order_by = $this->context->cookie->{$prefix.$this->table.'Orderby'};
+			if ($this->context->cookie->{$prefix.$this->list_id.'Orderby'})
+				$order_by = $this->context->cookie->{$prefix.$this->list_id.'Orderby'};
 			elseif ($this->_orderBy)
 				$order_by = $this->_orderBy;
 			else
@@ -2102,16 +2117,16 @@ class AdminControllerCore extends Controller
 
 		if (empty($order_way))
 		{
-			if ($this->context->cookie->{$prefix.$this->table.'Orderway'})
-				$order_way = $this->context->cookie->{$prefix.$this->table.'Orderway'};
+			if ($this->context->cookie->{$prefix.$this->list_id.'Orderway'})
+				$order_way = $this->context->cookie->{$prefix.$this->list_id.'Orderway'};
 			elseif ($this->_orderWay)
 				$order_way = $this->_orderWay;
 			else
 				$order_way = $this->_defaultOrderWay;
 		}
 
-		$limit = (int)Tools::getValue('pagination', $limit);
-		$this->context->cookie->{$this->table.'_pagination'} = $limit;
+		$limit = (int)Tools::getValue($this->list_id.'_pagination', $limit);
+		$this->context->cookie->{$this->list_id.'_pagination'} = $limit;
 
 		/* Check params validity */
 		if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way)
@@ -2123,12 +2138,12 @@ class AdminControllerCore extends Controller
 			$order_by = $this->fields_list[$order_by]['filter_key'];
 
 		/* Determine offset from current page */
-		if ((isset($_POST['submitFilter'.$this->table]) ||
-		isset($_POST['submitFilter'.$this->table.'_x']) ||
-		isset($_POST['submitFilter'.$this->table.'_y'])) &&
-		!empty($_POST['submitFilter'.$this->table]) &&
-		is_numeric($_POST['submitFilter'.$this->table]))
-			$start = ((int)$_POST['submitFilter'.$this->table] - 1) * $limit;
+		if ((isset($_POST['submitFilter'.$this->list_id]) ||
+		isset($_POST['submitFilter'.$this->list_id.'_x']) ||
+		isset($_POST['submitFilter'.$this->list_id.'_y'])) &&
+		!empty($_POST['submitFilter'.$this->list_id]) &&
+		is_numeric($_POST['submitFilter'.$this->list_id]))
+			$start = ((int)$_POST['submitFilter'.$this->list_id] - 1) * $limit;
 
 		/* Cache */
 		$this->_lang = (int)$id_lang;
