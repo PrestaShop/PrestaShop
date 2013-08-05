@@ -94,6 +94,9 @@ function onFinishCallback(obj, context)
 			}
 			else
 				window.location.href = carrierlist_url;
+		},
+		error: function(XMLHttpRequest, textStatus, errorThrown) {
+			jAlert("TECHNICAL ERROR: \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
 		}
 	});
 }
@@ -202,6 +205,9 @@ function validateSteps(step_number)
 				displayError(datas.errors, step_number);
 				resizeWizard();
 			}
+		},
+		error: function(XMLHttpRequest, textStatus, errorThrown) {
+			jAlert("TECHNICAL ERROR: \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
 		}
 	});
 	return is_ok;
@@ -315,6 +321,9 @@ function bind_inputs()
 				$('#zone_ranges').replaceWith(data);
 				displayRangeType();
 				bind_inputs();
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+				jAlert("TECHNICAL ERROR: \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
 			}
 		});
 	});
