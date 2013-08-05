@@ -379,7 +379,7 @@ class OrderHistoryCore extends ObjectModel
 			return false;
 
 		$result = Db::getInstance()->getRow('
-			SELECT osl.`template`, c.`lastname`, c.`firstname`, osl.`name` AS osname, c.`email`, os.`module_name`
+			SELECT osl.`template`, c.`lastname`, c.`firstname`, osl.`name` AS osname, c.`email`, os.`module_name`, os.`id_order_state`
 			FROM `'._DB_PREFIX_.'order_history` oh
 				LEFT JOIN `'._DB_PREFIX_.'orders` o ON oh.`id_order` = o.`id_order`
 				LEFT JOIN `'._DB_PREFIX_.'customer` c ON o.`id_customer` = c.`id_customer`
@@ -411,9 +411,23 @@ class OrderHistoryCore extends ObjectModel
 			$data['{order_name}'] = $order->getUniqReference();
 
 			if (Validate::isLoadedObject($order))
+			{
+				// Join PDF invoice if order state is "payment accepted"
+				if ((int)$result['id_order_state'] === 2 && (int)Configuration::get('PS_INVOICE') && $order->invoice_number)
+				{
+					$context = Context::getContext();
+					$pdf = new PDF($order->getInvoicesCollection(), PDF::TEMPLATE_INVOICE, $context->smarty);
+					$file_attachement['content'] = $pdf->render(false);
+					$file_attachement['name'] = Configuration::get('PS_INVOICE_PREFIX', (int)$order->id_lang, null, $order->id_shop).sprintf('%06d', $order->invoice_number).'.pdf';
+					$file_attachement['mime'] = 'application/pdf';
+				}
+				else
+					$file_attachement = null;
+
 				Mail::Send((int)$order->id_lang, $result['template'], $topic, $data, $result['email'], $result['firstname'].' '.$result['lastname'],
-					null, null, null, null, _PS_MAIL_DIR_, false, (int)$order->id_shop);
-			
+					null, null, $file_attachement, null, _PS_MAIL_DIR_, false, (int)$order->id_shop);
+			}
+
 			ShopUrl::resetMainDomainCache();
 		}
 
