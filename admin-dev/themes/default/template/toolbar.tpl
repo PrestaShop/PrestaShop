@@ -38,7 +38,7 @@
 							<div style="float:right;margin:5px">
 								<a href="#" onclick="$('#modules_list_container').slideUp();return false;"><img alt="X" src="../img/admin/close.png"></a>
 							</div>
-							<div id="modules_list_loader"><img src="../img/loader.gif" alt="" border="0"></div>
+							<div id="modules_list_loader"><img src="../img/loader.gif" alt="" border="0" /></div>
 							<div id="modules_list_container_tab" style="display:none;"></div>
 							</div>
 						{/if}

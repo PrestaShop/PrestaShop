@@ -109,8 +109,8 @@
 						/ {$list_total} {l s='result(s)'}
 					</span>
 					<span style="float: right;">
+						<input type="submit" id="submitFilterButton{$list_id}" name="submitFilter" value="{l s='Filter'}" class="button" />					
 						<input type="submit" name="submitReset{$list_id}" value="{l s='Reset'}" class="button" />
-						<input type="submit" id="submitFilterButton{$list_id}" name="submitFilter" value="{l s='Filter'}" class="button" />
 					</span>
 					<span class="clear"></span>
 				</td>
