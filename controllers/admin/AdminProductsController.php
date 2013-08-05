@@ -2409,18 +2409,23 @@ class AdminProductsControllerCore extends AdminController
 		{
 			if ($product = $this->loadObject(true))
 			{
+				if ($this->tabAccess['edit'])
+				{
+					$this->toolbar_btn['save'] = array(
+						'short' => 'Save',
+						'href' => '#',
+						'desc' => $this->l('Save'),
+					);
+
+					$this->toolbar_btn['save-and-stay'] = array(
+						'short' => 'SaveAndStay',
+						'href' => '#',
+						'desc' => $this->l('Save and stay'),
+					);
+				}
+
 				if ((bool)$product->id)
 				{
-					// adding button for delete this product
-					if ($this->tabAccess['delete'] && $this->display != 'add')
-						$this->toolbar_btn['delete'] = array(
-							'short' => 'Delete',
-							'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)$product->id.'&amp;deleteproduct',
-							'desc' => $this->l('Delete this product.'),
-							'confirm' => 1,
-							'js' => 'if (confirm(\''.$this->l('Delete product?').'\')){return true;}else{event.preventDefault();}'
-						);
-
 					// adding button for duplicate this product
 					if ($this->tabAccess['add'] && $this->display != 'add')
 						$this->toolbar_btn['duplicate'] = array(
@@ -2454,22 +2459,17 @@ class AdminProductsControllerCore extends AdminController
 						'desc' => $this->l('New combination'),
 						'class' => 'toolbar-new'
 					);
-				}
-
-				if ($this->tabAccess['edit'])
-				{
-					$this->toolbar_btn['save'] = array(
-						'short' => 'Save',
-						'href' => '#',
-						'desc' => $this->l('Save'),
-					);
-
-					$this->toolbar_btn['save-and-stay'] = array(
-						'short' => 'SaveAndStay',
-						'href' => '#',
-						'desc' => $this->l('Save and stay'),
-					);
-				}
+				
+					// adding button for delete this product
+					if ($this->tabAccess['delete'] && $this->display != 'add')
+						$this->toolbar_btn['delete'] = array(
+							'short' => 'Delete',
+							'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)$product->id.'&amp;deleteproduct',
+							'desc' => $this->l('Delete this product.'),
+							'confirm' => 1,
+							'js' => 'if (confirm(\''.$this->l('Delete product?').'\')){return true;}else{event.preventDefault();}'
+						);
+				}				
 			}
 		}
 		else
