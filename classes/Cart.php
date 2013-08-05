@@ -210,7 +210,7 @@ class CartCore extends ObjectModel
 		if (!isset($this->id_address_invoice) || $this->id_address_invoice == $id_address)
 		{
 			$to_update = true;
-			$this->context->cart->id_address_invoice = $id_address_new;
+			$this->id_address_invoice = $id_address_new;
 		}
 		if (!isset($this->id_address_delivery) || $this->id_address_delivery == $id_address)
 		{
