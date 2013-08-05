@@ -284,6 +284,16 @@ function bind_inputs()
 		$(this).removeClass('field_error');
 	});
 	
+	$('tr.range_sup td input:text, tr.range_inf td input:text').keypress( function (evn) {
+	
+		index = $(this).parent('td').index();
+		if (evn.keyCode == 13)
+			if (validateRange(index))
+				enableRange(index);
+			else
+				disableRange(index);
+	});
+	
 	$('tr.range_sup td input:text, tr.range_inf td input:text').off('change').on('change', function () {
 		index = $(this).parent('td').index();
 		if ($('tr.fees_all td:eq('+index+')').hasClass('validated') || $('tr.fees_all td:eq('+index+')').hasClass('not_validated'))
