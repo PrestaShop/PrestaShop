@@ -122,7 +122,7 @@
 {* begin  HEADER *}
 <div class="container-fluid">
 	<div id="header">
-		<div id="header_infos" class="navbar navbar-fixed-top navbar-inverse">
+		<div id="header_infos" class="navbar navbar-fixed-top">
 			<a id="header_shopname" class="navbar-brand" href="{$link->getAdminLink('AdminHome')|escape:'htmlall':'UTF-8'}">{$shop_name}</a>
 
 			<ul id="notifs_icon_wrapper" class="nav navbar-nav nav-pills">

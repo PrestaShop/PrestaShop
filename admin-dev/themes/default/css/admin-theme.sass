@@ -1,11 +1,23 @@
 //variables 
 $icon-color: #87C795
-$bg-content-color: #F6F5F3
-$bg-head-color: #97C885
-$brand-primary: #444B55
+$bg-content-color: #F8F9FB
+
+//$bg-head-color: #F5792B // orange
+//$bg-head-color: #81A98C //vert d'eau
+//$bg-head-color: #ED3A6C // fushia
+//$bg-head-color: #0091B0 // bleu
+//$bg-head-color: #00C3C1 //turquoise
+$bg-head-color: #9DC44B // vert pomme
+//$bg-head-color: #97C885 // vert menthe
+//$bg-head-color:  #4691D2 // bleu ciel
+
+//$brand-primary: #E6E6E6
+//$brand-primary: #373E35 // vert camo
+$brand-primary: #262C3F // bleu nuit
+
 $panel-color: $brand-primary
 $badge-panel-color: #DC315E
-
+$bg-body-color: $bg-content-color
 
 @import "compass"
 @import "bootstrap/variables"
@@ -21,12 +33,12 @@ body.fixed-top
 	position: relative
 	top: 53px
 	margin-bottom: 50px
-	background-color: #C5C3BF
+	background-color: $bg-body-color
 
 #header_infos
 	height: 53px
-	border-bottom: solid 2px black
-	background-color: darken($brand-primary,10%)
+	//border-bottom: solid 2px black
+	background-color: darken($brand-primary,20%)
 	z-index: 9999
 	@include box-shadow(rgba(black,0.15) 0 2px 0)
 	#header_shopname
@@ -45,21 +57,21 @@ body.fixed-top
 	position: relative
 
 #content
-	float: left
+	//float: left
 	min-height: 100%
-	width: 1282px
+	//width: 1278px
 	padding: 90px 20px 90px
 	margin: 0 0 0 240px
-	border-left: 2px solid black
-	border-right: 2px solid black
+	//border-left: 2px solid black
+	//border-right: 2px solid black
 	background-color: $bg-content-color
 	//background-image: url('../img/patterns/bedge_grunge.png')
-	@include box-shadow(darken($bg-content-color,30%) 0 0 0 4px)
+	//@include box-shadow(darken($bg-content-color,30%) 0 0 0 4px)
 	fieldset, .panel
 		padding: 20px
-		margin-bottom: 10px
+		margin-bottom: 20px
 		border: solid 1px darken($bg-content-color,10%)
-		background-color: $bg-content-color
+		background-color: lighten($bg-content-color,20%)
 		@include border-radius(5px)
 		@include box-shadow(rgba(black,0.10) 0 2px 0, white 0 0 0 3px inset)
 	.panel-heading
@@ -74,7 +86,9 @@ body.fixed-top
 		font-size: 1.2em
 		font-weight: 300
 		text-transform: uppercase
-		background-color: lighten($panel-color,10%)
+		background-color: $panel-color
+		i, a
+			color: $bg-head-color!important
 		.badge
 			background-color: lighten($panel-color,20%)
 			border-radius: 0
@@ -105,20 +119,20 @@ body.fixed-top
 			@include box-shadow(white 0 0 0 1px inset)
 
 .page-head
-	width: 1278px
+	width: 100%
 	height: 69px
-	padding: 4px 3px 0 20px
+	padding: 5px 10px 0 0
 	margin: 0
-	border-bottom: 4px solid darken($bg-head-color,30%)
+	border-bottom: 4px solid darken($bg-head-color,20%)
 	position: fixed
 	top: 53px
-	left: 242px
+	left: 0px
 	z-index: 9000
 	background-color: $bg-head-color
 	@include box-shadow(rgba(black,0.15) 0 7px 0, rgba(white,0.15) 0 -1px 0 inset)
 	h2.page-title
 		@extend .pull-left
-		padding: 0
+		padding: 0 0 0 260px
 		font-size: 20px
 		line-height: 25px
 		color: white
@@ -134,10 +148,12 @@ body.fixed-top
 				background: #f5f5f5
 
 .page-sidebar
+	z-index: 9001
 	top: 53px
 	position: fixed
 	width: 240px
 	border-bottom: solid 1px black
+	background-color: $brand-primary
 	@include box-shadow(darken($bg-content-color,30%) 0 4px 0)	
 	min-height: 700px
 	height: 100%
@@ -153,7 +169,7 @@ body.fixed-top
 		padding: 0
 		padding-bottom: 100px
 		li
-			background-color: #48525F
+			background-color: lighten($brand-primary,0)
 			list-style: none
 		li:not(.active) ul
 			display: none
@@ -164,22 +180,26 @@ body.fixed-top
 		> li
 			&:hover > a, &.active > a
 				color: white
-				background-color: darken(#48525F,15%)
-				border-top: 1px solid darken($brand-primary,15%)
-				border-bottom: 1px solid darken($brand-primary,10%)
-				@include box-shadow(darken($brand-primary,15%) -4px 0 0 inset)
-				@include transition-property(background-color, border)
-				@include transition-duration(0.4s)
-				@include transition-timing-function(ease-out)
+				background-color: darken($brand-primary,5%)
+				@include box-shadow($bg-head-color -4px 0 0 inset)
+				i
+					color: $bg-head-color!important
 			> a
 				display: block
 				padding: 5px 0 5px 5px
-				border-top: 1px solid lighten(#48525F,5%)
-				border-bottom: 1px solid darken(#48525F,10%)
-				color: lighten(#48525F,35%)
+				border-top: 1px solid lighten($brand-primary,5%)
+				border-bottom: 1px solid darken($brand-primary,15%)
+				color: lighten($brand-primary,45%)
 				text-transform: uppercase
 				text-decoration: none
-				@include box-shadow(darken(#48525F,5%) -4px 0 0 inset)
+				@include transition-property(background-color, border, box-shadow)
+				@include transition-duration(0.4s)
+				@include transition-timing-function(ease-out)
+				@include box-shadow(darken($brand-primary,15%) -4px 0 0 inset)
+				i
+					@include transition-property(color)
+					@include transition-duration(0.4s)
+					@include transition-timing-function(ease-out)
 			img
 				margin-right: 10px
 			ul
@@ -190,16 +210,16 @@ body.fixed-top
 				li 
 					a
 						display: block
-						padding: 3px 15px 3px 20px
+						padding: 3px 10px 3px 10px
 						font-size: 12px
 						border: none
-						border-bottom: 1px solid #F5F5F5
+						border-bottom: 1px solid lighten($bg-head-color,25%)
 						background-color: white
 						i
 							margin-top: 3px
-							color: #CECECE
+							color: $bg-head-color
 						&:hover
-							background-color: lighten(#48525F,15%)
+							background-color: lighten($bg-head-color,35%)
 							text-decoration: none
 							i
 								color: $brand-primary
@@ -209,28 +229,6 @@ body.fixed-top
 							background-color: $bg-head-color
 							i
 								color: $brand-primary
-
-#footer
-	z-index: 9999
-	position: fixed
-	width: 100%
-	bottom: 0
-	padding: 0
-	background-color: darken($brand-primary,10%)
-	.go-top
-		display: block
-		padding: 0px 6px 0px 6px
-		margin: -2px 0px 0px
-		text-decoration: none
-		color: #fff
-		cursor: pointer
-		font-size: 16px
-		background-color: #111
-		
-	.go-top i
-		color: #666
-		font-size: 22px
-		margin-bottom: 5px
 
 #menu .maintab > a [class^="icon-"], #menu .maintab > a [class*=" icon-"]
 	font-size: 22px
@@ -244,27 +242,30 @@ body.fixed-top
 
 // Tool bar
 .toolbar_btn
-	@extend .btn
+	//@extend .btn
 	//@extend .btn-primary
-	background-color: $brand-primary
+	//background-color: $brand-primary
+	border: solid 1px lighten($bg-head-color,5%)
 	position: relative
 	padding: 2px 5px !important
 	margin-right: 3px
-	border-bottom: 4px solid darken($brand-primary,7%)
-	font-size: 11px
+	//border-bottom: 4px solid darken($brand-primary,7%)
+	font-size: 12px
+	font-weight: 600
 	color: white
-	text-shadow: -1px -1px 0 rgba(black,0.6)
+	text-align: center
+	text-shadow: none
 	//@include background(linear-gradient(top, lighten($brand-primary,15%), $brand-primary))
-	@include box-shadow(rgba(black,0.15) 0 3px 0, rgba(white,0.1) 0 0 0 1px inset)
+	//@include box-shadow(rgba(black,0.15) 0 3px 0, rgba(white,0.1) 0 0 0 1px inset)
 	&:hover
-		top: 2px
-		border-color: $brand-primary
-		border-bottom: 2px solid lighten($brand-primary,10%)
-		color: $brand-primary
-		text-shadow: 1px 1px 0 rgba(white,0.6)
-		background-color: lighten($brand-primary,40%)!important
-		@include background(linear-gradient(top left, lighten($brand-primary,75%), lighten($brand-primary,55%)))
-		@include box-shadow(rgba(black,0.3) 0 1px 3px, rgba(white,0.4) 0 0 0 1px inset)
+		//top: 2px
+		//border-color: $brand-primary
+		//border-bottom: 2px solid lighten($brand-primary,10%)
+		//color: $brand-primary
+		//@include text-shadow(lighten($bg-head-color,15%) 1px 1px 0)
+		background-color: lighten($bg-head-color,5%)!important
+		//@include background(linear-gradient(top left, lighten($brand-primary,75%), lighten($brand-primary,55%)))
+		//@include box-shadow(rgba(black,0.3) 0 1px 3px, rgba(white,0.4) 0 0 0 1px inset)
 
 .icon-AdminDashboard
 	@extend .icon-dashboard
@@ -302,11 +303,14 @@ body.fixed-top
 .icon-AdminParentStats
 	@extend .icon-bar-chart
 	background-color: adjust-hue($icon-color, 330)
+.icon-AdminStock
+	@extend .icon-archive
+	background-color: adjust-hue($icon-color, 360)
 
 [class^="icon-Admin"]
-	//background-color: #9ED072
+	background-color: darken($brand-primary,10%)
 	margin-right: 6px
-	color: $brand-primary!important
+	color: lighten($brand-primary,10%)!important
 
 [class^="process-icon-"], [class*=" process-icon-"]
 	height: 32px
@@ -389,9 +393,9 @@ label.control-label
 label.control-label span.label-tooltip
 	text-decoration: none
 	font-size: 13px
-	background-color: #D7E1ED
+	background-color: darken($bg-content-color,5%)
 	border: none
-	border-bottom: solid 1px darken($bg-content-color,20%)
+	border-bottom: solid 1px darken($bg-content-color,10%)
 	padding: 0 5px
 	@include border-radius(3px)
 
@@ -438,14 +442,14 @@ input[type="password"].input-tiny
 		@include background(linear-gradient(top, darken($bg-content-color,10%), darken($bg-content-color,20%)))
 
 .btn-primary
-	border-color: $brand-primary
-	color: lighten($brand-primary,70%)
-	@include background(linear-gradient(top,lighten($brand-primary,30%),lighten($brand-primary,20%)))
-	@include box-shadow(lighten($brand-primary,40%) 0 0 0 1px inset)
+	border-color: $bg-head-color
+	color: lighten($bg-head-color,70%)
+	@include background(linear-gradient(top,lighten($bg-head-color,10%),lighten($bg-head-color,0%)))
+	@include box-shadow(lighten($bg-head-color,10%) 0 0 0 1px inset)
 	&:hover, &:focus
-		border-color: $brand-primary
-		color: lighten($brand-primary,70%)
-		@include background(linear-gradient(top,lighten($brand-primary,20%),lighten($brand-primary,10%)))
+		border-color: $bg-head-color
+		color: lighten($bg-head-color,70%)
+		@include background(linear-gradient(top,darken($bg-head-color,0%),darken($bg-head-color,10%)))
 
 .btn-group-action
 	display: inline-block
@@ -527,6 +531,9 @@ tr.filter
 .breadcrumb
 	background-color: lighten($bg-content-color,7%)
 
+.badge
+	background-color: $bg-head-color
+
 .badge-success
 	@extend .badge
 	background-color: $brand-success
@@ -538,3 +545,70 @@ tr.filter
 .icon-big
 	font-size: 4em
 	color: darken($bg-content-color,20%)
+
+
+
+#module-list
+	h3
+		position: relative
+		top: 0
+		left: 0
+		margin: 0
+		padding: 0
+		background-color: transparent
+		color: $brand-primary
+		font-weight: 500
+
+#footer
+	z-index: 9002
+	display: block
+	//position: absolute
+	//width: 100%
+	bottom: 0
+	padding: 5px 0
+	background-color: darken($bg-content-color,5%)
+	@include box-shadow(darken($bg-content-color,40%) 0 2px 10px inset)
+	#go-top
+		position: fixed
+		bottom: 10px
+		height: 30px
+		width: 30px
+		text-align: center
+		line-height: 30px
+		right: 10px
+		z-index: 9003
+		display: block
+		padding: 0px 6px 0px 6px
+		margin: -2px 0px 0px
+		text-decoration: none
+		color: #fff
+		cursor: pointer
+		font-size: 16px
+		background-color: rgba(0,0,0,0.8)
+
+		
+	.go-top i
+		color: #666
+		font-size: 22px
+		margin-bottom: 5px
+	.link-social
+		&:hover
+			text-decoration: none
+		i
+			font-size: 2em
+			width: 30px
+			height: 30px
+			display: inline-block
+			line-height: 30px
+			text-align: center
+			@include border-radius(30px)
+	.link-twitter i
+		background-color: #7CCEEF
+	.link-facebook i
+		color: white
+		background-color: #557DBB
+	.link-github i
+		background-color: white
+	.link-google i
+		color: white
+		background-color: #E6644E
