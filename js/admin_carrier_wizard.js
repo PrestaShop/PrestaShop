@@ -402,18 +402,31 @@ function validateRange(index)
 	}
 	else if (is_ok && index > 2)//check range only if it's not the first range
 	{	
-		is_ok = false;
 		$('tr.range_sup td').not('.range_type, .range_sign, tr.range_sup td:last').each( function () 
 		{
-			index = $(this).index();
+			is_ok = false;
+			curent_index = $(this).index();
 			current_val = $(this).find('input').val();
-			if ((range_inf >= current_val) && (($('tr.range_inf td:eq('+index+1+')').length && range_inf <= $('tr.range_inf td:eq('+index+1+') input').val()) || !$('tr.range_inf td:eq('+index+1+')').length))
+			
+			if ((range_sup != current_val) && (range_inf != $('tr.range_inf td:eq('+curent_index+') input').val()))
 			{
-				if (range_sup >= $('tr.range_inf td:eq('+index+') input').val() && ($('tr.range_inf td:eq('+index+1+')').length && range_sup < $('tr.range_inf td:eq('+index+1+') input').val() || !$('tr.range_inf td:eq('+index+1+')').length ))
-					is_ok = true;
+				if ((range_inf >= current_val) && (($('tr.range_inf td:eq('+curent_index+1+')').length && range_inf <= $('tr.range_inf td:eq('+curent_index+1+') input').val()) || !$('tr.range_inf td:eq('+curent_index+1+')').length))
+				{
+					if (range_sup >= $('tr.range_inf td:eq('+curent_index+') input').val() && ($('tr.range_inf td:eq('+curent_index+1+')').length && range_sup < $('tr.range_inf td:eq('+curent_index+1+') input').val() || !$('tr.range_inf td:eq('+index+1+')').length ))
+					{
+						if ((range_sup < current_val && range_sup > $('tr.range_inf td:eq('+curent_index+') input').val()) || (range_inf > $('tr.range_inf td:eq('+curent_index+') input').val() && range_inf <= current_val)) //check if ranges is overlapping
+							is_ok = true;
+					}
+					else
+						is_ok = false;
+				}
+				else
+					is_ok = false;
 			}
+			else
+				is_ok = false;
 		});
-		
+
 		if (!is_ok)
 		{
 			$('tr.range_sup td:eq('+index+')').children('input:text').addClass('field_error');
@@ -493,12 +506,6 @@ function checkAllFieldIsNumeric()
 	});
 }
 
-function checkRangeContinuity()
-{
-	
-
-}
-
 function rebuildTabindex()
 {
 	i = 1;
@@ -527,4 +534,15 @@ function validateAndAddRangeButtonDisplay()
 		$('.validate_range').show();
 		$('.new_range').hide();
 	}
+}
+
+
+function repositionRange(current_index, new_index)
+{
+	$('tr.range_sup, tr.range_inf, tr.fees_all, tr.fees, tr.delete_range ').each(function () {
+		$(this).find('td:eq('+current_index+')').each( function () {
+			$(this).parent('tr').find('td:eq('+new_index+')').after(this.outerHTML);
+			$(this).remove();
+		});
+	});
 }
