@@ -39,6 +39,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	{
 		$this->context = Context::getContext();
 	 	$this->table = 'supply_order';
+
 	 	$this->className = 'SupplyOrder';
 	 	$this->identifier = 'id_supply_order';
 	 	$this->lang = false;
@@ -462,6 +463,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$this->_where .= ' AND st.enclosed != 1';
 			self::$currentIndex .= '&filter_status=on';
 		}
+
+		$this->list_id = 'orders';
 		$first_list = parent::renderList();
 
 		if (Tools::isSubmit('csv_orders') || Tools::isSubmit('csv_orders_details') || Tools::isSubmit('csv_order_details'))
@@ -514,6 +517,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			'href' => self::$currentIndex.'&amp;add'.$this->table.'&mod=template&amp;token='.$this->token,
 			'desc' => $this->l('Add new template')
 		);
+
+		$this->list_id = 'templates';
 		// inits list
 		$second_list = parent::renderList();
 
