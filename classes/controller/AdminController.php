@@ -379,6 +379,39 @@ class AdminControllerCore extends Controller
 				break;
 		}
 		$this->toolbar_title = $bread_extended;
+    
+		if (Tools::isSubmit('submitFilter'))
+		{
+			$filter = '';
+			foreach ($this->fields_list AS $field => $t)
+			{
+				if ($val = Tools::getValue($this->table.'Filter_'.$field))
+				{
+					if(!is_array($val) && !empty($val))
+						$filter .= ($filter ?  ', ' : $this->l(' filter by ')).$t['title'].' : ';
+		
+					if (isset($t['type']) && $t['type'] == 'bool')
+						$filter .= ((bool)$val) ? $this->l('yes') : $this->l('no');
+					elseif(is_string($val))
+						$filter .= $val;
+					elseif(is_array($val))
+					{
+						$tmp = '';
+						foreach($val as $v)
+							if(is_string($v) && !empty($v))
+								$tmp .= ' - '.$v;
+						if(Tools::strlen($tmp))
+						{
+							$tmp = ltrim($tmp, ' - ');
+							$filter .= ($filter ?  ', ' : $this->l(' filter by ')).$t['title'].' : ';							
+							$filter .= $tmp;
+						}
+					}
+				}
+			}
+			if ($filter)
+				$this->toolbar_title[] = $filter;
+		}	
 	}
 
 	/**
