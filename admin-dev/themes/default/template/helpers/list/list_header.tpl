@@ -104,11 +104,30 @@
 					</th>
 					{foreach $fields_display AS $key => $params}
 					<th {if isset($params.align)} class="{$params.align}"{/if}>
-						{if isset($params.hint)}
-						<span class="alert alert-info" name="help_box">{$params.hint}<span class="hint-pointer">&nbsp;</span></span>
-						{/if}
+
 						<span class="title_box {if isset($order_by) && ($key == $order_by)} active{/if}">
-							{$params.title}
+
+							{if isset($params.hint)}
+							<span class="label-tooltip" data-toggle="tooltip"
+								title="
+									{if is_array($params.hint)}
+										{foreach $params.hint as $hint}
+											{if is_array($hint)}
+												{$hint.text}
+											{else}
+												{$hint}
+											{/if}
+										{/foreach}
+									{else}
+										{$params.hint}
+									{/if}
+								">
+								{$params.title}
+							</span>
+							{else}
+								{$params.title}
+							{/if}
+							
 							{if (!isset($params.orderby) || $params.orderby) && !$simple_header}
 							<a {if isset($order_by) && ($key == $order_by) && ($order_way == 'DESC')}class="active"{/if}  href="{$currentIndex}&{$table}Orderby={$key|urlencode}&{$table}Orderway=desc&token={$token}{if isset($smarty.get.$identifier)}&{$identifier}={$smarty.get.$identifier|intval}{/if}">
 								<i class="icon-caret-down"></i>

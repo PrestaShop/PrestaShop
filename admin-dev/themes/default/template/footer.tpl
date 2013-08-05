@@ -29,14 +29,34 @@
 {if $display_footer}
 {hook h="displayBackOfficeFooter"}
 	<div id="footer">
-		<div class="footerLeft col-lg-4">
+		<div id="go-top"><i class="icon-arrow-up"></i></div>
+		<div class="col-lg-4">
 			<a href="http://www.prestashop.com/" target="_blank">PrestaShop&trade; {$ps_version}</a><br />
 			<span>{l s='Load time: '} {number_format(microtime(true) - $timer_start, 3, '.', '')}s</span>
 		</div>
-		<div class="footerRight col-lg-8">
+		<div class="col-lg-8">
 			<a href="http://www.prestashop.com/en/contact_us/" target="_blank" class="footer_link">{l s='Contact'}</a>
 			|&nbsp;<a href="http://forge.prestashop.com" target="_blank" class="footer_link">{l s='Bug Tracker'}</a>
 			|&nbsp;<a href="http://www.prestashop.com/forums/" target="_blank" class="footer_link">{l s='Forum'}</a>
+
+
+			<a class="link-social link-twitter" href="#" title="Twitter">
+				<i class="icon-twitter"></i>
+			</a>
+			<a class="link-social link-facebook" href="#" title="Facebook">
+				<i class="icon-facebook"></i>
+			</a>
+			<a class="link-social link-github" href="#" title="Github">
+				<i class="icon-github"></i>
+			</a>
+			<a class="link-social link-google" href="#" title="Google">
+				<i class="icon-google-plus"></i>
+			</a>
+
+			
+			
+			
+
 			{if $iso_is_fr}
 			<p>Questions / Renseignements / Formations : 
 				<strong>+33 (0)1.40.18.30.04</strong> de 09h &agrave; 18h

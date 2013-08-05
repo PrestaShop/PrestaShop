@@ -24,28 +24,25 @@
 *}
 
 {if count($modules)}
-	<div class="row-fluid">
-		<span class="pull-right">
-			<button type="button" class="btn btn-default" onclick="modules_management('install')">
-				<i class="icon-plus-sign-alt"></i>
-				{l s='Install the selection'}
-			</button>
-			<button type="button" class="btn btn-default" onclick="modules_management('uninstall')">
-				<i class="icon-minus-sign-alt"></i>
-				{l s='Uninstall the selection'}
-			</button>
-		</span>
-	</div>
-	<table cellspacing="0" cellpadding="0" class="table table-striped table-hover">
+	<table id="module-list" class="table">
 		<thead>
-			<tr class="nodrag nodrop">
+			<tr>
 				<th width="1%">
 					<input type="checkbox" rel="false" class="noborder" id="checkme">
 				</th>
-				<th width="20%">{l s='Logo'}</th>
-				<th width="45%">{l s='Module name'}</th>
-				<th width="35%">&nbsp;</th>
-			</tr>			
+				<th colspan="3">
+					<div class="btn-group pull-right">
+						<a class="btn btn-default btn-small" href="index.php?controller={$smarty.get.controller|htmlentities}&token={$smarty.get.token|htmlentities}">
+							<i class="icon-list"></i>
+							{l s='Normal view'} 
+						</a>
+						<a class="btn btn-default btn-small" href="index.php?controller={$smarty.get.controller|htmlentities}&token={$smarty.get.token|htmlentities}&select=favorites">
+							<i class="icon-star"></i> 
+							{l s='Favorites view'}
+						</a>
+					</div>
+				</th>
+			</tr>
 		<tbody>
 		{foreach from=$modules item=module}
 			<tr>
@@ -61,109 +58,94 @@
 				</td>
 				<td>
 					<div id="anchor{$module->name|ucfirst}">
-						<h4>{$module->displayName}
+						<h3 class="module-title">
+							{$module->displayName}
 							{if isset($module->type) && $module->type == 'addonsMustHave'}
-								<span class="label label-danger">{l s='Must Have'}</span>
-							{else}
-								{if isset($module->id) && $module->id gt 0}
-									<span class="label label-success{if isset($module->active) && $module->active eq 0} off{/if}">{l s='Installed'}</span>
-								{else}
-									<span class="label label-warning">{l s='Not installed'}</span>
-								{/if}
+								<span class="label label-info">{l s='Must Have'}</span>
 							{/if}
-						</h4>
+<!-- 						{if isset($module->id) && $module->id gt 0}
+								<span class="label label-success{if isset($module->active) && $module->active eq 0} off{/if}">{l s='Installed'}</span>
+							{else}
+								<span class="label label-warning">{l s='Not installed'}</span>
+							{/if} -->
+						</h3>
 						<div class="row-fluid">
-							<dl class="dl-horizontal">
+							<p class="module-infos">
+								<span>{$module->categoryName}</span> - 
 								{if isset($module->author) && !empty($module->author)}
-									<dt>{l s='Developed by'} :</dt>
-									<dd>{$module->author|truncate:20:'...'}</dd>
+									{l s='Developed by'} {$module->author|truncate:20:'...'}
 								{/if}
-									<dt>{l s='Version'} :</dt>
-									<dd>{$module->version} 
-										{if isset($module->version_addons)}({l s='Update'} {$module->version_addons} {l s='Available on PrestaShop Addons'}){/if}
-									</dd>
-									<dt>{l s='Category'} :</dt>
-									<dd>{$module->categoryName}</dd>
+									&nbsp;- {l s='Version'} : {$module->version} 
+										{if isset($module->version_addons)}
+											({l s='Update'} {$module->version_addons} {l s='Available on PrestaShop Addons'})
+										{/if}
+							</p>
+							<p class="module-description">
 								{if isset($module->description) && $module->description ne ''}
-									<dt>{l s='Description'} :</dt>
-									<dd>{$module->description}</dd>
-								{else}
-									&nbsp;
+									{l s='Description'} : {$module->description}
 								{/if}
-							</dl>
+							</p>
 						</div>
-						{if isset($module->message) && (!isset($module->type) || ($module->type != 'addonsMustHave' || $module->type !== 'addonsNative'))}<div class="alert">{$module->message}</div>{/if}
+						{if isset($module->message) && (!isset($module->type) || ($module->type != 'addonsMustHave' || $module->type !== 'addonsNative'))}<div class="alert alert-success">{$module->message}</div>{/if}
 					</div>
 				</td>
-				<td>
-					<div id="list-action-button" class="row-light">
-						<div class="btn-group">
-							{if isset($module->type) && $module->type == 'addonsMustHave'}
-								<a href="{$module->addons_buy_url}" target="_blank">
-									<span class="btn btn-default">
-										<i class="icon-shopping-cart"></i> &nbsp;&nbsp;{if isset($module->id_currency) && isset($module->price)}{displayPrice price=$module->price currency=$module->id_currency}{/if}
-									</span>
+				<td width="180px">
+					<div id="list-action-button" class="btn-group">
+
+						{if isset($module->type) && $module->type == 'addonsMustHave'}
+							<a class="btn btn-default" href="{$module->addons_buy_url}" target="_blank">
+								<i class="icon-shopping-cart"></i> &nbsp;{if isset($module->id_currency) && isset($module->price)}{displayPrice price=$module->price currency=$module->id_currency}{/if}
+							</a>
+						{else}
+							{if $module->id && isset($module->version_addons) && $module->version_addons}
+								<a class="btn btn-warning" href="{$module->options.update_url}">
+									<i class="icon-refresh"></i> {l s='Update it!'}
 								</a>
-							{else}
-								{if $module->id && isset($module->version_addons) && $module->version_addons}
-									<a href="{$module->options.update_url}">
-										<span class="btn btn-warning">
-											<i class="icon-refresh"></i> {l s='Update it!'}
-										</span>
-									</a>
+							{/if}
+							<a class="btn {if isset($module->id) && $module->id gt 0}btn-danger{else}btn-success{/if}" {if isset($module->id) && $module->id gt 0 && !empty($module->options.uninstall_onclick)}onclick="{$module->options.uninstall_onclick}"{/if} href="{if isset($module->id) && $module->id gt 0}{$module->options.uninstall_url}{else}{$module->options.install_url}{/if}">
+								{if isset($module->id) && $module->id gt 0}
+									<i class="icon-minus-sign-alt"></i> 
+									{l s='Uninstall'}
+								{else}
+									<i class="icon-plus-sign-alt"></i> 
+									{l s='Install'}
 								{/if}
-								<a {if isset($module->id) && $module->id gt 0 && !empty($module->options.uninstall_onclick)}onclick="{$module->options.uninstall_onclick}"{/if} href="{if isset($module->id) && $module->id gt 0}{$module->options.uninstall_url}{else}{$module->options.install_url}{/if}" class="button installed">
-									{if isset($module->id) && $module->id gt 0}
-										<span class="btn btn-danger">
-											<i class="icon-minus-sign-alt"></i> 
-											{l s='Uninstall'}
-										</span>
-									{else}
-										<span class="btn btn-success">
-											<i class="icon-plus-sign-alt"></i> 
-											{l s='Install'}
-										</span>
-									{/if}
-								</a>
-								<div class="row-fluid btn-group btn-group-action">
-									{if !isset($module->not_on_disk)}
-										<span class="btn btn-default btn-small">
-											<i class="icon-cog"></i> {l s='Choose an action'}
-										</span>
-										<button data-toggle="dropdown" class="btn btn-default btn-small dropdown-toggle">
-											<span class="caret"></span>&nbsp;
-										</button>
-										<ul class="dropdown-menu">
-											{$module->optionsHtml}
-											{if isset($module->preferences) && isset($module->preferences['favorite']) && $module->preferences['favorite'] == 1}
-												<li>
-													<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#">
-														<i class="icon-star"></i> {l s='Remove from Favorites'}
-													</a>
-												</li>
-												<li>
-													<a class="action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#" style="display: none;">
-														<i class="icon-star"></i> {l s='Mark as Favorite'}
-													</a>
-												</li>
-											{else}
-												<li>
-													<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#" style="display: none;">
-														<i class="icon-star"></i> {l s='Remove from Favorites'}
-													</a>
-												</li>
-												<li>
-													<a class="action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#">
-														<i class="icon-star"></i> {l s='Mark as Favorite'}
-													</a>
-												</li>
-											{/if}
-									{else}
-										&nbsp;
-									{/if}
-								</div>
-							 {/if}
-						</div>
+							</a>
+							{if !isset($module->not_on_disk)}
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
+								<span class="caret">&nbsp;</span>
+							</button>
+
+							<ul class="dropdown-menu">
+								{$module->optionsHtml}
+								{if isset($module->preferences) && isset($module->preferences['favorite']) && $module->preferences['favorite'] == 1}
+								<li>
+									<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#">
+										<i class="icon-star"></i> {l s='Remove from Favorites'}
+									</a>
+								</li>
+								<li>
+									<a class="action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#" style="display: none;">
+										<i class="icon-star"></i> {l s='Mark as Favorite'}
+									</a>
+								</li>
+							{else}
+								<li>
+									<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#" style="display: none;">
+										<i class="icon-star"></i> {l s='Remove from Favorites'}
+									</a>
+								</li>
+								<li>
+									<a class="action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#">
+										<i class="icon-star"></i> {l s='Mark as Favorite'}
+									</a>
+								</li>
+								{/if}
+							</ul>
+							{else}
+								&nbsp;
+							{/if}
+						 {/if}
 					</div>
 				</td>
 			</tr>
