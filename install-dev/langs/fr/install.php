@@ -240,5 +240,13 @@ return array(
 		'Sign-up to the newsletter' => 'S\'inscrire à la newsletter de PrestaShop',
 		'PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, please uncheck this box.' => 'PrestaShop peut vous guider de façon régulière en vous faisant parvenir des conseils afin d\'optimiser la gestion de votre boutique et développer votre activité. Si vous ne souhaitez pas recevoir ces conseils, nous vous invitons à décocher cette case.',
 		'Your PHP sessions path is not writable - check with your hosting provider:' => 'Le dossier de stockage n\'est pas accessible en écriture - consultez votre hébergeur',
+		'Database is created' => 'Base de données créée',
+		'Cannot create the database automatically' => 'Impossible de créer la base de données automatiquement',
+		'Install modules Addons' => 'Installation des modules Addons',
+		'Attempt to create the database automatically' => 'Essayer de créer la base de données automatiquement',
+		'Country:' => 'Pays :',
+		'Must be letters and numbers with at least 8 characters' => 'Lettres et chiffres avec au moins 8 caractères',
+		'To install PrestaShop, you need to have JavaScript enabled in your browser.' => 'Pour installer PrestaShop, vous devez avoir JavaScript activé dans votre navigateur',
+		'For security purposes, you must delete the "install" folder.' => 'Pour des raisons de sécurité, vous devez supprimer le dossier "install" manuellement.',
 	),
 );
