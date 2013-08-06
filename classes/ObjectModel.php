@@ -858,15 +858,13 @@ abstract class ObjectModelCore
 				continue;
 
 			$values = $this->$field;
+			
+			// If the object has not been loaded in multilanguage, then the value is the one for the current language of the object
 			if (!is_array($values))
-			{
-				$value = $values;
-				$values = array();
-				$values[$this->id_lang] = $value;
-				$values[Configuration::get('PS_LANG_DEFAULT')] = $value;
-			}
+				$values = array($this->id_lang => $values);
 
-			if (!isset($values[Configuration::get('PS_LANG_DEFAULT')])) 
+			// The value for the default must always be set, so we put an empty string if it does not exists
+			if (!isset($values[Configuration::get('PS_LANG_DEFAULT')]))
 				$values[Configuration::get('PS_LANG_DEFAULT')] = '';
 
 			foreach ($values as $id_lang => $value)
