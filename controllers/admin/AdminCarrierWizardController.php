@@ -828,6 +828,10 @@ class AdminCarrierWizardControllerCore extends AdminController
 	public static function getValidationRules()
 	{
 		$step_number = Tools::getValue('step_number');
+		
+		if ($step_number == 4 && !Shop::isFeatureActive() || $step_number == 5 && Shop::isFeatureActive())
+			return array();
+		
 		$step_fields = array(
 			1 => array('name', 'delay', 'grade', 'url'),
 			2 => array('is_free', 'id_tax_rules_group', 'shipping_handling', 'shipping_method', 'range_behavior'),
