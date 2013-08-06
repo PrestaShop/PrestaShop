@@ -30,10 +30,16 @@
 
 {block name="field"}
 	{if $input.name == 'zones'}
+		<div class="ranges_not_follow warn" style="display:none">
+			<label>{l s="Ranges are not correctly ordered:"}</label>
+			<a href="#" class="button" style="text-decoration:none">{l s="Reordering"}</a>
+		</div>
 		{include file='controllers/carrier_wizard/helpers/form/form_ranges.tpl'}
-		<div class="validate_range" style="display:none">
+		<!--
+<div class="validate_range" style="display:none">
 			<a href="#" class="button" id="validate_range_button">{l s="Validate"}</a>
 		</div>
+-->
 		<div class="new_range">
 			<a href="#" onclick="add_new_range();return false;" class="button" id="add_new_range">{l s='Add new range'}</a>
 		</div>

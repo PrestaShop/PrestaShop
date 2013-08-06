@@ -252,7 +252,8 @@ function bind_inputs()
 		return false;
 	});
 	
-	$('#validate_range_button').off('click').on('click', function () {
+	/*
+$('#validate_range_button').off('click').on('click', function () {
 		index = $('tr.fees_all td:last').index();
 		if (validateRange(index))
 		{
@@ -264,6 +265,7 @@ function bind_inputs()
 		validateAndAddRangeButtonDisplay();
 		return false;
 	});
+*/
 	
 	$('tr.fees td input:checkbox').off('change').on('change', function () {
 				
@@ -297,14 +299,17 @@ function bind_inputs()
 		}
 	});
 	
-	$('tr.range_sup td input:text, tr.range_inf td input:text').off('change').on('change', function () {
-		index = $(this).parent('td').index();
-		if ($('tr.fees_all td:eq('+index+')').hasClass('validated') || $('tr.fees_all td:eq('+index+')').hasClass('not_validated'))
-		{
+	$('tr.range_sup td input:text, tr.range_inf td input:text').typeWatch({
+		captureLength: 0,
+		highlight: false,
+		wait: 1000,
+		callback: function() { 
+
+			index = $(this.el).parent('td').index();
 			if (validateRange(index))
 				enableRange(index);
 			else
-				disableRange(index);
+				disableRange(index);			
 		}
 	});
 	
@@ -386,6 +391,7 @@ function showFees()
 
 function validateRange(index)
 {
+	$('.wizard_error').remove();
 	//reset error css
 	$('tr.range_sup td input:text').removeClass('field_error');
 	$('tr.range_inf td input:text').removeClass('field_error');
@@ -413,25 +419,29 @@ function validateRange(index)
 		is_ok = false;
 		displayError([invalid_range], $("#carrier_wizard").smartWizard('currentStep'));
 	}
-	else if (is_ok && index > 2)//check range only if it's not the first range
+	else if (is_ok && index > 2) //check range only if it's not the first range
 	{	
 		$('tr.range_sup td').not('.range_type, .range_sign, tr.range_sup td:last').each( function () 
 		{
-			is_ok = false;
-			curent_index = $(this).index();
-
-			current_sup = $(this).find('input').val();
-			current_inf = $('tr.range_inf td:eq('+curent_index+') input').val();
+			if ($('tr.fees_all td:eq('+index+')').hasClass('validated'))
+			{
+				is_ok = false;
+				curent_index = $(this).index();
+	
+				current_sup = $(this).find('input').val();
+				current_inf = $('tr.range_inf td:eq('+curent_index+') input').val();
+				
+				if ($('tr.range_inf td:eq('+curent_index+1+') input').length)
+					next_inf = $('tr.range_inf td:eq('+curent_index+1+') input').val();
+				else
+					next_inf = false;
+				
+				//check if range already exist
+				//check if ranges is overlapping
+				if ((range_sup != current_sup && range_inf != current_inf) && ((range_sup > current_sup || range_sup <= current_inf) && (range_inf < current_inf || range_inf >= current_sup)))
+					is_ok = true;
+			}
 			
-			if ($('tr.range_inf td:eq('+curent_index+1+') input').length)
-				next_inf = $('tr.range_inf td:eq('+curent_index+1+') input').val();
-			else
-				next_inf = false;
-			
-			//check if range already exist
-			//check if ranges is overlapping
-			if ((range_sup != current_sup && range_inf != current_inf) && ((range_sup > current_sup || range_sup <= current_inf) && (range_inf < current_inf || range_inf >= current_sup)))
-				is_ok = true;
 		});
 
 		if (!is_ok)
@@ -440,6 +450,8 @@ function validateRange(index)
 			$('tr.range_inf td:eq('+index+')').children('input:text').addClass('field_error');
 			displayError([range_is_overlapping], $("#carrier_wizard").smartWizard('currentStep'));
 		}
+		else
+			checkRangeContinuity();
 	}
 	return is_ok;
 }
@@ -531,6 +543,7 @@ function rebuildTabindex()
 
 function validateAndAddRangeButtonDisplay()
 {
+	return;
 	if ($('tr.fees_all td:last').hasClass('validated'))
 	{
 		$('.validate_range').hide();
@@ -543,8 +556,7 @@ function validateAndAddRangeButtonDisplay()
 	}
 }
 
-
-function repositionRange(current_index, new_index)
+function reorderRange(current_index, new_index)
 {
 	$('tr.range_sup, tr.range_inf, tr.fees_all, tr.fees, tr.delete_range ').each(function () {
 		$(this).find('td:eq('+current_index+')').each( function () {
@@ -552,4 +564,28 @@ function repositionRange(current_index, new_index)
 			$(this).remove();
 		});
 	});
+}
+
+function checkRangeContinuity()
+{
+	res = true;
+	return true;//TODO
+	$('tr.range_sup td').not('.range_type, .range_sign, tr.range_sup').each( function () 
+	{
+		index = $(this).index();
+		if (index > 2)
+		{
+			range_sup = parseFloat($('tr.range_sup td:eq('+index+')').children('input:text').val().trim());
+			range_inf = parseFloat($('tr.range_inf td:eq('+index+')').children('input:text').val().trim());
+			prev_index = index-1;
+			prev_range_sup = parseFloat($('tr.range_sup td:eq('+prev_index+')').children('input:text').val().trim());
+			prev_range_inf = parseFloat($('tr.range_inf td:eq('+prev_index+')').children('input:text').val().trim());
+			if (range_inf < prev_range_inf || range_sup < prev_range_sup)
+				res = false;
+		}
+	});
+	if (res)
+		$('.ranges_not_follow').fadeOut();
+	else
+		$('.ranges_not_follow').fadeIn();
 }
