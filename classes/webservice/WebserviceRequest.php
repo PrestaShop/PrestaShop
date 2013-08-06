@@ -513,7 +513,6 @@ class WebserviceRequestCore
 						$this->setError(501, sprintf('The specific management class is not implemented for the "%s" entity.', $this->urlSegment[0]), 124);
 					else
 					{
-						$this->setFieldsToDisplay();
 						$this->objectSpecificManagement = new $specificObjectName();
 						$this->objectSpecificManagement->setObjectOutput($this->objOutput)
 													   ->setWsObject($this);
