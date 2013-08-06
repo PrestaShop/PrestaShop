@@ -285,13 +285,16 @@ function bind_inputs()
 	});
 	
 	$('tr.range_sup td input:text, tr.range_inf td input:text').keypress( function (evn) {
-	
 		index = $(this).parent('td').index();
 		if (evn.keyCode == 13)
+		{
 			if (validateRange(index))
 				enableRange(index);
 			else
 				disableRange(index);
+			validateAndAddRangeButtonDisplay();
+			return false;
+		}
 	});
 	
 	$('tr.range_sup td input:text, tr.range_inf td input:text').off('change').on('change', function () {
@@ -416,28 +419,19 @@ function validateRange(index)
 		{
 			is_ok = false;
 			curent_index = $(this).index();
-			current_val = $(this).find('input').val();
-			
-			if ((range_sup != current_val) && (range_inf != $('tr.range_inf td:eq('+curent_index+') input').val()))
-			{
-				if ((range_inf >= current_val) && (($('tr.range_inf td:eq('+curent_index+1+')').length && range_inf <= $('tr.range_inf td:eq('+curent_index+1+') input').val()) || !$('tr.range_inf td:eq('+curent_index+1+')').length))
-				{
-					if (range_sup >= $('tr.range_inf td:eq('+curent_index+') input').val() && ($('tr.range_inf td:eq('+curent_index+1+')').length && range_sup < $('tr.range_inf td:eq('+curent_index+1+') input').val() || !$('tr.range_inf td:eq('+index+1+')').length ))
-					{
 
-						if ((range_sup < current_val && range_inf <= current_val) || (range_sup >= $('tr.range_inf td:eq('+curent_index+') input').val() && range_inf > $('tr.range_inf td:eq('+curent_index+') input').val()))//check if ranges is overlapping
-						{
-							is_ok = true;
-						} 
-					}
-					else
-						is_ok = false;
-				}
-				else
-					is_ok = false;
-			}
+			current_sup = $(this).find('input').val();
+			current_inf = $('tr.range_inf td:eq('+curent_index+') input').val();
+			
+			if ($('tr.range_inf td:eq('+curent_index+1+') input').length)
+				next_inf = $('tr.range_inf td:eq('+curent_index+1+') input').val();
 			else
-				is_ok = false;
+				next_inf = false;
+			
+			//check if range already exist
+			//check if ranges is overlapping
+			if ((range_sup != current_sup && range_inf != current_inf) && ((range_sup > current_sup || range_sup <= current_inf) && (range_inf < current_inf || range_inf >= current_sup)))
+				is_ok = true;
 		});
 
 		if (!is_ok)
