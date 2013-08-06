@@ -2630,6 +2630,8 @@ margin-bottom:7px;
 #carrier_wizard tr.fees_all { background: #CCCCCC}
 #carrier_wizard #zones_table input[type=text] {width: 45px;}
 #carrier_wizard #fieldset_form { min-height: 190px}
+#carrier_wizard #zone_ranges label { float: none; width: inherit }
+
 
 /*** IE10 ***/
 /*@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) { 

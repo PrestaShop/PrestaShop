@@ -844,10 +844,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 				$step_field[] = $row;
 		}
 
-		$rules = array();
-		
-		if ($step_number == 1)
-			$rules = Carrier::getValidationRules('Carrier');
+		$rules = Carrier::getValidationRules('Carrier');
 
 		foreach ($rules as $key_r => $rule)
 			foreach ($rule as $key_f => $field)
