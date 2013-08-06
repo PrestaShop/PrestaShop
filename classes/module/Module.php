@@ -1622,9 +1622,16 @@ abstract class ModuleCore
 	
 	protected function getCacheId($name = null)
 	{
-		if ($name === null)
-			$name = $this->name;
-		return $name.'|'.(int)Tools::usingSecureMode().'|'.(int)$this->context->shop->id.'|'.(int)Group::getCurrent()->id.'|'.(int)$this->context->language->id.'|'.(int)$this->context->currency->id;
+		$cache_array = array(
+			$name !== null ? $name : $this->name,
+			(int)Tools::usingSecureMode(),
+			(int)$this->context->shop->id,
+			(int)Group::getCurrent()->id,
+			(int)$this->context->language->id,
+			(int)$this->context->currency->id,
+			(int)$this->context->country->id
+		);
+		return implode('|', $cache_array);
 	}
 
 	public function display($file, $template, $cacheId = null, $compileId = null)
