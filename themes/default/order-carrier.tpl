@@ -230,6 +230,8 @@
 					{if !$address@last}
 					<br />
 					{/if}
+				{foreachelse}
+					{l s='No carriers available.'}
 				{/foreach}
 			</p>
 		{/foreach}
