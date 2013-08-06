@@ -2384,8 +2384,14 @@ class ProductCore extends ObjectModel
 			WHERE id_product = '.(int)$this->id.'
 			AND id_shop = '.(int)$this->id_shop
 		);
-		if (count($data))
-			Db::getInstance()->insert('product_carrier', $data);
+		
+		$uniqueArray = array();
+		foreach($data as $subArray)
+			if(!in_array($subArray, $uniqueArray))
+			  $uniqueArray[] = $subArray;
+  		
+		if (count($uniqueArray))
+			Db::getInstance()->insert('product_carrier', $uniqueArray, false, true, Db::INSERT_IGNORE);
 	}
 
 	/**
