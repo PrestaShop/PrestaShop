@@ -41,7 +41,7 @@
 					{/foreach}
 				</table>
 			{else}
-				<table border="0" cellpadding="0" cellspacing="5" class="table table-striped table-hover">
+				<table class="table">
 					<tr>
 						<td>
 							<div class="alert alert-block">{l s='No modules available in this section.'}</div>
@@ -52,4 +52,3 @@
 		</div>
 	</div>
 </fieldset>
-

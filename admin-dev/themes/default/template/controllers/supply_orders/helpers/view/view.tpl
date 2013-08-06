@@ -25,8 +25,10 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
-	<div class="row">
-		<fieldset class="col-lg-12">
+
+<div class="row">
+	<div class="col-lg-6">
+		<fieldset>
 			<h3>
 				<i class="icon-info"></i>
 				{if isset($is_template) && $is_template == 1} {l s='Template'} {/if}{l s='General information'}
@@ -63,31 +65,16 @@
 			</table>
 		</fieldset>
 	</div>
-
-	<div class="row">
-		<fieldset class="col-lg-12">
-			<h3>
-				<i class="icon-dropbox"></i>
-				{if isset($is_template) && $is_template == 1} {l s='Template'} {/if}{l s='Products:'}
-			</h3>
-			{$supply_order_detail_content}
-		</fieldset>
-	</div>
-
-	<div class="row">
-		<fieldset class="col-lg-12">
+	<div class="col-lg-6">
+		<fieldset>
 			<h3>
 				<i class="icon-th-list"></i>
 				{if isset($is_template) && $is_template == 1} {l s='Template'} {/if}{l s='Summary'}
 			</h3>
-			<table classe="table">
+			<table class="table">
 				<tr>
 					<th>{l s='Designation'}</th>
 					<th>{l s='Value'}</th>
-				</tr>
-				<tr>
-					<td bgcolor="#000000"></td>
-					<td bgcolor="#000000"></td>
 				</tr>
 				<tr>
 					<td>{l s='Total (tax excl.)'}</td>
@@ -102,10 +89,6 @@
 					<td>{$supply_order_total_with_discount_te}</td>
 				</tr>
 				<tr>
-					<td bgcolor="#000000"></td>
-					<td bgcolor="#000000"></td>
-				</tr>
-				<tr>
 					<td>{l s='Total Tax'}</td>
 					<td>{$supply_order_total_tax}</td>
 				</tr>
@@ -114,15 +97,19 @@
 					<td>{$supply_order_total_ti}</td>
 				</tr>
 				<tr>
-					<td bgcolor="#000000"></td>
-					<td bgcolor="#000000"></td>
-				</tr>
-				<tr>
 					<td>{l s='Total to pay.'}</td>
 					<td>{$supply_order_total_ti}</td>
 				</tr>
 			</table>
 		</fieldset>
 	</div>
+</div>
+		<fieldset>
+			<h3>
+				<i class="icon-dropbox"></i>
+				{if isset($is_template) && $is_template == 1} {l s='Template'} {/if}{l s='Products:'}
+			</h3>
+			{$supply_order_detail_content}
+		</fieldset>
 
 {/block}

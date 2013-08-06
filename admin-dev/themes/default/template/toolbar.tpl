@@ -24,7 +24,7 @@
 *}
 
 
-<div class="row-fluid page-head">
+<div class="page-head">
 	{block name=pageTitle}
 	<h2 class="page-title">
 		{if is_array($title)}{$title|end}{else}{$title}{/if}

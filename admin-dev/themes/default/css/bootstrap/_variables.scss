@@ -84,7 +84,7 @@ $border-radius-base:             3px ;
 
 // $table-bg:                           transparent ; overall background-color
 // $table-bg-accent:                    #f9f9f9 ; for striping
-$table-bg-hover:                     lighten($brand-primary,40%) ;
+$table-bg-hover:                     lighten($bg-head-color,35%) ;
 
 // $table-border-color:                 #ddd ; table and cell border
 
@@ -180,7 +180,7 @@ $grid-gutter-width:         10px ;
 // -------------------------
 
 // Basics of a navbar
-// $navbar-height:                    50px ;
+$navbar-height:                    35px ;
 // $navbar-color:                     #777 ;
 // $navbar-bg:                        #eee ;
 // $navbar-padding:                   floor($grid-gutter-width / 2) ;  ~15px

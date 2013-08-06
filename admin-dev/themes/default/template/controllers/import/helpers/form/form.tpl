@@ -104,7 +104,7 @@
  *}
 <form id="preview_import" action="{$current}&token={$token}" method="post" enctype="multipart/form-data" class="form-horizontal">
 	
-	<fieldset class="col-lg-12">
+	<fieldset>
 		<h3>
 			<i class="icon-download"></i>
 			{l s='Import'}
@@ -251,7 +251,7 @@
 	</fieldset>
 </form>
 
-<fieldset class="col-lg-12">
+<fieldset>
 	<h3>
 		<i class="icon-download"></i>
 		{l s='Available fields'}
