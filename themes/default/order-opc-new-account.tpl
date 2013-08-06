@@ -88,10 +88,10 @@
 				}
 				
 				$(document).ready(function() {
-					$('#company').blur(function(){
+					$('#company').on('input',function(){
 						vat_number();
 					});
-					$('#company_invoice').blur(function(){
+					$('#company_invoice').on('input',function(){
 						vat_number_invoice();
 					});
 					vat_number();
