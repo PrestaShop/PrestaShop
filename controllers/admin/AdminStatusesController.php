@@ -501,6 +501,10 @@ class AdminStatusesControllerCore extends AdminController
 		else if (isset($_GET['delivery'.$this->table]))
 		{
 			$this->processDelivery();
+		}
+		else if (isset($_GET['invoice'.$this->table]))
+		{
+			$this->processInvoice();
 		} 
 		else if (Tools::isSubmit('delete'.$this->table))
 		{
