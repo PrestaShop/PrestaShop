@@ -36,7 +36,7 @@
 			{if $voucherAllowed}<li><a href="{$link->getPageLink('discount', true)}" title="{l s='List of my vouchers' mod='blockmyaccountfooter'}" rel="nofollow">{l s='My vouchers' mod='blockmyaccountfooter'}</a></li>{/if}
 			{$HOOK_BLOCK_MY_ACCOUNT}
 		</ul>
-		<p class="logout"><a href="{$link->getPageLink('index')}?mylogout" title="{l s='Sign out' mod='blockmyaccountfooter'}" rel="nofollow">{l s='Sign out' mod='blockmyaccount'}</a></p>
+		<p class="logout"><a href="{$link->getPageLink('index')}?mylogout" title="{l s='Sign out' mod='blockmyaccountfooter'}" rel="nofollow">{l s='Sign out' mod='blockmyaccountfooter'}</a></p>
 	</div>
 </div>
 <!-- /Block myaccount module -->
