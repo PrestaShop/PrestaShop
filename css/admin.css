@@ -2631,7 +2631,8 @@ margin-bottom:7px;
 #carrier_wizard #zones_table input[type=text] {width: 45px;}
 #carrier_wizard #fieldset_form { min-height: 190px}
 #carrier_wizard #zone_ranges label { float: none; width: inherit }
-
+#carrier_wizard #step_carrier_summary label {width: 40px}
+#carrier_wizard #step_carrier_summary .margin-form {padding-left: 60px;}
 
 /*** IE10 ***/
 /*@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) { 
