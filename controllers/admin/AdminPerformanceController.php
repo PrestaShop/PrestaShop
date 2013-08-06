@@ -471,21 +471,6 @@ class AdminPerformanceControllerCore extends AdminController
 		$this->tpl_form_vars['servers'] = CacheMemcache::getMemcachedServers();
 	}
 
-	public function initFieldsetCloudCache()
-	{
-		if (!class_exists('CloudCache'))
-			$this->fields_form[6]['form'] = array(
-				'legend' => array(
-					'title' => $this->l('CloudCache'),
-					'image' => '../img/admin/subdomain.gif'
-				),
-				'desc' => $this->l('Performance matters! Improve speed and conversions the easy way.').'<br />'.
-				$this->l('CloudCache supercharges your site in minutes through its state-of-the-art content delivery network.').'<br /><br />'.
-				$this->l('Subscribe now using the code "presta25" and get an exclusive 25% monthly discount on every available package.').'<br /><br />
-			<a style="color: blue" href="index.php?controller=AdminModules&token='.Tools::getAdminTokenLite('AdminModules').'&filtername=cloudcache" id="installCloudCache">&gt; '.$this->l('Click here to install the CloudCache module for PrestaShop').'</a><br />'
-		);
-	}
-
 	public function renderForm()
 	{
 		// Initialize fieldset for a form
@@ -495,7 +480,6 @@ class AdminPerformanceControllerCore extends AdminController
 		$this->initFieldsetMediaServer();
 		$this->initFieldsetCiphering();
 		$this->initFieldsetCaching();
-		$this->initFieldsetCloudCache();
 
 		// Activate multiple fieldset
 		$this->multiple_fieldsets = true;
