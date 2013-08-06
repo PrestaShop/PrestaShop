@@ -1339,7 +1339,7 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	 * Sets Supplier Reference
+	 * Sets or updates Supplier Reference
 	 *
 	 * @param int $id_supplier
 	 * @param int $id_product_attribute
@@ -1352,30 +1352,25 @@ class ProductCore extends ObjectModel
 		//in some case we need to add price without supplier reference
 		if ($supplier_reference === null)
 			$supplier_reference = '';
-		
+
 		//Try to set the default supplier reference
-		if ($id_supplier > 0)
+		if (($id_supplier > 0) && ($id_product > 0))
 		{
 			$id_product_supplier = (int)ProductSupplier::getIdByProductAndSupplier($this->id, $id_product_attribute, $id_supplier);
 
+			$product_supplier = new ProductSupplier($id_product_supplier);
+
 			if (!$id_product_supplier)
 			{
-				//create new record
-				$product_supplier_entity = new ProductSupplier();
-				$product_supplier_entity->id_product = (int)$this->id;
-				$product_supplier_entity->id_product_attribute = (int)$id_product_attribute;
-				$product_supplier_entity->id_supplier = (int)$id_supplier;
-				$product_supplier_entity->product_supplier_reference = pSQL($supplier_reference);
-				$product_supplier_entity->product_supplier_price_te = (float)$price;
-				$product_supplier_entity->id_currency = (int)$id_currency;
-				$product_supplier_entity->save();
+				$product_supplier->id_product = (int)$this->id;
+				$product_supplier->id_product_attribute = (int)$id_product_attribute;
+				$product_supplier->id_supplier = (int)$id_supplier;
 			}
-			else
-			{
-				$product_supplier = new ProductSupplier((int)$id_product_supplier);
-				$product_supplier->product_supplier_reference = pSQL($supplier_reference);
-				$product_supplier->update();
-			}
+
+			$product_supplier->product_supplier_reference = pSQL($supplier_reference);
+			$product_supplier->product_supplier_price_te = (float)$price;
+			$product_supplier->id_currency = (int)$id_currency;
+			$product_supplier->save();
 		}
 	}
 
