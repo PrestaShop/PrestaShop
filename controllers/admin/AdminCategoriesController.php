@@ -457,13 +457,9 @@ class AdminCategoriesControllerCore extends AdminController
 		
 		$this->tpl_form_vars['shared_category'] = Validate::isLoadedObject($obj) && $obj->hasMultishopEntries(); 
 		$this->tpl_form_vars['PS_ALLOW_ACCENTED_CHARS_URL'] = (int)Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
-		if (Shop::isFeatureActive())
-		{
-			$this->fields_form['input'][] = array(
-				'type' => 'shop',
-				'label' => $this->l('Shop association:'),
-				'name' => 'checkBoxShopAsso',
-			);
+		
+		// Display this field only if multistore option is enabled
+		if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE'))
 			$this->fields_form['input'][] = array(
 				'type' => 'radio',
 				'label' => $this->l('Root Category:'),
@@ -484,7 +480,14 @@ class AdminCategoriesControllerCore extends AdminController
 					)
 				)
 			);
-		}
+		// Display this field only if multistore option is enabled AND there are several stores configured
+		if (Shop::isFeatureActive())
+			$this->fields_form['input'][] = array(
+				'type' => 'shop',
+				'label' => $this->l('Shop association:'),
+				'name' => 'checkBoxShopAsso',
+			);
+
 		// remove category tree and radio button "is_root_category" if this category has the root category as parent category to avoid any conflict
 		if ($this->_category->id_parent == Category::getTopCategory()->id && Tools::isSubmit('updatecategory'))
 			foreach ($this->fields_form['input'] as $k => $input)
