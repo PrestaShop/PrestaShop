@@ -136,25 +136,25 @@
 	{/if}
 	{if $has_actions}
 		<td>
-			<div class="btn-group btn-group-action">
-			{foreach $actions AS $key => $action}
-				{if isset($tr.$action)}
-					{if $key==0}
-					<span class="btn btn-default btn-small">
-						{$tr.$action}
-					</span>
-					<button class="btn btn-default btn-small dropdown-toggle" data-toggle="dropdown">
-						<span class="caret"></span>&nbsp;
-					</button>
+			<div class="btn-group{if count($actions) > 1} btn-group-action{/if}">			
+				<span class="btn btn-default btn-small">
+					{assign var='action' value=$actions[0]}
+					{$tr.$action}
+				</span>
+				{if count($actions) > 1}
+				<button class="btn btn-default btn-small dropdown-toggle" data-toggle="dropdown">
+					<span class="caret"></span>&nbsp;
+				</button>
 					<ul class="dropdown-menu">
-					{else}
+					{foreach $actions AS $key => $action}
+						{if $key != 0}
 						<li>
 							{$tr.$action}
 						</li>
-					{/if}
+						{/if}
+					{/foreach}
+					</ul>
 				{/if}
-			{/foreach}
-				</ul>
 			</div>
 		</td>
 	{/if}
