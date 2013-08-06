@@ -355,7 +355,8 @@ class AdminCarrierWizardControllerCore extends AdminController
 						'name' => 'max_height',
 						'required' => false,
 						'size' => 10,
-						'desc' => $this->l('Maximum height managed by this carrier. Set the value to "0", or leave this field blank to ignore.')
+						'desc' => $this->l('Maximum height managed by this carrier. Set the value to "0", or leave this field blank to ignore.').' '.$this->l('The value must be an integer
+.')
 					),
 					array(
 						'type' => 'text',
@@ -363,7 +364,8 @@ class AdminCarrierWizardControllerCore extends AdminController
 						'name' => 'max_width',
 						'required' => false,
 						'size' => 10,
-						'desc' => $this->l('Maximum width managed by this carrier. Set the value to "0", or leave this field blank to ignore.')
+						'desc' => $this->l('Maximum width managed by this carrier. Set the value to "0", or leave this field blank to ignore.').' '.$this->l('The value must be an integer
+.')
 					),
 					array(
 						'type' => 'text',
@@ -371,7 +373,8 @@ class AdminCarrierWizardControllerCore extends AdminController
 						'name' => 'max_depth',
 						'required' => false,
 						'size' => 10,
-						'desc' => $this->l('Maximum depth managed by this carrier. Set the value to "0", or leave this field blank to ignore.')
+						'desc' => $this->l('Maximum depth managed by this carrier. Set the value to "0", or leave this field blank to ignore.').' '.$this->l('The value must be an integer
+.')
 					),
 					array(
 						'type' => 'text',
