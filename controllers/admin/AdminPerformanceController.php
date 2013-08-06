@@ -118,12 +118,20 @@ class AdminPerformanceControllerCore extends AdminController
 						)
 					)
 				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Debug console Key'),
+					'name' => 'smarty_console_key',
+					'size' => 30,
+					'desc' => $this->l('SMARTY_DEBUG parameter in the URL.')
+				),
 			)
 		);
 
 		$this->fields_value['smarty_force_compile'] = Configuration::get('PS_SMARTY_FORCE_COMPILE');
 		$this->fields_value['smarty_cache'] = Configuration::get('PS_SMARTY_CACHE');
 		$this->fields_value['smarty_console'] = Configuration::get('PS_SMARTY_CONSOLE');
+		$this->fields_value['smarty_console_key'] = Configuration::get('PS_SMARTY_CONSOLE_KEY');
 	}
 
 	public function initFieldsetFeaturesDetachables()
@@ -586,7 +594,8 @@ class AdminPerformanceControllerCore extends AdminController
 				Configuration::updateValue('PS_SMARTY_FORCE_COMPILE', Tools::getValue('smarty_force_compile', _PS_SMARTY_NO_COMPILE_));
 				Configuration::updateValue('PS_SMARTY_CACHE', Tools::getValue('smarty_cache', 0));
 				Configuration::updateValue('PS_SMARTY_CONSOLE', Tools::getValue('smarty_console', 0));
-				$redirectAdmin = true;
+				Configuration::updateValue('PS_SMARTY_CONSOLE_KEY', Tools::getValue('smarty_console_key', 'SMARTY_DEBUG'));
+				$redirecAdmin = true;
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');

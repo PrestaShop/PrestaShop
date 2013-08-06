@@ -771,6 +771,9 @@ Country</value>
     </configuration>
     <configuration id="PS_CUSTOMER_CREATION_EMAIL" name="PS_CUSTOMER_CREATION_EMAIL">
       <value>1</value>
+    </configuration>	  
+    <configuration id="PS_SMARTY_CONSOLE_KEY" name="PS_SMARTY_CONSOLE_KEY">
+      <value>SMARTY_DEBUG</value>
     </configuration>
   </entities>
 </entity_configuration>
