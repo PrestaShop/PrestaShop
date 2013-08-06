@@ -66,7 +66,6 @@
 				{/if}
 				<option value="reference:asc" {if $orderby eq 'reference' AND $orderway eq 'asc'}selected="selected"{/if}>{l s='Reference: Lowest first'}</option>
 				<option value="reference:desc" {if $orderby eq 'reference' AND $orderway eq 'desc'}selected="selected"{/if}>{l s='Reference: Highest first'}</option>
-
 			</select>
 		</form>
 	</div> <!-- .{$container_class} -->
