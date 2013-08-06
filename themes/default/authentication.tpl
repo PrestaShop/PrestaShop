@@ -59,7 +59,7 @@ $(function(){ldelim}
 //]]>
 {literal}
 $(document).ready(function() {
-	$('#company').blur(function(){
+	$('#company').on('input',function(){
 		vat_number();
 	});
 	vat_number();
