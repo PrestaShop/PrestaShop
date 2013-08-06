@@ -52,6 +52,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 	{
 		parent::setMedia();
 		$this->addJqueryPlugin('smartWizard');
+		$this->addJqueryPlugin('typewatch');
 		$this->addJs(_PS_JS_DIR_.'admin_carrier_wizard.js');
 	}
 
@@ -503,7 +504,8 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$helper = new HelperForm();
 		$helper->show_toolbar = false;
 		$helper->table =  $this->table;
-		$helper->default_form_language = $this->context->language->id;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
 		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
 		$this->fields_form = array();
 		$helper->id = (int)Tools::getValue('id_carrier');
