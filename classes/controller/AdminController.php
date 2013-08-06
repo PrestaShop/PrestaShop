@@ -1624,8 +1624,10 @@ class AdminControllerCore extends Controller
 
 	/**
 	 * Function used to render the form for this controller
+	 *
+	 * @param string $submitAction custom submit action (optional)
 	 */
-	public function renderForm()
+	public function renderForm($submitAction = null)
 	{
 		if (!$this->default_form_language)
 			$this->getLanguages();
@@ -1653,6 +1655,10 @@ class AdminControllerCore extends Controller
 				else
 					$helper->tpl_vars['back'] = Tools::safeOutput(Tools::getValue(self::$currentIndex.'&token='.$this->token));
 			}
+
+			if (!empty($submitAction))
+				$helper->submit_action = $submitAction;
+
 			$form = $helper->generateForm($this->fields_form);
 
 			return $form;
