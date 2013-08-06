@@ -114,7 +114,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 					0 => $this->renderStepOne($carrier),
 					1 => $this->renderStepThree($carrier),
 					2 => $this->renderStepFour($carrier),
-					3 => $this->renderStepFive(),
+					3 => $this->renderStepFive($carrier),
 				)),
 			'labels' => array('next' => $this->l('Next'), 'previous' => $this->l('Previous'), 'finish' => $this->l('Finish'))
 		);
@@ -411,9 +411,47 @@ class AdminCarrierWizardControllerCore extends AdminController
 		return $this->renderGenericForm(array('form' => $this->fields_form), $fields_value);
 	}
 	
-	public function renderStepFive()
+	public function renderStepFive($carrier)
 	{
-		return $this->context->smarty->fetch('controllers/carrier_wizard/summary.tpl');
+		$this->fields_form = array(
+			'form' => array(
+				'id_form' => 'step_carrier_summary',
+				'input' => array(
+					array(
+						'type' => 'radio',
+						'label' => $this->l('Status:'),
+						'name' => 'active',
+						'required' => false,
+						'class' => 't',
+						'is_bool' => true,
+						'values' => array(
+							array(
+								'id' => 'active_on',
+								'value' => 1,
+								'label' => $this->l('Enabled')
+							),
+							array(
+								'id' => 'active_off',
+								'value' => 0,
+								'label' => $this->l('Disabled')
+							)
+						),
+						'desc' => $this->l('Enable the carrier in the Front Office')
+					)
+				)
+			));
+		
+		$template = $this->createTemplate('controllers/carrier_wizard/summary.tpl');
+		
+		$fields_value = $this->getStepFiveFieldsValues($carrier);
+		
+		$active_form = $this->renderGenericForm(array('form' => $this->fields_form), $fields_value);
+		
+		$active_form =  str_replace(array('<fieldset id="fieldset_form">', '</fieldset>'), '', $active_form);
+		
+		$template->assign('active_form', $active_form);
+		
+		return $template->fetch('controllers/carrier_wizard/summary.tpl');
 	}
 	
 	protected function getTplRangesVarsAndValues($carrier, &$tpl_vars, &$fields_value)
@@ -516,7 +554,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 	public function getStepFourFieldsValues($carrier)
 	{
 		return array(
-			'range_behavior' => $this->getFieldValue($carrier, 'shop'),
+			'range_behavior' => $this->getFieldValue($carrier, 'range_behavior'),
 			'max_height' => $this->getFieldValue($carrier, 'max_height'),
 			'max_width' => $this->getFieldValue($carrier, 'max_width'),
 			'max_depth' => $this->getFieldValue($carrier, 'max_depth'),
@@ -525,6 +563,10 @@ class AdminCarrierWizardControllerCore extends AdminController
 		);
 	}
 	
+	public function getStepFiveFieldsValues($carrier)
+	{
+		return array('active' => $this->getFieldValue($carrier, 'active'));
+	}
 	
 	public function ajaxProcessChangeRanges()
 	{
