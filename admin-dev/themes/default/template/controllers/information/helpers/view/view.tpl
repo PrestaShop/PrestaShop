@@ -69,164 +69,176 @@
 		});
 	</script>
 
-	<fieldset>
-		<h3>
-			<i class="icon-info"></i>
-			{l s='Configuration information'}
-		</h3>
-		<p>{l s='This information must be provided when you report an issue on our bug tracker or forum.'}</p>
-	</fieldset>
-	<fieldset>
-		<h3>
-			<i class="icon-info"></i>
-			{l s='Server information'}
-		</h3>	
-		{if count($uname)}
-		<p>
-			<strong>{l s='Server information'}:</strong> {$uname|escape:'htmlall':'UTF-8'}
-		</p>
-		{/if}
-		<p>
-			<strong>{l s='Server software version'}:</strong> {$version.server|escape:'htmlall':'UTF-8'}
-		</p>
-		<p>
-			<strong>{l s='PHP version'}:</strong> {$version.php|escape:'htmlall':'UTF-8'}
-		</p>
-		<p>
-			<strong>{l s='Memory limit'}:</strong> {$version.memory_limit|escape:'htmlall':'UTF-8'}
-		</p>
-		<p>
-			<strong>{l s='Max execution time'}:</strong> {$version.max_execution_time|escape:'htmlall':'UTF-8'}
-		</p>
-		{if $apache_instaweb}
-			<p>{l s='PageSpeed module for Apache installed (mod_instaweb)'}</p>
-		{/if}
-	</fieldset>
-	<fieldset>
-		<h3>
-			<i class="icon-info"></i>
-			{l s='Database information'}
-		</h3>
-		<p>
-			<strong>{l s='MySQL version'}:</strong> {$database.version|escape:'htmlall':'UTF-8'}
-		</p>
-		<p>
-			<strong>{l s='MySQL engine'}:</strong> {$database.engine|escape:'htmlall':'UTF-8'}
-		</p>
-		<p>
-			<strong>{l s='Tables prefix'}:</strong> {$database.prefix|escape:'htmlall':'UTF-8'}
-		</p>
-	</fieldset>
-	<fieldset>
-		<h3>
-			<i class="icon-info"></i>
-			{l s='Store information'}
-		</h3>
-		<p>
-			<strong>{l s='PrestaShop version'}:</strong> {$shop.ps|escape:'htmlall':'UTF-8'}
-		</p>
-		<p>
-			<strong>{l s='Shop URL'}:</strong> {$shop.url|escape:'htmlall':'UTF-8'}
-		</p>
-		<p>
-			<strong>{l s='Current theme in use'}:</strong> {$shop.theme|escape:'htmlall':'UTF-8'}
-		</p>
-	</fieldset>
-	<fieldset>
-		<h3>
-			<i class="icon-info"></i>
-			{l s='Mail configuration'}
-		</h3>
-		<p>
-			<strong>{l s='Mail method'}:</strong>
-	
-	{if $mail}
-		{l s='You are using the PHP mail function.'}</p>
-	{else}
-		{l s='You are using your own SMTP parameters.'}</p>
-		<p>
-			<strong>{l s='SMTP server'}:</strong> {$smtp.server|escape:'htmlall':'UTF-8'}
-		</p>
-		<p>
-			<strong>{l s='SMTP user'}:</strong>
-			{if $smtp.user neq ''}
-				{l s='Defined'}
-			{else}
-				<span style="color:red;">{l s='Not defined'}</span>
-			{/if}
-		</p>
-		<p>
-			<strong>{l s='SMTP password'}:</strong>
-			{if $smtp.password neq ''}
-				{l s='Defined'}
-			{else}
-				<span style="color:red;">{l s='Not defined'}</span>
-			{/if}
-		</p>
-		<p>
-			<strong>{l s='Encryption'}:</strong> {$smtp.encryption|escape:'htmlall':'UTF-8'}
-		</p>
-		<p>
-			<strong>{l s='Port'}:</strong> {$smtp.port|escape:'htmlall':'UTF-8'}
-		</p>
-	{/if}
-	</fieldset>
-	<fieldset>
-		<h3>
-			<i class="icon-info"></i>
-			{l s='Your information'}
-		</h3>
-		<p>
-			<strong>{l s='Your web browser'}:</strong> {$user_agent|escape:'htmlall':'UTF-8'}
-		</p>
-	</fieldset>
 
-	<fieldset id="checkConfiguration">
-		<h3>
-			<i class="icon-info"></i>
-			{l s='Check your configuration'}
-		</h3>
-		<p>
-			<strong>{l s='Required parameters'}:</strong>
-			{if !$failRequired}
-					<span class="text-success">OK</span>
-				</p>
-			{else}
-				<span class="text-danger">{l s='Please fix the following error(s)'}</span>
-			</p>
-			<ul class="nav">
-				{foreach from=$testsRequired item='value' key='key'}
-					{if $value eq 'fail'}
-						<li>{$testsErrors[$key]}</li>
-					{/if}
-				{/foreach}
-			</ul>
-			{/if}
-	
+<div class="row">
+	<div class="col-lg-6">
+		<div class="panel">
+			<h3>
+				<i class="icon-info"></i>
+				{l s='Configuration information'}
+			</h3>
+			<p>{l s='This information must be provided when you report an issue on our bug tracker or forum.'}</p>
+		</div>
+
+		<div class="panel">
+			<h3>
+				<i class="icon-info"></i>
+				{l s='Server information'}
+			</h3>	
+			{if count($uname)}
 			<p>
-				<strong>{l s='Optional parameters'}:</strong>
-			{if !$failOptional}
-				<span>OK</span>
+				<strong>{l s='Server information'}:</strong> {$uname|escape:'htmlall':'UTF-8'}
 			</p>
-			{else}
-				<span class="text-success">{l s='Please fix the following error(s)'}</span>
-			</p>
-			<ul class="nav">
-				{foreach from=$testsOptional item='value' key='key'}
-					{if $value eq 'fail'}
-						<li>{$key}</li>
-					{/if}
-				{/foreach}
-			</ul>
 			{/if}
-	</fieldset>
+			<p>
+				<strong>{l s='Server software version'}:</strong> {$version.server|escape:'htmlall':'UTF-8'}
+			</p>
+			<p>
+				<strong>{l s='PHP version'}:</strong> {$version.php|escape:'htmlall':'UTF-8'}
+			</p>
+			<p>
+				<strong>{l s='Memory limit'}:</strong> {$version.memory_limit|escape:'htmlall':'UTF-8'}
+			</p>
+			<p>
+				<strong>{l s='Max execution time'}:</strong> {$version.max_execution_time|escape:'htmlall':'UTF-8'}
+			</p>
+			{if $apache_instaweb}
+				<p>{l s='PageSpeed module for Apache installed (mod_instaweb)'}</p>
+			{/if}
+		</div>
 
-	<fieldset>
-		<h3>
-			<i class="icon-info"></i> 
-			{l s='List of changed files'}
-		</h3>
-		<div id="changedFiles"><img src="../img/admin/ajax-loader.gif" /> {l s='Checking files...'}</div>
-	</fieldset>
+		<div class="panel">
+			<h3>
+				<i class="icon-info"></i>
+				{l s='Database information'}
+			</h3>
+			<p>
+				<strong>{l s='MySQL version'}:</strong> {$database.version|escape:'htmlall':'UTF-8'}
+			</p>
+			<p>
+				<strong>{l s='MySQL engine'}:</strong> {$database.engine|escape:'htmlall':'UTF-8'}
+			</p>
+			<p>
+				<strong>{l s='Tables prefix'}:</strong> {$database.prefix|escape:'htmlall':'UTF-8'}
+			</p>
+		</div>
+	</div>
+
+	<div class="col-lg-6">
+		<div class="panel">
+			<h3>
+				<i class="icon-info"></i>
+				{l s='Store information'}
+			</h3>
+			<p>
+				<strong>{l s='PrestaShop version'}:</strong> {$shop.ps|escape:'htmlall':'UTF-8'}
+			</p>
+			<p>
+				<strong>{l s='Shop URL'}:</strong> {$shop.url|escape:'htmlall':'UTF-8'}
+			</p>
+			<p>
+				<strong>{l s='Current theme in use'}:</strong> {$shop.theme|escape:'htmlall':'UTF-8'}
+			</p>
+		</div>
+
+		<div class="panel">
+			<h3>
+				<i class="icon-info"></i>
+				{l s='Mail configuration'}
+			</h3>
+			<p>
+				<strong>{l s='Mail method'}:</strong>
+		
+		{if $mail}
+			{l s='You are using the PHP mail function.'}</p>
+		{else}
+			{l s='You are using your own SMTP parameters.'}</p>
+			<p>
+				<strong>{l s='SMTP server'}:</strong> {$smtp.server|escape:'htmlall':'UTF-8'}
+			</p>
+			<p>
+				<strong>{l s='SMTP user'}:</strong>
+				{if $smtp.user neq ''}
+					{l s='Defined'}
+				{else}
+					<span style="color:red;">{l s='Not defined'}</span>
+				{/if}
+			</p>
+			<p>
+				<strong>{l s='SMTP password'}:</strong>
+				{if $smtp.password neq ''}
+					{l s='Defined'}
+				{else}
+					<span style="color:red;">{l s='Not defined'}</span>
+				{/if}
+			</p>
+			<p>
+				<strong>{l s='Encryption'}:</strong> {$smtp.encryption|escape:'htmlall':'UTF-8'}
+			</p>
+			<p>
+				<strong>{l s='Port'}:</strong> {$smtp.port|escape:'htmlall':'UTF-8'}
+			</p>
+		{/if}
+		</div>
+
+		<div class="panel">
+			<h3>
+				<i class="icon-info"></i>
+				{l s='Your information'}
+			</h3>
+			<p>
+				<strong>{l s='Your web browser'}:</strong> {$user_agent|escape:'htmlall':'UTF-8'}
+			</p>
+		</div>
+
+		<div class="panel" id="checkConfiguration">
+			<h3>
+				<i class="icon-info"></i>
+				{l s='Check your configuration'}
+			</h3>
+			<p>
+				<strong>{l s='Required parameters'}:</strong>
+				{if !$failRequired}
+						<span class="text-success">OK</span>
+					</p>
+				{else}
+					<span class="text-danger">{l s='Please fix the following error(s)'}</span>
+				</p>
+				<ul class="nav">
+					{foreach from=$testsRequired item='value' key='key'}
+						{if $value eq 'fail'}
+							<li>{$testsErrors[$key]}</li>
+						{/if}
+					{/foreach}
+				</ul>
+				{/if}
+		
+				<p>
+					<strong>{l s='Optional parameters'}:</strong>
+				{if !$failOptional}
+					<span>OK</span>
+				</p>
+				{else}
+					<span class="text-success">{l s='Please fix the following error(s)'}</span>
+				</p>
+				<ul class="nav">
+					{foreach from=$testsOptional item='value' key='key'}
+						{if $value eq 'fail'}
+							<li>{$key}</li>
+						{/if}
+					{/foreach}
+				</ul>
+				{/if}
+		</div>
+	</div>
+</div>
+
+<div class="panel">
+	<h3>
+		<i class="icon-info"></i> 
+		{l s='List of changed files'}
+	</h3>
+	<div id="changedFiles"><img src="../img/admin/ajax-loader.gif" /> {l s='Checking files...'}</div>
+</div>
 
 {/block}

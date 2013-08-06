@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div class="row-fluid page-head">
+<div class="page-head">
 	<h2 class="page-title">
 		{l s='List of modules'}
 	</h2>
@@ -46,28 +46,26 @@
 {if $add_permission eq '1'}
 	<div id="module_install" class="row" style="{if !isset($smarty.post.downloadflag)}display: none;{/if}">
 		<div class="col-lg-12">
-			<div class="row-fluid">
-				<form action="{$currentIndex}&token={$token}" method="post" enctype="multipart/form-data" class="form-horizontal">
-					<legend>{l s='Add a new module'}</legend>
-					<p>{l s='The module must either be a zip file or a tarball.'}</p>
-					<label class="control-label col-lg-3">
-						<span class="label-tooltip" data-toggle="tooltip" title="{l s='Upload a module from your computer.'}">
-							{l s='Module file'}
-						</span>
-					</label>
-					<div class="col-lg-9">
-						<p>
-							<input type="file" name="file" />
-						</p>
-						<p>
-							<button class="btn btn-default" type="submit" name="download">
-								<i class="icon-upload-alt" ></i>
-								{l s='Upload this module'}
-							</button>
-						</p>
-					</div>
-				</form>
-			</div>
+			<form action="{$currentIndex}&token={$token}" method="post" enctype="multipart/form-data" class="form-horizontal">
+				<legend>{l s='Add a new module'}</legend>
+				<p>{l s='The module must either be a zip file or a tarball.'}</p>
+				<label class="control-label col-lg-3">
+					<span class="label-tooltip" data-toggle="tooltip" title="{l s='Upload a module from your computer.'}">
+						{l s='Module file'}
+					</span>
+				</label>
+				<div class="col-lg-9">
+					<p>
+						<input type="file" name="file" />
+					</p>
+					<p>
+						<button class="btn btn-default" type="submit" name="download">
+							<i class="icon-upload-alt" ></i>
+							{l s='Upload this module'}
+						</button>
+					</p>
+				</div>
+			</form>
 		</div>
 	</div>
 {/if}

@@ -1,10 +1,10 @@
-<div class="row-fluid">
+<div class="row">
 	{include file="toolbar.tpl" toolbar_btn=$toolbar_btn toolbar_scroll=$toolbar_scroll title=$title}
 	<div class="leadin">{block name="leadin"}{/block}</div>
 </div>
 
 
-<div class="row-fluid">
+<div class="row">
  	<div class="productTabs">
 		<ul class="tab nav nav-tabs">
 			<li class="tab-row">
@@ -20,23 +20,22 @@
 	</div>
 </div>
 
-<div class="row-fluid">
+<div class="row">
 	<form action="{$currentIndex|escape}&token={$currentToken|escape}&addcart_rule" id="cart_rule_form" class="form-horizontal" method="post">
 		{if $currentObject->id}<input type="hidden" name="id_cart_rule" value="{$currentObject->id|intval}" />{/if}
 		<input type="hidden" id="currentFormTab" name="currentFormTab" value="informations" />
 		<fieldset id="cart_rule_informations" class="cart_rule_tab">
-			<legend>{l s='Cart-rule information'}</legend>
+			<h3>{l s='Cart-rule information'}</h3>
 			{include file='controllers/cart_rules/informations.tpl'}
 		</fieldset>
 		<fieldset id="cart_rule_conditions" class="cart_rule_tab">
-			<legend>{l s='Cart-rule conditions'}</legend>
+			<h3>{l s='Cart-rule conditions'}</h3>
 			{include file='controllers/cart_rules/conditions.tpl'}
 		</fieldset>
 		<fieldset id="cart_rule_actions" class="cart_rule_tab">
-			<legend>{l s='Cart-rule actions'}</legend>
+			<h3>{l s='Cart-rule actions'}</h3>
 			{include file='controllers/cart_rules/actions.tpl'}
 		</fieldset>
-		<hr/>
 		<button type="submit" class="btn btn-primary btn-large pull-right" name="submitAddcart_rule" id="{$table|escape}_form_submit_btn"><i class="icon-save"></i> {l s='Save'}</button>
 		<!--<input type="submit" value="{l s='Save and stay'}" class="button" name="submitAddcart_ruleAndStay" id="" />-->
 	</form>

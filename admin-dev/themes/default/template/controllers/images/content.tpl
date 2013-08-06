@@ -28,7 +28,7 @@
 {if isset($display_regenerate)}
 
 	<form class="form-horizontal" action="{$current}&token={$token}" method="post">
-		<fieldset class="col-lg-12">
+		<fieldset>
 			<h3>
                 <i class="icon-picture"></i>
                 {l s='Regenerate thumbnails'}
@@ -103,7 +103,7 @@
         </div>
     {else}
         <form action="{$current}&token={$token}" method="post" class="form-horizontal">
-            <fieldset class="col-lg-12">
+            <fieldset>
                 <h3>
                     <i class="icon-picture"></i>
                     {l s='Move images'}

@@ -232,12 +232,10 @@
 		<div id="product-tab-content-wait" style="display:none">
 			<div id="loading">{l s='Loading...'}</div>
 		</div>
-	
 
 		<form id="product_form" class="form-horizontal col-lg-10" action="{$form_action}" method="post" enctype="multipart/form-data" name="product" style="display:none;">
 			<input type="hidden" name="id_product" value="{$id_product}" />
 			<input type="hidden" id="is_virtual" name="is_virtual" value="{$product->is_virtual|escape:html:'UTF-8'}" />
-
 
 			{if !$product->active && $product->isAssociatedToShop()}
 			<div class="alert draft" >
@@ -253,11 +251,11 @@
 			{* all input are here *}
 			<div class="row">
 			{foreach $product_tabs key=numStep item=tab}
-			<fieldset id="product-tab-content-{$tab.id}" class="{if !$tab.selected}not-loaded{/if} product-tab-content col-lg-12" {if !$tab.selected}style="display:none"{/if}>
-				{if $tab.selected}
-					{$custom_form}
-				{/if}
-			</fieldset>
+				<fieldset id="product-tab-content-{$tab.id}" class="{if !$tab.selected}not-loaded{/if} product-tab-content" {if !$tab.selected}style="display:none"{/if}>
+					{if $tab.selected}
+						{$custom_form}
+					{/if}
+				</fieldset>
 			{/foreach}
 			</div>
 

@@ -32,6 +32,7 @@
 	<meta charset="utf-8">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
 	<meta name="robots" content="NOFOLLOW, NOINDEX">
@@ -115,17 +116,16 @@
 
 </head>
 
-<body class="fixed-top">
+<body class="fixed-top page-sidebar-closed">
 
 {if $display_header}
 
 {* begin  HEADER *}
-<div class="container-fluid">
 	<div id="header">
 		<div id="header_infos" class="navbar navbar-fixed-top">
 			<a id="header_shopname" class="navbar-brand" href="{$link->getAdminLink('AdminHome')|escape:'htmlall':'UTF-8'}">{$shop_name}</a>
-
 			<ul id="notifs_icon_wrapper" class="nav navbar-nav nav-pills">
+
 {if {$show_new_orders} == 1}
 					<li id="orders_notif" class="dropdown" >
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -143,6 +143,7 @@
 						</ul>
 					</li>
 {/if}
+
 {if ($show_new_customers == 1)}
 					<li id="customers_notif" class="notifs dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -160,6 +161,7 @@
 						</ul>
 					</li>
 {/if}
+
 {if {$show_new_messages} == 1}
 					<li id="customer_messages_notif" class="notifs dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -233,31 +235,41 @@
 			<span id="ajax_running" class="navbar-text">
 				<i class="icon-refresh icon-spin"></i> {l s='Loading...'}
 			</span>
-
-
 {if isset($displayBackOfficeTop)}{$displayBackOfficeTop}{/if}
 		</div>{* end header_infos*}
 	</div>
-</div>{* end header*}	
+{* end header*}	
 {/if}
 
-	<div id="main" class="page-container row-fluid">
+	<div id="main">
 
-		<div class="page-sidebar">
+		<div id="sidebar" class="page-sidebar nav-collapse collapse">
       	{if !$tab}
 			<div class="mainsubtablist" style="display:none"></div>
 		{/if}
+			<span class="menu-collapse">
+				<i class="icon-align-justify"></i>
+			</span>
+
+			<script type="text/javascript">
+				$('.menu-collapse').click(function(){
+					$('body').toggleClass('page-sidebar-closed');
+				});
+			</script>
+
 			<ul id="menu">
 				<li class="maintab">
 					<a href="{$link->getAdminLink('AdminHome')|escape:'htmlall':'UTF-8'}" class="title">
-						<i class="icon-AdminDashboard"></i> {l s='Dashboard'}
+						<i class="icon-AdminDashboard"></i>
+						<span class="title">{l s='Dashboard'}</span>
 					</a>
 				</li>
 			{foreach $tabs as $t}
 				{if $t.active}
 				<li class="maintab {if $t.current}active{/if}" id="maintab{$t.id_tab}">
 					<a href="javascript:adminNav('#maintab{$t.id_tab}');" class="title">
-						<i class="icon-{$t.class_name}"></i> {if $t.name eq ''}{$t.class_name}{else}{$t.name}{/if}
+						<i class="icon-{$t.class_name}"></i>
+						<span class="title">{if $t.name eq ''}{$t.class_name}{else}{$t.name}{/if}</span>
 					</a>
 					<ul class="submenu">
 					{foreach from=$t.sub_tabs item=t2}
@@ -278,17 +290,15 @@
 		</div>
 
 		<div id="content" class="page-content">
-			<div class="container-fluid">
-            	<div class="row-fluid">
 
-				{if $display_header && $install_dir_exists}
-					<div class="alert alert-block">
-						{l s='For security reasons, you must also:'}&nbsp;{l s='delete the /install folder'}
-					</div>
-				{/if}
+			{if $display_header && $install_dir_exists}
+				<div class="alert alert-block">
+					{l s='For security reasons, you must also:'}&nbsp;{l s='delete the /install folder'}
+				</div>
+			{/if}
 
-				{if $display_header && $is_multishop && $shop_list && ($multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
-					<div class="multishop_toolbar">
-						<span class="text_multishop">{l s='Multistore configuration for'}</span> {$shop_list}
-					</div>
-				{/if}
+			{if $display_header && $is_multishop && $shop_list && ($multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
+				<div class="multishop_toolbar">
+					<span class="text_multishop">{l s='Multistore configuration for'}</span> {$shop_list}
+				</div>
+			{/if}

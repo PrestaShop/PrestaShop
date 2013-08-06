@@ -108,7 +108,7 @@
 				</div>	
 			{/if}
 
-			<table class="table table-hover">
+			<table class="table">
 				<colgroup>
 					<col width="50">
 					<col>

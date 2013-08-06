@@ -26,7 +26,7 @@
 {$content}
 
 <form action="{$action_fees}" id="fees" name="fees" method="post" class="form-horizontal">
-	<fieldset class="col-lg-12">
+	<fieldset>
 		<h3>
 			<i class="icon-truck"></i>
 			{l s='Fees by carrier, geographical zone and ranges'}

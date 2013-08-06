@@ -27,7 +27,7 @@
 
 {block name="override_header"}
 
-	<fieldset class="col-lg-12">
+	<fieldset>
 		<h3>
 			<i class="icon-level-up"></i>
 			{l s='Severity levels'}
@@ -39,6 +39,6 @@
 			<li class="text-warning">{l s='Error'}</li>
 			<li class="text-danger">{l s='Major issue (crash)!'}</li>
 		</ol>
-	</fieldset><br />
+	</fieldset>
 
 {/block}

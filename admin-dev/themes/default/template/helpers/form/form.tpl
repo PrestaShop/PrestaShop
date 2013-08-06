@@ -36,7 +36,7 @@
 		<input type="hidden" name="{$identifier}" id="{$identifier}" value="{$form_id}" />
 	{/if}
 	{foreach $fields as $f => $fieldset}
-		<fieldset id="fieldset_{$f}" class="col-lg-12">
+		<fieldset id="fieldset_{$f}">
 			{foreach $fieldset.form as $key => $field}
 				{if $key == 'legend'}
 					<h3>

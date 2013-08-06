@@ -110,7 +110,7 @@
 
 	<!-- Breadcrumb -->
 	<div class="col-lg-12">
-		<div class="breadcrumb pull-right">
+		<div class="breadcrumb">
 			<span><strong>{l s='Orders'}</strong></span> :
 			{if $previousOrder}
 				<a class="button" href="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$previousOrder}">
@@ -130,10 +130,10 @@
 		<!-- Change status form -->
 		<form action="{$currentIndex}&vieworder&token={$smarty.get.token}" method="post">
 			<fieldset>
-				<legend>
+				<h3>
 					<i class="icon-table"></i>
 					{l s='Order status'}
-				</legend>
+				</h3>
 				<label class="control-label col-lg-1 text-right">
 					{l s='Status:'}
 				</label>
@@ -197,10 +197,10 @@
 	<!-- Customer informations -->
 	<div class="col-lg-6">
 		<fieldset>
-			<legend>
+			<h3>
 				<i class="icon-user"></i>
 				{l s='Customer information'}
-			</legend>
+			</h3>
 			<span>
 				<a href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={getAdminToken tab='AdminCustomers'}"> 
 					{$customer->firstname} {$customer->lastname}
@@ -228,10 +228,10 @@
 		<!-- Sources block -->
 		{if (sizeof($sources))}
 			<fieldset>
-				<legend>
+				<h3>
 					<i class="icon-signal"></i>
 					{l s='Sources'}
-				</legend>
+				</h3>
 				<ul {if sizeof($sources) > 3}style="height: 200px; overflow-y: scroll;"{/if}>
 				{foreach from=$sources item=source}
 					<li>
@@ -254,10 +254,10 @@
 	<div class="col-lg-6">
 		<form action="{$smarty.server.REQUEST_URI}&token={$smarty.get.token}" method="post" onsubmit="if (getE('visibility').checked == true) return confirm('{l s='Do you want to send this message to the customer?'}');">
 			<fieldset>
-				<legend onclick="$('#message').slideToggle();$('#message_m').slideToggle();return false">
+				<h3 onclick="$('#message').slideToggle();$('#message_m').slideToggle();return false">
 					<i class="icon-envelope"></i>
 					{l s='New message'}
-				</legend>
+				</h3>
 				<p id="message_m" style="display: {if Tools::getValue('message')}none{else}block{/if};">
 					<a href="#" onclick="$('#message').slideToggle();$('#message_m').slideToggle();return false">
 						<strong>{l s='Click here'}</strong> {l s='to add a comment or send a message to the customer.'}
@@ -302,10 +302,10 @@
 
 		{if (sizeof($messages))}
 			<fieldset>
-				<legend>
+				<h3>
 					<i class="icon-envelope"></i>
 					{l s='Messages'}
-				</legend>
+				</h3>
 				{foreach from=$messages item=message}
 					<div {if $message['is_new_for_me']}class="new_message"{/if}>
 						{if ($message['is_new_for_me'])}
@@ -328,17 +328,15 @@
 		{/if}
 	</div>
 
-	<div class="col-lg-12"></div>
-
 	<!-- Addresses -->
 	<div class="col-lg-6">
 		{if !$order->isVirtual()}
 			<!-- Shipping address -->
 			<fieldset>
-				<legend>
+				<h3>
 					<i class="icon-truck"></i>
 					{l s='Shipping address'}
-				</legend>
+				</h3>
 				{if $can_edit}
 				<form method="post" action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$order->id}">
 					<div class="col-lg-10">
@@ -385,10 +383,10 @@
 	<!-- Invoice address -->
 	<div class="col-lg-6">
 		<fieldset>
-			<legend>
+			<h3>
 				<i class="icon-file"></i>
 				{l s='Invoice address'}
-			</legend>
+			</h3>
 			{if $can_edit}
 			<form method="post" action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$order->id}">
 				<div class="col-lg-10">
@@ -417,16 +415,14 @@
 		</fieldset>
 	</div>
 
-	<div class="col-lg-12"></div>
-
 	<!-- linked orders block -->
 	{if count($order->getBrother()) > 0}
 		<div class="col-lg-6">
 			<fieldset>
-				<legend>
+				<h3>
 					<i class="icon-shopping-cart"></i>
 					{l s='Linked orders'}
-				</legend>
+				</h3>
 				<table class="table">
 					<thead>
 						<tr>
@@ -469,10 +465,10 @@
 	<!-- Documents block -->
 	<div class="col-lg-12">
 		<fieldset>
-			<legend>
+			<h3>
 				<i class="icon-file-text"></i>
 				{l s='Documents'}
-			</legend>
+			</h3>
 			{* Include document template *}
 			{include file='controllers/orders/_documents.tpl'}
 		</fieldset>
@@ -481,10 +477,10 @@
 	<!-- Payments block -->
 	<div class="col-lg-12">
 		<fieldset>
-			<legend>
+			<h3>
 				<i class="icon-money"></i>
 				{l s='Payment'}
-			</legend>
+			</h3>
 
 			{if (!$order->valid && sizeof($currencies) > 1)}
 			<form method="post" action="{$currentIndex}&vieworder&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
@@ -518,6 +514,7 @@
 				{/foreach}
 			</p>
 			{/if}
+			
 			<form id="formAddPayment" method="post" action="{$current_index}&vieworder&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
 				<table class="table">
 					<colgroup>
@@ -660,10 +657,10 @@
 		<!-- Shipping block -->
 		<div class="col-lg-6">
 			<fieldset>
-				<legend>
+				<h3>
 					<i class="icon-truck"></i>
 					{l s='Shipping'}
-				</legend>
+				</h3>
 				{if $order->recyclable}
 					<p>
 						<span class="label label-success">
@@ -716,10 +713,10 @@
 		<!-- Return block -->
 		<div class="col-lg-6">	
 			<fieldset>
-				<legend>
+				<h3>
 					<i class="icon-suitcase"></i>
 					{l s='Merchandise returns'}
-				</legend>
+				</h3>
 
 				{if $order->getReturn()|count > 0}
 				<table class="table">
@@ -790,10 +787,10 @@
 				<div style="display: none">
 					<input type="hidden" value="{$order->getWarehouseList()|implode}" id="warehouse_list" />
 				</div>
-				<legend>
+				<h3>
 					<i class="icon-shopping-cart"></i>
 					{l s='Products:'}
-				</legend>
+				</h3>
 				<div class="col-lg-12">
 					{if $can_edit}
 						{if !$order->hasBeenDelivered()}
@@ -992,15 +989,17 @@
 							<input type="submit" name="cancelProduct" value="{if $order->hasBeenDelivered()}{l s='Return products'}{elseif $order->hasBeenPaid()}{l s='Refund products'}{else}{l s='Cancel products'}{/if}" class="btn btn-default" />
 						</div>
 					{/if}
+					</fieldset>
 				</div>
 
 				<!-- Discount block -->
 				{if (sizeof($discounts) || $can_edit)}
 				<div class="col-lg-12">
-					<legend>
+					<fieldset>
+					<h3>
 						<i class="icon-tag"></i>
 						{l s='Discounts'}
-					</legend>
+					</h3>
 					{*
 						TO DO - Je voudrais placer le bouton ici mais l'apparition du formulaire ne fonctionne plus....
 						<a class="btn btn-default" href="#" id="add_voucher">
@@ -1068,8 +1067,4 @@
 		</form>
 	</div>
 </div>
-<a class="btn btn-default" href="{$current_index}&token={$smarty.get.token}">
-	<i class="icon-arrow-left"></i>
-	{l s='Back to list'}
-</a>
 {/block}
