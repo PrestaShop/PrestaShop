@@ -2626,7 +2626,7 @@ margin-bottom:7px;
 #carrier_wizard .border_all {border:solid 1px #C0C0C0;}
 #carrier_wizard input.field_error {border : solid 1px red; background-color:#FFCCCC;}
 #carrier_wizard table td.center {text-align: center}
-#carrier_wizard .new_range, #carrier_wizard .validate_range {float: left; margin: 20px 0 0 10px; width: 130px;}
+#carrier_wizard .new_range, #carrier_wizard .validate_range {float: left; margin: 35px 0 0 10px; width: 130px;}
 #carrier_wizard tr.fees_all { background: #CCCCCC}
 #carrier_wizard #zones_table input[type=text] {width: 45px;}
 #carrier_wizard #fieldset_form { min-height: 190px}
@@ -2634,6 +2634,8 @@ margin-bottom:7px;
 #carrier_wizard #step_carrier_summary label {width: 40px}
 #carrier_wizard #step_carrier_summary .margin-form {padding-left: 60px;}
 #carrier_wizard #summary_zones, #carrier_wizard #summary_groups {margin-left: 20px; margin-top: 10px; list-style: disc}
+#carrier_wizard .ranges_not_follow label {width: inherit; float:none}
+#carrier_wizard .ranges_not_follow {width: 300px; margin-bottom: 0}
 
 
 /*** IE10 ***/
