@@ -535,29 +535,28 @@ abstract class ObjectModelCore
 			return false;
 		
 		$object_id = Db::getInstance()->Insert_ID();
-		
+
 		if (isset($definition['multilang']) && $definition['multilang'])
 		{
-			$res = Db::getInstance()->executeS('
-						SELECT * 
-						FROM `'._DB_PREFIX_.bqSQL($definition['table']).'_lang`
-						WHERE `'.bqSQL($definition['primary']).'` = '.(int)$this->id
-					);
-
-			if (!$res)
+			$result = Db::getInstance()->executeS('
+			SELECT * 
+			FROM `'._DB_PREFIX_.bqSQL($definition['table']).'_lang`
+			WHERE `'.bqSQL($definition['primary']).'` = '.(int)$this->id);
+			if (!$result)
 				return false;
-
-			foreach ($res as $lang => &$row)
+	
+			foreach ($result as &$row)
 				foreach ($row as $field => &$value)
 					if (isset($definition['fields'][$field]))
 						$value = ObjectModel::formatValue($value, $definition['fields'][$field]['type']);
-
-			foreach ($res as $row)
+			
+			// Keep $row2, you cannot use $row because there is an unexplicated conflict with the previous usage of this variable
+			foreach ($result as $row2)
 			{
-				$row[$definition['primary']] = (int)$object_id;	
-				if (!Db::getInstance()->insert($definition['table'].'_lang', $row))
+				$row2[$definition['primary']] = (int)$object_id;
+				if (!Db::getInstance()->insert($definition['table'].'_lang', $row2))
 					return false;
-				}
+			}
 		}
 	
 		$object_duplicated = new $definition['classname']((int)$object_id);
