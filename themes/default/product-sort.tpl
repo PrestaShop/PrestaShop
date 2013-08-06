@@ -67,6 +67,8 @@ $(document).ready(function()
 			{if $PS_STOCK_MANAGEMENT && !$PS_CATALOG_MODE}
 				<option value="quantity:desc" {if $orderby eq 'quantity' AND $orderway eq 'desc'}selected="selected"{/if}>{l s='In stock'}</option>
 			{/if}
+			<option value="reference:asc" {if $orderby eq 'reference' AND $orderway eq 'asc'}selected="selected"{/if}>{l s='Reference: Lowest first'}</option>
+			<option value="reference:desc" {if $orderby eq 'reference' AND $orderway eq 'desc'}selected="selected"{/if}>{l s='Reference: Highest first'}</option>
 		</select>
 	</p>
 </form>
