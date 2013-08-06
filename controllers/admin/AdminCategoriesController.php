@@ -391,26 +391,6 @@ class AdminCategoriesControllerCore extends AdminController
 					)
 				),
 				array(
-					'type' => 'radio',
-					'label' => $this->l('Root Category:'),
-					'name' => 'is_root_category',
-					'required' => false,
-					'is_bool' => true,
-					'class' => 't',
-					'values' => array(
-						array(
-							'id' => 'is_root_on',
-							'value' => 1,
-							'label' => $this->l('Yes')
-						),
-						array(
-							'id' => 'is_root_off',
-							'value' => 0,
-							'label' => $this->l('No')
-						)
-					)
-				),
-				array(
 					'type' => 'textarea',
 					'label' => $this->l('Description:'),
 					'name' => 'description',
@@ -478,11 +458,33 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->tpl_form_vars['shared_category'] = Validate::isLoadedObject($obj) && $obj->hasMultishopEntries(); 
 		$this->tpl_form_vars['PS_ALLOW_ACCENTED_CHARS_URL'] = (int)Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
 		if (Shop::isFeatureActive())
+		{
 			$this->fields_form['input'][] = array(
 				'type' => 'shop',
 				'label' => $this->l('Shop association:'),
 				'name' => 'checkBoxShopAsso',
 			);
+			$this->fields_form['input'][] = array(
+				'type' => 'radio',
+				'label' => $this->l('Root Category:'),
+				'name' => 'is_root_category',
+				'required' => false,
+				'is_bool' => true,
+				'class' => 't',
+				'values' => array(
+					array(
+						'id' => 'is_root_on',
+						'value' => 1,
+						'label' => $this->l('Yes')
+					),
+					array(
+						'id' => 'is_root_off',
+						'value' => 0,
+						'label' => $this->l('No')
+					)
+				)
+			);
+		}
 		// remove category tree and radio button "is_root_category" if this category has the root category as parent category to avoid any conflict
 		if ($this->_category->id_parent == Category::getTopCategory()->id && Tools::isSubmit('updatecategory'))
 			foreach ($this->fields_form['input'] as $k => $input)
