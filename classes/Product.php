@@ -2390,7 +2390,7 @@ class ProductCore extends ObjectModel
 			AND id_shop = '.(int)$this->id_shop
 		);
 		if (count($data))
-			Db::getInstance()->insert('product_carrier', $data);
+			Db::getInstance()->insert('product_carrier', $data, false, true, Db::INSERT_IGNORE);
 	}
 
 	/**
