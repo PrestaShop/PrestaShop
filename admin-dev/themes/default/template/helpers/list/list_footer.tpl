@@ -25,11 +25,21 @@
 	</table>
 
 	{if $bulk_actions}
-		<p>
+		<div class="btn-group">
+			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+				{l s='Bulk actions'} <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu">
+			<li><a href=""><i class="icon-check-sign"></i>&nbsp;{l s='Select all'}</a></li>
+			<li><a href=""><i class="icon-check-empty"></i>&nbsp;{l s='Unselect all'}</a></li>
+			<li class="divider"></li>
 			{foreach $bulk_actions as $key => $params}
-				<input type="submit" class="btn btn-default" name="submitBulk{$key}{$table}" value="{$params.text}" {if isset($params.confirm)}onclick="return confirm('{$params.confirm}');"{/if} />
+				<li{if $params.text == 'divider'} class="divider"{/if}>
+					{if $params.text != 'divider'}<a href=""><i class="{$params.icon}"></i>&nbsp;{$params.text}</a>{/if}
+				</li>
 			{/foreach}
-		</p>
+			</ul>
+		</div>
 	{/if}
 
 	{if !$simple_header && $list_total > 20}
