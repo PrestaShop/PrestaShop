@@ -33,7 +33,8 @@
 {/if}
 
 <form method="post" action="{$currentIndex}&{$identifier}&token={$token}&id_tax_rules_group={$id_tax_rules_group}&updatetax_rules_group#{$table}" class="form">
-	<fieldset class="col-lg-12">
+	<fieldset>
+		
 		<input type="hidden" id="submitFilter{$table}" name="submitFilter{$table}" value="0"/>
 		<table {if $table_id} id={$table_id}{/if} class="table {if $table_dnd}tableDnD{/if} {$table}">
 			<col width="10" />
@@ -47,7 +48,7 @@
 				<col width="52" />
 			{/if}
 			<thead>
-				<tr class="nodrag nodrop">
+				<tr>
 					<th>
 						{if $has_bulk_actions}
 							<input type="checkbox" name="checkme" class="noborder" onclick="checkDelBoxes(this.form, '{$table}Box[]', this.checked)" />

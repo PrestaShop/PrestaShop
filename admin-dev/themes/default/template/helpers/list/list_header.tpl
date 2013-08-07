@@ -74,7 +74,7 @@
 
 {if !$simple_header}
 <form method="post" action="{$action}" class="form-horizontal">
-	<fieldset class="col-lg-12">
+	<fieldset>
 		{block name="override_header"}{/block}
 
 		{if $show_filters}
@@ -90,13 +90,13 @@
 		{/if}
 {/if}
 		<table 
-			class="table table-hover"
+			class="table"
 			name="list_table"
 			{if $table_id} id={$table_id}{/if}
 			class="table {if $table_dnd}tableDnD{/if} {$table}"
 			>
 			<thead>
-				<tr class="nodrag nodrop">
+				<tr>
 					<th class="center">
 					</th>
 					{foreach $fields_display AS $key => $params}
@@ -150,7 +150,7 @@
 					{/if}
 				</tr>
 			{if !$simple_header && $show_filters}
-				<tr class="nodrag nodrop filter {if $row_hover}row_hover{/if}">
+				<tr class="filter {if $row_hover}row_hover{/if}">
 					<td class="center">
 						{if $has_bulk_actions}
 							--

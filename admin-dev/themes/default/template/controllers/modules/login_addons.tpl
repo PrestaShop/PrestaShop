@@ -68,7 +68,7 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-lg-10 col-offset-3">
+					<div class="col-lg-9 col-offset-3">
 						<button class="btn btn-default" id="addons_login_button" type="submit">
 							<i class="icon-unlock"></i> {l s='Log in'}
 						</button>

@@ -41,7 +41,7 @@
 {/block}
 
 {block name="after"}
-	<fieldset id="prestastore-content" class="col-lg-12"></fieldset>
+	<fieldset id="prestastore-content"></fieldset>
 	<script type="text/javascript">
 		$.post(
 			"ajax-tab.php",

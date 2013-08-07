@@ -63,7 +63,7 @@
 		{foreach $confirmations as $conf}
 			{$conf}<br />
 		{/foreach}
-	</div><br />
+	</div>
 {/if}
 {if count($warnings)}
 	<div class="alert alert-block">

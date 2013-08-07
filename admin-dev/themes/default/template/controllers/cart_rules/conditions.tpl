@@ -157,7 +157,7 @@
 				{l s='Carrier selection'}
 			</label>
 			<div id="carrier_restriction_div">
-				<table class="col-lg-12">
+				<table>
 					<tr>
 						<td>
 							<p>{l s='Unselected carriers'}</p>
@@ -190,7 +190,7 @@
 				{l s='Customer group selection'}
 			</label>
 			<div id="group_restriction_div">
-				<table class="col-lg-12">
+				<table>
 					<tr>
 						<td>
 							<p>{l s='Unselected groups'}</p>
