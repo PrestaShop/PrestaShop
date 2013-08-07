@@ -34,7 +34,7 @@
 					{if $shared_category}
 						<p class="warn">{l s='If you delete this picture, it will be deleted in all of your shared shops!'}</p>
 					{/if}
-					<br>
+					<br />
 					<a href="{$current}&{$identifier}={$form_id}&token={$token}&{if $shared_category}forcedeleteImage=1{else}deleteImage=1{/if}">
 						<img src="../img/admin/delete.gif" alt="{l s='Delete'}" /> {l s='Delete'}
 					</a>
