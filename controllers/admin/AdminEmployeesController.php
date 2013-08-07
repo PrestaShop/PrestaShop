@@ -469,6 +469,8 @@ class AdminEmployeesControllerCore extends AdminController
 		// Update cookie if needed
 		if (Tools::getValue('id_employee') == $this->context->employee->id && Tools::getValue('passwd') && $object->passwd != $this->context->employee->passwd)
 			$this->context->cookie->passwd = $this->context->employee->passwd = $object->passwd;
+
+		return $res;
 	}
 
 	public function ajaxProcessGetTabByIdProfile()
