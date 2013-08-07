@@ -177,7 +177,19 @@
 						{if $return_allowed}<td class="order_cb"></td>{/if}
 						<td><label for="cb_{$product.id_order_detail|intval}">{if $product.product_reference}{$product.product_reference|escape:'htmlall':'UTF-8'}{else}--{/if}</label></td>
 						<td class="bold">
-							<label for="cb_{$product.id_order_detail|intval}">{$product.product_name|escape:'htmlall':'UTF-8'}</label>
+							<label for="cb_{$product.id_order_detail|intval}">
+								{if $product.download_hash && $invoice && $product.display_filename != '' && $product.product_quantity_refunded == 0 && $product.product_quantity_return == 0}
+									{if isset($is_guest) && $is_guest}
+									<a href="{$link->getPageLink('get-file', true, NULL, "key={$product.filename|escape:'htmlall':'UTF-8'}-{$product.download_hash|escape:'htmlall':'UTF-8'}&amp;id_order={$order->id}&secure_key={$order->secure_key}")}" title="{l s='Download this product'}">
+									{else}
+										<a href="{$link->getPageLink('get-file', true, NULL, "key={$product.filename|escape:'htmlall':'UTF-8'}-{$product.download_hash|escape:'htmlall':'UTF-8'}")}" title="{l s='Download this product'}">
+									{/if}
+										<img src="{$img_dir}icon/download_product.gif" class="icon" alt="{l s='Download product'}" /> {$product.product_name|escape:'htmlall':'UTF-8'}
+									</a>
+								{else}
+									{$product.product_name|escape:'htmlall':'UTF-8'}
+								{/if}
+							</label>
 						</td>
 						<td><input class="order_qte_input"  name="order_qte_input[{$smarty.foreach.products.index}]" type="text" size="2" value="{$product.customizationQuantityTotal|intval}" /><label for="cb_{$product.id_order_detail|intval}"><span class="order_qte_span editable">{$product.customizationQuantityTotal|intval}</span></label></td>
 						{if $order->hasProductReturned()}
@@ -255,13 +267,8 @@
 									{else}
 										<a href="{$link->getPageLink('get-file', true, NULL, "key={$product.filename|escape:'htmlall':'UTF-8'}-{$product.download_hash|escape:'htmlall':'UTF-8'}")}" title="{l s='Download this product'}">
 									{/if}
-										<img src="{$img_dir}icon/download_product.gif" class="icon" alt="{l s='Download product'}" />
+										<img src="{$img_dir}icon/download_product.gif" class="icon" alt="{l s='Download product'}" /> {$product.product_name|escape:'htmlall':'UTF-8'}
 									</a>
-									{if isset($is_guest) && $is_guest}
-										<a href="{$link->getPageLink('get-file', true, NULL, "key={$product.filename|escape:'htmlall':'UTF-8'}-{$product.download_hash|escape:'htmlall':'UTF-8'}&id_order={$order->id}&secure_key={$order->secure_key}")}" title="{l s='Download this product'}"> {$product.product_name|escape:'htmlall':'UTF-8'} 	</a>
-									{else}
-									<a href="{$link->getPageLink('get-file', true, NULL, "key={$product.filename|escape:'htmlall':'UTF-8'}-{$product.download_hash|escape:'htmlall':'UTF-8'}")}" title="{l s='Download this product'}"> {$product.product_name|escape:'htmlall':'UTF-8'} 	</a>
-									{/if}
 								{else}
 									{$product.product_name|escape:'htmlall':'UTF-8'}
 								{/if}
