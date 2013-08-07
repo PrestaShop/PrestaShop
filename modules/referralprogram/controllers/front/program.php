@@ -29,31 +29,31 @@
  */
 include_once(dirname(__FILE__).'../../../ReferralProgramModule.php');
 include_once(dirname(__FILE__).'../../../referralprogram.php');
- 
+
 class ReferralprogramProgramModuleFrontController extends ModuleFrontController
 {
-	
+
 	public function init()
 	{
 		if (!$this->context->customer->isLogged())
 			Tools::redirect('index.php?controller=authentication&back=modules/referralprogram/referralprogram-program.php');
 		parent::init();
 	}
-	
+
 	public function setMedia()
 	{
 		parent::setMedia();
 		$this->addJqueryPlugin(array('thickbox', 'idTabs'));
 	}
 
-	
+
 	/**
 	 * @see FrontController::initContent()
 	 */
 	public function initContent()
 	{
 		parent::initContent();
-		
+
 		// get discount value (ready to display)
 		$discount_type = (int)(Configuration::get('REFERRAL_DISCOUNT_TYPE'));
 		if ($discount_type == 1)
@@ -63,7 +63,7 @@ class ReferralprogramProgramModuleFrontController extends ModuleFrontController
 
 		$activeTab = 'sponsor';
 		$error = false;
-		
+
 		// Mailing invitation to friend sponsor
 		$invitation_sent = false;
 		$nbInvitation = 0;
@@ -82,7 +82,7 @@ class ReferralprogramProgramModuleFrontController extends ModuleFrontController
 					$friendEmail = strval($friendEmail);
 					$friendLastName = strval($friendsLastName[$key]);
 					$friendFirstName = strval($friendsFirstName[$key]);
-		
+
 					if (empty($friendEmail) AND empty($friendLastName) AND empty($friendFirstName))
 						continue;
 					elseif (empty($friendEmail) OR !Validate::isEmail($friendEmail))
@@ -136,7 +136,7 @@ class ReferralprogramProgramModuleFrontController extends ModuleFrontController
 					$error = 'email exists';
 			}
 		}
-		
+
 		// Mailing revive
 		$revive_sent = false;
 		$nbRevive = 0;
@@ -174,16 +174,16 @@ class ReferralprogramProgramModuleFrontController extends ModuleFrontController
 			else
 				$error = 'no revive checked';
 		}
-		
+
 		$customer = new Customer((int)($this->context->customer->id));
 		$stats = $customer->getStats();
-		
+
 		$orderQuantity = (int)(Configuration::get('REFERRAL_ORDER_QUANTITY'));
 		$canSendInvitations = false;
 
 		if ((int)($stats['nb_orders']) >= $orderQuantity)
 			$canSendInvitations = true;
-		
+
 		// Smarty display
 		$this->context->smarty->assign(array(
 			'activeTab' => $activeTab,
@@ -198,7 +198,8 @@ class ReferralprogramProgramModuleFrontController extends ModuleFrontController
 			'revive_sent' => $revive_sent,
 			'nbRevive' => $nbRevive,
 			'subscribeFriends' => ReferralProgramModule::getSponsorFriend((int)($this->context->customer->id), 'subscribed'),
-			'mails_exists' => (isset($mails_exists) ? $mails_exists : array())
+			'mails_exists' => (isset($mails_exists) ? $mails_exists : array()),
+			'currencySign' => $this->context->currency->sign
 		));
 		$this->setTemplate('program.tpl');
 	}
