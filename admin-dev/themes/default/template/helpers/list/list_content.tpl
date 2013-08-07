@@ -139,7 +139,9 @@
 			<div class="btn-group{if count($actions) > 1} btn-group-action{/if}">			
 				<span class="btn btn-default btn-small">
 					{assign var='action' value=$actions[0]}
-					{$tr.$action}
+					{if isset($tr.$action)}
+						{$tr.$action}
+					{/if}
 				</span>
 				{if count($actions) > 1}
 				<button class="btn btn-default btn-small dropdown-toggle" data-toggle="dropdown">
@@ -147,7 +149,7 @@
 				</button>
 					<ul class="dropdown-menu">
 					{foreach $actions AS $key => $action}
-						{if $key != 0}
+						{if $key != 0 && isset($tr.$action)}
 						<li>
 							{$tr.$action}
 						</li>
