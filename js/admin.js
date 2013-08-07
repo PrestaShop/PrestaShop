@@ -1045,7 +1045,11 @@ function hideOtherLanguage(id)
 
 function sendBulkAction(form, action)
 {
-	$(action).val(1);
+	String.prototype.splice = function( idx, rem, s ) {
+		return (this.slice(0,idx) + s + this.slice(idx + Math.abs(rem)));
+	};
+
+	$(form).attr('action', $(form).attr('action').splice($(form).attr('action').lastIndexOf('&'), 0, '&' + action));
 	$(form).submit();
 }
 

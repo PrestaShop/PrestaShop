@@ -47,7 +47,6 @@
 					<a href="#" onclick="{if isset($params.confirm)}if (confirm('{$params.confirm}')){/if}sendBulkAction($(this).closest('form').get(0), 'submitBulk{$key}{$table}');">
 						<i class="{$params.icon}"></i>&nbsp;{$params.text}
 					</a>
-					<input type="hidden" name="submitBulk{$key}{$table}" value="" />
 					{/if}
 				</li>
 			{/foreach}
