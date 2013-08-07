@@ -30,12 +30,25 @@
 				{l s='Bulk actions'} <span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu">
-			<li><a href=""><i class="icon-check-sign"></i>&nbsp;{l s='Select all'}</a></li>
-			<li><a href=""><i class="icon-check-empty"></i>&nbsp;{l s='Unselect all'}</a></li>
+			<li>
+				<a href="#" onclick="javascript:checkDelBoxes($(this).closest('form').get(0), '{$table}Box[]', true);return false;">
+					<i class="icon-check-sign"></i>&nbsp;{l s='Select all'}
+				</a>
+			</li>
+			<li>
+				<a href="#" onclick="javascript:checkDelBoxes($(this).closest('form').get(0), '{$table}Box[]', false);return false;">
+					<i class="icon-check-empty"></i>&nbsp;{l s='Unselect all'}
+				</a>
+			</li>
 			<li class="divider"></li>
 			{foreach $bulk_actions as $key => $params}
 				<li{if $params.text == 'divider'} class="divider"{/if}>
-					{if $params.text != 'divider'}<a href=""><i class="{$params.icon}"></i>&nbsp;{$params.text}</a>{/if}
+					{if $params.text != 'divider'}
+					<a href="#" onclick="{if isset($params.confirm)}if (confirm('{$params.confirm}')){/if}sendBulkAction($(this).closest('form').get(0), 'submitBulk{$key}{$table}');">
+						<i class="{$params.icon}"></i>&nbsp;{$params.text}
+					</a>
+					<input type="hidden" name="submitBulk{$key}{$table}" value="" />
+					{/if}
 				</li>
 			{/foreach}
 			</ul>

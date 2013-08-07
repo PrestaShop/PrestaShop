@@ -98,9 +98,6 @@
 			<thead>
 				<tr class="nodrag nodrop">
 					<th class="center">
-					{if $has_bulk_actions}
-						<input type="checkbox" name="checkme" class="noborder" onclick="checkDelBoxes(this.form, '{$table}Box[]', this.checked)" />
-					{/if}
 					</th>
 					{foreach $fields_display AS $key => $params}
 					<th {if isset($params.align)} class="{$params.align}"{/if}>
