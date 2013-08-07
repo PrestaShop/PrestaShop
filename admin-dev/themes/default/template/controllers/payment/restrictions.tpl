@@ -30,7 +30,7 @@
 			{$list['title']}
 		</h3>
 		<p class="help-block">{$list['desc']}</p>
-		<table cellpadding="0" cellspacing="0" class="table table-striped table-hover">
+		<table cellpadding="0" cellspacing="0" class="table">
 			<tr>
 				<th width="40%">{$list['title']}</th>
 				{foreach $payment_modules as $module}

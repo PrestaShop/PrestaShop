@@ -41,7 +41,7 @@
 	enctype="multipart/form-data" class="form-horizontal">
 	{foreach $option_list AS $category => $categoryData}
 		{if isset($categoryData['top'])}{$categoryData['top']}{/if}
-		<fieldset {if isset($categoryData['class'])}class="{$categoryData['class']}"{/if} class="col-lg-12">
+		<fieldset {if isset($categoryData['class'])}class="{$categoryData['class']}"{/if}>
 			{* Options category title *}
 			<h3>
 				<i class="icon-cogs"></i>

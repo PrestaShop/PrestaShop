@@ -19,27 +19,26 @@ $bg-content-color: #E0E0E0 // gris foncé
 //$bg-head-color:  #F8235A //rose
 //$bg-head-color: #F2B100 //moutarde
 //$bg-head-color: #F7854E // abricot
-$bg-head-color: #665D5C // taupe clair
-//$bg-head-color: #60C276
+//$bg-head-color: #665D5C // taupe clair
+$bg-head-color: #60C276 //vert
 
-//light (experimental)
+//light
 //$brand-primary: #98958C // sable
 //$brand-primary: #92979B //gris
 //$brand-primary: #A9B6C1 //bleu
-
 //dark
-$brand-primary: #3D3D3D // taupe
+//$brand-primary: #3D3D3D // gris
 //$brand-primary: #515561 // gris bleu clair
 //$brand-primary: #4D4645 //taupe
-//$brand-primary: #272822 // gris vert
+$brand-primary: #272822 // gris vert
 //$brand-primary: #313A45 // gris
 //$brand-primary: #4F2E4A // violet
 //$brand-primary: #373E35 // vert camo
 //$brand-primary: #262C3F // bleu nuit
 
 $panel-color: $brand-primary
+$bg-body-color: $brand-primary
 $badge-panel-color: #DC315E
-$bg-body-color: $bg-content-color
 
 @import "compass"
 @import "bootstrap/variables"
@@ -53,16 +52,13 @@ html, body
 
 body.fixed-top
 	position: relative
-	top: 53px
+	top: 35px
 	margin-bottom: 50px
 	background-color: $bg-body-color
 
 #header_infos
-	height: 53px
-	//border-bottom: solid 2px black
-	background-color: darken($brand-primary,20%)
+	background-color: darken($brand-primary,10%)
 	z-index: 9999
-	//@include box-shadow(rgba(black,0.15) 0 2px 0)
 	#header_shopname
 		font-size: 1.6em
 		font-family: "ubuntu"
@@ -74,21 +70,20 @@ body.fixed-top
 			background-color: $badge-panel-color
 
 #main
-	min-height: 100%
-	height: 100%
 	position: relative
 
+.container-fluid, .row-fluid
+	width: 100%
+
 #content
-	//float: left
-	min-height: 100%
-	//width: 1278px
-	padding: 90px 20px 90px
-	margin: 0 0 0 240px
-	//border-left: 2px solid black
-	//border-right: 2px solid black
+	min-height: 700px
+	padding: 90px 20px 20px
+	margin-left: 240px
+	@include transition-property(margin)
+	@include transition-duration(0.4s)
+	@include transition-timing-function(ease-out)
 	background-color: $bg-content-color
-	//background-image: url('../img/patterns/bedge_grunge.png')
-	//@include box-shadow(darken($bg-content-color,30%) 0 0 0 4px)
+	background-image: url('../img/patterns/bedge_grunge.png') 
 	fieldset, .panel
 		padding: 20px
 		margin-bottom: 20px
@@ -123,11 +118,9 @@ body.fixed-top
 			margin-left: -5px
 	.panel-danger .panel-heading
 		background-color: $badge-panel-color!important
-
 	.panel-heading-big
 		font-size: 2em
 		text-align: center
-
 	form .alert
 		clear: both
 		color: darken(#D6D2CF,40%)
@@ -139,57 +132,51 @@ body.fixed-top
 			border: none
 			border-bottom: solid 1px darken($bg-content-color,10%)
 			@include box-shadow(white 0 0 0 1px inset)
-
-.page-head
-	width: 100%
-	height: 69px
-	padding: 5px 10px 0 0
-	margin: 0
-	border-bottom: 4px solid darken($bg-head-color,20%)
-	position: fixed
-	top: 53px
-	left: 0px
-	z-index: 9000
-	background-color: $bg-head-color
-	@include box-shadow(rgba(black,0.15) 0 7px 0, rgba(white,0.15) 0 -1px 0 inset)
-	h2.page-title
-		@extend .pull-left
-		padding: 0 0 0 260px
-		font-size: 20px
-		line-height: 25px
-		color: white
-		text-transform: uppercase
-	.btn-toolbar
+	.page-head
+		width: 100%
+		height: 69px
+		padding: 5px 10px 0 0
 		margin: 0
-		.nav-tabs
+		border-bottom: 4px solid darken($bg-head-color,20%)
+		position: fixed
+		top: 37px
+		left: 0px
+		z-index: 9000
+		background-color: $bg-head-color
+		@include box-shadow(rgba(black,0.15) 0 7px 0, rgba(white,0.15) 0 -1px 0 inset)
+		h2.page-title
+			@extend .pull-left
+			padding: 0 0 0 260px
+			font-size: 20px
+			line-height: 25px
+			color: white
+			text-transform: uppercase
+		.btn-toolbar
 			margin: 0
-		.nav-tabs > li > a
-			color: #333
-			> .active > a, > .active > a:hover
-				color: #3399ff
-				background: #f5f5f5
+			.nav-tabs
+				margin: 0
+			.nav-tabs > li > a
+				color: #333
+				> .active > a, > .active > a:hover
+					color: #3399ff
+					background: #f5f5f5
 
-.page-sidebar
+#sidebar
 	z-index: 9001
-	top: 53px
-	position: fixed
+	float: left
+	position: absolute
 	width: 240px
-	border-bottom: solid 1px black
 	background-color: $brand-primary
-	@include box-shadow(darken($bg-content-color,30%) 0 4px 0)	
-	min-height: 700px
-	height: 100%
+	border-bottom: 1px solid lighten($brand-primary,5%)
+	border-right: 1px solid black
 	> ul > li > ul.sub-menu
 		display: none
 		list-style: none
 		clear: both
 		margin: 8px 0px 8px 0px
 	> ul
-		height: 100%
-		overflow: scroll
 		margin: 0
 		padding: 0
-		padding-bottom: 100px
 		li
 			background-color: lighten($brand-primary,0)
 			list-style: none
@@ -219,6 +206,7 @@ body.fixed-top
 				@include transition-timing-function(ease-out)
 				@include box-shadow(darken($brand-primary,15%) -4px 0 0 inset)
 				i
+					color: lighten($brand-primary,25%)!important
 					@include transition-property(color)
 					@include transition-duration(0.4s)
 					@include transition-timing-function(ease-out)
@@ -252,6 +240,35 @@ body.fixed-top
 							i
 								color: $brand-primary
 
+.page-sidebar-closed
+	#sidebar
+		width: 50px
+		white-space: nowrap
+		@include transition-property(width)
+		@include transition-duration(0.4s)
+		@include transition-timing-function(ease-out)
+		span.title
+			display: none
+		ul.submenu
+			display: none!important
+	#content
+		margin-left: 50px
+		.page-head h2.page-title
+			padding: 0 0 0 70px
+
+
+.menu-collapse
+	height: 70px
+	width: 100%
+	font-size: 2em
+	text-align: center
+	line-height: 68px
+	display: block
+	background-color: black
+	i
+		color: white!important
+
+
 #menu .maintab > a [class^="icon-"], #menu .maintab > a [class*=" icon-"]
 	font-size: 22px
 	border-radius: 40px
@@ -264,30 +281,19 @@ body.fixed-top
 
 // Tool bar
 .toolbar_btn
-	//@extend .btn
-	//@extend .btn-primary
-	//background-color: $brand-primary
-	border: solid 1px lighten($bg-head-color,5%)
+	border: solid 1px lighten($bg-head-color,15%)
 	position: relative
 	padding: 2px 5px !important
 	margin-right: 3px
-	//border-bottom: 4px solid darken($brand-primary,7%)
 	font-size: 12px
 	font-weight: 600
 	color: white
 	text-align: center
 	text-shadow: none
-	//@include background(linear-gradient(top, lighten($brand-primary,15%), $brand-primary))
-	//@include box-shadow(rgba(black,0.15) 0 3px 0, rgba(white,0.1) 0 0 0 1px inset)
 	&:hover
-		//top: 2px
-		//border-color: $brand-primary
-		//border-bottom: 2px solid lighten($brand-primary,10%)
-		//color: $brand-primary
-		//@include text-shadow(lighten($bg-head-color,15%) 1px 1px 0)
-		background-color: lighten($bg-head-color,5%)!important
-		//@include background(linear-gradient(top left, lighten($brand-primary,75%), lighten($brand-primary,55%)))
-		//@include box-shadow(rgba(black,0.3) 0 1px 3px, rgba(white,0.4) 0 0 0 1px inset)
+		color: darken($bg-head-color,20%)
+		border-color: white
+		background-color: white
 
 .icon-AdminDashboard
 	@extend .icon-dashboard
@@ -389,13 +395,10 @@ body.fixed-top
 	@extend .icon-bar-chart
 .process-icon-duplicate
 	@extend .icon-copy
-
 .process-icon-newCombination.toolbar-new
 	@extend .icon-plus-sign
-
 .process-icon-newCombination.toolbar-cancel
 	@extend .icon-minus-sign
-
 .process-icon-partial_refund
 	@extend .icon-exchange
 .process-icon-cancel
@@ -456,18 +459,30 @@ input[type="password"].input-tiny
 .btn-default
 	border-color: darken($bg-content-color,20%)
 	color: lighten($brand-primary,15%)
-	@include background(linear-gradient(top,$bg-content-color, darken($bg-content-color,10%)))
-	@include box-shadow(rgba(white,1) 0 0 0 1px inset)
+	//@include background(linear-gradient(top,$bg-content-color, darken($bg-content-color,10%)))
+	background-color: white
+	@include box-shadow(rgba(black,0.10) 0 -2px 0 inset)
 	&:hover, &:focus
 		border-color: darken($bg-content-color,30%)
 		color: lighten($brand-primary,15%)
-		@include background(linear-gradient(top, darken($bg-content-color,10%), darken($bg-content-color,20%)))
+		@include background(linear-gradient(top, darken($bg-content-color,0%), darken($bg-content-color,5%)))
 
 .btn-primary
 	border-color: $bg-head-color
-	color: lighten($bg-head-color,70%)
-	@include background(linear-gradient(top,lighten($bg-head-color,10%),lighten($bg-head-color,0%)))
-	@include box-shadow(lighten($bg-head-color,10%) 0 0 0 1px inset)
+	color: lighten($brand-primary,15%)
+	background-color: lighten($bg-head-color,40%)
+	//@include background(linear-gradient(top,lighten($bg-head-color,10%),lighten($bg-head-color,0%)))
+	@include box-shadow(lighten($bg-head-color,20%) 0 -2px 0  inset)
+	&:hover, &:focus
+		border-color: $bg-head-color
+		color: lighten($bg-head-color,70%)
+		@include background(linear-gradient(top,darken($bg-head-color,0%),darken($bg-head-color,10%)))
+
+.btn-default[disabled]
+	border-color: lighten($brand-primary,35%)
+	color: lighten($brand-primary,15%)
+	background-color: lighten($brand-primary,65%)
+	@include box-shadow(lighten($brand-primary,55%) 0 -2px 0  inset)
 	&:hover, &:focus
 		border-color: $bg-head-color
 		color: lighten($bg-head-color,70%)
@@ -488,13 +503,13 @@ hr
 
 //table 
 .table
+	@extend .table-striped
+	@extend .table-hover
 	border-collapse: separate
 	border-spacing: 0 2px
 	margin-bottom: 5px
 	thead th
 		background-color: darken($bg-content-color,10%)
-		//border-bottom: solid 2px lighten($brand-primary,20%)
-		//@include box-shadow(rgba(black,0.15) 0 2px 3px inset)
 	thead > tr > th
 		font-weight: normal
 		vertical-align: top
@@ -519,13 +534,7 @@ hr
 		word-wrap: nowrap
 		font-size: 12px
 		@include box-shadow(rgba(black,0.15) 0 1px 0)
-	tbody > tr:hover > td
-		cursor: pointer
-		background-color: lighten($bg-head-color,15%)
-		@include transition-property(background-color)
-		@include transition-duration(0.4s)
-		@include transition-timing-function(ease-out)
-		@include box-shadow(rgba($bg-head-color,0.80) 0 2px 0)
+
 	td.center, th.center
 		text-align: center
 	tr td:first-child,
@@ -582,14 +591,36 @@ tr.filter
 		font-weight: 500
 
 #footer
-	z-index: 9002
-	display: block
-	//position: absolute
-	//width: 100%
-	bottom: 0
+	width: 100%
+	float: left
 	padding: 5px 0
-	background-color: darken($bg-content-color,5%)
-	@include box-shadow(darken($bg-content-color,40%) 0 2px 10px inset)
+	background-color: black
+	color: #888
+	a
+		color: #ccc
+	a.link-social
+		&:hover
+			text-decoration: none
+		i
+			font-size: 2em
+			width: 30px
+			height: 30px
+			display: inline-block
+			line-height: 30px
+			text-align: center
+			@include border-radius(30px)
+	.link-twitter i
+		color: white
+		background-color: #7CCEEF
+	.link-facebook i
+		color: white
+		background-color: #557DBB
+	.link-github i
+		color: black
+		background-color: white
+	.link-google i
+		color: white
+		background-color: #E6644E
 	#go-top
 		position: fixed
 		bottom: 10px
@@ -613,24 +644,4 @@ tr.filter
 		color: #666
 		font-size: 22px
 		margin-bottom: 5px
-	.link-social
-		&:hover
-			text-decoration: none
-		i
-			font-size: 2em
-			width: 30px
-			height: 30px
-			display: inline-block
-			line-height: 30px
-			text-align: center
-			@include border-radius(30px)
-	.link-twitter i
-		background-color: #7CCEEF
-	.link-facebook i
-		color: white
-		background-color: #557DBB
-	.link-github i
-		background-color: white
-	.link-google i
-		color: white
-		background-color: #E6644E
+

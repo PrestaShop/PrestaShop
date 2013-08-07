@@ -27,7 +27,7 @@
 
 {block name="after"}
 
-	<fieldset class="col-lg-12">
+	<fieldset>
 		<h3>
 			<i class="icon-list"></i>
 			{l s='List of MySQL Tables:'}
