@@ -246,13 +246,13 @@ class SearchCore
 
 		$eligible_products = array_unique($eligible_products);
 
-		$product_pool = '';
+		$product_pool = array;
 		foreach ($eligible_products as $id_product)
 			if ($id_product)
-				$product_pool .= (int)$id_product.',';
+				$product_pool[(int)$id_product] = (int)$id_product;
 		if (empty($product_pool))
 			return ($ajax ? array() : array('total' => 0, 'result' => array()));
-		$product_pool = ((strpos($product_pool, ',') === false) ? (' = '.(int)$product_pool.' ') : (' IN ('.rtrim($product_pool, ',').') '));
+		$product_pool = count($product_pool)<=1 ? (' = '.(int)$product_pool.' ') : (' IN ('.implode(',' $product_pool.') '));
 
 		if ($ajax)
 		{
