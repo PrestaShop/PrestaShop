@@ -4935,7 +4935,8 @@ class ProductCore extends ObjectModel
 					ON (a.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)Context::getContext()->language->id.')
 				WHERE pa.`id_product` = '.(int)$id_product.'
 					AND pac.`id_product_attribute` = '.(int)$id_product_attribute.'
-					AND agl.`id_lang` = '.(int)Context::getContext()->language->id);
+					AND agl.`id_lang` = '.(int)Context::getContext()->language->id.'
+				GROUP BY a.`id_attribute`');
 			}
 		}
 		else
@@ -4954,7 +4955,8 @@ class ProductCore extends ObjectModel
 				ON (a.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)Context::getContext()->language->id.')
 			WHERE pa.`id_product` = '.(int)$id_product.'
 				AND pac.`id_product_attribute` = '.(int)$id_product_attribute.'
-				AND agl.`id_lang` = '.(int)Context::getContext()->language->id);
+				AND agl.`id_lang` = '.(int)Context::getContext()->language->id.'
+			GROUP BY a.`id_attribute`');
 		}
 		return $result;
 	}
