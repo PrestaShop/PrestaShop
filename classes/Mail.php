@@ -147,7 +147,10 @@ class MailCore
 				if ($to_name == null)
 					$to_name = $addr;
 				/* Encode accentuated chars */
-				$to_list->addTo($addr, mb_encode_mimeheader($to_name, 'utf-8'));
+				if (function_exists('mb_encode_mimeheader'))
+					$to_list->addTo($addr, mb_encode_mimeheader($to_name, 'utf-8'));
+				else
+					$to_list->addTo($addr, '=?UTF-8?B?'.base64_encode($to_name).'?=');
 			}
 			$to_plugin = $to[0];
 			$to = $to_list;
@@ -156,7 +159,10 @@ class MailCore
 			$to_plugin = $to;
 			if ($to_name == null)
 				$to_name = $to;
-			$to = new Swift_Address($to, mb_encode_mimeheader($to_name, 'utf-8'));
+			if (function_exists('mb_encode_mimeheader'))
+				$to = new Swift_Address($to, mb_encode_mimeheader($to_name, 'utf-8'));
+			else
+				$to = new Swift_Address($to, '=?UTF-8?B?'.base64_encode($to_name).'?=');
 		}
 		try {
 			/* Connect with the appropriate configuration */
