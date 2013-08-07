@@ -25,7 +25,6 @@
 
 
 $(document).ready(function() {
-	validateAndAddRangeButtonDisplay();
 	bind_inputs();
 	initCarrierWizard();
 	if (parseInt($('input[name="is_free"]:checked').val()))
@@ -252,21 +251,6 @@ function bind_inputs()
 		return false;
 	});
 	
-	/*
-$('#validate_range_button').off('click').on('click', function () {
-		index = $('tr.fees_all td:last').index();
-		if (validateRange(index))
-		{
-			enableRange(index);
-			$('.currency_sign').show();
-		}
-		else
-			disableRange(index);
-		validateAndAddRangeButtonDisplay();
-		return false;
-	});
-*/
-	
 	$('tr.fees td input:checkbox').off('change').on('change', function () {
 				
 		if($(this).is(':checked'))
@@ -294,7 +278,6 @@ $('#validate_range_button').off('click').on('click', function () {
 				enableRange(index);
 			else
 				disableRange(index);
-			validateAndAddRangeButtonDisplay();
 			return false;
 		}
 	});
@@ -306,10 +289,15 @@ $('#validate_range_button').off('click').on('click', function () {
 		callback: function() { 
 
 			index = $(this.el).parent('td').index();
-			if (validateRange(index))
-				enableRange(index);
-			else
-				disableRange(index);			
+			range_sup = $('tr.range_sup td:eq('+index+')').children('input:text').val().trim();
+			range_inf = $('tr.range_inf td:eq('+index+')').children('input:text').val().trim();
+			if (range_sup != '' && range_inf != '')
+			{
+				if (validateRange(index))
+					enableRange(index);
+				else
+					disableRange(index);
+			}
 		}
 	});
 	
@@ -503,7 +491,6 @@ function add_new_range()
 	});
 	$('tr.delete_range td:last').after('<td class="center"><button class="button">'+labelDelete+'</button</td>');
 	
-	validateAndAddRangeButtonDisplay();
 	bind_inputs();
 	rebuildTabindex();
 	displayRangeType();
@@ -541,22 +528,7 @@ function rebuildTabindex()
 	});
 }
 
-function validateAndAddRangeButtonDisplay()
-{
-	return;
-	if ($('tr.fees_all td:last').hasClass('validated'))
-	{
-		$('.validate_range').hide();
-		$('.new_range').show();
-	}
-	else
-	{
-		$('.validate_range').show();
-		$('.new_range').hide();
-	}
-}
-
-function reorderRange(current_index, new_index)
+function repositionRange(current_index, new_index)
 {
 	$('tr.range_sup, tr.range_inf, tr.fees_all, tr.fees, tr.delete_range ').each(function () {
 		$(this).find('td:eq('+current_index+')').each( function () {
@@ -566,11 +538,13 @@ function reorderRange(current_index, new_index)
 	});
 }
 
-function checkRangeContinuity()
+function checkRangeContinuity(reordering)
 {
+	return true;
+	reordering = typeof reordering !== 'undefined' ? reordering : false;
 	res = true;
-	return true;//TODO
-	$('tr.range_sup td').not('.range_type, .range_sign, tr.range_sup').each( function () 
+
+	$('tr.range_sup td').not('.range_type, .range_sign').each( function () 
 	{
 		index = $(this).index();
 		if (index > 2)
@@ -581,11 +555,36 @@ function checkRangeContinuity()
 			prev_range_sup = parseFloat($('tr.range_sup td:eq('+prev_index+')').children('input:text').val().trim());
 			prev_range_inf = parseFloat($('tr.range_inf td:eq('+prev_index+')').children('input:text').val().trim());
 			if (range_inf < prev_range_inf || range_sup < prev_range_sup)
+			{
 				res = false;
+				if (reordering)
+				{
+					new_position = getCorrectRangePosistion(range_inf, range_sup);
+					if (new_position)
+						repositionRange(index, new_position);
+				}
+			}	
 		}
 	});
 	if (res)
 		$('.ranges_not_follow').fadeOut();
 	else
 		$('.ranges_not_follow').fadeIn();
+	resizeWizard();
+}
+
+function getCorrectRangePosistion(current_inf, current_sup)
+{
+	new_position = false;
+	$('tr.range_sup td').not('.range_type, .range_sign').each( function () 
+	{
+		index = $(this).index();
+		range_sup = parseFloat($('tr.range_sup td:eq('+index+')').children('input:text').val().trim());
+		next_range_inf = 0
+		if ($('tr.range_inf td:eq('+index+1+')').length)
+			next_range_inf = parseFloat($('tr.range_inf td:eq('+index+1+')').children('input:text').val().trim());
+		if (current_inf >= range_sup && current_sup < next_range_inf)
+			new_position = index;
+	});
+	return new_position;
 }
