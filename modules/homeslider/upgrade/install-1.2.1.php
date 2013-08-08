@@ -16,9 +16,9 @@ function upgrade_module_1_2_1($object)
 
 function homeslider_stripslashes_field($field)
 {
-	$quotes = array('\'\\\\\'\'', '\'\\\'\'');
-	$dquotes = array('\'\\"\'', '\'"\'');
-	$backslashes = array('\'\\\\\'', '\'\\\'');
+	$quotes = array('"\\\'"', '"\'"');
+	$dquotes = array('\'\\\\"\'', '\'"\'');
+	$backslashes = array('"\\\\\\\\"', '"\\\\"');
 
 	return '`'.bqSQL($field).'` = replace(replace(replace(`'.bqSQL($field).'`, '.$quotes[0].', '.$quotes[1].'), '.$dquotes[0].', '.$dquotes[1].'), '.$backslashes[0].', '.$backslashes[1].')';
 }
