@@ -2651,7 +2651,7 @@ class BlockLayered extends Module
 					AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
 					AND c.active = 1
 					AND '.$alias.'.active = 1';
-					$sql_query['group'] = ' GROUP BY p.id_manufacturer ';
+					$sql_query['group'] = ' GROUP BY p.id_manufacturer ORDER BY m.name';
 					
 					if (!Configuration::get('PS_LAYERED_HIDE_0_VALUES'))
 					{
@@ -2668,7 +2668,7 @@ class BlockLayered extends Module
 							AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
 							AND c.active = 1
 							AND '.$alias.'.active = 1
-							GROUP BY p.id_manufacturer';
+							GROUP BY p.id_manufacturer ORDER BY m.name';
 					}
 					
 					break;
