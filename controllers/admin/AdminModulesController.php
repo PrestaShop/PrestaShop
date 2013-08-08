@@ -630,9 +630,8 @@ class AdminModulesControllerCore extends AdminController
 
 										if (!$download_ok)
 											$this->errors[] = $this->l('Error on downloading the lastest version');
-										else
-											if(!$this->extractArchive(_PS_MODULE_DIR_.$modaddons->name.'.zip', false))
-												$this->errors[] = $this->l(sprintf("Module %s can't be upgraded: ", $modaddons->name));
+										elseif (!$this->extractArchive(_PS_MODULE_DIR_.$modaddons->name.'.zip', false))
+											$this->errors[] = $this->l(sprintf("Module %s can't be upgraded: ", $modaddons->name));
 									}
 							}
 					}
@@ -674,18 +673,18 @@ class AdminModulesControllerCore extends AdminController
 
 							// Get the return value of current method
 							$echo = $module->{$method}();
-							
+
 							// After a successful install of a single module that has a configuration method, to the configuration page
 							if ($key == 'install' && $echo === true && strpos(Tools::getValue('install'), '|') === false && method_exists($module, 'getContent'))
 								Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&configure='.$module->name.'&conf=12');
 						}
-						
+
 						// If the method called is "configure" (getContent method), we show the html code of configure page
 						if ($key == 'configure' && Module::isInstalled($module->name))
 						{
 							if (isset($module->multishop_context))
 								$this->multishop_context = $module->multishop_context;
-							
+
 							$backlink = self::$currentIndex.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name;
 							$hooklink = 'index.php?tab=AdminModulesPositions&token='.Tools::getAdminTokenLite('AdminModulesPositions').'&show_modules='.(int)$module->id;
 							$tradlink = 'index.php?tab=AdminTranslations&token='.Tools::getAdminTokenLite('AdminTranslations').'&type=modules&lang=';
@@ -768,17 +767,14 @@ class AdminModulesControllerCore extends AdminController
 			Tools::redirectAdmin(self::$currentIndex.'&conf='.$return.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).(isset($modules_list_save) ? '&modules_list='.$modules_list_save : '').$params);
 		}
 
-		if(isset($_GET['update']))
-		{
+		if (isset($_GET['update']))
 			Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&updated=1tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).(isset($modules_list_save) ? '&modules_list='.$modules_list_save : '').$params);
-		}
 	}
 	
 	public function postProcess()
 	{
 		// Parent Post Process
 		parent::postProcess();
-
 
 		// Get the list of installed module ans prepare it for ajax call.
 		if (($list = Tools::getValue('installed_modules')))
