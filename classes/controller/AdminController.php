@@ -1813,7 +1813,11 @@ class AdminControllerCore extends Controller
 			$this->context->employee->logout();
 
 		if ($this->controller_name != 'AdminLogin' && (!isset($this->context->employee) || !$this->context->employee->isLoggedBack()))
+		{
+			if (isset($this->context->employee))
+				$this->context->employee->logout();
 			Tools::redirectAdmin($this->context->link->getAdminLink('AdminLogin').((!isset($_GET['logout']) && $this->controller_name != 'AdminNotFound') ? '&redirect='.$this->controller_name : ''));
+		}
 
 		// Set current index
 		$current_index = 'index.php'.(($controller = Tools::getValue('controller')) ? '?controller='.$controller : '');
