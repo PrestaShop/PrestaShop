@@ -1,4 +1,3 @@
-<div id="productBox">
 	{include file='controllers/modules/header.tpl'}
 	<div class="row">
 		<div class="col-lg-12">
@@ -102,4 +101,3 @@
 			</div>
 		</div>
 	</div>
-</div>

@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div id="productBox">
+
 	{include file='controllers/modules/header.tpl'}
 
 	{include file='controllers/modules/login_addons.tpl'}
@@ -74,4 +74,3 @@
 			</div>
 		</div>
 	</div>
-</div>
