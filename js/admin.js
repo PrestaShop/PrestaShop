@@ -1045,11 +1045,20 @@ function hideOtherLanguage(id)
 
 function sendBulkAction(form, action)
 {
-	String.prototype.splice = function( idx, rem, s ) {
-		return (this.slice(0,idx) + s + this.slice(idx + Math.abs(rem)));
+	String.prototype.splice = function(index, remove, string) {
+		return (this.slice(0, index) + string + this.slice(index + Math.abs(remove)));
 	};
 
-	$(form).attr('action', $(form).attr('action').splice($(form).attr('action').lastIndexOf('&'), 0, '&' + action));
+	var form_action = $(form).attr('action');
+
+	if (form_action.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'').replace(/\s+/g,' ') == '')
+		return false;
+
+	if (form_action.indexOf('#') == -1)
+		$(form).attr('action', form_action + '&' + action);
+	else
+		$(form).attr('action', form_action.splice(form_action.lastIndexOf('&'), 0, '&' + action));
+
 	$(form).submit();
 }
 
