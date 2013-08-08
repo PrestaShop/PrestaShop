@@ -2518,7 +2518,7 @@ class BlockLayered extends Module
 				'.($alias_where == 'p' ? '' : 'product_shop.*,' ).'
 				'.$alias_where.'.id_category_default,
 				pl.*,
-				i.id_image,
+				image_shop.`id_image`,
 				il.legend, 
 				m.name manufacturer_name,
 				DATEDIFF('.$alias_where.'.`date_add`, DATE_SUB(NOW(), INTERVAL '.(int)$nb_day_new_product.' DAY)) > 0 AS new
@@ -2527,10 +2527,11 @@ class BlockLayered extends Module
 			LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = cp.`id_product`
 			'.$join.'
 			LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = p.id_product'.Shop::addSqlRestrictionOnLang('pl').' AND pl.id_lang = '.(int)$cookie->id_lang.')
-			LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = p.id_product AND i.cover = 1)
-			LEFT JOIN '._DB_PREFIX_.'image_lang il ON (i.id_image = il.id_image AND il.id_lang = '.(int)($cookie->id_lang).')
+			LEFT JOIN `'._DB_PREFIX_.'image` i  ON (i.`id_product` = p.`id_product`)'.Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
+			LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$cookie->id_lang.')
 			LEFT JOIN '._DB_PREFIX_.'manufacturer m ON (m.id_manufacturer = p.id_manufacturer)
-			WHERE '.$alias_where.'.`active` = 1 AND
+			WHERE (i.id_image IS NULL OR image_shop.id_shop='.(int)Context::getContext()->shop->id.') 
+			AND '.$alias_where.'.`active` = 1 AND 
 			'.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'c.nleft >= '.(int)$parent->nleft.'
 			AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
 			AND c.active = 1
@@ -2651,7 +2652,7 @@ class BlockLayered extends Module
 					AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
 					AND c.active = 1
 					AND '.$alias.'.active = 1';
-					$sql_query['group'] = ' GROUP BY p.id_manufacturer ';
+					$sql_query['group'] = ' GROUP BY p.id_manufacturer ORDER BY m.name';
 					
 					if (!Configuration::get('PS_LAYERED_HIDE_0_VALUES'))
 					{
@@ -2668,7 +2669,7 @@ class BlockLayered extends Module
 							AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
 							AND c.active = 1
 							AND '.$alias.'.active = 1
-							GROUP BY p.id_manufacturer';
+							GROUP BY p.id_manufacturer ORDER BY m.name';
 					}
 					
 					break;
