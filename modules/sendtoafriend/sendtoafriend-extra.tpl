@@ -32,13 +32,15 @@ $('document').ready(function(){
 
 	$('#sendEmail').click(function(){
 		var datas = [];
-		$('#fancybox-content').find('input').each(function(index){
+		$('#send_friend_form_content').find(':input').each(function(index){
 			var o = {};
 			o.key = $(this).attr('name');
 			o.value = $(this).val();
+
 			if (o.value != '')
 				datas.push(o);
 		});
+
 		if (datas.length >= 3)
 		{
 			$.ajax({
@@ -73,7 +75,7 @@ $('document').ready(function(){
 				</div>
 			</div>
 			
-			<div class="send_friend_form_content">
+			<div class="send_friend_form_content" id="send_friend_form_content">
 				<div id="send_friend_form_error"></div>
 				<div class="form_container">
 					<p class="intro_form">{l s='Recipient' mod='sendtoafriend'} :</p>
