@@ -1,44 +1,64 @@
-//variables 
-$icon-color: #87C795
-
-//$bg-content-color: #F8F9FB // bleu gris clair
-//$bg-content-color: #F8FBF8 // vert gris clair
-//$bg-content-color: #F8F8F8 // gris
-$bg-content-color: #E0E0E0 // gris foncé
-
-//$bg-head-color: white
-//$bg-head-color: #F5792B // orange
-//$bg-head-color: #81A98C //vert d'eau
-//$bg-head-color: #0091B0 // bleu
-//$bg-head-color: #00C3C1 //turquoise
-//$bg-head-color: #9DC44B // vert pomme
-//$bg-head-color: #97C885 // vert menthe
-//$bg-head-color:  #4691D2 // bleu ciel
-//$bg-head-color: #814C76 //violet
-//$bg-head-color:  #FE635F //saumon
-//$bg-head-color:  #F8235A //rose
-//$bg-head-color: #F2B100 //moutarde
-//$bg-head-color: #F7854E // abricot
-//$bg-head-color: #665D5C // taupe clair
-$bg-head-color: #60C276 //vert
-
+//do some sass magic with color schemes
 //light
-//$brand-primary: #98958C // sable
-//$brand-primary: #92979B //gris
-//$brand-primary: #A9B6C1 //bleu
+//$main-color: #DBD8CF 			//sable
+//$main-color: #CFD7DD			//bleu
 //dark
-//$brand-primary: #3D3D3D // gris
-//$brand-primary: #515561 // gris bleu clair
-//$brand-primary: #4D4645 //taupe
-$brand-primary: #272822 // gris vert
-//$brand-primary: #313A45 // gris
-//$brand-primary: #4F2E4A // violet
-//$brand-primary: #373E35 // vert camo
-//$brand-primary: #262C3F // bleu nuit
+$main-color: #272A31 			//bleu PrestaShop
+//$main-color: #3D3D3D 			//gris
+//$main-color: #515561 			//gris bleu clair
+//$main-color: #4D4645 			//taupe
+//$main-color: #272822 			//gris vert
+//$main-color: #313A45 			//gris bleu
+//$main-color: #443A42 			//violet
+//$main-color: #373E35 			//vert camo
+//$main-color: #262C3F 			//bleu nuit  - pretty sure that a girl could do better naming the colors, sorry about that...
+//$main-color: white
 
-$panel-color: $brand-primary
-$bg-body-color: $brand-primary
-$badge-panel-color: #DC315E
+//$secondary-color: white		//blanc
+//$secondary-color: #F5792B		//orange
+//$secondary-color: #81A98C		//vert d'eau
+//$secondary-color: #1EAEC0		//bleu
+//$secondary-color: #00C3C1		//turquoise
+//$secondary-color: #97C885		//vert menthe
+//$secondary-color: #4691D2		//bleu ciel
+//$secondary-color: #814C76		//violet
+//$secondary-color: #FE635F		//saumon
+//$secondary-color: #F8235A		//rose
+//$secondary-color: #F2B100		//moutarde
+//$secondary-color: #F7854E		//abricot
+//$secondary-color: #937976		//taupe clair
+//$secondary-color: #60C276		//vert
+$secondary-color: #9DC44B		//vert pomme
+$secondary-color: #8BC954 		//vert PrestaShop
+
+//some tests
+//$secondary-color: invert($main-color)
+//$secondary-color: lighten(complement($main-color),20%)
+//$secondary-color: adjust-hue($main-color, 80%)
+//$hue: hue(adjust-hue($main-color, 80%))
+//$secondary-color: hsl($hue, 50%, 50%) //Creates a Color from hue, saturation, and lightness values
+
+//dark and light, love and war, fire and ice, etc...
+$contrasted-dark-default: #333
+$contrasted-light-default: white
+$contrasted-lightness-threshold: 40% //30% default
+
+//50 shades of gray
+//$bg-content-color: #F8F9FB 	//bleu gris clair
+//$bg-content-color: #F8FBF8 	//vert gris clair
+//$bg-content-color: #F8F8F8 	//gris
+//$bg-content-color: #E0E0E0 	//gris foncé
+$bg-content-color: #F6F6F6 		//gris
+
+//heading
+//$bg-header-color: darken($secondary-color,20%)
+$bg-header-color: darken($main-color,10%)
+$bg-page-head-color : $secondary-color
+$bg-panel-heading-color: lighten($secondary-color,30%)
+
+//others
+$badge-notif-color: #EF1778
+$icon-color: #87C795
 
 @import "compass"
 @import "bootstrap/variables"
@@ -53,11 +73,9 @@ html, body
 body.fixed-top
 	position: relative
 	top: 35px
-	margin-bottom: 50px
-	background-color: $bg-body-color
 
 #header_infos
-	background-color: darken($brand-primary,10%)
+	background-color: $bg-header-color
 	z-index: 9999
 	#header_shopname
 		font-size: 1.6em
@@ -67,7 +85,7 @@ body.fixed-top
 		i
 			font-size: 1.5em
 		.badge
-			background-color: $badge-panel-color
+			background-color: $badge-notif-color
 
 #main
 	position: relative
@@ -83,7 +101,7 @@ body.fixed-top
 	@include transition-duration(0.4s)
 	@include transition-timing-function(ease-out)
 	background-color: $bg-content-color
-	background-image: url('../img/patterns/bedge_grunge.png') 
+	//background-image: url('../img/patterns/bedge_grunge.png') // texture
 	fieldset, .panel
 		padding: 20px
 		margin-bottom: 20px
@@ -97,17 +115,16 @@ body.fixed-top
 		height: 30px
 		padding: 0 5px
 		margin: -16px -16px 15px -16px
-		clear: both
 		line-height: 30px
-		color: white	
+		color: contrasted($bg-panel-heading-color)	
 		font-size: 1.2em
 		font-weight: 300
 		text-transform: uppercase
-		background-color: $panel-color
+		background-color: $bg-panel-heading-color
 		i, a
-			color: $bg-head-color!important
+			color: contrasted($bg-panel-heading-color)
 		.badge
-			background-color: lighten($panel-color,20%)
+			background-color: lighten($bg-panel-heading-color,20%)
 			border-radius: 0
 			height: 29px
 			line-height: 25px
@@ -117,7 +134,7 @@ body.fixed-top
 			float: left
 			margin-left: -5px
 	.panel-danger .panel-heading
-		background-color: $badge-panel-color!important
+		background-color: $badge-notif-color!important
 	.panel-heading-big
 		font-size: 2em
 		text-align: center
@@ -132,43 +149,43 @@ body.fixed-top
 			border: none
 			border-bottom: solid 1px darken($bg-content-color,10%)
 			@include box-shadow(white 0 0 0 1px inset)
-	.page-head
-		width: 100%
-		height: 69px
-		padding: 5px 10px 0 0
+
+.page-head
+	width: 100%
+	height: 65px
+	padding: 5px 10px 0 0
+	margin: 0
+	border-bottom: 4px solid darken($secondary-color,10%)
+	position: fixed
+	top: 37px
+	left: 0px
+	z-index: 9000
+	background-color: $secondary-color
+	@include box-shadow(rgba(black,0.15) 0 7px 0, rgba(white,0.15) 0 -1px 0 inset)
+	h2.page-title
+		@extend .pull-left
+		padding: 0 0 0 260px
+		font-size: 20px
+		line-height: 25px
+		color: white
+		text-transform: uppercase
+	.btn-toolbar
 		margin: 0
-		border-bottom: 4px solid darken($bg-head-color,20%)
-		position: fixed
-		top: 37px
-		left: 0px
-		z-index: 9000
-		background-color: $bg-head-color
-		@include box-shadow(rgba(black,0.15) 0 7px 0, rgba(white,0.15) 0 -1px 0 inset)
-		h2.page-title
-			@extend .pull-left
-			padding: 0 0 0 260px
-			font-size: 20px
-			line-height: 25px
-			color: white
-			text-transform: uppercase
-		.btn-toolbar
+		.nav-tabs
 			margin: 0
-			.nav-tabs
-				margin: 0
-			.nav-tabs > li > a
-				color: #333
-				> .active > a, > .active > a:hover
-					color: #3399ff
-					background: #f5f5f5
+		.nav-tabs > li > a
+			color: #333
+			> .active > a, > .active > a:hover
+				//color: #3399ff
+				//background: #f5f5f5
 
 #sidebar
 	z-index: 9001
 	float: left
-	position: absolute
+	//position: absolute
 	width: 240px
-	background-color: $brand-primary
-	border-bottom: 1px solid lighten($brand-primary,5%)
-	border-right: 1px solid black
+	background-color: $main-color
+	border-bottom: 1px solid lighten($main-color,5%)
 	> ul > li > ul.sub-menu
 		display: none
 		list-style: none
@@ -178,7 +195,7 @@ body.fixed-top
 		margin: 0
 		padding: 0
 		li
-			background-color: lighten($brand-primary,0)
+			background-color: $main-color
 			list-style: none
 		li:not(.active) ul
 			display: none
@@ -188,25 +205,29 @@ body.fixed-top
 				background-color: white
 		> li
 			&:hover > a, &.active > a
-				color: white
-				background-color: darken($brand-primary,5%)
-				@include box-shadow($bg-head-color -4px 0 0 inset)
+				@include contrasted($secondary-color)
+				background-color: $secondary-color
+				border-top: 1px solid lighten($secondary-color,10%)
+				border-bottom: 1px solid darken($secondary-color,10%)
+				@include box-shadow(darken($secondary-color,10%) -4px 0 0 inset)
 				i
-					color: $bg-head-color!important
+					color: $secondary-color!important
+					background-color: white
 			> a
 				display: block
 				padding: 5px 0 5px 5px
-				border-top: 1px solid lighten($brand-primary,5%)
-				border-bottom: 1px solid darken($brand-primary,15%)
-				color: lighten($brand-primary,45%)
+				border-top: 1px solid lighten($main-color,5%)
+				border-bottom: 1px solid darken($main-color,10%)
+				$color: contrast-color($main-color, #333, white, 30%)
+				color: mix($color, $main-color, 60%)
 				text-transform: uppercase
 				text-decoration: none
 				@include transition-property(background-color, border, box-shadow)
 				@include transition-duration(0.4s)
 				@include transition-timing-function(ease-out)
-				@include box-shadow(darken($brand-primary,15%) -4px 0 0 inset)
+				@include box-shadow(darken($main-color,15%) -4px 0 0 inset)
 				i
-					color: lighten($brand-primary,25%)!important
+					color: lighten($main-color,25%)!important
 					@include transition-property(color)
 					@include transition-duration(0.4s)
 					@include transition-timing-function(ease-out)
@@ -215,7 +236,6 @@ body.fixed-top
 			ul
 				margin: 0
 				padding: 0
-				border-bottom: 1px solid #CECECE
 				background-color: white
 				li 
 					a
@@ -223,22 +243,21 @@ body.fixed-top
 						padding: 3px 10px 3px 10px
 						font-size: 12px
 						border: none
-						border-bottom: 1px solid lighten($bg-head-color,25%)
 						background-color: white
 						i
 							margin-top: 3px
-							color: $bg-head-color
+							color: $secondary-color
 						&:hover
-							background-color: lighten($bg-head-color,35%)
+							background-color: lighten($secondary-color,35%)
 							text-decoration: none
 							i
-								color: $brand-primary
+								color: $main-color
 					&.active
 						a
-							color: #1A1A1A
-							background-color: $bg-head-color
+							@include contrasted(darken($secondary-color,0%))
+							background-color: darken($secondary-color,0%)
 							i
-								color: $brand-primary
+								color: $main-color
 
 .page-sidebar-closed
 	#sidebar
@@ -251,23 +270,35 @@ body.fixed-top
 			display: none
 		ul.submenu
 			display: none!important
+		> ul > li:hover
+			width: 250px!important
+			position: relative
+			@include box-shadow(rgba(black,0.15) 4px 4px 0 )
+			span.title
+				display: inline-block
+			ul.submenu
+				display: block!important
+				position: absolute
+				left: 50px
+				width: 200px!important
+				@include box-shadow(rgba(black,0.30) 4px 4px 8px )
+
 	#content
 		margin-left: 50px
 		.page-head h2.page-title
 			padding: 0 0 0 70px
 
-
 .menu-collapse
-	height: 70px
+	height: 67px
 	width: 100%
 	font-size: 2em
 	text-align: center
 	line-height: 68px
 	display: block
-	background-color: black
+	background-color: darken($secondary-color,5%)
+	border-bottom: 4px solid darken($secondary-color,15%)
 	i
-		color: white!important
-
+		color: lighten($secondary-color,10%)
 
 #menu .maintab > a [class^="icon-"], #menu .maintab > a [class*=" icon-"]
 	font-size: 22px
@@ -281,7 +312,6 @@ body.fixed-top
 
 // Tool bar
 .toolbar_btn
-	border: solid 1px lighten($bg-head-color,15%)
 	position: relative
 	padding: 2px 5px !important
 	margin-right: 3px
@@ -291,9 +321,9 @@ body.fixed-top
 	text-align: center
 	text-shadow: none
 	&:hover
-		color: darken($bg-head-color,20%)
+		color: $secondary-color
 		border-color: white
-		background-color: white
+		background-color: white!important
 
 .icon-AdminDashboard
 	@extend .icon-dashboard
@@ -336,9 +366,9 @@ body.fixed-top
 	background-color: adjust-hue($icon-color, 360)
 
 [class^="icon-Admin"]
-	background-color: darken($brand-primary,10%)
+	background-color: darken($main-color,10%)
 	margin-right: 6px
-	color: lighten($brand-primary,10%)!important
+	color: lighten($main-color,10%)!important
 
 [class^="process-icon-"], [class*=" process-icon-"]
 	height: 32px
@@ -453,48 +483,41 @@ input[type="password"].input-tiny
 	width: 200px
 
 
-.btn
-	text-transform: uppercase
-
-.btn-default
-	border-color: darken($bg-content-color,20%)
-	color: lighten($brand-primary,15%)
-	//@include background(linear-gradient(top,$bg-content-color, darken($bg-content-color,10%)))
-	background-color: white
-	@include box-shadow(rgba(black,0.10) 0 -2px 0 inset)
-	&:hover, &:focus
-		border-color: darken($bg-content-color,30%)
-		color: lighten($brand-primary,15%)
-		@include background(linear-gradient(top, darken($bg-content-color,0%), darken($bg-content-color,5%)))
-
-.btn-primary
-	border-color: $bg-head-color
-	color: lighten($brand-primary,15%)
-	background-color: lighten($bg-head-color,40%)
-	//@include background(linear-gradient(top,lighten($bg-head-color,10%),lighten($bg-head-color,0%)))
-	@include box-shadow(lighten($bg-head-color,20%) 0 -2px 0  inset)
-	&:hover, &:focus
-		border-color: $bg-head-color
-		color: lighten($bg-head-color,70%)
-		@include background(linear-gradient(top,darken($bg-head-color,0%),darken($bg-head-color,10%)))
-
-.btn-default[disabled]
-	border-color: lighten($brand-primary,35%)
-	color: lighten($brand-primary,15%)
-	background-color: lighten($brand-primary,65%)
-	@include box-shadow(lighten($brand-primary,55%) 0 -2px 0  inset)
-	&:hover, &:focus
-		border-color: $bg-head-color
-		color: lighten($bg-head-color,70%)
-		@include background(linear-gradient(top,darken($bg-head-color,0%),darken($bg-head-color,10%)))
-
 .btn-group-action
 	display: inline-block
 	white-space: nowrap
 	a
 		text-decoration: none
-.btn .caret
-	border-top-color: lighten($brand-primary,15%)!important
+
+.btn
+	text-transform: uppercase
+
+.btn-default
+	@include box-shadow(darken($btn-default-bg,10%) 0 -2px 0 inset)
+	&:hover, &:focus
+		background-color: $gray
+		border-color: $gray-darker
+		@include box-shadow($gray-darker 0 -2px 0 inset)
+
+.btn-primary
+	@include box-shadow(lighten($brand-success,30%) 0 -2px 0  inset)
+	&:hover, &:focus
+		background-color: $gray
+		border-color: $gray-darker
+		@include box-shadow($gray-darker 0 -2px 0 inset)
+
+.btn-default[disabled]
+	border-color: $gray-light
+	color: $gray-light
+	background-color: lighten($gray-light,35%)
+	@include box-shadow(lighten($gray-light,20%) 0 -2px 0  inset)
+
+.btn
+	.caret
+		border-top-color: $gray-dark!important
+	&:hover, &:focus
+		.caret
+			border-top-color: white!important
 
 
 hr
@@ -563,7 +586,7 @@ tr.filter
 	background-color: lighten($bg-content-color,7%)
 
 .badge
-	background-color: $bg-head-color
+	background-color: $secondary-color
 
 .badge-success
 	@extend .badge
@@ -578,7 +601,6 @@ tr.filter
 	color: darken($bg-content-color,20%)
 
 
-
 #module-list
 	h3
 		position: relative
@@ -587,7 +609,7 @@ tr.filter
 		margin: 0
 		padding: 0
 		background-color: transparent
-		color: $brand-primary
+		color: $main-color
 		font-weight: 500
 
 #footer
@@ -639,9 +661,5 @@ tr.filter
 		font-size: 16px
 		background-color: rgba(0,0,0,0.8)
 
-		
-	.go-top i
-		color: #666
-		font-size: 22px
-		margin-bottom: 5px
-
+#nobootstrap
+	float: left
