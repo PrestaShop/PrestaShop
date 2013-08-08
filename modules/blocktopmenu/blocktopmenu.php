@@ -52,7 +52,7 @@ class Blocktopmenu extends Module
 	{
 		$this->name = 'blocktopmenu';
 		$this->tab = 'front_office_features';
-		$this->version = 1.5;
+		$this->version = 1.6;
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -69,6 +69,7 @@ class Blocktopmenu extends Module
 			!Configuration::updateGlobalValue('MOD_BLOCKTOPMENU_SEARCH', '1') ||
 			!$this->registerHook('actionObjectCategoryUpdateAfter') ||
 			!$this->registerHook('actionObjectCategoryDeleteAfter') ||
+			!$this->registerHook('actionObjectCategoryAddAfter') ||
 			!$this->registerHook('actionObjectCmsUpdateAfter') ||
 			!$this->registerHook('actionObjectCmsDeleteAfter') ||
 			!$this->registerHook('actionObjectSupplierUpdateAfter') ||
@@ -797,7 +798,11 @@ class Blocktopmenu extends Module
 
 		return Db::getInstance()->executeS($sql);
 	}
-	
+
+	public function hookActionObjectCategoryAddAfter($params)
+	{
+		$this->clearMenuCache();
+	}
 
 	public function hookActionObjectCategoryUpdateAfter($params)
 	{
