@@ -38,6 +38,7 @@ function add_missing_columns_customer()
 		'company' => 'ALTER TABLE `'._DB_PREFIX_.'customer` ADD `company` varchar(64)',
 		'siret' => 'ALTER TABLE `'._DB_PREFIX_.'customer` ADD `siret` varchar(14)',
 		'ape' => 'ALTER TABLE `'._DB_PREFIX_.'customer` ADD `ape` varchar(5)',
+		'companynr' => 'ALTER TABLE `'._DB_PREFIX_.'customer` ADD companynr varchar(20)',
 		'website' => 'ALTER TABLE `'._DB_PREFIX_.'customer` ADD `website` varchar(128)',
 		'outstanding_allow_amount' => 'ALTER TABLE `'._DB_PREFIX_.'customer`
 			ADD `outstanding_allow_amount` DECIMAL( 10,6 ) NOT NULL default "0.00"',

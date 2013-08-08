@@ -83,6 +83,9 @@ class CustomerCore extends ObjectModel
 	/** @var string APE */
 	public $ape;
 
+	/** @var string Company Nr (B2B opt) */
+	public $compnr;
+
 	/** @var float Outstanding allow amount (B2B opt)  */
 	public $outstanding_allow_amount = 0;
 
@@ -174,6 +177,7 @@ class CustomerCore extends ObjectModel
 			'company' =>					array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
 			'siret' =>						array('type' => self::TYPE_STRING, 'validate' => 'isSiret'),
 			'ape' =>						array('type' => self::TYPE_STRING, 'validate' => 'isApe'),
+			'compnr' => 						array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
 			'outstanding_allow_amount' =>	array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'copy_post' => false),
 			'show_public_prices' =>			array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false),
 			'id_risk' =>					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'copy_post' => false),

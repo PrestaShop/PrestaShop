@@ -36,6 +36,9 @@ class AdminCustomersControllerCore extends AdminController
 	{
 		$this->required_database = true;
 		$this->required_fields = array('newsletter','optin');
+		if((int)Configuration::get('PS_B2B_ENABLE'))
+			$this->required_fields = array('newsletter','optin','compnr','company','siret','ape');
+
 		$this->table = 'customer';
 		$this->className = 'Customer';
 		$this->lang = false;
@@ -442,18 +445,30 @@ class AdminCustomersControllerCore extends AdminController
 				'name' => 'company',
 				'size' => 33
 			);
-			$this->fields_form['input'][] = array(
-				'type' => 'text',
-				'label' => $this->l('SIRET:'),
-				'name' => 'siret',
-				'size' => 14
-			);
-			$this->fields_form['input'][] = array(
-				'type' => 'text',
-				'label' => $this->l('APE:'),
-				'name' => 'ape',
-				'size' => 5
-			);
+			if (Configuration::get('PS_B2B_SIRET')) {
+				$this->fields_form['input'][] = array(
+					'type' => 'text',
+					'label' => $this->l('SIRET:'),
+					'name' => 'siret',
+					'size' => 14
+				);
+			}
+			if (Configuration::get('PS_B2B_APE')) {
+				$this->fields_form['input'][] = array(
+					'type' => 'text',
+					'label' => $this->l('APE:'),
+					'name' => 'ape',
+					'size' => 5
+				);
+			}
+			if (Configuration::get('PS_B2B_COMPNR')) {
+				$this->fields_form['input'][] = array(
+					'type' => 'text',
+					'label' => $this->l('Company Nr:'),
+					'name' => 'compnr',
+					'size' => 20
+				);
+			}
 			$this->fields_form['input'][] = array(
 				'type' => 'text',
 				'label' => $this->l('Website:'),

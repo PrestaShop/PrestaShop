@@ -543,6 +543,7 @@ CREATE TABLE `PREFIX_customer` (
   `company` varchar(64),
   `siret` varchar(14),
   `ape` varchar(5),
+  `companynr` varchar(20),
   `firstname` varchar(32) NOT NULL,
   `lastname` varchar(32) NOT NULL,
   `email` varchar(128) NOT NULL,
