@@ -3579,7 +3579,7 @@ class AdminProductsControllerCore extends AdminController
 
 	protected function getCarrierList()
 	{
-		$carrier_list = Carrier::getCarriers($this->context->language->id, true, false, false, null, Carrier::ALL_CARRIERS);
+		$carrier_list = Carrier::getCarriers($this->context->language->id, false, false, false, null, Carrier::ALL_CARRIERS);
 		if ($product = $this->loadObject(true))
 		{
 			$carrier_selected_list = $product->getCarriers();
