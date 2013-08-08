@@ -306,7 +306,6 @@ $(document).ready(function() {
 						<p class="required select">
 							<label for="id_country">{l s='Country'} <sup>*</sup></label>
 							<select name="id_country" id="id_country">
-								<option value="">-</option>
 								{foreach from=$countries item=v}
 									<option value="{$v.id_country}" {if ($sl_country == $v.id_country)} selected="selected"{/if}>{$v.name}</option>
 								{/foreach}
