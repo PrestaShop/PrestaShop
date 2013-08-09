@@ -99,7 +99,7 @@ $(function(){ldelim}
 	{foreach from=$ordered_adr_fields item=field_name}
 		{if $field_name eq 'company'}
 			<p class="text">
-			<input type="hidden" name="token" value="{$token}" />
+			
 			<label for="company">{l s='Company'}</label>
 			<input type="text" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{else}{if isset($address->company)}{$address->company|escape:'html'}{/if}{/if}" />
 		</p>
@@ -131,6 +131,7 @@ $(function(){ldelim}
 			<label for="address1">{l s='Address'} <sup>*</sup></label>
 			<input type="text" id="address1" name="address1" value="{if isset($smarty.post.address1)}{$smarty.post.address1}{else}{if isset($address->address1)}{$address->address1|escape:'html'}{/if}{/if}" />
 		</p>
+		<input type="hidden" name="token" value="{$token}" />
 		{/if}
 		{if $field_name eq 'address2'}
 		<p class="required text">
