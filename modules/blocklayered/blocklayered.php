@@ -1264,7 +1264,7 @@ class BlockLayered extends Module
 		if (version_compare(_PS_VERSION_, '1.5', '>'))
 		{
 			$this->context->controller->addJS(($this->_path).'blocklayered.js');
-			$this->context->controller->addJS(_PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js');
+			//$this->context->controller->addJS(_PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js');
 			$this->context->controller->addJQueryUI('ui.slider');
 			$this->context->controller->addCSS(($this->_path).'blocklayered-15.css', 'all');
 			$this->context->controller->addJQueryPlugin('scrollTo');
