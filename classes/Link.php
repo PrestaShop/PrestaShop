@@ -373,15 +373,18 @@ class LinkCore
 			$shop = new Shop($id_shop);
 		$url = $base.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang);
 
-		// Set available keywords
-		$params['module'] = $module;
-		$params['controller'] = $controller ? $controller : 'default';
+
 
 		// If the module has its own route ... just use it !
 		if (Dispatcher::getInstance()->hasRoute('module-'.$module.'-'.$controller, $id_lang, $id_shop))
 			return $this->getPageLink('module-'.$module.'-'.$controller, $ssl, $id_lang, $params);
 		else
+		{
+			// Set available keywords
+			$params['module'] = $module;
+			$params['controller'] = $controller ? $controller : 'default';		
 			return $url.Dispatcher::getInstance()->createUrl('module', $id_lang, $params, $this->allow, '', $id_shop);
+		}
 	}
 
 	/**
