@@ -38,6 +38,8 @@ class AdminCategoriesControllerCore extends AdminController
 	/** @var boolean does the product have to be disable during the delete process */
 	public $disable_products = false;
 
+	private $original_filter = '';
+
 	public function __construct()
 	{
 		$this->table = 'category';
@@ -130,7 +132,7 @@ class AdminCategoriesControllerCore extends AdminController
 			$id_parent = $this->context->shop->id_category;
 
 		$this->_select = 'sa.position position';
-		$this->_filter .= ' AND `id_parent` = '.(int)$id_parent.' ';
+		$this->original_filter = $this->_filter .= ' AND `id_parent` = '.(int)$id_parent.' ';
 
 		if (Shop::getContext() == Shop::CONTEXT_SHOP)
 			$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = '.(int)$this->context->shop->id.') ';
@@ -174,6 +176,9 @@ class AdminCategoriesControllerCore extends AdminController
 
 	public function renderList()
 	{
+		if (isset($this->_filter) && trim($this->_filter) == '')
+			$this->_filter = $this->original_filter;
+
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 		$this->addRowAction('add');
