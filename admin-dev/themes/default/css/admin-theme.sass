@@ -1,8 +1,11 @@
 //light
 //$main-color: #DBD8CF 			//sable
 //$main-color: #CFD7DD			//bleu
+//$main-color: #E0E0E0
+//$main-color: #D7D6DE 			//violet
+//$main-color: #F1F8FE 			//theme wordpress
 //dark
-$main-color: #272A31 			//bleu PrestaShop
+//$main-color: #272A31 			//bleu PrestaShop
 //$main-color: #3D3D3D 			//gris
 //$main-color: #515561 			//gris bleu clair
 //$main-color: #4D4645 			//taupe
@@ -12,6 +15,7 @@ $main-color: #272A31 			//bleu PrestaShop
 //$main-color: #373E35 			//vert camo
 //$main-color: #262C3F 			//bleu nuit  - pretty sure that a girl could do better naming the colors, sorry about that...
 //$main-color: white
+$main-color: #8C8574
 
 //$secondary-color: white		//blanc
 //$secondary-color: #F5792B		//orange
@@ -27,12 +31,14 @@ $main-color: #272A31 			//bleu PrestaShop
 //$secondary-color: #F7854E		//abricot
 //$secondary-color: #937976		//taupe clair
 //$secondary-color: #60C276		//vert
-$secondary-color: #9DC44B		//vert pomme
-$secondary-color: #8BC954 		//vert PrestaShop
+//$secondary-color: #9DC44B		//vert pomme
+//$secondary-color: #6992AF		//theme wordpress
+//$secondary-color: #8BC954 	//vert PrestaShop
 
 //some tests
+$secondary-color: #79C09D
 //$secondary-color: invert($main-color)
-//$secondary-color: lighten(complement($main-color),20%)
+//$secondary-color: lighten(invert($main-color),20%)
 //$secondary-color: adjust-hue($main-color, 80%)
 //$hue: hue(adjust-hue($main-color, 80%))
 //$secondary-color: hsl($hue, 50%, 50%) //Creates a Color from hue, saturation, and lightness values
@@ -40,19 +46,19 @@ $secondary-color: #8BC954 		//vert PrestaShop
 //dark and light, love and war, fire and ice, etc...
 $contrasted-dark-default: #333
 $contrasted-light-default: white
-$contrasted-lightness-threshold: 40% //30% default
+$contrasted-lightness-threshold: 10% //30% default
 
 //50 shades of gray
 //$bg-content-color: #F8F9FB 	//bleu gris clair
 //$bg-content-color: #F8FBF8 	//vert gris clair
-//$bg-content-color: #F8F8F8 	//gris
-//$bg-content-color: #E0E0E0 	//gris foncé
-$bg-content-color: #F6F6F6 		//gris
+$bg-content-color: #F8F8F8 	//gris
+//$bg-content-color: #F8F4E3 	//gris foncé
+//$bg-content-color: #F6F6F6 		//gris
 
 //heading
 //$bg-header-color: darken($secondary-color,20%)
-$bg-header-color: darken($main-color,10%)
-$bg-footer-color: darken($main-color,10%)
+$bg-header-color: #242424
+$bg-footer-color: #242424
 $bg-page-head-color : $secondary-color
 $bg-panel-heading-color: lighten($secondary-color,30%)
 
@@ -96,6 +102,7 @@ body.fixed-top
 	width: 100%
 
 #content
+	min-height: 900px
 	padding: 90px 20px 20px
 	margin-left: 240px
 	@include transition-property(margin)
@@ -205,7 +212,7 @@ body.fixed-top
 				background-color: white
 		> li
 			&.active > a
-				color: contrast-color($main-color, #333, white, 30%)
+				color: contrasted($main-color, 30%)
 				background-color: $secondary-color
 				border-top: 1px solid lighten($secondary-color,10%)
 				border-bottom: 1px solid darken($secondary-color,10%)
@@ -227,8 +234,9 @@ body.fixed-top
 				padding: 3px 0 3px 5px
 				border-top: 1px solid lighten($main-color,5%)
 				border-bottom: 1px solid darken($main-color,10%)
-				$color: contrast-color($main-color, #333, white, 30%)
+				$color: contrast-color($main-color, white, #333, 10%)
 				color:  mix($main-color, $color, 30%)
+				background-color: $main-color
 				text-transform: uppercase
 				text-decoration: none
 				@include transition-property(background-color, border, box-shadow)
@@ -236,7 +244,8 @@ body.fixed-top
 				@include transition-timing-function(ease-out)
 				@include box-shadow(darken($main-color,15%) -4px 0 0 inset)
 				i
-					color: lighten($main-color,25%)!important
+					color: lighten($main-color,25%)
+					background-color: darken($main-color,25%)
 					@include transition-property(color)
 					@include transition-duration(0.4s)
 					@include transition-timing-function(ease-out)
@@ -267,7 +276,7 @@ body.fixed-top
 								color: $main-color
 					&.active
 						a
-							@include contrasted($brand-primary)
+							color: contrast-color($brand-primary, white, #333, 10%)
 							background-color: $brand-primary
 							i
 								color: $main-color
@@ -444,6 +453,10 @@ body.fixed-top
 	@extend .icon-exchange
 .process-icon-cancel
 	@extend .icon-remove
+.process-icon-new-url
+	@extend .icon-plus-sign-alt
+
+
 
 .navbar-inner
 	box-shadow: none!important

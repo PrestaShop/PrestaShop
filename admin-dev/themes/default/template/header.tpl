@@ -256,7 +256,7 @@
 					$('body').toggleClass('page-sidebar-closed');
 				});
 			</script>
-
+			{if $controller_name != 'AdminLogin'}
 			<ul id="menu">
 				<li class="maintab">
 					<a href="{$link->getAdminLink('AdminHome')|escape:'htmlall':'UTF-8'}" class="title">
@@ -287,6 +287,7 @@
 				{/if}
 			{/foreach}
 			</ul>
+			{/if}
 		</div>
 
 		<div id="content" class="page-content">
