@@ -103,14 +103,14 @@
 	<link type="text/css" rel="stylesheet" href="{$base_url}css/admin-ie.css" />
 	<![endif]-->
 
-	{*if isset($brightness)*}
+	{if isset($brightness)}
 	<!--
 		/// multishop
 		<style type="text/css">
 			div#header_infos, div#header_infos a#header_shopname, div#header_infos a#header_logout, div#header_infos a#header_foaccess {ldelim}color:{$brightness}{rdelim}
 		</style>
 	-->
-	{*/if*}
+	{/if}
 
 	<link href='http://fonts.googleapis.com/css?family=Ubuntu:300|Open+Sans' rel='stylesheet' type='text/css'>
 
@@ -243,7 +243,7 @@
 
 	<div id="main">
 
-		<div id="sidebar" class="page-sidebar nav-collapse collapse">
+		<div id="sidebar" data-spy="affix" data-offset-top="0" class="page-sidebar nav-collapse collapse">
       	{if !$tab}
 			<div class="mainsubtablist" style="display:none"></div>
 		{/if}
@@ -277,7 +277,7 @@
 						<li {if $t2.current} class="active"{/if}>
 							<a href="{$t2.href|escape:'htmlall':'UTF-8'}">
 								{if $t2.name eq ''}{$t2.class_name}{else}{$t2.name|escape:'htmlall':'UTF-8'}{/if}
-								<i class="icon-chevron-sign-right pull-right"></i>
+								<!-- <i class="icon-chevron-sign-right pull-right"></i> -->
 							</a>
 						</li>
 						{/if}
