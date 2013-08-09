@@ -3864,10 +3864,9 @@ class BlockLayered extends Module
 	
 	public function ajaxCall()
 	{
-		global $smarty;
+		global $smarty, $cookie;
 
 		$selected_filters = $this->getSelectedFilters();
-		
 		$this->getProducts($selected_filters, $products, $nb_products, $p, $n, $pages_nb, $start, $stop, $range);
 		
 		// Add pagination variable
@@ -3880,8 +3879,8 @@ class BlockLayered extends Module
 			array(
 				'homeSize' => Image::getSize(ImageType::getFormatedName('home')),
 				'nb_products' => $nb_products,
-				'category' => (object)array('id' => Tools::getValue('id_category_layered', 1)),
-				'pages_nb' => (int)($pages_nb),
+				'category' => new Category(Tools::getValue('id_category_layered', 1), (int)$cookie->id_lang),
+				'pages_nb' => (int)$pages_nb,
 				'p' => (int)$p,
 				'n' => (int)$n,
 				'range' => (int)$range,
