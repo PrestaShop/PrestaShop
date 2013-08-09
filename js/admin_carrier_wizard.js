@@ -44,7 +44,8 @@ function initCarrierWizard()
 		'onLeaveStep' : onLeaveStepCallback,
 		'onFinish' : onFinishCallback,
 		'transitionEffect' : 'slideleft',
-		'enableAllSteps' : enableAllSteps
+		'enableAllSteps' : enableAllSteps,
+		'keyNavigation' : false
 	});
 	displayRangeType();
 }

@@ -4493,7 +4493,7 @@ class ProductCore extends ObjectModel
 
  		return true;
 	}
-	/*
+
 	/**
 	* Webservice getter : get virtual field default combination
 	*

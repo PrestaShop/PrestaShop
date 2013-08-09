@@ -33,6 +33,7 @@ class CartControllerCore extends FrontController
 	protected $id_address_delivery;
 	protected $customization_id;
 	protected $qty;
+	public 	 $ssl = false;
 
 	protected $ajax_refresh = false;
 

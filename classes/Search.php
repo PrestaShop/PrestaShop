@@ -93,8 +93,12 @@ define('PREG_CLASS_CJK', '\x{3041}-\x{30ff}\x{31f0}-\x{31ff}\x{3400}-\x{4db5}\x{
 
 class SearchCore
 {
-	public static function sanitize($string, $id_lang, $indexation = false)
+	public static function sanitize($string, $id_lang, $indexation = false, $iso_code = false)
 	{
+		$string = trim($string);
+		if (empty($string))
+			return '';
+
 		$string = Tools::strtolower(strip_tags($string));
 		$string = html_entity_decode($string, ENT_NOQUOTES, 'utf-8');
 
@@ -138,14 +142,34 @@ class SearchCore
 
 		if ($indexation)
 		{
-			$minWordLen = (int)Configuration::get('PS_SEARCH_MINWORDLEN');
-			if ($minWordLen > 1)
+			// If the language is constituted with symbol and there is no "words", then split every chars
+			if (in_array($iso_code, array('zh', 'tw', 'ja')) && function_exists('mb_strlen'))
 			{
-				$minWordLen -= 1;
-				$string = preg_replace('/(?<=\s)[^\s]{1,'.$minWordLen.'}(?=\s)/Su', ' ', $string);
-				$string = preg_replace('/^[^\s]{1,'.$minWordLen.'}(?=\s)/Su', '', $string);
-				$string = preg_replace('/(?<=\s)[^\s]{1,'.$minWordLen.'}$/Su', '', $string);
-				$string = preg_replace('/^[^\s]{1,'.$minWordLen.'}$/Su', '', $string);
+				// Cut symbols from letters
+				$symbols = '';
+				$letters = '';
+				foreach (explode(' ', $string) as $mb_word)
+					if (strlen(Tools::replaceAccentedChars($mb_word)) == mb_strlen(Tools::replaceAccentedChars($mb_word)))
+						$letters .= $mb_word.' ';
+					else
+						$symbols .= $mb_word.' ';
+			
+				if (preg_match_all('/./u', $symbols, $matches))
+					$symbols = implode(' ', $matches[0]);
+
+				$string = $letters.$symbols;
+			}
+			else
+			{
+				$minWordLen = (int)Configuration::get('PS_SEARCH_MINWORDLEN');
+				if ($minWordLen > 1)
+				{
+					$minWordLen -= 1;
+					$string = preg_replace('/(?<=\s)[^\s]{1,'.$minWordLen.'}(?=\s)/Su', ' ', $string);
+					$string = preg_replace('/^[^\s]{1,'.$minWordLen.'}(?=\s)/Su', '', $string);
+					$string = preg_replace('/(?<=\s)[^\s]{1,'.$minWordLen.'}$/Su', '', $string);
+					$string = preg_replace('/^[^\s]{1,'.$minWordLen.'}$/Su', '', $string);
+				}
 			}
 		}
 
@@ -175,7 +199,7 @@ class SearchCore
 
 		$intersect_array = array();
 		$score_array = array();
-		$words = explode(' ', Search::sanitize($expr, $id_lang));
+		$words = explode(' ', Search::sanitize($expr, $id_lang, false, $context->language->iso_code));
 
 		foreach ($words as $key => $word)
 			if (!empty($word) && strlen($word) >= (int)Configuration::get('PS_SEARCH_MINWORDLEN'))
@@ -383,7 +407,7 @@ class SearchCore
 
 		return Db::getInstance()->executeS('
 			SELECT p.id_product, pl.id_lang, pl.id_shop, pl.name pname, p.reference, p.ean13, p.upc,
-				pl.description_short, pl.description, cl.name cname, m.name mname
+				pl.description_short, pl.description, cl.name cname, m.name mname, l.iso_code
 			FROM '._DB_PREFIX_.'product p
 			LEFT JOIN '._DB_PREFIX_.'product_lang pl
 				ON p.id_product = pl.id_product
@@ -392,6 +416,8 @@ class SearchCore
 				ON (cl.id_category = product_shop.id_category_default AND pl.id_lang = cl.id_lang AND cl.id_shop = product_shop.id_shop)
 			LEFT JOIN '._DB_PREFIX_.'manufacturer m
 				ON m.id_manufacturer = p.id_manufacturer
+			LEFT JOIN '._DB_PREFIX_.'lang l
+				ON l.id_lang = pl.id_lang
 			WHERE product_shop.indexed = 0
 			AND product_shop.visibility IN ("both", "search")
 			'.($id_product ? 'AND p.id_product = '.(int)$id_product : '').'
@@ -482,9 +508,9 @@ class SearchCore
 				// Data must be cleaned of html, bad characters, spaces and anything, then if the resulting words are long enough, they're added to the array
 				$product_array = array();
 				foreach ($product as $key => $value)
-					if (strncmp($key, 'id_', 3))
+					if (strncmp($key, 'id_', 3) && isset($weight_array[$key]))
 					{
-						$words = explode(' ', Search::sanitize($value, (int)$product['id_lang'], true));
+						$words = explode(' ', Search::sanitize($value, (int)$product['id_lang'], true, $product['iso_code']));
 						foreach ($words as $word)
 							if (!empty($word))
 							{
