@@ -136,13 +136,11 @@
 	{/if}
 	{if $has_actions}
 		<td>
-			<div class="btn-group{if count($actions) > 1} btn-group-action{/if}">			
-				<span class="btn btn-default btn-small">
-					{assign var='action' value=$actions[0]}
-					{if isset($tr.$action)}
-						{$tr.$action}
-					{/if}
-				</span>
+			<div class="btn-group{if count($actions) > 1} btn-group-action{/if}">
+				{assign var='action' value=$actions[0]|cat:"_button"}
+				{if isset($tr.$action)}
+					{$tr.$action}
+				{/if}
 				{if count($actions) > 1}
 				<button class="btn btn-default btn-small dropdown-toggle" data-toggle="dropdown">
 					<span class="caret"></span>&nbsp;
