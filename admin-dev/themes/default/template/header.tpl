@@ -103,14 +103,14 @@
 	<link type="text/css" rel="stylesheet" href="{$base_url}css/admin-ie.css" />
 	<![endif]-->
 
-	{*if isset($brightness)*}
+	{if isset($brightness)}
 	<!--
 		/// multishop
 		<style type="text/css">
 			div#header_infos, div#header_infos a#header_shopname, div#header_infos a#header_logout, div#header_infos a#header_foaccess {ldelim}color:{$brightness}{rdelim}
 		</style>
 	-->
-	{*/if*}
+	{/if}
 
 	<link href='http://fonts.googleapis.com/css?family=Ubuntu:300|Open+Sans' rel='stylesheet' type='text/css'>
 
