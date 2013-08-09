@@ -883,16 +883,13 @@ class AdminCarrierWizardControllerCore extends AdminController
 			1 => array('name', 'delay', 'grade', 'url'),
 			2 => array('is_free', 'id_tax_rules_group', 'shipping_handling', 'shipping_method', 'range_behavior'),
 			3 => array('range_behavior', 'max_height', 'max_width', 'max_depth', 'max_weight'),
+			4 => array(),
 		);
 
 		if (Shop::isFeatureActive())
 		{
 			$multistore_field = array(array('shop'));
-			$tmp = $step_fields;
-			$step_fields = array(1 => $tmp[1]) +  $multistore_field;
-			array_shift($tmp);
-			foreach ($tmp as $row)
-				$step_field[] = $row;
+			array_splice($step_fields, 1, 0, $multistore_field);
 		}
 
 		$rules = Carrier::getValidationRules('Carrier');
