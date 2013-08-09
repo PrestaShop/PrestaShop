@@ -674,7 +674,7 @@ $(document).ready(function(){
 	var cart_qty = 0;
 	var current_timestamp = parseInt(new Date().getTime() / 1000);
 
-	if (typeof $('.ajax_cart_quantity').html() == 'undefined' || (generated_date != null && (parseInt(generated_date) + 30) < current_timestamp))
+	if (typeof $('.ajax_cart_quantity').html() == 'undefined' || (typeof generated_date != 'undefined' && generated_date != null && (parseInt(generated_date) + 30) < current_timestamp))
 		ajaxCart.refresh();
 	else
 		cart_qty = parseInt($('.ajax_cart_quantity').html());
