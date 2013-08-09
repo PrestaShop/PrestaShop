@@ -445,14 +445,21 @@ class BlockLayered extends Module
 		static $_MODULES = array();
 		global $_MODULE;
 
-		$file = _PS_MODULE_DIR_.$this->name.'/'.Language::getIsoById($id_lang).'.php';
 
 		if (!array_key_exists($id_lang, $_MODULES))
 		{
-			if (!file_exists($file))
+			if (file_exists($file1 = _PS_MODULE_DIR_.$this->name.'/translations/'.Language::getIsoById($id_lang).'.php'))
+			{
+				include($file1);
+				$_MODULES[$id_lang] = $_MODULE;
+			}
+			elseif (file_exists($file2 = _PS_MODULE_DIR_.$this->name.'/'.Language::getIsoById($id_lang).'.php'))
+			{
+				include($file2);
+				$_MODULES[$id_lang] = $_MODULE;
+			}
+			else
 				return $string;
-			include($file);
-			$_MODULES[$id_lang] = $_MODULE;
 		}
 
 		$string = str_replace('\'', '\\\'', $string);
