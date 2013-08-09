@@ -117,6 +117,7 @@ var generated_date = {$smarty.now|intval};
 		</dl>
 	{/if}
 		<p class="cart_block_no_products{if $products} hidden{/if}" id="cart_block_no_products">{l s='No products' mod='blockcart'}</p>
+		{if $discounts|@count > 0}
 		<table id="vouchers"{if $discounts|@count == 0} style="display:none;"{/if}>
 			{foreach from=$discounts item=discount}
 				{if $discount.value_real > 0}
@@ -132,7 +133,8 @@ var generated_date = {$smarty.now|intval};
 				</tr>
 				{/if}
 			{/foreach}
-		</table>		
+		</table>
+		{/if}
 		<p id="cart-prices">
 			<span id="cart_block_shipping_cost" class="price ajax_cart_shipping_cost">{$shipping_cost}</span>
 			<span>{l s='Shipping' mod='blockcart'}</span>
