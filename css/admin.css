@@ -2468,13 +2468,19 @@ margin-bottom:7px;
   clear: both;
   width: 100%;
 }
+
 #carrier_wizard.swMain ul.anchor li{ 
   position: relative; 
   display:block;
   margin: 0;
   padding: 0;  
   float: left;
+}
+#carrier_wizard.swMain ul.nbr_steps_4.anchor li{ 
   width: 25%;
+}
+#carrier_wizard.swMain ul.nbr_steps_5.anchor li{ 
+  width: 20%;
 }
 #carrier_wizard.swMain ul.anchor li a {
   height: 32px;
