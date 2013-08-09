@@ -2197,7 +2197,7 @@ class BlockLayered extends Module
 		if ($id_parent == 1)
 			return false;
 
-		$query_filters_where = ' AND '.$alias_where.'.`active` = 1 AND product_shop.`visibility` IN ("both", "catalog")';
+		$query_filters_where = ' AND product_shop.`active` = 1 AND product_shop.`visibility` IN ("both", "catalog")';
 		$query_filters_from = '';
 		
 		$parent = new Category((int)$id_parent);
