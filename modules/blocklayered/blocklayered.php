@@ -936,25 +936,25 @@ class BlockLayered extends Module
 					SELECT count(DISTINCT p.`id_product`)
 					FROM '._DB_PREFIX_.'product p
 					INNER JOIN `'._DB_PREFIX_.'product_shop` ps
-						ON (ps.`id_product` = p.`id_product` AND ps.`active` = 1)');
+						ON (ps.`id_product` = p.`id_product` AND ps.`active` = 1 AND ps.`visibility` IN ("both", "catalog"))');
 		else
 				$nb_products = (int)Db::getInstance()->getValue('
 					SELECT count(DISTINCT p.`id_product`)
 					FROM '._DB_PREFIX_.'product p
-					WHERE `active` = 1');
+					WHERE `active` = 1 AND `visibility` IN ("both", "catalog")');
 		else
 			if (version_compare(_PS_VERSION_,'1.5','>'))
 				$nb_products = (int)Db::getInstance()->getValue('
 					SELECT COUNT(DISTINCT p.`id_product`) FROM `'._DB_PREFIX_.'product` p
 					INNER JOIN `'._DB_PREFIX_.'product_shop` ps
-						ON (ps.`id_product` = p.`id_product` AND ps.`active` = 1)
+						ON (ps.`id_product` = p.`id_product` AND ps.`active` = 1 AND ps.`visibility` IN ("both", "catalog"))
 					LEFT JOIN  `'._DB_PREFIX_.'layered_price_index` psi ON (psi.id_product = p.id_product)
 					WHERE psi.id_product IS NULL');
 			else
 				$nb_products = (int)Db::getInstance()->getValue('
 					SELECT COUNT(DISTINCT p.`id_product`) FROM `'._DB_PREFIX_.'product` p
 					LEFT JOIN  `'._DB_PREFIX_.'layered_price_index` psi ON (psi.id_product = p.id_product)
-					WHERE `active` = 1 AND psi.id_product IS NULL');
+					WHERE `active` = 1 AND `visibility` IN ("both", "catalog") AND psi.id_product IS NULL');
 		
 		$max_executiontime = @ini_get('max_execution_time');
 		if ($max_executiontime > 5 || $max_executiontime <= 0)
@@ -1015,14 +1015,14 @@ class BlockLayered extends Module
 				SELECT p.`id_product`
 				FROM `'._DB_PREFIX_.'product` p
 				INNER JOIN `'._DB_PREFIX_.'product_shop` ps
-					ON (ps.`id_product` = p.`id_product` AND ps.`active` = 1)
+					ON (ps.`id_product` = p.`id_product` AND ps.`active` = 1 AND ps.`visibility` IN ("both", "catalog"))
 				GROUP BY p.`id_product`
 				ORDER BY p.`id_product` LIMIT '.(int)$cursor.','.(int)$length;
 			else
 				$query = '
 				SELECT p.`id_product`
 				FROM `'._DB_PREFIX_.'product` p
-				WHERE `active` = 1
+				WHERE `active` = 1 AND `visibility` IN ("both", "catalog")
 				GROUP BY p.`id_product`
 				ORDER BY p.`id_product` LIMIT '.(int)$cursor.','.(int)$length;
 		else
@@ -1031,7 +1031,7 @@ class BlockLayered extends Module
 				SELECT p.`id_product`
 				FROM `'._DB_PREFIX_.'product` p
 				INNER JOIN `'._DB_PREFIX_.'product_shop` ps
-					ON (ps.`id_product` = p.`id_product` AND ps.`active` = 1)
+					ON (ps.`id_product` = p.`id_product` AND ps.`active` = 1 AND ps.`visibility` IN ("both", "catalog"))
 				LEFT JOIN  `'._DB_PREFIX_.'layered_price_index` psi ON (psi.id_product = p.id_product)
 				WHERE psi.id_product IS NULL
 				GROUP BY p.`id_product`
@@ -1041,7 +1041,7 @@ class BlockLayered extends Module
 				SELECT p.`id_product`
 				FROM `'._DB_PREFIX_.'product` p
 				LEFT JOIN  `'._DB_PREFIX_.'layered_price_index` psi ON (psi.id_product = p.id_product)
-				WHERE `active` = 1 AND psi.id_product IS NULL
+				WHERE `active` = 1 AND `visibility` IN ("both", "catalog") AND psi.id_product IS NULL
 				GROUP BY p.`id_product`
 				ORDER BY p.`id_product` LIMIT 0,'.(int)$length;
 		
@@ -2322,7 +2322,7 @@ class BlockLayered extends Module
 		$alias_where = 'p';
 		if (version_compare(_PS_VERSION_,'1.5','>'))
 			$alias_where = 'product_shop';
-		$query_filters_where = ' AND '.$alias_where.'.`active` = 1';
+		$query_filters_where = ' AND '.$alias_where.'.`active` = 1 AND '.$alias_where.'.`visibility` IN ("both", "catalog")';
 		$query_filters_from = '';
 		
 		$parent = new Category((int)$id_parent);
@@ -2531,9 +2531,8 @@ class BlockLayered extends Module
 			LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$cookie->id_lang.')
 			LEFT JOIN '._DB_PREFIX_.'manufacturer m ON (m.id_manufacturer = p.id_manufacturer)
 			WHERE (i.id_image IS NULL OR image_shop.id_shop='.(int)Context::getContext()->shop->id.') 
-			AND '.$alias_where.'.`active` = 1 AND 
-			'.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'c.nleft >= '.(int)$parent->nleft.'
-			AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
+			AND '.$alias_where.'.`active` = 1 AND '.$alias_where.'.`visibility` IN ("both", "catalog")
+			AND '.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'c.nleft >= '.(int)$parent->nleft.' AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
 			AND c.active = 1
 			AND p.id_product IN ('.implode(',', $product_id_list).')
 			GROUP BY cp.id_product
@@ -2633,10 +2632,10 @@ class BlockLayered extends Module
 					{
 						$sql_query['join'] .= 'LEFT JOIN `'._DB_PREFIX_.'stock_available` sa
 							ON (sa.id_product = p.id_product AND sa.id_shop = '.(int)$this->context->shop->id.') ';
-						$sql_query['where'] = 'WHERE product_shop.`active` = 1 ';
+						$sql_query['where'] = 'WHERE product_shop.`active` = 1 AND product_shop.`visibility` IN ("both", "catalog") ';
 					}
 					else
-						$sql_query['where'] = 'WHERE p.`active` = 1 ';
+						$sql_query['where'] = 'WHERE p.`active` = 1 AND p.`visibility` IN ("both", "catalog") ';
 					$sql_query['group'] = ' GROUP BY p.id_product ';
 					break;
 
@@ -2651,7 +2650,7 @@ class BlockLayered extends Module
 					'.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'c.nleft >= '.(int)$parent->nleft.'
 					AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
 					AND c.active = 1
-					AND '.$alias.'.active = 1';
+					AND '.$alias.'.active = 1 AND '.$alias.'.`visibility` IN ("both", "catalog")';
 					$sql_query['group'] = ' GROUP BY p.id_manufacturer ORDER BY m.name';
 					
 					if (!Configuration::get('PS_LAYERED_HIDE_0_VALUES'))
@@ -2668,7 +2667,7 @@ class BlockLayered extends Module
 							WHERE '.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'c.nleft >= '.(int)$parent->nleft.'
 							AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
 							AND c.active = 1
-							AND '.$alias.'.active = 1
+							AND '.$alias.'.active = 1 AND '.$alias.'.`visibility` IN ("both", "catalog")
 							GROUP BY p.id_manufacturer ORDER BY m.name';
 					}
 					
@@ -2699,13 +2698,15 @@ class BlockLayered extends Module
 					$sql_query['where'] = 'WHERE a.id_attribute_group = '.(int)$filter['id_value'];
 					if (version_compare(_PS_VERSION_,'1.5','>'))
 						$sql_query['where'] .= ' AND lpa.`id_shop` = '.(int)Context::getContext()->shop->id;
-					$sql_query['where'] .= ' AND '.$alias.'.active = 1 AND p.id_product IN (
-					SELECT id_product
-					FROM '._DB_PREFIX_.'category_product cp
-					INNER JOIN '._DB_PREFIX_.'category c ON (c.id_category = cp.id_category AND 
-					'.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'c.nleft >= '.(int)$parent->nleft.'
-					AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
-					AND c.active = 1)) ';
+					$sql_query['where'] .= ' AND '.$alias.'.active = 1 AND '.$alias.'.`visibility` IN ("both", "catalog")
+					AND p.id_product IN (
+						SELECT id_product
+						FROM '._DB_PREFIX_.'category_product cp
+						INNER JOIN '._DB_PREFIX_.'category c ON (c.id_category = cp.id_category AND 
+						'.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'c.nleft >= '.(int)$parent->nleft.'
+						AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
+						AND c.active = 1)
+					) ';
 					$sql_query['group'] = '
 					GROUP BY lpa.id_attribute
 					ORDER BY ag.`position` ASC, a.`position` ASC';
@@ -2714,31 +2715,28 @@ class BlockLayered extends Module
 					{
 						$sql_query['second_query'] = '
 							SELECT 0 nbr, lpa.id_attribute_group,
-							a.color, al.name attribute_name, agl.public_name attribute_group_name , lpa.id_attribute, ag.is_color_group,
-							liagl.url_name name_url_name, liagl.meta_title name_meta_title, lial.url_name value_url_name, lial.meta_title value_meta_title
-							
+								a.color, al.name attribute_name, agl.public_name attribute_group_name , lpa.id_attribute, ag.is_color_group,
+								liagl.url_name name_url_name, liagl.meta_title name_meta_title, lial.url_name value_url_name, lial.meta_title value_meta_title
 							FROM '._DB_PREFIX_.'layered_product_attribute lpa
 							'.(version_compare(_PS_VERSION_,'1.5','>') ? Shop::addSqlAssociation('product', 'lpa') : '').'
 							INNER JOIN '._DB_PREFIX_.'attribute a
-							ON a.id_attribute = lpa.id_attribute
+								ON a.id_attribute = lpa.id_attribute
 							INNER JOIN '._DB_PREFIX_.'attribute_lang al
-							ON al.id_attribute = a.id_attribute
-							AND al.id_lang = '.$id_lang.'
+								ON al.id_attribute = a.id_attribute AND al.id_lang = '.$id_lang.'
 							INNER JOIN '._DB_PREFIX_.'product as p
-							ON p.id_product = lpa.id_product
+								ON p.id_product = lpa.id_product
 							INNER JOIN '._DB_PREFIX_.'attribute_group ag
-							ON ag.id_attribute_group = lpa.id_attribute_group
+								ON ag.id_attribute_group = lpa.id_attribute_group
 							INNER JOIN '._DB_PREFIX_.'attribute_group_lang agl
-							ON agl.id_attribute_group = lpa.id_attribute_group
+								ON agl.id_attribute_group = lpa.id_attribute_group
 							AND agl.id_lang = '.$id_lang.'
 							LEFT JOIN '._DB_PREFIX_.'layered_indexable_attribute_group_lang_value liagl
-							ON (liagl.id_attribute_group = lpa.id_attribute_group AND liagl.id_lang = '.$id_lang.')
+								ON (liagl.id_attribute_group = lpa.id_attribute_group AND liagl.id_lang = '.$id_lang.')
 							LEFT JOIN '._DB_PREFIX_.'layered_indexable_attribute_lang_value lial
-							ON (lial.id_attribute = lpa.id_attribute AND lial.id_lang = '.$id_lang.')
-							
-							WHERE '.$alias.'.active = 1 AND a.id_attribute_group = '.(int)$filter['id_value'].'
+								ON (lial.id_attribute = lpa.id_attribute AND lial.id_lang = '.$id_lang.')
+							WHERE '.$alias.'.active = 1 AND '.$alias.'.`visibility` IN ("both", "catalog")
+							AND a.id_attribute_group = '.(int)$filter['id_value'].'
 							'.(version_compare(_PS_VERSION_,'1.5','>') ? 'AND lpa.`id_shop` = '.(int)Context::getContext()->shop->id : '').'
-							
 							GROUP BY lpa.id_attribute
 							ORDER BY id_attribute_group, id_attribute';
 					}
@@ -2758,7 +2756,8 @@ class BlockLayered extends Module
 					ON (lifl.id_feature = fp.id_feature AND lifl.id_lang = '.$id_lang.')
 					LEFT JOIN '._DB_PREFIX_.'layered_indexable_feature_value_lang_value lifvl
 					ON (lifvl.id_feature_value = fp.id_feature_value AND lifvl.id_lang = '.$id_lang.') ';
-					$sql_query['where'] = 'WHERE '.$alias.'.`active` = 1 AND fp.id_feature = '.(int)$filter['id_value'].'
+					$sql_query['where'] = 'WHERE '.$alias.'.`active` = 1 AND '.$alias.'.`visibility` IN ("both", "catalog")
+					AND fp.id_feature = '.(int)$filter['id_value'].'
 					AND p.id_product IN (
 					SELECT id_product
 					FROM '._DB_PREFIX_.'category_product cp
@@ -2782,10 +2781,11 @@ class BlockLayered extends Module
 							INNER JOIN '._DB_PREFIX_.'feature_value fv ON (fv.id_feature_value = fp.id_feature_value AND (fv.custom IS NULL OR fv.custom = 0))
 							LEFT JOIN '._DB_PREFIX_.'feature_value_lang fvl ON (fvl.id_feature_value = fp.id_feature_value AND fvl.id_lang = '.$id_lang.')
 							LEFT JOIN '._DB_PREFIX_.'layered_indexable_feature_lang_value lifl
-							ON (lifl.id_feature = fp.id_feature AND lifl.id_lang = '.$id_lang.')
+								ON (lifl.id_feature = fp.id_feature AND lifl.id_lang = '.$id_lang.')
 							LEFT JOIN '._DB_PREFIX_.'layered_indexable_feature_value_lang_value lifvl
-							ON (lifvl.id_feature_value = fp.id_feature_value AND lifvl.id_lang = '.$id_lang.')
-							WHERE '.$alias.'.`active` = 1 AND fp.id_feature = '.(int)$filter['id_value'].'
+								ON (lifvl.id_feature_value = fp.id_feature_value AND lifvl.id_lang = '.$id_lang.')
+							WHERE '.$alias.'.`active` = 1 AND '.$alias.'.`visibility` IN ("both", "catalog")
+							AND fp.id_feature = '.(int)$filter['id_value'].'
 							GROUP BY fv.id_feature_value';
 					}
 					
@@ -2802,7 +2802,8 @@ class BlockLayered extends Module
 					FROM '._DB_PREFIX_.'category_product cp
 					LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = cp.id_product) ';
 					$sql_query['where'] = '
-					WHERE cp.id_category = c.id_category AND '.$alias.'.active = 1 ';
+					WHERE cp.id_category = c.id_category
+					AND '.$alias.'.active = 1 AND '.$alias.'.`visibility` IN ("both", "catalog")';
 					$sql_query['group'] = ') count_products
 					FROM '._DB_PREFIX_.'category c
 					LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category AND cl.id_lang = '.$id_lang.')
@@ -4014,8 +4015,8 @@ class BlockLayered extends Module
 		LEFT JOIN '._DB_PREFIX_.'category c ON (c.id_category = cp.id_category)
 		WHERE c.active = 1'.
 		(count($categories_ids) ? ' AND cp.id_category IN ('.implode(',', $categories_ids).')' : '').'
-		AND '.$alias.'.active = 1'.
-		(count($products_ids) ? ' AND p.id_product IN ('.implode(',', $products_ids).')' : ''));
+		AND '.$alias.'.active = 1 AND '.$alias.'.`visibility` IN ("both", "catalog")
+		'.(count($products_ids) ? 'AND p.id_product IN ('.implode(',', $products_ids).')' : ''));
 
 		$attribute_groups_by_id = array();
 		while ($row = $db->nextRow($attribute_groups))
@@ -4030,7 +4031,7 @@ class BlockLayered extends Module
 		LEFT JOIN '._DB_PREFIX_.'category_product cp ON (cp.id_product = p.id_product)
 		LEFT JOIN '._DB_PREFIX_.'category c ON (c.id_category = cp.id_category)
 		WHERE (fv.custom IS NULL OR fv.custom = 0) AND c.active = 1'.(count($categories_ids) ? ' AND cp.id_category IN ('.implode(',', $categories_ids).')' : '').'
-		AND '.$alias.'.active = 1'.(count($products_ids) ? ' AND p.id_product IN ('.implode(',', $products_ids).')' : ''));
+		AND '.$alias.'.active = 1 AND '.$alias.'.`visibility` IN ("both", "catalog") '.(count($products_ids) ? 'AND p.id_product IN ('.implode(',', $products_ids).')' : ''));
 
 		$features_by_id = array();
 		while ($row = $db->nextRow($features))
@@ -4049,9 +4050,9 @@ class BlockLayered extends Module
 		LEFT JOIN '._DB_PREFIX_.'product_attribute pa ON (pa.id_product = p.id_product)
 		'.$join_product.$join_product_attribute.'
 		LEFT JOIN '._DB_PREFIX_.'product_attribute_combination pac ON (pac.id_product_attribute = pa.id_product_attribute)
-		WHERE c.active = 1'.(count($categories_ids) ? ' AND cp.id_category IN ('.implode(',', $categories_ids).')' : '').
-		' AND '.$alias.'.active = 1'.
-		(count($products_ids) ? ' AND p.id_product IN ('.implode(',', $products_ids).')' : '').
+		WHERE c.active = 1'.(count($categories_ids) ? ' AND cp.id_category IN ('.implode(',', $categories_ids).')' : '').'
+		AND '.$alias.'.active = 1 AND '.$alias.'.`visibility` IN ("both", "catalog")
+		'.(count($products_ids) ? 'AND p.id_product IN ('.implode(',', $products_ids).')' : '').
 		' AND (fv.custom IS NULL OR fv.custom = 0)
 		GROUP BY p.id_product');
 
