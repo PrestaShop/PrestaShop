@@ -588,3 +588,11 @@ function getCorrectRangePosistion(current_inf, current_sup)
 	});
 	return new_position;
 }
+
+function checkAllZones(elt)
+{
+	if($(elt).is(':checked'))
+		$('.input_zone').attr('checked', 'checked');
+	else
+		$('.input_zone').removeAttr('checked');
+}

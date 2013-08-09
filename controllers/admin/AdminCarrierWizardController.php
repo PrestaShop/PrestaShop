@@ -81,7 +81,6 @@ class AdminCarrierWizardControllerCore extends AdminController
 			$multistore_step = array(
 				array(
 					'title' => $this->l('MultiStore'),
-					'desc' => $this->l('MultiStore'),
 				)
 			);
 			array_splice($this->wizard_steps['steps'], 1, 0, $multistore_step);
