@@ -373,8 +373,6 @@ class LinkCore
 			$shop = new Shop($id_shop);
 		$url = $base.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang);
 
-
-
 		// If the module has its own route ... just use it !
 		if (Dispatcher::getInstance()->hasRoute('module-'.$module.'-'.$controller, $id_lang, $id_shop))
 			return $this->getPageLink('module-'.$module.'-'.$controller, $ssl, $id_lang, $params);
@@ -512,6 +510,7 @@ class LinkCore
 			unset($params['id_lang']);
 
 		$controller = Dispatcher::getInstance()->getController();
+	
 		if (!empty(Context::getContext()->controller->php_self))
 			$controller = Context::getContext()->controller->php_self;
 
@@ -527,6 +526,15 @@ class LinkCore
 			return $this->getCMSLink((int)$params['id_cms'], null, false, (int)$id_lang);
 		elseif ($controller == 'cms' && isset($params['id_cms_category']))
 			return $this->getCMSCategoryLink((int)$params['id_cms_category'], null, (int)$id_lang);
+		elseif (isset($params['fc']) && $params['fc'] == 'module')
+		{
+			$module = Validate::isModuleName(Tools::getValue('module')) ? Tools::getValue('module') : '';
+			if (!empty($module))
+			{
+				unset($params['fc'], $params['module']);
+				return $this->getModuleLink($module, $controller, $params, false, (int)$id_lang);
+			}
+		}		
 
 		return $this->getPageLink($controller, false, $id_lang, $params);
 	}
