@@ -1192,6 +1192,9 @@ class AdminControllerCore extends Controller
 
 	protected function filterToField($key, $filter)
 	{
+		if (!isset($this->fields_list))
+			return false;
+
 		foreach ($this->fields_list as $field)
 			if (array_key_exists('filter_key', $field) && $field['filter_key'] == $key)
 				return $field;
