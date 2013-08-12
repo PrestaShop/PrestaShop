@@ -442,9 +442,9 @@ function displayDiscounts(combination)
 			$(this).fadeOut('slow');
 	 });
 
-	if ($('#quantityDiscount_' + combination).length != 0)
+	if ($('#quantityDiscount_' + combination+',.quantityDiscount_' + combination).length != 0)
 	{
-		$('#quantityDiscount_' + combination).show();
+		$('#quantityDiscount_' + combination+',.quantityDiscount_' + combination).show();
 		$('#noQuantityDiscount').hide();
 	}
 	else
