@@ -147,9 +147,6 @@
     <tab id="Marketing" id_parent="Price_Rules" active="1">
       <class_name>AdminMarketing</class_name>
     </tab>
-    <tab id="CarrierWizard" id_parent="Shipping" active="1">
-      <class_name>AdminCarrierWizard</class_name>
-    </tab>
     <tab id="Localization_1" id_parent="Localization" active="1">
       <class_name>AdminLocalization</class_name>
     </tab>
@@ -191,6 +188,9 @@
     </tab>
     <tab id="Carriers" id_parent="Modules" active="1">
       <class_name>AdminCarriers</class_name>
+    </tab>
+    <tab id="CarrierWizard_1" id_parent="Modules" active="1">
+      <class_name>AdminCarrierWizard</class_name>
     </tab>
     <tab id="General" id_parent="Preferences" active="1">
       <class_name>AdminPreferences</class_name>
