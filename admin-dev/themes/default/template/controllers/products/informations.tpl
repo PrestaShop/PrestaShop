@@ -342,12 +342,12 @@
 
 <div id="createImageDescription" class="panel" style="display:none">
 	<div class="row">
-		<label class="control-label col-lg-3" for="smallImage_{$key}">{l s='Select your image:'}</label>
+		<label class="control-label col-lg-3" for="smallImage_0">{l s='Select your image:'}</label>
 		<div class="col-lg-9">
 			<ul class="list-inline">
 				{foreach from=$images item=image key=key}
 				<li>
-					<input type="radio" name="smallImage" id=" for="smallImage_{$key}"" value="{$image.id_image}" {if $key == 0}checked="checked"{/if} >
+					<input type="radio" name="smallImage" id="smallImage_{$key}" value="{$image.id_image}" {if $key == 0}checked="checked"{/if} >
 					<label for="smallImage_{$key}" class="t">
 						<img src="{$image.src}" alt="{$image.legend}" />
 					</label>
@@ -370,7 +370,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<label class="control-label col-lg-3" for="imageTypes_{$key}">{l s='Select the type of picture:'}</label>
+		<label class="control-label col-lg-3" for="imageTypes_0">{l s='Select the type of picture:'}</label>
 		<div class="col-lg-5">
 			{foreach from=$imagesTypes key=key item=type}
 			<p class="checkbox">
