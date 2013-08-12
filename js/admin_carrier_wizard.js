@@ -184,32 +184,41 @@ $('input[name$="range_inf[]"]').each(function(){
 
 function validateSteps(step_number)
 {
-	$('.wizard_error').remove();
 	var is_ok = true;
-	form = $('#carrier_wizard #step-'+step_number+' form');
-	$.ajax({
-		type:"POST",
-		url : validate_url,
-		async: false,
-		dataType: 'json',
-		data : form.serialize()+'&step_number='+step_number+'&action=validate_step&ajax=1',
-		success : function(datas)
-		{
-			if (datas.has_error)
+	if ((multistore_enable && step_number == 3) || (!multistore_enable && step_number == 2))
+	{
+		if (!validateRange(2))
+			is_ok = false;
+	}
+	
+	$('.wizard_error').remove();
+	if (is_ok)
+	{
+		form = $('#carrier_wizard #step-'+step_number+' form');
+		$.ajax({
+			type:"POST",
+			url : validate_url,
+			async: false,
+			dataType: 'json',
+			data : form.serialize()+'&step_number='+step_number+'&action=validate_step&ajax=1',
+			success : function(datas)
 			{
-				is_ok = false;
-				
-				$('input').focus( function () {
-					$(this).removeClass('field_error');
-				});
-				displayError(datas.errors, step_number);
-				resizeWizard();
+				if (datas.has_error)
+				{
+					is_ok = false;
+					
+					$('input').focus( function () {
+						$(this).removeClass('field_error');
+					});
+					displayError(datas.errors, step_number);
+					resizeWizard();
+				}
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+				jAlert("TECHNICAL ERROR: \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
 			}
-		},
-		error: function(XMLHttpRequest, textStatus, errorThrown) {
-			jAlert("TECHNICAL ERROR: \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
-		}
-	});
+		});
+	}
 	return is_ok;
 }
 
