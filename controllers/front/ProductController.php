@@ -658,4 +658,9 @@ class ProductControllerCore extends FrontController
 		}
 		return $specific_prices;
 	}
+	
+	public function getProduct()
+	{
+	    return $this->product;
+	}
 }
