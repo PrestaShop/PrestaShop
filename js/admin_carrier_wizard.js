@@ -619,13 +619,16 @@ function checkAllZones(elt)
 		$('.fees input:text').each( function () {
 			index = $(this).parent().index();
 			if ($('tr.fees_all td:eq('+index+')').hasClass('validated'))
+			{
 				$(this).removeAttr('disabled');
-		})
+				$('.fees_all td:eq('+index+') input:text').removeAttr('disabled');
+			}
+		});
 	}
 	else
 	{
 		$('.input_zone').removeAttr('checked');
-		$('.fees input:text').attr('disabled', 'disabled').val('');
+		$('.fees input:text, .fees_all input:text').attr('disabled', 'disabled').val('');
 	}
 	
 }
