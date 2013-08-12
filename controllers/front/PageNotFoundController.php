@@ -41,9 +41,9 @@ class PageNotFoundControllerCore extends FrontController
 		if (in_array(Tools::strtolower(substr($_SERVER['REQUEST_URI'], -3)), array('png', 'jpg', 'gif')))
 		{
 			if ((bool)Configuration::get('PS_REWRITING_SETTINGS'))
-				preg_match('¤([0-9]+)(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/(.+)\.(png|jpg|gif)$¤', $_SERVER['REQUEST_URI'], $matches);
+				preg_match('#([0-9]+)(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/(.+)\.(png|jpg|gif)$#', $_SERVER['REQUEST_URI'], $matches);
 			if ((!isset($matches[2]) || empty($matches[2])) && !(bool)Configuration::get('PS_REWRITING_SETTINGS'))
-				preg_match('¤/([0-9]+)(\-[_a-zA-Z]*)\.(png|jpg|gif)$¤', $_SERVER['REQUEST_URI'], $matches);
+				preg_match('#/([0-9]+)(\-[_a-zA-Z]*)\.(png|jpg|gif)$#', $_SERVER['REQUEST_URI'], $matches);
 
 			if (is_array($matches) && !empty($matches[2]) && Tools::strtolower(substr($matches[2], -8)) != '_default' && is_numeric($matches[1]))
 			{			
