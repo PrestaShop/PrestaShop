@@ -669,7 +669,7 @@ class AdminProductsControllerCore extends AdminController
 				{
 					$productId = (int)Tools::getValue('id_product');
 					@unlink(_PS_TMP_IMG_DIR_.'product_'.$productId.'.jpg');
-					@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$productId.'.jpg');
+					@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$productId.'_'.$this->context->shop->id.'.jpg');
 					$this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&action=Images&addproduct'.'&token='.$this->token;
 				}
 			}
@@ -1348,7 +1348,7 @@ class AdminProductsControllerCore extends AdminController
 				'shops' => $json_shops,
 			);
 			@unlink(_PS_TMP_IMG_DIR_.'product_'.(int)$obj->id_product.'.jpg');
-			@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.(int)$obj->id_product.'.jpg');
+			@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.(int)$obj->id_product.'_'.$this->context->shop->id.'.jpg');
 			die(Tools::jsonEncode($json));
 		}
 		else
@@ -1520,7 +1520,7 @@ class AdminProductsControllerCore extends AdminController
 		$img->cover = 1;
 
 		@unlink(_PS_TMP_IMG_DIR_.'product_'.(int)$img->id_product.'.jpg');
-		@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.(int)$img->id_product.'.jpg');
+		@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.(int)$img->id_product.'_'.$this->context->shop->id.'.jpg');
 
 		if ($img->update())
 			$this->jsonConfirmation($this->_conf[26]);
@@ -1556,8 +1556,8 @@ class AdminProductsControllerCore extends AdminController
 
 		if (file_exists(_PS_TMP_IMG_DIR_.'product_'.$image->id_product.'.jpg'))
 			$res &= @unlink(_PS_TMP_IMG_DIR_.'product_'.$image->id_product.'.jpg');
-		if (file_exists(_PS_TMP_IMG_DIR_.'product_mini_'.$image->id_product.'.jpg'))
-			$res &= @unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$image->id_product.'.jpg');
+		if (file_exists(_PS_TMP_IMG_DIR_.'product_mini_'.$image->id_product.'_'.$this->context->shop->id.'.jpg'))
+			$res &= @unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$image->id_product.'_'.$this->context->shop->id.'.jpg');
 
 		if ($res)
 			$this->jsonConfirmation($this->_conf[7]);
@@ -1646,7 +1646,7 @@ class AdminProductsControllerCore extends AdminController
 		if (count($this->errors))
 			return false;
 		@unlink(_PS_TMP_IMG_DIR_.'product_'.$product->id.'.jpg');
-		@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$product->id.'.jpg');
+		@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$product->id.'_'.$this->context->shop->id.'.jpg');
 		return ((isset($id_image) && is_int($id_image) && $id_image) ? $id_image : false);
 	}
 	/**
