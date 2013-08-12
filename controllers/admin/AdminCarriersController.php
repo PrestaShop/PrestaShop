@@ -470,7 +470,8 @@ class AdminCarriersControllerCore extends AdminController
 			}
 			parent::postProcess();
 		}
-		else if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier))
+		/*
+else if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
@@ -482,17 +483,20 @@ class AdminCarriersControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
+*/
 		else if (isset($_GET['isFree'.$this->table]))
 		{
 			$this->processIsFree();
 		}
 		else
 		{
-			if ((Tools::isSubmit('submitDel'.$this->table) && in_array(Configuration::get('PS_CARRIER_DEFAULT'), Tools::getValue('carrierBox')))
+		/*
+	if ((Tools::isSubmit('submitDel'.$this->table) && in_array(Configuration::get('PS_CARRIER_DEFAULT'), Tools::getValue('carrierBox')))
 				|| (isset($_GET['delete'.$this->table]) && Tools::getValue('id_carrier') == Configuration::get('PS_CARRIER_DEFAULT')))
 					$this->errors[] = $this->l('Please set another carrier as default before deleting this one.');
 			else
 			{
+*/
 				// if deletion : removes the carrier from the warehouse/carrier association
 				if (Tools::isSubmit('delete'.$this->table))
 				{
@@ -514,7 +518,7 @@ class AdminCarriersControllerCore extends AdminController
 				}
 				parent::postProcess();
 				Carrier::cleanPositions();
-			}
+			//}
 		}
 	}
 
