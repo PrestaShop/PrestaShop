@@ -42,9 +42,6 @@
     <tab id="Price_Rules" id_parent="" active="1">
       <class_name>AdminPriceRule</class_name>
     </tab>
-    <tab id="Shipping" id_parent="" active="1">
-      <class_name>AdminParentShipping</class_name>
-    </tab>
     <tab id="Localization" id_parent="" active="1">
       <class_name>AdminParentLocalization</class_name>
     </tab>
@@ -150,12 +147,6 @@
     <tab id="Marketing" id_parent="Price_Rules" active="1">
       <class_name>AdminMarketing</class_name>
     </tab>
-    <tab id="Shipping_1" id_parent="Shipping" active="1">
-      <class_name>AdminShipping</class_name>
-    </tab>
-    <tab id="Carriers" id_parent="Shipping" active="1">
-      <class_name>AdminCarriers</class_name>
-    </tab>
     <tab id="CarrierWizard" id_parent="Shipping" active="1">
       <class_name>AdminCarrierWizard</class_name>
     </tab>
@@ -198,6 +189,9 @@
     <tab id="Payment" id_parent="Modules" active="1">
       <class_name>AdminPayment</class_name>
     </tab>
+    <tab id="Carriers" id_parent="Modules" active="1">
+      <class_name>AdminCarriers</class_name>
+    </tab>
     <tab id="General" id_parent="Preferences" active="1">
       <class_name>AdminPreferences</class_name>
     </tab>
@@ -209,6 +203,9 @@
     </tab>
     <tab id="Customers_2" id_parent="Preferences" active="1">
       <class_name>AdminCustomerPreferences</class_name>
+    </tab>
+    <tab id="Shipping" id_parent="Preferences" active="1">
+      <class_name>AdminShipping</class_name>
     </tab>
     <tab id="Themes" id_parent="Preferences" active="1">
       <class_name>AdminThemes</class_name>
