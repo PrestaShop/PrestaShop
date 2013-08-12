@@ -454,12 +454,24 @@ function validateRange(index)
 	return is_ok;
 }
 
+function enableZone(index)
+{
+	$(this).children('td:eq('+index+')').children('input').removeAttr('disabled');
+}
+
+function disableZone(index)
+{
+	$(this).children('td:eq('+index+')').children('input').attr('disabled', 'disabled');
+}
+
+
+
 function enableRange(index)
 {
 	$('tr.fees').each( function () {
 		//only enable fees for enabled zones
 		if ($(this).children('td').children('input:checkbox').attr('checked') == 'checked')
-			$(this).children('td:eq('+index+')').children('input').removeAttr('disabled');
+			enableZone(index);
 	});
 	$('span.fees_all').show();
 	$('tr.fees_all td:eq('+index+')').children('input').show().removeAttr('disabled');
@@ -474,7 +486,7 @@ function disableRange(index)
 	$('tr.fees').each( function () {
 		//only enable fees for enabled zones
 		if ($(this).children('td').children('input:checkbox').attr('checked') == 'checked')
-			$(this).children('td:eq('+index+')').children('input').attr('disabled', 'disabled');
+			disableZone(index);
 	});
 	$('tr.fees_all td:eq('+index+')').children('input').attr('disabled', 'disabled');
 	$('tr.fees_all td:eq('+index+')').removeClass('validated').addClass('not_validated');
@@ -602,7 +614,18 @@ function getCorrectRangePosistion(current_inf, current_sup)
 function checkAllZones(elt)
 {
 	if($(elt).is(':checked'))
+	{
 		$('.input_zone').attr('checked', 'checked');
+		$('.fees input:text').each( function () {
+			index = $(this).parent().index();
+			if ($('tr.fees_all td:eq('+index+')').hasClass('validated'))
+				$(this).removeAttr('disabled');
+		})
+	}
 	else
+	{
 		$('.input_zone').removeAttr('checked');
+		$('.fees input:text').attr('disabled', 'disabled').val('');
+	}
+	
 }

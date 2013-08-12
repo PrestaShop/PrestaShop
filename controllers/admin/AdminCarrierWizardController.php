@@ -109,6 +109,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 			'wizard_steps' => $this->wizard_steps,
 			'validate_url' => $this->context->link->getAdminLink('AdminCarrierWizard'),
 			'carrierlist_url' => $this->context->link->getAdminLink('AdminCarriers').'&conf='.((int)Validate::isLoadedObject($carrier) ? 4 : 3),
+			'multistore_enable' => Shop::isFeatureActive(),
 			'wizard_contents' => array(
 				'contents' => array(
 					0 => $this->renderStepOne($carrier),
