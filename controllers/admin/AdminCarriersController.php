@@ -101,54 +101,6 @@ class AdminCarriersControllerCore extends AdminController
 			)
 		);
 
-		$carrier_default_sort = array(
-			array('value' => Carrier::SORT_BY_PRICE, 'name' => $this->l('Price')),
-			array('value' => Carrier::SORT_BY_POSITION, 'name' => $this->l('Position'))
-		);
-
-		$carrier_default_order = array(
-			array('value' => Carrier::SORT_BY_ASC, 'name' => $this->l('Ascending')),
-			array('value' => Carrier::SORT_BY_DESC, 'name' => $this->l('Descending'))
-		);
-
-		$this->fields_options = array(
-			'general' => array(
-				'title' => $this->l('Carrier options'),
-				'fields' => array(
-					'PS_CARRIER_DEFAULT' => array(
-						'title' => $this->l('Default carrier:'),
-						'desc' => $this->l('Your shop\'s default carrier'),
-						'cast' => 'intval',
-						'type' => 'select',
-						'identifier' => 'id_carrier',
-						'list' => array_merge(
-							array(
-								-1 => array('id_carrier' => -1, 'name' => $this->l('Best price')),
-								-2 => array('id_carrier' => -2, 'name' => $this->l('Best grade'))
-							),
-							Carrier::getCarriers((int)Configuration::get('PS_LANG_DEFAULT'), true, false, false, null, Carrier::ALL_CARRIERS))
-					),
-					'PS_CARRIER_DEFAULT_SORT' => array(
-						'title' => $this->l('Sort by:'),
-						'desc' => $this->l('This will only be visible in the Front Office'),
-						'cast' => 'intval',
-						'type' => 'select',
-						'identifier' => 'value',
-						'list' => $carrier_default_sort
-					),
-					'PS_CARRIER_DEFAULT_ORDER' => array(
-						'title' => $this->l('Order by:'),
-						'desc' => $this->l('This will only be visible in the Front Office'),
-						'cast' => 'intval',
-						'type' => 'select',
-						'identifier' => 'value',
-						'list' => $carrier_default_order
-					),
-				),
-				'submit' => array()
-			)
-		);
-
 		parent::__construct();
 	}
 

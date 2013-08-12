@@ -22,6 +22,14 @@ CHANGE `module_name` `module_name` VARCHAR(64) NULL DEFAULT NULL;
 /* PHP:remove_tab(AdminRangePrice); */;
 /* PHP:remove_tab(AdminRangeWeight); */;
 
+/* PHP:remove_tab(AdminShipping); */;
+/* PHP:remove_tab(AdminParentShipping); */;
+/* PHP:remove_tab(AdminCarriers); */;
+
+/* PHP:add_new_tab(AdminShipping, es:Shipping|it:Shipping|en:Shipping|de:Shipping|fr:Transport, 0, false, AdminParentPreferences); */;
+/* PHP:add_new_tab(AdminCarriers, es:Carriers|it:Carriers|en:Carriers|de:Carriers|fr:Tarsporteurs, 0, false, AdminParentModules); */;
+
+
 ALTER TABLE `PREFIX_log` ADD `id_employee` INT(10) UNSIGNED NULL DEFAULT NULL AFTER `object_id`;
 
 SET @id_parent = (SELECT IFNULL(id_tab, 1) FROM `PREFIX_tab` WHERE `class_name` = 'AdminPriceRule' LIMIT 1);
