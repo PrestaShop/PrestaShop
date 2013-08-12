@@ -64,7 +64,7 @@ function displayRangeType()
 		$('.price_unit').show();
 		$('.weight_unit').hide();
 	}
-	
+	is_freeClick($('input[name="is_free"]:checked'));
 	$('.range_type').html(string);
 }
 
