@@ -478,7 +478,6 @@ class SearchCore
 		// Those are kind of global variables required to save the processed data in the database every X occurrences, in order to avoid overloading MySQL
 		$count_words = 0;
 		$query_array3 = array();
-		$products_array = array();
 
 		// Every indexed words are cached into a PHP array
 		$word_ids = $db->executeS('
@@ -498,6 +497,7 @@ class SearchCore
 		// Products are processed 50 by 50 in order to avoid overloading MySQL
 		while (($products = Search::getProductsToIndex($total_languages, $id_product, 50)) && (count($products) > 0))
 		{
+			$products_array = array();
 			// Now each non-indexed product is processed one by one, langage by langage
 			foreach ($products as $product)
 			{
