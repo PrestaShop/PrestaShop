@@ -263,7 +263,7 @@ class AdminModulesControllerCore extends AdminController
 					}
 					if ($perm)
 					{
-						$this->fillModuleData($module, 'select', $back);
+						$this->fillModuleData($module, 'array');
 						if ($module->id)
 							$modules_list['installed'][] = $module;
 						else

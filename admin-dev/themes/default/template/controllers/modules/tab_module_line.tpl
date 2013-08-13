@@ -69,16 +69,24 @@
 			</p>
 		</td>
 	{else if !isset($module->not_on_disk)}
-		<td>
-			<p>{$module->optionsHtml}</p>
-		</td>
+		<td>&nbsp;</td>
 		<td align="right">
-			<p>
-				<a href="#" class="btn btn-default action_tab_module" data-option="select_{$module->name}">
-					<i class="icon-ok"></i>
-					{l s='Submit'}
-				</a>
-			</p>
+			{if $module->optionsHtml|count > 0}
+			<div id="list-action-button" class="btn-group">
+				{assign var=option value=$module->optionsHtml[0]}
+				{$option}
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
+					<span class="caret">&nbsp;</span>
+				</button>
+				<ul class="dropdown-menu">
+				{foreach $module->optionsHtml key=key item=option}
+					{if $key != 0}
+						<li>{$option}</li>
+					{/if}
+				{/foreach}
+				</ul>
+			</div>
+			{/if}
 		</td>
 	{else}
 		<td>&nbsp;</td>

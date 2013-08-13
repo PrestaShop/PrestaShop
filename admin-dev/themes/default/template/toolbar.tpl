@@ -42,12 +42,19 @@
 							<div {if isset($btn.force_desc) && $btn.force_desc == true } class="locked" {/if}>{$btn.desc}</div>
 						</a>
 						{if $k == 'modules-list'}
-							<div id="modules_list_container" style="display:none">
-								<div style="float:right;margin:5px">
-									<a href="#" onclick="$('#modules_list_container').slideUp();return false;"><img alt="X" src="../img/admin/close.png"></a>
+							<div class="modal fade" id="modules_list_container">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+											<h4 class="modal-title">{l s='Modules'}</h4>
+										</div>
+										<div class="modal-body">
+											<div id="modules_list_container_tab" style="display:none;"></div>
+											<div id="modules_list_loader"><img src="../img/loader.gif" alt="" border="0"></div>
+										</div>
+									</div>
 								</div>
-								<div id="modules_list_loader"><img src="../img/loader.gif" alt="" border="0"></div>
-								<div id="modules_list_container_tab" style="display:none;"></div>
 							</div>
 						{/if}
 					</li>
@@ -137,7 +144,7 @@
 			
 			function openModulesList()
 			{
-				$('#modules_list_container').slideDown();
+				$('#modules_list_container').modal('show');
 				if (!modules_list_loaded)
 				{
 					$.ajax({
