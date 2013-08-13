@@ -884,6 +884,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 			1 => array('name', 'delay', 'grade', 'url'),
 			2 => array('is_free', 'id_tax_rules_group', 'shipping_handling', 'shipping_method', 'range_behavior'),
 			3 => array('range_behavior', 'max_height', 'max_width', 'max_depth', 'max_weight'),
+			4 => array(),
 		);
 
 		if (Shop::isFeatureActive())
