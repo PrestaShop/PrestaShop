@@ -23,5 +23,5 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <a href="{$href}" class="" title="{$action}">
-	<img src="../img/admin/delivery.gif" alt="{$action}" />
+	<i class="icon-truck"></i> {$action}
 </a>
