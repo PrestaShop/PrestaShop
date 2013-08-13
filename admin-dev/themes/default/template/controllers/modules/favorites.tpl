@@ -2,11 +2,11 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="btn-group pull-right">
-				<a class="btn btn-default" href="index.php?controller={$smarty.get.controller|htmlentities}&token={$smarty.get.token|htmlentities}">
+				<a class="btn btn-default btn-small{if !isset($smarty.get.select)} active{/if}" href="index.php?controller={$smarty.get.controller|htmlentities}&token={$smarty.get.token|htmlentities}">
 					<i class="icon-list"></i>
 					{l s='Normal view'} 
 				</a>
-				<a class="btn btn-default" href="index.php?controller={$smarty.get.controller|htmlentities}&token={$smarty.get.token|htmlentities}&select=favorites">
+				<a class="btn btn-default btn-small{if $smarty.get.select == 'favorites'} active{/if}" href="index.php?controller={$smarty.get.controller|htmlentities}&token={$smarty.get.token|htmlentities}&select=favorites">
 					<i class="icon-star"></i> 
 					{l s='Favorites view'}
 				</a>
