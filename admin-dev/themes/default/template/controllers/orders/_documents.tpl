@@ -60,6 +60,8 @@
 			{if get_class($document) eq 'OrderInvoice'}
 				{if isset($document->is_delivery)}
 					<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order_invoice={$document->id}">
+				{elseif isset($document->is_package)}
+					PACKAGE, WORKING HERE
 			   	{else}
 					<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateInvoicePDF&id_order_invoice={$document->id}">
 			   {/if}
