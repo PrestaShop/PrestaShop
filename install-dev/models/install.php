@@ -374,7 +374,7 @@ class InstallModelInstall extends InstallAbstractModel
 		if (file_exists(_PS_TMP_IMG_DIR_))
 			foreach (scandir(_PS_TMP_IMG_DIR_) as $file)
 				if ($file[0] != '.' && $file != 'index.php')
-					self::deleteDirectory($dir.DIRECTORY_SEPARATOR.$file);
+					Tools::deleteDirectory(_PS_TMP_IMG_DIR_.DIRECTORY_SEPARATOR.$file);
 
 		$default_data = array(
 			'shop_name' =>		'My Shop',
