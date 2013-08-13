@@ -154,6 +154,26 @@ class AdminCmsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
+					'label' => $this->l('Indexation (by search robots):'),
+					'name' => 'indexation',
+					'required' => false,
+					'class' => 't',
+					'is_bool' => true,
+					'values' => array(
+						array(
+							'id' => 'indexation_on',
+							'value' => 1,
+							'label' => $this->l('Enabled')
+						),
+						array(
+							'id' => 'indexation_off',
+							'value' => 0,
+							'label' => $this->l('Disabled')
+						)
+					),
+				),
+				array(
+					'type' => 'radio',
 					'label' => $this->l('Displayed:'),
 					'name' => 'active',
 					'required' => false,
