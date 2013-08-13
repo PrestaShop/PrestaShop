@@ -78,7 +78,7 @@
 	<tr id="image_id">
 		<td>
 			<a href="{$smarty.const._THEME_PROD_DIR_}image_path.jpg" class="fancybox">
-				<img src="{$smarty.const._THEME_PROD_DIR_}{$iso_lang}-path-small_default.jpg" alt="image_id" title="image_id" />
+				<img src="{$smarty.const._THEME_PROD_DIR_}{$iso_lang}-default-small_default.jpg" alt="image_id" title="image_id" />
 			</a>
 		</td>
 		<td id="td_image_id" class="pointer dragHandle center positionImage">
@@ -309,7 +309,7 @@
 		{
 			line = $("#lineType").html();
 			line = line.replace(/image_id/g, id);
-			line = line.replace(/[a-z]{2}-path/g, path);
+			line = line.replace(/[a-z]{2}-default/g, path);
 			line = line.replace(/image_path/g, path);
 			line = line.replace(/image_position/g, position);
 			line = line.replace(/icon-check-empty/g, cover);
