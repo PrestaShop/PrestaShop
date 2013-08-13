@@ -273,12 +273,14 @@ class Blocktopmenu extends Module
 
 		$this->_html .= '</select><br />
 								<br />
-								<a href="#" id="addItem" style="border: 1px solid rgb(170, 170, 170); margin: 2px; padding: 2px; text-align: center; display: block; text-decoration: none; background-color: rgb(250, 250, 250); color: rgb(18, 52, 86);">'.$this->l('Add').' &gt;&gt;</a>
+								<a href="#" id="addItem" style="border: 1px solid rgb(170, 170, 170); margin: 52px 2px 2px 2px; padding: 2px; text-align: center; display: block; text-decoration: none; background-color: rgb(250, 250, 250); color: rgb(18, 52, 86);">'.$this->l('Add').' &gt;&gt;</a>
 							</td>
 							<td>
 								<select multiple="multiple" id="items" style="width: 300px; height: 160px;">';
 		$this->makeMenuOption();
 		$this->_html .= '</select><br/>
+								<a href="#" id="upItem" style="width: 110px; border: 1px solid rgb(170, 170, 170); margin: 2px; padding: 2px; text-align: center; display: block; text-decoration: none; background-color: rgb(250, 250, 250); color: rgb(18, 52, 86);">'.$this->l('Up').'</a>
+								<a href="#" id="downItem" style="width: 110px; border: 1px solid rgb(170, 170, 170); margin: 2px; padding: 2px; text-align: center; display: block; text-decoration: none; background-color: rgb(250, 250, 250); color: rgb(18, 52, 86);">'.$this->l('Down').'</a>
 								<br/>
 								<a href="#" id="removeItem" style="border: 1px solid rgb(170, 170, 170); margin: 2px; padding: 2px; text-align: center; display: block; text-decoration: none; background-color: rgb(250, 250, 250); color: rgb(18, 52, 86);">&lt;&lt; '.$this->l('Remove').'</a>
 							</td>
@@ -292,6 +294,40 @@ class Blocktopmenu extends Module
 					$("#availableItems").dblclick(add);
 					$("#removeItem").click(remove);
 					$("#items").dblclick(remove);
+					$("#upItem").click(upItem);
+					$("#downItem").click(downItem);
+
+					function downItem()
+					{
+						var countOptions = $("#items option").size();
+				        $("#items option:selected").each( function() {
+				        	var val = $(this).val();
+							var text = $(this).text();
+				            var newPos = $("#items option").index(this) + 1;
+				            if (newPos < countOptions) {
+				                $("#items option").eq(newPos).after("<option selected=\"selected\" value=\""+val+"\">"+text+"</option>");
+				                $(this).remove();
+				            }
+				        });
+						serialize();
+						return false;
+					}
+
+					function upItem()
+					{
+				        $("#items option:selected").each( function() {
+				        	var val = $(this).val();
+							var text = $(this).text();
+				            var newPos = $("#items option").index(this) - 1;
+				            if (newPos > -1) {
+				                $("#items option").eq(newPos).before("<option selected=\"selected\" value=\""+val+"\">"+text+"</option>");
+				                $(this).remove();
+				            }
+				        });
+						serialize();
+						return false;
+					}
+
 					function add()
 					{
 						$("#availableItems option:selected").each(function(i){
