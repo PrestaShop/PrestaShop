@@ -376,9 +376,11 @@ function showFees()
 		if ($(this).index() >= 2)
 		{
 			//enable only if zone is active
+			/*
 			tr = $(this).parent('tr');
-			if ($(tr).index() > 2 && $(tr).find('td:eq(1) input').attr('checked') && $('tr.fees_all td:eq('+$(this).index()+')').hasClass('validated') || $(tr).hasClass('range_sup') || $(tr).hasClass('range_inf'))
-					$(this).find('input:text').val('').removeAttr('disabled');
+			validate = $('tr.fees_all td:eq('+$(this).index()+')').hasClass('validated');
+			if ($(tr).index() > 2 && $(tr).find('td:eq(1) input').attr('checked') && validate || !$(tr).hasClass('range_sup') || !$(tr).hasClass('range_inf'))
+					$(this).find('input:text').val('').removeAttr('disabled'); */
 			
 			$(this).find('input:text, button').css('background-color', '').css('border-color', '');
 			$(this).find('button').css('background-color', '').css('border-color', '').removeAttr('disabled');
