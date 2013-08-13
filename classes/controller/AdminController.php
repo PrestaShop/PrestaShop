@@ -1727,7 +1727,6 @@ class AdminControllerCore extends Controller
 			_PS_JS_DIR_.'ajax.js',
 			_PS_JS_DIR_.'toolbar.js',
 		));
-
 		//loads specific javascripts for the admin theme, bootstrap.js should be moved into /js root directory
 		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/bootstrap.js');
 		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/admin-theme.js');
@@ -2918,7 +2917,7 @@ class AdminControllerCore extends Controller
 			$module->logo = 'logo.gif';
 		if (file_exists('../modules/'.$module->name.'/logo.png'))
 			$module->logo = 'logo.png';
-		$module->optionsHtml = $this->displayModuleOptions($module, $output_type);
+		$module->optionsHtml = $this->displayModuleOptions($module, $output_type, $back);
 		$link_admin_modules = $this->context->link->getAdminLink('AdminModules', true);
 		
 		$module->options['install_url'] = $link_admin_modules.'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name);
@@ -3003,7 +3002,7 @@ class AdminControllerCore extends Controller
 			if ($option['cond'])
 			{
 				if ($output_type == 'link')
-					$return .= '<li><a class="'.$option_name.' action_module" href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog' ).'"></i> '.$option['text'].'</a></li>';
+					$return .= '<li><a class="'.$option_name.' action_module" href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog' ).'"></i>&nbsp;'.$option['text'].'</a></li>';
 				elseif ($output_type == 'array')
 				{
 					if (!is_array($return))

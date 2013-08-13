@@ -25,54 +25,19 @@
 *}
 
 {if isset($tab_modules_list) && !empty($tab_modules_list)}
-<script type="text/javascript">
-	$(document).ready(function() {
-
-		$('#nav_tabs_modules_installed').click(function () { showInstalledModules() });
-		$('#nav_tabs_modules_not_installed').click(function () { showNotInstalledModules() });
-
-		{if count($tab_modules_list.installed)}
-			showInstalledModules();
-		{else}
-			showNotInstalledModules();
-		{/if}
-		
-		bindTabModuleListAction();
-	});
-	
-	function showInstalledModules(element)
-	{
-		$('#tab_modules_list_not_installed').hide();
-		$('#tab_modules_list_installed').show();
-		$('#nav_tabs_modules_installed').parent('li').addClass('active');
-		$('#nav_tabs_modules_not_installed').parent('li').removeClass('active');
-		return false;
-	}
-	
-	function showNotInstalledModules(element)
-	{
-		$('#tab_modules_list_installed').hide();
-		$('#tab_modules_list_not_installed').show();
-		$(element).parent('li').addClass('active');
-		$('#nav_tabs_modules_not_installed').parent('li').removeClass('active');
-		return false;
-	}
-</script>
 	<div class="row">
 		<div class="col-lg-12">
-			<ul class="nav">
+			<ul class="nav nav-tabs">
 				{if count($tab_modules_list.installed)}
-					<li>
-						<a id="nav_tabs_modules_installed" class="panel-content" href="#" onclick="">
-							<i class="icon-plus-sign-alt"></i>
+					<li class="active">
+						<a href="#tab_modules_list_installed" data-toggle="tab">
 							{l s='Installed'}
 						</a>
 					</li>
 				{/if}
 				{if count($tab_modules_list.not_installed)}
-					<li>
-						<a href="#" id="nav_tabs_modules_not_installed" class="panel-content">
-							<i class="icon-minus-sign-alt"></i>
+					<li{if count($tab_modules_list.installed) == 0} class="active"{/if}>
+						<a href="#tab_modules_list_not_installed" data-toggle="tab">
 							{l s='Not Installed'}
 						</a>
 					</li>
@@ -80,21 +45,25 @@
 			</ul>
 		</div>
 	</div>
-	<div id="modules_list_container_content">
-		{if count($tab_modules_list.installed)}
-		<table id="tab_modules_list_installed" class="table">
-			{foreach from=$tab_modules_list.installed item=module}
-				{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",rowalt"}}
-			{/foreach}
-		</table>
-		{/if}
-		{if count($tab_modules_list.not_installed)}
-		<table id="tab_modules_list_not_installed" class="table">
-			{foreach from=$tab_modules_list.not_installed item=module}
-				{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",rowalt"}}
-			{/foreach}
-		</table>
-		{/if}
+	<div id="modules_list_container_content" class="tab-content">
+		<div class="tab-pane{if count($tab_modules_list.installed)} active{/if}" id="tab_modules_list_installed">
+			{if count($tab_modules_list.installed)}
+			<table id="tab_modules_list_installed" class="table">
+				{foreach from=$tab_modules_list.installed item=module}
+					{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",rowalt"}}
+				{/foreach}
+			</table>
+			{/if}
+		</div>
+		<div class="tab-pane{if count($tab_modules_list.installed) == 0} active{/if}" id="tab_modules_list_not_installed">
+			{if count($tab_modules_list.not_installed)}
+			<table id="tab_modules_list_not_installed" class="table">
+				{foreach from=$tab_modules_list.not_installed item=module}
+					{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",rowalt"}}
+				{/foreach}
+			</table>
+			{/if}
+		</div>
 	</div>
 {/if}
 <div class="alert alert-block">
