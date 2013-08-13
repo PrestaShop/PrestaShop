@@ -578,7 +578,7 @@ class HelperListCore extends Helper
 
 		foreach ($this->fields_list as $key => $field)
 		{
-			if (isset($field['value']) && $field['value'] !== false)
+			if (isset($field['value']) && $field['value'] !== false && $field['value'] !== '')
 			{
 				$has_value = true;
 				break;
