@@ -147,23 +147,21 @@ function displaySummary()
 	var range_inf = summary_translation_undefined;
 	var range_sup = summary_translation_undefined;
 	
-/*
-	$('input[name$="range_inf[]"]').each(function(){
-		if (!isNaN(parseFloat($(this).val())) && (range_inf == summary_translation_undefined || range_inf < $(this).val()))
+	$('tr.range_inf td input').each( function()
+	{
+		if (!isNaN(parseFloat($(this).val())) && (range_inf == summary_translation_undefined || range_inf > $(this).val()))
 			range_inf = $(this).val();
 	});
-*/
-	range_inf = $('tr.range_inf td input:first').val()+' '+unit; 
-	range_sup = $('tr.range_sup td input:last').val()+' '+unit;
 
-	$('input[name$="range_sup[]"]').each(function(){
-		if (!isNaN(parseFloat($(this).val())) && (range_sup == summary_translation_undefined || range_sup > $(this).val()))
+	$('tr.range_sup td input').each( function(){
+		if (!isNaN(parseFloat($(this).val())) && (range_sup == summary_translation_undefined || range_sup < $(this).val()))
 			range_sup = $(this).val();
 	});
+	
 	$('#summary_range').html(
 		$('#summary_range').html()
-		.replace('@s1', '<strong>' + range_inf + '</strong>')
-		.replace('@s2', '<strong>' + range_sup + '</strong>')
+		.replace('@s1', '<strong>' + range_inf +' '+ unit + '</strong>')
+		.replace('@s2', '<strong>' + range_sup +' '+ unit + '</strong>')
 		.replace('@s3', '<strong>' + $('#range_behavior option:selected').text().toLowerCase() + '</strong>')
 	);
 	
