@@ -22,6 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<a href="{$href}" class="default" title="{$action}" {if isset($name)}name="{$name}"{/if}>
+<a href="{$href}" class="" title="{$action}" {if isset($name)}name="{$name}"{/if}>
 	<i class="icon-asterisk"></i> {$action}
 </a>

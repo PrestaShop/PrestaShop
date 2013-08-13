@@ -1011,13 +1011,13 @@ function display_action_details(row_id, controller, token, action, params)
 
 	if (current_element.data('opened'))
 	{
-		current_element.find('img').attr('src', '../img/admin/more.png');
+		current_element.find('i.icon-collapse-top').attr('class', 'icon-collapse');
 		current_element.parent().parent().parent().find('.details_'+id).hide('fast');
 		current_element.data('opened', false);
 	}
 	else
 	{
-		current_element.find('img').attr('src', '../img/admin/less.png');
+		current_element.find('i.icon-collapse').attr('class', 'icon-collapse-top');
 		current_element.parent().parent().parent().find('.details_'+id).show('fast');
 		current_element.data('opened', true);
 	}

@@ -22,6 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<a href="{$href}" title="{$action}">
-	<img src="../img/admin/remove_stock.png" alt="{$action}" />
+<a href="{$href}" title="{$action}" class="">
+	<i class="icon-circle-arrow-down"></i> {$action}
 </a>

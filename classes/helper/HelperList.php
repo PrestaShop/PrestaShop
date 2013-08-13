@@ -209,13 +209,6 @@ class HelperListCore extends Helper
 						$this->_list[$index][$action] = $this->context->controller->$method_name($this->token, $id, $name);
 					elseif (method_exists($this, $method_name))
 						$this->_list[$index][$action] = $this->$method_name($this->token, $id, $name);
-
-					$method_name = 'display'.ucfirst($action).'Button';
-
-					if (method_exists($this->context->controller, $method_name))
-						$this->_list[$index][$action.'_button'] = $this->context->controller->$method_name($this->token, $id, $name);
-					elseif (method_exists($this, $method_name))
-						$this->_list[$index][$action.'_button'] = $this->$method_name($this->token, $id, $name);
 				}
 			}
 
@@ -336,31 +329,6 @@ class HelperListCore extends Helper
 	}
 
 	/**
-	 * Display duplicate action button
-	 */
-	public function displayDuplicateButton($token = null, $id, $name = null)
-	{
-		$tpl = $this->createTemplate('list_action_button_duplicate.tpl');
-		if (!array_key_exists('Bad SQL query', self::$cache_lang))
-			self::$cache_lang['Duplicate'] = $this->l('Duplicate', 'Helper');
-
-		if (!array_key_exists('Copy images too?', self::$cache_lang))
-			self::$cache_lang['Copy images too?'] = $this->l('Copy images too?', 'Helper');
-
-		$duplicate = $this->currentIndex.'&'.$this->identifier.'='.$id.'&duplicate'.$this->table;
-
-		$tpl->assign(array(
-			'href' => Tools::safeOutput($this->currentIndex.'&'.$this->identifier.'='.$id.'&view'.$this->table.'&token='.($token != null ? $token : $this->token)),
-			'action' => self::$cache_lang['Duplicate'],
-			'confirm' => self::$cache_lang['Copy images too?'],
-			'location_ok' => Tools::safeOutput($duplicate.'&token='.($token != null ? $token : $this->token)),
-			'location_ko' => Tools::safeOutput($duplicate.'&noimage=1&token='.($token ? $token : $this->token)),
-		));
-
-		return $tpl->fetch();
-	}
-
-	/**
 	 * Display duplicate action link
 	 */
 	public function displayDuplicateLink($token = null, $id, $name = null)
@@ -427,24 +395,6 @@ class HelperListCore extends Helper
 	}
 
 	/**
-	 * Display view action button
-	 */
-	public function displayViewButton($token = null, $id, $name = null)
-	{
-		$tpl = $this->createTemplate('list_action_button_view.tpl');
-		if (!array_key_exists('View', self::$cache_lang))
-			self::$cache_lang['View'] = $this->l('View', 'Helper');
-
-		$tpl->assign(array(
-			'href' => Tools::safeOutput($this->currentIndex.'&'.$this->identifier.'='.$id.'&view'.$this->table.'&token='.($token != null ? $token : $this->token)),
-			'action' => self::$cache_lang['View'],
-		));
-
-		return $tpl->fetch();
-
-	}
-
-	/**
 	 * Display view action link
 	 */
 	public function displayViewLink($token = null, $id, $name = null)
@@ -463,24 +413,6 @@ class HelperListCore extends Helper
 	}
 
 	/**
-	 * Display edit action button
-	 */
-	public function displayEditButton($token = null, $id, $name = null)
-	{
-		$tpl = $this->createTemplate('list_action_button_edit.tpl');
-		if (!array_key_exists('Edit', self::$cache_lang))
-			self::$cache_lang['Edit'] = $this->l('Edit', 'Helper');
-
-		$tpl->assign(array(
-			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.'&token='.($token != null ? $token : $this->token),
-			'action' => self::$cache_lang['Edit'],
-			'id' => $id
-		));
-
-		return $tpl->fetch();
-	}
-
-	/**
 	 * Display edit action link
 	 */
 	public function displayEditLink($token = null, $id, $name = null)
@@ -494,39 +426,6 @@ class HelperListCore extends Helper
 			'action' => self::$cache_lang['Edit'],
 			'id' => $id
 		));
-
-		return $tpl->fetch();
-	}
-
-	/**
-	 * Display delete action button
-	 */
-	public function displayDeleteButton($token = null, $id, $name = null)
-	{
-		$tpl = $this->createTemplate('list_action_button_delete.tpl');
-
-		if (!array_key_exists('Delete', self::$cache_lang))
-			self::$cache_lang['Delete'] = $this->l('Delete', 'Helper');
-
-		if (!array_key_exists('DeleteItem', self::$cache_lang))
-			self::$cache_lang['DeleteItem'] = $this->l('Delete selected item?', 'Helper');
-
-		if (!array_key_exists('Name', self::$cache_lang))
-			self::$cache_lang['Name'] = $this->l('Name:', 'Helper');
-
-		if (!is_null($name))
-			$name = '\n\n'.self::$cache_lang['Name'].' '.$name;
-
-		$data = array(
-			$this->identifier => $id,
-			'href' => Tools::safeOutput($this->currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token)),
-			'action' => self::$cache_lang['Delete'],
-		);
-
-		if ($this->specificConfirmDelete !== false)
-			$data['confirm'] = !is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : addcslashes(Tools::htmlentitiesDecodeUTF8(self::$cache_lang['DeleteItem'].$name), '\'');
-
-		$tpl->assign(array_merge($this->tpl_delete_link_vars, $data));
 
 		return $tpl->fetch();
 	}
