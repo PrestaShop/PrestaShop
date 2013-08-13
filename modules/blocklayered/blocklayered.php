@@ -150,7 +150,7 @@ class BlockLayered extends Module
 		Db::getInstance()->execute('
 		CREATE TABLE `'._DB_PREFIX_.'layered_friendly_url` (
 		`id_layered_friendly_url` INT NOT NULL AUTO_INCREMENT,
-		`url_key` varchar(32) NOT NULL,
+		`url_key` varchar(64) NOT NULL,
 		`data` varchar(200) NOT NULL,
 		`id_lang` INT NOT NULL,
 		PRIMARY KEY (`id_layered_friendly_url`),
@@ -179,8 +179,8 @@ class BlockLayered extends Module
 		CREATE TABLE `'._DB_PREFIX_.'layered_indexable_attribute_group_lang_value` (
 		`id_attribute_group` INT NOT NULL,
 		`id_lang` INT NOT NULL,
-		`url_name` VARCHAR(20),
-		`meta_title` VARCHAR(20),
+		`url_name` VARCHAR(64),
+		`meta_title` VARCHAR(64),
 		PRIMARY KEY (`id_attribute_group`, `id_lang`)
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;');
 		
@@ -190,8 +190,8 @@ class BlockLayered extends Module
 		CREATE TABLE `'._DB_PREFIX_.'layered_indexable_attribute_lang_value` (
 		`id_attribute` INT NOT NULL,
 		`id_lang` INT NOT NULL,
-		`url_name` VARCHAR(20),
-		`meta_title` VARCHAR(20),
+		`url_name` VARCHAR(64),
+		`meta_title` VARCHAR(64),
 		PRIMARY KEY (`id_attribute`, `id_lang`)
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;');
 		
@@ -214,8 +214,8 @@ class BlockLayered extends Module
 		CREATE TABLE `'._DB_PREFIX_.'layered_indexable_feature_lang_value` (
 		`id_feature` INT NOT NULL,
 		`id_lang` INT NOT NULL,
-		`url_name` VARCHAR(20) NOT NULL,
-		`meta_title` VARCHAR(20),
+		`url_name` VARCHAR(64) NOT NULL,
+		`meta_title` VARCHAR(64),
 		PRIMARY KEY (`id_feature`, `id_lang`)
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;');
 		
@@ -225,8 +225,8 @@ class BlockLayered extends Module
 		CREATE TABLE `'._DB_PREFIX_.'layered_indexable_feature_value_lang_value` (
 		`id_feature_value` INT NOT NULL,
 		`id_lang` INT NOT NULL,
-		`url_name` VARCHAR(20),
-		`meta_title` VARCHAR(20),
+		`url_name` VARCHAR(64),
+		`meta_title` VARCHAR(64),
 		PRIMARY KEY (`id_feature_value`, `id_lang`)
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;');
 	}
@@ -515,7 +515,7 @@ class BlockLayered extends Module
 	{
 		if (!$params['id_feature'] || Tools::getValue('layered_indexable') === false)
 			return;
-		
+
 		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_feature WHERE id_feature = '.(int)$params['id_feature']);
 		Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_feature VALUES ('.(int)$params['id_feature'].', '.(int)Tools::getValue('layered_indexable').')');
 		
@@ -524,8 +524,17 @@ class BlockLayered extends Module
 		{
 			// Data are validated by method "hookPostProcessFeature"
 			$id_lang = (int)$language['id_lang'];
+
+			$seo_url = Tools::getValue('url_name_'.$id_lang);
+
+			if(empty($seo_url))
+				$seo_url = Tools::getValue('name_'.$id_lang);
+			else
+				$seo_url = Tools::getValue('url_name_'.$id_lang);
+
+
 			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_feature_lang_value
-			VALUES ('.(int)$params['id_feature'].', '.$id_lang.', \''.pSQL(Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang))).'\',
+			VALUES ('.(int)$params['id_feature'].', '.$id_lang.', \''.pSQL(Tools::link_rewrite($seo_url)).'\',
 			\''.pSQL(Tools::getValue('meta_title_'.$id_lang), true).'\')');
 		}
 	}
@@ -540,8 +549,16 @@ class BlockLayered extends Module
 		{
 			// Data are validated by method "hookPostProcessFeatureValue"
 			$id_lang = (int)$language['id_lang'];
+
+			$seo_url = Tools::getValue('url_name_'.$id_lang, 0);
+
+			if($seo_url)
+				$seo_url = Tools::getValue('url_name_'.$id_lang);	
+			else
+				$seo_url = Tools::getValue('value_'.$id_lang);
+
 			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_feature_value_lang_value
-			VALUES ('.(int)$params['id_feature_value'].', '.$id_lang.', \''.pSQL(Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang))).'\',
+			VALUES ('.(int)$params['id_feature_value'].', '.$id_lang.', \''.pSQL(Tools::link_rewrite($seo_url)).'\',
 			\''.pSQL(Tools::getValue('meta_title_'.$id_lang), true).'\')');
 		}
 	}
@@ -588,7 +605,7 @@ class BlockLayered extends Module
 		foreach ($languages as $language)
 			$return .= '
 					<div class="lang_'.$language['id_lang'].'" id="url_name_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-						<input size="33" type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['url_name'], true).'" />
+						<input size="64" type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['url_name'], true).'" />
 						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}_<span class="hint-pointer">&nbsp;</span></span>
 						<p style="clear: both">'.$this->l('Specific URL format in block layered generation').'</p>
 					</div>';
@@ -604,7 +621,7 @@ class BlockLayered extends Module
 		foreach ($languages as $language)
 			$return .= '
 						<div class="lang_'.$language['id_lang'].'" id="meta_title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['meta_title'], true).'" />
+							<input size="64" type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['meta_title'], true).'" />
 							<p style="clear: both">'.$this->l('Specific format for meta title').'</p>
 						</div>';
 			
@@ -627,8 +644,16 @@ class BlockLayered extends Module
 		{
 			// Data are validated by method "hookPostProcessAttribute"
 			$id_lang = (int)$language['id_lang'];
+
+			$seo_url = Tools::getValue('url_name_'.$id_lang, 0);
+
+			if($seo_url)
+				$seo_url = Tools::getValue('url_name_'.$id_lang);	
+			else
+				$seo_url = Tools::getValue('name_'.$id_lang);
+
 			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_attribute_lang_value
-			VALUES ('.(int)$params['id_attribute'].', '.$id_lang.', \''.pSQL(Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang))).'\',
+			VALUES ('.(int)$params['id_attribute'].', '.$id_lang.', \''.pSQL(Tools::link_rewrite($seo_url)).'\',
 			\''.pSQL(Tools::getValue('meta_title_'.$id_lang), true).'\')');
 		}
 	}
@@ -675,7 +700,7 @@ class BlockLayered extends Module
 		foreach ($languages as $language)
 			$return .= '
 					<div class="lang_'.$language['id_lang'].'" id="url_name_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-						<input size="33" type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['url_name'], true).'" />
+						<input size="64" type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['url_name'], true).'" />
 						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}_<span class="hint-pointer">&nbsp;</span></span>
 						<p style="clear: both">'.$this->l('Specific URL format in block layered generation').'</p>
 					</div>';
@@ -691,7 +716,7 @@ class BlockLayered extends Module
 		foreach ($languages as $language)
 			$return .= '
 						<div class="lang_'.$language['id_lang'].'" id="meta_title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['meta_title'], true).'" />
+							<input size="64" type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['meta_title'], true).'" />
 							<p style="clear: both">'.$this->l('Specific format for meta title').'</p>
 						</div>';
 		if (version_compare(_PS_VERSION_,'1.5','<'))
@@ -728,8 +753,16 @@ class BlockLayered extends Module
 		{
 			// Data are validated by method "hookPostProcessAttributeGroup"
 			$id_lang = (int)$language['id_lang'];
+
+			$seo_url = Tools::getValue('url_name_'.$id_lang, 0);
+
+			if($seo_url)
+				$seo_url = Tools::getValue('url_name_'.$id_lang);	
+			else
+				$seo_url = Tools::getValue('name_'.$id_lang);
+			
 			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_attribute_group_lang_value
-			VALUES ('.(int)$params['id_attribute_group'].', '.$id_lang.', \''.pSQL(Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang))).'\',
+			VALUES ('.(int)$params['id_attribute_group'].', '.$id_lang.', \''.pSQL(Tools::link_rewrite($seo_url)).'\',
 			\''.pSQL(Tools::getValue('meta_title_'.$id_lang), true).'\')');
 		}
 	}
@@ -802,7 +835,7 @@ class BlockLayered extends Module
 		foreach ($languages as $language)
 			$return .= '
 					<div class="lang_'.$language['id_lang'].'" id="url_name_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-						<input size="33" type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['url_name'], true).'" />
+						<input size="64" type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['url_name'], true).'" />
 						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}_<span class="hint-pointer">&nbsp;</span></span>
 						<p style="clear: both">'.$this->l('Specific URL format in block layered generation').'</p>
 					</div>';
@@ -818,7 +851,7 @@ class BlockLayered extends Module
 		foreach ($languages as $language)
 			$return .= '
 						<div class="lang_'.$language['id_lang'].'" id="meta_title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['meta_title'], true).'" />
+							<input size="64" type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['meta_title'], true).'" />
 							<p style="clear: both">'.$this->l('Specific format for meta title').'</p>
 						</div>';
 		if (version_compare(_PS_VERSION_,'1.5','<'))
@@ -876,7 +909,7 @@ class BlockLayered extends Module
 		foreach ($languages as $language)
 			$return .= '
 					<div class="lang_'.$language['id_lang'].'" id="url_name_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-						<input size="33" type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['url_name'], true).'" />
+						<input size="64" type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['url_name'], true).'" />
 						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}_<span class="hint-pointer">&nbsp;</span></span>
 						<p style="clear: both">'.$this->l('Specific URL format in block layered generation').'</p>
 					</div>';
@@ -892,7 +925,7 @@ class BlockLayered extends Module
 		foreach ($languages as $language)
 			$return .= '
 						<div class="lang_'.$language['id_lang'].'" id="meta_title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['meta_title'], true).'" />
+							<input size="64" type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['meta_title'], true).'" />
 							<p style="clear: both">'.$this->l('Specific format for meta title').'</p>
 						</div>';
 		if (version_compare(_PS_VERSION_,'1.5','<'))
