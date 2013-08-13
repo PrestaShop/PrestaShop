@@ -137,17 +137,24 @@ function displaySummary()
 	
 	// Weight or price ranges
 	$('#summary_range').html(summary_translation_range);
+	
+	
+	if ($('input[name="shipping_method"]:checked').val() == 1)
+		unit = PS_WEIGHT_UNIT;
+	else
+		unit = currency_sign;
+
 	var range_inf = summary_translation_undefined;
 	var range_sup = summary_translation_undefined;
 	
-	/*
-$('input[name$="range_inf[]"]').each(function(){
+/*
+	$('input[name$="range_inf[]"]').each(function(){
 		if (!isNaN(parseFloat($(this).val())) && (range_inf == summary_translation_undefined || range_inf < $(this).val()))
 			range_inf = $(this).val();
 	});
 */
-	range_inf = $('tr.range_inf td input:first').val(); 
-	range_sup = $('tr.range_sup td input:last').val();
+	range_inf = $('tr.range_inf td input:first').val()+' '+unit; 
+	range_sup = $('tr.range_sup td input:last').val()+' '+unit;
 
 	$('input[name$="range_sup[]"]').each(function(){
 		if (!isNaN(parseFloat($(this).val())) && (range_sup == summary_translation_undefined || range_sup > $(this).val()))
@@ -187,7 +194,7 @@ function validateSteps(step_number)
 	var is_ok = true;
 	if ((multistore_enable && step_number == 3) || (!multistore_enable && step_number == 2))
 	{
-		if (!validateRange(2))
+		if ($('input[name="is_free"]').val() == 1 && !validateRange(2))
 			is_ok = false;
 	}
 	
