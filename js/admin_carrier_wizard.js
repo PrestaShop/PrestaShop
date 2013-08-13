@@ -465,15 +465,17 @@ function validateRange(index)
 
 function enableZone(index)
 {
-	$(this).children('td:eq('+index+')').children('input').removeAttr('disabled');
+	$('tr.fees').each( function () {
+		$(this).find('td:eq('+index+')').children('input').removeAttr('disabled');
+	});
 }
 
 function disableZone(index)
 {
-	$(this).children('td:eq('+index+')').children('input').attr('disabled', 'disabled');
+	$('tr.fees').each( function () {
+		$(this).find('td:eq('+index+')').children('input').attr('disabled', 'disabled');
+	});
 }
-
-
 
 function enableRange(index)
 {
