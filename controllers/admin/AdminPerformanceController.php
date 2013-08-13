@@ -791,6 +791,13 @@ class AdminPerformanceControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
+		
+		if ((bool)Tools::getValue('empty_smarty_cache'))
+		{
+			$redirectAdmin = true;
+			Tools::clearSmartyCache();
+		}
+
 		if ($redirectAdmin && (!isset($this->errors) || !count($this->errors)))
 		{
 			Hook::exec('action'.get_class($this).ucfirst($this->action).'After', array('controller' => $this, 'return' => ''));
