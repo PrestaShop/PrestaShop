@@ -368,7 +368,7 @@ class InstallModelInstall extends InstallAbstractModel
 	public function configureShop(array $data = array())
 	{
 		// Clear smarty cache
-		$this->clearSmartyCache();
+		Tools::clearSmartyCache();
 		
 		//clear image cache in tmp folder
 		Tools::deleteDirectory(_PS_TMP_IMG_DIR_, false);
@@ -492,18 +492,6 @@ class InstallModelInstall extends InstallAbstractModel
 		}
 
 		return true;
-	}
-
-	/**
-	 * Clear smarty cache folders
-	 */
-	public function clearSmartyCache()
-	{
-		foreach (array(_PS_CACHE_DIR_.'smarty/cache', _PS_CACHE_DIR_.'smarty/compile') as $dir)
-			if (file_exists($dir))
-				foreach (scandir($dir) as $file)
-					if ($file[0] != '.' && $file != 'index.php')
-						Tools::deleteDirectory($dir.DIRECTORY_SEPARATOR.$file);
 	}
 
 	public function getModulesList()
