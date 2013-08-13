@@ -49,7 +49,7 @@
 		</div>
 		<div class="clear">&nbsp;</div>
 		<div>
-			{l s='And it will be proposed for thise client groups:'}
+			{l s='And it will be proposed for those client groups:'}
 			<ul id="summary_groups"></ul>
 		</div>
 		{if $is_multishop}
