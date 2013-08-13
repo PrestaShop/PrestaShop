@@ -503,7 +503,7 @@ class InstallModelInstall extends InstallAbstractModel
 			if (file_exists($dir))
 				foreach (scandir($dir) as $file)
 					if ($file[0] != '.' && $file != 'index.php')
-						@unlink($dir.$file);
+						Tools::deleteDirectory($dir.DIRECTORY_SEPARATOR.$file);
 	}
 
 	public function getModulesList()
