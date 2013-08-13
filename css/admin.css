@@ -2639,7 +2639,7 @@ margin-bottom:7px;
 #carrier_wizard #zone_ranges label { float: none; width: inherit }
 #carrier_wizard #step_carrier_summary label {width: 40px}
 #carrier_wizard #step_carrier_summary .margin-form {padding-left: 60px;}
-#carrier_wizard #summary_zones, #carrier_wizard #summary_groups {margin-left: 20px; margin-top: 10px; list-style: disc}
+#carrier_wizard #summary_zones, #carrier_wizard #summary_groups, #carrier_wizard #summary_shops {margin-left: 20px; margin-top: 10px; list-style: disc}
 #carrier_wizard .ranges_not_follow label {width: inherit; float:none}
 #carrier_wizard .ranges_not_follow {width: 300px; margin-bottom: 0}
 #carrier_wizard .assoShop { min-height:  inherit}
