@@ -2642,7 +2642,7 @@ margin-bottom:7px;
 #carrier_wizard #summary_zones, #carrier_wizard #summary_groups {margin-left: 20px; margin-top: 10px; list-style: disc}
 #carrier_wizard .ranges_not_follow label {width: inherit; float:none}
 #carrier_wizard .ranges_not_follow {width: 300px; margin-bottom: 0}
-
+#carrier_wizard .assoShop { min-height:  inherit}
 
 /*** IE10 ***/
 /*@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) { 
