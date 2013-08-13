@@ -1083,7 +1083,7 @@ class AdminModulesControllerCore extends AdminController
 				unset($modules[$km]);
 			else
 			{
-				$this->fillModuleData($module);
+				$this->fillModuleData($module, 'array');
 				$module->categoryName = (isset($this->list_modules_categories[$module->tab]['name']) ? $this->list_modules_categories[$module->tab]['name'] : $this->list_modules_categories['others']['name']);
 
 				if (isset($modules_preferences[$modules[$km]->name]))

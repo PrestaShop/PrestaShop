@@ -3003,11 +3003,20 @@ class AdminControllerCore extends Controller
 			if ($option['cond'])
 			{
 				if ($output_type == 'link')
-					$return .= '<li>
-							<a class="'.$option_name.' action_module" href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'">
-								<i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog' ).'"></i> '.$option['text'].'
-							</a>
-						</li>';
+					$return .= '<li><a class="'.$option_name.' action_module" href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog' ).'"></i> '.$option['text'].'</a></li>';
+				elseif ($output_type == 'array')
+				{
+					if (!is_array($return))
+						$return = array();
+
+					$html = '<a class="';
+
+					if (count($return) == 0)
+						$html .= 'btn btn-default btn-small';
+
+					$html .= '" href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog' ).'"></i> '.$option['text'].'</a>';
+					$return[] = $html;
+				}
 				elseif ($output_type == 'select')
 					$return .= '<option id="'.$option_name.'" data-href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" data-onclick="'.$option['onclick'].'">'.$option['text'].'</option>';
 			}
