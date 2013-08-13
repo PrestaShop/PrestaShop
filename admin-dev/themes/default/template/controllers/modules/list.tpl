@@ -62,6 +62,16 @@
 							{$module->displayName}
 							{if isset($module->type) && $module->type == 'addonsMustHave'}
 								<span class="label label-info">{l s='Must Have'}</span>
+							{elseif isset($module->id) && $module->id gt 0}
+								{if isset($module->version_addons) && $module->version_addons}
+									<span class="label label-warning">{l s='Need update'}</span>
+								{elseif $module->active == 1}
+									<span class="label label-info">{l s='Active'}</span>
+								{elseif $module->active == 0}
+									<span class="label label-disabled">{l s='Inactive'}</span>
+								{/if}
+							{else}
+								<span class="label label-disabled">{l s='Not installed'}</span>
 							{/if}
 <!-- 						{if isset($module->id) && $module->id gt 0}
 								<span class="label label-success{if isset($module->active) && $module->active eq 0} off{/if}">{l s='Installed'}</span>
@@ -91,33 +101,42 @@
 				</td>
 				<td width="180px">
 					<div id="list-action-button" class="btn-group">
-
 						{if isset($module->type) && $module->type == 'addonsMustHave'}
 							<a class="btn btn-default" href="{$module->addons_buy_url}" target="_blank">
 								<i class="icon-shopping-cart"></i> &nbsp;{if isset($module->id_currency) && isset($module->price)}{displayPrice price=$module->price currency=$module->id_currency}{/if}
 							</a>
 						{else}
-							{if $module->id && isset($module->version_addons) && $module->version_addons}
-								<a class="btn btn-warning" href="{$module->options.update_url}">
-									<i class="icon-refresh"></i> {l s='Update it!'}
+							{if isset($module->id) && $module->id gt 0}
+								{if isset($module->version_addons) && $module->version_addons}
+									<a class="btn btn-warning" href="{$module->options.update_url}">
+										<i class="icon-refresh"></i> {l s='Update it!'}
+									</a>
+								{elseif !isset($module->not_on_disk)}
+									{if $module->optionsHtml|count > 0}
+										{assign var=option value=$module->optionsHtml[0]}
+										{$option}
+									{/if}
+								{else}
+									<a class="btn btn-danger" {if !empty($module->options.uninstall_onclick)}onclick="{$module->options.uninstall_onclick}"{/if} href="{$module->options.uninstall_url}">
+										<i class="icon-minus-sign-alt"></i>&nbsp;{l s='Uninstall'}
+									</a>
+								{/if}
+							{else}
+								<a class="btn btn-success" href="{$module->options.install_url}">
+									<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Install'}
 								</a>
 							{/if}
-							<a class="btn {if isset($module->id) && $module->id gt 0}btn-danger{else}btn-success{/if}" {if isset($module->id) && $module->id gt 0 && !empty($module->options.uninstall_onclick)}onclick="{$module->options.uninstall_onclick}"{/if} href="{if isset($module->id) && $module->id gt 0}{$module->options.uninstall_url}{else}{$module->options.install_url}{/if}">
-								{if isset($module->id) && $module->id gt 0}
-									<i class="icon-minus-sign-alt"></i> 
-									{l s='Uninstall'}
-								{else}
-									<i class="icon-plus-sign-alt"></i> 
-									{l s='Install'}
-								{/if}
-							</a>
 							{if !isset($module->not_on_disk)}
 							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
 								<span class="caret">&nbsp;</span>
 							</button>
 
 							<ul class="dropdown-menu">
-								{$module->optionsHtml}
+								{foreach $module->optionsHtml key=key item=option}
+									{if $key != 0}
+										<li>{$option}</li>
+									{/if}
+								{/foreach}
 								{if isset($module->preferences) && isset($module->preferences['favorite']) && $module->preferences['favorite'] == 1}
 								<li>
 									<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#">
@@ -129,7 +148,7 @@
 										<i class="icon-star"></i> {l s='Mark as Favorite'}
 									</a>
 								</li>
-							{else}
+								{else}
 								<li>
 									<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#" style="display: none;">
 										<i class="icon-star"></i> {l s='Remove from Favorites'}
@@ -145,7 +164,7 @@
 							{else}
 								&nbsp;
 							{/if}
-						 {/if}
+						{/if}
 					</div>
 				</td>
 			</tr>
