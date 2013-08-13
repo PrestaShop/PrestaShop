@@ -205,5 +205,13 @@ class CategoryControllerCore extends FrontController
 
 		$this->context->smarty->assign('nb_products', $this->nbProducts);
 	}
+	
+	/**
+	 * Get instance of current category
+	 */
+	public function getCategory()
+	{
+		return $this->category;
+	}
 }
 
