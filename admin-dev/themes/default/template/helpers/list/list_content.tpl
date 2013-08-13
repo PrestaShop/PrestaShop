@@ -136,26 +136,34 @@
 	{/if}
 	{if $has_actions}
 		<td>
-			<div class="btn-group{if count($actions) > 1} btn-group-action{/if}">
-				{assign var='action' value=$actions[0]|cat:"_button"}
+			{assign var='compiled_actions' value=array()}
+			{foreach $actions AS $key => $action}
 				{if isset($tr.$action)}
-					{$tr.$action}
+					{if $key == 0}
+						{assign var='action' value=$action}
+					{/if}
+					{$compiled_actions[] = $tr.$action}
 				{/if}
-				{if count($actions) > 1}
+			{/foreach}
+			{if $compiled_actions|count > 0}
+			<div class="btn-group{if $compiled_actions|count > 1} btn-group-action{/if}">
+				{$compiled_actions[0]|replace:'class=""':'class="btn btn-default btn-small"'}
+				{if $compiled_actions|count > 1}
 				<button class="btn btn-default btn-small dropdown-toggle" data-toggle="dropdown">
 					<span class="caret"></span>&nbsp;
 				</button>
 					<ul class="dropdown-menu">
-					{foreach $actions AS $key => $action}
-						{if $key != 0 && isset($tr.$action)}
+					{foreach $compiled_actions AS $key => $action}
+						{if $key != 0}
 						<li>
-							{$tr.$action}
+							{$action}
 						</li>
 						{/if}
 					{/foreach}
 					</ul>
 				{/if}
 			</div>
+			{/if}
 		</td>
 	{/if}
 	</tr>

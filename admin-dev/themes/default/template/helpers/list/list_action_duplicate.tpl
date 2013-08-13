@@ -22,6 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<a class="pointer" title="{$action}" onclick="if (confirm('{$confirm}')) document.location = '{$location_ok}'; else document.location = '{$location_ko}';">
+<a href="#" class="" title="{$action}" onclick="if (confirm('{$confirm}')) document.location = '{$location_ok}'; else document.location = '{$location_ko}'; return false;">
 	<i class="icon-copy"></i> {$action}
 </a>

@@ -23,6 +23,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<a class="pointer" id="details_{$params.action}_{$id}" title="{$action}" onclick="display_action_details('{$id}', '{$controller}', '{$token}', '{$params.action}', {$json_params|escape}); return false">
-	<img src="../img/admin/more.png" alt="{$action}" />
+<a href="#" class="" id="details_{$params.action}_{$id}" title="{$action}" onclick="display_action_details('{$id}', '{$controller}', '{$token}', '{$params.action}', {$json_params|escape}); return false">
+	<i class="icon-collapse"></i> {$action}
 </a>
