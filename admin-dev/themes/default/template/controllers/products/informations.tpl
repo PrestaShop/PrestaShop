@@ -404,12 +404,28 @@
 			{l s='Tags:'}
 		</span>
 	</label>
-	<div class="col-lg-8 translatable">
-		{foreach from=$languages item=language}
-		<div class="lang_{$language.id_lang}" style="{if !$language.is_default}display: none;{/if}">
-			<input type="text" id="tags_{$language.id_lang}" name="tags_{$language.id_lang}"
-				value="{$product->getTags($language.id_lang, true)|htmlentitiesUTF8}" />
+	<div class="col-lg-8">
+		<div class="row">
+			{foreach from=$languages item=language}
+			<div class="input-group col-lg-12 translatable-field lang-{$language.id_lang}" style="display: table;">
+				<input type="text" id="tags_{$language.id_lang}" class=" updateCurrentText" name="tags_{$language.id_lang}" value="{$product->getTags($language.id_lang, true)|htmlentitiesUTF8}">
+				<div class="input-group-btn">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+						<img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt="">	{$language.iso_code}
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu">
+						{foreach from=$languages item=language}
+						<li>
+							<a href="javascript:hideOtherLanguage({$language.id_lang});">
+								<img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt=""> {$language.iso_code}
+							</a>
+						</li>
+						{/foreach}
+					</ul>
+				</div>
+			</div>
+			{/foreach}
 		</div>
-		{/foreach}
 	</div>
 </div>
