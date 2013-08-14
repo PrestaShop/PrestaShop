@@ -634,7 +634,7 @@ class LinkCore
 		if (!$context)
 			$context = Context::getContext();
 
-		if ((!$this->allow && in_array($id_shop, array($context->id_shop,  null))) || !Language::isMultiLanguageActivated($id_shop) || !(int)Configuration::get('PS_REWRITING_SETTINGS', null, null, $id_shop))
+		if ((!$this->allow && in_array($id_shop, array($context->shop->id,  null))) || !Language::isMultiLanguageActivated($id_shop) || !(int)Configuration::get('PS_REWRITING_SETTINGS', null, null, $id_shop))
 			return '';
 
 		if (!$id_lang)
