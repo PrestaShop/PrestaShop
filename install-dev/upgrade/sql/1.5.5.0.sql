@@ -36,3 +36,5 @@ UPDATE `PREFIX_hook` SET `live_edit` = '1' WHERE `name` LIKE 'leftcolumn';
 UPDATE `PREFIX_configuration` SET `name` = '0' WHERE `name` LIKE 'PS_LEGACY_IMAGES' AND `value` LIKE '1';
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES('PS_SMARTY_CONSOLE_KEY', 'SMARTY_DEBUG', NOW(), NOW());
+
+ALTER TABLE `PREFIX_cms` ADD `indexation` tinyint(1) UNSIGNED NULL DEFAULT '1' AFTER `active`;
