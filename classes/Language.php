@@ -70,7 +70,7 @@ class LanguageCore extends ObjectModel
 	/** @var array Languages cache */
 	protected static $_checkedLangs;
 	protected static $_LANGUAGES;
-	protected static $countActiveLanguages;
+	protected static $countActiveLanguages = array();
 
 	protected	$webserviceParameters = array(
 		'objectNodeName' => 'language',
@@ -762,15 +762,18 @@ class LanguageCore extends ObjectModel
 		return (isset(self::$_cache_language_installation[$iso_code]) ? self::$_cache_language_installation[$iso_code] : false);
 	}
 
-	public static function countActiveLanguages()
+	public static function countActiveLanguages($id_shop = null)
 	{
-		if (!self::$countActiveLanguages)
-			self::$countActiveLanguages = Db::getInstance()->getValue('
+		if ($id_shop === null)
+			$id_shop = (int)Context::getContext()->shop->id;
+
+		if (!isset(self::$countActiveLanguages[$id_shop]))
+			self::$countActiveLanguages[$id_shop] = Db::getInstance()->getValue('
 				SELECT COUNT(DISTINCT l.id_lang) FROM `'._DB_PREFIX_.'lang` l
-				'.Shop::addSqlAssociation('lang', 'l').'
+				JOIN '._DB_PREFIX_.'lang_shop lang_shop ON (lang_shop.id_lang = l.id_lang AND lang_shop.id_shop = '.(int)$id_shop.')
 				WHERE l.`active` = 1
 			');
-		return self::$countActiveLanguages;
+		return self::$countActiveLanguages[$id_shop];
 	}
 
 	public static function downloadAndInstallLanguagePack($iso, $version = null, $params = null)
@@ -825,8 +828,8 @@ class LanguageCore extends ObjectModel
 	 * @since 1.5.0
 	 * @return bool
 	 */
-	public static function isMultiLanguageActivated()
+	public static function isMultiLanguageActivated($id_shop = null)
 	{
-		return (Language::countActiveLanguages() > 1);
+		return (Language::countActiveLanguages($id_shop) > 1);
 	}
 }

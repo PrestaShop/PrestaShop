@@ -96,14 +96,14 @@ class LinkCore
 		else
 			$shop = Context::getContext()->shop;
 		
-		$url = 'http://'.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang);
+		$url = 'http://'.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop);
 
 		if (!is_object($product))
 		{
 			if (is_array($product) && isset($product['id_product']))
-				$product = new Product($product['id_product'], false, $id_lang);
+				$product = new Product($product['id_product'], false, $id_lang, $id_shop);
 			elseif ((int)$product)
-				$product = new Product((int)$product, false, $id_lang);
+				$product = new Product((int)$product, false, $id_lang, $id_shop);
 			else
 				throw new PrestaShopException('Invalid product vars');
 		}
@@ -167,7 +167,7 @@ class LinkCore
 			$shop = Context::getContext()->shop;
 		else
 			$shop = new Shop($id_shop);
-		$url = 'http://'.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang);
+		$url = 'http://'.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop);
 
 		if (!is_object($category))
 			$category = new Category($category, $id_lang);
@@ -210,7 +210,7 @@ class LinkCore
 			$shop = Context::getContext()->shop;
 		else
 			$shop = new Shop($id_shop);
-		$url = 'http://'.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang);
+		$url = 'http://'.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop);
 
 		$dispatcher = Dispatcher::getInstance();
 		if (!is_object($cms_category))
@@ -250,7 +250,7 @@ class LinkCore
 			$shop = Context::getContext()->shop;
 		else
 			$shop = new Shop($id_shop);
-		$url = $base.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang);
+		$url = $base.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop);
 
 
 		$dispatcher = Dispatcher::getInstance();
@@ -294,7 +294,7 @@ class LinkCore
 			$shop = Context::getContext()->shop;
 		else
 			$shop = new Shop($id_shop);
-		$url = 'http://'.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang);
+		$url = 'http://'.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop);
 		
 		$dispatcher = Dispatcher::getInstance();
 		if (!is_object($supplier))
@@ -331,7 +331,7 @@ class LinkCore
 			$shop = Context::getContext()->shop;
 		else
 			$shop = new Shop($id_shop);
-		$url = 'http://'.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang);
+		$url = 'http://'.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop);
 
 		$dispatcher = Dispatcher::getInstance();
 		if (!is_object($manufacturer))
@@ -371,7 +371,7 @@ class LinkCore
 			$shop = Context::getContext()->shop;
 		else
 			$shop = new Shop($id_shop);
-		$url = $base.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang);
+		$url = $base.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop);
 
 		// If the module has its own route ... just use it !
 		if (Dispatcher::getInstance()->hasRoute('module-'.$module.'-'.$controller, $id_lang, $id_shop))
@@ -476,7 +476,7 @@ class LinkCore
 
 		$uri_path = Dispatcher::getInstance()->createUrl($controller, $id_lang, $request, false, '', $id_shop);
 		$url = ($ssl && $this->ssl_enable) ? 'https://' : 'http://';
-		$url .= $shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang).ltrim($uri_path, '/');
+		$url .= $shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop).ltrim($uri_path, '/');
 
 		return $url;
 	}
@@ -629,12 +629,12 @@ class LinkCore
 		return $url.(!strstr($url, '?') ? '?' : '&').'orderby='.urlencode($orderby).'&orderway='.urlencode($orderway);
 	}
 
-	protected function getLangLink($id_lang = null, Context $context = null)
+	protected function getLangLink($id_lang = null, Context $context = null, $id_shop = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
 
-		if (!$this->allow || !Language::isMultiLanguageActivated())
+		if (!$this->allow || !Language::isMultiLanguageActivated($id_shop))
 			return '';
 
 		if (!$id_lang)
