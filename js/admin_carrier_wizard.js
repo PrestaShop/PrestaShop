@@ -127,16 +127,20 @@ function displaySummary()
 	
 	// Tax and calculation mode for the shipping cost
 	tmp = summary_translation_shipping_cost.replace('@s2', '<strong>' + $('#id_tax_rules_group option:selected').text() + '</strong>');	
-	if ($('#billing_price').attr('checked'))
-		tmp = tmp.replace('@s1', summary_translation_price);
-	else if ($('#billing_weight').attr('checked'))
-		tmp = tmp.replace('@s1', summary_translation_weight);
-	else
-		tmp = tmp.replace('@s1', '<strong>' + summary_translation_undefined + '</strong>');
+	
+		if ($('#billing_price').attr('checked'))
+			tmp = tmp.replace('@s1', summary_translation_price);
+		else if ($('#billing_weight').attr('checked'))
+			tmp = tmp.replace('@s1', summary_translation_weight);
+		else
+			tmp = tmp.replace('@s1', '<strong>' + summary_translation_undefined + '</strong>');
+	
+	
+	
 	$('#summary_shipping_cost').html(tmp);
 	
 	// Weight or price ranges
-	$('#summary_range').html(summary_translation_range);
+	$('#summary_range').html(summary_translation_range+' '+summary_translation_range_limit);
 	
 	
 	if ($('input[name="shipping_method"]:checked').val() == 1)
@@ -164,7 +168,8 @@ function displaySummary()
 		.replace('@s2', '<strong>' + range_sup +' '+ unit + '</strong>')
 		.replace('@s3', '<strong>' + $('#range_behavior option:selected').text().toLowerCase() + '</strong>')
 	);
-	
+	if ($('#is_free_on').attr('checked'))
+		$('span.is_free').hide();
 	// Delivery zones
 	$('#summary_zones').html('');
 	$('.input_zone').each(function(){
@@ -192,7 +197,7 @@ function validateSteps(step_number)
 	var is_ok = true;
 	if ((multistore_enable && step_number == 3) || (!multistore_enable && step_number == 2))
 	{
-		if ($('input[name="is_free"]').val() == 1 && !validateRange(2))
+		if (!$('#is_free_on').attr('checked') && !validateRange(2))
 			is_ok = false;
 	}
 	
@@ -381,11 +386,10 @@ function showFees()
 		if ($(this).index() >= 2)
 		{
 			//enable only if zone is active
-			/*
 			tr = $(this).parent('tr');
 			validate = $('tr.fees_all td:eq('+$(this).index()+')').hasClass('validated');
 			if ($(tr).index() > 2 && $(tr).find('td:eq(1) input').attr('checked') && validate || !$(tr).hasClass('range_sup') || !$(tr).hasClass('range_inf'))
-					$(this).find('input:text').val('').removeAttr('disabled'); */
+					$(this).find('input:text').removeAttr('disabled');
 			
 			$(this).find('input:text, button').css('background-color', '').css('border-color', '');
 			$(this).find('button').css('background-color', '').css('border-color', '').removeAttr('disabled');
