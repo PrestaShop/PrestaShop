@@ -476,11 +476,21 @@ class AdminMetaControllerCore extends AdminController
 	public function updateOptionPsRewritingSettings()
 	{
 		Configuration::updateValue('PS_REWRITING_SETTINGS', (int)Tools::getValue('PS_REWRITING_SETTINGS'));
-		Tools::generateHtaccess($this->ht_file, null, null, '', Tools::getValue('PS_HTACCESS_DISABLE_MULTIVIEWS'), false, Tools::getValue('PS_HTACCESS_DISABLE_MODSEC'));
-
-		Tools::enableCache();
-		Tools::clearCache($this->context->smarty);
-		Tools::restoreCacheSettings();
+		if (Tools::generateHtaccess($this->ht_file, null, null, '', Tools::getValue('PS_HTACCESS_DISABLE_MULTIVIEWS'), false, Tools::getValue('PS_HTACCESS_DISABLE_MODSEC')))
+		{
+			Tools::enableCache();
+			Tools::clearCache($this->context->smarty);
+			Tools::restoreCacheSettings();
+		}
+		else
+		{
+			Configuration::updateValue('PS_REWRITING_SETTINGS', 0);
+			// Message copied/pasted from the information tip
+			$message = $this->l('Before being able to use this tool, you need to:');
+			$message .= '<br />- '.$this->l('Create a blank .htaccess in your root directory.');
+			$message .= '<br />- '.$this->l('Give it write permissions (CHMOD 666 on Unix system)');
+			$this->errors[] = $message;
+		}
 	}
 
 	public function updateOptionPsRouteProductRule()
