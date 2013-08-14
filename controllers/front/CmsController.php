@@ -108,6 +108,11 @@ class CmsControllerCore extends FrontController
 				'content_only' => (int)(Tools::getValue('content_only')),
 				'path' => $path
 			));
+
+			if($this->cms->indexation == 0)
+			{
+				$this->context->smarty->assign('nobots', true);
+			}
 		}
 		else if ($this->assignCase == 2)
 		{
