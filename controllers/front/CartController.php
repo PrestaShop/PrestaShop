@@ -189,10 +189,30 @@ class CartControllerCore extends FrontController
 			return;
 		}
 
+		$qty_to_check = $this->qty;
+		$cart_products = $this->context->cart->getProducts();
+
+		if (is_array($cart_products))
+			foreach ($cart_products as $cart_product)
+			{
+				if ((isset($this->id_product_attribute) && $cart_product['id_product_attribute'] == $this->id_product_attribute) ||
+					(isset($this->id_product) && $cart_product['id_product'] == $this->id_product))
+				{
+					$qty_to_check = $cart_product['cart_quantity'];
+
+					if (Tools::getValue('op', 'up') == 'down')
+						$qty_to_check -= $this->qty;
+					else
+						$qty_to_check += $this->qty;
+
+					break;
+				}
+			}
+
 		// Check product quantity availability
 		if ($this->id_product_attribute)
 		{
-			if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $this->qty))
+			if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $qty_to_check))
 				$this->errors[] = Tools::displayError('There isn\'t enough product in stock.');
 		}
 		else if ($product->hasAttributes())
@@ -202,10 +222,10 @@ class CartControllerCore extends FrontController
 			// @todo do something better than a redirect admin !!
 			if (!$this->id_product_attribute)
 				Tools::redirectAdmin($this->context->link->getProductLink($product));
-			else if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $this->qty))
+			else if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $qty_to_check))
 				$this->errors[] = Tools::displayError('There isn\'t enough product in stock.');
 		}
-		else if (!$product->checkQty($this->qty))
+		else if (!$product->checkQty($qty_to_check))
 			$this->errors[] = Tools::displayError('There isn\'t enough product in stock.');
 
 		// If no errors, process product addition
