@@ -1395,17 +1395,17 @@ class CartCore extends ObjectModel
 				);
 
 				$total_ecotax = $product['ecotax'] * (int)$product['cart_quantity'];
-				$total_price = $price;
-    				if ($with_taxes)
-    				{
+			$total_price = Tools::ps_round($price * (int)$product['cart_quantity'],2);
+    if ($with_taxes)
+    {
          $product_tax_rate = (float)Tax::getProductTaxRate((int)$product['id_product'], (int)$address_id, $virtual_context);
          $product_eco_tax_rate = Tax::getProductEcotaxRate((int)$address_id);
-         $total_price = Tools::ps_round((($total_price - $total_ecotax) * (1 + $product_tax_rate / 100)),2);
+         $total_price = Tools::ps_round((($price - $total_ecotax) * (1 + $product_tax_rate / 100)),2);
          $total_price = $total_price * (int)$product['cart_quantity'];
          $total_ecotax = $total_ecotax * (1 + $product_eco_tax_rate / 100);
          $total_price = Tools::ps_round($total_price + $total_ecotax, 2);
-    				}
-			}
+    }
+			
 			else
 			{
 				if ($with_taxes)
