@@ -363,6 +363,9 @@ class AdminMetaControllerCore extends AdminController
 		else if (Tools::isSubmit('submitRobots'))
 			$this->generateRobotsFile();
 
+		if (Tools::isSubmit('PS_ROUTE_product_rule'))
+			Tools::clearCache($this->context->smarty);		
+
 		return parent::postProcess();
 	}
 
