@@ -58,7 +58,7 @@
 	</div>
 
 	<form action="{$current}&token={$token}" method="post" id="import_form" name="import_form">
-		{l s='Skip'} <input type="text" size="2" name="skip" value="1" /> {l s='lines'}
+		{l s='Skip'} <input type="text" size="2" name="skip" value="0" /> {l s='lines'}
 		<input type="hidden" name="csv" value="{$fields_value.csv}" />
 		<input type="hidden" name="convert" value="{$fields_value.convert}" />
 		<input type="hidden" name="entity" value="{$fields_value.entity}" />
