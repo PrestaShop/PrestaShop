@@ -494,6 +494,7 @@ class AdminStatusesControllerCore extends AdminController
 
 			return parent::postProcess();
 		}
+		//new function
 		else if (isset($_GET['send_email'.$this->table]))
     		{
 		  $this->processSend_email();
