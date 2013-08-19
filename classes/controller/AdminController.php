@@ -2149,15 +2149,14 @@ class AdminControllerCore extends Controller
 
 		/* Cache */
 		$this->_lang = (int)$id_lang;
+		$this->_orderBy = $order_by;
 
 		if (preg_match('/[.!]/', $order_by))
 		{
 			$order_by_split = preg_split('/[.!]/', $order_by);
 			$order_by = pSQL($order_by_split[0]).'.`'.pSQL($order_by_split[1]).'`';
-			$this->_orderBy = (isset($order_by_split) && isset($order_by_split[1])) ? $order_by_split[1] : $order_by;
 		}
-		else
-			$this->_orderBy = $order_by;
+
 		$this->_orderWay = Tools::strtoupper($order_way);
 
 		/* SQL table : orders, but class name is Order */
