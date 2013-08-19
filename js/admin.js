@@ -130,7 +130,7 @@ function updateCurrentText()
 function updateFriendlyURLByName()
 {
 	$('#link_rewrite_' + id_language).val(str2url($('#name_' + id_language).val(), 'UTF-8'));
-	$('#friendly-url').html($('#link_rewrite_' + id_language).val());
+	$('#friendly-url_' + id_language).html($('#link_rewrite_' + id_language).val());
 }
 
 function updateFriendlyURL()
@@ -138,7 +138,7 @@ function updateFriendlyURL()
 	var link = $('#link_rewrite_' + id_language);
 	if (link[0])
 	{
-		$('#friendly-url').text(str2url($('#link_rewrite_' + id_language).val(), 'UTF-8'));
+		$('#friendly-url_' + id_language).text(str2url($('#link_rewrite_' + id_language).val(), 'UTF-8'));
 	}
 }
 
@@ -148,7 +148,7 @@ function updateLinkRewrite()
 	if (link[0])
 	{
 		link.val(str2url($('#link_rewrite_' + id_language).val(), 'UTF-8'));
-		$('#friendly-url').text(link.val());
+		$('#friendly-url_' + id_language).text(link.val());
 	}
 }
 
@@ -1046,6 +1046,7 @@ function hideOtherLanguage(id)
 {
 	$('.translatable-field').hide();
 	$('.lang-' + id).show();
+	id_language = id;
 }
 
 function sendBulkAction(form, action)
