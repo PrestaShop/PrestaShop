@@ -488,7 +488,8 @@ class LanguageCore extends ObjectModel
 			// Files deletion
 			foreach (Language::getFilesList($this->iso_code, _THEME_NAME_, false, false, false, true, true) as $key => $file)
 				if (file_exists($key))
-				unlink($key);
+					unlink($key);
+
 			$modList = scandir(_PS_MODULE_DIR_);
 			foreach ($modList as $mod)
 			{
@@ -510,36 +511,31 @@ class LanguageCore extends ObjectModel
 				Language::recurseDeleteDir(_PS_MAIL_DIR_.$this->iso_code);
 			if (file_exists(_PS_TRANSLATIONS_DIR_.$this->iso_code))
 				Language::recurseDeleteDir(_PS_TRANSLATIONS_DIR_.$this->iso_code);
-		}
-		
-		if (!parent::delete())
-			return false;
-		if (!$this->hasMultishopEntries() || Shop::getContext() == Shop::CONTEXT_ALL)
-		{
-			// delete images
-			$files_copy = array(
-				'/en.jpg',
-				'/en-default-'.ImageType::getFormatedName('thickbox').'.jpg',
-				'/en-default-'.ImageType::getFormatedName('home').'.jpg',
-				'/en-default-'.ImageType::getFormatedName('large').'.jpg',
-				'/en-default-'.ImageType::getFormatedName('medium').'.jpg',
-				'/en-default-'.ImageType::getFormatedName('small').'.jpg'
+
+			$images = array(
+				'.jpg',
+				'-default-'.ImageType::getFormatedName('thickbox').'.jpg',
+				'-default-'.ImageType::getFormatedName('home').'.jpg',
+				'-default-'.ImageType::getFormatedName('large').'.jpg',
+				'-default-'.ImageType::getFormatedName('medium').'.jpg',
+				'-default-'.ImageType::getFormatedName('small').'.jpg'
 			);
-			$tos = array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_);
-			foreach ($tos as $to)
-				foreach ($files_copy as $file)
+			$image_directories = array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_);
+			foreach ($images_directories as $image_directory)
+				foreach ($images as $image)
 				{
-					$name = str_replace('/en', ''.$this->iso_code, $file);
-	
-					if (file_exists($to.$name))
-						unlink($to.$name);
+					if (file_exists($image_directory.$this->iso_code.$image))
+						unlink($image_directory.$this->iso_code.$image);
 					if (file_exists(dirname(__FILE__).'/../img/l/'.$this->id.'.jpg'))
 						unlink(dirname(__FILE__).'/../img/l/'.$this->id.'.jpg');
 				}
 		}
+
+		if (!parent::delete())
+			return false;
+
 		return Tools::generateHtaccess();
 	}
-
 
 	public function deleteSelection($selection)
 	{
@@ -549,11 +545,10 @@ class LanguageCore extends ObjectModel
 		$result = true;
 		foreach ($selection as $id)
 		{
-			$this->id = (int)($id);
-			$result = $result && $this->delete();
+			$language = new Language($id);
+			$result = $result && $language->delete();
 		}
 
-		Tools::generateHtaccess();
 		return $result;
 	}
 
