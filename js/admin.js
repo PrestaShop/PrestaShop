@@ -126,18 +126,29 @@ function updateCurrentText()
 {
 	$('#current_product').html($('#name_' + id_language).val());
 }
+
 function updateFriendlyURLByName()
 {
 	$('#link_rewrite_' + id_language).val(str2url($('#name_' + id_language).val(), 'UTF-8'));
 	$('#friendly-url').html($('#link_rewrite_' + id_language).val());
 }
+
 function updateFriendlyURL()
 {
 	var link = $('#link_rewrite_' + id_language);
 	if (link[0])
 	{
+		$('#friendly-url').text(str2url($('#link_rewrite_' + id_language).val(), 'UTF-8'));
+	}
+}
+
+function updateLinkRewrite()
+{
+	var link = $('#link_rewrite_' + id_language);
+	if (link[0])
+	{
 		link.val(str2url($('#link_rewrite_' + id_language).val(), 'UTF-8'));
-		$('#seo #friendly-url').text(link.val());
+		$('#friendly-url').text(link.val());
 	}
 }
 
