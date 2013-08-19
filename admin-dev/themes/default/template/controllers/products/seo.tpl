@@ -110,10 +110,12 @@
 
 	<div class="row">
 		<div class="col-lg-9 col-offset-3">
-			<div class="alert alert-block">
+			{foreach from=$languages item=language}
+			<div class="alert alert-block translatable-field lang-{$language.id_lang}">
 				<i class="icon-link"></i> {l s='The product link will look like this:'}
-				{$curent_shop_url|escape:'htmlall':'UTF-8'}lang/{if isset($product->id)}{$product->id}{else}<b>id_product</b>{/if}-<span id="friendly-url">{$product->link_rewrite[$default_language]}</span>.html
+				{$curent_shop_url|escape:'htmlall':'UTF-8'}lang/{if isset($product->id)}{$product->id}{else}<b>id_product</b>{/if}-<span id="friendly-url_{$language.id_lang}">{$product->link_rewrite[$default_language]}</span>.html
 			</div>
+			{/foreach}
 		</div>
 	</div>
 </fieldset>
