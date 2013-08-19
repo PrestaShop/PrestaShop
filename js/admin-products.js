@@ -1323,17 +1323,20 @@ product_tabs['Suppliers'] = new function(){
 
 		// @TODO: a better way to fix the accordion wrong size bug when the selected page is this page
 		setTimeout(function() {
-			$('#suppliers_accordion').accordion();
-			// If one second was not enough to display page, another resize is needed
-			setTimeout(function() {
-				$('#suppliers_accordion').accordion({ heightStyle: "fill" });
-			}, 3000);
+			$('#suppliers_accordion').accordion({
+				collapsible: true,
+				autoHeight: true,
+				heightStyle: "content"});
 		}, 1000);
 
 		// Resize the accordion once the page is visible because of the bug with accordions initialized
 		// inside a display:none block not having the correct size.
 		$('#suppliers_accordion').parents('.product-tab-content').bind('displayed', function(){
-			$('#suppliers_accordion').accordion({ heightStyle: "fill" });
+			$('#suppliers_accordion').accordion({
+				collapsible: true,
+				autoHeight: true,
+				heightStyle: "content"
+			});
 		});
 	};
 }
@@ -1435,13 +1438,21 @@ product_tabs['Warehouses'] = new function(){
 
 		// @TODO: a better way to fix the accordion wrong size bug when the selected page is this page
 		setTimeout(function() {
-			$('#warehouse_accordion').accordion();
-		}, 500);
+			$('#warehouse_accordion').accordion({
+				collapsible: true,
+				autoHeight: true,
+				heightStyle: "content"
+			});
+		}, 1000);
 
 		// Resize the accordion once the page is visible because of the bug with accordions initialized
 		// inside a display:none block not having the correct size.
 		$('#warehouse_accordion').parents('.product-tab-content').bind('displayed', function(){
-			$('#warehouse_accordion').accordion("refresh");
+			$('#warehouse_accordion').accordion({
+				collapsible: true,
+				autoHeight: true,
+				heightStyle: "content"
+			});
 		});
 	};
 }

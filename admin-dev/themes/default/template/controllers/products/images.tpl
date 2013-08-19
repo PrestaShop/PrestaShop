@@ -24,6 +24,7 @@
 *}
 
 {if isset($id_product) && isset($product)}
+<fieldset>
 <input type="hidden" name="submitted_tabs[]" value="Images" />
 	
 <h3 class="tab" >
@@ -328,4 +329,5 @@
 	});
 	{/literal}
 </script>
+</fieldset>
 {/if}
