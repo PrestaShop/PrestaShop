@@ -24,36 +24,37 @@
 *}
 
 {if isset($obj->id)}
+<fieldset>
 	<input type="hidden" name="submitted_tabs[]" value="Customization" />
 	<h3>{l s='Add or modify customizable properties.'}</h3>
 	
 	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Customization"}
 
-<div class="row">
-	{include file="controllers/products/multishop/checkbox.tpl" field="uploadable_files" type="default"}
-	<label class="control-label col-lg-3" for="uploadable_files">
-		<span class="label-tooltip" data-toggle="tooltip"
-			title="{l s='Number of upload file fields displayed'}">
-			{l s='File fields:'}
-		</span>
-	</label>
-	<div class="col-lg-1">
-		<input type="text" name="uploadable_files" id="uploadable_files" value="{$uploadable_files|htmlentities}" />
+	<div class="row">
+		{include file="controllers/products/multishop/checkbox.tpl" field="uploadable_files" type="default"}
+		<label class="control-label col-lg-3" for="uploadable_files">
+			<span class="label-tooltip" data-toggle="tooltip"
+				title="{l s='Number of upload file fields displayed'}">
+				{l s='File fields:'}
+			</span>
+		</label>
+		<div class="col-lg-1">
+			<input type="text" name="uploadable_files" id="uploadable_files" value="{$uploadable_files|htmlentities}" />
+		</div>
 	</div>
-</div>
 
-<div class="row">
-	{include file="controllers/products/multishop/checkbox.tpl" field="text_fields" type="default"}
-	<label class="control-label col-lg-3" for="text_fields">
-		<span class="label-tooltip" data-toggle="tooltip"
-			title="{l s='Number of text fields displayed'}">
-			{l s='Text fields:'}
-		</span>
-	</label>
-	<div class="col-lg-1">
-		<input type="text" name="text_fields" id="text_fields" value="{$text_fields|htmlentities}" />
+	<div class="row">
+		{include file="controllers/products/multishop/checkbox.tpl" field="text_fields" type="default"}
+		<label class="control-label col-lg-3" for="text_fields">
+			<span class="label-tooltip" data-toggle="tooltip"
+				title="{l s='Number of text fields displayed'}">
+				{l s='Text fields:'}
+			</span>
+		</label>
+		<div class="col-lg-1">
+			<input type="text" name="text_fields" id="text_fields" value="{$text_fields|htmlentities}" />
+		</div>
 	</div>
-</div>
 
 	{if $has_file_labels}
 		{l s='Define the label of the file fields:'}
@@ -64,5 +65,5 @@
 		{l s='Define the label of the text fields:'}
 		{$display_text_labels}
 	{/if}
-
+</fieldset>
 {/if}

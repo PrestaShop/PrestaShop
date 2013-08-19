@@ -24,6 +24,7 @@
 *}
 
 {if isset($product->id)}
+<fieldset>
 	<input type="hidden" name="submitted_tabs[]" value="Features" />
 	<h3>{l s='Assign features to this product:'}</h3>
 
@@ -107,5 +108,5 @@
 	<a href="{$link->getAdminLink('AdminFeatures')|escape:'htmlall':'UTF-8'}&amp;addfeature" class="btn btn-link confirm_leave button">
 		<i class="icon-plus-sign"></i> {l s='Add a new feature'} <i class="icon-external-link-sign"></i>
 	</a>
-
+</fieldset>
 {/if}
