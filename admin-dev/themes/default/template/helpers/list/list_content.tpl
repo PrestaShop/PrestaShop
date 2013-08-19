@@ -147,7 +147,7 @@
 			{/foreach}
 			{if $compiled_actions|count > 0}
 			<div class="btn-group{if $compiled_actions|count > 1} btn-group-action{/if}">
-				{$compiled_actions[0]|replace:'class=""':'class="btn btn-default btn-small"'}
+				{$compiled_actions[0]|regex_replace:'/class\s*=\s*"(\w*)"/':'class="$1 btn btn-default"'}
 				{if $compiled_actions|count > 1}
 				<button class="btn btn-default btn-small dropdown-toggle" data-toggle="dropdown">
 					<span class="caret"></span>&nbsp;
