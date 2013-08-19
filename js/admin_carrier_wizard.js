@@ -302,6 +302,12 @@ function bind_inputs()
 		}
 	});
 	
+	$('tr.fees_all td input:text').keypress( function (evn) {
+		index = $(this).parent('td').index();
+		if (evn.keyCode == 13)
+			return false;
+	});
+	
 	$('tr.range_sup td input:text, tr.range_inf td input:text').typeWatch({
 		captureLength: 0,
 		highlight: false,
