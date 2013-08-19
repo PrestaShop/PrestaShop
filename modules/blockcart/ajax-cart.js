@@ -729,4 +729,9 @@ $(document).ready(function(){
 		}
 		return false;
 	});
+
+	$('#cart_navigation input').click(function(){
+		$(this).attr('disabled', true).removeClass('exclusive').addClass('exclusive_disabled');
+		$(this).closest("form").get(0).submit();
+	});
 });
