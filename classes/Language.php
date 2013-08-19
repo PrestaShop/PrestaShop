@@ -192,7 +192,7 @@ class LanguageCore extends ObjectModel
 
 	public function add($autodate = true, $nullValues = false, $only_add = false)
 	{
-		if (!parent::add($autodate))
+		if (!parent::add($autodate, $nullValues))
 			return false;
 
 		if ($only_add)
@@ -202,10 +202,9 @@ class LanguageCore extends ObjectModel
 		$this->_generateFiles();
 
 		// @todo Since a lot of modules are not in right format with their primary keys name, just get true ...
-		$resUpdateSQL = $this->loadUpdateSQL();
-		$resUpdateSQL = true;
-		Tools::generateHtaccess();
-		return $resUpdateSQL;
+		$this->loadUpdateSQL();
+
+		return Tools::generateHtaccess();
 	}
 
 	public function toggleStatus()
