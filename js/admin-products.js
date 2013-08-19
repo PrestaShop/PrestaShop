@@ -553,7 +553,8 @@ product_tabs['Prices'] = new function(){
 	this.bindDelete = function(){
 		$('#specific_prices_list').delegate('a[name="delete_link"]', 'click', function(e){
 			e.preventDefault();
-			self.deleteSpecificPrice(this.href, $(this).parents('tr'));
+			if (confirm(delete_price_rule))
+				self.deleteSpecificPrice(this.href, $(this).parents('tr'));
 		})
 	};
 
