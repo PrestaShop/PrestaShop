@@ -23,6 +23,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<a href="#" class="" id="details_{$params.action}_{$id}" title="{$action}" onclick="display_action_details('{$id}', '{$controller}', '{$token}', '{$params.action}', {$json_params|escape}); return false">
+<a href="#" id="details_{$params.action}_{$id}" title="{$action}" onclick="display_action_details('{$id}', '{$controller}', '{$token}', '{$params.action}', {$json_params|escape}); return false">
 	<i class="icon-collapse"></i> {$action}
 </a>
