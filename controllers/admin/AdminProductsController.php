@@ -3762,7 +3762,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->addRowAction('default');
 		$this->addRowAction('delete');
 
-		$color_by_default = '#BDE5F8';
+		$default_class = 'highlighted';
 
 		$this->fields_list = array(
 			'attributes' => array('title' => $this->l('Attributes'), 'align' => 'left'),
@@ -3825,7 +3825,7 @@ class AdminProductsControllerCore extends AdminController
 					if ($product_attribute['default_on'])
 					{
 						$comb_array[$id_product_attribute]['name'] = 'is_default';
-						$comb_array[$id_product_attribute]['color'] = $color_by_default;
+						$comb_array[$id_product_attribute]['class'] = $default_class;
 					}
 				}
 			}
