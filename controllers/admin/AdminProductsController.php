@@ -2612,6 +2612,7 @@ class AdminProductsControllerCore extends AdminController
 	{
 		if (!ShopUrl::getMainShopDomain())
 			return false;
+
 		$is_rewrite_active = (bool)Configuration::get('PS_REWRITING_SETTINGS');
 		$preview_url = $this->context->link->getProductLink(
 			$product,
@@ -2623,6 +2624,7 @@ class AdminProductsControllerCore extends AdminController
 			0,
 			$is_rewrite_active
 		);
+
 		if (!$product->active)
 		{
 			$preview_url = $this->context->link->getProductLink(
@@ -2635,15 +2637,12 @@ class AdminProductsControllerCore extends AdminController
 				0,
 				$is_rewrite_active
 			);
+			$admin_dir = dirname($_SERVER['PHP_SELF']);
+			$admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
+			$preview_url .= ((strpos($preview_url, '?') === false) ? '?' : '&').'adtoken='.$this->token.'&ad='.$admin_dir.'&id_employee='.(int)$this->context->employee->id;
 
-			if (!$product->active)
-			{
-				$admin_dir = dirname($_SERVER['PHP_SELF']);
-				$admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
-
-				$preview_url .= $product->active ? '' : '&adtoken='.$this->token.'&ad='.$admin_dir.'&id_employee='.(int)$this->context->employee->id;
-			}
 		}
+
 		return $preview_url;
 	}
 
