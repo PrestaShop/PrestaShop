@@ -245,7 +245,9 @@ class AdminManufacturersControllerCore extends AdminController
 					'name' => 'short_description',
 					'lang' => true,
 					'class' => 'rte',
-					'hint' => $this->l('Invalid characters:').' <>;=#{}'
+					'hint' => $this->l('Invalid characters:').' <>;=#{}',
+					'rows' => 2,
+					'cols' => 10
 				),
 				array(
 					'type' => 'textarea',
@@ -253,7 +255,9 @@ class AdminManufacturersControllerCore extends AdminController
 					'name' => 'description',
 					'lang' => true,
 					'class' => 'rte',
-					'hint' => $this->l('Invalid characters:').' <>;=#{}'
+					'hint' => $this->l('Invalid characters:').' <>;=#{}',
+					'rows' => 2,
+					'cols' => 10
 				),
 				array(
 					'type' => 'file',
@@ -483,7 +487,9 @@ class AdminManufacturersControllerCore extends AdminController
 			'label' => $this->l('Other:'),
 			'name' => 'other',
 			'required' => false,
-			'hint' => $this->l('Forbidden characters:').' <>;=#{}'
+			'hint' => $this->l('Forbidden characters:').' <>;=#{}',
+			'rows' => 2,
+			'cols' => 10
 		);
 		$form['submit'] = array(
 			'title' => $this->l('Save   '),
