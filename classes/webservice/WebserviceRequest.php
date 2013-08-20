@@ -1264,14 +1264,22 @@ class WebserviceRequestCore
 		$assoc = Shop::getAssoTable($this->resourceConfiguration['retrieveData']['table']);
 		if ($assoc !== false)
 		{
+			$check_shop_group = false;
+
 			$sql = 'SELECT 1
  						FROM `'.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table']);
 			if ($assoc['type'] != 'fk_shop')
 				$sql .= '_'.$assoc['type'];
+			else
+			{
+				$def = ObjectModel::getDefinition($this->resourceConfiguration['retrieveData']['className']);
+				if (isset($def['fields']) && isset($def['fields']['id_shop_group']))
+					$check_shop_group = true;
+			}
 			$sql .= '`';
 
 			foreach (self::$shopIDs as $id_shop)
-				$OR[] = ' id_shop = '.(int)$id_shop.' ';
+				$OR[] = ' (id_shop = '.(int)$id_shop.($check_shop_group ? ' OR (id_shop = 0 AND id_shop_group='.(int)Shop::getGroupFromShop((int)$id_shop).')' : '').') ';
 
 			$check = ' WHERE ('.implode('OR', $OR).') AND `'.bqSQL($this->resourceConfiguration['fields']['id']['sqlId']).'` = '.(int)$this->urlSegment[1];
 			if (!Db::getInstance()->getValue($sql.$check))
