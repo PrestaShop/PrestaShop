@@ -24,7 +24,7 @@
 *}
 
 {if $add_permission eq '1'}
-<div class="panel">
+	<div class="panel">
 	{if isset($logged_on_addons)}
 			<!--start addons login-->
 			<div class="panel-heading">
@@ -57,14 +57,14 @@
 					<label class="control-label col-lg-3">{l s='Addons Login'} :</label> 
 					<div class="input-group col-lg-4">
 						<span class="input-group-addon"><i class="icon-user"></i></span>
-						<input type="text" value="" id="username_addons" autocomplete="off" class="ac_input">
+						<input type="text" value="" id="username_addons" autocomplete="off" class="form-control ac_input">
 					</div>
 				</div>
 				<div class="row">
 					<label class="control-label col-lg-3">{l s= 'Password Addons'} :</label>
 					<div class="input-group col-lg-4">
 						<span class="input-group-addon"><i class="icon-key"></i></span>
-						<input type="password" value="" id="password_addons" autocomplete="off" class="ac_input">
+						<input type="password" value="" id="password_addons" autocomplete="off" class="form-control ac_input">
 					</div>
 				</div>
 				<div class="row">

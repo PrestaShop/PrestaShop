@@ -1,4 +1,4 @@
-#nobootstrap{
+#nobootstrap {
 	body {font-family: Arial, Helvetica, sans-serif;}
 
 	h1, h2, h3, h4  { font-family: Arial, Helvetica, sans-serif; margin-bottom:.5em; line-height:1.4em; }
@@ -7,12 +7,11 @@
 	h4  { font-size:1.05em; }
 	h6  { font-size:1em; }
 
-
-	/*LIST*/
-	ul,ol {list-style:none; margin: 0; padding: 0;}
+	//LIST
+	ul, ol {list-style:none; margin: 0; padding: 0;}
 	ul li {color:#585A69;}
 
-	/*FORM*/
+	//FORM
 	label {color:#585a69;text-shadow:0 1px 0#fff;}
 	fieldset{background-color:#EBEDF4; border:1px solid #CCCED7; color:#585A69; font-size:1.1em;margin:0;padding:1em}
 	.Bloc {background-color:#EBEDF4; border:1px solid #CCCED7;font-size:1.1em;margin:0;padding:1em}
@@ -28,7 +27,7 @@
 	.icon {vertical-align:middle}
 	.icon-top {vertical-align:top}
 
-	/*BUTTON*/
+	//BUTTON
 	.button{
 		background: #e3e3e3 url('../img/bg-button-degrade.png') repeat-x scroll left top;
 		background: -moz-linear-gradient(center top , #F9F9F9, #E3E3E3) repeat scroll 0 0 transparent;
@@ -45,11 +44,11 @@
 
 	#top_container{margin:0;padding:0}
 
-	/*HEADER*/
+	//HEADER
 	#header { background-color: #394049; height:90px; }
-	/* Portrait orientation targeting */ 
+	// Portrait orientation targeting  
 	@media screen and (orientation: portrait) {#header{min-width:1250px}}
-	/* Portrait orientation targeting */ 
+	// Portrait orientation targeting  
 	@media screen and (orientation: landscape) {#header{min-width:1250px}}
 	#header #header_infos{ position:relative; margin: 0; padding:0; height:60px; }
 	#header #header_shopname {float: left; margin:10px 15px 0 10px;}
@@ -76,7 +75,7 @@
 	#header #header_search #bo_query{ font: 13px Arial,sans-serif; float:left;background: none repeat scroll 0 0 transparent;  border:none; box-shadow:none;  padding: 5px 0px 5px 4px; width: 160px; }
 	#header #header_search #bo_search_type_chzn{ font-size:13px; float:left; margin:0 23px 0 0; padding:0 4px; vertical-align:middle;width:80px !important;height:27px; border:none;}
 	#header #header_search #bo_search_type_chzn.chzn-container-single .chzn-single { box-shadow:none; border-radius:0px; border:none; border-left:1px dotted #ccc;} 
-	#header #header_search #bo_search_submit { background:  url('../img/icon-search2.png') no-repeat scroll center; border:none; width:27px; height:25px; float:left; font-weight:normal; margin:0; padding:0; cursor:pointer; text-indent:-9999em; position:absolute; right:0; display:block; border-left:1px solid #3079ED; border-radius:0px; /*hacking ie7font-size: 0!ie7; color: transparent!ie;*/ }
+	#header #header_search #bo_search_submit { background:  url('../img/icon-search2.png') no-repeat scroll center; border:none; width:27px; height:25px; float:left; font-weight:normal; margin:0; padding:0; cursor:pointer; text-indent:-9999em; position:absolute; right:0; display:block; border-left:1px solid #3079ED; border-radius:0px;}
 	#header #header_quick{float:right; display:block; margin-top:15px;}
 	#header #header_quick #quick_select_chzn{ font-size:13px; margin:0 10px 0 0; padding:0px 0 4px;  }
 	#header #header_myaccount{background:url('../img/bg-lang.png') no-repeat;display:block;float:right;height:16px;margin:8px 1px 0 0;width:16px}
@@ -104,7 +103,7 @@
 	.notifs_wrapper p.no_notifs {border: none;}
 
 
-	/*MENU*/
+	//MENU
 	#header #menu{ background-color: #f8f8f8; border-bottom:1px solid #e5e5e5; float:left;line-height:normal;margin:0;padding:0;width:100%;}
 	#header #menu li.maintab{float:left;height:29px;list-style:none;list-style:none;display:block; border-left:1px solid #fff; border-right:1px solid #ccc;}
 	#header #menu li.submenu_size .title{cursor:default;color:#000;display:block; padding:8px 3px 4px 0;font-weight:normal;font-size:12px;}
@@ -124,10 +123,10 @@
 	#header #menu .submenu li.active a { color: #fff;}
 	#header #menu .submenu li.active a:hover { color:#666666}
 
-	/*SEPARATION*/
+	//SEPARATION
 	.separation { background-color:#ccc;border-bottom:1px solid #fff; width:100%; height:1px; margin:10px 0;}
 
-	/*TABLE*/
+	//TABLE
 	.table_grid {width:100%;}
 	.table{ background-color:#fff;border:1px solid #ccc; padding:0; border-radius:3px; -moz-border-radius:3px;-webkit-border-radius:3px;}
 	.filter {background-color:#f1f9ff;}
@@ -182,17 +181,17 @@
 	.button-autoupgrade {-moz-border-bottom-colors: none;-moz-border-image: none;-moz-border-left-colors: none;-moz-border-right-colors: none;-moz-border-top-colors: none;border-color: #FFF6D3 #DFD5AF #DFD5AF #FFF6D3;border-right: 1px solid #DFD5AF;border-style: solid;border-width: 1px;color: #268CCD;font-size: medium;padding: 5px;}
 	.processing {overflow: auto;}
 
-	/*UI ACCORDEON*/
+	//UI ACCORDEON
 	.ui-accordion-header { background-color: #ccc; color:#000;}
 
-	/*BLOC*/
+	//BLOC
 	.Bloc { background: none repeat scroll 0 0 #EBEDF4;}
 
 
-	/*TABLE STATUS COMMANDE*/
+	//TABLE STATUS COMMANDE
 	.table td span.color_field { font-size:11px; padding:2px 5px; border-radius:3px; text-transform:uppercase; color:#fff; border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px;}
 
-	/*multishop toolbar*/
+	//multishop toolbar
 	.multishop_toolbar { background-color: #F8F8F8; border: 1px solid #CCCCCC; margin-bottom:10px; padding: 10px; border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px; font-size: 18px;}
 	.multishop_toolbar span.text_multishop {vertical-align: 7px; padding-right: 5px; }
 	.multishop_toolbar select.shopList { width: 300px; }
@@ -202,7 +201,7 @@
 	.multishop_toolbar .chzn-container .chzn-results .group{font-weight: bold;font-style: italic;padding-left: 15px;background-color: #C6DEFC;}
 	.multishop_toolbar .chzn-container .chzn-results .shop{padding-left: 30px;background-color: #EAF2FC;}
 
-	/*toolbarBox*/
+	//toolbarBox
 	.toolbar-placeholder {position:relative}
 	.toolbarBox {background-color: #F8F8F8; border: 1px solid #CCCCCC; margin-bottom:10px; padding: 5px 0; border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px;-o-border-radius:3px;position:relative}
 	.toolbarBox .pageTitle { margin-left:10px; line-height:48px}
@@ -211,7 +210,7 @@
 	.toolbarBox ul.cc_button li {color: #666666; float: left; height: 48px; list-style: none outside none; padding: 1px 1px 3px 4px; text-align: center;}
 	.toolbarBox a.toolbar_btn {   border:1px solid #f8f8f8; min-width:50px; border-width: 1px; font-size:11px;cursor: pointer; display: block; float: left; padding: 3px 5px; white-space: nowrap; text-shadow: 0 1px 0 #ffffff;}
 	.toolbarBox a.toolbar_btn:hover { background-color:#fff; border:1px inset #ccc; border-radius:3px;-moz-border-radius:3px; -webkit-border-radius:3px;-o-border-radius:3px;}
-	.toolbarBox .toolbar_btn span{ display: block; float: none; height: 32px; margin: 0 auto; width: 32px; /*hacking ie7margin:0 !ie; position:relative !ie;*/ }
+	.toolbarBox .toolbar_btn span{ display: block; float: none; height: 32px; margin: 0 auto; width: 32px}
 	.toolbarBox .process-icon-delete { background-image: url('../img/process-icon-delete.png');}
 	.toolbarBox .process-icon-duplicate { background-image: url('../img/process-icon-duplicate.png');}
 	.toolbarBox .process-icon-preview { background-image: url('../img/process-icon-preview.png');}
@@ -314,11 +313,9 @@
 	}
 
 
-
-
 	div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0.9;z-index:500;margin:auto}
 
-	/*button upload files*/
+	//button upload files
 	#content .qq-upload-button {
 		background: #e4e4e4 url('../img/bg-button-degrade.png') repeat-x scroll left top;
 		background: -moz-linear-gradient(center top , #F9F9F9, #E3E3E3) repeat scroll 0 0 transparent;
@@ -338,14 +335,14 @@
 
 	.file_upload_label {margin-top:5px;}
 
-	/*leadin*/
+	//leadin
 	.leadin {}
 	.leadin .bloc-leadin{ padding:10px 3px;}
 
-	/*productBox*/
+	//productBox
 	#productBox { position:relative; width:100%; float:left;}
 
-	/*tab-pane*/
+	//tab-pane
 	form#product_form, form#access_form, form#cart_rule_form, #modules_tab_list { background-color:#ebedf4; border:1px solid #ccced7; min-height:404px; padding: 5px 10px 10px; margin-left:140px;}
 	#modules_tab_list {min-height: inherit}
 	#content form.adminstockmanagement {margin-left:0px;}
@@ -367,14 +364,14 @@
 	#categories-treeview { }
 	#product-tab-content-3-Associations .Association td.col-left  { width:200px;}
 
-	/*FILTER MODULE*/
+	//FILTER MODULE
 	.filter-module { background-color:#ebedf4; border:1px solid #c2c4d9; padding:10px; display:block; min-height:35px;}
 	.filter-module #filternameForm {float:left; margin-right:30px;}
 	.filter-module label {width:auto;}
 	.filter-module .select-filter { float:left;}
 	.filter-module .button-filter { float:right;}
 
-	/*FILTER STOCK*/
+	//FILTER STOCK
 	.filter-stock { background-color:#ebedf4; border:1px solid #c2c4d9; margin-bottom:15px; padding:10px; display:block; min-height:25px;}
 	.filter-stock #stock_instant_state {float:left; margin-right:30px;}
 	.filter-stock label {width:auto;}
@@ -387,7 +384,7 @@
 	.filter-stock-extended .select-filter { float:left;}
 	.filter-stock-extended .button-filter { float:right;}
 
-	/*ADDONS LOGIN*/
+	//ADDONS LOGIN
 	#addons_login_div { background: #EBEDF4 url('../img/lock.png') no-repeat scroll left 5px;}
 	#addons_login_div form#addons_login_form { float:right;}
 	#addons_login_div p {float:left; font-size:16px; color:#585A69; line-height:24px; text-shadow: 0 1px 0 #fff; margin:0; padding-left:25px;}
@@ -395,7 +392,7 @@
 	#addons_login_div input { float:left; margin-right:10px;}
 	#addons_login_div input#addons_login_button { margin-right: 0px; }
 
-	/*SIDEBAR*/
+	//SIDEBAR
 	.sidebar { position:relative; float:left; width:220px; display:inline;}
 	.sidebar h3 { background-color:#ebedf4; font-weight:bold; display:block; padding:5px;}
 	.sidebar.navigation h3 {margin:0;}
@@ -409,7 +406,7 @@
 	.sidebar ul.categorieList li div.count{ position:absolute; top:0; right:5px;}
 	.sidebar .categorieStatus { display:none;}
 
-	/*NAVIGATION ENGINE*/
+	//NAVIGATION ENGINE
 	.blocEngine { background-color:#eee;}
 	.blocEngine .rowForm {    display: block;float: left;margin: 0; padding: 5px 0; }
 	.blocEngine .rowForm label { font-weight:normal;}
@@ -418,7 +415,7 @@
 
 	.blocEngine p { margin-top:10px;display:block; float:left;}
 
-	/*STATCONTAINER*/
+	//STATCONTAINER
 	#statsContainer {margin-left:220px; padding:0 0 0 20px;}
 	#statsContainer #calendar,
 	#referrersContainer #calendar{   background-color: #EEEEEE;border-top: 1px solid #CCCCCC; display: block; margin: 10px 0;min-height: 25px; padding: 5px;}
@@ -499,9 +496,9 @@
 	#statsContainer .blocStats form { position:absolute; top:10px; right:5px;}
 	#statsContainer .blocStats form.checkup { position:relative; top:0; left:0;}
 	#statsContainer .totalStats { font-size:16px; font-weight:bold;}
-	#statsContainer .blocStats .blocConversion { display:block; display:inline-table; min-height:80px /*!ie;*/ }
+	#statsContainer .blocStats .blocConversion { display:block; display:inline-table; min-height:80px}
 
-	/*MODULECONTAINER*/
+	//MODULECONTAINER
 	#moduleContainer { margin-left:220px; padding:13px 0 0 20px;}
 	#moduleContainer .table tr th { height:40px;}
 	#moduleContainer .table tr td { font-size:12px; vertical-align:top; padding: 5px 7px 0; border-top:1px solid #ccc; border-bottom:none;}
@@ -529,7 +526,7 @@
 	#moduleContainer .moduleGridDesc h3 { color:#3A6EA7; margin:0;}
 	#moduleContainer ul.listing-grid-module li select { position:absolute; top:0; right:0px; }
 
-	/*TAB MODULES LIST*/
+	//TAB MODULES LIST
 
 	#modules_list_container_tab #modules_list_container_content{
 		list-style-type:none; 
@@ -570,19 +567,18 @@
 	.default_modules_list_display_type #modules_list_container_content li table {border:solid 1px #ccc;height:105px;width:100%;margin-bottom:10px}
 	#modules_list_container_tab ul li {height:105px}
 
-			/******** ie7 ******/
-			.ie7 #modules_list_container_tab #modules_list_container_content li{zoom:1;display:inline;}
-			.ie7 #modules_list_container_content li table {width: 21%;}
-			.ie7 #modules_list_container_content li table td .btn_right{width:100%;float:right;}
-			.ie7 #modules_list_container_content li table td .btn_right select{float:left;}
-			.ie7 #modules_list_container_content li table td a.button{display:block;float:right;}
+	//******* ie7 *****
+	.ie7 #modules_list_container_tab #modules_list_container_content li{zoom:1;display:inline;}
+	.ie7 #modules_list_container_content li table {width: 21%;}
+	.ie7 #modules_list_container_content li table td .btn_right{width:100%;float:right;}
+	.ie7 #modules_list_container_content li table td .btn_right select{float:left;}
+	.ie7 #modules_list_container_content li table td a.button{display:block;float:right;}
 
-	/*MODULE POSITION*/
+	//MODULE POSITION
 	.blocLiveEdit { float:right; clear:right;  background-color: #EBEDF4; border: 1px solid #C2C4D9;display: block;  width:250px;}
 	.blocLiveEdit h2 { background: transparent url('../img/live_edit.png') no-repeat scroll 10px 10px; height: 40px; line-height: 50px;margin: 0; padding: 0 10px; text-indent: 40px;}
 	.blocLiveEdit p { padding: 0 10px;}
 	.blocLiveEdit a.button {float: left; margin:10px; display: inline-block;}
-
 
 	#modulePosition { width:100%; float:left; clear:left;}
 	#modulePosition .table tr th { height:40px;}
@@ -601,13 +597,13 @@
 	ul.listForm li {padding-bottom:3px;}
 
 
-	/*FOOTER*/
+	//FOOTER
 	#footer {height:40px; font-size:12px;clear:both;font-size:0.9em;color:#666666}
 	#footer .footerLeft { float:left; margin-left:10px;}
 	#footer .footerRight {float:right; margin-right:10px;}
 	#footer .footer_link, #footer .footer_link:hover { color:#268CCD;}
 
-	/*DASHBOARD*/
+	//DASHBOARD
 	.pageTitleHome { font-size: 1.6em; font-weight: normal; margin:0; padding:10px 0;}
 	.pageTitleHome h3 { font-weight: normal; margin:0;}
 	#dashboard {  background-color: #EBEDF4; border: 1px solid #C2C4D9; display: block; padding: 10px; position: relative; min-width:1200px;}
@@ -663,15 +659,16 @@
 		background: -o-linear-gradient(top, #ddd, #aaa);
 		background: -webkit-linear-gradient(top, #ddd, #aaa);
 		background: linear-gradient(top, #ddd, #aaa);
-		color: #666
+		color: #666;
 	}
 
-	/******** CREATE AN ORDER **************/
+	//******* CREATE AN ORDER *************
 
 	#carrier_form label{padding-top:0}
 	#carrier_form input{margin-top:3px}
 
-	/************** SCENE *****************/
+	//************* SCENE ****************
 
-	#large_scene_image{clear:both;border:1px solid transparent;}			
+	#large_scene_image { clear:both; border:1px solid transparent;}
+
 }

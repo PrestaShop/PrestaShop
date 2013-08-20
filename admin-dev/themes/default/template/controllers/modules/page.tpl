@@ -39,8 +39,6 @@
 		</ul>
 	</div>
 	{/if}
-
-	
 		<div class="panel">
 			<div class="panel-heading">
 				<i class="icon-list-ul"></i>
@@ -49,7 +47,6 @@
 			{include file='controllers/modules/filters.tpl'}
 			<!--start sidebar module-->
 			<div class="row">
-
 				<div class="categorieTitle col col-lg-3">
 					<div class="list-group">
 
