@@ -48,7 +48,6 @@
 					<div class="alert alert-info">{$field}</div>
 				{elseif $key == 'input'}
 					{foreach $field as $input}
-
 						<div class="row {if $input.type == 'hidden'}hide{/if}">
 						{if $input.type == 'hidden'}
 							<input type="hidden" name="{$input.name}" id="{$input.name}" value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" />
@@ -58,7 +57,7 @@
 							{/if}
 							{block name="label"}
 								{if isset($input.label)}
-									<label for="{if isset($input.id)}{$input.id}{if isset($input.lang) AND $input.lang}_{$language.id_lang}{/if}{else}{$input.name}{if isset($input.lang) AND $input.lang}_{$language.id_lang}{/if}{/if}" class="control-label col-lg-3 {if isset($input.required) && $input.required && $input.type != 'radio'}required{/if}">
+									<label for="{if isset($input.id)}{$input.id}{if isset($input.lang) AND $input.lang}_{$current_id_lang}{/if}{else}{$input.name}{if isset($input.lang) AND $input.lang}_{$current_id_lang}{/if}{/if}" class="control-label col-lg-3 {if isset($input.required) && $input.required && $input.type != 'radio'}required{/if}">
 										{if isset($input.hint)}
 										<span class="label-tooltip" data-toggle="tooltip"
 											title="
@@ -75,11 +74,12 @@
 												{/if}
 											">
 										{/if}
-											{$input.label}
+										{$input.label}
 										{if isset($input.hint)}
 										</span>
 										{/if}
-									</label>{/if}
+									</label>
+								{/if}
 							{/block}
 
 							{block name="field"}
