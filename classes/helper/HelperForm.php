@@ -157,6 +157,7 @@ class HelperFormCore extends Helper
 			'identifier' => $this->identifier,
 			'name_controller' => $this->name_controller,
 			'languages' => $this->languages,
+			'current_id_lang' => $this->context->language->id,
 			'defaultFormLanguage' => $this->default_form_language,
 			'allowEmployeeFormLang' => $this->allow_employee_form_lang,
 			'form_id' => $this->id,
