@@ -111,7 +111,8 @@ class MediaCore
 			// In this case, we don't compress the content
 			if (preg_last_error() == PREG_BACKTRACK_LIMIT_ERROR)
 			{
-				error_log('ERROR: PREG_BACKTRACK_LIMIT_ERROR in function packJSinHTML');
+				if (_PS_MODE_DEV_)
+					error_log('ERROR: PREG_BACKTRACK_LIMIT_ERROR in function packJSinHTML');
 				return $html_content_copy;
 			}
 			return $html_content;
