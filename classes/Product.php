@@ -1354,7 +1354,7 @@ class ProductCore extends ObjectModel
 			$supplier_reference = '';
 
 		//Try to set the default supplier reference
-		if (($id_supplier > 0) && ($id_product > 0))
+		if (($id_supplier > 0) && ($this->id > 0))
 		{
 			$id_product_supplier = (int)ProductSupplier::getIdByProductAndSupplier($this->id, $id_product_attribute, $id_supplier);
 
