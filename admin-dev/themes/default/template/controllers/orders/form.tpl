@@ -569,7 +569,7 @@
 						stock[id_product] = new Array();
 						if (this.customizable == '1')
 						{
-							customization_html += '<fieldset class="width3"><legend>{l s='Customization'}</legend><form id="customization_'+id_product+'" class="id_customization" method="post" enctype="multipart/form-data" action="'+admin_cart_link+'" style="display:none;">';
+							customization_html += '<fieldset class="width3"><h3>{l s='Customization'}</h3><form id="customization_'+id_product+'" class="id_customization" method="post" enctype="multipart/form-data" action="'+admin_cart_link+'" style="display:none;">';
 							customization_html += '<input type="hidden" name="id_product" value="'+id_product+'" />';
 							customization_html += '<input type="hidden" name="id_cart" value="'+id_cart+'" />';
 							customization_html += '<input type="hidden" name="action" value="updateCustomizationFields" />';
@@ -983,10 +983,10 @@
 
 <form action="" method="" class="form-horizontal">
 	<fieldset id="customer_part">
-		<legend>
+		<h3>
 			<i class="icon-user"></i>
 			{l s='Customer'}
-		</legend>
+		</h3>
 		<div class="row">
 			<div class="col-lg-12">
 				<a class="fancybox btn btn-default" href="{$link->getAdminLink('AdminCustomers')|escape:'htmlall':'UTF-8'}&addcustomer&liteDisplaying=1&submitFormAjax=1#">
@@ -1010,10 +1010,10 @@
 </form>
 <form class="form-horizontal" action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&submitAdd{$table}=1" method="post" autocomplete="off">
 	<fieldset id="products_part" style="display:none;">
-		<legend>
+		<h3>
 			<i class="icon-folder-close"></i>
 			{l s='Cart'}
-		</legend>
+		</h3>
 		<div class="row">
 			<label class="control-label col-lg-3">
 				<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Search a product by tapping the first letters of his/her name.'}">
@@ -1189,10 +1189,10 @@
 		</div>
 	</fieldset>
 	<fieldset id="vouchers_part" style="display:none;">
-		<legend>
+		<h3>
 			<i class="icon-table"></i>
 			{l s='Vouchers'}
-		</legend>
+		</h3>
 		<div class="row">
 			<div class="col-lg-12">
 				<a class="fancybox btn btn-default" href="{$link->getAdminLink('AdminCartRules')|escape:'htmlall':'UTF-8'}&addcart_rule&liteDisplaying=1&submitFormAjax=1#">
@@ -1225,10 +1225,10 @@
 		<div id="vouchers_err" class="alert alert-block" style="display:none;"></div>
 	</fieldset>
 	<fieldset id="address_part" style="display:none;">
-		<legend>
+		<h3>
 			<i class="icon-envelope"></i>
 			{l s='Addresses'}
-		</legend>
+		</h3>
 		<div id="addresses_err" class="alert alert-block" style="display:none;"></div>
 
 		<div class="row">
@@ -1261,10 +1261,10 @@
 		</div>
 	</fieldset>
 	<fieldset id="carriers_part" style="display:none;">
-		<legend>
+		<h3>
 			<i class="icon-truck"></i>
 			{l s='Shipping'}
-		</legend>
+		</h3>
 		<div id="carriers_err" style="display:none;" class="alert alert-block"></div>
 		<div id="carrier_form">
 			<div class="row">
@@ -1304,10 +1304,10 @@
 		</div>
 	</fieldset>
 	<fieldset id="summary_part" style="display:none;">
-		<legend>
+		<h3>
 			<i class="icon-align-justify"></i>
 			{l s='Summary'}
-		</legend>
+		</h3>
 		<div class="row">
 			<div id="send_email_feedback" class="col-lg-12"></div>
 		</div>

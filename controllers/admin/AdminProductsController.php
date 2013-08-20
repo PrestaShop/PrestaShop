@@ -195,8 +195,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->fields_list['id_product'] = array(
 			'title' => $this->l('ID'),
 			'align' => 'center',
-			'type' => 'int',
-			'width' => 40
+			'type' => 'int'
 		);
 		$this->fields_list['image'] = array(
 			'title' => $this->l('Photo'),
@@ -223,7 +222,6 @@ class AdminProductsControllerCore extends AdminController
 		else
 			$this->fields_list['name_category'] = array(
 				'title' => $this->l('Category'),
-				'width' => 'auto',
 				'filter_key' => 'cl!name',
 			);
 		$this->fields_list['price'] = array(
@@ -3764,11 +3762,11 @@ class AdminProductsControllerCore extends AdminController
 
 		$this->fields_list = array(
 			'attributes' => array('title' => $this->l('Attributes'), 'align' => 'left'),
-			'price' => array('title' => $this->l('Impact'), 'type' => 'price', 'align' => 'left', 'width' => 70),
-			'weight' => array('title' => $this->l('Weight'), 'align' => 'left', 'width' => 70),
-			'reference' => array('title' => $this->l('Reference'), 'align' => 'left', 'width' => 70),
-			'ean13' => array('title' => $this->l('EAN13'), 'align' => 'left', 'width' => 70),
-			'upc' => array('title' => $this->l('UPC'), 'align' => 'left', 'width' => 70)
+			'price' => array('title' => $this->l('Impact'), 'type' => 'price', 'align' => 'left'),
+			'weight' => array('title' => $this->l('Weight'), 'align' => 'left'),
+			'reference' => array('title' => $this->l('Reference'), 'align' => 'left'),
+			'ean13' => array('title' => $this->l('EAN13'), 'align' => 'left'),
+			'upc' => array('title' => $this->l('UPC'), 'align' => 'left')
 		);
 
 		if ($product->id)

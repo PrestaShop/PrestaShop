@@ -3011,7 +3011,7 @@ class AdminControllerCore extends Controller
 					$html = '<a class="';
 
 					if (count($return) == 0)
-						$html .= 'btn btn-default btn-small';
+						$html .= 'btn btn-default';
 
 					$html .= '" href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog' ).'"></i> '.$option['text'].'</a>';
 					$return[] = $html;

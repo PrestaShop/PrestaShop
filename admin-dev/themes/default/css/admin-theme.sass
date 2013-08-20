@@ -1,4 +1,4 @@
-//light
+//light #F7F7F7
 //$main-color: #DBD8CF 			//sable
 //$main-color: #CFD7DD			//bleu
 //$main-color: #E0E0E0
@@ -15,7 +15,8 @@
 //$main-color: #373E35 			//vert camo
 //$main-color: #262C3F 			//bleu nuit  - pretty sure that a girl could do better naming the colors, sorry about that...
 //$main-color: white
-$main-color: #8C8574
+//$main-color: #8C8574
+$main-color: #3A3A4A
 
 //$secondary-color: white		//blanc
 //$secondary-color: #F5792B		//orange
@@ -36,7 +37,8 @@ $main-color: #8C8574
 //$secondary-color: #8BC954 	//vert PrestaShop
 
 //some tests
-$secondary-color: #79C09D
+$secondary-color: #00A89C
+//$secondary-color: #79C09D
 //$secondary-color: invert($main-color)
 //$secondary-color: lighten(invert($main-color),20%)
 //$secondary-color: adjust-hue($main-color, 80%)
@@ -60,7 +62,7 @@ $bg-content-color: #F8F8F8 	//gris
 $bg-header-color: #242424
 $bg-footer-color: #242424
 $bg-page-head-color : $secondary-color
-$bg-panel-heading-color: lighten($secondary-color,30%)
+$bg-panel-heading-color: hsl(hue($secondary-color), 20, 90)
 
 //others
 $badge-notif-color: #EF1778
@@ -68,6 +70,7 @@ $icon-color: #87C795
 
 @import "compass"
 @import "bootstrap/variables"
+//@import "bootstrap.min.css"
 @import "bootstrap"
 @import "font-awesome"
 @import "toggle-switch"
@@ -95,21 +98,22 @@ body.fixed-top
 #main
 	min-height: 100%
 	height: auto!important
-	padding: 35px 0 60px
-	margin: 0 0 -60px
+	padding: 38px 0 60px
+	margin: 0 0 -60px 0
+	background-color: $bg-content-color
 
 .container-fluid, .row-fluid
 	width: 100%
 
 #content
-	min-height: 900px
-	padding: 90px 20px 20px
+	padding: 90px 20px 100px
 	margin-left: 240px
 	@include transition-property(margin)
 	@include transition-duration(0.4s)
 	@include transition-timing-function(ease-out)
-	background-color: $bg-content-color
-	background-image: url('../img/patterns/bedge_grunge.png') // texture
+	
+	//overflow-x: scroll
+	//background-image: url('../img/patterns/bedge_grunge.png') // texture
 	fieldset, .panel
 		padding: 20px
 		margin-bottom: 20px
@@ -120,12 +124,13 @@ body.fixed-top
 	.panel-heading
 		@extend h3
 	h3, .panel-heading
+		border: none
 		height: 30px
 		padding: 0 5px
 		margin: -16px -16px 15px -16px
-		line-height: 30px
 		color: contrasted($bg-panel-heading-color)	
 		font-size: 1.2em
+		line-height: 30px
 		font-weight: 300
 		text-transform: uppercase
 		background-color: $bg-panel-heading-color
@@ -157,26 +162,31 @@ body.fixed-top
 			border: none
 			border-bottom: solid 1px darken($bg-content-color,10%)
 			@include box-shadow(white 0 0 0 1px inset)
+	@media (max-width: $screen-tablet)
+		margin-left: 0
+		width: 100%
+
 
 .page-head
 	width: 100%
-	height: 65px
-	padding: 5px 10px 0 0
+	height: 55px
+	padding: 0 10px 0 0
 	margin: 0
 	border-bottom: 4px solid darken($secondary-color,10%)
 	position: fixed
-	top: 37px
+	top: 38px
 	left: 0px
-	z-index: 9000
+	z-index: 499
 	background-color: $secondary-color
-	@include box-shadow(rgba(black,0.15) 0 7px 0, rgba(white,0.15) 0 -1px 0 inset)
+	@include box-shadow(rgba(black,0.15) 0 7px 0)
 	h2.page-title
 		@extend .pull-left
 		padding: 0 0 0 260px
 		font-size: 20px
-		line-height: 25px
 		color: white
 		text-transform: uppercase
+		@media (max-width: $screen-tablet)
+			padding: 0 0 0 20px
 	.btn-toolbar
 		margin: 0
 		.nav-tabs
@@ -188,11 +198,23 @@ body.fixed-top
 				//background: #f5f5f5
 
 #sidebar
-	z-index: 9001
+	height: 100%!important
+	z-index: 500
 	float: left
 	width: 240px
 	background-color: $main-color
 	border-bottom: 1px solid lighten($main-color,5%)
+	.menu
+		border-top: 1px black solid
+		.maintab > a [class^="icon-"], .menu .maintab > a [class*=" icon-"]
+			font-size: 20px
+			border-radius: 40px
+			height: 30px
+			width: 30px
+			color: white
+			display: inline-block
+			text-align: center
+			line-height: 30px
 	> ul > li > ul.sub-menu
 		display: none
 		list-style: none
@@ -212,28 +234,29 @@ body.fixed-top
 				background-color: white
 		> li
 			&.active > a
-				color: contrasted($main-color, 30%)
+				color: contrast-color($main-color, white, #333, 10%)
 				background-color: $secondary-color
-				border-top: 1px solid lighten($secondary-color,10%)
-				border-bottom: 1px solid darken($secondary-color,10%)
+				border-top: 1px solid lighten($secondary-color,5%)
+				border-bottom: 1px solid darken($secondary-color,20%)
 				@include box-shadow(darken($secondary-color,10%) -4px 0 0 inset)
 				i
 					color: $brand-primary!important
 					background-color: white
 			&.active:hover > a
-				color: white
+				color: contrast-color($main-color, white, #333, 10%)
 				@include box-shadow(darken($secondary-color,10%) -4px 0 0 inset)
 			&:hover > a
-				
 				@include box-shadow($brand-primary -4px 0 0 inset)
 				i
-					color: $brand-primary!important
+					color: $secondary-color!important
 					background-color: white
 			> a
 				display: block
-				padding: 3px 0 3px 5px
+				padding: 2px 0 2px 8px
 				border-top: 1px solid lighten($main-color,5%)
 				border-bottom: 1px solid darken($main-color,10%)
+				font-size: 12px
+				line-height: 28px
 				$color: contrast-color($main-color, white, #333, 10%)
 				color:  mix($main-color, $color, 30%)
 				background-color: $main-color
@@ -258,12 +281,12 @@ body.fixed-top
 				li 
 					a
 						display: block
-						padding: 3px 5px 3px 10px
+						padding: 2px 5px 2px 10px
 						font-size: 12px
 						border: none
 						border-bottom: solid 1px #eee
 						background-color: white
-						@include box-shadow($main-color -4px 0 0 inset)
+						//@include box-shadow($main-color -4px 0 0 inset)
 						i
 							margin-top: 3px
 							color: $secondary-color
@@ -271,7 +294,7 @@ body.fixed-top
 							color: $brand-primary
 							background-color: mix(white, $main-color, 90%)
 							text-decoration: none
-							@include box-shadow($brand-primary -4px 0 0 inset)
+							//@include box-shadow($brand-primary -4px 0 0 inset)
 							i
 								color: $main-color
 					&.active
@@ -284,7 +307,6 @@ body.fixed-top
 .page-sidebar-closed
 	#sidebar
 		width: 50px
-		white-space: nowrap
 		@include transition-property(width)
 		@include transition-duration(0.4s)
 		@include transition-timing-function(ease-out)
@@ -302,33 +324,27 @@ body.fixed-top
 				position: absolute
 				left: 50px
 				width: 200px!important
-
 	#content
 		margin-left: 50px
 		.page-head h2.page-title
 			padding: 0 0 0 70px
+			@media (max-width: $screen-tablet)
+				padding: 0 0 0 20px
+		@media (max-width: $screen-tablet)
+			margin-left: 0
+			width: 100%
 
 .menu-collapse
-	height: 67px
+	height: 55px
 	width: 100%
 	font-size: 2em
 	text-align: center
-	line-height: 68px
+	line-height: 55px
 	display: block
-	background-color: darken($secondary-color,5%)
-	border-bottom: 4px solid darken($secondary-color,15%)
+	background-color: darken($secondary-color,10%)
+	border-bottom: 4px solid darken($secondary-color,20%)
 	i
 		color: lighten($secondary-color,10%)
-
-#menu .maintab > a [class^="icon-"], #menu .maintab > a [class*=" icon-"]
-	font-size: 22px
-	border-radius: 40px
-	height: 35px
-	width: 35px
-	color: white
-	display: inline-block
-	text-align: center
-	line-height: 35px
 
 // Tool bar
 .toolbar_btn
@@ -391,7 +407,7 @@ body.fixed-top
 	color: lighten($main-color,10%)!important
 
 [class^="process-icon-"], [class*=" process-icon-"]
-	height: 32px
+	height: 25px
 	min-width: 32px
 	background-position: center
 	background-repeat: no-repeat
@@ -400,7 +416,7 @@ body.fixed-top
 	font-weight: normal
 	font-style: normal
 	font-size: 25px
-	line-height: 32px
+	line-height: 25px
 	text-decoration: inherit
 	-webkit-font-smoothing: antialiased
 	*margin-right: .3em
@@ -456,8 +472,6 @@ body.fixed-top
 .process-icon-new-url
 	@extend .icon-plus-sign-alt
 
-
-
 .navbar-inner
 	box-shadow: none!important
 	.input-append
@@ -506,7 +520,6 @@ input[type="password"].input-tiny
 .fixed-width-XL
 	width: 200px
 
-
 .btn-group-action
 	display: inline-block
 	white-space: nowrap
@@ -542,7 +555,6 @@ input[type="password"].input-tiny
 	&:hover, &:focus
 		.caret
 			border-top-color: white!important
-
 
 hr
 	border-color: darken($bg-content-color,10%)
@@ -601,10 +613,9 @@ hr
 
 //filter table
 tr.filter
-	background-color: rgba(#A39F95,0.5)
+	background-color: darken($bg-content-color,20%)
 	input[type="text"].filter, input[type="password"].filter, select.filter
 		font-size: 12px
-		border-color: #A39F95
 
 .breadcrumb
 	background-color: lighten($bg-content-color,7%)
@@ -637,10 +648,11 @@ tr.filter
 		font-weight: 500
 
 #footer
+	z-index: 600
+	min-height: 60px
 	display: block
 	width: 100%
-	height: 60px
-	padding: 5px 0
+	padding: 15px 0 0 0
 	background-color: $bg-footer-color
 	color: #888
 	a
@@ -688,3 +700,114 @@ tr.filter
 
 #nobootstrap
 	float: left
+
+.box-stats
+	padding: 10px
+	margin-bottom: 20px
+	background-color: white
+	@include box-shadow(rgba(black,0.10) 0 2px 0, white 0 0 0 3px inset)
+	.boxchart-overlay
+		padding: 10px
+		margin-right: 10px
+		float: left
+		color: white
+		@include border-radius(3px)
+	i
+		@include border-radius(3px)
+		float: left
+		color: white
+		font-size: 30px
+		height: 50px
+		width: 50px
+		text-align: center
+		line-height: 50px
+		margin-right: 10px
+	.title
+		color: #999
+		display: block
+	.value
+		font-size: 25px
+.color1
+	i, .boxchart-overlay
+		background-color: #2BA8E3
+		@include box-shadow(rgba(black,0.15) 0 -3px 0 inset)
+	.value
+		color: #2BA8E3
+.color2
+	i, .boxchart-overlay
+		background-color: #FF5450
+		@include box-shadow(rgba(black,0.15) 0 -3px 0 inset)
+	.value
+		color: #FF5450
+.color3
+	i, .boxchart-overlay
+		background-color: #9E5BA1
+		@include box-shadow(rgba(black,0.15) 0 -3px 0 inset)
+	.value
+		color: #9E5BA1
+.color4
+	i, .boxchart-overlay
+		background-color: #95CC6B
+		@include box-shadow(rgba(black,0.15) 0 -3px 0 inset)
+	.value
+		color: #95CC6B
+
+.chart
+	rect
+		fill: white
+	path
+		stroke: white
+		stroke-width: 2
+		fill: none
+	line
+		stroke: black
+	.area
+		fill: rgba(white,0.30)
+		stroke-width: 0
+
+.highlighted
+	background-color: blue
+
+.notification-panel
+	@extend .panel
+	padding: 15px
+	margin: 0
+	width: 300px
+	@include box-shadow(rgba(black,0.50) 2px 2px 10px)
+
+.notification-dropdown
+	background-color: transparent
+	border: none
+	box-shadow: none
+
+.list-toolbar-btn
+
+
+//WIP
+#topbar
+	position: fixed
+	left: 80
+	width: 100%
+	height: 25px
+	z-index: 600
+	background-color: $main-color
+	border-top: black solid 1px
+	border-bottom: black solid 1px
+	a
+		line-height: 25px
+		color: white
+		i
+			height: 25px
+			width: 25px
+			line-height: 25px
+			color: white
+			font-size: 20px
+	.menu-collapse
+		display: none
+	.menu
+		padding: 0 0 0 60px
+		display: inline
+		li
+			display: inline
+	.submenu
+		display: none

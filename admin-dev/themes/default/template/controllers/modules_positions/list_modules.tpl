@@ -149,8 +149,8 @@
 												</td>
 												<td>
 													<div class="btn-group btn-group-action">
-														<span class="btn btn-default btn-small">{l s='Choose an action'}</span>
-														<button class="btn btn-default btn-small dropdown-toggle" data-toggle="dropdown">
+														<span class="btn btn-default">{l s='Choose an action'}</span>
+														<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 															<span class="caret"></span>&nbsp;
 														</button>
 														<ul class="dropdown-menu">
@@ -199,7 +199,7 @@
 				<p>{l s='You have to select a shop to use LiveEdit'}</p>
 			{else}
 				<p>{l s='Click here to be redirected to the Front Office of your shop where you can move and delete modules directly.'}</p>
-					<a class="btn btn-default btn-small pull-right" href="{$url_live_edit}" target="_blank">
+					<a class="btn btn-default pull-right" href="{$url_live_edit}" target="_blank">
 						<i class="icon-edit"></i>
 						{l s='Run LiveEdit'}
 					</a>
