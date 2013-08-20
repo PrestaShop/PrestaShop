@@ -91,7 +91,10 @@ class AdminStatusesControllerCore extends AdminController
 			'send_email' => array(
 				'title' => $this->l('Send email to customer'),
 				'align' => 'center',
-				'active' => 'send_email', 
+				'icon' => array(
+					'1' => 'enabled.gif',
+					'0' => 'disabled.gif'
+				),
 				'width' => 190,
 				'type' => 'bool',
 				'orderby' => false
@@ -100,7 +103,10 @@ class AdminStatusesControllerCore extends AdminController
 				'title' => $this->l('Delivery'),
 				'align' => 'center',
 				'width' => 25,
-				'active' => 'delivery',
+				'icon' => array(
+					'1' => 'enabled.gif',
+					'0' => 'disabled.gif'
+				),
 				'type' => 'bool',
 				'orderby' => false
 			)
@@ -109,7 +115,10 @@ class AdminStatusesControllerCore extends AdminController
 				'title' => $this->l('Invoice'),
 				'align' => 'center',
 				'width' => 25,
-				'active' => 'invoice', 
+				'icon' => array(
+					'1' => 'enabled.gif',
+					'0' => 'disabled.gif'
+				),
 				'type' => 'bool',
 				'orderby' => false
 			),
@@ -494,18 +503,6 @@ class AdminStatusesControllerCore extends AdminController
 
 			return parent::postProcess();
 		}
-		else if (isset($_GET['send_email'.$this->table]))
-    		{
-		  $this->processSend_email();
-    		}
-		else if (isset($_GET['delivery'.$this->table]))
-    		{
-		  $this->processDelivery();
-    		}
-		else if (isset($_GET['invoice'.$this->table]))
-    		{
-		  $this->processInvoice();
-    		}
 		else if (Tools::isSubmit('delete'.$this->table))
 		{
 			$order_state = new OrderState(Tools::getValue('id_order_state'), $this->context->language->id);
@@ -531,39 +528,6 @@ class AdminStatusesControllerCore extends AdminController
 		}
 		else
 			return parent::postProcess();
-	}
-
-	public function processSend_email()
-	{
-	       $order_state = new OrderState($this->id_object);
-	       if (!Validate::isLoadedObject($order_state))
-	         $this->errors[] = Tools::displayError('An error occurred while updating order_state information.');
-	       $order_state->send_email = $order_state->send_email ? 0 : 1;
-	       if (!$order_state->update())
-	        $this->errors[] = Tools::displayError('An error occurred while updating order_state information.');
-	       Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
-	}
-
-	public function processDelivery()
-	{
-	       $order_state = new OrderState($this->id_object);
-	       if (!Validate::isLoadedObject($order_state))
-	         $this->errors[] = Tools::displayError('An error occurred while updating order_state information.');
-	       $order_state->delivery = $order_state->delivery ? 0 : 1;
-	       if (!$order_state->update())
-	        $this->errors[] = Tools::displayError('An error occurred while updating order_state information.');
-	       Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
-	}
-	  
-	public function processInvoice()
-	{
-	       $order_state = new OrderState($this->id_object);
-	       if (!Validate::isLoadedObject($order_state))
-	         $this->errors[] = Tools::displayError('An error occurred while updating order_state information.');
-	       $order_state->invoice = $order_state->invoice ? 0 : 1;
-	       if (!$order_state->update())
-	        $this->errors[] = Tools::displayError('An error occurred while updating order_state information.');
-	       Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 	}
 	
 	protected function filterToField($key, $filter)
