@@ -470,7 +470,6 @@ class AdminMetaControllerCore extends AdminController
 			else
 				Configuration::updateValue('PS_ROUTE_'.$route_id, $rule);
 		}
-		
 	}
 
 	/**
