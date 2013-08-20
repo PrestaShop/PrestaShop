@@ -144,9 +144,11 @@ class AttributeGroupCore extends ObjectModel
 		 	/* Also delete related attributes */
 			if (Db::getInstance()->execute('
 				DELETE FROM `'._DB_PREFIX_.'attribute_lang`
-				WHERE `id_attribute`
-					IN (SELECT id_attribute FROM `'._DB_PREFIX_.'attribute` WHERE `id_attribute_group` = '.(int)$this->id.')') === false ||
-					Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'attribute` WHERE `id_attribute_group` = '.(int)$this->id) === false)
+				WHERE `id_attribute`	IN ('.implode(',', $to_remove).')') === false ||
+				Db::getInstance()->execute('
+				DELETE FROM `'._DB_PREFIX_.'attribute_shop`
+				WHERE `id_attribute`	IN ('.implode(',', $to_remove).')') === false ||
+				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'attribute` WHERE `id_attribute_group` = '.(int)$this->id) === false)
 				return false;
 			$this->cleanPositions();
 		}
