@@ -3273,8 +3273,9 @@ class AdminProductsControllerCore extends AdminController
 			}
 		}
 		$content .= '
-			</tbody>
-		</table>';
+				</tbody>
+			</table>
+		</fieldset>';
 
 		$content .= '
 		<script type="text/javascript">
@@ -3301,7 +3302,7 @@ class AdminProductsControllerCore extends AdminController
 		// Reindex array starting from 0
 		$specific_price_priorities = array_values($specific_price_priorities);
 
-		$content .= '
+		$content .= '<fieldset>
 		<h3>'.$this->l('Priority management').'</h3>
 		<div class="alert alert-info">
 				'.$this->l('Sometimes one customer can fit into multiple price rules. Priorities allow you to define which rule applies to the customer.').'
@@ -3348,6 +3349,7 @@ class AdminProductsControllerCore extends AdminController
 				</p>
 			</div>
 		</div>
+		</fieldset>
 		';
 		return $content;
 	}
@@ -3758,7 +3760,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->addRowAction('default');
 		$this->addRowAction('delete');
 
-		$color_by_default = '#BDE5F8';
+		$default_class = 'highlighted';
 
 		$this->fields_list = array(
 			'attributes' => array('title' => $this->l('Attributes'), 'align' => 'left'),
@@ -3821,7 +3823,7 @@ class AdminProductsControllerCore extends AdminController
 					if ($product_attribute['default_on'])
 					{
 						$comb_array[$id_product_attribute]['name'] = 'is_default';
-						$comb_array[$id_product_attribute]['color'] = $color_by_default;
+						$comb_array[$id_product_attribute]['class'] = $default_class;
 					}
 				}
 			}

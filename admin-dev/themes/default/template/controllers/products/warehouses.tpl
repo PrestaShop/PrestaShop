@@ -25,8 +25,9 @@
 
 <input type="hidden" name="warehouse_loaded" value="1">
 {if isset($product->id)}
+<fieldset>
 	<input type="hidden" name="submitted_tabs[]" value="Warehouses" />
-	<h4>{l s='Product location in warehouses'}</h4>
+	<h3>{l s='Product location in warehouses'}</h3>
 				<div class="separation"></div>
 				<div class="alert alert-info" style="display:block; position:'auto';">
 		<p>{l s='This interface allows you to specify the warehouse in which the product is stocked.'}</p>
@@ -38,51 +39,57 @@
 		<img src="../img/admin/add.gif" alt="{l s='Create a new warehouse'}" title="{l s='Create a new warehouse'}" /><span>{l s='Create a new warehouse'}</span>
 	</a>
 
-	<div id="warehouse_accordion" style="margin-top:10px; display:block;">
+	<div id="warehouse_accordion">
 		{foreach from=$warehouses item=warehouse}
-		    <h3 style="margin-bottom:0;"><a href="#">{$warehouse['name']}</a></h3>
-		    <div style="display:block;">
-				<table cellpadding="10" cellspacing="0" class="table">
-					<tr>
-						<th width="100">{l s='Stored'}</th>
-						<th>{l s='Product'}</th>
-						<th width="150">{l s='Location (optional)'}</th>
-					</tr>
-					{foreach $attributes AS $index => $attribute}
-						{assign var=location value=''}
-						{assign var=selected value=''}
-						{foreach from=$associated_warehouses item=aw}
-							{if $aw->id_product == $attribute['id_product'] && $aw->id_product_attribute == $attribute['id_product_attribute'] && $aw->id_warehouse == $warehouse['id_warehouse']}
-								{assign var=location value=$aw->location}
-								{assign var=selected value=true}
+		    <div class="accordion-group">
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#warehouse-{$warehouse['name']}">{$warehouse['name']}</a>
+				</div>
+				<div id="warehouse-{$warehouse['name']}" class="accordion-body collapse in">
+					<div class="accordion-inner">
+						<table cellpadding="10" cellspacing="0" class="table">
+							<tr>
+								<th width="100">{l s='Stored'}</th>
+								<th>{l s='Product'}</th>
+								<th width="150">{l s='Location (optional)'}</th>
+							</tr>
+							{foreach $attributes AS $index => $attribute}
+								{assign var=location value=''}
+								{assign var=selected value=''}
+								{foreach from=$associated_warehouses item=aw}
+									{if $aw->id_product == $attribute['id_product'] && $aw->id_product_attribute == $attribute['id_product_attribute'] && $aw->id_warehouse == $warehouse['id_warehouse']}
+										{assign var=location value=$aw->location}
+										{assign var=selected value=true}
+									{/if}
+								{/foreach}
+								<tr {if $index is odd}class="alt_row"{/if}>
+									<td><input type="checkbox"
+										name="check_warehouse_{$warehouse['id_warehouse']}_{$attribute['id_product']}_{$attribute['id_product_attribute']}"
+										{if $selected == true}checked="checked"{/if}
+										value="1" />
+									</td>
+									<td>{$product_designation[$attribute['id_product_attribute']]}</td>
+									<td><input type="text"
+										name="location_warehouse_{$warehouse['id_warehouse']}_{$attribute['id_product']}_{$attribute['id_product_attribute']}"
+										value="{$location|escape:'htmlall':'UTF-8'}"
+										size="20" />
+									</td>
+								</tr>
+							{/foreach}
+							<tr>
+								<td colspan="3">&nbsp;</td>
+							</tr>
+							{if $attributes|@count gt 1}
+							<tr>
+								<td><input type="checkbox" class="check_all_warehouse" value="check_warehouse_{$warehouse['id_warehouse']}" /></td>
+								<td colspan="2"><i>{l s='Mark all products as stored in this warehouse.'}</i></td>
+							</tr>
 							{/if}
-						{/foreach}
-						<tr {if $index is odd}class="alt_row"{/if}>
-							<td><input type="checkbox"
-								name="check_warehouse_{$warehouse['id_warehouse']}_{$attribute['id_product']}_{$attribute['id_product_attribute']}"
-								{if $selected == true}checked="checked"{/if}
-								value="1" />
-							</td>
-							<td>{$product_designation[$attribute['id_product_attribute']]}</td>
-							<td><input type="text"
-								name="location_warehouse_{$warehouse['id_warehouse']}_{$attribute['id_product']}_{$attribute['id_product_attribute']}"
-								value="{$location|escape:'htmlall':'UTF-8'}"
-								size="20" />
-							</td>
-						</tr>
-					{/foreach}
-					<tr>
-						<td colspan="3">&nbsp;</td>
-					</tr>
-					{if $attributes|@count gt 1}
-					<tr>
-						<td><input type="checkbox" class="check_all_warehouse" value="check_warehouse_{$warehouse['id_warehouse']}" /></td>
-						<td colspan="2"><i>{l s='Mark all products as stored in this warehouse.'}</i></td>
-					</tr>
-					{/if}
-				</table>
+						</table>
+					</div>
+				</div>
 			</div>
 		{/foreach}
 	</div>
-	<p>&nbsp;</p>
+<fieldset>
 {/if}

@@ -30,7 +30,7 @@
 		{if isset($input_class)}class="{$input_class}"{/if}
 		name="{$input_name}_{$language.id_lang}"
 		value="{$input_value[$language.id_lang]|htmlentitiesUTF8|default:''}"
-		onkeyup="if (isArrowKey(event)) return ;updateFriendlyURL();">
+		onkeyup="if (isArrowKey(event)) return ;updateFriendlyURL();" onblur="updateLinkRewrite();">
 		<div class="input-group-btn">
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 				<img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt="">
