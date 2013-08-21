@@ -1,4 +1,5 @@
-//light #F7F7F7
+//light
+//$main-color: #F7F7F7
 //$main-color: #DBD8CF 			//sable
 //$main-color: #CFD7DD			//bleu
 //$main-color: #E0E0E0
@@ -70,50 +71,84 @@ $icon-color: #87C795
 
 @import "compass"
 @import "bootstrap/variables"
-//@import "bootstrap.min.css"
 @import "bootstrap"
 @import "font-awesome"
 @import "toggle-switch"
 
 html, body
 	height: 100%
-	//min-height: 700px
-
-body.fixed-top
-	//position: relative
 
 #header_infos
+	@extend .navbar
+	//@extend .navbar-default
+	@extend .navbar-inverse
+	@extend .navbar-fixed-top
 	background-color: $bg-header-color
-	z-index: 9999
-	#header_shopname
-		font-size: 1.6em
-		font-family: "ubuntu"
-		font-weight: 300
-	#notifs_icon_wrapper
-		i
-			font-size: 1.5em
-		.badge
-			background-color: $badge-notif-color
+#header_shopname
+	@extend .navbar-brand
+	font-size: 1.3em
+	font-family: "ubuntu"
+	font-weight: 300
+#header_notifs_icon_wrapper
+	@extend .hidden-xs
+	@extend .nav
+	@extend .navbar-nav
+	> li > a > i
+		font-size: 1.2em
+		color: white
+	.notifs_badge
+		@extend .badge
+		background-color: $badge-notif-color
+	.notifs_dropdown
+		background-color: transparent
+		border: none
+		box-shadow: none
+	.notifs_panel
+		@extend .panel
+		@extend .panel-default
+		width: 300px
+		@include box-shadow(rgba(black,0.5) 2px 2px 8px)
+		.notifs_panel_header
+			@extend .panel-heading
+			h3
+				padding: 0
+				font-size: 1.3em
+				margin: 0
+		.notifs_panel_footer
+			@extend .panel-footer
+#header_nav_toggle
+	background-color: black
+	border: none
+	color: white
+#header_employee_box
+	@extend .nav
+	@extend .navbar-nav
+	@extend .navbar-right
+#header_search
+	@extend .navbar-form
+	@extend .navbar-left
+#header_quick
+	@extend .nav
+	@extend .navbar-nav
+	@extend .navbar-left
 
 #main
 	min-height: 100%
-	height: auto!important
-	padding: 38px 0 60px
+	//height: auto!important
+	padding: 36px 0 60px
 	margin: 0 0 -60px 0
 	background-color: $bg-content-color
+	//background-image: url('../img/patterns/bedge_grunge.png') // texture
 
 .container-fluid, .row-fluid
 	width: 100%
 
 #content
-	padding: 90px 20px 100px
+	padding: 90px 20px 0
 	margin-left: 240px
 	@include transition-property(margin)
 	@include transition-duration(0.4s)
 	@include transition-timing-function(ease-out)
-	
-	//overflow-x: scroll
-	//background-image: url('../img/patterns/bedge_grunge.png') // texture
 	fieldset, .panel
 		padding: 20px
 		margin-bottom: 20px
@@ -174,7 +209,7 @@ body.fixed-top
 	margin: 0
 	border-bottom: 4px solid darken($secondary-color,10%)
 	position: fixed
-	top: 38px
+	top: 36px
 	left: 0px
 	z-index: 499
 	background-color: $secondary-color
@@ -182,13 +217,14 @@ body.fixed-top
 	h2.page-title
 		@extend .pull-left
 		padding: 0 0 0 260px
-		font-size: 20px
+		font-size: 18px
 		color: white
 		text-transform: uppercase
 		@media (max-width: $screen-tablet)
 			padding: 0 0 0 20px
 	.btn-toolbar
 		margin: 0
+		padding: 3px 0 0 0
 		.nav-tabs
 			margin: 0
 		.nav-tabs > li > a
@@ -197,7 +233,7 @@ body.fixed-top
 				//color: #3399ff
 				//background: #f5f5f5
 
-#sidebar
+#nav-sidebar
 	height: 100%!important
 	z-index: 500
 	float: left
@@ -286,7 +322,6 @@ body.fixed-top
 						border: none
 						border-bottom: solid 1px #eee
 						background-color: white
-						//@include box-shadow($main-color -4px 0 0 inset)
 						i
 							margin-top: 3px
 							color: $secondary-color
@@ -294,7 +329,6 @@ body.fixed-top
 							color: $brand-primary
 							background-color: mix(white, $main-color, 90%)
 							text-decoration: none
-							//@include box-shadow($brand-primary -4px 0 0 inset)
 							i
 								color: $main-color
 					&.active
@@ -303,9 +337,11 @@ body.fixed-top
 							background-color: $brand-primary
 							i
 								color: $main-color
+	@media (max-width: $screen-tablet)
+		display: none
 
 .page-sidebar-closed
-	#sidebar
+	#nav-sidebar
 		width: 50px
 		@include transition-property(width)
 		@include transition-duration(0.4s)
@@ -335,14 +371,14 @@ body.fixed-top
 			width: 100%
 
 .menu-collapse
-	height: 55px
+	height: 54px
 	width: 100%
 	font-size: 2em
 	text-align: center
 	line-height: 55px
 	display: block
 	background-color: darken($secondary-color,10%)
-	border-bottom: 4px solid darken($secondary-color,20%)
+	border-bottom: 3px solid darken($secondary-color,20%)
 	i
 		color: lighten($secondary-color,10%)
 
@@ -531,17 +567,9 @@ input[type="password"].input-tiny
 
 .btn-default
 	@include box-shadow(darken($btn-default-bg,10%) 0 -2px 0 inset)
-	&:hover, &:focus
-		background-color: $gray
-		border-color: $gray-darker
-		@include box-shadow($gray-darker 0 -2px 0 inset)
 
 .btn-primary
 	@include box-shadow(lighten($brand-success,30%) 0 -2px 0  inset)
-	&:hover, &:focus
-		background-color: $gray
-		border-color: $gray-darker
-		@include box-shadow($gray-darker 0 -2px 0 inset)
 
 .btn-default[disabled]
 	border-color: $gray-light
@@ -635,7 +663,6 @@ tr.filter
 	font-size: 4em
 	color: darken($bg-content-color,20%)
 
-
 #module-list
 	h3
 		position: relative
@@ -701,6 +728,9 @@ tr.filter
 #nobootstrap
 	float: left
 
+
+//WIP
+
 .box-stats
 	padding: 10px
 	margin-bottom: 20px
@@ -765,25 +795,13 @@ tr.filter
 		fill: rgba(white,0.30)
 		stroke-width: 0
 
+
+
 .highlighted
 	background-color: blue
 
-.notification-panel
-	@extend .panel
-	padding: 15px
-	margin: 0
-	width: 300px
-	@include box-shadow(rgba(black,0.50) 2px 2px 10px)
-
-.notification-dropdown
-	background-color: transparent
-	border: none
-	box-shadow: none
-
 .list-toolbar-btn
 
-
-//WIP
 #topbar
 	position: fixed
 	left: 80
