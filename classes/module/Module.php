@@ -1946,7 +1946,43 @@ abstract class ModuleCore
 		$path = Autoload::getInstance()->getClassPath($classname.'Core');
 
 		// Check if there is already an override file, if not, we just need to copy the file
-		if (!($classpath = Autoload::getInstance()->getClassPath($classname)))
+		if (Autoload::getInstance()->getClassPath($classname))
+		{
+			// Check if override file is writable
+			$override_path = _PS_ROOT_DIR_.'/'.Autoload::getInstance()->getClassPath($classname);
+			if ((!file_exists($override_path) && !is_writable(dirname($override_path))) || (file_exists($override_path) && !is_writable($override_path)))
+				throw new Exception(sprintf(Tools::displayError('file (%s) not writable'), $override_path));
+
+			// Get a uniq id for the class, because you can override a class (or remove the override) twice in the same session and we need to avoid redeclaration
+			do $uniq = uniqid();
+			while (class_exists($classname.'OverrideOriginal_remove', false));
+				
+			// Make a reflection of the override class and the module override class
+			$override_file = file($override_path);
+			eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'), array('', 'class '.$classname.'OverrideOriginal'.$uniq), implode('', $override_file)));
+			$override_class = new ReflectionClass($classname.'OverrideOriginal'.$uniq);
+
+			$module_file = file($this->getLocalPath().'override'.DIRECTORY_SEPARATOR.$path);
+			eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array('', 'class '.$classname.'Override'.$uniq), implode('', $module_file)));
+			$module_class = new ReflectionClass($classname.'Override'.$uniq);
+
+			// Check if none of the methods already exists in the override class
+			foreach ($module_class->getMethods() as $method)
+				if ($override_class->hasMethod($method->getName()))
+					throw new Exception(sprintf(Tools::displayError('The method %1$s in the class %2$s is already overriden.'), $method->getName(), $classname));
+
+			// Check if none of the properties already exists in the override class
+			foreach ($module_class->getProperties() as $property)
+				if ($override_class->hasProperty($property->getName()))
+					throw new Exception(sprintf(Tools::displayError('The property %1$s in the class %2$s is already defined.'), $property->getName(), $classname));
+
+			// Insert the methods from module override in override
+			$copy_from = array_slice($module_file, $module_class->getStartLine() + 1, $module_class->getEndLine() - $module_class->getStartLine() - 2);
+			array_splice($override_file, $override_class->getEndLine() - 1, 0, $copy_from);
+			$code = implode('', $override_file);
+			file_put_contents($override_path, $code);
+		}
+		else
 		{
 			$override_src = $this->getLocalPath().'override'.DIRECTORY_SEPARATOR.$path;
 			$override_dest = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'override'.DIRECTORY_SEPARATOR.$path;
@@ -1955,39 +1991,7 @@ abstract class ModuleCore
 			copy($override_src, $override_dest);
 			// Re-generate the class index
 			Autoload::getInstance()->generateIndex();
-			return true;
 		}
-		
-		// Check if override file is writable
-		$override_path = _PS_ROOT_DIR_.'/'.Autoload::getInstance()->getClassPath($classname);
-		if ((!file_exists($override_path) && !is_writable(dirname($override_path))) || (file_exists($override_path) && !is_writable($override_path)))
-			throw new Exception(sprintf(Tools::displayError('file (%s) not writable'), $override_path));
-			
-		// Make a reflection of the override class and the module override class
-		$override_file = file($override_path);
-		eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'), array('', 'class '.$classname.'OverrideOriginal'), implode('', $override_file)));
-		$override_class = new ReflectionClass($classname.'OverrideOriginal');
-
-		$module_file = file($this->getLocalPath().'override'.DIRECTORY_SEPARATOR.$path);
-		eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array('', 'class '.$classname.'Override'), implode('', $module_file)));
-		$module_class = new ReflectionClass($classname.'Override');
-
-		// Check if none of the methods already exists in the override class
-		foreach ($module_class->getMethods() as $method)
-			if ($override_class->hasMethod($method->getName()))
-				throw new Exception(sprintf(Tools::displayError('The method %1$s in the class %2$s is already overriden.'), $method->getName(), $classname));
-
-		// Check if none of the properties already exists in the override class
-		foreach ($module_class->getProperties() as $property)
-			if ($override_class->hasProperty($property->getName()))
-				throw new Exception(sprintf(Tools::displayError('The property %1$s in the class %2$s is already defined.'), $property->getName(), $classname));
-
-		// Insert the methods from module override in override
-		$copy_from = array_slice($module_file, $module_class->getStartLine() + 1, $module_class->getEndLine() - $module_class->getStartLine() - 2);
-		array_splice($override_file, $override_class->getEndLine() - 1, 0, $copy_from);
-		$code = implode('', $override_file);
-		file_put_contents($override_path, $code);
-
 		return true;
 	}
 
@@ -2009,14 +2013,18 @@ abstract class ModuleCore
 		if (!is_writable($override_path))
 			return false;
 
+		// Get a uniq id for the class, because you can override a class (or remove the override) twice in the same session and we need to avoid redeclaration
+		do $uniq = uniqid();
+		while (class_exists($classname.'OverrideOriginal_remove', false));
+			
 		// Make a reflection of the override class and the module override class
 		$override_file = file($override_path);
-		eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'), array('', 'class '.$classname.'OverrideOriginal_remove'), implode('', $override_file)));
-		$override_class = new ReflectionClass($classname.'OverrideOriginal_remove');
+		eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'), array('', 'class '.$classname.'OverrideOriginal_remove'.$uniq), implode('', $override_file)));
+		$override_class = new ReflectionClass($classname.'OverrideOriginal_remove'.$uniq);
 
 		$module_file = file($this->getLocalPath().'override/'.$path);
-		eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array('', 'class '.$classname.'Override_remove'), implode('', $module_file)));
-		$module_class = new ReflectionClass($classname.'Override_remove');
+		eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array('', 'class '.$classname.'Override_remove'.$uniq), implode('', $module_file)));
+		$module_class = new ReflectionClass($classname.'Override_remove'.$uniq);
 
 		// Remove methods from override file
 		$override_file = file($override_path);
