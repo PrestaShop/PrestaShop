@@ -9,55 +9,51 @@
  */
 
 // Core variables and mixins
-@import "../components/sass-twitter-bootstrap/lib/variables";
-@import "../components/sass-twitter-bootstrap/lib/mixins";
+@import "../bower_components/sass-bootstrap/lib/variables";
+@import "../bower_components/sass-bootstrap/lib/mixins";
 
 // Reset
-@import "../components/sass-twitter-bootstrap/lib/normalize";
-@import "../components/sass-twitter-bootstrap/lib/print";
+@import "../bower_components/sass-bootstrap/lib/normalize";
+@import "../bower_components/sass-bootstrap/lib/print";
 
 // Core CSS
-@import "../components/sass-twitter-bootstrap/lib/scaffolding";
-@import "../components/sass-twitter-bootstrap/lib/type";
-@import "../components/sass-twitter-bootstrap/lib/code";
-@import "../components/sass-twitter-bootstrap/lib/grid";
+@import "../bower_components/sass-bootstrap/lib/scaffolding";
+@import "../bower_components/sass-bootstrap/lib/type";
+@import "../bower_components/sass-bootstrap/lib/code";
+@import "../bower_components/sass-bootstrap/lib/grid";
+@import "../bower_components/sass-bootstrap/lib/tables";
+@import "../bower_components/sass-bootstrap/lib/forms";
+@import "../bower_components/sass-bootstrap/lib/buttons";
 
-@import "../components/sass-twitter-bootstrap/lib/tables";
-@import "../components/sass-twitter-bootstrap/lib/forms";
-@import "../components/sass-twitter-bootstrap/lib/buttons";
+// Components
+@import "../bower_components/sass-bootstrap/lib/component-animations";
+@import "../bower_components/sass-bootstrap/lib/glyphicons";
+@import "../bower_components/sass-bootstrap/lib/dropdowns";
+@import "../bower_components/sass-bootstrap/lib/button-groups";
+@import "../bower_components/sass-bootstrap/lib/input-groups";
+@import "../bower_components/sass-bootstrap/lib/navs";
+@import "../bower_components/sass-bootstrap/lib/navbar";
+@import "../bower_components/sass-bootstrap/lib/breadcrumbs";
+@import "../bower_components/sass-bootstrap/lib/pagination";
+@import "../bower_components/sass-bootstrap/lib/pager";
+@import "../bower_components/sass-bootstrap/lib/labels";
+@import "../bower_components/sass-bootstrap/lib/badges";
+@import "../bower_components/sass-bootstrap/lib/jumbotron";
+@import "../bower_components/sass-bootstrap/lib/thumbnails";
+@import "../bower_components/sass-bootstrap/lib/alerts";
+@import "../bower_components/sass-bootstrap/lib/progress-bars";
+@import "../bower_components/sass-bootstrap/lib/media";
+@import "../bower_components/sass-bootstrap/lib/list-group";
+@import "../bower_components/sass-bootstrap/lib/panels";
+@import "../bower_components/sass-bootstrap/lib/wells";
+@import "../bower_components/sass-bootstrap/lib/close";
 
-// Components: common
-@import "../components/sass-twitter-bootstrap/lib/component-animations";
-@import "../components/sass-twitter-bootstrap/lib/dropdowns";
-@import "../components/sass-twitter-bootstrap/lib/list-group";
-@import "../components/sass-twitter-bootstrap/lib/panels";
-@import "../components/sass-twitter-bootstrap/lib/wells";
-@import "../components/sass-twitter-bootstrap/lib/close";
-
-// Components: Nav
-@import "../components/sass-twitter-bootstrap/lib/navs";
-@import "../components/sass-twitter-bootstrap/lib/navbar";
-@import "../components/sass-twitter-bootstrap/lib/button-groups";
-@import "../components/sass-twitter-bootstrap/lib/breadcrumbs";
-@import "../components/sass-twitter-bootstrap/lib/pagination";
-@import "../components/sass-twitter-bootstrap/lib/pager";
-
-// Components: Popovers
-@import "../components/sass-twitter-bootstrap/lib/modals";
-@import "../components/sass-twitter-bootstrap/lib/tooltip";
-@import "../components/sass-twitter-bootstrap/lib/popovers";
-
-// Components: Misc
-@import "../components/sass-twitter-bootstrap/lib/alerts";
-@import "../components/sass-twitter-bootstrap/lib/thumbnails";
-@import "../components/sass-twitter-bootstrap/lib/media";
-@import "../components/sass-twitter-bootstrap/lib/labels";
-@import "../components/sass-twitter-bootstrap/lib/badges";
-@import "../components/sass-twitter-bootstrap/lib/progress-bars";
-@import "../components/sass-twitter-bootstrap/lib/accordion";
-//@import "../components/sass-twitter-bootstrap/lib/carousel";
-//@import "../components/sass-twitter-bootstrap/lib/jumbotron";
+// Components w/ JavaScript
+@import "../bower_components/sass-bootstrap/lib/modals";
+@import "../bower_components/sass-bootstrap/lib/tooltip";
+@import "../bower_components/sass-bootstrap/lib/popovers";
+@import "../bower_components/sass-bootstrap/lib/carousel";
 
 // Utility classes
-@import "../components/sass-twitter-bootstrap/lib/utilities"; // Has to be last to override when necessary
-@import "../components/sass-twitter-bootstrap/lib/responsive-utilities";
+@import "../bower_components/sass-bootstrap/lib/utilities";
+@import "../bower_components/sass-bootstrap/lib/responsive-utilities";

@@ -2,8 +2,8 @@
   "name": "admin-theme",
   "version": "0.0.0",
   "dependencies": {
-    "font-awesome": "~3.2.1-wip",
-    "sass-twitter-bootstrap": "https://github.com/jlong/sass-twitter-bootstrap/archive/3.0.0-wip.zip"
+    "font-awesome": "~3.2.1",
+    "sass-bootstrap": "~3.0.0"
   },
   "devDependencies": {}
 }
