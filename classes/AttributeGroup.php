@@ -142,14 +142,15 @@ class AttributeGroupCore extends ObjectModel
 			if (!AttributeGroup::cleanDeadCombinations())
 				return false;
 		 	/* Also delete related attributes */
-			if (Db::getInstance()->execute('
+			if (count($to_remove))
+				if (!Db::getInstance()->execute('
 				DELETE FROM `'._DB_PREFIX_.'attribute_lang`
-				WHERE `id_attribute`	IN ('.implode(',', $to_remove).')') === false ||
-				Db::getInstance()->execute('
+				WHERE `id_attribute`	IN ('.implode(',', $to_remove).')') ||
+				!Db::getInstance()->execute('
 				DELETE FROM `'._DB_PREFIX_.'attribute_shop`
-				WHERE `id_attribute`	IN ('.implode(',', $to_remove).')') === false ||
-				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'attribute` WHERE `id_attribute_group` = '.(int)$this->id) === false)
-				return false;
+				WHERE `id_attribute`	IN ('.implode(',', $to_remove).')') ||
+				!Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'attribute` WHERE `id_attribute_group` = '.(int)$this->id))
+					return false;
 			$this->cleanPositions();
 		}
 		$return = parent::delete();
