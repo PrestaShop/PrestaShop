@@ -352,7 +352,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 				'input' => array(
 					array(
 						'type' => 'text',
-						'label' => $this->l('Maximum package height ('.Configuration::get('PS_DIMENSION_UNIT').'):'),
+						'label' => sprintf($this->l('Maximum package height (%s):'), Configuration::get('PS_DIMENSION_UNIT')),
 						'name' => 'max_height',
 						'required' => false,
 						'size' => 10,
@@ -361,7 +361,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Maximum package width ('.Configuration::get('PS_DIMENSION_UNIT').'):'),
+						'label' => sprintf($this->l('Maximum package width (%s):'), Configuration::get('PS_DIMENSION_UNIT')),
 						'name' => 'max_width',
 						'required' => false,
 						'size' => 10,
@@ -370,7 +370,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Maximum package depth ('.Configuration::get('PS_DIMENSION_UNIT').'):'),
+						'label' => sprintf($this->l('Maximum package depth (%s):'), Configuration::get('PS_DIMENSION_UNIT')),
 						'name' => 'max_depth',
 						'required' => false,
 						'size' => 10,
@@ -379,7 +379,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Maximum package weight ('.Configuration::get('PS_WEIGHT_UNIT').'):'),
+						'label' => sprintf($this->l('Maximum package weight (%s):'), Configuration::get('PS_WEIGHT_UNIT')),
 						'name' => 'max_weight',
 						'required' => false,
 						'size' => 10,
