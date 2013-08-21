@@ -6590,14 +6590,13 @@ a .icon-flip-vertical:before {
   .switch, .toggle {
     -webkit-animation: bugfix infinite 1s; }
 
-  @-webkit-keyframes bugfix { from { position: relative; } to { position: relative; } };
   .prestashop-switch {
     min-width: 150px;
     color: #666666;
     text-align: center;
     border-radius: 3px;
-    -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0 0 6px 1px inset;
-    box-shadow: rgba(0, 0, 0, 0.3) 0 0 6px 1px inset; }
+    -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 2px 5px 1px inset;
+    box-shadow: rgba(0, 0, 0, 0.2) 0 2px 5px 1px inset; }
     .prestashop-switch label {
       padding-top: 0 !important;
       font-weight: 500; }
