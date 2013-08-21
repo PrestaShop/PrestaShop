@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<localizationPack name="MY">
+  <currencies>
+    <currency name="Ringgit" iso_code="MYR" iso_code_num="458" sign="RM" blank="0" conversion_rate="1.000000" format="1" decimals="1"/>
+  </currencies>
+  <languages>
+    <language iso_code="ms"/>
+  </languages>
+  <taxes>
+    <taxRulesGroup name="Malaysia Sales Tax Standard Rate">
+      <taxRule iso_code_country="my" behavior="0" id_tax="60"/>
+    </taxRulesGroup>
+    <taxRulesGroup name="Malaysia Sales Tax Reduced Rate">
+      <taxRule iso_code_country="my" behavior="0" id_tax="61"/>
+    </taxRulesGroup>
+    <taxRulesGroup name="Malaysia Service Tax">
+      <taxRule iso_code_country="my" behavior="0" id_tax="62"/>
+    </taxRulesGroup>
+    <tax id="60" name="Malaysia Sales Tax Standard Rate" rate="10.000"/>
+    <tax id="61" name="Malaysia Sales Tax Reduced Rate" rate="5.000"/>
+    <tax id="62" name="Malaysia Service Tax" rate="6.000"/>
+  </taxes>
+  <units>
+    <unit type="weight" value="kg"/>
+    <unit type="volume" value="L"/>
+    <unit type="short_distance" value="cm"/>
+    <unit type="base_distance" value="m"/>
+    <unit type="long_distance" value="km"/>
+  </units>
+</localizationPack>

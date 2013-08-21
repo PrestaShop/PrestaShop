@@ -669,12 +669,14 @@ abstract class ModuleCore
 			return false;
 
 		// Retrocompatibility
+		$hook_name_bak = $hook_name;
 		if ($alias = Hook::getRetroHookName($hook_name))
 			$hook_name = $alias;
 
 		Hook::exec('actionModuleRegisterHookBefore', array('object' => $this, 'hook_name' => $hook_name));
 		// Get hook id
 		$id_hook = Hook::getIdByName($hook_name);
+		$live_edit = Hook::getLiveEditById((int)Hook::getIdByName($hook_name_bak));
 
 		// If hook does not exist, we create it
 		if (!$id_hook)
@@ -682,6 +684,7 @@ abstract class ModuleCore
 			$new_hook = new Hook();
 			$new_hook->name = pSQL($hook_name);
 			$new_hook->title = pSQL($hook_name);
+			$new_hook->live_edit  = pSQL($live_edit);
 			$new_hook->add();
 			$id_hook = $new_hook->id;
 			if (!$id_hook)
@@ -1538,7 +1541,7 @@ abstract class ModuleCore
 			Cache::store($cache_id, $exceptionsCache);
 		}
 		else
-			$exceptionsCache = !Cache::retrieve($cache_id);
+			$exceptionsCache = Cache::retrieve($cache_id);
 
 		$key = $id_hook.'-'.$this->id;
 		$array_return = array();
@@ -1600,7 +1603,11 @@ abstract class ModuleCore
 	protected static function _isTemplateOverloadedStatic($module_name, $template)
 	{
 		if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$module_name.'/'.$template))
-			return true;
+			return _PS_THEME_DIR_.'modules/'.$module_name.'/'.$template;
+		elseif (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$module_name.'/views/templates/hook/'.$template))
+			return _PS_THEME_DIR_.'modules/'.$module_name.'/views/templates/hook/'.$template;
+		elseif (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$module_name.'/views/templates/front/'.$template))
+			return _PS_THEME_DIR_.'modules/'.$module_name.'/views/templates/front/'.$template;
 		elseif (Tools::file_exists_cache(_PS_MODULE_DIR_.$module_name.'/views/templates/hook/'.$template))
 			return false;
 		elseif (Tools::file_exists_cache(_PS_MODULE_DIR_.$module_name.'/'.$template))
@@ -1615,9 +1622,16 @@ abstract class ModuleCore
 	
 	protected function getCacheId($name = null)
 	{
-		if ($name === null)
-			$name = $this->name;
-		return $name.'|'.(int)Tools::usingSecureMode().'|'.(int)$this->context->shop->id.'|'.(int)Group::getCurrent()->id.'|'.(int)$this->context->language->id.'|'.(int)$this->context->currency->id;
+		$cache_array = array(
+			$name !== null ? $name : $this->name,
+			(int)Tools::usingSecureMode(),
+			(int)$this->context->shop->id,
+			(int)Group::getCurrent()->id,
+			(int)$this->context->language->id,
+			(int)$this->context->currency->id,
+			(int)$this->context->country->id
+		);
+		return implode('|', $cache_array);
 	}
 
 	public function display($file, $template, $cacheId = null, $compileId = null)
@@ -1661,8 +1675,9 @@ abstract class ModuleCore
 		$overloaded = $this->_isTemplateOverloaded($template);
 		if ($overloaded === null)
 			return null;
+		
 		if ($overloaded)
-			return _PS_THEME_DIR_.'modules/'.$this->name.'/'.$template;
+			return $overloaded;
 		else if (file_exists(_PS_MODULE_DIR_.$this->name.'/views/templates/hook/'.$template))
 			return _PS_MODULE_DIR_.$this->name.'/views/templates/hook/'.$template;
 		else

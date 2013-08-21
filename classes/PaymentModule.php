@@ -348,7 +348,8 @@ abstract class PaymentModuleCore extends Module
 					// Construct order detail table for the email
 					$products_list = '';
 					$virtual_product = true;
-					foreach ($products as $key => $product)
+
+					foreach ($order->product_list as $key => $product)
 					{
 						$price = Product::getPriceStatic((int)$product['id_product'], false, ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : null), 6, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 						$price_wt = Product::getPriceStatic((int)$product['id_product'], true, ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : null), 2, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
@@ -604,7 +605,8 @@ abstract class PaymentModuleCore extends Module
 						'{total_products}' => Tools::displayPrice($order->total_paid - $order->total_shipping - $order->total_wrapping + $order->total_discounts, $this->context->currency, false),
 						'{total_discounts}' => Tools::displayPrice($order->total_discounts, $this->context->currency, false),
 						'{total_shipping}' => Tools::displayPrice($order->total_shipping, $this->context->currency, false),
-						'{total_wrapping}' => Tools::displayPrice($order->total_wrapping, $this->context->currency, false));
+						'{total_wrapping}' => Tools::displayPrice($order->total_wrapping, $this->context->currency, false),
+						'{total_tax_paid}' => Tools::displayPrice(($order->total_products_wt - $order->total_products) + ($order->total_shipping_tax_incl - $order->total_shipping_tax_excl), $this->context->currency, false));
 
 						if (is_array($extra_vars))
 							$data = array_merge($data, $extra_vars);

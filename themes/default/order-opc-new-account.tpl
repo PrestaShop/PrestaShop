@@ -88,10 +88,10 @@
 				}
 				
 				$(document).ready(function() {
-					$('#company').blur(function(){
+					$('#company').on('input',function(){
 						vat_number();
 					});
-					$('#company_invoice').blur(function(){
+					$('#company_invoice').on('input',function(){
 						vat_number_invoice();
 					});
 					vat_number();
@@ -168,11 +168,11 @@
 				</p>
 				{if isset($newsletter) && $newsletter}
 				<p class="checkbox">
-					<input type="checkbox" name="newsletter" id="newsletter" value="1" {if isset($guestInformations) && $guestInformations.newsletter}checked="checked"{/if} />
+					<input type="checkbox" name="newsletter" id="newsletter" value="1" {if isset($guestInformations) && $guestInformations.newsletter}checked="checked"{/if} autocomplete="off"/>
 					<label for="newsletter">{l s='Sign up for our newsletter!'}</label>
 				</p>
 				<p class="checkbox" >
-					<input type="checkbox"name="optin" id="optin" value="1" {if isset($guestInformations) && $guestInformations.optin}checked="checked"{/if} />
+					<input type="checkbox"name="optin" id="optin" value="1" {if isset($guestInformations) && $guestInformations.optin}checked="checked"{/if} autocomplete="off"/>
 					<label for="optin">{l s='Receive special offers from our partners!'}</label>
 				</p>
 				{/if}
@@ -277,10 +277,10 @@
 					<label for="phone_mobile">{l s='Mobile phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>*</sup>{/if}</label>
 					<input type="text" class="text" name="phone_mobile" id="phone_mobile" value="{if isset($guestInformations) && $guestInformations.phone_mobile}{$guestInformations.phone_mobile}{/if}" />
 				</p>
-				<input type="hidden" name="alias" id="alias" value="{l s='My address'}" />
+				<input type="hidden" name="alias" id="alias" value="{l s='My address'}"/>
 
 				<p class="checkbox">
-					<input type="checkbox" name="invoice_address" id="invoice_address" />
+					<input type="checkbox" name="invoice_address" id="invoice_address" autocomplete="off"/>
 					<label for="invoice_address"><b>{l s='Please use another address for invoice'}</b></label>
 				</p>
 

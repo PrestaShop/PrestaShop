@@ -279,17 +279,24 @@ abstract class Controller extends ControllerCore
 				return (bool)(int)$b;
 		}
 	}
-
+	
 	private function sizeofvar($var)
 	{
 		$start_memory = memory_get_usage();
 		try {
 			$tmp = Tools::unSerialize(serialize($var));
 		} catch (Exception $e) {
-			$tmp = strlen((string)$var);
+			$tmp = $this->getVarData($var);
 		}
 		$size = memory_get_usage() - $start_memory;
 		return $size;
+	}
+	
+	private function getVarData($var)
+	{
+		if (is_object($var))
+			return $var;
+		return (string)$var;
 	}
 
 	public function displayDebug()

@@ -343,8 +343,8 @@ class ToolsCore
 				$cookie->id_lang = null;
 		}
 
-		/* Automatically detect language if not already defined */
-		if (!$cookie->id_lang && isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
+		/* Automatically detect language if not already defined, detect_language is set in Cookie::update */
+		if ((!$cookie->id_lang || isset($cookie->detect_language)) && isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
 		{
 			$array = explode(',', Tools::strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
 			if (Tools::strlen($array[0]) > 2)
@@ -358,9 +358,17 @@ class ToolsCore
 			{
 				$lang = new Language(Language::getIdByIso($string));
 				if (Validate::isLoadedObject($lang) && $lang->active)
+				{				
+					$language = new Language((int)$lang->id);
+					if (Validate::isLoadedObject($language))
+						Context::getContext()->language = $language;				
 					$cookie->id_lang = (int)$lang->id;
+				}					
 			}
 		}
+		
+		if (isset($cookie->detect_language))
+			unset($cookie->detect_language);
 
 		/* If language file not present, you must use default language file */
 		if (!$cookie->id_lang || !Validate::isUnsignedId($cookie->id_lang))
@@ -768,6 +776,33 @@ class ToolsCore
 	public static function d($object, $kill = true)
 	{
 		return (Tools::dieObject($object, $kill));
+	}
+	
+	public static function debug_backtrace($start = 0, $limit = null)
+	{
+		$backtrace = debug_backtrace();
+		array_shift($backtrace);
+		for ($i = 0; $i < $start; ++$i)
+			array_shift($backtrace);
+		
+		echo '
+		<div style="margin:10px;padding:10px;border:1px solid #666666">
+			<ul>';
+		$i = 0;
+		foreach ($backtrace as $id => $trace)
+		{
+			if ((int)$limit && (++$i > $limit ))
+				break;
+			$relative_file = (isset($trace['file'])) ? 'in /'.ltrim(str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $trace['file']), '/') : '';
+			$current_line = (isset($trace['line'])) ? ':'.$trace['line'] : '';
+
+			echo '<li>
+				<b>'.((isset($trace['class'])) ? $trace['class'] : '').((isset($trace['type'])) ? $trace['type'] : '').$trace['function'].'</b>
+				'.$relative_file.$current_line.'
+			</li>';
+		}
+		echo '</ul>
+		</div>';
 	}
 
 	/**
@@ -1388,13 +1423,13 @@ class ToolsCore
 
 	/**
 	* Translates a string with underscores into camel case (e.g. first_name -> firstName)
-	* @prototype string public static function toCamelCase(string $str[, bool $catapitalise_first_char = false])
+	* @prototype string public static function toCamelCase(string $str[, bool $capitalise_first_char = false])
 	*/
 	public static function toCamelCase($str, $catapitalise_first_char = false)
 	{
-		$str = strtolower($str);
+		$str = Tools::strtolower($str);
 		if ($catapitalise_first_char)
-			$str = ucfirst($str);
+			$str = Tools::ucfirst($str);
 		return preg_replace_callback('/_+([a-z])/', create_function('$c', 'return strtoupper($c[1]);'), $str);
 	}
 
@@ -2528,7 +2563,7 @@ exit;
 		$fileAttachment = null;
 		if (isset($_FILES[$input]['name']) && !empty($_FILES[$input]['name']) && !empty($_FILES[$input]['tmp_name']))
 		{
-			$fileAttachment['rename'] = uniqid(). self::strtolower(substr($_FILES[$input]['name'], -5));	
+			$fileAttachment['rename'] = uniqid(). Tools::strtolower(substr($_FILES[$input]['name'], -5));	
 			$fileAttachment['content'] = file_get_contents($_FILES[$input]['tmp_name']);
 			$fileAttachment['tmp_name'] = $_FILES[$input]['tmp_name'];
 			$fileAttachment['name'] = $_FILES[$input]['name'];

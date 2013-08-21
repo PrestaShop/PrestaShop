@@ -445,7 +445,10 @@ class BlockLayered extends Module
 		static $_MODULES = array();
 		global $_MODULE;
 
-		$file = _PS_MODULE_DIR_.$this->name.'/'.Language::getIsoById($id_lang).'.php';
+		if (version_compare(_PS_VERSION_,'1.5','>'))
+			$file = _PS_MODULE_DIR_.$this->name.'/translations/'.Language::getIsoById($id_lang).'.php';
+		else
+			$file = _PS_MODULE_DIR_.$this->name.'/'.Language::getIsoById($id_lang).'.php';
 
 		if (!array_key_exists($id_lang, $_MODULES))
 		{
@@ -2707,7 +2710,7 @@ class BlockLayered extends Module
 					AND c.active = 1)) ';
 					$sql_query['group'] = '
 					GROUP BY lpa.id_attribute
-					ORDER BY id_attribute_group, id_attribute ';
+					ORDER BY ag.`position` ASC, a.`position` ASC';
 					
 					if (!Configuration::get('PS_LAYERED_HIDE_0_VALUES'))
 					{

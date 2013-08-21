@@ -78,6 +78,7 @@ class AdminTrackingControllerCore extends AdminController
 	public function getCustomListCategoriesEmpty()
 	{
 		$this->table = 'category';
+		$this->list_id = 'empty_categories';
 		$this->lang = true;
 		$this->className = 'Category';
 		$this->identifier = 'id_category';
@@ -118,6 +119,7 @@ class AdminTrackingControllerCore extends AdminController
 			return;
 		
 		$this->table = 'product';
+		$this->list_id = 'no_stock_products_attributes';
 		$this->lang = true;
 		$this->identifier = 'id_product';
 		$this->_orderBy = 'id_product';
@@ -162,6 +164,7 @@ class AdminTrackingControllerCore extends AdminController
 			return;
 		
 		$this->table = 'product';
+		$this->list_id = 'no_stock_products';
 		$this->className = 'Product';
 		$this->lang = true;
 		$this->identifier = 'id_product';
@@ -202,13 +205,13 @@ class AdminTrackingControllerCore extends AdminController
 	public function getCustomListProductsDisabled()
 	{
 		$this->table = 'product';
+		$this->list_id = 'disabled_products';
 		$this->className = 'Product';
 		$this->lang = true;
 		$this->identifier = 'id_product';
 		$this->_orderBy = 'id_product';
 		$this->_orderWay = 'DESC';
 		$this->_filter = 'AND product_shop.`active` = 0';
-		$this->list_no_filter = true;
 		$this->tpl_list_vars = array('sub_title' => $this->l('List of disabled products:'));
 		$this->show_toolbar = false;
 		$this->_list_index = 'index.php?controller=AdminProducts';
@@ -265,8 +268,17 @@ class AdminTrackingControllerCore extends AdminController
 	
 	protected function clearFilters()
 	{
-		if ((Tools::isSubmit('submitResetcategory') && $this->table == 'category' ) || (Tools::isSubmit('submitResetproduct') && $this->table == 'product' ))
-			$this->processResetFilters();
+		if (Tools::isSubmit('submitResetcategory'))
+			$this->processResetFilters('empty_categories');
+
+		if (Tools::isSubmit('submitResetproduct'))
+			$this->processResetFilters('no_stock_products_attributes');
+
+		if (Tools::isSubmit('submitResetno_stock_products'))
+			$this->processResetFilters('no_stock_products');
+
+		if (Tools::isSubmit('submitResetdisabled_products'))
+			$this->processResetFilters('disabled_products');			
 	}
 
 	public function clearListOptions()
@@ -280,7 +292,6 @@ class AdminTrackingControllerCore extends AdminController
 		$this->_filter = '';
 		$this->_group = '';
 		$this->_where = '';
-		$this->list_no_filter = true;
 		$this->list_title = $this->l('Product disabled');
 	}
 

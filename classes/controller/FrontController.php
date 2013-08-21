@@ -114,18 +114,15 @@ class FrontControllerCore extends Controller
 		$css_files = $this->css_files;
 		$js_files = $this->js_files;
 
-		if ($this->ssl && !Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED'))
+		// If we call a SSL controller without SSL or a non SSL controller with SSL, we redirect with the right protocol
+		if (Configuration::get('PS_SSL_ENABLED') && ($_SERVER['REQUEST_METHOD'] != 'POST') && $this->ssl != Tools::usingSecureMode())
 		{
 			header('HTTP/1.1 301 Moved Permanently');
 			header('Cache-Control: no-cache');
-			header('Location: '.Tools::getShopDomainSsl(true).$_SERVER['REQUEST_URI']);
-			exit();
-		}
-		elseif (Configuration::get('PS_SSL_ENABLED') && Tools::usingSecureMode() && !($this->ssl))
-		{
-			header('HTTP/1.1 301 Moved Permanently');
-			header('Cache-Control: no-cache');
-			header('Location: '.Tools::getShopDomain(true).$_SERVER['REQUEST_URI']);
+			if ($this->ssl)
+				header('Location: '.Tools::getShopDomainSsl(true).$_SERVER['REQUEST_URI']);
+			else
+				header('Location: '.Tools::getShopDomain(true).$_SERVER['REQUEST_URI']);
 			exit();
 		}
 
@@ -808,7 +805,7 @@ class FrontControllerCore extends Controller
 		// 'orderwaydefault' => Tools::getProductsOrder('way'),
 
 		$stock_management = Configuration::get('PS_STOCK_MANAGEMENT') ? true : false; // no display quantity order if stock management disabled
-		$order_by_values = array(0 => 'name', 1 => 'price', 2 => 'date_add', 3 => 'date_upd', 4 => 'position', 5 => 'manufacturer_name', 6 => 'quantity');
+		$order_by_values = array(0 => 'name', 1 => 'price', 2 => 'date_add', 3 => 'date_upd', 4 => 'position', 5 => 'manufacturer_name', 6 => 'quantity', 7 => 'reference');
 		$order_way_values = array(0 => 'asc', 1 => 'desc');
 		$this->orderBy = Tools::strtolower(Tools::getValue('orderby', $order_by_values[(int)Configuration::get('PS_PRODUCTS_ORDER_BY')]));
 		$this->orderWay = Tools::strtolower(Tools::getValue('orderway', $order_way_values[(int)Configuration::get('PS_PRODUCTS_ORDER_WAY')]));

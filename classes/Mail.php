@@ -52,7 +52,8 @@ class MailCore
 	 * @param bool $die
 	 */
 	public static function Send($id_lang, $template, $subject, $template_vars, $to,
-		$to_name = null, $from = null, $from_name = null, $file_attachment = null, $mode_smtp = null, $template_path = _PS_MAIL_DIR_, $die = false, $id_shop = null)
+		$to_name = null, $from = null, $from_name = null, $file_attachment = null, $mode_smtp = null,
+		$template_path = _PS_MAIL_DIR_, $die = false, $id_shop = null)
 	{
 		$configuration = Configuration::getMultiple(array(
 			'PS_SHOP_EMAIL',
@@ -146,7 +147,10 @@ class MailCore
 				if ($to_name == null)
 					$to_name = $addr;
 				/* Encode accentuated chars */
-				$to_list->addTo($addr, '=?UTF-8?B?'.base64_encode($to_name).'?=');
+				if (function_exists('mb_encode_mimeheader'))
+					$to_list->addTo($addr, mb_encode_mimeheader($to_name, 'utf-8'));
+				else
+					$to_list->addTo($addr, '=?UTF-8?B?'.base64_encode($to_name).'?=');
 			}
 			$to_plugin = $to[0];
 			$to = $to_list;
@@ -155,7 +159,10 @@ class MailCore
 			$to_plugin = $to;
 			if ($to_name == null)
 				$to_name = $to;
-			$to = new Swift_Address($to, '=?UTF-8?B?'.base64_encode($to_name).'?=');
+			if (function_exists('mb_encode_mimeheader'))
+				$to = new Swift_Address($to, mb_encode_mimeheader($to_name, 'utf-8'));
+			else
+				$to = new Swift_Address($to, '=?UTF-8?B?'.base64_encode($to_name).'?=');
 		}
 		try {
 			/* Connect with the appropriate configuration */
@@ -229,6 +236,8 @@ class MailCore
 
 			/* Create mail and attach differents parts */
 			$message = new Swift_Message('['.Configuration::get('PS_SHOP_NAME', null, null, $id_shop).'] '.$subject);
+
+			$message->setCharset('utf-8');
 
 			/* Set Message-ID - getmypid() is blocked on some hosting */
 			$message->setId(Mail::generateId());

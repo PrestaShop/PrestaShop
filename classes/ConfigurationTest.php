@@ -49,7 +49,6 @@ class ConfigurationTestCore
 			'mysql_support' => false,
 			'config_dir' => 'config',
 			'cache_dir' => 'cache',
-			'sitemap' => 'sitemap.xml',
 			'log_dir' => 'log',
 			'img_dir' => 'img',
 			'mails_dir' => 'mails',

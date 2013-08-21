@@ -40,6 +40,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$this->bootstrap = true;
 		$this->context = Context::getContext();
 	 	$this->table = 'supply_order';
+
 	 	$this->className = 'SupplyOrder';
 	 	$this->identifier = 'id_supply_order';
 	 	$this->lang = false;
@@ -457,6 +458,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$this->_where .= ' AND st.enclosed != 1';
 			self::$currentIndex .= '&filter_status=on';
 		}
+
+		$this->list_id = 'orders';
 		$first_list = parent::renderList();
 
 		if (Tools::isSubmit('csv_orders') || Tools::isSubmit('csv_orders_details') || Tools::isSubmit('csv_order_details'))
@@ -509,6 +512,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			'href' => self::$currentIndex.'&amp;add'.$this->table.'&mod=template&amp;token='.$this->token,
 			'desc' => $this->l('Add new template')
 		);
+
+		$this->list_id = 'templates';
 		// inits list
 		$second_list = parent::renderList();
 
@@ -1061,9 +1066,12 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				$this->errors[] = Tools::displayError($this->l('The date you specified cannot be in the past.'));
 
 			// gets threshold
-			$quantity_threshold = null;
-			if (Tools::getValue('load_products') && Validate::isInt(Tools::getValue('load_products')))
-				$quantity_threshold = (int)Tools::getValue('load_products');
+			$quantity_threshold = Tools::getValue('load_products');
+
+			if (is_numeric($quantity_threshold))
+				$quantity_threshold = (int)$quantity_threshold;
+			else
+				$quantity_threshold = null;
 
 			if (!count($this->errors))
 			{
@@ -1082,15 +1090,14 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 				//specific discount check
 				$_POST['discount_rate'] = (float)str_replace(array(' ', ','), array('', '.'), Tools::getValue('discount_rate', 0));
-
 			}
 
 			// manage each associated product
 			$this->manageOrderProducts();
 
 			// if the threshold is defined and we are saving the order
-			if (Tools::isSubmit('submitAddsupply_order') && $quantity_threshold != null)
-				$this->loadProducts($quantity_threshold);
+			if (Tools::isSubmit('submitAddsupply_order') && Validate::isInt($quantity_threshold))
+				$this->loadProducts((int)$quantity_threshold);
 		}
 
 		// Manage state change
@@ -1349,7 +1356,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						// first, converts the price to the default currency
 						$price_converted_to_default_currency = Tools::convertPrice($supply_order_detail->unit_price_te, $supply_order->id_currency, false);
 
-						// then, converts the newly calculated price from the default currency to the needed currency
+						// then, converts the newly calculated pri-ce from the default currency to the needed currency
 						$price = Tools::ps_round(Tools::convertPrice($price_converted_to_default_currency,
 																	 $warehouse->id_currency,
 																	 true),
@@ -1365,14 +1372,27 @@ class AdminSupplyOrdersControllerCore extends AdminController
 										 		$price,
 										 		true,
 										 		$supply_order->id);
-					if ($res) // if product has been added
+
+					if (!$res)
+						$this->errors[] = Tools::displayError($this->l('Something went wrong when adding products to the warehouse.'));
+
+					$location = Warehouse::getProductLocation($supply_order_detail->id_product,
+										 					  $supply_order_detail->id_product_attribute,
+									 						  $warehouse->id);
+
+					$res = Warehouse::setProductlocation($supply_order_detail->id_product,
+														 $supply_order_detail->id_product_attribute,
+									 					 $warehouse->id,
+									 					 $location ? $location : '');
+
+					if ($res)
 					{
 						$supplier_receipt_history->add();
 						$supply_order_detail->save();
 						$supply_order->save();
 					}
 					else
-						$this->errors[] = Tools::displayError($this->l('Something went wrong when adding products to the warehouse.'));
+						$this->errors[] = Tools::displayError($this->l('Something went wrong when setting warehouse on product record'));
 				}
 			}
 		}
@@ -1951,7 +1971,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	 */
 	protected function afterAdd($object)
 	{
-		if (Tools::getValue('load_products') && Validate::isInt(Tools::getValue('load_products')))
+		if (is_numeric(Tools::getValue('load_products')))
 			$this->loadProducts((int)Tools::getValue('load_products'));
 
 		$this->object = $object;
@@ -2024,7 +2044,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				$diff = (int)$threshold - (int)$real_quantity;
 			}
 
-			if ($diff > 0)
+			if ($diff >= 0)
 			{
 				// sets supply_order_detail
 				$supply_order_detail = new SupplyOrderDetail();
@@ -2037,7 +2057,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				$supply_order_detail->name = Product::getProductName($item['id_product'], $item['id_product_attribute'], $supply_order->id_lang);
 				$supply_order_detail->ean13 = $item['ean13'];
 				$supply_order_detail->upc = $item['upc'];
-				$supply_order_detail->quantity_expected = (int)$diff;
+				$supply_order_detail->quantity_expected = ((int)$diff == 0) ? 1 : (int)$diff;
 				$supply_order_detail->exchange_rate = $order_currency->conversion_rate;
 
 				$product_currency = new Currency($item['id_currency']);

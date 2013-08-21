@@ -184,7 +184,7 @@
 			<div class="button_multishipping_mode" id="multishipping_mode_box">
 				<div class="title">{l s='Multi-shipping'}</div>
 				<div class="description">
-					<input type="checkbox" id="multishipping_mode_checkbox" onchange="multishippingMode(this); return false;"/><label for="multishipping_mode_checkbox">{l s='I\'d like to specify a delivery address for each product ordered.'}</label>
+					<input type="checkbox" id="multishipping_mode_checkbox" onchange="multishippingMode(this); return false;" autocomplete="off"/><label for="multishipping_mode_checkbox">{l s='I\'d like to specify a delivery address for each product ordered.'}</label>
 				</div>
 				<div class="description_off">
 					<a href="{$link->getPageLink('order-opc', true, NULL, 'ajax=1&multi-shipping=1&method=multishipping')|escape:'html'}" id="link_multishipping_form" title="{l s='Choose the delivery address(es)'}">
@@ -217,7 +217,7 @@
 			</select>
 		</p>
 		<p class="checkbox addressesAreEquals" {if $cart->isVirtualCart()}style="display:none;"{/if}>
-			<input type="checkbox" name="same" id="addressesAreEquals" value="1" onclick="updateAddressesDisplay();{if $opc}updateAddressSelection();{/if}"{if $cart->id_address_invoice == $cart->id_address_delivery || $addresses|@count == 1} checked="checked"{/if}/>
+			<input type="checkbox" name="same" id="addressesAreEquals" value="1" onclick="updateAddressesDisplay();{if $opc}updateAddressSelection();{/if}"{if $cart->id_address_invoice == $cart->id_address_delivery || $addresses|@count == 1} checked="checked"{/if} autocomplete="off"/>
 			<label for="addressesAreEquals">{l s='Use the delivery address as the billing address.'}</label>
 		</p>
 

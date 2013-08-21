@@ -31,7 +31,7 @@
 {if isset($fields.title)}<h3>{$fields.title}</h3>{/if}
 
 {block name="defaultForm"}
-<form id="{$table}_form" class="form-horizontal defaultForm {$name_controller}" action="{$current}&{if !empty($submit_action)}{$submit_action}=1{/if}&token={$token}" method="post" enctype="multipart/form-data" {if isset($style)}style="{$style}"{/if}>
+<form id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'htmlall':'UTF-8'}{else}{$table}_form{/if}" class="defaultForm {$name_controller}" action="{$current}&{if !empty($submit_action)}{$submit_action}=1{/if}&token={$token}" method="post" enctype="multipart/form-data" {if isset($style)}style="{$style}"{/if}>
 	{if $form_id}
 		<input type="hidden" name="{$identifier}" id="{$identifier}" value="{$form_id}" />
 	{/if}
@@ -339,6 +339,7 @@
 											</div>
 										{/if}
 									{/if}
+<<<<<<< HEAD
 
 									<div class="col-lg-7">
 										<div class="row">
@@ -370,6 +371,22 @@
 										});
 									</script>
 
+=======
+									
+									{if isset($input.lang) AND $input.lang}
+										<div class="translatable">
+											{foreach $languages as $language}
+												<div class="lang_{$language.id_lang}" id="{$input.name}_{$language.id_lang}" style="display:{if $language.id_lang == $defaultFormLanguage}block{else}none{/if}; float: left;">
+													<input type="file" name="{$input.name}_{$language.id_lang}" {if isset($input.id)}id="{$input.id}_{$language.id_lang}"{/if} />
+									
+												</div>
+											{/foreach}
+										</div>
+									{else}
+										<input type="file" name="{$input.name}" {if isset($input.id)}id="{$input.id}"{/if} />
+									{/if}
+									{if !empty($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
+>>>>>>> f610b0d844c37cc9b1dc1b94c17f3d0e5a3ca21a
 								{elseif $input.type == 'password'}
 									<input type="password"
 											id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
@@ -426,7 +443,6 @@
 										{if isset($input.class)}class="{$input.class}"
 										{else}class="color mColorPickerInput"{/if}
 										name="{$input.name}"
-										class="{if isset($input.class)}{$input.class}{/if}"
 										value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" />
 
 								{elseif $input.type == 'date'}

@@ -28,7 +28,7 @@ function ajaxStates (id_state_selected)
 	$.ajax({
 		url: "ajax.php",
 		cache: false,
-		data: "ajaxStates=1&id_country="+$('#id_country').val() + "&id_state=" + $('#id_state').val(),
+		data: "ajaxStates=1&no_empty=1&id_country="+$('#id_country').val() + "&id_state=" + $('#id_state').val(),
 		success: function(html)
 		{
 			if (html == 'false')

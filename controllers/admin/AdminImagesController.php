@@ -529,18 +529,16 @@ class AdminImagesControllerCore extends AdminController
 	protected function _regenerateNoPictureImages($dir, $type, $languages)
 	{
 		$errors = false;
-		foreach ($type as $imageType)
-		{
+		foreach ($type as $image_type)
 			foreach ($languages as $language)
 			{
 				$file = $dir.$language['iso_code'].'.jpg';
 				if (!file_exists($file))
-					$file = _PS_PROD_IMG_DIR_.Language::getIsoById((int)(Configuration::get('PS_LANG_DEFAULT'))).'.jpg';
-				if (!file_exists($dir.$language['iso_code'].'-default-'.stripslashes($imageType['name']).'.jpg'))
-					if (!ImageManager::resize($file, $dir.$language['iso_code'].'-default-'.stripslashes($imageType['name']).'.jpg', (int)$imageType['width'], (int)$imageType['height']))
+					$file = _PS_PROD_IMG_DIR_.Language::getIsoById((int)Configuration::get('PS_LANG_DEFAULT')).'.jpg';
+				if (!file_exists($dir.$language['iso_code'].'-default-'.stripslashes($image_type['name']).'.jpg'))
+					if (!ImageManager::resize($file, $dir.$language['iso_code'].'-default-'.stripslashes($image_type['name']).'.jpg', (int)$image_type['width'], (int)$image_type['height']))
 						$errors = true;
 			}
-		}
 		return $errors;
 	}
 

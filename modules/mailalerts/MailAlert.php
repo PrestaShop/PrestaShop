@@ -188,8 +188,7 @@ class MailAlert extends ObjectModel
 				file_exists(dirname(__FILE__).'/mails/'.$iso.'/customer_qty.html'))
 				Mail::Send((int)Configuration::get('PS_LANG_DEFAULT'), 'customer_qty', Mail::l('Product available', $id_lang), $templateVars, strval($customer_email), NULL, strval(Configuration::get('PS_SHOP_EMAIL')), strval(Configuration::get('PS_SHOP_NAME')), NULL, NULL, dirname(__FILE__).'/mails/');
 
-			Hook::exec('actionModuleMailAlertSendCustomer', array('product' => (is_array($product->name) ? $product->name[$id_lang] : $product->name), 'link' => $link->getProductLink($product)));
-
+			Hook::exec('actionModuleMailAlertSendCustomer', array('product' => (is_array($product->name) ? $product->name[$id_lang] : $product->name), 'link' => $link->getProductLink($product), 'customer' => $customer, 'product_obj' => $product));
 			self::deleteAlert((int)$customer_id, strval($customer_email), (int)$id_product, (int)$id_product_attribute);
 		}
 	}

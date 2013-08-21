@@ -1437,7 +1437,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `date_upd` datetime NOT NULL,
   PRIMARY KEY (`id_product`, `id_shop`),
   KEY `id_category_default` (`id_category_default`),
-  KEY `date_add` (`date_add`)
+  KEY `date_add` (`date_add` , `active` , `visibility`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_product_attribute` (

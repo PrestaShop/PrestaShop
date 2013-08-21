@@ -174,7 +174,7 @@ class ValidateCore
 	 */
 	public static function isMailName($mail_name)
 	{
-		return preg_match(Tools::cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'), $mail_name);
+		return (is_string($mail_name) && preg_match(Tools::cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'), $mail_name));
 	}
 
 	/**
@@ -592,7 +592,7 @@ class ValidateCore
 	 */
 	public static function isOrderBy($order)
 	{
-		return preg_match('/^[a-zA-Z0-9._-]+$/', $order);
+		return preg_match('/^[a-zA-Z0-9.!_-]+$/', $order);
 	}
 
 	/**

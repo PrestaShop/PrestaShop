@@ -535,28 +535,28 @@ abstract class ObjectModelCore
 			return false;
 		
 		$object_id = Db::getInstance()->Insert_ID();
-		
+
 		if (isset($definition['multilang']) && $definition['multilang'])
 		{
-			$res = Db::getInstance()->executeS('
-						SELECT * 
-						FROM `'._DB_PREFIX_.bqSQL($definition['table']).'_lang`
-						WHERE `'.bqSQL($definition['primary']).'` = '.(int)$this->id
-					);
-
-			if (!$res)
+			$result = Db::getInstance()->executeS('
+			SELECT * 
+			FROM `'._DB_PREFIX_.bqSQL($definition['table']).'_lang`
+			WHERE `'.bqSQL($definition['primary']).'` = '.(int)$this->id);
+			if (!$result)
 				return false;
-
-			foreach ($res as $field => &$value)
-				if (isset($definition['fields'][$field]))
-					$value = ObjectModel::formatValue($value, $definition['fields'][$field]['type']);
-
-			foreach ($res as $row)
+	
+			foreach ($result as &$row)
+				foreach ($row as $field => &$value)
+					if (isset($definition['fields'][$field]))
+						$value = ObjectModel::formatValue($value, $definition['fields'][$field]['type']);
+			
+			// Keep $row2, you cannot use $row because there is an unexplicated conflict with the previous usage of this variable
+			foreach ($result as $row2)
 			{
-				$row[$definition['primary']] = (int)$object_id;	
-				if (!Db::getInstance()->insert($definition['table'].'_lang', $row))
+				$row2[$definition['primary']] = (int)$object_id;
+				if (!Db::getInstance()->insert($definition['table'].'_lang', $row2))
 					return false;
-				}
+			}
 		}
 	
 		$object_duplicated = new $definition['classname']((int)$object_id);
@@ -857,8 +857,12 @@ abstract class ObjectModelCore
 				continue;
 
 			$values = $this->$field;
+			
+			// If the object has not been loaded in multilanguage, then the value is the one for the current language of the object
 			if (!is_array($values))
 				$values = array($this->id_lang => $values);
+
+			// The value for the default must always be set, so we put an empty string if it does not exists
 			if (!isset($values[Configuration::get('PS_LANG_DEFAULT')]))
 				$values[Configuration::get('PS_LANG_DEFAULT')] = '';
 
@@ -979,17 +983,18 @@ abstract class ObjectModelCore
 		$required_fields_database = (isset(self::$fieldsRequiredDatabase[get_class($this)])) ? self::$fieldsRequiredDatabase[get_class($this)] : array();
 		foreach ($this->def['fields'] as $field => $data)
 		{
+			$value = Tools::getValue($field, $this->{$field});		
 			// Check if field is required by user
 			if (in_array($field, $required_fields_database))
 				$data['required'] = true;
 			
 			// Checking for required fields
-			if (isset($data['required']) && $data['required'] && ($value = Tools::getValue($field, $this->{$field})) == false && (string)$value != '0')
+			if (isset($data['required']) && $data['required'] && empty($value) && $value !== '0')
 				if (!$this->id || $field != 'passwd')
 					$errors[$field] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is required.');
 
 			// Checking for maximum fields sizes
-			if (isset($data['size']) && ($value = Tools::getValue($field, $this->{$field})) && Tools::strlen($value) > $data['size'])
+			if (isset($data['size']) && !empty($value) && Tools::strlen($value) > $data['size'])
 				$errors[$field] = sprintf(
 					Tools::displayError('%1$s is too long. Maximum length: %2$d'),
 					self::displayFieldName($field, get_class($this), $htmlentities),
@@ -998,7 +1003,7 @@ abstract class ObjectModelCore
 
 			// Checking for fields validity
 			// Hack for postcode required for country which does not have postcodes
-			if (($value = Tools::getValue($field, $this->{$field})) || ($field == 'postcode' && $value == '0'))
+			if (!empty($value) || $value === '0' || ($field == 'postcode' && $value == '0'))
 			{
 				if (isset($data['validate']) && !Validate::$data['validate']($value) && (!empty($value) || $data['required']))
 					$errors[$field] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is invalid.');
@@ -1322,7 +1327,7 @@ abstract class ObjectModelCore
 	 * @param string $specific_where Only executed for common table
 	 * @return bool
 	 */
-	public static function updateMultishopTable($classname, $data, $where, $specific_where = '')
+	public static function updateMultishopTable($classname, $data, $where = '', $specific_where = '')
 	{
 		$def = ObjectModel::getDefinition($classname);
 		$update_data = array();
@@ -1342,8 +1347,8 @@ abstract class ObjectModelCore
 
 		$sql = 'UPDATE '._DB_PREFIX_.$def['table'].' a
 				'.Shop::addSqlAssociation($def['table'], 'a', true, null, true).'
-				SET '.implode(', ', $update_data).'
-				WHERE '.$where;
+				SET '.implode(', ', $update_data).
+				(!empty($where) ? ' WHERE '.$where : '');
 		return Db::getInstance()->execute($sql);
 	}
 

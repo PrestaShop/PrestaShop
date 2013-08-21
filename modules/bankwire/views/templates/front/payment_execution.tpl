@@ -71,8 +71,8 @@
 	<br /><br />
 	<b>{l s='Please confirm your order by clicking "Place my order."' mod='bankwire'}.</b>
 </p>
-<p class="cart_navigation">
-	<input type="submit" name="submit" value="{l s='Place my order' mod='bankwire'}" class="exclusive_large" />
+<p class="cart_navigation" id="cart_navigation">
+	<input type="submit" value="{l s='Place my order' mod='bankwire'}" class="exclusive_large" />
 	<a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'html'}" class="button_large">{l s='Other payment methods' mod='bankwire'}</a>
 </p>
 </form>

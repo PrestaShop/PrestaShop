@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>newsletter</name>
-            <displayName><![CDATA[Newsletter]]></displayName>
+            <displayName><![CDATA[Lettre d&#039;informations]]></displayName>
             <version><![CDATA[2]]></version>
-            <description><![CDATA[Generates a .CSV file for mass mailings]]></description>
+            <description><![CDATA[G&eacute;n&egrave;re un fichier .CSV pour votre envoi d&#039;e-mails]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[administration]]></tab>
             <is_configurable>1</is_configurable>

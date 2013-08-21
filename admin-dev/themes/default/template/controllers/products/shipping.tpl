@@ -47,7 +47,7 @@
 			{$bullet_common_field}
 		</div>
 	</div>
-
+	
 	<div class="row">
 		<label class="control-label col-lg-5" for="depth">{l s='Depth (package):'}</label>
 		<div class="input-group col-lg-2">
