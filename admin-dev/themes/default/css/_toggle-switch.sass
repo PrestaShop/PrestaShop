@@ -1,0 +1,167 @@
+// CSS TOGGLE SWITCHES (Ionuț Colceriu)
+// Licensed under Unlicense 
+// https://github.com/ghinda/css-toggle-switch
+
+//Hide by default
+.switch .slide-button, .toggle p span
+	display: none
+.switch
+	background-color: darken($bg-content-color,15%)
+	border-radius: 3px
+	label
+		padding: 0
+		cursor: pointer
+//Toggle Switches
+//We can't test for a specific feature, so we only target browsers with support for media queries.
+//Position the label over all the elements, except the slide-button
+//Clicking anywhere on the label will change the switch-state
+// Don't hide the input from screen-readers and keyboard access
+@media only screen 
+	// Checkbox
+	.toggle
+		position: relative
+		padding: 0
+		margin-left: 100px
+		label
+			position: relative
+			z-index: 3
+			display: block
+			width: 100%
+		input
+			position: absolute
+			opacity: 0
+			z-index: 5
+		p
+			position: absolute
+			left: -100px
+			width: 100%
+			margin: 0
+			padding-right: 100px
+			text-align: left
+		p span
+			position: absolute
+			top: 0
+			left: 0
+			z-index: 5
+			display: block
+			width: 50%
+			margin-left: 100px
+			text-align: center
+		&:last-child
+			left: 50%
+		.slide-button
+			position: absolute
+			right: 0
+			top: 0
+			z-index: 4
+			display: block
+			width: 50%
+			height: 100%
+			padding: 0
+	// Radio Switch
+	.switch
+		position: relative
+		padding: 0
+		input
+			position: absolute
+			opacity: 0
+		label
+			position: relative
+			z-index: 2
+			float: left
+			width: 50%
+			height: 100%
+			margin: 0
+			text-align: center
+		.slide-button 
+			position: absolute
+			top: 0
+			left: 0
+			padding: 0
+			z-index: 1
+			width: 50%
+			height: 100%
+		input:last-of-type:checked ~ .slide-button
+			left: 50%
+		// Switch with 3 items
+		&.switch-three label, &.switch-three .slide-button
+			width: 33.3%
+		&.switch-three input:checked:nth-of-type(2) ~ .slide-button	
+			left: 33.3%
+		&.switch-three input:checked:last-of-type ~ .slide-button
+			left: 66.6%
+		// Switch with 4 items
+		&.switch-four label, &.switch-four .slide-button
+			width: 25%
+		&.switch-four input:checked:nth-of-type(2) ~ .slide-button
+			left: 25%
+		&.switch-four input:checked:nth-of-type(3) ~ .slide-button
+			left: 50%
+		&.switch-four input:checked:last-of-type ~ .slide-button
+			left: 75%
+		// Switch with 5 items
+		&.switch-five label, &.switch-five .slide-button
+			width: 20%
+		&.switch-five input:checked:nth-of-type(2) ~ .slide-button	
+			left: 20%
+		&.switch-five input:checked:nth-of-type(3) ~ .slide-button
+			left: 40%
+		&.switch-five input:checked:nth-of-type(4) ~ .slide-button
+			left: 60%
+		&.switch-five input:checked:last-of-type ~ .slide-button
+			left: 80%
+	// Shared
+	.toggle, .switch
+		display: block
+		height: $input-height-base
+	.switch *, .toggle *
+		-webkit-box-sizing: border-box
+		-moz-box-sizing: border-box
+		-ms-box-sizing: border-box
+		-o-box-sizing: border-box
+		box-sizing: border-box
+	.switch .slide-button, .toggle .slide-button
+		display: block
+		-webkit-transition: all 0.3s ease-out
+		-moz-transition: all 0.3s ease-out
+		-ms-transition: all 0.3s ease-out
+		-o-transition: all 0.3s ease-out
+		transition: all 0.3s ease-out
+	.toggle label, .toggle p, .switch label
+		line-height: $input-height-base
+		vertical-align: middle
+	.toggle input:checked ~ .slide-button
+		right: 50%
+	// Outline the toggles when the inputs are focused
+	.toggle input:focus ~ .slide-button, .switch input:focus + label
+		outline: 1px dotted #888
+	// Bugfix for older Webkit, including mobile Webkit. Adapted from:
+	// http://css-tricks.com/webkit-sibling-bug/
+	.switch, .toggle
+		-webkit-animation: bugfix infinite 1s
+	@-webkit-keyframes bugfix { from { position: relative; } to { position: relative; } }
+
+	// Prestashop Theme
+	.prestashop-switch
+		min-width: 150px
+		color: #666
+		text-align: center
+		border-radius: 3px
+		@include box-shadow(rgba(black,0.3) 0 0 6px 1px inset)
+		label
+			padding-top: 0!important
+			font-weight: 500
+		input:checked + label
+			color: #333
+			@include text-shadow(rgba(white,0.7) 1px 1px 0)
+		.slide-button
+			position: relative
+			margin-right: 3px
+			border-color: darken($bg-content-color,20%)
+			color: lighten($bg-content-color,50%)
+			@include background(linear-gradient(top,$bg-content-color, darken($bg-content-color,10%)))
+			@include box-shadow(rgba(white,1) 0 0 0 1px inset)
+		p
+			color: #333
+		span
+			color: #fff

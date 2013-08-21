@@ -731,6 +731,12 @@ tr.filter
 
 //WIP
 
+input[type="text"],input[type="search"],input[type="password"], textarea, select
+	@extend .form-control
+
+fieldset > .row
+	@extend .form-group
+
 .box-stats
 	padding: 10px
 	margin-bottom: 20px
@@ -801,6 +807,7 @@ tr.filter
 	background-color: blue
 
 .list-toolbar-btn
+
 
 #topbar
 	position: fixed
