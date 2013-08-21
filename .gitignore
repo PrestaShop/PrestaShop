@@ -106,3 +106,4 @@ modules/uspscarrier
 modules/wexpay
 modules/yotpo
 modules/zingaya
+admin-dev/themes/default/bower_components
