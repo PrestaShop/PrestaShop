@@ -350,13 +350,13 @@ class SearchCore
 
 		$attributes = '';
 		$attributesArray = $db->executeS('
-		SELECT al.name FROM '._DB_PREFIX_.'product_attribute pa
+		SELECT al.name, pa.ean13, pa.reference, pa.upc FROM '._DB_PREFIX_.'product_attribute pa
 		INNER JOIN '._DB_PREFIX_.'product_attribute_combination pac ON pa.id_product_attribute = pac.id_product_attribute
 		INNER JOIN '._DB_PREFIX_.'attribute_lang al ON (pac.id_attribute = al.id_attribute AND al.id_lang = '.(int)$id_lang.')
 		'.Shop::addSqlAssociation('product_attribute', 'pa').'
 		WHERE pa.id_product = '.(int)$id_product);
 		foreach ($attributesArray as $attribute)
-			$attributes .= $attribute['name'].' ';
+			$attributes .= $attribute['name'].' '.$attribute['ean13'].' '.$attribute['reference'].' '.$attribute['upc'].' ';
 		return $attributes;
 	}
 
