@@ -10,7 +10,7 @@
 * http://opensource.org/licenses/osl-3.0.php
 * If you did not receive a copy of the license and are unable to
 * obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy 502immediately.
+* to license@prestashop.com so we can send you a copy immediately.
 *
 * DISCLAIMER
 *
@@ -495,36 +495,14 @@ class CartRuleCore extends ObjectModel
 			$cartTotal = $context->cart->getOrderTotal($this->minimum_amount_tax, Cart::ONLY_PRODUCTS);
 			if ($this->minimum_amount_shipping)
 				$cartTotal += $context->cart->getOrderTotal($this->minimum_amount_tax, Cart::ONLY_SHIPPING);
+			$products = $context->cart->getProducts();
+			$cart_rules = $context->cart->getCartRules();
 
-			// If a product is given for free in this rule and already in the cart, the price is subtracted
-			if ($this->gift_product && $alreadyInCart)
-			{
-				$query = new DbQuery();
-				
-				$query->select('id_product');
-				$query->from('cart_product');
-				$query->where('id_product = '.(int)$this->gift_product);
-				$query->where('id_cart = '.(int)$context->cart->id);
-				
-				if ((int)$this->gift_product_attribute)
-					$query->where('id_product_attribute = '.(int)$this->gift_product_attribute);
-				
-				if (Db::getInstance()->getValue($query))
-				{
-					$ref = false;
-					$product_price = Product::getPriceStatic(
-						$this->gift_product,
-						$this->minimum_amount_tax,
-						$this->gift_product_attribute,
-						null, null, false, true, 1, null,
-						$context->cart->id_customer ? $context->cart->id_customer : null,
-						$context->cart->id,
-						(int)$context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')} ? (int)$context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')} : null,
-						$ref, true, true, $context, true
-					);
-					$cartTotal -= $product_price;
-				}
-			}
+			foreach ($cart_rules as &$cart_rule)
+				if ($cart_rule['gift_product'])
+					foreach ($products as $key => &$product)
+						if (empty($product['gift']) && $product['id_product'] == $cart_rule['gift_product'] && $product['id_product_attribute'] == $cart_rule['gift_product_attribute'])
+							$cartTotal = Tools::ps_round($cartTotal - $product[$this->minimum_amount_tax ? 'price_wt' : 'price'], (int)$context->currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
 
 			if ($cartTotal < $minimum_amount)
 				return (!$display_error) ? false : Tools::displayError('You have not reached the minimum amount required to use this voucher');
@@ -1130,7 +1108,7 @@ class CartRuleCore extends ObjectModel
 				WHERE `id_cart` = '.(int)$context->cart->id.'
 			)
 		)
-		AND cr.id_cart_rule NOT IN (SELECT id_cart_rule	FROM '._DB_PREFIX_.'cart_cart_rule WHERE id_cart = '.(int)$context->cart->id.')
+		AND cr.id_cart_rule NOT IN (SELECT id_cart_rule FROM '._DB_PREFIX_.'cart_cart_rule WHERE id_cart = '.(int)$context->cart->id.')
 		ORDER BY priority';
 		$result = Db::getInstance()->executeS($sql);
 		if ($result)

@@ -399,20 +399,31 @@ class AdminModulesPositionsControllerCore extends AdminController
 		if (!is_array($file_list))
 			$file_list = ($file_list) ? array($file_list) : array();
 
-		$content = '<p><input type="text" name="exceptions['.$shop_id.']" size="40" value="'.implode(', ', $file_list).'" id="em_text_'.$shop_id.'"/></p>';
+		$content = '<p><input type="text" name="exceptions['.$shop_id.']" value="'.implode(', ', $file_list).'" id="em_text_'.$shop_id.'"/></p>';
+
 		if ($shop_id)
 		{
 			$shop = new Shop($shop_id);
 			$content .= ' ('.$shop->name.')';
 		}
+		
 		$content .= '<p>
-					<select id="em_list_'.$shop_id.'">';
+					<select id="em_list_'.$shop_id.'" multiple="multiple">
+					<option disabled="disabled">'.$this->l('___________ CUSTOM ___________').'</option>';
 
 		// @todo do something better with controllers
 		$controllers = Dispatcher::getControllers(_PS_FRONT_CONTROLLER_DIR_);
 		ksort($controllers);
+		
+		foreach ($file_list as $k => $v)
+			if ( ! array_key_exists ($v, $controllers))
+				$content .= '<option value="'.$v.'">'.$v.'</option>';
+
+		$content .= '<option disabled="disabled">'.$this->l('____________ CORE ____________').'</option>';
+
 		foreach ($controllers as $k => $v)
 			$content .= '<option value="'.$k.'">'.$k.'</option>';
+
 		$content .= '</select>
 					</p> 
 					<p>

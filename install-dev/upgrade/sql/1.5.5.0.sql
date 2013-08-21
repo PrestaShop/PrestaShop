@@ -19,6 +19,8 @@ CHANGE `module_name` `module_name` VARCHAR(64) NULL DEFAULT NULL;
 /* PHP:add_module_to_hook(blockmyaccountfooter, actionModuleRegisterHookAfter); */;
 /* PHP:add_module_to_hook(blockmyaccount, actionModuleUnRegisterHookAfter); */;
 /* PHP:add_module_to_hook(blockmyaccountfooter, actionModuleUnRegisterHookAfter); */;
+/* PHP:remove_tab(AdminRangePrice); */;
+/* PHP:remove_tab(AdminRangeWeight); */;
 
 ALTER TABLE `PREFIX_log` ADD `id_employee` INT(10) UNSIGNED NULL DEFAULT NULL AFTER `object_id`;
 
@@ -26,3 +28,11 @@ SET @id_parent = (SELECT IFNULL(id_tab, 1) FROM `PREFIX_tab` WHERE `class_name` 
 UPDATE `PREFIX_tab` SET id_parent = @id_parent WHERE `id_parent` = 1 AND `class_name` = 'AdminMarketing' LIMIT 1;
 
 UPDATE `PREFIX_hook` SET `description` = 'This hook is called when a new credit slip is added regarding client order' WHERE `name` = 'actionOrderSlipAdd';
+
+ALTER TABLE `PREFIX_product_shop` DROP INDEX `date_add`, ADD INDEX `date_add` (`date_add` , `active` , `visibility`);
+
+UPDATE `PREFIX_hook` SET `live_edit` = '1' WHERE `name` LIKE 'leftcolumn';
+
+UPDATE `PREFIX_configuration` SET `name` = '0' WHERE `name` LIKE 'PS_LEGACY_IMAGES' AND `value` LIKE '1';
+
+INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES('PS_SMARTY_CONSOLE_KEY', 'SMARTY_DEBUG', NOW(), NOW());

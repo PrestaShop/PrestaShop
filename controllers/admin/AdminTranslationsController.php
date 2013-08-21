@@ -723,9 +723,8 @@ class AdminTranslationsControllerCore extends AdminController
 		$arr_import_lang = explode('|', Tools::getValue('params_import_language')); /* 0 = Language ISO code, 1 = PS version */
 		if (Validate::isLangIsoCode($arr_import_lang[0]))
 		{
-			if ($content = Tools::file_get_contents(
-				'http://www.prestashop.com/download/lang_packs/gzip/'.$arr_import_lang[1].'/'.Tools::strtolower($arr_import_lang[0]).'.gzip', false,
-				@stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 5)))))
+			$content = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/gzip/'.$arr_import_lang[1].'/'.Tools::strtolower($arr_import_lang[0]).'.gzip');
+			if ($content)
 			{
 				$file = _PS_TRANSLATIONS_DIR_.$arr_import_lang[0].'.gzip';
 				if ((bool)@file_put_contents($file, $content))
@@ -2355,7 +2354,8 @@ class AdminTranslationsControllerCore extends AdminController
 
 		foreach ($files_by_directiories['php'] as $dir => $files)
 			foreach ($files as $file)
-				if (Tools::file_exists_cache($dir.$file) && is_file($dir.$file) && !in_array($file, self::$ignore_folder) && preg_match('/\.php$/', $file))
+				// If file exist and is not in ignore_folder, in the next step we check if a folder or mail
+				if (Tools::file_exists_cache($dir.$file) && !in_array($file, self::$ignore_folder))
 					$subject_mail = $this->getSubjectMail($dir, $file, $subject_mail);
 
 		// Get path of directory for find a good path of translation file
@@ -2411,30 +2411,37 @@ class AdminTranslationsControllerCore extends AdminController
 	 */
 	protected function getSubjectMail($dir, $file, $subject_mail)
 	{
-		$content = file_get_contents($dir.'/'.$file);
-		$content = str_replace("\n", ' ', $content);
+		// If is file and is not in ignore_folder
+		if (is_file($dir.'/'.$file) && !in_array($file, self::$ignore_folder) && preg_match('/\.php$/', $file)) 
+		{
+			$content = file_get_contents($dir.'/'.$file);
+			$content = str_replace("\n", ' ', $content);
 
-		// Subject must match with a template, therefor we first grep the Mail::Send() function then the Mail::l() inside.
-		if (preg_match_all('/Mail::Send([^;]*);/si', $content, $tab))
-			for ($i = 0; isset($tab[1][$i]); $i++)
+			// Subject must match with a template, therefor we first grep the Mail::Send() function then the Mail::l() inside.
+			if (preg_match_all('/Mail::Send([^;]*);/si', $content, $tab))
 			{
-				$tab2 = explode(',', $tab[1][$i]);
-				if (is_array($tab2) && isset($tab2[1]))
+				for ($i = 0; isset($tab[1][$i]); $i++)
 				{
-					$template = trim(str_replace('\'', '', $tab2[1]));
-					foreach ($tab2 as $tab3)
-						if (preg_match('/Mail::l\(\''._PS_TRANS_PATTERN_.'\'\)/Us', $tab3.')', $matches))
-						{
-							if (!isset($subject_mail[$template]))
-								$subject_mail[$template] = array();
-							if (!in_array($matches[1], $subject_mail[$template]))
-								$subject_mail[$template][] = $matches[1];
-						}
+					$tab2 = explode(',', $tab[1][$i]);
+					if (is_array($tab2) && isset($tab2[1]))
+					{
+						$template = trim(str_replace('\'', '', $tab2[1]));
+						foreach ($tab2 as $tab3)
+							if (preg_match('/Mail::l\(\''._PS_TRANS_PATTERN_.'\'\)/Us', $tab3.')', $matches))
+							{
+								if (!isset($subject_mail[$template]))
+									$subject_mail[$template] = array();
+								if (!in_array($matches[1], $subject_mail[$template]))
+									$subject_mail[$template][] = $matches[1];
+							}
+					}
 				}
 			}
-
-		if (!in_array($file, self::$ignore_folder) && is_dir($dir.'/'.$file))
-			$subject_mail = $this->getSubjectMail($dir, $file, $subject_mail);
+		}
+		// Of if is colder, we scan colder for check if find in folder and subfolder
+		else if (!in_array($file, self::$ignore_folder) && is_dir($dir.'/'.$file))
+			foreach( scandir($dir.'/'.$file ) as $temp )
+				$subject_mail = $this->getSubjectMail($dir.'/'.$file, $temp, $subject_mail);
 
 		return $subject_mail;
 	}

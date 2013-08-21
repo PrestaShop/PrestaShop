@@ -84,7 +84,7 @@ function updateAddressSelection()
 		async: true,
 		cache: false,
 		dataType : "json",
-		data: 'ajax=true&method=updateAddressesSelected&id_address_delivery=' + idAddress_delivery + '&id_address_invoice=' + idAddress_invoice + '&token=' + static_token,
+		data: 'allow_refresh=1&ajax=true&method=updateAddressesSelected&id_address_delivery=' + idAddress_delivery + '&id_address_invoice=' + idAddress_invoice + '&token=' + static_token,
 		success: function(jsonData)
 		{
 			if (jsonData.hasError)
@@ -98,6 +98,8 @@ function updateAddressSelection()
 			}
 			else
 			{
+				if (jsonData.refresh)
+					location.reload();
 				// Update all product keys with the new address id
 				$('#cart_summary .address_'+deliveryAddress).each(function() {
 					$(this)

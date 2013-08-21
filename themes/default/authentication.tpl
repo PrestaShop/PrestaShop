@@ -59,7 +59,7 @@ $(function(){ldelim}
 //]]>
 {literal}
 $(document).ready(function() {
-	$('#company').blur(function(){
+	$('#company').on('input',function(){
 		vat_number();
 	});
 	vat_number();
@@ -260,11 +260,11 @@ $(document).ready(function() {
 				</p>
 				{if isset($newsletter) && $newsletter}
 					<p class="checkbox">
-						<input type="checkbox" name="newsletter" id="newsletter" value="1" {if isset($smarty.post.newsletter) && $smarty.post.newsletter == '1'}checked="checked"{/if} />
+						<input type="checkbox" name="newsletter" id="newsletter" value="1" {if isset($smarty.post.newsletter) && $smarty.post.newsletter == '1'}checked="checked"{/if} autocomplete="off"/>
 						<label for="newsletter">{l s='Sign up for our newsletter!'}</label>
 					</p>
 					<p class="checkbox">
-						<input type="checkbox" name="optin" id="optin" value="1" {if isset($smarty.post.optin) && $smarty.post.optin == '1'}checked="checked"{/if} />
+						<input type="checkbox" name="optin" id="optin" value="1" {if isset($smarty.post.optin) && $smarty.post.optin == '1'}checked="checked"{/if} autocomplete="off"/>
 						<label for="optin">{l s='Receive special offers from our partners!'}</label>
 					</p>
 				{/if}
@@ -306,7 +306,6 @@ $(document).ready(function() {
 						<p class="required select">
 							<label for="id_country">{l s='Country'} <sup>*</sup></label>
 							<select name="id_country" id="id_country">
-								<option value="">-</option>
 								{foreach from=$countries item=v}
 									<option value="{$v.id_country}" {if ($sl_country == $v.id_country)} selected="selected"{/if}>{$v.name}</option>
 								{/foreach}
@@ -442,11 +441,11 @@ $(document).ready(function() {
 		</p>
 		{if $newsletter}
 		<p class="checkbox" >
-			<input type="checkbox" name="newsletter" id="newsletter" value="1" {if isset($smarty.post.newsletter) AND $smarty.post.newsletter == 1} checked="checked"{/if} />
+			<input type="checkbox" name="newsletter" id="newsletter" value="1" {if isset($smarty.post.newsletter) AND $smarty.post.newsletter == 1} checked="checked"{/if} autocomplete="off"/>
 			<label for="newsletter">{l s='Sign up for our newsletter!'}</label>
 		</p>
 		<p class="checkbox" >
-			<input type="checkbox"name="optin" id="optin" value="1" {if isset($smarty.post.optin) AND $smarty.post.optin == 1} checked="checked"{/if} />
+			<input type="checkbox"name="optin" id="optin" value="1" {if isset($smarty.post.optin) AND $smarty.post.optin == 1} checked="checked"{/if} autocomplete="off"/>
 			<label for="optin">{l s='Receive special offers from our partners!'}</label>
 		</p>
 		{/if}

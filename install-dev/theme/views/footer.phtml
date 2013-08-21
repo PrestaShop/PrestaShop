@@ -36,6 +36,8 @@
 			errors.push($(this).text().trim());
 		});
 		psuser_assistance.setStep('install_<?php echo addslashes($this->step) ?>', {'error':errors});
+		if (errors.length)
+			$('#iframe_help').attr('src', $('#iframe_help').attr('src') + '&errors=' + encodeURI(errors.join(', ')));
 	}
 </script>
 </body>

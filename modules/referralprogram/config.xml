@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>referralprogram</name>
-            <displayName><![CDATA[Customer referral program]]></displayName>
+            <displayName><![CDATA[Programme de parrainage]]></displayName>
             <version><![CDATA[1.5.1]]></version>
-            <description><![CDATA[Integrate a referral program system into your shop.]]></description>
+            <description><![CDATA[Int&egrave;gre un programme de parrainage &agrave; votre boutique]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[advertising_marketing]]></tab>
-	<confirmUninstall>All sponsors and friends will be deleted. Are you sure you want to uninstall this module?</confirmUninstall>
+	<confirmUninstall>Tous les informations relatives aux parrains et filleuls</confirmUninstall>
             <is_configurable>1</is_configurable>
             <need_instance>1</need_instance>
 	<limited_countries></limited_countries>

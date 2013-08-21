@@ -38,6 +38,8 @@ class AdminCategoriesControllerCore extends AdminController
 	/** @var boolean does the product have to be disable during the delete process */
 	public $disable_products = false;
 
+	private $original_filter = '';
+
 	public function __construct()
 	{
 		$this->bootstrap = true;
@@ -130,7 +132,7 @@ class AdminCategoriesControllerCore extends AdminController
 			$id_parent = $this->context->shop->id_category;
 
 		$this->_select = 'sa.position position';
-		$this->_filter .= ' AND `id_parent` = '.(int)$id_parent.' ';
+		$this->original_filter = $this->_filter .= ' AND `id_parent` = '.(int)$id_parent.' ';
 
 		if (Shop::getContext() == Shop::CONTEXT_SHOP)
 			$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = '.(int)$this->context->shop->id.') ';
@@ -174,6 +176,9 @@ class AdminCategoriesControllerCore extends AdminController
 
 	public function renderList()
 	{
+		if (isset($this->_filter) && trim($this->_filter) == '')
+			$this->_filter = $this->original_filter;
+
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 		$this->addRowAction('add');
@@ -389,25 +394,6 @@ class AdminCategoriesControllerCore extends AdminController
 					)
 				),
 				array(
-					'type' => 'switch',
-					'label' => $this->l('Root Category:'),
-					'name' => 'is_root_category',
-					'required' => false,
-					'is_bool' => true,
-					'values' => array(
-						array(
-							'id' => 'is_root_on',
-							'value' => 1,
-							'label' => $this->l('Yes')
-						),
-						array(
-							'id' => 'is_root_off',
-							'value' => 0,
-							'label' => $this->l('No')
-						)
-					)
-				),
-				array(
 					'type' => 'textarea',
 					'label' => $this->l('Description:'),
 					'name' => 'description',
@@ -471,12 +457,36 @@ class AdminCategoriesControllerCore extends AdminController
 		
 		$this->tpl_form_vars['shared_category'] = Validate::isLoadedObject($obj) && $obj->hasMultishopEntries(); 
 		$this->tpl_form_vars['PS_ALLOW_ACCENTED_CHARS_URL'] = (int)Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
+		
+		// Display this field only if multistore option is enabled
+		if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE'))
+			$this->fields_form['input'][] = array(
+				'type' => 'switch',
+				'label' => $this->l('Root Category:'),
+				'name' => 'is_root_category',
+				'required' => false,
+				'is_bool' => true,
+				'values' => array(
+					array(
+						'id' => 'is_root_on',
+						'value' => 1,
+						'label' => $this->l('Yes')
+					),
+					array(
+						'id' => 'is_root_off',
+						'value' => 0,
+						'label' => $this->l('No')
+					)
+				)
+			);
+		// Display this field only if multistore option is enabled AND there are several stores configured
 		if (Shop::isFeatureActive())
 			$this->fields_form['input'][] = array(
 				'type' => 'shop',
 				'label' => $this->l('Shop association:'),
 				'name' => 'checkBoxShopAsso',
 			);
+
 		// remove category tree and radio button "is_root_category" if this category has the root category as parent category to avoid any conflict
 		if ($this->_category->id_parent == Category::getTopCategory()->id && Tools::isSubmit('updatecategory'))
 			foreach ($this->fields_form['input'] as $k => $input)

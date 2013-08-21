@@ -83,11 +83,7 @@ class AdminCarriersControllerCore extends AdminController
 			'is_free' => array(
 				'title' => $this->l('Free Shipping'),
 				'align' => 'center',
-				'icon' => array(
-					0 => 'disabled.gif',
-					1 => 'enabled.gif',
-					'default' => 'disabled.gif'
-				),
+				'active' => 'isFree',
 				'type' => 'bool',
 				'orderby' => false,
 			),
@@ -150,33 +146,16 @@ class AdminCarriersControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function initToolbar()
+	{
+		parent::initToolbar();
+		
+		if (isset($this->toolbar_btn['new']))
+			$this->toolbar_btn['new']['href'] = $this->context->link->getAdminLink('AdminCarrierWizard');
+	}
+
 	public function renderList()
 	{
-		$this->displayInformation(
-			'&nbsp;<b>'.$this->l('How do I create a new carrier?').'</b>
-			<br />
-			<ul>
-			<li>'.$this->l('Click "Add New."').'<br /></li>
-				<li>'.$this->l('Fill in the fields and click "Save."').'</li>
-				<li>'.
-					$this->l('You need to set a price range -- or weight range -- for which the new carrier will be available.').' '.
-					$this->l('Under the "Shipping" menu, click either "Price ranges" or "Weight ranges.".').'
-				</li>
-				<li>'.$this->l('Click "Add New."').'</li>
-				<li>'.
-					$this->l('Select the name of the carrier before defining the price or weight range.').' '.
-					$this->l('For example, the carrier can be made available for a weight range between 0 and 5lbs. Another carrier can have a range between 5 and 10lbs.').'
-				</li>
-				<li>'.$this->l('When you\'re done, click "Save."').'</li>
-				<li>'.$this->l('Click on the "Shipping" menu.').'</li>
-				<li>'.
-					$this->l('You need to set the fees that will be applied for this carrier.').' '.
-					$this->l('At the bottom on the page -- in the "Fees" section -- select the name of the carrier.').'
-				</li>
-				<li>'.$this->l('For each zone, enter a price and then click "Save."').'</li>
-				<li>'.$this->l('You\'re all set! The new carrier will now be displayed to customers.').'</li>
-			</ul>'
-		);
 		$this->_select = 'b.*';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'carrier_lang` b ON a.id_carrier = b.id_carrier'.Shop::addSqlRestrictionOnLang('b').'
 							LEFT JOIN `'._DB_PREFIX_.'carrier_tax_rules_group_shop` ctrgs ON (a.`id_carrier` = ctrgs.`id_carrier`
@@ -537,6 +516,10 @@ class AdminCarriersControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
+		else if (isset($_GET['isFree'.$this->table]))
+		{
+			$this->processIsFree();
+		}
 		else
 		{
 			if ((Tools::isSubmit('submitDel'.$this->table) && in_array(Configuration::get('PS_CARRIER_DEFAULT'), Tools::getValue('carrierBox')))
@@ -567,6 +550,17 @@ class AdminCarriersControllerCore extends AdminController
 				Carrier::cleanPositions();
 			}
 		}
+	}
+
+	public function processIsFree()
+	{
+		$carrier = new Carrier($this->id_object);
+		if (!Validate::isLoadedObject($carrier))
+			$this->errors[] = Tools::displayError('An error occurred while updating carrier information.');
+		$carrier->is_free = $carrier->is_free ? 0 : 1;
+		if (!$carrier->update())
+			$this->errors[] = Tools::displayError('An error occurred while updating carrier information.');
+		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 	}
 
 	/**
@@ -680,6 +674,22 @@ class AdminCarriersControllerCore extends AdminController
 				break;
 			}
 		}
+	}
+
+	public function displayEditLink($token = null, $id, $name = null)
+	{
+		if ($this->tabAccess['edit'] == 1)
+			return '<a href="'.$this->context->link->getAdminLink('AdminCarrierWizard').'&id_carrier='.(int)$id.'"><img src="../img/admin/edit.gif"/></a>';
+		else
+			return;
+	}
+	
+	public function displayDeleteLink($token = null, $id, $name = null)
+	{
+		if ($this->tabAccess['delete'] == 1)
+			return '<a href="'.$this->context->link->getAdminLink('AdminCarriers').'&id_carrier='.(int)$id.'&deletecarrier=1"><img src="../img/admin/delete.gif"/></a>';
+		else
+			return;
 	}
 
 }

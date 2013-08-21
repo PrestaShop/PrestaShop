@@ -103,8 +103,6 @@
 				<i class="icon-edit"></i> {l s='Edit'}
 			</a>
 		</div>
-
-		
 		<div class="panel">
 			<div class="panel-heading">
 				<i class="icon-file"></i> {l s='Orders'} <span class="badge">{count($orders)}</span>
@@ -542,6 +540,5 @@
 			{/if}
 		</div>
 	</div>
-
 </div>
 {/block}
