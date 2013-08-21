@@ -1412,16 +1412,16 @@ input[type="checkbox"]:focus {
 input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
   height: auto; }
 
-.form-control:-moz-placeholder {
+.form-control:-moz-placeholder, input[type="text"]:-moz-placeholder, input[type="search"]:-moz-placeholder, input[type="password"]:-moz-placeholder, textarea:-moz-placeholder, select:-moz-placeholder {
   color: #999999; }
-.form-control::-moz-placeholder {
+.form-control::-moz-placeholder, input[type="text"]::-moz-placeholder, input[type="search"]::-moz-placeholder, input[type="password"]::-moz-placeholder, textarea::-moz-placeholder, select::-moz-placeholder {
   color: #999999; }
-.form-control:-ms-input-placeholder {
+.form-control:-ms-input-placeholder, input[type="text"]:-ms-input-placeholder, input[type="search"]:-ms-input-placeholder, input[type="password"]:-ms-input-placeholder, textarea:-ms-input-placeholder, select:-ms-input-placeholder {
   color: #999999; }
-.form-control::-webkit-input-placeholder {
+.form-control::-webkit-input-placeholder, input[type="text"]::-webkit-input-placeholder, input[type="search"]::-webkit-input-placeholder, input[type="password"]::-webkit-input-placeholder, textarea::-webkit-input-placeholder, select::-webkit-input-placeholder {
   color: #999999; }
 
-.form-control {
+.form-control, input[type="text"], input[type="search"], input[type="password"], textarea, select {
   display: block;
   width: 100%;
   height: 27px;
@@ -1437,19 +1437,19 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s; }
-  .form-control:focus {
+  .form-control:focus, input[type="text"]:focus, input[type="search"]:focus, input[type="password"]:focus, textarea:focus, select:focus {
     border-color: #66afe9;
     outline: 0;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6); }
-  .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+  .form-control[disabled], input[disabled][type="text"], input[disabled][type="search"], input[disabled][type="password"], textarea[disabled], select[disabled], .form-control[readonly], input[readonly][type="text"], input[readonly][type="search"], input[readonly][type="password"], textarea[readonly], select[readonly], fieldset[disabled] .form-control, fieldset[disabled] input[type="text"], fieldset[disabled] input[type="search"], fieldset[disabled] input[type="password"], fieldset[disabled] textarea, fieldset[disabled] select {
     cursor: not-allowed;
     background-color: #eeeeee; }
 
-textarea.form-control {
+textarea.form-control, textarea {
   height: auto; }
 
-.form-group {
+.form-group, fieldset > .row {
   margin-bottom: 15px; }
 
 .radio,
@@ -1505,7 +1505,7 @@ input[type="checkbox"],
 .checkbox-inline {
   cursor: not-allowed; }
 
-.input-sm, .input-group-sm > .form-control,
+.input-sm, .input-group-sm > .form-control, .input-group-sm > input[type="text"], .input-group-sm > input[type="search"], .input-group-sm > input[type="password"], .input-group-sm > textarea, .input-group-sm > select,
 .input-group-sm > .input-group-addon,
 .input-group-sm > .input-group-btn > .btn {
   height: 28px;
@@ -1514,18 +1514,18 @@ input[type="checkbox"],
   line-height: 1.5;
   border-radius: 3px; }
 
-select.input-sm, .input-group-sm > select.form-control,
+select.input-sm, .input-group-sm > select,
 .input-group-sm > select.input-group-addon,
 .input-group-sm > .input-group-btn > select.btn {
   height: 28px;
   line-height: 28px; }
 
-textarea.input-sm, .input-group-sm > textarea.form-control,
+textarea.input-sm, .input-group-sm > textarea,
 .input-group-sm > textarea.input-group-addon,
 .input-group-sm > .input-group-btn > textarea.btn {
   height: auto; }
 
-.input-lg, .input-group-lg > .form-control,
+.input-lg, .input-group-lg > .form-control, .input-group-lg > input[type="text"], .input-group-lg > input[type="search"], .input-group-lg > input[type="password"], .input-group-lg > textarea, .input-group-lg > select,
 .input-group-lg > .input-group-addon,
 .input-group-lg > .input-group-btn > .btn {
   height: 41px;
@@ -1534,13 +1534,13 @@ textarea.input-sm, .input-group-sm > textarea.form-control,
   line-height: 1.33;
   border-radius: 6px; }
 
-select.input-lg, .input-group-lg > select.form-control,
+select.input-lg, .input-group-lg > select,
 .input-group-lg > select.input-group-addon,
 .input-group-lg > .input-group-btn > select.btn {
   height: 41px;
   line-height: 41px; }
 
-textarea.input-lg, .input-group-lg > textarea.form-control,
+textarea.input-lg, .input-group-lg > textarea,
 .input-group-lg > textarea.input-group-addon,
 .input-group-lg > .input-group-btn > textarea.btn {
   height: auto; }
@@ -1548,11 +1548,11 @@ textarea.input-lg, .input-group-lg > textarea.form-control,
 .has-warning .help-block,
 .has-warning .control-label {
   color: #c09853; }
-.has-warning .form-control {
+.has-warning .form-control, .has-warning input[type="text"], .has-warning input[type="search"], .has-warning input[type="password"], .has-warning textarea, .has-warning select {
   border-color: #c09853;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); }
-  .has-warning .form-control:focus {
+  .has-warning .form-control:focus, .has-warning input[type="text"]:focus, .has-warning input[type="search"]:focus, .has-warning input[type="password"]:focus, .has-warning textarea:focus, .has-warning select:focus {
     border-color: #a47e3c;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #dbc59e;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #dbc59e; }
@@ -1564,11 +1564,11 @@ textarea.input-lg, .input-group-lg > textarea.form-control,
 .has-error .help-block,
 .has-error .control-label {
   color: #b94a48; }
-.has-error .form-control {
+.has-error .form-control, .has-error input[type="text"], .has-error input[type="search"], .has-error input[type="password"], .has-error textarea, .has-error select {
   border-color: #b94a48;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); }
-  .has-error .form-control:focus {
+  .has-error .form-control:focus, .has-error input[type="text"]:focus, .has-error input[type="search"]:focus, .has-error input[type="password"]:focus, .has-error textarea:focus, .has-error select:focus {
     border-color: #953b39;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392; }
@@ -1580,11 +1580,11 @@ textarea.input-lg, .input-group-lg > textarea.form-control,
 .has-success .help-block,
 .has-success .control-label {
   color: #468847; }
-.has-success .form-control {
+.has-success .form-control, .has-success input[type="text"], .has-success input[type="search"], .has-success input[type="password"], .has-success textarea, .has-success select {
   border-color: #468847;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); }
-  .has-success .form-control:focus {
+  .has-success .form-control:focus, .has-success input[type="text"]:focus, .has-success input[type="search"]:focus, .has-success input[type="password"]:focus, .has-success textarea:focus, .has-success select:focus {
     border-color: #356635;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7aba7b;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7aba7b; }
@@ -1604,11 +1604,11 @@ textarea.input-lg, .input-group-lg > textarea.form-control,
   color: #959595; }
 
 @media (min-width: 768px) {
-  .form-inline .form-group, .navbar-form .form-group, #header_search .form-group {
+  .form-inline .form-group, .navbar-form .form-group, #header_search .form-group, .form-inline fieldset > .row, .navbar-form fieldset > .row, #header_search fieldset > .row {
     display: inline-block;
     margin-bottom: 0;
     vertical-align: middle; }
-  .form-inline .form-control, .navbar-form .form-control, #header_search .form-control {
+  .form-inline .form-control, .navbar-form .form-control, #header_search .form-control, .form-inline input[type="text"], .navbar-form input[type="text"], #header_search input[type="text"], .form-inline input[type="search"], .navbar-form input[type="search"], #header_search input[type="search"], .form-inline input[type="password"], .navbar-form input[type="password"], #header_search input[type="password"], .form-inline textarea, .navbar-form textarea, #header_search textarea, .form-inline select, .navbar-form select, #header_search select {
     display: inline-block; }
   .form-inline .radio, .navbar-form .radio, #header_search .radio,
   .form-inline .checkbox,
@@ -1633,15 +1633,15 @@ textarea.input-lg, .input-group-lg > textarea.form-control,
   margin-top: 0;
   margin-bottom: 0;
   padding-top: 5px; }
-.form-horizontal .form-group {
+.form-horizontal .form-group, .form-horizontal fieldset > .row {
   margin-left: -5px;
   margin-right: -5px; }
-  .form-horizontal .form-group:before, .form-horizontal .form-group:after {
+  .form-horizontal .form-group:before, .form-horizontal fieldset > .row:before, .form-horizontal .form-group:after, .form-horizontal fieldset > .row:after {
     content: " ";
     /* 1 */
     display: table;
     /* 2 */ }
-  .form-horizontal .form-group:after {
+  .form-horizontal .form-group:after, .form-horizontal fieldset > .row:after {
     clear: both; }
 @media (min-width: 768px) {
   .form-horizontal .control-label {
@@ -2779,17 +2779,27 @@ input[type="button"].btn-block {
     float: none;
     padding-left: 0;
     padding-right: 0; }
-  .input-group .form-control {
+  .input-group .form-control, .input-group input[type="text"], .input-group input[type="search"], .input-group input[type="password"], .input-group textarea, .input-group select {
     width: 100%;
     margin-bottom: 0; }
 
 .input-group-addon,
 .input-group-btn,
-.input-group .form-control {
+.input-group .form-control,
+.input-group input[type="text"],
+.input-group input[type="search"],
+.input-group input[type="password"],
+.input-group textarea,
+.input-group select {
   display: table-cell; }
   .input-group-addon:not(:first-child):not(:last-child),
   .input-group-btn:not(:first-child):not(:last-child),
-  .input-group .form-control:not(:first-child):not(:last-child) {
+  .input-group .form-control:not(:first-child):not(:last-child),
+  .input-group input[type="text"]:not(:first-child):not(:last-child),
+  .input-group input[type="search"]:not(:first-child):not(:last-child),
+  .input-group input[type="password"]:not(:first-child):not(:last-child),
+  .input-group textarea:not(:first-child):not(:last-child),
+  .input-group select:not(:first-child):not(:last-child) {
     border-radius: 0; }
 
 .input-group-addon,
@@ -2823,7 +2833,7 @@ input[type="button"].btn-block {
   .input-group-addon input[type="checkbox"] {
     margin-top: 0; }
 
-.input-group .form-control:first-child,
+.input-group .form-control:first-child, .input-group input[type="text"]:first-child, .input-group input[type="search"]:first-child, .input-group input[type="password"]:first-child, .input-group textarea:first-child, .input-group select:first-child,
 .input-group-addon:first-child,
 .input-group-btn:first-child > .btn,
 .input-group-btn:first-child > .dropdown-toggle,
@@ -2834,7 +2844,7 @@ input[type="button"].btn-block {
 .input-group-addon:first-child {
   border-right: 0; }
 
-.input-group .form-control:last-child,
+.input-group .form-control:last-child, .input-group input[type="text"]:last-child, .input-group input[type="search"]:last-child, .input-group input[type="password"]:last-child, .input-group textarea:last-child, .input-group select:last-child,
 .input-group-addon:last-child,
 .input-group-btn:last-child > .btn,
 .input-group-btn:last-child > .dropdown-toggle,
@@ -3161,7 +3171,7 @@ input[type="button"].btn-block {
   margin-top: 4px;
   margin-bottom: 4px; }
   @media (max-width: 767px) {
-    .navbar-form .form-group, #header_search .form-group {
+    .navbar-form .form-group, #header_search .form-group, .navbar-form fieldset > .row, #header_search fieldset > .row {
       margin-bottom: 5px; } }
   @media (min-width: 768px) {
     .navbar-form, #header_search {
@@ -6447,172 +6457,119 @@ a .icon-flip-vertical:before {
 .icon-renren:before {
   content: "\f18b"; }
 
-/* ------------------------------------------
-CSS TOGGLE SWITCHES (Ionuț Colceriu)
-Licensed under Unlicense 
-https://github.com/ghinda/css-toggle-switch
------------------------------------------- */
-/* Hide by default */
-.switch .slide-button,
-.toggle p span {
+.switch .slide-button, .toggle p span {
   display: none; }
 
 .switch {
   background-color: #d2d2d2;
   border-radius: 3px; }
+  .switch label {
+    padding: 0;
+    cursor: pointer; }
 
-.switch label {
-  padding: 0;
-  cursor: pointer; }
-
-/* Toggle Switches */
-/* We can't test for a specific feature,
- * so we only target browsers with support for media queries.
- */
 @media only screen {
-  /* Checkbox
-   */
   .toggle {
     position: relative;
     padding: 0;
     margin-left: 100px; }
+    .toggle label {
+      position: relative;
+      z-index: 3;
+      display: block;
+      width: 100%; }
+    .toggle input {
+      position: absolute;
+      opacity: 0;
+      z-index: 5; }
+    .toggle p {
+      position: absolute;
+      left: -100px;
+      width: 100%;
+      margin: 0;
+      padding-right: 100px;
+      text-align: left; }
+    .toggle p span {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 5;
+      display: block;
+      width: 50%;
+      margin-left: 100px;
+      text-align: center; }
+    .toggle:last-child {
+      left: 50%; }
+    .toggle .slide-button {
+      position: absolute;
+      right: 0;
+      top: 0;
+      z-index: 4;
+      display: block;
+      width: 50%;
+      height: 100%;
+      padding: 0; }
 
-  /* Position the label over all the elements, except the slide-button
-   * Clicking anywhere on the label will change the switch-state
-   */
-  .toggle label {
-    position: relative;
-    z-index: 3;
-    display: block;
-    width: 100%; }
-
-  /* Don't hide the input from screen-readers and keyboard access
-   */
-  .toggle input {
-    position: absolute;
-    opacity: 0;
-    z-index: 5; }
-
-  .toggle p {
-    position: absolute;
-    left: -100px;
-    width: 100%;
-    margin: 0;
-    padding-right: 100px;
-    text-align: left; }
-
-  .toggle p span {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 5;
-    display: block;
-    width: 50%;
-    margin-left: 100px;
-    text-align: center; }
-
-  .toggle p span:last-child {
-    left: 50%; }
-
-  .toggle .slide-button {
-    position: absolute;
-    right: 0;
-    top: 0;
-    z-index: 4;
-    display: block;
-    width: 50%;
-    height: 100%;
-    padding: 0; }
-
-  /* Radio Switch
-   */
   .switch {
     position: relative;
     padding: 0; }
+    .switch input {
+      position: absolute;
+      opacity: 0; }
+    .switch label {
+      position: relative;
+      z-index: 2;
+      float: left;
+      width: 50%;
+      height: 100%;
+      margin: 0;
+      text-align: center; }
+    .switch .slide-button {
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding: 0;
+      z-index: 1;
+      width: 50%;
+      height: 100%; }
+    .switch input:last-of-type:checked ~ .slide-button {
+      left: 50%; }
+    .switch.switch-three label, .switch.switch-three .slide-button {
+      width: 33.3%; }
+    .switch.switch-three input:checked:nth-of-type(2) ~ .slide-button {
+      left: 33.3%; }
+    .switch.switch-three input:checked:last-of-type ~ .slide-button {
+      left: 66.6%; }
+    .switch.switch-four label, .switch.switch-four .slide-button {
+      width: 25%; }
+    .switch.switch-four input:checked:nth-of-type(2) ~ .slide-button {
+      left: 25%; }
+    .switch.switch-four input:checked:nth-of-type(3) ~ .slide-button {
+      left: 50%; }
+    .switch.switch-four input:checked:last-of-type ~ .slide-button {
+      left: 75%; }
+    .switch.switch-five label, .switch.switch-five .slide-button {
+      width: 20%; }
+    .switch.switch-five input:checked:nth-of-type(2) ~ .slide-button {
+      left: 20%; }
+    .switch.switch-five input:checked:nth-of-type(3) ~ .slide-button {
+      left: 40%; }
+    .switch.switch-five input:checked:nth-of-type(4) ~ .slide-button {
+      left: 60%; }
+    .switch.switch-five input:checked:last-of-type ~ .slide-button {
+      left: 80%; }
 
-  .switch input {
-    position: absolute;
-    opacity: 0; }
-
-  .switch label {
-    position: relative;
-    z-index: 2;
-    float: left;
-    width: 50%;
-    height: 100%;
-    margin: 0;
-    text-align: center; }
-
-  .switch .slide-button {
-    position: absolute;
-    top: 0;
-    left: 0;
-    padding: 0;
-    z-index: 1;
-    width: 50%;
-    height: 100%; }
-
-  .switch input:last-of-type:checked ~ .slide-button {
-    left: 50%; }
-
-  /* Switch with 3 items */
-  .switch.switch-three label,
-  .switch.switch-three .slide-button {
-    width: 33.3%; }
-
-  .switch.switch-three input:checked:nth-of-type(2) ~ .slide-button {
-    left: 33.3%; }
-
-  .switch.switch-three input:checked:last-of-type ~ .slide-button {
-    left: 66.6%; }
-
-  /* Switch with 4 items */
-  .switch.switch-four label,
-  .switch.switch-four .slide-button {
-    width: 25%; }
-
-  .switch.switch-four input:checked:nth-of-type(2) ~ .slide-button {
-    left: 25%; }
-
-  .switch.switch-four input:checked:nth-of-type(3) ~ .slide-button {
-    left: 50%; }
-
-  .switch.switch-four input:checked:last-of-type ~ .slide-button {
-    left: 75%; }
-
-  /* Switch with 5 items */
-  .switch.switch-five label,
-  .switch.switch-five .slide-button {
-    width: 20%; }
-
-  .switch.switch-five input:checked:nth-of-type(2) ~ .slide-button {
-    left: 20%; }
-
-  .switch.switch-five input:checked:nth-of-type(3) ~ .slide-button {
-    left: 40%; }
-
-  .switch.switch-five input:checked:nth-of-type(4) ~ .slide-button {
-    left: 60%; }
-
-  .switch.switch-five input:checked:last-of-type ~ .slide-button {
-    left: 80%; }
-
-  /* Shared */
-  .toggle,
-  .switch {
+  .toggle, .switch {
     display: block;
     height: 27px; }
 
-  .switch *,
-  .toggle * {
+  .switch *, .toggle * {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     -ms-box-sizing: border-box;
     -o-box-sizing: border-box;
     box-sizing: border-box; }
 
-  .switch .slide-button,
-  .toggle .slide-button {
+  .switch .slide-button, .toggle .slide-button {
     display: block;
     -webkit-transition: all 0.3s ease-out;
     -moz-transition: all 0.3s ease-out;
@@ -6620,67 +6577,49 @@ https://github.com/ghinda/css-toggle-switch
     -o-transition: all 0.3s ease-out;
     transition: all 0.3s ease-out; }
 
-  .toggle label,
-  .toggle p,
-  .switch label {
+  .toggle label, .toggle p, .switch label {
     line-height: 27px;
     vertical-align: middle; }
 
   .toggle input:checked ~ .slide-button {
     right: 50%; }
 
-  /* Outline the toggles when the inputs are focused */
-  .toggle input:focus ~ .slide-button,
-  .switch input:focus + label {
-    outline: 1px dotted #888; }
+  .toggle input:focus ~ .slide-button, .switch input:focus + label {
+    outline: 1px dotted #888888; }
 
-  /* Bugfix for older Webkit, including mobile Webkit. Adapted from:
-   * http://css-tricks.com/webkit-sibling-bug/
-   */
   .switch, .toggle {
     -webkit-animation: bugfix infinite 1s; }
 
-  @-webkit-keyframes bugfix {
-    from {
-      position: relative; }
-
-    to {
-      position: relative; } }
-
-  /* Standalone Themes */
-  .prestashop-switch label {
-    font-weight: 500; }
-
+  @-webkit-keyframes bugfix { from { position: relative; } to { position: relative; } };
   .prestashop-switch {
     min-width: 150px;
-    color: #666;
+    color: #666666;
     text-align: center;
     border-radius: 3px;
-    -webkit-box-shadow: rgba(72, 82, 95, 0.3) 0 0 6px 1px inset;
-    box-shadow: rgba(72, 82, 95, 0.3) 0 0 6px 1px inset; }
-
-  .prestashop-switch input:checked + label {
-    color: #333;
-    text-shadow: rgba(255, 255, 255, 0.7) 1px 1px 0; }
-
-  .prestashop-switch .slide-button {
-    position: relative;
-    margin-right: 3px;
-    border-color: #c5c5c5;
-    color: white;
-    background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f8f8f8), color-stop(100%, #dfdfdf));
-    background: -webkit-linear-gradient(top, #f8f8f8, #dfdfdf);
-    background: -moz-linear-gradient(top, #f8f8f8, #dfdfdf);
-    background: -o-linear-gradient(top, #f8f8f8, #dfdfdf);
-    background: linear-gradient(top, #f8f8f8, #dfdfdf);
-    -webkit-box-shadow: white 0 0 0 1px inset;
-    box-shadow: white 0 0 0 1px inset; }
-
-  .prestashop-switch p {
-    color: #333; }
-
-  .prestashop-switch span {
-    color: #fff; } }
+    -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0 0 6px 1px inset;
+    box-shadow: rgba(0, 0, 0, 0.3) 0 0 6px 1px inset; }
+    .prestashop-switch label {
+      padding-top: 0 !important;
+      font-weight: 500; }
+    .prestashop-switch input:checked + label {
+      color: #333333;
+      text-shadow: rgba(255, 255, 255, 0.7) 1px 1px 0; }
+    .prestashop-switch .slide-button {
+      position: relative;
+      margin-right: 3px;
+      border-color: #c5c5c5;
+      color: white;
+      background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f8f8f8), color-stop(100%, #dfdfdf));
+      background: -webkit-linear-gradient(top, #f8f8f8, #dfdfdf);
+      background: -moz-linear-gradient(top, #f8f8f8, #dfdfdf);
+      background: -o-linear-gradient(top, #f8f8f8, #dfdfdf);
+      background: linear-gradient(top, #f8f8f8, #dfdfdf);
+      -webkit-box-shadow: white 0 0 0 1px inset;
+      box-shadow: white 0 0 0 1px inset; }
+    .prestashop-switch p {
+      color: #333333; }
+    .prestashop-switch span {
+      color: white; } }
 html, body {
   height: 100%; }
 
