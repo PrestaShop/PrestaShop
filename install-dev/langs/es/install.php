@@ -1,7 +1,7 @@
 <?php
 return array(
 	'informations' => array(
-		'phone' => '+1 (888) 947-6543',
+		'phone' => '+34 917.872.909',
 		'support' => 'https://www.prestashop.com/es/support',
 	),
 	'translations' => array(
