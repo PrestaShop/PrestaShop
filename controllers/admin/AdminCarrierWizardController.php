@@ -718,7 +718,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 			&& (!isset($logo['error']) || !$logo['error'])
 			&& preg_match('/\.(jpe?g|gif|png)$/', $logo['name'])
 			&& is_uploaded_file($logo['tmp_name'])
-			&& ImageManager::isRealImage($logo['tmp_name']))
+			&& ImageManager::isRealImage($logo['tmp_name'], $logo['type']))
 		{
 			$file = $logo['tmp_name'];
 			do $tmp_name = uniqid().'.jpg';
