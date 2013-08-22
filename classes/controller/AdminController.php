@@ -387,7 +387,7 @@ class AdminControllerCore extends Controller
 			$filter = '';
 			foreach ($this->fields_list AS $field => $t)
 			{
-				if ($val = Tools::getValue($this->table.'Filter_'.$field))
+				if ($val = htmlspecialchars(Tools::getValue($this->table.'Filter_'.$field), ENT_QUOTES, 'UTF-8'))
 				{
 					if(!is_array($val) && !empty($val))
 						$filter .= ($filter ?  ', ' : $this->l(' filter by ')).$t['title'].' : ';
