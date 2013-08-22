@@ -161,6 +161,13 @@ function add_condition(id_condition_group, type, value)
 function delete_condition(condition)
 {
 	delete conditions[condition];
+	
+	to_delete = $('#'+condition).prev();
+	if ($(to_delete).children().hasClass('btn_delete_condition'))
+		$(to_delete).remove();
+	else
+		$('#'+condition).next().remove();
+
 	$('#'+condition).remove();
 	return false;
 }
@@ -178,7 +185,7 @@ function new_condition_group()
 function appendConditionToGroup(html)
 {
 	if ($('#condition_group_'+current_id_condition_group+' table tbody tr').length > 0)
-		$('#condition_group_'+current_id_condition_group+' table tbody').append('<tr><td align="center" colspan="3"><b>{l s='AND' js=1}</b></td></tr>');
+		$('#condition_group_'+current_id_condition_group+' table tbody').append('<tr><td align="center" class="btn_delete_condition" colspan="3"><b>{l s='AND' js=1}</b></td></tr>');
 	$('#condition_group_'+current_id_condition_group+' table tbody').append(html);
 }
 
