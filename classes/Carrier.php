@@ -1291,7 +1291,7 @@ class CarrierCore extends ObjectModel
 	{
 		if ($delete)
 			Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'carrier_group WHERE id_carrier = '.(int)$this->id);
-		if (!count($groups))
+		if (!is_array($groups) || !count($groups))
 			return true;
 		$sql = 'INSERT INTO '._DB_PREFIX_.'carrier_group (id_carrier, id_group) VALUES ';
 		foreach ($groups as $id_group)
