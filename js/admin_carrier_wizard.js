@@ -195,9 +195,9 @@ function displaySummary()
 function validateSteps(fromStep, toStep)
 {
 	var is_ok = true;
-	if ((multistore_enable && fromStep == 3) || (!multistore_enable && fromStep == 2) && toStep > fromStep)
+	if ((multistore_enable && fromStep == 3) || (!multistore_enable && fromStep == 2))
 	{
-		if (!$('#is_free_on').attr('checked') && !validateRange(2))
+		if (toStep > fromStep && !$('#is_free_on').attr('checked') && !validateRange(2))
 			is_ok = false;
 	}
 	
