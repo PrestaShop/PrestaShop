@@ -105,8 +105,8 @@ function onLeaveStepCallback(obj, context)
 {
 	if (context.toStep == nbr_steps)
 		displaySummary();
-	
-	return validateSteps(context.fromStep); // return false to stay on step and true to continue navigation 
+
+	return validateSteps(context.fromStep, context.toStep); // return false to stay on step and true to continue navigation 
 }
 
 function displaySummary()
@@ -192,10 +192,10 @@ function displaySummary()
 	});
 }
 
-function validateSteps(step_number)
+function validateSteps(fromStep, toStep)
 {
 	var is_ok = true;
-	if ((multistore_enable && step_number == 3) || (!multistore_enable && step_number == 2))
+	if ((multistore_enable && fromStep == 3) || (!multistore_enable && fromStep == 2) && toStep > fromStep)
 	{
 		if (!$('#is_free_on').attr('checked') && !validateRange(2))
 			is_ok = false;
@@ -204,13 +204,13 @@ function validateSteps(step_number)
 	$('.wizard_error').remove();
 	if (is_ok)
 	{
-		form = $('#carrier_wizard #step-'+step_number+' form');
+		form = $('#carrier_wizard #step-'+fromStep+' form');
 		$.ajax({
 			type:"POST",
 			url : validate_url,
 			async: false,
 			dataType: 'json',
-			data : form.serialize()+'&step_number='+step_number+'&action=validate_step&ajax=1',
+			data : form.serialize()+'&step_number='+fromStep+'&action=validate_step&ajax=1',
 			success : function(datas)
 			{
 				if (datas.has_error)
@@ -220,7 +220,7 @@ function validateSteps(step_number)
 					$('input').focus( function () {
 						$(this).removeClass('field_error');
 					});
-					displayError(datas.errors, step_number);
+					displayError(datas.errors, fromStep);
 					resizeWizard();
 				}
 			},
