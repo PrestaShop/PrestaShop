@@ -639,6 +639,9 @@ class OrderOpcControllerCore extends ParentOrderController
 				foreach (explode(' ', $fields_line) as $field_item)
 					${$adr_type.'_all_fields'}[] = trim($field_item);
 
+			${$adr_type.'_adr_fields'} = array_unique(${$adr_type.'_adr_fields'});
+			${$adr_type.'_all_fields'} = array_unique(${$adr_type.'_all_fields'});
+
 			$this->context->smarty->assign($adr_type.'_adr_fields', ${$adr_type.'_adr_fields'});
 			$this->context->smarty->assign($adr_type.'_all_fields', ${$adr_type.'_all_fields'});
 		}
