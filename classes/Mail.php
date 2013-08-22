@@ -150,7 +150,7 @@ class MailCore
 				if (function_exists('mb_encode_mimeheader'))
 					$to_list->addTo($addr, mb_encode_mimeheader($to_name, 'utf-8'));
 				else
-					$to_list->addTo($addr, '=?UTF-8?B?'.base64_encode($to_name).'?=');
+					$to_list->addTo($addr, self::mimeEncode($to_name));
 			}
 			$to_plugin = $to[0];
 			$to = $to_list;
@@ -162,7 +162,7 @@ class MailCore
 			if (function_exists('mb_encode_mimeheader'))
 				$to = new Swift_Address($to, mb_encode_mimeheader($to_name, 'utf-8'));
 			else
-				$to = new Swift_Address($to, '=?UTF-8?B?'.base64_encode($to_name).'?=');
+				$to = new Swift_Address($to, self::mimeEncode($to_name));
 		}
 		try {
 			/* Connect with the appropriate configuration */
@@ -381,4 +381,68 @@ class MailCore
 		return vsprintf("<%s.%d.%s@%s>", $midparams);
 	}
 	
+	public static function isMultibyte($data)
+	{
+		$length = strlen($data);
+
+		for ($i = 0; $i < $length; $i++)
+		{
+			$result = ord(($data[$i]));
+
+			if ($result > 128)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public static function mimeEncode($string, $charset = 'UTF-8', $newline = "\r\n")
+	{
+		if (!self::isMultibyte($string) && strlen($string) < 75)
+		{
+			return $string;
+		}
+
+		$charset = strtoupper($charset);
+		$start   = '=?' . $charset . '?B?';
+		$end     = '?=';
+		$sep     = $end . $newline . ' ' . $start;
+		$length  = 75 - strlen($start) - strlen($end);
+		$length  = $length - ($length % 4);
+
+		if ($charset === 'UTF-8')
+		{
+			$parts = array();
+			$maxchars = floor(($length * 3) / 4);
+			$stringLength = strlen($string);
+
+			while ($stringLength > $maxchars)
+			{
+				$i = (int)$maxchars;
+				$result = ord($string[$i]);
+
+				while ($result >= 128 && $result <= 191)
+				{
+					$i--;
+					$result = ord($string[$i]);
+				}
+
+				$parts[] = base64_encode(substr($string, 0, $i));
+				$string = substr($string, $i);
+				$stringLength = strlen($string);
+			}
+
+			$parts[] = base64_encode($string);
+			$string = implode($sep, $parts);
+		}
+		else
+		{
+			$string = chunk_split(base64_encode($string), $length, $sep);
+			$string = preg_replace('/' . preg_quote($sep) . '$/', '', $string);
+		}
+
+		return $start . $string . $end;
+	}
 }
