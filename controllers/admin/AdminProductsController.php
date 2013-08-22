@@ -366,8 +366,8 @@ class AdminProductsControllerCore extends AdminController
 				foreach ($def['fields'] as $field_name => $row)
 				{
 					if (is_array($default_product->$field_name))
-						foreach ($default_product->$field_name as $key => $fields_name)
-							$this->object->$field_name[$key] = ObjectModel::formatValue($fields_name, $def['fields'][$field_name]['type']);
+						foreach ($default_product->$field_name as $key => $value)
+							$this->object->{$field_name}[$key] = ObjectModel::formatValue($value, $def['fields'][$field_name]['type']);
 					else
 						$this->object->$field_name = ObjectModel::formatValue($default_product->$field_name, $def['fields'][$field_name]['type']);
 				}
