@@ -2,7 +2,8 @@
 return array(
 	'informations' => array(
 		'phone' => '+1 888.947.6543',
-		'support' => 'https://www.prestashop.com/pt/support',
+        'support' => 'https://www.prestashop.com/pt/support',
+        'blog' => 'http://www.prestashop.com/blog/pt/'
 	),
 	'translations' => array(
 		'menu_welcome' => 'Escolha seu idioma',
