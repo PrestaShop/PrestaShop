@@ -125,7 +125,8 @@ class AdminSearchConfControllerCore extends AdminController
 				'info' =>
 						$this->l('The "weight" represents its importance and relevance for the ranking of the products when completing a new search.').'<br />
 						'.$this->l('A word with a weight of eight will have four times more value than a word with a weight of two.').'<br /><br />
-						'.$this->l('We advise you to set a greater weight for words which appear in the name or reference of a product. This will allow the search results to be as precise and relevant as possible.'),
+						'.$this->l('We advise you to set a greater weight for words which appear in the name or reference of a product. This will allow the search results to be as precise and relevant as possible.'). '<br /><br />
+						'.$this->l('Setting a weight to 0 will exclude that field from search index. Re-build the entire index is required when changing to or from 0'),
 				'fields' =>	array(
 					'PS_SEARCH_WEIGHT_PNAME' => array(
 						'title' => $this->l('Product name weight'),
