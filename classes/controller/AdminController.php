@@ -387,7 +387,7 @@ class AdminControllerCore extends Controller
 			$filter = '';
 			foreach ($this->fields_list AS $field => $t)
 			{
-				if ($val = Tools::getValue($this->table.'Filter_'.$field))
+				if ($val = htmlspecialchars(Tools::getValue($this->table.'Filter_'.$field), ENT_QUOTES, 'UTF-8'))
 				{
 					if(!is_array($val) && !empty($val))
 						$filter .= ($filter ?  ', ' : $this->l(' filter by ')).$t['title'].' : ';
@@ -1192,6 +1192,9 @@ class AdminControllerCore extends Controller
 
 	protected function filterToField($key, $filter)
 	{
+		if (!isset($this->fields_list))
+			return false;
+
 		foreach ($this->fields_list as $field)
 			if (array_key_exists('filter_key', $field) && $field['filter_key'] == $key)
 				return $field;
@@ -1813,7 +1816,11 @@ class AdminControllerCore extends Controller
 			$this->context->employee->logout();
 
 		if ($this->controller_name != 'AdminLogin' && (!isset($this->context->employee) || !$this->context->employee->isLoggedBack()))
+		{
+			if (isset($this->context->employee))
+				$this->context->employee->logout();
 			Tools::redirectAdmin($this->context->link->getAdminLink('AdminLogin').((!isset($_GET['logout']) && $this->controller_name != 'AdminNotFound') ? '&redirect='.$this->controller_name : ''));
+		}
 
 		// Set current index
 		$current_index = 'index.php'.(($controller = Tools::getValue('controller')) ? '?controller='.$controller : '');

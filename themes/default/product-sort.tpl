@@ -38,25 +38,26 @@
 		{assign var='request' value=$link->getPaginationLink(false, false, false, true)}
 	{/if}
 {/if}
-
+{if !isset($paginationId) || $paginationId == ''}
 <script type="text/javascript">
 //<![CDATA[
-$(document).ready(function()
-{
-	$('.selectProductSort').change(function()
+$(document).ready(function(){
+	if($('#layered_form').length == 0)
 	{
-		var requestSortProducts = '{$request}';
-		var splitData = $(this).val().split(':');
-		document.location.href = requestSortProducts + ((requestSortProducts.indexOf('?') < 0) ? '?' : '&') + 'orderby=' + splitData[0] + '&orderway=' + splitData[1];
-	});
+ 		$('.selectProductSort').change(function(){
+			var requestSortProducts = '{$request}';
+ 			var splitData = $(this).val().split(':');
+			document.location.href = requestSortProducts + ((requestSortProducts.indexOf('?') < 0) ? '?' : '&') + 'orderby=' + splitData[0] + '&orderway=' + splitData[1];
+    	});
+  	}
 });
 //]]>
 </script>
-
-<form id="productsSortForm" action="{$request|escape:'htmlall':'UTF-8'}">
+{/if}
+<form id="productsSortForm{if isset($paginationId)}_{$paginationId}{/if}" action="{$request|escape:'htmlall':'UTF-8'}" class="productsSortForm">
 	<p class="select">
-		<label for="selectPrductSort">{l s='Sort by'}</label>
-		<select id="selectPrductSort" class="selectProductSort">
+		<label for="selectPrductSort{if isset($paginationId)}_{$paginationId}{/if}">{l s='Sort by'}</label>
+		<select id="selectPrductSort{if isset($paginationId)}_{$paginationId}{/if}" class="selectProductSort">
 			<option value="{$orderbydefault|escape:'htmlall':'UTF-8'}:{$orderwaydefault|escape:'htmlall':'UTF-8'}" {if $orderby eq $orderbydefault}selected="selected"{/if}>{l s='--'}</option>
 			{if !$PS_CATALOG_MODE}
 				<option value="price:asc" {if $orderby eq 'price' AND $orderway eq 'asc'}selected="selected"{/if}>{l s='Price: Lowest first'}</option>

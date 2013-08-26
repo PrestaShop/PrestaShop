@@ -12,7 +12,7 @@
   <tab id="Orders" name="Orders"/>
   <tab id="Customers" name="Customers"/>
   <tab id="Price_Rules" name="Price Rules"/>
-  <tab id="Shipping" name="Shipping"/>
+  <tab id="Shipping" name="Preferences"/>
   <tab id="Localization" name="Localization"/>
   <tab id="Modules" name="Modules"/>
   <tab id="Preferences" name="Preferences"/>

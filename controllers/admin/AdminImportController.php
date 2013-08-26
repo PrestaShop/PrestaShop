@@ -2658,6 +2658,13 @@ class AdminImportControllerCore extends AdminController
 		Image::clearTmpDir();
 		return true;
 	}
+	
+	public function clearSmartyCache()
+	{
+		Tools::enableCache();
+		Tools::clearCache($this->context->smarty);
+		Tools::restoreCacheSettings();
+	}
 
 	public function postProcess()
 	{
@@ -2715,10 +2722,12 @@ class AdminImportControllerCore extends AdminController
 				{
 					case $this->entities[$import_type = $this->l('Categories')]:
 						$this->categoryImport();
+						$this->clearSmartyCache();
 						break;
 					case $this->entities[$import_type = $this->l('Products')]:
 					$import_type = $this->l('Categories');
 						$this->productImport();
+						$this->clearSmartyCache();
 						break;
 					case $this->entities[$import_type = $this->l('Customers')]:
 						$this->customerImport();
@@ -2728,12 +2737,15 @@ class AdminImportControllerCore extends AdminController
 						break;
 					case $this->entities[$import_type = $this->l('Combinations')]:
 						$this->attributeImport();
+						$this->clearSmartyCache();
 						break;
 					case $this->entities[$import_type = $this->l('Manufacturers')]:
 						$this->manufacturerImport();
+						$this->clearSmartyCache();
 						break;
 					case $this->entities[$import_type = $this->l('Suppliers')]:
 						$this->supplierImport();
+						$this->clearSmartyCache();
 						break;
 					// @since 1.5.0
 					case $this->entities[$import_type = $this->l('Supply Orders')]:

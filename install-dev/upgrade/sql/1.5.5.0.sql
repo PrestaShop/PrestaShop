@@ -22,6 +22,7 @@ CHANGE `module_name` `module_name` VARCHAR(64) NULL DEFAULT NULL;
 /* PHP:remove_tab(AdminRangePrice); */;
 /* PHP:remove_tab(AdminRangeWeight); */;
 
+
 ALTER TABLE `PREFIX_log` ADD `id_employee` INT(10) UNSIGNED NULL DEFAULT NULL AFTER `object_id`;
 
 SET @id_parent = (SELECT IFNULL(id_tab, 1) FROM `PREFIX_tab` WHERE `class_name` = 'AdminPriceRule' LIMIT 1);

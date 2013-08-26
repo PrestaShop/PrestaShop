@@ -39,7 +39,8 @@
 					{/if}
 					|&nbsp;<a href="http://www.prestashop.com/en/contact_us/" target="_blank" class="footer_link">{l s='Contact'}</a>
 					|&nbsp;<a href="http://forge.prestashop.com" target="_blank" class="footer_link">{l s='Bug Tracker'}</a>
-					|&nbsp;<a href="http://www.prestashop.com/forums/" target="_blank" class="footer_link">{l s='Forum'}</a>	
+					|&nbsp;<a href="http://www.prestashop.com/forums/" target="_blank" class="footer_link">{l s='Forum'}</a>
+					|&nbsp;<a href="http://addons.prestashop.com/" target="_blank" class="footer_link">{l s='Addons'}</a>
 				</div>
 			</div>
 		</div>

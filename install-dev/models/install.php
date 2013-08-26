@@ -368,11 +368,14 @@ class InstallModelInstall extends InstallAbstractModel
 	public function configureShop(array $data = array())
 	{
 		// Clear smarty cache
-		$this->clearSmartyCache();
-		
+		Tools::clearSmartyCache();
+
 		//clear image cache in tmp folder
-		Tools::deleteDirectory(_PS_TMP_IMG_DIR_, false);
-		
+		if (file_exists(_PS_TMP_IMG_DIR_))
+			foreach (scandir(_PS_TMP_IMG_DIR_) as $file)
+				if ($file[0] != '.' && $file != 'index.php')
+					Tools::deleteDirectory(_PS_TMP_IMG_DIR_.DIRECTORY_SEPARATOR.$file);
+
 		$default_data = array(
 			'shop_name' =>		'My Shop',
 			'shop_activity' =>	'',
@@ -395,7 +398,7 @@ class InstallModelInstall extends InstallAbstractModel
 
 		// use the old image system if the safe_mod is enabled otherwise the installer will fail with the fixtures installation
 		if (InstallSession::getInstance()->safe_mode)
-			Configuration::updateGlobalValue('PS_LEGACY_IMAGES', 				1);
+			Configuration::updateGlobalValue('PS_LEGACY_IMAGES', 1);
 	
 		$id_country = Country::getByIso($data['shop_country']);
 
@@ -492,18 +495,6 @@ class InstallModelInstall extends InstallAbstractModel
 		}
 
 		return true;
-	}
-
-	/**
-	 * Clear smarty cache folders
-	 */
-	public function clearSmartyCache()
-	{
-		foreach (array(_PS_CACHE_DIR_.'smarty/cache', _PS_CACHE_DIR_.'smarty/compile') as $dir)
-			if (file_exists($dir))
-				foreach (scandir($dir) as $file)
-					if ($file[0] != '.' && $file != 'index.php')
-						@unlink($dir.$file);
 	}
 
 	public function getModulesList()

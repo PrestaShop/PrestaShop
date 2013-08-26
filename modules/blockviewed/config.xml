@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>blockviewed</name>
-            <displayName><![CDATA[Bloc produits d&eacute;j&agrave; vus]]></displayName>
+            <displayName><![CDATA[Viewed products block.]]></displayName>
             <version><![CDATA[0.9]]></version>
-            <description><![CDATA[Ajoute un bloc proposant les derniers produits vus par le client.]]></description>
+            <description><![CDATA[Adds a block displaying recently viewed products.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>
             <is_configurable>1</is_configurable>
