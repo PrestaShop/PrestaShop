@@ -2,7 +2,8 @@
 return array(
 	'informations' => array(
 		'phone' => '+33 (0)1.40.18.30.04',
-		'support' => 'https://www.prestashop.com/en/support',
+        'support' => 'https://www.prestashop.com/ru/support',
+        'blog' => 'http://www.prestashop.com/blog/ru/'
 	),
 	'translations' => array(
 		'An SQL error occured for entity <i>%1$s</i>: <i>%2$s</i>' => 'В SQL произошла ошибка для значения <i>%1$s</i>: <i>%2$s</i>',
