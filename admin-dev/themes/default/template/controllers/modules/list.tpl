@@ -105,7 +105,7 @@
 					</div>
 				</td>
 				<td>
-					<div id="list-action-button" class="btn-group">
+					<div class="btn-group list-action-button">
 						{if isset($module->type) && $module->type == 'addonsMustHave'}
 							<a class="btn btn-default" href="{$module->addons_buy_url}" target="_blank">
 								<i class="icon-shopping-cart"></i> &nbsp;{if isset($module->id_currency) && isset($module->price)}{displayPrice price=$module->price currency=$module->id_currency}{/if}
