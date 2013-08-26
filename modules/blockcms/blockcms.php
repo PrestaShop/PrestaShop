@@ -757,7 +757,7 @@ class BlockCms extends Module
 		//get all cmd block to duplicate in new shop
 		$cms_blocks = Db::getInstance()->executeS('
 			SELECT * FROM `'._DB_PREFIX_.'cms_block` cb 
-			LEFT JOIN `'._DB_PREFIX_.'cms_block_shop` cbf 
+			JOIN `'._DB_PREFIX_.'cms_block_shop` cbf 
 				ON (cb.`id_cms_block` = cbf.`id_cms_block` AND cbf.`id_shop` = '.(int)$params['old_id_shop'].') ');
 
 		if (count($cms_blocks))
