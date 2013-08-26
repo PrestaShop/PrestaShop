@@ -614,13 +614,21 @@ class OrderOpcControllerCore extends ParentOrderController
 
 	protected function _processAddressFormat()
 	{
-		$selectedCountry = (int)(Configuration::get('PS_COUNTRY_DEFAULT'));
-
 		$address_delivery = new Address((int)$this->context->cart->id_address_delivery);
 		$address_invoice = new Address((int)$this->context->cart->id_address_invoice);
 
 		$inv_adr_fields = AddressFormat::getOrderedAddressFields((int)$address_delivery->id_country, false, true);
 		$dlv_adr_fields = AddressFormat::getOrderedAddressFields((int)$address_invoice->id_country, false, true);
+		$requireFormFieldsList = AddressFormat::$requireFormFieldsList;
+
+		// Add missing require fields for a new user susbscription form
+		foreach ($requireFormFieldsList as $fieldName)
+			if (!in_array($fieldName, $dlv_adr_fields))
+				$dlv_adr_fields[] = trim($fieldName);
+
+		foreach ($requireFormFieldsList as $fieldName)
+			if (!in_array($fieldName, $inv_adr_fields))
+				$inv_adr_fields[] = trim($fieldName);
 
 		$inv_all_fields = array();
 		$dlv_all_fields = array();
@@ -630,6 +638,9 @@ class OrderOpcControllerCore extends ParentOrderController
 			foreach (${$adr_type.'_adr_fields'} as $fields_line)
 				foreach (explode(' ', $fields_line) as $field_item)
 					${$adr_type.'_all_fields'}[] = trim($field_item);
+
+			${$adr_type.'_adr_fields'} = array_unique(${$adr_type.'_adr_fields'});
+			${$adr_type.'_all_fields'} = array_unique(${$adr_type.'_all_fields'});
 
 			$this->context->smarty->assign($adr_type.'_adr_fields', ${$adr_type.'_adr_fields'});
 			$this->context->smarty->assign($adr_type.'_all_fields', ${$adr_type.'_all_fields'});

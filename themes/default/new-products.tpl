@@ -46,7 +46,7 @@
 			{include file="./product-sort.tpl"} {include file="./product-compare.tpl"} {include file="./nbr-product-page.tpl"}
 
 		</div>
-		{include file="./pagination.tpl"}
+		{include file="./pagination.tpl" paginationId='bottom'}
 	</div>
 	{else}
 	<p class="warning">{l s='No new products.'}</p>

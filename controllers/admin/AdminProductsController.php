@@ -359,18 +359,17 @@ class AdminProductsControllerCore extends AdminController
 		$result = parent::loadObject($opt);
 		if ($result && Validate::isLoadedObject($this->object))
 		{
-			if (Shop::getContext() == Shop::CONTEXT_SHOP && !$this->object->isAssociatedToShop())
+			if (Shop::getContext() == Shop::CONTEXT_SHOP && Shop::isFeatureActive() && !$this->object->isAssociatedToShop())
 			{
 				$default_product = new Product((int)$this->object->id, false, null, (int)$this->object->id_shop_default);
 				$def = ObjectModel::getDefinition($this->object);
 				foreach ($def['fields'] as $field_name => $row)
 				{
-					$fields_array = array();
-					if(is_array($default_product->$field_name))
-						foreach ($fields_array as $key => $fields_name)
-							$this->object->$field_name[$key] = ObjectModel::formatValue($fields_name, $def['fields'][$field_name]['type']);
+					if (is_array($default_product->$field_name))
+						foreach ($default_product->$field_name as $key => $value)
+							$this->object->{$field_name}[$key] = ObjectModel::formatValue($value, $def['fields'][$field_name]['type']);
 					else
-						$this->object->$field_name = ObjectModel::formatValue($this->object->$field_name, $def['fields'][$field_name]['type']);
+						$this->object->$field_name = ObjectModel::formatValue($default_product->$field_name, $def['fields'][$field_name]['type']);
 				}
 			}
 			$this->object->loadStockData();
@@ -631,6 +630,7 @@ class AdminProductsControllerCore extends AdminController
 					{
 						$id_category = (int)Tools::getValue('id_category');
 						$category_url = empty($id_category) ? '' : '&id_category='.(int)$id_category;
+						Logger::addLog(sprintf($this->l('%s deletion'), $this->className), 1, null, $this->className, (int)$object->id, true, (int)$this->context->employee->id);
 						$this->redirect_after = self::$currentIndex.'&conf=1&token='.$this->token.$category_url;
 					}
 					else
@@ -669,7 +669,7 @@ class AdminProductsControllerCore extends AdminController
 				{
 					$productId = (int)Tools::getValue('id_product');
 					@unlink(_PS_TMP_IMG_DIR_.'product_'.$productId.'.jpg');
-					@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$productId.'.jpg');
+					@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$productId.'_'.$this->context->shop->id.'.jpg');
 					$this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&action=Images&addproduct'.'&token='.$this->token;
 				}
 			}
@@ -1348,7 +1348,7 @@ class AdminProductsControllerCore extends AdminController
 				'shops' => $json_shops,
 			);
 			@unlink(_PS_TMP_IMG_DIR_.'product_'.(int)$obj->id_product.'.jpg');
-			@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.(int)$obj->id_product.'.jpg');
+			@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.(int)$obj->id_product.'_'.$this->context->shop->id.'.jpg');
 			die(Tools::jsonEncode($json));
 		}
 		else
@@ -1520,7 +1520,7 @@ class AdminProductsControllerCore extends AdminController
 		$img->cover = 1;
 
 		@unlink(_PS_TMP_IMG_DIR_.'product_'.(int)$img->id_product.'.jpg');
-		@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.(int)$img->id_product.'.jpg');
+		@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.(int)$img->id_product.'_'.$this->context->shop->id.'.jpg');
 
 		if ($img->update())
 			$this->jsonConfirmation($this->_conf[26]);
@@ -1556,8 +1556,8 @@ class AdminProductsControllerCore extends AdminController
 
 		if (file_exists(_PS_TMP_IMG_DIR_.'product_'.$image->id_product.'.jpg'))
 			$res &= @unlink(_PS_TMP_IMG_DIR_.'product_'.$image->id_product.'.jpg');
-		if (file_exists(_PS_TMP_IMG_DIR_.'product_mini_'.$image->id_product.'.jpg'))
-			$res &= @unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$image->id_product.'.jpg');
+		if (file_exists(_PS_TMP_IMG_DIR_.'product_mini_'.$image->id_product.'_'.$this->context->shop->id.'.jpg'))
+			$res &= @unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$image->id_product.'_'.$this->context->shop->id.'.jpg');
 
 		if ($res)
 			$this->jsonConfirmation($this->_conf[7]);
@@ -1646,7 +1646,7 @@ class AdminProductsControllerCore extends AdminController
 		if (count($this->errors))
 			return false;
 		@unlink(_PS_TMP_IMG_DIR_.'product_'.$product->id.'.jpg');
-		@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$product->id.'.jpg');
+		@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$product->id.'_'.$this->context->shop->id.'.jpg');
 		return ((isset($id_image) && is_int($id_image) && $id_image) ? $id_image : false);
 	}
 	/**
@@ -2614,6 +2614,7 @@ class AdminProductsControllerCore extends AdminController
 
 		if (!ShopUrl::getMainShopDomain())
 			return false;
+
 		$is_rewrite_active = (bool)Configuration::get('PS_REWRITING_SETTINGS');
 		$preview_url = $this->context->link->getProductLink(
 			$product,
@@ -2625,6 +2626,7 @@ class AdminProductsControllerCore extends AdminController
 			0,
 			$is_rewrite_active
 		);
+
 		if (!$product->active)
 		{
 			$preview_url = $this->context->link->getProductLink(
@@ -2637,15 +2639,12 @@ class AdminProductsControllerCore extends AdminController
 				0,
 				$is_rewrite_active
 			);
+			$admin_dir = dirname($_SERVER['PHP_SELF']);
+			$admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
+			$preview_url .= ((strpos($preview_url, '?') === false) ? '?' : '&').'adtoken='.$this->token.'&ad='.$admin_dir.'&id_employee='.(int)$this->context->employee->id;
 
-			if (!$product->active)
-			{
-				$admin_dir = dirname($_SERVER['PHP_SELF']);
-				$admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
-
-				$preview_url .= $product->active ? '' : '&adtoken='.$this->token.'&ad='.$admin_dir.'&id_employee='.(int)$this->context->employee->id;
-			}
 		}
+
 		return $preview_url;
 	}
 
@@ -2996,7 +2995,7 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign(array(
 			'link' => $this->context->link,
 			'currency' => $currency = $this->context->currency,
-			'tax_rules_groups' => TaxRulesGroup::getTaxRulesGroups(true, true),
+			'tax_rules_groups' => TaxRulesGroup::getTaxRulesGroups(true),
 			'taxesRatesByGroup' => TaxRulesGroup::getAssociatedTaxRatesByIdCountry($this->context->country->id),
 			'ecotaxTaxRate' => Tax::getProductEcotaxRate(),
 			'tax_exclude_taxe_option' => Tax::excludeTaxeOption(),

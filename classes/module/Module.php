@@ -292,15 +292,17 @@ abstract class ModuleCore
 			else
 			{
 				if (!$upgrade_detail['number_upgraded'])
-					$this->_errors[] = $this->l('None upgrades have been applied');
+					$this->_errors[] = $this->l('No upgrade has been applied');
 				else
 				{
-					$this->_errors[] = $this->l('Upgraded from: ').$upgrade_detail['upgraded_from'].$this->l(' to ').
-						$upgrade_detail['upgraded_to'];
+					$this->_errors[] = sprintf($this->l('Upgraded from: %S to %s'), $upgrade_detail['upgraded_from'], $upgrade_detail['upgraded_to']);
 					$this->_errors[] = $upgrade_detail['number_upgrade_left'].' '.$this->l('upgrade left');
 				}
 
-				$this->_errors[] = $this->l('To prevent any problem, this module has been turned off');
+				if ($upgrade_detail['duplicate'])
+					$this->_errors[] = sprintf(Tools::displayError('Module %s cannot be upgraded this time: please refresh this page to update it.'), $this->name);
+				else
+					$this->_errors[] = $this->l('To prevent any problem, this module has been turned off');
 			}
 		}
 	}
@@ -348,19 +350,21 @@ abstract class ModuleCore
 		$upgrade = &self::$modules_cache[$this->name]['upgrade'];
 		foreach ($upgrade['upgrade_file_left'] as $num => $file_detail)
 		{
-			// Default variable required in the included upgrade file need to be set by default there:
-			// upgrade_version, success_upgrade
-			$upgrade_result = false;
+			if (function_exists($file_detail['upgrade_function']))
+			{
+				$upgrade['success'] = false;
+				$upgrade['duplicate'] = true;
+				break;
+			}
 			include($file_detail['file']);
 
 			// Call the upgrade function if defined
+			$upgrade['success'] = false;
 			if (function_exists($file_detail['upgrade_function']))
-				$upgrade_result = $file_detail['upgrade_function']($this);
-
-			$upgrade['success'] = $upgrade_result;
+				$upgrade['success'] = $file_detail['upgrade_function']($this);
 
 			// Set detail when an upgrade succeed or failed
-			if ($upgrade_result)
+			if ($upgrade['success'])
 			{
 				$upgrade['number_upgraded'] += 1;
 				$upgrade['upgraded_to'] = $file_detail['version'];
@@ -378,6 +382,7 @@ abstract class ModuleCore
 		}
 
 		$upgrade['number_upgrade_left'] = count($upgrade['upgrade_file_left']);
+
 		// Update module version in DB with the last succeed upgrade
 		if ($upgrade['upgraded_to'])
 			Module::upgradeModuleVersion($this->name, $upgrade['upgraded_to']);
@@ -396,9 +401,9 @@ abstract class ModuleCore
 	public static function upgradeModuleVersion($name, $version)
 	{
 		return Db::getInstance()->execute('
-				UPDATE `'._DB_PREFIX_.'module` m
-				SET m.version = \''.bqSQL($version).'\'
-				WHERE m.name = \''.bqSQL($name).'\'');
+		UPDATE `'._DB_PREFIX_.'module` m
+		SET m.version = \''.bqSQL($version).'\'
+		WHERE m.name = \''.bqSQL($name).'\'');
 	}
 
 	/**

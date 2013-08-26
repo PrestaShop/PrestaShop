@@ -2,7 +2,8 @@
 return array(
 	'informations' => array(
 		'phone' => '+33 (0)1.40.18.30.04',
-		'support' => 'https://www.prestashop.com/en/support',
+        'support' => 'https://www.prestashop.com/ru/support',
+        'blog' => 'http://www.prestashop.com/blog/ru/'
 	),
 	'translations' => array(
 		'An SQL error occured for entity <i>%1$s</i>: <i>%2$s</i>' => 'В SQL произошла ошибка для значения <i>%1$s</i>: <i>%2$s</i>',
@@ -231,5 +232,15 @@ return array(
 		'menu_welcome' => 'Выберите язык',
 		'Your PHP sessions path is not writable - check with your hosting provider:' => 'Дисковая память недоступна в письменном виде - обратитесь к Вашему хостинг-провайдеру',
 		'Install modules Addons' => 'Установка модулей Addons',
+		'Database is created' => 'База данных создана',
+		'Cannot create the database automatically' => 'Невозможно автоматически создать базу данных',
+		'Attempt to create the database automatically' => 'Попытка автоматического создания базы данных',
+		'Country:' => 'Страна:',
+		'Must be letters and numbers with at least 8 characters' => 'Должен состоять из букв и цифр и содержать минимум 8 символов',
+		'To install PrestaShop, you need to have JavaScript enabled in your browser.' => 'Чтобы установить PrestaShop, Вам нужно включить JavaScript в Вашем браузере.',
+		'http://doc.prestashop.com/display/PS15/What+you+need+to+get+started#HowtoenableJavaScript-HowtoenableJavaScript' => 'http://doc.prestashop.com/display/PS15/What+you+need+to+get+started#HowtoenableJavaScript-HowtoenableJavaScript',
+		'To enjoy the many features that are offered for free by PrestaShop, please read the license terms below. PrestaShop core is licensed under OSL 3.0, while the modules and themes are licensed under AFL 3.0.' => 'Чтобы пользоваться всем функционалом PrestaShop, прочтите лицензионное соглашение. Ядро PrestaShop разработано на OSL 3.0, модули и темы - на AFL 3.0.',
+		'For security purposes, you must delete the "install" folder.' => 'В целях безопасности, удалите папку "install\'.',
+		'http://doc.prestashop.com/display/PS15/Installing+PrestaShop#InstallingPrestaShop-Completingtheinstallation' => 'http://doc.prestashop.com/display/PS15/Installing+PrestaShop#InstallingPrestaShop-Completingtheinstallation',
 	),
 );

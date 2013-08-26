@@ -84,7 +84,6 @@ class AdminCarrierWizardControllerCore extends AdminController
 			$multistore_step = array(
 				array(
 					'title' => $this->l('MultiStore'),
-					'desc' => $this->l('MultiStore'),
 				)
 			);
 			array_splice($this->wizard_steps['steps'], 1, 0, $multistore_step);
@@ -113,6 +112,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 			'wizard_steps' => $this->wizard_steps,
 			'validate_url' => $this->context->link->getAdminLink('AdminCarrierWizard'),
 			'carrierlist_url' => $this->context->link->getAdminLink('AdminCarriers').'&conf='.((int)Validate::isLoadedObject($carrier) ? 4 : 3),
+			'multistore_enable' => Shop::isFeatureActive(),
 			'wizard_contents' => array(
 				'contents' => array(
 					0 => $this->renderStepOne($carrier),
@@ -356,7 +356,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 				'input' => array(
 					array(
 						'type' => 'text',
-						'label' => $this->l('Maximum package height ('.Configuration::get('PS_DIMENSION_UNIT').'):'),
+						'label' => sprintf($this->l('Maximum package height (%s):'), Configuration::get('PS_DIMENSION_UNIT')),
 						'name' => 'max_height',
 						'required' => false,
 						'size' => 10,
@@ -364,7 +364,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Maximum package width ('.Configuration::get('PS_DIMENSION_UNIT').'):'),
+						'label' => sprintf($this->l('Maximum package width (%s):'), Configuration::get('PS_DIMENSION_UNIT')),
 						'name' => 'max_width',
 						'required' => false,
 						'size' => 10,
@@ -372,7 +372,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Maximum package depth ('.Configuration::get('PS_DIMENSION_UNIT').'):'),
+						'label' => sprintf($this->l('Maximum package depth (%s):'), Configuration::get('PS_DIMENSION_UNIT')),
 						'name' => 'max_depth',
 						'required' => false,
 						'size' => 10,
@@ -380,7 +380,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Maximum package weight ('.Configuration::get('PS_WEIGHT_UNIT').'):'),
+						'label' => sprintf($this->l('Maximum package weight (%s):'), Configuration::get('PS_WEIGHT_UNIT')),
 						'name' => 'max_weight',
 						'required' => false,
 						'size' => 10,
@@ -718,7 +718,8 @@ class AdminCarrierWizardControllerCore extends AdminController
 		if ($logo && !empty($logo['tmp_name']) && $logo['tmp_name'] != 'none'
 			&& (!isset($logo['error']) || !$logo['error'])
 			&& preg_match('/\.(jpe?g|gif|png)$/', $logo['name'])
-			&& is_uploaded_file($logo['tmp_name']))
+			&& is_uploaded_file($logo['tmp_name'])
+			&& ImageManager::isRealImage($logo['tmp_name'], $logo['type']))
 		{
 			$file = $logo['tmp_name'];
 			do $tmp_name = uniqid().'.jpg';
@@ -884,16 +885,13 @@ class AdminCarrierWizardControllerCore extends AdminController
 			1 => array('name', 'delay', 'grade', 'url'),
 			2 => array('is_free', 'id_tax_rules_group', 'shipping_handling', 'shipping_method', 'range_behavior'),
 			3 => array('range_behavior', 'max_height', 'max_width', 'max_depth', 'max_weight'),
+			4 => array(),
 		);
 
 		if (Shop::isFeatureActive())
 		{
 			$multistore_field = array(array('shop'));
-			$tmp = $step_fields;
-			$step_fields = array(1 => $tmp[1]) +  $multistore_field;
-			array_shift($tmp);
-			foreach ($tmp as $row)
-				$step_field[] = $row;
+			array_splice($step_fields, 1, 0, $multistore_field);
 		}
 
 		$rules = Carrier::getValidationRules('Carrier');

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>pscleaner</name>
-            <displayName><![CDATA[Nettoyage de PrestaShop]]></displayName>
+            <displayName><![CDATA[PrestaShop Cleaner]]></displayName>
             <version><![CDATA[0.9]]></version>
-            <description><![CDATA[V&eacute;rifie et r&eacute;pare les probl&egrave;mes d&#039;int&eacute;grit&eacute; fonctionnelle et supprime les donn&eacute;es par d&eacute;faut (produits, commandes, clients)]]></description>
+            <description><![CDATA[Check and fix functional integrity constraints and remove default data]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[administration]]></tab>
             <is_configurable>1</is_configurable>

@@ -53,22 +53,15 @@ class TaxRulesGroupCore extends ObjectModel
 
 	protected static $_taxes = array();
 
-	public static function getTaxRulesGroups($only_active = true, $multiShop = false)
+	public static function getTaxRulesGroups($only_active = true)
 	{
-		if ((bool)$multiShop) {
-			return Db::getInstance()->executeS('
-			SELECT *
+		return Db::getInstance()->executeS('
+			SELECT DISTINCT g.id_tax_rules_group, g.name, g.active
 			FROM `'._DB_PREFIX_.'tax_rules_group` g'
 			.Shop::addSqlAssociation('tax_rules_group', 'g')
 			.($only_active ? ' WHERE g.`active` = 1' : '').'
 			ORDER BY name ASC');
-		} else {
-			return Db::getInstance()->executeS('
-			SELECT *
-			FROM `'._DB_PREFIX_.'tax_rules_group` g'
-			.($only_active ? ' WHERE g.`active` = 1' : '').'
-			ORDER BY name ASC');
-		}
+
 	}
 
 	/**

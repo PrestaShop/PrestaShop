@@ -41,6 +41,7 @@
 	var PS_WEIGHT_UNIT = '{$PS_WEIGHT_UNIT}';
 	var invalid_range = '{l s='This range is not valid' js=1}';
 	var range_is_overlapping = '{l s='Ranges are overlapping' js=1}';
+	var multistore_enable = '{$multistore_enable}';
 </script>
 <div id="carrier_wizard" class="swMain">
 	<ul class="nbr_steps_{$wizard_steps.steps|count}">

@@ -270,12 +270,13 @@ class AdminModulesPositionsControllerCore extends AdminController
 			'href' => self::$currentIndex.'&addToHook'.($this->display_key ? '&show_modules='.$this->display_key : '').'&token='.$this->token,
 			'desc' => $this->l('Transplant a module')
 		);
-		
+						
 		$live_edit_params = array(
 									'live_edit' => true, 
 									'ad' => $admin_dir, 
 									'liveToken' => $this->token,
-									'id_employee' => (int)$this->context->employee->id
+									'id_employee' => (int)$this->context->employee->id,
+									'id_shop' => (int)$this->context->shop->id
 									);
 
 		$this->context->smarty->assign(array(
@@ -308,6 +309,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 		if (Configuration::get('PS_REWRITING_SETTINGS') && count(Language::getLanguages(true)) > 1)
 			$lang = Language::getIsoById($this->context->employee->id_lang).'/';
 		$url = 'http://'.Tools::getHttpHost().$dir.$lang.Dispatcher::getInstance()->createUrl('index', (int)$this->context->language->id, $live_edit_params);
+
 		return $url;
 	}
 	

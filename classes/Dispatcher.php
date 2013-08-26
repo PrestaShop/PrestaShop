@@ -549,6 +549,9 @@ class DispatcherCore
 		if ($id_shop === null)
 			$id_shop = (int)Context::getContext()->shop->id;
 
+		if ($this->use_routes && !isset($this->routes[$id_shop]))
+			$this->loadRoutes($id_shop);
+
 		if (!isset($this->routes[$id_shop]) || !isset($this->routes[$id_shop][$id_lang]) || !isset($this->routes[$id_shop][$id_lang][$route_id]))
 			return false;
 

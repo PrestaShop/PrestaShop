@@ -220,7 +220,6 @@
 				<p class="required select">
 					<label for="id_country">{l s='Country'} <sup>*</sup></label>
 					<select name="id_country" id="id_country">
-						<option value="">-</option>
 						{foreach from=$countries item=v}
 						<option value="{$v.id_country}"{if (isset($guestInformations) AND $guestInformations.id_country == $v.id_country) OR (!isset($guestInformations) && $sl_country == $v.id_country)} selected="selected"{/if}>{$v.name|escape:'htmlall':'UTF-8'}</option>
 						{/foreach}

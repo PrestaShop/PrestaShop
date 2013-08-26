@@ -470,7 +470,7 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
         </thead>
 		<tbody>
             {foreach from=$quantity_discounts item='quantity_discount' name='quantity_discounts'}
-            <tr id="quantityDiscount_{$quantity_discount.id_product_attribute}">
+            <tr id="quantityDiscount_{$quantity_discount.id_product_attribute}" class="quantityDiscount_{$quantity_discount.id_product_attribute}">
                 <td>
                     {if (isset($quantity_discount.attributes) && ($quantity_discount.attributes))}
                         {$product->getProductName($quantity_discount.id_product, $quantity_discount.id_product_attribute)}
