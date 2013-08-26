@@ -484,7 +484,7 @@
 
 			{if (!$order->valid && sizeof($currencies) > 1)}
 			<form method="post" action="{$currentIndex}&vieworder&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
-				<p class="alert alert-block">{l s='Don\'t forget to update your conversion rate before making this change.'}</p>
+				<p class="alert alert-warning">{l s='Don\'t forget to update your conversion rate before making this change.'}</p>
 				<div class="col-lg-10">
 					<select name="new_currency">
 						{foreach from=$currencies item=currency_change}
@@ -500,7 +500,7 @@
 			{/if}
 			
 			{if count($order->getOrderPayments()) > 0}
-			<p class="alert alert-block " style="{if round($orders_total_paid_tax_incl, 2) == round($total_paid, 2) || $currentState->id == 6}display: none;{/if} clear: both;">
+			<p class="alert alert-warning " style="{if round($orders_total_paid_tax_incl, 2) == round($total_paid, 2) || $currentState->id == 6}display: none;{/if} clear: both;">
 				{l s='Warning'} {displayPrice price=$total_paid currency=$currency->id} {l s='paid instead of'} <strong>{displayPrice price=$orders_total_paid_tax_incl currency=$currency->id}</strong>
 				{foreach $order->getBrother() as $brother_order}
 					{if $brother_order@first}
@@ -683,7 +683,7 @@
 							{l s='Gift wrapping'}
 						</span>
 						{if $order->gift_message}
-							<div class="alert alert-block">
+							<div class="alert alert-warning">
 								<p>
 									<strong>{l s='Message'}</strong>
 								</p>

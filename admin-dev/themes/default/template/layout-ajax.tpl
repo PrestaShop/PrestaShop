@@ -75,7 +75,7 @@
 	{/if}
 
 	{if count($warnings)}
-		<div class="alert alert-block">
+		<div class="alert alert-warning">
 			<button type="button" class="close" data-dismiss="alert">&times;</button>
 			{if count($warnings) > 1}
 				{l s='There are %d warnings.' sprintf=count($warnings)}

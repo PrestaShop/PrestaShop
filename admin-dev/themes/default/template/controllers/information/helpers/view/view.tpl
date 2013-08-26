@@ -46,7 +46,7 @@
 					};
 
 					if (json.missing.length || json.updated.length)
-						$('#changedFiles').html('<div class="alert alert-block">{l s='Changed/missing files have been detected.'}</div>');
+						$('#changedFiles').html('<div class="alert alert-warning">{l s='Changed/missing files have been detected.'}</div>');
 					else
 						$('#changedFiles').html('<div class="alert">{l s='No change has been detected in your files'}</div>');
 

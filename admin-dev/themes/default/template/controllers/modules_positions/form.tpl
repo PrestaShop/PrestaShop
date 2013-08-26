@@ -59,7 +59,7 @@
 		<div class="row">
 			<label class="control-label col-lg-3">{l s='Exceptions'} :</label>
 			<div class="col-lg-6">
-				<div class="alert alert-block">
+				<div class="alert alert-warning">
 					<p>
 						{l s='Please specify the files for which you do not want the module to be displayed.'}<br />
 						{l s='Please input each filename, separated by a comma.'}<br />

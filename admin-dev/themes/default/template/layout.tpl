@@ -66,7 +66,7 @@
 	</div>
 {/if}
 {if count($warnings)}
-	<div class="alert alert-block">
+	<div class="alert alert-warning">
 		<button type="button" class="close" data-dismiss="alert">&times;</button>
 		{if count($warnings) > 1}
 			{l s='There are %d warnings.' sprintf=count($warnings)}
@@ -74,13 +74,13 @@
 				<a id="linkSeeMore" href="#" style="text-decoration:underline">{l s='Click here to see more'}</a>
 				<a id="linkHide" href="#" style="text-decoration:underline;display:none">{l s='Hide warning'}</a>
 			</span>
-			<ul {if count($warnings) > 1}style="display:none;"{/if} id="seeMore">
+			<ul {if count($warnings) > 1}style="display:none;"{/if} id="seeMore" class="list-unstyled">
 			{foreach $warnings as $warning}
 				<li>{$warning}</li>
 			{/foreach}
 			</ul>
 		{else}
-			<ul >
+			<ul class="list-unstyled">
 			{foreach $warnings as $warning}
 				<li>{$warning}</li>
 			{/foreach}

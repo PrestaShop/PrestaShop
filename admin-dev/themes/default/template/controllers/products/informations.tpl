@@ -87,12 +87,12 @@
 	</script>
 
 	{if isset($display_common_field) && $display_common_field}
-	<div class="alert alert-block" style="display: block">{l s='Warning, if you change the value of fields with an orange bullet %s, the value will be changed for all other shops for this product' sprintf=$bullet_common_field}</div>
+	<div class="alert alert-warning" style="display: block">{l s='Warning, if you change the value of fields with an orange bullet %s, the value will be changed for all other shops for this product' sprintf=$bullet_common_field}</div>
 	{/if}
 
 	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Informations"}
 
-	<div id="warn_virtual_combinations" class="alert alert-block" style="display:none">{l s='You cannot use combinations with a virtual product.'}</div>
+	<div id="warn_virtual_combinations" class="alert alert-warning" style="display:none">{l s='You cannot use combinations with a virtual product.'}</div>
 
 	<div class="row">
 		<label class="control-label col-lg-3" for="simple_product">{$bullet_common_field} {l s='Type:'}</label>

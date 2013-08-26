@@ -274,7 +274,7 @@
 
 								{/block}{* end block input *}
 								{if $field['is_invisible']}
-									<p class="alert alert-block">
+									<p class="alert alert-warning">
 										{l s='You can\'t change the value of this configuration field in the context of this shop.'}
 									</p>
 								{/if}

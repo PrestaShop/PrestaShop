@@ -45,25 +45,28 @@
 
 {if $add_permission eq '1'}
 	<div id="module_install" class="row" style="{if !isset($smarty.post.downloadflag)}display: none;{/if}">
-		<div class="col-lg-12">
+
+		<div class="panel col-lg-12">
 			<form action="{$currentIndex}&token={$token}" method="post" enctype="multipart/form-data" class="form-horizontal">
-				<legend>{l s='Add a new module'}</legend>
-				<p>{l s='The module must either be a zip file or a tarball.'}</p>
-				<label class="control-label col-lg-3">
-					<span class="label-tooltip" data-toggle="tooltip" title="{l s='Upload a module from your computer.'}">
-						{l s='Module file'}
-					</span>
-				</label>
-				<div class="col-lg-9">
-					<p>
-						<input type="file" name="file" />
-					</p>
-					<p>
+				<h3>{l s='Add a new module'}</h3>
+				<p class="alert alert-info">{l s='The module must either be a zip file or a tarball.'}</p>
+				<div class="form-group">
+					<label for="file" class="control-label col-lg-3">
+						<span class="label-tooltip" data-toggle="tooltip" title="{l s='Upload a module from your computer.'}">
+							{l s='Module file'}
+						</span>
+					</label>
+					<div class="col-lg-3">
+						<input type="file" name="file" class="form-control" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-lg-9 col-lg-push-3">
 						<button class="btn btn-default" type="submit" name="download">
 							<i class="icon-upload-alt" ></i>
 							{l s='Upload this module'}
 						</button>
-					</p>
+					</div>
 				</div>
 			</form>
 		</div>

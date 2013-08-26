@@ -28,7 +28,7 @@
 {block name="override_tpl"}
 
 	{if !empty($limit_warning)}
-	<div class="alert alert-block">
+	<div class="alert alert-warning">
 		{if $limit_warning['error_type'] == 'suhosin'}
 			{l s='Warning: Your hosting provider is using the suhosin patch for PHP, which limits the maximum number of fields allowed in a form:'}
 
@@ -77,7 +77,7 @@
 				</script>
 
 				<div id="BoxUseSpecialSyntax">
-					<div class="alert alert-block">
+					<div class="alert alert-warning">
 						<p>
 							{l s='This expression uses this special syntax:'} <strong>%d.</strong>
 							{l s='You must use this syntax in your translations. Here are several examples:'}

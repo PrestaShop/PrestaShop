@@ -150,4 +150,4 @@
 		</div>
 	</div>
 </div>
-<div id="gift_products_err" class="alert alert-block" style="display:none"></div>
+<div id="gift_products_err" class="alert alert-warning" style="display:none"></div>

@@ -40,7 +40,7 @@
 			<!--end addons login-->
 	{else}
 		{if $check_url_fopen eq 'ko'  OR $check_openssl eq 'ko'}
-			<div class="alert alert-block">
+			<div class="alert alert-warning">
 				{l s='If you want to be able to fully use the AdminModules panel and have free modules available, you should enable the following configuration on your server:'}
 				<br />
 				{if $check_url_fopen eq 'ko'}- {l s='Enable allow_url_fopen'}<br />{/if}
@@ -50,31 +50,29 @@
 			<!--start addons login-->
 			<div class="panel-heading">
 				<i class="icon-user"></i>
-				{l s='Do you have a %s account?' sprintf='<a target="_blank" href="http://addons.prestashop.com/">PrestaShop Addons</a>'}
+				<a target="_blank" href="http://addons.prestashop.com/">PrestaShop Addons</a>
 			</div>
-			<form id="addons_login_form" method="post" class="form-horizontal">
-				<div class="row">
-					<label class="control-label col-lg-3">{l s='Addons Login'} :</label> 
-					<div class="input-group col-lg-4">
+			<form id="addons_login_form" method="post" >
+				<div class="form-group">
+					<label for="username_addons">{l s='Addons Login'} :</label> 
+					<div class="input-group">
 						<span class="input-group-addon"><i class="icon-user"></i></span>
-						<input type="text" value="" id="username_addons" autocomplete="off" class="form-control ac_input">
+						<input id="username_addons" class="form-control" name="username_addons" type="text" value=""  autocomplete="off" class="form-control ac_input">
 					</div>
 				</div>
-				<div class="row">
-					<label class="control-label col-lg-3">{l s= 'Password Addons'} :</label>
-					<div class="input-group col-lg-4">
+				<div class="form-group">
+					<label for="password_addons">{l s= 'Password Addons'} :</label>
+					<div class="input-group">
 						<span class="input-group-addon"><i class="icon-key"></i></span>
-						<input type="password" value="" id="password_addons" autocomplete="off" class="form-control ac_input">
+						<input id="password_addons" class="form-control" name="password_addons" type="password" value=""  autocomplete="off" class="form-control ac_input">
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-lg-9 col-offset-3">
-						<button class="btn btn-default" id="addons_login_button" type="submit">
-							<i class="icon-unlock"></i> {l s='Log in'}
-						</button>
-						<div id="addons_loading" class="help-block"></div>
-					</div>
+				<div class="form-group">
+					<button id="addons_login_button" class="btn btn-default" type="submit">
+						<i class="icon-unlock"></i> {l s='Log in'}
+					</button>
 				</div>
+				<div id="addons_loading" class="help-block"></div>
 			</form>
 			<!--end addons login-->
 		{/if}

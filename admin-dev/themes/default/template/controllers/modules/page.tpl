@@ -26,9 +26,6 @@
 
 	{include file='controllers/modules/header.tpl'}
 
-	{include file='controllers/modules/login_addons.tpl'}
-
-
 	{if $upgrade_available|@count}
 	<div class="alert alert-info">
 		{l s='An upgrade is available for some of your modules!'}
@@ -44,16 +41,23 @@
 				<i class="icon-list-ul"></i>
 				{l s='Modules list'}
 			</div>
-			{include file='controllers/modules/filters.tpl'}
 			<!--start sidebar module-->
 			<div class="row">
-				<div class="categorieTitle col col-lg-3">
+				<div class="categorieTitle col-lg-3">
 					<div class="list-group">
-
+						<form id="filternameForm" method="post" class="list-group-item form-horizontal">
+							<div class="input-group col-lg-12">
+								<input type="text" value="" name="filtername" autocomplete="off" class="ac_input">
+								<span class="input-group-btn">
+									<button class="btn btn-default" type="submit">
+										<i class="icon-search"></i> {l s='Search'}
+									</button>
+								</span>
+							</div>
+						</form>
 						<a class="list-group-item {if isset($categoryFiltered.favorites)}active{/if}" href="{$currentIndex}&token={$token}&filterCategory=favorites">
-							<i class="icon-star"></i> {l s='Favorites'} <span class="badge pull-right">{$nb_modules_favorites}</span>
+							{l s='Favorites'} <span class="badge pull-right">{$nb_modules_favorites}</span>
 						</a>
-					
 						<a class="list-group-item {if count($categoryFiltered) lte 0}active{/if}" href="{$currentIndex}&token={$token}&unfilterCategory=yes">
 							{l s='All'} <span class="badge pull-right">{$nb_modules}</span>
 						</a>
@@ -63,9 +67,9 @@
 							</a>
 						{/foreach}
 					</div>
+					{include file='controllers/modules/login_addons.tpl'}
 				</div>
-			
-				<div id="moduleContainer" class="col col-lg-9">
+				<div id="moduleContainer" class="col-lg-9">
 					{include file='controllers/modules/list.tpl'}
 				</div>
 			</div>

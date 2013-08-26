@@ -36,7 +36,7 @@
 {block name=leadin}
 	{if isset($delete_customer) && $delete_customer}
 		<form action="{$REQUEST_URI|escape:'htmlall':'UTF-8'}" method="post">
-			<div class="alert alert-block">
+			<div class="alert alert-warning">
 				<h2>{l s='How do you want to delete these customer(s)?'}</h2>
 				<p>{l s='There are two ways of deleting a customer. Please choose your preferred method.'}</p>
 				<ul class="listForm">
