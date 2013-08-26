@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{if count($modules)}
+
 	<table id="module-list" class="table">
 		<thead>
 			<tr>
@@ -46,6 +46,8 @@
 					</div>
 				</th>
 			</tr>
+		</thead>
+{if count($modules)}
 		<tbody>
 		{foreach from=$modules item=module}
 			<tr>
@@ -173,20 +175,38 @@
 			</tr>
 		{/foreach}
 		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="4">
+					<div class="btn-group pull-left">
+						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+							{l s='bulk actions'}
+							 <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu">
+							<li>
+							 	<a href="#" onclick="modules_management('install')">
+									<i class="icon-plus-sign-alt"></i>&nbsp;
+									{l s='Install the selection'}
+								</a>
+							</li>
+							<li>
+								<a href="#" onclick="modules_management('uninstall')">
+									<i class="icon-minus-sign-alt"></i>&nbsp;
+									{l s='Uninstall the selection'}
+								</a>
+							</li>
+						</ul>
+					</div>
+				</td>
+			</tr>
+		</tfoot>
 	</table>
-
-	<div class="row-fluid">
-		<span class="pull-right">
-			<button type="button" class="btn btn-default" onclick="modules_management('install')">
-				<i class="icon-plus-sign-alt"></i>
-				{l s='Install the selection'}
-			</button>
-			<button type="button" class="btn btn-default" onclick="modules_management('uninstall')">
-				<i class="icon-minus-sign-alt"></i>
-				{l s='Uninstall the selection'}
-			</button>
-		</span>
-	</div>
 {else}
-	<p class="help-block">{l s='No modules available in this section.'}</p>
+		<tbody>
+			<tr>
+				<td colspan="4" class="text-center"><i class="icon-warning-sign"></i> {l s='No modules available in this section.'}</td>
+			</tr>
+		</tbody>
+	</table>
 {/if}
