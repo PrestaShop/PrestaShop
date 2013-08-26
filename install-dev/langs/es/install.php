@@ -2,7 +2,8 @@
 return array(
 	'informations' => array(
 		'phone' => '+34 917.872.909',
-		'support' => 'https://www.prestashop.com/es/support',
+        'support' => 'https://www.prestashop.com/es/support',
+        'blog' => 'http://www.prestashop.com/blog/es/'
 	),
 	'translations' => array(
 		'menu_welcome' => 'Elegir el idioma',
