@@ -1303,7 +1303,7 @@ abstract class AdminTabCore
 		}
 
 		$asso = Shop::getAssoTable($this->table);
-		if ($asso !== false && $assos['type'] == 'shop')
+		if ($asso !== false && $asso['type'] == 'shop')
 		{
 			$filterKey = $asso['type'];
 			$idenfierShop = Shop::getContextListShopID();
