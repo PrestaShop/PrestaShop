@@ -2610,6 +2610,8 @@ class AdminProductsControllerCore extends AdminController
 
 	public function getPreviewUrl(Product $product)
 	{
+		$id_lang = Configuration::get('PS_LANG_DEFAULT', null, null, Context::getContext()->shop->id);
+
 		if (!ShopUrl::getMainShopDomain())
 			return false;
 		$is_rewrite_active = (bool)Configuration::get('PS_REWRITING_SETTINGS');
@@ -2618,7 +2620,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->getFieldValue($product, 'link_rewrite', $this->context->language->id),
 			Category::getLinkRewrite($product->id_category_default, $this->context->language->id),
 			null,
-			null,
+			$id_lang,
 			Context::getContext()->shop->id,
 			0,
 			$is_rewrite_active
@@ -2630,7 +2632,7 @@ class AdminProductsControllerCore extends AdminController
 				$this->getFieldValue($product, 'link_rewrite', $this->default_form_language),
 				Category::getLinkRewrite($this->getFieldValue($product, 'id_category_default'), $this->context->language->id),
 				null,
-				null,
+				$id_lang,
 				Context::getContext()->shop->id,
 				0,
 				$is_rewrite_active
