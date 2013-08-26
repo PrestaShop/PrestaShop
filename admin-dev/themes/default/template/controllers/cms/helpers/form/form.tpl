@@ -69,7 +69,7 @@
 
 {block name="leadin"}
 	<div style="{if $active}display:none{/if}">
-		<p class="alert alert-block">
+		<p class="alert alert-warning">
 			{l s='Your CMS page will be saved as a draft'}
 		</p>
 	</div>

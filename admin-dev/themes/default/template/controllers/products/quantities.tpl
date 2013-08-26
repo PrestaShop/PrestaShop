@@ -41,7 +41,7 @@
 			</div>
 
 			{if $show_quantities == true}
-				<div class="alert alert-block" id="available_quantity_ajax_msg" style="display: none;"></div>
+				<div class="alert alert-warning" id="available_quantity_ajax_msg" style="display: none;"></div>
 				<div class="error" id="available_quantity_ajax_error_msg" style="display: none;"></div>
 				<div class="alert" id="available_quantity_ajax_success_msg" style="display: none;"></div>
 
@@ -164,7 +164,7 @@
 				</div>
 
 			{else}
-				<div class="alert alert-block">
+				<div class="alert alert-warning">
 					<p>{l s='It is not possible to manage quantities when:'}</p>
 					<ul>
 						<li>{l s='You are currently managing all of your shops.'}</li>

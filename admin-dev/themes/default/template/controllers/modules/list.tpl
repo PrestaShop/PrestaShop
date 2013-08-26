@@ -28,9 +28,12 @@
 		<thead>
 			<tr>
 				<th width="1%">
-					<input type="checkbox" rel="false" class="noborder" id="checkme">
+					<!-- <input type="checkbox" rel="false" class="noborder" id="checkme"> -->
 				</th>
 				<th colspan="3">
+					<div class="pull-left">
+						{include file='controllers/modules/filters.tpl'}
+					</div>
 					<div class="btn-group pull-right">
 						<a class="btn btn-default {if !isset($smarty.get.select)} active{/if}" href="index.php?controller={$smarty.get.controller|htmlentities}&token={$smarty.get.token|htmlentities}">
 							<i class="icon-list"></i>
@@ -68,10 +71,10 @@
 								{elseif $module->active == 1}
 									<span class="label label-info">{l s='Active'}</span>
 								{elseif $module->active == 0}
-									<span class="label label-disabled">{l s='Inactive'}</span>
+									<span class="label label-warning">{l s='Inactive'}</span>
 								{/if}
 							{else}
-								<span class="label label-disabled">{l s='Not installed'}</span>
+								<span class="label label-warning">{l s='Not installed'}</span>
 							{/if}
 <!-- 						{if isset($module->id) && $module->id gt 0}
 								<span class="label label-success{if isset($module->active) && $module->active eq 0} off{/if}">{l s='Installed'}</span>
@@ -79,9 +82,9 @@
 								<span class="label label-warning">{l s='Not installed'}</span>
 							{/if} -->
 						</h3>
-						<div class="row-fluid">
+						<div class="row">
 							<p class="module-infos">
-								<span>{$module->categoryName}</span> - 
+								<strong>{$module->categoryName}</strong> - 
 								{if isset($module->author) && !empty($module->author)}
 									{l s='Developed by'} {$module->author|truncate:20:'...'}
 								{/if}
@@ -92,14 +95,14 @@
 							</p>
 							<p class="module-description">
 								{if isset($module->description) && $module->description ne ''}
-									{l s='Description'} : {$module->description}
+									{$module->description}
 								{/if}
 							</p>
 						</div>
 						{if isset($module->message) && (!isset($module->type) || ($module->type != 'addonsMustHave' || $module->type !== 'addonsNative'))}<div class="alert alert-success">{$module->message}</div>{/if}
 					</div>
 				</td>
-				<td width="180px">
+				<td>
 					<div id="list-action-button" class="btn-group">
 						{if isset($module->type) && $module->type == 'addonsMustHave'}
 							<a class="btn btn-default" href="{$module->addons_buy_url}" target="_blank">

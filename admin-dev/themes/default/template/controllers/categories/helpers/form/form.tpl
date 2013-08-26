@@ -32,7 +32,7 @@
 					{$fields_value.image}
 					<p align="center">{l s='File size'} {$fields_value.size}kb</p>
 					{if $shared_category}
-						<p class="alert alert-block">{l s='If you delete this picture, it will be deleted in all of your shared shops!'}</p>
+						<p class="alert alert-warning">{l s='If you delete this picture, it will be deleted in all of your shared shops!'}</p>
 					{/if}
 					<a class="btn btn-default" href="{$current}&{$identifier}={$form_id}&token={$token}&{if $shared_category}forcedeleteImage=1{else}deleteImage=1{/if}">
 						<i class="icon-trash"></i> {l s='Delete'}

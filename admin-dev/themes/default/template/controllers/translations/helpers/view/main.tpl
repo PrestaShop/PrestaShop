@@ -66,7 +66,7 @@
 				<i class="icon-file-text"></i>
 				{l s='Modify translations'}
 			</h3>
-			<p class="alert alert-block">
+			<p class="alert alert-warning">
 				{l s='Here you can modify translations for every line of code inside PrestaShop.'}<br />
 				{l s='First, select a section (such as Back Office or Installed modules), and then click the flag representing the language you want to edit.'}
 			</p>
@@ -133,7 +133,7 @@
 			</h3>
 			<div id="submitAddLangContent" class="row">
 				<div class="col-lg-12">
-					<p class="alert alert-block">
+					<p class="alert alert-warning">
 						{l s='You can add or update a language directly from the PrestaShop website here:'}<br/>
 						{l s='If you choose to update an existing language pack, all of your previous customization\'s in the theme named "Default" will be lost. This includes Front Office expressions and default email templates.'}
 					</p>
@@ -170,7 +170,7 @@
 			</h3>
 			<div id="submitImportContent" class="row">
 				<div class="col-lg-12">
-					<p class="alert alert-block">
+					<p class="alert alert-warning">
 						{l s='If the language file format is: isocode.gzip (e.g. us.gzip), and the language corresponding to this package does not exist, it will automatically be created.'}
 						{l s='Warning: This will replace all of the existing data inside the destination language.'}
 					</p>
@@ -206,7 +206,7 @@
 				<i class="icon-upload"></i>
 				{l s='Export a language'}
 			</h3>
-			<p class="alert alert-block">
+			<p class="alert alert-warning">
 				{l s='Export data from one language to a file (language pack).'}<br />
 				{l s='Choose which theme you\'d like to export your translations to. '}
 			</p>
@@ -244,7 +244,7 @@
 				<i class="icon-copy"></i>
 				{l s='Copy'}
 			</h3>
-			<p class="alert alert-block">
+			<p class="alert alert-warning">
 				{l s='Copies data from one language to another.'}<br />
 				{l s='Warning: This will replace all of the existing data inside the destination language.'}<br />
 				{l s='If necessary'}, <b><a href="{$url_create_language}">{l s='you must first create a new language.'}</a></b>.

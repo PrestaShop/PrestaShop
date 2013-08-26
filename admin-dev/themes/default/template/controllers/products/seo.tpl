@@ -111,7 +111,7 @@
 	<div class="row">
 		<div class="col-lg-9 col-offset-3">
 			{foreach from=$languages item=language}
-			<div class="alert alert-block translatable-field lang-{$language.id_lang}">
+			<div class="alert alert-warning translatable-field lang-{$language.id_lang}">
 				<i class="icon-link"></i> {l s='The product link will look like this:'}
 				{$curent_shop_url|escape:'htmlall':'UTF-8'}lang/{if isset($product->id)}{$product->id}{else}<b>id_product</b>{/if}-<span id="friendly-url_{$language.id_lang}">{$product->link_rewrite[$default_language]}</span>.html
 			</div>

@@ -347,7 +347,7 @@
 
 		<div id="content" class="page-content">
 {if $display_header && $install_dir_exists}
-			<div class="alert alert-block">
+			<div class="alert alert-warning">
 				{l s='For security reasons, you must also:'}&nbsp;{l s='delete the /install folder'}
 			</div>
 {/if}

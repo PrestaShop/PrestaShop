@@ -98,7 +98,7 @@
 
 {if isset($display_move) && $display_move}
 	{if $safe_mode}
-        <div class="alert alert-block">
+        <div class="alert alert-warning">
             <p>{l s='PrestaShop has detected that your server configuration is not compatible with the new storage system (directive "safe_mode" is activated). You should therefore continue to use the existing system.'}</p>
         </div>
     {else}
@@ -108,7 +108,7 @@
                     <i class="icon-picture"></i>
                     {l s='Move images'}
                 </h3>
-                <div class="alert alert-block">
+                <div class="alert alert-warning">
                     <p>{l s='You can choose to keep your images stored in the previous system. There\'s nothing wrong with that.'}</p>
                     <p>{l s='You can also decide to move your images to the new storage system. In this case, click on the "Move images" button below. Please be patient. This can take several minutes.'}</p>
                 </div>

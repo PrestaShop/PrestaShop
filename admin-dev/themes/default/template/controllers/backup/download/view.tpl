@@ -32,7 +32,7 @@
 			<i class="icon-download"></i>
 			{l s='Download'}
 		</h3>
-		<div class="alert alert-block">
+		<div class="alert alert-warning">
 			<p><a href="{$backup_url}"><img src="../img/admin/AdminBackup.gif" alt="" class="icon" /></a></p>
 			<p><a href="{$backup_url}">{l s='Download the backup file'} ({$backup_weight}{l s='MB'})</a></p>
 			<p>{l s='Tip: You can also download this file over to your FTP. Backup files are located in the "admin/backups" directory.'}</p>

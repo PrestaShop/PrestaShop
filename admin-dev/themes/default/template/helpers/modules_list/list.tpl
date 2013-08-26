@@ -44,7 +44,7 @@
 				<table class="table">
 					<tr>
 						<td>
-							<div class="alert alert-block">{l s='No modules available in this section.'}</div>
+							<div class="alert alert-warning">{l s='No modules available in this section.'}</div>
 						</td>
 					</tr>
 				</table>

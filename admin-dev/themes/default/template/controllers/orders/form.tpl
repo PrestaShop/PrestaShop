@@ -448,7 +448,7 @@
 					html += '</ul>';
 				}
 				else
-					html = '<div class="alert alert-block">{l s='No customers found'}</div>';
+					html = '<div class="alert alert-warning">{l s='No customers found'}</div>';
 				$('#customers').html(html);
 				resetBind();
 			}
@@ -1067,7 +1067,7 @@
 				<input type="submit" onclick="addProduct();return false;" class="btn btn-default" id="submitAddProduct" value="{l s='Add to cart'}"/></p>
 			</div>
 		</div>
-		<div id="products_err" class="alert alert-block" style="display:none;"></div>
+		<div id="products_err" class="alert alert-warning" style="display:none;"></div>
 		<div class="row">
 			<div class="col-lg-12">
 				<table class="table" id="customer_cart">
@@ -1092,7 +1092,7 @@
 					<tbody>
 					</tbody>
 				</table>
-				<p class="alert alert-block">{l s='The prices are without taxes.'}</p>
+				<p class="alert alert-warning">{l s='The prices are without taxes.'}</p>
 			</div>
 		</div>
 		<div class="row">
@@ -1222,14 +1222,14 @@
 				</tbody>
 			</table>
 		</div>
-		<div id="vouchers_err" class="alert alert-block" style="display:none;"></div>
+		<div id="vouchers_err" class="alert alert-warning" style="display:none;"></div>
 	</fieldset>
 	<fieldset id="address_part" style="display:none;">
 		<h3>
 			<i class="icon-envelope"></i>
 			{l s='Addresses'}
 		</h3>
-		<div id="addresses_err" class="alert alert-block" style="display:none;"></div>
+		<div id="addresses_err" class="alert alert-warning" style="display:none;"></div>
 
 		<div class="row">
 			<div class="col-lg-12">
@@ -1265,7 +1265,7 @@
 			<i class="icon-truck"></i>
 			{l s='Shipping'}
 		</h3>
-		<div id="carriers_err" style="display:none;" class="alert alert-block"></div>
+		<div id="carriers_err" style="display:none;" class="alert alert-warning"></div>
 		<div id="carrier_form">
 			<div class="row">
 				<label class="control-label col-lg-3">

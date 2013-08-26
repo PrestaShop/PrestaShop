@@ -81,7 +81,7 @@ $(document).ready(function () {
 				html += '</ul>';
 			}
 			else
-				html = '<div class="alert alert-block">{l s='No customers found'}</div>';
+				html = '<div class="alert alert-warning">{l s='No customers found'}</div>';
 			Customer.hideLoader();
 			Customer.container.html(html);
 			jQuery('.fancybox', Customer.container).fancybox();
