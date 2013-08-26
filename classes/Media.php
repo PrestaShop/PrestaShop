@@ -201,7 +201,7 @@ class MediaCore
 		if (!preg_match('/^http(s?):\/\//i', $file_uri) && !@filemtime($file_uri))
 			return false;
 
-		if (Context::getContext()->controller->controller_type == 'admin')
+		if (Context::getContext()->controller->controller_type == 'admin' && !array_key_exists('host', $url_data))
 		{
 			$js_uri = preg_replace('/^'.preg_quote(__PS_BASE_URI__, '/').'/', '/', $js_uri);
 			$js_uri = dirname(preg_replace('/\?.+$/', '', $_SERVER['REQUEST_URI']).'a').'/..'.$js_uri;
@@ -271,10 +271,10 @@ class MediaCore
 
 		if ($add_no_conflict)
 			$return[] = Media::getJSPath(_PS_JS_DIR_.'jquery/jquery.noConflict.php?version='.$version);
-		
+
 		//added query migrate for compatibility with new version of jquery will be removed in ps 1.6
 		$return[] = Media::getJSPath(_PS_JS_DIR_.'jquery/jquery-migrate-1.2.1.js');
-		
+
 		return $return;
 	}
 
