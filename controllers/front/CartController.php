@@ -67,13 +67,13 @@ class CartControllerCore extends FrontController
 		{
 			if (Tools::getIsset('add') || Tools::getIsset('update'))
 				$this->processChangeProductInCart();
-			else if (Tools::getIsset('delete'))
+			elseif (Tools::getIsset('delete'))
 				$this->processDeleteProductInCart();
-			else if (Tools::getIsset('changeAddressDelivery'))
+			elseif (Tools::getIsset('changeAddressDelivery'))
 				$this->processChangeProductAddressDelivery();
-			else if (Tools::getIsset('allowSeperatedPackage'))
+			elseif (Tools::getIsset('allowSeperatedPackage'))
 				$this->processAllowSeperatedPackage();
-			else if (Tools::getIsset('duplicate'))
+			elseif (Tools::getIsset('duplicate'))
 				$this->processDuplicateProduct();
 			// Make redirection
 			if (!$this->errors && !$this->ajax)
@@ -179,7 +179,7 @@ class CartControllerCore extends FrontController
 
 		if ($this->qty == 0)
 			$this->errors[] = Tools::displayError('Null quantity.');
-		else if (!$this->id_product)
+		elseif (!$this->id_product)
 			$this->errors[] = Tools::displayError('Product not found');
 
 		$product = new Product($this->id_product, true, $this->context->language->id);
@@ -195,7 +195,7 @@ class CartControllerCore extends FrontController
 		if (is_array($cart_products))
 			foreach ($cart_products as $cart_product)
 			{
-				if ((isset($this->id_product_attribute) && $cart_product['id_product_attribute'] == $this->id_product_attribute) ||
+				if ((isset($this->id_product_attribute) && $cart_product['id_product_attribute'] == $this->id_product_attribute && $this->id_product_attribute) ||
 					(isset($this->id_product) && $cart_product['id_product'] == $this->id_product))
 				{
 					$qty_to_check = $cart_product['cart_quantity'];
@@ -215,17 +215,17 @@ class CartControllerCore extends FrontController
 			if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $qty_to_check))
 				$this->errors[] = Tools::displayError('There isn\'t enough product in stock.');
 		}
-		else if ($product->hasAttributes())
+		elseif ($product->hasAttributes())
 		{
 			$minimumQuantity = ($product->out_of_stock == 2) ? !Configuration::get('PS_ORDER_OUT_OF_STOCK') : !$product->out_of_stock;
 			$this->id_product_attribute = Product::getDefaultAttribute($product->id, $minimumQuantity);
 			// @todo do something better than a redirect admin !!
 			if (!$this->id_product_attribute)
 				Tools::redirectAdmin($this->context->link->getProductLink($product));
-			else if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $qty_to_check))
+			elseif (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $qty_to_check))
 				$this->errors[] = Tools::displayError('There isn\'t enough product in stock.');
 		}
-		else if (!$product->checkQty($qty_to_check))
+		elseif (!$product->checkQty($qty_to_check))
 			$this->errors[] = Tools::displayError('There isn\'t enough product in stock.');
 
 		// If no errors, process product addition
