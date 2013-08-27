@@ -601,7 +601,7 @@ class DispatcherCore
 		{
 			$query = http_build_query($params, '', '&');
 			$index_link = $this->use_routes ? '' : 'index.php';
-			return ($route_id == 'index') ? $index_link.(($query) ? '?'.$query : '') : 'index.php?controller='.$route_id.(($query) ? '&'.$query : '').$anchor;
+			return ($route_id == 'index') ? $index_link.(($query) ? '?'.$query : '') : ((trim($route_id) == '') ? '' : 'index.php?controller='.$route_id).(($query) ? '&'.$query : '').$anchor;
 		}
 		$route = $this->routes[$id_shop][$id_lang][$route_id];
 		// Check required fields
