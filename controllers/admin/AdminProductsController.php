@@ -2400,6 +2400,18 @@ class AdminProductsControllerCore extends AdminController
 			$this->tpl_form_vars['draft_warning'] = $content;
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('Products');
+		$this->page_header_toolbar_btn['new_product'] = array(
+			'href' => self::$currentIndex.'&amp;addproduct&amp;token='.$this->token,
+			'desc' => $this->l('Add new product'),
+			'icon' => 'process-icon-new'
+		);
+
+		parent::initPageHeaderToolbar();
+	}
+
 	public function initToolbar()
 	{
 		parent::initToolbar();
