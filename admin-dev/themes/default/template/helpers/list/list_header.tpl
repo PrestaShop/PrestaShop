@@ -99,6 +99,9 @@
 				</div>
 				{/if}
 			{/foreach}
+				<a id="desc-{$table}-refresh" class="list-tooolbar-btn" href="javascript:location.reload();" title="{l s='refresh'}">
+					<i class="process-icon-refresh" ></i>
+				</a>
 			</span>
 			{/if}
 			{if $show_toolbar}
