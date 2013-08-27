@@ -469,7 +469,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-		$this->page_header_toolbar_title = $this->l('Products');
+		$this->page_header_toolbar_title = $this->l('Attribute groups');
 		$this->page_header_toolbar_btn['new_attribute_group'] = array(
 			'href' => self::$currentIndex.'&amp;addattribute_group&amp;token='.$this->token,
 			'desc' => $this->l('Add new attribute'),
