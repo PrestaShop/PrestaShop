@@ -322,7 +322,7 @@
 			{foreach $tabs as $t}
 				{if $t.active}
 				<li class="maintab {if $t.current}active{/if}" id="maintab{$t.id_tab}">
-					<a href="javascript:adminNav('#maintab{$t.id_tab}');" class="title">
+					<a href="{if count($t.sub_tabs) > 0}{$t.sub_tabs[0].href}{else}#{/if}" class="title" onclick="javascript:adminNav('#maintab{$t.id_tab}');">
 						<i class="icon-{$t.class_name}"></i>
 						<span class="title">{if $t.name eq ''}{$t.class_name}{else}{$t.name}{/if}</span>
 					</a>
