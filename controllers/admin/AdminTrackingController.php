@@ -75,6 +75,12 @@ class AdminTrackingControllerCore extends AdminController
 		));
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('Monitoring');
+		parent::initPageHeaderToolbar();
+	}
+
 	public function getCustomListCategoriesEmpty()
 	{
 		$this->table = 'category';
@@ -107,9 +113,7 @@ class AdminTrackingControllerCore extends AdminController
 			FROM `'._DB_PREFIX_.'category_product` cp
 		)
 		AND a.`id_category` != '.(int)Category::getTopCategory()->id;
-
-		$this->tpl_list_vars = array('sub_title' => $this->l('List of empty categories:'));
-		
+		$this->toolbar_title = $this->l('List of empty categories:');
 		return $this->renderList();
 	}
 
@@ -152,9 +156,7 @@ class AdminTrackingControllerCore extends AdminController
 			)
 			AND IFNULL(stock.quantity, 0) <= 0
 		)';
-
-		$this->tpl_list_vars = array('sub_title' => $this->l('List of products with attributes but without available quantities for sale:'));
-
+		$this->toolbar_title = $this->l('List of products with attributes but without available quantities for sale:');
 		return $this->renderList();
 	}
 
@@ -197,8 +199,7 @@ class AdminTrackingControllerCore extends AdminController
 			AND IFNULL(stock.quantity, 0) <= 0
 		)';
 
-		$this->tpl_list_vars = array('sub_title' => $this->l('List of products without attributes and without available quantities for sale:'));
-		
+		$this->toolbar_title = $this->l('List of products without attributes and without available quantities for sale:');
 		return $this->renderList();
 	}
 
@@ -212,7 +213,6 @@ class AdminTrackingControllerCore extends AdminController
 		$this->_orderBy = 'id_product';
 		$this->_orderWay = 'DESC';
 		$this->_filter = 'AND product_shop.`active` = 0';
-		$this->tpl_list_vars = array('sub_title' => $this->l('List of disabled products:'));
 		$this->show_toolbar = false;
 		$this->_list_index = 'index.php?controller=AdminProducts';
 		$this->_list_token = Tools::getAdminTokenLite('AdminProducts');
@@ -229,6 +229,7 @@ class AdminTrackingControllerCore extends AdminController
 		$this->clearFilters();
 		
 		$this->_join = Shop::addSqlAssociation('product', 'a');
+		$this->toolbar_title = $this->l('List of disabled products:');
 		return $this->renderList();
 	}
 	
