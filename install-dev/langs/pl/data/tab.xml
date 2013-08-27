@@ -74,8 +74,8 @@
   <tab id="Search" name="Wyszukaj"/>
   <tab id="Search_Engines" name="Wyszukiwarki"/>
   <tab id="SEO_URLs" name="Dane URL i SEO"/>
-  <tab id="Shipping" name="Preferencje"/>
-  <tab id="Shipping_1" name="Wysy&#x142;ka"/>
+  <tab id="Shipping" name="Wysy&#x142;ka"/>
+  <tab id="Shipping_1" name="Preferencje"/>
   <tab id="Shop_URLs" name="Adres URL sklepu"/>
   <tab id="Shopping_Carts" name="Koszyk zakup&#xF3;w"/>
   <tab id="Shops" name="Sklepy"/>
