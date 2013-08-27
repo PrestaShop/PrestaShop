@@ -554,7 +554,9 @@ class OrderOpcControllerCore extends ParentOrderController
 				$free_shipping = true;
 				break;
 			}			
-		}		
+		}
+		
+		$this->context->smarty->assign('isVirtualCart', $this->context->cart->isVirtualCart());
 
 		$vars = array(
 			'free_shipping' => $free_shipping,
