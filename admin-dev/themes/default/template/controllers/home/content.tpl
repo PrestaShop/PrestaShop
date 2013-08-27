@@ -223,7 +223,7 @@ $(document).ready(function() {
 		$.fancybox(
 			this.href,
 			{
-				'width'				: 	660,
+				'width'				: 	920,
 				'height'			: 	384,
 				'transitionIn'		: 'none',
 				'transitionOut'		: 'none',
