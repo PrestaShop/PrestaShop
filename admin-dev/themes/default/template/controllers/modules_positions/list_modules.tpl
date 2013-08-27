@@ -92,13 +92,15 @@
 								<div class="module_col_position" {if $can_move && $hook['module_count'] >= 2}class="dragHandle"{/if} id="td_{$hook['id_hook']}_{$module['instance']->id}">
 									<span class="positions">{$module@iteration}</span>
 					{if $can_move}
-									<a class="btn btn-default" {if {$module@iteration} == 1} style="display: none;"{/if} href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&direction=0&token={$token}&changePosition#{$hook['name']}">
+									<div class="btn-group-vertical">
+									<a class="btn btn-default btn-xs" {if {$module@iteration} == 1} disabled{/if} href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&direction=0&token={$token}&changePosition#{$hook['name']}">
 										<i class="icon-chevron-up"></i>
 									</a>
 
-									<a class="btn btn-default" {if {$module@iteration} == count($hook['modules'])} style="display: none;"{/if} href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&direction=1&token={$token}&changePosition#{$hook['name']}">
+									<a class="btn btn-default btn-xs" {if {$module@iteration} == count($hook['modules'])}disabled{/if} href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&direction=1&token={$token}&changePosition#{$hook['name']}">
 										<i class="icon-chevron-down"></i>
 									</a>
+									</div>
 					{/if}
 								</div>
 				{/if}
