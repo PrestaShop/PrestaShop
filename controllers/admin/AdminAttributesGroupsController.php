@@ -467,6 +467,23 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		));
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('Products');
+		$this->page_header_toolbar_btn['new_attribute_group'] = array(
+			'href' => self::$currentIndex.'&amp;addattribute_group&amp;token='.$this->token,
+			'desc' => $this->l('Add new attribute'),
+			'icon' => 'process-icon-new'
+		);
+		$this->page_header_toolbar_btn['new_value'] = array(
+			'href' => self::$currentIndex.'&amp;updateattribute&amp;token='.$this->token,
+			'desc' => $this->l('Add new value'),
+			'icon' => 'process-icon-new'
+		);
+
+		parent::initPageHeaderToolbar();
+	}
+
 	public function initToolbar()
 	{
 		switch ($this->display)
