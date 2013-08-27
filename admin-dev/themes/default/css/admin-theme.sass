@@ -116,6 +116,7 @@ html, body
 				margin: 0
 		.notifs_panel_footer
 			@extend .panel-footer
+
 #header_nav_toggle
 	background-color: black
 	border: none
@@ -507,6 +508,10 @@ html, body
 	@extend .icon-remove
 .process-icon-new-url
 	@extend .icon-plus-sign-alt
+.process-icon-anchor
+	@extend .icon-anchor
+.process-icon-refresh
+	@extend .icon-refresh
 
 .navbar-inner
 	box-shadow: none!important
@@ -543,18 +548,6 @@ input[type="text"].input-tiny,
 input[type="password"].input-tiny
 	width: 80px
 	float: left
-
-//some helpers to get fixed width
-.fixed-width-XS
-	width: 40px
-.fixed-width-S
-	width: 80px
-.fixed-width-M
-	width: 120px
-.fixed-width-L
-	width: 160px
-.fixed-width-XL
-	width: 200px
 
 .btn-group-action
 	display: inline-block
@@ -632,12 +625,6 @@ hr
 	tr th:last-child 
 		border-top-right-radius: 3px
 		border-bottom-right-radius: 3px
-	.btn-group
-		float: right
-		.btn
-			float: left
-	.btn
-		float: right
 
 //filter table
 tr.filter
@@ -723,7 +710,9 @@ tr.filter
 		color: #fff
 		cursor: pointer
 		font-size: 16px
-		background-color: rgba(0,0,0,0.8)
+		background-color: rgba(0,0,0,0.5)
+		&:hover
+			background-color: black
 
 #nobootstrap
 	float: left
@@ -731,11 +720,26 @@ tr.filter
 
 //WIP
 
+//some helpers to get fixed width
+.fixed-width-XS
+	width: 40px
+.fixed-width-S
+	width: 80px
+.fixed-width-M
+	width: 120px
+.fixed-width-L
+	width: 160px
+.fixed-width-XL
+	width: 200px
+
+
+
+// temp fix for latest bootstrap
 input[type="text"],input[type="search"],input[type="password"], textarea, select
 	@extend .form-control
-
 fieldset > .row
 	@extend .form-group
+
 
 .box-stats
 	padding: 10px
@@ -806,7 +810,7 @@ fieldset > .row
 .highlighted
 	background-color: blue
 
-.list-toolbar-btn
+//.list-toolbar-btn
 
 
 #topbar
@@ -836,3 +840,91 @@ fieldset > .row
 			display: inline
 	.submenu
 		display: none
+
+.hook_panel
+	@extend .well
+	//@include background-image(linear-gradient(#fff, #ccc))
+	//@include box-shadow(rgba(black,0.10) 0 -2px 0 inset)
+	@include box-shadow(rgba(white,0.9) 0 0 0 1px inset)
+	padding: 10px 10px 5px 10px
+	margin-bottom: 3px!important
+	.module_name
+		font-size: 1.2em
+	.module_description
+		@extend .text-muted
+		
+
+.hook_panel_header
+	margin: 0 -10px 0 -10px
+	padding: 0 10px 10px 10px
+	.hook_name
+		font-weight: 400
+		font-size: 1.2em
+		@include border-radius(3px)
+		color: $brand-primary
+		border: solid 1px #ccc
+		background-color: white
+		padding: 0 4px
+	.hook_title 
+		text-transform: uppercase
+		font-size: 1em
+	.hook_description
+		@extend .text-muted
+		padding: 3px 0 0 3px
+
+
+.module_list
+	//@extend .list-group
+	.module_list_item
+		display: table
+		width: 100%
+		padding: 5px 0
+		margin-bottom: 4px
+		background-color: white
+		@include box-shadow(rgba(0,0,0,0.3) 0 0 3px,rgba(black,0.10) 0 -2px 0 inset)
+		@include border-radius(3px)
+
+.module_col_select
+	display: table-cell
+	vertical-align: middle
+	text-align: center
+	width: 22px
+	min-height: 35px
+	border-right: 1px solid #ddd
+.module_col_position
+	display: table-cell
+	vertical-align: middle
+	width: 50px
+	text-align: right
+	.positions
+		font-family: $headings-font-family
+		font-weight: 200
+		@include text-shadow(white 1px 1px)
+		padding: 0 5px
+		font-size: 1.6em
+		color: #aaa
+		@include border-radius(3px)
+		@include box-shadow(rgba(0,0,0,0.2) 0 1px 3px inset)
+		border: solid 1px #ccc
+		background-color: #eee
+
+
+.module_col_icon
+	display: table-cell
+	text-align: center
+	vertical-align: middle
+	width: 50px
+.module_col_infos
+	display: table-cell
+	vertical-align: middle
+	height: 50px
+.module_col_actions
+	width: 160px
+	display: table-cell
+	vertical-align: middle
+	text-align: right
+	padding: 0 10px
+	.btn-group
+		text-align: left
+
+

@@ -24,6 +24,7 @@
 *}
 
 {if isset($module_content)}
+	
 	{$module_content}
 {else}
 	{if !isset($smarty.get.configure)}
