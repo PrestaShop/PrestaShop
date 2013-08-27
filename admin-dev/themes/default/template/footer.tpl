@@ -58,6 +58,12 @@
 			{/if}
 		</div>
 		<div id="go-top"><i class="icon-arrow-up"></i></div>
+		<script>
+			$("#go-top").click(function() {
+  				$("html, body").animate({ scrollTop: 0 }, "slow");
+  				return false;
+			});
+		</script>
 	</div>
 	<div id="ajax_confirmation" style="display:none"></div>
 {* ajaxBox allows*}	<div id="ajaxBox" style="display:none"></div>
