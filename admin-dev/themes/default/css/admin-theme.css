@@ -7385,7 +7385,7 @@ tr.filter {
 .module_col_position {
   display: table-cell;
   vertical-align: middle;
-  width: 50px;
+  width: 60px;
   text-align: right; }
   .module_col_position .positions {
     font-family: "Ubuntu", sans-serif;
