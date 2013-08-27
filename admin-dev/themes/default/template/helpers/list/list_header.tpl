@@ -76,7 +76,7 @@
 	<fieldset class="col-lg-12">
 		<div class="panel-heading">
 			{if is_array($title)}{$title|end}{else}{$title}{/if}
-			<span class="pull-right">
+			<span class="panel-heading-action">
 			{foreach from=$toolbar_btn item=btn key=k}
 				<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="list-tooolbar-btn" {if isset($btn.href)}href="{$btn.href}"{/if} title="{$btn.desc}" {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
 					<i class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if} {if isset($btn.class)}{$btn.class}{/if}" ></i>
