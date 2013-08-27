@@ -691,35 +691,33 @@ class AdminModulesControllerCore extends AdminController
 							$hooklink = 'index.php?tab=AdminModulesPositions&token='.Tools::getAdminTokenLite('AdminModulesPositions').'&show_modules='.(int)$module->id;
 							$tradlink = 'index.php?tab=AdminTranslations&token='.Tools::getAdminTokenLite('AdminTranslations').'&type=modules&lang=';
 
-							$toolbar = '<table class="table" cellpadding="0" cellspacing="0" style="margin:auto;text-align:center"><tr>
-									<th>'.$this->l('Module').' <span style="color: green;">'.$module->name.'</span></th>
-									<th><a href="'.$backlink.'" style="padding:5px 10px">'.$this->l('Back').'</a></th>
-									<th><a href="'.$hooklink.'" style="padding:5px 10px">'.$this->l('Manage hooks').'</a></th>
-									<th style="padding:5px 10px">'.$this->l('Manage translations').' ';
-									foreach (Language::getLanguages(false) as $language)
-										$toolbar .= '<a href="'.$tradlink.$language['iso_code'].'#'.$module->name.'" style="margin-left:5px"><img src="'._THEME_LANG_DIR_.$language['id_lang'].'.jpg" alt="'.$language['iso_code'].'" title="'.$language['iso_code'].'" /></a>';
-							$toolbar .= '</th></tr>';
+							$language = '';
+							foreach (Language::getLanguages(false) as $language)
+								$language .= '<a href="'.$tradlink.$language['iso_code'].'#'.$module->name.'" ><img src="'._THEME_LANG_DIR_.$language['id_lang'].'.jpg" alt="'.$language['iso_code'].'" title="'.$language['iso_code'].'" /></a>';
 
+
+							$this->context->smarty->assign(array(
+								'module_name' => $module->name,
+								'backlink' => $backlink,
+								'module_hooklink' => $hooklink,
+								'module_language' => $language
+							));
+							
 							// Display checkbox in toolbar if multishop
 							if (Shop::isFeatureActive())
 							{
 								$activateOnclick = 'onclick="location.href = \''.$this->getCurrentUrl('enable').'&enable=\'+(($(this).attr(\'checked\')) ? 1 : 0)"';
-								$toolbar .= '<tr>
-										<th colspan="4">
-											<input type="checkbox" name="activateModule" value="1" '.(($module->active) ? 'checked="checked"' : '').' '.$activateOnclick.' /> '.$this->l('Activate module for').' ';
+								$multishop = '<input type="checkbox" name="activateModule" value="1" '.(($module->active) ? 'checked="checked"' : '').' '.$activateOnclick.' /> '.$this->l('Activate module for').' ';
 								if (Shop::getContext() == Shop::CONTEXT_SHOP)
 									$toolbar .= 'shop <b>'.$this->context->shop->name.'</b>';
 								elseif (Shop::getContext() == Shop::CONTEXT_GROUP)
 								{
 									$shop_group = new ShopGroup((int)Shop::getContextShopGroupID());
-									$toolbar .= 'all shops of group shop <b>'.$shop_group->name.'</b>';
+									$multishop .= 'all shops of group shop <b>'.$shop_group->name.'</b>';
 								}
 								else
-									$toolbar .= 'all shops';
-								$toolbar .= '</th>
-								</tr>';
+									$multishop .= 'all shops';
 							}
-							$toolbar .= '</table>';
 
 
 							if (Shop::isFeatureActive() && isset(Context::getContext()->tmpOldShop))
@@ -728,7 +726,8 @@ class AdminModulesControllerCore extends AdminController
 								unset(Context::getContext()->tmpOldShop);
 							}
 							// Display module configuration
-							$this->context->smarty->assign('module_content', $toolbar.'<div class="clear">&nbsp;</div>'.$echo.'<div class="clear">&nbsp;</div>'.$toolbar);
+							$header = $this->context->smarty->fetch('controllers/modules/configure.tpl');
+							$this->context->smarty->assign('module_content', $header.$echo );
 						}
 						elseif ($echo === true)
 						{
