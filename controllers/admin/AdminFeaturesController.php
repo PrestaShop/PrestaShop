@@ -212,6 +212,23 @@ class AdminFeaturesControllerCore extends AdminController
 		return parent::renderForm();
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('Features');
+		$this->page_header_toolbar_btn['new_feature'] = array(
+			'href' => self::$currentIndex.'&amp;addfeature&amp;token='.$this->token,
+			'desc' => $this->l('Add new feature'),
+			'icon' => 'process-icon-new'
+		);
+		$this->page_header_toolbar_btn['new_feature_value'] = array(
+			'href' => self::$currentIndex.'&amp;addfeature_value&amp;token='.$this->token,
+			'desc' => $this->l('Add new feature value'),
+			'icon' => 'process-icon-new'
+		);
+
+		parent::initPageHeaderToolbar();
+	}
+
 	/**
 	 * AdminController::initToolbar() override
 	 * @see AdminController::initToolbar()

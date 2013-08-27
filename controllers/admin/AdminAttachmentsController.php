@@ -55,6 +55,18 @@ class AdminAttachmentsControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('Attachments');
+		$this->page_header_toolbar_btn['new_attachment'] = array(
+			'href' => self::$currentIndex.'&amp;addattachment&amp;token='.$this->token,
+			'desc' => $this->l('Add new attachment'),
+			'icon' => 'process-icon-new'
+		);
+
+		parent::initPageHeaderToolbar();
+	}
+
 	public function renderForm()
 	{
 		$this->fields_form = array(
