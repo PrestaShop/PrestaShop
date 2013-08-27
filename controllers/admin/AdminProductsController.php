@@ -863,6 +863,12 @@ class AdminProductsControllerCore extends AdminController
 				{
 					$combination = new Combination((int)$id_product_attribute);
 					$combination->setAttributes(Tools::getValue('attribute_combination_list'));
+
+					// images could be deleted before
+					$id_images = Tools::getValue('id_image_attr');
+					if (!empty($id_images))
+						$combination->setImages($id_images);
+
 					$product->checkDefaultAttributes();
 					if (Tools::getValue('attribute_default'))
 					{
