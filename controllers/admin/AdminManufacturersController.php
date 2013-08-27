@@ -97,6 +97,23 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->addJqueryPlugin('tagify');
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('Manufacturers');
+		$this->page_header_toolbar_btn['new_manufacturer'] = array(
+			'href' => self::$currentIndex.'&amp;addmanufacturer&amp;token='.$this->token,
+			'desc' => $this->l('Add new manufacturer'),
+			'icon' => 'process-icon-new'
+		);
+		$this->page_header_toolbar_btn['new_manufacturer_address'] = array(
+			'href' => self::$currentIndex.'&amp;addaddress&amp;token='.$this->token,
+			'desc' => $this->l('Add new manufacturer address'),
+			'icon' => 'process-icon-new'
+		);
+
+		parent::initPageHeaderToolbar();
+	}
+
 	public function initListManufacturer()
 	{
 		$this->addRowAction('view');

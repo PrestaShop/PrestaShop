@@ -64,6 +64,18 @@ class AdminTagsControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('Tags');
+		$this->page_header_toolbar_btn['new_tag'] = array(
+			'href' => self::$currentIndex.'&amp;addtag&amp;token='.$this->token,
+			'desc' => $this->l('Add new tag'),
+			'icon' => 'process-icon-new'
+		);
+
+		parent::initPageHeaderToolbar();
+	}
+
 	public function renderList()
 	{
 		$this->addRowAction('edit');

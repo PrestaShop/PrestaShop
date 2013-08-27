@@ -70,6 +70,18 @@ class AdminSuppliersControllerCore extends AdminController
 		$this->addJqueryPlugin('tagify');
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('Suppliers');
+		$this->page_header_toolbar_btn['new_supplier'] = array(
+			'href' => self::$currentIndex.'&amp;addsupplier&amp;token='.$this->token,
+			'desc' => $this->l('Add new supplier'),
+			'icon' => 'process-icon-new'
+		);
+
+		parent::initPageHeaderToolbar();
+	}
+
 	public function renderForm()
 	{
 		// loads current warehouse
