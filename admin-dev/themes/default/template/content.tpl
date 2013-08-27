@@ -24,5 +24,8 @@
 *}
 
 {if isset($content)}
+	{if isset($show_page_header_toolbar) && $show_page_header_toolbar}
+		{include file="page_header_toolbar.tpl" toolbar_btn=$page_header_toolbar_btn title=$page_header_toolbar_title}
+	{/if}
 	{$content}
 {/if}

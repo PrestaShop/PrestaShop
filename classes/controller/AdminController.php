@@ -273,6 +273,11 @@ class AdminControllerCore extends Controller
 	 */
 	protected $breadcrumbs;
 
+	//Bootstrap variable
+	public $show_page_header_toolbar = false;
+	public $page_header_toolbar_title;
+	public $page_header_toolbar_btn = array();
+
 	public function __construct()
 	{
 		global $timer_start;
@@ -414,7 +419,7 @@ class AdminControllerCore extends Controller
 			}
 			if ($filter)
 				$this->toolbar_title[] = $filter;
-		}	
+		}
 	}
 
 	/**
@@ -1082,6 +1087,21 @@ class AdminControllerCore extends Controller
 			$this->confirmations[] = $this->_conf[6];
 	}
 
+
+	public function initPageHeaderToolbar()
+	{
+		if (is_array($this->page_header_toolbar_btn)
+			&& $this->page_header_toolbar_btn instanceof Traversable
+			|| trim($this->page_header_toolbar_title) != '')
+			$this->show_page_header_toolbar = true;
+
+		$this->context->smarty->assign(array(
+			'show_page_header_toolbar' => $this->show_page_header_toolbar,
+			'page_header_toolbar_title' => $this->page_header_toolbar_title,
+			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
+		));
+	}
+
 	/**
 	 * assign default action in toolbar_btn smarty var, if they are not set.
 	 * uses override to specifically add, modify or remove items
@@ -1583,6 +1603,8 @@ class AdminControllerCore extends Controller
 	 */
 	public function renderList()
 	{
+		$this->initPageHeaderToolbar();
+
 		if (!($this->fields_list && is_array($this->fields_list)))
 			return false;
 		$this->getList($this->context->language->id);
