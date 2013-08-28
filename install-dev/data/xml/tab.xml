@@ -9,6 +9,9 @@
     <tab id="Home" id_parent="-1" active="1">
       <class_name>AdminHome</class_name>
     </tab>
+    <tab id="Dashboard" id_parent="-1" active="1">
+      <class_name>AdminDashboard</class_name>
+    </tab>
     <tab id="CMS_Pages" id_parent="-1" active="1">
       <class_name>AdminCms</class_name>
     </tab>
