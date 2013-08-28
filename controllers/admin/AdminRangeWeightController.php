@@ -50,6 +50,18 @@ class AdminRangeWeightControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('Weight ranges');
+		$this->page_header_toolbar_btn['new_weight_range'] = array(
+			'href' => self::$currentIndex.'&amp;addrange_weight&amp;token='.$this->token,
+			'desc' => $this->l('Add new weight range'),
+			'icon' => 'process-icon-new'
+		);
+
+		parent::initPageHeaderToolbar();
+	}
+
 	public function renderForm()
 	{
 		$carriers = Carrier::getCarriers($this->context->language->id, true, false, false, null, Carrier::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);

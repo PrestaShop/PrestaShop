@@ -50,6 +50,18 @@ class AdminRangePriceControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('Price ranges');
+		$this->page_header_toolbar_btn['new_price_range'] = array(
+			'href' => self::$currentIndex.'&amp;addrange_price&amp;token='.$this->token,
+			'desc' => $this->l('Add new price range'),
+			'icon' => 'process-icon-new'
+		);
+
+		parent::initPageHeaderToolbar();
+	}
+
 	public function renderForm()
 	{
 		$currency = $this->context->currency;
