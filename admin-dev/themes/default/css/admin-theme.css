@@ -514,17 +514,18 @@ blockquote {
     color: #999999; }
     blockquote small:before {
       content: '\2014 \00A0'; }
-  blockquote.pull-right {
+  blockquote.pull-right, blockquote.panel-heading-action {
     padding-right: 15px;
     padding-left: 0;
     border-right: 5px solid #eeeeee;
     border-left: 0; }
-    blockquote.pull-right p,
-    blockquote.pull-right small {
+    blockquote.pull-right p, blockquote.panel-heading-action p,
+    blockquote.pull-right small,
+    blockquote.panel-heading-action small {
       text-align: right; }
-    blockquote.pull-right small:before {
+    blockquote.pull-right small:before, blockquote.panel-heading-action small:before {
       content: ''; }
-    blockquote.pull-right small:after {
+    blockquote.pull-right small:after, blockquote.panel-heading-action small:after {
       content: '\00A0 \2014'; }
 
 q:before,
@@ -2526,7 +2527,7 @@ input[type="button"].btn-block {
   -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   background-clip: padding-box; }
-  .dropdown-menu.pull-right {
+  .dropdown-menu.pull-right, .dropdown-menu.panel-heading-action {
     right: 0;
     left: auto; }
   .dropdown-menu .divider {
@@ -2584,7 +2585,7 @@ input[type="button"].btn-block {
   top: 0;
   z-index: 990; }
 
-.pull-right > .dropdown-menu {
+.pull-right > .dropdown-menu, .panel-heading-action > .dropdown-menu {
   right: 0;
   left: auto; }
 
@@ -3193,11 +3194,15 @@ input[type="button"].btn-block {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0; }
 
-.navbar-nav.pull-right > li > .dropdown-menu, .pull-right#header_notifs_icon_wrapper > li > .dropdown-menu, .pull-right#header_employee_box > li > .dropdown-menu, .pull-right#header_quick > li > .dropdown-menu,
+.navbar-nav.pull-right > li > .dropdown-menu, .pull-right#header_notifs_icon_wrapper > li > .dropdown-menu, #header_notifs_icon_wrapper.panel-heading-action > li > .dropdown-menu, .pull-right#header_employee_box > li > .dropdown-menu, #header_employee_box.panel-heading-action > li > .dropdown-menu, .pull-right#header_quick > li > .dropdown-menu, #header_quick.panel-heading-action > li > .dropdown-menu, .navbar-nav.panel-heading-action > li > .dropdown-menu,
 .navbar-nav > li > .dropdown-menu.pull-right,
 #header_notifs_icon_wrapper > li > .dropdown-menu.pull-right,
 #header_employee_box > li > .dropdown-menu.pull-right,
-#header_quick > li > .dropdown-menu.pull-right {
+#header_quick > li > .dropdown-menu.pull-right,
+.navbar-nav > li > .dropdown-menu.panel-heading-action,
+#header_notifs_icon_wrapper > li > .dropdown-menu.panel-heading-action,
+#header_employee_box > li > .dropdown-menu.panel-heading-action,
+#header_quick > li > .dropdown-menu.panel-heading-action {
   left: auto;
   right: 0; }
 
@@ -3774,7 +3779,7 @@ a.thumbnail:focus {
 
 .media > .pull-left, .page-head .media > h2.page-title {
   margin-right: 10px; }
-.media > .pull-right {
+.media > .pull-right, .media > .panel-heading-action {
   margin-left: 10px; }
 
 .media-list {
@@ -4473,7 +4478,7 @@ body.modal-open {
 .clearfix:after {
   clear: both; }
 
-.pull-right {
+.pull-right, .panel-heading-action {
   float: right !important; }
 
 .pull-left, .page-head h2.page-title {
@@ -5089,7 +5094,7 @@ a [class*=" icon-"] {
   -moz-border-radius: 7px;
   border-radius: 7px; }
 
-.pull-right {
+.pull-right, .panel-heading-action {
   float: right; }
 
 .pull-left, .page-head h2.page-title {
@@ -5100,8 +5105,9 @@ a [class*=" icon-"] {
 .page-head h2[class*=" icon-"].page-title {
   margin-right: .3em; }
 
-[class^="icon-"].pull-right,
-[class*=" icon-"].pull-right {
+[class^="icon-"].pull-right, [class^="icon-"].panel-heading-action,
+[class*=" icon-"].pull-right,
+[class*=" icon-"].panel-heading-action {
   margin-left: .3em; }
 
 /* BOOTSTRAP SPECIFIC CLASSES
@@ -5189,7 +5195,9 @@ a [class*=" icon-"] {
 .btn .page-head h2[class*=" icon-"].icon-2x.page-title,
 .page-head .btn h2[class*=" icon-"].icon-2x.page-title,
 .btn [class^="icon-"].pull-right.icon-2x,
-.btn [class*=" icon-"].pull-right.icon-2x {
+.btn [class^="icon-"].icon-2x.panel-heading-action,
+.btn [class*=" icon-"].pull-right.icon-2x,
+.btn [class*=" icon-"].icon-2x.panel-heading-action {
   margin-top: .18em; }
 
 .btn [class^="icon-"].icon-spin.icon-large,
@@ -5201,7 +5209,9 @@ a [class*=" icon-"] {
 .btn.btn-small .page-head h2[class*=" icon-"].icon-2x.page-title,
 .page-head .btn.btn-small h2[class*=" icon-"].icon-2x.page-title,
 .btn.btn-small [class^="icon-"].pull-right.icon-2x,
-.btn.btn-small [class*=" icon-"].pull-right.icon-2x {
+.btn.btn-small [class^="icon-"].icon-2x.panel-heading-action,
+.btn.btn-small [class*=" icon-"].pull-right.icon-2x,
+.btn.btn-small [class*=" icon-"].icon-2x.panel-heading-action {
   margin-top: .25em; }
 
 .btn.btn-large [class^="icon-"],
@@ -5213,7 +5223,9 @@ a [class*=" icon-"] {
 .btn.btn-large .page-head h2[class*=" icon-"].icon-2x.page-title,
 .page-head .btn.btn-large h2[class*=" icon-"].icon-2x.page-title,
 .btn.btn-large [class^="icon-"].pull-right.icon-2x,
-.btn.btn-large [class*=" icon-"].pull-right.icon-2x {
+.btn.btn-large [class^="icon-"].icon-2x.panel-heading-action,
+.btn.btn-large [class*=" icon-"].pull-right.icon-2x,
+.btn.btn-large [class*=" icon-"].icon-2x.panel-heading-action {
   margin-top: .05em; }
 
 .btn.btn-large [class^="icon-"].pull-left.icon-2x, .btn.btn-large .page-head h2[class^="icon-"].icon-2x.page-title, .page-head .btn.btn-large h2[class^="icon-"].icon-2x.page-title,
@@ -5222,8 +5234,9 @@ a [class*=" icon-"] {
 .page-head .btn.btn-large h2[class*=" icon-"].icon-2x.page-title {
   margin-right: .2em; }
 
-.btn.btn-large [class^="icon-"].pull-right.icon-2x,
-.btn.btn-large [class*=" icon-"].pull-right.icon-2x {
+.btn.btn-large [class^="icon-"].pull-right.icon-2x, .btn.btn-large [class^="icon-"].icon-2x.panel-heading-action,
+.btn.btn-large [class*=" icon-"].pull-right.icon-2x,
+.btn.btn-large [class*=" icon-"].icon-2x.panel-heading-action {
   margin-left: .2em; }
 
 /* Fixes alignment in nav lists */
@@ -7423,3 +7436,20 @@ tr.filter {
   padding: 0 10px; }
   .module_col_actions .btn-group {
     text-align: left; }
+
+.panel-heading-action {
+  margin-right: -5px; }
+  .panel-heading-action a.list-tooolbar-btn {
+    float: left;
+    height: 30px;
+    width: 30px;
+    color: #1d7878;
+    border-left: solid 1px white; }
+    .panel-heading-action a.list-tooolbar-btn:hover {
+      text-decoration: none;
+      color: white;
+      background-color: #1d7878; }
+    .panel-heading-action a.list-tooolbar-btn i {
+      text-align: center;
+      font-size: 1.2em;
+      line-height: 30px; }
