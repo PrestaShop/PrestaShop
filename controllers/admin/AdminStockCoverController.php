@@ -100,6 +100,12 @@ class AdminStockCoverControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('Stock coverage');		
+		parent::initPageHeaderToolbar();
+	}
+
 	/**
 	 * Method called when an ajax request is made
 	 * @see AdminController::postProcess()
