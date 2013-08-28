@@ -78,6 +78,18 @@ class AdminTabsControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('Menus');
+		$this->page_header_toolbar_btn['new_menu'] = array(
+			'href' => self::$currentIndex.'&amp;addtab&amp;token='.$this->token,
+			'desc' => $this->l('Add new menu'),
+			'icon' => 'process-icon-new'
+		);
+		
+		parent::initPageHeaderToolbar();
+	}
+
 	/**
 	 * AdminController::renderForm() override
 	 * @see AdminController::renderForm()

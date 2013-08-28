@@ -152,6 +152,18 @@ class AdminReferrersControllerCore extends AdminController
 		$this->context->controller->addJqueryUI('ui.datepicker');
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('Referrers');
+		$this->page_header_toolbar_btn['new_referrer'] = array(
+			'href' => self::$currentIndex.'&amp;addreferrer&amp;token='.$this->token,
+			'desc' => $this->l('Add new referrer'),
+			'icon' => 'process-icon-new'
+		);
+		
+		parent::initPageHeaderToolbar();
+	}
+
 	public function renderList()
 	{
 		// Display list Referrers:
