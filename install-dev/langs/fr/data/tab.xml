@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <entity_tab>
   <tab id="Addresses" name="Adresses"/>
+  <tab id="Dashboard" name="Dasboard"/>
   <tab id="Administration" name="Administration"/>
   <tab id="Advanced_Parameters" name="Param&#xE8;tres avanc&#xE9;s"/>
   <tab id="Attachments" name="Documents joints"/>
