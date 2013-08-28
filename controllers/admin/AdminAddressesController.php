@@ -83,6 +83,18 @@ class AdminAddressesControllerCore extends AdminController
 			);
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('Addresses');
+		$this->page_header_toolbar_btn['new_address'] = array(
+			'href' => self::$currentIndex.'&amp;addaddress&amp;token='.$this->token,
+			'desc' => $this->l('Add new address'),
+			'icon' => 'process-icon-new'
+		);
+
+		parent::initPageHeaderToolbar();
+	}
+
 	public function renderForm()
 	{
 		$this->fields_form = array(
@@ -130,6 +142,8 @@ class AdminAddressesControllerCore extends AdminController
 					'label' => $this->l('Other'),
 					'name' => 'other',
 					'required' => false,
+					'cols' => 15,
+					'rows' => 3,
 					'hint' => $this->l('Forbidden characters:').' &lt;&gt;;=#{}'
 				),
 			),
