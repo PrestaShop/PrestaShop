@@ -56,6 +56,18 @@ class AdminCartRulesControllerCore extends AdminController
 		$this->addJqueryPlugin(array('typewatch', 'fancybox', 'autocomplete'));
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('Cart rules');
+		$this->page_header_toolbar_btn['new_cart_rule'] = array(
+			'href' => self::$currentIndex.'&amp;addcart_rule&amp;token='.$this->token,
+			'desc' => $this->l('Add new cart rule'),
+			'icon' => 'process-icon-new'
+		);
+
+		parent::initPageHeaderToolbar();
+	}
+
 	public function postProcess()
 	{
 		if (Tools::isSubmit('submitAddcart_rule') || Tools::isSubmit('submitAddcart_ruleAndStay'))
