@@ -95,6 +95,18 @@ class AdminLanguagesControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('Languages');
+		$this->page_header_toolbar_btn['new_language'] = array(
+			'href' => self::$currentIndex.'&amp;addlang&amp;token='.$this->token,
+			'desc' => $this->l('Add new language'),
+			'icon' => 'process-icon-new'
+		);
+
+		parent::initPageHeaderToolbar();
+	}
+
 	public function renderList()
 	{
 		$this->addRowAction('edit');

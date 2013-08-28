@@ -135,6 +135,13 @@ class AdminLocalizationControllerCore extends AdminController
 			);
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('Localizations');
+
+		parent::initPageHeaderToolbar();
+	}
+
 	public function postProcess()
 	{
 		if (Tools::isSubmit('submitLocalizationPack'))
