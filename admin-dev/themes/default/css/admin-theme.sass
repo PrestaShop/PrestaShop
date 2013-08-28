@@ -512,6 +512,8 @@ html, body
 	@extend .icon-anchor
 .process-icon-refresh
 	@extend .icon-refresh
+.process-icon-configure
+	@extend .icon-cog
 
 .navbar-inner
 	box-shadow: none!important
@@ -806,13 +808,10 @@ fieldset > .row
 		stroke-width: 0
 
 
-
 .highlighted
 	background-color: blue
 
 //.list-toolbar-btn
-
-
 #topbar
 	position: fixed
 	left: 80
@@ -841,10 +840,9 @@ fieldset > .row
 	.submenu
 		display: none
 
+
 .hook_panel
 	@extend .well
-	//@include background-image(linear-gradient(#fff, #ccc))
-	//@include box-shadow(rgba(black,0.10) 0 -2px 0 inset)
 	@include box-shadow(rgba(white,0.9) 0 0 0 1px inset)
 	padding: 10px 10px 5px 10px
 	margin-bottom: 3px!important
@@ -852,8 +850,6 @@ fieldset > .row
 		font-size: 1.2em
 	.module_description
 		@extend .text-muted
-		
-
 .hook_panel_header
 	margin: 0 -10px 0 -10px
 	padding: 0 10px 10px 10px
@@ -871,10 +867,7 @@ fieldset > .row
 	.hook_description
 		@extend .text-muted
 		padding: 3px 0 0 3px
-
-
 .module_list
-	//@extend .list-group
 	.module_list_item
 		display: table
 		width: 100%
@@ -883,7 +876,6 @@ fieldset > .row
 		background-color: white
 		@include box-shadow(rgba(0,0,0,0.3) 0 0 3px,rgba(black,0.10) 0 -2px 0 inset)
 		@include border-radius(3px)
-
 .module_col_select
 	display: table-cell
 	vertical-align: middle
@@ -907,8 +899,6 @@ fieldset > .row
 		@include box-shadow(rgba(0,0,0,0.2) 0 1px 3px inset)
 		border: solid 1px #ccc
 		background-color: #eee
-
-
 .module_col_icon
 	display: table-cell
 	text-align: center
@@ -946,6 +936,165 @@ fieldset > .row
 			font-size: 1.2em
 			line-height: 30px
 			
+
+//DASHBOARD
+
+.size_s, .size_md, .size_l, .size_xl, .size_xxl
+	font-family: $headings-font-family
+	color: $main-color
+.size_s
+	font-size: 1.1em
+.size_md
+	font-size: 1.3em
+.size_l
+	font-size: 1.7em
+.size_xl
+	font-size: 2em
+.size_xxl
+	font-size: 2.3em
+
+.dash_trend_down
+	color: red
+.dash_trend_up
+	color: green
+
+#dashboard
+	section
+		header
+			padding: 3px 8px
+			margin: 0 0 3px 0
+			color: white
+			font-size: 1.2em
+			background-color: $brand-primary
+		header.panel-heading
+			color: #555
+		
+
+	.data_list
+		@extend .list-group
+		margin: 0 0 10px 0
+		padding: 0
+		li
+			@extend .list-group-item
+			position: relative
+		.data_label
+			small
+		.data_value
+			line-height: 39px
+			position: absolute
+			top: 0
+			right: 0
+			padding: 0 10px 0 0
+
+	.data_list_small
+		margin: 8px 0 10px 0
+		padding: 0 0 0 0
+		border-top: solid 1px #ddd
+		li
+			padding: 3px 0
+			position: relative
+			border: none
+			margin: 0
+			border-bottom: dashed 1px #ddd
+		.data_label
+			text-transform: uppercase
+			color: #bbb
+		.data_value
+			line-height: 25px
+			position: absolute
+			top: 0
+			right: 0
+			padding: 0
+
+	.data_list_large
+		margin: 8px 0 10px 0
+		padding: 0
+		@extend .list-unstyled
+		li
+			padding: 6px 0
+			position: relative
+			border: none
+			margin: 0
+		.data_label
+			line-height: 0.8em
+			small
+				font-size: 0.6em
+		.data_value
+			text-align: right
+			line-height: 0.6em
+			position: absolute
+			top: 0
+			right: 0
+			padding: 8px 0 0 0
+			small
+				font-size: 0.5em
+
+	.data_list_vertical
+		@extend .list-unstyled
+		@extend .row
+		padding: 0
+		margin: 0 0 10px 0
+		border: 1px solid #ddd
+		@include border-radius(3px)
+		li
+			border-left: solid 1px #ddd
+			@extend .col-xs-4
+			padding: 6px
+			&:first-child
+				border: none
+		.data_label
+			min-height: 32px
+			display: block
+			line-height: 1em
+			text-align: center
+		.data_value
+			display: block
+			text-align: center
+			
+
+	#dash_trends
+		header
+			margin-bottom: 0
+		#dash_trends_toolbar
+			margin: 4px -16px
+			border-bottom: 1px solid #ddd
+		dl
+			margin: 0
+			text-align: center
+			background-color: white
+			padding: 10px
+			border-left: 1px solid #ddd
+			&:first-child
+				border: none
+			&.active
+				background-color: #eee
+		dt
+			text-align: center
+			height: 37px
+			line-height: 1em
+			font-size: 1.1em
+			font-weight: 300
+		dd
+			
+	#dash_products
+		header
+			margin-bottom: 0
+		nav
+			border-bottom: solid 1px #ddd
+			margin: 0 -11px
+			ul
+				margin: 0 -5px
+				padding: 0
+				text-decoration: none
+				background-color: white
+				li
+					float: left
+				li.active
+					background-color: $brand-primary
+					a
+						color: white
+
+
 
 
 
