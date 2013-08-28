@@ -308,7 +308,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 		$dir = str_replace($admin_dir, '', dirname($_SERVER['SCRIPT_NAME']));
 		if (Configuration::get('PS_REWRITING_SETTINGS') && count(Language::getLanguages(true)) > 1)
 			$lang = Language::getIsoById($this->context->employee->id_lang).'/';
-		$url = 'http://'.Tools::getHttpHost().$dir.$lang.Dispatcher::getInstance()->createUrl('index', (int)$this->context->language->id, $live_edit_params);
+		$url = Tools::getCurrentUrlProtocolPrefix().Tools::getHttpHost().$dir.$lang.Dispatcher::getInstance()->createUrl('index', (int)$this->context->language->id, $live_edit_params);
 
 		return $url;
 	}
