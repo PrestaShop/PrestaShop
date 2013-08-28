@@ -113,6 +113,18 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('Specific price rules');
+		$this->page_header_toolbar_btn['new_specific_price_rule'] = array(
+			'href' => self::$currentIndex.'&amp;addspecific_price_rule&amp;token='.$this->token,
+			'desc' => $this->l('Add new specific rule'),
+			'icon' => 'process-icon-new'
+		);
+
+		parent::initPageHeaderToolbar();
+	}
+
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
 		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
