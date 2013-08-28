@@ -28,6 +28,7 @@ class AdminDashboardControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->display = 'view';
 		parent::__construct();
 	}
