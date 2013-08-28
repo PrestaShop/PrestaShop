@@ -79,6 +79,18 @@ class AdminStatesControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('States');
+		$this->page_header_toolbar_btn['new_state'] = array(
+			'href' => self::$currentIndex.'&amp;addstate&amp;token='.$this->token,
+			'desc' => $this->l('Add new state'),
+			'icon' => 'process-icon-new'
+		);
+
+		parent::initPageHeaderToolbar();
+	}
+
 	public function renderList()
 	{
 		$this->_select = 'z.`name` AS zone';

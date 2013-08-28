@@ -65,6 +65,18 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('Tax rules groups');
+		$this->page_header_toolbar_btn['new_tax_rules_group'] = array(
+			'href' => self::$currentIndex.'&amp;addtax_rules_group&amp;token='.$this->token,
+			'desc' => $this->l('Add new tax rules group'),
+			'icon' => 'process-icon-new'
+		);
+
+		parent::initPageHeaderToolbar();
+	}
+
 	public function renderList()
 	{
 		$this->addRowAction('edit');

@@ -60,6 +60,18 @@ class AdminZonesControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('Zones');
+		$this->page_header_toolbar_btn['new_zone'] = array(
+			'href' => self::$currentIndex.'&amp;addzone&amp;token='.$this->token,
+			'desc' => $this->l('Add new zone'),
+			'icon' => 'process-icon-new'
+		);
+
+		parent::initPageHeaderToolbar();
+	}
+
 	public function renderList()
 	{
 		$this->addRowAction('edit');
