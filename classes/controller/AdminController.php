@@ -2325,7 +2325,7 @@ class AdminControllerCore extends Controller
 			
 			if (in_array($module->name, $filter_modules_list) && $perm)
 			{
-				$this->fillModuleData($module, 'select');
+				$this->fillModuleData($module, 'array');
 				$this->modules_list[array_search($module->name, $filter_modules_list)] = $module;
 			}		
 		}

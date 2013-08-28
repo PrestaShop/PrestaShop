@@ -45,7 +45,6 @@
 					{else}
 						<span class="label label-warning">{l s='Not installed'}</span>
 					{/if}
-					
 				{/if}
 			</h4>
 			<p>
@@ -75,6 +74,7 @@
 			<div id="list-action-button" class="btn-group">
 				{assign var=option value=$module->optionsHtml[0]}
 				{$option}
+				{if $module->optionsHtml|count > 1}
 				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
 					<span class="caret">&nbsp;</span>
 				</button>
@@ -85,6 +85,7 @@
 					{/if}
 				{/foreach}
 				</ul>
+				{/if}
 			</div>
 			{/if}
 		</td>
