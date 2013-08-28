@@ -430,7 +430,7 @@
 									<div class="row">
 										<div class="input-group col-lg-4">
 											<input 
-												id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}"
+												id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
 												type="text"
 												data-hex="true"
 												{if isset($input.class)}class="{$input.class}"
