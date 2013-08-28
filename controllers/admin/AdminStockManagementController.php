@@ -76,6 +76,12 @@ class AdminStockManagementControllerCore extends AdminController
 		);
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('Stock management');		
+		parent::initPageHeaderToolbar();
+	}
+
 	/**
 	 * AdminController::renderList() override
 	 * @see AdminController::renderList()

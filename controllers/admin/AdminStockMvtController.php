@@ -111,6 +111,12 @@ class AdminStockMvtControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('Stock mouvement');		
+		parent::initPageHeaderToolbar();
+	}
+
 	/**
 	 * AdminController::renderList() override
 	 * @see AdminController::renderList()

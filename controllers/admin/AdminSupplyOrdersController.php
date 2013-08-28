@@ -147,6 +147,23 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		}
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('Supply orders');
+		$this->page_header_toolbar_btn['new_supply_order'] = array(
+			'href' => self::$currentIndex.'&amp;addsupply_order&amp;token='.$this->token,
+			'desc' => $this->l('Add new supply order'),
+			'icon' => 'process-icon-new'
+		);
+		$this->page_header_toolbar_btn['new_supply_order_template'] = array(
+			'href' => self::$currentIndex.'&amp;addsupply_order&amp;mod=template&amp;token='.$this->token,
+			'desc' => $this->l('Add new supply order template'),
+			'icon' => 'process-icon-new'
+		);
+		
+		parent::initPageHeaderToolbar();
+	}
+
 	/**
 	 * AdminController::renderForm() override
 	 * @see AdminController::renderForm()
