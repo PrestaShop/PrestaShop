@@ -185,6 +185,18 @@ class AdminCustomersControllerCore extends AdminController
 		}
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('Customers');
+		$this->page_header_toolbar_btn['new_customer'] = array(
+			'href' => self::$currentIndex.'&amp;addcustomer&amp;token='.$this->token,
+			'desc' => $this->l('Add new customer'),
+			'icon' => 'process-icon-new'
+		);
+
+		parent::initPageHeaderToolbar();
+	}
+
 	public function initProcess()
 	{
 		parent::initProcess();

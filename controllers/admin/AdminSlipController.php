@@ -75,6 +75,18 @@ class AdminSlipControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('Slips');
+		$this->page_header_toolbar_btn['generate_pdf'] = array(
+			'href' => self::$currentIndex.'&amp;token='.$this->token,
+			'desc' => $this->l('Generate PDF'),
+			'icon' => 'process-icon-save-date'
+		);
+
+		parent::initPageHeaderToolbar();
+	}
+
 	public function renderForm()
 	{
 		$this->fields_form = array(
