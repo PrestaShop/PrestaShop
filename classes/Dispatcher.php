@@ -384,7 +384,7 @@ class DispatcherCore
 		$context = Context::getContext();
 		
 		// Load custom routes from modules
-		$modules_routes = Hook::exec('moduleRoutes', array('id_shop' => $id_shop), null, true, false);
+		$modules_routes = Hook::exec('ModuleRoutes', array('id_shop' => $id_shop), null, true, false);
 		if (is_array($modules_routes) && count($modules_routes))
 			foreach($modules_routes as $module_route)
 				foreach($module_route as $route => $route_details)
