@@ -62,7 +62,7 @@
 			$.ajax({
 				url: "index.php",
 				cache: false,
-				data: "ajax=1&tab=AdminTaxRulesGroup&token={getAdminToken tab='AdminTaxRulesGroup'}&action=states&id_country="+id_country+"&id_state="+id_state+"&empty_value={l s='All'}",
+				data: "ajax=1&tab=AdminTaxRulesGroup&token={getAdminToken tab='AdminStates'}&action=states&id_country="+id_country+"&id_state="+id_state+"&empty_value={l s='All'}",
 				success: function(html){
 					if (html == "false")
 					{
