@@ -1,4 +1,9 @@
 	{include file='controllers/modules/header.tpl'}
+<div class="panel">
+	<div class="panel-heading">
+		<i class="icon-list-ul"></i>
+		{l s='Modules list'}
+	</div>
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="btn-group pull-right">
@@ -12,25 +17,15 @@
 				</a>
 			</div>
 		</div>
+	</div>
+	<div class="row">
 		<div id="container" class="col-lg-12">
 			<div id="moduleContainer">
-				<table class="table" id="">
-					<colgroup>
-						<col width="5%">
-						<col width="10%">
-						<col width="20%">
-						<col width="5%">
-						<col width="20%">
-						<col width="5%">
-						<col width="7%">
-						<col width="7%">
-						<col width="7%">
-					</colgroup>
+				<table class="table">
 					<thead>
 						<tr class="nodrag nodrop">
-							<th>{l s='Logo'}</th>
-							<th>{l s='Module Name'}</th>
-							<th>{l s='Description'}</th>
+							<th></th>
+							<th>{l s='Module'}</th>
 							<th>{l s='Status'}</th>
 							<th>{l s='Tab'}</th>
 							<th>{l s='Categories'}</th>
@@ -41,15 +36,13 @@
 					</thead>
 					<tbody>
 					{foreach from=$modules key=km item=module}
-						<tr height="32" {if $km % 2 eq 0} class="alt_row"{/if}>
+						<tr>
 							<td>
-								<img src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}" width="57" height="57" />
+								<img src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}" width="32" height="32" />
 							</td>
 							<td class="moduleName">
-								<h5>{$module->displayName}</h5>
-							</td>
-							<td>
-								<span class="moduleFavDesc">{$module->description|truncate:80:'...'}</span>
+								<h4>{$module->displayName}</h4>
+								<span class="moduleFavDesc text-muted">{$module->description|truncate:80:'...'}</span>
 							</td>
 							<td class="setup">
 								{if isset($module->id) && $module->id gt 0}
@@ -101,3 +94,4 @@
 			</div>
 		</div>
 	</div>
+</div>
