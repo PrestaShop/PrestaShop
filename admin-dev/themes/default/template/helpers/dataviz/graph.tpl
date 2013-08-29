@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
 
 <div id="box-clients" class="col-lg-3 box-stats color1" >
 	<div class="boxchart-overlay">
@@ -32,6 +32,7 @@
 	<span class="value">4 589</span>
 </div>
 
+
 <div id="box-orders" class="col-lg-3 box-stats color2">
 	<div class="boxchart-overlay">
 		<div class="boxchart"></div>
@@ -40,11 +41,13 @@
 	<span class="value">789</span>
 </div>
 
+
 <div id="box-income" class="col-lg-3 box-stats color3">
 	<i class="icon-money"></i>
 	<span class="title">Income / 1 month</span>
 	<span class="value">$999,99</span>
 </div>
+
 
 <div id="box-messages" class="col-lg-3 box-stats color4">
 	<i class="icon-envelope-alt"></i>
@@ -52,7 +55,9 @@
 	<span class="value">19</span>
 </div>
 
+
 <div class="clearfix"></div>
+
 
 <div id="box-pie" class="col-lg-6 box-stats">
 	<div class="boxchart-overlay">
@@ -70,6 +75,7 @@
 	</ul>
 </div>
 
+
 <div id="box-line" class="col-lg-3 box-stats color1" >
 	<div class="boxchart-overlay">
 		<div class="boxchart"></div>
@@ -77,6 +83,7 @@
 	<span class="title">Trafic / 1 month</span>
 	<span class="value">4 589</span>
 </div>
+
 
 <div id="box-spline" class="col-lg-3 box-stats color2" >
 	<div class="boxchart-overlay">
@@ -86,12 +93,13 @@
 	<span class="value">4 589</span>
 </div>
 
+
 <div class="clearfix"></div>
 
 <script>
 	var data = [4, 8, 15, 16, 23, 42, 8, 15, 16, 23, 42, 16, 23, 42, 8, 15, 15, 16, 23];
 	var chart = d3.select("#box-clients .boxchart").append("svg")
-		.attr("class", "chart")
+		.attr("class", "data_chart")
 		.attr("width", data.length * 6)
 		.attr("height", 30);
 	var y = d3.scale.linear()
@@ -109,7 +117,7 @@
 <script>
 	var data = [4, 8, 15, 16, 23, 42, 8, 15, 16];
 	var chart = d3.select("#box-orders .boxchart").append("svg")
-		.attr("class", "chart")
+		.attr("class", "data_chart")
 		.attr("width", data.length * 6)
 		.attr("height", 30);
 	var y = d3.scale.linear()
@@ -141,6 +149,7 @@
 		.innerRadius(radius - 140)
 		.outerRadius(radius - 120);
 	var svg = d3.select("#box-pie .boxchart").append("svg")
+		.attr("class", "data_chart")
 		.attr("width", width)
 		.attr("height", height)
 		.append("g")
@@ -160,7 +169,7 @@
 		y = d3.scale.linear().domain([0, d3.max(data)]).range([0 + margin, h - margin]),
 		x = d3.scale.linear().domain([0, data.length]).range([0 + margin, w - margin]);
 	var vis = d3.select("#box-line .boxchart").append("svg")
-		.attr("class", "chart")
+		.attr("class", "data_chart")
 		.attr("width", w)
 		.attr("height", h);
 	var g = vis.append("g")
@@ -201,7 +210,7 @@
 		y = d3.scale.linear().domain([0, d3.max(data)]).range([0 + margin, h - margin]),
 		x = d3.scale.linear().domain([0, data.length]).range([0 + margin, w - margin]);
 	var vis = d3.select("#box-spline .boxchart").append("svg")
-		.attr("class", "chart")
+		.attr("class", "data_chart")
 		.attr("width", w)
 		.attr("height", h);
 	var g = vis.append("g")
