@@ -202,7 +202,6 @@ html, body
 		margin-left: 0
 		width: 100%
 
-
 .page-head
 	width: 100%
 	height: 55px
@@ -252,23 +251,19 @@ html, body
 			display: inline-block
 			text-align: center
 			line-height: 30px
-	> ul > li > ul.sub-menu
-		display: none
-		list-style: none
-		clear: both
-		margin: 8px 0px 8px 0px
-	> ul
+	ul
 		margin: 0
 		padding: 0
-		li
-			background-color: $main-color
-			list-style: none
-		li:not(.active) ul
+	li
+		list-style: none
+	li:not(.active)
+		ul
 			display: none
-		li.expanded
-			ul
-				display: block
-				background-color: white
+	li.expanded
+		ul
+			display: block
+			background-color: white
+	> ul
 		> li
 			&.active > a
 				color: contrast-color($main-color, white, #333, 10%)
@@ -295,7 +290,7 @@ html, body
 				font-size: 12px
 				line-height: 28px
 				$color: contrast-color($main-color, white, #333, 10%)
-				color:  mix($main-color, $color, 30%)
+				color: mix($main-color, $color, 30%)
 				background-color: $main-color
 				text-transform: uppercase
 				text-decoration: none
@@ -311,35 +306,32 @@ html, body
 					@include transition-timing-function(ease-out)
 			img
 				margin-right: 10px
-			ul
-				margin: 0
-				padding: 0
-				background-color: white
-				li 
-					a
-						display: block
-						padding: 2px 5px 2px 10px
-						font-size: 12px
-						border: none
-						border-bottom: solid 1px #eee
-						background-color: white
-						i
-							margin-top: 3px
-							color: $secondary-color
-						&:hover
-							color: $brand-primary
-							background-color: mix(white, $main-color, 90%)
-							text-decoration: none
-							i
-								color: $main-color
-					&.active
-						a
-							color: contrast-color($brand-primary, white, #333, 10%)
-							background-color: $brand-primary
-							i
-								color: $main-color
+	ul.submenu
+		a
+			display: block
+			padding: 2px 5px 2px 10px
+			font-size: 12px
+			border: none
+			border-bottom: solid 1px #eee
+			background-color: white
+			i
+				margin-top: 3px
+				color: $secondary-color
+			&:hover
+				color: $brand-primary
+				background-color: mix(white, $main-color, 90%)
+				text-decoration: none
+				i
+					color: $main-color
+		&.active
+			a
+				color: contrast-color($brand-primary, white, #333, 10%)
+				background-color: $brand-primary
+				i
+					color: $main-color
 	@media (max-width: $screen-tablet)
 		display: none
+
 
 .page-sidebar-closed
 	#nav-sidebar
@@ -1071,7 +1063,6 @@ fieldset > .row
 			line-height: 1em
 			font-size: 1.1em
 			font-weight: 300
-		dd
 		svg
 			height: 350px
 			
