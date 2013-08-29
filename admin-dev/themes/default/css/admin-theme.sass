@@ -735,7 +735,6 @@ tr.filter
 	width: 200px
 
 
-
 // temp fix for latest bootstrap
 input[type="text"],input[type="search"],input[type="password"], textarea, select
 	@extend .form-control
@@ -794,7 +793,7 @@ fieldset > .row
 	.value
 		color: #95CC6B
 
-.chart
+.data_chart
 	rect
 		fill: white
 	path
@@ -917,7 +916,6 @@ fieldset > .row
 	.btn-group
 		text-align: left
 
-
 .panel-heading-action
 	@extend .pull-right
 	margin-right: -5px
@@ -969,7 +967,6 @@ fieldset > .row
 		header.panel-heading
 			color: #555
 		
-
 	.data_list
 		@extend .list-group
 		margin: 0 0 10px 0
@@ -1057,15 +1054,15 @@ fieldset > .row
 			margin-bottom: 0
 		#dash_trends_toolbar
 			margin: 4px -16px
-			border-bottom: 1px solid #ddd
 		dl
 			margin: 0
 			text-align: center
 			background-color: white
 			padding: 10px
 			border-left: 1px solid #ddd
+			border-bottom: 1px solid #ddd
 			&:first-child
-				border: none
+				border-left: none
 			&.active
 				background-color: #eee
 		dt
@@ -1075,6 +1072,8 @@ fieldset > .row
 			font-size: 1.1em
 			font-weight: 300
 		dd
+		svg
+			height: 350px
 			
 	#dash_products
 		header
@@ -1093,12 +1092,8 @@ fieldset > .row
 					background-color: $brand-primary
 					a
 						color: white
-
-
-
-
-
-
-
+	#dash_activity
+		svg
+			height: 150px
 
 

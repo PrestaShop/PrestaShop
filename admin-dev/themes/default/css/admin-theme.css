@@ -7304,15 +7304,15 @@ tr.filter {
 .color4 .value {
   color: #95cc6b; }
 
-.chart rect {
+.data_chart rect {
   fill: white; }
-.chart path {
+.data_chart path {
   stroke: white;
   stroke-width: 2;
   fill: none; }
-.chart line {
+.data_chart line {
   stroke: black; }
-.chart .area {
+.data_chart .area {
   fill: rgba(255, 255, 255, 0.3);
   stroke-width: 0; }
 
@@ -7566,16 +7566,16 @@ tr.filter {
 #dashboard #dash_trends header {
   margin-bottom: 0; }
 #dashboard #dash_trends #dash_trends_toolbar {
-  margin: 4px -16px;
-  border-bottom: 1px solid #dddddd; }
+  margin: 4px -16px; }
 #dashboard #dash_trends dl {
   margin: 0;
   text-align: center;
   background-color: white;
   padding: 10px;
-  border-left: 1px solid #dddddd; }
+  border-left: 1px solid #dddddd;
+  border-bottom: 1px solid #dddddd; }
   #dashboard #dash_trends dl:first-child {
-    border: none; }
+    border-left: none; }
   #dashboard #dash_trends dl.active {
     background-color: #eeeeee; }
 #dashboard #dash_trends dt {
@@ -7584,6 +7584,8 @@ tr.filter {
   line-height: 1em;
   font-size: 1.1em;
   font-weight: 300; }
+#dashboard #dash_trends svg {
+  height: 350px; }
 #dashboard #dash_products header {
   margin-bottom: 0; }
 #dashboard #dash_products nav {
@@ -7600,3 +7602,5 @@ tr.filter {
       background-color: #1d7878; }
       #dashboard #dash_products nav ul li.active a {
         color: white; }
+#dashboard #dash_activity svg {
+  height: 150px; }
