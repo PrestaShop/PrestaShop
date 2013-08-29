@@ -506,5 +506,48 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		// TODO: check if the rule already exists
 		return $tr->validateController();
 	}
+	
+	protected function displayAjaxUpdateTaxRule()
+	{
+		if ($this->tabAccess['view'] === '1')
+		{
+			$id_tax_rule = Tools::getValue('id_tax_rule');
+			$tax_rules = new TaxRule((int)$id_tax_rule);
+			$output = array();
+			foreach ($tax_rules as $key => $result)
+				$output[$key] = $result;
+			die(Tools::jsonEncode($output));
+		}
+	}
+	
+	protected function displayAjaxStates()
+	{
+		if ($this->tabAccess['view'] === '1')
+		{
+			$states = Db::getInstance()->executeS('
+			SELECT s.id_state, s.name
+			FROM '._DB_PREFIX_.'state s
+			LEFT JOIN '._DB_PREFIX_.'country c ON (s.`id_country` = c.`id_country`)
+			WHERE s.id_country = '.(int)(Tools::getValue('id_country')).' AND s.active = 1 AND c.`contains_states` = 1
+			ORDER BY s.`name` ASC');
+
+			if (is_array($states) AND !empty($states))
+			{
+				$list = '';
+				if (Tools::getValue('no_empty') != true)
+				{
+					$empty_value = (Tools::isSubmit('empty_value')) ? Tools::getValue('empty_value') : '----------';
+					$list = '<option value="0">'.Tools::htmlentitiesUTF8($empty_value).'</option>'."\n";
+				}
+
+				foreach ($states AS $state)
+					$list .= '<option value="'.(int)($state['id_state']).'"'.((isset($_GET['id_state']) AND $_GET['id_state'] == $state['id_state']) ? ' selected="selected"' : '').'>'.$state['name'].'</option>'."\n";
+			}
+			else
+				$list = 'false';
+
+			die($list);
+		}
+	}
 }
 
