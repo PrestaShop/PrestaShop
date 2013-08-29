@@ -32,4 +32,18 @@ class AdminDashboardControllerCore extends AdminController
 		$this->display = 'view';
 		parent::__construct();
 	}
+
+	public function setMedia()
+	{
+		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
+		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
+		parent::setMedia();
+		$this->addJS(array(
+			__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/d3.js',
+			__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/nv.d3.js'
+		));
+		$this->addCSS(array(
+			__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/nv.d3.css'
+		));
+	}
 }
