@@ -183,10 +183,15 @@ function changeFormLanguage(id_language_new, iso_code, employee_cookie)
 
 	// For multishop checkboxes
 	$('.multishop_lang_'+id_language_new).show().siblings('div[class^=\'multishop_lang_\']').hide();
-
 	$('.language_flags').hide();
 	if (employee_cookie)
-		$.post("ajax.php", { form_language_id: id_language_new });
+		$.post("index.php", {
+			action: 'formLanguage', 
+			tab: 'AdminEmployees',
+			ajax: 1,
+			token: employee_token,
+			form_language_id: id_language_new 
+		});
 	id_language = id_language_new;
 
 	updateCurrentText();

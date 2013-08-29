@@ -472,7 +472,15 @@ class AdminEmployeesControllerCore extends AdminController
 
 		return $res;
 	}
-
+	
+	protected function ajaxProcessFormLanguage()
+	{
+		$this->context->cookie->employee_form_lang = (int)Tools::getValue('form_language_id');
+		if (!$this->context->cookie->write())
+			die ('Error while updating cookie.');
+		die ('Form language updated.');
+	}
+	
 	public function ajaxProcessGetTabByIdProfile()
 	{
 		$id_profile = Tools::getValue('id_profile');
