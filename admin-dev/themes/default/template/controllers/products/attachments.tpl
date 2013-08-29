@@ -103,7 +103,7 @@
 	<hr/>
 
 	<div class="row">
-		<div class="col-lg-9 col-offset-3">
+		<div class="col-lg-9 col-lg-offset-3">
 			<div class="row">
 				<div class="col-lg-6">
 					<p>{l s='Available attachments:'}</p>

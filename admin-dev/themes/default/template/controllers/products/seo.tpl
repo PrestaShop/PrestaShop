@@ -109,7 +109,7 @@
 	</div>
 
 	<div class="row">
-		<div class="col-lg-9 col-offset-3">
+		<div class="col-lg-9 col-lg-offset-3">
 			{foreach from=$languages item=language}
 			<div class="alert alert-warning translatable-field lang-{$language.id_lang}">
 				<i class="icon-link"></i> {l s='The product link will look like this:'}

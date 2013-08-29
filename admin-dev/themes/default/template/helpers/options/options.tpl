@@ -285,12 +285,12 @@
 			{/foreach}
 			{if isset($categoryData['submit'])}
 				<div class="row">
-					<div class="col-lg-9 col-offset-3">
+					<div class="col-lg-9 col-lg-offset-3">
 						<button
 							type="submit"
 							id="{$table}_form_submit_btn"
 							name="{if isset($categoryData['submit']['name'])}{$categoryData['submit']['name']}{else}submitOptions{$table}{/if}"
-							class="{if isset($categoryData['submit']['class'])}{$categoryData['submit']['class']}{else}btn btn-primary{/if}"
+							class="{if isset($categoryData['submit']['class'])}{$categoryData['submit']['class']}{else}btn btn-default{/if}"
 							>
 							<i class="{if isset($categoryData['submit']['icon'])}{$categoryData['submit']['icon']}{else}icon-save{/if}"></i>
 							{if isset($categoryData['submit']['title'])}{$categoryData['submit']['title']}{else}{l s='Save'}{/if}

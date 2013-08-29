@@ -111,7 +111,7 @@ class AdminInvoicesControllerCore extends AdminController
 			),
 			'submit' => array(
 				'title' => $this->l('Generate PDF file by date'),
-				'class' => 'btn btn-primary',
+				'class' => 'btn btn-default',
 				'id' => 'submitPrint',
 				'icon' => 'icon-download-alt'
 			)
@@ -149,7 +149,7 @@ class AdminInvoicesControllerCore extends AdminController
 			),
 			'submit' => array(
 				'title' => $this->l('Generate PDF file by status.'),
-				'class' => 'btn btn-primary',
+				'class' => 'btn btn-default',
 				'id' => 'submitPrint2',
 				'icon' => 'icon-download-alt'
 			)

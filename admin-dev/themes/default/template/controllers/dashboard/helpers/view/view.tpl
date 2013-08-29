@@ -5,11 +5,6 @@
 </div>
 
 <div id="dashboard">
-<!--
-		<select class="form-control pull-right" name="" id="">
-			<option value="">Jan 29, 2012 - Feb 4, 2012</option>
-		</select>
--->
 	<div class="row">
 		<div class="col-lg-3">
 			<div id="dash_activity" class="panel">
