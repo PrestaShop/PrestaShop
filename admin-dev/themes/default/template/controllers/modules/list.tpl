@@ -39,7 +39,7 @@
 							<i class="icon-list"></i>
 							{l s='Normal view'} 
 						</a>
-						<a class="btn btn-default {if $smarty.get.select == 'favorites'} active{/if}" href="index.php?controller={$smarty.get.controller|htmlentities}&token={$smarty.get.token|htmlentities}&select=favorites">
+						<a class="btn btn-default {if isset($smarty.get.select) && $smarty.get.select == 'favorites'} active{/if}" href="index.php?controller={$smarty.get.controller|htmlentities}&token={$smarty.get.token|htmlentities}&select=favorites">
 							<i class="icon-star"></i> 
 							{l s='Favorites view'}
 						</a>
