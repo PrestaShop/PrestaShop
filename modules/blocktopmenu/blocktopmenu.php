@@ -228,6 +228,8 @@ class Blocktopmenu extends Module
 
 		// BEGIN Manufacturer
 		$this->_html .= '<optgroup label="'.$this->l('Manufacturer').'">';
+		// Option to show all Manufacturer
+		$this->_html .= '<option value="ALLMAN0">'.$this->l('All manufacturers').'</option>';
 		$manufacturers = Manufacturer::getManufacturers(false, $id_lang);
 		foreach ($manufacturers as $manufacturer)
 			$this->_html .= '<option value="MAN'.$manufacturer['id_manufacturer'].'">'.$spacer.$manufacturer['name'].'</option>';
@@ -472,6 +474,11 @@ class Blocktopmenu extends Module
 						$this->_html .= '<option value="CMS_CAT'.$id.'">'.$category->name.'</option>'.PHP_EOL;
 					break;
 
+				// Case to handle the option to show all Manufacturer
+				case 'ALLMAN':
+					$this->_html .= '<option value="ALLMAN0">'.$this->l('All manufacturers').'</option>'.PHP_EOL;
+					break;
+
 				case 'MAN':
 					$manufacturer = new Manufacturer((int)$id, (int)$id_lang);
 					if (Validate::isLoadedObject($manufacturer))
@@ -561,6 +568,17 @@ class Blocktopmenu extends Module
 						$link = new Link;
 						$this->_menu .= '<li'.$selected.'><a href="'.htmlentities($link->getManufacturerLink((int)$id, $manufacturer->link_rewrite)).'">'.$manufacturer->name.'</a></li>'.PHP_EOL;
 					}
+					break;
+
+				// Case to handle the option to show all Manufacturer
+				case 'ALLMAN':
+					$this->_menu .= '<li><a>'.$this->l('All manufacturers').'</a><ul>'.PHP_EOL;
+					$manufacturers = Manufacturer::getManufacturers();
+					$link = new Link;
+					foreach ($manufacturers as $key => $manufacturer) {
+						$this->_menu .= '<li><a href="'.$link->getManufacturerLink((int)$manufacturer['id_manufacturer'], $manufacturer['link_rewrite']).'">'.$manufacturer['name'].'</a></li>'.PHP_EOL;
+					}
+					$this->_menu .= '</ul>';
 					break;
 
 				case 'SUP':
