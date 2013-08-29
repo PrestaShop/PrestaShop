@@ -182,7 +182,7 @@ $(document).ready(function () {
 
 	{if $tax_exclude_taxe_option}
 	<div class="row">
-		<div class="col-lg-9 col-offset-3">
+		<div class="col-lg-9 col-lg-offset-3">
 			<div class="alert">
 				{l s='Taxes are currently disabled'} : 
 				<a href="{$link->getAdminLink('AdminTaxes')|escape:'htmlall':'UTF-8'}">{l s='Tax options'}</a>
@@ -233,7 +233,7 @@ $(document).ready(function () {
 
 	{if $ps_tax && $country_display_tax_label}
 	<div class="row">
-		<div class="col-lg-9 col-offset-3">
+		<div class="col-lg-9 col-lg-offset-3">
 			<div class="alert">
 				<span>{l s='or'}
 					{$currency->prefix}<span id="unit_price_with_tax">0.00</span>{$currency->suffix}
@@ -246,7 +246,7 @@ $(document).ready(function () {
 
 	<div class="row">
 		{include file="controllers/products/multishop/checkbox.tpl" field="on_sale" type="default"}
-		<div class="col-lg-9 col-offset-3">
+		<div class="col-lg-9 col-lg-offset-3">
 			<div class="checkbox">
 				<label class="control-label" for="on_sale" >
 					<input type="checkbox" name="on_sale" id="on_sale" {if $product->on_sale}checked="checked"{/if} value="1" />
@@ -257,7 +257,7 @@ $(document).ready(function () {
 	</div>
 
 	<div class="row">
-		<div class="col-lg-9 col-offset-3">
+		<div class="col-lg-9 col-lg-offset-3">
 			<div class="alert">
 				<strong>{l s='Final retail price:'}</strong>
 				<span {if !$country_display_tax_label}style="display:none"{/if} >

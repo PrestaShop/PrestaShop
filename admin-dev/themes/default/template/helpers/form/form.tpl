@@ -31,7 +31,7 @@
 {if isset($fields.title)}<h3>{$fields.title}</h3>{/if}
 
 {block name="defaultForm"}
-<form id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'htmlall':'UTF-8'}{else}{$table}_form{/if}" class="defaultForm {$name_controller}" action="{$current}&{if !empty($submit_action)}{$submit_action}=1{/if}&token={$token}" method="post" enctype="multipart/form-data" {if isset($style)}style="{$style}"{/if}>
+<form id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'htmlall':'UTF-8'}{else}{$table}_form{/if}" class="defaultForm {$name_controller} form-horizontal" action="{$current}&{if !empty($submit_action)}{$submit_action}=1{/if}&token={$token}" method="post" enctype="multipart/form-data" {if isset($style)}style="{$style}"{/if}>
 	{if $form_id}
 		<input type="hidden" name="{$identifier}" id="{$identifier}" value="{$form_id}" />
 	{/if}
@@ -482,7 +482,7 @@
 					{/if}
 				{elseif $key == 'submit'}
 					<div class="row">
-						<div class="col-lg-9 col-offset-3">
+						<div class="col-lg-9 col-lg-offset-3">
 							<button
 								type="submit"
 								id="{if isset($field.id)}{$field.id}{else}{$table}_form_submit_btn{/if}"

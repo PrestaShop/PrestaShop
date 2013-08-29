@@ -127,7 +127,7 @@
 			</div>
 		</div>
 		<div class="row">
-			<p class="alert alert-info col-offset-3">
+			<p class="alert alert-info col-lg-offset-3">
 				<a href="#" onclick="$('#sample_files_import').slideToggle(); return false;">
 					{l s='Click to view our sample import csv files.'}
 				</a>
@@ -223,7 +223,7 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-offset-3">
+			<div class="col-lg-offset-3">
 				<input type="submit" name="submitImportFile" value="{l s='Next step'}" class="btn btn-primary" {if empty($files_to_import)}disabled{/if}/>
 			</div>
 			{if empty($files_to_import)}

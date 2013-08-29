@@ -208,7 +208,7 @@
 		</div>
 	</div>
 	<div class="row redirect_product_options" style="display:none">
-		<div class="col-lg-9 col-offset-3">
+		<div class="col-lg-9 col-lg-offset-3">
 			<div class="alert alert-info">
 				{l s='404 : Not Found = Product does not exist and no redirect'}<br/>
 				{l s='301 : Moved Permanently = Product Moved Permanently'}<br/>
@@ -333,7 +333,7 @@
 
 	{if $images}
 	<div class="row">
-		<div class="col-lg-9 col-offset-3">
+		<div class="col-lg-9 col-lg-offset-3">
 			<div class="alert">
 				{l s='Do you want an image associated with the product in your description?'}
 				<a class="addImageDescription" href="javascript:void(0);">{l s='Click here'}</a>.

@@ -62,7 +62,7 @@
 </div>
 
 <div class="row">
-	<div class="col-lg-9 col-offset-3">
+	<div class="col-lg-9 col-lg-offset-3">
 		<button type="button" id="add_pack_item" class="btn btn-default">
 			<i class="icon-plus-sign-alt"></i> {l s='Add this product to the pack'}
 		</button>	
