@@ -1535,6 +1535,16 @@ class AdminControllerCore extends Controller
 	
 	protected function addToolBarModulesListButton()
 	{
+		
+		if (!$this->isFresh(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 86400))
+			file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, Tools::addonsRequest('native'));
+		
+		$country_module_list_xml = simplexml_load_file(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
+			$country_module_list = array();
+			foreach ($country_module_list_xml->module as $k => $m)
+				$country_module_list[] = (string)$m->name;
+		$this->tab_modules_list['slider_list'] = array_intersect($this->tab_modules_list['slider_list'], $country_module_list);
+		
 		if (is_array($this->tab_modules_list['slider_list']) && count($this->tab_modules_list['slider_list']))
 			$this->toolbar_btn['modules-list'] = array(
 					'href' => '#',
