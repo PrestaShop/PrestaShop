@@ -95,7 +95,7 @@ class SupplierCore extends ObjectModel
 
 	public function getLink()
 	{
-		return Tools::link_rewrite($this->name, false);
+		return Tools::link_rewrite($this->name);
 	}
 
 	/**
@@ -140,6 +140,7 @@ class SupplierCore extends ObjectModel
 					WHERE ps.`id_supplier` = '.(int)$supplier['id_supplier'].'
 					AND ps.id_product_attribute = 0'.
 					($active ? ' AND product_shop.`active` = 1' : '').
+					' AND product_shop.`visibility` NOT IN ("none")'.
 					($all_groups ? '' :'
 					AND ps.`id_product` IN (
 						SELECT cp.`id_product`
@@ -156,7 +157,7 @@ class SupplierCore extends ObjectModel
 		$rewrite_settings = (int)Configuration::get('PS_REWRITING_SETTINGS');
 		for ($i = 0; $i < $nb_suppliers; $i++)
 			if ($rewrite_settings)
-				$suppliers[$i]['link_rewrite'] = Tools::link_rewrite($suppliers[$i]['name'], false);
+				$suppliers[$i]['link_rewrite'] = Tools::link_rewrite($suppliers[$i]['name']);
 			else
 				$suppliers[$i]['link_rewrite'] = 0;
 		return $suppliers;

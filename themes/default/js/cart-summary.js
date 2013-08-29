@@ -76,7 +76,7 @@ function changeAddressDelivery(obj)
 
 	if (new_id_address_delivery == old_id_address_delivery)
 		return;
-	
+
 	if (new_id_address_delivery > 0) // Change the delivery address
 	{
 		$.ajax({
@@ -86,26 +86,28 @@ function changeAddressDelivery(obj)
 			async: true,
 			cache: false,
 			dataType: 'json',
-			data: 'controller=cart&ajax=true&changeAddressDelivery=1&summary=1&id_product='+id_product
-				+'&id_product_attribute='+id_product_attribute
-				+'&old_id_address_delivery='+old_id_address_delivery
-				+'&new_id_address_delivery='+new_id_address_delivery
-				+'&token='+static_token
-				+'&allow_refresh=1',
+			data: 'controller=cart&ajax=true&changeAddressDelivery=1&summary=1&id_product=' + id_product
+				+ '&id_product_attribute='+id_product_attribute
+				+ '&old_id_address_delivery='+old_id_address_delivery
+				+ '&new_id_address_delivery='+new_id_address_delivery
+				+ '&token='+static_token
+				+ '&allow_refresh=1',
 			success: function(jsonData)
 			{
 				if (typeof(jsonData.hasErrors) != 'undefined' && jsonData.hasErrors)
 				{
 					alert(jsonData.error);
 					// Reset the old address
-					$('#select_address_delivery_'+id_product+'_'+id_product_attribute+'_'+old_id_address_delivery).val(old_id_address_delivery);
+					$('#select_address_delivery_' + id_product + '_' + id_product_attribute + '_' + old_id_address_delivery).val(old_id_address_delivery);
 				}
 				else
 				{
 					// The product exist
-					if ($('#product_'+id_product+'_'+id_product_attribute+'_0_'+new_id_address_delivery).length)
+					if ($('#product_' + id_product + '_' + id_product_attribute + '_0_' + new_id_address_delivery).length)
 					{
 						updateCartSummary(jsonData.summary);
+						if (window.ajaxCart != undefined)
+							ajaxCart.updateCart(jsonData);
 						updateCustomizedDatas(jsonData.customizedDatas);
 						updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
 						updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
@@ -114,14 +116,13 @@ function changeAddressDelivery(obj)
 	
 						// @todo reverse the remove order
 						// This effect remove the current line, but it's better to remove the other one, and refresshing this one
-						$('#product_'+id_product+'_'+id_product_attribute+'_0_'+old_id_address_delivery).remove();
+						$('#product_' + id_product + '_' + id_product_attribute + '_0_' + old_id_address_delivery).remove();
 						
 						// @todo improve customization upgrading
-						$('.product_'+id_product+'_'+id_product_attribute+'_0_'+old_id_address_delivery).remove();
+						$('.product_' + id_product + '_' + id_product_attribute + '_0_' + old_id_address_delivery).remove();
 					}
-					
 					if (window.ajaxCart != undefined)
-						ajaxCart.refresh();
+						ajaxCart.updateCart(jsonData);
 					updateAddressId(id_product, id_product_attribute, old_id_address_delivery, new_id_address_delivery);
 					cleanSelectAddressDelivery();
 				}
@@ -141,7 +142,7 @@ function changeAddressDelivery(obj)
 		
 		// Get new address to deliver
 		var id_address_delivery = 0;
-		var options = $('#select_address_delivery_'+id_product+'_'+id_product_attribute+'_'+old_id_address_delivery+' option');
+		var options = $('#select_address_delivery_' + id_product + '_' + id_product_attribute + '_' + old_id_address_delivery + ' option');
 		$.each(options, function(i) {
 			// Check the address is not already used for a similare products
 			if ($(options[i]).val() > 0 && $(options[i]).val() !== old_id_address_delivery && $('#product_' + id_product + '_' + id_product_attribute + '_0_' + $(options[i]).val()).length == 0)
@@ -160,13 +161,13 @@ function changeAddressDelivery(obj)
 			dataType: 'json',
 			context: obj,
 			data: 'controller=cart'
-				+'&ajax=true&duplicate=true&summary=true'
-				+'&id_product='+id_product
-				+'&id_product_attribute='+id_product_attribute
-				+'&id_address_delivery='+old_id_address_delivery
-				+'&new_id_address_delivery='+id_address_delivery
-				+'&token='+static_token
-				+'&allow_refresh=1',
+				+ '&ajax=true&duplicate=true&summary=true'
+				+ '&id_product='+id_product
+				+ '&id_product_attribute='+id_product_attribute
+				+ '&id_address_delivery='+old_id_address_delivery
+				+ '&new_id_address_delivery='+id_address_delivery
+				+ '&token='+static_token
+				+ '&allow_refresh=1',
 			success: function(jsonData)
 			{
 				if (jsonData.error)
@@ -175,24 +176,23 @@ function changeAddressDelivery(obj)
 					return;
 				}
 				
-				var line = $('#product_' + id_product+'_' + id_product_attribute + '_0_' + old_id_address_delivery);
+				var line = $('#product_' + id_product + '_' + id_product_attribute + '_0_' + old_id_address_delivery);
 				var new_line = line.clone();
 				updateAddressId(id_product, id_product_attribute, old_id_address_delivery, id_address_delivery, new_line);
 				line.after(new_line);
-				new_line.find('input[name=quantity_' + id_product+'_' + id_product_attribute + '_0_' + old_id_address_delivery + '_hidden]')
+				new_line.find('input[name=quantity_' + id_product + '_' + id_product_attribute + '_0_' + old_id_address_delivery + '_hidden]')
 					.val(1);
 				new_line.find('.cart_quantity_input')
 					.val(1);
-				$('#select_address_delivery_' + id_product+'_' + id_product_attribute + '_' + old_id_address_delivery).val(old_id_address_delivery);
-				$('#select_address_delivery_' + id_product+'_' + id_product_attribute + '_' + id_address_delivery).val(id_address_delivery);
+				$('#select_address_delivery_' + id_product + '_' + id_product_attribute + '_' + old_id_address_delivery).val(old_id_address_delivery);
+				$('#select_address_delivery_' + id_product + '_' + id_product_attribute + '_' + id_address_delivery).val(id_address_delivery);
 				
 				
 				cleanSelectAddressDelivery();
 				
 				updateCartSummary(jsonData.summary);
-				
 				if (window.ajaxCart !== undefined)
-					ajaxCart.refresh();
+					ajaxCart.updateCart(jsonData);
 			}
 		});
 	}
@@ -201,7 +201,6 @@ function changeAddressDelivery(obj)
 
 function updateAddressId(id_product, id_product_attribute, old_id_address_delivery, id_address_delivery, line)
 {
-
 	if (typeof(line) == 'undefined' || line.length == 0)
 		line = $('#cart_summary tr[id^=product_' + id_product + '_' + id_product_attribute + '_0_], #cart_summary tr[id^=product_' + id_product + '_' + id_product_attribute + '_nocustom_]');
 
@@ -253,8 +252,8 @@ function updateQty(val, cart, el)
 
 	if (exp.test(val) == true)
 	{
-		var hidden = $(prefix+'input[name='+ id +'_hidden]').val();
-		var input = $(prefix+'input[name='+ id +']').val();
+		var hidden = $(prefix + 'input[name=' + id + '_hidden]').val();
+		var input = $(prefix + 'input[name=' + id + ']').val();
 		var QtyToUp = parseInt(input) - parseInt(hidden);
 
 		if (parseInt(QtyToUp) > 0)
@@ -263,7 +262,7 @@ function updateQty(val, cart, el)
 			downQuantity(id.replace('quantity_', ''), QtyToUp);
 	}
 	else
-		$(prefix+'input[name='+ id +']').val($(prefix+'input[name='+ id +'_hidden]').val());
+		$(prefix + 'input[name=' + id + ']').val($(prefix + 'input[name=' + id + '_hidden]').val());
 	
 	if (typeof(getCarrierListAndUpdate) !== 'undefined')
 		getCarrierListAndUpdate();
@@ -292,13 +291,13 @@ function deleteProductFromSummary(id)
 		cache: false,
 		dataType: 'json',
 		data: 'controller=cart'
-			+'&ajax=true&delete=true&summary=true'
-			+'&id_product='+productId
-			+'&ipa='+productAttributeId
-			+'&id_address_delivery='+id_address_delivery 
+			+ '&ajax=true&delete=true&summary=true'
+			+ '&id_product='+productId
+			+ '&ipa='+productAttributeId
+			+ '&id_address_delivery='+id_address_delivery 
 			+ ((customizationId !== 0) ? '&id_customization=' + customizationId : '')
-			+'&token=' + static_token
-			+'&allow_refresh=1',
+			+ '&token=' + static_token
+			+ '&allow_refresh=1',
 		success: function(jsonData)
 		{
 			if (jsonData.hasError)
@@ -333,7 +332,7 @@ function deleteProductFromSummary(id)
 				}
 				else
 				{
-					$('#product_'+ id).fadeOut('slow', function() {
+					$('#product_' + id).fadeOut('slow', function() {
 						$(this).remove();
 						cleanSelectAddressDelivery();
 						if (!customizationId)
@@ -370,11 +369,15 @@ function deleteProductFromSummary(id)
 						});
 				}
 				updateCartSummary(jsonData.summary);
+				if (window.ajaxCart != undefined)
+					ajaxCart.updateCart(jsonData);
 				updateCustomizedDatas(jsonData.customizedDatas);
 				updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
 				updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
 				if (typeof(getCarrierListAndUpdate) !== 'undefined' && jsonData.summary.products.length > 0)
 					getCarrierListAndUpdate();
+				if (typeof(updatePaymentMethodsDisplay) !== 'undefined')
+					updatePaymentMethodsDisplay();
 			}
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -433,17 +436,17 @@ function upQuantity(id, qty)
 		cache: false,
 		dataType: 'json',
 		data: 'controller=cart'
-			+'&ajax=true'
-			+'&add=true'
-			+'&getproductprice=true'
-			+'&summary=true'
-			+'&id_product=' + productId
-			+'&ipa=' + productAttributeId
-			+'&id_address_delivery=' + id_address_delivery
+			+ '&ajax=true'
+			+ '&add=true'
+			+ '&getproductprice=true'
+			+ '&summary=true'
+			+ '&id_product=' + productId
+			+ '&ipa=' + productAttributeId
+			+ '&id_address_delivery=' + id_address_delivery
 			+ ((customizationId !== 0) ? '&id_customization=' + customizationId : '')
-			+'&qty=' + qty
-			+'&token=' + static_token
-			+'&allow_refresh=1',
+			+ '&qty=' + qty
+			+ '&token=' + static_token
+			+ '&allow_refresh=1',
 		success: function(jsonData)
 		{
 			if (jsonData.hasError)
@@ -452,7 +455,7 @@ function upQuantity(id, qty)
 				for(var error in jsonData.errors)
 					//IE6 bug fix
 					if(error !== 'indexOf')
-						errors += jsonData.errors[error] + "\n";
+						errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
 				alert(errors);
 				$('input[name=quantity_'+ id +']').val($('input[name=quantity_'+ id +'_hidden]').val());
 			}
@@ -461,6 +464,8 @@ function upQuantity(id, qty)
 				if (jsonData.refresh)
 					location.reload();
 				updateCartSummary(jsonData.summary);
+				if (window.ajaxCart != undefined)
+					ajaxCart.updateCart(jsonData);
 				if (customizationId !== 0)
 					updateCustomizedDatas(jsonData.customizedDatas);
 				updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
@@ -480,7 +485,7 @@ function upQuantity(id, qty)
 
 function downQuantity(id, qty)
 {
-	var val = $('input[name=quantity_'+id+']').val();
+	var val = $('input[name=quantity_' + id + ']').val();
 	var newVal = val;
 	if(typeof(qty) == 'undefined' || !qty)
 	{
@@ -505,7 +510,7 @@ function downQuantity(id, qty)
 	if (typeof(ids[3]) !== 'undefined')
 		id_address_delivery = parseInt(ids[3]);
 
-	if (newVal > 0 || $('#product_'+id+'_gift').length)
+	if (newVal > 0 || $('#product_' + id + '_gift').length)
 	{
 		$.ajax({
 			type: 'POST',
@@ -515,18 +520,18 @@ function downQuantity(id, qty)
 			cache: false,
 			dataType: 'json',
 			data: 'controller=cart'
-				+'&ajax=true'
-				+'&add=true'
-				+'&getproductprice=true'
-				+'&summary=true'
-				+'&id_product='+productId
-				+'&ipa='+productAttributeId
-				+'&id_address_delivery='+id_address_delivery
-				+'&op=down'
+				+ '&ajax=true'
+				+ '&add=true'
+				+ '&getproductprice=true'
+				+ '&summary=true'
+				+ '&id_product='+productId
+				+ '&ipa='+productAttributeId
+				+ '&id_address_delivery='+id_address_delivery
+				+ '&op=down'
 				+ ((customizationId !== 0) ? '&id_customization='+customizationId : '')
-				+'&qty='+qty
-				+'&token='+static_token
-				+'&allow_refresh=1',
+				+ '&qty='+qty
+				+ '&token='+static_token
+				+ '&allow_refresh=1',
 			success: function(jsonData)
 			{
 				if (jsonData.hasError)
@@ -535,22 +540,24 @@ function downQuantity(id, qty)
 					for(var error in jsonData.errors)
 						//IE6 bug fix
 						if(error !== 'indexOf')
-							errors += jsonData.errors[error] + "\n";
+							errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
 					alert(errors);
-					$('input[name=quantity_'+ id +']').val($('input[name=quantity_'+ id +'_hidden]').val());
+					$('input[name=quantity_' + id + ']').val($('input[name=quantity_' + id + '_hidden]').val());
 				}
 				else
 				{
 					if (jsonData.refresh)
 						location.reload();
 					updateCartSummary(jsonData.summary);
+					if (window.ajaxCart !== undefined)
+						ajaxCart.updateCart(jsonData);
 					if (customizationId !== 0)					
 						updateCustomizedDatas(jsonData.customizedDatas);
 					updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
 					updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
 					
 					if (newVal == 0)
-						$('#product_'+id).hide();
+						$('#product_' + id).hide();
 					
 					if (typeof(getCarrierListAndUpdate) !== 'undefined')
 						getCarrierListAndUpdate();
@@ -583,18 +590,18 @@ function updateCartSummary(json)
 	$('div.error').fadeOut();		
 
 	for (i=0;i<json.products.length;i++)
-		product_list[json.products[i].id_product+'_'+json.products[i].id_product_attribute+'_'+json.products[i].id_address_delivery] = json.products[i];
+		product_list[json.products[i].id_product + '_' + json.products[i].id_product_attribute + '_' + json.products[i].id_address_delivery] = json.products[i];
 
 	if (!$('.multishipping-cart:visible').length)
 	{
 		for (i=0;i<json.gift_products.length;i++)
-			if (typeof(product_list[json.gift_products[i].id_product+'_'+json.gift_products[i].id_product_attribute+'_'+json.gift_products[i].id_address_delivery]) !== 'undefined')
-				product_list[json.gift_products[i].id_product+'_'+json.gift_products[i].id_product_attribute+'_'+json.gift_products[i].id_address_delivery].quantity -= json.gift_products[i].cart_quantity;
+			if (typeof(product_list[json.gift_products[i].id_product + '_' + json.gift_products[i].id_product_attribute + '_' + json.gift_products[i].id_address_delivery]) !== 'undefined')
+				product_list[json.gift_products[i].id_product + '_' + json.gift_products[i].id_product_attribute + '_' + json.gift_products[i].id_address_delivery].quantity -= json.gift_products[i].cart_quantity;
 	}
 	else
 		for (i=0;i<json.gift_products.length;i++)
-			if (typeof(product_list[json.gift_products[i].id_product+'_'+json.gift_products[i].id_product_attribute+'_'+json.gift_products[i].id_address_delivery]) == 'undefined')
-				product_list[json.gift_products[i].id_product+'_'+json.gift_products[i].id_product_attribute+'_'+json.gift_products[i].id_address_delivery] = json.gift_products[i];
+			if (typeof(product_list[json.gift_products[i].id_product + '_' + json.gift_products[i].id_product_attribute + '_' + json.gift_products[i].id_address_delivery]) == 'undefined')
+				product_list[json.gift_products[i].id_product + '_' + json.gift_products[i].id_product_attribute + '_' + json.gift_products[i].id_address_delivery] = json.gift_products[i];
 
 	for (i in product_list)
 	{
@@ -711,7 +718,7 @@ function updateCartSummary(json)
 	$('.ajax_cart_quantity').html(nbrProducts);
 
 	// Cart summary
-	$('#summary_products_quantity').html(nbrProducts+' '+(nbrProducts > 1 ? txtProducts : txtProduct));
+	$('#summary_products_quantity').html(nbrProducts + ' ' + (nbrProducts > 1 ? txtProducts : txtProduct));
 	if (priceDisplayMethod !== 0)
 		$('#total_product').html(formatCurrency(json.total_products, currencyFormat, currencySign, currencyBlank));
 	else
@@ -754,8 +761,6 @@ function updateCartSummary(json)
 		$('#total_wrapping').html(formatCurrency(json.total_wrapping, currencyFormat, currencySign, currencyBlank));
 		$('#total_wrapping').parent().hide();
 	}
-	if (window.ajaxCart !== undefined)
-		ajaxCart.refresh();
 }
 
 function updateCustomizedDatas(json)
@@ -766,8 +771,8 @@ function updateCustomizedDatas(json)
 				for(var l in json[i][j][k])
 				{
 					var quantity = json[i][j][k][l]['quantity'];
-					$('input[name=quantity_'+i+'_'+j+'_'+l+'_'+k+'_hidden]').val(quantity);
-					$('input[name=quantity_'+i+'_'+j+'_'+l+'_'+k+']').val(quantity);
+					$('input[name=quantity_' + i + '_' + j + '_' + l + '_' + k + '_hidden]').val(quantity);
+					$('input[name=quantity_' + i + '_' + j + '_' + l + '_' + k + ']').val(quantity);
 				}
 }
 
@@ -791,7 +796,7 @@ function refreshDeliveryOptions()
 			carrier_id_list.pop();
 			var it = this;
 			$(carrier_id_list).each(function() {
-				$(it).parent().find('input[value="'+this.toString()+'"]').change();
+				$(it).parent().find('input[value="' + this.toString() + '"]').change();
 			});
 		}
 		else
@@ -814,9 +819,9 @@ $(document).ready(function() {
 			async: true,
 			cache: false,
 			data: 'controller=cart&ajax=true&allowSeperatedPackage=true&value='
-				+($(this).prop('checked') ? '1' : '0')
-				+'&token='+static_token
-				+'&allow_refresh=1',
+				+ ($(this).prop('checked') ? '1' : '0')
+				+ '&token='+static_token
+				+ '&allow_refresh=1',
 			success: function(jsonData)
 			{
 				if (typeof(getCarrierListAndUpdate) !== 'undefined')
@@ -856,14 +861,14 @@ function updateExtraCarrier(id_delivery_option, id_address)
 		cache: false,
 		dataType : "json",
 		data: 'ajax=true'
-			+'&method=updateExtraCarrier'
-			+'&id_address='+id_address
-			+'&id_delivery_option='+id_delivery_option
-			+'&token='+static_token
-			+'&allow_refresh=1',
+			+ '&method=updateExtraCarrier'
+			+ '&id_address='+id_address
+			+ '&id_delivery_option='+id_delivery_option
+			+ '&token='+static_token
+			+ '&allow_refresh=1',
 		success: function(jsonData)
 		{
-			$('#HOOK_EXTRACARRIER_'+id_address).html(jsonData['content']);
+			$('#HOOK_EXTRACARRIER_' + id_address).html(jsonData['content']);
 		}
 	});
 }

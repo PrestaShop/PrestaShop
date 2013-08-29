@@ -152,18 +152,7 @@ class AdminAddressesControllerCore extends AdminController
 			$token_customer = Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$this->context->employee->id);
 		}
 
-		// @todo in 1.4, this include was done before the class declaration
-		// We should use a hook now
-		if (Configuration::get('VATNUMBER_MANAGEMENT') && file_exists(_PS_MODULE_DIR_.'vatnumber/vatnumber.php'))
-			include_once(_PS_MODULE_DIR_.'vatnumber/vatnumber.php');
-		if (Configuration::get('VATNUMBER_MANAGEMENT'))
-			if (file_exists(_PS_MODULE_DIR_.'vatnumber/vatnumber.php') && VatNumber::isApplicable(Configuration::get('PS_COUNTRY_DEFAULT')))
-				$vat = 'is_applicable';
-			else
-				$vat = 'management';
-
 		$this->tpl_form_vars = array(
-			'vat' => isset($vat) ? $vat : null,
 			'customer' => isset($customer) ? $customer : null,
 			'tokenCustomer' => isset ($token_customer) ? $token_customer : null
 		);
@@ -443,5 +432,42 @@ class AdminAddressesControllerCore extends AdminController
 			}
 		}
 		die;
+	}
+
+	/**
+	 * Object Delete
+	 */
+	public function processDelete()
+	{
+		if (Validate::isLoadedObject($object = $this->loadObject()))
+			if (!$object->isUsed())
+				$this->deleted = false;
+
+		return parent::processDelete();
+	}
+
+	/**
+	 * Delete multiple items
+	 *
+	 * @return boolean true if succcess
+	 */
+	protected function processBulkDelete()
+	{
+		if (is_array($this->boxes) && !empty($this->boxes))
+		{
+			$deleted = false;
+			foreach ($this->boxes as $id)
+			{
+				$to_delete = new Address((int)$id);
+				if ($to_delete->isUsed())
+				{
+					$deleted = true;
+					break;
+				}
+			}
+			$this->deleted = $deleted;
+		}
+
+		return parent::processBulkDelete();
 	}
 }

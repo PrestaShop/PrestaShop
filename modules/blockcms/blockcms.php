@@ -39,7 +39,7 @@ class BlockCms extends Module
 	{
 		$this->name = 'blockcms';
 		$this->tab = 'front_office_features';
-		$this->version = '1.1.1';
+		$this->version = '1.3';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -52,14 +52,23 @@ class BlockCms extends Module
 
 	public function install()
 	{
-		if (!parent::install() ||
-			!$this->registerHooks() ||
-			!BlockCMSModel::createTables() ||
-			!Configuration::updateValue('FOOTER_CMS', '') ||
-			!Configuration::updateValue('FOOTER_BLOCK_ACTIVATION', 1) ||
-			!Configuration::updateValue('FOOTER_POWEREDBY', 1))
+		if (!parent::install()
+			|| !$this->registerHook('leftColumn')
+			|| !$this->registerHook('rightColumn')
+			|| !$this->registerHook('header')
+			|| !$this->registerHook('footer')
+			|| !$this->registerHook('actionObjectCmsUpdateAfter')
+			|| !$this->registerHook('actionObjectCmsDeleteAfter')
+			|| !$this->registerHook('actionShopDataDuplication')
+			|| !BlockCMSModel::createTables()
+			|| !Configuration::updateValue('FOOTER_CMS', '')
+			|| !Configuration::updateValue('FOOTER_BLOCK_ACTIVATION', 1)
+			|| !Configuration::updateValue('FOOTER_POWEREDBY', 1)
+		)
 		return false;
 
+		$this->_clearCache('blockcms.tpl');
+		
 		// Install fixtures for blockcms
 		$default = Db::getInstance()->insert('cms_block', array(
 			'id_cms_category' =>	1,
@@ -101,21 +110,14 @@ class BlockCms extends Module
 
 	public function uninstall()
 	{
+		$this->_clearCache('blockcms.tpl');
 		if (!parent::uninstall() ||
 			!BlockCMSModel::DropTables() ||
 			!Configuration::deleteByName('FOOTER_CMS') ||
 			!Configuration::deleteByName('FOOTER_BLOCK_ACTIVATION') ||
 			!Configuration::deleteByName('FOOTER_POWEREDBY'))
 			return false;
-
 		return true;
-	}
-
-	private function registerHooks()
-	{
-		return (
-			$this->registerHook('leftColumn') && $this->registerHook('rightColumn') &&
-			$this->registerHook('header') && $this->registerHook('footer') && $this->registerHook('actionShopDataDuplication'));
 	}
 
 	public function initToolbar()
@@ -541,6 +543,8 @@ class BlockCms extends Module
 		if ($this->_postValidation() == false)
 			return false;
 
+		$this->_clearCache('blockcms.tpl');
+		
 		$this->_errors = array();
 		if (Tools::isSubmit('submitBlockCMS'))
 		{
@@ -661,42 +665,33 @@ class BlockCms extends Module
 
 	public function displayBlockCMS($column)
 	{
-		$cms_titles = BlockCMSModel::getCMSTitles($column);
+		if (!$this->isCached('blockcms.tpl', $this->getCacheId($column)))
+		{
+			$cms_titles = BlockCMSModel::getCMSTitles($column);
 
-		$this->smarty->assign(array(
-			'block' => 1,
-			'cms_titles' => $cms_titles,
-			'contact_url' => (_PS_VERSION_ >= 1.5) ? 'contact' : 'contact-form'
-		));
-
-		return $this->display(__FILE__, 'blockcms.tpl');
+			$this->smarty->assign(array(
+				'block' => 1,
+				'cms_titles' => $cms_titles,
+				'contact_url' => (_PS_VERSION_ >= 1.5) ? 'contact' : 'contact-form'
+			));
+		}
+		return $this->display(__FILE__, 'blockcms.tpl', $this->getCacheId($column));
 	}
-
-	private function _prepareHook()
+	
+	protected function getCacheId($name = null)
 	{
-		$block_activation = Configuration::get('FOOTER_BLOCK_ACTIVATION');
-
-		if (!$block_activation)
-			return false;
-
-		$cms_titles = BlockCMSModel::getCMSTitlesFooter();
-		$display_footer = Configuration::get('PS_STORES_DISPLAY_FOOTER');
-		$display_poweredby = Configuration::get('FOOTER_POWEREDBY');
-		$footer_text = Configuration::get('FOOTER_CMS_TEXT_'.(int)$this->context->language->id);
-
-		$this->smarty->assign(
-			array(
-				'block' => 0,
-				'contact_url' => 'contact',
-				'cmslinks' => $cms_titles,
-				'display_stores_footer' => $display_footer,
-				'display_poweredby' => ((int)$display_poweredby === 1 || $display_poweredby === false),
-				'footer_text' => $footer_text
-			)
-		);
-		return true;
+		return parent::getCacheId('blockcms|'.$name);
 	}
 
+	public function hookActionObjectCmsUpdateAfter()
+	{
+		$this->_clearCache('blockcms.tpl');
+	}
+
+	public function hookActionObjectCmsDeleteAfter()
+	{
+		$this->_clearCache('blockcms.tpl');
+	}
 
 	public function hookHeader($params)
 	{
@@ -715,9 +710,28 @@ class BlockCms extends Module
 
 	public function hookFooter()
 	{
-		if (!$this->_prepareHook())
-			return ;
-		return $this->display(__FILE__, 'blockcms.tpl');
+		if (!($block_activation = Configuration::get('FOOTER_BLOCK_ACTIVATION')))
+			return;
+
+		if (!$this->isCached('blockcms.tpl', $this->getCacheId(BlockCMSModel::FOOTER)))
+		{
+			$cms_titles = BlockCMSModel::getCMSTitlesFooter();
+			$display_footer = Configuration::get('PS_STORES_DISPLAY_FOOTER');
+			$display_poweredby = Configuration::get('FOOTER_POWEREDBY');
+			$footer_text = Configuration::get('FOOTER_CMS_TEXT_'.(int)$this->context->language->id);
+
+			$this->smarty->assign(
+				array(
+					'block' => 0,
+					'contact_url' => 'contact',
+					'cmslinks' => $cms_titles,
+					'display_stores_footer' => $display_footer,
+					'display_poweredby' => ((int)$display_poweredby === 1 || $display_poweredby === false),
+					'footer_text' => $footer_text
+				)
+			);
+		}
+		return $this->display(__FILE__, 'blockcms.tpl', $this->getCacheId(BlockCMSModel::FOOTER));
 	}
 
 	protected function updatePositionsDnd()
@@ -740,10 +754,38 @@ class BlockCms extends Module
 	
 	public function hookActionShopDataDuplication($params)
 	{
-		Db::getInstance()->execute('
-		INSERT IGNORE INTO '._DB_PREFIX_.'cms_block_shop (id_cms_block, id_shop)
-		SELECT id_cms_block, '.(int)$params['new_id_shop'].'
-		FROM '._DB_PREFIX_.'cms_block_shop
-		WHERE id_shop = '.(int)$params['old_id_shop']);
+		//get all cmd block to duplicate in new shop
+		$cms_blocks = Db::getInstance()->executeS('
+			SELECT * FROM `'._DB_PREFIX_.'cms_block` cb 
+			JOIN `'._DB_PREFIX_.'cms_block_shop` cbf 
+				ON (cb.`id_cms_block` = cbf.`id_cms_block` AND cbf.`id_shop` = '.(int)$params['old_id_shop'].') ');
+
+		if (count($cms_blocks))
+		{
+			foreach ($cms_blocks as $cms_block)
+			{
+				Db::getInstance()->execute('
+					INSERT IGNORE INTO '._DB_PREFIX_.'cms_block (`id_cms_block`, `id_cms_category`, `location`, `position`, `display_store`) 
+					VALUES (NULL, '.(int)$cms_block['id_cms_category'].', '.(int)$cms_block['location'].', '.(int)$cms_block['position'].', '.(int)$cms_block['display_store'].');');
+
+				$id_block_cms =  Db::getInstance()->Insert_ID();
+				
+				Db::getInstance()->execute('INSERT IGNORE INTO '._DB_PREFIX_.'cms_block_shop (`id_cms_block`, `id_shop`) VALUES ('.(int)$id_block_cms.', '.(int)$params['new_id_shop'].');');
+				
+				$langs = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'cms_block_lang` WHERE `id_cms_block` = '.(int)$cms_block['id_cms_block']);
+				
+				foreach($langs as $lang)
+					Db::getInstance()->execute('
+						INSERT IGNORE INTO `'._DB_PREFIX_.'cms_block_lang` (`id_cms_block`, `id_lang`, `name`) 
+						VALUES ('.(int)$id_block_cms.', '.(int)$lang['id_lang'].', \''.pSQL($lang['name']).'\');');
+				
+				$pages =  Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'cms_block_page` WHERE `id_cms_block` = '.(int)$cms_block['id_cms_block']);
+				
+				foreach($pages as $page)
+					Db::getInstance()->execute('
+						INSERT IGNORE INTO `'._DB_PREFIX_.'cms_block_page` (`id_cms_block_page`, `id_cms_block`, `id_cms`, `is_category`) 
+						VALUES (NULL, '.(int)$id_block_cms.', '.(int)$page['id_cms'].', '.(int)$page['is_category'].');');
+			}
+		}
 	}
 }

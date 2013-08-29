@@ -45,6 +45,7 @@
 			{/if}
 		</td>
 		<td align="center" class="productQuantity">{$product['customizationQuantityTotal']}</td>
+		{if $display_warehouse}<td style="" align="center">&nbsp;</td>{/if}
 		{if ($order->hasBeenPaid())}<td align="center" class="productQuantity">{$product['customizationQuantityRefunded']}</td>{/if}
 		{if ($order->hasBeenDelivered() || $order->hasProductReturned())}<td align="center" class="productQuantity">{$product['customizationQuantityReturned']}</td>{/if}
 		{if $stock_management}<td align="center" class=""> - </td>{/if}
@@ -103,6 +104,7 @@
 					</span>
 					{/if}
 				</td>
+				{if $display_warehouse}<td style="" align="center">&nbsp;</td>{/if}
 				{if ($order->hasBeenPaid())}<td align="center">{$customization['quantity_refunded']}</td>{/if}
 				{if ($order->hasBeenDelivered())}<td align="center">{$customization['quantity_returned']}</td>{/if}
 				<td align="center">

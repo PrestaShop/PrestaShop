@@ -70,7 +70,7 @@ class LanguageCore extends ObjectModel
 	/** @var array Languages cache */
 	protected static $_checkedLangs;
 	protected static $_LANGUAGES;
-	protected static $countActiveLanguages;
+	protected static $countActiveLanguages = array();
 
 	protected	$webserviceParameters = array(
 		'objectNodeName' => 'language',
@@ -262,7 +262,7 @@ class LanguageCore extends ObjectModel
 			$mPath_to = _PS_MAIL_DIR_.(string)$iso_to.'/';
 		}
 
-		$lFiles = array('admin.php', 'errors.php', 'fields.php', 'pdf.php', 'tabs.php', 'index.php');
+		$lFiles = array('admin.php', 'errors.php', 'fields.php', 'pdf.php', 'tabs.php');
 
 		// Added natives mails files
 		$mFiles = array(
@@ -273,7 +273,7 @@ class LanguageCore extends ObjectModel
 			'contact.html', 'contact.txt',
 			'contact_form.html', 'contact_form.txt',
 			'credit_slip.html', 'credit_slip.txt',
-			'download_product.html', 'download_product.txt', 'download-product.tpl',
+			'download_product.html', 'download_product.txt',
 			'employee_password.html', 'employee_password.txt',
 			'forward_msg.html', 'forward_msg.txt',
 			'guest_to_customer.html', 'guest_to_customer.txt',
@@ -297,7 +297,7 @@ class LanguageCore extends ObjectModel
 			'test.html', 'test.txt',
 			'voucher.html', 'voucher.txt',
 			'voucher_new.html', 'voucher_new.txt',
-			'order_changed.html', 'order_changed.txt', 'index.php'
+			'order_changed.html', 'order_changed.txt'
 		);
 
 		$number = -1;
@@ -466,7 +466,7 @@ class LanguageCore extends ObjectModel
 
 	public function delete()
 	{
-		if (!$this->hasMultishopEntries())
+		if (!$this->hasMultishopEntries() || Shop::getContext() == Shop::CONTEXT_ALL)
 		{
 			if (empty($this->iso_code))
 				$this->iso_code = Language::getIsoById($this->id);
@@ -514,7 +514,7 @@ class LanguageCore extends ObjectModel
 		
 		if (!parent::delete())
 			return false;
-		if (!$this->hasMultishopEntries())
+		if (!$this->hasMultishopEntries() || Shop::getContext() == Shop::CONTEXT_ALL)
 		{
 			// delete images
 			$files_copy = array(
@@ -580,7 +580,7 @@ class LanguageCore extends ObjectModel
 
 	public static function getLanguage($id_lang)
 	{
-		if (!array_key_exists((int)($id_lang), self::$_LANGUAGES))
+		if (!array_key_exists((int)$id_lang, self::$_LANGUAGES))
 			return false;
 		return self::$_LANGUAGES[(int)($id_lang)];
 	}
@@ -704,10 +704,8 @@ class LanguageCore extends ObjectModel
 					$lang->name = $lang_pack->name;
 		}
 		elseif ($params_lang !== null && is_array($params_lang))
-		{
 			foreach ($params_lang as $key => $value)
 				$lang->$key = $value;
-		}
 		else
 			return false;
 		
@@ -764,15 +762,18 @@ class LanguageCore extends ObjectModel
 		return (isset(self::$_cache_language_installation[$iso_code]) ? self::$_cache_language_installation[$iso_code] : false);
 	}
 
-	public static function countActiveLanguages()
+	public static function countActiveLanguages($id_shop = null)
 	{
-		if (!self::$countActiveLanguages)
-			self::$countActiveLanguages = Db::getInstance()->getValue('
+		if ($id_shop === null)
+			$id_shop = (int)Context::getContext()->shop->id;
+
+		if (!isset(self::$countActiveLanguages[$id_shop]))
+			self::$countActiveLanguages[$id_shop] = Db::getInstance()->getValue('
 				SELECT COUNT(DISTINCT l.id_lang) FROM `'._DB_PREFIX_.'lang` l
-				'.Shop::addSqlAssociation('lang', 'l').'
+				JOIN '._DB_PREFIX_.'lang_shop lang_shop ON (lang_shop.id_lang = l.id_lang AND lang_shop.id_shop = '.(int)$id_shop.')
 				WHERE l.`active` = 1
 			');
-		return self::$countActiveLanguages;
+		return self::$countActiveLanguages[$id_shop];
 	}
 
 	public static function downloadAndInstallLanguagePack($iso, $version = null, $params = null)
@@ -788,11 +789,11 @@ class LanguageCore extends ObjectModel
 		$lang_pack_ok = false;
 		$errors = array();
 		$file = _PS_TRANSLATIONS_DIR_.$iso.'.gzip';
-		if (!$lang_pack_link = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.$version.'&iso_lang='.$iso))
+		if (!$lang_pack_link = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.$version.'&iso_lang='.Tools::strtolower($iso)))
 			$errors[] = Tools::displayError('Archive cannot be downloaded from prestashop.com.');
 		elseif (!$lang_pack = Tools::jsonDecode($lang_pack_link))
 			$errors[] = Tools::displayError('Error occurred when language was checked according to your Prestashop version.');
-		elseif ($content = Tools::file_get_contents('http://translations.prestashop.com/download/lang_packs/gzip/'.$lang_pack->version.'/'.$lang_pack->iso_code.'.gzip'))
+		elseif ($content = Tools::file_get_contents('http://translations.prestashop.com/download/lang_packs/gzip/'.$lang_pack->version.'/'.Tools::strtolower($lang_pack->iso_code.'.gzip')))
 			if (!@file_put_contents($file, $content))
 				$errors[] = Tools::displayError('Server does not have permissions for writing.');
 		if (file_exists($file))
@@ -827,8 +828,8 @@ class LanguageCore extends ObjectModel
 	 * @since 1.5.0
 	 * @return bool
 	 */
-	public static function isMultiLanguageActivated()
+	public static function isMultiLanguageActivated($id_shop = null)
 	{
-		return (Language::countActiveLanguages() > 1);
+		return (Language::countActiveLanguages($id_shop) > 1);
 	}
 }

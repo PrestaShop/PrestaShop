@@ -37,15 +37,8 @@ class ContactControllerCore extends FrontController
 	{
 		if (Tools::isSubmit('submitMessage'))
 		{
-			$fileAttachment = null;
-			if (isset($_FILES['fileUpload']['name']) && !empty($_FILES['fileUpload']['name']) && !empty($_FILES['fileUpload']['tmp_name']))
-			{
-				$extension = array('.txt', '.rtf', '.doc', '.docx', '.pdf', '.zip', '.png', '.jpeg', '.gif', '.jpg');
-				$filename = uniqid().substr($_FILES['fileUpload']['name'], -5);
-				$fileAttachment['content'] = file_get_contents($_FILES['fileUpload']['tmp_name']);
-				$fileAttachment['name'] = $_FILES['fileUpload']['name'];
-				$fileAttachment['mime'] = $_FILES['fileUpload']['type'];
-			}
+			$extension = array('.txt', '.rtf', '.doc', '.docx', '.pdf', '.zip', '.png', '.jpeg', '.gif', '.jpg');
+			$fileAttachment = Tools::fileAttachment('fileUpload');
 			$message = Tools::getValue('message'); // Html entities is not usefull, iscleanHtml check there is no bad html tags.
 			if (!($from = trim(Tools::getValue('from'))) || !Validate::isEmail($from))
 				$this->errors[] = Tools::displayError('Invalid email address.');
@@ -55,9 +48,9 @@ class ContactControllerCore extends FrontController
 				$this->errors[] = Tools::displayError('Invalid message');
 			else if (!($id_contact = (int)(Tools::getValue('id_contact'))) || !(Validate::isLoadedObject($contact = new Contact($id_contact, $this->context->language->id))))
 				$this->errors[] = Tools::displayError('Please select a subject from the list provided. ');
-			else if (!empty($_FILES['fileUpload']['name']) && $_FILES['fileUpload']['error'] != 0)
+			else if (!empty($fileAttachment['name']) && $fileAttachment['error'] != 0)
 				$this->errors[] = Tools::displayError('An error occurred during the file-upload process.');
-			else if (!empty($_FILES['fileUpload']['name']) && !in_array(substr(Tools::strtolower($_FILES['fileUpload']['name']), -4), $extension) && !in_array(substr(Tools::strtolower($_FILES['fileUpload']['name']), -5), $extension))
+			else if (!empty($fileAttachment['name']) && !in_array( Tools::strtolower(substr($fileAttachment['name'], -4)), $extension) && !in_array( Tools::strtolower(substr($fileAttachment['name'], -5)), $extension))
 				$this->errors[] = Tools::displayError('Bad file extension');
 			else
 			{
@@ -152,8 +145,8 @@ class ContactControllerCore extends FrontController
 						$cm = new CustomerMessage();
 						$cm->id_customer_thread = $ct->id;
 						$cm->message = Tools::htmlentitiesUTF8($message);
-						if (isset($filename) && rename($_FILES['fileUpload']['tmp_name'], _PS_MODULE_DIR_.'../upload/'.$filename))
-							$cm->file_name = $filename;
+						if (isset($fileAttachment['rename']) && !empty($fileAttachment['rename']) && rename($fileAttachment['tmp_name'], _PS_MODULE_DIR_.'../upload/'.basename($fileAttachment['rename'])))
+							$cm->file_name = $fileAttachment['rename'];
 						$cm->ip_address = ip2long($_SERVER['REMOTE_ADDR']);
 						$cm->user_agent = $_SERVER['HTTP_USER_AGENT'];
 						if (!$cm->add())
@@ -170,21 +163,18 @@ class ContactControllerCore extends FrontController
 									'{attached_file}' => '-',
 									'{message}' => Tools::nl2br(stripslashes($message)),
 									'{email}' =>  $from,
+									'{product_name}' => '',
 								);
 
-					if (isset($filename))
-						$var_list['{attached_file}'] = $_FILES['fileUpload']['name'];
+					if (isset($fileAttachment['name']))
+						$var_list['{attached_file}'] = $fileAttachment['name'];
 
 					$id_order = (int)Tools::getValue('id_order');
 					
-					if (isset($ct) && Validate::isLoadedObject($ct))
-					{
-						if ($ct->id_order)
-							$id_order = $ct->id_order;
-						$subject = sprintf(Mail::l('Your message has been correctly sent #ct%1$s #tc%2$s'), $ct->id, $ct->token);
-					}
-					else
-						$subject = Mail::l('Your message has been correctly sent');
+					$id_product = (int)Tools::getValue('id_product');
+					
+					if (isset($ct) && Validate::isLoadedObject($ct) && $ct->id_order)
+						$id_order = $ct->id_order;
 
 					if ($id_order)
 					{
@@ -193,14 +183,21 @@ class ContactControllerCore extends FrontController
 						$var_list['{id_order}'] = $id_order;
 					}
 					
+					if ($id_product)
+					{
+						$product = new Product((int)$id_product);
+						if (Validate::isLoadedObject($product) && isset($product->name[Context::getContext()->language->id]))
+							$var_list['{product_name}'] = $product->name[Context::getContext()->language->id];
+					}
+
 					if (empty($contact->email))
-						Mail::Send($this->context->language->id, 'contact_form', $subject, $var_list, $from, null, null, null, $fileAttachment);
+						Mail::Send($this->context->language->id, 'contact_form', ((isset($ct) && Validate::isLoadedObject($ct)) ? sprintf(Mail::l('Your message has been correctly sent #ct%1$s #tc%2$s'), $ct->id, $ct->token) : Mail::l('Your message has been correctly sent')), $var_list, $from, null, null, null, $fileAttachment);
 					else
 					{					
 						if (!Mail::Send($this->context->language->id, 'contact', Mail::l('Message from contact form').' [no_sync]',
 							$var_list, $contact->email, $contact->name, $from, ($customer->id ? $customer->firstname.' '.$customer->lastname : ''),
 									$fileAttachment) ||
-								!Mail::Send($this->context->language->id, 'contact_form', $subject, $var_list, $from, null, $contact->email, $contact->name, $fileAttachment))
+								!Mail::Send($this->context->language->id, 'contact_form', ((isset($ct) && Validate::isLoadedObject($ct)) ? sprintf(Mail::l('Your message has been correctly sent #ct%1$s #tc%2$s'), $ct->id, $ct->token) : Mail::l('Your message has been correctly sent')), $var_list, $from, null, $contact->email, $contact->name, $fileAttachment))
 									$this->errors[] = Tools::displayError('An error occurred while sending the message.');
 					}
 				}
@@ -281,7 +278,7 @@ class ContactControllerCore extends FrontController
 				$tmp = $order->getProducts();
 				foreach ($tmp as $key => $val)
 					$products[$row['id_order']][$val['product_id']] = array('value' => $val['product_id'], 'label' => $val['product_name']);
-				$orders[] = array('value' => $order->id, 'label' => $order->getUniqReference().' - '.Tools::displayDate($date[0], $this->context->language->id), 'selected' => (int)Tools::getValue('id_order') == $order->id);
+				$orders[] = array('value' => $order->id, 'label' => $order->getUniqReference().' - '.Tools::displayDate($date[0],null) , 'selected' => (int)Tools::getValue('id_order') == $order->id);
 			}
 
 			$this->context->smarty->assign('orderList', $orders);
@@ -289,4 +286,3 @@ class ContactControllerCore extends FrontController
 		}
 	}
 }
-

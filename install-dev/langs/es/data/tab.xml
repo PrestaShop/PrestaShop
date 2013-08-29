@@ -64,7 +64,6 @@
   <tab id="Positions" name="Posiciones"/>
   <tab id="Preferences_1" name="Preferencias"/>
   <tab id="Preferences" name="Preferencias"/>
-  <tab id="Price_Ranges" name="Rangos de precio"/>
   <tab id="Price_Rules" name="Precio de las normas"/>
   <tab id="Products_1" name="Productos"/>
   <tab id="Products" name="Productos"/>
@@ -75,8 +74,8 @@
   <tab id="Search" name="Buscar"/>
   <tab id="Search_Engines" name="Buscador"/>
   <tab id="SEO_URLs" name="SEO y URLs"/>
-  <tab id="Shipping" name="transporte"/>
-  <tab id="Shipping_1" name="transporte"/>
+  <tab id="Shipping" name="Transporte"/>
+  <tab id="Shipping_1" name="Preferencias"/>
   <tab id="Shop_URLs" name="URL cortos"/>
   <tab id="Shopping_Carts" name="Cestas"/>
   <tab id="Shops" name="Tiendas"/>
@@ -100,6 +99,5 @@
   <tab id="Translations" name="Traducciones"/>
   <tab id="Warehouses" name="Almacenes"/>
   <tab id="Webservice" name="Servicio Web"/>
-  <tab id="Weight_Ranges" name="Rangos de peso"/>
   <tab id="Zones" name="Zonas"/>
 </entity_tab>

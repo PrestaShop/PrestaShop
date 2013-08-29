@@ -35,7 +35,7 @@ $('document').ready(function()
 		var parent = $(this).parent().parent();
 
 		$.ajax({
-			url: "{$link->getModuleLink('mailalerts', 'actions', ['process' => 'remove'])}",
+			url: "{$link->getModuleLink('mailalerts', 'actions', ['process' => 'remove'])|addslashes}",
 			type: "POST",
 			data: {
 				'id_product': id_product_mail_alert,
@@ -56,7 +56,7 @@ $('document').ready(function()
 });
 </script>
 
-{capture name=path}<a href="{$link->getPageLink('my-account', true)}" title="{l s='Manage my account' mod='mailalerts'}" rel="nofollow">{l s='My account' mod='mailalerts'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='My alerts' mod='mailalerts'}{/capture}
+{capture name=path}<a href="{$link->getPageLink('my-account', true)|escape:'html'}" title="{l s='Manage my account' mod='mailalerts'}" rel="nofollow">{l s='My account' mod='mailalerts'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='My alerts' mod='mailalerts'}{/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
 <div id="mailalerts_block_account">
@@ -65,8 +65,8 @@ $('document').ready(function()
 		<div>
 			{foreach from=$mailAlerts item=mailAlert}
 			<div class="mailalert clearfix">
-				<a href="{$link->getProductLink($mailAlert.id_product, null, null, null, null, $mailAlert.id_shop)}" title="{$mailAlert.name|escape:'htmlall':'UTF-8'}" class="product_img_link"><img src="{$link->getImageLink($mailAlert.link_rewrite, $mailAlert.cover, 'small_default')}" alt=""/></a>
-				<h3><a href="{$link->getProductLink($mailAlert.id_product, null, null, null, null, $mailAlert.id_shop)}" title="{$mailAlert.name|escape:'htmlall':'UTF-8'}">{$mailAlert.name|escape:'htmlall':'UTF-8'}</a></h3>
+				<a href="{$link->getProductLink($mailAlert.id_product, null, null, null, null, $mailAlert.id_shop)}" title="{$mailAlert.name|escape:'htmlall':'UTF-8'}" class="product_img_link"><img src="{$link->getImageLink($mailAlert.link_rewrite, $mailAlert.cover, 'small_default')|escape:'html'}" alt=""/></a>
+				<h3><a href="{$link->getProductLink($mailAlert.id_product, null, null, null, null, $mailAlert.id_shop)|escape:'html'}" title="{$mailAlert.name|escape:'htmlall':'UTF-8'}">{$mailAlert.name|escape:'htmlall':'UTF-8'}</a></h3>
 				<div class="product_desc">{$mailAlert.attributes_small|escape:'htmlall':'UTF-8'}</div>
 
 				<div class="remove">
@@ -80,6 +80,6 @@ $('document').ready(function()
 	{/if}
 
 	<ul class="footer_links">
-		<li class="fleft"><a href="{$link->getPageLink('my-account', true)}" rel="nofollow"><img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /></a><a href="{$link->getPageLink('my-account', true)}" title="{l s='Back to Your Account' mod='mailalerts'}">{l s='Back to Your Account' mod='mailalerts'}</a></li>
+		<li class="fleft"><a href="{$link->getPageLink('my-account', true)}" rel="nofollow"><img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /></a><a href="{$link->getPageLink('my-account', true)|escape:'html'}" title="{l s='Back to Your Account' mod='mailalerts'}">{l s='Back to Your Account' mod='mailalerts'}</a></li>
 	</ul>
 </div>

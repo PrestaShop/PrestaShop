@@ -270,12 +270,14 @@ class GetFileControllerCore extends FrontController
 				$mimeType = 'application/octet-stream';
 		}
 
+		if (ob_get_level()) 
+			ob_end_clean();
+
 		/* Set headers for download */
 		header('Content-Transfer-Encoding: binary');
 		header('Content-Type: '.$mimeType);
 		header('Content-Length: '.filesize($file));
 		header('Content-Disposition: attachment; filename="'.$filename.'"');
-		ob_end_flush();
 		$fp = fopen($file, 'rb');
 		while (!feof($fp))
 			echo fgets($fp, 16384);

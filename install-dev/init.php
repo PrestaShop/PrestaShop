@@ -24,6 +24,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+ob_start();
+
 // Check PHP version
 if (version_compare(PHP_VERSION, '5.1.3', '<'))
 	die('You need at least PHP 5.1.3 to run PrestaShop. Your current PHP version is '.PHP_VERSION);
@@ -37,7 +39,7 @@ define('_PS_INSTALL_MODELS_PATH_', _PS_INSTALL_PATH_.'models/');
 define('_PS_INSTALL_LANGS_PATH_', _PS_INSTALL_PATH_.'langs/');
 define('_PS_INSTALL_FIXTURES_PATH_', _PS_INSTALL_PATH_.'fixtures/');
 
-require_once(_PS_INSTALL_PATH_ . 'install_version.php');
+require_once(_PS_INSTALL_PATH_.'install_version.php');
 
 // we check if theses constants are defined
 // in order to use init.php in upgrade.php script
@@ -71,8 +73,8 @@ if (!@ini_get('date.timezone'))
 ini_set('magic_quotes_runtime', 0);
 
 // Try to improve memory limit if it's under 32M
-if (psinstall_get_memory_limit() < psinstall_get_octets('32M'))
-	ini_set('memory_limit', '32M');
+if (psinstall_get_memory_limit() < psinstall_get_octets('64M'))
+	ini_set('memory_limit', '64M');
 
 function psinstall_get_octets($option)
 {

@@ -2,7 +2,8 @@
 return array(
 	'informations' => array(
 		'phone' => '+1 888.947.6543',
-		'support' => 'http://support.prestashop.com/en/',
+        'support' => 'https://www.prestashop.com/pt/support',
+        'blog' => 'http://www.prestashop.com/blog/pt/'
 	),
 	'translations' => array(
 		'menu_welcome' => 'Escolha seu idioma',
@@ -162,7 +163,7 @@ return array(
 		'Test message from PrestaShop' => 'Mensagem de teste do PrestaShop',
 		'This is a test message, your server is now available to send email' => 'Esta é uma mensagem de teste, seu servidor está disponível agora para enviar emails.',
 		'%s - Login information' => '%s - Informação de identificação',
-		'An SQL error occured for entity <i>%1$s</i>: <i>%2$s</i>' => 'Um erro SQL ocorrey para a entidade <i>%1$s</i> : <i>%2$s</i>',
+		'An SQL error occured for entity <i>%1$s</i>: <i>%2$s</i>' => 'Um erro SQL ocorreu para a entidade <i>%1$s</i> : <i>%2$s</i>',
 		'Cannot create image "%1$s" for entity "%2$s"' => 'Não é possível criar imagem "%1$s" para a entidade "%2$s"',
 		'Cannot create image "%1$s" (bad permissions on folder "%2$s")' => 'Não é possível criar imagem "%1$s" (permissão inválida na pasta "%2$s")',
 		'Cannot create image "%s"' => 'Não é possível criar imagem "%s"',
@@ -211,7 +212,7 @@ return array(
 		'We are currently checking PrestaShop compatibility with your system environment' => 'Neste momento, nós estamos verificando a compatibilidade do  PrestaShop com seu ambiente de sistema.',
 		'PrestaShop compatibility with your system environment has been verified!' => 'A compatibilidade do PrestaShop com seu ambiente de sistema foi verificada!',
 		'Oops! Please correct the item(s) below, and then click "Refresh information" to test the compatibility of your new system.' => 'Ups! Por favor corrija o(s)  item(s) abaixo, e depois clique “Atualizar Informação” para testar a compatibilidade do seu novo sistema.',
-		'The installation of PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 130,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'A instalação do PrestaShop é rápida e fácil. Em alguns minutos, você vai se tornar parte de uma comunidade composta por mais de 130 mil comerciantes. Você está no caminho certo para criar sua própria loja virtual original que você pode gerenciar facilmente todos os dias.',
+		'The installation of PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 150,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'A instalação do PrestaShop é rápida e fácil. Em alguns minutos, você vai se tornar parte de uma comunidade composta por mais de 150 mil comerciantes. Você está no caminho certo para criar sua própria loja virtual original que você pode gerenciar facilmente todos os dias.',
 		'Continue the installation in:' => 'Continue a instalação em:',
 		'The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d translations, all for free!' => 'A seleção de idioma acima é válida somente para o Assistente de  Instalação. Uma vez que a loja for instalada, você pode escolher o idioma da sua loja entre mais de %d traduções disponíveis, totalmente grátis!',
 		'The field %s is limited to %d characters' => 'O campo %s está limitado a %d caractéres',
@@ -237,5 +238,14 @@ return array(
 		'E-mail:' => 'E-mail:',
 		'PrestaShop requires at least 32M of memory to run, please check the memory_limit directive in php.ini or contact your host provider' => 'PrestaShop requer pelo menos 32M de memória para funcionar, por favor verifique memory_limit no php.ini ou contate seu provedor de hospedagem.',
 		'Your PHP sessions path is not writable - check with your hosting provider:' => 'O caminho para sessão PHP não pode  ser escrito - verifique com o seu provedor de hospedagem',
+		'Database is created' => 'Banco de dados está criado',
+		'Cannot create the database automatically' => 'Não é possível criar o banco de dados automaticamente',
+		'Install modules Addons' => 'Instalar módulos Addons',
+		'Attempt to create the database automatically' => 'Tentativa de criar o banco de dados automaticamente',
+		'Country:' => 'País:',
+		'Must be letters and numbers with at least 8 characters' => 'Deve ser letras e números com pelo menos 8 caractéres',
+		'To install PrestaShop, you need to have JavaScript enabled in your browser.' => 'Para instalar o PrestaShop, você precisa ter JavaScript ativado no seu navegador',
+		'To enjoy the many features that are offered for free by PrestaShop, please read the license terms below. PrestaShop core is licensed under OSL 3.0, while the modules and themes are licensed under AFL 3.0.' => 'Para aproveitar os muitos recursos que são oferecidos grátis pelo PrestaShop, por favor, leia os termos de licença abaixo. O núcleo do PrestaShop é licenciado sob OSL 3.0, enquanto os módulos e temas são licenciados sob AFL 3.0.',
+		'For security purposes, you must delete the "install" folder.' => 'Por questões de segurança, você deve deletar a pasta "install"',
 	),
 );

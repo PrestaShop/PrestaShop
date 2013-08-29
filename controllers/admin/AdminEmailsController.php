@@ -165,6 +165,15 @@ class AdminEmailsControllerCore extends AdminController
 		);
 	}
 	
+	public function updateOptionPsMailPasswd($value)
+	{
+		if (Tools::getValue('PS_MAIL_PASSWD') == '' && Configuration::get('PS_MAIL_PASSWD'))
+			return true;
+		else
+			Configuration::updateValue('PS_MAIL_PASSWD', Tools::getValue('PS_MAIL_PASSWD'));
+	}	
+	
+	
 	/**
 	 * AdminController::initContent() override
 	 * @see AdminController::initContent()

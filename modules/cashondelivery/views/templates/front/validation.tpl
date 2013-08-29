@@ -33,10 +33,10 @@
 
 <h3>{l s='Cash on delivery (COD) payment' mod='cashondelivery'}</h3>
 
-<form action="{$link->getModuleLink('cashondelivery', 'validation', [], true)}" method="post">
+<form action="{$link->getModuleLink('cashondelivery', 'validation', [], true)|escape:'html'}" method="post">
 	<input type="hidden" name="confirm" value="1" />
 	<p>
-		<img src="{$this_path}cashondelivery.jpg" alt="{l s='Cash on delivery (COD) payment' mod='cashondelivery'}" style="float:left; margin: 0px 10px 5px 0px;" />
+		<img src="{$this_path_cod}cashondelivery.jpg" alt="{l s='Cash on delivery (COD) payment' mod='cashondelivery'}" style="float:left; margin: 0px 10px 5px 0px;" />
 		{l s='You have chosen the cash on delivery method.' mod='cashondelivery'}
 		<br/><br />
 		{l s='The total amount of your order is' mod='cashondelivery'}

@@ -181,11 +181,13 @@ class AdminStockInstantStateControllerCore extends AdminController
 	 */
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
-		if (Tools::isSubmit('csv') && (int)Tools::getValue('id_warehouse') != -1)
+		if ((Tools::isSubmit('csv_quantities') || Tools::isSubmit('csv_prices')) &&
+			(int)Tools::getValue('id_warehouse') != -1)
 			$limit = false;
 
 		$order_by_valuation = false;
 		$order_by_real_quantity = false;
+
 		if ($this->context->cookie->{$this->table.'Orderby'} == 'valuation')
 		{
 			unset($this->context->cookie->{$this->table.'Orderby'});
@@ -200,6 +202,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 
 		$nb_items = count($this->_list);
+
 		for ($i = 0; $i < $nb_items; ++$i)
 		{
 			$item = &$this->_list[$i];

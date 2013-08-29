@@ -187,18 +187,16 @@ class ShopCore extends ObjectModel
 
 	public function setUrl()
 	{
-		$sql = 'SELECT su.physical_uri, su.virtual_uri,
-			su.domain, su.domain_ssl, t.id_theme, t.name, t.directory
-				FROM '._DB_PREFIX_.'shop s
-				LEFT JOIN '._DB_PREFIX_.'shop_url su ON (s.id_shop = su.id_shop)
-				LEFT JOIN '._DB_PREFIX_.'theme t ON (t.id_theme = s.id_theme)
-				WHERE s.id_shop = '.(int)$this->id.'
-					AND s.active = 1
-					AND s.deleted = 0
-					AND su.main = 1';
-
-		if (!$row = Db::getInstance()->getRow($sql))
-			return;
+		$row = Db::getInstance()->getRow('
+		SELECT su.physical_uri, su.virtual_uri, su.domain, su.domain_ssl, t.id_theme, t.name, t.directory
+		FROM '._DB_PREFIX_.'shop s
+		LEFT JOIN '._DB_PREFIX_.'shop_url su ON (s.id_shop = su.id_shop)
+		LEFT JOIN '._DB_PREFIX_.'theme t ON (t.id_theme = s.id_theme)
+		WHERE s.id_shop = '.(int)$this->id.'
+		AND s.active = 1 AND s.deleted = 0 AND su.main = 1');
+			
+		if (!$row)
+			return false;
 
 		$this->theme_id = $row['id_theme'];
 		$this->theme_name = $row['name'];
@@ -349,12 +347,27 @@ class ShopCore extends ObjectModel
 			}
 		}
 
-		if (!$id_shop && defined('_PS_ADMIN_DIR_'))
+		if ((!$id_shop && defined('_PS_ADMIN_DIR_')) || Tools::isPHPCLI())
 		{
 			// If in admin, we can access to the shop without right URL
-			$shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+			if ((!$id_shop && Tools::isPHPCLI()) || defined('_PS_ADMIN_DIR_'))
+				$id_shop = (int)Configuration::get('PS_SHOP_DEFAULT');
+
+			$shop = new Shop((int)$id_shop);
+			if (!Validate::isLoadedObject($shop))
+				$shop = new Shop((int)Configuration::get('PS_SHOP_DEFAULT'));
+
 			$shop->physical_uri = preg_replace('#/+#', '/', str_replace('\\', '/', dirname(dirname($_SERVER['SCRIPT_NAME']))).'/');
 			$shop->virtual_uri = '';
+			
+			// Define some $_SERVER variables like HTTP_HOST if PHP is launched with php-cli
+			if (Tools::isPHPCLI())
+			{
+				if(!isset($_SERVER['HTTP_HOST']) || empty($_SERVER['HTTP_HOST']))
+					$_SERVER['HTTP_HOST'] = $shop->domain;
+				if(!isset($_SERVER['SERVER_NAME']) || empty($_SERVER['SERVER_NAME']))
+					$_SERVER['SERVER_NAME'] = $shop->domain;
+			}
 		}
 		else
 		{

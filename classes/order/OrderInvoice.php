@@ -522,14 +522,16 @@ class OrderInvoiceCore extends ObjectModel
 	 */
 	public function getTotalPaid()
 	{
-		if (!array_key_exists($this->id, self::$_total_paid_cache))
+		$cache_id = 'order_invoice_paid_'.(int)$this->id;
+		if (!Cache::isStored($cache_id))
 		{
-			self::$_total_paid_cache[$this->id] = 0;
+			$amount = 0;
 			$payments = OrderPayment::getByInvoiceId($this->id);
 			foreach ($payments as $payment)
-				self::$_total_paid_cache[$this->id] += $payment->amount;
+				$amount += $payment->amount;
+			Cache::store($cache_id, $amount);
 		}
-		return self::$_total_paid_cache[$this->id];
+		return Cache::retrieve($cache_id);
 	}
 
 	/**

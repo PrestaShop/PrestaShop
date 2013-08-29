@@ -64,6 +64,9 @@ class OrderHistoryCore extends ObjectModel
 			'id_order_state' => array('required' => true, 'xlink_resource'=> 'order_states'),
 			'id_order' => array('xlink_resource' => 'orders'),
 		),
+		'objectMethods' => array(
+			'add' => 'addWs',
+		), 
 	);
 
 	/**
@@ -85,13 +88,15 @@ class OrderHistoryCore extends ObjectModel
 		else
 			return;
 
+		ShopUrl::cacheMainDomainForShop($order->id_shop);
+
 		$new_os = new OrderState((int)$new_order_state, $order->id_lang);
 		$old_os = $order->getCurrentOrderState();
 		$is_validated = $this->isValidated();
 		
 
 		// executes hook
-		if ($new_os->id == Configuration::get('PS_OS_PAYMENT'))
+		if (in_array($new_os->id, array(Configuration::get('PS_OS_PAYMENT'), Configuration::get('PS_OS_WS_PAYMENT'))))
 			Hook::exec('actionPaymentConfirmation', array('id_order' => (int)$order->id));
 
 		// executes hook
@@ -120,8 +125,8 @@ class OrderHistoryCore extends ObjectModel
 							.'&id_order='.(int)$order->id
 							.'&secure_key='.$order->secure_key;
 						$assign[$key]['link'] = $dl_link;
-						if ($virtual_product['date_expiration'] != '0000-00-00 00:00:00')
-							$assign[$key]['deadline'] = Tools::displayDate($virtual_product['date_expiration '], $order->id_lang);
+						if (isset($virtual_product['download_deadline']) && $virtual_product['download_deadline'] != '0000-00-00 00:00:00')
+							$assign[$key]['deadline'] = Tools::displayDate($virtual_product['download_deadline']);
 						if ($product_download->nb_downloadable != 0)
 							$assign[$key]['downloadable'] = (int)$product_download->nb_downloadable;
 					}
@@ -140,7 +145,7 @@ class OrderHistoryCore extends ObjectModel
 						$links .= '&nbsp;'.Tools::htmlentitiesUTF8(sprintf(Tools::displayError('downloadable %d time(s)'), (int)$product['downloadable']));	
 					$links .= '</li>';
 				}
-				$links .= '<ul>';
+				$links .= '</ul>';
 				$data = array(
 						'{lastname}' => $customer->lastname,
 						'{firstname}' => $customer->firstname,
@@ -159,6 +164,9 @@ class OrderHistoryCore extends ObjectModel
 			$manager = null;
 			if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 				$manager = StockManagerFactory::getManager();
+				
+			$errorOrCanceledStatuses = array(Configuration::get('PS_OS_ERROR'), Configuration::get('PS_OS_CANCELED'));
+			
 			// foreach products of the order
 			if (Validate::isLoadedObject($old_os))			
 				foreach ($order->getProductsDetail() as $product)
@@ -169,7 +177,7 @@ class OrderHistoryCore extends ObjectModel
 						ProductSale::addProductSale($product['product_id'], $product['product_quantity']);
 						// @since 1.5.0 - Stock Management
 						if (!Pack::isPack($product['product_id']) &&
-							($old_os->id == Configuration::get('PS_OS_ERROR') || $old_os->id == Configuration::get('PS_OS_CANCELED')) &&
+							in_array($old_os->id, $errorOrCanceledStatuses) &&
 							!StockAvailable::dependsOnStock($product['id_product'], (int)$order->id_shop))
 							StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int)$product['product_quantity'], $order->id_shop);
 					}
@@ -180,13 +188,14 @@ class OrderHistoryCore extends ObjectModel
 	
 						// @since 1.5.0 - Stock Management
 						if (!Pack::isPack($product['product_id']) &&
-							($new_os->id == Configuration::get('PS_OS_ERROR') || $new_os->id == Configuration::get('PS_OS_CANCELED')) &&
+							in_array($new_os->id, $errorOrCanceledStatuses) &&
 							!StockAvailable::dependsOnStock($product['id_product']))
 							StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
 					}
 					// if waiting for payment => payment error/canceled
 					elseif (!$new_os->logable && !$old_os->logable &&
-							 ($new_os->id == Configuration::get('PS_OS_ERROR') || $new_os->id == Configuration::get('PS_OS_CANCELED')) &&
+							 in_array($new_os->id, $errorOrCanceledStatuses) &&
+							 !in_array($old_os->id, $errorOrCanceledStatuses) &&
 							 !StockAvailable::dependsOnStock($product['id_product']))
 							 StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
 					// @since 1.5.0 : if the order is being shipped and this products uses the advanced stock management :
@@ -326,6 +335,8 @@ class OrderHistoryCore extends ObjectModel
 			'newOrderStatus' => $new_os,
 			'id_order' => (int)$order->id,
 		));
+
+		ShopUrl::resetMainDomainCache();
 	}
 
 	/**
@@ -368,7 +379,7 @@ class OrderHistoryCore extends ObjectModel
 			return false;
 
 		$result = Db::getInstance()->getRow('
-			SELECT osl.`template`, c.`lastname`, c.`firstname`, osl.`name` AS osname, c.`email`, os.`module_name`
+			SELECT osl.`template`, c.`lastname`, c.`firstname`, osl.`name` AS osname, c.`email`, os.`module_name`, os.`id_order_state`
 			FROM `'._DB_PREFIX_.'order_history` oh
 				LEFT JOIN `'._DB_PREFIX_.'orders` o ON oh.`id_order` = o.`id_order`
 				LEFT JOIN `'._DB_PREFIX_.'customer` c ON o.`id_customer` = c.`id_customer`
@@ -377,6 +388,8 @@ class OrderHistoryCore extends ObjectModel
 			WHERE oh.`id_order_history` = '.(int)$this->id.' AND os.`send_email` = 1');
 		if (isset($result['template']) && Validate::isEmail($result['email']))
 		{
+			ShopUrl::cacheMainDomainForShop($order->id_shop);
+			
 			$topic = $result['osname'];
 			$data = array(
 				'{lastname}' => $result['lastname'],
@@ -398,8 +411,24 @@ class OrderHistoryCore extends ObjectModel
 			$data['{order_name}'] = $order->getUniqReference();
 
 			if (Validate::isLoadedObject($order))
+			{
+				// Join PDF invoice if order state is "payment accepted"
+				if ((int)$result['id_order_state'] === 2 && (int)Configuration::get('PS_INVOICE') && $order->invoice_number)
+				{
+					$context = Context::getContext();
+					$pdf = new PDF($order->getInvoicesCollection(), PDF::TEMPLATE_INVOICE, $context->smarty);
+					$file_attachement['content'] = $pdf->render(false);
+					$file_attachement['name'] = Configuration::get('PS_INVOICE_PREFIX', (int)$order->id_lang, null, $order->id_shop).sprintf('%06d', $order->invoice_number).'.pdf';
+					$file_attachement['mime'] = 'application/pdf';
+				}
+				else
+					$file_attachement = null;
+
 				Mail::Send((int)$order->id_lang, $result['template'], $topic, $data, $result['email'], $result['firstname'].' '.$result['lastname'],
-					null, null, null, null, _PS_MAIL_DIR_, false, (int)$order->id_shop);
+					null, null, $file_attachement, null, _PS_MAIL_DIR_, false, (int)$order->id_shop);
+			}
+
+			ShopUrl::resetMainDomainCache();
 		}
 
 		return true;
@@ -433,4 +462,27 @@ class OrderHistoryCore extends ObjectModel
 		AND os.`logable` = 1');
 	}
 
+    /**
+     * Add method for webservice create resource Order History      
+     * If sendemail=1 GET parameter is present sends email to customer otherwise does not
+     * @return bool
+     */
+	public function addWs()
+	{
+	    $sendemail = (bool)Tools::getValue('sendemail', false);
+	    if ($sendemail)
+	    {
+	        //Mail::Send requires link object on context and is not set when getting here
+	        $context = Context::getContext();
+	        if ($context->link == null)
+	        {
+	            $protocol_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+	            $protocol_content = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+	            $context->link = new Link($protocol_link, $protocol_content);
+	        }
+	        return $this->addWithemail();            
+	    }
+		else
+	        return $this->add();
+	}
 }

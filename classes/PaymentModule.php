@@ -135,6 +135,8 @@ abstract class PaymentModuleCore extends Module
 		$this->context->customer = new Customer($this->context->cart->id_customer);
 		$this->context->language = new Language($this->context->cart->id_lang);
 		$this->context->shop = ($shop ? $shop : new Shop($this->context->cart->id_shop));
+		ShopUrl::resetMainDomainCache();
+
 		$id_currency = $currency_special ? (int)$currency_special : (int)$this->context->cart->id_currency;
 		$this->context->currency = new Currency($id_currency, null, $this->context->shop->id);
 		if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_delivery')
@@ -346,7 +348,8 @@ abstract class PaymentModuleCore extends Module
 					// Construct order detail table for the email
 					$products_list = '';
 					$virtual_product = true;
-					foreach ($products as $key => $product)
+
+					foreach ($order->product_list as $key => $product)
 					{
 						$price = Product::getPriceStatic((int)$product['id_product'], false, ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : null), 6, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 						$price_wt = Product::getPriceStatic((int)$product['id_product'], true, ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : null), 2, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
@@ -384,7 +387,7 @@ abstract class PaymentModuleCore extends Module
 							'<tr style="background-color: '.($key % 2 ? '#DDE2E6' : '#EBECEE').';">
 								<td style="padding: 0.6em 0.4em;width: 15%;">'.$product['reference'].'</td>
 								<td style="padding: 0.6em 0.4em;width: 30%;"><strong>'.$product['name'].(isset($product['attributes']) ? ' - '.$product['attributes'] : '').'</strong></td>
-								<td style="padding: 0.6em 0.4em; width: 20%;">'.Tools::displayPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $price_wt, $this->context->currency, false).'</td>
+								<td style="padding: 0.6em 0.4em; width: 20%;">'.Tools::displayPrice(Product::getTaxCalculationMethod((int)$this->context->customer->id) == PS_TAX_EXC ? Tools::ps_round($price, 2) : $price_wt, $this->context->currency, false).'</td>
 								<td style="padding: 0.6em 0.4em; width: 15%;">'.((int)$product['cart_quantity'] - $customization_quantity).'</td>
 								<td style="padding: 0.6em 0.4em; width: 20%;">'.Tools::displayPrice(((int)$product['cart_quantity'] - $customization_quantity) * (Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $price_wt), $this->context->currency, false).'</td>
 							</tr>';
@@ -429,9 +432,9 @@ abstract class PaymentModuleCore extends Module
 
 							// Set the new voucher value
 							if ($voucher->reduction_tax)
-								$voucher->reduction_amount = $values['tax_incl'] - $order->total_products_wt - $order->total_shipping_tax_incl;
+								$voucher->reduction_amount = $values['tax_incl'] - $order->total_products_wt - ($voucher->free_shipping == 1 ? $order->total_shipping_tax_incl : 0);
 							else
-								$voucher->reduction_amount = $values['tax_excl'] - $order->total_products - $order->total_shipping_tax_excl;
+								$voucher->reduction_amount = $values['tax_excl'] - $order->total_products - ($voucher->free_shipping == 1 ? $order->total_shipping_tax_excl : 0);
 
 							$voucher->id_customer = $order->id_customer;
 							$voucher->quantity = 1;
@@ -593,7 +596,7 @@ abstract class PaymentModuleCore extends Module
 						'{invoice_phone}' => ($invoice->phone) ? $invoice->phone : $invoice->phone_mobile,
 						'{invoice_other}' => $invoice->other,
 						'{order_name}' => $order->getUniqReference(),
-						'{date}' => Tools::displayDate(date('Y-m-d H:i:s'), (int)$order->id_lang, 1),
+						'{date}' => Tools::displayDate(date('Y-m-d H:i:s'),null , 1),
 						'{carrier}' => $virtual_product ? Tools::displayError('No carrier') : $carrier->name,
 						'{payment}' => Tools::substr($order->payment, 0, 32),
 						'{products}' => $this->formatProductAndVoucherForEmail($products_list),
@@ -602,7 +605,8 @@ abstract class PaymentModuleCore extends Module
 						'{total_products}' => Tools::displayPrice($order->total_paid - $order->total_shipping - $order->total_wrapping + $order->total_discounts, $this->context->currency, false),
 						'{total_discounts}' => Tools::displayPrice($order->total_discounts, $this->context->currency, false),
 						'{total_shipping}' => Tools::displayPrice($order->total_shipping, $this->context->currency, false),
-						'{total_wrapping}' => Tools::displayPrice($order->total_wrapping, $this->context->currency, false));
+						'{total_wrapping}' => Tools::displayPrice($order->total_wrapping, $this->context->currency, false),
+						'{total_tax_paid}' => Tools::displayPrice(($order->total_products_wt - $order->total_products) + ($order->total_shipping_tax_incl - $order->total_shipping_tax_excl), $this->context->currency, false));
 
 						if (is_array($extra_vars))
 							$data = array_merge($data, $extra_vars);

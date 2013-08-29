@@ -680,7 +680,7 @@ class StockAvailableCore extends ObjectModel
 
 		// if there is no $id_shop, gets the context one
 		// get shop group too
-		if ($shop === null)
+		if ($shop === null || $shop === $context->shop->id)
 		{
 			if (Shop::getContext() == Shop::CONTEXT_GROUP)
 				$shop_group = Shop::getContextShopGroup();

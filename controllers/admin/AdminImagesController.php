@@ -53,7 +53,7 @@ class AdminImagesControllerCore extends AdminController
 		);
 		
 		// No need to display the old image system if the install has been made later than 2013-03-26
-		$this->display_move = (defined('_PS_CREATION_DATE_') && strtotime(_PS_CREATION_DATE_) > strtotime('2013-03-26')) ? false : true;
+		$this->display_move = (!Configuration::get('PS_LEGACY_IMAGES') && defined('_PS_CREATION_DATE_') && strtotime(_PS_CREATION_DATE_) > strtotime('2013-03-26')) ? false : true;
 
 		$this->fields_options = array(
 			'images' => array(
@@ -62,7 +62,7 @@ class AdminImagesControllerCore extends AdminController
 				'top' => '',
 				'bottom' => '',
 				'description' => $this->l('JPEG images have a small file size and standard quality. PNG images have a larger file size, a higher quality and support transparency. Note that in all cases the image files will have the .jpg extension.').'
-								  <br /><br />'.$this->l('WARNING: This feature may not be compatible with your theme, or with some of your modules. In particular, PNG mode is not compatible with the Watermark module. If you encounter any issues, turn it off by selecting "Use JPEG".'),
+					<br /><br />'.$this->l('WARNING: This feature may not be compatible with your theme, or with some of your modules. In particular, PNG mode is not compatible with the Watermark module. If you encounter any issues, turn it off by selecting "Use JPEG".'),
 				'fields' =>	array(
 					'PS_IMAGE_QUALITY' => array(
 						'title' => $this->l('Image quality'),
@@ -375,6 +375,7 @@ class AdminImagesControllerCore extends AdminController
 					|| !Configuration::updateValue('PS_PNG_QUALITY', Tools::getValue('PS_PNG_QUALITY')))
 					$this->errors[] = Tools::displayError('Unknown error.');
 				else
+					$this->confirmations[] = $this->_conf[6];
 					return parent::postProcess();
 			}
 			else

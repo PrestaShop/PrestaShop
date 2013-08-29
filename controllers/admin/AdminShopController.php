@@ -226,13 +226,8 @@ class AdminShopControllerCore extends AdminController
 		
 		if (Tools::isSubmit('submitAddshopAndStay') || Tools::isSubmit('submitAddshop'))
 		{
-			$same_name = Db::getInstance()->getValue('
-			SELECT id_shop
-			FROM '._DB_PREFIX_.'shop
-			WHERE name = "'.pSQL(Tools::getValue('name')).'"
-			AND id_shop_group = '.(int)Tools::getValue('id_shop_group').'
-			'.(Tools::getValue('id_shop') ? 'AND id_shop != '.(int)Tools::getValue('id_shop') : ''));
-			if ($same_name)
+			$shop_group = new ShopGroup((int)Tools::getValue('id_shop_group'));
+			if ($shop_group->shopNameExists(Tools::getValue('name'), (int)Tools::getValue('id_shop')))
 				$this->errors[] = Tools::displayError('You cannot have two shops with the same name in the same group.');
 		}
 
@@ -391,7 +386,7 @@ class AdminShopControllerCore extends AdminController
 		$this->fields_form['input'][] = array(
 			'type' => 'select',
 			'label' => $this->l('Category root:'),
-			'desc' => $this->l('This is the root category of the store that you\'ve created. To define a new root category for your store,').'&nbsp;<a href="'.$this->context->link->getAdminLink('AdminCategories').'&addcategoryroot">'.$this->l('Please click here').'</a>',
+			'desc' => $this->l('This is the root category of the store that you\'ve created. To define a new root category for your store,').'&nbsp;<a href="'.$this->context->link->getAdminLink('AdminCategories').'&addcategoryroot" target="_blank">'.$this->l('Please click here').'</a>',
 			'name' => 'id_category',
 			'options' => array(
 				'query' => $categories,

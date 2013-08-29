@@ -37,11 +37,11 @@
 		{/if}
 		<br /><br />{l s='An email has been sent to you with this information.' mod='cheque'}
 		<br /><br /><strong>{l s='Your order will be sent as soon as we receive your payment.' mod='cheque'}</strong>
-		<br /><br />{l s='For any questions or for further information, please contact our' mod='cheque'} <a href="{$link->getPageLink('contact', true)}">{l s='customer service department.' mod='cheque'}</a>.
+		<br /><br />{l s='For any questions or for further information, please contact our' mod='cheque'} <a href="{$link->getPageLink('contact', true)|escape:'html'}">{l s='customer service department.' mod='cheque'}</a>.
 	</p>
 {else}
 	<p class="warning">
 		{l s='We have noticed that there is a problem with your order. If you think this is an error, you can contact our' mod='cheque'} 
-		<a href="{$link->getPageLink('contact', true)}">{l s='customer service department.' mod='cheque'}</a>.
+		<a href="{$link->getPageLink('contact', true)|escape:'html'}">{l s='customer service department.' mod='cheque'}</a>.
 	</p>
 {/if}

@@ -84,7 +84,7 @@ function updateAddressSelection()
 		async: true,
 		cache: false,
 		dataType : "json",
-		data: 'ajax=true&method=updateAddressesSelected&id_address_delivery=' + idAddress_delivery + '&id_address_invoice=' + idAddress_invoice + '&token=' + static_token,
+		data: 'allow_refresh=1&ajax=true&method=updateAddressesSelected&id_address_delivery=' + idAddress_delivery + '&id_address_invoice=' + idAddress_invoice + '&token=' + static_token,
 		success: function(jsonData)
 		{
 			if (jsonData.hasError)
@@ -93,11 +93,13 @@ function updateAddressSelection()
 				for(var error in jsonData.errors)
 					//IE6 bug fix
 					if(error !== 'indexOf')
-						errors += jsonData.errors[error] + "\n";
+						errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
 				alert(errors);
 			}
 			else
 			{
+				if (jsonData.refresh)
+					location.reload();
 				// Update all product keys with the new address id
 				$('#cart_summary .address_'+deliveryAddress).each(function() {
 					$(this)
@@ -186,7 +188,7 @@ function getCarrierListAndUpdate()
 				for(var error in jsonData.errors)
 					//IE6 bug fix
 					if(error !== 'indexOf')
-						errors += jsonData.errors[error] + "\n";
+						errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
 				alert(errors);
 			}
 			else
@@ -236,7 +238,7 @@ function updateCarrierSelectionAndGift()
 				for(var error in jsonData.errors)
 					//IE6 bug fix
 					if(error !== 'indexOf')
-						errors += jsonData.errors[error] + "\n";
+						errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
 				alert(errors);
 			}
 			else
@@ -445,6 +447,7 @@ $(function() {
 				$('#is_new_customer').val('0');
 				$('#opc_account_choice, #opc_invoice_address').hide();
 				$('#new_account_title').html(txtInstantCheckout);
+				$('#submitAccount').prop({id : 'submitGuestAccount', name : 'submitGuestAccount'});
 				updateState();
 				updateNeedIDNumber();
 				updateZipCode();
@@ -702,7 +705,7 @@ function bindInputs()
 					for(var error in jsonData.errors)
 						//IE6 bug fix
 						if(error !== 'indexOf')
-							errors += jsonData.errors[error] + "\n";
+							errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
 					alert(errors);
 				}
 			else

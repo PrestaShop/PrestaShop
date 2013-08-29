@@ -25,6 +25,8 @@
   'AdminAttributesGroupsControllerCore' => 'controllers/admin/AdminAttributesGroupsController.php',
   'AdminBackupController' => '',
   'AdminBackupControllerCore' => 'controllers/admin/AdminBackupController.php',
+  'AdminCarrierWizardController' => '',
+  'AdminCarrierWizardControllerCore' => 'controllers/admin/AdminCarrierWizardController.php',
   'AdminCarriersController' => '',
   'AdminCarriersControllerCore' => 'controllers/admin/AdminCarriersController.php',
   'AdminCartRulesController' => '',

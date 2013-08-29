@@ -20,8 +20,8 @@ function start_install()
 	$('.stepList li:last-child').removeClass('ok').removeClass('ko');
 	process_pixel = parseInt($('#progress_bar .total').css('width')) / process_steps.length;
 	$('#tabs li a').each(function() {
-		 this.rel=$(this).attr('href');
-		 this.href='#';
+		 this.rel = $(this).attr('href');
+		 this.href = '#';
 	});
 	process_install();
 }
@@ -31,11 +31,11 @@ function process_install(step)
 	if (!step)
 		step = process_steps[0];
 
-	$('.installing').hide().html(step.lang+' ...').fadeIn('slow');
+	$('.installing').hide().html(step.lang + ' ...').fadeIn('slow');
 
 	$.ajax({
 		url: 'index.php',
-		data: step.key+'=true',
+		data: step.key + '=true',
 		dataType: 'json',
 		cache: false,
 		success: function(json)
@@ -51,10 +51,7 @@ function process_install(step)
 					$('#progress_bar .total span').html('100%');
 
 					// Installation finished
-					setTimeout(function()
-					{
-						install_success();
-					}, 700)
+					setTimeout(function(){install_success();}, 700);
 				}
 				else
 				{

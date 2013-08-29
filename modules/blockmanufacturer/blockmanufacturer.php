@@ -48,19 +48,25 @@ class BlockManufacturer extends Module
 		Configuration::updateValue('MANUFACTURER_DISPLAY_TEXT', true);
 		Configuration::updateValue('MANUFACTURER_DISPLAY_TEXT_NB', 5);
 		Configuration::updateValue('MANUFACTURER_DISPLAY_FORM', true);
-        return parent::install() && $this->registerHook('leftColumn') && $this->registerHook('header');
+		return parent::install() &&
+			$this->registerHook('leftColumn') && 
+			$this->registerHook('header') &&
+			$this->registerHook('actionObjectManufacturerDeleteAfter') &&
+			$this->registerHook('actionObjectManufacturerAddAfter') &&
+			$this->registerHook('actionObjectManufacturerUpdateAfter');
     }
 
 	public function hookLeftColumn($params)
 	{
-		$this->smarty->assign(array(
-			'manufacturers' => Manufacturer::getManufacturers(),
-			'text_list' => Configuration::get('MANUFACTURER_DISPLAY_TEXT'),
-			'text_list_nb' => Configuration::get('MANUFACTURER_DISPLAY_TEXT_NB'),
-			'form_list' => Configuration::get('MANUFACTURER_DISPLAY_FORM'),
-			'display_link_manufacturer' => Configuration::get('PS_DISPLAY_SUPPLIERS'),
-		));
-		return $this->display(__FILE__, 'blockmanufacturer.tpl');
+		if (!$this->isCached('blockmanufacturer.tpl', $this->getCacheId()))
+			$this->smarty->assign(array(
+				'manufacturers' => Manufacturer::getManufacturers(),
+				'text_list' => Configuration::get('MANUFACTURER_DISPLAY_TEXT'),
+				'text_list_nb' => Configuration::get('MANUFACTURER_DISPLAY_TEXT_NB'),
+				'form_list' => Configuration::get('MANUFACTURER_DISPLAY_FORM'),
+				'display_link_manufacturer' => Configuration::get('PS_DISPLAY_SUPPLIERS'),
+			));
+		return $this->display(__FILE__, 'blockmanufacturer.tpl', $this->getCacheId());
 	}
 
 	public function hookRightColumn($params)
@@ -85,6 +91,7 @@ class BlockManufacturer extends Module
 				Configuration::updateValue('MANUFACTURER_DISPLAY_TEXT', $text_list);
 				Configuration::updateValue('MANUFACTURER_DISPLAY_TEXT_NB', $text_nb);
 				Configuration::updateValue('MANUFACTURER_DISPLAY_FORM', $form_list);
+				$this->_clearCache('blockmanufacturer.tpl');
 			}
 			if (isset($errors) && count($errors))
 				$output .= $this->displayError(implode('<br />', $errors));
@@ -125,5 +132,20 @@ class BlockManufacturer extends Module
 	public function hookHeader($params)
 	{
 		$this->context->controller->addCSS(($this->_path).'blockmanufacturer.css', 'all');
+	}
+	
+	public function hookActionObjectManufacturerUpdateAfter($params)
+	{
+		$this->_clearCache('blockmanufacturer.tpl');
+	}
+
+	public function hookActionObjectManufacturerAddAfter($params)
+	{
+		$this->_clearCache('blockmanufacturer.tpl');
+	}
+
+	public function hookActionObjectManufacturerDeleteAfter($params)
+	{
+		$this->_clearCache('blockmanufacturer.tpl');
 	}
 }

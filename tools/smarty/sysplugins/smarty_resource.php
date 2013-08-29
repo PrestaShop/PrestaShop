@@ -584,7 +584,7 @@ abstract class Smarty_Resource {
  * @author Rodney Rehm
  *
  * @property integer $timestamp Source Timestamp
- * @property boolean $exists    Source Existance
+ * @property boolean $exists    Source Existence
  * @property boolean $template  Extended Template reference
  * @property string  $content   Source Content
  */
@@ -811,7 +811,7 @@ class Smarty_Template_Compiled {
     public $timestamp = null;
 
     /**
-     * Compiled Existance
+     * Compiled Existence
      * @var boolean
      */
     public $exists = false;

@@ -25,8 +25,6 @@
 */
 
 /**
- * This class is currently only here for tests
- *
  * @since 1.5.0
  */
 class DbPDOCore extends Db
@@ -44,6 +42,19 @@ class DbPDOCore extends Db
 			$dsn .= 'host='.$host;
 
 		return new PDO($dsn, $user, $password, array(PDO::ATTR_TIMEOUT => $timeout, PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true));
+	}
+	
+	public static function createDatabase($host, $user, $password, $dbname, $dropit = false)
+	{
+		try {
+			$link = DbPDO::_getPDO($host, $user, $password, false);
+			$success = $link->exec('CREATE DATABASE `'.str_replace('`', '\\`', $dbname).'`');
+			if ($dropit && ($link->exec('DROP DATABASE `'.str_replace('`', '\\`', $dbname).'`') !== false))
+				return true;
+		} catch (PDOException $e) {
+			return false;
+		}
+		return $success;
 	}
 	
 	/**
@@ -174,7 +185,7 @@ class DbPDOCore extends Db
 		return (bool)$result->fetch();
 	}
 
-	public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine)
+	public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
 	{
 		try {
 			$link = DbPDO::_getPDO($server, $user, $pwd, $db, 5);
@@ -206,19 +217,33 @@ class DbPDOCore extends Db
 		} catch (PDOException $e) {
 			return ($e->getCode() == 1049) ? 2 : 1;
 		}
-
-		if (strtolower($engine) == 'innodb')
-		{
-			$sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
-			$result = $link->query($sql);
-			if (!$result)
-				return 4;
-			$row = $result->fetch();
-			if (!$row || strtolower($row['Value']) != 'yes')
-				return 4;
-		}
 		unset($link);
 		return 0;
+	}
+	
+	public function getBestEngine()
+	{
+		$value = 'InnoDB';
+		
+		$sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
+		$result = $this->link->query($sql);
+		if (!$result)
+			$value = 'MyISAM';
+		$row = $result->fetch();
+		if (!$row || strtolower($row['Value']) != 'yes')
+			$value = 'MyISAM';
+		
+		/* MySQL >= 5.6 */
+		$sql = 'SHOW ENGINES';
+		$result = $this->link->query($sql);
+		while ($row = $result->fetch())
+			if ($row['Engine'] == 'InnoDB')
+			{
+				if (in_array($row['Support'], array('DEFAULT', 'YES')))
+					$value = 'InnoDB';
+				break;
+			}
+		return $value;
 	}
 
 	/**

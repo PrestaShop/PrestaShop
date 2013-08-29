@@ -149,7 +149,7 @@
 	</div>
 	
 	<div style="width:50%;float:left;">
-		<div style="margin-left:15px;"
+		<div style="margin-left:15px;">
 			<h2>{l s='Vouchers'} ({count($discounts)})</h2>
 			{if count($discounts)}
 				<table cellspacing="0" cellpadding="0" class="table">

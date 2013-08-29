@@ -175,7 +175,7 @@ class AdminPaymentControllerCore extends AdminController
 					),
 					array('items' => Group::getGroups($this->context->language->id),
 						  'title' => $this->l('Group restrictions'),
-						  'desc' => $this->l('Please mark each checkbox for the currency, or currencies, in which you want the payment module(s) to be available.'),
+						  'desc' => $this->l('Please mark each checkbox for the customer group(s), in which you want the payment module(s) to be available.'),
 						  'name_id' => 'group',
 						  'identifier' => 'id_group',
 						  'icon' => 'group',

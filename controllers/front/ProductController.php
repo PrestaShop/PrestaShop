@@ -69,6 +69,8 @@ class ProductControllerCore extends FrontController
 
 	public function canonicalRedirection($canonical_url = '')
 	{
+		if (Tools::getValue('live_edit'))
+			return ;
 		if (Validate::isLoadedObject($this->product))
 			parent::canonicalRedirection($this->context->link->getProductLink($this->product));
 	}
@@ -143,7 +145,8 @@ class ProductControllerCore extends FrontController
 				// Load category
 				if (isset($_SERVER['HTTP_REFERER'])
 					&& strstr($_SERVER['HTTP_REFERER'], Tools::getHttpHost()) // Assure us the previous page was one of the shop
-					&& preg_match('!^(.*)\/([0-9]+)\-(.*[^\.])|(.*)id_category=([0-9]+)(.*)$!', $_SERVER['HTTP_REFERER'], $regs))
+					&& (stripos($_SERVER['HTTP_REFERER'], '.html') === false)
+					&& preg_match('~^(.*)\/([0-9]+)\-((?![.]+html).*)|(.*)id_category=([0-9]+)(.*)$~', $_SERVER['HTTP_REFERER'], $regs))
 				{
 					// If the previous page was a category and is a parent category of the product use this category as parent category
 					if (isset($regs[2]) && is_numeric($regs[2]))
@@ -157,8 +160,7 @@ class ProductControllerCore extends FrontController
 							$this->category = new Category($regs[5], (int)$this->context->cookie->id_lang);
 					}
 				}
-				else
-					// Set default product category
+				if (!isset($this->category))
 					$this->category = new Category($this->product->id_category_default, (int)$this->context->cookie->id_lang);
 			}
 		}
@@ -454,7 +456,7 @@ class ProductControllerCore extends FrontController
 					{
 						if (isset($this->context->smarty->tpl_vars['images']->value))
 							$product_images = $this->context->smarty->tpl_vars['images']->value;
-						if (is_array($product_images) && isset($product_images[$id_image]))
+						if (isset($product_images) && is_array($product_images) && isset($product_images[$id_image]))
 						{
 							$product_images[$id_image]['cover'] = 1;
 							$this->context->smarty->assign('mainImage', $product_images[$id_image]);
@@ -463,7 +465,7 @@ class ProductControllerCore extends FrontController
 						}
 						if (isset($this->context->smarty->tpl_vars['cover']->value))
 							$cover = $this->context->smarty->tpl_vars['cover']->value;
-						if (is_array($cover) && is_array($product_images))
+						if (isset($cover) && is_array($cover) && isset($product_images) && is_array($product_images))
 						{
 							$product_images[$cover['id_image']]['cover'] = 0;
 							if (isset($product_images[$id_image]))
@@ -510,9 +512,12 @@ class ProductControllerCore extends FrontController
 	protected function assignAttributesCombinations()
 	{
 		$attributes_combinations = Product::getAttributesInformationsByProduct($this->product->id);
-		foreach ($attributes_combinations as &$ac)
-			foreach ($ac as &$val)
-				$val = str_replace('-', '_', Tools::link_rewrite(str_replace(array(',', '.'), '-', $val)));
+		if (is_array($attributes_combinations) && count($attributes_combinations))
+			foreach ($attributes_combinations as &$ac)
+				foreach ($ac as &$val)
+					$val = str_replace('-', '_', Tools::link_rewrite(str_replace(array(',', '.'), '-', $val)));
+		else
+			$attributes_combinations = array();
 		$this->context->smarty->assign('attributesCombinations', $attributes_combinations);
 	}
 

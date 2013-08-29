@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>blockadvertising</name>
-            <displayName><![CDATA[Bloc publicit&eacute;]]></displayName>
+            <displayName><![CDATA[Block advertising]]></displayName>
             <version><![CDATA[0.5]]></version>
-            <description><![CDATA[Ajoute un bloc affichant une publicit&eacute;]]></description>
+            <description><![CDATA[Adds an advertisement block to selected sections of your e-commerce webiste.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[advertising_marketing]]></tab>
             <is_configurable>1</is_configurable>

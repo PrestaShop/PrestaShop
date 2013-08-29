@@ -103,7 +103,7 @@ p em {font-style:italic}
 .success {
 	margin:0 0 10px 0;
 	padding:10px;
-	border:1px solid #5cff74;
+	border:1px solid #339900;
 	font-size:13px;
 	background: #d3ffab;
 }
@@ -296,7 +296,6 @@ table.table_block  td {
 		text-shadow:0 1px 0 #000;
 		text-transform:uppercase;
 		background:#383838;
-		text-align:left;
 		font-weight: bold;
 	}
 		.block .title_block a, .block h4 a {color:#fff}
@@ -356,7 +355,7 @@ ul.footer_links li .icon {
 		border:1px solid #ccc
 	}
 
-.sortPagiBar #bt_compare {
+.sortPagiBar .bt_compare {
 	padding:3px 7px;
 	border:none;
 	color:#fff;
@@ -408,19 +407,19 @@ ul.pagination .current span {
 }
 ul.pagination li.disabled span {color:#ccc}
 
-#pagination_previous {float:left}
-#pagination_next {float:right}
+#pagination_previous, .pagination_previous {float:left}
+#pagination_next, .pagination_next {float:right}
 
-.ie7 #pagination_previous,
-.ie7 #pagination_next {float:none}
+.ie7 #pagination_previous, .ie7 .pagination_previous,
+.ie7 #pagination_next, .ie7 .pagination_next {float:none}
 
-#pagination_previous a, #pagination_previous span,
-#pagination_next a, #pagination_next span {
+ul.pagination .pagination_previous a,ul.pagination .pagination_previous span,
+ul.pagination .pagination_next a, ul.pagination .pagination_next span {
 	padding:0 8px;
 	width:auto;
 }
-#pagination_previous span,
-#pagination_next span {
+#pagination_previous, .pagination_previous span,
+#pagination_next, .pagination_next span {
 	color:#ccc;
 	border:1px solid #eee
 }
@@ -547,6 +546,7 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 #header {position:relative}
 #header_logo {
 	position: absolute;
+	left:0;
 	top: 30px;
 	z-index: 1;
 }
@@ -708,7 +708,9 @@ ul.idTabs li {
 /*p.cart_navigation .multishipping-button { margin-right: 10px }*/
 
 #order-detail-content {margin-bottom:20px}
-
+#order-detail-content .customizationUploaded li,#order-detail-content .typedText li {
+	list-style: none;
+}
 table#cart_summary th {
 	padding:14px 12px;
 	color:#fff;
@@ -1976,7 +1978,6 @@ div.star_hover a, div.star a:hover { background-position: 0 -12px }
 	padding:15px 10px;
 }
 .blockcategories_footer .category_footer {float:left;clear:none;}
-.blockcategories_footer .category_footer .list{float:left;}
 .blockcategories_footer ul ul {display:none !important}
 
 
@@ -2039,10 +2040,13 @@ tr.subitem > td:first-child + td {
 	}
 
 
-.blockmanufacturer form {margin-top:10px;}
+.blockmanufacturer form {
+	margin-top: 10px;
+    text-align: center;
+    width: 200px;
+}
 .blockmanufacturer p {
 	padding:0;
-	text-align:center
 }
 
 /*************** Block LOGO PAYMENT ***************/
@@ -2100,10 +2104,13 @@ tr.subitem > td:first-child + td {
 		background:url(../../../modules/blocksupplier/img/arrow_right_2.png) no-repeat 10px 10px transparent
 	}
 
-.blocksupplier form {margin-top:10px;}
+.blocksupplier form {
+	margin-top: 10px;
+    text-align: center;
+    width: 200px;
+}
 .blocksupplier p {
 	padding:0;
-	text-align:center
 }
 
 .ie7 #featured-products_block_center .product_image span.new {top:110px;right:0;width:94%}

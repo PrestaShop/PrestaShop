@@ -297,7 +297,7 @@ class AdminEmployeesControllerCore extends AdminController
 					}
 			$this->fields_form['input'][] = array(
 				'type' => 'select',
-				'label' => $this->l('Profile:'),
+				'label' => $this->l('Profile Permission:'),
 				'name' => 'id_profile',
 				'required' => true,
 				'options' => array(
@@ -461,6 +461,16 @@ class AdminEmployeesControllerCore extends AdminController
 			$this->display = 'edit';
 
 		return parent::initContent();
+	}
+
+	protected function afterUpdate($object)
+	{
+		$res = parent::afterUpdate($object);
+		// Update cookie if needed
+		if (Tools::getValue('id_employee') == $this->context->employee->id && Tools::getValue('passwd') && $object->passwd != $this->context->employee->passwd)
+			$this->context->cookie->passwd = $this->context->employee->passwd = $object->passwd;
+
+		return $res;
 	}
 
 	public function ajaxProcessGetTabByIdProfile()

@@ -64,7 +64,6 @@
   <tab id="Positions" name="&#x420;&#x430;&#x441;&#x43F;&#x43E;&#x43B;&#x43E;&#x436;&#x435;&#x43D;&#x438;&#x435;"/>
   <tab id="Preferences_1" name="&#x41D;&#x430;&#x441;&#x442;&#x440;&#x43E;&#x439;&#x43A;&#x438;"/>
   <tab id="Preferences" name="&#x41D;&#x430;&#x441;&#x442;&#x440;&#x43E;&#x439;&#x43A;&#x438;"/>
-  <tab id="Price_Ranges" name="&#x428;&#x43A;&#x430;&#x43B;&#x430; &#x446;&#x435;&#x43D;"/>
   <tab id="Price_Rules" name="&#x426;&#x435;&#x43D;&#x43E;&#x432;&#x44B;&#x435; &#x43F;&#x440;&#x430;&#x432;&#x438;&#x43B;&#x430;"/>
   <tab id="Products_1" name="&#x442;&#x43E;&#x432;&#x430;&#x440;&#x44B;"/>
   <tab id="Products" name="&#x442;&#x43E;&#x432;&#x430;&#x440;&#x44B;"/>
@@ -76,7 +75,7 @@
   <tab id="Search_Engines" name="&#x41F;&#x43E;&#x438;&#x441;&#x43A;&#x43E;&#x432;&#x44B;&#x435; &#x441;-&#x43C;&#x44B;"/>
   <tab id="SEO_URLs" name="SEO &#x438; URLs"/>
   <tab id="Shipping" name="&#x414;&#x43E;&#x441;&#x442;&#x430;&#x432;&#x43A;&#x430;"/>
-  <tab id="Shipping_1" name="&#x414;&#x43E;&#x441;&#x442;&#x430;&#x432;&#x43A;&#x430;"/>
+  <tab id="Shipping_1" name="&#x41D;&#x430;&#x441;&#x442;&#x440;&#x43E;&#x439;&#x43A;&#x438;"/>
   <tab id="Shop_URLs" name="URL &#x43C;&#x430;&#x433;&#x430;&#x437;&#x438;&#x43D;&#x430;"/>
   <tab id="Shopping_Carts" name="&#x41A;&#x43E;&#x440;&#x437;&#x438;&#x43D;&#x44B;"/>
   <tab id="Shops" name="&#x41C;&#x430;&#x433;&#x430;&#x437;&#x438;&#x43D;&#x44B;"/>
@@ -100,6 +99,5 @@
   <tab id="Translations" name="&#x41F;&#x435;&#x440;&#x435;&#x432;&#x43E;&#x434;&#x44B;"/>
   <tab id="Warehouses" name="&#x421;&#x43A;&#x43B;&#x430;&#x434;&#x44B;"/>
   <tab id="Webservice" name="WEB &#x441;&#x43B;&#x443;&#x436;&#x431;&#x44B;"/>
-  <tab id="Weight_Ranges" name="&#x428;&#x43A;&#x430;&#x43B;&#x430; &#x432;&#x435;&#x441;&#x430;"/>
   <tab id="Zones" name="&#x417;&#x43E;&#x43D;&#x44B;"/>
 </entity_tab>

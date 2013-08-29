@@ -78,8 +78,8 @@ class ManufacturerCore extends ObjectModel
 			'date_upd' => 			array('type' => self::TYPE_DATE),
 
 			// Lang fields
-			'description' => 		array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isString'),
-			'short_description' => 	array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isString', 'size' => 254),
+			'description' => 		array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
+			'short_description' => 	array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 254),
 			'meta_title' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
 			'meta_description' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
 			'meta_keywords' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName'),
@@ -198,6 +198,7 @@ class ManufacturerCore extends ObjectModel
 					LEFT JOIN `'._DB_PREFIX_.'manufacturer` as m ON (m.`id_manufacturer`= p.`id_manufacturer`)
 					WHERE m.`id_manufacturer` = '.(int)$manufacturer['id_manufacturer'].
 					($active ? ' AND product_shop.`active` = 1 ' : '').
+					' AND product_shop.`visibility` NOT IN ("none")'.
 					($all_group ? '' : ' AND p.`id_product` IN (
 						SELECT cp.`id_product`
 						FROM `'._DB_PREFIX_.'category_group` cg
@@ -215,7 +216,7 @@ class ManufacturerCore extends ObjectModel
 
 		for ($i = 0; $i < $total_manufacturers; $i++)
 			if ($rewrite_settings)
-				$manufacturers[$i]['link_rewrite'] = Tools::link_rewrite($manufacturers[$i]['name'], false);
+				$manufacturers[$i]['link_rewrite'] = Tools::link_rewrite($manufacturers[$i]['name']);
 			else
 				$manufacturers[$i]['link_rewrite'] = 0;
 
@@ -258,7 +259,7 @@ class ManufacturerCore extends ObjectModel
 
 	public function getLink()
 	{
-		return Tools::link_rewrite($this->name, false);
+		return Tools::link_rewrite($this->name);
 	}
 
 	public static function getProducts($id_manufacturer, $id_lang, $p, $n, $order_by = null, $order_way = null,
@@ -339,7 +340,7 @@ class ManufacturerCore extends ObjectModel
 				'.Shop::addSqlAssociation('product', 'p').'
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
 					ON (p.`id_product` = pa.`id_product`)
-				'.Shop::addSqlAssociation('product_attribute', 'pa', false).'
+				'.Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.`default_on` = 1').'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 					ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').')
 				LEFT JOIN `'._DB_PREFIX_.'image` i

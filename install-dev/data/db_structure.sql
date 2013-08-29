@@ -1437,7 +1437,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `date_upd` datetime NOT NULL,
   PRIMARY KEY (`id_product`, `id_shop`),
   KEY `id_category_default` (`id_category_default`),
-  KEY `date_add` (`date_add`)
+  KEY `date_add` (`date_add` , `active` , `visibility`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_product_attribute` (
@@ -1819,8 +1819,8 @@ CREATE TABLE `PREFIX_store` (
   `address2` varchar(128) DEFAULT NULL,
   `city` varchar(64) NOT NULL,
   `postcode` varchar(12) NOT NULL,
-  `latitude` decimal(11,8) DEFAULT NULL,
-  `longitude` decimal(11,8) DEFAULT NULL,
+  `latitude` decimal(13,8) DEFAULT NULL,
+  `longitude` decimal(13,8) DEFAULT NULL,
   `hours` varchar(254) DEFAULT NULL,
   `phone` varchar(16) DEFAULT NULL,
   `fax` varchar(16) DEFAULT NULL,
@@ -1924,6 +1924,7 @@ CREATE TABLE `PREFIX_log` (
 	`message` text NOT NULL,
 	`object_type` varchar(32) DEFAULT NULL,
 	`object_id` int(10) unsigned DEFAULT NULL,
+	`id_employee` int(10) unsigned DEFAULT NULL,
 	`date_add` datetime NOT NULL,
 	`date_upd` datetime NOT NULL,
 	PRIMARY KEY (`id_log`)

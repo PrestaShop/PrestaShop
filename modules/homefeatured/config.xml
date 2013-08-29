@@ -2,7 +2,7 @@
         <module>
             <name>homefeatured</name>
             <displayName><![CDATA[Featured products on the homepage.]]></displayName>
-            <version><![CDATA[0.9]]></version>
+            <version><![CDATA[1.1]]></version>
             <description><![CDATA[Displays featured products in the middle of your homepage.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>

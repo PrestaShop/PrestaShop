@@ -110,17 +110,21 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 			$this->printErrors();
 		if (!$this->processInstallTheme())
 			$this->printErrors();
-		if (!$this->processSendEmail())
-			$this->printErrors();
+		if ($this->datas->send_email)
+			if (!$this->processSendEmail())
+				$this->printErrors();
 
-		$params = http_build_query(array(
-				'email' => $this->datas->admin_email,
-				'method' => 'addMemberToNewsletter',
-				'language' => $this->datas->lang,
-				'visitorType' => 1,
-				'source' => 'installer'
-			));
-		Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
+		if ($this->datas->newsletter)
+		{
+			$params = http_build_query(array(
+					'email' => $this->datas->admin_email,
+					'method' => 'addMemberToNewsletter',
+					'language' => $this->datas->lang,
+					'visitorType' => 1,
+					'source' => 'installer'
+				));
+			Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
+		}
 	}
 
 	/**
@@ -221,7 +225,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 		$this->initializeContext();
 
 		$this->model_install->xml_loader_ids = $this->datas->xml_loader_ids;
-		$result = $this->model_install->installFixtures();
+		$result = $this->model_install->installFixtures(null, array('shop_activity' => $this->datas->shop_activity, 'shop_country' => $this->datas->shop_country));
 		$this->datas->xml_loader_ids = $this->model_install->xml_loader_ids;
 		return $result;
 	}
@@ -285,4 +289,3 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 		return $this->model_install->installModulesAddons();
 	}
 }
-
