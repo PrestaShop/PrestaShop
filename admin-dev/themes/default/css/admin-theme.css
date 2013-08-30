@@ -6675,9 +6675,6 @@ html, body {
   margin: 0 0 -60px 0;
   background-color: #f8f8f8; }
 
-.container-fluid, .row-fluid {
-  width: 100%; }
-
 #content {
   padding: 90px 20px 0;
   margin-left: 240px;

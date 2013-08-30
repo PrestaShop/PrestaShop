@@ -264,7 +264,7 @@
 				{include file="controllers/products/multishop/checkbox.tpl" only_checkbox="true" field="online_only" type="default"}
 			</div>
 			{/if}
-			<div class="row">
+			<div class="form-group">
 				<label class="control-label col-lg-3" for="available_for_order">{l s='Options:'}</label>
 				<div class="col-lg-5">
 					<p class="checkbox">
@@ -281,7 +281,8 @@
 					</p>
 				</div>
 			</div>
-			<div class="row">
+
+			<div class="form-group">
 				{include file="controllers/products/multishop/checkbox.tpl" field="condition" type="default"}
 				<label class="control-label col-lg-3" for="condition">{l s='Condition:'}</label>
 				<div class="col-lg-3">

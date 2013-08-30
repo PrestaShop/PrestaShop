@@ -63,7 +63,7 @@
 {/block}
 
 {block name="defaultForm"}
-	<div class="row-fluid">
+	<div class="row">
 		<div class="productTabs col-lg-2">
 			<div class="list-group">
 			{foreach $product_tabs key=numStep item=tab}
