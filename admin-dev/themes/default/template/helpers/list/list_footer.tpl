@@ -23,6 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 	</table>
+</div>
 
 	{if $bulk_actions}
 		<div class="btn-group">
