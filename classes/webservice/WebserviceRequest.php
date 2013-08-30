@@ -1260,40 +1260,40 @@ class WebserviceRequestCore
 		if (!isset($this->urlFragments['display']))
 			$this->fieldsToDisplay = 'full';
 
-		// Check if Object is accessible for this/those id_shop
-		$assoc = Shop::getAssoTable($this->resourceConfiguration['retrieveData']['table']);
-		if ($assoc !== false)
-		{
-			$check_shop_group = false;
-
-			$sql = 'SELECT 1
- 						FROM `'.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table']);
-			if ($assoc['type'] != 'fk_shop')
-				$sql .= '_'.$assoc['type'];
-			else
-			{
-				$def = ObjectModel::getDefinition($this->resourceConfiguration['retrieveData']['className']);
-				if (isset($def['fields']) && isset($def['fields']['id_shop_group']))
-					$check_shop_group = true;
-			}
-			$sql .= '`';
-
-			foreach (self::$shopIDs as $id_shop)
-				$OR[] = ' (id_shop = '.(int)$id_shop.($check_shop_group ? ' OR (id_shop = 0 AND id_shop_group='.(int)Shop::getGroupFromShop((int)$id_shop).')' : '').') ';
-
-			$check = ' WHERE ('.implode('OR', $OR).') AND `'.bqSQL($this->resourceConfiguration['fields']['id']['sqlId']).'` = '.(int)$this->urlSegment[1];
-			if (!Db::getInstance()->getValue($sql.$check))
-				$this->setError(403, 'Bad id_shop : You are not allowed to access this '.$this->resourceConfiguration['retrieveData']['className'].' ('.(int)$this->urlSegment[1].')', 131);
-		}
-
 		//get entity details
 		$object = new $this->resourceConfiguration['retrieveData']['className']((int)$this->urlSegment[1]);
 		if ($object->id)
 		{
 			$objects[] = $object;
-			return $objects;
+			// Check if Object is accessible for this/those id_shop
+			$assoc = Shop::getAssoTable($this->resourceConfiguration['retrieveData']['table']);
+			if ($assoc !== false)
+			{
+				$check_shop_group = false;
+
+				$sql = 'SELECT 1
+	 						FROM `'.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table']);
+				if ($assoc['type'] != 'fk_shop')
+					$sql .= '_'.$assoc['type'];
+				else
+				{
+					$def = ObjectModel::getDefinition($this->resourceConfiguration['retrieveData']['className']);
+					if (isset($def['fields']) && isset($def['fields']['id_shop_group']))
+						$check_shop_group = true;
+				}
+				$sql .= '`';
+
+				foreach (self::$shopIDs as $id_shop)
+					$OR[] = ' (id_shop = '.(int)$id_shop.($check_shop_group ? ' OR (id_shop = 0 AND id_shop_group='.(int)Shop::getGroupFromShop((int)$id_shop).')' : '').') ';
+
+				$check = ' WHERE ('.implode('OR', $OR).') AND `'.bqSQL($this->resourceConfiguration['fields']['id']['sqlId']).'` = '.(int)$this->urlSegment[1];
+				if (!Db::getInstance()->getValue($sql.$check))
+					$this->setError(403, 'Bad id_shop : You are not allowed to access this '.$this->resourceConfiguration['retrieveData']['className'].' ('.(int)$this->urlSegment[1].')', 131);
+				else
+					return $objects;
+			}
 		}
-		elseif (!count($this->errors))
+		if (!count($this->errors))
 		{
 			$this->objOutput->setStatus(404);
 			$this->_outputEnabled = false;
