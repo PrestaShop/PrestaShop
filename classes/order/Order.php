@@ -1595,7 +1595,7 @@ class OrderCore extends ObjectModel
 	/**
 	 *
 	 * Get all delivery slips for the current order
-	 * @since 1.5.0.2 
+	 * @since 1.5.0.2
 	 * @return Collection of Order invoice
 	 */
 	public function getDeliverySlipsCollection()

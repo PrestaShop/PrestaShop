@@ -50,6 +50,8 @@
 			{if get_class($document) eq 'OrderInvoice'}
 				{if isset($document->is_delivery)}
 					{l s='Delivery slip'}
+				{elseif isset($document->is_package)}
+					{l s='Package slip'}
 				{else}
 					{l s='Invoice'}
 				{/if}
@@ -61,7 +63,7 @@
 				{if isset($document->is_delivery)}
 					<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order_invoice={$document->id}">
 				{elseif isset($document->is_package)}
-					PACKAGE, WORKING HERE
+					<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generatePackageSlipPDF&id_order_invoice={$document->id}">
 			   	{else}
 					<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateInvoicePDF&id_order_invoice={$document->id}">
 			   {/if}
@@ -71,6 +73,8 @@
 			{if get_class($document) eq 'OrderInvoice'}
 				{if isset($document->is_delivery)}
 					#{Configuration::get('PS_DELIVERY_PREFIX', $current_id_lang)}{'%06d'|sprintf:$document->delivery_number}
+				{elseif isset($document->is_package)}
+					#PACKSLIP
 				{else}
 					{$document->getInvoiceNumberFormatted($current_id_lang)}
 				{/if}
@@ -80,6 +84,8 @@
 		<td class="document_amount">
 		{if get_class($document) eq 'OrderInvoice'}
 			{if isset($document->is_delivery)}
+				--
+			{elseif isset($document->is_package)}
 				--
 			{else}
 				{displayPrice price=$document->total_paid_tax_incl currency=$currency->id}&nbsp;

@@ -80,6 +80,22 @@ class AdminPdfControllerCore extends AdminController
 			die (Tools::displayError('The order ID -- or the invoice order ID -- is missing.'));
 	}
 
+	public function processGeneratePackageSlipPDF()
+	{
+// 		if (Tools::isSubmit('id_order'))
+// 			$this->generateDeliverySlipPDFByIdOrder((int)Tools::getValue('id_order'));
+// 		else
+		if (Tools::isSubmit('id_order_invoice'))
+			$this->generatePackageSlipPDFByIdOrderInvoice((int)Tools::getValue('id_order_invoice'));
+// 		elseif (Tools::isSubmit('id_delivery'))
+// 		{
+// 			$order = Order::getByDelivery((int)Tools::getValue('id_delivery'));
+// 			$this->generateDeliverySlipPDFByIdOrder((int)$order->id);
+// 		}
+		else
+			die (Tools::displayError('The order ID -- or the invoice order ID -- is missing.'));
+	}
+
 	public function processGenerateInvoicesPDF()
 	{
 		$order_invoice_collection = OrderInvoice::getByDateInterval(Tools::getValue('date_from'), Tools::getValue('date_to'));
@@ -157,6 +173,15 @@ class AdminPdfControllerCore extends AdminController
 			throw new PrestaShopException('Can\'t load Order Invoice object');
 
 		$this->generatePDF($order_invoice, PDF::TEMPLATE_DELIVERY_SLIP);
+	}
+
+	public function generatePackageSlipPDFByIdOrderInvoice($id_order_invoice)
+	{
+		$order_invoice = new OrderInvoice((int)$id_order_invoice);
+		if (!Validate::isLoadedObject($order_invoice))
+			throw new PrestaShopException('Can\'t load Order Invoice object');
+
+		$this->generatePDF($order_invoice, PDF::TEMPLATE_PACKAGE_SLIP);
 	}
 
 	public function generateInvoicePDFByIdOrder($id_order)
