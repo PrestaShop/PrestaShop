@@ -80,7 +80,6 @@ html, body
 
 #header_infos
 	@extend .navbar
-	//@extend .navbar-default
 	@extend .navbar-inverse
 	@extend .navbar-fixed-top
 	background-color: $bg-header-color
@@ -323,12 +322,12 @@ html, body
 				text-decoration: none
 				i
 					color: $main-color
-		&.active
+		li.active
 			a
 				color: contrast-color($brand-primary, white, #333, 10%)
 				background-color: $brand-primary
 				i
-					color: $main-color
+					color: contrast-color($brand-primary, white, #333, 10%)
 	@media (max-width: $screen-tablet)
 		display: none
 
@@ -798,7 +797,6 @@ fieldset > .row
 		fill: rgba(white,0.30)
 		stroke-width: 0
 
-
 .highlighted
 	background-color: blue
 
@@ -948,6 +946,7 @@ fieldset > .row
 .dash_trend_up
 	color: green
 
+
 #dashboard
 	section
 		header
@@ -1040,7 +1039,6 @@ fieldset > .row
 			display: block
 			text-align: center
 			
-
 	#dash_trends
 		header
 			margin-bottom: 0
@@ -1086,5 +1084,3 @@ fieldset > .row
 	#dash_activity
 		svg
 			height: 150px
-
-
