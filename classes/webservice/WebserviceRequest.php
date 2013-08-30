@@ -1288,7 +1288,7 @@ class WebserviceRequestCore
 
 				$check = ' WHERE ('.implode('OR', $OR).') AND `'.bqSQL($this->resourceConfiguration['fields']['id']['sqlId']).'` = '.(int)$this->urlSegment[1];
 				if (!Db::getInstance()->getValue($sql.$check))
-					$this->setError(403, 'Bad id_shop : You are not allowed to access this '.$this->resourceConfiguration['retrieveData']['className'].' ('.(int)$this->urlSegment[1].')', 131);
+					$this->setError(404, 'This '.$this->resourceConfiguration['retrieveData']['className'].' ('.(int)$this->urlSegment[1].') does not exists on this shop', 131);
 				else
 					return $objects;
 			}
