@@ -84,9 +84,7 @@ html, body
 	background-color: $bg-header-color
 #header_shopname
 	@extend .navbar-brand
-	font-size: 1.3em
-	font-family: "ubuntu"
-	font-weight: 300
+	font: 300 1.3em/100% $headings-font-family
 #header_notifs_icon_wrapper
 	@extend .hidden-xs
 	@extend .nav
@@ -169,7 +167,7 @@ html, body
 			color: contrasted($bg-panel-heading-color)
 		.badge
 			background-color: lighten($bg-panel-heading-color,20%)
-			border-radius: 0
+			@include border-radius(none)
 			height: 29px
 			line-height: 25px
 			font-size: 1.3em
@@ -239,7 +237,7 @@ html, body
 		border-top: 1px black solid
 		.maintab > a [class^="icon-"], .menu .maintab > a [class*=" icon-"]
 			font-size: 20px
-			border-radius: 40px
+			@include border-radius(40px)
 			height: 30px
 			width: 30px
 			color: white
@@ -260,6 +258,7 @@ html, body
 			background-color: white
 	> ul
 		> li
+			position: relative
 			&.active > a
 				color: contrast-color($main-color, white, #333, 10%)
 				background-color: $secondary-color
@@ -299,9 +298,8 @@ html, body
 					@include transition-property(color)
 					@include transition-duration(0.4s)
 					@include transition-timing-function(ease-out)
-			img
-				margin-right: 10px
 	ul.submenu
+		@include box-shadow(rgba(black,0.3) 2px 2px 4px)
 		a
 			display: block
 			padding: 2px 5px 2px 10px
@@ -337,6 +335,9 @@ html, body
 		span.title
 			display: none
 		ul.submenu
+			padding-top: 38px
+			position: relative
+			top: 0
 			display: none!important
 		> ul > li:hover
 			width: 250px!important
@@ -863,15 +864,15 @@ fieldset > .row
 		@include border-radius(3px)
 .module_col_select
 	display: table-cell
-	vertical-align: middle
-	text-align: center
 	width: 22px
 	min-height: 35px
+	vertical-align: middle
+	text-align: center
 	border-right: 1px solid #ddd
 .module_col_position
 	display: table-cell
-	vertical-align: middle
 	width: 60px
+	vertical-align: middle
 	text-align: right
 	.positions
 		font-family: $headings-font-family
@@ -886,19 +887,21 @@ fieldset > .row
 		background-color: #eee
 .module_col_icon
 	display: table-cell
+	width: 50px
 	text-align: center
 	vertical-align: middle
-	width: 50px
+	
 .module_col_infos
 	display: table-cell
-	vertical-align: middle
 	height: 50px
+	vertical-align: middle
+	
 .module_col_actions
-	width: 160px
 	display: table-cell
+	width: 160px
+	padding: 0 10px
 	vertical-align: middle
 	text-align: right
-	padding: 0 10px
 	.btn-group
 		text-align: left
 
@@ -1055,8 +1058,8 @@ fieldset > .row
 			text-align: center
 			height: 37px
 			line-height: 1em
-			font-size: 1.1em
-			font-weight: 300
+			font: 300 1.1em/120% $headings-font-family
+
 		svg
 			height: 350px
 			
