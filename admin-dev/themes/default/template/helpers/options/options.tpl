@@ -174,9 +174,9 @@
 										<div class="col-lg-9">
 							              <input type="color" size="{$field['size']}" data-hex="true" {if isset($input.class)}class="{$field['class']}" {else}class="color mColorPickerInput"{/if} name="{$field['name']}" class="{if isset($field['class'])}{$field['class']}{/if}" value="{$field['value']|escape:'htmlall':'UTF-8'}" />
 							            </div>
-									{elseif $field['type'] == 'price' && isset($currency)}
+									{elseif $field['type'] == 'price'}
 										<div class="input-group col-lg-9">
-											<span class="input-group-addon">{$currency->prefix}{$currency->suffix} {l s='(tax excl.)'}</span>
+											<span class="input-group-addon">{$currency_left_sign}{$currency_right_sign} {l s='(tax excl.)'}</span>
 											<input type="text" size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="{$field['value']|escape:'htmlall':'UTF-8'}" />
 										</div>
 									{elseif $field['type'] == 'textLang' || $field['type'] == 'textareaLang' || $field['type'] == 'selectLang'}
