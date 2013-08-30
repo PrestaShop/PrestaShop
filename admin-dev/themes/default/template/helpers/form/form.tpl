@@ -59,7 +59,7 @@
 								{if isset($input.label)}
 									<label for="{if isset($input.id)}{$input.id}{if isset($input.lang) AND $input.lang}_{$current_id_lang}{/if}{else}{$input.name}{if isset($input.lang) AND $input.lang}_{$current_id_lang}{/if}{/if}" class="control-label col-lg-3 {if isset($input.required) && $input.required && $input.type != 'radio'}required{/if}">
 										{if isset($input.hint)}
-										<span class="label-tooltip" data-toggle="tooltip"
+										<span class="label-tooltip" data-toggle="tooltip" data-html="true"
 											title="
 												{if is_array($input.hint)}
 													{foreach $input.hint as $hint}
