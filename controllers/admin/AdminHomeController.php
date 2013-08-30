@@ -503,7 +503,7 @@ class AdminHomeControllerCore extends AdminController
 
 		// SHOW TIPS OF THE DAY
 		$content = Tools::file_get_contents($protocol.'api.prestashop.com/partner/tipsoftheday/?iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser), false, $stream_context);
-		$content = explode('|', $content);
+		$content = explode('|', utf8_encode($content));
 		if ($content[0] == 'OK' && Validate::isCleanHtml($content[1]))
 			$result['discover_prestashop'] .= '<div id="block_partner_tips">'.$content[1].'</div></div>';
 
