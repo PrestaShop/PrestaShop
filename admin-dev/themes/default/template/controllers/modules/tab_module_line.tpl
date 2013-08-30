@@ -27,11 +27,11 @@
 
 <tr>
 	<td class="center">
-		<img width="57" alt="" src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}">
+		<img width="32" alt="" src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}">
 	</td>
 	<td>
 		<div id="anchor{$module->name|ucfirst}">
-			<h4>
+			<span>
 				{$module->displayName|truncate:40:'…'} {$module->version}
 				{if isset($module->id) && $module->id gt 0 }
 					{if $module->active}
@@ -46,14 +46,12 @@
 						<span class="label label-warning">{l s='Not installed'}</span>
 					{/if}
 				{/if}
-			</h4>
-			<p>
-				{if isset($module->description) && $module->description ne ''}
-					{$module->description|truncate:100:'…'}
-				{else}
-					&nbsp;
-				{/if}
+			</span>
+			{if isset($module->description) && $module->description ne ''}
+			<p class="text-muted">
+				{$module->description|truncate:100:'…'}
 			</p>
+			{/if}
 		</div>
 	</td>
 	{if isset($module->type) && $module->type == 'addonsMustHave'}

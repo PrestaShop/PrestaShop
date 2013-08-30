@@ -235,8 +235,9 @@
 		</span>
 		{/if}
 {/if}
+	<div class="table-responsive">
 		<table 
-			class="table table-hover"
+			class="table"
 			name="list_table"
 			{if $table_id} id={$table_id}{/if}
 			class="table {if $table_dnd}tableDnD{/if} {$table}"
