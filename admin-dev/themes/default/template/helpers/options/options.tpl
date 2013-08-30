@@ -76,7 +76,7 @@
 								{block name="label"}
 									{if isset($field['title']) && isset($field['hint'])}
 										<label class="control-label col-lg-3 {if isset($field['required']) && $field['required'] && $field['type'] != 'radio'}required{/if}">
-											<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{$field['hint']}">
+											<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{$field['hint']}" data-html="true">
 												{$field['title']}
 											</span>
 										</label>
