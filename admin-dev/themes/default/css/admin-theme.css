@@ -6879,11 +6879,11 @@ html, body {
       text-decoration: none; }
       #nav-sidebar ul.submenu a:hover i {
         color: #3a3a4a; }
-  #nav-sidebar ul.submenu.active a {
+  #nav-sidebar ul.submenu li.active a {
     color: white;
     background-color: #1d7878; }
-    #nav-sidebar ul.submenu.active a i {
-      color: #3a3a4a; }
+    #nav-sidebar ul.submenu li.active a i {
+      color: white; }
   @media (max-width: 768px) {
     #nav-sidebar {
       display: none; } }
