@@ -284,16 +284,17 @@ class AdminMetaControllerCore extends AdminController
 					'lang' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
 					'desc' => $this->l('Title of this page'),
-					'size' => 30
+					'size' => 70
 				),
 				array(
-					'type' => 'text',
+					'type' => 'textarea',
 					'label' => $this->l('Meta description:'),
 					'name' => 'description',
 					'lang' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
 					'desc' => $this->l('A short description of your shop'),
-					'size' => 50
+					'rows' => 5,
+					'cols' => 80
 				),
 				array(
 					'type' => 'tags',
@@ -312,7 +313,7 @@ class AdminMetaControllerCore extends AdminController
 					'required' => true,
 					'hint' => $this->l('Only letters and hyphens are allowed'),
 					'desc' => $this->l('e.g. "contacts" for http://mysite.com/shop/contacts to redirect to http://mysite.com/shop/contact-form.php'),
-					'size' => 50
+					'size' => 70
 				),
 			),
 			'submit' => array(
