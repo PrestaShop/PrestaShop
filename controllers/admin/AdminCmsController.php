@@ -115,15 +115,16 @@ class AdminCmsControllerCore extends AdminController
 					'required' => true,
 					'class' => 'copy2friendlyUrl',
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'size' => 50
+					'size' => 70
 				),
 				array(
-					'type' => 'text',
+					'type' => 'textarea',
 					'label' => $this->l('Meta description'),
 					'name' => 'meta_description',
 					'lang' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'size' => 70
+					'rows' => 5,
+					'cols' => 80
 				),
 				array(
 					'type' => 'tags',
@@ -139,6 +140,7 @@ class AdminCmsControllerCore extends AdminController
 					'label' => $this->l('Friendly URL'),
 					'name' => 'link_rewrite',
 					'required' => true,
+					'size' => 70,
 					'lang' => true,
 					'hint' => $this->l('Only letters and the minus (-) character are allowed')
 				),
