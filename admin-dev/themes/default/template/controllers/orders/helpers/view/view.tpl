@@ -100,7 +100,7 @@
 				<dd id="product_number">{sizeof($products)}</dd>
 			|</dl>
 			<dl>
-				<dt>{l s='Total'}</dt>
+				<dt>{l s='Total:'}</dt>
 				<dd class="total_paid">{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}</dd>
 			</dl>
 		<div class="clear"></div>
@@ -112,12 +112,13 @@
 			<!-- Change status form -->
 			<form action="{$currentIndex}&vieworder&token={$smarty.get.token}" method="post">
 				<select id="id_order_state" name="id_order_state">
+				<option value="">-- {l s='choose status'} --</option>
 				{foreach from=$states item=state}
 					<option value="{$state['id_order_state']}"{if $state['id_order_state'] == $currentState->id} selected="selected" disabled="disabled"{/if}>{$state['name']|stripslashes}</option>
 				{/foreach}
 				</select>
 				<input type="hidden" name="id_order" value="{$order->id}" />
-				<input type="submit" name="submitState" value="{l s='Add'}" class="button" />
+				<input type="submit" name="submitState" value="{l s='Change order status'}" class="button" />
 			</form>
 			<br />
 
