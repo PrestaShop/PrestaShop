@@ -83,13 +83,15 @@ class AddressesControllerCore extends FrontController
 
 		$addresses_style = array(
 			'company' => 'address_company',
-			'vat_number' => 'address_company',
+			'dni' => 'address_dni',
+			'vat_number' => 'address_vat_number',
 			'firstname' => 'address_name',
 			'lastname' => 'address_name',
 			'address1' => 'address_address1',
 			'address2' => 'address_address2',
 			'city' => 'address_city',
 			'country' => 'address_country',
+			'Country:name' => 'address_country',
 			'phone' => 'address_phone',
 			'phone_mobile' => 'address_phone_mobile',
 			'alias' => 'address_title',
