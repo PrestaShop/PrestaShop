@@ -25,7 +25,7 @@
 
 <!-- MODULE Home Block best sellers -->
 <div id="best-sellers_block_center" class="block products_block">
-	<h4 class="title_block">{l s='Top sellers' mod='blockbestsellers'}</h4>
+	<p class="title_block">{l s='Best sellers' mod='blockbestsellers'}</p>
 	{if isset($best_sellers) AND $best_sellers}
 		<div class="block_content">
 			{assign var='liHeight' value=320}
@@ -46,7 +46,7 @@
 				</li>
 			{/foreach}
 			</ul>
-			<p class="clearfix" style="padding: 5px;"><a style="float:right;" href="{$link->getPageLink('best-sales')|escape:'html'}" title="{l s='All best sellers' mod='blockbestsellers'}" class="button_large">{l s='All best sellers' mod='blockbestsellers'}</a></p>
+			<p class="clearfix" style="padding: 5px;"><a style="float:right;" href="{$link->getPageLink('best-sales')|escape:'html'}" title="{l s='View all best sellers' mod='blockbestsellers'}" class="button_large">{l s='All best sellers' mod='blockbestsellers'}</a></p>
 		</div>
 	{else}
 		<p>{l s='No best sellers' mod='blockbestsellers'}</p>
