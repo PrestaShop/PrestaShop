@@ -90,8 +90,8 @@ class AdminSuppliersControllerCore extends AdminController
 					'type' => 'textarea',
 					'label' => $this->l('Description:'),
 					'name' => 'description',
-					'cols' => 60,
-					'rows' => 10,
+					'cols' => 100,
+					'rows' => 8,
 					'lang' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
 					'desc' => $this->l('Will appear in the supplier list')
@@ -168,14 +168,17 @@ class AdminSuppliersControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Meta title:'),
 					'name' => 'meta_title',
+					'size' => 80,
 					'lang' => true,
 					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
 				),
 				array(
-					'type' => 'text',
+					'type' => 'textarea',
 					'label' => $this->l('Meta description:'),
 					'name' => 'meta_description',
 					'lang' => true,
+					'rows' => 5,
+					'cols' => 100,
 					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
 				),
 				array(
