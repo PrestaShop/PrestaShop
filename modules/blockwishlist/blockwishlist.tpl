@@ -24,9 +24,7 @@
 *}
 
 <div id="wishlist_block" class="block account">
-	<h4 class="title_block">
-		<a href="{$wishlist_link}" title="{l s='My wishlists' mod='blockwishlist'}" rel="nofollow">{l s='Wishlist' mod='blockwishlist'}</a>
-	</h4>
+	<p class="title_block"><a href="{$wishlist_link}" title="{l s='View your wishlists' mod='blockwishlist'}" rel="nofollow">{l s='Wishlist' mod='blockwishlist'}</a></p>
 	<div class="block_content">
 		<div id="wishlist_block_list" class="expanded">
 		{if $wishlist_products}
@@ -47,7 +45,7 @@
 			</dl>
 		{else}
 			<dl class="products">
-				<dt>{l s='No products' mod='blockwishlist'}</dt>
+				<div class="no_product">{l s='No products in your wishlist' mod='blockwishlist'}</div>
 			</dl>
 		{/if}
 		</div>
@@ -59,7 +57,7 @@
 			{/foreach}
 			</select>
 		{/if}
-			<a href="{$wishlist_link}" title="{l s='My wishlists' mod='blockwishlist'}">&raquo; {l s='My wishlists' mod='blockwishlist'}</a>
+			<a href="{$wishlist_link}" title="{l s='View your wishlists' mod='blockwishlist'}">&raquo; {l s='My wishlists' mod='blockwishlist'}</a>
 		</p>
 	</div>
 </div>
