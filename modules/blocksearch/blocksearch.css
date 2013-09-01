@@ -26,7 +26,7 @@
 	height: 25px;
 }
 
-form#searchbox{padding-top:5px}
+#search_block_top form#searchbox{padding-top:5px}
 form#searchbox label{color:#333;margin-bottom:1px}
 form#searchbox input#search_query_block{
 	border: 1px solid #CCCCCC;
