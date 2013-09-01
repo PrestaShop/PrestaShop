@@ -438,6 +438,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Friendly URL:'),
 					'name' => 'link_rewrite',
+					'size' => 80,
 					'lang' => true,
 					'required' => true,
 					'hint' => $this->l('Only letters and the minus (-) character are allowed.')
