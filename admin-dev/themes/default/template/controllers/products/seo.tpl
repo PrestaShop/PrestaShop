@@ -50,7 +50,7 @@
 			<label>{l s='Meta description:'}</label>
 		</td>
 		<td>
-			{include file="controllers/products/input_text_lang.tpl"
+			{include file="controllers/products/input_textarea_lang.tpl"
 				languages=$languages
 				input_name='meta_description'
 				input_value=$product->meta_description
