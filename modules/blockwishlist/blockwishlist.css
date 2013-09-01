@@ -31,7 +31,7 @@
 	margin-top:5px;
 	padding-right:20px
 }
-
+#wishlist_block_list .no_product { text-align: center; margin: 10px 0 0 }
 #wishlist_block_list .quantity-formated {
 	display:inline-block;
 	margin-right:5px;
