@@ -81,10 +81,10 @@
 
 				<div id="ajax_choose_product">
 					<p style="clear:both;margin-top:0;">
-						<input type="text" value="" id="product_autocomplete_input" />
-						{l s='Begin typing the first letters of the product name, then select the product from the drop-down list.'}
+						<input type="text" value="" id="product_autocomplete_input" size="50" />
 					</p>
-					<p class="preference_description">{l s='(Do not forget to save the product afterward)'}</p>
+					<p class="preference_description">{l s='Begin typing the first letters of the product name, then select the product from the drop-down list.'}<br />
+					{l s='(Do not forget to save the product afterward)'}</p>
 					<!--<img onclick="$(this).prev().search();" style="cursor: pointer;" src="../img/admin/add.gif" alt="{l s='Add an accessory'}" title="{l s='Add an accessory'}" />-->
 				</div>
 				<div id="divAccessories">
