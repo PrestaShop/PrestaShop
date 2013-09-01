@@ -92,6 +92,6 @@
 				</tr>
 			{/if}
 		</table>
-		<div><input type="submit" class="button space" name="submitModule{$list['name_id']}" value="{l s='Save restrictions'}" /></div>
+		<div><br /><input type="submit" class="button space" name="submitModule{$list['name_id']}" value="{l s='Save restrictions'}" /></div>
 	</fieldset>
 </form>
