@@ -37,25 +37,25 @@
 	<tr>
 		<td class="col-left"><label>{l s='Width (package):'}</label></td>
 		<td style="padding-bottom:5px;">
-			<input size="6" maxlength="6" name="width" type="text" value="{$product->width}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />{$bullet_common_field}  {$ps_dimension_unit}
+			<input size="10" maxlength="6" name="width" type="text" value="{$product->width}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />{$bullet_common_field}  {$ps_dimension_unit}
 		</td>
 	</tr>
 	<tr>
 		<td class="col-left"><label>{l s='Height (package):'}</label></td>
 		<td style="padding-bottom:5px;">
-			<input size="6" maxlength="6" name="height" type="text" value="{$product->height}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />{$bullet_common_field}  {$ps_dimension_unit}
+			<input size="10" maxlength="6" name="height" type="text" value="{$product->height}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />{$bullet_common_field}  {$ps_dimension_unit}
 		</td>
 	</tr>
 	<tr>
 	<td class="col-left"><label>{l s='Depth (package):'}</label></td>
 	<td style="padding-bottom:5px;">
-	<input size="6" maxlength="6" name="depth" type="text" value="{$product->depth}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />{$bullet_common_field}  {$ps_dimension_unit}
+	<input size="10" maxlength="6" name="depth" type="text" value="{$product->depth}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />{$bullet_common_field}  {$ps_dimension_unit}
 	</td>
 	</tr>
 	<tr>
 	<td class="col-left"><label>{l s='Weight (package):'}</label></td>
 	<td style="padding-bottom:5px;">
-	<input size="6" maxlength="6" name="weight" type="text" value="{$product->weight}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />{$bullet_common_field}  {$ps_weight_unit}
+	<input size="10" maxlength="6" name="weight" type="text" value="{$product->weight}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />{$bullet_common_field}  {$ps_weight_unit}
 	</td>
 	</tr>
 	<tr>
@@ -71,7 +71,7 @@
 			<label>{l s='Carriers:'}</label>
 		</td>
 		<td class="padding-bottom:5px;">
-			<select name="carriers[]" id="carriers_restriction" multiple="multiple" size="4" style="height:100px;width:300px;">
+			<select name="carriers[]" id="carriers_restriction" multiple="multiple" size="4" style="height:100px;width:400px;">
 				{foreach $carrier_list as $carrier}
 					<option value="{$carrier.id_reference}" {if isset($carrier.selected) && $carrier.selected}selected="selected"{/if}>{$carrier.name}</option>
 				{/foreach}
