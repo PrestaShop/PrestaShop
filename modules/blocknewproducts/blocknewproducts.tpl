@@ -25,7 +25,7 @@
 
 <!-- MODULE Block new products -->
 <div id="new-products_block_right" class="block products_block">
-	<h4 class="title_block"><a href="{$link->getPageLink('new-products')|escape:'html'}" title="{l s='New products' mod='blocknewproducts'}">{l s='New products' mod='blocknewproducts'}</a></h4>
+	<h4 class="title_block"><a href="{$link->getPageLink('new-products')|escape:'html'}" title="{l s='View list of the new products' mod='blocknewproducts'}">{l s='New products' mod='blocknewproducts'}</a></h4>
 	<div class="block_content">
 	{if $new_products !== false}
 		<ul class="product_images clearfix">
