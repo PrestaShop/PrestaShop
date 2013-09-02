@@ -34,43 +34,54 @@ $(function() {
 	<div class="leadin">{block name="leadin"}{/block}</div>
 {/if}
 
+
 {if isset($features)}
+	<div class="panel">
 	{if !$features}
 		<h3>{l s='No features matching your query'} : {$query}</h3>
 	{else}
 		<h3>{l s='Features matching your query'} : {$query}</h3>
-		<table class="table" cellpadding="0" cellspacing="0">
+		<table class="table">
+			<tbody>
 			{foreach $features key=key item=feature}
 				{foreach $feature key=k item=val name=feature_list}
 					<tr>
-						<th>{if $smarty.foreach.feature_list.first}{$key}{/if}</th>
+						<td><strong>{if $smarty.foreach.feature_list.first}{$key}{/if}</strong></td>
+
 						<td>
 							<a href="{$val.link}">{$val.value}</a>
 						</td>
 					</tr>
 				{/foreach}
 			{/foreach}
+			</tbody>
 		</table>
-		<div class="clear">&nbsp;</div>
 	{/if}
+	</div>
 {/if}
+
 {if isset($modules)}
+	<div class="panel">
 	{if !$modules}
 		<h3>{l s='No modules matching your query'} : {$query}</h3>
 	{else}
 		<h3>{l s='Modules matching your query'} : {$query}</h3>
-		<table class="table" cellpadding="0" cellspacing="0">
+		<table class="table">
+			<tbody>
 			{foreach $modules key=key item=module}
 				<tr>
-					<th><a href="{$module->linkto|escape:'htmlall':'UTF-8'}">{$module->displayName}</a></th>
+					<td><strong><a href="{$module->linkto|escape:'htmlall':'UTF-8'}">{$module->displayName}</a></strong></td>
 					<td><a href="{$module->linkto|escape:'htmlall':'UTF-8'}">{$module->description}</a></td>
 				</tr>
 			{/foreach}
+		</tbody>
 		</table>
-		<div class="clear">&nbsp;</div>
 	{/if}
+	</div>
 {/if}
+
 {if isset($categories)}
+	<div class="panel">
 	{if !$categories}
 		<h3>{l s='No categories matching your query'} : {$query}</h3>
 	{else}
@@ -82,30 +93,39 @@ $(function() {
 				</tr>
 			{/foreach}
 		</table>
-		<div class="clear">&nbsp;</div>
 	{/if}
+	</div>
 {/if}
+
 {if isset($products)}
+	<div class="panel">
 	{if !$products}
 		<h3>{l s='There are no products matching your query'} : {$query}</h3>
 	{else}
 		<h3>{l s='Products matching your query'} : {$query}</h3>
 		{$products}
 	{/if}
+	</div>
 {/if}
+
 {if isset($customers)}
+	<div class="panel">
 	{if !$customers}
 		<h3>{l s='There are no customers matching your query'} : {$query}</h3>
 	{else}
 		<h3>{l s='Customers matching your query'} : {$query}</h3>
 		{$customers}
 	{/if}
+	</div>
 {/if}
+
 {if isset($orders)}
+	<div class="panel">
 	{if !$orders}
 		<h3>{l s='There are no orders matching your query'} : {$query}</h3>
 	{else}
 		<h3>{l s='Orders matching your query'} : {$query}</h3>
 		{$orders}
 	{/if}
+	</div>
 {/if}
