@@ -256,7 +256,7 @@ class AdminManufacturersControllerCore extends AdminController
 					'lang' => true,
 					'cols' => 60,
 					'rows' => 10,
-					'class' => 'rte',
+					'autoload_rte' => 'rte', //Enable TinyMCE editor for short description
 					'hint' => $this->l('Invalid characters:').' <>;=#{}'
 				),
 				array(
@@ -266,7 +266,7 @@ class AdminManufacturersControllerCore extends AdminController
 					'lang' => true,
 					'cols' => 60,
 					'rows' => 10,
-					'class' => 'rte',
+					'autoload_rte' => 'rte', //Enable TinyMCE editor for description
 					'hint' => $this->l('Invalid characters:').' <>;=#{}'
 				),
 				array(
