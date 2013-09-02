@@ -30,9 +30,9 @@ class AdminPerformanceControllerCore extends AdminController
 	public function __construct()
 	{
 		$this->className = 'Configuration';
-		parent::__construct();		
+		parent::__construct();
 	}
-	
+
 	public function initFieldsetSmarty()
 	{
 		$this->fields_form[0]['form'] = array(
@@ -399,21 +399,25 @@ class AdminPerformanceControllerCore extends AdminController
 	{
 		$caching_system = array(
 			0 => array(
-				'id' => 'CacheMemcache',
-				'name' => $this->l('Memcached')
-			),
-			1 => array(
-				'id' => 'CacheApc',
-				'name' => $this->l('APC')
-			),
-			2 => array(
-				'id' => 'CacheXcache',
-				'name' => $this->l('Xcache')
-			),
-			3 => array(
-				'id' => 'CacheFs',
-				'name' => $this->l('File System')
-			)
+                'id' => 'CacheMemcache',
+                'name' => $this->l('Memcached')
+            ),
+            1 => array(
+                'id' => 'CacheApc',
+                'name' => $this->l('APC')
+            ),
+            2 => array(
+                'id' => 'CacheXcache',
+                'name' => $this->l('Xcache')
+            ),
+            3 => array(
+                'id' => 'CacheFs',
+                'name' => $this->l('File System')
+            ),
+            4 => array(
+                'id' => 'CacheMemcached',
+                'name' => $this->l('libMemcached')
+            )
 		);
 
 		$this->fields_form[5]['form'] = array(
@@ -506,6 +510,11 @@ class AdminPerformanceControllerCore extends AdminController
 				<a href="http://www.php.net/manual/'.substr($php_lang, 0, 2).'/memcache.installation.php" target="_blank">
 					http://www.php.net/manual/'.substr($php_lang, 0, 2).'/memcache.installation.php
 				</a>';
+		if (!extension_loaded('memcached'))
+			$this->warnings[] = $this->l('To use Memcached, you must install the Memcache PECL extension on your server.').'
+				<a href="http://www.php.net/manual/'.substr($php_lang, 0, 2).'/memcache.installation.php" target="_blank">
+					http://www.php.net/manual/'.substr($php_lang, 0, 2).'/memcache.installation.php
+				</a>';
 		if (!extension_loaded('apc'))
 		{
 			$this->warnings[] = $this->l('To use APC, you must install the APC PECL extension on your server.').'
@@ -540,7 +549,7 @@ class AdminPerformanceControllerCore extends AdminController
 
 	public function postProcess()
 	{
-	
+
 		/* PrestaShop demo mode */
 		if (_PS_MODE_DEMO_)
 		{
@@ -618,7 +627,7 @@ class AdminPerformanceControllerCore extends AdminController
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
-				$theme_cache_directory = _PS_ALL_THEMES_DIR_.$this->context->shop->theme_directory.'/cache/';							
+				$theme_cache_directory = _PS_ALL_THEMES_DIR_.$this->context->shop->theme_directory.'/cache/';
 				if (((bool)Tools::getValue('PS_CSS_THEME_CACHE') || (bool)Tools::getValue('PS_JS_THEME_CACHE')) && !is_writable($theme_cache_directory))
 					$this->errors[] = Tools::displayError(sprintf($this->l('To use Smart Cache directory %s must be writable.'), realpath($theme_cache_directory)));
 				if (!Configuration::updateValue('PS_CSS_THEME_CACHE', (int)Tools::getValue('PS_CSS_THEME_CACHE')) ||
@@ -670,7 +679,7 @@ class AdminPerformanceControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 		if ((bool)Tools::getValue('ciphering_up') && Configuration::get('PS_CIPHER_ALGORITHM') != (int)Tools::getValue('PS_CIPHER_ALGORITHM'))
-		{				
+		{
 			if ($this->tabAccess['edit'] === '1')
 			{
 				$algo = (int)Tools::getValue('PS_CIPHER_ALGORITHM');
@@ -742,11 +751,14 @@ class AdminPerformanceControllerCore extends AdminController
 						'define(\'_PS_CACHING_SYSTEM_\', \''.$caching_system.'\');',
 						$new_settings
 					);
-					
+
 				if ($cache_active && $caching_system == 'CacheMemcache' && !extension_loaded('memcache'))
 					$this->errors[] = Tools::displayError('To use Memcached, you must install the Memcache PECL extension on your server.').'
 						<a href="http://www.php.net/manual/en/memcache.installation.php">http://www.php.net/manual/en/memcache.installation.php</a>';
-				elseif ($cache_active && $caching_system == 'CacheApc' && !extension_loaded('apc'))
+				elseif ($cache_active && $caching_system == 'CacheMemcached' && !extension_loaded('memcached'))
+					$this->errors[] = Tools::displayError('To use Memcached, you must install libmemcached and PECL Memcached extension on your server.').'
+						<a href="http://www.php.net/manual/en/memcached.installation.php" target="_blank">http://www.php.net/manual/en/memcached.installation.php</a>';
+                elseif ($cache_active && $caching_system == 'CacheApc' && !extension_loaded('apc'))
 					$this->errors[] = Tools::displayError('To use APC cache, you must install the APC PECL extension on your server.').'
 						<a href="http://fr.php.net/manual/fr/apc.installation.php">http://fr.php.net/manual/fr/apc.installation.php</a>';
 				elseif ($cache_active && $caching_system == 'CacheXcache' && !extension_loaded('xcache'))
@@ -754,7 +766,7 @@ class AdminPerformanceControllerCore extends AdminController
 						<a href="http://xcache.lighttpd.net">http://xcache.lighttpd.net</a>';
 				else if ($cache_active && $caching_system == 'CacheXcache' && !ini_get('xcache.var_size'))
 					$this->errors[] = Tools::displayError('To use Xcache, you must configure "xcache.var_size" for the Xcache extension (recommended value 16M to 64M).').'
-						<a href="http://xcache.lighttpd.net/wiki/XcacheIni">http://xcache.lighttpd.net/wiki/XcacheIni</a>';						
+						<a href="http://xcache.lighttpd.net/wiki/XcacheIni">http://xcache.lighttpd.net/wiki/XcacheIni</a>';
 				elseif ($cache_active && $caching_system == 'CacheFs' && !is_writable(_PS_CACHEFS_DIRECTORY_))
 					$this->errors[] = sprintf(
 						Tools::displayError('To use CacheFS, the directory %s must be writable.'),
@@ -773,6 +785,8 @@ class AdminPerformanceControllerCore extends AdminController
 					}
 				}
 				elseif ($caching_system == 'CacheMemcache' && $cache_active && !_PS_CACHE_ENABLED_ && _PS_CACHING_SYSTEM_ == 'CacheMemcache')
+					Cache::getInstance()->flush();
+				elseif ($caching_system == 'CacheMemcached' && $cache_active && !_PS_CACHE_ENABLED_ && _PS_CACHING_SYSTEM_ == 'CacheMemcached')
 					Cache::getInstance()->flush();
 
 				if (!count($this->errors))

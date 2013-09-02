@@ -129,7 +129,7 @@
 
 	function showMemcached()
 	{
-		if ($('#caching_system option:selected').val() == 'CacheMemcache')
+		if ($('#caching_system option:selected').val() == 'CacheMemcache' || $('#caching_system option:selected').val() == 'CacheMemcached')
 		{
 			$('#memcachedServers').show();
 			$('#directory_depth').hide();
