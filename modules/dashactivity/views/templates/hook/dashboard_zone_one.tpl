@@ -43,8 +43,12 @@
 					<small class="text-muted">{l s='Within the last seven days'}</small>
 				</span>
 				<span class="data_value size_xxl">
-					<span id="order_nbr"></span><br/>
-					<small class="dash_trend dash_trend_up"><i class="icon-circle-arrow-up"></i> <span id="orders_trends"></span>%</small>
+					<span id="order_nbr">
+
+
+
+					</span><br/>
+					<small class="dash_trend dash_trend_up"><span id="orders_trends"></span>%</small>
 				</span>
 			</li>
 		</ul>			
