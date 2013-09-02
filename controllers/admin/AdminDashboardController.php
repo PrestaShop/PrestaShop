@@ -46,4 +46,13 @@ class AdminDashboardControllerCore extends AdminController
 			__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/nv.d3.css'
 		));
 	}
+	
+	public function renderView()
+	{
+		$this->tpl_view_vars = array(
+			'hookDashboardZoneOne' => Hook::exec('dashboardZoneOne'),
+			'hookDashboardZoneTwo' => Hook::exec('dashboardZoneTwo'),
+		);
+		return parent::renderView();
+	}
 }

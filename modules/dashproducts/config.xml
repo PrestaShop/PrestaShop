@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>dashproducts</name>
-            <displayName><![CDATA[Dasboard Products &amp; sales]]></displayName>
+            <displayName><![CDATA[Dashboard Products]]></displayName>
             <version><![CDATA[0.1]]></version>
             <description><![CDATA[]]></description>
             <author><![CDATA[PrestaShop]]></author>

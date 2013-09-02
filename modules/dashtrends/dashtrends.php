@@ -32,6 +32,7 @@ class Dashtrends extends Module
 	public function __construct()
 	{
 		$this->name = 'dashtrends';
+		$this->displayName = 'Dashboard Trends';
 		$this->tab = '';
 		$this->version = '0.1';
 		$this->author = 'PrestaShop';
