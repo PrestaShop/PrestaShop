@@ -691,16 +691,16 @@ class AdminModulesControllerCore extends AdminController
 							$hooklink = 'index.php?tab=AdminModulesPositions&token='.Tools::getAdminTokenLite('AdminModulesPositions').'&show_modules='.(int)$module->id;
 							$tradlink = 'index.php?tab=AdminTranslations&token='.Tools::getAdminTokenLite('AdminTranslations').'&type=modules&lang=';
 
-							$language = '';
+							$mlanguage = '';
 							foreach (Language::getLanguages(false) as $language)
-								$language .= '<a href="'.$tradlink.$language['iso_code'].'#'.$module->name.'" ><img src="'._THEME_LANG_DIR_.$language['id_lang'].'.jpg" alt="'.$language['iso_code'].'" title="'.$language['iso_code'].'" /></a>';
+								$mlanguage .= '<a href="'.$tradlink.$language['iso_code'].'#'.$module->name.'" ><img src="'._THEME_LANG_DIR_.$language['id_lang'].'.jpg" alt="'.$language['iso_code'].'" title="'.$language['iso_code'].'" /></a>';
 
 
 							$this->context->smarty->assign(array(
 								'module_name' => $module->name,
 								'backlink' => $backlink,
 								'module_hooklink' => $hooklink,
-								'module_language' => $language
+								'module_language' => $mlanguage
 							));
 							
 							// Display checkbox in toolbar if multishop
