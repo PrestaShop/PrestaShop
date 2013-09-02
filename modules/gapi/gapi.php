@@ -44,8 +44,28 @@ class Gapi extends Module
 
 	public function getContent()
 	{
+		$html = '';
+
+		// Check configuration
+		$allow_url_fopen = ini_get('allow_url_fopen');
+		$openssl = extension_loaded('openssl');
+		$curl = extension_loaded('curl');
+		$ping = (($allow_url_fopen || $curl) && $openssl && Tools::file_get_contents('https://www.google.com/'));
+		$online = (in_array(Tools::getRemoteAddr(), array('127.0.0.1', '::1')) ? false : true);
+
+		if (!$ping || !$online)
+		{
+			$html .= $this->displayError('<ul>
+				'.(($curl && $allow_url_fopen) ? '' : '<li>'.$this->l('You are not allowed to open external URLs').'</li>').'
+				'.(($curl && $allow_url_fopen) ? '' : '<li>'.$this->l('cURL is not enabled').'</li>').'
+				'.($openssl ? '' : '<li>'.$this->l('OpenSSL is not enabled').'</li>').'
+				'.(($allow_url_fopen AND $openssl AND !$ping) ? '<li>'.$this->l('Google is unreachable').' ('.$this->l('check your firewall').')</li>' : '').'
+				'.($online ? '' : '<li>'.$this->l('Your store is not online').'</li>').'
+			</ul>');
+		}
+
 		// You can switch to the 1.3 API by replacing the following function call by $this->api_1_3_getContent()
-		return $this->api_3_0_getContent();
+		return $html.$this->api_3_0_getContent();
 	}
 
 	public function requestReportData($dimensions, $metrics, $date_from, $date_to, $sort = null, $filters = null, $start = 1, $limit = 30)
@@ -207,7 +227,6 @@ class Gapi extends Module
 		$fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('Google Analytics API v3.0'),
-				'icon' =>	$this->_path.'logo.png',
 				'fields' =>	$fields = array(
 					'PS_GAPI30_CLIENT_ID' => array(
 						'title' => $this->l('Client ID'),
@@ -219,8 +238,7 @@ class Gapi extends Module
 					),
 					'PS_GAPI30_PROFILE' => array(
 						'title' => $this->l('Profile'),
-						'type' => 'text',
-						'desc' => sprintf($this->l('You can find your profile ID in the address bar of your browser while accessing Analytics report: %s.'), '<a href="'.$this->_path.'screenshot.png'.'">'.$this->l('see screenshot').'</a>')
+						'type' => 'text'
 					)
 				),
 				'submit' => array('title' => $this->l('Save and Authenticate')),
@@ -345,26 +363,22 @@ class Gapi extends Module
 		$fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('Google Analytics API v1.3'),
-				'icon' =>	$this->_path.'logo.png',
 				'fields' =>	$fields = array(
 					'PS_GAPI13_EMAIL' => array(
 						'title' => $this->l('Email'),
-						'validation' => 'isEmail',
 						'type' => 'text'
 					),
 					'PS_GAPI13_PASSWORD' => array(
 						'title' => $this->l('Password'),
-						'validation' => 'isNothing',
 						'type' => 'password'
 					),
 					'PS_GAPI13_PROFILE' => array(
 						'title' => $this->l('Profile'),
-						'validation' => 'isUnsignedInt',
 						'type' => 'text',
-						'desc' => sprintf($this->l('You can find your profile ID in the address bar of your browser while accessing Analytics report: %s.'), '<a href="'.$this->_path.'screenshot.png'.'">'.$this->l('see screenshot').'</a>')
+						'desc' => $this->l('You can find your profile ID in the address bar of your browser while accessing Analytics report.')
 					)
 				),
-				'submit' => array('title' => $this->l('Authenticate'), 'class' => 'button'),
+				'submit' => array('title' => $this->l('Save and Authenticate')),
 			)
 		);	
 
