@@ -1093,10 +1093,17 @@ fieldset > .row
 		svg
 			height: 150px
 
+	.data_value
+
+		span, .dash_trend
+			+transition-property(opacity)
+			+transition-duration(0.2s)
+			+transition-timing-function(ease-in)
+			+opacity(1)
 	.loading
 		.data_value
 			//background-color: black
-			min-width: 40px
+			min-width: 30px
 			text-align: center
 			&:before
 				@extend .icon-spin
@@ -1105,6 +1112,8 @@ fieldset > .row
 				content: "\f021"
 				color: #ccc
 				margin-right: 4px
+			span, .dash_trend
+				+opacity(0)
 		.data_table
 
 		.data_chart
@@ -1112,52 +1121,3 @@ fieldset > .row
 		.data_trends
 
 
-
-=animation($name,$value)
-	-webkit-animation-#{$name}: $value
-	animation-#{$name}: $value
-
-=keyframes($name)
-	@-webkit-keyframes #{$name}
-		@content
-	@-moz-keyframes #{$name}
-		@content
-	@-ms-keyframes #{$name}
-		@content
-	@-o-keyframes #{$name}
-		@content
-	@keyframes #{$name}
-		@content
-
-.data_loading
-	width: 20px
-	margin: 0 auto
-	.lb
-		background-color: #eee
-		//border: 1px solid #ccc
-		float: left
-		height: 14px
-		margin-left: 1px
-		width: 4px
-		opacity: 0.1
-		+animation(name,bounceG)
-		+animation(duration,0.7s)
-		+animation(iteration-count,infinite)
-		+animation(direction,linear)
-		+scale(0.7)
-		&.lb1
-			+animation(delay,0.20999999999999996s)
-
-		&.lb2
-			+animation(delay,0.27999999999999997s)
-
-		&.lb3
-			+animation(delay,0.35s)
-
-+keyframes(bounceG)
-	0%
-		+opacity(1)
-		+scale(1.2)
-	100%
-		+scale(0.7)
-		+opacity(0.1)
