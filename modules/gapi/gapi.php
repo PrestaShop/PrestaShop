@@ -48,6 +48,12 @@ class Gapi extends Module
 		return $this->api_3_0_getContent();
 	}
 
+	public function requestReportData($dimensions, $metrics, $date_from, $date_to, $sort = null, $filters = null, $start = 1, $limit = 30)
+	{
+		// You can switch to the 1.3 API by replacing the following function call by $this->api_1_3_requestReportData()
+		return $this->api_3_0_requestReportData($dimensions, $metrics, $date_from, $date_to, $sort, $filters, $start, $limit);
+	}
+
 	public function api_3_0_authenticate()
 	{
 		// https://developers.google.com/accounts/docs/OAuth2WebServer
@@ -103,7 +109,7 @@ class Gapi extends Module
 	public function api_3_0_getContent()
 	{
 		$html = '';
-		if (Tools::isSubmit('PS_GAPI30_CLIENT_ID'))
+		if (Tools::getValue('PS_GAPI30_CLIENT_ID'))
 		{
 			Configuration::updateValue('PS_GAPI30_REQUEST_URI_TMP', dirname($_SERVER['REQUEST_URI']).'/'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'));
 			Configuration::updateValue('PS_GAPI30_CLIENT_ID_TMP', trim(Tools::getValue('PS_GAPI30_CLIENT_ID')));
@@ -124,13 +130,72 @@ class Gapi extends Module
 				$html .= $this->displayError('Google API Authorization granted but access token cannot be retrieved');
 		}
 
+		$display_slider = true;
 		if (Configuration::get('PS_GAPI30_CLIENT_ID') && Configuration::get('PS_GAPI30_CLIENT_SECRET') && Configuration::get('PS_GAPI30_PROFILE'))
 		{
 			$result_test = $this->api_3_0_requestReportData('', 'ga:visits,ga:uniquePageviews', date('Y-m-d', strtotime('-1 day')), date('Y-m-d', strtotime('-1 day')), null, null, 1, 1);
 			if (!$result_test)
 				$html .= $this->displayError('Cannot retrieve test results');
 			else
+			{
+				$display_slider = false;
 				$html .= $this->displayConfirmation(sprintf($this->l('Yesterday, your store received the visit of %d people for a total of %d unique page views.'), $result_test[0]['metrics']['visits'], $result_test[0]['metrics']['uniquePageviews']));
+			}
+		}
+		
+		if ($display_slider)
+		{
+			$slides = array(
+				'Google API - 01 - Start.png' => $this->l('Go to https://code.google.com/apis/console and click the "Create project..." button'),
+				'Google API - 02 - Services.png' => $this->l('In the "Services" tab, switch on the Analytics API'),
+				'Google API - 03 - Terms.png' => $this->l('You will be asked to agree to the Terms of Service of Google APIs'),
+				'Google API - 04 - Terms.png' => $this->l('And the Terms of Service of Analytics API'),
+				'Google API - 05 - Services OK.png' => $this->l('You should now have something like that'),
+				'Google API - 06 - API Access.png' => $this->l('In the "API Access" tab, click the big, blue, "Create an OAuth 2.0 client ID..." button'),
+				'Google API - 07 - Create Client ID.png' => $this->l('Fill in the form with the name of your store, the URL of your logo and the URL of your store then click "Next"'),
+				'Google API - 08 - Create Client ID.png' => sprintf($this->l('Keep "Web application" select and fill in the "Authorized Redirect URIs" area with the following URL: %s (you may have to click the "more options" link). Then validate by clicking the "Create client ID" button'), Tools::getShopDomain(true, false).__PS_BASE_URI__.'modules/'.$this->name.'/oauth2callback.php'),
+				'Google API - 09 - API Access created.png' => $this->l('You should now have the following screen. Copy/Paste the "Client ID" and "Client secret" into the form below'),
+				'Google API - 10 - Profile ID.png' => $this->l('Now you need the ID of the Analytics Profile you want to connect. In order to find you Profile ID, connect to the Analytics dashboard look at the URL in the address bar. Your Profile ID is the number following a "p", as shown underlined in red on the screenshot')
+			);
+			$first_slide = key($slides);
+		
+			$html .= '
+			<a id="screenshots_button" href="#screenshots"><button class="btn btn-default"><i class="icon-question-sign"></i> How to configure Google Analytics API</button></a> 
+			<div style="display:none">
+				<div id="screenshots" class="carousel slide">
+					<ol class="carousel-indicators">';
+				$i = 0;
+			foreach ($slides as $slide => $caption)
+				$html .= '<li data-target="#screenshots" data-slide-to="'.($i++).'" '.($slide == $first_slide ? 'class="active"' : '').'></li>';
+			$html .= '
+					</ol>
+					<div class="carousel-inner">';
+			foreach ($slides as $slide => $caption)
+				$html .= '
+						<div class="item '.($slide == $first_slide ? 'active' : '').'">
+							<img src="'.$this->_path.'screenshots/3.0/'.$slide.'" style="margin:auto">
+							<div style="text-align:center;font-size:1.4em;margin-top:10px;font-weight:700">
+								'.$caption.'
+							</div>
+							<div class="clear">&nbsp;</div>
+						</div>';
+			$html .= '
+					</div>
+					<a class="left carousel-control" href="#screenshots" data-slide="prev">
+						<span class="icon-prev"></span>
+					</a>
+					<a class="right carousel-control" href="#screenshots" data-slide="next">
+						<span class="icon-next"></span>
+					</a>
+				</div>
+			</div>
+			<div class="clear">&nbsp;</div>
+			<script type="text/javascript">
+				$(document).ready(function(){
+					$("a#screenshots_button").fancybox();
+					$("#screenshots").carousel({interval:false});
+				});
+			</script>';
 		}
 
 		$helper = new HelperOptions($this);
@@ -141,27 +206,24 @@ class Gapi extends Module
 
 		$fields_options = array(
 			'general' => array(
-				'title' =>	$this->l('Google Analytics API'),
+				'title' =>	$this->l('Google Analytics API v3.0'),
 				'icon' =>	$this->_path.'logo.png',
 				'fields' =>	$fields = array(
 					'PS_GAPI30_CLIENT_ID' => array(
 						'title' => $this->l('Client ID'),
-						'validation' => 'isEmail',
 						'type' => 'text'
 					),
 					'PS_GAPI30_CLIENT_SECRET' => array(
 						'title' => $this->l('Client Secret'),
-						'validation' => 'isNothing',
 						'type' => 'text'
 					),
 					'PS_GAPI30_PROFILE' => array(
 						'title' => $this->l('Profile'),
-						'validation' => 'isUnsignedInt',
 						'type' => 'text',
 						'desc' => sprintf($this->l('You can find your profile ID in the address bar of your browser while accessing Analytics report: %s.'), '<a href="'.$this->_path.'screenshot.png'.'">'.$this->l('see screenshot').'</a>')
 					)
 				),
-				'submit' => array('title' => $this->l('Authenticate')),
+				'submit' => array('title' => $this->l('Save and Authenticate')),
 			)
 		);	
 
@@ -202,7 +264,7 @@ class Gapi extends Module
 
 	// https://developers.google.com/analytics/devguides/reporting/core/dimsmets
 	// requestReportData('ga:country', 'ga:visits', '2013-08-25', '2013-08-25', null, null, 1, 1000);
-	protected function api_3_0_requestReportData($dimensions, $metrics, $date_from, $date_to, $sort = null, $filters = null, $start = 1, $limit = 30)
+	protected function api_3_0_requestReportData($dimensions, $metrics, $date_from, $date_to, $sort, $filters, $start, $limit)
 	{
 		if (Configuration::get('PS_GAPI30_TOKEN_EXPIRATION') < time() + 30 && !$this->api_3_0_refreshtoken())
 			return false;
@@ -282,7 +344,7 @@ class Gapi extends Module
 
 		$fields_options = array(
 			'general' => array(
-				'title' =>	$this->l('Google Analytics API'),
+				'title' =>	$this->l('Google Analytics API v1.3'),
 				'icon' =>	$this->_path.'logo.png',
 				'fields' =>	$fields = array(
 					'PS_GAPI13_EMAIL' => array(
@@ -332,7 +394,7 @@ class Gapi extends Module
 	}
 
 	// requestReportData('ga:country', 'ga:visits', '2013-08-25', '2013-08-25', null, null, 1, 1000);
-	protected function api_1_3_requestReportData($dimensions, $metrics, $date_from, $date_to, $sort = null, $filters = null, $start = 1, $limit = 30)
+	protected function api_1_3_requestReportData($dimensions, $metrics, $date_from, $date_to, $sort, $filters, $start, $limit)
 	{
 		if (!$this->api_1_3_authenticate(Configuration::get('PS_GAPI13_EMAIL'), Configuration::get('PS_GAPI13_PASSWORD')))
 			return false;
