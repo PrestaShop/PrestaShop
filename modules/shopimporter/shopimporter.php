@@ -434,7 +434,7 @@ class shopimporter extends ImportModule
 		if ((sizeof($rules['requiredLang']) || sizeof($rules['sizeLang']) || sizeof($rules['validateLang']) || Tools::isSubmit('syncLang') ||  Tools::isSubmit('syncCurrency')))
 		{
 			$moduleName = Tools::getValue('moduleName');
-			if (Validate::isModuleName($moduleName) && Validate::file_exists('../../modules/'.$moduleName.'/'.$moduleName.'.php'))
+			if (Validate::isModuleName($moduleName) && file_exists('../../modules/'.$moduleName.'/'.$moduleName.'.php'))
 			{
 				require_once('../../modules/'.$moduleName.'/'.$moduleName.'.php');
 				$importModule = new $moduleName();
