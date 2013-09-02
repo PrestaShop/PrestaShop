@@ -214,26 +214,46 @@ var ajaxCart = {
 					$element = $('#bigpic');
 				var $picture = $element.clone();
 				var pictureOffsetOriginal = $element.offset();
+				pictureOffsetOriginal.right = $(window).innerWidth() - pictureOffsetOriginal.left - $element.width();
 
 				if ($picture.length)
-					$picture.css({'position': 'absolute', 'top': pictureOffsetOriginal.top, 'left': pictureOffsetOriginal.left});
+				{
+					$picture.css({
+						position: 'absolute',
+						top: pictureOffsetOriginal.top,
+						right: pictureOffsetOriginal.right
+					});
+				}
 
 				var pictureOffset = $picture.offset();
-				if ($('#cart_block')[0] && $('#cart_block').offset().top && $('#cart_block').offset().left)
-					var cartBlockOffset = $('#cart_block').offset();
-				else
-					var cartBlockOffset = $('#shopping_cart').offset();
+				var cartBlock = $('#cart_block');
+				if (!$('#cart_block')[0] || !$('#cart_block').offset().top || !$('#cart_block').offset().left)
+					cartBlock = $('#shopping_cart');
+				var cartBlockOffset = cartBlock.offset();
+				cartBlockOffset.right = $(window).innerWidth() - cartBlockOffset.left - cartBlock.width();
 
 				// Check if the block cart is activated for the animation
 				if (cartBlockOffset != undefined && $picture.length)
 				{
 					$picture.appendTo('body');
-					$picture.css({ 'position': 'absolute', 'top': $picture.css('top'), 'left': $picture.css('left'), 'z-index': 4242 })
-					.animate({ 'width': $element.attr('width')*0.66, 'height': $element.attr('height')*0.66, 'opacity': 0.2, 'top': cartBlockOffset.top + 30, 'left': cartBlockOffset.left + 15 }, 1000)
-					.fadeOut(100, function() {
-						ajaxCart.updateCartInformation(jsonData, addedFromProductPage);
-						$(this).remove();
-					});
+					$picture
+						.css({
+							position: 'absolute',
+							top: pictureOffsetOriginal.top,
+							right: pictureOffsetOriginal.right,
+							zIndex: 4242
+						})
+						.animate({
+							width: $element.attr('width')*0.66,
+							height: $element.attr('height')*0.66,
+							opacity: 0.2,
+							top: cartBlockOffset.top + 30,
+							right: cartBlockOffset.right + 15
+						}, 1000)
+						.fadeOut(100, function() {
+							ajaxCart.updateCartInformation(jsonData, addedFromProductPage);
+							$(this).remove();
+						});
 				}
 				else
 					ajaxCart.updateCartInformation(jsonData, addedFromProductPage);
