@@ -30,7 +30,7 @@
 			<a class="list-tooolbar-btn" href="javascript:void(0);" title="configure">
 				<i class="process-icon-configure"></i>
 			</a>
-			<a class="list-tooolbar-btn" href="javascript:location.reload();" title="refresh">
+			<a class="list-tooolbar-btn" href="#"  onclick="refreshDashbard('dashproducts'); return false;"  title="refresh">
 				<i class="process-icon-refresh"></i>
 			</a>
 		</span>

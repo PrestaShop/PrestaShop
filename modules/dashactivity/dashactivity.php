@@ -54,7 +54,6 @@ class Dashactivity extends Module
 	
 	public function hookDashboardDatas($params)
 	{
-		sleep(2);
 		return array(
 			'data_value' => array(
 				'order_nbr' => 365,
