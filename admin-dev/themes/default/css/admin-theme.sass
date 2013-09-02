@@ -954,7 +954,6 @@ fieldset > .row
 		font-family: FontAwesome
 		content: "\f0aa"
 
-
 #dashboard
 	section
 		header
@@ -1047,10 +1046,10 @@ fieldset > .row
 			display: block
 			text-align: center
 			
-	#dash_trends
+	#dashtrends
 		header
 			margin-bottom: 0
-		#dash_trends_toolbar
+		#dashtrends_toolbar
 			margin: 4px -16px
 		dl
 			margin: 0
@@ -1068,11 +1067,10 @@ fieldset > .row
 			height: 37px
 			line-height: 1em
 			font: 300 1.1em/120% $headings-font-family
-
 		svg
 			height: 350px
 			
-	#dash_products
+	#dashproducts
 		header
 			margin-bottom: 0
 		nav
@@ -1089,20 +1087,18 @@ fieldset > .row
 					background-color: $brand-primary
 					a
 						color: white
-	#dash_activity
+	#dashactivity
 		svg
 			height: 150px
 
 	.data_value
-
 		span, .dash_trend
 			+transition-property(opacity)
-			+transition-duration(0.2s)
+			+transition-duration(0.6s)
 			+transition-timing-function(ease-in)
 			+opacity(1)
 	.loading
 		.data_value
-			//background-color: black
 			min-width: 30px
 			text-align: center
 			&:before
@@ -1111,7 +1107,6 @@ fieldset > .row
 				font-family: FontAwesome
 				content: "\f021"
 				color: #ccc
-				margin-right: 4px
 			span, .dash_trend
 				+opacity(0)
 		.data_table
@@ -1119,5 +1114,3 @@ fieldset > .row
 		.data_chart
 
 		.data_trends
-
-

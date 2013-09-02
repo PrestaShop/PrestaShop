@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<section id="dash_activity" class="panel">
+<section id="dashactivity" class="panel">
 	<div class="panel-heading">
 		<i class="icon-time"></i> {l s='Recent Activity'}
 		<span class="panel-heading-action">
@@ -58,19 +58,27 @@
 		<ul class="data_list">
 			<li>
 				<span class="data_label">{l s='Pending Orders'}</span>
-				<span class="data_value size_l" id="pending_orders"></span>
+				<span class="data_value size_l">
+					<span id="pending_orders"></span>
+				</span>
 			</li>
 			<li>
 				<span class="data_label">{l s='Return/Exchanges'}</span>
-				<span class="data_value size_l" id="return_exchanges"></span>
+				<span class="data_value size_l">
+					<span id="return_exchanges"></span>
+				</span>
 			</li>
 			<li>
 				<span class="data_label">{l s='Abandoned Carts'}</span>
-				<span class="data_value size_l" id="abandoned_cart"></span>
+				<span class="data_value size_l">
+					<span id="abandoned_cart"></span>
+				</span>
 			</li>
 			<li>
 				<span class="data_label">{l s='Products Out of Stock'}</span>
-				<span class="data_value size_l" id="products_out_of_stock"></span>
+				<span class="data_value size_l">
+					<span id="products_out_of_stock"></span>
+				</span>
 			</li>
 		</ul>
 	</section>
@@ -79,15 +87,21 @@
 		<ul class="data_list_vertical">
 			<li>
 				<span class="data_label">{l s='New Messages'}</span>
-				<span class="data_value size_l" id="new_messages"></span>
+				<span class="data_value size_l">
+					<span id="new_messages"></span>
+				</span>
 			</li>
 			<li>
 				<span class="data_label">{l s='Order Inquires'}</span>
-				<span class="data_value size_l" id="order_inquires"></span>
+				<span class="data_value size_l">
+					<span id="order_inquires"></span>
+				</span>
 			</li>
 			<li>
 				<span class="data_label">{l s='Product Reviews'}</span>
-				<span class="data_value size_l" id="product_reviews"></span>
+				<span class="data_value size_l">
+					<span id="product_reviews"></span>
+				</span>
 			</li>
 		</ul>
 	</section>
@@ -96,11 +110,15 @@
 		<ul class="data_list">
 			<li>
 				<span class="data_label">{l s='New Customers'}</span>
-				<span class="data_value size_md" id="new_customers"></span>
+				<span class="data_value size_md">
+					<span id="new_customers"></span>
+				</span>
 			</li>
 			<li>
 				<span class="data_label">{l s='Online Visitor'}</span>
-				<span class="data_value size_md" id="online_visitor"></span>
+				<span class="data_value size_md">
+					<span id="online_visitor"></span>
+				</span>
 			</li>
 			<li>
 				<span class="data_label">
@@ -109,7 +127,9 @@
 						{l s='In the last 30 minutes'}
 					</small>
 				</span>
-				<span class="data_value size_md" id="active_shopping_cart"></span>
+				<span class="data_value size_md">
+					<span id="active_shopping_cart"></span>
+				</span>
 			</li>
 		</ul>
 	</section>
@@ -118,11 +138,15 @@
 		<ul class="data_list">
 			<li>
 				<span class="data_label">{l s='New Registrations'}</span>
-				<span class="data_value size_md" id="new_registrations"></span>
+				<span class="data_value size_md">
+					<span id="new_registrations"></span>
+				</span>
 			</li>
 			<li>
 				<span class="data_label">{l s='Total Subscribers'}</span>
-				<span class="data_value size_md" id="total_suscribers"></span>
+				<span class="data_value size_md">
+					<span id="total_suscribers"></span>
+				</span>
 			</li>
 		</ul>		
 	</section>
@@ -131,11 +155,15 @@
 		<ul class="data_list">
 			<li>
 				<span class="data_label">{l s='Visits'}</span>
-				<span class="data_value size_md" id="visits"></span>
+				<span class="data_value size_md">
+					<span id="visits"></span>
+				</span>
 			</li>
 			<li>
 				<span class="data_label">{l s='Unique Visitors'}</span>
-				<span class="data_value size_md" id="unique_visitors"></span>
+				<span class="data_value size_md">
+					<span id="unique_visitors"></span>
+				</span>
 			</li>
 			<li>
 				<span class="data_label">{l s='Traffic Sources'}</span>

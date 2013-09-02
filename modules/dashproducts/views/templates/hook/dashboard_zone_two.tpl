@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<section id="dash_products" class="panel">
+<section id="dashproducts" class="panel">
 	<header class="panel-heading">
 		<i class="icon-bar-chart"></i> {l s='Product and Sales'}
 		<span class="panel-heading-action">
