@@ -39,8 +39,12 @@ function refreshDashbard()
 		dataType: 'json',
 		success : function(widgets){
 			for (var name in widgets)
+			{
 				for (data_type in widgets[name])
 					window[data_type](widgets[name][data_type]);
+				$('#'+name).removeClass('loading');
+			}
+			
 		},
 		error : function(data){
 			alert("[TECHNICAL ERROR]");
