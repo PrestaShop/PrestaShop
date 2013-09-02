@@ -94,7 +94,8 @@ class AdminSuppliersControllerCore extends AdminController
 					'rows' => 10,
 					'lang' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'desc' => $this->l('Will appear in the supplier list')
+					'desc' => $this->l('Will appear in the supplier list'),
+					'autoload_rte' => 'rte', //Enable TinyMCE editor for short description
 				),
 				array(
 					'type' => 'text',
