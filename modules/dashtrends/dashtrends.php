@@ -54,6 +54,23 @@ class Dashtrends extends Module
 	
 	public function hookDashboardDatas($params)
 	{
-		return array();
+		return array(
+			'data_value' => array(
+				'sales_score' => Tools::displayPrice(151.365),
+				'orders_score' => 120,
+				'cart_value_score' => Tools::displayPrice(35),
+				'visits_score' => 12,
+				'convertion_rate_score' => 4,
+				'net_profits_score' => Tools::displayPrice(42),
+				),
+			'data_trends' => array(
+				'sales_score_trends' => array('way' => 'up', 'value' => 0.66),
+				'orders_score_trends' => array('way' => 'down', 'value' => 0.66),
+				'cart_value_score_trends' => array('way' => 'up', 'value' => 0.66),
+				'visits_score_trends' => array('way' => 'down', 'value' => 0.66),
+				'convertion_rate_score_trends' => array('way' => 'up', 'value' => 0.66),
+				'net_profits_score_trends' => array('way' => 'up', 'value' => 0.66)
+				)
+			);
 	}
 }

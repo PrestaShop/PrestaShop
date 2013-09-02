@@ -31,14 +31,18 @@ function refreshDashbard(module_name)
 {
 	if (typeof(module_name) == 'undefined')
 		module_name = 0;
-	datas = {
-		ajax:true,
-		action:'refreshDashboard',
-		module:module_name
-		};
+	else	
+		$('#'+module_name+' section').each( function (){
+			$(this).addClass('loading');
+		});
+
 	$.ajax({
 		url : dashboard_ajax_url,
-		data : datas,
+		data : {
+			ajax:true,
+			action:'refreshDashboard',
+			module:module_name
+			},
 		dataType: 'json',
 		success : function(widgets){
 			for (var name in widgets)
