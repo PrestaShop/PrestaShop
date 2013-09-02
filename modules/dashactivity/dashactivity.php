@@ -42,7 +42,7 @@ class Dashactivity extends Module
 
 	public function install()
 	{
-		if (!parent::install() || !$this->registerHook('dashboardZoneOne'))
+		if (!parent::install() || !$this->registerHook('dashboardZoneOne') || !$this->registerHook('dashboardDatas'))
 			return false;
 		return true;
 	}
@@ -50,5 +50,30 @@ class Dashactivity extends Module
 	public function hookDashboardZoneOne($params)
 	{
 		return $this->display(__FILE__, 'dashboard_zone_one.tpl');
+	}
+	
+	public function hookDashboardDatas($params)
+	{
+		return array(
+			'data_value' => array(
+				'order_nbr' => 365,
+				'pending_orders' => 120,
+				'return_exchanges' => 35,
+				'abandoned_cart' => 12,
+				'products_out_of_stock' => 4,
+				'new_messages' => 42,
+				'order_inquires' => 13,
+				'product_reviews' => 56,
+				'new_customers' => 42,
+				'online_visitor' => 200,
+				'new_registrations' => 125,
+				'total_suscribers' => 13500,
+				'visits' => 10000,
+				'unique_visitors' => 3500,
+				),
+			'data_trends' => array(
+				'orders_trends' => array('way' => 'down', 'value' => 0.66),
+				)
+			);
 	}
 }

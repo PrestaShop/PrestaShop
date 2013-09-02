@@ -21,3 +21,48 @@
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
+
+$(document).ready( function () {
+	refreshDashbard();
+});
+
+
+function refreshDashbard()
+{
+	datas = {
+		ajax:true,
+		action:'refreshDashboard'
+		};
+	$.ajax({
+		url : dashboard_ajax_url,
+		data : datas,
+		dataType: 'json',
+		success : function(widgets){
+			for (var name in widgets)
+				for (data_type in widgets[name])
+					window[data_type](widgets[name][data_type]);
+		},
+		error : function(data){
+			alert("[TECHNICAL ERROR]");
+		}
+	});
+}
+
+function data_value(datas)
+{
+	for (var data_id in datas)
+		$('#'+data_id).html(datas[data_id]);
+}
+
+function data_trends(datas)
+{
+	for (var data_id in datas)
+	{
+		$('#'+data_id).html(datas[data_id]['value']);
+		if (datas[data_id]['value'] == 'down')
+			$('#'+data_id).parent().removeClass('dash_trend_up').addClass('dash_trend_down');
+		else
+			$('#'+data_id).parent().removeClass('dash_trend_down').addClass('dash_trend_up');
+	}
+	
+}

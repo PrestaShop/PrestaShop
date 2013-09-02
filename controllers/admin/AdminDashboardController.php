@@ -56,4 +56,14 @@ class AdminDashboardControllerCore extends AdminController
 		);
 		return parent::renderView();
 	}
+	
+	public function ajaxProcessRefreshDashboard()
+	{
+		$id_module = null;
+		if ($module = Tools::getValue('module'))
+			$id_module = Module::getInstanceByName($module)->id;
+		
+		$datas = Hook::exec('dashboardDatas', array(), $id_module, true);
+		die(Tools::jsonEncode($datas));
+	}
 }
