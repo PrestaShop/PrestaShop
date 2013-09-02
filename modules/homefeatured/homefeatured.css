@@ -51,6 +51,9 @@
 	color:#0088cc;
 	background:url(img/arrow_right_1.png) no-repeat 100% 3px;
 }
+#featured-products_block_center a.lnk_more:hover {
+	color:#333;
+}
 #featured-products_block_center .price_container {
 	margin-top:10px;
 	padding:0;

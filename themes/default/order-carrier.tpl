@@ -69,7 +69,7 @@
 {/if}
 
 {if !$opc}
-	{capture name=path}{l s='Shipping:'}{/capture}
+	{capture name=path}{l s='Shipping'}{/capture}
 	{include file="$tpl_dir./breadcrumb.tpl"}
 {/if}
 
@@ -80,7 +80,7 @@
 {/if}
 
 {if !$opc}
-	<h1>{l s='Shipping:'}</h1>
+	<h1>{l s='Shipping'}</h1>
 {else}
 	<h2><span>2</span> {l s='Delivery methods'}</h2>
 {/if}
@@ -267,7 +267,7 @@
 	<h3 class="condition_title">{l s='Terms of service'}</h3>
 	<p class="checkbox">
 		<input type="checkbox" name="cgv" id="cgv" value="1" {if $checkedTOS}checked="checked"{/if} autocomplete="off"/>
-		<label for="cgv">{l s='I agree to the terms of service and will adhere to them unconditionally.'}</label> <a href="{$link_conditions}" class="iframe">{l s='(Read the Terms of Service)'}</a>
+		<label for="cgv">{l s='I agree to the terms of service and will adhere to them unconditionally.'}</label> <a href="{$link_conditions}" class="iframe" rel="nofollow" title="{l s='Terms of Service'}">{l s='(Read the Terms of Service)'}</a>
 	</p>
 	<script type="text/javascript">
 		$(document).ready(function() {

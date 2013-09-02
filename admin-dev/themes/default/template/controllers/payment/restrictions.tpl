@@ -37,7 +37,7 @@
 								<input type="hidden" id="checkedBox_{$list['name_id']}_{$module->name}" value="checked"/>
 								<a href="javascript:checkPaymentBoxes('{$list['name_id']}', '{$module->name}')" style="text-decoration:none;">
 							{/if}
-							&nbsp;<img src="{$ps_base_uri}modules/{$module->name}/logo.gif" alt="{$module->name}" title="{$module->displayName}"/>
+							&nbsp;<img src="{$ps_base_uri}modules/{$module->name}/logo.gif" alt="{$module->name}" title="{$module->displayName}"/>&nbsp;{$module->displayName}
 							{if $list['name_id'] != 'currency' || $module->currencies_mode == 'checkbox'}
 								</a>
 							{/if}
@@ -92,6 +92,6 @@
 				</tr>
 			{/if}
 		</table>
-		<div><input type="submit" class="button space" name="submitModule{$list['name_id']}" value="{l s='Save restrictions'}" /></div>
+		<div><br /><input type="submit" class="button space" name="submitModule{$list['name_id']}" value="{l s='Save restrictions'}" /></div>
 	</fieldset>
 </form>

@@ -23,11 +23,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div id="contact_block" class="block">
-	<p class="title_block">{l s='Contact us' mod='blockcontact'}</p>
-	<div class="block_content clearfix">
-			<p>{l s='Our hotline is available 24/7' mod='blockcontact'}</p>
-			{if $telnumber != ''}<p class="tel"><span class="label">{l s='Phone:' mod='blockcontact'}</span>{$telnumber|escape:'htmlall':'UTF-8'}</p>{/if}
-			{if $email != ''}<a href="mailto:{$email|escape:'htmlall':'UTF-8'}">{l s='Contact our hotline' mod='blockcontact'}</a>{/if}
-	</div>
+<div class="translatable">
+{foreach from=$languages item=language}
+<div class="lang_{$language.id_lang}" style="{if !$language.is_default}display:none;{/if} float:left;">
+	<textarea name="{$input_name}_{$language.id_lang}" cols="96" rows="4" id="{$input_name}_{$language.id_lang}">{$input_value[$language.id_lang]|htmlentitiesUTF8|default:''}</textarea>
+</div>
+{/foreach}
 </div>

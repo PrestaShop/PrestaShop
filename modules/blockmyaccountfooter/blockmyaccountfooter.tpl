@@ -25,18 +25,24 @@
 
 <!-- Block myaccount module -->
 <div class="block myaccount">
-	<h4 class="title_block"><a href="{$link->getPageLink('my-account', true)|escape:'html'}" title="{l s='Manage my customer account' mod='blockmyaccountfooter'}" rel="nofollow">{l s='My account' mod='blockmyaccountfooter'}</a></h4>
+	<p class="title_block"><a href="{$link->getPageLink('my-account', true)|escape:'html'}" title="{l s='Manage your customer account' mod='blockmyaccount'}" rel="nofollow">{l s='My account' mod='blockmyaccount'}</a></p>
 	<div class="block_content">
 		<ul class="bullet">
-			<li><a href="{$link->getPageLink('history', true)|escape:'html'}" title="{l s='My orders' mod='blockmyaccountfooter'}" rel="nofollow">{l s='My orders' mod='blockmyaccountfooter'}</a></li>
-			{if $returnAllowed}<li><a href="{$link->getPageLink('order-follow', true)|escape:'html'}" title="{l s='My returns' mod='blockmyaccountfooter'}" rel="nofollow">{l s='My merchandise returns' mod='blockmyaccountfooter'}</a></li>{/if}
-			<li><a href="{$link->getPageLink('order-slip', true)|escape:'html'}" title="{l s='My credit slips' mod='blockmyaccountfooter'}" rel="nofollow">{l s='My credit slips' mod='blockmyaccountfooter'}</a></li>
-			<li><a href="{$link->getPageLink('addresses', true)|escape:'html'}" title="{l s='My addresses' mod='blockmyaccountfooter'}" rel="nofollow">{l s='My addresses' mod='blockmyaccountfooter'}</a></li>
-			<li><a href="{$link->getPageLink('identity', true)|escape:'html'}" title="{l s='Manage my personal information' mod='blockmyaccountfooter'}" rel="nofollow">{l s='My personal info' mod='blockmyaccountfooter'}</a></li>
-			{if $voucherAllowed}<li><a href="{$link->getPageLink('discount', true)|escape:'html'}" title="{l s='My vouchers' mod='blockmyaccountfooter'}" rel="nofollow">{l s='My vouchers' mod='blockmyaccountfooter'}</a></li>{/if}
+			<li><a href="{$link->getPageLink('identity', true)|escape:'html'}" title="{l s='Manage your personal account information' mod='blockmyaccount'}" rel="nofollow">{l s='My personal info' mod='blockmyaccount'}</a></li>
+			<li><a href="{$link->getPageLink('addresses', true)|escape:'html'}" title="{l s='Manage your shipping and billing addresses' mod='blockmyaccount'}" rel="nofollow">{l s='My addresses' mod='blockmyaccount'}</a></li>
+			<li><a href="{$link->getPageLink('history', true)|escape:'html'}" title="{l s='View list of the orders you\'ve created' mod='blockmyaccount'}" rel="nofollow">{l s='Order history and details' mod='blockmyaccount'}</a></li>
+			{if $returnAllowed}
+			<li><a href="{$link->getPageLink('order-follow', true)|escape:'html'}" title="{l s='View list of your merchandise returns' mod='blockmyaccount'}" rel="nofollow">{l s='My merchandise returns' mod='blockmyaccount'}</a></li>
+			{/if}
+			<li><a href="{$link->getPageLink('order-slip', true)|escape:'html'}" title="{l s='View list of your credit slips' mod='blockmyaccount'}" rel="nofollow">{l s='My credit slips' mod='blockmyaccount'}</a></li>
+			{if $voucherAllowed}
+			<li><a href="{$link->getPageLink('discount', true)|escape:'html'}" title="{l s='View list of your discount vouchers' mod='blockmyaccount'}" rel="nofollow">{l s='My discount vouchers' mod='blockmyaccount'}</a></li>
+			{/if}
 			{$HOOK_BLOCK_MY_ACCOUNT}
+			{if $logged}
+			<li class="logout"><a href="{$link->getPageLink('index', true, NULL, "mylogout")|escape:'html'}" title="{l s='Log out from this customer account' mod='blockmyaccount'}" rel="nofollow">{l s='Log out' mod='blockmyaccount'}</a></li>
+			{/if}
 		</ul>
-		<p class="logout"><a href="{$link->getPageLink('index')}?mylogout" title="{l s='Sign out' mod='blockmyaccountfooter'}" rel="nofollow">{l s='Sign out' mod='blockmyaccountfooter'}</a></p>
 	</div>
 </div>
 <!-- /Block myaccount module -->

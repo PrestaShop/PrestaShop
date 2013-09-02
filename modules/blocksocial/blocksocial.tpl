@@ -25,10 +25,10 @@
 *}
 
 <div id="social_block">
-	<h4 class="title_block">{l s='Follow us' mod='blocksocial'}</h4>
+	<p class="title_block">{l s='Follow us' mod='blocksocial'}</p>
 	<ul>
-		{if $facebook_url != ''}<li class="facebook"><a href="{$facebook_url|escape:html:'UTF-8'}">{l s='Facebook' mod='blocksocial'}</a></li>{/if}
-		{if $twitter_url != ''}<li class="twitter"><a href="{$twitter_url|escape:html:'UTF-8'}">{l s='Twitter' mod='blocksocial'}</a></li>{/if}
-		{if $rss_url != ''}<li class="rss"><a href="{$rss_url|escape:html:'UTF-8'}">{l s='RSS' mod='blocksocial'}</a></li>{/if}
+		{if $facebook_url != ''}<li class="facebook"><a href="{$facebook_url|escape:html:'UTF-8'}" title="{l s='Join us on Facebook' mod='blocksocial'}">{l s='Facebook' mod='blocksocial'}</a></li>{/if}
+		{if $twitter_url != ''}<li class="twitter"><a href="{$twitter_url|escape:html:'UTF-8'}" title="{l s='Follow us on Twitter' mod='blocksocial'}">{l s='Twitter' mod='blocksocial'}</a></li>{/if}
+		{if $rss_url != ''}<li class="rss"><a href="{$rss_url|escape:html:'UTF-8'}" title="{l s='Receiving updates via RSS' mod='blocksocial'}">{l s='RSS' mod='blocksocial'}</a></li>{/if}
 	</ul>
 </div>

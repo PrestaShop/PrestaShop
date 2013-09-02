@@ -26,7 +26,7 @@
 
 <!-- MODULE Block best sellers -->
 <div id="best-sellers_block_right" class="block products_block">
-	<h4 class="title_block"><a href="{$link->getPageLink('best-sales')|escape:'html'}" title="{l s='View a top sellers products' mod='blockbestsellers'}">{l s='Top sellers' mod='blockbestsellers'}</a></h4>
+	<p class="title_block"><a href="{$link->getPageLink('best-sales')|escape:'html'}" title="{l s='View all best sellers' mod='blockbestsellers'}">{l s='Top sellers' mod='blockbestsellers'}</a></p>
 	<div class="block_content">
 	{if $best_sellers|@count > 0}
 		<ul class="product_images">
@@ -44,7 +44,7 @@
 			</li>
 		{/foreach}
 		</ul>
-		<p class="lnk"><a href="{$link->getPageLink('best-sales')|escape:'html'}" title="{l s='All best sellers' mod='blockbestsellers'}" class="button_large">&raquo; {l s='All best sellers' mod='blockbestsellers'}</a></p>
+		<p class="lnk"><a href="{$link->getPageLink('best-sales')|escape:'html'}" title="{l s='View all best sellers' mod='blockbestsellers'}" class="button_large">&raquo; {l s='All best sellers' mod='blockbestsellers'}</a></p>
 	{else}
 		<p>{l s='No best sellers at this time' mod='blockbestsellers'}</p>
 	{/if}

@@ -25,7 +25,7 @@
 
 <!-- MODULE Home Block best sellers -->
 <div id="best-sellers_block_center" class="block products_block">
-	<h4 class="title_block">{l s='Top sellers' mod='blockbestsellers'}</h4>
+	<p class="title_block">{l s='Best sellers' mod='blockbestsellers'}</p>
 	{if isset($best_sellers) AND $best_sellers}
 		<div class="block_content">
 			{assign var='liHeight' value=320}
@@ -36,7 +36,7 @@
 			<ul style="height:{$ulHeight}px;">
 			{foreach from=$best_sellers item=product name=myLoop}
 				<li style="border-bottom:0" class="ajax_block_product {if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if} {if $smarty.foreach.myLoop.iteration%$nbItemsPerLine == 0}last_item_of_line{elseif $smarty.foreach.myLoop.iteration%$nbItemsPerLine == 1}clear{/if} {if $smarty.foreach.myLoop.iteration > ($smarty.foreach.myLoop.total - ($smarty.foreach.myLoop.total % $nbItemsPerLine))}last_line{/if}">
-					<h5 class="s_title_block"><a href="{$product.link|escape:'html'}" title="{$product.name|truncate:32:'...'|escape:'htmlall':'UTF-8'}">{$product.name|truncate:27:'...'|escape:'htmlall':'UTF-8'}</a></h5>
+					<p class="s_title_block"><a href="{$product.link|escape:'html'}" title="{$product.name|truncate:32:'...'|escape:'htmlall':'UTF-8'}">{$product.name|truncate:27:'...'|escape:'htmlall':'UTF-8'}</a></p>
 					<div class="product_desc"><a href="{$product.link|escape:'html'}" title="{l s='More' mod='blockbestsellers'}">{$product.description_short|strip_tags|truncate:130:'...'}</a></div>
 					<a href="{$product.link|escape:'html'}" title="{$product.name|escape:html:'UTF-8'}" class="product_image"><img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')|escape:'html'}" height="{$homeSize.height}" width="{$homeSize.width}" alt="{$product.name|escape:html:'UTF-8'}" /></a>
 					<div>
@@ -46,7 +46,7 @@
 				</li>
 			{/foreach}
 			</ul>
-			<p class="clearfix" style="padding: 5px;"><a style="float:right;" href="{$link->getPageLink('best-sales')|escape:'html'}" title="{l s='All best sellers' mod='blockbestsellers'}" class="button_large">{l s='All best sellers' mod='blockbestsellers'}</a></p>
+			<p class="clearfix" style="padding: 5px;"><a style="float:right;" href="{$link->getPageLink('best-sales')|escape:'html'}" title="{l s='View all best sellers' mod='blockbestsellers'}" class="button_large">{l s='All best sellers' mod='blockbestsellers'}</a></p>
 		</div>
 	{else}
 		<p>{l s='No best sellers' mod='blockbestsellers'}</p>

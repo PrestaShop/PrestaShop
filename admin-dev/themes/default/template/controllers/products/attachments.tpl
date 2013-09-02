@@ -32,7 +32,7 @@
 		<div class="margin-form translatable">
 			{foreach $languages as $language}
 				<div class="lang_{$language.id_lang}" style="{if $language.id_lang != $default_form_language}display:none;{/if}float: left;">
-					<input type="text" name="attachment_name_{$language.id_lang}" value="{$attachment_name[$language.id_lang]|escape:'htmlall':'UTF-8'}" />
+					<input type="text" size="60" name="attachment_name_{$language.id_lang}" value="{$attachment_name[$language.id_lang]|escape:'htmlall':'UTF-8'}" />
 				</div>
 			{/foreach}
 			<sup>&nbsp;*</sup>
@@ -43,7 +43,7 @@
 		<div class="margin-form translatable">
 			{foreach $languages as $language}
 				<div class="lang_{$language.id_lang}" style="display: {if $language.id_lang == $default_form_language}block{else}none{/if}; float: left;">
-					<textarea name="attachment_description_{$language.id_lang}">{$attachment_description[$language.id_lang]|escape:'htmlall':'UTF-8'}</textarea>
+					<textarea name="attachment_description_{$language.id_lang}" rows="4" cols="80">{$attachment_description[$language.id_lang]|escape:'htmlall':'UTF-8'}</textarea>
 				</div>
 			{/foreach}
 		</div>

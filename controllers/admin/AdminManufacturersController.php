@@ -254,8 +254,8 @@ class AdminManufacturersControllerCore extends AdminController
 					'label' => $this->l('Short description:'),
 					'name' => 'short_description',
 					'lang' => true,
-					'cols' => 60,
-					'rows' => 10,
+					'cols' => 100,
+					'rows' => 8,
 					'class' => 'rte',
 					'hint' => $this->l('Invalid characters:').' <>;=#{}'
 				),
@@ -264,8 +264,8 @@ class AdminManufacturersControllerCore extends AdminController
 					'label' => $this->l('Description:'),
 					'name' => 'description',
 					'lang' => true,
-					'cols' => 60,
-					'rows' => 10,
+					'cols' => 100,
+					'rows' => 8,
 					'class' => 'rte',
 					'hint' => $this->l('Invalid characters:').' <>;=#{}'
 				),
@@ -281,13 +281,16 @@ class AdminManufacturersControllerCore extends AdminController
 					'label' => $this->l('Meta title:'),
 					'name' => 'meta_title',
 					'lang' => true,
+					'size' => 80,
 					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
 				),
 				array(
-					'type' => 'text',
+					'type' => 'textarea',
 					'label' => $this->l('Meta description:'),
 					'name' => 'meta_description',
 					'lang' => true,
+					'rows' => 5,
+					'cols' => 100,
 					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
 				),
 				array(

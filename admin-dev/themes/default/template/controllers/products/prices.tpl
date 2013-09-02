@@ -291,7 +291,7 @@ $(document).ready(function () {
 		<label>{l s='Customer:'}</label>
 		<div class="margin-form">
 			<input type="hidden" name="sp_id_customer" id="id_customer" value="0" />
-			<input type="text" name="customer" value="{l s='All customers'}" id="customer" autocomplete="off" />
+			<input type="text" name="customer" value="{l s='All customers'}" id="customer" autocomplete="off"  ize="30" />
 			<img src="../img/admin/field-loader.gif" id="customerLoader" alt="{l s='Loading...'}" style="display: none;" />
 			<div id="customers"></div>
 		</div>
