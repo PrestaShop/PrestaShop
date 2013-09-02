@@ -61,7 +61,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_ORDER_PROCESS_TYPE' => array(
 						'title' => $this->l('Order process type'),
-						'desc' => $this->l('Please choose either the five-step, or one-page, checkout process.'),
+						'hint' => $this->l('Please choose either the five-step, or one-page, checkout process.'),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'select',
@@ -70,35 +70,35 @@ class AdminOrderPreferencesControllerCore extends AdminController
 					),
 					'PS_GUEST_CHECKOUT_ENABLED' => array(
 						'title' => $this->l('Enable guest checkout'),
-						'desc' => $this->l('Guests can place an order without registering'),
+						'hint' => $this->l('Guests can place an order without registering'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
 					'PS_PURCHASE_MINIMUM' => array(
 						'title' => $this->l('Minimum purchase total required in order to validate the order'),
-						'desc' => $this->l('Set to 0 to disable this feature'),
+						'hint' => $this->l('Set to 0 to disable this feature'),
 						'validation' => 'isFloat',
 						'cast' => 'floatval',
 						'type' => 'price'
 					),
 					'PS_ALLOW_MULTISHIPPING' => array(
 						'title' => $this->l('Allow multishipping'),
-						'desc' => $this->l('Allow the customer to ship orders to multiple addresses. This option will convert the customer\'s cart into one or more orders.'),
+						'hint' => $this->l('Allow the customer to ship orders to multiple addresses. This option will convert the customer\'s cart into one or more orders.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
 					'PS_SHIP_WHEN_AVAILABLE' => array(
 						'title' => $this->l('Delayed shipping'),
-						'desc' => $this->l('This option allows you to delay shipping at your customers\' request. '),
+						'hint' => $this->l('This option allows you to delay shipping at your customers\' request. '),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
 					'PS_CONDITIONS' => array(
 						'title' => $this->l('Terms of service'),
-						'desc' => $this->l('Require customers to accept or decline terms of service before processing an order.'),
+						'hint' => $this->l('Require customers to accept or decline terms of service before processing an order.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool',
@@ -109,7 +109,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 					),
 					'PS_CONDITIONS_CMS_ID' => array(
 						'title' => $this->l('Conditions of use for the CMS page'),
-						'desc' => $this->l('Choose the conditions of use for the CMS page.'),
+						'hint' => $this->l('Choose the conditions of use for the CMS page.'),
 						'validation' => 'isInt',
 						'type' => 'select',
 						'list' => $cms_tab,
