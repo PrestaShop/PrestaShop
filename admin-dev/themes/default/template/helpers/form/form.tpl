@@ -455,6 +455,7 @@
 				});
 
 		});
+	state_token = '{getAdminToken tab='AdminStates'}';
 	{block name="script"}{/block}
 	</script>
 {/if}

@@ -31,6 +31,6 @@ function block_category_1521()
 			(`id_configuration` ,`id_shop_group` ,`id_shop` ,`name` ,`value` ,`date_add` ,`date_upd`)
 			VALUES (NULL, NULL, NULL, \'BLOCK_CATEG_MAX_DEPTH\', 4, NOW(), NOW())');
 	else if ($maxdepth = (int)Db::getInstance()->getValue('SELECT FROM `'._DB_PREFIX_.'configuration` WHERE `value` IS NOT NULL AND `value` <> 0'))
-		Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'configuration` SET `value` = '.($maxdepth + 1).' WHERE `name` LIKE\'BLOCK_CATEG_MAX_DEPTH\'');
+		Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'configuration` SET `value` = '.($maxdepth + 1).' WHERE `name` LIKE \'BLOCK_CATEG_MAX_DEPTH\'');
 
 }
