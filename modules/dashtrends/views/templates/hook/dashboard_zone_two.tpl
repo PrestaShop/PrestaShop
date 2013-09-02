@@ -39,32 +39,32 @@
 		<dl class="col-xs-4 col-lg-2 active">
 			<dt>{l s='Sales'}</dt>
 			<dd class="size_l">$150,365</dd>
-			<dd class="dash_trend dash_trend_up"><i class="icon-circle-arrow-up"></i> 0.66%</dd>
+			<dd class="dash_trend dash_trend_up">0.66%</dd>
 		</dl>
 		<dl class="col-xs-4 col-lg-2">
 			<dt>{l s='Orders'}</dt>
 			<dd class="size_l">20,432</dd>
-			<dd class="dash_trend dash_trend_down"><i class="icon-circle-arrow-down"></i> 0.66%</dd>
+			<dd class="dash_trend dash_trend_down">0.66%</dd>
 		</dl>
 		<dl class="col-xs-4 col-lg-2">
 			<dt>{l s='Cart Value'}</dt>
 			<dd class="size_l">$125</dd>
-			<dd class="dash_trend dash_trend_up"><i class="icon-circle-arrow-up"></i> 0.66%</dd>
+			<dd class="dash_trend dash_trend_up">0.66%</dd>
 		</dl>
 		<dl class="col-xs-4 col-lg-2">
 			<dt>{l s='Visits'}</dt>
 			<dd class="size_l">1,200</dd>
-			<dd class="dash_trend dash_trend_down"><i class="icon-circle-arrow-down"></i> 0.66%</dd>
+			<dd class="dash_trend dash_trend_down">0.66%</dd>
 		</dl>
 		<dl class="col-xs-4 col-lg-2">
 			<dt>{l s='Converstion Rate'}</dt>
 			<dd class="size_l">23%</dd>
-			<dd class="dash_trend dash_trend_up"><i class="icon-circle-arrow-up"></i> 0.66%</dd>
+			<dd class="dash_trend dash_trend_up">0.66%</dd>
 		</dl>
 		<dl class="col-xs-4 col-lg-2">
 			<dt>{l s='Net Profits'}</dt>
 			<dd class="size_l">$23,568</dd>
-			<dd class="dash_trend dash_trend_up"><i class="icon-circle-arrow-up"></i> 0.66%</dd>
+			<dd class="dash_trend dash_trend_up">0.66%</dd>
 		</dl>
 	</div>
 

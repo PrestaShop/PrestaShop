@@ -940,10 +940,19 @@ fieldset > .row
 .size_xxl
 	font-size: 2.3em
 
+
 .dash_trend_down
 	color: red
+	&:before
+		margin-right: 4px
+		font-family: FontAwesome
+		content: "\f0ab"
 .dash_trend_up
 	color: green
+	&:before
+		margin-right: 4px
+		font-family: FontAwesome
+		content: "\f0aa"
 
 
 #dashboard
@@ -1083,3 +1092,72 @@ fieldset > .row
 	#dash_activity
 		svg
 			height: 150px
+
+	.loading
+		.data_value
+			//background-color: black
+			min-width: 40px
+			text-align: center
+			&:before
+				@extend .icon-spin
+				font-size: 0.7em
+				font-family: FontAwesome
+				content: "\f021"
+				color: #ccc
+				margin-right: 4px
+		.data_table
+
+		.data_chart
+
+		.data_trends
+
+
+
+=animation($name,$value)
+	-webkit-animation-#{$name}: $value
+	animation-#{$name}: $value
+
+=keyframes($name)
+	@-webkit-keyframes #{$name}
+		@content
+	@-moz-keyframes #{$name}
+		@content
+	@-ms-keyframes #{$name}
+		@content
+	@-o-keyframes #{$name}
+		@content
+	@keyframes #{$name}
+		@content
+
+.data_loading
+	width: 20px
+	margin: 0 auto
+	.lb
+		background-color: #eee
+		//border: 1px solid #ccc
+		float: left
+		height: 14px
+		margin-left: 1px
+		width: 4px
+		opacity: 0.1
+		+animation(name,bounceG)
+		+animation(duration,0.7s)
+		+animation(iteration-count,infinite)
+		+animation(direction,linear)
+		+scale(0.7)
+		&.lb1
+			+animation(delay,0.20999999999999996s)
+
+		&.lb2
+			+animation(delay,0.27999999999999997s)
+
+		&.lb3
+			+animation(delay,0.35s)
+
++keyframes(bounceG)
+	0%
+		+opacity(1)
+		+scale(1.2)
+	100%
+		+scale(0.7)
+		+opacity(0.1)
