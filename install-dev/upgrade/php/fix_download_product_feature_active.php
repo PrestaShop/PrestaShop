@@ -27,5 +27,5 @@
 function fix_download_product_feature_active()
 {
 	if (Db::getInstance()->getValue('SELECT COUNT(id_product_download) FROM `'._DB_PREFIX_.'product_download` WHERE `active` = 1 ;') > 0)
-		Configuration::updateGlobaleValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE');
+		Configuration::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE');
 }
