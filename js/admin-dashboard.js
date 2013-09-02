@@ -27,11 +27,14 @@ $(document).ready( function () {
 });
 
 
-function refreshDashbard()
+function refreshDashbard(module_name)
 {
+	if (typeof(module_name) == 'undefined')
+		module_name = 0;
 	datas = {
 		ajax:true,
-		action:'refreshDashboard'
+		action:'refreshDashboard',
+		module:module_name
 		};
 	$.ajax({
 		url : dashboard_ajax_url,
@@ -42,9 +45,7 @@ function refreshDashbard()
 			{
 				for (data_type in widgets[name])
 					window[data_type](widgets[name][data_type]);
-				$('#'+name).removeClass('loading');
 			}
-			
 		},
 		error : function(data){
 			alert("[TECHNICAL ERROR]");
@@ -55,7 +56,10 @@ function refreshDashbard()
 function data_value(datas)
 {
 	for (var data_id in datas)
+	{
 		$('#'+data_id).html(datas[data_id]);
+		$('#'+data_id).closest('section').removeClass('loading');
+	}
 }
 
 function data_trends(datas)
@@ -67,6 +71,7 @@ function data_trends(datas)
 			$('#'+data_id).parent().removeClass('dash_trend_up').addClass('dash_trend_down');
 		else
 			$('#'+data_id).parent().removeClass('dash_trend_down').addClass('dash_trend_up');
+		$('#'+data_id).closest('section').removeClass('loading');
 	}
 	
 }
