@@ -347,7 +347,7 @@ class ProductCore extends ObjectModel
 			),
 			'id_tax_rules_group' => array(
 				'xlink_resource' => array(
-					'resourceName' => 'tax_rules_group'
+					'resourceName' => 'tax_rule_groups'
 				)
 			),
 			'position_in_category' => array(

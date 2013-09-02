@@ -387,7 +387,7 @@ class AdminControllerCore extends Controller
 			$filter = '';
 			foreach ($this->fields_list AS $field => $t)
 			{
-				if ($val = htmlspecialchars(Tools::getValue($this->table.'Filter_'.$field), ENT_QUOTES, 'UTF-8'))
+				if ($val = Tools::getValue($this->table.'Filter_'.$field))
 				{
 					if(!is_array($val) && !empty($val))
 						$filter .= ($filter ?  ', ' : $this->l(' filter by ')).$t['title'].' : ';
@@ -395,13 +395,13 @@ class AdminControllerCore extends Controller
 					if (isset($t['type']) && $t['type'] == 'bool')
 						$filter .= ((bool)$val) ? $this->l('yes') : $this->l('no');
 					elseif(is_string($val))
-						$filter .= $val;
+						$filter .= htmlspecialchars($val, ENT_QUOTES, 'UTF-8');
 					elseif(is_array($val))
 					{
 						$tmp = '';
 						foreach($val as $v)
 							if(is_string($v) && !empty($v))
-								$tmp .= ' - '.$v;
+								$tmp .= ' - '.htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
 						if(Tools::strlen($tmp))
 						{
 							$tmp = ltrim($tmp, ' - ');
@@ -1535,6 +1535,16 @@ class AdminControllerCore extends Controller
 	
 	protected function addToolBarModulesListButton()
 	{
+		
+		if (!$this->isFresh(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 86400))
+			file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, Tools::addonsRequest('native'));
+		
+		$country_module_list_xml = simplexml_load_file(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
+			$country_module_list = array();
+			foreach ($country_module_list_xml->module as $k => $m)
+				$country_module_list[] = (string)$m->name;
+		$this->tab_modules_list['slider_list'] = array_intersect($this->tab_modules_list['slider_list'], $country_module_list);
+		
 		if (is_array($this->tab_modules_list['slider_list']) && count($this->tab_modules_list['slider_list']))
 			$this->toolbar_btn['modules-list'] = array(
 					'href' => '#',
