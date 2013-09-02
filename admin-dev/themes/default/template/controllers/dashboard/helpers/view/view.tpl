@@ -10,7 +10,7 @@
 			{$hookDashboardZoneOne}
 		</div>
 		<div class="col-lg-7">
-			{$hookDashboardZoneOne}
+			{$hookDashboardZoneTwo}
 		</div>
 		<div class="col-lg-2">
 			<section class="dash_news panel">

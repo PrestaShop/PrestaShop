@@ -49,6 +49,6 @@ class Dashtrends extends Module
 
 	public function hookDashboardZoneTwo($params)
 	{
-		return $this->display(__FILE__, 'dashboard_zone_one.tpl');
+		return $this->display(__FILE__, 'dashboard_zone_two.tpl');
 	}
 }
