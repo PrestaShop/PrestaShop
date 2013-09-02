@@ -27,15 +27,15 @@
 	<div class="panel-heading">
 		<i class="icon-time"></i> {l s='Recent Activity'}
 		<span class="panel-heading-action">
-			<a class="list-tooolbar-btn" href="javascript:void(0);" title="configure">
+			<a class="list-tooolbar-btn" href="#" title="configure">
 				<i class="process-icon-configure"></i>
 			</a>
-			<a class="list-tooolbar-btn" href="javascript:location.reload();" title="refresh">
+			<a class="list-tooolbar-btn" href="#" title="refresh">
 				<i class="process-icon-refresh"></i>
 			</a>
 		</span>
 	</div>
-	<section id="dash_orders">
+	<section id="dash_orders" class="loading">
 		<ul class="data_list_large">
 			<li>
 				<span class="data_label size_l">
@@ -43,60 +43,60 @@
 					<small class="text-muted">{l s='Within the last seven days'}</small>
 				</span>
 				<span class="data_value size_xxl">
-					365<br/>
-					<small class="dash_trend dash_trend_up"><i class="icon-circle-arrow-up"></i> 0.66%</small>
+					<span id="order_nbr"></span><br/>
+					<small class="dash_trend dash_trend_up"><i class="icon-circle-arrow-up"></i> <span id="orders_trends"></span>%</small>
 				</span>
 			</li>
 		</ul>			
 	</section>
-	<section id="dash_pending">
+	<section id="dash_pending" class="loading">
 		<header><i class="icon-time"></i> {l s='Pending'}</header>
 		<ul class="data_list">
 			<li>
 				<span class="data_label">{l s='Pending Orders'}</span>
-				<span class="data_value size_l">120</span>
+				<span class="data_value size_l" id="pending_orders"></span>
 			</li>
 			<li>
 				<span class="data_label">{l s='Return/Exchanges'}</span>
-				<span class="data_value size_l">35</span>
+				<span class="data_value size_l" id="return_exchanges"></span>
 			</li>
 			<li>
-				<span class="data_label">{l s='Abandonned Carts'}</span>
-				<span class="data_value size_l">12</span>
+				<span class="data_label">{l s='Abandoned Carts'}</span>
+				<span class="data_value size_l" id="abandoned_cart"></span>
 			</li>
 			<li>
 				<span class="data_label">{l s='Products Out of Stock'}</span>
-				<span class="data_value size_l">4</span>
+				<span class="data_value size_l" id="products_out_of_stock"></span>
 			</li>
 		</ul>
 	</section>
-	<section id="dash_notifications">
+	<section id="dash_notifications" class="loading">
 		<header><i class="icon-exclamation-sign"></i> {l s='Notification'}</header>
 		<ul class="data_list_vertical">
 			<li>
 				<span class="data_label">{l s='New Messages'}</span>
-				<span class="data_value size_l">42</span>
+				<span class="data_value size_l" id="new_messages"></span>
 			</li>
 			<li>
 				<span class="data_label">{l s='Order Inquires'}</span>
-				<span class="data_value size_l">13</span>
+				<span class="data_value size_l" id="order_inquires"></span>
 			</li>
 			<li>
 				<span class="data_label">{l s='Product Reviews'}</span>
-				<span class="data_value size_l">56</span>
+				<span class="data_value size_l" id="product_reviews"></span>
 			</li>
 		</ul>
 	</section>
-	<section id="dash_customers">
+	<section id="dash_customers" class="loading">
 		<header><i class="icon-user"></i> {l s='Customers'}</header>
 		<ul class="data_list">
 			<li>
 				<span class="data_label">{l s='New Customers'}</span>
-				<span class="data_value size_md">42</span>
+				<span class="data_value size_md" id="new_customers"></span>
 			</li>
 			<li>
 				<span class="data_label">{l s='Online Visitor'}</span>
-				<span class="data_value size_md">200</span>
+				<span class="data_value size_md" id="online_visitor"></span>
 			</li>
 			<li>
 				<span class="data_label">
@@ -105,33 +105,33 @@
 						{l s='In the last 30 minutes'}
 					</small>
 				</span>
-				<span class="data_value size_md">36</span>
+				<span class="data_value size_md" id="active_shopping_cart"></span>
 			</li>
 		</ul>
 	</section>
-	<section id="dash_newsletter">
+	<section id="dash_newsletter" class="loading">
 		<header><i class="icon-envelope"></i> {l s='Newsletter'}</header>
 		<ul class="data_list">
 			<li>
 				<span class="data_label">{l s='New Registrations'}</span>
-				<span class="data_value size_md">125</span>
+				<span class="data_value size_md" id="new_registrations"></span>
 			</li>
 			<li>
 				<span class="data_label">{l s='Total Subscribers'}</span>
-				<span class="data_value size_md">13,500</span>
+				<span class="data_value size_md" id="total_suscribers"></span>
 			</li>
 		</ul>		
 	</section>
-	<section id="dash_traffic">
+	<section id="dash_traffic" class="loading">
 		<header><i class="icon-globe"></i> {l s='Traffic'}</header>
 		<ul class="data_list">
 			<li>
 				<span class="data_label">{l s='Visits'}</span>
-				<span class="data_value size_md">10,000</span>
+				<span class="data_value size_md" id="visits"></span>
 			</li>
 			<li>
 				<span class="data_label">{l s='Unique Visitors'}</span>
-				<span class="data_value size_md">3,500</span>
+				<span class="data_value size_md" id="unique_visitors"></span>
 			</li>
 			<li>
 				<span class="data_label">{l s='Traffic Sources'}</span>
