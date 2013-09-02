@@ -59,7 +59,7 @@ function data_trends(datas)
 	for (var data_id in datas)
 	{
 		$('#'+data_id).html(datas[data_id]['value']);
-		if (datas[data_id]['value'] == 'down')
+		if (datas[data_id]['way'] == 'down')
 			$('#'+data_id).parent().removeClass('dash_trend_up').addClass('dash_trend_down');
 		else
 			$('#'+data_id).parent().removeClass('dash_trend_down').addClass('dash_trend_up');
