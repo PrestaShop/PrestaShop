@@ -49,6 +49,6 @@ class Dashproducts extends Module
 
 	public function hookDashboardZoneOne($params)
 	{
-		return $this->display(__FILE__, 'dashboard_zone_Two.tpl');
+		return $this->display(__FILE__, 'dashboard_zone_two.tpl');
 	}
 }
