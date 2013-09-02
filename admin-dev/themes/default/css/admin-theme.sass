@@ -1053,6 +1053,7 @@ fieldset > .row
 			margin: 4px -16px
 		dl
 			margin: 0
+			min-height: 120px
 			text-align: center
 			background-color: white
 			padding: 10px
@@ -1093,10 +1094,7 @@ fieldset > .row
 
 	.data_value
 		span, .dash_trend
-			+transition-property(opacity)
-			+transition-duration(0.6s)
-			+transition-timing-function(ease-in)
-			+opacity(1)
+			@extend .data_loading
 	.loading
 		.data_value
 			min-width: 30px
@@ -1108,9 +1106,44 @@ fieldset > .row
 				content: "\f021"
 				color: #ccc
 			span, .dash_trend
-				+opacity(0)
+				display: none
+
 		.data_table
 
 		.data_chart
 
 		.data_trends
+
+
+=animation($name,$value)
+	-webkit-animation-#{$name}: $value
+	animation-#{$name}: $value
+
+=keyframes($name)
+	@-webkit-keyframes #{$name}
+		@content
+	@-moz-keyframes #{$name}
+		@content
+	@-ms-keyframes #{$name}
+		@content
+	@-o-keyframes #{$name}
+		@content
+	@keyframes #{$name}
+		@content
+
+.data_loading
+	opacity: 1
+	+animation(name,bounceG)
+	+animation(duration,0.7s)
+	+animation(direction,linear)
+	+scale(0.7)
+
++keyframes(bounceG)
+	0%
+		+opacity(0)
+		+scale(0.1)
+	100%
+		+opacity(1)
+		+scale(1)
+		
+
