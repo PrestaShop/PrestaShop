@@ -299,7 +299,6 @@ html, body
 					@include transition-duration(0.4s)
 					@include transition-timing-function(ease-out)
 	ul.submenu
-		@include box-shadow(rgba(black,0.3) 2px 2px 4px)
 		a
 			display: block
 			padding: 2px 5px 2px 10px
@@ -335,10 +334,11 @@ html, body
 		span.title
 			display: none
 		ul.submenu
+			display: none!important
 			padding-top: 38px
 			position: relative
 			top: 0
-			display: none!important
+			@include box-shadow(rgba(black,0.3) 2px 2px 4px)
 		> ul > li:hover
 			width: 250px!important
 			position: relative
