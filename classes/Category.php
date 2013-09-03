@@ -105,8 +105,6 @@ class CategoryCore extends ObjectModel
 			'position' => 			array('type' => self::TYPE_INT),
 			'date_add' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'date_upd' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-
-			// Lang fields
 			'name' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 64),
 			'link_rewrite' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 64),
 			'description' => 		array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
@@ -475,6 +473,39 @@ class CategoryCore extends ObjectModel
 		$categories = array();
 		foreach ($result as $row)
 			$categories[$row['id_parent']][$row['id_category']]['infos'] = $row;
+
+		return $categories;
+	}
+
+	public static function getNestedCategories($id_lang = false, $active = true, $sql_filter = '', $sql_sort = '', $sql_limit = '')
+	{
+		if (!Validate::isBool($active))
+			die(Tools::displayError());
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+			SELECT *
+			FROM `'._DB_PREFIX_.'category` c
+			'.Shop::addSqlAssociation('category', 'c').'
+			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').'
+			WHERE 1 '.$sql_filter.' '.($id_lang ? 'AND `id_lang` = '.(int)$id_lang : '').'
+			'.($active ? 'AND `active` = 1' : '').'
+			'.(!$id_lang ? 'GROUP BY c.id_category' : '').'
+			'.($sql_sort != '' ? $sql_sort : 'ORDER BY c.`level_depth` ASC, category_shop.`position` ASC').'
+			'.($sql_limit != '' ? $sql_limit : '')
+		);
+
+		$categories = array();
+		$buff = array();
+
+		foreach ($result as $row)
+		{
+			$current = &$buff[$row['id_category']];
+			$current = $row;
+
+			if ($row['id_parent'] == 0)
+				$categories[$row['id_category']] = &$current;
+			else
+				$buff[$row['id_parent']]['children'][$row['id_category']] = &$current;
+		}
 
 		return $categories;
 	}
