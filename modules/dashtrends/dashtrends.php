@@ -55,7 +55,7 @@ class Dashtrends extends Module
 	public function hookDashboardData($params)
 	{
 		$gapi = Module::isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
-		if (Validate::isLoadedObject($gapi))
+		if (Validate::isLoadedObject($gapi) && $gapi->isConfigured())
 		{
 			$visits_score = 0;
 			if ($result = $gapi->requestReportData('', 'ga:visits', $params['date_from'], $params['date_to'], null, null, 1, 1))

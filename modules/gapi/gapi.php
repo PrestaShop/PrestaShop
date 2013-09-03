@@ -41,6 +41,11 @@ class Gapi extends Module
 
 		$this->displayName = $this->l('Google Analytics API');
     }
+	
+	public function isConfigured()
+	{
+		return ($this->active && $this->api_3_0_isConfigured());
+	}
 
 	public function getContent()
 	{
@@ -126,6 +131,11 @@ class Gapi extends Module
 		return true;
 	}
 
+	public function api_3_0_isConfigured()
+	{
+		return (Configuration::get('PS_GAPI30_CLIENT_ID') && Configuration::get('PS_GAPI30_CLIENT_SECRET') && Configuration::get('PS_GAPI30_PROFILE'));
+	}
+
 	public function api_3_0_getContent()
 	{
 		$html = '';
@@ -151,7 +161,7 @@ class Gapi extends Module
 		}
 
 		$display_slider = true;
-		if (Configuration::get('PS_GAPI30_CLIENT_ID') && Configuration::get('PS_GAPI30_CLIENT_SECRET') && Configuration::get('PS_GAPI30_PROFILE'))
+		if ($this->api_3_0_isConfigured())
 		{
 			$result_test = $this->api_3_0_requestReportData('', 'ga:visits,ga:uniquePageviews', date('Y-m-d', strtotime('-1 day')), date('Y-m-d', strtotime('-1 day')), null, null, 1, 1);
 			if (!$result_test)
@@ -330,6 +340,11 @@ class Gapi extends Module
 		return $result;
 	}
 
+	public function api_1_3_isConfigured()
+	{
+		return (Configuration::get('PS_GAPI13_EMAIL') && Configuration::get('PS_GAPI13_PASSWORD') && Configuration::get('PS_GAPI13_PROFILE'));
+	}
+	
 	public function api_1_3_getContent()
 	{
 		$html = '';
@@ -345,7 +360,7 @@ class Gapi extends Module
 				$html .= $this->displayError($this->l('Authentication failed'));
 		}
 
-		if (Configuration::get('PS_GAPI13_EMAIL') && Configuration::get('PS_GAPI13_PASSWORD') && Configuration::get('PS_GAPI13_PROFILE'))
+		if ($this->api_1_3_isConfigured())
 		{
 			$result_test = $this->api_3_0_requestReportData('', 'ga:visits,ga:uniquePageviews', date('Y-m-d', strtotime('-1 day')), date('Y-m-d', strtotime('-1 day')), null, null, 1, 1);
 			if (!$result_test)
