@@ -55,7 +55,7 @@ class Dashactivity extends Module
 	public function hookDashboardData($params)
 	{
 		$gapi = Module::isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
-		if (Validate::isLoadedObject($gapi))
+		if (Validate::isLoadedObject($gapi) && $gapi->isConfigured())
 		{
 			$visits = $unique_visitors = 0;
 			if ($result = $gapi->requestReportData('', 'ga:visits,ga:visitors', $params['date_from'], $params['date_to'], null, null, 1, 1))
@@ -67,7 +67,7 @@ class Dashactivity extends Module
 		else
 		{
 			$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-			SELECT COUNT(`id_connections`) as visits, COUNT(DISTINCT `id_guest`) as unique_visitors
+			SELECT COUNT(*) as visits, COUNT(DISTINCT `id_guest`) as unique_visitors
 			FROM `'._DB_PREFIX_.'connections`
 			WHERE `date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
 			'.Shop::addSqlRestriction(false));
@@ -75,25 +75,84 @@ class Dashactivity extends Module
 		}
 		
 		$order_nbr = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT COUNT(o.`id_order`)
+		SELECT COUNT(*)
+		FROM `'._DB_PREFIX_.'orders`
+		WHERE `invoice_date` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
+		'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
+
+		$abandoned_cart = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT COUNT(*)
+		FROM `'._DB_PREFIX_.'cart`
+		WHERE `date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
+		AND id_cart NOT IN (SELECT id_cart FROM `'._DB_PREFIX_.'orders`)
+		'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
+		
+		$return_exchanges = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT COUNT(*)
 		FROM `'._DB_PREFIX_.'orders` o
-		WHERE o.`invoice_date` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
+		LEFT JOIN `'._DB_PREFIX_.'order_return` or2 ON o.id_order = or2.id_order
+		WHERE or2.`date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
 		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o'));
+
+		$products_out_of_stock = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT COUNT(*)
+		FROM `'._DB_PREFIX_.'product` p
+		'.Shop::addSqlAssociation('product', 'p').'
+		'.Product::sqlStock('p').'
+		WHERE IFNULL(stock.quantity, 0) <= 0');
+		
+		$new_messages = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT COUNT(*)
+		FROM `'._DB_PREFIX_.'customer_thread` ct
+		LEFT JOIN `'._DB_PREFIX_.'customer_message` cm ON ct.id_customer_thread = cm.id_customer_thread
+		WHERE cm.`date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
+		'.Shop::addSqlRestriction(false, 'ct'));
+		
+		if ($maintenance_ips = Configuration::get('PS_MAINTENANCE_IP'))
+			$maintenance_ips = implode(',', array_map('ip2long', array_map('trim', explode(',', $maintenance_ips))));
+		if (Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS'))
+			$sql = 'SELECT COUNT(DISTINCT c.id_connections)
+					FROM `'._DB_PREFIX_.'connections` c
+					LEFT JOIN `'._DB_PREFIX_.'connections_page` cp ON c.id_connections = cp.id_connections
+					WHERE TIME_TO_SEC(TIMEDIFF(NOW(), cp.`time_start`)) < 900
+					AND cp.`time_end` IS NULL
+					'.Shop::addSqlRestriction(false, 'c').'
+					'.($maintenance_ips ? 'AND c.ip_address NOT IN ('.preg_replace('/[^,0-9]/', '', $maintenance_ips).')' : '');
+		else
+			$sql = 'SELECT COUNT(*)
+					FROM `'._DB_PREFIX_.'connections`
+					WHERE TIME_TO_SEC(TIMEDIFF(NOW(), `date_add`)) < 900
+					'.Shop::addSqlRestriction(false).'
+					'.($maintenance_ips ? 'AND ip_address NOT IN ('.preg_replace('/[^,0-9]/', '', $maintenance_ips).')' : '');
+		$online_visitor = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+		
+		$active_shopping_cart = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT COUNT(*)
+		FROM `'._DB_PREFIX_.'cart`
+		WHERE date_upd > "'.pSQL(date('Y-m-d H:i:s', strtotime('-30 MIN'))).'"
+		'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
+
+		$new_customers = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT COUNT(*)
+		FROM `'._DB_PREFIX_.'customer`
+		WHERE `date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
+		'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
 
 		return array(
 			'data_value' => array(
 				'order_nbr' => $order_nbr,
-				'pending_orders' => 120,
-				'return_exchanges' => 35,
-				'abandoned_cart' => 12,
-				'products_out_of_stock' => 4,
-				'new_messages' => 42,
-				'order_inquires' => 13,
-				'product_reviews' => 56,
-				'new_customers' => 42,
-				'online_visitor' => 200,
-				'new_registrations' => 125,
-				'total_suscribers' => 13500,
+				'pending_orders' => 42,
+				'return_exchanges' => $return_exchanges,
+				'abandoned_cart' => $abandoned_cart,
+				'products_out_of_stock' => $products_out_of_stock,
+				'new_messages' => $new_messages,
+				'order_inquires' => 42,
+				'product_reviews' => 42,
+				'new_customers' => $new_customers,
+				'online_visitor' => $online_visitor,
+				'active_shopping_cart' => $active_shopping_cart,
+				'new_registrations' => 42,
+				'total_suscribers' => 42,
 				'visits' => $visits,
 				'unique_visitors' => $unique_visitors,
 			),
