@@ -38,6 +38,7 @@ class AdminDashboardControllerCore extends AdminController
 		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
 		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
 		parent::setMedia();
+		$this->addJqueryUI('ui.datepicker');
 		$this->addJS(array(
 			__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/d3.js',
 			__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/nv.d3.js',
@@ -50,9 +51,23 @@ class AdminDashboardControllerCore extends AdminController
 	
 	public function renderView()
 	{
+		$translations = array(
+			'Calendar' => $this->l('Calendar', 'AdminStatsTab'),
+			'Day' => $this->l('Day', 'AdminStatsTab'),
+			'Month' => $this->l('Month', 'AdminStatsTab'),
+			'Year' => $this->l('Year', 'AdminStatsTab'),
+			'From' => $this->l('From:', 'AdminStatsTab'),
+			'To' => $this->l('To:', 'AdminStatsTab'),
+			'Save' => $this->l('Save', 'AdminStatsTab')
+		);
+		
 		$this->tpl_view_vars = array(
 			'hookDashboardZoneOne' => Hook::exec('dashboardZoneOne'),
 			'hookDashboardZoneTwo' => Hook::exec('dashboardZoneTwo'),
+			'translations' => $translations,
+			'action' => '#',
+			'datepickerFrom' => Tools::getValue('datepickerFrom', $this->context->employee->stats_date_from),
+			'datepickerTo' => Tools::getValue('datepickerTo', $this->context->employee->stats_date_to)
 		);
 		return parent::renderView();
 	}

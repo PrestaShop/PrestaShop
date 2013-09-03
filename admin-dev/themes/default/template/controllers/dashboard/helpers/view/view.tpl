@@ -35,6 +35,11 @@
 
 <div id="dashboard">
 	<div class="row">
+		<div class="col-lg-12">
+			{include file="../../../../form_date_range_picker.tpl"}
+		</div>
+	</div>
+	<div class="row">
 		<div class="col-lg-3">
 			{$hookDashboardZoneOne}
 		</div>
