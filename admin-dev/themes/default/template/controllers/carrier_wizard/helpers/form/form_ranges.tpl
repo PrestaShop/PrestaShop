@@ -53,7 +53,7 @@
 						{if $smarty.foreach.ranges.first}
 							<td class="center">&nbsp;</td>
 						{else}
-							<td class="center"><button class="button">{l s='Delete'}</button</td>
+							<td class="center"><button class="btn btn-default">{l s='Delete'}</button</td>
 						{/if}
 					{/foreach}
 				</tr>

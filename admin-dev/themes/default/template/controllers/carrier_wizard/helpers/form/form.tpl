@@ -32,25 +32,21 @@
 	{if $input.name == 'zones'}
 		<div class="ranges_not_follow warn" style="display:none">
 			<label>{l s="Ranges are not correctly ordered:"}</label>
-			<a href="#" class="button" style="text-decoration:none">{l s="Reordering"}</a>
+			<a href="#" class="btn btn-default" style="text-decoration:none">{l s="Reordering"}</a>
 		</div>
 		{include file='controllers/carrier_wizard/helpers/form/form_ranges.tpl'}
-		<!--
-<div class="validate_range" style="display:none">
-			<a href="#" class="button" id="validate_range_button">{l s="Validate"}</a>
-		</div>
--->
+
 		<div class="new_range">
-			<a href="#" onclick="add_new_range();return false;" class="button" id="add_new_range">{l s='Add new range'}</a>
+			<a href="#" onclick="add_new_range();return false;" class="btn btn-default" id="add_new_range">{l s='Add new range'}</a>
 		</div>
 	{/if}
 	{if $input.name == 'logo'}
-		<div class="margin-form">
+		<div class="row">
 			<input id="carrier_logo_input" type="file" onchange="uploadCarrierLogo();" name="carrier_logo_input" />
 			<input type="hidden" id="logo" name="logo" value="" />
 			<p class="preference_description">
-				{l s='Format:'} JPG, GIF, PNG. {l s='Filesize:'} {$max_image_size|string_format:"%.2f"} {l s='MB max.'}
-				<br />{l s='Current size:'} <span id="carrier_logo_size">{l s='undefined'}</span>.
+				{l s='Format:'} JPG, GIF, PNG. {l s='Filesize:'} {$max_image_size|string_format:"%.2f"} {l s='MB max.'}<br />
+				{l s='Current size:'} <span id="carrier_logo_size">{l s='undefined'}</span>.
 			</p>
 		</div>
 	{/if}
