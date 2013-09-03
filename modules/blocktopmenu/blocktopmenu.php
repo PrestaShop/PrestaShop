@@ -65,6 +65,7 @@ class Blocktopmenu extends Module
 	{
 		if (!parent::install() ||
 			!$this->registerHook('displayTop') ||
+			!$this->registerHook('displayHeader') ||
 			!Configuration::updateGlobalValue('MOD_BLOCKTOPMENU_ITEMS', 'CAT1,CMS1,CMS2,PRD1') ||
 			!Configuration::updateGlobalValue('MOD_BLOCKTOPMENU_SEARCH', '1') ||
 			!$this->registerHook('actionObjectCategoryUpdateAfter') ||
@@ -754,6 +755,13 @@ class Blocktopmenu extends Module
 		$page_name = in_array($this->page_name, array('category', 'supplier', 'manufacturer', 'cms', 'product')) ? $this->page_name : 'index';
 		return 'blocktopmenu|'.(int)Tools::usingSecureMode().'|'.$page_name.'|'.(int)$this->context->shop->id.'|'.implode(', ',$this->user_groups).'|'.(int)$this->context->language->id.'|'.(int)Tools::getValue('id_category').'|'.(int)Tools::getValue('id_manufacturer').'|'.(int)Tools::getValue('id_supplier').'|'.(int)Tools::getValue('id_cms').'|'.(int)Tools::getValue('id_product');
 	}
+	
+	public function hookDisplayHeader($params)
+	{
+		$this->context->controller->addJS($this->_path.'js/hoverIntent.js');
+		$this->context->controller->addJS($this->_path.'js/superfish-modified.js');
+		$this->context->controller->addCSS($this->_path.'css/superfish-modified.css');
+	}
 
 	public function hookDisplayTop($param)
 	{
@@ -766,10 +774,6 @@ class Blocktopmenu extends Module
 			$this->smarty->assign('MENU', $this->_menu);
 			$this->smarty->assign('this_path', $this->_path);
 		}
-
-		$this->context->controller->addJS($this->_path.'js/hoverIntent.js');
-		$this->context->controller->addJS($this->_path.'js/superfish-modified.js');
-		$this->context->controller->addCSS($this->_path.'css/superfish-modified.css');
 
 		$html = $this->display(__FILE__, 'blocktopmenu.tpl', $this->getCacheId());
 		return $html;
