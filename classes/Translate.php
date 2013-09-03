@@ -148,7 +148,7 @@ class TranslateCore
 					$translations_merged[$name] = true;
 				}
 		}
-		$key = md5(str_replace('\'', '\\\'', $string));
+		$key = md5($string);
 
 		$cache_key = $name.'|'.$string.'|'.$source;
 
