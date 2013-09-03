@@ -460,7 +460,8 @@ class LanguageCore extends ObjectModel
 				}
 			closedir($handle);
 		}
-		rmdir($dir);
+		if (is_writable($dir))
+			rmdir($dir);
 	}
 
 	public function delete()
