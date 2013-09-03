@@ -51,75 +51,83 @@
 				<i class="icon-thumbs-up"></i> {l s='Best Sales'}</a></li>
 		</ul>
 	</nav>
-
-	<h4 >Last 10 orders: Overall | Pending</h4>
-	<table class="table">
-		<thead>
-			<tr>
-				<th>Customer</th>
-				<th class="text-center">Products</th>
-				<th class="text-center">Total</th>
-				<th>Date</th>
-				<th></th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td class=""><a href="javascript:void(0);">John Smith</a></td>
-				<td class="text-center"><strong>10</strong></td>
-				<td class="text-center"><span class="label label-success">$1200</span></td>
-				<td>July 8th, 2013 // 10:42 am</td>
-				<td><i class="icon-time"></i> Today</td>
-			</tr>
-			<tr>
-				<td class=""><a href="javascript:void(0);">John Smith</a></td>
-				<td class="text-center"><strong>10</strong></td>
-				<td class="text-center"><span class="label label-success">$1200</span></td>
-				<td>July 8th, 2013 // 10:42 am</td>
-				<td><i class="icon-time"></i> Today</td>
-			</tr>
-			<tr>
-				<td class=""><a href="javascript:void(0);">John Smith</a></td>
-				<td class="text-center"><strong>10</strong></td>
-				<td class="text-center"><span class="label label-success">$1200</span></td>
-				<td>July 8th, 2013 // 10:42 am</td>
-				<td><i class="icon-time"></i> Today</td>
-			</tr>
-			<tr>
-				<td class=""><a href="javascript:void(0);">John Smith</a></td>
-				<td class="text-center"><strong>10</strong></td>
-				<td class="text-center"><span class="label label-success">$1200</span></td>
-				<td>July 8th, 2013 // 10:42 am</td>
-				<td><i class="icon-time"></i> Today</td>
-			</tr>
-			<tr>
-				<td class=""><a href="javascript:void(0);">John Smith</a></td>
-				<td class="text-center"><strong>10</strong></td>
-				<td class="text-center"><span class="label label-success">$1200</span></td>
-				<td>July 8th, 2013 // 10:42 am</td>
-				<td><i class="icon-time"></i> Today</td>
-			</tr>
-			<tr>
-				<td class=""><a href="javascript:void(0);">John Smith</a></td>
-				<td class="text-center"><strong>10</strong></td>
-				<td class="text-center"><span class="label label-success">$1200</span></td>
-				<td>July 8th, 2013 // 10:42 am</td>
-				<td><i class="icon-time"></i> Today</td>
-			</tr>
-			<tr>
-				<td class=""><a href="javascript:void(0);">John Smith</a></td>
-				<td class="text-center"><strong>10</strong></td>
-				<td class="text-center"><span class="label label-success">$1200</span></td>
-				<td>July 8th, 2013 // 10:42 am</td>
-				<td><i class="icon-time"></i> Today</td>
-			</tr>
-			<tr>
-				<td class=""><a href="javascript:void(0);">John Smith</a></td>
-				<td class="text-center"><strong>10</strong></td>
-				<td class="text-center"><span class="label label-success">$1200</span></td>
-				<td>July 8th, 2013 // 10:42 am</td>
-				<td><i class="icon-time"></i> Today</td>
-			</tr>
-		</tbody>
-	</table>
+	<div class="tab-content">
+		<div class="tab-pane active" id="dash_recent_orders">
+			<h4>Last 10 orders: Overall | Pending</h4>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Customer</th>
+						<th class="text-center">Products</th>
+						<th class="text-center">Total</th>
+						<th>Date</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class=""><a href="javascript:void(0);">John Smith</a></td>
+						<td class="text-center"><strong>10</strong></td>
+						<td class="text-center"><span class="label label-success">$1200</span></td>
+						<td>July 8th, 2013 // 10:42 am</td>
+						<td><i class="icon-time"></i> Today</td>
+					</tr>
+					<tr>
+						<td class=""><a href="javascript:void(0);">John Smith</a></td>
+						<td class="text-center"><strong>10</strong></td>
+						<td class="text-center"><span class="label label-success">$1200</span></td>
+						<td>July 8th, 2013 // 10:42 am</td>
+						<td><i class="icon-time"></i> Today</td>
+					</tr>
+					<tr>
+						<td class=""><a href="javascript:void(0);">John Smith</a></td>
+						<td class="text-center"><strong>10</strong></td>
+						<td class="text-center"><span class="label label-success">$1200</span></td>
+						<td>July 8th, 2013 // 10:42 am</td>
+						<td><i class="icon-time"></i> Today</td>
+					</tr>
+					<tr>
+						<td class=""><a href="javascript:void(0);">John Smith</a></td>
+						<td class="text-center"><strong>10</strong></td>
+						<td class="text-center"><span class="label label-success">$1200</span></td>
+						<td>July 8th, 2013 // 10:42 am</td>
+						<td><i class="icon-time"></i> Today</td>
+					</tr>
+					<tr>
+						<td class=""><a href="javascript:void(0);">John Smith</a></td>
+						<td class="text-center"><strong>10</strong></td>
+						<td class="text-center"><span class="label label-success">$1200</span></td>
+						<td>July 8th, 2013 // 10:42 am</td>
+						<td><i class="icon-time"></i> Today</td>
+					</tr>
+					<tr>
+						<td class=""><a href="javascript:void(0);">John Smith</a></td>
+						<td class="text-center"><strong>10</strong></td>
+						<td class="text-center"><span class="label label-success">$1200</span></td>
+						<td>July 8th, 2013 // 10:42 am</td>
+						<td><i class="icon-time"></i> Today</td>
+					</tr>
+					<tr>
+						<td class=""><a href="javascript:void(0);">John Smith</a></td>
+						<td class="text-center"><strong>10</strong></td>
+						<td class="text-center"><span class="label label-success">$1200</span></td>
+						<td>July 8th, 2013 // 10:42 am</td>
+						<td><i class="icon-time"></i> Today</td>
+					</tr>
+					<tr>
+						<td class=""><a href="javascript:void(0);">John Smith</a></td>
+						<td class="text-center"><strong>10</strong></td>
+						<td class="text-center"><span class="label label-success">$1200</span></td>
+						<td>July 8th, 2013 // 10:42 am</td>
+						<td><i class="icon-time"></i> Today</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="tab-pane" id="dash_best_sellers"><h4>Coming soon</h4></div>
+		<div class="tab-pane" id="dash_most_viewed"><h4>Coming soon</h4></div>
+		<div class="tab-pane" id="dash_top_search"><h4>Coming soon</h4></div>
+		<div class="tab-pane" id="dash_best_sales"><h4>Coming soon</h4></div>
+	</div>
+	
 </section>
