@@ -75,6 +75,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 	public static function displayCalendarForm($translations, $token, $action = null, $table = null, $identifier = null, $id = null)
 	{
 		$context = Context::getContext();
+
 		$tpl = $context->controller->createTemplate('calendar.tpl');
 
 		$context->controller->addJqueryUI('ui.datepicker');
@@ -84,7 +85,13 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 			$identifier = 'module';
 			$id = Tools::getValue('module');
 		}
-
+		
+		$action = Context::getContext()->link->getAdminLink('AdminStatsTab');
+		$action .= ($action && $table ? '&'.Tools::safeOutput($action) : '');
+		$action .= ($identifier && $id ? '&'.Tools::safeOutput($identifier).'='.(int)$id : '');
+		$action .= ($module = Tools::getValue('module') ? '&module='.Tools::safeOutput($module) : '');
+		$action .= ($id_product = Tools::getValue('id_product') ? '&id_product='.Tools::safeOutput($id_product) : '');
+		
 		$tpl->assign(array(
 			'current' => self::$currentIndex,
 			'token' => $token,
