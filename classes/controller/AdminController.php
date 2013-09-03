@@ -726,6 +726,8 @@ class AdminControllerCore extends Controller
 	 */
 	public function processAdd()
 	{
+		if (!isset($this->className) || empty($this->className))
+			return false;
 		/* Checking fields validity */
 		$this->validateRules();
 		if (count($this->errors) <= 0)
@@ -1142,6 +1144,8 @@ class AdminControllerCore extends Controller
 	 */
 	protected function loadObject($opt = false)
 	{
+		if (!isset($this->className) || empty($this->className))
+			return true;
 		$id = (int)Tools::getValue($this->identifier);
 		if ($id && Validate::isUnsignedId($id))
 		{
@@ -2400,7 +2404,7 @@ class AdminControllerCore extends Controller
 	public function getFieldValue($obj, $key, $id_lang = null)
 	{
 		if ($id_lang)
-			$default_value = ($obj->id && isset($obj->{$key}[$id_lang])) ? $obj->{$key}[$id_lang] : false;
+			$default_value = (isset($obj->id) && $obj->id && isset($obj->{$key}[$id_lang])) ? $obj->{$key}[$id_lang] : false;
 		else
 			$default_value = isset($obj->{$key}) ? $obj->{$key} : false;
 
