@@ -83,7 +83,6 @@ class AdminDashboardControllerCore extends AdminController
 			'date_to' => $this->context->employee->stats_date_to,
 		);
 		
-		$datas = Hook::exec('dashboardDatas', $params, $id_module, true);
-		die(Tools::jsonEncode($datas));
+		die(Tools::jsonEncode(Hook::exec('dashboardData', $params, $id_module, true)));
 	}
 }
