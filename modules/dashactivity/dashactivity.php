@@ -54,9 +54,15 @@ class Dashactivity extends Module
 	
 	public function hookDashboardDatas($params)
 	{
+		$order_nbr = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT COUNT(o.`id_order`)
+		FROM `'._DB_PREFIX_.'orders` o
+		WHERE o.`invoice_date` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
+		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o'));
+
 		return array(
 			'data_value' => array(
-				'order_nbr' => 365,
+				'order_nbr' => $order_nbr,
 				'pending_orders' => 120,
 				'return_exchanges' => 35,
 				'abandoned_cart' => 12,
@@ -72,7 +78,7 @@ class Dashactivity extends Module
 				'unique_visitors' => 3500,
 				),
 			'data_trends' => array(
-				'orders_trends' => array('way' => 'down', 'value' => 0.66),
+				'orders_trends' => array('way' => 'down', 'value' => 0.42),
 				)
 			);
 	}
