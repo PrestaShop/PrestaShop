@@ -240,7 +240,7 @@
 					<a href="#" id="quick_select" class="dropdown-toggle" data-toggle="dropdown">{l s='Quick Access'} <b class="caret"></b></a>
 					<ul class="dropdown-menu">
 					{foreach $quick_access as $quick}
-						<li><a href="{$quick.link|escape:'htmlall':'UTF-8'}{if $quick.new_window}_blank{/if}"><i class="icon-chevron-right"></i> {$quick.name}</a></li>
+						<li><a href="{$quick.link|escape:'htmlall':'UTF-8'}" {if $quick.new_window} target="_blank"{/if}><i class="icon-chevron-right"></i> {$quick.name}</a></li>
 					{/foreach}
 					</ul>
 				</li>
