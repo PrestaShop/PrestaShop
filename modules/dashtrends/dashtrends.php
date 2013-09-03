@@ -58,22 +58,22 @@ class Dashtrends extends Module
 		if (Validate::isLoadedObject($gapi))
 		{
 			$visits_score = 0;
-			if ($result = $gapi->requestReportData('', 'ga:visits', $this->context->employee->stats_date_from, $this->context->employee->stats_date_to, null, null, 1, 1))
+			if ($result = $gapi->requestReportData('', 'ga:visits', $params['date_from'], $params['date_to'], null, null, 1, 1))
 				$visits_score = $result[0]['metrics']['visits'];
 		}
 		else
 		{
 			$visits_score = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT COUNT(c.`id_connections`)
-			FROM `'._DB_PREFIX_.'connections` c
-			WHERE c.`date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
-			'.Shop::addSqlRestriction(false, 'c'));
+			SELECT COUNT(`id_connections`)
+			FROM `'._DB_PREFIX_.'connections`
+			WHERE `date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
+			'.Shop::addSqlRestriction(false));
 		}
 		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT COUNT(o.`id_order`) as orders_score, SUM(o.`total_paid_tax_excl` / o.conversion_rate) as sales_score
-		FROM `'._DB_PREFIX_.'orders` o
-		WHERE o.`invoice_date` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
-		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o'));
+		SELECT COUNT(`id_order`) as orders_score, SUM(`total_paid_tax_excl` / `conversion_rate`) as sales_score
+		FROM `'._DB_PREFIX_.'orders`
+		WHERE `invoice_date` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
+		'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
 		extract($row);
 
 		return array(
