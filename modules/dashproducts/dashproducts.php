@@ -42,7 +42,7 @@ class Dashproducts extends Module
 
 	public function install()
 	{
-		if (!parent::install() || !$this->registerHook('dashboardZoneTwo') || !$this->registerHook('dashboardDatas'))
+		if (!parent::install() || !$this->registerHook('dashboardZoneTwo') || !$this->registerHook('dashboardData'))
 			return false;
 		return true;
 	}
@@ -52,7 +52,7 @@ class Dashproducts extends Module
 		return $this->display(__FILE__, 'dashboard_zone_two.tpl');
 	}
 	
-	public function hookDashboardDatas($params)
+	public function hookDashboardData($params)
 	{
 		return array();
 	}

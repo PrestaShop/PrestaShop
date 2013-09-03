@@ -42,7 +42,7 @@ class Dashactivity extends Module
 
 	public function install()
 	{
-		if (!parent::install() || !$this->registerHook('dashboardZoneOne') || !$this->registerHook('dashboardDatas'))
+		if (!parent::install() || !$this->registerHook('dashboardZoneOne') || !$this->registerHook('dashboardData'))
 			return false;
 		return true;
 	}
@@ -52,7 +52,7 @@ class Dashactivity extends Module
 		return $this->display(__FILE__, 'dashboard_zone_one.tpl');
 	}
 	
-	public function hookDashboardDatas($params)
+	public function hookDashboardData($params)
 	{
 		$order_nbr = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT COUNT(o.`id_order`)
