@@ -66,13 +66,13 @@ class Dashtrends extends Module
 			$visits_score = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT COUNT(c.`id_connections`)
 			FROM `'._DB_PREFIX_.'connections` c
-			WHERE c.`date_add` BETWEEN '.ModuleGraph::getDateBetween().'
+			WHERE c.`date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
 			'.Shop::addSqlRestriction(false, 'c'));
 		}
 		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT COUNT(o.`id_order`) as orders_score, SUM(o.`total_paid_tax_excl` / o.conversion_rate) as sales_score
 		FROM `'._DB_PREFIX_.'orders` o
-		WHERE o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'
+		WHERE o.`invoice_date` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
 		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o'));
 		extract($row);
 
