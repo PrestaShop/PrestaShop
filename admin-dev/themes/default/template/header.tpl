@@ -94,13 +94,12 @@
 	<![endif]-->
 	{if isset($brightness)}
 	<!--
-		/// multishop
+		/// todo multishop
 		<style type="text/css">
 			div#header_infos, div#header_infos a#header_shopname, div#header_infos a#header_logout, div#header_infos a#header_foaccess {ldelim}color:{$brightness}{rdelim}
 		</style>
 	-->
 	{/if}
-	<link href='http://fonts.googleapis.com/css?family=Ubuntu:300|Open+Sans' rel='stylesheet' type='text/css'>
 </head>
 
 
@@ -111,7 +110,6 @@
 		<nav id="header_infos" role="navigation">
 			<div class="navbar-header">
 			<button id="header_nav_toggle" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-primary">
-					<span class="sr-only">Toggle navigation</span>
 					<i class="icon-reorder"></i>
 			</button>
 
@@ -123,7 +121,7 @@
 			<ul id="header_notifs_icon_wrapper">
 {if {$show_new_orders} == 1}
 				<li id="orders_notif" class="dropdown" >
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+					<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
 						<i class="icon-shopping-cart"></i>
 						<span id="orders_notif_number_wrapper" class="notifs_badge">
 							<span id="orders_notif_value">0</span>
@@ -140,8 +138,7 @@
 										<i class="icon-time"></i>
 									</span>
 									<span class="media-body">
-										{l s='No new orders has been placed on your shop'}<br>
-										<small class="text-muted">1 minute ago</small>
+										{l s='No new orders has been placed on your shop'}
 									</span>
 								</a>
 							</div>
@@ -150,17 +147,11 @@
 							</footer>
 						</section>
 					</div>
-					<!-- <ul id="orders_notif_wrapper" class="dropdown-menu notification">
-						<li><p>{l s='Last orders'}</p></li>
-						<li><p class="no_notifs">{l s='No new orders has been placed on your shop'}</p></li>
-						<li><ul id="list_orders_notif"></ul></li>
-						<li><a href="index.php?controller=AdminOrders&amp;token={getAdminToken tab='AdminOrders'}">{l s='Show all orders'} <i class="icon-circle-arrow-right"></i></a></li>
-					</ul> -->
 				</li>
 {/if}
-{if ($show_new_customers == 1)}
+{if {$show_new_customers} == 1}
 				<li id="customers_notif" class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+					<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
 						<i class="icon-user"></i>
 						<span id="customers_notif_number_wrapper" class="notifs_badge">
 							<span id="customers_notif_value">0</span>
@@ -171,14 +162,13 @@
 							<header class="notifs_panel_header">
 								<h3>{l s='Last customers'}</h3>
 							</header>
-							<div id="list_orders_notif" class="list-group">
+							<div id="list_customers_notif" class="list-group">
 								<a href="#" class="media list-group-item no_notifs">
 									<span class="pull-left">
 										<i class="icon-time"></i>
 									</span>
 									<span class="media-body">
-										{l s='No new customers registered on your shop'}<br>
-										<small class="text-muted">1 minute ago</small>
+										{l s='No new customers registered on your shop'}
 									</span>
 								</a>
 							</div>
@@ -187,17 +177,11 @@
 							</footer>
 						</section>
 					</div>
-<!-- 					<ul id="customers_notif_wrapper" class="dropdown-menu notification">
-						<li><p>{l s='Last customers'}</p></li>
-						<li><p class="no_notifs">{l s='No new customers registered on your shop'}</p></li>
-						<li><ul id="list_customers_notif"></ul></li>
-						<li><a href="index.php?controller=AdminCustomers&amp;token={getAdminToken tab='AdminCustomers'}">{l s='Show all customers'} <i class="icon-circle-arrow-right"></i></a></li>
-					</ul> -->
 				</li>
 {/if}
 {if {$show_new_messages} == 1}
 				<li id="customer_messages_notif" class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+					<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
 						<i class="icon-envelope"></i>
 						<span id="customer_messages_notif_number_wrapper" class="notifs_badge">
 							<span id="customer_messages_notif_value" >0</span>
@@ -214,8 +198,7 @@
 										<i class="icon-time"></i>
 									</span>
 									<span class="media-body">
-										{l s='No new messages posted on your shop'}<br>
-										<small class="text-muted">1 minute ago</small>
+										{l s='No new messages posted on your shop'}
 									</span>
 								</a>
 							</div>
@@ -224,12 +207,6 @@
 							</footer>
 						</section>
 					</div>
-<!-- 						<ul id="customer_messages_notif_wrapper" class="dropdown-menu notification">
-						<li>{l s='Last messages'}</li>
-						<li><p class="no_notifs">{l s='No new messages posted on your shop'}</p></li>
-						<li><ul id="list_customer_messages_notif"></ul></li>
-						<li><a href="index.php?tab=AdminCustomerThreads&amp;token={getAdminToken tab='AdminCustomerThreads'}">{l s='Show all messages'} <i class="icon-circle-arrow-right"></i></a></li>
-					</ul> -->
 				</li>
 {/if}
 			</ul>
@@ -271,6 +248,9 @@
 {/if}
 
 			<ul id="header_employee_box">
+{if {$base_url}}
+				<li><a href="{$base_url}" id="header_foaccess" target="_blank" title="{l s='View my shop'}"><i class="icon-eye-open"></i> {l s='View my shop'}</a></li>
+{/if}
 				<li id="employee_infos" class="dropdown">
 					<a href='#' class="employee_name dropdown-toggle" data-toggle="dropdown">
 						<img src="{$img_dir}prestashop-avatar.png" height="15" width="15" />
@@ -280,9 +260,6 @@
 					<ul id="employee_links" class="dropdown-menu">
 						<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'htmlall':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences'}</a></li>
 						<li><a id="header_logout" href="index.php?logout"><i class="icon-signout"></i> {l s='logout'}</a></li>
-{if {$base_url}}
-						<li><a href="{$base_url}" id="header_foaccess" target="_blank" title="{l s='View my shop'}"><i class="icon-eye-open"></i> {l s='View my shop'}</a></li>
-{/if}
 					</ul>
 				</li>
 			</ul>

@@ -56,13 +56,22 @@ function getPush(refresh)
 			html = "";
 			nb_notifs = 0;
 			$.each(json.order, function(property, value) {
-				html += "<li>" + new_order_msg + "<br />" + order_number_msg + "<strong>#" + parseInt(value.id_order) + "</strong><br />" + total_msg + "<strong>" + value.total_paid + "</strong><br />" + from_msg + "<strong>" + value.customer_name + "</strong><br /><a href=\"index.php?tab=AdminOrders&token=" + token_admin_orders + "&vieworder&id_order=" + parseInt(value.id_order) + "\">" + see_order_msg + "</a></li>";
+				html += "<a href='index.php?tab=AdminOrders&token=" + token_admin_orders + "&vieworder&id_order=" + parseInt(value.id_order) + "' class='media list-group-item no_notifs'>";
+				html += "<span class='pull-left'><i class='icon-time'></i></span>";
+				html += "<span class='media-body'>";
+				//html += "<p>" + new_order_msg + "</p>";
+				html += "<p>" + order_number_msg + "&nbsp;<strong>#" + parseInt(value.id_order) + "</strong></p>";
+				html += "<p class='pull-right'>" + total_msg + "&nbsp;<span class='label label-success'>" + value.total_paid + "</span></p>";
+				html += "<p>" + from_msg + "&nbsp;<strong>" + value.customer_name + "</strong></p>";
+				//html += "<p>" + see_order_msg + "</p>";
+				html += "<small class='text-muted'>1 minute ago</small>";
+				html += "</span></a>";
 			});
 			if (html != "")
 			{
-				$("#list_orders_notif").prev("p").hide();
+				//$("#list_orders_notif").prev("p").hide();
 				$("#list_orders_notif").empty().append(html);
-				nb_notifs = $("#list_orders_notif li").length;
+				nb_notifs = $("#list_orders_notif").length;
 				$("#orders_notif_value").text(nb_notifs);
 				$("#orders_notif_number_wrapper").show();
 			}
@@ -75,13 +84,22 @@ function getPush(refresh)
 			html = "";
 			nb_notifs = 0;
 			$.each(json.customer, function(property, value) {
-				html += "<li>" + new_customer_msg + "<br />" + customer_name_msg + "<strong>" + value.customer_name + "</strong><br /><a href=\"index.php?tab=AdminCustomers&token=" + token_admin_customers + "&viewcustomer&id_customer=" + parseInt(value.id_customer) + "\">" + see_customer_msg + "</a></li>";
+
+				html += "<a href='index.php?tab=AdminCustomers&token=" + token_admin_customers + "&viewcustomer&id_customer=" + parseInt(value.id_customer) + "' class='media list-group-item no_notifs'>";
+				html += "<span class='pull-left'><i class='icon-time'></i></span>";
+				html += "<span class='media-body'>";
+				//html += "<p>" + new_customer_msg + "</p>";
+				html += "<p>" + customer_name_msg + "&nbsp;<strong>#" + value.customer_name + "</strong></p>";
+				//html += "<p>" + see_customer_msg + "</p>";
+				html += "<small class='text-muted'>1 minute ago</small>";
+				html += "</span></a>";
+
 			});						
 			if (html != "")
 			{
-				$("#list_customers_notif").prev("p").hide();						
+				//$("#list_customers_notif").prev("p").hide();
 				$("#list_customers_notif").empty().append(html);
-				nb_notifs = $("#list_customers_notif li").length;
+				nb_notifs = $("#list_customers_notif").length;
 				$("#customers_notif_value").text(nb_notifs);
 				$("#customers_notif_number_wrapper").show();
 			}
@@ -94,7 +112,14 @@ function getPush(refresh)
 			html = "";
 			nb_notifs = 0;
 			$.each(json.customer_message, function(property, value) {
-				html += "<li>" + new_msg + "<br />" + from_msg + "<strong>" + value.customer_name + "</strong><br /><a href=\"index.php?tab=AdminCustomerThreads&token=" + token_admin_customer_threads + "&viewcustomer_thread&id_customer_thread=" + parseInt(value.id_customer_thread) + "\">" + see_msg + "</a></li>";
+				html += "<a href='index.php?tab=AdminCustomerThreads&token=" + token_admin_customer_threads + "&viewcustomer_thread&id_customer_thread=" + parseInt(value.id_customer_thread) + "'>";
+				html += "<span class='pull-left'><i class='icon-time'></i></span>";
+				html += "<span class='media-body'>";
+				//html += "<p>" + new_msg + "</p>";
+				html += "<p>" + from_msg + "&nbsp;<strong>" + value.customer_name + "</strong></p>";
+				//html += "<p>" + see_msg + "</p>";
+				html += "<small class='text-muted'>1 minute ago</small>";
+				html += "</span></a>";
 			});
 
 			if (html != "")
