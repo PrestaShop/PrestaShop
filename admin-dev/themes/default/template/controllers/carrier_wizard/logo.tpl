@@ -24,9 +24,8 @@
 *}
 
 <div id="carrier_logo_block">
-	<img id="carrier_logo_img" src="{if $carrier_logo}{$carrier_logo}{else}../img/admin/carrier-default.jpg{/if}" />
-	<br/>
-	<a id="carrier_logo_remove" {if !$carrier_logo}style="display:none"{/if} href="javascript:removeCarrierLogo();"><img src="../img/admin/disabled.gif" /> {l s='Remove the logo'}</a>
+	<img id="carrier_logo_img" src="{if $carrier_logo}{$carrier_logo}{else}../img/admin/carrier-default.jpg{/if}" class="thumbnail" />
+	<a id="carrier_logo_remove" class="btn btn-default" {if !$carrier_logo}style="display:none"{/if} href="javascript:removeCarrierLogo();"><i class="icon-trash"></i> {l s='Remove the logo'}</a>
 </div>
 
 <script type="text/javascript">

@@ -36,35 +36,27 @@
 	var summary_translation_price = '<strong>{l s='according to the price' js=1}</strong>';
 	var summary_translation_weight = '<strong>{l s='according to the weight' js=1}</strong>';
 </script>
+
 <div class="defaultForm">
 	<fieldset>
 		{l s='Carrier name:'} <strong id="summary_name"></strong>
-		<div class="clear">&nbsp;</div>
 		<div id="summary_meta_informations"></div>
-		<div class="clear">&nbsp;</div>
 		<div id="summary_shipping_cost"></div>
-		<div class="clear">&nbsp;</div>
 		<div id="summary_range"></div>
-		<div class="clear">&nbsp;</div>
 		<div>
 			{l s='It will be displayed only for the following zones:'}
 			<ul id="summary_zones"></ul>
 		</div>
-		<div class="clear">&nbsp;</div>
 		<div>
 			{l s='It will be displayed only for the following groups:'}
 			<ul id="summary_groups"></ul>
 		</div>
 		{if $is_multishop}
-		<div class="clear">&nbsp;</div>
 		<div>
 			{l s='It will be displayed only for the following shops:'}
 			<ul id="summary_shops"></ul>
 		</div>
 		{/if}
-		<div class="clear">&nbsp;</div>
 		{$active_form}
 	</fieldset>
-	</div>
-<div class="clear">&nbsp;</div>
-
+</div>

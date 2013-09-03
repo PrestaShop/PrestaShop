@@ -619,7 +619,7 @@ hr
 
 //filter table
 tr.filter
-	background-color: darken($bg-content-color,20%)
+	background-color: $bg-content-color
 	input[type="text"].filter, input[type="password"].filter, select.filter
 		font-size: 12px
 
@@ -1224,3 +1224,283 @@ $treeBackgroundSelect: blue
 		background-color: $treeBackgroundSelect
 		&:hover
 			background-color: $treeBackgroundSelect
+
+
+
+
+#carrier_wizard.swMain
+	position: relative
+	display: block
+	.stepContainer
+		position: relative
+		display: block
+		overflow: hidden
+		clear: both
+		div.content
+			position: absolute
+			display: block
+			width: 100%
+			text-align: left
+			overflow: visible 
+			z-index: 88
+			clear: both
+		.StepTitle
+			display: block
+			position: relative
+			margin: 0
+			padding: 5px
+			clear: both
+			text-align: left
+			z-index: 88
+			-webkit-border-radius: 5px
+			-moz-border-radius: 5px
+	ul.anchor
+		position: relative
+		display: block
+		float: left
+		list-style: none
+		padding: 0
+		margin: 0 0 10px 0
+		clear: both
+		width: 100%
+		&.nbr_steps_4
+			li
+				width: 25%
+				float: left
+		&.nbr_steps_5
+			li
+				width: 25%
+				float: left
+	li
+		position: relative
+		display: block
+
+		a
+			height: 32px
+			display: block
+			position: relative
+			margin: 0
+			margin-right: 16px
+			padding-right: 25px
+			text-decoration: none
+			outline-style: none
+			z-index: 99
+			//overflow: hidden
+			.stepNumber
+				position: relative
+				float: left
+				width: 24px
+				height: 32px
+				text-align: center
+				padding: 0 5px
+				padding-top: 0
+				font-size: 30px
+				line-height: 32px
+				color: #fffffe
+				text-shadow: none
+				font-weight: normal
+				font-style: normal
+			.stepDesc
+				position: relative
+				text-align: left
+				font-size: 15px
+				height: 32px
+				display: table-cell
+				vertical-align: middle
+				line-height: 13px
+			.chevron
+				border: 16px solid transparent
+				border-left: 14px solid white
+				border-right: 0
+				position: absolute
+				background-color: #ccc
+				right: -16px
+				top: 0
+				&:after
+					border: 16px solid transparent
+					border-left: 14px solid #ccc
+					border-right: 0
+					position: absolute
+					content: ""
+					right: 2px
+					top: -16px
+		&.selected a.selected
+			color: #F8F8F8
+			cursor: text
+			background-color: $main-color
+			.chevron:after
+				border-left: 14px solid $main-color
+		&.done a
+			color: #ccc
+			background-color: $main-color
+			.chevron
+				background-color: $main-color
+			.chevron:after
+				border-left: 14px solid $main-color
+
+
+		&.disabled a
+			cursor: text
+			background-color: #ccc
+			color: #878787
+			.chevron:after
+				border-left: 14px solid #ccc
+
+		&.done a.selected
+			position: relative
+			color: #FFF
+			background-color: $main-color
+			.chevron
+				background-color: $main-color
+
+	.loader
+		display: none
+	.buttonNext
+		@extend .btn
+		@extend .btn-default
+	.buttonDisabled
+		@extend .btn
+		@extend .btn-disabled
+	.buttonPrevious
+		@extend .btn
+		@extend .btn-default
+	.buttonFinish
+		@extend .btn
+		@extend .btn-primary
+	.msgBox
+		position: relative
+		display: none
+		float: left
+		margin: 4px 0 0 5px
+		padding: 5px
+		border: 1px solid #FFD700
+		background-color: #FFFFDD
+		color: #5A5655
+		+border-radius(5px)
+		z-index: 999
+		min-width: 200px
+	.msgBox .content
+		padding: 0px
+		float: left
+
+	.msgBox .close
+		border: 1px solid #CCC
+		border-radius: 3px
+		color: #CCC
+		display: block
+		float: right
+		margin: 0 0 0 5px
+		outline-style: none
+		padding: 0 2px 0 2px
+		position: relative
+		text-align: center
+		text-decoration: none
+	#carrier_logo_block
+		position: absolute
+		right: 10px
+
+	.wizard_error
+		@extend .alert
+		@extend .alert-danger
+
+
+
+
+.wizardUX
+	@extend .clearfix
+	border: 1px solid blue
+	background-color: white
+	ul
+		list-style: none outside none
+		padding: 0
+		margin: 0
+		li
+			float: left
+			margin: 0
+			padding: 0 20px 0 30px
+			height: 46px
+			line-height: 46px
+			position: relative
+			background: #ededed
+			color: blue
+			font-size: 16px
+			cursor: default
+			.chevron
+				border: 24px solid transparent
+				border-left: 14px solid blue
+				border-right: 0
+				display: block
+				position: absolute
+				right: -14px
+				top: 0
+			.chevron:before
+				border: 24px solid transparent
+				border-left: 14px solid #ededed
+				border-right: 0
+				content: ""
+				display: block
+				position: absolute
+				right: 1px
+				top: -24px
+			&.complete 
+				background: #f3f4f5
+				color: blue
+				&:hover
+					background: #e7eff8
+					cursor: pointer
+					.chevron:before
+						border-left: 14px solid #e7eff8
+				.chevron:before
+					border-left: 14px solid #f3f4f5
+			&.active
+				background: #f1f6fc
+				color: blue
+				.chevron:before 
+					border-left: 14px solid #f1f6fc
+			.badge
+				margin-right: 8px
+		li:nth-child(1)
+			border-radius: 4px 0 0 4px
+			padding-left: 20px
+			z-index: 10
+		li:nth-child(2)
+			z-index: 9
+		li:nth-child(3)
+			z-index: 8
+		li:nth-child(4)
+			z-index: 7
+		li:nth-child(5)
+			z-index: 6
+		li:nth-child(6)
+			z-index: 5
+		li:nth-child(7)
+			z-index: 4
+		li:nth-child(8)
+			z-index: 3
+		li:nth-child(9)
+			z-index: 2
+		li:nth-child(10)
+			z-index: 1
+	.actions
+		line-height: 44px
+		float: right
+		padding-right: 15px
+		vertical-align: middle
+		a
+			line-height: 45px
+			font-size: 12px
+			margin-right: 8px
+		.btn-prev
+			i
+				margin-right: 5px
+		.btn-next
+			i
+				margin-left: 5px
+	.step-content
+		.step-pane
+			display: none
+		.active
+			display: block
+			.btn-group
+				.active
+					display: inline-block

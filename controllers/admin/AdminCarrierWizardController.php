@@ -30,6 +30,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 	
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->display = 'view';
 		$this->table = 'carrier';
 		$this->identifier = 'id_carrier';
@@ -161,10 +162,9 @@ class AdminCarrierWizardControllerCore extends AdminController
 						'type' => 'text',
 						'label' => $this->l('Carrier name:'),
 						'name' => 'name',
-						'size' => 25,
 						'required' => true,
-						'hint' => sprintf($this->l('Allowed characters: letters, spaces and %s'), '().-'),
-						'desc' => array(
+						'hint' => array(
+							sprintf($this->l('Allowed characters: letters, spaces and %s'), '().-'),
 							$this->l('Carrier name displayed during checkout'),
 							$this->l('For in-store pickup, enter 0 to replace the carrier name with your shop name.')
 						)
@@ -175,9 +175,8 @@ class AdminCarrierWizardControllerCore extends AdminController
 						'name' => 'delay',
 						'lang' => true,
 						'required' => true,
-						'size' => 41,
 						'maxlength' => 128,
-						'desc' => $this->l('Estimated delivery time will be displayed during checkout.')
+						'hint' => $this->l('Estimated delivery time will be displayed during checkout.')
 					),
 					array(
 						'type' => 'text',
@@ -185,7 +184,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 						'name' => 'grade',
 						'required' => false,
 						'size' => 1,
-						'desc' => $this->l('Enter "0" for a longest shipping delay, or "9" for the shortest shipping delay.')
+						'hint' => $this->l('Enter "0" for a longest shipping delay, or "9" for the shortest shipping delay.')
 					),
 					array(
 						'type' => 'logo',
@@ -196,8 +195,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 						'type' => 'text',
 						'label' => $this->l('Tracking URL:'),
 						'name' => 'url',
-						'size' => 40,
-						'desc' => $this->l('Delivery tracking URL: Type \'@\' where the tracking number should appear. It will then be automatically replaced by the tracking number.')
+						'hint' => $this->l('Delivery tracking URL: Type \'@\' where the tracking number should appear. It will then be automatically replaced by the tracking number.')
 					),
 				)),
 		);
@@ -231,7 +229,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 				'id_form' => 'step_carrier_ranges',
 				'input' => array(
 					array(
-						'type' => 'radio',
+						'type' => 'switch',
 						'label' => $this->l('Shipping and handling:'),
 						'name' => 'shipping_handling',
 						'required' => false,
@@ -249,10 +247,10 @@ class AdminCarrierWizardControllerCore extends AdminController
 								'label' => $this->l('Disabled')
 							)
 						),
-						'desc' => $this->l('Include the shipping and handling costs in the carrier price.')
+						'hint' => $this->l('Include the shipping and handling costs in the carrier price.')
 					),
 					array(
-						'type' => 'radio',
+						'type' => 'switch',
 						'label' => $this->l('Apply shipping cost:'),
 						'name' => 'is_free',
 						'required' => false,
@@ -269,10 +267,10 @@ class AdminCarrierWizardControllerCore extends AdminController
 								'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" />'
 							)
 						),
-						'desc' => $this->l('Apply both regular shipping cost and product-specific shipping costs.')
+						'hint' => $this->l('Apply both regular shipping cost and product-specific shipping costs.')
 					),
 					array(
-						'type' => 'radio',
+						'type' => 'switch',
 						'label' => $this->l('Billing:'),
 						'name' => 'shipping_method',
 						'required' => false,
@@ -327,7 +325,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 							'id' => 'id',
 							'name' => 'name'
 						),
-						'desc' => $this->l('Out-of-range behavior occurs when no defined range matches the customer\'s cart (e.g. when the weight of the cart is greater than the highest weight limit defined by the weight ranges)')
+						'hint' => $this->l('Out-of-range behavior occurs when no defined range matches the customer\'s cart (e.g. when the weight of the cart is greater than the highest weight limit defined by the weight ranges)')
 					)
 					),
 					
@@ -355,8 +353,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 						'label' => $this->l('Maximum package height ('.Configuration::get('PS_DIMENSION_UNIT').'):'),
 						'name' => 'max_height',
 						'required' => false,
-						'size' => 10,
-						'desc' => $this->l('Maximum height managed by this carrier. Set the value to "0", or leave this field blank to ignore.').' '.$this->l('The value must be an integer
+						'hint' => $this->l('Maximum height managed by this carrier. Set the value to "0", or leave this field blank to ignore.').' '.$this->l('The value must be an integer
 .')
 					),
 					array(
@@ -364,8 +361,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 						'label' => $this->l('Maximum package width ('.Configuration::get('PS_DIMENSION_UNIT').'):'),
 						'name' => 'max_width',
 						'required' => false,
-						'size' => 10,
-						'desc' => $this->l('Maximum width managed by this carrier. Set the value to "0", or leave this field blank to ignore.').' '.$this->l('The value must be an integer
+						'hint' => $this->l('Maximum width managed by this carrier. Set the value to "0", or leave this field blank to ignore.').' '.$this->l('The value must be an integer
 .')
 					),
 					array(
@@ -373,8 +369,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 						'label' => $this->l('Maximum package depth ('.Configuration::get('PS_DIMENSION_UNIT').'):'),
 						'name' => 'max_depth',
 						'required' => false,
-						'size' => 10,
-						'desc' => $this->l('Maximum depth managed by this carrier. Set the value to "0", or leave this field blank to ignore.').' '.$this->l('The value must be an integer
+						'hint' => $this->l('Maximum depth managed by this carrier. Set the value to "0", or leave this field blank to ignore.').' '.$this->l('The value must be an integer
 .')
 					),
 					array(
@@ -382,15 +377,14 @@ class AdminCarrierWizardControllerCore extends AdminController
 						'label' => $this->l('Maximum package weight ('.Configuration::get('PS_WEIGHT_UNIT').'):'),
 						'name' => 'max_weight',
 						'required' => false,
-						'size' => 10,
-						'desc' => $this->l('Maximum weight managed by this carrier. Set the value to "0", or leave this field blank to ignore.')
+						'hint' => $this->l('Maximum weight managed by this carrier. Set the value to "0", or leave this field blank to ignore.')
 					),
 					array(
 						'type' => 'group',
 						'label' => $this->l('Group access:'),
 						'name' => 'groupBox',
 						'values' => Group::getGroups(Context::getContext()->language->id),
-						'desc' => $this->l('Mark the groups that are allowed access to this carrier.')
+						'hint' => $this->l('Mark the groups that are allowed access to this carrier.')
 					)
 				)
 			));
@@ -419,7 +413,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 				'id_form' => 'step_carrier_summary',
 				'input' => array(
 					array(
-						'type' => 'radio',
+						'type' => 'switch',
 						'label' => $this->l('Status:'),
 						'name' => 'active',
 						'required' => false,
@@ -437,7 +431,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 								'label' => $this->l('Disabled')
 							)
 						),
-						'desc' => $this->l('Enable the carrier in the Front Office')
+						'hint' => $this->l('Enable the carrier in the Front Office')
 					)
 				)
 			));

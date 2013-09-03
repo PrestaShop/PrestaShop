@@ -42,24 +42,28 @@
 	var invalid_range = '{l s='This range is not valid' js=1}';
 	var range_is_overlapping = '{l s='Ranges are overlapping' js=1}';
 </script>
-<div id="carrier_wizard" class="swMain">
-	<ul class="nbr_steps_{$wizard_steps.steps|count}">
-	{foreach from=$wizard_steps.steps key=step_nbr item=step}
-		<li>
-			<a href="#step-{$step_nbr + 1}">
-				<label class="stepNumber">{$step_nbr + 1}</label>
-				<span class="stepDesc">
-					{$step.title}<br />
-					{if isset($step.desc)}<small>{$step.desc}</small>{/if}
-				</span>
-			</a>
-		</li>
-	{/foreach}
-	</ul>
-	{foreach from=$wizard_contents.contents key=step_nbr item=content}
-		<div id="step-{$step_nbr + 1}" class="step_container"> 	
-			{$content}
-		</div>
-	{/foreach}
+
+<div class="row">
+	<div id="carrier_wizard" class="panel swMain">
+		<ul class="steps nbr_steps_{$wizard_steps.steps|count}">
+		{foreach from=$wizard_steps.steps key=step_nbr item=step}
+			<li>
+				<a href="#step-{$step_nbr + 1}">
+					<span class="stepNumber">{$step_nbr + 1}</span>
+					<span class="stepDesc">
+						{$step.title}<br />
+						{if isset($step.desc)}<small>{$step.desc}</small>{/if}
+					</span>
+					<span class="chevron"></span>
+				</a>
+			</li>
+		{/foreach}
+		</ul>
+		{foreach from=$wizard_contents.contents key=step_nbr item=content}
+			<div id="step-{$step_nbr + 1}" class="step_container"> 	
+				{$content}
+			</div>
+		{/foreach}
+	</div>
 </div>
 {/block}
