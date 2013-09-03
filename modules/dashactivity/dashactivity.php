@@ -54,6 +54,26 @@ class Dashactivity extends Module
 	
 	public function hookDashboardData($params)
 	{
+		$gapi = Module::isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
+		if (Validate::isLoadedObject($gapi))
+		{
+			$visits = $unique_visitors = 0;
+			if ($result = $gapi->requestReportData('', 'ga:visits,ga:visitors', $params['date_from'], $params['date_to'], null, null, 1, 1))
+			{
+				$visits = $result[0]['metrics']['visits'];
+				$unique_visitors = $result[0]['metrics']['visitors'];
+			}
+		}
+		else
+		{
+			$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+			SELECT COUNT(`id_connections`) as visits, COUNT(DISTINCT `id_guest`) as unique_visitors
+			FROM `'._DB_PREFIX_.'connections`
+			WHERE `date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
+			'.Shop::addSqlRestriction(false));
+			extract($row);
+		}
+		
 		$order_nbr = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT COUNT(o.`id_order`)
 		FROM `'._DB_PREFIX_.'orders` o
@@ -74,12 +94,12 @@ class Dashactivity extends Module
 				'online_visitor' => 200,
 				'new_registrations' => 125,
 				'total_suscribers' => 13500,
-				'visits' => 10000,
-				'unique_visitors' => 3500,
-				),
+				'visits' => $visits,
+				'unique_visitors' => $unique_visitors,
+			),
 			'data_trends' => array(
 				'orders_trends' => array('way' => 'down', 'value' => 0.42),
-				)
-			);
+			)
+		);
 	}
 }
