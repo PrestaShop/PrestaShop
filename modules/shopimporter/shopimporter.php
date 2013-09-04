@@ -959,7 +959,17 @@ class shopimporter extends ImportModule
 									c.id_parent = c2.`id_category_'.bqSQL($moduleName).'`
 									SET
 									c.id_parent = c2.id_category
-									WHERE c.`id_category_'.bqSQL($moduleName).'` != 0');
+									WHERE c.`id_category_'.bqSQL($moduleName).'` != 0
+									AND c.`id_parent` != 0');
+
+		// get first PS home category's id
+		$home_categories = Category::getRootCategories();
+		$home_category_id = $home_categories[0]['id_category'];
+		Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'category c
+									SET c.id_parent = '.$home_category_id.'
+									WHERE c.`id_category_'.bqSQL($moduleName).'` != 0
+									AND c.`id_parent` = 0');
+
 		$category = new Category();
 		$cats = $category->getSimpleCategories((int)Configuration::get('PS_LANG_DEFAULT'));
 		foreach($cats as $cat)
