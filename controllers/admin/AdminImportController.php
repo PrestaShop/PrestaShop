@@ -256,7 +256,6 @@ class AdminImportControllerCore extends AdminController
 					'description_short' => array((int)Configuration::get('PS_LANG_DEFAULT') => ''),
 					'link_rewrite' => array((int)Configuration::get('PS_LANG_DEFAULT') => ''),
 					'online_only' => 0,
-					'condition' => 'new',
 					'date_add' => date('Y-m-d H:i:s'),
 					'condition' => 'new',
 				);
