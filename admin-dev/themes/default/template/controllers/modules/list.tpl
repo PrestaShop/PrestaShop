@@ -59,12 +59,19 @@
 					{/if}
 				</td>
 				<td>
-					<img width="57" alt="" src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}" />
+					<img width="32" alt="" src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}" />
 				</td>
 				<td>
 					<div id="anchor{$module->name|ucfirst}">
-						<h3 class="module-title">
+						<div class="text-muted">
+							{$module->categoryName}
+						</div>
+						<div class="module_name">
 							{$module->displayName}
+
+							<small>v{$module->version}</small>
+							
+
 							{if isset($module->type) && $module->type == 'addonsMustHave'}
 								<span class="label label-info">{l s='Must Have'}</span>
 							{elseif isset($module->id) && $module->id gt 0}
@@ -83,29 +90,25 @@
 							{else}
 								<span class="label label-warning">{l s='Not installed'}</span>
 							{/if} -->
-						</h3>
-						<div class="row">
-							<p class="module-infos">
-								<strong>{$module->categoryName}</strong> - 
-								{if isset($module->author) && !empty($module->author)}
-									{l s='Developed by'} {$module->author|truncate:20:'...'}
-								{/if}
-									&nbsp;- {l s='Version'} : {$module->version} 
-										{if isset($module->version_addons)}
-											({l s='Update'} {$module->version_addons} {l s='Available on PrestaShop Addons'})
-										{/if}
-							</p>
-							<p class="module-description">
-								{if isset($module->description) && $module->description ne ''}
-									{$module->description}
-								{/if}
-							</p>
-						</div>
+						</div>						
+						<!-- <p class="text-muted">
+							{if isset($module->author) && !empty($module->author)}
+								{l s='Developed by'} {$module->author|truncate:20:'...'}
+							{/if}
+							{if isset($module->version_addons)}
+								({l s='Update'} {$module->version_addons} {l s='Available on PrestaShop Addons'})
+							{/if}
+						</p> -->
+						<p class="module_description">
+							{if isset($module->description) && $module->description ne ''}
+								{$module->description}
+							{/if}
+						</p>
 						{if isset($module->message) && (!isset($module->type) || ($module->type != 'addonsMustHave' || $module->type !== 'addonsNative'))}<div class="alert alert-success">{$module->message}</div>{/if}
 					</div>
 				</td>
 				<td>
-					<div class="btn-group list-action-button">
+					<div class="btn-group btn-group-action">
 						{if isset($module->type) && $module->type == 'addonsMustHave'}
 							<a class="btn btn-default" href="{$module->addons_buy_url}" target="_blank">
 								<i class="icon-shopping-cart"></i> &nbsp;{if isset($module->id_currency) && isset($module->price)}{displayPrice price=$module->price currency=$module->id_currency}{/if}
