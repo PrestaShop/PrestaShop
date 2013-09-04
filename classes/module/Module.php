@@ -935,7 +935,7 @@ abstract class ModuleCore
 
 	public static function configXmlStringFormat($string)
 	{
-		return str_replace('\'', '\\\'', Tools::htmlentitiesDecodeUTF8($string));
+		return Tools::htmlentitiesDecodeUTF8($string);
 	}
 
 
