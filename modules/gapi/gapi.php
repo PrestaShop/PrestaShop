@@ -111,11 +111,12 @@ class Gapi extends Module
 			$params['redirect_uri'] = Tools::getShopDomain(true, false).__PS_BASE_URI__.'modules/'.$this->name.'/oauth2callback.php';
 		}
 
+		$content = http_build_query($params);
 		$stream_context = stream_context_create(array(
 			'http' => array(
 				'method'=> 'POST',
-				'content' => http_build_query($params),
-				'header'  => 'Content-type: application/x-www-form-urlencoded',
+				'content' => $content,
+				'header'  => "Content-type: application/x-www-form-urlencoded\r\nContent-length: ".strlen($content)."\r\n",
 				'timeout' => 5,
 			)
 		));
@@ -124,6 +125,9 @@ class Gapi extends Module
 			return false;
 
 		$response = Tools::jsonDecode($response_json, true);
+		if (isset($response['error']))
+			return false;
+
 		Configuration::updateValue('PS_GAPI30_ACCESS_TOKEN', $response['access_token']);
 		Configuration::updateValue('PS_GAPI30_TOKEN_EXPIRATION', time() + (int)$response['expires_in']);
 		if (isset($response['refresh_token']))
@@ -406,7 +410,7 @@ class Gapi extends Module
 			'http' => array(
 				'method'=> 'POST',
 				'content' => 'accountType=GOOGLE&Email='.urlencode($email).'&Passwd='.urlencode($password).'&source=GAPI-1.3&service=analytics',
-				'header'  => 'Content-type: application/x-www-form-urlencoded',
+				'header'  => 'Content-type: application/x-www-form-urlencoded'."\r\n",
 				'timeout' => 5,
 			)
 		));
