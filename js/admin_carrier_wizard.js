@@ -216,7 +216,7 @@ function validateSteps(step_number)
 function displayError(errors, step_number)
 {
 	$('.wizard_error').remove();
-	str_error = '<div class="error wizard_error" style="display:none"><span style="float:right"><a id="hideError" href="#"><img alt="X" src="../img/admin/close.png" /></a></span><ul>';
+	str_error = '<div class="error wizard_error" style="display:none"><ul>';
 	for (var error in errors)
 	{
 		$('#carrier_wizard').smartWizard('setError',{stepnum:step_number,iserror:true});
@@ -408,7 +408,7 @@ function validateRange(index)
 	}
 	else if (is_ok && (isNaN(range_inf) || range_inf.length === 0))
 	{
-		$('tr.range_inf td:eq('+index+')').children('input:text').addClass('field_error');
+		$('tr.range_inf td:eq('+index+')').closest('input:text').addClass('field_error');
 		is_ok = false;
 		displayError([invalid_range], $("#carrier_wizard").smartWizard('currentStep'));
 	}
@@ -492,16 +492,15 @@ function add_new_range()
 	
 	last_sup_val = $('tr.range_sup td:last input').val();
 	//add new rand sup input
-	$('tr.range_sup td:last').after('<td class="center"><input name="range_sup[]" type="text" /><sup>*</sup><span class="weight_unit" style="display: none;">&nbsp; '+PS_WEIGHT_UNIT+'</span><span class="price_unit" style="display: none;">&nbsp; '+currency_sign+'</span></td>');
+	$('tr.range_sup td:last').after('<td class="range_data"><div class="input-group"><span class="input-group-addon weight_unit" style="display: none;">'+PS_WEIGHT_UNIT+'</span><span class="input-group-addon price_unit" style="display: none;">'+currency_sign+'</span><input class="form-control" name="range_sup[]" type="text" /></div></td>');
 	//add new rand inf input
-	$('tr.range_inf td:last').after('<td class="border_bottom center"><input name="range_inf[]" type="text" value="'+last_sup_val+'" /><sup>*</sup><span class="weight_unit" style="display: none;">&nbsp; '+PS_WEIGHT_UNIT+'</span><span class="price_unit" style="display: none;">&nbsp; '+currency_sign+'</span></td>');
-	
-	$('tr.fees_all td:last').after('<td class="center border_top border_bottom"><input style="display:none" type="text" /><span class="currency_sign" style="display:none" >&nbsp;'+currency_sign+'</span></td>');
+	$('tr.range_inf td:last').after('<td class="border_bottom"><div class="input-group"><span class="input-group-addon weight_unit" style="display: none;">'+PS_WEIGHT_UNIT+'</span><span class="input-group-addon price_unit" style="display: none;">'+currency_sign+'</span><input class="form-control" name="range_inf[]" type="text" value="'+last_sup_val+'" /></div></td>');
+	$('tr.fees_all td:last').after('<td class="border_top border_bottom"><div class="input-group"><span class="input-group-addon currency_sign" style="display:none" >'+currency_sign+'</span><input class="form-control" style="display:none" type="text" /></div></td>');
 
 	$('tr.fees').each( function () {
-		$(this).children('td:last').after('<td class="center"><input disabled="disabled" name="fees['+$(this).data('zoneid')+'][]" type="text" /> &nbsp; '+currency_sign+'</td>');
+		$(this).children('td:last').after('<td><div class="input-group"><span class="input-group-addon currency_sign">'+currency_sign+'</span><input class="form-control" disabled="disabled" name="fees['+$(this).data('zoneid')+'][]" type="text" /></div></td>');
 	});
-	$('tr.delete_range td:last').after('<td class="center"><button class="button">'+labelDelete+'</button</td>');
+	$('tr.delete_range td:last').after('<td><button class="btn btn-default">'+labelDelete+'</button</td>');
 	
 	validateAndAddRangeButtonDisplay();
 	bind_inputs();

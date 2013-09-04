@@ -84,7 +84,6 @@ function getPush(refresh)
 			html = "";
 			nb_notifs = 0;
 			$.each(json.customer, function(property, value) {
-
 				html += "<a href='index.php?tab=AdminCustomers&token=" + token_admin_customers + "&viewcustomer&id_customer=" + parseInt(value.id_customer) + "' class='media list-group-item no_notifs'>";
 				html += "<span class='pull-left'><i class='icon-time'></i></span>";
 				html += "<span class='media-body'>";
@@ -93,7 +92,6 @@ function getPush(refresh)
 				//html += "<p>" + see_customer_msg + "</p>";
 				html += "<small class='text-muted'>1 minute ago</small>";
 				html += "</span></a>";
-
 			});						
 			if (html != "")
 			{
@@ -124,7 +122,6 @@ function getPush(refresh)
 
 			if (html != "")
 			{
-
 				$("#list_customer_messages_notif").prev("p").hide();
 				$("#list_customer_messages_notif").empty().append(html);
 				nb_notifs = $("#list_customer_messages_notif li").length;
