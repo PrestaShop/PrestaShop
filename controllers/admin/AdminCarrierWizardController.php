@@ -189,7 +189,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 					array(
 						'type' => 'logo',
 						'label' => $this->l('Logo:'),
-						'name' => 'logo',
+						'name' => 'logo'
 					),
 					array(
 						'type' => 'text',
@@ -257,20 +257,20 @@ class AdminCarrierWizardControllerCore extends AdminController
 						'class' => 't',
 						'values' => array(
 							array(
-								'id' => 'is_free_off',
-								'value' => 0,
-								'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />'
-							),
-							array(
 								'id' => 'is_free_on',
 								'value' => 1,
 								'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" />'
+							),
+							array(
+								'id' => 'is_free_off',
+								'value' => 0,
+								'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />'
 							)
 						),
 						'hint' => $this->l('Apply both regular shipping cost and product-specific shipping costs.')
 					),
 					array(
-						'type' => 'switch',
+						'type' => 'radio',
 						'label' => $this->l('Billing:'),
 						'name' => 'shipping_method',
 						'required' => false,
@@ -304,10 +304,6 @@ class AdminCarrierWizardControllerCore extends AdminController
 						)
 					),
 					array(
-						'type' => 'zone',
-						'name' => 'zones'
-					),
-					array(
 						'type' => 'select',
 						'label' => $this->l('Out-of-range behavior:'),
 						'name' => 'range_behavior',
@@ -326,7 +322,12 @@ class AdminCarrierWizardControllerCore extends AdminController
 							'name' => 'name'
 						),
 						'hint' => $this->l('Out-of-range behavior occurs when no defined range matches the customer\'s cart (e.g. when the weight of the cart is greater than the highest weight limit defined by the weight ranges)')
+					),
+					array(
+						'type' => 'zone',
+						'name' => 'zones'
 					)
+
 					),
 					
 				));

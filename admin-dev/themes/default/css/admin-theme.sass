@@ -62,7 +62,7 @@ $bg-content-color: #F8F8F8 	//gris
 $bg-header-color: #242424
 $bg-footer-color: #242424
 $bg-page-head-color : $secondary-color
-$bg-panel-heading-color: hsl(hue($secondary-color), 20, 90)
+$bg-panel-heading-color: hsl(hue($secondary-color), 10, 90)
 
 //others
 $badge-notif-color: #EF1778
@@ -940,7 +940,10 @@ fieldset > .row
 	font-size: 2em
 .size_xxl
 	font-size: 2.3em
-
+.color_success
+	color: $brand-success
+.color_danger
+	color: $brand-danger
 
 .dash_trend_down
 	color: red
@@ -1148,7 +1151,10 @@ fieldset > .row
 	100%
 		+opacity(1)
 		+scale(1)
-	
+
+
+
+
 $treeBackgroundHover: lighten(blue,30%)
 $treeBackgroundSelect: blue
 
@@ -1240,20 +1246,12 @@ $treeBackgroundSelect: blue
 			position: absolute
 			display: block
 			width: 100%
-			text-align: left
-			overflow: visible 
-			z-index: 88
 			clear: both
 		.StepTitle
 			display: block
 			position: relative
-			margin: 0
-			padding: 5px
 			clear: both
-			text-align: left
-			z-index: 88
-			-webkit-border-radius: 5px
-			-moz-border-radius: 5px
+
 	ul.anchor
 		position: relative
 		display: block
@@ -1274,36 +1272,30 @@ $treeBackgroundSelect: blue
 	li
 		position: relative
 		display: block
-
+		overflow: hidden
 		a
+			color: #ccc
 			height: 32px
 			display: block
 			position: relative
-			margin: 0
-			margin-right: 16px
-			padding-right: 25px
+			margin: 0 16px 0 0
 			text-decoration: none
 			outline-style: none
-			z-index: 99
-			//overflow: hidden
 			.stepNumber
 				position: relative
 				float: left
 				width: 24px
 				height: 32px
+				margin-right: 3px
 				text-align: center
 				padding: 0 5px
-				padding-top: 0
 				font-size: 30px
 				line-height: 32px
-				color: #fffffe
-				text-shadow: none
-				font-weight: normal
-				font-style: normal
+				color: white
 			.stepDesc
 				position: relative
 				text-align: left
-				font-size: 15px
+				font-size: 13px
 				height: 32px
 				display: table-cell
 				vertical-align: middle
@@ -1313,7 +1305,7 @@ $treeBackgroundSelect: blue
 				border-left: 14px solid white
 				border-right: 0
 				position: absolute
-				background-color: #ccc
+				//background-color: #ccc
 				right: -16px
 				top: 0
 				&:after
@@ -1324,35 +1316,22 @@ $treeBackgroundSelect: blue
 					content: ""
 					right: 2px
 					top: -16px
-		&.selected a.selected
+		a.disabled
+			color: #777
+			background-color: #ccc
+			.chevron:after
+				border-left: 14px solid #ccc
+		a.selected
 			color: #F8F8F8
 			cursor: text
 			background-color: $main-color
 			.chevron:after
 				border-left: 14px solid $main-color
-		&.done a
-			color: #ccc
-			background-color: $main-color
-			.chevron
-				background-color: $main-color
+		a.done
+			color: white
+			background-color: $brand-success
 			.chevron:after
-				border-left: 14px solid $main-color
-
-
-		&.disabled a
-			cursor: text
-			background-color: #ccc
-			color: #878787
-			.chevron:after
-				border-left: 14px solid #ccc
-
-		&.done a.selected
-			position: relative
-			color: #FFF
-			background-color: $main-color
-			.chevron
-				background-color: $main-color
-
+				border-left: 14px solid $brand-success
 	.loader
 		display: none
 	.buttonNext
@@ -1377,130 +1356,33 @@ $treeBackgroundSelect: blue
 		background-color: #FFFFDD
 		color: #5A5655
 		+border-radius(5px)
-		z-index: 999
-		min-width: 200px
 	.msgBox .content
 		padding: 0px
 		float: left
-
-	.msgBox .close
-		border: 1px solid #CCC
-		border-radius: 3px
-		color: #CCC
-		display: block
-		float: right
-		margin: 0 0 0 5px
-		outline-style: none
-		padding: 0 2px 0 2px
-		position: relative
-		text-align: center
-		text-decoration: none
 	#carrier_logo_block
-		position: absolute
 		right: 10px
-
 	.wizard_error
 		@extend .alert
 		@extend .alert-danger
+	.range_inf td, .range_sup td
+		background-color: #ccc
+
+	.range_type
+		width: 220px
+		text-align: right
+		font-weight: bold
+	.range_data
+		width: 110px
+	.range_sign
+		width: 18px
+		font-size: 20px
+		text-align: center
+	.range_data_new
+		width: 110px
+	table#zones_table
+		width: auto
+	.field_error
+		border-color: $brand-danger
 
 
 
-
-.wizardUX
-	@extend .clearfix
-	border: 1px solid blue
-	background-color: white
-	ul
-		list-style: none outside none
-		padding: 0
-		margin: 0
-		li
-			float: left
-			margin: 0
-			padding: 0 20px 0 30px
-			height: 46px
-			line-height: 46px
-			position: relative
-			background: #ededed
-			color: blue
-			font-size: 16px
-			cursor: default
-			.chevron
-				border: 24px solid transparent
-				border-left: 14px solid blue
-				border-right: 0
-				display: block
-				position: absolute
-				right: -14px
-				top: 0
-			.chevron:before
-				border: 24px solid transparent
-				border-left: 14px solid #ededed
-				border-right: 0
-				content: ""
-				display: block
-				position: absolute
-				right: 1px
-				top: -24px
-			&.complete 
-				background: #f3f4f5
-				color: blue
-				&:hover
-					background: #e7eff8
-					cursor: pointer
-					.chevron:before
-						border-left: 14px solid #e7eff8
-				.chevron:before
-					border-left: 14px solid #f3f4f5
-			&.active
-				background: #f1f6fc
-				color: blue
-				.chevron:before 
-					border-left: 14px solid #f1f6fc
-			.badge
-				margin-right: 8px
-		li:nth-child(1)
-			border-radius: 4px 0 0 4px
-			padding-left: 20px
-			z-index: 10
-		li:nth-child(2)
-			z-index: 9
-		li:nth-child(3)
-			z-index: 8
-		li:nth-child(4)
-			z-index: 7
-		li:nth-child(5)
-			z-index: 6
-		li:nth-child(6)
-			z-index: 5
-		li:nth-child(7)
-			z-index: 4
-		li:nth-child(8)
-			z-index: 3
-		li:nth-child(9)
-			z-index: 2
-		li:nth-child(10)
-			z-index: 1
-	.actions
-		line-height: 44px
-		float: right
-		padding-right: 15px
-		vertical-align: middle
-		a
-			line-height: 45px
-			font-size: 12px
-			margin-right: 8px
-		.btn-prev
-			i
-				margin-right: 5px
-		.btn-next
-			i
-				margin-left: 5px
-	.step-content
-		.step-pane
-			display: none
-		.active
-			display: block
-			.btn-group
-				.active
-					display: inline-block
