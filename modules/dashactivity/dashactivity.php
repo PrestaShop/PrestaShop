@@ -36,13 +36,23 @@ class Dashactivity extends Module
 		$this->tab = '';
 		$this->version = '0.1';
 		$this->author = 'PrestaShop';
-		
+		$this->push_filename = _PS_CACHE_DIR_.'push/activity';
+
 		parent::__construct();
 	}
 
 	public function install()
 	{
-		if (!parent::install() || !$this->registerHook('dashboardZoneOne') || !$this->registerHook('dashboardData'))
+		if (!parent::install() 
+			|| !$this->registerHook('dashboardZoneOne') 
+			|| !$this->registerHook('dashboardData')
+			|| !$this->registerHook('actionObjectOrderAddAfter')
+			|| !$this->registerHook('actionObjectCustomerAddAfter')
+			|| !$this->registerHook('actionObjectCustomerMessageAddAfter')
+			|| !$this->registerHook('actionObjectCustomerThreadAddAfter')
+			|| !$this->registerHook('actionObjectOrderReturnAddAfter')
+			
+		)
 			return false;
 		return true;
 	}
@@ -54,6 +64,9 @@ class Dashactivity extends Module
 	
 	public function hookDashboardData($params)
 	{
+		if ($params['use_push'])
+			Tools::waitUntilFileIsModified($this->push_filename, 30);
+			
 		$gapi = Module::isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
 		if (Validate::isLoadedObject($gapi) && $gapi->isConfigured())
 		{
@@ -186,5 +199,30 @@ class Dashactivity extends Module
 				'orders_trends' => array('way' => 'down', 'value' => 0.42),
 			)
 		);
+	}
+	
+	public function hookActionObjectCustomerMessageAddAfter($params)
+	{
+		return $this->hookActionObjectOrderAddAfter($params);
+	}
+
+	public function hookActionObjectCustomerThreadAddAfter($params)
+	{
+		return $this->hookActionObjectOrderAddAfter($params);
+	}
+
+	public function hookActionObjectCustomerAddAfter($params)
+	{
+		return $this->hookActionObjectOrderAddAfter($params);
+	}
+
+	public function hookActionObjectOrderReturnAddAfter($params)
+	{
+		return $this->hookActionObjectOrderAddAfter($params);
+	}
+
+	public function hookActionObjectOrderAddAfter($params)
+	{
+		Tools::changeFileMTime($this->push_filename);
 	}
 }

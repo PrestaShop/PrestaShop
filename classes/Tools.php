@@ -2572,6 +2572,33 @@ exit;
 		}
 		return $fileAttachment;
 	}
+	
+	public static function changeFileMTime($file_name, $time = null)
+	{
+		if ($time === null)
+			$time = time();
+
+		touch($file_name, $time);
+	}
+	
+	public static function waitUntilFileIsModified($file_name, $timeout = 180)
+	{
+		@ini_set('max_execution_time', $timeout);
+		if (($time_limit = ini_get('max_execution_time')) === null)
+			$time_limit = 30;
+
+		$time_limit -= 5;
+		$start_time = microtime(true);
+		$last_modified = filemtime($file_name);
+
+		while(true)
+		{
+			if (((microtime(true) - $start_time) > $time_limit) || filemtime($file_name) > $last_modified)
+				break;
+			clearstatcache();
+			usleep(300);
+		}
+	}
 }
 
 /**

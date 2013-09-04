@@ -24,8 +24,31 @@
 
 $(document).ready( function () {
 	refreshDashbard();
+	if (use_push)
+		launchPush();
 });
 
+function launchPush()
+{
+	$.ajax({
+		url : dashboard_ajax_url,
+		data : {
+			ajax:true,
+			action:'refreshDashboard',
+			module:'dashactivity',
+			use_push:1,
+			},
+		dataType: 'json',
+		success : function(widgets){
+			for (var name in widgets)
+			{
+				for (data_type in widgets[name])
+					window[data_type](widgets[name][data_type]);
+			}
+			launchPush();
+		},
+	});
+}
 
 function refreshDashbard(module_name)
 {
