@@ -38,7 +38,7 @@
 
 	<nav>
 		<ul class="nav">
-			<li><a href="#dash_recent_orders" data-toggle="tab">
+			<li class="active"><a href="#dash_recent_orders" data-toggle="tab">
 				<i class="icon-fire"></i> {l s='Recent Orders'}</a>
 			</li>
 			<li><a href="#dash_best_sellers" data-toggle="tab">
@@ -53,81 +53,63 @@
 	</nav>
 	<div class="tab-content">
 		<div class="tab-pane active" id="dash_recent_orders">
-			<h4>Last 10 orders: Overall | Pending</h4>
-			<table class="table">
+			<h4>{l s="Last 10 orders:"}</h4>
+			<table class="table data_table" id="table_recent_orders">
 				<thead>
-					<tr>
-						<th>Customer</th>
-						<th class="text-center">Products</th>
-						<th class="text-center">Total</th>
-						<th>Date</th>
-						<th></th>
-					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td class=""><a href="javascript:void(0);">John Smith</a></td>
-						<td class="text-center"><strong>10</strong></td>
-						<td class="text-center"><span class="label label-success">$1200</span></td>
-						<td>July 8th, 2013 // 10:42 am</td>
-						<td><i class="icon-time"></i> Today</td>
-					</tr>
-					<tr>
-						<td class=""><a href="javascript:void(0);">John Smith</a></td>
-						<td class="text-center"><strong>10</strong></td>
-						<td class="text-center"><span class="label label-success">$1200</span></td>
-						<td>July 8th, 2013 // 10:42 am</td>
-						<td><i class="icon-time"></i> Today</td>
-					</tr>
-					<tr>
-						<td class=""><a href="javascript:void(0);">John Smith</a></td>
-						<td class="text-center"><strong>10</strong></td>
-						<td class="text-center"><span class="label label-success">$1200</span></td>
-						<td>July 8th, 2013 // 10:42 am</td>
-						<td><i class="icon-time"></i> Today</td>
-					</tr>
-					<tr>
-						<td class=""><a href="javascript:void(0);">John Smith</a></td>
-						<td class="text-center"><strong>10</strong></td>
-						<td class="text-center"><span class="label label-success">$1200</span></td>
-						<td>July 8th, 2013 // 10:42 am</td>
-						<td><i class="icon-time"></i> Today</td>
-					</tr>
-					<tr>
-						<td class=""><a href="javascript:void(0);">John Smith</a></td>
-						<td class="text-center"><strong>10</strong></td>
-						<td class="text-center"><span class="label label-success">$1200</span></td>
-						<td>July 8th, 2013 // 10:42 am</td>
-						<td><i class="icon-time"></i> Today</td>
-					</tr>
-					<tr>
-						<td class=""><a href="javascript:void(0);">John Smith</a></td>
-						<td class="text-center"><strong>10</strong></td>
-						<td class="text-center"><span class="label label-success">$1200</span></td>
-						<td>July 8th, 2013 // 10:42 am</td>
-						<td><i class="icon-time"></i> Today</td>
-					</tr>
-					<tr>
-						<td class=""><a href="javascript:void(0);">John Smith</a></td>
-						<td class="text-center"><strong>10</strong></td>
-						<td class="text-center"><span class="label label-success">$1200</span></td>
-						<td>July 8th, 2013 // 10:42 am</td>
-						<td><i class="icon-time"></i> Today</td>
-					</tr>
-					<tr>
-						<td class=""><a href="javascript:void(0);">John Smith</a></td>
-						<td class="text-center"><strong>10</strong></td>
-						<td class="text-center"><span class="label label-success">$1200</span></td>
-						<td>July 8th, 2013 // 10:42 am</td>
-						<td><i class="icon-time"></i> Today</td>
-					</tr>
 				</tbody>
 			</table>
 		</div>
-		<div class="tab-pane" id="dash_best_sellers"><h4>Coming soon</h4></div>
-		<div class="tab-pane" id="dash_most_viewed"><h4>Coming soon</h4></div>
-		<div class="tab-pane" id="dash_top_search"><h4>Coming soon</h4></div>
-		<div class="tab-pane" id="dash_best_sales"><h4>Coming soon</h4></div>
+		<div class="tab-pane" id="dash_best_sellers">
+			<h4>{l s="Top 5 products:"}</h4>
+			<table class="table data_table" id="table_best_sellers">
+				<thead>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+		<div class="tab-pane" id="dash_most_viewed">
+			<h4>{l s="Coming soon"}</h4>
+			<table class="table data_table" id="table_most_viewed">
+				<thead>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+		<div class="tab-pane" id="dash_top_search">
+			<div class="row">
+				<div class="col-lg-7">
+					<h4>{l s="Top 10 most search terms:"}</h4>
+					<table class="table data_table" id="table_top_10_most_search">
+						<thead>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-lg-5">
+					<h4>{l s="Coming soon"}</h4>
+					<table class="table data_table" id="table_top_5_search">
+						<thead>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="tab-pane" id="dash_best_sales">
+			<h4>{l s="Coming soon"}</h4>
+			<table class="table data_table" id="table_best_sales">
+				<thead>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
 	</div>
 	
 </section>
