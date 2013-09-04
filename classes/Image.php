@@ -126,14 +126,16 @@ class ImageCore extends ObjectModel
 	public static function getImages($id_lang, $id_product, $id_product_attribute = NULL)
 	{
 		$attribute_filter = ($id_product_attribute ? ' AND ai.`id_product_attribute` = '.(int)$id_product_attribute : '');
+		$sql = 'SELECT *
+			FROM `'._DB_PREFIX_.'image` i
+			LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image`)';
 
-		return Db::getInstance()->executeS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'image` i
-		LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image`)
-		LEFT JOIN `'._DB_PREFIX_.'product_attribute_image` ai ON (i.`id_image` = ai.`id_image`)
-		WHERE i.`id_product` = '.(int)$id_product.' AND il.`id_lang` = '.(int)$id_lang . $attribute_filter.'
-		ORDER BY i.`position` ASC');
+		if ($id_product_attribute)
+			$sql .= ' LEFT JOIN `'._DB_PREFIX_.'product_attribute_image` ai ON (i.`id_image` = ai.`id_image`)';
+
+		$sql .= ' WHERE i.`id_product` = '.(int)$id_product.' AND il.`id_lang` = '.(int)$id_lang . $attribute_filter.'
+			ORDER BY i.`position` ASC';
+		return Db::getInstance()->executeS($sql);
 	}
 
 	/**
