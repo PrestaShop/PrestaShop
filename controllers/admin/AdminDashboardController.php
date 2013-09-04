@@ -71,16 +71,17 @@ class AdminDashboardControllerCore extends AdminController
 		);
 		return parent::renderView();
 	}
-	
+
 	public function ajaxProcessRefreshDashboard()
 	{
 		$id_module = null;
 		if ($module = Tools::getValue('module'))
 			$id_module = Module::getInstanceByName($module)->id;
-		
+
 		$params = array(
 			'date_from' => $this->context->employee->stats_date_from,
 			'date_to' => $this->context->employee->stats_date_to,
+			'use_push' => (int)Tools::getValue('use_push')
 		);
 		
 		die(Tools::jsonEncode(Hook::exec('dashboardData', $params, $id_module, true)));
