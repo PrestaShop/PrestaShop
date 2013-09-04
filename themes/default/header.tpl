@@ -50,6 +50,7 @@
 			var priceDisplayPrecision = {$priceDisplayPrecision*$currency->decimals};
 			var priceDisplayMethod = {$priceDisplay};
 			var roundMode = {$roundMode};
+			var isUserLogged = {if $logged}1{else}0{/if};
 		</script>
 {if isset($css_files)}
 	{foreach from=$css_files key=css_uri item=media}
