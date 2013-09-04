@@ -460,7 +460,9 @@ class AdminTranslationsControllerCore extends AdminController
 		if (!$default_language || !Validate::isLanguageIsoCode($default_language))
 			return false;
 		// 1 - Scan mails files
-		$mails = scandir(_PS_MAIL_DIR_.$default_language.'/');
+		$mails = array();
+		if (Tools::file_exists_cache(_PS_MAIL_DIR_.$default_language.'/'))
+			$mails = scandir(_PS_MAIL_DIR_.$default_language.'/');
 
 		$mails_new_lang = array();
 
@@ -579,7 +581,9 @@ class AdminTranslationsControllerCore extends AdminController
 			if (preg_match('#^translations\/'.$iso_code.'\/tabs.php#Ui', $file['filename'], $matches) && Validate::isLanguageIsoCode($iso_code))
 			{
 				// Include array width new translations tabs
-				$tabs = include _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$file['filename'];
+				$tabs = array();
+				if (Tools::file_exists_cache(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$file['filename']))
+					$tabs = include_once(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$file['filename']);
 
 				foreach ($tabs as $class_name => $translations)
 				{
