@@ -137,6 +137,32 @@ class Dashactivity extends Module
 		FROM `'._DB_PREFIX_.'customer`
 		WHERE `date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
 		'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
+		
+		$new_registrations = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT COUNT(*)
+		FROM `'._DB_PREFIX_.'customer`
+		WHERE `newsletter_date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
+		AND newsletter = 1
+		'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
+		$total_suscribers = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT COUNT(*)
+		FROM `'._DB_PREFIX_.'customer`
+		WHERE newsletter = 1
+		'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
+		if (Module::isInstalled('blocknewsletter'))
+		{
+			$new_registrations += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT COUNT(*)
+			FROM `'._DB_PREFIX_.'newsletter`
+			WHERE active = 1
+			AND `newsletter_date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
+			'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
+			$total_suscribers += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT COUNT(*)
+			FROM `'._DB_PREFIX_.'newsletter`
+			WHERE active = 1
+			'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
+		}
 
 		return array(
 			'data_value' => array(
@@ -151,8 +177,8 @@ class Dashactivity extends Module
 				'new_customers' => $new_customers,
 				'online_visitor' => $online_visitor,
 				'active_shopping_cart' => $active_shopping_cart,
-				'new_registrations' => 42,
-				'total_suscribers' => 42,
+				'new_registrations' => $new_registrations,
+				'total_suscribers' => $total_suscribers,
 				'visits' => $visits,
 				'unique_visitors' => $unique_visitors,
 			),

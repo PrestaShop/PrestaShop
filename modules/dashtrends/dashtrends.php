@@ -82,7 +82,7 @@ class Dashtrends extends Module
 				'orders_score' => $orders_score,
 				'cart_value_score' => Tools::displayPrice($orders_score ? $sales_score / $orders_score : 0),
 				'visits_score' => $visits_score,
-				'convertion_rate_score' => $visits_score ? 100 * $orders_score / $visits_score : 0,
+				'convertion_rate_score' => $visits_score ? round(100 * $orders_score / $visits_score, 2) : 0,
 				'net_profits_score' => Tools::displayPrice(0),
 			),
 			'data_trends' => array(
