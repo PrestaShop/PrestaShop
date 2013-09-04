@@ -41,12 +41,21 @@
 		</div>
 	{/if}
 	{if $input.name == 'logo'}
-		<div class="row">
-			<input id="carrier_logo_input" type="file" onchange="uploadCarrierLogo();" name="carrier_logo_input" />
+		<div class="col-lg-9">
+			<input id="carrier_logo_input" class="hide" type="file" onchange="uploadCarrierLogo();" name="carrier_logo_input" />
 			<input type="hidden" id="logo" name="logo" value="" />
-			<p class="preference_description">
-				{l s='Format:'} JPG, GIF, PNG. {l s='Filesize:'} {$max_image_size|string_format:"%.2f"} {l s='MB max.'}<br />
-				{l s='Current size:'} <span id="carrier_logo_size">{l s='undefined'}</span>.
+			<div class="dummyfile input-group">
+				<span class="input-group-addon"><i class="icon-file"></i></span>
+				<input id="attachement_filename" type="text" class="disabled" name="filename" readonly="">
+				<span class="input-group-btn">
+					<button id="attachement_fileselectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
+						<i class="icon-folder-open"></i> Choose a file
+					</button>
+				</span>
+			</div>
+			<p class="help-block">
+					{l s='Format:'} JPG, GIF, PNG. {l s='Filesize:'} {$max_image_size|string_format:"%.2f"} {l s='MB max.'}
+					{l s='Current size:'} <span id="carrier_logo_size">{l s='undefined'}</span>.
 			</p>
 		</div>
 	{/if}

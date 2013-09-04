@@ -302,8 +302,6 @@
 						<i class="icon-{$t.class_name}"></i>
 						<span class="title">{if $t.name eq ''}{$t.class_name}{else}{$t.name}{/if}</span>
 					</a>
-
-					
 					<ul class="submenu">
 					{foreach from=$t.sub_tabs item=t2}
 						{if $t2.active}
