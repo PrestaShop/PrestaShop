@@ -556,6 +556,7 @@ abstract class PaymentModuleCore extends Module
 						$invoice_state = $invoice->id_state ? new State($invoice->id_state) : false;
 
 						$data = array(
+						'{gender}' => ($this->context->customer->id_gender == 1 ? 'Mr' : ($this->context->customer->id_gender == 2 ? 'Mme' : ($this->context->customer->id_gender == 3 ? 'Mlle' : ''))),
 						'{firstname}' => $this->context->customer->firstname,
 						'{lastname}' => $this->context->customer->lastname,
 						'{email}' => $this->context->customer->email,
