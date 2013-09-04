@@ -70,20 +70,39 @@ class Dashtrends extends Module
 			'.Shop::addSqlRestriction(false));
 		}
 		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT COUNT(`id_order`) as orders_score, SUM(`total_paid_tax_excl` / `conversion_rate`) as sales_score
+		SELECT
+			COUNT(`id_order`) as orders_score,
+			SUM(`total_paid_tax_excl` / `conversion_rate`) as total_paid_tax_excl,
+			SUM(`total_discounts_tax_excl` / `conversion_rate`) as total_discounts_tax_excl
 		FROM `'._DB_PREFIX_.'orders`
 		WHERE `invoice_date` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
 		'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
 		extract($row);
+		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+		SELECT SUM(os.`amount` / o.`conversion_rate`) as total_credit_tax_excl, SUM(os.`shipping_cost_amount` / o.`conversion_rate`) as total_credit_shipping_tax_excl
+		FROM `'._DB_PREFIX_.'orders` o
+		LEFT JOIN `'._DB_PREFIX_.'order_slip` os ON o.id_order = os.id_order
+		WHERE os.`date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
+		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o'));
+		extract($row);
+		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+		SELECT
+			SUM(od.`total_price_tax_excl` / `conversion_rate`) as total_product_price_tax_excl,
+			SUM(od.`product_quantity` * od.`purchase_supplier_price` / `conversion_rate`) as total_purchase_price
+		FROM `'._DB_PREFIX_.'orders` o
+		LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
+		WHERE `invoice_date` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
+		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o'));
+		extract($row);
 
 		return array(
 			'data_value' => array(
-				'sales_score' => Tools::displayPrice((float)$sales_score),
+				'sales_score' => Tools::displayPrice($total_paid_tax_excl - $total_credit_tax_excl - $total_credit_shipping_tax_excl),
 				'orders_score' => $orders_score,
-				'cart_value_score' => Tools::displayPrice($orders_score ? $sales_score / $orders_score : 0),
+				'cart_value_score' => Tools::displayPrice($orders_score ? $total_paid_tax_excl / $orders_score : 0),
 				'visits_score' => $visits_score,
 				'convertion_rate_score' => $visits_score ? round(100 * $orders_score / $visits_score, 2) : 0,
-				'net_profits_score' => Tools::displayPrice(0),
+				'net_profits_score' => Tools::displayPrice($total_product_price_tax_excl - $total_discounts_tax_excl - $total_purchase_price - $total_credit_tax_excl),
 			),
 			'data_trends' => array(
 				'sales_score_trends' => array('way' => 'up', 'value' => 0.42),
