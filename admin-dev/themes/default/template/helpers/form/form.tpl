@@ -274,9 +274,9 @@
 													{/if}
 												>
 													{if $value.value == 1}
-														<i class="icon-check-sign"></i> {l s='Yes'}
+														<i class="icon-check-sign color_success"></i> {l s='Yes'}
 													{else}
-														<i class="icon-ban-circle"></i> {l s='No'}
+														<i class="icon-ban-circle color_danger"></i> {l s='No'}
 													{/if}
 												</label>
 												{/foreach}
@@ -511,9 +511,9 @@
 				{/if}
 				{block name="other_input"}{/block}
 			{/foreach}
-<!-- {if $required_fields}
+<!-- {*if $required_fields}
 	<div class="small"><sup>*</sup> {l s='Required field'}</div>
-{/if} -->
+{/if*} -->
 		</fieldset>
 		{block name="other_fieldsets"}{/block}
 		{if isset($fields[$f+1])}<br />{/if}

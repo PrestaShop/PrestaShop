@@ -106,11 +106,11 @@
 													<span class="switch prestashop-switch">
 														<input type="radio" name="{$key}" id="{$key}_on" value="1" {if $field['value']} checked="checked"{/if}{if isset($field['js']['on'])} {$field['js']['on']}{/if}/>
 														<label for="{$key}_on" class="radioCheck">
-															<i class="icon-check-sign"></i> {l s='Yes'}
+															<i class="icon-check-sign color_success"></i> {l s='Yes'}
 														</label>
 														<input type="radio" name="{$key}" id="{$key}_off" value="0" {if !$field['value']} checked="checked"{/if}{if isset($field['js']['off'])} {$field['js']['off']}{/if}/>
 														<label for="{$key}_off" class="radioCheck">
-															<i class="icon-ban-circle"></i> {l s='No'}
+															<i class="icon-ban-circle color_danger"></i> {l s='No'}
 														</label>
 														<span class="slide-button btn btn-default"></span>
 													</span>
@@ -290,7 +290,7 @@
 							type="submit"
 							id="{$table}_form_submit_btn"
 							name="{if isset($categoryData['submit']['name'])}{$categoryData['submit']['name']}{else}submitOptions{$table}{/if}"
-							class="{if isset($categoryData['submit']['class'])}{$categoryData['submit']['class']}{else}btn btn-default{/if}"
+							class="btn btn-default {if isset($categoryData['submit']['class'])}{$categoryData['submit']['class']}{else}btn btn-default{/if}"
 							>
 							<i class="{if isset($categoryData['submit']['icon'])}{$categoryData['submit']['icon']}{else}icon-save{/if}"></i>
 							{if isset($categoryData['submit']['title'])}{$categoryData['submit']['title']}{else}{l s='Save'}{/if}
@@ -298,9 +298,9 @@
 					</div>
 				</div>
 			{/if}
-			{if isset($categoryData['required_fields']) && $categoryData['required_fields']}
+<!-- 			{*if isset($categoryData['required_fields']) && $categoryData['required_fields']}
 				<div class="small"><sup>*</sup> {l s='Required field'}</div>
-			{/if}
+			{/if*} -->
 			{if isset($categoryData['bottom'])}{$categoryData['bottom']}{/if}
 		</fieldset>
 	{/foreach}

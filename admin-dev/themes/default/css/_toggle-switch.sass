@@ -152,15 +152,15 @@
 			padding-top: 0!important
 			font-weight: 500
 		input:checked + label
-			color: #333
+			color: #333!important
 			@include text-shadow(rgba(white,0.7) 1px 1px 0)
+		input:not(:checked) + label
+			i
+				color: #666!important
 		.slide-button
 			position: relative
 			margin-right: 3px
-			border-color: darken($bg-content-color,20%)
 			color: lighten($bg-content-color,50%)
-			@include background(linear-gradient(top,$bg-content-color, darken($bg-content-color,10%)))
-			@include box-shadow(rgba(white,1) 0 0 0 1px inset)
 		p
 			color: #333
 		span

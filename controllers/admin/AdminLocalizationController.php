@@ -99,7 +99,7 @@ class AdminLocalizationControllerCore extends AdminController
 						'type' => 'text'
 					)
 				),
-				'submit' => array('title' => $this->l('Save'), 'class' => 'btn btn-primary')
+				'submit' => array('title' => $this->l('Save'))
 			),
 			'options' => array(
 				'title' =>	$this->l('Advanced'),
@@ -120,7 +120,7 @@ class AdminLocalizationControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					)
 				),
-				'submit' => array('title' => $this->l('Save'), 'class' => 'btn btn-primary')
+				'submit' => array('title' => $this->l('Save'))
 			)
 		);
 
