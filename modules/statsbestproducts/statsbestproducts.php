@@ -146,6 +146,7 @@ class StatsBestProducts extends ModuleGrid
 	public function getData()
 	{
 		$dateBetween = $this->getDate();
+		d($dateBetween);
 		$arrayDateBetween = explode(' AND ', $dateBetween);
 
 		$this->_query = 'SELECT SQL_CALC_FOUND_ROWS p.reference, p.id_product, pl.name,
