@@ -962,11 +962,9 @@ class shopimporter extends ImportModule
 									WHERE c.`id_category_'.bqSQL($moduleName).'` != 0
 									AND c.`id_parent` != 0');
 
-		// get first PS home category's id
-		$home_categories = Category::getRootCategories();
-		$home_category_id = $home_categories[0]['id_category'];
+		// get PS home category
 		Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'category c
-									SET c.id_parent = '.$home_category_id.'
+									SET c.id_parent = '.Configuration::get('PS_HOME_CATEGORY').'
 									WHERE c.`id_category_'.bqSQL($moduleName).'` != 0
 									AND c.`id_parent` = 0');
 
