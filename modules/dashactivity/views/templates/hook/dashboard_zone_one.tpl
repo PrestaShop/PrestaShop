@@ -30,7 +30,7 @@
 			<a class="list-tooolbar-btn" href="#" title="configure">
 				<i class="process-icon-configure"></i>
 			</a>
-			<a class="list-tooolbar-btn" href="#" onclick="refreshDashbard('dashactivity'); return false;" title="refresh">
+			<a class="list-tooolbar-btn" href="#" onclick="refreshDashboard('dashactivity'); return false;" title="refresh">
 				<i class="process-icon-refresh"></i>
 			</a>
 		</span>
