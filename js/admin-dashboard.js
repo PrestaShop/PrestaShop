@@ -50,7 +50,6 @@ function refreshDashboard(module_name)
 			$(this).addClass('loading');
 		});
 	}
-	console.log(module_list);
 	for (var module_id in module_list)
 	{
 		$.ajax({
@@ -165,4 +164,10 @@ function data_table(widget_name, data)
 		else
 			$('#'+data_id+' tbody').html('<tr><td class="text-center" colspan="'+data[data_id].header.length+'">'+no_results_translation+'</td></tr>');
 	}
+}
+
+function data_chart(widget_name, charts)
+{
+	for (chart_id in charts)
+		window[charts[chart_id].chart_type](widget_name, charts[chart_id]);
 }
