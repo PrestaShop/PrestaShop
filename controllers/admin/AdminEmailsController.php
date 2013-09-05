@@ -155,8 +155,8 @@ class AdminEmailsControllerCore extends AdminController
 						'id' => 'testEmail'
 						),
 				),
-				'bottom' => '<div class="row col-offset-3"><input type="button" class="btn btn-primary" name="btEmailTest" id="btEmailTest" value="'.$this->l('Send an email test').'" onclick="verifyMail();" /><br />
-					<p id="mailResultCheck" style="display:none;"></p></div>',
+				'bottom' => '<div class="row"> <div class="col-lg-9 col-lg-offset-3"><input type="button" class="btn btn-default" name="btEmailTest" id="btEmailTest" value="'.$this->l('Send an email test').'" onclick="verifyMail();" /><br /><br />
+					<p class="alert" id="mailResultCheck" style="display:none;"></p></div></div>',
 			)
 		);
 	}
