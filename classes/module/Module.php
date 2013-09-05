@@ -40,7 +40,7 @@ abstract class ModuleCore
 	public $registered_version;
 
 	/** @var array filled with known compliant PS versions */
-	public $ps_versions_compliancy = array('min' => '1.4', 'max' => '1.6');
+	public $ps_versions_compliancy = array();
 
 	/** @var array filled with modules needed for install */
 	public $dependencies = array();
@@ -138,6 +138,7 @@ abstract class ModuleCore
 	 */
 	public function __construct($name = null, Context $context = null)
 	{
+		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
 		// Load context and smarty
 		$this->context = $context ? $context : Context::getContext();				
 		if (is_object($this->context->smarty))				
@@ -200,7 +201,7 @@ abstract class ModuleCore
 		}
 
 		// Check PS version compliancy
-		if (version_compare(_PS_VERSION_, $this->ps_versions_compliancy['min']) < 0 || version_compare(_PS_VERSION_, $this->ps_versions_compliancy['max']) >= 0)
+		if (version_compare(_PS_VERSION_, $this->ps_versions_compliancy['min']) < 0 || version_compare(_PS_VERSION_, $this->ps_versions_compliancy['max']) > 0)
 		{
 			$this->_errors[] = $this->l('The version of your module is not compliant with your PrestaShop version.');
 			return false;
