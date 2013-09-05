@@ -98,15 +98,18 @@ class Gapi extends Module
 	{
 		$params = array(
 			'client_id' => Configuration::get('PS_GAPI30_CLIENT_ID'),
-			'client_secret' => Configuration::get('PS_GAPI30_CLIENT_SECRET'),
-			'grant_type' => 'authorization_code'
+			'client_secret' => Configuration::get('PS_GAPI30_CLIENT_SECRET')
 		);
 
 		// https://developers.google.com/accounts/docs/OAuth2WebServer#offline
 		if (Configuration::get('PS_GAPI30_REFRESH_TOKEN'))
+		{
+			$params['grant_type'] = 'refresh_token';
 			$params['refresh_token'] = Configuration::get('PS_GAPI30_REFRESH_TOKEN');
+		}
 		else
 		{
+			$params['grant_type'] = 'authorization_code';
 			$params['code'] = Configuration::get('PS_GAPI30_AUTHORIZATION_CODE');
 			$params['redirect_uri'] = Tools::getShopDomain(true, false).__PS_BASE_URI__.'modules/'.$this->name.'/oauth2callback.php';
 		}
