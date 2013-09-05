@@ -36,7 +36,7 @@ function refreshDashboard(use_push)
 {
 	module_list = new Array();
 	
-	if (typeof(module_name) == 'undefined')
+	if (!use_push && typeof(module_name) == 'undefined')
 	{
 		$('.widget').each( function () {
 			module_list.push($(this).attr('id'));
