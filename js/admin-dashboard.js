@@ -36,19 +36,21 @@ function refreshDashboard(use_push)
 {
 	module_list = new Array();
 	
-	if (!use_push && typeof(module_name) == 'undefined')
+	if (typeof(module_name) == 'undefined')
 	{
 		$('.widget').each( function () {
 			module_list.push($(this).attr('id'));
-			$(this).addClass('loading');
+			if (!use_push)
+				$(this).addClass('loading');
 		});
 	}
 	else
 	{
 		module_list.push(module_name);
-		$('#'+module_name+' section').each( function (){
-			$(this).addClass('loading');
-		});
+		if (!use_push)
+			$('#'+module_name+' section').each( function (){
+				$(this).addClass('loading');
+			});
 	}
 
 	for (var module_id in module_list)
