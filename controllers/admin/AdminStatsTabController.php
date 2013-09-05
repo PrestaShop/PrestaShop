@@ -194,6 +194,25 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 	public function postProcess()
 	{
 		$this->context = Context::getContext();
+		
+		$this->ajaxProcessSetDashboardDateRange();
+		
+		if (Tools::getValue('submitSettings'))
+		{
+		 	if ($this->tabAccess['edit'] === '1')
+			{
+				self::$currentIndex .= '&module='.Tools::getValue('module');
+				Configuration::updateValue('PS_STATS_RENDER', Tools::getValue('PS_STATS_RENDER', Configuration::get('PS_STATS_RENDER')));
+				Configuration::updateValue('PS_STATS_GRID_RENDER', Tools::getValue('PS_STATS_GRID_RENDER', Configuration::get('PS_STATS_GRID_RENDER')));
+				Configuration::updateValue('PS_STATS_OLD_CONNECT_AUTO_CLEAN', Tools::getValue('PS_STATS_OLD_CONNECT_AUTO_CLEAN', Configuration::get('PS_STATS_OLD_CONNECT_AUTO_CLEAN')));
+			}
+			else
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
+		}
+	}
+	
+	public function ajaxProcessSetDashboardDateRange()
+	{
 		if (Tools::isSubmit('submitDatePicker'))
 		{
 			if (!Validate::isDate($from = Tools::getValue('datepickerFrom')) || !Validate::isDate($to = Tools::getValue('datepickerTo')))
@@ -239,17 +258,21 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 			$this->context->employee->update();
 			Tools::redirectAdmin($_SERVER['REQUEST_URI']);
 		}
-		if (Tools::getValue('submitSettings'))
+		if ($this->isXmlHttpRequest())
 		{
-		 	if ($this->tabAccess['edit'] === '1')
-			{
-				self::$currentIndex .= '&module='.Tools::getValue('module');
-				Configuration::updateValue('PS_STATS_RENDER', Tools::getValue('PS_STATS_RENDER', Configuration::get('PS_STATS_RENDER')));
-				Configuration::updateValue('PS_STATS_GRID_RENDER', Tools::getValue('PS_STATS_GRID_RENDER', Configuration::get('PS_STATS_GRID_RENDER')));
-				Configuration::updateValue('PS_STATS_OLD_CONNECT_AUTO_CLEAN', Tools::getValue('PS_STATS_OLD_CONNECT_AUTO_CLEAN', Configuration::get('PS_STATS_OLD_CONNECT_AUTO_CLEAN')));
-			}
+			if (is_array($this->errors) && count($this->errors))
+				die(Tools::jsonEncode(array(
+					'has_errors' => true,
+					'errors' => array($this->errors),
+					'date_from' => $this->context->employee->stats_date_from,
+					'date_to' => $this->context->employee->stats_date_to)
+				));
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
+				die(Tools::jsonEncode(array(
+					'has_errors' => false,
+					'date_from' => $this->context->employee->stats_date_from,
+					'date_to' => $this->context->employee->stats_date_to)
+					));
 		}
 	}
 
