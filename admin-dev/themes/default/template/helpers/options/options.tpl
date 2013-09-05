@@ -123,8 +123,10 @@
 											{foreach $field['choices'] AS $k => $v}
 
 												<p class="radio">
-													<input type="radio" name="{$key}" id="{$key}_{$k}" value="{$k}"{if $k == $field['value']} checked="checked"{/if}{if isset($field['js'][$k])} {$field['js'][$k]}{/if}/>
-													<label class="col-lg-6" for="{$key}_{$k}"> {$v}</label>
+													<label for="{$key}_{$k}">
+														<input type="radio" name="{$key}" id="{$key}_{$k}" value="{$k}"{if $k == $field['value']} checked="checked"{/if}{if isset($field['js'][$k])} {$field['js'][$k]}{/if}/>
+													 	{$v}
+													</label>
 												</p>
 											{/foreach}
 										</div>

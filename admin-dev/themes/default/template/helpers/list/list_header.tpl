@@ -256,7 +256,7 @@
 		</span>
 		{/if}
 {/if}
-	<div class="table-responsive">
+	<div class="table-responsive clearfix">
 		<table 
 			class="table"
 			name="list_table"
