@@ -318,7 +318,6 @@ class Dashproducts extends Module
 		);
 		
 		$terms = $this->getMostSearchTerms($date_from, $date_to);
-		
 		$body = array();
 		if (is_array($terms) && count($terms))
 			foreach ($terms as $term)
@@ -462,7 +461,6 @@ class Dashproducts extends Module
 					GROUP BY ss.`keywords`
 					ORDER BY `count_keywords` DESC
 					LIMIT 0, '.(int)$limit;
-		
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 }

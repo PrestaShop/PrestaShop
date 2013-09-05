@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<section id="dashtrends" class="panel">
+<section id="dashtrends" class="panel widget">
 	<header class="panel-heading">
 		<i class="icon-bar-chart"></i> {l s='Score Trends'}
 		<span class="panel-heading-action">

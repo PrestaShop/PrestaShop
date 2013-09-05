@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<section id="dashactivity" class="panel">
+<section id="dashactivity" class="panel widget">
 	<div class="panel-heading">
 		<i class="icon-time"></i> {l s='Recent Activity'}
 		<span class="panel-heading-action">

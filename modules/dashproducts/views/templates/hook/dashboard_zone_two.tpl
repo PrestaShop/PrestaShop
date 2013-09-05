@@ -23,11 +23,11 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<section id="dashproducts" class="panel">
+<section id="dashproducts" class="panel widget">
 	<header class="panel-heading">
 		<i class="icon-bar-chart"></i> {l s='Product and Sales'}
 		<span class="panel-heading-action">
-			<a class="list-tooolbar-btn" href="javascript:void(0);" title="configure">
+			<a class="list-tooolbar-btn" href="#" title="configure">
 				<i class="process-icon-configure"></i>
 			</a>
 			<a class="list-tooolbar-btn" href="#"  onclick="refreshDashbard('dashproducts'); return false;"  title="refresh">
@@ -111,5 +111,4 @@
 			</table>
 		</div>
 	</div>
-	
 </section>
