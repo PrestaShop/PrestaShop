@@ -28,13 +28,11 @@ $(document).ready( function () {
 		setDashboardDateRange(elt.currentTarget.name);
 		return false;
 	});
-	
-	refreshDashbard();
-	if (dashboard_use_push)
-		refreshDashbard();
+
+	refreshDashboard();
 });
 
-function refreshDashbard(module_name)
+function refreshDashboard(module_name)
 {
 	module_list = new Array();
 	
@@ -61,17 +59,16 @@ function refreshDashbard(module_name)
 				ajax:true,
 				action:'refreshDashboard',
 				module:module_list[module_id],
-				dashboard_use_push:dashboard_use_push
+				dashboard_use_push:parseInt(dashboard_use_push)
 				},
 			dataType: 'json',
 			success : function(widgets){
 				for (var widget_name in widgets)
-				{
 					for (data_type in widgets[widget_name])
 						window[data_type](widget_name, widgets[widget_name][data_type]);
-				}
-				if (dashboard_use_push)
-					refreshDashbard();
+
+				if (parseInt(dashboard_use_push) == 1)
+					refreshDashboard();
 			},
 			error : function(data){
 				//@TODO display errors
