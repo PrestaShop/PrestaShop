@@ -64,7 +64,7 @@ class Dashactivity extends Module
 	
 	public function hookDashboardData($params)
 	{
-		if ($params['use_push'])
+		if ($params['dashboard_use_push'])
 			Tools::waitUntilFileIsModified($this->push_filename, 30);
 			
 		$gapi = Module::isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
