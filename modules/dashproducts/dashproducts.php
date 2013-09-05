@@ -42,15 +42,9 @@ class Dashproducts extends Module
 
 	public function install()
 	{
-		if (!parent::install() || !$this->registerHook('dashboardZoneTwo') || !$this->registerHook('dashboardData') || !$this->registerHook('displayBackOfficeHeader'))
+		if (!parent::install() || !$this->registerHook('dashboardZoneTwo') || !$this->registerHook('dashboardData'))
 			return false;
 		return true;
-	}
-
-	public function hookDisplayBackOfficeHeader()
-	{
-		if (get_class($this->context->controller) == 'AdminDashboardController')
-			$this->context->controller->addJqueryPlugin('timeago');
 	}
 
 	public function hookDashboardZoneTwo($params)
