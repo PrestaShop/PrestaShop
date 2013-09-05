@@ -133,11 +133,10 @@ html, body
 
 #main
 	min-height: 100%
-	//height: auto!important
 	padding: 36px 0 60px
 	margin: 0 0 -60px 0
 	background-color: $bg-content-color
-	//background-image: url('../img/patterns/bedge_grunge.png') // texture
+	background-image: url('../img/patterns/bedge_grunge.png') // texture
 
 #content
 	padding: 90px 20px 0
@@ -234,10 +233,11 @@ html, body
 	float: left
 	width: 240px
 	background-color: $main-color
-	border-bottom: 1px solid lighten($main-color,5%)
+	//border-bottom: 1px solid lighten($main-color,5%)
+	border-right: 1px solid black
 	.menu
 		border-top: 1px black solid
-		.maintab > a [class^="icon-"], .menu .maintab > a [class*=" icon-"]
+		.maintab > a > i
 			font-size: 20px
 			@include border-radius(40px)
 			height: 30px
@@ -258,6 +258,9 @@ html, body
 		ul
 			display: block
 			background-color: white
+	li.active
+		.submenu_expand	i
+			display: none
 	> ul
 		> li
 			position: relative
@@ -280,6 +283,7 @@ html, body
 					background-color: white
 			> a
 				display: block
+				position: relative
 				padding: 2px 0 2px 8px
 				border-top: 1px solid lighten($main-color,5%)
 				border-bottom: 1px solid darken($main-color,10%)
@@ -300,10 +304,23 @@ html, body
 					@include transition-property(color)
 					@include transition-duration(0.4s)
 					@include transition-timing-function(ease-out)
+				&:hover
+					color: white
+			.submenu_expand
+				position: absolute
+				right: 10px
+				top: 11px
+				i
+					font-size: 18px
+					font-weight: 100
+					color: black
+					@include text-shadow(lighten($main-color,10%) 1px 1px 0)
+					background-color: transparent
+
 	ul.submenu
 		a
 			display: block
-			padding: 2px 5px 2px 10px
+			padding: 4px 5px 4px 10px
 			font-size: 12px
 			border: none
 			border-bottom: solid 1px #eee
@@ -360,6 +377,9 @@ html, body
 		@media (max-width: $screen-tablet)
 			margin-left: 0
 			width: 100%
+	.submenu_expand
+		display: none
+
 
 .menu-collapse
 	height: 54px
@@ -372,6 +392,7 @@ html, body
 	border-bottom: 3px solid darken($secondary-color,20%)
 	i
 		color: lighten($secondary-color,10%)
+
 
 // Tool bar
 .toolbar_btn
@@ -797,33 +818,39 @@ fieldset > .row
 	background-color: blue
 
 //.list-toolbar-btn
-#topbar
+#nav-topbar
+	display: none
 	position: fixed
 	left: 80
 	width: 100%
-	height: 25px
+	height: 32px
 	z-index: 600
 	background-color: $main-color
 	border-top: black solid 1px
 	border-bottom: black solid 1px
 	a
-		line-height: 25px
+		line-height: 32px
 		color: white
+		border-right: solid 1px white
+		padding-right: 3px
+		margin-right: 3px
 		i
 			height: 25px
 			width: 25px
 			line-height: 25px
-			color: white
+			color: white!important
+			background-color: transparent
 			font-size: 20px
 	.menu-collapse
 		display: none
 	.menu
-		padding: 0 0 0 60px
+		padding: 0
 		display: inline
 		li
 			display: inline
 	.submenu
 		display: none
+
 
 
 .hook_panel
@@ -1151,15 +1178,12 @@ fieldset > .row
 		+scale(1)
 
 
-
-
 $treeBackgroundHover: lighten(blue,30%)
 $treeBackgroundSelect: blue
 
-
 .tree
 	border: 1px solid #BBBBBB
-	border-radius: 4px 4px 4px 4px
+	+border-radius(4px)
 	overflow-y: auto
 	overflow-x: hidden
 	padding: 10px 15px 0 15px
@@ -1172,12 +1196,9 @@ $treeBackgroundSelect: blue
 		.tree-folder-header
 			position: relative
 			height: 20px
-			-webkit-border-radius: 6px
-			-moz-border-radius: 6px
-			border-radius: 6px
+			+border-radius(6px)
 			&:hover
 				background-color: $treeBackgroundHover
-
 			i
 				position: absolute
 				float: left
@@ -1188,23 +1209,16 @@ $treeBackgroundSelect: blue
 				white-space: nowrap
 				overflow: hidden
 				text-overflow: ellipsis
-
 		.tree-folder-content
 			margin-left: 23px
-
-	.tree-item 
+	.tree-item
 		position: relative
 		width: 100%
 		height: 20px
 		cursor: pointer
 		margin-top: 1px
-		-webkit-border-radius: 6px
-		-moz-border-radius: 6px
-		border-radius: 6px
-
 		&:hover
 			background-color: $treeBackgroundHover
-
 		.tree-item-name
 			position: absolute
 			left: 29px
@@ -1216,10 +1230,7 @@ $treeBackgroundSelect: blue
 			width: 4px
 			height: 4px
 			background-color: #ccc
-			-webkit-border-radius: 6px
-			-moz-border-radius: 6px
-			border-radius: 6px
-
+			+border-radius(6px)
 		.icon-ok 
 			position: absolute
 			top: 1px
@@ -1228,8 +1239,6 @@ $treeBackgroundSelect: blue
 		background-color: $treeBackgroundSelect
 		&:hover
 			background-color: $treeBackgroundSelect
-
-
 
 
 #carrier_wizard.swMain
@@ -1249,7 +1258,6 @@ $treeBackgroundSelect: blue
 			display: block
 			position: relative
 			clear: both
-
 	ul.anchor
 		position: relative
 		display: block
@@ -1364,7 +1372,6 @@ $treeBackgroundSelect: blue
 		@extend .alert-danger
 	.range_inf td, .range_sup td
 		background-color: #ccc
-
 	.range_type
 		width: 220px
 		text-align: right
