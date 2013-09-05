@@ -37,6 +37,8 @@ class Dashactivity extends Module
 		$this->version = '0.1';
 		$this->author = 'PrestaShop';
 		$this->push_filename = _PS_CACHE_DIR_.'push/activity';
+		$this->allow_push = true;
+		$this->push_time_limit = 180;
 
 		parent::__construct();
 	}
@@ -64,9 +66,6 @@ class Dashactivity extends Module
 	
 	public function hookDashboardData($params)
 	{
-		if ($params['dashboard_use_push'])
-			Tools::waitUntilFileIsModified($this->push_filename, 30);
-			
 		$gapi = Module::isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
 		if (Validate::isLoadedObject($gapi) && $gapi->isConfigured())
 		{

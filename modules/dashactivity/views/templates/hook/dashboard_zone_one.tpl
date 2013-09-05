@@ -22,8 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-<section id="dashactivity" class="panel widget">
+<section id="dashactivity" class="panel widget{if $allow_push} allow_push{/if}">
 	<div class="panel-heading">
 		<i class="icon-time"></i> {l s='Recent Activity'}
 		<span class="panel-heading-action">

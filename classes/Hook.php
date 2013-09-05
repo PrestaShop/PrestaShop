@@ -387,7 +387,7 @@ class HookCore extends ObjectModel
 	 * @param int $id_module Execute hook for this module only
 	 * @return string modules output
 	 */
-	public static function exec($hook_name, $hook_args = array(), $id_module = null, $array_return = false, $check_exceptions = true)
+	public static function exec($hook_name, $hook_args = array(), $id_module = null, $array_return = false, $check_exceptions = true, $use_push = false)
 	{
 		// Check arguments validity
 		if (($id_module && !is_numeric($id_module)) || !Validate::isHookName($hook_name))
@@ -446,6 +446,8 @@ class HookCore extends ObjectModel
 					continue;
 			}
 
+			if ($use_push && !$moduleInstance->allow_push)
+				continue;
 			// Check which / if method is callable
 			$hook_callable = is_callable(array($moduleInstance, 'hook'.$hook_name));
 			$hook_retro_callable = is_callable(array($moduleInstance, 'hook'.$retro_hook_name));
@@ -453,10 +455,13 @@ class HookCore extends ObjectModel
 			{
 				$hook_args['altern'] = ++$altern;
 
+				if ($use_push && isset($moduleInstance->push_filename) && file_exists($moduleInstance->push_filename))
+					Tools::waitUntilFileIsModified($moduleInstance->push_filename, $moduleInstance->push_time_limit);
+
 				// Call hook method
 				if ($hook_callable)
 					$display = $moduleInstance->{'hook'.$hook_name}($hook_args);
-				else if ($hook_retro_callable)
+				elseif ($hook_retro_callable)
 					$display = $moduleInstance->{'hook'.$retro_hook_name}($hook_args);
 				// Live edit
 				if (!$array_return && $array['live_edit'] && Tools::isSubmit('live_edit') && Tools::getValue('ad') && Tools::getValue('liveToken') == Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee')))
