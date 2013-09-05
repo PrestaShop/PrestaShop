@@ -349,7 +349,9 @@ abstract class Controller extends ControllerCore
 		$cache = Cache::retrieveAll();
  	 	$totalCacheSize = $this->sizeofvar($cache);
 
-		echo '<br /><br />
+		echo '
+		<div style="clear:both;height:20px;line-height:20px">&nbsp;</div>
+		<div style="margin:50px;background-color:#FFFFFF">
 		<div class="rte" style="text-align:left;padding:8px;float:left">
 			<b>Load time</b>: '.$this->displayLoadTimeColor($this->_time['display'] - $start_time, true).'';
 		if (self::$_footer)
@@ -362,6 +364,7 @@ abstract class Controller extends ControllerCore
 			}
 			echo '</ul>';
 		echo '</div>
+		
 		<div class="rte" style="text-align:left;padding:8px;float:left;margin-left:20px">
 			<b>Hook processing</b>: '.$this->displayLoadTimeColor($totalHookTime).' / '.$this->displayMemoryColor($totalHookMemoryUsage).'
 			<ul>';
@@ -385,7 +388,6 @@ abstract class Controller extends ControllerCore
 		echo '<br /><br />
  	 	<b>Total cache size (in Cache class)</b>: '.$this->displayMemoryColor($totalCacheSize).'
  	 	</div>';
-		echo '</div>';
 
 		echo '
 		<div class="rte" style="text-align:left;padding:8px;float:left;margin-left:20px">
@@ -514,7 +516,9 @@ abstract class Controller extends ControllerCore
 			echo $i.' '.$file.'<br />';
 			$i++;
 		}
-		echo '</div>';
+		echo '</div>
+		<div style="clear:both;height:20px;line-height:20px">&nbsp;</div>
+		</div>';
 	}
 }
 
