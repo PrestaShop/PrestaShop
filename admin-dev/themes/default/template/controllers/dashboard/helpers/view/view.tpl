@@ -26,7 +26,7 @@
 <script>
 	var dashboard_ajax_url = '{$link->getAdminLink('AdminDashboard')}';
 	var no_results_translation = '{l s='No result'}';
-	var use_push = 1;
+	var use_push = 0;
 </script>
 
 <div class="page-head">
