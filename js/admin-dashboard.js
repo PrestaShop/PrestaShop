@@ -50,7 +50,7 @@ function refreshDashboard(module_name)
 			$(this).addClass('loading');
 		});
 	}
-	
+	console.log(module_list);
 	for (var module_id in module_list)
 	{
 		$.ajax({
@@ -79,6 +79,7 @@ function refreshDashboard(module_name)
 
 function setDashboardDateRange(action)
 {
+	$('#datepickerFrom, #datepickerTo').parent('.input-group').removeClass('has-error');
 	data = 'ajax=true&action=setDashboardDateRange&submitDatePicker=true&'+$('#calendar_form').serialize()+'&'+action+'=1';
 	$.ajax({
 			url : adminstats_ajax_url,
@@ -88,10 +89,12 @@ function setDashboardDateRange(action)
 			success : function(jsonData){
 				if (!jsonData.has_errors)
 				{
-					refreshDashbard();
+					refreshDashboard();
 					$('#datepickerFrom').val(jsonData.date_from);
 					$('#datepickerTo').val(jsonData.date_to);
 				}
+				else
+					$('#datepickerFrom, #datepickerTo').parent('.input-group').addClass('has-error');
 			},
 			error : function(data){
 				//@TODO display errors
