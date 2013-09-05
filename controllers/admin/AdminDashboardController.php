@@ -66,6 +66,7 @@ class AdminDashboardControllerCore extends AdminController
 			'hookDashboardZoneTwo' => Hook::exec('dashboardZoneTwo'),
 			'translations' => $translations,
 			'action' => '#',
+			'dashboard_use_push' => Configuration::get('PS_DASHBOARD_USE_PUSH'),
 			'datepickerFrom' => Tools::getValue('datepickerFrom', $this->context->employee->stats_date_from),
 			'datepickerTo' => Tools::getValue('datepickerTo', $this->context->employee->stats_date_to)
 		);
@@ -76,12 +77,16 @@ class AdminDashboardControllerCore extends AdminController
 	{
 		$id_module = null;
 		if ($module = Tools::getValue('module'))
-			$id_module = Module::getInstanceByName($module)->id;
-
+		{
+			$module_obj = Module::getInstanceByName($module);
+			if (Validate::isLoadedObject($module_obj))
+				$id_module = $module_obj->id;
+		}
+		
 		$params = array(
 			'date_from' => $this->context->employee->stats_date_from,
 			'date_to' => $this->context->employee->stats_date_to,
-			'use_push' => (int)Tools::getValue('use_push')
+			'dashboard_use_push' => (int)Tools::getValue('dashboard_use_push')
 		);
 		
 		die(Tools::jsonEncode(Hook::exec('dashboardData', $params, $id_module, true)));

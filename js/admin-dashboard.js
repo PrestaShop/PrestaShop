@@ -23,34 +23,16 @@
 */
 
 $(document).ready( function () {
-	refreshDashbard();
-	/*
-if (use_push)
-		launchPush();
-*/
-});
-
-function launchPush()
-{
-	$.ajax({
-		url : dashboard_ajax_url,
-		data : {
-			ajax:true,
-			action:'refreshDashboard',
-			module:'dashactivity',
-			use_push:1,
-			},
-		dataType: 'json',
-		success : function(widgets){
-			for (var name in widgets)
-			{
-				for (data_type in widgets[name])
-					window[data_type](widgets[name][data_type]);
-			}
-			launchPush();
-		},
+	
+	$('#calendar_form input[type="submit"]').on('click', function (elt) {
+		setDashboardDateRange(elt.currentTarget.name);
+		return false;
 	});
-}
+	
+	refreshDashbard();
+	if (dashboard_use_push)
+		refreshDashbard();
+});
 
 function refreshDashbard(module_name)
 {
@@ -78,7 +60,8 @@ function refreshDashbard(module_name)
 			data : {
 				ajax:true,
 				action:'refreshDashboard',
-				module:module_list[module_id]
+				module:module_list[module_id],
+				dashboard_use_push:dashboard_use_push
 				},
 			dataType: 'json',
 			success : function(widgets){
@@ -87,12 +70,36 @@ function refreshDashbard(module_name)
 					for (data_type in widgets[widget_name])
 						window[data_type](widget_name, widgets[widget_name][data_type]);
 				}
+				if (dashboard_use_push)
+					refreshDashbard();
 			},
 			error : function(data){
 				//@TODO display errors
 			}
 		});
 	}
+}
+
+function setDashboardDateRange(action)
+{
+	data = 'ajax=true&action=setDashboardDateRange&submitDatePicker=true&'+$('#calendar_form').serialize()+'&'+action+'=1';
+	$.ajax({
+			url : adminstats_ajax_url,
+			data : data,
+			dataType: 'json',
+			type: 'POST',
+			success : function(jsonData){
+				if (!jsonData.has_errors)
+				{
+					refreshDashbard();
+					$('#datepickerFrom').val(jsonData.date_from);
+					$('#datepickerTo').val(jsonData.date_to);
+				}
+			},
+			error : function(data){
+				//@TODO display errors
+			}
+		});
 }
 
 function data_value(widget_name, data)
