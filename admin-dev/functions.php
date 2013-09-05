@@ -23,7 +23,7 @@
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-require_once(dirname(__FILE__).'/../images.inc.php');
+require_once(dirname(__FILE__).'/../images.inc.php'); //deprecated
 function bindDatepicker($id, $time)
 {
 	if ($time)
