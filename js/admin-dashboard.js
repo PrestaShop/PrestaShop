@@ -29,36 +29,42 @@ $(document).ready( function () {
 		return false;
 	});
 
-	refreshDashboard();
+	refreshDashboard(false, false);
 });
 
-function refreshDashboard(module_name)
+function refreshDashboard(module_name, use_push)
 {
 	module_list = new Array();
 	
-	if (typeof(module_name) == 'undefined')
+	if (module_name === false)
 	{
 		$('.widget').each( function () {
 			module_list.push($(this).attr('id'));
-			$(this).addClass('loading');
+			if (!use_push)
+				$(this).addClass('loading');
 		});
 	}
 	else
 	{
 		module_list.push(module_name);
-		$('#'+module_name+' section').each( function (){
-			$(this).addClass('loading');
-		});
+		if (!use_push)
+			$('#'+module_name+' section').each( function (){
+				$(this).addClass('loading');
+			});
 	}
+
 	for (var module_id in module_list)
 	{
+		if (use_push && !$('#'+module_list[module_id]).hasClass('allow_push'))
+			continue;
+
 		$.ajax({
 			url : dashboard_ajax_url,
 			data : {
 				ajax:true,
 				action:'refreshDashboard',
 				module:module_list[module_id],
-				dashboard_use_push:parseInt(dashboard_use_push)
+				dashboard_use_push:Number(use_push)
 				},
 			dataType: 'json',
 			success : function(widgets){
@@ -67,7 +73,7 @@ function refreshDashboard(module_name)
 						window[data_type](widget_name, widgets[widget_name][data_type]);
 
 				if (parseInt(dashboard_use_push) == 1)
-					refreshDashboard();
+					refreshDashboard(false, true);
 			},
 			error : function(data){
 				//@TODO display errors
@@ -88,7 +94,7 @@ function setDashboardDateRange(action)
 			success : function(jsonData){
 				if (!jsonData.has_errors)
 				{
-					refreshDashboard();
+					refreshDashboard(false, false);
 					$('#datepickerFrom').val(jsonData.date_from);
 					$('#datepickerTo').val(jsonData.date_to);
 				}

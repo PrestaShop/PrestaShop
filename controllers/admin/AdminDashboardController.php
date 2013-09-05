@@ -89,6 +89,6 @@ class AdminDashboardControllerCore extends AdminController
 			'dashboard_use_push' => (int)Tools::getValue('dashboard_use_push')
 		);
 		
-		die(Tools::jsonEncode(Hook::exec('dashboardData', $params, $id_module, true)));
+		die(Tools::jsonEncode(Hook::exec('dashboardData', $params, $id_module, true, true, (int)Tools::getValue('dashboard_use_push'))));
 	}
 }
