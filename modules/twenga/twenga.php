@@ -126,7 +126,7 @@ class Twenga extends PaymentModule
 		
 	 	parent::__construct();
 	
-		$this->displayName = $this->l('Twenga API');
+		$this->displayName = $this->l('Twenga Module');
 		$this->description = $this->l('Export your products to Twenga Shopping Search Engine and get new online buyers immediately.');
 
 		// For Twenga subscription
@@ -616,12 +616,16 @@ class Twenga extends PaymentModule
 		}
 		
 		if ($isoUser == 'en')
-			$tarifs_link = 'https://rts.twenga.com/media/prices_uk.jpg';
+			$tarifs_link = 'https://rts.twenga.co.uk/ratecard';
+		elseif ($isoUser == 'es')
+			$tarifs_link = 'https://rts.twenga.es/ratecard';
+		elseif ($isoUser == 'it')
+			$tarifs_link = 'https://rts.twenga.it/ratecard';
+		elseif ($isoUser == 'de')
+			$tarifs_link = 'https://rts.twenga.de/ratecard';
 		else
-			$tarifs_link = 'https://rts.twenga.com/media/prices_'.$isoUser.'.jpg';
+			$tarifs_link = 'https://rts.twenga.fr/ratecard';
 		
-	
-
 		$tarif_arr = array(950, 565);
 		if (file_exists($tarifs_link))
 			$tarif_arr = @getimagesize($tarifs_link);
@@ -684,9 +688,15 @@ class Twenga extends PaymentModule
 			$lost_link = 'https://rts.twenga.'.$isoUser.'/lostpassword';
 
 		if ($isoUser == 'en')
-			$tarifs_link = 'https://rts.twenga.com/media/prices_uk.jpg';
+			$tarifs_link = 'https://rts.twenga.co.uk/ratecard';
+		elseif ($isoUser == 'es')
+			$tarifs_link = 'https://rts.twenga.es/ratecard';
+		elseif ($isoUser == 'it')
+			$tarifs_link = 'https://rts.twenga.it/ratecard';
+		elseif ($isoUser == 'de')
+			$tarifs_link = 'https://rts.twenga.de/ratecard';
 		else
-			$tarifs_link = 'https://rts.twenga.com/media/prices_'.$isoUser.'.jpg';
+			$tarifs_link = 'https://rts.twenga.fr/ratecard';
 
 		$output =
 		'<form name="form_set_hashkey" action="" method="post">
@@ -723,7 +733,7 @@ class Twenga extends PaymentModule
 			
 				<p><a href="'.$tarifs_link.'" class="link" id="twenga_tarif">'.$this->l('Twenga Prices').'</a></p>
 			<p>'.$this->l('You will benefit from detailed traffic & sales supports tools, allowing you total control on your activity on Twenga.').'</p>	
-			<div align=center><img src="../modules/'.$this->name.'/recompense.png" alt="" /></div>
+			<div align=center><img src="../modules/'.$this->name.'/awards.jpg" alt="" /></div>
 			</fieldset>
 			</form><br />';
 

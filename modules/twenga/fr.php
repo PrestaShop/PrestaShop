@@ -2,7 +2,7 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{twenga}prestashop>twenga_400b0c914f01bcecf50b936e652695b2'] = 'l\'API de Twenga';
+$_MODULE['<{twenga}prestashop>twenga_400b0c914f01bcecf50b936e652695b2'] = 'Module Twenga';
 $_MODULE['<{twenga}prestashop>twenga_456e8ef57bad2bb00b1a4e40ba29e8a9'] = 'Exportez très facilement vos produits sur Twenga et captez immédiatement de nouveaux acheteurs !';
 $_MODULE['<{twenga}prestashop>twenga_2034864b8a4fce12f3621b7ec8912e95'] = 'Le module Twenga marche seulement dans certains pays (liste des iso codes :';
 $_MODULE['<{twenga}prestashop>twenga_bcfaccebf745acfd5e75351095a5394a'] = 'Désactiver';
