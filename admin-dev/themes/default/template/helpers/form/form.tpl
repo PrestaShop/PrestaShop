@@ -231,7 +231,7 @@
 								{elseif $input.type == 'radio'}
 									{foreach $input.values as $value}
 										
-										<label class="checkbox-inline" {if isset($input.class)}class="{$input.class}"{/if} for="{$value.id}">
+										<div class="radio {if isset($input.class)}"{$input.class}"{/if}">
 											<input type="radio"	name="{$input.name}"id="{$value.id}" value="{$value.value|escape:'htmlall':'UTF-8'}"
 												{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
 												{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if} />
@@ -243,10 +243,10 @@
 												{/if}
 											 {else}
 												{$value.label}
-										 {/if}
-										</label>
-										{if isset($input.br) && $input.br}<br />{/if}
-										{if isset($value.p) && $value.p}<p>{$value.p}</p>{/if}
+											{/if}
+										</div>
+										{*if isset($input.br) && $input.br}<br />{/if*}
+										{*if isset($value.p) && $value.p}<p>{$value.p}</p>{/if*}
 									{/foreach}
 								{elseif $input.type == 'switch'}
 									<div class="row">

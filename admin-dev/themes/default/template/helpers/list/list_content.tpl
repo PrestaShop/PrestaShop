@@ -68,7 +68,7 @@
 						{if $tr.$key}
 							<span class="label label-success"><i class="icon-check-sign"></i> {l s='Enabled'}</span>
 						{else}
-							<span class="label label-important"><i class="icon-ban-circle"></i> {l s='Disabled'}</span>
+							<span class="label label-warning"><i class="icon-ban-circle"></i> {l s='Disabled'}</span>
 						{/if}
 
 					{elseif isset($params.position)}
