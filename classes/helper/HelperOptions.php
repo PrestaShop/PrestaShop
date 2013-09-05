@@ -129,7 +129,7 @@ class HelperOptionsCore extends Helper
 									$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',\''.Tools::getRemoteAddr().'\');
 							}
 						</script>';
-					$field['link_remove_ip'] = ' &nbsp<a href="#" class="button" onclick="addRemoteAddr(); return false;">'.$this->l('Add my IP', 'Helper').'</a>';
+					$field['link_remove_ip'] = ' &nbsp<div class="col-lg-9 col-lg-offset-3"><a href="#" class="btn btn-default" onclick="addRemoteAddr(); return false;"><i class="icon-plus"></i> '.$this->l('Add my IP', 'Helper').'</a></div>';
 				}
 
 				// Multishop default value
