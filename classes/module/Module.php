@@ -119,6 +119,10 @@ abstract class ModuleCore
 	/** @var Smarty_Data */
 	protected $smarty;
 	
+	/** @var allow push */
+	public $allow_push;
+	
+	public $push_time_limit = 180;
 	
 	const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
 	
@@ -1643,7 +1647,8 @@ abstract class ModuleCore
 		{
 			$this->smarty->assign(array(
 				'module_dir' =>				__PS_BASE_URI__.'modules/'.basename($file, '.php').'/',
-				'module_template_dir' =>	($overloaded ? _THEME_DIR_ : __PS_BASE_URI__).'modules/'.basename($file, '.php').'/'
+				'module_template_dir' =>	($overloaded ? _THEME_DIR_ : __PS_BASE_URI__).'modules/'.basename($file, '.php').'/',
+				'allow_push' => $this->allow_push
 			));
 
 			if ($cacheId !== null)

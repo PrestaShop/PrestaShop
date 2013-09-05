@@ -29,10 +29,10 @@ $(document).ready( function () {
 		return false;
 	});
 
-	refreshDashboard();
+	refreshDashboard(false);
 });
 
-function refreshDashboard(module_name)
+function refreshDashboard(use_push)
 {
 	module_list = new Array();
 	
@@ -50,16 +50,19 @@ function refreshDashboard(module_name)
 			$(this).addClass('loading');
 		});
 	}
-	console.log(module_list);
+
 	for (var module_id in module_list)
 	{
+		if (use_push && !$('#'+module_list[module_id]).hasClass('allow_push'))
+			continue;
+
 		$.ajax({
 			url : dashboard_ajax_url,
 			data : {
 				ajax:true,
 				action:'refreshDashboard',
 				module:module_list[module_id],
-				dashboard_use_push:parseInt(dashboard_use_push)
+				dashboard_use_push:Number(use_push)
 				},
 			dataType: 'json',
 			success : function(widgets){
@@ -68,7 +71,7 @@ function refreshDashboard(module_name)
 						window[data_type](widget_name, widgets[widget_name][data_type]);
 
 				if (parseInt(dashboard_use_push) == 1)
-					refreshDashboard();
+					refreshDashboard(true);
 			},
 			error : function(data){
 				//@TODO display errors
@@ -89,7 +92,7 @@ function setDashboardDateRange(action)
 			success : function(jsonData){
 				if (!jsonData.has_errors)
 				{
-					refreshDashboard();
+					refreshDashboard(false);
 					$('#datepickerFrom').val(jsonData.date_from);
 					$('#datepickerTo').val(jsonData.date_to);
 				}
