@@ -29,14 +29,14 @@ $(document).ready( function () {
 		return false;
 	});
 
-	refreshDashboard(false);
+	refreshDashboard(false, false);
 });
 
-function refreshDashboard(use_push)
+function refreshDashboard(module_name, use_push)
 {
 	module_list = new Array();
 	
-	if (typeof(module_name) == 'undefined')
+	if (module_name === false)
 	{
 		$('.widget').each( function () {
 			module_list.push($(this).attr('id'));
@@ -73,7 +73,7 @@ function refreshDashboard(use_push)
 						window[data_type](widget_name, widgets[widget_name][data_type]);
 
 				if (parseInt(dashboard_use_push) == 1)
-					refreshDashboard(true);
+					refreshDashboard(false, true);
 			},
 			error : function(data){
 				//@TODO display errors
@@ -94,7 +94,7 @@ function setDashboardDateRange(action)
 			success : function(jsonData){
 				if (!jsonData.has_errors)
 				{
-					refreshDashboard(false);
+					refreshDashboard(false, false);
 					$('#datepickerFrom').val(jsonData.date_from);
 					$('#datepickerTo').val(jsonData.date_to);
 				}
