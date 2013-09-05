@@ -24,8 +24,10 @@
 
 $(document).ready( function () {
 	refreshDashbard();
-	if (use_push)
+	/*
+if (use_push)
 		launchPush();
+*/
 });
 
 function launchPush()
@@ -52,44 +54,57 @@ function launchPush()
 
 function refreshDashbard(module_name)
 {
+	module_list = new Array();
+	
 	if (typeof(module_name) == 'undefined')
-		module_name = 0;
-	else	
+	{
+		$('.widget').each( function () {
+			module_list.push($(this).attr('id'));
+			$(this).addClass('loading');
+		});
+	}
+	else
+	{
+		module_list.push(module_name);
 		$('#'+module_name+' section').each( function (){
 			$(this).addClass('loading');
 		});
-
-	$.ajax({
-		url : dashboard_ajax_url,
-		data : {
-			ajax:true,
-			action:'refreshDashboard',
-			module:module_name
-			},
-		dataType: 'json',
-		success : function(widgets){
-			for (var name in widgets)
-			{
-				for (data_type in widgets[name])
-					window[data_type](widgets[name][data_type]);
-			}
-		},
-		error : function(data){
-			//@TODO display errors
-		}
-	});
-}
-
-function data_value(data)
-{
-	for (var data_id in data)
+	}
+	
+	for (var module_id in module_list)
 	{
-		$('#'+data_id).html(data[data_id]);
-		$('#'+data_id).closest('section').removeClass('loading');
+		$.ajax({
+			url : dashboard_ajax_url,
+			data : {
+				ajax:true,
+				action:'refreshDashboard',
+				module:module_list[module_id]
+				},
+			dataType: 'json',
+			success : function(widgets){
+				for (var widget_name in widgets)
+				{
+					for (data_type in widgets[widget_name])
+						window[data_type](widget_name, widgets[widget_name][data_type]);
+				}
+			},
+			error : function(data){
+				//@TODO display errors
+			}
+		});
 	}
 }
 
-function data_trends(data)
+function data_value(widget_name, data)
+{
+	for (var data_id in data)
+	{
+		$('#'+data_id+' ').html(data[data_id]);
+		$('#'+data_id+', #'+widget_name).closest('section').removeClass('loading');
+	}
+}
+
+function data_trends(widget_name, data)
 {
 	for (var data_id in data)
 	{
@@ -102,7 +117,7 @@ function data_trends(data)
 	}
 }
 
-function data_table(data)
+function data_table(widget_name, data)
 {
 	for (var data_id in data)
 	{
