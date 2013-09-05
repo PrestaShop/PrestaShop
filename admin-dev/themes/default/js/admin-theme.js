@@ -22,27 +22,35 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-function adminNav(navId)
-{
-  $(".submenu-collapse").remove();
-  if($(".expanded").length ){
-    $(".expanded > ul").slideUp(
-      "fast",
-      function(){
-        var $target = $(".expanded").not(".active");
-        $target.removeClass("expanded");
-        $(navId).not($target).addClass("expanded");
-        $(navId).not($target).children("ul:first").hide().slideDown();
-
-      }
-    );
-  }
-  else{
-    $(navId).not(".active").addClass("expanded");
-    $(navId).not(".active").children("ul:first").hide().slideDown();
-  } 
-}
+$( document ).ready(function() {
+  $('.submenu_expand').click(function(){
+    //var $tab = $(this).parent().data('submenu');
+    var $navId = $(this).parent();
+    $(".submenu-collapse").remove();
+    if($(".expanded").length ){
+      $(".expanded > ul").slideUp(
+        "fast",
+        function(){
+          var $target = $(".expanded");
+          $target.removeClass("expanded");
+          $($navId).not($target).not(".active").addClass("expanded");
+          $($navId).not($target).not(".active").children("ul:first").hide().slideDown();
+        }
+      );
+    }
+    else{
+      $($navId).not(".active").addClass("expanded");
+      $($navId).not(".active").children("ul:first").hide().slideDown();
+    }
+  });
+});
 
 $( document ).ready(function() {
   $('.label-tooltip').tooltip();
+});
+
+$( document ).ready(function() {
+  $('.menu-collapse').click(function(){
+    $('body').toggleClass('page-sidebar-closed');
+  });
 });
