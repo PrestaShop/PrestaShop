@@ -120,7 +120,7 @@
 					</select>
 				{/if}
 				&nbsp;
-				<a href="#upload_file_import" id="upload_file_import_link" class="btn btn-primary">
+				<a href="#upload_file_import" id="upload_file_import_link" class="btn btn-default">
 					<i class="icon-plus-sign-alt"></i>
 					{l s='Upload'}
 				</a>
@@ -183,15 +183,15 @@
 		<div class="row">
 			<label class="control-label col-lg-3">{l s='Field separator'} </label>
 			<div class="col-lg-6 input-group">
-				<input type="text" size="2" value=";" name="separator"/>
 				<span class="input-group-addon">{l s='e.g. '}"1; Ipod; 129.90; 5"</span>
+				<input type="text" size="2" value=";" name="separator"/>
 			</div>
 		</div>
 		<div class="row">
 			<label class="control-label col-lg-3">{l s='Multiple value separator'} </label>
 			<div class="col-lg-6 input-group">
-				<input type="text" size="2" value="," name="multiple_value_separator"/>
 				<span class="input-group-addon">{l s='e.g. '}"Ipod; red.jpg, blue.jpg, green.jpg; 129.90"</span>
+				<input type="text" size="2" value="," name="multiple_value_separator"/>
 			</div>
 		</div>
 		<div class="row">
@@ -224,11 +224,11 @@
 		</div>
 		<div class="row">
 			<div class="col-lg-offset-3">
-				<input type="submit" name="submitImportFile" value="{l s='Next step'}" class="btn btn-primary" {if empty($files_to_import)}disabled{/if}/>
+				<input type="submit" name="submitImportFile" value="{l s='Next step'}" class="btn btn-default" {if empty($files_to_import)}disabled{/if}/>
 			</div>
 			{if empty($files_to_import)}
 				<div class="col-lg-12">
-					<p class="amert alert-info">{l s='You must upload a file in order to proceed to the next step'}</p>
+					<p class="alert alert-info">{l s='You must upload a file in order to proceed to the next step'}</p>
 				</div>
 			{/if}
 		</div>
