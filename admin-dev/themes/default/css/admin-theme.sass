@@ -233,7 +233,6 @@ html, body
 	float: left
 	width: 240px
 	background-color: $main-color
-	//border-bottom: 1px solid lighten($main-color,5%)
 	border-right: 1px solid black
 	.menu
 		border-top: 1px black solid
@@ -310,6 +309,10 @@ html, body
 				position: absolute
 				right: 10px
 				top: 11px
+				cursor: pointer
+				&:hover
+					i
+						color: white
 				i
 					font-size: 18px
 					font-weight: 100
