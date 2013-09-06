@@ -121,9 +121,7 @@ class HelperTreeToolbarCore implements HelperITreeToolbarCore
 		return $this->getContext()->smarty->createTemplate(
 			$this->getTemplateDirectory().$this->getTemplate(),
 			$this->getContext()->smarty
-		)
-		->assign('actions', $this->getActions())
-		->fetch();
+		)->assign('actions', $this->getActions())->fetch();
 	}
 
 	private function _normalizeDirectory($directory)
