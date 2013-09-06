@@ -25,7 +25,7 @@
 */
 
 include(dirname(__FILE__).'/../../config/config.inc.php');
-include(dirname(__FILE__).'/../../init.php');
+include(dirname(__FILE__).'/../../init.php'); // @todo remove this include cause file is deprecated
 include(dirname(__FILE__).'/blocklayered.php');
 
 $blockLayered = new BlockLayered();
