@@ -2309,8 +2309,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->tpl_list_vars['is_category_filter'] = (bool)$this->id_current_category;
 
 			// Generate category selection tree
-			$helper = new Helper();
-			$this->tpl_list_vars['category_tree'] = $helper->renderCategoryTree(null, array((int)$id_category), 'categoryBox', true, false, array(), false, true);
+			$this->tpl_list_vars['category_tree'] = $this->renderCategoriesTree((int)$id_category);
 
 			// used to build the new url when changing category
 			$this->tpl_list_vars['base_url'] = preg_replace('#&id_category=[0-9]*#', '', self::$currentIndex).'&token='.$this->token;
@@ -2327,6 +2326,96 @@ class AdminProductsControllerCore extends AdminController
 		$this->addRowAction('duplicate');
 		$this->addRowAction('delete');
 		return parent::renderList();
+	}
+
+	public function renderCategoriesTree($selectedCategory = null)
+	{
+		$tree = new HelperTree('categories-tree', Category::getNestedCategories());
+
+		$html = $tree->setTitle('Filter by category')
+			->setActions(array(
+				new HelperTreeToolbarLink('Collapse All', '$(\'#categories-tree\').tree(\'collapseAll\')', '#', 'icon-collapse-alt'),
+				new HelperTreeToolbarLink('Expand All', '$(\'#categories-tree\').tree(\'expandAll\')', '#', 'icon-expand-alt')
+			))
+			->setTemplateDirectory($this->context->smarty->getTemplateDir(0).'/controllers/products/helpers/tree')
+			->render();
+		$html .= '<script type="text/javascript">
+			$(document).ready(function () {
+				$("#categories-tree").tree("collapseAll");
+				$("#categories-tree").find(":input[type=radio]").click(
+					function()
+					{
+						location.href = location.href.replace(
+							/&id_category=[0-9]*/, "")+"&id_category="
+							+$(this).val();
+					}
+				);';
+
+			if (isset($selectedCategory))
+				$html .= '$("#categories-tree").find(":input").each(
+					function()
+					{
+						if ($(this).val() == '.$selectedCategory.')
+						{
+							$(this).prop("checked", true);
+							$(this).parents("ul.tree").each(
+								function()
+								{
+									$(this).children().children(".icon-folder-close")
+										.removeClass("icon-folder-close")
+										.addClass("icon-folder-open");
+									$(this).show();
+								}
+							);
+						}
+					}
+				);';
+			$html .= '});
+		</script>';
+		return $html;
+	}
+
+	public function renderAssociationsCategoriesTree()
+	{
+		$tree = new HelperTree('associated-categories-tree', Category::getNestedCategories());
+
+		$html = $tree->setTitle('Associated categories')
+			->setActions(array(
+				new HelperTreeToolbarLink('Collapse All', '$(\'#associated-categories-tree\').tree(\'collapseAll\')', '#', 'icon-collapse-alt'),
+				new HelperTreeToolbarLink('Expand All', '$(\'#associated-categories-tree\').tree(\'expandAll\')', '#', 'icon-expand-alt'),
+				new HelperTreeToolbarLink('Check All', 'checkAllAssociatedCategories();', '#', 'icon-check-sign'),
+				new HelperTreeToolbarLink('Uncheck All', 'uncheckAllAssociatedCategories();', '#', 'icon-check-empty')
+			))
+			->setTemplateDirectory($this->context->smarty->getTemplateDir(0).'/controllers/products/helpers/tree')
+			->setNodeFolderTemplate('tree_node_folder_associations.tpl')
+			->setNodeFolderTemplate('tree_node_item_associations.tpl')
+			->render();
+		$html .= '<script type="text/javascript">
+			function checkAllAssociatedCategories()
+			{
+				$("#associated-categories-tree").find(":input[type=checkbox]").each(
+					function()
+					{
+						$(this).prop("checked", true);
+					}
+				);
+			}
+
+			function uncheckAllAssociatedCategories()
+			{
+				$("#associated-categories-tree").find(":input[type=checkbox]").each(
+					function()
+					{
+						$(this).prop("checked", false);
+					}
+				);
+			}
+
+			$(document).ready(function () {
+				//$("#associated-categories-tree").tree("collapseAll");
+			});
+		</script>';
+		return $html;
 	}
 
 	public function ajaxProcessProductManufacturers()
@@ -2933,12 +3022,11 @@ class AdminProductsControllerCore extends AdminController
 
 		$tab_root = array('id_category' => $root->id, 'name' => $root->name);
 		$helper = new Helper();
-		$category_tree = $helper->renderCategoryTree($tab_root, $selected_cat, 'categoryBox', false, true, array(), false, true);
 		$data->assign(array('default_category' => $default_category,
 					'selected_cat_ids' => implode(',', array_keys($selected_cat)),
 					'selected_cat' => $selected_cat,
 					'id_category_default' => $product->getDefaultCategory(),
-					'category_tree' => $category_tree,
+					'category_tree' => $this->renderAssociationsCategoriesTree(),
 					'product' => $product,
 					'link' => $this->context->link,
 					'is_shop_context' => Shop::getContext() == Shop::CONTEXT_SHOP
