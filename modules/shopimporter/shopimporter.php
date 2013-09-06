@@ -434,7 +434,7 @@ class shopimporter extends ImportModule
 		if ((sizeof($rules['requiredLang']) || sizeof($rules['sizeLang']) || sizeof($rules['validateLang']) || Tools::isSubmit('syncLang') ||  Tools::isSubmit('syncCurrency')))
 		{
 			$moduleName = Tools::getValue('moduleName');
-			if (Validate::isModuleName($moduleName) && Validate::file_exists('../../modules/'.$moduleName.'/'.$moduleName.'.php'))
+			if (Validate::isModuleName($moduleName) && file_exists('../../modules/'.$moduleName.'/'.$moduleName.'.php'))
 			{
 				require_once('../../modules/'.$moduleName.'/'.$moduleName.'.php');
 				$importModule = new $moduleName();
@@ -959,7 +959,15 @@ class shopimporter extends ImportModule
 									c.id_parent = c2.`id_category_'.bqSQL($moduleName).'`
 									SET
 									c.id_parent = c2.id_category
-									WHERE c.`id_category_'.bqSQL($moduleName).'` != 0');
+									WHERE c.`id_category_'.bqSQL($moduleName).'` != 0
+									AND c.`id_parent` != 0');
+
+		// get PS home category
+		Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'category c
+									SET c.id_parent = '.Configuration::get('PS_HOME_CATEGORY').'
+									WHERE c.`id_category_'.bqSQL($moduleName).'` != 0
+									AND c.`id_parent` = 0');
+
 		$category = new Category();
 		$cats = $category->getSimpleCategories((int)Configuration::get('PS_LANG_DEFAULT'));
 		foreach($cats as $cat)

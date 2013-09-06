@@ -111,18 +111,22 @@ class LanguageCore extends ObjectModel
 		$iso_code = $newIso ? $newIso : $this->iso_code;
 
 		if (!file_exists(_PS_TRANSLATIONS_DIR_.$iso_code))
-			mkdir(_PS_TRANSLATIONS_DIR_.$iso_code);
+		{
+			if (@mkdir(_PS_TRANSLATIONS_DIR_.$iso_code))
+				@chmod(_PS_TRANSLATIONS_DIR_.$iso_code, 0777);
+		}
+
 		foreach ($this->translationsFilesAndVars as $file => $var)
 		{
 			$path_file = _PS_TRANSLATIONS_DIR_.$iso_code.'/'.$file.'.php';
 			if (!file_exists($path_file))
 				if ($file != 'tabs')
-					file_put_contents($path_file, '<?php
+					@file_put_contents($path_file, '<?php
 	global $'.$var.';
 	$'.$var.' = array();
 ?>');
 				else
-					file_put_contents($path_file, '<?php
+					@file_put_contents($path_file, '<?php
 	$'.$var.' = array();
 	return $'.$var.';
 ?>');
@@ -460,7 +464,8 @@ class LanguageCore extends ObjectModel
 				}
 			closedir($handle);
 		}
-		rmdir($dir);
+		if (is_writable($dir))
+			rmdir($dir);
 	}
 
 	public function delete()
@@ -783,13 +788,22 @@ class LanguageCore extends ObjectModel
 		$lang_pack_ok = false;
 		$errors = array();
 		$file = _PS_TRANSLATIONS_DIR_.$iso.'.gzip';
+
 		if (!$lang_pack_link = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.$version.'&iso_lang='.Tools::strtolower($iso)))
 			$errors[] = Tools::displayError('Archive cannot be downloaded from prestashop.com.');
 		elseif (!$lang_pack = Tools::jsonDecode($lang_pack_link))
 			$errors[] = Tools::displayError('Error occurred when language was checked according to your Prestashop version.');
 		elseif ($content = Tools::file_get_contents('http://translations.prestashop.com/download/lang_packs/gzip/'.$lang_pack->version.'/'.Tools::strtolower($lang_pack->iso_code.'.gzip')))
 			if (!@file_put_contents($file, $content))
-				$errors[] = Tools::displayError('Server does not have permissions for writing.');
+			{
+				if (is_writable(dirname($file)))
+				{
+					@unlink($file);
+					@file_put_contents($file, $content);
+				}
+				elseif (!is_writable($file))
+					$errors[] = Tools::displayError('Server does not have permissions for writing.').' ('.$file.')';
+			}
 		if (file_exists($file))
 		{
 			$gz = new Archive_Tar($file, true);

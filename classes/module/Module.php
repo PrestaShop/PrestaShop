@@ -1726,7 +1726,15 @@ abstract class ModuleCore
             <need_instance>'.(int)$this->need_instance.'</need_instance>'.(isset($this->limited_countries) ? "\n\t".'<limited_countries>'.(count($this->limited_countries) == 1 ? $this->limited_countries[0] : '').'</limited_countries>' : '').'
         </module>';
 		if (is_writable(_PS_MODULE_DIR_.$this->name.'/'))
-			file_put_contents(_PS_MODULE_DIR_.$this->name.'/config.xml', $xml);
+		{
+			$file = _PS_MODULE_DIR_.$this->name.'/config.xml';
+			if (!@file_put_contents($file, $xml))
+				if (!is_writable($file))
+				{
+					@unlink($file);
+					@file_put_contents($file, $xml);
+				}
+		}
 	}
 
 	/**

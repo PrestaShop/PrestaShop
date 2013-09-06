@@ -726,6 +726,8 @@ class AdminControllerCore extends Controller
 	 */
 	public function processAdd()
 	{
+		if (!isset($this->className) || empty($this->className))
+			return false;
 		/* Checking fields validity */
 		$this->validateRules();
 		if (count($this->errors) <= 0)
@@ -1142,6 +1144,8 @@ class AdminControllerCore extends Controller
 	 */
 	protected function loadObject($opt = false)
 	{
+		if (!isset($this->className) || empty($this->className))
+			return true;
 		$id = (int)Tools::getValue($this->identifier);
 		if ($id && Validate::isUnsignedId($id))
 		{
@@ -1540,10 +1544,13 @@ class AdminControllerCore extends Controller
 			file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, Tools::addonsRequest('native'));
 		
 		$country_module_list_xml = simplexml_load_file(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
+		if($country_module_list_xml === TRUE)
+		{
 			$country_module_list = array();
 			foreach ($country_module_list_xml->module as $k => $m)
 				$country_module_list[] = (string)$m->name;
-		$this->tab_modules_list['slider_list'] = array_intersect($this->tab_modules_list['slider_list'], $country_module_list);
+			$this->tab_modules_list['slider_list'] = array_intersect($this->tab_modules_list['slider_list'], $country_module_list);
+		}
 		
 		if (is_array($this->tab_modules_list['slider_list']) && count($this->tab_modules_list['slider_list']))
 			$this->toolbar_btn['modules-list'] = array(
@@ -2400,7 +2407,7 @@ class AdminControllerCore extends Controller
 	public function getFieldValue($obj, $key, $id_lang = null)
 	{
 		if ($id_lang)
-			$default_value = ($obj->id && isset($obj->{$key}[$id_lang])) ? $obj->{$key}[$id_lang] : false;
+			$default_value = (isset($obj->id) && $obj->id && isset($obj->{$key}[$id_lang])) ? $obj->{$key}[$id_lang] : false;
 		else
 			$default_value = isset($obj->{$key}) ? $obj->{$key} : false;
 
