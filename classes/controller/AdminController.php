@@ -1539,24 +1539,23 @@ class AdminControllerCore extends Controller
 	
 	protected function addToolBarModulesListButton()
 	{
-		
 		if (!$this->isFresh(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 86400))
 			file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, Tools::addonsRequest('native'));
 		
-		$country_module_list_xml = simplexml_load_file(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
-		if($country_module_list_xml === TRUE)
+		$country_module_list = file_get_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
+		if (!empty($country_module_list) && $country_module_list_xml = simplexml_load_string($country_module_list))
 		{
-			$country_module_list = array();
+			$country_module_list_array = array();
 			foreach ($country_module_list_xml->module as $k => $m)
-				$country_module_list[] = (string)$m->name;
-			$this->tab_modules_list['slider_list'] = array_intersect($this->tab_modules_list['slider_list'], $country_module_list);
+				$country_module_list_array[] = (string)$m->name;
+			$this->tab_modules_list['slider_list'] = array_intersect($this->tab_modules_list['slider_list'], $country_module_list_array);
 		}
 		
 		if (is_array($this->tab_modules_list['slider_list']) && count($this->tab_modules_list['slider_list']))
 			$this->toolbar_btn['modules-list'] = array(
-					'href' => '#',
-					'desc' => $this->l('Modules List')
-				);
+				'href' => '#',
+				'desc' => $this->l('Modules List')
+			);
 	}
 
 	/**
@@ -2946,21 +2945,17 @@ class AdminControllerCore extends Controller
 
 	public function isFresh($file, $timeout = 604800000)
 	{
-		if (file_exists(_PS_ROOT_DIR_.$file))
-		{
-			if (filesize(_PS_ROOT_DIR_.$file) < 1)
-				return false;
+		if (file_exists(_PS_ROOT_DIR_.$file) && filesize(_PS_ROOT_DIR_.$file) > 0)
 			return ((time() - filemtime(_PS_ROOT_DIR_.$file)) < $timeout);
-		}
-		else
-			return false;
+		return false;
 	}
 
+	protected static $is_prestashop_up = true;
 	public function refresh($file_to_refresh, $external_file)
 	{
-		$content = Tools::file_get_contents($external_file);
-		if ($content)
+		if (self::$is_prestashop_up && $content = Tools::file_get_contents($external_file))
 			return (bool)file_put_contents(_PS_ROOT_DIR_.$file_to_refresh, $content);
+		self::$is_prestashop_up = false;
 		return false;
 	}
 	
