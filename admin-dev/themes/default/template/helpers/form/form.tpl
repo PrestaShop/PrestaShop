@@ -232,23 +232,14 @@
 									{foreach $input.values as $value}
 										
 										<div class="radio {if isset($input.class)}"{$input.class}"{/if}">
-											<div class="label">
+											<label>
 											<input type="radio"	name="{$input.name}"id="{$value.id}" value="{$value.value|escape:'htmlall':'UTF-8'}"
 												{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
 												{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if} />
-											 {if isset($input.is_bool) && $input.is_bool == true}
-												{if $value.value == 1}
-													<img src="../img/admin/enabled.gif" alt="{$value.label}" title="{$value.label}" />
-												{else}
-													<img src="../img/admin/disabled.gif" alt="{$value.label}" title="{$value.label}" />
-												{/if}
-											 {else}
 												{$value.label}
-											{/if}
-											</div>
+											</label>
 										</div>
-										{*if isset($input.br) && $input.br}<br />{/if*}
-										{*if isset($value.p) && $value.p}<p>{$value.p}</p>{/if*}
+										{if isset($value.p) && $value.p}<p class="help-block">{$value.p}</p>{/if}
 									{/foreach}
 								{elseif $input.type == 'switch'}
 									<div class="row">
