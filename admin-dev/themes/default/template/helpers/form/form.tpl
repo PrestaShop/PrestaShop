@@ -509,7 +509,6 @@
 {/if*} -->
 		</fieldset>
 		{block name="other_fieldsets"}{/block}
-		{if isset($fields[$f+1])}<br />{/if}
 	{/foreach}
 </form>
 {/block}
