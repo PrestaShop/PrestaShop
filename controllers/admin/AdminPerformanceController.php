@@ -50,7 +50,6 @@ class AdminPerformanceControllerCore extends AdminController
 					'type' => 'radio',
 					'label' => $this->l('Template cache'),
 					'name' => 'smarty_force_compile',
-					'br' => true,
 					'values' => array(
 						array(
 							'id' => 'smarty_force_compile_'._PS_SMARTY_NO_COMPILE_,
@@ -95,7 +94,6 @@ class AdminPerformanceControllerCore extends AdminController
 					'type' => 'radio',
 					'label' => $this->l('Debug console'),
 					'name' => 'smarty_console',
-					'br' => true,
 					'values' => array(
 						array(
 							'id' => 'smarty_console_none',
@@ -120,8 +118,7 @@ class AdminPerformanceControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Debug console Key'),
 					'name' => 'smarty_console_key',
-					'size' => 30,
-					'desc' => $this->l('SMARTY_DEBUG parameter in the URL.')
+					'hint' => $this->l('SMARTY_DEBUG parameter in the URL.')
 				),
 			)
 		);
@@ -208,7 +205,6 @@ class AdminPerformanceControllerCore extends AdminController
 					'type' => 'switch',
 					'label' => $this->l('Smart cache for CSS'),
 					'name' => 'PS_CSS_THEME_CACHE',
-					'br' => true,
 					'values' => array(
 						array(
 							'id' => 'PS_CSS_THEME_CACHE_1',
@@ -226,7 +222,6 @@ class AdminPerformanceControllerCore extends AdminController
 					'type' => 'switch',
 					'label' => $this->l('Smart cache for JavaScript'),
 					'name' => 'PS_JS_THEME_CACHE',
-					'br' => true,
 					'values' => array(
 						array(
 							'id' => 'PS_JS_THEME_CACHE_1',
@@ -244,7 +239,6 @@ class AdminPerformanceControllerCore extends AdminController
 					'type' => 'switch',
 					'label' => $this->l('Minify HTML'),
 					'name' => 'PS_HTML_THEME_COMPRESSION',
-					'br' => true,
 					'values' => array(
 						array(
 							'id' => 'PS_HTML_THEME_COMPRESSION_1',
@@ -262,7 +256,6 @@ class AdminPerformanceControllerCore extends AdminController
 					'type' => 'switch',
 					'label' => $this->l('Compress inline JavaScript in HTML'),
 					'name' => 'PS_JS_HTML_THEME_COMPRESSION',
-					'br' => true,
 					'values' => array(
 						array(
 							'id' => 'PS_JS_HTML_THEME_COMPRESSION_1',
@@ -281,7 +274,6 @@ class AdminPerformanceControllerCore extends AdminController
 					'label' => $this->l('Apache optimization'),
 					'name' => 'PS_HTACCESS_CACHE_CONTROL',
 					'hint' => $this->l('This will add directives to your .htaccess file, which should improve caching and compression.'),
-					'is_bool' => true,
 					'values' => array(
 						array(
 							'id' => 'PS_HTACCESS_CACHE_CONTROL_1',
@@ -352,7 +344,7 @@ class AdminPerformanceControllerCore extends AdminController
 				'title' => $this->l('Ciphering'),
 				'icon' => 'icon-desktop'
 			),
-			'desc' => $this->l('Mcrypt is faster than our custom BlowFish class, but requires the PHP extension "mcrypt". If you change this configuration, all cookies will be reset.'),
+			'hint' => $this->l('Mcrypt is faster than our custom BlowFish class, but requires the PHP extension "mcrypt". If you change this configuration, all cookies will be reset.'),
 			'input' => array(
 				array(
 					'type' => 'hidden',
@@ -362,7 +354,6 @@ class AdminPerformanceControllerCore extends AdminController
 					'type' => 'radio',
 					'label' => $this->l('Algorithm'),
 					'name' => 'PS_CIPHER_ALGORITHM',
-					'br' => true,
 					'values' => array(
 						array(
 							'id' => 'PS_CIPHER_ALGORITHM_1',
