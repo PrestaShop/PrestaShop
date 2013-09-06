@@ -44,20 +44,22 @@
 
 <script type="text/javascript">
     var placeholder = "{l s='your e-mail' mod='blocknewsletter' js=1}";
-    {literal}
-        $(document).ready(function() {
-            $('#newsletter-input').on({
-                focus: function() {
-                    if ($(this).val() == placeholder) {
+        $(document).ready(function() {ldelim}
+            $('#newsletter-input').on({ldelim}
+                focus: function() {ldelim}
+                    if ($(this).val() == placeholder) {ldelim}
                         $(this).val('');
-                    }
-                },
-                blur: function() {
-                    if ($(this).val() == '') {
+                    {rdelim}
+                {rdelim},
+                blur: function() {ldelim}
+                    if ($(this).val() == '') {ldelim}
                         $(this).val(placeholder);
-                    }
-                }
-            });
+                    {rdelim}
+                {rdelim}
+            {rdelim});
+
+            {if isset($msg)}
+                $('#columns').before('<div class="clearfix"></div><p class="{if $nw_error}warning{else}success{/if}">{l s="Newsletter:" js=1 mod="blocknewsletter"} {$msg}</p>');
+            {/if}
         });
-    {/literal}
 </script>

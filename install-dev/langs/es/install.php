@@ -1,8 +1,9 @@
 <?php
 return array(
 	'informations' => array(
-		'phone' => '+1 (888) 947-6543',
-		'support' => 'https://www.prestashop.com/es/support',
+		'phone' => '+34 917.872.909',
+        'support' => 'https://www.prestashop.com/es/support',
+        'blog' => 'http://www.prestashop.com/blog/es/'
 	),
 	'translations' => array(
 		'menu_welcome' => 'Elegir el idioma',
@@ -205,7 +206,7 @@ return array(
 		'Print my login information' => 'Imprimir la información e inicio de sesión',
 		'We are currently checking PrestaShop compatibility with your system environment' => 'Verificamos en este momento la compatibilidad de PrestaShop con tu entorno del sistema',
 		'Oops! Please correct the item(s) below, and then click "Refresh information" to test the compatibility of your new system.' => '¡Uups! Por favor corrija los siguientes puntos marcados como errores y después hacer Clic en el botón "Actualizar esta información" con el fin de probar de nuevo la compatibilidad de tu sistema.',
-		'The installation of PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 130,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'La instalación de PrestaShop es rápida y fácil. En solo unos minutos, podrás unirte a una comunidad de más de 130.000 comerciantes electrónicos. Así podrás crear tu propia tienda Online con tu imagen corporativa y administrarla a diario de forma muy sencilla.',
+		'The installation of PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 150,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'La instalación de PrestaShop es rápida y fácil. En solo unos minutos, podrás unirte a una comunidad de más de 150.000 comerciantes electrónicos. Así podrás crear tu propia tienda Online con tu imagen corporativa y administrarla a diario de forma muy sencilla.',
 		'Continue the installation in:' => 'Continuar la instalación en:',
 		'The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d translations, all for free!' => 'La elección del idioma se realiza sólo al inicio y se aplica al asistente de instalación. Una vez que tu tienda Online está instalada, podrás elegir el idioma de tu tienda, ¡entre las más de %d traducciones disponibles, ¡todas ellas de forma gratuitas!',
 		'The field %s is limited to %d characters' => 'El campo %s está limitado a %d caracteres',
@@ -234,5 +235,16 @@ return array(
 		'PrestaShop compatibility with your system environment has been verified!' => '¡La compatibilidad de PrestaShop con su entorno del sistema ha sido verificada correctamente!',
 		'PrestaShop requires at least 32M of memory to run, please check the memory_limit directive in php.ini or contact your host provider' => 'PrestaShop requiere al menos 32MB de memoria para funcionar, por favor verifica la directiva memory_limit que se encuentra en el fichero php.ini o contacta con su proveedor de alojamiento',
 		'Your PHP sessions path is not writable - check with your hosting provider:' => 'El fichero de almacenamiento no está disponible en modo escritura, consulte con su proveedor de alojamiento',
+		'Database is created' => 'Base de datos se creada',
+		'Cannot create the database automatically' => 'No se puede crear la base de datos automáticamente',
+		'Install modules Addons' => 'Instalar módulos Addons',
+		'Attempt to create the database automatically' => 'Tentativa de crear la base de datos automáticamente',
+		'Country:' => 'País:',
+		'Must be letters and numbers with at least 8 characters' => 'Deben ser letras y números con un mínimo de 8 caracteres',
+		'To install PrestaShop, you need to have JavaScript enabled in your browser.' => 'Para instalar PrestaShop, usted necesita tener el Javascript activado en su navegador.',
+		'http://doc.prestashop.com/display/PS15/What+you+need+to+get+started#HowtoenableJavaScript-HowtoenableJavaScript' => 'http://doc.prestashop.com/display/PS15/What+you+need+to+get+started#HowtoenableJavaScript-HowtoenableJavaScript',
+		'To enjoy the many features that are offered for free by PrestaShop, please read the license terms below. PrestaShop core is licensed under OSL 3.0, while the modules and themes are licensed under AFL 3.0.' => 'Para disfrutar de las numerosas funcionalidades ofrecidas de forma gratuita por PrestaShop, por favor lea los términos de la licencia a continuación. Core PrestaShop está disponible bajo la licencia OSL 3.0, mientras que los módulos y los temas están licenciados bajo la AFL 3.0.',
+		'For security purposes, you must delete the "install" folder.' => 'Por razones de seguridad, debe eliminar la carpeta "install".',
+		'http://doc.prestashop.com/display/PS15/Installing+PrestaShop#InstallingPrestaShop-Completingtheinstallation' => 'http://doc.prestashop.com/display/PS15/Installing+PrestaShop#InstallingPrestaShop-Completingtheinstallation',
 	),
 );

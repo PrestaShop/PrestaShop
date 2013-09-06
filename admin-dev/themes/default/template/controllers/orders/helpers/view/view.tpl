@@ -170,9 +170,9 @@
 					{l s='Account registered:'} <b>{dateFormat date=$customer->date_add full=true}</b><br />
 					{l s='Valid orders placed:'} <b>{$customerStats['nb_orders']}</b><br />
 					{l s='Total spent since registration:'} <b>{displayPrice price=Tools::ps_round(Tools::convertPrice($customerStats['total_orders'], $currency), 2) currency=$currency->id}</b><br />
-			</fieldset>
 				{/if}
 			{/if}
+			</fieldset>
 
 			<!-- Sources block -->
 			{if (sizeof($sources))}
@@ -592,6 +592,7 @@
 						<th>{l s='Product'}</th>
 						<th style="width: 15%; text-align: center">{l s='Unit Price'} <sup>*</sup></th>
 						<th style="width: 4%; text-align: center">{l s='Qty'}</th>
+						{if $display_warehouse}<th style="text-align: center">{l s='Warehouse'}</th>{/if}
 						{if ($order->hasBeenPaid())}<th style="width: 3%; text-align: center">{l s='Refunded'}</th>{/if}
 						{if ($order->hasBeenDelivered() || $order->hasProductReturned())}<th style="width: 3%; text-align: center">{l s='Returned'}</th>{/if}
 						{if $stock_management}<th style="width: 10%; text-align: center">{l s='Available quantity'}</th>{/if}

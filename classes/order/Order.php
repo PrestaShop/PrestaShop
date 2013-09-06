@@ -254,10 +254,12 @@ class OrderCore extends ObjectModel
 	public function __construct($id = null, $id_lang = null)
 	{
 		parent::__construct($id, $id_lang);
-		if ($this->id_customer)
+
+		$is_admin = (is_object(Context::getContext()->controller) && Context::getContext()->controller->controller_type == 'admin');
+		if ($this->id_customer && !$is_admin)
 		{
 			$customer = new Customer((int)($this->id_customer));
-			$this->_taxCalculationMethod = Group::getPriceDisplayMethod((int)($customer->id_default_group));
+			$this->_taxCalculationMethod = Group::getPriceDisplayMethod((int)$customer->id_default_group);
 		}
 		else
 			$this->_taxCalculationMethod = Group::getDefaultPriceDisplayMethod();
@@ -710,11 +712,10 @@ class OrderCore extends ObjectModel
 	}
 
 	public function getCartRules()
-	{
+	{	
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'order_cart_rule` ocr
-		LEFT JOIN `'._DB_PREFIX_.'cart_rule` cr ON cr.`id_cart_rule` = ocr.`id_cart_rule`
 		WHERE ocr.`id_order` = '.(int)$this->id);
 	}
 

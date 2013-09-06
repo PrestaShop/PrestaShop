@@ -173,13 +173,13 @@ class HelperListCore extends Helper
 
 	public function displayListContent()
 	{
-		if ($this->position_identifier)
-			$id_category = (int)Tools::getValue('id_'.($this->is_cms ? 'cms_' : '').'category', ($this->is_cms ? '1' : Category::getRootCategory()->id ));
-		else
-			$id_category = Category::getRootCategory()->id;
-
 		if (isset($this->fields_list['position']))
 		{
+			if ($this->position_identifier)
+				$id_category = (int)Tools::getValue('id_'.($this->is_cms ? 'cms_' : '').'category', ($this->is_cms ? '1' : Category::getRootCategory()->id ));
+			else
+				$id_category = Category::getRootCategory()->id;
+
 			$positions = array_map(create_function('$elem', 'return (int)($elem[\'position\']);'), $this->_list);
 			sort($positions);
 		}
@@ -259,7 +259,7 @@ class HelperListCore extends Helper
 						$path_to_image = _PS_IMG_DIR_.$params['image'].'/'.$item_id.(isset($tr['id_image']) ? '-'.(int)$tr['id_image'] : '').'.'.$this->imageType;
 					else
 						$path_to_image = _PS_IMG_DIR_.$params['image'].'/'.Image::getImgFolderStatic($tr['id_image']).(int)$tr['id_image'].'.'.$this->imageType;
-					$this->_list[$index][$key] = ImageManager::thumbnail($path_to_image, $this->table.'_mini_'.$item_id.'.'.$this->imageType, 45, $this->imageType);
+					$this->_list[$index][$key] = ImageManager::thumbnail($path_to_image, $this->table.'_mini_'.$item_id.'_'.$this->context->shop->id.'.'.$this->imageType, 45, $this->imageType);
 				}
 				elseif (isset($params['icon']) && isset($tr[$key]) && (isset($params['icon'][$tr[$key]]) || isset($params['icon']['default'])))
 				{
@@ -307,7 +307,7 @@ class HelperListCore extends Helper
 			'table' => $this->table,
 			'token' => $this->token,
 			'color_on_bg' => $this->colorOnBackground,
-			'id_category' => $id_category,
+			'id_category' => isset($id_category) ? $id_category : false,
 			'bulk_actions' => $this->bulk_actions,
 			'positions' => isset($positions) ? $positions : null,
 			'order_by' => $this->orderBy,
@@ -456,7 +456,7 @@ class HelperListCore extends Helper
 		);
 		
 		if ($this->specificConfirmDelete !== false)
-			$data['confirm'] = !is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : self::$cache_lang['DeleteItem'].$name;
+			$data['confirm'] = !is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : addcslashes(Tools::htmlentitiesDecodeUTF8(self::$cache_lang['DeleteItem'].$name), '\'');
 		
 		$tpl->assign(array_merge($this->tpl_delete_link_vars, $data));
 
@@ -486,18 +486,21 @@ class HelperListCore extends Helper
 	 */
 	public function displayListHeader()
 	{
+		if (!isset($this->list_id))
+			$this->list_id = $this->table;
+
 		$id_cat = (int)Tools::getValue('id_'.($this->is_cms ? 'cms_' : '').'category');
 
 		if (!isset($token) || empty($token))
 			$token = $this->token;
 
 		/* Determine total page number */
-		if (isset($this->context->cookie->{$this->table.'_pagination'}) && $this->context->cookie->{$this->table.'_pagination'})
-			$default_pagination = $this->context->cookie->{$this->table.'_pagination'};
+		if (isset($this->context->cookie->{$this->list_id.'_pagination'}) && $this->context->cookie->{$this->list_id.'_pagination'})
+			$default_pagination = $this->context->cookie->{$this->list_id.'_pagination'};
 		else
 			$default_pagination = $this->_pagination[0];
 
-		$total_pages = ceil($this->listTotal / Tools::getValue('pagination', ($default_pagination)));
+		$total_pages = ceil($this->listTotal / Tools::getValue($this->list_id.'_pagination', ($default_pagination)));
 
 		if (!$total_pages) 
 			$total_pages = 1;
@@ -510,14 +513,13 @@ class HelperListCore extends Helper
 		$action = $this->currentIndex.$identifier.'&token='.$token.$order.'#'.$this->table;
 
 		/* Determine current page number */
-		$page = (int)Tools::getValue('submitFilter'.$this->table);
+		$page = (int)Tools::getValue('submitFilter'.$this->list_id);
 		if (!$page)
 			$page = 1;
 
 		/* Choose number of results per page */
-		$selected_pagination = Tools::getValue(
-			'pagination',
-			isset($this->context->cookie->{$this->table.'_pagination'}) ? $this->context->cookie->{$this->table.'_pagination'} : null
+		$selected_pagination = Tools::getValue($this->list_id.'_pagination',
+			isset($this->context->cookie->{$this->list_id.'_pagination'}) ? $this->context->cookie->{$this->list_id.'_pagination'} : null
 		);
 
 		// Cleaning links
@@ -535,7 +537,7 @@ class HelperListCore extends Helper
 		{
 			if (!isset($params['type']))
 				$params['type'] = 'text';
-			$value = Context::getContext()->cookie->{$prefix.$this->table.'Filter_'.(array_key_exists('filter_key', $params) && $key != 'active' ? $params['filter_key'] : $key)};
+			$value = Context::getContext()->cookie->{$prefix.$this->list_id.'Filter_'.(array_key_exists('filter_key', $params) && $key != 'active' ? $params['filter_key'] : $key)};
 			switch ($params['type'])
 			{
 				case 'bool':
@@ -547,7 +549,7 @@ class HelperListCore extends Helper
 						$value = Tools::unSerialize($value);
 					if (!Validate::isCleanHtml($value[0]) || !Validate::isCleanHtml($value[1]))
 						$value = '';
-					$name = $this->table.'Filter_'.(isset($params['filter_key']) ? $params['filter_key'] : $key);
+					$name = $this->list_id.'Filter_'.(isset($params['filter_key']) ? $params['filter_key'] : $key);
 					$name_id = str_replace('!', '__', $name);
 
 					$params['id_date'] = $name_id;
@@ -559,9 +561,9 @@ class HelperListCore extends Helper
 				case 'select':
 					foreach ($params['list'] as $option_value => $option_display)
 					{
-						if (isset(Context::getContext()->cookie->{$prefix.$this->table.'Filter_'.$params['filter_key']})
-							&& Context::getContext()->cookie->{$prefix.$this->table.'Filter_'.$params['filter_key']} == $option_value
-							&& Context::getContext()->cookie->{$prefix.$this->table.'Filter_'.$params['filter_key']} != '')
+						if (isset(Context::getContext()->cookie->{$prefix.$this->list_id.'Filter_'.$params['filter_key']})
+							&& Context::getContext()->cookie->{$prefix.$this->list_id.'Filter_'.$params['filter_key']} == $option_value
+							&& Context::getContext()->cookie->{$prefix.$this->list_id.'Filter_'.$params['filter_key']} != '')
 							$this->fields_list[$key]['select'][$option_value]['selected'] = 'selected';
 					}
 					break;
@@ -605,6 +607,7 @@ class HelperListCore extends Helper
 			'name' => isset($name) ? $name : null,
 			'name_id' => isset($name_id) ? $name_id : null,
 			'row_hover' => $this->row_hover,
+			'list_id' => isset($this->list_id) ? $this->list_id : $this->table
 		)));
 
 		return $this->header_tpl->fetch();

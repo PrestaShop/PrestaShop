@@ -368,11 +368,14 @@ class InstallModelInstall extends InstallAbstractModel
 	public function configureShop(array $data = array())
 	{
 		// Clear smarty cache
-		$this->clearSmartyCache();
-		
+		Tools::clearSmartyCache();
+
 		//clear image cache in tmp folder
-		Tools::deleteDirectory(_PS_TMP_IMG_DIR_, false);
-		
+		if (file_exists(_PS_TMP_IMG_DIR_))
+			foreach (scandir(_PS_TMP_IMG_DIR_) as $file)
+				if ($file[0] != '.' && $file != 'index.php')
+					Tools::deleteDirectory(_PS_TMP_IMG_DIR_.DIRECTORY_SEPARATOR.$file);
+
 		$default_data = array(
 			'shop_name' =>		'My Shop',
 			'shop_activity' =>	'',
@@ -395,7 +398,7 @@ class InstallModelInstall extends InstallAbstractModel
 
 		// use the old image system if the safe_mod is enabled otherwise the installer will fail with the fixtures installation
 		if (InstallSession::getInstance()->safe_mode)
-			Configuration::updateGlobalValue('PS_LEGACY_IMAGES', 				1);
+			Configuration::updateGlobalValue('PS_LEGACY_IMAGES', 1);
 	
 		$id_country = Country::getByIso($data['shop_country']);
 
@@ -494,18 +497,6 @@ class InstallModelInstall extends InstallAbstractModel
 		return true;
 	}
 
-	/**
-	 * Clear smarty cache folders
-	 */
-	public function clearSmartyCache()
-	{
-		foreach (array(_PS_CACHE_DIR_.'smarty/cache', _PS_CACHE_DIR_.'smarty/compile') as $dir)
-			if (file_exists($dir))
-				foreach (scandir($dir) as $file)
-					if ($file[0] != '.' && $file != 'index.php')
-						@unlink($dir.$file);
-	}
-
 	public function getModulesList()
 	{
 		// @todo REMOVE DEV MODE
@@ -551,7 +542,6 @@ class InstallModelInstall extends InstallAbstractModel
 				'blockviewed',
 				'cheque',
 				'favoriteproducts',
-				'feeder',
 				'graphartichow',
 				'graphgooglechart',
 				'graphvisifire',
@@ -661,13 +651,40 @@ class InstallModelInstall extends InstallAbstractModel
 	 * PROCESS : installFixtures
 	 * Install fixtures (E.g. demo products)
 	 */
-	public function installFixtures($entity = null)
+	public function installFixtures($entity = null, array $data = array())
 	{
-		// Load class (use fixture class if one exists, or use InstallXmlLoader)
-		if (file_exists(_PS_INSTALL_FIXTURES_PATH_.'apple/install.php'))
+		$fixtures_path = _PS_INSTALL_FIXTURES_PATH_.'apple/';
+		$fixtures_name = 'apple';
+		$zip_file = _PS_ROOT_DIR_.'/download/fixtures.zip';
+		$temp_dir = _PS_ROOT_DIR_.'/download/fixtures/';
+
+		// try to download fixtures if no low memory mode
+		if ($entity === null)
 		{
-			require_once _PS_INSTALL_FIXTURES_PATH_.'apple/install.php';
-			$class = 'InstallFixtures'.Tools::toCamelCase('apple');
+			if (Tools::copy('http://api.prestashop.com/fixtures/'.$data['shop_country'].'/'.$data['shop_activity'].'/fixtures.zip', $zip_file))
+			{
+				Tools::deleteDirectory($temp_dir, true);
+				if (Tools::ZipTest($zip_file))
+					if (Tools::ZipExtract($zip_file, $temp_dir))
+					{
+						$files = scandir($temp_dir);
+						if (count($files))
+							foreach ($files as $file)
+								if (!preg_match('/^\./', $file) && is_dir($temp_dir.$file.'/'))
+								{
+									$fixtures_path = $temp_dir.$file.'/';
+									$fixtures_name = $file;
+									break;
+								}
+					}
+			}
+		}
+
+		// Load class (use fixture class if one exists, or use InstallXmlLoader)
+		if (file_exists($fixtures_path.'/install.php'))
+		{
+			require_once $fixtures_path.'/install.php';
+			$class = 'InstallFixtures'.Tools::toCamelCase($fixtures_name);
 			if (!class_exists($class, false))
 			{
 				$this->setError($this->language->l('Fixtures class "%s" not found', $class));
@@ -685,7 +702,7 @@ class InstallModelInstall extends InstallAbstractModel
 			$xml_loader = new InstallXmlLoader();
 
 		// Install XML data (data/xml/ folder)
-		$xml_loader->setFixturesPath();
+		$xml_loader->setFixturesPath($fixtures_path);
 		if (isset($this->xml_loader_ids) && $this->xml_loader_ids)
 			$xml_loader->setIds($this->xml_loader_ids);
 
@@ -697,7 +714,11 @@ class InstallModelInstall extends InstallAbstractModel
 		if ($entity)
 			$xml_loader->populateEntity($entity);
 		else
+		{
 			$xml_loader->populateFromXmlFiles();
+			Tools::deleteDirectory($temp_dir, true);
+			@unlink($zip_file);
+		}
 
 		if ($errors = $xml_loader->getErrors())
 		{

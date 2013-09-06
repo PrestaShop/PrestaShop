@@ -90,7 +90,15 @@ if (!isset($_SERVER['HTTP_HOST']) || empty($_SERVER['HTTP_HOST']))
 $context = Context::getContext();
 
 /* Initialize the current Shop */
-$context->shop = Shop::initialize();
+try 
+{
+	$context->shop = Shop::initialize();
+}
+catch (PrestaShopException $e)
+{
+	$e->displayMessage();
+}
+
 define('_THEME_NAME_', $context->shop->getTheme());
 define('__PS_BASE_URI__', $context->shop->getBaseURI());
 

@@ -126,18 +126,29 @@ function updateCurrentText()
 {
 	$('#current_product').html($('#name_' + id_language).val());
 }
+
 function updateFriendlyURLByName()
 {
 	$('#link_rewrite_' + id_language).val(str2url($('#name_' + id_language).val(), 'UTF-8'));
 	$('#friendly-url').html($('#link_rewrite_' + id_language).val());
 }
+
 function updateFriendlyURL()
 {
 	var link = $('#link_rewrite_' + id_language);
 	if (link[0])
 	{
+		$('#friendly-url').text(str2url($('#link_rewrite_' + id_language).val(), 'UTF-8'));
+	}
+}
+
+function updateLinkRewrite()
+{
+	var link = $('#link_rewrite_' + id_language);
+	if (link[0])
+	{
 		link.val(str2url($('#link_rewrite_' + id_language).val(), 'UTF-8'));
-		$('#seo #friendly-url').text(link.val());
+		$('#friendly-url').text(link.val());
 	}
 }
 
@@ -172,10 +183,15 @@ function changeFormLanguage(id_language_new, iso_code, employee_cookie)
 
 	// For multishop checkboxes
 	$('.multishop_lang_'+id_language_new).show().siblings('div[class^=\'multishop_lang_\']').hide();
-
 	$('.language_flags').hide();
 	if (employee_cookie)
-		$.post("ajax.php", { form_language_id: id_language_new });
+		$.post("index.php", {
+			action: 'formLanguage', 
+			tab: 'AdminEmployees',
+			ajax: 1,
+			token: employee_token,
+			form_language_id: id_language_new 
+		});
 	id_language = id_language_new;
 
 	updateCurrentText();
@@ -211,7 +227,7 @@ function displayFlags(languages, defaultLanguageID, employee_cookie)
 				$.each(languages, function(key, language) {
 					var img = $('<img>')
 						.addClass('pointer')
-						.css('margin', '0 2px')
+						.css('margin', '2px 2px')
 						.attr('src', '../img/l/' + language['id_lang'] + '.jpg')
 						.attr('alt', language['name'])
 						.click(function() {

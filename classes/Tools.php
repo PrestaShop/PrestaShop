@@ -343,8 +343,8 @@ class ToolsCore
 				$cookie->id_lang = null;
 		}
 
-		/* Automatically detect language if not already defined */
-		if (!$cookie->id_lang && isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
+		/* Automatically detect language if not already defined, detect_language is set in Cookie::update */
+		if ((!$cookie->id_lang || isset($cookie->detect_language)) && isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
 		{
 			$array = explode(',', Tools::strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
 			if (Tools::strlen($array[0]) > 2)
@@ -358,9 +358,17 @@ class ToolsCore
 			{
 				$lang = new Language(Language::getIdByIso($string));
 				if (Validate::isLoadedObject($lang) && $lang->active)
+				{				
+					$language = new Language((int)$lang->id);
+					if (Validate::isLoadedObject($language))
+						Context::getContext()->language = $language;				
 					$cookie->id_lang = (int)$lang->id;
+				}					
 			}
 		}
+		
+		if (isset($cookie->detect_language))
+			unset($cookie->detect_language);
 
 		/* If language file not present, you must use default language file */
 		if (!$cookie->id_lang || !Validate::isUnsignedId($cookie->id_lang))
@@ -696,6 +704,18 @@ class ToolsCore
 			}
         return false;
     }
+    
+	/**
+	* Clear smarty cache folders
+ 	*/
+	public static function clearSmartyCache()
+	{
+		foreach (array(_PS_CACHE_DIR_.'smarty/cache', _PS_CACHE_DIR_.'smarty/compile') as $dir)
+			if (file_exists($dir))
+				foreach (scandir($dir) as $file)
+					if ($file[0] != '.' && $file != 'index.php')
+						self::deleteDirectory($dir.DIRECTORY_SEPARATOR.$file);
+	}   
 
 	/**
 	* Display an error according to an error code
@@ -767,6 +787,33 @@ class ToolsCore
 	public static function d($object, $kill = true)
 	{
 		return (Tools::dieObject($object, $kill));
+	}
+	
+	public static function debug_backtrace($start = 0, $limit = null)
+	{
+		$backtrace = debug_backtrace();
+		array_shift($backtrace);
+		for ($i = 0; $i < $start; ++$i)
+			array_shift($backtrace);
+		
+		echo '
+		<div style="margin:10px;padding:10px;border:1px solid #666666">
+			<ul>';
+		$i = 0;
+		foreach ($backtrace as $id => $trace)
+		{
+			if ((int)$limit && (++$i > $limit ))
+				break;
+			$relative_file = (isset($trace['file'])) ? 'in /'.ltrim(str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $trace['file']), '/') : '';
+			$current_line = (isset($trace['line'])) ? ':'.$trace['line'] : '';
+
+			echo '<li>
+				<b>'.((isset($trace['class'])) ? $trace['class'] : '').((isset($trace['type'])) ? $trace['type'] : '').$trace['function'].'</b>
+				'.$relative_file.$current_line.'
+			</li>';
+		}
+		echo '</ul>
+		</div>';
 	}
 
 	/**
@@ -1387,13 +1434,13 @@ class ToolsCore
 
 	/**
 	* Translates a string with underscores into camel case (e.g. first_name -> firstName)
-	* @prototype string public static function toCamelCase(string $str[, bool $catapitalise_first_char = false])
+	* @prototype string public static function toCamelCase(string $str[, bool $capitalise_first_char = false])
 	*/
 	public static function toCamelCase($str, $catapitalise_first_char = false)
 	{
-		$str = strtolower($str);
+		$str = Tools::strtolower($str);
 		if ($catapitalise_first_char)
-			$str = ucfirst($str);
+			$str = Tools::ucfirst($str);
 		return preg_replace_callback('/_+([a-z])/', create_function('$c', 'return strtoupper($c[1]);'), $str);
 	}
 
@@ -1628,6 +1675,9 @@ class ToolsCore
 
 		// RewriteEngine
 		fwrite($write_fd, "<IfModule mod_rewrite.c>\n");
+
+		// Ensure HTTP_MOD_REWRITE variable is set in environment
+		fwrite($write_fd, "SetEnv HTTP_MOD_REWRITE On\n");
 
 		// Disable multiviews ?
 		if ($disable_multiviews)
@@ -2127,6 +2177,9 @@ exit;
 		}
 	}
 
+	/**
+	* @deprecated as of 1.5 use Controller::getController('PageNotFoundController')->run();
+   	*/
 	public static function display404Error()
 	{
 		header('HTTP/1.1 404 Not Found');
@@ -2427,91 +2480,83 @@ exit;
 			return $pattern;
 		return preg_replace('/\\\[px]\{[a-z]\}{1,2}|(\/[a-z]*)u([a-z]*)$/i', "$1$2", $pattern);
 	}
-	
+
+	protected static $is_addons_up = true;
 	public static function addonsRequest($request, $params = array())
 	{
-		$addons_url = 'api.addons.prestashop.com';
-		$postData = '';
-		$postDataArray = array(
+		if (!self::$is_addons_up)
+			return false;
+
+		$postData = http_build_query(array(
 			'version' => isset($params['version']) ? $params['version'] : _PS_VERSION_,
 			'iso_lang' => Tools::strtolower(isset($params['iso_lang']) ? $params['iso_lang'] : Context::getContext()->language->iso_code),
 			'iso_code' => Tools::strtolower(isset($params['iso_country']) ? $params['iso_country'] : Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))),
-			'shop_url' => urlencode(isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain()),
-			'mail' => urlencode(isset($params['email']) ? $params['email'] : Configuration::get('email'))
-		);
-		foreach ($postDataArray as $postDataKey => $postDataValue)
-			$postData .= '&'.$postDataKey.'='.$postDataValue;
-		$postData = ltrim($postData, '&');
+			'shop_url' => isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain(),
+			'mail' => isset($params['email']) ? $params['email'] : Configuration::get('email')
+		));
 
-		// Config for each request
-		if ($request == 'native')
+		$protocols = array('https');
+		switch ($request)
 		{
-			// Define protocol accepted and post data values for this request
-			$protocolsList = array('https://' => 443, 'http://' => 80);
-			$postData .= '&method=listing&action=native';
-		}
-		if ($request == 'must-have')
-		{
-			// Define protocol accepted and post data values for this request
-			$protocolsList = array('https://' => 443, 'http://' => 80);
-			$postData .= '&method=listing&action=must-have';
-		}
-		if ($request == 'customer')
-		{
-			// Define protocol accepted and post data values for this request
-			$protocolsList = array('https://' => 443);
-			$postData .= '&method=listing&action=customer&username='.urlencode(trim(Context::getContext()->cookie->username_addons)).'&password='.urlencode(trim(Context::getContext()->cookie->password_addons));
-		}
-		if ($request == 'check_customer')
-		{
-			// Define protocol accepted and post data values for this request
-			$protocolsList = array('https://' => 443);
-			$postData .= '&method=check_customer&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
-		}
-		if ($request == 'module')
-		{
-			// Define protocol accepted and post data values for this request
-			if (isset($params['username_addons']) && isset($params['password_addons']))
-			{
-				$protocolsList = array('https://' => 443);
-				$postData .= '&method=module&id_module='.urlencode($params['id_module']).'&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
-			}
-			else
-			{
-				$protocolsList = array('https://' => 443, 'http://' => 80);
+			case 'native':
+				$protocols[] = 'http';
+				$postData .= '&method=listing&action=native';
+				break;
+			case 'must-have':
+				$protocols[] = 'http';
+				$postData .= '&method=listing&action=must-have';
+				break;
+			case 'customer':
+				$postData .= '&method=listing&action=customer&username='.urlencode(trim(Context::getContext()->cookie->username_addons)).'&password='.urlencode(trim(Context::getContext()->cookie->password_addons));
+				break;
+			case 'check_customer':
+				$postData .= '&method=check_customer&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
+				break;
+			case 'module':
 				$postData .= '&method=module&id_module='.urlencode($params['id_module']);
-			}
-		}
-		
-		if ($request == 'install-modules')
-		{
-			// Define protocol accepted and post data values for this request
-			$protocolsList = array('https://' => 443, 'http://' => 80);
-			$postData .= '&method=listing&action=install-modules';
-			
+				if (isset($params['username_addons']) && isset($params['password_addons']))
+					$postData .= '&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
+				else
+					$protocols[] = 'http';
+
+				break;
+			case 'install-modules':
+				$protocols[] = 'http';
+				$postData .= '&method=listing&action=install-modules';
+				break;
+			default:
+				return false;
 		}
 
-		// Make the request
-		$opts = array(
-			'http'=>array(
+		$context = stream_context_create(array(
+			'http' => array(
 				'method'=> 'POST',
 				'content' => $postData,
 				'header'  => 'Content-type: application/x-www-form-urlencoded',
 				'timeout' => 5,
 			)
-		);
-		$context = stream_context_create($opts);
-		foreach ($protocolsList as $protocol => $port)
-		{
-			$content = Tools::file_get_contents($protocol.$addons_url, false, $context);
-
-			// If content returned, we cache it
-			if ($content)
+		));
+		foreach ($protocols as $protocol)
+			if ($content = Tools::file_get_contents($protocol.'://api.addons.prestashop.com', false, $context))
 				return $content;
-		}
 
-		// No content, return false
+		self::$is_addons_up = false;
 		return false;
+	}
+
+	public static function fileAttachment($input = 'fileUpload')
+	{
+		$fileAttachment = null;
+		if (isset($_FILES[$input]['name']) && !empty($_FILES[$input]['name']) && !empty($_FILES[$input]['tmp_name']))
+		{
+			$fileAttachment['rename'] = uniqid(). Tools::strtolower(substr($_FILES[$input]['name'], -5));	
+			$fileAttachment['content'] = file_get_contents($_FILES[$input]['tmp_name']);
+			$fileAttachment['tmp_name'] = $_FILES[$input]['tmp_name'];
+			$fileAttachment['name'] = $_FILES[$input]['name'];
+			$fileAttachment['mime'] = $_FILES[$input]['type'];
+			$fileAttachment['error'] = $_FILES[$input]['error'];
+		}
+		return $fileAttachment;
 	}
 }
 

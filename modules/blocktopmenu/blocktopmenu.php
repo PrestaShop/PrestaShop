@@ -52,7 +52,7 @@ class Blocktopmenu extends Module
 	{
 		$this->name = 'blocktopmenu';
 		$this->tab = 'front_office_features';
-		$this->version = 1.5;
+		$this->version = 1.6;
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -69,6 +69,7 @@ class Blocktopmenu extends Module
 			!Configuration::updateGlobalValue('MOD_BLOCKTOPMENU_SEARCH', '1') ||
 			!$this->registerHook('actionObjectCategoryUpdateAfter') ||
 			!$this->registerHook('actionObjectCategoryDeleteAfter') ||
+			!$this->registerHook('actionObjectCategoryAddAfter') ||
 			!$this->registerHook('actionObjectCmsUpdateAfter') ||
 			!$this->registerHook('actionObjectCmsDeleteAfter') ||
 			!$this->registerHook('actionObjectSupplierUpdateAfter') ||
@@ -220,6 +221,8 @@ class Blocktopmenu extends Module
 
 		// BEGIN SUPPLIER
 		$this->_html .= '<optgroup label="'.$this->l('Supplier').'">';
+		// Option to show all Suppliers
+		$this->_html .= '<option value="ALLSUP0">'.$this->l('All suppliers').'</option>';
 		$suppliers = Supplier::getSuppliers(false, $id_lang);
 		foreach ($suppliers as $supplier)
 			$this->_html .= '<option value="SUP'.$supplier['id_supplier'].'">'.$spacer.$supplier['name'].'</option>';
@@ -227,6 +230,8 @@ class Blocktopmenu extends Module
 
 		// BEGIN Manufacturer
 		$this->_html .= '<optgroup label="'.$this->l('Manufacturer').'">';
+		// Option to show all Manufacturers
+		$this->_html .= '<option value="ALLMAN0">'.$this->l('All manufacturers').'</option>';
 		$manufacturers = Manufacturer::getManufacturers(false, $id_lang);
 		foreach ($manufacturers as $manufacturer)
 			$this->_html .= '<option value="MAN'.$manufacturer['id_manufacturer'].'">'.$spacer.$manufacturer['name'].'</option>';
@@ -471,12 +476,22 @@ class Blocktopmenu extends Module
 						$this->_html .= '<option value="CMS_CAT'.$id.'">'.$category->name.'</option>'.PHP_EOL;
 					break;
 
+				// Case to handle the option to show all Manufacturers
+				case 'ALLMAN':
+					$this->_html .= '<option value="ALLMAN0">'.$this->l('All manufacturers').'</option>'.PHP_EOL;
+					break;
+
 				case 'MAN':
 					$manufacturer = new Manufacturer((int)$id, (int)$id_lang);
 					if (Validate::isLoadedObject($manufacturer))
 						$this->_html .= '<option value="MAN'.$id.'">'.$manufacturer->name.'</option>'.PHP_EOL;
 					break;
 
+				// Case to handle the option to show all Suppliers
+				case 'ALLSUP':
+					$this->_html .= '<option value="ALLSUP0">'.$this->l('All suppliers').'</option>'.PHP_EOL;
+					break;
+					
 				case 'SUP':
 					$supplier = new Supplier((int)$id, (int)$id_lang);
 					if (Validate::isLoadedObject($supplier))
@@ -548,6 +563,16 @@ class Blocktopmenu extends Module
 					}
 					break;
 
+				// Case to handle the option to show all Manufacturers
+				case 'ALLMAN':
+					$link = new Link;
+					$this->_menu .= '<li><a href="'.$link->getPageLink('manufacturer').'">'.$this->l('All manufacturers').'</a><ul>'.PHP_EOL;
+					$manufacturers = Manufacturer::getManufacturers();
+					foreach ($manufacturers as $key => $manufacturer)
+						$this->_menu .= '<li><a href="'.$link->getManufacturerLink((int)$manufacturer['id_manufacturer'], $manufacturer['link_rewrite']).'">'.$manufacturer['name'].'</a></li>'.PHP_EOL;
+					$this->_menu .= '</ul>';
+					break;
+
 				case 'MAN':
 					$selected = ($this->page_name == 'manufacturer' && (Tools::getValue('id_manufacturer') == $id)) ? ' class="sfHover"' : '';
 					$manufacturer = new Manufacturer((int)$id, (int)$id_lang);
@@ -560,6 +585,16 @@ class Blocktopmenu extends Module
 						$link = new Link;
 						$this->_menu .= '<li'.$selected.'><a href="'.htmlentities($link->getManufacturerLink((int)$id, $manufacturer->link_rewrite)).'">'.$manufacturer->name.'</a></li>'.PHP_EOL;
 					}
+					break;
+
+				// Case to handle the option to show all Suppliers
+				case 'ALLSUP':
+					$link = new Link;
+					$this->_menu .= '<li><a href="'.$link->getPageLink('supplier').'">'.$this->l('All suppliers').'</a><ul>'.PHP_EOL;
+					$suppliers = Supplier::getSuppliers();
+					foreach ($suppliers as $key => $supplier)
+						$this->_menu .= '<li><a href="'.$link->getSupplierLink((int)$supplier['id_supplier'], $supplier['link_rewrite']).'">'.$supplier['name'].'</a></li>'.PHP_EOL;
+					$this->_menu .= '</ul>';
 					break;
 
 				case 'SUP':
@@ -797,7 +832,11 @@ class Blocktopmenu extends Module
 
 		return Db::getInstance()->executeS($sql);
 	}
-	
+
+	public function hookActionObjectCategoryAddAfter($params)
+	{
+		$this->clearMenuCache();
+	}
 
 	public function hookActionObjectCategoryUpdateAfter($params)
 	{

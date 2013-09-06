@@ -32,6 +32,9 @@ include_once(_PS_PEAR_XML_PARSER_PATH_.'Parser.php');
 
 class Blockrss extends Module
 {
+		
+	private static $xmlFields = array('title', 'guid', 'description', 'author', 'comments', 'pubDate', 'source', 'link', 'content');
+	
  	function __construct()
  	{
  	 	$this->name = 'blockrss';
@@ -151,13 +154,24 @@ class Blockrss extends Module
 
 		// Getting data
 		$rss_links = array();
-		if ($url && ($contents = @file_get_contents($url)))
+		if ($url && ($contents = Tools::file_get_contents($url)))
 			try
 			{
-			if (@$src = new XML_Feed_Parser($contents))
-				for ($i = 0; $i < ($nb ? $nb : 5); $i++)
-					if (@$item = $src->getEntryByOffset($i))
-						$rss_links[] = array('title' => $item->title, 'url' => $item->link);
+				if (@$src = new XML_Feed_Parser($contents)) {
+					for ($i = 0; $i < ($nb ? $nb : 5); $i++) {
+						if (@$item = $src->getEntryByOffset($i)) {
+							
+							$xmlValues = array();
+							foreach(self::$xmlFields as $xmlField) {
+								$xmlValues[$xmlField] = $item->__get($xmlField);
+							}
+							$xmlValues['enclosure'] = $item->getEnclosure();
+							# Compatibility
+							$xmlValues['url'] = $xmlValues['link']; 
+							$rss_links[] = $xmlValues;
+						}
+					}
+				}
 			}
 			catch (XML_Feed_Parser_Exception $e)
 			{
