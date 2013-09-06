@@ -139,7 +139,7 @@ class Autoload
 			$filename_tmp = tempnam(dirname($filename), basename($filename.'.'));
 			if($filename_tmp !== FALSE and file_put_contents($filename_tmp, $content, LOCK_EX) !== FALSE)
             {
-				rename($filename_tmp, $filename);
+				@rename($filename_tmp, $filename);
                 @chmod($filename, 0664);
 			}
             else
