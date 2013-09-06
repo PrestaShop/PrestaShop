@@ -58,9 +58,9 @@
 	</div>
 {/if}
 {if isset($confirmations) && count($confirmations) && $confirmations}
-	<div class="alert" style="display:block;">
+	<div class="alert alert-success" style="display:block;">
 		{foreach $confirmations as $conf}
-			{$conf}<br />
+			{$conf}
 		{/foreach}
 	</div>
 {/if}
