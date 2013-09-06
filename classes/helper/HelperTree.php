@@ -295,23 +295,19 @@ class HelperTreeCore
 				$html .= $this->getContext()->smarty->createTemplate(
 					$this->getTemplateDirectory().$this->getNodeFolderTemplate(),
 					$this->getContext()->smarty
-				)
-				->assign(array(
+				)->assign(array(
 					'name'     => $item['name'],
 					'children' => $this->renderNodes($item['children']),
 					'node'     => $item
-				))
-				->fetch();
+				))->fetch();
 			else
 				$html .= $this->getContext()->smarty->createTemplate(
 					$this->getTemplateDirectory().$this->getNodeItemTemplate(),
 					$this->getContext()->smarty
-				)
-				->assign(array(
+				)->assign(array(
 					'name' => $item['name'],
 					'node' => $item
-				))
-				->fetch();				
+				))->fetch();
 		}
 
 		return $html;
