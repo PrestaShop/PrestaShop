@@ -2573,12 +2573,9 @@ exit;
 		return $fileAttachment;
 	}
 	
-	public static function changeFileMTime($file_name, $time = null)
+	public static function changeFileMTime($file_name)
 	{
-		if ($time === null)
-			$time = time();
-
-		touch($file_name, $time);
+		touch($file_name);
 	}
 	
 	public static function waitUntilFileIsModified($file_name, $timeout = 180)
