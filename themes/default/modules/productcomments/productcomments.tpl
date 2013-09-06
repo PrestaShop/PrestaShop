@@ -27,6 +27,9 @@ var productcomments_controller_url = '{$productcomments_controller_url}';
 var confirm_report_message = "{l s='Are you sure you want report this comment?' mod='productcomments'}";
 var secure_key = "{$secure_key}";
 var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
+var productcomment_added = '{l s='Your comment has been added !' mod='productcomments'}';
+var productcomment_title = '{l s='New comment' mod='productcomments'}';
+var productcomment_ok = '{l s='OK' mod='productcomments'}';
 </script>
 
 <div id="idTab5">
@@ -89,7 +92,7 @@ var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
 <!-- Fancybox -->
 <div style="display: none;">
 	<div id="new_comment_form">
-		<form action="#">
+		<form id="id_new_comment_form" action="#">
 			<h2 class="title">{l s='Write your review' mod='productcomments'}</h2>
 			<div class="product clearfix">
 				<img src="{$link->getImageLink($product->link_rewrite, $productcomment_cover, 'home_default')|escape:'html'}" height="{$homeSize.height}" width="{$homeSize.width}" alt="{$product->name|escape:html:'UTF-8'}" />
