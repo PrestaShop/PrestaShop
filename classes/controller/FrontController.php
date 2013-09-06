@@ -114,21 +114,18 @@ class FrontControllerCore extends Controller
 		$css_files = $this->css_files;
 		$js_files = $this->js_files;
 
-		if ($this->ssl && !Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED'))
-		{
+		// If we call a SSL controller without SSL or a non SSL controller with SSL, we redirect with the right protocol
+		if (Configuration::get('PS_SSL_ENABLED') && ($_SERVER['REQUEST_METHOD'] != 'POST') && $this->ssl != Tools::usingSecureMode())
+		{	
 			header('HTTP/1.1 301 Moved Permanently');
 			header('Cache-Control: no-cache');
-			header('Location: '.Tools::getShopDomainSsl(true).$_SERVER['REQUEST_URI']);
+			if ($this->ssl)					
+				header('Location: '.Tools::getShopDomainSsl(true).$_SERVER['REQUEST_URI']);
+			else						
+				header('Location: '.Tools::getShopDomain(true).$_SERVER['REQUEST_URI']);
 			exit();
 		}
-		elseif (Configuration::get('PS_SSL_ENABLED') && Tools::usingSecureMode() && !($this->ssl))
-		{
-			header('HTTP/1.1 301 Moved Permanently');
-			header('Cache-Control: no-cache');
-			header('Location: '.Tools::getShopDomain(true).$_SERVER['REQUEST_URI']);
-			exit();
-		}
-
+		
 		if ($this->ajax)
 		{
 			$this->display_header = false;
@@ -336,7 +333,8 @@ class FrontControllerCore extends Controller
 			'opc' => (bool)Configuration::get('PS_ORDER_PROCESS_TYPE'),
 			'PS_CATALOG_MODE' => (bool)Configuration::get('PS_CATALOG_MODE') || !(bool)Group::getCurrent()->show_prices,
 			'b2b_enable' => (bool)Configuration::get('PS_B2B_ENABLE'),
-			'request' => $link->getPaginationLink(false, false, false, true)
+			'request' => $link->getPaginationLink(false, false, false, true),
+			'PS_STOCK_MANAGEMENT' => Configuration::get('PS_STOCK_MANAGEMENT')
 		));
 
 		// Add the tpl files directory for mobile
@@ -596,7 +594,7 @@ class FrontControllerCore extends Controller
 
 	protected function canonicalRedirection($canonical_url = '')
 	{
-		if (!$canonical_url || !Configuration::get('PS_CANONICAL_REDIRECT') || strtoupper($_SERVER['REQUEST_METHOD']) != 'GET')
+		if (!$canonical_url || !Configuration::get('PS_CANONICAL_REDIRECT') || strtoupper($_SERVER['REQUEST_METHOD']) != 'GET' || Tools::getValue('live_edit'))
 			return;
 
 		$match_url = (($this->ssl && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
@@ -775,9 +773,11 @@ class FrontControllerCore extends Controller
 	
 	public function checkLiveEditAccess()
 	{
-		$live_token = Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee'));
-		$ad = Tools::getValue('ad');
-		return Tools::isSubmit('live_edit') && $ad && Tools::getValue('liveToken') == $live_token && is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$ad);
+		if (!Tools::isSubmit('live_edit') || !Tools::getValue('ad') || !Tools::getValue('liveToken'))
+			return false;
+		if (Tools::getValue('liveToken') != Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee')))
+			return false;
+		return is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.Tools::getValue('ad'));
 	}
 	
 	public function getLiveEditFooter()
@@ -806,7 +806,7 @@ class FrontControllerCore extends Controller
 		// 'orderwaydefault' => Tools::getProductsOrder('way'),
 
 		$stock_management = Configuration::get('PS_STOCK_MANAGEMENT') ? true : false; // no display quantity order if stock management disabled
-		$order_by_values = array(0 => 'name', 1 => 'price', 2 => 'date_add', 3 => 'date_upd', 4 => 'position', 5 => 'manufacturer_name', 6 => 'quantity');
+		$order_by_values = array(0 => 'name', 1 => 'price', 2 => 'date_add', 3 => 'date_upd', 4 => 'position', 5 => 'manufacturer_name', 6 => 'quantity', 7 => 'reference');
 		$order_way_values = array(0 => 'asc', 1 => 'desc');
 		$this->orderBy = Tools::strtolower(Tools::getValue('orderby', $order_by_values[(int)Configuration::get('PS_PRODUCTS_ORDER_BY')]));
 		$this->orderWay = Tools::strtolower(Tools::getValue('orderway', $order_way_values[(int)Configuration::get('PS_PRODUCTS_ORDER_WAY')]));
@@ -847,8 +847,8 @@ class FrontControllerCore extends Controller
 
 		$range = 2; /* how many pages around page selected */
 
-		if ($this->p < 0)
-			$this->p = 0;
+		if ($this->p < 1)
+			$this->p = 1;
 
 		if (isset($this->context->cookie->nb_item_per_page) && $this->n != $this->context->cookie->nb_item_per_page && in_array($this->n, $nArray))
 			$this->context->cookie->nb_item_per_page = $this->n;

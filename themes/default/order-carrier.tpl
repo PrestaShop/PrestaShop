@@ -114,7 +114,7 @@
 	{else}
 		{if $recyclablePackAllowed}
 			<p class="checkbox">
-				<input type="checkbox" name="recyclable" id="recyclable" value="1" {if $recyclable == 1}checked="checked"{/if} />
+				<input type="checkbox" name="recyclable" id="recyclable" value="1" {if $recyclable == 1}checked="checked"{/if} autocomplete="off"/>
 				<label for="recyclable">{l s='I would like to receive my order in recycled packaging.'}.</label>
 			</p>
 		{/if}
@@ -230,6 +230,8 @@
 					{if !$address@last}
 					<br />
 					{/if}
+				{foreachelse}
+					{l s='No carriers available.'}
 				{/foreach}
 			</p>
 		{/foreach}
@@ -241,7 +243,7 @@
 		{if $giftAllowed}
 		<h3 class="gift_title">{l s='Gift'}</h3>
 		<p class="checkbox">
-			<input type="checkbox" name="gift" id="gift" value="1" {if $cart->gift == 1}checked="checked"{/if} />
+			<input type="checkbox" name="gift" id="gift" value="1" {if $cart->gift == 1}checked="checked"{/if} autocomplete="off"/>
 			<label for="gift">{l s='I would like my order to be gift wrapped.'}</label>
 			<br />
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -264,10 +266,18 @@
 {if $conditions AND $cms_id}
 	<h3 class="condition_title">{l s='Terms of service'}</h3>
 	<p class="checkbox">
-		<input type="checkbox" name="cgv" id="cgv" value="1" {if $checkedTOS}checked="checked"{/if} />
+		<input type="checkbox" name="cgv" id="cgv" value="1" {if $checkedTOS}checked="checked"{/if} autocomplete="off"/>
 		<label for="cgv">{l s='I agree to the terms of service and will adhere to them unconditionally.'}</label> <a href="{$link_conditions}" class="iframe">{l s='(Read the Terms of Service)'}</a>
 	</p>
-	<script type="text/javascript">$('a.iframe').fancybox();</script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+	        $("a.iframe").fancybox({
+	            'type' : 'iframe',
+	            'width':600,
+	            'height':600
+	        });
+	    });
+	</script>
 {/if}
 </div>
 

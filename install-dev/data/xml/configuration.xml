@@ -689,7 +689,7 @@ Country</value>
       <value>7700</value>
     </configuration>
     <configuration id="PS_VERSION_DB" name="PS_VERSION_DB">
-      <value>1.5.0.9</value>
+      <value>1.5.5.0</value>
     </configuration>
     <configuration id="PS_BASE_DISTANCE_UNIT" name="PS_BASE_DISTANCE_UNIT">
       <value>m</value>
@@ -701,7 +701,7 @@ Country</value>
       <value>localhost</value>
     </configuration>
     <configuration id="PS_INSTALL_VERSION" name="PS_INSTALL_VERSION">
-      <value>1.5.0.9</value>
+      <value>1.5.5.0</value>
     </configuration>
     <configuration id="PS_SHOP_NAME" name="PS_SHOP_NAME">
       <value>PrestaShop</value>
@@ -771,6 +771,9 @@ Country</value>
     </configuration>
     <configuration id="PS_CUSTOMER_CREATION_EMAIL" name="PS_CUSTOMER_CREATION_EMAIL">
       <value>1</value>
+    </configuration>	  
+    <configuration id="PS_SMARTY_CONSOLE_KEY" name="PS_SMARTY_CONSOLE_KEY">
+      <value>SMARTY_DEBUG</value>
     </configuration>
   </entities>
 </entity_configuration>

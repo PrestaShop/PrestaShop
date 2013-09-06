@@ -125,15 +125,13 @@ class StatsBestCustomers extends ModuleGrid
 			<p class="space">
 				'.$this->l('Keeping a client is more profitable than gaining a new one. That is one of the many reasons it is necessary to cultivate customer loyalty.').' <br />
 				'.$this->l('Word of mouth is also a means for getting new, satisfied clients. A dissatisfied customer can hurt your e-reputation and obstruct future sales goals.').'<br />
-				'.$this->l('In order to achieve this goal, you can organize: ').'
+				'.$this->l('In order to achieve this goal, you can organize:').'
 				<ul>
-					<li>'.$this->l('Punctual operations: commercial rewards (personalized special offers, product or service offered),
-						non commercial rewards (priority handling of an order or a product), pecuniary rewards (bonds, discount coupons, payback).').'</li>
-					<li>'.$this->l('Sustainable operations: loyalty points or cards, which not only justify communication between merchant and client,
-						 but also offer advantages to clients (private offers, discounts).').'</li>
+					<li>'.$this->l('Punctual operations: commercial rewards (personalized special offers, product or service offered), non commercial rewards (priority handling of an order or a product), pecuniary rewards (bonds, discount coupons, payback).').'</li>
+					<li>'.$this->l('Sustainable operations: loyalty points or cards, which not only justify communication between merchant and client, but also offer advantages to clients (private offers, discounts).').'</li>
 				</ul>
-				'.$this->l('These operations encourage clients to buy products and visit your e-store regularly.').' <br />
-			</p><br />
+				'.$this->l('These operations encourage clients to buy products and visit your e-store regularly.').'
+			</p>
 		</div>';
 		return $this->_html;
 	}

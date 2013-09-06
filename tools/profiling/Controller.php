@@ -279,17 +279,24 @@ abstract class Controller extends ControllerCore
 				return (bool)(int)$b;
 		}
 	}
-
+	
 	private function sizeofvar($var)
 	{
 		$start_memory = memory_get_usage();
 		try {
 			$tmp = Tools::unSerialize(serialize($var));
 		} catch (Exception $e) {
-			$tmp = strlen((string)$var);
+			$tmp = $this->getVarData($var);
 		}
 		$size = memory_get_usage() - $start_memory;
 		return $size;
+	}
+	
+	private function getVarData($var)
+	{
+		if (is_object($var))
+			return $var;
+		return (string)$var;
 	}
 
 	public function displayDebug()
@@ -398,6 +405,32 @@ abstract class Controller extends ControllerCore
 		echo '</ul>
 		</div>';
 
+		$array_queries = array();
+		$queries = Db::getInstance()->queries;
+		uasort($queries, 'prestashop_querytime_sort');
+		foreach ($queries as $data)
+		{
+			$query_row = array(
+				'time' => $data['time'],
+				'query' => $data['query'],
+				'location' => $data['file'].':'.$data['line'],
+				'filesort' => false,
+				'rows' => 1,
+				'group_by' => false
+			);
+			if (preg_match('/^\s*select\s+/i', $data['query']))
+			{
+				$explain = Db::getInstance()->executeS('explain '.$data['query']);
+				if (stristr($explain[0]['Extra'], 'filesort'))
+					$query_row['filesort'] = true;
+				foreach ($explain as $row)
+					$query_row['rows'] *= $row['rows'];
+				if (stristr($data['query'], 'group by') && !preg_match('/(avg|count|min|max|group_concat|sum)\s*\(/i', $data['query']))
+					$query_row['group_by'] = true;
+			}
+			$array_queries[] = $query_row;
+		}
+
 		echo '
 		<div class="rte" style="text-align:left;padding:8px;clear:both;margin-top:20px">
 			<ul>
@@ -405,25 +438,32 @@ abstract class Controller extends ControllerCore
 				<li><a href="#doubles">Go to Doubles</a></li>
 				<li><a href="#tables">Go to Tables</a></li>
 				'.(isset(ObjectModel::$debug_list) ? '<li><a href="#objectModels">Go to ObjectModels</a></li>' : '').'
+				<li><a onclick="$(\'#queries_table\').toggle();" style="cursor:pointer">Display queries table</a></li>
 			</ul>
+		</div>
+		<div id="queries_table" style="display:none;margin:4px">
+			<table class="table std">
+				<tr><th>Time (ms)</th><th>Rows</th><th>Query</th><th>Location</th><th>Filesort</th><th>Group By</th></tr>';
+		foreach ($array_queries as $data)
+		{
+			$data['location'] = str_replace('\\', '/', substr($data['location'], strlen(_PS_ROOT_DIR_)));
+			$data['query'] = str_replace('SQL_NO_CACHE ', '', $data['query']);
+			echo '<tr><td>'.round(1000 * $data['time'], 3).'</td><td>'.$data['rows'].'</td><td>'.$data['query'].'</td><td>'.$data['location'].'</td><td>'.($data['filesort'] ? 'Yes' : '').'</td><td>'.($data['group_by'] ? 'Yes' : '').'</td></tr>';
+		}
+		echo '
+			</table>
 		</div>
 		<div class="rte" style="text-align:left;padding:8px">
 		<h3><a name="stopwatch">Stopwatch (with SQL_NO_CACHE) (total = '.count(Db::getInstance()->queries).')</a></h3>';
-		$queries = Db::getInstance()->queries;
-		uasort($queries, 'prestashop_querytime_sort');
-		foreach ($queries as $data)
+		foreach ($array_queries as $data)
 		{
-			echo $hr.'<b '.$this->getTimeColor($data['time'] * 1000).'>'.round($data['time'] * 1000, 3).' ms</b> '.htmlspecialchars($data['query'], ENT_NOQUOTES, 'utf-8', false).'<br />in '.$data['file'].':'.$data['line'].'<br />';
+			echo $hr.'<b '.$this->getTimeColor($data['time'] * 1000).'>'.round($data['time'] * 1000, 3).' ms</b> '.htmlspecialchars($data['query'], ENT_NOQUOTES, 'utf-8', false).'<br />in '.$data['location'].'<br />';
 			if (preg_match('/^\s*select\s+/i', $data['query']))
 			{
-				$explain = Db::getInstance()->executeS('explain '.$data['query']);
-				if (stristr($explain[0]['Extra'], 'filesort'))
+				if ($data['filesort'])
 					echo '<b '.$this->getTimeColor($data['time'] * 1000).'>USING FILESORT</b> - ';
-				$browsed_rows = 1;
-				foreach ($explain as $row)
-					$browsed_rows *= $row['rows'];
-				echo $this->displayRowsBrowsed($browsed_rows);
-				if (stristr($data['query'], 'group by') && !preg_match('/(avg|count|min|max|group_concat|sum)\s*\(/i', $data['query']))
+				echo $this->displayRowsBrowsed($data['rows']);
+				if ($data['group_by'])
 					echo '<br /><b>Useless GROUP BY need to be removed</b>';
 			}
 		}

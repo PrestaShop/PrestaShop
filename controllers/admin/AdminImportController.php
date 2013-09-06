@@ -2435,17 +2435,12 @@ class AdminImportControllerCore extends AdminController
 				$discount_rate = (float)$info['discount_rate'];
 				$tax_rate = (float)$info['tax_rate'];
 
-				// checks if one product is there only once
-				if (isset($product['id_product']))
-				{
-					if ($product['id_product'] == $id_product_attribute)
-						$this->errors[] = sprintf($this->l('Product (%d/%D) cannot be added twice (at line %d).'), $id_product,
-							$id_product_attribute, $current_line + 1);
-					else
-						$product['id_product'] = $id_product_attribute;
-				}
+				// checks if one product/attribute is there only once
+				if (isset($products[$id_product][$id_product_attribute]))
+					$this->errors[] = sprintf($this->l('Product/Attribute (%d/%d) cannot be added twice (at line %d).'), $id_product,
+						$id_product_attribute, $current_line + 1);					
 				else
-					$product['id_product'] = 0;
+					$products[$id_product][$id_product_attribute] = $quantity_expected;	
 
 				// checks parameters
 				if (false === ($supplier_reference = ProductSupplier::getProductSupplierReference($id_product, $id_product_attribute, $supply_order->id_supplier)))
@@ -2658,6 +2653,13 @@ class AdminImportControllerCore extends AdminController
 		Image::clearTmpDir();
 		return true;
 	}
+	
+	public function clearSmartyCache()
+	{
+		Tools::enableCache();
+		Tools::clearCache($this->context->smarty);
+		Tools::restoreCacheSettings();
+	}
 
 	public function postProcess()
 	{
@@ -2715,10 +2717,12 @@ class AdminImportControllerCore extends AdminController
 				{
 					case $this->entities[$import_type = $this->l('Categories')]:
 						$this->categoryImport();
+						$this->clearSmartyCache();
 						break;
 					case $this->entities[$import_type = $this->l('Products')]:
 					$import_type = $this->l('Categories');
 						$this->productImport();
+						$this->clearSmartyCache();
 						break;
 					case $this->entities[$import_type = $this->l('Customers')]:
 						$this->customerImport();
@@ -2728,12 +2732,15 @@ class AdminImportControllerCore extends AdminController
 						break;
 					case $this->entities[$import_type = $this->l('Combinations')]:
 						$this->attributeImport();
+						$this->clearSmartyCache();
 						break;
 					case $this->entities[$import_type = $this->l('Manufacturers')]:
 						$this->manufacturerImport();
+						$this->clearSmartyCache();
 						break;
 					case $this->entities[$import_type = $this->l('Suppliers')]:
 						$this->supplierImport();
+						$this->clearSmartyCache();
 						break;
 					// @since 1.5.0
 					case $this->entities[$import_type = $this->l('Supply Orders')]:

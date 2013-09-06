@@ -29,8 +29,8 @@
 	<form method="get" action="{$link->getPageLink('search', true)|escape:'html'}" id="searchbox">
 		<p class="block_content">
 			<label for="search_query_block">{l s='Enter a product name or description.' mod='blocksearch'}</label>
-			<input type="hidden" name="orderby" value="position" />
 			<input type="hidden" name="controller" value="search" />
+			<input type="hidden" name="orderby" value="position" />
 			<input type="hidden" name="orderway" value="desc" />
 			<input class="search_query" type="text" id="search_query_block" name="search_query" value="{if isset($smarty.get.search_query)}{$smarty.get.search_query|htmlentities:$ENT_QUOTES:'utf-8'|stripslashes}{/if}" />
 			<input type="submit" id="search_button" class="button_mini" value="{l s='Go!' mod='blocksearch'}" />

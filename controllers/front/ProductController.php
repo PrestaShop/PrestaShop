@@ -69,6 +69,8 @@ class ProductControllerCore extends FrontController
 
 	public function canonicalRedirection($canonical_url = '')
 	{
+		if (Tools::getValue('live_edit'))
+			return ;
 		if (Validate::isLoadedObject($this->product))
 			parent::canonicalRedirection($this->context->link->getProductLink($this->product));
 	}
@@ -158,8 +160,7 @@ class ProductControllerCore extends FrontController
 							$this->category = new Category($regs[5], (int)$this->context->cookie->id_lang);
 					}
 				}
-				else
-					// Set default product category
+				if (!isset($this->category))
 					$this->category = new Category($this->product->id_category_default, (int)$this->context->cookie->id_lang);
 			}
 		}
@@ -658,5 +659,10 @@ class ProductControllerCore extends FrontController
 			$row['nextQuantity'] = (isset($specific_prices[$key + 1]) ? (int)$specific_prices[$key + 1]['from_quantity'] : -1);
 		}
 		return $specific_prices;
+	}
+	
+	public function getProduct()
+	{
+	    return $this->product;
 	}
 }

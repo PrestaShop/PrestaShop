@@ -72,7 +72,7 @@ class SupplierCore extends ObjectModel
 			'date_upd' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 
 			// Lang fields
-			'description' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName'),
+			'description' => 		array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
 			'meta_title' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
 			'meta_description' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
 			'meta_keywords' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
@@ -140,6 +140,7 @@ class SupplierCore extends ObjectModel
 					WHERE ps.`id_supplier` = '.(int)$supplier['id_supplier'].'
 					AND ps.id_product_attribute = 0'.
 					($active ? ' AND product_shop.`active` = 1' : '').
+					' AND product_shop.`visibility` NOT IN ("none")'.
 					($all_groups ? '' :'
 					AND ps.`id_product` IN (
 						SELECT cp.`id_product`

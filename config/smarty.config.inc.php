@@ -44,7 +44,10 @@ $smarty->debugging = false;
 $smarty->debugging_ctrl = 'NONE';
 
 if (Configuration::get('PS_SMARTY_CONSOLE') == _PS_SMARTY_CONSOLE_OPEN_BY_URL_)
+{
 	$smarty->debugging_ctrl = 'URL';
+	$smarty->smarty_debug_id = Configuration::get('PS_SMARTY_CONSOLE_KEY');
+}
 else if (Configuration::get('PS_SMARTY_CONSOLE') == _PS_SMARTY_CONSOLE_OPEN_)
 	$smarty->debugging = true;
 
@@ -176,6 +179,7 @@ function smartyHook($params, &$smarty)
 	{
 		$id_module = null;
 		$hook_params = $params;
+		$hook_params['smarty'] = $smarty;
 		if (!empty($params['mod']))
 		{
 			$module = Module::getInstanceByName($params['mod']);

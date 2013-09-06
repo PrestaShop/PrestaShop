@@ -48,7 +48,7 @@ $(function(){ldelim}
 {rdelim});
 {literal}
 	$(document).ready(function() {
-		$('#company').blur(function(){
+		$('#company').on('input',function(){
 			vat_number();
 		});
 		vat_number();
@@ -98,8 +98,7 @@ $(function(){ldelim}
 	{assign var="postCodeExist" value="false"}
 	{foreach from=$ordered_adr_fields item=field_name}
 		{if $field_name eq 'company'}
-			<p class="text">
-			<input type="hidden" name="token" value="{$token}" />
+		<p class="text">
 			<label for="company">{l s='Company'}</label>
 			<input type="text" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{else}{if isset($address->company)}{$address->company|escape:'html'}{/if}{/if}" />
 		</p>
@@ -236,6 +235,7 @@ $(function(){ldelim}
 		{if isset($back)}<input type="hidden" name="back" value="{$back}" />{/if}
 		{if isset($mod)}<input type="hidden" name="mod" value="{$mod}" />{/if}
 		{if isset($select_address)}<input type="hidden" name="select_address" value="{$select_address|intval}" />{/if}
+		<input type="hidden" name="token" value="{$token}" />		
 		<input type="submit" name="submitAddress" id="submitAddress" value="{l s='Save'}" class="button" />
 	</p>
 </form>

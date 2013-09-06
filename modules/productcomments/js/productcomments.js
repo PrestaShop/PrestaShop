@@ -56,11 +56,11 @@ $(function() {
 		e.preventDefault();
 
 		// Form element
-
+        
 		url_options = parseInt(productcomments_url_rewrite) ? '?' : '&';
 		$.ajax({
 			url: productcomments_controller_url + url_options + 'action=add_comment&secure_key=' + secure_key + '&rand=' + new Date().getTime(),
-			data: $('#fancybox-content form').serialize(),
+			data: $('#id_new_comment_form').serialize(),
 			type: 'POST',
 			headers: { "cache-control": "no-cache" },
 			dataType: "json",
@@ -68,7 +68,9 @@ $(function() {
 				if (data.result)
 				{
 					$.fancybox.close();
-					document.location.href = document.location.href;
+                    var buttons = {};
+                    buttons[productcomment_ok] = "productcommentRefreshPage";
+                    fancyChooseBox(productcomment_added, productcomment_title, buttons);
 				}
 				else
 				{
@@ -83,3 +85,7 @@ $(function() {
 		return false;
 	});
 });
+
+function productcommentRefreshPage() {
+    window.location.reload();
+}

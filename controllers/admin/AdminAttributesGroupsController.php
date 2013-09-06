@@ -54,6 +54,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				'title' => $this->l('Values count'),
 				'width' => 120,
 				'align' => 'center',
+				'orderby' => false,
+				'search' => false
 			),
 			'position' => array(
 				'title' => $this->l('Position'),
@@ -327,6 +329,11 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			'type' => 'current_texture',
 			'label' => $this->l('Current texture:'),
 			'name' => 'current_texture'
+		);
+		
+		$this->fields_form['input'][] = array(
+			'type' => 'closediv',
+			'name' => ''
 		);
 
 		$this->fields_form['submit'] = array(

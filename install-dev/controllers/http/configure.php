@@ -56,7 +56,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 				$params = http_build_query(array(
 					'email' => $this->session->admin_email,
 					'method' => 'addMemberToNewsletter',
-					'language' => $this->session->lang,
+					'language' => $this->language->getLanguageIso(),
 					'visitorType' => 1,
 					'source' => 'installer'
 				));

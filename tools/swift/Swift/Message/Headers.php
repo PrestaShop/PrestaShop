@@ -420,8 +420,7 @@ class Swift_Message_Headers
       
       if (false !== $p = strpos($encoded_value[$key], $this->LE))
       {
-        $cb = 'str_replace("' . $this->LE . '", "", "<$1>");';
-        $encoded_value[$key] = preg_replace("/<([^>]+)>/e", $cb, $encoded_value[$key]);
+        $encoded_value[$key] = preg_replace_callback("/<([^>]+)>/", array($this, 'prestaShopReplace'), $encoded_value[$key]);
       }
       
       //Turn our header into an array of lines ready for wrapping around the encoding specification
@@ -553,6 +552,12 @@ class Swift_Message_Headers
     }
     return $ret;
   }
+  
+  public function prestaShopReplace($matches)
+  {
+		return str_replace("' . $this->LE . '", "", "<$matches[1]>");
+  }
+  
   /**
    * Compile the list of headers which have been set and return an ascii string
    * The return value should always be 7-bit ascii and will have been cleaned for header injection

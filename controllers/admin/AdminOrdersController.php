@@ -305,7 +305,7 @@ class AdminOrdersControllerCore extends AdminController
 							'{shipping_number}' => $order->shipping_number,
 							'{order_name}' => $order->getUniqReference()
 						);
-						if (@Mail::Send((int)$order->id_lang, 'in_transit', Mail::l('Package in transit', (int)$order->id_lang), $templateVars,
+						if (@Mail::Send((int)$order->id_lang, 'in_transit', Mail::l('Package in transit'), $templateVars,
 							$customer->email, $customer->firstname.' '.$customer->lastname, null, null, null, null,
 							_PS_MAIL_DIR_, true, (int)$order->id_shop))
 						{
@@ -861,7 +861,7 @@ class AdminOrdersControllerCore extends AdminController
 				$payment_module->validateOrder(
 					(int)$cart->id, (int)$id_order_state,
 					$cart->getOrderTotal(true, Cart::BOTH), $payment_module->displayName, $this->l('Manual order -- Employee:').
-					Tools::safeOutput(substr($employee->firstname, 0, 1).'. '.$employee->lastname), array(), null, false, $cart->secure_key
+					substr($employee->firstname, 0, 1).'. '.$employee->lastname, array(), null, false, $cart->secure_key
 				);
 				if ($payment_module->currentOrder)
 					Tools::redirectAdmin(self::$currentIndex.'&id_order='.$payment_module->currentOrder.'&vieworder'.'&token='.$this->token);
@@ -1332,6 +1332,13 @@ class AdminOrdersControllerCore extends AdminController
 			// if the current stock requires a warning
 			if ($product['current_stock'] == 0 && $display_out_of_stock_warning)
 				$this->displayWarning($this->l('This product is out of stock: ').' '.$product['product_name']);
+			if ($product['id_warehouse'] != 0)
+			{
+				$warehouse = new Warehouse((int)$product['id_warehouse']);
+				$product['warehouse_name'] = $warehouse->name;
+			}
+			else
+				$product['warehouse_name'] = '--';
 		}
 
 		// Smarty assign
@@ -1374,7 +1381,8 @@ class AdminOrdersControllerCore extends AdminController
 			'invoices_collection' => $order->getInvoicesCollection(),
 			'not_paid_invoices_collection' => $order->getNotPaidInvoicesCollection(),
 			'payment_methods' => $payment_methods,
-			'invoice_management_active' => Configuration::get('PS_INVOICE', null, null, $order->id_shop)
+			'invoice_management_active' => Configuration::get('PS_INVOICE', null, null, $order->id_shop),
+			'display_warehouse' => (int)Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
 		);
 
 		return parent::renderView();
@@ -1737,6 +1745,13 @@ class AdminOrdersControllerCore extends AdminController
 		$product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl']);
 		$product['return_history'] = OrderReturn::getProductReturnDetail((int)$product['id_order_detail']);
 		$product['refund_history'] = OrderSlip::getProductSlipDetail((int)$product['id_order_detail']);
+		if ($product['id_warehouse'] != 0)
+		{
+			$warehouse = new Warehouse((int)$product['id_warehouse']);
+			$product['warehouse_name'] = $warehouse->name;
+		}
+		else
+			$product['warehouse_name'] = '--';
 
 		// Get invoices collection
 		$invoice_collection = $order->getInvoicesCollection();
@@ -1757,7 +1772,8 @@ class AdminOrdersControllerCore extends AdminController
 			'invoices_collection' => $invoice_collection,
 			'current_id_lang' => Context::getContext()->language->id,
 			'link' => Context::getContext()->link,
-			'current_index' => self::$currentIndex
+			'current_index' => self::$currentIndex,
+			'display_warehouse' => (int)Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
 		));
 		
 		$this->sendChangedNotification($order);
@@ -1952,6 +1968,14 @@ class AdminOrdersControllerCore extends AdminController
 		$product['amount_refundable'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
 		$product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl']);
 		$product['refund_history'] = OrderSlip::getProductSlipDetail($order_detail->id);
+		if ($product['id_warehouse'] != 0)
+		{
+			$warehouse = new Warehouse((int)$product['id_warehouse']);
+			$product['warehouse_name'] = $warehouse->name;
+		}
+		else
+			$product['warehouse_name'] = '--';
+
 		// Get invoices collection
 		$invoice_collection = $order->getInvoicesCollection();
 
@@ -1971,7 +1995,8 @@ class AdminOrdersControllerCore extends AdminController
 			'invoices_collection' => $invoice_collection,
 			'current_id_lang' => Context::getContext()->language->id,
 			'link' => Context::getContext()->link,
-			'current_index' => self::$currentIndex
+			'current_index' => self::$currentIndex,
+			'display_warehouse' => (int)Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
 		));
 
 		if (!$res)

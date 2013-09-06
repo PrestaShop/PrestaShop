@@ -66,7 +66,8 @@
 						{
 							if (msg)
 							{
-								var infos = msg.infos.split('_');
+								var infos = msg.infos.replace("\\'", "'").split('_');
+
 								$('input[name=firstname]').val(infos[0]);
 								$('input[name=lastname]').val(infos[1]);
 								$('input[name=company]').val(infos[2]);

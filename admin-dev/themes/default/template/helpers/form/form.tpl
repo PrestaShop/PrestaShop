@@ -30,7 +30,7 @@
 
 {if isset($fields.title)}<h2>{$fields.title}</h2>{/if}
 {block name="defaultForm"}
-<form id="{$table}_form" class="defaultForm {$name_controller}" action="{$current}&{if !empty($submit_action)}{$submit_action}=1{/if}&token={$token}" method="post" enctype="multipart/form-data" {if isset($style)}style="{$style}"{/if}>
+<form id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'htmlall':'UTF-8'}{else}{$table}_form{/if}" class="defaultForm {$name_controller}" action="{$current}&{if !empty($submit_action)}{$submit_action}=1{/if}&token={$token}" method="post" enctype="multipart/form-data" {if isset($style)}style="{$style}"{/if}>
 	{if $form_id}
 		<input type="hidden" name="{$identifier}" id="{$identifier}" value="{$form_id}" />
 	{/if}
@@ -234,17 +234,29 @@
 									{/foreach}
 								{elseif $input.type == 'file'}
 									{if isset($input.display_image) && $input.display_image}
-										{if isset($fields_value.image) && $fields_value.image}
+										{if isset($fields_value[$input.name].image) && $fields_value[$input.name].image}
 											<div id="image">
-												{$fields_value.image}
-												<p align="center">{l s='File size'} {$fields_value.size}kb</p>
+												{$fields_value[$input.name].image}
+												<p align="center">{l s='File size'} {$fields_value[$input.name].size}kb</p>
 												<a href="{$current}&{$identifier}={$form_id}&token={$token}&deleteImage=1">
 													<img src="../img/admin/delete.gif" alt="{l s='Delete'}" /> {l s='Delete'}
 												</a>
 											</div><br />
 										{/if}
 									{/if}
-									<input type="file" name="{$input.name}" {if isset($input.id)}id="{$input.id}"{/if} />
+									
+									{if isset($input.lang) AND $input.lang}
+										<div class="translatable">
+											{foreach $languages as $language}
+												<div class="lang_{$language.id_lang}" id="{$input.name}_{$language.id_lang}" style="display:{if $language.id_lang == $defaultFormLanguage}block{else}none{/if}; float: left;">
+													<input type="file" name="{$input.name}_{$language.id_lang}" {if isset($input.id)}id="{$input.id}_{$language.id_lang}"{/if} />
+									
+												</div>
+											{/foreach}
+										</div>
+									{else}
+										<input type="file" name="{$input.name}" {if isset($input.id)}id="{$input.id}"{/if} />
+									{/if}
 									{if !empty($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
 								{elseif $input.type == 'password'}
 									<input type="password"
@@ -302,7 +314,6 @@
 										{if isset($input.class)}class="{$input.class}"
 										{else}class="color mColorPickerInput"{/if}
 										name="{$input.name}"
-										class="{if isset($input.class)}{$input.class}{/if}"
 										value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" />
 								{elseif $input.type == 'date'}
 									<input type="text"
@@ -421,7 +432,8 @@
 			};
 		{/foreach}
 		// we need allowEmployeeFormLang var in ajax request
-		allowEmployeeFormLang = {$allowEmployeeFormLang};
+		allowEmployeeFormLang = {$allowEmployeeFormLang|intval};
+		employee_token = '{getAdminToken tab='AdminEmployees'}';
 		displayFlags(languages, id_language, allowEmployeeFormLang);
 
 		$(document).ready(function() {
@@ -443,6 +455,7 @@
 				});
 
 		});
+	state_token = '{getAdminToken tab='AdminStates'}';
 	{block name="script"}{/block}
 	</script>
 {/if}

@@ -33,8 +33,8 @@
 	var currencies = new Array();
 	var id_currency = '';
 	var id_lang = '';
-	var txt_show_carts = '{l s='Show carts and orders for this customer.' js='1'}';
-	var txt_hide_carts = '{l s='Hide carts and orders for this customer.' js='1'}';
+	var txt_show_carts = '{l s='Show carts and orders for this customer.' js=1}';
+	var txt_hide_carts = '{l s='Hide carts and orders for this customer.' js=1}';
 	var defaults_order_state = new Array();
 	var customization_errors = false;
 	var pic_dir = '{$pic_dir}';

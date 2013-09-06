@@ -380,6 +380,7 @@ class MailAlerts extends Module
 			'{total_products}' => Tools::displayPrice($order->getTotalProductsWithTaxes(), $currency),
 			'{total_discounts}' => Tools::displayPrice($order->total_discounts, $currency),
 			'{total_shipping}' => Tools::displayPrice($order->total_shipping, $currency),
+			'{total_tax_paid}' => Tools::displayPrice(($order->total_products_wt - $order->total_products) + ($order->total_shipping_tax_incl - $order->total_shipping_tax_excl), $currency, false),
 			'{total_wrapping}' => Tools::displayPrice($order->total_wrapping, $currency),
 			'{currency}' => $currency->sign,
 			'{message}' => $message
@@ -540,8 +541,7 @@ class MailAlerts extends Module
 		$coverage = StockManagerFactory::getManager()->getProductCoverage($id_product, $id_product_attribute, $warning_coverage, $id_warehouse);
 
 		// if we need to send a notification
-		if ($product->active == 1 &&
-			($coverage < $warning_coverage) && !empty($this->_merchant_mails) &&
+		if ($product->active == 1 && $coverage !== -1 && ($coverage < $warning_coverage) && !empty($this->_merchant_mails) &&
 			Configuration::getGlobalValue('MA_MERCHANT_COVERAGE'))
 		{
 			$id_lang = (int)Context::getContext()->language->id;

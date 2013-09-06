@@ -171,11 +171,6 @@ span.view_scroll_spacer {
 
 .ie7 #pb-left-column #buy_block label {margin-right:5px;float:left}
 
-/* short description pack */
-.short_description_pack {
-	display:none;
-}
-
 /* color_picker */
 #pb-left-column #color_picker p {
 	padding-bottom:5px;

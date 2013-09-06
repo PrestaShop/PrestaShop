@@ -37,7 +37,17 @@ class AdminShippingControllerCore extends AdminController
 		foreach ($carriers as $key => $carrier)
 			if ($carrier['is_free'])
 				unset($carriers[$key]);
+		
+		$carrier_default_sort = array(
+			array('value' => Carrier::SORT_BY_PRICE, 'name' => $this->l('Price')),
+			array('value' => Carrier::SORT_BY_POSITION, 'name' => $this->l('Position'))
+		);
 
+		$carrier_default_order = array(
+			array('value' => Carrier::SORT_BY_ASC, 'name' => $this->l('Ascending')),
+			array('value' => Carrier::SORT_BY_DESC, 'name' => $this->l('Descending'))
+		);
+		
 		$this->fields_options = array(
 			'handling' => array(
 				'title' =>	$this->l('Handling'),
@@ -69,73 +79,42 @@ class AdminShippingControllerCore extends AdminController
 					</ul>',
 				'submit' => array()
 			),
-			'billing' => array(
-				'title' =>	$this->l('Billing'),
-				'icon' => 'money',
-				'fields' =>	array(
-					'PS_SHIPPING_METHOD' => array(
-						'title' => $this->l('Billing'),
+			'general' => array(
+				'title' => $this->l('Carrier options'),
+				'fields' => array(
+					'PS_CARRIER_DEFAULT' => array(
+						'title' => $this->l('Default carrier:'),
+						'desc' => $this->l('Your shop\'s default carrier'),
 						'cast' => 'intval',
-						'type' => 'radio',
-						'choices' => array(
-							0 => $this->l('According to total price'),
-							1 => $this->l('According to total weight')
-						),
-						'validation' => 'isBool'
+						'type' => 'select',
+						'identifier' => 'id_carrier',
+						'list' => array_merge(
+							array(
+								-1 => array('id_carrier' => -1, 'name' => $this->l('Best price')),
+								-2 => array('id_carrier' => -2, 'name' => $this->l('Best grade'))
+							),
+							Carrier::getCarriers((int)Configuration::get('PS_LANG_DEFAULT'), true, false, false, null, Carrier::ALL_CARRIERS))
 					),
-				)
-			),
-		);
-	}
-
-	public function initContent()
-	{
-		$array_carrier = array();
-		$carriers = Carrier::getCarriers($this->context->language->id, true, false, false, null, Carrier::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
-		foreach ($carriers as $key => $carrier)
-			if ($carrier['is_free'])
-				unset($carriers[$key]);
-			else
-				$array_carrier[] = $carrier['id_carrier'];
-
-		$id_carrier = (int)Tools::getValue('id_carrier');
-
-		if (count($carriers) && isset($array_carrier[0]))
-		{
-			if (!$id_carrier)
-				$id_carrier = (int)$array_carrier[0];
-
-			$carrierSelected = new Carrier((int)$id_carrier);
-		}
-		else
-			$carrierSelected = new Carrier((int)$id_carrier);
-
-		$currency = $this->context->currency;
-		$rangeObj = $carrierSelected->getRangeObject();
-		$rangeTable = $carrierSelected->getRangeTable();
-		$suffix = $carrierSelected->getRangeSuffix();
-
-		$rangeIdentifier = 'id_'.$rangeTable;
-		$ranges = $rangeObj->getRanges($id_carrier);
-		$delivery = Carrier::getDeliveryPriceByRanges($rangeTable, $id_carrier);
-		$deliveryArray = array();
-		foreach ($delivery as $deliv)
-			$deliveryArray[$deliv['id_zone']][$deliv['id_carrier']][$deliv[$rangeIdentifier]] = $deliv['price'];
-
-		$this->context->smarty->assign(array(
-			'zones' => $carrierSelected->getZones(),
-			'carriers' => $carriers,
-			'ranges' => $ranges,
-			'currency' => $currency,
-			'deliveryArray' => $deliveryArray,
-			'carrierSelected' => $carrierSelected,
-			'id_carrier' => $id_carrier,
-			'suffix' => $suffix,
-			'rangeIdentifier' => $rangeIdentifier,
-			'action_fees' => self::$currentIndex.'&token='.$this->token
-		));
-
-		parent::initContent();
+					'PS_CARRIER_DEFAULT_SORT' => array(
+						'title' => $this->l('Sort by:'),
+						'desc' => $this->l('This will only be visible in the Front Office'),
+						'cast' => 'intval',
+						'type' => 'select',
+						'identifier' => 'value',
+						'list' => $carrier_default_sort
+					),
+					'PS_CARRIER_DEFAULT_ORDER' => array(
+						'title' => $this->l('Order by:'),
+						'desc' => $this->l('This will only be visible in the Front Office'),
+						'cast' => 'intval',
+						'type' => 'select',
+						'identifier' => 'value',
+						'list' => $carrier_default_order
+					),
+				),
+				'submit' => array()
+			)
+		);		
 	}
 
 	public function postProcess()

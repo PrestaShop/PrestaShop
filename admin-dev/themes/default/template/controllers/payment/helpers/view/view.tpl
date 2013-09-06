@@ -31,6 +31,14 @@
 		{if isset($modules_list)}
 			{$modules_list}
 		{/if}
+		<div class="space info">
+			{l s='This is where you decide what payment modules are available for different variations like your customers\' currency, group, and country.'}
+			<br />
+			{l s='A check mark indicates you want the payment module available.'}
+			{l s='If it is not checked then this means that the Payment module is disabled.'}
+			<br />
+			{l s='Please make sure to click Save for each section.'}
+		</div>
 		{if $display_restrictions}
 			<br /><h2 class="space">{l s='Payment module restrictions'}</h2>
 			{foreach $lists as $list}

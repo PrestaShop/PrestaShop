@@ -1238,7 +1238,7 @@ product_tabs['Suppliers'] = new function(){
 	var self = this;
 
 	this.manageDefaultSupplier = function() {
-		var default_is_ok = false;
+		var default_is_set = false;
 		var availables_radio_buttons = [];
 		var radio_buttons = $('input[name="default_supplier"]');
 
@@ -1251,27 +1251,25 @@ product_tabs['Suppliers'] = new function(){
 				if (item.is(':checked'))
 				{
 					item.removeAttr("checked");
-					default_is_ok = false;
 				}
 			}
-			else
+
+			if (item.is(':checked'))
 			{
-				availables_radio_buttons.push(item);
+				default_is_set = true;
 			}
 		}
 
-		if (default_is_ok == false)
+		if (!default_is_set)
 		{
-			for (i=0; i<availables_radio_buttons.length; i++)
+			for (i=0; i<radio_buttons.length; i++)
 			{
-				var item = $(availables_radio_buttons[i]);
+				var item = $(radio_buttons[i]);
 
 				if (item.is(':disabled') == false)
 				{
 					item.attr("checked", true);
-					default_is_ok = true;
 				}
-				break;
 			}
 		}
 	};
@@ -1280,6 +1278,7 @@ product_tabs['Suppliers'] = new function(){
 		$('.supplierCheckBox').live('click', function() {
 			var check = $(this);
 			var checkbox = $('#default_supplier_'+check.val());
+
 			if (this.checked)
 			{
 				// enable default radio button associated
@@ -1290,23 +1289,26 @@ product_tabs['Suppliers'] = new function(){
 				// disable default radio button associated
 				checkbox.attr('disabled', true);
 			}
+
 			//manage default supplier check
 			self.manageDefaultSupplier();
 		});
 
 		// @TODO: a better way to fix the accordion wrong size bug when the selected page is this page
 		setTimeout(function() {
-			$('#suppliers_accordion').accordion();
-			// If one second was not enough to display page, another resize is needed
-			setTimeout(function() {
-				$('#suppliers_accordion').accordion({ heightStyle: "fill" });
-			}, 3000);
+			$('#suppliers_accordion').accordion({
+				collapsible: true,
+				autoHeight: true,
+				heightStyle: "content"});
 		}, 1000);
 
 		// Resize the accordion once the page is visible because of the bug with accordions initialized
 		// inside a display:none block not having the correct size.
 		$('#suppliers_accordion').parents('.product-tab-content').bind('displayed', function(){
-			$('#suppliers_accordion').accordion({ heightStyle: "fill" });
+			$('#suppliers_accordion').accordion({
+				collapsible: true,
+				autoHeight: true,
+				heightStyle: "content"});
 		});
 	};
 }
@@ -1408,13 +1410,19 @@ product_tabs['Warehouses'] = new function(){
 
 		// @TODO: a better way to fix the accordion wrong size bug when the selected page is this page
 		setTimeout(function() {
-			$('#warehouse_accordion').accordion();
-		}, 500);
+			$('#warehouse_accordion').accordion({
+				collapsible: true,
+				autoHeight: true,
+				heightStyle: "content"});
+		}, 1000);
 
 		// Resize the accordion once the page is visible because of the bug with accordions initialized
 		// inside a display:none block not having the correct size.
 		$('#warehouse_accordion').parents('.product-tab-content').bind('displayed', function(){
-			$('#warehouse_accordion').accordion("refresh");
+			$('#warehouse_accordion').accordion({
+				collapsible: true,
+				autoHeight: true,
+				heightStyle: "content"});
 		});
 	};
 }

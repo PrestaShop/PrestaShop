@@ -137,14 +137,14 @@
 	{/if}
 	</fieldset>
 	<fieldset data-role="fieldcontain">
-		<input type="checkbox" name="same" id="recyclable" value="1" class="delivery_option_radio" {if $recyclable == 1}checked="checked"{/if} />
+		<input type="checkbox" name="same" id="recyclable" value="1" class="delivery_option_radio" {if $recyclable == 1}checked="checked"{/if} autocomplete="off"/>
 		<label for="recyclable">{l s='I agree to receive my order in recycled packaging'}.</label>
 	</fieldset>
 
 	{if $giftAllowed}
 		<h3 class="gift_title">{l s='Gift'}</h3>
 		<p class="checkbox">
-			<input type="checkbox" name="gift" id="gift" value="1" {if $cart->gift == 1}checked="checked"{/if} />
+			<input type="checkbox" name="gift" id="gift" value="1" {if $cart->gift == 1}checked="checked"{/if} autocomplete="off"/>
 			<label for="gift">{l s='I would like my order to be gift wrapped.'}</label>
 			<br />
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -164,7 +164,7 @@
 	
 	<h3 class="bg">{l s='Terms of service'}</h3>
 	<fieldset data-role="fieldcontain" id="cgv_checkbox">
-		<input type="checkbox" value="1" id="cgv" name="cgv" {if $checkedTOS}checked="checked"{/if} />
+		<input type="checkbox" value="1" id="cgv" name="cgv" {if $checkedTOS}checked="checked"{/if} autocomplete="off"/>
 		<label for="cgv">{l s='I agree to the terms of service and will adhere to them unconditionally.'}</label>
 	</fieldset>
 	<p class="lnk_CGV"><a href="{$link_conditions}" data-ajax="false">{l s='(Read Terms of Service)'}</a></p>
