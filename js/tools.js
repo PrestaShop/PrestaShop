@@ -322,6 +322,7 @@ function fancyChooseBox(question, title, buttons, otherParams)
     for (var caption in buttons) {
         if (!buttons.hasOwnProperty(caption)) continue;
         funcName = buttons[caption];
+        if (typeof otherParams == 'undefined') otherParams = 0;
         otherParams = escape(JSON.stringify(otherParams));
         action = funcName ? "$.fancybox.close();window['" + funcName + "'](JSON.parse(unescape('" + otherParams + "')), " + i + ")" : "$.fancybox.close()";
         msg += '<input class="button" style="margin-right: 5px" type="button" value="' + caption + '" onclick="' + action + '" />';
