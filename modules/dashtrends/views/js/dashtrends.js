@@ -1,6 +1,5 @@
 function line_chart_trends(widget_name, chart_details)
 {
-	console.log(chart_details.data);
 	nv.addGraph(function() {  
 		var chart = nv.models.lineChart()
 				 .useInteractiveGuideline(true)
