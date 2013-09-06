@@ -2481,89 +2481,66 @@ exit;
 		return preg_replace('/\\\[px]\{[a-z]\}{1,2}|(\/[a-z]*)u([a-z]*)$/i', "$1$2", $pattern);
 	}
 
+	protected static $is_addons_up = true;
 	public static function addonsRequest($request, $params = array())
 	{
-		$addons_url = 'api.addons.prestashop.com';
-		$postData = '';
-		$postDataArray = array(
+		if (!self::$is_addons_up)
+			return false;
+
+		$postData = http_build_query(array(
 			'version' => isset($params['version']) ? $params['version'] : _PS_VERSION_,
 			'iso_lang' => Tools::strtolower(isset($params['iso_lang']) ? $params['iso_lang'] : Context::getContext()->language->iso_code),
 			'iso_code' => Tools::strtolower(isset($params['iso_country']) ? $params['iso_country'] : Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))),
-			'shop_url' => urlencode(isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain()),
-			'mail' => urlencode(isset($params['email']) ? $params['email'] : Configuration::get('email'))
-		);
-		foreach ($postDataArray as $postDataKey => $postDataValue)
-			$postData .= '&'.$postDataKey.'='.$postDataValue;
-		$postData = ltrim($postData, '&');
+			'shop_url' => isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain(),
+			'mail' => isset($params['email']) ? $params['email'] : Configuration::get('email')
+		));
 
-		// Config for each request
-		if ($request == 'native')
+		$protocols = array('https');
+		switch ($request)
 		{
-			// Define protocol accepted and post data values for this request
-			$protocolsList = array('https://' => 443, 'http://' => 80);
-			$postData .= '&method=listing&action=native';
-		}
-		if ($request == 'must-have')
-		{
-			// Define protocol accepted and post data values for this request
-			$protocolsList = array('https://' => 443, 'http://' => 80);
-			$postData .= '&method=listing&action=must-have';
-		}
-		if ($request == 'customer')
-		{
-			// Define protocol accepted and post data values for this request
-			$protocolsList = array('https://' => 443);
-			$postData .= '&method=listing&action=customer&username='.urlencode(trim(Context::getContext()->cookie->username_addons)).'&password='.urlencode(trim(Context::getContext()->cookie->password_addons));
-		}
-		if ($request == 'check_customer')
-		{
-			// Define protocol accepted and post data values for this request
-			$protocolsList = array('https://' => 443);
-			$postData .= '&method=check_customer&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
-		}
-		if ($request == 'module')
-		{
-			// Define protocol accepted and post data values for this request
-			if (isset($params['username_addons']) && isset($params['password_addons']))
-			{
-				$protocolsList = array('https://' => 443);
-				$postData .= '&method=module&id_module='.urlencode($params['id_module']).'&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
-			}
-			else
-			{
-				$protocolsList = array('https://' => 443, 'http://' => 80);
+			case 'native':
+				$protocols[] = 'http';
+				$postData .= '&method=listing&action=native';
+				break;
+			case 'must-have':
+				$protocols[] = 'http';
+				$postData .= '&method=listing&action=must-have';
+				break;
+			case 'customer':
+				$postData .= '&method=listing&action=customer&username='.urlencode(trim(Context::getContext()->cookie->username_addons)).'&password='.urlencode(trim(Context::getContext()->cookie->password_addons));
+				break;
+			case 'check_customer':
+				$postData .= '&method=check_customer&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
+				break;
+			case 'module':
 				$postData .= '&method=module&id_module='.urlencode($params['id_module']);
-			}
-		}
-		
-		if ($request == 'install-modules')
-		{
-			// Define protocol accepted and post data values for this request
-			$protocolsList = array('https://' => 443, 'http://' => 80);
-			$postData .= '&method=listing&action=install-modules';
-			
+				if (isset($params['username_addons']) && isset($params['password_addons']))
+					$postData .= '&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
+				else
+					$protocols[] = 'http';
+
+				break;
+			case 'install-modules':
+				$protocols[] = 'http';
+				$postData .= '&method=listing&action=install-modules';
+				break;
+			default:
+				return false;
 		}
 
-		// Make the request
-		$opts = array(
-			'http'=>array(
+		$context = stream_context_create(array(
+			'http' => array(
 				'method'=> 'POST',
 				'content' => $postData,
 				'header'  => 'Content-type: application/x-www-form-urlencoded',
 				'timeout' => 5,
 			)
-		);
-		$context = stream_context_create($opts);
-		foreach ($protocolsList as $protocol => $port)
-		{
-			$content = Tools::file_get_contents($protocol.$addons_url, false, $context);
-
-			// If content returned, we cache it
-			if ($content)
+		));
+		foreach ($protocols as $protocol)
+			if ($content = Tools::file_get_contents($protocol.'://api.addons.prestashop.com', false, $context))
 				return $content;
-		}
 
-		// No content, return false
+		self::$is_addons_up = false;
 		return false;
 	}
 
