@@ -105,3 +105,4 @@ modules/uspscarrier
 modules/wexpay
 modules/yotpo
 modules/zingaya
+!modules/twenga
