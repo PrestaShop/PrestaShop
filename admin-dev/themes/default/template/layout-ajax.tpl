@@ -34,7 +34,7 @@
 {else}
 
 	{if isset($conf)}
-		<div class="alert">
+		<div class="alert alert-success">
 			{$conf}
 		</div>
 	{/if}

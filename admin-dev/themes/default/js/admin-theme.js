@@ -23,7 +23,7 @@
 */
 
 $( document ).ready(function() {
-  $('#nav-sidebar li.maintab.has_submenu').append('<span class="submenu_expand"><i class="icon-collapse"></i></span>');
+  $('#nav-sidebar li.maintab.has_submenu').append('<span class="submenu_expand"></span>');
   $('#nav-sidebar .submenu_expand').click(function(){
     //var $tab = $(this).parent().data('submenu');
     var $navId = $(this).parent();

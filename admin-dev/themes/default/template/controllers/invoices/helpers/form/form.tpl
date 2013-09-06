@@ -63,7 +63,7 @@
 					<input type="checkbox" name="{$input.name}[]" id="{$id_checkbox}" value="{$value[$input.values.id]|intval}" {if isset($fields_value[$id_checkbox]) && $fields_value[$id_checkbox]}checked="checked"{/if} />
 					{if $value['invoice']}
 						{$value[$input.values.name]}
-						<span class="badge-success">
+						<span class="badge badge-success">
 						{if isset($statusStats[$value['id_order_state']]) && $statusStats[$value['id_order_state']]}
 							{$statusStats[$value['id_order_state']]}
 						{else}
@@ -72,7 +72,7 @@
 						</span>
 					{else}
 						{$value[$input.values.name]}
-						<span class="badge-error">
+						<span class="badge badge-error">
 						{if isset($statusStats[$value['id_order_state']]) && $statusStats[$value['id_order_state']]}
 							{$statusStats[$value['id_order_state']]}
 						{else}
