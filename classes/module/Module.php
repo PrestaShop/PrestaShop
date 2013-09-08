@@ -299,7 +299,7 @@ abstract class ModuleCore
 					$this->_errors[] = $upgrade_detail['number_upgrade_left'].' '.$this->l('upgrade left');
 				}
 
-				if ($upgrade_detail['duplicate'])
+				if (isset($upgrade_detail['duplicate']) && $upgrade_detail['duplicate'])
 					$this->_errors[] = sprintf(Tools::displayError('Module %s cannot be upgraded this time: please refresh this page to update it.'), $this->name);
 				else
 					$this->_errors[] = $this->l('To prevent any problem, this module has been turned off');
