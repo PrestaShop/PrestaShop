@@ -51,7 +51,7 @@ function move_translations_module_file()
 		{
 			// Name for the old file and the new file
 			$old_file = _PS_MODULE_DIR_.$module_name.'/'.$lang['iso_code'].'.php';
-			if (!file_exists($old_file))
+			if (!@file_exists($old_file))
 				continue;
 
 			$dir_translations = _PS_MODULE_DIR_.$module_name.'/translations/';
@@ -61,7 +61,7 @@ function move_translations_module_file()
 			if (!is_dir($dir_translations))
 				$res &= mkdir($dir_translations, 0777);
 
-				if (!rename($old_file, $new_file))
+				if (!@rename($old_file, $new_file))
 				{
 					$error_list[] = $module_name.' - '.$lang['iso_code']."<br/>\r\n";
 					$res &= false;
