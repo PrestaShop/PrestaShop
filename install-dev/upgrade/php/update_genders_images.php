@@ -32,6 +32,6 @@ function update_genders_images()
 		@rename(_PS_ROOT_DIR_.'/img/genders/Ms.jpg', _PS_ROOT_DIR_.'/img/genders/2.jpg');
 	if (@file_exists(_PS_ROOT_DIR_.'/img/genders/Miss.jpg'))
 		@rename(_PS_ROOT_DIR_.'/img/genders/Miss.jpg', _PS_ROOT_DIR_.'/img/genders/3.jpg');
-	if (@file_exists(_PS_ROOT_DIR_.'genders/unknown.jpg'))
+	if (@file_exists(_PS_ROOT_DIR_.'/img/genders/unknown.jpg'))
 		@rename(_PS_ROOT_DIR_.'/img/genders/unknown.jpg', _PS_ROOT_DIR_.'/img/genders/Unknown.jpg');	
 }
