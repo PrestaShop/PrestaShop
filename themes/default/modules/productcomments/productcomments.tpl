@@ -24,12 +24,12 @@
 *}
 <script type="text/javascript">
 var productcomments_controller_url = '{$productcomments_controller_url}';
-var confirm_report_message = "{l s='Are you sure you want report this comment?' mod='productcomments'}";
+var confirm_report_message = '{l s='Are you sure you want report this comment?' mod='productcomments' js=1}';
 var secure_key = "{$secure_key}";
 var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
-var productcomment_added = '{l s='Your comment has been added !' mod='productcomments'}';
-var productcomment_title = '{l s='New comment' mod='productcomments'}';
-var productcomment_ok = '{l s='OK' mod='productcomments'}';
+var productcomment_added = '{l s='Your comment has been added !' mod='productcomments' js=1}';
+var productcomment_title = '{l s='New comment' mod='productcomments' js=1}';
+var productcomment_ok = '{l s='OK' mod='productcomments' js=1}';
 </script>
 
 <div id="idTab5">
