@@ -650,7 +650,7 @@ class ImageCore extends ObjectModel
 	 */
 	public static function testFileSystem()
 	{
-		$safe_mode = ini_get('safe_mode');
+		$safe_mode = Tools::getSafeModeStatus();
 		if ($safe_mode)
 			return false;
 		$folder1 = _PS_PROD_IMG_DIR_.'testfilesystem/';
