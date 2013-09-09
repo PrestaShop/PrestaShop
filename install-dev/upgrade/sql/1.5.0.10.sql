@@ -4,6 +4,8 @@
 
 UPDATE `PREFIX_meta` SET `page` = 'contact' WHERE `page` = 'contact-form';
 
+DROP TABLE IF EXISTS `PREFIX_shop_group`;
+
 RENAME TABLE `PREFIX_group_shop` TO `PREFIX_shop_group`;
 ALTER TABLE `PREFIX_shop_group` CHANGE `id_group_shop` `id_shop_group` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 ALTER TABLE `PREFIX_shop` CHANGE `id_group_shop` `id_shop_group` INT( 11 ) UNSIGNED NOT NULL;

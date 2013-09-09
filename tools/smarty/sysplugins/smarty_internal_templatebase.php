@@ -278,7 +278,9 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
                 //
                 // render cached template
                 //
-                $_template->properties['unifunc']($_template);
+                /* PrestaShop related to PSCFV-10040 - http://www.smarty.net/forums/viewtopic.php?p=76467 */
+                if (isset($_template->properties['unifunc']))
+                	$_template->properties['unifunc']($_template);
                 // any unclosed {capture} tags ?
                 if (isset($_template->_capture_stack[0][0])) {
                     $_template->capture_error();

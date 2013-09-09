@@ -49,7 +49,7 @@ class CacheMemcacheCore extends Cache
        
 		if(is_array($servers) && count($servers) > 0)
 		{
-		    $this->keys = $this->memcache->get(_COOKIE_IV_);
+		    $this->keys = @$this->memcache->get(_COOKIE_IV_);
 		    if (!is_array($this->keys))
 		        $this->keys = array();		
 		}

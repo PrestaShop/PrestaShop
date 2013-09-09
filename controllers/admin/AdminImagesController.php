@@ -641,7 +641,7 @@ class AdminImagesControllerCore extends AdminController
 	public function initMoveImages()
 	{
 		$this->context->smarty->assign(array(
-			'safe_mode' => ini_get('safe_mode'),
+			'safe_mode' => Tools::getSafeModeStatus(),
 			'link_ppreferences' => 'index.php?tab=AdminPPreferences&token='.Tools::getAdminTokenLite('AdminPPreferences').'#PS_LEGACY_IMAGES_on',
 		));
 }
