@@ -118,6 +118,9 @@ abstract class ModuleCore
 
 	/** @var Smarty_Data */
 	protected $smarty;
+
+	/** @var currentSmartySubTemplate */	
+	protected $current_subtemplate = null;
 	
 	
 	const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
@@ -1653,19 +1656,34 @@ abstract class ModuleCore
 			if ($cacheId !== null)
 				Tools::enableCache();
 
-			$smarty_subtemplate = $this->context->smarty->createTemplate(
-				$this->getTemplatePath($template),
-				$cacheId,
-				$compileId,
-				$this->smarty
-			);
-			$result = $smarty_subtemplate->fetch();
+			$result = $this->getCurrentSubTemplate($template, $cacheId, $compileId)->fetch();
 
 			if ($cacheId !== null)
 				Tools::restoreCacheSettings();
 
+			$this->resetCurrentSubTemplate($template, $cacheId, $compileId);
+
 			return $result;
 		}
+	}
+	
+	protected function getCurrentSubTemplate($template, $cache_id = null, $compile_id = null)
+	{
+		if (!isset($this->current_subtemplate[$template.'_'.$cache_id.'_'.$compile_id]))
+		{
+			$this->current_subtemplate[$template.'_'.$cache_id.'_'.$compile_id] = $this->context->smarty->createTemplate(
+				$this->getTemplatePath($template),
+				$cache_id,
+				$compile_id,
+				$this->smarty
+			);
+		}
+		return $this->current_subtemplate[$template.'_'.$cache_id.'_'.$compile_id];
+	}
+	
+	protected function resetCurrentSubTemplate($template, $cache_id, $compile_id)
+	{
+		$this->current_subtemplate[$template.'_'.$cache_id.'_'.$compile_id] = null;
 	}
 
 	/**
@@ -1696,10 +1714,8 @@ abstract class ModuleCore
 
 	public function isCached($template, $cacheId = null, $compileId = null)
 	{
-		$context = Context::getContext();
-
 		Tools::enableCache();
-		$is_cached =  $context->smarty->isCached($this->getTemplatePath($template), $cacheId, $compileId);
+		$is_cached = $this->getCurrentSubTemplate($this->getTemplatePath($template), $cacheId, $compileId)->isCached($this->getTemplatePath($template), $cacheId, $compileId);
 		Tools::restoreCacheSettings();
 
 		return $is_cached;
