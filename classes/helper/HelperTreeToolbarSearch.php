@@ -24,54 +24,34 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class HelperTreeToolbarLinkCore extends HelperTreeToolbarButtonCore implements
+class HelperTreeToolbarSearchCore extends HelperTreeToolbarButtonCore implements
 	HelperITreeToolbarButtonCore
 {
-	private   $_icon_class;
-	private   $_link;
-	protected $_template = 'tree_toolbar_link.tpl';
+	protected $_template = 'tree_toolbar_search.tpl';
 
-	public function __construct($label, $action = null, $link, $iconClass)
+	public function __construct($label, $action = null, $class = null)
 	{
-		parent::__construct($label, $action);
-		$this->setLink($link);
-		$this->setIconClass($iconClass);
-	}
+		parent::__construct($label, $action, $class);
 
-	public function setIconClass($value)
-	{
-		$this->_icon_class = $value;
-		return $this;
-	}
+		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
+		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
+		$bo_theme = ((Validate::isLoadedObject($this->getContext()->employee)
+			&& $this->getContext()->employee->bo_theme) ? $this->getContext()->employee->bo_theme : 'default');
 
-	public function getIconClass()
-	{
-		return $this->_icon_class;
-	}
-
-	public function setLink($value)
-	{
-		$this->_link = $value;
-		return $this;
-	}
-
-	public function getLink()
-	{
-		if (!isset($this->_link))
-			$this->_link = '';
-
-		return $this->_link;
+		if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$bo_theme.DIRECTORY_SEPARATOR
+			.'template'))
+			$bo_theme = 'default';
+		$this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
+			.'/themes/'.$bo_theme.'/js/vendor/typeahead.min.js');
 	}
 
 	public function render()
 	{
 		$template = parent::render();
 		$template->assign(array(
-			'link'       => $this->getLink(),
 			'action'     => $this->getAction(),
 			'label'      => $this->getLabel(),
-			'class'      => $this->getClass(),
-			'icon_class' => $this->getIconClass()
+			'class'      => $this->getClass()
 		));
 		return $template->fetch();
 	}
