@@ -477,8 +477,13 @@ class CategoryCore extends ObjectModel
 		return $categories;
 	}
 
-	public static function getNestedCategories($id_lang = false, $active = true, $sql_filter = '', $sql_sort = '', $sql_limit = '')
+	public static function getNestedCategories($parent_category = 0,
+		$id_lang = false, $active = true, $sql_filter = '', $sql_sort = '',
+		$sql_limit = '')
 	{
+		if (!Validate::isInt($parent_category))
+			die(Tools::displayError());
+
 		if (!Validate::isBool($active))
 			die(Tools::displayError());
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
@@ -501,7 +506,7 @@ class CategoryCore extends ObjectModel
 			$current = &$buff[$row['id_category']];
 			$current = $row;
 
-			if ($row['id_parent'] == 0)
+			if ($row['id_parent'] == $parent_category)
 				$categories[$row['id_category']] = &$current;
 			else
 				$buff[$row['id_parent']]['children'][$row['id_category']] = &$current;
