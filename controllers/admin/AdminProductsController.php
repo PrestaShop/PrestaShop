@@ -2377,14 +2377,22 @@ class AdminProductsControllerCore extends AdminController
 
 	public function renderAssociationsCategoriesTree()
 	{
-		$tree = new HelperTree('associated-categories-tree', Category::getNestedCategories());
+		$categories = Category::getSimpleCategories(1);
+		$search_source = array();
+		foreach ($categories as $key => $category)
+			$search_source[] = $category['name'];
 
+		$tree = new HelperTree('associated-categories-tree', Category::getNestedCategories());
+		$search = new HelperTreeToolbarSearch('Find a category:');
+		$search->setTemplateDirectory($this->context->smarty->getTemplateDir(0).'/controllers/products/helpers/tree')
+			->addAttribute('categories_name', '"'.implode('","', $search_source).'"');
 		$html = $tree->setTitle('Associated categories')
 			->setActions(array(
 				new HelperTreeToolbarLink('Collapse All', '$(\'#associated-categories-tree\').tree(\'collapseAll\')', '#', 'icon-collapse-alt'),
 				new HelperTreeToolbarLink('Expand All', '$(\'#associated-categories-tree\').tree(\'expandAll\')', '#', 'icon-expand-alt'),
 				new HelperTreeToolbarLink('Check All', 'checkAllAssociatedCategories();', '#', 'icon-check-sign'),
-				new HelperTreeToolbarLink('Uncheck All', 'uncheckAllAssociatedCategories();', '#', 'icon-check-empty')
+				new HelperTreeToolbarLink('Uncheck All', 'uncheckAllAssociatedCategories();', '#', 'icon-check-empty'),
+				$search
 			))
 			->setTemplateDirectory($this->context->smarty->getTemplateDir(0).'/controllers/products/helpers/tree')
 			->setNodeFolderTemplate('tree_node_folder_associations.tpl')
@@ -3019,14 +3027,14 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign('accessories', $accessories);
 
 		$product->manufacturer_name = Manufacturer::getNameById($product->id_manufacturer);
-
 		$tab_root = array('id_category' => $root->id, 'name' => $root->name);
+		$category_tree = $helper->renderCategoryTree($tab_root, $selected_cat, 'categoryBox', false, true, array(), false, true);
 		$helper = new Helper();
 		$data->assign(array('default_category' => $default_category,
 					'selected_cat_ids' => implode(',', array_keys($selected_cat)),
 					'selected_cat' => $selected_cat,
 					'id_category_default' => $product->getDefaultCategory(),
-					'category_tree' => $this->renderAssociationsCategoriesTree(),
+					'category_tree' => $category_tree,
 					'product' => $product,
 					'link' => $this->context->link,
 					'is_shop_context' => Shop::getContext() == Shop::CONTEXT_SHOP

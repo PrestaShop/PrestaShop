@@ -23,8 +23,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div class="panel">
-	{if $header}{$header}{/if}
-	{if $nodes}
+	{if isset($header)}{$header}{/if}
+	{if isset($nodes)}
 	<ul id="{$id}" class="nav nav-list tree">{$nodes}</ul>
 	{/if}
 </div>

@@ -22,4 +22,4 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<div class="pull-right">{if isset($actions)}{foreach from=$actions item=action}{$action}{/foreach}{/if}</div>
+<label for="node-search">{l s=$label}</label>&nbsp;<input type="text" id="node-search" name="node-search"{if isset($class)} class="{$class}"{/if}{if isset($categories_name)} data-provide="typeahead" data-source="[{$categories_name}]"{/if} />

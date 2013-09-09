@@ -22,4 +22,4 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<div class="pull-right">{if $actions}{foreach from=$actions item=action}{$action}{/foreach}{/if}</div>
+<div class="pull-right">{if isset($actions)}{foreach from=$actions item=action}{$action}{/foreach}{/if}</div>
