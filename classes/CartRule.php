@@ -464,7 +464,7 @@ class CartRuleCore extends ObjectModel
 		// Check if the products chosen by the customer are usable with the cart rule
 		if ($this->product_restriction)
 		{
-			$r = $this->checkProductRestrictions($context, false, $display_error);
+			$r = $this->checkProductRestrictions($context, false, $display_error, $alreadyInCart);
 			if ($r !== false && $display_error)
 				return $r;
 			elseif (!$r && !$display_error)
@@ -523,6 +523,7 @@ class CartRuleCore extends ObjectModel
 					return (!$display_error) ? false : Tools::displayError('This voucher is already in your cart');
 				if ($otherCartRule['gift_product'])
 					--$nb_products;
+
 				if ($this->cart_rule_restriction && $otherCartRule['cart_rule_restriction'] && $otherCartRule['id_cart_rule'] != $this->id)
 				{
 					$combinable = Db::getInstance()->getValue('
@@ -550,7 +551,7 @@ class CartRuleCore extends ObjectModel
 			return true;
 	}
 
-	protected function checkProductRestrictions(Context $context, $return_products = false, $display_error = true)
+	protected function checkProductRestrictions(Context $context, $return_products = false, $display_error = true, $alreadyInCart = false)
 	{
 		$selectedProducts = array();
 
@@ -585,6 +586,8 @@ class CartRuleCore extends ObjectModel
 								if (in_array($cartAttribute['id_attribute'], $productRule['values']))
 								{
 									$countMatchingProducts += $cartAttribute['quantity'];
+									if ($alreadyInCart && $this->gift_product == $cartProduct['id_product']&& $this->gift_product_attribute == $cartProduct['id_product_attribute'])
+										--$countMatchingProducts;
 									$matchingProductsList[] = $cartAttribute['id_product'].'-'.$cartAttribute['id_product_attribute'];
 								}
 							if ($countMatchingProducts < $productRuleGroup['quantity'])
@@ -603,6 +606,8 @@ class CartRuleCore extends ObjectModel
 								if (in_array($cartProduct['id_product'], $productRule['values']))
 								{
 									$countMatchingProducts += $cartProduct['quantity'];
+									if ($alreadyInCart && $this->gift_product == $cartProduct['id_product'])
+										--$countMatchingProducts;
 									$matchingProductsList[] = $cartProduct['id_product'].'-0';
 								}
 							if ($countMatchingProducts < $productRuleGroup['quantity'])

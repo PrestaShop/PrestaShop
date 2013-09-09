@@ -34,6 +34,6 @@ ALTER TABLE `PREFIX_product_shop` DROP INDEX `date_add`, ADD INDEX `date_add` (`
 
 UPDATE `PREFIX_hook` SET `live_edit` = '1' WHERE `name` LIKE 'leftcolumn';
 
-UPDATE `PREFIX_configuration` SET `name` = '0' WHERE `name` LIKE 'PS_LEGACY_IMAGES' AND `value` LIKE '1';
+UPDATE `PREFIX_configuration` SET `value` = '0' WHERE `name` LIKE 'PS_LEGACY_IMAGES' AND `value` = 1;
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES('PS_SMARTY_CONSOLE_KEY', 'SMARTY_DEBUG', NOW(), NOW());

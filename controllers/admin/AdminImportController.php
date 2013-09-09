@@ -2435,17 +2435,12 @@ class AdminImportControllerCore extends AdminController
 				$discount_rate = (float)$info['discount_rate'];
 				$tax_rate = (float)$info['tax_rate'];
 
-				// checks if one product is there only once
-				if (isset($product['id_product']))
-				{
-					if ($product['id_product'] == $id_product_attribute)
-						$this->errors[] = sprintf($this->l('Product (%d/%D) cannot be added twice (at line %d).'), $id_product,
-							$id_product_attribute, $current_line + 1);
-					else
-						$product['id_product'] = $id_product_attribute;
-				}
+				// checks if one product/attribute is there only once
+				if (isset($products[$id_product][$id_product_attribute]))
+					$this->errors[] = sprintf($this->l('Product/Attribute (%d/%d) cannot be added twice (at line %d).'), $id_product,
+						$id_product_attribute, $current_line + 1);					
 				else
-					$product['id_product'] = 0;
+					$products[$id_product][$id_product_attribute] = $quantity_expected;	
 
 				// checks parameters
 				if (false === ($supplier_reference = ProductSupplier::getProductSupplierReference($id_product, $id_product_attribute, $supply_order->id_supplier)))
