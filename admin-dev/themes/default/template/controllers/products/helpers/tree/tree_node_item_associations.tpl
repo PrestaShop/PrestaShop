@@ -22,4 +22,10 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<li><input type="checkbox" name="id-category[]" value="{$node['id_category']}" />&nbsp;{$name}</li>
+<li class="tree-item">
+	<label class="tree-item-name">
+	<input type="checkbox" name="id-category[]" value="{$node['id_category']}" />
+	<i class="tree-dot"></i>
+	{$name}
+	</label>
+</li>

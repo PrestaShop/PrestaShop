@@ -251,7 +251,7 @@
 				<i class="icon-eraser"></i> {l s='Reset'}
 			</button>
 			<button type="submit" id="submitFilterButton{$list_id}" name="submitFilter" class="btn btn-default btn-small" />
-				<i class="icon-filter"></i> {l s='Filter'}
+				<i class="icon-ok"></i> {l s='Filter'}
 			</button>
 		</span>
 		{/if}

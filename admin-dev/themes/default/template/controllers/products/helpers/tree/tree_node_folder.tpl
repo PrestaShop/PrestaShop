@@ -23,7 +23,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <li class="tree-folder">
-	
 	<span class="tree-folder-name">
 		<input type="radio" name="id-category" value="{$node['id_category']}" />
 		<i class="icon-folder-close"></i>

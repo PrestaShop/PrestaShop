@@ -23,12 +23,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <li class="tree-item">
-	
 	<label class="tree-item-name">
-
 		<input type="radio" name="id-category" value="{$node['id_category']}" />
 		<i class="tree-dot"></i>
 		{$name}
 	<label>
-	
 </li>
