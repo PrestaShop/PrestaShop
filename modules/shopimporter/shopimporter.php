@@ -1483,9 +1483,11 @@ class shopimporter extends ImportModule
 			$order->total_products_wt = (float)$item['total_products_wt'];
 			$order->total_discounts = (float)$item['total_discounts'];
 			$order->total_shipping = (float)$item['total_shipping'];
+			$order->total_shipping_tax_incl = (float)$item['total_shipping'];
 			$order->carrier_tax_rate = (float)$carrier->getTaxesRate(new Address((int)$item[Configuration::get('PS_TAX_ADDRESS_TYPE')]));
 			$order->total_wrapping = (float)$item['total_wrapping'];
 			$order->total_paid = (float)$item['total_paid'];
+			$order->total_paid_tax_incl = (float)$item['total_paid'];
 			$order->total_paid_real = (float)$item['total_paid_real'];
 			$order->invoice_date = '0000-00-00 00:00:00';
 			$order->delivery_date = '0000-00-00 00:00:00';
