@@ -30,6 +30,7 @@ $(document).ready( function () {
 	});
 
 	refreshDashboard(false, false);
+	getBlogRss();
 });
 
 function refreshDashboard(module_name, use_push)
@@ -176,4 +177,31 @@ function data_chart(widget_name, charts)
 {
 	for (chart_id in charts)
 		window[charts[chart_id].chart_type](widget_name, charts[chart_id]);
+}
+
+function getBlogRss()
+{
+	$.ajax({
+		url : dashboard_ajax_url,
+		data : {
+			ajax:true,
+			action:'getBlogRss'
+			},
+		dataType: 'json',
+		success : function(jsonData){
+			if (!jsonData.has_errors)
+			{
+				for (var article in jsonData.rss)
+				{
+					article_html = '<article><strong>'+jsonData.rss[article].title+'</strong><br>'+jsonData.rss[article].short_desc+'</article><br>';
+					$('.dash_news h4').after(article_html);
+				}
+			}
+			else
+				$('.dash_news').hide();
+		},
+		error : function(data){
+			//@TODO display errors
+		}
+	});
 }

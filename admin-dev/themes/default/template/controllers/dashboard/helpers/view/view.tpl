@@ -52,33 +52,26 @@
 		<div class="col-lg-2">
 			<section class="dash_news panel">
 				<h4><i class="icon-rss"></i> PrestaShop News</h4>
-				<article>
-				<strong>Important it is to focus marketing efforts.</strong><br/>
-				Let’s go over how to use newsletters to increase traffic to your online store and we’ll review the benefits, what to include and how to get subscribers.
-				</article>
-				<br/>
-				<article>
-				<strong>Important it is to focus marketing efforts.</strong><br/>
-				Let’s go over how to use newsletters to increase traffic to your online store and we’ll review the benefits, what to include and how to get subscribers.
-				</article>
-				<br/>
-				<article>
-				<strong>Important it is to focus marketing efforts.</strong><br/>
-				Let’s go over how to use newsletters to increase traffic to your online store and we’ll review the benefits, what to include and how to get subscribers.
-				</article>
 			</section>
 			<section class="dash_links panel">
-				<h4><i class="icon-link"></i> Useful Links</h4>
-					<ul>
-						<li><a href="#">link</a></li>
-						<li><a href="#">link</a></li>
-						<li><a href="#">link</a></li>
-						<li><a href="#">link</a></li>
-					</ul>
+				<h4><i class="icon-link"></i>{l s="Useful PrestaShop Links"}</h4>
+					<dl>
+						<dt>{l s="Discover the latest official documentation :"}</dt>
+						<dd><a href="http://doc.prestashop.com/display/PS16?utm_source=backoffice_dashboard" target="_blank">{l s="PrestaShop documentation"}</a></dd>
+					</dl>
+					<dl>
+						<dt>{l s="Use the PrestaShop forum &amp; discover a great community :"}</dt>
+						<dd><a href="http://www.prestashop.com/forums?utm_source=backoffice_dashboard" target="_blank">{l s="Go to forums.prestashop.com"}</a></dd>
+					</dl>
+					<dl>
+						<dt>{l s="Enhance your Shop with new templates &amp; modules :"}</dt>
+						<dd><a href="http://addons.prestashop.com?utm_source=backoffice_dashboard" target="_blank">{l s="Go to addons.prestashop.com"}</a></dd>
+					</dl>
 			</section>
 		</div>
 	</div>
 </div>
+
 <script>
 var testdata = [
 	{
