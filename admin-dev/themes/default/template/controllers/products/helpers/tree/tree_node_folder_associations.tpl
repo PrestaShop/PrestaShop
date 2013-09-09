@@ -23,10 +23,13 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <li>
-	<i class="icon-folder-open"></i>&nbsp;
-	<input type="checkbox" name="id-category[]" value="{$node['id_category']}" />&nbsp;
-	<label class="tree-toggler nav-header">{$name}</label>
-	<ul class="nav nav-list tree">
+	<i class="icon-folder-open"></i>
+
+	<input type="checkbox" name="id-category[]" value="{$node['id_category']}" />
+
+	<label class="tree-toggler tree-folder-name">{$name}</label>
+
+	<ul class="tree">
 		{$children}
 	</ul>
 </li>

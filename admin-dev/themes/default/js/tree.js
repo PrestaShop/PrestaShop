@@ -14,17 +14,26 @@ Tree.prototype =
 		this.$element.find("label.tree-toggler").click(
 			function ()
 			{
-				if ($(this).parent().children("ul.tree").is(":visible"))
-					 $(this).parent().children(".icon-folder-open")
+				if ($(this).parent().parent().children("ul.tree").is(":visible"))
+				{
+					$(this).parent().children(".icon-folder-open")
 						.removeClass("icon-folder-open")
 						.addClass("icon-folder-close");
+				}
 				else
+				{
 					$(this).parent().children(".icon-folder-close")
 						.removeClass("icon-folder-close")
 						.addClass("icon-folder-open");
-
-				$(this).parent().children("ul.tree").toggle(300);
-				$(this).parent().addClass('tree-selected');
+				}
+				$(this).parent().parent().children("ul.tree").toggle(300);
+			}
+		);
+		this.$element.find("li").click(
+			function ()
+			{
+				$('.tree-selected').removeClass("tree-selected");
+				$('li input:checked').parent().addClass("tree-selected");
 			}
 		);
 	},
@@ -37,7 +46,7 @@ Tree.prototype =
 				$(this).parent().children(".icon-folder-open")
 					.removeClass("icon-folder-open")
 					.addClass("icon-folder-close");
-				$(this).parent().children("ul.tree").hide($speed);
+				$(this).parent().parent().children("ul.tree").hide($speed);
 			}
 		);
 	},
@@ -50,7 +59,7 @@ Tree.prototype =
 				$(this).parent().children(".icon-folder-close")
 					.removeClass("icon-folder-close")
 					.addClass("icon-folder-open");
-				$(this).parent().children("ul.tree").show($speed);
+				$(this).parent().parent().children("ul.tree").show($speed);
 			}
 		);
 	},
@@ -66,8 +75,12 @@ $.fn.tree = function (option, value)
 			var data = $this.data('tree');
 			var options = typeof option === 'object' && option;
 
-			if (!data) $this.data('tree', (data = new Tree(this, options)));
-			if (typeof option === 'string') methodReturn = data[option](value);
+			if (!data){
+				$this.data('tree', (data = new Tree(this, options)));
+			}
+			if (typeof option === 'string') {
+				methodReturn = data[option](value);
+			}
 		}
 	);
 

@@ -25,6 +25,8 @@
 <div class="panel">
 	{if $header}{$header}{/if}
 	{if $nodes}
-	<ul id="{$id}" class="nav nav-list tree">{$nodes}</ul>
+	<ul id="{$id}" class="tree">
+		{$nodes}
+	</ul>
 	{/if}
 </div>

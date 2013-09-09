@@ -1,5 +1,5 @@
-$brand-primary: #1BA6E5
-
+//$brand-primary: #1BA6E5
+$brand-primary: #6992AF
 
 //light
 //$main-color: #F7F7F7
@@ -36,8 +36,8 @@ $main-color: #313A45 			//gris bleu
 //$secondary-color: #937976		//taupe clair
 //$secondary-color: #60C276		//vert
 //$secondary-color: #9DC44B		//vert pomme
-//$secondary-color: #6992AF		//theme wordpress
-$secondary-color: #8BC954 	//vert PrestaShop
+$secondary-color: #6992AF		//theme wordpress
+//$secondary-color: #8BC954 	//vert PrestaShop
 
 //some tests
 //$secondary-color: #79C09D
@@ -1172,64 +1172,89 @@ fieldset > .row
 $treeBackgroundHover: lighten(blue,30%)
 $treeBackgroundSelect: blue
 
+
 .tree
-	border: 1px solid #BBBBBB
-	+border-radius(4px)
-	overflow-y: auto
-	overflow-x: hidden
-	padding: 10px 15px 0 15px
-	position: relative
+	padding: 0 0 0 20px
+	list-style: none
+	input
+		margin-right: 4px
+	i
+		font-size: 1.3em
 	.tree-folder
-		width: 100%
-		min-height: 20px
-		cursor: pointer
-		margin-top: 1px
-		.tree-folder-header
-			position: relative
-			height: 20px
-			+border-radius(6px)
-			&:hover
-				background-color: $treeBackgroundHover
-			i
-				position: absolute
-				float: left
-				top: 1px
-				left: 5px
-			.tree-folder-name
-				padding-left: 29px
-				white-space: nowrap
-				overflow: hidden
-				text-overflow: ellipsis
-		.tree-folder-content
-			margin-left: 23px
 	.tree-item
-		position: relative
-		width: 100%
-		height: 20px
-		cursor: pointer
-		margin-top: 1px
+	.tree-item-name, .tree-folder-name
+		padding: 0 5px
+		+border-radius(6px)
+		font-weight: normal
 		&:hover
-			background-color: $treeBackgroundHover
-		.tree-item-name
-			position: absolute
-			left: 29px
-		.tree-dot
-			position: absolute
-			top: 8px
-			left: 10px
-			display: block
-			width: 4px
-			height: 4px
-			background-color: #ccc
-			+border-radius(6px)
-		.icon-ok 
-			position: absolute
-			top: 1px
-			left: 5px
+			background-color: #eee
+			cursor: pointer
 	.tree-selected
-		background-color: $treeBackgroundSelect
-		&:hover
-			background-color: $treeBackgroundSelect
+		background-color: lighten($brand-primary,30%)
+		i.tree-dot
+			background-color: $brand-primary
+	i.tree-dot
+		display: inline-block
+		position: relative
+		width: 6px
+		height: 6px
+		margin: 0 4px 0 6px
+		background-color: #ccc
+		+border-radius(6px)
+
+// .tree
+// 	padding: 0 0 0 18px
+// 	.tree-folder
+// 		width: 100%
+// 		min-height: 20px
+// 		cursor: pointer
+// 		margin-top: 1px
+// 		.tree-folder-header
+// 			position: relative
+// 			height: 20px
+// 			+border-radius(6px)
+// 			&:hover
+// 				background-color: $treeBackgroundHover
+// 			i
+// 				position: absolute
+// 				float: left
+// 				top: 1px
+// 				left: 5px
+// 			.tree-folder-name
+// 				padding-left: 29px
+// 				white-space: nowrap
+// 				overflow: hidden
+// 				text-overflow: ellipsis
+// 		.tree-folder-content
+// 			margin-left: 23px
+// 	.tree-item
+// 		position: relative
+// 		width: 100%
+// 		height: 20px
+// 		cursor: pointer
+// 		margin-top: 1px
+// 		&:hover
+// 			background-color: $treeBackgroundHover
+// 		.tree-item-name
+// 			position: absolute
+// 			left: 29px
+// 		.tree-dot
+// 			position: absolute
+// 			top: 8px
+// 			left: 10px
+// 			display: block
+// 			width: 4px
+// 			height: 4px
+// 			background-color: #ccc
+// 			+border-radius(6px)
+// 		.icon-ok 
+// 			position: absolute
+// 			top: 1px
+// 			left: 5px
+// 	.tree-selected
+// 		background-color: $treeBackgroundSelect
+// 		&:hover
+// 			background-color: $treeBackgroundSelect
 
 
 #carrier_wizard.swMain
