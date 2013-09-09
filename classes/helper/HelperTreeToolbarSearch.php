@@ -29,10 +29,8 @@ class HelperTreeToolbarSearchCore extends HelperTreeToolbarButtonCore implements
 {
 	protected $_template = 'tree_toolbar_search.tpl';
 
-	public function __construct($label, $action = null, $class = null)
+	public function render()
 	{
-		parent::__construct($label, $action, $class);
-
 		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
 		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
 		$bo_theme = ((Validate::isLoadedObject($this->getContext()->employee)
@@ -41,18 +39,20 @@ class HelperTreeToolbarSearchCore extends HelperTreeToolbarButtonCore implements
 		if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$bo_theme.DIRECTORY_SEPARATOR
 			.'template'))
 			$bo_theme = 'default';
-		$this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
-			.'/themes/'.$bo_theme.'/js/vendor/typeahead.min.js');
-	}
 
-	public function render()
-	{
+		if ($this->getContext()->controller->ajax)
+			$html = '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
+				.'/themes/'.$bo_theme.'/js/vendor/typeahead.min.js"></script>';
+		else
+			$this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
+				.'/themes/'.$bo_theme.'/js/vendor/typeahead.min.js');
+
 		$template = parent::render();
 		$template->assign(array(
 			'action'     => $this->getAction(),
 			'label'      => $this->getLabel(),
 			'class'      => $this->getClass()
 		));
-		return $template->fetch();
+		return (isset($html)?$html:'').$template->fetch();
 	}
 }
