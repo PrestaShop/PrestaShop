@@ -24,6 +24,7 @@ Tree.prototype =
 						.addClass("icon-folder-open");
 
 				$(this).parent().children("ul.tree").toggle(300);
+				$(this).parent().addClass('tree-selected');
 			}
 		);
 	},
