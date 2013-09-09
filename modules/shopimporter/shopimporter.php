@@ -844,19 +844,15 @@ class shopimporter extends ImportModule
 			default:
 			case 'Product':
 				$path = _PS_PROD_IMG_DIR_;
-				$type = 'products';
 			break;
 			case 'Category':
 				$path = _PS_CAT_IMG_DIR_;
-				$type = 'categories';
 			break;
 			case 'Manufacturer':
 				$path = _PS_MANU_IMG_DIR_;
-				$type = 'manufacturers';
 			break;
 			case 'Supplier':
 				$path = _PS_SUPP_IMG_DIR_;
-				$type = 'suppliers';
 			break;
 		}
 		$cover = 1;
@@ -865,11 +861,8 @@ class shopimporter extends ImportModule
 			foreach($item['images'] as $key => $image)
 			{
 				$tmpfile = tempnam(_PS_TMP_IMG_DIR_, 'import');
-					if (@copy(str_replace(' ', '%20', $image), $tmpfile))
+				if (@copy(str_replace(' ', '%20', $image), $tmpfile))
 				{
-
-					$imagesTypes = ImageType::getImagesTypes($type);
-					ImageManager::resize($tmpfile, $path.(int)$matchId[$item[$identifier]].'.jpg');
 					if ($className == 'Product')
 					{
 						$image = new Image();
@@ -884,13 +877,13 @@ class shopimporter extends ImportModule
 								$legend[Configuration::get('PS_LANG_DEFAULT')] = Tools::link_rewrite($val);
 						$image->legend = $legend;
 						$image->add();
-						ImageManager::resize($tmpfile, $path.(int)$matchId[$item[$identifier]].'-'.(int)$image->id.'.jpg');
-						foreach ($imagesTypes AS $k => $imageType)
-							ImageManager::resize($tmpfile, $path.(int)$matchId[$item[$identifier]].'-'.(int)$image->id.'-'.stripslashes($imageType['name']).'.jpg', $imageType['width'], $imageType['height']);
+                        			$path = $image->getPathForCreation();
+                        			ImageManager::resize($tmpfile, $path.'.jpg');
 					}
 					else
-						foreach ($imagesTypes as $imageType)
-							ImageManager::resize($tmpfile, $path.(int)$matchId[$item[$identifier]].'-'.stripslashes($imageType['name']).'.jpg', $imageType['width'], $imageType['height']);
+                    			{
+                        			ImageManager::resize($tmpfile, $path.(int)$matchId[$item[$identifier]].'.jpg');
+                    			}
 				}
 				else
 					@unlink($tmpfile);
