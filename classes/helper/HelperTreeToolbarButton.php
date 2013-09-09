@@ -29,15 +29,18 @@ abstract class HelperTreeToolbarButtonCore
 	const DEFAULT_TEMPLATE_DIRECTORY = 'helpers/tree';
 
 	private   $_action;
+	private   $_attributes;
+	private   $_class;
 	private   $_context;
 	private   $_label;
 	protected $_template;
 	protected $_template_directory;
 
-	public function __construct($label, $action = null)
+	public function __construct($label, $action = null, $class = null)
 	{
 		$this->setLabel($label);
 		$this->setAction($action);
+		$this->setClass($class);
 	}
 
 	public function __toString()
@@ -54,6 +57,34 @@ abstract class HelperTreeToolbarButtonCore
 	public function getAction()
 	{
 		return $this->_action;
+	}
+
+	public function setAttributes($value)
+	{
+		if (!is_array($value) && !$value instanceof Traversable)
+			throw new PrestaShopException('Data value must be an traversable array');
+
+		$this->_attributes = $value;
+		return $this;
+	}
+
+	public function getAttributes()
+	{
+		if (!isset($this->_attributes))
+			$this->_attributes = array();
+
+		return $this->_attributes;
+	}
+
+	public function setClass($value)
+	{
+		$this->_class = $value;
+		return $this;
+	}
+
+	public function getClass()
+	{
+		return $this->_class;
 	}
 
 	public function setContext($value)
@@ -108,12 +139,21 @@ abstract class HelperTreeToolbarButtonCore
 		return $this->_template_directory;
 	}
 
+	public function addAttribute($name, $value)
+	{
+		if (!isset($this->_attributes))
+			$this->_attributes = array();
+
+		$this->_attributes[$name] = $value;
+		return $this;
+	}
+
 	public function render()
 	{
 		return $this->getContext()->smarty->createTemplate(
 			$this->getTemplateDirectory().$this->getTemplate(),
 			$this->getContext()->smarty
-		);
+		)->assign($this->getAttributes());
 	}
 
 	private function _normalizeDirectory($directory)

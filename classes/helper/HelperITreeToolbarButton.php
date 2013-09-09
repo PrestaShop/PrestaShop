@@ -29,6 +29,10 @@ interface HelperITreeToolbarButtonCore
 	public function __toString();
 	public function setAction($value);
 	public function getAction();
+	public function setAttributes($value);
+	public function getAttributes();
+	public function setClass($value);
+	public function getClass();
 	public function setContext($value);
 	public function getContext();
 	public function setLabel($value);
@@ -37,5 +41,6 @@ interface HelperITreeToolbarButtonCore
 	public function getTemplate();
 	public function setTemplateDirectory($value);
 	public function getTemplateDirectory();
+	public function addAttribute($name, $value);
 	public function render();
 }
