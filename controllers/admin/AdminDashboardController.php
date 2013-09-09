@@ -91,4 +91,30 @@ class AdminDashboardControllerCore extends AdminController
 		
 		die(Tools::jsonEncode(Hook::exec('dashboardData', $params, $id_module, true, true, (int)Tools::getValue('dashboard_use_push'))));
 	}
+	
+	public function ajaxProcessGetBlogRss()
+	{
+		$return = array('has_errors' => false, 'rss' => array());
+		if (!$this->isFresh('/config/xml/blog-'.$this->context->language->iso_code.'.xml', 604800))
+		{
+			if (!$this->refresh('/config/xml/blog-'.$this->context->language->iso_code.'.xml', 'https://api.prestashop.com/rss/blog/blog-'.$this->context->language->iso_code.'.xml'))
+				$return['has_errors'] = true;		
+		}
+		
+		if (!$return['has_errors'])
+		{
+			$rss = simpleXML_load_file(_PS_ROOT_DIR_.'/config/xml/blog-'.$this->context->language->iso_code.'.xml');
+			$articles_limit = 3;
+			foreach ($rss->channel->item as $item)
+			{
+				if ($articles_limit > 0)
+					$return['rss'][] = array('title' => (string)$item->title, 'short_desc' => (string)$item->description);
+				else
+					break;
+				$articles_limit --;
+			}
+		}
+				
+		die(Tools::jsonEncode($return));
+	}
 }
