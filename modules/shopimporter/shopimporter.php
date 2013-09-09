@@ -1505,6 +1505,20 @@ class shopimporter extends ImportModule
 				$order->valid = 1;
 			else
 				$order->valid = 0;
+
+			if (array_key_exists('current_state', $item))
+				$order->current_state = $item['current_state'];
+			if (array_key_exists('reference', $item))
+				$order->reference = $item['reference'];
+			if (array_key_exists('invoice_number', $item))
+				$order->invoice_number = $item['invoice_number'];
+			if (array_key_exists('delivery_number', $item))
+				$order->delivery_number = $item['delivery_number'];
+			if (array_key_exists('invoice_date', $item))
+				$order->invoice_date = $item['invoice_date'];
+			if (array_key_exists('delivery_date', $item))
+				$order->delivery_date = $item['delivery_date'];
+
 			$order->save(false, false);
 
 			$this->saveMatchId('order', (int)$order->id, (int)$item['id_cart']);
