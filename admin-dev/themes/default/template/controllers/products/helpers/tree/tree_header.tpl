@@ -24,5 +24,5 @@
 *}
 <div class="panel-heading">
 	<i class="icon-tag"></i>&nbsp;{l s=$title}
-	{if $toolbar}{$toolbar}{/if}
+	{if isset($toolbar)}{$toolbar}{/if}
 </div>
