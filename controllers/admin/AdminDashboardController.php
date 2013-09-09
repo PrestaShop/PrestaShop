@@ -107,8 +107,11 @@ class AdminDashboardControllerCore extends AdminController
 			$articles_limit = 3;
 			foreach ($rss->channel->item as $item)
 			{
-				if ($articles_limit > 0)
-					$return['rss'][] = array('title' => (string)$item->title, 'short_desc' => (string)$item->description);
+				if ($articles_limit > 0 && Validate::isCleanHtml((string)$item->title) && Validate::isCleanHtml((string)$item->description))
+					$return['rss'][] = array(
+						'title' => (string)$item->title,
+						'short_desc' => (string)$item->description
+					);
 				else
 					break;
 				$articles_limit --;
