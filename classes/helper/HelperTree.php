@@ -247,8 +247,13 @@ class HelperTreeCore
 		if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$bo_theme.DIRECTORY_SEPARATOR
 			.'template'))
 			$bo_theme = 'default';
-		$this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
-			.'/themes/'.$bo_theme.'/js/tree.js');
+
+		if ($this->getContext()->controller->ajax)
+			$html = '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
+				.'/themes/'.$bo_theme.'/js/tree.js"></script>';
+		else
+			$this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
+				.'/themes/'.$bo_theme.'/js/tree.js');
 
 		//Create Tree Template
 		$template = $this->getContext()->smarty->createTemplate(
@@ -276,7 +281,7 @@ class HelperTreeCore
 			'nodes' => $this->renderNodes($data)
 		));
 
-		return $template->fetch();
+		return (isset($html)?$html:'').$template->fetch();
 	}
 
 	public function renderNodes($data = null)
