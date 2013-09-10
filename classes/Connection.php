@@ -97,7 +97,7 @@ class ConnectionCore extends ObjectModel
 			'id_connections' => (int)$cookie->id_connections,
 			'id_page' => (int)$id_page,
 			'time_start' => $time_start
-		));
+		), false, true, Db::INSERT_IGNORE);
 
 		// This array is serialized and used by the ajax request to identify the page
 		return array(
