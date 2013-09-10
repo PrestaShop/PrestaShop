@@ -60,11 +60,11 @@
 						<dd><a href="http://doc.prestashop.com/display/PS16?utm_source=backoffice_dashboard" target="_blank">{l s="PrestaShop documentation"}</a></dd>
 					</dl>
 					<dl>
-						<dt>{l s="Use the PrestaShop forum &amp; discover a great community :"}</dt>
+						<dt>{l s="Use the PrestaShop forum & discover a great community :"}</dt>
 						<dd><a href="http://www.prestashop.com/forums?utm_source=backoffice_dashboard" target="_blank">{l s="Go to forums.prestashop.com"}</a></dd>
 					</dl>
 					<dl>
-						<dt>{l s="Enhance your Shop with new templates &amp; modules :"}</dt>
+						<dt>{l s="Enhance your Shop with new templates & modules :"}</dt>
 						<dd><a href="http://addons.prestashop.com?utm_source=backoffice_dashboard" target="_blank">{l s="Go to addons.prestashop.com"}</a></dd>
 					</dl>
 			</section>
