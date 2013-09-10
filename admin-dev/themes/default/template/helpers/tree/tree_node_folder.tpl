@@ -22,10 +22,13 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<li>
-	<i class="icon-folder-open"></i>&nbsp;
-	<label class="tree-toggler nav-header">{$name}</label>
-	<ul class="nav nav-list tree">
+
+<li class="tree-folder">
+	<span class="tree-folder-name">
+		<i class="icon-folder-close"></i>
+		<label class="tree-toggler ">{$name}</label>
+	</span>
+	<ul class="tree">
 		{$children}
 	</ul>
 </li>

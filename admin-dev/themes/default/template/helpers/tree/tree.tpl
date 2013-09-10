@@ -22,9 +22,12 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+
 <div class="panel">
 	{if isset($header)}{$header}{/if}
 	{if isset($nodes)}
-	<ul id="{$id}" class="nav nav-list tree">{$nodes}</ul>
+	<ul id="{$id}" class="tree">
+		{$nodes}
+	</ul>
 	{/if}
 </div>
