@@ -477,11 +477,11 @@ class CategoryCore extends ObjectModel
 		return $categories;
 	}
 
-	public static function getNestedCategories($parent_category = 0,
+	public static function getNestedCategories($root_category = 1,
 		$id_lang = false, $active = true, $sql_filter = '', $sql_sort = '',
 		$sql_limit = '')
 	{
-		if (!Validate::isInt($parent_category))
+		if (!Validate::isInt($root_category))
 			die(Tools::displayError());
 
 		if (!Validate::isBool($active))
@@ -506,7 +506,7 @@ class CategoryCore extends ObjectModel
 			$current = &$buff[$row['id_category']];
 			$current = $row;
 
-			if ($row['id_parent'] == $parent_category)
+			if ($row['id_category'] == $root_category)
 				$categories[$row['id_category']] = &$current;
 			else
 				$buff[$row['id_parent']]['children'][$row['id_category']] = &$current;

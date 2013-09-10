@@ -2330,8 +2330,21 @@ class AdminProductsControllerCore extends AdminController
 
 	public function renderCategoriesTree($selected_category = null)
 	{
+		if (Tools::isSubmit('id_shop'))
+			$id_shop = Tools::getValue('id_shop');
+		else
+			if (Context::getContext()->shop->id)
+				$id_shop = Context::getContext()->shop->id;
+			else
+				if (!Shop::isFeatureActive())
+					$id_shop = Configuration::get('PS_SHOP_DEFAULT');
+				else
+					$id_shop = 0;
+
+		$shop = new Shop($id_shop);
+		$root_category = Category::getRootCategory(null, $shop);
 		$tree = new HelperTree('categories-tree', Category::getNestedCategories(
-			1, $this->context->employee->id_lang));
+			$root_category->id, $this->context->employee->id_lang));
 
 		$html = $tree->setTitle('Filter by category')
 			->setActions(array(
@@ -2346,7 +2359,6 @@ class AdminProductsControllerCore extends AdminController
 					'$(\'#categories-tree\').tree(\'expandAll\')',
 					'icon-expand-alt')
 			))
-			->setTemplateDirectory($this->context->smarty->getTemplateDir(0).'/controllers/products/helpers/tree')
 			->render();
 		$html .= '<script type="text/javascript">
 			$(document).ready(function () {
@@ -2389,10 +2401,7 @@ class AdminProductsControllerCore extends AdminController
 		$selected_categories)
 	{
 		$tree = new HelperTree('associated-categories-tree',
-			Category::getNestedCategories(1, $this->context->employee->id_lang));
-		$search = new HelperTreeToolbarSearch('Find a category:',
-			'categories-search');
-		$search->setIdKey('id_category');
+			Category::getNestedCategories($root_category, $this->context->employee->id_lang));
 		$html = $tree->setTitle('Associated categories')
 			->setActions(array(
 				new HelperTreeToolbarLink(
@@ -2415,9 +2424,10 @@ class AdminProductsControllerCore extends AdminController
 					'#',
 					'uncheckAllAssociatedCategories();',
 					'icon-check-empty'),
-				$search
+				new HelperTreeToolbarSearch(
+					'Find a category:',
+					'categories-search')
 			))
-			->setTemplateDirectory($this->context->smarty->getTemplateDir(0).'/controllers/products/helpers/tree')
 			->setNodeFolderTemplate('tree_node_folder_associations.tpl')
 			->setNodeItemTemplate('tree_node_item_associations.tpl')
 			->render();
@@ -2445,11 +2455,11 @@ class AdminProductsControllerCore extends AdminController
 				);
 			}
 
-			$("#categories-search").bind("typeahead:selected", function(obj, datum) {        
+			$("#categories-search").bind("typeahead:selected", function(obj, datum) {
 			    $("#associated-categories-tree").find(":input").each(
 					function()
 					{
-						if ($(this).val() == datum.id)
+						if ($(this).val() == datum.id_category)
 						{
 							$(this).prop("checked", true);
 							$(this).parent().addClass("tree-selected");

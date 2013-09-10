@@ -27,9 +27,6 @@
 class HelperTreeToolbarSearchCore extends HelperTreeToolbarButtonCore implements
 	HelperITreeToolbarButtonCore
 {
-	private   $_children_key;
-	private   $_id_key;
-	private   $_name_key;
 	protected $_template = 'tree_toolbar_search.tpl';
 
 	public function __construct($label, $id, $name = null, $class = null)
@@ -39,48 +36,6 @@ class HelperTreeToolbarSearchCore extends HelperTreeToolbarButtonCore implements
 		$this->setId($id);
 		$this->setName($name);
 		$this->setClass($class);
-	}
-
-	public function setChildrenKey($value)
-	{
-		$this->_children_key = (string)$value;
-		return $this;
-	}
-
-	public function getChildrenKey()
-	{
-		if (!isset($this->_children_key))
-			$this->setChildrenKey('children');
-
-		return $this->_children_key;
-	}
-
-	public function setIdKey($value)
-	{
-		$this->_id_key = (string)$value;
-		return $this;
-	}
-
-	public function getIdKey()
-	{
-		if (!isset($this->_id_key))
-			$this->setIdKey('id');
-
-		return $this->_id_key;
-	}
-
-	public function setNameKey($value)
-	{
-		$this->_name_key = (string)$value;
-		return $this;
-	}
-
-	public function getNameKey()
-	{
-		if (!isset($this->_name_key))
-			$this->setNameKey('name');
-
-		return $this->_name_key;
 	}
 
 	public function render()
@@ -117,10 +72,16 @@ class HelperTreeToolbarSearchCore extends HelperTreeToolbarButtonCore implements
 
 		foreach ($data as $item)
 		{
-			if (array_key_exists($this->getChildrenKey(), $item) && !empty($item[$this->getChildrenKey()]))
-				$html .= '{id : '.$item[$this->getIdKey()].', name : "'.$item[$this->getNameKey()].'"},'.$this->_renderData($item[$this->getChildrenKey()]);
-			else
-				$html .= '{id : '.$item[$this->getIdKey()].', name : "'.$item[$this->getNameKey()].'"},';
+			$html .= '{';
+
+			foreach ($item as $key => $value)
+				if (!is_array($value))
+					$html .= $key.':'.(is_numeric($value) ? $value : '"'.$value.'"').',';
+
+			$html .= '},';
+
+			if (array_key_exists('children', $item) && !empty($item['children']))
+				$html .= $this->_renderData($item['children']);
 		}
 
 		return $html;

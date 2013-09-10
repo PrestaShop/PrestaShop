@@ -32,15 +32,13 @@ class HelperTreeCore
 	const DEFAULT_NODE_FOLDER_TEMPLATE = 'tree_node_folder.tpl';
 	const DEFAULT_NODE_ITEM_TEMPLATE   = 'tree_node_item.tpl';
 
-	private $_children_key;
 	private $_context;
 	private $_data;
 	private $_headerTemplate;
 	private $_id;
-	private $_id_key;
-	private $_name_key;
 	private $_node_folder_template;
 	private $_node_item_template;
+	private $_template;
 	private $_template_directory;
 	private $_title;
 
@@ -81,20 +79,6 @@ class HelperTreeCore
 
 		$this->getToolbar()->addAction($action);
 		return $this;
-	}
-
-	public function setChildrenKey($value)
-	{
-		$this->_children_key = (string)$value;
-		return $this;
-	}
-
-	public function getChildrenKey()
-	{
-		if (!isset($this->_children_key))
-			$this->setChildrenKey('children');
-
-		return $this->_children_key;
 	}
 
 	public function setContext($value)
@@ -153,34 +137,6 @@ class HelperTreeCore
 		return $this->_id;
 	}
 
-	public function setIdKey($value)
-	{
-		$this->_id_key = (string)$value;
-		return $this;
-	}
-
-	public function getIdKey()
-	{
-		if (!isset($this->_id_key))
-			$this->setIdKey('id');
-
-		return $this->_id_key;
-	}
-
-	public function setNameKey($value)
-	{
-		$this->_name_key = (string)$value;
-		return $this;
-	}
-
-	public function getNameKey()
-	{
-		if (!isset($this->_name_key))
-			$this->setNameKey('name');
-
-		return $this->_name_key;
-	}
-
 	public function setNodeFolderTemplate($value)
 	{
 		$this->_node_folder_template = $value;
@@ -232,13 +188,48 @@ class HelperTreeCore
 	public function getTemplateDirectory()
 	{
 		if (!isset($this->_template_directory))
-		{
 			$this->_template_directory = $this->_normalizeDirectory(
-				$this->getContext()->smarty->getTemplateDir(0)
-				.self::DEFAULT_TEMPLATE_DIRECTORY);
-		}
+				self::DEFAULT_TEMPLATE_DIRECTORY);
 
 		return $this->_template_directory;
+	}
+
+	public function getTemplateFile($template)
+	{
+		if (preg_match_all('/((?:^|[A-Z])[a-z]+)/', get_class($this->getContext()->controller), $matches) !== FALSE)
+			$controllerName = strtolower($matches[0][1]);
+
+		if ($this->getContext()->controller instanceof ModuleAdminController)
+			return $this->_normalizeDirectory(
+				$this->getContext()->controller->getTemplatePath())
+				.$this->getTemplateDirectory().$template;
+		else if ($this->getContext()->controller instanceof AdminController
+			&& isset($controllerName) && file_exists($this->_normalizeDirectory(
+				$this->getContext()->smarty->getTemplateDir(0)).'controllers'
+				.DIRECTORY_SEPARATOR
+				.$controllerName
+				.DIRECTORY_SEPARATOR
+				.$this->getTemplateDirectory().$template))
+			return $this->_normalizeDirectory(
+				$this->getContext()->smarty->getTemplateDir(0)).'controllers'
+				.DIRECTORY_SEPARATOR
+				.$controllerName
+				.DIRECTORY_SEPARATOR
+				.$this->getTemplateDirectory().$template;
+		else if (file_exists($this->_normalizeDirectory(
+				$this->getContext()->smarty->getTemplateDir(1))
+				.$this->getTemplateDirectory().$template))
+				return $this->_normalizeDirectory(
+					$this->getContext()->smarty->getTemplateDir(1))
+					.$this->getTemplateDirectory().$template;
+		else if (file_exists($this->_normalizeDirectory(
+				$this->getContext()->smarty->getTemplateDir(0))
+				.$this->getTemplateDirectory().$template))
+				return $this->_normalizeDirectory(
+				$this->getContext()->smarty->getTemplateDir(0))
+				.$this->getTemplateDirectory().$template;
+		else
+			return $this->getTemplateDirectory().$template;
 	}
 
 	public function setTitle($value)
@@ -305,7 +296,7 @@ class HelperTreeCore
 
 		//Create Tree Template
 		$template = $this->getContext()->smarty->createTemplate(
-			$this->getTemplateDirectory().$this->getTemplate(),
+			$this->getTemplateFile($this->getTemplate()),
 			$this->getContext()->smarty
 		);
 
@@ -313,7 +304,7 @@ class HelperTreeCore
 		{
 			//Create Tree Header Template
 			$headerTemplate = $this->getContext()->smarty->createTemplate(
-				$this->getTemplateDirectory().$this->getHeaderTemplate(),
+				$this->getTemplateFile($this->getHeaderTemplate()),
 				$this->getContext()->smarty
 			);
 			$headerTemplate->assign(array(
@@ -344,22 +335,20 @@ class HelperTreeCore
 
 		foreach ($data as $item)
 		{
-			if (array_key_exists($this->getChildrenKey(), $item)
-				&& !empty($item[$this->getChildrenKey()]))
+			if (array_key_exists('children', $item)
+				&& !empty($item['children']))
 				$html .= $this->getContext()->smarty->createTemplate(
-					$this->getTemplateDirectory().$this->getNodeFolderTemplate(),
+					$this->getTemplateFile($this->getNodeFolderTemplate()),
 					$this->getContext()->smarty
 				)->assign(array(
-					'name'     => $item[$this->getNameKey()],
-					'children' => $this->renderNodes($item[$this->getChildrenKey()]),
+					'children' => $this->renderNodes($item['children']),
 					'node'     => $item
 				))->fetch();
 			else
 				$html .= $this->getContext()->smarty->createTemplate(
-					$this->getTemplateDirectory().$this->getNodeItemTemplate(),
+					$this->getTemplateFile($this->getNodeItemTemplate()),
 					$this->getContext()->smarty
 				)->assign(array(
-					'name' => $item[$this->getNameKey()],
 					'node' => $item
 				))->fetch();
 		}
