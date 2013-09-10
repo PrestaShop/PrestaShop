@@ -22,4 +22,18 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<label for="node-search">{l s=$label}</label>&nbsp;<input type="text" id="node-search" name="node-search"{if isset($class)} class="{$class}"{/if}{if isset($categories_name)} data-provide="typeahead" data-source="[{$categories_name}]"{/if} />
+<label for="node-search">{l s=$label}</label>&nbsp;<input type="text"{if isset($id)} id="{$id}"{/if}{if isset($name)} name="{$name}"{/if}{if isset($class)} class="{$class}"{/if} />
+{if isset($typeahead_source) && isset($id)}
+<script type="text/javascript">
+	$(document).ready(
+		function()
+		{
+			$("#{$id}").typeahead(
+			{
+				name: "{$name}",
+				local: [{$typeahead_source}]
+			});
+		}
+	);
+</script>
+{/if}

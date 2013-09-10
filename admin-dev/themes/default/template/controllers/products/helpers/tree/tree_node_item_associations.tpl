@@ -24,7 +24,7 @@
 *}
 <li class="tree-item">
 	<label class="tree-item-name">
-	<input type="checkbox" name="id-category[]" value="{$node['id_category']}" />
+	<input type="checkbox" name="categoryBox[]" value="{$node['id_category']}" />
 	<i class="tree-dot"></i>
 	{$name}
 	</label>

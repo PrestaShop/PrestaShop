@@ -27,52 +27,47 @@
 class HelperTreeToolbarLinkCore extends HelperTreeToolbarButtonCore implements
 	HelperITreeToolbarButtonCore
 {
+	private   $_action;
 	private   $_icon_class;
 	private   $_link;
 	protected $_template = 'tree_toolbar_link.tpl';
 
-	public function __construct($label, $action = null, $link, $iconClass)
+	public function __construct($label, $link, $action = null, $iconClass = null)
 	{
-		parent::__construct($label, $action);
+		parent::__construct($label);
+
 		$this->setLink($link);
+		$this->setAction($action);
 		$this->setIconClass($iconClass);
+	}
+
+	public function setAction($value)
+	{
+		return $this->setAttribute('action', $value);
+	}
+
+	public function getAction()
+	{
+		return $this->getAttribute('action');
 	}
 
 	public function setIconClass($value)
 	{
-		$this->_icon_class = $value;
-		return $this;
+		return $this->setAttribute('icon_class', $value);
 	}
 
 	public function getIconClass()
 	{
-		return $this->_icon_class;
+		return $this->getAttribute('icon_class');
 	}
 
 	public function setLink($value)
 	{
-		$this->_link = $value;
-		return $this;
+		return $this->setAttribute('link', $value);
 	}
 
 	public function getLink()
 	{
-		if (!isset($this->_link))
-			$this->_link = '';
-
-		return $this->_link;
-	}
-
-	public function render()
-	{
-		$template = parent::render();
-		$template->assign(array(
-			'link'       => $this->getLink(),
-			'action'     => $this->getAction(),
-			'label'      => $this->getLabel(),
-			'class'      => $this->getClass(),
-			'icon_class' => $this->getIconClass()
-		));
-		return $template->fetch();
+		return $this->getAttribute('link');
 	}
 }

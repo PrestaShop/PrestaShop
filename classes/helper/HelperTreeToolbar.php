@@ -31,6 +31,7 @@ class HelperTreeToolbarCore implements HelperITreeToolbarCore
 
 	private $_actions;
 	private $_context;
+	private $_data;
 	private $_template;
 	private $_template_directory;
 
@@ -67,6 +68,20 @@ class HelperTreeToolbarCore implements HelperITreeToolbarCore
 			$this->_context = Context::getContext();
 
 		return $this->_context;
+	}
+
+	public function setData($value)
+	{
+		if (!is_array($value) && !$value instanceof Traversable)
+			throw new PrestaShopException('Data value must be an traversable array');
+
+		$this->_data = $value;
+		return $this;
+	}
+
+	public function getData()
+	{
+		return $this->_data;
 	}
 
 	public function setTemplate($value)
@@ -118,6 +133,12 @@ class HelperTreeToolbarCore implements HelperITreeToolbarCore
 
 	public function render()
 	{
+		foreach ($this->getActions() as $action)
+		{
+			if (is_subclass_of($action, 'HelperTreeToolbarSearchCore'))
+				$action->setAttribute('data', $this->getData());
+		}
+
 		return $this->getContext()->smarty->createTemplate(
 			$this->getTemplateDirectory().$this->getTemplate(),
 			$this->getContext()->smarty

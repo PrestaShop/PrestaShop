@@ -32,10 +32,13 @@ class HelperTreeCore
 	const DEFAULT_NODE_FOLDER_TEMPLATE = 'tree_node_folder.tpl';
 	const DEFAULT_NODE_ITEM_TEMPLATE   = 'tree_node_item.tpl';
 
+	private $_children_key;
 	private $_context;
 	private $_data;
 	private $_headerTemplate;
 	private $_id;
+	private $_id_key;
+	private $_name_key;
 	private $_node_folder_template;
 	private $_node_item_template;
 	private $_template_directory;
@@ -78,6 +81,20 @@ class HelperTreeCore
 
 		$this->getToolbar()->addAction($action);
 		return $this;
+	}
+
+	public function setChildrenKey($value)
+	{
+		$this->_children_key = (string)$value;
+		return $this;
+	}
+
+	public function getChildrenKey()
+	{
+		if (!isset($this->_children_key))
+			$this->setChildrenKey('children');
+
+		return $this->_children_key;
 	}
 
 	public function setContext($value)
@@ -134,6 +151,34 @@ class HelperTreeCore
 	public function getId()
 	{
 		return $this->_id;
+	}
+
+	public function setIdKey($value)
+	{
+		$this->_id_key = (string)$value;
+		return $this;
+	}
+
+	public function getIdKey()
+	{
+		if (!isset($this->_id_key))
+			$this->setIdKey('id');
+
+		return $this->_id_key;
+	}
+
+	public function setNameKey($value)
+	{
+		$this->_name_key = (string)$value;
+		return $this;
+	}
+
+	public function getNameKey()
+	{
+		if (!isset($this->_name_key))
+			$this->setNameKey('name');
+
+		return $this->_name_key;
 	}
 
 	public function setNodeFolderTemplate($value)
@@ -223,6 +268,9 @@ class HelperTreeCore
 
 	public function getToolbar()
 	{
+		if (isset($this->_toolbar))
+			$this->_toolbar->setData($this->getData());
+
 		return $this->_toolbar;
 	}
 
@@ -296,13 +344,14 @@ class HelperTreeCore
 
 		foreach ($data as $item)
 		{
-			if (array_key_exists('children', $item) && !empty($item['children']))
+			if (array_key_exists($this->getChildrenKey(), $item)
+				&& !empty($item[$this->getChildrenKey()]))
 				$html .= $this->getContext()->smarty->createTemplate(
 					$this->getTemplateDirectory().$this->getNodeFolderTemplate(),
 					$this->getContext()->smarty
 				)->assign(array(
-					'name'     => $item['name'],
-					'children' => $this->renderNodes($item['children']),
+					'name'     => $item[$this->getNameKey()],
+					'children' => $this->renderNodes($item[$this->getChildrenKey()]),
 					'node'     => $item
 				))->fetch();
 			else
@@ -310,7 +359,7 @@ class HelperTreeCore
 					$this->getTemplateDirectory().$this->getNodeItemTemplate(),
 					$this->getContext()->smarty
 				)->assign(array(
-					'name' => $item['name'],
+					'name' => $item[$this->getNameKey()],
 					'node' => $item
 				))->fetch();
 		}

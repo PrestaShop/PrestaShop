@@ -28,18 +28,20 @@ abstract class HelperTreeToolbarButtonCore
 {
 	const DEFAULT_TEMPLATE_DIRECTORY = 'helpers/tree';
 
-	private   $_action;
-	private   $_attributes;
+	protected $_attributes;
 	private   $_class;
 	private   $_context;
+	private   $_id;
 	private   $_label;
+	private   $_name;
 	protected $_template;
 	protected $_template_directory;
 
-	public function __construct($label, $action = null, $class = null)
+	public function __construct($label, $id = null, $name = null, $class = null)
 	{
 		$this->setLabel($label);
-		$this->setAction($action);
+		$this->setId($id);
+		$this->setName($name);
 		$this->setClass($class);
 	}
 
@@ -48,15 +50,18 @@ abstract class HelperTreeToolbarButtonCore
 		return $this->render();
 	}
 
-	public function setAction($value)
+	public function setAttribute($name, $value)
 	{
-		$this->_action = $value;
+		if (!isset($this->_attributes))
+			$this->_attributes = array();
+
+		$this->_attributes[$name] = $value;
 		return $this;
 	}
 
-	public function getAction()
+	public function getAttribute($name)
 	{
-		return $this->_action;
+		return $this->hasAttribute($name) ? $this->_attributes[$name] : null;
 	}
 
 	public function setAttributes($value)
@@ -78,13 +83,12 @@ abstract class HelperTreeToolbarButtonCore
 
 	public function setClass($value)
 	{
-		$this->_class = $value;
-		return $this;
+		return $this->setAttribute('class', $value);
 	}
 
 	public function getClass()
 	{
-		return $this->_class;
+		return $this->getAttribute('class');
 	}
 
 	public function setContext($value)
@@ -101,15 +105,34 @@ abstract class HelperTreeToolbarButtonCore
 		return $this->_context;
 	}
 
+	public function setId($value)
+	{
+		return $this->setAttribute('id', $value);
+	}
+
+	public function getId()
+	{
+		return $this->getAttribute('id');
+	}
+
 	public function setLabel($value)
 	{
-		$this->_label = $value;
-		return $this;
+		return $this->setAttribute('label', $value);
 	}
 
 	public function getLabel()
 	{
-		return $this->_label;
+		return $this->getAttribute('label');
+	}
+
+	public function setName($value)
+	{
+		return $this->setAttribute('name', $value);
+	}
+
+	public function getName()
+	{
+		return $this->getAttribute('name');
 	}
 
 	public function setTemplate($value)
@@ -139,13 +162,10 @@ abstract class HelperTreeToolbarButtonCore
 		return $this->_template_directory;
 	}
 
-	public function addAttribute($name, $value)
+	public function hasAttribute($name)
 	{
-		if (!isset($this->_attributes))
-			$this->_attributes = array();
-
-		$this->_attributes[$name] = $value;
-		return $this;
+		return (isset($this->_attributes)
+			&& array_key_exists($name, $this->_attributes));
 	}
 
 	public function render()
@@ -153,7 +173,7 @@ abstract class HelperTreeToolbarButtonCore
 		return $this->getContext()->smarty->createTemplate(
 			$this->getTemplateDirectory().$this->getTemplate(),
 			$this->getContext()->smarty
-		)->assign($this->getAttributes());
+		)->assign($this->getAttributes())->fetch();
 	}
 
 	private function _normalizeDirectory($directory)
