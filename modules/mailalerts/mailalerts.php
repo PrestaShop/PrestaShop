@@ -40,13 +40,13 @@ class MailAlerts extends Module
 	private $_merchant_coverage;
 	private $_product_coverage;
 
-	const __MA_MAIL_DELIMITOR__ = ',';
+	const __MA_MAIL_DELIMITOR__ = "\n";
 
 	public function __construct()
 	{
 		$this->name = 'mailalerts';
 		$this->tab = 'administration';
-		$this->version = '2.4';
+		$this->version = '2.5';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -100,7 +100,8 @@ class MailAlerts extends Module
 					`id_product` int(10) unsigned NOT NULL,
 					`id_product_attribute` int(10) unsigned NOT NULL,
 					`id_shop` int(10) unsigned NOT NULL,
-					PRIMARY KEY  (`id_customer`,`customer_email`,`id_product`,`id_product_attribute`)
+					`id_lang` int(10) unsigned NOT NULL,
+					PRIMARY KEY  (`id_customer`,`customer_email`,`id_product`,`id_product_attribute`,`id_shop`)
 				) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci';
 
 		if (!Db::getInstance()->execute($sql))
@@ -161,7 +162,7 @@ class MailAlerts extends Module
 						$errors[] = $this->l('Invalid e-mail:').' '.Tools::safeOutput($email);
 						break;
 					}
-					else if (!empty($email) && count($email) > 0)
+					elseif (!empty($email) && count($email) > 0)
 						$emails[$k] = $email;
 					else
 						unset($emails[$k]);
@@ -171,15 +172,15 @@ class MailAlerts extends Module
 
 				if (!Configuration::updateValue('MA_MERCHANT_MAILS', strval($emails)))
 					$errors[] = $this->l('Cannot update settings');
-				else if (!Configuration::updateValue('MA_MERCHANT_ORDER', (int)Tools::getValue('mA_merchand_order')))
+				elseif (!Configuration::updateValue('MA_MERCHANT_ORDER', (int)Tools::getValue('mA_merchand_order')))
 					$errors[] = $this->l('Cannot update settings');
-				else if (!Configuration::updateValue('MA_MERCHANT_OOS', (int)Tools::getValue('mA_merchand_oos')))
+				elseif (!Configuration::updateValue('MA_MERCHANT_OOS', (int)Tools::getValue('mA_merchand_oos')))
 					$errors[] = $this->l('Cannot update settings');
-				else if (!Configuration::updateValue('MA_LAST_QTIES', (int)Tools::getValue('MA_LAST_QTIES')))
+				elseif (!Configuration::updateValue('MA_LAST_QTIES', (int)Tools::getValue('MA_LAST_QTIES')))
 					$errors[] = $this->l('Cannot update settings');
-					else if (!Configuration::updateGlobalValue('MA_MERCHANT_COVERAGE', (int)Tools::getValue('mA_merchant_coverage')))
+				elseif (!Configuration::updateGlobalValue('MA_MERCHANT_COVERAGE', (int)Tools::getValue('mA_merchant_coverage')))
 					$errors[] = $this->l('Cannot update settings');
-					else if (!Configuration::updateGlobalValue('MA_PRODUCT_COVERAGE', (int)Tools::getValue('MA_PRODUCT_COVERAGE')))
+				elseif (!Configuration::updateGlobalValue('MA_PRODUCT_COVERAGE', (int)Tools::getValue('MA_PRODUCT_COVERAGE')))
 					$errors[] = $this->l('Cannot update settings');
 			}
 		}
@@ -262,14 +263,16 @@ class MailAlerts extends Module
 			return;
 
 		// Getting differents vars
-		$id_lang = (int)Context::getContext()->language->id;
+		$context = Context::getContext();
+		$id_lang = (int)$context->language->id;
+		$id_shop = (int)$context->shop->id;
 		$currency = $params['currency'];
-		$configuration = Configuration::getMultiple(array('PS_SHOP_EMAIL', 'PS_MAIL_METHOD', 'PS_MAIL_SERVER', 'PS_MAIL_USER', 'PS_MAIL_PASSWD', 'PS_SHOP_NAME'));
 		$order = $params['order'];
 		$customer = $params['customer'];
+		$configuration = Configuration::getMultiple(array('PS_SHOP_EMAIL', 'PS_MAIL_METHOD', 'PS_MAIL_SERVER', 'PS_MAIL_USER', 'PS_MAIL_PASSWD', 'PS_SHOP_NAME', 'PS_MAIL_COLOR'), $id_lang, null, $id_shop);
 		$delivery = new Address((int)$order->id_address_delivery);
 		$invoice = new Address((int)$order->id_address_invoice);
-		$order_date_text = Tools::displayDate($order->date_add);
+		$order_date_text = Tools::displayDate($order->date_add, (int)$id_lang);
 		$carrier = new Carrier((int)$order->id_carrier);
 		$message = $order->getFirstMessage();
 
@@ -288,7 +291,6 @@ class MailAlerts extends Module
 			$customization_text = '';
 			if (isset($customized_datas[$product['product_id']][$product['product_attribute_id']]))
 			{
-
 				foreach ($customized_datas[$product['product_id']][$product['product_attribute_id']] as $customization)
 				{
 					if (isset($customization['datas'][_CUSTOMIZE_TEXTFIELD_]))
@@ -339,11 +341,11 @@ class MailAlerts extends Module
 			'{delivery_block_txt}' => MailAlert::getFormatedAddress($delivery, "\n"),
 			'{invoice_block_txt}' => MailAlert::getFormatedAddress($invoice, "\n"),
 			'{delivery_block_html}' => MailAlert::getFormatedAddress($delivery, '<br />', array(
-			'firstname' => '<span style="color:'.Configuration::get('PS_MAIL_COLOR').'; font-weight:bold;">%s</span>',
-			'lastname' => '<span style="color:'.Configuration::get('PS_MAIL_COLOR').'; font-weight:bold;">%s</span>')),
+			'firstname' => '<span style="color:'.$configuration['PS_MAIL_COLOR'].'; font-weight:bold;">%s</span>',
+			'lastname' => '<span style="color:'.$configuration['PS_MAIL_COLOR'].'; font-weight:bold;">%s</span>')),
 			'{invoice_block_html}' => MailAlert::getFormatedAddress($invoice, '<br />', array(
-			'firstname' => '<span style="color:'.Configuration::get('PS_MAIL_COLOR').' font-weight:bold;">%s</span>',
-			'lastname' => '<span style="color:'.Configuration::get('PS_MAIL_COLOR').'; font-weight:bold;">%s</span>')),
+			'firstname' => '<span style="color:'.$configuration['PS_MAIL_COLOR'].' font-weight:bold;">%s</span>',
+			'lastname' => '<span style="color:'.$configuration['PS_MAIL_COLOR'].'; font-weight:bold;">%s</span>')),
 			'{delivery_company}' => $delivery->company,
 			'{delivery_firstname}' => $delivery->firstname,
 			'{delivery_lastname}' => $delivery->lastname,
@@ -353,9 +355,7 @@ class MailAlerts extends Module
 			'{delivery_postal_code}' => $delivery->postcode,
 			'{delivery_country}' => $delivery->country,
 			'{delivery_state}' => $delivery->id_state ? $delivery_state->name : '',
-			'{delivery_phone}' => $delivery->phone,
-			'{delivery_phone_mobile}' => $delivery->phone_mobile,
-			'{delivery_vat_number}' => $delivery->vat_number,
+			'{delivery_phone}' => $delivery->phone ? $delivery->phone : $delivery->phone_mobile,
 			'{delivery_other}' => $delivery->other,
 			'{invoice_company}' => $invoice->company,
 			'{invoice_firstname}' => $invoice->firstname,
@@ -366,21 +366,18 @@ class MailAlerts extends Module
 			'{invoice_postal_code}' => $invoice->postcode,
 			'{invoice_country}' => $invoice->country,
 			'{invoice_state}' => $invoice->id_state ? $invoice_state->name : '',
-			'{invoice_phone}' => $invoice->phone,
-			'{invoice_phone_mobile}' => $invoice->phone_mobile,
-			'{invoice_vat_number}' => $invoice->vat_number,
+			'{invoice_phone}' => $invoice->phone ? $invoice->phone : $invoice->phone_mobile,
 			'{invoice_other}' => $invoice->other,
 			'{order_name}' => sprintf('%06d', $order->id),
-			'{shop_name}' => Configuration::get('PS_SHOP_NAME'),
+			'{shop_name}' => $configuration['PS_SHOP_NAME'],
 			'{date}' => $order_date_text,
-			'{carrier}' => (($carrier->name == '0') ? Configuration::get('PS_SHOP_NAME') : $carrier->name),
+			'{carrier}' => (($carrier->name == '0') ? $configuration['PS_SHOP_NAME'] : $carrier->name),
 			'{payment}' => Tools::substr($order->payment, 0, 32),
 			'{items}' => $items_table,
 			'{total_paid}' => Tools::displayPrice($order->total_paid, $currency),
 			'{total_products}' => Tools::displayPrice($order->getTotalProductsWithTaxes(), $currency),
 			'{total_discounts}' => Tools::displayPrice($order->total_discounts, $currency),
 			'{total_shipping}' => Tools::displayPrice($order->total_shipping, $currency),
-			'{total_tax_paid}' => Tools::displayPrice(($order->total_products_wt - $order->total_products) + ($order->total_shipping_tax_incl - $order->total_shipping_tax_excl), $currency, false),
 			'{total_wrapping}' => Tools::displayPrice($order->total_wrapping, $currency),
 			'{currency}' => $currency->sign,
 			'{message}' => $message
@@ -390,19 +387,28 @@ class MailAlerts extends Module
 
 		if (file_exists(dirname(__FILE__).'/mails/'.$iso.'/'.$template.'.txt') &&
 			file_exists(dirname(__FILE__).'/mails/'.$iso.'/'.$template.'.html'))
-			Mail::Send(
-				$id_lang,
-				$template,
-				sprintf(Mail::l('New order - #%06d', $id_lang), $order->id),
-				$template_vars,
-				explode(self::__MA_MAIL_DELIMITOR__, $this->_merchant_mails),
-				null,
-				$configuration['PS_SHOP_EMAIL'],
-				$configuration['PS_SHOP_NAME'],
-				null,
-				null,
-				dirname(__FILE__).'/mails/'
-			);
+		{
+			// Send 1 email by merchant mail, because Mail::Send doesn't work with an array of recipients
+			$merchant_mails = explode(self::__MA_MAIL_DELIMITOR__, $this->_merchant_mails);
+			foreach ($merchant_mails as $merchant_mail)
+			{
+				Mail::Send(
+					$id_lang,
+					$template,
+					sprintf(Mail::l('New order - #%06d', $id_lang), $order->id),
+					$template_vars,
+					$merchant_mail,
+					null,
+					$configuration['PS_SHOP_EMAIL'],
+					$configuration['PS_SHOP_NAME'],
+					null,
+					null,
+					dirname(__FILE__).'/mails/',
+					null,
+					$id_shop
+				);
+			}
+		}
 	}
 
 	public function hookActionProductOutOfStock($params)
@@ -410,18 +416,20 @@ class MailAlerts extends Module
 		if (!$this->_customer_qty || !Configuration::get('PS_STOCK_MANAGEMENT') || Product::isAvailableWhenOutOfStock($params['product']->out_of_stock))
 			return;
 
+		$context = Context::getContext();
 		$id_product = (int)$params['product']->id;
 		$id_product_attribute = 0;
-		$id_customer = (int)Context::getContext()->customer->id;
+		$id_customer = (int)$context->customer->id;
 
-		if (!(int)Context::getContext()->customer->isLogged())
+		if ((int)$context->customer->id <= 0)
 			$this->context->smarty->assign('email', 1);
-		else if (MailAlert::customerHasNotification($id_customer, $id_product, $id_product_attribute))
+		elseif (MailAlert::customerHasNotification($id_customer, $id_product, $id_product_attribute, (int)$context->shop->id))
 			return;
 
 		$this->context->smarty->assign(array(
-							'id_product' => $id_product,
-							'id_product_attribute' => $id_product_attribute));
+			'id_product' => $id_product,
+			'id_product_attribute' => $id_product_attribute
+		));
 
 		return $this->display(__FILE__, 'product.tpl');
 	}
@@ -431,33 +439,47 @@ class MailAlerts extends Module
 		$id_product = (int)$params['id_product'];
 		$id_product_attribute = (int)$params['id_product_attribute'];
 		$quantity = (int)$params['quantity'];
-		$id_shop = (int)Context::getContext()->shop->id;
-		$id_lang = (int)Context::getContext()->language->id;
-		$product = new Product($id_product, true, $id_lang, $id_shop, Context::getContext());
-		$ma_last_qties = (int)Configuration::get('MA_LAST_QTIES');
+		$context = Context::getContext();
+		$id_shop = (int)$context->shop->id;
+		$id_lang = (int)$context->language->id;
+		$product = new Product($id_product, true, $id_lang, $id_shop, $context);
+		$configuration = Configuration::getMultiple(array('MA_LAST_QTIES', 'PS_STOCK_MANAGEMENT', 'PS_SHOP_EMAIL', 'PS_SHOP_NAME'), $id_lang, null, $id_shop);
+		$ma_last_qties = (int)$configuration['MA_LAST_QTIES'];
 
-		if ($product->active == 1 && (int)$quantity <= $ma_last_qties && !(!$this->_merchant_oos || empty($this->_merchant_mails)) && Configuration::get('PS_STOCK_MANAGEMENT'))
+		if ($product->active == 1 && (int)$quantity <= $ma_last_qties && !(!$this->_merchant_oos || empty($this->_merchant_mails)) && $configuration['PS_STOCK_MANAGEMENT'])
 		{
 			$iso = Language::getIsoById($id_lang);
 			$product_name = Product::getProductName($id_product, $id_product_attribute, $id_lang);
 			$template_vars = array(
-								'{qty}' => $quantity,
-								'{last_qty}' => $ma_last_qties,
-								'{product}' => $product_name);
+				'{qty}' => $quantity,
+				'{last_qty}' => $ma_last_qties,
+				'{product}' => $product_name
+			);
 
 			if (file_exists(dirname(__FILE__).'/mails/'.$iso.'/productoutofstock.txt') &&
 				file_exists(dirname(__FILE__).'/mails/'.$iso.'/productoutofstock.html'))
-				Mail::Send($id_lang,
-							'productoutofstock',
-							Mail::l('Product out of stock', $id_lang),
-							$template_vars,
-							explode(self::__MA_MAIL_DELIMITOR__, $this->_merchant_mails),
-							null,
-							strval(Configuration::get('PS_SHOP_EMAIL')),
-							strval(Configuration::get('PS_SHOP_NAME')),
-							null,
-							null,
-							dirname(__FILE__).'/mails/');
+			{
+				// Send 1 email by merchant mail, because Mail::Send doesn't work with an array of recipients
+				$merchant_mails = explode(self::__MA_MAIL_DELIMITOR__, $this->_merchant_mails);
+				foreach ($merchant_mails as $merchant_mail)
+				{
+					Mail::Send(
+						$id_lang,
+						'productoutofstock',
+						Mail::l('Product out of stock', $id_lang),
+						$template_vars,
+						$merchant_mail,
+						null,
+						strval($configuration['PS_SHOP_EMAIL']),
+						strval($configuration['PS_SHOP_NAME']),
+						null,
+						null,
+						dirname(__FILE__).'/mails/',
+						false,
+						$id_shop
+					);
+				}
+			}
 		}
 
 		if ($this->_customer_qty && $quantity > 0)
@@ -541,31 +563,44 @@ class MailAlerts extends Module
 		$coverage = StockManagerFactory::getManager()->getProductCoverage($id_product, $id_product_attribute, $warning_coverage, $id_warehouse);
 
 		// if we need to send a notification
-		if ($product->active == 1 && $coverage !== -1 && ($coverage < $warning_coverage) && !empty($this->_merchant_mails) &&
+		if ($product->active == 1 &&
+			($coverage < $warning_coverage) && !empty($this->_merchant_mails) &&
 			Configuration::getGlobalValue('MA_MERCHANT_COVERAGE'))
 		{
-			$id_lang = (int)Context::getContext()->language->id;
+			$context = Context::getContext();
+			$id_lang = (int)$context->language->id;
+			$id_shop = (int)$context->shop->id;
 			$iso = Language::getIsoById($id_lang);
 			$product_name = Product::getProductName($id_product, $id_product_attribute, $id_lang);
 			$template_vars = array(
-								'{current_coverage}' => $coverage,
-								'{warning_coverage}' => $warning_coverage,
-								'{product}' => pSQL($product_name));
+				'{current_coverage}' => $coverage,
+				'{warning_coverage}' => $warning_coverage,
+				'{product}' => pSQL($product_name)
+			);
 
 			if (file_exists(dirname(__FILE__).'/mails/'.$iso.'/productcoverage.txt') &&
 				file_exists(dirname(__FILE__).'/mails/'.$iso.'/productcoverage.html'))
 			{
-				Mail::Send($id_lang,
-							'productcoverage',
-							Mail::l('Stock coverage', $id_lang),
-							$template_vars,
-							explode(self::__MA_MAIL_DELIMITOR__, $this->_merchant_mails),
-							null,
-							strval(Configuration::get('PS_SHOP_EMAIL')),
-							strval(Configuration::get('PS_SHOP_NAME')),
-							null,
-							null,
-							dirname(__FILE__).'/mails/');
+				// Send 1 email by merchant mail, because Mail::Send doesn't work with an array of recipients
+				$merchant_mails = explode(self::__MA_MAIL_DELIMITOR__, $this->_merchant_mails);
+				foreach ($merchant_mails as $merchant_mail)
+				{
+					Mail::Send(
+						$id_lang,
+						'productcoverage',
+						Mail::l('Stock coverage', $id_lang),
+						$template_vars,
+						$merchant_mail,
+						null,
+						strval(Configuration::get('PS_SHOP_EMAIL')),
+						strval(Configuration::get('PS_SHOP_NAME')),
+						null,
+						null,
+						dirname(__FILE__).'/mails/',
+						null,
+						$id_shop
+					);
+				}
 			}
 		}
 	}
