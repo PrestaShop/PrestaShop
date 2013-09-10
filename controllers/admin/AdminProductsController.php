@@ -2456,7 +2456,7 @@ class AdminProductsControllerCore extends AdminController
 							$(this).parents("ul.tree").each(
 								function()
 								{
-									$(this).children().children(".icon-folder-close")
+									$(this).children().children().children(".icon-folder-close")
 										.removeClass("icon-folder-close")
 										.addClass("icon-folder-open");
 									$(this).show();
@@ -2483,7 +2483,7 @@ class AdminProductsControllerCore extends AdminController
 								$(this).parents("ul.tree").each(
 									function()
 									{
-										$(this).children().children(".icon-folder-close")
+										$(this).children().children().children(".icon-folder-close")
 											.removeClass("icon-folder-close")
 											.addClass("icon-folder-open");
 										$(this).show();
