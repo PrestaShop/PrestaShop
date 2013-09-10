@@ -80,7 +80,7 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 		if (!empty($this->address->postcode))
 			$postcode = $this->address->postcode;
 
-		if (!isset(self::$cache_tax_calculator[$postcode.'-'.$this->type]))
+		if (!isset(self::$cache_tax_calculator[(int)$this->address->id_country.'-'.$postcode.'-'.$this->type]))
 		{
 			$rows = Db::getInstance()->executeS('
 			SELECT *
