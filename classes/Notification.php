@@ -45,9 +45,9 @@ class NotificationCore
 
 		$notifications = array();
 		$employee_infos = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-				SELECT id_last_order, id_last_customer_message, id_last_customer
-				FROM `'._DB_PREFIX_.'employee`
-				WHERE `id_employee` = '.(int)$cookie->id_employee);
+		SELECT id_last_order, id_last_customer_message, id_last_customer
+		FROM `'._DB_PREFIX_.'employee`
+		WHERE `id_employee` = '.(int)$cookie->id_employee);
 
 		foreach ($this->types as $type)
 			$notifications[$type] = Notification::getLastElementsIdsByType($type, $employee_infos['id_last_'.$type]);
@@ -57,10 +57,11 @@ class NotificationCore
 
 	public function installDb()
 	{
-		Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('ALTER TABLE `'._DB_PREFIX_.'employee`
-						ADD `id_last_order` INT(10) unsigned NOT NULL default "0"
-						ADD `id_last_customer_message` INT(10) unsigned NOT NULL default "0"
-						ADD `id_last_message` INT(10) unsigned NOT NULL default "0"');
+		Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('
+		ALTER TABLE `'._DB_PREFIX_.'employee`
+		ADD `id_last_order` INT(10) unsigned NOT NULL default "0"
+		ADD `id_last_customer_message` INT(10) unsigned NOT NULL default "0"
+		ADD `id_last_message` INT(10) unsigned NOT NULL default "0"');
 	}
 
 	/**
@@ -77,40 +78,40 @@ class NotificationCore
 		{
 			case 'order':
 				$sql = '
-					SELECT o.`id_order`, o.`id_customer`, o.`total_paid`, o.`id_currency`, c.`firstname`, c.`lastname`
+					SELECT SQL_CALC_FOUND_ROWS o.`id_order`, o.`id_customer`, o.`total_paid`, o.`id_currency`, c.`firstname`, c.`lastname`
 					FROM `'._DB_PREFIX_.'orders` as o
 					LEFT JOIN `'._DB_PREFIX_.'customer` as c ON (c.`id_customer` = o.`id_customer`)
 					WHERE `id_order` > '.(int)$id_last_element.
 					Shop::addSqlRestriction(false, 'o').'
 					ORDER BY `id_order` DESC
-				';
+					LIMIT 5';
 				break;
 
 			case 'customer_message':
 				$sql = '
-					SELECT c.`id_customer_message`, ct.`id_customer`, ct.`id_customer_thread`, ct.`email`
+					SELECT SQL_CALC_FOUND_ROWS c.`id_customer_message`, ct.`id_customer`, ct.`id_customer_thread`, ct.`email`
 					FROM `'._DB_PREFIX_.'customer_message` as c
 					LEFT JOIN `'._DB_PREFIX_.'customer_thread` as ct ON (c.`id_customer_thread` = ct.`id_customer_thread`)
 					WHERE c.`id_customer_message` > '.(int)$id_last_element.'
 						AND c.`id_employee` = 0
 						AND ct.id_shop IN ('.implode(', ', Shop::getContextListShopID()).')
 					ORDER BY c.`id_customer_message` DESC
-				';
+					LIMIT 5';
 				break;
 			default:
 				$sql = '
-					SELECT t.`id_'.bqSQL($type).'`, t.*
+					SELECT SQL_CALC_FOUND_ROWS t.`id_'.bqSQL($type).'`, t.*
 					FROM `'._DB_PREFIX_.bqSQL($type).'` t
 					WHERE t.`deleted` = 0 AND t.`id_'.bqSQL($type).'` > '.(int)$id_last_element.
 					Shop::addSqlRestriction(false, 't').'
 					ORDER BY t.`id_'.bqSQL($type).'` DESC
-				';
+					LIMIT 5';
 				break;
 		}
 
-		$json = array();
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-
+		$total = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT FOUND_ROWS()');
+		$json = array('total' => $total, 'results' => array());
 		foreach ($result as $value)
 		{
 			$customer_name = '';
@@ -119,7 +120,7 @@ class NotificationCore
 			else if (isset($value['email']))
 				$customer_name = Tools::safeOutput($value['email']);
 			
-			$json[] = array(
+			$json['results'][] = array(
 				'id_order' => ((!empty($value['id_order'])) ? (int)$value['id_order'] : 0),
 				'id_customer' => ((!empty($value['id_customer'])) ? (int)$value['id_customer'] : 0),
 				'id_customer_message' => ((!empty($value['id_customer_message'])) ? (int)$value['id_customer_message'] : 0),
@@ -146,13 +147,12 @@ class NotificationCore
 		if (in_array($type, $this->types))
 			// We update the last item viewed
 			return Db::getInstance()->execute('
-					UPDATE `'._DB_PREFIX_.'employee`
-					SET `id_last_'.bqSQL($type).'` = (
-						SELECT IFNULL(MAX(`id_'.$type.'`), 0)
-						FROM `'._DB_PREFIX_.(($type == 'order') ? bqSQL($type).'s' : bqSQL($type)).'`
-					)
-					WHERE `id_employee` = '.(int)$cookie->id_employee);
-		else
-			return false;
+			UPDATE `'._DB_PREFIX_.'employee`
+			SET `id_last_'.bqSQL($type).'` = (
+				SELECT IFNULL(MAX(`id_'.$type.'`), 0)
+				FROM `'._DB_PREFIX_.(($type == 'order') ? bqSQL($type).'s' : bqSQL($type)).'`
+			)
+			WHERE `id_employee` = '.(int)$cookie->id_employee);
+		return false;
 	}
 }

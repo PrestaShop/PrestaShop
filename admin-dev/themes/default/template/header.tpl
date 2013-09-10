@@ -130,7 +130,7 @@
 					<div class="dropdown-menu notifs_dropdown">
 						<section id="orders_notif_wrapper" class="notifs_panel">
 							<header class="notifs_panel_header">
-								<h3>{l s='Last orders'}</h3>
+								<h3>{l s='Latest Orders'}</h3>
 							</header>
 							<div id="list_orders_notif" class="list-group">
 								<a href="#" class="media list-group-item no_notifs">
@@ -160,7 +160,7 @@
 					<div class="dropdown-menu notifs_dropdown">
 						<section id="customers_notif_wrapper" class="notifs_panel">
 							<header class="notifs_panel_header">
-								<h3>{l s='Last customers'}</h3>
+								<h3>{l s='Latest Registrations'}</h3>
 							</header>
 							<div id="list_customers_notif" class="list-group">
 								<a href="#" class="media list-group-item no_notifs">
@@ -190,7 +190,7 @@
 					<div class="dropdown-menu notifs_dropdown">
 						<section id="customer_messages_notif_wrapper" class="notifs_panel">
 							<header class="notifs_panel_header">
-								<h3>{l s='Last messages'}</h3>
+								<h3>{l s='Latest Messages'}</h3>
 							</header>
 							<div id="list_orders_notif" class="list-group">
 								<a href="#" class="media list-group-item no_notifs">
