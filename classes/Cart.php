@@ -3462,7 +3462,9 @@ class CartCore extends ObjectModel
 		WHERE `id_cart` = '.(int)$this->id.'
 		'.(Configuration::get('PS_ALLOW_MULTISHIPPING') ? ' AND `id_shop` = '.(int)$this->id_shop : '');
 	
-		$emptyCache = Db::getInstance()->execute($sql);
+		$result = Db::getInstance()->execute($sql);
+		if ($result)
+			$emptyCache = true;
 
 		if (Customization::isFeatureActive())
 			Db::getInstance()->execute('
