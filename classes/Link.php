@@ -241,8 +241,6 @@ class LinkCore
 	 */
 	public function getCMSLink($cms, $alias = null, $ssl = false, $id_lang = null, $id_shop = null)
 	{
-		$base = (($ssl && $this->ssl_enable) ? 'https://' : 'http://');
-
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
 		
@@ -250,7 +248,9 @@ class LinkCore
 			$shop = Context::getContext()->shop;
 		else
 			$shop = new Shop($id_shop);
-		$url = $base.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop);
+
+		$base = (($ssl && $this->ssl_enable) ? 'https://'.$shop->domain_ssl : 'http://'.$shop->domain);
+		$url = $base.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop);
 
 
 		$dispatcher = Dispatcher::getInstance();
@@ -362,8 +362,6 @@ class LinkCore
 	 */
 	public function getModuleLink($module, $controller = 'default', array $params = array(), $ssl = false, $id_lang = null, $id_shop = null)
 	{
-		$base = (($ssl && $this->ssl_enable) ? 'https://' : 'http://');
-
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
 
@@ -371,7 +369,9 @@ class LinkCore
 			$shop = Context::getContext()->shop;
 		else
 			$shop = new Shop($id_shop);
-		$url = $base.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop);
+		
+		$base = (($ssl && $this->ssl_enable) ? 'https://'.$shop->domain_ssl : 'http://'.$shop->domain);
+		$url = $base.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop);
 
 		// If the module has its own route ... just use it !
 		if (Dispatcher::getInstance()->hasRoute('module-'.$module.'-'.$controller, $id_lang, $id_shop))
@@ -475,8 +475,9 @@ class LinkCore
 			$shop = new Shop($id_shop);
 
 		$uri_path = Dispatcher::getInstance()->createUrl($controller, $id_lang, $request, false, '', $id_shop);
-		$url = ($ssl && $this->ssl_enable) ? 'https://' : 'http://';
-		$url .= $shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop).ltrim($uri_path, '/');
+
+		$url = ($ssl && $this->ssl_enable) ? 'https://'.$shop->domain_ssl : 'http://'.$shop->domain;
+		$url .= $shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop).ltrim($uri_path, '/');
 
 		return $url;
 	}
