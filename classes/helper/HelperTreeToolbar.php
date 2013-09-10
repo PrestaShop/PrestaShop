@@ -108,10 +108,48 @@ class HelperTreeToolbarCore implements HelperITreeToolbarCore
 	{
 		if (!isset($this->_template_directory))
 			$this->_template_directory = $this->_normalizeDirectory(
-				$this->getContext()->smarty->getTemplateDir(0)
-				.self::DEFAULT_TEMPLATE_DIRECTORY);
+				self::DEFAULT_TEMPLATE_DIRECTORY);
 
 		return $this->_template_directory;
+	}
+
+
+	public function getTemplateFile($template)
+	{
+		if (preg_match_all('/((?:^|[A-Z])[a-z]+)/', get_class($this->getContext()->controller), $matches) !== FALSE)
+			$controllerName = strtolower($matches[0][1]);
+
+		if ($this->getContext()->controller instanceof ModuleAdminController)
+			return $this->_normalizeDirectory(
+				$this->getContext()->controller->getTemplatePath())
+				.$this->getTemplateDirectory().$template;
+		else if ($this->getContext()->controller instanceof AdminController
+			&& isset($controllerName) && file_exists($this->_normalizeDirectory(
+				$this->getContext()->smarty->getTemplateDir(0)).'controllers'
+				.DIRECTORY_SEPARATOR
+				.$controllerName
+				.DIRECTORY_SEPARATOR
+				.$this->getTemplateDirectory().$template))
+			return $this->_normalizeDirectory(
+				$this->getContext()->smarty->getTemplateDir(0)).'controllers'
+				.DIRECTORY_SEPARATOR
+				.$controllerName
+				.DIRECTORY_SEPARATOR
+				.$this->getTemplateDirectory().$template;
+		else if (file_exists($this->_normalizeDirectory(
+				$this->getContext()->smarty->getTemplateDir(1))
+				.$this->getTemplateDirectory().$template))
+				return $this->_normalizeDirectory(
+					$this->getContext()->smarty->getTemplateDir(1))
+					.$this->getTemplateDirectory().$template;
+		else if (file_exists($this->_normalizeDirectory(
+				$this->getContext()->smarty->getTemplateDir(0))
+				.$this->getTemplateDirectory().$template))
+				return $this->_normalizeDirectory(
+				$this->getContext()->smarty->getTemplateDir(0))
+				.$this->getTemplateDirectory().$template;
+		else
+			return $this->getTemplateDirectory().$template;
 	}
 
 	public function addAction($action)
@@ -135,12 +173,12 @@ class HelperTreeToolbarCore implements HelperITreeToolbarCore
 	{
 		foreach ($this->getActions() as $action)
 		{
-			if (is_subclass_of($action, 'HelperTreeToolbarSearchCore'))
+			if ($action instanceof HelperTreeToolbarSearchCore)
 				$action->setAttribute('data', $this->getData());
 		}
 
 		return $this->getContext()->smarty->createTemplate(
-			$this->getTemplateDirectory().$this->getTemplate(),
+			$this->getTemplateFile($this->getTemplate()),
 			$this->getContext()->smarty
 		)->assign('actions', $this->getActions())->fetch();
 	}

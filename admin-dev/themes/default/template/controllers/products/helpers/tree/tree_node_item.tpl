@@ -26,6 +26,6 @@
 	<label class="tree-item-name">
 		<input type="radio" name="id-category" value="{$node['id_category']}" />
 		<i class="tree-dot"></i>
-		{$name}
+		{$node['name']}
 	<label>
 </li>
