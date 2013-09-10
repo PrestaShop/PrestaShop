@@ -24,7 +24,7 @@
 *}
 <li class="tree-folder">
 	<span class="tree-folder-name">
-		<input type="checkbox" name="id-category[]" value="{$node['id_category']}" />
+		<input type="checkbox" name="categoryBox[]" value="{$node['id_category']}" />
 		<i class="icon-folder-close"></i>
 		<label class="tree-toggler">{$name}</label>
 	</span>

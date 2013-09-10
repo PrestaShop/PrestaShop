@@ -22,6 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<a href="{$link}" onclick="{$action}" class="btn btn-default btn-xs">
-	<i class="{$icon_class}"></i>&nbsp;{l s=$label}
+<a href="{$link}"{if isset($action)}onclick="{$action}"{/if} class="btn btn-default btn-xs">
+	{if isset($icon_class)}<i class="{$icon_class}"></i>&nbsp;{/if}{l s=$label}
 </a>

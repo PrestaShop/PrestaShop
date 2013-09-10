@@ -27,10 +27,68 @@
 class HelperTreeToolbarSearchCore extends HelperTreeToolbarButtonCore implements
 	HelperITreeToolbarButtonCore
 {
+	private   $_children_key;
+	private   $_id_key;
+	private   $_name_key;
 	protected $_template = 'tree_toolbar_search.tpl';
+
+	public function __construct($label, $id, $name = null, $class = null)
+	{
+		parent::__construct($label);
+
+		$this->setId($id);
+		$this->setName($name);
+		$this->setClass($class);
+	}
+
+	public function setChildrenKey($value)
+	{
+		$this->_children_key = (string)$value;
+		return $this;
+	}
+
+	public function getChildrenKey()
+	{
+		if (!isset($this->_children_key))
+			$this->setChildrenKey('children');
+
+		return $this->_children_key;
+	}
+
+	public function setIdKey($value)
+	{
+		$this->_id_key = (string)$value;
+		return $this;
+	}
+
+	public function getIdKey()
+	{
+		if (!isset($this->_id_key))
+			$this->setIdKey('id');
+
+		return $this->_id_key;
+	}
+
+	public function setNameKey($value)
+	{
+		$this->_name_key = (string)$value;
+		return $this;
+	}
+
+	public function getNameKey()
+	{
+		if (!isset($this->_name_key))
+			$this->setNameKey('name');
+
+		return $this->_name_key;
+	}
 
 	public function render()
 	{
+		if ($this->hasAttribute('data'))
+			$this->setAttribute('typeahead_source',
+				$this->_renderData($this->getAttribute('data')));
+
 		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
 		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
 		$bo_theme = ((Validate::isLoadedObject($this->getContext()->employee)
@@ -47,12 +105,24 @@ class HelperTreeToolbarSearchCore extends HelperTreeToolbarButtonCore implements
 			$this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
 				.'/themes/'.$bo_theme.'/js/vendor/typeahead.min.js');
 
-		$template = parent::render();
-		$template->assign(array(
-			'action'     => $this->getAction(),
-			'label'      => $this->getLabel(),
-			'class'      => $this->getClass()
-		));
-		return (isset($html)?$html:'').$template->fetch();
+		return (isset($html)?$html:'').parent::render();
+	}
+
+	private function _renderData($data)
+	{
+		if (!is_array($data) && !$data instanceof Traversable)
+			throw new PrestaShopException('Data value must be an traversable array');
+
+		$html = '';
+
+		foreach ($data as $item)
+		{
+			if (array_key_exists($this->getChildrenKey(), $item) && !empty($item[$this->getChildrenKey()]))
+				$html .= '{id : '.$item[$this->getIdKey()].', name : "'.$item[$this->getNameKey()].'"},'.$this->_renderData($item[$this->getChildrenKey()]);
+			else
+				$html .= '{id : '.$item[$this->getIdKey()].', name : "'.$item[$this->getNameKey()].'"},';
+		}
+
+		return $html;
 	}
 }

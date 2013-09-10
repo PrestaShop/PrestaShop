@@ -2328,14 +2328,23 @@ class AdminProductsControllerCore extends AdminController
 		return parent::renderList();
 	}
 
-	public function renderCategoriesTree($selectedCategory = null)
+	public function renderCategoriesTree($selected_category = null)
 	{
-		$tree = new HelperTree('categories-tree', Category::getNestedCategories());
+		$tree = new HelperTree('categories-tree', Category::getNestedCategories(
+			1, $this->context->employee->id_lang));
 
 		$html = $tree->setTitle('Filter by category')
 			->setActions(array(
-				new HelperTreeToolbarLink('Collapse All', '$(\'#categories-tree\').tree(\'collapseAll\')', '#', 'icon-collapse-alt'),
-				new HelperTreeToolbarLink('Expand All', '$(\'#categories-tree\').tree(\'expandAll\')', '#', 'icon-expand-alt')
+				new HelperTreeToolbarLink(
+					'Collapse All',
+					'#',
+					'$(\'#categories-tree\').tree(\'collapseAll\')',
+					'icon-collapse-alt'),
+				new HelperTreeToolbarLink(
+					'Expand All',
+					'#',
+					'$(\'#categories-tree\').tree(\'expandAll\')',
+					'icon-expand-alt')
 			))
 			->setTemplateDirectory($this->context->smarty->getTemplateDir(0).'/controllers/products/helpers/tree')
 			->render();
@@ -2351,13 +2360,14 @@ class AdminProductsControllerCore extends AdminController
 					}
 				);';
 
-			if (isset($selectedCategory))
+			if (isset($selected_category))
 				$html .= '$("#categories-tree").find(":input").each(
 					function()
 					{
-						if ($(this).val() == '.$selectedCategory.')
+						if ($(this).val() == '.$selected_category.')
 						{
 							$(this).prop("checked", true);
+							$(this).parent().addClass("tree-selected");
 							$(this).parents("ul.tree").each(
 								function()
 								{
@@ -2375,36 +2385,51 @@ class AdminProductsControllerCore extends AdminController
 		return $html;
 	}
 
-	public function renderAssociationsCategoriesTree()
+	public function renderAssociationsCategoriesTree($root_category,
+		$selected_categories)
 	{
-		$categories = Category::getSimpleCategories(1);
-		$search_source = array();
-		foreach ($categories as $key => $category)
-			$search_source[] = $category['name'];
-
-		$tree = new HelperTree('associated-categories-tree', Category::getNestedCategories());
-		$search = new HelperTreeToolbarSearch('Find a category:');
-		$search->setTemplateDirectory($this->context->smarty->getTemplateDir(0).'/controllers/products/helpers/tree')
-			->addAttribute('categories_name', '"'.implode('","', $search_source).'"');
+		$tree = new HelperTree('associated-categories-tree',
+			Category::getNestedCategories(1, $this->context->employee->id_lang));
+		$search = new HelperTreeToolbarSearch('Find a category:',
+			'categories-search');
+		$search->setIdKey('id_category');
 		$html = $tree->setTitle('Associated categories')
 			->setActions(array(
-				new HelperTreeToolbarLink('Collapse All', '$(\'#associated-categories-tree\').tree(\'collapseAll\')', '#', 'icon-collapse-alt'),
-				new HelperTreeToolbarLink('Expand All', '$(\'#associated-categories-tree\').tree(\'expandAll\')', '#', 'icon-expand-alt'),
-				new HelperTreeToolbarLink('Check All', 'checkAllAssociatedCategories();', '#', 'icon-check-sign'),
-				new HelperTreeToolbarLink('Uncheck All', 'uncheckAllAssociatedCategories();', '#', 'icon-check-empty'),
+				new HelperTreeToolbarLink(
+					'Collapse All',
+					'#',
+					'$(\'#associated-categories-tree\').tree(\'collapseAll\')',
+					'icon-collapse-alt'),
+				new HelperTreeToolbarLink(
+					'Expand All',
+					'#',
+					'$(\'#associated-categories-tree\').tree(\'expandAll\')',
+					'icon-expand-alt'),
+				new HelperTreeToolbarLink(
+					'Check All',
+					'#',
+					'checkAllAssociatedCategories();',
+					'icon-check-sign'),
+				new HelperTreeToolbarLink(
+					'Uncheck All',
+					'#',
+					'uncheckAllAssociatedCategories();',
+					'icon-check-empty'),
 				$search
 			))
 			->setTemplateDirectory($this->context->smarty->getTemplateDir(0).'/controllers/products/helpers/tree')
 			->setNodeFolderTemplate('tree_node_folder_associations.tpl')
-			->setNodeFolderTemplate('tree_node_item_associations.tpl')
+			->setNodeItemTemplate('tree_node_item_associations.tpl')
 			->render();
-		$html .= '<script type="text/javascript">
+
+			$html .= '<script type="text/javascript">
 			function checkAllAssociatedCategories()
 			{
 				$("#associated-categories-tree").find(":input[type=checkbox]").each(
 					function()
 					{
 						$(this).prop("checked", true);
+						$(this).parent().addClass("tree-selected");
 					}
 				);
 			}
@@ -2415,13 +2440,60 @@ class AdminProductsControllerCore extends AdminController
 					function()
 					{
 						$(this).prop("checked", false);
+						$(this).parent().removeClass("tree-selected");
 					}
 				);
 			}
 
-			$(document).ready(function () {
-				//$("#associated-categories-tree").tree("collapseAll");
+			$("#categories-search").bind("typeahead:selected", function(obj, datum) {        
+			    $("#associated-categories-tree").find(":input").each(
+					function()
+					{
+						if ($(this).val() == datum.id)
+						{
+							$(this).prop("checked", true);
+							$(this).parent().addClass("tree-selected");
+							$(this).parents("ul.tree").each(
+								function()
+								{
+									$(this).children().children(".icon-folder-close")
+										.removeClass("icon-folder-close")
+										.addClass("icon-folder-open");
+									$(this).show();
+								}
+							);
+						}
+					}
+				);
 			});
+
+			$(document).ready(
+				function()
+				{
+					$("#associated-categories-tree").tree("collapseAll");
+
+					var selected_categories = new Array("'.implode('","', $selected_categories).'");
+					$("#associated-categories-tree").find(":input").each(
+						function()
+						{
+							if ($.inArray($(this).val(), selected_categories) != -1)
+							{
+								$(this).prop("checked", true);
+								$(this).parent().addClass("tree-selected");
+								$(this).parents("ul.tree").each(
+									function()
+									{
+										$(this).children().children(".icon-folder-close")
+											.removeClass("icon-folder-close")
+											.addClass("icon-folder-open");
+										$(this).show();
+									}
+								);
+							}
+						}
+					);
+				}
+			);
 		</script>';
 		return $html;
 	}
@@ -3027,14 +3099,17 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign('accessories', $accessories);
 
 		$product->manufacturer_name = Manufacturer::getNameById($product->id_manufacturer);
-		$tab_root = array('id_category' => $root->id, 'name' => $root->name);
-		$category_tree = $helper->renderCategoryTree($tab_root, $selected_cat, 'categoryBox', false, true, array(), false, true);
-		$helper = new Helper();
+
+		$categories = array();
+		foreach ($selected_cat as $key => $category)
+			$categories[] = $key;
+
 		$data->assign(array('default_category' => $default_category,
 					'selected_cat_ids' => implode(',', array_keys($selected_cat)),
 					'selected_cat' => $selected_cat,
 					'id_category_default' => $product->getDefaultCategory(),
-					'category_tree' => $category_tree,
+					'category_tree' => $this->renderAssociationsCategoriesTree(
+						$root->id, $categories),
 					'product' => $product,
 					'link' => $this->context->link,
 					'is_shop_context' => Shop::getContext() == Shop::CONTEXT_SHOP
