@@ -22,4 +22,10 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<li>{$name}</li>
+
+<li class="tree-item">
+	<label class="tree-item-name">
+		<i class="tree-dot"></i>
+		{$name}
+	<label>
+</li>
