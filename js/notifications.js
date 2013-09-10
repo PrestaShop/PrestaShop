@@ -54,8 +54,7 @@ function getPush(refresh)
 
 			// Add orders notifications to the list
 			html = "";
-			nb_notifs = 0;
-			$.each(json.order, function(property, value) {
+			$.each(json.order.results, function(property, value) {
 				html += "<a href='index.php?tab=AdminOrders&token=" + token_admin_orders + "&vieworder&id_order=" + parseInt(value.id_order) + "' class='media list-group-item no_notifs'>";
 				html += "<span class='pull-left'><i class='icon-time'></i></span>";
 				html += "<span class='media-body'>";
@@ -67,23 +66,19 @@ function getPush(refresh)
 				html += "<small class='text-muted'>1 minute ago</small>";
 				html += "</span></a>";
 			});
-			if (html != "")
+			if (json.order.total)
 			{
 				//$("#list_orders_notif").prev("p").hide();
 				$("#list_orders_notif").empty().append(html);
-				nb_notifs = $("#list_orders_notif").length;
-				$("#orders_notif_value").text(nb_notifs);
+				$("#orders_notif_value").text(json.order.total);
 				$("#orders_notif_number_wrapper").show();
 			}
 			else
-			{
 				$("#orders_notif_number_wrapper").hide();
-			}
 			
 			// Add customers notifications to the list
 			html = "";
-			nb_notifs = 0;
-			$.each(json.customer, function(property, value) {
+			$.each(json.customer.results, function(property, value) {
 				html += "<a href='index.php?tab=AdminCustomers&token=" + token_admin_customers + "&viewcustomer&id_customer=" + parseInt(value.id_customer) + "' class='media list-group-item no_notifs'>";
 				html += "<span class='pull-left'><i class='icon-time'></i></span>";
 				html += "<span class='media-body'>";
@@ -93,23 +88,19 @@ function getPush(refresh)
 				html += "<small class='text-muted'>1 minute ago</small>";
 				html += "</span></a>";
 			});						
-			if (html != "")
+			if (json.customer.total)
 			{
 				//$("#list_customers_notif").prev("p").hide();
 				$("#list_customers_notif").empty().append(html);
-				nb_notifs = $("#list_customers_notif").length;
-				$("#customers_notif_value").text(nb_notifs);
+				$("#customers_notif_value").text(json.customer.total);
 				$("#customers_notif_number_wrapper").show();
 			}
 			else
-			{
 				$("#customers_notif_number_wrapper").hide();
-			}
 
 			// Add messages notifications to the list
 			html = "";
-			nb_notifs = 0;
-			$.each(json.customer_message, function(property, value) {
+			$.each(json.customer_message.results, function(property, value) {
 				html += "<a href='index.php?tab=AdminCustomerThreads&token=" + token_admin_customer_threads + "&viewcustomer_thread&id_customer_thread=" + parseInt(value.id_customer_thread) + "'>";
 				html += "<span class='pull-left'><i class='icon-time'></i></span>";
 				html += "<span class='media-body'>";
@@ -120,20 +111,17 @@ function getPush(refresh)
 				html += "</span></a>";
 			});
 
-			if (html != "")
+			if (json.customer_message.total)
 			{
-				$("#list_customer_messages_notif").prev("p").hide();
+				// $("#list_customer_messages_notif").prev("p").hide();
 				$("#list_customer_messages_notif").empty().append(html);
-				nb_notifs = $("#list_customer_messages_notif li").length;
-				$("#customer_messages_notif_value").text(nb_notifs);
+				$("#customer_messages_notif_value").text(json.customer_message.total);
 				$("#customer_messages_notif_number_wrapper").show();
 			}
 			else
-			{
 				$("#customer_messages_notif_number_wrapper").hide();
-			}
 		}
-		if(refresh)
-			setTimeout("getPush(1)",60000);
+		if (refresh)
+			setTimeout("getPush(1)", 60000);
 	});
 }
