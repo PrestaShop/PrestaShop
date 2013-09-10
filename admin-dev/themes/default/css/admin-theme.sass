@@ -94,6 +94,8 @@ html, body
 	@extend .hidden-xs
 	@extend .nav
 	@extend .navbar-nav
+	li a
+		padding: 9px 5px
 	> li > a > i
 		font-size: 1.2em
 		color: white
@@ -129,6 +131,12 @@ html, body
 #header_search
 	@extend .navbar-form
 	@extend .navbar-left
+	width: 130px
+	padding: 0 0 0 10px
+	@media (max-width: $screen-tablet)
+		width: 100%
+	input, .form-group
+		margin: 0
 #header_quick
 	@extend .nav
 	@extend .navbar-nav
@@ -139,7 +147,7 @@ html, body
 	padding: 36px 0 60px
 	margin: 0 0 -60px 0
 	background-color: $bg-content-color
-	//background-image: url('../img/patterns/bedge_grunge.png') // texture
+	background-image: url('../img/patterns/bedge_grunge.png') // texture
 
 #content
 	padding: 90px 20px 0
@@ -331,6 +339,8 @@ html, body
 				&:hover
 					color: white
 					@include text-shadow(darken($main-color,20%) -1px -1px 0)
+	@media (max-width: $screen-tablet)
+		display: none
 	ul.submenu
 		li
 			a
@@ -348,12 +358,100 @@ html, body
 				border-bottom: none
 		&.active
 			a
-				color: contrast-color($secondary-color, white, #333, 10%)
-				background-color: $secondary-color
-				border-bottom: solid 1px darken($secondary-color,10%)
-	@media (max-width: $screen-tablet)
-		display: none
+				color: contrast-color($brand-primary, white, #333, 10%)
+				background-color: $brand-primary
+				border-bottom: solid 1px darken($brand-primary,10%)
 
+#nav-topbar
+	height: 28px
+	position: fixed
+	top: 36px
+	left: 80
+	width: 100%
+	z-index: 600
+	background-color: white
+	border-top: black solid 1px
+	border-bottom: black solid 1px
+	ul.menu
+		height: 28px
+		margin: 0
+		padding: 0
+		display: block
+		list-style: none
+		> li
+			border-right: solid 1px black
+			height: 26px
+			padding: 0
+			margin: 0
+			list-style: none
+			position: relative
+			float: left
+			> a
+				display: block
+				line-height: 26px
+				color: $main-color
+				padding: 0 6px
+				margin: 0
+				i
+					margin: 0
+					width: 15px
+					background-color: transparent
+					font-size: 18px
+				&:hover
+					text-decoration: none
+					background-color: $main-color
+					color: white
+					i
+						color: white!important
+	.menu-collapse
+		display: none
+	ul.submenu
+		display: none!important
+		@include box-shadow(rgba(black,0.2) 0 0 0 1px,rgba(black,0.3) 2px 2px 4px)
+	> ul > li:hover
+		ul.submenu
+			display: block!important
+			position: absolute
+			margin: 0
+			padding: 0
+			left: 0
+			top: 27px
+			width: 200px!important
+			li
+				width: 200px
+				padding: 0
+				list-style: none
+				a
+					display: block
+					padding: 4px 5px 4px 10px
+					font-size: 12px
+					border: none
+					border-bottom: solid 1px #eee
+					background-color: white
+					&:hover
+						color: $main-color
+						background-color: mix(white, $main-color, 90%)
+						text-decoration: none
+			&:last-child a
+				border-bottom: none
+			&.active
+				a
+					color: contrast-color($secondary-color, white, #333, 10%)
+					background-color: $secondary-color
+					border-bottom: solid 1px darken($secondary-color,10%)
+
+.page-topbar
+	#main
+		padding-top: 64px
+	#nav-sidebar
+		display: none
+	.page-head
+		top: 64px
+	#content
+		margin-left: 0
+		width: 100%
+		.page-head h2.page-title
+			padding: 0 0 0 20px
 
 .page-sidebar-closed
 	#nav-sidebar
@@ -391,7 +489,6 @@ html, body
 	.submenu_expand
 		display: none
 
-
 .menu-collapse
 	height: 54px
 	width: 100%
@@ -402,7 +499,6 @@ html, body
 	background-color: $main-color
 	border-bottom: 3px solid darken($main-color,10%)
 	color: darken($main-color,30%)
-
 
 // Tool bar
 .toolbar_btn
@@ -628,20 +724,18 @@ hr
 		border-top: none
 		background-color: white
 	tbody > tr > td
-		padding: 3px 7px 3px 7px
+		padding: 3px 7px
 		vertical-align: middle
 		word-wrap: nowrap
 		font-size: 12px
-		@include box-shadow(rgba(black,0.15) 0 1px 0)
+		//@include box-shadow(rgba(black,0.15) 0 1px 0)
 
 	td.center, th.center
 		text-align: center
-	tr td:first-child,
-	tr th:first-child 
+	tr td:first-child, tr th:first-child 
 		border-top-left-radius: 3px
 		border-bottom-left-radius: 3px
-	tr td:last-child,
-	tr th:last-child 
+	tr td:last-child,tr th:last-child 
 		border-top-right-radius: 3px
 		border-bottom-right-radius: 3px
 
@@ -824,40 +918,6 @@ fieldset > .row
 .highlight
 	background-color: #FFFFC0
 
-//.list-toolbar-btn
-#nav-topbar
-	display: none
-	position: fixed
-	left: 80
-	width: 100%
-	height: 32px
-	z-index: 600
-	background-color: $main-color
-	border-top: black solid 1px
-	border-bottom: black solid 1px
-	a
-		line-height: 32px
-		color: white
-		border-right: solid 1px white
-		padding-right: 3px
-		margin-right: 3px
-		i
-			height: 25px
-			width: 25px
-			line-height: 25px
-			color: white!important
-			background-color: transparent
-			font-size: 20px
-	.menu-collapse
-		display: none
-	.menu
-		padding: 0
-		display: inline
-		li
-			display: inline
-	.submenu
-		display: none
-
 
 
 .hook_panel
@@ -937,9 +997,6 @@ fieldset > .row
 	text-align: right
 	.btn-group
 		text-align: left
-
-
-			
 
 //DASHBOARD
 
@@ -1197,7 +1254,7 @@ fieldset > .row
 		background-color: #ccc
 		+border-radius(6px)
 
-#carrier_wizard.swMain
+#carrier_wizard
 	position: relative
 	display: block
 	.stepContainer
@@ -1267,7 +1324,6 @@ fieldset > .row
 				border-left: 14px solid white
 				border-right: 0
 				position: absolute
-				//background-color: #ccc
 				right: -16px
 				top: 0
 				&:after
@@ -1297,17 +1353,13 @@ fieldset > .row
 	.loader
 		display: none
 	.buttonNext
-		@extend .btn
-		@extend .btn-default
+
 	.buttonDisabled
-		@extend .btn
-		@extend .btn-disabled
+
 	.buttonPrevious
-		@extend .btn
-		@extend .btn-default
+
 	.buttonFinish
-		@extend .btn
-		@extend .btn-primary
+
 	.msgBox
 		position: relative
 		display: none

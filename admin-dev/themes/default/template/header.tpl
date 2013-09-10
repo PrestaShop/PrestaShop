@@ -102,8 +102,12 @@
 	{/if}
 </head>
 
-
+<body class="page-topbar">
+<!-- 
+<body>
 <body class="page-sidebar-closed">
+<body class="page-topbar">
+-->
 {if $display_header}
 {* begin  HEADER *}
 	<header id="header">
@@ -214,11 +218,15 @@
 		<div class="collapse navbar-collapse navbar-collapse-primary">
 			<form id="header_search" method="post" action="index.php?controller=AdminSearch&amp;token={getAdminToken tab='AdminSearch'}" role="search">
 				<div class="form-group">
-					<input type="text" class="form-control" name="bo_query" id="bo_query" value="{$bo_query}" placeholder="{l s='Search'}"/>
+					<div class="input-group">
+						<span class="input-group-btn">
+							<button type="submit" id="bo_search_submit" class="btn btn-default">
+								<i class="icon-search"></i>
+							</button>
+						</span>
+						<input type="text" class="form-control" name="bo_query" id="bo_query" value="{$bo_query}" placeholder="{l s='Search'}"/>
+					</div>
 				</div>
-				<button type="submit" id="bo_search_submit" class="btn btn-default">
-					<i class="icon-search"></i>
-				</button>
 				<!-- 	//todo Search in section 
 				<select name="bo_search_type" id="bo_search_type" class="chosen no-search">
 					<option value="0">{l s='everywhere'}</option>
@@ -249,7 +257,11 @@
 
 			<ul id="header_employee_box">
 {if {$base_url}}
-				<li><a href="{$base_url}" id="header_foaccess" target="_blank" title="{l s='View my shop'}"><i class="icon-eye-open"></i> {l s='View my shop'}</a></li>
+				<li>
+					<a href="http://{$base_url}" id="header_foaccess" target="_blank" title="{l s='View my shop'}">
+						<i class="icon-eye-open"></i> {l s='View my shop'}
+					</a>
+				</li>
 {/if}
 				<li id="employee_infos" class="dropdown">
 					<a href='#' class="employee_name dropdown-toggle" data-toggle="dropdown">
