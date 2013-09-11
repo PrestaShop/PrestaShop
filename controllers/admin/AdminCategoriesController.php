@@ -367,7 +367,10 @@ class AdminCategoriesControllerCore extends AdminController
 			Category::getRootCategory()->id,
 			$this->context->employee->id_lang			
 		);
-		$this->_disableCategories($categories, array($this->_category->id));
+
+		if (!Tools::isSubmit('add'.$this->table))
+			$this->_disableCategories($categories, array($this->_category->id));
+
 		$categories_tree = new HelperTree('categories-tree', $categories);
 		$categories_tree_render = $categories_tree->setActions(array(
 				new HelperTreeToolbarLink(
