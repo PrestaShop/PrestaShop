@@ -289,7 +289,7 @@ class MailAlerts extends Module
 			if (isset($customized_datas[$product['product_id']][$product['product_attribute_id']]))
 			{
 
-				foreach ($customized_datas[$product['product_id']][$product['product_attribute_id']] as $customization)
+				foreach ($customized_datas[$product['product_id']][$product['product_attribute_id']][$order->id_address_delivery] as $customization)
 				{
 					if (isset($customization['datas'][_CUSTOMIZE_TEXTFIELD_]))
 						foreach ($customization['datas'][_CUSTOMIZE_TEXTFIELD_] as $text)
