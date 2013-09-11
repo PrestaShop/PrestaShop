@@ -138,18 +138,14 @@ class Autoload
 		{
 			$filename_tmp = tempnam(dirname($filename), basename($filename.'.'));
 			if($filename_tmp !== FALSE and file_put_contents($filename_tmp, $content, LOCK_EX) !== FALSE)
-            {
+			{
 				@rename($filename_tmp, $filename);
-                @chmod($filename, 0664);
+				@chmod($filename, 0666);
 			}
-            else
-            {
-				// $filename_tmp couldn't be written. $filename should be there anyway (even if outdated),
-				// no need to die.
+			else
+				// $filename_tmp couldn't be written. $filename should be there anyway (even if outdated), no need to die.
 				error_log('Cannot write temporary file '.$filename_tmp);
-			}
 		}
-
 		$this->index = $classes;
 	}
 
@@ -192,4 +188,3 @@ class Autoload
 		return isset($this->index[$classname]) ? $this->index[$classname] : null;
 	}
 }
-
