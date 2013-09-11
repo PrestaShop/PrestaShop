@@ -66,7 +66,14 @@ function smartyTranslate($params, &$smarty)
 		{
 	// Split by \ and / to get the folder tree for the file
 		$folder_tree = preg_split('#[/\\\]#', $filename);
-		$key = array_search('controllers', $folder_tree);
+				
+		// If we use a TPL override, we must go farther in the folder tree
+		if (strpos($filename,'override')) {
+			$key = 3 + array_search('controllers', $folder_tree);
+		} else {
+			$key = array_search('controllers', $folder_tree);
+		}
+
 
 		// If there was a match, construct the class name using the child folder name
 		// Eg. xxx/controllers/customers/xxx => AdminCustomers
