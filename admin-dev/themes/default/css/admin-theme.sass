@@ -363,8 +363,9 @@ html, body
 				border-bottom: solid 1px darken($brand-primary,10%)
 
 #nav-topbar
+	position: fixed
 	height: 28px
-	top: 36px
+	top: 35px
 	left: 80
 	width: 100%
 	z-index: 600
@@ -420,7 +421,7 @@ html, body
 			display: block!important
 	> ul.menu > li
 		ul.submenu
-			display: none
+			display: none!important
 			position: absolute
 			margin: 0
 			padding: 0
@@ -455,7 +456,7 @@ html, body
 	#nav-sidebar
 		display: none
 	.page-head
-		top: 64px
+		top: 63px
 	#content
 		margin-left: 0
 		width: 100%
@@ -1262,6 +1263,11 @@ fieldset > .row
 		margin: 0 4px 0 6px
 		background-color: #ccc
 		+border-radius(6px)
+	.tree-item-disable, .tree-folder-name-disable
+		color: #ccc
+		&:hover
+			color: #ccc
+			background-color: none
 
 #carrier_wizard
 	position: relative

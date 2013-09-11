@@ -1,4 +1,4 @@
-<nav id="nav-topbar" data-spy="affix" data-offset-top="34px" role="navigation">
+<nav id="nav-topbar" data-spy="affix" data-offset-top="0" role="navigation">
 {if !$tab}
 	<div class="mainsubtablist" style="display:none"></div>
 {/if}
