@@ -1,8 +1,10 @@
-<nav id="nav-topbar" role="navigation">
+<nav id="nav-topbar" data-spy="affix" data-offset-top="34px" role="navigation">
 {if !$tab}
 	<div class="mainsubtablist" style="display:none"></div>
 {/if}
-
+	<span class="menu-collapse">
+		<i class="icon-align-justify"></i>
+	</span>
 {if $controller_name != 'AdminLogin'}
 	<ul class="menu">
 		<li class="maintab {if $smarty.get.controller == 'AdminDashboard'}active{/if}">

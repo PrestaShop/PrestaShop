@@ -47,19 +47,20 @@ $( document ).ready(function() {
   });
 
   //nav top bar
-
   $(window).on("resize", function() {
-
-    var h = $("#nav-topbar").height();
-
     $("#nav-topbar ul.menu").find("li.maintab").each(function(){
-
       if ($(this).position().top > 0) {
-        $(this).addClass("tab-elipsed").addClass("hide");
+        $(this).addClass("hide");
       }
     });
   });
   
+  $("#nav-topbar li.maintab.has_submenu").hover(function(){
+    $(this).find("ul.submenu").fadeIn("fast").addClass("expanded");
+  }, function(){
+    //$(this).removeClass("expanded");
+    $(this).find("ul.submenu").fadeOut("fast").removeClass("expanded");
+  });
 
   //tooltip
   $('.label-tooltip').tooltip();
