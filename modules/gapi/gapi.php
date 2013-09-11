@@ -73,7 +73,7 @@ class Gapi extends Module
 		return $html.$this->api_3_0_getContent();
 	}
 
-	public function requestReportData($dimensions, $metrics, $date_from, $date_to, $sort = null, $filters = null, $start = 1, $limit = 30)
+	public function requestReportData($dimensions, $metrics, $date_from = null, $date_to = null, $sort = null, $filters = null, $start = 1, $limit = 30)
 	{
 		// You can switch to the 1.3 API by replacing the following function call by $this->api_1_3_requestReportData()
 		return $this->api_3_0_requestReportData($dimensions, $metrics, $date_from, $date_to, $sort, $filters, $start, $limit);
@@ -326,7 +326,8 @@ class Gapi extends Module
 				'timeout' => 5,
 			)
 		));
-		if (!$response_json = Tools::file_get_contents('https://www.googleapis.com/analytics/v3/data/ga?'.$content, false, $stream_context))
+		$api = ($date_from && $date_to) ? 'ga' : 'realtime';
+		if (!$response_json = Tools::file_get_contents('https://www.googleapis.com/analytics/v3/data/'.$api.'?'.$content, false, $stream_context))
 			return false;
 			
 		// https://developers.google.com/analytics/devguides/reporting/core/v3/reference
