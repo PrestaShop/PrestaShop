@@ -36,6 +36,7 @@
 	</div>
 	<section id="dashactivity" class="dash_config hide">
 		<header><i class="icon-wrench"></i> {l s='Configuration'}</header>
+		{$dashactivity_config_form}
 	</section>
 	<section id="dash_orders" class="loading">
 		<ul class="data_list_large">
@@ -52,6 +53,7 @@
 			</li>
 		</ul>			
 	</section>
+	{if $DASHACTIVITY_SHOW_PENDING}
 	<section id="dash_pending" class="loading">
 		<header><i class="icon-time"></i> {l s='Pending'}</header>
 		<ul class="data_list">
@@ -81,6 +83,8 @@
 			</li>
 		</ul>
 	</section>
+	{/if}
+	{if $DASHACTIVITY_SHOW_NOTIFICATION}
 	<section id="dash_notifications" class="loading">
 		<header><i class="icon-exclamation-sign"></i> {l s='Notification'}</header>
 		<ul class="data_list_vertical">
@@ -104,6 +108,8 @@
 			</li>
 		</ul>
 	</section>
+	{/if}
+	{if $DASHACTIVITY_SHOW_CUSTOMERS}
 	<section id="dash_customers" class="loading">
 		<header><i class="icon-user"></i> {l s='Customers'}</header>
 		<ul class="data_list">
@@ -132,6 +138,8 @@
 			</li>
 		</ul>
 	</section>
+	{/if}
+	{if $DASHACTIVITY_SHOW_NEWSLETTER}
 	<section id="dash_newsletter" class="loading">
 		<header><i class="icon-envelope"></i> {l s='Newsletter'}</header>
 		<ul class="data_list">
@@ -149,6 +157,8 @@
 			</li>
 		</ul>		
 	</section>
+	{/if}
+	{if $DASHACTIVITY_SHOW_TRAFFIC}
 	<section id="dash_traffic" class="loading">
 		<header><i class="icon-globe"></i> {l s='Traffic'}</header>
 		<ul class="data_list">
@@ -174,4 +184,5 @@
 			</li>
 		</ul>		
 	</section>
+	{/if}
 </section>

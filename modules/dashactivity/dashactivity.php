@@ -45,6 +45,9 @@ class Dashactivity extends Module
 
 	public function install()
 	{
+		foreach ($this->getConfigFieldsValues() as $conf_name => $conf)
+			Configuration::updateValue($conf_name, true);
+		
 		if (!parent::install() 
 			|| !$this->registerHook('dashboardZoneOne') 
 			|| !$this->registerHook('dashboardData')
@@ -67,6 +70,7 @@ class Dashactivity extends Module
 
 	public function hookDashboardZoneOne($params)
 	{
+		$this->context->smarty->assign(array_merge(array('dashactivity_config_form' => $this->renderConfigForm()), $this->getConfigFieldsValues()));
 		return $this->display(__FILE__, 'dashboard_zone_one.tpl');
 	}
 	
@@ -250,6 +254,72 @@ class Dashactivity extends Module
 		}
 		arsort($websites);
 		return $websites;
+	}
+	
+	public function renderConfigForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'id_form' => 'step_carrier_general',
+				'input' => array()
+				),
+			);
+			
+		$sub_widget = array(
+			array('label' => $this->l('Show Pending'), 'config_name' => 'DASHACTIVITY_SHOW_PENDING'),
+			array('label' => $this->l('Show Notification'), 'config_name' => 'DASHACTIVITY_SHOW_NOTIFICATION'),
+			array('label' => $this->l('Show Customers'), 'config_name' => 'DASHACTIVITY_SHOW_CUSTOMERS'),
+			array('label' => $this->l('Show Newsletter'), 'config_name' => 'DASHACTIVITY_SHOW_NEWSLETTER'),
+			array('label' => $this->l('Show Traffic'), 'config_name' => 'DASHACTIVITY_SHOW_TRAFFIC'),
+			);
+		
+		foreach($sub_widget as $widget)
+			$fields_form['form']['input'][] = array(
+				'type' => 'switch',
+				'label' => $widget['label'],
+				'name' => $widget['config_name'],
+				'is_bool' => true,
+				'values' => array(
+							array(
+								'id' => 'active_on',
+								'value' => 1,
+								'label' => $this->l('Enabled')
+							),
+							array(
+								'id' => 'active_off',
+								'value' => 0,
+								'label' => $this->l('Disabled')
+							)
+						),
+				);
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$this->fields_form = array();
+		$helper->id = (int)Tools::getValue('id_carrier');
+		$helper->identifier = $this->identifier;
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function getConfigFieldsValues()
+	{
+		return array(
+			'DASHACTIVITY_SHOW_PENDING' => Tools::getValue('DASHACTIVITY_SHOW_PENDING', Configuration::get('DASHACTIVITY_SHOW_PENDING')),
+			'DASHACTIVITY_SHOW_NOTIFICATION' => Tools::getValue('DASHACTIVITY_SHOW_NOTIFICATION', Configuration::get('DASHACTIVITY_SHOW_NOTIFICATION')),
+			'DASHACTIVITY_SHOW_CUSTOMERS' => Tools::getValue('DASHACTIVITY_SHOW_CUSTOMERS', Configuration::get('DASHACTIVITY_SHOW_CUSTOMERS')),
+			'DASHACTIVITY_SHOW_NEWSLETTER' => Tools::getValue('DASHACTIVITY_SHOW_NEWSLETTER', Configuration::get('DASHACTIVITY_SHOW_NEWSLETTER')),
+			'DASHACTIVITY_SHOW_TRAFFIC' => Tools::getValue('DASHACTIVITY_SHOW_TRAFFIC', Configuration::get('DASHACTIVITY_SHOW_TRAFFIC')),
+		);
 	}
 	
 	public function hookActionObjectCustomerMessageAddAfter($params)
