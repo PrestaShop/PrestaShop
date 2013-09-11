@@ -24,8 +24,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class HelperTreeToolbarSearchCore extends HelperTreeToolbarButtonCore implements
-	HelperITreeToolbarButtonCore
+class TreeToolbarSearchCore extends TreeToolbarButtonCore implements
+	ITreeToolbarButtonCore
 {
 	protected $_template = 'tree_toolbar_search.tpl';
 

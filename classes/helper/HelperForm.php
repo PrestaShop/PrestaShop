@@ -89,7 +89,18 @@ class HelperFormCore extends Helper
 						case 'categories':
 							if ($categories)
 							{
-								$this->context->smarty->assign('categories_tree', $params['categories_tree']);
+								$tree = new HelperTreeCategories($params['tree']['id'], isset($params['tree']['title']) ? $params['tree']['title'] : null);
+
+								if (isset($params['tree']['selected_categories']))
+									$tree->setSelectedCategories($params['tree']['selected_categories']);
+
+								if (isset($params['tree']['disabled_categories']))
+									$tree->setDisabledCategories($params['tree']['disabled_categories']);
+
+								if (isset($params['tree']['root_category']))
+									$tree->setRootCategory($params['tree']['root_category']);
+
+								$this->context->smarty->assign('categories_tree', $tree->render());
 								$categories = false;
 							}
 						break;
@@ -215,6 +226,7 @@ class HelperFormCore extends Helper
 				break;
 			}
 		}
+
 
 		$tpl = $this->createTemplate('assoshop.tpl');
 		$tree = Shop::getTree();

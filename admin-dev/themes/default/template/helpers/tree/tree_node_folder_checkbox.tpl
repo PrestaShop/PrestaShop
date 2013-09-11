@@ -22,10 +22,13 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<li class="tree-item">
-	<label class="tree-item-name">
-	<input type="checkbox" name="categoryBox[]" value="{$node['id_category']}" />
-	<i class="tree-dot"></i>
-	{$node['name']}
-	</label>
+<li class="tree-folder">
+	<span class="tree-folder-name{if isset($node['disabled']) && $node['disabled'] == true} tree-folder-name-disable{/if}">
+		<input type="checkbox" name="categoryBox[]" value="{$node['id_category']}"{if isset($node['disabled']) && $node['disabled'] == true} disabled="disabled"{/if} />
+		<i class="icon-folder-close"></i>
+		<label class="tree-toggler">{$node['name']}</label>
+	</span>
+	<ul class="tree">
+		{$children}
+	</ul>
 </li>
