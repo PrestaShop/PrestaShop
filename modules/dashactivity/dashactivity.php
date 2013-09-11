@@ -79,14 +79,14 @@ class Dashactivity extends Module
 		$gapi = Module::isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
 		if (Validate::isLoadedObject($gapi) && $gapi->isConfigured())
 		{
-			$visits = $unique_visitors = $online_visitors = 0;
+			$visits = $unique_visitors = $online_visitor = 0;
 			if ($result = $gapi->requestReportData('', 'ga:visits,ga:visitors', $params['date_from'], $params['date_to'], null, null, 1, 1))
 			{
 				$visits = $result[0]['metrics']['visits'];
 				$unique_visitors = $result[0]['metrics']['visitors'];
 			}
 			if ($result = $gapi->requestReportData('', 'ga:activeVisitors', null, null, null, null, 1, 1))
-				$online_visitors = $result[0]['metrics']['activeVisitors'];
+				$online_visitor = $result[0]['metrics']['activeVisitors'];
 		}
 		else
 		{
@@ -210,7 +210,7 @@ class Dashactivity extends Module
 				'orders_trends' => array('way' => 'down', 'value' => 0.42),
 			),
 			'data_list_small' => array(
-				'dash_traffic_source' => $this->getReferer($params['date_from'], $params['date_to']),
+				'dash_traffic_source' => $this->getReferer($params['date_from'], $params[ 'date_to']),
 			),
 			'data_chart' => array(
 				'dash_trends_chart1' => $this->getChartTrafficSource($params['date_from'], $params['date_to']),
@@ -230,31 +230,42 @@ class Dashactivity extends Module
 	
 	public function getReferer($date_from, $date_to, $limit = 10)
 	{
-		$directLink = $this->l('Direct link');
-		$sql = 'SELECT http_referer
-				FROM '._DB_PREFIX_.'connections
-				WHERE 1
-					'.Shop::addSqlRestriction().'
-					AND date_add BETWEEN '.$date_from.' AND '.$date_to.'
-					LIMIT 0, '.(int)$limit;
-		
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->query($sql);
-		$websites = array($directLink => 0);
-		
-		while ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->nextRow($result))
+		$gapi = Module::isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
+		if (Validate::isLoadedObject($gapi) && $gapi->isConfigured())
 		{
-			if (!isset($row['http_referer']) || empty($row['http_referer']))
-				++$websites[$directLink];
-			else
-			{
-				$website = preg_replace('/^www./', '', parse_url($row['http_referer'], PHP_URL_HOST));
-				if (!isset($websites[$website]))
-					$websites[$website] = 1;
-				else
-					++$websites[$website];
-			}
+			$websites = array();
+			if ($result = $gapi->requestReportData('ga:source', 'ga:visitors', $date_from, $date_to, '-ga:visitors', null, 1, 3))
+			foreach ($result as $row)
+				$websites[$row['dimensions']['source']] = $row['metrics']['visitors'];
 		}
-		arsort($websites);
+		else
+		{
+			$directLink = $this->l('Direct link');
+			$sql = 'SELECT http_referer
+					FROM '._DB_PREFIX_.'connections
+					WHERE 1
+						'.Shop::addSqlRestriction().'
+						AND date_add BETWEEN '.$date_from.' AND '.$date_to.'
+						LIMIT 0, '.(int)$limit;
+			
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->query($sql);
+			$websites = array($directLink => 0);
+			
+			while ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->nextRow($result))
+			{
+				if (!isset($row['http_referer']) || empty($row['http_referer']))
+					++$websites[$directLink];
+				else
+				{
+					$website = preg_replace('/^www./', '', parse_url($row['http_referer'], PHP_URL_HOST));
+					if (!isset($websites[$website]))
+						$websites[$website] = 1;
+					else
+						++$websites[$website];
+				}
+			}
+			arsort($websites);
+		}
 		return $websites;
 	}
 	
