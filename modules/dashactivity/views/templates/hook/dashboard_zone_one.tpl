@@ -166,19 +166,7 @@
 			</li>
 			<li>
 				<span class="data_label">{l s='Traffic Sources'}</span>
-				<ul class="data_list_small">
-					<li>
-						<span class="data_label">{l s='Direct Link'}</span>
-						<span class="data_value size_s">120</span>
-					</li>
-					<li>
-						<span class="data_label">google.com</span>
-						<span class="data_value size_s">75</span>
-					</li>
-					<li>
-						<span class="data_label">facebook.com</span>
-						<span class="data_value size_s">32</span>
-					</li>
+				<ul class="data_list_small" id="dash_traffic_source">
 				</ul>
 				<div id="dash_traffic_chart2" class='chart with-transitions'>
 					<svg></svg>
