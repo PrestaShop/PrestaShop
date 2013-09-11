@@ -22,6 +22,10 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<a href="{$link}"{if isset($action)}onclick="{$action}"{/if} class="btn btn-default btn-xs">
-	{if isset($icon_class)}<i class="{$icon_class}"></i>&nbsp;{/if}{l s=$label}
-</a>
+<li class="tree-item">
+	<label class="tree-item-name{if isset($node['disabled']) && $node['disabled'] == true} tree-item-name-disable{/if}">
+		<input type="radio" name="id_parent" value="{$node['id_category']}"{if isset($node['disabled']) && $node['disabled'] == true} disabled="disabled"{/if} />
+		<i class="tree-dot"></i>
+		{$node['name']}
+	<label>
+</li>

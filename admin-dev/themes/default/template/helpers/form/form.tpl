@@ -405,7 +405,7 @@
 								{elseif $input.type == 'shop'}
 									{$input.html}
 								{elseif $input.type == 'categories'}
-									{include file='helpers/form/form_category.tpl' categories=$input.values}
+									{$categories_tree}
 								{elseif $input.type == 'categories_select'}
 									{$input.category_tree}
 								{elseif $input.type == 'asso_shop' && isset($asso_shop) && $asso_shop}
