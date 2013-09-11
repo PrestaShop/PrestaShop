@@ -158,7 +158,19 @@
 											{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
 											{if isset($input.autocomplete) && !$input.autocomplete}autocomplete="off"{/if} />
 										{if isset($input.suffix)}{$input.suffix}{/if}
-										{if !empty($input.desc)}<div class="alert alert-info">{$input.desc}</div>{/if}
+										{if !empty($input.desc)}
+										<div class="alert alert-info">
+										{if is_array($input.desc)}
+											<ul>
+											{foreach $input.desc as $desc}
+												<li>{$desc}</li>
+											{/foreach}
+											</ul>
+										{else}
+											{$input.desc}
+										{/if}
+										</div>
+										{/if}
 									{/if}
 								{elseif $input.type == 'select'}
 									{if isset($input.options.query) && !$input.options.query && isset($input.empty_message)}
