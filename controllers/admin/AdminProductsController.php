@@ -1881,8 +1881,7 @@ class AdminProductsControllerCore extends AdminController
 
 						// Save and preview
 						if (Tools::isSubmit('submitAddProductAndPreview'))
-							$this->redirect_after = $this->getPreviewUrl($object);;
-
+							$this->redirect_after = $this->getPreviewUrl($object);
 						else
 						{
 							// Save and stay on same form
