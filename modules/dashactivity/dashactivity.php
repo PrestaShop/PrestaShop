@@ -79,12 +79,14 @@ class Dashactivity extends Module
 		$gapi = Module::isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
 		if (Validate::isLoadedObject($gapi) && $gapi->isConfigured())
 		{
-			$visits = $unique_visitors = 0;
+			$visits = $unique_visitors = $online_visitors = 0;
 			if ($result = $gapi->requestReportData('', 'ga:visits,ga:visitors', $params['date_from'], $params['date_to'], null, null, 1, 1))
 			{
 				$visits = $result[0]['metrics']['visits'];
 				$unique_visitors = $result[0]['metrics']['visitors'];
 			}
+			if ($result = $gapi->requestReportData('', 'ga:activeVisitors', null, null, null, null, 1, 1))
+				$online_visitors = $result[0]['metrics']['activeVisitors'];
 		}
 		else
 		{
@@ -94,6 +96,24 @@ class Dashactivity extends Module
 			WHERE `date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
 			'.Shop::addSqlRestriction(false));
 			extract($row);
+
+			if ($maintenance_ips = Configuration::get('PS_MAINTENANCE_IP'))
+				$maintenance_ips = implode(',', array_map('ip2long', array_map('trim', explode(',', $maintenance_ips))));
+			if (Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS'))
+				$sql = 'SELECT COUNT(DISTINCT c.id_connections)
+						FROM `'._DB_PREFIX_.'connections` c
+						LEFT JOIN `'._DB_PREFIX_.'connections_page` cp ON c.id_connections = cp.id_connections
+						WHERE TIME_TO_SEC(TIMEDIFF(NOW(), cp.`time_start`)) < 900
+						AND cp.`time_end` IS NULL
+						'.Shop::addSqlRestriction(false, 'c').'
+						'.($maintenance_ips ? 'AND c.ip_address NOT IN ('.preg_replace('/[^,0-9]/', '', $maintenance_ips).')' : '');
+			else
+				$sql = 'SELECT COUNT(*)
+						FROM `'._DB_PREFIX_.'connections`
+						WHERE TIME_TO_SEC(TIMEDIFF(NOW(), `date_add`)) < 900
+						'.Shop::addSqlRestriction(false).'
+						'.($maintenance_ips ? 'AND ip_address NOT IN ('.preg_replace('/[^,0-9]/', '', $maintenance_ips).')' : '');
+			$online_visitor = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 		}
 		
 		$order_nbr = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
@@ -129,25 +149,7 @@ class Dashactivity extends Module
 		LEFT JOIN `'._DB_PREFIX_.'customer_message` cm ON ct.id_customer_thread = cm.id_customer_thread
 		WHERE cm.`date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
 		'.Shop::addSqlRestriction(false, 'ct'));
-		
-		if ($maintenance_ips = Configuration::get('PS_MAINTENANCE_IP'))
-			$maintenance_ips = implode(',', array_map('ip2long', array_map('trim', explode(',', $maintenance_ips))));
-		if (Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS'))
-			$sql = 'SELECT COUNT(DISTINCT c.id_connections)
-					FROM `'._DB_PREFIX_.'connections` c
-					LEFT JOIN `'._DB_PREFIX_.'connections_page` cp ON c.id_connections = cp.id_connections
-					WHERE TIME_TO_SEC(TIMEDIFF(NOW(), cp.`time_start`)) < 900
-					AND cp.`time_end` IS NULL
-					'.Shop::addSqlRestriction(false, 'c').'
-					'.($maintenance_ips ? 'AND c.ip_address NOT IN ('.preg_replace('/[^,0-9]/', '', $maintenance_ips).')' : '');
-		else
-			$sql = 'SELECT COUNT(*)
-					FROM `'._DB_PREFIX_.'connections`
-					WHERE TIME_TO_SEC(TIMEDIFF(NOW(), `date_add`)) < 900
-					'.Shop::addSqlRestriction(false).'
-					'.($maintenance_ips ? 'AND ip_address NOT IN ('.preg_replace('/[^,0-9]/', '', $maintenance_ips).')' : '');
-		$online_visitor = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
-		
+
 		$active_shopping_cart = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT COUNT(*)
 		FROM `'._DB_PREFIX_.'cart`
