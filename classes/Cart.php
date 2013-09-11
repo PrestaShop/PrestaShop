@@ -762,10 +762,11 @@ class CartCore extends ObjectModel
 	{
 		// You can't add a cart rule that does not exist
 		$cartRule = new CartRule($id_cart_rule, Context::getContext()->language->id);
+
 		if (!Validate::isLoadedObject($cartRule))
 			return false;
 		
-		if (Db::getInstance()->getValue('SELECT id_cart_rule FROM '._DB_PREFIX_.'cart_cart_rule WHERE id_cart = '.(int)$this->id))
+		if (Db::getInstance()->getValue('SELECT id_cart_rule FROM '._DB_PREFIX_.'cart_cart_rule WHERE id_cart_rule = '.(int)$id_cart_rule.' AND id_cart = '.(int)$this->id))
 			return false;
 			
 		// Add the cart rule to the cart
