@@ -506,7 +506,7 @@ class AdminOrdersControllerCore extends AdminController
 						if (Tools::isSubmit('generateDiscountRefund') && !count($this->errors))
 						{
 							$cart_rule = new CartRule();
-							$cart_rule->description = sprintf($this->l('Credit card slip for order #%d'), $order->id);
+							$cart_rule->description = sprintf($this->l('Credit slip for order #%d'), $order->id);
 							$languages = Language::getLanguages(false);
 							foreach ($languages as $language)
 								// Define a temporary name
