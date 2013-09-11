@@ -53,10 +53,16 @@ class Dashactivity extends Module
 			|| !$this->registerHook('actionObjectCustomerMessageAddAfter')
 			|| !$this->registerHook('actionObjectCustomerThreadAddAfter')
 			|| !$this->registerHook('actionObjectOrderReturnAddAfter')
-			
+			|| !$this->registerHook('displayBackOfficeHeader')
 		)
 			return false;
 		return true;
+	}
+	
+	public function hookDisplayBackOfficeHeader()
+	{
+		if (get_class($this->context->controller) == 'AdminDashboardController')
+			$this->context->controller->addJs($this->_path.'views/js/'.$this->name.'.js');
 	}
 
 	public function hookDashboardZoneOne($params)
@@ -196,8 +202,54 @@ class Dashactivity extends Module
 			),
 			'data_trends' => array(
 				'orders_trends' => array('way' => 'down', 'value' => 0.42),
-			)
+			),
+			'data_list_small' => array(
+				'dash_traffic_source' => $this->getReferer($params['date_from'], $params['date_to']),
+			),
+			'data_chart' => array(
+				'dash_trends_chart1' => $this->getChartTrafficSource($params['date_from'], $params['date_to']),
+			),
 		);
+	}
+	
+	public function getChartTrafficSource($date_from, $date_to)
+	{
+		$referers = $this->getReferer($date_from, $date_to);
+		$return = array('chart_type' => 'pie_chart_trends', 'data' => array());
+		foreach ($referers as $referer_name => $nbr)
+			$return['data'][] = array('key' => $referer_name, 'y' => $nbr);
+
+		return $return;
+	}
+	
+	public function getReferer($date_from, $date_to, $limit = 10)
+	{
+		$directLink = $this->l('Direct link');
+		$sql = 'SELECT http_referer
+				FROM '._DB_PREFIX_.'connections
+				WHERE 1
+					'.Shop::addSqlRestriction().'
+					AND date_add BETWEEN '.$date_from.' AND '.$date_to.'
+					LIMIT 0, '.(int)$limit;
+		
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->query($sql);
+		$websites = array($directLink => 0);
+		
+		while ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->nextRow($result))
+		{
+			if (!isset($row['http_referer']) || empty($row['http_referer']))
+				++$websites[$directLink];
+			else
+			{
+				$website = preg_replace('/^www./', '', parse_url($row['http_referer'], PHP_URL_HOST));
+				if (!isset($websites[$website]))
+					$websites[$website] = 1;
+				else
+					++$websites[$website];
+			}
+		}
+		arsort($websites);
+		return $websites;
 	}
 	
 	public function hookActionObjectCustomerMessageAddAfter($params)

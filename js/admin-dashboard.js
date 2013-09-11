@@ -179,6 +179,16 @@ function data_chart(widget_name, charts)
 		window[charts[chart_id].chart_type](widget_name, charts[chart_id]);
 }
 
+function data_list_small(widget_name, data)
+{
+	for (var data_id in data)
+	{
+		for (var item in data[data_id])
+			$('#'+data_id+' ').append('<li><span class="data_label">'+item+'</span><span class="data_value size_s">'+data[data_id][item]+'</span></li>');
+		$('#'+data_id+', #'+widget_name).closest('section').removeClass('loading');
+	}
+}
+
 function getBlogRss()
 {
 	$.ajax({
