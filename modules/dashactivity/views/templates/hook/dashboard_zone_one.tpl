@@ -26,7 +26,7 @@
 	<div class="panel-heading">
 		<i class="icon-time"></i> {l s='Recent Activity'}
 		<span class="panel-heading-action">
-			<a class="list-tooolbar-btn" href="#" title="configure">
+			<a class="list-tooolbar-btn" href="#" onclick="toggleDashConfig('dashactivity'); return false;" title="configure">
 				<i class="process-icon-configure"></i>
 			</a>
 			<a class="list-tooolbar-btn" href="#" onclick="refreshDashboard('dashactivity'); return false;" title="refresh">
@@ -34,6 +34,9 @@
 			</a>
 		</span>
 	</div>
+	<section id="dashactivity" class="dash_config hide">
+		<header><i class="icon-wrench"></i> {l s='Configuration'}</header>
+	</section>
 	<section id="dash_orders" class="loading">
 		<ul class="data_list_large">
 			<li>
@@ -43,9 +46,6 @@
 				</span>
 				<span class="data_value size_xxl">
 					<span id="order_nbr">
-
-
-
 					</span><br/>
 					<small class="dash_trend dash_trend_up"><span id="orders_trends"></span>%</small>
 				</span>

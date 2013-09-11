@@ -215,3 +215,22 @@ function getBlogRss()
 		}
 	});
 }
+
+function toggleDashConfig(widget)
+{
+	if ($('#'+widget+' section.dash_config').hasClass('hide'))
+	{
+		$('#'+widget+' section').not('.dash_config').slideUp(500, function () {
+			$('#'+widget+' section.dash_config').fadeIn(500).removeClass('hide');
+		});
+	}
+	else
+	{
+		$('#'+widget+' section.dash_config').slideUp(500, function () {
+			$('#'+widget+' section').not('.dash_config').slideDown(500).removeClass('hide');
+			$('#'+widget+' section.dash_config').addClass('hide')
+		});
+	}
+}
+
+
