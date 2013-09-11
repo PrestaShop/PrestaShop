@@ -89,16 +89,7 @@ class HelperFormCore extends Helper
 						case 'categories':
 							if ($categories)
 							{
-								// Added Jquery plugin treeview (css and js files)
-								$this->context->controller->addJqueryPlugin('treeview-categories');
-
-								// Added JS files
-								$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/treeview-categories/jquery.treeview-categories.async.js');
-								$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/treeview-categories/jquery.treeview-categories.edit.js');
-								$this->context->controller->addJS(_PS_JS_DIR_.'admin-categories-tree.js');
-
-								if (isset($params['use_search']) && $params['use_search'])
-									$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/autocomplete/jquery.autocomplete.js');
+								$this->context->smarty->assign('categories_tree', $params['categories_tree']);
 								$categories = false;
 							}
 						break;
