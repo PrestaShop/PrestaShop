@@ -1736,27 +1736,7 @@ class AdminProductsControllerCore extends AdminController
 
 				// Save and preview
 				if (Tools::isSubmit('submitAddProductAndPreview'))
-				{
-					$preview_url = $this->context->link->getProductLink(
-						$this->getFieldValue($this->object, 'id'),
-						$this->getFieldValue($this->object, 'link_rewrite', $this->context->language->id),
-						Category::getLinkRewrite($this->getFieldValue($this->object, 'id_category_default'), $this->context->language->id),
-						null,
-						null,
-						Context::getContext()->shop->id,
-						0,
-						(bool)Configuration::get('PS_REWRITING_SETTINGS')
-					);
-
-					if (!$this->object->active)
-					{
-						$admin_dir = dirname($_SERVER['PHP_SELF']);
-						$admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
-						$preview_url .= '&adtoken='.$this->token.'&ad='.$admin_dir.'&id_employee='.(int)$this->context->employee->id;
-					}
-
-					$this->redirect_after = $preview_url;
-				}
+					$this->redirect_after = $this->getPreviewUrl($this->object);
 
 				// Save and stay on same form
 				if ($this->display == 'edit')
@@ -1901,30 +1881,8 @@ class AdminProductsControllerCore extends AdminController
 
 						// Save and preview
 						if (Tools::isSubmit('submitAddProductAndPreview'))
-						{
-							$preview_url = $this->context->link->getProductLink(
-								$this->getFieldValue($object, 'id'),
-								$this->getFieldValue($object, 'link_rewrite', $this->context->language->id),
-								Category::getLinkRewrite($this->getFieldValue($object, 'id_category_default'), $this->context->language->id),
-								null,
-								null,
-								Context::getContext()->shop->id,
-								0,
-								(bool)Configuration::get('PS_REWRITING_SETTINGS')
-							);
+							$this->redirect_after = $this->getPreviewUrl($object);;
 
-							if (!$object->active)
-							{
-								$admin_dir = dirname($_SERVER['PHP_SELF']);
-								$admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
-								if (strpos($preview_url, '?') === false)
-									$preview_url .= '?';
-								else
-									$preview_url .= '&';
-								$preview_url .= 'adtoken='.$this->token.'&ad='.$admin_dir.'&id_employee='.(int)$this->context->employee->id;
-							}
-							$this->redirect_after = $preview_url;
-						}
 						else
 						{
 							// Save and stay on same form
@@ -2625,30 +2583,19 @@ class AdminProductsControllerCore extends AdminController
 		$preview_url = $this->context->link->getProductLink(
 			$product,
 			$this->getFieldValue($product, 'link_rewrite', $this->context->language->id),
-			Category::getLinkRewrite($product->id_category_default, $this->context->language->id),
+			Category::getLinkRewrite($this->getFieldValue($product, 'id_category_default'), $this->context->language->id),
 			null,
 			$id_lang,
-			Context::getContext()->shop->id,
+			(int)Context::getContext()->shop->id,
 			0,
 			$is_rewrite_active
 		);
 
 		if (!$product->active)
 		{
-			$preview_url = $this->context->link->getProductLink(
-				$product,
-				$this->getFieldValue($product, 'link_rewrite', $this->default_form_language),
-				Category::getLinkRewrite($this->getFieldValue($product, 'id_category_default'), $this->context->language->id),
-				null,
-				$id_lang,
-				Context::getContext()->shop->id,
-				0,
-				$is_rewrite_active
-			);
 			$admin_dir = dirname($_SERVER['PHP_SELF']);
 			$admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
 			$preview_url .= ((strpos($preview_url, '?') === false) ? '?' : '&').'adtoken='.$this->token.'&ad='.$admin_dir.'&id_employee='.(int)$this->context->employee->id;
-
 		}
 
 		return $preview_url;
