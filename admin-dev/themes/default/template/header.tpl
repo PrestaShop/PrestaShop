@@ -102,10 +102,10 @@
 	{/if}
 </head>
 
-<body class="page-topbar">
+<body class="page-sidebar">
 <!-- 
-<body>
-<body class="page-sidebar-closed">
+<body class="page-sidebar">
+<body class="page-sidebar page-sidebar-closed">
 <body class="page-topbar">
 -->
 {if $display_header}
@@ -288,8 +288,8 @@
 {/if}
 
 	<div id="main">
-		{include file='nav-top.tpl'}
-		
+		{include file='nav.tpl'}
+
 		<div id="content" class="page-content">
 {if $display_header && $install_dir_exists}
 			<div class="alert alert-warning">

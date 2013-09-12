@@ -94,8 +94,13 @@ $( document ).ready(function() {
     }
   }
 
-  //todo add condition
-  navTopbar();
+  //init menu
+  if ($('body').hasClass('page-sidebar')){
+    navSidebar();
+  } else if($('body').hasClass('page-topbar')) {
+    navTopbar();
+  }
+  
 
   $('#header_shopname').on('click',
     function(e){

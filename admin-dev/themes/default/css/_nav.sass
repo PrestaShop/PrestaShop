@@ -1,0 +1,253 @@
+#nav-sidebar
+	height: 100%!important
+	z-index: 500
+	float: left
+	width: 240px
+	background-color: $main-color
+	border-right: 1px solid black
+	ul.menu
+		margin: 0
+		padding: 0
+		border-top: 1px black solid
+		list-style: none
+	li.maintab > a > i
+		font-size: 20px
+		@include border-radius(40px)
+		height: 30px
+		width: 30px
+		color: white
+		display: inline-block
+		text-align: center
+		line-height: 30px		
+	li:not(.active)
+		ul
+			display: none
+	li.expanded
+		span.submenu_expand
+			@extend .icon-angle-up
+		ul.submenu
+			display: block
+	li.active
+		span.submenu_expand
+			display: none
+	> ul.menu > li.maintab
+		position: relative
+		&.active > a
+			color: contrast-color($brand-primary, white, #333, 10%)
+			background-color: $brand-primary
+			i
+				background-color: white
+		&.active:hover > a
+			color: contrast-color($main-color, white, #333, 10%)
+		&:hover > a
+			i
+				background-color: white
+		> a
+			display: block
+			position: relative
+			padding: 2px 0 2px 8px
+			border-bottom: 1px solid darken($main-color,10%)
+			font-size: 12px
+			line-height: 28px
+			$color: contrast-color($main-color, white, #333, 10%)
+			color: mix($main-color, $color, 30%)
+			background-color: $main-color
+			text-transform: uppercase
+			text-decoration: none
+			@include transition-property(background-color, border, box-shadow)
+			@include transition-duration(0.4s)
+			@include transition-timing-function(ease-out)
+			i
+				color: lighten($main-color,25%)
+				background-color: darken($main-color,25%)
+				@include transition-property(color)
+				@include transition-duration(0.4s)
+				@include transition-timing-function(ease-out)
+			&:hover
+				color: white
+		span.submenu_expand
+			position: absolute
+			right: 10px
+			top: 2px
+			cursor: pointer
+			@extend .icon-angle-down
+			font-family: FontAwesome
+			font-size: 24px
+			font-weight: 100
+			color: black
+			@include text-shadow(lighten($main-color,10%) 1px 1px 0)
+			background-color: transparent
+			&:hover
+				color: white
+				@include text-shadow(darken($main-color,20%) -1px -1px 0)
+	@media (max-width: $screen-tablet)
+		display: none
+	ul.submenu
+		list-style: none
+		padding: 0
+		li
+			a
+				display: block
+				padding: 4px 5px 4px 10px
+				font-size: 12px
+				border: none
+				border-bottom: solid 1px #eee
+				background-color: white
+				&:hover
+					color: $main-color
+					background-color: mix(white, $main-color, 90%)
+					text-decoration: none
+			&:last-child a
+				border-bottom: none
+			&.active a
+				color: contrast-color($brand-primary, white, #333, 10%)
+				background-color: $brand-primary
+				border-bottom: solid 1px darken($brand-primary,10%)
+
+#nav-topbar
+	position: fixed
+	height: 28px
+	top: 35px
+	left: 80
+	width: 100%
+	z-index: 600
+	background-color: white
+	border-top: black solid 1px
+	border-bottom: darken($secondary-color,20%) solid 1px
+	ul.menu
+		height: 28px
+		margin: 0
+		padding: 0
+		display: block
+		list-style: none
+		> li
+			height: 26px
+			padding: 0
+			margin: 0
+			border-right: solid 1px #aaa
+			list-style: none
+			position: relative
+			float: left
+			@include box-shadow(#ccc 0 -2px 0 inset)
+			> a
+				display: block
+				line-height: 26px
+				color: $main-color
+				padding: 0 6px
+				margin: 0
+				i
+					margin: 0
+					width: 15px
+					background-color: transparent
+					font-size: 18px
+				&:hover
+					text-decoration: none
+					background-color: $main-color
+					color: white
+					i
+						color: white!important
+			&.active
+				border-right: solid 1px black
+				> a
+					color: contrast-color($main-color, white, #333, 10%)
+					background-color: $main-color
+					i
+						color: white!important
+	.menu-collapse
+		display: none
+	ul.submenu
+		display: none!important
+		@include box-shadow(rgba(black,0.3) 0 2px 4px)
+	> ul.menu > li.expanded
+		ul.submenu
+			display: block!important
+	> ul.menu > li
+		ul.submenu
+			display: none!important
+			position: absolute
+			margin: 0
+			padding: 0
+			left: 0
+			top: 26px
+			border-top: solid 1px darken($main-color,10%)
+			width: 200px!important
+			li
+				width: 200px
+				padding: 0
+				list-style: none
+				a
+					display: block
+					padding: 4px 5px 4px 10px
+					font-size: 12px
+					background-color: white
+					border-bottom: solid 1px #eee
+					&:hover
+						color: $main-color
+						background-color: mix(white, $main-color, 90%)
+						text-decoration: none
+				&:last-child a
+					border-bottom: none
+				&.active a
+					color: contrast-color($brand-primary, white, #333, 10%)
+					background-color: $brand-primary
+					border-bottom: solid 1px darken($brand-primary,10%)
+
+.menu-collapse
+	height: 54px
+	width: 100%
+	font-size: 2em
+	text-align: center
+	line-height: 55px
+	display: block
+	background-color: $main-color
+	border-bottom: 3px solid darken($main-color,10%)
+	color: darken($main-color,30%)
+
+.page-topbar
+	#main
+		padding-top: 64px
+	#nav-sidebar
+		display: none
+	.page-head
+		top: 63px
+	#content
+		margin-left: 0
+		width: 100%
+		.page-head h2.page-title
+			padding: 0 0 0 20px
+
+.page-sidebar-closed
+	#nav-sidebar
+		width: 50px
+		@include transition-property(width)
+		@include transition-duration(0.4s)
+		@include transition-timing-function(ease-out)
+		span.title
+			display: none
+		ul.submenu
+			display: none!important
+			padding-top: 37px
+			position: relative
+			top: 0
+			@include box-shadow(rgba(black,0.2) 1px 1px 0,rgba(black,0.3) 2px 2px 4px)
+		> ul > li:hover
+			width: 250px!important
+			position: relative
+			span.title
+				display: inline-block
+			ul.submenu
+				display: block!important
+				position: absolute
+				left: 50px
+				width: 200px!important
+	#content
+		margin-left: 50px
+		.page-head h2.page-title
+			padding: 0 0 0 70px
+			@media (max-width: $screen-tablet)
+				padding: 0 0 0 20px
+		@media (max-width: $screen-tablet)
+			margin-left: 0
+			width: 100%
+	.submenu_expand
+		display: none
