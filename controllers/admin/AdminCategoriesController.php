@@ -484,10 +484,6 @@ class AdminCategoriesControllerCore extends AdminController
 		if (Shop::isFeatureActive())
 			$this->fields_form['input'][] = array(
 				'type' => 'shop',
-				'tree' => array(
-					'id'    => 'shops-tree',
-					'title' => 'Shop'
-				),
 				'label' => $this->l('Shop association:'),
 				'name' => 'checkBoxShopAsso',
 			);
