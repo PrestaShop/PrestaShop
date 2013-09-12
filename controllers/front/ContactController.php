@@ -144,7 +144,7 @@ class ContactControllerCore extends FrontController
 					{
 						$cm = new CustomerMessage();
 						$cm->id_customer_thread = $ct->id;
-						$cm->message = Tools::htmlentitiesUTF8($message);
+						$cm->message = $message;
 						if (isset($fileAttachment['rename']) && !empty($fileAttachment['rename']) && rename($fileAttachment['tmp_name'], _PS_MODULE_DIR_.'../upload/'.basename($fileAttachment['rename'])))
 							$cm->file_name = $fileAttachment['rename'];
 						$cm->ip_address = ip2long($_SERVER['REMOTE_ADDR']);
