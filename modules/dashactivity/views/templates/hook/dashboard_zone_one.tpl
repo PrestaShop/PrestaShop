@@ -34,7 +34,7 @@
 			</a>
 		</span>
 	</div>
-	<section id="dashactivity" class="dash_config hide">
+	<section id="dashactivity_config" class="dash_config hide">
 		<header><i class="icon-wrench"></i> {l s='Configuration'}</header>
 		{$dashactivity_config_form}
 	</section>
