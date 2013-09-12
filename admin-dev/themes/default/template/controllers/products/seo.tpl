@@ -41,7 +41,9 @@
 				{include file="controllers/products/input_text_lang.tpl"
 					languages=$languages
 					input_name='meta_title'
-					input_value=$product->meta_title}
+					input_value=$product->meta_title
+					maxlength=70
+				}
 			</div>
 		</div>
 	</div>
@@ -60,6 +62,7 @@
 				languages=$languages
 				input_name='meta_description'
 				input_value=$product->meta_description
+				maxlength=160
 			}
 			</div>
 		</div>

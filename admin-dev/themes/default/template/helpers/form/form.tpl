@@ -104,6 +104,9 @@
 													</script>
 												{/literal}
 											{/if}
+											{if isset($input.maxlength)}
+											<span id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}_counter" class="input-group-addon"><span class="text-count-down">{$input.maxlength}</span></span>
+											{/if}
 											<input type="text"
 												id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}"
 												name="{$input.name}_{$language.id_lang}"
@@ -129,6 +132,24 @@
 											</div>
 										</div>
 									{/foreach}
+									{if isset($input.maxlength)}
+									<script type="text/javascript">
+									function countDown($source, $target) {
+										var max = $source.attr("maxlength");
+										$target.html(max-$source.val().length);
+
+										$source.keyup(function(){
+											$target.html(max-$source.val().length);
+										});
+									}
+
+									$(document).ready(function(){
+									{foreach from=$languages item=language}
+										countDown($("#{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}"), $("#{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}_counter"));
+									{/foreach}
+									});
+									</script>
+									{/if}
 									</div>
 									{else}
 										{if $input.type == 'tags'}
@@ -146,6 +167,9 @@
 											{/literal}
 										{/if}
 										{assign var='value_text' value=$fields_value[$input.name]}
+										{if isset($input.maxlength)}
+										<span id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}_counter" class="input-group-addon"><span class="text-count-down">{$input.maxlength}</span></span>
+										{/if}
 										<input type="text"
 											name="{$input.name}"
 											id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
@@ -170,6 +194,22 @@
 											{$input.desc}
 										{/if}
 										</div>
+										{/if}
+										{if isset($input.maxlength)}
+										<script type="text/javascript">
+										function countDown($source, $target) {
+											var max = $source.attr("maxlength");
+											$target.html(max-$source.val().length);
+
+											$source.keyup(function(){
+												$target.html(max-$source.val().length);
+											});
+										}
+
+										$(document).ready(function(){
+											countDown($("#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"), $("#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}_counter"));
+										});
+										</script>
 										{/if}
 									{/if}
 								{elseif $input.type == 'select'}
@@ -292,6 +332,7 @@
 
 
 								{elseif $input.type == 'textarea'}
+									{assign var=use_textarea_autosize value=true}
 									{if isset($input.lang) AND $input.lang}
 									{foreach $languages as $language}
 									<div class="row translatable-field lang-{$language.id_lang}"  {if $language.id_lang != $defaultFormLanguage}style="display:none;"{/if}>
@@ -579,8 +620,9 @@
 					nextText: '',
 					dateFormat: 'yy-mm-dd'
 				});
-
+			{if isset($use_textarea_autosize)}
 			$(".textarea-autosize").autosize();
+			{/if}
 		});
 	{block name="script"}{/block}
 	</script>
