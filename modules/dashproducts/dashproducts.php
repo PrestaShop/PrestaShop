@@ -242,7 +242,7 @@ class Dashproducts extends Module
 				'class' => 'text-center',
 			)
 		);
-		
+
 		$products = $this->getTotalViewed($date_from, $date_to);
 		$body = array();
 		if (is_array($products) && count($products))
@@ -433,17 +433,33 @@ class Dashproducts extends Module
 	
 	public function getTotalViewed($date_from, $date_to)
 	{
-		$sql = 'SELECT *
-				FROM `'._DB_PREFIX_.'page_viewed` pv
-				LEFT JOIN `'._DB_PREFIX_.'date_range` dr ON pv.`id_date_range` = dr.`id_date_range`
-				LEFT JOIN `'._DB_PREFIX_.'page` p ON pv.`id_page` = p.`id_page`
-				LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON pt.`id_page_type` = p.`id_page_type`
-				WHERE pt.`name` = \'product\'
-					'.Shop::addSqlRestriction(false, 'pv').'
-					AND dr.`time_start` BETWEEN "'.pSQL($date_from).'" AND "'.pSQL($date_to).'"
-					AND dr.`time_end` BETWEEN "'.pSQL($date_from).'" AND "'.pSQL($date_to).'"';
-	
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+		$gapi = Module::isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
+		if (Validate::isLoadedObject($gapi) && $gapi->isConfigured())
+		{
+			$products = array();
+			if ($result = $gapi->requestReportData('ga:pagePath', 'ga:visits', $date_from, $date_to, '-ga:visits', 'ga:pagePath=~/([a-z]{2}/)?([a-z]+/)?[0-9][0-9]*\-.*\.html$', 1, 10))
+				foreach ($result as $row)
+				{
+					if (preg_match('@/([a-z]{2}/)?([a-z]+/)?([0-9]+)\-.*\.html$@', $row['dimensions']['pagePath'], $matches))
+						$id_object = (int)$matches[3];
+					$products[] = array('id_object' => $id_object, 'counter' => $row['metrics']['visits']);
+				}
+			return $products;
+		}
+		else
+		{
+			$sql = 'SELECT p.id_object, pv.counter
+					FROM `'._DB_PREFIX_.'page_viewed` pv
+					LEFT JOIN `'._DB_PREFIX_.'date_range` dr ON pv.`id_date_range` = dr.`id_date_range`
+					LEFT JOIN `'._DB_PREFIX_.'page` p ON pv.`id_page` = p.`id_page`
+					LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON pt.`id_page_type` = p.`id_page_type`
+					WHERE pt.`name` = \'product\'
+						'.Shop::addSqlRestriction(false, 'pv').'
+						AND dr.`time_start` BETWEEN "'.pSQL($date_from).'" AND "'.pSQL($date_to).'"
+						AND dr.`time_end` BETWEEN "'.pSQL($date_from).'" AND "'.pSQL($date_to).'"';
+		
+			return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+		}
 	}
 	
 	public function getMostSearchTerms($date_from, $date_to, $limit = 10)
