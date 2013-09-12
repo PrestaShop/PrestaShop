@@ -50,6 +50,12 @@
 			{$hookDashboardZoneTwo}
 		</div>
 		<div class="col-lg-2">
+			<section class="dash_version panel panel-success">
+				<div class="panel-heading"><i class="icon-download-alt"></i> PrestaShop Version</div>
+				<div class="panel-body">
+					<i class="icon-check-sign"></i> PrestaShop VersionVous utilisez la dernière version
+				</div>
+			</section>
 			<section class="dash_news panel">
 				<h4><i class="icon-rss"></i> PrestaShop News</h4>
 			</section>
