@@ -34,7 +34,7 @@
 	</p>
 	<p>
 		<h2>{l s='Please provide an explanation for your RMA:'}</h2>
-		<form method="POST"  id="returnOrderMessage"/>
+		<form method="POST"  id="returnOrderMessage">
 			<p class="textarea">
 				<textarea name="returnText"></textarea>
 			</p>
