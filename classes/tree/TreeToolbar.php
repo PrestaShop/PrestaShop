@@ -172,10 +172,7 @@ class TreeToolbarCore implements ITreeToolbarCore
 	public function render()
 	{
 		foreach ($this->getActions() as $action)
-		{
-			if ($action instanceof TreeToolbarSearchCore)
-				$action->setAttribute('data', $this->getData());
-		}
+			$action->setAttribute('data', $this->getData());
 
 		return $this->getContext()->smarty->createTemplate(
 			$this->getTemplateFile($this->getTemplate()),

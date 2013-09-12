@@ -73,15 +73,6 @@ class TreeCore
 		return $this->getToolbar()->getActions();
 	}
 
-	public function addAction($action)
-	{
-		if (!isset($this->_toolbar))
-			$this->setToolbar(new TreeToolbarCore());
-
-		$this->getToolbar()->addAction($action);
-		return $this;
-	}
-
 	public function setAttribute($name, $value)
 	{
 		if (!isset($this->_attributes))
@@ -297,14 +288,13 @@ class TreeCore
 		return $this->_toolbar;
 	}
 
-	public function useInput()
+	public function addAction($action)
 	{
-		return isset($this->_input_type);
-	}
+		if (!isset($this->_toolbar))
+			$this->setToolbar(new TreeToolbarCore());
 
-	public function useToolbar()
-	{
-		return isset($this->_toolbar);
+		$this->getToolbar()->addAction($action);
+		return $this;
 	}
 
 	public function render($data = null)
@@ -393,6 +383,16 @@ class TreeCore
 	public function renderToolbar()
 	{
 		return $this->getToolbar()->render();
+	}
+
+	public function useInput()
+	{
+		return isset($this->_input_type);
+	}
+
+	public function useToolbar()
+	{
+		return isset($this->_toolbar);
 	}
 
 	private function _normalizeDirectory($directory)
