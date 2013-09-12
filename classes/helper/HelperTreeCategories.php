@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class HelperTreeCategories extends TreeCore
+class HelperTreeCategoriesCore extends TreeCore
 {
 	const DEFAULT_TEMPLATE             = 'tree_categories.tpl';
 	const DEFAULT_NODE_FOLDER_TEMPLATE = 'tree_node_folder_radio.tpl';
@@ -237,7 +237,7 @@ class HelperTreeCategories extends TreeCore
 
 		if ($this->useSearch())
 		{
-			$this->addAction(new TreeToolbarSearch(
+			$this->addAction(new TreeToolbarSearchCategories(
 				'Find a category:',
 				$this->getId().'-categories-search')
 			);

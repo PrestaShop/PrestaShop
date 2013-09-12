@@ -139,7 +139,7 @@ class HelperFormCore extends Helper
 
 						case 'shop' :
 							$disable_shops = isset($params['disable_shared']) ? $params['disable_shared'] : false;
-							$params['html'] = $this->renderAssoShop($disable_shops);
+							$params['html'] = $this->renderAssoShop($params['tree'], $disable_shops);
 							if (Shop::getTotalShops(false) == 1)
 								unset($this->fields_form[$fieldset_key]['form']['input'][$key]);
 						break;
@@ -192,7 +192,7 @@ class HelperFormCore extends Helper
 	 *
 	 * @return string
 	 */
-	public function renderAssoShop($disable_shared = false)
+	public function renderAssoShop($params, $disable_shared = false)
 	{
 		if (!Shop::isFeatureActive())
 			return;
@@ -227,27 +227,16 @@ class HelperFormCore extends Helper
 			}
 		}
 
-
-		$tpl = $this->createTemplate('assoshop.tpl');
-		$tree = Shop::getTree();
 		$nb_shop = 0;
 		foreach ($tree as &$value)
 		{
 			$value['disable_shops'] = (isset($value[$disable_shared]) && $value[$disable_shared]);
 			$nb_shop += count($value['shops']);
 		}
-		$tpl->assign(array(
-				'input' => array(
-					'type' => 'shop',
-					'values' => $tree,
-				),
-				'fields_value' => array(
-					'shop' => $assos
-				),
-				'form_id' => $this->id,
-				'table' => $this->table,
-				'nb_shop' => $nb_shop
-			));
-		return $tpl->fetch();
+
+		$tree = new HelperTreeShops($params['id'],
+			isset($params['title']) ? $params['title'] : null);
+		$tree->setSelectedShops($assos);
+		return $tree->render();
 	}
 }

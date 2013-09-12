@@ -22,4 +22,10 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<div class="pull-right">{if isset($actions)}{foreach from=$actions item=action}{$action->render()}{/foreach}{/if}</div>
+<li class="tree-item{if isset($node['disabled']) && $node['disabled'] == true} tree-item-disable{/if}">
+	<label class="tree-item-name">
+	<input type="checkbox" name="checkBoxShopAsso_category[{$node['id_shop']}]" value="{$node['id_shop']}"{if isset($node['disabled']) && $node['disabled'] == true} disabled="disabled"{/if} />
+	<i class="tree-dot"></i>
+	{$node['name']}
+	</label>
+</li>
