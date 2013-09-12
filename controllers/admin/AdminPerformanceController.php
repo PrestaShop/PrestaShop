@@ -796,6 +796,7 @@ class AdminPerformanceControllerCore extends AdminController
 		{
 			$redirectAdmin = true;
 			Tools::clearSmartyCache();
+			Autoload::getInstance()->generateIndex();
 		}
 
 		if ($redirectAdmin && (!isset($this->errors) || !count($this->errors)))
