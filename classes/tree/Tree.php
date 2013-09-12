@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class HelperTreeCore
+class TreeCore
 {
 	const DEFAULT_TEMPLATE_DIRECTORY   = 'helpers/tree';
 	const DEFAULT_TEMPLATE             = 'tree.tpl';
@@ -32,15 +32,16 @@ class HelperTreeCore
 	const DEFAULT_NODE_FOLDER_TEMPLATE = 'tree_node_folder.tpl';
 	const DEFAULT_NODE_ITEM_TEMPLATE   = 'tree_node_item.tpl';
 
-	private $_context;
-	private $_data;
-	private $_headerTemplate;
-	private $_id;
-	private $_node_folder_template;
-	private $_node_item_template;
-	private $_template;
-	private $_template_directory;
-	private $_title;
+	protected $_attributes;
+	private   $_context;
+	protected $_data;
+	protected $_headerTemplate;
+	private   $_id;
+	protected $_node_folder_template;
+	protected $_node_item_template;
+	protected $_template;
+	private   $_template_directory;
+	private   $_title;
 
 	public function __construct($id, $data = null)
 	{
@@ -58,7 +59,7 @@ class HelperTreeCore
 	public function setActions($value)
 	{
 		if (!isset($this->_toolbar))
-			$this->setToolbar(new HelperTreeToolbarCore());
+			$this->setToolbar(new TreeToolbarCore());
 
 		$this->getToolbar()->setActions($value);
 		return $this;
@@ -67,7 +68,7 @@ class HelperTreeCore
 	public function getActions()
 	{
 		if (!isset($this->_toolbar))
-			$this->setToolbar(new HelperTreeToolbarCore());
+			$this->setToolbar(new TreeToolbarCore());
 
 		return $this->getToolbar()->getActions();
 	}
@@ -75,10 +76,41 @@ class HelperTreeCore
 	public function addAction($action)
 	{
 		if (!isset($this->_toolbar))
-			$this->setToolbar(new HelperTreeToolbarCore());
+			$this->setToolbar(new TreeToolbarCore());
 
 		$this->getToolbar()->addAction($action);
 		return $this;
+	}
+
+	public function setAttribute($name, $value)
+	{
+		if (!isset($this->_attributes))
+			$this->_attributes = array();
+
+		$this->_attributes[$name] = $value;
+		return $this;
+	}
+
+	public function getAttribute($name)
+	{
+		return $this->hasAttribute($name) ? $this->_attributes[$name] : null;
+	}
+
+	public function setAttributes($value)
+	{
+		if (!is_array($value) && !$value instanceof Traversable)
+			throw new PrestaShopException('Data value must be an traversable array');
+
+		$this->_attributes = $value;
+		return $this;
+	}
+
+	public function getAttributes()
+	{
+		if (!isset($this->_attributes))
+			$this->_attributes = array();
+
+		return $this->_attributes;
 	}
 
 	public function setContext($value)
@@ -250,7 +282,7 @@ class HelperTreeCore
 
 		$reflection = new ReflectionClass($value);
 
-		if (!$reflection->implementsInterface('HelperITreeToolbarCore'))
+		if (!$reflection->implementsInterface('ITreeToolbarCore'))
 			throw new PrestaShopException('Toolbar class must implements ITreeToolbarCore interface');
 
 		$this->_toolbar = $value;
@@ -315,7 +347,9 @@ class HelperTreeCore
 		}
 		
 		//Assign Tree nodes
-		$template->assign(array(
+		$template
+		->assign($this->getAttributes())
+		->assign(array(
 			'id'    => $this->getId(),
 			'nodes' => $this->renderNodes($data)
 		));

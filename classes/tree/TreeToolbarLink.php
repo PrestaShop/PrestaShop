@@ -24,19 +24,50 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-interface HelperITreeToolbarCore
+class TreeToolbarLinkCore extends TreeToolbarButtonCore implements
+	ITreeToolbarButtonCore
 {
-	public function __toString();
-	public function setActions($value);
-	public function getActions();
-	public function setContext($value);
-	public function getContext();
-	public function setData($value);
-	public function getData();
-	public function setTemplate($value);
-	public function getTemplate();
-	public function setTemplateDirectory($value);
-	public function getTemplateDirectory();	
-	public function addAction($action);
-	public function render();
+	private   $_action;
+	private   $_icon_class;
+	private   $_link;
+	protected $_template = 'tree_toolbar_link.tpl';
+
+	public function __construct($label, $link, $action = null, $iconClass = null)
+	{
+		parent::__construct($label);
+
+		$this->setLink($link);
+		$this->setAction($action);
+		$this->setIconClass($iconClass);
+	}
+
+	public function setAction($value)
+	{
+		return $this->setAttribute('action', $value);
+	}
+
+	public function getAction()
+	{
+		return $this->getAttribute('action');
+	}
+
+	public function setIconClass($value)
+	{
+		return $this->setAttribute('icon_class', $value);
+	}
+
+	public function getIconClass()
+	{
+		return $this->getAttribute('icon_class');
+	}
+
+	public function setLink($value)
+	{
+		return $this->setAttribute('link', $value);
+	}
+
+	public function getLink()
+	{
+		return $this->getAttribute('link');
+	}
 }

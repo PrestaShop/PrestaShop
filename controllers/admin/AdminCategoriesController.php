@@ -340,7 +340,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->initToolbar();
 		$obj = $this->loadObject(true);
 		$id_shop = Context::getContext()->shop->id;
-		$selected_cat = array((isset($obj->id_parent) && $obj->isParentCategoryAvailable($id_shop))? (int)$obj->id_parent : (int)Tools::getValue('id_parent', Category::getRootCategory()->id));
+		$selected_categories = array((isset($obj->id_parent) && $obj->isParentCategoryAvailable($id_shop))? (int)$obj->id_parent : (int)Tools::getValue('id_parent', Category::getRootCategory()->id));
 		$unidentified = new Group(Configuration::get('PS_UNIDENTIFIED_GROUP'));
 		$guest = new Group(Configuration::get('PS_GUEST_GROUP'));
 		$default = new Group(Configuration::get('PS_CUSTOMER_GROUP'));
@@ -348,8 +348,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$unidentified_group_information = sprintf($this->l('%s - All people without a valid customer account.'), '<b>'.$unidentified->name[$this->context->language->id].'</b>');
 		$guest_group_information = sprintf($this->l('%s - Customer who placed an order with the guest checkout.'), '<b>'.$guest->name[$this->context->language->id].'</b>');
 		$default_group_information = sprintf($this->l('%s - All people who have created an account on this site.'), '<b>'.$default->name[$this->context->language->id].'</b>');
-		$root_category = Category::getRootCategory();
-		$root_category = array('id_category' => $root_category->id, 'name' => $root_category->name);
+
 		$this->fields_form = array(
 			'tinymce' => true,
 			'legend' => array(
@@ -386,23 +385,13 @@ class AdminCategoriesControllerCore extends AdminController
 					)
 				),
 				array(
-					'type' => 'categories',
+					'type'  => 'categories',
 					'label' => $this->l('Parent category:'),
-					'name' => 'id_parent',
-					'values' => array(
-						'trads' => array(
-							 'Root' => $root_category,
-							 'selected' => $this->l('Selected'),
-							 'Collapse All' => $this->l('Collapse All'),
-							 'Expand All' => $this->l('Expand All')
-						),
-						'selected_cat' => $selected_cat,
-						'input_name' => 'id_parent',
-						'use_radio' => true,
-						'use_search' => false,
-						'disabled_categories' => array(4),
-						'top_category' => Category::getTopCategory(),
-						'use_context' => true,
+					'name'  => 'id_parent',
+					'tree'  => array(
+						'id'                  => 'categories-tree',
+						'selected_categories' => $selected_categories,
+						'disabled_categories' => !Tools::isSubmit('add'.$this->table) ? array($this->_category->id) : null
 					)
 				),
 				array(

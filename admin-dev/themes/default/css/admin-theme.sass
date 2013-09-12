@@ -1,5 +1,5 @@
 //$brand-primary: #1BA6E5
-$brand-primary: #6992AF
+
 
 //light
 //$main-color: #F7F7F7
@@ -8,13 +8,15 @@ $brand-primary: #6992AF
 //$main-color: #E0E0E0 			//gris
 //$main-color: #D7D6DE 			//violet
 //$main-color: #F1F8FE 			//theme wordpress
+
 //dark
 //$main-color: #272A31 			//bleu PrestaShop
 //$main-color: #3D3D3D 			//gris
-//$main-color: #515561 			//gris bleu clair
+$main-color: #515561 			//gris bleu clair
 //$main-color: #4D4645 			//taupe
 //$main-color: #272822 			//gris vert
-$main-color: #313A45 			//gris bleu
+//$main-color: #313A45 			//gris bleu
+//$main-color: #7B8676
 //$main-color: #443A42 			//violet
 //$main-color: #373E35 			//vert camo
 //$main-color: #262C3F 			//bleu nuit  - pretty sure that a girl could do better naming the colors, sorry about that...
@@ -30,14 +32,17 @@ $main-color: #313A45 			//gris bleu
 //$secondary-color: #4691D2		//bleu ciel
 //$secondary-color: #814C76		//violet
 //$secondary-color: #FE635F		//saumon
-//$secondary-color: #F8235A		//rose
+//$secondary-color: #FFB4B8		//rose
 //$secondary-color: #F2B100		//moutarde
-//$secondary-color: #F7854E		//abricot
+//$secondary-color: #F6A88A		//abricot
 //$secondary-color: #937976		//taupe clair
 //$secondary-color: #60C276		//vert
 //$secondary-color: #9DC44B		//vert pomme
-$secondary-color: #6992AF		//theme wordpress
+//$secondary-color: #6992AF		//theme wordpress
 //$secondary-color: #8BC954 	//vert PrestaShop
+$secondary-color: #AB7073
+
+$brand-primary: #89AFE5
 
 //some tests
 //$secondary-color: #79C09D
@@ -68,7 +73,7 @@ $bg-page-head-color : $secondary-color
 $bg-panel-heading-color: hsl(hue($secondary-color), 10, 90)
 
 //others
-$badge-notif-color: #EF1778
+$badge-notif-color: #8BC954
 $icon-color: #87C795
 
 @import "compass"
@@ -150,7 +155,7 @@ html, body
 	background-image: url('../img/patterns/bedge_grunge.png') // texture
 
 #content
-	padding: 90px 20px 0
+	padding: 80px 20px 0
 	margin-left: 240px
 	@include transition-property(margin)
 	@include transition-duration(0.4s)
@@ -356,21 +361,21 @@ html, body
 					text-decoration: none
 			&:last-child a
 				border-bottom: none
-		&.active
-			a
+			&.active a
 				color: contrast-color($brand-primary, white, #333, 10%)
 				background-color: $brand-primary
 				border-bottom: solid 1px darken($brand-primary,10%)
 
 #nav-topbar
+	position: fixed
 	height: 28px
-	top: 36px
+	top: 35px
 	left: 80
 	width: 100%
 	z-index: 600
 	background-color: white
 	border-top: black solid 1px
-	border-bottom: black solid 1px
+	border-bottom: darken($secondary-color,20%) solid 1px
 	ul.menu
 		height: 28px
 		margin: 0
@@ -415,12 +420,12 @@ html, body
 	ul.submenu
 		display: none!important
 		@include box-shadow(rgba(black,0.3) 0 2px 4px)
-	> ul.menu > li
-		ul.submenu.expanded
+	> ul.menu > li.expanded
+		ul.submenu
 			display: block!important
 	> ul.menu > li
 		ul.submenu
-			display: none
+			display: none!important
 			position: absolute
 			margin: 0
 			padding: 0
@@ -445,9 +450,9 @@ html, body
 				&:last-child a
 					border-bottom: none
 				&.active a
-					color: contrast-color($main-color, white, #333, 10%)
-					background-color: $main-color
-					border-bottom: solid 1px darken($main-color,10%)
+					color: contrast-color($brand-primary, white, #333, 10%)
+					background-color: $brand-primary
+					border-bottom: solid 1px darken($brand-primary,10%)
 
 .page-topbar
 	#main
@@ -455,7 +460,7 @@ html, body
 	#nav-sidebar
 		display: none
 	.page-head
-		top: 64px
+		top: 63px
 	#content
 		margin-left: 0
 		width: 100%
@@ -1262,6 +1267,11 @@ fieldset > .row
 		margin: 0 4px 0 6px
 		background-color: #ccc
 		+border-radius(6px)
+	.tree-item-disable, .tree-folder-name-disable
+		color: #ccc
+		&:hover
+			color: #ccc
+			background-color: none
 
 #carrier_wizard
 	position: relative
@@ -1405,6 +1415,3 @@ fieldset > .row
 		width: auto
 	.field_error
 		border-color: $brand-danger
-
-
-

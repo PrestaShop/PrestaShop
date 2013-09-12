@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class HelperTreeToolbarCore implements HelperITreeToolbarCore
+class TreeToolbarCore implements ITreeToolbarCore
 {
 	const DEFAULT_TEMPLATE_DIRECTORY = 'helpers/tree';
 	const DEFAULT_TEMPLATE           = 'tree_toolbar.tpl';
@@ -159,7 +159,7 @@ class HelperTreeToolbarCore implements HelperITreeToolbarCore
 
 		$reflection = new ReflectionClass($action);
 
-		if (!$reflection->implementsInterface('HelperITreeToolbarButtonCore'))
+		if (!$reflection->implementsInterface('ITreeToolbarButtonCore'))
 			throw new PrestaShopException('Action class must implements ITreeToolbarButtonCore interface');
 
 		if (!isset($this->_actions))
@@ -173,7 +173,7 @@ class HelperTreeToolbarCore implements HelperITreeToolbarCore
 	{
 		foreach ($this->getActions() as $action)
 		{
-			if ($action instanceof HelperTreeToolbarSearchCore)
+			if ($action instanceof TreeToolbarSearchCore)
 				$action->setAttribute('data', $this->getData());
 		}
 

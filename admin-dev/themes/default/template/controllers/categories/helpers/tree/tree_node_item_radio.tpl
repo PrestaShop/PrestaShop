@@ -22,12 +22,10 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<li class="tree-folder">
-	<span class="tree-folder-name">
-		<i class="icon-folder-close"></i>
-		<label class="tree-toggler ">{$node['name']}</label>
-	</span>
-	<ul class="tree">
-		{$children}
-	</ul>
+<li class="tree-item{if isset($node['disabled']) && $node['disabled'] == true} tree-item-disable{/if}">
+	<label class="tree-item-name">
+		<input type="radio" name="id_parent" value="{$node['id_category']}"{if isset($node['disabled']) && $node['disabled'] == true} disabled="disabled"{/if} />
+		<i class="tree-dot"></i>
+		{$node['name']}
+	<label>
 </li>

@@ -93,7 +93,7 @@ class Dashtrends extends Module
 		$gapi = Module::isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
 		if (Validate::isLoadedObject($gapi) && $gapi->isConfigured())
 		{
-			if ($result = $gapi->requestReportData('ga:date', 'ga:visits', $params['date_from'], $params['date_to'], null, null, 1, 1))
+			if ($result = $gapi->requestReportData('ga:date', 'ga:visits', $params['date_from'], $params['date_to'], null, null, 1, 9999))
 				foreach ($result as $row)
 					$tmp_data['visits_score'][strtotime(preg_replace('/^([0-9]{4})([0-9]{2})([0-9]{2})$/', '$1-$2-$3', $row['dimensions']['date']))] = $row['metrics']['visits'];
 		}

@@ -23,8 +23,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <li class="tree-folder">
-	<span class="tree-folder-name">
-		<input type="radio" name="id-category" value="{$node['id_category']}" />
+	<span class="tree-folder-name{if isset($node['disabled']) && $node['disabled'] == true} tree-folder-name-disable{/if}">
+		<input type="radio" name="id_parent" value="{$node['id_category']}"{if isset($node['disabled']) && $node['disabled'] == true} disabled="disabled"{/if} />
 		<i class="icon-folder-close"></i>
 		<label class="tree-toggler ">{$node['name']}</label>
 	</span>

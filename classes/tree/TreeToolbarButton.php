@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-abstract class HelperTreeToolbarButtonCore
+abstract class TreeToolbarButtonCore
 {
 	const DEFAULT_TEMPLATE_DIRECTORY = 'helpers/tree';
 

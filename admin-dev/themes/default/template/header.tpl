@@ -289,8 +289,7 @@
 
 	<div id="main">
 		{include file='nav-top.tpl'}
-		{include file='nav-side.tpl'}
-
+		
 		<div id="content" class="page-content">
 {if $display_header && $install_dir_exists}
 			<div class="alert alert-warning">
