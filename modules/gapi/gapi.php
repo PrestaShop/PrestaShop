@@ -44,7 +44,13 @@ class Gapi extends Module
 
 	public function isConfigured()
 	{
-		return ($this->active && $this->api_3_0_isConfigured());
+		if (!$this->active)
+			return false;
+		if (Configuration::get('PS_GAPI_VERSION') == 30)
+			return $this->api_3_0_isConfigured();
+		elseif (Configuration::get('PS_GAPI_VERSION') == 13)
+			return $this->api_1_3_isConfigured();
+		return false;
 	}
 
 	public function getContent()
@@ -68,15 +74,49 @@ class Gapi extends Module
 				'.($online ? '' : '<li>'.$this->l('Your store is not online').'</li>').'
 			</ul>');
 		}
+		
+		if (Tools::getValue('PS_GAPI_VERSION'))
+		{
+			Configuration::updateValue('PS_GAPI_VERSION', (int)Tools::getValue('PS_GAPI_VERSION'));
+		}
+		
+		$helper = new HelperOptions($this);
+		$helper->id = $this->id;
+		$helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->module = $this;
 
-		// You can switch to the 1.3 API by replacing the following function call by $this->api_1_3_getContent()
-		return $html.$this->api_3_0_getContent();
+		$fields_options = array(
+			'general' => array(
+				'title' =>	$this->l('Which Google Analytics API version do you want to use?'),
+				'fields' =>	$fields = array(
+					'PS_GAPI_VERSION' => array(
+						'type' => 'radio',
+						'choices' => array(
+							13 => $this->l('v1.3: easy to configure but deprecated and less secure'),
+							30 => $this->l('v3.0 with OAuth 2.0: most powerful and up-to-date version')
+						),
+						'visibility' => Shop::CONTEXT_ALL
+					)
+				),
+				'submit' => array('title' => $this->l('Save and configure')),
+			)
+		);	
+		$html .= $helper->generateOptions($fields_options);
+		
+		if (Configuration::get('PS_GAPI_VERSION') == 30)
+			$html .= $this->api_3_0_getContent();
+		elseif (Configuration::get('PS_GAPI_VERSION') == 13)
+			$html .= $this->api_1_3_getContent();
+		return $html;
 	}
 
 	public function requestReportData($dimensions, $metrics, $date_from = null, $date_to = null, $sort = null, $filters = null, $start = 1, $limit = 30)
 	{
-		// You can switch to the 1.3 API by replacing the following function call by $this->api_1_3_requestReportData()
-		return $this->api_3_0_requestReportData($dimensions, $metrics, $date_from, $date_to, $sort, $filters, $start, $limit);
+		if (Configuration::get('PS_GAPI_VERSION') == 30)
+			return $this->api_3_0_requestReportData($dimensions, $metrics, $date_from, $date_to, $sort, $filters, $start, $limit);
+		elseif (Configuration::get('PS_GAPI_VERSION') == 13)
+			return $this->api_1_3_requestReportData($dimensions, $metrics, $date_from, $date_to, $sort, $filters, $start, $limit);
 	}
 
 	public function api_3_0_authenticate()
@@ -140,7 +180,7 @@ class Gapi extends Module
 
 	public function api_3_0_isConfigured()
 	{
-		return (Configuration::get('PS_GAPI30_CLIENT_ID') && Configuration::get('PS_GAPI30_CLIENT_SECRET') && Configuration::get('PS_GAPI30_PROFILE'));
+		return (Configuration::get('PS_GAPI30_CLIENT_ID') && Configuration::get('PS_GAPI30_CLIENT_SECRET') && Configuration::get('PS_GAPI_PROFILE'));
 	}
 
 	public function api_3_0_getContent()
@@ -151,7 +191,7 @@ class Gapi extends Module
 			Configuration::updateValue('PS_GAPI30_REQUEST_URI_TMP', dirname($_SERVER['REQUEST_URI']).'/'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'));
 			Configuration::updateValue('PS_GAPI30_CLIENT_ID_TMP', trim(Tools::getValue('PS_GAPI30_CLIENT_ID')));
 			Configuration::updateValue('PS_GAPI30_CLIENT_SECRET_TMP', trim(Tools::getValue('PS_GAPI30_CLIENT_SECRET')));
-			Configuration::updateValue('PS_GAPI30_PROFILE_TMP', trim(Tools::getValue('PS_GAPI30_PROFILE')));
+			Configuration::updateValue('PS_GAPI_PROFILE_TMP', trim(Tools::getValue('PS_GAPI_PROFILE')));
 			// This will redirect the user to Google API authentication page
 			$this->api_3_0_authenticate();
 		}
@@ -253,7 +293,7 @@ class Gapi extends Module
 						'title' => $this->l('Client Secret'),
 						'type' => 'text'
 					),
-					'PS_GAPI30_PROFILE' => array(
+					'PS_GAPI_PROFILE' => array(
 						'title' => $this->l('Profile'),
 						'type' => 'text'
 					)
@@ -283,14 +323,14 @@ class Gapi extends Module
 		{
 			Configuration::updateValue('PS_GAPI30_CLIENT_ID', Configuration::get('PS_GAPI30_CLIENT_ID_TMP'));
 			Configuration::updateValue('PS_GAPI30_CLIENT_SECRET', Configuration::get('PS_GAPI30_CLIENT_SECRET_TMP'));
-			Configuration::updateValue('PS_GAPI30_PROFILE', Configuration::get('PS_GAPI30_PROFILE_TMP'));
+			Configuration::updateValue('PS_GAPI_PROFILE', Configuration::get('PS_GAPI_PROFILE_TMP'));
 			Configuration::updateValue('PS_GAPI30_AUTHORIZATION_CODE', Tools::getValue('code'));
 			$oauth2callback = 'success';
 		}
 
 		Configuration::deleteByName('PS_GAPI30_CLIENT_ID_TMP');
 		Configuration::deleteByName('PS_GAPI30_CLIENT_SECRET_TMP');
-		Configuration::deleteByName('PS_GAPI30_PROFILE_TMP');
+		Configuration::deleteByName('PS_GAPI_PROFILE_TMP');
 		Configuration::deleteByName('PS_GAPI30_REQUEST_URI_TMP');
 		Configuration::deleteByName('PS_GAPI30_REFRESH_TOKEN');
 
@@ -306,7 +346,7 @@ class Gapi extends Module
 		$bearer = Configuration::get('PS_GAPI30_ACCESS_TOKEN');
 
 		$params = array(
-			'ids' => 'ga:'.Configuration::get('PS_GAPI30_PROFILE'),
+			'ids' => 'ga:'.Configuration::get('PS_GAPI_PROFILE'),
 			'dimensions' => $dimensions,
 			'metrics' => $metrics,
 			'sort' => $sort ? $sort : $metrics,
@@ -350,7 +390,7 @@ class Gapi extends Module
 
 	public function api_1_3_isConfigured()
 	{
-		return (Configuration::get('PS_GAPI13_EMAIL') && Configuration::get('PS_GAPI13_PASSWORD') && Configuration::get('PS_GAPI13_PROFILE'));
+		return (Configuration::get('PS_GAPI13_EMAIL') && Configuration::get('PS_GAPI13_PASSWORD') && Configuration::get('PS_GAPI_PROFILE'));
 	}
 
 	public function api_1_3_getContent()
@@ -362,7 +402,7 @@ class Gapi extends Module
 			{
 				Configuration::updateValue('PS_GAPI13_EMAIL', Tools::getValue('PS_GAPI13_EMAIL'));
 				Configuration::updateValue('PS_GAPI13_PASSWORD', Tools::getValue('PS_GAPI13_PASSWORD'));
-				Configuration::updateValue('PS_GAPI13_PROFILE', Tools::getValue('PS_GAPI13_PROFILE'));
+				Configuration::updateValue('PS_GAPI_PROFILE', Tools::getValue('PS_GAPI_PROFILE'));
 			}
 			else
 				$html .= $this->displayError($this->l('Authentication failed'));
@@ -370,7 +410,7 @@ class Gapi extends Module
 
 		if ($this->api_1_3_isConfigured())
 		{
-			$result_test = $this->api_3_0_requestReportData('', 'ga:visits,ga:uniquePageviews', date('Y-m-d', strtotime('-1 day')), date('Y-m-d', strtotime('-1 day')), null, null, 1, 1);
+			$result_test = $this->api_1_3_requestReportData('', 'ga:visits,ga:uniquePageviews', date('Y-m-d', strtotime('-1 day')), date('Y-m-d', strtotime('-1 day')), null, null, 1, 1);
 			if (!$result_test)
 				$html .= $this->displayError('Cannot retrieve test results');
 			else
@@ -395,7 +435,7 @@ class Gapi extends Module
 						'title' => $this->l('Password'),
 						'type' => 'password'
 					),
-					'PS_GAPI13_PROFILE' => array(
+					'PS_GAPI_PROFILE' => array(
 						'title' => $this->l('Profile'),
 						'type' => 'text',
 						'desc' => $this->l('You can find your profile ID in the address bar of your browser while accessing Analytics report.')
@@ -437,7 +477,7 @@ class Gapi extends Module
 			return false;
 
 		$params = array(
-			'ids' => 'ga:'.Configuration::get('PS_GAPI13_PROFILE'),
+			'ids' => 'ga:'.Configuration::get('PS_GAPI_PROFILE'),
 			'dimensions' => $dimensions,
 			'metrics' => $metrics,
 			'sort' => $sort ? $sort : $metrics,
