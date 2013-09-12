@@ -57,7 +57,7 @@
 				<h4><i class="icon-link"></i>{l s="Useful PrestaShop Links"}</h4>
 					<dl>
 						<dt>{l s="Discover the latest official documentation :"}</dt>
-						<dd><a href="http://doc.prestashop.com/display/PS16?utm_source=backoffice_dashboard" target="_blank">{l s="PrestaShop documentation"}</a></dd>
+						<dd><a href="http://doc.prestashop.com/display/PS16?utm_source=backoffice_dashboard" target="_blank">{l s="Go to doc.prestashop.com"}</a></dd>
 					</dl>
 					<dl>
 						<dt>{l s="Use the PrestaShop forum & discover a great community :"}</dt>
@@ -66,6 +66,14 @@
 					<dl>
 						<dt>{l s="Enhance your Shop with new templates & modules :"}</dt>
 						<dd><a href="http://addons.prestashop.com?utm_source=backoffice_dashboard" target="_blank">{l s="Go to addons.prestashop.com"}</a></dd>
+					</dl>
+					<dl>
+						<dt>{l s="PrestaShop BugTracker :"}</dt>
+						<dd><a href="http://forge.prestashop.com?utm_source=backoffice_dashboard" target="_blank">{l s="Go to forge.prestashop.com"}</a></dd>
+					</dl>
+					<dl>
+						<dt>{l s="Contact US :"}</dt>
+						<dd><a href="http://www.prestashop.com/en/contact-us?utm_source=backoffice_dashboard" target="_blank">{l s="Go to prestashop.com"}</a></dd>
 					</dl>
 			</section>
 		</div>
