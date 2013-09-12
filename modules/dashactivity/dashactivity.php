@@ -121,6 +121,13 @@ class Dashactivity extends Module
 		FROM `'._DB_PREFIX_.'orders`
 		WHERE `invoice_date` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
 		'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
+		
+		$pending_orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT COUNT(*)
+		FROM `'._DB_PREFIX_.'orders` o
+		LEFT JOIN `'._DB_PREFIX_.'order_state` os ON (o.current_state = os.id_order_state)
+		WHERE os.paid = 1 AND os.shipped = 0
+		'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
 
 		$abandoned_cart = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT COUNT(*)
@@ -187,17 +194,30 @@ class Dashactivity extends Module
 			WHERE active = 1
 			'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
 		}
+		
+		$product_reviews = 0;
+		if (Module::isInstalled('productcomments'))
+		{
+			$new_registrations += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT COUNT(*)
+			FROM `'._DB_PREFIX_.'product_comment` pc
+			LEFT JOIN `'._DB_PREFIX_.'product` p ON (pc.id_product = p.id_product)
+			'.Shop::addSqlAssociation('product', 'p').'
+			WHERE pc.deleted = 0
+			AND pc.`date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
+			'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
+		}
 
 		return array(
 			'data_value' => array(
 				'order_nbr' => $order_nbr,
-				'pending_orders' => 42,
+				'pending_orders' => $pending_orders,
 				'return_exchanges' => $return_exchanges,
 				'abandoned_cart' => $abandoned_cart,
 				'products_out_of_stock' => $products_out_of_stock,
 				'new_messages' => $new_messages,
 				'order_inquires' => 42,
-				'product_reviews' => 42,
+				'product_reviews' => $product_reviews,
 				'new_customers' => $new_customers,
 				'online_visitor' => $online_visitor,
 				'active_shopping_cart' => $active_shopping_cart,
