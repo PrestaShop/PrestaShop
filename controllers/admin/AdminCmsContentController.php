@@ -73,6 +73,8 @@ class AdminCmsContentControllerCore extends AdminController
 
 	public function initContent()
 	{
+		$this->content .= $this->renderPageHeaderToolbar();
+
 		$this->admin_cms_categories->token = $this->token;
 		$this->admin_cms->token = $this->token;
 
@@ -109,11 +111,12 @@ class AdminCmsContentControllerCore extends AdminController
 		));
 	}
 
-	public function initPageHeaderToolbar()
+	public function renderPageHeaderToolbar()
 	{
 		$id_cms_category = (int)Tools::getValue('id_cms_category');
-			if (!$id_cms_category)
-				$id_cms_category = 1;
+
+		if (!$id_cms_category)
+			$id_cms_category = 1;
 
 		$this->page_header_toolbar_title = $this->l('CMS');
 		$this->page_header_toolbar_btn['new_cms_category'] = array(
@@ -127,7 +130,22 @@ class AdminCmsContentControllerCore extends AdminController
 			'icon' => 'process-icon-new'
 		);
 
-		parent::initPageHeaderToolbar();
+		if (is_array($this->page_header_toolbar_btn)
+			&& $this->page_header_toolbar_btn instanceof Traversable
+			|| trim($this->page_header_toolbar_title) != '')
+			$this->show_page_header_toolbar = true;
+
+		$template = $this->context->smarty->createTemplate(
+			$this->context->smarty->getTemplateDir(0).DIRECTORY_SEPARATOR
+			.'page_header_toolbar.tpl', $this->context->smarty);
+
+		$this->context->smarty->assign(array(
+			'show_page_header_toolbar' => $this->show_page_header_toolbar,
+			'title' => $this->page_header_toolbar_title,
+			'toolbar_btn' => $this->page_header_toolbar_btn
+		));
+
+		return $template->fetch();
 	}
 
 	public function postProcess()
