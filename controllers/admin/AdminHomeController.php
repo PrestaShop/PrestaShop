@@ -491,9 +491,6 @@ class AdminHomeControllerCore extends AdminController
 		$isoCountry = Context::getContext()->country->iso_code;
 		$stream_context = @stream_context_create(array('http' => array('method'=> 'GET', 'timeout' => 2)));
 
-		// SCREENCAST
-		$result['screencast'] = 'OK';
-
 		// PREACTIVATION
 		$result['partner_preactivation'] = $this->getBlockPartners();
 
@@ -508,20 +505,6 @@ class AdminHomeControllerCore extends AdminController
 			$result['discover_prestashop'] .= '<div id="block_partner_tips">'.$content[1].'</div></div>';
 
 		$this->content = Tools::jsonEncode($result);
-	}
-
-	public function ajaxProcessHideScreencast()
-	{
-		if ($employee = new Employee((int)Tools::getValue('id_employee')))
-		{
-			$employee->bo_show_screencast = 0;
-			if ($employee->save())
-				$this->content = '{"status":"ok"}';
-			else
-				$this->content = '{"status":"error","msg":"not saved"}';
-		}
-		else
-			$this->content = '{"status":"error", "msg":"employee does not exists"}';
 	}
 
 	public function getBlockPartners()

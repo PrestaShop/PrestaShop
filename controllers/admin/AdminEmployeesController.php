@@ -234,22 +234,21 @@ class AdminEmployeesControllerCore extends AdminController
 					'hint' => $this->l('Back Office theme')
 				),
 				array(
-					'type' => 'switch',
-					'label' => $this->l('Show screencast at login:'),
-					'name' => 'bo_show_screencast',
-					'hint' => $this->l('Display the welcome video in the Admin panel dashboard at log in.'),
+					'type' => 'radio',
+					'label' => $this->l('Display admin menu:'),
+					'name' => 'bo_menu',
 					'required' => false,
 					'is_bool' => true,
 					'values' => array(
 						array(
-							'id' => 'bo_show_screencast_on',
-							'value' => 1,
-							'label' => $this->l('Enabled')
+							'id' => 'bo_menu_on',
+							'value' => 0,
+							'label' => $this->l('Top')
 						),
 						array(
-							'id' => 'bo_show_screencast_off',
-							'value' => 0,
-							'label' => $this->l('Disabled')
+							'id' => 'bo_menu_off',
+							'value' => 1,
+							'label' => $this->l('Left')
 						)
 					)
 				)
