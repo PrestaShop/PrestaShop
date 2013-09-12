@@ -62,6 +62,9 @@ class AdminLogsControllerCore extends AdminController
 		$this->list_no_link = true;
 		$this->_select .= 'CONCAT(LEFT(e.firstname, 1), \'. \', e.lastname) employee';
 		$this->_join .= ' LEFT JOIN '._DB_PREFIX_.'employee e ON (a.id_employee = e.id_employee)';
+		
+		// Set up GUI to clean up logs
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected log entries?')));
 		parent::__construct();
 	}
 	
@@ -80,7 +83,66 @@ class AdminLogsControllerCore extends AdminController
 		);
 		unset($this->toolbar_btn['new']);
 	}
+	
+	/**
+	 * Delete multiple logs without reporting it into the logger
+	 *
+	 * @return boolean true if succcess
+	 */
+	public function processBulkDelete()
+	{
+		if (is_array($this->boxes) && !empty($this->boxes))
+		{
+			$object = new $this->className();
+
+			if (isset($object->noZeroObject))
+			{
+				$objects_count = count(call_user_func(array($this->className, $object->noZeroObject)));
+
+				// Check if all object will be deleted
+				if ($objects_count <= 1 || count($this->boxes) == $objects_count)
+					$this->errors[] = Tools::displayError('You need at least one object.').
+						' <b>'.$this->table.'</b><br />'.
+						Tools::displayError('You cannot delete all of the items.');
+			}
+			else
+			{
+				$result = true;
+				foreach ($this->boxes as $id)
+				{
+					$to_delete = new $this->className($id);
+					$delete_ok = true;
+					if ($this->deleted)
+					{
+						$to_delete->deleted = 1;
+						if (!$to_delete->update())
+						{
+							$result = false;
+							$delete_ok = false;
+						}
+					}
+					else
+						if (!$to_delete->delete())
+						{
+							$result = false;
+							$delete_ok = false;
+						}
+
+					if (!$delete_ok)
+						$this->errors[] = sprintf(Tools::displayError('Can\'t delete #%d'), $id);
+				}
+				if ($result)
+					$this->redirect_after = self::$currentIndex.'&conf=2&token='.$this->token;
+				$this->errors[] = Tools::displayError('An error occurred while deleting this selection.');
+			}
+		}
+		else
+			$this->errors[] = Tools::displayError('You must select at least one element to delete.');
+
+		if (isset($result))
+			return $result;
+		else
+			return false;
+	}
 
 }
-
-?>
