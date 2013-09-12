@@ -3100,6 +3100,14 @@ class AdminControllerCore extends Controller
 				$return .= '<option data-onclick=""  data-href="'.$link_admin_modules.'&uninstall='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : '').'" >'.$this->translationsTab['Uninstall'].'</option>';
 			$return = '<select id="select_'.$module->name.'">'.$return.'</select>';
 		}
+		else if ($output_type == 'array')
+		{
+			if ($module->id)
+				$return[] = '<a href="'.$link_admin_modules.'&uninstall='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : '').'"
+				onclick="'.$option['onclick'].'"
+				title="'.$option['title'].'">
+				<i class="icon-minus-sign-alt"></i>&nbsp;'.$this->translationsTab['Uninstall'].'</a>';
+		}
 
 		return $return;
 	}
