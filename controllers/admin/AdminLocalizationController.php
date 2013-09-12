@@ -298,6 +298,7 @@ class AdminLocalizationControllerCore extends AdminController
 
 		// toolbar (save, cancel, new, ..)
 		$this->initToolbar();
+		$this->initPageHeaderToolbar();
 
 		$this->context->smarty->assign(array(
 			'localization_form' => $this->renderForm(),
