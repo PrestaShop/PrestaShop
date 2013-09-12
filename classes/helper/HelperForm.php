@@ -139,7 +139,7 @@ class HelperFormCore extends Helper
 
 						case 'shop' :
 							$disable_shops = isset($params['disable_shared']) ? $params['disable_shared'] : false;
-							$params['html'] = $this->renderAssoShop($params['tree'], $disable_shops);
+							$params['html'] = $this->renderAssoShop($disable_shops);
 							if (Shop::getTotalShops(false) == 1)
 								unset($this->fields_form[$fieldset_key]['form']['input'][$key]);
 						break;
@@ -234,8 +234,7 @@ class HelperFormCore extends Helper
 			$nb_shop += count($value['shops']);
 		}*/
 
-		$tree = new HelperTreeShops($params['id'],
-			isset($params['title']) ? $params['title'] : null);
+		$tree = new HelperTreeShops('shop-tree', 'Shops');
 		$tree->setSelectedShops($assos);
 		return $tree->render();
 	}
