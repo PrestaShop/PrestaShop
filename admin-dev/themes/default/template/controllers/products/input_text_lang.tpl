@@ -25,26 +25,50 @@
 
 {foreach from=$languages item=language}
 	<div class="input-group col-lg-12 translatable-field lang-{$language.id_lang}">
-		<input type="text"
-		id="{$input_name}_{$language.id_lang}" 
-		{if isset($input_class)}class="{$input_class}"{/if}
-		name="{$input_name}_{$language.id_lang}"
-		value="{$input_value[$language.id_lang]|htmlentitiesUTF8|default:''}"
-		onkeyup="if (isArrowKey(event)) return ;updateFriendlyURL();" onblur="updateLinkRewrite();">
-		<div class="input-group-btn">
-			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-				<img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt="">
-				{$language.iso_code}
-				<span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu">
-				{foreach from=$languages item=language}
-				<li>
-					<a href="javascript:hideOtherLanguage({$language.id_lang});"><img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt=""> {$language.name}</a>
-				</li>
-				{/foreach}
-			</ul>
-		</div>
+
+			{if isset($maxlength)}
+			<span id="{$input_name}_{$language.id_lang}_counter" class="input-group-addon"><span class="text-count-down">{$maxlength}</span></span>
+			{/if}
+			<input type="text"
+			id="{$input_name}_{$language.id_lang}"
+			{if isset($input_class)}class="{$input_class}"{/if}
+			name="{$input_name}_{$language.id_lang}"
+			value="{$input_value[$language.id_lang]|htmlentitiesUTF8|default:''}"
+			onkeyup="if (isArrowKey(event)) return ;updateFriendlyURL();"
+			onblur="updateLinkRewrite();"
+			{if isset($maxlength)}maxlength="{$maxlength}"{/if}>
+			<div class="input-group-btn">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+					<img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt="">
+					{$language.iso_code}
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+					{foreach from=$languages item=language}
+					<li>
+						<a href="javascript:hideOtherLanguage({$language.id_lang});"><img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt=""> {$language.name}</a>
+					</li>
+					{/foreach}
+				</ul>
+			</div>
+
 	</div>
 {/foreach}
+{if isset($maxlength)}
+<script type="text/javascript">
+function countDown($source, $target) {
+	var max = $source.attr("maxlength");
+	$target.html(max-$source.val().length);
 
+	$source.keyup(function(){
+		$target.html(max-$source.val().length);
+	});
+}
+
+$(document).ready(function(){
+{foreach from=$languages item=language}
+	countDown($("#{$input_name}_{$language.id_lang}"), $("#{$input_name}_{$language.id_lang}_counter"));
+{/foreach}
+});
+</script>
+{/if}
