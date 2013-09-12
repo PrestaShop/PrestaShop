@@ -227,12 +227,12 @@ class HelperFormCore extends Helper
 			}
 		}
 
-		$nb_shop = 0;
+		/*$nb_shop = 0;
 		foreach ($tree as &$value)
 		{
 			$value['disable_shops'] = (isset($value[$disable_shared]) && $value[$disable_shared]);
 			$nb_shop += count($value['shops']);
-		}
+		}*/
 
 		$tree = new HelperTreeShops($params['id'],
 			isset($params['title']) ? $params['title'] : null);
