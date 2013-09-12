@@ -135,6 +135,8 @@ class HelperFormCore extends Helper
 								$this->context->controller->addJS(_PS_JS_DIR_.'tinymce.inc.js');
 								$tinymce = false;
 							}
+							else
+								$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/jquery.autosize.min.js');
 						break;
 
 						case 'shop' :

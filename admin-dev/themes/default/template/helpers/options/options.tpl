@@ -161,7 +161,7 @@
 										</div>
 									{elseif $field['type'] == 'textarea'}
 										<div class="col-lg-9">
-											<textarea name={$key} cols="{$field['cols']}" rows="{$field['rows']}">{$field['value']|escape:'htmlall':'UTF-8'}</textarea>
+											<textarea class="textarea-autosize" name={$key} cols="{$field['cols']}" rows="{$field['rows']}">{$field['value']|escape:'htmlall':'UTF-8'}</textarea>
 										</div>
 									{elseif $field['type'] == 'file'}
 										{if isset($field['thumb']) && $field['thumb']}
@@ -217,7 +217,7 @@
 												{foreach $field['languages'] AS $id_lang => $value}
 													<div class="row translatable-field lang-{$id_lang}" {if $id_lang != $current_id_lang}style="display:none;"{/if}>
 														<div id="{$key}_{$id_lang}" class="col-lg-10" >
-															<textarea name="{$key}_{$id_lang}">{$value|replace:'\r\n':"\n"}</textarea>
+															<textarea class="textarea-autosize" name="{$key}_{$id_lang}">{$value|replace:'\r\n':"\n"}</textarea>
 														</div>
 
 														<div class="input-group-btn col-lg-2">

@@ -296,7 +296,7 @@
 									{foreach $languages as $language}
 									<div class="row translatable-field lang-{$language.id_lang}"  {if $language.id_lang != $defaultFormLanguage}style="display:none;"{/if}>
 										<div class="col-lg-10">
-											<textarea name="{$input.name}_{$language.id_lang}" {if isset($input.autoload_rte) && $input.autoload_rte}class="rte autoload_rte {if isset($input.class)}{$input.class}{/if}"{/if} >{$fields_value[$input.name][$language.id_lang]|escape:'htmlall':'UTF-8'}</textarea>
+											<textarea name="{$input.name}_{$language.id_lang}" class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte {if isset($input.class)}{$input.class}{/if}{else}textarea-autosize{/if}" >{$fields_value[$input.name][$language.id_lang]|escape:'htmlall':'UTF-8'}</textarea>
 										</div>
 										<div class="col-lg-2">
 											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -318,7 +318,7 @@
 									{/foreach}
 
 									{else}
-										<textarea name="{$input.name}" id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}" cols="{$input.cols}" rows="{$input.rows}" {if isset($input.autoload_rte) && $input.autoload_rte}class="rte autoload_rte {if isset($input.class)}{$input.class}{/if}"{/if}>{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}</textarea>
+										<textarea name="{$input.name}" id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}" cols="{$input.cols}" rows="{$input.rows}" class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte {if isset($input.class)}{$input.class}{/if}{else}textarea-autosize{/if}">{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}</textarea>
 									{/if}
 
 								{elseif $input.type == 'checkbox'}
@@ -580,6 +580,7 @@
 					dateFormat: 'yy-mm-dd'
 				});
 
+			$(".textarea-autosize").autosize();
 		});
 	{block name="script"}{/block}
 	</script>

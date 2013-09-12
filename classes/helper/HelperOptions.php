@@ -92,6 +92,9 @@ class HelperOptionsCore extends Helper
 
 				if ($field['type'] == 'color')
 					$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/jquery.colorpicker.js');
+
+				if ($field['type'] == 'texarea' || $field['type'] == 'textareaLang')
+					$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/jquery.autosize.min.js');
 					
 				// Cast options values if specified
 				if ($field['type'] == 'select' && isset($field['cast']))
