@@ -144,15 +144,6 @@ if (Tools::isSubmit('submitTrackClickOnHelp'))
         HelpAccess::trackClick($label, $version);
 }
 
-if (Tools::isSubmit('toggleScreencast'))
-{
-	if (Validate::isLoadedObject($context->employee))
-	{
-		$context->employee->bo_show_screencast = !$context->employee->bo_show_screencast;
-		$context->employee->update();
-	}
-}
-
 if (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category_parent'))
 {
 	$children_categories = Category::getChildrenWithNbSelectedSubCat(Tools::getValue('id_category_parent'), Tools::getValue('selectedCat'), Context::getContext()->language->id, null, Tools::getValue('use_shop_context'));

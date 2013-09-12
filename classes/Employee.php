@@ -63,8 +63,11 @@ class EmployeeCore extends ObjectModel
 	/** @var integer employee desired screen width */
 	public $bo_width;
 
-	/** @var bool, true */
-	public $bo_show_screencast;
+	/** @var bool, false */
+	public $bo_menu;
+	
+	/* Deprecated */
+	public $bo_show_screencast = false;
 
 	/** @var boolean Status */
 	public $active = 1;
@@ -90,7 +93,7 @@ class EmployeeCore extends ObjectModel
 			'default_tab' => 		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 			'bo_theme' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 32),
 			'bo_width' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-			'bo_show_screencast' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'bo_menu' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'stats_date_from' => 	array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'stats_date_to' => 		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
