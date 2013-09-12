@@ -193,12 +193,12 @@ class Dashtrends extends Module
 
 		return array(
 			'data_value' => array(
-				'sales_score' => Tools::displayPrice($this->dashboard_data_sum['sales']),
+				'sales_score' => Tools::displayPrice(round($this->dashboard_data_sum['sales'])),
 				'orders_score' => $this->dashboard_data_sum['orders'],
 				'cart_value_score' => Tools::displayPrice($this->dashboard_data_sum['average_cart_value']),
 				'visits_score' => $this->dashboard_data_sum['visits'],
 				'convertion_rate_score' => round(100 * $this->dashboard_data_sum['conversion_rate'], 2),
-				'net_profits_score' => Tools::displayPrice($this->dashboard_data_sum['net_profits']),
+				'net_profits_score' => Tools::displayPrice(round($this->dashboard_data_sum['net_profits'])),
 			),
 			'data_trends' => array(
 				'sales_score_trends' => array('way' => 'up', 'value' => 0.42),
