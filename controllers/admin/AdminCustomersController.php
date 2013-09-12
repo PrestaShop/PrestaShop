@@ -109,7 +109,8 @@ class AdminCustomersControllerCore extends AdminController
 				'align' => 'center',
 				'active' => 'status',
 				'type' => 'bool',
-				'orderby' => false
+				'orderby' => false,
+				'filter_key' => 'a!active',
 			),
 			'newsletter' => array(
 				'title' => $this->l('News.'),
