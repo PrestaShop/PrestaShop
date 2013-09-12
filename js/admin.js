@@ -119,7 +119,8 @@ function copy2friendlyURL()
 
 function copyMeta2friendlyURL()
 {
-	$('#input_link_rewrite_' + id_language).val(str2url($('#name_' + id_language).val().replace(/^[0-9]+\./, ''), 'UTF-8'));
+	if (!$('input[name="id_cms"]').length)
+		$('#link_rewrite_' + id_language).val(str2url($('#name_' + id_language).val().replace(/^[0-9]+\./, ''), 'UTF-8'));
 }
 
 function updateCurrentText()
