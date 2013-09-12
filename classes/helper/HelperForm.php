@@ -89,16 +89,18 @@ class HelperFormCore extends Helper
 						case 'categories':
 							if ($categories)
 							{
-								// Added Jquery plugin treeview (css and js files)
-								$this->context->controller->addJqueryPlugin('treeview-categories');
+								$tree = new HelperTreeCategories($params['tree']['id'], isset($params['tree']['title']) ? $params['tree']['title'] : null);
 
-								// Added JS files
-								$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/treeview-categories/jquery.treeview-categories.async.js');
-								$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/treeview-categories/jquery.treeview-categories.edit.js');
-								$this->context->controller->addJS(_PS_JS_DIR_.'admin-categories-tree.js');
+								if (isset($params['tree']['selected_categories']))
+									$tree->setSelectedCategories($params['tree']['selected_categories']);
 
-								if (isset($params['use_search']) && $params['use_search'])
-									$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/autocomplete/jquery.autocomplete.js');
+								if (isset($params['tree']['disabled_categories']))
+									$tree->setDisabledCategories($params['tree']['disabled_categories']);
+
+								if (isset($params['tree']['root_category']))
+									$tree->setRootCategory($params['tree']['root_category']);
+
+								$this->context->smarty->assign('categories_tree', $tree->render());
 								$categories = false;
 							}
 						break;
@@ -224,6 +226,7 @@ class HelperFormCore extends Helper
 				break;
 			}
 		}
+
 
 		$tpl = $this->createTemplate('assoshop.tpl');
 		$tree = Shop::getTree();

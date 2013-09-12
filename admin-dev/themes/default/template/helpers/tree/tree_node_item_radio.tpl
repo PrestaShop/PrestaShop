@@ -22,10 +22,10 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<li class="tree-item">
+<li class="tree-item{if isset($node['disabled']) && $node['disabled'] == true} tree-item-disable{/if}">
 	<label class="tree-item-name">
-	<input type="checkbox" name="categoryBox[]" value="{$node['id_category']}" />
-	<i class="tree-dot"></i>
-	{$node['name']}
-	</label>
+		<input type="radio" name="id-category" value="{$node['id_category']}"{if isset($node['disabled']) && $node['disabled'] == true} disabled="disabled"{/if} />
+		<i class="tree-dot"></i>
+		{$node['name']}
+	<label>
 </li>

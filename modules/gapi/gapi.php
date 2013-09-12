@@ -29,8 +29,8 @@ if (!defined('_PS_VERSION_'))
 
 class Gapi extends Module
 {
-    public function __construct($type = null)
-    {
+	public function __construct()
+	{
 		$this->name = 'gapi';
 		$this->tab = 'administration';
 		$this->version = 0.9;
@@ -40,8 +40,8 @@ class Gapi extends Module
 		parent::__construct();
 
 		$this->displayName = $this->l('Google Analytics API');
-    }
-	
+	}
+
 	public function isConfigured()
 	{
 		return ($this->active && $this->api_3_0_isConfigured());
@@ -64,7 +64,7 @@ class Gapi extends Module
 				'.(($curl && $allow_url_fopen) ? '' : '<li>'.$this->l('You are not allowed to open external URLs').'</li>').'
 				'.(($curl && $allow_url_fopen) ? '' : '<li>'.$this->l('cURL is not enabled').'</li>').'
 				'.($openssl ? '' : '<li>'.$this->l('OpenSSL is not enabled').'</li>').'
-				'.(($allow_url_fopen AND $openssl AND !$ping) ? '<li>'.$this->l('Google is unreachable').' ('.$this->l('check your firewall').')</li>' : '').'
+				'.(($allow_url_fopen && $openssl && !$ping) ? '<li>'.$this->l('Google is unreachable').' ('.$this->l('check your firewall').')</li>' : '').'
 				'.($online ? '' : '<li>'.$this->l('Your store is not online').'</li>').'
 			</ul>');
 		}
@@ -73,7 +73,7 @@ class Gapi extends Module
 		return $html.$this->api_3_0_getContent();
 	}
 
-	public function requestReportData($dimensions, $metrics, $date_from, $date_to, $sort = null, $filters = null, $start = 1, $limit = 30)
+	public function requestReportData($dimensions, $metrics, $date_from = null, $date_to = null, $sort = null, $filters = null, $start = 1, $limit = 30)
 	{
 		// You can switch to the 1.3 API by replacing the following function call by $this->api_1_3_requestReportData()
 		return $this->api_3_0_requestReportData($dimensions, $metrics, $date_from, $date_to, $sort, $filters, $start, $limit);
@@ -93,7 +93,7 @@ class Gapi extends Module
 		);
 		Tools::redirectLink('https://accounts.google.com/o/oauth2/auth?'.http_build_query($params));
 	}
-	
+
 	public function api_3_0_refreshtoken()
 	{
 		$params = array(
@@ -179,7 +179,7 @@ class Gapi extends Module
 				$html .= $this->displayConfirmation(sprintf($this->l('Yesterday, your store received the visit of %d people for a total of %d unique page views.'), $result_test[0]['metrics']['visits'], $result_test[0]['metrics']['uniquePageviews']));
 			}
 		}
-		
+
 		if ($display_slider)
 		{
 			$slides = array(
@@ -195,7 +195,7 @@ class Gapi extends Module
 				'Google API - 10 - Profile ID.png' => $this->l('Now you need the ID of the Analytics Profile you want to connect. In order to find you Profile ID, connect to the Analytics dashboard look at the URL in the address bar. Your Profile ID is the number following a "p", as shown underlined in red on the screenshot')
 			);
 			$first_slide = key($slides);
-		
+
 			$html .= '
 			<a id="screenshots_button" href="#screenshots"><button class="btn btn-default"><i class="icon-question-sign"></i> How to configure Google Analytics API</button></a> 
 			<div style="display:none">
@@ -264,7 +264,7 @@ class Gapi extends Module
 
 		return $html.$helper->generateOptions($fields_options);
 	}
-	
+
 	public function api_3_0_oauth2callback()
 	{
 		if (!Tools::getValue('state'))
@@ -326,9 +326,10 @@ class Gapi extends Module
 				'timeout' => 5,
 			)
 		));
-		if (!$response_json = Tools::file_get_contents('https://www.googleapis.com/analytics/v3/data/ga?'.$content, false, $stream_context))
+		$api = ($date_from && $date_to) ? 'ga' : 'realtime';
+		if (!$response_json = Tools::file_get_contents('https://www.googleapis.com/analytics/v3/data/'.$api.'?'.$content, false, $stream_context))
 			return false;
-			
+
 		// https://developers.google.com/analytics/devguides/reporting/core/v3/reference
 		$response = Tools::jsonDecode($response_json, true);
 
@@ -337,7 +338,7 @@ class Gapi extends Module
 		{
 			$metrics = array();
 			$dimensions = array();
-			foreach($row as $key => $value)
+			foreach ($row as $key => $value)
 				if ($response['columnHeaders'][$key]['columnType'] == 'DIMENSION')
 					$dimensions[str_replace('ga:', '', $response['columnHeaders'][$key]['name'])] = $value;
 				elseif ($response['columnHeaders'][$key]['columnType'] == 'METRIC')
@@ -351,7 +352,7 @@ class Gapi extends Module
 	{
 		return (Configuration::get('PS_GAPI13_EMAIL') && Configuration::get('PS_GAPI13_PASSWORD') && Configuration::get('PS_GAPI13_PROFILE'));
 	}
-	
+
 	public function api_1_3_getContent()
 	{
 		$html = '';
@@ -448,17 +449,17 @@ class Gapi extends Module
 		if ($filters !== null)
 			$params['filters'] = $filters;
 		$content = str_replace('&amp;', '&', urldecode(http_build_query($params)));
-		
+
 		$stream_context = stream_context_create(array(
 			'http' => array(
 				'method'=> 'GET',
-				'header'  => "Authorization: GoogleLogin auth=".$this->auth_token."\r\n",
+				'header'  => 'Authorization: GoogleLogin auth='.$this->auth_token."\r\n",
 				'timeout' => 5,
 			)
 		));
 		if (!$response = Tools::file_get_contents('https://www.google.com/analytics/feeds/data?'.$content, false, $stream_context))
 			return false;
-		
+
 		$xml = simplexml_load_string($response);
 
 		/* Meta data not useful at this time */
@@ -485,21 +486,21 @@ class Gapi extends Module
 			$metrics = array();
 			foreach ($entry->children('http://schemas.google.com/analytics/2009')->metric as $metric)
 			{
-				$key = str_replace('ga:','',$metric->attributes()->name);
+				$key = str_replace('ga:', '', $metric->attributes()->name);
 				$metric_value = strval($metric->attributes()->value);
-				if (preg_match('/^(\d+\.\d+)|(\d+E\d+)|(\d+.\d+E\d+)$/',$metric_value))
+				if (preg_match('/^(\d+\.\d+)|(\d+E\d+)|(\d+.\d+E\d+)$/', $metric_value))
 					$metrics[$key] = floatval($metric_value);
 				else
 					$metrics[$key] = intval($metric_value);
 			}
 
 			$dimensions = array();
-			foreach($entry->children('http://schemas.google.com/analytics/2009')->dimension as $dimension)
+			foreach ($entry->children('http://schemas.google.com/analytics/2009')->dimension as $dimension)
 				$dimensions[str_replace('ga:', '', $dimension->attributes()->name)] = strval($dimension->attributes()->value);
 
 			$result[] = array('metrics' => $metrics, 'dimensions' => $dimensions);
 		}
-		
+
 		return $result;
 	}
 }

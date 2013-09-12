@@ -22,18 +22,10 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<label for="node-search">{l s=$label}</label>&nbsp;<input type="text"{if isset($id)} id="{$id}"{/if}{if isset($name)} name="{$name}"{/if}{if isset($class)} class="{$class}"{/if} />
-{if isset($typeahead_source) && isset($id)}
-<script type="text/javascript">
-	$(document).ready(
-		function()
-		{
-			$("#{$id}").typeahead(
-			{
-				name: "{$name}",
-				local: [{$typeahead_source}]
-			});
-		}
-	);
-</script>
-{/if}
+<li class="tree-item{if isset($node['disabled']) && $node['disabled'] == true} tree-item-disable{/if}">
+	<label class="tree-item-name">
+	<input type="checkbox" name="categoryBox[]" value="{$node['id_category']}"{if isset($node['disabled']) && $node['disabled'] == true} disabled="disabled"{/if} />
+	<i class="tree-dot"></i>
+	{$node['name']}
+	</label>
+</li>

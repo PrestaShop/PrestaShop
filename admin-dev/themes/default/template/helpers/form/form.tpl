@@ -158,7 +158,19 @@
 											{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
 											{if isset($input.autocomplete) && !$input.autocomplete}autocomplete="off"{/if} />
 										{if isset($input.suffix)}{$input.suffix}{/if}
-										{if !empty($input.desc)}<div class="alert alert-info">{$input.desc}</div>{/if}
+										{if !empty($input.desc)}
+										<div class="alert alert-info">
+										{if is_array($input.desc)}
+											<ul>
+											{foreach $input.desc as $desc}
+												<li>{$desc}</li>
+											{/foreach}
+											</ul>
+										{else}
+											{$input.desc}
+										{/if}
+										</div>
+										{/if}
 									{/if}
 								{elseif $input.type == 'select'}
 									{if isset($input.options.query) && !$input.options.query && isset($input.empty_message)}
@@ -405,7 +417,7 @@
 								{elseif $input.type == 'shop'}
 									{$input.html}
 								{elseif $input.type == 'categories'}
-									{include file='helpers/form/form_category.tpl' categories=$input.values}
+									{$categories_tree}
 								{elseif $input.type == 'categories_select'}
 									{$input.category_tree}
 								{elseif $input.type == 'asso_shop' && isset($asso_shop) && $asso_shop}

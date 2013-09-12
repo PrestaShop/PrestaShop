@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-interface HelperITreeToolbarButtonCore
+interface ITreeToolbarButtonCore
 {
 	public function __toString();
 	public function setAttribute($name, $value);
