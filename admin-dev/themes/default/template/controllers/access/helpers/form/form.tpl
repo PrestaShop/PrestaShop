@@ -32,7 +32,8 @@
 		$('div.productTabs a').click(function() {
 			var id = $(this).attr('id');
 			$('.nav-profile').removeClass('selected');
-			$(this).addClass('selected');
+			$(this).addClass('selected active');
+			$(this).siblings().removeClass('active');
 			$('.tab-profile').hide()
 			$('.'+id).show();
 		});
@@ -175,11 +176,10 @@
 <div class="productTabs col-lg-2">
 	<div class="tab list-group">
 	{foreach $profiles as $profile}
-		<a class="list-group-item nav-profile {if $profile.id_profile == $current_profile}selected{/if}" id="profile-{$profile.id_profile}" href="{$current}&token={$token}&id_profile={$profile.id_profile}">{$profile.name}</a>
+		<a class="list-group-item nav-profile {if $profile.id_profile == $current_profile}active{/if}" id="profile-{$profile.id_profile}" href="{$current}&token={$token}&id_profile={$profile.id_profile}">{$profile.name}</a>
 	{/foreach}
 	</div>
 </div>
-
 <form id="{$table}_form" class="defaultForm form-horizontal col-lg-10" action="{$current}&{$submit_action}=1&token={$token}" method="post" enctype="multipart/form-data">
 	<fieldset>
 		{if $form_id}
@@ -195,8 +195,8 @@
 
 		{foreach $profiles as $profile}
 
-			<div class="profile-{$profile.id_profile} tab-profile" style="display:{if $profile.id_profile == $current_profile}block{else}none{/if}">
-
+			<div class="profile-{$profile.id_profile} tab-profile" style="display:{if $profile.id_profile != $current_profile}none{/if}">
+				<h3>{$profile.name}</h3>
 				{if $profile.id_profile != $admin_profile}
 					<table class="table" id="table_{$profile.id_profile}">
 						<thead>

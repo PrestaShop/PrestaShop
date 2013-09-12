@@ -114,16 +114,11 @@ class AdminAccessControllerCore extends AdminController
 	public function initContent()
 	{
 		$this->display = 'edit';
-		// toolbar (save, cancel, new, ..)
-		$this->initToolbar();
-		unset($this->toolbar_btn['save']);
-		unset($this->toolbar_btn['cancel']);
 
 		if (!$this->loadObject(true))
 			return;
 
 		$this->content .= $this->renderForm();
-
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
 			'url_post' => self::$currentIndex.'&token='.$this->token,
