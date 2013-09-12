@@ -369,7 +369,7 @@ class DispatcherCore
 
 		// If there are several languages, get language from uri
 		if ($this->use_routes && Language::isMultiLanguageActivated())
-			if (preg_match('#^/([a-z]{2})/#', $this->request_uri, $m))
+			if (preg_match('#^/([a-z]{2})/?#', $this->request_uri, $m))
 			{
 				$_GET['isolang'] = $m[1];
 				$this->request_uri = substr($this->request_uri, 3);
