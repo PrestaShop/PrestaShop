@@ -80,7 +80,7 @@ class Autoload
 		if (strpos(strtolower($classname), 'smarty_') === 0)
 			return;
 
-		// regenerate the class index if the requested class is not found in the index or if the requested file doesn't exists
+		// regenerate the class index if the requested file doesn't exists
 		if ((isset($this->index[$classname]) && $this->index[$classname] && !is_file($this->root_dir.$this->index[$classname]))
 			|| (isset($this->index[$classname.'Core']) && $this->index[$classname.'Core'] && !is_file($this->root_dir.$this->index[$classname.'Core'])))
 			$this->generateIndex();
