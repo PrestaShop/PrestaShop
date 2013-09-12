@@ -110,7 +110,8 @@ class AdminOrdersControllerCore extends AdminController
 			'type' => 'select',
 			'list' => $statuses_array,
 			'filter_key' => 'os!id_order_state',
-			'filter_type' => 'int'
+			'filter_type' => 'int',
+			'order_key' => 'osname'
 		),
 		'date_add' => array(
 			'title' => $this->l('Date'),
