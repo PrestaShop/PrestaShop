@@ -261,7 +261,11 @@ class Dashactivity extends Module
 		$fields_form = array(
 			'form' => array(
 				'id_form' => 'step_carrier_general',
-				'input' => array()
+				'input' => array(),
+				'submit' => array(
+					'title' => $this->l('   Save   '),
+					'class' => 'btn submit_dash_config'
+					)
 				),
 			);
 			
@@ -302,6 +306,7 @@ class Dashactivity extends Module
 		$this->fields_form = array();
 		$helper->id = (int)Tools::getValue('id_carrier');
 		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitDashConfig';
 		$helper->tpl_vars = array(
 			'fields_value' => $this->getConfigFieldsValues(),
 			'languages' => $this->context->controller->getLanguages(),

@@ -96,10 +96,8 @@ class AdminDashboardControllerCore extends AdminController
 	{
 		$return = array('has_errors' => false, 'rss' => array());
 		if (!$this->isFresh('/config/xml/blog-'.$this->context->language->iso_code.'.xml', 604800))
-		{
 			if (!$this->refresh('/config/xml/blog-'.$this->context->language->iso_code.'.xml', 'https://api.prestashop.com/rss/blog/blog-'.$this->context->language->iso_code.'.xml'))
 				$return['has_errors'] = true;		
-		}
 		
 		if (!$return['has_errors'])
 		{
@@ -120,4 +118,27 @@ class AdminDashboardControllerCore extends AdminController
 				
 		die(Tools::jsonEncode($return));
 	}
+	
+	public function ajaxProcessSaveDashConfig()
+	{
+		$return = array('has_errors' => false);
+		$module = Tools::getValue('module');
+		$hook = Tools::getValue('hook');
+		$configs = Tools::getValue('configs');
+
+		if (Validate::isModuleName($module) && $module_obj = Module::getInstanceByName($module))
+			if (Validate::isLoadedObject($module_obj) && method_exists($module_obj, 'saveDashConfig'))
+				$return['has_errors'] = $module_obj->saveDashConfig($configs);
+		else if (is_array($configs) && count($configs))
+				foreach ($configs as $name => $value)
+					if (Validate::isConfigName($name))
+						Configuration::updateValue($name, $value);
+		
+		if (Validate::isHookName($hook) && method_exists($module_obj, $hook))
+			$return['widget_html'] = $module_obj->$hook(array());
+		
+		die(Tools::jsonEncode($return));
+	}
 }
+
+

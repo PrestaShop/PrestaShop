@@ -43,10 +43,10 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-lg-3">
+		<div class="col-lg-3" id="hookDashboardZoneOne">
 			{$hookDashboardZoneOne}
 		</div>
-		<div class="col-lg-7">
+		<div class="col-lg-7" id="hookDashboardZoneTwo">
 			{$hookDashboardZoneTwo}
 		</div>
 		<div class="col-lg-2">

@@ -31,6 +31,8 @@ $(document).ready( function () {
 
 	refreshDashboard(false, false);
 	getBlogRss();
+	bindSubmitDashConfig();
+	
 });
 
 function refreshDashboard(module_name, use_push)
@@ -183,8 +185,9 @@ function data_list_small(widget_name, data)
 {
 	for (var data_id in data)
 	{
+		$('#'+data_id).html('');
 		for (var item in data[data_id])
-			$('#'+data_id+' ').append('<li><span class="data_label">'+item+'</span><span class="data_value size_s">'+data[data_id][item]+'</span></li>');
+			$('#'+data_id).append('<li><span class="data_label">'+item+'</span><span class="data_value size_s">'+data[data_id][item]+'</span></li>');
 		$('#'+data_id+', #'+widget_name).closest('section').removeClass('loading');
 	}
 }
@@ -233,4 +236,40 @@ function toggleDashConfig(widget)
 	}
 }
 
+function bindSubmitDashConfig()
+{
+	$('.submit_dash_config').on('click', function () {
+		saveDashConfig($(this).closest('section.widget').attr('id'));
+		return false;
+	});
+}
+
+function saveDashConfig(widget_name)
+{
+	configs = '';
+	$('#'+widget_name+' form input, #'+widget_name+' form textarea , #'+widget_name+' form select').each( function () {
+		if ($(this).attr('type') == 'radio' && !$(this).attr('checked'))
+			return;
+		configs += '&configs['+$(this).attr('name')+']='+$(this).val();
+	});
+	data = 'ajax=true&action=saveDashConfig&module='+widget_name+configs+'&hook='+$('#'+widget_name).closest('[id^=hook]').attr('id');
+	
+	$.ajax({
+		url : dashboard_ajax_url,
+		data : data,
+		dataType: 'json',
+		success : function(jsonData){
+			if (!jsonData.has_errors)
+			{
+				$('#'+widget_name).find('section').not('.dash_config').remove();
+				$('#'+widget_name).append($(jsonData.widget_html).find('section').not('.dash_config'));
+				refreshDashboard(widget_name);
+				toggleDashConfig(widget_name);
+			}
+		},
+		error : function(data){
+			//@TODO display errors
+		}
+	});
+}
 
