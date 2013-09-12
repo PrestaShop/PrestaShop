@@ -257,34 +257,34 @@ class Dashproducts extends Module
 					'id' => 'product',
 					'value' => '<img src="..'._PS_TMP_IMG_.'product_mini_'.(int)$product_obj->id.'.jpg'.'" />',
 					'class' => 'text-center',
-					);
+				);
 				$tr[] = array(
 					'id' => 'product',
 					'value' => Tools::htmlentitiesUTF8($product_obj->name).'<br/>'.Tools::displayPrice(Product::getPriceStatic((int)$product_obj->id)),
 					'class' => 'text-center',
-					);
+				);
 				$tr[] = array(
 					'id' => 'views',
 					'value' => $product['counter'],
 					'class' => 'text-center',
-					);
+				);
 				$added_cart = $this->getTotalProductAddedCart($date_from, $date_to, (int)$product_obj->id);
 				$tr[] = array(
 					'id' => 'added_to_cart',
 					'value' => $added_cart,
 					'class' => 'text-center',
-					);
+				);
 				$purchased = $this->getTotalProductPurchased($date_from, $date_to, (int)$product_obj->id);
 				$tr[] = array(
-				'id' => 'purchased',
+					'id' => 'purchased',
 					'value' => $this->getTotalProductPurchased($date_from, $date_to, (int)$product_obj->id),
 					'class' => 'text-center',
-					);
+				);
 				$tr[] = array(
-				'id' => 'rate',
-					'value' => (!$purchased ? '-' : ($added_cart*100)/$purchased.'%'),
+					'id' => 'rate',
+					'value' => ($product['counter'] ? round(100 * $purchased / $product['counter'], 1).'%' : '-'),
 					'class' => 'text-center',
-					);
+				);
 				$body[] = $tr;
 			}
 		
