@@ -103,7 +103,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'label' => $this->l('Name'),
 					'name' => 'name',
 					'required' => true,
-					'hint' => $this->l('Invalid characters:').' <>;=#{}',
+					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}',
 				),
 				array(
 					'type' => 'textarea',
@@ -111,9 +111,10 @@ class AdminSuppliersControllerCore extends AdminController
 					'name' => 'description',
 					'lang' => true,
 					'hint' => array(
-						$this->l('Invalid characters:').' <>;=#{}',
+						$this->l('Invalid characters:').' &lt;&gt;;=#{}',
 						$this->l('Will appear in the supplier list')
-					)
+					),
+					'autoload_rte' => 'rte' //Enable TinyMCE editor for short description
 				),
 				array(
 					'type' => 'text',
@@ -183,14 +184,14 @@ class AdminSuppliersControllerCore extends AdminController
 					'label' => $this->l('Meta title:'),
 					'name' => 'meta_title',
 					'lang' => true,
-					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
+					'hint' => $this->l('Forbidden characters:').' &lt;&gt;;=#{}'
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Meta description:'),
 					'name' => 'meta_description',
 					'lang' => true,
-					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
+					'hint' => $this->l('Forbidden characters:').' &lt;&gt;;=#{}'
 				),
 				array(
 					'type' => 'tags',
@@ -199,7 +200,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'lang' => true,
 					'hint' => array(
 						$this->l('To add "tags" click in the field, write something and then press "Enter"'),
-						$this->l('Forbidden characters:').' <>;=#{}'
+						$this->l('Forbidden characters:').' &lt;&gt;;=#{}'
 					)
 				),
 				array(

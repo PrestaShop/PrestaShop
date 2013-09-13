@@ -40,6 +40,8 @@ class ManufacturerControllerCore extends FrontController
 
 	public function canonicalRedirection($canonicalURL = '')
 	{
+		if (Tools::getValue('live_edit'))
+			return ;
 		if (Validate::isLoadedObject($this->manufacturer))
 			parent::canonicalRedirection($this->context->link->getManufacturerLink($this->manufacturer));
 	}
@@ -131,5 +133,13 @@ class ManufacturerControllerCore extends FrontController
 		}
 		else
 			$this->context->smarty->assign('nbManufacturers', 0);
+	}
+	
+	/**
+	 * Get instance of current manufacturer
+	 */
+	public function getManufacturer()
+	{
+		return $this->manufacturer;
 	}
 }

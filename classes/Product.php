@@ -347,7 +347,7 @@ class ProductCore extends ObjectModel
 			),
 			'id_tax_rules_group' => array(
 				'xlink_resource' => array(
-					'resourceName' => 'tax_rules_group'
+					'resourceName' => 'tax_rule_groups'
 				)
 			),
 			'position_in_category' => array(
@@ -1354,7 +1354,7 @@ class ProductCore extends ObjectModel
 			$supplier_reference = '';
 
 		//Try to set the default supplier reference
-		if (($id_supplier > 0) && ($id_product > 0))
+		if (($id_supplier > 0) && ($this->id > 0))
 		{
 			$id_product_supplier = (int)ProductSupplier::getIdByProductAndSupplier($this->id, $id_product_attribute, $id_supplier);
 
@@ -2914,7 +2914,7 @@ class ProductCore extends ObjectModel
 	 * @param Shop $shop
 	 * @return string
 	 */
-	public static function sqlStock($product_alias, $product_attribute = 0, $inner_join = false, Shop $shop = null)
+	public static function sqlStock($product_alias, $product_attribute = null, $inner_join = false, Shop $shop = null)
 	{
 		$id_shop = ($shop !== null ? (int)$shop->id : null);
 		$sql = (($inner_join) ? ' INNER ' : ' LEFT ').'
@@ -4493,7 +4493,7 @@ class ProductCore extends ObjectModel
 
  		return true;
 	}
-	/*
+
 	/**
 	* Webservice getter : get virtual field default combination
 	*

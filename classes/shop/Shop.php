@@ -363,10 +363,12 @@ class ShopCore extends ObjectModel
 			// Define some $_SERVER variables like HTTP_HOST if PHP is launched with php-cli
 			if (Tools::isPHPCLI())
 			{
-				if(!isset($_SERVER['HTTP_HOST']) || empty($_SERVER['HTTP_HOST']))
+				if (!isset($_SERVER['HTTP_HOST']) || empty($_SERVER['HTTP_HOST']))
 					$_SERVER['HTTP_HOST'] = $shop->domain;
-				if(!isset($_SERVER['SERVER_NAME']) || empty($_SERVER['SERVER_NAME']))
+				if (!isset($_SERVER['SERVER_NAME']) || empty($_SERVER['SERVER_NAME']))
 					$_SERVER['SERVER_NAME'] = $shop->domain;
+				if (!isset($_SERVER['REMOTE_ADDR']) || empty($_SERVER['REMOTE_ADDR']))
+					$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 			}
 		}
 		else

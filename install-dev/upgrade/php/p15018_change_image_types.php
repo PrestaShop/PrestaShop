@@ -41,7 +41,7 @@ function p15018_change_image_types()
 		)
 	);
 
-	$option = (bool)Db::getInstance()->getValue('SELECT id_theme FROM `'._DB_PREFIX_.'theme` WHERE directory != "default"');
+	$option = (bool)Db::getInstance()->getValue('SELECT id_theme FROM `'._DB_PREFIX_.'theme` WHERE directory != "default" AND directory != "prestashop"');
 		
 	// If there is another theme than the default one, duplicate
 	if ($option)

@@ -259,27 +259,27 @@ class AdminManufacturersControllerCore extends AdminController
 					'label' => $this->l('Name:'),
 					'name' => 'name',
 					'required' => true,
-					'hint' => $this->l('Invalid characters:').' <>;=#{}'
+					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
 				),
 				array(
 					'type' => 'textarea',
 					'label' => $this->l('Short description:'),
 					'name' => 'short_description',
 					'lang' => true,
-					'class' => 'rte',
-					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'rows' => 2,
-					'cols' => 10
+					'cols' => 60,
+					'rows' => 10,
+					'autoload_rte' => 'rte', //Enable TinyMCE editor for short description
+					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
 				),
 				array(
 					'type' => 'textarea',
 					'label' => $this->l('Description:'),
 					'name' => 'description',
 					'lang' => true,
-					'class' => 'rte',
-					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'rows' => 2,
-					'cols' => 10
+					'cols' => 60,
+					'rows' => 10,
+					'autoload_rte' => 'rte', //Enable TinyMCE editor for description
+					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
 				),
 				array(
 					'type' => 'file',
@@ -293,14 +293,14 @@ class AdminManufacturersControllerCore extends AdminController
 					'label' => $this->l('Meta title:'),
 					'name' => 'meta_title',
 					'lang' => true,
-					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
+					'hint' => $this->l('Forbidden characters:').' &lt;&gt;;=#{}'
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Meta description:'),
 					'name' => 'meta_description',
 					'lang' => true,
-					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
+					'hint' => $this->l('Forbidden characters:').' &lt;&gt;;=#{}'
 				),
 				array(
 					'type' => 'tags',
@@ -308,7 +308,7 @@ class AdminManufacturersControllerCore extends AdminController
 					'name' => 'meta_keywords',
 					'lang' => true,
 					'hint' => array(
-						$this->l('Forbidden characters:').' <>;=#{}',
+						$this->l('Forbidden characters:').' &lt;&gt;;=#{}',
 						$this->l('To add "tags," click inside the field, write something, and then press "Enter."')
 					)
 				),
@@ -435,14 +435,14 @@ class AdminManufacturersControllerCore extends AdminController
 			'label' => $this->l('Last name:'),
 			'name' => 'lastname',
 			'required' => true,
-			'hint' => $this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:'
+			'hint' => $this->l('Invalid characters:').' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:'
 		);
 		$form['input'][] = array(
 			'type' => 'text',
 			'label' => $this->l('First name:'),
 			'name' => 'firstname',
 			'required' => true,
-			'hint' => $this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:'
+			'hint' => $this->l('Invalid characters:').' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:'
 		);
 		$form['input'][] = array(
 			'type' => 'text',
@@ -509,7 +509,7 @@ class AdminManufacturersControllerCore extends AdminController
 			'label' => $this->l('Other:'),
 			'name' => 'other',
 			'required' => false,
-			'hint' => $this->l('Forbidden characters:').' <>;=#{}',
+			'hint' => $this->l('Forbidden characters:').' &lt;&gt;;=#{}',
 			'rows' => 2,
 			'cols' => 10
 		);

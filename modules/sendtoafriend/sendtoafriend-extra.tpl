@@ -23,7 +23,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<script text="javascript">
+<script type="text/javascript">
 {literal}
 $('document').ready(function(){
 	$('#send_friend_button').fancybox({
@@ -49,8 +49,11 @@ $('document').ready(function(){
 				headers: {"cache-control": "no-cache"},
 				data: {action: 'sendToMyFriend', secure_key: '{/literal}{$stf_secure_key}{literal}', friend: unescape(JSON.stringify(datas).replace(/\\u/g, '%u'))},{/literal}{literal}
 				dataType: "json",
-				success: function(result){
+				success: function(result) {
 					$.fancybox.close();
+                    var msg = result ? "{/literal}{l s='Your e-mail has been sent successfully' mod='sendtoafriend'}{literal}" : "{/literal}{l s='Your e-mail could not be sent. Please check the e-mail address and try again.' mod='sendtoafriend'}{literal}";
+                    var title = "{/literal}{l s='Send to a friend' mod='sendtoafriend'}{literal}";
+                    fancyMsgBox(msg, title);
 				}
 			});
 		}
@@ -77,6 +80,7 @@ $('document').ready(function(){
 			
 			<div class="send_friend_form_content" id="send_friend_form_content">
 				<div id="send_friend_form_error"></div>
+				<div id="send_friend_form_success"></div>
 				<div class="form_container">
 					<p class="intro_form">{l s='Recipient' mod='sendtoafriend'} :</p>
 					<p class="text">

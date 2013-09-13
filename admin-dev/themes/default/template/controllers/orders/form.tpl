@@ -117,7 +117,7 @@
 							$('#vouchers_err').hide();
 						var mytab = new Array();
 						for (var i = 0; i < data.vouchers.length; i++)
-							mytab[mytab.length] = { data: data.vouchers[i], value: data.vouchers[i].name+' - '+data.vouchers[i].description };
+							mytab[mytab.length] = { data: data.vouchers[i], value: data.vouchers[i].name + (data.vouchers[i].code.length > 0 ? ' - ' + data.vouchers[i].code : '')};
 						return mytab;
 					},
 					extraParams: {
@@ -694,17 +694,15 @@
 	function updateCartVouchers(vouchers)
 	{
 		var vouchers_html = '';
-		if (vouchers.length > 0)
-		{
-			$.each(vouchers, function() {
+		if (typeof(vouchers) == 'object')
+			$.each(vouchers, function(){
 				vouchers_html += '<tr><td>'+this.name+'</td><td>'+this.description+'</td><td>'+this.value_real+'</td><td><a href="#" class="delete_discount" rel="'+this.id_discount+'"><img src="../img/admin/delete.gif" /></a></td></tr>';
 			});
-			$('#voucher_list').show();
-		}
-		else
+		$('#voucher_list tbody').html($.trim(vouchers_html));
+		if ($('#voucher_list tbody').html().length == 0)
 			$('#voucher_list').hide();
-
-		$('#voucher_list tbody').html(vouchers_html);
+		else
+			$('#voucher_list').show();
 	}
 
 	function updateCartPaymentList(payment_list)

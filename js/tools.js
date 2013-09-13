@@ -294,6 +294,44 @@ function removeQuotes(value)
 	return value;
 }
 
+/**
+ * Display a MessageBox
+ * @param {string} msg
+ * @param {string} title (optional)
+ */
+function fancyMsgBox(msg, title)
+{
+    if (title) msg = "<h2>" + title + "</h2><p>" + msg + "</p>";
+    msg += "<br/><p class=\"submit\" style=\"text-align:right; padding-bottom: 0\"><input class=\"button\" type=\"button\" value=\"OK\" onclick=\"$.fancybox.close();\" /></p>";
+    $.fancybox( msg, {'autoDimensions': false, 'width': 500, 'height': 'auto', 'transitionIn': 'none', 'transitionOut': 'none'} );
+}
+
+/**
+ * Display a messageDialog with different buttons including a callback for each one
+ * @param {string} question
+ * @param {mixed} title Optional title for the dialog box. Send false if you don't want any title
+ * @param {object} buttons Associative array containg a list of {buttonCaption: callbackFunctionName, ...}. Use an empty space instead of function name for no callback
+ * @param {mixed} otherParams Optional data sent to the callback function
+ */
+function fancyChooseBox(question, title, buttons, otherParams)
+{
+    var msg, funcName, action;
+    if (title) msg = "<h2>" + title + "</h2><p>" + question + "</p>";
+    msg += "<br/><p class=\"submit\" style=\"text-align:right; padding-bottom: 0\">";
+    var i = 0;
+    for (var caption in buttons) {
+        if (!buttons.hasOwnProperty(caption)) continue;
+        funcName = buttons[caption];
+        if (typeof otherParams == 'undefined') otherParams = 0;
+        otherParams = escape(JSON.stringify(otherParams));
+        action = funcName ? "$.fancybox.close();window['" + funcName + "'](JSON.parse(unescape('" + otherParams + "')), " + i + ")" : "$.fancybox.close()";
+        msg += '<input class="button" style="margin-right: 5px" type="button" value="' + caption + '" onclick="' + action + '" />';
+        i++;
+    }
+    msg += "</p>";
+    $.fancybox( msg, {'autoDimensions': false, 'width': 500, 'height': 'auto', 'transitionIn': 'none', 'transitionOut': 'none'} );
+}
+
 //On dom ready
 $().ready(function()
 {

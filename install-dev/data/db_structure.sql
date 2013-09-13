@@ -936,7 +936,7 @@ CREATE TABLE `PREFIX_manufacturer_lang` (
   `id_manufacturer` int(10) unsigned NOT NULL,
   `id_lang` int(10) unsigned NOT NULL,
   `description` text,
-  `short_description` varchar(254) default NULL,
+  `short_description` text,
   `meta_title` varchar(128) default NULL,
   `meta_keywords` varchar(255) default NULL,
   `meta_description` varchar(255) default NULL,

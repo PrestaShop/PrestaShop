@@ -775,11 +775,11 @@ class CarrierCore extends ObjectModel
 			if ($delete)
 				Db::getInstance()->execute('
 					DELETE FROM `'._DB_PREFIX_.'delivery` 
-					WHERE id_shop = '.(int)$values['id_shop'].' 
-					AND id_shop_group='.(int)$values['id_shop_group'].' 
+					WHERE '.(is_null($values['id_shop']) ? 'ISNULL(`id_shop`) ' : 'id_shop = '.(int)$values['id_shop']).' 
+					AND '.(is_null($values['id_shop_group']) ? 'ISNULL(`id_shop`) ' : 'id_shop_group='.(int)$values['id_shop_group']).'
 					AND id_carrier='.(int)$values['id_carrier'].
-					($values['id_range_price'] !== null ? ' AND id_range_price='.(int)$values['id_range_price'] : '').
-					($values['id_range_weight'] !== null ? ' AND id_range_weight='.(int)$values['id_range_weight'] : '').'
+					($values['id_range_price'] !== null ? ' AND id_range_price='.(int)$values['id_range_price'] : ' AND (ISNULL(`id_range_price`) OR `id_range_price` = 0)').
+					($values['id_range_weight'] !== null ? ' AND id_range_weight='.(int)$values['id_range_weight'] : ' AND (ISNULL(`id_range_weight`) OR `id_range_weight` = 0)').'
 					AND id_zone='.(int)$values['id_zone']
 				);
 
@@ -1291,7 +1291,7 @@ class CarrierCore extends ObjectModel
 	{
 		if ($delete)
 			Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'carrier_group WHERE id_carrier = '.(int)$this->id);
-		if (!count($groups))
+		if (!is_array($groups) || !count($groups))
 			return true;
 		$sql = 'INSERT INTO '._DB_PREFIX_.'carrier_group (id_carrier, id_group) VALUES ';
 		foreach ($groups as $id_group)

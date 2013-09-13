@@ -26,6 +26,7 @@
 <!-- MODULE WishList -->
 <li class="lnk_wishlist">
 	<a href="{$wishlist_link}" title="{l s='My wishlists' mod='blockwishlist'}">
+		<img src="{$module_template_dir}img/gift.gif" alt="{l s='My wishlists' mod='blockwishlist'}" class="icon" />
 		{l s='My wishlists' mod='blockwishlist'}
 	</a>
 </li>

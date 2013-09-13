@@ -1,4 +1,4 @@
-#nobootstrap {
+#nobootstrap{
 	/* CSS Admin PrestaShop */
 	* {font-family: Arial,Verdana,Helvetica,sans-serif}
 
@@ -2471,13 +2471,19 @@
 	  clear: both;
 	  width: 100%;
 	}
+
 	#carrier_wizard.swMain ul.anchor li{ 
 	  position: relative; 
 	  display:block;
 	  margin: 0;
 	  padding: 0;  
 	  float: left;
+	}
+	#carrier_wizard.swMain ul.nbr_steps_4.anchor li{ 
 	  width: 25%;
+	}
+	#carrier_wizard.swMain ul.nbr_steps_5.anchor li{ 
+	  width: 20%;
 	}
 	#carrier_wizard.swMain ul.anchor li a {
 	  height: 32px;
@@ -2636,10 +2642,10 @@
 	#carrier_wizard #zone_ranges label { float: none; width: inherit }
 	#carrier_wizard #step_carrier_summary label {width: 40px}
 	#carrier_wizard #step_carrier_summary .margin-form {padding-left: 60px;}
-	#carrier_wizard #summary_zones, #carrier_wizard #summary_groups {margin-left: 20px; margin-top: 10px; list-style: disc}
+	#carrier_wizard #summary_zones, #carrier_wizard #summary_groups, #carrier_wizard #summary_shops {margin-left: 20px; margin-top: 10px; list-style: disc}
 	#carrier_wizard .ranges_not_follow label {width: inherit; float:none}
 	#carrier_wizard .ranges_not_follow {width: 300px; margin-bottom: 0}
-
+	#carrier_wizard .assoShop { min-height:  inherit}
 
 	/*** IE10 ***/
 	/*@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) { 

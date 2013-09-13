@@ -111,7 +111,8 @@ class MediaCore
 			// In this case, we don't compress the content
 			if (preg_last_error() == PREG_BACKTRACK_LIMIT_ERROR)
 			{
-				error_log('ERROR: PREG_BACKTRACK_LIMIT_ERROR in function packJSinHTML');
+				if (_PS_MODE_DEV_)
+					error_log('ERROR: PREG_BACKTRACK_LIMIT_ERROR in function packJSinHTML');
 				return $html_content_copy;
 			}
 			return $html_content;
@@ -200,7 +201,7 @@ class MediaCore
 		if (!preg_match('/^http(s?):\/\//i', $file_uri) && !@filemtime($file_uri))
 			return false;
 
-		if (Context::getContext()->controller->controller_type == 'admin')
+		if (Context::getContext()->controller->controller_type == 'admin' && !array_key_exists('host', $url_data))
 		{
 			$js_uri = preg_replace('/^'.preg_quote(__PS_BASE_URI__, '/').'/', '/', $js_uri);
 			$js_uri = dirname(preg_replace('/\?.+$/', '', $_SERVER['REQUEST_URI']).'a').'/..'.$js_uri;
@@ -270,6 +271,9 @@ class MediaCore
 
 		if ($add_no_conflict)
 			$return[] = Media::getJSPath(_PS_JS_DIR_.'jquery/jquery.noConflict.php?version='.$version);
+
+		//added query migrate for compatibility with new version of jquery will be removed in ps 1.6
+		$return[] = Media::getJSPath(_PS_JS_DIR_.'jquery/jquery-migrate-1.2.1.js');
 
 		return $return;
 	}
