@@ -114,7 +114,7 @@ class ConnectionCore extends ObjectModel
 			// This is a bot and we have to retrieve its connection ID
 			$sql = 'SELECT `id_connections` FROM `'._DB_PREFIX_.'connections`
 					WHERE ip_address = '.ip2long(Tools::getRemoteAddr()).'
-						AND DATE_ADD(`date_add`, INTERVAL 30 MINUTE) > \''.pSQL(date('Y-m-d H:i:00')).'\'
+						AND `date_add` > \''.pSQL(date('Y-m-d H:i:00'), time() - 1800).'\'
 						'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 					ORDER BY `date_add` DESC';
 			if ($id_connections = Db::getInstance()->getValue($sql))
@@ -128,7 +128,7 @@ class ConnectionCore extends ObjectModel
 		$sql = 'SELECT `id_guest`
 				FROM `'._DB_PREFIX_.'connections`
 				WHERE `id_guest` = '.(int)$cookie->id_guest.'
-					AND DATE_ADD(`date_add`, INTERVAL 30 MINUTE) > \''.pSQL(date('Y-m-d H:i:00')).'\'
+					AND `date_add` > \''.pSQL(date('Y-m-d H:i:00', time() - 1800)).'\'
 					'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 				ORDER BY `date_add` DESC';
 		$result = Db::getInstance()->getRow($sql);
