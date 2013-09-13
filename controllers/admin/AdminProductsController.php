@@ -2273,7 +2273,9 @@ class AdminProductsControllerCore extends AdminController
 
 			// Generate category selection tree
 			$tree = new HelperTreeCategories('categories-tree', 'Filter by category');
-			$tree->setSelectedCategories(array((int)$id_category));
+			$tree->setAttribute('is_category_filter', (bool)$this->id_current_category)
+				->setAttribute('base_url', preg_replace('#&id_category=[0-9]*#', '', self::$currentIndex).'&token='.$this->token)
+				->setSelectedCategories(array((int)$id_category));
 			$this->tpl_list_vars['category_tree'] = $tree->render();
 
 			// used to build the new url when changing category
