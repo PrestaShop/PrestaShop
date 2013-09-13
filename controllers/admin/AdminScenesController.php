@@ -219,11 +219,17 @@ class AdminScenesControllerCore extends AdminController
 				_THEME_SCENE_DIR_.$obj->id.'-scene_default.jpg?rand='.(int)rand().'" /><br />';
 
 			$image_to_map_desc .= '
-						<div id="ajax_choose_product" style="display:none; padding:6px; padding-top:2px; width:600px;">
+						<div id="ajax_choose_product" style="display:none;" class="panel panel-default">
+							<div class="panel-heading">
 							'.$this->l('Begin typing the first few letters of the product name, then select the product you are looking for from the drop-down list:').'
-								<br /><input type="text" value="" id="product_autocomplete_input" style="width: 450px"/> 
-								<input type="button" class="button" value="'.$this->l('OK').'" onclick="$(this).prev().search();" />
-								<input type="button" class="button" value="'.$this->l('Delete').'" onclick="undoEdit();" />
+							</div>
+							<div class="panel-body">
+								<input type="text" value="" id="product_autocomplete_input" />
+							</div>
+							<div class="panel-footer">
+								<button type="button" class="btn btn-default" onclick="undoEdit();"><i class="icon-remove"></i>&nbsp;'.$this->l('Delete').'</button>
+								<button type="button" class="btn btn-default" onclick="$(this).prev().search();"><i class="icon-check-sign"></i>&nbsp;'.$this->l('Ok').'</button>
+							</div>
 						</div>
 				';
 
@@ -255,36 +261,16 @@ class AdminScenesControllerCore extends AdminController
 				foreach (Scene::getIndexedCategories($obj->id) as $row)
 					$selected_cat[] = $row['id_category'];
 
-			$root_category = Category::getRootCategory();
-			if (!$root_category->id)
-			{
-				$root_category->id = 0;
-				$root_category->name = $this->l('Root');
-			}
-			$root_category = array('id_category' => (int)$root_category->id, 'name' => $root_category->name);
-			$trads = array(
-							'Root' => $root_category,
-							'selected' => $this->l('Selected'),
-							'Check all' => $this->l('Check all'),
-							'Check All' => $this->l('Check All'),
-							'Uncheck All'  => $this->l('Uncheck All'),
-							'Collapse All' => $this->l('Collapse All'),
-							'Expand All' => $this->l('Expand All'),
-							'search' => $this->l('Search a category')
-
-						);
 			$this->fields_form['input'][] = array(
-					'type' => 'categories',
+					'type'  => 'categories',
 					'label' => $this->l('Categories'),
-					'name' => 'categories',
-					'values' => array('trads' => $trads,
-						'selected_cat' => $selected_cat,
-						'input_name' => 'categories[]',
-						'use_radio' => false,
-						'use_search' => true,
-						'disabled_categories' => array(4),
-						'top_category' => Category::getTopCategory(),
-						'use_context' => true,
+					'name'  => 'categories',
+					'tree'  => array(
+						'id'                  => 'categories-tree',
+						'title'               => 'Categories',
+						'selected_categories' => $selected_cat,
+						'use_search'          => true,
+						'use_checkbox'        => true
 					)
 				);
 		}

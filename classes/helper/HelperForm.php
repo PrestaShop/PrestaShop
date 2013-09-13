@@ -100,6 +100,12 @@ class HelperFormCore extends Helper
 								if (isset($params['tree']['root_category']))
 									$tree->setRootCategory($params['tree']['root_category']);
 
+								if (isset($params['tree']['use_search']))
+									$tree->setUseSearch($params['tree']['use_search']);
+
+								if (isset($params['tree']['use_checkbox']))
+									$tree->setuseCheckBox($params['tree']['use_checkbox']);
+
 								$this->context->smarty->assign('categories_tree', $tree->render());
 								$categories = false;
 							}

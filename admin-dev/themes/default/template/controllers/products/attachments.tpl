@@ -28,7 +28,7 @@
 	<input type="hidden" name="submitted_tabs[]" value="Attachments" />
 	<h3>{l s='Attachment'}</h3>
 
-	<div class="row">
+	<div class="form-group">
 		<label class="control-label col-lg-3 required" for="attachment_name_{$id_lang}">
 			<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='Maximum 32 characters.'}">
@@ -36,17 +36,15 @@
 			</span>
 		</label>
 		<div class="col-lg-7">
-			<div class="row">
-				{include file="controllers/products/input_text_lang.tpl"
-					languages=$languages
-					input_value=$attachment_name
-					input_name="attachment_name"
-				}
-			</div>
+			{include file="controllers/products/input_text_lang.tpl"
+				languages=$languages
+				input_value=$attachment_name
+				input_name="attachment_name"
+			}
 		</div>
 	</div>
 		
-	<div class="row">
+	<div class="form-group">
 		<label class="control-label col-lg-3" for="attachment_description_{$id_lang}">{l s='Description:'} </label>
 		<div class="col-lg-9">
 			{include
@@ -58,7 +56,7 @@
 		</div>
 	</div>
 
-	<div class="row">
+	<div class="form-group">
 		<label class="control-label col-lg-3" for="attachement_filename">
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='Upload a file from your computer'} ({$PS_ATTACHMENT_MAXIMUM_SIZE|string_format:'%.2f'} {l s='MB max.'})">
@@ -66,24 +64,22 @@
 			</span>
 		</label>
 		<div class="col-lg-7">
-			<div class="row">
-				<div class="col-lg-8">
-					<input id="attachement_file" type="file" name="attachment_file" class="hide" />
-					<div class="dummyfile input-group">
-						<span class="input-group-addon"><i class="icon-file"></i></span>
-						<input id="attachement_filename" type="text" class="disabled" name="filename" readonly />
-						<span class="input-group-btn">
-							<button id="attachement_fileselectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
-								<i class="icon-folder-open"></i> {l s='Choose a file'}
-							</button>
-						</span>
-					</div>
+			<div class="col-lg-8">
+				<input id="attachement_file" type="file" name="attachment_file" class="hide" />
+				<div class="dummyfile input-group">
+					<span class="input-group-addon"><i class="icon-file"></i></span>
+					<input id="attachement_filename" type="text" class="disabled" name="filename" readonly />
+					<span class="input-group-btn">
+						<button id="attachement_fileselectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
+							<i class="icon-folder-open"></i> {l s='Choose a file'}
+						</button>
+					</span>
 				</div>
-				<div class="col-lg-4">
-					<button type="submit" name="submitAddAttachments" class="btn btn-default">
-						<i class="icon-cloud-upload"></i> {l s='Upload attachment file'}
-					</button>
-				</div>
+			</div>
+			<div class="col-lg-4">
+				<button type="submit" name="submitAddAttachments" class="btn btn-default">
+					<i class="icon-cloud-upload"></i> {l s='Upload attachment file'}
+				</button>
 			</div>
 		</div>
 		<script>
@@ -102,7 +98,7 @@
 
 	<hr/>
 
-	<div class="row">
+	<div class="form-group">
 		<div class="col-lg-9 col-lg-offset-3">
 			<div class="row">
 				<div class="col-lg-6">
