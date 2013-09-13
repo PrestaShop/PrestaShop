@@ -481,7 +481,7 @@ function askFeatureName(selected, selector)
 {
 	var elem;
 
-	if (selected.value == 'feature')
+	if (selected.value == 'features')
 	{
 		$('#features_' + selector).show();
 		$('#feature_name_' + selector).attr('name', selected.name);
