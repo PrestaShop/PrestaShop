@@ -140,7 +140,7 @@ class AdminManufacturersControllerCore extends AdminController
 			'lastname' => array(
 				'title' => $this->l('Last name'),
 				'width' => 100,
-				'filter_key' => 'a!name'
+				'filter_key' => 'a!lastname'
 			),
 			'postcode' => array(
 				'title' => $this->l('Zip Code/Postal Code'),
