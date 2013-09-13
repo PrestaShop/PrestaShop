@@ -26,10 +26,5 @@
 	{include file="page_header_toolbar.tpl" toolbar_btn=$page_header_toolbar_btn title=$page_header_toolbar_title}
 {/if}
 
-<div class="width4">
-	{if isset($localization_form)}{$localization_form}{/if}
-</div>
-<br />
-<div class="width4">
-	{if isset($localization_options)}{$localization_options}{/if}
-</div>
+{if isset($localization_form)}{$localization_form}{/if}
+{if isset($localization_options)}{$localization_options}{/if}
