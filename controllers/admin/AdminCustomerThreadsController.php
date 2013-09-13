@@ -597,11 +597,12 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		}
 		$message['date_add'] = Tools::displayDate($message['date_add'], null, true);
 		$message['user_agent'] = strip_tags($message['user_agent']);
+
 		$message['message'] = preg_replace(
 			'/(https?:\/\/[a-z0-9#%&_=\(\)\.\? \+\-@\/]{6,1000})([\s\n<])/Uui',
 			'<a href="\1">\1</a>\2',
 			html_entity_decode($message['message'],
-			ENT_NOQUOTES, 'UTF-8')
+			ENT_QUOTES, 'UTF-8')
 		);
 
 		$tpl->assign(array(
