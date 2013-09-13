@@ -22,15 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-{extends file="helpers/list/list_header.tpl"}
-
-{block name=leadin}
-	{if isset($category_tree)}
-		<div class="bloc-leadin">
-			<div id="container_category_tree">
-				{$category_tree}
-			</div>
-		</div>
-	{/if}
-{/block}
+<div class="panel-heading">
+	<i class="icon-tags"></i>&nbsp;{l s=$title}
+	<div class="pull-right">{if isset($toolbar)}{$toolbar}{/if}</div>
+</div>

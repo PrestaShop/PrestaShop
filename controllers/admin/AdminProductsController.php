@@ -2892,7 +2892,9 @@ class AdminProductsControllerCore extends AdminController
 			$categories[] = $key;
 
 		$tree = new HelperTreeCategories('associated-categories-tree', 'Associated categories');
-		$tree->setRootCategory($root->id)
+		$tree->setTemplate('tree_associated_categories.tpl')
+			->setHeaderTemplate('tree_associated_header.tpl')
+			->setRootCategory($root->id)
 			->setUseCheckBox(true)
 			->setUseSearch(true)
 			->setSelectedCategories($categories);
