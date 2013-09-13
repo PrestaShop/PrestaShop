@@ -54,6 +54,8 @@ class Autoload
 		$this->root_dir = dirname(dirname(__FILE__)).'/';
 		if (file_exists($this->root_dir.Autoload::INDEX_FILE))
 			$this->index = include($this->root_dir.Autoload::INDEX_FILE);
+		else
+			$this->generateIndex();
 	}
 
 	/**
