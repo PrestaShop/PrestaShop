@@ -329,7 +329,8 @@ class TreeCore
 				$this->getTemplateFile($this->getHeaderTemplate()),
 				$this->getContext()->smarty
 			);
-			$headerTemplate->assign(array(
+			$headerTemplate->assign($this->getAttributes())
+				->assign(array(
 				'title'   => $this->getTitle(),
 				'toolbar' => $this->useToolbar() ? $this->renderToolbar() : null
 			));
@@ -337,9 +338,8 @@ class TreeCore
 		}
 		
 		//Assign Tree nodes
-		$template
-		->assign($this->getAttributes())
-		->assign(array(
+		$template->assign($this->getAttributes())
+			->assign(array(
 			'id'    => $this->getId(),
 			'nodes' => $this->renderNodes($data)
 		));
