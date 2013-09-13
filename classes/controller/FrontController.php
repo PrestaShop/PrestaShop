@@ -321,7 +321,7 @@ class FrontControllerCore extends Controller
 			'cart_qties' => (int)$cart->nbProducts(),
 			'currencies' => Currency::getCurrencies(),
 			'languages' => $languages,
-			'meta_language' => implode('-', $meta_language),
+			'meta_language' => implode(',', $meta_language),
 			'priceDisplay' => Product::getTaxCalculationMethod(),
 			'add_prod_display' => (int)Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
 			'shop_name' => Configuration::get('PS_SHOP_NAME'),
