@@ -303,7 +303,7 @@
 					</th>
 					{/if}
 					{if $has_actions}
-					<th>{l s='Actions'}{if !$simple_header}{/if}</th>
+					<th>{if !$simple_header}{/if}</th>
 					{/if}
 				</tr>
 			{if !$simple_header && $show_filters}

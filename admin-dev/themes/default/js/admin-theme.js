@@ -49,6 +49,7 @@ $( document ).ready(function() {
   }
   //nav top bar
   function navTopbar(){
+    $('span.submenu_expand').remove();
     $('.expanded').removeClass('expanded');
 
     $('#nav-topbar').on('mouseenter', 'li.maintab.has_submenu',
@@ -80,7 +81,6 @@ $( document ).ready(function() {
 
   //nav switch
   function navSwitch(){
-
     if ($('body').hasClass('page-sidebar')||$('body').hasClass('page-sidebar-closed')) {
       $('body').removeClass('page-sidebar').removeClass('page-sidebar-closed').addClass('page-topbar');
       $('#nav-sidebar').attr('id','nav-topbar');
@@ -101,7 +101,6 @@ $( document ).ready(function() {
     navTopbar();
   }
   
-
   $('#header_shopname').on('click',
     function(e){
       e.preventDefault();

@@ -124,8 +124,7 @@ html, body
 				border-left: solid 1px #ccc
 				&:hover
 					text-decoration: none
-					color: white
-					background-color: $brand-primary
+					color: black
 				i
 					text-align: center
 					font-size: 1.2em
@@ -304,7 +303,7 @@ input[type="password"].input-tiny
 td.actions
 	min-width: 200px
 .btn-group-action
-	min-width: 200px
+	float: right
 	a
 		text-decoration: none
 
@@ -338,12 +337,14 @@ hr
 	border-collapse: separate
 	border-spacing: 0 2px
 	margin-bottom: 5px
-	thead th
-		background-color: darken($bg-content-color,10%)
 	thead > tr > th
+		border: none
 		font-weight: normal
 		vertical-align: top
 		span.title_box
+			color: black
+			font-size: 1.1em
+			font-weight: bold
 			display: block
 			word-wrap: nowrap
 			white-space: nowrap
@@ -363,6 +364,7 @@ hr
 		vertical-align: middle
 		word-wrap: nowrap
 		font-size: 12px
+		border-bottom: solid 1px #eee
 		//@include box-shadow(rgba(black,0.15) 0 1px 0)
 
 	td.center, th.center
@@ -376,7 +378,7 @@ hr
 
 //filter table
 tr.filter
-	background-color: $bg-content-color
+	background-color: lighten($brand-primary,25%)
 	input[type="text"].filter, input[type="password"].filter, select.filter
 		font-size: 12px
 
