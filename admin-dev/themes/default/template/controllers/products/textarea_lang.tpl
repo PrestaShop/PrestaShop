@@ -24,11 +24,11 @@
 *}
 
 {foreach from=$languages item=language}
-<div class="row translatable-field lang-{$language.id_lang}">
+<div class="translatable-field lang-{$language.id_lang}">
 	<div class="col-lg-10">
 		<textarea
 			id="{$input_name}_{$language.id_lang}" 
-			name="{$input_name}_{$language.id_lang}" 
+			name="{$input_name}_{$language.id_lasng}" 
 			class="autoload_rte" >
 			{if isset($input_value[$language.id_lang])}{$input_value[$language.id_lang]|htmlentitiesUTF8}{/if}
 		</textarea>
