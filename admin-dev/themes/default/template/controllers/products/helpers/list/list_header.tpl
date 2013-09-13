@@ -53,15 +53,7 @@
 		</script>
 		<div class="bloc-leadin">
 			<div id="container_category_tree">
-				<a class="btn btn-default" href="javascript:void(0);" id="toggle_category_tree">
-					<form>
-						<input type="checkbox" {if $is_category_filter}checked="checked"{/if} />
-						<i class="icon-tags"></i> {l s='Filter by category'}
-					</form>
-				</a>
-				<div id="block_category_tree" {if !$is_category_filter}style="display:none"{/if}>
-					{$category_tree}
-				</div>
+				{$category_tree}
 			</div>
 		</div>
 	{/if}
