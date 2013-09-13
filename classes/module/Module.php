@@ -118,6 +118,9 @@ abstract class ModuleCore
 
 	/** @var Smarty_Data */
 	protected $smarty;
+
+	/** @var currentSmartySubTemplate */	
+	protected $current_subtemplate = null;
 	
 	/** @var allow push */
 	public $allow_push;
@@ -297,15 +300,17 @@ abstract class ModuleCore
 			else
 			{
 				if (!$upgrade_detail['number_upgraded'])
-					$this->_errors[] = $this->l('None upgrades have been applied');
+					$this->_errors[] = $this->l('No upgrade has been applied');
 				else
 				{
-					$this->_errors[] = $this->l('Upgraded from: ').$upgrade_detail['upgraded_from'].$this->l(' to ').
-						$upgrade_detail['upgraded_to'];
+					$this->_errors[] = sprintf($this->l('Upgraded from: %S to %s'), $upgrade_detail['upgraded_from'], $upgrade_detail['upgraded_to']);
 					$this->_errors[] = $upgrade_detail['number_upgrade_left'].' '.$this->l('upgrade left');
 				}
 
-				$this->_errors[] = $this->l('To prevent any problem, this module has been turned off');
+				if (isset($upgrade_detail['duplicate']) && $upgrade_detail['duplicate'])
+					$this->_errors[] = sprintf(Tools::displayError('Module %s cannot be upgraded this time: please refresh this page to update it.'), $this->name);
+				else
+					$this->_errors[] = $this->l('To prevent any problem, this module has been turned off');
 			}
 		}
 	}
@@ -353,19 +358,21 @@ abstract class ModuleCore
 		$upgrade = &self::$modules_cache[$this->name]['upgrade'];
 		foreach ($upgrade['upgrade_file_left'] as $num => $file_detail)
 		{
-			// Default variable required in the included upgrade file need to be set by default there:
-			// upgrade_version, success_upgrade
-			$upgrade_result = false;
+			if (function_exists($file_detail['upgrade_function']))
+			{
+				$upgrade['success'] = false;
+				$upgrade['duplicate'] = true;
+				break;
+			}
 			include($file_detail['file']);
 
 			// Call the upgrade function if defined
+			$upgrade['success'] = false;
 			if (function_exists($file_detail['upgrade_function']))
-				$upgrade_result = $file_detail['upgrade_function']($this);
-
-			$upgrade['success'] = $upgrade_result;
+				$upgrade['success'] = $file_detail['upgrade_function']($this);
 
 			// Set detail when an upgrade succeed or failed
-			if ($upgrade_result)
+			if ($upgrade['success'])
 			{
 				$upgrade['number_upgraded'] += 1;
 				$upgrade['upgraded_to'] = $file_detail['version'];
@@ -383,6 +390,7 @@ abstract class ModuleCore
 		}
 
 		$upgrade['number_upgrade_left'] = count($upgrade['upgrade_file_left']);
+
 		// Update module version in DB with the last succeed upgrade
 		if ($upgrade['upgraded_to'])
 			Module::upgradeModuleVersion($this->name, $upgrade['upgraded_to']);
@@ -401,9 +409,9 @@ abstract class ModuleCore
 	public static function upgradeModuleVersion($name, $version)
 	{
 		return Db::getInstance()->execute('
-				UPDATE `'._DB_PREFIX_.'module` m
-				SET m.version = \''.bqSQL($version).'\'
-				WHERE m.name = \''.bqSQL($name).'\'');
+		UPDATE `'._DB_PREFIX_.'module` m
+		SET m.version = \''.bqSQL($version).'\'
+		WHERE m.name = \''.bqSQL($name).'\'');
 	}
 
 	/**
@@ -1654,19 +1662,34 @@ abstract class ModuleCore
 			if ($cacheId !== null)
 				Tools::enableCache();
 
-			$smarty_subtemplate = $this->context->smarty->createTemplate(
-				$this->getTemplatePath($template),
-				$cacheId,
-				$compileId,
-				$this->smarty
-			);
-			$result = $smarty_subtemplate->fetch();
+			$result = $this->getCurrentSubTemplate($template, $cacheId, $compileId)->fetch();
 
 			if ($cacheId !== null)
 				Tools::restoreCacheSettings();
 
+			$this->resetCurrentSubTemplate($template, $cacheId, $compileId);
+
 			return $result;
 		}
+	}
+	
+	protected function getCurrentSubTemplate($template, $cache_id = null, $compile_id = null)
+	{
+		if (!isset($this->current_subtemplate[$template.'_'.$cache_id.'_'.$compile_id]))
+		{
+			$this->current_subtemplate[$template.'_'.$cache_id.'_'.$compile_id] = $this->context->smarty->createTemplate(
+				$this->getTemplatePath($template),
+				$cache_id,
+				$compile_id,
+				$this->smarty
+			);
+		}
+		return $this->current_subtemplate[$template.'_'.$cache_id.'_'.$compile_id];
+	}
+	
+	protected function resetCurrentSubTemplate($template, $cache_id, $compile_id)
+	{
+		$this->current_subtemplate[$template.'_'.$cache_id.'_'.$compile_id] = null;
 	}
 
 	/**
@@ -1697,10 +1720,8 @@ abstract class ModuleCore
 
 	public function isCached($template, $cacheId = null, $compileId = null)
 	{
-		$context = Context::getContext();
-
 		Tools::enableCache();
-		$is_cached =  $context->smarty->isCached($this->getTemplatePath($template), $cacheId, $compileId);
+		$is_cached = $this->getCurrentSubTemplate($this->getTemplatePath($template), $cacheId, $compileId)->isCached($this->getTemplatePath($template), $cacheId, $compileId);
 		Tools::restoreCacheSettings();
 
 		return $is_cached;
@@ -1727,7 +1748,15 @@ abstract class ModuleCore
             <need_instance>'.(int)$this->need_instance.'</need_instance>'.(isset($this->limited_countries) ? "\n\t".'<limited_countries>'.(count($this->limited_countries) == 1 ? $this->limited_countries[0] : '').'</limited_countries>' : '').'
         </module>';
 		if (is_writable(_PS_MODULE_DIR_.$this->name.'/'))
-			file_put_contents(_PS_MODULE_DIR_.$this->name.'/config.xml', $xml);
+		{
+			$file = _PS_MODULE_DIR_.$this->name.'/config.xml';
+			if (!@file_put_contents($file, $xml))
+				if (!is_writable($file))
+				{
+					@unlink($file);
+					@file_put_contents($file, $xml);
+				}
+		}
 	}
 
 	/**
@@ -1952,7 +1981,43 @@ abstract class ModuleCore
 		$path = Autoload::getInstance()->getClassPath($classname.'Core');
 
 		// Check if there is already an override file, if not, we just need to copy the file
-		if (!($classpath = Autoload::getInstance()->getClassPath($classname)))
+		if (Autoload::getInstance()->getClassPath($classname))
+		{
+			// Check if override file is writable
+			$override_path = _PS_ROOT_DIR_.'/'.Autoload::getInstance()->getClassPath($classname);
+			if ((!file_exists($override_path) && !is_writable(dirname($override_path))) || (file_exists($override_path) && !is_writable($override_path)))
+				throw new Exception(sprintf(Tools::displayError('file (%s) not writable'), $override_path));
+
+			// Get a uniq id for the class, because you can override a class (or remove the override) twice in the same session and we need to avoid redeclaration
+			do $uniq = uniqid();
+			while (class_exists($classname.'OverrideOriginal_remove', false));
+				
+			// Make a reflection of the override class and the module override class
+			$override_file = file($override_path);
+			eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'), array('', 'class '.$classname.'OverrideOriginal'.$uniq), implode('', $override_file)));
+			$override_class = new ReflectionClass($classname.'OverrideOriginal'.$uniq);
+
+			$module_file = file($this->getLocalPath().'override'.DIRECTORY_SEPARATOR.$path);
+			eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array('', 'class '.$classname.'Override'.$uniq), implode('', $module_file)));
+			$module_class = new ReflectionClass($classname.'Override'.$uniq);
+
+			// Check if none of the methods already exists in the override class
+			foreach ($module_class->getMethods() as $method)
+				if ($override_class->hasMethod($method->getName()))
+					throw new Exception(sprintf(Tools::displayError('The method %1$s in the class %2$s is already overriden.'), $method->getName(), $classname));
+
+			// Check if none of the properties already exists in the override class
+			foreach ($module_class->getProperties() as $property)
+				if ($override_class->hasProperty($property->getName()))
+					throw new Exception(sprintf(Tools::displayError('The property %1$s in the class %2$s is already defined.'), $property->getName(), $classname));
+
+			// Insert the methods from module override in override
+			$copy_from = array_slice($module_file, $module_class->getStartLine() + 1, $module_class->getEndLine() - $module_class->getStartLine() - 2);
+			array_splice($override_file, $override_class->getEndLine() - 1, 0, $copy_from);
+			$code = implode('', $override_file);
+			file_put_contents($override_path, $code);
+		}
+		else
 		{
 			$override_src = $this->getLocalPath().'override'.DIRECTORY_SEPARATOR.$path;
 			$override_dest = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'override'.DIRECTORY_SEPARATOR.$path;
@@ -1961,39 +2026,7 @@ abstract class ModuleCore
 			copy($override_src, $override_dest);
 			// Re-generate the class index
 			Autoload::getInstance()->generateIndex();
-			return true;
 		}
-		
-		// Check if override file is writable
-		$override_path = _PS_ROOT_DIR_.'/'.Autoload::getInstance()->getClassPath($classname);
-		if ((!file_exists($override_path) && !is_writable(dirname($override_path))) || (file_exists($override_path) && !is_writable($override_path)))
-			throw new Exception(sprintf(Tools::displayError('file (%s) not writable'), $override_path));
-			
-		// Make a reflection of the override class and the module override class
-		$override_file = file($override_path);
-		eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'), array('', 'class '.$classname.'OverrideOriginal'), implode('', $override_file)));
-		$override_class = new ReflectionClass($classname.'OverrideOriginal');
-
-		$module_file = file($this->getLocalPath().'override'.DIRECTORY_SEPARATOR.$path);
-		eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array('', 'class '.$classname.'Override'), implode('', $module_file)));
-		$module_class = new ReflectionClass($classname.'Override');
-
-		// Check if none of the methods already exists in the override class
-		foreach ($module_class->getMethods() as $method)
-			if ($override_class->hasMethod($method->getName()))
-				throw new Exception(sprintf(Tools::displayError('The method %1$s in the class %2$s is already overriden.'), $method->getName(), $classname));
-
-		// Check if none of the properties already exists in the override class
-		foreach ($module_class->getProperties() as $property)
-			if ($override_class->hasProperty($property->getName()))
-				throw new Exception(sprintf(Tools::displayError('The property %1$s in the class %2$s is already defined.'), $property->getName(), $classname));
-
-		// Insert the methods from module override in override
-		$copy_from = array_slice($module_file, $module_class->getStartLine() + 1, $module_class->getEndLine() - $module_class->getStartLine() - 2);
-		array_splice($override_file, $override_class->getEndLine() - 1, 0, $copy_from);
-		$code = implode('', $override_file);
-		file_put_contents($override_path, $code);
-
 		return true;
 	}
 
@@ -2015,14 +2048,18 @@ abstract class ModuleCore
 		if (!is_writable($override_path))
 			return false;
 
+		// Get a uniq id for the class, because you can override a class (or remove the override) twice in the same session and we need to avoid redeclaration
+		do $uniq = uniqid();
+		while (class_exists($classname.'OverrideOriginal_remove', false));
+			
 		// Make a reflection of the override class and the module override class
 		$override_file = file($override_path);
-		eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'), array('', 'class '.$classname.'OverrideOriginal_remove'), implode('', $override_file)));
-		$override_class = new ReflectionClass($classname.'OverrideOriginal_remove');
+		eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'), array('', 'class '.$classname.'OverrideOriginal_remove'.$uniq), implode('', $override_file)));
+		$override_class = new ReflectionClass($classname.'OverrideOriginal_remove'.$uniq);
 
 		$module_file = file($this->getLocalPath().'override/'.$path);
-		eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array('', 'class '.$classname.'Override_remove'), implode('', $module_file)));
-		$module_class = new ReflectionClass($classname.'Override_remove');
+		eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array('', 'class '.$classname.'Override_remove'.$uniq), implode('', $module_file)));
+		$module_class = new ReflectionClass($classname.'Override_remove'.$uniq);
 
 		// Remove methods from override file
 		$override_file = file($override_path);

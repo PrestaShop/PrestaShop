@@ -369,7 +369,7 @@ class DispatcherCore
 
 		// If there are several languages, get language from uri
 		if ($this->use_routes && Language::isMultiLanguageActivated())
-			if (preg_match('#^/([a-z]{2})/#', $this->request_uri, $m))
+			if (preg_match('#^/([a-z]{2})/?#', $this->request_uri, $m))
 			{
 				$_GET['isolang'] = $m[1];
 				$this->request_uri = substr($this->request_uri, 3);
@@ -549,6 +549,9 @@ class DispatcherCore
 		if ($id_shop === null)
 			$id_shop = (int)Context::getContext()->shop->id;
 
+		if (!isset($this->routes[$id_shop]))
+			$this->loadRoutes($id_shop);
+
 		if (!isset($this->routes[$id_shop]) || !isset($this->routes[$id_shop][$id_lang]) || !isset($this->routes[$id_shop][$id_lang][$route_id]))
 			return false;
 
@@ -591,14 +594,14 @@ class DispatcherCore
 		if ($id_shop === null)
 			$id_shop = (int)Context::getContext()->shop->id;
 		
-		if ($this->use_routes && !isset($this->routes[$id_shop]))
+		if (!isset($this->routes[$id_shop]))
 			$this->loadRoutes($id_shop);
-		
+
 		if (!isset($this->routes[$id_shop][$id_lang][$route_id]))
 		{
 			$query = http_build_query($params, '', '&');
 			$index_link = $this->use_routes ? '' : 'index.php';
-			return ($route_id == 'index') ? $index_link.(($query) ? '?'.$query : '') : 'index.php?controller='.$route_id.(($query) ? '&'.$query : '').$anchor;
+			return ($route_id == 'index') ? $index_link.(($query) ? '?'.$query : '') : ((trim($route_id) == '') ? '' : 'index.php?controller='.$route_id).(($query) ? '&'.$query : '').$anchor;
 		}
 		$route = $this->routes[$id_shop][$id_lang][$route_id];
 		// Check required fields

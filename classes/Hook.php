@@ -110,6 +110,7 @@ class HookCore extends ObjectModel
 	 */
 	public static function getIdByName($hook_name)
 	{
+		$hook_name = strtolower($hook_name);
 		if (!Validate::isHookName($hook_name))
 			return false;
 
@@ -126,9 +127,7 @@ class HookCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'hook_alias` ha
 			INNER JOIN `'._DB_PREFIX_.'hook` h ON ha.name = h.name');
 			foreach ($result as $row)
-			{
-				$hook_ids[$row['name']] = $row['id_hook'];
-			}				
+				$hook_ids[strtolower($row['name'])] = $row['id_hook'];
 			Cache::store($cache_id, $hook_ids);
 		}
 		else

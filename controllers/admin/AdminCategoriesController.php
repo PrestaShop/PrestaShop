@@ -248,7 +248,7 @@ class AdminCategoriesControllerCore extends AdminController
 	{
 		if (empty($this->display))
 		{
-			if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && count(Shop::getShops()) > 1)
+			if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE'))
 				$this->toolbar_btn['new-url'] = array(
 					'href' => self::$currentIndex.'&amp;add'.$this->table.'root&amp;token='.$this->token,
 					'desc' => $this->l('Add new root category')
@@ -460,7 +460,8 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->tpl_form_vars['PS_ALLOW_ACCENTED_CHARS_URL'] = (int)Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
 		
 		// Display this field only if multistore option is enabled
-		if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE'))
+		if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && Tools::isSubmit('add'.$this->table.'root'))
+		{
 			$this->fields_form['input'][] = array(
 				'type' => 'switch',
 				'label' => $this->l('Root Category:'),
@@ -480,6 +481,8 @@ class AdminCategoriesControllerCore extends AdminController
 					)
 				)
 			);
+			unset($this->fields_form['input'][2],$this->fields_form['input'][3]);
+		}
 		// Display this field only if multistore option is enabled AND there are several stores configured
 		if (Shop::isFeatureActive())
 			$this->fields_form['input'][] = array(
@@ -493,9 +496,6 @@ class AdminCategoriesControllerCore extends AdminController
 			foreach ($this->fields_form['input'] as $k => $input)
 				if (in_array($input['name'], array('id_parent', 'is_root_category')))
 					unset($this->fields_form['input'][$k]);
-
-		if (Tools::isSubmit('add'.$this->table.'root'))
-			unset($this->fields_form['input'][2],$this->fields_form['input'][3]);
 
 		if (!($obj = $this->loadObject(true)))
 			return;
@@ -519,6 +519,8 @@ class AdminCategoriesControllerCore extends AdminController
 		}
 		foreach ($groups as $group)
 			$this->fields_value['groupBox_'.$group['id_group']] = Tools::getValue('groupBox_'.$group['id_group'], (in_array($group['id_group'], $category_groups_ids)));
+
+		$this->fields_value['is_root_category'] = (bool)Tools::isSubmit('add'.$this->table.'root');
 
 		return parent::renderForm();
 	}
@@ -550,7 +552,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$id_parent = (int)Tools::getValue('id_parent');
 
 		// if true, we are in a root category creation
-		if (!$id_parent && !Tools::isSubmit('is_root_category'))
+		if (!$id_parent)
 		{
 			$_POST['is_root_category'] = $_POST['level_depth'] = 1;
 		   $_POST['id_parent'] = $id_parent = (int)Configuration::get('PS_ROOT_CATEGORY');

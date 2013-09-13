@@ -49,7 +49,9 @@
 						<td class="border_top border_bottom border_bold">
 							<span class="fees_all" {if $ranges|count == 0}style="display:none" {/if}>All</span>
 						</td>
-						<td></td>
+						<td>
+							<input type="checkbox" onclick="checkAllZones(this);" >
+						</td>
 						{foreach from=$ranges key=r item=range}
 						<td class="border_top border_bottom {if $range.id_range != 0} validated {/if}"  >
 							<div class="input-group">

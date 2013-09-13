@@ -48,7 +48,7 @@
   <tab id="Cart_Rules" name="Cart Rules"/>
   <tab id="Catalog_Price_Rules" name="Catalog Price Rules"/>
   <tab id="Marketing" name="Marketing"/>
-  <tab id="Shipping_1" name="Shipping"/>
+  <tab id="Shipping_1" name="Preferences"/>
   <tab id="Carriers" name="Carriers"/>
   <tab id="Price_Ranges" name="Price Ranges"/>
   <tab id="Weight_Ranges" name="Weight Ranges"/>

@@ -116,16 +116,16 @@ class FrontControllerCore extends Controller
 
 		// If we call a SSL controller without SSL or a non SSL controller with SSL, we redirect with the right protocol
 		if (Configuration::get('PS_SSL_ENABLED') && ($_SERVER['REQUEST_METHOD'] != 'POST') && $this->ssl != Tools::usingSecureMode())
-		{
+		{	
 			header('HTTP/1.1 301 Moved Permanently');
 			header('Cache-Control: no-cache');
-			if ($this->ssl)
+			if ($this->ssl)					
 				header('Location: '.Tools::getShopDomainSsl(true).$_SERVER['REQUEST_URI']);
-			else
+			else						
 				header('Location: '.Tools::getShopDomain(true).$_SERVER['REQUEST_URI']);
 			exit();
 		}
-
+		
 		if ($this->ajax)
 		{
 			$this->display_header = false;
@@ -333,7 +333,8 @@ class FrontControllerCore extends Controller
 			'opc' => (bool)Configuration::get('PS_ORDER_PROCESS_TYPE'),
 			'PS_CATALOG_MODE' => (bool)Configuration::get('PS_CATALOG_MODE') || !(bool)Group::getCurrent()->show_prices,
 			'b2b_enable' => (bool)Configuration::get('PS_B2B_ENABLE'),
-			'request' => $link->getPaginationLink(false, false, false, true)
+			'request' => $link->getPaginationLink(false, false, false, true),
+			'PS_STOCK_MANAGEMENT' => Configuration::get('PS_STOCK_MANAGEMENT')
 		));
 
 		// Add the tpl files directory for mobile
@@ -511,7 +512,7 @@ class FrontControllerCore extends Controller
 			if (Configuration::get('PS_CSS_THEME_CACHE'))
 				$this->css_files = Media::cccCSS($this->css_files);
 			//JS compressor management
-			if (Configuration::get('PS_JS_THEME_CACHE'))
+			if (Configuration::get('PS_JS_THEME_CACHE') && !$this->context->getMobileDevice())
 				$this->js_files = Media::cccJs($this->js_files);
 		}
 
@@ -593,7 +594,7 @@ class FrontControllerCore extends Controller
 
 	protected function canonicalRedirection($canonical_url = '')
 	{
-		if (!$canonical_url || !Configuration::get('PS_CANONICAL_REDIRECT') || strtoupper($_SERVER['REQUEST_METHOD']) != 'GET')
+		if (!$canonical_url || !Configuration::get('PS_CANONICAL_REDIRECT') || strtoupper($_SERVER['REQUEST_METHOD']) != 'GET' || Tools::getValue('live_edit'))
 			return;
 
 		$match_url = (($this->ssl && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];

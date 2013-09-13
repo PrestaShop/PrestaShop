@@ -106,6 +106,9 @@
 
 	function buildAddressBlock(id_address, address_type, dest_comp)
 	{
+		if (isNaN(id_address))
+			return;
+
 		var adr_titles_vals = getAddressesTitles();
 		var li_content = formatedAddressFieldsValuesList[id_address]['formated_fields_values'];
 		var ordered_fields_name = ['title'];

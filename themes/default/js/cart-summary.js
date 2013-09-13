@@ -621,7 +621,7 @@ function updateCartSummary(json)
 				initial_price_text = '<span style="text-decoration:line-through;">' + initial_price + '</span><br />';
 
 		var key_for_blockcart = product_list[i].id_product + '_' + product_list[i].id_product_attribute + '_' + product_list[i].id_address_delivery;
-		var key_for_blockcart_nocustom = product_list[i].id_product + '_' + product_list[i].id_product_attribute + '_' + ((product_list[i].quantity_without_customization != product_list[i].quantity)? 'nocustom' : '0') + '_' + product_list[i].id_address_delivery;
+		var key_for_blockcart_nocustom = product_list[i].id_product + '_' + product_list[i].id_product_attribute + '_' + ((product_list[i].id_customization && product_list[i].quantity_without_customization != product_list[i].quantity)? 'nocustom' : '0') + '_' + product_list[i].id_address_delivery;
 
 		if (priceDisplayMethod !== 0)
 		{
@@ -643,8 +643,10 @@ function updateCartSummary(json)
 			if (product_list[i].quantity_without_customization != product_list[i].quantity)
 				$('#total_product_price_' + key_for_blockcart_nocustom).html(formatCurrency(product_list[i].total_wt, currencyFormat, currencySign, currencyBlank));									
 		}
-		$('input[name=quantity_' + key_for_blockcart_nocustom + ']').val(product_list[i].quantity_without_customization);
-		$('input[name=quantity_' + key_for_blockcart_nocustom + '_hidden]').val(product_list[i].quantity_without_customization);
+
+		$('input[name=quantity_' + key_for_blockcart_nocustom + ']').val(product_list[i].id_customization? product_list[i].quantity_without_customization : product_list[i].cart_quantity);
+		$('input[name=quantity_' + key_for_blockcart_nocustom + '_hidden]').val(product_list[i].id_customization? product_list[i].quantity_without_customization : product_list[i].cart_quantity);
+
 		if (typeof(product_list[i].customizationQuantityTotal) !== 'undefined' && product_list[i].customizationQuantityTotal > 0)
 			$('#cart_quantity_custom_' + key_for_blockcart).html(product_list[i].customizationQuantityTotal);
 		nbrProducts += parseInt(product_list[i].quantity);			

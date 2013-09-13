@@ -310,6 +310,21 @@
 		</tbody>
 	</table>
 </div>
+	{if $return_allowed}
+	<div id="returnOrderMessage">
+		<h3>{l s='Merchandise return'}</h3>
+		<p>{l s='If you wish to return one or more products, please mark the corresponding boxes and provide an explanation for the return. When complete, click the button below.'}</p>
+		<p class="textarea">
+			<textarea cols="67" rows="3" name="returnText"></textarea>
+		</p>
+		<p class="submit">
+			<input type="submit" value="{l s='Make an RMA slip'}" name="submitReturnMerchandise" class="button_large" />
+			<input type="hidden" class="hidden" value="{$order->id|intval}" name="id_order" />
+		</p>
+	</div>
+	<br />
+	{/if}
+	</form>
 <div class="table_block">
 {if $order->getShipping()|count > 0}
 	<table class="std">
@@ -340,22 +355,6 @@
 </div>
 <br />
 {if !$is_guest}
-	{if $return_allowed}
-	<div id="returnOrderMessage">
-		<h3>{l s='Merchandise return'}</h3>
-		<p>{l s='If you wish to return one or more products, please mark the corresponding boxes and provide an explanation for the return. When complete, click the button below.'}</p>
-		<p class="textarea">
-			<textarea cols="67" rows="3" name="returnText"></textarea>
-		</p>
-		<p class="submit">
-			<input type="submit" value="{l s='Make an RMA slip'}" name="submitReturnMerchandise" class="button_large" />
-			<input type="hidden" class="hidden" value="{$order->id|intval}" name="id_order" />
-		</p>
-	</div>
-	<br />
-	{/if}
-	</form>
-
 	{if count($messages)}
 	<h3>{l s='Messages'}</h3>
 	<div class="table_block">

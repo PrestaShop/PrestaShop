@@ -454,6 +454,24 @@ class AdminEmployeesControllerCore extends AdminController
 		return parent::initContent();
 	}
 
+	protected function afterUpdate($object)
+	{
+		$res = parent::afterUpdate($object);
+		// Update cookie if needed
+		if (Tools::getValue('id_employee') == $this->context->employee->id && Tools::getValue('passwd') && $object->passwd != $this->context->employee->passwd)
+			$this->context->cookie->passwd = $this->context->employee->passwd = $object->passwd;
+
+		return $res;
+	}
+	
+	protected function ajaxProcessFormLanguage()
+	{
+		$this->context->cookie->employee_form_lang = (int)Tools::getValue('form_language_id');
+		if (!$this->context->cookie->write())
+			die ('Error while updating cookie.');
+		die ('Form language updated.');
+	}
+	
 	public function ajaxProcessGetTabByIdProfile()
 	{
 		$id_profile = Tools::getValue('id_profile');

@@ -759,7 +759,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
-				'hint' => 'Note that you can see details on the receptions - per products',
+				'hint' => $this->l('Note that you can see details on the receptions - per products'),
 			),
 			'quantity_expected' => array(
 				'title' => $this->l('Quantity expected'),
@@ -1197,7 +1197,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		}
 
 		// updates receipt
-		if (Tools::isSubmit('submitFiltersupply_order_detail') && Tools::isSubmit('submitBulkUpdatesupply_order_detail') && Tools::isSubmit('id_supply_order'))
+		if (Tools::isSubmit('submitBulkUpdatesupply_order_detail') && Tools::isSubmit('id_supply_order'))
 			$this->postProcessUpdateReceipt();
 
 		// use template to create a supply order
@@ -1342,6 +1342,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 					$this->errors[] = sprintf(Tools::displayError($this->l('Quantity (%d) for product #%d is not valid')), (int)$quantity, (int)$id_supply_order_detail);
 				else // everything is valid :  updates
 				{
+
 					// creates the history
 					$supplier_receipt_history = new SupplyOrderReceiptHistory();
 					$supplier_receipt_history->id_supply_order_detail = (int)$id_supply_order_detail;

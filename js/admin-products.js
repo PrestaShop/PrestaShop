@@ -1326,8 +1326,9 @@ product_tabs['Suppliers'] = new function(){
 			$('#suppliers_accordion').accordion({
 				collapsible: true,
 				autoHeight: true,
-				heightStyle: "content"});
-			}, 1000);
+				heightStyle: "content"
+			});
+		}, 1000);
 
 		// Resize the accordion once the page is visible because of the bug with accordions initialized
 		// inside a display:none block not having the correct size.

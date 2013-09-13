@@ -113,7 +113,8 @@ class AdminLanguagesControllerCore extends AdminController
 		$this->addRowAction('delete');
 
 		$this->displayWarning($this->l('When you delete a language, all related translations in the database will be deleted.'));
-		$this->displayInformation($this->l('Your .htaccess file must be writable.'));
+		if (!is_writable(_PS_ROOT_DIR_.'/.htaccess') && Configuration::get('PS_REWRITING_SETTINGS'))
+			$this->displayInformation($this->l('Your .htaccess file must be writable.'));
 		return parent::renderList();
 	}
 
@@ -384,12 +385,11 @@ class AdminLanguagesControllerCore extends AdminController
 			if ($_FILES['no-picture']['error'] == UPLOAD_ERR_OK)
 				$this->copyNoPictureImage(strtolower(Tools::getValue('iso_code')));
 			unset($_FILES['no-picture']);
-			return parent::processAdd();
 		}
 		else
 			$this->errors[] = Tools::displayError('Flag and "No picture" image fields are required.');
 
-		return false;
+		return parent::processAdd();
 	}
 
 	public function processUpdate()

@@ -43,7 +43,7 @@ class AuthControllerCore extends FrontController
 		parent::init();
 
 		if (!Tools::getIsset('step') && $this->context->customer->isLogged() && !$this->ajax)
-			Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? url_encode($this->authRedirection) : 'my-account'));
+			Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? urlencode($this->authRedirection) : 'my-account'));
 
 		if (Tools::getValue('create_account'))
 			$this->create_account = true;
@@ -329,7 +329,7 @@ class AuthControllerCore extends FrontController
 				{
 					if ($back = Tools::getValue('back'))
 						Tools::redirect(html_entity_decode($back));
-					Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? url_encode($this->authRedirection) : 'my-account'));
+					Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? urlencode($this->authRedirection) : 'my-account'));
 				}
 			}
 		}
@@ -469,7 +469,7 @@ class AuthControllerCore extends FrontController
 							Tools::redirect('index.php?controller=order&multi-shipping='.(int)Tools::getValue('multi-shipping'));
 						// else : redirection to the account
 						else
-							Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? url_encode($this->authRedirection) : 'my-account'));
+							Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? urlencode($this->authRedirection) : 'my-account'));
 					}
 					else
 						$this->errors[] = Tools::displayError('An error occurred while creating your account.');
@@ -608,7 +608,7 @@ class AuthControllerCore extends FrontController
 								Tools::redirect('index.php?controller=order&multi-shipping='.(int)Tools::getValue('multi-shipping'));
 							// else : redirection to the account
 							else
-								Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? url_encode($this->authRedirection) : 'my-account'));
+								Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? urlencode($this->authRedirection) : 'my-account'));
 						}
 					}
 				}

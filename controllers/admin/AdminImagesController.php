@@ -53,8 +53,17 @@ class AdminImagesControllerCore extends AdminController
 			'stores' => array('title' => $this->l('Stores'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false)
 		);
 		
-		// No need to display the old image system if the install has been made later than 2013-03-26
-		$this->display_move = (!Configuration::get('PS_LEGACY_IMAGES') && defined('_PS_CREATION_DATE_') && strtotime(_PS_CREATION_DATE_) > strtotime('2013-03-26')) ? false : true;
+		// No need to display the old image system migration tool except if product images are in _PS_PROD_IMG_DIR_
+		$this->display_move = false;
+		$dir = _PS_PROD_IMG_DIR_;
+		if (is_dir($dir))
+			if ($dh = opendir($dir))
+			{
+				while (($file = readdir($dh)) !== false && $this->display_move == false)
+						if (!is_dir($dir.DIRECTORY_SEPARATOR.$file) && $file[0] != '.' && is_numeric($file[0]))
+							$this->display_move = true;
+				closedir($dh);
+			}
 
 		$this->fields_options = array(
 			'images' => array(
@@ -636,7 +645,7 @@ class AdminImagesControllerCore extends AdminController
 	public function initMoveImages()
 	{
 		$this->context->smarty->assign(array(
-			'safe_mode' => ini_get('safe_mode'),
+			'safe_mode' => Tools::getSafeModeStatus(),
 			'link_ppreferences' => 'index.php?tab=AdminPPreferences&token='.Tools::getAdminTokenLite('AdminPPreferences').'#PS_LEGACY_IMAGES_on',
 		));
 }

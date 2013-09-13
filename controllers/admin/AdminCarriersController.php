@@ -94,55 +94,6 @@ class AdminCarriersControllerCore extends AdminController
 				'position' => 'position'
 			)
 		);
-
-		$carrier_default_sort = array(
-			array('value' => Carrier::SORT_BY_PRICE, 'name' => $this->l('Price')),
-			array('value' => Carrier::SORT_BY_POSITION, 'name' => $this->l('Position'))
-		);
-
-		$carrier_default_order = array(
-			array('value' => Carrier::SORT_BY_ASC, 'name' => $this->l('Ascending')),
-			array('value' => Carrier::SORT_BY_DESC, 'name' => $this->l('Descending'))
-		);
-
-		$this->fields_options = array(
-			'general' => array(
-				'title' => $this->l('Carrier options'),
-				'fields' => array(
-					'PS_CARRIER_DEFAULT' => array(
-						'title' => $this->l('Default carrier:'),
-						'hint' => $this->l('Your shop\'s default carrier'),
-						'cast' => 'intval',
-						'type' => 'select',
-						'identifier' => 'id_carrier',
-						'list' => array_merge(
-							array(
-								-1 => array('id_carrier' => -1, 'name' => $this->l('Best price')),
-								-2 => array('id_carrier' => -2, 'name' => $this->l('Best grade'))
-							),
-							Carrier::getCarriers((int)Configuration::get('PS_LANG_DEFAULT'), true, false, false, null, Carrier::ALL_CARRIERS))
-					),
-					'PS_CARRIER_DEFAULT_SORT' => array(
-						'title' => $this->l('Sort by:'),
-						'hint' => $this->l('This will only be visible in the Front Office'),
-						'cast' => 'intval',
-						'type' => 'select',
-						'identifier' => 'value',
-						'list' => $carrier_default_sort
-					),
-					'PS_CARRIER_DEFAULT_ORDER' => array(
-						'title' => $this->l('Order by:'),
-						'hint' => $this->l('This will only be visible in the Front Office'),
-						'cast' => 'intval',
-						'type' => 'select',
-						'identifier' => 'value',
-						'list' => $carrier_default_order
-					),
-				),
-				'submit' => array()
-			)
-		);
-
 		parent::__construct();
 	}
 
@@ -504,7 +455,8 @@ class AdminCarriersControllerCore extends AdminController
 			}
 			parent::postProcess();
 		}
-		else if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier))
+		/*
+else if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
@@ -516,17 +468,20 @@ class AdminCarriersControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
+*/
 		else if (isset($_GET['isFree'.$this->table]))
 		{
 			$this->processIsFree();
 		}
 		else
 		{
-			if ((Tools::isSubmit('submitDel'.$this->table) && in_array(Configuration::get('PS_CARRIER_DEFAULT'), Tools::getValue('carrierBox')))
+		/*
+	if ((Tools::isSubmit('submitDel'.$this->table) && in_array(Configuration::get('PS_CARRIER_DEFAULT'), Tools::getValue('carrierBox')))
 				|| (isset($_GET['delete'.$this->table]) && Tools::getValue('id_carrier') == Configuration::get('PS_CARRIER_DEFAULT')))
 					$this->errors[] = $this->l('Please set another carrier as default before deleting this one.');
 			else
 			{
+*/
 				// if deletion : removes the carrier from the warehouse/carrier association
 				if (Tools::isSubmit('delete'.$this->table))
 				{
@@ -548,7 +503,7 @@ class AdminCarriersControllerCore extends AdminController
 				}
 				parent::postProcess();
 				Carrier::cleanPositions();
-			}
+			//}
 		}
 	}
 

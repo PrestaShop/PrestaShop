@@ -140,7 +140,7 @@ class AdminMetaControllerCore extends AdminController
 			$this->url = ShopUrl::getShopUrls($this->context->shop->id)->where('main', '=', 1)->getFirst();
 			if ($this->url)
 			{
-				$shop_url_options['description'] = $this->l('Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values bellow.');
+				$shop_url_options['description'] = $this->l('Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.');
 				$shop_url_options['fields'] = array(
 					'domain' => array(
 						'title' =>	$this->l('Shop domain'),
@@ -366,6 +366,9 @@ class AdminMetaControllerCore extends AdminController
 		else if (Tools::isSubmit('submitRobots'))
 			$this->generateRobotsFile();
 
+		if (Tools::isSubmit('PS_ROUTE_product_rule'))
+			Tools::clearCache($this->context->smarty);		
+
 		return parent::postProcess();
 	}
 
@@ -470,7 +473,6 @@ class AdminMetaControllerCore extends AdminController
 			else
 				Configuration::updateValue('PS_ROUTE_'.$route_id, $rule);
 		}
-		
 	}
 
 	/**
