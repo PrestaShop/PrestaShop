@@ -61,14 +61,14 @@
 	<thead>
 		<tr class="nodrag nodrop"> 
 			<th>{l s='Image'}</th>
-			<th>{l s='Position'}</th>
+			<th class="center">{l s='Position'}</th>
 			{if $shops}
 			{foreach from=$shops item=shop}
 				<th>{$shop.name}</th>
 			{/foreach}
 			{/if}
-			<th>{l s='Cover'}</th>
-			<th>{l s='Action'}</th>
+			<th class="center">{l s='Cover'}</th>
+			<th></th>
 		</tr>
 	</thead>
 	<tbody id="imageList">
@@ -96,7 +96,7 @@
 			<i class="covered icon-check-empty"></i>
 		</td>
 		<td class="center">
-			<a href="#" class="btn btn-default delete_product_image" >
+			<a href="#" class="btn btn-default delete_product_image pull-right" >
 				<i class="icon-trash"></i> {l s='Delete this image'}
 			</a>
 		</td>
@@ -309,8 +309,9 @@
 		function imageLine(id, path, position, cover, shops)
 		{
 			line = $("#lineType").html();
-			line = line.replace(/image_id/g, id);
-			line = line.replace(/[a-z]{2}-default/g, path);
+			line = line.replace(/image_id/g, id);			
+			line = line.replace(/[a-z]{2}-default-small_default/g, path+'-small_default');
+			console.log(line);
 			line = line.replace(/image_path/g, path);
 			line = line.replace(/image_position/g, position);
 			line = line.replace(/icon-check-empty/g, cover);
