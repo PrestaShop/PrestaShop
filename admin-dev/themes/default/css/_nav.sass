@@ -23,10 +23,19 @@
 		ul
 			display: none
 	li.expanded
+		color: lighten($main-color,30%)!important
 		span.submenu_expand
 			@extend .icon-angle-up
 		ul.submenu
 			display: block
+			li a
+				color: lighten($main-color,30%)!important
+				background-color: darken($main-color,20%)!important
+				border-bottom: solid 1px lighten($main-color,10%)!important
+			&:last-child a
+				border: none!important
+
+
 	li.active
 		span.submenu_expand
 			display: none
@@ -36,6 +45,7 @@
 			color: contrast-color($brand-primary, white, #333, 10%)
 			background-color: $brand-primary
 			i
+				color: black
 				background-color: white
 		&.active:hover > a
 			color: contrast-color($main-color, white, #333, 10%)
@@ -152,7 +162,7 @@
 					color: contrast-color($main-color, white, #333, 10%)
 					background-color: $main-color
 					i
-						color: white!important
+						color: black
 	.menu-collapse
 		display: none
 	ul.submenu
@@ -251,3 +261,50 @@
 			width: 100%
 	.submenu_expand
 		display: none
+
+//icons
+
+.icon-AdminDashboard
+	@extend .icon-dashboard
+	background-color: adjust-hue($icon-color, 0)
+.icon-AdminCatalog
+	@extend .icon-book
+	background-color: adjust-hue($icon-color, 30)
+.icon-AdminParentOrders
+	@extend .icon-credit-card
+	background-color: adjust-hue($icon-color, 60)
+.icon-AdminParentCustomer
+	@extend .icon-group
+	background-color: adjust-hue($icon-color, 90)
+.icon-AdminPriceRule
+	@extend .icon-tags
+	background-color: adjust-hue($icon-color, 120)
+.icon-AdminParentShipping
+	@extend .icon-truck
+	background-color: adjust-hue($icon-color, 150)
+.icon-AdminParentLocalization
+	@extend .icon-globe
+	background-color: adjust-hue($icon-color, 180)
+.icon-AdminParentModules
+	@extend .icon-puzzle-piece
+	background-color: adjust-hue($icon-color, 210)
+.icon-AdminParentPreferences
+	@extend .icon-wrench
+	background-color: adjust-hue($icon-color, 240)
+.icon-AdminTools
+	@extend .icon-cogs
+	background-color: adjust-hue($icon-color, 270)
+.icon-AdminAdmin
+	@extend .icon-cog
+	background-color: adjust-hue($icon-color, 300)
+.icon-AdminParentStats
+	@extend .icon-bar-chart
+	background-color: adjust-hue($icon-color, 330)
+.icon-AdminStock
+	@extend .icon-archive
+	background-color: adjust-hue($icon-color, 360)
+
+[class^="icon-Admin"]
+	background-color: black
+	margin-right: 6px
+	color: white
