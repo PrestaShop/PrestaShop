@@ -401,6 +401,8 @@ class ShopCore extends ObjectModel
 					else
 						$url = 'http://'.$uri;
 				}
+				//bellini: this returns a 302 redirect which is not SEO friendly.  We should specifically state that it is a 301
+				header("HTTP/1.0 301 Moved Permanently");
 				header('location: '.$url);
 				exit;
 			}
