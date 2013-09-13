@@ -244,17 +244,6 @@
 		</script>
 		{/if}
 		</div>
-		{if $show_filters}
-		<input type="hidden" id="submitFilter{$list_id}" name="submitFilter{$list_id}" value="0"/>
-		<span class="pull-right">
-			<button type="submit" name="submitReset{$list_id}" class="btn {if !$filters_has_value}btn-default{else}btn-primary{/if} btn-small"{if !$filters_has_value} disabled="disabled"{/if}>
-				<i class="icon-eraser"></i> {l s='Reset'}
-			</button>
-			<button type="submit" id="submitFilterButton{$list_id}" name="submitFilter" class="btn btn-default btn-small" />
-				<i class="icon-ok"></i> {l s='Filter'}
-			</button>
-		</span>
-		{/if}
 {/if}
 	<div class="table-responsive clearfix">
 		<table 
@@ -362,7 +351,21 @@
 					<td>--</td>
 					{/if}
 					{if $has_actions}
-					<td class="center">--</td>
+					<td class="actions">
+						{if $show_filters}
+						<input type="hidden" id="submitFilter{$list_id}" name="submitFilter{$list_id}" value="0"/>
+						<span class="pull-right">
+							{if $filters_has_value}
+							<button type="submit" name="submitReset{$list_id}" class="btn btn-warning btn-small">
+								<i class="icon-eraser"></i> {l s='Reset'}
+							</button>
+							{/if}
+							<button type="submit" id="submitFilterButton{$list_id}" name="submitFilter" class="btn btn-default btn-small" />
+								<i class="icon-search"></i> {l s='Search'}
+							</button>
+						</span>
+						{/if}
+					</td>
 					{/if}
 				</tr>
 			{/if}
