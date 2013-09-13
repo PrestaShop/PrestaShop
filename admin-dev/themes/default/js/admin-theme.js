@@ -26,6 +26,8 @@ $( document ).ready(function() {
 
   //nav side bar
   function navSidebar(){
+    $('.expanded').removeClass('expanded');
+    $('.submenu').not('.active').hide();
     $('#nav-sidebar li.maintab.has_submenu').append('<span class="submenu_expand"></span>');
     $('#nav-sidebar .submenu_expand').on('click',function(){
       var $navId = $(this).parent();
@@ -114,6 +116,7 @@ $( document ).ready(function() {
   //sidebar menu collapse
   $('.menu-collapse').click(function(){
     $('body').toggleClass('page-sidebar-closed');
+    $('.expanded').removeClass('expanded');
   });
 
 });

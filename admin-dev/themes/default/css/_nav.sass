@@ -1,15 +1,10 @@
 #nav-sidebar
-	height: 100%!important
-	z-index: 500
 	float: left
 	width: 240px
+	height: 100%!important
+	z-index: 500
 	background-color: $main-color
 	border-right: 1px solid black
-	ul.menu
-		margin: 0
-		padding: 0
-		border-top: 1px black solid
-		list-style: none
 	li.maintab > a > i
 		display: inline-block
 		height: 30px
@@ -26,30 +21,43 @@
 		span.submenu_expand
 			display: none
 	ul.menu
+		margin: 0
+		padding: 0
+		border-top: 1px black solid
+		list-style: none
 		li.maintab
 			position: relative
-			&.active > a
-				color: contrast-color($brand-primary, white, #333, 10%)
-				background-color: $brand-primary
-				i
-					color: black
-					background-color: white
-			&.active > a:hover
-				color: contrast-color($main-color, white, #333, 10%)
+			&.active
+				a.title
+					color: contrast-color($brand-primary, white, #333, 10%)
+					background-color: $brand-primary
+					i
+						color: black
+						background-color: white
+			&.active
+				a.title:hover
+					color: contrast-color($main-color, white, #333, 10%)
 			&.expanded
-				color: lighten($main-color,30%)!important
-				background-color: darken($main-color,10%)
+				a.title
+					color: white
+					background-color: darken($main-color,10%)
+					border-bottom: solid 1px darken($main-color,25%)
+					&:hover
+						background-color: lighten($main-color,10%)
+					i
+						color: white
 				span.submenu_expand
 					@extend .icon-angle-up
 				ul.submenu
 					display: block
-					li a
+					a
 						color: lighten($main-color,30%)
-						background-color: darken($main-color,20%)
-						border-bottom: solid 1px darken($main-color,20%)
-					&:last-child a
-						border: none
-			> a
+						background-color: darken($main-color,15%)
+						border-bottom: solid 1px darken($main-color,25%)
+						&:hover
+							color: white
+							background-color: darken($main-color,5%)
+			a.title
 				display: block
 				position: relative
 				padding: 2px 0 2px 8px
@@ -71,19 +79,23 @@
 					@include transition-duration(0.4s)
 					@include transition-timing-function(ease-out)
 				&:hover
+					background-color: lighten($main-color,10%)
 					color: white
+					i
+						color: white
 			span.submenu_expand
 				position: absolute
 				right: 10px
 				top: 2px
 				cursor: pointer
-				@extend .icon-angle-down
 				font-family: FontAwesome
 				font-size: 24px
 				font-weight: 100
 				color: black
-				@include text-shadow(lighten($main-color,10%) 1px 1px 0)
 				background-color: transparent
+				@extend .icon-angle-down
+				@include text-shadow(lighten($main-color,10%) 1px 1px 0)
+				
 				&:hover
 					color: white
 					@include text-shadow(darken($main-color,20%) -1px -1px 0)
