@@ -152,36 +152,41 @@ class Blockrss extends Module
 		$url = strval(Configuration::get('RSS_FEED_URL'));
 		$nb = (int)(Configuration::get('RSS_FEED_NBR'));
 
-		// Getting data
-		$rss_links = array();
-		if ($url && ($contents = Tools::file_get_contents($url)))
-			try
-			{
-				if (@$src = new XML_Feed_Parser($contents)) {
-					for ($i = 0; $i < ($nb ? $nb : 5); $i++) {
-						if (@$item = $src->getEntryByOffset($i)) {
-							
-							$xmlValues = array();
-							foreach(self::$xmlFields as $xmlField) {
-								$xmlValues[$xmlField] = $item->__get($xmlField);
+		# 1 hour cache
+		$cacheId = $this->getCacheId($this->name.'-'.date("YmdH"));
+		if (!$this->isCached('blockrss.tpl', $cacheId)) {
+			
+			// Getting data
+			$rss_links = array();
+			if ($url && ($contents = Tools::file_get_contents($url)))
+				try
+				{
+					if (@$src = new XML_Feed_Parser($contents)) {
+						for ($i = 0; $i < ($nb ? $nb : 5); $i++) {
+							if (@$item = $src->getEntryByOffset($i)) {
+								
+								$xmlValues = array();
+								foreach(self::$xmlFields as $xmlField) {
+									$xmlValues[$xmlField] = $item->__get($xmlField);
+								}
+								$xmlValues['enclosure'] = $item->getEnclosure();
+								# Compatibility
+								$xmlValues['url'] = $xmlValues['link']; 
+								$rss_links[] = $xmlValues;
 							}
-							$xmlValues['enclosure'] = $item->getEnclosure();
-							# Compatibility
-							$xmlValues['url'] = $xmlValues['link']; 
-							$rss_links[] = $xmlValues;
 						}
 					}
 				}
-			}
-			catch (XML_Feed_Parser_Exception $e)
-			{
-				Tools::dieOrLog(sprintf($this->l('Error: invalid RSS feed in "blockrss" module: %s'), $e->getMessage()), false);
-			}
-
-		// Display smarty
-		$this->smarty->assign(array('title' => ($title ? $title : $this->l('RSS feed')), 'rss_links' => $rss_links));
-
- 	 	return $this->display(__FILE__, 'blockrss.tpl');
+				catch (XML_Feed_Parser_Exception $e)
+				{
+					Tools::dieOrLog(sprintf($this->l('Error: invalid RSS feed in "blockrss" module: %s'), $e->getMessage()), false);
+				}
+	
+			// Display smarty
+			$this->smarty->assign(array('title' => ($title ? $title : $this->l('RSS feed')), 'rss_links' => $rss_links));
+		}
+		
+ 	 	return $this->display(__FILE__, 'blockrss.tpl', $cacheId);
  	}
 
 	function hookRightColumn($params)
