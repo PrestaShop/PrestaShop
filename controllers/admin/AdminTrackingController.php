@@ -269,10 +269,10 @@ class AdminTrackingControllerCore extends AdminController
 	
 	protected function clearFilters()
 	{
-		if (Tools::isSubmit('submitResetcategory'))
+		if (Tools::isSubmit('submitResetempty_categories'))
 			$this->processResetFilters('empty_categories');
 
-		if (Tools::isSubmit('submitResetproduct'))
+		if (Tools::isSubmit('submitResetno_stock_products_attributes'))
 			$this->processResetFilters('no_stock_products_attributes');
 
 		if (Tools::isSubmit('submitResetno_stock_products'))
