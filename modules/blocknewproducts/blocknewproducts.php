@@ -134,6 +134,11 @@ class BlockNewProducts extends Module
 	{
 		return $this->hookRightColumn($params);
 	}
+	
+	public function hookHome($params)
+	{
+		return $this->hookRightColumn($params);
+	}
 
 	public function hookHeader($params)
 	{
