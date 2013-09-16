@@ -136,6 +136,7 @@ class AdminStatusesControllerCore extends AdminController
 	{
 		$this->table = 'order_return_state';
 		$this->_defaultOrderBy = $this->identifier = 'id_order_return_state';
+		$this->list_id = 'order_return_state';
 		$this->deleted = false;
 		$this->_orderBy = null;
 
