@@ -66,38 +66,87 @@ class StatsSales extends ModuleGraph
 			$this->csvExport(array('type' => 'pie', 'option' => '3-'.(int)Tools::getValue('id_country')));
 			
 		$this->_html = '
-		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
-			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" style="float: right; margin-left: 10px;">
-				<select name="id_country">
-					<option value="0"'.((!Tools::getValue('id_order_state')) ? ' selected="selected"' : '').'>'.$this->l('All').'</option>';
-		foreach (Country::getCountries($this->context->language->id) AS $country)
-			$this->_html .= '<option value="'.$country['id_country'].'"'.(($country['id_country'] == Tools::getValue('id_country')) ? ' selected="selected"' : '').'>'.$country['name'].'</option>';
-		$this->_html .= '</select>
-				<input type="submit" name="submitCountry" value="'.$this->l('Filter').'" class="button" />
+		<div class="blocStats">
+			<div class="panel-heading">
+				'.$this->l('Guide').'
+			</div>
+			<div class="alert alert-info">
+				<h4>'.$this->l('Various order statuses').'</h4>
+				<p>
+					'.$this->l('In your Back Office, you can modify the following order statuses: Awaiting Check Payment, Payment Accepted, Preparation in Progress, Shipping, Delivered, Cancelled, Refund, Payment Error, Out of Stock, and Awaiting Bank Wire Payment.').'<br />
+					'.$this->l('These order statuses cannot be removed from the Back Office, however you have the option to add more.').'
+				</p>
+			</div>
+			<div class="panel-heading">
+				'.$this->displayName.'
+			</div>
+			<div class="alert alert-info">
+				<p>'.$this->l('The following graphs represent the evolution of your e-store\'s orders and sales turnover for a selected period. This tool is one that you should use often as it allows you to quickly monitor your store\'s viability. This feature also allows you to monitor multiple time periods, and only valid orders are graphically represented.').'</p>
+			</div>
+			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" class="form-horizontal alert">
+				<div class="row">
+					<div class="col-lg-4 col-lg-offset-7">
+						<select name="id_country">
+							<option value="0"'.((!Tools::getValue('id_order_state')) ? ' selected="selected"' : '').'>'.$this->l('All').'</option>';
+					foreach (Country::getCountries($this->context->language->id) AS $country)
+						$this->_html .= '<option value="'.$country['id_country'].'"'.(($country['id_country'] == Tools::getValue('id_country')) ? ' selected="selected"' : '').'>'.$country['name'].'</option>';
+					$this->_html .= '</select>
+					</div>
+					<div class="col-lg-1">
+						<input type="submit" name="submitCountry" value="'.$this->l('Filter').'" class="btn btn-default pull-right" />
+					</div>
+				</div>
 			</form>
-			<p><img src="../img/admin/down.gif" />
-				'.$this->l('The following graphs represent the evolution of your e-store\'s orders and sales turnover for a selected period. This tool is one that you should use often as it allows you to quickly monitor your store\'s viability. This feature also allows you to monitor multiple time periods, and only valid orders are graphically represented.').'
-			</p>
-			<p>'.$this->l('Orders placed:').' <span class="totalStats">'.(int)($totals['orderCount']).'</span></p>
-			<p>'.$this->l('Products bought:').' <span class="totalStats">'.(int)($totals['products']).'</span></p>
-			<div>'.$this->engine(array('type' => 'line', 'option' => '1-'.(int)Tools::getValue('id_country'), 'layers' => 2)).'</div>
-			<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><span>'.$this->l('CSV Export').'</span></a></p>
-			<h4>'.$this->l('Sales:').' '.Tools::displayPrice($totals['orderSum'], $currency).'</h4>
-			<div>'.$this->engine(array('type' => 'line', 'option' => '2-'.(int)Tools::getValue('id_country'))).'</div>
-			<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=2"><span>'.$this->l('CSV Export').'</span></a></p>
-			<p class="space"><img src="../img/admin/down.gif" />
+			<div class="row row-margin-bottom">
+				<div class="col-lg-12">
+					<div class="col-lg-6">
+						'.$this->engine(array('type' => 'line', 'option' => '1-'.(int)Tools::getValue('id_country'), 'layers' => 2)).'
+					</div>
+					<div class="col-lg-6">
+						<ul class="list-unstyled">
+							<li>'.$this->l('Orders placed:').' <span class="totalStats">'.(int)($totals['orderCount']).'</span></li>
+							<li>'.$this->l('Products bought:').' <span class="totalStats">'.(int)($totals['products']).'</span></li>
+							<li>
+								<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1">
+									<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="row row-margin-bottom">
+				<div class="col-lg-12">
+					<div class="col-lg-6">
+						<div>'.$this->engine(array('type' => 'line', 'option' => '2-'.(int)Tools::getValue('id_country'))).'</div>
+					</div>
+					<div class="col-lg-6">
+						<ul class="list-unstyled">
+							<li>'.$this->l('Sales').' '.Tools::displayPrice($totals['orderSum'], $currency).'</li>
+							<li>
+								<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=2">
+									<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="alert alert-info">
 				'.$this->l('You can view order distribution below.').'
-			</p><br />
-			'.($totals['orderCount'] ? $this->engine(array('type' => 'pie', 'option' => '3-'.(int)Tools::getValue('id_country'))) : $this->l('No orders for this period.')).'</center>
-			<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=3"><span>'.$this->l('CSV Export').'</span></a></p>
-		</div >
-		<br />
-		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</h2>
-			<h2>'.$this->l('Various order statuses').'</h2>
-			<p>
-				'.$this->l('In your Back Office, you can modify the following order statuses: Awaiting Check Payment, Payment Accepted, Preparation in Progress, Shipping, Delivered, Cancelled, Refund, Payment Error, Out of Stock, and Awaiting Bank Wire Payment.').'<br />
-				'.$this->l('These order statuses cannot be removed from the Back Office, however you have the option to add more.').'
-			</p>
+			</div>
+			<div class="row row-margin-bottom">
+				<div class="col-lg-12">
+					<div class="col-lg-6">
+						'.($totals['orderCount'] ? $this->engine(array('type' => 'pie', 'option' => '3-'.(int)Tools::getValue('id_country'))) : $this->l('No orders for this period.')).'</center>
+					</div>
+					<div class="col-lg-6">
+						<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=3">
+							<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
+						</a>
+					</div>
+				</div>
+			</div>
 		</div >';
 		return $this->_html;
 	}
