@@ -356,11 +356,11 @@
 						<input type="hidden" id="submitFilter{$list_id}" name="submitFilter{$list_id}" value="0"/>
 						<span class="pull-right">
 							{if $filters_has_value}
-							<button type="submit" name="submitReset{$list_id}" class="btn btn-warning btn-small">
+							<button type="submit" name="submitReset{$list_id}" class="btn btn-warning">
 								<i class="icon-eraser"></i> {l s='Reset'}
 							</button>
 							{/if}
-							<button type="submit" id="submitFilterButton{$list_id}" name="submitFilter" class="btn btn-default btn-small" />
+							<button type="submit" id="submitFilterButton{$list_id}" name="submitFilter" class="btn btn-default" />
 								<i class="icon-search"></i> {l s='Search'}
 							</button>
 						</span>
