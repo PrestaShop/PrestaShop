@@ -206,7 +206,7 @@ function getBlogRss()
 			{
 				for (var article in jsonData.rss)
 				{
-					article_html = '<article><strong>'+jsonData.rss[article].title+'</strong><br>'+jsonData.rss[article].short_desc+'</article><br>';
+					article_html = '<article><strong>'+jsonData.rss[article].title+'</strong><br>'+jsonData.rss[article].short_desc+'<br/><a href="'+jsonData.rss[article].link+'">'+read_more+'</a></article><br>';
 					$('.dash_news h4').after(article_html);
 				}
 			}
