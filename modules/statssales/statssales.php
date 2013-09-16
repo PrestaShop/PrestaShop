@@ -66,19 +66,16 @@ class StatsSales extends ModuleGraph
 			$this->csvExport(array('type' => 'pie', 'option' => '3-'.(int)Tools::getValue('id_country')));
 			
 		$this->_html = '
-		<div class="blocStats">
 			<div class="panel-heading">
-				'.$this->l('Guide').'
+				'.$this->displayName.'
 			</div>
-			<div class="alert alert-info">
+			<h4>'.$this->l('Guide').'</h4>
+			<div class="alert alert-warning">
 				<h4>'.$this->l('Various order statuses').'</h4>
 				<p>
 					'.$this->l('In your Back Office, you can modify the following order statuses: Awaiting Check Payment, Payment Accepted, Preparation in Progress, Shipping, Delivered, Cancelled, Refund, Payment Error, Out of Stock, and Awaiting Bank Wire Payment.').'<br />
 					'.$this->l('These order statuses cannot be removed from the Back Office, however you have the option to add more.').'
 				</p>
-			</div>
-			<div class="panel-heading">
-				'.$this->displayName.'
 			</div>
 			<div class="alert alert-info">
 				<p>'.$this->l('The following graphs represent the evolution of your e-store\'s orders and sales turnover for a selected period. This tool is one that you should use often as it allows you to quickly monitor your store\'s viability. This feature also allows you to monitor multiple time periods, and only valid orders are graphically represented.').'</p>
@@ -99,36 +96,34 @@ class StatsSales extends ModuleGraph
 			</form>
 			<div class="row row-margin-bottom">
 				<div class="col-lg-12">
-					<div class="col-lg-6">
+					<div class="col-lg-8">
 						'.$this->engine(array('type' => 'line', 'option' => '1-'.(int)Tools::getValue('id_country'), 'layers' => 2)).'
 					</div>
-					<div class="col-lg-6">
+					<div class="col-lg-4">
 						<ul class="list-unstyled">
 							<li>'.$this->l('Orders placed:').' <span class="totalStats">'.(int)($totals['orderCount']).'</span></li>
 							<li>'.$this->l('Products bought:').' <span class="totalStats">'.(int)($totals['products']).'</span></li>
-							<li>
-								<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1">
-									<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
-								</a>
-							</li>
 						</ul>
+						<hr/>
+						<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1">
+							<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
+						</a>
 					</div>
 				</div>
 			</div>
 			<div class="row row-margin-bottom">
 				<div class="col-lg-12">
-					<div class="col-lg-6">
-						<div>'.$this->engine(array('type' => 'line', 'option' => '2-'.(int)Tools::getValue('id_country'))).'</div>
+					<div class="col-lg-8">
+						'.$this->engine(array('type' => 'line', 'option' => '2-'.(int)Tools::getValue('id_country'))).'
 					</div>
-					<div class="col-lg-6">
+					<div class="col-lg-4">
 						<ul class="list-unstyled">
 							<li>'.$this->l('Sales').' '.Tools::displayPrice($totals['orderSum'], $currency).'</li>
-							<li>
-								<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=2">
-									<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
-								</a>
-							</li>
 						</ul>
+						<hr/>
+						<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=2">
+							<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
+						</a>
 					</div>
 				</div>
 			</div>
@@ -137,17 +132,16 @@ class StatsSales extends ModuleGraph
 			</div>
 			<div class="row row-margin-bottom">
 				<div class="col-lg-12">
-					<div class="col-lg-6">
+					<div class="col-lg-8">
 						'.($totals['orderCount'] ? $this->engine(array('type' => 'pie', 'option' => '3-'.(int)Tools::getValue('id_country'))) : $this->l('No orders for this period.')).'</center>
 					</div>
-					<div class="col-lg-6">
+					<div class="col-lg-4">
 						<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=3">
 							<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
 						</a>
 					</div>
 				</div>
-			</div>
-		</div >';
+			</div>';
 		return $this->_html;
 	}
 
