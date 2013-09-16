@@ -135,7 +135,7 @@
 			{/if}</td>
 	{/if}
 	{if $has_actions}
-		<td>
+		<td class="text-right">
 			{assign var='compiled_actions' value=array()}
 			{foreach $actions AS $key => $action}
 				{if isset($tr.$action)}
@@ -149,7 +149,7 @@
 			<div class="btn-group{if $compiled_actions|count > 1} btn-group-action{/if}">
 				{$compiled_actions[0]|regex_replace:'/class\s*=\s*"(\w*)"/':'class="$1 btn btn-default"'}
 				{if $compiled_actions|count > 1}
-				<button class="btn btn-default btn-small dropdown-toggle" data-toggle="dropdown">
+				<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 					<span class="caret"></span>&nbsp;
 				</button>
 					<ul class="dropdown-menu">

@@ -62,7 +62,7 @@
 					<input type="hidden" name="feature_{$available_feature.id_feature}_value" value="0" />
 					<span>{l s='N/A'} - 
 						<a href="{$link->getAdminLink('AdminFeatures')|escape:'htmlall':'UTF-8'}&amp;addfeature_value&id_feature={$available_feature.id_feature}"
-					 	class="confirm_leave btn btn-link btn-small"><i class="icon-plus-sign"></i> {l s='Add pre-defined values first'} <i class="icon-external-link-sign"></i></a>
+					 	class="confirm_leave btn btn-link"><i class="icon-plus-sign"></i> {l s='Add pre-defined values first'} <i class="icon-external-link-sign"></i></a>
 					</span>
 				{/if}
 				</td>
