@@ -77,6 +77,7 @@ class HelperFormCore extends Helper
 		$color = true;
 		$date = true;
 		$tinymce = true;
+		$textarea_autosize = true;
 		foreach ($this->fields_form as $fieldset_key => &$fieldset)
 			if (isset($fieldset['form']['input']))
 				foreach ($fieldset['form']['input'] as $key => &$params)
@@ -141,8 +142,12 @@ class HelperFormCore extends Helper
 								$this->context->controller->addJS(_PS_JS_DIR_.'tinymce.inc.js');
 								$tinymce = false;
 							}
-							else
+
+							if ($textarea_autosize)
+							{
 								$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/jquery.autosize.min.js');
+								$textarea_autosize = false;
+							}
 						break;
 
 						case 'shop' :
