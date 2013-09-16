@@ -377,10 +377,10 @@ hr
 
 //filter table
 tr.filter
-	background-color: lighten($brand-primary,25%)
+	background-color: lighten(#CAE5F4,10%)
 	input[type="text"].filter, input[type="password"].filter, select.filter
 		font-size: 12px
-		border-color: lighten($brand-primary,10%)
+		border-color: darken(#CAE5F4,10%)
 
 .breadcrumb
 	background-color: lighten($bg-content-color,7%)
@@ -489,12 +489,10 @@ fieldset > .row
 
 
 .box-stats
-	padding: 10px
-	margin-bottom: 20px
 	background-color: white
-	@include box-shadow(rgba(black,0.10) 0 2px 0, white 0 0 0 3px inset)
+	//@include box-shadow(rgba(black,0.10) 0 2px 0, white 0 0 0 3px inset)
 	.boxchart-overlay
-		padding: 10px
+		padding: 10px 10px 5px 10px
 		margin-right: 10px
 		float: left
 		color: white
@@ -503,17 +501,21 @@ fieldset > .row
 		@include border-radius(3px)
 		float: left
 		color: white
-		font-size: 30px
-		height: 50px
-		width: 50px
+		font-size: 35px
+		height: 64px
+		width: 64px
 		text-align: center
-		line-height: 50px
+		line-height: 64px
 		margin-right: 10px
 	.title
-		color: #999
+		color: #666
 		display: block
 	.value
-		font-size: 25px
+		font-size: 22px
+	small
+		line-height: 0.3em
+		color: #aaa
+		text-transform: uppercase
 .color1
 	i, .boxchart-overlay
 		background-color: #2BA8E3

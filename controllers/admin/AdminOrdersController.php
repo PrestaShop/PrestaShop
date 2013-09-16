@@ -240,6 +240,7 @@ class AdminOrdersControllerCore extends AdminController
 	{
 		parent::setMedia();
 		$this->addJqueryUI('ui.datepicker');
+		$this->addJS(_PS_JS_DIR_.'vendor/d3.js');
 		if ($this->tabAccess['edit'] == 1 && $this->display == 'view')
 		{
 			$this->addJS(_PS_JS_DIR_.'admin_order.js');
