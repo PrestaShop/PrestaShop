@@ -751,6 +751,7 @@ function doAdminAjax(data, success_func, error_func)
 	{
 		url : 'index.php',
 		data : data,
+		type : 'POST',
 		success : function(data){
 			if (success_func)
 				return success_func(data);
