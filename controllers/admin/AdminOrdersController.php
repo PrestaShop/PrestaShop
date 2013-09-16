@@ -75,13 +75,6 @@ class AdminOrdersControllerCore extends AdminController
 			'align' => 'center',
 			'type' => 'bool',
 			'tmpTableFilter' => true,
-			'icon' => array(
-				0 => 'blank.gif',
-				1 => array(
-					'src' => 'note.png',
-					'alt' => $this->l('First customer order'),
-				)
-			),
 			'orderby' => false
 		),
 		'customer' => array(

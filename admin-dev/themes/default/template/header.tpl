@@ -258,7 +258,7 @@
 			<ul id="header_employee_box">
 {if {$base_url}}
 				<li>
-					<a href="http://{$base_url}" id="header_foaccess" target="_blank" title="{l s='View my shop'}">
+					<a href="{$base_url}" id="header_foaccess" target="_blank" title="{l s='View my shop'}">
 						<i class="icon-eye-open"></i> {l s='View my shop'}
 					</a>
 				</li>
