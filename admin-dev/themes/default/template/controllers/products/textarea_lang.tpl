@@ -28,8 +28,8 @@
 	<div class="col-lg-10">
 		<textarea
 			id="{$input_name}_{$language.id_lang}" 
-			name="{$input_name}_{$language.id_lasng}" 
-			class="autoload_rte" >
+			name="{$input_name}_{$language.id_lang}"
+			class="{if isset($autosize_js)}textarea-autosize{else}autoload_rte{/if}">
 			{if isset($input_value[$language.id_lang])}{$input_value[$language.id_lang]|htmlentitiesUTF8}{/if}
 		</textarea>
 	</div>
@@ -49,8 +49,15 @@
 <span class="counter" max="{if isset($max)}{$max}{else}none{/if}"></span>
 {/foreach}
 
+{if isset($autosize_js)}
+<script src="{$autosize_js}" type="text/javascript"></script>
+{/if}
 <script type="text/javascript">
 	var iso = '{$iso_tiny_mce}';
 	var pathCSS = '{$smarty.const._THEME_CSS_DIR_}';
 	var ad = '{$ad}';
+
+	{if isset($autosize_js)}
+	$(".textarea-autosize").autosize();
+	{/if}
 </script>
