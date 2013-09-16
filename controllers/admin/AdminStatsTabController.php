@@ -36,6 +36,9 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
 	public function initContent()
 	{
+		if ($this->ajax)
+			return;
+
 		$this->initTabModuleList();
 		$this->addToolBarModulesListButton();
 		$this->toolbar_title = $this->l('Stats', 'AdminStatsTab');

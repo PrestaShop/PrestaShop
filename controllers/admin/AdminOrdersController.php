@@ -1238,6 +1238,40 @@ class AdminOrdersControllerCore extends AdminController
 
 		parent::postProcess();
 	}
+	
+	public function renderKpis()
+	{
+		$time = time();
+		$kpis = array();
+
+		$helper = new HelperKpi();
+		$helper->id = 'box-carts';
+		$helper->icon = 'icon-shopping-cart';
+		$helper->color = 'color2';
+		$helper->title = $this->l('Abandoned Carts');
+		$helper->subtitle = $this->l('Today');
+		if (Configuration::get('PS_KPI_ABANDONED_CARTS') !== false)
+			$helper->value = Configuration::get('PS_KPI_ABANDONED_CARTS');
+		if (Configuration::get('PS_KPI_ABANDONED_CARTS_EXPIRE') < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=abandoned_cart';
+		$kpis[] = $helper->generate();
+		
+		$helper = new HelperKpi();
+		$helper->id = 'box-average-order';
+		$helper->icon = 'icon-money';
+		$helper->color = 'color3';
+		$helper->title = $this->l('Average Order Value');
+		$helper->subtitle = $this->l('30 days');
+		if (Configuration::get('PS_KPI_AVG_ORDER_VALUE') !== false)
+			$helper->value = Configuration::get('PS_KPI_AVERAGE_ORDER_VALUE');
+		if (Configuration::get('PS_KPI_AVG_ORDER_VALUE_EXPIRE') < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=average_order_value';
+		$kpis[] = $helper->generate();
+
+		$helper = new HelperKpiRow();
+		$helper->kpis = $kpis;
+		return $helper->generate();
+	}
 
 	public function renderView()
 	{
