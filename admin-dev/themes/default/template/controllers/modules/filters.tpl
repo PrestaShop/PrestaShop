@@ -62,11 +62,11 @@
 		</select>
 	</span> -->
 	<!-- <span class="pull-right">
-		<button class="btn btn-default btn-small" type="submit" name="resetFilterModules">
+		<button class="btn btn-default " type="submit" name="resetFilterModules">
 			<i class="icon-eraser"></i>
 			{l s='Reset'} 
 		</button>
-		<button class="btn btn-default btn-small" name="filterModules" id="filterModulesButton" type="submit">
+		<button class="btn btn-default " name="filterModules" id="filterModulesButton" type="submit">
 			<i class="icon-filter"></i> 
 			{l s='Filter'}
 		</button>

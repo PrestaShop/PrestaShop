@@ -83,7 +83,7 @@
 							{/if}
 						{elseif get_class($document) eq 'OrderSlip'}
 							#{Configuration::get('PS_CREDIT_SLIP_PREFIX', $current_id_lang)}{'%06d'|sprintf:$document->id}
-						{/if} 	<span class="btn btn-default btn-small">
+						{/if} 	<span class="btn btn-default">
 									<i class="icon-search"></i>
 									{l s='See the document'}
 								</span>
@@ -113,12 +113,12 @@
 					{if get_class($document) eq 'OrderInvoice'}
 						{if !isset($document->is_delivery)}
 							{if $document->getRestPaid()}
-								<a href="#" class="js-set-payment btn btn-default btn-small" data-amount="{$document->getRestPaid()}" data-id-invoice="{$document->id}" title="{l s='Set payment form'}">
+								<a href="#" class="js-set-payment btn btn-default" data-amount="{$document->getRestPaid()}" data-id-invoice="{$document->id}" title="{l s='Set payment form'}">
 									<i class="icon-pencil"></i>
 									{l s='Set payment form'}
 								</a>
 							{/if}
-							<a href="#" class="btn btn-default btn-small" onclick="$('#invoiceNote{$document->id}').show(); return false;" title="{if $document->note eq ''}{l s='Add note'}{else}{l s='Edit note'}{/if}">
+							<a href="#" class="btn btn-default" onclick="$('#invoiceNote{$document->id}').show(); return false;" title="{if $document->note eq ''}{l s='Add note'}{else}{l s='Edit note'}{/if}">
 								{if $document->note eq ''}
 									<i class="icon-plus-sign-alt"></i>
 									{l s='Add note'}
