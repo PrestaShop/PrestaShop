@@ -1260,6 +1260,13 @@ class ToolsCore
 		return Tools::strtoupper(Tools::substr($str, 0, 1)).Tools::substr($str, 1);
 	}
 
+	public static function ucwords($str)
+	{
+		if (function_exists('mb_convert_case'))
+			return mb_convert_case($str, MB_CASE_TITLE);
+		return ucwords(strtolower($str));
+	}
+
 	public static function orderbyPrice(&$array, $order_way)
 	{
 		foreach ($array as &$row)
