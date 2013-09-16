@@ -173,8 +173,10 @@
 											<input type="file" name="{$key}" />
 										</div>
 						            {elseif $field['type'] == 'color'}
-										<div class="col-lg-9">
-							              <input type="color" size="{$field['size']}" data-hex="true" {if isset($input.class)}class="{$field['class']}" {else}class="color mColorPickerInput"{/if} name="{$field['name']}" class="{if isset($field['class'])}{$field['class']}{/if}" value="{$field['value']|escape:'htmlall':'UTF-8'}" />
+										<div class="col-lg-2">
+											<div class="input-group">
+								              <input type="color" size="{$field['size']}" data-hex="true" {if isset($input.class)}class="{$field['class']}" {else}class="color mColorPickerInput"{/if} name="{$field['name']}" class="{if isset($field['class'])}{$field['class']}{/if}" value="{$field['value']|escape:'htmlall':'UTF-8'}" />
+								            </div>
 							            </div>
 									{elseif $field['type'] == 'price'}
 										<div class="input-group col-lg-9">
