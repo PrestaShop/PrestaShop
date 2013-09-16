@@ -95,7 +95,7 @@
 				background-color: transparent
 				@extend .icon-angle-down
 				@include text-shadow(lighten($main-color,10%) 1px 1px 0)
-				
+
 				&:hover
 					color: white
 					@include text-shadow(darken($main-color,20%) -1px -1px 0)
@@ -131,8 +131,6 @@
 	width: 100%
 	z-index: 600
 	background-color: white
-	border-top: black solid 1px
-	border-bottom: darken($secondary-color,20%) solid 1px
 	ul.menu
 		height: 28px
 		margin: 0
@@ -140,17 +138,16 @@
 		display: block
 		list-style: none
 		> li
-			height: 26px
+			height: 28px
 			padding: 0
 			margin: 0
 			border-right: solid 1px #aaa
 			list-style: none
 			position: relative
 			float: left
-			@include box-shadow(#ccc 0 -2px 0 inset)
 			> a
 				display: block
-				line-height: 26px
+				line-height: 28px
 				color: $main-color
 				padding: 0 6px
 				margin: 0
@@ -166,12 +163,11 @@
 					i
 						color: white!important
 			&.active
-				border-right: solid 1px black
 				> a
 					color: contrast-color($main-color, white, #333, 10%)
 					background-color: $main-color
 					i
-						color: black
+						color: white
 	.menu-collapse
 		display: none
 	ul.submenu
@@ -187,8 +183,7 @@
 			margin: 0
 			padding: 0
 			left: 0
-			top: 26px
-			border-top: solid 1px darken($main-color,10%)
+			top: 28px
 			width: 200px!important
 			li
 				width: 200px
