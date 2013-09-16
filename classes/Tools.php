@@ -1412,7 +1412,12 @@ class ToolsCore
 			$stream_context = @stream_context_create(array('http' => array('timeout' => 10)));
 
 		if (in_array(@ini_get('allow_url_fopen'), array('On', 'on', '1')) || !preg_match('/^https?:\/\//', $source))
-			return @copy($source, $destination, $stream_context);
+		{
+			if (!is_null($stream_context))
+				return @copy($source, $destination, $stream_context);
+			else
+				return @copy($source, $destination);
+		}
 		elseif (function_exists('curl_init'))
 		{
 			$curl = curl_init();
