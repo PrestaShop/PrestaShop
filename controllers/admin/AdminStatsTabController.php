@@ -206,7 +206,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 	{
 		$this->context = Context::getContext();
 		
-		$this->ajaxProcessSetDashboardDateRange();
+		$this->processDateRange();
 		
 		if (Tools::getValue('submitSettings'))
 		{
@@ -222,7 +222,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 		}
 	}
 	
-	public function ajaxProcessSetDashboardDateRange()
+	public function processDateRange()
 	{
 		if (Tools::isSubmit('submitDatePicker'))
 		{
@@ -267,8 +267,15 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 			$this->context->employee->stats_date_from = $from;
 			$this->context->employee->stats_date_to = $to;
 			$this->context->employee->update();
-			Tools::redirectAdmin($_SERVER['REQUEST_URI']);
+			if (!$this->isXmlHttpRequest())
+				Tools::redirectAdmin($_SERVER['REQUEST_URI']);
 		}
+	}
+	
+	public function ajaxProcessSetDashboardDateRange()
+	{
+		$this->processDateRange();
+		
 		if ($this->isXmlHttpRequest())
 		{
 			if (is_array($this->errors) && count($this->errors))
