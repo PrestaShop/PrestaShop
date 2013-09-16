@@ -3442,6 +3442,7 @@ class AdminProductsControllerCore extends AdminController
 					'table' => $this->table,
 					'ad' => dirname($_SERVER['PHP_SELF']),
 					'iso_tiny_mce' => $iso_tiny_mce,
+					'autosize_js' => _PS_JS_DIR_.'jquery/plugins/jquery.autosize.min.js',
 					'languages' => $this->_languages,
 					'id_lang' => $this->context->language->id,
 					'attach1' => Attachment::getAttachments($this->context->language->id, $obj->id, true),
