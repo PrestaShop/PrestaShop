@@ -201,7 +201,7 @@ class AdminGroupsControllerCore extends AdminController
 				'active' => array('title' => $this->l('Enabled'),'align' => 'center', 'active' => 'status','type' => 'bool')
 			));
 
-		$customer_list = $group->getCustomers(false, 0, 0, true);
+		$customer_list = $group->getCustomers(false, 0, 100, true);
 
 		$helper = new HelperList();
 		$helper->currentIndex = Context::getContext()->link->getAdminLink('AdminCustomers', false);
