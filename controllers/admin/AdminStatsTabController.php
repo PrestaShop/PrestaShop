@@ -148,6 +148,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
 		$tpl->assign(array(
 			'current' => self::$currentIndex,
+			'current_module_name' => Tools::getValue('module'),
 			'token' => $this->token,
 			'modules' => $modules,
 			'module_instance' => $module_instance

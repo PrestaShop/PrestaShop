@@ -28,7 +28,7 @@
 		{if count($modules)}
 			{foreach $modules as $module}
 				{if $module_instance[$module.name]}
-					<a class="list-group-item" href="{$current}&token={$token}&module={$module.name}">{$module_instance[$module.name]->displayName}</a>
+					<a class="list-group-item{if ($current_module_name && $current_module_name == $module.name) || (!$current_module_name && $module@first)} active{/if}" href="{$current}&token={$token}&module={$module.name}">{$module_instance[$module.name]->displayName}</a>
 				{/if}
 			{/foreach}
 		{else}
