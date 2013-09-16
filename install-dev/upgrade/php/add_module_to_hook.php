@@ -35,9 +35,14 @@ function add_module_to_hook($module_name, $hook_name)
 
 	if ((int)$id_module > 0)
 	{
-		$id_hook = Db::getInstance()->getValue('
-		SELECT `id_hook` FROM `'._DB_PREFIX_.'hook` WHERE `name` = "'.$hook_name.'"
-		');
+		$id_hook = Db::getInstance()->getValue('SELECT `id_hook` FROM `'._DB_PREFIX_.'hook` WHERE `name` = "'.$hook_name.'"');
+		if(!$id_hook)
+		{
+			$res &= Db::getInstance()->execute('
+			INSERT IGNORE INTO `'._DB_PREFIX_.'hook` (`name`, `title`)
+			VALUES ("'.pSQL($hook_name).'", "'.pSQL($hook_name).'")');
+			$id_hook = Db::getInstance()->Insert_ID();
+		}
 
 		if ((int)$id_hook > 0)
 		{
@@ -51,7 +56,5 @@ function add_module_to_hook($module_name, $hook_name)
 			)');
 		}
 	}
-
 	return $res;
 }
-
