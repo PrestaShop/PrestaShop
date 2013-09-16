@@ -1408,31 +1408,9 @@ class ToolsCore
 	
 	public static function copy($source, $destination, $stream_context = null)
 	{
-		if ($stream_context == null && preg_match('/^https?:\/\//', $source))
-			$stream_context = @stream_context_create(array('http' => array('timeout' => 10)));
-
-		if (in_array(@ini_get('allow_url_fopen'), array('On', 'on', '1')) || !preg_match('/^https?:\/\//', $source))
-		{
-			if (!is_null($stream_context))
-				return @copy($source, $destination, $stream_context);
-			else
-				return @copy($source, $destination);
-		}
-		elseif (function_exists('curl_init'))
-		{
-			$curl = curl_init();
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($curl, CURLOPT_URL, $source);
-			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
-			curl_setopt($curl, CURLOPT_TIMEOUT, 10);
-			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-			$opts = stream_context_get_options($stream_context);
-			$content = curl_exec($curl);
-			curl_close($curl);
-			return file_put_contents($destination, $content);
-		}
-		else
-			return false;
+		if (is_null($stream_context) && !preg_match('/^https?:\/\//', $source))
+			return @copy($source, $destination);
+		return @file_put_contents($destination, Tools::file_get_contents($source, false, $stream_context));
 	}
 
 	/**
