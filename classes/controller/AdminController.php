@@ -1522,6 +1522,7 @@ class AdminControllerCore extends Controller
 		elseif (!$this->ajax)
 		{
 			$this->content .= $this->renderModulesList();
+			$this->content .= $this->renderKpis();
 			$this->content .= $this->renderList();
 			$this->content .= $this->renderOptions();
 
@@ -1729,6 +1730,10 @@ class AdminControllerCore extends Controller
 			return $form;
 		}
 	}
+	
+	public function renderKpis()
+	{
+	}
 
 	/**
 	 * Function used to render the options for this controller
@@ -1810,7 +1815,6 @@ class AdminControllerCore extends Controller
 
 	public function setMedia()
 	{
-
 		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
 		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
 

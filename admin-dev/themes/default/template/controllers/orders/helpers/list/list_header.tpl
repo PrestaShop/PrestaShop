@@ -39,18 +39,6 @@
 			<span class="title">Net Profit per visitor <br/><small>30 days</small></span>
 			<span class="value">$2.12</span>
 		</div>
-
-		<div id="box-income" class="col-lg-3 box-stats color3">
-			<i class="icon-money"></i>
-			<span class="title">Average order value <br/><small>30 days</small></span>
-			<span class="value">$78.36</span>
-		</div>
-
-		<div id="box-messages" class="col-lg-3 box-stats color2">
-			<i class="icon-shopping-cart"></i>
-			<span class="title">Carts abandoned <br/><small>Today</small></span>
-			<span class="value">14</span>
-		</div>
 	</div>
 </div>
 
