@@ -239,6 +239,11 @@
 														
 													</div>
 												{/foreach}
+												<script type="text/javascript">
+													$(document).ready(function() {
+														$(".textarea-autosize").autosize();
+													});
+												</script>
 											</div>
 
 										{elseif $field['type'] == 'selectLang'}
