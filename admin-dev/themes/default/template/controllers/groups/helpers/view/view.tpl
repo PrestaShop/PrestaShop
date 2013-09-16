@@ -59,6 +59,7 @@
 		</ul>
 	</fieldset>
 	<h2>{l s='Members of this customer group'}</h2>
+	<p>{l s='Limited to the 100th first customers.'} {l s='Please use filters to narrow your search.'}</p>
 	{$customerList}
 
 {/block}
