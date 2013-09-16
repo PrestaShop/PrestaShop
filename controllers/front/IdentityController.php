@@ -79,7 +79,7 @@ class IdentityControllerCore extends FrontController
 				if (!count($this->errors))
 				{
 					$this->customer->id_default_group = (int)$prev_id_default_group;
-					$this->customer->firstname = Tools::ucfirst(Tools::strtolower($this->customer->firstname));
+					$this->customer->firstname = Tools::ucwords($this->customer->firstname);
 
 					if (!isset($_POST['newsletter']))
 						$this->customer->newsletter = 0;
