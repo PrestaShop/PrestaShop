@@ -119,14 +119,14 @@
 												{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
 												{if isset($input.autocomplete) && !$input.autocomplete}autocomplete="off"{/if} />
 											<div class="input-group-btn">
-												<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+												<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
 													<img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt="">
 													{$language.iso_code}
 													<span class="caret"></span>
 												</button>
 												<ul class="dropdown-menu">
 													{foreach from=$languages item=language}
-													<li><a href="javascript:hideOtherLanguage({$language.id_lang});"><img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt=""> {$language.name}</a></li>
+													<li><a href="javascript:hideOtherLanguage({$language.id_lang});" tabindex="-1"><img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt=""> {$language.name}</a></li>
 													{/foreach}
 												</ul>
 											</div>
@@ -340,7 +340,7 @@
 											<textarea name="{$input.name}_{$language.id_lang}" class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte {if isset($input.class)}{$input.class}{/if}{else}textarea-autosize{/if}" >{$fields_value[$input.name][$language.id_lang]|escape:'htmlall':'UTF-8'}</textarea>
 										</div>
 										<div class="col-lg-2">
-											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+											<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
 												<img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt="">
 												{$language.iso_code}
 												<span class="caret"></span>
@@ -348,7 +348,7 @@
 											<ul class="dropdown-menu">
 												{foreach from=$languages item=language}
 												<li>
-													<a href="javascript:hideOtherLanguage({$language.id_lang});">
+													<a href="javascript:hideOtherLanguage({$language.id_lang});" tabindex="-1">
 														<img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt=""> {$language.name}
 													</a>
 												</li>
