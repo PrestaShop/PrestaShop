@@ -66,13 +66,35 @@ class AdminDashboardControllerCore extends AdminController
 			'hookDashboardZoneTwo' => Hook::exec('dashboardZoneTwo'),
 			'translations' => $translations,
 			'action' => '#',
+			'warning' => $this->getWarningDomainName(),
+			'new_version_url' => Tools::getCurrentUrlProtocolPrefix().'api.dev.prestashop.com/version/check_version.php?v='._PS_VERSION_.'&l='.$this->context->language->iso_code,
 			'dashboard_use_push' => Configuration::get('PS_DASHBOARD_USE_PUSH'),
 			'datepickerFrom' => Tools::getValue('datepickerFrom', $this->context->employee->stats_date_from),
 			'datepickerTo' => Tools::getValue('datepickerTo', $this->context->employee->stats_date_to)
 		);
 		return parent::renderView();
 	}
+	
+	protected function getWarningDomainName()
+	{
+		$warning = false;
+		if (Shop::isFeatureActive())
+			return;
 
+		$shop = Context::getContext()->shop;
+		if ($_SERVER['HTTP_HOST'] != $shop->domain && $_SERVER['HTTP_HOST'] != $shop->domain_ssl && Tools::getValue('ajax') == false)
+		{
+			$warning = $this->l('You are currently connected under the following domain name:').' <span style="color: #CC0000;">'.$_SERVER['HTTP_HOST'].'</span><br />';
+			if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE'))
+				$warning .= sprintf($this->l('This is different from the shop domain name set in the Multistore settings: "%s".'), $shop->domain).'
+				'.preg_replace('@{link}(.*){/link}@', '<a href="index.php?controller=AdminShopUrl&id_shop_url='.(int)$shop->id.'&updateshop_url&token='.Tools::getAdminTokenLite('AdminShopUrl').'">$1</a>', $this->l('If this is your main domain, please {link}change it now{/link}.'));
+			else
+				$warning .= $this->l('This is different from the domain name set in the "SEO & URLs" tab.').'
+				'.preg_replace('@{link}(.*){/link}@', '<a href="index.php?controller=AdminMeta&token='.Tools::getAdminTokenLite('AdminMeta').'#conf_id_domain">$1</a>', $this->l('If this is your main domain, please {link}change it now{/link}.'));
+		}
+		return $warning;
+	}
+	
 	public function ajaxProcessRefreshDashboard()
 	{
 		$id_module = null;
@@ -108,14 +130,14 @@ class AdminDashboardControllerCore extends AdminController
 				if ($articles_limit > 0 && Validate::isCleanHtml((string)$item->title) && Validate::isCleanHtml((string)$item->description))
 					$return['rss'][] = array(
 						'title' => (string)$item->title,
-						'short_desc' => (string)$item->description
+						'short_desc' => substr((string)$item->description, 0, 100).'...',
+						'link' => (string)$item->link,
 					);
 				else
 					break;
 				$articles_limit --;
 			}
 		}
-				
 		die(Tools::jsonEncode($return));
 	}
 	

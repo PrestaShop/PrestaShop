@@ -28,6 +28,7 @@
 	var adminstats_ajax_url = '{$link->getAdminLink('AdminStats')}';
 	var no_results_translation = '{l s='No result'}';
 	var dashboard_use_push = '{$dashboard_use_push|intval}';
+	var read_more = '{l s='Read more'}'
 </script>
 
 <div class="page-head">
@@ -39,6 +40,9 @@
 <div id="dashboard">
 	<div class="row">
 		<div class="col-lg-12">
+			{if $warning}
+				<div class="alert alert-warning">{$warning}</div>
+			{/if}	
 			{include file="../../../../form_date_range_picker.tpl"}
 		</div>
 	</div>
@@ -50,12 +54,8 @@
 			{$hookDashboardZoneTwo}
 		</div>
 		<div class="col-lg-2">
-			<section class="dash_version panel panel-success">
-				<div class="panel-heading"><i class="icon-download-alt"></i> PrestaShop Version</div>
-				<div class="panel-body">
-					<i class="icon-check-sign"></i> PrestaShop VersionVous utilisez la dernière version
-				</div>
-			</section>
+			<div id="new_version_container"></div>
+			<iframe frameborder="no" src="{$new_version_url}"></iframe>
 			<section class="dash_news panel">
 				<h4><i class="icon-rss"></i> PrestaShop News</h4>
 			</section>
