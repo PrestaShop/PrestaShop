@@ -32,6 +32,7 @@ class AdminAccessControllerCore extends AdminController
 	public function __construct()
 	{
 		$this->bootstrap = true;
+		$this->show_toolbar = false;
 		$this->table = 'access';
 		$this->className = 'Profile';
 		$this->multishop_context = Shop::CONTEXT_ALL;
@@ -42,6 +43,12 @@ class AdminAccessControllerCore extends AdminController
 		$this->accesses_black_list[] = Tab::getIdFromClassName('AdminLogin');
 
 		parent::__construct();
+	}
+
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('Permissions');
+		parent::initPageHeaderToolbar();
 	}
 
 	/**
@@ -117,6 +124,8 @@ class AdminAccessControllerCore extends AdminController
 
 		if (!$this->loadObject(true))
 			return;
+
+		$this->initPageHeaderToolbar();
 
 		$this->content .= $this->renderForm();
 		$this->context->smarty->assign(array(

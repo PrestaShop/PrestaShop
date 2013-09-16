@@ -1102,6 +1102,8 @@ class AdminControllerCore extends Controller
 			'page_header_toolbar_title' => $this->page_header_toolbar_title,
 			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
 		));
+
+		$this->addPageHeaderToolBarModulesListButton();
 	}
 
 	/**
@@ -1551,6 +1553,7 @@ class AdminControllerCore extends Controller
 		elseif (is_array($this->tab_modules_list['slider_list']) && count($this->tab_modules_list['slider_list']))
 		{
 			$this->addToolBarModulesListButton();
+			$this->addPageHeaderToolBarModulesListButton();
 			$this->context->smarty->assign(array(
 				'tab_modules_list' => implode(',', $this->tab_modules_list['slider_list']),
 				'admin_module_ajax_url' => $this->context->link->getAdminLink('AdminModules'),
@@ -1558,6 +1561,28 @@ class AdminControllerCore extends Controller
 				'tab_modules_open' => (int)Tools::getValue('tab_modules_open')
 			));
 		}
+	}
+
+	protected function addPageHeaderToolBarModulesListButton()
+	{
+		if (!$this->isFresh(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 86400))
+			file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, Tools::addonsRequest('native'));
+		
+		$country_module_list = file_get_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
+		if (!empty($country_module_list) && $country_module_list_xml = simplexml_load_string($country_module_list))
+		{			
+			$country_module_list_array = array();
+			foreach ($country_module_list_xml->module as $k => $m)
+				$country_module_list_array[] = (string)$m->name;
+			
+			$this->tab_modules_list['slider_list'] = array_intersect($this->tab_modules_list['slider_list'], $country_module_list_array);
+		}
+
+		if (is_array($this->tab_modules_list['slider_list']) && count($this->tab_modules_list['slider_list']))
+			$this->page_header_toolbar_btn['modules-list'] = array(
+				'href' => '#',
+				'desc' => $this->l('Modules List')
+			);
 	}
 	
 	protected function addToolBarModulesListButton()

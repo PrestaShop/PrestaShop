@@ -35,12 +35,14 @@ class AdminInformationControllerCore extends AdminController
 
 	public function initContent()
 	{
+		$this->show_toolbar = false;
 		$this->display = 'view';
 		parent::initContent();
 	}
 
 	public function renderView()
 	{
+		$this->initPageHeaderToolbar();
 		$this->tpl_view_vars = array(
 			'version' => array(
 				'php' => phpversion(),
@@ -74,12 +76,12 @@ class AdminInformationControllerCore extends AdminController
 
 		return parent::renderView();
 	}
-	
-	public function initToolBar()
+
+	public function initPageHeaderToolbar()
 	{
-		return;
+		$this->page_header_toolbar_title = $this->l('Configuration information');
+		parent::initPageHeaderToolbar();
 	}
-	
 
 	/**
 	 * get all tests
