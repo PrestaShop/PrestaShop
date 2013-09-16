@@ -155,7 +155,23 @@ class StatsProduct extends ModuleGraph
 			if (!Tools::getValue('exportType'))
 				$this->csvExport(array('layers' => 2, 'type' => 'line', 'option' => '42'));
 
-		$this->html = '<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>';
+		$this->html = '
+			<div class="panel-heading">
+				'.$this->displayName.'
+			</div>
+			<h4>'.$this->l('Guide').'</h4>
+			<div class="alert alert-warning">
+				<h4>'.$this->l('Number of purchases compared to number of views.').'</h4>
+				<p>
+					'.$this->l('After choosing a category and selecting a product, informational graphs will appear.').'
+					<ul>
+						<li class="bullet">'.$this->l('If you notice that a product is often purchased but viewed infrequently, you should display it more prominently in your Front Office. ').'</li>
+						<li class="bullet">'.$this->l('On the other hand, if a product has many viewings but is not often purchased,
+							we advise you to check or modify this product\'s information, description and photography again.').'
+						</li>
+					</ul>
+				</p>
+			</div>';
 		if ($id_product = (int)Tools::getValue('id_product'))
 		{
 			if (Tools::getValue('export'))
@@ -167,71 +183,107 @@ class StatsProduct extends ModuleGraph
 			$totalBought = $this->getTotalBought($product->id);
 			$totalSales = $this->getTotalSales($product->id);
 			$totalViewed = $this->getTotalViewed($product->id);
-			$this->html .= '<h3>'.$product->name.' - '.$this->l('Details').'</h3>
-			<p>'.$this->l('Total bought:').' '.$totalBought.'</p>
-			<p>'.$this->l('Sales ( Figure does not include tax):').' '.Tools::displayprice($totalSales, $currency).'</p>
-			<p>'.$this->l('Total viewed:').' '.$totalViewed.'</p>
-			<p>'.$this->l('Conversion rate:').' '.number_format($totalViewed ? $totalBought / $totalViewed : 0, 2).'</p>
-			<center>'.$this->engine(array('layers' => 2, 'type' => 'line', 'option' => '1-'.$id_product)).'</center>
-			<br />
-			<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=1"><span>'.$this->l('CSV Export').'</span></a></p>';
+			$this->html .= '<h4>'.$product->name.' - '.$this->l('Details').'</h4>
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="col-lg-8">
+						'.$this->engine(array('layers' => 2, 'type' => 'line', 'option' => '1-'.$id_product)).'
+					</div>
+					<div class="col-lg-4">
+						<ul class="list-unstyled">
+							<li>'.$this->l('Total bought:').' '.$totalBought.'</li>
+							<li>'.$this->l('Sales ( Figure does not include tax):').' '.Tools::displayprice($totalSales, $currency).'</li>
+							<li>'.$this->l('Total viewed:').' '.$totalViewed.'</li>
+							<li>'.$this->l('Conversion rate:').' '.number_format($totalViewed ? $totalBought / $totalViewed : 0, 2).'</li>
+						</ul>
+						<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=1">
+							<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
+						</a>
+					</div>
+				</div>
+			</div>';
 			if ($hasAttribute = $product->hasAttributes() && $totalBought)
 				$this->html .= '<h3 class="space">'.$this->l('Attribute sales distribution').'</h3><center>'.$this->engine(array('type' => 'pie', 'option' => '3-'.$id_product)).'</center><br />
-			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=2"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p><br />';
+			<a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=2"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a>';
 			if ($totalBought)
 			{
 				$sales = $this->getSales($id_product, $this->context->language->id);
 				$this->html .= '
-				<h3>'.$this->l('Sales').'</h3>
+				<h4>'.$this->l('Sales').'</h4>
 				<div style="overflow-y: scroll; height: '.min(400, (count($sales) + 1) * 32).'px;">
-				<table class="table" border="0" cellspacing="0" cellspacing="0">
-				<thead>
-					<tr>
-						<th>'.$this->l('Date').'</th>
-						<th>'.$this->l('Order').'</th>
-						<th>'.$this->l('Customer').'</th>
-						'.($hasAttribute ? '<th>'.$this->l('Attribute').'</th>' : '').'
-						<th>'.$this->l('Quantity').'</th>
-						<th>'.$this->l('Price').'</th>
-					</tr>
-				</thead><tbody>';
-				$tokenOrder = Tools::getAdminToken('AdminOrders'.(int)Tab::getIdFromClassName('AdminOrders').(int)$this->context->employee->id);
-				$tokenCustomer = Tools::getAdminToken('AdminCustomers'.(int)Tab::getIdFromClassName('AdminCustomers').(int)$this->context->employee->id);
-				foreach ($sales as $sale)
+					<table class="table">
+						<thead>
+							<tr>
+								<th>
+									<span class="title_box  active">'.$this->l('Date').'</span>
+								</th>
+								<th>
+									<span class="title_box  active">'.$this->l('Order').'</span>
+								</th>
+								<th>
+									<span class="title_box  active">'.$this->l('Customer').'</span>
+								</th>
+								'.($hasAttribute ? '<th><span class="title_box  active">'.$this->l('Attribute').'</span></th>' : '').'
+								<th>
+									<span class="title_box  active">'.$this->l('Quantity').'</span>
+								</th>
+								<th>
+									<span class="title_box  active">'.$this->l('Price').'</span>
+								</th>
+							</tr>
+						</thead>
+						<tbody>';
+					$tokenOrder = Tools::getAdminToken('AdminOrders'.(int)Tab::getIdFromClassName('AdminOrders').(int)$this->context->employee->id);
+					$tokenCustomer = Tools::getAdminToken('AdminCustomers'.(int)Tab::getIdFromClassName('AdminCustomers').(int)$this->context->employee->id);
+					foreach ($sales as $sale)
+						$this->html .= '
+						<tr>
+							<td>'.Tools::displayDate($sale['date_add'],null , false).'</td>
+							<td align="center"><a href="?tab=AdminOrders&id_order='.$sale['id_order'].'&vieworder&token='.$tokenOrder.'">'.(int)($sale['id_order']).'</a></td>
+							<td align="center"><a href="?tab=AdminCustomers&id_customer='.$sale['id_customer'].'&viewcustomer&token='.$tokenCustomer.'">'.(int)($sale['id_customer']).'</a></td>
+							'.($hasAttribute ? '<td>'.$sale['product_name'].'</td>' : '').'
+							<td>'.(int)$sale['product_quantity'].'</td>
+							<td>'.Tools::displayprice($sale['total'], $currency).'</td>
+						</tr>';
 					$this->html .= '
-					<tr>
-						<td>'.Tools::displayDate($sale['date_add'],null , false).'</td>
-						<td align="center"><a href="?tab=AdminOrders&id_order='.$sale['id_order'].'&vieworder&token='.$tokenOrder.'">'.(int)($sale['id_order']).'</a></td>
-						<td align="center"><a href="?tab=AdminCustomers&id_customer='.$sale['id_customer'].'&viewcustomer&token='.$tokenCustomer.'">'.(int)($sale['id_customer']).'</a></td>
-						'.($hasAttribute ? '<td>'.$sale['product_name'].'</td>' : '').'
-						<td>'.(int)$sale['product_quantity'].'</td>
-						<td>'.Tools::displayprice($sale['total'], $currency).'</td>
-					</tr>';
-				$this->html .= '</tbody></table></div>';
+						</tbody>
+					</table>
+				</div>';
 
 				$crossSelling = $this->getCrossSales($id_product, $this->context->language->id);
 				if (count($crossSelling))
 				{
-					$this->html .= '<br class="clear" />
-					<h3>'.$this->l('Cross selling').'</h3>
+					$this->html .= '
+					<h4>'.$this->l('Cross selling').'</h4>
 					<div style="overflow-y: scroll; height: 200px;">
-					<table class="table" border="0" cellspacing="0" cellspacing="0">
-					<thead>
-						<tr>
-							<th>'.$this->l('Product name').'</th>
-							<th>'.$this->l('Quantity sold').'</th>
-							<th>'.$this->l('Average price').'</th>
-						</tr>
-					</thead><tbody>';
-					$tokenProducts = Tools::getAdminToken('AdminProducts'.(int)Tab::getIdFromClassName('AdminProducts').(int)$this->context->employee->id);
-					foreach ($crossSelling as $selling)
+						<h4>'.$this->l('Cross selling').'</h4>
+						<table class="table">
+							<thead>
+								<tr>
+									<th>
+										<span class="title_box  active">'.$this->l('Product name').'</span>
+									</th>
+									<th>
+										<span class="title_box  active">'.$this->l('Quantity sold').'</span>
+									</th>
+									<th>
+										<span class="title_box  active">'.$this->l('Average price').'</span>
+									</th>
+								</tr>
+							</thead>
+						<tbody>';
+						$tokenProducts = Tools::getAdminToken('AdminProducts'.(int)Tab::getIdFromClassName('AdminProducts').(int)$this->context->employee->id);
+						foreach ($crossSelling as $selling)
+							$this->html .= '
+							<tr>
+								<td ><a href="?tab=AdminProducts&id_product='.(int)$selling['id_product'].'&addproduct&token='.$tokenProducts.'">'.$selling['pname'].'</a></td>
+								<td align="center">'.(int)$selling['pqty'].'</td>
+								<td align="right">'.Tools::displayprice($selling['pprice'], $currency).'</td>
+							</tr>';
 						$this->html .= '
-						<tr>
-							<td ><a href="?tab=AdminProducts&id_product='.(int)$selling['id_product'].'&addproduct&token='.$tokenProducts.'">'.$selling['pname'].'</a></td>
-							<td align="center">'.(int)$selling['pqty'].'</td>
-							<td align="right">'.Tools::displayprice($selling['pprice'], $currency).'</td>
-						</tr>';
-					$this->html .= '</tbody></table></div>';
+							</tbody>
+						</table>
+					</div>';
 				}
 			}
 		}
@@ -239,29 +291,39 @@ class StatsProduct extends ModuleGraph
 		{
 			$categories = Category::getCategories((int)$this->context->language->id, true, false);
 			$this->html .= '
-			<div class="margin-form">
-				<form action="" method="post" id="categoriesForm">
-				<label class="t">'.$this->l('Choose a category').'</label>
-					<select name="id_category" onchange="$(\'#categoriesForm\').submit();">
-						<option value="0">'.$this->l('All').'</option>';
-			foreach ($categories as $category)
-				$this->html .= '<option value="'.$category['id_category'].'"'.($id_category == $category['id_category'] ? ' selected="selected"' : '').'>'.$category['name'].'</option>';
-			$this->html .= '
-					</select>
-				</form>
-			</div>
-						<p>'.$this->l('Click on a product to access its statistics!').'</p>
-				
-			<h2>'.$this->l('Products available').'</h2>
-			<div>
+			<form action="" method="post" id="categoriesForm" class="form-horizontal">
+				<div class="row row-margin-form">
+					<label class="control-label col-lg-3" for="id_category">
+						<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="'.$this->l('Click on a product to access its statistics!').'">
+							'.$this->l('Choose a category').'
+						</span>
+					</label>
+					<div class="col-lg-3">
+						<select name="id_category" onchange="$(\'#categoriesForm\').submit();">
+							<option value="0">'.$this->l('All').'</option>';
+				foreach ($categories as $category)
+					$this->html .= '<option value="'.$category['id_category'].'"'.($id_category == $category['id_category'] ? ' selected="selected"' : '').'>'.$category['name'].'</option>';
+				$this->html .= '
+						</select>
+					</div>
+				</div>
+			</form>
+			<h4>'.$this->l('Products available').'</h4>
 			<table class="table" border="0" cellspacing="0" cellspacing="0">
-			<thead>
-				<tr>
-					<th>'.$this->l('Ref.').'</th>
-					<th>'.$this->l('Name').'</th>
-					<th>'.$this->l('Available quantity for sale').'</th>
-				</tr>
-			</thead><tbody>';
+				<thead>
+					<tr>
+						<th>
+							<span class="title_box  active">'.$this->l('Ref.').'</span>
+						</th>
+						<th>
+							<span class="title_box  active">'.$this->l('Name').'</span>
+						</th>
+						<th>
+							<span class="title_box  active">'.$this->l('Available quantity for sale').'</span>
+						</th>
+					</tr>
+				</thead>
+				<tbody>';
 
 			foreach ($this->getProducts($this->context->language->id) as $product)
 				$this->html .= '
@@ -273,23 +335,13 @@ class StatsProduct extends ModuleGraph
 					<td>'.$product['quantity'].'</td>
 				</tr>';
 
-			$this->html .= '</tbody></table><br /></div><br />
-				<a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><span>'.$this->l('CSV Export').'</span></a><br />';
+			$this->html .= '
+				</tbody>
+			</table>
+			<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1">
+				<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
+			</a>';
 		}
-
-		$this->html .= '</div><br />
-		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</h2>
-		<h2>'.$this->l('Number of purchases compared to number of views.').'</h2>
-			<p>
-				'.$this->l('After choosing a category and selecting a product, informational graphs will appear.').'
-				<ul>
-					<li class="bullet">'.$this->l('If you notice that a product is often purchased but viewed infrequently, you should display it more prominently in your Front Office. ').'</li>
-					<li class="bullet">'.$this->l('On the other hand, if a product has many viewings but is not often purchased,
-						we advise you to check or modify this product\'s information, description and photography again.').'
-					</li>
-				</ul>
-			</p>
-		</div>';
 		return $this->html;
 	}
 

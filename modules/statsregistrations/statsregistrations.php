@@ -108,50 +108,46 @@ class StatsRegistrations extends ModuleGraph
 		if (Tools::getValue('export'))
 			$this->csvExport(array('layers' => 0, 'type' => 'line'));
 		$this->_html = '
-		<div class="blocStats">
-			<div class="panel-heading">
-				'.$this->l('Guide').'
-			</div>
-			<div class="alert alert-info">
-				<h4>'.$this->l('Number of customer accounts created').'</h4>
-				<p>'.$this->l('The total number of accounts created is not in itself important information. However, it is beneficial to analyze the number created over time. This will indicate whether or not things are on the right track. You feel me?').'</p>
-			</div>
-			<div class="panel-heading">
-				'.$this->l('How to act on the registrations\' evolution?').'
-			</div>
-			<div class="alert alert-info">
-				'.$this->l('If you let your shop run without changing anything, the number of customer registrations should stay stable or slightly decline.').'
-				'.$this->l('A significant increase or decrease in customer registration shows that there has probably been a change to your shop.With that in mind, we suggest that you identify the cause, correct the issue and get back in the business of making money!').'<br />
-				'.$this->l('Here is a summary of what may affect the creation of customer accounts:').'
-				<ul>
-					<li>'.$this->l('An advertising campaign can attract an increased number of visitors to your online store. This will likely be followed by an increase in customer accounts, and profit margins, which will depend on customer "quality." Well-targeted advertising is typically more effective than large-scale advertising... and it\'s cheaper too!').'</li>
-					<li>'.$this->l('Specials, sales, promotions and/or contests typically demand a shoppers\' attentions. Offering such things will not only keep your business lively,  it will also increase traffic, build customer loyalty and genuine change your current e-commerce philosophy.').'</li>
-					<li>'.$this->l('Design and user-friendliness are more important than ever in the world of online sales. An ill-chosen or hard-to-follow graphical theme can keep shoppers at bay. This means that you should aspire to find the right balance between beauty and functionality for your online store.').'</li>
-				</ul>
-			</div>
-			<div class="panel-heading">
-				'.$this->displayName.'
-			</div>
-			<div class="alert alert-info">
-				<ul>
-					<li>
-						'.$this->l('Number of visitors who stopped at the registering step:').' <span class="totalStats">'.(int)($totalBlocked).($totalRegistrations ? ' ('.number_format(100*$totalBlocked/($totalRegistrations+$totalBlocked), 2).'%)' : '').'</span><li/>
-						'.$this->l('Number of visitors who placed an order directly after registration:').' <span class="totalStats">'.(int)($totalBuyers).($totalRegistrations ? ' ('.number_format(100*$totalBuyers/($totalRegistrations), 2).'%)' : '').'</span>
-					<li>'.$this->l('Total customer accounts:').' <span class="totalStats">'.$totalRegistrations.'</span></li>
-				</ul>
-			</div>
-			<div class="row row-margin-bottom">
-				<div class="col-lg-12">
-					<div class="col-lg-6">
-						'.$this->engine(array('type' => 'line')).'
-					</div>
-					<div class="col-lg-6">
-						<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1">
-							<i class="icon-cloud-upload"></i>'.$this->l('CSV Export').'
-						</a>
-					</div>
+		<div class="panel-heading">
+			'.$this->displayName.'
+		</div>
+		<div class="alert alert-info">
+			<ul>
+				<li>
+					'.$this->l('Number of visitors who stopped at the registering step:').' <span class="totalStats">'.(int)($totalBlocked).($totalRegistrations ? ' ('.number_format(100*$totalBlocked/($totalRegistrations+$totalBlocked), 2).'%)' : '').'</span><li/>
+					'.$this->l('Number of visitors who placed an order directly after registration:').' <span class="totalStats">'.(int)($totalBuyers).($totalRegistrations ? ' ('.number_format(100*$totalBuyers/($totalRegistrations), 2).'%)' : '').'</span>
+				<li>'.$this->l('Total customer accounts:').' <span class="totalStats">'.$totalRegistrations.'</span></li>
+			</ul>
+		</div>
+		<h4>'.$this->l('Guide').'</h4>
+		<div class="alert alert-warning">
+			<h4>'.$this->l('Number of customer accounts created').'</h4>
+			<p>'.$this->l('The total number of accounts created is not in itself important information. However, it is beneficial to analyze the number created over time. This will indicate whether or not things are on the right track. You feel me?').'</p>
+		</div>
+		<h4>'.$this->l('How to act on the registrations\' evolution?').'</h4>
+		<div class="alert alert-warning">
+			'.$this->l('If you let your shop run without changing anything, the number of customer registrations should stay stable or slightly decline.').'
+			'.$this->l('A significant increase or decrease in customer registration shows that there has probably been a change to your shop.With that in mind, we suggest that you identify the cause, correct the issue and get back in the business of making money!').'<br />
+			'.$this->l('Here is a summary of what may affect the creation of customer accounts:').'
+			<ul>
+				<li>'.$this->l('An advertising campaign can attract an increased number of visitors to your online store. This will likely be followed by an increase in customer accounts, and profit margins, which will depend on customer "quality." Well-targeted advertising is typically more effective than large-scale advertising... and it\'s cheaper too!').'</li>
+				<li>'.$this->l('Specials, sales, promotions and/or contests typically demand a shoppers\' attentions. Offering such things will not only keep your business lively,  it will also increase traffic, build customer loyalty and genuine change your current e-commerce philosophy.').'</li>
+				<li>'.$this->l('Design and user-friendliness are more important than ever in the world of online sales. An ill-chosen or hard-to-follow graphical theme can keep shoppers at bay. This means that you should aspire to find the right balance between beauty and functionality for your online store.').'</li>
+			</ul>
+		</div>
+		
+		<div class="row row-margin-bottom">
+			<div class="col-lg-12">
+				<div class="col-lg-8">
+					'.$this->engine(array('type' => 'line')).'
 				</div>
-			</div>';
+				<div class="col-lg-4">
+					<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1">
+						<i class="icon-cloud-upload"></i>'.$this->l('CSV Export').'
+					</a>
+				</div>
+			</div>
+		</div>';
 		return $this->_html;
 	}
 	
