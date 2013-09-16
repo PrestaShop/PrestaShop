@@ -27,7 +27,7 @@ $( document ).ready(function() {
   //nav side bar
   function navSidebar(){
     $('.expanded').removeClass('expanded');
-    $('.submenu').not('.active').hide();
+    $('.maintab').not('.active').closest('.submenu').hide();
     $('#nav-sidebar li.maintab.has_submenu').append('<span class="submenu_expand"></span>');
     $('#nav-sidebar .submenu_expand').on('click',function(){
       var $navId = $(this).parent();
