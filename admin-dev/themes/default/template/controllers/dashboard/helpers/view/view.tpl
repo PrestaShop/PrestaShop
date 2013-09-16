@@ -55,7 +55,7 @@
 		</div>
 		<div class="col-lg-2">
 			<div id="new_version_container"></div>
-			<iframe frameborder="no" src="{$new_version_url}"></iframe>
+			<iframe frameborder="no"  allowtransparency="true" src="{$new_version_url}"></iframe>
 			<section class="dash_news panel">
 				<h4><i class="icon-rss"></i> PrestaShop News</h4>
 			</section>
