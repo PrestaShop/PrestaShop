@@ -57,29 +57,25 @@ class StatsBestCategories extends ModuleGrid
 				'id' => 'name',
 				'header' => $this->l('Name'),
 				'dataIndex' => 'name',
-				'align' => 'left',
-				'width' => 140
+				'align' => 'center'
 			),
 			array(
 				'id' => 'totalQuantitySold',
 				'header' => $this->l('Total Quantity Sold'),
 				'dataIndex' => 'totalQuantitySold',
-				'width' => 20,
-				'align' => 'right'
+				'align' => 'center'
 			),
 			array(
 				'id' => 'totalPriceSold',
 				'header' => $this->l('Total Price'),
 				'dataIndex' => 'totalPriceSold',
-				'width' => 30,
-				'align' => 'right'
+				'align' => 'center'
 			),
 			array(
 				'id' => 'totalPageViewed',
 				'header' => $this->l('Total Viewed'),
 				'dataIndex' => 'totalPageViewed',
-				'width' => 30,
-				'align' => 'right'
+				'align' => 'center'
 			)
 		);
 
@@ -108,10 +104,13 @@ class StatsBestCategories extends ModuleGrid
 			$this->csvExport($engineParams);
 
 		$this->_html = '
-		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
+			<div class="panel-heading">
+				'.$this->displayName.'
+			</div>
 			'.$this->engine($engineParams).'
-			<br /><a class="button export-csv" href="'.htmlentities($_SERVER['REQUEST_URI']).'&export=1"><span>'.$this->l('CSV Export').'</span></a>
-		</div>';
+			<a class="btn btn-default export-csv" href="'.htmlentities($_SERVER['REQUEST_URI']).'&export=1">
+				<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
+			</a>';
 		return $this->_html;
 	}
 

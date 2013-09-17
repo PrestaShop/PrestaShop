@@ -104,52 +104,77 @@ class SEKeywords extends ModuleGraph
 			$this->csvExport(array('type' => 'pie'));
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.ModuleGraph::getDateBetween().$this->_query2);
 		$total = count($result);
-		$this->html = '<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
+		$this->html = '
+		<div class="panel-heading">'
+			.$this->displayName.'
+		</div>
+		<h4>'.$this->l('Guide').'</h4>
+		<div class="alert alert-warning">
+			<h4>'.$this->l('Identify external search engine keywords').'</h4>
+			<p>'
+				.$this->l('One of the most common ways of finding a website through a search engine.').
+				$this->l('Identifying the most popular keywords entered by your new visitors allows you to see the products you should put in front if you want to achieve SEO. ').'
+			</p>
+			<p>&nbsp;</p>
+			<h4>'.$this->l('How does it work?').'</h4>
+			<p>'
+				.$this->l('When a visitor comes to your website, the server notes their previous location. This module parses the URL and finds the keywords in it.').
+				sprintf($this->l('Currently, it manages the following search engines: %1$s and %2$s.'),
+				'<b>Google, AOL, Yandex, Ask, NHL, Yahoo, Baidu, Lycos, Exalead, Live, Voila</b>',
+				'<b>Altavista</b>'
+				).$this->l('Soon, it will be possible to dynamically add new search engines and contribute to this module.').'
+			</p>
+		</div>
 		<p>'.($total == 1 ? sprintf($this->l('%d keyword matches your query.'), $total) : sprintf($this->l('%d keywords match your query.'), $total)).'</p>';
 		
-		$form = '<form action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'" method="post">
-				'.$this->l('Filter by keyword').' <input type="text" name="SEK_FILTER_KW" value="'.Tools::htmlentitiesUTF8(Configuration::get('SEK_FILTER_KW')).'" />
-				'.$this->l('And min occurrences').' <input type="text" name="SEK_MIN_OCCURENCES" value="'.(int)Configuration::get('SEK_MIN_OCCURENCES').'" />
-				<input type="submit" class="button" name="submitSEK" value="'.$this->l('Apply   ').'" />
-			</form>';
+		$form = '
+		<form action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'" method="post" class="form-horizontal">
+			<div class="row row-margin-bottom">
+				<label class="control-label col-lg-3">'.$this->l('Filter by keyword').'</label>
+				<div class="col-lg-9">
+					<input type="text" name="SEK_FILTER_KW" value="'.Tools::htmlentitiesUTF8(Configuration::get('SEK_FILTER_KW')).'" />
+				</div>
+			</div>
+			<div class="row row-margin-bottom">
+				<label class="control-label col-lg-3">'.$this->l('And min occurrences').'</label>
+				<div class="col-lg-9">
+					<input type="text" name="SEK_MIN_OCCURENCES" value="'.(int)Configuration::get('SEK_MIN_OCCURENCES').'" />
+				</div>
+			</div>
+			<div class="row row-margin-bottom">
+				<div class="col-lg-9 col-lg-offset-3">
+					<button type="submit" class="btn btn-default" name="submitSEK">
+						<i class="icon-ok"></i> '.$this->l('Apply').'
+					</button>
+				</div>
+			</div>
+		</form>';
 		
 		if ($result && $total)
 		{
 			$table = '
-			<div style="overflow-y: scroll; height: 600px;">
-			<table class="table" border="0" cellspacing="0" cellspacing="0">
-			<thead>
-				<tr><th style="width:400px;">'.$this->l('Keywords').'</th>
-				<th style="width:50px; text-align: right">'.$this->l('Occurrences').'</th></tr>
-			</thead><tbody>';
+			<table class="table">
+				<thead>
+					<tr>
+						<th><span class="title_box active">'.$this->l('Keywords').'</span></th>
+						<th><span class="title_box active">'.$this->l('Occurrences').'</span></th>
+					</tr>
+				</thead>
+				<tbody>';
 			foreach ($result as $index => $row)
 			{
 				$keyword =& $row['keyword'];
 				$occurences =& $row['occurences'];
-				$table .= '<tr><td>'.$keyword.'</td><td style="text-align: right">'.$occurences.'</td></tr>';
+				$table .= '<tr><td>'.$keyword.'</td><td>'.$occurences.'</td></tr>';
 			}
-			$table .= '</tbody></table></div>';
+			$table .= '</tbody></table>';
 			$this->html .= '<div>'.$this->engine(array('type' => 'pie')).'</div>
-			<br/>
-			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=language"><img src="../img/admin/asterisk.gif" /> '.$this->l('CSV Export').'</a></p><br/>
+			<a class="btn btn-default" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=language"><<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'</a>
 			'.$form.'<br/>'.$table;
 		}
 		else
 			$this->html .= '<p>'.$form.'<strong>'.$this->l('No keywords').'</strong></p>';
 
-		$this->html .= '</div><br/>
-		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</h2>
-			<h2>'.$this->l('Identify external search engine keywords').'</h2>
-			<p>'.$this->l('One of the most common ways of finding a website through a search engine.').
-			$this->l('Identifying the most popular keywords entered by your new visitors allows you to see the products you should put in front if you want to achieve SEO. ').'
-			</p><br />
-			<h3>'.$this->l('How does it work?').'</h2>
-			<p>'.$this->l('When a visitor comes to your website, the server notes their previous location. This module parses the URL and finds the keywords in it.').
-			sprintf($this->l('Currently, it manages the following search engines: %1$s and %2$s.'),
-				'<b>Google, AOL, Yandex, Ask, NHL, Yahoo, Baidu, Lycos, Exalead, Live, Voila</b>',
-				'<b>Altavista</b>'
-			).$this->l('Soon, it will be possible to dynamically add new search engines and contribute to this module.').'</p><br />
-		</div>';
 		return $this->html;
 	}
 

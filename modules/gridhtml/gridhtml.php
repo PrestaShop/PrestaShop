@@ -62,19 +62,24 @@ class GridHtml extends ModuleGridEngine
 		if (!isset($params['emptyMsg']))
 			$params['emptyMsg'] = 'Empty';
 
-		$html = '<div style="width:'.$params['width'].'px;height:'.$params['height'].'px;overflow:scroll">
-			<table class="table" cellpadding="0" cellspacing="0" id="grid_1"><thead><tr>';
-		foreach ($params['columns'] as $column)
-			$html .= '<th style="width:'.$column['width'].'px;cursor:pointer">
-						'.$column['header'].'<br />
-						<a href="javascript:getGridData(\''.$grider.'&sort='.$column['dataIndex'].'&dir=ASC\');"><img src="../img/admin/up.gif" /></a>
-						<a href="javascript:getGridData(\''.$grider.'&sort='.$column['dataIndex'].'&dir=DESC\');"><img src="../img/admin/down.gif" /></a>
-					</th>';
-		$html .= '</tr></thead>
+		$html = '
+			<table class="table" id="grid_1">
+				<thead>
+					<tr>';
+					foreach ($params['columns'] as $column)
+						$html .= '<th class="center">
+									<span class="title_box active">'.$column['header'].'</span>
+								</th>';
+					$html .= '
+					</tr>
+				</thead>
 				<tbody></tbody>
-				<tfoot><tr><th colspan="'.count($params['columns']).'"></th></tr></tfoot>
+				<tfoot>
+					<tr>
+						<th colspan="'.count($params['columns']).'"></th>
+					</tr>
+				</tfoot>
 			</table>
-		</div>
 		<script type="text/javascript">
 			function getGridData(url)
 			{
@@ -96,7 +101,7 @@ class GridHtml extends ModuleGridEngine
 						$.each(values, function(index, row){
 							var newLine = "<tr>";';
 			foreach ($params['columns'] as $column)
-				$html .= '	newLine += "<td'.(isset($column['align']) ? ' style=\"text-align:'.$column['align'].'\"' : '').'>" + row["'.$column['dataIndex'].'"] + "</td>";';
+				$html .= '	newLine += "<td'.(isset($column['align']) ? ' class=\"'.$column['align'].'\"' : '').'>" + row["'.$column['dataIndex'].'"] + "</td>";';
 			if (!isset($params['defaultSortColumn']))
 				$params['defaultSortColumn'] = false;
 			if (!isset($params['defaultSortDirection']))
@@ -104,7 +109,7 @@ class GridHtml extends ModuleGridEngine
 			$html .= '		$("#grid_1 tbody").append(newLine);
 						});
 					else
-						$("#grid_1 tbody").append("<tr><td style=\"text-align:center\" colspan=\"" + '.count($params['columns']).' + "\">'.$params['emptyMsg'].'</td></tr>");
+						$("#grid_1 tbody").append("<tr><td class=\"center\" colspan=\"" + '.count($params['columns']).' + "\">'.$params['emptyMsg'].'</td></tr>");
 				});
 			}
 			

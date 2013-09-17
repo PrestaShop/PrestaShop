@@ -97,35 +97,40 @@ class StatsSearch extends ModuleGraph
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.ModuleGraph::getDateBetween().$this->_query2);
 		$this->_html = '
-		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>';
-		$table = '<div style="overflow-y: scroll; height: 600px;">
-		<table class="table" border="0" cellspacing="0" cellspacing="0">
-		<thead>
-			<tr>
-				<th style="width:400px;">'.$this->l('Keywords').'</th>
-				<th style="width:50px; text-align: right">'.$this->l('Occurrences').'</th>
-				<th style="width:50px; text-align: right">'.$this->l('Results').'</th>
-			</tr>
-		</thead><tbody>';
+		<div class="panel-heading">
+			'.$this->displayName.'
+		</div>';
+		$table = '
+		<table class="table">
+			<thead>
+				<tr>
+					<th><span class="title_box active">'.$this->l('Keywords').'</span></th>
+					<th><span class="title_box active">'.$this->l('Occurrences').'</span></th>
+					<th><span class="title_box active">'.$this->l('Results').'</span></th>
+				</tr>
+			</thead>
+			<tbody>';
 
 		foreach ($result as $row)
 		{
 			if (Tools::strlen($row['keywords']) >= Configuration::get('PS_SEARCH_MINWORDLEN'))
 				$table .= '<tr>
 					<td>'.$row['keywords'].'</td>
-					<td style="text-align: right">'.$row['occurences'].'</td>
-					<td style="text-align: right">'.$row['total'].'</td>
+					<td>'.$row['occurences'].'</td>
+					<td>'.$row['total'].'</td>
 				</tr>';
 		}
-		$table .= '</tbody></table></div>';
+		$table .= '
+			</tbody>
+		</table>';
 
 		if (count($result))
 			$this->_html .= '<div>'.$this->engine(array('type' => 'pie')).'</div>
-									<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
-									<br class="clear" />'.$table;
+							<a class="btn btn-default" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1">
+								<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
+							</a>'.$table;
 		else
 			$this->_html .= '<p>'.$this->l('No keywords searched more than once have been found.').'</p>';
-		$this->_html .= '</div>';
 		return $this->_html;
 	}
 

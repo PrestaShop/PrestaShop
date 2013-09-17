@@ -57,22 +57,19 @@ class StatsBestSuppliers extends ModuleGrid
 				'id' => 'name',
 				'header' => $this->l('Name'),
 				'dataIndex' => 'name',
-				'align' => 'left',
-				'width' => 200
+				'align' => 'center'
 			),
 			array(
 				'id' => 'quantity',
 				'header' => $this->l('Quantity sold'),
 				'dataIndex' => 'quantity',
-				'width' => 60,
-				'align' => 'right'
+				'align' => 'center'
 			),
 			array(
 				'id' => 'sales',
 				'header' => $this->l('Total paid'),
 				'dataIndex' => 'sales',
-				'width' => 60,
-				'align' => 'right'
+				'align' => 'center'
 			)
 		);
 
@@ -100,10 +97,13 @@ class StatsBestSuppliers extends ModuleGrid
 		if (Tools::getValue('export') == 1)
 				$this->csvExport($engineParams);
 		$this->_html = '
-		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
+			<div class="panel-heading">
+				'.$this->displayName.'
+			</div>
 			'.$this->engine($engineParams).'
-			<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><span>'.$this->l('CSV Export').'</span></a></p>
-		</div>';
+			<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1">
+				<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
+			</a>';
 		return $this->_html;
 	}
 
