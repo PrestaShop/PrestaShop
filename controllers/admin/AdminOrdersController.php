@@ -1245,7 +1245,21 @@ class AdminOrdersControllerCore extends AdminController
 		$kpis = array();
 
 		/* The data generation is located in AdminStatsControllerCore */
-		
+
+		$helper = new HelperKpi();
+		$helper->id = 'box-conversion-rate';
+		$helper->chart = true;
+		$helper->color = 'color1';
+		$helper->title = $this->l('Conversion Rate');
+		$helper->subtitle = $this->l('30 days');
+		if (Configuration::get('PS_KPI_CONVERSION_RATE') !== false)
+			$helper->value = Configuration::get('PS_KPI_CONVERSION_RATE');
+		if (Configuration::get('PS_KPI_CONVERSION_RATE_CHART') !== false)
+			$helper->data = Configuration::get('PS_KPI_CONVERSION_RATE_CHART');
+		if (Configuration::get('PS_KPI_CONVERSION_RATE_EXPIRE') < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=conversion_rate';
+		$kpis[] = $helper->generate();
+
 		$helper = new HelperKpi();
 		$helper->id = 'box-carts';
 		$helper->icon = 'icon-shopping-cart';
@@ -1257,7 +1271,7 @@ class AdminOrdersControllerCore extends AdminController
 		if (Configuration::get('PS_KPI_ABANDONED_CARTS_EXPIRE') < $time)
 			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=abandoned_cart';
 		$kpis[] = $helper->generate();
-		
+
 		$helper = new HelperKpi();
 		$helper->id = 'box-average-order';
 		$helper->icon = 'icon-money';
@@ -1269,12 +1283,12 @@ class AdminOrdersControllerCore extends AdminController
 		if (Configuration::get('PS_KPI_AVG_ORDER_VALUE_EXPIRE') < $time)
 			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=average_order_value';
 		$kpis[] = $helper->generate();
-		
+
 		$helper = new HelperKpi();
 		$helper->id = 'box-net-profit-visitor';
 		$helper->icon = 'icon-user';
 		$helper->color = 'color4';
-		$helper->title = $this->l('Net Profit per Visitor ');
+		$helper->title = $this->l('Net Profit per Visitor');
 		$helper->subtitle = $this->l('30 days');
 		if (Configuration::get('PS_KPI_NETPROFIT_VISITOR') !== false)
 			$helper->value = Configuration::get('PS_KPI_NETPROFIT_VISITOR');

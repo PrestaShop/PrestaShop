@@ -31,10 +31,12 @@ class HelperKpiCore extends Helper
 	
 	public $id;
 	public $icon;
+	public $chart;
 	public $color;
 	public $title;
 	public $subtitle;
 	public $value;
+	public $data;
 	public $source;
 
 	public function generate()
@@ -44,10 +46,12 @@ class HelperKpiCore extends Helper
 		$this->tpl->assign(array(
 			'id' => $this->id,
 			'icon' => $this->icon,
+			'chart' => (bool)$this->chart,
 			'color' => $this->color,
 			'title' => $this->title,
 			'subtitle' => $this->subtitle,
 			'value' => $this->value,
+			'data' => $this->data,
 			'source' => $this->source
 		));
 		return $this->tpl->fetch();
