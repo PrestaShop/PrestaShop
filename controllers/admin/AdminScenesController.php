@@ -153,24 +153,19 @@ class AdminScenesControllerCore extends AdminController
 			'legend' => array(
 				'title' => $this->l('Image Maps'),
 				'icon' => 'icon-picture',
-				),
-			'submit' => array(
-				'title' => $this->l('Save'),
-				'class' => 'button'
 			),
+			'description' =>
+				'<h4>'.$this->l('How to map products in the image:').'</h4>
+				<p>'.
+				$this->l('When a customer hovers over the image, a pop-up appears displaying a brief description of the product.').
+				$this->l('The customer can then click to open the full product page.').
+				$this->l('To achieve this, please define the \'mapping zone\' that, when hovered over, will display the pop-up.').
+				$this->l('Left click with your mouse to draw the four-sided mapping zone, then release.').
+				$this->l('Then begin typing the name of the associated product, and  a list of products will appear.').
+				$this->l('Click the appropriate product and then click OK. Repeat these steps for each mapping zone you wish to create.').
+				$this->l('When you have finished mapping zones, click "Save Image Map."').
+				'</p>',
 			'input' => array(
-				array(
-					'type' => 'description',
-					'name' => 'description',
-					'label' => $this->l('How to map products in the image:'),
-					'text' => $this->l('When a customer hovers over the image, a pop-up appears displaying a brief description of the product.').
-						$this->l('The customer can then click to open the full product page.').
-						$this->l('To achieve this, please define the \'mapping zone\' that, when hovered over, will display the pop-up.').
-						$this->l('Left click with your mouse to draw the four-sided mapping zone, then release.').
-						$this->l('Then begin typing the name of the associated product, and  a list of products will appear.').
-						$this->l('Click the appropriate product and then click OK. Repeat these steps for each mapping zone you wish to create.').
-						$this->l('When you have finished mapping zones, click "Save Image Map."')
-				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Image map name:'),
@@ -200,6 +195,10 @@ class AdminScenesControllerCore extends AdminController
 					)
 				),
 			),
+			'submit' => array(
+				'title' => $this->l('Save'),
+				'class' => 'btn btn-default'
+			),
 		);
 		$this->fields_form = $fields_form;
 
@@ -217,28 +216,29 @@ class AdminScenesControllerCore extends AdminController
 			$this->addJqueryPlugin('autocomplete');
 			$this->addJqueryPlugin('imgareaselect');
 			$this->addJs(_PS_JS_DIR_.'admin-scene-cropping.js' );
-			$image_to_map_desc .= '<br /><img id="large_scene_image" alt="" src="'.
-				_THEME_SCENE_DIR_.$obj->id.'-scene_default.jpg?rand='.(int)rand().'" /><br />';
+			$image_to_map_desc .= '<div class="panel panel-default"><span class="thumbnail row-margin-bottom"><img id="large_scene_image" alt="" src="'.
+				_THEME_SCENE_DIR_.$obj->id.'-scene_default.jpg?rand='.(int)rand().'" /></span>';
 
 			$image_to_map_desc .= '
-						<div id="ajax_choose_product" style="display:none;" class="panel panel-default">
-							<div class="panel-heading">
-							'.$this->l('Begin typing the first few letters of the product name, then select the product you are looking for from the drop-down list:').'
-							</div>
-							<div class="panel-body">
-								<input type="text" value="" id="product_autocomplete_input" />
-							</div>
-							<div class="panel-footer">
-								<button type="button" class="btn btn-default" onclick="undoEdit();"><i class="icon-remove"></i>&nbsp;'.$this->l('Delete').'</button>
-								<button type="button" class="btn btn-default" onclick="$(this).prev().search();"><i class="icon-check-sign"></i>&nbsp;'.$this->l('Ok').'</button>
-							</div>
-						</div>
+				<div id="ajax_choose_product" class="row" style="display:none;">
+					<div class="col-lg-12">
+					<p class="alert alert-info">'
+					.$this->l('Begin typing the first few letters of the product name, then select the product you are looking for from the drop-down list:').'
+					</p>
+					<div class="input-group row-margin-bottom">
+						<span class="input-group-addon">
+							<i class="icon-search"></i>
+						</span>
+						<input type="text" value="" id="product_autocomplete_input" />
+					</div>
+					<button type="button" class="btn btn-default" onclick="undoEdit();"><i class="icon-remove"></i>&nbsp;'.$this->l('Delete').'</button>
+					<button type="button" class="btn btn-default" onclick="$(this).prev().search();"><i class="icon-check-sign"></i>&nbsp;'.$this->l('Ok').'</button>
+					</div>
+				</div>
 				';
 
 			if ($obj->id && file_exists(_PS_SCENE_IMG_DIR_.'thumbs/'.$obj->id.'-m_scene_default.jpg'))
-				$image_to_map_desc .= '<br/>
-					<img id="large_scene_image" style="clear:both;border:1px solid black;" alt="" src="'._THEME_SCENE_DIR_.'thumbs/'.$obj->id.'-m_scene_default.jpg?rand='.(int)rand().'" />
-					<br />';
+				$image_to_map_desc .= '</div><hr/><img class="thumbnail" id="large_scene_image" style="clear:both;border:1px solid black;" alt="" src="'._THEME_SCENE_DIR_.'thumbs/'.$obj->id.'-m_scene_default.jpg?rand='.(int)rand().'" />';
 
 			$img_alt_desc = '';
 			$img_alt_desc .= $this->l('If you want to use a thumbnail other than one generated from simply reducing the mapped image, please upload it here.')
@@ -277,7 +277,7 @@ class AdminScenesControllerCore extends AdminController
 				);
 		}
 		else
-			$image_to_map_desc .= '<br/><span class="bold">'.$this->l('Please add a picture to continue mapping the image.').'</span><br/><br/>';
+			$image_to_map_desc .= '<span>'.$this->l('Please add a picture to continue mapping the image.').'</span>';
 
 		if (Shop::isFeatureActive())
 		{
