@@ -193,7 +193,6 @@
 
 		.data_trends
 
-
 =animation($name,$value)
 	-webkit-animation-#{$name}: $value
 	animation-#{$name}: $value
@@ -224,3 +223,11 @@
 	100%
 		+opacity(1)
 		+scale(1)
+
+#new_version_container
+	@extend .panel
+	padding: 0!important
+	overflow: hidden
+	iframe
+		height: 120px
+		width: 100%
