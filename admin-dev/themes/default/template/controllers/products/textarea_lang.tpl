@@ -25,13 +25,11 @@
 
 {foreach from=$languages item=language}
 <div class="translatable-field lang-{$language.id_lang}">
-	<div class="col-lg-10">
+	<div class="col-lg-9">
 		<textarea
-			id="{$input_name}_{$language.id_lang}" 
+			id="{$input_name}_{$language.id_lang}"
 			name="{$input_name}_{$language.id_lang}"
-			class="{if isset($autosize_js)}textarea-autosize{else}autoload_rte{/if}">
-			{if isset($input_value[$language.id_lang])}{$input_value[$language.id_lang]|htmlentitiesUTF8}{/if}
-		</textarea>
+			class="{if isset($autosize_js)}textarea-autosize{else}autoload_rte{/if}">{if isset($input_value[$language.id_lang])}{$input_value[$language.id_lang]|htmlentitiesUTF8}{/if}</textarea>
 	</div>
 	<div class="col-lg-2">
 		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">

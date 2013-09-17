@@ -90,35 +90,42 @@
 									<div class="row">
 									{foreach $languages as $language}
 										{assign var='value_text' value=$fields_value[$input.name][$language.id_lang]}
-										<div class="input-group col-lg-12 translatable-field lang-{$language.id_lang}" {if $language.id_lang != $defaultFormLanguage}style="display:none"{/if}>
-											{if $input.type == 'tags'}
-												{literal}
-													<script type="text/javascript">
-														$().ready(function () {
-															var input_id = '{/literal}{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}{literal}';
-															$('#'+input_id).tagify({addTagPrompt: '{/literal}{l s='Add tag' js=1}{literal}'});
-															$({/literal}'#{$table}{literal}_form').submit( function() {
-																$(this).find('#'+input_id).val($('#'+input_id).tagify('serialize'));
+										<div class="translatable-field lang-{$language.id_lang}" {if $language.id_lang != $defaultFormLanguage}style="display:none"{/if}>
+											<div class="col-lg-9">
+												{if $input.type == 'tags'}
+													{literal}
+														<script type="text/javascript">
+															$().ready(function () {
+																var input_id = '{/literal}{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}{literal}';
+																$('#'+input_id).tagify({addTagPrompt: '{/literal}{l s='Add tag' js=1}{literal}'});
+																$({/literal}'#{$table}{literal}_form').submit( function() {
+																	$(this).find('#'+input_id).val($('#'+input_id).tagify('serialize'));
+																});
 															});
-														});
-													</script>
-												{/literal}
-											{/if}
-											{if isset($input.maxlength)}
-											<span id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}_counter" class="input-group-addon"><span class="text-count-down">{$input.maxlength}</span></span>
-											{/if}
-											<input type="text"
-												id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}"
-												name="{$input.name}_{$language.id_lang}"
-												class="{if $input.type == 'tags'}tagify {/if}{if isset($input.class)}{$input.class}{/if}"
-												value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'htmlall':'UTF-8'}{else}{$value_text|escape:'htmlall':'UTF-8'}{/if}"
-												onkeyup="if (isArrowKey(event)) return ;updateFriendlyURL();"
-												{if isset($input.size)}size="{$input.size}"{/if}
-												{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
-												{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if}
-												{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
-												{if isset($input.autocomplete) && !$input.autocomplete}autocomplete="off"{/if} />
-											<div class="input-group-btn">
+														</script>
+													{/literal}
+												{/if}
+												{if isset($input.maxchar)}
+												<div class="input-group">
+												<span id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}_counter" class="input-group-addon"><span class="text-count-down">{$input.maxchar}</span></span>
+												{/if}
+												<input type="text"
+													id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}"
+													name="{$input.name}_{$language.id_lang}"
+													class="{if $input.type == 'tags'}tagify {/if}{if isset($input.class)}{$input.class}{/if}"
+													value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'htmlall':'UTF-8'}{else}{$value_text|escape:'htmlall':'UTF-8'}{/if}"
+													onkeyup="if (isArrowKey(event)) return ;updateFriendlyURL();"
+													{if isset($input.size)} size="{$input.size}"{/if}
+													{if isset($input.maxchar)} data-maxchar="{$input.maxchar}"{/if}
+													{if isset($input.maxlength)} maxlength="{$input.maxlength}"{/if}
+													{if isset($input.readonly) && $input.readonly} readonly="readonly"{/if}
+													{if isset($input.disabled) && $input.disabled} disabled="disabled"{/if}
+													{if isset($input.autocomplete) && !$input.autocomplete} autocomplete="off"{/if} />
+												{if isset($input.maxchar)}
+												</div>
+												{/if}
+											</div>
+											<div class="col-lg-2">
 												<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
 													<img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt="">
 													{$language.iso_code}
@@ -132,10 +139,10 @@
 											</div>
 										</div>
 									{/foreach}
-									{if isset($input.maxlength)}
+									{if isset($input.maxchar)}
 									<script type="text/javascript">
 									function countDown($source, $target) {
-										var max = $source.attr("maxlength");
+										var max = $source.attr("data-maxchar");
 										$target.html(max-$source.val().length);
 
 										$source.keyup(function(){
@@ -167,21 +174,26 @@
 											{/literal}
 										{/if}
 										{assign var='value_text' value=$fields_value[$input.name]}
-										{if isset($input.maxlength)}
-										<span id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}_counter" class="input-group-addon"><span class="text-count-down">{$input.maxlength}</span></span>
+										{if isset($input.maxchar)}
+										<div class="input-group">
+										<span id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}_counter" class="input-group-addon"><span class="text-count-down">{$input.maxchar}</span></span>
 										{/if}
 										<input type="text"
 											name="{$input.name}"
 											id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
 											value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'htmlall':'UTF-8'}{else}{$value_text|escape:'htmlall':'UTF-8'}{/if}"
 											class="{if $input.type == 'tags'}tagify {/if}{if isset($input.class)}{$input.class}{/if}"
-											{if isset($input.size)}size="{$input.size}"{/if}
-											{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
-											{if isset($input.class)}class="{$input.class}"{/if}
-											{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if}
-											{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
-											{if isset($input.autocomplete) && !$input.autocomplete}autocomplete="off"{/if} />
+											{if isset($input.size)} size="{$input.size}"{/if}
+											{if isset($input.maxchar)} data-maxchar="{$input.maxchar}"{/if}
+											{if isset($input.maxlength)} maxlength="{$input.maxlength}"{/if}
+											{if isset($input.class)} class="{$input.class}"{/if}
+											{if isset($input.readonly) && $input.readonly} readonly="readonly"{/if}
+											{if isset($input.disabled) && $input.disabled} disabled="disabled"{/if}
+											{if isset($input.autocomplete) && !$input.autocomplete} autocomplete="off"{/if} />
 										{if isset($input.suffix)}{$input.suffix}{/if}
+										{if isset($input.maxchar)}
+										</div>
+										{/if}
 										{if !empty($input.desc)}
 										<div class="alert alert-info">
 										{if is_array($input.desc)}
@@ -195,10 +207,10 @@
 										{/if}
 										</div>
 										{/if}
-										{if isset($input.maxlength)}
+										{if isset($input.maxchar)}
 										<script type="text/javascript">
 										function countDown($source, $target) {
-											var max = $source.attr("maxlength");
+											var max = $source.attr("data-maxchar");
 											$target.html(max-$source.val().length);
 
 											$source.keyup(function(){
@@ -282,7 +294,7 @@
 									{/if}
 								{elseif $input.type == 'radio'}
 									{foreach $input.values as $value}
-										
+
 										<div class="radio {if isset($input.class)}"{$input.class}"{/if}">
 											<label>
 											<input type="radio"	name="{$input.name}"id="{$value.id}" value="{$value.value|escape:'htmlall':'UTF-8'}"
@@ -336,7 +348,7 @@
 									{if isset($input.lang) AND $input.lang}
 									{foreach $languages as $language}
 									<div class="row translatable-field lang-{$language.id_lang}"  {if $language.id_lang != $defaultFormLanguage}style="display:none;"{/if}>
-										<div class="col-lg-10">
+										<div class="col-lg-9">
 											<textarea name="{$input.name}_{$language.id_lang}" class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte {if isset($input.class)}{$input.class}{/if}{else}textarea-autosize{/if}" >{$fields_value[$input.name][$language.id_lang]|escape:'htmlall':'UTF-8'}</textarea>
 										</div>
 										<div class="col-lg-2">
@@ -475,7 +487,7 @@
 								{elseif $input.type == 'date'}
 									<div class="row">
 										<div class="input-group col-lg-4">
-											<input 
+											<input
 												id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
 												type="text"
 												data-hex="true"

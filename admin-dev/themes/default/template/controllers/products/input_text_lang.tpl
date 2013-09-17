@@ -24,10 +24,11 @@
 *}
 
 {foreach from=$languages item=language}
-	<div class="input-group col-lg-12 translatable-field lang-{$language.id_lang}">
-
-			{if isset($maxlength)}
-			<span id="{$input_name}_{$language.id_lang}_counter" class="input-group-addon"><span class="text-count-down">{$maxlength}</span></span>
+	<div class="translatable-field lang-{$language.id_lang}">
+		<div class="col-lg-9">
+			{if isset($maxchar)}
+			<div class="input-group">
+			<span id="{$input_name}_{$language.id_lang}_counter" class="input-group-addon"><span class="text-count-down">{$maxchar}</span></span>
 			{/if}
 			<input type="text"
 			id="{$input_name}_{$language.id_lang}"
@@ -36,28 +37,32 @@
 			value="{$input_value[$language.id_lang]|htmlentitiesUTF8|default:''}"
 			onkeyup="if (isArrowKey(event)) return ;updateFriendlyURL();"
 			onblur="updateLinkRewrite();"
-			{if isset($maxlength)}maxlength="{$maxlength}"{/if}>
-			<div class="input-group-btn">
-				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-					<img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt="">
-					{$language.iso_code}
-					<span class="caret"></span>
-				</button>
-				<ul class="dropdown-menu">
-					{foreach from=$languages item=language}
-					<li>
-						<a href="javascript:hideOtherLanguage({$language.id_lang});"><img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt=""> {$language.name}</a>
-					</li>
-					{/foreach}
-				</ul>
+			{if isset($maxchar)} data-maxchar="{$maxchar}"{/if}
+			{if isset($maxlength)} maxlength="{$maxlength}"{/if}>
+			{if isset($maxchar)}
 			</div>
-
+			{/if}
+		</div>
+		<div class="col-lg-2">
+			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" tabindex="-1">
+				<img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt="">
+				{$language.iso_code}
+				<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu">
+				{foreach from=$languages item=language}
+				<li>
+					<a href="javascript:hideOtherLanguage({$language.id_lang});"><img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt="" tabindex="-1"> {$language.name}</a>
+				</li>
+				{/foreach}
+			</ul>
+		</div>
 	</div>
 {/foreach}
-{if isset($maxlength)}
+{if isset($maxchar)}
 <script type="text/javascript">
 function countDown($source, $target) {
-	var max = $source.attr("maxlength");
+	var max = $source.attr("data-maxchar");
 	$target.html(max-$source.val().length);
 
 	$source.keyup(function(){
