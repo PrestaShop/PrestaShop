@@ -27,7 +27,7 @@
 {include file='./page-title.tpl'}
 
 <div data-role="content" id="content">
-<a data-role="button" data-icon="arrow-l" data-theme="a" data-mini="true" data-inline="true" href="{$link->getPageLink('my-account', true)}" data-ajax="false">{l s='My account'}</a>
+<a data-role="button" data-icon="arrow-l" data-theme="a" data-mini="true" data-inline="true" href="{$link->getPageLink('my-account', true)|escape:'html'}" data-ajax="false">{l s='My account'}</a>
 
 {include file="./errors.tpl"}
 
@@ -39,7 +39,7 @@
 {else}
 	<h3>{l s='Please be sure to update your personal information if it has changed.'}</h3>
 	<p class="required bold"><sup>*</sup>{l s='Required field'}</p>
-	<form action="{$link->getPageLink('identity', true)}" method="post" class="std">
+	<form action="{$link->getPageLink('identity', true)|escape:'html'}" method="post" class="std">
 		<label>{l s='Title'}</label>
 		<fieldset data-role="controlgroup">
 		{foreach from=$genders key=k item=gender}
@@ -94,9 +94,9 @@
 		</fieldset>
 		{if $newsletter}
 		<fieldset data-role="controlgroup">
-			<input type="checkbox" id="newsletter" name="newsletter" value="1" {if isset($smarty.post.newsletter) && $smarty.post.newsletter == 1} checked="checked"{/if} />
+			<input type="checkbox" id="newsletter" name="newsletter" value="1" {if isset($smarty.post.newsletter) && $smarty.post.newsletter == 1} checked="checked"{/if} autocomplete="off"/>
 			<label for="newsletter">{l s='Sign up for our newsletter!'}</label>
-			<input type="checkbox" name="optin" id="optin" value="1" {if isset($smarty.post.optin) && $smarty.post.optin == 1} checked="checked"{/if} />
+			<input type="checkbox" name="optin" id="optin" value="1" {if isset($smarty.post.optin) && $smarty.post.optin == 1} checked="checked"{/if} autocomplete="off"/>
 			<label for="optin">{l s='Receive special offers from our partners!'}</label>
 		</fieldset>
 		{/if}

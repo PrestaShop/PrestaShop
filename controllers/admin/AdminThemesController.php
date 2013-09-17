@@ -122,7 +122,7 @@ class AdminThemesControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_LOGO' => array(
 						'title' => $this->l('Header logo'),
-						'desc' => $this->l('Will appear on main page'),
+						'desc' => $this->l('Will appear on main page.').' '.$this->l('Recommended height: 52px. Maximum height on default theme: 65px.'),
 						'type' => 'file',
 						'thumb' => _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()
 					),
@@ -614,7 +614,7 @@ class AdminThemesControllerCore extends AdminController
 
 			$ext = ($field_name == 'PS_STORES_ICON') ? '.gif' : '.jpg';
 			$logo_name = $logo_prefix.'-'.(int)$id_shop.$ext;
-			if (Context::getContext()->shop->getContext() == Shop::CONTEXT_ALL || $id_shop == 0 || Shop::isFeatureActive()==false)
+			if (Context::getContext()->shop->getContext() == Shop::CONTEXT_ALL || $id_shop == 0 || Shop::isFeatureActive() == false)
 				$logo_name = $logo_prefix.$ext;
 
 			if ($field_name == 'PS_STORES_ICON')

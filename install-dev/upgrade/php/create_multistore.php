@@ -29,7 +29,8 @@ require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_new_tab.php');
 function create_multistore()
 {
 	$res = true;
-
+	if (!defined('_THEME_NAME_'))
+		define('_THEME_NAME_', 'default');
 	// @todo : use _PS_ROOT_DIR_
 	if (defined('__PS_BASE_URI__'))
 		$INSTALLER__PS_BASE_URI = __PS_BASE_URI__;
@@ -61,10 +62,10 @@ function create_multistore()
 			id_theme = (SELECT id_theme FROM '._DB_PREFIX_.'theme WHERE name="'.Db::getInstance()->escape(_THEME_NAME_).'") 
 		WHERE id_shop = 1');
 	$shop_domain = Db::getInstance()->getValue('SELECT `value`
-															FROM `'._DB_PREFIX_.'_configuration` 
+															FROM `'._DB_PREFIX_.'configuration` 
 															WHERE `name`="PS_SHOP_DOMAIN"');
 	$shop_domain_ssl = Db::getInstance()->getValue('SELECT `value`
-															FROM `'._DB_PREFIX_.'_configuration` 
+															FROM `'._DB_PREFIX_.'configuration` 
 															WHERE `name`="PS_SHOP_DOMAIN_SSL"');
 	if(empty($shop_domain))
 	{
@@ -78,11 +79,11 @@ function create_multistore()
 																			VALUES(1, \''.pSQL($shop_domain).'\', \''.pSQL($shop_domain_ssl).'\', \''.pSQL($_PS_DIRECTORY_).'\', \'\', 1, 1)');
 
 	// Stock conversion
-	$sql = 'INSERT INTO `'._DB_PREFIX_.'.stock` (`id_product`, `id_product_attribute`, `id_group_shop`, `id_shop`, `quantity`)
-	VALUES (SELECT p.`id_product`, 0, 1, 1, p.`quantity` FROM `'._DB_PREFIX_.'.product` p);';
+	$sql = 'INSERT INTO `'._DB_PREFIX_.'stock` (`id_product`, `id_product_attribute`, `id_group_shop`, `id_shop`, `quantity`)
+	VALUES (SELECT p.`id_product`, 0, 1, 1, p.`quantity` FROM `'._DB_PREFIX_.'product` p);';
 	$res &= Db::getInstance()->execute($sql);
 
-	$sql = 'INSERT INTO `'._DB_PREFIX_.'.stock` (`id_product`, `id_product_attribute`, `id_group_shop`, `id_shop`, `quantity`)
+	$sql = 'INSERT INTO `'._DB_PREFIX_.'stock` (`id_product`, `id_product_attribute`, `id_group_shop`, `id_shop`, `quantity`)
 	VALUES (SELECT `id_product`, `id_product_attribute`, 1, 1, `quantity` FROM `'._DB_PREFIX_.'product_attribute` p);';
 	$res &= Db::getInstance()->execute($sql);
 

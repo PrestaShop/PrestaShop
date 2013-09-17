@@ -45,7 +45,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 		$this->smarty = $smarty;
 
 		// header informations
-		$this->date = Tools::displayDate($this->order->invoice_date, (int)$this->order->id_lang);
+		$this->date = Tools::displayDate($this->order_slip->date_add);
 		$this->title = HTMLTemplateOrderSlip::l('Slip #').Configuration::get('PS_CREDIT_SLIP_PREFIX', Context::getContext()->language->id).sprintf('%06d', (int)$this->order_slip->id);
 
 		// footer informations
@@ -212,7 +212,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 			foreach ($tmp_tax_infos as $rate => &$row)
 			{
 				if (!isset($ecotax[$rate]))
-					continue
+					continue;
 				$row['total_price_tax_excl'] -= $ecotax[$rate]['ecotax_tax_excl'];
 				$row['total_amount'] -= ($ecotax[$rate]['ecotax_tax_incl'] - $ecotax[$rate]['ecotax_tax_excl']);
 			}

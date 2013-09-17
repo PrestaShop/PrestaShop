@@ -27,7 +27,7 @@
 
 {block name="override_tpl"}
 	<script type="text/javascript">
-	var admin_order_tab_link = "{$link->getAdminLink('AdminOrders')}";
+	var admin_order_tab_link = "{$link->getAdminLink('AdminOrders')|addslashes}";
 	var id_order = {$order->id};
 	var id_lang = {$current_id_lang};
 	var id_currency = {$order->id_currency};
@@ -59,7 +59,7 @@
 
 	{assign var="hook_invoice" value={hook h="displayInvoice" id_order=$order->id}}
 	{if ($hook_invoice)}
-	<div style="float: right; margin: -40px 40px 10px 0;">{$hook_invoice}</div><br class="clear" />';
+	<div style="float: right; margin: -40px 40px 10px 0;">{$hook_invoice}</div><br class="clear" />
 	{/if}
 
 <div class="bloc-command">
@@ -113,9 +113,7 @@
 			<form action="{$currentIndex}&vieworder&token={$smarty.get.token}" method="post">
 				<select id="id_order_state" name="id_order_state">
 				{foreach from=$states item=state}
-					{if $state['id_order_state'] != $currentState->id}
-					<option value="{$state['id_order_state']}">{$state['name']|stripslashes}</option>
-					{/if}
+					<option value="{$state['id_order_state']}"{if $state['id_order_state'] == $currentState->id} selected="selected" disabled="disabled"{/if}>{$state['name']|stripslashes}</option>
 				{/foreach}
 				</select>
 				<input type="hidden" name="id_order" value="{$order->id}" />
@@ -172,9 +170,9 @@
 					{l s='Account registered:'} <b>{dateFormat date=$customer->date_add full=true}</b><br />
 					{l s='Valid orders placed:'} <b>{$customerStats['nb_orders']}</b><br />
 					{l s='Total spent since registration:'} <b>{displayPrice price=Tools::ps_round(Tools::convertPrice($customerStats['total_orders'], $currency), 2) currency=$currency->id}</b><br />
-			</fieldset>
 				{/if}
 			{/if}
+			</fieldset>
 
 			<!-- Sources block -->
 			{if (sizeof($sources))}
@@ -266,8 +264,8 @@
 
 				{if (!$order->valid && sizeof($currencies) > 1)}
 				<form method="post" action="{$currentIndex}&vieworder&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
-					<p class="warn">{l s='Don\'t forget to update your conversion rate before making this change.'}</p>
-					<label>{l s='Don\'t forget to update your conversion rate before making this change.'}</label>
+					<p class="warn">{l s='Do not forget to update your exchange rate before making this change.'}</p>
+					<label>{l s='Do not forget to update your exchange rate before making this change.'}</label>
 					<select name="new_currency">
 						{foreach from=$currencies item=currency_change}
 							{if $currency_change['id_currency'] != $order->id_currency}
@@ -327,7 +325,7 @@
 								<td>{displayPrice price=$payment->amount currency=$payment->id_currency}</td>
 								<td>
 								{if $invoice = $payment->getOrderInvoice($order->id)}
-									{$invoice->getInvoiceNumberFormatted($current_id_lang)}
+									{$invoice->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}
 								{else}
 									{l s='No invoice'}
 								{/if}
@@ -406,7 +404,7 @@
 								<td>
 									<select name="payment_invoice" id="payment_invoice">
 									{foreach from=$invoices_collection item=invoice}
-										<option value="{$invoice->id}" selected="selected">{$invoice->getInvoiceNumberFormatted($current_id_lang)}</option>
+										<option value="{$invoice->id}" selected="selected">{$invoice->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}</option>
 									{/foreach}
 									</select>
 								</td>
@@ -594,6 +592,7 @@
 						<th>{l s='Product'}</th>
 						<th style="width: 15%; text-align: center">{l s='Unit Price'} <sup>*</sup></th>
 						<th style="width: 4%; text-align: center">{l s='Qty'}</th>
+						{if $display_warehouse}<th style="text-align: center">{l s='Warehouse'}</th>{/if}
 						{if ($order->hasBeenPaid())}<th style="width: 3%; text-align: center">{l s='Refunded'}</th>{/if}
 						{if ($order->hasBeenDelivered() || $order->hasProductReturned())}<th style="width: 3%; text-align: center">{l s='Returned'}</th>{/if}
 						{if $stock_management}<th style="width: 10%; text-align: center">{l s='Available quantity'}</th>{/if}

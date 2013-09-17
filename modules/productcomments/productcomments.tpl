@@ -71,6 +71,9 @@ var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
 			</div>
 			{/if}
 		{/foreach}
+		<p class="align_center">
+			<a id="new_comment_tab_btn" class="open-comment-form" href="#new_comment_form">{l s='Write your review' mod='productcomments'} !</a>
+		</p>
 	{else}
 		{if ($too_early == false AND ($logged OR $allow_guests))}
 		<p class="align_center">
@@ -86,10 +89,10 @@ var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
 <!-- Fancybox -->
 <div style="display: none;">
 	<div id="new_comment_form">
-		<form action="#">
+		<form id="id_new_comment_form" action="#">
 			<h2 class="title">{l s='Write your review' mod='productcomments'}</h2>
 			<div class="product clearfix">
-				<img src="{$link->getImageLink($product->link_rewrite, $productcomment_cover, 'home_default')}" height="{$homeSize.height}" width="{$homeSize.width}" alt="{$product->name|escape:html:'UTF-8'}" />
+				<img src="{$link->getImageLink($product->link_rewrite, $productcomment_cover, 'home_default')|escape:'html'}" height="{$homeSize.height}" width="{$homeSize.width}" alt="{$product->name|escape:html:'UTF-8'}" />
 				<div class="product_desc">
 					<p class="product_name"><strong>{$product->name}</strong></p>
 					{$product->description_short}
@@ -99,7 +102,7 @@ var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
 			<div class="new_comment_form_content">
 				<h2>{l s='Write your review' mod='productcomments'}</h2>
 
-				<div id="new_comment_form_error" class="error" style="display: none;">
+				<div id="new_comment_form_error" class="error" style="display: none; padding: 15px 25px">
 					<ul></ul>
 				</div>
 
@@ -133,7 +136,7 @@ var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
 				{/if}
 
 				<div id="new_comment_form_footer">
-					<input id="id_product_comment_send" name="id_product" type="hidden" value='{$id_product_comment_form}'></input>
+					<input id="id_product_comment_send" name="id_product" type="hidden" value='{$id_product_comment_form}' />
 					<p class="fl required"><sup>*</sup> {l s='Required fields' mod='productcomments'}</p>
 					<p class="fr">
 						<button id="submitNewMessage" name="submitMessage" type="submit">{l s='Send' mod='productcomments'}</button>&nbsp;

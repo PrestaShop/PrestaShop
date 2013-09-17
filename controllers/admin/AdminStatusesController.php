@@ -136,6 +136,7 @@ class AdminStatusesControllerCore extends AdminController
 	{
 		$this->table = 'order_return_state';
 		$this->_defaultOrderBy = $this->identifier = 'id_order_return_state';
+		$this->list_id = 'order_return_state';
 		$this->deleted = false;
 		$this->_orderBy = null;
 
@@ -231,14 +232,6 @@ class AdminStatusesControllerCore extends AdminController
 	}
 	
 	public function renderForm()
-	{
-		if (Tools::isSubmit('updateorder_state') || Tools::isSubmit('addorder_state'))
-			return $this->renderOrderStatusForm();
-		else if (Tools::isSubmit('updateorder_return_state') || Tools::isSubmit('addorder_return_state'))
-			return $this->renderOrderReturnsForm();
-	}
-	
-	protected function renderOrderStatusForm()
 	{
 		$this->fields_form = array(
 			'tinymce' => true,
@@ -377,7 +370,17 @@ class AdminStatusesControllerCore extends AdminController
 				'class' => 'button'
 			)
 		);
-
+	
+		if (Tools::isSubmit('updateorder_state') || Tools::isSubmit('addorder_state'))
+			return $this->renderOrderStatusForm();
+		else if (Tools::isSubmit('updateorder_return_state') || Tools::isSubmit('addorder_return_state'))
+			return $this->renderOrderReturnsForm();
+		else
+			return parent::renderForm();			
+	}
+	
+	protected function renderOrderStatusForm()
+	{
 		if (!($obj = $this->loadObject(true)))
 			return;
 

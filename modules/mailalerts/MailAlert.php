@@ -36,6 +36,8 @@ class MailAlert extends ObjectModel
 
 	public $id_shop;
 
+	public $id_lang;
+
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -47,14 +49,18 @@ class MailAlert extends ObjectModel
 			'customer_email' => array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true),
 			'id_product' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
 			'id_product_attribute' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
-			'id_shop' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true)
+			'id_shop' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
+			'id_lang' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true)
 		),
 	);
 
-	public static function customerHasNotification($id_customer, $id_product, $id_product_attribute, $id_shop = null)
+	public static function customerHasNotification($id_customer, $id_product, $id_product_attribute, $id_shop = null, $id_lang = null)
 	{
 		if ($id_shop == null)
 			$id_shop = Context::getContext()->shop->id;
+
+		if ($id_lang == null)
+			$id_lang = Context::getContext()->language->id;
 
 		$customer = new Customer($id_customer);
 		$customer_email = $customer->email;
@@ -70,14 +76,15 @@ class MailAlert extends ObjectModel
 		return count(Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql));
 	}
 
-	public static function deleteAlert($id_customer, $customer_email, $id_product, $id_product_attribute)
+	public static function deleteAlert($id_customer, $customer_email, $id_product, $id_product_attribute, $id_shop)
 	{
 		$sql = '
 			DELETE FROM `'._DB_PREFIX_.self::$definition['table'].'`
 			WHERE '.(($id_customer > 0) ? '(`customer_email` = \''.pSQL($customer_email).'\' OR `id_customer` = '.(int)$id_customer.')' :
 			'`customer_email` = \''.pSQL($customer_email).'\'').
 			' AND `id_product` = '.(int)$id_product.'
-			AND `id_product_attribute` = '.(int)$id_product_attribute;
+			AND `id_product_attribute` = '.(int)$id_product_attribute.'
+			AND `id_shop` = '.(int)$id_shop;
 
 		return Db::getInstance()->execute($sql);
 	}
@@ -160,17 +167,23 @@ class MailAlert extends ObjectModel
 	public static function sendCustomerAlert($id_product, $id_product_attribute)
 	{
 		$link = new Link();
-
-		$id_lang = (int)Context::getContext()->language->id;
-		$product = new Product((int)$id_product, false, $id_lang);
-		$templateVars = array(
-					'{product}' => (is_array($product->name) ? $product->name[$id_lang] : $product->name),
-					'{product_link}' => $link->getProductLink($product)
-				);
-
+		$context = Context::getContext()->cloneContext();
 		$customers = self::getCustomers($id_product, $id_product_attribute);
+		
 		foreach ($customers as $customer)
 		{
+			$id_shop = (int)$customer['id_shop'];
+			$id_lang = (int)$customer['id_lang'];
+			$context->shop->id = $id_shop;
+			$context->language->id = $id_lang;
+			
+			$product = new Product((int)$id_product, false, $id_lang, $id_shop);
+			$product_link = $link->getProductLink($product, $product->link_rewrite, null, null, $id_lang, $id_shop);
+			$templateVars = array(
+				'{product}' => (is_array($product->name) ? $product->name[$id_lang] : $product->name),
+				'{product_link}' => $product_link
+			);
+			
 			if ($customer['id_customer'])
 			{
 				$customer = new Customer((int)$customer['id_customer']);
@@ -182,15 +195,30 @@ class MailAlert extends ObjectModel
 				$customer_id = 0;
 				$customer_email = $customer['customer_email'];
 			}
+			
 			$iso = Language::getIsoById($id_lang);
-
+			
 			if (file_exists(dirname(__FILE__).'/mails/'.$iso.'/customer_qty.txt') &&
 				file_exists(dirname(__FILE__).'/mails/'.$iso.'/customer_qty.html'))
-				Mail::Send((int)Configuration::get('PS_LANG_DEFAULT'), 'customer_qty', Mail::l('Product available', $id_lang), $templateVars, strval($customer_email), NULL, strval(Configuration::get('PS_SHOP_EMAIL')), strval(Configuration::get('PS_SHOP_NAME')), NULL, NULL, dirname(__FILE__).'/mails/');
+				Mail::Send(
+					$id_lang, 
+					'customer_qty', 
+					Mail::l('Product available', $id_lang), 
+					$templateVars, 
+					strval($customer_email), 
+					NULL, 
+					strval(Configuration::get('PS_SHOP_EMAIL', null, null, $id_shop)), 
+					strval(Configuration::get('PS_SHOP_NAME', null, null, $id_shop)), 
+					NULL, 
+					NULL, 
+					dirname(__FILE__).'/mails/',
+					false,
+					$id_shop
+				);
 
-			Hook::exec('actionModuleMailAlertSendCustomer', array('product' => (is_array($product->name) ? $product->name[$id_lang] : $product->name), 'link' => $link->getProductLink($product)));
+			Hook::exec('actionModuleMailAlertSendCustomer', array('product' => (is_array($product->name) ? $product->name[$id_lang] : $product->name), 'link' => $product_link, 'customer' => $customer, 'product_obj' => $product));
 
-			self::deleteAlert((int)$customer_id, strval($customer_email), (int)$id_product, (int)$id_product_attribute);
+			self::deleteAlert((int)$customer_id, strval($customer_email), (int)$id_product, (int)$id_product_attribute, $id_shop);
 		}
 	}
 
@@ -245,7 +273,7 @@ class MailAlert extends ObjectModel
 	public static function getCustomers($id_product, $id_product_attribute)
 	{
 		$sql = '
-			SELECT id_customer, customer_email
+			SELECT id_customer, customer_email, id_shop, id_lang
 			FROM `'._DB_PREFIX_.self::$definition['table'].'`
 			WHERE `id_product` = '.(int)$id_product.' AND `id_product_attribute` = '.(int)$id_product_attribute;
 

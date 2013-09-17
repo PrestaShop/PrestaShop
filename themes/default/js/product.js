@@ -312,7 +312,7 @@ function updateDisplay()
 			var taxExclPrice = (specific_currency ? product_specific_price.price : product_specific_price.price * currencyRate) + (selectedCombination['price'] * currencyRate);
 
 		if (!displayPrice && !noTaxForThisProduct)
-			productPriceDisplay = taxExclPrice * tax; // Need to be global => no var
+			productPriceDisplay = ps_round(taxExclPrice * tax, 2); // Need to be global => no var
 		else
 			productPriceDisplay = ps_round(taxExclPrice, 2); // Need to be global => no var
 
@@ -326,7 +326,7 @@ function updateDisplay()
 				reduction = ps_round(reduction / tax, 6);
 
 		}
-		else if (product_specific_price && product_specific_price.reduction)
+		else if (product_specific_price && product_specific_price.reduction && !selectedCombination.specific_price)
 		{
 			if (product_specific_price.reduction_type == 'amount')
 				reduction_price = (specific_currency ? product_specific_price.reduction : product_specific_price.reduction * currencyRate);
@@ -372,7 +372,6 @@ function updateDisplay()
 			$('#not_impacted_by_discount').hide();
 
 		productPriceDisplay -= reduction;
-		var tmp = productPriceDisplay * group_reduction;
 		productPriceDisplay = ps_round(productPriceDisplay * group_reduction, 2);
 
 		var ecotaxAmount = !displayPrice ? ps_round(selectedCombination['ecotax'] * (1 + ecotaxTax_rate / 100), 2) : selectedCombination['ecotax'];
@@ -387,6 +386,7 @@ function updateDisplay()
 		}
 		$('#our_price_display').text(our_price);
 		$('#old_price_display').text(formatCurrency(productPriceWithoutReductionDisplay, currencyFormat, currencySign, currencyBlank));
+
 		if (productPriceWithoutReductionDisplay > productPriceDisplay)
 			$('#old_price,#old_price_display,#old_price_display_taxes').show();
 		else
@@ -442,9 +442,9 @@ function displayDiscounts(combination)
 			$(this).fadeOut('slow');
 	 });
 
-	if ($('#quantityDiscount_' + combination).length != 0)
+	if ($('#quantityDiscount_' + combination+',.quantityDiscount_' + combination).length != 0)
 	{
-		$('#quantityDiscount_' + combination).show();
+		$('#quantityDiscount_' + combination+',.quantityDiscount_' + combination).show();
 		$('#noQuantityDiscount').hide();
 	}
 	else
@@ -668,7 +668,7 @@ function getProductAttribute()
 		url = url.substring(0, url.indexOf('#'));
 
 	// set ipa to the customization form
-	$('#customizationForm').attr('action', $('#customizationForm').attr('action') + request)
+	$('#customizationForm').attr('action', $('#customizationForm').attr('action') + request);
 	window.location = url + request;
 }
 

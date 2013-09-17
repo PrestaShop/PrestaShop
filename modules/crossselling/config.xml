@@ -2,7 +2,7 @@
         <module>
             <name>crossselling</name>
             <displayName><![CDATA[Cross Selling]]></displayName>
-            <version><![CDATA[0.1]]></version>
+            <version><![CDATA[0.7]]></version>
             <description><![CDATA[Customers who bought this product also bought:]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>

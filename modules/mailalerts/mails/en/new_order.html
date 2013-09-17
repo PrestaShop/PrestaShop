@@ -16,7 +16,7 @@
 					<p>Payment method: <b>{payment}</b></p>
 
 					<table style="width: 100%; font-size: 11px; color: #374953;">
-						<tr style="background-color: #b9babe; text-align: center;">
+						<tr style="background-color: {color}; text-align: center;">
 							<th style="width: 15%; padding: 0.6em;">Reference</th>
 							<th>Product</th>
 							<th style="width: 15%; padding: 0.6em;">Price</th>
@@ -27,8 +27,8 @@
 							<td>{items}</td>
 						</tr>
 						<tr style="text-align: right;">
-							<td style="background-color: #b9babe; padding: 0.6em 0.4em;" colspan="4">Products</td>
-							<td style="background-color: #b9babe; padding: 0.6em 0.4em;">{total_products}</td>
+							<td style="background-color: {color}; padding: 0.6em 0.4em;" colspan="4">Products</td>
+							<td style="background-color: {color}; padding: 0.6em 0.4em;">{total_products}</td>
 						</tr>
 						<tr style="text-align: right;">
 							<td style="background-color: #ebecee; padding: 0.6em 0.4em;" colspan="4">Discounts</td>
@@ -42,16 +42,20 @@
 							<td style="background-color: #dde2e6; padding: 0.6em 0.4em;" colspan="4">Shipping</td>
 							<td style="background-color: #dde2e6; padding: 0.6em 0.4em;">{total_shipping}</td>
 						</tr>
+						<tr style="text-align: right;">
+							<td style="background-color: #dde2e6; padding: 0.6em 0.4em;" colspan="4">Total Tax paid</td>
+							<td style="background-color: #dde2e6; padding: 0.6em 0.4em;">{total_tax_paid}</td>
+						</tr>
 						<tr style="text-align: right; font-weight: bold;">
-							<td style="background-color: {color}; padding: 0.6em 0.4em;" colspan="4">Total paid</td>
-							<td style="background-color: {color}; padding: 0.6em 0.4em;">{total_paid}</td>
+							<td style="background-color: #f1aecf; padding: 0.6em 0.4em;" colspan="4">Total paid</td>
+							<td style="background-color: #f1aecf; padding: 0.6em 0.4em;">{total_paid}</td>
 						</tr>
 					</table>
 						
 					<p>Carrier: <b>{carrier}</b></p>
 
 					<table style="width: 100%; font-size: 11px; color: #374953;">
-						<tr style="background-color: #b9babe; text-transform: uppercase;">
+						<tr style="background-color: {color}; text-transform: uppercase;">
 							<th style="text-align: left; padding: 0.3em 1em;">Delivery address</th>
 							<th style="text-align: left; padding: 0.3em 1em;">Billing address</th>
 						</tr>

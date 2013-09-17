@@ -54,6 +54,8 @@ class Autoload
 		$this->root_dir = dirname(dirname(__FILE__)).'/';
 		if (file_exists($this->root_dir.Autoload::INDEX_FILE))
 			$this->index = include($this->root_dir.Autoload::INDEX_FILE);
+		else
+			$this->generateIndex();
 	}
 
 	/**
@@ -80,9 +82,8 @@ class Autoload
 		if (strpos(strtolower($classname), 'smarty_') === 0)
 			return;
 
-		// regenerate the class index if the requested class is not found in the index or if the requested file doesn't exists
-		if (!isset($this->index[$classname])
-			|| ($this->index[$classname] && !is_file($this->root_dir.$this->index[$classname]))
+		// regenerate the class index if the requested file doesn't exists
+		if ((isset($this->index[$classname]) && $this->index[$classname] && !is_file($this->root_dir.$this->index[$classname]))
 			|| (isset($this->index[$classname.'Core']) && $this->index[$classname.'Core'] && !is_file($this->root_dir.$this->index[$classname.'Core'])))
 			$this->generateIndex();
 
@@ -137,15 +138,15 @@ class Autoload
 		else
 		{
 			$filename_tmp = tempnam(dirname($filename), basename($filename.'.'));
-			if($filename_tmp !== FALSE and file_put_contents($filename_tmp, $content, LOCK_EX) !== FALSE) {
-				rename($filename_tmp, $filename);
-			} else {
-				// $filename_tmp couldn't be written. $filename should be there anyway (even if outdated),
-				// no need to die.
-				error_log('Cannot write temporary file '.$filename_tmp);
+			if($filename_tmp !== FALSE and file_put_contents($filename_tmp, $content, LOCK_EX) !== FALSE)
+			{
+				@rename($filename_tmp, $filename);
+				@chmod($filename, 0666);
 			}
+			else
+				// $filename_tmp couldn't be written. $filename should be there anyway (even if outdated), no need to die.
+				error_log('Cannot write temporary file '.$filename_tmp);
 		}
-
 		$this->index = $classes;
 	}
 
@@ -188,4 +189,3 @@ class Autoload
 		return isset($this->index[$classname]) ? $this->index[$classname] : null;
 	}
 }
-

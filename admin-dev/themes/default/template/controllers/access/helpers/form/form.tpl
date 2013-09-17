@@ -49,10 +49,12 @@
 
 			if (perm == 'all' && $(this).parent().parent().hasClass('parent'))
 			{
-				checked = enabled ? 'checked': '';
-				$(this).parent().parent().parent().find('.child-'+id_tab+' input[type=checkbox]').attr('checked', checked);
+				if (enabled)
+					$(this).parent().parent().parent().find('.child-'+id_tab+' input[type=checkbox]').attr('checked', 'checked');
+				else
+					$(this).parent().parent().parent().find('.child-'+id_tab+' input[type=checkbox]').removeAttr('checked');
 				$.ajax({
-					url: "{$link->getAdminLink('AdminAccess')}",
+					url: "{$link->getAdminLink('AdminAccess')|addslashes}",
 					cache: false,
 					data : {
 						ajaxMode : '1',
@@ -68,15 +70,12 @@
 					},
 					success : function(res,textStatus,jqXHR)
 					{
-						try
-						{
+						try {
 							if (res == 'ok')
 								showSuccessMessage("{l s='Update successful'}");
 							else
 								showErrorMessage("{l s='Update error'}");
-						}
-						catch(e)
-						{
+						} catch(e) {
 							jAlert('Technical error');
 						}
 					}
@@ -85,7 +84,7 @@
 			perfect_access_js_gestion(this, perm, id_tab, tabsize, tabnumber, table);
 
 			$.ajax({
-				url: "{$link->getAdminLink('AdminAccess')}",
+				url: "{$link->getAdminLink('AdminAccess')|addslashes}",
 				cache: false,
 				data : {
 					ajaxMode : '1',
@@ -134,7 +133,7 @@
 				});
 
 			$.ajax({
-				url: "{$link->getAdminLink('AdminAccess')}",
+				url: "{$link->getAdminLink('AdminAccess')|addslashes}",
 				cache: false,
 				data : {
 					ajaxMode: '1',
@@ -303,7 +302,7 @@
 											{assign var=is_child value=true}
 											{assign var=result_accesses value=0}
 											<tr class="child-{$child.id_parent}">
-												<td{if !$is_child} class="bold"{/if}>{if $is_child} &raquo; {/if}<strong>{$child.name}</strong></td>
+												<td{if !$is_child} class="bold"{/if}>{if $is_child} &raquo; {/if}{$child.name}</td>
 												{foreach $perms as $perm}
 													{if $access_edit == 1}
 														<td>

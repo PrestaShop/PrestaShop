@@ -51,7 +51,7 @@ class PrestaShopExceptionCore extends Exception
 			</style>';
 			echo '<div id="psException">';
 			echo '<h2>['.get_class($this).']</h2>';
-			echo $this->getExentedMessage();
+			echo $this->getExtendedMessage();
 
 			$this->displayFileDebug($this->getFile(), $this->getLine());
 
@@ -145,14 +145,23 @@ class PrestaShopExceptionCore extends Exception
 	{
 		$logger = new FileLogger();
 		$logger->setFilename(_PS_ROOT_DIR_.'/log/'.date('Ymd').'_exception.log');
-		$logger->logError($this->getExentedMessage(false));
+		$logger->logError($this->getExtendedMessage(false));
+	}
+	
+	/**
+	 * @deprecated 1.5.5
+	 */
+	protected function getExentedMessage($html = true)
+	{
+		Tools::displayAsDeprecated();
+		return $this->getExtendedMessage($html);
 	}
 	
 	/**
 	 * Return the content of the Exception
 	 * @return string content of the exception
 	 */
-	protected function getExentedMessage($html = true)
+	protected function getExtendedMessage($html = true)
 	{
 		$format = '<p><b>%s</b><br /><i>at line </i><b>%d</b><i> in file </i><b>%s</b></p>';
 		if (!$html)

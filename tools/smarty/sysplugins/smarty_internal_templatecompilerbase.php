@@ -107,6 +107,12 @@ abstract class Smarty_Internal_TemplateCompilerBase {
     public $suppressTemplatePropertyHeader = false;
 
     /**
+     * suppress pre and post filter
+     * @var bool
+     */
+    public $suppressFilter = false;
+
+    /**
      * flag if compiled template file shall we written
      * @var bool
      */
@@ -184,7 +190,7 @@ abstract class Smarty_Internal_TemplateCompilerBase {
             // get template source
             $_content = $template->source->content;
             // run prefilter if required
-            if (isset($this->smarty->autoload_filters['pre']) || isset($this->smarty->registered_filters['pre'])) {
+            if ((isset($this->smarty->autoload_filters['pre']) || isset($this->smarty->registered_filters['pre'])) && !$this->suppressFilter) {
                 $_content = Smarty_Internal_Filter_Handler::runFilter('pre', $_content, $template);
             }
             // on empty template just return header
@@ -209,13 +215,9 @@ abstract class Smarty_Internal_TemplateCompilerBase {
             foreach ($this->merged_templates as $code) {
                 $merged_code .= $code;
             }
-            // run postfilter if required on merged code
-            if (isset($this->smarty->autoload_filters['post']) || isset($this->smarty->registered_filters['post'])) {
-                $merged_code = Smarty_Internal_Filter_Handler::runFilter('post', $merged_code, $template);
-            }
         }
         // run postfilter if required on compiled template code
-        if (isset($this->smarty->autoload_filters['post']) || isset($this->smarty->registered_filters['post'])) {
+        if ((isset($this->smarty->autoload_filters['post']) || isset($this->smarty->registered_filters['post'])) && !$this->suppressFilter) {
             $_compiled_code = Smarty_Internal_Filter_Handler::runFilter('post', $_compiled_code, $template);
         }
         if ($this->suppressTemplatePropertyHeader) {
@@ -331,7 +333,7 @@ abstract class Smarty_Internal_TemplateCompilerBase {
                 }
                 // check plugins from plugins folder
                 foreach ($this->smarty->plugin_search_order as $plugin_type) {
-                    if ($plugin_type == Smarty::PLUGIN_BLOCK && $this->smarty->loadPlugin('smarty_compiler_' . $tag) && (!isset($this->smarty->security_policy) || $this->smarty->security_policy->isTrustedTag($tag, $this))) {
+                    if ($plugin_type == Smarty::PLUGIN_COMPILER && $this->smarty->loadPlugin('smarty_compiler_' . $tag) && (!isset($this->smarty->security_policy) || $this->smarty->security_policy->isTrustedTag($tag, $this))) {
                         $plugin = 'smarty_compiler_' . $tag;
                         if (is_callable($plugin)) {
                             // convert arguments format for old compiler plugins
@@ -605,7 +607,7 @@ abstract class Smarty_Internal_TemplateCompilerBase {
                 $_output = addcslashes($content,'\'\\');
                 $_output = str_replace("^#^", "'", $_output);
                 $_output = "<?php echo '/*%%SmartyNocache:{$this->nocache_hash}%%*/" . $_output . "/*/%%SmartyNocache:{$this->nocache_hash}%%*/';?>\n";
-                // make sure we include modifer plugins for nocache code
+                // make sure we include modifier plugins for nocache code
                 foreach ($this->modifier_plugins as $plugin_name => $dummy) {
                     if (isset($this->template->required_plugins['compiled'][$plugin_name]['modifier'])) {
                         $this->template->required_plugins['nocache'][$plugin_name]['modifier'] = $this->template->required_plugins['compiled'][$plugin_name]['modifier'];
@@ -641,7 +643,7 @@ abstract class Smarty_Internal_TemplateCompilerBase {
             $line = $this->lex->line;
         }
         $match = preg_split("/\n/", $this->lex->data);
-        $error_text = 'Syntax Error in template "' . $this->template->source->filepath . '"  on line ' . $line . ' "' . htmlspecialchars(trim(preg_replace('![\t\r\n]+!', ' ', $match[$line - 1]))) . '" ';
+        $error_text = 'Syntax Error in template "' . $this->template->source->filepath . '"  on line ' . $line . ' "' . trim(preg_replace('![\t\r\n]+!', ' ', $match[$line - 1])) . '" ';
         if (isset($args)) {
             // individual error message
             $error_text .= $args;

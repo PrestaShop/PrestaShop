@@ -1,4 +1,7 @@
 SET NAMES 'utf8';
+
+DROP TABLE IF EXISTS `PREFIX_group_shop`;
+
 CREATE TABLE IF NOT EXISTS `PREFIX_group_shop` (
   `id_group_shop` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(64) CHARACTER SET utf8 NOT NULL,
@@ -92,7 +95,6 @@ UPDATE PREFIX_stock_mvt sm SET sm.id_stock = IFNULL((
 	WHERE s.id_product = sm.id_product
 	AND s.id_product_attribute = sm.id_product_attribute
 	ORDER BY s.id_shop
-	LIMIT 1
 ), 0);
 DELETE FROM PREFIX_stock_mvt WHERE id_stock = 0;
 ALTER TABLE PREFIX_stock_mvt DROP id_product, DROP id_product_attribute;
@@ -312,8 +314,6 @@ PRIMARY KEY (`id_scene`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 INSERT INTO `PREFIX_scene_shop` (id_shop, id_scene) (SELECT 1, id_scene FROM PREFIX_scene);
-
-ALTER TABLE `PREFIX_delivery` ADD `id_shop` INT UNSIGNED NULL DEFAULT NULL AFTER `id_delivery`, ADD `id_group_shop` INT UNSIGNED NULL DEFAULT NULL AFTER `id_shop`;
 
 /* PHP:create_multistore(); */;
 

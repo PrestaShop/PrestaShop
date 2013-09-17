@@ -936,7 +936,7 @@ CREATE TABLE `PREFIX_manufacturer_lang` (
   `id_manufacturer` int(10) unsigned NOT NULL,
   `id_lang` int(10) unsigned NOT NULL,
   `description` text,
-  `short_description` varchar(254) default NULL,
+  `short_description` text,
   `meta_title` varchar(128) default NULL,
   `meta_keywords` varchar(255) default NULL,
   `meta_description` varchar(255) default NULL,
@@ -1437,7 +1437,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `date_upd` datetime NOT NULL,
   PRIMARY KEY (`id_product`, `id_shop`),
   KEY `id_category_default` (`id_category_default`),
-  KEY `date_add` (`date_add`)
+  KEY `date_add` (`date_add` , `active` , `visibility`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_product_attribute` (
@@ -1924,6 +1924,7 @@ CREATE TABLE `PREFIX_log` (
 	`message` text NOT NULL,
 	`object_type` varchar(32) DEFAULT NULL,
 	`object_id` int(10) unsigned DEFAULT NULL,
+	`id_employee` int(10) unsigned DEFAULT NULL,
 	`date_add` datetime NOT NULL,
 	`date_upd` datetime NOT NULL,
 	PRIMARY KEY (`id_log`)

@@ -380,7 +380,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				$cm->id_employee = (int)$this->context->employee->id;
 				$cm->id_customer_thread = $ct->id;
 				
-				$cm->message = Tools::htmlentitiesutf8(Tools::getValue('reply_message'));
+				$cm->message = Tools::getValue('reply_message');
 				$cm->ip_address = ip2long($_SERVER['REMOTE_ADDR']);
 				if (isset($_FILES) && !empty($_FILES['joinFile']['name']) && $_FILES['joinFile']['error'] != 0)
 					$this->errors[] = Tools::displayError('An error occurred during the file upload process.');
@@ -401,10 +401,10 @@ class AdminCustomerThreadsControllerCore extends AdminController
 						),
 					);
 					//#ct == id_customer_thread    #tc == token of thread   <== used in the synchronization imap
-					$contact = new Contact((int)$ct->id_contact);
+					$contact = new Contact((int)$ct->id_contact, (int)$ct->id_lang);
 					if (Validate::isLoadedObject($contact))
 					{
-						$from_name = $contact->name;
+						$from_name = $contact->name[(int)$ct->id_lang];
 						$from_email = $contact->email;
 					}
 					else
@@ -549,7 +549,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 						$orders_ok[] = $order;
 						$total_ok += $order['total_paid_real'];
 					}
-					$orders[$key]['date_add'] = Tools::displayDate($order['date_add'], $this->context->language->id);
+					$orders[$key]['date_add'] = Tools::displayDate($order['date_add']);
 					$orders[$key]['total_paid_real'] = Tools::displayPrice($order['total_paid_real'], new Currency((int)$order['id_currency']));
 				}
 			}
@@ -557,7 +557,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			$products = $customer->getBoughtProducts();
 			if ($products && count($products))
 				foreach ($products as $key => $product)
-					$products[$key]['date_add'] = Tools::displayDate($product['date_add'],null , true);
+					$products[$key]['date_add'] = Tools::displayDate($product['date_add'], null, true);
 		}
 
 		foreach ($messages as $key => $message)
@@ -595,13 +595,14 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			if (!empty($message['id_product']) && empty($message['employee_name']))
 				$id_order_product = Order::getIdOrderProduct((int)$message['id_customer'], (int)$message['id_product']);
 		}
-		$message['date_add'] = Tools::displayDate($message['date_add'],null , true);
+		$message['date_add'] = Tools::displayDate($message['date_add'], null, true);
 		$message['user_agent'] = strip_tags($message['user_agent']);
+
 		$message['message'] = preg_replace(
 			'/(https?:\/\/[a-z0-9#%&_=\(\)\.\? \+\-@\/]{6,1000})([\s\n<])/Uui',
 			'<a href="\1">\1</a>\2',
 			html_entity_decode($message['message'],
-			ENT_NOQUOTES, 'UTF-8')
+			ENT_QUOTES, 'UTF-8')
 		);
 
 		$tpl->assign(array(

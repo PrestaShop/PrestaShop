@@ -153,8 +153,8 @@ class ParentOrderControllerCore extends FrontController
 		$this->addJqueryPlugin('fancybox');
 		if ((int)(Configuration::get('PS_BLOCK_CART_AJAX')) || Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
 		{
-			$this->addJS(_THEME_JS_DIR_.'cart-summary.js');
 			$this->addJqueryPlugin('typewatch');
+			$this->addJS(_THEME_JS_DIR_.'cart-summary.js');
 		}
 	}
 
@@ -399,6 +399,7 @@ class ParentOrderControllerCore extends FrontController
 
 			// Getting a list of formated address fields with associated values
 			$formatedAddressFieldsValuesList = array();
+
 			foreach ($customerAddresses as $i => $address)
 			{
 				if (!Address::isCountryActiveById((int)($address['id_address'])))
@@ -411,6 +412,10 @@ class ParentOrderControllerCore extends FrontController
 
 				unset($tmpAddress);
 			}
+
+			if (key($customerAddresses) != 0)
+				$customerAddresses = array_values($customerAddresses);
+
 			$this->context->smarty->assign(array(
 				'addresses' => $customerAddresses,
 				'formatedAddressFieldsValuesList' => $formatedAddressFieldsValuesList));

@@ -118,12 +118,20 @@ class AdminPerformanceControllerCore extends AdminController
 						)
 					)
 				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Debug console Key'),
+					'name' => 'smarty_console_key',
+					'size' => 30,
+					'desc' => $this->l('SMARTY_DEBUG parameter in the URL.')
+				),
 			)
 		);
 
 		$this->fields_value['smarty_force_compile'] = Configuration::get('PS_SMARTY_FORCE_COMPILE');
 		$this->fields_value['smarty_cache'] = Configuration::get('PS_SMARTY_CACHE');
 		$this->fields_value['smarty_console'] = Configuration::get('PS_SMARTY_CONSOLE');
+		$this->fields_value['smarty_console_key'] = Configuration::get('PS_SMARTY_CONSOLE_KEY');
 	}
 
 	public function initFieldsetFeaturesDetachables()
@@ -471,21 +479,6 @@ class AdminPerformanceControllerCore extends AdminController
 		$this->tpl_form_vars['servers'] = CacheMemcache::getMemcachedServers();
 	}
 
-	public function initFieldsetCloudCache()
-	{
-		if (!class_exists('CloudCache'))
-			$this->fields_form[6]['form'] = array(
-				'legend' => array(
-					'title' => $this->l('CloudCache'),
-					'image' => '../img/admin/subdomain.gif'
-				),
-				'desc' => $this->l('Performance matters! Improve speed and conversions the easy way.').'<br />'.
-				$this->l('CloudCache supercharges your site in minutes through its state-of-the-art content delivery network.').'<br /><br />'.
-				$this->l('Subscribe now using the code "presta25" and get an exclusive 25% monthly discount on every available package.').'<br /><br />
-			<a style="color: blue" href="index.php?controller=AdminModules&token='.Tools::getAdminTokenLite('AdminModules').'&filtername=cloudcache" id="installCloudCache">&gt; '.$this->l('Click here to install the CloudCache module for PrestaShop').'</a><br />'
-		);
-	}
-
 	public function renderForm()
 	{
 		// Initialize fieldset for a form
@@ -495,7 +488,6 @@ class AdminPerformanceControllerCore extends AdminController
 		$this->initFieldsetMediaServer();
 		$this->initFieldsetCiphering();
 		$this->initFieldsetCaching();
-		$this->initFieldsetCloudCache();
 
 		// Activate multiple fieldset
 		$this->multiple_fieldsets = true;
@@ -602,7 +594,8 @@ class AdminPerformanceControllerCore extends AdminController
 				Configuration::updateValue('PS_SMARTY_FORCE_COMPILE', Tools::getValue('smarty_force_compile', _PS_SMARTY_NO_COMPILE_));
 				Configuration::updateValue('PS_SMARTY_CACHE', Tools::getValue('smarty_cache', 0));
 				Configuration::updateValue('PS_SMARTY_CONSOLE', Tools::getValue('smarty_console', 0));
-				$redirectAdmin = true;
+				Configuration::updateValue('PS_SMARTY_CONSOLE_KEY', Tools::getValue('smarty_console_key', 'SMARTY_DEBUG'));
+				$redirecAdmin = true;
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
@@ -798,6 +791,14 @@ class AdminPerformanceControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
+		
+		if ((bool)Tools::getValue('empty_smarty_cache'))
+		{
+			$redirectAdmin = true;
+			Tools::clearSmartyCache();
+			Autoload::getInstance()->generateIndex();
+		}
+
 		if ($redirectAdmin && (!isset($this->errors) || !count($this->errors)))
 		{
 			Hook::exec('action'.get_class($this).ucfirst($this->action).'After', array('controller' => $this, 'return' => ''));

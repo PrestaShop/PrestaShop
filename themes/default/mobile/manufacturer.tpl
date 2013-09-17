@@ -31,7 +31,7 @@
 {if !isset($errors) OR !sizeof($errors)}
 
 <div data-role="content" id="content">
-	<p><a data-role="button" data-icon="arrow-l" data-theme="a" data-mini="true" data-inline="true" href="{$link->getPageLink('manufacturer', true)}" data-ajax="false">{l s='Manufacturers:'}</a></p>
+	<p><a data-role="button" data-icon="arrow-l" data-theme="a" data-mini="true" data-inline="true" href="{$link->getPageLink('manufacturer', true)|escape:'html'}" data-ajax="false">{l s='Manufacturers:'}</a></p>
 	{if !empty($manufacturer->description) || !empty($manufacturer->short_description)}
 		<div class="category_desc clearfix">
 			{if !empty($manufacturer->short_description)}

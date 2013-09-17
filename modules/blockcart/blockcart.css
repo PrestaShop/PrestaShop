@@ -38,16 +38,17 @@
 	display:inline-block;
 	margin-right:5px;
 	min-width:18px;
+	vertical-align: top;
 }
 #cart_block .cart_block_product_name {font-weight:bold}
-#cart_block .remove_link {
+#cart_block .remove_link, #cart_block .deleteCustomizableProduct {
 	float:right;
 	display:inline-block;
 	margin:1px 0 0 5px;
 	height:12px;
 	width:12px
 }
-#cart_block .remove_link a {
+#cart_block .remove_link a, #cart_block .ajax_cart_block_remove_link {
 	display:inline-block;
 	height:12px;
 	width:12px;
@@ -61,7 +62,7 @@
 	padding-bottom:10px
 }
 #cart_block #cart_block_list dt {padding:4px 0}
-#cart_block #cart_block_list dt a {font-weight:bold}
+#cart_block #cart_block_list dt a {font-weight:bold; display: inline-block; width: 95px}
 #cart_block #cart_block_list dd {
 	margin-left:20px
 }

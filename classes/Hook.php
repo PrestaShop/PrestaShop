@@ -64,10 +64,10 @@ class HookCore extends ObjectModel
 		'primary' => 'id_hook',
 		'fields' => array(
 			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isHookName', 'required' => true, 'size' => 64),
-			'title' => 			array('type' => self::TYPE_STRING),
-			'description' => 	array('type' => self::TYPE_HTML),
-			'position' => 		array('type' => self::TYPE_BOOL),
-			'live_edit' => 		array('type' => self::TYPE_BOOL),
+			'title' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
+			'description' => 	array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml'),
+			'position' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'live_edit' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 		),
 	);
 
@@ -83,7 +83,7 @@ class HookCore extends ObjectModel
 
 	public function add($autodate = true, $null_values = false)
 	{
-		Cache::clean('hook_idbyname_'.$this->name);
+		Cache::clean('hook_idsbyname');
 		return parent::add($autodate, $null_values);
 	}
 
@@ -110,23 +110,61 @@ class HookCore extends ObjectModel
 	 */
 	public static function getIdByName($hook_name)
 	{
+		$hook_name = strtolower($hook_name);
 		if (!Validate::isHookName($hook_name))
 			return false;
 
-		$cache_id = 'hook_idbyname_'.$hook_name;
+		$cache_id = 'hook_idsbyname';
 		if (!Cache::isStored($cache_id))
 		{
-			$retro_hook_name = Hook::getRetroHookName($hook_name);
-			Cache::store($cache_id, Db::getInstance()->getValue('
-				SELECT `id_hook`
-				FROM `'._DB_PREFIX_.'hook`
-				WHERE `name` = \''.pSQL($hook_name).'\'
-					OR `name` = \''.pSQL($retro_hook_name).'\'
-			'));
+			// Get all hook ID by name and alias
+			$hook_ids = array();
+			$result = Db::getInstance()->ExecuteS('
+			SELECT `id_hook`, `name`
+			FROM `'._DB_PREFIX_.'hook`
+			UNION
+			SELECT `id_hook`, ha.`alias` as name
+			FROM `'._DB_PREFIX_.'hook_alias` ha
+			INNER JOIN `'._DB_PREFIX_.'hook` h ON ha.name = h.name');
+			foreach ($result as $row)
+				$hook_ids[strtolower($row['name'])] = $row['id_hook'];
+			Cache::store($cache_id, $hook_ids);
 		}
+		else
+			$hook_ids = Cache::retrieve($cache_id);
 
+		return (isset($hook_ids[$hook_name]) ? $hook_ids[$hook_name] : false);
+	}
+
+	/**
+	 * Return hook ID from name
+	 */
+	public static function getNameById($hook_id)
+	{
+		$cache_id = 'hook_namebyid_'.$hook_id;
+		if (!Cache::isStored($cache_id))
+			Cache::store($cache_id, Db::getInstance()->getValue('
+				SELECT `name`
+				FROM `'._DB_PREFIX_.'hook`
+				WHERE `id_hook` = '.(int)$hook_id)
+			);
 		return Cache::retrieve($cache_id);
 	}
+	
+	/**
+	 * Return hook live edit bool from ID
+	 */
+	public static function getLiveEditById($hook_id)
+	{
+		$cache_id = 'hook_live_editbyid_'.$hook_id;
+		if (!Cache::isStored($cache_id))
+			Cache::store($cache_id, Db::getInstance()->getValue('
+				SELECT `live_edit`
+				FROM `'._DB_PREFIX_.'hook`
+				WHERE `id_hook` = '.(int)$hook_id)
+			);
+		return Cache::retrieve($cache_id);
+	}	
 
 	/**
 	 * Get list of hook alias
@@ -292,15 +330,9 @@ class HookCore extends ObjectModel
 
 			$sql->orderBy('hm.`position`');
 
-			// Store results per hook name
-			$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 			$list = array();
-			
-			// Get all available payment module
-			$payment_modules = array();
-
-			if ($results)
-				foreach ($results as $row)
+			if ($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
+				foreach ($result as $row)
 				{
 					$row['hook'] = strtolower($row['hook']);
 					if (!isset($list[$row['hook']]))
@@ -330,14 +362,17 @@ class HookCore extends ObjectModel
 			$hook_name = strtolower($hook_name);
 
 			$return = array();
+			$inserted_modules = array();
 			if (isset($list[$hook_name]))
 				$return = $list[$hook_name];
+			foreach ($return as $module)
+				$inserted_modules[] = $module['id_module'];
 			if (isset($list[$retro_hook_name]))
-				$return = array_merge($return, $list[$retro_hook_name]);
+				foreach ($list[$retro_hook_name] as $retro_module_call)
+					if (!in_array($retro_module_call['id_module'], $inserted_modules))
+						$return[] = $retro_module_call;
 
-			if (count($return) > 0)
-				return $return;
-			return false;
+			return (count($return) > 0 ? $return : false);
 		}
 		else
 			return $list;
@@ -381,6 +416,7 @@ class HookCore extends ObjectModel
 		// Look on modules list
 		$altern = 0;
 		$output = '';
+						
 		foreach ($module_list as $array)
 		{
 			// Check errors
@@ -394,7 +430,7 @@ class HookCore extends ObjectModel
 			{
 				$exceptions = $moduleInstance->getExceptions($array['id_hook']);
 				$controller = Dispatcher::getInstance()->getController();
-								
+
 				if (in_array($controller, $exceptions))
 					continue;
 				
@@ -402,7 +438,7 @@ class HookCore extends ObjectModel
 				$matching_name = array(
 					'authentication' => 'auth',
 					'compare' => 'products-comparison',
-					);
+				);
 				if (isset($matching_name[$controller]) && in_array($matching_name[$controller], $exceptions))
 					continue;
 				if (Validate::isLoadedObject($context->employee) && !$moduleInstance->getPermission('view', $context->employee))
@@ -436,7 +472,7 @@ class HookCore extends ObjectModel
 		if ($array_return)
 			return $output;
 		else
-			return ($live_edit ? '<script type="text/javascript">hooks_list.push(\''.$hook_name.'\'); </script>
+			return ($live_edit ? '<script type="text/javascript">hooks_list.push(\''.$hook_name.'\');</script>
 				<div id="'.$hook_name.'" class="dndHook" style="min-height:50px">' : '').$output.($live_edit ? '</div>' : '');// Return html string
 	}
 
@@ -445,13 +481,13 @@ class HookCore extends ObjectModel
 		return '<script type="text/javascript"> modules_list.push(\''.Tools::safeOutput($moduleInstance->name).'\');</script>
 				<div id="hook_'.(int)$id_hook.'_module_'.(int)$moduleInstance->id.'_moduleName_'.str_replace('_', '-', Tools::safeOutput($moduleInstance->name)).'"
 				class="dndModule" style="border: 1px dotted red;'.(!strlen($display) ? 'height:50px;' : '').'">
-				<span style="font-family: Georgia;font-size:13px;font-style:italic;">
-				<img style="padding-right:5px;" src="'._MODULE_DIR_.Tools::safeOutput($moduleInstance->name).'/logo.gif">'
+					<span style="font-family: Georgia;font-size:13px;font-style:italic;">
+						<img style="padding-right:5px;" src="'._MODULE_DIR_.Tools::safeOutput($moduleInstance->name).'/logo.gif">'
 			 	.Tools::safeOutput($moduleInstance->displayName).'<span style="float:right">
 			 	<a href="#" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="moveModule">
 			 		<img src="'._PS_ADMIN_IMG_.'arrow_out.png"></a>
 			 	<a href="#" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="unregisterHook">
-			 		<img src="'._PS_ADMIN_IMG_.'delete.gif"></span></a>
+			 		<img src="'._PS_ADMIN_IMG_.'delete.gif"></a></span>
 			 	</span>'.$display.'</div>';
 	}
 

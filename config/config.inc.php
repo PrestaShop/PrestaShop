@@ -53,9 +53,6 @@ require_once(dirname(__FILE__).'/settings.inc.php');
 
 require_once(dirname(__FILE__).'/autoload.php');
 
-if (Tools::isPHPCLI())
-	Tools::argvToGET($argc, $argv);
-
 if (_PS_DEBUG_PROFILING_)
 {
 	include_once(_PS_TOOL_DIR_.'profiling/Controller.php');
@@ -64,6 +61,9 @@ if (_PS_DEBUG_PROFILING_)
 	include_once(_PS_TOOL_DIR_.'profiling/Db.php');
 	include_once(_PS_TOOL_DIR_.'profiling/Tools.php');
 }
+
+if (Tools::isPHPCLI())
+	Tools::argvToGET($argc, $argv);
 
 /* Redefine REQUEST_URI if empty (on some webservers...) */
 if (!isset($_SERVER['REQUEST_URI']) || empty($_SERVER['REQUEST_URI']))
@@ -90,7 +90,15 @@ if (!isset($_SERVER['HTTP_HOST']) || empty($_SERVER['HTTP_HOST']))
 $context = Context::getContext();
 
 /* Initialize the current Shop */
-$context->shop = Shop::initialize();
+try 
+{
+	$context->shop = Shop::initialize();
+}
+catch (PrestaShopException $e)
+{
+	$e->displayMessage();
+}
+
 define('_THEME_NAME_', $context->shop->getTheme());
 define('__PS_BASE_URI__', $context->shop->getBaseURI());
 

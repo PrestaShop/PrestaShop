@@ -2,7 +2,8 @@
 return array(
 	'informations' => array(
 		'phone' => '+33 (0)1.40.18.30.04',
-		'support' => 'https://www.prestashop.com/pl/wsparcie-techniczne',
+        'support' => 'https://www.prestashop.com/pl/wsparcie-techniczne',
+        'blog' => 'http://www.prestashop.com/blog/pl/'
 	),
 	'translations' => array(
 		'An SQL error occured for entity <i>%1$s</i>: <i>%2$s</i>' => 'Wystąpił błąd SQL w rekordzie <i>%1$s</i>: <i>%2$s</i>',
@@ -184,7 +185,7 @@ return array(
 		'Welcome to the PrestaShop %s Installer.' => 'Etapy instalacji PrestaShop %s ',
 		'Continue the installation in:' => 'Kontynuuj instalację w:',
 		'PrestaShop requires at least 32M of memory to run, please check the memory_limit directive in php.ini or contact your host provider' => 'PrestaShop wymaga co namniej 32M pamięci do odpowiedniego funkcjonowania. Proszę o sprawdzenie wartości dyrektywy memory_limit w pliku php.ini lub skontaktowanie się z Twoim hostingowcem.     ',
-		'The installation of PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 130,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'Instalacja PrestaShop odbywa się w łatwy i szybki sposób! W kilka minut dołączysz do 130 000 właścicieli sklepów internetowych w Europie, korzystających z naszego oprogramowania e-commerce. Będziesz mógł stworzyć swój sklep według własnych potrzeb i zarządzać nim w prosty sposób.',
+		'The installation of PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 150,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'Instalacja PrestaShop odbywa się w łatwy i szybki sposób! W kilka minut dołączysz do 150 000 właścicieli sklepów internetowych w Europie, korzystających z naszego oprogramowania e-commerce. Będziesz mógł stworzyć swój sklep według własnych potrzeb i zarządzać nim w prosty sposób.',
 		'If you need help, do not hesitate to check <a href="%1$s" target="_blank">our documentation</a> or to contact our support team: %2$s' => 'Jeśli potrzebujesz pomocy zapoznaj się z <a href="%1$s" target="_blank">naszą dokumentacją</a> lub skontaktuj się z działem technicznym;%2$s',
 		'The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d translations, all for free!' => 'Po dokonaniu instalacji sklepu, wybierz język spośród %d darmowych tłumaczeń.',
 		'menu_welcome' => 'Wybierz język',
@@ -194,5 +195,16 @@ return array(
 		'menu_configure' => 'Informacje o sklepie',
 		'menu_process' => 'Instalacja sklepu',
 		'Your PHP sessions path is not writable - check with your hosting provider:' => 'Twoja ścieżka sesji PHP jest niezapisywalna - skontaktuj się z dostawcą usług hostingowych:',
+		'To install PrestaShop, you need to have JavaScript enabled in your browser.' => 'Aby zainstalować PrestaShop, musisz mieć włączoną obsługę JavaScript w przeglądarce.',
+		'http://doc.prestashop.com/display/PS15/What+you+need+to+get+started#HowtoenableJavaScript-HowtoenableJavaScript' => 'http://doc.prestashop.com/display/PS15/What+you+need+to+get+started#HowtoenableJavaScript-HowtoenableJavaScript ',
+		'To enjoy the many features that are offered for free by PrestaShop, please read the license terms below. PrestaShop core is licensed under OSL 3.0, while the modules and themes are licensed under AFL 3.0.' => 'Przed skorzystaniem z darmowych funkcji oferowanych przez PrestaShop zapoznaj się z warunkami licencji. PrestaShop funkcjonuje na licencji OSL 3,0 zaś moduły i szablony na AFL 3,0.',
+		'For security purposes, you must delete the "install" folder.' => 'Ze względów bezpieczeństwa należy usunąć folder \'\'install\'\'.',
+		'http://doc.prestashop.com/display/PS15/Installing+PrestaShop#InstallingPrestaShop-Completingtheinstallation' => 'http://doc.prestashop.com/display/PS15/Installing+PrestaShop#InstallingPrestaShop-Completingtheinstallation ',
+		'Database is created' => 'Baza danych jest tworzona ',
+		'Cannot create the database automatically' => 'Nie można automatycznie utworzyć bazy danych',
+		'Install modules Addons' => 'Instalacja modułów Addons',
+		'Attempt to create the database automatically' => 'Próba utworzenia automatycznie bazy danych',
+		'Country:' => 'Kraj',
+		'Must be letters and numbers with at least 8 characters' => 'Minimum 8 znaków z użyciem liter i cyfr',
 	),
 );

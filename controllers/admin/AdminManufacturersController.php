@@ -115,45 +115,23 @@ class AdminManufacturersControllerCore extends AdminController
 
 		$this->content .= parent::renderList();
 	}
-
-	public function initListManufacturerAddresses()
+	
+	protected function getAddressFieldsList()
 	{
-		$this->toolbar_title = $this->l('Addresses');
-		// reset actions and query vars
-		$this->actions = array();
-		unset($this->fields_list, $this->_select, $this->_join, $this->_group, $this->_filterHaving, $this->_filter);
-
-		$this->table = 'address';
-		$this->identifier = 'id_address';
-		$this->deleted = true;
-		$this->_orderBy = null;
-
-		$this->addRowAction('editaddresses');
-		$this->addRowAction('delete');
-
-		// test if a filter is applied for this list
-		if (Tools::isSubmit('submitFilter'.$this->table) || $this->context->cookie->{'submitFilter'.$this->table} !== false)
-			$this->filter = true;
-
-		// test if a filter reset request is required for this list
-		if (isset($_POST['submitReset'.$this->table]))
-			$this->action = 'reset_filters';
-		else
-			$this->action = '';
-
 		// Sub tab addresses
 		$countries = Country::getCountries($this->context->language->id);
 		foreach ($countries as $country)
 			$this->countries_array[$country['id_country']] = $country['name'];
 
-		$this->fields_list = array(
+		return array(
 			'id_address' => array(
 				'title' => $this->l('ID'),
 				'width' => 25
 			),
 			'manufacturer_name' => array(
 				'title' => $this->l('Manufacturer'),
-				'width' => 'auto'
+				'width' => 'auto',
+				'filter_key' => 'm!name'
 			),
 			'firstname' => array(
 				'title' => $this->l('First name'),
@@ -162,7 +140,7 @@ class AdminManufacturersControllerCore extends AdminController
 			'lastname' => array(
 				'title' => $this->l('Last name'),
 				'width' => 100,
-				'filter_key' => 'a!name'
+				'filter_key' => 'a!lastname'
 			),
 			'postcode' => array(
 				'title' => $this->l('Zip Code/Postal Code'),
@@ -181,6 +159,32 @@ class AdminManufacturersControllerCore extends AdminController
 				'filter_key' => 'cl!id_country'
 			)
 		);
+	}
+
+	public function initListManufacturerAddresses()
+	{
+		$this->toolbar_title = $this->l('Addresses');
+		// reset actions and query vars
+		$this->actions = array();
+		unset($this->fields_list, $this->_select, $this->_join, $this->_group, $this->_filterHaving, $this->_filter);
+
+		$this->table = 'address';
+		$this->list_id = 'address';
+		$this->identifier = 'id_address';
+		$this->deleted = true;
+		$this->_orderBy = null;
+
+		$this->addRowAction('editaddresses');
+		$this->addRowAction('delete');
+
+		// test if a filter is applied for this list
+		if (Tools::isSubmit('submitFilter'.$this->table) || $this->context->cookie->{'submitFilter'.$this->table} !== false)
+			$this->filter = true;
+
+		// test if a filter reset request is required for this list
+		$this->action = (isset($_POST['submitReset'.$this->table]) ? 'reset_filters' : '');
+
+		$this->fields_list = $this->getAddressFieldsList();
 
 		$this->_select = 'cl.`name` as country, m.`name` AS manufacturer_name';
 		$this->_join = '
@@ -189,7 +193,7 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->_join .= '
 			LEFT JOIN `'._DB_PREFIX_.'manufacturer` m
 				ON (a.`id_manufacturer` = m.`id_manufacturer`)';
-		$this->_where = 'AND a.`id_customer` = 0 AND a.`id_supplier` = 0 AND a.`id_warehouse` = 0';
+		$this->_where = 'AND a.`id_customer` = 0 AND a.`id_supplier` = 0 AND a.`id_warehouse` = 0 AND a.`deleted`=0';
 
 		$this->context->smarty->assign('title_list', $this->l('Manufacturers addresses:'));
 
@@ -252,7 +256,7 @@ class AdminManufacturersControllerCore extends AdminController
 					'lang' => true,
 					'cols' => 60,
 					'rows' => 10,
-					'class' => 'rte',
+					'autoload_rte' => 'rte', //Enable TinyMCE editor for short description
 					'hint' => $this->l('Invalid characters:').' <>;=#{}'
 				),
 				array(
@@ -262,7 +266,7 @@ class AdminManufacturersControllerCore extends AdminController
 					'lang' => true,
 					'cols' => 60,
 					'rows' => 10,
-					'class' => 'rte',
+					'autoload_rte' => 'rte', //Enable TinyMCE editor for description
 					'hint' => $this->l('Invalid characters:').' <>;=#{}'
 				),
 				array(
@@ -406,6 +410,12 @@ class AdminManufacturersControllerCore extends AdminController
 			'type' => 'hidden',
 			'name' => 'alias',
 		);
+		
+		$form['input'][] = array(
+			'type' => 'hidden',
+			'name' => 'id_address',
+		);
+		
 		$form['input'][] = array(
 			'type' => 'text',
 			'label' => $this->l('Last name:'),
@@ -440,6 +450,7 @@ class AdminManufacturersControllerCore extends AdminController
 			'type' => 'text',
 			'label' => $this->l('Zip Code/Postal Code'),
 			'name' => 'postcode',
+			'required' => true,
 			'size' => 33,
 			'required' => false,
 		);
@@ -504,7 +515,7 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->fields_value = array(
 			'name' => Manufacturer::getNameById($address->id_manufacturer),
 			'alias' => 'manufacturer',
-			'id_country' => Configuration::get('PS_COUNTRY_DEFAULT')
+			'id_country' => $address->id_country
 		);
 
 		$this->initToolbar();
@@ -664,6 +675,8 @@ class AdminManufacturersControllerCore extends AdminController
 
 		if (Tools::isSubmit('editaddresses'))
 			$this->display = 'editaddresses';
+		else if (Tools::isSubmit('updateaddress'))
+			$this->display = 'editaddresses';
 		else if (Tools::isSubmit('addaddress'))
 			$this->display = 'addaddress';
 		else if (Tools::isSubmit('submitAddaddress'))
@@ -674,12 +687,13 @@ class AdminManufacturersControllerCore extends AdminController
 
 	public function initProcess()
 	{
-		if (Tools::getValue('submitAddaddress') || Tools::isSubmit('deleteaddress') || Tools::isSubmit('submitBulkdeleteaddress'))
+		if (Tools::getValue('submitAddaddress') || Tools::isSubmit('deleteaddress') || Tools::isSubmit('submitBulkdeleteaddress') || Tools::isSubmit('exportaddress'))
 		{
 			$this->table = 'address';
 			$this->className = 'Address';
 			$this->identifier = 'id_address';
 			$this->deleted = true;
+			$this->fields_list = $this->getAddressFieldsList();
 		}
 		parent::initProcess();
 	}
@@ -711,6 +725,9 @@ class AdminManufacturersControllerCore extends AdminController
 
 		return $res;
 	}
+	
+	protected function beforeDelete($object)
+	{
+		return true;
+	}
 }
-
-

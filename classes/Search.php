@@ -93,8 +93,12 @@ define('PREG_CLASS_CJK', '\x{3041}-\x{30ff}\x{31f0}-\x{31ff}\x{3400}-\x{4db5}\x{
 
 class SearchCore
 {
-	public static function sanitize($string, $id_lang, $indexation = false)
+	public static function sanitize($string, $id_lang, $indexation = false, $iso_code = false)
 	{
+		$string = trim($string);
+		if (empty($string))
+			return '';
+
 		$string = Tools::strtolower(strip_tags($string));
 		$string = html_entity_decode($string, ENT_NOQUOTES, 'utf-8');
 
@@ -102,11 +106,11 @@ class SearchCore
 		$string = preg_replace('/['.PREG_CLASS_SEARCH_EXCLUDE.']+/u', ' ', $string);
 
 		if ($indexation)
-			$string = preg_replace('/[._-]+/', '', $string);
+			$string = preg_replace('/[._-]+/', ' ', $string);
 		else
 		{
 			$string = preg_replace('/[._]+/', '', $string);
-			$string = ltrim(preg_replace('/([^ ])-/', '$1', ' '.$string));
+			$string = ltrim(preg_replace('/([^ ])-/', '$1 ', ' '.$string));
 			$string = preg_replace('/[._]+/', '', $string);
 			$string = preg_replace('/[^\s]-+/', '', $string);
 		}
@@ -136,7 +140,24 @@ class SearchCore
 			$string = implode(' ', $processed_words);
 		}
 
-		if ($indexation)
+		// If the language is constituted with symbol and there is no "words", then split every chars
+		if (in_array($iso_code, array('zh', 'tw', 'ja')) && function_exists('mb_strlen'))
+		{
+			// Cut symbols from letters
+			$symbols = '';
+			$letters = '';
+			foreach (explode(' ', $string) as $mb_word)
+				if (strlen(Tools::replaceAccentedChars($mb_word)) == mb_strlen(Tools::replaceAccentedChars($mb_word)))
+					$letters .= $mb_word.' ';
+				else
+					$symbols .= $mb_word.' ';
+		
+			if (preg_match_all('/./u', $symbols, $matches))
+				$symbols = implode(' ', $matches[0]);
+
+			$string = $letters.$symbols;
+		}
+		elseif ($indexation)
 		{
 			$minWordLen = (int)Configuration::get('PS_SEARCH_MINWORDLEN');
 			if ($minWordLen > 1)
@@ -175,7 +196,7 @@ class SearchCore
 
 		$intersect_array = array();
 		$score_array = array();
-		$words = explode(' ', Search::sanitize($expr, $id_lang));
+		$words = explode(' ', Search::sanitize($expr, $id_lang, false, $context->language->iso_code));
 
 		foreach ($words as $key => $word)
 			if (!empty($word) && strlen($word) >= (int)Configuration::get('PS_SEARCH_MINWORDLEN'))
@@ -224,7 +245,7 @@ class SearchCore
 					AND product_shop.`active` = 1
 					AND product_shop.`visibility` IN ("both", "search")
 					AND product_shop.indexed = 1
-					AND cg.`id_group` '.(!$id_customer ?  '= 1' : 'IN (
+					AND cg.`id_group` '.(!$id_customer ?  '= '.(int)Configuration::get('PS_UNIDENTIFIED_GROUP') : 'IN (
 						SELECT id_group FROM '._DB_PREFIX_.'customer_group
 						WHERE id_customer = '.(int)$id_customer.'
 					)');
@@ -383,7 +404,7 @@ class SearchCore
 
 		return Db::getInstance()->executeS('
 			SELECT p.id_product, pl.id_lang, pl.id_shop, pl.name pname, p.reference, p.ean13, p.upc,
-				pl.description_short, pl.description, cl.name cname, m.name mname
+				pl.description_short, pl.description, cl.name cname, m.name mname, l.iso_code
 			FROM '._DB_PREFIX_.'product p
 			LEFT JOIN '._DB_PREFIX_.'product_lang pl
 				ON p.id_product = pl.id_product
@@ -392,6 +413,8 @@ class SearchCore
 				ON (cl.id_category = product_shop.id_category_default AND pl.id_lang = cl.id_lang AND cl.id_shop = product_shop.id_shop)
 			LEFT JOIN '._DB_PREFIX_.'manufacturer m
 				ON m.id_manufacturer = p.id_manufacturer
+			LEFT JOIN '._DB_PREFIX_.'lang l
+				ON l.id_lang = pl.id_lang
 			WHERE product_shop.indexed = 0
 			AND product_shop.visibility IN ("both", "search")
 			'.($id_product ? 'AND p.id_product = '.(int)$id_product : '').'
@@ -410,7 +433,7 @@ class SearchCore
 		{
 			$db->execute('TRUNCATE '._DB_PREFIX_.'search_index');
 			$db->execute('TRUNCATE '._DB_PREFIX_.'search_word');
-			ObjectModel::updateMultishopTable('Product', array('indexed' => 0), '1');
+			ObjectModel::updateMultishopTable('Product', array('indexed' => 0));
 		}
 		else
 		{
@@ -452,7 +475,6 @@ class SearchCore
 		// Those are kind of global variables required to save the processed data in the database every X occurrences, in order to avoid overloading MySQL
 		$count_words = 0;
 		$query_array3 = array();
-		$products_array = array();
 
 		// Every indexed words are cached into a PHP array
 		$word_ids = $db->executeS('
@@ -472,6 +494,7 @@ class SearchCore
 		// Products are processed 50 by 50 in order to avoid overloading MySQL
 		while (($products = Search::getProductsToIndex($total_languages, $id_product, 50)) && (count($products) > 0))
 		{
+			$products_array = array();
 			// Now each non-indexed product is processed one by one, langage by langage
 			foreach ($products as $product)
 			{
@@ -482,9 +505,9 @@ class SearchCore
 				// Data must be cleaned of html, bad characters, spaces and anything, then if the resulting words are long enough, they're added to the array
 				$product_array = array();
 				foreach ($product as $key => $value)
-					if (strncmp($key, 'id_', 3))
+					if (strncmp($key, 'id_', 3) && isset($weight_array[$key]))
 					{
-						$words = explode(' ', Search::sanitize($value, (int)$product['id_lang'], true));
+						$words = explode(' ', Search::sanitize($value, (int)$product['id_lang'], true, $product['iso_code']));
 						foreach ($words as $word)
 							if (!empty($word))
 							{
@@ -571,6 +594,14 @@ class SearchCore
 		return true;
 	}
 
+	public static function removeProductsSearchIndex($products)
+	{
+		if (count($products)) {
+			Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'search_index WHERE id_product IN ('.implode(',', $products).')');
+			ObjectModel::updateMultishopTable('Product', array('indexed' => 0), 'a.id_product IN ('.implode(',', $products).')');
+		}
+	}
+
 	protected static function setProductsAsIndexed(&$products)
 	{
 		if (count($products))
@@ -622,7 +653,7 @@ class SearchCore
 					LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)
 					WHERE product_shop.`active` = 1
 						AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
-						AND cg.`id_group` '.(!$id_customer ?  '= 1' : 'IN (
+						AND cg.`id_group` '.(!$id_customer ?  '= '.(int)Configuration::get('PS_UNIDENTIFIED_GROUP') : 'IN (
 							SELECT id_group FROM '._DB_PREFIX_.'customer_group
 							WHERE id_customer = '.(int)$id_customer.')').'
 						AND t.`name` LIKE \'%'.pSQL($tag).'%\'';
@@ -656,7 +687,7 @@ class SearchCore
 				'.Product::sqlStock('p', 0).'
 				WHERE product_shop.`active` = 1
 					AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
-					AND cg.`id_group` '.(!$id_customer ?  '= 1' : 'IN (
+					AND cg.`id_group` '.(!$id_customer ?  '= '.(int)Configuration::get('PS_UNIDENTIFIED_GROUP') : 'IN (
 						SELECT id_group FROM '._DB_PREFIX_.'customer_group
 						WHERE id_customer = '.(int)$id_customer.')').'
 					AND t.`name` LIKE \'%'.pSQL($tag).'%\'

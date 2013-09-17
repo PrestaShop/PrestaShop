@@ -14,7 +14,7 @@
 		var currencyBlank = '{$currencyBlank|intval}';
 		var txtProduct = "{l s='product' js=1}";
 		var txtProducts = "{l s='products' js=1}";
-		var orderUrl = '{$link->getPageLink("order", true)}';
+		var orderUrl = '{$link->getPageLink("order", true)|addslashes}';
 	
 		var msg = "{l s='You must agree to the terms of service before continuing.' js=1}";
 		{literal}
@@ -67,7 +67,7 @@
 			{assign var='current_step' value='shipping'}
 			{include file="$tpl_dir./errors.tpl"}
 			
-			<form id="form" action="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")}" method="post" onsubmit="return acceptCGV();" data-ajax="false">
+			<form id="form" action="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")|escape:'html'}" method="post" onsubmit="return acceptCGV();" data-ajax="false">
 		{else}
 			<div id="opc_delivery_methods" class="opc-main-block">
 			<div id="opc_delivery_methods-overlay" class="opc-overlay" style="display: none;"></div>
@@ -89,7 +89,7 @@
 			{else}
 				{if $recyclablePackAllowed}
 					<p class="checkbox">
-						<input type="checkbox" name="recyclable" id="recyclable" value="1" {if $recyclable == 1}checked="checked"{/if} />
+						<input type="checkbox" name="recyclable" id="recyclable" value="1" {if $recyclable == 1}checked="checked"{/if} autocomplete="off"/>
 						<label for="recyclable">{l s='I would like to receive my order in recycled packaging.'}.</label>
 					</p>
 				{/if}
@@ -202,7 +202,7 @@
 				{if $giftAllowed}
 				<h3 class="gift_title">{l s='Gift'}</h3>
 				<p class="checkbox">
-					<input type="checkbox" name="gift" id="gift" value="1" {if $cart->gift == 1}checked="checked"{/if} />
+					<input type="checkbox" name="gift" id="gift" value="1" {if $cart->gift == 1}checked="checked"{/if} autocomplete="off"/>
 					<label for="gift">{l s='I would like my order to be gift wrapped.'}</label>
 					<br />
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -225,7 +225,7 @@
 		{if $conditions AND $cms_id}
 			<h3 class="condition_title">{l s='Terms of service'}</h3>
 			<p class="checkbox">
-				<input type="checkbox" name="cgv" id="cgv" value="1" {if $checkedTOS}checked="checked"{/if} />
+				<input type="checkbox" name="cgv" id="cgv" value="1" {if $checkedTOS}checked="checked"{/if} autocomplete="off"/>
 				<label for="cgv">{l s='I agree to the Terms of Service and will adhere to them unconditionally.'}</label> <a href="{$link_conditions}" class="iframe">{l s='(Read the Terms of Service)'}</a>
 			</p>
 			<script type="text/javascript">$('a.iframe').fancybox();</script>
@@ -237,7 +237,7 @@
 			<fieldset class="cart_navigation submit ui-grid-a">
 				<input type="hidden" class="hidden" name="step" value="3" />
 				<input type="hidden" name="back" value="{$back}" />
-				<div class="ui-block-a"><a href="{$link->getPageLink($back_order_page, true, NULL, "step=1{if $back}&back={$back}{/if}")}" title="{l s='Previous'}" data-role="button" data-icon="back" data-ajax="false">&laquo; {l s='Previous'}</a></div>
+				<div class="ui-block-a"><a href="{$link->getPageLink($back_order_page, true, NULL, "step=1{if $back}&back={$back}{/if}")|escape:'html'}" title="{l s='Previous'}" data-role="button" data-icon="back" data-ajax="false">&laquo; {l s='Previous'}</a></div>
 				<div class="ui-block-b"><input type="submit" name="processCarrier" value="{l s='Next'}" class="exclusive" data-icon="check" data-iconpos="right" data-theme="b" data-ajax="false" /></div>
 			</fieldset>
 		</form>

@@ -103,7 +103,7 @@ p em {font-style:italic}
 .success {
 	margin:0 0 10px 0;
 	padding:10px;
-	border:1px solid #5cff74;
+	border:1px solid #339900;
 	font-size:13px;
 	background: #d3ffab;
 }
@@ -355,7 +355,7 @@ ul.footer_links li .icon {
 		border:1px solid #ccc
 	}
 
-.sortPagiBar #bt_compare {
+.sortPagiBar .bt_compare {
 	padding:3px 7px;
 	border:none;
 	color:#fff;
@@ -407,19 +407,19 @@ ul.pagination .current span {
 }
 ul.pagination li.disabled span {color:#ccc}
 
-#pagination_previous {float:left}
-#pagination_next {float:right}
+#pagination_previous, .pagination_previous {float:left}
+#pagination_next, .pagination_next {float:right}
 
-.ie7 #pagination_previous,
-.ie7 #pagination_next {float:none}
+.ie7 #pagination_previous, .ie7 .pagination_previous,
+.ie7 #pagination_next, .ie7 .pagination_next {float:none}
 
-#pagination_previous a, #pagination_previous span,
-#pagination_next a, #pagination_next span {
+ul.pagination .pagination_previous a,ul.pagination .pagination_previous span,
+ul.pagination .pagination_next a, ul.pagination .pagination_next span {
 	padding:0 8px;
 	width:auto;
 }
-#pagination_previous span,
-#pagination_next span {
+#pagination_previous, .pagination_previous span,
+#pagination_next, .pagination_next span {
 	color:#ccc;
 	border:1px solid #eee
 }
@@ -708,7 +708,9 @@ ul.idTabs li {
 /*p.cart_navigation .multishipping-button { margin-right: 10px }*/
 
 #order-detail-content {margin-bottom:20px}
-
+#order-detail-content .customizationUploaded li,#order-detail-content .typedText li {
+	list-style: none;
+}
 table#cart_summary th {
 	padding:14px 12px;
 	color:#fff;

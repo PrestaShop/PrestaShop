@@ -27,13 +27,7 @@
 
 {block name="label"}
 	{if $input.name == 'vat_number'}
-		{if $vat == 'is_applicable'}
-			<div id="vat_area" style="display: visible">
-		{else if $vat == 'management'}
-			<div id="vat_area" style="display: hidden">
-		{else}
-			<div style="display: none;">
-		{/if}
+		<div id="vat_area" style="display: visible">
 	{/if}
 
 	{if $input.type == 'text_customer' && !isset($customer)}
@@ -72,7 +66,8 @@
 						{
 							if (msg)
 							{
-								var infos = msg.infos.split('_');
+								var infos = msg.infos.replace("\\'", "'").split('_');
+
 								$('input[name=firstname]').val(infos[0]);
 								$('input[name=lastname]').val(infos[1]);
 								$('input[name=company]').val(infos[2]);

@@ -2,7 +2,8 @@
 return array(
 	'informations' => array(
 		'phone' => '+33 (0)1.40.18.30.04',
-		'support' => 'https://www.prestashop.com/en/support',
+        'support' => 'https://www.prestashop.com/ru/support',
+        'blog' => 'http://www.prestashop.com/blog/ru/'
 	),
 	'translations' => array(
 		'An SQL error occured for entity <i>%1$s</i>: <i>%2$s</i>' => 'В SQL произошла ошибка для значения <i>%1$s</i>: <i>%2$s</i>',
@@ -223,7 +224,7 @@ return array(
 		'PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, please uncheck this box.' => 'PrestaShop предоставит Вам поддержку, отправляя  уведомления о том, как оптимизировать менеджмент Вашего магазина. Если Вы не хотите получать данные уведомления, то снимите флажок с данного поля. ',
 		'To enjoy the many features that are offered by PrestaShop, please read the license terms below. PrestaShop core is licensed under OSL 3.0, while the modules and themes are licensed under AFL 3.0.' => 'Чтобы использовать многочисленные свойства PrestaShop, прочитайте нижеприведенное лицензионное соглашение. Ядро  PrestaShop лицензировано на OSL 3.0,модули и шаблоны - на  AFL 3.0.',
 		'We are currently checking PrestaShop compatibility with your system environment' => 'Мы проверяем совместимость PrestaShop с Вашей системой',
-		'The installation of PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 130,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'У PrestaShop простая и быстрая установка. Всего через несколько минут Вы станете членом сообщества, которое уже насчитывает около 130 000 членов. Вы уже сделали первый шаг для создании Вашего уникального магазина с простым управлением!',
+		'The installation of PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 150,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'У PrestaShop простая и быстрая установка. Всего через несколько минут Вы станете членом сообщества, которое уже насчитывает около 150 000 членов. Вы уже сделали первый шаг для создании Вашего уникального магазина с простым управлением!',
 		'menu_system' => 'Совместимость системы',
 		'menu_database' => 'Конфигурация системы',
 		'menu_process' => 'Установка магазина',
@@ -231,5 +232,15 @@ return array(
 		'menu_welcome' => 'Выберите язык',
 		'Your PHP sessions path is not writable - check with your hosting provider:' => 'Дисковая память недоступна в письменном виде - обратитесь к Вашему хостинг-провайдеру',
 		'Install modules Addons' => 'Установка модулей Addons',
+		'Database is created' => 'База данных создана',
+		'Cannot create the database automatically' => 'Невозможно автоматически создать базу данных',
+		'Attempt to create the database automatically' => 'Попытка автоматического создания базы данных',
+		'Country:' => 'Страна:',
+		'Must be letters and numbers with at least 8 characters' => 'Должен состоять из букв и цифр и содержать минимум 8 символов',
+		'To install PrestaShop, you need to have JavaScript enabled in your browser.' => 'Чтобы установить PrestaShop, Вам нужно включить JavaScript в Вашем браузере.',
+		'http://doc.prestashop.com/display/PS15/What+you+need+to+get+started#HowtoenableJavaScript-HowtoenableJavaScript' => 'http://doc.prestashop.com/display/PS15/What+you+need+to+get+started#HowtoenableJavaScript-HowtoenableJavaScript',
+		'To enjoy the many features that are offered for free by PrestaShop, please read the license terms below. PrestaShop core is licensed under OSL 3.0, while the modules and themes are licensed under AFL 3.0.' => 'Чтобы пользоваться всем функционалом PrestaShop, прочтите лицензионное соглашение. Ядро PrestaShop разработано на OSL 3.0, модули и темы - на AFL 3.0.',
+		'For security purposes, you must delete the "install" folder.' => 'В целях безопасности, удалите папку "install\'.',
+		'http://doc.prestashop.com/display/PS15/Installing+PrestaShop#InstallingPrestaShop-Completingtheinstallation' => 'http://doc.prestashop.com/display/PS15/Installing+PrestaShop#InstallingPrestaShop-Completingtheinstallation',
 	),
 );

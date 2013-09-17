@@ -28,13 +28,13 @@
 	var changed_shipping_price = false;
 	var shipping_price_selected_carrier = '';
 	var current_index = '{$current}&token={$token}';
-	var admin_cart_link = '{$link->getAdminLink('AdminCarts')}';
+	var admin_cart_link = '{$link->getAdminLink('AdminCarts')|addslashes}';
 	var cart_quantity = new Array();
 	var currencies = new Array();
 	var id_currency = '';
 	var id_lang = '';
-	var txt_show_carts = '{l s='Show carts and orders for this customer.'}';
-	var txt_hide_carts = '{l s='Hide carts and orders for this customer.'}';
+	var txt_show_carts = '{l s='Show carts and orders for this customer.' js=1}';
+	var txt_hide_carts = '{l s='Hide carts and orders for this customer.' js=1}';
 	var defaults_order_state = new Array();
 	var customization_errors = false;
 	var pic_dir = '{$pic_dir}';
@@ -100,7 +100,7 @@
 		$('#show_old_carts').click();
 		$('#payment_module_name').change();
 		$.ajaxSetup({ type:"post" });
-		$("#voucher").autocomplete('{$link->getAdminLink('AdminCartRules')}', {
+		$("#voucher").autocomplete('{$link->getAdminLink('AdminCartRules')|addslashes}', {
 					minChars: 3,
 					max: 15,
 					width: 250,
@@ -117,7 +117,7 @@
 							$('#vouchers_err').hide();
 						var mytab = new Array();
 						for (var i = 0; i < data.vouchers.length; i++)
-							mytab[mytab.length] = { data: data.vouchers[i], value: data.vouchers[i].name+' - '+data.vouchers[i].description };
+							mytab[mytab.length] = { data: data.vouchers[i], value: data.vouchers[i].name + (data.vouchers[i].code.length > 0 ? ' - ' + data.vouchers[i].code : '')};
 						return mytab;
 					},
 					extraParams: {
@@ -157,7 +157,7 @@
 				free_shipping = 1;
 			$.ajax({
 				type:"POST",
-				url: "{$link->getAdminLink('AdminCarts')}",
+				url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 				async: true,
 				dataType: "json",
 				data : {
@@ -217,7 +217,7 @@
 			e.preventDefault();
 			$.ajax({
 				type:"POST",
-				url: "{$link->getAdminLink('AdminCarts')}",
+				url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 				async: true,
 				dataType: "json",
 				data : {
@@ -254,7 +254,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -288,7 +288,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -324,7 +324,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -351,7 +351,7 @@
 		$('#id_cart').val(id_cart);
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: false,
 			dataType: "json",
 			data : {
@@ -378,7 +378,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -401,7 +401,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -426,7 +426,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url : "{$link->getAdminLink('AdminOrders')}",
+			url : "{$link->getAdminLink('AdminOrders')|escape:'html'}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -468,7 +468,7 @@
 		$('#new_address').attr('href', address_link.replace(/id_customer=[0-9]+/, 'id_customer='+id_customer));
 		$.ajax({
 			type:"POST",
-			url : "{$link->getAdminLink('AdminCarts')}",
+			url : "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: false,
 			dataType: "json",
 			data : {
@@ -534,7 +534,7 @@
 		$('#products_part').show();
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminOrders')}",
+			url: "{$link->getAdminLink('AdminOrders')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -661,17 +661,17 @@
 			{
 				$.each(this.customized_datas[this.id_product][this.id_product_attribute][id_address_delivery], function() {
 					var customized_desc = '';
-					if(this.datas[1].length)
+					if (this.datas[1].length)
 					{
 						$.each(this.datas[1],function() {
-							customized_desc += this.name+':'+this.value+'<br />';
+							customized_desc += this.name + ': ' + this.value + '<br />';
 							id_customization = this.id_customization;
 						});
 					}
-					if(this.datas[0] && this.datas[0].length)
+					if (this.datas[0] && this.datas[0].length)
 					{
 						$.each(this.datas[0],function() {
-							customized_desc += this.name+':<img src="'+pic_dir+this.value+'_small" /><br />';
+							customized_desc += this.name + ': <img src="' + pic_dir + this.value + '_small" /><br />';
 							id_customization = this.id_customization;
 						});
 					}
@@ -694,17 +694,15 @@
 	function updateCartVouchers(vouchers)
 	{
 		var vouchers_html = '';
-		if (vouchers.length > 0)
-		{
-			$.each(vouchers, function() {
+		if (typeof(vouchers) == 'object')
+			$.each(vouchers, function(){
 				vouchers_html += '<tr><td>'+this.name+'</td><td>'+this.description+'</td><td>'+this.value_real+'</td><td><a href="#" class="delete_discount" rel="'+this.id_discount+'"><img src="../img/admin/delete.gif" /></a></td></tr>';
 			});
-			$('#voucher_list').show();
-		}
-		else
+		$('#voucher_list tbody').html($.trim(vouchers_html));
+		if ($('#voucher_list tbody').html().length == 0)
 			$('#voucher_list').hide();
-
-		$('#voucher_list tbody').html(vouchers_html);
+		else
+			$('#voucher_list').show();
 	}
 
 	function updateCartPaymentList(payment_list)
@@ -766,7 +764,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -822,7 +820,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -845,7 +843,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -868,7 +866,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -899,7 +897,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminOrders')}",
+			url: "{$link->getAdminLink('AdminOrders')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -957,7 +955,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {

@@ -31,7 +31,7 @@ CREATE TABLE `PREFIX_tab_module_preference` (
   UNIQUE KEY `employee_module` (`id_employee`, `id_tab`, `module`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
-/* PHP:add_new_tab(AdminMarketing, es:Marketing|it:Marketing|en:Marketing|de:Marketing|fr:Marketing,  1); */;
+/* PHP:add_new_tab(AdminMarketing, es:Marketing|it:Marketing|en:Marketing|de:Marketing|fr:Marketing, 0, false, AdminPriceRule); */;
 
 /* PHP:p1540_add_missing_columns(); */;
 

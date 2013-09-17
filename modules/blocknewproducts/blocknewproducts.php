@@ -33,7 +33,7 @@ class BlockNewProducts extends Module
 	{
 		$this->name = 'blocknewproducts';
 		$this->tab = 'front_office_features';
-		$this->version = 0.9;
+		$this->version = '1.4';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -45,9 +45,23 @@ class BlockNewProducts extends Module
 
 	public function install()
 	{
-			if (parent::install() == false || $this->registerHook('rightColumn') == false || $this->registerHook('header') == false || Configuration::updateValue('NEW_PRODUCTS_NBR', 5) == false)
-					return false;
-			return true;
+		if (!parent::install()
+			|| !$this->registerHook('rightColumn')
+			|| !$this->registerHook('header')
+			|| !$this->registerHook('addproduct')
+			|| !$this->registerHook('updateproduct')
+			|| !$this->registerHook('deleteproduct')
+			|| !Configuration::updateValue('NEW_PRODUCTS_NBR', 5)
+		)
+			return false;
+		$this->_clearCache('blocknewproducts.tpl');
+		return true;
+	}
+	
+	public function uninstall()
+	{
+		$this->_clearCache('blocknewproducts.tpl');
+		return parent::uninstall();
 	}
 
 	public function getContent()
@@ -95,19 +109,33 @@ class BlockNewProducts extends Module
 
 	public function hookRightColumn($params)
 	{
-		$newProducts = Product::getNewProducts((int)($params['cookie']->id_lang), 0, (int)(Configuration::get('NEW_PRODUCTS_NBR')));
-		if (!$newProducts && !Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY'))
-			return;
+		if (!$this->isCached('blocknewproducts.tpl', $this->getCacheId()))
+		{
+			if (!Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY'))
+				return;
+			$newProducts = Product::getNewProducts((int) $params['cookie']->id_lang, 0, (int) Configuration::get('NEW_PRODUCTS_NBR'));
+			if (!$newProducts)
+				return;
 
-		$this->smarty->assign(array(
-			'new_products' => $newProducts,
-			'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
-		));
+			$this->smarty->assign(array(
+				'new_products' => $newProducts,
+				'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
+			));
+		}
+		return $this->display(__FILE__, 'blocknewproducts.tpl', $this->getCacheId());
+	}
 
-		return $this->display(__FILE__, 'blocknewproducts.tpl');
+	protected function getCacheId($name = null)
+	{
+		return parent::getCacheId('blocknewproducts|'.date('Ymd'));
 	}
 
 	public function hookLeftColumn($params)
+	{
+		return $this->hookRightColumn($params);
+	}
+	
+	public function hookHome($params)
 	{
 		return $this->hookRightColumn($params);
 	}
@@ -117,6 +145,18 @@ class BlockNewProducts extends Module
 		$this->context->controller->addCSS(($this->_path).'blocknewproducts.css', 'all');
 	}
 
+	public function hookAddProduct($params)
+	{
+		$this->_clearCache('blocknewproducts.tpl');
+	}
+
+	public function hookUpdateProduct($params)
+	{
+		$this->_clearCache('blocknewproducts.tpl');
+	}
+
+	public function hookDeleteProduct($params)
+	{
+		$this->_clearCache('blocknewproducts.tpl');
+	}
 }
-
-

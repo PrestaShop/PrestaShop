@@ -513,7 +513,6 @@ class WebserviceRequestCore
 						$this->setError(501, sprintf('The specific management class is not implemented for the "%s" entity.', $this->urlSegment[0]), 124);
 					else
 					{
-						$this->setFieldsToDisplay();
 						$this->objectSpecificManagement = new $specificObjectName();
 						$this->objectSpecificManagement->setObjectOutput($this->objOutput)
 													   ->setWsObject($this);
@@ -530,9 +529,10 @@ class WebserviceRequestCore
 				}
 			}
 		}
-		return $this->returnOutput();
+		$return = $this->returnOutput();
 		unset($webservice_call);
-		unset ($display_errors);
+		unset($display_errors);
+		return $return;
 	}
 
 	protected function webserviceChecks()
@@ -1158,6 +1158,7 @@ class WebserviceRequestCore
 				$sorts = array($this->urlFragments['sort']);
 
 			$sql_sort .= ' ORDER BY ';
+
 			foreach ($sorts as $sort)
 			{
 				$delimiterPosition = strrpos($sort, '_');
@@ -1184,7 +1185,14 @@ class WebserviceRequestCore
 					$sql_sort .= 'main_i18n.`'.pSQL($this->resourceConfiguration['fields'][$fieldName]['sqlId']).'` '.$direction.', ';// ORDER BY main_i18n.`field` ASC|DESC
 				}
 				else
-					$sql_sort .= (isset($this->resourceConfiguration['retrieveData']['tableAlias']) ? $this->resourceConfiguration['retrieveData']['tableAlias'].'.' : '').'`'.pSQL($this->resourceConfiguration['fields'][$fieldName]['sqlId']).'` '.$direction.', ';// ORDER BY `field` ASC|DESC
+				{
+					$object = new $this->resourceConfiguration['retrieveData']['className']();
+					if ($object->isMultiShopField($this->resourceConfiguration['fields'][$fieldName]['sqlId']))
+						$table_alias = 'multi_shop_'.$this->resourceConfiguration['retrieveData']['table'];
+					else
+						$table_alias = '';
+					$sql_sort .= (isset($this->resourceConfiguration['retrieveData']['tableAlias']) ? '`'.bqSQL($this->resourceConfiguration['retrieveData']['tableAlias']).'`.' : '`'.bqSQL($table_alias).'`.').'`'.pSQL($this->resourceConfiguration['fields'][$fieldName]['sqlId']).'` '.$direction.', ';// ORDER BY `field` ASC|DESC
+				}
 			}
 			$sql_sort = rtrim($sql_sort, ', ')."\n";
 		}
@@ -1212,12 +1220,15 @@ class WebserviceRequestCore
 		return $filters;
 	}
 
-
-
 	public function getFilteredObjectList()
 	{
 		$objects = array();
 		$filters = $this->manageFilters();
+
+		/* If we only need to display the synopsis, analyzing the first row is sufficient */
+		if (isset($this->urlFragments['schema']) && in_array($this->urlFragments['schema'], array('blank', 'synopsis')))
+			$filters = array('sql_join' => '', 'sql_filter' => '', 'sql_sort' => '', 'sql_limit' => ' LIMIT 1');
+			
 		$this->resourceConfiguration['retrieveData']['params'][] = $filters['sql_join'];
 		$this->resourceConfiguration['retrieveData']['params'][] = $filters['sql_filter'];
 		$this->resourceConfiguration['retrieveData']['params'][] = $filters['sql_sort'];
@@ -1229,7 +1240,16 @@ class WebserviceRequestCore
 		if ($sqlObjects)
 		{
 			foreach ($sqlObjects as $sqlObject)
-				$objects[] = new $this->resourceConfiguration['retrieveData']['className']((int)$sqlObject[$this->resourceConfiguration['fields']['id']['sqlId']]);
+			{
+				if ($this->fieldsToDisplay == 'minimum')
+				{
+					$obj = new $this->resourceConfiguration['retrieveData']['className']();
+					$obj->id = (int)$sqlObject[$this->resourceConfiguration['fields']['id']['sqlId']];
+					$objects[] = $obj;
+				}
+				else
+					$objects[] = new $this->resourceConfiguration['retrieveData']['className']((int)$sqlObject[$this->resourceConfiguration['fields']['id']['sqlId']]);
+			}
 			return $objects;
 		}
 	}
@@ -1240,32 +1260,39 @@ class WebserviceRequestCore
 		if (!isset($this->urlFragments['display']))
 			$this->fieldsToDisplay = 'full';
 
-		// Check if Object is accessible for this/those id_shop
-		$assoc = Shop::getAssoTable($this->resourceConfiguration['retrieveData']['table']);
-		if ($assoc !== false)
-		{
-			$sql = 'SELECT 1
- 						FROM `'.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table']);
-			if ($assoc['type'] != 'fk_shop')
-				$sql .= '_'.$assoc['type'];
-			$sql .= '`';
-
-			foreach (self::$shopIDs as $id_shop)
-				$OR[] = ' id_shop = '.(int)$id_shop.' ';
-
-			$check = ' WHERE ('.implode('OR', $OR).') AND `'.bqSQL($this->resourceConfiguration['fields']['id']['sqlId']).'` = '.(int)$this->urlSegment[1];
-			if (!Db::getInstance()->getValue($sql.$check))
-				$this->setError(403, 'Bad id_shop : You are not allowed to access this '.$this->resourceConfiguration['retrieveData']['className'].' ('.(int)$this->urlSegment[1].')', 131);
-		}
-
 		//get entity details
 		$object = new $this->resourceConfiguration['retrieveData']['className']((int)$this->urlSegment[1]);
 		if ($object->id)
 		{
 			$objects[] = $object;
+			// Check if Object is accessible for this/those id_shop
+			$assoc = Shop::getAssoTable($this->resourceConfiguration['retrieveData']['table']);
+			if ($assoc !== false)
+			{
+				$check_shop_group = false;
+
+				$sql = 'SELECT 1
+	 						FROM `'.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table']);
+				if ($assoc['type'] != 'fk_shop')
+					$sql .= '_'.$assoc['type'];
+				else
+				{
+					$def = ObjectModel::getDefinition($this->resourceConfiguration['retrieveData']['className']);
+					if (isset($def['fields']) && isset($def['fields']['id_shop_group']))
+						$check_shop_group = true;
+				}
+				$sql .= '`';
+
+				foreach (self::$shopIDs as $id_shop)
+					$OR[] = ' (id_shop = '.(int)$id_shop.($check_shop_group ? ' OR (id_shop = 0 AND id_shop_group='.(int)Shop::getGroupFromShop((int)$id_shop).')' : '').') ';
+
+				$check = ' WHERE ('.implode('OR', $OR).') AND `'.bqSQL($this->resourceConfiguration['fields']['id']['sqlId']).'` = '.(int)$this->urlSegment[1];
+				if (!Db::getInstance()->getValue($sql.$check))
+					$this->setError(404, 'This '.$this->resourceConfiguration['retrieveData']['className'].' ('.(int)$this->urlSegment[1].') does not exists on this shop', 131);
+			}
 			return $objects;
 		}
-		elseif (!count($this->errors))
+		if (!count($this->errors))
 		{
 			$this->objOutput->setStatus(404);
 			$this->_outputEnabled = false;

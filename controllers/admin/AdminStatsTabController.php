@@ -131,8 +131,13 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
 		$modules = $this->getModules();
 		$module_instance = array();
-		foreach ($modules as $module)
+		foreach ($modules as $m => $module)
+		{
 			$module_instance[$module['name']] = Module::getInstanceByName($module['name']);
+			$modules[$m]['displayName'] = $module_instance[$module['name']]->displayName;
+		}
+
+		uasort($modules, array($this, 'checkModulesNames'));
 
 		$tpl->assign(array(
 			'current' => self::$currentIndex,
@@ -142,6 +147,11 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 		));
 
 		return $tpl->fetch();
+	}
+	
+	public function checkModulesNames($a, $b)
+	{
+		return (bool)($a['displayName'] > $b['displayName']);
 	}
 
 	protected function getModules()
