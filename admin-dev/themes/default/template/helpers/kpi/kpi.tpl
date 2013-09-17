@@ -23,22 +23,70 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div id="{$id|escape}" class="col-lg-3 box-stats {$color|escape}" >
-	<i class="{$icon|escape}"></i>
+	{if $icon}<i class="{$icon|escape}"></i>{/if}
+	{if $chart}
+	<div class="boxchart-overlay">
+		<div class="boxchart">
+		</div>
+	</div>
+	{/if}
 	<span class="title">{$title|escape}<br /><small>{$subtitle|escape}</small></span>
 	<span class="value">{$value|escape}</span>
 </div>
+
 {if $source != ''}
 <script>
-$.ajax({
-	url: '{$source|addslashes}' + '&rand=' + new Date().getTime(),
-	dataType: 'json',
-	type: 'GET',
-	cache: false,
-	headers: { 'cache-control': 'no-cache' },
-	success: function(jsonData){
-		if (!jsonData.has_errors)
-			$('#{$id|addslashes} .value').html(jsonData.value);
+	$.ajax({
+		url: '{$source|addslashes}' + '&rand=' + new Date().getTime(),
+		dataType: 'json',
+		type: 'GET',
+		cache: false,
+		headers: { 'cache-control': 'no-cache' },
+		success: function(jsonData){
+			if (!jsonData.has_errors)
+			{
+				if (jsonData.value)
+					$('#{$id|addslashes} .value').html(jsonData.value);
+				if (jsonData.data)
+				{
+					$("#{$id|addslashes} .boxchart svg").remove();
+					set_d3_{$id|str_replace:'-':'_'|addslashes}(jsonData.data);
+				}
+			}
+		}
+	});
+</script>
+{/if}
+
+{if $chart}
+<script>
+	function set_d3_{$id|str_replace:'-':'_'|addslashes}(jsonObject)
+	{
+		var data = new Array;
+		$.each(jsonObject, function (index, value) {
+			data.push(value);
+		});
+
+		var chart = d3.select("#{$id|addslashes} .boxchart").append("svg")
+			.attr("class", "data_chart")
+			.attr("width", data.length * 6)
+			.attr("height", 45);
+
+		var y = d3.scale.linear()
+			.domain([0, d3.max(data)])
+			.range([0, d3.max(data) * 45]);
+
+		chart.selectAll("rect")
+			.data(data)
+			.enter().append("rect")
+			.attr("y", function(d) { return 45 - d * 45 / d3.max(data); })
+			.attr("x", function(d, i) { return i * 6; })
+			.attr("width", 4)
+			.attr("height", y);
 	}
-});
+	
+	{if $data}
+		set_d3_{$id|str_replace:'-':'_'|addslashes}($.parseJSON("{$data|addslashes}"));
+	{/if}
 </script>
 {/if}

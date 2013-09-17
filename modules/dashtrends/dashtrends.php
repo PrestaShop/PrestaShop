@@ -102,7 +102,7 @@ class Dashtrends extends Module
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 			SELECT
 				LEFT(`date_add`, 10) as date,
-				COUNT(`id_connections`) as visits_score
+				COUNT(*) as visits_score
 			FROM `'._DB_PREFIX_.'connections`
 			WHERE `date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
 			'.Shop::addSqlRestriction(false).'
@@ -115,7 +115,7 @@ class Dashtrends extends Module
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT
 			LEFT(`invoice_date`, 10) as date,
-			COUNT(`id_order`) as orders_score,
+			COUNT(*) as orders_score,
 			SUM(`total_paid_tax_excl` / `conversion_rate`) as total_paid_tax_excl,
 			SUM(`total_discounts_tax_excl` / `conversion_rate`) as total_discounts_tax_excl
 		FROM `'._DB_PREFIX_.'orders`

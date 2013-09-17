@@ -31,6 +31,64 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 		switch (Tools::getValue('kpi'))
 		{
+			case 'conversion_rate':
+				$visits = array();
+				$gapi = Module::isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
+				if (Validate::isLoadedObject($gapi) && $gapi->isConfigured())
+				{
+					if ($result = $gapi->requestReportData('ga:date', 'ga:visits', date('Y-m-d', strtotime('-31 day')), date('Y-m-d', strtotime('-1 day')), null, null, 1, 30))
+						foreach ($result as $row)
+							$visits[strtotime(preg_replace('/^([0-9]{4})([0-9]{2})([0-9]{2})$/', '$1-$2-$3', $row['dimensions']['date']))] = $row['metrics']['visits'];
+				}
+				else
+				{
+					$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+					SELECT
+						LEFT(`date_add`, 10) as date,
+						COUNT(*) as visits
+					FROM `'._DB_PREFIX_.'connections`
+					WHERE `date_add` BETWEEN "'.pSQL(date('Y-m-d', strtotime('-31 day'))).' 00:00:00" AND "'.pSQL(date('Y-m-d', strtotime('-1 day'))).' 23:59:59"
+					'.Shop::addSqlRestriction(false).'
+					GROUP BY LEFT(`date_add`, 10)');
+					foreach ($result as $row)
+						$visits[strtotime($row['date'])] = $row['visits'];
+				}
+				$orders = array();
+				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+				SELECT
+					LEFT(`invoice_date`, 10) as date,
+					COUNT(*) as orders
+				FROM `'._DB_PREFIX_.'orders`
+				WHERE `invoice_date` BETWEEN "'.pSQL(date('Y-m-d', strtotime('-31 day'))).' 00:00:00" AND "'.pSQL(date('Y-m-d', strtotime('-1 day'))).' 23:59:59"
+				'.Shop::addSqlRestriction(Shop::SHARE_ORDER).'
+				GROUP BY LEFT(`invoice_date`, 10)');
+				foreach ($result as $row)
+					$orders[strtotime($row['date'])] = $row['orders'];
+
+				$data = array();
+				$from = strtotime(date('Y-m-d 00:00:00', strtotime('-31 day')));
+				$to = strtotime(date('Y-m-d 23:59:59', strtotime('-1 day')));
+				for ($date = $from; $date <= $to; $date = strtotime('+1 day', $date))
+				{
+					$data[$date] = 0;
+					if (isset($visits[$date]) && $visits[$date])
+						$data[$date] = round(100 * ((isset($orders[$date]) && $orders[$date]) ? $orders[$date] : 0) / $visits[$date], 2);
+				}
+
+				$visits_sum = array_sum($visits);
+				$orders_sum = array_sum($orders);
+				if ($visits_sum)
+					$value = round(100 * $orders_sum / $visits_sum, 2);
+				elseif ($orders_sum)
+					$value = '&infin;';
+				else
+					$value = 0;
+				$value .= '%';
+				
+				Configuration::updateValue('PS_KPI_CONVERSION_RATE_CHART', Tools::jsonEncode($data));
+				Configuration::updateValue('PS_KPI_CONVERSION_RATE', $value);
+				Configuration::updateValue('PS_KPI_CONVERSION_RATE_EXPIRE', strtotime(date('Y-m-d 00:00:00', strtotime('+1 day'))));
+				break;
 			case 'abandoned_cart':
 				$value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT COUNT(*)
@@ -54,7 +112,6 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				Configuration::updateValue('PS_KPI_AVG_ORDER_VALUE_EXPIRE', strtotime(date('Y-m-d 00:00:00', strtotime('+1 day'))));
 				break;
 			case 'netprofit_visitor':
-
 				$gapi = Module::isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
 				if (Validate::isLoadedObject($gapi) && $gapi->isConfigured())
 				{
@@ -68,7 +125,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 					SELECT COUNT(DISTINCT id_guest)
 					FROM `'._DB_PREFIX_.'connections`
 					WHERE `date_add` BETWEEN "'.pSQL(date('Y-m-d', strtotime('-31 day'))).' 00:00:00" AND "'.pSQL(date('Y-m-d', strtotime('-1 day'))).' 23:59:59"
-					'.Shop::addSqlRestriction(false).'');
+					'.Shop::addSqlRestriction(false));
 				}
 
 				$row_products = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
@@ -114,7 +171,12 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				$value = false;
 		}
 		if ($value !== false)
-			die(Tools::jsonEncode(array('value' => $value)));
+		{
+			$array = array('value' => $value);
+			if (isset($data))
+				$array['data'] = $data;
+			die(Tools::jsonEncode($array));
+		}
 		die(Tools::jsonEncode(array('has_errors' => true)));
 	}
 }
