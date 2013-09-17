@@ -35,7 +35,7 @@
 			{l s='Filename:'}
 			</span>
 		</label>
-		<div class="col-lg-7">
+		<div class="col-lg-9">
 			{include file="controllers/products/input_text_lang.tpl"
 				languages=$languages
 				input_value=$attachment_name
@@ -43,7 +43,7 @@
 			}
 		</div>
 	</div>
-		
+
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="attachment_description_{$id_lang}">{l s='Description:'} </label>
 		<div class="col-lg-9">

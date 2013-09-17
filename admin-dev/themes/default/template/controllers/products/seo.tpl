@@ -42,7 +42,7 @@
 					languages=$languages
 					input_name='meta_title'
 					input_value=$product->meta_title
-					maxlength=70
+					maxchar=70
 				}
 			</div>
 		</div>
@@ -62,7 +62,7 @@
 				languages=$languages
 				input_name='meta_description'
 				input_value=$product->meta_description
-				maxlength=160
+				maxchar=160
 			}
 			</div>
 		</div>
@@ -92,7 +92,7 @@
 				title="{l s='friendly URL from the product name.'}">
 				{l s='Friendly URL:'}
 			</span>
-			
+
 		</label>
 		<div class="col-lg-9">
 			<div class="row">

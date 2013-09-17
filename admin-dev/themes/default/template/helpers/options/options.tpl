@@ -85,7 +85,7 @@
 									{/if}
 								{/block}
 								{block name="field"}
-									
+
 								{block name="input"}
 									{if $field['type'] == 'select'}
 										<div class="col-lg-9">
@@ -186,16 +186,18 @@
 									{elseif $field['type'] == 'textLang' || $field['type'] == 'textareaLang' || $field['type'] == 'selectLang'}
 
 										{if $field['type'] == 'textLang'}
-											<div class="col-lg-9">
+											<div class="col-lg-12">
 												<div class="row">
 												{foreach $field['languages'] AS $id_lang => $value}
-													<div class="input-group col-lg-12 translatable-field lang-{$id_lang}" {if $id_lang != $current_id_lang}style="display:none;"{/if}>
-														<input type="text"
-															name="{$key}_{$id_lang}"
-															value="{$value|escape:'htmlall':'UTF-8'}"
-															{if isset($input.class)}class="{$input.class}"{/if}
-														/>
-														<div class="input-group-btn">
+													<div class="translatable-field lang-{$id_lang}" {if $id_lang != $current_id_lang}style="display:none;"{/if}>
+														<div class="col-lg-9">
+															<input type="text"
+																name="{$key}_{$id_lang}"
+																value="{$value|escape:'htmlall':'UTF-8'}"
+																{if isset($input.class)}class="{$input.class}"{/if}
+															/>
+														</div>
+														<div class="col-lg-2">
 															<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 																<img src="{$base_url}/img/l/{$id_lang|intval}.jpg" alt="">
 																<!-- name -->
@@ -218,10 +220,9 @@
 											<div class="col-lg-9">
 												{foreach $field['languages'] AS $id_lang => $value}
 													<div class="row translatable-field lang-{$id_lang}" {if $id_lang != $current_id_lang}style="display:none;"{/if}>
-														<div id="{$key}_{$id_lang}" class="col-lg-10" >
+														<div id="{$key}_{$id_lang}" class="col-lg-9" >
 															<textarea class="textarea-autosize" name="{$key}_{$id_lang}">{$value|replace:'\r\n':"\n"}</textarea>
 														</div>
-
 														<div class="input-group-btn col-lg-2">
 															<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 																<img src="{$base_url}/img/l/{$id_lang|intval}.jpg" alt="">
@@ -236,7 +237,7 @@
 																{/foreach}
 															</ul>
 														</div>
-														
+
 													</div>
 												{/foreach}
 												<script type="text/javascript">
@@ -248,7 +249,7 @@
 
 										{elseif $field['type'] == 'selectLang'}
 											{foreach $languages as $language}
-											
+
 												<div id="{$key}_{$language.id_lang}" style="display: {if $language.id_lang == $current_id_lang}block{else}none{/if};" class="col-lg-9">
 													<select name="{$key}_{$language.iso_code|upper}">
 														{foreach $field['list'] AS $k => $v}
@@ -262,7 +263,7 @@
 											{/foreach}
 										{/if}
 
-<!-- 
+<!--
 {if count($languages) > 1}
 	<div class="displayed_flag">
 		<img src="../img/l/{$current_id_lang}.jpg" class="pointer" id="language_current_{$key}" onclick="toggleLanguageFlags(this);" />
