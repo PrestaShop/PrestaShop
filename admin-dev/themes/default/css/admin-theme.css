@@ -7691,25 +7691,14 @@ html, body {
   text-align: center; }
 /* line 137, admin-theme.sass */
 #content form .alert, #content form #carrier_wizard .wizard_error, #carrier_wizard #content form .wizard_error {
-  clear: both;
-  color: #756b64;
-  border: solid 1px #cac5c1;
-  background-color: #e2dfdd; }
-/* line 142, admin-theme.sass */
-#content form .alert.alert-info, #content form #carrier_wizard .alert-info.wizard_error, #carrier_wizard #content form .alert-info.wizard_error {
-  background-color: white;
-  color: #59a1e0;
-  border: none;
-  border-bottom: solid 1px #dfdfdf;
-  -webkit-box-shadow: white 0 0 0 1px inset;
-  box-shadow: white 0 0 0 1px inset; }
+  clear: both; }
 @media (max-width: 768px) {
   /* line 77, admin-theme.sass */
   #content {
     margin-left: 0;
     width: 100%; } }
 
-/* line 152, admin-theme.sass */
+/* line 144, admin-theme.sass */
 .page-head {
   width: 100%;
   height: 55px;
@@ -7723,28 +7712,28 @@ html, body {
   background-color: #8fc04d;
   -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0 7px 0;
   box-shadow: rgba(0, 0, 0, 0.15) 0 7px 0; }
-/* line 164, admin-theme.sass */
+/* line 156, admin-theme.sass */
 .page-head h2.page-title {
   padding: 0 0 0 260px;
   font-size: 18px;
   color: white;
   text-transform: uppercase; }
 @media (max-width: 768px) {
-  /* line 164, admin-theme.sass */
+  /* line 156, admin-theme.sass */
   .page-head h2.page-title {
     padding: 0 0 0 20px; } }
-/* line 172, admin-theme.sass */
+/* line 164, admin-theme.sass */
 .page-head .btn-toolbar {
   margin: 0;
   padding: 3px 0 0 0; }
-/* line 175, admin-theme.sass */
+/* line 167, admin-theme.sass */
 .page-head .btn-toolbar .nav-tabs {
   margin: 0; }
-/* line 177, admin-theme.sass */
+/* line 169, admin-theme.sass */
 .page-head .btn-toolbar .nav-tabs > li > a {
   color: #333333; }
 
-/* line 181, admin-theme.sass */
+/* line 173, admin-theme.sass */
 .toolbar_btn {
   position: relative;
   padding: 2px 5px !important;
@@ -7754,13 +7743,13 @@ html, body {
   color: white;
   text-align: center;
   text-shadow: none; }
-/* line 190, admin-theme.sass */
+/* line 182, admin-theme.sass */
 .toolbar_btn:hover {
   color: #8fc04d;
   border-color: white;
   background-color: white !important; }
 
-/* line 195, admin-theme.sass */
+/* line 187, admin-theme.sass */
 [class^="process-icon-"], [class*=" process-icon-"] {
   height: 25px;
   min-width: 32px;
@@ -7776,20 +7765,20 @@ html, body {
   -webkit-font-smoothing: antialiased;
   *margin-right: 0.3em; }
 
-/* line 267, admin-theme.sass */
+/* line 259, admin-theme.sass */
 .navbar-inner {
   box-shadow: none !important; }
-/* line 269, admin-theme.sass */
+/* line 261, admin-theme.sass */
 .navbar-inner .input-append {
   margin-bottom: 0; }
 
-/* line 273, admin-theme.sass */
+/* line 265, admin-theme.sass */
 label.control-label {
   font-size: 13px;
   font-weight: normal;
   color: #666666; }
 
-/* line 278, admin-theme.sass */
+/* line 270, admin-theme.sass */
 label.control-label span.label-tooltip {
   text-decoration: none;
   font-size: 13px;
@@ -7803,11 +7792,11 @@ label.control-label span.label-tooltip {
   -o-border-radius: 3px;
   border-radius: 3px; }
 
-/* line 287, admin-theme.sass */
+/* line 279, admin-theme.sass */
 .tooltip {
   font-size: 12px; }
 
-/* line 290, admin-theme.sass */
+/* line 282, admin-theme.sass */
 label.required:before {
   content: "*";
   color: red;
@@ -7815,44 +7804,44 @@ label.required:before {
   position: relative;
   line-height: 12px; }
 
-/* line 297, admin-theme.sass */
+/* line 289, admin-theme.sass */
 select.input-tiny, input[type="text"].input-tiny, input[type="password"].input-tiny {
   width: 80px;
   float: left; }
 
-/* line 303, admin-theme.sass */
+/* line 295, admin-theme.sass */
 td.actions {
   min-width: 200px; }
 
-/* line 305, admin-theme.sass */
+/* line 297, admin-theme.sass */
 .dropdown-menu {
   text-align: left; }
 
-/* line 307, admin-theme.sass */
+/* line 299, admin-theme.sass */
 .btn-group-action {
   float: right; }
-/* line 309, admin-theme.sass */
+/* line 301, admin-theme.sass */
 .btn-group-action a {
   text-decoration: none; }
 
-/* line 312, admin-theme.sass */
+/* line 304, admin-theme.sass */
 .btn {
   text-transform: uppercase; }
-/* line 314, admin-theme.sass */
+/* line 306, admin-theme.sass */
 .btn .caret {
   border-top-color: #333333 !important; }
-/* line 317, admin-theme.sass */
+/* line 309, admin-theme.sass */
 .btn:hover .caret, .btn:focus .caret {
   border-top-color: white !important; }
-/* line 319, admin-theme.sass */
+/* line 311, admin-theme.sass */
 .btn.btn-default {
   -webkit-box-shadow: #e6e6e6 0 -2px 0 inset;
   box-shadow: #e6e6e6 0 -2px 0 inset; }
-/* line 322, admin-theme.sass */
+/* line 314, admin-theme.sass */
 .btn.btn-primary {
   -webkit-box-shadow: #c7e6c7 0 -2px 0 inset;
   box-shadow: #c7e6c7 0 -2px 0 inset; }
-/* line 325, admin-theme.sass */
+/* line 317, admin-theme.sass */
 .btn.btn-default[disabled] {
   border-color: #999999;
   color: #999999;
@@ -7860,22 +7849,22 @@ td.actions {
   -webkit-box-shadow: #cccccc 0 -2px 0 inset;
   box-shadow: #cccccc 0 -2px 0 inset; }
 
-/* line 331, admin-theme.sass */
+/* line 323, admin-theme.sass */
 hr {
   border-color: #dfdfdf;
   border-bottom: 1px solid white; }
 
-/* line 336, admin-theme.sass */
+/* line 328, admin-theme.sass */
 .table {
   border-collapse: separate;
   border-spacing: 0 2px;
   margin-bottom: 5px; }
-/* line 342, admin-theme.sass */
+/* line 334, admin-theme.sass */
 .table thead > tr > th {
   border: none;
   font-weight: normal;
   vertical-align: top; }
-/* line 346, admin-theme.sass */
+/* line 338, admin-theme.sass */
 .table thead > tr > th span.title_box {
   color: black;
   font-size: 1.1em;
@@ -7883,73 +7872,73 @@ hr {
   display: block;
   word-wrap: nowrap;
   white-space: nowrap; }
-/* line 353, admin-theme.sass */
+/* line 345, admin-theme.sass */
 .table thead > tr > th span.title_box.active {
   font-weight: bold; }
-/* line 355, admin-theme.sass */
+/* line 347, admin-theme.sass */
 .table thead > tr > th span.title_box a {
   text-decoration: none; }
-/* line 357, admin-theme.sass */
+/* line 349, admin-theme.sass */
 .table thead > tr > th span.title_box a.active {
   color: black; }
-/* line 359, admin-theme.sass */
+/* line 351, admin-theme.sass */
 .table input, .table select {
   margin: 0; }
-/* line 361, admin-theme.sass */
+/* line 353, admin-theme.sass */
 .table tbody > tr > td {
   border-top: none;
   background-color: white; }
-/* line 364, admin-theme.sass */
+/* line 356, admin-theme.sass */
 .table tbody > tr > td {
   padding: 3px 7px;
   vertical-align: middle;
   word-wrap: nowrap;
   font-size: 12px;
   border-bottom: solid 1px #eeeeee; }
-/* line 371, admin-theme.sass */
+/* line 363, admin-theme.sass */
 .table td.center, .table th.center {
   text-align: center; }
-/* line 373, admin-theme.sass */
+/* line 365, admin-theme.sass */
 .table tr td:first-child, .table tr th:first-child {
   border-top-left-radius: 3px;
   border-bottom-left-radius: 3px; }
-/* line 376, admin-theme.sass */
+/* line 368, admin-theme.sass */
 .table tr td:last-child, .table tr th:last-child {
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px; }
 
-/* line 381, admin-theme.sass */
+/* line 373, admin-theme.sass */
 tr.filter {
   background-color: #f4fafd; }
-/* line 383, admin-theme.sass */
+/* line 375, admin-theme.sass */
 tr.filter input[type="text"].filter, tr.filter input[type="password"].filter, tr.filter select.filter {
   font-size: 12px;
   border-color: #a0d0eb; }
 
-/* line 387, admin-theme.sass */
+/* line 379, admin-theme.sass */
 .breadcrumb {
   background-color: white; }
 
-/* line 390, admin-theme.sass */
+/* line 382, admin-theme.sass */
 .badge, #header_notifs_icon_wrapper .notifs_badge, .badge.badge-success, .badge.badge-error {
   background-color: #8fc04d; }
-/* line 392, admin-theme.sass */
+/* line 384, admin-theme.sass */
 #header_notifs_icon_wrapper .badge-success.notifs_badge, .badge-success.badge {
   background-color: #5cb85c; }
-/* line 395, admin-theme.sass */
+/* line 387, admin-theme.sass */
 #header_notifs_icon_wrapper .badge-error.notifs_badge, .badge-error.badge {
   background-color: #d9534f; }
 
-/* line 399, admin-theme.sass */
+/* line 391, admin-theme.sass */
 .row-margin-bottom {
   margin-bottom: 15px; }
 
-/* line 402, admin-theme.sass */
+/* line 394, admin-theme.sass */
 .icon-big {
   font-size: 4em;
   color: #c5c5c5; }
 
-/* line 407, admin-theme.sass */
+/* line 399, admin-theme.sass */
 #module-list h3, #module-list #content .panel-heading, #content #module-list .panel-heading, #module-list #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header, #content #header_notifs_icon_wrapper .notifs_panel #module-list .notifs_panel_header, #module-list #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header, #header_notifs_icon_wrapper .notifs_panel #content #module-list .notifs_panel_header {
   position: relative;
   top: 0;
@@ -7960,7 +7949,7 @@ tr.filter input[type="text"].filter, tr.filter input[type="password"].filter, tr
   color: #515561;
   font-weight: 500; }
 
-/* line 417, admin-theme.sass */
+/* line 409, admin-theme.sass */
 #footer {
   z-index: 600;
   min-height: 60px;
@@ -7969,13 +7958,13 @@ tr.filter input[type="text"].filter, tr.filter input[type="password"].filter, tr
   padding: 15px 0 0 0;
   background-color: #242424;
   color: #888888; }
-/* line 425, admin-theme.sass */
+/* line 417, admin-theme.sass */
 #footer a {
   color: #cccccc; }
-/* line 428, admin-theme.sass */
+/* line 420, admin-theme.sass */
 #footer a.link-social:hover {
   text-decoration: none; }
-/* line 430, admin-theme.sass */
+/* line 422, admin-theme.sass */
 #footer a.link-social i {
   font-size: 2em;
   width: 30px;
@@ -7988,23 +7977,23 @@ tr.filter input[type="text"].filter, tr.filter input[type="password"].filter, tr
   -ms-border-radius: 30px;
   -o-border-radius: 30px;
   border-radius: 30px; }
-/* line 438, admin-theme.sass */
+/* line 430, admin-theme.sass */
 #footer .link-twitter i {
   color: white;
   background-color: #7cceef; }
-/* line 441, admin-theme.sass */
+/* line 433, admin-theme.sass */
 #footer .link-facebook i {
   color: white;
   background-color: #557dbb; }
-/* line 444, admin-theme.sass */
+/* line 436, admin-theme.sass */
 #footer .link-github i {
   color: black;
   background-color: white; }
-/* line 447, admin-theme.sass */
+/* line 439, admin-theme.sass */
 #footer .link-google i {
   color: white;
   background-color: #e6644e; }
-/* line 450, admin-theme.sass */
+/* line 442, admin-theme.sass */
 #footer #go-top {
   position: fixed;
   bottom: 10px;
@@ -8022,42 +8011,38 @@ tr.filter input[type="text"].filter, tr.filter input[type="password"].filter, tr
   cursor: pointer;
   font-size: 16px;
   background-color: rgba(0, 0, 0, 0.5); }
-/* line 467, admin-theme.sass */
+/* line 459, admin-theme.sass */
 #footer #go-top:hover {
   background-color: black; }
 
-/* line 470, admin-theme.sass */
+/* line 462, admin-theme.sass */
 #nobootstrap {
   float: left; }
 
-/* line 477, admin-theme.sass */
-.fixed-width-XS {
+/* line 469, admin-theme.sass */
+.fixed-width-xs {
   width: 40px; }
 
-/* line 479, admin-theme.sass */
-.fixed-width-S {
+/* line 471, admin-theme.sass */
+.fixed-width-sm {
   width: 80px; }
 
-/* line 481, admin-theme.sass */
-.fixed-width-M {
+/* line 473, admin-theme.sass */
+.fixed-width-md {
   width: 120px; }
 
-/* line 483, admin-theme.sass */
-.fixed-width-L {
+/* line 475, admin-theme.sass */
+.fixed-width-lg {
   width: 160px; }
 
-/* line 485, admin-theme.sass */
-.fixed-width-XL {
-  width: 200px; }
-
-/* line 495, admin-theme.sass */
+/* line 484, admin-theme.sass */
 textarea {
   resize: none; }
 
-/* line 499, admin-theme.sass */
+/* line 487, admin-theme.sass */
 .box-stats {
   background-color: white; }
-/* line 501, admin-theme.sass */
+/* line 489, admin-theme.sass */
 .box-stats .boxchart-overlay {
   padding: 10px 10px 5px 10px;
   margin-right: 10px;
@@ -8068,7 +8053,7 @@ textarea {
   -ms-border-radius: 3px;
   -o-border-radius: 3px;
   border-radius: 3px; }
-/* line 507, admin-theme.sass */
+/* line 495, admin-theme.sass */
 .box-stats i {
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -8083,91 +8068,91 @@ textarea {
   text-align: center;
   line-height: 64px;
   margin-right: 10px; }
-/* line 517, admin-theme.sass */
+/* line 505, admin-theme.sass */
 .box-stats .title {
   color: #666666;
   display: block; }
-/* line 520, admin-theme.sass */
+/* line 508, admin-theme.sass */
 .box-stats .value {
   font-size: 22px; }
-/* line 522, admin-theme.sass */
+/* line 510, admin-theme.sass */
 .box-stats small {
   line-height: 0.3em;
   color: #aaaaaa;
   text-transform: uppercase; }
 
-/* line 527, admin-theme.sass */
+/* line 515, admin-theme.sass */
 .color1 i, .color1 .boxchart-overlay {
   background-color: #2ba8e3;
   -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0 -3px 0 inset;
   box-shadow: rgba(0, 0, 0, 0.15) 0 -3px 0 inset; }
-/* line 530, admin-theme.sass */
+/* line 518, admin-theme.sass */
 .color1 .value {
   color: #2ba8e3; }
 
-/* line 533, admin-theme.sass */
+/* line 521, admin-theme.sass */
 .color2 i, .color2 .boxchart-overlay {
   background-color: #ff5450;
   -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0 -3px 0 inset;
   box-shadow: rgba(0, 0, 0, 0.15) 0 -3px 0 inset; }
-/* line 536, admin-theme.sass */
+/* line 524, admin-theme.sass */
 .color2 .value {
   color: #ff5450; }
 
-/* line 539, admin-theme.sass */
+/* line 527, admin-theme.sass */
 .color3 i, .color3 .boxchart-overlay {
   background-color: #9e5ba1;
   -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0 -3px 0 inset;
   box-shadow: rgba(0, 0, 0, 0.15) 0 -3px 0 inset; }
-/* line 542, admin-theme.sass */
+/* line 530, admin-theme.sass */
 .color3 .value {
   color: #9e5ba1; }
 
-/* line 545, admin-theme.sass */
+/* line 533, admin-theme.sass */
 .color4 i, .color4 .boxchart-overlay {
   background-color: #95cc6b;
   -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0 -3px 0 inset;
   box-shadow: rgba(0, 0, 0, 0.15) 0 -3px 0 inset; }
-/* line 548, admin-theme.sass */
+/* line 536, admin-theme.sass */
 .color4 .value {
   color: #95cc6b; }
 
-/* line 552, admin-theme.sass */
+/* line 540, admin-theme.sass */
 .data_chart rect {
   fill: white; }
-/* line 554, admin-theme.sass */
+/* line 542, admin-theme.sass */
 .data_chart path {
   stroke: white;
   stroke-width: 2;
   fill: none; }
-/* line 558, admin-theme.sass */
+/* line 546, admin-theme.sass */
 .data_chart line {
   stroke: black; }
-/* line 560, admin-theme.sass */
+/* line 548, admin-theme.sass */
 .data_chart .area {
   fill: rgba(255, 255, 255, 0.3);
   stroke-width: 0; }
 
-/* line 564, admin-theme.sass */
+/* line 552, admin-theme.sass */
 .highlight {
   background-color: #ffffc0; }
 
-/* line 567, admin-theme.sass */
+/* line 555, admin-theme.sass */
 .hook_panel {
   -webkit-box-shadow: rgba(255, 255, 255, 0.9) 0 0 0 1px inset;
   box-shadow: rgba(255, 255, 255, 0.9) 0 0 0 1px inset;
   padding: 10px 10px 5px 10px;
   margin-bottom: 3px !important; }
 
-/* line 572, admin-theme.sass */
+/* line 560, admin-theme.sass */
 .module_name {
   font-size: 1.2em; }
 
-/* line 576, admin-theme.sass */
+/* line 564, admin-theme.sass */
 .hook_panel_header {
   margin: 0 -10px 0 -10px;
   padding: 0 10px 10px 10px; }
-/* line 579, admin-theme.sass */
+/* line 567, admin-theme.sass */
 .hook_panel_header .hook_name {
   font-weight: 400;
   font-size: 1.2em;
@@ -8180,15 +8165,15 @@ textarea {
   border: solid 1px #cccccc;
   background-color: white;
   padding: 0 4px; }
-/* line 587, admin-theme.sass */
+/* line 575, admin-theme.sass */
 .hook_panel_header .hook_title {
   text-transform: uppercase;
   font-size: 1em; }
-/* line 590, admin-theme.sass */
+/* line 578, admin-theme.sass */
 .hook_panel_header .hook_description {
   padding: 3px 0 0 3px; }
 
-/* line 594, admin-theme.sass */
+/* line 582, admin-theme.sass */
 .module_list .module_list_item {
   display: table;
   width: 100%;
@@ -8203,7 +8188,7 @@ textarea {
   -o-border-radius: 3px;
   border-radius: 3px; }
 
-/* line 602, admin-theme.sass */
+/* line 590, admin-theme.sass */
 .module_col_select {
   display: table-cell;
   width: 22px;
@@ -8212,13 +8197,13 @@ textarea {
   text-align: center;
   border-right: 1px solid #dddddd; }
 
-/* line 609, admin-theme.sass */
+/* line 597, admin-theme.sass */
 .module_col_position {
   display: table-cell;
   width: 60px;
   vertical-align: middle;
   text-align: right; }
-/* line 614, admin-theme.sass */
+/* line 602, admin-theme.sass */
 .module_col_position .positions {
   font-family: "Ubuntu", sans-serif;
   font-weight: 200;
@@ -8236,41 +8221,41 @@ textarea {
   border: solid 1px #cccccc;
   background-color: #eeeeee; }
 
-/* line 625, admin-theme.sass */
+/* line 613, admin-theme.sass */
 .module_col_icon {
   display: table-cell;
   width: 50px;
   text-align: center;
   vertical-align: middle; }
 
-/* line 631, admin-theme.sass */
+/* line 619, admin-theme.sass */
 .module_col_infos {
   display: table-cell;
   height: 50px;
   vertical-align: middle; }
 
-/* line 636, admin-theme.sass */
+/* line 624, admin-theme.sass */
 .module_col_actions {
   display: table-cell;
   width: 160px;
   padding: 0 10px;
   vertical-align: middle;
   text-align: right; }
-/* line 642, admin-theme.sass */
+/* line 630, admin-theme.sass */
 .module_col_actions .btn-group {
   text-align: left; }
 
-/* line 646, admin-theme.sass */
+/* line 634, admin-theme.sass */
 .tree {
   padding: 0 0 0 20px;
   list-style: none; }
-/* line 649, admin-theme.sass */
+/* line 637, admin-theme.sass */
 .tree input {
   margin-right: 4px; }
-/* line 651, admin-theme.sass */
+/* line 639, admin-theme.sass */
 .tree i {
   font-size: 1.3em; }
-/* line 655, admin-theme.sass */
+/* line 643, admin-theme.sass */
 .tree .tree-item-name, .tree .tree-folder-name {
   padding: 0 5px;
   -webkit-border-radius: 6px;
@@ -8279,17 +8264,17 @@ textarea {
   -o-border-radius: 6px;
   border-radius: 6px;
   font-weight: normal; }
-/* line 659, admin-theme.sass */
+/* line 647, admin-theme.sass */
 .tree .tree-item-name:hover, .tree .tree-folder-name:hover {
   background-color: #eeeeee;
   cursor: pointer; }
-/* line 662, admin-theme.sass */
+/* line 650, admin-theme.sass */
 .tree .tree-selected {
   background-color: #a4dcf5; }
-/* line 664, admin-theme.sass */
+/* line 652, admin-theme.sass */
 .tree .tree-selected i.tree-dot {
   background-color: #1ba6e5; }
-/* line 666, admin-theme.sass */
+/* line 654, admin-theme.sass */
 .tree i.tree-dot {
   display: inline-block;
   position: relative;
@@ -8302,20 +8287,65 @@ textarea {
   -ms-border-radius: 6px;
   -o-border-radius: 6px;
   border-radius: 6px; }
-/* line 674, admin-theme.sass */
+/* line 662, admin-theme.sass */
 .tree .tree-item-disable, .tree .tree-folder-name-disable {
   color: #cccccc; }
-/* line 676, admin-theme.sass */
+/* line 664, admin-theme.sass */
 .tree .tree-item-disable:hover, .tree .tree-folder-name-disable:hover {
   color: #cccccc;
   background-color: none; }
 
-/* line 681, admin-theme.sass */
+/* line 669, admin-theme.sass */
 .nav-tabs {
   border-bottom: none; }
-/* line 684, admin-theme.sass */
+/* line 672, admin-theme.sass */
 .nav-tabs li.active a.tab-page {
   background-color: white; }
+
+/* line 677, admin-theme.sass */
+.tagify-container {
+  background-color: white;
+  padding: 2px 6px;
+  min-height: 30px;
+  overflow: auto;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+  border: solid 1px #cccccc;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.075) 0 1px 1px inset;
+  box-shadow: rgba(0, 0, 0, 0.075) 0 1px 1px inset; }
+/* line 685, admin-theme.sass */
+.tagify-container span {
+  float: left; }
+/* line 687, admin-theme.sass */
+.tagify-container > span {
+  display: inline-block;
+  padding: 3px 5px;
+  margin: 3px;
+  border-radius: 2px;
+  border: 1px solid #1ba6e5;
+  background-color: #60c1ed;
+  color: white; }
+/* line 695, admin-theme.sass */
+.tagify-container > span > a {
+  padding-left: 5px;
+  color: #1ba6e5;
+  text-decoration: none;
+  font-weight: bold; }
+/* line 700, admin-theme.sass */
+.tagify-container > input {
+  margin-top: 2px;
+  border: 0 none;
+  width: 100px;
+  -webkit-box-shadow: none;
+  box-shadow: none; }
+/* line 705, admin-theme.sass */
+.tagify-container > input:focus {
+  outline: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none; }
 
 /* line 1, _nav.sass */
 #nav-sidebar {

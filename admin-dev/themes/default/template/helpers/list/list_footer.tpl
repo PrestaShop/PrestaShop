@@ -72,7 +72,7 @@
 		<span>
 			&nbsp;|&nbsp;
 			<label >{l s='Display'}</label>
-			<select class="filter fixed-width-S" name="pagination" onchange="submit()">
+			<select class="filter fixed-width-xs" name="pagination" onchange="submit()">
 				{* Choose number of results per page *}
 				{foreach $pagination AS $value}
 					<option value="{$value|intval}"{if $selected_pagination == $value} selected="selected" {elseif $selected_pagination == NULL && $value == $pagination[1]} selected="selected2"{/if}>{$value|intval}</option>
