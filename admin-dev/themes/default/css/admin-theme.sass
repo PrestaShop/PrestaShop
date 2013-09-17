@@ -89,7 +89,7 @@ html, body
 		@include box-shadow(rgba(black,0.10) 0 2px 0, white 0 0 0 3px inset)
 	.panel-heading
 		@extend h3
-	h3, .panel-heading
+	h3:not(.modal-title), .panel-heading
 		border: none
 		height: 30px
 		padding: 0 5px
@@ -302,6 +302,8 @@ input[type="password"].input-tiny
 
 td.actions
 	min-width: 200px
+.dropdown-menu
+	text-align: left
 .btn-group-action
 	float: right
 	a
@@ -490,6 +492,9 @@ input[type="text"],input[type="search"],input[type="password"], textarea, select
 fieldset > .row
 	@extend .form-group
 
+textarea
+	resize: none
+
 
 .box-stats
 	background-color: white
@@ -671,6 +676,19 @@ fieldset > .row
 		&:hover
 			color: #ccc
 			background-color: none
+
+
+.nav-tabs
+	border-bottom: none
+	li.active
+		a.tab-page
+			background-color: white
+
+
+
+
+
+
 
 @import "nav"
 @import "toggle-switch"
