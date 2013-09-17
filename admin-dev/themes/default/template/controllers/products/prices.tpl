@@ -120,7 +120,7 @@ $(document).ready(function () {
 				title="{l s='Wholesale price'}">
 				{l s='Pre-tax wholesale price:'}
 			</span>
-			
+
 		</label>
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
@@ -173,7 +173,7 @@ $(document).ready(function () {
 				</div>
 				<div class="col-lg-2">
 					<a class="btn btn-link confirm_leave" href="{$link->getAdminLink('AdminTaxRulesGroup')|escape:'htmlall':'UTF-8'}&addtax_rules_group&id_product={$product->id}" {if $tax_exclude_taxe_option}disabled="disabled"{/if}>
-						<i class="icon-plus-sign"></i>  {l s='Create new taxe'} <i class="icon-external-link-sign"></i>
+						<i class="icon-plus-sign"></i>  {l s='Create new tax'} <i class="icon-external-link-sign"></i>
 					</a>
 				</div>
 			</div>
@@ -184,7 +184,7 @@ $(document).ready(function () {
 	<div class="row">
 		<div class="col-lg-9 col-lg-offset-3">
 			<div class="alert">
-				{l s='Taxes are currently disabled'} : 
+				{l s='Taxes are currently disabled'} :
 				<a href="{$link->getAdminLink('AdminTaxes')|escape:'htmlall':'UTF-8'}">{l s='Tax options'}</a>
 				<input type="hidden" value="{$product->getIdTaxRulesGroup()}" name="id_tax_rules_group" />
 			</div>
@@ -385,7 +385,7 @@ $(document).ready(function () {
 					<input class="datepicker" type="text" name="sp_to" value="" style="text-align: center" id="sp_to" />
 				</div>
 			</div>
-			
+
 			<div class="row">
 				<label class="control-label col-lg-3" for="sp_from_quantity">{l s='Starting at'}</label>
 				<div class="input-group col-lg-4">
@@ -434,8 +434,8 @@ $(document).ready(function () {
 				</div>
 				<p class="help-block">{l s='The discount is applied after the tax'}</p>
 			</div>
-		
-		</div>	
+
+		</div>
 	</div>
 	<script type="text/javascript">
 		$(document).ready(function(){
