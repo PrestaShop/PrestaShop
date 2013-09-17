@@ -3350,25 +3350,23 @@ class AdminProductsControllerCore extends AdminController
 
 	protected function _displayLabelField(&$label, $languages, $default_language, $type, $fieldIds, $id_customization_field)
 	{
-		$content = '';
-		$fieldsName = 'label_'.$type.'_'.(int)($id_customization_field);
-		$fieldsContainerName = 'labelContainer_'.$type.'_'.(int)($id_customization_field);
-		$content .= '<div id="'.$fieldsContainerName.'" class="translatable clear" style="line-height: 18px">';
 		foreach ($languages as $language)
-		{
-			$fieldName = 'label_'.$type.'_'.(int)($id_customization_field).'_'.(int)($language['id_lang']);
-			$text = (isset($label[(int)($language['id_lang'])])) ? $label[(int)($language['id_lang'])]['name'] : '';
-			$content .= '<div class="lang_'.$language['id_lang'].'" id="'.$fieldName.'" style="display: '.((int)($language['id_lang']) == (int)($default_language) ? 'block' : 'none').'; clear: left; float: left; padding-bottom: 4px;">
-						<input type="text" name="'.$fieldName.'" value="'.htmlentities($text, ENT_COMPAT, 'UTF-8').'" style="float: left" />
-					</div>';
-		}
+			$input_value[$language['id_lang']] = (isset($label[(int)($language['id_lang'])])) ? $label[(int)($language['id_lang'])]['name'] : '';
 
 		$required = (isset($label[(int)($language['id_lang'])])) ? $label[(int)($language['id_lang'])]['required'] : false;
-		$content .= '</div>
-				<div style="margin: 3px 0 0 3px; font-size: 11px">
-					<input type="checkbox" name="require_'.$type.'_'.(int)($id_customization_field).'" id="require_'.$type.'_'.(int)($id_customization_field).'" value="1" '.($required ? 'checked="checked"' : '').' style="float: left; margin: 0 4px"/><label for="require_'.$type.'_'.(int)($id_customization_field).'" style="float: none; font-weight: normal;"> '.$this->l('required').'</label>
-				</div>';
-		return $content;
+
+		$template = $this->context->smarty->createTemplate('controllers/products/input_text_lang.tpl',
+			$this->context->smarty);
+		return '<div class="form-group">'
+			.$template->assign(array(
+				'languages' => $languages,
+				'input_name'  => 'label_'.$type.'_'.(int)($id_customization_field),
+				'input_value' => $input_value
+			))->fetch()
+			.'</div>'
+			.'<div class="form-group">'
+			.'<input type="checkbox" name="require_'.$type.'_'.(int)($id_customization_field).'" id="require_'.$type.'_'.(int)($id_customization_field).'" value="1" '.($required ? 'checked="checked"' : '').' style="float: left; margin: 0 4px"/><label for="require_'.$type.'_'.(int)($id_customization_field).'" style="float: none; font-weight: normal;"> '.$this->l('required').'</label>'
+			.'</div>';
 	}
 
 	protected function _displayLabelFields(&$obj, &$labels, $languages, $default_language, $type)
