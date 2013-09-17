@@ -329,6 +329,10 @@ class OrderHistoryCore extends ObjectModel
 		// updates delivery date even if it was already set by another state change
 		if ($new_os->delivery)
 			$order->setDelivery();
+		
+		// set package
+		if ($new_os->package)
+			$order->setPackage();
 
 		// executes hook
 		Hook::exec('actionOrderStatusPostUpdate', array(

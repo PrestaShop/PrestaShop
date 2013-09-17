@@ -392,7 +392,7 @@ class AdminStatusesControllerCore extends AdminController
 			'shipped_on' => $this->getFieldValue($obj, 'shipped'),
 			'paid_on' => $this->getFieldValue($obj, 'paid'),
 			'delivery_on' => $this->getFieldValue($obj, 'delivery'),
-			'packing_on' => $this->getFieldValue($obj, 'package'),
+			'package_on' => $this->getFieldValue($obj, 'package'),
 		);
 
 		return parent::renderForm();
@@ -507,7 +507,7 @@ class AdminStatusesControllerCore extends AdminController
 			$_POST['shipped'] = (int)Tools::getValue('shipped_on');
 			$_POST['paid'] = (int)Tools::getValue('paid_on');
 			$_POST['delivery'] = (int)Tools::getValue('delivery_on');
-			$_POST['package'] = (int)Tools::getValue('packing_on');
+			$_POST['package'] = (int)Tools::getValue('package_on');
 			if (!$_POST['send_email'])
 			{
 				$languages = Language::getLanguages(false);

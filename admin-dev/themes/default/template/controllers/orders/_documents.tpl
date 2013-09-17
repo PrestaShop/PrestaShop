@@ -69,6 +69,8 @@
 			{if get_class($document) eq 'OrderInvoice'}
 				{if isset($document->is_delivery)}
 					#{Configuration::get('PS_DELIVERY_PREFIX', $current_id_lang, null, $order->id_shop)}{'%06d'|sprintf:$document->delivery_number}
+				{elseif isset($document->is_package)}
+					#PACKSLIP
 				{else}
 					{$document->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}
 				{/if}

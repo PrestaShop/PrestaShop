@@ -83,6 +83,7 @@ class OrderStateCore extends ObjectModel
 			'unremovable' =>array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'delivery' =>	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'package' =>	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			// mysql package ps_order_state
 			'hidden' =>		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'paid' =>		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'deleted' =>	array('type' => self::TYPE_BOOL, 'validade' => 'isBool'),

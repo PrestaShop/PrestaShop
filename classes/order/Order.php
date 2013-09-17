@@ -1214,6 +1214,23 @@ class OrderCore extends ObjectModel
 		// Update object
 		$this->update();
 	}
+	
+	public function setPackage()
+	{
+		// Get all invoice
+		$order_invoice_collection = $this->getInvoicesCollection();
+		foreach ($order_invoice_collection as $order_invoice)
+		{
+
+			$number = $order_invoice->id_order;
+				
+			// Set package number on invoice
+			$order_invoice->package = $number;
+			// Update Order Invoice
+			$order_invoice->update();
+		}
+
+	}
 
 	public static function getByDelivery($id_delivery)
 	{
@@ -1497,6 +1514,12 @@ class OrderCore extends ObjectModel
 			$delivery->date_add = $delivery->delivery_date;
 		}
 		$order_slips = $this->getOrderSlipsCollection()->getResults();
+		
+		$package_slip = $this->getPackageSlipCollection()->getResults();
+		foreach ($package_slip as $package)
+		{
+			$package->is_package = true;
+		}
 
 		// @TODO review
 		function sortDocuments($a, $b)
@@ -1506,7 +1529,7 @@ class OrderCore extends ObjectModel
 			return ($a->date_add < $b->date_add) ? -1 : 1;
 		}
 
-		$documents = array_merge($invoices, $order_slips, $delivery_slips);
+		$documents = array_merge($invoices, $order_slips, $delivery_slips,$package_slip);
 		usort($documents, 'sortDocuments');
 
 		return $documents;
@@ -1565,6 +1588,19 @@ class OrderCore extends ObjectModel
 		return $order_invoices;
 	}
 
+	/**
+	 *
+	 * Get package slip for the current order
+	 * @return Collection of Order invoice
+	 */
+	public function getPackageSlipCollection()
+	{
+		$order_invoices = new Collection('OrderInvoice');
+		$order_invoices->where('id_order', '=', $this->id);
+		$order_invoices->where('package', '!=', '0');
+		return $order_invoices;
+	}
+	
 	/**
 	 *
 	 * Get all delivery slips for the current order
