@@ -238,7 +238,7 @@
 			<input type="hidden" id="is_virtual" name="is_virtual" value="{$product->is_virtual|escape:html:'UTF-8'}" />
 
 			{if !$product->active && $product->isAssociatedToShop()}
-			<div class="alert draft" >
+			<div class="alert alert-info draft" >
 				<p>
 					<span >
 					{l s='Your product will be saved as a draft.'}</span>
