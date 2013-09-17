@@ -1244,6 +1244,8 @@ class AdminOrdersControllerCore extends AdminController
 		$time = time();
 		$kpis = array();
 
+		/* The data generation is located in AdminStatsControllerCore */
+		
 		$helper = new HelperKpi();
 		$helper->id = 'box-carts';
 		$helper->icon = 'icon-shopping-cart';
@@ -1266,6 +1268,18 @@ class AdminOrdersControllerCore extends AdminController
 			$helper->value = Configuration::get('PS_KPI_AVERAGE_ORDER_VALUE');
 		if (Configuration::get('PS_KPI_AVG_ORDER_VALUE_EXPIRE') < $time)
 			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=average_order_value';
+		$kpis[] = $helper->generate();
+		
+		$helper = new HelperKpi();
+		$helper->id = 'box-net-profit-visitor';
+		$helper->icon = 'icon-user';
+		$helper->color = 'color4';
+		$helper->title = $this->l('Net Profit per Visitor ');
+		$helper->subtitle = $this->l('30 days');
+		if (Configuration::get('PS_KPI_NETPROFIT_VISITOR') !== false)
+			$helper->value = Configuration::get('PS_KPI_NETPROFIT_VISITOR');
+		if (Configuration::get('PS_KPI_NETPROFIT_VISITOR_EXPIRE') < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=netprofit_visitor';
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpiRow();

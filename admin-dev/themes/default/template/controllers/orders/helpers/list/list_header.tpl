@@ -33,12 +33,6 @@
 			<span class="title">Conversion Rate <br/><small>30 days</small></span>
 			<span class="value">1.89%</span>
 		</div>
-
-		<div id="box-orders" class="col-lg-3 box-stats color4">
-			<i class="icon-user"></i>
-			<span class="title">Net Profit per visitor <br/><small>30 days</small></span>
-			<span class="value">$2.12</span>
-		</div>
 	</div>
 </div>
 
