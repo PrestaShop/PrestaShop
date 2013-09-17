@@ -59,38 +59,38 @@ class StatsBestCustomers extends ModuleGrid
 				'id' => 'lastname',
 				'header' => $this->l('Last Name'),
 				'dataIndex' => 'lastname',
-				'width' => 80
+				'align' => 'center'
 			),
 			array(
 				'id' => 'firstname',
 				'header' => $this->l('First Name'),
 				'dataIndex' => 'firstname',
-				'width' => 80
+				'align' => 'center'
 			),
 			array(
 				'id' => 'email',
 				'header' => $this->l('Email'),
 				'dataIndex' => 'email',
-				'width' => 140
+				'align' => 'center'
 			),
 			array(
 				'id' => 'totalVisits',
 				'header' => $this->l('Visits'),
 				'dataIndex' => 'totalVisits',
-				'width' => 80,
-				'align' => 'right'),
+				'align' => 'center'
+			),
 			array(
 				'id' => 'totalValidOrders',
 				'header' => $this->l('Valid orders'),
 				'dataIndex' => 'totalValidOrders',
-				'width' => 80,
-				'align' => 'right'),
+				'align' => 'center'
+			),
 			array(
 				'id' => 'totalMoneySpent',
 				'header' => $this->l('Money spent').' ('.Tools::safeOutput($currency->iso_code).')',
 				'dataIndex' => 'totalMoneySpent',
-				'width' => 140,
-				'align' => 'right')
+				'align' => 'center'
+			)
 		);
 
 		$this->displayName = $this->l('Best customers');
@@ -116,23 +116,27 @@ class StatsBestCustomers extends ModuleGrid
 		if (Tools::getValue('export'))
 			$this->csvExport($engineParams);
 		$this->_html = '
-		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
-			'.$this->engine($engineParams).'
-		<p><a class="button export-csv" href="'.htmlentities($_SERVER['REQUEST_URI']).'&export=1"><span>'.$this->l('CSV Export').'</span></a></p>
-		</div><br />
-		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</h2>
-			<h2 >'.$this->l('Develop clients\' loyalty').'</h2>
-			<p class="space">
-				'.$this->l('Keeping a client is more profitable than gaining a new one. That is one of the many reasons it is necessary to cultivate customer loyalty.').' <br />
-				'.$this->l('Word of mouth is also a means for getting new, satisfied clients. A dissatisfied customer can hurt your e-reputation and obstruct future sales goals.').'<br />
-				'.$this->l('In order to achieve this goal, you can organize:').'
-				<ul>
-					<li>'.$this->l('Punctual operations: commercial rewards (personalized special offers, product or service offered), non commercial rewards (priority handling of an order or a product), pecuniary rewards (bonds, discount coupons, payback).').'</li>
-					<li>'.$this->l('Sustainable operations: loyalty points or cards, which not only justify communication between merchant and client, but also offer advantages to clients (private offers, discounts).').'</li>
-				</ul>
-				'.$this->l('These operations encourage clients to buy products and visit your e-store regularly.').'
-			</p>
-		</div>';
+		<div class="panel-heading">
+			'.$this->displayName.'
+		</div>
+		<h4>'.$this->l('Guide').'</h4>
+			<div class="alert alert-warning">
+				<h4>'.$this->l('Develop clients\' loyalty').'</h4>
+				<p>
+					'.$this->l('Keeping a client is more profitable than gaining a new one. That is one of the many reasons it is necessary to cultivate customer loyalty.').' <br />
+					'.$this->l('Word of mouth is also a means for getting new, satisfied clients. A dissatisfied customer can hurt your e-reputation and obstruct future sales goals.').'<br />
+					'.$this->l('In order to achieve this goal, you can organize:').'
+					<ul>
+						<li>'.$this->l('Punctual operations: commercial rewards (personalized special offers, product or service offered), non commercial rewards (priority handling of an order or a product), pecuniary rewards (bonds, discount coupons, payback).').'</li>
+						<li>'.$this->l('Sustainable operations: loyalty points or cards, which not only justify communication between merchant and client, but also offer advantages to clients (private offers, discounts).').'</li>
+					</ul>
+					'.$this->l('These operations encourage clients to buy products and visit your e-store regularly.').'
+				</p>
+			</div>
+		'.$this->engine($engineParams).'
+		<a class="btn btn-default export-csv" href="'.htmlentities($_SERVER['REQUEST_URI']).'&export=1">
+			<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
+		</a>';
 		return $this->_html;
 	}
 

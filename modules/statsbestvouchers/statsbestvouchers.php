@@ -57,29 +57,25 @@ class StatsBestVouchers extends ModuleGrid
 				'id' => 'code',
 				'header' => $this->l('Code'),
 				'dataIndex' => 'code',
-				'align' => 'left',
-				'width' => 300
+				'align' => 'center'
 			),
 			array(
 				'id' => 'name',
 				'header' => $this->l('Name'),
 				'dataIndex' => 'name',
-				'align' => 'left',
-				'width' => 300
+				'align' => 'center'
 			),
 			array(
 				'id' => 'ca',
 				'header' => $this->l('Sales'),
 				'dataIndex' => 'ca',
-				'width' => 30,
-				'align' => 'right'
+				'align' => 'center'
 			),
 			array(
 				'id' => 'total',
 				'header' => $this->l('Total used'),
 				'dataIndex' => 'total',
-				'width' => 30,
-				'align' => 'right'
+				'align' => 'center'
 			)
 		);
 
@@ -108,10 +104,13 @@ class StatsBestVouchers extends ModuleGrid
 				$this->csvExport($engineParams);
 
 		$this->_html = '
-		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
+			<div class="panel-heading">
+				'.$this->displayName.'
+			</div>
 			'.$this->engine($engineParams).'
-			<br /><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><span>'.$this->l('CSV Export').'</span></a>
-		</div>';
+			<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1">
+				<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
+			</a>';
 		return $this->_html;
 	}
 

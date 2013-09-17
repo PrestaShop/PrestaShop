@@ -83,40 +83,57 @@ class StatsOrigin extends ModuleGraph
 		if (Tools::getValue('export'))
 			if (Tools::getValue('exportType') == 'top')
 				$this->csvExport(array('type' => 'pie'));
-		$this->_html = '<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->l('Origin').'</h2>';
+		$this->_html = '<div class="panel-heading">'.$this->l('Origin').'</div>';
 		if (count($websites))
 		{
 			$this->_html .= '
-			<p><img src="../img/admin/down.gif" />'.$this->l('Here we break down the 10 most popular referral websites that call customers to your e-store.').'</p>
-			<div>'.$this->engine(array('type' => 'pie')).'</div><br />
-			<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=top"><span>'.$this->l('CSV Export').'</span></a></p><br />
-			
-			<table class="table " border="0" cellspacing="0" cellspacing="0">
-				<tr>
-					<th style="width:400px;">'.$this->l('Origin').'</th>
-					<th style="width:50px; text-align: right">'.$this->l('Total').'</th>
-				</tr>';
+			<div class="alert alert-info">
+				'.$this->l('Here we break down the 10 most popular referral websites that call customers to your e-store.').'
+			</div>
+			<h4>'.$this->l('Guide').'</h4>
+			<div class="alert alert-warning">
+				<h4>'.$this->l('What is a referral website?').'</h4>
+				<p>
+					'.$this->l('When visiting a webpage, the referrer is the URL of the previous webpage from which a link was followed.').'<br />
+					'.$this->l('A referrer enables you to know which keywords visitors use in search engines when browsing for your online store.').'<br /><br />
+					'.$this->l('A referrer can be:').'
+				</p>
+				<ul>
+					<li>'.$this->l('Someone who posts a link to your shop.').'</li>
+					<li>'.$this->l('A partner who has agreed to a link exchange in order to attract new customers.').'</li>
+				</ul>
+			</div>
+			<div class="row row-margin-bottom">
+				<div class="col-lg-12">
+					<div class="col-lg-8">
+						'.$this->engine(array('type' => 'pie')).'
+					</div>
+					<div class="col-lg-4">
+						<a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=top" class="btn btn-default">
+							<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
+						</a>
+					</div>
+				</div>
+			</div>
+			<table class="table">
+				<thead>
+					<tr>
+						<th><span class="title_box active">'.$this->l('Origin').'</span></th>
+						<th><span class="title_box active">'.$this->l('Total').'</span></th>
+					</tr>
+				</thead>
+				<tbody>';
 			foreach ($websites as $website => $total)
-				$this->_html .= '<tr>
-					<td>'.(!strstr($website, ' ') ? '<a href="'.Tools::getProtocol().$website.'">' : '').$website.(!strstr($website, ' ') ? '</a>' : '').'</td><td style="text-align: right">'.$total.'</td>
-				</tr>';
-			$this->_html .= '</table></div>';
+				$this->_html .= '
+					<tr>
+						<td>'.(!strstr($website, ' ') ? '<a href="'.Tools::getProtocol().$website.'">' : '').$website.(!strstr($website, ' ') ? '</a>' : '').'</td><td>'.$total.'</td>
+					</tr>';
+			$this->_html .= '
+				</tbody>
+			</table>';
 		}
 		else
-			$this->_html .= '<p><strong>'.$this->l('Direct links only').'</strong></p>';
-		$this->_html .= '</div><br />
-		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</h2>
-		<h2>'.$this->l('What is a referral website?').'</h2>
-			<p>
-				'.$this->l('When visiting a webpage, the referrer is the URL of the previous webpage from which a link was followed.').'<br />
-				'.$this->l('A referrer enables you to know which keywords visitors use in search engines when browsing for your online store.').'<br /><br />
-				'.$this->l('A referrer can be:').'
-				<ul>
-					<li class="bullet">'.$this->l('Someone who posts a link to your shop.').'</li>
-					<li class="bullet">'.$this->l('A partner who has agreed to a link exchange in order to attract new customers.').'</li>
-				</ul>
-			</p>
-		</div>';
+			$this->_html .= '<p>'.$this->l('Direct links only').'</p>';
 		return $this->_html;
 	}
 

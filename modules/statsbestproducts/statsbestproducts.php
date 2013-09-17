@@ -57,57 +57,49 @@ class StatsBestProducts extends ModuleGrid
 				'id' => 'reference',
 				'header' => $this->l('Ref.'),
 				'dataIndex' => 'reference',
-				'align' => 'left',
-				'width' => 50
+				'align' => 'center'
 			),
 			array(
 				'id' => 'name',
 				'header' => $this->l('Name'),
 				'dataIndex' => 'name',
-				'align' => 'left',
-				'width' => 100
+				'align' => 'center'
 			),
 			array(
 				'id' => 'totalQuantitySold',
 				'header' => $this->l('Quantity sold'),
 				'dataIndex' => 'totalQuantitySold',
-				'width' => 50,
-				'align' => 'right'
+				'align' => 'center'
 			),
 			array(
 				'id' => 'avgPriceSold',
 				'header' => $this->l('Price sold'),
 				'dataIndex' => 'avgPriceSold',
-				'width' => 50,
-				'align' => 'right'
+				'align' => 'center'
 			),
 			array(
 				'id' => 'totalPriceSold',
 				'header' => $this->l('Sales'),
 				'dataIndex' => 'totalPriceSold',
-				'width' => 50,
-				'align' => 'right'
+				'align' => 'center'
 			),
 			array(
 				'id' => 'averageQuantitySold',
 				'header' => $this->l('Quantity sold in a day.'),
 				'dataIndex' => 'averageQuantitySold',
-				'width' => 60,
-				'align' => 'right'
+				'align' => 'center'
 			),
 			array(
 				'id' => 'totalPageViewed',
 				'header' => $this->l('Page views'),
 				'dataIndex' => 'totalPageViewed',
-				'width' => 60,
-				'align' => 'right'
+				'align' => 'center'
 			),
 			array(
 				'id' => 'quantity',
 				'header' => $this->l('Available quantity for sale.'),
 				'dataIndex' => 'quantity',
-				'width' => 150,
-				'align' => 'right'
+				'align' => 'center'
 			)
 		);
 		
@@ -136,10 +128,13 @@ class StatsBestProducts extends ModuleGrid
 			$this->csvExport($engineParams);
 
 		$this->_html = '
-		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
+			<div class="panel-heading">
+				'.$this->displayName.'
+			</div>
 			'.$this->engine($engineParams).'
-			<p><a class="button export-csv" href="'.htmlentities($_SERVER['REQUEST_URI']).'&export=1"><span>'.$this->l('CSV Export').'</span></a></p>
-		</fieldset>';
+			<a class="btn btn-default export-csv" href="'.htmlentities($_SERVER['REQUEST_URI']).'&export=1">
+				<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
+			</a>';
 		return $this->_html;
 	}
 

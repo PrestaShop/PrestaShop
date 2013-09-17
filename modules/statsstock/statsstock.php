@@ -84,62 +84,77 @@ class StatsStock extends Module
 
 		$this->html .= '
 		<script type="text/javascript">$(\'#calendar\').slideToggle();</script>
-		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->l('Evaluation of available quantities for sale.').'</h2>
-		<form action="'.$ru.'" method="post">
-			<input type="hidden" name="submitCategory" value="1" />
-			'.$this->l('Category').' : <select name="statsstock_id_category" onchange="this.form.submit();">
-				<option value="0">-- '.$this->l('All').' --</option>';
-		foreach (Category::getSimpleCategories($this->context->language->id) as $category)
-			$this->html .= '<option value="'.(int)$category['id_category'].'" '.
-				($this->context->cookie->statsstock_id_category == $category['id_category'] ? 'selected="selected"' : '').'>'.
-				$category['name'].'
-			</option>';
-		$this->html .= '</select>
-		</form><br />';
+		<div class="panel-heading">'
+			.$this->l('Evaluation of available quantities for sale.').
+		'</div>
+		<form action="'.$ru.'" method="post" class="form-horizontal">
+			<div class="row row-margin-bottom">
+				<label class="control-label col-lg-3">'.$this->l('Category').'</label>
+				<div class="col-lg-6">
+					<select name="statsstock_id_category" onchange="this.form.submit();">
+						<option value="0">-- '.$this->l('All').' --</option>';
+				foreach (Category::getSimpleCategories($this->context->language->id) as $category)
+					$this->html .= '<option value="'.(int)$category['id_category'].'" '.
+						($this->context->cookie->statsstock_id_category == $category['id_category'] ? 'selected="selected"' : '').'>'.
+						$category['name'].'
+					</option>';
+		$this->html .= '
+					</select>
+					<input type="hidden" name="submitCategory" value="1" />
+				</div>
+			</div>
+		</form>';
 
 		if (!count($products))
-			$this->html .= $this->l('Your catalog is empty.');
+			$this->html .= '<p>'.$this->l('Your catalog is empty.').'</p>';
 		else
 		{
 			$rollup = array('quantity' => 0, 'wholesale_price' => 0, 'stockvalue' => 0);
-			$this->html .= '<table class="table" cellspacing="0" cellpadding="0">
-			<tr>
-				<th>'.$this->l('ID').'</th>
-				<th>'.$this->l('Ref.').'</th>
-				<th style="width:350px">'.$this->l('Item').'</th>
-				<th>'.$this->l('Available quantity for sale').'</th>
-				<th>'.$this->l('Price*').'</th>
-				<th>'.$this->l('Value').'</th>
-			</tr>';
-			foreach ($products as $product)
-			{
-				$rollup['quantity'] += $product['quantity'];
-				$rollup['wholesale_price'] += $product['wholesale_price'];
-				$rollup['stockvalue'] += $product['stockvalue'];
-				$this->html .= '<tr>
-					<td>'.$product['id_product'].'</td>
-					<td>'.$product['reference'].'</td>
-					<td>'.$product['name'].'</td>
-					<td>'.$product['quantity'].'</td>
-					<td>'.Tools::displayPrice($product['wholesale_price'], $currency).'</td>
-					<td>'.Tools::displayPrice($product['stockvalue'], $currency).'</td>
-				</tr>';
-			}
 			$this->html .= '
-				<tr>
-					<th colspan="3"></th>
-					<th>'.$this->l('Total quantities').'</th>
-					<th>'.$this->l('Avg price').'</th>
-					<th>'.$this->l('Total value').'</th>
-				</tr>
-				<tr>
-					<td colspan="3"></td>
-					<td>'.$rollup['quantity'].'</td>
-					<td>'.Tools::displayPrice($rollup['wholesale_price'] / count($products), $currency).'</td>
-					<td>'.Tools::displayPrice($rollup['stockvalue'], $currency).'</td>
-				</tr>
+			<table class="table">
+				<thead>
+					<tr>
+						<th><span class="title_box active">'.$this->l('ID').'</span></th>
+						<th><span class="title_box active">'.$this->l('Ref.').'</span></th>
+						<th><span class="title_box active">'.$this->l('Item').'</span></th>
+						<th><span class="title_box active">'.$this->l('Available quantity for sale').'</span></th>
+						<th><span class="title_box active">'.$this->l('Price*').'</span></th>
+						<th><span class="title_box active">'.$this->l('Value').'</span></th>
+					</tr>
+				</thead>
+				<tbody>';
+				foreach ($products as $product)
+				{
+					$rollup['quantity'] += $product['quantity'];
+					$rollup['wholesale_price'] += $product['wholesale_price'];
+					$rollup['stockvalue'] += $product['stockvalue'];
+					$this->html .= '<tr>
+						<td>'.$product['id_product'].'</td>
+						<td>'.$product['reference'].'</td>
+						<td>'.$product['name'].'</td>
+						<td>'.$product['quantity'].'</td>
+						<td>'.Tools::displayPrice($product['wholesale_price'], $currency).'</td>
+						<td>'.Tools::displayPrice($product['stockvalue'], $currency).'</td>
+					</tr>';
+				}
+				$this->html .= '
+				</tbody>
+				<tfoot>
+					<tr>
+						<th colspan="3"></th>
+						<th><span class="title_box active">'.$this->l('Total quantities').'</span></th>
+						<th><span class="title_box active">'.$this->l('Avg price').'</span></th>
+						<th><span class="title_box active">'.$this->l('Total value').'</span></th>
+					</tr>
+					<tr>
+						<td colspan="3"></td>
+						<td>'.$rollup['quantity'].'</td>
+						<td>'.Tools::displayPrice($rollup['wholesale_price'] / count($products), $currency).'</td>
+						<td>'.Tools::displayPrice($rollup['stockvalue'], $currency).'</td>
+					</tr>
+				</tfoot>
 			</table>
-			<p>* '.$this->l('This section corresponds to the default wholesale price according to the default supplier for the product. An average price is used when the product has attributes.').'</p></div>';
+			<i class="icon-asterisk"></i> '.$this->l('This section corresponds to the default wholesale price according to the default supplier for the product. An average price is used when the product has attributes.');
 
 			return $this->html;
 		}

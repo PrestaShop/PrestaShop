@@ -172,66 +172,90 @@ class StatsCatalog extends Module
 
 		$html = '
 		<script type="text/javascript" language="javascript">$(\'#calendar\').slideToggle();</script>
-		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
-			<div class="margin-form">
-				<form action="" method="post" id="categoriesForm">
-				<label>
-				'.$this->l('Choose a category').'
-				</label>
-					<select name="id_category" onchange="$(\'#categoriesForm\').submit();">
-						<option value="0">'.$this->l('All').'</option>';
-		foreach ($categories as $category)
-			$html .= '<option value="'.$category['id_category'].'"'.($id_category == $category['id_category'] ? ' selected="selected"' : '').'>'.
-				$category['name'].'
-			</option>';
-		$html .= '
-					</select>
-				</form>
+			<div class="panel-heading">
+				'.$this->displayName.'
 			</div>
-			<table>
-				'.$this->returnLine($this->l('Products available:'), (int)$total).'
-				'.$this->returnLine($this->l('Average price (base price):'), Tools::displayPrice($averagePrice, $this->context->currency)).'
-				'.$this->returnLine($this->l('Product pages viewed:'), (int)$totalPageViewed).'
-				'.$this->returnLine($this->l('Products bought:'), (int)$totalBought).'
-				'.$this->returnLine($this->l('Average number of page visits:'), number_format((float)$averageViewed, 2, '.', '')).'
-				'.$this->returnLine($this->l('Average number of purchases:'), number_format((float)$averagePurchase, 2, '.', '')).'
-				'.$this->returnLine($this->l('Images available:'), (int)$totalPictures).'
-				'.$this->returnLine($this->l('Average number of images:'), number_format((float)$averagePictures, 2, '.', '')).'
-				'.$this->returnLine($this->l('Products never viewed:'), (int)$totalNV.' / '.(int)$total).'
-				'.$this->returnLine('<a style="cursor : pointer" onclick="$(\'#pnb\').slideToggle();">'.$this->l('Products never purchased:').'</a>', (int)$totalNB.' / '.(int)$total).'
-				'.$this->returnLine($this->l('Conversion rate*:'), $conversion).'
-			</table>
-			<div style="margin-top: 20px;">
-				<span style="color:red;font-weight:bold">*</span> 
-				'.$this->l('Define the average conversion rate for the product page (It is possible to purchase a product without viewing the product page, so this rate can be greater than 1).').'
-			</div>
-		</div>';
+			<form action="" method="post" id="categoriesForm" class="form-horizontal">
+				<div class="row row-margin-bottom">
+					<label class="control-label col-lg-3">
+						'.$this->l('Choose a category').'
+					</label>
+					<div class="col-lg-6">
+						<select name="id_category" onchange="$(\'#categoriesForm\').submit();">
+							<option value="0">'.$this->l('All').'</option>';
+						foreach ($categories as $category)
+							$html .= '<option value="'.$category['id_category'].'"'.($id_category == $category['id_category'] ? ' selected="selected"' : '').'>'.
+								$category['name'].'
+							</option>';
+				$html .= '
+						</select>
+					</div>
+				</div>
+			</form>
+			<ul class="list-group">
+				<li class="list-group-item">'.$this->returnLine($this->l('Products available:'), '<span class="badge">'.(int)$total).'</span></li>
+				<li class="list-group-item">'.$this->returnLine($this->l('Average price (base price):'), '<span class="badge">'.Tools::displayPrice($averagePrice, $this->context->currency)).'</span></li>
+				<li class="list-group-item">'.$this->returnLine($this->l('Product pages viewed:'), '<span class="badge">'.(int)$totalPageViewed).'</span></li>
+				<li class="list-group-item">'.$this->returnLine($this->l('Products bought:'), '<span class="badge">'.(int)$totalBought).'</span></li>
+				<li class="list-group-item">'.$this->returnLine($this->l('Average number of page visits:'), '<span class="badge">'.number_format((float)$averageViewed, 2, '.', '')).'</span></li>
+				<li class="list-group-item">'.$this->returnLine($this->l('Average number of purchases:'), '<span class="badge">'.number_format((float)$averagePurchase, 2, '.', '')).'</span></li>
+				<li class="list-group-item">'.$this->returnLine($this->l('Images available:'), '<span class="badge">'.(int)$totalPictures).'</span></li>
+				<li class="list-group-item">'.$this->returnLine($this->l('Average number of images:'), '<span class="badge">'.number_format((float)$averagePictures, 2, '.', '')).'</span></li>
+				<li class="list-group-item">'.$this->returnLine($this->l('Products never viewed:'), '<span class="badge">'.(int)$totalNV.' / '.(int)$total).'</span></li>
+				<li class="list-group-item">'.$this->returnLine('<a style="cursor : pointer" onclick="$(\'#pnb\').slideToggle();">'.$this->l('Products never purchased:').'</a>', '<span class="badge">'.(int)$totalNB.' / '.(int)$total).'</span></li>
+				<li class="list-group-item">'.$this->returnLine($this->l('Conversion rate*:'), '<span class="badge">'.$conversion).'</span></li>
+			</ul>
+			<div class="row row-margin-bottom">
+				<p>
+					<i class="icon-asterisk"></i>'.$this->l('Define the average conversion rate for the product page (It is possible to purchase a product without viewing the product page, so this rate can be greater than 1).').'
+				</p>
+			</div>';
 
 		if (count($productsNB) && count($productsNB) < 50)
 		{
-			$html .= '<br />
-			<div class="blocStats"><h2 class="icon-basket-delete"><span></span>'.$this->l('Products never purchased').'</h2>
-				<table cellpadding="0" cellspacing="0" class="table">
-					<tr><th>'.$this->l('ID').'</th><th>'.$this->l('Name').'</th><th>'.$this->l('Edit / View').'</th></tr>';
+			$html .= '
+				<div class="panel-heading">'.$this->l('Products never purchased').'</div>
+				<table class="table">
+					<thead>
+						<tr>
+							<th><span class="title_box active">'.$this->l('ID').'</span></th>
+							<th><span class="title_box active">'.$this->l('Name').'</span></th>
+							<th><span class="title_box active">'.$this->l('Edit / View').'</span></th>
+						</tr>
+					</thead>
+					<tbody>';
 			foreach ($productsNB as $product)
 				$html .= '
 					<tr'.($irow++ % 2 ? ' class="alt_row"' : '').'>
 						<td>'.$product['id_product'].'</td>
-						<td style="width: 400px;">'.$product['name'].'</td>
-						<td style="text-align: right">
-							<a href="index.php?tab=AdminProducts&id_product='.$product['id_product'].'&addproduct&token='.$productToken.'" target="_blank"><img src="../modules/'.$this->name.'/page_edit.png" /></a>
-							<a href="'.$this->context->link->getProductLink($product['id_product'], $product['link_rewrite']).'" target="_blank"><img src="../modules/'.$this->name.'/application_home.png" /></a>
+						<td>'.$product['name'].'</td>
+						<td class="left">
+							<div class="btn-group btn-group-action">
+								<a class="btn btn-default" href="index.php?tab=AdminProducts&id_product='.$product['id_product'].'&addproduct&token='.$productToken.'" target="_blank">
+									<i class="icon-edit"></i> '.$this->l('Edit').'
+								</a>
+								<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">
+									<span class="caret">&nbsp;</span>
+								</button>
+								<ul class="dropdown-menu">
+									<li>
+										<a href="'.$this->context->link->getProductLink($product['id_product'], $product['link_rewrite']).'" target="_blank">
+											<i class="icon-eye-open"></i> '.$this->l('See').'
+										</a>
+									</li>
+								</ul>
+							</div>
 						</td>
 					</tr>';
 			$html .= '
-				</table>
-			</div>';
+					</tbody>
+				</table>';
 		}
 		return $html;
 	}
 
 	private function returnLine($label, $data)
 	{
-		return '<tr><td>'.$label.'</td><td style="color:green;font-weight:bold;padding-left:20px;">'.$data.'</td></tr>';
+		return '<tr><td>'.$label.'</td><td>'.$data.'</td></tr>';
 	}
 }

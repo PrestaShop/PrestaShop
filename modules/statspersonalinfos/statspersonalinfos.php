@@ -54,7 +54,27 @@ class StatsPersonalInfos extends ModuleGraph
 
 	public function hookAdminStatsModules($params)
 	{
-		$this->html = '<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>';
+		$this->html = '
+			<div class="panel-heading">
+				'.$this->displayName.'
+			</div>
+			<h4>'.$this->l('Guide').'</h4>
+			<div class="alert alert-warning">
+				<h4>'.$this->l('Target your audience.').'</h4>
+				<p>
+					'.$this->l('In order for each message to have an impact, you need to know who it is being addressed to. ').'
+					'.$this->l('Defining your target audience is essential when choosing the right tools to win them over.').'
+					'.$this->l('It is best to limit action to a group -- or groups -- of clients.').'
+					'.$this->l('Storing registered customer information allows you to accurately define customer profile so you can adapt your special deals and promotions.').'
+				</p>
+				<p>
+					'.$this->l('Increase your sales by').'
+					<ul>
+						<li class="bullet">'.$this->l('launching targeted advertisement campaigns.').'</li>
+						<li class="bullet">'.$this->l('Contact a group of clients by email or newsletter.').'</li>
+					</ul>
+				</p>
+			</div>';
 		if (count(Customer::getCustomers()))
 		{
 			if (Tools::getValue('export'))
@@ -70,44 +90,79 @@ class StatsPersonalInfos extends ModuleGraph
 					$this->csvExport(array('type' => 'pie', 'option' => 'language'));
 
 			$this->html .= '
-				<p><img src="../img/admin/down.gif" />'.$this->l('Gender distribution allows you to determine the percentage of men and women shoppers in your store. ').'</p>
-				<div>'.$this->engine(array('type' => 'pie', 'option' => 'gender')).'</div><br />
-				<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=gender"><span>'.$this->l('CSV Export').'</span></a></p>
-				<br class="clear" /><br />
-				<p><img src="../img/admin/down.gif" />'.$this->l('Age ranges allow you to better understand target demographics. ').'</p>
-				<div>'.$this->engine(array('type' => 'pie', 'option' => 'age')).'</div><br />
-				<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=age"><span>'.$this->l('CSV Export').'</span></a></p><br /><br />
-				<p><img src="../img/admin/down.gif" />'.$this->l('Country distribution allows you to analyze which part of the world your customers are shopping from.').'</p>
-				<div>'.$this->engine(array('type' => 'pie', 'option' => 'country')).'</div><br />
-				<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=country"><span>'.$this->l('CSV Export').'</span></a></p><br /><br />
-				<p><img src="../img/admin/down.gif" />'.$this->l('Currency range allows you to determine which currency your customers are using.').'</p>
-				<div>'.$this->engine(array('type' => 'pie', 'option' => 'currency')).'</div><br />
-				<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=currency"><span>'.$this->l('CSV Export').'</span></a></p><br /><br />
-				<p><img src="../img/admin/down.gif" />'.$this->l('Language distribution allows you to analyze the browsing language used by your customers. ').'</p>
-				<div>'.$this->engine(array('type' => 'pie', 'option' => 'language')).'</div><br />
-				<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=language"><span>'.$this->l('CSV Export').'</span></a></p>
-			</center>';
+				<div class="row row-margin-bottom">
+					<div class="col-lg-12">
+						<div class="col-lg-8">
+							'.$this->engine(array('type' => 'pie', 'option' => 'gender')).'
+						</div>
+						<div class="col-lg-4">
+							<p>'.$this->l('Gender distribution allows you to determine the percentage of men and women shoppers in your store. ').'</p>
+							<hr/>
+							<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=gender">
+								<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="row row-margin-bottom">
+					<div class="col-lg-12">
+						<div class="col-lg-8">
+							'.$this->engine(array('type' => 'pie', 'option' => 'age')).'
+						</div>
+						<div class="col-lg-4">
+							<p>'.$this->l('Age ranges allow you to better understand target demographics. ').'</p>
+							<hr/>
+							<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=age">
+								<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="row row-margin-bottom">
+					<div class="col-lg-12">
+						<div class="col-lg-8">
+							'.$this->engine(array('type' => 'pie', 'option' => 'country')).'
+						</div>
+						<div class="col-lg-4">
+							<p>'.$this->l('Country distribution allows you to analyze which part of the world your customers are shopping from.').'</p>
+							<hr/>
+							<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=country">
+								<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="row row-margin-bottom">
+					<div class="col-lg-12">
+						<div class="col-lg-8">
+							'.$this->engine(array('type' => 'pie', 'option' => 'currency')).'
+						</div>
+						<div class="col-lg-4">
+							<p>'.$this->l('Currency range allows you to determine which currency your customers are using.').'</p>
+							<hr/>
+							<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=currency">
+								<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="row row-margin-bottom">
+					<div class="col-lg-12">
+						<div class="col-lg-8">
+							'.$this->engine(array('type' => 'pie', 'option' => 'language')).'
+						</div>
+						<div class="col-lg-4">
+							<p>'.$this->l('Language distribution allows you to analyze the browsing language used by your customers. ').'</p>
+							<hr/>
+							<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=language">
+								<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
+							</a>
+						</div>
+					</div>
+				</div>';
 		}
 		else
 			$this->html .= '<p>'.$this->l('No customers have registered yet.').'</p>';
-		$this->html .= '
-		</div><br />
-		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</h2>
-			<h2>'.$this->l('Target your audience.').'</h2>
-			<p>
-				'.$this->l('In order for each message to have an impact, you need to know who it is being addressed to. ').'
-				'.$this->l('Defining your target audience is essential when choosing the right tools to win them over.').'
-				'.$this->l('It is best to limit action to a group -- or groups -- of clients.').'
-				'.$this->l('Storing registered customer information allows you to accurately define customer profile so you can adapt your special deals and promotions.').'
-			</p><br />
-			<p>
-				'.$this->l('Increase your sales by').'
-				<ul>
-					<li class="bullet">'.$this->l('launching targeted advertisement campaigns.').'</li>
-					<li class="bullet">'.$this->l('Contact a group of clients by email or newsletter.').'</li>
-				</ul>
-			</p><br />
-		</div>';
 		return $this->html;
 	}
 

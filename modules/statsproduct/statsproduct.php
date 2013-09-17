@@ -184,7 +184,7 @@ class StatsProduct extends ModuleGraph
 			$totalSales = $this->getTotalSales($product->id);
 			$totalViewed = $this->getTotalViewed($product->id);
 			$this->html .= '<h4>'.$product->name.' - '.$this->l('Details').'</h4>
-			<div class="row">
+			<div class="row row-margin-bottom">
 				<div class="col-lg-12">
 					<div class="col-lg-8">
 						'.$this->engine(array('layers' => 2, 'type' => 'line', 'option' => '1-'.$id_product)).'
@@ -292,7 +292,7 @@ class StatsProduct extends ModuleGraph
 			$categories = Category::getCategories((int)$this->context->language->id, true, false);
 			$this->html .= '
 			<form action="" method="post" id="categoriesForm" class="form-horizontal">
-				<div class="row row-margin-form">
+				<div class="row row-margin-bottom">
 					<label class="control-label col-lg-3" for="id_category">
 						<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="'.$this->l('Click on a product to access its statistics!').'">
 							'.$this->l('Choose a category').'

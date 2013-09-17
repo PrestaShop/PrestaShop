@@ -66,18 +66,39 @@ class StatsCarrier extends ModuleGraph
 		if (Tools::getValue('export'))
 				$this->csvExport(array('type' => 'pie', 'option' => Tools::getValue('id_order_state')));
 		$this->_html = '
-			<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
-			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" style="float: right;">
-				<select name="id_order_state">
-					<option value="0"'.((!Tools::getValue('id_order_state')) ? ' selected="selected"' : '').'>'.$this->l('All').'</option>';
-		foreach ($states as $state)
-			$this->_html .= '<option value="'.$state['id_order_state'].'"'.(($state['id_order_state'] == Tools::getValue('id_order_state')) ? ' selected="selected"' : '').'>'.$state['name'].'</option>';
-		$this->_html .= '</select>
-				<input type="submit" name="submitState" value="'.$this->l('Filter').'" class="button" />
+			<div class="panel-heading">
+				'.$this->displayName.'
+			</div>
+			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" class="form-horizontal alert">
+				<div class="row">
+					<div class="col-lg-5 col-lg-offset-6">
+						<select name="id_order_state">
+							<option value="0"'.((!Tools::getValue('id_order_state')) ? ' selected="selected"' : '').'>'.$this->l('All').'</option>';
+				foreach ($states as $state)
+					$this->_html .= '<option value="'.$state['id_order_state'].'"'.(($state['id_order_state'] == Tools::getValue('id_order_state')) ? ' selected="selected"' : '').'>'.$state['name'].'</option>';
+				$this->_html .= '</select>
+					</div>
+					<div class="col-lg-1">
+						<input type="submit" name="submitState" value="'.$this->l('Filter').'" class="btn btn-default pull-right" />
+					</div>
+				</div>
 			</form>
-			<p><img src="../img/admin/down.gif" />'.$this->l('This graph represents the carrier distribution for your orders. You can also narrow the focus of the graph to display distribution for a particular state.').'</p>
-			'.($result['total'] ? $this->engine(array('type' => 'pie', 'option' => Tools::getValue('id_order_state'))).'<br /><br /> <a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=language"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a>' : $this->l('No valid orders have been received for this period.')).'
-		</div>';
+
+			<div class="alert alert-info">
+				'.$this->l('This graph represents the carrier distribution for your orders. You can also narrow the focus of the graph to display distribution for a particular state.').'
+			</div>
+			<div class="row row-margin-bottom">
+				<div class="col-lg-12">
+					<div class="col-lg-8">
+						'.($result['total'] ? $this->engine(array('type' => 'pie', 'option' => Tools::getValue('id_order_state'))).'
+					</div>
+					<div class="col-lg-4">
+						<a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=language" class="btn btn-default">
+							<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
+						</a>' : $this->l('No valid orders have been received for this period.')).'
+					</div>
+				</div>
+			</div>';
 		return $this->_html;
 	}
 

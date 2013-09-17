@@ -121,35 +121,55 @@ class StatsEquipment extends ModuleGraph
 
 		$equipment = $this->getEquipment();
 		$this->html = '
-		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
-			<p><img src="../img/admin/down.gif" />'.$this->l('Determine the percentage of web browsers used by customers.').'</p>
-			'.$this->engine(array('type' => 'pie', 'option' => 'wb')).'<br /><br />
-			<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=browser"><span>'.$this->l('CSV Export').'</span></a></p>
-			<p><img src="../img/admin/down.gif" />'.$this->l('Determine the percentage of operating systems used by customers.').'</p>
-			'.$this->engine(array('type' => 'pie', 'option' => 'os')).'
-			<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=os"><span>'.$this->l('CSV Export').'</span></a></p>';
-
+		<div class="panel-heading">'
+			.$this->displayName.'
+		</div>
+		<h4>'.$this->l('Guide').'</h4>
+		<div class="alert alert-warning">
+			<h4>'.$this->l('Ensure that your website is accessible to all.').'</h4>
+			<p>
+			'.$this->l('When managing Websites, it is important to keep track of software used by visitors in order to be sure that the site displays the same way for everyone. 
+				PrestaShop was built in order to be compatible with most recent Web browsers and computer operating systems (OS). 
+				However, because you may end up adding advanced features to your Website or even modify the core PrestaShop code, these additions may not be accessible by everyone. 
+				That is why it is a good idea to keep tabs on the percentage of users for each type of software before adding or changing something that only a limited number of users will be able to access.').'
+			</p>
+		</div>
+		<div class="row row-margin-bottom">
+			<div class="col-lg-12">
+				<div class="col-lg-8">
+					'.$this->engine(array('type' => 'pie', 'option' => 'wb')).'
+				</div>
+				<div class="col-lg-4">
+					<p>'.$this->l('Determine the percentage of web browsers used by customers.').'</p>
+					<hr/>
+					<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=browser">
+						<i class="icon-cloud-upload"></i>'.$this->l('CSV Export').'
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="row row-margin-bottom">
+			<div class="col-lg-12">
+				<div class="col-lg-8">
+					'.$this->engine(array('type' => 'pie', 'option' => 'os')).'
+				</div>
+				<div class="col-lg-4">
+					<p>'.$this->l('Determine the percentage of operating systems used by customers.').'</p>
+					<hr/>
+					<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=os">
+						<i class="icon-cloud-upload"></i>'.$this->l('CSV Export').'
+					</a>
+				</div>
+			</div>
+		</div>';
 			if ($equipment)
 			{
-				$this->html .= '<table class="table space" border="0" cellspacing="0" cellpadding="0">
-				<tr><th style="width: 200px">'.$this->l('Plugins').'</th><th></th></tr>';
+				$this->html .= '<table class="table">
+				<tr><th><span class="title_box  active">'.$this->l('Plugins').'</th></span><th></th></tr>';
 				foreach ($equipment as $name => $value)	
 					$this->html .= '<tr><td>'.$name.'</td><td>'.number_format(100 * $value, 2).'%</td></tr>';
 				$this->html .= '</table>';
 			}
-			$this->html .= '
-		</div>
-		<br />
-		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</h2>
-		<h2>'.$this->l('Ensure that your website is accessible to all.').'</h2>
-			<p>
-				'.$this->l('When managing Websites, it is important to keep track of software used by visitors in order to be sure that the site displays the same way for everyone. 
-					PrestaShop was built in order to be compatible with most recent Web browsers and computer operating systems (OS). 
-					However, because you may end up adding advanced features to your Website or even modify the core PrestaShop code, these additions may not be accessible by everyone. 
-					That is why it is a good idea to keep tabs on the percentage of users for each type of software before adding or changing something that only a limited number of users will be able to access.').'
-			</p><br />
-			
-		</div>';
 		return $this->html;
 	}
 
