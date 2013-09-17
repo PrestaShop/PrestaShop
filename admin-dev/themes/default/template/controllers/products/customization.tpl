@@ -42,7 +42,6 @@
 			<input type="text" name="uploadable_files" id="uploadable_files" value="{$uploadable_files|htmlentities}" />
 		</div>
 	</div>
-
 	<div class="row">
 		{include file="controllers/products/multishop/checkbox.tpl" field="text_fields" type="default"}
 		<label class="control-label col-lg-3" for="text_fields">
@@ -55,15 +54,27 @@
 			<input type="text" name="text_fields" id="text_fields" value="{$text_fields|htmlentities}" />
 		</div>
 	</div>
-
 	{if $has_file_labels}
-		{l s='Define the label of the file fields:'}
-		{$display_file_labels}
+	<hr/>
+	<div class="row">
+		<label class="control-label col-lg-3">
+			{l s='Define the label of the file fields:'}
+		</label>
+		<div class="col-lg-9">
+			{$display_file_labels}
+		</div>
+	</div>
 	{/if}
-
 	{if $has_text_labels}
-		{l s='Define the label of the text fields:'}
-		{$display_text_labels}
+	<hr/>
+	<div class="row">
+		<label class="control-label col-lg-3">
+			{l s='Define the label of the text fields:'}
+		</label>
+		<div class="col-lg-9">
+			{$display_text_labels}
+		</div>
+	</div>
 	{/if}
 </fieldset>
 {/if}
