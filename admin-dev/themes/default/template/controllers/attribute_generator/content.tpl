@@ -24,6 +24,20 @@
 *}
 
 <script type="text/javascript">
+	var attrs = new Array();
+	attrs[0] = new Array(0, '---');
+
+	{foreach $attribute_js as $idgrp => $group}
+		{assign var="row" value="attrs[{$idgrp}] = new Array(0, '---'"}
+
+		{foreach $group as $idattr => $attrname}
+			{assign var="row" value="{$row}, {$idattr}, '{$attrname|escape}'"}
+		{/foreach}
+
+		{assign var="row" value="{$row});"}
+		{$row}
+	{/foreach}
+
 	i18n_tax_exc = '{l s='Tax Excluded'} ';
 	i18n_tax_inc = '{l s='Tax Included'} ';
 
@@ -58,7 +72,7 @@
 		<div class="row">
 			<div class="col-lg-3">
 				<div class="form-group">
-					<select multiple name="attributes[]" id="attribute_group" style="height: 400px">
+					<select multiple name="attributes[]" id="attribute_group" style="height: 500px">
 						{foreach $attribute_groups as $k => $attribute_group}
 							{if isset($attribute_js[$attribute_group['id_attribute_group']])}
 								<optgroup name="{$attribute_group['id_attribute_group']}" id="{$attribute_group['id_attribute_group']}" label="{$attribute_group['name']|escape:'htmlall':'UTF-8'}">
@@ -75,27 +89,29 @@
 					<button type="button" class="btn btn-default pull-right" onclick="add_attr_multiple();"><i class="icon-plus-sign"></i> {l s='Add'}</button>
 				</div>
 			</div>
-			<div class="col-lg-9">
+			<div class="col-lg-8 col-lg-offset-1">
 				<div class="alert alert-info">{l s='The Combinations Generator is a tool that allows you to easily create a series of combinations by selecting the related attributes. For example, if you\'re selling t-shirts in three different sizes and two different colors, the generator will create six combinations for you.'}</div>
 
-				<p>{l s='You\'re currently generating combinations for the following product:'} <b>{$product_name|escape:'htmlall':'UTF-8'}</b></p>
+				<div class="alert alert-info">{l s='You\'re currently generating combinations for the following product:'} <b>{$product_name|escape:'htmlall':'UTF-8'}</b></div>
 
-				<h4>{l s='Step 1: On the left side, select the attributes you want to use (Hold down the "Ctrl" key on your keyboard and validate by clicking on "Add")'}</h4>
+				<div class="alert alert-info"><strong>{l s='Step 1: On the left side, select the attributes you want to use (Hold down the "Ctrl" key on your keyboard and validate by clicking on "Add")'}</strong></div>
 
-				<div>
 				{foreach $attribute_groups as $k => $attribute_group}
 					{if isset($attribute_js[$attribute_group['id_attribute_group']])}
+					<div class="row">
 						<table class="table" style="display: none;">
 							<thead>
 								<tr>
-									<th id="tab_h1">{$attribute_group['name']|escape:'htmlall':'UTF-8'}</th>
-									<th id="tab_h2" colspan="2">{l s='Impact on the product price'} ({$currency_sign})</th>
-									<th>{l s='Impact on the product weight'} ({$weight_unit})</th>
+									<th id="tab_h1" class="fixed-width-md"><span class="title_box">{$attribute_group['name']|escape:'htmlall':'UTF-8'}</span></th>
+									<th id="tab_h2" colspan="2"><span class="title_box">{l s='Impact on the product price'} ({$currency_sign})</span></th>
+									<th><span class="title_box">{l s='Impact on the product weight'} ({$weight_unit})</span></th>
 								</tr>
 							</thead>
 							<tbody id="table_{$attribute_group['id_attribute_group']}" name="result_table">
 							</tbody>
 						</table>
+						<hr />
+					</div>
 						{if isset($attributes[$attribute_group['id_attribute_group']])}
 							{foreach $attributes[$attribute_group['id_attribute_group']] AS $k => $attribute}
 								<script type="text/javascript">
@@ -106,8 +122,7 @@
 						{/if}
 					{/if}
 				{/foreach}
-	            </div>
-				<h4>{l s='Select a default quantity, and reference, for each combination the generator will create for this product.'}</h4>
+				<div class="alert alert-info">{l s='Select a default quantity, and reference, for each combination the generator will create for this product.'}</div>
 				<table class="table">
 					<tbody>
 						<tr>
@@ -120,8 +135,8 @@
 						</tr>
 					</tbody>
 				</table>
-				<h4>{l s='Please click on "Generate these Combinations"'}</h4>
-				<p><input type="submit" class="btn btn-default" name="generate" value="{l s='Generate these Combinations'}" /></p>
+				<div class="alert alert-info">{l s='Please click on "Generate these Combinations"'}</div>
+				<button type="submit" class="btn btn-default" name="generate"><i class="icon-random"></i> {l s='Generate these Combinations'}</button>
 			</div>
 		</div>
 	</fieldset>

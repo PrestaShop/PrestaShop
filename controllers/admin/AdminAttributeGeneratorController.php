@@ -139,29 +139,6 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 		}
 	}
 
-	protected static function displayAndReturnAttributeJs()
-	{
-		$attributes = Attribute::getAttributes(Context::getContext()->language->id, true);
-		$attribute_js = array();
-		foreach ($attributes as $k => $attribute)
-			$attribute_js[$attribute['id_attribute_group']][$attribute['id_attribute']] = $attribute['name'];
-		echo '
-		<script type="text/javascript">
-			var attrs = new Array();
-			attrs[0] = new Array(0, \'---\');';
-		foreach ($attribute_js as $idgrp => $group)
-		{
-			echo '
-				attrs['.$idgrp.'] = new Array(0, \'---\' ';
-			foreach ($group as $idattr => $attrname)
-				echo ', '.$idattr.', \''.addslashes(($attrname)).'\'';
-			echo ');';
-		}
-		echo '
-		</script>';
-		return $attribute_js;
-	}
-
     protected static function setAttributesImpacts($id_product, $tab)
     {
         $attributes = array();
@@ -240,10 +217,14 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 		// Init toolbar
 		$this->initToolbarTitle();
 		$this->initToolbar();
-
 		$this->initGroupTable();
 
-		$js_attributes = AdminAttributeGeneratorController::displayAndReturnAttributeJs();
+		$attributes = Attribute::getAttributes(Context::getContext()->language->id, true);
+		$attribute_js = array();
+
+		foreach ($attributes as $k => $attribute)
+			$attribute_js[$attribute['id_attribute_group']][$attribute['id_attribute']] = $attribute['name'];
+		
 		$attribute_groups = AttributeGroup::getAttributesGroups($this->context->language->id);
 		$this->product = new Product((int)Tools::getValue('id_product'));
 
@@ -255,7 +236,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 			'product_reference' => $this->product->reference,
 			'url_generator' => self::$currentIndex.'&id_product='.(int)Tools::getValue('id_product').'&attributegenerator&token='.Tools::getValue('token'),
 			'attribute_groups' => $attribute_groups,
-			'attribute_js' => $js_attributes,
+			'attribute_js' => $attribute_js,
 			'toolbar_btn' => $this->toolbar_btn,
 			'toolbar_scroll' => true,
 			'title' => $this->toolbar_title,
