@@ -22,8 +22,21 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<label for="node-search">{l s=$label}</label>&nbsp;<input type="text"{if isset($id)} id="{$id}"{/if}{if isset($name)} name="{$name}"{/if}{if isset($class)} class="{$class}"{/if} />
+
+<!-- <label for="node-search">{l s=$label}</label> -->
+<span class="input-group">
+	<span class="input-group-addon">
+		<i class="icon-search"></i>
+	</span>
+	<input type="text"
+		{if isset($id)}id="{$id}"{/if}
+		{if isset($name)}name="{$name}"{/if}
+		class="form-control{if isset($class)} {$class}{/if}"
+	/>
+</span>
+
 {if isset($typeahead_source) && isset($id)}
+
 <script type="text/javascript">
 	$(document).ready(
 		function()

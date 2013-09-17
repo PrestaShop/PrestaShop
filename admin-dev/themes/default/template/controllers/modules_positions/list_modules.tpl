@@ -38,7 +38,7 @@
 			<form class="form-inline well">
 				<label>{l s='Show'} :</label>
 				<span>
-					<select id="show_modules" onChange="autoUrl('show_modules', '{$url_show_modules}')" class="filter fixed-width-XL">
+					<select id="show_modules" onChange="autoUrl('show_modules', '{$url_show_modules}')" class="filter fixed-width-lg">
 						<option value="all">{l s='All modules'}&nbsp;</option>
 						<option>---------------</option>
 						{foreach $modules as $module}

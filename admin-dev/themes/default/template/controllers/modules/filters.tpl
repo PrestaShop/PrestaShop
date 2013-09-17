@@ -26,7 +26,7 @@
 <!--start filter module-->
 <form method="post" class="form-inline pull-right">
 <!-- 		<span>
-		<select class="filter fixed-width-L" name="module_type" id="module_type_filter" {if $showTypeModules ne 'allModules' && $showTypeModules ne ''}style="background-color:#49B2FF;color:white;"{/if}>
+		<select class="filter fixed-width-lg" name="module_type" id="module_type_filter" {if $showTypeModules ne 'allModules' && $showTypeModules ne ''}style="background-color:#49B2FF;color:white;"{/if}>
 			<option value="allModules" {if $showTypeModules eq 'allModules'}selected="selected"{/if}>{l s='All Modules'}</option>
 			<option value="nativeModules" {if $showTypeModules eq 'nativeModules'}selected="selected"{/if}>{l s='Free Modules'}</option>
 			<option value="partnerModules" {if $showTypeModules eq 'partnerModules'}selected="selected"{/if}>{l s='Partner Modules (Free)'}</option>
@@ -56,7 +56,7 @@
 		</select>
 	</div>
 <!-- 		<span>
-		<select class="filter fixed-width-XL" name="country_module_value" id="country_module_value_filter" {if $showCountryModules eq 1}style="background-color:#49B2FF;color:white;"{/if}>
+		<select class="filter fixed-width-lg" name="country_module_value" id="country_module_value_filter" {if $showCountryModules eq 1}style="background-color:#49B2FF;color:white;"{/if}>
 			<option value="0" >{l s='All countries'}</option>
 			<option value="1" {if $showCountryModules eq 1}selected="selected"{/if}>{l s='Current country:'} {$nameCountryDefault}</option>
 		</select>

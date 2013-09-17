@@ -136,15 +136,7 @@ html, body
 		text-align: center
 	form .alert
 		clear: both
-		color: darken(#D6D2CF,40%)
-		border: solid 1px darken(#D6D2CF,5%)
-		background-color: lighten(#D6D2CF,5%)
-		&.alert-info
-			background-color: white
-			color: darken(#DAEAF8,30%)
-			border: none
-			border-bottom: solid 1px darken($bg-content-color,10%)
-			@include box-shadow(white 0 0 0 1px inset)
+		
 	@media (max-width: $screen-tablet)
 		margin-left: 0
 		width: 100%
@@ -474,17 +466,14 @@ tr.filter
 //WIP (refacto, keep it simple, order ...)
 
 //some helpers to get fixed width
-.fixed-width-XS
+.fixed-width-xs
 	width: 40px
-.fixed-width-S
+.fixed-width-sm
 	width: 80px
-.fixed-width-M
+.fixed-width-md
 	width: 120px
-.fixed-width-L
+.fixed-width-lg
 	width: 160px
-.fixed-width-XL
-	width: 200px
-
 
 // temp fix for latest bootstrap
 input[type="text"],input[type="search"],input[type="password"], textarea, select
@@ -494,7 +483,6 @@ fieldset > .row
 
 textarea
 	resize: none
-
 
 .box-stats
 	background-color: white
@@ -650,8 +638,8 @@ textarea
 		margin-right: 4px
 	i
 		font-size: 1.3em
-	.tree-folder
-	.tree-item
+	//.tree-folder
+	//.tree-item
 	.tree-item-name, .tree-folder-name
 		padding: 0 5px
 		+border-radius(6px)
@@ -685,10 +673,38 @@ textarea
 			background-color: white
 
 
-
-
-
-
+//tag
+.tagify-container
+	background-color: white
+	padding: 2px 6px
+	min-height: 30px
+	overflow: auto
+	+border-radius(5px)
+	border: solid 1px #ccc
+	+box-shadow(rgba(0, 0, 0, 0.075) 0 1px 1px inset)
+	span
+		float: left
+	> span
+		display: inline-block
+		padding: 3px 5px
+		margin: 3px
+		border-radius: 2px
+		border: 1px solid $brand-primary
+		background-color: lighten($brand-primary,15%)
+		color: white
+		> a
+			padding-left: 5px
+			color: $brand-primary
+			text-decoration: none
+			font-weight: bold
+	> input
+		margin-top: 2px
+		border: 0 none
+		width: 100px
+		+box-shadow(none)
+	> input:focus
+		outline: 0
+		+box-shadow(none)
 
 @import "nav"
 @import "toggle-switch"
