@@ -377,13 +377,17 @@
 								{elseif $input.type == 'checkbox'}
 									{foreach $input.values.query as $value}
 										{assign var=id_checkbox value=$input.name|cat:'_'|cat:$value[$input.values.id]}
-										<input type="checkbox"
-											name="{$id_checkbox}"
-											id="{$id_checkbox}"
-											class="{if isset($input.class)}{$input.class}{/if}"
-											{if isset($value.val)}value="{$value.val|escape:'htmlall':'UTF-8'}"{/if}
-											{if isset($fields_value[$id_checkbox]) && $fields_value[$id_checkbox]}checked="checked"{/if} />
-										<label for="{$id_checkbox}" class="t"><strong>{$value[$input.values.name]}</strong></label><br />
+										<div class="checkbox">
+											<label for="{$id_checkbox}">
+												<input type="checkbox"
+													name="{$id_checkbox}"
+													id="{$id_checkbox}"
+													class="{if isset($input.class)}{$input.class}{/if}"
+													{if isset($value.val)}value="{$value.val|escape:'htmlall':'UTF-8'}"{/if}
+													{if isset($fields_value[$id_checkbox]) && $fields_value[$id_checkbox]}checked="checked"{/if} />
+												{$value[$input.values.name]}
+											</label>
+										</div>
 									{/foreach}
 								{elseif $input.type == 'file'}
 									{if isset($input.display_image) && $input.display_image}
@@ -397,19 +401,17 @@
 											</div>
 										{/if}
 									{/if}
-									<div class="col-lg-7">
-										<div class="row">
-											<div class="col-lg-8">
-												<input id="{$input.name}" type="file" name="{$input.name}" class="hide" />
-												<div class="dummyfile input-group">
-													<span class="input-group-addon"><i class="icon-file"></i></span>
-													<input id="{$input.name}-name" type="text" class="disabled" name="filename" readonly />
-													<span class="input-group-btn">
-														<button id="{$input.name}-selectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
-															<i class="icon-folder-open"></i> {l s='Choose a file'}
-														</button>
-													</span>
-												</div>
+									<div class="row">
+										<div class="col-lg-7">
+											<input id="{$input.name}" type="file" name="{$input.name}" class="hide" />
+											<div class="dummyfile input-group">
+												<span class="input-group-addon"><i class="icon-file"></i></span>
+												<input id="{$input.name}-name" type="text" class="disabled" name="filename" readonly />
+												<span class="input-group-btn">
+													<button id="{$input.name}-selectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
+														<i class="icon-folder-open"></i> {l s='Choose a file'}
+													</button>
+												</span>
 											</div>
 										</div>
 									</div>
@@ -507,7 +509,7 @@
 								{/block}{* end block input *}
 								{block name="description"}
 									{if isset($input.desc) && !empty($input.desc)}
-										<p class="preference_description">
+										<p class="help-block">
 											{if is_array($input.desc)}
 												{foreach $input.desc as $p}
 													{if is_array($p)}

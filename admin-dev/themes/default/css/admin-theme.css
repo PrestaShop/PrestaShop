@@ -8134,25 +8134,30 @@ textarea {
   stroke-width: 0; }
 
 /* line 552, admin-theme.sass */
+.thumbnail {
+  background-color: white;
+  border-color: #cccccc !important; }
+
+/* line 556, admin-theme.sass */
 .highlight {
   background-color: #ffffc0; }
 
-/* line 555, admin-theme.sass */
+/* line 559, admin-theme.sass */
 .hook_panel {
   -webkit-box-shadow: rgba(255, 255, 255, 0.9) 0 0 0 1px inset;
   box-shadow: rgba(255, 255, 255, 0.9) 0 0 0 1px inset;
   padding: 10px 10px 5px 10px;
   margin-bottom: 3px !important; }
 
-/* line 560, admin-theme.sass */
+/* line 564, admin-theme.sass */
 .module_name {
   font-size: 1.2em; }
 
-/* line 564, admin-theme.sass */
+/* line 568, admin-theme.sass */
 .hook_panel_header {
   margin: 0 -10px 0 -10px;
   padding: 0 10px 10px 10px; }
-/* line 567, admin-theme.sass */
+/* line 571, admin-theme.sass */
 .hook_panel_header .hook_name {
   font-weight: 400;
   font-size: 1.2em;
@@ -8165,15 +8170,15 @@ textarea {
   border: solid 1px #cccccc;
   background-color: white;
   padding: 0 4px; }
-/* line 575, admin-theme.sass */
+/* line 579, admin-theme.sass */
 .hook_panel_header .hook_title {
   text-transform: uppercase;
   font-size: 1em; }
-/* line 578, admin-theme.sass */
+/* line 582, admin-theme.sass */
 .hook_panel_header .hook_description {
   padding: 3px 0 0 3px; }
 
-/* line 582, admin-theme.sass */
+/* line 586, admin-theme.sass */
 .module_list .module_list_item {
   display: table;
   width: 100%;
@@ -8188,7 +8193,7 @@ textarea {
   -o-border-radius: 3px;
   border-radius: 3px; }
 
-/* line 590, admin-theme.sass */
+/* line 594, admin-theme.sass */
 .module_col_select {
   display: table-cell;
   width: 22px;
@@ -8197,13 +8202,13 @@ textarea {
   text-align: center;
   border-right: 1px solid #dddddd; }
 
-/* line 597, admin-theme.sass */
+/* line 601, admin-theme.sass */
 .module_col_position {
   display: table-cell;
   width: 60px;
   vertical-align: middle;
   text-align: right; }
-/* line 602, admin-theme.sass */
+/* line 606, admin-theme.sass */
 .module_col_position .positions {
   font-family: "Ubuntu", sans-serif;
   font-weight: 200;
@@ -8221,41 +8226,41 @@ textarea {
   border: solid 1px #cccccc;
   background-color: #eeeeee; }
 
-/* line 613, admin-theme.sass */
+/* line 617, admin-theme.sass */
 .module_col_icon {
   display: table-cell;
   width: 50px;
   text-align: center;
   vertical-align: middle; }
 
-/* line 619, admin-theme.sass */
+/* line 623, admin-theme.sass */
 .module_col_infos {
   display: table-cell;
   height: 50px;
   vertical-align: middle; }
 
-/* line 624, admin-theme.sass */
+/* line 628, admin-theme.sass */
 .module_col_actions {
   display: table-cell;
   width: 160px;
   padding: 0 10px;
   vertical-align: middle;
   text-align: right; }
-/* line 630, admin-theme.sass */
+/* line 634, admin-theme.sass */
 .module_col_actions .btn-group {
   text-align: left; }
 
-/* line 634, admin-theme.sass */
+/* line 638, admin-theme.sass */
 .tree {
   padding: 0 0 0 20px;
   list-style: none; }
-/* line 637, admin-theme.sass */
+/* line 641, admin-theme.sass */
 .tree input {
   margin-right: 4px; }
-/* line 639, admin-theme.sass */
+/* line 643, admin-theme.sass */
 .tree i {
   font-size: 1.3em; }
-/* line 643, admin-theme.sass */
+/* line 647, admin-theme.sass */
 .tree .tree-item-name, .tree .tree-folder-name {
   padding: 0 5px;
   -webkit-border-radius: 6px;
@@ -8264,17 +8269,17 @@ textarea {
   -o-border-radius: 6px;
   border-radius: 6px;
   font-weight: normal; }
-/* line 647, admin-theme.sass */
+/* line 651, admin-theme.sass */
 .tree .tree-item-name:hover, .tree .tree-folder-name:hover {
   background-color: #eeeeee;
   cursor: pointer; }
-/* line 650, admin-theme.sass */
+/* line 654, admin-theme.sass */
 .tree .tree-selected {
   background-color: #a4dcf5; }
-/* line 652, admin-theme.sass */
+/* line 656, admin-theme.sass */
 .tree .tree-selected i.tree-dot {
   background-color: #1ba6e5; }
-/* line 654, admin-theme.sass */
+/* line 658, admin-theme.sass */
 .tree i.tree-dot {
   display: inline-block;
   position: relative;
@@ -8287,22 +8292,22 @@ textarea {
   -ms-border-radius: 6px;
   -o-border-radius: 6px;
   border-radius: 6px; }
-/* line 662, admin-theme.sass */
+/* line 666, admin-theme.sass */
 .tree .tree-item-disable, .tree .tree-folder-name-disable {
   color: #cccccc; }
-/* line 664, admin-theme.sass */
+/* line 668, admin-theme.sass */
 .tree .tree-item-disable:hover, .tree .tree-folder-name-disable:hover {
   color: #cccccc;
   background-color: none; }
 
-/* line 669, admin-theme.sass */
+/* line 672, admin-theme.sass */
 .nav-tabs {
   border-bottom: none; }
-/* line 672, admin-theme.sass */
+/* line 675, admin-theme.sass */
 .nav-tabs li.active a.tab-page {
   background-color: white; }
 
-/* line 677, admin-theme.sass */
+/* line 679, admin-theme.sass */
 .tagify-container {
   background-color: white;
   padding: 2px 6px;
@@ -8316,10 +8321,10 @@ textarea {
   border: solid 1px #cccccc;
   -webkit-box-shadow: rgba(0, 0, 0, 0.075) 0 1px 1px inset;
   box-shadow: rgba(0, 0, 0, 0.075) 0 1px 1px inset; }
-/* line 685, admin-theme.sass */
+/* line 687, admin-theme.sass */
 .tagify-container span {
   float: left; }
-/* line 687, admin-theme.sass */
+/* line 689, admin-theme.sass */
 .tagify-container > span {
   display: inline-block;
   padding: 3px 5px;
@@ -8328,20 +8333,20 @@ textarea {
   border: 1px solid #1ba6e5;
   background-color: #60c1ed;
   color: white; }
-/* line 695, admin-theme.sass */
+/* line 697, admin-theme.sass */
 .tagify-container > span > a {
   padding-left: 5px;
   color: #1ba6e5;
   text-decoration: none;
   font-weight: bold; }
-/* line 700, admin-theme.sass */
+/* line 702, admin-theme.sass */
 .tagify-container > input {
   margin-top: 2px;
   border: 0 none;
   width: 100px;
   -webkit-box-shadow: none;
   box-shadow: none; }
-/* line 705, admin-theme.sass */
+/* line 707, admin-theme.sass */
 .tagify-container > input:focus {
   outline: 0;
   -webkit-box-shadow: none;
