@@ -28,7 +28,7 @@ class AdminTrackingControllerCore extends AdminController
 {
 	public $bootstrap = true ;
 	protected $_helper_list;
-	
+
 	public function postprocess()
 	{
 		if (Tools::getValue('id_product') && Tools::isSubmit('statusproduct'))
@@ -57,10 +57,10 @@ class AdminTrackingControllerCore extends AdminController
 			Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts').'&id_category='.(int)$id_category.'&viewcategory');
 
 		$this->_helper_list = new HelperList();
-		
+
 		if (!Configuration::get('PS_STOCK_MANAGEMENT'))
 			$this->warnings[] = $this->l('List of products without available quantities for sale are not displayed because stock management is disabled.');
-		
+
 		$methods = get_class_methods($this);
 		$tpl_vars['arrayList'] = array();
 		foreach ($methods as $method_name)
@@ -106,7 +106,7 @@ class AdminTrackingControllerCore extends AdminController
 			'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status')
 		));
 		$this->clearFilters();
-		
+
 		$this->_join = Shop::addSqlAssociation('category', 'a');
 		$this->_filter = ' AND a.`id_category` NOT IN (
 			SELECT DISTINCT(cp.id_category)
@@ -121,7 +121,7 @@ class AdminTrackingControllerCore extends AdminController
 	{
 		if (!Configuration::get('PS_STOCK_MANAGEMENT'))
 			return;
-		
+
 		$this->table = 'product';
 		$this->list_id = 'no_stock_products_attributes';
 		$this->lang = true;
@@ -142,9 +142,9 @@ class AdminTrackingControllerCore extends AdminController
 			'name' => array('title' => $this->l('Name'), 'filter_key' => 'b!name'),
 			'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status')
 		);
-		
+
 		$this->clearFilters();
-		
+
 		$this->_join = Shop::addSqlAssociation('product', 'a');
 		$this->_filter = 'AND a.id_product IN (
 			SELECT p.id_product
@@ -161,10 +161,10 @@ class AdminTrackingControllerCore extends AdminController
 	}
 
 	public function getCustomListProductsNoStock()
-	{	
+	{
 		if (!Configuration::get('PS_STOCK_MANAGEMENT'))
 			return;
-		
+
 		$this->table = 'product';
 		$this->list_id = 'no_stock_products';
 		$this->className = 'Product';
@@ -186,7 +186,7 @@ class AdminTrackingControllerCore extends AdminController
 			'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status')
 		);
 		$this->clearFilters();
-		
+
 		$this->_join = Shop::addSqlAssociation('product', 'a');
 		$this->_filter = 'AND a.id_product IN (
 			SELECT p.id_product
@@ -227,46 +227,46 @@ class AdminTrackingControllerCore extends AdminController
 		);
 
 		$this->clearFilters();
-		
+
 		$this->_join = Shop::addSqlAssociation('product', 'a');
 		$this->toolbar_title = $this->l('List of disabled products:');
 		return $this->renderList();
 	}
-	
-	
+
+
 	public function renderList()
 	{
 		$this->processFilter();
 		return parent::renderList();
 	}
-	
+
 	public function displayEnableLink($token, $id, $value, $active, $id_category = null, $id_product = null)
 	{
 		$this->_helper_list->currentIndex = $this->_list_index;
 		$this->_helper_list->identifier = $this->identifier;
 		$this->_helper_list->table = $this->table;
-		
+
 		return $this->_helper_list->displayEnableLink($this->_list_token, $id, $value, $active, $id_category, $id_product);
 	}
-	
+
 	public function displayDeleteLink($token = null, $id, $name = null)
 	{
 		$this->_helper_list->currentIndex = $this->_list_index;
 		$this->_helper_list->identifier = $this->identifier;
 		$this->_helper_list->table = $this->table;
-		
+
 		return $this->_helper_list->displayDeleteLink($this->_list_token, $id, $name);
 	}
-	
+
 	public function displayEditLink($token = null, $id, $name = null)
 	{
 		$this->_helper_list->currentIndex = $this->_list_index;
 		$this->_helper_list->identifier = $this->identifier;
 		$this->_helper_list->table = $this->table;
-		
+
 		return $this->_helper_list->displayEditLink($this->_list_token, $id, $name);
 	}
-	
+
 	protected function clearFilters()
 	{
 		if (Tools::isSubmit('submitResetempty_categories'))
@@ -279,7 +279,7 @@ class AdminTrackingControllerCore extends AdminController
 			$this->processResetFilters('no_stock_products');
 
 		if (Tools::isSubmit('submitResetdisabled_products'))
-			$this->processResetFilters('disabled_products');			
+			$this->processResetFilters('disabled_products');
 	}
 
 	public function clearListOptions()
