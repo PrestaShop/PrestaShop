@@ -153,7 +153,7 @@
 			<br />
 			<fieldset>
 				<legend><img src="../img/admin/tab-customers.gif" /> {l s='Customer information'}</legend>
-				<span style="font-weight: bold; font-size: 14px;"><a href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={getAdminToken tab='AdminCustomers'}"> {$customer->firstname} {$customer->lastname}</a></span> ({l s='#'}{$customer->id})<br />
+				<span style="font-weight: bold; font-size: 14px;"><a href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={getAdminToken tab='AdminCustomers'}"> {$gender->name|escape:'htmlall':'UTF-8'} {$customer->firstname} {$customer->lastname}</a></span> ({l s='#'}{$customer->id})<br />
 				(<a href="mailto:{$customer->email}">{$customer->email}</a>)<br /><br />
 				{if ($customer->isGuest())}
 					{l s='This order has been placed by a guest.'}
