@@ -177,7 +177,7 @@
 								if (submited)
 									return false;
 								submited = true;
-								
+
 								//add hidden input to emulate submit button click when posting the form -> field name posted
 								btn_submit.before('<input type="hidden" name="'+btn_submit.attr("name")+'" value="1" />');
 
@@ -207,7 +207,7 @@
 					console.log('ok');
 					openModulesList();
 				});
-				
+
 				function openModulesList()
 				{
 					$('#modules_list_container').modal('show');
@@ -246,7 +246,7 @@
 		</div>
 {/if}
 	<div class="table-responsive clearfix">
-		<table 
+		<table
 			class="table"
 			name="list_table"
 			{if $table_id} id={$table_id}{/if}
@@ -257,7 +257,7 @@
 					<th class="center">
 					</th>
 					{foreach $fields_display AS $key => $params}
-					<th {if isset($params.align)} class="{$params.align}"{/if}>
+					<th class="{if isset($params.class)}{$params.class}{/if}{if isset($params.align)} {$params.align}{/if}">
 
 						<span class="title_box {if isset($order_by) && ($key == $order_by)} active{/if}">
 
@@ -281,7 +281,7 @@
 							{else}
 								{$params.title}
 							{/if}
-							
+
 							{if (!isset($params.orderby) || $params.orderby) && !$simple_header}
 							<a {if isset($order_by) && ($key == $order_by) && ($order_way == 'DESC')}class="active"{/if}  href="{$currentIndex}&{$list_id}Orderby={$key|urlencode}&{$list_id}Orderway=desc&token={$token}{if isset($smarty.get.$identifier)}&{$identifier}={$smarty.get.$identifier|intval}{/if}">
 								<i class="icon-caret-down"></i>

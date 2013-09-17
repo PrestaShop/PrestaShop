@@ -47,11 +47,11 @@
 			{else}
 				{l s='%d errors' sprintf=$errors|count}
 				<br/>
-				<ol>
+				<ul>
 					{foreach $errors AS $error}
 						<li>{$error}</li>
 					{/foreach}
-				</ol>
+				</ul>
 			{/if}
 		</div>
 	{/if}
