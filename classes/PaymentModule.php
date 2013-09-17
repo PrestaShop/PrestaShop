@@ -554,8 +554,10 @@ abstract class PaymentModuleCore extends Module
 						$delivery = new Address($order->id_address_delivery);
 						$delivery_state = $delivery->id_state ? new State($delivery->id_state) : false;
 						$invoice_state = $invoice->id_state ? new State($invoice->id_state) : false;
-
+						$gender = new Gender($this->context->customer->id_gender);
+						
 						$data = array(
+						'{gender}' => $gender->name[(int)$this->context->language->id],
 						'{firstname}' => $this->context->customer->firstname,
 						'{lastname}' => $this->context->customer->lastname,
 						'{email}' => $this->context->customer->email,
