@@ -1342,11 +1342,14 @@ class AdminOrdersControllerCore extends AdminController
 				$product['warehouse_name'] = '--';
 		}
 
+		$gender = new Gender((int)$customer->id_gender, $this->context->language->id);
+
 		// Smarty assign
 		$this->tpl_view_vars = array(
 			'order' => $order,
 			'cart' => new Cart($order->id_cart),
 			'customer' => $customer,
+			'gender' => $gender,
 			'customer_addresses' => $customer->getAddresses($this->context->language->id),
 			'addresses' => array(
 				'delivery' => $addressDelivery,
