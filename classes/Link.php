@@ -227,7 +227,7 @@ class LinkCore
 	 * @param int $id_lang
 	 * @return string
 	 */
-	public function getCMSLink($cms, $alias = null, $ssl = false, $id_lang = null, $id_shop = null)
+	public function getCMSLink($cms, $alias = null, $ssl = null, $id_lang = null, $id_shop = null)
 	{
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
@@ -334,7 +334,7 @@ class LinkCore
 	 * @param int $id_lang
 	 * @return string
 	 */
-	public function getModuleLink($module, $controller = 'default', array $params = array(), $ssl = false, $id_lang = null, $id_shop = null)
+	public function getModuleLink($module, $controller = 'default', array $params = array(), $ssl = null, $id_lang = null, $id_shop = null)
 	{
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
@@ -421,7 +421,7 @@ class LinkCore
 	 *
 	 * @return string Page link
 	 */
-	public function getPageLink($controller, $ssl = false, $id_lang = null, $request = null, $request_url_encode = false, $id_shop = null)
+	public function getPageLink($controller, $ssl = null, $id_lang = null, $request = null, $request_url_encode = false, $id_shop = null)
 	{
 		$controller = Tools::strReplaceFirst('.php', '', $controller);
 		if (!$id_lang)
@@ -603,8 +603,17 @@ class LinkCore
 		return Language::getIsoById($id_lang).'/';
 	}
 	
-	protected function getBaseLink($id_shop = null, $ssl = true)
+	protected function getBaseLink($id_shop = null, $ssl = null)
 	{
+		static $force_ssl = null;
+		
+		if ($ssl === null)
+		{
+			if ($force_ssl === null)
+				$force_ssl = (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE'));
+			$ssl = $force_ssl;
+		}
+
 		if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && $id_shop !== null)
 			$shop = new Shop($id_shop);
 		else
