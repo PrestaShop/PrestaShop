@@ -96,6 +96,51 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				Configuration::updateValue('PS_KPI_ABANDONED_CARTS_EXPIRE', strtotime('+10 min'));
 				break;
 
+			case 'products_stock':
+				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+				SELECT SUM(IF(IFNULL(stock.quantity, 0) > 0, 1, 0)) as stock, COUNT(*) as total
+				FROM `'._DB_PREFIX_.'product` p
+				'.Shop::addSqlAssociation('product', 'p').'
+				'.Product::sqlStock('p'));
+				$value = round($row['total'] ? $row['stock'] / $row['total'] : 0, 2).'%';
+				Configuration::updateValue('PS_KPI_PRODUCTS_STOCK', $value);
+				Configuration::updateValue('PS_KPI_PRODUCTS_STOCK_EXPIRE', strtotime('+10 min'));
+				break;
+
+			case 'avg_gross_margin':
+				$value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				SELECT AVG((product_shop.price - product_shop.wholesale_price) / product_shop.price)
+				FROM `'._DB_PREFIX_.'product` p
+				'.Shop::addSqlAssociation('product', 'p'));
+				$value = round(100 * $value, 2).'%';
+				Configuration::updateValue('PS_KPI_AVG_GROSS_MARGIN', $value);
+				Configuration::updateValue('PS_KPI_AVG_GROSS_MARGIN_EXPIRE', strtotime('+6 hour'));
+				break;
+
+			case 'disabled_categories':
+				$value = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				SELECT COUNT(*)
+				FROM `'._DB_PREFIX_.'category` c
+				'.Shop::addSqlAssociation('category', 'c').'
+				WHERE c.active = 0');
+				Configuration::updateValue('PS_KPI_DISABLED_CATS', $value);
+				Configuration::updateValue('PS_KPI_DISABLED_CATS_EXPIRE', strtotime('+2 hour'));
+				break;
+
+			case 'empty_categories':
+				$total = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				SELECT COUNT(*)
+				FROM `'._DB_PREFIX_.'category` c
+				'.Shop::addSqlAssociation('category', 'c'));
+				$used = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				SELECT COUNT(DISTINCT cp.id_category)
+				FROM `'._DB_PREFIX_.'category_product` cp
+				'.Shop::addSqlAssociation('category', 'cp'));
+				$value = intval($total - $used);
+				Configuration::updateValue('PS_KPI_EMPTY_CATS', $value);
+				Configuration::updateValue('PS_KPI_EMPTY_CATS_EXPIRE', strtotime('+2 hour'));
+				break;
+
 			case 'average_order_value':
 				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT
