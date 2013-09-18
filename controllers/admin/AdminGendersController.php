@@ -53,7 +53,8 @@ class AdminGendersControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_gender' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center'
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'name' => array(
 				'title' => $this->l('Name'),

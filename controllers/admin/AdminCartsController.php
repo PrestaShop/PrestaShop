@@ -48,7 +48,8 @@ class AdminCartsControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_cart' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center'
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'id_order' => array(
 				'title' => $this->l('Order ID'),

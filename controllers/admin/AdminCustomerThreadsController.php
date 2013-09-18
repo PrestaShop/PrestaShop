@@ -58,7 +58,9 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
 		$this->fields_list = array(
 			'id_customer_thread' => array(
-				'title' => $this->l('ID')
+				'title' => $this->l('ID'),
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'customer' => array(
 				'title' => $this->l('Customer'),

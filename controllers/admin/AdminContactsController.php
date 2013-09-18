@@ -37,7 +37,7 @@ class AdminContactsControllerCore extends AdminController
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->fields_list = array(
-			'id_contact' => array('title' => $this->l('ID'), 'align' => 'center'),
+			'id_contact' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
 			'name' => array('title' => $this->l('Title')),
 			'email' => array('title' => $this->l('Email address')),
 			'description' => array('title' => $this->l('Description')),

@@ -210,6 +210,7 @@ class AdminThemesControllerCore extends AdminController
 			'id_theme' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
