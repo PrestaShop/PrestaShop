@@ -2287,6 +2287,40 @@ class AdminProductsControllerCore extends AdminController
 		parent::initContent();
 	}
 
+	public function renderKpis()
+	{
+		$time = time();
+		$kpis = array();
+
+		/* The data generation is located in AdminStatsControllerCore */
+
+		$helper = new HelperKpi();
+		$helper->id = 'box-products-stock';
+		$helper->icon = 'icon-archive';
+		$helper->color = 'color1';
+		$helper->title = $this->l('Products in Stock');
+		if (Configuration::get('PS_KPI_PRODUCTS_STOCK') !== false)
+			$helper->value = Configuration::get('PS_KPI_PRODUCTS_STOCK');
+		if (Configuration::get('PS_KPI_PRODUCTS_STOCK_EXPIRE') < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=products_stock';
+		$kpis[] = $helper->generate();
+		
+		$helper = new HelperKpi();
+		$helper->id = 'box-avg-gross-margin';
+		$helper->icon = 'icon-tags';
+		$helper->color = 'color2';
+		$helper->title = $this->l('Average Gross Margin');
+		if (Configuration::get('PS_KPI_AVG_GROSS_MARGIN') !== false)
+			$helper->value = Configuration::get('PS_KPI_AVG_GROSS_MARGIN');
+		if (Configuration::get('PS_KPI_AVG_GROSS_MARGIN_EXPIRE') < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=avg_gross_margin';
+		$kpis[] = $helper->generate();
+
+		$helper = new HelperKpiRow();
+		$helper->kpis = $kpis;
+		return $helper->generate();
+	}
+
 	public function renderList()
 	{
 		$this->addRowAction('edit');

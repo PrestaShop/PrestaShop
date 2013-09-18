@@ -335,6 +335,40 @@ class AdminCategoriesControllerCore extends AdminController
 				$this->action = 'select_delete';
 	}
 
+	public function renderKpis()
+	{
+		$time = time();
+		$kpis = array();
+
+		/* The data generation is located in AdminStatsControllerCore */
+
+		$helper = new HelperKpi();
+		$helper->id = 'box-disabled-categories';
+		$helper->icon = 'icon-off';
+		$helper->color = 'color1';
+		$helper->title = $this->l('Disabled Categories');
+		if (Configuration::get('PS_KPI_DISABLED_CATS') !== false)
+			$helper->value = Configuration::get('PS_KPI_DISABLED_CATS');
+		if (Configuration::get('PS_KPI_DISABLED_CATS_EXPIRE') < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=disabled_categories';
+		$kpis[] = $helper->generate();
+		
+		$helper = new HelperKpi();
+		$helper->id = 'box-empty-categories';
+		$helper->icon = 'icon-bookmark-empty';
+		$helper->color = 'color2';
+		$helper->title = $this->l('Empty Categories');
+		if (Configuration::get('PS_KPI_EMPTY_CATS') !== false)
+			$helper->value = Configuration::get('PS_KPI_EMPTY_CATS');
+		if (Configuration::get('PS_KPI_EMPTY_CATS_EXPIRE') < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=empty_categories';
+		$kpis[] = $helper->generate();
+
+		$helper = new HelperKpiRow();
+		$helper->kpis = $kpis;
+		return $helper->generate();
+	}
+
 	public function renderForm()
 	{
 		$this->initToolbar();
