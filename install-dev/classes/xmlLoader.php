@@ -81,12 +81,15 @@ class InstallXmlLoader
 		$this->img_path = _PS_INSTALL_DATA_PATH_.'img/';
 	}
 
-	public function setFixturesPath()
+	public function setFixturesPath($path = null)
 	{
+		if ($path === null)
+			$path = _PS_INSTALL_FIXTURES_PATH_.'apple/';
+
 		$this->path_type = 'fixture';
-		$this->data_path = _PS_INSTALL_FIXTURES_PATH_.'apple/data/';
-		$this->lang_path = _PS_INSTALL_FIXTURES_PATH_.'apple/langs/';
-		$this->img_path = _PS_INSTALL_FIXTURES_PATH_.'apple/img/';
+		$this->data_path = $path.'data/';
+		$this->lang_path = $path.'langs/';
+		$this->img_path = $path.'img/';
 	}
 
 	/**
@@ -224,10 +227,13 @@ class InstallXmlLoader
 			return;
 		}
 
+		if (substr($entity, 0, 1) == '.' || substr($entity, 0, 1) == '_')
+			return;		
+
 		$xml = $this->loadEntity($entity);
 
 		// Read list of fields
-		if (!$xml->fields)
+		if (!is_object($xml) || !$xml->fields)
 			throw new PrestashopInstallerException('List of fields not found for entity '.$entity);
 
 		if ($this->isMultilang($entity))
@@ -237,7 +243,7 @@ class InstallXmlLoader
 			$default_lang = null;
 			foreach ($this->languages as $id_lang => $iso)
 			{
-				if ($iso == 'en')
+				if ($iso == $this->language->getLanguageIso())
 					$default_lang = $id_lang;
 
 				try
@@ -690,16 +696,12 @@ class InstallXmlLoader
 
 		if (is_null($tables))
 		{
-			$sql = 'SHOW TABLES';
 			$tables = array();
-			foreach (Db::getInstance()->executeS($sql) as $row)
+			foreach (Db::getInstance()->executeS('SHOW TABLES') as $row)
 			{
 				$table = current($row);
 				if (preg_match('#^'._DB_PREFIX_.'(.+?)(_lang)?$#i', $table, $m))
-					if (preg_match('#^'._DB_PREFIX_.'(.+?)_shop$#i', $table, $m2) && !isset($tables[$m2[1]]))
-						$tables[$m[1]] = (isset($m[2]) && $m[2]) ? true : false;
-					else
-						$tables[$m[1]] = (isset($m[2]) && $m[2]) ? true : false;
+					$tables[$m[1]] = (isset($m[2]) && $m[2]) ? true : false;
 			}
 		}
 

@@ -79,7 +79,7 @@
 		</colgroup>
 	<tr class="nodrag nodrop"><th colspan="5">	{if $hook['module_count'] && $can_move}
 		<input type="checkbox" id="Ghook{$hook['id_hook']}" style="margin-right: 2px;" onclick="hookCheckboxes({$hook['id_hook']}, 0, this)"/>
-	{/if}{$hook['title']} - <span style="color: red">{$hook['module_count']}</span> {if $hook['module_count'] > 1}{l s='modules'}{else}{l s='module'}{/if}
+	{/if}{$hook['title']} - <span style="color: red">{$hook['module_count']}</span> {if $hook['module_count'] > 1}{l s='Modules'}{else}{l s='Module'}{/if}
 
 	{if !empty($hook['description'])}
 		&nbsp;<span style="font-size:0.8em; font-weight: normal">[{$hook['description']}]</span>

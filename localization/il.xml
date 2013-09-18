@@ -8,9 +8,9 @@
 		<language iso_code="he" />
 	</languages>
 	<taxes>
-		<tax id="1" name="Ma'am IL 16%" rate="16" />
+		<tax id="1" name="Ma'am IL 18%" rate="18" />
 		
-		<taxRulesGroup name="IL Standard Rate (16%)">
+		<taxRulesGroup name="IL Standard Rate (18%)">
 			<taxRule iso_code_country="il" id_tax="1" />
 		</taxRulesGroup>
 	</taxes>

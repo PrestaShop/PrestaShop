@@ -51,7 +51,7 @@
 			</p>
 
 			<div id="message_forward_email" style="display:none">
-				<b>{l s='Email:'}</b> <input type="text" name="email" />
+				<b>{l s='Email'}</b> <input type="text" name="email" />
 			</div>
 
 			<div id="message_forward" style="display:none;margin-bottom:10px">

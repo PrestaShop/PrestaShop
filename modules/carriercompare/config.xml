@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>carriercompare</name>
-            <displayName><![CDATA[Shipping Estimation]]></displayName>
+            <displayName><![CDATA[Shipping Estimate]]></displayName>
             <version><![CDATA[1.2]]></version>
-            <description><![CDATA[Module to compare carrier possibilities before using  the checkout process]]></description>
+            <description><![CDATA[Compares carrier choices before checkout.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[shipping_logistics]]></tab>
             <is_configurable>1</is_configurable>

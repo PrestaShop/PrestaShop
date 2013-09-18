@@ -95,7 +95,7 @@ class AdminReturnControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Status:'),
+					'label' => $this->l('Status'),
 					'name' => 'state',
 					'required' => false,
 					'options' => array(
@@ -107,7 +107,7 @@ class AdminReturnControllerCore extends AdminController
 				),
 				array(
 					'type' => 'list_products',
-					'label' => $this->l('Products:'),
+					'label' => $this->l('Products'),
 					'name' => '',
 					'size' => '',
 					'required' => false,
@@ -136,7 +136,7 @@ class AdminReturnControllerCore extends AdminController
 		$this->tpl_form_vars = array(
 			'customer' => new Customer($this->object->id_customer),
 			'url_customer' => 'index.php?tab=AdminCustomers&id_customer='.(int)$this->object->id_customer.'&viewcustomer&token='.Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$this->context->employee->id),
-			'text_order' => sprintf($this->l('Order #%1$d from %2$s'), $order->id, Tools::displayDate($order->date_upd, $order->id_lang)),
+			'text_order' => sprintf($this->l('Order #%1$d from %2$s'), $order->id, Tools::displayDate($order->date_upd)),
 			'url_order' => 'index.php?tab=AdminOrders&id_order='.(int)$order->id.'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)Tab::getIdFromClassName('AdminOrders').(int)$this->context->employee->id),
 			'picture_folder' => _THEME_PROD_PIC_DIR_,
 			'type_file' => Product::CUSTOMIZE_FILE,
@@ -184,7 +184,7 @@ class AdminReturnControllerCore extends AdminController
 							if (OrderReturn::deleteOrderReturnDetail($id_order_return, $id_order_detail, (int)(Tools::getValue('id_customization', 0))))
 								Tools::redirectAdmin(self::$currentIndex.'&conf=4token='.$this->token);
 							else
-								$this->errors[] = Tools::displayError('An error occurred while deleting details of your order return.');
+								$this->errors[] = Tools::displayError('An error occurred while deleting the details of your order return.');
 						}
 						else
 							$this->errors[] = Tools::displayError('You need at least one product.');
@@ -196,7 +196,7 @@ class AdminReturnControllerCore extends AdminController
 					$this->errors[] = Tools::displayError('The order return content is invalid.');
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 		}
 		elseif (Tools::isSubmit('submitAddorder_return') || Tools::isSubmit('submitAddorder_returnAndStay'))
 		{
@@ -227,10 +227,10 @@ class AdminReturnControllerCore extends AdminController
 					}
 				}
 				else
-					$this->errors[] = Tools::displayError('No order return ID.');
+					$this->errors[] = Tools::displayError('No order return ID has been specified.');
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 		parent::postProcess();
 	}

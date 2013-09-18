@@ -96,6 +96,6 @@
 		{assign var="back_order_page" value="order.php"}
 	{/if}
 
-	<p><a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{if $back}&mod={$back}{/if}")}" title="{l s='Add a new address'}" data-role="button" data-theme="e" data-icon="plus" data-ajax="false">{l s='Add a new address'}</a><br /></p>
+	<p><a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{if $back}&mod={$back}{/if}")|escape:'html'}" title="{l s='Add a new address'}" data-role="button" data-theme="e" data-icon="plus" data-ajax="false">{l s='Add a new address'}</a><br /></p>
 
 </div>

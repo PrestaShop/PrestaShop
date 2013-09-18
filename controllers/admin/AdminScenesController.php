@@ -75,16 +75,15 @@ class AdminScenesControllerCore extends AdminController
 			$images_types = ImageType::getImagesTypes('scenes');
 
 			foreach ($images_types as $k => $image_type)
-			{
-				if ($image_type['name'] == 'scene_default' && isset($_FILES['image']))
+			{						
+				if ($image_type['name'] == 'scene_default' AND isset($_FILES['image']) AND isset($_FILES['image']['tmp_name']) AND !$_FILES['image']['error'])				
 					ImageManager::resize(
 						$base_img_path,
 						_PS_SCENE_IMG_DIR_.$obj->id.'-'.stripslashes($image_type['name']).'.jpg',
 						(int)$image_type['width'],
-						(int)$image_type['height']
-					);
+						(int)$image_type['height']);					
 				else if ($image_type['name'] == 'm_scene_default')
-				{
+				{				
 					if (isset($_FILES['thumb']) && !$_FILES['thumb']['error'])
 						$base_thumb_path = _PS_SCENE_THUMB_IMG_DIR_.$obj->id.'.jpg';
 					else
@@ -93,8 +92,7 @@ class AdminScenesControllerCore extends AdminController
 						$base_thumb_path,
 						_PS_SCENE_THUMB_IMG_DIR_.$obj->id.'-'.stripslashes($image_type['name']).'.jpg',
 						(int)$image_type['width'],
-						(int)$image_type['height']
-					);
+						(int)$image_type['height']);
 				}
 			}
 		}
@@ -196,40 +194,40 @@ class AdminScenesControllerCore extends AdminController
 
 		$image_to_map_desc = '';
 		$image_to_map_desc .= $this->l('Format:').' JPG, GIF, PNG. '.$this->l('File size:').' '
-				.(Tools::getMaxUploadSize() / 1024).''.$this->l('kB max.').' '
-				.sprintf($this->l('If larger than the image size setting, the image will be reduced to %1$d x %2$dpx (width x height).'),
+				.(Tools::getMaxUploadSize() / 1024).''.$this->l('Kb max.').' '
+				.sprintf($this->l('If an image is too large, it will be reduced to %1$d x %2$dpx (width x height).'),
 				$large_scene_image_type['width'], $large_scene_image_type['height'])
-				.$this->l('If smaller than the image size setting, a white background will be added in order to achieve the correct image size.').'<br />'.
+				.$this->l('If an image is deemed too small, a white background will be added in order to achieve the correct image size.').'<br />'.
 				$this->l('Note: To change image dimensions, please change the \'large_scene\' image type settings to the desired size (in Back Office > Preferences > Images).');
 		if ($obj->id && file_exists(_PS_SCENE_IMG_DIR_.$obj->id.'-scene_default.jpg'))
 		{
 			$this->addJqueryPlugin('autocomplete');
 			$this->addJqueryPlugin('imgareaselect');
 			$this->addJs(_PS_JS_DIR_.'admin-scene-cropping.js' );
-			$image_to_map_desc .= '<br /><img id="large_scene_image" style="clear:both;border:1px solid black;" alt="" src="'.
-				_THEME_SCENE_DIR_.$obj->id.'-scene_default.jpg" /><br />';
+			$image_to_map_desc .= '<br /><img id="large_scene_image" alt="" src="'.
+				_THEME_SCENE_DIR_.$obj->id.'-scene_default.jpg?rand='.(int)rand().'" /><br />';
 
 			$image_to_map_desc .= '
 						<div id="ajax_choose_product" style="display:none; padding:6px; padding-top:2px; width:600px;">
-							'.$this->l('Begin typing the first letters of the product name, then select the product from the drop-down list:').'
-								<br /><input type="text" value="" id="product_autocomplete_input" /> 
+							'.$this->l('Begin typing the first few letters of the product name, then select the product you are looking for from the drop-down list:').'
+								<br /><input type="text" value="" id="product_autocomplete_input" style="width: 450px"/> 
 								<input type="button" class="button" value="'.$this->l('OK').'" onclick="$(this).prev().search();" />
 								<input type="button" class="button" value="'.$this->l('Delete').'" onclick="undoEdit();" />
 						</div>
 				';
 
-			if ($obj->id && file_exists(_PS_SCENE_IMG_DIR_.'thumbs/'.$obj->id.'-thumb_scene.jpg'))
+			if ($obj->id && file_exists(_PS_SCENE_IMG_DIR_.'thumbs/'.$obj->id.'-m_scene_default.jpg'))
 				$image_to_map_desc .= '<br/>
-					<img id="large_scene_image" style="clear:both;border:1px solid black;" alt="" src="'._THEME_SCENE_DIR_.'thumbs/'.$obj->id.'-m_scene_default.jpg" />
+					<img id="large_scene_image" style="clear:both;border:1px solid black;" alt="" src="'._THEME_SCENE_DIR_.'thumbs/'.$obj->id.'-m_scene_default.jpg?rand='.(int)rand().'" />
 					<br />';
 
 			$img_alt_desc = '';
 			$img_alt_desc .= $this->l('If you want to use a thumbnail other than one generated from simply reducing the mapped image, please upload it here.')
 				.'<br />'.$this->l('Format:').' JPG, GIF, PNG. '
-				.$this->l('Filesize:').' '.(Tools::getMaxUploadSize() / 1024).''.$this->l('kB max.').' '
+				.$this->l('File size:').' '.(Tools::getMaxUploadSize() / 1024).''.$this->l('Kb max.').' '
 				.sprintf($this->l('Automatically resized to %1$d x %2$dpx (width x height).'),
 				$thumb_scene_image_type['width'], $thumb_scene_image_type['height']).'.<br />'
-				.$this->l('Note: To change image dimensions, please change the \'thumb_scene\' image type settings to the desired size (in Back Office > Preferences > Images).');
+				.$this->l('Note: To change image dimensions, please change the \'m_scene_default\' image type settings to the desired size (in Back Office > Preferences > Images).');
 
 			$input_img_alt = array(
 				'type' => 'file',
@@ -255,7 +253,7 @@ class AdminScenesControllerCore extends AdminController
 			$root_category = array('id_category' => (int)$root_category->id, 'name' => $root_category->name);
 			$trads = array(
 							'Root' => $root_category,
-							'selected' => $this->l('selected'),
+							'selected' => $this->l('Selected'),
 							'Check all' => $this->l('Check all'),
 							'Check All' => $this->l('Check All'),
 							'Uncheck All'  => $this->l('Uncheck All'),
@@ -266,7 +264,7 @@ class AdminScenesControllerCore extends AdminController
 						);
 			$this->fields_form['input'][] = array(
 					'type' => 'categories',
-					'label' => $this->l('Categories:'),
+					'label' => $this->l('Categories'),
 					'name' => 'categories',
 					'values' => array('trads' => $trads,
 						'selected_cat' => $selected_cat,
@@ -308,11 +306,18 @@ class AdminScenesControllerCore extends AdminController
 		if (Tools::isSubmit('save_image_map'))
 		{
 			if (!Tools::isSubmit('categories') || !count(Tools::getValue('categories')))
-				$this->errors[] = Tools::displayError('You should select at least one category');
+				$this->errors[] = Tools::displayError('You should select at least one category.');
 			if (!Tools::isSubmit('zones') || !count(Tools::getValue('zones')))
-				$this->errors[] = Tools::displayError('You should make at least one zone');
+				$this->errors[] = Tools::displayError('You should create at least one zone.');
 		}
-
+		
+		if (Tools::isSubmit('delete'.$this->table))
+		{
+			if (Validate::isLoadedObject($object = $this->loadObject()))
+				$object->deleteImage(false);
+			else
+				return false;
+		}
 		parent::postProcess();
 	}
 }

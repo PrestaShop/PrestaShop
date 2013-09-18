@@ -28,9 +28,6 @@ class AdminLocalizationControllerCore extends AdminController
 {
 	public function __construct()
 	{
-		$this->className = 'Configuration';
-		$this->table = 'configuration';
-
 		parent::__construct();
 
 		$this->fields_options = array(
@@ -130,7 +127,7 @@ class AdminLocalizationControllerCore extends AdminController
 
 		if (function_exists('date_default_timezone_set'))
 			$this->fields_options['general']['fields']['PS_TIMEZONE'] = array(
-				'title' => $this->l('Time Zone.'),
+				'title' => $this->l('Time zone:'),
 				'validation' => 'isAnything',
 				'type' => 'select',
 				'list' => Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT name FROM '._DB_PREFIX_.'timezone'),
@@ -152,7 +149,7 @@ class AdminLocalizationControllerCore extends AdminController
 				$pack = @Tools::file_get_contents('http://api.prestashop.com/localization/'.$version.'/'.Tools::getValue('iso_localization_pack').'.xml');
 
 				if (!$pack && !($pack = @Tools::file_get_contents(dirname(__FILE__).'/../../localization/'.Tools::getValue('iso_localization_pack').'.xml')))
-					$this->errors[] = Tools::displayError('Cannot load localization pack (from prestashop.com and from your local folder "localization")');
+					$this->errors[] = Tools::displayError('Cannot load the localization pack.');
 
 				if (!$selection = Tools::getValue('selection'))
 					$this->errors[] = Tools::displayError('Please select at least one item to import.');
@@ -221,12 +218,12 @@ class AdminLocalizationControllerCore extends AdminController
 			array(
 				'id' => 'taxes',
 				'val' => 'taxes',
-				'name' => $this->l('Taxes:')
+				'name' => $this->l('Taxes')
 			),
 			array(
 				'id' => 'currencies',
 				'val' => 'currencies',
-				'name' => $this->l('Currencies:')
+				'name' => $this->l('Currencies')
 			),
 			array(
 				'id' => 'languages',

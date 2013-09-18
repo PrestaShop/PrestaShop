@@ -82,8 +82,12 @@ class ConnectionCore extends ObjectModel
 		// The connection is created if it does not exist yet and we get the current page id
 		if (!isset($cookie->id_connections) || !strstr(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '', Tools::getHttpHost(false, false)))
 			$id_page = Connection::setNewConnection($cookie);
+		// If we do not track the pages, no need to get the page id
+		if (!Configuration::get('PS_STATSDATA_PAGESVIEWS') && !Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS'))
+			return array();
 		if (!isset($id_page) || !$id_page)
 			$id_page = Page::getCurrentId();
+		// If we do not track the page views by customer, the id_page is the only information needed
 		if (!Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS'))
 			return array('id_page' => $id_page);
 
@@ -93,7 +97,7 @@ class ConnectionCore extends ObjectModel
 			'id_connections' => (int)$cookie->id_connections,
 			'id_page' => (int)$id_page,
 			'time_start' => $time_start
-		));
+		), false, true, Db::INSERT_IGNORE);
 
 		// This array is serialized and used by the ajax request to identify the page
 		return array(

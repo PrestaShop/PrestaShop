@@ -73,18 +73,18 @@
 			{if $use_taxes}
 				{if $priceDisplay}
 					<tr class="cart_total_price">
-						<td colspan="5">{if $display_tax_label}{l s='Total products (tax excl.):'}{else}{l s='Total products:'}{/if}</td>
+						<td colspan="5">{if $display_tax_label}{l s='Total products (tax excl.)'}{else}{l s='Total products'}{/if}</td>
 						<td class="price" id="total_product">{displayPrice price=$total_products}</td>
 					</tr>
 				{else}
 					<tr class="cart_total_price">
-						<td colspan="5">{if $display_tax_label}{l s='Total products (tax incl.):'}{else}{l s='Total products:'}{/if}</td>
+						<td colspan="5">{if $display_tax_label}{l s='Total products (tax incl.)'}{else}{l s='Total products'}{/if}</td>
 						<td class="price" id="total_product">{displayPrice price=$total_products_wt}</td>
 					</tr>
 				{/if}
 			{else}
 				<tr class="cart_total_price">
-					<td colspan="5">{l s='Total products:'}</td>
+					<td colspan="5">{l s='Total products'}</td>
 					<td class="price" id="total_product">{displayPrice price=$total_products}</td>
 				</tr>
 			{/if}
@@ -94,7 +94,7 @@
 					{if $priceDisplay}
 						{if $display_tax_label}{l s='Total gift wrapping (tax excl.):'}{else}{l s='Total gift wrapping cost:'}{/if}
 					{else}
-						{if $display_tax_label}{l s='Total gift-wrapping (tax incl.):'}{else}{l s='Total gift wrapping cost:'}{/if}
+						{if $display_tax_label}{l s='Total gift wrapping (tax incl.)'}{else}{l s='Total gift wrapping cost:'}{/if}
 					{/if}
 				{else}
 					{l s='Total gift wrapping cost:'}
@@ -118,21 +118,21 @@
 					<td class="price" id="total_shipping">{l s='Free Shipping!'}</td>
 				</tr>
 			{else}
-				{if $use_taxes}
+				{if $use_taxes && $total_shipping_tax_exc != $total_shipping}
 					{if $priceDisplay}
 						<tr class="cart_total_delivery" {if $shippingCost <= 0} style="display:none"{/if}>
-							<td colspan="5">{if $display_tax_label}{l s='Total shipping (tax excl.):'}{else}{l s='Total shipping:'}{/if}</td>
+							<td colspan="5">{if $display_tax_label}{l s='Total shipping (tax excl.)'}{else}{l s='Total shipping'}{/if}</td>
 							<td class="price" id="total_shipping">{displayPrice price=$shippingCostTaxExc}</td>
 						</tr>
 					{else}
 						<tr class="cart_total_delivery"{if $shippingCost <= 0} style="display:none"{/if}>
-							<td colspan="5">{if $display_tax_label}{l s='Total shipping (tax incl.):'}{else}{l s='Total shipping:'}{/if}</td>
+							<td colspan="5">{if $display_tax_label}{l s='Total shipping (tax incl.)'}{else}{l s='Total shipping'}{/if}</td>
 							<td class="price" id="total_shipping" >{displayPrice price=$shippingCost}</td>
 						</tr>
 					{/if}
 				{else}
 					<tr class="cart_total_delivery"{if $shippingCost <= 0} style="display:none"{/if}>
-						<td colspan="5">{l s='Total shipping:'}</td>
+						<td colspan="5">{l s='Total shipping'}</td>
 						<td class="price" id="total_shipping" >{displayPrice price=$shippingCostTaxExc}</td>
 					</tr>
 				{/if}
@@ -141,12 +141,12 @@
 				<td colspan="5">
 				{if $use_taxes}
 					{if $priceDisplay}
-						{if $display_tax_label}{l s='Total vouchers (tax excl.):'}{else}{l s='Total vouchers:'}{/if}
+						{if $display_tax_label}{l s='Total vouchers (tax excl.)'}{else}{l s='Total vouchers'}{/if}
 					{else}
-						{if $display_tax_label}{l s='Total vouchers (tax incl.):'}{else}{l s='Total vouchers:'}{/if}
+						{if $display_tax_label}{l s='Total vouchers (tax incl.)'}{else}{l s='Total vouchers'}{/if}
 					{/if}
 				{else}
-					{l s='Total vouchers:'}
+					{l s='Total vouchers'}
 				{/if}
 				</td>
 				<td class="price-discount price" id="total_discount">
@@ -181,8 +181,8 @@
 				{/if}
 				</td>
 				<td colspan="2" class="price total_price_container" id="total_price_container">
-					<p>{l s='Total:'}</p>
-					<span>{displayPrice price=$total_price}</span>
+					<p>{l s='Total'}</p>
+					<span id="total_price">{displayPrice price=$total_price}</span>
 				</td>
 			</tr>
 			{else}
@@ -220,7 +220,7 @@
 				{/if}
 				</td>
 				<td colspan="2" class="price total_price_container" id="total_price_container">
-					<p>{l s='Total:'}</p>
+					<p>{l s='Total'}</p>
 					<span id="total_price">{displayPrice price=$total_price_without_tax}</span>
 				</td>
 			</tr>
@@ -273,12 +273,12 @@
 								<span style="float:left">{if $quantityDisplayed == 0 AND isset($customizedDatas.$productId.$productAttributeId)}{$customizedDatas.$productId.$productAttributeId|@count}{else}{$product.cart_quantity-$quantityDisplayed}{/if}</span>
 							{else}
 								<div style="float:right">
-									<a rel="nofollow" class="cart_quantity_delete" id="{$product.id_product}_{$product.id_product_attribute}_{$id_customization}" href="{$link->getPageLink('cart', true, NULL, "delete=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_customization={$id_customization}&amp;token={$token_cart}")}"><img src="{$img_dir}icon/delete.gif" alt="{l s='Delete'}" title="{l s='Delete this customization'}" width="11" height="13" class="icon" /></a>
+									<a rel="nofollow" class="cart_quantity_delete" id="{$product.id_product}_{$product.id_product_attribute}_{$id_customization}" href="{$link->getPageLink('cart', true, NULL, "delete=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_customization={$id_customization}&amp;token={$token_cart}")|escape:'html'}"><img src="{$img_dir}icon/delete.gif" alt="{l s='Delete'}" title="{l s='Delete this customization'}" width="11" height="13" class="icon" /></a>
 								</div>
 								<div id="cart_quantity_button" style="float:left">
-								<a rel="nofollow" class="cart_quantity_up" id="cart_quantity_up_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}" href="{$link->getPageLink('cart', true, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_customization={$id_customization}&amp;token={$token_cart}")}" title="{l s='Add'}"><img src="{$img_dir}icon/quantity_up.gif" alt="{l s='Add'}" width="14" height="9" /></a><br />
+								<a rel="nofollow" class="cart_quantity_up" id="cart_quantity_up_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}" href="{$link->getPageLink('cart', true, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_customization={$id_customization}&amp;token={$token_cart}")|escape:'html'}" title="{l s='Add'}"><img src="{$img_dir}icon/quantity_up.gif" alt="{l s='Add'}" width="14" height="9" /></a><br />
 								{if $product.minimal_quantity < ($customization.quantity -$quantityDisplayed) OR $product.minimal_quantity <= 1}
-								<a rel="nofollow" class="cart_quantity_down" id="cart_quantity_down_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}" href="{$link->getPageLink('cart', true, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_customization={$id_customization}&amp;op=down&amp;token={$token_cart}")}" title="{l s='Subtract'}">
+								<a rel="nofollow" class="cart_quantity_down" id="cart_quantity_down_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}" href="{$link->getPageLink('cart', true, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_customization={$id_customization}&amp;op=down&amp;token={$token_cart}")|escape:'html'}" title="{l s='Subtract'}">
 									<img src="{$img_dir}icon/quantity_down.gif" alt="{l s='Subtract'}" width="14" height="9" />
 								</a>
 								{else}
@@ -343,7 +343,7 @@
 {/if}
 
 {if !$opc}
-	<p class="cart_navigation"><a href="{$link->getPageLink('order', true, NULL, "step=2")}" title="{l s='Previous'}" class="button">&laquo; {l s='Previous'}</a></p>
+	<p class="cart_navigation"><a href="{$link->getPageLink('order', true, NULL, "step=2")|escape:'html'}" title="{l s='Previous'}" class="button">&laquo; {l s='Previous'}</a></p>
 {else}
 	</div>
 {/if}

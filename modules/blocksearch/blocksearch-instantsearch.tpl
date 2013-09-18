@@ -23,7 +23,7 @@
 			if($(this).val().length > 0){
 				stopInstantSearchQueries();
 				instantSearchQuery = $.ajax({
-					url: '{if $search_ssl == 1}{$link->getPageLink('search', true)}{else}{$link->getPageLink('search')}{/if}',
+					url: '{if $search_ssl == 1}{$link->getPageLink('search', true)|addslashes}{else}{$link->getPageLink('search')|addslashes}{/if}',
 					data: {
 						instantSearch: 1,
 						id_lang: {$cookie->id_lang},
@@ -38,6 +38,8 @@
 							$('#center_column').attr('id', 'old_center_column');
 							$('#old_center_column').after('<div id="center_column" class="' + $('#old_center_column').attr('class') + '">'+data+'</div>');
 							$('#old_center_column').hide();
+							// Button override
+							ajaxCart.overrideButtonsInThePage();
 							$("#instant_search_results a.close").click(function() {
 								$("#search_query_{$blocksearch_type}").val('');
 								return tryToCloseInstantSearch();
@@ -62,7 +64,7 @@
 		$('document').ready( function() {
 			$("#search_query_{$blocksearch_type}")
 				.autocomplete(
-					'{if $search_ssl == 1}{$link->getPageLink('search', true)}{else}{$link->getPageLink('search')}{/if}', {
+					'{if $search_ssl == 1}{$link->getPageLink('search', true)|addslashes}{else}{$link->getPageLink('search')|addslashes}{/if}', {
 						minChars: 3,
 						max: 10,
 						width: 500,

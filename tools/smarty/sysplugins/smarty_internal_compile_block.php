@@ -84,7 +84,7 @@ class Smarty_Internal_Compile_Block extends Smarty_Internal_CompileBase {
             $al = '';
         }
         if (0 == preg_match("!({$_ldl}{$al}block\s+)(name=)?(\w+|'.*'|\".*\")(\s*?)?((append|prepend|nocache)?(\s*)?(hide)?)?(\s*{$_rdl})!", $block_tag, $_match)) {
-            $error_text = 'Syntax Error in template "' . $template->source->filepath . '"   "' . htmlspecialchars($block_tag) . '" illegal options';
+            $error_text = 'Syntax Error in template "' . $template->source->filepath . '"   "' . $block_tag . '" illegal options';
             throw new SmartyCompilerException($error_text);
         } else {
             $_name = trim($_match[3], '\'"');
@@ -179,7 +179,7 @@ class Smarty_Internal_Compile_Block extends Smarty_Internal_CompileBase {
             return '';
         }
         $_tpl = new Smarty_Internal_template('string:' . $compiler->template->block_data[$_name]['source'], $compiler->smarty, $compiler->template, $compiler->template->cache_id,
-                        $compiler->template->compile_id = null, $compiler->template->caching, $compiler->template->cache_lifetime);
+                        $compiler->template->compile_id, $compiler->template->caching, $compiler->template->cache_lifetime);
         $_tpl->variable_filters = $compiler->template->variable_filters;
         $_tpl->properties['nocache_hash'] = $compiler->template->properties['nocache_hash'];
         $_tpl->source->filepath = $compiler->template->block_data[$_name]['file'];
@@ -190,6 +190,7 @@ class Smarty_Internal_Compile_Block extends Smarty_Internal_CompileBase {
             $_tpl->compiler->forceNocache = 1;
         }
         $_tpl->compiler->suppressHeader = true;
+        $_tpl->compiler->suppressFilter = true;
         $_tpl->compiler->suppressTemplatePropertyHeader = true;
         $_tpl->compiler->suppressMergedTemplates = true;
         if (strpos($compiler->template->block_data[$_name]['source'], '%%%%SMARTY_PARENT%%%%') !== false) {

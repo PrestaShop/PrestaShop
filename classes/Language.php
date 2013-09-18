@@ -70,7 +70,7 @@ class LanguageCore extends ObjectModel
 	/** @var array Languages cache */
 	protected static $_checkedLangs;
 	protected static $_LANGUAGES;
-	protected static $countActiveLanguages;
+	protected static $countActiveLanguages = array();
 
 	protected	$webserviceParameters = array(
 		'objectNodeName' => 'language',
@@ -111,18 +111,22 @@ class LanguageCore extends ObjectModel
 		$iso_code = $newIso ? $newIso : $this->iso_code;
 
 		if (!file_exists(_PS_TRANSLATIONS_DIR_.$iso_code))
-			mkdir(_PS_TRANSLATIONS_DIR_.$iso_code);
+		{
+			if (@mkdir(_PS_TRANSLATIONS_DIR_.$iso_code))
+				@chmod(_PS_TRANSLATIONS_DIR_.$iso_code, 0777);
+		}
+
 		foreach ($this->translationsFilesAndVars as $file => $var)
 		{
 			$path_file = _PS_TRANSLATIONS_DIR_.$iso_code.'/'.$file.'.php';
 			if (!file_exists($path_file))
 				if ($file != 'tabs')
-					file_put_contents($path_file, '<?php
+					@file_put_contents($path_file, '<?php
 	global $'.$var.';
 	$'.$var.' = array();
 ?>');
 				else
-					file_put_contents($path_file, '<?php
+					@file_put_contents($path_file, '<?php
 	$'.$var.' = array();
 	return $'.$var.';
 ?>');
@@ -190,19 +194,21 @@ class LanguageCore extends ObjectModel
 		return $themes;
 	}
 
-	public function add($autodate = true, $nullValues = false)
+	public function add($autodate = true, $nullValues = false, $only_add = false)
 	{
-		if (!parent::add($autodate))
+		if (!parent::add($autodate, $nullValues))
 			return false;
+
+		if ($only_add)
+			return true;
 
 		// create empty files if they not exists
 		$this->_generateFiles();
 
 		// @todo Since a lot of modules are not in right format with their primary keys name, just get true ...
-		$resUpdateSQL = $this->loadUpdateSQL();
-		$resUpdateSQL = true;
+		$this->loadUpdateSQL();
 
-		return $resUpdateSQL && Tools::generateHtaccess();
+		return Tools::generateHtaccess();
 	}
 
 	public function toggleStatus()
@@ -259,7 +265,7 @@ class LanguageCore extends ObjectModel
 			$mPath_to = _PS_MAIL_DIR_.(string)$iso_to.'/';
 		}
 
-		$lFiles = array('admin.php', 'errors.php', 'fields.php', 'pdf.php', 'tabs.php', 'index.php');
+		$lFiles = array('admin.php', 'errors.php', 'fields.php', 'pdf.php', 'tabs.php');
 
 		// Added natives mails files
 		$mFiles = array(
@@ -270,7 +276,7 @@ class LanguageCore extends ObjectModel
 			'contact.html', 'contact.txt',
 			'contact_form.html', 'contact_form.txt',
 			'credit_slip.html', 'credit_slip.txt',
-			'download_product.html', 'download_product.txt', 'download-product.tpl',
+			'download_product.html', 'download_product.txt',
 			'employee_password.html', 'employee_password.txt',
 			'forward_msg.html', 'forward_msg.txt',
 			'guest_to_customer.html', 'guest_to_customer.txt',
@@ -294,7 +300,7 @@ class LanguageCore extends ObjectModel
 			'test.html', 'test.txt',
 			'voucher.html', 'voucher.txt',
 			'voucher_new.html', 'voucher_new.txt',
-			'order_changed.html', 'order_changed.txt', 'index.php'
+			'order_changed.html', 'order_changed.txt'
 		);
 
 		$number = -1;
@@ -458,12 +464,13 @@ class LanguageCore extends ObjectModel
 				}
 			closedir($handle);
 		}
-		rmdir($dir);
+		if (is_writable($dir))
+			rmdir($dir);
 	}
 
 	public function delete()
 	{
-		if (!$this->hasMultishopEntries())
+		if (!$this->hasMultishopEntries() || Shop::getContext() == Shop::CONTEXT_ALL)
 		{
 			if (empty($this->iso_code))
 				$this->iso_code = Language::getIsoById($this->id);
@@ -485,7 +492,8 @@ class LanguageCore extends ObjectModel
 			// Files deletion
 			foreach (Language::getFilesList($this->iso_code, _THEME_NAME_, false, false, false, true, true) as $key => $file)
 				if (file_exists($key))
-				unlink($key);
+					unlink($key);
+
 			$modList = scandir(_PS_MODULE_DIR_);
 			foreach ($modList as $mod)
 			{
@@ -507,36 +515,31 @@ class LanguageCore extends ObjectModel
 				Language::recurseDeleteDir(_PS_MAIL_DIR_.$this->iso_code);
 			if (file_exists(_PS_TRANSLATIONS_DIR_.$this->iso_code))
 				Language::recurseDeleteDir(_PS_TRANSLATIONS_DIR_.$this->iso_code);
-		}
-		
-		if (!parent::delete())
-			return false;
-		if (!$this->hasMultishopEntries())
-		{
-			// delete images
-			$files_copy = array(
-				'/en.jpg',
-				'/en-default-'.ImageType::getFormatedName('thickbox').'.jpg',
-				'/en-default-'.ImageType::getFormatedName('home').'.jpg',
-				'/en-default-'.ImageType::getFormatedName('large').'.jpg',
-				'/en-default-'.ImageType::getFormatedName('medium').'.jpg',
-				'/en-default-'.ImageType::getFormatedName('small').'.jpg'
+
+			$images = array(
+				'.jpg',
+				'-default-'.ImageType::getFormatedName('thickbox').'.jpg',
+				'-default-'.ImageType::getFormatedName('home').'.jpg',
+				'-default-'.ImageType::getFormatedName('large').'.jpg',
+				'-default-'.ImageType::getFormatedName('medium').'.jpg',
+				'-default-'.ImageType::getFormatedName('small').'.jpg'
 			);
-			$tos = array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_);
-			foreach ($tos as $to)
-				foreach ($files_copy as $file)
+			$images_directories = array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_);
+			foreach ($images_directories as $image_directory)
+				foreach ($images as $image)
 				{
-					$name = str_replace('/en', ''.$this->iso_code, $file);
-	
-					if (file_exists($to.$name))
-						unlink($to.$name);
+					if (file_exists($image_directory.$this->iso_code.$image))
+						unlink($image_directory.$this->iso_code.$image);
 					if (file_exists(dirname(__FILE__).'/../img/l/'.$this->id.'.jpg'))
 						unlink(dirname(__FILE__).'/../img/l/'.$this->id.'.jpg');
 				}
 		}
+
+		if (!parent::delete())
+			return false;
+
 		return Tools::generateHtaccess();
 	}
-
 
 	public function deleteSelection($selection)
 	{
@@ -546,11 +549,10 @@ class LanguageCore extends ObjectModel
 		$result = true;
 		foreach ($selection as $id)
 		{
-			$this->id = (int)($id);
-			$result = $result && $this->delete();
+			$language = new Language($id);
+			$result = $result && $language->delete();
 		}
 
-		Tools::generateHtaccess();
 		return $result;
 	}
 
@@ -577,7 +579,7 @@ class LanguageCore extends ObjectModel
 
 	public static function getLanguage($id_lang)
 	{
-		if (!array_key_exists((int)($id_lang), self::$_LANGUAGES))
+		if (!array_key_exists((int)$id_lang, self::$_LANGUAGES))
 			return false;
 		return self::$_LANGUAGES[(int)($id_lang)];
 	}
@@ -681,66 +683,64 @@ class LanguageCore extends ObjectModel
 		return Tools::generateHtaccess();
 	}
 
-	public static function checkAndAddLanguage($iso_code)
+	public static function checkAndAddLanguage($iso_code, $lang_pack = false, $only_add = false, $params_lang = null)
 	{
 		if (Language::getIdByIso($iso_code))
 			return true;
-		else
+
+		$lang = new Language();
+		$lang->iso_code = $iso_code;
+		$lang->active = true;
+
+		if (!$lang_pack)
+			$lang_pack = Tools::jsonDecode(Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='._PS_VERSION_.'&iso_lang='.$iso_code));
+
+		if ($lang_pack)
 		{
-			if (@fsockopen('www.prestashop.com', 80))
+			if (isset($lang_pack->name)
+				&& isset($lang_pack->version)
+				&& isset($lang_pack->iso_code))
+					$lang->name = $lang_pack->name;
+		}
+		elseif ($params_lang !== null && is_array($params_lang))
+			foreach ($params_lang as $key => $value)
+				$lang->$key = $value;
+		else
+			return false;
+		
+		if (!$lang->add(true, false, $only_add))
+			return false;
+
+		$flag = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/flags/jpeg/'.$iso_code.'.jpg');
+		if ($flag != null && !preg_match('/<body>/', $flag))
+		{
+			$file = fopen(dirname(__FILE__).'/../img/l/'.(int)$lang->id.'.jpg', 'w');
+			if ($file)
 			{
-				$lang = new Language();
-				$lang->iso_code = $iso_code;
-				$lang->active = true;
-
-				if ($lang_pack = Tools::jsonDecode(Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='._PS_VERSION_.'&iso_lang='.$iso_code)))
-				{
-					if (isset($lang_pack->name)
-					&& isset($lang_pack->version)
-					&& isset($lang_pack->iso_code))
-						$lang->name = $lang_pack->name;
-				}
-				if (!$lang->name || !$lang->add())
-					return false;
-				$insert_id = (int)$lang->id;
-
-				if ($lang_pack)
-				{
-					$flag = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/flags/jpeg/'.$iso_code.'.jpg');
-					if ($flag != null && !preg_match('/<body>/', $flag))
-					{
-						$file = fopen(dirname(__FILE__).'/../img/l/'.$insert_id.'.jpg', 'w');
-						if ($file)
-						{
-							fwrite($file, $flag);
-							fclose($file);
-						}
-						else
-							Language::_copyNoneFlag($insert_id);
-					}
-					else
-						Language::_copyNoneFlag($insert_id);
-				}
-				else
-					Language::_copyNoneFlag($insert_id);
-
-				$files_copy = array(
-					'/en.jpg',
-					'/en-default-'.ImageType::getFormatedName('thickbox').'.jpg',
-					'/en-default-'.ImageType::getFormatedName('home').'.jpg',
-					'/en-default-'.ImageType::getFormatedName('large').'.jpg',
-					'/en-default-'.ImageType::getFormatedName('medium').'.jpg',
-					'/en-default-'.ImageType::getFormatedName('small').'.jpg',
-					'/en-default-'.ImageType::getFormatedName('scene').'.jpg'
-				);
-				foreach (array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_) as $to)
-					foreach ($files_copy as $file)
-						@copy(dirname(__FILE__).'/../img/l'.$file, $to.str_replace('/en', '/'.$iso_code, $file));
-				return true;
+				fwrite($file, $flag);
+				fclose($file);
 			}
 			else
-				return false;
+				Language::_copyNoneFlag((int)$lang->id);
 		}
+		else
+			Language::_copyNoneFlag((int)$lang->id);
+	
+		$files_copy = array(
+			'/en.jpg',
+			'/en-default-'.ImageType::getFormatedName('thickbox').'.jpg',
+			'/en-default-'.ImageType::getFormatedName('home').'.jpg',
+			'/en-default-'.ImageType::getFormatedName('large').'.jpg',
+			'/en-default-'.ImageType::getFormatedName('medium').'.jpg',
+			'/en-default-'.ImageType::getFormatedName('small').'.jpg',
+			'/en-default-'.ImageType::getFormatedName('scene').'.jpg'
+		);
+		
+		foreach (array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_) as $to)
+			foreach ($files_copy as $file)
+				@copy(dirname(__FILE__).'/../img/l'.$file, $to.str_replace('/en', '/'.$iso_code, $file));
+
+		return true;
 	}
 
 	protected static function _copyNoneFlag($id)
@@ -761,15 +761,73 @@ class LanguageCore extends ObjectModel
 		return (isset(self::$_cache_language_installation[$iso_code]) ? self::$_cache_language_installation[$iso_code] : false);
 	}
 
-	public static function countActiveLanguages()
+	public static function countActiveLanguages($id_shop = null)
 	{
-		if (!self::$countActiveLanguages)
-			self::$countActiveLanguages = Db::getInstance()->getValue('
+		if ($id_shop === null)
+			$id_shop = (int)Context::getContext()->shop->id;
+
+		if (!isset(self::$countActiveLanguages[$id_shop]))
+			self::$countActiveLanguages[$id_shop] = Db::getInstance()->getValue('
 				SELECT COUNT(DISTINCT l.id_lang) FROM `'._DB_PREFIX_.'lang` l
-				'.Shop::addSqlAssociation('lang', 'l').'
+				JOIN '._DB_PREFIX_.'lang_shop lang_shop ON (lang_shop.id_lang = l.id_lang AND lang_shop.id_shop = '.(int)$id_shop.')
 				WHERE l.`active` = 1
 			');
-		return self::$countActiveLanguages;
+		return self::$countActiveLanguages[$id_shop];
+	}
+
+	public static function downloadAndInstallLanguagePack($iso, $version = null, $params = null)
+	{
+		require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
+
+		if (!Validate::isLanguageIsoCode($iso))
+			return false;
+
+		if ($version == null)
+			$version = _PS_VERSION_;
+		$lang_pack = false;
+		$lang_pack_ok = false;
+		$errors = array();
+		$file = _PS_TRANSLATIONS_DIR_.$iso.'.gzip';
+
+		if (!$lang_pack_link = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.$version.'&iso_lang='.Tools::strtolower($iso)))
+			$errors[] = Tools::displayError('Archive cannot be downloaded from prestashop.com.');
+		elseif (!$lang_pack = Tools::jsonDecode($lang_pack_link))
+			$errors[] = Tools::displayError('Error occurred when language was checked according to your Prestashop version.');
+		elseif ($content = Tools::file_get_contents('http://translations.prestashop.com/download/lang_packs/gzip/'.$lang_pack->version.'/'.Tools::strtolower($lang_pack->iso_code.'.gzip')))
+			if (!@file_put_contents($file, $content))
+			{
+				if (is_writable(dirname($file)))
+				{
+					@unlink($file);
+					@file_put_contents($file, $content);
+				}
+				elseif (!is_writable($file))
+					$errors[] = Tools::displayError('Server does not have permissions for writing.').' ('.$file.')';
+			}
+		if (file_exists($file))
+		{
+			$gz = new Archive_Tar($file, true);
+			$files_list = $gz->listContent();
+			if (!$gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
+				$errors[] = Tools::displayError('Cannot decompress the translation file for the following language: ').(string)$iso;
+			// Clear smarty modules cache
+			Tools::clearCache();
+			if (!Language::checkAndAddLanguage((string)$iso, $lang_pack, false, $params))
+				$errors[] = Tools::displayError('An error occurred while creating the language: ').(string)$iso;
+			else
+			{
+				// Reset cache 
+				Language::loadLanguages();
+
+				AdminTranslationsController::checkAndAddMailsFiles($iso, $files_list);
+				AdminTranslationsController::addNewTabs($iso, $files_list);
+			}
+			@unlink($file);
+		}
+		else
+			$errors[] = Tools::displayError('No language pack is available for your version.');
+
+		return count($errors) ? $errors : true;
 	}
 
 	/**
@@ -778,8 +836,8 @@ class LanguageCore extends ObjectModel
 	 * @since 1.5.0
 	 * @return bool
 	 */
-	public static function isMultiLanguageActivated()
+	public static function isMultiLanguageActivated($id_shop = null)
 	{
-		return (Language::countActiveLanguages() > 1);
+		return (Language::countActiveLanguages($id_shop) > 1);
 	}
 }

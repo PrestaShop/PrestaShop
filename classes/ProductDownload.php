@@ -175,7 +175,7 @@ class ProductDownloadCore extends ObjectModel
 	{
 		if (!ProductDownload::isFeatureActive())
 			return false;
-		if (array_key_exists($id_product, self::$_productIds))
+		if (array_key_exists((int)$id_product, self::$_productIds))
 			return self::$_productIds[$id_product];
 		self::$_productIds[$id_product] = (int)Db::getInstance()->getValue('
 		SELECT `id_product_download`
@@ -299,10 +299,10 @@ class ProductDownloadCore extends ObjectModel
 	 */
 	public static function getNewFilename()
 	{
-		$ret = sha1(microtime());
-		if (file_exists(_PS_DOWNLOAD_DIR_.$ret))
-			$ret = ProductDownload::getNewFilename();
-		return $ret;
+		do {
+			$filename = sha1(microtime());
+		} while (file_exists(_PS_DOWNLOAD_DIR_.$filename));
+		return $filename;
 	}
 
 	/**

@@ -37,8 +37,8 @@ class Blockcontact extends Module
 
 		parent::__construct();
 
-		$this->displayName = $this->l('Block contact');
-		$this->description = $this->l('Allows you to add extra information about customer service');
+		$this->displayName = $this->l('Contact Block');
+		$this->description = $this->l('Allows you to add additional information about your store\'s customer service.');
 	}
 	
 	public function install()
@@ -75,7 +75,7 @@ class Blockcontact extends Module
 				<label for="telnumber">'.$this->l('Telephone number:').'</label>
 				<input type="text" id="telnumber" name="telnumber" value="'.((Configuration::get('blockcontact_telnumber') != '') ? Tools::safeOutput(Configuration::get('blockcontact_telnumber')) : '').'" />
 				<div class="clear">&nbsp;</div>
-				<label for="email">'.$this->l('Email:').'</label>
+				<label for="email">'.$this->l('Email').'</label>
 				<input type="text" id="email" name="email" value="'.((Configuration::get('blockcontact_email') != '') ? Tools::safeOutput(Configuration::get('blockcontact_email')) : '').'" />
 				<div class="clear">&nbsp;</div>
 				<div class="margin-form">

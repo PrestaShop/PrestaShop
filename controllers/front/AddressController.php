@@ -123,11 +123,11 @@ class AddressControllerCore extends FrontController
 
 		// Check page token
 		if ($this->context->customer->isLogged() && !$this->isTokenValid())
-			$this->errors[] = Tools::displayError('Invalid token');
+			$this->errors[] = Tools::displayError('Invalid token.');
 
 		// Check phone
 		if (Configuration::get('PS_ONE_PHONE_AT_LEAST') && !Tools::getValue('phone') && !Tools::getValue('phone_mobile'))
-			$this->errors[] = Tools::displayError('You must register at least one phone number');
+			$this->errors[] = Tools::displayError('You must register at least one phone number.');
 		if ($address->id_country)
 		{
 			// Check country
@@ -135,41 +135,29 @@ class AddressControllerCore extends FrontController
 				throw new PrestaShopException('Country cannot be loaded with address->id_country');
 
 			if ((int)$country->contains_states && !(int)$address->id_state)
-				$this->errors[] = Tools::displayError('This country requires a state selection.');
+				$this->errors[] = Tools::displayError('This country requires you to chose a State.');
 
 			// US customer: normalize the address
-			if ($address->id_country == Country::getByIso('US'))
+			if ($address->id_country == Country::getByIso('US') && Configuration::get('PS_TAASC'))
 			{
 				include_once(_PS_TAASC_PATH_.'AddressStandardizationSolution.php');
 				$normalize = new AddressStandardizationSolution;
 				$address->address1 = $normalize->AddressLineStandardization($address->address1);
 				$address->address2 = $normalize->AddressLineStandardization($address->address2);
 			}
-
-			// Check country zip code
-			$zip_code_format = $country->zip_code_format;
-			if ($country->need_zip_code)
-			{
-				if (($postcode = Tools::getValue('postcode')) && $zip_code_format)
-				{
-					if (!$country->checkZipCode($postcode))
-						$this->errors[] = sprintf(
-							Tools::displayError('Zip/Postal code is invalid. Must be typed as follows: %s'),
-							str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)))
-						);
-				}
-				else if ($zip_code_format)
-					$this->errors[] = Tools::displayError('Zip/Postal code is required.');
-				else if ($postcode && !preg_match('/^[0-9a-zA-Z -]{4,9}$/ui', $postcode))
-					$this->errors[] = sprintf(
-						Tools::displayError('Zip/Postal code is invalid. Must be typed as follows: %s'),
-						str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)))
-					);
-			}
+			
+			$postcode = Tools::getValue('postcode');		
+			/* Check zip code format */
+			if ($country->zip_code_format && !$country->checkZipCode($postcode))
+				$this->errors[] = sprintf(Tools::displayError('The Zip/Postal code you\'ve entered is invalid. It must follow this format: %s'), str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format))));
+			elseif(empty($postcode) && $country->need_zip_code)
+				$this->errors[] = Tools::displayError('A Zip / Postal code is required.');
+			elseif ($postcode && !Validate::isPostCode($postcode))
+				$this->errors[] = Tools::displayError('The Zip / Postal code is invalid.');
 
 			// Check country DNI
 			if ($country->isNeedDni() && (!Tools::getValue('dni') || !Validate::isDniLite(Tools::getValue('dni'))))
-				$this->errors[] = Tools::displayError('Identification number is incorrect or has already been used.');
+				$this->errors[] = Tools::displayError('The identification number is incorrect or has already been used.');
 			else if (!$country->isNeedDni())
 				$address->dni = null;
 		}
@@ -187,7 +175,7 @@ class AddressControllerCore extends FrontController
 				AND id_address != '.(int)$id_address.'
 				AND id_customer = '.(int)$this->context->customer->id.'
 				AND deleted = 0') > 0)
-				$this->errors[] = sprintf(Tools::displayError('The alias "%s" is already used, please chose another one.'), Tools::safeOutput($_POST['alias']));
+				$this->errors[] = sprintf(Tools::displayError('The alias "%s" has already been used. Please select another one.'), Tools::safeOutput($_POST['alias']));
 		}
 
 		// Check the requires fields which are settings in the BO
@@ -315,7 +303,9 @@ class AddressControllerCore extends FrontController
 			$selected_country = (int)$this->_address->id_country;
 		else if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
 		{
-			$array = preg_split('/,|-/', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+			// get all countries as language (xy) or language-country (wz-XY)
+			$array = array();
+			preg_match("#(?<=-)\w\w|\w\w(?!-)#",$_SERVER['HTTP_ACCEPT_LANGUAGE'],$array);
 			if (!Validate::isLanguageIsoCode($array[0]) || !($selected_country = Country::getByIso($array[0])))
 				$selected_country = (int)Configuration::get('PS_COUNTRY_DEFAULT');
 		}

@@ -34,7 +34,7 @@
 
 			<b>{$limit_warning['post.max_vars']}</b> {l s='for suhosin.post.max_vars.'}<br/>
 			<b>{$limit_warning['request.max_vars']}</b> {l s='for suhosin.request.max_vars.'}<br/>
-			{l s='Please ask your hosting provider to increase the suhosin post and request a limit of'}
+			{l s='Please ask your hosting provider to increase the suhosin limit to'}
 		{else}
 			{l s='Warning! Your PHP configuration limits the maximum number of fields allowed in a form:'}<br/>
 			<b>{$limit_warning['max_input_vars']}</b> {l s='for max_input_vars.'}<br/>
@@ -46,7 +46,7 @@
 
 		<div class="hint" style="display:block;">
 			<ul style="margin-left:30px;list-style-type:disc;">
-				<li>{l s='Click on the titles to open fieldsets'}.</li>
+				<li>{l s='Click on titles to open fieldsets'}.</li>
 				<li>{l s='Some sentences to translate use this syntax: %s... These are variables, and PrestaShop take care of replacing them before displaying your translation. You must leave these in your translations, and place them appropriately in your sentence.' sprintf='%d, %s, %1$s, %2$d'}</li>
 			</ul>
 		</div><br /><br />
@@ -92,7 +92,7 @@
 		<br />
 
 		{foreach $modules_translations as $theme_name => $theme}
-			<h2>&gt;{l s='Theme:'} <a name="{$theme_name}">{if $theme_name === $default_theme_name}{l s='default'}{else}{$theme_name}{/if} </h2>
+			{if $theme_name}<h2>&gt;{l s='Theme:'} <a name="{$theme_name}">{$theme_name}</h2>{/if}
 			{foreach $theme as $module_name => $module}
 				<h3>{l s='Module:'} <a name="{$module_name}" style="font-style:italic">{$module_name}</a></h3>
 				{foreach $module as $template_name => $newLang}
@@ -107,7 +107,7 @@
 							{$missing_translations_module = 0}
 						{/if}
 						<fieldset>
-							<legend style="cursor : pointer" onclick="$('#{$theme_name}_{$module_name}_{$template_name|replace:'.':'_'}').slideToggle();">{if $theme_name === 'default'}{l s='default'}{else}{$theme_name}{/if} - {$template_name}
+							<legend style="cursor : pointer" onclick="$('#{$theme_name}_{$module_name}_{$template_name|replace:'.':'_'}').slideToggle();">{if $theme_name}{$theme_name} - {/if}{$template_name}
 								<font color="blue">{$newLang|count}</font> {l s='expressions'} (<font color="red">{$missing_translations_module}</font>)
 							</legend>
 							<div name="{$type}_div" id="{$theme_name}_{$module_name}_{$template_name|replace:'.':'_'}" style="display:{if $missing_translations_module}block{else}none{/if}">
@@ -117,7 +117,7 @@
 											<td style="width: 40%">{$key|stripslashes}</td>
 											<td>= 
 												{* Prepare name string for md5() *}
-												{capture assign="name"}{strtolower($module_name)}_{strtolower($theme_name)}_{strtolower($template_name)}_{md5($key)}{/capture}
+												{capture assign="name"}{strtolower($module_name)}{if $theme_name}_{strtolower($theme_name)}{/if}_{strtolower($template_name)}_{md5($key)}{/capture}
 												{if $key|strlen < $textarea_sized}
 													<input type="text" 
 														style="width: 450px{if empty($value.trad)};background:#FBB{/if}"

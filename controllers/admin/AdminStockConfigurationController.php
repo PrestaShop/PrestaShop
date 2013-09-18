@@ -433,7 +433,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 		$this->list_no_link = true;
 		$this->_orderBy = null;
 		$this->addRowActionSkipList('delete', array(1, 2, 3, 4, 5, 6));
-		$this->toolbar_title = $this->l('Stock: Supply Order status');
+		$this->toolbar_title = $this->l('Stock: Supply order status');
 		$this->initToolbar();
 
 		$this->fields_list = array(

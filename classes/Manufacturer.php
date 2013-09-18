@@ -78,8 +78,8 @@ class ManufacturerCore extends ObjectModel
 			'date_upd' => 			array('type' => self::TYPE_DATE),
 
 			// Lang fields
-			'description' => 		array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isString'),
-			'short_description' => 	array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isString', 'size' => 254),
+			'description' => 		array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
+			'short_description' => 	array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
 			'meta_title' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
 			'meta_description' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
 			'meta_keywords' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName'),
@@ -198,6 +198,7 @@ class ManufacturerCore extends ObjectModel
 					LEFT JOIN `'._DB_PREFIX_.'manufacturer` as m ON (m.`id_manufacturer`= p.`id_manufacturer`)
 					WHERE m.`id_manufacturer` = '.(int)$manufacturer['id_manufacturer'].
 					($active ? ' AND product_shop.`active` = 1 ' : '').
+					' AND product_shop.`visibility` NOT IN ("none")'.
 					($all_group ? '' : ' AND p.`id_product` IN (
 						SELECT cp.`id_product`
 						FROM `'._DB_PREFIX_.'category_group` cg
@@ -215,7 +216,7 @@ class ManufacturerCore extends ObjectModel
 
 		for ($i = 0; $i < $total_manufacturers; $i++)
 			if ($rewrite_settings)
-				$manufacturers[$i]['link_rewrite'] = Tools::link_rewrite($manufacturers[$i]['name'], false);
+				$manufacturers[$i]['link_rewrite'] = Tools::link_rewrite($manufacturers[$i]['name']);
 			else
 				$manufacturers[$i]['link_rewrite'] = 0;
 
@@ -258,7 +259,7 @@ class ManufacturerCore extends ObjectModel
 
 	public function getLink()
 	{
-		return Tools::link_rewrite($this->name, false);
+		return Tools::link_rewrite($this->name);
 	}
 
 	public static function getProducts($id_manufacturer, $id_lang, $p, $n, $order_by = null, $order_way = null,
@@ -325,9 +326,9 @@ class ManufacturerCore extends ObjectModel
 			$alias = 'stock.';
 		else
 			$alias = 'p.';
-		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pa.`id_product_attribute`,
+		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, MAX(product_attribute_shop.`id_product_attribute`) id_product_attribute,
 					pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`,
-					pl.`meta_title`, pl.`name`, image_shop.`id_image`, il.`legend`, m.`name` AS manufacturer_name,
+					pl.`meta_title`, pl.`name`, MAX(image_shop.`id_image`) id_image, il.`legend`, m.`name` AS manufacturer_name,
 					DATEDIFF(
 						product_shop.`date_add`,
 						DATE_SUB(
@@ -339,7 +340,7 @@ class ManufacturerCore extends ObjectModel
 				'.Shop::addSqlAssociation('product', 'p').'
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
 					ON (p.`id_product` = pa.`id_product`)
-				'.Shop::addSqlAssociation('product_attribute', 'pa', false).'
+				'.Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.`default_on` = 1').'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 					ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').')
 				LEFT JOIN `'._DB_PREFIX_.'image` i
@@ -353,7 +354,6 @@ class ManufacturerCore extends ObjectModel
 				WHERE p.`id_manufacturer` = '.(int)$id_manufacturer.'
 				'.($active ? ' AND product_shop.`active` = 1' : '').'
 				'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
-				AND (product_attribute_shop.default_on = 1 OR product_attribute_shop.default_on IS NULL)
 				AND p.`id_product` IN (
 					SELECT cp.`id_product`
 					FROM `'._DB_PREFIX_.'category_group` cg
@@ -362,7 +362,7 @@ class ManufacturerCore extends ObjectModel
 					($active_category ? ' INNER JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1' : '').'
 					WHERE cg.`id_group` '.$sql_groups.'
 				)
-				AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))
+				GROUP BY product_shop.id_product
 				ORDER BY '.$alias.'`'.bqSQL($order_by).'` '.pSQL($order_way).'
 				LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n;
 

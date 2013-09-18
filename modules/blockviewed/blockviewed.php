@@ -42,8 +42,8 @@ class BlockViewed extends Module
 
 		parent::__construct();
 
-		$this->displayName = $this->l('Viewed products block');
-		$this->description = $this->l('Adds a block displaying last-viewed products.');
+		$this->displayName = $this->l('Viewed products block.');
+		$this->description = $this->l('Adds a block displaying recently viewed products.');
 	}
 
 	public function install()
@@ -82,7 +82,7 @@ class BlockViewed extends Module
 				<label>'.$this->l('Products displayed').'</label>
 				<div class="margin-form">
 					<input type="text" name="productNbr" value="'.(int)Configuration::get('PRODUCTS_VIEWED_NBR').'" />
-					<p class="clear">'.$this->l('Define the number of products displayed in this block').'</p>
+					<p class="clear">'.$this->l('Define the number of products displayed in this block.').'</p>
 				</div>
 				<center><input type="submit" name="submitBlockViewed" value="'.$this->l('Save').'" class="button" /></center>
 			</fieldset>
@@ -93,7 +93,15 @@ class BlockViewed extends Module
 	public function hookRightColumn($params)
 	{
 		$id_product = (int)Tools::getValue('id_product');
-		$productsViewed = (isset($params['cookie']->viewed) && !empty($params['cookie']->viewed)) ? array_slice(explode(',', $params['cookie']->viewed), 0, Configuration::get('PRODUCTS_VIEWED_NBR')) : array();
+		$productsViewed = (isset($params['cookie']->viewed) && !empty($params['cookie']->viewed)) ? array_slice(array_reverse(explode(',', $params['cookie']->viewed)), 0, Configuration::get('PRODUCTS_VIEWED_NBR')) : array();
+
+		if ($id_product && !in_array($id_product, $productsViewed))
+		{
+			if(isset($params['cookie']->viewed) && !empty($params['cookie']->viewed))
+		  		$params['cookie']->viewed .= ',' . (int)$id_product;
+			else
+		  		$params['cookie']->viewed = (int)$id_product;
+		}
 
 		if (count($productsViewed))
 		{
@@ -101,18 +109,18 @@ class BlockViewed extends Module
 
 			$productIds = implode(',', $productsViewed);
 			$productsImages = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT image_shop.id_image, p.id_product, il.legend, product_shop.active, pl.name, pl.description_short, pl.link_rewrite, cl.link_rewrite AS category_rewrite
+			SELECT MAX(image_shop.id_image) id_image, p.id_product, il.legend, product_shop.active, pl.name, pl.description_short, pl.link_rewrite, cl.link_rewrite AS category_rewrite
 			FROM '._DB_PREFIX_.'product p
-			LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = p.id_product'.Shop::addSqlRestrictionOnLang('pl').')
-			LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = p.id_product AND i.cover = 1)'.
-				Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
-			LEFT JOIN '._DB_PREFIX_.'image_lang il ON (il.id_image = i.id_image)
 			'.Shop::addSqlAssociation('product', 'p').'
+			LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = p.id_product'.Shop::addSqlRestrictionOnLang('pl').')
+			LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = p.id_product)'.
+			Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
+			LEFT JOIN '._DB_PREFIX_.'image_lang il ON (il.id_image = image_shop.id_image)
 			LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = product_shop.id_category_default'.Shop::addSqlRestrictionOnLang('cl').')
 			WHERE p.id_product IN ('.$productIds.')
-			AND (i.id_image IS NULL OR image_shop.id_shop='.(int)$this->context->shop->id.')
 			AND pl.id_lang = '.(int)($params['cookie']->id_lang).'
-			AND cl.id_lang = '.(int)($params['cookie']->id_lang)
+			AND cl.id_lang = '.(int)($params['cookie']->id_lang).'
+			GROUP BY product_shop.id_product'
 			);
 
 			$productsImagesArray = array();
@@ -154,10 +162,6 @@ class BlockViewed extends Module
 				if ($product->checkAccess((int)$this->context->customer->id))
 					array_unshift($productsViewed, $id_product);
 			}
-			$viewed = '';
-			foreach ($productsViewed as $id_product_viewed)
-				$viewed .= (int)($id_product_viewed).',';
-			$params['cookie']->viewed = rtrim($viewed, ',');
 
 			if (!count($productsViewedObj))
 				return;
@@ -168,8 +172,6 @@ class BlockViewed extends Module
 
 			return $this->display(__FILE__, 'blockviewed.tpl');
 		}
-		elseif ($id_product)
-			$params['cookie']->viewed = (int)($id_product);
 		return;
 	}
 

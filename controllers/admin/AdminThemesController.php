@@ -122,15 +122,15 @@ class AdminThemesControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_LOGO' => array(
 						'title' => $this->l('Header logo'),
-						'desc' => $this->l('Will appear on main page'),
+						'desc' => $this->l('Will appear on main page.').' '.$this->l('Recommended height: 52px. Maximum height on default theme: 65px.'),
 						'type' => 'file',
 						'thumb' => _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()
 					),
 					'PS_LOGO_MOBILE' => array(
-						'title' => $this->l('Mobile Header logo'),
+						'title' => $this->l('Header logo for mobile'),
 						'desc' => 
-							((Configuration::get('PS_LOGO_MOBILE') === false) ? '<span class="light-warning">'.$this->l('Warning: No mobile logo defined, the header logo is used instead.').'</span><br />' : '').
-							$this->l('Will appear on mobile main page. If undefined, the Header logo will be used'),
+							((Configuration::get('PS_LOGO_MOBILE') === false) ? '<span class="light-warning">'.$this->l('Warning: No mobile logo has been defined. The header logo will be used instead.').'</span><br />' : '').
+							$this->l('Will appear on the main page of your mobile template. If left undefined, the header logo will be used.'),
 						'type' => 'file',
 						'thumb' => (Configuration::get('PS_LOGO_MOBILE') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MOBILE'))) ? _PS_IMG_.Configuration::get('PS_LOGO_MOBILE').'?date='.time() : _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()
 					),
@@ -186,7 +186,7 @@ class AdminThemesControllerCore extends AdminController
 					),
 					'PS_MAIL_COLOR' => array(
 						'title' => $this->l('Mail color'),
-						'desc' => $this->l('Mail will be highlighted in this color. HTML colors only (e.g.').' "lightblue", "#CC6600")',
+						'desc' => $this->l('Your mail will be highlighted in this color. HTML colors only, please (e.g.').' "lightblue", "#CC6600")',
 						'type' => 'color',
 						'name' => 'PS_MAIL_COLOR',
 						'size' => 30,					
@@ -227,9 +227,9 @@ class AdminThemesControllerCore extends AdminController
 		if (!$paypal_installed && in_array($iso_code, $paypal_countries))
 		{
 			if (!$this->isXmlHttpRequest())
-				$this->warnings[] = $this->l('The mobile theme only works with the PayPal\'s payment module at this time. Please activate the module to enable payments.')
+				$this->warnings[] = $this->l('At this time, the mobile theme only works with PayPal\'s payment module. Please activate and configure the PayPal module to enable mobile payments.')
 					.'<br>'.
-					$this->l('In order to use the mobile theme you have to install and configure the PayPal module.');
+					$this->l('In order to use the mobile theme, you must install and configure the PayPal module.');
 		}
 	}
 
@@ -479,7 +479,7 @@ class AdminThemesControllerCore extends AdminController
 		}
 		if ($xml_version_too_old && !$this->_checkConfigForFeatures(array_keys(AdminThemes::$check_features)))
 		{
-			$this->errors[] .= Tools::displayError('config.xml theme file has not been created for this version of prestashop.');
+			$this->errors[] .= Tools::displayError('config.xml theme file has not been created for this version of PrestaShop.');
 			$return = false;
 		}
 		return $return;
@@ -525,7 +525,7 @@ class AdminThemesControllerCore extends AdminController
 					.(!empty(AdminThemes::$check_features[$feature]['tab'])
 						?' <a href="?tab='.AdminThemes::$check_features[$feature]['tab'].'&amp;token='
 						.Tools::getAdminTokenLite(AdminThemes::$check_features[$feature]['tab']).'" ><u>'
-						.Tools::displayError('You can disable this function on this page')
+						.Tools::displayError('You can disable this function.')
 						.'</u></a>':''
 					).'<br/>';
 					$return = false;
@@ -550,7 +550,7 @@ class AdminThemesControllerCore extends AdminController
 			unset($_POST['submitThemes'.$this->table]);
 		Tools::clearCache($this->context->smarty);
 
-		parent::postProcess();
+		return parent::postProcess();
 	}
 
 	/**
@@ -614,18 +614,18 @@ class AdminThemesControllerCore extends AdminController
 
 			$ext = ($field_name == 'PS_STORES_ICON') ? '.gif' : '.jpg';
 			$logo_name = $logo_prefix.'-'.(int)$id_shop.$ext;
-			if (Context::getContext()->shop->getContext() == Shop::CONTEXT_ALL || $id_shop == 0)
+			if (Context::getContext()->shop->getContext() == Shop::CONTEXT_ALL || $id_shop == 0 || Shop::isFeatureActive() == false)
 				$logo_name = $logo_prefix.$ext;
 
 			if ($field_name == 'PS_STORES_ICON')
 			{
 				if (!@ImageManager::resize($tmp_name, _PS_IMG_DIR_.$logo_name, null, null, 'gif', true))
-					$this->errors[] = Tools::displayError('An error occurred during logo copy.');
+					$this->errors[] = Tools::displayError('An error occurred while attempting to copy your logo.');
 			}
 			else
 			{
 				if (!@ImageManager::resize($tmp_name, _PS_IMG_DIR_.$logo_name))
-					$this->errors[] = Tools::displayError('An error occurred during logo copy.');
+					$this->errors[] = Tools::displayError('An error occurred while attempting to copy your logo.');
 			}
 
 			Configuration::updateValue($field_name, $logo_name);

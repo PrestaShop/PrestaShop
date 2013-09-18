@@ -3,7 +3,7 @@
             <name>blockpermanentlinks</name>
             <displayName><![CDATA[Permanent links block]]></displayName>
             <version><![CDATA[0.1]]></version>
-            <description><![CDATA[Adds a block that displays permanent links such as sitemap, contact, etc.]]></description>
+            <description><![CDATA[Adds a block that displays permanent links such as sitemap, contact, etc...]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>
             <is_configurable>0</is_configurable>

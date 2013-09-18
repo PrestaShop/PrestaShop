@@ -136,30 +136,16 @@ class Autoload
 		}
 		else
 		{
-			// Let's write index content in cache file
-			// In order to be sure that this file is correctly written, a check is done on the file content
-			$loop_protection = 0;
-			do
+			$filename_tmp = tempnam(dirname($filename), basename($filename.'.'));
+			if($filename_tmp !== FALSE and file_put_contents($filename_tmp, $content, LOCK_EX) !== FALSE)
 			{
-				$integrity_is_ok = false;
-				file_put_contents($filename, $content);
-				if ($loop_protection++ > 10)
-					break;
-
-				// If the file content end with PHP tag, integrity of the file is ok
-				if (preg_match('#\?>\s*$#', file_get_contents($filename)))
-					$integrity_is_ok = true;
+				@rename($filename_tmp, $filename);
+				@chmod($filename, 0666);
 			}
-			while (!$integrity_is_ok);
-
-			if (!$integrity_is_ok)
-			{
-				file_put_contents($filename, '<?php return array(); ?>');
-				// Cannot use PrestaShopException in this context
-				die('Your file '.$filename.' is corrupted. Please remove this file, a new one will be regenerated automatically');
-			}
+			else
+				// $filename_tmp couldn't be written. $filename should be there anyway (even if outdated), no need to die.
+				error_log('Cannot write temporary file '.$filename_tmp);
 		}
-
 		$this->index = $classes;
 	}
 
@@ -202,4 +188,3 @@ class Autoload
 		return isset($this->index[$classname]) ? $this->index[$classname] : null;
 	}
 }
-

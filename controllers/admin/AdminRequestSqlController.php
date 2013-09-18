@@ -386,7 +386,7 @@ class AdminRequestSqlControllerCore extends AdminController
 
 				case 'checkedWhere':
 					if (isset($e[$key]['operator']))
-						$this->errors[] = sprintf(Tools::displayError('The operator "%s" used is incorrect.'), $e[$key]['operator']);
+						$this->errors[] = sprintf(Tools::displayError('The operator "%s" is incorrect.'), $e[$key]['operator']);
 					else if (isset($e[$key]['attribut']))
 						$this->errors[] = sprintf(
 							Tools::displayError('The attribute "%1$s" does not exist in the table: %2$s.'),
@@ -399,7 +399,7 @@ class AdminRequestSqlControllerCore extends AdminController
 
 				case 'checkedHaving':
 					if (isset($e[$key]['operator']))
-						$this->errors[] = sprintf(Tools::displayError('The operator "%s" used is incorrect.'), $e[$key]['operator']);
+						$this->errors[] = sprintf(Tools::displayError('The operator "%s" is incorrect.'), $e[$key]['operator']);
 					else if (isset($e[$key]['attribut']))
 						$this->errors[] = sprintf(
 							Tools::displayError('The attribute "%1$s" does not exist in the table: %2$s.'),
@@ -444,7 +444,7 @@ class AdminRequestSqlControllerCore extends AdminController
 								$e[$key]['attribut'][1]
 							);
 						else
-							$this->errors[] = Tools::displayError('When multiple tables are used, each attribute must refer to a table.');
+							$this->errors[] = Tools::displayError('When multiple tables are used, each attribute must refer back to a table.');
 				break;
 
 				case 'testedRequired':
@@ -452,7 +452,7 @@ class AdminRequestSqlControllerCore extends AdminController
 					break;
 
 				case 'testedUnauthorized':
-						$this->errors[] = sprintf(Tools::displayError('is an unauthorized keyword.'), $e[$key]);
+						$this->errors[] = sprintf(Tools::displayError('Is an unauthorized keyword.'), $e[$key]);
 				break;
 			}
 		}

@@ -37,7 +37,7 @@ class RequestSqlCore extends ObjectModel
 		'primary' => 'id_request_sql',
 		'fields' => array(
 			'name' => 	array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 200),
-			'sql' => 	array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 1000),
+			'sql' => 	array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true),
 		),
 	);
 
@@ -232,8 +232,6 @@ class RequestSqlCore extends ObjectModel
 		{
 			if ($attribut = $this->cutAttribute(trim($attr), $from))
 				$tab[] = $attribut;
-			else
-				return false;
 		}
 		return $tab;
 	}

@@ -217,7 +217,7 @@ class AdminCountriesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Need zip/postal code'),
+					'label' => $this->l('Need zip/postal code:'),
 					'name' => 'need_zip_code',
 					'required' => false,
 					'class' => 't',
@@ -237,7 +237,7 @@ class AdminCountriesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Zip/post code format'),
+					'label' => $this->l('Zip/post code format:'),
 					'name' => 'zip_code_format',
 					'class' => 'uppercase',
 					'required' => true,
@@ -252,6 +252,26 @@ class AdminCountriesControllerCore extends AdminController
 					'encoding_default_layout' => urlencode($default_layout),
 					'display_valid_fields' => $this->displayValidFields()
 				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Address Standardization:'),
+					'name' => 'standardization',
+					'required' => false,
+					'class' => 't',
+					'is_bool' => true,
+					'values' => array(
+						array(
+							'id' => 'standardization_on',
+							'value' => 1,
+							'label' => $this->l('Enabled')
+						),
+						array(
+							'id' => 'standardization_off',
+							'value' => 0,
+							'label' => $this->l('Disabled')
+						)
+					),
+				),					
 				array(
 					'type' => 'radio',
 					'label' => $this->l('Active:'),
@@ -271,8 +291,8 @@ class AdminCountriesControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Display this country to your customer (the country will always be displayed in the back office)')
-				),
+					'desc' => $this->l('Display this country to your customers (the selected country will always be displayed in the Back Office)')
+				),			
 				array(
 					'type' => 'radio',
 					'label' => $this->l('Contains following  states:'),
@@ -331,6 +351,7 @@ class AdminCountriesControllerCore extends AdminController
 					)
 				)
 			)
+			
 		);
 
 		if (Shop::isFeatureActive())
@@ -346,7 +367,10 @@ class AdminCountriesControllerCore extends AdminController
 			'title' => $this->l('Save   '),
 			'class' => 'button'
 		);
-
+		
+		if ($this->object->iso_code == 'US')
+			$this->object->standardization = Configuration::get('PS_TAASC');
+		
 		return parent::renderForm();
 	}
 
@@ -355,14 +379,17 @@ class AdminCountriesControllerCore extends AdminController
 		if (!Tools::getValue('id_'.$this->table))
 		{
 			if (Validate::isLanguageIsoCode(Tools::getValue('iso_code')) && Country::getByIso(Tools::getValue('iso_code')))
-				$this->errors[] = Tools::displayError('This ISO code already exists, you cannot create two country with the same ISO code');
+				$this->errors[] = Tools::displayError('This ISO code already exists.You cannot create two countries with the same ISO code.');
 		}
 		else if (Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
 		{
 			$id_country = Country::getByIso(Tools::getValue('iso_code'));
 			if (!is_null($id_country) && $id_country != Tools::getValue('id_'.$this->table))
-				$this->errors[] = Tools::displayError('This ISO code already exists, you cannot create two country with the same ISO code');
+				$this->errors[] = Tools::displayError('This ISO code already exists.You cannot create two countries with the same ISO code.');
 		}
+		
+		if (Tools::isSubmit('standardization'))
+			Configuration::updateValue('PS_TAASC', (bool)Tools::getValue('standardization', false));	
 
 		if (!count($this->errors))
 			$res = parent::postProcess();
@@ -407,10 +434,10 @@ class AdminCountriesControllerCore extends AdminController
 	
 	public function processStatus()
 	{
-		if (Validate::isLoadedObject($object = $this->loadObject()))
-			Country::addModuleRestrictions(array(), array(array('id_country' => $object->id)), array());
-		
 		parent::processStatus();
+		if (Validate::isLoadedObject($object = $this->loadObject()) &&  $object->active == 1)
+			return Country::addModuleRestrictions(array(), array(array('id_country' => $object->id)), array());				
+		return false;
 	}
 	
 	public function processBulkStatusSelection($way)
@@ -443,7 +470,7 @@ class AdminCountriesControllerCore extends AdminController
 			$html .= '<li>
 				<a href="javascript:void(0);" onClick="displayAvailableFields(\''.$class_name.'\')">'.$class_name.'</a>';
 			foreach (AddressFormat::getValidateFields($class_name) as $name)
-				$fields[] = '<a style="color:#4B8;" href="javascript:void(0);" class="addPattern" '.$name.' id="'.($class_name == 'Address' ? $name : $class_name.':'.$name).'">
+				$fields[] = '<a style="color:#4B8;" href="javascript:void(0);" class="addPattern" id="'.($class_name == 'Address' ? $name : $class_name.':'.$name).'">
 					'.$name.'</a>';
 			$html .= '
 				<div class="availableFieldsList" id="availableListFieldsFor_'.$class_name.'" style="width:300px;">

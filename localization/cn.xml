@@ -27,7 +27,7 @@
 	<states>
 		<state name="Beijing" iso_code="11" country="CN" zone="Asia" tax_behavior="0" />
 		<state name="Chongqing" iso_code="50" country="CN" zone="Asia" tax_behavior="0" />
-		<state name="Shanghaï" iso_code="31" country="CN" zone="Asia" tax_behavior="0" />
+		<state name="Shanghai" iso_code="31" country="CN" zone="Asia" tax_behavior="0" />
 		<state name="Tianjin" iso_code="12" country="CN" zone="Asia" tax_behavior="0" />
 		<state name="Anhui" iso_code="34" country="CN" zone="Asia" tax_behavior="0" />
 		<state name="Fujian" iso_code="35" country="CN" zone="Asia" tax_behavior="0" />
@@ -49,7 +49,7 @@
 		<state name="Shandong" iso_code="37" country="CN" zone="Asia" tax_behavior="0" />
 		<state name="Shanxi" iso_code="14" country="CN" zone="Asia" tax_behavior="0" />
 		<state name="Sichuan" iso_code="51" country="CN" zone="Asia" tax_behavior="0" />
-		<state name="Taïwan" iso_code="71" country="CN" zone="Asia" tax_behavior="0" />
+		<state name="Taiwan" iso_code="71" country="CN" zone="Asia" tax_behavior="0" />
 		<state name="Yunnan" iso_code="53" country="CN" zone="Asia" tax_behavior="0" />
 		<state name="Guangxi" iso_code="45" country="CN" zone="Asia" tax_behavior="0" />
 		<state name="Neimenggu" iso_code="15" country="CN" zone="Asia" tax_behavior="0" />
@@ -58,6 +58,7 @@
 		<state name="Xizang" iso_code="54" country="CN" zone="Asia" tax_behavior="0" />
 		<state name="Xianggang" iso_code="91" country="CN" zone="Asia" tax_behavior="0" />
 		<state name="Aomen" iso_code="92" country="CN" zone="Asia" tax_behavior="0" />
+		<state name="Zhejiang" iso_code="33" country="CN" zone="Asia" tax_behavior="0" />
 	</states>
 	<units>
 		<unit type="weight" value="市制" />

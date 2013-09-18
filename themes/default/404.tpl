@@ -29,8 +29,8 @@
 		{l s='We\'re sorry, but the Web address you\'ve entered is no longer available.'}
 	</p>
 
-	<h3>{l s='To find a product, please type its name in the field below'}</h3>
-	<form action="{$link->getPageLink('search')}" method="post" class="std">
+	<h3>{l s='To find a product, please type its name in the field below.'}</h3>
+	<form action="{$link->getPageLink('search')|escape:'html'}" method="post" class="std">
 		<fieldset>
 			<p>
 				<label for="search">{l s='Search our product catalog:'}</label>

@@ -42,16 +42,16 @@ class Blockcustomerprivacy extends Module
 			
 		parent::__construct();
 
-		$this->displayName = $this->l('Block customer data privacy');
-		$this->description = $this->l('Adds a block to display a message about customer data privacy.');
+		$this->displayName = $this->l('Customer data privacy block.');
+		$this->description = $this->l('Adds a block displaying a message about a customer\'s privacy data. ');
 	}
 	
 	public function install()
 	{	
 		$return = (parent::install() && $this->registerHook('createAccountForm') && $this->registerHook('header') && $this->registerHook('actionBeforeSubmitAccount'));
 		Configuration::updateValue('CUSTPRIV_MESSAGE', array($this->context->language->id => 
-			$this->l('The personal data you provide is used to answer to your queries, process your orders or allow you to access specific information.').' '.
-			$this->l('You have a right to modify and delete all the personal information which we hold concerning yourself in the "my account" page.')
+			$this->l('The personal data you provide is used to answer queries, process orders or allow access to specific information.').' '.
+			$this->l('You have the right to modify and delete all the personal information found in the "My Account" page. ')
 		));
 		return $return;
 	}
@@ -131,7 +131,7 @@ class Blockcustomerprivacy extends Module
 		$content .= '
 		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
 			<form action="'.htmlentities($_SERVER['REQUEST_URI']).'" method="post">				
-				<label>'.$this->l('Message for customer data privacy').'</label>
+				<label>'.$this->l('Customer data privacy message.').'</label>
 				<div class="margin-form">';
 		foreach ($languages as $language)
 			$content .= '					
@@ -142,8 +142,8 @@ class Blockcustomerprivacy extends Module
 					<div class="clear">
 				</div>
 					<p>
-						'.$this->l('Message that will be displayed in the account creation form.').'<br />
-						'.$this->l('Tips: Remember that if the text is too long to be written directly in the form, you can add a link to one of your pages created via the "CMS" page under the "Preferences" menu.').'
+						'.$this->l('The customer data privacy message will be displayed in the account creation form.').'<br />
+						'.$this->l('Tip: If the customer privacy message is too long to be written directly in the form, you can add a link to one of your pages. This can easily be created via the "CMS" page under the "Preferences" menu.').'
 					</p>
 				</div>
 				<div class="clear">&nbsp;</div>
@@ -181,7 +181,7 @@ class Blockcustomerprivacy extends Module
 			return;
 		
 		if (!Tools::getValue('customer_privacy'))
-			$this->context->controller->errors[] = $this->l('Please agree with the customer data privacy by ticking the checkbox below.');
+			$this->context->controller->errors[] = $this->l('If you agree to the terms in the Customer Data Privacy message, please click the check box below.');
 	}
 	
 	public function hookCreateAccountForm($params)

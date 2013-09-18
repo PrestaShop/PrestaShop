@@ -280,7 +280,7 @@ class AdminShopUrlControllerCore extends AdminController
 		$this->show_toolbar = false;
 		if (isset($this->toolbar_btn['new']))
 			$this->toolbar_btn['new'] = array(
-				'desc' => $this->l('Add new URL'),
+				'desc' => $this->l('Add a new URL'),
 				'href' => $this->context->link->getAdminLink('AdminShopUrl').'&amp;add'.$this->table.'&amp;id_shop='.$this->id_shop,
 			);
 
@@ -323,17 +323,17 @@ class AdminShopUrlControllerCore extends AdminController
 				if (Validate::isLoadedObject($object = $this->loadObject()))
 				{
 					if ($object->main)
-						$this->errors[] = Tools::displayError('You can\'t disable a Main URL');
+						$this->errors[] = Tools::displayError('You cannot disable the Main URL.');
 					elseif ($object->toggleStatus())
 						Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.$token);
 					else
-						$this->errors[] = Tools::displayError('An error occurred while updating status.');
+						$this->errors[] = Tools::displayError('An error occurred while updating the status.');
 				}
 				else
-					$this->errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+					$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 		else
 			$result = parent::postProcess();
@@ -348,7 +348,7 @@ class AdminShopUrlControllerCore extends AdminController
 	{
 		$object = $this->loadObject(true);
 		if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri')))
-			$this->errors[] = Tools::displayError('A shop URL that use this domain and uri already exists');
+			$this->errors[] = Tools::displayError('A shop URL that uses this domain already exists.');
 
 		$return = parent::processSave();
 		if (!$this->errors)
@@ -362,16 +362,16 @@ class AdminShopUrlControllerCore extends AdminController
 		$object = $this->loadObject(true);
 				
 		if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri')))
-			$this->errors[] = Tools::displayError('A shop URL that use this domain and uri already exists');
+			$this->errors[] = Tools::displayError('A shop URL that uses this domain already exists.');
 		
 		if ($object->id && Tools::getValue('main'))
 			$object->setMain();
 
 		if ($object->main && !Tools::getValue('main'))
-			$this->errors[] = Tools::displayError('You can\'t change a Main URL to a non-Main URL, you have to set another URL as Main URL for selected shop');
+			$this->errors[] = Tools::displayError('You cannot change a main URL to a non-main URL. You have to set another URL as your Main URL for the selected shop.');
 
 		if (($object->main || Tools::getValue('main')) && !Tools::getValue('active'))
-			$this->errors[] = Tools::displayError('You can\'t disable a Main URL');
+			$this->errors[] = Tools::displayError('You cannot disable the Main URL.');
 
 		return parent::processAdd();
 	}
@@ -393,6 +393,42 @@ class AdminShopUrlControllerCore extends AdminController
 
 		if ($this->redirect_shop_url)
 			$this->redirect_after = $object->getBaseURI().basename(_PS_ADMIN_DIR_).'/'.$this->context->link->getAdminLink('AdminShopUrl');
+	}
+	
+	/**
+	 * @param string $token
+	 * @param integer $id
+	 * @param string $name
+	 * @return mixed
+	 */
+	public function displayDeleteLink($token = null, $id, $name = null)
+	{
+		$tpl = $this->createTemplate('helpers/list/list_action_delete.tpl');
+
+		if (!array_key_exists('Delete', self::$cache_lang))
+			self::$cache_lang['Delete'] = $this->l('Delete', 'Helper');
+
+		if (!array_key_exists('DeleteItem', self::$cache_lang))
+			self::$cache_lang['DeleteItem'] = $this->l('Delete selected item?', 'Helper');
+
+		if (!array_key_exists('Name', self::$cache_lang))
+			self::$cache_lang['Name'] = $this->l('Name:', 'Helper');
+
+		if (!is_null($name))
+			$name = '\n\n'.self::$cache_lang['Name'].' '.$name;
+
+		$data = array(
+			$this->identifier => $id,
+			'href' => Tools::safeOutput(self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&id_shop='.$this->id_shop.'&token='.($token != null ? $token : $this->token)),
+			'action' => self::$cache_lang['Delete'],
+		);
+		
+		if ($this->specificConfirmDelete !== false)
+			$data['confirm'] = !is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : self::$cache_lang['DeleteItem'].$name;
+		
+		$tpl->assign(array_merge($this->tpl_delete_link_vars, $data));
+
+		return $tpl->fetch();
 	}
 }
 

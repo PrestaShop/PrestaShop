@@ -28,7 +28,7 @@
 	{foreach from=$products item=product name=products}
 		<li class="ui-block-{if $smarty.foreach.products.index % 2}b{else}a{/if} product-list-row">
 			<a href="{$product.link|escape:'htmlall':'UTF-8'}" data-ajax="false">
-				<div class="product_img_wrapper"><img class="ui-li-thumb" src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')}" alt="{$product.legend|escape:'htmlall':'UTF-8'}" /></div>
+				<div class="product_img_wrapper"><img class="ui-li-thumb" src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')|escape:'html'}" alt="{$product.legend|escape:'htmlall':'UTF-8'}" /></div>
 				<h3 class="ui-li-heading">{$product.name|escape:'htmlall':'UTF-8'}</h3>
 				{if (!$PS_CATALOG_MODE AND ((isset($product.show_price) && $product.show_price) || (isset($product.available_for_order) && $product.available_for_order)))}
 					<p class="ui-li-price">

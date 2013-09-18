@@ -441,7 +441,6 @@ class Archive_Tar extends PEAR
 			                                "complete", 0, $p_remove_path, $check_base_dir);
             $this->_close();
         }
-
         return $v_result;
     }
     // }}}
@@ -568,7 +567,7 @@ class Archive_Tar extends PEAR
     function _error($p_message)
     {
         // ----- To be completed
-        $this->raiseError($p_message);
+        return $this->raiseError($p_message);
     }
     // }}}
 
@@ -576,7 +575,7 @@ class Archive_Tar extends PEAR
     function _warning($p_message)
     {
         // ----- To be completed
-        $this->raiseError($p_message);
+        return $this->raiseError($p_message);
     }
     // }}}
 
@@ -1327,7 +1326,7 @@ class Archive_Tar extends PEAR
 
           if ($v_header['filename'] == $p_filename) {
               if ($v_header['typeflag'] == "5") {
-                  $this->_error('Unable to extract in string a directory '
+                  return $this->_error('Unable to extract in string a directory '
 				                .'entry {'.$v_header['filename'].'}');
                   return NULL;
               } else {
@@ -1386,7 +1385,7 @@ class Archive_Tar extends PEAR
           $v_listing = TRUE;
       break;
       default :
-        $this->_error('Invalid extract mode ('.$p_mode.')');
+        return $this->_error('Invalid extract mode ('.$p_mode.')');
         return false;
     }
 
@@ -1456,20 +1455,20 @@ class Archive_Tar extends PEAR
         if (file_exists($v_header['filename'])) {
           if (   (@is_dir($v_header['filename']))
 		      && ($v_header['typeflag'] == '')) {
-            $this->_error('File '.$v_header['filename']
+            return $this->_error('File '.$v_header['filename']
 			              .' already exists as a directory');
             return false;
           }
           if (   ($this->_isArchive($v_header['filename']))
 		      && ($v_header['typeflag'] == "5")) {
-            $this->_error('Directory '.$v_header['filename']
+            return $this->_error('Directory '.$v_header['filename']
 			              .' already exists as a file');
             return false;
           }
           if ($check_base_dir OR _PS_ROOT_DIR_ != realpath($v_header['filename']))
           {
 		      if (!is_writeable($v_header['filename'])) {
-		        $this->_error('File '.$v_header['filename']
+		        return $this->_error('File '.$v_header['filename']
 					          .' already exists and is write protected');
 		        return false;
 		      }
@@ -1484,7 +1483,7 @@ class Archive_Tar extends PEAR
 		         = $this->_dirCheck(($v_header['typeflag'] == "5"
 				                    ?$v_header['filename']
 									:dirname($v_header['filename'])))) != 1) {
-            $this->_error('Unable to create path for '.$v_header['filename']);
+            return $this->_error('Unable to create path for '.$v_header['filename']);
             return false;
         }
 
@@ -1492,14 +1491,14 @@ class Archive_Tar extends PEAR
           if ($v_header['typeflag'] == "5") {
             if (!@file_exists($v_header['filename'])) {
                 if (!@mkdir($v_header['filename'], 0777)) {
-                    $this->_error('Unable to create directory {'
+                    return $this->_error('Unable to create directory {'
 					              .$v_header['filename'].'}');
                     return false;
                 }
             }
           } else {
               if (($v_dest_file = @fopen($v_header['filename'], "wb")) == 0) {
-                  $this->_error('Error while opening {'.$v_header['filename']
+                  return $this->_error('Error while opening {'.$v_header['filename']
 				                .'} in write binary mode');
                   return false;
               } else {
@@ -1524,7 +1523,7 @@ class Archive_Tar extends PEAR
           // ----- Check the file size
           clearstatcache();
           if (filesize($v_header['filename']) != $v_header['size']) {
-              $this->_error('Extracted file '.$v_header['filename']
+              return $this->_error('Extracted file '.$v_header['filename']
 			                .' does not have the correct file size \''
 							.filesize($v_header['filename'])
 							.'\' ('.$v_header['size']

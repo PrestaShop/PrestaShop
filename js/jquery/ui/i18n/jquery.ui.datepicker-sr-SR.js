@@ -3,8 +3,8 @@
 jQuery(function($){
 	$.datepicker.regional['sr-SR'] = {
 		closeText: 'Zatvori',
-		prevText: '&#x3c;',
-		nextText: '&#x3e;',
+		prevText: '&#x3C;',
+		nextText: '&#x3E;',
 		currentText: 'Danas',
 		monthNames: ['Januar','Februar','Mart','April','Maj','Jun',
 		'Jul','Avgust','Septembar','Oktobar','Novembar','Decembar'],
@@ -14,7 +14,7 @@ jQuery(function($){
 		dayNamesShort: ['Ned','Pon','Uto','Sre','Čet','Pet','Sub'],
 		dayNamesMin: ['Ne','Po','Ut','Sr','Če','Pe','Su'],
 		weekHeader: 'Sed',
-		dateFormat: 'dd/mm/yy',
+		dateFormat: 'dd.mm.yy',
 		firstDay: 1,
 		isRTL: false,
 		showMonthAfterYear: false,

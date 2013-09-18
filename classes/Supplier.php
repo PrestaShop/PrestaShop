@@ -72,7 +72,7 @@ class SupplierCore extends ObjectModel
 			'date_upd' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 
 			// Lang fields
-			'description' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName'),
+			'description' => 		array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
 			'meta_title' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
 			'meta_description' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
 			'meta_keywords' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
@@ -95,7 +95,7 @@ class SupplierCore extends ObjectModel
 
 	public function getLink()
 	{
-		return Tools::link_rewrite($this->name, false);
+		return Tools::link_rewrite($this->name);
 	}
 
 	/**
@@ -140,6 +140,7 @@ class SupplierCore extends ObjectModel
 					WHERE ps.`id_supplier` = '.(int)$supplier['id_supplier'].'
 					AND ps.id_product_attribute = 0'.
 					($active ? ' AND product_shop.`active` = 1' : '').
+					' AND product_shop.`visibility` NOT IN ("none")'.
 					($all_groups ? '' :'
 					AND ps.`id_product` IN (
 						SELECT cp.`id_product`
@@ -156,7 +157,7 @@ class SupplierCore extends ObjectModel
 		$rewrite_settings = (int)Configuration::get('PS_REWRITING_SETTINGS');
 		for ($i = 0; $i < $nb_suppliers; $i++)
 			if ($rewrite_settings)
-				$suppliers[$i]['link_rewrite'] = Tools::link_rewrite($suppliers[$i]['name'], false);
+				$suppliers[$i]['link_rewrite'] = Tools::link_rewrite($suppliers[$i]['name']);
 			else
 				$suppliers[$i]['link_rewrite'] = 0;
 		return $suppliers;
@@ -258,7 +259,7 @@ class SupplierCore extends ObjectModel
 					pl.`meta_keywords`,
 					pl.`meta_title`,
 					pl.`name`,
-					image_shop.`id_image`,
+					MAX(image_shop.`id_image`) id_image,
 					il.`legend`,
 					s.`name` AS supplier_name,
 					DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.($nb_days_new_product).' DAY)) > 0 AS new,
@@ -286,7 +287,7 @@ class SupplierCore extends ObjectModel
 						($active_category ? ' INNER JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1' : '').'
 						WHERE cg.`id_group` '.$sql_groups.'
 					)
-					AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))
+				GROUP BY product_shop.id_product
 				ORDER BY '.$alias.pSQL($order_by).' '.pSQL($order_way).'
 				LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n;
 

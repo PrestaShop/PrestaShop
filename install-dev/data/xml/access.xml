@@ -51,6 +51,7 @@
     <access id="access_1_45" id_profile="SuperAdmin" id_tab="Outstanding" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_46" id_profile="SuperAdmin" id_tab="Cart_Rules" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_47" id_profile="SuperAdmin" id_tab="Catalog_price_rules" view="1" add="1" edit="1" delete="1"/>
+    <access id="access_1_49" id_profile="SuperAdmin" id_tab="CarrierWizard" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_49" id_profile="SuperAdmin" id_tab="Carriers" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_50" id_profile="SuperAdmin" id_tab="Price_Ranges" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_51" id_profile="SuperAdmin" id_tab="Weight_Ranges" view="1" add="1" edit="1" delete="1"/>

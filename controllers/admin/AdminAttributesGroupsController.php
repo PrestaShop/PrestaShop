@@ -54,6 +54,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				'title' => $this->l('Values count'),
 				'width' => 120,
 				'align' => 'center',
+				'orderby' => false,
+				'search' => false
 			),
 			'position' => array(
 				'title' => $this->l('Position'),
@@ -98,7 +100,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$this->lang = true;
 
 			if (!Validate::isLoadedObject($obj = new AttributeGroup((int)$id)))
-				$this->errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+				$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 
 			$this->fields_list = array(
 				'id_attribute' => array(
@@ -327,6 +329,11 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			'type' => 'current_texture',
 			'label' => $this->l('Current texture:'),
 			'name' => 'current_texture'
+		);
+		
+		$this->fields_form['input'][] = array(
+			'type' => 'closediv',
+			'name' => ''
 		);
 
 		$this->fields_form['submit'] = array(
@@ -591,9 +598,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		if (Tools::getValue('updateattribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute'))
 		{
 			if ($this->tabAccess['edit'] !== '1')
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 			else if (!$object = new Attribute((int)Tools::getValue($this->identifier)))
-				$this->errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+				$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 
 			if (Tools::getValue('position') !== false && Tools::getValue('id_attribute'))
 			{
@@ -606,7 +613,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			else if (Tools::isSubmit('deleteattribute') && Tools::getValue('id_attribute'))
 			{
 				if (!$object->delete())
-					$this->errors[] = Tools::displayError('Failed to delete attribute.');
+					$this->errors[] = Tools::displayError('Failed to delete the attribute.');
 				else
 					Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.Tools::getAdminTokenLite('AdminAttributesGroups'));
 			}
@@ -640,13 +647,13 @@ class AdminAttributesGroupsControllerCore extends AdminController
 						$object = new $this->className();
 						if ($object->deleteSelection($_POST[$this->table.'Box']))
 							Tools::redirectAdmin(self::$currentIndex.'&conf=2'.'&token='.$this->token);
-						$this->errors[] = Tools::displayError('An error occurred while deleting selection.');
+						$this->errors[] = Tools::displayError('An error occurred while deleting this selection.');
 					}
 					else
 						$this->errors[] = Tools::displayError('You must select at least one element to delete.');
 				}
 				else
-					$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+					$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 				// clean position after delete
 				AttributeGroup::cleanPositions();
 			}
@@ -686,7 +693,11 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		{
 			foreach ($this->_list as &$list)
 				if (file_exists(_PS_IMG_DIR_.$this->fieldImageSettings['dir'].'/'.(int)$list['id_attribute'].'.jpg'))
+				{
+					if (!isset($list['color']) || !is_array($list['color']))
+						$list['color'] = array();
 					$list['color']['texture'] = '../img/'.$this->fieldImageSettings['dir'].'/'.(int)$list['id_attribute'].'.jpg';
+				}
 		}
 		else
 		{

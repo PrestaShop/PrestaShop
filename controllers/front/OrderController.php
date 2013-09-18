@@ -46,7 +46,7 @@ class OrderControllerCore extends ParentOrderController
 		if (!$this->context->cart->checkQuantities())
 		{
 			$this->step = 0;
-			$this->errors[] = Tools::displayError('An item in your cart is no longer available in this quantity, you cannot proceed with your order.');
+			$this->errors[] = Tools::displayError('An item in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.');
 		}
 
 		// Check minimal amount
@@ -155,14 +155,18 @@ class OrderControllerCore extends ParentOrderController
 					Tools::redirect('index.php?controller=order&step=2');
 				Context::getContext()->cookie->check_cgv = true;
 
-				// Check the delivery option is setted
+				// Check the delivery option is set
 				if (!$this->context->cart->isVirtualCart())
 				{
 					if (!Tools::getValue('delivery_option') && !Tools::getValue('id_carrier') && !$this->context->cart->delivery_option && !$this->context->cart->id_carrier)
 						Tools::redirect('index.php?controller=order&step=2');
 					elseif (!Tools::getValue('id_carrier') && !$this->context->cart->id_carrier)
 					{
-						foreach (Tools::getValue('delivery_option') as $delivery_option)
+						$deliveries_options = Tools::getValue('delivery_option');
+						if (!$deliveries_options) {
+							$deliveries_options = $this->context->cart->delivery_option;
+						}
+						foreach ($deliveries_options as $delivery_option)
 							if (empty($delivery_option))
 								Tools::redirect('index.php?controller=order&step=2');
 					}
@@ -249,15 +253,19 @@ class OrderControllerCore extends ParentOrderController
 	{
 		if (!Tools::getValue('multi-shipping'))
 			$this->context->cart->setNoMultishipping();
-			
+		
+		$same = Tools::isSubmit('same');
+		if(!Tools::getValue('id_address_invoice', false) && !$same)
+			$same = true;
+
 		if (!Customer::customerHasAddress($this->context->customer->id, (int)Tools::getValue('id_address_delivery'))
-			|| (!Tools::isSubmit('same') && Tools::getValue('id_address_delivery') != Tools::getValue('id_address_invoice')
+			|| (!$same && Tools::getValue('id_address_delivery') != Tools::getValue('id_address_invoice')
 				&& !Customer::customerHasAddress($this->context->customer->id, (int)Tools::getValue('id_address_invoice'))))
 			$this->errors[] = Tools::displayError('Invalid address', !Tools::getValue('ajax'));
 		else
 		{
 			$this->context->cart->id_address_delivery = (int)Tools::getValue('id_address_delivery');
-			$this->context->cart->id_address_invoice = Tools::isSubmit('same') ? $this->context->cart->id_address_delivery : (int)Tools::getValue('id_address_invoice');
+			$this->context->cart->id_address_invoice = $same ? $this->context->cart->id_address_delivery : (int)Tools::getValue('id_address_invoice');
 			
 			CartRule::autoRemoveFromCart($this->context);
 			CartRule::autoAddToCart($this->context);
@@ -343,7 +351,6 @@ class OrderControllerCore extends ParentOrderController
 
 		$this->context->smarty->assign(
 			array(
-				'free_shipping' => false, // Deprecated since a cart rule can be applied the specific carriers only
 				'is_guest' => (isset($this->context->customer->is_guest) ? $this->context->customer->is_guest : 0)
 			));
 	}

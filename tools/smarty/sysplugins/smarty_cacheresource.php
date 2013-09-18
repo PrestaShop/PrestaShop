@@ -224,7 +224,7 @@ class Smarty_Template_Cached {
     public $timestamp = false;
 
     /**
-    * Source Existance
+    * Source Existence
     * @var boolean
     */
     public $exists = false;

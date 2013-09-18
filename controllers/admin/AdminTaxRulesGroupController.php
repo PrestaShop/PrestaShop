@@ -179,6 +179,15 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				'stay' => true
 			)
 		);
+		
+		if (Shop::isFeatureActive())
+		{
+			$this->fields_form['input'][] = array(
+				'type' => 'shop',
+				'label' => $this->l('Shop association:'),
+				'name' => 'checkBoxShopAsso',
+			);
+		}
 
 		if (!($obj = $this->loadObject(true)))
 			return;
@@ -356,21 +365,21 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			if ($this->tabAccess['delete'] === '1')
 				$this->action = 'delete_tax_rule';
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 		}
 		else if (Tools::isSubmit('submitBulkdeletetax_rule'))
 		{
 			if ($this->tabAccess['delete'] === '1')
 				$this->action = 'bulk_delete_tax_rules';
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 		}
 		else if (Tools::getValue('action') == 'create_rule')
 		{
 			if ($this->tabAccess['add'] === '1')
 				$this->action = 'create_rule';
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to add here.');
+				$this->errors[] = Tools::displayError('You do not have permission to add this.');
 		}
 		else
 			parent::initProcess();
@@ -404,7 +413,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		{
 			foreach ($this->selected_states as $id_state)
 			{
-				if ($tax_rules_group->hasUniqueTaxRuleForCountry($id_country, $id_state))
+				if ($tax_rules_group->hasUniqueTaxRuleForCountry($id_country, $id_state, $id_rule))
 				{
 					$this->errors[] = Tools::displayError('A tax rule already exists for this country/state with tax only behavior');
 					continue;
@@ -449,7 +458,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
 				if (count($this->errors) == 0)
 					if (!$tr->save())
-						$this->errors[] = Tools::displayError('An error has occurred: Can\'t save the current tax rule');
+						$this->errors[] = Tools::displayError('An error has occurred: Cannot save the current tax rule.');
 			}
 		}
 
@@ -496,6 +505,19 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 	{
 		// TODO: check if the rule already exists
 		return $tr->validateController();
+	}
+	
+	protected function displayAjaxUpdateTaxRule()
+	{
+		if ($this->tabAccess['view'] === '1')
+		{
+			$id_tax_rule = Tools::getValue('id_tax_rule');
+			$tax_rules = new TaxRule((int)$id_tax_rule);
+			$output = array();
+			foreach ($tax_rules as $key => $result)
+				$output[$key] = $result;
+			die(Tools::jsonEncode($output));
+		}
 	}
 }
 

@@ -95,6 +95,14 @@ class AdminPreferencesControllerCore extends AdminController
 					'default' => '0',
 					'visibility' => Shop::CONTEXT_ALL
 				),
+				'PS_ALLOW_HTML_IFRAME' => array(
+					'title' => $this->l('Allow iframes on html fields'),
+					'desc' => $this->l('Allow iframes on fields like product description. We recommend that you leave this option disabled'),
+					'validation' => 'isBool',
+					'cast' => 'intval',
+					'type' => 'bool',
+					'default' => '0'
+				),
 				'PS_PRICE_ROUND_MODE' => array(
 					'title' => $this->l('Round mode'),
 					'desc' => $this->l('You can choose how to round prices: Always round superior, always round inferior or classic rounding.'),

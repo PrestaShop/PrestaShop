@@ -3,7 +3,7 @@
             <name>blockmyaccount</name>
             <displayName><![CDATA[My Account block]]></displayName>
             <version><![CDATA[1.2]]></version>
-            <description><![CDATA[Displays a block with links relative to user account.]]></description>
+            <description><![CDATA[Displays a block with links relative to a user&#039;s account.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>
             <is_configurable>0</is_configurable>

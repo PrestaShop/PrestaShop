@@ -1,9 +1,0 @@
-Hola {firstname} {lastname},
-
-Ha recibido un mensaje de {shop_name} sobre su pedido con referencia {order_name}.
-
-Mensaje:
-{message}
-
-
-{shop_url} desarrollado por PrestaShop™

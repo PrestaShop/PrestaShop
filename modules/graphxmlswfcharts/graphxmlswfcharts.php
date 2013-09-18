@@ -63,7 +63,7 @@ class GraphXmlSwfCharts extends ModuleGraphEngine
 			Module::__construct();
 			
 			$this->displayName = $this->l('XML/SWF Charts');
-			$this->description = $this->l('XML/SWF Charts is a simple, yet powerful tool using Adobe Flash to create attractive web charts and graphs from dynamic data.');
+			$this->description = $this->l('XML/SWF Charts are simple, yet powerful tools using Adobe Flash to create attractive web charts and graphs from dynamic data.');
 		}
 	}
 

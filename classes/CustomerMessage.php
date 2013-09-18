@@ -84,7 +84,7 @@ class CustomerMessageCore extends ObjectModel
 			LEFT OUTER JOIN `'._DB_PREFIX_.'employee` e
 				ON e.`id_employee` = cm.`id_employee`
 			WHERE ct.id_order = '.(int)$id_order.'
-				AND '.(!$private ? 'cm.`private` = 0' : '').'
+			'.(!$private ? 'AND cm.`private` = 0' : '').'
 			GROUP BY cm.id_customer_message
 			ORDER BY cm.date_add DESC
 		');
@@ -104,6 +104,11 @@ class CustomerMessageCore extends ObjectModel
 				WHERE '.$where
 			);
 	}
-
+	
+	public function delete()
+	{
+		if (!empty($this->file_name))
+			@unlink(_PS_UPLOAD_DIR_.$this->file_name);
+		return parent::delete();
+	}  
 }
-

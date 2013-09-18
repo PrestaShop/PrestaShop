@@ -71,7 +71,7 @@ define('_THEME_LANG_DIR_',			_PS_IMG_.'l/');
 define('_THEME_COL_DIR_', 			_PS_IMG_.'co/');
 define('_THEME_GENDERS_DIR_',		_PS_IMG_.'genders/');
 define('_SUPP_DIR_',      			_PS_IMG_.'su/');
-define('_PS_PROD_IMG_', 			'img/p/');
+define('_PS_PROD_IMG_', 			_PS_IMG_.'p/');
 
 /* Other URLs */
 define('_PS_JS_DIR_',               __PS_BASE_URI__.'js/');

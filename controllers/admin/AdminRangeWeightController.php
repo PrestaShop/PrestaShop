@@ -121,9 +121,9 @@ class AdminRangeWeightControllerCore extends AdminController
 			if (Tools::getValue('delimiter1') >= Tools::getValue('delimiter2'))
 				$this->errors[] = Tools::displayError('Invalid range');
 			else if (!$id && RangeWeight::rangeExist((int)Tools::getValue('id_carrier'), (float)Tools::getValue('delimiter1'), (float)Tools::getValue('delimiter2')))
-				$this->errors[] = Tools::displayError('Range already exists');
+				$this->errors[] = Tools::displayError('The range already exists');
 			else if (RangeWeight::isOverlapping((int)Tools::getValue('id_carrier'), (float)Tools::getValue('delimiter1'), (float)Tools::getValue('delimiter2'), ($id ? (int)$id : null)))
-				$this->errors[] = Tools::displayError('Ranges are overlapping');
+				$this->errors[] = Tools::displayError('Error: Ranges are overlapping');
 			else if (!count($this->errors))
 				parent::postProcess();
 		}

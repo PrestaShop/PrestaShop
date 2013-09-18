@@ -21,12 +21,7 @@
  * @param boolean $double_encode encode already encoded entitites again, used for htmlspecialchars() or htmlentities()
  * @return string escaped input string
  */
-/* PrestaShop 
-change double_encode to false by default
-function smarty_modifier_escape($string, $esc_type = 'html', $char_set = null, $double_encode = true) 
-*/
-function smarty_modifier_escape($string, $esc_type = 'html', $char_set = null, $double_encode = false)
-/* END */
+function smarty_modifier_escape($string, $esc_type = 'html', $char_set = null, $double_encode = true)
 {
     static $_double_encode = null;
     if ($_double_encode === null) {

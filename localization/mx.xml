@@ -5,6 +5,7 @@
 	</currencies>
 	<languages>
 		<language iso_code="mx" />
+		<language iso_code="es" />
 	</languages>
 	<taxes>
 		<tax id="1" name="IVA MX 16%" rate="16" />

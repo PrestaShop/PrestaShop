@@ -66,13 +66,13 @@ class AdminMetaControllerCore extends AdminController
 			),
 			'PS_ALLOW_ACCENTED_CHARS_URL' => array(
 				'title' => $this->l('Accented URL'),
-				'desc' => $this->l('Enable if you want to allow accented characters in your friendly URLs.'),
+				'desc' => $this->l('Enable if you want to allow accented characters in your friendly URLs.').' '.$this->l('You should only activate this option if you are using non-latin characters ; for all the latin charsets, your SEO will be better without this option.'),
 				'validation' => 'isBool',
 				'cast' => 'intval',
 				'type' => 'bool'
 			),
 			'PS_CANONICAL_REDIRECT' => array(
-				'title' => $this->l('Automatically redirect to the canonical URL.'),
+				'title' => $this->l('Automatically redirect to the canonical URL'),
 				'desc' => $this->l('Recommended, but your theme must be compliant.'),
 				'validation' => 'isBool',
 				'cast' => 'intval',
@@ -139,7 +139,7 @@ class AdminMetaControllerCore extends AdminController
 			$this->url = ShopUrl::getShopUrls($this->context->shop->id)->where('main', '=', 1)->getFirst();
 			if ($this->url)
 			{
-				$shop_url_options['description'] = $this->l('Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values bellow.');
+				$shop_url_options['description'] = $this->l('Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.');
 				$shop_url_options['fields'] = array(
 					'domain' => array(
 						'title' =>	$this->l('Shop domain'),
@@ -249,7 +249,7 @@ class AdminMetaControllerCore extends AdminController
 
  		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Meta-Tags'),
+				'title' => $this->l('Meta tags'),
 				'image' => '../img/admin/metatags.gif'
 			),
 			'input' => array(
@@ -310,7 +310,7 @@ class AdminMetaControllerCore extends AdminController
 					'name' => 'url_rewrite',
 					'lang' => true,
 					'required' => true,
-					'hint' => $this->l('Only letters and the minus (-) character are allowed'),
+					'hint' => $this->l('Only letters and hyphens are allowed'),
 					'desc' => $this->l('e.g. "contacts" for http://mysite.com/shop/contacts to redirect to http://mysite.com/shop/contact-form.php'),
 					'size' => 50
 				),
@@ -343,7 +343,7 @@ class AdminMetaControllerCore extends AdminController
 
 			if (!$defaultLangIsValidated && !$englishLangIsValidated)
 			{
-				$this->errors[] = Tools::displayError('URL rewrite field must be filled at least in default or English language.');
+				$this->errors[] = Tools::displayError('The URL rewrite field must be filled in either the default or English language.');
 				return false;
 			}
 
@@ -362,6 +362,9 @@ class AdminMetaControllerCore extends AdminController
 		}
 		else if (Tools::isSubmit('submitRobots'))
 			$this->generateRobotsFile();
+
+		if (Tools::isSubmit('PS_ROUTE_product_rule'))
+			Tools::clearCache($this->context->smarty);		
 
 		return parent::postProcess();
 	}
@@ -449,7 +452,7 @@ class AdminMetaControllerCore extends AdminController
 
 		$rule = Tools::getValue('PS_ROUTE_'.$route_id);
 		if (!Validate::isRoutePattern($rule))
-			$this->errors[] = sprintf('The route %s is not valide', htmlspecialchars($rule));
+			$this->errors[] = sprintf('The route %s is not valid', htmlspecialchars($rule));
 		else
 		{
 			if (!$rule || $rule == $default_routes[$route_id]['rule'])
@@ -467,7 +470,6 @@ class AdminMetaControllerCore extends AdminController
 			else
 				Configuration::updateValue('PS_ROUTE_'.$route_id, $rule);
 		}
-		
 	}
 
 	/**
@@ -476,11 +478,21 @@ class AdminMetaControllerCore extends AdminController
 	public function updateOptionPsRewritingSettings()
 	{
 		Configuration::updateValue('PS_REWRITING_SETTINGS', (int)Tools::getValue('PS_REWRITING_SETTINGS'));
-		Tools::generateHtaccess($this->ht_file, null, null, '', Tools::getValue('PS_HTACCESS_DISABLE_MULTIVIEWS'), false, Tools::getValue('PS_HTACCESS_DISABLE_MODSEC'));
-
-		Tools::enableCache();
-		Tools::clearCache($this->context->smarty);
-		Tools::restoreCacheSettings();
+		if (Tools::generateHtaccess($this->ht_file, null, null, '', Tools::getValue('PS_HTACCESS_DISABLE_MULTIVIEWS'), false, Tools::getValue('PS_HTACCESS_DISABLE_MODSEC')))
+		{
+			Tools::enableCache();
+			Tools::clearCache($this->context->smarty);
+			Tools::restoreCacheSettings();
+		}
+		else
+		{
+			Configuration::updateValue('PS_REWRITING_SETTINGS', 0);
+			// Message copied/pasted from the information tip
+			$message = $this->l('Before being able to use this tool, you need to:');
+			$message .= '<br />- '.$this->l('Create a blank .htaccess in your root directory.');
+			$message .= '<br />- '.$this->l('Give it write permissions (CHMOD 666 on Unix system)');
+			$this->errors[] = $message;
+		}
 	}
 
 	public function updateOptionPsRouteProductRule()
@@ -529,9 +541,10 @@ class AdminMetaControllerCore extends AdminController
 			{
 				$this->url->domain = $value;
 				$this->url->update();
+				Configuration::updateGlobalValue('PS_SHOP_DOMAIN', $value);
 			}
 			else
-				$this->errors[] = Tools::displayError('Domain is not valid');
+				$this->errors[] = Tools::displayError('This domain is not valid.');
 		}
 	}
 
@@ -546,9 +559,10 @@ class AdminMetaControllerCore extends AdminController
 			{
 				$this->url->domain_ssl = $value;
 				$this->url->update();
+				Configuration::updateGlobalValue('PS_SHOP_DOMAIN_SSL', $value);
 			}
 			else
-				$this->errors[] = Tools::displayError('SSL Domain is not valid');
+				$this->errors[] = Tools::displayError('The SSL domain is not valid.');
 		}
 	}
 
@@ -648,7 +662,7 @@ class AdminMetaControllerCore extends AdminController
 		}
 
 		$tab['GB'] = array(
-			'orderby=','orderway=','tag=','id_currency=','search_query=','back=','utm_source=','utm_medium=','utm_campaign=','n='
+			'orderby=','orderway=','tag=','id_currency=','search_query=','back=','n='
 		);
 
 		foreach ($disallow_controllers as $controller)

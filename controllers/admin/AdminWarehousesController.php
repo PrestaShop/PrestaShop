@@ -424,7 +424,7 @@ class AdminWarehousesControllerCore extends AdminController
 		$address = new Address($object->id_address);
 		if (Validate::isLoadedObject($address))
 		{
-			$address->id_warehouse = $object->id_address;
+			$address->id_warehouse = (int)$object->id;
 			$address->save();
 		}
 
@@ -532,7 +532,7 @@ class AdminWarehousesControllerCore extends AdminController
 		{
 			foreach ($validation as $item)
 				$this->errors[] = $item;
-			$this->errors[] = Tools::displayError('The address is not correct. Check if all required fields are filled.');
+			$this->errors[] = Tools::displayError('The address is not correct. Please make sure all of the required fields are completed.');
 		}
 		else // valid
 		{

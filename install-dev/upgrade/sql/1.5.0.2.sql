@@ -411,7 +411,7 @@ ALTER TABLE `PREFIX_image_type` ADD `id_theme` INT(11) NOT NULL AFTER `id_image_
 ALTER TABLE `PREFIX_image_type` ADD UNIQUE (`id_theme` ,`name`);
 UPDATE `PREFIX_image_type` SET `id_theme`=1;
 
-CREATE TABLE `PREFIX_webservice_account_shop` (
+CREATE TABLE IF NOT EXISTS `PREFIX_webservice_account_shop` (
 `id_webservice_account` INT( 11 ) UNSIGNED NOT NULL,
 `id_shop` INT( 11 ) UNSIGNED NOT NULL,
 PRIMARY KEY (`id_webservice_account` , `id_shop`),

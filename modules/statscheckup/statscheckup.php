@@ -102,9 +102,9 @@ class StatsCheckUp extends Module
 		$languages = $db->executeS($sql);
 
 		$arrayColors = array(
-			0 => '<img src="../modules/'.$this->name.'/red.png" alt="'.$this->l('bad').'" />',
-			1 => '<img src="../modules/'.$this->name.'/orange.png" alt="'.$this->l('average').'" />',
-			2 => '<img src="../modules/'.$this->name.'/green.png" alt="'.$this->l('good').'" />'
+			0 => '<img src="../modules/'.$this->name.'/red.png" alt="'.$this->l('Bad').'" />',
+			1 => '<img src="../modules/'.$this->name.'/orange.png" alt="'.$this->l('Average').'" />',
+			2 => '<img src="../modules/'.$this->name.'/green.png" alt="'.$this->l('Good').'" />'
 		);
 		$tokenProducts = Tools::getAdminToken('AdminProducts'.(int)(Tab::getIdFromClassName('AdminProducts')).(int)Context::getContext()->employee->id);
 		$divisor = 4;
@@ -145,13 +145,13 @@ class StatsCheckUp extends Module
 		$result = $db->executeS($sql);
 
 		if (!$result)
-			return $this->l('No product found');
+			return $this->l('No product was found.');
 
 		$arrayConf = array(
-			'DESCRIPTIONS' => array('name' => $this->l('Descriptions'), 'text' => $this->l('chars (without HTML)')),
-			'IMAGES' => array('name' => $this->l('images'), 'text' => $this->l('images')),
+			'DESCRIPTIONS' => array('name' => $this->l('Descriptions'), 'text' => $this->l('Chars (without HTML)')),
+			'IMAGES' => array('name' => $this->l('Images'), 'text' => $this->l('Images')),
 			'SALES' => array('name' => $this->l('Sales'), 'text' => $this->l('orders / month')),
-			'STOCK' => array('name' => $this->l('Available quantities for sale'), 'text' => $this->l('items'))
+			'STOCK' => array('name' => $this->l('Available quantity for sale'), 'text' => $this->l('Items'))
 		);
 
 		$this->html = '
@@ -173,11 +173,11 @@ class StatsCheckUp extends Module
 			foreach ($arrayConf as $conf => $translations)
 				$this->html .= '<tr>
 					<th>'.$translations['name'].'</th>
-					<td>'.$this->l('lower than').'
+					<td>'.$this->l('Less than').'
 						 <input type="text" name="CHECKUP_'.$conf.'_LT"
 						 	value="'.Tools::safeOutput(Tools::getValue('CHECKUP_'.$conf.'_LT', Configuration::get('CHECKUP_'.$conf.'_LT'))).'" /> '.$translations['text'].'
 					</td>
-					<td>'.$this->l('greater than').'
+					<td>'.$this->l('Greater than').'
 						 <input type="text" name="CHECKUP_'.$conf.'_GT"
 						 	value="'.Tools::safeOutput(Tools::getValue('CHECKUP_'.$conf.'_GT', Configuration::get('CHECKUP_'.$conf.'_GT'))).'" /> '.$translations['text'].'
 					</td>
@@ -205,9 +205,9 @@ class StatsCheckUp extends Module
 		foreach ($languages as $language)
 			$this->html .= '<th>'.$this->l('Desc.').' ('.strtoupper($language['iso_code']).')</th>';
 		$this->html .= '
-				<th>'.$this->l('images').'</th>
+				<th>'.$this->l('Images').'</th>
 				<th>'.$this->l('Sales').'</th>
-				<th>'.$this->l('Available quantities for sale').'</th>
+				<th>'.$this->l('Available quantity for sale').'</th>
 				<th>'.$this->l('Global').'</th>
 			</tr>';
 		foreach ($result as $row)
@@ -278,9 +278,9 @@ class StatsCheckUp extends Module
 		foreach ($languages as $language)
 			$this->html .= '<th>'.$this->l('Desc.').' ('.strtoupper($language['iso_code']).')</th>';
 		$this->html .= '
-				<th>'.$this->l('images').'</th>
+				<th>'.$this->l('Images').'</th>
 				<th>'.$this->l('Sales').'</th>
-				<th>'.$this->l('Available quantities for sale').'</th>
+				<th>'.$this->l('Available quantity for sale').'</th>
 				<th>'.$this->l('Global').'</th>
 			</tr>
 			<tr>

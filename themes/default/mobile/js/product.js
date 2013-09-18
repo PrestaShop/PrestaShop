@@ -96,7 +96,7 @@ var ProductFn = (function()
 				return true;
 			}
 			ProductFn.already_init = true;
-			if ($('.attributes_group select').length) {
+			if ($('.attributes_group select').length || $('.attributes_group input[type=radio]').length) {
 				initAttrSelector();
 			}
 			ProductFn.checkMinimalQuantity();

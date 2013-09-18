@@ -53,7 +53,8 @@ class TranslateCore
 			$iso = Context::getContext()->language->iso_code;
 			if (empty($iso))
 				$iso = Language::getIsoById((int)(Configuration::get('PS_LANG_DEFAULT')));			
-			include_once(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
+			if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php'))
+				include_once(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
 		}
 
 		if (isset($modules_tabs[strtolower($class)]))
@@ -128,7 +129,7 @@ class TranslateCore
 		static $translations_merged = array();
 
 		$name = $module instanceof Module ? $module->name : $module;
-		if (!isset($translations_merged[$name]))
+		if (!isset($translations_merged[$name]) && isset(Context::getContext()->language))
 		{
 			$filesByPriority = array(
 				// Translations in theme
@@ -179,7 +180,13 @@ class TranslateCore
 			if ($js)
 				$ret = addslashes($ret);
 
-			$lang_cache[$cache_key] = str_replace('"', '&quot;', $ret);
+                        $ret = str_replace('"', '&quot;', $ret);
+
+                        if ($sprintf === null)
+                                $lang_cache[$cache_key] = $ret; 
+                        else    
+                                return $ret;
+
 		}
 		return $lang_cache[$cache_key];
 	}

@@ -40,7 +40,7 @@ class BlockPermanentLinks extends Module
 		parent::__construct();
 		
 		$this->displayName = $this->l('Permanent links block');
-		$this->description = $this->l('Adds a block that displays permanent links such as sitemap, contact, etc.');
+		$this->description = $this->l('Adds a block that displays permanent links such as sitemap, contact, etc...');
 	}
 
 	public function install()

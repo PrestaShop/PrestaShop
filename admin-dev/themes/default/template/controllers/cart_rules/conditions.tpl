@@ -42,12 +42,12 @@
 <label>{l s='Total available'}</label>
 <div class="margin-form">
 	<input type="text" name="quantity" value="{$currentTab->getFieldValue($currentObject, 'quantity')|intval}" />
-	<p class="preference_description">{l s='The cart rule will be applied to the first X customers only.'}</p>
+	<p class="preference_description">{l s='The cart rule will be applied to the first "X" customers only.'}</p>
 </div>
 <label>{l s='Total available for each user.'}</label>
 <div class="margin-form">
 	<input type="text" name="quantity_per_user" value="{$currentTab->getFieldValue($currentObject, 'quantity_per_user')|intval}" />
-	<p class="preference_description">{l s='A customer will only be able to use the cart rule X time(s).'}</p>
+	<p class="preference_description">{l s='A customer will only be able to use the cart rule "X" time(s).'}</p>
 </div>
 {if $countries.unselected|@count + $countries.selected|@count > 1}
 <br />
@@ -98,7 +98,7 @@
 				<p><strong>{l s='Unselected carriers'}</strong></p>
 				<select id="carrier_select_1" style="border:1px solid #AAAAAA;width:400px;height:160px" multiple>
 					{foreach from=$carriers.unselected item='carrier'}
-						<option value="{$carrier.id_carrier|intval}">&nbsp;{$carrier.name|escape}</option>
+						<option value="{$carrier.id_reference|intval}">&nbsp;{$carrier.name|escape}</option>
 					{/foreach}
 				</select><br /><br />
 				<a
@@ -112,7 +112,7 @@
 				<p><strong>{l s='Selected carriers'}</strong></p>
 				<select name="carrier_select[]" id="carrier_select_2" style="border:1px solid #AAAAAA;width:400px;height:160px" multiple>
 					{foreach from=$carriers.selected item='carrier'}
-						<option value="{$carrier.id_carrier|intval}">&nbsp;{$carrier.name|escape}</option>
+						<option value="{$carrier.id_reference|intval}">&nbsp;{$carrier.name|escape}</option>
 					{/foreach}
 				</select><br /><br />
 				<a
@@ -207,12 +207,12 @@
 <br />
 <input type="checkbox" id="product_restriction" name="product_restriction" value="1" {if $product_rule_groups|@count}checked="checked"{/if} /> <strong>{l s='Product selection'}</strong>
 <div id="product_restriction_div">
-	<table id="product_rule_group_table" style="border:1px solid #AAAAAA;margin:10px 0 10px 0;padding:10px 10px 10px 10px;background-color:#FFF5D3;width:600px" cellpadding="0" cellspacing="0">
+	<table id="product_rule_group_table" style="border:1px solid #AAAAAA;margin:10px 0 10px 0;padding:10px 10px 10px 10px;background-color:#FFF5D3;width:600px;display:none" cellpadding="0" cellspacing="0">
 		{foreach from=$product_rule_groups item='product_rule_group'}
 			{$product_rule_group}
 		{/foreach}
 	</table>
-	<a href="javascript:addProductRuleGroup();">
+	<a href="javascript:addProductRuleGroup();" style="margin-top:5px;display:block">
 		<img src="../img/admin/add.gif" alt="{l s='Add'}" title="{l s='Add'}" /> {l s='Product selection'}
 	</a>
 </div>

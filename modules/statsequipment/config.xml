@@ -3,7 +3,7 @@
             <name>statsequipment</name>
             <displayName><![CDATA[Software]]></displayName>
             <version><![CDATA[1]]></version>
-            <description><![CDATA[Display the software used by your visitors.]]></description>
+            <description><![CDATA[Display the software used by visitors.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[analytics_stats]]></tab>
             <is_configurable>0</is_configurable>

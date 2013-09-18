@@ -33,7 +33,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	/**
 	 * @var string The extension of the image to display
 	 */
-	protected $imgExtension = 'jpg';
+	protected $imgExtension;
 
 	/**
 	 * @var array The type of images (general, categories, manufacturers, suppliers, stores...)
@@ -119,10 +119,18 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 		// display image content if needed
 		else if ($this->imgToDisplay)
 		{
+			if(empty($this->imgExtension)){
+				$imginfo = getimagesize($this->imgToDisplay);
+				$this->imgExtension = image_type_to_extension($imginfo[2],false);
+			}
+
 			$imageResource = false;
-			$types = array('jpg' => array('function' => 'imagecreatefromjpeg', 'Content-Type' => 'image/jpeg'),
-							'gif' => array('function' => 'imagecreatefromgif', 'Content-Type' => 'image/gif')
-							);
+			$types = array(
+				'jpg' => array('function' => 'imagecreatefromjpeg', 'Content-Type' => 'image/jpeg'),
+				'jpeg' => array('function' => 'imagecreatefromjpeg', 'Content-Type' => 'image/jpeg'),
+				'png' => array('function' => 'imagecreatefrompng', 'Content-Type' => 'image/png'),
+				'gif' => array('function' => 'imagecreatefromgif', 'Content-Type' => 'image/gif')
+			);
 
 			if (array_key_exists($this->imgExtension, $types))
 				$imageResource = @$types[$this->imgExtension]['function']($this->imgToDisplay);

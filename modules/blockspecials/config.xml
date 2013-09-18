@@ -2,8 +2,8 @@
         <module>
             <name>blockspecials</name>
             <displayName><![CDATA[Specials block]]></displayName>
-            <version><![CDATA[0.8]]></version>
-            <description><![CDATA[Adds a block with current product specials.]]></description>
+            <version><![CDATA[0.9]]></version>
+            <description><![CDATA[Adds a block displaying current product specials.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[pricing_promotion]]></tab>
             <is_configurable>1</is_configurable>

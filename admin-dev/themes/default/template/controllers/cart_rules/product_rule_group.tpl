@@ -20,7 +20,7 @@
 			<option value="attributes">{l s='Attributes'}</option>
 			<option value="categories">{l s='Categories:'}</option>
 			<option value="manufacturers">{l s='Manufacturers:'}</option>
-			<option value="suppliers">{l s='Suppliers:'}</option>
+			<option value="suppliers">{l s='Suppliers'}</option>
 		</select>
 		<a href="javascript:addProductRule({$product_rule_group_id|intval});">
 			<input type="button" class="button" value="OK" />

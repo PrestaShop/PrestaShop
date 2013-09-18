@@ -23,8 +23,13 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture name=path}{l s='Login:'}{/capture}
-{include file="$tpl_dir./breadcrumb.tpl"}
+{capture name=path}
+	{if !isset($email_create)}{l s='Authentication'}{else}
+		<a href="{$link->getPageLink('authentication', true)|escape:'html'}" rel="nofollow" title="{l s='Authentication'}">{l s='Authentication'}</a>
+		<span class="navigation-pipe">{$navigationPipe}</span>{l s='Create your account'}
+	{/if}
+{/capture}
+	{include file="$tpl_dir./breadcrumb.tpl"}
 
 <script type="text/javascript">
 // <![CDATA[
@@ -54,7 +59,7 @@ $(function(){ldelim}
 //]]>
 {literal}
 $(document).ready(function() {
-	$('#company').blur(function(){
+	$('#company').on('input',function(){
 		vat_number();
 	});
 	vat_number();
@@ -69,10 +74,11 @@ $(document).ready(function() {
 {/literal}
 </script>
 
-<h1>{if !isset($email_create)}{l s='Log in'}{else}{l s='Create an account'}{/if}</h1>
-
+<h1>{if !isset($email_create)}{l s='Authentication'}{else}{l s='Create an account'}{/if}</h1>
+{if !isset($back) || $back != 'my-account'}{assign var='current_step' value='login'}{include file="$tpl_dir./order-steps.tpl"}{/if} 
 {include file="$tpl_dir./errors.tpl"}
 {assign var='stateExist' value=false}
+{assign var="postCodeExist" value=false}
 {if !isset($email_create)}
 	<script type="text/javascript">
 	{literal}
@@ -150,7 +156,7 @@ $(document).ready(function() {
 		</ol>
 	</div>
 	{/if}-->
-	<form action="{$link->getPageLink('authentication', true)}" method="post" id="create-account_form" class="std">
+	<form action="{$link->getPageLink('authentication', true)|escape:'html'}" method="post" id="create-account_form" class="std">
 		<fieldset>
 			<h3>{l s='Create an account'}</h3>
 			<div class="form_content clearfix">
@@ -169,7 +175,7 @@ $(document).ready(function() {
 		</fieldset>
 	</form>
 
-	<form action="{$link->getPageLink('authentication', true)}" method="post" id="login_form" class="std">
+	<form action="{$link->getPageLink('authentication', true)|escape:'html'}" method="post" id="login_form" class="std">
 		<fieldset>
 			<h3>{l s='Already registered?'}</h3>
 			<div class="form_content clearfix">
@@ -181,19 +187,19 @@ $(document).ready(function() {
 					<label for="passwd">{l s='Password'}</label>
 					<span><input type="password" id="passwd" name="passwd" value="{if isset($smarty.post.passwd)}{$smarty.post.passwd|stripslashes}{/if}" class="account_input" /></span>
 				</p>
-				<p class="lost_password"><a href="{$link->getPageLink('password')}">{l s='Forgot your password?'}</a></p>
+				<p class="lost_password"><a href="{$link->getPageLink('password')|escape:'html'}" title="{l s='Recover your forgotten password'}" rel="nofollow">{l s='Forgot your password?'}</a></p>
 				<p class="submit">
 					{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'htmlall':'UTF-8'}" />{/if}
-					<input type="submit" id="SubmitLogin" name="SubmitLogin" class="button" value="{l s='Log in'}" />
+					<input type="submit" id="SubmitLogin" name="SubmitLogin" class="button" value="{l s='Authentication'}" />
 				</p>
 			</div>
 		</fieldset>
 	</form>
 
 	{if isset($inOrderProcess) && $inOrderProcess && $PS_GUEST_CHECKOUT_ENABLED}
-	<form action="{$link->getPageLink('authentication', true, NULL, "back=$back")}" method="post" id="new_account_form" class="std clearfix">
+	<form action="{$link->getPageLink('authentication', true, NULL, "back=$back")|escape:'html'}" method="post" id="new_account_form" class="std clearfix">
 		<fieldset>
-			<h3>{l s='Instant Checkout'}</h3>
+			<h3>{l s='Instant checkout'}</h3>
 			<div id="opc_account_form" style="display: block; ">
 				<!-- Account -->
 				<p class="required text">
@@ -254,11 +260,11 @@ $(document).ready(function() {
 				</p>
 				{if isset($newsletter) && $newsletter}
 					<p class="checkbox">
-						<input type="checkbox" name="newsletter" id="newsletter" value="1" {if isset($smarty.post.newsletter) && $smarty.post.newsletter == '1'}checked="checked"{/if} />
+						<input type="checkbox" name="newsletter" id="newsletter" value="1" {if isset($smarty.post.newsletter) && $smarty.post.newsletter == '1'}checked="checked"{/if} autocomplete="off"/>
 						<label for="newsletter">{l s='Sign up for our newsletter!'}</label>
 					</p>
 					<p class="checkbox">
-						<input type="checkbox" name="optin" id="optin" value="1" {if isset($smarty.post.optin) && $smarty.post.optin == '1'}checked="checked"{/if} />
+						<input type="checkbox" name="optin" id="optin" value="1" {if isset($smarty.post.optin) && $smarty.post.optin == '1'}checked="checked"{/if} autocomplete="off"/>
 						<label for="optin">{l s='Receive special offers from our partners!'}</label>
 					</p>
 				{/if}
@@ -282,6 +288,7 @@ $(document).ready(function() {
 							<input type="text" class="text" name="address1" id="address1" value="{if isset($smarty.post.address1)}{$smarty.post.address1}{/if}" />
 						</p>
 						{elseif $field_name eq "postcode"}
+						{assign var='postCodeExist' value=true}
 						<p class="required postcode text">
 							<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
 							<input type="text" class="text" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onblur="$('#postcode').val($('#postcode').val().toUpperCase());" />
@@ -299,7 +306,6 @@ $(document).ready(function() {
 						<p class="required select">
 							<label for="id_country">{l s='Country'} <sup>*</sup></label>
 							<select name="id_country" id="id_country">
-								<option value="">-</option>
 								{foreach from=$countries item=v}
 									<option value="{$v.id_country}" {if ($sl_country == $v.id_country)} selected="selected"{/if}>{$v.name}</option>
 								{/foreach}
@@ -307,7 +313,6 @@ $(document).ready(function() {
 						</p>
 						{elseif $field_name eq "State:name"}
 						{assign var='stateExist' value=true}
-
 						<p class="required id_state select">
 							<label for="id_state">{l s='State'} <sup>*</sup></label>
 							<select name="id_state" id="id_state">
@@ -315,20 +320,26 @@ $(document).ready(function() {
 							</select>
 						</p>
 						{elseif $field_name eq "phone"}
-						<p class="required text">
-							<label for="phone">{l s='Phone'} <sup>*</sup></label>
-							<input type="text" class="text" name="phone" id="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{/if} "/>
+						<p class="{if isset($one_phone_at_least) && $one_phone_at_least}required {/if}text">
+							<label for="phone">{l s='Phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>*</sup>{/if}</label>
+							<input type="text" class="text" name="phone" id="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{/if}"/>
 						</p>
 					{/if}
 				{/foreach}
 				{if $stateExist eq false}
-					<p class="required id_state select">
+					<p class="required id_state select hidden">
 						<label for="id_state">{l s='State'} <sup>*</sup></label>
 						<select name="id_state" id="id_state">
 							<option value="">-</option>
 						</select>
 					</p>
 				{/if}
+				{if $postCodeExist eq false}
+					<p class="required postcode text hidden">
+						<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
+						<input type="text" class="text" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onblur="$('#postcode').val($('#postcode').val().toUpperCase());" />
+					</p>
+				{/if}				
 				<input type="hidden" name="alias" id="alias" value="{l s='My address'}" />
 				<input type="hidden" name="is_new_customer" id="is_new_customer" value="0" />
 				<!-- END Account -->
@@ -365,7 +376,7 @@ $(document).ready(function() {
 		</ol>
 	</div>
 	{/if}-->
-<form action="{$link->getPageLink('authentication', true)}" method="post" id="account-creation_form" class="std">
+<form action="{$link->getPageLink('authentication', true)|escape:'html'}" method="post" id="account-creation_form" class="std">
 	{$HOOK_CREATE_ACCOUNT_TOP}
 	<fieldset class="account_creation">
 		<h3>{l s='Your personal information'}</h3>
@@ -385,7 +396,7 @@ $(document).ready(function() {
 			<input onkeyup="$('#lastname').val(this.value);" type="text" class="text" id="customer_lastname" name="customer_lastname" value="{if isset($smarty.post.customer_lastname)}{$smarty.post.customer_lastname}{/if}" />
 		</p>
 		<p class="required text">
-			<label for="email">{l s='Email:'} <sup>*</sup></label>
+			<label for="email">{l s='Email'} <sup>*</sup></label>
 			<input type="text" class="text" id="email" name="email" value="{if isset($smarty.post.email)}{$smarty.post.email}{/if}" />
 		</p>
 		<p class="required password">
@@ -430,11 +441,11 @@ $(document).ready(function() {
 		</p>
 		{if $newsletter}
 		<p class="checkbox" >
-			<input type="checkbox" name="newsletter" id="newsletter" value="1" {if isset($smarty.post.newsletter) AND $smarty.post.newsletter == 1} checked="checked"{/if} />
+			<input type="checkbox" name="newsletter" id="newsletter" value="1" {if isset($smarty.post.newsletter) AND $smarty.post.newsletter == 1} checked="checked"{/if} autocomplete="off"/>
 			<label for="newsletter">{l s='Sign up for our newsletter!'}</label>
 		</p>
 		<p class="checkbox" >
-			<input type="checkbox"name="optin" id="optin" value="1" {if isset($smarty.post.optin) AND $smarty.post.optin == 1} checked="checked"{/if} />
+			<input type="checkbox"name="optin" id="optin" value="1" {if isset($smarty.post.optin) AND $smarty.post.optin == 1} checked="checked"{/if} autocomplete="off"/>
 			<label for="optin">{l s='Receive special offers from our partners!'}</label>
 		</p>
 		{/if}
@@ -465,10 +476,12 @@ $(document).ready(function() {
 		<h3>{l s='Your address'}</h3>
 		{foreach from=$dlv_all_fields item=field_name}
 			{if $field_name eq "company"}
-				<p class="text">
-					<label for="company">{l s='Company'}</label>
-					<input type="text" class="text" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{/if}" />
-				</p>
+				{if !$b2b_enable}
+					<p class="text">
+						<label for="company">{l s='Company'}</label>
+						<input type="text" class="text" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{/if}" />
+					</p>
+				{/if}
 			{elseif $field_name eq "vat_number"}
 				<div id="vat_number" style="display:none;">
 					<p class="text">
@@ -490,7 +503,7 @@ $(document).ready(function() {
 				<p class="required text">
 					<label for="address1">{l s='Address'} <sup>*</sup></label>
 					<input type="text" class="text" name="address1" id="address1" value="{if isset($smarty.post.address1)}{$smarty.post.address1}{/if}" />
-					<span class="inline-infos">{l s='Street address, P.O. box, company name, c/o'}</span>
+					<span class="inline-infos">{l s='Street address, P.O. Box, Company name, etc.'}</span>
 				</p>
 			{elseif $field_name eq "address2"}
 				<p class="text">
@@ -499,6 +512,7 @@ $(document).ready(function() {
 					<span class="inline-infos">{l s='Apartment, suite, unit, building, floor, etc...'}</span>
 				</p>
 			{elseif $field_name eq "postcode"}
+			{assign var='postCodeExist' value=true}
 				<p class="required postcode text">
 					<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
 					<input type="text" class="text" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
@@ -532,8 +546,14 @@ $(document).ready(function() {
 				</p>
 			{/if}
 		{/foreach}
+		{if $postCodeExist eq false}
+			<p class="required postcode text hidden">
+				<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
+				<input type="text" class="text" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
+			</p>
+		{/if}		
 		{if $stateExist eq false}
-			<p class="required id_state select">
+			<p class="required id_state select hidden">
 				<label for="id_state">{l s='State'} <sup>*</sup></label>
 				<select name="id_state" id="id_state">
 					<option value="">-</option>
@@ -544,15 +564,15 @@ $(document).ready(function() {
 			<label for="other">{l s='Additional information'}</label>
 			<textarea name="other" id="other" cols="26" rows="3">{if isset($smarty.post.other)}{$smarty.post.other}{/if}</textarea>
 		</p>
-		{if $one_phone_at_least}
+		{if isset($one_phone_at_least) && $one_phone_at_least}
 			<p class="inline-infos">{l s='You must register at least one phone number.'}</p>
 		{/if}
 		<p class="text">
 			<label for="phone">{l s='Home phone'}</label>
 			<input type="text" class="text" name="phone" id="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{/if}" />
 		</p>
-		<p class="text">
-			<label for="phone_mobile">{l s='Mobile phone'} {if $one_phone_at_least}<sup>*</sup>{/if}</label>
+		<p class="{if isset($one_phone_at_least) && $one_phone_at_least}required {/if} text">
+			<label for="phone_mobile">{l s='Mobile phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>*</sup>{/if}</label>
 			<input type="text" class="text" name="phone_mobile" id="phone_mobile" value="{if isset($smarty.post.phone_mobile)}{$smarty.post.phone_mobile}{/if}" />
 		</p>
 		<p class="required text" id="address_alias">

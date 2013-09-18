@@ -321,6 +321,46 @@
 			catch(e){}
 			return false;
 		});
+		
+		$('.toggle_favorite').live('click', function(event)
+	    {
+	      var el = $(this);
+	      var value_pref = el.data('value');
+	      var module_pref = el.data('module');
+	      var action_pref = 'f';
+	      try
+	      {
+	        resAjax = $.ajax({
+	            type:"POST",
+	            url : ajaxCurrentIndex,
+	            async: true,
+	            data : {
+	              ajax : "1",
+	              token : token,
+	              controller : "AdminModules",
+	              action : "saveFavoritePreferences",
+	              action_pref : action_pref,
+	              module_pref : module_pref,
+	              value_pref : value_pref
+	            },
+	            success : function(data)
+	            {
+	              // res.status  = cache or refresh
+	              if (data == 'OK')
+	              {
+	                el.parent('div').find('.toggle_favorite').toggle();
+	              }
+	                
+	            },
+	            error: function(res,textStatus,jqXHR)
+	            {
+	              //jAlert("TECHNICAL ERROR"+res);
+	            }
+	        });
+	      }
+	      catch(e){}
+	      return false;
+	    });
 	});
 
 	{/literal}

@@ -126,7 +126,7 @@ class AdminAddressesControllerCore extends AdminController
 					'name' => 'phone_mobile',
 					'size' => 33,
 					'required' => false,
-					'desc' => sprintf($this->l('You must register at least one phone number %s'), '<sup>*</sup>')
+					'desc' => Configuration::get('PS_ONE_PHONE_AT_LEAST')? sprintf($this->l('You must register at least one phone number %s'), '<sup>*</sup>') : ''
 				),
 				array(
 					'type' => 'textarea',
@@ -152,18 +152,7 @@ class AdminAddressesControllerCore extends AdminController
 			$token_customer = Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$this->context->employee->id);
 		}
 
-		// @todo in 1.4, this include was done before the class declaration
-		// We should use a hook now
-		if (Configuration::get('VATNUMBER_MANAGEMENT') && file_exists(_PS_MODULE_DIR_.'vatnumber/vatnumber.php'))
-			include_once(_PS_MODULE_DIR_.'vatnumber/vatnumber.php');
-		if (Configuration::get('VATNUMBER_MANAGEMENT'))
-			if (file_exists(_PS_MODULE_DIR_.'vatnumber/vatnumber.php') && VatNumber::isApplicable(Configuration::get('PS_COUNTRY_DEFAULT')))
-				$vat = 'is_applicable';
-			else
-				$vat = 'management';
-
 		$this->tpl_form_vars = array(
-			'vat' => isset($vat) ? $vat : null,
 			'customer' => isset($customer) ? $customer : null,
 			'tokenCustomer' => isset ($token_customer) ? $token_customer : null
 		);
@@ -278,7 +267,7 @@ class AdminAddressesControllerCore extends AdminController
 			{
 				$temp_fields[] = array(
 					'type' => 'select',
-					'label' => $this->l('Country:'),
+					'label' => $this->l('Country'),
 					'name' => 'id_country',
 					'required' => false,
 					'default_value' => (int)$this->context->country->id,
@@ -318,7 +307,7 @@ class AdminAddressesControllerCore extends AdminController
 			if (Validate::isLoadedObject($customer))
 				$_POST['id_customer'] = $customer->id;
 			else
-				$this->errors[] = Tools::displayError('This e-mail address is not registered.');
+				$this->errors[] = Tools::displayError('This email address is not registered.');
 		}
 		else if ($id_customer = Tools::getValue('id_customer'))
 		{
@@ -331,41 +320,30 @@ class AdminAddressesControllerCore extends AdminController
 		else
 			$this->errors[] = Tools::displayError('Unknown customer');
 		if (Country::isNeedDniByCountryId(Tools::getValue('id_country')) && !Tools::getValue('dni'))
-			$this->errors[] = Tools::displayError('Identification number is incorrect or has already been used.');
+			$this->errors[] = Tools::displayError('The identification number is incorrect or has already been used.');
 
 		/* If the selected country does not contain states */
 		$id_state = (int)Tools::getValue('id_state');
 		$id_country = (int)Tools::getValue('id_country');
 		$country = new Country((int)$id_country);
 		if ($country && !(int)$country->contains_states && $id_state)
-			$this->errors[] = Tools::displayError('You have selected a state for a country that does not contain states.');
+			$this->errors[] = Tools::displayError('You\'ve selected a state for a country that does not contain states.');
 
 		/* If the selected country contains states, then a state have to be selected */
 		if ((int)$country->contains_states && !$id_state)
 			$this->errors[] = Tools::displayError('An address located in a country containing states must have a state selected.');
 
-		/* Check zip code */
-		if ($country->need_zip_code)
-		{
-			$zip_code_format = $country->zip_code_format;
-			if (($postcode = Tools::getValue('postcode')) && $zip_code_format)
-			{
-				$zip_regexp = '/^'.$zip_code_format.'$/ui';
-				$zip_regexp = str_replace(' ', '( |)', $zip_regexp);
-				$zip_regexp = str_replace('-', '(-|)', $zip_regexp);
-				$zip_regexp = str_replace('N', '[0-9]', $zip_regexp);
-				$zip_regexp = str_replace('L', '[a-zA-Z]', $zip_regexp);
-				$zip_regexp = str_replace('C', $country->iso_code, $zip_regexp);
-				if (!preg_match($zip_regexp, $postcode))
-					$this->errors[] = Tools::displayError('Your Postal Code/Zip Code is incorrect.').'<br />'.
-									   Tools::displayError('Must be typed as follows:').' '.
-									   str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $zip_code_format)));
-			}
-			else if ($zip_code_format)
-				$this->errors[] = Tools::displayError('Postal Code/Zip Code required.');
-			else if ($postcode && !preg_match('/^[0-9a-zA-Z -]{4,9}$/ui', $postcode))
-				$this->errors[] = Tools::displayError('Your Postal Code/Zip Code is incorrect.');
-		}
+		$postcode = Tools::getValue('postcode');		
+		/* Check zip code format */
+		if ($country->zip_code_format && !$country->checkZipCode($postcode))
+			$this->errors[] = Tools::displayError('Your Postal / Zip Code is incorrect.').'<br />'.Tools::displayError('It must be entered as follows:').' '.str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
+		elseif(empty($postcode) && $country->need_zip_code)
+			$this->errors[] = Tools::displayError('A Zip / Postal code is required.');
+		elseif ($postcode && !Validate::isPostCode($postcode))
+			$this->errors[] = Tools::displayError('The Zip / Postal code is invalid.');
+
+		if (Configuration::get('PS_ONE_PHONE_AT_LEAST') && !Tools::getValue('phone') && !Tools::getValue('phone_mobile'))		
+			$this->errors[] = Tools::displayError('You must register at least one phone number.');
 
 		/* If this address come from order's edition and is the same as the other one (invoice or delivery one)
 		** we delete its id_address to force the creation of a new one */
@@ -454,5 +432,42 @@ class AdminAddressesControllerCore extends AdminController
 			}
 		}
 		die;
+	}
+
+	/**
+	 * Object Delete
+	 */
+	public function processDelete()
+	{
+		if (Validate::isLoadedObject($object = $this->loadObject()))
+			if (!$object->isUsed())
+				$this->deleted = false;
+
+		return parent::processDelete();
+	}
+
+	/**
+	 * Delete multiple items
+	 *
+	 * @return boolean true if succcess
+	 */
+	protected function processBulkDelete()
+	{
+		if (is_array($this->boxes) && !empty($this->boxes))
+		{
+			$deleted = false;
+			foreach ($this->boxes as $id)
+			{
+				$to_delete = new Address((int)$id);
+				if ($to_delete->isUsed())
+				{
+					$deleted = true;
+					break;
+				}
+			}
+			$this->deleted = $deleted;
+		}
+
+		return parent::processBulkDelete();
 	}
 }

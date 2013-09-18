@@ -156,11 +156,8 @@
     <tab id="Carriers" id_parent="Shipping" active="1">
       <class_name>AdminCarriers</class_name>
     </tab>
-    <tab id="Price_Ranges" id_parent="Shipping" active="1">
-      <class_name>AdminRangePrice</class_name>
-    </tab>
-    <tab id="Weight_Ranges" id_parent="Shipping" active="1">
-      <class_name>AdminRangeWeight</class_name>
+    <tab id="CarrierWizard" id_parent="Shipping" active="1">
+      <class_name>AdminCarrierWizard</class_name>
     </tab>
     <tab id="Localization_1" id_parent="Localization" active="1">
       <class_name>AdminLocalization</class_name>

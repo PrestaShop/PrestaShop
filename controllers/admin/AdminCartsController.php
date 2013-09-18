@@ -101,15 +101,15 @@ class AdminCartsControllerCore extends AdminController
 	{
 		if (!($cart = $this->loadObject(true)))
 			return;
-
 		$customer = new Customer($cart->id_customer);
+		$currency = new Currency($cart->id_currency);
 		$this->context->cart = $cart;
+		$this->context->currency = $currency;
 		$this->context->customer = $customer;
 		$products = $cart->getProducts();
 		$customized_datas = Product::getAllCustomizedDatas((int)$cart->id);
 		Product::addCustomizationPrice($products, $customized_datas);
 		$summary = $cart->getSummaryDetails();
-		$currency = new Currency($cart->id_currency);
 
 		/* Display order information */
 		$id_order = (int)Order::getOrderByCartId($cart->id);
@@ -209,7 +209,7 @@ class AdminCartsControllerCore extends AdminController
 
 			if (!$this->context->cart->id_customer)
 				$this->context->cart->id_customer = $id_customer;
-			if ($this->context->cart->OrderExists())
+			if (Validate::isLoadedObject($this->context->cart) && $this->context->cart->OrderExists())
 				return;
 			if (!$this->context->cart->secure_key)
 				$this->context->cart->secure_key = $this->context->customer->secure_key;
@@ -273,35 +273,35 @@ class AdminCartsControllerCore extends AdminController
 					$field_id = 'customization_'.$id_product.'_'.$customization_field['id_customization_field'];
 					if ($customization_field['type'] == Product::CUSTOMIZE_TEXTFIELD)
 					{
-						if (!isset($_POST[$field_id]) || empty($_POST[$field_id]))
+						if (!Tools::getValue($field_id))
 						{
 							if ($customization_field['required'])
-								$errors[] = Tools::displayError('Please fill in all required fields');
+								$errors[] = Tools::displayError('Please fill in all the required fields.');
 							continue;
 						}
-						if (!Validate::isMessage($_POST[$field_id]) || empty($_POST[$field_id]))
+						if (!Validate::isMessage(Tools::getValue($field_id)))
 							$errors[] = Tools::displayError('Invalid message');
-						$this->context->cart->addTextFieldToProduct((int)$product->id, (int)$customization_field['id_customization_field'], Product::CUSTOMIZE_TEXTFIELD, $_POST[$field_id]);
+						$this->context->cart->addTextFieldToProduct((int)$product->id, (int)$customization_field['id_customization_field'], Product::CUSTOMIZE_TEXTFIELD, Tools::getValue($field_id));
 					}
 					elseif ($customization_field['type'] == Product::CUSTOMIZE_FILE)
 					{
 						if (!isset($_FILES[$field_id]) || !isset($_FILES[$field_id]['tmp_name']) || empty($_FILES[$field_id]['tmp_name']))
 						{
 							if ($customization_field['required'])
-								$errors[] = Tools::displayError('Please fill in all required fields');
+								$errors[] = Tools::displayError('Please fill in all the required fields.');
 							continue;
 						}
 						if ($error = ImageManager::validateUpload($_FILES[$field_id], (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE')))
 							$errors[] = $error;
 						if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES[$field_id]['tmp_name'], $tmp_name))
-							$errors[] = Tools::displayError('An error occurred during the image upload.');
+							$errors[] = Tools::displayError('An error occurred during the image upload process.');
 						$file_name = md5(uniqid(rand(), true));
 						if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name))
 							continue;
 						elseif (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name.'_small', (int)Configuration::get('PS_PRODUCT_PICTURE_WIDTH'), (int)Configuration::get('PS_PRODUCT_PICTURE_HEIGHT')))
-							$errors[] = Tools::displayError('An error occurred during the image upload.');
+							$errors[] = Tools::displayError('An error occurred during the image upload process.');
 						elseif (!chmod(_PS_UPLOAD_DIR_.$file_name, 0777) || !chmod(_PS_UPLOAD_DIR_.$file_name.'_small', 0777))
-							$errors[] = Tools::displayError('An error occurred during the image upload.');
+							$errors[] = Tools::displayError('An error occurred during the image upload process.');
 						else
 							$this->context->cart->addPictureToProduct((int)$product->id, (int)$customization_field['id_customization_field'], Product::CUSTOMIZE_FILE, $file_name);
 						unlink($tmp_name);
@@ -324,7 +324,7 @@ class AdminCartsControllerCore extends AdminController
 			if (!$this->context->cart->id)
 				return;
 			if ($this->context->cart->OrderExists())
-				$errors[] = Tools::displayError('An order has already been placed with this cart');
+				$errors[] = Tools::displayError('An order has already been placed with this cart.');
 			elseif (!($id_product = (int)Tools::getValue('id_product')) || !($product = new Product((int)$id_product, true, $this->context->language->id)))
 				$errors[] = Tools::displayError('Invalid product');
 			elseif (!($qty = Tools::getValue('qty')) || $qty == 0)
@@ -336,17 +336,17 @@ class AdminCartsControllerCore extends AdminController
 				if (($id_product_attribute = Tools::getValue('id_product_attribute')) != 0)
 				{
 					if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty((int)$id_product_attribute, (int)$qty))
-						$errors[] = Tools::displayError('There is not enough product in stock');
+						$errors[] = Tools::displayError('There is not enough product in stock.');
 				}
 				else
 					if (!$product->checkQty((int)$qty))
-						$errors[] = Tools::displayError('There is not enough product in stock');
+						$errors[] = Tools::displayError('There is not enough product in stock.');
 				if (!($id_customization = (int)Tools::getValue('id_customization', 0)) && !$product->hasAllRequiredCustomizableFields())
-					$errors[] = Tools::displayError('Please fill in all required fields');
+					$errors[] = Tools::displayError('Please fill in all the required fields.');
 				$this->context->cart->save();
 			}
 			else
-				$errors[] = Tools::displayError('Product can\'t be added to the cart');
+				$errors[] = Tools::displayError('This product cannot be added to the cart');
 
 			if (!count($errors))
 			{
@@ -363,7 +363,7 @@ class AdminCartsControllerCore extends AdminController
 				elseif ($qty_upd < 0)
 				{
 					$minimal_qty = $id_product_attribute ? Attribute::getAttributeMinimalQty((int)$id_product_attribute) : $product->minimal_quantity;
-					$errors[] = sprintf(Tools::displayError('You must add a minimum of %d quantity', false), $minimal_qty);
+					$errors[] = sprintf(Tools::displayError('You must add a minimum quantity of %d', false), $minimal_qty);
 				}
 			}
 
@@ -452,9 +452,9 @@ class AdminCartsControllerCore extends AdminController
 			$cart = Cart::getCartByOrderId($id_order);
 			$new_cart = $cart->duplicate();
 			if (!$new_cart || !Validate::isLoadedObject($new_cart['cart']))
-				$errors[] = Tools::displayError('The order cannot be renewed');
+				$errors[] = Tools::displayError('The order cannot be renewed.');
 			else if (!$new_cart['success'])
-				$errors[] = Tools::displayError('The order cannot be renewed');
+				$errors[] = Tools::displayError('The order cannot be renewed.');
 			else
 			{
 				$this->context->cart = $new_cart['cart'];
@@ -739,6 +739,7 @@ class AdminCartsControllerCore extends AdminController
 	{
 		$context = Context::getContext();
 		$context->cart = new Cart($id_cart);
+		$context->currency = new Currency((int)$context->cart->id_currency);
 		$context->customer = new Customer((int)$context->cart->id_customer);
 		return Cart::getTotalCart($id_cart, true, Cart::BOTH_WITHOUT_SHIPPING);
 	}

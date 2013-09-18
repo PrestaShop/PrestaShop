@@ -64,7 +64,7 @@ class AdminSlipControllerCore extends AdminController
 				'title' =>	$this->l('Credit slip options'),
 				'fields' =>	array(
 					'PS_CREDIT_SLIP_PREFIX' => array(
-						'title' => $this->l('Credit slips prefix:'),
+						'title' => $this->l('Credit slip prefix:'),
 						'desc' => $this->l('Prefix used for credit slips'),
 						'size' => 6,
 						'type' => 'textLang'

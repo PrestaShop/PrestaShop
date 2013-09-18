@@ -8,4 +8,8 @@ Customer message:
 
 {message}
 
+Order reference : {order_name}
+
+Attached file : {attached_file}
+
 {shop_url} powered by PrestaShop™

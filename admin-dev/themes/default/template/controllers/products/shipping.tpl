@@ -25,7 +25,7 @@
 
 <input type="hidden" name="submitted_tabs[]" value="Shipping" />
 <h4 class="tab">1. {l s='Info.'}</h4>
-<h4>{l s='Shipping:'}</h4>
+<h4>{l s='Shipping'}</h4>
 
 {if isset($display_common_field) && $display_common_field}
 	<div class="hint" style="display: block">{l s='Warning, if you change the value of fields with an orange bullet %s, the value will be changed for all other shops for this product' sprintf=$bullet_common_field}</div>
@@ -71,7 +71,7 @@
 			<label>{l s='Carriers:'}</label>
 		</td>
 		<td class="padding-bottom:5px;">
-			<select name="carriers[]" id="carriers_restriction" multiple="multiple" size="4" style="height:100px;width:200px;">
+			<select name="carriers[]" id="carriers_restriction" multiple="multiple" size="4" style="height:100px;width:300px;">
 				{foreach $carrier_list as $carrier}
 					<option value="{$carrier.id_reference}" {if isset($carrier.selected) && $carrier.selected}selected="selected"{/if}>{$carrier.name}</option>
 				{/foreach}

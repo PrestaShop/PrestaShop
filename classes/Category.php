@@ -109,7 +109,7 @@ class CategoryCore extends ObjectModel
 			// Lang fields
 			'name' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 64),
 			'link_rewrite' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 64),
-			'description' => 		array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isString'),
+			'description' => 		array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
 			'meta_title' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
 			'meta_description' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
 			'meta_keywords' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
@@ -510,7 +510,7 @@ class CategoryCore extends ObjectModel
 	 		die(Tools::displayError());
 
 		$groups = FrontController::getCurrentCustomerGroups();
-		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
+		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '='.(int)Group::getCurrent()->id);
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT c.*, cl.id_lang, cl.name, cl.description, cl.link_rewrite, cl.meta_title, cl.meta_keywords, cl.meta_description
@@ -604,8 +604,8 @@ class CategoryCore extends ObjectModel
 			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 		}
 
-		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, product_attribute_shop.`id_product_attribute`, product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, pl.`description`, pl.`description_short`, pl.`available_now`,
-					pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, image_shop.`id_image`,
+		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, MAX(product_attribute_shop.id_product_attribute) id_product_attribute, product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, pl.`description`, pl.`description_short`, pl.`available_now`,
+					pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, MAX(image_shop.`id_image`) id_image,
 					il.`legend`, m.`name` AS manufacturer_name, cl.`name` AS category_default,
 					DATEDIFF(product_shop.`date_add`, DATE_SUB(NOW(),
 					INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).'
@@ -633,12 +633,11 @@ class CategoryCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m
 					ON m.`id_manufacturer` = p.`id_manufacturer`
 				WHERE product_shop.`id_shop` = '.(int)$context->shop->id.'
-				AND (pa.id_product_attribute IS NULL OR product_attribute_shop.id_shop='.(int)$context->shop->id.') 
-				AND (i.id_image IS NULL OR image_shop.id_shop='.(int)$context->shop->id.')
 					AND cp.`id_category` = '.(int)$this->id
 					.($active ? ' AND product_shop.`active` = 1' : '')
 					.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '')
-					.($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '');
+					.($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '')
+					.' GROUP BY product_shop.id_product';
 
 		if ($random === true)
 		{
@@ -685,8 +684,7 @@ class CategoryCore extends ObjectModel
 		else
 			return new Category($shop->getCategory(), $id_lang);
 		$is_more_than_one_root_category = count(Category::getCategoriesWithoutParent()) > 1;
-		if ((!Shop::isFeatureActive() && $is_more_than_one_root_category) ||
-			Shop::isFeatureActive() && $is_more_than_one_root_category && Shop::getContext() != Shop::CONTEXT_SHOP)
+		if (Shop::isFeatureActive() && $is_more_than_one_root_category && Shop::getContext() != Shop::CONTEXT_SHOP)
 			$category = Category::getTopCategory($id_lang);
 		else
 			$category = new Category($shop->getCategory(), $id_lang);
@@ -798,7 +796,7 @@ class CategoryCore extends ObjectModel
 				)).')';
 
 		$flag = Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'category_product` (`id_product`, `id_category`, `position`)
+			INSERT IGNORE INTO `'._DB_PREFIX_.'category_product` (`id_product`, `id_category`, `position`)
 			VALUES '.implode(',', $row)
 		);
 		return $flag;
@@ -833,20 +831,15 @@ class CategoryCore extends ObjectModel
 		if (!Validate::isUnsignedId($id_category) || !Validate::isUnsignedId($id_lang))
 			return false;
 
-		if (isset(self::$_links[$id_category.'-'.$id_lang]))
-			return self::$_links[$id_category.'-'.$id_lang];
-
-		$result = Db::getInstance()->getRow('
-			SELECT cl.`link_rewrite`
-			FROM `'._DB_PREFIX_.'category_lang` cl
-			WHERE `id_lang` = '.(int)$id_lang.'
-			'.Shop::addSqlRestrictionOnLang('cl').'
-			AND cl.`id_category` = '.(int)$id_category
-		);
-
-		self::$_links[$id_category.'-'.$id_lang] = $result['link_rewrite'];
-
-		return $result['link_rewrite'];
+		if (!isset(self::$_links[$id_category.'-'.$id_lang]))
+			self::$_links[$id_category.'-'.$id_lang] = Db::getInstance()->getValue('
+				SELECT cl.`link_rewrite`
+				FROM `'._DB_PREFIX_.'category_lang` cl
+				WHERE `id_lang` = '.(int)$id_lang.'
+				'.Shop::addSqlRestrictionOnLang('cl').'
+				AND cl.`id_category` = '.(int)$id_category
+			);
+		return self::$_links[$id_category.'-'.$id_lang];
 	}
 
 	public function getLink(Link $link = null)
@@ -1161,7 +1154,7 @@ class CategoryCore extends ObjectModel
 				UPDATE `'._DB_PREFIX_.'category` c
 				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs
 					ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
-				SET cs.`position` = '.(int)$i.'
+				SET cs.`position` = '.(int)($i+1).'
 				WHERE c.`id_parent` = '.(int)$id_category_parent.'
 				AND c.`id_category` = '.(int)$result[$i]['id_category'];
 			$return &= Db::getInstance()->execute($sql);
@@ -1397,8 +1390,7 @@ class CategoryCore extends ObjectModel
 		SELECT DISTINCT c.*
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND cl.`id_lang` = '.(int)Context::getContext()->language->id.')
-		WHERE `level_depth` = 1
-		');
+		WHERE `level_depth` = 1');
 	}
 
 	public function isRootCategoryForAShop()

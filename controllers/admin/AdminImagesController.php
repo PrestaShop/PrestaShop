@@ -28,6 +28,7 @@ class AdminImagesControllerCore extends AdminController
 {
 	protected $start_time = 0;
 	protected $max_execution_time = 7200;
+	protected $display_move;
 
 	public function __construct()
 	{
@@ -43,13 +44,25 @@ class AdminImagesControllerCore extends AdminController
 			'name' => array('title' => $this->l('Name'), 'width' => 'auto'),
 			'width' => array('title' => $this->l('Width'), 'align' => 'right', 'suffix' => ' px', 'width' => 50, 'size' => 5),
 			'height' => array('title' => $this->l('Height'), 'align' => 'right', 'suffix' => ' px', 'width' => 50, 'size' => 5),
-			'products' => array('title' => $this->l('Products:'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
-			'categories' => array('title' => $this->l('Categories:'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
-			'manufacturers' => array('title' => $this->l('Manufacturers:'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
-			'suppliers' => array('title' => $this->l('Suppliers:'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
+			'products' => array('title' => $this->l('Products'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
+			'categories' => array('title' => $this->l('Categories'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
+			'manufacturers' => array('title' => $this->l('Manufacturers'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
+			'suppliers' => array('title' => $this->l('Suppliers'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
 			'scenes' => array('title' => $this->l('Scenes'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
 			'stores' => array('title' => $this->l('Stores'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false)
 		);
+		
+		// No need to display the old image system migration tool except if product images are in _PS_PROD_IMG_DIR_
+		$this->display_move = false;
+		$dir = _PS_PROD_IMG_DIR_;
+		if (is_dir($dir))
+			if ($dh = opendir($dir))
+			{
+				while (($file = readdir($dh)) !== false && $this->display_move == false)
+						if (!is_dir($dir.DIRECTORY_SEPARATOR.$file) && $file[0] != '.' && is_numeric($file[0]))
+							$this->display_move = true;
+				closedir($dh);
+			}
 
 		$this->fields_options = array(
 			'images' => array(
@@ -57,8 +70,8 @@ class AdminImagesControllerCore extends AdminController
 				'icon' =>	'tab-orders',
 				'top' => '',
 				'bottom' => '',
-				'description' => $this->l('JPEG images have a small file size and standard quality. PNG images have a bigger file size, a higher quality and support transparency. Note that in all cases the image files will have the .jpg extension.').'
-								  <br /><br />'.$this->l('WARNING: This feature may not be compatible with your theme or with some modules. In particular, PNG mode is not compatible with the Watermark module. If you encounter any issues, turn it off by selecting "Use JPEG".'),
+				'description' => $this->l('JPEG images have a small file size and standard quality. PNG images have a larger file size, a higher quality and support transparency. Note that in all cases the image files will have the .jpg extension.').'
+					<br /><br />'.$this->l('WARNING: This feature may not be compatible with your theme, or with some of your modules. In particular, PNG mode is not compatible with the Watermark module. If you encounter any issues, turn it off by selecting "Use JPEG".'),
 				'fields' =>	array(
 					'PS_IMAGE_QUALITY' => array(
 						'title' => $this->l('Image quality'),
@@ -98,15 +111,15 @@ class AdminImagesControllerCore extends AdminController
 						'list' => array(
 							array(
 								'id' => '0',
-								'name' => $this->l('auto')
+								'name' => $this->l('Auto')
 							),
 							array(
 								'id' => '1',
-								'name' => $this->l('width')
+								'name' => $this->l('Width')
 							),
 							array(
 								'id' => '2',
-								'name' => $this->l('height')
+								'name' => $this->l('Height')
 							)
 						),
 						'identifier' => 'id',
@@ -119,7 +132,7 @@ class AdminImagesControllerCore extends AdminController
 						'required' => true,
 						'cast' => 'intval',
 						'type' => 'text',
-						'suffix' => $this->l('bytes'),
+						'suffix' => $this->l('Bytes'),
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_PRODUCT_PICTURE_WIDTH' => array(
@@ -141,20 +154,22 @@ class AdminImagesControllerCore extends AdminController
 						'type' => 'text',
 						'height' => 'px',
 						'visibility' => Shop::CONTEXT_ALL
-					),
-					'PS_LEGACY_IMAGES' => array(
-						'title' => $this->l('Use the legacy image filesystem.'),
-						'desc' => $this->l('This should be set to yes unless you successfully moved images in "Images" page under the "Preferences" menu.'),
-						'validation' => 'isBool',
-						'cast' => 'intval',
-						'required' => false,
-						'type' => 'bool',
-						'visibility' => Shop::CONTEXT_ALL
-					),
+					)
 				),
 				'submit' => array('title' => $this->l('Save   '), 'class' => 'button'),
 			),
 		);
+		
+		if ($this->display_move)
+			$this->fields_options['product_images']['fields']['PS_LEGACY_IMAGES'] = array(
+				'title' => $this->l('Use the legacy image filesystem'),
+				'desc' => $this->l('This should be set to yes unless you successfully moved images in "Images" page under the "Preferences" menu.'),
+				'validation' => 'isBool',
+				'cast' => 'intval',
+				'required' => false,
+				'type' => 'bool',
+				'visibility' => Shop::CONTEXT_ALL
+			);
 
 		$this->fields_form = array(
 			'legend' => array(
@@ -164,14 +179,14 @@ class AdminImagesControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Type name:'),
+					'label' => $this->l('Type name'),
 					'name' => 'name',
 					'required' => true,
-					'desc' => $this->l('Letters and minus sign (-) only (e.g. small, medium, large, extra-large)')
+					'desc' => $this->l('Letters and hyphens only (e.g. small, medium, large, extra-large)')
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Width:'),
+					'label' => $this->l('Width'),
 					'name' => 'width',
 					'required' => true,
 					'size' => 4,
@@ -180,7 +195,7 @@ class AdminImagesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Height:'),
+					'label' => $this->l('Height'),
 					'name' => 'height',
 					'required' => true,
 					'size' => 4,
@@ -189,7 +204,7 @@ class AdminImagesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Products:'),
+					'label' => $this->l('Products'),
 					'name' => 'products',
 					'required' => false,
 					'class' => 't',
@@ -210,7 +225,7 @@ class AdminImagesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Categories:'),
+					'label' => $this->l('Categories'),
 					'name' => 'categories',
 					'required' => false,
 					'class' => 't',
@@ -231,7 +246,7 @@ class AdminImagesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Manufacturers:'),
+					'label' => $this->l('Manufacturers'),
 					'name' => 'manufacturers',
 					'required' => false,
 					'class' => 't',
@@ -252,7 +267,7 @@ class AdminImagesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Suppliers:'),
+					'label' => $this->l('Suppliers'),
 					'name' => 'suppliers',
 					'required' => false,
 					'class' => 't',
@@ -273,7 +288,7 @@ class AdminImagesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Scenes:'),
+					'label' => $this->l('Scenes'),
 					'name' => 'scenes',
 					'required' => false,
 					'class' => 't',
@@ -294,7 +309,7 @@ class AdminImagesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Stores:'),
+					'label' => $this->l('Stores'),
 					'name' => 'stores',
 					'required' => false,
 					'class' => 't',
@@ -331,7 +346,7 @@ class AdminImagesControllerCore extends AdminController
 		{
 			$this->warnings[] = $this->l('Duplicate images were found when moving the product images. This is likely caused by unused demonstration images. Please make sure that the folder').
 				_PS_PROD_IMG_DIR_.'duplicates/'.
-				$this->l('only contains demonstration images, and then delete this folder.');
+				$this->l('only contains demonstration images, and then delete it.');
 		}
 
 		if (Tools::getValue('submitRegenerate'.$this->table))
@@ -342,7 +357,7 @@ class AdminImagesControllerCore extends AdminController
 					Tools::redirectAdmin(self::$currentIndex.'&conf=9'.'&token='.$this->token);
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 		elseif (Tools::getValue('submitMoveImages'.$this->table))
 		{
@@ -352,7 +367,7 @@ class AdminImagesControllerCore extends AdminController
 					Tools::redirectAdmin(self::$currentIndex.'&conf=25'.'&token='.$this->token);
 		 	}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 		elseif (Tools::getValue('submitImagePreferences'))
 		{
@@ -360,19 +375,20 @@ class AdminImagesControllerCore extends AdminController
 			{
 				if ((int)Tools::getValue('PS_JPEG_QUALITY') < 0
 					|| (int)Tools::getValue('PS_JPEG_QUALITY') > 100)
-					$this->errors[] = Tools::displayError('Incorrect value for JPEG image quality.');
+					$this->errors[] = Tools::displayError('Incorrect value for the selected JPEG image quality.');
 				elseif ((int)Tools::getValue('PS_PNG_QUALITY') < 0
 					|| (int)Tools::getValue('PS_PNG_QUALITY') > 9)
-					$this->errors[] = Tools::displayError('Incorrect value for PNG image quality.');
+					$this->errors[] = Tools::displayError('Incorrect value for the selected PNG image quality.');
 				elseif (!Configuration::updateValue('PS_IMAGE_QUALITY', Tools::getValue('PS_IMAGE_QUALITY'))
 					|| !Configuration::updateValue('PS_JPEG_QUALITY', Tools::getValue('PS_JPEG_QUALITY'))
 					|| !Configuration::updateValue('PS_PNG_QUALITY', Tools::getValue('PS_PNG_QUALITY')))
 					$this->errors[] = Tools::displayError('Unknown error.');
 				else
+					$this->confirmations[] = $this->_conf[6];
 					return parent::postProcess();
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 
 		else
@@ -396,11 +412,11 @@ class AdminImagesControllerCore extends AdminController
 	public function initRegenerate()
 	{
 		$types = array(
-			'categories' => $this->l('Categories:'),
-			'manufacturers' => $this->l('Manufacturers:'),
-			'suppliers' => $this->l('Suppliers:'),
+			'categories' => $this->l('Categories'),
+			'manufacturers' => $this->l('Manufacturers'),
+			'suppliers' => $this->l('Suppliers'),
 			'scenes' => $this->l('Scenes'),
-			'products' => $this->l('Products:'),
+			'products' => $this->l('Products'),
 			'stores' => $this->l('Stores')
 		);
 
@@ -527,18 +543,16 @@ class AdminImagesControllerCore extends AdminController
 	protected function _regenerateNoPictureImages($dir, $type, $languages)
 	{
 		$errors = false;
-		foreach ($type as $imageType)
-		{
+		foreach ($type as $image_type)
 			foreach ($languages as $language)
 			{
 				$file = $dir.$language['iso_code'].'.jpg';
 				if (!file_exists($file))
-					$file = _PS_PROD_IMG_DIR_.Language::getIsoById((int)(Configuration::get('PS_LANG_DEFAULT'))).'.jpg';
-				if (!file_exists($dir.$language['iso_code'].'-default-'.stripslashes($imageType['name']).'.jpg'))
-					if (!ImageManager::resize($file, $dir.$language['iso_code'].'-default-'.stripslashes($imageType['name']).'.jpg', (int)$imageType['width'], (int)$imageType['height']))
+					$file = _PS_PROD_IMG_DIR_.Language::getIsoById((int)Configuration::get('PS_LANG_DEFAULT')).'.jpg';
+				if (!file_exists($dir.$language['iso_code'].'-default-'.stripslashes($image_type['name']).'.jpg'))
+					if (!ImageManager::resize($file, $dir.$language['iso_code'].'-default-'.stripslashes($image_type['name']).'.jpg', (int)$image_type['width'], (int)$image_type['height']))
 						$errors = true;
 			}
-		}
 		return $errors;
 	}
 
@@ -613,12 +627,12 @@ class AdminImagesControllerCore extends AdminController
 					$this->errors[] = sprintf(Tools::displayError('Cannot write %s images. Please check the folder\'s writing permissions %s.'), $proc['type'], $proc['dir']);
 			}
 			elseif ($return == 'timeout')
-				$this->errors[] = Tools::displayError('Only part of the images have been regenerated, server timed out before finishing.');
+				$this->errors[] = Tools::displayError('Only part of the images have been regenerated. The server timed out before finishing.');
 			else
 			{
 				if ($proc['type'] == 'products')
 					if ($this->_regenerateWatermark($proc['dir']) == 'timeout')
-						$this->errors[] = Tools::displayError('Server timed out, the watermark may not have been applied to all images.');
+						$this->errors[] = Tools::displayError('Server timed out. The watermark may not have been applied to all images.');
 				if (!count($this->errors))
 					if ($this->_regenerateNoPictureImages($proc['dir'], $formats, $languages))
 						$this->errors[] = sprintf(
@@ -636,7 +650,7 @@ class AdminImagesControllerCore extends AdminController
 	public function initMoveImages()
 	{
 		$this->context->smarty->assign(array(
-			'safe_mode' => ini_get('safe_mode'),
+			'safe_mode' => Tools::getSafeModeStatus(),
 			'link_ppreferences' => 'index.php?tab=AdminPPreferences&token='.Tools::getAdminTokenLite('AdminPPreferences').'#PS_LEGACY_IMAGES_on',
 		));
 }
@@ -647,16 +661,16 @@ class AdminImagesControllerCore extends AdminController
 	protected function _moveImagesToNewFileSystem()
 	{
 		if (!Image::testFileSystem())
-			$this->errors[] = Tools::displayError('Error: your server configuration is not compatible with the new image system. No images were moved');
+			$this->errors[] = Tools::displayError('Error: Your server configuration is not compatible with the new image system. No images were moved.');
 		else
 		{
 			ini_set('max_execution_time', $this->max_execution_time); // ini_set may be disabled, we need the real value
 			$this->max_execution_time = (int)ini_get('max_execution_time');
 			$result = Image::moveToNewFileSystem($this->max_execution_time);
 			if ($result === 'timeout')
-				$this->errors[] = Tools::displayError('Not all images have been moved, server timed out before finishing. Click on "Move images" again to resume moving images');
+				$this->errors[] = Tools::displayError('Not all images have been moved. The server timed out before finishing. Click on "Move images" again to resume the moving process.');
 			else if ($result === false)
-				$this->errors[] = Tools::displayError('Error: some or all images could not be moved.');
+				$this->errors[] = Tools::displayError('Error: Some -- or all -- images can not be moved.');
 		}
 		return (count($this->errors) > 0 ? false : true);
 	}
@@ -670,7 +684,7 @@ class AdminImagesControllerCore extends AdminController
 
 			$this->context->smarty->assign(array(
 				'display_regenerate' => true,
-				'display_move' => true
+				'display_move' => $this->display_move
 			));
 		}
 

@@ -41,6 +41,8 @@ class SupplierControllerCore extends FrontController
 
 	public function canonicalRedirection($canonicalURL = '')
 	{
+		if (Tools::getValue('live_edit'))
+			return ;
 		if (Validate::isLoadedObject($this->supplier))
 			parent::canonicalRedirection($this->context->link->getSupplierLink($this->supplier));
 	}
@@ -61,7 +63,7 @@ class SupplierControllerCore extends FrontController
 			{
 				header('HTTP/1.1 404 Not Found');
 				header('Status: 404 Not Found');
-				$this->errors[] = Tools::displayError('Supplier does not exist.');
+				$this->errors[] = Tools::displayError('The chosen supplier does not exist.');
 			}
 			else
 				$this->canonicalRedirection();

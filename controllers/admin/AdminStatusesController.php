@@ -35,6 +35,7 @@ class AdminStatusesControllerCore extends AdminController
 		$this->colorOnBackground = false;
 		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 		$this->context = Context::getContext();
+		$this->multishop_context = Shop::CONTEXT_ALL;
 		$this->imageType = 'gif';
 		$this->fieldImageSettings = array(
 			'name' => 'icon',
@@ -187,7 +188,7 @@ class AdminStatusesControllerCore extends AdminController
 		else
 			$helper->fields_value = $this->getFieldsValue($order_return_state);
 		$helper->toolbar_btn = $this->toolbar_btn;
-		$helper->title = $this->l('Edit Order Statuses');
+		$helper->title = $this->l('Edit Order Status');
 		return $helper;
 	}
 	
@@ -206,7 +207,7 @@ class AdminStatusesControllerCore extends AdminController
 
 		// call postProcess() to take care of actions and filters
 		$this->postProcess();
-		$this->toolbar_title = $this->l('Return statuses');
+		$this->toolbar_title = $this->l('Return status');
 		$this->checkFilterForOrdersReturnsList();
 
 		parent::initToolbar();
@@ -231,18 +232,10 @@ class AdminStatusesControllerCore extends AdminController
 	
 	public function renderForm()
 	{
-		if (Tools::isSubmit('updateorder_state') || Tools::isSubmit('addorder_state'))
-			return $this->renderOrderStatusForm();
-		else if (Tools::isSubmit('updateorder_return_state') || Tools::isSubmit('addorder_return_state'))
-			return $this->renderOrderReturnsForm();
-	}
-	
-	protected function renderOrderStatusForm()
-	{
 		$this->fields_form = array(
 			'tinymce' => true,
 			'legend' => array(
-				'title' => $this->l('Order statuses'),
+				'title' => $this->l('Order status'),
 				'image' => '../img/admin/time.gif'
 			),
 			'input' => array(
@@ -296,7 +289,7 @@ class AdminStatusesControllerCore extends AdminController
 					'name' => 'hidden',
 					'values' => array(
 						'query' => array(
-							array('id' => 'on', 'name' => $this->l('Hide this state in order for customer'), 'val' => '1'),
+							array('id' => 'on', 'name' => $this->l('Hide this state in all customer orders'), 'val' => '1'),
 							),
 						'id' => 'id',
 						'name' => 'name'
@@ -365,7 +358,17 @@ class AdminStatusesControllerCore extends AdminController
 				'class' => 'button'
 			)
 		);
-
+	
+		if (Tools::isSubmit('updateorder_state') || Tools::isSubmit('addorder_state'))
+			return $this->renderOrderStatusForm();
+		else if (Tools::isSubmit('updateorder_return_state') || Tools::isSubmit('addorder_return_state'))
+			return $this->renderOrderReturnsForm();
+		else
+			return parent::renderForm();			
+	}
+	
+	protected function renderOrderStatusForm()
+	{
 		if (!($obj = $this->loadObject(true)))
 			return;
 
@@ -389,7 +392,7 @@ class AdminStatusesControllerCore extends AdminController
 		$this->fields_form[0]['form'] = array(
 			'tinymce' => true,
 			'legend' => array(
-				'title' => $this->l('Order statuses'),
+				'title' => $this->l('Order status'),
 				'image' => '../img/admin/time.gif'
 			),
 			'input' => array(
@@ -455,7 +458,7 @@ class AdminStatusesControllerCore extends AdminController
 
 			// Update object
 			if (!$order_return_state->save())
-				$this->errors[] = Tools::displayError('An error has occurred: Can\'t save the current order return state');
+				$this->errors[] = Tools::displayError('An error has occurred: Can\'t save the current order\'s return state.');
 			else
 				Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
 		}
@@ -476,7 +479,7 @@ class AdminStatusesControllerCore extends AdminController
 			$order_return_state = new OrderReturnState((int)$id_order_return_state);
 			
 			if (!$order_return_state->delete())
-				$this->errors[] = Tools::displayError('An error has occurred: Can\'t delete the current order return state');
+				$this->errors[] = Tools::displayError('An error has occurred: Can\'t delete the current order\'s return state.');
 			else
 				Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.$this->token);
 		}

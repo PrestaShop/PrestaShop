@@ -269,7 +269,7 @@ class MailAlerts extends Module
 		$customer = $params['customer'];
 		$delivery = new Address((int)$order->id_address_delivery);
 		$invoice = new Address((int)$order->id_address_invoice);
-		$order_date_text = Tools::displayDate($order->date_add, (int)$id_lang);
+		$order_date_text = Tools::displayDate($order->date_add);
 		$carrier = new Carrier((int)$order->id_carrier);
 		$message = $order->getFirstMessage();
 
@@ -289,7 +289,7 @@ class MailAlerts extends Module
 			if (isset($customized_datas[$product['product_id']][$product['product_attribute_id']]))
 			{
 
-				foreach ($customized_datas[$product['product_id']][$product['product_attribute_id']] as $customization)
+				foreach ($customized_datas[$product['product_id']][$product['product_attribute_id']][$order->id_address_delivery] as $customization)
 				{
 					if (isset($customization['datas'][_CUSTOMIZE_TEXTFIELD_]))
 						foreach ($customization['datas'][_CUSTOMIZE_TEXTFIELD_] as $text)
@@ -339,11 +339,11 @@ class MailAlerts extends Module
 			'{delivery_block_txt}' => MailAlert::getFormatedAddress($delivery, "\n"),
 			'{invoice_block_txt}' => MailAlert::getFormatedAddress($invoice, "\n"),
 			'{delivery_block_html}' => MailAlert::getFormatedAddress($delivery, '<br />', array(
-			'firstname' => '<span style="color:#DB3484; font-weight:bold;">%s</span>',
-			'lastname' => '<span style="color:#DB3484; font-weight:bold;">%s</span>')),
+			'firstname' => '<span style="color:'.Configuration::get('PS_MAIL_COLOR').'; font-weight:bold;">%s</span>',
+			'lastname' => '<span style="color:'.Configuration::get('PS_MAIL_COLOR').'; font-weight:bold;">%s</span>')),
 			'{invoice_block_html}' => MailAlert::getFormatedAddress($invoice, '<br />', array(
-			'firstname' => '<span style="color:#DB3484; font-weight:bold;">%s</span>',
-			'lastname' => '<span style="color:#DB3484; font-weight:bold;">%s</span>')),
+			'firstname' => '<span style="color:'.Configuration::get('PS_MAIL_COLOR').' font-weight:bold;">%s</span>',
+			'lastname' => '<span style="color:'.Configuration::get('PS_MAIL_COLOR').'; font-weight:bold;">%s</span>')),
 			'{delivery_company}' => $delivery->company,
 			'{delivery_firstname}' => $delivery->firstname,
 			'{delivery_lastname}' => $delivery->lastname,
@@ -353,7 +353,9 @@ class MailAlerts extends Module
 			'{delivery_postal_code}' => $delivery->postcode,
 			'{delivery_country}' => $delivery->country,
 			'{delivery_state}' => $delivery->id_state ? $delivery_state->name : '',
-			'{delivery_phone}' => $delivery->phone ? $delivery->phone : $delivery->phone_mobile,
+			'{delivery_phone}' => $delivery->phone,
+			'{delivery_phone_mobile}' => $delivery->phone_mobile,
+			'{delivery_vat_number}' => $delivery->vat_number,
 			'{delivery_other}' => $delivery->other,
 			'{invoice_company}' => $invoice->company,
 			'{invoice_firstname}' => $invoice->firstname,
@@ -364,7 +366,9 @@ class MailAlerts extends Module
 			'{invoice_postal_code}' => $invoice->postcode,
 			'{invoice_country}' => $invoice->country,
 			'{invoice_state}' => $invoice->id_state ? $invoice_state->name : '',
-			'{invoice_phone}' => $invoice->phone ? $invoice->phone : $invoice->phone_mobile,
+			'{invoice_phone}' => $invoice->phone,
+			'{invoice_phone_mobile}' => $invoice->phone_mobile,
+			'{invoice_vat_number}' => $invoice->vat_number,
 			'{invoice_other}' => $invoice->other,
 			'{order_name}' => sprintf('%06d', $order->id),
 			'{shop_name}' => Configuration::get('PS_SHOP_NAME'),
@@ -376,6 +380,7 @@ class MailAlerts extends Module
 			'{total_products}' => Tools::displayPrice($order->getTotalProductsWithTaxes(), $currency),
 			'{total_discounts}' => Tools::displayPrice($order->total_discounts, $currency),
 			'{total_shipping}' => Tools::displayPrice($order->total_shipping, $currency),
+			'{total_tax_paid}' => Tools::displayPrice(($order->total_products_wt - $order->total_products) + ($order->total_shipping_tax_incl - $order->total_shipping_tax_excl), $currency, false),
 			'{total_wrapping}' => Tools::displayPrice($order->total_wrapping, $currency),
 			'{currency}' => $currency->sign,
 			'{message}' => $message
@@ -536,8 +541,7 @@ class MailAlerts extends Module
 		$coverage = StockManagerFactory::getManager()->getProductCoverage($id_product, $id_product_attribute, $warning_coverage, $id_warehouse);
 
 		// if we need to send a notification
-		if ($product->active == 1 &&
-			($coverage < $warning_coverage) && !empty($this->_merchant_mails) &&
+		if ($product->active == 1 && $coverage !== -1 && ($coverage < $warning_coverage) && !empty($this->_merchant_mails) &&
 			Configuration::getGlobalValue('MA_MERCHANT_COVERAGE'))
 		{
 			$id_lang = (int)Context::getContext()->language->id;

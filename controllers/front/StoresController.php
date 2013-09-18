@@ -38,7 +38,7 @@ class StoresControllerCore extends FrontController
 
 		if (!extension_loaded('Dom'))
 		{
-			$this->errors[] = Tools::displayError('PHP "Dom" extension is not loaded.');
+			$this->errors[] = Tools::displayError('PHP "Dom" extension has not been loaded.');
 			$this->context->smarty->assign('errors', $this->errors);
 		}
 	}

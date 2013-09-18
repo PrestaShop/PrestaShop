@@ -1,8 +1,0 @@
-Bonjour,
-
-Vous avez reçu un nouveau message concernant la commande ayant pour référence {order_name} :
-{message}
-
-
-
-{shop_url} réalisé avec PrestaShop™

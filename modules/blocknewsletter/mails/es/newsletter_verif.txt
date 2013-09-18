@@ -1,6 +1,0 @@
-Hola,
-
-Se acaba de suscribir a nuestro boletín de noticias, por favor confirme su solicitud haciendo clic en el siguiente enlace:
-{verif_url}
-
-{shop_url} desarrollado por PrestaShop

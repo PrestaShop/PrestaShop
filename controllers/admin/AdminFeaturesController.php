@@ -127,7 +127,7 @@ class AdminFeaturesControllerCore extends AdminController
 			$this->addRowAction('delete');
 
 			if (!Validate::isLoadedObject($obj = new Feature((int)$id)))
-				$this->errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+				$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 
 			$this->fields_list = array(
 				'id_feature_value' => array(
@@ -455,7 +455,7 @@ class AdminFeaturesControllerCore extends AdminController
 	 * AdminController::getList() override
 	 * @see AdminController::getList()
 	 */
-	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
+	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = false, $id_lang_shop = false)
 	{
 		if ($this->table == 'feature_value')
 			$this->_where .= ' AND a.custom = 0';

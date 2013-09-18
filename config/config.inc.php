@@ -62,6 +62,9 @@ if (_PS_DEBUG_PROFILING_)
 	include_once(_PS_TOOL_DIR_.'profiling/Tools.php');
 }
 
+if (Tools::isPHPCLI())
+	Tools::argvToGET($argc, $argv);
+
 /* Redefine REQUEST_URI if empty (on some webservers...) */
 if (!isset($_SERVER['REQUEST_URI']) || empty($_SERVER['REQUEST_URI']))
 {
@@ -87,7 +90,15 @@ if (!isset($_SERVER['HTTP_HOST']) || empty($_SERVER['HTTP_HOST']))
 $context = Context::getContext();
 
 /* Initialize the current Shop */
-$context->shop = Shop::initialize();
+try 
+{
+	$context->shop = Shop::initialize();
+}
+catch (PrestaShopException $e)
+{
+	$e->displayMessage();
+}
+
 define('_THEME_NAME_', $context->shop->getTheme());
 define('__PS_BASE_URI__', $context->shop->getBaseURI());
 
@@ -151,19 +162,18 @@ if (defined('_PS_ADMIN_DIR_'))
 	if ($employee->id_profile != _PS_ADMIN_PROFILE_)
 		Shop::cacheShops(true);
 
-	$language = new Language($employee->id_lang);
-	$context->language = $language;
 	$cookie->id_lang = (int)$employee->id_lang;
 }
-else
-{
-	/* if the language stored in the cookie is not available language, use default language */
-	if (isset($cookie->id_lang) && $cookie->id_lang)
-		$language = new Language($cookie->id_lang);
-	if (!isset($language) || !Validate::isLoadedObject($language))
-		$language = new Language(Configuration::get('PS_LANG_DEFAULT'));
-	$context->language = $language;
 
+/* if the language stored in the cookie is not available language, use default language */
+if (isset($cookie->id_lang) && $cookie->id_lang)
+	$language = new Language($cookie->id_lang);
+if (!isset($language) || !Validate::isLoadedObject($language))
+	$language = new Language(Configuration::get('PS_LANG_DEFAULT'));
+$context->language = $language;
+
+if (!defined('_PS_ADMIN_DIR_'))
+{
 	if (isset($cookie->id_customer) && (int)$cookie->id_customer)
 	{
 		$customer = new Customer($cookie->id_customer);

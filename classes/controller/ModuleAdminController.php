@@ -51,9 +51,10 @@ abstract class ModuleAdminControllerCore extends AdminController
 
 	public function createTemplate($tpl_name)
 	{
-		if (file_exists($this->getTemplatePath().$this->override_folder.$tpl_name) && $this->viewAccess())
+		if (file_exists(_PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/admin/'.$tpl_name) && $this->viewAccess())
+			return $this->context->smarty->createTemplate(_PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/admin/'.$tpl_name, $this->context->smarty);
+		elseif (file_exists($this->getTemplatePath().$this->override_folder.$tpl_name) && $this->viewAccess())
 			return $this->context->smarty->createTemplate($this->getTemplatePath().$this->override_folder.$tpl_name, $this->context->smarty);
-
 		return parent::createTemplate($tpl_name);
 	}
 

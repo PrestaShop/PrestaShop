@@ -52,7 +52,7 @@ class BlockAdvertising extends Module
 		parent::__construct();
 
 		$this->displayName = $this->l('Block advertising');
-		$this->description = $this->l('Adds a block to display an advertisement.');
+		$this->description = $this->l('Adds an advertisement block to selected sections of your e-commerce webiste.');
 		
 		$this->initialize();
 	}
@@ -139,7 +139,7 @@ class BlockAdvertising extends Module
 
 					// Copy the image in the module directory with its new name
 					if (!move_uploaded_file($_FILES['adv_img']['tmp_name'], _PS_MODULE_DIR_.$this->name.'/'.$this->adv_imgname.'.'.Configuration::get('BLOCKADVERT_IMG_EXT')))
-						$errors .= $this->l('Error move uploaded file');
+						$errors .= $this->l('File upload error.');
 				}
 			}
 			
@@ -188,7 +188,7 @@ class BlockAdvertising extends Module
 				$output .= '<input class="button" type="submit" name="submitDeleteImgConf" value="'.$this->l('Delete image').'" style=""/>';
 		}
 		else
-			$output .= '<div style="margin-left: 100px;width:163px;">'.$this->l('no image').'</div>';
+			$output .= '<div style="margin-left: 100px;width:163px;">'.$this->l('No image').'</div>';
 		$output .= '<br/><br/>
 				<label for="adv_img">'.$this->l('Change image').'&nbsp;&nbsp;</label>
 				<div class="margin-form">

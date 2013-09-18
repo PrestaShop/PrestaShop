@@ -41,7 +41,7 @@ echo '
 		<link type="text/css" rel="stylesheet" href="'._PS_JS_DIR_.'jquery/plugins/cluetip/jquery.cluetip.css" />
 		<link type="text/css" rel="stylesheet" href="themes/'.Context::getContext()->employee->bo_theme.'/css/admin.css" />
 		<link type="text/css" rel="stylesheet" href="'._PS_JS_DIR_.'jquery/plugins/chosen/jquery.chosen.css" />
-		<title>PrestaShop&trade; - '.translate('Administration panel').'</title>
+		<title>PrestaShop&trade; - '.Translate::getAdminTranslation('Administration panel').'</title>
 		<script type="text/javascript">
 			var helpboxes = '.Configuration::get('PS_HELPBOX').';
 			var roundMode = '.Configuration::get('PS_PRICE_ROUND_MODE').';
@@ -78,7 +78,7 @@ echo '
 						html = "";
 						nb_notifs = 0;
 						$.each(json.order, function(property, value) {
-							html += "<li>'.translate('A new order has been made on your shop.').'<br />'.translate('Order number : ').'<strong>#" + parseInt(value.id_order) + "</strong><br />'.translate('Total : ').'<strong>" + value.total_paid_real + "</strong><br />'.translate('From : ').'<strong>" + value.customer_name + "</strong><br /><a href=\"index.php?tab=AdminOrders&token='.Tools::getAdminTokenLite('AdminOrders').'&vieworder&id_order=" + parseInt(value.id_order) + "\">'.translate('Click here to see that order').'</a></li>";
+							html += "<li>'.Translate::getAdminTranslation('A new order has been made on your shop.').'<br />'.Translate::getAdminTranslation('Order number : ').'<strong>#" + parseInt(value.id_order) + "</strong><br />'.Translate::getAdminTranslation('Total : ').'<strong>" + value.total_paid_real + "</strong><br />'.Translate::getAdminTranslation('From : ').'<strong>" + value.customer_name + "</strong><br /><a href=\"index.php?tab=AdminOrders&token='.Tools::getAdminTokenLite('AdminOrders').'&vieworder&id_order=" + parseInt(value.id_order) + "\">'.Translate::getAdminTranslation('Click here to see that order').'</a></li>";
 						});
 
 						if (html != "")
@@ -99,7 +99,7 @@ echo '
 						html = "";
 						nb_notifs = 0;
 						$.each(json.customer, function(property, value) {
-							html += "<li>'.translate('A new customer registered on your shop.').'<br />'.translate('Customer name : ').'<strong>" + value.customer_name + "</strong><br /><a href=\"index.php?tab=AdminCustomers&token='.Tools::getAdminTokenLite('AdminCustomers').'&viewcustomer&id_customer=" + parseInt(value.id_customer) + "\">'.translate('Click here to see that customer').'</a></li>";
+							html += "<li>'.Translate::getAdminTranslation('A new customer registered on your shop.').'<br />'.Translate::getAdminTranslation('Customer name : ').'<strong>" + value.customer_name + "</strong><br /><a href=\"index.php?tab=AdminCustomers&token='.Tools::getAdminTokenLite('AdminCustomers').'&viewcustomer&id_customer=" + parseInt(value.id_customer) + "\">'.Translate::getAdminTranslation('Click here to see that customer').'</a></li>";
 						});
 						if (html != "")
 						{
@@ -121,7 +121,7 @@ echo '
 						html = "";
 						nb_notifs = 0;
 						$.each(json.customer_message, function(property, value) {
-							html += "<li>'.translate('A new message posted on your shop.').'<br />'.translate('From : ').'<strong>" + value.customer_name + "</strong><br /><a href=\"index.php?tab=AdminCustomerThreads&token='.Tools::getAdminTokenLite('AdminCustomerThreads').'&viewcustomer_thread&id_customer_thread=" + parseInt(value.id_customer_thread) + "\">'.translate('Click here to see that message').'</a></li>";
+							html += "<li>'.Translate::getAdminTranslation('A new message posted on your shop.').'<br />'.Translate::getAdminTranslation('From : ').'<strong>" + value.customer_name + "</strong><br /><a href=\"index.php?tab=AdminCustomerThreads&token='.Tools::getAdminTokenLite('AdminCustomerThreads').'&viewcustomer_thread&id_customer_thread=" + parseInt(value.id_customer_thread) + "\">'.Translate::getAdminTranslation('Click here to see that message').'</a></li>";
 						});
 
 						if (html != "")
@@ -149,14 +149,14 @@ echo '
 			if (Shop::isFeatureActive())
 			{
 				if (Shop::getContext() == Shop::CONTEXT_ALL)
-					$youEditFieldFor = translate('A modification of this field will be applied for all shops');
+					$youEditFieldFor = Translate::getAdminTranslation('A modification of this field will be applied for all shops');
 				elseif (Shop::getContext() == Shop::CONTEXT_GROUP)
 				{
 					$shop_group = new ShopGroup((int)Shop::getContextShopGroupID());
-					$youEditFieldFor = sprintf(translate('A modification of this field will be applied for all shops of group %s'), '<b>'.$shop_group->name.'</b>');
+					$youEditFieldFor = sprintf(Translate::getAdminTranslation('A modification of this field will be applied for all shops of group %s'), '<b>'.$shop_group->name.'</b>');
 				}
 				else
-					$youEditFieldFor = sprintf(translate('A modification of this field will be applied for the shop %s'), '<b>'.Context::getContext()->shop->name.'</b>');
+					$youEditFieldFor = sprintf(Translate::getAdminTranslation('A modification of this field will be applied for the shop %s'), '<b>'.Context::getContext()->shop->name.'</b>');
 				echo 'hints.html(hints.html()+\'<br /><span class="red">'.addslashes($youEditFieldFor).'</span>\');';
 			}
 
@@ -202,10 +202,10 @@ echo '		var html = "";
 				{
 					echo '<div id="orders_notif" class="notifs"><span id="orders_notif_number_wrapper" class="number_wrapper"><span id="orders_notif_value">0</span></span>
 							<div id="orders_notif_wrapper" class="notifs_wrapper">
-								<h3>'.translate('Last orders').'</h3>
-								<p class="no_notifs">'.translate('No new orders has been made on your shop').'</p>
+								<h3>'.Translate::getAdminTranslation('Last orders').'</h3>
+								<p class="no_notifs">'.Translate::getAdminTranslation('No new orders has been made on your shop').'</p>
 								<ul id="list_orders_notif"></ul>
-								<p><a href="index.php?tab=AdminOrders&token='.Tools::getAdminTokenLite('AdminOrders').'">'.translate('Show all orders').'</a></p>
+								<p><a href="index.php?tab=AdminOrders&token='.Tools::getAdminTokenLite('AdminOrders').'">'.Translate::getAdminTranslation('Show all orders').'</a></p>
 							</div>
 						</div>';
 				}
@@ -213,10 +213,10 @@ echo '		var html = "";
 				{
 					echo '<div id="customers_notif" class="notifs notifs_alternate"><span id="customers_notif_number_wrapper" class="number_wrapper"><span id="customers_notif_value">0</span></span>
 							<div id="customers_notif_wrapper" class="notifs_wrapper">
-								<h3>'.translate('Last customers').'</h3>
-								<p class="no_notifs">'.translate('No new customers registered on your shop').'</p>
+								<h3>'.Translate::getAdminTranslation('Last customers').'</h3>
+								<p class="no_notifs">'.Translate::getAdminTranslation('No new customers registered on your shop').'</p>
 								<ul id="list_customers_notif"></ul>
-								<p><a href="index.php?tab=AdminCustomers&token='.Tools::getAdminTokenLite('AdminCustomers').'">'.translate('Show all customers').'</a></p>
+								<p><a href="index.php?tab=AdminCustomers&token='.Tools::getAdminTokenLite('AdminCustomers').'">'.Translate::getAdminTranslation('Show all customers').'</a></p>
 							</div>
 						</div>';
 				}
@@ -224,26 +224,26 @@ echo '		var html = "";
 				{
 					echo '<div id="customer_messages_notif" class="notifs"><span id="customer_messages_notif_number_wrapper" class="number_wrapper"><span id="customer_messages_notif_value">0</span></span>
 							<div id="customer_messages_notif_wrapper" class="notifs_wrapper">
-								<h3>'.translate('Last messages').'</h3>
-								<p class="no_notifs">'.translate('No new messages posted on your shop').'</p>
+								<h3>'.Translate::getAdminTranslation('Last messages').'</h3>
+								<p class="no_notifs">'.Translate::getAdminTranslation('No new messages posted on your shop').'</p>
 								<ul id="list_customer_messages_notif"></ul>
-								<p><a href="index.php?tab=AdminCustomerThreads&token='.Tools::getAdminTokenLite('AdminCustomerThreads').'">'.translate('Show all messages').'</a></p>
+								<p><a href="index.php?tab=AdminCustomerThreads&token='.Tools::getAdminTokenLite('AdminCustomerThreads').'">'.Translate::getAdminTranslation('Show all messages').'</a></p>
 							</div>
 						</div>';
 				}
-	echo		'</div>
+	echo			'</div>
 	
 	<div id="employee_box">
 				<div id="employee_infos">
-					<div class="employee_name">'.translate('Welcome,').' <strong>'.Context::getContext()->employee->firstname.'&nbsp'.Context::getContext()->employee->lastname.'</strong></div>
+					<div class="employee_name">'.Translate::getAdminTranslation('Welcome,').' <strong>'.Context::getContext()->employee->firstname.'&nbsp'.Context::getContext()->employee->lastname.'</strong></div>
 					<div class="clear"></div>
 					<ul id="employee_links">
-						<li><a href="'.htmlentities(Context::getContext()->link->getAdminLink('AdminEmployees'), ENT_COMPAT, 'UTF-8').'&id_employee={$employee->id}&amp;updateemployee">'.translate('My preferences').'</a></li>
+						<li><a href="'.htmlentities(Context::getContext()->link->getAdminLink('AdminEmployees'), ENT_COMPAT, 'UTF-8').'&id_employee={$employee->id}&amp;updateemployee">'.Translate::getAdminTranslation('My preferences').'</a></li>
 						<li class="separator">&nbsp;</li>
-						<li><a id="header_logout" href="index.php?logout">'.translate('logout').'</a></li>
+						<li><a id="header_logout" href="index.php?logout">'.Translate::getAdminTranslation('logout').'</a></li>
 					</ul>';
 					if (defined(_PS_BASE_URL_))
-						echo '<a href="'._PS_BASE_URL_.'" id="header_foaccess" target="_blank" title="'.translate('View my shop').'">'.translate('View my shop').'</a>';
+						echo '<a href="'._PS_BASE_URL_.'" id="header_foaccess" target="_blank" title="'.Translate::getAdminTranslation('View my shop').'">'.Translate::getAdminTranslation('View my shop').'</a>';
 				echo '</div>
 			</div>
 			
@@ -252,18 +252,18 @@ echo '		var html = "";
 				<form method="post" action="index.php?controller=AdminSearch&amp;token='.Tools::getAdminTokenLite('AdminSearch').'">
 					<input type="text" name="bo_query" id="bo_query" value="'.Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query'))).'" />
 					<select name="bo_search_type" id="bo_search_type" class="chosen no-search">
-						<option value="0">'.translate('everywhere').'</option>
-						<option value="1" '.(Tools::getValue('bo_search_type') == 1 ? 'selected="selected"' : '').'>'.translate('catalog').'</option>
-						<optgroup label="'.translate('customers').':">
-							<option value="2" '.(Tools::getValue('bo_search_type') == 2 ? 'selected="selected"' : '').'>'.translate('by name').'</option>
-							<option value="6" '.(Tools::getValue('bo_search_type') == 6 ? 'selected="selected"' : '').'>'.translate('by ip address').'</option>
+						<option value="0">'.Translate::getAdminTranslation('everywhere').'</option>
+						<option value="1" '.(Tools::getValue('bo_search_type') == 1 ? 'selected="selected"' : '').'>'.Translate::getAdminTranslation('catalog').'</option>
+						<optgroup label="'.Translate::getAdminTranslation('customers').':">
+							<option value="2" '.(Tools::getValue('bo_search_type') == 2 ? 'selected="selected"' : '').'>'.Translate::getAdminTranslation('by name').'</option>
+							<option value="6" '.(Tools::getValue('bo_search_type') == 6 ? 'selected="selected"' : '').'>'.Translate::getAdminTranslation('by ip address').'</option>
 						</optgroup>
-						<option value="3" '.(Tools::getValue('bo_search_type') == 3 ? 'selected="selected"' : '').'>'.translate('orders').'</option>
-						<option value="4" '.(Tools::getValue('bo_search_type') == 4 ? 'selected="selected"' : '').'>'.translate('invoices').'</option>
-						<option value="5" '.(Tools::getValue('bo_search_type') == 5 ? 'selected="selected"' : '').'>'.translate('carts').'</option>
-						<option value="7" '.(Tools::getValue('bo_search_type') == 7 ? 'selected="selected"' : '').'>'.translate('modules').'</option>
+						<option value="3" '.(Tools::getValue('bo_search_type') == 3 ? 'selected="selected"' : '').'>'.Translate::getAdminTranslation('orders').'</option>
+						<option value="4" '.(Tools::getValue('bo_search_type') == 4 ? 'selected="selected"' : '').'>'.Translate::getAdminTranslation('invoices').'</option>
+						<option value="5" '.(Tools::getValue('bo_search_type') == 5 ? 'selected="selected"' : '').'>'.Translate::getAdminTranslation('carts').'</option>
+						<option value="7" '.(Tools::getValue('bo_search_type') == 7 ? 'selected="selected"' : '').'>'.Translate::getAdminTranslation('modules').'</option>
 					</select>
-					<input type="submit" id="bo_search_submit" class="button" value="'.translate('Search').'"/>
+					<input type="submit" id="bo_search_submit" class="button" value="'.Translate::getAdminTranslation('Search').'"/>
 				</form>
 			</div>
 			<div id="header_quick">
@@ -277,7 +277,7 @@ echo '		var html = "";
 				}
 				</script>
 				<select onchange="quickSelect(this);" id="quick_select">
-					<option value="0">'.translate('Quick Access').'</option>';
+					<option value="0">'.Translate::getAdminTranslation('Quick Access').'</option>';
 foreach (QuickAccess::getQuickAccesses(Context::getContext()->language->id) AS $quick)
 {
 	preg_match('/controller=(.+)(&.+)?$/', $quick['link'], $adminTab);
@@ -342,8 +342,8 @@ echo '
 				<div id="main">
 				<div id="content">'
 			.(file_exists(_PS_ADMIN_DIR_.'/../install') ? '<div style="background-color: #FFEBCC;border: 1px solid #F90;line-height: 20px;margin: 0px 0px 10px;padding: 10px 20px;">'
-				.translate('For security reasons, you must also:').' '.
-				translate('delete the /install folder').
+				.Translate::getAdminTranslation('For security reasons, you must also:').' '.
+				Translate::getAdminTranslation('delete the /install folder').
 				'</div>' : '').'
 				';
 				if(defined('_PS_MODE_DEV_') && _PS_MODE_DEV_)
@@ -352,7 +352,7 @@ echo '
 if (Shop::isFeatureActive() && Context::getContext()->controller->multishop_context != Shop::CONTEXT_ALL)
 {
    echo '<div class="multishop_toolbar">
-        <span class="text_multishop">'.translate('Multistore configuration for').'</span>'.
+        <span class="text_multishop">'.Translate::getAdminTranslation('Multistore configuration for').'</span>'.
 		Helper::renderShopList();
     echo '</div>';
 }

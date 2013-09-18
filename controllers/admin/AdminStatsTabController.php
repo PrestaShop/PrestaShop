@@ -37,6 +37,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 	public function initContent()
 	{
 		$this->initTabModuleList();
+		$this->addToolBarModulesListButton();
 		$this->toolbar_title = $this->l('Stats', 'AdminStatsTab');
 		if ($this->display == 'view')
 		{
@@ -77,6 +78,12 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 		$tpl = $context->controller->createTemplate('calendar.tpl');
 
 		$context->controller->addJqueryUI('ui.datepicker');
+
+		if ($identifier === null && Tools::getValue('module'))
+		{
+			$identifier = 'module';
+			$id = Tools::getValue('module');
+		}
 
 		$tpl->assign(array(
 			'current' => self::$currentIndex,
@@ -124,8 +131,13 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
 		$modules = $this->getModules();
 		$module_instance = array();
-		foreach ($modules as $module)
+		foreach ($modules as $m => $module)
+		{
 			$module_instance[$module['name']] = Module::getInstanceByName($module['name']);
+			$modules[$m]['displayName'] = $module_instance[$module['name']]->displayName;
+		}
+
+		uasort($modules, array($this, 'checkModulesNames'));
 
 		$tpl->assign(array(
 			'current' => self::$currentIndex,
@@ -135,6 +147,11 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 		));
 
 		return $tpl->fetch();
+	}
+	
+	public function checkModulesNames($a, $b)
+	{
+		return (bool)($a['displayName'] > $b['displayName']);
 	}
 
 	protected function getModules()
@@ -183,7 +200,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 		if (Tools::isSubmit('submitDatePicker'))
 		{
 			if (!Validate::isDate($from = Tools::getValue('datepickerFrom')) || !Validate::isDate($to = Tools::getValue('datepickerTo')))
-				$this->errors[] = Tools::displayError('Specified date is invalid');
+				$this->errors[] = Tools::displayError('The specified date is invalid.');
 		}
 		if (Tools::isSubmit('submitDateDay'))
 		{
@@ -235,7 +252,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 				Configuration::updateValue('PS_STATS_OLD_CONNECT_AUTO_CLEAN', Tools::getValue('PS_STATS_OLD_CONNECT_AUTO_CLEAN', Configuration::get('PS_STATS_OLD_CONNECT_AUTO_CLEAN')));
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 	}
 

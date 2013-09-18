@@ -70,6 +70,11 @@ class AttributeGroupCore extends ObjectModel
 
 	public function add($autodate = true, $nullValues = false)
 	{
+		if ($this->group_type == 'color')
+			$this->is_color_group = 1;
+		else
+			$this->is_color_group = 0;
+		
 		if ($this->position <= 0)
 			$this->position = AttributeGroup::getHigherPosition() + 1;
 
@@ -80,11 +85,16 @@ class AttributeGroupCore extends ObjectModel
 
 	public function update($nullValues = false)
 	{
+		if ($this->group_type == 'color')
+			$this->is_color_group = 1;
+		else
+			$this->is_color_group = 0;
+		
 		$return = parent::update($nullValues);
 		Hook::exec('actionAttributeGroupSave', array('id_attribute_group' => $this->id));
 		return $return;
 	}
-
+	
 	public static function cleanDeadCombinations()
 	{
 		$attribute_combinations = Db::getInstance()->executeS('
@@ -109,7 +119,7 @@ class AttributeGroupCore extends ObjectModel
 
 	public function delete()
 	{
-		if (!$this->hasMultishopEntries())
+		if (!$this->hasMultishopEntries() || Shop::getContext() == Shop::CONTEXT_ALL)
 		{
 			/* Select children in order to find linked combinations */
 			$attribute_ids = Db::getInstance()->executeS('
@@ -132,12 +142,15 @@ class AttributeGroupCore extends ObjectModel
 			if (!AttributeGroup::cleanDeadCombinations())
 				return false;
 		 	/* Also delete related attributes */
-			if (Db::getInstance()->execute('
+			if (count($to_remove))
+				if (!Db::getInstance()->execute('
 				DELETE FROM `'._DB_PREFIX_.'attribute_lang`
-				WHERE `id_attribute`
-					IN (SELECT id_attribute FROM `'._DB_PREFIX_.'attribute` WHERE `id_attribute_group` = '.(int)$this->id.')') === false ||
-					Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'attribute` WHERE `id_attribute_group` = '.(int)$this->id) === false)
-				return false;
+				WHERE `id_attribute`	IN ('.implode(',', $to_remove).')') ||
+				!Db::getInstance()->execute('
+				DELETE FROM `'._DB_PREFIX_.'attribute_shop`
+				WHERE `id_attribute`	IN ('.implode(',', $to_remove).')') ||
+				!Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'attribute` WHERE `id_attribute_group` = '.(int)$this->id))
+					return false;
 			$this->cleanPositions();
 		}
 		$return = parent::delete();

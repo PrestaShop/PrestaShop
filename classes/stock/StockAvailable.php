@@ -367,9 +367,11 @@ class StockAvailableCore extends ObjectModel
 	 */
 	public function add($autodate = true, $null_values = false)
 	{
-		if (!parent::add($autodate, $null_values))
+		if (!$result = parent::add($autodate, $null_values))
 			return false;
-		$this->postSave();
+
+		$result &= $this->postSave();		
+		return $result;
 	}
 
 	/**
@@ -378,9 +380,11 @@ class StockAvailableCore extends ObjectModel
 	 */
 	public function update($null_values = false)
 	{
-		if (!parent::update($null_values))
+		if (!$result = parent::update($null_values))
 			return false;
-		return $this->postSave();
+
+		$result &= $this->postSave();		
+		return $result;
 	}
 
 	/**
@@ -676,7 +680,7 @@ class StockAvailableCore extends ObjectModel
 
 		// if there is no $id_shop, gets the context one
 		// get shop group too
-		if ($shop === null)
+		if ($shop === null || $shop === $context->shop->id)
 		{
 			if (Shop::getContext() == Shop::CONTEXT_GROUP)
 				$shop_group = Shop::getContextShopGroup();

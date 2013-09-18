@@ -50,7 +50,7 @@ class AddressesControllerCore extends FrontController
 		parent::init();
 
 		if (!Validate::isLoadedObject($this->context->customer))
-			die(Tools::displayError('Customer not found'));
+			die(Tools::displayError('The customer could not be found.'));
 	}
 
 	/**

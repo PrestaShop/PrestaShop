@@ -35,7 +35,7 @@
 		{if isset($opc) && $opc}
 			{assign var='type_order' value="order-opc"}
 		{/if}
-		<a data-icon="refresh" data-role="button" data-theme="e" href="{$link->getPageLink({$type_order}, true, NULL, "submitReorder&id_order={$order->id|intval}")}" title="{l s='Reorder'}" data-ajax="false">
+		<a data-icon="refresh" data-role="button" data-theme="e" href="{$link->getPageLink({$type_order}, true, NULL, "submitReorder&id_order={$order->id|intval}")|escape:'html'}" title="{l s='Reorder'}" data-ajax="false">
 		{l s='Reorder'}
 		</a>
 	</div>
@@ -46,8 +46,8 @@
 
 
 <ul class="info-order" data-role="listview">
-	{if $carrier->id}<li><strong>{l s='Carrier:'}</strong> {if $carrier->name == "0"}{$shop_name|escape:'htmlall':'UTF-8'}{else}{$carrier->name|escape:'htmlall':'UTF-8'}{/if}</li>{/if}
-	<li><strong>{l s='Payment method:'}</strong> <span class="color-myaccount">{$order->payment|escape:'htmlall':'UTF-8'}</span></li>
+	{if $carrier->id}<li><strong>{l s='Carrier'}</strong> {if $carrier->name == "0"}{$shop_name|escape:'htmlall':'UTF-8'}{else}{$carrier->name|escape:'htmlall':'UTF-8'}{/if}</li>{/if}
+	<li><strong>{l s='Payment method'}</strong> <span class="color-myaccount">{$order->payment|escape:'htmlall':'UTF-8'}</span></li>
 	{if $invoice AND $invoiceAllowed}
 	<li>
 		<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
@@ -59,7 +59,7 @@
 	{/if}
 	{if $order->gift}
 		<li><img src="{$img_dir}icon/gift.gif" alt="" class="icon" />&nbsp;{l s='You have requested gift wrapping for this order.'}</li>
-		<li>{l s='Message:'} {$order->gift_message|nl2br}</li>
+		<li>{l s='Message'} {$order->gift_message|nl2br}</li>
 	{/if}
 </ul><!-- .info-order -->
 
@@ -91,9 +91,9 @@
 <p>
 	<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
 	{if $is_guest}
-		<a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order->id}&amp;secure_key=$order->secure_key")}" >{l s='Download your invoice as a PDF file.'}</a>
+		<a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order->id}&amp;secure_key=$order->secure_key")|escape:'html'}" >{l s='Download your invoice as a PDF file.'}</a>
 	{else}
-		<a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order->id}")}" >{l s='Download your invoice as a PDF file.'}</a>
+		<a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order->id}")|escape:'html'}" >{l s='Download your invoice as a PDF file.'}</a>
 	{/if}
 </p>
 {/if}
@@ -103,7 +103,7 @@
 {/if}
 {if $order->gift}
 	<p><img src="{$img_dir}icon/gift.gif" alt="" class="icon" />&nbsp;{l s='You have requested gift wrapping for this order.'}</p>
-	<p>{l s='Message:'} {$order->gift_message|nl2br}</p>
+	<p>{l s='Message'} {$order->gift_message|nl2br}</p>
 {/if}
 {* / TO CHECK ==========================*}
 
@@ -117,7 +117,7 @@
 		{elseif $field_item eq "phone_mobile" && $address_invoice->phone_mobile}<p class="address_phone_mobile">{$address_invoice->phone_mobile|escape:'htmlall':'UTF-8'}</p>
 		{else}
 				{assign var=address_words value=" "|explode:$field_item}
-				<p>{foreach from=$address_words item=word_item name="word_loop"}{if !$smarty.foreach.word_loop.first} {/if}<span class="address_{$word_item}">{$invoiceAddressFormatedValues[$word_item]|escape:'htmlall':'UTF-8'}</span>{/foreach}</p>
+				<p>{foreach from=$address_words item=word_item name="word_loop"}{if !$smarty.foreach.word_loop.first} {/if}<span class="address_{$word_item|replace:',':''}">{$invoiceAddressFormatedValues[$word_item|replace:',':'']|escape:'htmlall':'UTF-8'}</span>{/foreach}</p>
 		{/if}
 	{/foreach}
 	</li>
@@ -130,7 +130,7 @@
 		{elseif $field_item eq "phone_mobile" && $address_delivery->phone_mobile}<p class="address_phone_mobile">{$address_delivery->phone_mobile|escape:'htmlall':'UTF-8'}</p>
 		{else}
 				{assign var=address_words value=" "|explode:$field_item} 
-				<p>{foreach from=$address_words item=word_item name="word_loop"}{if !$smarty.foreach.word_loop.first} {/if}<span class="address_{$word_item}">{$deliveryAddressFormatedValues[$word_item]|escape:'htmlall':'UTF-8'}</span>{/foreach}</p>
+				<p>{foreach from=$address_words item=word_item name="word_loop"}{if !$smarty.foreach.word_loop.first} {/if}<span class="address_{$word_item|replace:',':''}">{$deliveryAddressFormatedValues[$word_item|replace:',':'']|escape:'htmlall':'UTF-8'}</span>{/foreach}</p>
 		{/if}
 	{/foreach}
 	</li>
@@ -143,7 +143,7 @@
 {*$HOOK_ORDERDETAILDISPLAYED*}
 {* / TO CHECK ==========================*}
 {if $return_allowed}<p>{l s='If you wish to return one or more products, please mark the corresponding boxes and provide an explanation for the return. When complete, click the button below.'}</p>{/if}
-{if !$is_guest}<form action="{$link->getPageLink('order-follow', true)}" method="post">{/if}
+{if !$is_guest}<form action="{$link->getPageLink('order-follow', true)|escape:'html'}" method="post">{/if}
 <ul data-role="listview" data-inset="true">
 {foreach from=$products item=product name=products}
 	{if !isset($product.deleted)}
@@ -161,7 +161,7 @@
 {foreach from=$discounts item=discount}
 	<li class="item">
 		<h3>{$discount.name|escape:'htmlall':'UTF-8'}</h3>
-		<p>{l s='Voucher:'} {$discount.name|escape:'htmlall':'UTF-8'}</p>
+		<p>{l s='Voucher'} {$discount.name|escape:'htmlall':'UTF-8'}</p>
 		<p><span class="order_qte_span editable">1</span></p>
 		<p>&nbsp;</p>
 		<p>{if $discount.value != 0.00}{l s='-'}{/if}{convertPriceWithCurrency price=$discount.value currency=$currency}</p>
@@ -173,8 +173,8 @@
 {* / TO CHECK ==========================*}
 	{if $priceDisplay && $use_tax}
 		<li data-theme="b" class="item">
-			{l s='Total products (tax excl.):'} <span class="price">{displayWtPriceWithCurrency price=$order->getTotalProductsWithoutTaxes() currency=$currency}</span>
-		</tr>
+			{l s='Total products (tax excl.)'} <span class="price">{displayWtPriceWithCurrency price=$order->getTotalProductsWithoutTaxes() currency=$currency}</span>
+		</li>
 	{/if}
 	<li data-theme="b" class="item">
 		{l s='Total products'} {if $use_tax}{l s='(tax incl.)'}{/if}: <span class="price">{displayWtPriceWithCurrency price=$order->getTotalProductsWithTaxes() currency=$currency}</span>
@@ -193,7 +193,7 @@
 		{l s='Total shipping'} {if $use_tax}{l s='(tax incl.)'}{/if}: <span class="price-shipping">{displayWtPriceWithCurrency price=$order->total_shipping currency=$currency}</span>
 	</li>
 	<li data-theme="a" class="totalprice item">
-		{l s='Total:'} <span class="price">{displayWtPriceWithCurrency price=$order->total_paid currency=$currency}</span>
+		{l s='Total'} <span class="price">{displayWtPriceWithCurrency price=$order->total_paid currency=$currency}</span>
 	</li>
 </ul>
 <!-- /order details -->
@@ -203,7 +203,7 @@
 <ul data-role="listview" >
 	{foreach from=$order->getShipping() item=line}
 	<li>
-		<h3>{$line.state_name}</h3>
+		<h3>{$line.carrier_name}</h3>
 		<p><strong>{l s='Weight'}</strong> {$line.weight|string_format:"%.3f"} {Configuration::get('PS_WEIGHT_UNIT')}</p>
 		<p><strong>{l s='Shipping cost'}</strong> {if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}{displayPrice price=$line.shipping_cost_tax_incl currency=$currency->id}{else}{displayPrice price=$line.shipping_cost_tax_excl currency=$currency->id}{/if}</p>
 		<p><strong>{l s='Tracking number'}</strong> {if $line.url && $line.tracking_number}<a href="{$line.url|replace:'@':$line.tracking_number}" data-ajax="false">{$line.tracking_number}</a>{elseif $line.tracking_number != ''}{$line.tracking_number}{else}----{/if}</p>
@@ -273,8 +273,8 @@
 		</div>
 	{/if}
 	{* / TO CHECK ==========================*}
-	<form action="{$link->getPageLink('order-detail', true)}" method="post" class="std" id="sendOrderMessage">
-		<h3 class="bg">{l s='Add a message:'}</h3>
+	<form action="{$link->getPageLink('order-detail', true)|escape:'html'}" method="post" class="std" id="sendOrderMessage">
+		<h3 class="bg">{l s='Add a message'}</h3>
 		<p>{l s='If you would like to add a comment about your order, please write it in the field below.'}</p>
 		<fieldset>
 			<label for="id_product">{l s='Product'}</label>

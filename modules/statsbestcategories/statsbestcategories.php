@@ -69,7 +69,7 @@ class StatsBestCategories extends ModuleGrid
 			),
 			array(
 				'id' => 'totalPriceSold',
-				'header' => $this->l('Total Price Sold'),
+				'header' => $this->l('Total Price'),
 				'dataIndex' => 'totalPriceSold',
 				'width' => 30,
 				'align' => 'right'

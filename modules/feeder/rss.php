@@ -34,6 +34,7 @@ $id_category = ((int)(Tools::getValue('id_category')) ? (int)(Tools::getValue('i
 $products = Product::getProducts((int)Context::getContext()->language->id, 0, ($number > 10 ? 10 : $number), $orderBy, $orderWay, $id_category, true);
 $currency = new Currency((int)Context::getContext()->currency->id);
 $affiliate = (Tools::getValue('ac') ? '?ac='.(int)(Tools::getValue('ac')) : '');
+$metas = Meta::getMetaByPage('index', (int)Context::getContext()->language->id);
 
 // Send feed
 header("Content-Type:text/xml; charset=utf-8");
@@ -42,8 +43,9 @@ echo '<?xml version="1.0" encoding="UTF-8"?>'."\n";
 <rss version="2.0">
 	<channel>
 		<title><![CDATA[<?php echo Configuration::get('PS_SHOP_NAME') ?>]]></title>
+		<description><![CDATA[<?php echo $metas['description'] ?>]]></description>
 		<link><?php echo _PS_BASE_URL_.__PS_BASE_URI__; ?></link>
-		<mail><?php echo Configuration::get('PS_SHOP_EMAIL') ?></mail>
+		<webMaster><?php echo Configuration::get('PS_SHOP_EMAIL') ?></webMaster>
 		<generator>PrestaShop</generator>
 		<language><?php echo Context::getContext()->language->iso_code; ?></language>
 		<image>

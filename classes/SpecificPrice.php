@@ -135,7 +135,7 @@ class SpecificPriceCore extends ObjectModel
 			SELECT *
 			FROM `'._DB_PREFIX_.'specific_price`
 			WHERE `id_product` = '.(int)$id_product.
-			($id_product_attribute ? 'AND id_product_attribute = '.(int)$id_product_attribute : '').'
+			($id_product_attribute ? ' AND id_product_attribute = '.(int)$id_product_attribute : '').'
 			AND id_cart = '.(int)$id_cart);
 	}
 

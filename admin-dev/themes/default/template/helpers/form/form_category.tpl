@@ -35,39 +35,33 @@
 			buildTreeView(use_context);
 		});
 	</script>
-
 	<div class="category-filter">
-		<span><a href="#" id="collapse_all" >{$categories.trads['Collapse All']}</a>
-		 |</span>
-		 <span><a href="#" id="expand_all" >{$categories.trads['Expand All']}</a>
+		<span><a href="#" id="collapse_all">{$categories.trads['Collapse All']}</a>|&nbsp;</span>
+	 	<span><a href="#" id="expand_all">{$categories.trads['Expand All']}</a>|&nbsp;</span>		 
 		{if !$categories.use_radio}
-		 |</span>
-		 <span></span><a href="#" id="check_all" >{$categories.trads['Check All']}</a>
-		 |</span>
-		 <span></span><a href="#" id="uncheck_all" >{$categories.trads['Uncheck All']}</a></span>
-		 {/if}
+		<span><a href="#" id="check_all">{$categories.trads['Check All']}</a>|&nbsp;</span>
+		<span><a href="#" id="uncheck_all">{$categories.trads['Uncheck All']}</a>|&nbsp;</span>
+		{/if}
 		{if $categories.use_search}
 			<span style="margin-left:20px">
-				{$categories.trads.search} :
+				{$categories.trads.search}:&nbsp;
 				<form method="post" id="filternameForm">
-					<input type="text" name="search_cat" id="search_cat">
+					<input type="text" name="search_cat" id="search_cat"/>
 				</form>
 			</span>
 		{/if}
 	</div>
-
 	{assign var=home_is_selected value=false}
-
 	{foreach $categories.selected_cat AS $cat}
 		{if is_array($cat)}
 			{if $cat.id_category != $categories.trads.Root.id_category}
-				<input {if in_array($cat.id_category, $categories.disabled_categories)}disabled="disabled"{/if} type="hidden" name="{$categories.input_name}" value="{$cat.id_category}" >
+				<input {if in_array($cat.id_category, $categories.disabled_categories)}disabled="disabled"{/if} type="hidden" name="{$categories.input_name}" value="{$cat.id_category}"/>
 			{else}
 				{assign var=home_is_selected value=true}
 			{/if}
 		{else}
 			{if $cat != $categories.trads.Root.id_category}
-				<input {if in_array($cat, $categories.disabled_categories)}disabled="disabled"{/if} type="hidden" name="{$categories.input_name}" value="{$cat}" >
+				<input {if in_array($cat, $categories.disabled_categories)}disabled="disabled"{/if} type="hidden" name="{$categories.input_name}" value="{$cat}"/>
 			{else}
 				{assign var=home_is_selected value=true}
 			{/if}
@@ -80,8 +74,8 @@
 					<input type="{if !$categories.use_radio}checkbox{else}radio{/if}"
 							name="{$categories.input_name}"
 							value="{$categories.trads.Root.id_category}"
-							{if $home_is_selected}checked{/if}
-							onclick="clickOnCategoryBox($(this));" />
+							{if $home_is_selected}checked="checked"{/if}
+							onclick="clickOnCategoryBox($(this));"/>
 						<span class="category_label">{$categories.trads.Root.name}</span>
 				{else}
 					&nbsp;

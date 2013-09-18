@@ -3,7 +3,7 @@
             <name>statsnewsletter</name>
             <displayName><![CDATA[Newsletter]]></displayName>
             <version><![CDATA[1]]></version>
-            <description><![CDATA[Display the newsletter registrations]]></description>
+            <description><![CDATA[Display newsletter registrations.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[analytics_stats]]></tab>
             <is_configurable>0</is_configurable>

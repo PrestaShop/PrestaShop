@@ -4,7 +4,7 @@
 		<currency name="Krona" iso_code="SEK" iso_code_num="752" sign="kr" blank="1" conversion_rate="9.14651" format="2" decimals="1" />
 	</currencies>
 	<languages>
-		<language iso_code="se" />
+		<language iso_code="sv" />
 	</languages>
 	<taxes>
 		<tax id="1" name="Moms SE 25%" rate="25" />

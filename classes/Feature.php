@@ -81,7 +81,7 @@ class FeatureCore extends ObjectModel
 	public static function getFeatures($id_lang, $with_shop = true)
 	{
 		return Db::getInstance()->executeS('
-		SELECT *
+		SELECT DISTINCT f.id_feature, f.*, fl.*
 		FROM `'._DB_PREFIX_.'feature` f
 		'.($with_shop ? Shop::addSqlAssociation('feature', 'f') : '').'
 		LEFT JOIN `'._DB_PREFIX_.'feature_lang` fl ON (f.`id_feature` = fl.`id_feature` AND fl.`id_lang` = '.(int)$id_lang.')
@@ -312,6 +312,7 @@ class FeatureCore extends ObjectModel
 	 */
 	public static function cleanPositions()
 	{
+<<<<<<< HEAD
 		$return = true;
 		$sql = 'CREATE TEMPORARY TABLE `'._DB_PREFIX_.'feature_tmp` (
 			`rank` INT NOT NULL AUTO_INCREMENT,
@@ -323,6 +324,18 @@ class FeatureCore extends ObjectModel
 		UPDATE `'._DB_PREFIX_.'feature_tmp` f LEFT JOIN ps_feature_tmp t USING(id_feature) SET f.position = rank-1';
 		$return = Db::getInstance()->executeS($sql);
 		return $return;
+=======
+		return Db::getInstance()->execute('
+		UPDATE `'._DB_PREFIX_.'feature` f
+		LEFT JOIN (
+			SELECT @i := @i +1 AS rank, id_feature, position 
+			FROM `'._DB_PREFIX_.'feature`
+			JOIN (SELECT @i :=1) dummy
+			ORDER by position
+		) AS f2
+		USING (id_feature)
+		SET f.position = f2.rank - 1');
+>>>>>>> 3e750490feef2d55855c5713310e1e4f852725ba
 	}
 
 	/**

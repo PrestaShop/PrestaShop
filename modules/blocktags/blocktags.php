@@ -42,7 +42,7 @@ class BlockTags extends Module
 		parent::__construct();
 
 		$this->displayName = $this->l('Tags block');
-		$this->description = $this->l('Adds a block containing a tag cloud.');
+		$this->description = $this->l('Adds a block containing product tags.');
 	}
 
 	function install()
@@ -61,7 +61,7 @@ class BlockTags extends Module
 		if (Tools::isSubmit('submitBlockTags'))
 		{
 			if (!($tagsNbr = Tools::getValue('tagsNbr')) || empty($tagsNbr))
-				$output .= '<div class="alert error">'.$this->l('Please fill in the "tags displayed" field.').'</div>';
+				$output .= '<div class="alert error">'.$this->l('Please complete the "tags displayed" field.').'</div>';
 			elseif ((int)($tagsNbr) == 0)
 				$output .= '<div class="alert error">'.$this->l('Invalid number.').'</div>';
 			else
@@ -81,7 +81,7 @@ class BlockTags extends Module
 				<label>'.$this->l('Tags displayed').'</label>
 				<div class="margin-form">
 					<input type="text" name="tagsNbr" value="'.(int)(Configuration::get('BLOCKTAGS_NBR')).'" />
-					<p class="clear">'.$this->l('Set the number of tags to be displayed in this block').'</p>
+					<p class="clear">'.$this->l('Define the number of tags you would like displayed in this block.').'</p>
 				</div>
 				<center><input type="submit" name="submitBlockTags" value="'.$this->l('Save').'" class="button" /></center>
 			</fieldset>

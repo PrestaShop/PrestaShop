@@ -25,7 +25,7 @@
 
 <br/>
 <div class="blocEngine">
-	<form action="{$current}&token={$token}" method="post" id="settings_form" name="settings_form">
+	<form action="{$smarty.server.REQUEST_URI|escape}" method="post" id="settings_form" name="settings_form">
 		<h3 class="icon-{l s='Settings'}">{l s='Settings'}</h3>
 
 		<div class="rowForm">

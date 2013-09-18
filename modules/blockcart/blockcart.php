@@ -43,7 +43,7 @@ class BlockCart extends Module
 		$this->description = $this->l('Adds a block containing the customer\'s shopping cart.');
 	}
 
-	public function assignContentVars(&$params)
+	public function assignContentVars($params)
 	{
 		global $errors;
 
@@ -63,8 +63,9 @@ class BlockCart extends Module
 			$nbTotalProducts += (int)$product['cart_quantity'];
 		$cart_rules = $params['cart']->getCartRules();
 
-		$shipping_cost = Tools::displayPrice($params['cart']->getOrderTotal($useTax, Cart::ONLY_SHIPPING), $currency);
-		$shipping_cost_float = Tools::convertPrice($params['cart']->getOrderTotal($useTax, Cart::ONLY_SHIPPING), $currency);
+		$base_shipping = $params['cart']->getOrderTotal($useTax, Cart::ONLY_SHIPPING);
+		$shipping_cost = Tools::displayPrice($base_shipping, $currency);
+		$shipping_cost_float = Tools::convertPrice($base_shipping, $currency);
 		$wrappingCost = (float)($params['cart']->getOrderTotal($useTax, Cart::ONLY_WRAPPING));
 		$totalToPay = $params['cart']->getOrderTotal($useTax);
 
@@ -164,6 +165,7 @@ class BlockCart extends Module
 			parent::install() == false
 			|| $this->registerHook('top') == false
 			|| $this->registerHook('header') == false
+			|| $this->registerHook('actionCartListOverride') == false
 			|| Configuration::updateValue('PS_BLOCK_CART_AJAX', 1) == false)
 			return false;
 		return true;
@@ -195,10 +197,20 @@ class BlockCart extends Module
 		return $res;
 	}
 
+	public function hookActionCartListOverride($params)
+	{
+		if (!Configuration::get('PS_BLOCK_CART_AJAX'))
+			return;
+
+		$this->assignContentVars(array('cookie' => $this->context->cookie, 'cart' => $this->context->cart));
+		$params['json'] = $this->display(__FILE__, 'blockcart-json.tpl');
+	}
+
 	public function hookHeader()
 	{
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return;
+
 		$this->context->controller->addCSS(($this->_path).'blockcart.css', 'all');
 		if ((int)(Configuration::get('PS_BLOCK_CART_AJAX')))
 			$this->context->controller->addJS(($this->_path).'ajax-cart.js');

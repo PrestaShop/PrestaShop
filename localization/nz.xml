@@ -17,4 +17,7 @@
 		<unit type="base_distance" value="ft" />
 		<unit type="long_distance" value="mi" />
 	</units>
+	<languages>
+		<language iso_code="en"/>
+	</languages>
 </localizationPack>

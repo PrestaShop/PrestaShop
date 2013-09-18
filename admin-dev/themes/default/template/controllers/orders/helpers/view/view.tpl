@@ -27,7 +27,7 @@
 
 {block name="override_tpl"}
 	<script type="text/javascript">
-	var admin_order_tab_link = "{$link->getAdminLink('AdminOrders')}";
+	var admin_order_tab_link = "{$link->getAdminLink('AdminOrders')|addslashes}";
 	var id_order = {$order->id};
 	var id_lang = {$current_id_lang};
 	var id_currency = {$order->id_currency};
@@ -59,7 +59,7 @@
 
 	{assign var="hook_invoice" value={hook h="displayInvoice" id_order=$order->id}}
 	{if ($hook_invoice)}
-	<div style="float: right; margin: -40px 40px 10px 0;">{$hook_invoice}</div><br class="clear" />';
+	<div style="float: right; margin: -40px 40px 10px 0;">{$hook_invoice}</div><br class="clear" />
 	{/if}
 
 <div class="bloc-command">
@@ -84,7 +84,7 @@
 		</div>
 		<div class="metadata-command">
 			<dl>
-				<dt>{l s='Date:'} </dt>
+				<dt>{l s='Date'} </dt>
 				<dd>{dateFormat date=$order->date_add full=true}</dd>
 			|</dl>
 			<dl>
@@ -100,7 +100,7 @@
 				<dd id="product_number">{sizeof($products)}</dd>
 			|</dl>
 			<dl>
-				<dt>{l s='Total:'}</dt>
+				<dt>{l s='Total'}</dt>
 				<dd class="total_paid">{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}</dd>
 			</dl>
 		<div class="clear"></div>
@@ -113,9 +113,7 @@
 			<form action="{$currentIndex}&vieworder&token={$smarty.get.token}" method="post">
 				<select id="id_order_state" name="id_order_state">
 				{foreach from=$states item=state}
-					{if $state['id_order_state'] != $currentState->id}
-					<option value="{$state['id_order_state']}">{$state['name']|stripslashes}</option>
-					{/if}
+					<option value="{$state['id_order_state']}"{if $state['id_order_state'] == $currentState->id} selected="selected" disabled="disabled"{/if}>{$state['name']|stripslashes}</option>
 				{/foreach}
 				</select>
 				<input type="hidden" name="id_order" value="{$order->id}" />
@@ -162,7 +160,7 @@
 					{if (!Customer::customerExists($customer->email))}
 					<form method="post" action="index.php?tab=AdminCustomers&id_customer={$customer->id}&token={getAdminToken tab='AdminCustomers'}">
 						<input type="hidden" name="id_lang" value="{$order->id_lang}" />
-						<p class="center"><input class="button" type="submit" name="submitGuestToCustomer" value="{l s='Transform guest into customer'}" /></p>
+						<p class="center"><input class="button" type="submit" name="submitGuestToCustomer" value="{l s='Transform a guest into a customer'}" /></p>
 						{l s='This feature will generate a random password and send an email to the customer.'}
 					</form>
 					{else}
@@ -172,9 +170,9 @@
 					{l s='Account registered:'} <b>{dateFormat date=$customer->date_add full=true}</b><br />
 					{l s='Valid orders placed:'} <b>{$customerStats['nb_orders']}</b><br />
 					{l s='Total spent since registration:'} <b>{displayPrice price=Tools::ps_round(Tools::convertPrice($customerStats['total_orders'], $currency), 2) currency=$currency->id}</b><br />
-			</fieldset>
 				{/if}
 			{/if}
+			</fieldset>
 
 			<!-- Sources block -->
 			{if (sizeof($sources))}
@@ -185,9 +183,9 @@
 				{foreach from=$sources item=source}
 					<li>
 						{dateFormat date=$source['date_add'] full=true}<br />
-						<b>{l s='From:'}</b>{if $source['http_referer'] != ''}<a href="{$source['http_referer']}">{parse_url($source['http_referer'], $smarty.const.PHP_URL_HOST)|regex_replace:'/^www./':''}</a>{else}-{/if}<br />
-						<b>{l s='To:'}</b> <a href="http://{$source['request_uri']}">{$source['request_uri']|truncate:100:'...'}</a><br />
-						{if $source['keywords']}<b>{l s='Keywords:'}</b> {$source['keywords']}<br />{/if}<br />
+						<b>{l s='From'}</b>{if $source['http_referer'] != ''}<a href="{$source['http_referer']}">{parse_url($source['http_referer'], $smarty.const.PHP_URL_HOST)|regex_replace:'/^www./':''}</a>{else}-{/if}<br />
+						<b>{l s='To'}</b> <a href="http://{$source['request_uri']}">{$source['request_uri']|truncate:100:'...'}</a><br />
+						{if $source['keywords']}<b>{l s='Keywords'}</b> {$source['keywords']}<br />{/if}<br />
 					</li>
 				{/foreach}
 				</ul>
@@ -266,8 +264,8 @@
 
 				{if (!$order->valid && sizeof($currencies) > 1)}
 				<form method="post" action="{$currentIndex}&vieworder&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
-					<p class="warn">{l s='Don\'t forget to update your conversion rate before make this change.'}</p>
-					<label>{l s='Don\'t forget to update your conversion rate before make this change.'}</label>
+					<p class="warn">{l s='Do not forget to update your exchange rate before making this change.'}</p>
+					<label>{l s='Do not forget to update your exchange rate before making this change.'}</label>
 					<select name="new_currency">
 						{foreach from=$currencies item=currency_change}
 							{if $currency_change['id_currency'] != $order->id_currency}
@@ -282,13 +280,13 @@
 				
 				{if count($order->getOrderPayments()) > 0}
 				<p class="error" style="{if round($orders_total_paid_tax_incl, 2) == round($total_paid, 2) || $currentState->id == 6}display: none;{/if}">
-					{l s='Warning:'} {displayPrice price=$total_paid currency=$currency->id}
+					{l s='Warning'} {displayPrice price=$total_paid currency=$currency->id}
 					{l s='paid instead of'} <span class="total_paid">{displayPrice price=$orders_total_paid_tax_incl currency=$currency->id}</span>
 					
 					{foreach $order->getBrother() as $brother_order}
 						{if $brother_order@first}
 							{if count($order->getBrother()) == 1}
-								<br />{l s='This warning also concerns the order '}
+								<br />{l s='This warning also concerns order '}
 							{else}
 								<br />{l s='This warning also concerns the next orders:'}
 							{/if}
@@ -327,7 +325,7 @@
 								<td>{displayPrice price=$payment->amount currency=$payment->id_currency}</td>
 								<td>
 								{if $invoice = $payment->getOrderInvoice($order->id)}
-									{$invoice->getInvoiceNumberFormatted($current_id_lang)}
+									{$invoice->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}
 								{else}
 									{l s='No invoice'}
 								{/if}
@@ -339,7 +337,7 @@
 							<tr class="payment_information" style="display: none;">
 								<td colspan="6">
 									<p>
-										<b>{l s='Card Number:'}</b>&nbsp;
+										<b>{l s='Card Number'}</b>&nbsp;
 										{if $payment->card_number}
 											{$payment->card_number}
 										{else}
@@ -348,7 +346,7 @@
 									</p>
 
 									<p>
-										<b>{l s='Card Brand:'}</b>&nbsp;
+										<b>{l s='Card Brand'}</b>&nbsp;
 										{if $payment->card_brand}
 											{$payment->card_brand}
 										{else}
@@ -357,7 +355,7 @@
 									</p>
 
 									<p>
-										<b>{l s='Card Expiration:'}</b>&nbsp;
+										<b>{l s='Card Expiration'}</b>&nbsp;
 										{if $payment->card_expiration}
 											{$payment->card_expiration}
 										{else}
@@ -366,7 +364,7 @@
 									</p>
 
 									<p>
-										<b>{l s='Card Holder:'}</b>&nbsp;
+										<b>{l s='Card Holder'}</b>&nbsp;
 										{if $payment->card_holder}
 											{$payment->card_holder}
 										{else}
@@ -378,7 +376,7 @@
 							{foreachelse}
 							<tr>
 								<td colspan="6" class="center">
-									<h3>{l s='No payment available'}</h3>
+									<h3>{l s='No payments are available'}</h3>
 								</td>
 							</tr>
 							{/foreach}
@@ -406,7 +404,7 @@
 								<td>
 									<select name="payment_invoice" id="payment_invoice">
 									{foreach from=$invoices_collection item=invoice}
-										<option value="{$invoice->id}" selected="selected">{$invoice->getInvoiceNumberFormatted($current_id_lang)}</option>
+										<option value="{$invoice->id}" selected="selected">{$invoice->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}</option>
 									{/foreach}
 									</select>
 								</td>
@@ -422,10 +420,10 @@
 			<!-- Shipping block -->
 			{if !$order->isVirtual()}
 				<fieldset>
-					<legend><img src="../img/admin/delivery.gif" /> {l s='Shipping:'}</legend>
+					<legend><img src="../img/admin/delivery.gif" /> {l s='Shipping'}</legend>
 
 					<div class="clear" style="float: left; margin-right: 10px;">
-						<span>{l s='Recycled packaging:'}</span>
+						<span>{l s='Recycled packaging'}</span>
 						{if $order->recyclable}
 						<img src="../img/admin/enabled.gif" />
 						{else}
@@ -433,13 +431,13 @@
 						{/if}
 					</div>
 					<div style="float: left;">
-						<span>{l s='Gift-wrapping:'}</span>
+						<span>{l s='Gift wrapping'}</span>
 						{if $order->gift}
 						<img src="../img/admin/enabled.gif" />
 						</div>
 						<div style="clear: left; margin: 0px 42px 0px 42px; padding-top: 2px;">
 							{if $order->gift_message}
-							<div style="border: 1px dashed #999; padding: 5px; margin-top: 8px;"><b>{l s='Message:'}</b><br />{$order->gift_message|nl2br}</div>
+							<div style="border: 1px dashed #999; padding: 5px; margin-top: 8px;"><b>{l s='Message'}</b><br />{$order->gift_message|nl2br}</div>
 							{/if}
 						{else}
 						<img src="../img/admin/disabled.gif" />
@@ -594,6 +592,7 @@
 						<th>{l s='Product'}</th>
 						<th style="width: 15%; text-align: center">{l s='Unit Price'} <sup>*</sup></th>
 						<th style="width: 4%; text-align: center">{l s='Qty'}</th>
+						{if $display_warehouse}<th style="text-align: center">{l s='Warehouse'}</th>{/if}
 						{if ($order->hasBeenPaid())}<th style="width: 3%; text-align: center">{l s='Refunded'}</th>{/if}
 						{if ($order->hasBeenDelivered() || $order->hasProductReturned())}<th style="width: 3%; text-align: center">{l s='Returned'}</th>{/if}
 						{if $stock_management}<th style="width: 10%; text-align: center">{l s='Available quantity'}</th>{/if}
@@ -661,7 +660,7 @@
 							<td class="partial_refund_fields current-edit" style="display:none;">&nbsp;</td>
 						</tr>
 						<tr id="total_shipping">
-							<td><b>{l s='Shipping:'}</b></td>
+							<td><b>{l s='Shipping'}</b></td>
 							<td class="amount" align="right">{displayPrice price=$order->total_shipping_tax_incl currency=$currency->id}</td>
 							<td class="partial_refund_fields current-edit" style="display:none;">{$currency->prefix}<input type="text" size="3" name="partialRefundShippingCost" value="0" />{$currency->suffix}</td>
 						</tr>
@@ -780,7 +779,7 @@
 			{/if}
 			{l s='At'} <i>{dateFormat date=$message['date_add']}
 			</i> {l s='from'} <b>{if ($message['elastname']|escape:'htmlall':'UTF-8')}{$message['efirstname']|escape:'htmlall':'UTF-8'} {$message['elastname']|escape:'htmlall':'UTF-8'}{else}{$message['cfirstname']|escape:'htmlall':'UTF-8'} {$message['clastname']|escape:'htmlall':'UTF-8'}{/if}</b>
-			{if ($message['private'] == 1)}<span style="color:red; font-weight:bold;">{l s='Private:'}</span>{/if}
+			{if ($message['private'] == 1)}<span style="color:red; font-weight:bold;">{l s='Private'}</span>{/if}
 			<p>{$message['message']|escape:'htmlall':'UTF-8'|nl2br}</p>
 			</div>
 			<br />

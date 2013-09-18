@@ -25,6 +25,7 @@
 
 function addProductRuleGroup()
 {
+	$('#product_rule_group_table').show();
 	product_rule_groups_counter += 1;
 	product_rule_counters[product_rule_groups_counter] = 0;
 
@@ -84,6 +85,13 @@ function addCartRuleOption(item)
 
 function updateProductRuleShortDescription(item)
 {
+	/******* For IE: put a product in condition on cart rules *******/
+	if(typeof String.prototype.trim !== 'function') {
+	  String.prototype.trim = function() {
+		return this.replace(/^\s+|\s+$/g, ''); 
+	  }
+	}
+
 	var id1 = $(item).attr('id').replace('_add', '').replace('_remove', '');
 	var id2 = id1.replace('_select', '');
 	var length = $('#' + id1 + '_2 option').length;

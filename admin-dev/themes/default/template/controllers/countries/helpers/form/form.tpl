@@ -48,6 +48,21 @@
 		</div>
 	{else}
 		{$smarty.block.parent}
+	{/if}		
+{/block}
+{block name="label"}
+	{if $input.name == 'standardization'}
+		<div id="TAASC" style="display: none;">{$smarty.block.parent}
+	{else}
+		{$smarty.block.parent}
+	{/if}
+{/block}
+
+{block name="input"}
+	{if $input.name == 'standardization'}
+		{$smarty.block.parent}</div>
+	{else}
+		{$smarty.block.parent}
 	{/if}
 {/block}
 
@@ -85,7 +100,11 @@
 		$('#need_zip_code_on, #need_zip_code_off').change(function() {
 			disableZipFormat();
 		});
-
+		
+		$('#iso_code').change(function() {
+			disableTAASC();
+		});				
+		disableTAASC();
 	});
 
 	function switchExplanationText(text) {

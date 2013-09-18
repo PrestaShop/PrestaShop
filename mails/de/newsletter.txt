@@ -1,9 +1,0 @@
-Nachricht von {shop_name}
-
-Nachricht
-
-{message}
-
-
-
-{shop_url} powered by PrestaShop™

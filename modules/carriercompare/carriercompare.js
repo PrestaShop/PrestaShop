@@ -25,34 +25,38 @@
 
 function PS_SE_HandleEvent()
 {
-	$(document).ready(function() {
-		
+	$(document).ready(function() {		
 		$('#id_country').change(function() {
 			resetAjaxQueries();
 			updateStateByIdCountry();
 		});
+
 		if (SE_RefreshMethod == 0)
 		{
 			$('#id_state').change(function() {
 				resetAjaxQueries();
 				updateCarriersList();
-			});		
-			$('#zipcode').bind('blur keyup',function(e) {
-				if (e.type == 'blur' || e.keyCode == '13')
+			});
+
+			$('#zipcode').bind('keyup',function(e) {
+				if (e.keyCode == '13')
 				{		
 					resetAjaxQueries();
 					updateCarriersList();
 				}												
 			});
 		}
+
 		$('#update_carriers_list').click(function() {
 			updateCarriersList();
 		});
+
 		$('#carriercompare_submit').click(function() {
 			resetAjaxQueries();
 			saveSelection();
 			return false;
 		});
+
 		updateStateByIdCountry();
 	});
 }

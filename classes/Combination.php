@@ -102,7 +102,14 @@ class CombinationCore extends ObjectModel
 			
 		// Removes the product from StockAvailable, for the current shop
 		StockAvailable::removeProductFromStockAvailable((int)$this->id_product, (int)$this->id);
-		
+
+		if ($specific_prices = SpecificPrice::getByProductId((int)$this->id_product, (int)$this->id))
+			foreach ($specific_prices as $specific_price)
+				{
+					$price = new SpecificPrice((int)$specific_price['id_specific_price']);
+					$price->delete();
+				}
+
 		if (!$this->hasMultishopEntries() && !$this->deleteAssociations())
 			return false;
 		return true;
@@ -128,13 +135,15 @@ class CombinationCore extends ObjectModel
 	{
 		$result = Db::getInstance()->delete('product_attribute_combination', '`id_product_attribute` = '.(int)$this->id);
 		$result &= Db::getInstance()->delete('cart_product', '`id_product_attribute` = '.(int)$this->id);
+		$result &= Db::getInstance()->delete('product_attribute_image', '`id_product_attribute` = '.(int)$this->id);
 
 		return $result;
 	}
 
 	public function setAttributes($ids_attribute)
 	{
-		if ($this->deleteAssociations())
+		$result = $this->deleteAssociations();
+		if ($result && !empty($ids_attribute)) 
 		{
 			$sql_values = array();
 			foreach ($ids_attribute as $value)
@@ -144,10 +153,8 @@ class CombinationCore extends ObjectModel
 				INSERT INTO `'._DB_PREFIX_.'product_attribute_combination` (`id_attribute`, `id_product_attribute`)
 				VALUES '.implode(',', $sql_values)
 			);
-
-			return $result;
 		}
-		return false;
+		return $result;
 	}
 
 	public function setWsProductOptionValues($values)

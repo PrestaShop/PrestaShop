@@ -2,11 +2,36 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>Message de {shop_name}</title>
+	<title>Message from {shop_name}</title>
 </head>
 <body>
-	<div style="width: 650px;"><a href="{shop_url}"><img title="{shop_name}" src="{shop_logo}" alt="{shop_name}" border="0" /></a><br /><br /> Hi,<br /><br /> Thank you for subscribing to our newsletter, please confirm your request by clicking the link below:<br /> <a href="{verif_url}">{verif_url}</a>
-<div style="margin-top: 10px; padding-top: 5px; border-top: 1px solid #666; text-align: center; font-size: 11px;"><a href="{shop_url}">{shop_name}</a> Powered by&nbsp;<a href="http://www.prestashop.com">PrestaShop</a>&trade;</div>
-</div>
+	<table style="font-family: Verdana,sans-serif; font-size: 11px; color: {color}; width: 550px;">
+<tbody>
+<tr>
+<td align="left"><a title="{shop_name}" href="{shop_url}"><img style="border: none;" src="{shop_logo}" alt="{shop_name}" /></a></td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td align="left">Hi,</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>Thank you for subscribing to our newsletter, please confirm your request by clicking the link below :</td>
+</tr>
+<tr>
+<td><a href="{verif_url}">{verif_url}</a></td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td style="font-size: 10px; border-top: 1px solid #D9DADE;" align="center"><a style="color: {color}; font-weight: bold; text-decoration: none;" href="{shop_url}">{shop_name}</a> Powered by&nbsp;<a href="http://www.prestashop.com">PrestaShop</a>&trade;</td>
+</tr>
+</tbody>
+</table>
 </body>
 </html>

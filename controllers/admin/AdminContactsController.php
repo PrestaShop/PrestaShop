@@ -55,12 +55,12 @@ class AdminContactsControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Title:'),
+					'label' => $this->l('Title'),
 					'name' => 'name',
 					'size' => 33,
 					'required' => true,
 					'lang' => true,
-					'desc' => $this->l('Contact name (e.g. Technical Support)'),
+					'desc' => $this->l('Contact name (e.g. Customer Support)'),
 				),
 				array(
 					'type' => 'text',

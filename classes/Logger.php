@@ -43,6 +43,9 @@ class	LoggerCore extends ObjectModel
 
 	/** @var integer Object ID */
 	public $object_id;
+	
+	/** @var integer Object ID */
+	public $id_employee;
 
 	/** @var string Object creation date */
 	public $date_add;
@@ -61,6 +64,7 @@ class	LoggerCore extends ObjectModel
 			'error_code' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'message' => 		array('type' => self::TYPE_STRING, 'validate' => 'isMessage', 'required' => true),
 			'object_id' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'id_employee' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'object_type' =>	array('type' => self::TYPE_STRING, 'validate' => 'isName'),
 			'date_add' => 		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'date_upd' => 		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
@@ -98,7 +102,7 @@ class	LoggerCore extends ObjectModel
 	 * @param boolean $allow_duplicate if set to true, can log several time the same information (not recommended)
 	 * @return boolean true if succeed
 	 */
-	public static function addLog($message, $severity = 1, $error_code = null, $object_type = null, $object_id = null, $allow_duplicate = false)
+	public static function addLog($message, $severity = 1, $error_code = null, $object_type = null, $object_id = null, $allow_duplicate = false, $id_employee = null)
 	{
 		$log = new Logger();
 		$log->severity = intval($severity);
@@ -106,6 +110,13 @@ class	LoggerCore extends ObjectModel
 		$log->message = pSQL($message);
 		$log->date_add = date('Y-m-d H:i:s');
 		$log->date_upd = date('Y-m-d H:i:s');
+
+		if ($id_employee === null && isset(Context::getContext()->employee) && Validate::isLoadedObject(Context::getContext()->employee))
+			$id_employee = Context::getContext()->employee->id;
+		
+		if ($id_employee !== null)
+			$log->id_employee = (int)$id_employee;
+
 		if (!empty($object_type) && !empty($object_id))
 		{
 			$log->object_type = pSQL($object_type);
@@ -137,6 +148,11 @@ class	LoggerCore extends ObjectModel
 			$this->hash = md5($this->message.$this->severity.$this->error_code.$this->object_type.$this->object_id);
 
 		return $this->hash;
+	}
+	
+	public static function eraseAllLogs()
+	{
+		return Db::getInstance()->execute('TRUNCATE TABLE '._DB_PREFIX_.'log');
 	}
 
 	/**

@@ -34,4 +34,4 @@
 require(dirname(__FILE__).'/config/config.inc.php');
 Tools::displayFileAsDeprecated();
 
-Tools::redirect('index.php?controller=address'.($_REQUEST ? '&'.http_build_query($_REQUEST, '', '&') : ''), __PS_BASE_URI__, null, 'HTTP/1.1 301 Moved Permanently');
+Tools::redirect('index.php?controller=address'.((count($_GET) || count($_POST)) ? '&'.http_build_query(array_merge($_GET, $_POST), '', '&') : ''), __PS_BASE_URI__, null, 'HTTP/1.1 301 Moved Permanently');

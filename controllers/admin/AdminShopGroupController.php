@@ -280,7 +280,7 @@ class AdminShopGroupControllerCore extends AdminController
 			if (ShopGroup::getTotalShopGroup() == 1)
 				$this->errors[] = Tools::displayError('You cannot delete or disable the last shop group.');
 			else if ($object->haveShops())
-				$this->errors[] = Tools::displayError('You cannot delete or disable a shop group which has shops using it.');
+				$this->errors[] = Tools::displayError('You cannot delete or disable a shop group in use. ');
 
 			if (count($this->errors))
 				return false;

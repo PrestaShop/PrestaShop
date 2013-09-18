@@ -41,7 +41,7 @@
 
 			<td width="{$width}%" class="ajax_block_product comparison_infos">
 				<a href="{$product->getLink()}" title="{$product->name|escape:html:'UTF-8'}" class="product_image" >
-					<img src="{$link->getImageLink($product->link_rewrite, $product->id_image, 'home_default')}" alt="{$product->name|escape:html:'UTF-8'}" width="{$homeSize.width}" height="{$homeSize.height}" />
+					<img src="{$link->getImageLink($product->link_rewrite, $product->id_image, 'home_default')|escape:'html'}" alt="{$product->name|escape:html:'UTF-8'}" width="{$homeSize.width}" height="{$homeSize.height}" />
 				</a>
 				<p class="s_title_block"><a href="{$product->getLink()}" title="{$product->name|truncate:32:'...'|escape:'htmlall':'UTF-8'}">{$product->name|truncate:27:'...'|escape:'htmlall':'UTF-8'}</a></p>
 				<div class="product_desc"><a href="{$product->getLink()}">{$product->description_short|strip_tags|truncate:60:'...'}</a></div>
@@ -84,10 +84,10 @@
 						</span>
 					{/if}
 				</p>
-				<a class="cmp_remove" href="{$link->getPageLink('products-comparison', true)}" rel="ajax_id_product_{$product->id}">{l s='Remove'}</a>
+				<a class="cmp_remove" href="{$link->getPageLink('products-comparison', true)|escape:'html'}" rel="ajax_id_product_{$product->id}">{l s='Remove'}</a>
 				{if (!$product->hasAttributes() OR (isset($add_prod_display) AND ($add_prod_display == 1))) AND $product->minimal_quantity == 1 AND $product->customizable != 2 AND !$PS_CATALOG_MODE}
 					{if ($product->quantity > 0 OR $product->allow_oosp)}
-						<a class="exclusive ajax_add_to_cart_button" rel="ajax_id_product_{$product->id}" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$product->id}&amp;token={$static_token}&amp;add")}" title="{l s='Add to cart'}"><span></span>{l s='Add to cart'}</a>
+						<a class="exclusive ajax_add_to_cart_button" rel="ajax_id_product_{$product->id}" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$product->id}&amp;token={$static_token}&amp;add")|escape:'html'}" title="{l s='Add to cart'}"><span></span>{l s='Add to cart'}</a>
 					{else}
 						<span class="exclusive">{l s='Add to cart'}</span>
 					{/if}

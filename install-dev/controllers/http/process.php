@@ -66,7 +66,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		Shop::setContext(Shop::CONTEXT_SHOP, 1);
 		Configuration::loadConfiguration();
 		Context::getContext()->language = new Language(Configuration::get('PS_LANG_DEFAULT'));
-		Context::getContext()->country = new Country('PS_COUNTRY_DEFAULT');
+		Context::getContext()->country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'));
 		Context::getContext()->cart = new Cart();
 		Context::getContext()->employee = new Employee(1);
 		define('_PS_SMARTY_FAST_LOAD_', true);
@@ -78,7 +78,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 	public function process()
 	{
 		if (file_exists(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE))
-			@require_once _PS_ROOT_DIR_.'/'.self::SETTINGS_FILE;
+			require_once _PS_ROOT_DIR_.'/'.self::SETTINGS_FILE;
 
 		if (!$this->session->process_validated)
 			$this->session->process_validated = array();
@@ -95,7 +95,9 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 			$this->processConfigureShop();
 		elseif (Tools::getValue('installModules') && !empty($this->session->process_validated['configureShop']))
 			$this->processInstallModules();
-		elseif (Tools::getValue('installFixtures') && !empty($this->session->process_validated['installModules']))
+		elseif (Tools::getValue('installModulesAddons') && !empty($this->session->process_validated['installModules']))
+			$this->processInstallAddonsModules();
+		elseif (Tools::getValue('installFixtures') && !empty($this->session->process_validated['installModulesAddons']))
 			$this->processInstallFixtures();
 		elseif (Tools::getValue('installTheme') && !empty($this->session->process_validated['installModules']))
 			$this->processInstallTheme();
@@ -109,6 +111,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 			{
 				$this->session->process_validated = array();
 				$this->session->database_clear = true;
+				if (Tools::getSafeModeStatus())
+					$this->session->safe_mode = true;
 			}
 			elseif (!Tools::getValue('submitNext'))
 			{
@@ -229,6 +233,23 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		$this->session->process_validated = array_merge($this->session->process_validated, array('installModules' => true));
 		$this->ajaxJsonAnswer(true);
 	}
+	
+	/**
+	 * PROCESS : installModulesAddons
+	 * Install modules from addons
+	 */
+	public function processInstallAddonsModules()
+	{
+		$this->initializeContext();
+		if (($module = Tools::getValue('module')) && $id_module = Tools::getValue('id_module'))
+			$result = $this->model_install->installModulesAddons(array('name' => $module, 'id_module' => $id_module));
+		else
+			$result = $this->model_install->installModulesAddons();
+		if (!$result || $this->model_install->getErrors())
+			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
+		$this->session->process_validated = array_merge($this->session->process_validated, array('installModulesAddons' => true));
+		$this->ajaxJsonAnswer(true);
+	}
 
 	/**
 	 * PROCESS : installFixtures
@@ -239,7 +260,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		$this->initializeContext();
 
 		$this->model_install->xml_loader_ids = $this->session->xml_loader_ids;
-		if (!$this->model_install->installFixtures(Tools::getValue('entity')) || $this->model_install->getErrors())
+		if (!$this->model_install->installFixtures(Tools::getValue('entity', null), array('shop_activity' => $this->session->shop_activity, 'shop_country' => $this->session->shop_country)) || $this->model_install->getErrors())
 			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
 		$this->session->xml_loader_ids = $this->model_install->xml_loader_ids;
 		$this->ajaxJsonAnswer(true);
@@ -331,11 +352,23 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		$this->process_steps[] = $populate_step;
 		$this->process_steps[] = array('key' => 'configureShop', 'lang' => $this->l('Configure shop information'));
 
-
 		$install_modules = array('key' => 'installModules', 'lang' => $this->l('Install modules'));
 		if ($low_memory)
 			foreach ($this->model_install->getModulesList() as $module)
 				$install_modules['subtasks'][] = array('module' => $module);
+		$this->process_steps[] = $install_modules;
+		
+		$install_modules = array('key' => 'installModulesAddons', 'lang' => $this->l('Install modules Addons'));
+
+		$params = array('iso_lang' => $this->language->getLanguageIso(), 
+							'iso_country' => $this->session->shop_country, 
+							'email' => $this->session->admin_email, 
+							'shop_url' => Tools::getHttpHost(),
+							'version' => _PS_INSTALL_VERSION_);
+
+		if ($low_memory)
+			foreach ($this->model_install->getAddonsModulesList($params) as $module)
+				$install_modules['subtasks'][] = array('module' => (string)$module['name'], 'id_module' => (string)$module['id_module']);
 		$this->process_steps[] = $install_modules;
 
 		// Fixtures are installed only if option is selected

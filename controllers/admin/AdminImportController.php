@@ -81,13 +81,13 @@ class AdminImportControllerCore extends AdminController
 	public function __construct()
 	{
 		$this->entities = array(
-			$this->l('Categories:'),
-			$this->l('Products:'),
+			$this->l('Categories'),
+			$this->l('Products'),
 			$this->l('Combinations'),
 			$this->l('Customers'),
 			$this->l('Addresses'),
-			$this->l('Manufacturers:'),
-			$this->l('Suppliers:'),
+			$this->l('Manufacturers'),
+			$this->l('Suppliers'),
 		);
 
 		// @since 1.5.0
@@ -96,8 +96,8 @@ class AdminImportControllerCore extends AdminController
 			$this->entities = array_merge(
 				$this->entities,
 				array(
-					$this->l('SupplyOrders'),
-					$this->l('SupplyOrdersDetails'),
+					$this->l('Supply Orders'),
+					$this->l('Supply Order Details'),
 				)
 			);
 		}
@@ -161,7 +161,7 @@ class AdminImportControllerCore extends AdminController
 				);
 			break;
 
-			case $this->entities[$this->l('Categories:')]:
+			case $this->entities[$this->l('Categories')]:
 				$this->available_fields = array(
 					'no' => array('label' => $this->l('Ignore this column')),
 					'id' => array('label' => $this->l('ID')),
@@ -173,9 +173,9 @@ class AdminImportControllerCore extends AdminController
 						'help' => $this->l('A category root is where a category tree can begin. This is used with multistore.')
 						),
 					'description' => array('label' => $this->l('Description')),
-					'meta_title' => array('label' => $this->l('Meta-title')),
-					'meta_keywords' => array('label' => $this->l('Meta-keywords')),
-					'meta_description' => array('label' => $this->l('Meta-description')),
+					'meta_title' => array('label' => $this->l('Meta title')),
+					'meta_keywords' => array('label' => $this->l('Meta keywords')),
+					'meta_description' => array('label' => $this->l('Meta description')),
 					'link_rewrite' => array('label' => $this->l('URL rewritten')),
 					'image' => array('label' => $this->l('Image URL')),
 					'shop' => array(
@@ -191,7 +191,7 @@ class AdminImportControllerCore extends AdminController
 				);
 			break;
 
-			case $this->entities[$this->l('Products:')]:
+			case $this->entities[$this->l('Products')]:
 				self::$validators['image'] = array(
 					'AdminImportController',
 					'split'
@@ -224,9 +224,9 @@ class AdminImportControllerCore extends AdminController
 					'description_short' => array('label' => $this->l('Short description')),
 					'description' => array('label' => $this->l('Description')),
 					'tags' => array('label' => $this->l('Tags (x,y,z...)')),
-					'meta_title' => array('label' => $this->l('Meta-title')),
-					'meta_keywords' => array('label' => $this->l('Meta-keywords')),
-					'meta_description' => array('label' => $this->l('Meta-description')),
+					'meta_title' => array('label' => $this->l('Meta title')),
+					'meta_keywords' => array('label' => $this->l('Meta keywords')),
+					'meta_description' => array('label' => $this->l('Meta description')),
 					'link_rewrite' => array('label' => $this->l('URL rewritten')),
 					'available_now' => array('label' => $this->l('Text when in stock')),
 					'available_later' => array('label' => $this->l('Text when backorder allowed')),
@@ -316,7 +316,7 @@ class AdminImportControllerCore extends AdminController
 					'firstname' => array('label' => $this->l('First Name *')),
 					'address1' => array('label' => $this->l('Address 1 *')),
 					'address2' => array('label' => $this->l('Address 2')),
-					'postcode' => array('label' => $this->l('Postcode*/ Zipcode*')),
+					'postcode' => array('label' => $this->l('Postal code / Zipcode*')),
 					'city' => array('label' => $this->l('City *')),
 					'country' => array('label' => $this->l('Country *')),
 					'state' => array('label' => $this->l('State')),
@@ -332,8 +332,8 @@ class AdminImportControllerCore extends AdminController
 				);
 			break;
 
-			case $this->entities[$this->l('Manufacturers:')]:
-			case $this->entities[$this->l('Suppliers:')]:
+			case $this->entities[$this->l('Manufacturers')]:
+			case $this->entities[$this->l('Suppliers')]:
 				//Overwrite validators AS name is not MultiLangField
 				self::$validators = array(
 					'description' => array('AdminImportController', 'createMultiLangField'),
@@ -350,9 +350,9 @@ class AdminImportControllerCore extends AdminController
 					'name' => array('label' => $this->l('Name *')),
 					'description' => array('label' => $this->l('Description')),
 					'short_description' => array('label' => $this->l('Short description')),
-					'meta_title' => array('label' => $this->l('Meta-title')),
-					'meta_keywords' => array('label' => $this->l('Meta-keywords')),
-					'meta_description' => array('label' => $this->l('Meta-description')),
+					'meta_title' => array('label' => $this->l('Meta title')),
+					'meta_keywords' => array('label' => $this->l('Meta keywords')),
+					'meta_description' => array('label' => $this->l('Meta description')),
 					'shop' => array(
 						'label' => $this->l('ID / Name of group shop'),
 						'help' => $this->l('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.'),
@@ -364,7 +364,7 @@ class AdminImportControllerCore extends AdminController
 				);
 			break;
 			// @since 1.5.0
-			case $this->entities[$this->l('SupplyOrders')]:
+			case $this->entities[$this->l('Supply Orders')]:
 				if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 				{
 					// required fields
@@ -397,7 +397,7 @@ class AdminImportControllerCore extends AdminController
 				}
 			break;
 			// @since 1.5.0
-			case $this->entities[$this->l('SupplyOrdersDetails')]:
+			case $this->entities[$this->l('Supply Order Details')]:
 				if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 				{
 					// required fields
@@ -601,7 +601,7 @@ class AdminImportControllerCore extends AdminController
 				$this->content .= $this->renderView();
 			else
 			{
-				$this->errors[] = $this->l('You must upload a file for go to the next step');
+				$this->errors[] = $this->l('You must upload a file in order to proceed to the next step');
 				$this->content .= $this->renderForm();
 			}
 		else
@@ -645,7 +645,7 @@ class AdminImportControllerCore extends AdminController
 		do $uniqid_path = _PS_UPLOAD_DIR_.uniqid(); while (file_exists($uniqid_path));
 		file_put_contents($uniqid_path, $field);
 		$tab = '';
-		if(!empty($uniqid_path))
+		if (!empty($uniqid_path))
 		{
 			$fd = fopen($uniqid_path, 'r');
 			$tab = fgetcsv($fd, MAX_LINE_SIZE, $separator);
@@ -819,7 +819,7 @@ class AdminImportControllerCore extends AdminController
 
 		// 'file_exists' doesn't work on distant file, and getimagesize make the import slower.
 		// Just hide the warning, the traitment will be the same.
-		if (@copy($url, $tmpfile))
+		if (Tools::copy($url, $tmpfile))
 		{
 			ImageManager::resize($tmpfile, $path.'.jpg');
 			$images_types = ImageType::getImagesTypes($entity);
@@ -855,7 +855,7 @@ class AdminImportControllerCore extends AdminController
 			$tab_categ = array(Configuration::get('PS_HOME_CATEGORY'), Configuration::get('PS_ROOT_CATEGORY'));
 			if (isset($info['id']) && in_array((int)$info['id'], $tab_categ))
 			{
-				$this->errors[] = Tools::displayError('The ID category cannot be the same as the ID Root category, nor the ID Home category');
+				$this->errors[] = Tools::displayError('The ID category cannot be the same as the ID Root category or the ID Home category.');
 				continue;
 			}
 			AdminImportController::setDefaultValues($info);
@@ -969,7 +969,7 @@ class AdminImportControllerCore extends AdminController
 				if ($category->id && $category->categoryExists($category->id) && !in_array($category->id, $categories_home_root))
 					$res = $category->update();
 				if ($category->id == Configuration::get('PS_ROOT_CATEGORY'))
-					$this->errors[] = Tools::displayError('Root category cannot be modified');
+					$this->errors[] = Tools::displayError('The root category cannot be modified.');
 				// If no id_category or update failed
 				if (!$res)
 					$res = $category->add();
@@ -977,7 +977,7 @@ class AdminImportControllerCore extends AdminController
 			//copying images of categories
 			if (isset($category->image) && !empty($category->image))
 				if (!(AdminImportController::copyImg($category->id, null, $category->image, 'categories')))
-					$this->warnings[] = $category->image.' '.Tools::displayError('cannot be copied');
+					$this->warnings[] = $category->image.' '.Tools::displayError('cannot be copied.');
 			// If both failed, mysql error
 			if (!$res)
 			{
@@ -1088,7 +1088,7 @@ class AdminImportControllerCore extends AdminController
 					$this->addProductWarning(
 						'id_tax_rules_group',
 						$product->id_tax_rules_group,
-						Tools::displayError('Invalid tax rule group ID, you first need a group with this ID.')
+						Tools::displayError('Invalid tax rule group ID. You first need to create a group with this ID.')
 					);
 			}
 			if (isset($product->manufacturer) && is_numeric($product->manufacturer) && Manufacturer::manufacturerExists((int)$product->manufacturer))
@@ -1261,6 +1261,9 @@ class AdminImportControllerCore extends AdminController
 			foreach (Product::$definition['fields'] as $key => $array)
 				if ($array['type'] == Product::TYPE_FLOAT)
 					$product->{$key} = str_replace(',', '.', $product->{$key});
+			
+			// Indexation is already 0 if it's a new product, but not if it's an update
+			$product->indexed = 0;
 
 			$res = false;
 			$field_error = $product->validateFields(UNFRIENDLY_ERROR, true);
@@ -1430,9 +1433,7 @@ class AdminImportControllerCore extends AdminController
 							$image->position = Image::getHighestPosition($product->id) + 1;
 							$image->cover = (!$key && !$product_has_images) ? true : false;
 							// file_exists doesn't work with HTTP protocol
-							if (@fopen($url, 'r') == false)
-								$error = true;
-							else if (($field_error = $image->validateFields(UNFRIENDLY_ERROR, true)) === true &&
+							if (($field_error = $image->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 								($lang_field_error = $image->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $image->add())
 							{
 								// associate image to selected shops
@@ -1593,7 +1594,7 @@ class AdminImportControllerCore extends AdminController
 						}
 				if (!$id_image)
 					$this->warnings[] = sprintf(
-						Tools::displayError('No image found for combination with id_product = %s and image position = %s.'),
+						Tools::displayError('No image was found for combination with id_product = %s and image position = %s.'),
 						$product->id,
 						(int)$info['image_position']
 					);
@@ -2035,7 +2036,7 @@ class AdminImportControllerCore extends AdminController
 				}
 				else
 				{
-					$this->errors[] = sprintf(Tools::displayError('"%s": Is not a valid e-mail address'), $address->customer_email);
+					$this->errors[] = sprintf(Tools::displayError('"%s": Is not a valid email address'), $address->customer_email);
 					continue;
 				}
 			}
@@ -2053,11 +2054,11 @@ class AdminImportControllerCore extends AdminController
 							Tools::displayError('%1$s does not exist in database %2$s (ID: %3$s) cannot be saved'),
 							Db::getInstance()->getMsgError(),
 							$customer->email,
-							(int)$address->customer_id
+							(int)$address->id_customer
 						);
 				}
 				else
-					$this->errors[] = sprintf(Tools::displayError('The customer ID n.%d does not exist in database (ID: %d) cannot be saved'), $address->customer_id);
+					$this->errors[] = sprintf(Tools::displayError('The customer ID n.%d does not exist in the database (ID: %d) cannot be saved'), $address->id_customer);
 			}
 			else
 			{
@@ -2358,7 +2359,7 @@ class AdminImportControllerCore extends AdminController
 										   $current_line + 1, $this->l('YYYY-MM-DD'));
 			if ($discount_rate < 0 || $discount_rate > 100)
 				$this->errors[] = sprintf($this->l('Discount rate (%d) is not valid (at line %d). %s.'), $discount_rate,
-										   $current_line + 1, $this->l('Format: between 0 and 100'));
+										   $current_line + 1, $this->l('Format: Between 0 and 100'));
 			if ($supply_order->id > 0 && !$supply_order->isEditable())
 				$this->errors[] = sprintf($this->l('Supply Order (%d) is not editable (at line %d).'), $supply_order->id, $current_line + 1);
 
@@ -2434,17 +2435,12 @@ class AdminImportControllerCore extends AdminController
 				$discount_rate = (float)$info['discount_rate'];
 				$tax_rate = (float)$info['tax_rate'];
 
-				// checks if one product is there only once
-				if (isset($product['id_product']))
-				{
-					if ($product['id_product'] == $id_product_attribute)
-						$this->errors[] = sprintf($this->l('Product (%d/%D) cannot be added twice (at line %d).'), $id_product,
-							$id_product_attribute, $current_line + 1);
-					else
-						$product['id_product'] = $id_product_attribute;
-				}
+				// checks if one product/attribute is there only once
+				if (isset($products[$id_product][$id_product_attribute]))
+					$this->errors[] = sprintf($this->l('Product/Attribute (%d/%d) cannot be added twice (at line %d).'), $id_product,
+						$id_product_attribute, $current_line + 1);					
 				else
-					$product['id_product'] = 0;
+					$products[$id_product][$id_product_attribute] = $quantity_expected;	
 
 				// checks parameters
 				if (false === ($supplier_reference = ProductSupplier::getProductSupplierReference($id_product, $id_product_attribute, $supply_order->id_supplier)))
@@ -2456,10 +2452,10 @@ class AdminImportControllerCore extends AdminController
 					$this->errors[] = sprintf($this->l('Quantity Expected (%d) is not valid (at line %d).'), $quantity_expected, $current_line + 1);
 				if ($discount_rate < 0 || $discount_rate > 100)
 				$this->errors[] = sprintf($this->l('Discount rate (%d) is not valid (at line %d). %s.'), $discount_rate,
-										   $current_line + 1, $this->l('Format: between 0 and 100'));
+										   $current_line + 1, $this->l('Format: Between 0 and 100'));
 				if ($tax_rate < 0 || $tax_rate > 100)
 				$this->errors[] = sprintf($this->l('Quantity Expected (%d) is not valid (at line %d).'), $tax_rate,
-										   $current_line + 1, $this->l('Format: between 0 and 100'));
+										   $current_line + 1, $this->l('Format: Between 0 and 100'));
 
 				// if no errors, sets supply order details
 				if (empty($this->errors))
@@ -2515,13 +2511,7 @@ class AdminImportControllerCore extends AdminController
 
 	public function utf8EncodeArray($array)
 	{
-		if (is_array($array))
-			foreach ($array as $key => $value)
-				$array[$key] = utf8_encode($value);
-		else
-			$array = utf8_encode($array);
-
-		return $array;
+		return (is_array($array) ? array_map('utf8_encode', $array) : utf8_encode($array));
 	}
 
 	protected function getNbrColumn($handle, $glue)
@@ -2565,7 +2555,7 @@ class AdminImportControllerCore extends AdminController
 	{
 		switch ((int)$case)
 		{
-			case $this->entities[$this->l('Categories:')]:
+			case $this->entities[$this->l('Categories')]:
 				Db::getInstance()->execute('
 					DELETE FROM `'._DB_PREFIX_.'category`
 					WHERE id_category NOT IN ('.(int)Configuration::get('PS_HOME_CATEGORY').
@@ -2583,7 +2573,7 @@ class AdminImportControllerCore extends AdminController
 					if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d))
 						unlink(_PS_CAT_IMG_DIR_.$d);
 				break;
-			case $this->entities[$this->l('Products:')]:
+			case $this->entities[$this->l('Products')]:
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_shop');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'feature_product');
@@ -2643,7 +2633,7 @@ class AdminImportControllerCore extends AdminController
 			case $this->entities[$this->l('Addresses')]:
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'address');
 				break;
-			case $this->entities[$this->l('Manufacturers:')]:
+			case $this->entities[$this->l('Manufacturers')]:
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer_lang');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer_shop');
@@ -2651,7 +2641,7 @@ class AdminImportControllerCore extends AdminController
 					if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d))
 						unlink(_PS_MANU_IMG_DIR_.$d);
 				break;
-			case $this->entities[$this->l('Suppliers:')]:
+			case $this->entities[$this->l('Suppliers')]:
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier_lang');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier_shop');
@@ -2662,6 +2652,13 @@ class AdminImportControllerCore extends AdminController
 		}
 		Image::clearTmpDir();
 		return true;
+	}
+	
+	public function clearSmartyCache()
+	{
+		Tools::enableCache();
+		Tools::clearCache($this->context->smarty);
+		Tools::restoreCacheSettings();
 	}
 
 	public function postProcess()
@@ -2696,14 +2693,14 @@ class AdminImportControllerCore extends AdminController
 						break;
 					break;
 					case UPLOAD_ERR_NO_FILE:
-						$this->errors[] = Tools::displayError('No file was uploaded');
+						$this->errors[] = Tools::displayError('No file was uploaded.');
 						break;
 					break;
 				}
 			}
 			else if (!file_exists($_FILES['file']['tmp_name']) ||
 				!@move_uploaded_file($_FILES['file']['tmp_name'], _PS_ADMIN_DIR_.'/import/'.date('Ymdhis').'-'.$_FILES['file']['name']))
-				$this->errors[] = $this->l('an error occurred while uploading and copying file');
+				$this->errors[] = $this->l('An error occurred while uploading / copying the file.');
 			else
 				Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=18');
 		}
@@ -2715,46 +2712,59 @@ class AdminImportControllerCore extends AdminController
 				// If i am a superadmin, i can truncate table
 				if (((Shop::isFeatureActive() && $this->context->employee->isSuperAdmin()) || !Shop::isFeatureActive()) && Tools::getValue('truncate'))
 					$this->truncateTables((int)Tools::getValue('entity'));
-
+				$import_type = false;
 				switch ((int)Tools::getValue('entity'))
 				{
-					case $this->entities[$this->l('Categories:')]:
+					case $this->entities[$import_type = $this->l('Categories')]:
 						$this->categoryImport();
+						$this->clearSmartyCache();
 						break;
-					case $this->entities[$this->l('Products:')]:
+					case $this->entities[$import_type = $this->l('Products')]:
+					$import_type = $this->l('Categories');
 						$this->productImport();
+						$this->clearSmartyCache();
 						break;
-					case $this->entities[$this->l('Customers')]:
+					case $this->entities[$import_type = $this->l('Customers')]:
 						$this->customerImport();
 						break;
-					case $this->entities[$this->l('Addresses')]:
+					case $this->entities[$import_type = $this->l('Addresses')]:
 						$this->addressImport();
 						break;
-					case $this->entities[$this->l('Combinations')]:
+					case $this->entities[$import_type = $this->l('Combinations')]:
 						$this->attributeImport();
+						$this->clearSmartyCache();
 						break;
-					case $this->entities[$this->l('Manufacturers:')]:
+					case $this->entities[$import_type = $this->l('Manufacturers')]:
 						$this->manufacturerImport();
+						$this->clearSmartyCache();
 						break;
-					case $this->entities[$this->l('Suppliers:')]:
+					case $this->entities[$import_type = $this->l('Suppliers')]:
 						$this->supplierImport();
+						$this->clearSmartyCache();
 						break;
 					// @since 1.5.0
-					case $this->entities[$this->l('SupplyOrders')]:
+					case $this->entities[$import_type = $this->l('Supply Orders')]:
 						if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 							$this->supplyOrdersImport();
 						break;
 					// @since 1.5.0
-					case $this->entities[$this->l('SupplyOrdersDetails')]:
+					case $this->entities[$import_type = $this->l('Supply Order Details')]:
 						if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 							$this->supplyOrdersDetailsImport();
 						break;
 					default:
 						$this->errors[] = $this->l('Please select what you would like to import');
 				}
+				if ($import_type !== false)
+				{
+					$log_message = sprintf($this->l('%s import'), $import_type);
+					if (Tools::getValue('truncate'))
+						$log_message .= ' '.$this->l('with truncate');
+					Logger::addLog($log_message, 1, null, $import_type, null, true, (int)$this->context->employee->id);
+				}
 			}
 			else
-				$this->errors[] = $this->l('You must upload a file for go to the next step');
+				$this->errors[] = $this->l('You must upload a file in order to proceed to the next step');
 		}
 
 		parent::postProcess();

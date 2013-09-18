@@ -80,7 +80,7 @@ class AdminTaxesControllerCore extends AdminController
 						'identifier' => 'id'
 						),
 					'PS_USE_ECOTAX' => array(
-						'title' => $this->l('Use ecotax'),
+						'title' => $this->l('Use ecotax:'),
 						'desc' => $ecotax_desc,
 						'validation' => 'isBool',
 						'cast' => 'intval',
@@ -93,7 +93,7 @@ class AdminTaxesControllerCore extends AdminController
 
 		if (Configuration::get('PS_USE_ECOTAX'))
 			$this->fields_options['general']['fields']['PS_ECOTAX_TAX_RULES_GROUP_ID'] = array(
-				'title' => $this->l('Ecotax:'),
+				'title' => $this->l('Ecotax'),
 				'desc' => $this->l('Define the ecotax (e.g. French ecotax: 19.6%).'),
 				'cast' => 'intval',
 				'type' => 'select',
@@ -160,7 +160,7 @@ class AdminTaxesControllerCore extends AdminController
 	{
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Taxes:'),
+				'title' => $this->l('Taxes'),
 				'image' => '../img/admin/dollar.gif'
 			),
 			'input' => array(
@@ -171,7 +171,7 @@ class AdminTaxesControllerCore extends AdminController
 					'size' => 33,
 					'required' => true,
 					'lang' => true,
-					'hint' => $this->l('Invalid characters:').' <>;=#{}',
+					'hint' => $this->l('Invalid characters').' <>;=#{}',
 					'desc' => $this->l('Tax name to display in carts and on invoices (e.g. VAT).')
 				),
 				array(
@@ -181,7 +181,7 @@ class AdminTaxesControllerCore extends AdminController
 					'size' => 4,
 					'maxlength' => 6,
 					'required' => true,
-					'hint' => $this->l('Invalid characters:').' <>;=#{}',
+					'hint' => $this->l('Invalid characters').' <>;=#{}',
 					'desc' => $this->l('Format: XX.XX or XX.XXX (e.g. 19.60 or 13.925)')
 				),
 				array(
@@ -206,7 +206,7 @@ class AdminTaxesControllerCore extends AdminController
 				)
 			),
 			'submit' => array(
-				'title' => $this->l('   Save   '),
+				'title' => $this->l('Save'),
 				'class' => 'button'
 			)
 		);
@@ -234,12 +234,12 @@ class AdminTaxesControllerCore extends AdminController
 						$result = $object->update(false, false);
 
 						if (!$result)
-							$this->errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b>';
+							$this->errors[] = Tools::displayError('An error occurred while updating an object.').' <b>'.$this->table.'</b>';
 						elseif ($this->postImage($object->id))
 							Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$object->id.'&conf=4'.'&token='.$this->token);
 					}
 					else
-						$this->errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+						$this->errors[] = Tools::displayError('An error occurred while updating an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 				}
 
 				/* Object creation */
@@ -248,7 +248,7 @@ class AdminTaxesControllerCore extends AdminController
 					$object = new $this->className();
 					$this->copyFromPost($object, $this->table);
 					if (!$object->add())
-						$this->errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.'</b>';
+						$this->errors[] = Tools::displayError('An error occurred while creating an object.').' <b>'.$this->table.'</b>';
 					elseif (($_POST['id_'.$this->table] = $object->id /* voluntary */) && $this->postImage($object->id) && $this->_redirect)
 						Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$object->id.'&conf=3'.'&token='.$this->token);
 				}

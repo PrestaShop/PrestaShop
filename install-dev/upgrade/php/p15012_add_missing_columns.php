@@ -48,7 +48,7 @@ function p15012_add_missing_columns()
 	$q_list['cart_product']['id_shop']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'cart_product` 
 		CHANGE `id_shop` `id_shop` int(10) unsigned NOT NULL DEFAULT "1" AFTER `id_address_delivery`';
 	$q_list['cart_product']['id_shop']['add'] = 'ALTER TABLE `'._DB_PREFIX_.'cart_product` 
-		ADD `id_shop` `id_shop` int(10) unsigned NOT NULL DEFAULT "1" AFTER `id_address_delivery`';
+		ADD `id_shop` int(10) unsigned NOT NULL DEFAULT "1" AFTER `id_address_delivery`';
 	$q_list['cart_product']['id_product_attribute']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'cart_product`
 		CHANGE `id_product_attribute` `id_product_attribute` int(10) unsigned DEFAULT NULL AFTER `id_shop`';
 	$q_list['cart_product']['id_product_attribute']['add'] = 'ALTER TABLE `'._DB_PREFIX_.'cart_product`

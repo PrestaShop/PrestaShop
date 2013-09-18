@@ -46,7 +46,7 @@ class GridHtml extends ModuleGridEngine
 			
 			Module::__construct();
 			
-			$this->displayName = $this->l('Simple HTML table display');
+			$this->displayName = $this->l('Simple HTML table display.');
 			$this->description = '';
 		}
 	}
@@ -67,12 +67,8 @@ class GridHtml extends ModuleGridEngine
 		foreach ($params['columns'] as $column)
 			$html .= '<th style="width:'.$column['width'].'px;cursor:pointer">
 						'.$column['header'].'<br />
-						<a href="javascript:getGridData(\''.$grider.'&sort='.$column['dataIndex'].'&dir=ASC\');">
-							<img src="../img/admin/up.gif" />
-						</a>
-						<a href="javascript:getGridData(\''.$grider.'&sort='.$column['dataIndex'].'&dir=DESC\');">
-							<img src="../img/admin/down.gif" />
-						</a>
+						<a href="javascript:getGridData(\''.$grider.'&sort='.$column['dataIndex'].'&dir=ASC\');"><img src="../img/admin/up.gif" /></a>
+						<a href="javascript:getGridData(\''.$grider.'&sort='.$column['dataIndex'].'&dir=DESC\');"><img src="../img/admin/down.gif" /></a>
 					</th>';
 		$html .= '</tr></thead>
 				<tbody></tbody>

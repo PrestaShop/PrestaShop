@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<entity_order_message>
+  <order_message id="Delay">
+    <name>Opóźnienie</name>
+    <message>Witamy,
+Niestety jeden z produktów wybranych przez Ciebie w zamówieniu aktualnie nie jest dostępny. To może opóźnić odrobinę dostawę Twojego zamówienia.
+Przepraszamy za zaistniałą sytuację i zrobimy wszystko co w naszej mocy by zamówienie dotarło do Państwa jak najszybciej.
+
+Pozdrawiamy,</message>
+  </order_message>
+</entity_order_message>

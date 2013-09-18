@@ -1,0 +1,1 @@
+ALTER TABLE `PREFIX_manufacturer_lang` CHANGE `short_description` `short_description` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;

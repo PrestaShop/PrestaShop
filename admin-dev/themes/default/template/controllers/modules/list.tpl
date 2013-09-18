@@ -77,9 +77,20 @@
 							</dl>
 						</div>
 						<p class="desc">{if isset($module->description) && $module->description ne ''}{l s='Description'} : {$module->description}{else}&nbsp;{/if}</p>
-						{if isset($module->message)}<div class="conf">{$module->message}</div>{/if}
+						{if isset($module->message) && (!isset($module->type) || ($module->type != 'addonsMustHave' || $module->type !== 'addonsNative'))}<div class="conf">{$module->message}</div>{/if}
 						<div class="row-actions-module">
-							{if !isset($module->not_on_disk)}{$module->optionsHtml}{else}&nbsp;{/if}
+							{if !isset($module->not_on_disk)}
+								{$module->optionsHtml}
+								{if isset($module->preferences) && $module->preferences['favorite'] == 1}
+									<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#">{l s='Remove from Favorites'}</a>
+									<a class="action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#" style="display: none;">{l s='Mark as Favorite'}</a>
+								{else}
+									<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#" style="display: none;">{l s='Remove from Favorites'}</a>
+									<a class="action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#">{l s='Mark as Favorite'}</a>
+								{/if}
+							{else}
+								&nbsp;
+							{/if}
 						</div>
 					</div>
 				</td>

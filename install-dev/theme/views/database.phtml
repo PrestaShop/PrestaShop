@@ -4,7 +4,7 @@
 <div id="dbPart">
 	<h2><?php echo $this->l('Configure your database by filling out the following fields:') ?></h2>
 	<p>
-		<?php echo $this->l('To use PrestaShop, you must <a href="http://doc.prestashop.com/display/PS15/Installing+PrestaShop" target="_blank">create a database</a> to collect all of your store’s data-related activities.') ?>
+		<?php echo $this->l('To use PrestaShop, you must <a href="http://doc.prestashop.com/display/PS15/Installing+PrestaShop#InstallingPrestaShop-Creatingadatabaseforyourshop" target="_blank">create a database</a> to collect all of your store’s data-related activities.') ?>
 		<br />
 		<?php echo $this->l('Please complete the fields below in order for PrestaShop to connect to your database. ') ?>
 	</p>
@@ -27,13 +27,14 @@
 			<label for="dbPassword"><?php echo $this->l('Database password:') ?> </label>
 			<input class="text" size="10" type="password" id="dbPassword" name="dbPassword" value="<?php echo htmlspecialchars($this->database_password) ?>" />
 		</p>
+		<!--
 		<p>
 			<label for="dbEngine"><?php echo $this->l('Database Engine:') ?></label>
 			<select id="dbEngine" name="dbEngine">
 				<option value="InnoDB" <?php if ($this->database_engine == 'InnoDB'): ?>selected="selected"<?php endif; ?>>InnoDB</option>
 				<option value="MyISAM" <?php if ($this->database_engine == 'MyISAM'): ?>selected="selected"<?php endif; ?>>MyISAM</option>
 			</select>
-		</p>
+		</p>-->
 		<p>
 			<label for="db_prefix"><?php echo $this->l('Tables prefix:')?></label>
 			<input class="text" type="text" id="db_prefix" name="db_prefix" value="<?php echo htmlspecialchars($this->database_prefix) ?>" />

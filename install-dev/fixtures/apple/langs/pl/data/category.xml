@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<entity_category>
+  <category id="iPods" id_shop="1">
+    <name>iPod</name>
+    <description>Teraz możesz kupić filmy na ITunes, a następnie zsynchronizować je ze swoim iPod, cały świat to Twój wielki teatr.</description>
+    <link_rewrite>muzyczne-ipod</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Accessories" id_shop="1">
+    <name>Akcesoria</name>
+    <description>Fantastyczne akcesoria dla Twojego iPod</description>
+    <link_rewrite>akcesoria-ipod</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Laptops" id_shop="1">
+    <name>Laptopy</name>
+    <description>Najnowocześniejsze laptopy od Apple</description>
+    <link_rewrite>laptopy</link_rewrite>
+    <meta_title>Laptoty Apple</meta_title>
+    <meta_keywords>Apple Laptopy MacBook Air</meta_keywords>
+    <meta_description>Piękne i szybkie laptopy Apple Mac Book Air</meta_description>
+  </category>
+</entity_category>

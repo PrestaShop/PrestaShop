@@ -159,7 +159,10 @@
 								<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="{$up_filename}" />
 							{/if}
 							<div class="conf">
-								<a class="delete_virtual_product" id="delete_downloadable_product" onclick="return confirm('{l s='Delete this file'}')" href="{$currentIndex}&deleteVirtualProduct=true&token={$token}&id_product={$product->id}" class="red">
+							<script>
+								delete_this_file = '{l s='Delete this file'}';
+							</script>
+								<a class="delete_virtual_product" id="delete_downloadable_product" href="{$currentIndex}&deleteVirtualProduct=true&token={$token}&id_product={$product->id}" class="red">
 									<img src="../img/admin/delete.gif" alt="{l s='Delete this file'}"/>
 								</a>
 							</div>
@@ -173,7 +176,7 @@
 							</td>
 							 <td class="col-right">
 								{$product->productDownload->getHtmlLink(false, true)}
-								<a onclick="return confirm('{l s='Delete this file'})')" href="{$currentIndex}&deleteVirtualProduct=true&token={$token}&id_product={$product->id}" class="red delete_virtual_product">
+								<a href="{$currentIndex}&deleteVirtualProduct=true&token={$token}&id_product={$product->id}" class="red delete_virtual_product">
 									<img src="../img/admin/delete.gif" alt="{l s='Delete this file'}"/>
 								</a>
 							</td>
@@ -227,7 +230,7 @@
 				{else}
 					<div class="hint clear" style="display: block;width: 70%;">{l s='You cannot edit your file here because you used combinations. Please edit this file in the Combinations tab.'}</div>
 					<br />
-					{$error_product_download}
+					{if isset($error_product_download)}{$error_product_download}{/if}
 				{/if}
 			</table>
 		</div>

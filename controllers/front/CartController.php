@@ -33,6 +33,7 @@ class CartControllerCore extends FrontController
 	protected $id_address_delivery;
 	protected $customization_id;
 	protected $qty;
+	public    $ssl = true;
 
 	protected $ajax_refresh = false;
 
@@ -66,13 +67,13 @@ class CartControllerCore extends FrontController
 		{
 			if (Tools::getIsset('add') || Tools::getIsset('update'))
 				$this->processChangeProductInCart();
-			else if (Tools::getIsset('delete'))
+			elseif (Tools::getIsset('delete'))
 				$this->processDeleteProductInCart();
-			else if (Tools::getIsset('changeAddressDelivery'))
+			elseif (Tools::getIsset('changeAddressDelivery'))
 				$this->processChangeProductAddressDelivery();
-			else if (Tools::getIsset('allowSeperatedPackage'))
+			elseif (Tools::getIsset('allowSeperatedPackage'))
 				$this->processAllowSeperatedPackage();
-			else if (Tools::getIsset('duplicate'))
+			elseif (Tools::getIsset('duplicate'))
 				$this->processDuplicateProduct();
 			// Make redirection
 			if (!$this->errors && !$this->ajax)
@@ -128,7 +129,7 @@ class CartControllerCore extends FrontController
 		if (!count(Carrier::getAvailableCarrierList(new Product($this->id_product), null, $new_id_address_delivery)))
 			die(Tools::jsonEncode(array(
 				'hasErrors' => true,
-				'error' => Tools::displayError('It\'s not possible to deliver this product to the selected address.', false),
+				'error' => Tools::displayError('It is not possible to deliver this product to the selected address.', false),
 			)));
 		
 		$this->context->cart->setProductAddressDelivery(
@@ -177,35 +178,55 @@ class CartControllerCore extends FrontController
 		$mode = (Tools::getIsset('update') && $this->id_product) ? 'update' : 'add';
 
 		if ($this->qty == 0)
-			$this->errors[] = Tools::displayError('Null quantity');
-		else if (!$this->id_product)
+			$this->errors[] = Tools::displayError('Null quantity.');
+		elseif (!$this->id_product)
 			$this->errors[] = Tools::displayError('Product not found');
 
 		$product = new Product($this->id_product, true, $this->context->language->id);
 		if (!$product->id || !$product->active)
 		{
-			$this->errors[] = Tools::displayError('Product is no longer available.', false);
+			$this->errors[] = Tools::displayError('This product is no longer available.', false);
 			return;
 		}
+
+		$qty_to_check = $this->qty;
+		$cart_products = $this->context->cart->getProducts();
+
+		if (is_array($cart_products))
+			foreach ($cart_products as $cart_product)
+			{
+				if ((!isset($this->id_product_attribute) || $cart_product['id_product_attribute'] == $this->id_product_attribute) &&
+					(isset($this->id_product) && $cart_product['id_product'] == $this->id_product))
+				{
+					$qty_to_check = $cart_product['cart_quantity'];
+
+					if (Tools::getValue('op', 'up') == 'down')
+						$qty_to_check -= $this->qty;
+					else
+						$qty_to_check += $this->qty;
+
+					break;
+				}
+			}
 
 		// Check product quantity availability
 		if ($this->id_product_attribute)
 		{
-			if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $this->qty))
-				$this->errors[] = Tools::displayError('There is not enough product in stock.');
+			if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $qty_to_check))
+				$this->errors[] = Tools::displayError('There isn\'t enough product in stock.');
 		}
-		else if ($product->hasAttributes())
+		elseif ($product->hasAttributes())
 		{
 			$minimumQuantity = ($product->out_of_stock == 2) ? !Configuration::get('PS_ORDER_OUT_OF_STOCK') : !$product->out_of_stock;
 			$this->id_product_attribute = Product::getDefaultAttribute($product->id, $minimumQuantity);
 			// @todo do something better than a redirect admin !!
 			if (!$this->id_product_attribute)
 				Tools::redirectAdmin($this->context->link->getProductLink($product));
-			else if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $this->qty))
-				$this->errors[] = Tools::displayError('There is not enough product in stock.');
+			elseif (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $qty_to_check))
+				$this->errors[] = Tools::displayError('There isn\'t enough product in stock.');
 		}
-		else if (!$product->checkQty($this->qty))
-			$this->errors[] = Tools::displayError('There is not enough product in stock.');
+		elseif (!$product->checkQty($qty_to_check))
+			$this->errors[] = Tools::displayError('There isn\'t enough product in stock.');
 
 		// If no errors, process product addition
 		if (!$this->errors && $mode == 'add')
@@ -225,7 +246,7 @@ class CartControllerCore extends FrontController
 
 			// Check customizable fields
 			if (!$product->hasAllRequiredCustomizableFields() && !$this->customization_id)
-				$this->errors[] = Tools::displayError('Please fill in all required fields, then save the customization.');
+				$this->errors[] = Tools::displayError('Please fill in all of the required fields, and then save your customizations.');
 
 			if (!$this->errors)
 			{
@@ -335,7 +356,8 @@ class CartControllerCore extends FrontController
 			if ($result['customizedDatas'])
 				Product::addCustomizationPrice($result['summary']['products'], $result['customizedDatas']);
 
-			die(Tools::jsonEncode($result));
+			Hook::exec('actionCartListOverride', array('summary' => $result, 'json' => &$json));
+			die(Tools::jsonEncode(array_merge($result, (array)Tools::jsonDecode($json, true))));
 		}
 		// @todo create a hook
 		elseif (file_exists(_PS_MODULE_DIR_.'/blockcart/blockcart-ajax.php'))

@@ -118,7 +118,7 @@ function findCombination(firstTime)
 
 			//show the large image in relation to the selected combination
 			if (combinations[combination]['image'] && combinations[combination]['image'] != -1)
-				displayImage( $('#thumb_' + combinations[combination]['image']).parent() );
+				displayImage($('#thumb_' + combinations[combination]['image']).parent());
 
 			//show discounts values according to the selected combination
 			if (combinations[combination]['idCombination'] && combinations[combination]['idCombination'] > 0)
@@ -148,6 +148,9 @@ function findCombination(firstTime)
 //update display of the availability of the product AND the prices of the product
 function updateDisplay()
 {
+	var productPriceDisplay = productPrice;
+	var productPriceWithoutReductionDisplay = productPriceWithoutReduction;
+
 	if (!selectedCombination['unavailable'] && quantityAvailable > 0 && productAvailableForOrder == 1)
 	{
 		//show the choice of quantities
@@ -227,7 +230,7 @@ function updateDisplay()
 			$('#availability_value').text(doesntExist).addClass('warning_inline');
 			$('#oosHook').hide();
 		}
-		if(stock_management == 1)
+		if(stock_management == 1 && !allowBuyWhenOutOfStock)
 			$('#availability_statut:hidden').show();
 
 		if (typeof(selectedCombination['available_date']) != 'undefined' && selectedCombination['available_date']['date'].length != 0)
@@ -292,26 +295,61 @@ function updateDisplay()
 		var priceTaxExclWithoutGroupReduction = '';
 
 		// retrieve price without group_reduction in order to compute the group reduction after
-		// the specific price discount (done in the JS in order to keep backward compatibility)
-		if (!displayPrice && !noTaxForThisProduct)
-		{
-			priceTaxExclWithoutGroupReduction = ps_round(productPriceTaxExcluded, 6) * (1 / group_reduction);
-		} else {
-			priceTaxExclWithoutGroupReduction = ps_round(productPriceTaxExcluded, 6) * (1 / group_reduction);
-		}
-		var combination_add_price = selectedCombination['price'] * group_reduction;
+		// the specific price discount (done in the JS in order to keep backward compatibility)		
+		priceTaxExclWithoutGroupReduction = ps_round(productPriceTaxExcluded, 6) * (1 / group_reduction);
 
 		var tax = (taxRate / 100) + 1;
+		var taxExclPrice = priceTaxExclWithoutGroupReduction + (selectedCombination['price'] * currencyRate);
+
+		if (selectedCombination.specific_price && selectedCombination.specific_price['id_product_attribute'])
+		{
+			if (selectedCombination.specific_price['price'] && selectedCombination.specific_price['price'] >=0)
+				var taxExclPrice = (specific_currency ? selectedCombination.specific_price['price'] : selectedCombination.specific_price['price'] * currencyRate);
+			else
+				var taxExclPrice = productBasePriceTaxExcluded * currencyRate + (selectedCombination['price'] * currencyRate);
+		}
+		else if (product_specific_price.price && product_specific_price.price >= 0)
+			var taxExclPrice = (specific_currency ? product_specific_price.price : product_specific_price.price * currencyRate) + (selectedCombination['price'] * currencyRate);
+
+		if (!displayPrice && !noTaxForThisProduct)
+			productPriceDisplay = ps_round(taxExclPrice * tax, 2); // Need to be global => no var
+		else
+			productPriceDisplay = ps_round(taxExclPrice, 2); // Need to be global => no var
+
+		productPriceWithoutReductionDisplay = productPriceDisplay * group_reduction;
+		var reduction = 0;
+		if (selectedCombination['specific_price'].reduction_price || selectedCombination['specific_price'].reduction_percent)
+		{
+			reduction_price = (specific_currency ? selectedCombination['specific_price'].reduction_price : selectedCombination['specific_price'].reduction_price * currencyRate);
+			reduction = productPriceDisplay * (parseFloat(selectedCombination['specific_price'].reduction_percent) / 100) + reduction_price;
+			if (reduction_price && (displayPrice || noTaxForThisProduct))
+				reduction = ps_round(reduction / tax, 6);
+
+		}
+		else if (product_specific_price && product_specific_price.reduction && !selectedCombination.specific_price)
+		{
+			if (product_specific_price.reduction_type == 'amount')
+				reduction_price = (specific_currency ? product_specific_price.reduction : product_specific_price.reduction * currencyRate);
+			else
+				reduction_price = 0;
+
+			if (product_specific_price.reduction_type == 'percentage')
+				reduction_percent = productPriceDisplay * parseFloat(product_specific_price.reduction);
+
+			reduction = reduction_price + reduction_percent;
+			if (reduction_price && (displayPrice || noTaxForThisProduct))
+				reduction = ps_round(reduction / tax, 6);
+		}
 
 		if (selectedCombination.specific_price)
 		{
-			if (selectedCombination['specific_price'].reduction_type == 'percentage')
+			if (selectedCombination['specific_price'] && selectedCombination['specific_price'].reduction_type == 'percentage')
 			{
 				$('#reduction_amount').hide();
 				$('#reduction_percent_display').html('-' + parseFloat(selectedCombination['specific_price'].reduction_percent) + '%');
 				$('#reduction_percent').show();
 			} else if (selectedCombination['specific_price'].reduction_type == 'amount' && selectedCombination['specific_price'].reduction_price != 0) {
-				$('#reduction_amount_display').html('-' + formatCurrency(selectedCombination['specific_price'].reduction_price, currencyFormat, currencySign, currencyBlank));
+				$('#reduction_amount_display').html('-' + formatCurrency(reduction_price, currencyFormat, currencySign, currencyBlank));
 				$('#reduction_percent').hide();
 				$('#reduction_amount').show();
 			} else {
@@ -319,85 +357,52 @@ function updateDisplay()
 				$('#reduction_amount').hide();
 			}
 		}
-		else
-			if (product_specific_price['reduction_type'] == 'percentage')
-				$('#reduction_percent_display').html(product_specific_price['specific_price'].reduction_percent);
-		
+
 		if (product_specific_price['reduction_type'] != '' || selectedCombination['specific_price'].reduction_type != '')
 			$('#discount_reduced_price,#old_price').show();
 		else
 			$('#discount_reduced_price,#old_price').hide();
-		
-		if (product_specific_price['reduction_type'] == 'percentage' || selectedCombination['specific_price'].reduction_type == 'percentage')
+		if ((product_specific_price['reduction_type'] == 'percentage' && selectedCombination['specific_price'].reduction_type == 'percentage') || selectedCombination['specific_price'].reduction_type == 'percentage')
 			$('#reduction_percent').show();
 		else
 			$('#reduction_percent').hide();
-		if (product_specific_price['price'] || selectedCombination.specific_price['price'])
+		if (product_specific_price['price'] || (selectedCombination.specific_price && selectedCombination.specific_price['price']))
 			$('#not_impacted_by_discount').show();
 		else
 			$('#not_impacted_by_discount').hide();
 
-		if (selectedCombination.specific_price['price'] && selectedCombination.specific_price['price'] >=0)
-			var taxExclPrice = (specific_currency ? selectedCombination.specific_price['price'] : selectedCombination.specific_price['price'] * currencyRate);
-		else
-			var taxExclPrice = priceTaxExclWithoutGroupReduction + (selectedCombination['price'] * currencyRate);
-
-		if (!displayPrice && !noTaxForThisProduct)
-			productPrice = taxExclPrice * tax; // Need to be global => no var
-		else
-			productPrice = ps_round(taxExclPrice, 2); // Need to be global => no var
-
-
-		var reduction = 0;
-		if (selectedCombination['specific_price'].reduction_price || selectedCombination['specific_price'].reduction_percent)
-		{
-			selectedCombination['specific_price'].reduction_price = (specific_currency ? selectedCombination['specific_price'].reduction_price : selectedCombination['specific_price'].reduction_price * currencyRate);
-			reduction = productPrice * (parseFloat(selectedCombination['specific_price'].reduction_percent) / 100) + selectedCombination['specific_price'].reduction_price;
-			if (selectedCombination['specific_price'].reduction_price && (displayPrice || noTaxForThisProduct))
-				reduction = ps_round(reduction / tax, 6);
-		}
-		else if (product_specific_price.reduction_price || product_specific_price.reduction_percent)
-		{
-			product_specific_price.reduction_price = (specific_currency ? product_specific_price.reduction_price : product_specific_price.reduction_price * currencyRate);
-			reduction = productPrice * (parseFloat(product_specific_price.reduction_percent) / 100) + product_specific_price.reduction_price;
-			if (product_specific_price.reduction_price && (displayPrice || noTaxForThisProduct))
-				reduction = ps_round(reduction / tax, 6);
-		}
-
-		productPriceWithoutReduction = productPrice * group_reduction;
-
-		productPrice -= reduction;
-		var tmp = productPrice * group_reduction;
-		productPrice = ps_round(productPrice * group_reduction, 2);
+		productPriceDisplay -= reduction;
+		productPriceDisplay = ps_round(productPriceDisplay * group_reduction, 2);
 
 		var ecotaxAmount = !displayPrice ? ps_round(selectedCombination['ecotax'] * (1 + ecotaxTax_rate / 100), 2) : selectedCombination['ecotax'];
-		productPrice += ecotaxAmount;
-		productPriceWithoutReduction += ecotaxAmount;
+		productPriceDisplay += ecotaxAmount;
+		productPriceWithoutReductionDisplay += ecotaxAmount;
 
 		var our_price = '';
-		if (productPrice > 0) {
-			our_price = formatCurrency(productPrice, currencyFormat, currencySign, currencyBlank);
+		if (productPriceDisplay > 0) {
+			our_price = formatCurrency(productPriceDisplay, currencyFormat, currencySign, currencyBlank);
 		} else {
 			our_price = formatCurrency(0, currencyFormat, currencySign, currencyBlank);
 		}
 		$('#our_price_display').text(our_price);
-		$('#old_price_display').text(formatCurrency(productPriceWithoutReduction, currencyFormat, currencySign, currencyBlank));
-		if (productPriceWithoutReduction > productPrice)
+		$('#old_price_display').text(formatCurrency(productPriceWithoutReductionDisplay, currencyFormat, currencySign, currencyBlank));
+
+		if (productPriceWithoutReductionDisplay > productPriceDisplay)
 			$('#old_price,#old_price_display,#old_price_display_taxes').show();
 		else
 			$('#old_price,#old_price_display,#old_price_display_taxes').hide();
 		// Special feature: "Display product price tax excluded on product page"
 		var productPricePretaxed = '';
 		if (!noTaxForThisProduct)
-			productPricePretaxed = productPrice / tax;
+			productPricePretaxed = productPriceDisplay / tax;
 		else
-			productPricePretaxed = productPrice;
+			productPricePretaxed = productPriceDisplay;
 		$('#pretaxe_price_display').text(formatCurrency(productPricePretaxed, currencyFormat, currencySign, currencyBlank));
 		// Unit price 
 		productUnitPriceRatio = parseFloat(productUnitPriceRatio);
 		if (productUnitPriceRatio > 0 )
 		{
-			newUnitPrice = (productPrice / parseFloat(productUnitPriceRatio)) + selectedCombination['unit_price'];
+			newUnitPrice = (productPriceDisplay / parseFloat(productUnitPriceRatio)) + selectedCombination['unit_price'];
 			$('#unit_price_display').text(formatCurrency(newUnitPrice, currencyFormat, currencySign, currencyBlank));
 		}
 
@@ -412,17 +417,15 @@ function displayImage(domAAroundImgThumb, no_animation)
 {
 	if (typeof(no_animation) == 'undefined')
 		no_animation = false;
-	
 	if (domAAroundImgThumb.attr('href'))
 	{
-		var newSrc = domAAroundImgThumb.attr('href').replace('thickbox','large');
+		var newSrc = domAAroundImgThumb.attr('href').replace('thickbox', 'large');
 		if ($('#bigpic').attr('src') != newSrc)
 		{
-			$('#bigpic').fadeOut((no_animation ? 0 : 'fast'), function(){
-				$(this).attr('src', newSrc).show();
+			$('#bigpic').attr('src', newSrc).load(function() {
 				if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
-					$(this).attr('alt', domAAroundImgThumb.attr('href'));
-			});
+					$(this).attr('rel', domAAroundImgThumb.attr('href'));
+			}); 
 		}
 		$('#views_block li a').removeClass('shown');
 		$(domAAroundImgThumb).addClass('shown');
@@ -439,9 +442,9 @@ function displayDiscounts(combination)
 			$(this).fadeOut('slow');
 	 });
 
-	if ($('#quantityDiscount_' + combination).length != 0)
+	if ($('#quantityDiscount_' + combination+',.quantityDiscount_' + combination).length != 0)
 	{
-		$('#quantityDiscount_' + combination).show();
+		$('#quantityDiscount_' + combination+',.quantityDiscount_' + combination).show();
 		$('#noQuantityDiscount').hide();
 	}
 	else
@@ -466,24 +469,29 @@ function serialScrollFixLock(event, targeted, scrolled, items, position)
 function refreshProductImages(id_product_attribute)
 {
 	$('#thumbs_list_frame').scrollTo('li:eq(0)', 700, {axis:'x'});
-	$('#thumbs_list li').hide();
+
 	id_product_attribute = parseInt(id_product_attribute);
 
-	if (typeof(combinationImages) != 'undefined' && typeof(combinationImages[id_product_attribute]) != 'undefined')
+	if (id_product_attribute > 0 && typeof(combinationImages) != 'undefined' && typeof(combinationImages[id_product_attribute]) != 'undefined')
 	{
+		$('#thumbs_list li').hide();
+		$('#thumbs_list').trigger('goto', 0);
 		for (var i = 0; i < combinationImages[id_product_attribute].length; i++)
 			$('#thumbnail_' + parseInt(combinationImages[id_product_attribute][i])).show();
-	}
-	if (i > 0)
-	{
-		var thumb_width = $('#thumbs_list_frame >li').width() + parseInt($('#thumbs_list_frame >li').css('marginRight'));
-		$('#thumbs_list_frame').width((parseInt((thumb_width)* i) + 3) + 'px'); //  Bug IE6, needs 3 pixels more ?
+		if (parseInt($('#thumbs_list_frame >li:visible').length) < parseInt($('#thumbs_list_frame >li').length))
+			$('#wrapResetImages').show('slow');
+		else
+			$('#wrapResetImages').hide('slow');
 	}
 	else
 	{
-		$('#thumbnail_' + idDefaultImage).show();
-		displayImage($('#thumbnail_' + idDefaultImage + ' a'));
+		$('#thumbs_list li').show();
+		if (parseInt($('#thumbs_list_frame >li').length) == parseInt($('#thumbs_list_frame >li:visible').length))
+			$('#wrapResetImages').hide('slow');
 	}
+
+	var thumb_width = $('#thumbs_list_frame >li').width() + parseInt($('#thumbs_list_frame >li').css('marginRight'));
+	$('#thumbs_list_frame').width((parseInt((thumb_width) * $('#thumbs_list_frame >li').length)) + 'px');
 	$('#thumbs_list').trigger('goto', 0);
 	serialScrollFixLock('', '', '', '', 0);// SerialScroll Bug on goto 0 ?
 }
@@ -521,6 +529,7 @@ $(document).ready(function()
 	//set jqZoom parameters if needed
 	if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
 	{
+		$('#bigpic').attr('rel', $('#bigpic').attr('src').replace('large', 'thickbox'));
 		$('img.jqzoom').jqueryzoom({
 			xzoom: 200, //zooming div default width(default width value is 200)
 			yzoom: 200, //zooming div default width(default height value is 200)
@@ -546,6 +555,11 @@ $(document).ready(function()
 		$('#customizedDatas').append(uploading_in_progress);
 	});
 
+	original_url = window.location + '';
+	first_url_check = true;
+	checkUrl();
+	initLocationChange();
+
 	//init the price in relation of the selected attributes
 	if (typeof productHasAttributes != 'undefined' && productHasAttributes)
 		findCombination(true);
@@ -561,11 +575,6 @@ $(document).ready(function()
 		'transitionIn'	: 'elastic',
 		'transitionOut'	: 'elastic'
 	});
-	original_url = window.location + '';
-	first_url_check = true;
-	checkUrl();
-	initLocationChange();
-	
 });
 
 function saveCustomization()
@@ -659,19 +668,19 @@ function getProductAttribute()
 		url = url.substring(0, url.indexOf('#'));
 
 	// set ipa to the customization form
-	$('#customizationForm').attr('action', $('#customizationForm').attr('action') + request)
+	$('#customizationForm').attr('action', $('#customizationForm').attr('action') + request);
 	window.location = url + request;
 }
 
 function initLocationChange(time)
 {
 	if(!time) time = 500;
-	setInterval(checkUrl, time);
+		setInterval(checkUrl, time);
 }
 
 function checkUrl()
 {
-	if (original_url != window.url || first_url_check)
+	if (original_url != window.location || first_url_check)
 	{
 		first_url_check = false;
 		url = window.location + '';
@@ -708,7 +717,7 @@ function checkUrl()
 			if (count >= 0)
 			{
 				findCombination(false);
-				original_url = window.location + '';
+				original_url = url;
 			}
 			// no combination found = removing attributes from url
 			else

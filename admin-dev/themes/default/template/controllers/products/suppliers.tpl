@@ -36,7 +36,7 @@
 	</div>
 	<p>{l s='Please choose the suppliers associated with this product. Please select a default supplier, as well.'}</p>
 	<a class="button bt-icon confirm_leave" href="{$link->getAdminLink('AdminSuppliers')|escape:'htmlall':'UTF-8'}&addsupplier">
-		<img src="../img/admin/add.gif" alt="{l s='Create a new supplier.'}" title="{l s='Create a new supplier.'}" /><span>{l s='Create a new supplier.'}</span>
+		<img src="../img/admin/add.gif" alt="{l s='Create a new supplier'}" title="{l s='Create a new supplier'}" /><span>{l s='Create a new supplier'}</span>
 	</a>
 	<table cellpadding="5" style="width:100%">
 		<tbody>

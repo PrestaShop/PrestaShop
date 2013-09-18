@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <module>
+            <name>pscleaner</name>
+            <displayName><![CDATA[PrestaShop Cleaner]]></displayName>
+            <version><![CDATA[0.9]]></version>
+            <description><![CDATA[Check and fix functional integrity constraints and remove default data]]></description>
+            <author><![CDATA[PrestaShop]]></author>
+            <tab><![CDATA[administration]]></tab>
+            <is_configurable>1</is_configurable>
+            <need_instance>0</need_instance>
+	<limited_countries></limited_countries>
+        </module>

@@ -3,7 +3,7 @@
             <name>statsregistrations</name>
             <displayName><![CDATA[Customer accounts]]></displayName>
             <version><![CDATA[1]]></version>
-            <description><![CDATA[Display the progress of customer registration.]]></description>
+            <description><![CDATA[Display registration progress.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[analytics_stats]]></tab>
             <is_configurable>0</is_configurable>

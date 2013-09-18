@@ -40,11 +40,12 @@ class OrderFollowControllerCore extends FrontController
 		if (Tools::isSubmit('submitReturnMerchandise'))
 		{
 			$customizationQtyInput = Tools::getValue('customization_qty_input');
+			$order_qte_input = Tools::getValue('order_qte_input');
+			$customizationIds = Tools::getValue('customization_ids');
+
 			if (!$id_order = (int)(Tools::getValue('id_order')))
 				Tools::redirect('index.php?controller=history');
-			if (!$order_qte_input = Tools::getValue('order_qte_input'))
-				Tools::redirect('index.php?controller=order-follow&errorDetail1');
-			if (!$customizationQtyInput && $customizationIds = Tools::getValue('customization_ids'))
+			if (!$order_qte_input && !$customizationQtyInput && !$customizationIds)
 				Tools::redirect('index.php?controller=order-follow&errorDetail1');
 			if (!$customizationIds && !$ids_order_detail = Tools::getValue('ids_order_detail'))
 				Tools::redirect('index.php?controller=order-follow&errorDetail2');

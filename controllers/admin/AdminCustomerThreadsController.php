@@ -67,7 +67,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				'tmpTableFilter' => true,
 			),
 			'email' => array(
-				'title' => $this->l('Email:'),
+				'title' => $this->l('Email'),
 				'width' => 100,
 				'filter_key' => 'a!email',
 			),
@@ -256,8 +256,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$params = array(
 			$this->l('Total threads') => $all = CustomerThread::getTotalCustomerThreads(),
 			$this->l('Threads pending') => $pending = CustomerThread::getTotalCustomerThreads('status LIKE "%pending%"'),
-			$this->l('Total customer messages') => CustomerMessage::getTotalCustomerMessages('id_employee = 0'),
-			$this->l('Total employee messages') => CustomerMessage::getTotalCustomerMessages('id_employee != 0'),
+			$this->l('Total number of customer messages') => CustomerMessage::getTotalCustomerMessages('id_employee = 0'),
+			$this->l('Total number of employee messages') => CustomerMessage::getTotalCustomerMessages('id_employee != 0'),
 			$this->l('Unread threads') => $unread = CustomerThread::getTotalCustomerThreads('status = "open"'),
 			$this->l('Closed threads') => $all - ($unread + $pending)
 		);
@@ -368,11 +368,14 @@ class AdminCustomerThreadsControllerCore extends AdminController
 					}
 				}
 				else
-					$this->errors[] = '<div class="alert error">'.Tools::displayError('E-mail invalid.').'</div>';
+					$this->errors[] = '<div class="alert error">'.Tools::displayError('The email address is invalid.').'</div>';
 			}
 			if (Tools::isSubmit('submitReply'))
 			{
 				$ct = new CustomerThread($id_customer_thread);
+
+				ShopUrl::cacheMainDomainForShop((int)$ct->id_shop);
+
 				$cm = new CustomerMessage();
 				$cm->id_employee = (int)$this->context->employee->id;
 				$cm->id_customer_thread = $ct->id;
@@ -380,7 +383,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				$cm->message = Tools::htmlentitiesutf8(Tools::getValue('reply_message'));
 				$cm->ip_address = ip2long($_SERVER['REMOTE_ADDR']);
 				if (isset($_FILES) && !empty($_FILES['joinFile']['name']) && $_FILES['joinFile']['error'] != 0)
-					$this->errors[] = Tools::displayError('An error occurred with the file upload.');
+					$this->errors[] = Tools::displayError('An error occurred during the file upload process.');
 				elseif ($cm->add())
 				{
 					$file_attachment = null;
@@ -398,10 +401,10 @@ class AdminCustomerThreadsControllerCore extends AdminController
 						),
 					);
 					//#ct == id_customer_thread    #tc == token of thread   <== used in the synchronization imap
-					$contact = new Contact((int)$ct->id_contact);
+					$contact = new Contact((int)$ct->id_contact, (int)$ct->id_lang);
 					if (Validate::isLoadedObject($contact))
 					{
-						$from_name = $contact->name;
+						$from_name = $contact->name[(int)$ct->id_lang];
 						$from_email = $contact->email;
 					}
 					else
@@ -424,7 +427,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 					);
 				}
 				else
-					$this->errors[] = Tools::displayError('An error occurred, your message was not sent. Please contact your system administrator.');
+					$this->errors[] = Tools::displayError('An error occurred. Your message was not sent. Please contact your system administrator.');
 			}
 		}
 
@@ -458,7 +461,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
 		$extension = false;
 		foreach ($extensions as $key => $val)
-			if (substr($filename, -4) == $key || substr($filename, -5) == $key)
+			if (substr(Tools::strtolower($filename), -4) == $key || substr(Tools::strtolower($filename), -5) == $key)
 			{
 				$extension = $val;
 				break;
@@ -546,7 +549,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 						$orders_ok[] = $order;
 						$total_ok += $order['total_paid_real'];
 					}
-					$orders[$key]['date_add'] = Tools::displayDate($order['date_add'], $this->context->language->id);
+					$orders[$key]['date_add'] = Tools::displayDate($order['date_add']);
 					$orders[$key]['total_paid_real'] = Tools::displayPrice($order['total_paid_real'], new Currency((int)$order['id_currency']));
 				}
 			}
@@ -554,7 +557,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			$products = $customer->getBoughtProducts();
 			if ($products && count($products))
 				foreach ($products as $key => $product)
-					$products[$key]['date_add'] = Tools::displayDate($product['date_add'], $this->context->language->id, true);
+					$products[$key]['date_add'] = Tools::displayDate($product['date_add'], null, true);
 		}
 
 		foreach ($messages as $key => $message)
@@ -592,7 +595,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			if (!empty($message['id_product']) && empty($message['employee_name']))
 				$id_order_product = Order::getIdOrderProduct((int)$message['id_customer'], (int)$message['id_product']);
 		}
-		$message['date_add'] = Tools::displayDate($message['date_add'], $this->context->language->id, true);
+		$message['date_add'] = Tools::displayDate($message['date_add'], null, true);
 		$message['user_agent'] = strip_tags($message['user_agent']);
 		$message['message'] = preg_replace(
 			'/(https?:\/\/[a-z0-9#%&_=\(\)\.\? \+\-@\/]{6,1000})([\s\n<])/Uui',
@@ -659,7 +662,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 	public function updateOptionPsSavImapOpt($value)
 	{
 		if ($this->tabAccess['edit'] != '1')
-			throw new PrestaShopException(Tools::displayError('You do not have permission to edit here.'));
+			throw new PrestaShopException(Tools::displayError('You do not have permission to edit this.'));
 
 		if (!$this->errors && $value)
 			Configuration::updateValue('PS_SAV_IMAP_OPT', implode('', $value));
@@ -668,7 +671,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 	public function ajaxProcessMarkAsRead()
 	{
 		if ($this->tabAccess['edit'] != '1')
-			throw new PrestaShopException(Tools::displayError('You do not have permission to edit here.'));
+			throw new PrestaShopException(Tools::displayError('You do not have permission to edit this.'));
 
 		$id_thread = Tools::getValue('id_thread');
 		$messages = CustomerThread::getMessageCustomerThreads($id_thread);		
@@ -679,7 +682,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 	public function ajaxProcessSyncImap()
 	{
 		if ($this->tabAccess['edit'] != '1')
-			throw new PrestaShopException(Tools::displayError('You do not have permission to edit here.'));
+			throw new PrestaShopException(Tools::displayError('You do not have permission to edit this.'));
 
 		if (Tools::isSubmit('syncImapMail'))
 		{

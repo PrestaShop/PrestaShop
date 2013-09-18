@@ -25,12 +25,16 @@ select[disabled="disabled"], input[disabled="disabled"],textarea[disabled="disab
 .double_select select{width:300px;height:160px;}
 .double_select a{text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px}
 
+.icon {vertical-align:middle}
+.icon-top {vertical-align:top}
+
 /*BUTTON*/
 .button{
+	cursor: pointer;
 	background: #e3e3e3 url('../img/bg-button-degrade.png') repeat-x scroll left top;
 	background: -moz-linear-gradient(center top , #F9F9F9, #E3E3E3) repeat scroll 0 0 transparent;
 	background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#E3E3E3)) repeat scroll 0 0 transparent;
-	border-color: #CCCCCC #BBBBBB #A0A0A0;border-left: 1px solid #BBBBBB;border-radius: 3px 3px 3px 3px;border-right: 1px solid #BBBBBB;border-style: solid;border-width: 1px;color: #000000;margin: 0; outline: medium none;padding: 3px 8px;text-align: center;vertical-align: middle;white-space: nowrap; text-shadow:0 1px 0 #fff;}
+	border-color: #CCCCCC #BBBBBB #A0A0A0;border-left: 1px solid #BBBBBB;border-radius: 3px 3px 3px 3px;border-right: 1px solid #BBBBBB;border-style: solid;border-width: 1px;color: #000000;margin: 0;outline: medium none;padding: 3px 8px;text-align: center;vertical-align: middle;white-space: nowrap; text-shadow:0 1px 0 #fff;}
 .button[disabled=disabled]{color:#8C8C8C}
 .button.bt-icon { display:inline-block; margin-bottom:7px;}
 .button.bt-icon span {padding-left:5px;}
@@ -118,6 +122,8 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 #header #menu .submenu li{list-style:none;margin:0;padding:0;display:block;min-width:150px;}
 #header #menu .submenu li a{ font-size:12px;display:block;padding: 5px 15px 5px 10px; color:#666666;border-top:1px solid #fff; border-bottom:1px solid #ccc;}
 #header #menu .submenu li a:hover { background-color:#eee; text-shadow:0 1px 0 #fff;}
+#header #menu .submenu li.active a { color: #fff;}
+#header #menu .submenu li.active a:hover { color:#666666}
 
 /*SEPARATION*/
 .separation { background-color:#ccc;border-bottom:1px solid #fff; width:100%; height:1px; margin:10px 0;}
@@ -199,7 +205,7 @@ a.module_toggle_all{color: #268CCD;}
 
 /*toolbarBox*/
 .toolbar-placeholder {position:relative}
-.toolbarBox {background-color: #F8F8F8; border: 1px solid #CCCCCC; margin-bottom:10px; padding: 5px 0; border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px;-o-border-radius:3px;position:relative;width: auto !important;}
+.toolbarBox {background-color: #F8F8F8; border: 1px solid #CCCCCC; margin-bottom:10px; padding: 5px 0; border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px;-o-border-radius:3px;position:relative}
 .toolbarBox .pageTitle { margin-left:10px; line-height:48px}
 .toolbarBox .pageTitle h3 {font-size: 1.6em; font-weight: normal; line-height: 52px; margin: 0; padding: 0; text-shadow:0 1px 0 #fff;}
 .toolbarBox ul.cc_button {float:right;margin:0 5px 0 0;padding:0;}
@@ -243,47 +249,46 @@ a.module_toggle_all{color: #268CCD;}
 .toolbarReduced {margin-right:221px}
 #modules_list_button {width:211px;height:63px;border:none;position:absolute;top:0;right:0;background-image:url('../img/modules_list_button.png');font-size: 1.6em;cursor:pointer;padding-left:45px}
 
-#modules_list_container {
+.toolbarBox #modules_list_container {
 	background: none repeat scroll 0 0 #FFF;
 	border: solid 1px #CCC;
 	display: block;
 	float: right;
 	height: auto;
-	width: 300px;
+	width: 500px;
 	position: absolute;
 	right: 13px;
-	top: 83px;
+	top: 63px;
 	z-index: 100;
-	padding: 10px;
 	box-shadow: 1px 5px 5px #CCCCCC;
 	-moz-box-shadow: 1px 5px 10px #CCCCCC;
 	-webkit-box-shadow: 1px 5px 10px #CCCCCC;
 	opacity: 1;
 
 }
-#modules_list_container #modules_list_container_content
+.toolbarBox #modules_list_container #modules_list_container_content
 {
 	max-height: 500px;
     overflow: auto;
 
 }
 
-#modules_list_container #modules_list_container_tab {margin-top: 10px;width: auto;height: auto; }
-#modules_list_container #modules_list_container_tab table {width: 100%;border-spacing: 0px;  }
-#modules_list_container #modules_list_container_tab tr { height: auto}
-#modules_list_container #modules_list_container_tab tr.rowalt {background-color: #EEE}
-#modules_list_container #modules_list_container_tab #tab_module_switch {margin-bottom: 10px;}
-#modules_list_container #modules_list_loader {margin-top: 10px}
-#modules_list_container .nav-tabs-modules:after {clear:both}
-#modules_list_container .nav-tabs-modules > li {height: 19px;float:left}
-#modules_list_container .nav-tabs-modules > li > a {
+.toolbarBox #modules_list_container #modules_list_container_tab {margin-top: 10px;width: auto;height: auto; }
+.toolbarBox #modules_list_container #modules_list_container_tab table {width: 100%;border-spacing: 0px;  }
+.toolbarBox #modules_list_container #modules_list_container_tab tr { height: auto}
+.toolbarBox #modules_list_container #modules_list_container_tab tr.rowalt {background-color: #F0F7FF}
+.toolbarBox #modules_list_container #modules_list_container_tab #tab_module_switch {margin-bottom: 10px;}
+.toolbarBox #modules_list_container #modules_list_loader {margin-top: 10px}
+.toolbarBox #modules_list_container .nav-tabs-modules:after {clear: both;}
+.toolbarBox #modules_list_container .nav-tabs-modules > li {height: 19px;}
+.toolbarBox #modules_list_container .nav-tabs-modules > li > a {
   padding-right: 12px;
   padding-left: 12px;
   margin-right: 2px;
   line-height: 14px;
 }
 
-#modules_list_container .nav-tabs-modules > li > a {
+.toolbarBox #modules_list_container .nav-tabs-modules > li > a {
   padding-top: 8px;
   padding-bottom: 7px;
   border: 1px solid transparent;
@@ -293,18 +298,18 @@ a.module_toggle_all{color: #268CCD;}
           border-radius: 4px 4px 0 0;
 }
 
-#modules_list_container .nav-tabs-modules > li > a:hover {
+.toolbarBox #modules_list_container .nav-tabs-modules > li > a:hover {
   border-color: #C0C0C0;
   background-color: #ffffff;
 }
 
-#modules_list_container .nav-tabs-modules > li > a {border: 1px solid #ddd;border-bottom:none;}
+.toolbarBox #modules_list_container .nav-tabs-modules > li > a {border: 1px solid #ddd;border-bottom:none;}
 
-#modules_list_container .nav-tabs-modules > .active > a,
-#modules_list_container .nav-tabs-modules > .active > a:hover {
+.toolbarBox #modules_list_container .nav-tabs-modules > .active > a,
+.toolbarBox #modules_list_container .nav-tabs-modules > .active > a:hover {
   color: #555555;
   cursor: default;
-  background-color: #EEE;
+  background-color: #F8F8F8;
   border: 1px solid #ddd;
   border-bottom-color: transparent;
 }
@@ -312,7 +317,7 @@ a.module_toggle_all{color: #268CCD;}
 
 
 
-div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0.9;z-index:500;width:90% !important;margin:auto}
+div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0.9;z-index:500;margin:auto}
 
 /*button upload files*/
 #content .qq-upload-button {
@@ -533,16 +538,15 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 	margin:0;
 	white-space: nowrap;
 	overflow: auto;
-	height: 335px;
+	height: 370px;
 }
 #modules_list_container_tab #modules_list_container_content li{display:inline-block;}
 #modules_list_container_tab table tr th { height:40px;}
 #modules_list_container_tab table tr td { font-size:12px; padding: 3px 3px 3px; border-top:1px solid #ccc; border-bottom:none;}
 #modules_list_container_tab table tr td tr td {border: none}
 #modules_list_container_tab table tr:first-child {border-top:1px solid #ccc}
-#modules_list_container_tab table td.tab_modules_actions_row {border-top:1px solid #ccc}
 #modules_list_container_tab .imgm {width:32px;}
-#modules_list_container_tab .moduleDesc { font-size:12px;width: 238px;}
+#modules_list_container_tab .moduleDesc {font-size:12px}
 #modules_list_container_tab .moduleDesc h3 { color:#3A6EA7;margin: 0;font-size: 1.1em;text-align: left;white-space: normal;}
 #modules_list_container_tab .moduleDesc .metadata  { float:left; display:block; margin:5px 0;}
 #modules_list_container_tab .moduleDesc .metadata dl { float:left; margin:0; padding-right:10px;}
@@ -550,7 +554,7 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 #modules_list_container_tab .moduleDesc .metadata dl dd { padding-right:10px;}
 #modules_list_container_tab .moduleDesc .metadata dl dt { font-weight:bold; padding-right:5px;}
 #modules_list_container_tab .moduleDesc p.desc { color:#666; font-family: Georgia; font-style: italic;  font-size:12px; text-align: left;white-space: normal;}
-#modules_list_container_tab .setup  {background-color:#6db300; font-weight:bold; font-size:10px; color:#fff; text-transform:uppercase; padding:2px 10px; display: inline-block; border-radius:3px;}
+#modules_list_container_tab .setup  {background-color:#6db300; font-weight:bold; font-size:10px; color:#fff; text-transform:uppercase; padding:0 10px; display: inline-block; border-radius:3px;}
 #modules_list_container_tab .row-actions-module {float: right;}
 #modules_list_container_tab .setup.non-install { background-color:#ec7000;}
 #modules_list_container_tab .setup.must-have { background-color: #ec7000;}
@@ -564,8 +568,8 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 #modules_list_container_tab ul.listing-grid-module li select { position:absolute; top:0; right:0px; }
 
 .default_modules_list_display_type #modules_list_container_content li table tr td{border: none}
-.default_modules_list_display_type #modules_list_container_content li table {border: solid 1px #ccc; height: 140px;width: 100%;margin-bottom:15px}
-#modules_list_container_tab ul li {margin:5px;height:140px}
+.default_modules_list_display_type #modules_list_container_content li table {border:solid 1px #ccc;height:105px;width:100%;margin-bottom:10px}
+#modules_list_container_tab ul li {height:105px}
 
 		/******** ie7 ******/
 		.ie7 #modules_list_container_tab #modules_list_container_content li{zoom:1;display:inline;}
@@ -667,3 +671,7 @@ ul.listForm li {padding-bottom:3px;}
 
 #carrier_form label{padding-top:0}
 #carrier_form input{margin-top:3px}
+
+/************** SCENE *****************/
+
+#large_scene_image{clear:both;border:1px solid transparent;}

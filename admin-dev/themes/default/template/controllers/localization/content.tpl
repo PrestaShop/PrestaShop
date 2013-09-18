@@ -23,6 +23,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{$localization_form}
+<div class="width4">
+	{if isset($localization_form)}{$localization_form}{/if}
+</div>
 <br />
-{$localization_options}
+<div class="width4">
+	{if isset($localization_options)}{$localization_options}{/if}
+</div>

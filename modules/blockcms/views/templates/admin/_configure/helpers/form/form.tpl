@@ -53,7 +53,7 @@
                         <thead>
                             <tr class="nodrag nodrop">
                                 <th>{l s='ID' mod='blockcms'}</th>
-                                <th>{l s='Name of block' mod='blockcms'}</th>
+                                <th>{l s='Name of the block' mod='blockcms'}</th>
                                 <th>{l s='Category name' mod='blockcms'}</th>
                                 <th>{l s='Position' mod='blockcms'}</th>
                                 <th>{l s='Actions' mod='blockcms'}</th>
@@ -144,7 +144,7 @@
                         <td>
                             <strong>{$cms_category['id_cms_category']}</strong>
                         </td>
-                        <td><label for="{$id_checkbox}" class="t"><strong>{str_repeat('&nbsp;', ($cms_category['level_depth'] - 1) * 4)|cat:$cms_category['name']}</strong></label></td>
+                        <td><label for="{$id_checkbox}" class="t"><strong>{if $cms_category['level_depth'] > 0}{str_repeat('&nbsp;', ($cms_category['level_depth'] - 1) * 4)}{/if}{$cms_category['name']|escape}</strong></label></td>
                     </tr>
 
                     {foreach $cms_category['cms_pages'] as $subkey => $cms_page}
@@ -164,7 +164,7 @@
 
             </table>
             {else}
-            <p>{l s='No pages created' mod='blockcms'}</p>
+            <p>{l s='No pages have been created.' mod='blockcms'}</p>
         {/if}
 	{else}
 		{$smarty.block.parent}

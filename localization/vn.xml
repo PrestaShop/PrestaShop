@@ -4,7 +4,7 @@
 		<currency name="Đồng" iso_code="VND" iso_code_num="704" sign="₫" blank="1" conversion_rate="26505.85" format="2" decimals="1" />
 	</currencies>
 	<languages>
-		<language iso_code="vi" />
+		<language iso_code="vn" />
 	</languages>
 	<taxes>
 		<tax id="1" name="GTGT VN 10%" rate="10" />
