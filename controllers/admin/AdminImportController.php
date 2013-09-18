@@ -464,9 +464,15 @@ class AdminImportControllerCore extends AdminController
 		// adds fancybox
 		$this->addCSS(_PS_CSS_DIR_.'jquery.fancybox-1.3.4.css', 'screen');
 		$this->addJqueryPlugin(array('fancybox'));
+
 		$entity_selected = 0;
 		if (isset($this->entities[$this->l(Tools::ucfirst(Tools::getValue('import_type')))]))
+		{
 			$entity_selected = $this->entities[$this->l(Tools::ucfirst(Tools::getValue('import_type')))];
+			$this->context->cookie->entity_selected = $entity_selected;
+		}
+		elseif(isset($this->context->cookie->entity_selected))
+			$entity_selected = (int)$this->context->cookie->entity_selected;
 
 		$this->tpl_form_vars = array(
 			'module_confirmation' => (Tools::getValue('import')) && (isset($this->warnings) && !count($this->warnings)),
@@ -499,6 +505,9 @@ class AdminImportControllerCore extends AdminController
 		$data = array();
 		for ($i = 0; $i < $nb_table; $i++)
 			$data[$i] = $this->generateContentTable($i, $nb_column, $handle, $this->separator);
+
+		if ($entity_selected = (int)Tools::getValue('entity'))
+			$this->context->cookie->entity_selected = $entity_selected;
 
 		$this->tpl_view_vars = array(
 			'import_matchs' => Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'import_match'),
