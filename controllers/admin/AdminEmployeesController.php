@@ -72,12 +72,12 @@ class AdminEmployeesControllerCore extends AdminController
 				$this->profiles_array[$profile['name']] = $profile['name'];
 
 		$this->fields_list = array(
-			'id_employee' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'lastname' => array('title' => $this->l('Last Name'), 'width' => 'auto'),
-			'firstname' => array('title' => $this->l('First Name'), 'width' => 130),
-			'email' => array('title' => $this->l('Email address'), 'width' => 180),
-			'profile' => array('title' => $this->l('Profile'), 'width' => 90, 'type' => 'select', 'list' => $this->profiles_array, 'filter_key' => 'pl!name'),
-			'active' => array('title' => $this->l('Can log in'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'width' => 30),
+			'id_employee' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+			'lastname' => array('title' => $this->l('Last Name')),
+			'firstname' => array('title' => $this->l('First Name')),
+			'email' => array('title' => $this->l('Email address')),
+			'profile' => array('title' => $this->l('Profile'), 'type' => 'select', 'list' => $this->profiles_array, 'filter_key' => 'pl!name'),
+			'active' => array('title' => $this->l('Can log in'), 'align' => 'center', 'active' => 'status', 'type' => 'bool'),
 		);
 
 		$this->fields_options = array(

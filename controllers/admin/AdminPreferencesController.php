@@ -142,7 +142,7 @@ class AdminPreferencesControllerCore extends AdminController
 			if (!Tools::usingSecureMode() && !Configuration::get('PS_SSL_ENABLED'))
 			{
 				$fields['PS_SSL_ENABLED']['type'] = 'disabled';
-				$fields['PS_SSL_ENABLED']['disabled'] = '<a href="https://'.Tools::getShopDomainSsl().Tools::safeOutput($_SERVER['REQUEST_URI']).'">'.
+				$fields['PS_SSL_ENABLED']['disabled'] = '<a class="btn btn-link" href="https://'.Tools::getShopDomainSsl().Tools::safeOutput($_SERVER['REQUEST_URI']).'">'.
 					$this->l('Please click here to use HTTPS protocol before enabling SSL.').'</a>';
 			}
 
