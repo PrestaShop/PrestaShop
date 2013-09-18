@@ -254,8 +254,10 @@
 			>
 			<thead>
 				<tr class="nodrag nodrop">
-					<th class="center">
+					{if $has_bulk_actions}
+					<th class="center fixed-width-xs">
 					</th>
+					{/if}
 					{foreach $fields_display AS $key => $params}
 					<th class="{if isset($params.class)}{$params.class}{/if}{if isset($params.align)} {$params.align}{/if}">
 
@@ -308,12 +310,11 @@
 				</tr>
 			{if !$simple_header && $show_filters}
 				<tr class="nodrag nodrop filter {if $row_hover}row_hover{/if}">
+					{if $has_bulk_actions}
 					<td class="center">
-						{if $has_bulk_actions}
-							--
-						{/if}
+						--
 					</td>
-
+					{/if}
 					{* Filters (input, select, date or bool) *}
 					{foreach $fields_display AS $key => $params}
 					<td {if isset($params.align)} class="{$params.align}" {/if}>
