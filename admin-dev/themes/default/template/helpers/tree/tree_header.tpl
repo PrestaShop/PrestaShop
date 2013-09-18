@@ -23,6 +23,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div class="panel-heading">
-	<i class="icon-tag"></i>&nbsp;{l s=$title}
+	<!-- <i class="icon-tag"></i>&nbsp;{l s=$title} -->
 	{if isset($toolbar)}{$toolbar}{/if}
 </div>

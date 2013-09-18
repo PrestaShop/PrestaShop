@@ -27,5 +27,5 @@
 		<input type="radio" name="id-category" value="{$node['id_category']}"{if isset($node['disabled']) && $node['disabled'] == true} disabled="disabled"{/if} />
 		<i class="tree-dot"></i>
 		{$node['name']}
-	<label>
+	</label>
 </li>

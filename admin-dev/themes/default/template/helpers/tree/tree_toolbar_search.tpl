@@ -24,14 +24,12 @@
 *}
 
 <!-- <label for="node-search">{l s=$label}</label> -->
-<span class="input-group">
-	<span class="input-group-addon">
-		<i class="icon-search"></i>
-	</span>
+<span class="pull-right fixed-width-xl">
 	<input type="text"
 		{if isset($id)}id="{$id}"{/if}
 		{if isset($name)}name="{$name}"{/if}
-		class="form-control{if isset($class)} {$class}{/if}"
+		class="{if isset($class)} {$class}{/if}"
+		placeholder="search..."
 	/>
 </span>
 

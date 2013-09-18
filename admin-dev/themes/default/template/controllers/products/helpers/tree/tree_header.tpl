@@ -37,6 +37,9 @@
 	});
 </script>
 <div class="panel-heading">
-	<input type="checkbox" id="filter-by-category" {if $is_category_filter}checked="checked"{/if} />&nbsp;<i class="icon-tags"></i>&nbsp;{l s=$title}
-	<div class="pull-right" id="category-tree-toolbar"{if !$is_category_filter} style="display:none"{/if}>{if isset($toolbar)}{$toolbar}{/if}</div>
+	<input type="checkbox" id="filter-by-category" {if $is_category_filter}checked="checked"{/if} />
+	{l s=$title}
+	<div id="category-tree-toolbar" class="tree-actions"{if !$is_category_filter} style="display:none"{/if}>
+		{if isset($toolbar)}{$toolbar}{/if}
+	</div>
 </div>

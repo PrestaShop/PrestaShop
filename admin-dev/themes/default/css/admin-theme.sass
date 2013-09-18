@@ -91,7 +91,7 @@ html, body
 		@extend h3
 	h3:not(.modal-title), .panel-heading
 		border: none
-		height: 30px
+		//height: 30px
 		padding: 0 5px
 		margin: -16px -16px 15px -16px
 		color: contrasted($bg-panel-heading-color)	
@@ -371,7 +371,7 @@ hr
 
 //filter table
 tr.filter
-	background-color: lighten(#CAE5F4,10%)
+	background-color: lighten(#CAE5F4,5%)
 	input[type="text"].filter, input[type="password"].filter, select.filter
 		font-size: 12px
 		border-color: darken(#CAE5F4,10%)
@@ -462,7 +462,6 @@ tr.filter
 #nobootstrap
 	float: left
 
-
 //WIP (refacto, keep it simple, order ...)
 
 //some helpers to get fixed width
@@ -474,6 +473,10 @@ tr.filter
 	width: 120px
 .fixed-width-lg
 	width: 160px
+.fixed-width-xl
+	width: 200px
+.fixed-width-xxl
+	width: 250px
 
 // temp fix for latest bootstrap
 input[type="text"],input[type="search"],input[type="password"], textarea, select
@@ -674,6 +677,28 @@ textarea
 	li.active
 		a.tab-page
 			background-color: white
+
+.tree-actions
+	padding-bottom: 4px
+	display: inline-block
+
+//typeahead
+.tt-query
+	+border-right-radius(3px!important)
+.tt-dropdown-menu
+	background-color: white
+	border: solid 1px #ccc
+	font-size: 0.9em
+	text-transform: none
+.tt-suggestions
+	padding: 0 6px
+	+box-shadow(rgba(black,0.25) 0 1px 4px)
+.tt-suggestion p
+	border-bottom: solid 1px #ccc
+	margin: 0!important
+	padding: 0!important
+.tt-suggestion:last-child p
+	border-bottom: none
 
 //tag
 .tagify-container
