@@ -54,11 +54,14 @@
 			{$hookDashboardZoneTwo}
 		</div>
 		<div class="col-lg-2">
-			<div id="new_version_container"></div>
-			<iframe frameborder="no"  allowtransparency="true" src="{$new_version_url}"></iframe>
+			
 			<section class="dash_news panel">
 				<h4><i class="icon-rss"></i> PrestaShop News</h4>
 			</section>
+			<section id="dash_version" class="visible-lg">
+				<iframe frameborder="no" scrolling="no" allowtransparency="true" src="{$new_version_url}"></iframe>
+			</section>
+
 			<section class="dash_links panel">
 				<h4><i class="icon-link"></i>{l s="Useful PrestaShop Links"}</h4>
 					<dl>

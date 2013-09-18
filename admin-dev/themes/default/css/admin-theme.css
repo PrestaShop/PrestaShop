@@ -4387,7 +4387,7 @@ a.list-group-item:hover, a.list-group-item:focus {
   line-height: 1.3; }
 
 /* line 7, ../bower_components/sass-bootstrap/lib/_panels.scss */
-.panel, #header_notifs_icon_wrapper .notifs_panel, #new_version_container {
+.panel, #header_notifs_icon_wrapper .notifs_panel, #dash_version {
   margin-bottom: 17px;
   background-color: white;
   border: 1px solid transparent;
@@ -4409,17 +4409,17 @@ a.list-group-item:hover, a.list-group-item:focus {
   clear: both; }
 
 /* line 28, ../bower_components/sass-bootstrap/lib/_panels.scss */
-.panel > .list-group, #header_notifs_icon_wrapper .notifs_panel > .list-group, #new_version_container > .list-group, #dashboard .panel > .data_list, #header_notifs_icon_wrapper #dashboard .notifs_panel > .data_list, #dashboard #header_notifs_icon_wrapper .notifs_panel > .data_list, #dashboard #new_version_container > .data_list {
+.panel > .list-group, #header_notifs_icon_wrapper .notifs_panel > .list-group, #dash_version > .list-group, #dashboard .panel > .data_list, #header_notifs_icon_wrapper #dashboard .notifs_panel > .data_list, #dashboard #header_notifs_icon_wrapper .notifs_panel > .data_list, #dashboard #dash_version > .data_list {
   margin-bottom: 0; }
 /* line 31, ../bower_components/sass-bootstrap/lib/_panels.scss */
-.panel > .list-group .list-group-item, #header_notifs_icon_wrapper .notifs_panel > .list-group .list-group-item, #new_version_container > .list-group .list-group-item, #dashboard .panel > .data_list .list-group-item, #header_notifs_icon_wrapper #dashboard .notifs_panel > .data_list .list-group-item, #dashboard #header_notifs_icon_wrapper .notifs_panel > .data_list .list-group-item, #dashboard #new_version_container > .data_list .list-group-item, .panel > .list-group #dashboard .data_list li, #dashboard .data_list .panel > .list-group li, #header_notifs_icon_wrapper .notifs_panel > .list-group #dashboard .data_list li, #dashboard .data_list #header_notifs_icon_wrapper .notifs_panel > .list-group li, #new_version_container > .list-group #dashboard .data_list li, #dashboard .data_list #new_version_container > .list-group li, #dashboard .panel > .data_list li, #header_notifs_icon_wrapper #dashboard .notifs_panel > .data_list li, #dashboard #header_notifs_icon_wrapper .notifs_panel > .data_list li, #dashboard #new_version_container > .data_list li {
+.panel > .list-group .list-group-item, #header_notifs_icon_wrapper .notifs_panel > .list-group .list-group-item, #dash_version > .list-group .list-group-item, #dashboard .panel > .data_list .list-group-item, #header_notifs_icon_wrapper #dashboard .notifs_panel > .data_list .list-group-item, #dashboard #header_notifs_icon_wrapper .notifs_panel > .data_list .list-group-item, #dashboard #dash_version > .data_list .list-group-item, .panel > .list-group #dashboard .data_list li, #dashboard .data_list .panel > .list-group li, #header_notifs_icon_wrapper .notifs_panel > .list-group #dashboard .data_list li, #dashboard .data_list #header_notifs_icon_wrapper .notifs_panel > .list-group li, #dash_version > .list-group #dashboard .data_list li, #dashboard .data_list #dash_version > .list-group li, #dashboard .panel > .data_list li, #header_notifs_icon_wrapper #dashboard .notifs_panel > .data_list li, #dashboard #header_notifs_icon_wrapper .notifs_panel > .data_list li, #dashboard #dash_version > .data_list li {
   border-width: 1px 0; }
 /* line 35, ../bower_components/sass-bootstrap/lib/_panels.scss */
-.panel > .list-group .list-group-item:first-child, #header_notifs_icon_wrapper .notifs_panel > .list-group .list-group-item:first-child, #new_version_container > .list-group .list-group-item:first-child, #dashboard .panel > .data_list .list-group-item:first-child, #header_notifs_icon_wrapper #dashboard .notifs_panel > .data_list .list-group-item:first-child, #dashboard #header_notifs_icon_wrapper .notifs_panel > .data_list .list-group-item:first-child, #dashboard #new_version_container > .data_list .list-group-item:first-child, .panel > .list-group #dashboard .data_list li:first-child, #dashboard .data_list .panel > .list-group li:first-child, #header_notifs_icon_wrapper .notifs_panel > .list-group #dashboard .data_list li:first-child, #dashboard .data_list #header_notifs_icon_wrapper .notifs_panel > .list-group li:first-child, #new_version_container > .list-group #dashboard .data_list li:first-child, #dashboard .data_list #new_version_container > .list-group li:first-child, #dashboard .panel > .data_list li:first-child, #header_notifs_icon_wrapper #dashboard .notifs_panel > .data_list li:first-child, #dashboard #header_notifs_icon_wrapper .notifs_panel > .data_list li:first-child, #dashboard #new_version_container > .data_list li:first-child {
+.panel > .list-group .list-group-item:first-child, #header_notifs_icon_wrapper .notifs_panel > .list-group .list-group-item:first-child, #dash_version > .list-group .list-group-item:first-child, #dashboard .panel > .data_list .list-group-item:first-child, #header_notifs_icon_wrapper #dashboard .notifs_panel > .data_list .list-group-item:first-child, #dashboard #header_notifs_icon_wrapper .notifs_panel > .data_list .list-group-item:first-child, #dashboard #dash_version > .data_list .list-group-item:first-child, .panel > .list-group #dashboard .data_list li:first-child, #dashboard .data_list .panel > .list-group li:first-child, #header_notifs_icon_wrapper .notifs_panel > .list-group #dashboard .data_list li:first-child, #dashboard .data_list #header_notifs_icon_wrapper .notifs_panel > .list-group li:first-child, #dash_version > .list-group #dashboard .data_list li:first-child, #dashboard .data_list #dash_version > .list-group li:first-child, #dashboard .panel > .data_list li:first-child, #header_notifs_icon_wrapper #dashboard .notifs_panel > .data_list li:first-child, #dashboard #header_notifs_icon_wrapper .notifs_panel > .data_list li:first-child, #dashboard #dash_version > .data_list li:first-child {
   border-top-right-radius: 0;
   border-top-left-radius: 0; }
 /* line 39, ../bower_components/sass-bootstrap/lib/_panels.scss */
-.panel > .list-group .list-group-item:last-child, #header_notifs_icon_wrapper .notifs_panel > .list-group .list-group-item:last-child, #new_version_container > .list-group .list-group-item:last-child, #dashboard .panel > .data_list .list-group-item:last-child, #header_notifs_icon_wrapper #dashboard .notifs_panel > .data_list .list-group-item:last-child, #dashboard #header_notifs_icon_wrapper .notifs_panel > .data_list .list-group-item:last-child, #dashboard #new_version_container > .data_list .list-group-item:last-child, .panel > .list-group #dashboard .data_list li:last-child, #dashboard .data_list .panel > .list-group li:last-child, #header_notifs_icon_wrapper .notifs_panel > .list-group #dashboard .data_list li:last-child, #dashboard .data_list #header_notifs_icon_wrapper .notifs_panel > .list-group li:last-child, #new_version_container > .list-group #dashboard .data_list li:last-child, #dashboard .data_list #new_version_container > .list-group li:last-child, #dashboard .panel > .data_list li:last-child, #header_notifs_icon_wrapper #dashboard .notifs_panel > .data_list li:last-child, #dashboard #header_notifs_icon_wrapper .notifs_panel > .data_list li:last-child, #dashboard #new_version_container > .data_list li:last-child {
+.panel > .list-group .list-group-item:last-child, #header_notifs_icon_wrapper .notifs_panel > .list-group .list-group-item:last-child, #dash_version > .list-group .list-group-item:last-child, #dashboard .panel > .data_list .list-group-item:last-child, #header_notifs_icon_wrapper #dashboard .notifs_panel > .data_list .list-group-item:last-child, #dashboard #header_notifs_icon_wrapper .notifs_panel > .data_list .list-group-item:last-child, #dashboard #dash_version > .data_list .list-group-item:last-child, .panel > .list-group #dashboard .data_list li:last-child, #dashboard .data_list .panel > .list-group li:last-child, #header_notifs_icon_wrapper .notifs_panel > .list-group #dashboard .data_list li:last-child, #dashboard .data_list #header_notifs_icon_wrapper .notifs_panel > .list-group li:last-child, #dash_version > .list-group #dashboard .data_list li:last-child, #dashboard .data_list #dash_version > .list-group li:last-child, #dashboard .panel > .data_list li:last-child, #header_notifs_icon_wrapper #dashboard .notifs_panel > .data_list li:last-child, #dashboard #header_notifs_icon_wrapper .notifs_panel > .data_list li:last-child, #dashboard #dash_version > .data_list li:last-child {
   border-bottom: 0; }
 
 /* line 47, ../bower_components/sass-bootstrap/lib/_panels.scss */
@@ -4427,10 +4427,10 @@ a.list-group-item:hover, a.list-group-item:focus {
   border-top-width: 0; }
 
 /* line 59, ../bower_components/sass-bootstrap/lib/_panels.scss */
-.panel > .table, #header_notifs_icon_wrapper .notifs_panel > .table, #new_version_container > .table {
+.panel > .table, #header_notifs_icon_wrapper .notifs_panel > .table, #dash_version > .table {
   margin-bottom: 0; }
 /* line 62, ../bower_components/sass-bootstrap/lib/_panels.scss */
-.panel > .panel-body + .table, #header_notifs_icon_wrapper .notifs_panel > .panel-body + .table, #new_version_container > .panel-body + .table {
+.panel > .panel-body + .table, #header_notifs_icon_wrapper .notifs_panel > .panel-body + .table, #dash_version > .panel-body + .table {
   border-top: 1px solid #dddddd; }
 
 /* line 69, ../bower_components/sass-bootstrap/lib/_panels.scss */
@@ -4458,12 +4458,12 @@ a.list-group-item:hover, a.list-group-item:focus {
   border-bottom-left-radius: 2px; }
 
 /* line 101, ../bower_components/sass-bootstrap/lib/_panels.scss */
-.panel-group .panel, .panel-group #header_notifs_icon_wrapper .notifs_panel, #header_notifs_icon_wrapper .panel-group .notifs_panel, .panel-group #new_version_container {
+.panel-group .panel, .panel-group #header_notifs_icon_wrapper .notifs_panel, #header_notifs_icon_wrapper .panel-group .notifs_panel, .panel-group #dash_version {
   margin-bottom: 0;
   border-radius: 3px;
   overflow: hidden; }
 /* line 105, ../bower_components/sass-bootstrap/lib/_panels.scss */
-.panel-group .panel + .panel, .panel-group #header_notifs_icon_wrapper .notifs_panel + .panel, #header_notifs_icon_wrapper .panel-group .notifs_panel + .panel, .panel-group #new_version_container + .panel, .panel-group #header_notifs_icon_wrapper .panel + .notifs_panel, #header_notifs_icon_wrapper .panel-group .panel + .notifs_panel, .panel-group #header_notifs_icon_wrapper .notifs_panel + .notifs_panel, #header_notifs_icon_wrapper .panel-group .notifs_panel + .notifs_panel, .panel-group #header_notifs_icon_wrapper #new_version_container + .notifs_panel, #header_notifs_icon_wrapper .panel-group #new_version_container + .notifs_panel, .panel-group .panel + #new_version_container, .panel-group #header_notifs_icon_wrapper .notifs_panel + #new_version_container, #header_notifs_icon_wrapper .panel-group .notifs_panel + #new_version_container, .panel-group #new_version_container + #new_version_container {
+.panel-group .panel + .panel, .panel-group #header_notifs_icon_wrapper .notifs_panel + .panel, #header_notifs_icon_wrapper .panel-group .notifs_panel + .panel, .panel-group #dash_version + .panel, .panel-group #header_notifs_icon_wrapper .panel + .notifs_panel, #header_notifs_icon_wrapper .panel-group .panel + .notifs_panel, .panel-group #header_notifs_icon_wrapper .notifs_panel + .notifs_panel, #header_notifs_icon_wrapper .panel-group .notifs_panel + .notifs_panel, .panel-group #header_notifs_icon_wrapper #dash_version + .notifs_panel, #header_notifs_icon_wrapper .panel-group #dash_version + .notifs_panel, .panel-group .panel + #dash_version, .panel-group #header_notifs_icon_wrapper .notifs_panel + #dash_version, #header_notifs_icon_wrapper .panel-group .notifs_panel + #dash_version, .panel-group #dash_version + #dash_version {
   margin-top: 5px; }
 /* line 110, ../bower_components/sass-bootstrap/lib/_panels.scss */
 .panel-group .panel-heading, .panel-group #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header, #header_notifs_icon_wrapper .notifs_panel .panel-group .notifs_panel_header {
@@ -7620,7 +7620,7 @@ html, body {
   -o-transition-timing-function: ease-out;
   transition-timing-function: ease-out; }
 /* line 83, admin-theme.sass */
-#content fieldset, #content .panel, #content #header_notifs_icon_wrapper .notifs_panel, #header_notifs_icon_wrapper #content .notifs_panel, #content #new_version_container {
+#content fieldset, #content .panel, #content #header_notifs_icon_wrapper .notifs_panel, #header_notifs_icon_wrapper #content .notifs_panel, #content #dash_version {
   padding: 20px;
   margin-bottom: 20px;
   border: solid 1px #dfdfdf;
@@ -9424,10 +9424,10 @@ textarea {
     transform: scale(1); } }
 
 /* line 227, _dashboard.sass */
-#new_version_container {
+#dash_version {
   padding: 0 !important;
   overflow: hidden; }
 /* line 231, _dashboard.sass */
-#new_version_container iframe {
-  height: 120px;
+#dash_version iframe {
+  height: 140px;
   width: 100%; }
