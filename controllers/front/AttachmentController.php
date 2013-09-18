@@ -29,6 +29,9 @@ class AttachmentControllerCore extends FrontController
 	public function postProcess()
 	{
 		$a = new Attachment(Tools::getValue('id_attachment'), $this->context->language->id);
+		Hook::exec('actionDownloadAttachment',array(
+			'attachment' => &$a
+		);
 		if (!$a->id)
 			Tools::redirect('index.php');
 

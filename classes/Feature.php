@@ -312,6 +312,19 @@ class FeatureCore extends ObjectModel
 	 */
 	public static function cleanPositions()
 	{
+<<<<<<< HEAD
+		$return = true;
+		$sql = 'CREATE TEMPORARY TABLE `'._DB_PREFIX_.'feature_tmp` (
+			`rank` INT NOT NULL AUTO_INCREMENT,
+			`id_feature` int not null,
+				`position` int not null,
+				primary key(rank)
+		);
+		INSERT INTO '._DB_PREFIX_.'feature_tmp(id_feature,position) SELECT id_feature,position FROM ps_feature ORDER BY position ASC;
+		UPDATE `'._DB_PREFIX_.'feature_tmp` f LEFT JOIN ps_feature_tmp t USING(id_feature) SET f.position = rank-1';
+		$return = Db::getInstance()->executeS($sql);
+		return $return;
+=======
 		return Db::getInstance()->execute('
 		UPDATE `'._DB_PREFIX_.'feature` f
 		LEFT JOIN (
@@ -322,6 +335,7 @@ class FeatureCore extends ObjectModel
 		) AS f2
 		USING (id_feature)
 		SET f.position = f2.rank - 1');
+>>>>>>> 3e750490feef2d55855c5713310e1e4f852725ba
 	}
 
 	/**

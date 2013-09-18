@@ -626,7 +626,12 @@ class AdminControllerCore extends Controller
 
 		$headers = array();
 		foreach ($this->fields_list as $datas)
+<<<<<<< HEAD
+			$headers[] = html_entity_decode($datas['title'], ENT_QUOTES, "UTF-8");
+
+=======
 			$headers[] = Tools::htmlentitiesDecodeUTF8($datas['title']);
+>>>>>>> 3e750490feef2d55855c5713310e1e4f852725ba
 		$content = array();
 		foreach ($this->_list as $i => $row)
 		{
