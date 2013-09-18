@@ -26,48 +26,51 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
-
-<h2>{$supplier->name}</h2>
-
-<h3>{l s='Number of products:'} {count($products)}</h3>
-<table border="0" cellpadding="0" cellspacing="0" class="table" width="100%">
-	<tr>
-		<th>{l s='Product name'}</th>
-		<th>{l s='Attribute name'}</th>
-		<th>{l s='Supplier Reference'}</th>
-		<th>{l s='Wholesale price'}</th>
-		<th>{l s='Reference'}</th>
-		<th>{l s='EAN13'}</th>
-		<th>{l s='UPC'}</th>
-		{if $stock_management && $shopContext != Shop::CONTEXT_ALL}<th class="right">{l s='Available Quantity'}</th>{/if}
-	</tr>
-{foreach $products AS $product}
-	{if !$product->hasAttributes()}
-		<tr>
-			<td><a href="?tab=AdminProducts&id_product={$product->id}&updateproduct&token={getAdminToken tab='AdminProducts'}">{$product->name}</a></td>
-			<td>{l s='N/A'}</td>
-			<td>{if empty($product->product_supplier_reference)}{l s='N/A'}{else}{$product->product_supplier_reference}{/if}</td>
-			<td>{if empty($product->product_supplier_price_te)}0{else}{$product->product_supplier_price_te}{/if}</td>
-			<td>{if empty($product->reference)}{l s='N/A'}{else}{$product->reference}{/if}</td>
-			<td>{if empty($product->ean13)}{l s='N/A'}{else}{$product->ean13}{/if}</td>
-			<td>{if empty($product->upc)}{l s='N/A'}{else}{$product->upc}{/if}</td>
-			{if $stock_management && $shopContext != Shop::CONTEXT_ALL}<td class="right" width="150">{$product->quantity}</td>{/if}
-		</tr>
-	{else}
-		{foreach $product->combination AS $id_product_attribute => $product_attribute}
-			<tr {if $id_product_attribute %2}class="alt_row"{/if} >
-				<td><a href="?tab=AdminProducts&id_product={$product->id}&updateproduct&token={getAdminToken tab='AdminProducts'}">{$product->name}</a></td>
-				<td>{if empty($product_attribute.attributes)}{l s='N/A'}{else}{$product_attribute.attributes}{/if}</td>
-				<td>{if empty($product_attribute.product_supplier_reference)}{l s='N/A'}{else}{$product_attribute.product_supplier_reference}{/if}</td>
-				<td>{if empty($product_attribute.product_supplier_price_te)}0{else}{$product_attribute.product_supplier_price_te}{/if}</td>
-				<td>{if empty($product_attribute.reference)}{l s='N/A'}{else}{$product_attribute.reference}{/if}</td>
-				<td>{if empty($product_attribute.ean13)}{l s='N/A'}{else}{$product_attribute.ean13}{/if}</td>
-				<td>{if empty($product_attribute.upc)}{l s='N/A'}{else}{$product_attribute.upc}{/if}</td>
-				{if $stock_management && $shopContext != Shop::CONTEXT_ALL}<td class="right">{$product_attribute.quantity}</td>{/if}
+<div class="panel">
+	<div class="panel-heading">{l s='Number of products:'} {count($products)}</div>	
+	<table class="table">
+		<thead>
+			<tr>
+				<th><span class="title_box">{l s='Product name'}</span></th>
+				<th><span class="title_box">{l s='Attribute name'}</span></th>
+				<th><span class="title_box">{l s='Supplier Reference'}</span></th>
+				<th><span class="title_box">{l s='Wholesale price'}</span></th>
+				<th><span class="title_box">{l s='Reference'}</span></th>
+				<th><span class="title_box">{l s='EAN13'}</span></th>
+				<th><span class="title_box">{l s='UPC'}</span></th>
+				{if $stock_management && $shopContext != Shop::CONTEXT_ALL}<th class="right"><span class="title_box">{l s='Available Quantity'}</span></th>{/if}
 			</tr>
+		</thead>
+		<tbody>
+		{foreach $products AS $product}
+			{if !$product->hasAttributes()}
+				<tr>
+					<td><a class="btn btn-default" href="?tab=AdminProducts&id_product={$product->id}&updateproduct&token={getAdminToken tab='AdminProducts'}"><i class="icon-eye-open"></i>&nbsp;{$product->name}</a></td>
+					<td>{l s='N/A'}</td>
+					<td>{if empty($product->product_supplier_reference)}{l s='N/A'}{else}{$product->product_supplier_reference}{/if}</td>
+					<td>{if empty($product->product_supplier_price_te)}0{else}{$product->product_supplier_price_te}{/if}</td>
+					<td>{if empty($product->reference)}{l s='N/A'}{else}{$product->reference}{/if}</td>
+					<td>{if empty($product->ean13)}{l s='N/A'}{else}{$product->ean13}{/if}</td>
+					<td>{if empty($product->upc)}{l s='N/A'}{else}{$product->upc}{/if}</td>
+					{if $stock_management && $shopContext != Shop::CONTEXT_ALL}<td class="right" width="150">{$product->quantity}</td>{/if}
+				</tr>
+			{else}
+				{foreach $product->combination AS $id_product_attribute => $product_attribute}
+					<tr {if $id_product_attribute %2}class="alt_row"{/if} >
+						<td><a class="btn btn-default" href="?tab=AdminProducts&id_product={$product->id}&updateproduct&token={getAdminToken tab='AdminProducts'}"><i class="icon-eye-open"></i>&nbsp;{$product->name}</a></td>
+						<td>{if empty($product_attribute.attributes)}{l s='N/A'}{else}{$product_attribute.attributes}{/if}</td>
+						<td>{if empty($product_attribute.product_supplier_reference)}{l s='N/A'}{else}{$product_attribute.product_supplier_reference}{/if}</td>
+						<td>{if empty($product_attribute.product_supplier_price_te)}0{else}{$product_attribute.product_supplier_price_te}{/if}</td>
+						<td>{if empty($product_attribute.reference)}{l s='N/A'}{else}{$product_attribute.reference}{/if}</td>
+						<td>{if empty($product_attribute.ean13)}{l s='N/A'}{else}{$product_attribute.ean13}{/if}</td>
+						<td>{if empty($product_attribute.upc)}{l s='N/A'}{else}{$product_attribute.upc}{/if}</td>
+						{if $stock_management && $shopContext != Shop::CONTEXT_ALL}<td class="right">{$product_attribute.quantity}</td>{/if}
+					</tr>
+				{/foreach}
+			{/if}
 		{/foreach}
-	{/if}
-{/foreach}
-</table>
+		</tbody>
+	</table>
+</div>
 {/block}
 
