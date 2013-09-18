@@ -55,7 +55,7 @@ class AdminAddressesControllerCore extends AdminController
 			$this->countries_array[$country['id_country']] = $country['name'];
 
 		$this->fields_list = array(
-			'id_address' => array('title' => $this->l('ID'), 'align' => 'center'),
+			'id_address' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
 			'firstname' => array('title' => $this->l('First Name'), 'filter_key' => 'a!firstname'),
 			'lastname' => array('title' => $this->l('Last Name'), 'filter_key' => 'a!lastname'),
 			'address1' => array('title' => $this->l('Address')),

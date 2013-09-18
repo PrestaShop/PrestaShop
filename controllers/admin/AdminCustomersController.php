@@ -79,7 +79,8 @@ class AdminCustomersControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_customer' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center'
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'id_gender' => array(
 				'title' => $this->l('Title'),
