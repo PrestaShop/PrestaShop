@@ -43,11 +43,11 @@ class AdminCmsControllerCore extends AdminController
 		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->fields_list = array(
-			'id_cms' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'link_rewrite' => array('title' => $this->l('URL'), 'width' => 'auto'),
-			'meta_title' => array('title' => $this->l('Title'), 'width' => '300', 'filter_key' => 'b!meta_title'),
-			'position' => array('title' => $this->l('Position'), 'width' => 40,'filter_key' => 'position', 'align' => 'center', 'position' => 'position'),
-			'active' => array('title' => $this->l('Displayed'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
+			'id_cms' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+			'link_rewrite' => array('title' => $this->l('URL')),
+			'meta_title' => array('title' => $this->l('Title'), 'filter_key' => 'b!meta_title'),
+			'position' => array('title' => $this->l('Position'),'filter_key' => 'position', 'align' => 'center', 'class' => 'fixed-width-md', 'position' => 'position'),
+			'active' => array('title' => $this->l('Displayed'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
 		);
 
 		// The controller can't be call directly
