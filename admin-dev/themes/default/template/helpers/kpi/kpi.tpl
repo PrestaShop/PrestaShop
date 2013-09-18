@@ -66,6 +66,7 @@
 		$.each(jsonObject, function (index, value) {
 			data.push(value);
 		});
+		var data_max = d3.max(data);
 
 		var chart = d3.select("#{$id|addslashes} .boxchart").append("svg")
 			.attr("class", "data_chart")
@@ -73,13 +74,13 @@
 			.attr("height", 45);
 
 		var y = d3.scale.linear()
-			.domain([0, d3.max(data)])
-			.range([0, d3.max(data) * 45]);
+			.domain([0, data_max])
+			.range([0, data_max * 45]);
 
 		chart.selectAll("rect")
 			.data(data)
 			.enter().append("rect")
-			.attr("y", function(d) { return 45 - d * 45 / d3.max(data); })
+			.attr("y", function(d) { return 45 - d * 45 / data_max; })
 			.attr("x", function(d, i) { return i * 6; })
 			.attr("width", 4)
 			.attr("height", y);
