@@ -30,7 +30,7 @@
 	class="{if isset($tr.class)} {$tr.class}{/if}"
 	{if isset($tr.color) && $color_on_bg}style="background-color: {$tr.color}"{/if}
 	>
-		{if {$has_bulk_actions}}
+		{if $has_bulk_actions}
 		<td class="center">
 			{if isset($list_skip_actions.delete)}
 				{if !in_array($tr.$identifier, $list_skip_actions.delete)}
