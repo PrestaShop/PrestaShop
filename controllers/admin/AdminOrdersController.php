@@ -805,7 +805,7 @@ class AdminOrdersControllerCore extends AdminController
 
 				if (!Validate::isLoadedObject($order))
 					$this->errors[] = Tools::displayError('The order cannot be found');
-				elseif (!Validate::isNegativePrice($amount))
+				elseif (!Validate::isNegativePrice($amount) || !(float)$amount)
 					$this->errors[] = Tools::displayError('The amount is invalid.');
 				elseif (!Validate::isString(Tools::getValue('payment_method')))
 					$this->errors[] = Tools::displayError('The selected payment method is invalid.');
