@@ -80,9 +80,9 @@ class AdminStatsControllerCore extends AdminStatsTabController
 					$value = 0;
 				$value .= '%';
 				
-				Configuration::updateValue('PS_KPI_CONVERSION_RATE_CHART', Tools::jsonEncode($data));
-				Configuration::updateValue('PS_KPI_CONVERSION_RATE', $value);
-				Configuration::updateValue('PS_KPI_CONVERSION_RATE_EXPIRE', strtotime(date('Y-m-d 00:00:00', strtotime('+1 day'))));
+				ConfigurationKPI::updateValue('CONVERSION_RATE_CHART', Tools::jsonEncode($data));
+				ConfigurationKPI::updateValue('CONVERSION_RATE', $value);
+				ConfigurationKPI::updateValue('CONVERSION_RATE_EXPIRE', strtotime(date('Y-m-d 00:00:00', strtotime('+1 day'))));
 				break;
 
 			case 'abandoned_cart':
@@ -92,8 +92,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				WHERE `date_add` BETWEEN "'.pSQL(date('Y-m-d')).' 00:00:00" AND "'.pSQL(date('Y-m-d')).' 23:59:59"
 				AND id_cart NOT IN (SELECT id_cart FROM `'._DB_PREFIX_.'orders`)
 				'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
-				Configuration::updateValue('PS_KPI_ABANDONED_CARTS', $value);
-				Configuration::updateValue('PS_KPI_ABANDONED_CARTS_EXPIRE', strtotime('+10 min'));
+				ConfigurationKPI::updateValue('ABANDONED_CARTS', $value);
+				ConfigurationKPI::updateValue('ABANDONED_CARTS_EXPIRE', strtotime('+10 min'));
 				break;
 
 			case 'products_stock':
@@ -103,8 +103,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				'.Shop::addSqlAssociation('product', 'p').'
 				'.Product::sqlStock('p'));
 				$value = round($row['total'] ? $row['stock'] / $row['total'] : 0, 2).'%';
-				Configuration::updateValue('PS_KPI_PRODUCTS_STOCK', $value);
-				Configuration::updateValue('PS_KPI_PRODUCTS_STOCK_EXPIRE', strtotime('+10 min'));
+				ConfigurationKPI::updateValue('PRODUCTS_STOCK', $value);
+				ConfigurationKPI::updateValue('PRODUCTS_STOCK_EXPIRE', strtotime('+10 min'));
 				break;
 
 			case 'avg_gross_margin':
@@ -113,8 +113,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				FROM `'._DB_PREFIX_.'product` p
 				'.Shop::addSqlAssociation('product', 'p'));
 				$value = round(100 * $value, 2).'%';
-				Configuration::updateValue('PS_KPI_AVG_GROSS_MARGIN', $value);
-				Configuration::updateValue('PS_KPI_AVG_GROSS_MARGIN_EXPIRE', strtotime('+6 hour'));
+				ConfigurationKPI::updateValue('AVG_GROSS_MARGIN', $value);
+				ConfigurationKPI::updateValue('AVG_GROSS_MARGIN_EXPIRE', strtotime('+6 hour'));
 				break;
 
 			case 'disabled_categories':
@@ -123,8 +123,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				FROM `'._DB_PREFIX_.'category` c
 				'.Shop::addSqlAssociation('category', 'c').'
 				WHERE c.active = 0');
-				Configuration::updateValue('PS_KPI_DISABLED_CATS', $value);
-				Configuration::updateValue('PS_KPI_DISABLED_CATS_EXPIRE', strtotime('+2 hour'));
+				ConfigurationKPI::updateValue('DISABLED_CATS', $value);
+				ConfigurationKPI::updateValue('DISABLED_CATS_EXPIRE', strtotime('+2 hour'));
 				break;
 
 			case 'empty_categories':
@@ -137,8 +137,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				FROM `'._DB_PREFIX_.'category_product` cp
 				'.Shop::addSqlAssociation('category', 'cp'));
 				$value = intval($total - $used);
-				Configuration::updateValue('PS_KPI_EMPTY_CATS', $value);
-				Configuration::updateValue('PS_KPI_EMPTY_CATS_EXPIRE', strtotime('+2 hour'));
+				ConfigurationKPI::updateValue('EMPTY_CATS', $value);
+				ConfigurationKPI::updateValue('EMPTY_CATS_EXPIRE', strtotime('+2 hour'));
 				break;
 
 			case 'average_order_value':
@@ -150,8 +150,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				WHERE `invoice_date` BETWEEN "'.pSQL(date('Y-m-d', strtotime('-31 day'))).' 00:00:00" AND "'.pSQL(date('Y-m-d', strtotime('-1 day'))).' 23:59:59"
 				'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
 				$value = Tools::displayPrice($row['orders'] ? $row['total_paid_tax_excl'] / $row['orders'] : 0, $currency);
-				Configuration::updateValue('PS_KPI_AVG_ORDER_VALUE', $value);
-				Configuration::updateValue('PS_KPI_AVG_ORDER_VALUE_EXPIRE', strtotime(date('Y-m-d 00:00:00', strtotime('+1 day'))));
+				ConfigurationKPI::updateValue('AVG_ORDER_VALUE', $value);
+				ConfigurationKPI::updateValue('AVG_ORDER_VALUE_EXPIRE', strtotime(date('Y-m-d 00:00:00', strtotime('+1 day'))));
 				break;
 
 			case 'netprofit_visitor':
@@ -207,8 +207,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				else
 					$value = Tools::displayPrice(0, $currency);
 	
-				Configuration::updateValue('PS_KPI_NETPROFIT_VISITOR', $value);
-				Configuration::updateValue('PS_KPI_NETPROFIT_VISITOR_EXPIRE', strtotime(date('Y-m-d 00:00:00', strtotime('+1 day'))));
+				ConfigurationKPI::updateValue('NETPROFIT_VISITOR', $value);
+				ConfigurationKPI::updateValue('NETPROFIT_VISITOR_EXPIRE', strtotime(date('Y-m-d 00:00:00', strtotime('+1 day'))));
 				break;
 
 			default:

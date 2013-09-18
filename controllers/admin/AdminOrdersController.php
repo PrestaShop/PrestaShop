@@ -1252,11 +1252,11 @@ class AdminOrdersControllerCore extends AdminController
 		$helper->color = 'color1';
 		$helper->title = $this->l('Conversion Rate');
 		$helper->subtitle = $this->l('30 days');
-		if (Configuration::get('PS_KPI_CONVERSION_RATE') !== false)
-			$helper->value = Configuration::get('PS_KPI_CONVERSION_RATE');
-		if (Configuration::get('PS_KPI_CONVERSION_RATE_CHART') !== false)
-			$helper->data = Configuration::get('PS_KPI_CONVERSION_RATE_CHART');
-		if (Configuration::get('PS_KPI_CONVERSION_RATE_EXPIRE') < $time)
+		if (ConfigurationKPI::get('CONVERSION_RATE') !== false)
+			$helper->value = ConfigurationKPI::get('CONVERSION_RATE');
+		if (ConfigurationKPI::get('CONVERSION_RATE_CHART') !== false)
+			$helper->data = ConfigurationKPI::get('CONVERSION_RATE_CHART');
+		if (ConfigurationKPI::get('CONVERSION_RATE_EXPIRE') < $time)
 			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=conversion_rate';
 		$kpis[] = $helper->generate();
 
@@ -1266,9 +1266,9 @@ class AdminOrdersControllerCore extends AdminController
 		$helper->color = 'color2';
 		$helper->title = $this->l('Abandoned Carts');
 		$helper->subtitle = $this->l('Today');
-		if (Configuration::get('PS_KPI_ABANDONED_CARTS') !== false)
-			$helper->value = Configuration::get('PS_KPI_ABANDONED_CARTS');
-		if (Configuration::get('PS_KPI_ABANDONED_CARTS_EXPIRE') < $time)
+		if (ConfigurationKPI::get('ABANDONED_CARTS') !== false)
+			$helper->value = ConfigurationKPI::get('ABANDONED_CARTS');
+		if (ConfigurationKPI::get('ABANDONED_CARTS_EXPIRE') < $time)
 			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=abandoned_cart';
 		$kpis[] = $helper->generate();
 
@@ -1278,9 +1278,9 @@ class AdminOrdersControllerCore extends AdminController
 		$helper->color = 'color3';
 		$helper->title = $this->l('Average Order Value');
 		$helper->subtitle = $this->l('30 days');
-		if (Configuration::get('PS_KPI_AVG_ORDER_VALUE') !== false)
-			$helper->value = Configuration::get('PS_KPI_AVERAGE_ORDER_VALUE');
-		if (Configuration::get('PS_KPI_AVG_ORDER_VALUE_EXPIRE') < $time)
+		if (ConfigurationKPI::get('AVG_ORDER_VALUE') !== false)
+			$helper->value = ConfigurationKPI::get('AVERAGE_ORDER_VALUE');
+		if (ConfigurationKPI::get('AVG_ORDER_VALUE_EXPIRE') < $time)
 			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=average_order_value';
 		$kpis[] = $helper->generate();
 
@@ -1290,9 +1290,9 @@ class AdminOrdersControllerCore extends AdminController
 		$helper->color = 'color4';
 		$helper->title = $this->l('Net Profit per Visitor');
 		$helper->subtitle = $this->l('30 days');
-		if (Configuration::get('PS_KPI_NETPROFIT_VISITOR') !== false)
-			$helper->value = Configuration::get('PS_KPI_NETPROFIT_VISITOR');
-		if (Configuration::get('PS_KPI_NETPROFIT_VISITOR_EXPIRE') < $time)
+		if (ConfigurationKPI::get('NETPROFIT_VISITOR') !== false)
+			$helper->value = ConfigurationKPI::get('NETPROFIT_VISITOR');
+		if (ConfigurationKPI::get('NETPROFIT_VISITOR_EXPIRE') < $time)
 			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=netprofit_visitor';
 		$kpis[] = $helper->generate();
 
