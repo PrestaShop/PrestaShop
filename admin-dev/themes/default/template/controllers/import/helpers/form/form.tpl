@@ -112,7 +112,6 @@
 	
 	<fieldset style="float: left; margin: 0pt 20px 0pt 0pt; width: 70%;">
 		<legend><img src="../img/admin/import.gif" />{l s='Import   '}</legend>
-
 			<label class="clear">{if count($files_to_import) > 1}{l s='Your CSV file (%d files):' sprintf=count($files_to_import)}{else}{l s='Your CSV file (%d file):' sprintf=count($files_to_import)}{/if}</label>
 			<div class="margin-form">
 				{if count($files_to_import)}
@@ -146,7 +145,7 @@
 			<div class="margin-form">
 				<select name="entity" id="entity">
 					{foreach $entities AS $entity => $i}
-						<option value="{$i}" {if $entity == $i}selected="selected"{/if}>
+						<option value="{$i}"{if $entity_selected == $i} selected="selected"{/if}>
 							{$entity}
 						</option>
 					{/foreach}

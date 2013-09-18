@@ -464,12 +464,15 @@ class AdminImportControllerCore extends AdminController
 		// adds fancybox
 		$this->addCSS(_PS_CSS_DIR_.'jquery.fancybox-1.3.4.css', 'screen');
 		$this->addJqueryPlugin(array('fancybox'));
+		$entity_selected = 0;
+		if (isset($this->entities[$this->l(Tools::ucfirst(Tools::getValue('import_type')))]))
+			$entity_selected = $this->entities[$this->l(Tools::ucfirst(Tools::getValue('import_type')))];
 
 		$this->tpl_form_vars = array(
 			'module_confirmation' => (Tools::getValue('import')) && (isset($this->warnings) && !count($this->warnings)),
 			'path_import' => _PS_ADMIN_DIR_.'/import/',
 			'entities' => $this->entities,
-			'entity' => Tools::getValue('entity'),
+			'entity_selected' => $entity_selected,
 			'files_to_import' => $files_to_import,
 			'languages' => Language::getLanguages(false),
 			'id_language' => $this->context->language->id,
@@ -1451,7 +1454,7 @@ class AdminImportControllerCore extends AdminController
 							$error = true;
 
 						if ($error)
-							$this->warnings[] = sprintf(Tools::displayError('Product nÂ°%1$d: the picture cannot be saved: %2$s'), $image->id_product, $url);
+							$this->warnings[] = sprintf(Tools::displayError('Product n°%1$d: the picture cannot be saved: %2$s'), $image->id_product, $url);
 					}
 				}
 				if (isset($product->id_category))
