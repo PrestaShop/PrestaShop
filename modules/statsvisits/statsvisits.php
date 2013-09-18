@@ -84,26 +84,44 @@ class StatsVisits extends ModuleGraph
 		if (Tools::getValue('export'))
 			$this->csvExport(array('layers' => 2, 'type' => 'line', 'option' => 3));
 		$this->html = '
-		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
-			<p>
-				<img src="../img/admin/down.gif" />'.$this->l('A visit corresponds to an internet user coming to your shop, and until the end of their session, only one visit is counted.').'
-				'.$this->l('A visitor is an unknown person who has not registered or logged into your store. A visitor can also be considered a person who has visited your shop multiple times.').'
-			</p>
-			<div style="margin-top:20px"></div>
-			<p>'.$this->l('Total visits:').' <span class="totalStats">'.$totalVisits.'</span></p>
-			<p>'.$this->l('Total visitors:').' <span class="totalStats">'.$totalGuests.'</span></p>
-			'.($totalVisits ? $this->engine($graphParams).'<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><span>'.$this->l('CSV Export').'</span></a></p>' : '').'
+		<div class="panel-heading">
+			'.$this->displayName.'
 		</div>
-		<br />
-		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</h2>
-				<h2>'.$this->l('Determine the interest of a visit.').'</h2>
-				'.$this->l('The visitors\' evolution graph strongly resembles the visits\' graph, but provides additional information:').'<br />
+		<h4>'.$this->l('Guide').'</h4>
+			<div class="alert alert-warning">
+				<h4>'.$this->l('Determine the interest of a visit.').'</h4>
+				<p>
+					'.$this->l('The visitors\' evolution graph strongly resembles the visits\' graph, but provides additional information:').'<br />
+				</p>
 				<ul>
 					<li>'.$this->l('If this is the case, congratulations, your website is well planned and pleasing. Glad to see that you\'ve been paying attention.').'</li>
 					<li>'.$this->l('Otherwise, the conclusion is not so simple. The problem can be aesthetic or ergonomic. It is also possible that many visitors have mistakenly visited your URL without possessing a particular interest in your shop. This strange and ever-confusing phenomenon is most likely cause by search engines. If this is the case, you should consider revising your SEO structure.').'</li>
 				</ul>
-				'.$this->l('This information is mostly qualitative. It is up to you to determine the interest of a disjointed visit.').'<br />
-		</div>';
+				<p>
+					'.$this->l('This information is mostly qualitative. It is up to you to determine the interest of a disjointed visit.').'
+				</p>
+			</div>
+			<div class="alert alert-info">
+				'.$this->l('A visit corresponds to an internet user coming to your shop, and until the end of their session, only one visit is counted.').'
+				'.$this->l('A visitor is an unknown person who has not registered or logged into your store. A visitor can also be considered a person who has visited your shop multiple times.').'
+			</div>
+			<div class="row row-margin-bottom">
+				<div class="col-lg-12">
+					<div class="col-lg-8">
+						'.($totalVisits ? $this->engine($graphParams).'
+					</div>
+					<div class="col-lg-4">
+						<ul class="list-unstyled">
+							<li>'.$this->l('Total visits:').' <span class="totalStats">'.$totalVisits.'</span></li>
+							<li>'.$this->l('Total visitors:').' <span class="totalStats">'.$totalGuests.'</span></li>
+						</ul>
+						<hr/>
+						<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1">
+							<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
+						</a> ' : '').'
+					</div>
+				</div>
+			</div>';
 
 		return $this->html;
 	}
