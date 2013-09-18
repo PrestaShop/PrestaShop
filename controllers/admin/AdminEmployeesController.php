@@ -195,25 +195,19 @@ class AdminEmployeesControllerCore extends AdminController
 					'name' => 'email',
 					'required' => true
 				),
-				array(
+				/*array(
 					'type' => 'color',
 					'label' => $this->l('Admin panel color:'),
 					'name' => 'bo_color',
 					'class' => 'color mColorPickerInput',
 					'hint' => $this->l('Admin panel background will be displayed in this color (HTML colors only).').' "lightblue", "#CC6600")'
-				),
+				),*/
 				array(
 					'type' => 'default_tab',
 					'label' => $this->l('Default page:'),
 					'name' => 'default_tab',
 					'hint' => $this->l('This page will be displayed just after login'),
 					'options' => $this->tabs_list
-				),
-				array(
-					'type' => 'text',
-					'label' => $this->l('Back Office width'),
-					'name' => 'bo_width',
-					'hint' => $this->l('Back Office width, in pixels. The value "0" means that the Back Office width will be flexible.')
 				),
 				array(
 					'type' => 'select',
