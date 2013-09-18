@@ -153,12 +153,13 @@ function displaySummary()
 	
 	$('tr.range_inf td input').each( function()
 	{
-		if (!isNaN(parseFloat($(this).val())) && (range_inf == summary_translation_undefined || range_inf > $(this).val()))
+		if (!isNaN(parseFloat($(this).val())) && (range_inf == summary_translation_undefined || parseFloat(range_inf) > parseFloat($(this).val())))
 			range_inf = $(this).val();
 	});
 
 	$('tr.range_sup td input').each( function(){
-		if (!isNaN(parseFloat($(this).val())) && (range_sup == summary_translation_undefined || range_sup < $(this).val()))
+
+		if (!isNaN(parseFloat($(this).val())) && (range_sup == summary_translation_undefined || parseFloat(range_sup) < parseFloat($(this).val())))
 			range_sup = $(this).val();
 	});
 	
