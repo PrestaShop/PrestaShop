@@ -280,6 +280,7 @@ class AdminSuppliersControllerCore extends AdminController
 
 	public function renderView()
 	{
+		$this->toolbar_title = $this->object->name;
 		$products = $this->object->getProductsLite($this->context->language->id);
 		$total_product = count($products);
 		for ($i = 0; $i < $total_product; $i++)
