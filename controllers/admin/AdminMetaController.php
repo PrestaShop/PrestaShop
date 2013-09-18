@@ -47,10 +47,10 @@ class AdminMetaControllerCore extends AdminController
 		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->fields_list = array(
-			'id_meta' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'page' => array('title' => $this->l('Page'), 'width' => 120),
-			'title' => array('title' => $this->l('Title'), 'width' => 120),
-			'url_rewrite' => array('title' => $this->l('Friendly URL'), 'width' => 120)
+			'id_meta' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+			'page' => array('title' => $this->l('Page')),
+			'title' => array('title' => $this->l('Title')),
+			'url_rewrite' => array('title' => $this->l('Friendly URL'))
 		);
 		$this->_group = 'GROUP BY a.id_meta';
 
