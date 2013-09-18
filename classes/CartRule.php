@@ -1190,7 +1190,7 @@ class CartRuleCore extends ObjectModel
 			SELECT cr.*, crl.*
 			FROM '._DB_PREFIX_.'cart_rule cr
 			LEFT JOIN '._DB_PREFIX_.'cart_rule_lang crl ON (cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang = '.(int)$id_lang.')
-			WHERE code LIKE \'%'.pSQL($name).'%\'
+			WHERE code LIKE \'%'.pSQL($name).'%\' OR name LIKE \'%'.pSQL($name).'%\'
 		');
 	}
 }

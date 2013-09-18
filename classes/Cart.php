@@ -762,10 +762,11 @@ class CartCore extends ObjectModel
 	{
 		// You can't add a cart rule that does not exist
 		$cartRule = new CartRule($id_cart_rule, Context::getContext()->language->id);
+
 		if (!Validate::isLoadedObject($cartRule))
 			return false;
 		
-		if (Db::getInstance()->getValue('SELECT id_cart_rule FROM '._DB_PREFIX_.'cart_cart_rule WHERE id_cart = '.(int)$this->id))
+		if (Db::getInstance()->getValue('SELECT id_cart_rule FROM '._DB_PREFIX_.'cart_cart_rule WHERE id_cart_rule = '.(int)$id_cart_rule.' AND id_cart = '.(int)$this->id))
 			return false;
 			
 		// Add the cart rule to the cart
@@ -3415,6 +3416,7 @@ class CartCore extends ObjectModel
 	 */
 	public function setNoMultishipping()
 	{
+		$emptyCache = $result = false;
 		if (Configuration::get('PS_ALLOW_MULTISHIPPING'))
 		{
 			// Upgrading quantities
@@ -3433,7 +3435,9 @@ class CartCore extends ObjectModel
 						AND `id_shop` = '.(int)$this->id_shop.'
 						AND id_product = '.$product['id_product'].'
 						AND id_product_attribute = '.$product['id_product_attribute'];
-					Db::getInstance()->execute($sql);
+				$result = Db::getInstance()->execute($sql);
+				if ($result)
+					$emptyCache = true;
 			}
 
 			// Merging multiple lines
@@ -3451,15 +3455,18 @@ class CartCore extends ObjectModel
 		}
 		
 		// Update delivery address for each product line
-		Db::getInstance()->execute('
-		UPDATE `'._DB_PREFIX_.'cart_product`
+		$sql = 'UPDATE `'._DB_PREFIX_.'cart_product`
 		SET `id_address_delivery` = (
 			SELECT `id_address_delivery` FROM `'._DB_PREFIX_.'cart`
 			WHERE `id_cart` = '.(int)$this->id.' AND `id_shop` = '.(int)$this->id_shop.'
 		)
 		WHERE `id_cart` = '.(int)$this->id.'
-		'.(Configuration::get('PS_ALLOW_MULTISHIPPING') ? ' AND `id_shop` = '.(int)$this->id_shop : ''));
-		
+		'.(Configuration::get('PS_ALLOW_MULTISHIPPING') ? ' AND `id_shop` = '.(int)$this->id_shop : '');
+	
+		$result = Db::getInstance()->execute($sql);
+		if ($result)
+			$emptyCache = true;
+
 		if (Customization::isFeatureActive())
 			Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'customization`
@@ -3468,6 +3475,9 @@ class CartCore extends ObjectModel
 				WHERE `id_cart` = '.(int)$this->id.'
 			)
 			WHERE `id_cart` = '.(int)$this->id);
+
+		if ($emptyCache)	
+			$this->_products = null;
 	}
 
 	/**
