@@ -65,6 +65,9 @@ class FrontControllerCore extends Controller
 
 		parent::__construct();
 
+		if (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE'))
+			$this->ssl = true;
+
 		if (isset($useSSL))
 			$this->ssl = $useSSL;
 		else
@@ -597,7 +600,7 @@ class FrontControllerCore extends Controller
 		if (!$canonical_url || !Configuration::get('PS_CANONICAL_REDIRECT') || strtoupper($_SERVER['REQUEST_METHOD']) != 'GET' || Tools::getValue('live_edit'))
 			return;
 
-		$match_url = (($this->ssl && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+		$match_url = (($this->ssl) ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 		$match_url = rawurldecode($match_url);
 		if (!preg_match('/^'.Tools::pRegexp(rawurldecode($canonical_url), '/').'([&?].*)?$/', $match_url))
 		{

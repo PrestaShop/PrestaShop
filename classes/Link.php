@@ -91,12 +91,8 @@ class LinkCore
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
 
-		if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && $id_shop !== null)
-			$shop = new Shop($id_shop);
-		else
-			$shop = Context::getContext()->shop;
-		
-		$url = 'http://'.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop);
+
+		$url = $this->getBaseLink($id_shop).$this->getLangLink($id_lang, null, $id_shop);
 
 		if (!is_object($product))
 		{
@@ -163,11 +159,7 @@ class LinkCore
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
 		
-		if ($id_shop === null)
-			$shop = Context::getContext()->shop;
-		else
-			$shop = new Shop($id_shop);
-		$url = 'http://'.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop);
+		$url = $this->getBaseLink($id_shop).$this->getLangLink($id_lang, null, $id_shop);
 
 		if (!is_object($category))
 			$category = new Category($category, $id_lang);
@@ -206,11 +198,7 @@ class LinkCore
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
 
-		if ($id_shop === null)
-			$shop = Context::getContext()->shop;
-		else
-			$shop = new Shop($id_shop);
-		$url = 'http://'.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop);
+		$url = $this->getBaseLink($id_shop).$this->getLangLink($id_lang, null, $id_shop);
 
 		$dispatcher = Dispatcher::getInstance();
 		if (!is_object($cms_category))
@@ -243,15 +231,8 @@ class LinkCore
 	{
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
-		
-		if ($id_shop === null)
-			$shop = Context::getContext()->shop;
-		else
-			$shop = new Shop($id_shop);
 
-		$base = (($ssl && $this->ssl_enable) ? 'https://'.$shop->domain_ssl : 'http://'.$shop->domain);
-		$url = $base.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop);
-
+		$url = $this->getBaseLink($id_shop, $ssl).$this->getLangLink($id_lang, null, $id_shop);
 
 		$dispatcher = Dispatcher::getInstance();
 		if (!is_object($cms))
@@ -290,11 +271,8 @@ class LinkCore
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
 
-		if ($id_shop === null)
-			$shop = Context::getContext()->shop;
-		else
-			$shop = new Shop($id_shop);
-		$url = 'http://'.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop);
+
+		$url = $this->getBaseLink($id_shop).$this->getLangLink($id_lang, null, $id_shop);
 		
 		$dispatcher = Dispatcher::getInstance();
 		if (!is_object($supplier))
@@ -327,11 +305,7 @@ class LinkCore
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
 
-		if ($id_shop === null)
-			$shop = Context::getContext()->shop;
-		else
-			$shop = new Shop($id_shop);
-		$url = 'http://'.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop);
+		$url = $this->getBaseLink($id_shop).$this->getLangLink($id_lang, null, $id_shop);
 
 		$dispatcher = Dispatcher::getInstance();
 		if (!is_object($manufacturer))
@@ -365,13 +339,7 @@ class LinkCore
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
 
-		if ($id_shop === null)
-			$shop = Context::getContext()->shop;
-		else
-			$shop = new Shop($id_shop);
-		
-		$base = (($ssl && $this->ssl_enable) ? 'https://'.$shop->domain_ssl : 'http://'.$shop->domain);
-		$url = $base.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop);
+		$url = $this->getBaseLink($id_shop, $ssl).$this->getLangLink($id_lang, null, $id_shop);
 
 		// If the module has its own route ... just use it !
 		if (Dispatcher::getInstance()->hasRoute('module-'.$module.'-'.$controller, $id_lang, $id_shop))
@@ -456,7 +424,6 @@ class LinkCore
 	public function getPageLink($controller, $ssl = false, $id_lang = null, $request = null, $request_url_encode = false, $id_shop = null)
 	{
 		$controller = Tools::strReplaceFirst('.php', '', $controller);
-
 		if (!$id_lang)
 			$id_lang = (int)Context::getContext()->language->id;
 
@@ -469,17 +436,9 @@ class LinkCore
 			parse_str($request, $request);
 		}
 
-		if ($id_shop === null)
-			$shop = Context::getContext()->shop;
-		else
-			$shop = new Shop($id_shop);
-
 		$uri_path = Dispatcher::getInstance()->createUrl($controller, $id_lang, $request, false, '', $id_shop);
 
-		$url = ($ssl && $this->ssl_enable) ? 'https://'.$shop->domain_ssl : 'http://'.$shop->domain;
-		$url .= $shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop).ltrim($uri_path, '/');
-
-		return $url;
+		return $this->getBaseLink($id_shop, $ssl).$this->getLangLink($id_lang, null, $id_shop).ltrim($uri_path, '/');
 	}
 
 	public function getCatImageLink($name, $id_category, $type = null)
@@ -642,6 +601,18 @@ class LinkCore
 			$id_lang = $context->language->id;
 
 		return Language::getIsoById($id_lang).'/';
+	}
+	
+	protected function getBaseLink($id_shop = null, $ssl = true)
+	{
+		if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && $id_shop !== null)
+			$shop = new Shop($id_shop);
+		else
+			$shop = Context::getContext()->shop;
+
+		$base = (($ssl && $this->ssl_enable) ? 'https://'.$shop->domain_ssl : 'http://'.$shop->domain);
+
+		return $base.$shop->getBaseURI();
 	}
 }
 
