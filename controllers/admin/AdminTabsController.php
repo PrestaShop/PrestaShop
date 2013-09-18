@@ -46,7 +46,9 @@ class AdminTabsControllerCore extends AdminController
 
 		$this->fields_list = array(
 			'id_tab' => array(
-				'title' => $this->l('ID')
+				'title' => $this->l('ID'),
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'name' => array(
 				'title' => $this->l('Name')
@@ -71,7 +73,8 @@ class AdminTabsControllerCore extends AdminController
 			'position' => array(
 				'title' => $this->l('Position'),
 				'filter_key' => 'a!position',
-				'position' => 'position'
+				'position' => 'position',
+				'class' => 'fixed-width-md'
 			)
 		);
 

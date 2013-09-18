@@ -41,8 +41,8 @@ class AdminImagesControllerCore extends AdminController
 		$this->addRowAction('delete');
 
 		$this->fields_list = array(
-			'id_image_type' => array('title' => $this->l('ID'), 'align' => 'center'),
-			'name' => array('title' => $this->l('Name'), 'width' => 'auto'),
+			'id_image_type' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+			'name' => array('title' => $this->l('Name')),
 			'width' => array('title' => $this->l('Width'),  'suffix' => ' px'),
 			'height' => array('title' => $this->l('Height'),  'suffix' => ' px'),
 			'products' => array('title' => $this->l('Products'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),

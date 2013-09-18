@@ -30,17 +30,17 @@
 	class="{if isset($tr.class)} {$tr.class}{/if}"
 	{if isset($tr.color) && $color_on_bg}style="background-color: {$tr.color}"{/if}
 	>
+		{if $has_bulk_actions}
 		<td class="center">
-			{if {$has_bulk_actions}}
-				{if isset($list_skip_actions.delete)}
-					{if !in_array($tr.$identifier, $list_skip_actions.delete)}
-						<input type="checkbox" name="{$table}Box[]" value="{$tr.$identifier}" class="noborder" />
-					{/if}
-				{else}
+			{if isset($list_skip_actions.delete)}
+				{if !in_array($tr.$identifier, $list_skip_actions.delete)}
 					<input type="checkbox" name="{$table}Box[]" value="{$tr.$identifier}" class="noborder" />
 				{/if}
+			{else}
+				<input type="checkbox" name="{$table}Box[]" value="{$tr.$identifier}" class="noborder" />
 			{/if}
 		</td>
+		{/if}
 		{foreach $fields_display AS $key => $params}
 			{block name="open_td"}
 				<td

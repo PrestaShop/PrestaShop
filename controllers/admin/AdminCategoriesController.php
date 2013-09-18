@@ -347,9 +347,9 @@ class AdminCategoriesControllerCore extends AdminController
 		$helper->icon = 'icon-off';
 		$helper->color = 'color1';
 		$helper->title = $this->l('Disabled Categories');
-		if (Configuration::get('PS_KPI_DISABLED_CATS') !== false)
-			$helper->value = Configuration::get('PS_KPI_DISABLED_CATS');
-		if (Configuration::get('PS_KPI_DISABLED_CATS_EXPIRE') < $time)
+		if (ConfigurationKPI::get('DISABLED_CATS') !== false)
+			$helper->value = ConfigurationKPI::get('DISABLED_CATS');
+		if (ConfigurationKPI::get('DISABLED_CATS_EXPIRE') < $time)
 			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=disabled_categories';
 		$kpis[] = $helper->generate();
 		
@@ -358,9 +358,9 @@ class AdminCategoriesControllerCore extends AdminController
 		$helper->icon = 'icon-bookmark-empty';
 		$helper->color = 'color2';
 		$helper->title = $this->l('Empty Categories');
-		if (Configuration::get('PS_KPI_EMPTY_CATS') !== false)
-			$helper->value = Configuration::get('PS_KPI_EMPTY_CATS');
-		if (Configuration::get('PS_KPI_EMPTY_CATS_EXPIRE') < $time)
+		if (ConfigurationKPI::get('EMPTY_CATS') !== false)
+			$helper->value = ConfigurationKPI::get('EMPTY_CATS');
+		if (ConfigurationKPI::get('EMPTY_CATS_EXPIRE') < $time)
 			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=empty_categories';
 		$kpis[] = $helper->generate();
 

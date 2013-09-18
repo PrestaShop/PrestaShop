@@ -46,7 +46,8 @@ class AdminProfilesControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_profile' => array(
 						'title' => $this->l('ID'), 
-						'align' => 'center'
+						'align' => 'center',
+						'class' => 'fixed-width-xs'
 						),
 			'name' => array('title' => $this->l('Name'))
 			);
