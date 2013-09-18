@@ -273,7 +273,6 @@ function bind_inputs()
 	});
 	
 	$('tr.fees td input:checkbox').off('change').on('change', function () {
-				
 		if($(this).is(':checked'))
 		{
 			$(this).closest('tr').children('td').each( function () {
@@ -390,7 +389,7 @@ function hideFees()
 function showFees()
 {
 	$('tr.range_inf td, tr.range_sup td, tr.fees_all td, tr.fees td').each( function () {
-		if ($(this).index() >= 2)
+		if ($(this).index() > 2)
 		{
 			//enable only if zone is active
 			tr = $(this).parent('tr');
