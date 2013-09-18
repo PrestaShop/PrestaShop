@@ -93,7 +93,7 @@ class Dashtrends extends Module
 		$gapi = Module::isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
 		if (Validate::isLoadedObject($gapi) && $gapi->isConfigured())
 		{
-			if ($result = $gapi->requestReportData('ga:date', 'ga:visits', $params['date_from'], $params['date_to'], null, null, 1, 9999))
+			if ($result = $gapi->requestReportData('ga:date', 'ga:visits', $params['date_from'], $params['date_to'].' 23:59:59', null, null, 1, 9999))
 				foreach ($result as $row)
 					$tmp_data['visits_score'][strtotime(preg_replace('/^([0-9]{4})([0-9]{2})([0-9]{2})$/', '$1-$2-$3', $row['dimensions']['date']))] = $row['metrics']['visits'];
 		}
@@ -104,7 +104,7 @@ class Dashtrends extends Module
 				LEFT(`date_add`, 10) as date,
 				COUNT(*) as visits_score
 			FROM `'._DB_PREFIX_.'connections`
-			WHERE `date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
+			WHERE `date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to'].' 23:59:59').'"
 			'.Shop::addSqlRestriction(false).'
 			GROUP BY LEFT(`date_add`, 10)');
 			foreach ($result as $row)
@@ -119,7 +119,7 @@ class Dashtrends extends Module
 			SUM(`total_paid_tax_excl` / `conversion_rate`) as total_paid_tax_excl,
 			SUM(`total_discounts_tax_excl` / `conversion_rate`) as total_discounts_tax_excl
 		FROM `'._DB_PREFIX_.'orders`
-		WHERE `invoice_date` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
+		WHERE `invoice_date` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to'].' 23:59:59').'"
 		'.Shop::addSqlRestriction(Shop::SHARE_ORDER).'
 		GROUP BY LEFT(`invoice_date`, 10)');
 		foreach ($result as $row)
@@ -133,7 +133,7 @@ class Dashtrends extends Module
 			SUM(os.`shipping_cost_amount` / o.`conversion_rate`) as total_credit_shipping_tax_excl
 		FROM `'._DB_PREFIX_.'orders` o
 		LEFT JOIN `'._DB_PREFIX_.'order_slip` os ON o.id_order = os.id_order
-		WHERE os.`date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
+		WHERE os.`date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to'].' 23:59:59').'"
 		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 		GROUP BY LEFT(os.`date_add`, 10)');
 		foreach ($result as $row)
@@ -147,7 +147,7 @@ class Dashtrends extends Module
 			SUM(od.`product_quantity` * od.`purchase_supplier_price` / `conversion_rate`) as total_purchase_price
 		FROM `'._DB_PREFIX_.'orders` o
 		LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
-		WHERE `invoice_date` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
+		WHERE `invoice_date` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to'].' 23:59:59').'"
 		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 		GROUP BY LEFT(`invoice_date`, 10)');
 		foreach ($result as $row)
