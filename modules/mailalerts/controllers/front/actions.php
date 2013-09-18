@@ -64,8 +64,10 @@ class MailalertsActionsModuleFrontController extends ModuleFrontController
 		if (!Validate::isLoadedObject($product))
 			die('0');
 
-		if (MailAlert::deleteAlert((int)Context::getContext()->customer->id, (int)Context::getContext()->customer->email, (int)$product->id, (int)$this->id_product_attribute))
+		$context = Context::getContext();
+		if (MailAlert::deleteAlert((int)$context->customer->id, (int)$context->customer->email, (int)$product->id, (int)$this->id_product_attribute))
 			die('0');
+		
 		die(1);
 	}
 
@@ -74,29 +76,32 @@ class MailalertsActionsModuleFrontController extends ModuleFrontController
 	 */
 	public function processAdd()
 	{
-		if (Context::getContext()->customer->isLogged())
+		$context = Context::getContext();
+		
+		if ($context->customer->isLogged())
 		{
-		    $id_customer = (int)Context::getContext()->customer->id;
+		    $id_customer = (int)$context->customer->id;
 		    $customer = new Customer($id_customer);
 		    $customer_email = strval($customer->email);
 		}
 		else
 		{
 		    $customer_email = strval(Tools::getValue('customer_email'));
-		    $customer = Context::getContext()->customer->getByEmail($customer_email);
+		    $customer = $context->customer->getByEmail($customer_email);
 		    $id_customer = (isset($customer->id) && ($customer->id != null)) ? (int)$customer->id : null;
 		}
 		
 		$id_product = (int)Tools::getValue('id_product');
 		$id_product_attribute = (int)Tools::getValue('id_product_attribute');
-		$id_shop = (int)Context::getContext()->shop->id;
-		$product = new Product($id_product, null, null, $id_shop, Context::getContext());
+		$id_shop = (int)$context->shop->id;
+		$id_lang = (int)$context->language->id;
+		$product = new Product($id_product, false, $id_lang, $id_shop, $context);
 
 		$mailAlert = MailAlert::customerHasNotification($id_customer, $id_product, $id_product_attribute, $id_shop);
 
 		if ($mailAlert)
 		    die('2');
-		else if (!Validate::isLoadedObject($product))
+		elseif (!Validate::isLoadedObject($product))
 		    die('0');
 
 		$mailAlert = new MailAlert();
@@ -106,10 +111,11 @@ class MailalertsActionsModuleFrontController extends ModuleFrontController
 		$mailAlert->id_product = (int)$id_product;
 		$mailAlert->id_product_attribute = (int)$id_product_attribute;
 		$mailAlert->id_shop = (int)$id_shop;
+		$mailAlert->id_lang = (int)$id_lang;
 
 		if ($mailAlert->add() !== false)
 			die('1');
-		
+
 		die('0');
 	}
 
@@ -122,15 +128,15 @@ class MailalertsActionsModuleFrontController extends ModuleFrontController
 			die('0');
 
 		$id_customer = (int)$this->context->customer->id;
-		
-		if (!$id_product = (int)(Tools::getValue('id_product')))
-			die ('0');
-		$id_product_attribute = (int)(Tools::getValue('id_product_attribute'));
-		$id_shop = (int)Context::getContext()->shop->id;
 
-		if (MailAlert::customerHasNotification((int)$id_customer, (int)$id_product, (int)$id_product_attribute, (int)$id_shop))
-			die ('1');
-		
+		if (!$id_product = (int)(Tools::getValue('id_product')))
+			die('0');
+
+		$id_product_attribute = (int)(Tools::getValue('id_product_attribute'));
+
+		if (MailAlert::customerHasNotification((int)$id_customer, (int)$id_product, (int)$id_product_attribute, (int)$this->context->shop->id))
+			die('1');
+
 		die('0');
 	}
 }

@@ -844,19 +844,15 @@ class shopimporter extends ImportModule
 			default:
 			case 'Product':
 				$path = _PS_PROD_IMG_DIR_;
-				$type = 'products';
 			break;
 			case 'Category':
 				$path = _PS_CAT_IMG_DIR_;
-				$type = 'categories';
 			break;
 			case 'Manufacturer':
 				$path = _PS_MANU_IMG_DIR_;
-				$type = 'manufacturers';
 			break;
 			case 'Supplier':
 				$path = _PS_SUPP_IMG_DIR_;
-				$type = 'suppliers';
 			break;
 		}
 		$cover = 1;
@@ -865,11 +861,8 @@ class shopimporter extends ImportModule
 			foreach($item['images'] as $key => $image)
 			{
 				$tmpfile = tempnam(_PS_TMP_IMG_DIR_, 'import');
-					if (@copy(str_replace(' ', '%20', $image), $tmpfile))
+				if (@copy(str_replace(' ', '%20', $image), $tmpfile))
 				{
-
-					$imagesTypes = ImageType::getImagesTypes($type);
-					ImageManager::resize($tmpfile, $path.(int)$matchId[$item[$identifier]].'.jpg');
 					if ($className == 'Product')
 					{
 						$image = new Image();
@@ -884,13 +877,13 @@ class shopimporter extends ImportModule
 								$legend[Configuration::get('PS_LANG_DEFAULT')] = Tools::link_rewrite($val);
 						$image->legend = $legend;
 						$image->add();
-						ImageManager::resize($tmpfile, $path.(int)$matchId[$item[$identifier]].'-'.(int)$image->id.'.jpg');
-						foreach ($imagesTypes AS $k => $imageType)
-							ImageManager::resize($tmpfile, $path.(int)$matchId[$item[$identifier]].'-'.(int)$image->id.'-'.stripslashes($imageType['name']).'.jpg', $imageType['width'], $imageType['height']);
+                        			$path = $image->getPathForCreation();
+                        			ImageManager::resize($tmpfile, $path.'.jpg');
 					}
 					else
-						foreach ($imagesTypes as $imageType)
-							ImageManager::resize($tmpfile, $path.(int)$matchId[$item[$identifier]].'-'.stripslashes($imageType['name']).'.jpg', $imageType['width'], $imageType['height']);
+                    			{
+                        			ImageManager::resize($tmpfile, $path.(int)$matchId[$item[$identifier]].'.jpg');
+                    			}
 				}
 				else
 					@unlink($tmpfile);
@@ -1490,9 +1483,11 @@ class shopimporter extends ImportModule
 			$order->total_products_wt = (float)$item['total_products_wt'];
 			$order->total_discounts = (float)$item['total_discounts'];
 			$order->total_shipping = (float)$item['total_shipping'];
+			$order->total_shipping_tax_incl = (float)$item['total_shipping'];
 			$order->carrier_tax_rate = (float)$carrier->getTaxesRate(new Address((int)$item[Configuration::get('PS_TAX_ADDRESS_TYPE')]));
 			$order->total_wrapping = (float)$item['total_wrapping'];
 			$order->total_paid = (float)$item['total_paid'];
+			$order->total_paid_tax_incl = (float)$item['total_paid'];
 			$order->total_paid_real = (float)$item['total_paid_real'];
 			$order->invoice_date = '0000-00-00 00:00:00';
 			$order->delivery_date = '0000-00-00 00:00:00';
@@ -1505,6 +1500,20 @@ class shopimporter extends ImportModule
 				$order->valid = 1;
 			else
 				$order->valid = 0;
+
+			if (array_key_exists('current_state', $item))
+				$order->current_state = $item['current_state'];
+			if (array_key_exists('reference', $item))
+				$order->reference = $item['reference'];
+			if (array_key_exists('invoice_number', $item))
+				$order->invoice_number = $item['invoice_number'];
+			if (array_key_exists('delivery_number', $item))
+				$order->delivery_number = $item['delivery_number'];
+			if (array_key_exists('invoice_date', $item))
+				$order->invoice_date = $item['invoice_date'];
+			if (array_key_exists('delivery_date', $item))
+				$order->delivery_date = $item['delivery_date'];
+
 			$order->save(false, false);
 
 			$this->saveMatchId('order', (int)$order->id, (int)$item['id_cart']);

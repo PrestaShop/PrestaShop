@@ -36,7 +36,7 @@
 var idSelectedCountry = {if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{else}false{/if};
 var countries = new Array();
 var countriesNeedIDNumber = new Array();
-var countriesNeedZipCode = new Array(); 
+var countriesNeedZipCode = new Array();
 {if isset($countries)}
 	{foreach from=$countries item='country'}
 		{if isset($country.states) && $country.contains_states}
@@ -75,7 +75,7 @@ $(document).ready(function() {
 </script>
 
 <h1>{if !isset($email_create)}{l s='Authentication'}{else}{l s='Create an account'}{/if}</h1>
-{if !isset($back) || $back != 'my-account'}{assign var='current_step' value='login'}{include file="$tpl_dir./order-steps.tpl"}{/if} 
+{if !isset($back) || $back != 'my-account'}{assign var='current_step' value='login'}{include file="$tpl_dir./order-steps.tpl"}{/if}
 {include file="$tpl_dir./errors.tpl"}
 {assign var='stateExist' value=false}
 {assign var="postCodeExist" value=false}
@@ -126,7 +126,7 @@ $(document).ready(function() {
 					$('#center_column').html('<div id="noSlide">'+$('#center_column').html()+'</div>');
 					$('#noSlide').fadeOut('slow', function(){
 						$('#noSlide').html(jsonData.page);
-						// update the state (when this file is called from AJAX you still need to update the state)									
+						// update the state (when this file is called from AJAX you still need to update the state)
 						bindStateInputAndUpdate();
 						$(this).fadeIn('slow', function(){
 							document.location = '#account-creation';
@@ -160,7 +160,7 @@ $(document).ready(function() {
 		<fieldset>
 			<h3>{l s='Create an account'}</h3>
 			<div class="form_content clearfix">
-				<p class="title_block">{l s='Please enter your email address to create an account.'}.</p>
+				<p class="title_block">{l s='Please enter your email address to create an account.'}</p>
 				<div class="error" id="create_account_error" style="display:none"></div>
 				<p class="text">
 					<label for="email_create">{l s='Email address'}</label>
@@ -339,7 +339,7 @@ $(document).ready(function() {
 						<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
 						<input type="text" class="text" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onblur="$('#postcode').val($('#postcode').val().toUpperCase());" />
 					</p>
-				{/if}				
+				{/if}
 				<input type="hidden" name="alias" id="alias" value="{l s='My address'}" />
 				<input type="hidden" name="is_new_customer" id="is_new_customer" value="0" />
 				<!-- END Account -->
@@ -551,7 +551,7 @@ $(document).ready(function() {
 				<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
 				<input type="text" class="text" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
 			</p>
-		{/if}		
+		{/if}
 		{if $stateExist eq false}
 			<p class="required id_state select hidden">
 				<label for="id_state">{l s='State'} <sup>*</sup></label>

@@ -45,7 +45,7 @@ class AdminControllerCore extends Controller
 	public $template = 'content.tpl';
 
 	/** @var string Associated table name */
-	public $table;
+	public $table = 'configuration';
 
 	public $list_id;
 
@@ -2159,8 +2159,11 @@ class AdminControllerCore extends Controller
 			|| !Validate::isUnsignedId($id_lang))
 			throw new PrestaShopException('get list params is not valid');
 
-		if (isset($this->fields_list[$order_by]) && isset($this->fields_list[$order_by]['filter_key']))
-			$order_by = $this->fields_list[$order_by]['filter_key'];
+		if (!isset($this->fields_list[$order_by]['order_key']) && isset($this->fields_list[$order_by]['filter_key']))
+			$this->fields_list[$order_by]['order_key'] = $this->fields_list[$order_by]['filter_key'];
+
+		if (isset($this->fields_list[$order_by]) && isset($this->fields_list[$order_by]['order_key']))
+			$order_by = $this->fields_list[$order_by]['order_key'];
 
 		/* Determine offset from current page */
 		if ((isset($_POST['submitFilter'.$this->list_id]) ||

@@ -153,12 +153,13 @@ function displaySummary()
 	
 	$('tr.range_inf td input').each( function()
 	{
-		if (!isNaN(parseFloat($(this).val())) && (range_inf == summary_translation_undefined || range_inf > $(this).val()))
+		if (!isNaN(parseFloat($(this).val())) && (range_inf == summary_translation_undefined || parseFloat(range_inf) > parseFloat($(this).val())))
 			range_inf = $(this).val();
 	});
 
 	$('tr.range_sup td input').each( function(){
-		if (!isNaN(parseFloat($(this).val())) && (range_sup == summary_translation_undefined || range_sup < $(this).val()))
+
+		if (!isNaN(parseFloat($(this).val())) && (range_sup == summary_translation_undefined || parseFloat(range_sup) < parseFloat($(this).val())))
 			range_sup = $(this).val();
 	});
 	
@@ -272,7 +273,6 @@ function bind_inputs()
 	});
 	
 	$('tr.fees td input:checkbox').off('change').on('change', function () {
-				
 		if($(this).is(':checked'))
 		{
 			$(this).closest('tr').children('td').each( function () {
@@ -389,7 +389,7 @@ function hideFees()
 function showFees()
 {
 	$('tr.range_inf td, tr.range_sup td, tr.fees_all td, tr.fees td').each( function () {
-		if ($(this).index() >= 2)
+		if ($(this).index() > 2)
 		{
 			//enable only if zone is active
 			tr = $(this).parent('tr');
