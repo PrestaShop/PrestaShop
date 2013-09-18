@@ -38,7 +38,7 @@ class HelperFormCore extends Helper
 	/** @var array values of form fields */
 	public $fields_value = array();
 
-	public $table = 'Configuration';
+	public $table = 'configuration';
 	public $name_controller = '';
 
 	/** @var string if not null, a title will be added on that list */
