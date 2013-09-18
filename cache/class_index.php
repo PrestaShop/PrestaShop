@@ -268,6 +268,8 @@
   'CompareProductCore' => 'classes/CompareProduct.php',
   'Configuration' => '',
   'ConfigurationCore' => 'classes/Configuration.php',
+  'ConfigurationKPI' => '',
+  'ConfigurationKPICore' => 'classes/ConfigurationKPI.php',
   'ConfigurationTest' => '',
   'ConfigurationTestCore' => 'classes/ConfigurationTest.php',
   'Connection' => '',
