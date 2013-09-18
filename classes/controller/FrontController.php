@@ -147,8 +147,6 @@ class FrontControllerCore extends Controller
 		// Init cookie language
 		// @TODO This method must be moved into switchLanguage
 		Tools::setCookieLanguage($this->context->cookie);
-		
-		$currency = Tools::setCurrency($this->context->cookie);
 
 		$protocol_link = (Configuration::get('PS_SSL_ENABLED') || Tools::usingSecureMode()) ? 'https://' : 'http://';
 		$useSSL = ((isset($this->ssl) && $this->ssl && Configuration::get('PS_SSL_ENABLED')) || Tools::usingSecureMode()) ? true : false;
@@ -169,6 +167,8 @@ class FrontControllerCore extends Controller
 		if (Configuration::get('PS_GEOLOCATION_ENABLED'))
 			if (($newDefault = $this->geolocationManagement($this->context->country)) && Validate::isLoadedObject($newDefault))
 				$this->context->country = $newDefault;
+
+		$currency = Tools::setCurrency($this->context->cookie);
 
 		if (isset($_GET['logout']) || ($this->context->customer->logged && Customer::isBanned($this->context->customer->id)))
 		{
@@ -670,6 +670,7 @@ class FrontControllerCore extends Controller
 						}
 					}
 				}
+
 				if (isset($this->context->cookie->iso_code_country) && $this->context->cookie->iso_code_country && !Validate::isLanguageIsoCode($this->context->cookie->iso_code_country))
 					$this->context->cookie->iso_code_country = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
 				if (isset($this->context->cookie->iso_code_country) && ($id_country = Country::getByIso(strtoupper($this->context->cookie->iso_code_country))))
