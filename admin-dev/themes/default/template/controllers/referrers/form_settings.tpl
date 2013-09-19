@@ -25,39 +25,68 @@
 
 </div>
 
-<div>
-	<fieldset>
-		<legend>
-			<img src="../img/admin/tab-preferences.gif" /> {l s='Settings'}
-		</legend>
-		<form action="{$current}&token={$token}" method="post" id="settings_form" name="settings_form">
-			<label>{l s='Save direct traffic?'}</label>
-			<div class="margin-left">
-				<label class="t" for="tracking_dt_on"><img src="../img/admin/enabled.gif" alt="{l s='Yes'}" title="{l s='Yes'}" /></label>
-				<input type="radio" name="tracking_dt" id="tracking_dt_on" value="1" {if $tracking_dt}checked="checked"{/if} />
-				<label class="t" for="tracking_dt_on"> {l s='Yes'}</label>
-				<label class="t" for="tracking_dt_off"><img src="../img/admin/disabled.gif" alt="{l s='No'}" title="{l s='No'}" style="margin-left: 10px;" /></label>
-				<input type="radio" name="tracking_dt" id="tracking_dt_off" value="0" {if !$tracking_dt}checked="checked"{/if}/>
-				<label class="t" for="tracking_dt_off"> {l s='No'}</label>
-			</div>
-			<p>{l s='Direct traffic can be quite resource-intensive. You should consider enabling it only if you have a strong need for it.'}</p>
-			<input type="submit" class="button" value="{l s='   Save   '}" name="submitSettings" id="submitSettings" />
+<div id="settings_referrers" class="row">
+	<div class="col-lg-3">
+		<form action="{$current}&token={$token}" method="post" id="settings_form" name="settings_form" class="form-horizontal">
+			<fieldset>
+				<h3>
+					<i class="icon-cog"></i> {l s='Settings'}
+				</h3>
+				<div class="row">
+					<label class="control-label col-lg-5">{l s='Save direct traffic?'}</label>
+					<div class="col-lg-7">
+						<div class="row">
+							<div class="input-group col-lg-2">
+								<span class="switch prestashop-switch">
+									<input type="radio" name="tracking_dt" id="tracking_dt_on" value="1" {if $tracking_dt}checked="checked"{/if} />
+									<label class="t radio" for="tracking_dt_on">
+										<i class="icon-check-sign color_success"></i> {l s='Yes'}
+									</label>
+									<input type="radio" name="tracking_dt" id="tracking_dt_off" value="0" {if !$tracking_dt}checked="checked"{/if}  />
+									<label class="t radio" for="tracking_dt_off"> 
+										<i class="icon-ban-circle color_danger"></i> {l s='No'}
+									</label>
+									<span class="slide-button btn btn-default"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+					
+				<p>{l s='Direct traffic can be quite resource-intensive. You should consider enabling it only if you have a strong need for it.'}</p>
+				<button type="submit" class="btn btn-default pull-right" name="submitSettings" id="submitSettings">
+					<i class="icon-save"></i> {l s='Save'}
+				</button>
+			</fieldset>
 		</form>
-		<div class="separation"></div>
-		<form action="{$current}&token={$token}" method="post" id="refresh_index_form" name="refresh_index_form">
-			<h3>{l s='Indexation'}</h3>
-			<p>{l s='There is a huge quantity of data, so each connection corresponding to a referrer is indexed. You can also refresh this index by clicking the button above. This process may take awhile, and it\'s only needed if you modified or added a referrer, or if you want changes to be retroactive.'}</p>
-			<input type="submit" class="button" value="{l s='Refresh index'}" name="submitRefreshIndex" id="submitRefreshIndex" />
+	</div>
+	<div class="col-lg-6">
+		<form action="{$current}&token={$token}" method="post" id="refresh_index_form" name="refresh_index_form" class="form-horizontal">
+			<fieldset>
+				<h3>
+					<i class="icon-fullscreen"></i> {l s='Indexation'}
+				</h3>
+				<p>{l s='There is a huge quantity of data, so each connection corresponding to a referrer is indexed. You can also refresh this index by clicking the button above. This process may take awhile, and it\'s only needed if you modified or added a referrer, or if you want changes to be retroactive.'}</p>
+				<button type="submit" class="btn btn-default pull-right" name="submitRefreshIndex" id="submitRefreshIndex">
+					<i class="icon-refresh"></i> {l s='Refresh index'}
+				</button>
+			</fieldset>
 		</form>
-				<div class="separation"></div>
-		<form action="{$current}&token={$token}" method="post" id="refresh_cache_form" name="refresh_cache_form">
-			<h3>{l s='Cache'}</h3>
-			<p>{l s='In order to sort and filter your data, it\'s cached. You can refresh the cache by clicking on the button above.'}</p>
-			<input type="submit" class="button" value="{l s='Refresh cache'}" name="submitRefreshCache" id="submitRefreshCache" />
+	</div>
+	<div class="col-lg-6">
+		<form action="{$current}&token={$token}" method="post" id="refresh_cache_form" name="refresh_cache_form" class="form-horizontal">
+			<fieldset>
+				<h3>
+					<i class="icon-briefcase"></i> {l s='Cache'}
+				</h3>
+				<p>{l s='In order to sort and filter your data, it\'s cached. You can refresh the cache by clicking on the button above.'}</p>
+				<button type="submit" class="btn btn-default pull-right" name="submitRefreshCache" id="submitRefreshCache">
+					<i class="icon-refresh"></i> {l s='Refresh cache'}
+				</button>
+			</fieldset>
 		</form>
-	</fieldset>
+	</div>
 </div>
 
-<div class="clear">&nbsp;</div>
 
 	

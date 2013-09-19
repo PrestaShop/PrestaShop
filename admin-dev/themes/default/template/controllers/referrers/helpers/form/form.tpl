@@ -26,7 +26,6 @@
 
 {block name="other_fieldsets"}
 	{if $f == 1}
-		<br class="clear" />
 		<fieldset>
 			<legend onclick="$('#tracking_help').slideToggle();" style="cursor:pointer;">
 				<img src="../img/admin/help.png" /> {l s='Help'}

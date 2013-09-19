@@ -56,6 +56,7 @@ class AdminReferrersControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 	 	$this->table = 'referrer';
 		$this->className = 'Referrer';
 		$this->fields_list = array(
