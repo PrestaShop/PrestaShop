@@ -31,7 +31,7 @@
 	{/if}
 
 	{if $input.type == 'text_customer' && !isset($customer)}
-		<label>{l s='Customer email'}</label>
+		<label class="control-label col-lg-3 required" for="email">{l s='Customer email'}</label>
 	{else}
 		{$smarty.block.parent}
 	{/if}
@@ -85,9 +85,8 @@
 			});
 			</script>
 
-			<div class="margin-form">
-				<input type="text" name="email" value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}"/>
-				<sup>*</sup>
+			<div class="col-lg-9">
+				<input type="text" id="email" name="email" value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}"/>
 			</div>
 		{/if}
 	{else}

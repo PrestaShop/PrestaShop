@@ -179,18 +179,25 @@
 			</table>
 		
 		<div style="display:none" id="group_discount_category_fancybox">
-			<fieldset>
-				<h3><i class="icon-group"></i>{l s='New group category discount'}</h3>
-				<div class="hintGroup">
-					{l s='Caution: The discount applied to a category does not stack with the overall reduction but instead replaces it.'}
+			<fieldset class="form-horizontal">
+				<div class="col-lg-12">
+					<h3><i class="icon-group"></i> {l s='New group category discount'}</h3>
+					<hr/>
+					<div class="alert alert-info">{l s='Caution: The discount applied to a category does not stack with the overall reduction but instead replaces it.'}</div>
+					{$categoryTreeView}
+					<div class="alert alert-warning">{l s='Only products that have this category as the default category will be affected.'}</div>
+					<div class="form-group">
+						<label class="control-label col-lg-3" for="category_reduction_fancybox">{l s='Discount (%):'}</label>
+						<div class="col-lg-9">
+							<input type="text" name="category_reduction_fancybox" id="category_reduction_fancybox" value="0.00" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-lg-12">
+							<button type="button" onclick="addCategoryReduction();" class="btn btn-default pull-right">{l s='add'}</button>
+						</div>
+					</div>
 				</div>
-				{$categoryTreeView}
-				<div class="alert alert-warning">{l s='Only products that have this category as the default category will be affected.'}</div>
-
-				<label>{l s='Discount (%):'}</label>
-				<input type="text" name="category_reduction_fancybox" id="category_reduction_fancybox" value="0.00">
-
-				<button onclick="addCategoryReduction();" class="btn btn-primary">{l s='add'}</button>
 			</fieldset>
 		</div>
 	</div>
