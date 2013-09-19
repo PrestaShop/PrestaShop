@@ -740,6 +740,58 @@
 		</fieldset>
 	</form>
 	<div class="clear" style="height:20px;">&nbsp;</div>
+	
+	<form style="width: 98%" class="container-command-top-spacing" action="{$current_index}&vieworder&token={$smarty.get.token}&id_order={$order->id}" method="post" onsubmit="return orderDeleteProduct('{l s='This product cannot be returned.'}', '{l s='Quantity to cancel is greater than quantity available.'}');">
+		<input type="hidden" name="id_order" value="{$order->id}" />
+		<fieldset style="width: 100%; ">
+			<div style="display: none">
+				<input type="hidden" value="{$order->getWarehouseList()|implode}" id="warehouse_list" />
+			</div>
+			<legend><img src="../img/admin/delivery.gif" alt="{l s='Delivery:'}" />{l s='Delivery:'}</legend>
+			<div style="float:left;width: 100%;">
+				<table style="width: 100%;" cellspacing="0" cellpadding="0" class="table" id="orderDeliveryProducts">
+					<tr>
+						<th height="39" align="center" style="width: 7%">&nbsp;</th>
+						<th>{l s='Product'}</th>
+						<th style="width: 15%; text-align: center">{l s='Unit Price'} <sup>*</sup></th>
+						<th style="width: 4%; text-align: center">{l s='Qty'}</th>
+						{if $display_warehouse}<th style="text-align: center">{l s='Warehouse'}</th>{/if}
+						{if ($order->hasBeenPaid())}<th style="width: 3%; text-align: center">{l s='Refunded'}</th>{/if}
+						{if ($order->hasBeenDelivered() || $order->hasProductReturned())}<th style="width: 3%; text-align: center">{l s='Returned'}</th>{/if}
+						{if $stock_management}<th style="width: 10%; text-align: center">{l s='Available quantity'}</th>{/if}
+						<th style="width: 10%; text-align: center">{l s='Total'} <sup>*</sup></th>
+						<th colspan="2" style="display: none;" class="add_product_fields">&nbsp;</th>
+						<th colspan="2" style="display: none;" class="edit_product_fields">&nbsp;</th>
+						<th colspan="2" style="display: none;" class="standard_refund_fields"><img src="../img/admin/delete.gif" alt="{l s='Products:'}" />
+							{if ($order->hasBeenDelivered() || $order->hasBeenShipped())}
+								{l s='Return'}
+							{elseif ($order->hasBeenPaid())}
+								{l s='Refund'}
+							{else}
+								{l s='Cancel'}
+							{/if}
+						</th>
+						<th style="width: 12%;text-align:right;display:none" class="partial_refund_fields">
+							{l s='Partial refund'}
+						</th>
+					</tr>
+
+					{foreach from=$products item=product key=k}
+						{* Include customized datas partial *}
+						{include file='controllers/orders/_customized_data.tpl'}
+
+						{* Include product line partial *}
+						{include file='controllers/orders/_delivery_product_line.tpl'}
+					{/foreach}
+					{if $can_edit}
+						{include file='controllers/orders/_new_product.tpl'}
+					{/if}
+				</table>
+				<div class="clear"></div>
+			</div>
+		</fieldset>
+	</form>
+	<div class="clear" style="height:20px;">&nbsp;</div>
 
 	<div style="float: left">
 		<form action="{$smarty.server.REQUEST_URI}&token={$smarty.get.token}" method="post" onsubmit="if (getE('visibility').checked == true) return confirm('{l s='Do you want to send this message to the customer?'}');">
