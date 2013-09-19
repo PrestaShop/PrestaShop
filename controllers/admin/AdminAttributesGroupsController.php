@@ -28,6 +28,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 {
 	protected $id_attribute;
 	protected $position_identifier = 'id_attribute_group';
+	protected $attribute_name;
 
 	public function __construct()
 	{
@@ -83,7 +84,60 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	{
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-		$this->addRowAction('details');
+		$this->addRowAction('view');
+
+		return parent::renderList();
+	}
+
+	public function renderView()
+	{
+		if (($id = Tools::getValue('id_attribute_group')))
+		{
+			$this->table      = 'attribute';
+			$this->className  = 'Attribute';
+			$this->identifier = 'id_attribute';
+			$this->list_id    = 'attribute_values';
+			$this->lang       = true;
+
+			if (!Validate::isLoadedObject($obj = new AttributeGroup((int)$id)))
+			{
+				$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+				return;
+			}
+			
+			$this->attribute_name = $obj->name;
+			$this->fields_list = array(
+				'id_attribute' => array(
+					'title' => $this->l('ID'),
+					'align' => 'center',
+					'class' => 'fixed-width-xs'
+				),
+				'name' => array(
+					'title' => $this->l('Value'),
+					'width' => 'auto',
+					'filter_key' => 'b!name'
+				)
+			);
+
+			if ($obj->group_type == 'color')
+				$this->fields_list['color'] = array(
+					'title' => $this->l('Color'),
+					'filter_key' => 'b!color'
+				);
+
+			$this->fields_list['position'] = array(
+				'title' => $this->l('Position'),
+				'filter_key' => 'a!position',
+				'position' => 'position',
+				'class' => 'fixed-width-md'
+			);
+
+			$this->addRowAction('edit');
+			$this->addRowAction('delete');
+
+			$this->_where = 'AND a.`id_attribute_group` = '.(int)$id;
+			$this->_orderBy = 'position';
+		}
 
 		return parent::renderList();
 	}
@@ -457,6 +511,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$this->content .= $this->renderList();
 			$this->content .= $this->renderOptions();
 		}
+		elseif ($this->display == 'view' && !$this->ajax)
+			$this->content = $this->renderView();
 
 		$this->context->smarty->assign(array(
 			'table' => $this->table,
@@ -469,17 +525,29 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-		$this->page_header_toolbar_title = $this->l('Attribute groups');
-		$this->page_header_toolbar_btn['new_attribute_group'] = array(
-			'href' => self::$currentIndex.'&amp;addattribute_group&amp;token='.$this->token,
-			'desc' => $this->l('Add new attribute'),
-			'icon' => 'process-icon-new'
-		);
-		$this->page_header_toolbar_btn['new_value'] = array(
-			'href' => self::$currentIndex.'&amp;updateattribute&amp;token='.$this->token,
-			'desc' => $this->l('Add new value'),
-			'icon' => 'process-icon-new'
-		);
+		if ($this->display == 'view')
+		{
+			$this->page_header_toolbar_title = $this->attribute_name[$this->context->employee->id_lang];
+			$this->page_header_toolbar_btn['new_attribute_group'] = array(
+				'href' => self::$currentIndex.'&token='.$this->token,
+				'desc' => $this->l('Back to list'),
+				'icon' => 'process-icon-back'
+			);
+		}
+		else
+		{
+			$this->page_header_toolbar_title = $this->l('Attribute groups');
+			$this->page_header_toolbar_btn['new_attribute_group'] = array(
+				'href' => self::$currentIndex.'&amp;addattribute_group&amp;token='.$this->token,
+				'desc' => $this->l('Add new attribute'),
+				'icon' => 'process-icon-new'
+			);
+			$this->page_header_toolbar_btn['new_value'] = array(
+				'href' => self::$currentIndex.'&amp;updateattribute&amp;token='.$this->token,
+				'desc' => $this->l('Add new value'),
+				'icon' => 'process-icon-new'
+			);
+		}
 
 		parent::initPageHeaderToolbar();
 	}
@@ -512,6 +580,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'desc' => $this->l('Back to list')
 				);
 				break;
+			case 'view':
+				break;
 			default: // list
 				$this->toolbar_btn['new'] = array(
 					'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
@@ -537,6 +607,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
 			case 'add':
 				$bread_extended[] = $this->l('Add New Attributes');
+				break;
+
+			case 'view':
+				$bread_extended[] = $this->attribute_name[$this->context->employee->id_lang];
 				break;
 
 			case 'editAttributes':
@@ -700,7 +774,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	{
 		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 
-		if ($this->ajax)
+		if ($this->display == 'view')
 		{
 			foreach ($this->_list as &$list)
 				if (file_exists(_PS_IMG_DIR_.$this->fieldImageSettings['dir'].'/'.(int)$list['id_attribute'].'.jpg'))
