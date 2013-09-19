@@ -1576,7 +1576,7 @@ var ProductMultishop = new function()
 		ProductMultishop.checkField($('input[name=\'multishop_check[id_tax_rules_group]\']').prop('checked'), 'id_tax_rules_group');
 		ProductMultishop.checkField($('input[name=\'multishop_check[unit_price]\']').prop('checked'), 'unit_price', 'unit_price');
 		ProductMultishop.checkField($('input[name=\'multishop_check[on_sale]\']').prop('checked'), 'on_sale');
-		ProductMultishop.checkField($('input[name=\'multishop_check[on_sale]\']').prop('checked'), 'ecotax');
+		ProductMultishop.checkField($('input[name=\'multishop_check[ecotax]\']').prop('checked'), 'ecotax');
 	};
 
 	this.checkAllSeo = function()
