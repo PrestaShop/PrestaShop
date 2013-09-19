@@ -121,7 +121,6 @@ class BlockBestSellers extends Module
 					'title' => $this->l('Settings'),
 					'icon' => 'icon-star-empty'
 				),
-				'id_form' => 'step_carrier_general',
 				'input' => array(
 					array(
 						'type' => 'switch',
