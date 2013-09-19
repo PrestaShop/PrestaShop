@@ -1474,7 +1474,7 @@ class AdminImportControllerCore extends AdminController
 							$error = true;
 
 						if ($error)
-							$this->warnings[] = sprintf(Tools::displayError('Product n°%1$d: the picture cannot be saved: %2$s'), $image->id_product, $url);
+							$this->warnings[] = sprintf(Tools::displayError('Product nÂ°%1$d: the picture cannot be saved: %2$s'), $image->id_product, $url);
 					}
 				}
 				if (isset($product->id_category))
