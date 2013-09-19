@@ -114,10 +114,13 @@
 </div>
 
 	<div class="container-command">
-		<!-- Left column -->
-		<div>
+		<div class="panel">
+			<h3>
+				<i class="icon-time"></i>
+				{l s='Status'}
+			</h3>
 			<!-- Change status form -->
-			<form class="panel" action="{$currentIndex}&vieworder&token={$smarty.get.token}" method="post">
+			<form action="{$currentIndex}&vieworder&token={$smarty.get.token}" method="post">
 				<select id="id_order_state" name="id_order_state">
 				{foreach from=$states item=state}
 					<option value="{$state['id_order_state']}"{if $state['id_order_state'] == $currentState->id} selected="selected" disabled="disabled"{/if}>{$state['name']|stripslashes}</option>
@@ -127,29 +130,29 @@
 				<input type="submit" name="submitState" value="{l s='Add'}" class="btn btn-default" />
 			</form>
 			<!-- History of status -->
-			<div class="panel">
-				<table class="table history-status">
-					<tbody>
-				{foreach from=$history item=row key=key}
-						{if ($key == 0)}
-						<tr class="highlighted">
-							<td><img src="../img/os/{$row['id_order_state']}.gif" /></td>
-							<td><span class="title_box ">{$row['ostate_name']|stripslashes}</span></td>
-							<td><span class="title_box ">{if $row['employee_lastname']}{$row['employee_firstname']|stripslashes} {$row['employee_lastname']|stripslashes}{/if}</span></td>
-							<td><span class="title_box ">{dateFormat date=$row['date_add'] full=true}</span></td>
-						</tr>
-						{else}
-						<tr>
-							<td><img src="../img/os/{$row['id_order_state']}.gif" /></td>
-							<td>{$row['ostate_name']|stripslashes}</td>
-							<td>{if $row['employee_lastname']}{$row['employee_firstname']|stripslashes} {$row['employee_lastname']|stripslashes}{else}&nbsp;{/if}</td>
-							<td>{dateFormat date=$row['date_add'] full=true}</td>
-						</tr>
-						{/if}
-				{/foreach}
-					</tbody>
-				</table>
-			</div>
+			<table class="table history-status">
+				<tbody>
+			{foreach from=$history item=row key=key}
+					{if ($key == 0)}
+					<tr class="highlighted">
+						<td><img src="../img/os/{$row['id_order_state']}.gif" /></td>
+						<td><span class="title_box ">{$row['ostate_name']|stripslashes}</span></td>
+						<td><span class="title_box ">{if $row['employee_lastname']}{$row['employee_firstname']|stripslashes} {$row['employee_lastname']|stripslashes}{/if}</span></td>
+						<td><span class="title_box ">{dateFormat date=$row['date_add'] full=true}</span></td>
+					</tr>
+					{else}
+					<tr>
+						<td><img src="../img/os/{$row['id_order_state']}.gif" /></td>
+						<td>{$row['ostate_name']|stripslashes}</td>
+						<td>{if $row['employee_lastname']}{$row['employee_firstname']|stripslashes} {$row['employee_lastname']|stripslashes}{else}&nbsp;{/if}</td>
+						<td>{dateFormat date=$row['date_add'] full=true}</td>
+					</tr>
+					{/if}
+			{/foreach}
+				</tbody>
+			</table>
+		</div>
+
 			{if $customer->id}
 			<!-- Customer informations -->
 			<fieldset>
@@ -166,7 +169,9 @@
 					{if (!Customer::customerExists($customer->email))}
 					<form method="post" action="index.php?tab=AdminCustomers&id_customer={$customer->id}&token={getAdminToken tab='AdminCustomers'}">
 						<input type="hidden" name="id_lang" value="{$order->id_lang}" />
-						<p class="center"><input class="btn btn-default" type="submit" name="submitGuestToCustomer" value="{l s='Transform a guest into a customer'}" /></p>
+						<p class="center">
+							<input class="btn btn-default" type="submit" name="submitGuestToCustomer" value="{l s='Transform a guest into a customer'}" />
+						</p>
 						{l s='This feature will generate a random password and send an email to the customer.'}
 					</form>
 					{else}
@@ -204,15 +209,22 @@
 
 			<!-- Admin order hook -->
 			{hook h="displayAdminOrder" id_order=$order->id}
-		</div>
-		<!-- END Left column -->
 
-		<!-- Right column -->
-		<div>
+
 			<div class="button-command-prev-next panel">
 				<b>{l s='Orders'}</b> :
-				{if $previousOrder}<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$previousOrder}">{l s='< Prev'}</a>{/if}
-				{if $nextOrder}<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$nextOrder}">{l s='Next >'}</a>{/if}
+				{if $previousOrder}
+				<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$previousOrder}">
+					<i class="icon-chevron-left"></i>
+					{l s='Prev'}
+				</a>
+				{/if}
+				{if $nextOrder}
+				<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$nextOrder}">
+					<i class="icon-chevron-right"></i>
+					{l s='Next'}
+				</a>
+				{/if}
 			</div>
 			
 			<!-- linked orders block -->
@@ -381,7 +393,8 @@
 							{foreachelse}
 							<tr>
 								<td colspan="6" class="center">
-									<h3>{l s='No payments are available'}</h3>
+									<i class="icon-warning-sign"></i>
+									{l s='No payments are available'}
 								</td>
 							</tr>
 							{/foreach}
@@ -510,8 +523,6 @@
 					{/if}
 				</fieldset>
 			{/if}
-		</div>
-		<!-- END Right column -->
 	</div>
 
 	<div class="container-command container-command-top-spacing">
@@ -526,22 +537,23 @@
 					</h3>
 					{if $can_edit}
 					<form method="post" action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$order->id}">
-						<div>
-							<p>
-								<select name="id_address">
-									{foreach from=$customer_addresses item=address}
-									<option value="{$address['id_address']}"{if $address['id_address'] == $order->id_address_delivery} selected="selected"{/if}>{$address['alias']} - {$address['address1']} {$address['postcode']} {$address['city']}{if !empty($address['state'])} {$address['state']}{/if}, {$address['country']}</option>
-									{/foreach}
-								</select>
-								<input class="btn btn-default" type="submit" name="submitAddressShipping" value="{l s='Change'}" />
-							</p>
-						</div>
+						<select name="id_address">
+							{foreach from=$customer_addresses item=address}
+							<option value="{$address['id_address']}"{if $address['id_address'] == $order->id_address_delivery} selected="selected"{/if}>{$address['alias']} - {$address['address1']} {$address['postcode']} {$address['city']}{if !empty($address['state'])} {$address['state']}{/if}, {$address['country']}</option>
+							{/foreach}
+						</select>
+						<input class="btn btn-default" type="submit" name="submitAddressShipping" value="{l s='Change'}" />
 					</form>
 					{/if}
 
 					<div>
-						<a href="?tab=AdminAddresses&id_address={$addresses.delivery->id}&addaddress&realedit=1&id_order={$order->id}{if ($addresses.delivery->id == $addresses.invoice->id)}&address_type=1{/if}&token={getAdminToken tab='AdminAddresses'}&back={$smarty.server.REQUEST_URI|urlencode}"><img src="../img/admin/edit.gif" /></a>
-						<a href="http://maps.google.com/maps?f=q&hl={$iso_code_lang}&geocode=&q={$addresses.delivery->address1} {$addresses.delivery->postcode} {$addresses.delivery->city} {if ($addresses.delivery->id_state)} {$addresses.deliveryState->name}{/if}" target="_blank"><img src="../img/admin/google.gif" alt="" class="middle" /></a>
+						<a class="btn btn-default" href="?tab=AdminAddresses&id_address={$addresses.delivery->id}&addaddress&realedit=1&id_order={$order->id}{if ($addresses.delivery->id == $addresses.invoice->id)}&address_type=1{/if}&token={getAdminToken tab='AdminAddresses'}&back={$smarty.server.REQUEST_URI|urlencode}">
+							<i class="icon-pencil"></i>
+							{l s='Edit'}
+						</a>
+						<a href="http://maps.google.com/maps?f=q&hl={$iso_code_lang}&geocode=&q={$addresses.delivery->address1} {$addresses.delivery->postcode} {$addresses.delivery->city} {if ($addresses.delivery->id_state)} {$addresses.deliveryState->name}{/if}" target="_blank">
+							<img src="../img/admin/google.gif" alt="" class="middle" />
+						</a>
 					</div>
 
 					{displayAddressDetail address=$addresses.delivery newLine='<br />'}
@@ -559,21 +571,20 @@
 
 				{if $can_edit}
 				<form method="post" action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$order->id}">
-					<div>
-						<p>
-							<select name="id_address">
-								{foreach from=$customer_addresses item=address}
-								<option value="{$address['id_address']}"{if $address['id_address'] == $order->id_address_invoice} selected="selected"{/if}>{$address['alias']} - {$address['address1']} {$address['postcode']} {$address['city']}{if !empty($address['state'])} {$address['state']}{/if}, {$address['country']}</option>
-								{/foreach}
-							</select>
-							<input class="btn btn-default" type="submit" name="submitAddressInvoice" value="{l s='Change'}" />
-						</p>
-					</div>
+					<select name="id_address">
+						{foreach from=$customer_addresses item=address}
+						<option value="{$address['id_address']}"{if $address['id_address'] == $order->id_address_invoice} selected="selected"{/if}>{$address['alias']} - {$address['address1']} {$address['postcode']} {$address['city']}{if !empty($address['state'])} {$address['state']}{/if}, {$address['country']}</option>
+						{/foreach}
+					</select>
+					<input class="btn btn-default" type="submit" name="submitAddressInvoice" value="{l s='Change'}" />
 				</form>
 				{/if}
 
 				<div>
-					<a href="?tab=AdminAddresses&id_address={$addresses.invoice->id}&addaddress&realedit=1&id_order={$order->id}{if ($addresses.delivery->id == $addresses.invoice->id)}&address_type=2{/if}&back={$smarty.server.REQUEST_URI|urlencode}&token={getAdminToken tab='AdminAddresses'}"><img src="../img/admin/edit.gif" /></a>
+					<a class="btn btn-default" href="?tab=AdminAddresses&id_address={$addresses.invoice->id}&addaddress&realedit=1&id_order={$order->id}{if ($addresses.delivery->id == $addresses.invoice->id)}&address_type=2{/if}&back={$smarty.server.REQUEST_URI|urlencode}&token={getAdminToken tab='AdminAddresses'}">
+						<i class="icon-pencil"></i>
+						{l s='Edit'}
+					</a>
 				</div>
 
 				{displayAddressDetail address=$addresses.invoice newLine='<br />'}
@@ -612,7 +623,7 @@
 				<table class="table" id="orderProducts">
 					<thead>
 						<tr>
-							<th>&nbsp;</th>
+							<th></th>
 							<th><span class="title_box ">{l s='Product'}</span></th>
 							<th><span class="title_box ">{l s='Unit Price'} <sup>*</sup></span></th>
 							<th><span class="title_box ">{l s='Qty'}</th>
