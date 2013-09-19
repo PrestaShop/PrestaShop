@@ -311,7 +311,6 @@
 			line = $("#lineType").html();
 			line = line.replace(/image_id/g, id);			
 			line = line.replace(/[a-z]{2}-default-small_default/g, path+'-small_default');
-			console.log(line);
 			line = line.replace(/image_path/g, path);
 			line = line.replace(/image_position/g, position);
 			line = line.replace(/icon-check-empty/g, cover);
