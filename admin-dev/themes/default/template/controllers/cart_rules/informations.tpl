@@ -1,4 +1,4 @@
-<div class="row">	
+<div class="form-group">
 	<label class="control-label col-lg-3 required">
 		<span class="label-tooltip" data-toggle="tooltip"
 		title="{l s='This will be displayed in the cart summary, as well as on the invoice.'}">
@@ -30,7 +30,7 @@
 	</div>
 </div>
 
-<div class="row">
+<div class="form-group">
 	<label class="control-label col-lg-3">
 		<span class="label-tooltip" data-toggle="tooltip"
 		title="{l s='For your eyes only. This will never be displayed to the customer.'}">
@@ -38,11 +38,11 @@
 		</span>
 	</label>
 	<div class="col-lg-8">
-		<textarea name="description" rows="2" >{$currentTab->getFieldValue($currentObject, 'description')|escape}</textarea>
+		<textarea name="description" rows="2" class="textarea-autosize">{$currentTab->getFieldValue($currentObject, 'description')|escape}</textarea>
 	</div>
 </div>
 
-<div class="row">
+<div class="form-group">
 	<label class="control-label col-lg-3">
 		<span class="label-tooltip" data-toggle="tooltip"
 		title="{l s='Caution! The rule will automatically be applied if you leave this field blank.'}">
@@ -57,7 +57,7 @@
 	</div>
 </div>
 
-<div class="row">
+<div class="form-group">
 	<label class="control-label col-lg-3">
 		<span class="label-tooltip" data-toggle="tooltip"
 		title="{l s='If the voucher is not yet in the cart, it will be displayed in the cart summary.'}">
@@ -67,15 +67,15 @@
 	<div class="input-group col-lg-2">
 		<span class="switch prestashop-switch">
 			<input type="radio" name="highlight" id="highlight_on" value="1" {if $currentTab->getFieldValue($currentObject, 'highlight')|intval}checked="checked"{/if}/>
-			<label class="t radio" for="highlight_on"><i class="icon-check-sign"></i> {l s='Yes'}</label>
+			<label class="t radio" for="highlight_on"><i class="icon-check-sign color_success"></i> {l s='Yes'}</label>
 			<input type="radio" name="highlight" id="highlight_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'highlight')|intval}checked="checked"{/if} />
-			<label class="t radio" for="highlight_off"><i class="icon-ban-circle"></i> {l s='No'}</label>
+			<label class="t radio" for="highlight_off"><i class="icon-ban-circle color_danger"></i> {l s='No'}</label>
 			<span class="slide-button btn btn-default"></span>
 		</span>
 	</div>
 </div>
 
-<div class="row">
+<div class="form-group">
 	<label class="control-label col-lg-3">
 		<span class="label-tooltip" data-toggle="tooltip"
 		title="{l s='Only applicable if the voucher value is greater than the cart total.'}
@@ -86,15 +86,15 @@
 	<div class="input-group col-lg-2">
 		<span class="switch prestashop-switch">
 			<input type="radio" name="partial_use" id="partial_use_on" value="1" {if $currentTab->getFieldValue($currentObject, 'partial_use')|intval}checked="checked"{/if} />
-			<label class="t radio" for="partial_use_on"><i class="icon-check-sign"></i> {l s='Yes'}</label>
+			<label class="t radio" for="partial_use_on"><i class="icon-check-sign color_success"></i> {l s='Yes'}</label>
 			<input type="radio" name="partial_use" id="partial_use_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'partial_use')|intval}checked="checked"{/if} />
-			<label class="t radio" for="partial_use_off"><i class="icon-ban-circle"></i> {l s='No'}</label>
+			<label class="t radio" for="partial_use_off"><i class="icon-ban-circle color_danger"></i> {l s='No'}</label>
 			<span class="slide-button btn btn-default"></span>
 		</span>
 	</div>
 </div>
 
-<div class="row">
+<div class="form-group">
 	<label class="control-label col-lg-3">
 		<span class="label-tooltip" data-toggle="tooltip"
 		title="{l s='Cart rules are applied by priority. A cart rule with a priority of "1" will be processed before a cart rule with a priority of "2".'}">
@@ -106,15 +106,18 @@
 	</div>
 </div>
 
-<div class="row">
+<div class="form-group">
 	<label class="control-label col-lg-3">{l s='Status'}</label>
 	<div class="input-group col-lg-2">
 		<span class="switch prestashop-switch">
 			<input type="radio" name="active" id="active_on" value="1" {if $currentTab->getFieldValue($currentObject, 'active')|intval}checked="checked"{/if} />
-			<label class="t radio" for="active_on"><i class="icon-check-sign"></i> {l s='Yes'}</label>
+			<label class="t radio" for="active_on"><i class="icon-check-sign color_success"></i> {l s='Yes'}</label>
 			<input type="radio" name="active" id="active_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'active')|intval}checked="checked"{/if} />
-			<label class="t radio" for="active_off"><i class="icon-ban-circle"></i> {l s='No'}</label>
+			<label class="t radio" for="active_off"><i class="icon-ban-circle color_danger"></i> {l s='No'}</label>
 			<span class="slide-button btn btn-default"></span>
 		</span>
 	</div>
 </div>
+<script type="text/javascript">
+	$(".textarea-autosize").autosize();
+</script>
