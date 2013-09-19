@@ -25,9 +25,9 @@
 */
 class AdminFeaturesControllerCore extends AdminController
 {
-	public $bootstrap = true ;
-	
+	public $bootstrap = true;
 	protected $position_identifier = 'id_feature';
+	protected $feature_name;
 
 	public function __construct()
 	{
@@ -37,7 +37,9 @@ class AdminFeaturesControllerCore extends AdminController
 
 		$this->fields_list = array(
 			'id_feature' => array(
-				'title' => $this->l('ID')
+				'title' => $this->l('ID'),
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
@@ -75,7 +77,7 @@ class AdminFeaturesControllerCore extends AdminController
 	{
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-		$this->addRowAction('details');
+		$this->addRowAction('view');
 	 	$this->_defaultOrderBy = 'position';
 
 	 	// Added specific button in toolbar
@@ -110,6 +112,43 @@ class AdminFeaturesControllerCore extends AdminController
 		$this->table = 'feature';
 		$this->className = 'Feature';
 		$this->identifier = 'id_feature';
+	}
+
+	public function renderView()
+	{
+		if (($id = Tools::getValue('id_feature')))
+		{
+
+			$this->setTypeValue();
+			$this->lang = true;
+
+			// Action for list
+			$this->addRowAction('edit');
+			$this->addRowAction('delete');
+
+			if (!Validate::isLoadedObject($obj = new Feature((int)$id)))
+			{
+				$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+				return;
+			}
+
+			$this->feature_name = $obj->name;
+			$this->toolbar_title = $this->feature_name;	
+			$this->fields_list = array(
+				'id_feature_value' => array(
+					'title' => $this->l('ID'),
+					'align' => 'center',
+					'class' => 'fixed-width-xs'
+				),
+				'value' => array(
+					'title' => $this->l('Value')
+				)
+			);
+
+			$this->_where = sprintf('AND `id_feature` = %d', (int)$id);
+		}
+
+		return parent::renderList();
 	}
 
 	/**
@@ -214,17 +253,29 @@ class AdminFeaturesControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-		$this->page_header_toolbar_title = $this->l('Features');
-		$this->page_header_toolbar_btn['new_feature'] = array(
-			'href' => self::$currentIndex.'&amp;addfeature&amp;token='.$this->token,
-			'desc' => $this->l('Add new feature'),
-			'icon' => 'process-icon-new'
-		);
-		$this->page_header_toolbar_btn['new_feature_value'] = array(
-			'href' => self::$currentIndex.'&amp;addfeature_value&amp;token='.$this->token,
-			'desc' => $this->l('Add new feature value'),
-			'icon' => 'process-icon-new'
-		);
+		if ($this->display == 'view')
+		{
+			$this->page_header_toolbar_title = $this->feature_name[$this->context->employee->id_lang];
+			$this->page_header_toolbar_btn['back_to_list'] = array(
+				'href' => self::$currentIndex.'&token='.$this->token,
+				'desc' => $this->l('Back to list'),
+				'icon' => 'process-icon-back'
+			);
+		}
+		else
+		{
+			$this->page_header_toolbar_title = $this->l('Features');
+			$this->page_header_toolbar_btn['new_feature'] = array(
+				'href' => self::$currentIndex.'&amp;addfeature&amp;token='.$this->token,
+				'desc' => $this->l('Add new feature'),
+				'icon' => 'process-icon-new'
+			);
+			$this->page_header_toolbar_btn['new_feature_value'] = array(
+				'href' => self::$currentIndex.'&amp;addfeature_value&amp;token='.$this->token,
+				'desc' => $this->l('Add new feature value'),
+				'icon' => 'process-icon-new'
+			);
+		}
 
 		parent::initPageHeaderToolbar();
 	}
@@ -263,6 +314,8 @@ class AdminFeaturesControllerCore extends AdminController
 					'desc' => $this->l('Back to the list')
 				);
 			break;
+			case 'view':
+				break;
 
 			default:
 				parent::initToolbar();
