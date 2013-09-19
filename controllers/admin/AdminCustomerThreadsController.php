@@ -612,8 +612,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
 	protected function displayButton($content)
 	{
 		return '
-		<div style="margin-bottom:10px;border:1px solid #005500;width:200px;height:130px;padding:10px;background:#EFE">
-			<p style="text-align:center;font-size:15px;font-weight:bold">
+		<div>
+			<p>
 				'.$content.'
 			</p>
 		</div>';
