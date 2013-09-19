@@ -24,6 +24,44 @@
 *}
 {extends file="helpers/view/view.tpl"}
 {block name="override_tpl"}
+	<script type="text/javascript">
+		var errorEmpty = '{l s='Please name your matching configuration to save.' js='1'}';
+		var token = '{$token}';
+		var current = 0;
+		function showTable(nb)
+		{
+			$('#btn_left').disabled = null;
+			$('#btn_right').disabled = null;
+			if (nb <= 0)
+			{
+				nb = 0;
+				$('#btn_left').disabled = 'true';
+			}
+			if (nb >= {$nb_table} - 1)
+			{
+				nb = {$nb_table} - 1;
+				$('#btn_right').disabled = 'true';
+			}
+			$('#table' + current).hide();
+			current = nb;
+			$('#table' + current).show();
+		}
+		$(document).ready(function(){
+			var btn_save_import = $('span[class~="process-icon-save-import"]').parent();
+			var btn_submit_import = $('#import');
+			if (btn_save_import.length > 0 && btn_submit_import.length > 0)
+			{
+				btn_submit_import.hide();
+				btn_save_import.find('span').removeClass('process-icon-save-import');
+				btn_save_import.find('span').addClass('process-icon-save');
+				btn_save_import.click(function(){
+					btn_submit_import.before('<input type="hidden" name="' + btn_submit_import.attr("name") + '" value="1" />');
+					$('#import_form').submit();
+				});
+			}
+			showTable(current);
+		});
+	</script>
 	<div id="container-customer">
 	<h2>{l s='View your data'}</h2>
 	<div>
@@ -73,7 +111,7 @@
 			</tr>
 			<tr>
 				<td valign="top" align="center">
-					<input id="btn_left" value="{l s='<<'}" type="button" class="button" onclick="showTable(current - 1)" />
+					<input id="btn_left" value="{l s='<<'}" type="button" class="button" onclick="showTable(current - 1);" />
 				</td>
 				<td align="left">
 					{section name=nb_i start=0 loop=$nb_table step=1}
@@ -82,49 +120,10 @@
 					{/section}
 				</td>
 				<td valign="top" align="center">
-					<input id="btn_right" value="{l s='>>'}" type="button" class="button" onclick="showTable(current + 1)" />
+					<input id="btn_right" value="{l s='>>'}" type="button" class="button" onclick="showTable(current + 1);" />
 				</td>
 			</tr>
 		</table>
 	</form>
 	</div>
-<script type="text/javascript">
-	$(document).ready(function(){
-		var errorEmpty = "{l s='Please name your matching configuration to save.'}"
-		var token = '{$token}';
-		var current = 0;
-		var btn_save_import = $('span[class~="process-icon-save-import"]').parent();
-		var btn_submit_import = $('#import');
-
-		function showTable(nb)
-		{
-			getE('btn_left').disabled = null;
-			getE('btn_right').disabled = null;
-			if (nb <= 0)
-			{
-				nb = 0;
-				getE('btn_left').disabled = 'true';
-			}
-			if (nb >= {$nb_table} - 1)
-			{
-				nb = {$nb_table} - 1;
-				getE('btn_right').disabled = 'true';
-			}
-			toggle(getE('table'+current), false);
-			current = nb;
-			toggle(getE('table'+current), true);
-		}
-		if (btn_save_import.length > 0 && btn_submit_import.length > 0)
-		{
-			btn_submit_import.hide();
-			btn_save_import.find('span').removeClass('process-icon-save-import');
-			btn_save_import.find('span').addClass('process-icon-save');
-			btn_save_import.click(function(){
-				btn_submit_import.before('<input type="hidden" name="'+btn_submit_import.attr("name")+'" value="1" />');
-				$('#import_form').submit();
-			});
-		}
-		showTable(current);
-	});
-</script>
 {/block}
