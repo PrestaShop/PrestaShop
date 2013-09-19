@@ -195,7 +195,6 @@ class BankWire extends PaymentModule
 					'title' => $this->l('Contact details'),
 					'icon' => 'icon-envelope'
 				),
-				'id_form' => 'step_carrier_general',
 				'input' => array(
 					array(
 						'type' => 'text',
