@@ -45,6 +45,12 @@
 				valueKey: 'name',
 				local: [{$typeahead_source}]
 			});
+
+			$("#{$id}").keypress(function( event ) {
+				if ( event.which == 13 ) {
+					event.stopPropagation();
+				}
+			});
 		}
 	);
 </script>
