@@ -1509,7 +1509,7 @@ abstract class ModuleCore
 	public function displayError($error)
 	{
 	 	$output = '
-		<div class="module_error alert error">
+		<div class="module_error alert alert-danger">
 			'.$error.'
 		</div>';
 		$this->error = true;
@@ -1519,7 +1519,7 @@ abstract class ModuleCore
 	public function displayConfirmation($string)
 	{
 	 	$output = '
-		<div class="module_confirmation conf confirm">
+		<div class="module_confirmation conf confirm alert alert-success">
 			'.$string.'
 		</div>';
 		return $output;
