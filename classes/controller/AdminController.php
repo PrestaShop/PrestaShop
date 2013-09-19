@@ -45,7 +45,7 @@ class AdminControllerCore extends Controller
 	public $template = 'content.tpl';
 
 	/** @var string Associated table name */
-	public $table;
+	public $table = 'configuration';
 
 	public $list_id;
 
