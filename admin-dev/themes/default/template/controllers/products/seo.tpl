@@ -122,3 +122,6 @@
 		</div>
 	</div>
 </fieldset>
+<script type="text/javascript">
+	hideOtherLanguage({$id_lang});
+</script>

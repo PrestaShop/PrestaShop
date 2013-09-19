@@ -110,3 +110,6 @@
 	</a>
 </fieldset>
 {/if}
+<script type="text/javascript">
+	hideOtherLanguage({$default_form_language});
+</script>
