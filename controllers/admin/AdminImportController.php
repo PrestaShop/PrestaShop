@@ -2743,7 +2743,6 @@ class AdminImportControllerCore extends AdminController
 						$this->clearSmartyCache();
 						break;
 					case $this->entities[$import_type = $this->l('Products')]:
-					$import_type = $this->l('Categories');
 						$this->productImport();
 						$this->clearSmartyCache();
 						break;
