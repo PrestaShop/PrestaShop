@@ -186,7 +186,7 @@
 									{elseif $field['type'] == 'textLang' || $field['type'] == 'textareaLang' || $field['type'] == 'selectLang'}
 
 										{if $field['type'] == 'textLang'}
-											<div class="col-lg-12">
+											<div class="col-lg-9">
 												<div class="row">
 												{foreach $field['languages'] AS $id_lang => $value}
 													<div class="translatable-field lang-{$id_lang}" {if $id_lang != $current_id_lang}style="display:none;"{/if}>
@@ -223,7 +223,7 @@
 														<div id="{$key}_{$id_lang}" class="col-lg-9" >
 															<textarea class="textarea-autosize" name="{$key}_{$id_lang}">{$value|replace:'\r\n':"\n"}</textarea>
 														</div>
-														<div class="input-group-btn col-lg-2">
+														<div class="col-lg-2">
 															<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 																<img src="{$base_url}/img/l/{$id_lang|intval}.jpg" alt="">
 																<!-- name -->
