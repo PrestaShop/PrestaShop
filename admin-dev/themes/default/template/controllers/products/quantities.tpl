@@ -239,3 +239,6 @@
 	</fieldset>
 {/if}
 {*$default_language*}
+<script type="text/javascript">
+	hideOtherLanguage({$id_lang});
+</script>
