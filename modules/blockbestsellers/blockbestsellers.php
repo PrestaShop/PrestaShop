@@ -108,7 +108,7 @@ class BlockBestSellers extends Module
 		if (Tools::isSubmit('submitBestSellers'))
 		{
 			Configuration::updateValue('PS_BLOCK_BESTSELLERS_DISPLAY', (int)Tools::getValue('PS_BLOCK_BESTSELLERS_DISPLAY'));
-			$output .= '<div class="alert alert-success">'.$this->l('Settings updated').'</div>';
+			$output .= $this->displayConfirmation($this->l('Settings updated'));
 		}
 		return $output.$this->renderForm();
 	}
