@@ -312,9 +312,9 @@ function updateDisplay()
 			var taxExclPrice = (specific_currency ? product_specific_price.price : product_specific_price.price * currencyRate) + (selectedCombination['price'] * currencyRate);
 
 		if (!displayPrice && !noTaxForThisProduct)
-			productPriceDisplay = ps_round(taxExclPrice * tax, 2); // Need to be global => no var
+			{productPriceDisplay = ps_round(taxExclPrice * tax, 2);} // Need to be global => no var
 		else
-			productPriceDisplay = ps_round(taxExclPrice, 2); // Need to be global => no var
+			{productPriceDisplay = ps_round(taxExclPrice, 2);} // Need to be global => no var
 
 		productPriceWithoutReductionDisplay = productPriceDisplay * group_reduction;
 		var reduction = 0;
@@ -329,16 +329,16 @@ function updateDisplay()
 		else if (product_specific_price && product_specific_price.reduction && !selectedCombination.specific_price)
 		{
 			if (product_specific_price.reduction_type == 'amount')
-				reduction_price = (specific_currency ? product_specific_price.reduction : product_specific_price.reduction * currencyRate);
+				{reduction_price = (specific_currency ? product_specific_price.reduction : product_specific_price.reduction * currencyRate);}
 			else
-				reduction_price = 0;
+				{reduction_price = 0;}
 
 			if (product_specific_price.reduction_type == 'percentage')
-				reduction_percent = productPriceDisplay * parseFloat(product_specific_price.reduction);
+				{reduction_percent = productPriceDisplay * parseFloat(product_specific_price.reduction);}
 
 			reduction = reduction_price + reduction_percent;
 			if (reduction_price && (displayPrice || noTaxForThisProduct))
-				reduction = ps_round(reduction / tax, 6);
+				{reduction = ps_round(reduction / tax, 6);}
 		}
 
 		if (selectedCombination.specific_price)
