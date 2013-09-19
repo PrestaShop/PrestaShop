@@ -28,7 +28,7 @@
 {block name="label"}
 	{if $input['type'] == 'modules'}
 		<div style="{if !$form_id}display:none{/if}">
-			<label class="control-label col-lg-3">{l s='Module restrictions:'}</label>
+			<label class="control-label col-lg-3">{l s='Authorized modules:'}</label>
 		</div>
 	{elseif $input['type'] == 'group_discount_category'}
 		<div style="{if !$form_id}display:none{/if}">
@@ -62,39 +62,6 @@
 				$(this).remove();	
 			});
 		
-		}
-		function toogleCheck(elt)
-		{
-			if ($(elt).hasClass('select_all'))
-			{
-				$(elt).addClass('unselect_all').removeClass('select_all');
-				$('ul#sortable_module_'+$(elt).attr('id')).find('input[type="checkbox"]').removeAttr('checked');
-				$(elt).html('{l s='Select all'}');
-			}
-			else
-			{
-				$(elt).addClass('select_all').removeClass('unselect_all');
-				$('ul#sortable_module_'+$(elt).attr('id')).find('input[type="checkbox"]').attr('checked', true);
-				$(elt).html('{l s='Unselect all'}');
-			}
-		}
-		
-		function unauthorizeChecked()
-		{		
-			$('ul#sortable_module_unauthorize_list').find('input[type="checkbox"]:checked').each( function () {
-				$('ul#sortable_module_authorize_list').prepend($(this).parent());
-				$(this).removeAttr('checked');
-				$(this).parent().children('input["type=hidden"]').attr('name', 'modulesBoxAuth[]');
-			});
-		}
-		
-			function authorizeChecked()
-		{		
-			$('ul#sortable_module_authorize_list').find('input[type="checkbox"]:checked').each( function () {
-				$('ul#sortable_module_unauthorize_list').prepend($(this).parent());
-				$(this).removeAttr('checked');
-				$(this).parent().children('input["type=hidden"]').attr('name', 'modulesBoxUnauth[]');
-			});
 		}
 		
 		function addCategoryReduction() 
@@ -206,54 +173,47 @@
 		<div class="margin-form">
 		<script type="text/javascript">
 			$(document).ready(function() {
-				$( "#sortable_module_authorize_list, #sortable_module_unauthorize_list" ).sortable({
-					connectWith: ".connectedSortable",
-					stop: function(event, ui) 
-					{
-						if ($(event.toElement).parent('ul').attr('id') == 'sortable_module_authorize_list')
-							$(event.toElement).children('input["type=hidden"]').attr('name', 'modulesBoxAuth[]');
-						else
-							$(event.toElement).children('input["type=hidden"]').attr('name', 'modulesBoxUnauth[]');
-					}
-				}).disableSelection();
+				$('#authorized-modules').find('[value="0"]').click(function() {
+					$(this).parent().parent().find('input[type=hidden]').attr('name', 'modulesBoxUnauth[]');
+				});
+
+				$('#authorized-modules').find('[value="1"]').click(function() {
+					$(this).parent().parent().find('input[type=hidden]').attr('name', 'modulesBoxAuth[]');
+				});
 			});
 		</script>
 
-		<div class="col-lg-9">
-			<div class="row">
-				<div class="col-lg-6">
-					<label>{$input['label']['auth_modules']}</label>
-					<ul id="sortable_module_authorize_list" class="connectedSortable list-unstyled">
-						{foreach $input['values']['auth_modules'] key=key item=module }
-							<li class="module_list" id="module_{$module->id}">
-								<input type="checkbox" style="margin-right:5px">
-								<img src="../modules/{$module->name}/logo.gif">
-								{$module->displayName}
-								<input type="hidden" name="modulesBoxAuth[]" value="{$module->id}">
-							</li>
-							
-						{/foreach}
-					</ul>
-					<button id="authorize_list" onclick="toogleCheck(this);return false;" class="btn btn-default">{l s='Select all'}</button>
-					<button onclick="authorizeChecked();return false;" class="btn btn-default">{l s='Unauthorize >>'}</button>
-				</div>
-
-				<div class="col-lg-6">
-					<label>{$input['label']['unauth_modules']}</label>
-					<ul id="sortable_module_unauthorize_list" class="connectedSortable list-unstyled">
-						{foreach $input['values']['unauth_modules'] key=key item=module }
-							<li class="module_list" id="module_{$module->id}">
-								<input type="checkbox" style="margin-right:5px">
-								<img src="../modules/{$module->name}/logo.gif">
-								{$module->displayName}
-								<input type="hidden" name="modulesBoxUnauth[]" value="{$module->id}">
-							</li>
-						{/foreach}
-					</ul>
-					<button id="unauthorize_list" onclick="toogleCheck(this);return false;" class="btn btn-default">{l s='Select all'}</button>
-					<button onclick="unauthorizeChecked();return false;" class="btn btn-default">{l s='<< Authorize'}</button>
+		<div class="col-lg-9" id="authorized-modules">			
+			{foreach $input['values']['auth_modules'] key=key item=module }
+			<div class="form-group">
+				<label class="control-label col-lg-2"><img src="../modules/{$module->name}/logo.gif"> {$module->displayName}</label>
+				<div class="input-group col-lg-2">
+					<span class="switch prestashop-switch">
+						<input type="radio" name="{$module->name}" id="{$module->name}_on" value="1" checked="checked">
+						<label class="radio" for="{$module->name}_on"><i class="icon-check-sign color_success"></i> Yes</label>
+						<input type="radio" name="{$module->name}" id="{$module->name}_off" value="0">
+						<label class="radio" for="{$module->name}_off"><i class="icon-ban-circle color_danger"></i> No</label>
+						<span class="slide-button btn btn-default"></span>
+					</span>
+					<input type="hidden" name="modulesBoxAuth[]" value="{$module->id}">
 				</div>
 			</div>
+			{/foreach}
+			{foreach $input['values']['unauth_modules'] key=key item=module }
+			<div class="form-group">
+				<label class="control-label col-lg-2"><img src="../modules/{$module->name}/logo.gif"> {$module->displayName}</label>
+				<div class="input-group col-lg-2">
+					<span class="switch prestashop-switch">
+						<input type="radio" name="{$module->name}" id="{$module->name}_on" value="1">
+						<label class="radio" for="{$module->name}_on"><i class="icon-check-sign color_success"></i> Yes</label>
+						<input type="radio" name="{$module->name}" id="{$module->name}_off" value="0" checked="checked">
+						<label class="radio" for="{$module->name}_off"><i class="icon-ban-circle color_danger"></i> No</label>
+						<span class="slide-button btn btn-default"></span>
+					</span>
+					<input type="hidden" name="modulesBoxUnauth[]" value="{$module->id}">
+				</div>
+			</div>
+			{/foreach}
 		</div>
 	</div>
 	{else}
