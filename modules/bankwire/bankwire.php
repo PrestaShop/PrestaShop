@@ -107,7 +107,7 @@ class BankWire extends PaymentModule
 			Configuration::updateValue('BANK_WIRE_OWNER', Tools::getValue('BANK_WIRE_OWNER'));
 			Configuration::updateValue('BANK_WIRE_ADDRESS', Tools::getValue('BANK_WIRE_ADDRESS'));
 		}
-		$this->_html .= '<div class="alert alert-success"> '.$this->l('Settings updated').'</div>';
+		$this->_html .= $this->displayConfirmation($this->l('Settings updated'));
 	}
 
 	private function _displayBankWire()
@@ -124,7 +124,7 @@ class BankWire extends PaymentModule
 				$this->_postProcess();
 			else
 				foreach ($this->_postErrors as $err)
-					$this->_html .= '<div class="alert alert-danger">'.$err.'</div>';
+					$this->_html .= $this->displayError($err);
 		}
 		else
 			$this->_html .= '<br />';
