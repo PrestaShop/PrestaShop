@@ -54,6 +54,7 @@ class AdminCartRulesControllerCore extends AdminController
 	{
 		parent::setMedia();
 		$this->addJqueryPlugin(array('typewatch', 'fancybox', 'autocomplete'));
+		$this->addJS(_PS_JS_DIR_.'jquery/plugins/jquery.autosize.min.js');
 	}
 
 	public function initPageHeaderToolbar()
@@ -536,7 +537,7 @@ class AdminCartRulesControllerCore extends AdminController
 				
 				if (count($product['combinations']))
 				{
-					$gift_product_attribute_select .= '<select class="id_product_attribute" id="ipa_'.$product['id_product'].'" name="ipa_'.$product['id_product'].'">';
+					$gift_product_attribute_select .= '<select class="control-form id_product_attribute" id="ipa_'.$product['id_product'].'" name="ipa_'.$product['id_product'].'">';
 					foreach ($product['combinations'] as $combination)
 					{
 						$gift_product_attribute_select .= '
