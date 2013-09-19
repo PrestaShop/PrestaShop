@@ -26,6 +26,7 @@
 
 class AdminAttributesGroupsControllerCore extends AdminController
 {
+	public $bootstrap = true;
 	protected $id_attribute;
 	protected $position_identifier = 'id_attribute_group';
 	protected $attribute_name;
@@ -43,7 +44,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_attribute_group' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center'
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
@@ -528,7 +530,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		if ($this->display == 'view')
 		{
 			$this->page_header_toolbar_title = $this->attribute_name[$this->context->employee->id_lang];
-			$this->page_header_toolbar_btn['new_attribute_group'] = array(
+			$this->page_header_toolbar_btn['back_to_list'] = array(
 				'href' => self::$currentIndex.'&token='.$this->token,
 				'desc' => $this->l('Back to list'),
 				'icon' => 'process-icon-back'
