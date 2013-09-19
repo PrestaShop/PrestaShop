@@ -181,7 +181,6 @@
 	</div>
 </div>
 <form id="{$table}_form" class="defaultForm form-horizontal col-lg-10" action="{$current}&{$submit_action}=1&token={$token}" method="post" enctype="multipart/form-data">
-	<fieldset>
 		{if $form_id}
 			<input type="hidden" name="{$identifier}" id="{$identifier}" value="{$form_id}" />
 		{/if}
@@ -194,228 +193,234 @@
 		{/foreach}
 
 		{foreach $profiles as $profile}
-
-			<div class="profile-{$profile.id_profile} tab-profile" style="display:{if $profile.id_profile != $current_profile}none{/if}">
-				<h3>{$profile.name}</h3>
-				{if $profile.id_profile != $admin_profile}
-					<table class="table" id="table_{$profile.id_profile}">
-						<thead>
-							<tr>
-								<th>
-									{l s='Menus'}
-								</th>
-								<th>
-									<input type="checkbox" name="1" id="viewall"
-										{if $access_edit == 1}
-											rel="-1||{$profile.id_profile}||view||{$tabsize}||{count($tabs)}" class="ajaxPower"
-										{else}
-											disabled="disabled"
-										{/if} />
-									{l s='View'}
-								</th>
-								<th>
-									<input type="checkbox" name="1" id="addall"
-										{if $access_edit == 1}
-											rel="-1||{$profile.id_profile}||add||{$tabsize}||{count($tabs)}" class="ajaxPower"
-										{else}
-											disabled="disabled"
-										{/if} />
-									{l s='Add'}
-								</th>
-								<th>
-									<input type="checkbox" name="1" id="editall"
-										{if $access_edit == 1}
-											rel="-1||{$profile.id_profile}||edit||{$tabsize}||{count($tabs)}" class="ajaxPower"
-										{else}
-											disabled="disabled"
-										{/if} />
-									{l s='Edit'}
-								</th>
-								<th>
-									<input type="checkbox" name="1" id="deleteall"
-										{if $access_edit == 1}
-											rel="-1||{$profile.id_profile}||delete||{$tabsize}||{count($tabs)}" class="ajaxPower"
-										{else}
-											disabled="disabled"
-										{/if} />
-									{l s='Delete'}
-								</th>
-								<th>
-									<input type="checkbox" name="1" id="allall"
-										{if $access_edit == 1}
-											rel="-1||{$profile.id_profile}||all||{$tabsize}||{count($tabs)}" class="ajaxPower"
-										{else}
-											disabled="disabled"
-										{/if} />
-									{l s='All'}
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-							{if !count($tabs)}
+		<div class="profile-{$profile.id_profile} tab-profile" style="display:{if $profile.id_profile != $current_profile}none{/if}">
+			<div class="row">			
+			{if $profile.id_profile != $admin_profile}
+				<div class="col-lg-6">	
+					<fieldset>
+						<h3>{l s='Menu'}</h3>
+						<table class="table" id="table_{$profile.id_profile}">
+							<thead>
 								<tr>
-									<td colspan="6">{l s='No menu'}</td>
+									<th></th>
+									<th>
+										<input type="checkbox" name="1" id="viewall"
+											{if $access_edit == 1}
+												rel="-1||{$profile.id_profile}||view||{$tabsize}||{count($tabs)}" class="ajaxPower"
+											{else}
+												disabled="disabled"
+											{/if} />
+										{l s='View'}
+									</th>
+									<th>
+										<input type="checkbox" name="1" id="addall"
+											{if $access_edit == 1}
+												rel="-1||{$profile.id_profile}||add||{$tabsize}||{count($tabs)}" class="ajaxPower"
+											{else}
+												disabled="disabled"
+											{/if} />
+										{l s='Add'}
+									</th>
+									<th>
+										<input type="checkbox" name="1" id="editall"
+											{if $access_edit == 1}
+												rel="-1||{$profile.id_profile}||edit||{$tabsize}||{count($tabs)}" class="ajaxPower"
+											{else}
+												disabled="disabled"
+											{/if} />
+										{l s='Edit'}
+									</th>
+									<th>
+										<input type="checkbox" name="1" id="deleteall"
+											{if $access_edit == 1}
+												rel="-1||{$profile.id_profile}||delete||{$tabsize}||{count($tabs)}" class="ajaxPower"
+											{else}
+												disabled="disabled"
+											{/if} />
+										{l s='Delete'}
+									</th>
+									<th>
+										<input type="checkbox" name="1" id="allall"
+											{if $access_edit == 1}
+												rel="-1||{$profile.id_profile}||all||{$tabsize}||{count($tabs)}" class="ajaxPower"
+											{else}
+												disabled="disabled"
+											{/if} />
+										{l s='All'}
+									</th>
 								</tr>
-							{else}
-								{foreach $tabs AS $tab}
+							</thead>
+							<tbody>
+								{if !count($tabs)}
+									<tr>
+										<td colspan="6">{l s='No menu'}</td>
+									</tr>
+								{else}
+									{foreach $tabs AS $tab}
 
-									{assign var=access value=$accesses[$profile.id_profile]}
+										{assign var=access value=$accesses[$profile.id_profile]}
 
-									{if !$tab.id_parent OR $tab.id_parent == -1}
-										{assign var=is_child value=false}
-										{assign var=result_accesses value=0}
-										<tr{if !$is_child} class="parent"{/if}>
-											<td{if !$is_child} class="bold"{/if}>{if $is_child} &raquo; {/if}<strong>{$tab.name}</strong></td>
-											{foreach $perms as $perm}
-												{if $access_edit == 1}
-													<td>
-														<input type="checkbox"
-															id="{$perm}{$access[$tab.id_tab]['id_tab']}"
-															rel="{$access[$tab.id_tab]['id_tab']}||{$profile.id_profile}||{$perm}||{$tabsize}||{count($tabs)}"
-															class="ajaxPower {$perm} {$access[$tab.id_tab]['id_tab']}"
-															{if $access[$tab.id_tab][$perm] == 1}checked="checked"{/if}/>
-													</td>
-												{else}
-													<td>
-														<input type="checkbox"
-															disabled="disabled"
-															{if $access[$tab.id_tab][$perm] == 1}checked="checked"{/if}/>
-													</td>
-												{/if}
-												{assign var=result_accesses value=$result_accesses + $access[$tab.id_tab][$perm]}
-											{/foreach}
-											<td>
-												<input type="checkbox"
-													id='all{$access[$tab.id_tab]['id_tab']}'
+										{if !$tab.id_parent OR $tab.id_parent == -1}
+											{assign var=is_child value=false}
+											{assign var=result_accesses value=0}
+											<tr{if !$is_child} class="parent"{/if}>
+												<td{if !$is_child} class="bold"{/if}>{if $is_child} &raquo; {/if}<strong>{$tab.name}</strong></td>
+												{foreach $perms as $perm}
 													{if $access_edit == 1}
-														rel="{$access[$tab.id_tab]['id_tab']}||{$profile.id_profile}||all||{$tabsize}||{count($tabs)}"
-														class="ajaxPower all {$access[$tab.id_tab]['id_tab']}"
-													{else}
-														class="all {$access[$tab.id_tab]['id_tab']}"
-														disabled="disabled"
-													{/if}
-													{if $result_accesses == 4}checked="checked"{/if}/>
-											</td>
-										</tr>
-
-										{foreach $tabs AS $child}
-											{if $child.id_parent === $tab.id_tab}
-												{if isset($access[$child.id_tab])}
-													{assign var=is_child value=true}
-													{assign var=result_accesses value=0}
-													<tr class="child-{$child.id_parent}">
-														<td{if !$is_child} class="bold"{/if}>{if $is_child} &raquo; {/if}{$child.name}</td>
-														{foreach $perms as $perm}
-															{if $access_edit == 1}
-																<td>
-																	<input type="checkbox"
-																		id="{$perm}{$access[$child.id_tab]['id_tab']}"
-																		rel="{$access[$child.id_tab]['id_tab']}||{$profile.id_profile}||{$perm}||{$tabsize}||{count($tabs)}"
-																		class="ajaxPower {$perm} {$access[$child.id_tab]['id_tab']}"
-																		{if $access[$child.id_tab][$perm] == 1}checked="checked"{/if}/>
-																</td>
-															{else}
-																<td>
-																	<input type="checkbox"
-																		disabled="disabled"
-																		{if $access[$child.id_tab][$perm] == 1}checked="checked"{/if}/>
-																</td>
-															{/if}
-															{assign var=result_accesses value=$result_accesses + $access[$child.id_tab][$perm]}
-														{/foreach}
 														<td>
 															<input type="checkbox"
-																id='all{$access[$child.id_tab]['id_tab']}'
-																{if $access_edit == 1}
-																	rel="{$access[$child.id_tab]['id_tab']}||{$profile.id_profile}||all||{$tabsize}||{count($tabs)}"
-																	class="ajaxPower all {$access[$child.id_tab]['id_tab']}"
-																{else}
-																	class="all {$access[$child.id_tab]['id_tab']}"
-																	disabled="disabled"
-																{/if}
-																{if $result_accesses == 4}checked="checked"{/if}/>
+																id="{$perm}{$access[$tab.id_tab]['id_tab']}"
+																rel="{$access[$tab.id_tab]['id_tab']}||{$profile.id_profile}||{$perm}||{$tabsize}||{count($tabs)}"
+																class="ajaxPower {$perm} {$access[$tab.id_tab]['id_tab']}"
+																{if $access[$tab.id_tab][$perm] == 1}checked="checked"{/if}/>
 														</td>
-													</tr>
+													{else}
+														<td>
+															<input type="checkbox"
+																disabled="disabled"
+																{if $access[$tab.id_tab][$perm] == 1}checked="checked"{/if}/>
+														</td>
+													{/if}
+													{assign var=result_accesses value=$result_accesses + $access[$tab.id_tab][$perm]}
+												{/foreach}
+												<td>
+													<input type="checkbox"
+														id='all{$access[$tab.id_tab]['id_tab']}'
+														{if $access_edit == 1}
+															rel="{$access[$tab.id_tab]['id_tab']}||{$profile.id_profile}||all||{$tabsize}||{count($tabs)}"
+															class="ajaxPower all {$access[$tab.id_tab]['id_tab']}"
+														{else}
+															class="all {$access[$tab.id_tab]['id_tab']}"
+															disabled="disabled"
+														{/if}
+														{if $result_accesses == 4}checked="checked"{/if}/>
+												</td>
+											</tr>
+
+											{foreach $tabs AS $child}
+												{if $child.id_parent === $tab.id_tab}
+													{if isset($access[$child.id_tab])}
+														{assign var=is_child value=true}
+														{assign var=result_accesses value=0}
+														<tr class="child-{$child.id_parent}">
+															<td{if !$is_child} class="bold"{/if}>{if $is_child} &raquo; {/if}{$child.name}</td>
+															{foreach $perms as $perm}
+																{if $access_edit == 1}
+																	<td>
+																		<input type="checkbox"
+																			id="{$perm}{$access[$child.id_tab]['id_tab']}"
+																			rel="{$access[$child.id_tab]['id_tab']}||{$profile.id_profile}||{$perm}||{$tabsize}||{count($tabs)}"
+																			class="ajaxPower {$perm} {$access[$child.id_tab]['id_tab']}"
+																			{if $access[$child.id_tab][$perm] == 1}checked="checked"{/if}/>
+																	</td>
+																{else}
+																	<td>
+																		<input type="checkbox"
+																			disabled="disabled"
+																			{if $access[$child.id_tab][$perm] == 1}checked="checked"{/if}/>
+																	</td>
+																{/if}
+																{assign var=result_accesses value=$result_accesses + $access[$child.id_tab][$perm]}
+															{/foreach}
+															<td>
+																<input type="checkbox"
+																	id='all{$access[$child.id_tab]['id_tab']}'
+																	{if $access_edit == 1}
+																		rel="{$access[$child.id_tab]['id_tab']}||{$profile.id_profile}||all||{$tabsize}||{count($tabs)}"
+																		class="ajaxPower all {$access[$child.id_tab]['id_tab']}"
+																	{else}
+																		class="all {$access[$child.id_tab]['id_tab']}"
+																		disabled="disabled"
+																	{/if}
+																	{if $result_accesses == 4}checked="checked"{/if}/>
+															</td>
+														</tr>
+													{/if}
 												{/if}
-											{/if}
-										{/foreach}
+											{/foreach}
 
-									{/if}
+										{/if}
 
-								{/foreach}
-							{/if}
-						</tbody>
-					</table>
-					<table class="table" id="table_module_{$profile.id_profile}">
-						<thead>
-							<tr>
-								<th>{l s='Modules'}</th>
-								<th>
-									<input type="checkbox"
-										id="ajax-ma-view-master"
-										{if $access_edit == 1}
-											class="changeModuleAccess" rel="-1||view||{$profile.id_profile}"
-										{else}
-											disabled="disabled"
-										{/if} /> {l s='View'}
-								</th>
-								<th>
-									<input type="checkbox"
-										id="ajax-ma-configure-master"
-										{if $access_edit == 1}
-											class="changeModuleAccess" rel="-1||configure||{$profile.id_profile}"
-										{else}
-											disabled="disabled"
-										{/if} /> {l s='Configure'}</th>
-							</tr>
-						</thead>
-						<tbody>
-							{if !count($modules)}
+									{/foreach}
+								{/if}
+							</tbody>
+						</table>
+					</fieldset>
+				</div>
+				<div class="col-lg-6">
+					<fieldset>
+						<h3>{l s='Modules'}</h3>
+						<table class="table" id="table_module_{$profile.id_profile}">
+							<thead>
 								<tr>
-									<td colspan="3">{l s='No modules are installed'}</td>
+									<th></th>
+									<th>
+										<input type="checkbox"
+											id="ajax-ma-view-master"
+											{if $access_edit == 1}
+												class="changeModuleAccess" rel="-1||view||{$profile.id_profile}"
+											{else}
+												disabled="disabled"
+											{/if} /> {l s='View'}
+									</th>
+									<th>
+										<input type="checkbox"
+											id="ajax-ma-configure-master"
+											{if $access_edit == 1}
+												class="changeModuleAccess" rel="-1||configure||{$profile.id_profile}"
+											{else}
+												disabled="disabled"
+											{/if} /> {l s='Configure'}</th>
 								</tr>
-							{else}
-								{foreach $modules[$profile.id_profile] AS $module}
+							</thead>
+							<tbody>
+								{if !count($modules)}
 									<tr>
-										<td>&raquo; {$module.name}</td>
-										<td>
-											<input type="checkbox"
-												value="1"
-												{if $module.view == true}checked="checked"{/if}
-												{if $access_edit == 1}
-													class="ajax-ma-view changeModuleAccess"
-													rel="{$module.id_module}||view||{$profile.id_profile}"
-												{else}
-													class="ajax-ma-view"
-													disabled="disabled"
-												{/if}
-											/>
-										</td>
-										<td>
-											<input type="checkbox"
-												value="1"
-												{if $module.configure == true}checked="checked"{/if}
-												{if $access_edit == 1}
-													class="ajax-ma-configure changeModuleAccess"
-													rel="{$module.id_module}||configure||{$profile.id_profile}"
-												{else}
-													class="ajax-ma-configure"
-													disabled="disabled"
-												{/if}
-											/>
-										</td>
+										<td colspan="3">{l s='No modules are installed'}</td>
 									</tr>
-								{/foreach}
-							{/if}
-						</tbody>
-					</table>
-
-				{else}
-					{l s='Administrator permissions cannot be modified.'}
-				{/if}
-
+								{else}
+									{foreach $modules[$profile.id_profile] AS $module}
+										<tr>
+											<td>&raquo; {$module.name}</td>
+											<td>
+												<input type="checkbox"
+													value="1"
+													{if $module.view == true}checked="checked"{/if}
+													{if $access_edit == 1}
+														class="ajax-ma-view changeModuleAccess"
+														rel="{$module.id_module}||view||{$profile.id_profile}"
+													{else}
+														class="ajax-ma-view"
+														disabled="disabled"
+													{/if}
+												/>
+											</td>
+											<td>
+												<input type="checkbox"
+													value="1"
+													{if $module.configure == true}checked="checked"{/if}
+													{if $access_edit == 1}
+														class="ajax-ma-configure changeModuleAccess"
+														rel="{$module.id_module}||configure||{$profile.id_profile}"
+													{else}
+														class="ajax-ma-configure"
+														disabled="disabled"
+													{/if}
+												/>
+											</td>
+										</tr>
+									{/foreach}
+								{/if}
+							</tbody>
+						</table>
+					</fieldset>
+				</div>
+			{else}
+				<fieldset>
+				{l s='Administrator permissions cannot be modified.'}
+				</fieldset>
+			{/if}
 			</div>
-
+		</div>
 		{/foreach}
-	</fieldset>
 </form>
