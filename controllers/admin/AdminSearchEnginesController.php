@@ -28,6 +28,7 @@ class AdminSearchEnginesControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 	 	$this->table = 'search_engine';
 	 	$this->className = 'SearchEngine';
 	 	$this->lang = false;

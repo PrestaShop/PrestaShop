@@ -94,31 +94,33 @@
 		}
 	</script>
 
-	<fieldset style="margin-left: 280px;">
-		<legend>
-			<img src="../img/admin/tab-stats.gif" /> {l s='Statistics'}
-		</legend>
+	<fieldset>
+		<h3>
+			<i class="icon-bar-chart"></i> {l s='Statistics'}
+		</h3>
 		<h2>{$referrer->name}</h2>
-		<table>
+		<table class="table">
 			{foreach $display_tab as $data => $label}
 				<tr>
 					<td>{$label}</td>
-					<td style="color:green;font-weight:bold;padding-left:20px;" id="{$data}"></td>
+					<td id="{$data}"></td>
 				</tr>
 			{/foreach}
 		</table>
-		<br class="clear" />
-		<form id="product_referrers" name="product_referrers">
-			<label>{l s='Filter by product:'}</label>
-			<div class="margin-left">
-				<select id="selectProduct" name="selectProduct" style="width: 200px;" onfocus="fillProducts();" onchange="updateConversionRate(this.value);">
-					<option value="0" selected="selected">-- {l s='All'} --</option>
-				</select>
+		<form id="product_referrers" name="product_referrers" class="form-horizontal">
+			<div class="row">
+				<label class="control-label col-lg-3">{l s='Filter by product:'}</label>
+				<div class="col-lg-9">
+					<select id="selectProduct" name="selectProduct" style="width: 200px;" onfocus="fillProducts();" onchange="updateConversionRate(this.value);">
+						<option value="0" selected="selected">-- {l s='All'} --</option>
+					</select>
+				</div>
 			</div>
-			<br class="clear" />
-			<label>{l s='Search'}</label>
-			<div class="margin-left">
-				<input type="text" size="34" id="filterProduct" name="filterProduct" onkeyup="fillProducts();" />
+			<div class="row">
+				<label class="control-label col-lg-3">{l s='Search'}</label>
+				<div class="col-lg-9">
+					<input class="btn btn-default" type="text" size="34" id="filterProduct" name="filterProduct" onkeyup="fillProducts();" />
+				</div>
 			</div>
 		</form>
 	</fieldset>
