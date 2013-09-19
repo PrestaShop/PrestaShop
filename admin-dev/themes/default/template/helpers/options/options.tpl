@@ -74,22 +74,6 @@
 								</div>
 								{/if}
 								{block name="label"}
-									{if isset($input.hint)}
-										<span class="label-tooltip" data-toggle="tooltip" data-html="true"
-											title="
-												{if is_array($input.hint)}
-													{foreach $input.hint as $hint}
-														{if is_array($hint)}
-															{$hint.text}
-														{else}
-															{$hint}
-														{/if}
-													{/foreach}
-												{else}
-													{$input.hint}
-												{/if}
-											">
-										{/if}
 									{if isset($field['title']) && isset($field['hint'])}
 										<label class="control-label col-lg-3 {if isset($field['required']) && $field['required'] && $field['type'] != 'radio'}required{/if}">
 											<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="
