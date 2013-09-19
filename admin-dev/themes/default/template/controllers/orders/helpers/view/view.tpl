@@ -59,10 +59,10 @@
 
 	{assign var="hook_invoice" value={hook h="displayInvoice" id_order=$order->id}}
 	{if ($hook_invoice)}
-	<div style="float: right; margin: -40px 40px 10px 0;">{$hook_invoice}</div><br class="clear" />
+	<div>{$hook_invoice}</div>
 	{/if}
 
-<div class="bloc-command">
+<div class="bloc-command panel">
 	<div class="button-command">
 			{if (count($invoices_collection))}
 				<a class="button" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateInvoicePDF&id_order={$order->id}" target="_blank">
@@ -103,12 +103,11 @@
 				<dt>{l s='Total'}</dt>
 				<dd class="total_paid">{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}</dd>
 			</dl>
-		<div class="clear"></div>
 	</div>
 </div>
 	<div class="container-command">
 		<!-- Left column -->
-		<div style="width: 49%; float:left;">
+		<div>
 			<!-- Change status form -->
 			<form action="{$currentIndex}&vieworder&token={$smarty.get.token}" method="post">
 				<select id="id_order_state" name="id_order_state">
@@ -119,10 +118,8 @@
 				<input type="hidden" name="id_order" value="{$order->id}" />
 				<input type="submit" name="submitState" value="{l s='Add'}" class="button" />
 			</form>
-			<br />
-
 			<!-- History of status -->
-			<table cellspacing="0" cellpadding="0" class="table history-status" style="width: 100%;">
+			<table class="table history-status">
 				<colgroup>
 					<col width="1%">
 					<col width="">
@@ -150,11 +147,10 @@
 
 			{if $customer->id}
 			<!-- Customer informations -->
-			<br />
 			<fieldset>
-				<legend><img src="../img/admin/tab-customers.gif" /> {l s='Customer information'}</legend>
-				<span style="font-weight: bold; font-size: 14px;"><a href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={getAdminToken tab='AdminCustomers'}"> {$customer->firstname} {$customer->lastname}</a></span> ({l s='#'}{$customer->id})<br />
-				(<a href="mailto:{$customer->email}">{$customer->email}</a>)<br /><br />
+				<h3><img src="../img/admin/tab-customers.gif" /> {l s='Customer information'}</h3>
+				<span style="font-weight: bold; font-size: 14px;"><a href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={getAdminToken tab='AdminCustomers'}"> {$customer->firstname} {$customer->lastname}</a></span> ({l s='#'}{$customer->id})
+				(<a href="mailto:{$customer->email}">{$customer->email}</a>)
 				{if ($customer->isGuest())}
 					{l s='This order has been placed by a guest.'}
 					{if (!Customer::customerExists($customer->email))}
@@ -176,9 +172,8 @@
 
 			<!-- Sources block -->
 			{if (sizeof($sources))}
-			<br />
 			<fieldset>
-				<legend><img src="../img/admin/tab-stats.gif" /> {l s='Sources'}</legend>
+				<h3><img src="../img/admin/tab-stats.gif" /> {l s='Sources'}</h3>
 				<ul {if sizeof($sources) > 3}style="height: 200px; overflow-y: scroll;"{/if}>
 				{foreach from=$sources item=source}
 					<li>
@@ -198,7 +193,7 @@
 		<!-- END Left column -->
 
 		<!-- Right column -->
-		<div style="width: 49%; float:right;">
+		<div>
 			<div class="button-command-prev-next">
 				<b>{l s='Orders'}</b> :
 				{if $previousOrder}<a class="button" href="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$previousOrder}">{l s='< Prev'}</a>{/if}
@@ -209,8 +204,8 @@
 			<!-- linked orders block -->
 			{if count($order->getBrother()) > 0}
 				<fieldset>
-					<legend><img src="../img/admin/tab-orders.gif" /> {l s='Linked orders'}</legend>
-					<table class="table" width="100%;" cellspacing="0" cellpadding="0">
+					<h3><img src="../img/admin/tab-orders.gif" /> {l s='Linked orders'}</h3>
+					<table class="table">
 						<thead>
 							<tr>
 								<th width="10%">
@@ -246,21 +241,19 @@
 						</tbody>
 					</table>
 				</fieldset>
-				<br />
 			{/if}
 			
 			<!-- Documents block -->
 			<fieldset>
-				<legend><img src="../img/admin/details.gif" /> {l s='Documents'}</legend>
+				<h3><img src="../img/admin/details.gif" /> {l s='Documents'}</h3>
 
 				{* Include document template *}
 				{include file='controllers/orders/_documents.tpl'}
 			</fieldset>
-			<br />
 
 			<!-- Payments block -->
 			<fieldset>
-				<legend><img src="../img/admin/money.gif" /> {l s='Payment: '}</legend>
+				<h3><img src="../img/admin/money.gif" /> {l s='Payment: '}</h3>
 
 				{if (!$order->valid && sizeof($currencies) > 1)}
 				<form method="post" action="{$currentIndex}&vieworder&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
@@ -415,12 +408,11 @@
 					</table>
 				</form>
 			</fieldset>
-			<br />
 
 			<!-- Shipping block -->
 			{if !$order->isVirtual()}
 				<fieldset>
-					<legend><img src="../img/admin/delivery.gif" /> {l s='Shipping'}</legend>
+					<h3><img src="../img/admin/delivery.gif" /> {l s='Shipping'}</h3>
 
 					<div class="clear" style="float: left; margin-right: 10px;">
 						<span>{l s='Recycled packaging'}</span>
@@ -443,7 +435,6 @@
 						<img src="../img/admin/disabled.gif" />
 						{/if}
 					</div>
-					<div class="clear" style="margin-bottom: 10px;"></div>
 
 					{include file='controllers/orders/_shipping.tpl'}
 
@@ -451,14 +442,13 @@
 						{$carrierModuleCall}
 					{/if}
 				</fieldset>
-				<br />
 
 				<!-- Return block -->
 				<fieldset>
-					<legend><img src="../img/admin/delivery.gif" /> {l s='Merchandise returns'}</legend>
+					<h3><img src="../img/admin/delivery.gif" /> {l s='Merchandise returns'}</h3>
 
 					{if $order->getReturn()|count > 0}
-					<table class="table" width="100%" cellspacing="0" cellpadding="0">
+					<table class="table">
 						<thead>
 							<tr>
 								<th style="width:30%">Date</th>
@@ -510,7 +500,7 @@
 			<div style="width: 49%; float:left;">
 				<!-- Shipping address -->
 				<fieldset>
-					<legend><img src="../img/admin/delivery.gif" alt="{l s='Shipping address'}" />{l s='Shipping address'}</legend>
+					<h3><img src="../img/admin/delivery.gif" alt="{l s='Shipping address'}" />{l s='Shipping address'}</h3>
 
 					{if $can_edit}
 					<form method="post" action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$order->id}">
@@ -540,7 +530,7 @@
 		<div style="width: 49%; float:right;">
 			<!-- Invoice address -->
 			<fieldset>
-				<legend><img src="../img/admin/invoice.gif" alt="{l s='Invoice address'}" />{l s='Invoice address'}</legend>
+				<h3><img src="../img/admin/invoice.gif" alt="{l s='Invoice address'}" />{l s='Invoice address'}</h3>
 
 				{if $can_edit}
 				<form method="post" action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$order->id}">
@@ -574,7 +564,7 @@
 			<div style="display: none">
 				<input type="hidden" value="{$order->getWarehouseList()|implode}" id="warehouse_list" />
 			</div>
-			<legend><img src="../img/admin/cart.gif" alt="{l s='Products:'}" />{l s='Products:'}</legend>
+			<h3><img src="../img/admin/cart.gif" alt="{l s='Products:'}" />{l s='Products:'}</h3>
 			<div style="float:left;width: 100%;">
 				{if $can_edit}
 				{if !$order->hasBeenDelivered()}<div style="float: left;"><a href="#" class="add_product button"><img src="../img/admin/add.gif" alt="{l s='Add a product'}" /> {l s='Add a product'}</a></div>{/if}
@@ -584,7 +574,6 @@
 					<a href="#" class="partial_refund"><img src="../img/admin/add.gif" alt="{l s='Process a partial refund'}" /> {l s='Process a partial refund'}</a>
 				-->
 				</div>
-				<br clear="left" /><br />
 				{/if}
 				<table style="width: 100%;" cellspacing="0" cellpadding="0" class="table" id="orderProducts">
 					<tr>
@@ -744,7 +733,7 @@
 	<div style="float: left">
 		<form action="{$smarty.server.REQUEST_URI}&token={$smarty.get.token}" method="post" onsubmit="if (getE('visibility').checked == true) return confirm('{l s='Do you want to send this message to the customer?'}');">
 		<fieldset style="width: 400px;">
-			<legend style="cursor: pointer;" onclick="$('#message').slideToggle();$('#message_m').slideToggle();return false"><img src="../img/admin/email_edit.gif" /> {l s='New message'}</legend>
+			<h3 style="cursor: pointer;" onclick="$('#message').slideToggle();$('#message_m').slideToggle();return false"><img src="../img/admin/email_edit.gif" /> {l s='New message'}</h3>
 			<div id="message_m" style="display: {if Tools::getValue('message')}none{else}block{/if}; overflow: auto; width: 400px;">
 				<a href="#" onclick="$('#message').slideToggle();$('#message_m').slideToggle();return false"><b>{l s='Click here'}</b> {l s='to add a comment or send a message to the customer.'}</a>
 			</div>
@@ -771,7 +760,7 @@
 	{if (sizeof($messages))}
 		<br />
 		<fieldset style="width: 400px;">
-		<legend><img src="../img/admin/email.gif" /> {l s='Messages'}</legend>
+		<h3><img src="../img/admin/email.gif" /> {l s='Messages'}</h3>
 		{foreach from=$messages item=message}
 			<div style="overflow:auto; width:400px;" {if $message['is_new_for_me']}class="new_message"{/if}>
 			{if ($message['is_new_for_me'])}
@@ -782,13 +771,10 @@
 			{if ($message['private'] == 1)}<span style="color:red; font-weight:bold;">{l s='Private'}</span>{/if}
 			<p>{$message['message']|escape:'htmlall':'UTF-8'|nl2br}</p>
 			</div>
-			<br />
 		{/foreach}
 		</fieldset>
 	{/if}
 	</div>
 
-
-	<div class="clear">&nbsp;</div>
-	<br /><br /><a href="{$current_index}&token={$smarty.get.token}"><img src="../img/admin/arrow2.gif" /> {l s='Back to list'}</a><br />
+<a href="{$current_index}&token={$smarty.get.token}"><img src="../img/admin/arrow2.gif" /> {l s='Back to list'}</a>
 {/block}
