@@ -74,6 +74,7 @@ class AdminTabsControllerCore extends AdminController
 				'title' => $this->l('Position'),
 				'filter_key' => 'a!position',
 				'position' => 'position',
+				'align' => 'center',
 				'class' => 'fixed-width-md'
 			)
 		);
