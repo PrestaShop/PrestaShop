@@ -74,9 +74,37 @@
 								</div>
 								{/if}
 								{block name="label"}
+									{if isset($input.hint)}
+										<span class="label-tooltip" data-toggle="tooltip" data-html="true"
+											title="
+												{if is_array($input.hint)}
+													{foreach $input.hint as $hint}
+														{if is_array($hint)}
+															{$hint.text}
+														{else}
+															{$hint}
+														{/if}
+													{/foreach}
+												{else}
+													{$input.hint}
+												{/if}
+											">
+										{/if}
 									{if isset($field['title']) && isset($field['hint'])}
 										<label class="control-label col-lg-3 {if isset($field['required']) && $field['required'] && $field['type'] != 'radio'}required{/if}">
-											<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{$field['hint']}" data-html="true">
+											<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="
+												{if is_array($field['hint'])}
+													{foreach $field['hint'] as $hint}
+														{if is_array($hint)}
+															{$hint.text}
+														{else}
+															{$hint}
+														{/if}
+													{/foreach}
+												{else}
+													{$field['hint']}
+												{/if}
+											" data-html="true">
 												{$field['title']}
 											</span>
 										</label>
@@ -281,13 +309,30 @@
 
 									{/if}
 
-
+									{if isset($field['desc']) && !empty($field['desc'])}
+									<div class="col-lg-9 col-lg-push-3">
+										<p class="help-block">
+											{if is_array($field['desc'])}
+												{foreach $field['desc'] as $p}
+													{if is_array($p)}
+														<span id="{$p.id}">{$p.text}</span><br />
+													{else}
+														{$p}<br />
+													{/if}
+												{/foreach}
+											{else}
+												{$field['desc']}
+											{/if}
+										</p>
+									</div>
+									{/if}
 								{/block}{* end block input *}
 								{if $field['is_invisible']}
 									<p class="alert alert-warning">
 										{l s='You can\'t change the value of this configuration field in the context of this shop.'}
 									</p>
 								{/if}
+								
 							</div>
 						</div>
 					{/block}{* end block field *}
