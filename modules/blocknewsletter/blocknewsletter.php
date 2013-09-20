@@ -551,7 +551,7 @@ class Blocknewsletter extends Module
 						'type' => 'text',
 						'label' => $this->l('Welcome voucher code'),
 						'name' => 'NW_VOUCHER_CODE',
-						'class' => '.fixed-width-md',
+						'class' => 'fixed-width-md',
 						'desc' => $this->l('Leave blank to disable by default.')
 					),
 				),

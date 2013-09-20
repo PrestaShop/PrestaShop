@@ -63,14 +63,14 @@ class Blockrss extends Module
 
 	public function getContent()
 	{
-		$output = '<h2>'.$this->displayName.'</h2>';
+		$output = '';
 		
 		if (Tools::isSubmit('submitBlockRss'))
 		{
 			$errors = array();
-			$urlfeed = Tools::getValue('urlfeed');
-			$title = Tools::getValue('title');
-			$nbr = (int)Tools::getValue('nbr');
+			$urlfeed = Tools::getValue('RSS_FEED_URL');
+			$title = Tools::getValue('RSS_FEED_TITLE');
+			$nbr = (int)Tools::getValue('RSS_FEED_NBR');
 
 			if ($urlfeed AND !Validate::isAbsoluteUrl($urlfeed))
 				$errors[] = $this->l('Invalid feed URL');
@@ -113,36 +113,7 @@ class Blockrss extends Module
 				$output .= $this->displayError(implode('<br />', $errors));
 		}
 
-		return $output.$this->displayForm();
-	}
-
-	public function displayForm()
-	{					
-		$output = '
-		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset><legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
-				<label>'.$this->l('Block title').'</label>
-				<div class="margin-form">
-					<input type="text" name="title" value="'.Tools::safeOutput(Tools::getValue('title', Configuration::get('RSS_FEED_TITLE'))).'" />
-					<p class="clear">'.$this->l('Create a title for the block (default: \'RSS feed\')').'</p>
-
-				</div>
-				<label>'.$this->l('Add a feed URL').'</label>
-				<div class="margin-form">
-					<input type="text" size="85" name="urlfeed" value="'.Tools::safeOutput(Tools::getValue('urlfeed', Configuration::get('RSS_FEED_URL'))).'" />
-					<p class="clear">'.$this->l('Add the URL of the feed you want to use (sample: http://news.google.com/?output=rss)').'</p>
-
-				</div>
-				<label>'.$this->l('Number of threads displayed').'</label>
-				<div class="margin-form">
-					<input type="text" size="5" name="nbr" value="'.(int)Tools::getValue('nbr', Configuration::get('RSS_FEED_NBR')).'" />
-					<p class="clear">'.$this->l('Number of threads displayed by the block (default value: 5)').'</p>
-
-				</div>
-				<center><input type="submit" name="submitBlockRss" value="'.$this->l('Save').'" class="button" /></center>
-			</fieldset>
-		</form>';
-		return $output;
+		return $output.$this->renderForm();
 	}
 
 	function hookLeftColumn($params)
@@ -192,5 +163,68 @@ class Blockrss extends Module
 	function hookHeader($params)
 	{
 		$this->context->controller->addCSS(($this->_path).'blockrss.css', 'all');
+	}
+	
+	public function renderForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Settings'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'text',
+						'label' => $this->l('Block title'),
+						'name' => 'RSS_FEED_TITLE',
+						'desc' => $this->l('Create a title for the block (default: \'RSS feed\')'),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Add a feed URL'),
+						'name' => 'RSS_FEED_URL',
+						'desc' => $this->l('Add the URL of the feed you want to use (sample: http://news.google.com/?output=rss)'),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Number of threads displayed'),
+						'name' => 'RSS_FEED_NBR',
+						'class' => 'fixed-width-sm',
+						'desc' => $this->l('Number of threads displayed by the block (default value: 5)'),
+					),
+				),
+			'submit' => array(
+				'title' => $this->l('Save'),
+				'class' => 'btn btn-primary')
+			),
+		);
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitBlockRss';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function getConfigFieldsValues()
+	{
+		return array(
+			'RSS_FEED_TITLE' => Tools::getValue('RSS_FEED_TITLE', Configuration::get('RSS_FEED_TITLE')),
+			'RSS_FEED_URL' => Tools::getValue('RSS_FEED_URL', Configuration::get('RSS_FEED_URL')),
+			'RSS_FEED_NBR' => Tools::getValue('RSS_FEED_NBR', Configuration::get('RSS_FEED_NBR')),
+		);
 	}
 }
