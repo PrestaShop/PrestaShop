@@ -1704,10 +1704,12 @@ abstract class ModuleCore
 		
 		if ($overloaded)
 			return $overloaded;
-		else if (file_exists(_PS_MODULE_DIR_.$this->name.'/views/templates/hook/'.$template))
+		elseif (file_exists(_PS_MODULE_DIR_.$this->name.'/views/templates/hook/'.$template))
 			return _PS_MODULE_DIR_.$this->name.'/views/templates/hook/'.$template;
-		else
+		elseif (file_exists(_PS_MODULE_DIR_.$this->name.'/'.$template))
 			return _PS_MODULE_DIR_.$this->name.'/'.$template;
+		else
+			return null;
 	}
 
 	protected function _getApplicableTemplateDir($template)
