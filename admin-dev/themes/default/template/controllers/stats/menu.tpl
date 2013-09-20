@@ -35,3 +35,4 @@
 			{l s='No module has been installed.'}
 		{/if}
 		</nav>
+	</div>

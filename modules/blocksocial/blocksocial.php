@@ -56,32 +56,16 @@ class blocksocial extends Module
 	{
 		// If we try to update the settings
 		$output = '';
-		if (isset($_POST['submitModule']))
+		if (Tools::isSubmit('submitModule'))
 		{	
-			Configuration::updateValue('blocksocial_facebook', (($_POST['facebook_url'] != '') ? $_POST['facebook_url']: ''));
-			Configuration::updateValue('blocksocial_twitter', (($_POST['twitter_url'] != '') ? $_POST['twitter_url']: ''));		
-			Configuration::updateValue('blocksocial_rss', (($_POST['rss_url'] != '') ? $_POST['rss_url']: ''));				
+			Configuration::updateValue('blocksocial_facebook', (($_POST['blocksocial_facebook'] != '') ? $_POST['blocksocial_facebook']: ''));
+			Configuration::updateValue('blocksocial_twitter', (($_POST['blocksocial_twitter'] != '') ? $_POST['blocksocial_twitter']: ''));		
+			Configuration::updateValue('blocksocial_rss', (($_POST['blocksocial_rss'] != '') ? $_POST['blocksocial_rss']: ''));				
 			$this->_clearCache('blocksocial.tpl');
-			$output = '<div class="conf confirm">'.$this->l('Configuration updated').'</div>';
+			$output .= $this->displayConfirmation($this->l('Configuration updated'));
 		}
 		
-		return '
-		<h2>'.$this->displayName.'</h2>
-		'.$output.'
-		<form action="'.Tools::htmlentitiesutf8($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset class="width2">				
-				<label for="facebook_url">'.$this->l('Facebook URL: ').'</label>
-				<input type="text" id="facebook_url" name="facebook_url" value="'.Tools::safeOutput((Configuration::get('blocksocial_facebook') != "") ? Configuration::get('blocksocial_facebook') : "").'" />
-				<div class="clear">&nbsp;</div>		
-				<label for="twitter_url">'.$this->l('Twitter URL: ').'</label>
-				<input type="text" id="twitter_url" name="twitter_url" value="'.Tools::safeOutput((Configuration::get('blocksocial_twitter') != "") ? Configuration::get('blocksocial_twitter') : "").'" />
-				<div class="clear">&nbsp;</div>		
-				<label for="rss_url">'.$this->l('RSS URL: ').'</label>
-				<input type="text" id="rss_url" name="rss_url" value="'.Tools::safeOutput((Configuration::get('blocksocial_rss') != "") ? Configuration::get('blocksocial_rss') : "").'" />
-				<div class="clear">&nbsp;</div>						
-				<br /><center><input type="submit" name="submitModule" value="'.$this->l('Update settings').'" class="button" /></center>
-			</fieldset>
-		</form>';
+		return $output.$this->renderForm();
 	}
 	
 	public function hookDisplayHeader()
@@ -100,5 +84,67 @@ class blocksocial extends Module
 
 		return $this->display(__FILE__, 'blocksocial.tpl', $this->getCacheId());
 	}
+	
+	public function renderForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Settings'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'text',
+						'label' => $this->l('Facebook URL:'),
+						'name' => 'blocksocial_facebook',
+						'desc' => $this->l('Create a title for the block (default: \'RSS feed\')'),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Twitter URL:'),
+						'name' => 'blocksocial_twitter',
+						'desc' => $this->l('Add the URL of the feed you want to use (sample: http://news.google.com/?output=rss)'),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('RSS URL:'),
+						'name' => 'blocksocial_rss',
+						'desc' => $this->l('Number of threads displayed by the block (default value: 5)'),
+					),
+				),
+			'submit' => array(
+				'title' => $this->l('Save'),
+				'class' => 'btn btn-primary')
+			),
+		);
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitModule';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function getConfigFieldsValues()
+	{
+		return array(
+			'blocksocial_facebook' => Tools::getValue('blocksocial_facebook', Configuration::get('blocksocial_facebook')),
+			'blocksocial_twitter' => Tools::getValue('blocksocial_twitter', Configuration::get('blocksocial_twitter')),
+			'blocksocial_rss' => Tools::getValue('blocksocial_rss', Configuration::get('blocksocial_rss')),
+		);
+	}
+
 }
-?>

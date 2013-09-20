@@ -51,7 +51,6 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 		}
 		
 		$this->content .= $this->displayMenu();
-		$this->content .= $this->displayEngines();
 		$this->content .= $this->displayCalendar();
 		$this->content .= $this->displayStats();
 
@@ -110,6 +109,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 		return $tpl->fetch();
 	}
 
+	/* Not used anymore, but still work */
 	protected function displayEngines()
 	{
 		$tpl = $this->createTemplate('engines.tpl');
@@ -143,8 +143,13 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 		$module_instance = array();
 		foreach ($modules as $m => $module)
 		{
-			$module_instance[$module['name']] = Module::getInstanceByName($module['name']);
-			$modules[$m]['displayName'] = $module_instance[$module['name']]->displayName;
+			if ($module_instance[$module['name']] = Module::getInstanceByName($module['name']))
+				$modules[$m]['displayName'] = $module_instance[$module['name']]->displayName;
+			else
+			{
+				unset($module_instance[$module['name']]);
+				unset($modules[$m]);
+			}
 		}
 
 		uasort($modules, array($this, 'checkModulesNames'));

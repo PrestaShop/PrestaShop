@@ -78,8 +78,8 @@ class GraphNvD3 extends ModuleGraphEngine
 				nv.models.lineChart()',
 			'pie' => '
 				nv.models.pieChart()
-					.x(function(d) {return d.label})
-					.y(function(d) {return d.value})
+					.x(function(d) { return d.label; })
+					.y(function(d) { return d.value; })
 					.showLabels(true)
 					.showLegend(false)'
 		);
@@ -150,12 +150,17 @@ class GraphNvD3 extends ModuleGraphEngine
 		{
 			$nvd3_values = array();
 			if (Tools::getValue('type') == 'pie')
+			{
 				foreach ($this->_values as $x => $y)
 					$nvd3_values[] = array('label' => $this->_legend[$x], 'value' => $y);
+				$array['data'] = $nvd3_values;
+			}
 			else
+			{
 				foreach ($this->_values as $x => $y)
 					$nvd3_values[] = array('x' => $x, 'y' => $y);
-			$array['data'][] = array('values' => $nvd3_values, 'key' => $this->_titles['main']);
+				$array['data'][] = array('values' => $nvd3_values, 'key' => $this->_titles['main']);
+			}
 		}
 		else
 			foreach ($this->_values as $layer => $gross_values)
