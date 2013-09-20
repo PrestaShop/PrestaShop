@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-	<div class="blocEngine panel">
+{*
 		<form action="{$smarty.server.REQUEST_URI|escape}" method="post" id="settings_form" name="settings_form" class="form-horizontal">
 			<h3><i class="icon-cog"></i> {l s='Settings'}</h3>
 
@@ -66,5 +66,4 @@
 				<input type="submit" value="{l s='Save'}" name="submitSettings" id="submitSettings" class="btn btn-default" />
 			</p>
 		</form>
-	</div>
-</div>
+*}
