@@ -94,7 +94,7 @@ class Blockcontact extends Module
 		return $this->hookDisplayRightColumn();
 	}
 	
-		public function renderForm()
+	public function renderForm()
 	{
 		$fields_form = array(
 			'form' => array(
@@ -149,4 +149,3 @@ class Blockcontact extends Module
 		);
 	}
 }
-?>
