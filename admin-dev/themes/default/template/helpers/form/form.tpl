@@ -423,7 +423,9 @@
 											value=""
 											{if isset($input.autocomplete) && !$input.autocomplete}autocomplete="off"{/if} />
 								{elseif $input.type == 'birthday'}
+								<div class="row">
 									{foreach $input.options as $key => $select}
+									<div class="col-lg-4">
 										<select name="{$key}" class="{if isset($input.class)}{$input.class}{/if}">
 											<option value="">-</option>
 											{if $key == 'months'}
@@ -450,9 +452,10 @@
 													<option value="{$v}" {if $v == $fields_value[$key]}selected="selected"{/if}>{$v}</option>
 												{/foreach}
 											{/if}
-
 										</select>
+									</div>
 									{/foreach}
+								</div>
 								{elseif $input.type == 'group'}
 									{assign var=groups value=$input.values}
 									{include file='helpers/form/form_group.tpl'}
