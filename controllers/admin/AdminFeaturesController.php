@@ -49,12 +49,15 @@ class AdminFeaturesControllerCore extends AdminController
 			'value' => array(
 				'title' => $this->l('Values'),
 				'orderby' => false,
-				'search' => false
+				'search' => false,
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'position' => array(
 				'title' => $this->l('Position'),
 				'filter_key' => 'a!position',
 				'align' => 'center',
+				'class' => 'fixed-width-xs',
 				'position' => 'position'
 			)
 		);

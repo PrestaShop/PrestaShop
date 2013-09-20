@@ -60,7 +60,8 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_category' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center'
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'name' => array(
 				'title' => $this->l('Name')
@@ -80,6 +81,8 @@ class AdminCategoriesControllerCore extends AdminController
 				'title' => $this->l('Displayed'),
 				'active' => 'status',
 				'type' => 'bool',
+				'class' => 'fixed-width-xs',
+				'align' => 'center',
 				'orderby' => false
 			)
 		);

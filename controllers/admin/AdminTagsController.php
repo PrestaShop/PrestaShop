@@ -37,6 +37,7 @@ class AdminTagsControllerCore extends AdminController
 			'id_tag' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'lang' => array(
 				'title' => $this->l('Language'),
@@ -48,7 +49,8 @@ class AdminTagsControllerCore extends AdminController
 			),
 			'products' => array(
 				'title' => $this->l('Products:'),
-				'align' => 'right',
+				'align' => 'center',
+				'class' => 'fixed-width-xs',
 				'havingFilter' => true
 			)
 		);
