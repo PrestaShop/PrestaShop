@@ -27,10 +27,16 @@
 
 {block name="override_tpl"}
 <fieldset>
-	<div class="col-lg-3 box-stats color1">
-		<i class="icon-shopping-cart"></i><span class="title">{l s='Cart #%06d'|sprintf:$cart->id}<br/><small>{if $customer->id}{$customer->firstname} {$customer->lastname}{else}{l s='Guest'}{/if} {l s='On'} {$cart->date_upd}</small></span>
-		<span class="value">{displayWtPriceWithCurrency price=$total_price currency=$currency}</span>
-	</div>
+	{include file="helpers/kpi/kpi.tpl"
+		id="kpi-cart"
+		color="color1"
+		icon="icon-shopping-cart"
+		title="{l s='Cart #%06d'|sprintf:$cart->id}"
+		subtitle="{if $customer->id}{$customer->firstname} {$customer->lastname}{else}{l s='Guest'}{/if} {l s='On'} {$cart->date_upd}"
+		value="{displayWtPriceWithCurrency price=$total_price currency=$currency}"
+		source=''
+		chart=null
+	}
 </fieldset>
 <div class="row">
 	<div class="col-lg-6">
