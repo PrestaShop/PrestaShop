@@ -120,21 +120,31 @@
 				{l s='Status'}
 			</h3>
 			<!-- Change status form -->
-			<form action="{$currentIndex}&vieworder&token={$smarty.get.token}" method="post">
-				<select id="id_order_state" name="id_order_state">
-				{foreach from=$states item=state}
-					<option value="{$state['id_order_state']}"{if $state['id_order_state'] == $currentState->id} selected="selected" disabled="disabled"{/if}>{$state['name']|stripslashes}</option>
-				{/foreach}
-				</select>
-				<input type="hidden" name="id_order" value="{$order->id}" />
-				<input type="submit" name="submitState" value="{l s='Add'}" class="btn btn-default" />
+			<form action="{$currentIndex}&vieworder&token={$smarty.get.token}" method="post" class="form-horizontal">
+				
+				<div class="form-group">
+					<div class="col-lg-3">
+						<select id="id_order_state" name="id_order_state">
+						{foreach from=$states item=state}
+							<option value="{$state['id_order_state']}"{if $state['id_order_state'] == $currentState->id} selected="selected" disabled="disabled"{/if}>{$state['name']|stripslashes}</option>
+						{/foreach}
+						</select>
+						<input type="hidden" name="id_order" value="{$order->id}" />
+					</div>
+					<div class="col-lg-3">
+						<button type="submit" name="submitState" class="btn btn-default">
+							<i class="icon-plus-sign"></i>
+							{l s='Add'}
+						</button>
+					</div>
+				</div>
 			</form>
 			<!-- History of status -->
 			<table class="table history-status">
 				<tbody>
 			{foreach from=$history item=row key=key}
 					{if ($key == 0)}
-					<tr class="highlighted">
+					<tr class="highlight">
 						<td><img src="../img/os/{$row['id_order_state']}.gif" /></td>
 						<td><span class="title_box ">{$row['ostate_name']|stripslashes}</span></td>
 						<td><span class="title_box ">{if $row['employee_lastname']}{$row['employee_firstname']|stripslashes} {$row['employee_lastname']|stripslashes}{/if}</span></td>
@@ -525,10 +535,10 @@
 			{/if}
 	</div>
 
-	<div class="container-command container-command-top-spacing">
+	<div class="container-command row">
 		<!-- Addresses -->
 		{if !$order->isVirtual()}
-			<div>
+			<div class="col-lg-6">
 				<!-- Shipping address -->
 				<fieldset>
 					<h3>
@@ -536,59 +546,83 @@
 						{l s='Shipping address'}
 					</h3>
 					{if $can_edit}
-					<form method="post" action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$order->id}">
-						<select name="id_address">
-							{foreach from=$customer_addresses item=address}
-							<option value="{$address['id_address']}"{if $address['id_address'] == $order->id_address_delivery} selected="selected"{/if}>{$address['alias']} - {$address['address1']} {$address['postcode']} {$address['city']}{if !empty($address['state'])} {$address['state']}{/if}, {$address['country']}</option>
-							{/foreach}
-						</select>
-						<input class="btn btn-default" type="submit" name="submitAddressShipping" value="{l s='Change'}" />
+					<form class="form-horizontal" method="post" action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$order->id}">
+						<div class="form-group">
+							<div class="col-lg-9">
+								<select name="id_address">
+									{foreach from=$customer_addresses item=address}
+									<option value="{$address['id_address']}"
+										{if $address['id_address'] == $order->id_address_delivery}
+											selected="selected"
+										{/if}>
+										{$address['alias']} -
+										{$address['address1']}
+										{$address['postcode']}
+										{$address['city']}
+										{if !empty($address['state'])}
+											{$address['state']}
+										{/if},
+										{$address['country']}
+									</option>
+									{/foreach}
+								</select>
+							</div>
+							<div class="col-lg-3">
+								<input class="btn btn-default" type="submit" name="submitAddressShipping" value="{l s='Change'}" />
+							</div>
+						</div>
 					</form>
 					{/if}
-
-					<div>
-						<a class="btn btn-default" href="?tab=AdminAddresses&id_address={$addresses.delivery->id}&addaddress&realedit=1&id_order={$order->id}{if ($addresses.delivery->id == $addresses.invoice->id)}&address_type=1{/if}&token={getAdminToken tab='AdminAddresses'}&back={$smarty.server.REQUEST_URI|urlencode}">
+					<div class="well">
+						<a class="btn btn-default pull-right" href="?tab=AdminAddresses&id_address={$addresses.delivery->id}&addaddress&realedit=1&id_order={$order->id}{if ($addresses.delivery->id == $addresses.invoice->id)}&address_type=1{/if}&token={getAdminToken tab='AdminAddresses'}&back={$smarty.server.REQUEST_URI|urlencode}">
 							<i class="icon-pencil"></i>
 							{l s='Edit'}
 						</a>
-						<a href="http://maps.google.com/maps?f=q&hl={$iso_code_lang}&geocode=&q={$addresses.delivery->address1} {$addresses.delivery->postcode} {$addresses.delivery->city} {if ($addresses.delivery->id_state)} {$addresses.deliveryState->name}{/if}" target="_blank">
-							<img src="../img/admin/google.gif" alt="" class="middle" />
-						</a>
+						{displayAddressDetail address=$addresses.delivery newLine='<br />'}
+						{if $addresses.delivery->other}
+							<hr />{$addresses.delivery->other}<br />
+						{/if}
 					</div>
-
-					{displayAddressDetail address=$addresses.delivery newLine='<br />'}
-					{if $addresses.delivery->other}<hr />{$addresses.delivery->other}<br />{/if}
+					<img src="http://maps.googleapis.com/maps/api/staticmap?center={$addresses.delivery->address1} {$addresses.delivery->postcode} {$addresses.delivery->city} {if ($addresses.delivery->id_state)} {$addresses.deliveryState->name}{/if}&markers={$addresses.delivery->address1} {$addresses.delivery->postcode} {$addresses.delivery->city} {if ($addresses.delivery->id_state)} {$addresses.deliveryState->name}{/if}&zoom=7&size=600x200&scale=2&sensor=false" class="thumbnail" alt="">
 				</fieldset>
 			</div>
 		{/if}
-		<div>
+
+		<div class="col-lg-6">
 			<!-- Invoice address -->
 			<fieldset>
 				<h3>
 					<i class="icon-file-text"></i>
 					{l s='Invoice address'}
 				</h3>
-
+				
 				{if $can_edit}
-				<form method="post" action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$order->id}">
-					<select name="id_address">
-						{foreach from=$customer_addresses item=address}
-						<option value="{$address['id_address']}"{if $address['id_address'] == $order->id_address_invoice} selected="selected"{/if}>{$address['alias']} - {$address['address1']} {$address['postcode']} {$address['city']}{if !empty($address['state'])} {$address['state']}{/if}, {$address['country']}</option>
-						{/foreach}
-					</select>
-					<input class="btn btn-default" type="submit" name="submitAddressInvoice" value="{l s='Change'}" />
+				<form class="form-horizontal" method="post" action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$order->id}">
+					<div class="form-group">
+						<div class="col-lg-9">
+							<select name="id_address">
+								{foreach from=$customer_addresses item=address}
+								<option value="{$address['id_address']}"{if $address['id_address'] == $order->id_address_invoice} selected="selected"{/if}>{$address['alias']} - {$address['address1']} {$address['postcode']} {$address['city']}{if !empty($address['state'])} {$address['state']}{/if}, {$address['country']}</option>
+								{/foreach}
+							</select>
+						</div>
+						<div class="col-lg-3">
+							<input class="btn btn-default" type="submit" name="submitAddressInvoice" value="{l s='Change'}" />
+						</div>
+					</div>
 				</form>
 				{/if}
 
-				<div>
-					<a class="btn btn-default" href="?tab=AdminAddresses&id_address={$addresses.invoice->id}&addaddress&realedit=1&id_order={$order->id}{if ($addresses.delivery->id == $addresses.invoice->id)}&address_type=2{/if}&back={$smarty.server.REQUEST_URI|urlencode}&token={getAdminToken tab='AdminAddresses'}">
+				<div class="well">
+					<a class="btn btn-default pull-right" href="?tab=AdminAddresses&id_address={$addresses.invoice->id}&addaddress&realedit=1&id_order={$order->id}{if ($addresses.delivery->id == $addresses.invoice->id)}&address_type=2{/if}&back={$smarty.server.REQUEST_URI|urlencode}&token={getAdminToken tab='AdminAddresses'}">
 						<i class="icon-pencil"></i>
 						{l s='Edit'}
 					</a>
+					{displayAddressDetail address=$addresses.invoice newLine='<br />'}
+					{if $addresses.invoice->other}
+						<hr />{$addresses.invoice->other}<br />
+					{/if}
 				</div>
-
-				{displayAddressDetail address=$addresses.invoice newLine='<br />'}
-				{if $addresses.invoice->other}<hr />{$addresses.invoice->other}<br />{/if}
 			</fieldset>
 		</div>
 	</div>

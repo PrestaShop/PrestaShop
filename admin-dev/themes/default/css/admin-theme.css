@@ -8020,27 +8020,27 @@ tr.filter input[type="text"].filter, tr.filter input[type="password"].filter, tr
 
 /* line 468, admin-theme.sass */
 .fixed-width-xs {
-  width: 40px; }
+  width: 40px !important; }
 
 /* line 470, admin-theme.sass */
 .fixed-width-sm {
-  width: 80px; }
+  width: 80px !important; }
 
 /* line 472, admin-theme.sass */
 .fixed-width-md {
-  width: 120px; }
+  width: 120px !important; }
 
 /* line 474, admin-theme.sass */
 .fixed-width-lg {
-  width: 160px; }
+  width: 160px !important; }
 
 /* line 476, admin-theme.sass */
 .fixed-width-xl {
-  width: 200px; }
+  width: 200px !important; }
 
 /* line 478, admin-theme.sass */
 .fixed-width-xxl {
-  width: 250px; }
+  width: 250px !important; }
 
 /* line 487, admin-theme.sass */
 textarea {
