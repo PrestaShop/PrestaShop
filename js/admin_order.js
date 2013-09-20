@@ -797,16 +797,16 @@ function init()
 
 	$('#add_voucher').unbind('click');
 	$('#add_voucher').click(function() {
-		$(this).parent().parent().hide();
-		$('#voucher_form').parent().show();
+		$(this).hide();
+		$('#voucher_form').show();
 
 		return false;
 	});
 
 	$('#cancel_add_voucher').unbind('click');
 	$('#cancel_add_voucher').click(function() {
-		$('#voucher_form').parent().hide();
-		$('#add_voucher').parent().parent().show();
+		$('#voucher_form').hide();
+		$('#add_discount_btn').show();
 
 		return false;
 	});
