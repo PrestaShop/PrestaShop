@@ -105,7 +105,7 @@ class HelperFormCore extends Helper
 									$tree->setUseSearch($params['tree']['use_search']);
 
 								if (isset($params['tree']['use_checkbox']))
-									$tree->setuseCheckBox($params['tree']['use_checkbox']);
+									$tree->setUseCheckBox($params['tree']['use_checkbox']);
 
 								$this->context->smarty->assign('categories_tree', $tree->render());
 								$categories = false;
