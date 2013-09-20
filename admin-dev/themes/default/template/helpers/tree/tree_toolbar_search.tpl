@@ -24,11 +24,11 @@
 *}
 
 <!-- <label for="node-search">{l s=$label}</label> -->
-<span class="pull-right fixed-width-xl">
+<span class="pull-right">
 	<input type="text"
 		{if isset($id)}id="{$id}"{/if}
 		{if isset($name)}name="{$name}"{/if}
-		class="{if isset($class)} {$class}{/if}"
+		class="{if isset($class)} {$class}{/if} fixed-width-xl"
 		placeholder="search..."
 	/>
 </span>

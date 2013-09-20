@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<div class="tree-actions">
+<div class="tree-actions col-lg-12">
 	{if isset($actions)}
 	{foreach from=$actions item=action}
 		{$action->render()}
