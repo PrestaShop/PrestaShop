@@ -71,71 +71,29 @@ class BlockCategories extends Module
 
 	public function getContent()
 	{
-		$output = '<h2>'.$this->displayName.'</h2>';
+		$output = '';
 		if (Tools::isSubmit('submitBlockCategories'))
 		{
-			$maxDepth = (int)(Tools::getValue('maxDepth'));
-			$dhtml = Tools::getValue('dhtml');
-			$nbrColumns = Tools::getValue('nbrColumns', 4);
+			$maxDepth = (int)(Tools::getValue('BLOCK_CATEG_MAX_DEPTH'));
+			$dhtml = Tools::getValue('BLOCK_CATEG_DHTML');
+			$nbrColumns = Tools::getValue('BLOCK_CATEG_NBR_COLUMN_FOOTER', 4);
 			if ($maxDepth < 0)
-				$output .= '<div class="alert error">'.$this->l('Maximum depth: Invalid number.').'</div>';
+				$output .= $this->displayError($this->l('Maximum depth: Invalid number.'));
 			elseif ($dhtml != 0 && $dhtml != 1)
-				$output .= '<div class="alert error">'.$this->l('Dynamic HTML: Invalid choice.').'</div>';
+				$output .= $this->displayError($this->l('Dynamic HTML: Invalid choice.'));
 			else
 			{
-				Configuration::updateValue('BLOCK_CATEG_MAX_DEPTH', (int)($maxDepth));
-				Configuration::updateValue('BLOCK_CATEG_DHTML', (int)($dhtml));
-				Configuration::updateValue('BLOCK_CATEG_NBR_COLUMN_FOOTER', $nbrColumns);
+				Configuration::updateValue('BLOCK_CATEG_MAX_DEPTH', (int)$maxDepth);
+				Configuration::updateValue('BLOCK_CATEG_DHTML', (int)$dhtml);
+				Configuration::updateValue('BLOCK_CATEG_NBR_COLUMN_FOOTER', (int)$nbrColumns);
 				Configuration::updateValue('BLOCK_CATEG_SORT_WAY', Tools::getValue('BLOCK_CATEG_SORT_WAY'));
 				Configuration::updateValue('BLOCK_CATEG_SORT', Tools::getValue('BLOCK_CATEG_SORT'));
 
 				$this->_clearBlockcategoriesCache();
-				$output .= '<div class="conf confirm">'.$this->l('Settings updated').'</div>';
+				$output .= $this->displayConfirmation($this->l('Settings updated'));
 			}
 		}
-		return $output.$this->displayForm();
-	}
-
-	public function displayForm()
-	{
-		return '
-		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset>
-				<legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
-				<label>'.$this->l('Maximum depth').'</label>
-				<div class="margin-form">
-					<input type="text" name="maxDepth" value="'.(int)Configuration::get('BLOCK_CATEG_MAX_DEPTH').'" />
-					<p class="clear">'.$this->l('Set the maximum depth of sublevels displayed in this block (0 = infinite)').'</p>
-				</div>
-				<label>'.$this->l('Dynamic').'</label>
-
-				<div class="margin-form">
-					<input type="radio" name="dhtml" id="dhtml_on" value="1" '.(Tools::getValue('dhtml', Configuration::get('BLOCK_CATEG_DHTML')) ? 'checked="checked" ' : '').'/>
-					<label class="t" for="dhtml_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>
-					<input type="radio" name="dhtml" id="dhtml_off" value="0" '.(!Tools::getValue('dhtml', Configuration::get('BLOCK_CATEG_DHTML')) ? 'checked="checked" ' : '').'/>
-					<label class="t" for="dhtml_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
-					<p class="clear">'.$this->l('Activate dynamic (animated) mode for sublevels.').'</p>
-				</div>
-				<label>'.$this->l('Sort').'</label>
-
-				<div class="margin-form">
-					<input type="radio" name="BLOCK_CATEG_SORT" id="sort_on" value="0" '.(!Tools::getValue('BLOCK_CATEG_SORT', Configuration::get('BLOCK_CATEG_SORT')) ? 'checked="checked" ' : '').'/>
-					<label class="t" for="sort_on"> <img src="../modules/'.$this->name.'/sort_number.png" alt="'.$this->l('Enabled').'" title="'.$this->l('By position').'" />'.$this->l('By position').'</label>
-					<input type="radio" name="BLOCK_CATEG_SORT" id="sort_off" value="1" '.(Tools::getValue('BLOCK_CATEG_SORT', Configuration::get('BLOCK_CATEG_SORT')) ? 'checked="checked" ' : '').'/>
-					<label class="t" for="sort_off"> <img src="../modules/'.$this->name.'/sort_alphabet.png" alt="'.$this->l('Disabled').'" title="'.$this->l('By name').'" />'.$this->l('By name').'</label> -
-					<select name="BLOCK_CATEG_SORT_WAY">
-						<option value="0" '.(!Tools::getValue('BLOCK_CATEG_SORT_WAY', Configuration::get('BLOCK_CATEG_SORT_WAY')) ? 'selected="selected" ' : '').'>'.$this->l('Ascending').'</option>
-						<option value="1" '.(Tools::getValue('BLOCK_CATEG_SORT_WAY', Configuration::get('BLOCK_CATEG_SORT_WAY')) ? 'selected="selected" ' : '').'>'.$this->l('Descending').'</option>
-					</select>
-				</div>
-				<label>'.$this->l('How many footer columns would you like?').'</label>
-				<div class="margin-form">
-					<input type="text" name="nbrColumns" value="'.(int)Configuration::get('BLOCK_CATEG_NBR_COLUMN_FOOTER').'" />
-					<p class="clear">'.$this->l('Define the number of footer columns.').'</p>
-				</div>
-				<center><input type="submit" name="submitBlockCategories" value="'.$this->l('Save').'" class="button" /></center>
-			</fieldset>
-		</form>';
+		return $output.$this->renderForm();
 	}
 
 	public function getTree($resultParents, $resultIds, $maxDepth, $id_category = null, $currentDepth = 0)
@@ -336,5 +294,114 @@ class BlockCategories extends Module
 	public function hookActionAdminMetaControllerUpdate_optionsBefore($params)
 	{
 		$this->_clearBlockcategoriesCache();
+	}
+	
+	public function renderForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Settings'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'text',
+						'label' => $this->l('Maximum depth'),
+						'name' => 'BLOCK_CATEG_MAX_DEPTH',
+						'desc' => $this->l('Set the maximum depth of sublevels displayed in this block (0 = infinite)'),
+					),
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Dynamic'),
+						'name' => 'BLOCK_CATEG_DHTML',
+						'desc' => $this->l('Activate dynamic (animated) mode for sublevels.'),
+						'values' => array(
+									array(
+										'id' => 'active_on',
+										'value' => 1,
+										'label' => $this->l('Enabled')
+									),
+									array(
+										'id' => 'active_off',
+										'value' => 0,
+										'label' => $this->l('Disabled')
+									)
+								),
+					),
+					array(
+						'type' => 'radio',
+						'label' => $this->l('Sort:'),
+						'name' => 'BLOCK_CATEG_SORT',
+						'values' => array(
+							array(
+								'id' => 'name',
+								'value' => 1,
+								'label' => $this->l('By name')
+							),
+							array(
+								'id' => 'position',
+								'value' => 0,
+								'label' => $this->l('By position')
+							),
+						)
+					),
+					array(
+						'type' => 'radio',
+						'label' => $this->l('Sort way:'),
+						'name' => 'BLOCK_CATEG_SORT_WAY',
+						'values' => array(
+							array(
+								'id' => 'name',
+								'value' => 1,
+								'label' => $this->l('Descending')
+							),
+							array(
+								'id' => 'position',
+								'value' => 0,
+								'label' => $this->l('Ascending')
+							),
+						)
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('How many footer columns would you like?'),
+						'name' => 'BLOCK_CATEG_NBR_COLUMN_FOOTER',
+					),
+				),
+			'submit' => array(
+				'title' => $this->l('Save'),
+				'class' => 'btn btn-primary')
+			),
+		);
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitBlockCategories';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function getConfigFieldsValues()
+	{
+		return array(
+			'BLOCK_CATEG_MAX_DEPTH' => Tools::getValue('BLOCK_CATEG_MAX_DEPTH', Configuration::get('BLOCK_CATEG_MAX_DEPTH')),
+			'BLOCK_CATEG_DHTML' => Tools::getValue('BLOCK_CATEG_DHTML', Configuration::get('BLOCK_CATEG_DHTML')),
+			'BLOCK_CATEG_NBR_COLUMN_FOOTER' => Tools::getValue('BLOCK_CATEG_NBR_COLUMN_FOOTER', Configuration::get('BLOCK_CATEG_NBR_COLUMN_FOOTER')),
+			'BLOCK_CATEG_SORT_WAY' => Tools::getValue('BLOCK_CATEG_SORT_WAY', Configuration::get('BLOCK_CATEG_SORT_WAY')),
+			'BLOCK_CATEG_SORT' => Tools::getValue('BLOCK_CATEG_SORT', Configuration::get('BLOCK_CATEG_SORT')),
+		);
 	}
 }
