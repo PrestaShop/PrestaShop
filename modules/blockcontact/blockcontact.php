@@ -62,27 +62,13 @@ class Blockcontact extends Module
 		// If we try to update the settings
 		if (Tools::isSubmit('submitModule'))
 		{				
-			Configuration::updateValue('blockcontact_telnumber', Tools::getValue('telnumber'));
-			Configuration::updateValue('blockcontact_email', Tools::getValue('email'));
+			Configuration::updateValue('blockcontact_telnumber', Tools::getValue('blockcontact_telnumber'));
+			Configuration::updateValue('blockcontact_email', Tools::getValue('blockcontact_email'));
 			$this->_clearCache('blockcontact.tpl');
-			$html .= '<div class="conf confirm">'.$this->l('Configuration updated').'</div>';
+			$html .= $this->displayConfirmation($this->l('Configuration updated'));
 		}
 
-		$html .= '
-		<h2>'.$this->displayName.'</h2>
-		<form action="'.Tools::htmlentitiesutf8($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset>			
-				<label for="telnumber">'.$this->l('Telephone number:').'</label>
-				<input type="text" id="telnumber" name="telnumber" value="'.((Configuration::get('blockcontact_telnumber') != '') ? Tools::safeOutput(Configuration::get('blockcontact_telnumber')) : '').'" />
-				<div class="clear">&nbsp;</div>
-				<label for="email">'.$this->l('Email').'</label>
-				<input type="text" id="email" name="email" value="'.((Configuration::get('blockcontact_email') != '') ? Tools::safeOutput(Configuration::get('blockcontact_email')) : '').'" />
-				<div class="clear">&nbsp;</div>
-				<div class="margin-form">
-					<input type="submit" name="submitModule" value="'.$this->l('Update settings').'" class="button" /></center>
-				</div>
-			</fieldset>
-		</form>';
+		$html .= $this->renderForm();
 
 		return $html;
 	}
@@ -106,6 +92,61 @@ class Blockcontact extends Module
 	public function hookDisplayLeftColumn()
 	{
 		return $this->hookDisplayRightColumn();
+	}
+	
+		public function renderForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Settings'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'text',
+						'label' => $this->l('Telephone number'),
+						'name' => 'blockcontact_telnumber',
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Email'),
+						'name' => 'blockcontact_email',
+					),
+				),
+			'submit' => array(
+				'title' => $this->l('Save'),
+				'class' => 'btn btn-primary')
+			),
+		);
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$this->fields_form = array();
+
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitModule';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function getConfigFieldsValues()
+	{
+		return array(
+			'blockcontact_telnumber' => Tools::getValue('blockcontact_telnumber', Configuration::get('blockcontact_telnumber')),
+			'blockcontact_email' => Tools::getValue('blockcontact_email', Configuration::get('blockcontact_email')),
+		);
 	}
 }
 ?>
