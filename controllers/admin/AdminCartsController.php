@@ -115,6 +115,7 @@ class AdminCartsControllerCore extends AdminController
 		$this->context->cart = $cart;
 		$this->context->currency = $currency;
 		$this->context->customer = $customer;
+		$this->toolbar_title = sprintf($this->l('Cart #%06d'), $this->context->cart->id);
 		$products = $cart->getProducts();
 		$customized_datas = Product::getAllCustomizedDatas((int)$cart->id);
 		Product::addCustomizationPrice($products, $customized_datas);
