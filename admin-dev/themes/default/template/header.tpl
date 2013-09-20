@@ -297,7 +297,10 @@
 			</div>
 {/if}
 {if $display_header && $is_multishop && $shop_list && ($multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
-			<div class="multishop_toolbar">
-				<span class="text_multishop">{l s='Multistore configuration for'}</span> {$shop_list}
-			</div>
+			<fieldset class="multishop_toolbar">
+				<div class="col-lg-12 form-horizontal">
+					<label class="control-label col-lg-3">{l s='Multistore configuration for'}</label>
+					<div class="col-lg-9">{$shop_list}</div>
+				</div>
+			</fieldset>
 {/if}
