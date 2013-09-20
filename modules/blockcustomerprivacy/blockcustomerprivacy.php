@@ -74,86 +74,10 @@ class Blockcustomerprivacy extends Module
 				}
 			Configuration::updateValue('CUSTPRIV_MESSAGE', $message_trads, true);
 			$this->_clearCache('blockcustomerprivacy.tpl');
-			$output = '<div class="conf confirm">'.$this->l('Configuration updated').'</div>';
-		}
+			$output .= $this->displayConfirmation($this->l('Configuration updated'));
+		}		
 		
-		$content = '';
-		if (version_compare(_PS_VERSION_, '1.4.0.0') >= 0)
-			$content .= '
-			<script type="text/javascript">	
-				var iso = \''.(file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en').'\' ;
-				var pathCSS = \''._THEME_CSS_DIR_.'\' ;
-				var ad = \''.dirname($_SERVER['PHP_SELF']).'\' ;
-			</script>
-			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tiny_mce/tiny_mce.js"></script>
-			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tinymce.inc.js"></script>
-			<script language="javascript" type="text/javascript">
-				id_language = Number('.$id_lang_default.');
-				tinySetup();
-			</script>';
-		else
-		{
-			$content .= '
-			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-			<script type="text/javascript">
-				tinyMCE.init({
-					mode : "textareas",
-					theme : "advanced",
-					plugins : "safari,pagebreak,style,layer,table,advimage,advlink,inlinepopups,media,searchreplace,contextmenu,paste,directionality,fullscreen",
-					theme_advanced_buttons1 : "newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
-					theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,,|,forecolor,backcolor",
-					theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,media,|,ltr,rtl,|,fullscreen",
-					theme_advanced_buttons4 : "insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,del,ins,attribs,|,pagebreak",
-					theme_advanced_toolbar_location : "top",
-					theme_advanced_toolbar_align : "left",
-					theme_advanced_statusbar_location : "bottom",
-					theme_advanced_resizing : false,
-					content_css : "'.__PS_BASE_URI__.'themes/'._THEME_NAME_.'/css/global.css",
-					document_base_url : "'.__PS_BASE_URI__.'",
-					width: "600",
-					height: "auto",
-					font_size_style_values : "8pt, 10pt, 12pt, 14pt, 18pt, 24pt, 36pt",
-					template_external_list_url : "lists/template_list.js",
-					external_link_list_url : "lists/link_list.js",
-					external_image_list_url : "lists/image_list.js",
-					media_external_list_url : "lists/media_list.js",
-					elements : "nourlconvert",
-					entity_encoding: "raw",
-					convert_urls : false,
-					language : "'.(file_exists(_PS_ROOT_DIR_.'/js/tinymce/jscripts/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en').'"
-				});
-				id_language = Number('.$id_lang_default.');
-			</script>';
-		}
-		
-		$values = Configuration::getInt('CUSTPRIV_MESSAGE');
-		$content .= $output;
-		$content .= '
-		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
-			<form action="'.htmlentities($_SERVER['REQUEST_URI']).'" method="post">				
-				<label>'.$this->l('Customer data privacy message.').'</label>
-				<div class="margin-form">';
-		foreach ($languages as $language)
-			$content .= '					
-					<div id="ccont_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $id_lang_default ? 'block' : 'none').';float: left;">
-						<textarea class="rte" cols="70" rows="30" id="custpriv_message_'.$language['id_lang'].'" name="custpriv_message_'.$language['id_lang'].'">'.(isset($values[$language['id_lang']]) ? $values[$language['id_lang']] : '').'</textarea>
-					</div>';		
-		$content .= $this->displayFlags($languages, $id_lang_default, 'ccont', 'ccont', true).'
-					<div class="clear">
-				</div>
-					<p>
-						'.$this->l('The customer data privacy message will be displayed in the account creation form.').'<br />
-						'.$this->l('Tip: If the customer privacy message is too long to be written directly in the form, you can add a link to one of your pages. This can easily be created via the "CMS" page under the "Preferences" menu.').'
-					</p>
-				</div>
-				<div class="clear">&nbsp;</div>
-				<div class="margin-form">
-					<input type="submit" class="button" name="submitCustPrivMess" value="'.$this->l('Save').'" />
-				</div>
-			</form>
-		</fieldset>';
-		
-		return $content;
+		return $output.$this->renderForm();
 	}
 	
 	public function checkConfig()
@@ -193,4 +117,59 @@ class Blockcustomerprivacy extends Module
 		
 		return $this->display(__FILE__, 'blockcustomerprivacy.tpl', $this->getCacheId());
 	}
-} 
+	
+	public function renderForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Settings'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'textarea',
+						'lang' => true,
+						'autoload_rte' => true,
+						'label' => $this->l('Customer data privacy message :'),
+						'name' => 'custpriv_message',
+						'desc' => $this->l('The customer data privacy message will be displayed in the account creation form.').'<br>'.$this->l('
+Tip: If the customer privacy message is too long to be written directly in the form, you can add a link to one of your pages. This can easily be created via the "CMS" page under the "Preferences" menu.')
+					),
+				),
+			'submit' => array(
+				'title' => $this->l('Save'),
+				'class' => 'btn btn-primary')
+			),
+		);
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$this->fields_form = array();
+
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitCustPrivMess';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function getConfigFieldsValues()
+	{
+		$return = array();
+		foreach (Language::getLanguages(false) as $lang)
+			$return['custpriv_message'][(int)$lang['id_lang']] = Tools::getValue('custpriv_message_'.(int)$lang['id_lang'], Configuration::get('CUSTPRIV_MESSAGE', (int)$lang['id_lang']));
+
+		return $return;
+	}
+}
