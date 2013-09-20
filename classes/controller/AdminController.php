@@ -334,8 +334,9 @@ class AdminControllerCore extends Controller
 
 		if (!Shop::isFeatureActive())
 			$this->shopLinkType = '';
-
+		
 		//$this->base_template_folder = _PS_BO_ALL_THEMES_DIR_.$this->bo_theme.'/template';
+		//Why is truncated the Controller Name String from 5 character until the end ????????
 		$this->override_folder = Tools::toUnderscoreCase(substr($this->controller_name, 5)).'/';
 		// Get the name of the folder containing the custom tpl files
 		$this->tpl_folder = Tools::toUnderscoreCase(substr($this->controller_name, 5)).'/';
@@ -2911,7 +2912,7 @@ class AdminControllerCore extends Controller
 		// If view access is denied, we want to use the default template that will be used to display an error
 		if ($this->viewAccess() && $this->override_folder)
 		{
-			if (file_exists($this->context->smarty->getTemplateDir(1).DIRECTORY_SEPARATOR.$this->override_folder.$tpl_name))
+			if (file_exists($this->context->smarty->getTemplateDir(1).$this->override_folder.$tpl_name))
 				return $this->context->smarty->createTemplate($this->override_folder.$tpl_name, $this->context->smarty);
 			else if (file_exists($this->context->smarty->getTemplateDir(0).'controllers'.DIRECTORY_SEPARATOR.$this->override_folder.$tpl_name))
 				return $this->context->smarty->createTemplate('controllers'.DIRECTORY_SEPARATOR.$this->override_folder.$tpl_name, $this->context->smarty);
