@@ -202,18 +202,29 @@ class HelperTreeCategoriesCore extends TreeCore
 			&& !empty($this->_disabled_categories))
 			$this->_disableCategories($data, $this->getDisabledCategories());
 
-		$this->setActions(array(
-			new TreeToolbarLink(
-				'Collapse All',
-				'#',
-				'$(\'#'.$this->getId().'\').tree(\'collapseAll\')',
-				'icon-collapse-alt'),
-			new TreeToolbarLink(
-				'Expand All',
-				'#',
-				'$(\'#'.$this->getId().'\').tree(\'expandAll\')',
-				'icon-expand-alt')
-		));
+		//Default bootstrap style of search is push-right, so we add this button first
+		if ($this->useSearch())
+		{
+			$this->addAction(new TreeToolbarSearchCategories(
+				'Find a category:',
+				$this->getId().'-categories-search')
+			);
+			$this->setAttribute('use_search', $this->useSearch());
+		}
+
+		$this->addAction(new TreeToolbarLink(
+			'Collapse All',
+			'#',
+			'$(\'#'.$this->getId().'\').tree(\'collapseAll\')',
+			'icon-collapse-alt')
+		);
+
+		$this->addAction(new TreeToolbarLink(
+			'Expand All',
+			'#',
+			'$(\'#'.$this->getId().'\').tree(\'expandAll\')',
+			'icon-expand-alt')
+		);
 
 		if ($this->useCheckBox())
 		{
@@ -235,14 +246,7 @@ class HelperTreeCategoriesCore extends TreeCore
 			$this->setAttribute('use_checkbox', $this->useCheckBox());
 		}
 
-		if ($this->useSearch())
-		{
-			$this->addAction(new TreeToolbarSearchCategories(
-				'Find a category:',
-				$this->getId().'-categories-search')
-			);
-			$this->setAttribute('use_search', $this->useSearch());
-		}
+		
 
 		$this->setAttribute('selected_categories', $this->getSelectedCatgories());		
 		return parent::render($data);
