@@ -1630,15 +1630,18 @@ abstract class ModuleCore
 	
 	protected function getCacheId($name = null)
 	{
-		$cache_array = array(
-			$name !== null ? $name : $this->name,
-			(int)Tools::usingSecureMode(),
-			(int)$this->context->shop->id,
-			(int)Group::getCurrent()->id,
-			(int)$this->context->language->id,
-			(int)$this->context->currency->id,
-			(int)$this->context->country->id
-		);
+		$cache_array = array();
+		$cache_array[] = $name !== null ? $name : $this->name;
+		if (Configuration::get('PS_SSL_ENABLED'))
+			$cache_array[] = (int)Tools::usingSecureMode();
+		if (Shop::isFeatureActive())
+			$cache_array[] = (int)$this->context->shop->id;
+		$cache_array[] = (int)Group::getCurrent()->id;
+		if (Language::isMultiLanguageActivated())
+			$cache_array[] = (int)$this->context->language->id;
+		if (Currency::isMultiCurrencyActivated())
+			$cache_array[] = (int)$this->context->currency->id;
+		$cache_array[] = (int)$this->context->country->id;
 		return implode('|', $cache_array);
 	}
 

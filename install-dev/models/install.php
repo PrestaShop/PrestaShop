@@ -520,7 +520,6 @@ class InstallModelInstall extends InstallAbstractModel
 				'blockcontact',
 				'blockcontactinfos',
 				'blockcurrencies',
-				'blockcustomerprivacy',
 				'blocklanguages',
 				'blockmanufacturer',
 				'blockmyaccount',
