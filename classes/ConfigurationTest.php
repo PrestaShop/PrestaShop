@@ -58,7 +58,8 @@ class ConfigurationTestCore
 			'theme_cache_dir' => 'themes/'._THEME_NAME_.'/cache/',
 			'translations_dir' => 'translations',
 			'customizable_products_dir' => 'upload',
-			'virtual_products_dir' => 'download'
+			'virtual_products_dir' => 'download',
+			'files' => false
 		);
 	}
 
@@ -317,5 +318,22 @@ class ConfigurationTestCore
 	public static function test_dom()
 	{
 		return extension_loaded('Dom');
+	}
+	
+	public static function test_files()
+	{
+		$files = array(
+			'/cache/smarty/compile/index.php',
+			'/classes/log/index.php',
+			'/classes/cache/index.php',
+			'/config/index.php',
+			'/tools/tar/Archive_Tar.php',
+			'/tools/pear/PEAR.php',
+			'/index.php'
+		);
+		foreach ($files as $file)
+			if (!file_exists(rtrim(_PS_ROOT_DIR_, DIRECTORY_SEPARATOR).str_replace('/', DIRECTORY_SEPARATOR, $file)))
+				return false;
+		return true;		
 	}
 }
