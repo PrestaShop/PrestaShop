@@ -28,6 +28,7 @@ class AdminShopUrlControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 	 	$this->table = 'shop_url';
 		$this->className = 'ShopUrl';
 	 	$this->lang = false;
@@ -44,11 +45,10 @@ class AdminShopUrlControllerCore extends AdminController
 			'id_shop_url' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
-				'width' => 25
+				'class' => 'fixed-width-xs'
 			),
 			'shop_name' => array(
 				'title' => $this->l('Shop name'),
-				'width' => 150,
 				'filter_key' => 's!name'
 			),
 			'url' => array(
@@ -63,7 +63,7 @@ class AdminShopUrlControllerCore extends AdminController
 				'type' => 'bool',
 				'orderby' => false,
 				'filter_key' => 'main',
-				'width' => 100,
+				'class' => 'fixed-width-md'
 			),
 			'active' => array(
 				'title' => $this->l('Enabled'),
@@ -72,7 +72,7 @@ class AdminShopUrlControllerCore extends AdminController
 				'type' => 'bool',
 				'orderby' => false,
 				'filter_key' => 'active',
-				'width' => 50,
+				'class' => 'fixed-width-md'
 			),
 		);
 
@@ -118,7 +118,8 @@ class AdminShopUrlControllerCore extends AdminController
 			array(
 				'form' => array(
 					'legend' => array(
-						'title' => $this->l('URL options')
+						'title' => $this->l('URL options'),
+						'icon' => 'icon-cogs' 
 					),
 					'input' => array(
 						array(
@@ -139,20 +140,18 @@ class AdminShopUrlControllerCore extends AdminController
 							)
 						),
 						array(
-							'type' => 'radio',
+							'type' => 'switch',
 							'label' => $this->l('Main URL:'),
 							'name' => 'main',
 							'class' => 't',
 							'values' => array(
 								array(
 									'id' => 'main_on',
-									'value' => 1,
-									'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" />'
+									'value' => 1
 								),
 								array(
 									'id' => 'main_off',
-									'value' => 0,
-									'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" />'
+									'value' => 0
 								)
 							),
 							'desc' => array(
@@ -168,24 +167,21 @@ class AdminShopUrlControllerCore extends AdminController
 							)
 						),
 						array(
-							'type' => 'radio',
-							'label' => $this->l('Status:'),
+							'type' => 'switch',
+							'label' => $this->l('Enabled:'),
 							'name' => 'active',
 							'required' => false,
 							'class' => 't',
 							'values' => array(
 								array(
 									'id' => 'active_on',
-									'value' => 1,
-									'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" />'
+									'value' => 1
 								),
 								array(
 									'id' => 'active_off',
-									'value' => 0,
-									'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" />'
+									'value' => 0
 								)
-							),
-							'desc' => $this->l('Enabled or disabled')
+							)
 						)
 					),
 					'submit' => array(
@@ -197,7 +193,8 @@ class AdminShopUrlControllerCore extends AdminController
 			array(
 				'form' => array(
 					'legend' => array(
-						'title' => $this->l('Shop URL')
+						'title' => $this->l('Shop URL'),
+						'icon' => 'icon-shopping-cart'
 					),
 					'input' => array(
 						array(
@@ -225,7 +222,7 @@ class AdminShopUrlControllerCore extends AdminController
 							'name' => 'virtual_uri',
 							'desc' => $desc_virtual_uri,
 							'size' => 50,
-							'hint' => (!$update_htaccess) ? $this->l('Warning: URL rewriting (e.g. mod_rewrite for Apache) seems to be disabled. If your URL doesn\'t work, please check with your host provider on how to activate URL rewriting.') : '',
+							'hint' => (!$update_htaccess) ? $this->l('Warning: URL rewriting (e.g. mod_rewrite for Apache) seems to be disabled. If your URL doesn\'t work, please check with your host provider on how to activate URL rewriting.') : null,
 						),
 						array(
 							'type' => 'text',
@@ -290,7 +287,6 @@ class AdminShopUrlControllerCore extends AdminController
 
 	public function initContent()
 	{
-		$this->list_simple_header = true;
 		parent::initContent();
 
 		$this->addJqueryPlugin('cookie-plugin');

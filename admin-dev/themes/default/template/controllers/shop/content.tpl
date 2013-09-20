@@ -27,15 +27,12 @@
 	{include file="toolbar.tpl" toolbar_btn=$toolbar_btn toolbar_scroll=$toolbar_scroll title=$title}
 {/if}
 
-<div class="multishop-left">
-	<div class="multishop-title">{l s='Multistore tree'}</div>
-	{include file="controllers/shop/tree.tpl" selected_tree_id=$selected_tree_id}
+<div class="row">
+	<div class="col-lg-4">
+		<fieldset>
+			<h3><i class="icon-sitemap"></i> {l s='Multistore tree'}</h3>
+			{include file="controllers/shop/tree.tpl" selected_tree_id=$selected_tree_id}	
+		</fieldset>
+	</div>
+	<div class="col-lg-8">{$content}</div>
 </div>
-<div class="multishop-right">{$content}</div>
-
-<script type="text/javascript">
-	$().ready(function(){
-		if (parseInt($('.multishop-right').css('height')) > 200)
-			$('.multishop-left').css('height', $('.multishop-right').css('height'));
-	})
-</script>

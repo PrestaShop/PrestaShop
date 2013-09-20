@@ -27,10 +27,15 @@
 {block name="input"}
 	{if $input.type == 'theme'}
 		{foreach $input.values as $theme}
-			<div class="select_theme {if $theme->id == $fields_value.id_theme_checked}select_theme_choice{/if}" onclick="$(this).find('input').attr('checked', true); $('.select_theme').removeClass('select_theme_choice'); $(this).toggleClass('select_theme_choice');">
-				{$theme->name}<br />
-				<img src="../themes/{$theme->directory}/preview.jpg" alt="{$theme->directory}" /><br />
-				<input type="radio" name="id_theme" value="{$theme->id}" {if $theme->id == $fields_value.id_theme_checked}checked="checked"{/if} />
+			<div class="col-lg-3 select_theme {if $theme->id == $fields_value.id_theme_checked}select_theme_choice{/if}" onclick="$(this).find('input').attr('checked', true); $('.select_theme').removeClass('select_theme_choice'); $(this).toggleClass('select_theme_choice');">
+				<div class="radio">
+					<label>
+						<input type="radio" name="id_theme" value="{$theme->id}"{if $theme->id == $fields_value.id_theme_checked} checked="checked"{/if}> {$theme->name}
+					</label>
+				</div>
+				<div class="theme_container">
+					<img class="thumbnail" src="../themes/{$theme->directory}/preview.jpg" alt="{$theme->directory}">
+				</div>
 			</div>
 		{/foreach}
 		<div class="clear">&nbsp;</div>
@@ -65,50 +70,55 @@
 
 {block name="other_fieldsets"}
 	{if isset($form_import)}
-		<br /><br />
-		<fieldset><legend>{l s='Import data from another shop'}</legend>
-			{foreach $form_import as $key => $field}
-				{if $key == 'radio'}
-					<label>{$field.label} :</label>
-					<div class="margin-form">
-						<label class="t" for="{$field.name}_on"><img src="../img/admin/enabled.gif" alt="{l s='Yes'}" title="{l s='Yes'}" /></label>
-						<input type="radio" name="{$field.name}" id="{$field.name}_on" value="1" {if $field.value } checked="checked" {/if} />
-						<label class="t" for="{$field.name}_on"> {l s='Yes'}</label>
-						<label class="t" for="{$field.name}_off"><img src="../img/admin/disabled.gif" alt="{l s='No'}" title="{l s='No'}" style="margin-left: 10px;" /></label>
-						<input type="radio" name="{$field.name}" id="{$field.name}_off" value="0" {if !$field.value } checked="checked" {/if}/>
-						<label class="t" for="{$field.name}_off"> {l s='No'}</label>
-					</div>
-				{elseif $key == 'select'}
-					<div id="shop_list" {if !$checked}display:none{/if}>
-						<label>{$field.label} :</label>
-						<div class="margin-form">
-							<select name="{$field.name}" id="{$field.name}" >
-								{foreach $field.options.query AS $key => $option}
-									<option value="{$key}" {if $key == $defaultShop}selected="selected"{/if}>
-										{$option.name}
-									</option>
-								{/foreach}
-							</select>
-						</div>
-					</div>
-				{elseif $key == 'allcheckbox'}
-				<div id="data_list" {if !$checked}display:none{/if}>
-					<label>{$field.label} :</label>
-					<div class="margin-form">
-						<ul>
-							{foreach $field.values as $key => $label}
-								<li><input type="checkbox" name="importData[{$key}]" checked="checked" /> {$label}</li>
-							{/foreach}
-						</ul>
-					</div>
+	<fieldset>
+		<h3><i class="icon-cloud-download"></i> {l s='Import data from another shop'}</h3>
+		{foreach $form_import as $key => $field}
+		<div class="row">
+		{if $key == 'radio'}
+			<label class="control-label col-lg-3">{$field.label} :</label>
+			<div class="col-lg-2">
+				<span class="switch prestashop-switch">
+					<input type="radio" name="{$field.name}" id="{$field.name}_on" value="1" {if $field.value } checked="checked" {/if}>
+					<label class="radio" for="{$field.name}_on">
+						<i class="icon-check-sign color_success"></i> {l s='Yes'}
+					</label>
+					<input type="radio" name="{$field.name}" id="{$field.name}_off" value="0"  {if !$field.value } checked="checked" {/if}>
+					<label class="radio" for="{$field.name}_off">
+						<i class="icon-ban-circle color_danger"></i> {l s='No'}
+					</label>
+					<span class="slide-button btn btn-default"></span>
+				</span>
+			</div>
+		{elseif $key == 'select'}
+			<div id="shop_list" {if !$checked}display:none{/if}>
+				<label class="control-label col-lg-3">{$field.label} :</label>
+				<div class="col-lg-9">
+					<select name="{$field.name}" id="{$field.name}" >
+						{foreach $field.options.query AS $key => $option}
+							<option value="{$key}" {if $key == $defaultShop}selected="selected"{/if}>
+								{$option.name}
+							</option>
+						{/foreach}
+					</select>
 				</div>
-				{elseif $key == 'submit'}
-					<div class="margin-form">
-						<input type="submit" value="{$field.title}" name="submitAdd{$table}" {if isset($field.class)}class="{$field.class}"{/if} />
-					</div>
-				{/if}				
-			{/foreach}
-		</fieldset>
+			</div>
+		{elseif $key == 'allcheckbox'}
+			<div id="data_list" {if !$checked}display:none{/if}>
+				<label class="control-label col-lg-3">{$field.label} :</label>
+				<div class="col-lg-9">					
+				{foreach $field.values as $key => $label}
+					<p class="checkbox"><input type="checkbox" name="importData[{$key}]" checked="checked" /> {$label}</p>
+				{/foreach}					
+				</div>
+			</div>
+		{elseif $key == 'submit'}
+			<div class="col-lg-9">
+				<input type="submit" value="{$field.title}" name="submitAdd{$table}" class="btn btn-default{if isset($field.class)} {$field.class}{/if}" />
+			</div>
+		{/if}
+		</div>			
+		{/foreach}
+	</fieldset>
 	{/if}
 {/block}
 

@@ -75,7 +75,7 @@
 								{/if}
 								{block name="label"}
 									{if isset($field['title']) && isset($field['hint'])}
-										<label class="control-label col-lg-3 {if isset($field['required']) && $field['required'] && $field['type'] != 'radio'}required{/if}">
+										<label class="control-label col-lg-3 {if isset($field['required']) && $field['required'] && $field['type'] != 'radio'}required{/if}" for="{$key}">
 											<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="
 												{if is_array($field['hint'])}
 													{foreach $field['hint'] as $hint}
@@ -93,7 +93,7 @@
 											</span>
 										</label>
 									{elseif isset($field['title'])}
-										<label class="control-label col-lg-3">{$field['title']}</label>
+										<label class="control-label col-lg-3" for="{$key}">{$field['title']}</label>
 									{/if}
 								{/block}
 								{block name="field"}

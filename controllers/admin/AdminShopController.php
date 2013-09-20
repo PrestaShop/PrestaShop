@@ -29,6 +29,7 @@ class AdminShopControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->context = Context::getContext();
 		$this->table = 'shop';
 		$this->className = 'Shop';
@@ -39,7 +40,7 @@ class AdminShopControllerCore extends AdminController
 			'id_shop' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
-				'width' => 25
+				'class' => 'fixed-width-xs'
 			),
 			'name' => array(
 				'title' => $this->l('Shop'),
@@ -145,7 +146,6 @@ class AdminShopControllerCore extends AdminController
 
 	public function initContent()
 	{
-		$this->list_simple_header = true;
 		parent::initContent();
 
 		$this->addJqueryPlugin('cookie-plugin');
@@ -313,14 +313,15 @@ class AdminShopControllerCore extends AdminController
 
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Shop')
+				'title' => $this->l('Shop'),
+				'icon' => 'icon-shopping-cart'
 			),
 			'input' => array(
 				array(
 					'type' => 'text',
 					'label' => $this->l('Shop name:'),
-					'desc' => $this->l('This field does not refer to the shop name visible in the front office.').' '.
-						sprintf($this->l('Follow %sthis link%s to edit the shop name used on the Front Office.'), '<a href="'.$this->context->link->getAdminLink('AdminStores').'">', '</a>'),
+					'desc' => array($this->l('This field does not refer to the shop name visible in the front office.'),
+							sprintf($this->l('Follow %sthis link%s to edit the shop name used on the Front Office.'), '<a href="'.$this->context->link->getAdminLink('AdminStores').'">', '</a>')),
 					'name' => 'name',
 					'required' => true,
 				)
@@ -398,34 +399,60 @@ class AdminShopControllerCore extends AdminController
 		if (Tools::isSubmit('id_shop'))
 		{
 			$shop = new Shop((int)Tools::getValue('id_shop'));
-			$parent = $shop->id_category;
+			$id_root = $shop->id_category;
 		}
 		else
-			$parent = $categories[0]['id_category'];
+			$id_root = $categories[0]['id_category'];
+
+
+		$id_shop = (int)Tools::getValue('id_shop');
+		$shop = new Shop($id_shop);
+		$selected_cat = Shop::getCategories($id_shop);
+
+		if (empty($selected_cat))
+		{
+			// get first category root and preselect all these children
+			$root_categories = Category::getRootCategories();
+			$root_category = new Category($root_categories[0]['id_category']);
+			$children = $root_category->getAllChildren($this->context->language->id);
+			$selected_cat[] = $root_categories[0]['id_category'];
+			
+			foreach ($children as $child)
+				$selected_cat[] = $child->id;
+		}
+
+		if (Shop::getContext() == Shop::CONTEXT_SHOP && Tools::isSubmit('id_shop'))
+			$root_category = new Category($shop->id_category);
+		else
+			$root_category = new Category($id_root);
+
 		$this->fields_form['input'][] = array(
-			'type' => 'categories_select',
+			'type' => 'categories',
 			'name' => 'categoryBox',
 			'label' => $this->l('Associated categories:'),
-			'category_tree' => $this->initCategoriesAssociation($parent),
+			'tree' => array(
+				'id' => 'categories-tree',
+				'selected_categories' => $selected_cat,
+				'root_category' => $root_category->id,
+				'use_search' => true,
+				'use_checkbox' => true
+			),
 			'desc' => $this->l('By selecting associated categories, you are choosing to share the categories between shops. Once associated between shops, any alteration of this category will impact every shop.')
 		);
 		/*$this->fields_form['input'][] = array(
-			'type' => 'radio',
-			'label' => $this->l('Status:'),
+			'type' => 'switch',
+			'label' => $this->l('Enabled:'),
 			'name' => 'active',
 			'required' => true,
-			'class' => 't',
 			'is_bool' => true,
 			'values' => array(
 				array(
 					'id' => 'active_on',
-					'value' => 1,
-					'label' => $this->l('Enabled')
+					'value' => 1
 				),
 				array(
 					'id' => 'active_off',
-					'value' => 0,
-					'label' => $this->l('Disabled')
+					'value' => 0
 				)
 			),
 			'desc' => $this->l('Enable or disable your store?')
