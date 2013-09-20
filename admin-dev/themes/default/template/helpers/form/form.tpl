@@ -194,19 +194,6 @@
 										{if isset($input.maxchar)}
 										</div>
 										{/if}
-										{if !empty($input.desc)}
-										<div class="alert alert-info">
-										{if is_array($input.desc)}
-											<ul>
-											{foreach $input.desc as $desc}
-												<li>{$desc}</li>
-											{/foreach}
-											</ul>
-										{else}
-											{$input.desc}
-										{/if}
-										</div>
-										{/if}
 										{if isset($input.maxchar)}
 										<script type="text/javascript">
 										function countDown($source, $target) {
