@@ -66,47 +66,23 @@ class BlockNewProducts extends Module
 
 	public function getContent()
 	{
-		$output = '<h2>'.$this->displayName.'</h2>';
+		$output = '';
 		if (Tools::isSubmit('submitBlockNewProducts'))
 		{
-			if (!($productNbr = Tools::getValue('productNbr')) || empty($productNbr))
-				$output .= '<div class="alert error">'.$this->l('Please complete the "products to display" field.').'</div>';
+			if (!($productNbr = Tools::getValue('NEW_PRODUCTS_NBR')) || empty($productNbr))
+				$output .= $this->displayError($this->l('Please complete the "products to display" field.'));
 			elseif ((int)($productNbr) == 0)
-				$output .= '<div class="alert error">'.$this->l('Invalid number.').'</div>';
+				$output .= $this->displayError($this->l('Invalid number.'));
 			else
 			{
-				Configuration::updateValue('PS_BLOCK_NEWPRODUCTS_DISPLAY', (int)(Tools::getValue('always_display')));
+				Configuration::updateValue('PS_BLOCK_NEWPRODUCTS_DISPLAY', (int)(Tools::getValue('PS_BLOCK_NEWPRODUCTS_DISPLAY')));
 				Configuration::updateValue('NEW_PRODUCTS_NBR', (int)($productNbr));
-				$output .= '<div class="conf confirm">'.$this->l('Settings updated').'</div>';
+				$output .= $this->displayConfirmation($this->l('Settings updated'));
 			}
 		}
-		return $output.$this->displayForm();
+		return $output.$this->renderForm();
 	}
-
-	public function displayForm()
-	{
-		$output = '
-		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
-		<fieldset><legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
-				<label>'.$this->l('Products to display.').'</label>
-					<div class="margin-form">
-						<input type="text" name="productNbr" value="'.(int)(Configuration::get('NEW_PRODUCTS_NBR')).'" />
-						<p class="clear">'.$this->l('Define the number of products to be displayed in this block.').'</p>
-					</div>
-					<label>'.$this->l('Always display this block.').'</label>
-					<div class="margin-form">
-						<input type="radio" name="always_display" id="display_on" value="1" '.(Tools::getValue('always_display', Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY')) ? 'checked="checked" ' : '').'/>
-						<label class="t" for="display_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>
-						<input type="radio" name="always_display" id="display_off" value="0" '.(!Tools::getValue('always_display', Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY')) ? 'checked="checked" ' : '').'/>
-						<label class="t" for="display_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
-						<p class="clear">'.$this->l('Show the block even if no products are available.').'</p>
-					</div>
-					<center><input type="submit" name="submitBlockNewProducts" value="'.$this->l('Save').'" class="button" /></center>
-				</fieldset>
-			</form>';
-		return $output;
-	}
-
+	
 	public function hookRightColumn($params)
 	{
 		if (!$this->isCached('blocknewproducts.tpl', $this->getCacheId()))
@@ -153,5 +129,73 @@ class BlockNewProducts extends Module
 	public function hookDeleteProduct($params)
 	{
 		$this->_clearCache('blocknewproducts.tpl');
+	}
+	
+	public function renderForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Settings'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'text',
+						'label' => $this->l('Products to display'),
+						'name' => 'NEW_PRODUCTS_NBR',
+						'class' => 'fixed-width-xs',
+						'desc' => $this->l('Define the number of products to be displayed in this block.')
+					),
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Always display this block'),
+						'name' => 'PS_BLOCK_NEWPRODUCTS_DISPLAY',
+						'desc' => $this->l('Show the block even if no products are available.'),
+						'values' => array(
+									array(
+										'id' => 'active_on',
+										'value' => 1,
+										'label' => $this->l('Enabled')
+									),
+									array(
+										'id' => 'active_off',
+										'value' => 0,
+										'label' => $this->l('Disabled')
+									)
+								),
+					)
+				),
+			'submit' => array(
+				'title' => $this->l('Save'),
+				'class' => 'btn btn-primary')
+			),
+		);
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitBlockNewProducts';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function getConfigFieldsValues()
+	{		
+		return array(
+			'PS_BLOCK_NEWPRODUCTS_DISPLAY' => Tools::getValue('PS_BLOCK_NEWPRODUCTS_DISPLAY', Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY')),
+			'NEW_PRODUCTS_NBR' => Tools::getValue('NEW_PRODUCTS_NBR', Configuration::get('NEW_PRODUCTS_NBR')),
+		);
 	}
 }
