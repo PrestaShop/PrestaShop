@@ -46,6 +46,7 @@ class AdminScenesControllerCore extends AdminController
 			'id_scene' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'name' => array(
 				'title' => $this->l('Image Maps'),
@@ -54,6 +55,7 @@ class AdminScenesControllerCore extends AdminController
 			'active' => array(
 				'title' => $this->l('Activated'),
 				'align' => 'center',
+				'class' => 'fixed-width-xs',
 				'active' => 'status',
 				'type' => 'bool',
 				'orderby' => false

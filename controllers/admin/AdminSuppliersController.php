@@ -53,11 +53,11 @@ class AdminSuppliersControllerCore extends AdminController
 		$this->fieldImageSettings = array('name' => 'logo', 'dir' => 'su');
 
 		$this->fields_list = array(
-			'id_supplier' => array('title' => $this->l('ID'), 'align' => 'center'),
+			'id_supplier' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
 			'logo' => array('title' => $this->l('Logo'), 'align' => 'center', 'image' => 'su', 'orderby' => false, 'search' => false),
 			'name' => array('title' => $this->l('Name')),
 			'products' => array('title' => $this->l('Number of products'), 'align' => 'right', 'filter_type' => 'int', 'tmpTableFilter' => true),
-			'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
+			'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'class' => 'fixed-width-xs')
 		);
 
 		parent::__construct();

@@ -56,6 +56,8 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_manufacturer' => array(
 				'title' => $this->l('ID'),
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'logo' => array(
 				'title' => $this->l('Logo'),
@@ -70,12 +72,12 @@ class AdminManufacturersControllerCore extends AdminController
 			),
 			'addresses' => array(
 				'title' => $this->l('Addresses'),
-				'align' => 'center',
-				'havingFilter' => true
+				'search' => false,
+				'align' => 'center'
 			),
 			'products' => array(
 				'title' => $this->l('Products:'),
-				'havingFilter' => true,
+				'search' => false,
 				'align' => 'center',
 			),
 			'active' => array(
@@ -83,6 +85,7 @@ class AdminManufacturersControllerCore extends AdminController
 				'active' => 'status',
 				'type' => 'bool',
 				'align' => 'center',
+				'class' => 'fixed-width-xs',
 				'orderby' => false
 			)
 		);
@@ -144,7 +147,9 @@ class AdminManufacturersControllerCore extends AdminController
 
 		return array(
 			'id_address' => array(
-				'title' => $this->l('ID')
+				'title' => $this->l('ID'),
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'manufacturer_name' => array(
 				'title' => $this->l('Manufacturer'),

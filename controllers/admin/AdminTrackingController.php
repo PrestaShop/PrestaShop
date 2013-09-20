@@ -100,10 +100,10 @@ class AdminTrackingControllerCore extends AdminController
 		$this->addRowActionSkipList('edit', array(Category::getTopCategory()->id));
 
 		$this->fields_list = (array(
-			'id_category' => array('title' => $this->l('ID')),
+			'id_category' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs', 'align' => 'center'),
 			'name' => array('title' => $this->l('Name'), 'filter_key' => 'b!name'),
 			'description' => array('title' => $this->l('Description')),
-			'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status')
+			'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs')
 		));
 		$this->clearFilters();
 
@@ -137,10 +137,10 @@ class AdminTrackingControllerCore extends AdminController
 		$this->addRowAction('delete');
 
 		$this->fields_list = array(
-			'id_product' => array('title' => $this->l('ID')),
+			'id_product' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs', 'align' => 'center'),
 			'reference' => array('title' => $this->l('Reference')),
 			'name' => array('title' => $this->l('Name'), 'filter_key' => 'b!name'),
-			'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status')
+			'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs')
 		);
 
 		$this->clearFilters();
@@ -180,10 +180,10 @@ class AdminTrackingControllerCore extends AdminController
 		$this->addRowAction('delete');
 
 		$this->fields_list = array(
-			'id_product' => array('title' => $this->l('ID')),
+			'id_product' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs', 'align' => 'center'),
 			'reference' => array('title' => $this->l('Reference')),
 			'name' => array('title' => $this->l('Name')),
-			'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status')
+			'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs')
 		);
 		$this->clearFilters();
 
@@ -221,7 +221,7 @@ class AdminTrackingControllerCore extends AdminController
 		$this->addRowAction('delete');
 
 		$this->fields_list = array(
-			'id_product' => array('title' => $this->l('ID')),
+			'id_product' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs', 'align' => 'center'),
 			'reference' => array('title' => $this->l('Reference')),
 			'name' => array('title' => $this->l('Name'), 'filter_key' => 'b!name')
 		);

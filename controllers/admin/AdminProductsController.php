@@ -195,6 +195,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->fields_list['id_product'] = array(
 			'title' => $this->l('ID'),
 			'align' => 'center',
+			'class' => 'fixed-width-xs',
 			'type' => 'int'
 		);
 		$this->fields_list['image'] = array(
@@ -254,6 +255,7 @@ class AdminProductsControllerCore extends AdminController
 			'filter_key' => $alias.'!active',
 			'align' => 'center',
 			'type' => 'bool',
+			'class' => 'fixed-width-sm',
 			'orderby' => false
 		);
 
