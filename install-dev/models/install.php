@@ -468,7 +468,7 @@ class InstallModelInstall extends InstallAbstractModel
 			$employee->active = true;
 			$employee->id_profile = 1;
 			$employee->id_lang = Configuration::get('PS_LANG_DEFAULT');
-			$employee->bo_show_screencast = 1;
+			$employee->bo_menu = 1;
 			if (!$employee->add())
 			{
 				$this->setError($this->language->l('Cannot create admin account'));
