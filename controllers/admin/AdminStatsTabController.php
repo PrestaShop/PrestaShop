@@ -143,8 +143,13 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 		$module_instance = array();
 		foreach ($modules as $m => $module)
 		{
-			$module_instance[$module['name']] = Module::getInstanceByName($module['name']);
-			$modules[$m]['displayName'] = $module_instance[$module['name']]->displayName;
+			if ($module_instance[$module['name']] = Module::getInstanceByName($module['name']))
+				$modules[$m]['displayName'] = $module_instance[$module['name']]->displayName;
+			else
+			{
+				unset($module_instance[$module['name']]);
+				unset($modules[$m]);
+			}
 		}
 
 		uasort($modules, array($this, 'checkModulesNames'));
