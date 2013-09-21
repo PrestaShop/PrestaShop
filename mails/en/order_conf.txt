@@ -1,4 +1,4 @@
-﻿Hi {firstname} {lastname},
+Hi {gender} {firstname} {lastname},
 
 Thank you for your order on {shop_name}!
 
