@@ -25,7 +25,7 @@
 {extends file="helpers/view/view.tpl"}
 {block name="override_tpl"}
 	<script type="text/javascript">
-		var errorEmpty = '{l s='Please name your matching configuration to save.' js='1'}';
+		var errorEmpty = '{l s='Please name your matching configuration to save.' js=1}';
 		var token = '{$token}';
 		var current = 0;
 		function showTable(nb)
