@@ -53,7 +53,6 @@ class AdminPreferencesControllerCore extends AdminController
 			);
 			$activities1 = array(
 				0 => $this->l('-- Please choose your main activity --'),
-				1 => $this->l('Adult'),
 				2 => $this->l('Animals and Pets'),
 				3 => $this->l('Art and Culture'),
 				4 => $this->l('Babies'),
@@ -68,6 +67,7 @@ class AdminPreferencesControllerCore extends AdminController
 				13 => $this->l('Home and Garden'),
 				14 => $this->l('Home Appliances'),
 				15 => $this->l('Jewelry'),
+				1 => $this->l('Lingerie and Adult'),
 				16 => $this->l('Mobile and Telecom'),
 				17 => $this->l('Services'),
 				18 => $this->l('Shoes and accessories'),
