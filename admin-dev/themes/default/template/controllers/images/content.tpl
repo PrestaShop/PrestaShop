@@ -79,16 +79,26 @@
 					{l s='Erase previous images'}
 				</label>
 				<div class="col-lg-9">
-					<div class="radio">
-						<label>
-							<input name="erase" type="checkbox" value="1" checked="checked" />
-							{l s='Deselect this checkbox only if your server timed out and you need to resume the regeneration.'}
-						</label>
+					<div class="row">
+						<div class="input-group col-lg-2">
+							<span class="switch prestashop-switch">
+								<input type="radio" name="erase" id="erase_on" value="1" checked="checked">
+								<label for="erase_on" class="radioCheck">
+									<i class="icon-check-sign color_success"></i> {l s='Yes'}
+								</label>
+								<input type="radio" name="erase" id="erase_off" value="0">
+								<label for="erase_off" class="radioCheck">
+									<i class="icon-ban-circle color_danger"></i> {l s='No'}
+								</label>
+								<span class="slide-button btn btn-default"></span>
+							</span>
+						</div>
+						{l s='Select "No" only if your server timed out and you need to resume the regeneration.'}
 					</div>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-lg-9 col-push-3">
+				<div class="col-lg-9 col-lg-push-3">
 					<input type="Submit" name="submitRegenerate{$table}" value="{l s='Regenerate thumbnails'}" class="btn btn-primary" onclick="return confirm('{l s='Are you sure?'}');" />
 				</div>
 			</div>
