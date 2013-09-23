@@ -58,36 +58,20 @@ class BlockViewed extends Module
 
 	public function getContent()
 	{
-		$output = '<h2>'.$this->displayName.'</h2>';
+		$output = '';
 		if (Tools::isSubmit('submitBlockViewed'))
 		{
-			if (!($productNbr = Tools::getValue('productNbr')) || empty($productNbr))
-				$output .= '<div class="alert error">'.$this->l('You must fill in the \'Products displayed\' field.').'</div>';
+			if (!($productNbr = Tools::getValue('PRODUCTS_VIEWED_NBR')) || empty($productNbr))
+				$output .= $this->displayErrors($this->l('You must fill in the \'Products displayed\' field.'));
 			elseif ((int)($productNbr) == 0)
-				$output .= '<div class="alert error">'.$this->l('Invalid number.').'</div>';
+				$output .= $this->displayErrors($this->l('Invalid number.'));
 			else
 			{
 				Configuration::updateValue('PRODUCTS_VIEWED_NBR', (int)$productNbr);
-				$output .= '<div class="conf confirm">'.$this->l('Settings updated').'</div>';
+				$output .= $this->displayConfirmation($this->l('Settings updated'));
 			}
 		}
-		return $output.$this->displayForm();
-	}
-
-	public function displayForm()
-	{
-		$output = '
-		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset><legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
-				<label>'.$this->l('Products displayed').'</label>
-				<div class="margin-form">
-					<input type="text" name="productNbr" value="'.(int)Configuration::get('PRODUCTS_VIEWED_NBR').'" />
-					<p class="clear">'.$this->l('Define the number of products displayed in this block.').'</p>
-				</div>
-				<center><input type="submit" name="submitBlockViewed" value="'.$this->l('Save').'" class="button" /></center>
-			</fieldset>
-		</form>';
-		return $output;
+		return $output.$this->renderForm();
 	}
 
 	public function hookRightColumn($params)
@@ -183,5 +167,54 @@ class BlockViewed extends Module
 	public function hookHeader($params)
 	{
 		$this->context->controller->addCSS(($this->_path).'blockviewed.css', 'all');
+	}
+	
+	public function renderForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Settings'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'text',
+						'label' => $this->l('Products to display.'),
+						'name' => 'PRODUCTS_VIEWED_NBR',
+						'class' => 'fixed-width-xs',
+						'desc' => $this->l('Define the number of products displayed in this block.')
+					),
+				),
+				'submit' => array(
+					'title' => $this->l('Save'),
+					'class' => 'btn btn-primary')
+				),
+			);
+			
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitBlockViewed';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function getConfigFieldsValues()
+	{		
+		return array(
+			'PRODUCTS_VIEWED_NBR' => Tools::getValue('PRODUCTS_VIEWED_NBR', Configuration::get('PRODUCTS_VIEWED_NBR')),
+		);
 	}
 }
