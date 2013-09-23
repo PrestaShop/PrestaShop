@@ -127,7 +127,7 @@
 		{/foreach}
 
 	{if $shop_link_type}
-		<td class="center" title="{$tr.shop_name}">
+		<td title="{$tr.shop_name}">
 			{if isset($tr.shop_short_name)}
 				{$tr.shop_short_name}
 			{else}
