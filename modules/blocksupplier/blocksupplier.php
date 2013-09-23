@@ -90,12 +90,12 @@ class BlockSupplier extends Module
 
 	function getContent()
 	{
-		$output = '<h2>'.$this->displayName.'</h2>';
+		$output = '';
 		if (Tools::isSubmit('submitBlockSuppliers'))
 		{
-			$text_list = (int)(Tools::getValue('text_list'));
-			$text_nb = (int)(Tools::getValue('text_nb'));
-			$form_list = (int)(Tools::getValue('form_list'));
+			$text_list = (int)(Tools::getValue('SUPPLIER_DISPLAY_TEXT'));
+			$text_nb = (int)(Tools::getValue('SUPPLIER_DISPLAY_TEXT_NB'));
+			$form_list = (int)(Tools::getValue('SUPPLIER_DISPLAY_FORM'));
 			if ($text_list AND !Validate::isUnsignedInt($text_nb))
 				$errors[] = $this->l('Invalid number of elements');
 			elseif (!$text_list AND !$form_list)
@@ -112,35 +112,7 @@ class BlockSupplier extends Module
 			else
 				$output .= $this->displayConfirmation($this->l('Settings updated'));
 		}
-		return $output.$this->displayForm();
-	}
-
-	public function displayForm()
-	{
-		$output = '
-		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset><legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
-				<label>'.$this->l('Use a plain-text list.').'</label>
-				<div class="margin-form">
-					<input type="radio" name="text_list" id="text_list_on" value="1" '.(Tools::getValue('text_list', Configuration::get('SUPPLIER_DISPLAY_TEXT')) ? 'checked="checked" ' : '').'/>
-					<label class="t" for="text_list_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>
-					<input type="radio" name="text_list" id="text_list_off" value="0" '.(!Tools::getValue('text_list', Configuration::get('SUPPLIER_DISPLAY_TEXT')) ? 'checked="checked" ' : '').'/>
-					<label class="t" for="text_list_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
-					&nbsp;&nbsp;&nbsp;'.$this->l('Display').' <input type="text" size="2" name="text_nb" value="'.(int)Tools::getValue('text_nb', Configuration::get('SUPPLIER_DISPLAY_TEXT_NB')).'" /> '.$this->l('Elements').'
-					<p class="clear">'.$this->l('Display suppliers as a plain-text list').'</p>
-				</div>
-				<label>'.$this->l('Use a drop-down list.').'</label>
-				<div class="margin-form">
-					<input type="radio" name="form_list" id="form_list_on" value="1" '.(Tools::getValue('form_list', Configuration::get('SUPPLIER_DISPLAY_FORM')) ? 'checked="checked" ' : '').'/>
-					<label class="t" for="form_list_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>
-					<input type="radio" name="form_list" id="form_list_off" value="0" '.(!Tools::getValue('form_list', Configuration::get('SUPPLIER_DISPLAY_FORM')) ? 'checked="checked" ' : '').'/>
-					<label class="t" for="form_list_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
-					<p class="clear">'.$this->l('Display suppliers as a drop-down list.').'</p>
-				</div>
-				<center><input type="submit" name="submitBlockSuppliers" value="'.$this->l('Save').'" class="button" /></center>
-			</fieldset>
-		</form>';
-		return $output;
+		return $output.$this->renderForm();
 	}
 
 	public function hookDisplayRightColumn($params)
@@ -167,5 +139,90 @@ class BlockSupplier extends Module
 	{
 		$this->_clearCache('blocksupplier.tpl');
 	}
-}
+	
+	public function renderForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Settings'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Use a plain-text list'),
+						'name' => 'SUPPLIER_DISPLAY_TEXT',
+						'desc' => $this->l('Display suppliers in a plain-text list'),
+						'values' => array(
+									array(
+										'id' => 'active_on',
+										'value' => 1,
+										'label' => $this->l('Enabled')
+									),
+									array(
+										'id' => 'active_off',
+										'value' => 0,
+										'label' => $this->l('Disabled')
+									)
+								),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Elements number'),
+						'name' => 'SUPPLIER_DISPLAY_TEXT_NB',
+						'class' => 'fixed-width-xs'
+					),
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Use a drop-down list'),
+						'name' => 'SUPPLIER_DISPLAY_FORM',
+						'desc' => $this->l('Display suppliers in a drop-down list.'),
+						'values' => array(
+									array(
+										'id' => 'active_on',
+										'value' => 1,
+										'label' => $this->l('Enabled')
+									),
+									array(
+										'id' => 'active_off',
+										'value' => 0,
+										'label' => $this->l('Disabled')
+									)
+								),
+					)
+				),
+			'submit' => array(
+				'title' => $this->l('Save'),
+				'class' => 'btn btn-primary')
+			),
+		);
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitBlockSuppliers';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
 
+		return $helper->generateForm(array($fields_form));
+	}
+
+	public function getConfigFieldsValues()
+	{		
+		return array(
+			'SUPPLIER_DISPLAY_TEXT' => Tools::getValue('SUPPLIER_DISPLAY_TEXT', Configuration::get('SUPPLIER_DISPLAY_TEXT')),
+			'SUPPLIER_DISPLAY_TEXT_NB' => Tools::getValue('SUPPLIER_DISPLAY_TEXT_NB', Configuration::get('SUPPLIER_DISPLAY_TEXT_NB')),
+			'SUPPLIER_DISPLAY_FORM' => Tools::getValue('SUPPLIER_DISPLAY_FORM', Configuration::get('SUPPLIER_DISPLAY_FORM')),
+		);
+	}
+}
