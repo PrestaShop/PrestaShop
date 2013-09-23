@@ -68,27 +68,14 @@ class CarrierCompare extends Module
 	
 	public function getContent()
 	{
-		if (!empty($_POST))
-			$this->postProcess();
+		$output = '';
+		if (Tools::isSubmit('setGlobalConfiguration'))
+			if (Configuration::updateValue('SE_RERESH_METHOD', (int)Tools::getValue('SE_RERESH_METHOD')))
+				$output .= $this->displayConfirmation('Configuration updated');
 		
-		$this->smarty->assign('refresh_method', Configuration::get('SE_RERESH_METHOD'));
-		return $this->display(__FILE__, 'template/configuration.tpl');
+		return $output.$this->renderForm();
 	}
 	
-	public function postProcess()
-	{
-		$errors = array();
-		
-		if (Tools::isSubmit('setGlobalConfiguration'))
-		{
-			$method = (int)Tools::getValue('refresh_method');
-			Configuration::updateValue('SE_RERESH_METHOD', $method);
-		}
-		
-		$this->smarty->assign(array(
-			'display_error' => count($errors) ? $errors : false));
-	}
-
 	public function hookHeader($params)
 	{
 		if (!$this->isModuleAvailable())
@@ -290,6 +277,64 @@ class CarrierCompare extends Module
 		/*if (Context::getContext()->customer->id)
 			return false;*/
 		return true;
-}
+	}
+	
+	public function renderForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Settings'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'select',
+						'label' => $this->l('Refresh carrier list method'),
+						'name' => 'SE_RERESH_METHOD',
+						'required' => false,
+						'desc' => $this->l('How would you like to refresh information for a customer?'),
+						'default_value' => (int)$this->context->country->id,
+						'options' => array(
+							'query' => array(
+								array('id' => 0, 'name' => $this->l('Anytime')),
+								array('id' => 1, 'name' => $this->l('The required information is set.'))
+								),
+							'id' => 'id',
+							'name' => 'name',
+						),
+					),
+				),
+			'submit' => array(
+				'title' => $this->l('Save'),
+				'class' => 'btn btn-primary')
+			),
+		);
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'setGlobalConfiguration';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function getConfigFieldsValues()
+	{		
+		return array(
+			'SE_RERESH_METHOD' => Tools::getValue('SE_RERESH_METHOD', Configuration::get('SE_RERESH_METHOD')),
+		);
+	}
 }
 
