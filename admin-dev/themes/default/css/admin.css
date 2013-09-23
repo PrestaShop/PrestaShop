@@ -232,6 +232,7 @@ a.module_toggle_all{color: #268CCD;}
 .toolbarBox .process-icon-save-and-preview { background-image: url('../img/process-icon-preview.png');}
 .toolbarBox .process-icon-import { background-image: url('../img/process-icon-export-csv.png');}
 .toolbarBox .process-icon-export { background-image: url('../img/process-icon-export-csv.png');}
+.toolbarBox .process-icon-export-excel { background-image: url('../img/process-icon-export-csv.png');}
 .toolbarBox .process-icon-export-all { background-image: url('../img/process-icon-export-csv-details.png');}
 .toolbarBox .process-icon-export-stock-state-quantities-csv { background-image: url('../img/process-icon-export-csv.png');}
 .toolbarBox .process-icon-export-stock-state-prices-csv { background-image: url('../img/process-icon-export-csv-details.png');}
