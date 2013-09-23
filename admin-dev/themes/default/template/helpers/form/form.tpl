@@ -48,13 +48,10 @@
 					<div class="alert alert-info">{$field}</div>
 				{elseif $key == 'input'}
 					{foreach $field as $input}
-						<div class="row {if $input.type == 'hidden'}hide{/if}">
+						<div class="row {if $input.type == 'hidden'}hide{/if}" {if $input.name == 'id_state'}id="contains_states"{if !$contains_states}style="display:none;"{/if}{/if}>
 						{if $input.type == 'hidden'}
 							<input type="hidden" name="{$input.name}" id="{$input.name}" value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" />
 						{else}
-							{if $input.name == 'id_state'}
-								<div id="contains_states" {if !$contains_states}style="display:none;"{/if}>
-							{/if}
 							{block name="label"}
 								{if isset($input.label)}
 									<label for="{if isset($input.id)}{$input.id}{if isset($input.lang) AND $input.lang}_{$current_id_lang}{/if}{else}{$input.name}{if isset($input.lang) AND $input.lang}_{$current_id_lang}{/if}{/if}" class="control-label col-lg-3 {if isset($input.required) && $input.required && $input.type != 'radio'}required{/if}">
@@ -524,9 +521,6 @@
 								{/block}
 								</div>
 							{/block}{* end block field *}
-							{if $input.name == 'id_state'}
-								</div>
-							{/if}
 						{/if}
 						</div>
 					{/foreach}

@@ -34,18 +34,22 @@
 
 {block name="input"}
 	{if $input.type == 'latitude'}
-		<input type="text"
-			{if isset($input.size)}size="{$input.size}"{/if}
-			{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
-			name="latitude"
-			id="latitude"
-			value="{$fields_value[$input.name]|escape:'htmlall'}" /> /
-		<input type="text"
-			{if isset($input.size)}size="{$input.size}"{/if}
-			{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
-			name="longitude"
-			id="longitude"
-			value="{$fields_value['longitude']|escape:'htmlall'}" />
+	<div class="row">
+		<div class="col-lg-2">
+			<input type="text"
+				{if isset($input.size)}size="{$input.size}"{/if}
+				{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
+				name="latitude"
+				id="latitude"
+				value="{$fields_value[$input.name]|escape:'htmlall'}" /> /
+			<input type="text"
+				{if isset($input.size)}size="{$input.size}"{/if}
+				{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
+				name="longitude"
+				id="longitude"
+				value="{$fields_value['longitude']|escape:'htmlall'}" />
+		</div>
+	</div>
 	{else}
 		{$smarty.block.parent}
 	{/if}
@@ -59,7 +63,7 @@
 					<label class="control-label col-lg-3">{$input.label} </label>
 					<div class="col-lg-6">
 						<input type="file" name="{$input.name}" />
-						<p>{$input.desc}</p>
+						{if isset($input.desc)}<p>{$input.desc}</p>{/if}
 						{if isset($fields_value.image) && $fields_value.image}
 							<div id="image">
 								{$fields_value.image}
