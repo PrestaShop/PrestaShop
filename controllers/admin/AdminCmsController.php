@@ -46,8 +46,8 @@ class AdminCmsControllerCore extends AdminController
 			'id_cms' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
 			'link_rewrite' => array('title' => $this->l('URL')),
 			'meta_title' => array('title' => $this->l('Title'), 'filter_key' => 'b!meta_title'),
-			'position' => array('title' => $this->l('Position'),'filter_key' => 'position', 'align' => 'center', 'class' => 'fixed-width-md', 'position' => 'position'),
-			'active' => array('title' => $this->l('Displayed'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
+			'position' => array('title' => $this->l('Position'),'filter_key' => 'position', 'align' => 'center', 'class' => 'fixed-width-sm', 'position' => 'position'),
+			'active' => array('title' => $this->l('Displayed'), 'align' => 'center', 'active' => 'status', 'class' => 'fixed-width-sm', 'type' => 'bool', 'orderby' => false)
 		);
 
 		// The controller can't be call directly
