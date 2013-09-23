@@ -388,6 +388,14 @@
 											</div>
 										{/if}
 									{/if}
+									{if isset($input['thumb']) && $input['thumb']}
+										<div class="row">
+											<div class="col-lg-7">
+												<img src="{$input['thumb']}" alt="{$input['name']}" title="{$input['name']}" />
+												<br/><br/>
+											</div>
+										</div>
+									{/if}
 									<div class="row">
 										<div class="col-lg-7">
 											<input id="{$input.name}" type="file" name="{$input.name}" class="hide" />
