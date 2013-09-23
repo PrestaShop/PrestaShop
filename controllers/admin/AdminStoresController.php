@@ -125,7 +125,7 @@ class AdminStoresControllerCore extends AdminController
 
 		if ($this->display == 'options')
 			unset($this->toolbar_btn['new']);
-		else
+		else if ($this->display != 'add' && $this->display != 'edit')
 			unset($this->toolbar_btn['save']);
 	}
 

@@ -61,7 +61,7 @@
 			{if $input.type == 'file'}
 				<div class="row">
 					<label class="control-label col-lg-3">{$input.label} </label>
-					<div class="col-lg-6">
+					<div class="col-lg-9">
 						<input type="file" name="{$input.name}" />
 						{if isset($input.desc)}<p>{$input.desc}</p>{/if}
 						{if isset($fields_value.image) && $fields_value.image}
@@ -78,23 +78,15 @@
 				</div>
 			{/if}
 			<div class="row">
-				<table class="table">
-					<thead>
-						<tr>
-							<th>{l s='Hours:'}</th>
-							<th>{l s='e.g. 10:00AM - 9:30PM'}</th>
-						</tr>
-					</thead>
-					<tbody>
-						{foreach $fields_value.days as $k => $value}
-							<tr style="color: #7F7F7F; font-size: 0.85em;">
-								<td>{$value}</td>
-								<td><input type="text" size="25" name="hours_{$k}" value="{if isset($fields_value.hours[$k-1])}{$fields_value.hours[$k-1]|escape:'htmlall'}{/if}" /><br /></td>
-							</tr>
-						{/foreach}
-					</tbody>
-				</table>
+				<label class="control-label col-lg-3">{l s='Hours:'}</label>
+				<div class="col-lg-9"><p class="form-control-static">{l s='e.g. 10:00AM - 9:30PM'}</p></div>
 			</div>
+			{foreach $fields_value.days as $k => $value}
+			<div class="row">
+				<label class="control-label col-lg-3">{$value}</label>
+				<div class="col-lg-9"><input type="text" size="25" name="hours_{$k}" value="{if isset($fields_value.hours[$k-1])}{$fields_value.hours[$k-1]|escape:'htmlall'}{/if}" /></div>
+			</div>
+			{/foreach}
 		{/foreach}
 	{/if}
 {/block}
