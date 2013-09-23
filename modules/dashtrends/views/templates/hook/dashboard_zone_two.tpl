@@ -57,7 +57,7 @@
 			<dd class="dash_trend dash_trend_down"><span id="visits_score_trends"></span>%</dd>
 		</dl>
 		<dl class="col-xs-4 col-lg-2">
-			<dt>{l s='Converstion Rate'}</dt>
+			<dt>{l s='Conversion Rate'}</dt>
 			<dd class="data_value size_l"><span id="convertion_rate_score"></span>%</dd>
 			<dd class="dash_trend dash_trend_up"><span id="convertion_rate_score_trends"></span>%</dd>
 		</dl>
