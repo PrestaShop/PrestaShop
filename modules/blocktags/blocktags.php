@@ -57,36 +57,20 @@ class BlockTags extends Module
 
 	public function getContent()
 	{
-		$output = '<h2>'.$this->displayName.'</h2>';
+		$output = '';
 		if (Tools::isSubmit('submitBlockTags'))
 		{
-			if (!($tagsNbr = Tools::getValue('tagsNbr')) || empty($tagsNbr))
-				$output .= '<div class="alert error">'.$this->l('Please complete the "tags displayed" field.').'</div>';
+			if (!($tagsNbr = Tools::getValue('BLOCKTAGS_NBR')) || empty($tagsNbr))
+				$output .= $this->displayErrors($this->l('Please complete the "tags displayed" field.'));
 			elseif ((int)($tagsNbr) == 0)
-				$output .= '<div class="alert error">'.$this->l('Invalid number.').'</div>';
+				$output .= $this->displayErrors($this->l('Invalid number.'));
 			else
 			{
 				Configuration::updateValue('BLOCKTAGS_NBR', (int)$tagsNbr);
-				$output .= '<div class="conf confirm">'.$this->l('Settings updated').'</div>';
+				$output .= $this->displayConfirmation($this->l('Settings updated'));
 			}
 		}
-		return $output.$this->displayForm();
-	}
-
-	public function displayForm()
-	{
-		$output = '
-		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset><legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
-				<label>'.$this->l('Tags displayed').'</label>
-				<div class="margin-form">
-					<input type="text" name="tagsNbr" value="'.(int)(Configuration::get('BLOCKTAGS_NBR')).'" />
-					<p class="clear">'.$this->l('Define the number of tags you would like displayed in this block.').'</p>
-				</div>
-				<center><input type="submit" name="submitBlockTags" value="'.$this->l('Save').'" class="button" /></center>
-			</fieldset>
-		</form>';
-		return $output;
+		return $output.$this->renderForm();
 	}
 
 	/**
@@ -134,6 +118,55 @@ class BlockTags extends Module
 	function hookHeader($params)
 	{
 		$this->context->controller->addCSS(($this->_path).'blocktags.css', 'all');
+	}
+	
+	public function renderForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Settings'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'text',
+						'label' => $this->l('Tags displayed'),
+						'name' => 'BLOCKTAGS_NBR',
+						'class' => 'fixed-width-xs',
+						'desc' => $this->l('Define the number of tags you would like displayed in this block.')
+					),
+				),
+				'submit' => array(
+					'title' => $this->l('Save'),
+					'class' => 'btn btn-primary')
+				),
+			);
+			
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitBlockTags';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function getConfigFieldsValues()
+	{		
+		return array(
+			'BLOCKTAGS_NBR' => Tools::getValue('BLOCKTAGS_NBR', Configuration::get('BLOCKTAGS_NBR')),
+		);
 	}
 
 }
