@@ -57,7 +57,8 @@ class AdminCarriersControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_carrier' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center'
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'name' => array(
 				'title' => $this->l('Name')
@@ -66,6 +67,7 @@ class AdminCarriersControllerCore extends AdminController
 				'title' => $this->l('Logo'),
 				'align' => 'center',
 				'image' => 's',
+				'class' => 'fixed-width-xs',
 				'orderby' => false,
 				'search' => false
 			),
@@ -78,6 +80,7 @@ class AdminCarriersControllerCore extends AdminController
 				'align' => 'center',
 				'active' => 'status',
 				'type' => 'bool',
+				'class' => 'fixed-width-sm',
 				'orderby' => false,
 			),
 			'is_free' => array(
@@ -85,12 +88,14 @@ class AdminCarriersControllerCore extends AdminController
 				'align' => 'center',
 				'active' => 'isFree',
 				'type' => 'bool',
+				'class' => 'fixed-width-sm',
 				'orderby' => false,
 			),
 			'position' => array(
 				'title' => $this->l('Position'),
 				'filter_key' => 'a!position',
 				'align' => 'center',
+				'class' => 'fixed-width-sm',
 				'position' => 'position'
 			)
 		);
