@@ -44,12 +44,12 @@ class AdminCmsCategoriesControllerCore extends AdminController
 		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->fields_list = array(
-		'id_cms_category' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 30),
+		'id_cms_category' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
 		'name' => array('title' => $this->l('Name'), 'width' => 'auto', 'callback' => 'hideCMSCategoryPosition', 'callback_object' => 'CMSCategory'),
-		'description' => array('title' => $this->l('Description'), 'width' => 500, 'maxlength' => 90, 'orderby' => false),
-		'position' => array('title' => $this->l('Position'), 'width' => 40,'filter_key' => 'position', 'align' => 'center', 'position' => 'position'),
+		'description' => array('title' => $this->l('Description'), 'maxlength' => 90, 'orderby' => false),
+		'position' => array('title' => $this->l('Position'),'filter_key' => 'position', 'align' => 'center', 'class' => 'fixed-width-sm', 'position' => 'position'),
 		'active' => array(
-			'title' => $this->l('Displayed'), 'width' => 25, 'active' => 'status',
+			'title' => $this->l('Displayed'), 'class' => 'fixed-width-sm', 'active' => 'status',
 			'align' => 'center','type' => 'bool', 'orderby' => false
 		));
 
