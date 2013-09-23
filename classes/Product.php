@@ -2469,7 +2469,7 @@ class ProductCore extends ObjectModel
 		if (!Validate::isBool($usetax) || !Validate::isUnsignedId($id_product))
 			die(Tools::displayError());
 		// Initializations
-		$id_group = (isset($context->customer) ? $context->customer->id_default_group : (int)Configuration::get('PS_CUSTOMER_GROUP'));
+		$id_group = (isset($context->customer) && $context->customer->id_default_group) ? $context->customer->id_default_group : (int)Configuration::get('PS_CUSTOMER_GROUP');
 
 		// If there is cart in context or if the specified id_cart is different from the context cart id
 		if (!is_object($cur_cart) || (Validate::isUnsignedInt($id_cart) && $id_cart && $cur_cart->id != $id_cart))
