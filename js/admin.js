@@ -745,6 +745,31 @@ function checkMultishopDefaultValue(obj, key)
 	$('#conf_id_'+key+' .preference_default_multishop input').attr('disabled', false);
 }
 
+function toggleAllMultishopDefaultValue($container, value)
+{
+	$container.find('input[name^=\'multishopOverrideOption\']').each(function(k, v)
+	{
+		$(v).attr('checked', value);
+		var name = $(v).attr('name');
+		toggleMultishopDefaultValue(v, name.substr(24, name.length - 25));
+	})
+}
+
+function toggleMultishopDefaultValue(obj, key)
+{
+	if (!$(obj).prop('checked') || $('#'+key).hasClass('isInvisible'))
+	{
+		$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select').attr('disabled', true);
+		$('#conf_id_'+key+' label.conf_title').addClass('isDisabled');
+	}
+	else
+	{
+		$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select').attr('disabled', false);
+		$('#conf_id_'+key+' label.conf_title').removeClass('isDisabled');
+	}
+	$('#conf_id_'+key+' input[name^=\'multishopOverrideOption\']').attr('disabled', false);
+}
+
 function doAdminAjax(data, success_func, error_func)
 {
 	$.ajax(
@@ -810,6 +835,13 @@ $(document).ready(function()
 		var key = $(v).attr('name');
 		var len = key.length;
 		checkMultishopDefaultValue(v, key.substr(24, len - 25));
+	});
+
+	$('input[name^=\'multishopOverrideOption\']').each(function(k, v)
+	{
+		var key = $(v).attr('name');
+		var len = key.length;
+		toggleMultishopDefaultValue(v, key.substr(24, len - 25));
 	});
 
 	$(".copy2friendlyUrl").live('keyup change',function(e){
