@@ -86,21 +86,21 @@ class BlockStore extends Module
 	{
 		if (Tools::isSubmit('submitStoreConf'))
 		{
-			if (isset($_FILES['store_img']) && isset($_FILES['store_img']['tmp_name']) && !empty($_FILES['store_img']['tmp_name']))
+			if (isset($_FILES['BLOCKSTORE_IMG']) && isset($_FILES['BLOCKSTORE_IMG']['tmp_name']) && !empty($_FILES['BLOCKSTORE_IMG']['tmp_name']))
 			{
-				if ($error = ImageManager::validateUpload($_FILES['store_img'], 4000000))
+				if ($error = ImageManager::validateUpload($_FILES['BLOCKSTORE_IMG'], 4000000))
 					return $this->displayError($this->l('Invalid image'));
 				else
 				{
-					$ext = substr($_FILES['store_img']['name'], strrpos($_FILES['store_img']['name'], '.') + 1);
-					$file_name = md5($_FILES['store_img']['name']).'.'.$ext;
-					if (!move_uploaded_file($_FILES['store_img']['tmp_name'], dirname(__FILE__).'/'.$file_name))
+					$ext = substr($_FILES['BLOCKSTORE_IMG']['name'], strrpos($_FILES['BLOCKSTORE_IMG']['name'], '.') + 1);
+					$file_name = md5($_FILES['BLOCKSTORE_IMG']['name']).'.'.$ext;
+					if (!move_uploaded_file($_FILES['BLOCKSTORE_IMG']['tmp_name'], dirname(__FILE__).'/'.$file_name))
 						return $this->displayError($this->l('An error occurred while attempting to upload the file.'));
 					else
 					{
-						if (Configuration::hasContext('BLOCKSTORE_IMG', null, Shop::getContext()) && Configuration::get('BLOCKSTORE_IMG') != $file_name)
-							@unlink(dirname(__FILE__).'/'.Configuration::get('BLOCKSTORE_IMG'));
-						Configuration::updateValue('BLOCKSTORE_IMG', $file_name);
+						if (Configuration::hasContext('BLOCKBLOCKSTORE_IMG', null, Shop::getContext()) && Configuration::get('BLOCKBLOCKSTORE_IMG') != $file_name)
+							@unlink(dirname(__FILE__).'/'.Configuration::get('BLOCKBLOCKSTORE_IMG'));
+						Configuration::updateValue('BLOCKBLOCKSTORE_IMG', $file_name);
 						$this->_clearCache('blockstore.tpl');
 						return $this->displayConfirmation($this->l('The settings have been updated.'));
 					}
@@ -112,25 +112,56 @@ class BlockStore extends Module
 
 	public function getContent()
 	{
-		$output = $this->postProcess().'
-		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" enctype="multipart/form-data">
-			<fieldset>
-				<legend>'.$this->l('Store locator block configuration').'</legend>';
-		if (Configuration::get('BLOCKSTORE_IMG'))
-			$output .= '<div class="margin-form"><img src="'.Tools::getProtocol().Tools::getMediaServer($this->name)._MODULE_DIR_.$this->name.'/'.Configuration::get('BLOCKSTORE_IMG').'" alt="'.$this->l('Store image').'" style="height:115px;margin-left: 100px;width:174px"/></div>';
-		$output .= '
-				<label for="store_img">'.$this->l('Change image').'</label>
-				<div class="margin-form">
-					<input id="store_img" type="file" name="store_img" /> ( '.$this->l('The selected image will be displayed as 174x115').' )
-				</div>
-
-				<p class="center">
-					<input class="button" type="submit" name="submitStoreConf" value="'.$this->l('Save').'"/>
-				</p>
-			</fieldset>
-		</form>
-		';
+		return $this->postProcess().$this->renderForm();
 		return $output;
 	}
-}
+	
+	public function renderForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Settings'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'file',
+						'label' => $this->l('Block image'),
+						'name' => 'BLOCKSTORE_IMG',
+						'desc' => $this->l('( The selected image will be displayed as 174x115 )'),
+						'thumb' => '../modules/'.$this->name.'/'.Configuration::get('BLOCKBLOCKSTORE_IMG'),
+					),
+				),
+			'submit' => array(
+				'title' => $this->l('Save'),
+				'class' => 'btn btn-primary')
+			),
+		);
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitStoreConf';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
 
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function getConfigFieldsValues()
+	{
+		return array(
+			'BLOCKSTORE_IMG' => Tools::getValue('BLOCKSTORE_IMG', Configuration::get('BLOCKSTORE_IMG')),
+		);
+	}
+}
