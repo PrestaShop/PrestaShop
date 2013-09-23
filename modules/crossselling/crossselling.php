@@ -78,39 +78,21 @@ class CrossSelling extends Module
 		
 		if (Tools::isSubmit('submitCross'))
 		{
-			if (Tools::getValue('displayPrice') != 0 AND Tools::getValue('displayPrice') != 1)
+			if (Tools::getValue('displayPrice') != 0 AND Tools::getValue('CROSSSELLING_DISPLAY_PRICE') != 1)
 				$this->_html .= $this->displayError('Invalid displayPrice');
-			else if (!($productNbr = Tools::getValue('productNbr')) || empty($productNbr))
+			else if (!($productNbr = Tools::getValue('CROSSSELLING_NBR')) || empty($productNbr))
 				$this->_html .= $this->displayError('You must fill in the \'Products displayed\' field.');
 			elseif ((int)($productNbr) == 0)
 				$this->_html .= $this->displayError('Invalid number.');
 			else
 			{			
-				Configuration::updateValue('CROSSSELLING_DISPLAY_PRICE', (int)Tools::getValue('displayPrice'));
-				Configuration::updateValue('CROSSSELLING_NBR', (int)Tools::getValue('productNbr'));
+				Configuration::updateValue('CROSSSELLING_DISPLAY_PRICE', (int)Tools::getValue('CROSSSELLING_DISPLAY_PRICE'));
+				Configuration::updateValue('CROSSSELLING_NBR', (int)Tools::getValue('CROSSSELLING_NBR'));
 				$this->_clearCache('crossselling.tpl');
 				$this->_html .= $this->displayConfirmation($this->l('Settings updated successfully'));
 			}
 		}
-		$this->_html .= '
-		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
-		<fieldset><legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
-			<label>'.$this->l('Display price on products').'</label>
-			<div class="margin-form">
-				<input type="radio" name="displayPrice" id="display_on" value="1" '.(Configuration::get('CROSSSELLING_DISPLAY_PRICE') ? 'checked="checked" ' : '').'/>
-				<label class="t" for="display_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>
-				<input type="radio" name="displayPrice" id="display_off" value="0" '.(!Configuration::get('CROSSSELLING_DISPLAY_PRICE') ? 'checked="checked" ' : '').'/>
-				<label class="t" for="display_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
-				<p class="clear">'.$this->l('Show the price on the products in the block.').'</p>
-			</div>	
-			<div class="margin-form">
-				<input type="text" name="productNbr" value="'.(int)Configuration::get('CROSSSELLING_NBR').'" />
-				<p class="clear">'.$this->l('Define the number of products displayed in this block').'</p>
-			</div>
-			<center><input type="submit" name="submitCross" value="'.$this->l('Save').'" class="button" /></center>
-		</fieldset>
-		</form>';
-		return $this->_html;
+		return $this->_html.$this->renderForm();
 	}
 
 	public function hookHeader()
@@ -252,5 +234,73 @@ class CrossSelling extends Module
 	public function hookActionOrderStatusPostUpdate($params)
 	{
 		$this->_clearCache('crossselling.tpl');
+	}
+	
+	public function renderForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Settings'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Display price on products'),
+						'name' => 'CROSSSELLING_DISPLAY_PRICE',
+						'desc' => $this->l('Show the price on the products in the block.'),
+						'values' => array(
+									array(
+										'id' => 'active_on',
+										'value' => 1,
+										'label' => $this->l('Enabled')
+									),
+									array(
+										'id' => 'active_off',
+										'value' => 0,
+										'label' => $this->l('Disabled')
+									)
+								),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Number of products displayed'),
+						'name' => 'CROSSSELLING_NBR',
+						'class' => 'fixed-width-xs',
+						'desc' => $this->l('Define the number of products displayed in this block.'),
+					),
+				),
+			'submit' => array(
+				'title' => $this->l('Save'),
+				'class' => 'btn btn-primary')
+			),
+		);
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitCross';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function getConfigFieldsValues()
+	{
+		return array(
+			'CROSSSELLING_NBR' => Tools::getValue('CROSSSELLING_NBR', Configuration::get('CROSSSELLING_NBR')),
+			'CROSSSELLING_DISPLAY_PRICE' => Tools::getValue('CROSSSELLING_DISPLAY_PRICE', Configuration::get('CROSSSELLING_DISPLAY_PRICE')),
+		);
 	}
 }
