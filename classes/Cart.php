@@ -497,7 +497,7 @@ class CartCore extends ObjectModel
 				p.`upc` AS upc, product_shop.`minimal_quantity` AS minimal_quantity'
 			);
 		$result = Db::getInstance()->executeS($sql);
-d($result);
+
 		// Reset the cache before the following return, or else an empty cart will add dozens of queries
 		$products_ids = array();
 		$pa_ids = array();
