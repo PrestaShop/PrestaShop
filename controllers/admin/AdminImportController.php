@@ -2764,19 +2764,22 @@ class AdminImportControllerCore extends AdminController
 						$this->supplierImport();
 						$this->clearSmartyCache();
 						break;
-					// @since 1.5.0
-					case $this->entities[$import_type = $this->l('Supply Orders')]:
-						if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-							$this->supplyOrdersImport();
-						break;
-					// @since 1.5.0
-					case $this->entities[$import_type = $this->l('Supply Order Details')]:
-						if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-							$this->supplyOrdersDetailsImport();
-						break;
-					default:
-						$this->errors[] = $this->l('Please select what you would like to import');
 				}
+				
+				// @since 1.5.0
+				if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+					switch ((int)Tools::getValue('entity'))
+					{
+						case $this->entities[$import_type = $this->l('Supply Orders')]:
+							if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+								$this->supplyOrdersImport();
+							break;
+						case $this->entities[$import_type = $this->l('Supply Order Details')]:
+							if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+								$this->supplyOrdersDetailsImport();
+							break;	
+					}
+				
 				if ($import_type !== false)
 				{
 					$log_message = sprintf($this->l('%s import'), $import_type);
