@@ -1771,7 +1771,7 @@ class BlockLayered extends Module
 				$root_category = array('id_category' => '0', 'name' => $this->l('Root'));
 
 			$helper = new Helper();
-			$html .= $helper->renderCategoryTree(null, $selected_cat, 'categoryBox');
+			$html .= $helper->renderCategoryTree(null, $selected_cat, 'categoryBox', false, false, array(), true);
 			
 			$html .= '
 					<br />
@@ -1930,7 +1930,7 @@ class BlockLayered extends Module
 						
 						$(\'label a#inline\').fancybox({ 
 							\'hideOnContentClick\': false,
-							\'onClosed\': function() {
+							\'beforeClose\': function() {
 								lock_treeview_hidding = false;
 								$(\'#categories-treeview\').parent().parent().hide();
 								updCatCounter();

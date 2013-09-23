@@ -766,7 +766,7 @@ function multishippingMode(it)
 			'transitionIn': 'elastic',
 			'transitionOut': 'elastic',
 			'type': 'ajax',
-			'onClosed': function()
+			'beforeClose': function()
 			{
 				// Reload the cart
 				$.ajax({
@@ -783,7 +783,7 @@ function multishippingMode(it)
 				});
 				updateCarrierSelectionAndGift();
 			},
-			'onStart': function()
+			'beforeLoad': function()
 			{
 				// Removing all ids on the cart to avoid conflic with the new one on the fancybox
 				// This action could "break" the cart design, if css rules use ids of the cart
