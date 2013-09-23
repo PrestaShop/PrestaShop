@@ -53,7 +53,9 @@
 
 {block name="input"}
 	{if $field['type'] == 'textarea_newlines'}
-		<textarea name={$key} cols="{$field['cols']}" rows="{$field['rows']}">{$field['value']|replace:';':"\n"|escape:'htmlall':'UTF-8'}</textarea>
+		<div class="col-lg-9">
+			<textarea name={$key} cols="{$field['cols']}" rows="{$field['rows']}">{$field['value']|replace:';':"\n"|escape:'htmlall':'UTF-8'}</textarea>
+		</div>
 	{else}
 		{$smarty.block.parent}
 	{/if}

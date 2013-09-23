@@ -72,7 +72,7 @@ class AdminGeolocationControllerCore extends AdminController
 				'icon' =>	'world',
 				'description' => $this->l('You can add IP addresses that will always be allowed to access your shop (e.g. Google bots\' IP).'),
 				'fields' =>	array(
-		 			'PS_GEOLOCATION_WHITELIST' => array('title' => $this->l('Whitelisted IP addresses'), 'type' => 'textarea_newlines', 'cols' => 80, 'rows' => 30),
+		 			'PS_GEOLOCATION_WHITELIST' => array('title' => $this->l('Whitelisted IP addresses'), 'type' => 'textarea_newlines', 'cols' => 15, 'rows' => 30),
 				),
 				'submit' => array(),
 			),
