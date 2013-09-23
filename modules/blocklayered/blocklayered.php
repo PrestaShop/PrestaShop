@@ -1931,7 +1931,6 @@ class BlockLayered extends Module
 						$(\'label a#inline\').fancybox({ 
 							\'hideOnContentClick\': false,
 							\'beforeClose\': function() {
-								console.log("merde");
 								lock_treeview_hidding = false;
 								$(\'#categories-treeview\').parent().parent().hide();
 								updCatCounter();
