@@ -49,7 +49,7 @@ class AdminSearchConfControllerCore extends AdminController
 		$this->fields_list = array(
 			'alias' => array('title' => $this->l('Aliases')),
 			'search' => array('title' => $this->l('Search')),
-			'active' => array('title' => $this->l('Status'), 'class' => 'fixed-width-md', 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
+			'active' => array('title' => $this->l('Status'), 'class' => 'fixed-width-sm', 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
 		);
 
 		// Search options
