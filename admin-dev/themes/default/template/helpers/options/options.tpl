@@ -41,7 +41,7 @@
 	enctype="multipart/form-data" class="form-horizontal">
 	{foreach $option_list AS $category => $categoryData}
 		{if isset($categoryData['top'])}{$categoryData['top']}{/if}
-		<fieldset {if isset($categoryData['class'])}class="{$categoryData['class']}"{/if}>
+		<fieldset {if isset($categoryData['class'])}class="{$categoryData['class']}"{/if} id="{$table}_fieldset_{$category}">
 			{* Options category title *}
 			<h3>
 				<i class="icon-cogs"></i>
@@ -59,7 +59,31 @@
 			{/if}
 
 			{if !$categoryData['hide_multishop_checkbox'] && $use_multishop}
-				<input type="checkbox" onclick="checkAllMultishopDefaultValue(this)" /> <b>{l s='Check/uncheck all'}</b> {l s='(Check boxes if you want to set a custom value for this shop or group shop context)'}
+			<div class="row alert alert-info">
+				<label class="control-label col-lg-3">
+					<i class="icon-sitemap"></i> {l s='Multistore'}
+				</label>
+				<div class="col-lg-9">
+					<div class="row">
+						<div class="col-lg-2">
+							<span class="switch prestashop-switch">
+								<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_on" value="1" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), true)">
+								<label class="radio" for="{$table}_multishop_{$category}_on">
+									<i class="icon-check-sign color_success"></i> {l s='Yes'}
+								</label>
+								<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_off" value="0" checked="checked" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), false)">
+								<label class="radio" for="{$table}_multishop_{$category}_off">
+									<i class="icon-ban-circle color_danger"></i> {l s='No'}
+								</label>
+								<span class="slide-button btn btn-default"></span>
+							</span>
+						</div>
+						<div class="col-lg-7">
+							<p class="form-control-static"><strong>{l s='Check / Uncheck all'}</strong> {l s='(Check boxes if you want to set a custom value for this shop or group shop context)'}</p>
+						</div>
+					</div>
+				</div>
+			</div>
 			{/if}
 
 			{foreach $categoryData['fields'] AS $key => $field}
@@ -67,15 +91,13 @@
 						<input type="hidden" name="{$key}" value="{$field['value']}" />
 					{else}
 						<div class="row">
-							<div id="conf_id_{$key}" {if $field['is_invisible']} class="isInvisible"{/if}>
-								{if !$categoryData['hide_multishop_checkbox'] && $field['multishop_default'] && empty($field['no_multishop_checkbox'])}
-								<div class="preference_default_multishop col-lg-9">
-									<input type="checkbox" name="multishopOverrideOption[{$key}]" value="1" {if !$field['is_disabled']}checked="checked"{/if} onclick="checkMultishopDefaultValue(this, '{$key}')" />
-								</div>
-								{/if}
+							<div id="conf_id_{$key}" {if $field['is_invisible']} class="isInvisible"{/if}>								
 								{block name="label"}
 									{if isset($field['title']) && isset($field['hint'])}
 										<label class="control-label col-lg-3 {if isset($field['required']) && $field['required'] && $field['type'] != 'radio'}required{/if}" for="{$key}">
+											{if !$categoryData['hide_multishop_checkbox'] && $field['multishop_default'] && empty($field['no_multishop_checkbox'])}
+											<input type="checkbox" name="multishopOverrideOption[{$key}]" value="1" {if !$field['is_disabled']}checked="checked"{/if} onclick="toggleMultishopDefaultValue(this, '{$key}')"/>
+											{/if}
 											<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="
 												{if is_array($field['hint'])}
 													{foreach $field['hint'] as $hint}
@@ -93,8 +115,13 @@
 											</span>
 										</label>
 									{elseif isset($field['title'])}
-										<label class="control-label col-lg-3" for="{$key}">{$field['title']}</label>
-									{/if}
+										<label class="control-label col-lg-3" for="{$key}">
+											{if !$categoryData['hide_multishop_checkbox'] && $field['multishop_default'] && empty($field['no_multishop_checkbox'])}
+											<input type="checkbox" name="multishopOverrideOption[{$key}]" value="1" {if !$field['is_disabled']}checked="checked"{/if} onclick="checkMultishopDefaultValue(this, '{$key}')" />
+											{/if}
+											{$field['title']}
+										</label>
+									{/if}									
 								{/block}
 								{block name="field"}
 
