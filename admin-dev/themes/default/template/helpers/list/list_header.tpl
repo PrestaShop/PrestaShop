@@ -100,7 +100,7 @@
 			{if isset($toolbar_btn) && count($toolbar_btn) >0}
 			<span class="panel-heading-action">
 			{foreach from=$toolbar_btn item=btn key=k}
-				<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="list-tooolbar-btn" {if isset($btn.href)}href="{$btn.href}"{/if} title="{$btn.desc}" {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
+				<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="list-tooolbar-btn" {if isset($btn.href)}href="{$btn.href}"{/if} {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
 					<label>
 						<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s=$btn.desc}" data-html="true">
 							<i class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if} {if isset($btn.class)}{$btn.class}{/if}" ></i>
@@ -124,7 +124,7 @@
 				</div>
 				{/if}
 			{/foreach}
-				<a id="desc-{$table}-refresh" class="list-tooolbar-btn" href="javascript:location.reload();" title="{l s='refresh'}">
+				<a id="desc-{$table}-refresh" class="list-tooolbar-btn" href="javascript:location.reload();">
 					<label>
 						<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Refresh list'}" data-html="true">
 							<i class="process-icon-refresh" ></i>
@@ -303,11 +303,13 @@
 					{/foreach}
 					{if $shop_link_type}
 					<th>
+						<span class="title_box">
 						{if $shop_link_type == 'shop'}
 						{l s='Shop'}
 						{else}
 						{l s='Group shop'}
 						{/if}
+						</span>
 					</th>
 					{/if}
 					{if $has_actions}
