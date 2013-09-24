@@ -1565,7 +1565,14 @@ var ProductMultishop = new function()
 				break;
 
 			case 'category_box' :
-				$('#categories-treeview input[type=checkbox]').attr('disabled', checked);
+				$('#'+id+' input[type=checkbox]').attr('disabled', checked);
+				if (!checked) {
+					$('#check-all-'+id).removeAttr('disabled');
+					$('#uncheck-all-'+id).removeAttr('disabled');
+				} else {
+					$('#check-all-'+id).attr('disabled', 'disabled');
+					$('#uncheck-all-'+id).attr('disabled', 'disabled');
+				}
 				break;
 
 			case 'attribute_weight_impact' :
@@ -1633,7 +1640,7 @@ var ProductMultishop = new function()
 	this.checkAllAssociations = function()
 	{
 		ProductMultishop.checkField($('input[name=\'multishop_check[id_category_default]\']').prop('checked'), 'id_category_default');
-		ProductMultishop.checkField($('input[name=\'multishop_check[id_category_default]\']').prop('checked'), 'categories-treeview', 'category_box');
+		ProductMultishop.checkField($('input[name=\'multishop_check[id_category_default]\']').prop('checked'), 'associated-categories-tree', 'category_box');
 	};
 
 	this.checkAllCustomization = function()

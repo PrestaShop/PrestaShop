@@ -24,8 +24,29 @@
 *}
 
 {if isset($display_multishop_checkboxes) && $display_multishop_checkboxes}
-	<label style="float: none">
-		<input type="checkbox" style="vertical-align: text-bottom" onclick="$('#product-tab-content-{$product_tab} input[name^=\'multishop_check[\']').attr('checked', this.checked); ProductMultishop.checkAll{$product_tab}()" />
-		{l s='Check/uncheck all. (If you are editing this page for several shops, some fields like "name" or "price" are may be disabled. You will need check these fields in order to edit them)'}
-	</label>
+	<div class="row alert alert-info">
+		<label class="control-label col-lg-3">
+			<i class="icon-sitemap"></i> {l s='Multistore'}
+		</label>
+		<div class="col-lg-9">
+			<div class="row">
+				<div class="col-lg-2">
+					<span class="switch prestashop-switch">
+						<input type="radio" name="multishop_{$product_tab}" id="multishop_{$product_tab}_on" value="1" onclick="$('#product-tab-content-{$product_tab} input[name^=\'multishop_check[\']').attr('checked', true); ProductMultishop.checkAll{$product_tab}()">
+						<label class="radio" for="multishop_{$product_tab}_on">
+							<i class="icon-check-sign color_success"></i> {l s='Yes'}
+						</label>
+						<input type="radio" name="multishop_{$product_tab}" id="multishop_{$product_tab}_off" value="0" checked="checked" onclick="$('#product-tab-content-{$product_tab} input[name^=\'multishop_check[\']').attr('checked', false); ProductMultishop.checkAll{$product_tab}()">
+						<label class="radio" for="multishop_{$product_tab}_off">
+							<i class="icon-ban-circle color_danger"></i> {l s='No'}
+						</label>
+						<span class="slide-button btn btn-default"></span>
+					</span>
+				</div>
+				<div class="col-lg-7">
+					<p class="form-control-static"><strong>{l s='Check / Uncheck all'}</strong> {l s='(If you are editing this page for several shops, some fields like "name" or "price" are may be disabled. You will need check these fields in order to edit them)'}</p>
+				</div>
+			</div>
+		</div>
+	</div>
 {/if}
