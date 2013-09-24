@@ -97,11 +97,11 @@
 </fieldset>
 <fieldset>
 	<h3><i class="icon-archive"></i> {l s='Stock'}</h3>
-	<a class="btn btn-default" href="index.php?controller=adminstockinstantstate&id_warehouse={$warehouse->id}&token={getAdminToken tab='AdminStockInstantState'}"><i class="icon-eye-open"></i> {l s='See products details'}</a>
+	<a class="btn btn-link" href="index.php?controller=adminstockinstantstate&id_warehouse={$warehouse->id}&token={getAdminToken tab='AdminStockInstantState'}">{l s='See products details'} <i class="icon-external-link-sign"></i></a>
 </fieldset>
 <fieldset>
 	<h3><i class="icon-reorder"></i> {l s='History'}</h3>
-	<a class="btn btn-default" href="index.php?controller=adminstockmvt&id_warehouse={$warehouse->id}&token={getAdminToken tab='AdminStockMvt'}"><i class="icon-eye-open"></i> {l s='See warehouse\'s activity details'}</a>
+	<a class="btn btn-link" href="index.php?controller=adminstockmvt&id_warehouse={$warehouse->id}&token={getAdminToken tab='AdminStockMvt'}">{l s='See warehouse\'s activity details'} <i class="icon-external-link-sign"></i></a>
 </fieldset>
 {else}
 	<fieldset><div class="alert alert danger">{l s='This warehouse does not exist.'}</div></fieldset>
