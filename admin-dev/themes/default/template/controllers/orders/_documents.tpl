@@ -50,6 +50,8 @@
 			{if get_class($document) eq 'OrderInvoice'}
 				{if isset($document->is_delivery)}
 					{l s='Delivery slip'}
+				{elseif isset($document->is_package)}
+					{l s='Packing slip'}
 				{else}
 					{l s='Invoice'}
 				{/if}
@@ -60,6 +62,8 @@
 			{if get_class($document) eq 'OrderInvoice'}
 				{if isset($document->is_delivery)}
 					<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order_invoice={$document->id}">
+				{elseif isset($document->is_package)}
+					<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generatePackageSlipPDF&id_order_invoice={$document->id}">
 			   	{else}
 					<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateInvoicePDF&id_order_invoice={$document->id}">
 			   {/if}
@@ -81,6 +85,8 @@
 		{if get_class($document) eq 'OrderInvoice'}
 			{if isset($document->is_delivery)}
 				--
+			{elseif isset($document->is_package)}
+				--
 			{else}
 				{displayPrice price=$document->total_paid_tax_incl currency=$currency->id}&nbsp;
 				{if $document->getTotalPaid()}
@@ -99,7 +105,7 @@
 		</td>
 		<td class="right document_action">
 		{if get_class($document) eq 'OrderInvoice'}
-			{if !isset($document->is_delivery)}
+			{if !isset($document->is_delivery) && !isset($document->is_package)}
 				{if $document->getRestPaid()}
 					<a href="#" class="js-set-payment" data-amount="{$document->getRestPaid()}" data-id-invoice="{$document->id}" title="{l s='Set payment form'}"><img src="../img/admin/money_add.png" alt="{l s='Set payment form'}" /></a>
 				{/if}
@@ -109,7 +115,7 @@
 		</td>
 	</tr>
 	{if get_class($document) eq 'OrderInvoice'}
-		{if !isset($document->is_delivery)}
+		{if !isset($document->is_delivery) && !isset($document->is_package)}
 	<tr id="invoiceNote{$document->id}" style="display:none" class="current-edit">
 		<td colspan="5">
 			<form action="{$current_index}&viewOrder&id_order={$order->id}{if isset($smarty.get.token)}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}{/if}" method="post">
