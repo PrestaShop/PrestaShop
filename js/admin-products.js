@@ -1320,25 +1320,6 @@ product_tabs['Suppliers'] = new function(){
 			//manage default supplier check
 			self.manageDefaultSupplier();
 		});
-
-		// @TODO: a better way to fix the accordion wrong size bug when the selected page is this page
-		setTimeout(function() {
-			$('#suppliers_accordion').accordion({
-				collapsible: true,
-				autoHeight: true,
-				heightStyle: "content"
-			});
-		}, 1000);
-
-		// Resize the accordion once the page is visible because of the bug with accordions initialized
-		// inside a display:none block not having the correct size.
-		$('#suppliers_accordion').parents('.product-tab-content').bind('displayed', function(){
-			$('#suppliers_accordion').accordion({
-				collapsible: true,
-				autoHeight: true,
-				heightStyle: "content"
-			});
-		});
 	};
 }
 
@@ -1418,9 +1399,9 @@ product_tabs['Warehouses'] = new function(){
 
 	this.onReady = function(){
 		$('.check_all_warehouse').click(function() {
-			var check = $(this);
 			//get all checkboxes of current warehouse
-			var checkboxes = $('input[name*="'+check.val()+'"]');
+			var checkboxes = $('input[name*="'+$(this).val()+'"]');
+			var checked = false;
 
 			for (i=0; i<checkboxes.length; i++)
 			{
@@ -1433,27 +1414,14 @@ product_tabs['Warehouses'] = new function(){
 				else
 				{
 					item.attr("checked", true);
+					checked = true;
 				}
 			}
-		});
 
-		// @TODO: a better way to fix the accordion wrong size bug when the selected page is this page
-		setTimeout(function() {
-			$('#warehouse_accordion').accordion({
-				collapsible: true,
-				autoHeight: true,
-				heightStyle: "content"
-			});
-		}, 1000);
-
-		// Resize the accordion once the page is visible because of the bug with accordions initialized
-		// inside a display:none block not having the correct size.
-		$('#warehouse_accordion').parents('.product-tab-content').bind('displayed', function(){
-			$('#warehouse_accordion').accordion({
-				collapsible: true,
-				autoHeight: true,
-				heightStyle: "content"
-			});
+			if (checked)
+				$(this).find('i').removeClass('icon-check-sign').addClass('icon-check-empty');
+			else
+				$(this).find('i').removeClass('icon-check-empty').addClass('icon-check-sign');
 		});
 	};
 }
