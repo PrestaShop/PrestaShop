@@ -228,19 +228,20 @@ class HelperTreeCategoriesCore extends TreeCore
 
 		if ($this->useCheckBox())
 		{
-			$this->addAction(new TreeToolbarLink(
+			$checkAll = new TreeToolbarLink(
 				'Check All',
 				'#',
 				'checkAllAssociatedCategories($(\'#'.$this->getId().'\'));',
-				'icon-check-sign')
-			);
-			$this->addAction(new TreeToolbarLink(
+				'icon-check-sign');
+			$checkAll->setAttribute('id', 'check-all-'.$this->getId());
+			$unCheckAll = new TreeToolbarLink(
 				'Uncheck All',
 				'#',
 				'uncheckAllAssociatedCategories($(\'#'.$this->getId().'\'));',
-				'icon-check-empty')
-			);
-
+				'icon-check-empty');
+			$unCheckAll->setAttribute('id', 'uncheck-all-'.$this->getId());
+			$this->addAction($checkAll);
+			$this->addAction($unCheckAll);
 			$this->setNodeFolderTemplate('tree_node_folder_checkbox.tpl');
 			$this->setNodeItemTemplate('tree_node_item_checkbox.tpl');
 			$this->setAttribute('use_checkbox', $this->useCheckBox());
