@@ -26,83 +26,84 @@
 {extends file="helpers/view/view.tpl"}
 {block name="override_tpl"}
 {if isset($warehouse)}
-	<div>
-			<fieldset>
-				<legend><img src="../img/t/AdminPreferences.gif" alt="" />  {l s='General information'}</legend>
-				<table style="width: 400px;" classe="table">
-					<tr>
-						<td>{l s='Reference:'}</td>
-						<td>{$warehouse->reference}</td>
-					</tr>
-					<tr>
-						<td>{l s='Name:'}</td>
-						<td>{$warehouse->name}</td>
-					</tr>
-					<tr>
-						<td>{l s='Manager:'}</td>
-						<td>{$employee->lastname} {$employee->firstname}</td>
-					</tr>
-					<tr>
-						<td>{l s='Country:'}</td>
-						<td>{if $address->country != ''}{$address->country}{else}{l s='N/D'}{/if}</td>
-					</tr>
-					<tr>
-						<td>{l s='Phone:'}</td>
-						<td>{if $address->phone != ''}{$address->phone}{else}{l s='N/D'}{/if}</td>
-					</tr>
-					<tr>
-						<td>{l s='Management type:'}</td>
-						<td>{l s=$warehouse->management_type}</td>
-					</tr>
-					<tr>
-						<td>{l s='Valuation currency:'}</td>
-						<td>{$currency->name} ({$currency->sign})</td>
-					</tr>
-					<tr>
-						<td>{l s='Products'}</td>
-						<td>{$warehouse_num_products} {l s='References:'}</td>
-					</tr>
-					<tr>
-						<td>{l s='Physical product quantities:'}</td>
-						<td>{$warehouse_quantities}</td>
-					</tr>
-					<tr>
-						<td>{l s='Stock valuation:'}</td>
-						<td>{$warehouse_value}</td>
-					</tr>
-				</table>
-			</fieldset>
+<fieldset>
+	<h3><i class="icon-cogs"></i> {l s='General information'}</h3>
+	<div class="form-horizontal">
+		<div class="row">
+			<label class="control-label col-lg-3">{l s='Reference:'}</label>
+			<div class="col-lg-9"><p class="form-control-static">{$warehouse->reference}</p></div>
 		</div>
-		<div style="margin-top: 30px">
-			<fieldset>
-				<legend><img src="../img/t/AdminShop.gif" alt="" /> {l s='Shops:'}</legend>
-				{l s='The following are the shops associated with this warehouse.'}
-				<table style="width: 400px; margin-top:20px" classe="table">
-					<tr>
-						<th>{l s='ID'}</th>
-						<th>{l s='Name'}</th>
-					{foreach $shops as $shop}
-					<tr>
-						<td>{$shop.id_shop}</td>
-						<td>{$shop.name}</td>
-					</tr>
-					{/foreach}
-				</table>
-			</fieldset>
+		<div class="row">
+			<label class="control-label col-lg-3">{l s='Name:'}</label>
+			<div class="col-lg-9"><p class="form-control-static">{$warehouse->name}</p></div>
 		</div>
-		<div style="margin-top: 30px">
-			<fieldset>
-				<legend><img src="../img/t/AdminStock.gif" alt="" /> {l s='Stock'}</legend>
-				<a href="index.php?controller=adminstockinstantstate&id_warehouse={$warehouse->id}&token={getAdminToken tab='AdminStockInstantState'}">{l s='Click here if you want details on products in this warehouse'}</a>
-			</fieldset>
+		<div class="row">
+			<label class="control-label col-lg-3">{l s='Manager:'}</label>
+			<div class="col-lg-9"><p class="form-control-static">{$employee->lastname} {$employee->firstname}</p></div>
 		</div>
-		<div style="margin-top: 30px">
-		<fieldset>
-			<legend><img src="../img/t/AdminLogs.gif" alt="" /> {l s='History'}</legend>
-			<a href="index.php?controller=adminstockmvt&id_warehouse={$warehouse->id}&token={getAdminToken tab='AdminStockMvt'}">{l s='Click here if you want details about this warehouse\'s activity.'}</a>
-		</fieldset>
+		<div class="row">
+			<label class="control-label col-lg-3">{l s='Country:'}</label>
+			<div class="col-lg-9"><p class="form-control-static">{if $address->country != ''}{$address->country}{else}{l s='N/D'}{/if}</p></div>
 		</div>
+		<div class="row">
+			<label class="control-label col-lg-3">{l s='Phone:'}</label>
+			<div class="col-lg-9"><p class="form-control-static">{if $address->phone != ''}{$address->phone}{else}{l s='N/D'}{/if}</p></div>
+		</div>
+		<div class="row">
+			<label class="control-label col-lg-3">{l s='Management type:'}</label>
+			<div class="col-lg-9"><p class="form-control-static">{l s=$warehouse->management_type}</p></div>
+		</div>
+		<div class="row">
+			<label class="control-label col-lg-3">{l s='Valuation currency:'}</label>
+			<div class="col-lg-9"><p class="form-control-static">{$currency->name} ({$currency->sign})</p></div>
+		</div>
+		<div class="row">
+			<label class="control-label col-lg-3">{l s='Products'}</label>
+			<div class="col-lg-9"><p class="form-control-static">{$warehouse_num_products} {l s='References:'}</p></div>
+		</div>
+		<div class="row">
+			<label class="control-label col-lg-3">{l s='Physical product quantities:'}</label>
+			<div class="col-lg-9"><p class="form-control-static">{$warehouse_quantities}</p></div>
+		</div>
+		<div class="row">
+			<label class="control-label col-lg-3">{l s='Stock valuation:'}</label>
+			<div class="col-lg-9"><p class="form-control-static">{$warehouse_value}</p></div>
+		</div>
+	</div>
+</fieldset>
+<fieldset>
+	<h3><i class="icon-sitemap"></i> {l s='Shops:'}</h3>
+	{if isset($shops) && count($shops) > 0}
+	<div class="alert alert-info">{l s='The following are the shops associated with this warehouse.'}</div>
+	<table class="table">
+		<thead>
+			<tr>
+				<th class="fixed-width-xs align-center"><span class="title_box">{l s='ID'}</span></th>
+				<th><span class="title_box">{l s='Name'}</span></th>
+			</tr>
+		</thead>
+		<tbody>
+			{foreach $shops as $shop}
+			<tr>
+				<td class="fixed-width-xs align-center">{$shop.id_shop}</td>
+				<td>{$shop.name}</td>
+			</tr>
+			{/foreach}
+		</tbody>
+	</table>
+	{else}
+	<div class="alert alert-warning">{l s='Currently there is no shop associated with this warehouse.'}</div>
+	{/if}
+</fieldset>
+<fieldset>
+	<h3><i class="icon-archive"></i> {l s='Stock'}</h3>
+	<a class="btn btn-default" href="index.php?controller=adminstockinstantstate&id_warehouse={$warehouse->id}&token={getAdminToken tab='AdminStockInstantState'}"><i class="icon-eye-open"></i> {l s='See products details'}</a>
+</fieldset>
+<fieldset>
+	<h3><i class="icon-reorder"></i> {l s='History'}</h3>
+	<a class="btn btn-default" href="index.php?controller=adminstockmvt&id_warehouse={$warehouse->id}&token={getAdminToken tab='AdminStockMvt'}"><i class="icon-eye-open"></i> {l s='See warehouse\'s activity details'}</a>
+</fieldset>
 {else}
-	{l s='This warehouse does not exist.'}
+	<fieldset><div class="alert alert danger">{l s='This warehouse does not exist.'}</div></fieldset>
 {/if}
 {/block}

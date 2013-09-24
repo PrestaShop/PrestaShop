@@ -397,6 +397,8 @@ class AdminWarehousesControllerCore extends AdminController
 		$address = new Address($warehouse->id_address);
 		$shops = $warehouse->getShops();
 
+		$this->toolbar_title = $warehouse->name;
+
 		// checks objects
 		if (!Validate::isLoadedObject($warehouse) ||
 			!Validate::isLoadedObject($employee) ||
