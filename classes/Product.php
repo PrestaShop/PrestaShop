@@ -730,10 +730,10 @@ class ProductCore extends ObjectModel
 	/**
 	 * @see ObjectModel::validateField()
 	 */
-	public function validateField($field, $value, $id_lang = null)
+	public function validateField($field, $value, $id_lang = null, $skip = array(), $human_errors = false)
 	{
 		$value = ($field == 'description_short' ? strip_tags($value) : $value);
-		return parent::validateField($field, $value, $id_lang);
+		return parent::validateField($field, $value, $id_lang, $skip, $human_errors);
 	}
 
 	public function toggleStatus()
