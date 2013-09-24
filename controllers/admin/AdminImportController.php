@@ -1252,14 +1252,16 @@ class AdminImportControllerCore extends AdminController
 			}
 
 			$product->id_category_default = isset($product->id_category[0]) ? (int)$product->id_category[0] : '';
-
-			$link_rewrite = (is_array($product->link_rewrite) && count($product->link_rewrite)) ? trim($product->link_rewrite[$default_language_id]) : '';
+			
+			$id_lang = Language::getIdByIso(Tools::getValue('iso_lang', 'en'));
+	
+			$link_rewrite = (is_array($product->link_rewrite) && count($product->link_rewrite)) ? trim($product->link_rewrite[$id_lang]) : '';
 
 			$valid_link = Validate::isLinkRewrite($link_rewrite);
 
-			if ((isset($product->link_rewrite[$default_language_id]) && empty($product->link_rewrite[$default_language_id])) || !$valid_link)
+			if ((isset($product->link_rewrite[$id_lang]) && empty($product->link_rewrite[$id_lang])) || !$valid_link)
 			{
-				$link_rewrite = Tools::link_rewrite($product->name[$default_language_id]);
+				$link_rewrite = Tools::link_rewrite($product->name[$id_lang]);
 				if ($link_rewrite == '')
 					$link_rewrite = 'friendly-url-autogeneration-failed';
 			}
@@ -1267,12 +1269,13 @@ class AdminImportControllerCore extends AdminController
 			if (!$valid_link)
 				$this->warnings[] = sprintf(
 					Tools::displayError('Rewrite link for %1$s (ID: %2$s) was re-written as %3$s.'),
-					$product->name[$default_language_id],
+					$product->name[$id_lang],
 					(isset($info['id']) ? $info['id'] : 'null'),
 					$link_rewrite
 				);
 
-			$product->link_rewrite = AdminImportController::createMultiLangField($link_rewrite);
+			if (!Tools::getValue('match_ref') || !(is_array($product->link_rewrite) && count($product->link_rewrite)))
+				$product->link_rewrite = AdminImportController::createMultiLangField($link_rewrite);
 
 			// replace the value of separator by coma
 			if ($this->multiple_value_separator != ',')
