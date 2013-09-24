@@ -36,8 +36,8 @@
 #cart_block #cart_block_summary {display:none}
 #cart_block .quantity-formated {
 	display:inline-block;
-	margin-right:5px;
-	min-width:15px;
+	padding-right:2px;
+	min-width:18px;
 	vertical-align: top;
 }
 #cart_block .cart_block_product_name {font-weight:bold}
