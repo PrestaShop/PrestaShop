@@ -1108,7 +1108,7 @@ class AdminModulesControllerCore extends AdminController
 					$modules[$km]->preferences = $modules_preferences[$modules[$km]->name];
 			}
 			unset($object);
-			if (isset($module->version_addons))
+			if (isset($module->version_addons) && $module->installed)
 				$upgrade_available[] = array('anchor' => ucfirst($module->name), 'name' => $module->displayName);;
 		}
 
