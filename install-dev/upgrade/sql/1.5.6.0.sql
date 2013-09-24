@@ -13,3 +13,8 @@ ALTER TABLE `PREFIX_manufacturer_lang` CHANGE `short_description` `short_descrip
 /* PHP:add_module_to_hook(blockmyaccountfooter, actionModuleUnRegisterHookAfter); */;
 /* PHP:remove_tab(AdminRangePrice); */;
 /* PHP:remove_tab(AdminRangeWeight); */;
+
+
+/* Add support for delivery system */;
+ALTER TABLE `PREFIX_order_state` CHANGE `package` `package` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0';
+ALTER TABLE `PREFIX_order_invoice` CHANGE `package` `package` INT( 11 ) NOT NULL;
