@@ -36,9 +36,7 @@
 		<p>{l s='Please choose the warehouses associated with this product. You must also select a default warehouse. '}</p>
 	</div>	
 	<div class="row">
-		<a class="btn btn-default confirm_leave" href="{$link->getAdminLink('AdminWarehouses')|escape:'htmlall':'UTF-8'}&addwarehouse">
-			<i class="icon-plus-sign"></i> {l s='Create a new warehouse'}
-		</a>
+		<a class="btn btn-link confirm_leave" href="{$link->getAdminLink('AdminWarehouses')|escape:'htmlall':'UTF-8'}&addwarehouse">{l s='Create a new warehouse'} <i class="icon-external-link-sign"></i></a>
 	</div>
 	<div class="row">
 		<div class="panel-group" id="warehouse-accordion">
@@ -51,12 +49,15 @@
 					</div>
 					<div id="warehouse-{$warehouse['name']}" class="panel-collapse collapse{if $smarty.foreach.data.first} in{/if}">
 						<div class="panel-body">
-							<table cellpadding="10" cellspacing="0" class="table">
-								<tr>
-									<th width="100">{l s='Stored'}</th>
-									<th>{l s='Product'}</th>
-									<th width="150">{l s='Location (optional)'}</th>
-								</tr>
+							<table class="table">
+								<thead>
+									<tr>
+										<th class="fixed-width-xs" align="center"><span class="title_box">{l s='Stored'}</span></th>
+										<th><span class="title_box">{l s='Product'}</span></th>
+										<th><span class="title_box">{l s='Location (optional)'}</span></th>
+									</tr>
+								</thead>
+								<tbody>
 								{foreach $attributes AS $index => $attribute}
 									{assign var=location value=''}
 									{assign var=selected value=''}
@@ -67,7 +68,7 @@
 										{/if}
 									{/foreach}
 									<tr {if $index is odd}class="alt_row"{/if}>
-										<td><input type="checkbox"
+										<td class="fixed-width-xs" align="center"><input type="checkbox"
 											name="check_warehouse_{$warehouse['id_warehouse']}_{$attribute['id_product']}_{$attribute['id_product_attribute']}"
 											{if $selected == true}checked="checked"{/if}
 											value="1" />
@@ -79,17 +80,15 @@
 											size="20" />
 										</td>
 									</tr>
-								{/foreach}
-								<tr>
-									<td colspan="3">&nbsp;</td>
-								</tr>
-								{if $attributes|@count gt 1}
-								<tr>
-									<td><input type="checkbox" class="check_all_warehouse" value="check_warehouse_{$warehouse['id_warehouse']}" /></td>
-									<td colspan="2"><i>{l s='Mark all products as stored in this warehouse.'}</i></td>
-								</tr>
-								{/if}
+								{/foreach}								
 							</table>
+							{if $attributes|@count gt 1}
+							<button type="button" class="btn btn-default check_all_warehouse" value="check_warehouse_{$warehouse['id_warehouse']}"><i class="icon-check-sign"></i> {l s='Mark / Unmark all products as stored in this warehouse.'}</button>
+							<!--<tr>
+								<td><input type="checkbox" class="check_all_warehouse" value="check_warehouse_{$warehouse['id_warehouse']}" /></td>
+								<td colspan="2"><i></i></td>
+							</tr>-->
+							{/if}
 						</div>
 					</div>
 				</div>
