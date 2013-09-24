@@ -141,6 +141,78 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				ConfigurationKPI::updateValue('EMPTY_CATS_EXPIRE', strtotime('+2 hour'));
 				break;
 
+			case 'customer_main_gender':
+				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+				SELECT SUM(IF(g.id_gender IS NOT NULL, 1, 0)) as total, SUM(IF(type = 0, 1, 0)) as male, SUM(IF(type = 1, 1, 0)) as female, SUM(IF(type = 2, 1, 0)) as neutral
+				FROM `'._DB_PREFIX_.'customer` c
+				'.Shop::addSqlAssociation('customer', 'c').'
+				LEFT JOIN `'._DB_PREFIX_.'gender` g ON c.id_gender = g.id_gender
+				WHERE c.active = 1');
+				if (!$row['total'])
+					$value = $this->l('No customers');
+				elseif ($row['male'] > $row['female'] && $row['male'] > $row['neutral'])
+					$value = sprintf($this->l('%d%% Men Customers'), round(100 * $row['male'] / $row['total']));
+				elseif ($row['female'] > $row['male'] && $row['female'] > $row['neutral'])
+					$value = sprintf($this->l('%d%% Women Customers'), round(100 * $row['female'] / $row['total']));
+				else
+					$value = sprintf($this->l('%d%% Neutral Customers'), round(100 * $row['neutral'] / $row['total']));
+				
+				ConfigurationKPI::updateValue('CUSTOMER_MAIN_GENDER', $value);
+				ConfigurationKPI::updateValue('CUSTOMER_MAIN_GENDER_EXPIRE', strtotime('+1 day'));
+				break;
+
+			case 'customer_age':
+				$value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				SELECT AVG(birthday)
+				FROM `'._DB_PREFIX_.'customer`
+				'.Shop::addSqlAssociation('customer').'
+				WHERE active = 1
+				AND birthday IS NOT NULL AND birthday != "0000-00-00"');
+				$value = sprintf($this->l('%.1f years'), round((time() - strtotime($value)) / 86400 / 365, 1));
+
+				ConfigurationKPI::updateValue('CUSTOMER_AGE', $value);
+				ConfigurationKPI::updateValue('CUSTOMER_AGE_EXPIRE', strtotime('+1 day'));
+				break;
+
+			case 'newsletter_registrations':
+				$value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				SELECT COUNT(*)
+				FROM `'._DB_PREFIX_.'customer`
+				WHERE newsletter = 1
+				'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
+				if (Module::isInstalled('blocknewsletter'))
+				{
+					$value += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+					SELECT COUNT(*)
+					FROM `'._DB_PREFIX_.'newsletter`
+					WHERE active = 1
+					'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
+				}
+
+				ConfigurationKPI::updateValue('NEWSLETTER_REGISTRATIONS', $value);
+				ConfigurationKPI::updateValue('NEWSLETTER_REGISTRATIONS_EXPIRE', strtotime('+6 hour'));
+				break;
+
+			case 'orders_per_customer':
+				$value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				SELECT COUNT(*)
+				FROM `'._DB_PREFIX_.'customer`
+				'.Shop::addSqlAssociation('customer').'
+				WHERE active = 1');
+				if ($value)
+				{
+					$orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+					SELECT COUNT(*)
+					FROM `'._DB_PREFIX_.'orders`
+					'.Shop::addSqlAssociation('orders').'
+					WHERE valid = 1');
+					$value = round($orders / $value, 2);
+				}
+
+				ConfigurationKPI::updateValue('ORDERS_PER_CUSTOMER', $value);
+				ConfigurationKPI::updateValue('ORDERS_PER_CUSTOMER_EXPIRE', strtotime('+1 day'));
+				break;
+
 			case 'average_order_value':
 				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT

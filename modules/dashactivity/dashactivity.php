@@ -198,7 +198,7 @@ class Dashactivity extends Module
 		$product_reviews = 0;
 		if (Module::isInstalled('productcomments'))
 		{
-			$new_registrations += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			$product_reviews += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT COUNT(*)
 			FROM `'._DB_PREFIX_.'product_comment` pc
 			LEFT JOIN `'._DB_PREFIX_.'product` p ON (pc.id_product = p.id_product)
