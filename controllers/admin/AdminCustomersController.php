@@ -551,10 +551,10 @@ class AdminCustomersControllerCore extends AdminController
 		$helper->color = 'color2';
 		$helper->title = $this->l('Average Age');
 		$helper->subtitle = $this->l('All Time');
-		if (ConfigurationKPI::get('CUSTOMER_AGE') !== false)
-			$helper->value = ConfigurationKPI::get('CUSTOMER_AGE');
-		if (ConfigurationKPI::get('CUSTOMER_AGE_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=customer_age';
+		if (ConfigurationKPI::get('AVG_CUSTOMER_AGE') !== false)
+			$helper->value = ConfigurationKPI::get('AVG_CUSTOMER_AGE');
+		if (ConfigurationKPI::get('AVG_CUSTOMER_AGE_EXPIRE') < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=avg_customer_age';
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();

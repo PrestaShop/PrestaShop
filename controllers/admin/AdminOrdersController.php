@@ -1279,7 +1279,7 @@ class AdminOrdersControllerCore extends AdminController
 		$helper->title = $this->l('Average Order Value');
 		$helper->subtitle = $this->l('30 days');
 		if (ConfigurationKPI::get('AVG_ORDER_VALUE') !== false)
-			$helper->value = ConfigurationKPI::get('AVERAGE_ORDER_VALUE');
+			$helper->value = ConfigurationKPI::get('AVG_ORDER_VALUE');
 		if (ConfigurationKPI::get('AVG_ORDER_VALUE_EXPIRE') < $time)
 			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=average_order_value';
 		$kpis[] = $helper->generate();
