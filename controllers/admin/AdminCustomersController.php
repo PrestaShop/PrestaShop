@@ -525,6 +525,66 @@ class AdminCustomersControllerCore extends AdminController
 	{
 		$customer->id_shop = $this->context->shop->id;
 	}
+	
+	public function renderKpis()
+	{
+		$time = time();
+		$kpis = array();
+
+		/* The data generation is located in AdminStatsControllerCore */
+
+		$helper = new HelperKpi();
+		$helper->id = 'box-gender';
+		$helper->icon = 'icon-male';
+		$helper->color = 'color1';
+		$helper->title = $this->l('Customers');
+		$helper->subtitle = $this->l('All Time');
+		if (ConfigurationKPI::get('CUSTOMER_MAIN_GENDER') !== false)
+			$helper->value = ConfigurationKPI::get('CUSTOMER_MAIN_GENDER');
+		if (ConfigurationKPI::get('CUSTOMER_MAIN_GENDER_EXPIRE') < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=customer_main_gender';
+		$kpis[] = $helper->generate();
+
+		$helper = new HelperKpi();
+		$helper->id = 'box-age';
+		$helper->icon = 'icon-calendar';
+		$helper->color = 'color2';
+		$helper->title = $this->l('Average Age');
+		$helper->subtitle = $this->l('All Time');
+		if (ConfigurationKPI::get('CUSTOMER_AGE') !== false)
+			$helper->value = ConfigurationKPI::get('CUSTOMER_AGE');
+		if (ConfigurationKPI::get('CUSTOMER_AGE_EXPIRE') < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=customer_age';
+		$kpis[] = $helper->generate();
+
+		$helper = new HelperKpi();
+		$helper->id = 'box-orders';
+		$helper->icon = 'icon-retweet';
+		$helper->color = 'color3';
+		$helper->title = $this->l('Orders per Customer');
+		$helper->subtitle = $this->l('All Time');
+		if (ConfigurationKPI::get('ORDERS_PER_CUSTOMER') !== false)
+			$helper->value = ConfigurationKPI::get('ORDERS_PER_CUSTOMER');
+		if (ConfigurationKPI::get('ORDERS_PER_CUSTOMER_EXPIRE') < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=orders_per_customer';
+		$kpis[] = $helper->generate();
+
+		$helper = new HelperKpi();
+		$helper->id = 'box-newsletter';
+		$helper->icon = 'icon-envelope';
+		$helper->color = 'color4';
+		$helper->title = $this->l('Newsletter Registrations');
+		$helper->subtitle = $this->l('All Time');
+		if (ConfigurationKPI::get('NEWSLETTER_REGISTRATIONS') !== false)
+			$helper->value = ConfigurationKPI::get('NEWSLETTER_REGISTRATIONS');
+		if (ConfigurationKPI::get('NEWSLETTER_REGISTRATIONS_EXPIRE') < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=newsletter_registrations';
+		$kpis[] = $helper->generate();
+
+		$helper = new HelperKpiRow();
+		$helper->kpis = $kpis;
+		return $helper->generate();
+	}
 
 	public function renderView()
 	{

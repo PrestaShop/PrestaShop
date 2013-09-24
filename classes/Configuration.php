@@ -61,7 +61,7 @@ class ConfigurationCore extends ObjectModel
 	);
 
 	/** @var array Configuration cache */
-	protected static $_CONF;
+	protected static $_cache = array();
 
 	/** @var array Vars types */
 	protected static $types = array();
@@ -109,7 +109,7 @@ class ConfigurationCore extends ObjectModel
 	 */
 	public static function loadConfiguration()
 	{
-		self::$_CONF = array();
+		self::$_cache[self::$definition['table']] = array();
 		$sql = 'SELECT c.`name`, cl.`id_lang`, IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value, c.id_shop_group, c.id_shop
 				FROM `'._DB_PREFIX_.bqSQL(self::$definition['table']).'` c
 				LEFT JOIN `'._DB_PREFIX_.bqSQL(self::$definition['table']).'_lang` cl ON (c.`'.bqSQL(self::$definition['primary']).'` = cl.`'.bqSQL(self::$definition['primary']).'`)';
@@ -120,19 +120,19 @@ class ConfigurationCore extends ObjectModel
 		{
 			$lang = ($row['id_lang']) ? $row['id_lang'] : 0;
 			self::$types[$row['name']] = ($lang) ? 'lang' : 'normal';
-			if (!isset(self::$_CONF[$lang]))
-				self::$_CONF[$lang] = array(
+			if (!isset(self::$_cache[self::$definition['table']][$lang]))
+				self::$_cache[self::$definition['table']][$lang] = array(
 					'global' => array(),
 					'group' => array(),
 					'shop' => array(),
 				);
 
 			if ($row['id_shop'])
-				self::$_CONF[$lang]['shop'][$row['id_shop']][$row['name']] = $row['value'];
+				self::$_cache[self::$definition['table']][$lang]['shop'][$row['id_shop']][$row['name']] = $row['value'];
 			else if ($row['id_shop_group'])
-				self::$_CONF[$lang]['group'][$row['id_shop_group']][$row['name']] = $row['value'];
+				self::$_cache[self::$definition['table']][$lang]['group'][$row['id_shop_group']][$row['name']] = $row['value'];
 			else
-				self::$_CONF[$lang]['global'][$row['name']] = $row['value'];
+				self::$_cache[self::$definition['table']][$lang]['global'][$row['name']] = $row['value'];
 		}
 	}
 
@@ -149,10 +149,10 @@ class ConfigurationCore extends ObjectModel
 			return false;
 		
 		// If conf if not initialized, try manual query
-		if (!self::$_CONF)
+		if (!isset(self::$_cache[self::$definition['table']]))
 		{
 			Configuration::loadConfiguration();
-			if (!self::$_CONF)
+			if (!self::$_cache[self::$definition['table']])
 				return Db::getInstance()->getValue('SELECT `value` FROM `'._DB_PREFIX_.bqSQL(self::$definition['table']).'` WHERE `name` = "'.pSQL($key).'"');
 		}
 		$id_lang = (int)$id_lang;
@@ -161,15 +161,15 @@ class ConfigurationCore extends ObjectModel
 		if ($id_shop_group === null)
 			$id_shop_group = Shop::getContextShopGroupID(true);
 
-		if (!isset(self::$_CONF[$id_lang]))
+		if (!isset(self::$_cache[self::$definition['table']][$id_lang]))
 			$id_lang = 0;
 			
 		if ($id_shop && Configuration::hasKey($key, $id_lang, null, $id_shop))
-			return self::$_CONF[$id_lang]['shop'][$id_shop][$key];
+			return self::$_cache[self::$definition['table']][$id_lang]['shop'][$id_shop][$key];
 		elseif ($id_shop_group && Configuration::hasKey($key, $id_lang, $id_shop_group))
-			return self::$_CONF[$id_lang]['group'][$id_shop_group][$key];
+			return self::$_cache[self::$definition['table']][$id_lang]['group'][$id_shop_group][$key];
 		elseif (Configuration::hasKey($key, $id_lang))
-			return self::$_CONF[$id_lang]['global'][$key];
+			return self::$_cache[self::$definition['table']][$id_lang]['global'][$key];
 		return false;
 	}
 	
@@ -232,10 +232,10 @@ class ConfigurationCore extends ObjectModel
 	{
 		$id_lang = (int)$id_lang;
 		if ($id_shop)
-			return isset(self::$_CONF[$id_lang]['shop'][$id_shop]) && array_key_exists($key, self::$_CONF[$id_lang]['shop'][$id_shop]);
+			return isset(self::$_cache[self::$definition['table']][$id_lang]['shop'][$id_shop]) && array_key_exists($key, self::$_cache[self::$definition['table']][$id_lang]['shop'][$id_shop]);
 		elseif ($id_shop_group)
-			return isset(self::$_CONF[$id_lang]['group'][$id_shop_group]) && array_key_exists($key, self::$_CONF[$id_lang]['group'][$id_shop_group]);
-		return isset(self::$_CONF[$id_lang]['global']) && array_key_exists($key, self::$_CONF[$id_lang]['global']);
+			return isset(self::$_cache[self::$definition['table']][$id_lang]['group'][$id_shop_group]) && array_key_exists($key, self::$_cache[self::$definition['table']][$id_lang]['group'][$id_shop_group]);
+		return isset(self::$_cache[self::$definition['table']][$id_lang]['global']) && array_key_exists($key, self::$_cache[self::$definition['table']][$id_lang]['global']);
 	}
 
 	/**
@@ -262,11 +262,11 @@ class ConfigurationCore extends ObjectModel
 		foreach ($values as $lang => $value)
 		{
 			if ($id_shop)
-				self::$_CONF[$lang]['shop'][$id_shop][$key] = $value;
+				self::$_cache[self::$definition['table']][$lang]['shop'][$id_shop][$key] = $value;
 			else if ($id_shop_group)
-				self::$_CONF[$lang]['group'][$id_shop_group][$key] = $value;
+				self::$_cache[self::$definition['table']][$lang]['group'][$id_shop_group][$key] = $value;
 			else
-				self::$_CONF[$lang]['global'][$key] = $value;
+				self::$_cache[self::$definition['table']][$lang]['global'][$key] = $value;
 		}
 	}
 
@@ -401,7 +401,7 @@ class ConfigurationCore extends ObjectModel
 		DELETE FROM `'._DB_PREFIX_.bqSQL(self::$definition['table']).'`
 		WHERE `name` = "'.pSQL($key).'"');
 		
-		self::$_CONF = null;
+		self::$_cache[self::$definition['table']] = null;
 		
 		return ($result && $result2);
 	}
@@ -429,7 +429,7 @@ class ConfigurationCore extends ObjectModel
 		DELETE FROM `'._DB_PREFIX_.bqSQL(self::$definition['table']).'_lang`
 		WHERE `'.bqSQL(self::$definition['primary']).'` = '.(int)$id);
 		
-		self::$_CONF = null;
+		self::$_cache[self::$definition['table']] = null;
 	}
 
 	/**
