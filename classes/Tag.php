@@ -106,7 +106,7 @@ class TagCore extends ObjectModel
 		 	 	if (!Validate::isGenericName($tag))
 		 	 		return false;
 				$tag = trim(substr($tag, 0, self::$definition['fields']['name']['size']));
-				$tag_obj = new Tag(null, $tag), (int)$id_lang);
+				$tag_obj = new Tag(null, $tag, (int)$id_lang);
 	
 				/* Tag does not exist in database */
 				if (!Validate::isLoadedObject($tag_obj))
