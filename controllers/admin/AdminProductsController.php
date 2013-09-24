@@ -2296,26 +2296,52 @@ class AdminProductsControllerCore extends AdminController
 
 		/* The data generation is located in AdminStatsControllerCore */
 
-		$helper = new HelperKpi();
-		$helper->id = 'box-products-stock';
-		$helper->icon = 'icon-archive';
-		$helper->color = 'color1';
-		$helper->title = $this->l('Products in Stock');
-		if (ConfigurationKPI::get('PRODUCTS_STOCK') !== false)
-			$helper->value = ConfigurationKPI::get('PRODUCTS_STOCK');
-		if (ConfigurationKPI::get('PRODUCTS_STOCK_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=products_stock';
-		$kpis[] = $helper->generate();
+		if (Configuration::get('PS_STOCK_MANAGEMENT'))
+		{
+			$helper = new HelperKpi();
+			$helper->id = 'box-products-stock';
+			$helper->icon = 'icon-archive';
+			$helper->color = 'color1';
+			$helper->title = $this->l('Items in Stock');
+			if (ConfigurationKPI::get('PERCENT_PRODUCT_STOCK') !== false)
+				$helper->value = ConfigurationKPI::get('PERCENT_PRODUCT_STOCK');
+			if (ConfigurationKPI::get('PERCENT_PRODUCT_STOCK_EXPIRE') < $time)
+				$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=percent_product_stock';
+			$kpis[] = $helper->generate();
+		}
 		
 		$helper = new HelperKpi();
 		$helper->id = 'box-avg-gross-margin';
 		$helper->icon = 'icon-tags';
 		$helper->color = 'color2';
 		$helper->title = $this->l('Average Gross Margin');
-		if (ConfigurationKPI::get('AVG_GROSS_MARGIN') !== false)
-			$helper->value = ConfigurationKPI::get('AVG_GROSS_MARGIN');
-		if (ConfigurationKPI::get('AVG_GROSS_MARGIN_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=avg_gross_margin';
+		if (ConfigurationKPI::get('PRODUCT_AVG_GROSS_MARGIN') !== false)
+			$helper->value = ConfigurationKPI::get('PRODUCT_AVG_GROSS_MARGIN');
+		if (ConfigurationKPI::get('PRODUCT_AVG_GROSS_MARGIN_EXPIRE') < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=product_avg_gross_margin';
+		$kpis[] = $helper->generate();
+		
+		$helper = new HelperKpi();
+		$helper->id = 'box-8020-sales-catalog';
+		$helper->icon = 'icon-beaker';
+		$helper->color = 'color3';
+		$helper->title = $this->l('80% of your sales');
+		$helper->subtitle = $this->l('30 days');
+		if (ConfigurationKPI::get('8020_SALES_CATALOG') !== false)
+			$helper->value = ConfigurationKPI::get('8020_SALES_CATALOG');
+		if (ConfigurationKPI::get('8020_SALES_CATALOG_EXPIRE') < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=8020_sales_catalog';
+		$kpis[] = $helper->generate();
+
+		$helper = new HelperKpi();
+		$helper->id = 'box-disabled-products';
+		$helper->icon = 'icon-off';
+		$helper->color = 'color4';
+		$helper->title = $this->l('Disabled Products');
+		if (ConfigurationKPI::get('DISABLED_PRODUCTS') !== false)
+			$helper->value = ConfigurationKPI::get('DISABLED_PRODUCTS');
+		if (ConfigurationKPI::get('DISABLED_PRODUCTS_EXPIRE') < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=disabled_products';
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpiRow();
