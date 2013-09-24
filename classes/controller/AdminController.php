@@ -2128,7 +2128,7 @@ class AdminControllerCore extends Controller
 		elseif (isset($_POST['submitReset'.$this->list_id]))
 			$this->action = 'reset_filters';
 		/* Submit options list */
-		elseif (Tools::getValue('submitOptions'.$this->table) || Tools::getValue('submitOptions'))
+		elseif (Tools::isSubmit('submitOptions'.$this->table) || Tools::isSubmit('submitOptions'))
 		{
 			$this->display = 'options';
 			if ($this->tabAccess['edit'] === '1')
