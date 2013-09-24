@@ -30,7 +30,11 @@ class AdminDashboardControllerCore extends AdminController
 	{
 		$this->bootstrap = true;
 		$this->display = 'view';
+
 		parent::__construct();
+		
+		if (Tools::isSubmit('profitability_conf') || Tools::isSubmit('submitOptions'))
+			$this->fields_options = $this->getOptionFields();
 	}
 
 	public function setMedia()
@@ -49,8 +53,86 @@ class AdminDashboardControllerCore extends AdminController
 		));
 	}
 	
+	protected function getOptionFields()
+	{
+		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+		$fields = array();
+		
+		$modules = Module::getModulesOnDisk(true);
+		foreach ($modules as $module)
+			if ($module->tab == 'payments_gateways' && $module->id)
+			{
+				$fields['CONF_'.strtoupper($module->name).'_FIXED_FEE'] = array(
+					'title' => sprintf($this->l('Fixed fee / %s'), $module->displayName),
+					'desc' => sprintf($this->l('Choose a fixed fee for each order placed with %s.'), $module->displayName),
+					'validation' => 'isPrice',
+					'cast' => 'floatval',
+					'type' => 'text',
+					'default' => '0',
+					'suffix' => $currency->iso_code
+				);
+				$fields['CONF_'.strtoupper($module->name).'_VAR_FEE'] = array(
+					'title' => sprintf($this->l('Variable fee / %s'), $module->displayName),
+					'desc' => sprintf($this->l('Choose a variable fee for each order placed with %s. It will be applied on the total paid with taxes.'), $module->displayName),
+					'validation' => 'isPercentage',
+					'cast' => 'floatval',
+					'type' => 'text',
+					'default' => '0',
+					'suffix' => '%'
+				);
+			}
+		$fields['CONF_ORDER_FIXED_FEES'] = array(
+			'title' => $this->l('Other fixed fees'),
+			'desc' => $this->l('Other fixed fees applied to each order.'),
+			'validation' => 'isPrice',
+			'cast' => 'floatval',
+			'type' => 'text',
+			'default' => '0',
+			'suffix' => $currency->iso_code
+		);
+		$fields['CONF_SHIPPING_MARGIN'] = array(
+			'title' => $this->l('Shipping Margin'),
+			'desc' => $this->l('Profit margin on your shipping fees.'),
+			'validation' => 'isPercentage',
+			'cast' => 'floatval',
+			'type' => 'text',
+			'default' => '0',
+			'suffix' => '%'
+		);
+		$fields['CONF_MONTHLY_FEES'] = array(
+			'title' => $this->l('Monthly fees'),
+			'desc' => $this->l('Monthly fees like hosting, adwords, etc.'),
+			'validation' => 'isPrice',
+			'cast' => 'floatval',
+			'type' => 'text',
+			'default' => '0',
+			'suffix' => $currency->iso_code
+		);
+		$fields['CONF_YEARLY_FEES'] = array(
+			'title' => $this->l('Yearly fees'),
+			'desc' => $this->l('Yearly fees like hosting, subscriptions, etc.'),
+			'validation' => 'isPrice',
+			'cast' => 'floatval',
+			'type' => 'text',
+			'default' => '0',
+			'suffix' => $currency->iso_code
+		);
+
+		return array(
+			'profitability' => array(
+				'title' => $this->l('Profitability Configuration'),
+				'icon' => 'tab-preferences',
+				'fields' =>	$fields,
+				'submit' => array('title' => $this->l('Save'), 'class' => 'button'),
+			),
+		);
+	}
+
 	public function renderView()
 	{
+		if (Tools::isSubmit('profitability_conf'))
+			return parent::renderOptions();
+
 		$translations = array(
 			'Calendar' => $this->l('Calendar', 'AdminStatsTab'),
 			'Day' => $this->l('Day', 'AdminStatsTab'),
