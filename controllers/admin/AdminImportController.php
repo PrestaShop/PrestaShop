@@ -473,7 +473,7 @@ class AdminImportControllerCore extends AdminController
 		}
 		elseif (isset($this->context->cookie->entity_selected))
 			$entity_selected = (int)$this->context->cookie->entity_selected;
-		
+
 		$csv_selected = '';
 		if (isset($this->context->cookie->csv_selected))
 			$csv_selected = pSQL($this->context->cookie->csv_selected);
@@ -511,10 +511,10 @@ class AdminImportControllerCore extends AdminController
 		for ($i = 0; $i < $nb_table; $i++)
 			$data[$i] = $this->generateContentTable($i, $nb_column, $handle, $this->separator);
 
-		if ($entity_selected = (int)Tools::getValue('entity'))
-			$this->context->cookie->entity_selected = $entity_selected;
+		$this->context->cookie->entity_selected = (int)Tools::getValue('entity');
+
 		if ($csv_selected = Tools::getValue('csv'))
-			$this->context->cookie->csv_selected = $csv_selected;
+			$this->context->cookie->csv_selected = Tools::getValue('csv');
 
 		$this->tpl_view_vars = array(
 			'import_matchs' => Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'import_match'),
