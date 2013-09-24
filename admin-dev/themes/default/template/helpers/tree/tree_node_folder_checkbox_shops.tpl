@@ -24,7 +24,7 @@
 *}
 <li class="tree-folder">
 	<span class="tree-folder-name{if isset($node['disabled']) && $node['disabled'] == true} tree-folder-name-disable{/if}">
-		<input type="checkbox" name="checkBoxShopGroupAsso_category[{$node['id']}]" value="{$node['id']}"{if isset($node['disabled']) && $node['disabled'] == true} disabled="disabled"{/if} />
+		<input type="checkbox" name="checkBoxShopGroupAsso_{$table}[{$node['id']}]" value="{$node['id']}"{if isset($node['disabled']) && $node['disabled'] == true} disabled="disabled"{/if} />
 		<i class="icon-folder-close"></i>
 		<label class="tree-toggler">{l s='Group: %s' sprintf=$node['name']}</label>
 	</span>

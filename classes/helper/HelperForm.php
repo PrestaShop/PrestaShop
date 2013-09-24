@@ -249,6 +249,7 @@ class HelperFormCore extends Helper
 
 		$tree = new HelperTreeShops('shop-tree', 'Shops');
 		$tree->setSelectedShops($assos);
+		$tree->setAttribute('table', $this->table);
 		return $tree->render();
 	}
 }
