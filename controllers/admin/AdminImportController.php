@@ -868,6 +868,9 @@ class AdminImportControllerCore extends AdminController
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
 		$default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');
+		$id_lang = Language::getIdByIso(Tools::getValue('iso_lang'));
+		if (!Validate::isUnsignedId($id_lang))
+			$id_lang = $default_language_id;
 		AdminImportController::setLocale();
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
@@ -914,8 +917,8 @@ class AdminImportControllerCore extends AdminController
 					$category_to_create = new Category();
 					$category_to_create->name = AdminImportController::createMultiLangField($category->parent);
 					$category_to_create->active = 1;
-					$category_link_rewrite = Tools::link_rewrite($category_to_create->name[$default_language_id]);
-					$category_to_create->link_rewrite = $category_link_rewrite;
+					$category_link_rewrite = Tools::link_rewrite($category_to_create->name[$id_lang]);
+					$category_to_create->link_rewrite = AdminImportController::createMultiLangField($category_link_rewrite);
 					$category_to_create->id_parent = Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
 					if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 						($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $category_to_create->add())
@@ -1051,6 +1054,9 @@ class AdminImportControllerCore extends AdminController
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
 		$default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');
+		$id_lang = Language::getIdByIso(Tools::getValue('iso_lang'));
+		if (!Validate::isUnsignedId($id_lang))
+			$id_lang = $default_language_id;
 		AdminImportController::setLocale();
 		$shop_ids = Shop::getCompleteListOfShopsID();
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
@@ -1252,8 +1258,6 @@ class AdminImportControllerCore extends AdminController
 			}
 
 			$product->id_category_default = isset($product->id_category[0]) ? (int)$product->id_category[0] : '';
-			
-			$id_lang = Language::getIdByIso(Tools::getValue('iso_lang', 'en'));
 	
 			$link_rewrite = (is_array($product->link_rewrite) && count($product->link_rewrite)) ? trim($product->link_rewrite[$id_lang]) : '';
 
