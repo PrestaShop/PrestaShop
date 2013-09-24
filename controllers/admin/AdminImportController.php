@@ -363,10 +363,13 @@ class AdminImportControllerCore extends AdminController
 					'shop' => Shop::getGroupFromShop(Configuration::get('PS_SHOP_DEFAULT')),
 				);
 			break;
-			// @since 1.5.0
-			case $this->entities[$this->l('Supply Orders')]:
-				if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-				{
+		}
+		
+		// @since 1.5.0
+		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+			switch ((int)Tools::getValue('entity'))
+			{
+				case $this->entities[$this->l('Supply Orders')]:
 					// required fields
 					$this->required_fields = array(
 						'id_supplier',
@@ -394,12 +397,8 @@ class AdminImportControllerCore extends AdminController
 						'discount_rate' => '0',
 						'is_template' => '0',
 					);
-				}
-			break;
-			// @since 1.5.0
-			case $this->entities[$this->l('Supply Order Details')]:
-				if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-				{
+				break;
+				case $this->entities[$this->l('Supply Order Details')]:
 					// required fields
 					$this->required_fields = array(
 						'supply_order_reference',
@@ -423,8 +422,9 @@ class AdminImportControllerCore extends AdminController
 						'discount_rate' => '0',
 						'tax_rate' => '0',
 					);
-				}
-		}
+				break;
+					
+			}
 
 		$this->separator = strval(trim(Tools::getValue('separator', ';')));
 
