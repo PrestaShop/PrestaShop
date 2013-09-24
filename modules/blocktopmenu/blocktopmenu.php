@@ -340,7 +340,7 @@ class Blocktopmenu extends Module
 					function move(up=false) {
 						var tomove = $("#items option:selected");
 						if (tomove.length >1) {
-							alert("'.$this->l('Please select just one item').'");
+							alert(\''.Tools::htmlentitiesUTF8($this->l('Please select just one item')).'\');
 							return false;
 						}
 						if (up) {
