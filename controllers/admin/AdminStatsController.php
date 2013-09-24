@@ -65,9 +65,9 @@ class AdminStatsControllerCore extends AdminStatsTabController
 	public static function getAbandonedCarts($date_from, $date_to, $granularity = false)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT COUNT(*)
+		SELECT COUNT(DISTINCT id_guest)
 		FROM `'._DB_PREFIX_.'cart`
-		WHERE `date_add` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
+		WHERE `date_add` BETWEEN "'.pSQL($date_from).'" AND "'.pSQL($date_to).'"
 		AND id_cart NOT IN (SELECT id_cart FROM `'._DB_PREFIX_.'orders`)
 		'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
 	}
@@ -112,18 +112,31 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		WHERE product_shop.active = 0');
 	}
 	
+	public static function getTotalSales($date_from, $date_to)
+	{
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT SUM(total_paid_tax_excl / o.conversion_rate)
+		FROM `'._DB_PREFIX_.'orders` o
+		WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
+		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o'));
+	}
+	
 	public static function get8020SalesCatalog($date_from, $date_to)
 	{
-		$total_products = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT COUNT(*)
-		FROM `'._DB_PREFIX_.'product` p
-		'.Shop::addSqlAssociation('product', 'p'));
-		$total_sales = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		$total_sales = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT SUM(total_price_tax_excl / o.conversion_rate) as product_sales
 		FROM `'._DB_PREFIX_.'orders` o
 		LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
 		WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
 		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o'));
+		if (!$total_sales)
+			return '0%';
+
+		$total_products = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT COUNT(*)
+		FROM `'._DB_PREFIX_.'product` p
+		'.Shop::addSqlAssociation('product', 'p'));
+
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT SUM(total_price_tax_excl / o.conversion_rate) as product_sales
 		FROM `'._DB_PREFIX_.'orders` o
@@ -132,6 +145,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 		GROUP BY od.product_id, od.product_attribute_id
 		ORDER BY SUM(total_price_tax_excl) DESC');
+
 		$products = 0;
 		$products_sales = 0;
 		foreach ($result as $row)
@@ -184,6 +198,36 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		AND c.nright = c.nleft + 1');
 		return intval($total - $used);
 	}
+	
+	public static function getCustomerMainGender()
+	{
+		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+		SELECT SUM(IF(g.id_gender IS NOT NULL, 1, 0)) as total, SUM(IF(type = 0, 1, 0)) as male, SUM(IF(type = 1, 1, 0)) as female, SUM(IF(type = 2, 1, 0)) as neutral
+		FROM `'._DB_PREFIX_.'customer` c
+		'.Shop::addSqlAssociation('customer', 'c').'
+		LEFT JOIN `'._DB_PREFIX_.'gender` g ON c.id_gender = g.id_gender
+		WHERE c.active = 1');
+		if (!$row['total'])
+			$value = $this->l('No customers');
+		elseif ($row['male'] > $row['female'] && $row['male'] > $row['neutral'])
+			$value = sprintf($this->l('%d%% Men Customers'), round(100 * $row['male'] / $row['total']));
+		elseif ($row['female'] > $row['male'] && $row['female'] > $row['neutral'])
+			$value = sprintf($this->l('%d%% Women Customers'), round(100 * $row['female'] / $row['total']));
+		else
+			$value = sprintf($this->l('%d%% Neutral Customers'), round(100 * $row['neutral'] / $row['total']));
+		return $value;
+	}
+	
+	public static function getAverageCustomerAge()
+	{
+		$value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT AVG(birthday)
+		FROM `'._DB_PREFIX_.'customer` c
+		'.Shop::addSqlAssociation('customer', 'c').'
+		WHERE active = 1
+		AND birthday IS NOT NULL AND birthday != "0000-00-00"');
+		return round((time() - strtotime($value)) / 86400 / 365, 1);
+	}
 
 	public function displayAjaxGetKpi()
 	{
@@ -219,7 +263,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				break;
 
 			case 'abandoned_cart':
-				$value = AdminStatsController::getAbandonedCarts(date('Y-m-d'), date('Y-m-d'));
+				$value = AdminStatsController::getAbandonedCarts(date('Y-m-d H:i:s', strtotime('-2 day')), date('Y-m-d H:i:s', strtotime('-1 day')));
 				ConfigurationKPI::updateValue('ABANDONED_CARTS', $value);
 				ConfigurationKPI::updateValue('ABANDONED_CARTS_EXPIRE', strtotime('+10 min'));
 				break;
@@ -262,36 +306,15 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				break;
 
 			case 'customer_main_gender':
-				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-				SELECT SUM(IF(g.id_gender IS NOT NULL, 1, 0)) as total, SUM(IF(type = 0, 1, 0)) as male, SUM(IF(type = 1, 1, 0)) as female, SUM(IF(type = 2, 1, 0)) as neutral
-				FROM `'._DB_PREFIX_.'customer` c
-				'.Shop::addSqlAssociation('customer', 'c').'
-				LEFT JOIN `'._DB_PREFIX_.'gender` g ON c.id_gender = g.id_gender
-				WHERE c.active = 1');
-				if (!$row['total'])
-					$value = $this->l('No customers');
-				elseif ($row['male'] > $row['female'] && $row['male'] > $row['neutral'])
-					$value = sprintf($this->l('%d%% Men Customers'), round(100 * $row['male'] / $row['total']));
-				elseif ($row['female'] > $row['male'] && $row['female'] > $row['neutral'])
-					$value = sprintf($this->l('%d%% Women Customers'), round(100 * $row['female'] / $row['total']));
-				else
-					$value = sprintf($this->l('%d%% Neutral Customers'), round(100 * $row['neutral'] / $row['total']));
-				
+				$value = AdminStatsController::getCustomerMainGender();
 				ConfigurationKPI::updateValue('CUSTOMER_MAIN_GENDER', $value);
 				ConfigurationKPI::updateValue('CUSTOMER_MAIN_GENDER_EXPIRE', strtotime('+1 day'));
 				break;
 
-			case 'customer_age':
-				$value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT AVG(birthday)
-				FROM `'._DB_PREFIX_.'customer`
-				'.Shop::addSqlAssociation('customer').'
-				WHERE active = 1
-				AND birthday IS NOT NULL AND birthday != "0000-00-00"');
-				$value = sprintf($this->l('%.1f years'), round((time() - strtotime($value)) / 86400 / 365, 1));
-
-				ConfigurationKPI::updateValue('CUSTOMER_AGE', $value);
-				ConfigurationKPI::updateValue('CUSTOMER_AGE_EXPIRE', strtotime('+1 day'));
+			case 'avg_customer_age':
+				$value = sprintf($this->l('%.1f years'), AdminStatsController::getAverageCustomerAge(), 1);
+				ConfigurationKPI::updateValue('AVG_CUSTOMER_AGE', $value);
+				ConfigurationKPI::updateValue('AVG_CUSTOMER_AGE_EXPIRE', strtotime('+1 day'));
 				break;
 
 			case 'newsletter_registrations':
@@ -347,50 +370,20 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				break;
 
 			case 'netprofit_visitor':
-				$gapi = Module::isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
-				if (Validate::isLoadedObject($gapi) && $gapi->isConfigured())
-				{
-					$visitors = 0;
-					if ($result = $gapi->requestReportData('', 'ga:visitors', date('Y-m-d', strtotime('-31 day')), date('Y-m-d', strtotime('-1 day')), null, null, 1, 1))
-						$visitors = $result[0]['metrics']['visitors'];
-				}
-				else
-				{
-					$visitors = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-					SELECT COUNT(DISTINCT id_guest)
-					FROM `'._DB_PREFIX_.'connections`
-					WHERE `date_add` BETWEEN "'.pSQL(date('Y-m-d', strtotime('-31 day'))).' 00:00:00" AND "'.pSQL(date('Y-m-d', strtotime('-1 day'))).' 23:59:59"
-					'.Shop::addSqlRestriction(false));
-				}
-
-				$row_products = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-				SELECT
-					SUM(od.`total_price_tax_excl` / `conversion_rate`) as total_product_price_tax_excl,
-					SUM(od.`product_quantity` * od.`purchase_supplier_price` / `conversion_rate`) as total_purchase_price
+				$date_from = date('Y-m-d', strtotime('-31 day'));
+				$date_to = date('Y-m-d', strtotime('-1 day'));
+				$visitors = AdminStatsController::getUniqueVisitors($date_from, $date_to);
+				$total_sales = AdminStatsController::getTotalSales($date_from, $date_to);
+				$total_purchase = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				SELECT SUM(od.`product_quantity` * od.`purchase_supplier_price` / `conversion_rate`) as total_purchase_price
 				FROM `'._DB_PREFIX_.'orders` o
 				LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
-				WHERE `invoice_date` BETWEEN "'.pSQL(date('Y-m-d', strtotime('-31 day'))).' 00:00:00" AND "'.pSQL(date('Y-m-d', strtotime('-1 day'))).' 23:59:59"
-				'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o'));
-				extract($row_products);
-				
-				$total_discounts_tax_excl = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT SUM(`total_discounts_tax_excl` / `conversion_rate`) as total_discounts_tax_excl
-				FROM `'._DB_PREFIX_.'orders`
-				WHERE `invoice_date` BETWEEN "'.pSQL(date('Y-m-d', strtotime('-31 day'))).' 00:00:00" AND "'.pSQL(date('Y-m-d', strtotime('-1 day'))).' 23:59:59"
-				'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
-				
-				$total_credit_tax_excl = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT SUM(os.`amount` / o.`conversion_rate`) as total_credit_tax_excl
-				FROM `'._DB_PREFIX_.'orders` o
-				LEFT JOIN `'._DB_PREFIX_.'order_slip` os ON o.id_order = os.id_order
-				WHERE os.`date_add` BETWEEN "'.pSQL(date('Y-m-d', strtotime('-31 day'))).' 00:00:00" AND "'.pSQL(date('Y-m-d', strtotime('-1 day'))).' 23:59:59"
+				WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
 				'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o'));
 
-				$net_profits = 0;
-				$net_profits += $total_product_price_tax_excl;
-				$net_profits -= $total_discounts_tax_excl;
-				$net_profits -= $total_purchase_price;
-				$net_profits -= $total_credit_tax_excl;
+				$net_profits = $total_sales;
+				$net_profits -= $total_purchase;
+				// Todo : Add profitability calculation
 
 				if ($visitors)
 					$value = Tools::displayPrice($net_profits / $visitors, $currency);
