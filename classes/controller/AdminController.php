@@ -2516,12 +2516,18 @@ class AdminControllerCore extends Controller
 			foreach ($rules['validateLang'] as $field_lang => $function)
 				foreach ($languages as $language)
 					if (($value = Tools::getValue($field_lang.'_'.$language['id_lang'])) !== false && !empty($value))
-						if (!Validate::$function($value))
+					{
+						if (Tools::strtolower($function) == 'iscleanhtml' && Configuration::get('PS_ALLOW_HTML_IFRAME'))
+							$res = Validate::$function($value, true);
+						else
+							$res = Validate::$function($value);
+						if (!$res)
 							$this->errors[$field_lang.'_'.$language['id_lang']] = sprintf(
 								Tools::displayError('The %1$s field (%2$s) is invalid.'),
 								call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name),
 								$language['name']
 							);
+					}
 	}
 
 	/**
