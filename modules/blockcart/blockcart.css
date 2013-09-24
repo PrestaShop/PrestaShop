@@ -37,7 +37,7 @@
 #cart_block .quantity-formated {
 	display:inline-block;
 	margin-right:5px;
-	min-width:18px;
+	min-width:15px;
 	vertical-align: top;
 }
 #cart_block .cart_block_product_name {font-weight:bold}
