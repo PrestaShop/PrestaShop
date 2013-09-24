@@ -40,9 +40,13 @@
 {/block}
 {block name="input"}
 	{if $input.type == 'select_category'}
-		<select name="id_parent">
-			{$input.options.html}
-		</select>
+		<div class="col-lg-9">
+			<div class="row">
+				<select name="id_parent">
+					{$input.options.html}
+				</select>
+			</div>
+		</div>
 	{else}
 		{$smarty.block.parent}
 	{/if}
