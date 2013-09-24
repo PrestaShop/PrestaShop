@@ -40,7 +40,7 @@ class TagCore extends ObjectModel
 		'primary' => 'id_tag',
 		'fields' => array(
 			'id_lang' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-			'name' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
+			'name' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
 		),
 	);
 
