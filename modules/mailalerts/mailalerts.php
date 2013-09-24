@@ -128,10 +128,11 @@ class MailAlerts extends Module
 
 	public function getContent()
 	{
+		$this->_html = '';
+		
 		$this->_postProcess();
 
-		$this->_html = '<h2>'.$this->displayName.'</h2>';
-		$this->_html .= $this->_displayForm();
+		$this->_html .= $this->renderForm();
 
 		return $this->_html;
 	}
@@ -140,14 +141,14 @@ class MailAlerts extends Module
 	{
 		$errors = array();
 
-		if (Tools::isSubmit('submitMACustomer'))
+		if (Tools::isSubmit('submitMailAlert'))
 		{
-			if (!Configuration::updateValue('MA_CUSTOMER_QTY', (int)Tools::getValue('mA_customer_qty')))
+			if (!Configuration::updateValue('MA_CUSTOMER_QTY', (int)Tools::getValue('MA_CUSTOMER_QTY')))
 				$errors[] = $this->l('Cannot update settings');
 		}
 		else if (Tools::isSubmit('submitMAMerchant'))
 		{
-			$emails = strval(Tools::getValue('ma_merchant_mails'));
+			$emails = strval(Tools::getValue('MA_MERCHANT_MAILS'));
 
 			if (!$emails || empty($emails))
 				$errors[] = $this->l('Please type one (or more) e-mail address');
@@ -172,13 +173,13 @@ class MailAlerts extends Module
 
 				if (!Configuration::updateValue('MA_MERCHANT_MAILS', strval($emails)))
 					$errors[] = $this->l('Cannot update settings');
-				elseif (!Configuration::updateValue('MA_MERCHANT_ORDER', (int)Tools::getValue('mA_merchand_order')))
+				elseif (!Configuration::updateValue('MA_MERCHANT_ORDER', (int)Tools::getValue('MA_MERCHANT_ORDER')))
 					$errors[] = $this->l('Cannot update settings');
-				elseif (!Configuration::updateValue('MA_MERCHANT_OOS', (int)Tools::getValue('mA_merchand_oos')))
+				elseif (!Configuration::updateValue('MA_MERCHANT_OOS', (int)Tools::getValue('MA_MERCHANT_OOS')))
 					$errors[] = $this->l('Cannot update settings');
 				elseif (!Configuration::updateValue('MA_LAST_QTIES', (int)Tools::getValue('MA_LAST_QTIES')))
 					$errors[] = $this->l('Cannot update settings');
-				elseif (!Configuration::updateGlobalValue('MA_MERCHANT_COVERAGE', (int)Tools::getValue('mA_merchant_coverage')))
+				elseif (!Configuration::updateGlobalValue('MA_MERCHANT_COVERAGE', (int)Tools::getValue('MA_MERCHANT_COVERAGE')))
 					$errors[] = $this->l('Cannot update settings');
 				elseif (!Configuration::updateGlobalValue('MA_PRODUCT_COVERAGE', (int)Tools::getValue('MA_PRODUCT_COVERAGE')))
 					$errors[] = $this->l('Cannot update settings');
@@ -186,75 +187,11 @@ class MailAlerts extends Module
 		}
 
 		if (count($errors) > 0)
-			echo $this->displayError(implode('<br />', $errors));
+			$this->_html .= $this->displayError(implode('<br />', $errors));
+		else
+			$this->_html .= $this->displayConfirmation($this->l('Settings updated successfully'));
 
 		$this->init();
-	}
-
-	public function _displayForm()
-	{
-		return '<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset><legend><img src="'.$this->_path.'logo.gif" />'.$this->l('Customer notifications').'</legend>
-				<div style="clear:both;">&nbsp;</div>
-				<label>'.$this->l('Product availability:').' </label>
-				<div class="margin-form">
-					<input type="checkbox" value="1" id="mA_customer_qty" name="mA_customer_qty" '.(Tools::getValue('mA_customer_qty', $this->_customer_qty) == 1 ? 'checked' : '').'>
-					&nbsp;<label for="mA_customer_qty" class="t">'.$this->l('Gives the customer the option of receiving a notification for an available product if this one is out of stock.').'</label>
-				</div>
-				<div class="margin-form">
-					<input type="submit" value="'.$this->l('   Save   ').'" name="submitMACustomer" class="button" />
-				</div>
-			</fieldset>
-		</form>
-		<div style="clear:both;">&nbsp;</div>
-		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset>
-				<legend><img src="'.$this->_path.'logo.gif" />'.$this->l('Merchant notifications').'</legend>
-				<div style="clear:both;">&nbsp;</div>
-				<label>'.$this->l('New order:').' </label>
-				<div class="margin-form">
-					<input type="checkbox" value="1" id="mA_merchand_order" name="mA_merchand_order" '.(Tools::getValue('mA_merchand_order', $this->_merchant_order) == 1 ? 'checked' : '').'>
-					&nbsp;<label for="mA_merchand_order" class="t">'.$this->l('Receive a notification when an order is placed').'</label>
-				</div>
-				<div style="clear:both;">&nbsp;</div>
-				<label>'.$this->l('Out of stock:').' </label>
-				<div class="margin-form">
-					<input type="checkbox" value="1" id="mA_merchand_oos" name="mA_merchand_oos" '.(Tools::getValue('mA_merchand_oos', $this->_merchant_oos) == 1 ? 'checked' : '').'>
-					&nbsp;<label for="mA_merchand_oos" class="t">'.$this->l('Receive a notification if the available quantity of a product is below the following threshold').'</label>
-				</div>
-				<label>'.$this->l('Threshold:').'</label>
-				<div class="margin-form">
-					<input type="text" name="MA_LAST_QTIES" value="'.(Tools::getValue('MA_LAST_QTIES') != null ? (int)Tools::getValue('MA_LAST_QTIES') : (int)Configuration::get('MA_LAST_QTIES')).'" size="3" />
-					<p>'.$this->l('Quantity for which a product is considered out of stock').'</p>
-				</div>
-				<div style="clear:both;">&nbsp;</div>
-				<label>'.$this->l('Coverage warning:').' </label>
-				<div class="margin-form">
-					<input type="checkbox" value="1" id="mA_merchant_coverage" name="mA_merchant_coverage" '.(Tools::getValue('mA_merchant_coverage', $this->_merchant_coverage) == 1 ? 'checked' : '').'>
-					&nbsp;<label for="mA_merchant_coverage" class="t">'.$this->l('Receive a notification if the stock coverage of a product is below the following coverage').'</label>
-				</div>
-				<label>'.$this->l('Coverage:').'</label>
-				<div class="margin-form">
-					<input type="text" name="MA_PRODUCT_COVERAGE" value="'.(Tools::getValue('MA_PRODUCT_COVERAGE') != null ? (int)Tools::getValue('MA_PRODUCT_COVERAGE') : (int)Configuration::getGlobalValue('MA_PRODUCT_COVERAGE')).'" size="3" />
-					<p>'.$this->l('Stock coverage, in days. Also, the stock coverage of a given product will be calculated based on this number').'</p>
-				</div>
-				<div style="clear:both;">&nbsp;</div>
-				<div style="clear:both;">&nbsp;</div>
-				<label>'.$this->l('E-mail addresses:').' </label>
-				<div class="margin-form">
-					<div style="float:left; margin-right:10px;">
-						<textarea name="ma_merchant_mails" rows="10" cols="40">'.Tools::safeOutput(Tools::getValue('ma_merchant_mails', str_replace(self::__MA_MAIL_DELIMITOR__, "\n", $this->_merchant_mails))).'</textarea>
-					</div>
-					<div style="float:left;">
-						'.$this->l('One e-mail address per line (e.g. bob@example.com)').'
-					</div>
-				</div>
-				<div style="clear:both;">&nbsp;</div>
-				<div class="margin-form">
-					<input type="submit" value="'.$this->l('   Save   ').'" name="submitMAMerchant" class="button" />
-				</div>
-			</fieldset>
-		</form>';
 	}
 
 	public function hookActionValidateOrder($params)
@@ -608,5 +545,166 @@ class MailAlerts extends Module
 	public function hookDisplayHeader($params)
 	{
 		$this->context->controller->addCSS($this->_path.'mailalerts.css', 'all');
+	}
+	
+	public function renderForm()
+	{
+		$fields_form_1 = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Customer notifications'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Product availability:'),
+						'name' => 'MA_CUSTOMER_QTY',
+						'desc' => $this->l('Gives the customer the option of receiving a notification for an available product if this one is out of stock.'),
+						'values' => array(
+									array(
+										'id' => 'active_on',
+										'value' => 1,
+										'label' => $this->l('Enabled')
+									),
+									array(
+										'id' => 'active_off',
+										'value' => 0,
+										'label' => $this->l('Disabled')
+									)
+								),
+					),
+				),
+			'submit' => array(
+				'title' => $this->l('Save'),
+				'class' => 'btn btn-primary',
+				'name' => 'submitMailAlert',
+				)
+			),
+		);
+		
+		$fields_form_2 = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Merchant notifications'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'switch',
+						'label' => $this->l('New order:'),
+						'name' => 'MA_MERCHANT_ORDER',
+						'desc' => $this->l('Receive a notification when an order is placed'),
+						'values' => array(
+									array(
+										'id' => 'active_on',
+										'value' => 1,
+										'label' => $this->l('Enabled')
+									),
+									array(
+										'id' => 'active_off',
+										'value' => 0,
+										'label' => $this->l('Disabled')
+									)
+								),
+					),
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Out of stock:'),
+						'name' => 'MA_MERCHANT_OOS',
+						'desc' => $this->l('Receive a notification if the available quantity of a product is below the following threshold'),
+						'values' => array(
+									array(
+										'id' => 'active_on',
+										'value' => 1,
+										'label' => $this->l('Enabled')
+									),
+									array(
+										'id' => 'active_off',
+										'value' => 0,
+										'label' => $this->l('Disabled')
+									)
+								),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Threshold:'),
+						'name' => 'MA_LAST_QTIES',
+						'class' => 'fixed-width-xs',
+						'desc' => $this->l('Quantity for which a product is considered out of stock'),
+					),
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Coverage warning:'),
+						'name' => 'MA_MERCHANT_COVERAGE',
+						'desc' => $this->l('Receive a notification when an order is placed'),
+						'values' => array(
+									array(
+										'id' => 'active_on',
+										'value' => 1,
+										'label' => $this->l('Enabled')
+									),
+									array(
+										'id' => 'active_off',
+										'value' => 0,
+										'label' => $this->l('Disabled')
+									)
+								),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Coverage:'),
+						'name' => 'MA_PRODUCT_COVERAGE',
+						'class' => 'fixed-width-xs',
+						'desc' => $this->l('Stock coverage, in days. Also, the stock coverage of a given product will be calculated based on this number'),
+					),
+					array(
+						'type' => 'textarea',
+						'label' => $this->l('E-mail addresses:'),
+						'name' => 'MA_MERCHANT_MAILS',
+						'desc' => $this->l('One e-mail address per line (e.g. bob@example.com)
+'),
+					),
+				),
+			'submit' => array(
+				'title' => $this->l('Save'),
+				'class' => 'btn btn-primary',
+				'name' => 'submitMAMerchant',
+				)
+			),
+		);
+		
+		
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitMailAlert';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form_1, $fields_form_2));
+	}
+	
+	public function getConfigFieldsValues()
+	{
+		return array(
+			'MA_CUSTOMER_QTY' => Tools::getValue('MA_CUSTOMER_QTY', Configuration::get('MA_CUSTOMER_QTY')),
+			'MA_MERCHANT_ORDER' => Tools::getValue('MA_MERCHANT_ORDER', Configuration::get('MA_MERCHANT_ORDER')),
+			'MA_MERCHANT_OOS' => Tools::getValue('MA_MERCHANT_OOS', Configuration::get('MA_MERCHANT_OOS')),
+			'MA_LAST_QTIES' => Tools::getValue('MA_LAST_QTIES', Configuration::get('MA_LAST_QTIES')),
+			'MA_MERCHANT_COVERAGE' => Tools::getValue('MA_MERCHANT_COVERAGE', Configuration::get('MA_MERCHANT_COVERAGE')),
+			'MA_PRODUCT_COVERAGE' => Tools::getValue('MA_PRODUCT_COVERAGE', Configuration::get('MA_PRODUCT_COVERAGE')),
+			'MA_MERCHANT_MAILS' => Tools::getValue('MA_MERCHANT_MAILS', Configuration::get('MA_MERCHANT_MAILS')),
+		);
 	}
 }
