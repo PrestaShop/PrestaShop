@@ -336,10 +336,10 @@ ALTER TABLE `PREFIX_order_detail` ADD `tax_computation_method` tinyint(1) unsign
 ALTER TABLE `PREFIX_order_invoice` ADD `delivery_number` int(0) NOT NULL DEFAULT '0' AFTER `number`;
 ALTER TABLE `PREFIX_order_invoice` ADD `delivery_date` datetime AFTER `delivery_number`;
 
-INSERT INTO `PREFIX_order_invoice` (`id_order`, `number`, `total_discount_tax_excl`, `total_discount_tax_incl`, `total_paid_tax_excl`, `total_paid_tax_incl`, `total_products`, `total_products_wt`, `total_shipping_tax_excl`, `total_shipping_tax_incl`, `total_wrapping_tax_excl`, `total_wrapping_tax_incl`, `note`, `date_add`) (
-	SELECT `id_order`, `invoice_number`, `total_discounts_tax_excl`, `total_discounts_tax_incl`, `total_paid_tax_excl`, `total_paid_tax_incl`, `total_products`, `total_products_wt`, `total_shipping_tax_excl`, `total_shipping_tax_incl`, `total_wrapping_tax_excl`, `total_wrapping_tax_incl`, '', `invoice_date`
+INSERT INTO `PREFIX_order_invoice` (`id_order`, `number`, `delivery_number`, `total_discount_tax_excl`, `total_discount_tax_incl`, `total_paid_tax_excl`, `total_paid_tax_incl`, `total_products`, `total_products_wt`, `total_shipping_tax_excl`, `total_shipping_tax_incl`, `total_wrapping_tax_excl`, `total_wrapping_tax_incl`, `note`, `date_add`, `delivery_date`) (
+	SELECT `id_order`, `invoice_number`, `delivery_number`, `total_discounts_tax_excl`, `total_discounts_tax_incl`, `total_paid_tax_excl`, `total_paid_tax_incl`, `total_products`, `total_products_wt`, `total_shipping_tax_excl`, `total_shipping_tax_incl`, `total_wrapping_tax_excl`, `total_wrapping_tax_incl`, '', `invoice_date`, `delivery_date`
 	FROM `PREFIX_orders`
-	WHERE `invoice_number` != 0
+	WHERE `invoice_number` != 0 OR `delivery_number` != 0
 );
 
 ALTER TABLE `PREFIX_tab` ADD `active` TINYINT(1) UNSIGNED NOT NULL DEFAULT '1';
