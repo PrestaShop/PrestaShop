@@ -55,15 +55,6 @@ class NotificationCore
 		return $notifications;
 	}
 
-	public function installDb()
-	{
-		Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('
-		ALTER TABLE `'._DB_PREFIX_.'employee`
-		ADD `id_last_order` INT(10) unsigned NOT NULL default "0"
-		ADD `id_last_customer_message` INT(10) unsigned NOT NULL default "0"
-		ADD `id_last_message` INT(10) unsigned NOT NULL default "0"');
-	}
-
 	/**
 	 * getLastElementsIdsByType return all the element ids to show (order, customer registration, and customer message)
 	 * Get all the element ids
