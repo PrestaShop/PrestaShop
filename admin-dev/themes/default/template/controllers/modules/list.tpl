@@ -101,7 +101,7 @@
 								<a href="{$module->addons_buy_url}" target="_blank" class="button updated"><span><img src="../img/admin/cart_addons.png">&nbsp;&nbsp;{if isset($module->id_currency) && isset($module->price)}{displayPrice price=$module->price currency=$module->id_currency}{/if}</span></a>
 							</li>
 						{else}
-							{if $module->id && isset($module->version_addons) && $module->version_addons}
+							{if isset($module->version_addons) && $module->version_addons}
 								<li><a href="{$module->options.update_url}" class="button updated"><span>{l s='Update it!'}</span></a></li>
 							{/if}
 								<li>
