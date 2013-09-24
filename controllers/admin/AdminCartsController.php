@@ -105,6 +105,11 @@ class AdminCartsControllerCore extends AdminController
 
 		parent::initPageHeaderToolbar();
 	}
+	
+	public function renderKpis()
+	{
+		return @AdminOrdersController::renderKpis();
+	}
 
 	public function renderView()
 	{
