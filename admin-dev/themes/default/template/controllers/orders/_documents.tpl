@@ -85,7 +85,7 @@
 		{if get_class($document) eq 'OrderInvoice'}
 			{if isset($document->is_delivery)}
 				--
-			{elseif isset($document->package)}
+			{elseif isset($document->is_package)}
 				--
 			{else}
 				{displayPrice price=$document->total_paid_tax_incl currency=$currency->id}&nbsp;
