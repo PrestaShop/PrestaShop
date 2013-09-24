@@ -29,8 +29,8 @@
 	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Seo"}
 
 	<div class="row">
-		{include file="controllers/products/multishop/checkbox.tpl" field="meta_title" type="default" multilang="true"}
 		<label class="control-label col-lg-3" for="meta_title_{$id_lang}">
+			{include file="controllers/products/multishop/checkbox.tpl" field="meta_title" type="default" multilang="true"}
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='Product page title: Leave blank to use the product name'}">
 				{l s='Meta title:'}
@@ -48,9 +48,9 @@
 		</div>
 	</div>
 
-	<div class="row">
-		{include file="controllers/products/multishop/checkbox.tpl" field="meta_description" type="default" multilang="true"}
+	<div class="row">		
 		<label class="control-label col-lg-3" for="meta_description_{$id_lang}">
+			{include file="controllers/products/multishop/checkbox.tpl" field="meta_description" type="default" multilang="true"}
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='A single sentence for the HTML header is needed. '}">
 				{l s='Meta description:'}
@@ -69,8 +69,8 @@
 	</div>
 
 	<div class="row">
-		{include file="controllers/products/multishop/checkbox.tpl" field="meta_keywords" type="default" multilang="true"}
 		<label class="control-label col-lg-3" for="meta_keywords_{$id_lang}">
+			{include file="controllers/products/multishop/checkbox.tpl" field="meta_keywords" type="default" multilang="true"}
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='Keywords for HTML header, separated by commas.'}">
 				{l s='Meta keywords:'}
@@ -86,28 +86,24 @@
 	</div>
 
 	<div class="row">
-		{include file="controllers/products/multishop/checkbox.tpl" field="link_rewrite" type="default" multilang="true"}
 		<label class="control-label col-lg-3" for="link_rewrite_{$id_lang}">
+			{include file="controllers/products/multishop/checkbox.tpl" field="link_rewrite" type="default" multilang="true"}
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='friendly URL from the product name.'}">
 				{l s='Friendly URL:'}
 			</span>
 
 		</label>
-		<div class="col-lg-9">
+		<div class="col-lg-6">
 			<div class="row">
-				<div class="col-lg-9">
-					<div class="row">
-					{include file="controllers/products/input_text_lang.tpl"
-						languages=$languages
-						input_value=$product->link_rewrite
-						input_name='link_rewrite'}
-					</div>
-				</div>
-				<div class="col-lg-2">
-					<a class="btn btn-default" onmousedown="updateFriendlyURLByName();"><i class="icon-random"></i> {l s='Generate'}</a>
-				</div>
+				{include file="controllers/products/input_text_lang.tpl"
+					languages=$languages
+					input_value=$product->link_rewrite
+					input_name='link_rewrite'}
 			</div>
+		</div>
+		<div class="col-lg-2">
+			<a class="btn btn-default" onmousedown="updateFriendlyURLByName();"><i class="icon-random"></i> {l s='Generate'}</a>
 		</div>
 	</div>
 

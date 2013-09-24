@@ -112,10 +112,9 @@ $(document).ready(function () {
 	</div>
 
 	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Prices"}
-
-	{include file="controllers/products/multishop/checkbox.tpl" field="wholesale_price" type="default"}
 	<div class="row">
 		<label class="control-label col-lg-3" for="wholesale_price">
+			{include file="controllers/products/multishop/checkbox.tpl" field="wholesale_price" type="default"}
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='Wholesale price'}">
 				{l s='Pre-tax wholesale price:'}
@@ -129,8 +128,8 @@ $(document).ready(function () {
 	</div>
 
 	<div class="row">
-		{include file="controllers/products/multishop/checkbox.tpl" field="price" type="price"}
 		<label class="control-label col-lg-3" for="priceTE">
+			{include file="controllers/products/multishop/checkbox.tpl" field="price" type="price"}
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='The pre-tax retail price to sell this product'}">
 				{l s='Pre-tax retail price:'}
@@ -143,9 +142,11 @@ $(document).ready(function () {
 		</div>
 	</div>
 
-	<div class="row">
-		{include file="controllers/products/multishop/checkbox.tpl" field="id_tax_rules_group" type="default"}
-		<label class="control-label col-lg-3" for="id_tax_rules_group">{l s='Tax rule:'}</label>
+	<div class="row">		
+		<label class="control-label col-lg-3" for="id_tax_rules_group">
+			{include file="controllers/products/multishop/checkbox.tpl" field="id_tax_rules_group" type="default"}
+			{l s='Tax rule:'}
+		</label>
 		<div class="col-lg-8">
 			<script type="text/javascript">
 				noTax = {if $tax_exclude_taxe_option}true{else}false{/if};
@@ -193,8 +194,8 @@ $(document).ready(function () {
 	{/if}
 
 	<div class="row" {if !$ps_use_ecotax} style="display:none;"{/if}>
-		{include file="controllers/products/multishop/checkbox.tpl" field="ecot" type="default"}
 		<label class="control-label col-lg-3" for="ecotax">
+			{include file="controllers/products/multishop/checkbox.tpl" field="ecot" type="default"}
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='already included in price'}">
 				{l s='Eco-tax (tax incl.):'}
@@ -216,8 +217,8 @@ $(document).ready(function () {
 	</div>
 
 	<div class="row">
-		{include file="controllers/products/multishop/checkbox.tpl" field="unit_price" type="unit_price"}
 		<label class="control-label col-lg-3" for="unit_price">
+			{include file="controllers/products/multishop/checkbox.tpl" field="unit_price" type="unit_price"}
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='e.g. per lb.'}">
 				{l s='Unit price:'}
@@ -234,7 +235,7 @@ $(document).ready(function () {
 	{if $ps_tax && $country_display_tax_label}
 	<div class="row">
 		<div class="col-lg-9 col-lg-offset-3">
-			<div class="alert">
+			<div class="alert alert-warning">
 				<span>{l s='or'}
 					{$currency->prefix}<span id="unit_price_with_tax">0.00</span>{$currency->suffix}
 					{l s='per'} <span id="unity_second">{$product->unity}</span> {l s='with tax'}
@@ -245,8 +246,10 @@ $(document).ready(function () {
 	{/if}
 
 	<div class="row">
+		<label class="control-label col-lg-3" for="on_sale">
 		{include file="controllers/products/multishop/checkbox.tpl" field="on_sale" type="default"}
-		<div class="col-lg-9 col-lg-offset-3">
+		</label>
+		<div class="col-lg-9">
 			<div class="checkbox">
 				<label class="control-label" for="on_sale" >
 					<input type="checkbox" name="on_sale" id="on_sale" {if $product->on_sale}checked="checked"{/if} value="1" />
@@ -258,7 +261,7 @@ $(document).ready(function () {
 
 	<div class="row">
 		<div class="col-lg-9 col-lg-offset-3">
-			<div class="alert">
+			<div class="alert alert-success">
 				<strong>{l s='Final retail price:'}</strong>
 				<span {if !$country_display_tax_label}style="display:none"{/if} >
 					{$currency->prefix}
@@ -308,8 +311,7 @@ $(document).ready(function () {
 
 	<div id="add_specific_price" class="well" style="display: none;">
 		<div class="col-lg-12">
-
-			<div class="row">
+			<div class="form-group">
 				<label class="control-label col-lg-3" for="{if !$multi_shop}spm_currency_0{else}sp_id_shop{/if}">{l s='For:'}</label>
 				<div class="col-lg-9">
 					<div class="row">
@@ -353,7 +355,7 @@ $(document).ready(function () {
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="form-group">
 				<label class="control-label col-lg-3" for="customer">{l s='Customer:'}</label>
 				<div class="col-lg-9">
 					<input type="hidden" name="sp_id_customer" id="id_customer" value="0" />
@@ -364,7 +366,7 @@ $(document).ready(function () {
 			</div>
 
 			{if $combinations|@count != 0}
-			<div class="row">
+			<div class="form-group">
 				<label class="control-label col-lg-3" for="sp_id_product_attribute">{l s='Combination:'}</label>
 				<div class="col-lg-4">
 					<select id="sp_id_product_attribute" name="sp_id_product_attribute">
@@ -377,7 +379,7 @@ $(document).ready(function () {
 			</div>
 			{/if}
 
-			<div class="row">
+			<div class="form-group">
 				<label class="control-label col-lg-3" for="sp_from">{l s='Available from:'}</label>
 				<div class="input-group col-lg-4">
 					<input class="datepicker" type="text" name="sp_from" value="" style="text-align: center" id="sp_from" />
@@ -386,7 +388,7 @@ $(document).ready(function () {
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="form-group">
 				<label class="control-label col-lg-3" for="sp_from_quantity">{l s='Starting at'}</label>
 				<div class="input-group col-lg-4">
 					<span class="input-group-addon">{l s='unit'}</span>
@@ -394,7 +396,7 @@ $(document).ready(function () {
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="form-group">
 				<label class="control-label col-lg-3" for="sp_price">{l s='Product price'}
 					{if $country_display_tax_label}
 						{l s='(tax excl.):'}
@@ -416,7 +418,7 @@ $(document).ready(function () {
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="form-group">
 				<label class="control-label col-lg-3" for="sp_reduction">{l s='Apply a discount of:'}</label>
 				<div class="col-lg-4">
 					<div class="row">

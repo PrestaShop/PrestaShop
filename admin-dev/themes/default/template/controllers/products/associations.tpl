@@ -30,8 +30,10 @@
 		{l s='Please select a default category.'}
 	</div>
 	<div class="form-group">
-		{include file="controllers/products/multishop/checkbox.tpl" field="category_box" type="category_box"}
-		<label class="control-label col-lg-3" for="category_block">{l s='Associated categories:'}</label>
+		<label class="control-label col-lg-3" for="category_block">
+			{include file="controllers/products/multishop/checkbox.tpl" field="associated-categories-tree" type="category_box"}
+			{l s='Associated categories:'}
+		</label>
 		<div class="col-lg-9">
 			<div id="category_block">
 				{$category_tree}
@@ -42,8 +44,8 @@
 		</div>
 	</div>
 	<div class="form-group">
-		{include file="controllers/products/multishop/checkbox.tpl" field="id_category_default" type="default"}
 		<label class="control-label col-lg-3" for="id_category_default">
+			{include file="controllers/products/multishop/checkbox.tpl" field="id_category_default" type="default"}
 			<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='The default category is the category displayed by default.'}">
 				{l s='Default category:'}
