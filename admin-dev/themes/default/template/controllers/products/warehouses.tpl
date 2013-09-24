@@ -28,68 +28,73 @@
 <fieldset>
 	<input type="hidden" name="submitted_tabs[]" value="Warehouses" />
 	<h3>{l s='Product location in warehouses'}</h3>
-				<div class="separation"></div>
-				<div class="alert alert-info" style="display:block; position:'auto';">
-		<p>{l s='This interface allows you to specify the warehouse in which the product is stocked.'}</p>
-		<p>{l s='You can also specify product/product combinations as it relates to warehouse location. '}</p>
+	<div class="row">
+		<div class="alert alert-info" style="display:block; position:'auto';">
+			<p>{l s='This interface allows you to specify the warehouse in which the product is stocked.'}</p>
+			<p>{l s='You can also specify product/product combinations as it relates to warehouse location. '}</p>
+		</div>
+		<p>{l s='Please choose the warehouses associated with this product. You must also select a default warehouse. '}</p>
+	</div>	
+	<div class="row">
+		<a class="btn btn-default confirm_leave" href="{$link->getAdminLink('AdminWarehouses')|escape:'htmlall':'UTF-8'}&addwarehouse">
+			<i class="icon-plus-sign"></i> {l s='Create a new warehouse'}
+		</a>
 	</div>
-	<p>{l s='Please choose the warehouses associated with this product. You must also select a default warehouse. '}</p>
-
-	<a class="button bt-icon confirm_leave" href="{$link->getAdminLink('AdminWarehouses')|escape:'htmlall':'UTF-8'}&addwarehouse">
-		<img src="../img/admin/add.gif" alt="{l s='Create a new warehouse'}" title="{l s='Create a new warehouse'}" /><span>{l s='Create a new warehouse'}</span>
-	</a>
-
-	<div id="warehouse_accordion">
-		{foreach from=$warehouses item=warehouse}
-		    <div class="accordion-group">
-				<div class="accordion-heading">
-					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#warehouse-{$warehouse['name']}">{$warehouse['name']}</a>
-				</div>
-				<div id="warehouse-{$warehouse['name']}" class="accordion-body collapse in">
-					<div class="accordion-inner">
-						<table cellpadding="10" cellspacing="0" class="table">
-							<tr>
-								<th width="100">{l s='Stored'}</th>
-								<th>{l s='Product'}</th>
-								<th width="150">{l s='Location (optional)'}</th>
-							</tr>
-							{foreach $attributes AS $index => $attribute}
-								{assign var=location value=''}
-								{assign var=selected value=''}
-								{foreach from=$associated_warehouses item=aw}
-									{if $aw->id_product == $attribute['id_product'] && $aw->id_product_attribute == $attribute['id_product_attribute'] && $aw->id_warehouse == $warehouse['id_warehouse']}
-										{assign var=location value=$aw->location}
-										{assign var=selected value=true}
-									{/if}
-								{/foreach}
-								<tr {if $index is odd}class="alt_row"{/if}>
-									<td><input type="checkbox"
-										name="check_warehouse_{$warehouse['id_warehouse']}_{$attribute['id_product']}_{$attribute['id_product_attribute']}"
-										{if $selected == true}checked="checked"{/if}
-										value="1" />
-									</td>
-									<td>{$product_designation[$attribute['id_product_attribute']]}</td>
-									<td><input type="text"
-										name="location_warehouse_{$warehouse['id_warehouse']}_{$attribute['id_product']}_{$attribute['id_product_attribute']}"
-										value="{$location|escape:'htmlall':'UTF-8'}"
-										size="20" />
-									</td>
+	<div class="row">
+		<div class="panel-group" id="warehouse-accordion">
+			{foreach from=$warehouses item=warehouse name=data}
+			    <div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a class="accordion-toggle" data-toggle="collapse" data-parent="#warehouse-accordion" href="#warehouse-{$warehouse['name']}">{$warehouse['name']}</a>
+						</h4>
+					</div>
+					<div id="warehouse-{$warehouse['name']}" class="panel-collapse collapse{if $smarty.foreach.data.first} in{/if}">
+						<div class="panel-body">
+							<table cellpadding="10" cellspacing="0" class="table">
+								<tr>
+									<th width="100">{l s='Stored'}</th>
+									<th>{l s='Product'}</th>
+									<th width="150">{l s='Location (optional)'}</th>
 								</tr>
-							{/foreach}
-							<tr>
-								<td colspan="3">&nbsp;</td>
-							</tr>
-							{if $attributes|@count gt 1}
-							<tr>
-								<td><input type="checkbox" class="check_all_warehouse" value="check_warehouse_{$warehouse['id_warehouse']}" /></td>
-								<td colspan="2"><i>{l s='Mark all products as stored in this warehouse.'}</i></td>
-							</tr>
-							{/if}
-						</table>
+								{foreach $attributes AS $index => $attribute}
+									{assign var=location value=''}
+									{assign var=selected value=''}
+									{foreach from=$associated_warehouses item=aw}
+										{if $aw->id_product == $attribute['id_product'] && $aw->id_product_attribute == $attribute['id_product_attribute'] && $aw->id_warehouse == $warehouse['id_warehouse']}
+											{assign var=location value=$aw->location}
+											{assign var=selected value=true}
+										{/if}
+									{/foreach}
+									<tr {if $index is odd}class="alt_row"{/if}>
+										<td><input type="checkbox"
+											name="check_warehouse_{$warehouse['id_warehouse']}_{$attribute['id_product']}_{$attribute['id_product_attribute']}"
+											{if $selected == true}checked="checked"{/if}
+											value="1" />
+										</td>
+										<td>{$product_designation[$attribute['id_product_attribute']]}</td>
+										<td><input type="text"
+											name="location_warehouse_{$warehouse['id_warehouse']}_{$attribute['id_product']}_{$attribute['id_product_attribute']}"
+											value="{$location|escape:'htmlall':'UTF-8'}"
+											size="20" />
+										</td>
+									</tr>
+								{/foreach}
+								<tr>
+									<td colspan="3">&nbsp;</td>
+								</tr>
+								{if $attributes|@count gt 1}
+								<tr>
+									<td><input type="checkbox" class="check_all_warehouse" value="check_warehouse_{$warehouse['id_warehouse']}" /></td>
+									<td colspan="2"><i>{l s='Mark all products as stored in this warehouse.'}</i></td>
+								</tr>
+								{/if}
+							</table>
+						</div>
 					</div>
 				</div>
-			</div>
-		{/foreach}
+			{/foreach}
+		</div>
 	</div>
-<fieldset>
+</fieldset>
 {/if}

@@ -146,8 +146,8 @@
 		<hr/>
 
 		<div class="row">
-			{include file="controllers/products/multishop/checkbox.tpl" field="attribute_wholesale_price" type="default"}
 			<label class="control-label col-lg-3" for="attribute_wholesale_price">
+				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_wholesale_price" type="default"}
 				<span class="label-tooltip" data-toggle="tooltip"
 					title="{l s='Leave blank if the price does not change'}">
 					{l s='Wholesale price:'}
@@ -166,8 +166,8 @@
 
 
 		<div class="row">
-			{include file="controllers/products/multishop/checkbox.tpl" field="attribute_price_impact" type="attribute_price_impact"}
 			<label class="control-label col-lg-3" for="attribute_price_impact">
+				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_price_impact" type="attribute_price_impact"}
 				{l s='Impact on price:'}
 			</label>
 			<div class="col-lg-9">
@@ -225,8 +225,8 @@
 			
 
 		<div class="row">
-			{include file="controllers/products/multishop/checkbox.tpl" field="attribute_weight_impact" type="attribute_weight_impact"}
 			<label class="control-label col-lg-3" for="attribute_weight_impact">
+				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_weight_impact" type="attribute_weight_impact"}
 				{l s='Impact on weight:'}
 			</label>
 			<div class="col-lg-9">
@@ -256,8 +256,10 @@
 		</div>
 
 		<div id="tr_unit_impact" class="row">
-			{include file="controllers/products/multishop/checkbox.tpl" field="attribute_unit_impact" type="attribute_unit_impact"}
-			<label class="control-label col-lg-3" for="attribute_unit_impact">{l s='Impact on unit price :'}</label>
+			<label class="control-label col-lg-3" for="attribute_unit_impact">
+				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_unit_impact" type="attribute_unit_impact"}
+				{l s='Impact on unit price :'}
+			</label>
 			<div class="col-lg-3">
 				<select name="attribute_unit_impact" id="attribute_unit_impact" onchange="check_unit_impact();">
 					<option value="0">{l s='None'}</option>
@@ -284,8 +286,8 @@
 
 		{if $ps_use_ecotax}
 		<div class="row">
-			{include file="controllers/products/multishop/checkbox.tpl" field="attribute_ecotax" type="default"}
 			<label class="control-label col-lg-3" for="attribute_ecotax">
+				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_ecotax" type="default"}
 				<span class="label-tooltip" data-toggle="tooltip"
 					title="{l s='overrides Eco-tax in the "Information" tab'}">
 					{l s='Eco-tax (tax excl.):'}
@@ -302,8 +304,8 @@
 		{/if}
 
 		<div class="row">
-			{include file="controllers/products/multishop/checkbox.tpl" field="attribute_minimal_quantity" type="default"}
 			<label class="control-label col-lg-3" for="attribute_minimal_quantity">
+				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_minimal_quantity" type="default"}
 				<span class="label-tooltip" data-toggle="tooltip"
 					title="{l s='The minimum quantity to buy this product (set to 1 to disable this feature)'}">
 					{l s='Minimum quantity:'}
@@ -316,8 +318,8 @@
 		</div>
 
 		<div class="row">
-			{include file="controllers/products/multishop/checkbox.tpl" field="available_date_attribute" type="default"}
 			<label class="control-label col-lg-3" for="available_date_attribute">
+				{include file="controllers/products/multishop/checkbox.tpl" field="available_date_attribute" type="default"}
 				<span class="label-tooltip" data-toggle="tooltip"
 					title="{l s='The available date when this product is out of stock.'}">
 					{l s='Available date:'}
@@ -359,8 +361,10 @@
 		</div>
 
 		<div class="row">
-			{include file="controllers/products/multishop/checkbox.tpl" field="attribute_default" type="attribute_default"}
-			<label class="control-label col-lg-3" for="attribute_default">{l s='Default:'}</label>
+			<label class="control-label col-lg-3" for="attribute_default">
+				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_default" type="attribute_default"}
+				{l s='Default:'}
+			</label>
 			<div class="col-lg-9">
 				<p class="checkbox">
 				<label for="attribute_default">

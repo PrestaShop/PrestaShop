@@ -74,21 +74,23 @@
 		{l s='Click "Save and Stay" after changing selected suppliers to display the associated product references.'}
 	</div>
 
-	<div id="accordion-supplier">
-		{foreach from=$associated_suppliers item=supplier}
-		<div class="accordion-group">
-			<div class="accordion-heading">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#supplier-{$supplier->id}">{$supplier->name}</a>
+	<div class="panel-group" id="accordion-supplier">
+		{foreach from=$associated_suppliers item=supplier name=data}
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-supplier" href="#supplier-{$supplier->id}">{$supplier->name}</a>
+				</h4>
 			</div>
-			<div id="supplier-{$supplier->id}" class="accordion-body collapse in">
-				<div class="accordion-inner">
+			<div id="supplier-{$supplier->id}" class="panel-collapse collapse{if $smarty.foreach.data.first} in{/if}">
+				<div class="panel-body">
 					<table class="table">
 						<thead>
 							<tr>
-								<th>{l s='Product name'}</th>
-								<th>{l s='Supplier reference'}</th>
-								<th>{l s='Unit price tax excluded'}</th>
-								<th>{l s='Unit price currency'}</th>
+								<th><span class="title_box">{l s='Product name'}</span></th>
+								<th><span class="title_box">{l s='Supplier reference'}</span></th>
+								<th><span class="title_box">{l s='Unit price tax excluded'}</span></th>
+								<th><span class="title_box">{l s='Unit price currency'}</span></th>
 							</tr>
 						</thead>
 

@@ -188,10 +188,10 @@
 			</div>
 		{/if}
 
-		{if $ps_stock_management}
-			{include file="controllers/products/multishop/checkbox.tpl" field="available_now" type="default" multilang="true"}
+		{if $ps_stock_management}			
 			<div class="row">
 				<label class="control-label col-lg-5" for="available_now_{$id_lang}">
+					{include file="controllers/products/multishop/checkbox.tpl" field="available_now" type="default" multilang="true"}
 					<span class="label-tooltip" data-toggle="tooltip"
 						title="{l s='Forbidden characters:'} &#60;&#62;;&#61;#&#123;&#125;">
 						{l s='Displayed text when in-stock:'}
@@ -207,8 +207,8 @@
 				</div>
 			</div>
 			<div class="row">
-				{include file="controllers/products/multishop/checkbox.tpl" field="available_later" type="default" multilang="true"}
 				<label class="control-label col-lg-5" for="available_later_{$id_lang}">
+					{include file="controllers/products/multishop/checkbox.tpl" field="available_later" type="default" multilang="true"}
 					<span class="label-tooltip" data-toggle="tooltip"
 						title="{l s='Forbidden characters:'} &#60;&#62;;&#61;#&#123;&#125;">
 						{l s='Displayed text when back-ordereding is allowed:'}
