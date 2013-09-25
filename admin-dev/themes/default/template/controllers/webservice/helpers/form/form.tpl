@@ -24,30 +24,23 @@
 *}
 {extends file="helpers/form/form.tpl"}
 
-{block name="description"}
-	{$smarty.block.parent}
-	{if $input.type == 'text' && $input.name == 'key'}
-		<input type="button" value="{l s='Generate!   '}" class="button" onclick="gencode(32)" />
-	{/if}
-{/block}
-
 {block name="input"}
 	{if $input.type == 'resources'}
-		<p>{l s='Set the resource permissions for this key:'}</p>
-		<table border="0" cellspacing="0" cellpadding="0" class="table accesses">
+		<div class="alert alert-info">{l s='Set the resource permissions for this key:'}</div>
+		<table class="table accesses">
 			<thead>
 				<tr>
-					<th class="center">{l s='Resource'}</th>
-					<th width="30" class="center"></th>
-					<th width="50" class="center">{l s='View (GET)'}</th>
-					<th width="50" class="center">{l s='Modify (PUT)'}</th>
-					<th width="50" class="center">{l s='Add (POST)'}</th>
-					<th width="50" class="center">{l s='Delete (DELETE)'}</th>
-					<th width="50" class="center">{l s='Fast view (HEAD)'}</th>
+					<th><span class="title_box">{l s='Resource'}</span></th>
+					<th class="center fixed-width-xs"></th>
+					<th class="center fixed-width-xs"><span class="title_box">{l s='View (GET)'}</span></th>
+					<th class="center fixed-width-xs"><span class="title_box">{l s='Modify (PUT)'}</span></th>
+					<th class="center fixed-width-xs"><span class="title_box">{l s='Add (POST)'}</span></th>
+					<th class="center fixed-width-xs"><span class="title_box">{l s='Delete (DELETE)'}</span></th>
+					<th class="center fixed-width-xs"><span class="title_box">{l s='Fast view (HEAD)'}</span></th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr class="all" style="vertical-align:middle">
+				<tr>
 					<th></th>
 					<th></th>
 					<th class="center"><input type="checkbox" class="all_get get " /></th>
@@ -58,8 +51,8 @@
 				</tr>
 				{foreach $ressources as $resource_name => $resource}
 					<tr>
-						<th class="center">{$resource_name}</th>
-						<th class="center"><input type="checkbox" class="all"/></th>
+						<td>{$resource_name}</td>
+						<td class="center"><input type="checkbox" class="all"/></td>
 						<td class="center"><input type="checkbox" {if isset($ressources[$resource_name]['forbidden_method']) && in_array('GET', $ressources[$resource_name]['forbidden_method'])}disabled="disabled"{/if} class="get" name="resources[{$resource_name}][GET]" {if isset($permissions[$resource_name]) && in_array('GET', $permissions[$resource_name])}checked="checked"{/if} /></td>
 						<td class="center"><input type="checkbox" {if isset($ressources[$resource_name]['forbidden_method']) && in_array('PUT', $ressources[$resource_name]['forbidden_method'])}disabled="disabled"{/if} class="put" name="resources[{$resource_name}][PUT]" {if isset($permissions[$resource_name]) && in_array('PUT', $permissions[$resource_name])}checked="checked"{/if}/></td>
 						<td class="center"><input type="checkbox" {if isset($ressources[$resource_name]['forbidden_method']) && in_array('POST', $ressources[$resource_name]['forbidden_method'])}disabled="disabled"{/if} class="post" name="resources[{$resource_name}][POST]" {if isset($permissions[$resource_name]) && in_array('POST', $permissions[$resource_name])}checked="checked"{/if}/></td>
