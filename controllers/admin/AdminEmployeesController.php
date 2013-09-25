@@ -76,8 +76,8 @@ class AdminEmployeesControllerCore extends AdminController
 			'lastname' => array('title' => $this->l('Last Name')),
 			'firstname' => array('title' => $this->l('First Name')),
 			'email' => array('title' => $this->l('Email address')),
-			'profile' => array('title' => $this->l('Profile'), 'type' => 'select', 'list' => $this->profiles_array, 'filter_key' => 'pl!name'),
-			'active' => array('title' => $this->l('Can log in'), 'align' => 'center', 'active' => 'status', 'type' => 'bool'),
+			'profile' => array('title' => $this->l('Profile'), 'type' => 'select', 'list' => $this->profiles_array, 'filter_key' => 'pl!name', 'class' => 'fixed-width-lg'),
+			'active' => array('title' => $this->l('Can log in'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'class' => 'fixed-width-sm'),
 		);
 
 		$this->fields_options = array(

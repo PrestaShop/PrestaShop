@@ -46,7 +46,8 @@ class AdminQuickAccessesControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_quick_access' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center'
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'name' => array(
 				'title' => $this->l('Name')
@@ -58,7 +59,8 @@ class AdminQuickAccessesControllerCore extends AdminController
 				'title' => $this->l('New window'),
 				'align' => 'center',
 				'type' => 'bool',
-				'activeVisu' => 'new_window'
+				'activeVisu' => 'new_window',
+				'class' => 'fixed-width-sm'
 			)
 		);
 
