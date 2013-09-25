@@ -35,13 +35,13 @@ class AdminLogsControllerCore extends AdminController
 		$this->noLink = true;
 
 		$this->fields_list = array(
-			'id_log' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'employee' => array('title' => $this->l('Employee'), 'align' => 'center', 'width' => 100),
-			'severity' => array('title' => $this->l('Severity (1-4)'), 'align' => 'center', 'width' => 50),
+			'id_log' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+			'employee' => array('title' => $this->l('Employee'), 'align' => 'center'),
+			'severity' => array('title' => $this->l('Severity (1-4)'), 'align' => 'center', 'class' => 'fixed-width-xs'),
 			'message' => array('title' => $this->l('Message')),
-			'object_type' => array('title' => $this->l('Object type'), 'width' => 75),
-			'object_id' => array('title' => $this->l('Object ID'), 'width' => 50),
-			'error_code' => array('title' => $this->l('Error code'), 'width' => 75, 'prefix' => '0x'),
+			'object_type' => array('title' => $this->l('Object type'), 'class' => 'fixed-width-sm'),
+			'object_id' => array('title' => $this->l('Object ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+			'error_code' => array('title' => $this->l('Error code'), 'align' => 'center', 'prefix' => '0x', 'class' => 'fixed-width-xs'),
 			'date_add' => array('title' => $this->l('Date'), 'width' => 150, 'align' => 'right', 'type' => 'datetime')
 		);
 
