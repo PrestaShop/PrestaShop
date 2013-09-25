@@ -62,6 +62,8 @@ class AdminStockManagementControllerCore extends AdminController
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
+				'class' => 'fixed-width-sm',
+				'align' => 'center',
 				'hint' => $this->l('Quantitity total for all warehouses.')
 			),
 		);
@@ -788,6 +790,54 @@ class AdminStockManagementControllerCore extends AdminController
 		{
 			$this->display = 'transferstock';
 			$this->toolbar_title = $this->l('Stock: Transfer a product');
+		}
+	}
+
+	public function renderView()
+	{
+		if (Tools::isSubmit('id'))
+		{
+			// override attributes
+			$this->identifier = 'id_product_attribute';
+			$this->display = 'list';
+			$this->lang = false;
+
+			$this->addRowAction('addstock');
+			$this->addRowAction('removestock');
+			$this->addRowAction('transferstock');
+
+			// get current lang id
+			$lang_id = (int)$this->context->language->id;
+
+			// Get product id
+			$product_id = (int)Tools::getValue('id');
+
+			// Load product attributes with sql override
+			$this->table = 'product_attribute';
+
+			$this->_select = 'a.id_product_attribute as id, a.id_product, a.reference, a.ean13, a.upc';
+
+			$this->_where = 'AND a.id_product = '.$product_id;
+			$this->_group = 'GROUP BY a.id_product_attribute';
+
+			// get list and force no limit clause in the request
+			$this->getList($this->context->language->id, null, null, 0, false);
+
+			// Render list
+			$helper = new HelperList();
+			$helper->bulk_actions = array();
+			$helper->toolbar_scroll = $this->toolbar_scroll;
+			$helper->show_toolbar = false;
+			$helper->actions = $this->actions;
+			$helper->list_skip_actions = $this->list_skip_actions;
+			$helper->no_link = true;
+			$helper->shopLinkType = '';
+			$helper->identifier = $this->identifier;
+			// Force render - no filter, form, js, sorting ...
+			$helper->simple_header = true;
+			$content = $helper->generateList($this->_list, $this->fields_list);
+
+			return parent::renderView();
 		}
 	}
 
