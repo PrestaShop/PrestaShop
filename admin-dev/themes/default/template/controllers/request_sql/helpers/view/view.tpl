@@ -26,15 +26,16 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
+<fieldset>
+	<h3><i class="icon-cog"></i> {l s='Request result'}</h3>
 	{if isset($view['error'])}
-		<p>{l s='This query has no result.'}</p>
+		<div class="alert alert-warning">{l s='This request has no result.'}</div>
 	{else}
-		<h2>{$view['name']}</h2>
-		<table cellpadding="0" cellspacing="0" class="table" id="viewRequestSql">
+		<table class="table" id="viewRequestSql">
 			<thead>
 				<tr>
 					{foreach $view['key'] AS $key}
-						<th align="center">{$key}</th>
+					<th><span class="title_box">{$key}</span></th>
 					{/foreach}
 				</tr>
 			</thead>
@@ -62,5 +63,5 @@
 			});
 		</script>
 	{/if}
+</fieldset>
 {/block}
-

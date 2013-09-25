@@ -40,7 +40,7 @@ class AdminEmailsControllerCore extends AdminController
 		$this->fields_options = array(
 			'email' => array(
 				'title' => $this->l('Email'),
-				'icon' => 'email',
+				'icon' => 'icon-envelope',
 				'fields' =>	array(
 					'PS_MAIL_EMAIL_MESSAGE' => array(
 						'title' => $this->l('Send email to'), 
@@ -78,7 +78,6 @@ class AdminEmailsControllerCore extends AdminController
 			),
 			'smtp' => array(
 				'title' => $this->l('Email'),
-				'icon' => 'email',
 				'top' => '<div id="smtp" style="display: '.((Configuration::get('PS_MAIL_METHOD') == 2) ? 'block' : 'none').';">',
 				'bottom' => '</div>',
 				'fields' =>	array(
@@ -147,7 +146,6 @@ class AdminEmailsControllerCore extends AdminController
 			),
 			'test' => array(
 				'title' =>	$this->l('Test your email configuration'),
-				'icon' =>	'email',
 				'fields' =>	array(
 					'PS_SHOP_EMAIL' => array(
 						'title' => $this->l('Send a test email to'),

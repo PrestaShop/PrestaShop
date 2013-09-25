@@ -28,22 +28,19 @@
 {block name="override_header"}
 
 	{if isset($backup_url) && isset($backup_weight)}
-		<fieldset>
-			<h3>
-				<i class="icon-download"></i>
-				{l s='Download'}
-			</h3>
-			<p>
-				<a class="btn btn-default" href="{$backup_url}">
-					<i class="icon-download"></i> 
-					{l s='Download the backup file'} ({$backup_weight}{l s='MB'})
-				</a>
-			</p>
-			<p>{l s='Tip: You can also download this file over to your FTP. Backup files are located in the "admin/backups" directory.'}</p>
-		</fieldset>
+	<fieldset>
+		<h3><i class="icon-download"></i> {l s='Download'}</h3>
+		<p>
+			<a class="btn btn-default" href="{$backup_url}">
+				<i class="icon-download"></i> 
+				{l s='Download the backup file'} ({$backup_weight}{l s='MB'})
+			</a>
+		</p>
+		<p>{l s='Tip: You can also download this file over to your FTP. Backup files are located in the "admin/backups" directory.'}</p>
+	</fieldset>
 	{/if}
 
-	<div class="row">
+
 		<div class="alert alert-warning">
 			<button data-dismiss="alert" class="close" type="button">×</button>
 			<p>{l s='Disclaimer before creating a new backup'}</p>
@@ -65,9 +62,9 @@
 				</button>
 			</form>
 		</div>
-	</div>
 
-	<div class="row">
+
+
 		<div class="alert alert-info">
 			<p>{l s='How to restore a database backup in 10 easy steps:'}</p>
 			<ol>
@@ -83,6 +80,6 @@
 				<li>{l s='Click on the "Go" button and please wait patiently for the import  process to conclude. This may take several minutes.'}</li>
 			</ol>
 		</div>
-	</div>
+
 
 {/block}
