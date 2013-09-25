@@ -335,7 +335,7 @@ class AdminControllerCore extends Controller
 		$this->tabAccess = Profile::getProfileAccess($this->context->employee->id_profile, $this->id);
 
 		// Fix for AdminHome
-		if ($this->controller_name == 'AdminHome')
+		if ($this->controller_name == 'AdminDashboard')
 			$_POST['token'] = $this->token;
 
 		if (!Shop::isFeatureActive())
