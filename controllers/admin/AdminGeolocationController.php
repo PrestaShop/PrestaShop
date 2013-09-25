@@ -34,7 +34,7 @@ class AdminGeolocationControllerCore extends AdminController
 		$this->fields_options = array(
 			'geolocationConfiguration' => array(
 				'title' =>	$this->l('Geolocation by IP address'),
-				'icon' =>	'world',
+				'icon' =>	'icon-map-marker',
 				'fields' =>	array(
 		 			'PS_GEOLOCATION_ENABLED' => array(
 		 				'title' => $this->l('Geolocation by IP address'),
@@ -47,7 +47,7 @@ class AdminGeolocationControllerCore extends AdminController
 			),
 			'geolocationCountries' => array(
 				'title' =>	$this->l('Options'),
-				'icon' =>	'world',
+				'icon' =>	'icon-map-marker',
 				'description' => $this->l('The following features are only available if you enable the Geolocation by IP address feature.'),
 				'fields' =>	array(
 		 			'PS_GEOLOCATION_BEHAVIOR' => array(
@@ -69,7 +69,7 @@ class AdminGeolocationControllerCore extends AdminController
 			),
 			'geolocationWhitelist' => array(
 				'title' =>	$this->l('IP address whitelist'),
-				'icon' =>	'world',
+				'icon' =>	'icon-sitemap',
 				'description' => $this->l('You can add IP addresses that will always be allowed to access your shop (e.g. Google bots\' IP).'),
 				'fields' =>	array(
 		 			'PS_GEOLOCATION_WHITELIST' => array('title' => $this->l('Whitelisted IP addresses'), 'type' => 'textarea_newlines', 'cols' => 15, 'rows' => 30),

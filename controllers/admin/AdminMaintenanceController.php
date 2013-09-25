@@ -37,7 +37,6 @@ class AdminMaintenanceControllerCore extends AdminController
 		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('General'),
-				'icon' =>	'tab-preferences',
 				'fields' =>	array(
 					'PS_SHOP_ENABLE' => array(
 						'title' => $this->l('Enable Shop'),
