@@ -2509,7 +2509,7 @@ class ProductCore extends ObjectModel
 		$id_state = 0;
 		$zipcode = 0;
 
-		if (!$id_address)
+		if (!$id_address && Validate::isLoadedObject($cur_cart))
 			$id_address = $cur_cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
 
 		if ($id_address)
