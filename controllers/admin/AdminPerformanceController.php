@@ -339,12 +339,18 @@ class AdminPerformanceControllerCore extends AdminController
 
 	public function initFieldsetCiphering()
 	{
+		$phpdoc_langs = array('en', 'zh', 'fr', 'de', 'ja', 'pl', 'ro', 'ru', 'fa', 'es', 'tr');
+		$php_lang = in_array($this->context->language->iso_code, $phpdoc_langs) ? $this->context->language->iso_code : 'en';
+
+		$warning_mcrypt = ' '.$this->l('(you must install the [a]Mcrypt extension[/a])');
+		$warning_mcrypt = str_replace('[a]', '<a href="http://www.php.net/manual/'.substr($php_lang, 0, 2).'/book.mcrypt.php" target="_blank">', $warning_mcrypt);
+		$warning_mcrypt = str_replace('[/a]', '</a>', $warning_mcrypt);
+	
 		$this->fields_form[4]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('Ciphering'),
 				'icon' => 'icon-desktop'
 			),
-			'hint' => $this->l('Mcrypt is faster than our custom BlowFish class, but requires the PHP extension "mcrypt". If you change this configuration, all cookies will be reset.'),
 			'input' => array(
 				array(
 					'type' => 'hidden',
@@ -354,16 +360,17 @@ class AdminPerformanceControllerCore extends AdminController
 					'type' => 'radio',
 					'label' => $this->l('Algorithm'),
 					'name' => 'PS_CIPHER_ALGORITHM',
+					'hint' => $this->l('Mcrypt is faster than our custom BlowFish class, but requires the PHP extension "mcrypt". If you change this configuration, all cookies will be reset.'),
 					'values' => array(
 						array(
 							'id' => 'PS_CIPHER_ALGORITHM_1',
 							'value' => 1,
-							'label' => $this->l('Use Rijndael with mcrypt lib.')
+							'label' => $this->l('Use Rijndael with mcrypt lib.').(!function_exists('mcrypt_encrypt') ? '' : $warning_mcrypt)
 						),
 						array(
 							'id' => 'PS_CIPHER_ALGORITHM_0',
 							'value' => 0,
-							'label' => $this->l('Keep the custom BlowFish class.')
+							'label' => $this->l('Use the custom BlowFish class.')
 						)
 					)
 				)
