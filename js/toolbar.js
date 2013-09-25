@@ -48,16 +48,16 @@ $(document).ready(function(){
 	// if count warnings
 	$('#linkSeeMore').live('click', function(e){
 		e.preventDefault();
-		$('.warn #seeMore').show();
+		$('#seeMore').show();
 		$(this).hide();
-		$('.warn #linkHide').show();
+		$('#linkHide').show();
 		return false;
 	});
 	$('#linkHide').live('click', function(e){
 		e.preventDefault();
-		$('.warn #seeMore').hide();
+		$('#seeMore').hide();
 		$(this).hide();
-		$('.warn #linkSeeMore').show();
+		$('#linkSeeMore').show();
 		return false;
 	});
 	$('#hideWarn').live('click', function(e){

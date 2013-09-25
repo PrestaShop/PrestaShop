@@ -70,8 +70,8 @@
 		{if count($warnings) > 1}
 			{l s='There are %d warnings.' sprintf=count($warnings)}
 			<span id="labelSeeMore">
-				<a id="linkSeeMore" href="#" style="text-decoration:underline">{l s='Click here to see more'}</a>
-				<a id="linkHide" href="#" style="text-decoration:underline;display:none">{l s='Hide warning'}</a>
+				<a id="linkSeeMore" href="#" class="btn btn-default"><i class="icon-plus-sign-alt"></i> {l s='Click here to see more'}</a>
+				<a id="linkHide" href="#" class="btn btn-default" style="display:none"><i class="icon-minus-sign-alt"></i> {l s='Hide warning'}</a>
 			</span>
 			<ul {if count($warnings) > 1}style="display:none;"{/if} id="seeMore" class="list-unstyled">
 			{foreach $warnings as $warning}
