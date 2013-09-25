@@ -44,7 +44,7 @@
 		<fieldset {if isset($categoryData['class'])}class="{$categoryData['class']}"{/if} id="{$table}_fieldset_{$category}">
 			{* Options category title *}
 			<h3>
-				<i class="icon-cogs"></i>
+				<i class="{if isset($categoryData['icon'])}{$categoryData['icon']}{else}icon-cogs{/if}"></i>
 				{if isset($categoryData['title'])}{$categoryData['title']}{else}{l s='Options'}{/if}
 			</h3>
 
