@@ -610,7 +610,7 @@ class AdminCustomersControllerCore extends AdminController
 		$total_orders = count($orders);
 		for ($i = 0; $i < $total_orders; $i++)
 		{
-			$orders[$i]['date_add'] = Tools::displayDate($orders[$i]['date_add']);
+			$orders[$i]['date_add'] = $orders[$i]['date_add'];
 			$orders[$i]['total_paid_real_not_formated'] = $orders[$i]['total_paid_real'];
 			$orders[$i]['total_paid_real'] = Tools::displayPrice($orders[$i]['total_paid_real'], new Currency((int)$orders[$i]['id_currency']));
 		}
