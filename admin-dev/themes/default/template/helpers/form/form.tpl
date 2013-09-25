@@ -208,6 +208,59 @@
 										</script>
 										{/if}
 									{/if}
+								{elseif $input.type == 'textbutton'}
+									{assign var='value_text' value=$fields_value[$input.name]}
+									<div class="row">
+										<div class="col-lg-9">
+										{if isset($input.maxchar)}
+										<div class="input-group">
+											<span id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}_counter" class="input-group-addon">
+												<span class="text-count-down">{$input.maxchar}</span>
+											</span>
+										{/if}
+										<input type="text"
+											name="{$input.name}"
+											id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
+											value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'htmlall':'UTF-8'}{else}{$value_text|escape:'htmlall':'UTF-8'}{/if}"
+											class="{if $input.type == 'tags'}tagify {/if}{if isset($input.class)}{$input.class}{/if}"
+											{if isset($input.size)} size="{$input.size}"{/if}
+											{if isset($input.maxchar)} data-maxchar="{$input.maxchar}"{/if}
+											{if isset($input.maxlength)} maxlength="{$input.maxlength}"{/if}
+											{if isset($input.class)} class="{$input.class}"{/if}
+											{if isset($input.readonly) && $input.readonly} readonly="readonly"{/if}
+											{if isset($input.disabled) && $input.disabled} disabled="disabled"{/if}
+											{if isset($input.autocomplete) && !$input.autocomplete} autocomplete="off"{/if} />
+										{if isset($input.suffix)}{$input.suffix}{/if}
+										{if isset($input.maxchar)}
+										</div>
+										{/if}
+										</div>
+										<div class="col-lg-2">
+											<button type="button" class="btn btn-default{if isset($input.button.attributes['class'])} {$input.button.attributes['class']}{/if}{if isset($input.button.class)} {$input.button.class}{/if}"
+											{foreach from=$input.button.attributes key=name item=value}
+												{if $name|lower != 'class'}
+												 {$name}="{$value}"
+												{/if}
+											{/foreach}
+											>{$input.button.label}</button>
+										</div>
+									</div>
+									{if isset($input.maxchar)}
+									<script type="text/javascript">
+									function countDown($source, $target) {
+										var max = $source.attr("data-maxchar");
+										$target.html(max-$source.val().length);
+
+										$source.keyup(function(){
+											$target.html(max-$source.val().length);
+										});
+									}
+
+									$(document).ready(function(){
+										countDown($("#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"), $("#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}_counter"));
+									});
+									</script>
+									{/if}
 								{elseif $input.type == 'select'}
 									{if isset($input.options.query) && !$input.options.query && isset($input.empty_message)}
 										{$input.empty_message}
