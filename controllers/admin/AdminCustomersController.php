@@ -525,7 +525,7 @@ class AdminCustomersControllerCore extends AdminController
 	{
 		$customer->id_shop = $this->context->shop->id;
 	}
-	
+
 	public function renderKpis()
 	{
 		$time = time();

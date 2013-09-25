@@ -229,6 +229,52 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		return round((time() - strtotime($value)) / 86400 / 365, 1);
 	}
 
+	public static function getPendingMessages()
+	{
+		return CustomerThread::getTotalCustomerThreads('status LIKE "%pending%" OR status = "open"');
+	}
+
+	public static function getAverageMessageResponseTime($date_from, $date_to)
+	{
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		SELECT MIN(cm1.date_add) as question, MIN(cm2.date_add) as reply
+		FROM `'._DB_PREFIX_.'customer_message` cm1
+		INNER JOIN `'._DB_PREFIX_.'customer_message` cm2 ON (cm1.id_customer_thread = cm2.id_customer_thread AND cm1.date_add < cm2.date_add)
+		WHERE cm1.`date_add` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
+		AND cm1.id_employee = 0 AND cm2.id_employee != 0
+		GROUP BY cm1.id_customer_thread');
+		$total_questions = $total_replies = $threads = 0;
+		foreach ($result as $row)
+		{
+			++$threads;
+			$total_questions += strtotime($row['question']);
+			$total_replies += strtotime($row['reply']);
+		}
+		if (!$threads)
+			return 0;
+		return round(($total_replies - $total_questions) / $threads / 3600, 1);
+	}
+
+	public static function getMessagesPerThread($date_from, $date_to)
+	{
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		SELECT COUNT(*) as messages
+		FROM `'._DB_PREFIX_.'customer_thread` ct
+		LEFT JOIN `'._DB_PREFIX_.'customer_message` cm ON (ct.id_customer_thread = cm.id_customer_thread)
+		WHERE ct.`date_add` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
+		AND status = "closed"
+		GROUP BY ct.id_customer_thread');
+		$threads = $messages = 0;
+		foreach ($result as $row)
+		{
+			++$threads;
+			$messages += $row['messages'];
+		}
+		if (!$threads)
+			return 0;
+		return round($messages / $threads, 1);
+	}
+
 	public function displayAjaxGetKpi()
 	{
 		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
@@ -315,6 +361,24 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				$value = sprintf($this->l('%.1f years'), AdminStatsController::getAverageCustomerAge(), 1);
 				ConfigurationKPI::updateValue('AVG_CUSTOMER_AGE', $value);
 				ConfigurationKPI::updateValue('AVG_CUSTOMER_AGE_EXPIRE', strtotime('+1 day'));
+				break;
+
+			case 'pending_messages':
+				$value = (int)AdminStatsController::getPendingMessages();
+				ConfigurationKPI::updateValue('PENDING_MESSAGES', $value);
+				ConfigurationKPI::updateValue('PENDING_MESSAGES_EXPIRE', strtotime('+5 min'));
+				break;
+
+			case 'avg_msg_response_time':
+				$value = sprintf($this->l('%.1f hours'), AdminStatsController::getAverageMessageResponseTime(date('Y-m-d', strtotime('-31 day')), date('Y-m-d', strtotime('-1 day'))));
+				ConfigurationKPI::updateValue('AVG_MSG_RESPONSE_TIME', $value);
+				ConfigurationKPI::updateValue('AVG_MSG_RESPONSE_TIME_EXPIRE', strtotime('+4 hour'));
+				break;
+
+			case 'messages_per_thread':
+				$value = round(AdminStatsController::getMessagesPerThread(date('Y-m-d', strtotime('-31 day')), date('Y-m-d', strtotime('-1 day'))), 1);
+				ConfigurationKPI::updateValue('MESSAGES_PER_THREAD', $value);
+				ConfigurationKPI::updateValue('MESSAGES_PER_THREAD_EXPIRE', strtotime('+12 hour'));
 				break;
 
 			case 'newsletter_registrations':
