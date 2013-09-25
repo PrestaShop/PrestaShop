@@ -65,6 +65,11 @@ class AdminCountriesControllerCore extends AdminController
 				'submit' => array()
 			)
 		);
+		
+		$zones_array = array();
+		$this->zones = Zone::getZones();
+		foreach ($this->zones as $zone)
+			$zones_array[$zone['id_zone']] = $zone['name'];
 
 		$this->fields_list = array(
 			'id_country' => array(
@@ -86,7 +91,11 @@ class AdminCountriesControllerCore extends AdminController
 			),
 			'zone' => array(
 				'title' => $this->l('Zone'),
-				'filter_key' => 'z!name'
+				'type' => 'select',
+				'list' => $zones_array,
+				'filter_key' => 'z!id_zone',
+				'filter_type' => 'int',
+				'order_key' => 'zone'
 			),
 			'active' => array(
 				'title' => $this->l('Enabled'),
