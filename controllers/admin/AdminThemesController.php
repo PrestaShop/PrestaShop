@@ -127,7 +127,7 @@ class AdminThemesControllerCore extends AdminController
 			/* TO DO - DESC à revoir*/
 			'appearance' => array(
 				'title' =>	$this->l('Appearance'),
-				'icon' =>	'email',
+				'icon' =>	'icon-html5',
 				'fields' =>	array(
 					'PS_LOGO' => array(
 						'title' => $this->l('Header logo'),

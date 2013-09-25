@@ -146,15 +146,20 @@ class AdminEmailsControllerCore extends AdminController
 			),
 			'test' => array(
 				'title' =>	$this->l('Test your email configuration'),
+				'hide_multishop_checkbox' => true,
 				'fields' =>	array(
 					'PS_SHOP_EMAIL' => array(
 						'title' => $this->l('Send a test email to'),
 						'type' => 'text',
-						'id' => 'testEmail'
+						'id' => 'testEmail',
+						'no_multishop_checkbox' => true
 						),
 				),
-				'bottom' => '<div class="row"> <div class="col-lg-9 col-lg-offset-3"><input type="button" class="btn btn-default" name="btEmailTest" id="btEmailTest" value="'.$this->l('Send an email test').'" onclick="verifyMail();" /><br /><br />
-					<p class="alert" id="mailResultCheck" style="display:none;"></p></div></div>',
+				'bottom' => '<div class="row"><div class="col-lg-9 col-lg-offset-3">
+					<button type="button" class="btn btn-default" name="btEmailTest" id="btEmailTest" onclick="verifyMail();"><i class="icon-envelope"></i> '.$this->l('Send an email test').'</button>
+					<br/><br/>
+					<div class="alert" id="mailResultCheck" style="display:none;"></div>
+				</div></div>',
 			)
 		);
 	}

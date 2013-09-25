@@ -44,7 +44,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('General'),
-				'icon' =>	'tab-preferences',
+				'icon' =>	'icon-cogs',
 				'fields' =>	array(
 					'PRESTASTORE_LIVE' => array(
 						'title' => $this->l('Automatically check for module updates'),
@@ -86,7 +86,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 			),
 			'upload' => array(
 				'title' =>	$this->l('Upload quota'),
-				'icon' =>	'tab-preferences',
+				'icon' =>	'icon-cloud-upload',
 				'fields' => array(
 					'PS_ATTACHMENT_MAXIMUM_SIZE' => array(
 						'title' => $this->l('Maximum size for attachment'),
@@ -123,7 +123,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 			),
 			'help' => array(
 				'title' =>	$this->l('Help'),
-				'icon' =>	'tab-preferences',
+				'icon' =>	'icon-question-sign',
 				'fields' =>	array(
 					'PS_HELPBOX' => array(
 						'title' => $this->l('Back Office help boxes'),
@@ -144,7 +144,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 			),
 			'notifications' => array(
 				'title' =>	$this->l('Notifications'),
-				'icon' =>	'tab-preferences',
+				'icon' =>	'icon-list-alt',
 				'fields' =>	array(
 					'PS_SHOW_NEW_ORDERS' => array(
 						'title' => $this->l('Show notifications for new orders'),

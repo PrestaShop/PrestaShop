@@ -62,18 +62,18 @@ class AdminSearchConfControllerCore extends AdminController
 		$this->fields_options = array(
 			'indexation' => array(
 				'title' => $this->l('Indexation'),
-				'icon' => 'search',
+				'icon' => 'icon-cogs',
 				'info' =>
 						$this->l('The "indexed" products have been analyzed by PrestaShop and will appear in the results of a Front Office search.').'<br />
 						'.$this->l('Indexed products').' <strong>'.(int)$indexed.' / '.(int)$total.'</strong>.
 						</p>
 						<p>'.$this->l('Building the product index may take a few minutes.')
 						.$this->l('If your server stops before the process ends, you can resume the indexation by clicking "Add missing products."').'</p>
-						-&gt; <a href="searchcron.php?token='.substr(_COOKIE_KEY_, 34, 8).'&redirect=1" class="bold">'.
+						<a href="searchcron.php?token='.substr(_COOKIE_KEY_, 34, 8).'&redirect=1" class="btn btn-link"><i class="icon-external-link-sign"></i> '.
 							$this->l('Add missing products to the index.').'</a><br />
-						-&gt; <a href="searchcron.php?full=1&token='.substr(_COOKIE_KEY_, 34, 8).'&redirect=1">'.
+						<a href="searchcron.php?full=1&token='.substr(_COOKIE_KEY_, 34, 8).'&redirect=1" class="btn btn-link"><i class="icon-external-link-sign"></i> '.
 							$this->l('Re-build the entire index.').'</a><br /><br />
-						'.$this->l('You can set a cron job that will rebuild your index using the following URL:').' <a href="'.$cron_url.'">'.$cron_url.'</a>',
+						'.$this->l('You can set a cron job that will rebuild your index using the following URL:').' <a href="'.$cron_url.'"><i class="icon-external-link-sign"></i> '.$cron_url.'</a>',
 				'fields' =>	array(
 					'PS_SEARCH_INDEXATION' => array(
 						'title' => $this->l('Indexation'),
@@ -86,7 +86,7 @@ class AdminSearchConfControllerCore extends AdminController
 			),
 			'search' => array(
 				'title' =>	$this->l('Search'),
-				'icon' =>	'search',
+				'icon' =>	'icon-search',
 				'fields' =>	array(
 					'PS_SEARCH_AJAX' => array(
 						'title' => $this->l('Ajax search'),
@@ -126,7 +126,7 @@ class AdminSearchConfControllerCore extends AdminController
 			),
 			'relevance' => array(
 				'title' =>	$this->l('Weight'),
-				'icon' =>	'weight',
+				'icon' =>	'icon-cogs',
 				'info' =>
 						$this->l('The "weight" represents its importance and relevance for the ranking of the products when completing a new search.').'<br />
 						'.$this->l('A word with a weight of eight will have four times more value than a word with a weight of two.').'<br /><br />

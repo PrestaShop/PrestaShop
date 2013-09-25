@@ -149,7 +149,7 @@ class AdminPreferencesControllerCore extends AdminController
 			$this->fields_options = array(
 				'general' => array(
 					'title' =>	$this->l('General'),
-					'icon' =>	'tab-preferences',
+					'icon' =>	'icon-cogs',
 					'fields' =>	$fields,
 					'submit' => array('title' => $this->l('Save   '), 'class' => 'button'),
 				),
