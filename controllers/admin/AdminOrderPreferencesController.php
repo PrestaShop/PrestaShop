@@ -57,7 +57,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('General'),
-				'icon' =>	'tab-preferences',
+				'icon' =>	'icon-cogs',
 				'fields' =>	array(
 					'PS_ORDER_PROCESS_TYPE' => array(
 						'title' => $this->l('Order process type'),
@@ -120,7 +120,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 			),
 			'gift' => array(
 				'title' =>	$this->l('Gift options'),
-				'icon' =>	'tab-preferences',
+				'icon' =>	'icon-gift',
 				'fields' =>	array(
 					'PS_GIFT_WRAPPING' => array(
 						'title' => $this->l('Offer gift wrapping'),

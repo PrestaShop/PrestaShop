@@ -48,7 +48,7 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('General'),
-				'icon' =>	'tab-preferences',
+				'icon' =>	'icon-cogs',
 				'fields' =>	array(
 					'PS_REGISTRATION_PROCESS_TYPE' => array(
 						'title' => $this->l('Registration process type'),

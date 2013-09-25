@@ -505,7 +505,7 @@ class AdminStoresControllerCore extends AdminController
 		$fields = $formFields;
 		$this->fields_options['contact'] = array(
 			'title' =>	$this->l('Contact details'),
-			'icon' =>	'tab-contact',
+			'icon' =>	'icon-user',
 			'fields' =>	$fields,
 			'submit' => array('title' => $this->l('   Save   '), 'class' => 'button')
 		);

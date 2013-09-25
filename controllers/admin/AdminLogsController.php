@@ -48,6 +48,7 @@ class AdminLogsControllerCore extends AdminController
 		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('Logs by email'),
+				'icon' => 'icon-envelope',
 				'fields' =>	array(
 					'PS_LOGS_BY_EMAIL' => array(
 						'title' => $this->l('Minimum severity level'),
