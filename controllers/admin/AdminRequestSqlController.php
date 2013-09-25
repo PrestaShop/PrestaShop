@@ -45,9 +45,9 @@ class AdminRequestSqlControllerCore extends AdminController
 		$this->context = Context::getContext();
 
 		$this->fields_list = array(
-			'id_request_sql' => array('title' => $this->l('ID'), 'width' => 25),
-			'name' => array('title' => $this->l('Name'), 'width' => 300),
-			'sql' => array('title' => $this->l('Request'), 'width' => 500)
+			'id_request_sql' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs'),
+			'name' => array('title' => $this->l('Name')),
+			'sql' => array('title' => $this->l('Request'))
 		);
 
 		$this->fields_options = array(
@@ -95,8 +95,6 @@ class AdminRequestSqlControllerCore extends AdminController
 
 		if ($this->display == 'options')
 			unset($this->toolbar_btn['new']);
-		else
-			unset($this->toolbar_btn['save']);
 	}
 
 	public function renderList()
@@ -127,7 +125,8 @@ class AdminRequestSqlControllerCore extends AdminController
 	{
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Request')
+				'title' => $this->l('Request'),
+				'icon' => 'icon-cog'
 			),
 			'input' => array(
 				array(
@@ -211,6 +210,8 @@ class AdminRequestSqlControllerCore extends AdminController
 			$view['name'] = $obj->name;
 			$view['key'] = $tab_key;
 			$view['results'] = $results;
+
+			$this->toolbar_title = $obj->name;
 
 			$request_sql = new RequestSql();
 			$view['attributes'] = $request_sql->attributes;

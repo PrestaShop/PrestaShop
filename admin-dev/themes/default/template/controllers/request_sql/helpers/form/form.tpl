@@ -26,22 +26,32 @@
 {extends file="helpers/form/form.tpl"}
 
 {block name="after"}
-
-	<fieldset>
-		<h3>
-			<i class="icon-list"></i>
-			{l s='List of MySQL Tables:'}
-		</h3>
-		<div id="selectTables">
-			<select id="table" size="10">
-				{foreach $tables as $table}
-					<option value="{$table}">{$table}</option>
-				{/foreach}
-			</select>
-			<input type="button" id="add_table" value="{l s='Add table'}" />
-		</div>
-		<div id="listAttributes"></div>
-	</fieldset>
+<div class="row">
+	<div class="col-lg-3">
+		<fieldset>
+			<h3><i class="icon-list"></i> {l s='List of MySQL Tables'}</h3>
+			<div class="row" id="selectTables">
+				<select id="table" size="10">
+					{foreach $tables as $table}
+						<option value="{$table}">{$table}</option>
+					{/foreach}
+				</select>
+			</div>
+			<div class="row">
+				<button type="button" id="add_table" class="btn btn-default">{l s='Add table'}</button>
+			</div>
+		</fieldset>
+	</div>
+	<div class="col-lg-9">
+		<fieldset>
+			<h3><i class="icon-list"></i> {l s='List of tables attributes'}</h3>
+			<div id="listAttributes">
+				<div class="alert alert-warning">{l s='Please choose a MySQL table'}</div>
+			</div>
+		</fieldset>
+	</div>
+</div>
+	
 {/block}
 
 {block name="script"}
@@ -66,9 +76,9 @@
 					var html = "<table class='table'>";
 						html += "<thead>";
 							html += "<tr>";
-								html += "<th>{l s='Attribute'}</th>";
-								html += "<th>{l s='Type'}</th>";
-								html += "<th>{l s='Action'}</th>";
+								html += "<th><span class=\"title_box\">{l s='Attribute'}</span></th>";
+								html += "<th class=\"fixed-width-md\"><span class=\"title_box\">{l s='Type'}</span></th>";
+								html += "<th class=\"fixed-width-md\"><span class=\"title_box\">{l s='Action'}</span></th>";
 							html += "</tr>";
 						html += "</thead>";
 						html += "<tbody>";
@@ -77,7 +87,7 @@
 							html += "<tr>";
 								html += "<td>"+data[i].Field+"</td>";
 								html += "<td>"+data[i].Type+"</td>";
-								html += "<td><input type=\"button\" class=\"add_attribute\" value=\"{l s='Add attribute'}\" onclick=\"javascript:AddRequestSql('"+data[i].Field+"');\"/></td>";
+								html += "<td><button type=\"button\" class=\"btn btn-default\" onclick=\"javascript:AddRequestSql('"+data[i].Field+"');\">{l s='Add attribute'}</button></td>";
 							html += "</tr>";
 						}
 						html += "</tbody>";

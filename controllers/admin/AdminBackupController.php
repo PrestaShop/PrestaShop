@@ -38,13 +38,13 @@ class AdminBackupControllerCore extends AdminController
 		parent::__construct();
 
 		$this->fields_list = array (
-			'date' => array('title' => $this->l('Date'), 'type' => 'datetime', 'width' => 120, 'align' => 'right'),
+			'date' => array('title' => $this->l('Date'), 'type' => 'datetime'),
 			'age' => array('title' => $this->l('Age')),
-			'filename' => array('title' => $this->l('File name'), 'width' => 200),
-			'filesize' => array('title' => $this->l('File size'))
+			'filename' => array('title' => $this->l('File name')),
+			'filesize' => array('title' => $this->l('File size'), 'class' => 'fixed-width-sm')
 		);
 
-		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?'), 'icon' => 'icon-trash'));
 
 		$this->fields_options = array(
 			'general' => array(

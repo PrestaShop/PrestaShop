@@ -26,20 +26,16 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
-
 	<fieldset>
-			<h3>
-				<i class="icon-download"></i>
-				{l s='Download'}
-			</h3>
-			<p>
-				<a class="btn btn-default" href="{$backup_url}">
-					<i class="icon-download"></i> 
-					{l s='Download the backup file'} ({$backup_weight}{l s='MB'})
-				</a>
-			</p>
-			<p>{l s='Tip: You can also download this file over to your FTP. Backup files are located in the "admin/backups" directory.'}</p>
-		</fieldset>
+		<h3><i class="icon-download"></i> {l s='Download'}</h3>
+		<p>
+			<a class="btn btn-default" href="{$backup_url}">
+				<i class="icon-download"></i> 
+				{l s='Download the backup file'} ({$backup_weight}{l s='MB'})
+			</a>
+		</p>
+		<p>{l s='Tip: You can also download this file over to your FTP. Backup files are located in the "admin/backups" directory.'}</p>
+	</fieldset>
 
 	<div class="row">
 		<div class="alert alert-warning">
