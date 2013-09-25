@@ -391,8 +391,8 @@ class ConfigurationCore extends ObjectModel
 
 		$result = Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.bqSQL(self::$definition['table']).'_lang`
-		WHERE ``'.bqSQL(self::$definition['primary']).'`` IN (
-			SELECT ``'.bqSQL(self::$definition['primary']).'``
+		WHERE `'.bqSQL(self::$definition['primary']).'` IN (
+			SELECT `'.bqSQL(self::$definition['primary']).'`
 			FROM `'._DB_PREFIX_.bqSQL(self::$definition['table']).'`
 			WHERE `name` = "'.pSQL($key).'"
 		)');

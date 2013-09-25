@@ -25,15 +25,15 @@
 		{if $currentObject->id}<input type="hidden" name="id_cart_rule" value="{$currentObject->id|intval}" />{/if}
 		<input type="hidden" id="currentFormTab" name="currentFormTab" value="informations" />
 		<fieldset id="cart_rule_informations" class="cart_rule_tab">
-			<h3>{l s='Cart-rule information'}</h3>
+			<h3>{l s='Cart rule information'}</h3>
 			{include file='controllers/cart_rules/informations.tpl'}
 		</fieldset>
 		<fieldset id="cart_rule_conditions" class="cart_rule_tab">
-			<h3>{l s='Cart-rule conditions'}</h3>
+			<h3>{l s='Cart rule conditions'}</h3>
 			{include file='controllers/cart_rules/conditions.tpl'}
 		</fieldset>
 		<fieldset id="cart_rule_actions" class="cart_rule_tab">
-			<h3>{l s='Cart-rule actions'}</h3>
+			<h3>{l s='Cart rule actions'}</h3>
 			{include file='controllers/cart_rules/actions.tpl'}
 		</fieldset>
 		<button type="submit" class="btn btn-primary btn-large pull-right" name="submitAddcart_rule" id="{$table|escape}_form_submit_btn"><i class="icon-save"></i> {l s='Save'}</button>
