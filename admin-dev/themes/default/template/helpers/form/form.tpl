@@ -334,7 +334,7 @@
 
 										<div class="radio {if isset($input.class)}"{$input.class}"{/if}">
 											<label>
-											<input type="radio"	name="{$input.name}"id="{$value.id}" value="{$value.value|escape:'htmlall':'UTF-8'}"
+											<input type="radio"	name="{$input.name}" id="{$value.id}" value="{$value.value|escape:'htmlall':'UTF-8'}"
 												{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
 												{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if} />
 												{$value.label}

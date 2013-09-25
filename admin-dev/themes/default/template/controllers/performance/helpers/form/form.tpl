@@ -24,15 +24,6 @@
 *}
 {extends file="helpers/form/form.tpl"}
 
-{block name="label"}
-	{if $input.type == 'text' && $input.name == 'ps_cache_fs_directory_depth'}
-		<div id="directory_depth" class="col-lg-9 col-lg-push-3">
-			<div class="alert alert-warning">{l s='The CacheFS system should be used only when the infrastructure contains one front-end server. If you are not sure, ask your hosting company.'}</div>
-	{else}
-		{$smarty.block.parent}
-	{/if}
-{/block}
-
 {block name="input"}
 	{if $input.type == 'radio' && $input.name == 'combination' && $input.disabled}
 		<div class="alert alert-warning">
@@ -59,13 +50,6 @@
 			<li>{l s='Feature'}</li>
 			<li>{l s='Feature value'}</li>
 		</ul>
-	{/if}
-{/block}
-
-{block name="field"}
-	{$smarty.block.parent}
-	{if $input.type == 'text' && $input.name == 'ps_cache_fs_directory_depth'}
-		</div>
 	{/if}
 {/block}
 
@@ -145,15 +129,15 @@
 
 	function showMemcached()
 	{
-		if ($('#caching_system option:selected').val() == 'CacheMemcache')
+		if ($('input[name="caching_system"]:radio:checked').val() == 'CacheMemcache')
 		{
 			$('#memcachedServers').show();
-			$('#directory_depth').hide();
+			$('#ps_cache_fs_directory_depth').parent().parent().hide();
 		}
 		else
 		{
 			$('#memcachedServers').hide();
-			$('#directory_depth').show();
+			$('#ps_cache_fs_directory_depth').parent().parent().show();
 		}
 	}
 
@@ -161,7 +145,8 @@
 
 		showMemcached();
 
-		$('#caching_system').change(function() {
+		$('input[name="caching_system"]').change(function() {
+			$('#cache_up').val(1);
 			showMemcached();
 		});
 
@@ -221,10 +206,9 @@
 			$('#ciphering_up').val(1);
 		});
 
-		$('input[name="active"], select[name="caching_system"]').change(function(){
+		$('input[name="cache_active"]').change(function(){
 			$('#cache_up').val(1);
 		});
-
 	});
 
 {/block}
