@@ -47,7 +47,20 @@ class AdminStatesControllerCore extends AdminController
 			'enableSelection' => array('text' => $this->l('Enable selection')),
 			'disableSelection' => array('text' => $this->l('Disable selection')),
 			'affectzone' => array('text' => $this->l('Affect a new zone'))
-			);
+		);
+
+		$this->_select = 'z.`name` AS zone, cl.`name` AS country';
+		$this->_join = '
+		LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = a.`id_zone`)
+		LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (cl.`id_country` = a.`id_country` AND cl.id_lang = '.(int)$this->context->language->id.')';
+		
+		$countries_array = $zones_array = array();
+		$this->zones = Zone::getZones();
+		$this->countries = Country::getCountries($this->context->language->id, false, true, false);
+		foreach ($this->zones as $zone)
+			$zones_array[$zone['id_zone']] = $zone['name'];
+		foreach ($this->countries as $country)
+			$countries_array[$country['id_country']] = $country['name'];
 		
 		$this->fields_list = array(
 			'id_state' => array(
@@ -64,7 +77,19 @@ class AdminStatesControllerCore extends AdminController
 			),
 			'zone' => array(
 				'title' => $this->l('Zone'),
-				'filter_key' => 'z!name'
+				'type' => 'select',
+				'list' => $zones_array,
+				'filter_key' => 'z!id_zone',
+				'filter_type' => 'int',
+				'order_key' => 'zone'
+			),
+			'country' => array(
+				'title' => $this->l('Country'),
+				'type' => 'select',
+				'list' => $countries_array,
+				'filter_key' => 'cl!id_country',
+				'filter_type' => 'int',
+				'order_key' => 'country'
 			),
 			'active' => array(
 				'title' => $this->l('Enabled'),
@@ -93,10 +118,8 @@ class AdminStatesControllerCore extends AdminController
 
 	public function renderList()
 	{
-		$this->_select = 'z.`name` AS zone';
-		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = a.`id_zone`)';
-
-				$this->tpl_list_vars['zones'] = Zone::getZones();
+		$this->tpl_list_vars['zones'] = $this->zones;
+		$this->tpl_list_vars['countries'] = $this->countries;
 		return parent::renderList();
 	}
 
