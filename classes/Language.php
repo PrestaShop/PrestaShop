@@ -688,26 +688,25 @@ class LanguageCore extends ObjectModel
 		if (Language::getIdByIso($iso_code))
 			return true;
 
+		// Initialize the language
 		$lang = new Language();
 		$lang->iso_code = $iso_code;
 		$lang->active = true;
 
+		// If the language pack has not been provided, retrieve it from prestashop.com
 		if (!$lang_pack)
 			$lang_pack = Tools::jsonDecode(Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='._PS_VERSION_.'&iso_lang='.$iso_code));
 
+		// If a language pack has been found or provided, prefill the language object with the value
 		if ($lang_pack)
-		{
-			if (isset($lang_pack->name)
-				&& isset($lang_pack->version)
-				&& isset($lang_pack->iso_code))
-					$lang->name = $lang_pack->name;
-		}
-		elseif ($params_lang !== null && is_array($params_lang))
+			foreach (get_object_vars($lang_pack) as $key => $value)
+				$lang->$key = $value;
+
+		// Use the values given in parameters to override the data retrieved automatically
+		if ($params_lang !== null && is_array($params_lang))
 			foreach ($params_lang as $key => $value)
 				$lang->$key = $value;
-		else
-			return false;
-		
+
 		if (!$lang->add(true, false, $only_add))
 			return false;
 
