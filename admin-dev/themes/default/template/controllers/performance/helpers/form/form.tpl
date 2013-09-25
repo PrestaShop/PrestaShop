@@ -108,15 +108,16 @@
 				</form>
 			</div>
 			{if $servers}
+			<div class="row">
 				<div class="form-group">
 					<table class="table">
 						<thead>
 							<tr>
-								<th >{l s='ID'}</th>
-								<th >{l s='IP address'}</th>
-								<th >{l s='Port'}</th>
-								<th >{l s='Weight'}</th>
-								<th >&nbsp;</th>
+								<th class="fixed-width-xs"><span class="title_box">{l s='ID'}</span></th>
+								<th><span class="title_box">{l s='IP address'}</span></th>
+								<th class="fixed-width-xs"><span class="title_box">{l s='Port'}</span></th>
+								<th class="fixed-width-xs"><span class="title_box">{l s='Weight'}</span></th>
+								<th>&nbsp;</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -126,14 +127,15 @@
 							<td>{$server.ip}</td>
 							<td>{$server.port}</td>
 							<td>{$server.weight}</td>
-							<td>
-								<a class="btn btn-default" href="{$current}&token={$token}&deleteMemcachedServer={$server.id_memcached_server}" ><i class="icon-minus-sign-alt"></i></a>
+							<td align="right">
+								<a class="btn btn-default" href="{$current}&token={$token}&deleteMemcachedServer={$server.id_memcached_server}" ><i class="icon-minus-sign-alt"></i> {l s='Remove'}</a>
 							</td>
 						</tr>
 					{/foreach}
 						</tbody>
 					</table>
 				</div>
+			</div>
 			{/if}
 		</div>
 	{/if}
