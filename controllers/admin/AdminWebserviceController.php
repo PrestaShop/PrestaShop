@@ -49,19 +49,20 @@ class AdminWebserviceControllerCore extends AdminController
 		$this->fields_list = array(
 			'key' => array(
 				'title' => $this->l('Key'),
-				'align' => 'center'
+				'class' => 'fixed-width-md'
+			),
+			'description' => array(
+				'title' => $this->l('Key description'),
+				'align' => 'left',
+				'orderby' => false
 			),
 			'active' => array(
 				'title' => $this->l('Enabled'),
 				'align' => 'center',
 				'active' => 'status',
 				'type' => 'bool',
-				'orderby' => false
-			),
-			'description' => array(
-				'title' => $this->l('Key description'),
-				'align' => 'left',
-				'orderby' => false
+				'orderby' => false,
+				'class' => 'fixed-width-xs'
 			)
 		);
 
@@ -106,12 +107,18 @@ class AdminWebserviceControllerCore extends AdminController
 			),
 			'input' => array(
 				array(
-					'type' => 'text',
+					'type' => 'textbutton',
 					'label' => $this->l('Key:'),
 					'name' => 'key',
 					'id' => 'code',
 					'required' => true,
 					'hint' => $this->l('Webservice account key.'),
+					'button' => array(
+						'label' => $this->l('Generate!'),
+						'attributes' => array(
+							'onclick' => 'gencode(32)'
+						)
+					)
 				),
 				array(
 					'type' => 'textarea',
