@@ -199,7 +199,7 @@
 			<p>
 				<strong>{l s='Required parameters'}:</strong>
 				{if !$failRequired}
-						<span class="text-success">OK</span>
+						<span class="text-success">{l s='OK'}</span>
 					</p>
 				{else}
 					<span class="text-danger">{l s='Please fix the following error(s)'}</span>
@@ -216,7 +216,7 @@
 				<p>
 					<strong>{l s='Optional parameters'}:</strong>
 				{if !$failOptional}
-					<span>OK</span>
+					<span class="text-success">{l s='OK'}</span>
 				</p>
 				{else}
 					<span class="text-success">{l s='Please fix the following error(s)'}</span>
