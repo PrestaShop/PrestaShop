@@ -75,7 +75,7 @@
 	<p>{l s='Click "Save and Stay" after changing selected suppliers to display the associated product references.'}</p>
 	<div id="suppliers_accordion" style="margin-top:10px; display:block;">
 		{foreach from=$associated_suppliers item=supplier}
-		    <h3 style="margin-bottom:0;"><a href="#">{$supplier->name}</a></h3>
+		    <h3 style="margin-bottom:0;"><a href="#">{if isset($supplier->name)}{$supplier->name}{/if}</a></h3>
 		    <div style="display:block;">
 
 				<table cellpadding="10" cellspacing="0" class="table">
