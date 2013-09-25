@@ -86,6 +86,7 @@ class AdminPdfControllerCore extends AdminController
 // 			$this->generateDeliverySlipPDFByIdOrder((int)Tools::getValue('id_order'));
 // 		else
 		if (Tools::isSubmit('id_order_invoice'))
+// 			$this->generateDeliverySlipPDFByIdOrderInvoice((int)Tools::getValue('id_order_invoice'));
 			$this->generatePackageSlipPDFByIdOrderInvoice((int)Tools::getValue('id_order_invoice'));
 // 		elseif (Tools::isSubmit('id_delivery'))
 // 		{

@@ -117,6 +117,19 @@ class AdminOrderPreferencesControllerCore extends AdminController
 					)
 				)
 			),
+			'ads' => array(
+				'title' => $this->l('Advanced Delivery System'),
+				'icon' => 'tab-preferences',
+				'fields' => array(
+					'PS_ADS' => array(
+						'title' => $this->l('Enable ADS'),
+						'desc' => $this->l('Activate Advanced Delivery System, with packingslip, multiple deliveryslips'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool',
+					),
+				),
+			),
 			'gift' => array(
 				'title' =>	$this->l('Gift options'),
 				'icon' =>	'tab-preferences',
