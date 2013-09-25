@@ -116,13 +116,6 @@ class AdminStatesControllerCore extends AdminController
 		parent::initPageHeaderToolbar();
 	}
 
-	public function renderList()
-	{
-		$this->tpl_list_vars['zones'] = $this->zones;
-		$this->tpl_list_vars['countries'] = $this->countries;
-		return parent::renderList();
-	}
-
 	public function renderForm()
 	{
 		$this->fields_form = array(
@@ -146,26 +139,26 @@ class AdminStatesControllerCore extends AdminController
 					'maxlength' => 7,
 					'required' => true,
 					'class' => 'uppercase',
-					'hint' => $this->l('1 to 4 letter ISO code')
+					'hint' => $this->l('1 to 4 letter ISO code.').' '.$this->l('You can prefix it with the country ISO code if needed.')
 				),
 				array(
 					'type' => 'select',
 					'label' => $this->l('Country:'),
 					'name' => 'id_country',
-					'required' => false,
+					'required' => true,
 					'default_value' => (int)$this->context->country->id,
 					'options' => array(
 						'query' => Country::getCountries($this->context->language->id, false, true),
 						'id' => 'id_country',
 						'name' => 'name',
 					),
-					'hint' => $this->l('Country where the state, region or city is located')
+					'hint' => $this->l('Country where the state is located.').' '.$this->l('Only the countries with the option "contains states" enabled are displayed.')
 				),
 				array(
 					'type' => 'select',
 					'label' => $this->l('Zone:'),
 					'name' => 'id_zone',
-					'required' => false,
+					'required' => true,
 					'options' => array(
 						'query' => Zone::getZones(),
 						'id' => 'id_zone',
@@ -180,7 +173,7 @@ class AdminStatesControllerCore extends AdminController
 					'type' => 'switch',
 					'label' => $this->l('Status:'),
 					'name' => 'active',
-					'required' => false,
+					'required' => true,
 					'values' => array(
 						array(
 							'id' => 'active_on',
@@ -192,8 +185,7 @@ class AdminStatesControllerCore extends AdminController
 							'value' => 0,
 							'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" />'
 						)
-					),
-					'hint' => $this->l('Enabled or disabled')
+					)
 				)
 			),
 			'submit' => array(
@@ -209,49 +201,32 @@ class AdminStatesControllerCore extends AdminController
 	{
 		if (Tools::isSubmit($this->table.'Orderby') || Tools::isSubmit($this->table.'Orderway'))
 			$this->filter = true;
-		
-		if (!isset($this->table))
-			return false;
-			
+
+		// Idiot-proof controls
 		if (!Tools::getValue('id_'.$this->table))
 		{
 			if (Validate::isStateIsoCode(Tools::getValue('iso_code')) && State::getIdByIso(Tools::getValue('iso_code'), Tools::getValue('id_country')))
 				$this->errors[] = Tools::displayError('This ISO code already exists. You cannot create two states with the same ISO code.');
 		}
-		else if (Validate::isStateIsoCode(Tools::getValue('iso_code')))
+		elseif (Validate::isStateIsoCode(Tools::getValue('iso_code')))
 		{
 			$id_state = State::getIdByIso(Tools::getValue('iso_code'), Tools::getValue('id_country'));
 			if ($id_state && $id_state != Tools::getValue('id_'.$this->table))
 				$this->errors[] = Tools::displayError('This ISO code already exists. You cannot create two states with the same ISO code.');
 		}
 
-		/* Delete object */
-		if (isset($_GET['delete'.$this->table]))
+		/* Delete state */
+		if (Tools::isSubmit('delete'.$this->table))
 		{
-			// set token
-			$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
-
 			if ($this->tabAccess['delete'] === '1')
 			{
-				if (Validate::isLoadedObject($object = $this->loadObject()) && isset($this->fieldImageSettings))
+				if (Validate::isLoadedObject($object = $this->loadObject()))
 				{
 					if (!$object->isUsed())
 					{
-						// check if request at least one object with noZeroObject
-						if (isset($object->noZeroObject) && count($taxes = call_user_func(array($this->className, $object->noZeroObject))) <= 1)
-							$this->errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
-						else
-						{
-							if ($this->deleted)
-							{
-								$object->deleted = 1;
-								if ($object->update())
-									Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.$token);
-							}
-							else if ($object->delete())
-								Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.$token);
-							$this->errors[] = Tools::displayError('An error occurred during deletion.');
-						}
+						if ($object->delete())
+							Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.(Tools::getValue('token') ? Tools::getValue('token') : $this->token));
+						$this->errors[] = Tools::displayError('An error occurred during deletion.');
 					}
 					else
 						$this->errors[] = Tools::displayError('This state was used in at least one address. It cannot be removed.');
@@ -262,37 +237,8 @@ class AdminStatesControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 		}
-		else
+
+		if (!count($this->errors))
 			parent::postProcess();
-	}
-
-	protected function displayAjaxStates()
-	{
-		if ($this->tabAccess['view'] === '1')
-		{
-			$states = Db::getInstance()->executeS('
-			SELECT s.id_state, s.name
-			FROM '._DB_PREFIX_.'state s
-			LEFT JOIN '._DB_PREFIX_.'country c ON (s.`id_country` = c.`id_country`)
-			WHERE s.id_country = '.(int)(Tools::getValue('id_country')).' AND s.active = 1 AND c.`contains_states` = 1
-			ORDER BY s.`name` ASC');
-
-			if (is_array($states) AND !empty($states))
-			{
-				$list = '';
-				if (Tools::getValue('no_empty') != true)
-				{
-					$empty_value = (Tools::isSubmit('empty_value')) ? Tools::getValue('empty_value') : '----------';
-					$list = '<option value="0">'.Tools::htmlentitiesUTF8($empty_value).'</option>'."\n";
-				}
-
-				foreach ($states AS $state)
-					$list .= '<option value="'.(int)($state['id_state']).'"'.((isset($_GET['id_state']) AND $_GET['id_state'] == $state['id_state']) ? ' selected="selected"' : '').'>'.$state['name'].'</option>'."\n";
-			}
-			else
-				$list = 'false';
-
-			die($list);
-		}
 	}
 }
