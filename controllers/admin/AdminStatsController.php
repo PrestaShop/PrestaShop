@@ -208,14 +208,12 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		LEFT JOIN `'._DB_PREFIX_.'gender` g ON c.id_gender = g.id_gender
 		WHERE c.active = 1');
 		if (!$row['total'])
-			$value = $this->l('No customers');
+			return false;
 		elseif ($row['male'] > $row['female'] && $row['male'] > $row['neutral'])
-			$value = sprintf($this->l('%d%% Men Customers'), round(100 * $row['male'] / $row['total']));
+			return array('type' => 'male', 'value' => round(100 * $row['male'] / $row['total']));
 		elseif ($row['female'] > $row['male'] && $row['female'] > $row['neutral'])
-			$value = sprintf($this->l('%d%% Women Customers'), round(100 * $row['female'] / $row['total']));
-		else
-			$value = sprintf($this->l('%d%% Neutral Customers'), round(100 * $row['neutral'] / $row['total']));
-		return $value;
+			return array('type' => 'female', 'value' => round(100 * $row['female'] / $row['total']));
+		return array('type' => 'neutral', 'value' => round(100 * $row['neutral'] / $row['total']));
 	}
 	
 	public static function getAverageCustomerAge()
@@ -353,6 +351,16 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
 			case 'customer_main_gender':
 				$value = AdminStatsController::getCustomerMainGender();
+				
+				if ($value === false)
+					$value = $this->l('No customers');
+				elseif ($value['type'] == 'male')
+					$value = sprintf($this->l('%d%% Men Customers'), $value['value']);
+				elseif ($value['type'] == 'female')
+					$value = sprintf($this->l('%d%% Women Customers'), $value['value']);
+				else
+					$value = sprintf($this->l('%d%% Neutral Customers'), $value['value']);
+				
 				ConfigurationKPI::updateValue('CUSTOMER_MAIN_GENDER', $value);
 				ConfigurationKPI::updateValue('CUSTOMER_MAIN_GENDER_EXPIRE', strtotime('+1 day'));
 				break;
