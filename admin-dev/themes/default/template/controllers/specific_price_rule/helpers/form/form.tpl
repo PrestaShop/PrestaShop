@@ -25,112 +25,127 @@
 {extends file="helpers/form/form.tpl"}
 
 {block name="other_fieldsets"}
-
-<div class="clear">&nbsp;</div>
 <div id="conditions" class="Bloc">
 	<div id="condition_group_list">
-	</div>
-	<a class="button bt-icon" href="#" id="add_condition_group">
-		<img src="../img/admin/add.gif" />
-		{l s='Add a new condition group'}
-	</a>
-	<div id="condition_list">
-		<h3>{l s='Conditions'}</h3>
+</div>
+
+<a class="btn btn-default" href="#" id="add_condition_group">
+	<i class="icon-plus-sign"></i> {l s='Add a new condition group'}
+</a>
+<div class="clearfix">&nbsp;</div>
+<fieldset>
+	<h3><i class="icon-tasks"></i> {l s='Conditions'}</h3>
+	<form class="form-horizontal">
 		<div class="row">
-			<label for="id_category">{l s='Category'}</label>
-				<div class="margin-form">
+			<label for="id_category" class="control-label col-lg-3">{l s='Category'}</label>
+			<div class="col-lg-9">
+				<div class="col-lg-8">
 					<select id="id_category" name="id_category">
 						{foreach from=$categories item='category'}
 						<option value="{$category.id_category}">{$category.name}</option>
 						{/foreach}
 					</select>
-					<a class="button bt-icon" href="#" id="add_condition_category">
-						<img src="../img/admin/add.gif" />
-							{l s='Add condition'}
-						</a>
 				</div>
+				<div class="col-lg-1">
+					<a class="btn btn-default" href="#" id="add_condition_category">
+						<i class="icon-plus-sign"></i> {l s='Add condition'}
+					</a>
+				</div>
+			</div>
 		</div>
-		
 		<div class="row">
-		<label for="id_manufacturer">{l s='Manufacturer'}</label>
-		<div class="margin-form">
-			<select id="id_manufacturer" name="id_manufacturer">
-				{foreach from=$manufacturers item='manufacturer'}
-					<option value="{$manufacturer.id_manufacturer}">{$manufacturer.name}</option>
-				{/foreach}
-			</select>
-			<a class="button bt-icon" href="#" id="add_condition_manufacturer">
-				<img src="../img/admin/add.gif" />
-				{l s='Add condition'}
-			</a>
+			<label for="id_manufacturer" class="control-label col-lg-3">{l s='Manufacturer'}</label>
+			<div class="col-lg-9">
+				<div class="col-lg-8">
+					<select id="id_manufacturer" name="id_manufacturer">
+						{foreach from=$manufacturers item='manufacturer'}
+							<option value="{$manufacturer.id_manufacturer}">{$manufacturer.name}</option>
+						{/foreach}
+					</select>
+				</div>
+				<div class="col-lg-1">
+					<a class="btn btn-default" href="#" id="add_condition_manufacturer">
+						<i class="icon-plus-sign"></i> {l s='Add condition'}
+					</a>
+				</div>
+			</div>
 		</div>
-		</div>
-		
 		<div class="row">
-		<label for="id_supplier">{l s='Supplier'}</label>
-		<div class="margin-form">
-			<select id="id_supplier" name="id_supplier">
-				{foreach from=$suppliers item='supplier'}
-					<option value="{$supplier.id_supplier}">{$supplier.name}</option>
-				{/foreach}
-			</select>
-			<a class="button bt-icon" href="#" id="add_condition_supplier">
-				<img src="../img/admin/add.gif" />
-				{l s='Add condition'}
-			</a>
+			<label for="id_supplier" class="control-label col-lg-3">{l s='Supplier'}</label>
+			<div class="col-lg-9">
+				<div class="col-lg-8">
+					<select id="id_supplier" name="id_supplier">
+						{foreach from=$suppliers item='supplier'}
+							<option value="{$supplier.id_supplier}">{$supplier.name}</option>
+						{/foreach}
+					</select>
+				</div>
+				<div class="col-lg-1">
+					<a class="btn btn-default" href="#" id="add_condition_supplier">
+						<i class="icon-plus-sign"></i> {l s='Add condition'}
+					</a>
+				</div>
+			</div>
 		</div>
-		</div>
-		
 		<div class="row">
-		<label for="id_attribute">{l s='Attributes'}</label>
-		<div class="margin-form">
-			<select id="id_attribute_group">
-				{foreach from=$attributes_group item='attribute_group'}
-					<option value="{$attribute_group.id_attribute_group}">{$attribute_group.name}</option>
-				{/foreach}
-			</select>
-			{foreach from=$attributes_group item='attribute_group'}
-				<select class="id_attribute" style="display:none;" id="id_attribute_{$attribute_group.id_attribute_group}">
-					{foreach from=$attribute_group.attributes item='attribute'}
-						<option value="{$attribute.id_attribute}">{$attribute.name}</option>
+			<label for="id_attribute" class="control-label col-lg-3">{l s='Attributes'}</label>
+			<div class="col-lg-9">
+				<div class="col-lg-4">
+					<select id="id_attribute_group">
+						{foreach from=$attributes_group item='attribute_group'}
+							<option value="{$attribute_group.id_attribute_group}">{$attribute_group.name}</option>
+						{/foreach}
+					</select>
+				</div>
+				<div class="col-lg-4">
+					{foreach from=$attributes_group item='attribute_group'}
+						<select class="id_attribute" style="display:none;" id="id_attribute_{$attribute_group.id_attribute_group}">
+							{foreach from=$attribute_group.attributes item='attribute'}
+								<option value="{$attribute.id_attribute}">{$attribute.name}</option>
+							{/foreach}
+						</select>
 					{/foreach}
-				</select>
-			{/foreach}
-			</select>
-			<a rel="" class="button bt-icon" href="#" id="add_condition_attribute">
-				<img src="../img/admin/add.gif" />
-				{l s='Add condition'}
-			</a>
+					</select>
+				</div>
+				<div class="col-lg-1">
+					<a class="btn btn-default" href="#" id="add_condition_attribute">
+						<i class="icon-plus-sign"></i> {l s='Add condition'}
+					</a>
+				</div>
+			</div>
 		</div>
-		</div>
-		
 		<div class="row">
-		<label for="id_attribute">{l s='Features'}</label>
-		<div class="margin-form">
-			<select id="id_feature">
-				{foreach from=$features item='feature'}
-					<option value="{$feature.id_feature}">{$feature.name}</option>
-				{/foreach}
-			</select>
-			{foreach from=$features item='feature'}
-				<select class="id_feature_value" style="display:none;" id="id_feature_{$feature.id_feature}">
-					{foreach from=$feature.values item='value'}
-						<option value="{$value.id_feature_value}">{$value.value}</option>
+			<label for="id_attribute" class="control-label col-lg-3">{l s='Features'}</label>
+			<div class="col-lg-9">
+				<div class="col-lg-4">
+					<select id="id_feature">
+						{foreach from=$features item='feature'}
+							<option value="{$feature.id_feature}">{$feature.name}</option>
+						{/foreach}
+					</select>
+				</div>
+				<div class="col-lg-4">
+					{foreach from=$features item='feature'}
+						<select class="id_feature_value" style="display:none;" id="id_feature_{$feature.id_feature}">
+							{foreach from=$feature.values item='value'}
+								<option value="{$value.id_feature_value}">{$value.value}</option>
+							{/foreach}
+						</select>
 					{/foreach}
-				</select>
-			{/foreach}
-			</select>
-			<a class="button bt-icon" href="#" id="add_condition_feature">
-				<img src="../img/admin/add.gif" />
-				{l s='Add condition'}
-			</a>
+					</select>
+				</div>
+				<div class="col-lg-1">
+					<a class="btn btn-default" href="#" id="add_condition_feature">
+						<i class="icon-plus-sign"></i> {l s='Add condition'}
+					</a>
+				</div>
+			</div>
 		</div>
-		</div>
-	</div>
-</div>
+	</form>
 {if !$is_multishop}
 	<input type="hidden" name="id_shop" value=1 />
 {/if}
+</fieldset>
 {/block}
 
 {block name="script"}
@@ -140,8 +155,10 @@ var conditions = new Array();
 
 function toggle_condition_group(id_condition_group)
 {
-	$('.condition_group > table').css('border', 'none');
-	$('#condition_group_'+id_condition_group+' > table').css('border', '2px solid');
+	$('.condition_group').removeClass('alert-info');
+	$('.condition_group > table').removeClass('alert-info');
+	$('#condition_group_'+id_condition_group+' > table').addClass('alert-info');
+	$('#condition_group_'+id_condition_group).addClass('alert-info');
 	current_id_condition_group = id_condition_group;
 }
 
@@ -175,9 +192,9 @@ function delete_condition(condition)
 function new_condition_group()
 {
 	last_condition_group++;
-	var html = '<div class="condition_group" id="condition_group_'+last_condition_group+'"><h3>{l s='Condition group'} '+last_condition_group+'</h3>';
-		html += '<table cellspacing="0" cellpadding="0" class="table width3"><thead><tr><th width="196px" height="39">{l s='Type'}</th><th width="300px">{l s='Value'}</th><th></th></tr></thead><tbody></tbody></table>';
-		html += '</div><div class="condition_separator">{l s='OR'}</div><div class="separation"></div>';
+	var html = '<fieldset id="condition_group_'+last_condition_group+'" class="condition_group alert-info"><h3><i class="icon-tasks"></i> {l s='Condition group'} '+last_condition_group+'</h3>';
+		html += '<table class="table alert-info"><thead><tr><th class="fixed-width-md"><span class="title_box">{l s='Type'}</span></th><th><span class="title_box">{l s='Value'}</span></th><th></th></tr></thead><tbody></tbody></table>';
+		html += '</fieldset><div class="row condition_separator text-center">{l s='OR'}</div><div class="clearfix">&nbsp;</div>';
 	$('#condition_group_list').append(html);
 	toggle_condition_group(last_condition_group);
 }
@@ -219,7 +236,7 @@ $(document).ready(function() {
 		if (!id_condition)
 			return false;
 		
-		var html = '<tr id="'+id_condition+'"><td>{l s='Category'}</td><td>'+$('#id_category option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');"><img src="../img/admin/delete.gif" /></a></td></tr>';
+		var html = '<tr id="'+id_condition+'"><td>{l s='Category'}</td><td>'+$('#id_category option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
 		appendConditionToGroup(html);
 
 		return false;
@@ -230,7 +247,7 @@ $(document).ready(function() {
 		if (!id_condition)
 			return false;
 
-		var html = '<tr id="'+id_condition+'"><td>{l s='Manufacturer'}</td><td>'+$('#id_manufacturer option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');"><img src="../img/admin/delete.gif" /></a></td></tr>';
+		var html = '<tr id="'+id_condition+'"><td>{l s='Manufacturer'}</td><td>'+$('#id_manufacturer option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
 		appendConditionToGroup(html);
 
 		return false;
@@ -241,7 +258,7 @@ $(document).ready(function() {
 		if (!id_condition)
 			return false;
 
-		var html = '<tr id="'+id_condition+'"><td>{l s='Supplier'}</td><td>'+$('#id_supplier option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');"><img src="../img/admin/delete.gif" /></a></td></tr>';
+		var html = '<tr id="'+id_condition+'"><td>{l s='Supplier'}</td><td>'+$('#id_supplier option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
 		appendConditionToGroup(html);
 
 		return false;
@@ -252,7 +269,7 @@ $(document).ready(function() {
 		if (!id_condition)
 			return false;
 
-		var html = '<tr id="'+id_condition+'"><td>{l s='Attribute'}</td><td>'+$('#id_attribute_group option:selected').html()+': '+$('#id_attribute_'+$('#id_attribute_group option:selected').val()+' option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');"><img src="../img/admin/delete.gif" /></a></td></tr>';
+		var html = '<tr id="'+id_condition+'"><td>{l s='Attribute'}</td><td>'+$('#id_attribute_group option:selected').html()+': '+$('#id_attribute_'+$('#id_attribute_group option:selected').val()+' option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
 		appendConditionToGroup(html);
 
 		return false;
@@ -263,7 +280,7 @@ $(document).ready(function() {
 		if (!id_condition)
 			return false;
 
-		var html = '<tr id="'+id_condition+'"><td>{l s='Feature'}</td><td>'+$('#id_feature option:selected').html()+': '+$('#id_feature_'+$('#id_feature option:selected').val()+' option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');"><img src="../img/admin/delete.gif" /></a></td></tr>';
+		var html = '<tr id="'+id_condition+'"><td>{l s='Feature'}</td><td>'+$('#id_feature option:selected').html()+': '+$('#id_feature_'+$('#id_feature option:selected').val()+' option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
 		appendConditionToGroup(html);
 
 		return false;

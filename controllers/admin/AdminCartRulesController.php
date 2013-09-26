@@ -38,12 +38,12 @@ class AdminCartRulesControllerCore extends AdminController
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->fields_list = array(
-			'id_cart_rule' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 40),
+			'id_cart_rule' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
 			'name' => array('title' => $this->l('Name')),
-			'priority' => array('title' => $this->l('Priority'), 'width' => 40),
-			'code' => array('title' => $this->l('Code')),
-			'quantity' => array('title' => $this->l('Quantity'), 'width' => 40),
-			'date_to' => array('title' => $this->l('Until')),
+			'priority' => array('title' => $this->l('Priority'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+			'code' => array('title' => $this->l('Code'), 'class' => 'fixed-width-sm'),
+			'quantity' => array('title' => $this->l('Quantity'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+			'date_to' => array('title' => $this->l('Until'), 'class' => 'fixed-width-lg'),
 			'active' => array('title' => $this->l('Status'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false),
 		);
 
