@@ -2798,36 +2798,40 @@ class AdminImportControllerCore extends AdminController
 			else
 				$this->errors[] = $this->l('You must upload a file in order to proceed to the next step');
 		}
-		elseif($filename = Tools::getValue('csvfilename'))
+		elseif ($filename = Tools::getValue('csvfilename'))
 		{
 			$filename = base64_decode($filename);
 			$file =  _PS_ADMIN_DIR_.'/import/'.basename($filename);
 			if (realpath(dirname($file)) != _PS_ADMIN_DIR_.'/import')
 				exit();
-			if (!empty($filename) && file_exists($file))
+			if (!empty($filename))
 			{
 				$bName = basename($filename);
-				$bName = explode('.', $bName);
-				$bName = strtolower($bName[count($bName) - 1]);
-				$mimeTypes = array('csv' => 'text/csv');
-
-				if (isset($mimeTypes[$bName]))
-					$mimeType = $mimeTypes[$bName];
-				else
-					$mimeType = 'application/octet-stream';
-		
-				if (ob_get_level()) 
-					ob_end_clean();
-
-				header('Content-Transfer-Encoding: binary');
-				header('Content-Type: '.$mimeType);
-				header('Content-Length: '.filesize($file));
-				header('Content-Disposition: attachment; filename="'.$filename.'"');
-				$fp = fopen($file, 'rb');
-				while (!feof($fp))
-					echo fgets($fp, 16384);
-			}
-			exit;
+				if ($delete = Tools::getValue('delete') && file_exists($file))
+					@unlink($file);
+				elseif (file_exists($file))
+				{
+					$bName = explode('.', $bName);
+					$bName = strtolower($bName[count($bName) - 1]);
+					$mimeTypes = array('csv' => 'text/csv');
+	
+					if (isset($mimeTypes[$bName]))
+						$mimeType = $mimeTypes[$bName];
+					else
+						$mimeType = 'application/octet-stream';
+					if (ob_get_level()) 
+						ob_end_clean();
+	
+					header('Content-Transfer-Encoding: binary');
+					header('Content-Type: '.$mimeType);
+					header('Content-Length: '.filesize($file));
+					header('Content-Disposition: attachment; filename="'.$filename.'"');
+					$fp = fopen($file, 'rb');
+					while (is_resource($fp) && !feof($fp))
+						echo fgets($fp, 16384);
+					exit;
+				}
+			}	
 		}
 		parent::postProcess();
 	}

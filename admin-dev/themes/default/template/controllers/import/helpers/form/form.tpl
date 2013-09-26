@@ -87,7 +87,8 @@
 					<a href="#" onclick="$('#csv_files_import').slideToggle(); return false;">{l s='Click to view your csv files.'}</a>
 					<ul id="csv_files_import" style="display:none;">
 							{foreach $files_to_import AS $filename}
-								<li><a class="_blank" href="{$current}&token={$token}&csvfilename={$filename|@base64_encode}">{$filename}</a></li>
+								<li><a href="{$current}&token={$token}&csvfilename={$filename|@base64_encode}">{$filename}</a>&nbsp;&nbsp;
+<a href="{$current}&token={$token}&csvfilename={$filename|@base64_encode}&delete=1"><img src="../img/admin/delete.gif" /></a></li>
 							{/foreach}
 					</ul>
 				</div>
