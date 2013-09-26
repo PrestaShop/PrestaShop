@@ -2553,9 +2553,6 @@ class AdminImportControllerCore extends AdminController
 
 	protected static function usortFiles($a, $b)
 	{
-		$a = strrev(substr(strrev($a), 0, 14));
-		$b = strrev(substr(strrev($b), 0, 14));
-
 		if ($a == $b)
 			return 0;
 
