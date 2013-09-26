@@ -65,7 +65,7 @@ class AdminLocalizationControllerCore extends AdminController
 			),
 			'localization' => array(
 				'title' =>	$this->l('Localization'),
-				'icon' =>	'localization',
+				'icon' =>	'icon-globe',
 				'fields' =>	array(
 					'PS_WEIGHT_UNIT' => array(
 						'title' => $this->l('Weight unit:'),
@@ -100,7 +100,6 @@ class AdminLocalizationControllerCore extends AdminController
 			),
 			'options' => array(
 				'title' =>	$this->l('Advanced'),
-				'icon' =>	'localization',
 				'fields' =>	array(
 					'PS_LOCALE_LANGUAGE' => array(
 						'title' => $this->l('Language locale:'),

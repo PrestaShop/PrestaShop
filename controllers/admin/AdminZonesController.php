@@ -38,7 +38,8 @@ class AdminZonesControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_zone' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center'
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'name' => array(
 				'title' => $this->l('Zone'),
@@ -48,7 +49,8 @@ class AdminZonesControllerCore extends AdminController
 				'align' => 'center',
 				'active' => 'status',
 				'type' => 'bool',
-				'orderby' => false
+				'orderby' => false,
+				'class' => 'fixed-width-sm'
 			)
 		);
 		$this->bulk_actions = array(

@@ -65,7 +65,8 @@ class AdminStatesControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_state' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center'
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
@@ -73,7 +74,8 @@ class AdminStatesControllerCore extends AdminController
 			),
 			'iso_code' => array(
 				'title' => $this->l('ISO code'),
-				'align' => 'center'
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'zone' => array(
 				'title' => $this->l('Zone'),
@@ -97,7 +99,8 @@ class AdminStatesControllerCore extends AdminController
 				'filter_key' => 'a!active',
 				'align' => 'center',
 				'type' => 'bool',
-				'orderby' => false
+				'orderby' => false,
+				'class' => 'fixed-width-sm'
 			)
 		);
 

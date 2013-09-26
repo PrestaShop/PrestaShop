@@ -96,22 +96,20 @@
 			<div class="row">
 				<label class="control-label col-lg-3" for="language-button">{l s='Select your language:'}</label>
 				<div class="input-group col-lg-4">
-					<div class="input-group-btn">
-						<button type="button" id="language-button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-							{l s='Language'}
-							<span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu">
-							{foreach $languages as $language}
-							<li>
-								<a href="javascript:chooseTypeTranslation('{$language['iso_code']}');">
-									<img src="{$theme_lang_dir}{$language['id_lang']}.jpg" alt="{$language['iso_code']}" title="{$language['iso_code']}" />
-									{$language['iso_code']}
-								</a>
-							</li>
-							{/foreach}
-						</ul>
-					</div>
+					<button type="button" id="language-button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+						{l s='Language'}
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu">
+						{foreach $languages as $language}
+						<li>
+							<a href="javascript:chooseTypeTranslation('{$language['iso_code']}');">
+								<img src="{$theme_lang_dir}{$language['id_lang']}.jpg" alt="{$language['iso_code']}" title="{$language['iso_code']}" />
+								{$language['iso_code']}
+							</a>
+						</li>
+						{/foreach}
+					</ul>
 				</div>
 				<input type="hidden" name="token" value="{$token}" />
 			</div>
@@ -233,7 +231,7 @@
 			<p class="alert alert-warning">
 				{l s='Copies data from one language to another.'}<br />
 				{l s='Warning: This will replace all of the existing data inside the destination language.'}<br />
-				{l s='If necessary'}, <b><a href="{$url_create_language}">{l s='you must first create a new language.'}</a></b>.
+				{l s='If necessary'}, <b><a href="{$url_create_language}" class="btn btn-link"><i class="icon-external-link-sign"></i> {l s='you must first create a new language.'}</a></b>.
 			</p>
 			<div class="row">
 				<label class="control-label col-lg-3 required" for="fromLang"> {l s='From:'}</label>

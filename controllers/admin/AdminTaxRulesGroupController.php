@@ -42,7 +42,9 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
 		$this->fields_list = array(
 			'id_tax_rules_group' => array(
-				'title' => $this->l('ID')
+				'title' => $this->l('ID'),
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'name' => array(
 				'title' => $this->l('Name')
@@ -52,12 +54,13 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				'active' => 'status',
 				'type' => 'bool',
 				'orderby' => false,
-				'align' => 'center'
+				'align' => 'center',
+				'class' => 'fixed-width-sm'
 			)
 		);
 
 		$this->bulk_actions = array(
-			'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
+			'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?'), 'icon' => 'icon-trash'),
 			'enableSelection' => array('text' => $this->l('Enable selection')),
 			'disableSelection' => array('text' => $this->l('Disable selection'))
 		);
@@ -95,6 +98,10 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		$this->toolbar_btn = null;
 		$this->list_no_link = true;
 
+		$this->bulk_actions = array(
+			'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?'), 'icon' => 'icon-trash')
+		);
+
 		$this->fields_list = array(
 			'country_name' => array(
 				'title' => $this->l('Country')
@@ -103,13 +110,15 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				'title' => $this->l('State')
 			),
 			'zipcode' => array(
-				'title' => $this->l('Zip Code')
+				'title' => $this->l('Zip Code'),
+				'class' => 'fixed-width-md'
 			),
 			'behavior' => array(
 				'title' => $this->l('Behavior')
 			),
 			'rate' => array(
-				'title' => $this->l('Tax')
+				'title' => $this->l('Tax'),
+				'class' => 'fixed-width-sm'
 			),
 			'description' => array(
 				'title' => $this->l('Description')

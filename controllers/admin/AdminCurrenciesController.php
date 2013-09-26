@@ -34,13 +34,13 @@ class AdminCurrenciesControllerCore extends AdminController
 		$this->lang = false;
 
 		$this->fields_list = array(
-			'id_currency' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+			'id_currency' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
 			'name' => array('title' => $this->l('Currency')),
-			'iso_code' => array('title' => $this->l('ISO code'), 'align' => 'center', 'width' => 80),
-			'iso_code_num' => array('title' => $this->l('ISO code number'), 'align' => 'center', 'width' => 120),
-			'sign' => array('title' => $this->l('Symbol'), 'width' => 20, 'align' => 'center', 'orderby' => false, 'search' => false),
+			'iso_code' => array('title' => $this->l('ISO code'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+			'iso_code_num' => array('title' => $this->l('ISO code number'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+			'sign' => array('title' => $this->l('Symbol'), 'width' => 20, 'align' => 'center', 'orderby' => false, 'search' => false, 'class' => 'fixed-width-xs'),
 			'conversion_rate' => array('title' => $this->l('Exchange rate'), 'type' => 'float', 'align' => 'center', 'width' => 130, 'search' => false, 'filter_key' => 'currency_shop!conversion_rate'),
-			'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false),
+			'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'class' => 'fixed-width-sm'),
 		);
 
 	 	$this->bulk_actions = array(
