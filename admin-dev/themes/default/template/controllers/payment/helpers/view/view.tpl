@@ -31,7 +31,7 @@
 		{if isset($modules_list)}
 			{$modules_list}
 		{/if}
-		<div class="space info">
+		<div class="alert alert-info">
 			{l s='This is where you decide what payment modules are available for different variations like your customers\' currency, group, and country.'}
 			<br />
 			{l s='A check mark indicates you want the payment module available.'}
