@@ -26,7 +26,7 @@
 <a class="btn btn-default" href="#" onclick="if ($('.requiredFieldsParameters:visible').length == 0) $('.requiredFieldsParameters').slideDown('slow'); else $('.requiredFieldsParameters').slideUp('slow'); return false;">
 	<i class="icon-plus-sign"></i> {l s='Set required fields for this section'}
 </a>
-
+<div class="clearfix">&nbsp;</div>
 <fieldset style="display:none" class="requiredFieldsParameters">
 	<h3><i class="icon-asterisk"></i> {l s='Required Fields'}</h3>
 	<form name="updateFields" action="{$current}&submitFields=1&token={$token}" method="post">
@@ -36,12 +36,10 @@
 		<table class="table">
 			<thead>
 				<tr>
-					<th>
+					<th class="fixed-width-xs">
 						<input type="checkbox" onclick="checkDelBoxes(this.form, 'fieldsBox[]', this.checked)" class="noborder" name="checkme">
 					</th>
-					<th>
-						{l s='Field Name'}
-					</th>
+					<th><span class="title_box">{l s='Field Name'}</span></th>
 				</tr>
 			</thead>
 			<tbody>
