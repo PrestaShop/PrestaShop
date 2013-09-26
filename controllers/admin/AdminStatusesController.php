@@ -73,7 +73,8 @@ class AdminStatusesControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_order_state' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center'
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
@@ -85,7 +86,8 @@ class AdminStatusesControllerCore extends AdminController
 				'align' => 'center',
 				'image' => 'os',
 				'orderby' => false,
-				'search' => false
+				'search' => false,
+				'class' => 'fixed-width-xs'
 			),
 			'send_email' => array(
 				'title' => $this->l('Send email to customer'),
@@ -95,7 +97,8 @@ class AdminStatusesControllerCore extends AdminController
 					'0' => 'disabled.gif'
 				),
 				'type' => 'bool',
-				'orderby' => false
+				'orderby' => false,
+				'class' => 'fixed-width-sm'
 			),
 			'delivery' => array(
 				'title' => $this->l('Delivery'),
@@ -105,7 +108,8 @@ class AdminStatusesControllerCore extends AdminController
 					'0' => 'disabled.gif'
 				),
 				'type' => 'bool',
-				'orderby' => false
+				'orderby' => false,
+				'class' => 'fixed-width-sm'
 			)
 			,
 			'invoice' => array(
@@ -116,7 +120,8 @@ class AdminStatusesControllerCore extends AdminController
 					'0' => 'disabled.gif'
 				),
 				'type' => 'bool',
-				'orderby' => false
+				'orderby' => false,
+				'class' => 'fixed-width-sm'
 			),
 			'template' => array(
 				'title' => $this->l('Email template')
@@ -140,7 +145,8 @@ class AdminStatusesControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_order_return_state' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center'
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
