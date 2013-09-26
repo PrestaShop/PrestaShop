@@ -169,7 +169,8 @@ class SpecificPriceCore extends ObjectModel
 
 	    $priority = SpecificPrice::getPriority($id_product);
 	    foreach (array_reverse($priority) as $k => $field)
-			$select .= ' IF (`'.bqSQL($field).'` = '.(int)$$field.', '.pow(2, $k + 1).', 0) + ';
+			if (!empty($field))
+				$select .= ' IF (`'.bqSQL($field).'` = '.(int)$$field.', '.pow(2, $k + 1).', 0) + ';
 
 	    return rtrim($select, ' +').') AS `score`';
 	}
