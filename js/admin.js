@@ -759,12 +759,12 @@ function toggleMultishopDefaultValue(obj, key)
 {
 	if (!$(obj).prop('checked') || $('#'+key).hasClass('isInvisible'))
 	{
-		$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select').attr('disabled', true);
+		$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select, #conf_id_'+key+' button').attr('disabled', true);
 		$('#conf_id_'+key+' label.conf_title').addClass('isDisabled');
 	}
 	else
 	{
-		$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select').attr('disabled', false);
+		$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select, #conf_id_'+key+' button').attr('disabled', false);
 		$('#conf_id_'+key+' label.conf_title').removeClass('isDisabled');
 	}
 	$('#conf_id_'+key+' input[name^=\'multishopOverrideOption\']').attr('disabled', false);
