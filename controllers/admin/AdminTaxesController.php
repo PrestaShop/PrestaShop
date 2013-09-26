@@ -42,10 +42,10 @@ class AdminTaxesControllerCore extends AdminController
 			);
 
 		$this->fields_list = array(
-			'id_tax' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+			'id_tax' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
 			'name' => array('title' => $this->l('Name'), 'width' => 'auto'),
-			'rate' => array('title' => $this->l('Rate'), 'align' => 'center', 'suffix' => '%', 'width' => 50),
-			'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
+			'rate' => array('title' => $this->l('Rate'), 'align' => 'center', 'suffix' => '%' , 'class' => 'fixed-width-md'),
+			'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'class' => 'fixed-width-sm')
 			);
 
 		$ecotax_desc = '';

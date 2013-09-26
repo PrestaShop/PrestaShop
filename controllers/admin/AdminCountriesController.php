@@ -74,7 +74,8 @@ class AdminCountriesControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_country' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center'
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'name' => array(
 				'title' => $this->l('Country'),
@@ -82,12 +83,14 @@ class AdminCountriesControllerCore extends AdminController
 			),
 			'iso_code' => array(
 				'title' => $this->l('ISO code'),
-				'align' => 'center'
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'call_prefix' => array(
 				'title' => $this->l('Call prefix'),
 				'align' => 'center',
-				'callback' => 'displayCallPrefix'
+				'callback' => 'displayCallPrefix',
+				'class' => 'fixed-width-sm'
 			),
 			'zone' => array(
 				'title' => $this->l('Zone'),
@@ -103,7 +106,8 @@ class AdminCountriesControllerCore extends AdminController
 				'active' => 'status',
 				'type' => 'bool',
 				'orderby' => false,
-				'filter_key' => 'a!active'
+				'filter_key' => 'a!active',
+				'class' => 'fixed-width-sm'
 			)
 		);
 

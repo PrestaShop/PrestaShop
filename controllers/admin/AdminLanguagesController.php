@@ -51,25 +51,29 @@ class AdminLanguagesControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_lang' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center'
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'flag' => array(
-				'title' => $this->l('Logo'),
+				'title' => $this->l('Flag'),
 				'align' => 'center',
 				'image' => 'l',
 				'orderby' => false,
-				'search' => false
+				'search' => false,
+				'class' => 'fixed-width-xs'
 			),
 			'name' => array(
 				'title' => $this->l('Name')
 			),
 			'iso_code' => array(
 				'title' => $this->l('ISO code'),
-				'align' => 'center'
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'language_code' => array(
 				'title' => $this->l('Language code'),
-				'align' => 'center'
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'date_format_lite' => array(
 				'title' => $this->l('Date format')
@@ -81,7 +85,8 @@ class AdminLanguagesControllerCore extends AdminController
 				'title' => $this->l('Enabled'),
 				'align' => 'center',
 				'active' => 'status',
-				'type' => 'bool'
+				'type' => 'bool',
+				'class' => 'fixed-width-sm'
 			)
 		);
 
