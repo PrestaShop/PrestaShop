@@ -33,9 +33,12 @@
 
 {block name="input"}
 	{if $input.type == "select_template"}
-		<div class="translatable">
-			{foreach $languages as $language}
-				<div class="lang_{$language.id_lang}" id="{$input.name}_{$language.id_lang}" style="display:{if $language.id_lang == $defaultFormLanguage}block{else}none{/if}; float: left;">
+	<div class="col-lg-9">
+		<div class="row">
+		{foreach $languages as $language}
+			{assign var='value_text' value=$fields_value[$input.name][$language.id_lang]}
+			<div class="translatable-field lang-{$language.id_lang}" {if $language.id_lang != $defaultFormLanguage}style="display:none"{/if}>
+				<div class="col-lg-8">
 					<select name="{$input.name}_{$language.id_lang}"
 							id="{$input.name}_select_{$language.id_lang}"
 							{if isset($input.multiple)}multiple="multiple" {/if}
@@ -52,13 +55,40 @@
 								{/if}
 							>{$option[$input.options.name]|escape:'htmlall':'UTF-8'}</option>
 						{/foreach}
-					</select>
-					{if isset($input.hint)}<span class="alert alert-info" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
-					<img onclick="viewTemplates('#template_select_{$language.id_lang}', '../mails/{$language.iso_code}/', '.html');"
-						src="../img/t/AdminFeatures.gif" class="pointer" alt="{l s='Preview'}" title="{l s='Preview'}" />
+					</select>					
 				</div>
-			{/foreach}
+				<div class="col-lg-4">
+					<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
+						<img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt="">
+						{$language.iso_code}
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu">
+						{foreach from=$languages item=language_flag}
+						<li><a href="javascript:hideOtherLanguage({$language_flag.id_lang});" tabindex="-1"><img src="{$base_url}/img/l/{$language_flag.id_lang|intval}.jpg" alt=""> {$language_flag.name}</a></li>
+						{/foreach}
+					</ul>
+					<button type="button" class="btn btn-default" onclick="viewTemplates('#template_select_{$language.id_lang}', '../mails/{$language.iso_code}/', '.html');"><i class="icon-eye-open"></i> {l s='Preview'}</button>
+				</div>
+			</div>
+		{/foreach}
+			{if isset($input.hint)}
+			<div class="clearfix">&nbsp;</div>
+			<div class="col-lg-9">
+				<div class="alert alert-info">			
+				{if is_array($input.hint)}
+					{foreach from=$input.hint item=hint}
+						{$hint}<br/>
+					{/foreach}
+				{else}
+					{$input.hint}
+				{/if}
+				</div>
+			</div>
+		{/if}					
 		</div>
+	</div>
+
 	{else}
 		{$smarty.block.parent}
 	{/if}
