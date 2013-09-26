@@ -35,10 +35,12 @@ class AdminSlipControllerCore extends AdminController
 			'id_order_slip' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
+				'class' => 'fixed-width-xs'
  			),
 			'id_order' => array(
 				'title' => $this->l('ID Order'),
-				'align' => 'left'
+				'align' => 'left',
+				'class' => 'fixed-width-md'
  			),
 			'date_add' => array(
 				'title' => $this->l('Date issued'),
