@@ -148,6 +148,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Specific price rules'),
+				'icon' => 'icon-dollar'
 			),
 			'input' => array(
 				array(

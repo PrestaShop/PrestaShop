@@ -272,8 +272,9 @@
 				<input type="checkbox" id="shop_restriction" name="shop_restriction" value="1" {if $shops.unselected|@count}checked="checked"{/if} />
 				{l s='Shop selection'}
 			</label>
-			<div id="shop_restriction_div" >
-				<table class="col-lg-12">
+			<div id="shop_restriction_div">
+				<br/>
+				<table class="col-lg-9">
 					<tr>
 						<td>
 							<p>{l s='Unselected shops'}</p>
@@ -282,6 +283,7 @@
 									<option value="{$shop.id_shop|intval}">&nbsp;{$shop.name|escape}</option>
 								{/foreach}
 							</select>
+							<br/>
 							<a id="shop_select_add" class="btn btn-default" >{l s='Add'} &gt;&gt; </a>
 						</td>
 						<td>
@@ -291,7 +293,8 @@
 									<option value="{$shop.id_shop|intval}">&nbsp;{$shop.name|escape}</option>
 								{/foreach}
 							</select>
-							<a id="shop_select_remove" class="btn" > &lt;&lt; {l s='Remove'} </a>
+							<br/>
+							<a id="shop_select_remove" class="btn btn-default" > &lt;&lt; {l s='Remove'} </a>
 						</td>
 					</tr>
 				</table>
