@@ -200,5 +200,6 @@ return array(
 		'If you need help, do not hesitate to check <a href="%1$s" target="_blank">আমাদের নত্থি করন</a> or to contact our support team: %2$s' => 'যদি আপনার সাহায্যের প্রয়োজন হলে, <a href="%1$s" target="_blank">আমাদের ম্যানুয়াল</a>চেক করতে বিব্রত বোধ করবেন না অথবা আমাদের সহায়ক দলের সাথে যোগাযোগ করুন: %2$s ',
 		'Continue the installation in:' => 'ইনস্টলেশন চালিয়ে যান:',
 		'The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d translations, all for free!' => 'উপরোক্ত ভাষা নির্বাচন শুধুমাত্র ইনস্টলেশনের সহকারীর জন্য প্রযোজ্য।আপনার দোকান ইনস্টল করা হলে,আপনি উপর থেকে আপনার দোকানের ভাষা নির্বাচন করতে পারবেন একদম বিনামূল্যে!',
+		'If you need help, do not hesitate to check <a href="%1$s" target="_blank">our documentation</a> or to contact our support team: %2$s' => ' যদি আপনার কোনো সাহায্যের দরকার হয়,তবে আমাদের নত্থিপত্র<a href="%1$s" target="_blank">চেক করতে দ্বিধা করবেন না</a> অথবা আমাদের সাপোর্ট টিম এর সাথে যোগাযোগ করুন: %2$s ',
 	),
 );
