@@ -56,7 +56,8 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_specific_price_rule' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center'
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
@@ -85,6 +86,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 			'from_quantity' => array(
 				'title' => $this->l('From quantity'),
 				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'reduction_type' => array(
 				'title' => $this->l('Reduction type'),
@@ -96,7 +98,8 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 			'reduction' => array(
 				'title' => $this->l('Reduction'),
 				'align' => 'center',
-				'type' => 'decimal'
+				'type' => 'decimal',
+				'class' => 'fixed-width-xs'
 			),
 			'from' => array(
 				'title' => $this->l('Beginning'),
