@@ -27,7 +27,7 @@
 /**
  * @since 1.5
  */
-class HTMLTemplatePackageSlipCore extends HTMLTemplate
+class HTMLTemplatePackageSlipCore extends HTMLTemplate 
 {
 	public $order;
 

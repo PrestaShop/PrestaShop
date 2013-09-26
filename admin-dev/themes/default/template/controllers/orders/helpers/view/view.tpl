@@ -740,7 +740,8 @@
 		</fieldset>
 	</form>
 	<div class="clear" style="height:20px;">&nbsp;</div>
-	
+
+	{if Configuration::get('PS_ADS')}
 	<form style="width: 98%" class="container-command-top-spacing" action="{$current_index}&vieworder&token={$smarty.get.token}&id_order={$order->id}" method="post" onsubmit="return orderDeleteProduct('{l s='This product cannot be returned.'}', '{l s='Quantity to cancel is greater than quantity available.'}');">
 		<input type="hidden" name="id_order" value="{$order->id}" />
 		<fieldset style="width: 100%; ">
@@ -793,7 +794,8 @@
 		</fieldset>
 	</form>
 	<div class="clear" style="height:20px;">&nbsp;</div>
-
+	{/if}
+	
 	<div style="float: left">
 		<form action="{$smarty.server.REQUEST_URI}&token={$smarty.get.token}" method="post" onsubmit="if (getE('visibility').checked == true) return confirm('{l s='Do you want to send this message to the customer?'}');">
 		<fieldset style="width: 400px;">

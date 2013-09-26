@@ -1514,11 +1514,12 @@ class OrderCore extends ObjectModel
 			$delivery->date_add = $delivery->delivery_date;
 		}
 		$order_slips = $this->getOrderSlipsCollection()->getResults();
-		
-		$package_slip = $this->getPackageSlipCollection()->getResults();
-		foreach ($package_slip as $package)
-		{
-			$package->is_package = true;
+		if(Configuration::get('PS_ADS')) {
+			$package_slip = $this->getPackageSlipCollection()->getResults();
+			foreach ($package_slip as $package)
+			{
+				$package->is_package = true;
+			}
 		}
 
 		// @TODO review
@@ -1528,8 +1529,12 @@ class OrderCore extends ObjectModel
 				return 0;
 			return ($a->date_add < $b->date_add) ? -1 : 1;
 		}
-
-		$documents = array_merge($invoices, $order_slips, $delivery_slips,$package_slip);
+		
+		$documents = array_merge($invoices, $order_slips, $delivery_slips);
+		if(Configuration::get('PS_ADS')) {
+			$documents = array_merge($documents, $package_slip);
+		}
+// 		$documents = array_merge($invoices, $order_slips, $delivery_slips,$package_slip);
 		usort($documents, 'sortDocuments');
 
 		return $documents;

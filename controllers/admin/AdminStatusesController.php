@@ -349,7 +349,8 @@ class AdminStatusesControllerCore extends AdminController
 							),
 						'id' => 'id',
 						'name' => 'name'
-					)
+					),
+					'desc' => "Advanced Delivery System must be enabled.",
 				),
 				array(
 					'type' => 'select_template',

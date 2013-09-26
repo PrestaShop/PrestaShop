@@ -54,14 +54,17 @@ class PDFCore
 
 	public function render($display = true)
 	{
+// 		echo("Render");
 		$render = false;
 		$this->pdf_renderer->setFontForLang(Context::getContext()->language->iso_code);
 		foreach ($this->objects as $object)
 		{
 			$template = $this->getTemplateObject($object);
+			echo("Works?<br>");
 			if (!$template)
 				continue;
 
+			echo("Broken!?<br>");
 			if (empty($this->filename))
 			{
 				$this->filename = $template->getFilename();
@@ -93,12 +96,16 @@ class PDFCore
 	{
 		$class = false;
 		$classname = 'HTMLTemplate'.$this->template;
+		echo($classname . "<br>");
 
 		if (class_exists($classname))
 		{
+			echo($classname . " is at class<br>");
 			$class = new $classname($object, $this->smarty);
 			if (!($class instanceof HTMLTemplate))
 				throw new PrestaShopException('Invalid class. It should be an instance of HTMLTemplate');
+		} else {
+			echo("There is no class today<br>");
 		}
 
 		return $class;
