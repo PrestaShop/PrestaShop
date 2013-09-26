@@ -118,7 +118,7 @@
 		</table>
 		<p class="text-right">
 			<button type="submit" class="btn btn-primary" name="submitModule{$list['name_id']}"> 
-				<i class="icon-ok"></i>
+				<i class="icon-save"></i>
 				{l s='Save restrictions'}
 			</button>
 		</p>
