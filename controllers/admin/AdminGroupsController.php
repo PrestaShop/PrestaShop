@@ -191,15 +191,15 @@ class AdminGroupsControllerCore extends AdminController
 			$genders[$gender->id] = $gender->name;
 		}
 		$customer_fields_display = (array(
-				'id_customer' => array('title' => $this->l('ID'), 'align' => 'center'),
-				'id_gender' => array('title' => $this->l('Titles'), 'align' => 'center','icon' => $genders_icon, 'list' => $genders),
-				'firstname' => array('title' => $this->l('Name'), 'align' => 'center'),
-				'lastname' => array('title' => $this->l('Name'), 'align' => 'center'),
+				'id_customer' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+				'id_gender' => array('title' => $this->l('Titles'), 'align' => 'center','icon' => $genders_icon, 'list' => $genders, 'class' => 'fixed-width-sm'),
+				'firstname' => array('title' => $this->l('First name'), 'align' => 'center'),
+				'lastname' => array('title' => $this->l('Last name'), 'align' => 'center'),
 				'email' => array('title' => $this->l('Email address'), 'align' => 'center'),
 				'birthday' => array('title' => $this->l('Birth date'), 'align' => 'right', 'type' => 'date'),
 				'date_add' => array('title' => $this->l('Register date'), 'align' => 'right', 'type' => 'date'),
-				'orders' => array('title' => $this->l('Orders'), 'align' => 'center'),
-				'active' => array('title' => $this->l('Enabled'),'align' => 'center', 'active' => 'status','type' => 'bool')
+				'orders' => array('title' => $this->l('Orders'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+				'active' => array('title' => $this->l('Enabled'),'align' => 'center', 'active' => 'status','type' => 'bool', 'class' => 'fixed-width-xs')
 			));
 
 		$customer_list = $group->getCustomers(false, 0, 100, true);
@@ -212,7 +212,7 @@ class AdminGroupsControllerCore extends AdminController
 		$helper->identifier = 'id_customer';
 		$helper->actions = array('edit', 'view');
 		$helper->show_toolbar = false;
-
+		$helper->title = $this->l('Members of this customer group (Limited to the 100th first customers. Please use filters to narrow your search.)');
 		return $helper->generateList($customer_list, $customer_fields_display);
 	}
 
