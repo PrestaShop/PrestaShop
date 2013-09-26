@@ -414,16 +414,18 @@
 								{elseif $input.type == 'checkbox'}
 									{foreach $input.values.query as $value}
 										{assign var=id_checkbox value=$input.name|cat:'_'|cat:$value[$input.values.id]}
-										<div class="checkbox">
-											<label for="{$id_checkbox}">
-												<input type="checkbox"
-													name="{$id_checkbox}"
-													id="{$id_checkbox}"
-													class="{if isset($input.class)}{$input.class}{/if}"
-													{if isset($value.val)}value="{$value.val|escape:'htmlall':'UTF-8'}"{/if}
-													{if isset($fields_value[$id_checkbox]) && $fields_value[$id_checkbox]}checked="checked"{/if} />
-												{$value[$input.values.name]}
-											</label>
+										<div class="row">
+											<div class="checkbox col-lg-9 col-lg-push-4">
+												<label for="{$id_checkbox}">
+													<input type="checkbox"
+														name="{$id_checkbox}"
+														id="{$id_checkbox}"
+														class="{if isset($input.class)}{$input.class}{/if}"
+														{if isset($value.val)}value="{$value.val|escape:'htmlall':'UTF-8'}"{/if}
+														{if isset($fields_value[$id_checkbox]) && $fields_value[$id_checkbox]}checked="checked"{/if} />
+													{$value[$input.values.name]}
+												</label>
+											</div>
 										</div>
 									{/foreach}
 								{elseif $input.type == 'file'}
