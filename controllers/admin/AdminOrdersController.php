@@ -110,7 +110,8 @@ class AdminOrdersControllerCore extends AdminController
 			'type' => 'select',
 			'list' => $statuses_array,
 			'filter_key' => 'os!id_order_state',
-			'filter_type' => 'int'
+			'filter_type' => 'int',
+			'order_key' => 'osname'
 		),
 		'date_add' => array(
 			'title' => $this->l('Date'),
@@ -506,7 +507,7 @@ class AdminOrdersControllerCore extends AdminController
 						if (Tools::isSubmit('generateDiscountRefund') && !count($this->errors))
 						{
 							$cart_rule = new CartRule();
-							$cart_rule->description = sprintf($this->l('Credit card slip for order #%d'), $order->id);
+							$cart_rule->description = sprintf($this->l('Credit slip for order #%d'), $order->id);
 							$languages = Language::getLanguages(false);
 							foreach ($languages as $language)
 								// Define a temporary name
@@ -804,7 +805,7 @@ class AdminOrdersControllerCore extends AdminController
 
 				if (!Validate::isLoadedObject($order))
 					$this->errors[] = Tools::displayError('The order cannot be found');
-				elseif (!Validate::isNegativePrice($amount))
+				elseif (!Validate::isNegativePrice($amount) || !(float)$amount)
 					$this->errors[] = Tools::displayError('The amount is invalid.');
 				elseif (!Validate::isString(Tools::getValue('payment_method')))
 					$this->errors[] = Tools::displayError('The selected payment method is invalid.');
@@ -1341,11 +1342,14 @@ class AdminOrdersControllerCore extends AdminController
 				$product['warehouse_name'] = '--';
 		}
 
+		$gender = new Gender((int)$customer->id_gender, $this->context->language->id);
+
 		// Smarty assign
 		$this->tpl_view_vars = array(
 			'order' => $order,
 			'cart' => new Cart($order->id_cart),
 			'customer' => $customer,
+			'gender' => $gender,
 			'customer_addresses' => $customer->getAddresses($this->context->language->id),
 			'addresses' => array(
 				'delivery' => $addressDelivery,

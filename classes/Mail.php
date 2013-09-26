@@ -50,10 +50,11 @@ class MailCore
 	 * @param bool $modeSMTP
 	 * @param string $template_path
 	 * @param bool $die
+         * @param string $bcc Bcc recipient
 	 */
 	public static function Send($id_lang, $template, $subject, $template_vars, $to,
 		$to_name = null, $from = null, $from_name = null, $file_attachment = null, $mode_smtp = null,
-		$template_path = _PS_MAIL_DIR_, $die = false, $id_shop = null)
+		$template_path = _PS_MAIL_DIR_, $die = false, $id_shop = null, $bcc = null)
 	{
 		$configuration = Configuration::getMultiple(array(
 			'PS_SHOP_EMAIL',
@@ -127,9 +128,9 @@ class MailCore
 		}
 
 		/* Construct multiple recipients list if needed */
+		$to_list = new Swift_RecipientList();
 		if (is_array($to) && isset($to))
 		{
-			$to_list = new Swift_RecipientList();
 			foreach ($to as $key => $addr)
 			{
 				$to_name = null;
@@ -153,17 +154,20 @@ class MailCore
 					$to_list->addTo($addr, self::mimeEncode($to_name));
 			}
 			$to_plugin = $to[0];
-			$to = $to_list;
 		} else {
 			/* Simple recipient, one address */
 			$to_plugin = $to;
 			if ($to_name == null)
 				$to_name = $to;
 			if (function_exists('mb_encode_mimeheader'))
-				$to = new Swift_Address($to, mb_encode_mimeheader($to_name, 'utf-8'));
+				$to_list->addTo($to, mb_encode_mimeheader($to_name, 'utf-8'));
 			else
-				$to = new Swift_Address($to, self::mimeEncode($to_name));
+				$to_list->addTo($to, self::mimeEncode($to_name));
 		}
+		if(isset($bcc)) {
+			$to_list->addBcc($bcc);
+		}
+		$to = $to_list;
 		try {
 			/* Connect with the appropriate configuration */
 			if ($configuration['PS_MAIL_METHOD'] == 2)

@@ -140,36 +140,33 @@ class SearchCore
 			$string = implode(' ', $processed_words);
 		}
 
-		if ($indexation)
+		// If the language is constituted with symbol and there is no "words", then split every chars
+		if (in_array($iso_code, array('zh', 'tw', 'ja')) && function_exists('mb_strlen'))
 		{
-			// If the language is constituted with symbol and there is no "words", then split every chars
-			if (in_array($iso_code, array('zh', 'tw', 'ja')) && function_exists('mb_strlen'))
-			{
-				// Cut symbols from letters
-				$symbols = '';
-				$letters = '';
-				foreach (explode(' ', $string) as $mb_word)
-					if (strlen(Tools::replaceAccentedChars($mb_word)) == mb_strlen(Tools::replaceAccentedChars($mb_word)))
-						$letters .= $mb_word.' ';
-					else
-						$symbols .= $mb_word.' ';
-			
-				if (preg_match_all('/./u', $symbols, $matches))
-					$symbols = implode(' ', $matches[0]);
+			// Cut symbols from letters
+			$symbols = '';
+			$letters = '';
+			foreach (explode(' ', $string) as $mb_word)
+				if (strlen(Tools::replaceAccentedChars($mb_word)) == mb_strlen(Tools::replaceAccentedChars($mb_word)))
+					$letters .= $mb_word.' ';
+				else
+					$symbols .= $mb_word.' ';
+		
+			if (preg_match_all('/./u', $symbols, $matches))
+				$symbols = implode(' ', $matches[0]);
 
-				$string = $letters.$symbols;
-			}
-			else
+			$string = $letters.$symbols;
+		}
+		elseif ($indexation)
+		{
+			$minWordLen = (int)Configuration::get('PS_SEARCH_MINWORDLEN');
+			if ($minWordLen > 1)
 			{
-				$minWordLen = (int)Configuration::get('PS_SEARCH_MINWORDLEN');
-				if ($minWordLen > 1)
-				{
-					$minWordLen -= 1;
-					$string = preg_replace('/(?<=\s)[^\s]{1,'.$minWordLen.'}(?=\s)/Su', ' ', $string);
-					$string = preg_replace('/^[^\s]{1,'.$minWordLen.'}(?=\s)/Su', '', $string);
-					$string = preg_replace('/(?<=\s)[^\s]{1,'.$minWordLen.'}$/Su', '', $string);
-					$string = preg_replace('/^[^\s]{1,'.$minWordLen.'}$/Su', '', $string);
-				}
+				$minWordLen -= 1;
+				$string = preg_replace('/(?<=\s)[^\s]{1,'.$minWordLen.'}(?=\s)/Su', ' ', $string);
+				$string = preg_replace('/^[^\s]{1,'.$minWordLen.'}(?=\s)/Su', '', $string);
+				$string = preg_replace('/(?<=\s)[^\s]{1,'.$minWordLen.'}$/Su', '', $string);
+				$string = preg_replace('/^[^\s]{1,'.$minWordLen.'}$/Su', '', $string);
 			}
 		}
 
@@ -374,13 +371,13 @@ class SearchCore
 
 		$attributes = '';
 		$attributesArray = $db->executeS('
-		SELECT al.name, pa.ean13, pa.reference, pa.upc FROM '._DB_PREFIX_.'product_attribute pa
+		SELECT al.name FROM '._DB_PREFIX_.'product_attribute pa
 		INNER JOIN '._DB_PREFIX_.'product_attribute_combination pac ON pa.id_product_attribute = pac.id_product_attribute
 		INNER JOIN '._DB_PREFIX_.'attribute_lang al ON (pac.id_attribute = al.id_attribute AND al.id_lang = '.(int)$id_lang.')
 		'.Shop::addSqlAssociation('product_attribute', 'pa').'
 		WHERE pa.id_product = '.(int)$id_product);
 		foreach ($attributesArray as $attribute)
-			$attributes .= $attribute['name'].' '.$attribute['ean13'].' '.$attribute['reference'].' '.$attribute['upc'].' ';
+			$attributes .= $attribute['name'].' ';
 		return $attributes;
 	}
 

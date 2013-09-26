@@ -118,6 +118,9 @@ abstract class ModuleCore
 
 	/** @var Smarty_Data */
 	protected $smarty;
+
+	/** @var currentSmartySubTemplate */	
+	protected $current_subtemplate = null;
 	
 	
 	const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
@@ -299,7 +302,7 @@ abstract class ModuleCore
 					$this->_errors[] = $upgrade_detail['number_upgrade_left'].' '.$this->l('upgrade left');
 				}
 
-				if ($upgrade_detail['duplicate'])
+				if (isset($upgrade_detail['duplicate']) && $upgrade_detail['duplicate'])
 					$this->_errors[] = sprintf(Tools::displayError('Module %s cannot be upgraded this time: please refresh this page to update it.'), $this->name);
 				else
 					$this->_errors[] = $this->l('To prevent any problem, this module has been turned off');
@@ -935,7 +938,7 @@ abstract class ModuleCore
 
 	public static function configXmlStringFormat($string)
 	{
-		return str_replace('\'', '\\\'', Tools::htmlentitiesDecodeUTF8($string));
+		return Tools::htmlentitiesDecodeUTF8($string);
 	}
 
 
@@ -1627,15 +1630,18 @@ abstract class ModuleCore
 	
 	protected function getCacheId($name = null)
 	{
-		$cache_array = array(
-			$name !== null ? $name : $this->name,
-			(int)Tools::usingSecureMode(),
-			(int)$this->context->shop->id,
-			(int)Group::getCurrent()->id,
-			(int)$this->context->language->id,
-			(int)$this->context->currency->id,
-			(int)$this->context->country->id
-		);
+		$cache_array = array();
+		$cache_array[] = $name !== null ? $name : $this->name;
+		if (Configuration::get('PS_SSL_ENABLED'))
+			$cache_array[] = (int)Tools::usingSecureMode();
+		if (Shop::isFeatureActive())
+			$cache_array[] = (int)$this->context->shop->id;
+		$cache_array[] = (int)Group::getCurrent()->id;
+		if (Language::isMultiLanguageActivated())
+			$cache_array[] = (int)$this->context->language->id;
+		if (Currency::isMultiCurrencyActivated())
+			$cache_array[] = (int)$this->context->currency->id;
+		$cache_array[] = (int)$this->context->country->id;
 		return implode('|', $cache_array);
 	}
 
@@ -1653,19 +1659,34 @@ abstract class ModuleCore
 			if ($cacheId !== null)
 				Tools::enableCache();
 
-			$smarty_subtemplate = $this->context->smarty->createTemplate(
-				$this->getTemplatePath($template),
-				$cacheId,
-				$compileId,
-				$this->smarty
-			);
-			$result = $smarty_subtemplate->fetch();
+			$result = $this->getCurrentSubTemplate($template, $cacheId, $compileId)->fetch();
 
 			if ($cacheId !== null)
 				Tools::restoreCacheSettings();
 
+			$this->resetCurrentSubTemplate($template, $cacheId, $compileId);
+
 			return $result;
 		}
+	}
+	
+	protected function getCurrentSubTemplate($template, $cache_id = null, $compile_id = null)
+	{
+		if (!isset($this->current_subtemplate[$template.'_'.$cache_id.'_'.$compile_id]))
+		{
+			$this->current_subtemplate[$template.'_'.$cache_id.'_'.$compile_id] = $this->context->smarty->createTemplate(
+				$this->getTemplatePath($template),
+				$cache_id,
+				$compile_id,
+				$this->smarty
+			);
+		}
+		return $this->current_subtemplate[$template.'_'.$cache_id.'_'.$compile_id];
+	}
+	
+	protected function resetCurrentSubTemplate($template, $cache_id, $compile_id)
+	{
+		$this->current_subtemplate[$template.'_'.$cache_id.'_'.$compile_id] = null;
 	}
 
 	/**
@@ -1683,10 +1704,12 @@ abstract class ModuleCore
 		
 		if ($overloaded)
 			return $overloaded;
-		else if (file_exists(_PS_MODULE_DIR_.$this->name.'/views/templates/hook/'.$template))
+		elseif (file_exists(_PS_MODULE_DIR_.$this->name.'/views/templates/hook/'.$template))
 			return _PS_MODULE_DIR_.$this->name.'/views/templates/hook/'.$template;
-		else
+		elseif (file_exists(_PS_MODULE_DIR_.$this->name.'/'.$template))
 			return _PS_MODULE_DIR_.$this->name.'/'.$template;
+		else
+			return null;
 	}
 
 	protected function _getApplicableTemplateDir($template)
@@ -1696,10 +1719,8 @@ abstract class ModuleCore
 
 	public function isCached($template, $cacheId = null, $compileId = null)
 	{
-		$context = Context::getContext();
-
 		Tools::enableCache();
-		$is_cached =  $context->smarty->isCached($this->getTemplatePath($template), $cacheId, $compileId);
+		$is_cached = $this->getCurrentSubTemplate($this->getTemplatePath($template), $cacheId, $compileId)->isCached($this->getTemplatePath($template), $cacheId, $compileId);
 		Tools::restoreCacheSettings();
 
 		return $is_cached;
@@ -1708,6 +1729,8 @@ abstract class ModuleCore
 	protected function _clearCache($template, $cache_id = null, $compile_id = null)
 	{
 		Tools::enableCache();
+		if ($cache_id === null)
+			$cache_id = Module::getCacheId($this->name);
 		Tools::clearCache(Context::getContext()->smarty, $this->getTemplatePath($template), $cache_id, $compile_id);
 		Tools::restoreCacheSettings();
 	}

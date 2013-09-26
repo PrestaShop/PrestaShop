@@ -81,6 +81,7 @@ class CurrencyCore extends ObjectModel
 
 	/** @var array Currency cache */
 	static protected $currencies = array();
+	protected static $countActiveCurrencies = array();
 
 	protected $webserviceParameters = array(
 		'objectsNodeName' => 'currencies',
@@ -414,5 +415,23 @@ class CurrencyCore extends ObjectModel
 			self::$currencies[(int)($id)] = new Currency($id);
 		return self::$currencies[(int)($id)];
 	}
-}
+	
+	public static function countActiveCurrencies($id_shop = null)
+	{
+		if ($id_shop === null)
+			$id_shop = (int)Context::getContext()->shop->id;
 
+		if (!isset(self::$countActiveCurrencies[$id_shop]))
+			self::$countActiveCurrencies[$id_shop] = Db::getInstance()->getValue('
+				SELECT COUNT(DISTINCT c.id_currency) FROM `'._DB_PREFIX_.'currency` c
+				LEFT JOIN '._DB_PREFIX_.'currency_shop cs ON (cs.id_currency = c.id_currency AND cs.id_shop = '.(int)$id_shop.')
+				WHERE c.`active` = 1
+			');
+		return self::$countActiveCurrencies[$id_shop];
+	}
+
+	public static function isMultiCurrencyActivated($id_shop = null)
+	{
+		return (Currency::countActiveCurrencies($id_shop) > 1);
+	}
+}

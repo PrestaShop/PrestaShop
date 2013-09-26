@@ -52,6 +52,9 @@ class CartControllerCore extends FrontController
 	{
 		parent::init();
 
+		// Send noindex to avoid ghost carts by bots
+		header("X-Robots-Tag: noindex, nofollow", true);
+
 		// Get page main parameters
 		$this->id_product = (int)Tools::getValue('id_product', null);
 		$this->id_product_attribute = (int)Tools::getValue('id_product_attribute', Tools::getValue('ipa'));
