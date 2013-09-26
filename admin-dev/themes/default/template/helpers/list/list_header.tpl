@@ -255,7 +255,6 @@
 {/if}
 	<div class="table-responsive clearfix">
 		<table
-			class="table"
 			name="list_table"
 			{if $table_id} id={$table_id}{/if}
 			class="table {if $table_dnd}tableDnD{/if} {$table}"
