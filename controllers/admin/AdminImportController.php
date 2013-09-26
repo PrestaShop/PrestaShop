@@ -2555,7 +2555,7 @@ class AdminImportControllerCore extends AdminController
 	{
 		if ($a == $b)
 			return 0;
-		return ($a < $b) ? 1 : -1;
+		return ($b < $a) ? 1 : -1;
 	}
 
 	protected function openCsvFile()
