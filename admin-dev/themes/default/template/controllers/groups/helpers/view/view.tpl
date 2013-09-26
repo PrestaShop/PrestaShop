@@ -26,40 +26,55 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
-
+<div class="col-lg-6">
 	<fieldset>
-		<ul>
-			<li><span >{l s='Name:'}</span> {$group->name[$language->id]}</li>
-			<li><span >{l s='Discount: %d%%' sprintf=$group->reduction}</span></li>
-			<li><span >{l s='Current category discount:'}</span>
-				
-			{if !$categorieReductions}
-				{l s='None'}
-			{else}
-				<table class="table">
-					{foreach $categorieReductions key=key item=category }
-						<tr class="alt_row">
-							<td>{$category.path}</td>
-							<td>{l s='Discount: %d%%' sprintf=$category.reduction}</td>
-						</tr>
-					{/foreach}
-				</table>
-			{/if}
-			</li>
-			
-		<li><span>{l s='Price display method:'}</span>
-			{if $group->price_display_method}
+		<h3><i class="icon-group"></i> {l s='Group information'}</h3>
+		<h2><i class="icon-group"></i> {$group->name[$language->id]}</h2>
+		<div class="form-horizontal">
+			<div class="form-group">
+				<label class="col-lg-3 control-label">{l s='Discount:'}</label>
+				<div class="col-lg-3"><p class="form-control-static">{l s='%d%%' sprintf=$group->reduction}</p></div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-3 control-label">{l s='Price display method:'}</label>
+				<div class="col-lg-3"><p class="form-control-static">{if $group->price_display_method}
 				{l s='Tax excluded'}
 			{else}
 				{l s='Tax included'}
-			{/if}
-		</li>
-		<li><span>{l s='Show prices:'}</span> {if $group->show_prices}{l s='Yes'}{else}{l s='No'}{/if}
-		</li>
-		</ul>
+			{/if}</p></div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-3 control-label">{l s='Show prices:'}</label>
+				<div class="col-lg-3"><p class="form-control-static">{if $group->show_prices}{l s='Yes'}{else}{l s='No'}{/if}</p></div>
+			</div>
+		</div>
 	</fieldset>
-	<h2>{l s='Members of this customer group'}</h2>
-	<p>{l s='Limited to the 100th first customers.'} {l s='Please use filters to narrow your search.'}</p>
-	{$customerList}
+</div>
+<div class="col-lg-6">
+	<fieldset>
+		<h3><i class="icon-dollar"></i> {l s='Current category discount'}</h3>	
+		{if !$categorieReductions}
+			<div class="alert alert-warning">{l s='None'}</div>
+		{else}
+			<table class="table">
+				<thead>
+					<tr>
+						<th><span class="title_box">{l s='Category'}</span></th>
+						<th><span class="title_box">{l s='Discount'}</span></th>
+					</tr>
+				</thead>
+				<tbody>
+				{foreach $categorieReductions key=key item=category }
+					<tr class="alt_row">
+						<td>{$category.path}</td>
+						<td>{l s='%d%%' sprintf=$category.reduction}</td>
+					</tr>
+				{/foreach}
+				<tbody>
+			</table>
+		{/if}
+	</fieldset>
+</div>
 
+{$customerList}
 {/block}
