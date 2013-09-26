@@ -110,10 +110,10 @@ class AdminCmsControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Meta title:'),
 					'name' => 'meta_title',
-					'id' => 'name', // for copy2friendlyUrl compatibility
+					'id' => 'name', // for copyMeta2friendlyURL compatibility
 					'lang' => true,
 					'required' => true,
-					'class' => 'copy2friendlyUrl',
+					'class' => 'copyMeta2friendlyURL',
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
 					'size' => 50
 				),

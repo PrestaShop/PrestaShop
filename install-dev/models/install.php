@@ -465,6 +465,7 @@ class InstallModelInstall extends InstallAbstractModel
 			$employee->passwd = md5(_COOKIE_KEY_.$data['admin_password']);
 			$employee->last_passwd_gen = date('Y-m-d h:i:s', strtotime('-360 minutes'));
 			$employee->bo_theme = 'default';
+			$employee->default_tab = 1;
 			$employee->active = true;
 			$employee->id_profile = 1;
 			$employee->id_lang = Configuration::get('PS_LANG_DEFAULT');
@@ -520,7 +521,6 @@ class InstallModelInstall extends InstallAbstractModel
 				'blockcontact',
 				'blockcontactinfos',
 				'blockcurrencies',
-				'blockcustomerprivacy',
 				'blocklanguages',
 				'blockmanufacturer',
 				'blockmyaccount',

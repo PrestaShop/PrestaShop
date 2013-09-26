@@ -305,11 +305,7 @@ class StockAvailableCore extends ObjectModel
 		if (!Validate::isUnsignedId($id_product))
 			return false;
 
-		if ($id_shop === null)
-			$id_shop = Context::getContext()->shop->id;
-
 		$existing_id = StockAvailable::getStockAvailableIdByProductId((int)$id_product, (int)$id_product_attribute, (int)$id_shop);
-
 		if ($existing_id > 0)
 		{
 			Db::getInstance()->update(

@@ -75,7 +75,7 @@ function migrate_orders()
 		WHERE name = "PS_GIFT_WRAPPING_TAX"') / 100);
 
 	$cpt = 0;
-	$flush_limit = 1000;
+	$flush_limit = 500;
 	while ($order = Db::getInstance()->nextRow($order_res))
 	{
 		$sum_total_products = 0;
@@ -122,7 +122,9 @@ function migrate_orders()
 		if ($sum_total_products > 0)
 			$average_tax_used +=  $sum_tax_amount / $sum_total_products;
 		$average_tax_used = round($average_tax_used, 4);
-		$carrier_tax_rate = 1 + ((float)$order['carrier_tax_rate'] / 100);
+		$carrier_tax_rate = 1;
+		if (isset($order['carrier_tax_rate']))
+			$carrier_tax_rate + ((float)$order['carrier_tax_rate'] / 100);
 
 		$total_discount_tax_excl = $order['total_discounts'] / $average_tax_used;
 		$order['total_discounts_tax_incl'] = (float)$order['total_discounts'];

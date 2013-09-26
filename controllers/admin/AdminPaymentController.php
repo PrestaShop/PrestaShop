@@ -213,6 +213,7 @@ class AdminPaymentControllerCore extends AdminController
 					if ($name_id == 'country'
 						&& isset($module->limited_countries)
 						&& !empty($module->limited_countries)
+						&& is_array($module->limited_countries)
 						&& !(in_array(strtoupper($item['iso_code']), array_map('strtoupper', $module->limited_countries))))
 						$list['items'][$key_item]['check_list'][$key_module] = null;
 				}

@@ -33,22 +33,22 @@
 {/if}
 
 <form method="post" action="{$currentIndex}&{$identifier}&token={$token}&id_tax_rules_group={$id_tax_rules_group}&updatetax_rules_group#{$table}" class="form">
-	<input type="hidden" id="submitFilter{$table}" name="submitFilter{$table}" value="0"/>
+	<input type="hidden" id="submitFilter{$list_id}" name="submitFilter{$list_id}" value="0"/>
 	<table class="table_grid">
 		<tr>
 			<td style="vertical-align: bottom;">
 				<span style="float: left;">
 					{if $page > 1}
-						<input type="image" src="../img/admin/list-prev2.gif" onclick="getE('submitFilter{$table}').value=1"/>&nbsp;
-						<input type="image" src="../img/admin/list-prev.gif" onclick="getE('submitFilter{$table}').value={$page - 1}"/>
+						<input type="image" src="../img/admin/list-prev2.gif" onclick="getE('submitFilter{$list_id}').value=1"/>&nbsp;
+						<input type="image" src="../img/admin/list-prev.gif" onclick="getE('submitFilter{$list_id}').value={$page - 1}"/>
 					{/if}
 					{l s='Page'} <b>{$page}</b> / {$total_pages}
 					{if $page < $total_pages}
-						<input type="image" src="../img/admin/list-next.gif" onclick="getE('submitFilter{$table}').value={$page + 1};"/>&nbsp;
-						<input type="image" src="../img/admin/list-next2.gif" onclick="getE('submitFilter{$table}').value={$total_pages}"/>
+						<input type="image" src="../img/admin/list-next.gif" onclick="getE('submitFilter{$list_id}').value={$page + 1};"/>&nbsp;
+						<input type="image" src="../img/admin/list-next2.gif" onclick="getE('submitFilter{$list_id}').value={$total_pages}"/>
 					{/if}
 					| {l s='Display'}
-					<select name="pagination" onchange="submit()">
+					<select name="{$list_id}_pagination" onchange="submit()">
 						{* Choose number of results per page *}
 						{foreach $pagination AS $value}
 							<option value="{$value|intval}"{if $selected_pagination == $value} selected="selected" {elseif $selected_pagination == NULL && $value == $pagination[1]} selected="selected2"{/if}>{$value|intval}</option>
@@ -57,7 +57,7 @@
 					/ {$list_total} {l s='result(s)'}
 				</span>
 				<span style="float: right;">
-					<input type="submit" name="submitReset{$table}" value="{l s='Reset'}" class="button" />
+					<input type="submit" name="submitReset{$list_id}" value="{l s='Reset'}" class="button" />
 				</span>
 				<span class="clear"></span>
 			</td>
@@ -66,7 +66,7 @@
 			<td>
 				<table
 				{if $table_id} id={$table_id}{/if}
-				class="table {if $table_dnd}tableDnD{/if} {$table}"
+				class="table {if $table_dnd}tableDnD{/if} {$list_id}"
 				cellpadding="0" cellspacing="0"
 				style="width: 100%; margin-bottom:10px;"
 				>
@@ -84,7 +84,7 @@
 						<tr class="nodrag nodrop">
 							<th class="center">
 								{if $has_bulk_actions}
-									<input type="checkbox" name="checkme" class="noborder" onclick="checkDelBoxes(this.form, '{$table}Box[]', this.checked)" />
+									<input type="checkbox" name="checkme" class="noborder" onclick="checkDelBoxes(this.form, '{$list_id}Box[]', this.checked)" />
 								{/if}
 							</th>
 							{foreach $fields_display AS $key => $params}
