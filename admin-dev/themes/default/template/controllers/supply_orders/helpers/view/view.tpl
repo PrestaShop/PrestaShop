@@ -72,34 +72,38 @@
 				{if isset($is_template) && $is_template == 1} {l s='Template'} {/if}{l s='Summary'}
 			</h3>
 			<table class="table">
-				<tr>
-					<th>{l s='Designation'}</th>
-					<th>{l s='Value'}</th>
-				</tr>
-				<tr>
-					<td>{l s='Total (tax excl.)'}</td>
-					<td>{$supply_order_total_te}</td>
-				</tr>
-				<tr>
-					<td>{l s='Discount'}</td>
-					<td>{$supply_order_discount_value_te}</td>
-				</tr>
-				<tr>
-					<td>{l s='Total with discount (tax excl.)'}</td>
-					<td>{$supply_order_total_with_discount_te}</td>
-				</tr>
-				<tr>
-					<td>{l s='Total Tax'}</td>
-					<td>{$supply_order_total_tax}</td>
-				</tr>
-				<tr>
-					<td>{l s='Total (tax incl.)'}</td>
-					<td>{$supply_order_total_ti}</td>
-				</tr>
-				<tr>
-					<td>{l s='Total to pay.'}</td>
-					<td>{$supply_order_total_ti}</td>
-				</tr>
+				<thead>
+					<tr>
+						<th><span class="title_box">{l s='Designation'}</span></th>
+						<th><span class="title_box">{l s='Value'}</span></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{l s='Total (tax excl.)'}</td>
+						<td>{$supply_order_total_te}</td>
+					</tr>
+					<tr>
+						<td>{l s='Discount'}</td>
+						<td>{$supply_order_discount_value_te}</td>
+					</tr>
+					<tr>
+						<td>{l s='Total with discount (tax excl.)'}</td>
+						<td>{$supply_order_total_with_discount_te}</td>
+					</tr>
+					<tr>
+						<td>{l s='Total Tax'}</td>
+						<td>{$supply_order_total_tax}</td>
+					</tr>
+					<tr>
+						<td>{l s='Total (tax incl.)'}</td>
+						<td>{$supply_order_total_ti}</td>
+					</tr>
+					<tr>
+						<td>{l s='Total to pay.'}</td>
+						<td>{$supply_order_total_ti}</td>
+					</tr>
+				</tbody>
 			</table>
 		</fieldset>
 	</div>

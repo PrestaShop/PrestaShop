@@ -371,12 +371,14 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'short' => 'Export Orders',
 				'href' => $this->context->link->getAdminLink('AdminSupplyOrders').'&amp;csv_orders&id_warehouse='.$this->getCurrentWarehouse(),
 				'desc' => $this->l('Export Orders (CSV)'),
+				'class' => 'process-icon-export'
 			);
 
 			$this->toolbar_btn['export-csv-details'] = array(
 				'short' => 'Export Orders Details',
 				'href' => $this->context->link->getAdminLink('AdminSupplyOrders').'&amp;csv_orders_details&id_warehouse='.$this->getCurrentWarehouse(),
 				'desc' => $this->l('Export Orders Details (CSV)'),
+				'class' => 'process-icon-export'
 			);
 
 			unset($this->toolbar_btn['new']);
@@ -592,7 +594,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$this->fields_form[]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('Supply order status'),
-				'image' => '../img/admin/cms.gif'
+				'icon' => 'icon-pencil'
 			),
 		);
 

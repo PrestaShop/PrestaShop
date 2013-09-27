@@ -26,15 +26,19 @@
 {block name=override_header}
 	{if count($list_warehouses) > 0}
 <div class="filter-stock">
-		<form type="get">
-			<label for="id_warehouse">{l s='Filter movements by warehouse:'}</label>
+		<form type="get" class="form-horizontal">
 			<input type="hidden" name="controller" value="AdminStockMvt" />
 			<input type="hidden" name="token" value="{$token}" />
-			<select name="id_warehouse" onChange="$(this).parent().submit();">
-				{foreach $list_warehouses as $warehouse}
-					<option {if $warehouse.id_warehouse == $current_warehouse}selected="selected"{/if} value="{$warehouse.id_warehouse}">{$warehouse.name}</option>
-				{/foreach}
-			</select>
+			<div class="form-group">
+				<label for="id_warehouse" class="control-label col-lg-3">{l s='Filter movements by warehouse:'}</label>
+				<div class="col-lg-9">					
+					<select name="id_warehouse" onChange="$(this).parent().submit();">
+						{foreach $list_warehouses as $warehouse}
+							<option {if $warehouse.id_warehouse == $current_warehouse}selected="selected"{/if} value="{$warehouse.id_warehouse}">{$warehouse.name}</option>
+						{/foreach}
+					</select>
+				</div>
+			</div>
 		</form>
 	{/if}
 </div>
