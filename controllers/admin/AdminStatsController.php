@@ -216,6 +216,21 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		return array('type' => 'neutral', 'value' => round(100 * $row['neutral'] / $row['total']));
 	}
 	
+	public static function getMainCountry($date_from, $date_to)
+	{
+		$total_orders = AdminStatsController::getOrders($date_from, $date_to);
+		if (!$total_orders)
+			return false;
+		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+		SELECT a.id_country, COUNT(*) as orders
+		FROM `'._DB_PREFIX_.'orders` o
+		LEFT JOIN `'._DB_PREFIX_.'address` a ON o.id_address_delivery = a.id_address
+		WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
+		'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
+		$row['orders'] = round(100 * $row['orders'] / $total_orders, 1);
+		return $row;
+	}
+	
 	public static function getAverageCustomerAge()
 	{
 		$value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
@@ -406,6 +421,44 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
 				ConfigurationKPI::updateValue('NEWSLETTER_REGISTRATIONS', $value);
 				ConfigurationKPI::updateValue('NEWSLETTER_REGISTRATIONS_EXPIRE', strtotime('+6 hour'));
+				break;
+
+			case 'enabled_languages':
+				$value = Language::countActiveLanguages();
+				ConfigurationKPI::updateValue('ENABLED_LANGUAGES', $value);
+				ConfigurationKPI::updateValue('ENABLED_LANGUAGES_EXPIRE', strtotime('+1 min'));
+				break;
+
+			case 'frontoffice_translations':
+				$themes = Theme::getThemes();
+				$languages = Language::getLanguages();
+				$total = $translated = 0;
+				foreach ($themes as $theme)
+					foreach ($languages as $language)
+					{
+						$kpi_key = substr(strtoupper($theme->name.'_'.$language['iso_code']), 0, 16);
+						$total += ConfigurationKPI::get('TRANSLATE_TOTAL_'.$kpi_key);
+						$translated += ConfigurationKPI::get('TRANSLATE_DONE_'.$kpi_key);
+					}
+				$value = 0;
+				if ($translated)
+					$value = round(100 * $translated / $total, 1);
+				$value .= '%';
+				ConfigurationKPI::updateValue('FRONTOFFICE_TRANSLATIONS', $value);
+				ConfigurationKPI::updateValue('FRONTOFFICE_TRANSLATIONS_EXPIRE', strtotime('+2 min'));
+				break;
+
+			case 'main_country':
+				if (!($row = AdminStatsController::getMainCountry(date('Y-m-d', strtotime('-30 day')), date('Y-m-d'))))
+					$value = $this->l('No orders');
+				else
+				{
+					$country = new Country($row['id_country'], $this->context->language->id);
+					$value = sprintf($this->l('%.1f%% %s'), $row['orders'], $country->name);
+				}
+
+				ConfigurationKPI::updateValue('MAIN_COUNTRY', array($this->context->language->id => $value));				
+				ConfigurationKPI::updateValue('MAIN_COUNTRY_EXPIRE', array($this->context->language->id => strtotime('+1 day')));
 				break;
 
 			case 'orders_per_customer':
