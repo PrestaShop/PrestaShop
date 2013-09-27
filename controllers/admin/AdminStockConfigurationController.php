@@ -47,6 +47,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 				'title' => $this->l('ID'),
 				'align' => 'center',
 				'search' => false,
+				'class' => 'fixed-width-xs'
 			),
 			'sign' => array(
 				'title' => $this->l('Sign'),
@@ -61,7 +62,8 @@ class AdminStockConfigurationControllerCore extends AdminController
 					-1 => 'remove_stock.png',
 					1 => 'add_stock.png'
 				),
-				'orderby' => false
+				'orderby' => false,
+				'class' => 'fixed-width-sm'
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
@@ -438,8 +440,8 @@ class AdminStockConfigurationControllerCore extends AdminController
 					'0' => 'disabled.gif'
 				),
 				'type' => 'bool',
-				'width' => 170,
-				'orderby' => false
+				'orderby' => false,
+				'class' => 'fixed-width-sm'
 			),
 			'delivery_note' => array(
 				'title' => $this->l('Is there a delivery note available?'),
@@ -449,8 +451,8 @@ class AdminStockConfigurationControllerCore extends AdminController
 					'0' => 'disabled.gif'
 				),
 				'type' => 'bool',
-				'width' => 170,
-				'orderby' => false
+				'orderby' => false,
+				'class' => 'fixed-width-sm'
 			),
 			'pending_receipt' => array(
 				'title' => $this->l('Is there a pending receipt?'),
@@ -460,8 +462,8 @@ class AdminStockConfigurationControllerCore extends AdminController
 					'0' => 'disabled.gif'
 				),
 				'type' => 'bool',
-				'width' => 170,
-				'orderby' => false
+				'orderby' => false,
+				'class' => 'fixed-width-sm'
 			),
 			'receipt_state' => array(
 				'title' => $this->l('Delivery state?'),
@@ -471,8 +473,8 @@ class AdminStockConfigurationControllerCore extends AdminController
 					'0' => 'disabled.gif'
 				),
 				'type' => 'bool',
-				'width' => 170,
-				'orderby' => false
+				'orderby' => false,
+				'class' => 'fixed-width-sm'
 			),
 			'enclosed' => array(
 				'title' => $this->l('Enclosed order state?'),
@@ -482,8 +484,8 @@ class AdminStockConfigurationControllerCore extends AdminController
 					'0' => 'disabled.gif'
 				),
 				'type' => 'bool',
-				'width' => 170,
-				'orderby' => false
+				'orderby' => false,
+				'class' => 'fixed-width-sm'
 			),
 		);
 

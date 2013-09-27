@@ -26,40 +26,34 @@
 
 {block name="other_fieldsets"}
 	{if isset($show_product_management_form)}
-	<p>&nbsp;</p>
-
 	<input type="hidden" id="product_ids" name="product_ids" value="{$product_ids}" />
 	<input type="hidden" id="product_ids_to_delete" name="product_ids_to_delete" value="{$product_ids_to_delete}" />
 	<input type="hidden" name="updatesupply_order" value="1" />
 
 	<fieldset>
-		<legend>
-			<img alt="Supply Order Management" src="../img/admin/edit.gif">
-			{l s='Manage the products you want to order from the supplier.'}
-		</legend>
-
-		<p class="clear">{l s='To add a product to the order, type the first letters of the product name, then select it from the drop-down list.'}</p>
-		<input type="text" size="100" id="cur_product_name" />
-		<span onclick="addProduct();" style="cursor: pointer;"><img src="../img/admin/add.gif" alt="{l s='Add a product to the supply order'}" title="{l s='Add a product to the supply order'}" /></span>
-
-		<p>&nbsp;</p>
-
-		<table
-		id="products_in_supply_order"
-		class="table"
-		>
+		<h3><i class="icon-cogs"></i> {l s='Manage the products you want to order from the supplier.'}</h3>
+		<div class="alert alert-info">{l s='To add a product to the order, type the first letters of the product name, then select it from the drop-down list.'}</div>
+		<div class="row">
+			<div class="col-lg-9">
+				<input type="text" size="100" id="cur_product_name" />
+			</div>
+			<div class="col-lg-2">
+				<button type="button" class="btn btn-default" onclick="addProduct();"><i class="icon-plus-sign"></i> {l s='Add a product to the supply order'}</button>
+			</div>
+		</div>
+		<table id="products_in_supply_order" class="table">
 			<thead>
 				<tr class="nodrag nodrop">
-					<th width="150">{l s='Reference'}</th>
-					<th width="50">{l s='EAN13'}</th>
-					<th width="50">{l s='UPC'}</th>
-					<th width="150">{l s='Supplier Reference'}</th>
-					<th>{l s='Name'}</th>
-					<th width="100">{l s='Unit Price (tax excl.)'}</th>
-					<th width="100">{l s='Quantity'}</th>
-					<th width="100">{l s='Discount rate'}</th>
-					<th width="100">{l s='Tax rate'}</th>
-					<th width="40">{l s='Delete'}</th>
+					<th><span class="title_box">{l s='Reference'}</span></th>
+					<th><span class="title_box">{l s='EAN13'}</span></th>
+					<th><span class="title_box">{l s='UPC'}</span></th>
+					<th><span class="title_box">{l s='Supplier Reference'}</span></th>
+					<th><span class="title_box">{l s='Name'}</span></th>
+					<th class="fixed-width-md"><span class="title_box">{l s='Unit Price (tax excl.)'}</span></th>
+					<th class="fixed-width-xs"><span class="title_box">{l s='Quantity'}</span></th>
+					<th class="fixed-width-md"><span class="title_box">{l s='Discount rate'}</span></th>
+					<th class="fixed-width-md"><span class="title_box">{l s='Tax rate'}</span></th>
+					<th class="fixed-width-sm">&nbsp;</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -88,27 +82,31 @@
 							<input type="hidden" name="input_name_{$product.id_product}_{$product.id_product_attribute}" value="{$product.name}" />
 						</td>
 						<td>
-							{$currency->prefix}&nbsp;<input type="text" name="input_unit_price_te_{$product.id_product}_{$product.id_product_attribute}" value="{$product.unit_price_te|htmlentities}" size="8" />&nbsp;{$currency->suffix}
+							<div class="input-group fixed-width-md">
+							{if isset($currency->prefix) && trim($currency->prefix) != ''}<span class="input-group-addon">{$currency->prefix}</span>{/if}<input type="text" name="input_unit_price_te_{$product.id_product}_{$product.id_product_attribute}" value="{$product.unit_price_te|htmlentities}" />{if isset($currency->suffix) && trim($currency->suffix) != ''}<span class="input-group-addon">{$currency->suffix}</span>{/if}
+							</div>
 						</td>
 						<td>
-							<input type="text" name="input_quantity_expected_{$product.id_product}_{$product.id_product_attribute}" value="{$product.quantity_expected|htmlentities}" size="5" />
+							<input type="text" name="input_quantity_expected_{$product.id_product}_{$product.id_product_attribute}" value="{$product.quantity_expected|htmlentities}" class="fixed-width-xs" />
 						</td>
 						<td>
-							<input type="text" name="input_discount_rate_{$product.id_product}_{$product.id_product_attribute}" value="{round($product.discount_rate, 4)}" size="5" />%
+							<div class="input-group fixed-width-md">
+								<input type="text" name="input_discount_rate_{$product.id_product}_{$product.id_product_attribute}" value="{round($product.discount_rate, 4)}" /><span class="input-group-addon">%</span>
+							</div>
 						</td>
 						<td>
-							<input type="text" name="input_tax_rate_{$product.id_product}_{$product.id_product_attribute}" value="{round($product.tax_rate, 4)}" size="5" />%
+							<div class="input-group fixed-width-md">
+								<input type="text" name="input_tax_rate_{$product.id_product}_{$product.id_product_attribute}" value="{round($product.tax_rate, 4)}" /><span class="input-group-addon">%</span>
+							</div>
 						</td>
 						<td>
-							<a href="#" id="deletelink|{$product.id_product}_{$product.id_product_attribute}" class="removeProductFromSupplyOrderLink">
-								<img src="../img/admin/delete.gif" alt="{l s='Remove this product from the order.'}" title="{l s='Remove this product from the order.'}" />
+							<a href="#" id="deletelink|{$product.id_product}_{$product.id_product_attribute}" class="btn btn-default"><i class="icon-trash"></i> {l s='Remove'}
 							</a>
 						</td>
 					</tr>
 				{/foreach}
 			</tbody>
 		</table>
-
 	</fieldset>
 
 	<script type="text/javascript">
@@ -139,18 +137,17 @@
 
 			// add a new line in the products table
 			$('#products_in_supply_order > tbody:last').append(
-				'<tr style="height:50px;">'+
+				'<tr>'+
 				'<td>'+product_infos.reference+'<input type="hidden" name="input_check_'+product_infos.id+'" value="'+product_infos.checksum+'" /><input type="hidden" name="input_reference_'+product_infos.id+'" value="'+product_infos.reference+'" /></td>'+
 				'<td>'+product_infos.ean13+'<input type="hidden" name="input_ean13_'+product_infos.id+'" value="'+product_infos.ean13+'" /></td>'+
 				'<td>'+product_infos.upc+'<input type="hidden" name="input_upc_'+product_infos.id+'" value="'+product_infos.upc+'" /></td>'+
 				'<td>'+product_infos.supplier_reference+'<input type="hidden" name="input_supplier_reference_'+product_infos.id+'" value="'+product_infos.supplier_reference+'" /></td>'+
 				'<td>'+product_infos.name+'<input type="hidden" name="input_name_displayed_'+product_infos.id+'" value="'+product_infos.name+'" /></td>'+
-				'<td class="center">{$currency->prefix}&nbsp;<input type="text" name="input_unit_price_te_'+product_infos.id+'" value="'+product_infos.unit_price_te+'" size="8" />&nbsp;{$currency->suffix}</td>'+
-				'<td class="center"><input type="text" name="input_quantity_expected_'+product_infos.id+'" value="0" size="5" /></td>'+
-				'<td class="center"><input type="text" name="input_discount_rate_'+product_infos.id+'" value="0" size="5" />%</td>'+
-				'<td class="center"><input type="text" name="input_tax_rate_'+product_infos.id+'" value="0" size="5" />%</td>'+
-				'<td class="center"><a href="#" class="removeProductFromSupplyOrderLink" id="deletelink|'+product_infos.id+'">'+
-				'<img src="../img/admin/delete.gif" alt="{l s='Remove this product from the order.'}" title="{l s='Remove this product from the order.'}" />'+
+				'<td><div class="input-group fixed-width-md">{if isset($currency->prefix) && trim($currency->prefix) != ''}<span class="input-group-addon">{$currency->prefix}</span>{/if}<input type="text" name="input_unit_price_te_'+product_infos.id+'" value="'+product_infos.unit_price_te+'" />{if isset($currency->suffix) && trim($currency->suffix) != ''}<span class="input-group-addon">{$currency->suffix}</span>{/if}</div></td>'+
+				'<td><input type="text" name="input_quantity_expected_'+product_infos.id+'" value="0" class="fixed-width-xs" /></td>'+
+				'<td><div class="input-group fixed-width-md"><input type="text" name="input_discount_rate_'+product_infos.id+'" value="0" /><span class="input-group-addon">%</span></div></td>'+
+				'<td><div class="input-group fixed-width-md"><input type="text" name="input_tax_rate_'+product_infos.id+'" value="0" /><span class="input-group-addon">%</span></div></td>'+
+				'<td><a href="#" id="deletelink|'+product_infos.id+'" class="btn btn-default"><i class="icon-trash"></i> {l s="Remove"}'+
 				'</a></td></tr>'
 			);
 

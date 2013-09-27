@@ -103,7 +103,7 @@ class AdminWebserviceControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Webservice Accounts:'),
-				'image' => '../img/admin/access.png'
+				'icon' => 'icon-lock'
 			),
 			'input' => array(
 				array(
