@@ -691,6 +691,7 @@ class LanguageCore extends ObjectModel
 		// Initialize the language
 		$lang = new Language();
 		$lang->iso_code = $iso_code;
+		$lang->language_code = $iso_code;
 		$lang->active = true;
 
 		// If the language pack has not been provided, retrieve it from prestashop.com
@@ -700,12 +701,14 @@ class LanguageCore extends ObjectModel
 		// If a language pack has been found or provided, prefill the language object with the value
 		if ($lang_pack)
 			foreach (get_object_vars($lang_pack) as $key => $value)
-				$lang->$key = $value;
+				if ($key != 'iso_code' && isset(Language::$definition['fields'][$key]))
+					$lang->$key = $value;
 
 		// Use the values given in parameters to override the data retrieved automatically
 		if ($params_lang !== null && is_array($params_lang))
 			foreach ($params_lang as $key => $value)
-				$lang->$key = $value;
+				if ($key != 'iso_code' && isset(Language::$definition['fields'][$key]))
+					$lang->$key = $value;
 
 		if (!$lang->add(true, false, $only_add))
 			return false;
@@ -724,7 +727,7 @@ class LanguageCore extends ObjectModel
 		}
 		else
 			Language::_copyNoneFlag((int)$lang->id);
-	
+
 		$files_copy = array(
 			'/en.jpg',
 			'/en-default-'.ImageType::getFormatedName('thickbox').'.jpg',
