@@ -31,23 +31,17 @@ $('document').ready(function(){
 	});
 
 	$('#sendEmail').click(function(){
-		var datas = [];
-		$('#send_friend_form_content').find(':input').each(function(index){
-			var o = {};
-			o.key = $(this).attr('name');
-			o.value = $(this).val();
-
-			if (o.value != '')
-				datas.push(o);
-		});
-
-		if (datas.length >= 3)
+        
+        var name = $('#friend_name').val();
+        var email = $('#friend_email').val();
+        var id_product = $('#id_product_comment_send').val();
+		if (name && email && !isNaN(id_product))
 		{
 			$.ajax({
 				{/literal}url: "{$module_dir}sendtoafriend_ajax.php",{literal}
 				type: "POST",
 				headers: {"cache-control": "no-cache"},
-				data: {action: 'sendToMyFriend', secure_key: '{/literal}{$stf_secure_key}{literal}', friend: unescape(JSON.stringify(datas).replace(/\\u/g, '%u'))},{/literal}{literal}
+				data: {action: 'sendToMyFriend', secure_key: '{/literal}{$stf_secure_key}{literal}', name: name, email: email, id_product: id_product},{/literal}{literal}
 				dataType: "json",
 				success: function(result) {
 					$.fancybox.close();
