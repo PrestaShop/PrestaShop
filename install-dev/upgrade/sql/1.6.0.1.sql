@@ -27,3 +27,5 @@ CREATE TABLE `PREFIX_configuration_kpi_lang` (
   `date_upd` datetime default NULL,
   PRIMARY KEY (`id_configuration_kpi`,`id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+/* PHP:ps1600_add_missing_index(); */;
