@@ -1,6 +1,6 @@
-<?xml version="1.0"?>
+<?xml version='1.0'?>
 <entity_category>
-  <category id="Root" id_shop="1">
+  <category id='Root' id_shop='1'>
     <name>Root</name>
     <description/>
     <link_rewrite>root</link_rewrite>
@@ -8,10 +8,10 @@
     <meta_keywords/>
     <meta_description/>
   </category>
-  <category id="Home" id_shop="1">
-    <name>Home</name>
+  <category id='Home' id_shop='1'>
+    <name>Beranda</name>
     <description/>
-    <link_rewrite>home</link_rewrite>
+    <link_rewrite>beranda</link_rewrite>
     <meta_title/>
     <meta_keywords/>
     <meta_description/>
