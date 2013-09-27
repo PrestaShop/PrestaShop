@@ -207,7 +207,11 @@ class AdminTranslationsControllerCore extends AdminController
 
 		$this->toolbar_scroll = false;
 		$this->base_tpl_view = 'main.tpl';
-		return parent::renderView();
+		
+		$this->content .= $this->renderKpis();
+		$this->content .= parent::renderView();
+		
+		return $this->content;
 	}
 
 	/**
@@ -280,6 +284,7 @@ class AdminTranslationsControllerCore extends AdminController
 			elseif (!touch($file_path))
 				throw new PrestaShopException(sprintf(Tools::displayError('File "%s" cannot be created'), $file_path));
 		}
+		$kpi_key = substr(strtoupper(Tools::getValue('theme').'_'.Tools::getValue('lang')), 0, 16);
 
 		if ($fd = fopen($file_path, 'w'))
 		{
@@ -304,6 +309,9 @@ class AdminTranslationsControllerCore extends AdminController
 			foreach ($_POST as $key => $value)
 				if (!empty($value))
 					$to_insert[$key] = $value;
+
+			ConfigurationKPI::updateValue('TRANSLATE_TOTAL_'.$kpi_key, count($_POST));
+			ConfigurationKPI::updateValue('TRANSLATE_DONE_'.$kpi_key, count($to_insert));
 
 			// translations array is ordered by key (easy merge)
 			ksort($to_insert);
@@ -1227,6 +1235,51 @@ class AdminTranslationsControllerCore extends AdminController
 		$this->getTranslationsInformations();
 	}
 
+	public function renderKpis()
+	{
+		$time = time();
+		$kpis = array();
+
+		/* The data generation is located in AdminStatsControllerCore */
+
+		$helper = new HelperKpi();
+		$helper->id = 'box-languages';
+		$helper->icon = 'icon-microphone';
+		$helper->color = 'color1';
+		$helper->title = $this->l('Enabled Languages');
+		if (ConfigurationKPI::get('ENABLED_LANGUAGES') !== false)
+			$helper->value = ConfigurationKPI::get('ENABLED_LANGUAGES');
+		if (ConfigurationKPI::get('ENABLED_LANGUAGES_EXPIRE') < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=enabled_languages';
+		$kpis[] = $helper->generate();
+
+		$helper = new HelperKpi();
+		$helper->id = 'box-country';
+		$helper->icon = 'icon-home';
+		$helper->color = 'color2';
+		$helper->title = $this->l('Main Country');
+		$helper->subtitle = $this->l('30 Days');
+		if (ConfigurationKPI::get('MAIN_COUNTRY', $this->context->language->id) !== false)
+			$helper->value = ConfigurationKPI::get('MAIN_COUNTRY', $this->context->language->id);
+		if (ConfigurationKPI::get('MAIN_COUNTRY_EXPIRE', $this->context->language->id) < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=main_country';
+		$kpis[] = $helper->generate();
+
+		$helper = new HelperKpi();
+		$helper->id = 'box-country';
+		$helper->icon = 'icon-list';
+		$helper->color = 'color3';
+		$helper->title = $this->l('Front Office Translations');
+		if (ConfigurationKPI::get('FRONTOFFICE_TRANSLATIONS') !== false)
+			$helper->value = ConfigurationKPI::get('FRONTOFFICE_TRANSLATIONS');
+		if (ConfigurationKPI::get('FRONTOFFICE_TRANSLATIONS_EXPIRE') < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=frontoffice_translations';
+		$kpis[] = $helper->generate();
+
+		$helper = new HelperKpiRow();
+		$helper->kpis = $kpis;
+		return $helper->generate();
+	}
 
 	/**
 	 * AdminController::postProcess() override
@@ -1253,35 +1306,28 @@ class AdminTranslationsControllerCore extends AdminController
 				else
 					$this->errors[] = Tools::displayError('You do not have permission to add this.');
 			}
-			else if (Tools::isSubmit('submitExport'))
+			elseif (Tools::isSubmit('submitExport'))
 			{
 				if ($this->tabAccess['add'] === '1')
 					$this->submitExportLang();
 				else
 					$this->errors[] = Tools::displayError('You do not have permission to add this.');
 			}
-			else if (Tools::isSubmit('submitImport'))
+			elseif (Tools::isSubmit('submitImport'))
 			{
 				if ($this->tabAccess['add'] === '1')
 					$this->submitImportLang();
 				else
 					$this->errors[] = Tools::displayError('You do not have permission to add this.');
 			}
-			else if (Tools::isSubmit('submitAddLanguage'))
+			elseif (Tools::isSubmit('submitAddLanguage'))
 			{
 				if ($this->tabAccess['add'] === '1')
 					$this->submitAddLang();
 				else
 					$this->errors[] = Tools::displayError('You do not have permission to add this.');
 			}
-			else if (Tools::isSubmit('submitTranslationsFront'))
-			{
-				if ($this->tabAccess['edit'] === '1')
-					$this->writeTranslationFile();
-				else
-					$this->errors[] = Tools::displayError('You do not have permission to edit this.');
-			}
-			else if (Tools::isSubmit('submitTranslationsPdf'))
+			elseif (Tools::isSubmit('submitTranslationsPdf'))
 			{
 				if ($this->tabAccess['edit'] === '1')
 					// Only the PrestaShop team should write the translations into the _PS_TRANSLATIONS_DIR_
@@ -1292,36 +1338,21 @@ class AdminTranslationsControllerCore extends AdminController
 				else
 					$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 			}
-			else if (Tools::isSubmit('submitTranslationsBack'))
+			elseif (Tools::isSubmit('submitTranslationsBack') || Tools::isSubmit('submitTranslationsErrors') || Tools::isSubmit('submitTranslationsFields') || Tools::isSubmit('submitTranslationsFront'))
 			{
 				if ($this->tabAccess['edit'] === '1')
 					$this->writeTranslationFile();
 				else
 					$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 			}
-			else if (Tools::isSubmit('submitTranslationsErrors'))
-			{
-				if ($this->tabAccess['edit'] === '1')
-					$this->writeTranslationFile();
-				else
-					$this->errors[] = Tools::displayError('You do not have permission to edit this.');
-			}
-			else if (Tools::isSubmit('submitTranslationsFields'))
-			{
-				if ($this->tabAccess['edit'] === '1')
-					$this->writeTranslationFile();
-				else
-					$this->errors[] = Tools::displayError('You do not have permission to edit this.');
-
-			}
-			else if (Tools::isSubmit('submitTranslationsMails') || Tools::isSubmit('submitTranslationsMailsAndStay'))
+			elseif (Tools::isSubmit('submitTranslationsMails') || Tools::isSubmit('submitTranslationsMailsAndStay'))
 			{
 				if ($this->tabAccess['edit'] === '1')
 					$this->submitTranslationsMails();
 				else
 					$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 			}
-			else if (Tools::isSubmit('submitTranslationsModules'))
+			elseif (Tools::isSubmit('submitTranslationsModules'))
 			{
 				if ($this->tabAccess['edit'] === '1')
 				{
