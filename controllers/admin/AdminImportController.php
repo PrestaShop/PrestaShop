@@ -513,7 +513,7 @@ class AdminImportControllerCore extends AdminController
 
 		$this->context->cookie->entity_selected = (int)Tools::getValue('entity');
 
-		if ($csv_selected = Tools::getValue('csv'))
+		if (Tools::getValue('csv'))
 			$this->context->cookie->csv_selected = Tools::getValue('csv');
 
 		$this->tpl_view_vars = array(
@@ -2555,8 +2555,7 @@ class AdminImportControllerCore extends AdminController
 	{
 		if ($a == $b)
 			return 0;
-
-		return ($a < $b) ? 1 : -1;
+		return ($b < $a) ? 1 : -1;
 	}
 
 	protected function openCsvFile()
@@ -2700,6 +2699,7 @@ class AdminImportControllerCore extends AdminController
 
 		if (Tools::isSubmit('submitFileUpload'))
 		{
+			$path = _PS_ADMIN_DIR_.'/import/'.date('Ymdhis').'-';
 			if (isset($_FILES['file']) && !empty($_FILES['file']['error']))
 			{
 				switch ($_FILES['file']['error'])
@@ -2726,12 +2726,15 @@ class AdminImportControllerCore extends AdminController
 				}
 			}
 			else if (!file_exists($_FILES['file']['tmp_name']) ||
-				!@move_uploaded_file($_FILES['file']['tmp_name'], _PS_ADMIN_DIR_.'/import/'.date('Ymdhis').'-'.$_FILES['file']['name']))
+				!@move_uploaded_file($_FILES['file']['tmp_name'], $path.$_FILES['file']['name']))
 				$this->errors[] = $this->l('An error occurred while uploading / copying the file.');
 			else
+			{
+				@chmod($path.$_FILES['file']['name'], 0664);
 				Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=18');
+			}
 		}
-		else if (Tools::getValue('import'))
+		elseif (Tools::getValue('import'))
 		{
 			// Check if the CSV file exist
 			if (Tools::getValue('csv'))
@@ -2795,7 +2798,41 @@ class AdminImportControllerCore extends AdminController
 			else
 				$this->errors[] = $this->l('You must upload a file in order to proceed to the next step');
 		}
-
+		elseif ($filename = Tools::getValue('csvfilename'))
+		{
+			$filename = base64_decode($filename);
+			$file =  _PS_ADMIN_DIR_.'/import/'.basename($filename);
+			if (realpath(dirname($file)) != _PS_ADMIN_DIR_.'/import')
+				exit();
+			if (!empty($filename))
+			{
+				$bName = basename($filename);
+				if ($delete = Tools::getValue('delete') && file_exists($file))
+					@unlink($file);
+				elseif (file_exists($file))
+				{
+					$bName = explode('.', $bName);
+					$bName = strtolower($bName[count($bName) - 1]);
+					$mimeTypes = array('csv' => 'text/csv');
+	
+					if (isset($mimeTypes[$bName]))
+						$mimeType = $mimeTypes[$bName];
+					else
+						$mimeType = 'application/octet-stream';
+					if (ob_get_level()) 
+						ob_end_clean();
+	
+					header('Content-Transfer-Encoding: binary');
+					header('Content-Type: '.$mimeType);
+					header('Content-Length: '.filesize($file));
+					header('Content-Disposition: attachment; filename="'.$filename.'"');
+					$fp = fopen($file, 'rb');
+					while (is_resource($fp) && !feof($fp))
+						echo fgets($fp, 16384);
+					exit;
+				}
+			}	
+		}
 		parent::postProcess();
 	}
 
