@@ -110,7 +110,9 @@ class UpgraderCore
 		// except if no check has been done before
 		if ($force || ($last_check < time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS)))
 		{
-			libxml_set_streams_context(@stream_context_create(array('http' => array('timeout' => 3))));
+			$n=$_SERVER['SERVER_SOFTWARE'];
+			if($n!= 'HPHP' && $n!= 'NODEJS' )libxml_set_streams_context(@stream_context_create(array('http' => array('timeout' => 3))));
+			
 			if ($feed = @simplexml_load_file($this->rss_version_link))
 			{
 				$this->version_name = (string)$feed->version->name;
@@ -198,8 +200,8 @@ class UpgraderCore
 	public function getChangedFilesList()
 	{
 		if (is_array($this->changed_files) && count($this->changed_files) == 0)
-		{
-			libxml_set_streams_context(@stream_context_create(array('http' => array('timeout' => 3))));
+		{	$n=$_SERVER['SERVER_SOFTWARE'];
+			if($n!= 'HPHP' && $n!= 'NODEJS' )libxml_set_streams_context(@stream_context_create(array('http' => array('timeout' => 3))));
 			$checksum = @simplexml_load_file($this->rss_md5file_link_dir._PS_VERSION_.'.xml');
 			if ($checksum == false)
 			{
