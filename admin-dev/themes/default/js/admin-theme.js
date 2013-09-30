@@ -26,6 +26,9 @@ $( document ).ready(function() {
 
   //nav side bar
   function navSidebar(){
+	$('body.page-topbar').removeClass('page-topbar').addClass('page-sidebar');
+	$('#nav-topbar').attr('id','nav-sidebar');
+    $('#nav-sidebar').off();
     $('.expanded').removeClass('expanded');
     $('.maintab').not('.active').closest('.submenu').hide();
     $('#nav-sidebar li.maintab.has_submenu').append('<span class="submenu_expand"></span>');
@@ -51,6 +54,9 @@ $( document ).ready(function() {
   }
   //nav top bar
   function navTopbar(){
+    $('body').removeClass('page-sidebar').removeClass('page-sidebar-closed').addClass('page-topbar');
+    $('#nav-sidebar').attr('id','nav-topbar');
+    $('#nav-topbar').off();
     $('span.submenu_expand').remove();
     $('.expanded').removeClass('expanded');
 
@@ -84,14 +90,8 @@ $( document ).ready(function() {
   //nav switch
   function navSwitch(){
     if ($('body').hasClass('page-sidebar')||$('body').hasClass('page-sidebar-closed')) {
-      $('body').removeClass('page-sidebar').removeClass('page-sidebar-closed').addClass('page-topbar');
-      $('#nav-sidebar').attr('id','nav-topbar');
-      $('#nav-topbar').off();
       navTopbar();
     } else {
-      $('body.page-topbar').removeClass('page-topbar').addClass('page-sidebar');
-      $('#nav-topbar').attr('id','nav-sidebar');
-      $('#nav-sidebar').off();
       navSidebar();
     }
   }
@@ -100,7 +100,7 @@ $( document ).ready(function() {
   if ($('body').hasClass('page-sidebar')){
     navSidebar();
   } else if($('body').hasClass('page-topbar')) {
-    navTopbar();
+	navTopbar();
   }
   
   $('#header_shopname').on('click',
