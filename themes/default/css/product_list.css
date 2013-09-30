@@ -146,4 +146,22 @@ ul#product_list {
 		background:url(../img/arrow_right_1.png) no-repeat 100% 4px transparent
 	}
 	#product_list li .lnk_view:hover {text-decoration:underline}
-	
+
+	#color_to_pick_list {
+		list-style-type:none;
+		width:125px;
+		float:left;
+	}
+
+	#color_to_pick_list li {
+		float:left;
+		clear:none;
+		padding:0;
+		margin-bottom:1px;
+	}
+
+	#color_to_pick_list li a {
+		display:block;
+		height:20px;
+		width:20px;
+	}

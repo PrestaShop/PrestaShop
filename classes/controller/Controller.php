@@ -356,4 +356,9 @@ abstract class ControllerCore
 		$this->context->cookie->write();
 		$this->context->smarty->display($content);
 	}
+	
+	protected function isCached($template, $cacheId = null, $compileId = null)
+	{
+		return $this->context->smarty->isCached($template, $cacheId, $compileId);
+	}
 }
