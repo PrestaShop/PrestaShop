@@ -102,13 +102,6 @@ $( document ).ready(function() {
   } else if($('body').hasClass('page-topbar')) {
 	navTopbar();
   }
-  
-  $('#header_shopname').on('click',
-    function(e){
-      e.preventDefault();
-      navSwitch();
-    }
-  );
 
   //tooltip
   $('.label-tooltip').tooltip();
