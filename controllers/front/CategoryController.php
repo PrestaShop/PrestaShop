@@ -204,36 +204,38 @@ class CategoryControllerCore extends FrontController
 		{
 			if ($product['id_product_attribute'] && isset($product['product_attribute_minimal_quantity']))
 				$product['minimal_quantity'] = $product['product_attribute_minimal_quantity'];
-			if (!$this->isCached(_PS_THEME_DIR_.'product-list-colors.tpl', 'productlist_colors|'.$product['id_product']))
-				$products_need_cache[] = (int)$product['id_product'];
+
+			if (!$this->isCached(_PS_THEME_DIR_.'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product'])))
+				$products_need_cache[] = (int)$product['id_product']; 
 		}
 		unset($product);
-		
-		$colors = array();
+
+		$colors = false;
 		if (count($products_need_cache))
 			$colors = Product::getAttributesColorList($products_need_cache);
 
-		if (count($colors))
+		Tools::enableCache();
+		foreach ($this->cat_products as &$product)
 		{
-			Tools::enableCache();
-
-			foreach ($this->cat_products as &$product)
-				if (isset($colors[$product['id_product']]) && count($colors[$product['id_product']]))
-				{
-					$data = $this->context->smarty->createData();
-					$data->assign(array(
+			$tpl = $this->context->smarty->createTemplate(_PS_THEME_DIR_.'product-list-colors.tpl');
+			if (isset($colors[$product['id_product']]))
+					$tpl->assign(array(
 						'id_product' => $product['id_product'],
 						'colors_list' => $colors[$product['id_product']]
 					));
-					$product['color_list'] =  $this->context->smarty->createTemplate(_PS_THEME_DIR_.'product-list-colors.tpl', $data)->fetch(_PS_THEME_DIR_.'product-list-colors.tpl', 'productlist_colors|'.(int)$product['id_product']);
-				}
-				else
-					$product['color_list'] = '';
-
-			Tools::restoreCacheSettings();
+			if (!in_array($product['id_product'], $products_need_cache) || isset($colors[$product['id_product']]))
+				$product['color_list'] = $tpl->fetch(_PS_THEME_DIR_.'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']));
+			else
+				$product['color_list'] = '';
 		}
+		Tools::restoreCacheSettings();
 
 		$this->context->smarty->assign('nb_products', $this->nbProducts);
+	}
+	
+	protected function getColorsListCacheId($id_product)
+	{
+		return 'productlist_colors|'.(int)$id_product.'|'.$this->context->shop->id;
 	}
 	
 	/**
