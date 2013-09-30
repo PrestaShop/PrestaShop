@@ -360,7 +360,10 @@ class AdminControllerCore extends Controller
 		$tabs = Tab::recursiveTab($this->id, $tabs);
 		$tabs = array_reverse($tabs);
 		foreach ($tabs as $tab)
-			$this->breadcrumbs[] = $tab['name'];
+			if ($tab['id_parent'] != 0)
+				$this->breadcrumbs[] = '<a href="'.Tools::htmlentitiesUTF8($this->context->link->getAdminLink($tab['class_name'])).'">'.$tab['name'].'</a>';
+			else
+				$this->breadcrumbs[] = $tab['name'];
 	}
 
 	/**
@@ -1092,12 +1095,11 @@ class AdminControllerCore extends Controller
 			$this->confirmations[] = $this->_conf[6];
 	}
 
-
 	public function initPageHeaderToolbar()
 	{
 		if (empty($this->toolbar_title))
 			$this->initToolbarTitle();
-		$title = implode(' &gt; ', $this->toolbar_title);
+		$title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title);
 
 		if (is_array($this->page_header_toolbar_btn)
 			&& $this->page_header_toolbar_btn instanceof Traversable
