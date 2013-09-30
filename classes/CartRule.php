@@ -388,7 +388,20 @@ class CartRuleCore extends ObjectModel
 			return (!$display_error) ? false : Tools::displayError('This voucher is not valid yet');
 		if (strtotime($this->date_to) < time())
 			return (!$display_error) ? false : Tools::displayError('This voucher has expired');
-
+		
+		$product_on_sale = false;
+		$amount = false;
+		if($this->reduction_percent === '0.00' && $this->reduction_amount !== '0.00')
+			$amount = true;
+		if(!$amount){
+			$products = $context->cart->getProducts();
+			foreach($products as $product){
+				if(!empty($product["reduction_applies"]) && $product["reduction_applies"] > 0)
+					$product_on_sale = true;
+			}
+			if ($product_on_sale)
+				return (!$display_error) ? false : Tools::displayError('This voucher isn\'t cumulative on products with reduction or marked as on sale');
+		}
 		if ($context->cart->id_customer)
 		{
 			$quantityUsed = Db::getInstance()->getValue('
@@ -530,21 +543,14 @@ class CartRuleCore extends ObjectModel
 				return (!$display_error) ? false : Tools::displayError('You have not reached the minimum amount required to use this voucher');
 		}
 		
-		/* This loop checks:
-			- if the voucher is already in the cart
-			- if a non compatible voucher is in the cart
-			- if there are products in the cart (gifts excluded)
-			Important note: this MUST be the last check, because if the tested cart rule has priority over a non combinable one in the cart, we will switch them
-		*/
-		$nb_products = Cart::getNbProducts($context->cart->id);
+		// Check if the voucher is already in the cart of if a non compatible voucher is in the cart
+		// Important note: this MUST be the last check, because if the tested cart rule has priority over a non combinable one in the cart, we will switch them
 		$otherCartRules = $context->cart->getCartRules();
 		if (count($otherCartRules))
 			foreach ($otherCartRules as $otherCartRule)
 			{
 				if ($otherCartRule['id_cart_rule'] == $this->id && !$alreadyInCart)
 					return (!$display_error) ? false : Tools::displayError('This voucher is already in your cart');
-				if ($otherCartRule['gift_product'])
-					--$nb_products;
 				if ($this->cart_rule_restriction && $otherCartRule['cart_rule_restriction'] && $otherCartRule['id_cart_rule'] != $this->id)
 				{
 					$combinable = Db::getInstance()->getValue('
@@ -564,9 +570,6 @@ class CartRuleCore extends ObjectModel
 					}
 				}
 			}
-		
-		if (!$nb_products)
-			return (!$display_error) ? false : Tools::displayError('Cart is empty');
 		
 		if (!$display_error)
 			return true;
