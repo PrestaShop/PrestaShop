@@ -2082,7 +2082,7 @@ abstract class ModuleCore
 
 			// Remplacer la ligne de declaration par "remove"
 			foreach ($override_file as $line_number => &$line_content)
-				if (preg_match('/(public|private|protected)\s+(static\s+)?\$'.$property->getName().'/i', $line_content))
+				if (preg_match('/(public|private|protected|const)\s+(static\s+)?(\$)'.$property->getName().'/i', $line_content))
 				{
 					$line_content = '#--remove--#';
 					break;
