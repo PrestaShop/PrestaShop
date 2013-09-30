@@ -53,7 +53,7 @@ class BlockCurrencies extends Module
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return false;
 
-		if (!count(Currency::getCurrencies()))
+		if (!Currency::isMultiCurrencyActivated())
 			return false;
 
 		$this->smarty->assign('blockcurrencies_sign', $this->context->currency->sign);

@@ -364,10 +364,13 @@ class AdminImportControllerCore extends AdminController
 					'shop' => Shop::getGroupFromShop(Configuration::get('PS_SHOP_DEFAULT')),
 				);
 			break;
-			// @since 1.5.0
-			case $this->entities[$this->l('Supply Orders')]:
-				if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-				{
+		}
+		
+		// @since 1.5.0
+		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+			switch ((int)Tools::getValue('entity'))
+			{
+				case $this->entities[$this->l('Supply Orders')]:
 					// required fields
 					$this->required_fields = array(
 						'id_supplier',
@@ -395,12 +398,8 @@ class AdminImportControllerCore extends AdminController
 						'discount_rate' => '0',
 						'is_template' => '0',
 					);
-				}
-			break;
-			// @since 1.5.0
-			case $this->entities[$this->l('Supply Order Details')]:
-				if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-				{
+				break;
+				case $this->entities[$this->l('Supply Order Details')]:
 					// required fields
 					$this->required_fields = array(
 						'supply_order_reference',
@@ -424,8 +423,9 @@ class AdminImportControllerCore extends AdminController
 						'discount_rate' => '0',
 						'tax_rate' => '0',
 					);
-				}
-		}
+				break;
+					
+			}
 
 		$this->separator = strval(trim(Tools::getValue('separator', ';')));
 
@@ -466,11 +466,25 @@ class AdminImportControllerCore extends AdminController
 		$this->addCSS(_PS_CSS_DIR_.'jquery.fancybox-1.3.4.css', 'screen');
 		$this->addJqueryPlugin(array('fancybox'));
 
+		$entity_selected = 0;
+		if (isset($this->entities[$this->l(Tools::ucfirst(Tools::getValue('import_type')))]))
+		{
+			$entity_selected = $this->entities[$this->l(Tools::ucfirst(Tools::getValue('import_type')))];
+			$this->context->cookie->entity_selected = $entity_selected;
+		}
+		elseif (isset($this->context->cookie->entity_selected))
+			$entity_selected = (int)$this->context->cookie->entity_selected;
+		
+		$csv_selected = '';
+		if (isset($this->context->cookie->csv_selected))
+			$csv_selected = pSQL($this->context->cookie->csv_selected);
+
 		$this->tpl_form_vars = array(
 			'module_confirmation' => (Tools::getValue('import')) && (isset($this->warnings) && !count($this->warnings)),
 			'path_import' => _PS_ADMIN_DIR_.'/import/',
 			'entities' => $this->entities,
-			'entity' => Tools::getValue('entity'),
+			'entity_selected' => $entity_selected,
+			'csv_selected' => $csv_selected,
 			'files_to_import' => $files_to_import,
 			'languages' => Language::getLanguages(false),
 			'id_language' => $this->context->language->id,
@@ -498,6 +512,11 @@ class AdminImportControllerCore extends AdminController
 		for ($i = 0; $i < $nb_table; $i++)
 			$data[$i] = $this->generateContentTable($i, $nb_column, $handle, $this->separator);
 
+		if ($entity_selected = (int)Tools::getValue('entity'))
+			$this->context->cookie->entity_selected = $entity_selected;
+		if ($csv_selected = Tools::getValue('csv'))
+			$this->context->cookie->csv_selected = $csv_selected;
+
 		$this->tpl_view_vars = array(
 			'import_matchs' => Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'import_match'),
 			'fields_value' => array(
@@ -507,6 +526,7 @@ class AdminImportControllerCore extends AdminController
 				'iso_lang' => Tools::getValue('iso_lang'),
 				'truncate' => Tools::getValue('truncate'),
 				'forceIDs' => Tools::getValue('forceIDs'),
+				'regenerate' => Tools::getValue('regenerate'),
 				'match_ref' => Tools::getValue('match_ref'),
 				'separator' => $this->separator,
 				'multiple_value_separator' => $this->multiple_value_separator
@@ -796,7 +816,7 @@ class AdminImportControllerCore extends AdminController
 	 * @param string entity 'products' or 'categories'
 	 * @return void
 	 */
-	protected static function copyImg($id_entity, $id_image = null, $url, $entity = 'products')
+	protected static function copyImg($id_entity, $id_image = null, $url, $entity = 'products', $regenerate = true)
 	{
 		$tmpfile = tempnam(_PS_TMP_IMG_DIR_, 'ps_import');
 		$watermark_types = explode(',', Configuration::get('WATERMARK_TYPES'));
@@ -824,11 +844,14 @@ class AdminImportControllerCore extends AdminController
 		{
 			ImageManager::resize($tmpfile, $path.'.jpg');
 			$images_types = ImageType::getImagesTypes($entity);
-			foreach ($images_types as $image_type)
-				ImageManager::resize($tmpfile, $path.'-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height']);
 
-			if (in_array($image_type['id_image_type'], $watermark_types))
-				Hook::exec('actionWatermark', array('id_image' => $id_image, 'id_product' => $id_entity));
+			if ($regenerate)
+				foreach ($images_types as $image_type)
+				{
+					ImageManager::resize($tmpfile, $path.'-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height']);
+					if (in_array($image_type['id_image_type'], $watermark_types))
+						Hook::exec('actionWatermark', array('id_image' => $id_image, 'id_product' => $id_entity));
+				}
 		}
 		else
 		{
@@ -977,7 +1000,7 @@ class AdminImportControllerCore extends AdminController
 			}
 			//copying images of categories
 			if (isset($category->image) && !empty($category->image))
-				if (!(AdminImportController::copyImg($category->id, null, $category->image, 'categories')))
+				if (!(AdminImportController::copyImg($category->id, null, $category->image, 'categories', !Tools::getValue('regenerate'))))
 					$this->warnings[] = $category->image.' '.Tools::displayError('cannot be copied.');
 			// If both failed, mysql error
 			if (!$res)
@@ -1439,7 +1462,7 @@ class AdminImportControllerCore extends AdminController
 							{
 								// associate image to selected shops
 								$image->associateTo($shops);
-								if (!AdminImportController::copyImg($product->id, $image->id, $url))
+								if (!AdminImportController::copyImg($product->id, $image->id, $url, 'products', !Tools::getValue('regenerate')))
 								{
 									$image->delete();
 									$this->warnings[] = sprintf(Tools::displayError('Error copying image: %s'), $url);
@@ -1565,7 +1588,7 @@ class AdminImportControllerCore extends AdminController
 				if ($field_error === true && $lang_field_error === true && $image->add())
 				{
 					$image->associateTo($id_shop_list);
-					if (!AdminImportController::copyImg($product->id, $image->id, $url))
+					if (!AdminImportController::copyImg($product->id, $image->id, $url, 'products', !Tools::getValue('regenerate')))
 					{
 						$this->warnings[] = sprintf(Tools::displayError('Error copying image: %s'), $url);
 						$image->delete();
@@ -2721,7 +2744,6 @@ class AdminImportControllerCore extends AdminController
 						$this->clearSmartyCache();
 						break;
 					case $this->entities[$import_type = $this->l('Products')]:
-					$import_type = $this->l('Categories');
 						$this->productImport();
 						$this->clearSmartyCache();
 						break;
@@ -2743,19 +2765,22 @@ class AdminImportControllerCore extends AdminController
 						$this->supplierImport();
 						$this->clearSmartyCache();
 						break;
-					// @since 1.5.0
-					case $this->entities[$import_type = $this->l('Supply Orders')]:
-						if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-							$this->supplyOrdersImport();
-						break;
-					// @since 1.5.0
-					case $this->entities[$import_type = $this->l('Supply Order Details')]:
-						if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-							$this->supplyOrdersDetailsImport();
-						break;
-					default:
-						$this->errors[] = $this->l('Please select what you would like to import');
 				}
+				
+				// @since 1.5.0
+				if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+					switch ((int)Tools::getValue('entity'))
+					{
+						case $this->entities[$import_type = $this->l('Supply Orders')]:
+							if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+								$this->supplyOrdersImport();
+							break;
+						case $this->entities[$import_type = $this->l('Supply Order Details')]:
+							if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+								$this->supplyOrdersDetailsImport();
+							break;	
+					}
+				
 				if ($import_type !== false)
 				{
 					$log_message = sprintf($this->l('%s import'), $import_type);

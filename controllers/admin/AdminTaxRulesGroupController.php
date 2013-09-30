@@ -91,6 +91,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 	public function initRulesList($id_group)
 	{
 		$this->table = 'tax_rule';
+		$this->list_id = 'tax_rule';
 		$this->identifier = 'id_tax_rule';
 		$this->className = 'TaxRule';
 		$this->lang = false;

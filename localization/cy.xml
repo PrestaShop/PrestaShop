@@ -8,7 +8,7 @@
 		<language iso_code="tr" />
 	</languages>
 	<taxes>
-		<tax id="1" name="ΦΠΑ CY 15%" rate="15" />
+		<tax id="1" name="ΦΠΑ CY 17%" rate="17" />
 		<tax id="2" name="ΦΠΑ CY 8%" rate="8" />
 		<tax id="3" name="ΦΠΑ CY 5%" rate="5" />
 		

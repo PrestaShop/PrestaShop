@@ -31,6 +31,7 @@ class AdminGroupsControllerCore extends AdminController
 		$this->bootstrap = true ;
 		$this->table = 'group';
 		$this->className = 'Group';
+		$this->list_id = 'group';
 		$this->lang = true;
 		$this->addRowAction('edit');
 		$this->addRowAction('view');
@@ -162,6 +163,16 @@ class AdminGroupsControllerCore extends AdminController
 		if (Tools::isSubmit('changeShowPricesVal') && $this->id_object)
 			$this->action = 'change_show_prices_val';
 
+		if (Tools::getIsset('viewgroup'))
+		{
+			$this->list_id = 'customer_group';
+
+			if (isset($_POST['submitReset'.$this->list_id]))
+				$this->processResetFilters();
+		}
+		else
+			$this->list_id = 'group';
+
 		parent::initProcess();
 	}
 
@@ -190,30 +201,28 @@ class AdminGroupsControllerCore extends AdminController
 			$genders_icon[$gender->id] = '../genders/'.(int)$gender->id.'.jpg';
 			$genders[$gender->id] = $gender->name;
 		}
-		$customer_fields_display = (array(
-				'id_customer' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-				'id_gender' => array('title' => $this->l('Titles'), 'align' => 'center','icon' => $genders_icon, 'list' => $genders, 'class' => 'fixed-width-sm'),
-				'firstname' => array('title' => $this->l('First name'), 'align' => 'center'),
-				'lastname' => array('title' => $this->l('Last name'), 'align' => 'center'),
-				'email' => array('title' => $this->l('Email address'), 'align' => 'center'),
-				'birthday' => array('title' => $this->l('Birth date'), 'align' => 'right', 'type' => 'date'),
-				'date_add' => array('title' => $this->l('Register date'), 'align' => 'right', 'type' => 'date'),
-				'orders' => array('title' => $this->l('Orders'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-				'active' => array('title' => $this->l('Enabled'),'align' => 'center', 'active' => 'status','type' => 'bool', 'class' => 'fixed-width-xs')
-			));
-
-		$customer_list = $group->getCustomers(false, 0, 100, true);
-
-		$helper = new HelperList();
-		$helper->currentIndex = Context::getContext()->link->getAdminLink('AdminCustomers', false);
-		$helper->token = Tools::getAdminTokenLite('AdminCustomers');
-		$helper->shopLinkType = '';
-		$helper->table = 'customer';
-		$helper->identifier = 'id_customer';
-		$helper->actions = array('edit', 'view');
-		$helper->show_toolbar = false;
-		$helper->title = $this->l('Members of this customer group (Limited to the 100th first customers. Please use filters to narrow your search.)');
-		return $helper->generateList($customer_list, $customer_fields_display);
+		$this->table = 'customer_group';
+		$this->lang = false;
+		$this->list_id = 'customer_group';
+		$this->actions = array();
+		$this->bulk_actions = false;
+		$this->no_link = true;
+		$this->fields_list = (array(
+			'id_customer' => array('title' => $this->l('ID'), 'width' => 15, 'align' => 'center', 'filter_key' => 'c!id_customer'),
+			'id_gender' => array('title' => $this->l('Titles'), 'align' => 'center', 'width' => 50,'icon' => $genders_icon, 'list' => $genders),
+			'firstname' => array('title' => $this->l('First name'), 'align' => 'center'),
+			'lastname' => array('title' => $this->l('Last name'), 'align' => 'center'),
+			'email' => array('title' => $this->l('Email address'), 'width' => 150, 'align' => 'center', 'filter_key' => 'c!email', 'orderby' => true),
+			'birthday' => array('title' => $this->l('Birth date'), 'width' => 150, 'align' => 'right', 'type' => 'date'),
+			'date_add' => array('title' => $this->l('Register date'), 'width' => 150, 'align' => 'right', 'type' => 'date'),
+			'active' => array('title' => $this->l('Enabled'),'align' => 'center','width' => 20, 'active' => 'status','type' => 'bool')
+		));
+		$this->_select = 'c.*';
+		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'customer` c ON (a.`id_customer` = c.`id_customer`)';
+		$this->_where = 'AND a.`id_group` = '.(int)$group->id.' AND c.`deleted` != 1';
+		self::$currentIndex = self::$currentIndex.'&viewgroup';
+		$this->processFilter();
+		return parent::renderList();
 	}
 
 	public function renderForm()

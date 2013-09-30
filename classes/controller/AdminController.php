@@ -46,7 +46,7 @@ class AdminControllerCore extends Controller
 	public $template = 'content.tpl';
 
 	/** @var string Associated table name */
-	public $table;
+	public $table = 'configuration';
 
 	public $list_id;
 
@@ -2493,102 +2493,41 @@ class AdminControllerCore extends Controller
 		if (!$class_name)
 			$class_name = $this->className;
 
-		/* Class specific validation rules */
-		if (!empty($class_name))
-			$rules = call_user_func(array($class_name, 'getValidationRules'), $class_name);
+		$object = new $class_name();
+		$definition = ObjectModel::getDefinition($class_name);
+		$default_language = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
 
-		if (isset($rules) && count($rules) && (count($rules['requiredLang']) || count($rules['sizeLang']) || count($rules['validateLang'])))
+		foreach ($definition['fields'] as $field => $def)
 		{
-			/* Language() instance determined by default language */
-			$default_language = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+			$skip = array();
+			if (in_array($field, array('passwd', 'no-picture')))
+				$skip = array('required');
 
-			/* All availables languages */
-			$languages = Language::getLanguages(false);
+			if (isset($def['lang']) && $def['lang'] && isset($def['required']) && $def['required'])
+			{
+				$value = Tools::getValue($field.'_'.$default_language->id);
+				if (Tools::isEmpty($value))
+					$this->errors[$field.'_'.$default_language->id] = sprintf(
+							Tools::displayError('The field %1$s is required at least in %2$s.'),
+							$object->displayFieldName($field, $class_name),
+							$default_language->name
+					);
+
+				foreach (Language::getLanguages(false) as $language)
+				{
+					$value = Tools::getValue($field.'_'.$language['id_lang']);
+					if (!empty($value))
+						if (($error = $object->validateField($field, $value, $language['id_lang'], $skip, true)) !== true)
+							$this->errors[$field.'_'.$language['id_lang']] = $error;
+				}
+			}
+			else
+				if (($error = $object->validateField($field, Tools::getValue($field), null, $skip, true)) !== true)
+					$this->errors[$field] = $error;
 		}
 
-		/* Checking for required fields */
-		if (isset($rules['required']) && is_array($rules['required']))
-			foreach ($rules['required'] as $field)
-				if (($value = Tools::getValue($field)) == false && (string)$value != '0')
-					if (!Tools::getValue($this->identifier) || ($field != 'passwd' && $field != 'no-picture'))
-						$this->errors[$field] = sprintf(
-							Tools::displayError('The %s field is required.'),
-							call_user_func(array($class_name, 'displayFieldName'), $field, $class_name)
-						);
-
-		/* Checking for multilingual required fields */
-		if (isset($rules['requiredLang']) && is_array($rules['requiredLang']))		
-			foreach ($rules['requiredLang'] as $field_lang)
-				if (($empty = Tools::getValue($field_lang.'_'.$default_language->id)) === false || $empty !== '0' && empty($empty))
-					$this->errors[$field_lang.'_'.$default_language->id] = sprintf(
-						Tools::displayError('The field %1$s is required at least in %2$s.'),
-						call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name),
-						$default_language->name
-					);
-
-		/* Checking for maximum fields sizes */
-		if (isset($rules['size']) && is_array($rules['size']))			
-			foreach ($rules['size'] as $field => $max_length)
-				if (Tools::getValue($field) !== false && Tools::strlen(Tools::getValue($field)) > $max_length)
-					$this->errors[$field] = sprintf(
-						Tools::displayError('The %1$s field is too long (%2$d chars max).'),
-						call_user_func(array($class_name, 'displayFieldName'), $field, $class_name),
-						$max_length
-					);
-
-		/* Checking for maximum multilingual fields size */
-		if (isset($rules['sizeLang']) && is_array($rules['sizeLang']))			
-			foreach ($rules['sizeLang'] as $field_lang => $max_length)
-				foreach ($languages as $language)
-				{
-					$field_lang_value = Tools::getValue($field_lang.'_'.$language['id_lang']);
-					if ($field_lang_value !== false && Tools::strlen($field_lang_value) > $max_length)
-						$this->errors[$field_lang.'_'.$language['id_lang']] = sprintf(
-							Tools::displayError('The field %1$s (%2$s) is too long (%3$d chars max, html chars including).'),
-							call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name),
-							$language['name'],
-							$max_length
-						);
-				}
 		/* Overload this method for custom checking */
 		$this->_childValidation();
-
-		/* Checking for fields validity */
-		if (isset($rules['validate']) && is_array($rules['validate']))			
-			foreach ($rules['validate'] as $field => $function)
-				if (($value = Tools::getValue($field)) !== false && ($field != 'passwd'))
-					if (!Validate::$function($value) && !empty($value))
-						$this->errors[$field] = sprintf(
-							Tools::displayError('The %s field is invalid.'),
-							call_user_func(array($class_name, 'displayFieldName'), $field, $class_name)
-						);
-
-		/* Checking for passwd_old validity */
-		if (($value = Tools::getValue('passwd')) != false)
-		{
-			if ($class_name == 'Employee' && !Validate::isPasswdAdmin($value))
-				$this->errors['passwd'] = sprintf(
-					Tools::displayError('The %s field is invalid.'),
-					call_user_func(array($class_name, 'displayFieldName'), 'passwd', $class_name)
-				);
-			elseif ($class_name == 'Customer' && !Validate::isPasswd($value))
-				$this->errors['passwd'] = sprintf(
-					Tools::displayError('The %s field is invalid.'),
-					call_user_func(array($class_name, 'displayFieldName'), 'passwd', $class_name)
-				);
-		}
-
-		/* Checking for multilingual fields validity */
-		if (isset($rules['validateLang']) && is_array($rules['validateLang']))			
-			foreach ($rules['validateLang'] as $field_lang => $function)
-				foreach ($languages as $language)
-					if (($value = Tools::getValue($field_lang.'_'.$language['id_lang'])) !== false && !empty($value))
-						if (!Validate::$function($value))
-							$this->errors[$field_lang.'_'.$language['id_lang']] = sprintf(
-								Tools::displayError('The %1$s field (%2$s) is invalid.'),
-								call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name),
-								$language['name']
-							);
 	}
 
 	/**

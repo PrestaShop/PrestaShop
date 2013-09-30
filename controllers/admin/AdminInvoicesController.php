@@ -59,10 +59,8 @@ class AdminInvoicesControllerCore extends AdminController
 					'PS_INVOICE_FREE_TEXT' => array(
 						'title' => $this->l('Footer text:'),
 						'desc' => $this->l('This text will appear at the bottom of the invoice'),
-						'size' => 6,
-						'type' => 'textareaLang',
-						'cols' => 40,
-						'rows' => 8
+						'size' => 50,
+						'type' => 'textLang',
 					),
 					'PS_INVOICE_MODEL' => array(
 						'title' => $this->l('Invoice model:'),

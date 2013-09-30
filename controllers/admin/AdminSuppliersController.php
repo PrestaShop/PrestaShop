@@ -278,6 +278,24 @@ class AdminSuppliersControllerCore extends AdminController
 		return parent::renderForm();
 	}
 
+	/**
+	 * AdminController::initToolbar() override
+	 * @see AdminController::initToolbar()
+	 *
+	 */
+	public function initToolbar()
+	{
+		switch ($this->display)
+		{
+			default:
+				parent::initToolbar();
+				$this->toolbar_btn['import'] = array(
+					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=suppliers',
+					'desc' => $this->l('Import')
+				);
+		}
+	}
+
 	public function renderView()
 	{
 		$this->toolbar_title = $this->object->name;

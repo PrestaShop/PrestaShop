@@ -46,11 +46,11 @@
 		<script type="text/javascript">
 		$(document).ready(function() {
 			$("#group_discount_category").fancybox({
-				onStart: function () {
+				beforeLoad: function () {
 					$('#group_discount_category_fancybox').show();
 					initFancyBox();
 				},
-				onClosed: function () {
+				beforeClose: function () {
 					$('#group_discount_category_fancybox').hide();
 				}
 			});

@@ -181,7 +181,7 @@ class AdminCustomersControllerCore extends AdminController
 		else if (!$this->display) //display import button only on listing
 		{
 			$this->toolbar_btn['import'] = array(
-				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type='.$this->table,
+				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=customers',
 				'desc' => $this->l('Import')
 			);
 		}
