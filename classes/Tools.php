@@ -704,6 +704,21 @@ class ToolsCore
 			}
         return false;
     }
+
+    /**
+	* Delete file
+	*
+	* @param string File path
+	* @param array  Excluded files
+	*/
+    public static function deleteFile($file, $exclude_files = array())
+    {
+		if (isset($exclude_files) && !is_array($exclude_files))
+			$exclude_files = array($exclude_files);
+
+		if (file_exists($file) && is_file($file) && array_search(basename($file), $exclude_files) === FALSE)
+			unlink($file);
+    }
     
 	/**
 	* Clear smarty cache folders
