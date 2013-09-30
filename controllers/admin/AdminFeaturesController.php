@@ -142,7 +142,7 @@ class AdminFeaturesControllerCore extends AdminController
 			$this->_where = sprintf('AND `id_feature` = %d', (int)$id);
 
 			// get list and force no limit clause in the request
-			$this->getList($this->context->language->id);
+			$this->getList($this->context->language->id, 'id_feature_value', 'ASC');
 
 			// Render list
 			$helper = new HelperList();
@@ -151,8 +151,6 @@ class AdminFeaturesControllerCore extends AdminController
 			$helper->shopLinkType = '';
 			$helper->identifier = $this->identifier;
 			$helper->toolbar_scroll = false;
-			$helper->orderBy = 'position';
-			$helper->orderWay = 'ASC';
 			$helper->currentIndex = self::$currentIndex;
 			$helper->token = $this->token;
 			$helper->table = $this->table;
