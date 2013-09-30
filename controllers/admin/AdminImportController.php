@@ -1067,13 +1067,23 @@ class AdminImportControllerCore extends AdminController
 
 			if (Tools::getValue('forceIDs') && isset($info['id']) && (int)$info['id'])
 				$product = new Product((int)$info['id']);
-			else
+			elseif (Tools::getValue('match_ref') && array_key_exists('reference', $info))
 			{
-				if (array_key_exists('id', $info) && (int)$info['id'] && Product::existsInDatabase((int)$info['id'], 'product'))
-					$product = new Product((int)$info['id']);
-				else
-					$product = new Product();
+					$datas = Db::getInstance()->getRow('
+						SELECT p.`id_product`
+						FROM `'._DB_PREFIX_.'product` p
+						'.Shop::addSqlAssociation('product', 'p').'
+						WHERE p.`reference` = "'.pSQL($info['reference']).'"
+					');
+					if (isset($datas['id_product']) && $datas['id_product'])
+						$product = new Product((int)$datas['id_product']);
+					else
+						$product = new Product();
 			}
+			elseif (array_key_exists('id', $info) && (int)$info['id'] && Product::existsInDatabase((int)$info['id'], 'product'))
+					$product = new Product((int)$info['id']);
+			else
+				$product = new Product();
 
 			if (array_key_exists('id', $info) && (int)$info['id'] && Product::existsInDatabase((int)$info['id'], 'product'))
 			{
@@ -1311,7 +1321,7 @@ class AdminImportControllerCore extends AdminController
 						SELECT product_shop.`date_add`, p.`id_product`
 						FROM `'._DB_PREFIX_.'product` p
 						'.Shop::addSqlAssociation('product', 'p').'
-						WHERE p.`reference` = "'.$product->reference.'"
+						WHERE p.`reference` = "'.pSQL($product->reference).'"
 					');
 					$product->id = (int)$datas['id_product'];
 					$product->date_add = pSQL($datas['date_add']);
