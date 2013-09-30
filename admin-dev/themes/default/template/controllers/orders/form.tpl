@@ -984,7 +984,7 @@
 	<label>{l s='Search customers'}</label>
 	<div class="margin-form">
 		<input type="text" id="customer" value="" />
-		<p>{l s='Search a customer by tapping the first letters of his/her name'}</p>
+		<p>{l s='Search a customer by typing the first letters of his/her name'}</p>
 		<a class="fancybox button" href="{$link->getAdminLink('AdminCustomers')|escape:'htmlall':'UTF-8'}&addcustomer&liteDisplaying=1&submitFormAjax=1#">
 			<img src="../img/admin/add.gif" title="new"/><span>{l s='Add new customer'}</span>
 		</a>
@@ -999,7 +999,7 @@
 		<div class="margin-form">
 			<input type="hidden" value="" id="id_cart" name="id_cart" />
 			<input type="text" id="product" value="" />
-			<p>{l s='Search a product by tapping the first letters of his/her name.'}</p>
+			<p>{l s='Search a product by typing the first letters of his/her name.'}</p>
 		</div>
 		<div id="products_found">
 			<div id="product_list">
