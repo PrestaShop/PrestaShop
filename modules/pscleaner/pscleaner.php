@@ -65,65 +65,31 @@ class PSCleaner extends Module
 		if (Tools::isSubmit('submitTruncateCatalog'))
 		{
 			self::truncate('catalog');
-			$html .= '<div class="conf">'.$this->l('Catalog truncated').'</div>';
+			$html .= $this->displayConfirmation($this->l('Catalog truncated'));
 		}
 		if (Tools::isSubmit('submitTruncateSales'))
 		{
 			self::truncate('sales');
-			$html .= '<div class="conf">'.$this->l('Orders and customers truncated').'</div>';
+			$html .= $this->displayConfirmation($this->l('Orders and customers truncated'));
 		}
 
 		$html .= '
 		<script type="text/javascript">
 			$(document).ready(function(){
-				$("#submitTruncateCatalog").submit(function(){
-					if (!$(\'#checkTruncateCatalog\').attr(\'checked\'))
-						alert(\''.addslashes($this->l('Please tick the checkbox above')).'\');
-					else if (confirm(\''.addslashes($this->l('Are you sure that you want to delete all catalog data?')).'\'))
+				$("#submitTruncateCatalog").click(function(){
+					if (confirm(\''.addslashes($this->l('Are you sure that you want to delete all catalog data?')).'\'))
 						return true; 
 					return false;
 				});
-				$("#submitTruncateSales").submit(function(){
-					if (!$(\'#checkTruncateSales\').attr(\'checked\'))
-						alert(\''.addslashes($this->l('Please tick the checkbox above')).'\');
-					else if (confirm(\''.addslashes($this->l('Are you sure that you want to delete all sales data?')).'\'))
+				$("#submitTruncateSales").click(function(){
+					if (confirm(\''.addslashes($this->l('Are you sure that you want to delete all sales data?')).'\'))
 						return true; 
 					return false;
 				});
 			});
-		</script>
-		<form id="submitTruncateCatalog" action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset><legend>'.$this->l('Catalog').'</legend>
-				<p>
-					<label style="float:none;width:auto">
-						<input id="checkTruncateCatalog" type="checkbox" />
-						'.$this->l('I understand that all the catalog data will be removed without possible rollback:').'
-						'.$this->l('products, features, categories, tags, images, prices, attachments, scenes, stocks, attribute groups and values, manufacturers, suppliers...').'
-					</label>
-				</p>
-				<input type="submit" class="button" name="submitTruncateCatalog" value="'.$this->l('Delete catalog').'" />
-			</fieldset>
-		</form>
-		<br /><br />
-		<form id="submitTruncateSales" action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset><legend>'.$this->l('Orders and customers').'</legend>
-				<p>
-					<label style="float:none;width:auto">
-						<input id="checkTruncateSales" type="checkbox" />
-						'.$this->l('I understand that all the orders and customers will be removed without possible rollback:').'
-						'.$this->l('customers, carts, orders, connections, guests, messages, stats...').'
-					</label>
-				</p>
-				<input type="submit" class="button" id="submitTruncateSales" name="submitTruncateSales" value="'.$this->l('Delete orders & customers').'"/>
-			</fieldset>
-		</form>
-		<br /><br />
-		<form action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset><legend>'.$this->l('Functional integrity constraints').'</legend>
-				<input type="submit" class="button" name="submitCheckAndFix" value="'.$this->l('Check & fix').'" />
-			</fieldset>
-		</form>';
-		return $html;
+		</script>';
+		
+		return $html.$this->renderForm();
 	}
 
 	public static function checkAndFix()
@@ -564,5 +530,79 @@ class PSCleaner extends Module
 		Tools::deleteDirectory(_PS_TMP_IMG_DIR_, false);
 		file_put_contents(_PS_TMP_IMG_DIR_.'index.php', $index);
 		Context::getContext()->smarty->clearAllCache();
+	}
+	
+	public function renderForm()
+	{	
+		$fields_form_1 = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Catalog'),
+					'icon' => 'icon-cogs'
+				),
+				'description' => $this->l('I understand that all the catalog data will be removed without possible rollback: products, features, categories, tags, images, prices, attachments, scenes, stocks, attribute groups and values, manufacturers, suppliers…'),
+			'submit' => array(
+				'title' => $this->l('Delete catalog'),
+				'class' => 'btn btn-primary',
+				'name' => 'submitTruncateCatalog',
+				'id' => 'submitTruncateCatalog',
+				)
+			),
+		);
+		
+		$fields_form_2 = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Orders and customers'),
+					'icon' => 'icon-cogs'
+				),
+				'description' => $this->l('I understand that all the orders and customers will be removed without possible rollback: customers, carts, orders, connections, guests, messages, stats...'),
+				'submit' => array(
+					'title' => $this->l('Delete orders & customers'),
+					'class' => 'btn btn-primary',
+					'name' => 'submitTruncateSales',
+					'id' => 'submitTruncateSales',
+					)
+			),
+		);
+		
+		$fields_form_3 = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Functional integrity constraints'),
+					'icon' => 'icon-cogs'
+				),
+			'submit' => array(
+				'title' => $this->l('Check & fix'),
+				'class' => 'btn btn-primary',
+				'name' => 'submitCheckAndFix',
+				)
+			),
+		);
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$this->fields_form = array();
+		$helper->id = (int)Tools::getValue('id_carrier');
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'btnSubmit';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form_1, $fields_form_2, $fields_form_3));
+	}
+	
+	public function getConfigFieldsValues()
+	{
+		return array('value' => '');
 	}
 }
