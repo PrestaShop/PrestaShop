@@ -356,14 +356,24 @@ class AdminControllerCore extends Controller
 	 */
 	public function initBreadcrumbs()
 	{
+		/* Breadcrumb */
+		$navigationPipe = (Configuration::get('PS_NAVIGATION_PIPE') ? Configuration::get('PS_NAVIGATION_PIPE') : '>');
+		$this->context->smarty->assign('navigationPipe', $navigationPipe);
+
 		$tabs = array();
 		$tabs = Tab::recursiveTab($this->id, $tabs);
 		$tabs = array_reverse($tabs);
+		$prev = '';
 		foreach ($tabs as $tab)
+		{
+			if (!empty($prev) && $prev == $tab['name'])
+				array_pop($this->breadcrumbs);
+			$prev = $tab['name'];
 			if ($tab['id_parent'] != 0)
 				$this->breadcrumbs[] = '<a href="'.Tools::htmlentitiesUTF8($this->context->link->getAdminLink($tab['class_name'])).'">'.$tab['name'].'</a>';
 			else
 				$this->breadcrumbs[] = $tab['name'];
+		}
 	}
 
 	/**
@@ -373,24 +383,29 @@ class AdminControllerCore extends Controller
 	 */
 	public function initToolbarTitle()
 	{
-		$bread_extended = array_unique($this->breadcrumbs);
+		$this->toolbar_title = array_unique($this->breadcrumbs);
 
 		switch ($this->display)
 		{
 			case 'edit':
-				$bread_extended[] = $this->l('Edit');
+				$this->toolbar_title[] = $this->l('Edit');
 				break;
 
 			case 'add':
-				$bread_extended[] = $this->l('Add new');
+				$this->toolbar_title[] = $this->l('Add new');
 				break;
 
 			case 'view':
-				$bread_extended[] = $this->l('View');
+				$this->toolbar_title[] = $this->l('View');
 				break;
 		}
-		$this->toolbar_title = $bread_extended;
-    
+
+		if ($filter = $this->addFiltersToBreadcrumbs())
+			$this->toolbar_title[] = $filter;
+	}
+	
+	public function addFiltersToBreadcrumbs()
+	{
 		if (Tools::isSubmit('submitFilter'))
 		{
 			$filters = array();
@@ -424,7 +439,7 @@ class AdminControllerCore extends Controller
 			}
 
 			if (count($filters))
-				$this->toolbar_title[] = sprintf($this->l('filter by %s'), implode(', ', $filters));
+				return sprintf($this->l('filter by %s'), implode(', ', $filters));
 		}
 	}
 
@@ -1272,7 +1287,7 @@ class AdminControllerCore extends Controller
 
 		// Use page title from meta_title if it has been set else from the breadcrumbs array
 		if (!$this->meta_title)
-			$this->meta_title = isset($this->breadcrumbs[1]) ? $this->breadcrumbs[1] : $this->breadcrumbs[0];
+			$this->meta_title = strip_tags(is_array($this->toolbar_title) ? implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title) : $this->toolbar_title);
 		$this->context->smarty->assign('meta_title', $this->meta_title);
 
 		$tpl_action = $this->tpl_folder.$this->display.'.tpl';
@@ -1783,7 +1798,7 @@ class AdminControllerCore extends Controller
 			$helper->id = $this->object->id;
 
 		// @todo : move that in Helper
-		$helper->title = implode(' &gt; ', $this->toolbar_title);
+		$helper->title = is_array($this->toolbar_title) ? implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title) : $this->toolbar_title;
 		$helper->toolbar_btn = $this->toolbar_btn;
 		$helper->show_toolbar = $this->show_toolbar;
 		$helper->toolbar_scroll = $this->toolbar_scroll;

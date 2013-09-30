@@ -2524,9 +2524,10 @@ class AdminProductsControllerCore extends AdminController
 	public function initToolbarTitle()
 	{
 		parent::initToolbarTitle();
-		if ($product = $this->loadObject(true))
-			if ((bool)$product->id && $this->display != 'list' && isset($this->toolbar_title[2]))
-				$this->toolbar_title[2] = $this->toolbar_title[2].' ('.$this->product_name.')';
+		
+		if ($this->display != 'list')
+			if (($product = $this->loadObject(true)) && Validate::isLoadedObject($product))
+				$this->toolbar_title[] = Tools::htmlentitiesUTF8($this->product_name);
 	}
 
 	/**

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <entity_tab>
-  <tab id="Home" name="Home"/>
+  <tab id="Dashboard" name="Dashboard"/>
   <tab id="CMS_Pages" name="CMS Pages"/>
   <tab id="CMS_Categories" name="CMS Categories"/>
   <tab id="Combinations_Generator" name="Combinations Generator"/>
