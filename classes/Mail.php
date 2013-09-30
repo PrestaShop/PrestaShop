@@ -235,8 +235,13 @@ class MailCore
 					include_once($template_path.$iso.'/lang.php');
 			else if ($module_name && file_exists($theme_path.'mails/'.$iso.'/lang.php'))
 				include_once($theme_path.'mails/'.$iso.'/lang.php');
-			else
+			else if (file_exists(_PS_MAIL_DIR_.$iso.'/lang.php'))
 				include_once(_PS_MAIL_DIR_.$iso.'/lang.php');
+			else
+			{
+				Tools::dieOrLog(Tools::displayError('Error - The lang file is missing for :').' '.$iso, $die);
+				return false;
+			}
 
 			/* Create mail and attach differents parts */
 			$message = new Swift_Message('['.Configuration::get('PS_SHOP_NAME', null, null, $id_shop).'] '.$subject);
