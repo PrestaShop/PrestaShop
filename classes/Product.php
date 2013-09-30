@@ -3045,6 +3045,35 @@ class ProductCore extends ObjectModel
 		return true;
 	}
 
+	public static function getAttributesColorList(Array $products, $have_stock = true)
+	{
+		if (!count($products))
+			return array();
+			
+		if (!$res = Db::getInstance()->executeS('
+					SELECT pa.id_product, a.color, a.id_attribute, pac.id_product_attribute
+					FROM '._DB_PREFIX_.'product_attribute pa
+					'.Shop::addSqlAssociation('product_attribute', 'pa').'
+					JOIN '._DB_PREFIX_.'product_attribute_combination pac ON (pac.id_product_attribute = product_attribute_shop.id_product_attribute)
+					JOIN '._DB_PREFIX_.'attribute a ON (a.id_attribute = pac.id_attribute)
+					JOIN '._DB_PREFIX_.'attribute_group ag ON (ag.id_attribute_group = ag.id_attribute_group)
+					WHERE pa.id_product IN ('.implode(array_map('intval', $products), ',').') AND ag.is_color_group = 1
+					GROUP BY pa.id_product, color
+			'))
+				return false;
+
+		$colors = array();
+		foreach ($res as $row)
+		{
+			if (Tools::isEmpty($row['color']))
+				continue;
+
+			$colors[(int)$row['id_product']][] = array('id_product_attribute' => (int)$row['id_product_attribute'], 'color' => $row['color']);
+		}
+		
+		return $colors;
+	}
+
 	/**
 	 * Get all available attribute groups
 	 *
