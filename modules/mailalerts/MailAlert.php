@@ -54,7 +54,7 @@ class MailAlert extends ObjectModel
 		),
 	);
 
-	public static function customerHasNotification($id_customer, $id_product, $id_product_attribute, $id_shop = null, $id_lang = null)
+	public static function customerHasNotification($id_customer, $id_product, $id_product_attribute, $id_shop = null, $id_lang = null, $guest_email = '')
 	{
 		if ($id_shop == null)
 			$id_shop = Context::getContext()->shop->id;
@@ -64,11 +64,15 @@ class MailAlert extends ObjectModel
 
 		$customer = new Customer($id_customer);
 		$customer_email = $customer->email;
-
+		$guest_email = pSQL($guest_email);
+		
+		$id_customer = (int)$id_customer;
+		$customer_email = pSQL($customer_email);
+		$where = $id_customer == 0 ? "customer_email = '$guest_email'" : "(id_customer=$id_customer OR customer_email='$customer_email')";
 		$sql = '
 			SELECT *
 			FROM `'._DB_PREFIX_.self::$definition['table'].'`
-			WHERE (`id_customer` = '.(int)$id_customer.' OR `customer_email` = \''.pSQL($customer_email).'\')
+			WHERE '.$where.'
 			AND `id_product` = '.(int)$id_product.'
 			AND `id_product_attribute` = '.(int)$id_product_attribute.'
 			AND `id_shop` = '.(int)$id_shop;

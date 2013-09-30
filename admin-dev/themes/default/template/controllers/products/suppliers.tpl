@@ -34,10 +34,7 @@
 		<br />
 		{l s='When using the advanced stock management tool (see Preferences/Products), the values you define (prices, references) will be used in supply orders.'}
 	</div>
-
 	<label>{l s='Please choose the suppliers associated with this product. Please select a default supplier, as well.'}</label>
-
-
 	<table class="table">
 		<thead>
 			<tr>
@@ -56,15 +53,12 @@
 		{/foreach}
 		</tbody>
 	</table>
-
-
 	<a class="btn btn-link bt-icon confirm_leave" href="{$link->getAdminLink('AdminSuppliers')|escape:'htmlall':'UTF-8'}&addsupplier">
 		<i class="icon-plus"></i> {l s='Create a new supplier'} <i class="icon-external-link-sign"></i>
 	</a>
 </fieldset>
 <fieldset>
 	<h3>{l s='Product reference(s)'}</h3>
-
 	<div class="alert alert-info">
 		{if $associated_suppliers|@count == 0}
 			{l s='You must specify the suppliers associated with this product. You must also select the default product supplier before setting references.'}
@@ -73,13 +67,12 @@
 		{/if}
 		{l s='Click "Save and Stay" after changing selected suppliers to display the associated product references.'}
 	</div>
-
 	<div class="panel-group" id="accordion-supplier">
 		{foreach from=$associated_suppliers item=supplier name=data}
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h4 class="panel-title">
-					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-supplier" href="#supplier-{$supplier->id}">{$supplier->name}</a>
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-supplier" href="#supplier-{$supplier->id}">{if isset($supplier->name)}{$supplier->name}{/if}</a>
 				</h4>
 			</div>
 			<div id="supplier-{$supplier->id}" class="panel-collapse collapse{if $smarty.foreach.data.first} in{/if}">
@@ -93,7 +86,6 @@
 								<th><span class="title_box">{l s='Unit price currency'}</span></th>
 							</tr>
 						</thead>
-
 						<tbody>
 						{foreach $attributes AS $index => $attribute}
 							{assign var=reference value=''}

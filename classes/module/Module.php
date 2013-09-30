@@ -943,7 +943,7 @@ abstract class ModuleCore
 
 	public static function configXmlStringFormat($string)
 	{
-		return str_replace('\'', '\\\'', Tools::htmlentitiesDecodeUTF8($string));
+		return Tools::htmlentitiesDecodeUTF8($string);
 	}
 
 
@@ -1635,15 +1635,18 @@ abstract class ModuleCore
 	
 	protected function getCacheId($name = null)
 	{
-		$cache_array = array(
-			$name !== null ? $name : $this->name,
-			(int)Tools::usingSecureMode(),
-			(int)$this->context->shop->id,
-			(int)Group::getCurrent()->id,
-			(int)$this->context->language->id,
-			(int)$this->context->currency->id,
-			(int)$this->context->country->id
-		);
+		$cache_array = array();
+		$cache_array[] = $name !== null ? $name : $this->name;
+		if (Configuration::get('PS_SSL_ENABLED'))
+			$cache_array[] = (int)Tools::usingSecureMode();
+		if (Shop::isFeatureActive())
+			$cache_array[] = (int)$this->context->shop->id;
+		$cache_array[] = (int)Group::getCurrent()->id;
+		if (Language::isMultiLanguageActivated())
+			$cache_array[] = (int)$this->context->language->id;
+		if (Currency::isMultiCurrencyActivated())
+			$cache_array[] = (int)$this->context->currency->id;
+		$cache_array[] = (int)$this->context->country->id;
 		return implode('|', $cache_array);
 	}
 
@@ -1707,10 +1710,12 @@ abstract class ModuleCore
 		
 		if ($overloaded)
 			return $overloaded;
-		else if (file_exists(_PS_MODULE_DIR_.$this->name.'/views/templates/hook/'.$template))
+		elseif (file_exists(_PS_MODULE_DIR_.$this->name.'/views/templates/hook/'.$template))
 			return _PS_MODULE_DIR_.$this->name.'/views/templates/hook/'.$template;
-		else
+		elseif (file_exists(_PS_MODULE_DIR_.$this->name.'/'.$template))
 			return _PS_MODULE_DIR_.$this->name.'/'.$template;
+		else
+			return null;
 	}
 
 	protected function _getApplicableTemplateDir($template)
@@ -1730,6 +1735,8 @@ abstract class ModuleCore
 	protected function _clearCache($template, $cache_id = null, $compile_id = null)
 	{
 		Tools::enableCache();
+		if ($cache_id === null)
+			$cache_id = Module::getCacheId($this->name);
 		Tools::clearCache(Context::getContext()->smarty, $this->getTemplatePath($template), $cache_id, $compile_id);
 		Tools::restoreCacheSettings();
 	}

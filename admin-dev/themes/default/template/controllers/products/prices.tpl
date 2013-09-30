@@ -195,7 +195,7 @@ $(document).ready(function () {
 
 	<div class="row" {if !$ps_use_ecotax} style="display:none;"{/if}>
 		<label class="control-label col-lg-3" for="ecotax">
-			{include file="controllers/products/multishop/checkbox.tpl" field="ecot" type="default"}
+			{include file="controllers/products/multishop/checkbox.tpl" field="ecotax" type="default"}
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='already included in price'}">
 				{l s='Eco-tax (tax incl.):'}

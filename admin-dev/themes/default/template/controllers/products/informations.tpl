@@ -200,7 +200,7 @@
 
 	<div class="row redirect_product_options" style="display:none">		
 		<label class="control-label col-lg-3" for="redirect_type">
-			{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
+			{include file="controllers/products/multishop/checkbox.tpl" field="redirect_type" type="radio" onclick=""}
 			{l s='Redirect:'}
 		</label>
 		<div class="col-lg-5">
@@ -223,7 +223,7 @@
 
 	<div class="row redirect_product_options redirect_product_options_product_choise" style="display:none">		
 		<label class="control-label col-lg-3" for="related_product_autocomplete_input">
-			{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
+			{include file="controllers/products/multishop/checkbox.tpl" field="id_product_redirected" type="radio" onclick=""}
 			{l s='Related product:'}
 		</label>
 		<div class="col-lg-7">

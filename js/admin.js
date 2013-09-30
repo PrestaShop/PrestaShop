@@ -481,7 +481,7 @@ function askFeatureName(selected, selector)
 {
 	var elem;
 
-	if (selected.value == 'feature')
+	if (selected.value == 'features')
 	{
 		$('#features_' + selector).show();
 		$('#feature_name_' + selector).attr('name', selected.name);
@@ -776,6 +776,7 @@ function doAdminAjax(data, success_func, error_func)
 	{
 		url : 'index.php',
 		data : data,
+		type : 'POST',
 		success : function(data){
 			if (success_func)
 				return success_func(data);

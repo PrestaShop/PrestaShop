@@ -168,7 +168,7 @@
 				{l s='Customer information'}
 			</h3>
 			<span>
-				<a href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={getAdminToken tab='AdminCustomers'}"> {$customer->firstname} {$customer->lastname}</a>
+				<a href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={getAdminToken tab='AdminCustomers'}"> {$gender->name|escape:'htmlall':'UTF-8'} {$customer->firstname} {$customer->lastname}</a>
 			</span> ({l s='#'}{$customer->id})
 			(<a href="mailto:{$customer->email}">{$customer->email}</a>)
 			{if ($customer->isGuest())}
@@ -216,8 +216,6 @@
 
 		<!-- Admin order hook -->
 		{hook h="displayAdminOrder" id_order=$order->id}
-
-
 		<div class="panel">
 			<b>{l s='Orders'}</b> :
 			{if $previousOrder}
