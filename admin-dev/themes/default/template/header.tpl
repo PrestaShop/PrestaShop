@@ -33,7 +33,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="robots" content="NOFOLLOW, NOINDEX">
-	<title>{$meta_title} - PrestaShop&trade;</title>
+	<title>{$shop_name} {if $meta_title != ''}- {$meta_title}{/if} - PrestaShop&trade;</title>
 	{if $display_header}
 	<script type="text/javascript">
 		var help_class_name = '{$controller_name}';
