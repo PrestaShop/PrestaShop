@@ -414,7 +414,7 @@
 								{elseif $input.type == 'checkbox'}
 									{foreach $input.values.query as $value}
 										{assign var=id_checkbox value=$input.name|cat:'_'|cat:$value[$input.values.id]}
-										<div class="checkbox col-lg-9 col-lg-push-4">
+										<div class="checkbox">
 											<label for="{$id_checkbox}">
 												<input type="checkbox"
 													name="{$id_checkbox}"
