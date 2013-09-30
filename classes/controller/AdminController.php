@@ -654,7 +654,7 @@ class AdminControllerCore extends Controller
 			'export_content' => $content
 			)
 		);
-			
+
 		$this->layout = 'layout-export.tpl';
 	}
 
@@ -2112,6 +2112,7 @@ class AdminControllerCore extends Controller
 	 */
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
+
 		if (!isset($this->list_id))
 			$this->list_id = $this->table;
 
@@ -2166,12 +2167,17 @@ class AdminControllerCore extends Controller
 			$order_by = $this->fields_list[$order_by]['order_key'];
 
 		/* Determine offset from current page */
+		if (isset($this->context->cookie->{$this->list_id.'_page'}))
+			$start = $this->context->cookie->{$this->list_id.'_page'};
+		
 		if ((isset($_POST['submitFilter'.$this->list_id]) ||
 		isset($_POST['submitFilter'.$this->list_id.'_x']) ||
 		isset($_POST['submitFilter'.$this->list_id.'_y'])) &&
 		!empty($_POST['submitFilter'.$this->list_id]) &&
 		is_numeric($_POST['submitFilter'.$this->list_id]))
 			$start = ((int)$_POST['submitFilter'.$this->list_id] - 1) * $limit;
+
+		$this->context->cookie->{$this->list_id.'_page'} = $start;
 
 		/* Cache */
 		$this->_lang = (int)$id_lang;
@@ -2240,8 +2246,6 @@ class AdminControllerCore extends Controller
 			if (isset($this->_having))
 				$having_clause .= $this->_having.' ';
 		}
-
-
 
 		$this->_listsql = '
 		SELECT SQL_CALC_FOUND_ROWS
