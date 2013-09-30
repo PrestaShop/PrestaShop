@@ -76,11 +76,13 @@ var moderation_active = {$moderation_active};
 			</div>
 			{/if}
 		{/foreach}
+        {if (!$too_early AND ($logged OR $allow_guests))}
 		<p class="align_center">
 			<a id="new_comment_tab_btn" class="open-comment-form" href="#new_comment_form">{l s='Write your review' mod='productcomments'} !</a>
 		</p>
+        {/if}
 	{else}
-		{if ($too_early == false AND ($logged OR $allow_guests))}
+		{if (!$too_early AND ($logged OR $allow_guests))}
 		<p class="align_center">
 			<a id="new_comment_tab_btn" class="open-comment-form" href="#new_comment_form">{l s='Be the first to write your review' mod='productcomments'} !</a>
 		</p>

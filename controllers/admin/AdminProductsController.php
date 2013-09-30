@@ -2023,7 +2023,7 @@ class AdminProductsControllerCore extends AdminController
 		// Check multilingual fields validity
 		foreach ($rules['validateLang'] as $fieldLang => $function)
 			foreach ($languages as $language)
-				if ($this->isProductFieldUpdated('description_short', $language['id_lang']) && ($value = Tools::getValue($fieldLang.'_'.$language['id_lang'])))
+				if ($this->isProductFieldUpdated($fieldLang, $language['id_lang']) && ($value = Tools::getValue($fieldLang.'_'.$language['id_lang'])))
 					if (!Validate::$function($value, (int)Configuration::get('PS_ALLOW_HTML_IFRAME')))
 						$this->errors[] = sprintf(
 							Tools::displayError('The %1$s field (%2$s) is invalid.'),
