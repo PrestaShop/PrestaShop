@@ -102,22 +102,18 @@
 	{/if}
 </head>
 
-<body class="page-sidebar">
-<!-- 
-<body class="page-sidebar">
-<body class="page-sidebar page-sidebar-closed">
-<body class="page-topbar">
--->
+<body class="{if $employee->bo_menu}page-sidebar {* page-sidebar-closed *}{else}page-topbar{/if}">
+
 {if $display_header}
 {* begin  HEADER *}
 	<header id="header">
 		<nav id="header_infos" role="navigation">
 			<div class="navbar-header">
 			<button id="header_nav_toggle" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-primary">
-					<i class="icon-reorder"></i>
+				<i class="icon-reorder"></i>
 			</button>
 
-			<a id="header_shopname" href="{$link->getAdminLink('AdminHome')|escape:'htmlall':'UTF-8'}">
+			<a id="header_shopname" href="{$link->getAdminLink('AdminDashboard')|escape:'htmlall':'UTF-8'}">
 				<img src="{$img_dir}prestashop-avatar.png" height="15" width="15" />
 				{$shop_name}
 			</a>
