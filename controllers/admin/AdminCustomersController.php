@@ -187,6 +187,15 @@ class AdminCustomersControllerCore extends AdminController
 		}
 	}
 
+	public function initToolbarTitle()
+	{
+		parent::initToolbarTitle();
+
+		if ($this->display != 'list')
+			if (($customer = $this->loadObject(true)) && Validate::isLoadedObject($customer))
+				$this->toolbar_title[] = Tools::htmlentitiesUTF8(Tools::substr($customer->firstname, 0, 1).'. '.$customer->firstname);
+	}
+
 	public function initPageHeaderToolbar()
 	{
 		$this->page_header_toolbar_title = $this->l('Customers');

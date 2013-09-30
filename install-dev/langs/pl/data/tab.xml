@@ -33,7 +33,7 @@
   <tab id="General" name="Ustawienia g&#x142;&#xF3;wne"/>
   <tab id="Geolocation" name="Lokalizacja geograficzna"/>
   <tab id="Groups" name="Grupy"/>
-  <tab id="Home" name="Strona g&#x142;&#xF3;wna"/>
+  <tab id="Dashboard" name="Dashboard"/>
   <tab id="Image_Mapping" name="Image Mapping"/>
   <tab id="Images" name="Obrazki"/>
   <tab id="Instant_Stock_Status" name="Natychmiastowe stany magazynowe"/>

@@ -33,7 +33,7 @@
   <tab id="General" name="General"/>
   <tab id="Geolocation" name="Localizaci&#xF3;n"/>
   <tab id="Groups" name="Grupos"/>
-  <tab id="Home" name="Inicio"/>
+  <tab id="Dashboard" name="Dashboard"/>
   <tab id="Image_Mapping" name="Cartograf&#xED;a de im&#xE1;genes"/>
   <tab id="Images" name="Im&#xE1;genes"/>
   <tab id="Instant_Stock_Status" name="Estado de existencias instantes"/>
