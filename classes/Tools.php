@@ -494,6 +494,20 @@ class ToolsCore
 		if (($is_negative = ($price < 0)))
 			$price *= -1;
 		$price = Tools::ps_round($price, $c_decimals);
+
+		/*
+		* If the language is RTL and the selected currency format contains spaces as thousands separator
+		* then the number will be printed in reverse since the space is interpreted as separating words.
+		* To avoid this we replace the currency format containing a space with the one containing a comma (,) as thousand
+		* separator when the language is RTL.
+		*
+		* TODO: This is not ideal, a currency format should probably be tied to a language, not to a currency.
+		*/
+		if(($c_format == 2) && ($context->language->is_rtl == 1))
+		{
+			$c_format = 4;
+		}
+
 		switch ($c_format)
 		{
 			/* X 0,000.00 */
