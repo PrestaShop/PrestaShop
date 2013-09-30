@@ -390,35 +390,38 @@ class AdminControllerCore extends Controller
     
 		if (Tools::isSubmit('submitFilter'))
 		{
-			$filter = '';
-			foreach ($this->fields_list AS $field => $t)
+			$filters = array();
+			foreach ($this->fields_list as $field => $t)
 			{
+				if (isset($t['filter_key']))
+					$field = $t['filter_key'];
 				if ($val = Tools::getValue($this->table.'Filter_'.$field))
 				{
-					if(!is_array($val) && !empty($val))
-						$filter .= ($filter ?  ', ' : $this->l(' filter by ')).$t['title'].' : ';
-		
-					if (isset($t['type']) && $t['type'] == 'bool')
-						$filter .= ((bool)$val) ? $this->l('yes') : $this->l('no');
-					elseif(is_string($val))
-						$filter .= htmlspecialchars($val, ENT_QUOTES, 'UTF-8');
-					elseif(is_array($val))
+					if (!is_array($val))
 					{
-						$tmp = '';
-						foreach($val as $v)
-							if(is_string($v) && !empty($v))
-								$tmp .= ' - '.htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
-						if(Tools::strlen($tmp))
-						{
-							$tmp = ltrim($tmp, ' - ');
-							$filter .= ($filter ?  ', ' : $this->l(' filter by ')).$t['title'].' : ';							
-							$filter .= $tmp;
-						}
+						$filter_value = '';
+						if (isset($t['type']) && $t['type'] == 'bool')
+							$filter_value = ((bool)$val) ? $this->l('yes') : $this->l('no');
+						elseif (is_string($val))
+							$filter_value = htmlspecialchars($val, ENT_QUOTES, 'UTF-8');
+						if (!empty($filter_value))
+							$filters[] = sprintf($this->l('%s: %s'), $t['title'], $filter_value);
+					}
+					else
+					{
+						$filter_value = '';
+						foreach ($val as $v)
+							if (is_string($v) && !empty($v))
+								$filter_value .= ' - '.htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
+						$filter_value = ltrim($tmp, ' -');
+						if (!empty($filter_value))
+							$filters[] = sprintf($this->l('%s: %s'), $t['title'], $filter_value);
 					}
 				}
 			}
-			if ($filter)
-				$this->toolbar_title[] = $filter;
+
+			if (count($filters))
+				$this->toolbar_title[] = sprintf($this->l('filter by %s'), implode(', ', $filters));
 		}
 	}
 
@@ -1092,14 +1095,18 @@ class AdminControllerCore extends Controller
 
 	public function initPageHeaderToolbar()
 	{
+		if (empty($this->toolbar_title))
+			$this->initToolbarTitle();
+		$title = implode(' &gt; ', $this->toolbar_title);
+
 		if (is_array($this->page_header_toolbar_btn)
 			&& $this->page_header_toolbar_btn instanceof Traversable
-			|| trim($this->page_header_toolbar_title) != '')
+			|| trim($title) != '')
 			$this->show_page_header_toolbar = true;
 
 		$this->context->smarty->assign(array(
 			'show_page_header_toolbar' => $this->show_page_header_toolbar,
-			'page_header_toolbar_title' => $this->page_header_toolbar_title,
+			'page_header_toolbar_title' => $title,
 			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
 		));
 
@@ -1774,7 +1781,7 @@ class AdminControllerCore extends Controller
 			$helper->id = $this->object->id;
 
 		// @todo : move that in Helper
-		$helper->title = $this->toolbar_title;
+		$helper->title = implode(' &gt; ', $this->toolbar_title);
 		$helper->toolbar_btn = $this->toolbar_btn;
 		$helper->show_toolbar = $this->show_toolbar;
 		$helper->toolbar_scroll = $this->toolbar_scroll;
