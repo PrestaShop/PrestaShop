@@ -111,5 +111,5 @@
 </fieldset>
 {/if}
 <script type="text/javascript">
-	hideOtherLanguage({$default_form_language});
+	hideOtherLanguage({$default_language});
 </script>
