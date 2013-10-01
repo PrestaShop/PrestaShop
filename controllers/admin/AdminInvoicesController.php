@@ -42,6 +42,12 @@ class AdminInvoicesControllerCore extends AdminController
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
+					'PS_INVOICE_TAXES_BREAKDOWN' => array(
+						'title' => $this->l('Enable the breakdown of taxes on the invoice:'),
+						'desc' => $this->l('Enable the breakdown of taxes on the invoice when there are computed (like in QC)'),
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
 					'PS_INVOICE_PREFIX' => array(
 						'title' => $this->l('Invoice prefix:'),
 						'desc' => $this->l('Prefix used for invoice name (e.g. IN00001)'),

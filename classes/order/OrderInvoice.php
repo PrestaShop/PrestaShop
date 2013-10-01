@@ -243,7 +243,7 @@ class OrderInvoiceCore extends ObjectModel
 		WHERE od.`id_order` = '.(int)$this->id_order.'
 		AND od.`id_order_invoice` = '.(int)$this->id.'
 		AND od.`tax_computation_method` = '.(int)TaxCalculator::ONE_AFTER_ANOTHER_METHOD
-		);
+		) || Configuration::get('PS_INVOICE_TAXES_BREAKDOWN');
 	}
 
 	/**
