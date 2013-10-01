@@ -152,35 +152,98 @@ class VatNumber extends TaxManagerModule
 
 		if (Tools::isSubmit('submitVatNumber'))
 		{
-			if (Configuration::updateValue('VATNUMBER_COUNTRY', (int)(Tools::getValue('vatnumber_country'))))
+			if (Configuration::updateValue('VATNUMBER_COUNTRY', (int)Tools::getValue('VATNUMBER_COUNTRY')))
 				$echo .= $this->displayConfirmation($this->l('Your country has been updated.'));
-			$check = (int)Tools::getValue('vatnumber_checking');
-			if (Configuration::get('VATNUMBER_CHECKING') != $check AND Configuration::updateValue('VATNUMBER_CHECKING', $check))
-				$echo .= ($check ? $this->displayConfirmation($this->l('The check of the VAT number with the WebService is now enabled.')) : $this->displayConfirmation($this->l('The check of the VAT number with the WebService is now disabled.')));
+
+			if (Configuration::updateValue('VATNUMBER_CHECKING', (int)Tools::getValue('VATNUMBER_CHECKING')))
+				$echo .= ((bool)Tools::getValue('VATNUMBER_CHECKING') ? $this->displayConfirmation($this->l('The check of the VAT number with the WebService is now enabled.')) : $this->displayConfirmation($this->l('The check of the VAT number with the WebService is now disabled.')));
 		}
-		$echo .=  '
-		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
-			<form action="'.htmlentities($_SERVER['REQUEST_URI']).'" method="post">
-				<label>'.$this->l('Your country').'</label>
-				<div class="margin-form">
-					<select name="vatnumber_country">
-						<option value="0">'.$this->l('-- Choose a country --').'</option>';
-		foreach (Country::getCountries($this->context->language->id) as $country)
-			$echo .=  '		<option value="'.$country['id_country'].'" '.(Tools::getValue('VATNUMBER_COUNTRY', Configuration::get('VATNUMBER_COUNTRY')) == $country['id_country'] ? 'selected="selected"' : '').'>'.$country['name'].'</option>';
-		$echo .=  '		</select>
-				</div>
-				<div class="clear">&nbsp;</div>
-				<label>'.$this->l('Enable checking of the VAT number with the WebService').'</label>
-				<div class="margin-form">
-					<input type="checkbox" name="vatnumber_checking" '.(Configuration::get('VATNUMBER_CHECKING') ? 'checked="checked"' : '').' value="1"/>
-					<p>'.$this->l('The verification by the webservice is slow. Enabling this option can slow down your shop.').'</p>
-				</div>
-				<div class="clear">&nbsp;</div>
-				<div class="margin-form">
-					<input type="submit" class="button" name="submitVatNumber" value="'.$this->l('   Save   ').'" />
-				</div>
-			</form>
-		</fieldset>';
+		$echo .=  $this->renderForm();
 		return $echo;
+	}
+	
+	public function renderForm()
+	{
+		// Getting data...
+		$_countries = Country::getCountries($this->context->language->id);
+
+		// ...formatting array
+		$countries[0] = array('id' => 0, 'name' => $this->l('-- Choose a country --'));
+		foreach ($_countries as $country)
+			$countries[] = array('id' => $country['id_country'], 'name' => $country['name']);
+	
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Settings'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'select',
+						'label' => $this->l('Customers\' country :'),
+						'desc' => $this->l('Operate a filter on customers\' country.'),
+						'name' => 'VATNUMBER_COUNTRY',
+						'required' => false,
+						'default_value' => (int)$this->context->country->id,
+						'options' => array(
+							'query' => $countries,
+							'id' => 'id',
+							'name' => 'name',
+						)
+					),
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Enable checking of the VAT number with the WebService'),
+						'name' => 'VATNUMBER_CHECKING',
+						'is_bool' => true,
+						'desc' => $this->l('The verification by the webservice is slow. Enabling this option can slow down your shop.'),
+						'values' => array(
+									array(
+										'id' => 'active_on',
+										'value' => 1,
+										'label' => $this->l('Enabled')
+									),
+									array(
+										'id' => 'active_off',
+										'value' => 0,
+										'label' => $this->l('Disabled')
+									)
+								),
+						)
+				),
+			'submit' => array(
+				'title' => $this->l('Save'),
+				'class' => 'btn btn-primary')
+			),
+		);
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$this->fields_form = array();
+
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitVatNumber';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function getConfigFieldsValues()
+	{
+		return array(
+			'VATNUMBER_COUNTRY' => Tools::getValue('VATNUMBER_COUNTRY', Configuration::get('VATNUMBER_COUNTRY')),
+			'VATNUMBER_CHECKING' => Tools::getValue('VATNUMBER_CHECKING', Configuration::get('VATNUMBER_CHECKING')),
+		);
 	}
 }
