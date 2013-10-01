@@ -33,6 +33,7 @@ class AdminFeaturesControllerCore extends AdminController
 	{
 	 	$this->table = 'feature';
 		$this->className = 'Feature';
+		$this->list_id = 'feature';
 	 	$this->lang = true;
 
 		$this->fields_list = array(
@@ -121,8 +122,8 @@ class AdminFeaturesControllerCore extends AdminController
 	{
 		if (($id = Tools::getValue('id_feature')))
 		{
-
 			$this->setTypeValue();
+			$this->list_id = 'feature_value';
 			$this->lang = true;
 
 			// Action for list
@@ -149,16 +150,17 @@ class AdminFeaturesControllerCore extends AdminController
 			);
 
 			$this->_where = sprintf('AND `id_feature` = %d', (int)$id);
+			self::$currentIndex = self::$currentIndex.'&id_feature='.(int)$id.'&viewfeature';
+			$this->processFilter();
+			return parent::renderList();
 		}
-
-		return parent::renderList();
 	}
 
 	/**
 	 * method call when ajax request is made with the details row action
 	 * @see AdminController::postProcess()
 	 */
-	public function ajaxProcessDetails()
+	/*public function ajaxProcessDetails()
 	{
 		if (($id = Tools::getValue('id')))
 		{
@@ -210,7 +212,7 @@ class AdminFeaturesControllerCore extends AdminController
 			echo Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
 			exit;
 		}
-	}
+	}*/
 
 	/**
 	 * AdminController::renderForm() override
@@ -260,7 +262,7 @@ class AdminFeaturesControllerCore extends AdminController
 		{
 			$this->page_header_toolbar_title = $this->feature_name[$this->context->employee->id_lang];
 			$this->page_header_toolbar_btn['back_to_list'] = array(
-				'href' => self::$currentIndex.'&token='.$this->token,
+				'href' => Context::getContext()->link->getAdminLink('AdminFeatures'),
 				'desc' => $this->l('Back to list'),
 				'icon' => 'process-icon-back'
 			);
@@ -318,7 +320,10 @@ class AdminFeaturesControllerCore extends AdminController
 				);
 			break;
 			case 'view':
-				break;
+				$this->toolbar_btn['back'] = array(
+					'href' => self::$currentIndex.'&token='.$this->token,
+					'desc' => $this->l('Back to the list')
+				);
 
 			default:
 				parent::initToolbar();
@@ -448,6 +453,16 @@ class AdminFeaturesControllerCore extends AdminController
 			|| Tools::isSubmit('updatefeature_value')
 			|| Tools::isSubmit('submitBulkdeletefeature_value'))
 			$this->setTypeValue();
+
+		if (Tools::getIsset('viewfeature'))
+		{
+			$this->list_id = 'feature_value';
+
+			if (isset($_POST['submitReset'.$this->list_id]))
+				$this->processResetFilters();
+		}
+		else
+			$this->list_id = 'feature';
 
 		parent::initProcess();
 
