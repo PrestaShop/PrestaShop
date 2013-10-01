@@ -84,11 +84,15 @@
 								{block name="input"}
 								{if $input.type == 'text' || $input.type == 'tags'}
 									{if isset($input.lang) AND $input.lang}
+									{if $languages|count > 1}
 									<div class="row">
+									{/if}
 									{foreach $languages as $language}
 										{assign var='value_text' value=$fields_value[$input.name][$language.id_lang]}
+										{if $languages|count > 1}
 										<div class="translatable-field lang-{$language.id_lang}" {if $language.id_lang != $defaultFormLanguage}style="display:none"{/if}>
 											<div class="col-lg-9">
+										{/if}
 												{if $input.type == 'tags'}
 													{literal}
 														<script type="text/javascript">
@@ -121,6 +125,7 @@
 												{if isset($input.maxchar)}
 												</div>
 												{/if}
+										{if $languages|count > 1}
 											</div>
 											<div class="col-lg-2">
 												<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
@@ -135,6 +140,7 @@
 												</ul>
 											</div>
 										</div>
+										{/if}
 									{/foreach}
 									{if isset($input.maxchar)}
 									<script type="text/javascript">
@@ -154,7 +160,9 @@
 									});
 									</script>
 									{/if}
+									{if $languages|count > 1}
 									</div>
+									{/if}
 									{else}
 										{if $input.type == 'tags'}
 											{literal}
