@@ -78,20 +78,20 @@ function includeDatepicker($id, $time = false)
   * @param string $theme Theme name (eg. default)
   * @param array $arrayDB Parameters in order to connect to database
   */
-function	rewriteSettingsFile($baseUrls = NULL, $theme = NULL, $arrayDB = NULL)
+function rewriteSettingsFile($baseUrls = null, $theme = null, $arrayDB = null)
 {
  	$defines = array();
-	$defines['_MEDIA_SERVER_1_'] = ($baseUrls AND isset($baseUrls['_MEDIA_SERVER_1_'])) ? $baseUrls['_MEDIA_SERVER_1_'] : _MEDIA_SERVER_1_;
-	$defines['_MEDIA_SERVER_2_'] = ($baseUrls AND isset($baseUrls['_MEDIA_SERVER_2_'])) ? $baseUrls['_MEDIA_SERVER_2_'] : _MEDIA_SERVER_2_;
-	$defines['_MEDIA_SERVER_3_'] = ($baseUrls AND isset($baseUrls['_MEDIA_SERVER_3_'])) ? $baseUrls['_MEDIA_SERVER_3_'] : _MEDIA_SERVER_3_;
+	$defines['_MEDIA_SERVER_1_'] = ($baseUrls && isset($baseUrls['_MEDIA_SERVER_1_'])) ? $baseUrls['_MEDIA_SERVER_1_'] : _MEDIA_SERVER_1_;
+	$defines['_MEDIA_SERVER_2_'] = ($baseUrls && isset($baseUrls['_MEDIA_SERVER_2_'])) ? $baseUrls['_MEDIA_SERVER_2_'] : _MEDIA_SERVER_2_;
+	$defines['_MEDIA_SERVER_3_'] = ($baseUrls && isset($baseUrls['_MEDIA_SERVER_3_'])) ? $baseUrls['_MEDIA_SERVER_3_'] : _MEDIA_SERVER_3_;
 	$defines['_PS_CACHING_SYSTEM_'] = _PS_CACHING_SYSTEM_;
 	$defines['_PS_CACHE_ENABLED_'] = _PS_CACHE_ENABLED_;
-	$defines['_DB_NAME_'] = (($arrayDB AND isset($arrayDB['_DB_NAME_'])) ? $arrayDB['_DB_NAME_'] : _DB_NAME_);
-	$defines['_MYSQL_ENGINE_'] = (($arrayDB AND isset($arrayDB['_MYSQL_ENGINE_'])) ? $arrayDB['_MYSQL_ENGINE_'] : _MYSQL_ENGINE_);
-	$defines['_DB_SERVER_'] = (($arrayDB AND isset($arrayDB['_DB_SERVER_'])) ? $arrayDB['_DB_SERVER_'] : _DB_SERVER_);
-	$defines['_DB_USER_'] = (($arrayDB AND isset($arrayDB['_DB_USER_'])) ? $arrayDB['_DB_USER_'] : _DB_USER_);
-	$defines['_DB_PREFIX_'] = (($arrayDB AND isset($arrayDB['_DB_PREFIX_'])) ? $arrayDB['_DB_PREFIX_'] : _DB_PREFIX_);
-	$defines['_DB_PASSWD_'] = (($arrayDB AND isset($arrayDB['_DB_PASSWD_'])) ? $arrayDB['_DB_PASSWD_'] : _DB_PASSWD_);
+	$defines['_DB_NAME_'] = (($arrayDB && isset($arrayDB['_DB_NAME_'])) ? $arrayDB['_DB_NAME_'] : _DB_NAME_);
+	$defines['_MYSQL_ENGINE_'] = (($arrayDB && isset($arrayDB['_MYSQL_ENGINE_'])) ? $arrayDB['_MYSQL_ENGINE_'] : _MYSQL_ENGINE_);
+	$defines['_DB_SERVER_'] = (($arrayDB && isset($arrayDB['_DB_SERVER_'])) ? $arrayDB['_DB_SERVER_'] : _DB_SERVER_);
+	$defines['_DB_USER_'] = (($arrayDB && isset($arrayDB['_DB_USER_'])) ? $arrayDB['_DB_USER_'] : _DB_USER_);
+	$defines['_DB_PREFIX_'] = (($arrayDB && isset($arrayDB['_DB_PREFIX_'])) ? $arrayDB['_DB_PREFIX_'] : _DB_PREFIX_);
+	$defines['_DB_PASSWD_'] = (($arrayDB && isset($arrayDB['_DB_PASSWD_'])) ? $arrayDB['_DB_PASSWD_'] : _DB_PASSWD_);
 	$defines['_COOKIE_KEY_'] = addslashes(_COOKIE_KEY_);
 	$defines['_COOKIE_IV_'] = addslashes(_COOKIE_IV_);
 	$defines['_PS_CREATION_DATE_'] = addslashes(_PS_CREATION_DATE_);
@@ -121,7 +121,7 @@ function	rewriteSettingsFile($baseUrls = NULL, $theme = NULL, $arrayDB = NULL)
   * @param boolean $withTime Display both date and time
   * @todo Several formats (french : DD-MM-YYYY)
   */
-function	displayDate($sqlDate, $withTime = false)
+function displayDate($sqlDate, $withTime = false)
 {
 	return strftime('%Y-%m-%d'.($withTime ? ' %H:%M:%S' : ''), strtotime($sqlDate));
 }
@@ -164,12 +164,12 @@ function getPath($urlBase, $id_category, $path = '', $highlight = '', $categoryT
 			foreach ($categories AS $category)
 			{
 				$link = Context::getContext()->link->getAdminLink('AdminCategories');
-				$edit = '<a href="'.$link.'&id_category='.(int)$category['id_category'].'&'.(($category['id_category'] == 1 || $home) ? 'viewcategory' : 'updatecategory').'" title="'.($category['id_category'] == 1 ? 'Home' : 'Modify').'"><img src="../img/admin/'.(($category['id_category'] == 1  || $home) ? 'home' : 'edit').'.gif" alt="" /></a> ';
+				$edit = '<a href="'.$link.'&id_category='.(int)$category['id_category'].'&'.(($category['id_category'] == 1 || $home) ? 'viewcategory' : 'updatecategory').'" title="'.($category['id_category'] == Category::getRootCategory()->id_category ? 'Home' : 'Modify').'"><i class="icon-'.(($category['id_category'] == Category::getRootCategory()->id_category  || $home) ? 'home' : 'pencil').'"></i></a> ';
 				$fullPath .= $edit.
 				($n < $nCategories ? '<a href="'.$urlBase.'&id_category='.(int)$category['id_category'].'&viewcategory&token='.Tools::getAdminToken('AdminCategories'.(int)(Tab::getIdFromClassName('AdminCategories')).(int)$context->employee->id).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'">' : '').
 				(!empty($highlight) ? str_ireplace($highlight, '<span class="highlight">'.htmlentities($highlight, ENT_NOQUOTES, 'UTF-8').'</span>', $category['name']) : $category['name']).
 				($n < $nCategories ? '</a>' : '').
-				(($n++ != $nCategories OR !empty($path)) ? ' > ' : '');
+				(($n++ != $nCategories || !empty($path)) ? ' > ' : '');
 			}
 
 			return $fullPath.$path;
@@ -181,7 +181,7 @@ function getPath($urlBase, $id_category, $path = '', $highlight = '', $categoryT
 		if (!$category->id)
 			return $path;
 
-		$name = ($highlight != NULL) ? str_ireplace($highlight, '<span class="highlight">'.$highlight.'</span>', CMSCategory::hideCMSCategoryPosition($category->name)) : CMSCategory::hideCMSCategoryPosition($category->name);
+		$name = ($highlight != null) ? str_ireplace($highlight, '<span class="highlight">'.$highlight.'</span>', CMSCategory::hideCMSCategoryPosition($category->name)) : CMSCategory::hideCMSCategoryPosition($category->name);
 		$edit = '<a href="'.$urlBase.'&id_cms_category='.$category->id.'&addcategory&token=' . Tools::getAdminToken('AdminCmsContent'.(int)(Tab::getIdFromClassName('AdminCmsContent')).(int)$context->employee->id).'">
 				<img src="../img/admin/edit.gif" alt="Modify" /></a> ';
 		if ($category->id == 1)
@@ -264,13 +264,13 @@ function checkingTab($tab)
 	}
 
 	// Class file is included in Dispatcher::dispatch() function
-	if (!class_exists($tab, false) OR !$row['id_tab'])
+	if (!class_exists($tab, false) || !$row['id_tab'])
 	{
 		echo sprintf(Tools::displayError('The class %s cannot be found.'),$tab);
 		return false;
 	}
 	$adminObj = new $tab;
-	if (!$adminObj->viewAccess() AND ($adminObj->table != 'employee' OR Context::getContext()->employee->id != Tools::getValue('id_employee') OR !Tools::isSubmit('updateemployee')))
+	if (!$adminObj->viewAccess() && ($adminObj->table != 'employee' || Context::getContext()->employee->id != Tools::getValue('id_employee') || !Tools::isSubmit('updateemployee')))
 	{
 		$adminObj->_errors = array(Tools::displayError('Access denied.'));
 		echo $adminObj->displayErrors();
@@ -284,9 +284,9 @@ function checkingTab($tab)
  */
 function checkTabRights($id_tab)
 {
-	static $tabAccesses = NULL;
+	static $tabAccesses = null;
 
-	if ($tabAccesses === NULL)
+	if ($tabAccesses === null)
 		$tabAccesses =  Profile::getProfileAccesses(Context::getContext()->employee->id_profile);
 
 	if (isset($tabAccesses[(int)($id_tab)]['view']))
@@ -409,7 +409,7 @@ function runAdminTab($tab, $ajaxMode = false)
 
 	require_once(_PS_ADMIN_DIR_.'/init.php');
 	$cookie = Context::getContext()->cookie;
-	if (empty($tab) and !sizeof($_POST))
+	if (empty($tab) && !sizeof($_POST))
 	{
 		$tab = 'AdminHome';
 		$_POST['tab'] = 'AdminHome';
@@ -494,14 +494,14 @@ function runAdminTab($tab, $ajaxMode = false)
 						$action = Tools::getValue('action');
 						// no need to use displayConf() here
 
-						if (!empty($action) AND method_exists($adminObj, 'ajaxProcess'.Tools::toCamelCase($action)) )
+						if (!empty($action) && method_exists($adminObj, 'ajaxProcess'.Tools::toCamelCase($action)) )
 							$adminObj->{'ajaxProcess'.Tools::toCamelCase($action)}();
 						else
 							$adminObj->ajaxProcess();
 
 						// @TODO We should use a displayAjaxError
 						$adminObj->displayErrors();
-						if (!empty($action) AND method_exists($adminObj, 'displayAjax'.Tools::toCamelCase($action)) )
+						if (!empty($action) && method_exists($adminObj, 'displayAjax'.Tools::toCamelCase($action)) )
 							$adminObj->{'displayAjax'.$action}();
 						else
 							$adminObj->displayAjax();
@@ -511,26 +511,26 @@ function runAdminTab($tab, $ajaxMode = false)
 					else
 					{
 						/* Filter memorization */
-						if (isset($_POST) AND !empty($_POST) AND isset($adminObj->table))
+						if (isset($_POST) && !empty($_POST) && isset($adminObj->table))
 							foreach ($_POST AS $key => $value)
 								if (is_array($adminObj->table))
 								{
 									foreach ($adminObj->table AS $table)
-										if (strncmp($key, $table.'Filter_', 7) === 0 OR strncmp($key, 'submitFilter', 12) === 0)
+										if (strncmp($key, $table.'Filter_', 7) === 0 || strncmp($key, 'submitFilter', 12) === 0)
 											$cookie->$key = !is_array($value) ? $value : serialize($value);
 								}
-								elseif (strncmp($key, $adminObj->table.'Filter_', 7) === 0 OR strncmp($key, 'submitFilter', 12) === 0)
+								elseif (strncmp($key, $adminObj->table.'Filter_', 7) === 0 || strncmp($key, 'submitFilter', 12) === 0)
 									$cookie->$key = !is_array($value) ? $value : serialize($value);
 
-						if (isset($_GET) AND !empty($_GET) AND isset($adminObj->table))
+						if (isset($_GET) && !empty($_GET) && isset($adminObj->table))
 							foreach ($_GET AS $key => $value)
 								if (is_array($adminObj->table))
 								{
 									foreach ($adminObj->table AS $table)
-										if (strncmp($key, $table.'OrderBy', 7) === 0 OR strncmp($key, $table.'Orderway', 8) === 0)
+										if (strncmp($key, $table.'OrderBy', 7) === 0 || strncmp($key, $table.'Orderway', 8) === 0)
 											$cookie->$key = $value;
 								}
-								elseif (strncmp($key, $adminObj->table.'OrderBy', 7) === 0 OR strncmp($key, $adminObj->table.'Orderway', 12) === 0)
+								elseif (strncmp($key, $adminObj->table.'OrderBy', 7) === 0 || strncmp($key, $adminObj->table.'Orderway', 12) === 0)
 									$cookie->$key = $value;
 						$adminObj->displayConf();
 						$adminObj->postProcess();
@@ -548,7 +548,7 @@ function runAdminTab($tab, $ajaxMode = false)
 
 						// ${1} in the replacement string of the regexp is required, because the token may begin with a number and mix up with it (e.g. $17)
 						$url = preg_replace('/([&?]token=)[^&]*(&.*)?$/', '${1}'.$adminObj->token.'$2', $_SERVER['REQUEST_URI']);
-						if (false === strpos($url, '?token=') AND false === strpos($url, '&token='))
+						if (false === strpos($url, '?token=') && false === strpos($url, '&token='))
 							$url .= '&token='.$adminObj->token;
 
 
@@ -563,7 +563,7 @@ function runAdminTab($tab, $ajaxMode = false)
 
 						// ${1} in the replacement string of the regexp is required, because the token may begin with a number and mix up with it (e.g. $17)
 						$url = preg_replace('/([&?]token=)[^&]*(&.*)?$/', '${1}'.$adminObj->token.'$2', $_SERVER['REQUEST_URI']);
-						if (false === strpos($url, '?token=') AND false === strpos($url, '&token='))
+						if (false === strpos($url, '?token=') && false === strpos($url, '&token='))
 							$url .= '&token='.$adminObj->token;
 
 						$message = Translate::getAdminTranslation('Invalid security token');
