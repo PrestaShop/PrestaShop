@@ -87,7 +87,7 @@
 
 	<div class="row">
 		<label class="control-label col-lg-3" for="link_rewrite_{$id_lang}">
-			{include file="controllers/products/multishop/checkbox.tpl" field="link_rewrite" type="default" multilang="true"}
+			{include file="controllers/products/multishop/checkbox.tpl" field="link_rewrite" type="seo_friendly_url" multilang="true"}
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='friendly URL from the product name.'}">
 				{l s='Friendly URL:'}
@@ -103,7 +103,7 @@
 			</div>
 		</div>
 		<div class="col-lg-2">
-			<a class="btn btn-default" onmousedown="updateFriendlyURLByName();"><i class="icon-random"></i> {l s='Generate'}</a>
+			<button type="button" class="btn btn-default" id="generate-friendly-url" onmousedown="updateFriendlyURLByName();"><i class="icon-random"></i> {l s='Generate'}</button>
 		</div>
 	</div>
 

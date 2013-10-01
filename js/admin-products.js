@@ -1553,6 +1553,10 @@ var ProductMultishop = new function()
 				$('#attribute_unity').attr('disabled', checked);
 				break;
 
+			case 'seo_friendly_url':
+				$('#'+id).attr('disabled', checked);
+				$('#generate-friendly-url').attr('disabled', checked);
+
 			default :
 				$('#'+id).attr('disabled', checked);
 				break;
@@ -1592,7 +1596,7 @@ var ProductMultishop = new function()
 			ProductMultishop.checkField($('input[name=\'multishop_check[meta_title]['+v.id_lang+']\']').prop('checked'), 'meta_title_'+v.id_lang);
 			ProductMultishop.checkField($('input[name=\'multishop_check[meta_description]['+v.id_lang+']\']').prop('checked'), 'meta_description_'+v.id_lang);
 			ProductMultishop.checkField($('input[name=\'multishop_check[meta_keywords]['+v.id_lang+']\']').prop('checked'), 'meta_keywords_'+v.id_lang);
-			ProductMultishop.checkField($('input[name=\'multishop_check[link_rewrite]['+v.id_lang+']\']').prop('checked'), 'link_rewrite_'+v.id_lang);
+			ProductMultishop.checkField($('input[name=\'multishop_check[link_rewrite]['+v.id_lang+']\']').prop('checked'), 'link_rewrite_'+v.id_lang, 'seo_friendly_url');
 		});
 	};
 	
