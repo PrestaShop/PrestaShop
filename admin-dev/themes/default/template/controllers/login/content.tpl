@@ -29,7 +29,7 @@
 				var label_error = '{l s='error'}';
 			</script>
 			<div id="container">	
-				<div id="error" {if !isset($errors)}class="hide"{/if}>
+				<div id="error">
 {if isset($errors)}
 					<h3>{if $nbErrors > 1}{l s='There are %d errors.' sprintf=$nbErrors}{else}{l s='There is %d error.' sprintf=$nbErrors}{/if}</h3>
 					<ol style="margin: 0 0 0 20px;">
