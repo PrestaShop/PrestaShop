@@ -24,12 +24,15 @@
 *}
 
 {foreach from=$languages item=language}
+{if $languages|count > 1}
 <div class="translatable-field lang-{$language.id_lang}">
 	<div class="col-lg-9">
+{/if}
 		<textarea
 			id="{$input_name}_{$language.id_lang}"
 			name="{$input_name}_{$language.id_lang}"
 			class="{if isset($autosize_js)}textarea-autosize{else}autoload_rte{/if}">{if isset($input_value[$language.id_lang])}{$input_value[$language.id_lang]|htmlentitiesUTF8}{/if}</textarea>
+{if $languages|count > 1}
 	</div>
 	<div class="col-lg-2">
 		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -44,6 +47,7 @@
 		</ul>
 	</div>
 </div>
+{/if}
 <span class="counter" max="{if isset($max)}{$max}{else}none{/if}"></span>
 {/foreach}
 
