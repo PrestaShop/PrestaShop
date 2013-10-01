@@ -65,24 +65,30 @@
 		<div class="panel">
 			{if (count($invoices_collection))}
 			<a class="btn btn-default" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateInvoicePDF&id_order={$order->id}" target="_blank">
-				<img src="../img/admin/charged_ok.gif" alt="{l s='View invoice'}" />
+				<i class="icon-file"></i>
 				{l s='View invoice'}
 			</a>
 			{else}
-			<img src="../img/admin/charged_ko.gif" alt="{l s='No invoice'}" />
-			{l s='No invoice'}
+				<span class="icon-stack">
+					<i class="icon-file"></i>
+					<i class="icon-ban-circle icon-stack-base text-danger"></i>
+				</span>
+				{l s='No invoice'}
 			{/if}
 			{if (($currentState && $currentState->delivery) || $order->delivery_number)}
 			<a class="btn btn-default"  href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order={$order->id}" target="_blank">
-				<img src="../img/admin/delivery.gif" alt="{l s='View delivery slip'}" />
+				<i class="icon-truck"></i>
 				{l s='View delivery slip'}
 			</a>
 			{else}
-			<img src="../img/admin/delivery_ko.gif" alt="{l s='No delivery slip'}" />
-			{l s='No delivery slip'}
+				<span class="icon-stack">
+					<i class="icon-truck"></i>
+					<i class="icon-ban-circle icon-stack-base text-danger"></i>
+				</span>
+				{l s='No delivery slip'}
 			{/if}
 			<a class="btn btn-default" href="javascript:window.print()">
-				<img src="../img/admin/printer.gif" alt="{l s='Print order'}" title="{l s='Print order'}" />
+				<i class="icon-print"></i>
 				{l s='Print order'}
 			</a>
 			<hr/>
@@ -443,33 +449,56 @@
 
 		<!-- Shipping block -->
 		{if !$order->isVirtual()}
-		<fieldset>
+		<fieldset class="form-horizontal">
 			<h3>
 				<i class="icon-truck"></i>
 				{l s='Shipping'}
 			</h3>
-			<div>
-				<span>{l s='Recycled packaging'}</span>
-				{if $order->recyclable}
-				<img src="../img/admin/enabled.gif" />
-				{else}
-				<img src="../img/admin/disabled.gif" />
-				{/if}
-			</div>
-			<div>
-				<span>{l s='Gift wrapping'}</span>
-				{if $order->gift}
-				<img src="../img/admin/enabled.gif" />
+			<div class="form-group">
+				<label class="control-label col-lg-3">{l s='Recycled packaging'}</label>
+				<div class="col-lg-9 ">
+					<p class="form-control-static">
+						{if $order->recyclable}
+						<span class="label label-success">
+							<i class="icon-check-sign"></i>
+							{l s='Yes'}
+						</span>
+						{else}
+						<span class="label label-warning">
+							<i class="icon-ban-circle"></i>
+							{l s='No'}
+						</span>
+						{/if}
+					</p>
 				</div>
-				<div>
-					{if $order->gift_message}
-					<div><b>{l s='Message'}</b><br />{$order->gift_message|nl2br}</div>
-					{/if}
-				{else}
-				<img src="../img/admin/disabled.gif" />
-				{/if}
 			</div>
-
+			<div class="form-group">
+				<label class="control-label col-lg-3">{l s='Gift wrapping'}</label>
+				<div class="col-lg-9">
+					<p class="form-control-static">
+						{if $order->gift}
+						<span class="label label-success">
+							<i class="icon-check-sign"></i>
+							{l s='Yes'}
+						</span>
+						{else}
+						<span class="label label-warning">
+							<i class="icon-ban-circle"></i>
+							{l s='No'}
+						</span>
+						{/if}
+					</p>
+				</div>
+			</div>
+			{if $order->gift_message}
+			<div class="form-group">
+				<label class="control-label col-lg-3">{l s='Message'}</label>
+				<div class="col-lg-9">
+					<p class="form-control-static">{$order->gift_message|nl2br}</p>
+				</div>
+			</div>
+			{/if}
+			<hr/>
 			{include file='controllers/orders/_shipping.tpl'}
 
 			{if $carrierModuleCall}
@@ -505,15 +534,21 @@
 							{if $line.can_edit}
 							<form method="post" action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$order->id}&id_order_invoice={if $line.id_order_invoice}{$line.id_order_invoice|escape:'htmlall':'UTF-8'}{else}0{/if}&id_carrier={if $line.id_carrier}{$line.id_carrier|escape:'htmlall':'UTF-8'}{else}0{/if}">
 								<span class="shipping_number_edit" style="display:none;">
-									<input type="text" name="tracking_number" value="{$line.tracking_number|htmlentities}" />
-									<input type="submit" class="btn btn-default" name="submitShippingNumber" value="{l s='Update'}" />
+									<button type="button" name="tracking_number">
+										{$line.tracking_number|htmlentities}
+									</button>
+									<button type="submit" class="btn btn-default" name="submitShippingNumber">
+										{l s='Update'}
+									</button>
 								</span>
-								<a href="#" class="edit_shipping_number_link">
-									<img src="../img/admin/edit.gif" alt="{l s='Edit'}" />
-								</a>
-								<a href="#" class="cancel_shipping_number_link" style="display: none;">
-									<img src="../img/admin/disabled.gif" alt="{l s='Cancel'}" />
-								</a>
+								<button href="#" class="edit_shipping_number_link">
+									<i class="icon-pencil"></i>
+									{l s='Edit'}
+								</button>
+								<button href="#" class="cancel_shipping_number_link" style="display: none;">
+									<i class="icon-remove"></i>
+									{l s='Cancel'}
+								</button>
 							</form>
 							{/if}
 						</td>
