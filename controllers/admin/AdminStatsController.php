@@ -193,7 +193,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		SELECT COUNT(DISTINCT cp.id_category)
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON c.id_category = cp.id_category
-		'.Shop::addSqlAssociation('category', 'cp').'
+		'.Shop::addSqlAssociation('category', 'c').'
 		AND c.active = 1
 		AND c.nright = c.nleft + 1');
 		return intval($total - $used);
@@ -464,15 +464,15 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			case 'orders_per_customer':
 				$value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT COUNT(*)
-				FROM `'._DB_PREFIX_.'customer`
-				'.Shop::addSqlAssociation('customer').'
+				FROM `'._DB_PREFIX_.'customer` c
+				'.Shop::addSqlAssociation('customer', 'c').'
 				WHERE active = 1');
 				if ($value)
 				{
 					$orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 					SELECT COUNT(*)
-					FROM `'._DB_PREFIX_.'orders`
-					'.Shop::addSqlAssociation('orders').'
+					FROM `'._DB_PREFIX_.'orders` o
+					'.Shop::addSqlAssociation('orders', 'o').'
 					WHERE valid = 1');
 					$value = round($orders / $value, 2);
 				}
