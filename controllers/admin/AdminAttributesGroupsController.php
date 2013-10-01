@@ -36,6 +36,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		$this->bootstrap = true;
 		$this->context = Context::getContext();
 		$this->table = 'attribute_group';
+		$this->list_id = 'attribute_group';
 		$this->identifier = 'id_attribute_group';
 		$this->className = 'AttributeGroup';
 		$this->lang = true;
@@ -141,16 +142,18 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
 			$this->_where = 'AND a.`id_attribute_group` = '.(int)$id;
 			$this->_orderBy = 'position';
-		}
 
-		return parent::renderList();
+			self::$currentIndex = self::$currentIndex.'&id_attribute_group='.(int)$id.'&viewattribute_group';
+			$this->processFilter();
+			return parent::renderList();
+		}
 	}
 
 	/**
 	 * method call when ajax request is made with the details row action
 	 * @see AdminController::postProcess()
 	 */
-	public function ajaxProcessDetails()
+	/*public function ajaxProcessDetails()
 	{
 		if (($id = Tools::getValue('id')))
 		{
@@ -220,7 +223,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
 			die (Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content)));
 		}
-	}
+	}*/
 
 	/**
 	 * AdminController::renderForm() override
@@ -533,7 +536,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		{
 			$this->page_header_toolbar_title = $this->attribute_name[$this->context->employee->id_lang];
 			$this->page_header_toolbar_btn['back_to_list'] = array(
-				'href' => self::$currentIndex.'&token='.$this->token,
+				'href' => Context::getContext()->link->getAdminLink('AdminAttributesGroups'),
 				'desc' => $this->l('Back to list'),
 				'icon' => 'process-icon-back'
 			);
@@ -578,13 +581,16 @@ class AdminAttributesGroupsControllerCore extends AdminController
 						'force_desc' => true,
 					);
 
-				$back = self::$currentIndex.'&token='.$this->token;
 				$this->toolbar_btn['back'] = array(
-					'href' => $back,
+					'href' => self::$currentIndex.'&token='.$this->token,
 					'desc' => $this->l('Back to list')
 				);
 				break;
 			case 'view':
+				$this->toolbar_btn['back'] = array(
+					'href' => self::$currentIndex.'&token='.$this->token,
+					'desc' => $this->l('Back to list')
+				);
 				break;
 			default: // list
 				$this->toolbar_btn['new'] = array(
@@ -631,6 +637,16 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	public function initProcess()
 	{
 		$this->setTypeAttribute();
+
+		if (Tools::getIsset('viewattribute_group'))
+		{
+			$this->list_id = 'attribute_values';
+
+			if (isset($_POST['submitReset'.$this->list_id]))
+				$this->processResetFilters();
+		}
+		else
+			$this->list_id = 'attribute_group';
 
 		parent::initProcess();
 
