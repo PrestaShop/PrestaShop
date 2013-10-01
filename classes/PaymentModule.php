@@ -399,6 +399,8 @@ abstract class PaymentModuleCore extends Module
 					} // end foreach ($products)
 
 					$cart_rules_list = '';
+					$total_reduction_value_ti = 0;
+					$total_reduction_value_tex = 0;
 					foreach ($cart_rules as $cart_rule)
 					{
 						$package = array('id_carrier' => $order->id_carrier, 'id_address' => $order->id_address_delivery, 'products' => $order->product_list);
@@ -419,7 +421,8 @@ abstract class PaymentModuleCore extends Module
 						** THEN
 						** The voucher is cloned with a new value corresponding to the remainder
 						*/
-						if (count($order_list) == 1 && $values['tax_incl'] > $order->total_products_wt && $cart_rule['obj']->partial_use == 1 && $cart_rule['obj']->reduction_amount > 0)
+
+						if (count($order_list) == 1 && $values['tax_incl'] > ($order->total_products_wt - $total_reduction_value_ti) && $cart_rule['obj']->partial_use == 1 && $cart_rule['obj']->reduction_amount > 0)
 						{
 							// Create a new voucher from the original
 							$voucher = new CartRule($cart_rule['obj']->id); // We need to instantiate the CartRule without lang parameter to allow saving it
@@ -432,9 +435,9 @@ abstract class PaymentModuleCore extends Module
 
 							// Set the new voucher value
 							if ($voucher->reduction_tax)
-								$voucher->reduction_amount = $values['tax_incl'] - $order->total_products_wt - ($voucher->free_shipping == 1 ? $order->total_shipping_tax_incl : 0);
+								$voucher->reduction_amount = $values['tax_incl'] - ($order->total_products_wt - $total_reduction_value_ti) - ($voucher->free_shipping == 1 ? $order->total_shipping_tax_incl : 0);
 							else
-								$voucher->reduction_amount = $values['tax_excl'] - $order->total_products - ($voucher->free_shipping == 1 ? $order->total_shipping_tax_excl : 0);
+								$voucher->reduction_amount = $values['tax_excl'] - ($order->total_products - $total_reduction_value_tex) - ($voucher->free_shipping == 1 ? $order->total_shipping_tax_excl : 0);
 
 							$voucher->id_customer = $order->id_customer;
 							$voucher->quantity = 1;
@@ -466,7 +469,10 @@ abstract class PaymentModuleCore extends Module
 
 							$values['tax_incl'] -= $values['tax_incl'] - $order->total_products_wt;
 							$values['tax_excl'] -= $values['tax_excl'] - $order->total_products;
+
 						}
+						$total_reduction_value_ti += $values['tax_incl'];
+						$total_reduction_value_tex += $values['tax_excl'];	
 
 						$order->addCartRule($cart_rule['obj']->id, $cart_rule['obj']->name, $values, 0, $cart_rule['obj']->free_shipping);
 
