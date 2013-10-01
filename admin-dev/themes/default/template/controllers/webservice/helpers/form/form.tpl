@@ -31,7 +31,7 @@
 			<thead>
 				<tr>
 					<th><span class="title_box">{l s='Resource'}</span></th>
-					<th class="center fixed-width-xs"></th>
+					<th class="center fixed-width-xs"><span class="title_box">{l s='All'}</span></th>
 					<th class="center fixed-width-xs"><span class="title_box">{l s='View (GET)'}</span></th>
 					<th class="center fixed-width-xs"><span class="title_box">{l s='Modify (PUT)'}</span></th>
 					<th class="center fixed-width-xs"><span class="title_box">{l s='Add (POST)'}</span></th>
