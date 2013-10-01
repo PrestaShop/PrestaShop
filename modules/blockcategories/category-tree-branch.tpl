@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<li {if isset($last) && $last == 'true'}class="last"{/if}>
+<li class="category_{$node.id}{if isset($last) && $last == 'true'} last{/if}">
 	<a href="{$node.link|escape:'htmlall':'UTF-8'}" {if isset($currentCategoryId) && $node.id == $currentCategoryId}class="selected"{/if}
 		title="{$node.desc|strip_tags|trim|escape:'htmlall':'UTF-8'}">{$node.name|escape:'htmlall':'UTF-8'}</a>
 	{if $node.children|@count > 0}
