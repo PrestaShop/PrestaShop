@@ -1114,6 +1114,10 @@ class AdminControllerCore extends Controller
 	{
 		if (empty($this->toolbar_title))
 			$this->initToolbarTitle();
+
+		if (!is_array($this->toolbar_title))
+			$this->toolbar_title = array($this->toolbar_title);
+
 		$title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title);
 
 		if (is_array($this->page_header_toolbar_btn)
