@@ -248,5 +248,7 @@ return array(
 		'Must be letters and numbers with at least 8 characters' => 'Lettres et chiffres avec au moins 8 caractères',
 		'To install PrestaShop, you need to have JavaScript enabled in your browser.' => 'Pour installer PrestaShop, vous devez avoir JavaScript activé dans votre navigateur',
 		'For security purposes, you must delete the "install" folder.' => 'Pour des raisons de sécurité, vous devez supprimer le dossier "install" manuellement.',
+		'Files' => 'Fichiers',
+		'All files are not successfuly uploaded on your server' => 'Tous les fichiers n\'ont pas été correctement téléchargés sur votre serveur',
 	),
 );
