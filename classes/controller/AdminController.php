@@ -2167,8 +2167,7 @@ class AdminControllerCore extends Controller
 			$order_by = $this->fields_list[$order_by]['order_key'];
 
 		/* Determine offset from current page */
-		if (isset($this->context->cookie->{$this->list_id.'_page'}))
-			$start = $this->context->cookie->{$this->list_id.'_page'};
+
 		
 		if ((isset($_POST['submitFilter'.$this->list_id]) ||
 		isset($_POST['submitFilter'.$this->list_id.'_x']) ||
@@ -2176,8 +2175,12 @@ class AdminControllerCore extends Controller
 		!empty($_POST['submitFilter'.$this->list_id]) &&
 		is_numeric($_POST['submitFilter'.$this->list_id]))
 			$start = ((int)$_POST['submitFilter'.$this->list_id] - 1) * $limit;
+		elseif (empty($start) && isset($this->context->cookie->{$this->list_id.'_start'}))
+			$start = $this->context->cookie->{$this->list_id.'_start'};
+		else
+			$start = $this->_listTotal;
 
-		$this->context->cookie->{$this->list_id.'_page'} = $start;
+		$this->context->cookie->{$this->list_id.'_start'} = $start;
 
 		/* Cache */
 		$this->_lang = (int)$id_lang;
