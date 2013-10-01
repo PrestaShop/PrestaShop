@@ -2,8 +2,8 @@
 return array(
 	'informations' => array(
 		'phone' => '+1 888.947.6543',
-        'support' => 'https://www.prestashop.com/pt/support',
-        'blog' => 'http://www.prestashop.com/blog/pt/'
+		'support' => 'https://www.prestashop.com/pt/support',
+		'blog' => 'http://www.prestashop.com/blog/pt/',
 	),
 	'translations' => array(
 		'menu_welcome' => 'Escolha seu idioma',
@@ -247,5 +247,7 @@ return array(
 		'To install PrestaShop, you need to have JavaScript enabled in your browser.' => 'Para instalar o PrestaShop, você precisa ter JavaScript ativado no seu navegador',
 		'To enjoy the many features that are offered for free by PrestaShop, please read the license terms below. PrestaShop core is licensed under OSL 3.0, while the modules and themes are licensed under AFL 3.0.' => 'Para aproveitar os muitos recursos que são oferecidos grátis pelo PrestaShop, por favor, leia os termos de licença abaixo. O núcleo do PrestaShop é licenciado sob OSL 3.0, enquanto os módulos e temas são licenciados sob AFL 3.0.',
 		'For security purposes, you must delete the "install" folder.' => 'Por questões de segurança, você deve deletar a pasta "install"',
+		'Files' => 'Arquivos',
+		'All files are not successfuly uploaded on your server' => 'Todos os arquivos não foram carregados no seu servidor com sucesso',
 	),
 );
