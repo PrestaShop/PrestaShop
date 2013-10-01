@@ -32,7 +32,7 @@ $(document).ready(function() {
 function displayForgotPassword() {
 	$('#error').hide();
 	$('#login_form').fadeOut('fast', function () {
-		$("#forgot_password_form").fadeIn('fast');
+		$("#forgot_password_form").removeClass('hide').fadeIn('fast');
 		// Focus on email address forgot field
 		$('#email_forgot').select();
 	});
@@ -81,7 +81,7 @@ function doAjaxLogin(redirect) {
 					window.location.assign(jsonData.redirect);
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
-				$('#error').html('<h3>TECHNICAL ERROR:</h3><p>Details: Error thrown: ' + XMLHttpRequest + '</p><p>Text status: ' + textStatus + '</p>').show();
+				$('#error').html('<h3>TECHNICAL ERROR:</h3><p>Details: Error thrown: ' + XMLHttpRequest + '</p><p>Text status: ' + textStatus + '</p>').removeClass('hide');
 				$('#login_form .ajax-loader').fadeOut('slow');
 			}
 		});
