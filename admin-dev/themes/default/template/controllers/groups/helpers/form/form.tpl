@@ -103,7 +103,7 @@
 					}
 					else
 					{
-						$('#group_discount_category_table').append('<tr class="alt_row" id="'+jsonData.id_category+'"><td>'+jsonData.catPath+'</td><td>{l s='Discount:'}'+jsonData.discount+'{l s='%'}</td><td><a href="#" onclick="deleteCategoryReduction('+jsonData.id_category+');"><img src="../img/admin/delete.gif"></a></td></tr>');
+						$('#group_discount_category_table').append('<tr class="alt_row" id="'+jsonData.id_category+'"><td>'+jsonData.catPath+'</td><td>{l s='Discount:'}'+jsonData.discount+'{l s='%'}</td><td><a href="#" onclick="deleteCategoryReduction('+jsonData.id_category+');" class="btn btn-default"><i class="icon-trash"></i> {l s='Delete'}</a></td></tr>');
 						
 						var input_hidden = document.createElement("input");
 						input_hidden.setAttribute('type', 'hidden');
@@ -123,7 +123,6 @@
 		function initFancyBox()
 		{
 			$('[name="id_category"]:checked').removeAttr('checked');
-			collapseAllCategories();
 			$('#category_reduction_fancybox').val('0.00');
 		}
 		</script>
@@ -136,8 +135,8 @@
 						<td>{$category.path}</td>
 						<td>{l s='Discount: %d%%' sprintf=$category.reduction}</td>
 						<td>
-							<a href="#" onclick="deleteCategoryReduction({$category.id_category});">
-								<img src="../img/admin/delete.gif">
+							<a href="#" onclick="deleteCategoryReduction({$category.id_category});"class="btn btn-default">
+								<i class="icon-trash"></i> {l s='Delete'}
 							</a>
 							<input type="hidden" class="category_reduction" name="category_reduction[{$category.id_category}]" value="{$category.reduction}">
 						</td>

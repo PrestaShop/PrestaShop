@@ -339,7 +339,7 @@ class AdminGroupsControllerCore extends AdminController
 				$category['reduction'] = $category_reduction[$category['id_category']];
 
 			$category_reductions[(int)$category['id_category']] = array(
-				'path' => getPath(self::$currentIndex.'?tab=AdminCategories', (int)$category['id_category']),
+				'path' => getPath(Context::getContext()->link->getAdminLink('AdminCategories'), (int)$category['id_category']),
 				'reduction' => (float)$category['reduction'] * 100,
 				'id_category' => (int)$category['id_category']
 			);
@@ -349,7 +349,7 @@ class AdminGroupsControllerCore extends AdminController
 			foreach ($category_reduction as $key => $val)
 				if (!array_key_exists($key, $category_reductions))
 					$category_reductions[(int)$key] = array(
-						'path' => getPath(self::$currentIndex.'?tab=AdminCategories', $key),
+						'path' => getPath(Context::getContext()->link->getAdminLink('AdminCategories'), $key),
 						'reduction' => (float)$val * 100,
 						'id_category' => (int)$key
 					);
