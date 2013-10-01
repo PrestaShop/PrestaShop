@@ -421,11 +421,16 @@
 			</span>
 		</label>
 		<div class="col-lg-9">
+			{if $languages|count > 1}
 			<div class="row">
+			{/if}
 				{foreach from=$languages item=language}
+				{if $languages|count > 1}
 				<div class="translatable-field lang-{$language.id_lang}">
 					<div class="col-lg-9">
+				{/if}
 						<input type="text" id="tags_{$language.id_lang}" class=" updateCurrentText" name="tags_{$language.id_lang}" value="{$product->getTags($language.id_lang, true)|htmlentitiesUTF8}" />
+				{if $languages|count > 1}
 					</div>
 					<div class="col-lg-2">
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -443,6 +448,7 @@
 						</ul>
 					</div>
 				</div>
+				{/if}
 				{/foreach}
 			</div>
 		</div>
