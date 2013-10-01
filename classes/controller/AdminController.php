@@ -2175,7 +2175,7 @@ class AdminControllerCore extends Controller
 		!empty($_POST['submitFilter'.$this->list_id]) &&
 		is_numeric($_POST['submitFilter'.$this->list_id]))
 			$start = ((int)$_POST['submitFilter'.$this->list_id] - 1) * $limit;
-		elseif (empty($start) && isset($this->context->cookie->{$this->list_id.'_start'}))
+		elseif (empty($start) && isset($this->context->cookie->{$this->list_id.'_start'}) && Tools::isSubmit('export'.$this->table))
 			$start = $this->context->cookie->{$this->list_id.'_start'};
 		else
 			$start = $this->_listTotal;
