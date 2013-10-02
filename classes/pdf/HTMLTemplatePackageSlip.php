@@ -71,7 +71,9 @@ class HTMLTemplatePackageSlipCore extends HTMLTemplate
 				$warehouse = new Warehouse((int)$order_detail['id_warehouse']);
 				$warehouse_location = $warehouse->getProductLocation($order_detail["product_id"],$order_detail["product_attribute_id"],$warehouse->id);
 				$order_details[$key]['warehouse_name'] = $warehouse->name;
-				$order_details[$key]['warehouse_location'] = $warehouse_location;
+				if($warehouse_location != "") {
+					$order_details[$key]['warehouse_location'] = $warehouse_location;
+				}
 			}
 		}
 	
