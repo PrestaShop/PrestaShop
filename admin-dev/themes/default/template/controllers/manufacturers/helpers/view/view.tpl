@@ -51,7 +51,7 @@
 							{if $addresse.phone}{$addresse.phone}<br />{/if}
 							{if $addresse.phone_mobile}{$addresse.phone_mobile}<br />{/if}
 							{if $addresse.other}<div ><br />
-								<i>{$addresse.other}</i></div>
+								<i>{$addresse.other|nl2br}</i></div>
 							{/if}
 						</td>
 					</tr>
