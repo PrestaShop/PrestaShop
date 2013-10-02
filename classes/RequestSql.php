@@ -245,9 +245,10 @@ class RequestSqlCore extends ObjectModel
 	 */
 	public function cutAttribute($attr, $from)
 	{
-		if (preg_match('#^((`(\()?([a-z0-9_])+`(\))?)|((\()?([a-z0-9_])+(\))?))\.((`(\()?([a-z0-9_])+`(\))?)|((\()?([a-z0-9_])+(\))?))$#i', $attr))
+		$matches = array();
+		if (preg_match('/((`(\()?([a-z0-9_])+`(\))?)|((\()?([a-z0-9_])+(\))?))\.((`(\()?([a-z0-9_])+`(\))?)|((\()?([a-z0-9_])+(\))?))$/i', $attr, $matches, PREG_OFFSET_CAPTURE))
 		{
-			$tab = explode('.', str_replace(array('`', '(', ')'), '', $attr));
+			$tab = explode('.', str_replace(array('`', '(', ')'), '', $matches[0][0]));
 			if (!$table = $this->returnNameTable($tab[0], $from))
 				return false;
 			else
@@ -256,9 +257,9 @@ class RequestSqlCore extends ObjectModel
 							'attribut' => $tab[1],
 							'string' => $attr);
 		}
-		elseif (preg_match('#^((`(\()?([a-z0-9_])+`(\))?)|((\()?([a-z0-9_])+(\))?))$#i', $attr))
+		elseif (preg_match('/((`(\()?([a-z0-9_])+`(\))?)|((\()?([a-z0-9_])+(\))?))$/i', $attr, $matches, PREG_OFFSET_CAPTURE))
 		{
-			$attribut = str_replace(array('`', '(', ')'), '', $attr);
+			$attribut = str_replace(array('`', '(', ')'), '', $matches[0][0]);
 			if (!$table = $this->returnNameTable(false, $from))
 				return false;
 			else
