@@ -464,7 +464,8 @@ var ajaxCart = {
 					var productAttributeId = (this.hasAttributes ? parseInt(this.attributes) : 0);
 					var content =  '<dt class="hidden" id="cart_block_product_' + domIdProduct + '">';
 					content += '<span class="quantity-formated"><span class="quantity">' + this.quantity + '</span>x</span>';
-					var name = (this.name.length > 12 ? this.name.substring(0, 10) + '...' : this.name);
+					var min = this.name.indexOf(';', 10);
+					var name = (this.name.length > 12 ? this.name.substring(0, ((min - 10) <= 7) ? min : 10) + '...' : this.name);
 					content += '<a href="' + this.link + '" title="' + this.name + '" class="cart_block_product_name">' + name + '</a>';
 
 					if (typeof(this.is_gift) == 'undefined' || this.is_gift == 0)

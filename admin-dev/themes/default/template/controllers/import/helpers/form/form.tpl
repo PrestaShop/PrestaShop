@@ -1,8 +1,8 @@
 {*
 * 2007-2013 PrestaShop
-*
+**
 * NOTICE OF LICENSE
-*
+**
 * This source file is subject to the Academic Free License (AFL 3.0)
 * that is bundled with this package in the file LICENSE.txt.
 * It is also available through the world-wide-web at this URL:
@@ -10,72 +10,25 @@
 * If you did not receive a copy of the license and are unable to
 * obtain it through the world-wide-web, please send an email
 * to license@prestashop.com so we can send you a copy immediately.
-*
+**
 * DISCLAIMER
-*
+**
 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
-*
+**
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 {include file="toolbar.tpl" toolbar_btn=$toolbar_btn toolbar_scroll=$toolbar_scroll title=$title}
 <div class="leadin">{block name="leadin"}{/block}</div>
-
 {if $module_confirmation}
 	<div class="module_confirmation conf confirm">
 		{l s='Your .CSV file has been sucessfully imported into your shop.'}
 	</div>
 {/if}
-
-<script type="text/javascript">
-
-	var truncateAuthorized = {$truncateAuthorized|intval};
-
-	$(document).ready(function(){
-		activeClueTip();
-		$("a#upload_file_import_link").fancybox({
-				'titleShow' : false,
-				'transitionIn' : 'elastic',
-				'transitionOut' : 'elastic'
-		});
-
-		$('#preview_import').submit(function(e) {
-			if ($('#truncate').get(0).checked)
-			{
-				console.log(truncateAuthorized);
-				if (truncateAuthorized)
-				{
-					if (!confirm('{l s='Are you sure that you would like to delete this' js=1}' + ' ' + $.trim($('#entity > option:selected').text().toLowerCase()) + '?'))
-					{
-						e.preventDefault();
-					}
-				}
-				else
-				{
-					jAlert('{l s='You do not have permission to delete here. When the multistore is enabled, only a SuperAdmin can delete all items before an import.' js=1}');
-					return false;
-				}
-			}
-		});
-	});
-
-	function activeClueTip()
-	{
-		$('.info_import').cluetip({
-			splitTitle: '|',
-		    showTitle: false
-	 	});
-	};
-</script>
-
-{** 
- * Upload fancybox 
- *}
 <div style="display: none">
 	<div id="upload_file_import" style="padding-left: 10px; background-color: #EBEDF4; border: 1px solid #CCCED7">
 		<div class="clear">&nbsp;</div>
@@ -97,28 +50,16 @@
 		</form>
 	</div>
 </div>
-
 <div class="clear">&nbsp;</div>
-
-{** 
- * Import fieldset 
- *}
-<form id="preview_import"
-	action="{$current}&token={$token}"
-	method="post"
-	style="display:inline"
-	enctype="multipart/form-data"
-	class="clear">
-	
+<form id="preview_import" action="{$current}&token={$token}" method="post" style="display:inline" enctype="multipart/form-data" class="clear">
 	<fieldset style="float: left; margin: 0pt 20px 0pt 0pt; width: 70%;">
 		<legend><img src="../img/admin/import.gif" />{l s='Import   '}</legend>
-
 			<label class="clear">{if count($files_to_import) > 1}{l s='Your CSV file (%d files):' sprintf=count($files_to_import)}{else}{l s='Your CSV file (%d file):' sprintf=count($files_to_import)}{/if}</label>
 			<div class="margin-form">
 				{if count($files_to_import)}
 					<select name="csv">
 						{foreach $files_to_import AS $filename}
-							<option value="{$filename}">{$filename}</option>
+							<option value="{$filename}"{if $csv_selected == $filename} selected="selected"{/if}>{$filename}</option>
 						{/foreach}
 					</select>
 				{/if}
@@ -146,13 +87,12 @@
 			<div class="margin-form">
 				<select name="entity" id="entity">
 					{foreach $entities AS $entity => $i}
-						<option value="{$i}" {if $entity == $i}selected="selected"{/if}>
+						<option value="{$i}"{if $entity_selected == $i} selected="selected"{/if}>
 							{$entity}
 						</option>
 					{/foreach}
 				</select>
 			</div>
-				
 			<label class="clear">{l s='Language of the file'}</label>
 			<div class="margin-form">
 				<select name="iso_lang">
@@ -180,13 +120,17 @@
 			<div class="margin-form">
 				<input name="truncate" id="truncate" type="checkbox"/>
 			</div>
-				<label for="match_ref" class="clear" style="display: none">{l s='Use product reference as key?'}</label>
+			<label for="regenerate" class="clear">{l s='No thumbnails regeneration'}</label>
 			<div class="margin-form">
-				<input name="match_ref" id="match_ref" type="checkbox" style="margin-top: 6px; display:none"/>
+				<input name="regenerate" id="regenerate" type="checkbox" />
 			</div>
 			<label for="forceIDs" class="clear">{l s='Force all ID\'s during import?'} </label>
 			<div class="margin-form">
 				<input name="forceIDs" id="forceIDs" type="checkbox"/> {l s='If you don\'t use this option, all ID\'s will be auto-incremented.'}
+			</div>
+			<label for="match_ref" class="clear" style="display: none">{l s='Use product reference as key?'}</label>
+			<div class="margin-form">
+				<input name="match_ref" id="match_ref" type="checkbox" style="margin-top: 6px; display:none"/>
 			</div>
 			<div class="space margin-form">
 				<input type="submit" name="submitImportFile" value="{l s='Next step'}" class="button" {if empty($files_to_import)}disabled{/if}/>
@@ -210,13 +154,10 @@
 		{/if}
 	</fieldset>
 </form>
-
 <fieldset style="display:block;">
-
 	<legend>
 		<img src="../img/admin/import.gif" />{l s='Available fields'}
 	</legend>
-
 	<div id="availableFields">
 		{$available_fields}
 	</div>
@@ -224,74 +165,88 @@
 	<div class="clear">
 		<br /><br />{l s='* Required field'}
 	</div>
-
 </fieldset>
-		
 <div class="clear">&nbsp;</div>
-
 <script type="text/javascript">
-	$("select#entity").change( function() {
-
-		if ($("#entity > option:selected").val() == 7 || $("#entity > option:selected").val() == 8)
-		{
-			$("label[for=truncate],#truncate").hide();
-		}
-		else
-			$("label[for=truncate],#truncate").show();
-
-
-		if ($("#entity > option:selected").val() == 8)
-		{
-			$(".import_supply_orders_details").show();
-			$('input[name=multiple_value_separator]').val('|');
-		}
-		else
-		{
-			$(".import_supply_orders_details").hide();
-			$('input[name=multiple_value_separator]').val(',');
-		}
-		
-		
-		if ($("#entity > option:selected").val() == 1)
-		{
-			$("label[for=match_ref],#match_ref").show();
-		}
-		else
-			$("label[for=match_ref],#match_ref").hide();
-
-		if ($("#entity > option:selected").val() == 1 || $("#entity > option:selected").val() == 0)
-		{
-			$(".import_products_categories").show();
-		}
-		else
-			$(".import_products_categories").hide();
-
-		if ($("#entity > option:selected").val() == 0 || $("#entity > option:selected").val() == 1 || $("#entity > option:selected").val() == 3 || $("#entity > option:selected").val() == 5 || $("#entity > option:selected").val() == 6)
-			$("label[for=forceIDs],#forceIDs").show();
-		else
-			$("label[for=forceIDs],#forceIDs").hide();
-
-		$("#entitie").html($("#entity > option:selected").text().toLowerCase());
-		$.ajax({
-			url: 'ajax.php',
-			data: {
-				getAvailableFields:1,
-				entity: $("#entity").val()
-			},
-			dataType: 'json',
-			success: function(j) {
-				var fields = "";
-				$("#availableFields").empty();
-				
-				for (var i = 0; i < j.length; i++)
-					fields += j[i].field;
-
-				$("#availableFields").html(fields);
-				activeClueTip();
-			},
-			error: function(j) {		
-			}			
+	$(document).ready(function(){
+		var truncateAuthorized = {$truncateAuthorized|intval};
+		activeClueTip();
+		$("a#upload_file_import_link").fancybox({
+				'titleShow' : false,
+				'transitionIn' : 'elastic',
+				'transitionOut' : 'elastic'
 		});
 
+		$('#preview_import').submit(function(e){
+			if ($('#truncate').get(0).checked)
+				if (truncateAuthorized)
+				{
+					if (!confirm('{l s='Are you sure that you would like to delete this' js=1}' + ' ' + $.trim($('#entity > option:selected').text().toLowerCase()) + '?'))
+						e.preventDefault();
+				}
+				else
+				{
+					jAlert('{l s='You do not have permission to delete here. When the multistore is enabled, only a SuperAdmin can delete all items before an import.' js=1}');
+					return false;
+				}
+		});
+
+		$("select#entity").change(function(){
+			if ($("#entity > option:selected").val() == 7 || $("#entity > option:selected").val() == 8)
+				$("label[for=truncate],#truncate").hide();
+			else
+				$("label[for=truncate],#truncate").show();
+	
+			if ($("#entity > option:selected").val() == 8)
+			{
+				$(".import_supply_orders_details").show();
+				$('input[name=multiple_value_separator]').val('|');
+			}
+			else
+			{
+				$(".import_supply_orders_details").hide();
+				$('input[name=multiple_value_separator]').val(',');
+			}
+			if ($("#entity > option:selected").val() == 1)
+				$("label[for=match_ref], #match_ref, label[for=regenerate], #regenerate").show();
+			else
+				$("label[for=match_ref], #match_ref, label[for=regenerate], #regenerate").hide();
+			if ($("#entity > option:selected").val() == 1 || $("#entity > option:selected").val() == 0)
+				$(".import_products_categories, label[for=regenerate], #regenerate").show();
+			else
+				$(".import_products_categories, label[for=regenerate], #regenerate").hide();
+			if ($("#entity > option:selected").val() == 0 || $("#entity > option:selected").val() == 1 || $("#entity > option:selected").val() == 3 || $("#entity > option:selected").val() == 5 || $("#entity > option:selected").val() == 6)
+				$("label[for=forceIDs], #forceIDs").show();
+			else
+				$("label[for=forceIDs], #forceIDs").hide();
+			$("#entitie").html($("#entity > option:selected").text().toLowerCase());
+			$.ajax({
+				url: 'ajax.php',
+				data: {
+					getAvailableFields:1,
+					entity: $("#entity").val()
+				},
+				dataType: 'json',
+				success: function(j){
+					var fields = "";
+					$("#availableFields").empty();
+					
+					for (var i = 0; i < j.length; i++)
+						fields += j[i].field;
+	
+					$("#availableFields").html(fields);
+					activeClueTip();
+				},
+				error: function(j){}			
+			});
+		});
+		$("select#entity").trigger('change');
+		function activeClueTip()
+		{
+			$('.info_import').cluetip({
+				splitTitle: '|',
+			    showTitle: false
+		 	});
+		};	
 	});
 </script>

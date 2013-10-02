@@ -651,7 +651,7 @@ class AdminModulesControllerCore extends AdminController
 						$this->errors[] = $this->l('Module not found');
 					elseif ($key == 'install' && $this->tabAccess['add'] !== '1')
 						$this->errors[] = Tools::displayError('You do not have permission to install this module.');
-					elseif ($key == 'uninstall' && ($this->tabAccess['delete'] !== '1' || !$module->getPermission('configure')))
+					elseif ($key == 'delete' && ($this->tabAccess['delete'] !== '1' || !$module->getPermission('configure')))
 						$this->errors[] = Tools::displayError('You do not have permission to delete this module.');
 					elseif ($key == 'configure' && ($this->tabAccess['edit'] !== '1' || !$module->getPermission('configure') || !Module::isInstalled(urldecode($name))))
 						$this->errors[] = Tools::displayError('You do not have permission to configure this module.');
@@ -1108,8 +1108,8 @@ class AdminModulesControllerCore extends AdminController
 					$modules[$km]->preferences = $modules_preferences[$modules[$km]->name];
 			}
 			unset($object);
-			if (isset($module->version_addons))
-				$upgrade_available[] = array('anchor' => ucfirst($module->name), 'name' => $module->displayName);;
+			if ($module->installed && isset($module->version_addons) && $module->version_addons)
+				$upgrade_available[] = array('anchor' => ucfirst($module->name), 'name' => $module->displayName);
 		}
 
 		// Don't display categories without modules

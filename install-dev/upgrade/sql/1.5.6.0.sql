@@ -11,3 +11,7 @@ ALTER TABLE `PREFIX_manufacturer_lang` CHANGE `short_description` `short_descrip
 /* PHP:add_module_to_hook(blockmyaccountfooter, actionModuleRegisterHookAfter); */;
 /* PHP:add_module_to_hook(blockmyaccount, actionModuleUnRegisterHookAfter); */;
 /* PHP:add_module_to_hook(blockmyaccountfooter, actionModuleUnRegisterHookAfter); */;
+/* PHP:remove_tab(AdminRangePrice); */;
+/* PHP:remove_tab(AdminRangeWeight); */;
+
+UPDATE `PREFIX_employee` SET default_tab =  1 WHERE default_tab = 0;
