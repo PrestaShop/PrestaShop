@@ -1332,7 +1332,11 @@ class AdminControllerCore extends Controller
 				$this->context->smarty->assign($type, $this->json ? Tools::jsonEncode(array_unique($this->$type)) : array_unique($this->$type));
 
 		$this->context->smarty->assign('page', $this->json ? Tools::jsonEncode($page) : $page);
-		$this->smartyOutputContent(array($header_tpl, $this->layout, $footer_tpl));
+
+		if (!$this->ajax)
+			$this->smartyOutputContent(array($header_tpl, $this->layout, $footer_tpl));
+		else
+			$this->smartyOutputContent($this->layout);
 	}
 
 	/**
