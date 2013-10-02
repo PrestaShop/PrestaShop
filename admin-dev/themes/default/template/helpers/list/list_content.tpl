@@ -59,7 +59,7 @@
 			{block name="td_content"}
 				{if isset($params.prefix)}{$params.prefix}{/if}
 				{if isset($params.color) && isset($tr[$params.color])}
-					<span class="label color_field" style="font-size:100%;background-color:{$tr[$params.color]};color:{if Tools::getBrightness($tr[$params.color]) < 128}white{else}#383838{/if}">
+					<span class="label color_field" style="background-color:{$tr[$params.color]};color:{if Tools::getBrightness($tr[$params.color]) < 128}white{else}#383838{/if}">
 				{/if}
 				{if isset($tr.$key)}
 					{if isset($params.active)}
@@ -87,7 +87,11 @@
 						{$tr.$key}
 					{elseif isset($params.icon)}
 						{if is_array($tr[$key])}
-							<img src="../img/admin/{$tr[$key]['src']}" alt="{$tr[$key]['alt']}" title="{$tr[$key]['alt']}" />
+							{if isset($tr[$key]['class'])}
+								<i class="{$tr[$key]['class']}"></i>
+							{else}
+								<img src="../img/admin/{$tr[$key]['src']}" alt="{$tr[$key]['alt']}" title="{$tr[$key]['alt']}" />
+							{/if}
 						{/if}
 					{elseif isset($params.price)}
 						{$tr.$key}
@@ -107,7 +111,7 @@
 					{elseif isset($params.callback)}
 						{$tr.$key}
 					{elseif $key == 'color'}
-						<div style="float: left; width: 18px; height: 12px; border: 1px solid #996633; background-color: {$tr.$key}; margin-right: 4px;"></div>
+						<div style="background-color: {$tr.$key}"></div>
 					{elseif isset($params.maxlength) && Tools::strlen($tr.$key) > $params.maxlength}
 						<span title="{$tr.$key|escape:'htmlall':'UTF-8'}">{$tr.$key|truncate:$params.maxlength:'...'|escape:'htmlall':'UTF-8'}</span>
 					{else}
@@ -132,7 +136,8 @@
 				{$tr.shop_short_name}
 			{else}
 				{$tr.shop_name}
-			{/if}</td>
+			{/if}
+		</td>
 	{/if}
 	{if $has_actions}
 		<td class="text-right">

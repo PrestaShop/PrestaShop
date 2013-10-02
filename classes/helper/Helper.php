@@ -36,6 +36,7 @@ class HelperCore
 	public $show_toolbar = true;
 	public $context;
 	public $toolbar_scroll = false;
+	public $bootstrap = false;
 
 	/**
 	 * @var Module
