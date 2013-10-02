@@ -36,6 +36,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 		$this->bootstrap = true;
 		$this->context = Context::getContext();
 		$this->table = 'stock';
+		$this->list_id = 'stock';
 		$this->className = 'Stock';
 		$this->tpl_list_vars['show_filter'] = true;
 		$this->lang = false;
@@ -250,7 +251,6 @@ class AdminStockInstantStateControllerCore extends AdminController
 			$this->_groupBy = 'GROUP BY a.price_te';
 
 			self::$currentIndex = self::$currentIndex.'&id_stock='.Tools::getValue('id_stock').'&detailsstock';
-			$this->processFilter();
 			return parent::renderList();
 		}
 	}
@@ -520,6 +520,12 @@ class AdminStockInstantStateControllerCore extends AdminController
 			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management before using this feature.');
 			return false;
 		}
+
+		if (Tools::isSubmit('detailsproduct'))
+			$this->list_id = 'details';
+		else
+			$this->list_id = 'stock';
+
 		parent::initProcess();	
 	}
 
