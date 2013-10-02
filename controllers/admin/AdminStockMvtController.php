@@ -67,7 +67,6 @@ class AdminStockMvtControllerCore extends AdminController
 			),
 			'sign' => array(
 				'title' => $this->l('Sign'),
-				'width' => 100,
 				'align' => 'center',
 				'type' => 'select',
 				'filter_key' => 'a!sign',
@@ -79,15 +78,16 @@ class AdminStockMvtControllerCore extends AdminController
 					-1 => 'remove_stock.png',
 					1 => 'add_stock.png'
 				),
+				'class' => 'fixed-width-xs'
 			),
 			'physical_quantity' => array(
 				'title' => $this->l('Quantity'),
-				'filter_key' => 'a!physical_quantity'
+				'align' => 'center',
+				'filter_key' => 'a!physical_quantity',
+				'class' => 'fixed-width-sm'
 			),
 			'price_te' => array(
 				'title' => $this->l('Price (tax excl.)'),
-				'width' => 70,
-				'align' => 'right',
 				'type' => 'price',
 				'currency' => true,
 				'filter_key' => 'a!price_te'
@@ -102,7 +102,6 @@ class AdminStockMvtControllerCore extends AdminController
 			),
 			'date_add' => array(
 				'title' => $this->l('Date'),
-				'align' => 'right',
 				'type' => 'datetime',
 				'filter_key' => 'a!date_add'
 			),

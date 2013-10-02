@@ -75,19 +75,22 @@ class AdminStockInstantStateControllerCore extends AdminController
 			),
 			'physical_quantity' => array(
 				'title' => $this->l('Physical quantity'),
-				'width' => 80,
+				'class' => 'fixed-width-xs',
+				'align' => 'center',
 				'orderby' => true,
 				'search' => false
 			),
 			'usable_quantity' => array(
 				'title' => $this->l('Usable quantity'),
-				'width' => 80,
+				'class' => 'fixed-width-xs',
+				'align' => 'center',
 				'orderby' => true,
 				'search' => false,
 			),
 			'real_quantity' => array(
 				'title' => $this->l('Real quantity'),
-				'width' => 80,
+				'class' => 'fixed-width-xs',
+				'align' => 'center',
 				'orderby' => false,
 				'search' => false,
 				'hint' => $this->l('Physical quantity (usable) - Client orders + Supply Orders'),
