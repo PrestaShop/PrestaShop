@@ -388,6 +388,7 @@ class HelperListCore extends Helper
 
 		$tpl->assign(array(
 			'id' => Tools::safeOutput($id),
+			'href' => Tools::safeOutput($this->currentIndex.'&'.$this->identifier.'='.$id.'&details'.$this->table.'&token='.($token != null ? $token : $this->token)),
 			'controller' => str_replace('Controller', '', get_class($this->context->controller)),
 			'token' => Tools::safeOutput($token != null ? $token : $this->token),
 			'action' => self::$cache_lang['Details'],

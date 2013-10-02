@@ -172,7 +172,7 @@
 	{include file="toolbar.tpl" toolbar_btn=$toolbar_btn toolbar_scroll=$toolbar_scroll title=$title}
 	<div class="leadin">{block name="leadin"}{/block}</div>
 {/if}
-
+<div class="row">
 <div class="productTabs col-lg-2">
 	<div class="tab list-group">
 	{foreach $profiles as $profile}
@@ -416,11 +416,14 @@
 					</fieldset>
 				</div>
 			{else}
-				<fieldset>
-				{l s='Administrator permissions cannot be modified.'}
-				</fieldset>
+				<div class="col-lg-12">
+					<fieldset>
+						{l s='Administrator permissions cannot be modified.'}
+					</fieldset>
+				</div>
 			{/if}
 			</div>
 		</div>
 		{/foreach}
 </form>
+</div>
