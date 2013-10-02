@@ -2427,7 +2427,12 @@ class AdminControllerCore extends Controller
 			$class_name = $this->className;
 
 		$object = new $class_name();
-		$definition = ObjectModel::getDefinition($class_name);
+
+		if (method_exists($this, 'getValidationRules'))
+			$definition = $this->getValidationRules();
+		else
+			$definition = ObjectModel::getDefinition($class_name);
+
 		$default_language = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
 
 		foreach ($definition['fields'] as $field => $def)
