@@ -38,8 +38,8 @@ class HTMLTemplatePackageSlipCore extends HTMLTemplate
 		$this->smarty = $smarty;
 
 		// header informations
-		$this->date = Tools::displayDate($this->order->invoice_date);
-		$this->title = HTMLTemplatePackageSlip::l('Delivery').' #'.Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id).sprintf('%06d', $this->order_invoice->delivery_number);
+		$this->date = Tools::displayDate(date("Y-m-d"));// ($this->order->invoice_date);
+		$this->title = HTMLTemplatePackageSlip::l('Package Slip'); //.' #'.sprintf('%06d', $this->order_invoice->id_order);
 
 		// footer informations
 		$this->shop = new Shop((int)$this->order->id_shop);
@@ -61,18 +61,32 @@ class HTMLTemplatePackageSlipCore extends HTMLTemplate
 			$formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
 		}
 		
+		$order_details = $this->order_invoice->getProducts();
+		foreach ($order_details as $key => $order_detail)
+		{
+			$order_details[$key]['warehouse_name'] = "--";
+			$order_details[$key]['warehouse_location'] = "--";
+			if ($order_detail['id_warehouse'] != 0)
+			{
+				$warehouse = new Warehouse((int)$order_detail['id_warehouse']);
+				$warehouse_location = $warehouse->getProductLocation($order_detail["product_id"],$order_detail["product_attribute_id"],$warehouse->id);
+				$order_details[$key]['warehouse_name'] = $warehouse->name;
+				$order_details[$key]['warehouse_location'] = $warehouse_location;
+			}
+		}
+	
 		$carrier = new Carrier($this->order->id_carrier);
 		$carrier->name = ($carrier->name == '0' ? Configuration::get('PS_SHOP_NAME') : $carrier->name);
 		$this->smarty->assign(array(
 			'order' => $this->order,
-			'order_details' => $this->order_invoice->getProducts(),
+			'order_details' => $order_details,
 			'delivery_address' => $formatted_delivery_address,
 			'invoice_address' => $formatted_invoice_address,
 			'order_invoice' => $this->order_invoice,
 			'carrier' => $carrier
 		));
 
-		return $this->smarty->fetch($this->getTemplate('delivery-slip'));
+		return $this->smarty->fetch($this->getTemplate('package-slip'));
 	}
 
 	/**
@@ -81,7 +95,7 @@ class HTMLTemplatePackageSlipCore extends HTMLTemplate
 	 */
 	public function getBulkFilename()
 	{
-		return 'deliveries.pdf';
+		return 'packageslips.pdf';
 	}
 
 	/**
@@ -90,7 +104,7 @@ class HTMLTemplatePackageSlipCore extends HTMLTemplate
 	 */
 	public function getFilename()
 	{
-		return Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order->invoice_number).'.pdf';
+		return "PACKSLIP".sprintf('%06d', $this->order_invoice->id_order).'.pdf';
 	}
 }
 

@@ -493,6 +493,14 @@ class OrderCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)
 		WHERE od.`id_order` = '.(int)($this->id));
 	}
+	
+	public function getProductsDeliveryDetails()
+	{
+		return Db::getInstance(_PS_USE_SQL_SLAVE__)->executeS('
+		SELECT *
+		FROM `'._DB_PREFIX_.'order_delivery` ody
+		WHERE ody.`id_order` = ' . (int)($this->id));
+	}
 
 	public function getFirstMessage()
 	{
@@ -584,6 +592,58 @@ class OrderCore extends ObjectModel
 
 		return $resultArray;
 	}
+	
+	public function getProductsDelivery($products = false, $selectedProducts = false, $selectedQty = false)
+	{
+		if(!$deliverd_products)
+			$deliverd_products = $this->getProductsDeliveryDetails();
+			
+		$customized_datas = Product::getAllCustomizedDatas($this->id_cart);
+		
+		$resultArray = array();
+		foreach($deliverd_products as $row)
+		{
+			// Change qty if selected
+			if ($selectedQty)
+			{
+				$row['product_quantity'] = 0;
+				foreach ($selectedProducts as $key => $id_product)
+					if ($row['id_order_detail'] == $id_product)
+						$row['product_quantity'] = (int)($selectedQty[$key]);
+				if (!$row['product_quantity'])
+					continue;
+			}
+
+			$this->setProductImageInformations($row);
+			$this->setProductCurrentStock($row);
+
+			// Backward compatibility 1.4 -> 1.5
+			$this->setProductPrices($row);
+
+			$this->setProductCustomizedDatas($row, $customized_datas);
+
+			// Add information for virtual product
+			if ($row['download_hash'] && !empty($row['download_hash']))
+			{
+				$row['filename'] = ProductDownload::getFilenameFromIdProduct((int)$row['product_id']);
+				// Get the display filename
+				$row['display_filename'] = ProductDownload::getFilenameFromFilename($row['filename']);
+			}
+			
+			$row['id_address_delivery'] = $this->id_address_delivery;
+			
+			/* Stock product */
+			$resultArray[(int)$row['id_order_detail']] = $row;
+		}
+
+		if ($customized_datas)
+			Product::addCustomizationPrice($resultArray, $customized_datas);
+
+		return $resultArray;
+		
+	}
+	
+	
 
 	public static function getIdOrderProduct($id_customer, $id_product)
 	{

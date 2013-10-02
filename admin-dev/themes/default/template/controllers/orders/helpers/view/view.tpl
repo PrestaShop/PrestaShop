@@ -750,7 +750,11 @@
 			</div>
 			<legend><img src="../img/admin/delivery.gif" alt="{l s='Delivery:'}" />{l s='Delivery:'}</legend>
 			<div style="float:left;width: 100%;">
-				<select><option value="product_name">Product name</select> {l s='Reference:'}<input type="text"  value="" /> {l s='Quantity'} <input type="text" value="1" /> <button type="submit" name="" value="1">Add</button>  | <button type="submit" name="" value="1">Add All products</button><br><br>
+				<select name="adsProductName"><option value="select pname">--  {l s='Select productname'} --</select>
+				{l s='Reference:'}<input type="text" name=""adsReference value="" placeholder="Enter REF" /> {l s='Quantity'}
+				<input type="text" name="ads_qty" value="1" /> <button type="submit" name="sumbitAdsAdd" value="1">Add</button>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<button type="submit" name="submitAdsAdAll" value="1">Add All products</button><br><br>
 				<table style="width: 100%;" cellspacing="0" cellpadding="0" class="table" id="orderDeliveryProducts">
 					<tr>
 						<th height="39" align="center" style="width: 7%">&nbsp;</th>

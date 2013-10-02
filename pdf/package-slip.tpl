@@ -79,19 +79,6 @@
 			<b>{l s='Order Date:' pdf='true'}</b><br />
 			{dateFormat date=$order->date_add full=0}<br />
 			<br />
-			<b>{l s='Payment Method:' pdf='true'}</b><br />
-			<table style="width: 100%;">
-			{foreach from=$order_invoice->getOrderPaymentCollection() item=payment}
-				<tr>
-					<td style="width: 50%">{$payment->payment_method}</td>
-					<td style="width: 50%">{displayPrice price=$payment->amount currency=$order->id_currency}</td>
-				</tr>
-			{foreachelse}
-				<tr>
-					<td>{l s='No payment'}</td>
-				</tr>
-			{/foreach}
-			</table>
 			<br />
 			{if isset($carrier)}
 			<b>{l s='Carrier:' pdf='true'}</b><br />
@@ -103,22 +90,24 @@
 		<td style="width: 78%; text-align: right">
 			<table style="width: 100%">
 				<tr style="line-height:6px;">
-					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 60%">{l s='ITEMS TO BE DELIVERED' pdf='true'}</td>
+					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 40%">{l s='PRODUCT NAME' pdf='true'}</td>
 					<td style="background-color: #4D4D4D; color: #FFF; text-align: left; font-weight: bold; width: 20%">{l s='REFERENCE' pdf='true'}</td>
 					<td style="background-color: #4D4D4D; color: #FFF; text-align: center; font-weight: bold; width: 20%">{l s='QTY' pdf='true'}</td>
+					<td style="background-color: #4D4D4D; color: #FFF; text-align: center; font-weight: bold; width: 20%">{l s='WAREHOUSE' pdf='true'}</td>
 				</tr>
 				{foreach $order_details as $product}
 				{cycle values='#FFF,#DDD' assign=bgcolor}
 				<tr style="line-height:6px;background-color:{$bgcolor};">
-					<td style="text-align: left; width: 60%">{$product.product_name}</td>
+					<td style="text-align: left; width: 40%">{$product.product_name}</td>
 					<td style="text-align: left; width: 20%">
 						{if empty($product.product_reference)}
-							---
+							--- 
 						{else}
 							{$product.product_reference}
 						{/if}
 					</td>
 					<td style="text-align: center; width: 20%">{$product.product_quantity}</td>
+					<td style="text-align: center; width: 20%">{$product.warehouse_name} ({$product.warehouse_location})</td>
 				</tr>
 				{/foreach}
 			</table>

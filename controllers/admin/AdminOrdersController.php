@@ -1233,6 +1233,11 @@ class AdminOrdersControllerCore extends AdminController
 						$this->errors[] = Tools::displayError('An error occurred during the OrderCartRule creation');
 				}
 			}
+			
+			elseif (Tools::getValue('submitAdsAdd')) 
+			{
+				// Do some shit here.
+			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
@@ -1249,6 +1254,7 @@ class AdminOrdersControllerCore extends AdminController
 		$customer = new Customer($order->id_customer);
 		$carrier = new Carrier($order->id_carrier);
 		$products = $this->getProducts($order);
+		$delivered_products = $this->getProducts($order);
 		$currency = new Currency((int)$order->id_currency);
 		// Carrier module call
 		$carrier_module_call = null;
@@ -1356,6 +1362,7 @@ class AdminOrdersControllerCore extends AdminController
 			),
 			'customerStats' => $customer->getStats(),
 			'products' => $products,
+			'delivered_products' => $delivered_products,
 			'discounts' => $order->getCartRules(),
 			'orders_total_paid_tax_incl' => $order->getOrdersTotalPaid(), // Get the sum of total_paid_tax_incl of the order with similar reference
 			'total_paid' => $order->getTotalPaid(),
