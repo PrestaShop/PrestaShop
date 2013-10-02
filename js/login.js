@@ -58,7 +58,7 @@ function displayLogin() {
  */
 function doAjaxLogin(redirect) {
 	$('#error').hide();
-	$('#login_form .ajax-loader').fadeIn('slow', function() {
+	$('#login_form').fadeIn('slow', function() {
 		$.ajax({
 			type: "POST",
 			headers: { "cache-control": "no-cache" },
@@ -82,14 +82,14 @@ function doAjaxLogin(redirect) {
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
 				$('#error').html('<h3>TECHNICAL ERROR:</h3><p>Details: Error thrown: ' + XMLHttpRequest + '</p><p>Text status: ' + textStatus + '</p>').removeClass('hide');
-				$('#login_form .ajax-loader').fadeOut('slow');
+				$('#login_form').fadeOut('slow');
 			}
 		});
 	});
 }
 function doAjaxForgot() {
 	$('#error').hide();
-	$('#forgot_password_form .ajax-loader').fadeIn('slow', function() {
+	$('#forgot_password_form').fadeIn('slow', function() {
 		$.ajax({
 			type: "POST",
 			headers: { "cache-control": "no-cache" },
@@ -109,23 +109,23 @@ function doAjaxForgot() {
 				else
 				{
 					alert(jsonData.confirm);
-					$('#forgot_password_form .ajax-loader').hide();
+					$('#forgot_password_form').hide();
 					displayLogin();
 				}
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
 				$('#error').html('<h3>TECHNICAL ERROR:</h3><p>Details: Error thrown: ' + XMLHttpRequest + '</p><p>Text status: ' + textStatus + '</p>').show();
-				$('#forgot_password_form .ajax-loader').fadeOut('slow');
+				$('#forgot_password_form').fadeOut('slow');
 			}
 		});
 	});
 }
 function displayErrors(errors) {
-	str_errors = '<h3>' + (errors.length > 1 ? there_are : there_is) + ' ' + errors.length + ' ' + (errors.length > 1 ? label_errors : label_error) + '</h3><ol>';
+	str_errors = '<p><strong>' + (errors.length > 1 ? there_are : there_is) + ' ' + errors.length + ' ' + (errors.length > 1 ? label_errors : label_error) + '</strong></p><ol>';
 	for (var error in errors) //IE6 bug fix
 		if (error != 'indexOf') str_errors += '<li>' + errors[error] + '</li>';
 	$('.ajax-loader').hide();
-	$('#error').html(str_errors + '</ol>').fadeIn('slow');
+	$('#error').html(str_errors + '</ol>').removeClass('hide').fadeIn('slow');
 	$("#login").effect("shake", {
 		times: 4
 	}, 100);
