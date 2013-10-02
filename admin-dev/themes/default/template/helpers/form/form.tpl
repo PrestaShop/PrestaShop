@@ -392,9 +392,13 @@
 									{assign var=use_textarea_autosize value=true}
 									{if isset($input.lang) AND $input.lang}
 									{foreach $languages as $language}
+									{if $languages|count > 1}
 									<div class="row translatable-field lang-{$language.id_lang}"  {if $language.id_lang != $defaultFormLanguage}style="display:none;"{/if}>
+
 										<div class="col-lg-9">
+									{/if}
 											<textarea name="{$input.name}_{$language.id_lang}" class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte {if isset($input.class)}{$input.class}{/if}{else}textarea-autosize{/if}" >{$fields_value[$input.name][$language.id_lang]|escape:'htmlall':'UTF-8'}</textarea>
+									{if $languages|count > 1}	
 										</div>
 										<div class="col-lg-2">
 											<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
@@ -413,6 +417,7 @@
 											</ul>
 										</div>
 									</div>
+									{/if}
 									{/foreach}
 
 									{else}
