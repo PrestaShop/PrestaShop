@@ -679,8 +679,7 @@ class AdminControllerCore extends Controller
 			'export_precontent' => "\xEF\xBB\xBF",
 			'export_headers' => $headers,
 			'export_content' => $content
-			)
-		);
+		));
 			
 		$this->layout = 'layout-export.tpl';
 	}
@@ -1284,20 +1283,32 @@ class AdminControllerCore extends Controller
 	public function display()
 	{
 		$this->context->smarty->assign(array(
-				'display_header' => $this->display_header,
-				'display_footer' => $this->display_footer,
-				)
-			);
+			'display_header' => $this->display_header,
+			'display_footer' => $this->display_footer,
+		));
 
 		// Use page title from meta_title if it has been set else from the breadcrumbs array
 		if (!$this->meta_title)
 			$this->meta_title = strip_tags(is_array($this->toolbar_title) ? implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title) : $this->toolbar_title);
 		$this->context->smarty->assign('meta_title', $this->meta_title);
 
+		$template_dirs = $this->context->smarty->getTemplateDir();
+		
+		// Check if header/footer have been overriden
+		$header_tpl = 'header.tpl';
+		$footer_tpl = 'footer.tpl';
+		foreach ($template_dirs as $template_dir)
+		{
+			if (file_exists($template_dir.DIRECTORY_SEPARATOR.'header.tpl'))
+				$header_tpl = $template_dir.DIRECTORY_SEPARATOR.'header.tpl';
+			if (file_exists($template_dir.DIRECTORY_SEPARATOR.'footer.tpl'))
+				$footer_tpl = $template_dir.DIRECTORY_SEPARATOR.'footer.tpl';
+		}
+
 		$tpl_action = $this->tpl_folder.$this->display.'.tpl';
 
 		// Check if action template has been overriden
-		foreach ($this->context->smarty->getTemplateDir() as $template_dir)
+		foreach ($template_dirs as $template_dir)
 			if (file_exists($template_dir.DIRECTORY_SEPARATOR.$tpl_action) && $this->display != 'view' && $this->display != 'options')
 			{
 				if (method_exists($this, $this->display.Tools::toCamelCase($this->className)))
@@ -1321,7 +1332,7 @@ class AdminControllerCore extends Controller
 				$this->context->smarty->assign($type, $this->json ? Tools::jsonEncode(array_unique($this->$type)) : array_unique($this->$type));
 
 		$this->context->smarty->assign('page', $this->json ? Tools::jsonEncode($page) : $page);
-		$this->smartyOutputContent($this->layout);
+		$this->smartyOutputContent(array($header_tpl, $this->layout, $footer_tpl));
 	}
 
 	/**
@@ -1974,12 +1985,10 @@ class AdminControllerCore extends Controller
 		if ($this->display_header)
 			$this->context->smarty->assign('displayBackOfficeHeader', Hook::exec('displayBackOfficeHeader', array()));
 		
-		$this->context->smarty->assign(
-			array(
-				'displayBackOfficeTop' => Hook::exec('displayBackOfficeTop', array()),
-				'submit_form_ajax' => (int)Tools::getValue('submitFormAjax')
-				)
-			);
+		$this->context->smarty->assign(array(
+			'displayBackOfficeTop' => Hook::exec('displayBackOfficeTop', array()),
+			'submit_form_ajax' => (int)Tools::getValue('submitFormAjax')
+		));
 
 		$this->initProcess();
 	}

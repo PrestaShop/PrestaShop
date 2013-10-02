@@ -33,7 +33,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="robots" content="NOFOLLOW, NOINDEX">
-	<title>{$shop_name} {if $meta_title != ''}{$navigationPipe|escape:'htmlall':'UTF-8'} {$meta_title}{/if} (PrestaShop&trade;)</title>
+	<title>{$shop_name} {if $meta_title != ''}{if isset($navigationPipe)}{$navigationPipe|escape:'htmlall':'UTF-8'}{else}&gt;{/if} {$meta_title}{/if} (PrestaShop&trade;)</title>
 	{if $display_header}
 	<script type="text/javascript">
 		var help_class_name = '{$controller_name}';
@@ -102,9 +102,9 @@
 	{/if}
 </head>
 
-<body class="{if $employee->bo_menu}page-sidebar {* page-sidebar-closed *}{else}page-topbar{/if}">
-
 {if $display_header}
+	<body class="{if $employee->bo_menu}page-sidebar {* page-sidebar-closed *}{else}page-topbar{/if}">
+
 {* begin  HEADER *}
 	<header id="header">
 		<nav id="header_infos" role="navigation">
@@ -280,23 +280,28 @@
 		</nav>{* end header_infos*}
 	</header>
 
-{* end header*}	
-{/if}
 
 	<div id="main">
 		{include file='nav.tpl'}
 
 		<div id="content" class="page-content">
-{if $display_header && $install_dir_exists}
+{if $install_dir_exists}
 			<div class="alert alert-warning">
 				{l s='For security reasons, you must also:'}&nbsp;{l s='delete the /install folder'}
 			</div>
 {/if}
-{if $display_header && $is_multishop && $shop_list && ($multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
+{if $is_multishop && $shop_list && ($multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
 			<fieldset class="multishop_toolbar">
 				<div class="col-lg-12 form-horizontal">
 					<label class="control-label col-lg-3"><i class="icon-sitemap"></i> {l s='Multistore configuration for'}</label>
 					<div class="col-lg-9">{$shop_list}</div>
 				</div>
 			</fieldset>
+{/if}
+
+{* end display_header*}	
+{else}
+	<body>
+		<div id="main">
+			<div id="content" class="page-content">
 {/if}
