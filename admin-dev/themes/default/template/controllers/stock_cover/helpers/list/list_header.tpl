@@ -34,7 +34,7 @@
 			<div class="form-group">
 				<label for="coverage_period" class="control-label col-lg-3">{l s='Filter by period:'}</label>
 				<div class="col-lg-9">
-					<select name="coverage_period" onChange="$(this).parent().parent().submit();">
+					<select name="coverage_period" onChange="$('#stock_cover').submit();">
 						{foreach from=$stock_cover_periods key=k item=i}
 							<option {if $i == $stock_cover_cur_period} selected="selected"{/if} value="{$i}">{$k}</option>
 						{/foreach}
@@ -46,7 +46,7 @@
 			<div class="form-group">
 				<label for="id_warehouse" class="control-label col-lg-3">{l s='Filter by warehouse:'}</label>
 				<div class="col-lg-9">
-					<select name="id_warehouse" onChange="$(this).parent().parent().submit();">
+					<select name="id_warehouse" onChange="$('#stock_cover').submit();">
 						{foreach from=$stock_cover_warehouses key=k item=i}
 							<option {if $i.id_warehouse == $stock_cover_cur_warehouse} selected="selected"{/if} value="{$i.id_warehouse}">{$i.name}</option>
 						{/foreach}
@@ -57,7 +57,7 @@
 			<div class="form-group">
 				<label for="warn_days" class="control-label col-lg-3">{l s='Highlight when coverage (in days) is less than:'}</label>
 				<div class="col-lg-9">
-					<input name="warn_days" type="text" size="3" onChange="$(this).parent().parent().submit();" value="{if isset($stock_cover_warn_days)}{$stock_cover_warn_days}{/if}" />
+					<input name="warn_days" type="text" size="3" onChange="$('#stock_cover').submit();" value="{if isset($stock_cover_warn_days)}{$stock_cover_warn_days}{/if}" />
 				</div>
 			</div>
 		</form>
