@@ -253,6 +253,10 @@
 		{/if}
 		</div>
 {/if}
+{if $simple_header}
+<fieldset class="col-lg-12">
+	<h3>{if is_array($title)}{$title|end}{else}{$title}{/if}</h3>
+{/if}
 	<div class="table-responsive clearfix">
 		<table
 			name="list_table"

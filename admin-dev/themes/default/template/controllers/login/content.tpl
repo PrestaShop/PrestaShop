@@ -72,6 +72,10 @@
 									<button class="btn btn-default" name="submitLogin" type="submit">
 										{l s='Log in'}
 									</button>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-lg-9 col-lg-offset-3">
 									<p>		
 										<a href="#" class="show-forgot-password">
 											<i class="icon-question-sign"></i>
@@ -103,6 +107,10 @@
 									<button class="btn btn-default" name="submitLogin" type="submit">
 										{l s='Send'}
 									</button>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-lg-9 col-lg-offset-3">
 									<p>		
 										<a href="#" class="show-login-form">
 											<i class="icon-angle-left"></i>

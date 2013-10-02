@@ -354,7 +354,11 @@ abstract class ControllerCore
 	protected function smartyOutputContent($content)
 	{
 		$this->context->cookie->write();
-		$this->context->smarty->display($content);
+		if (is_array($content))
+			foreach ($content as $tpl)
+				$this->context->smarty->display($tpl);
+		else
+			$this->context->smarty->display($content);
 	}
 	
 	protected function isCached($template, $cacheId = null, $compileId = null)
