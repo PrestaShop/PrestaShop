@@ -24,6 +24,7 @@
 *}
 {extends file="helpers/list/list_header.tpl"}
 {block name=override_header}
+{if isset($show_filter) && $show_filter}
 <fieldset>
 	<h3><i class="icon-cogs"></i> {l s='Filters'}</h3>
 	<div class="filter-stock">
@@ -34,7 +35,7 @@
 			<div id="stock_instant_state_form_warehouse" class="form-group">
 				<label for="id_warehouse" class="control-label col-lg-3">{l s='Filter by warehouse:'}</label>
 				<div class="col-lg-9">
-					<select name="id_warehouse" onChange="$(this).parent().parent().submit();">
+					<select name="id_warehouse" onChange="$('#stock_instant_state').submit();">
 						{foreach from=$stock_instant_state_warehouses key=k item=i}
 							<option {if $i.id_warehouse == $stock_instant_state_cur_warehouse} selected="selected"{/if} value="{$i.id_warehouse}">{$i.name}</option>
 						{/foreach}
@@ -45,4 +46,5 @@
 		</form>
 	</div>
 </fieldset>
+{/if}
 {/block}
