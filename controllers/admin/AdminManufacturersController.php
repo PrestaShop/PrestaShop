@@ -238,7 +238,7 @@ class AdminManufacturersControllerCore extends AdminController
 	public function displayEditaddressesLink($token = null, $id)
 	{
 		if (!array_key_exists('editaddresses', self::$cache_lang))
-			self::$cache_lang['editaddresses'] = $this->l('Edit Adresses');
+			self::$cache_lang['editaddresses'] = $this->l('Edit');
 
 		$this->context->smarty->assign(array(
 			'href' => self::$currentIndex.
