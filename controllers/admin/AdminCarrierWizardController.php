@@ -619,7 +619,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 				}
 			}
 			else
-				$this->validateRules('AdminCarrierWizardControllerCore');
+				$this->validateRules();
 		}
 
 		if (count($this->errors))
@@ -874,7 +874,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 			return $return;
 	}
 
-	public static function getValidationRules()
+	public function getValidationRules()
 	{
 		$step_number = Tools::getValue('step_number');
 
@@ -894,20 +894,12 @@ class AdminCarrierWizardControllerCore extends AdminController
 			array_splice($step_fields, 1, 0, $multistore_field);
 		}
 
-		$rules = Carrier::getValidationRules('Carrier');
-
-		foreach ($rules as $key_r => $rule)
-			foreach ($rule as $key_f => $field)
-			{
-				if (in_array($key_r, array('required', 'requiredLang')))
-				{
-					if(!in_array($field, $step_fields[$step_number]))
-						unset($rules[$key_r][$key_f]);
-				}
-				else if(!in_array($key_f, $step_fields[$step_number]))
-						unset($rules[$key_r][$key_f]);
-			}
-		return $rules;
+		$definition = ObjectModel::getDefinition('Carrier');
+		foreach ($definition['fields'] as $field => $def)
+			if (!in_array($field, $step_fields[$step_number]))
+				unset($definition['fields'][$field]);
+		
+		return $definition;
 	}
 
 	public static function displayFieldName($field)
