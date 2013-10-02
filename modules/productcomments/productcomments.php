@@ -248,7 +248,7 @@ class ProductComments extends Module
 			$defaultLanguage = new Language((int)(Configuration::get('PS_LANG_DEFAULT')));
 			if (!Tools::getValue('criterion_'.$defaultLanguage->id))
 			{
-				$this->_html .= '<div class="error"><img src="../img/admin/error2.png" />'.$this->l('The field <b>Name</b> is required at least in').' '.$defaultLanguage->name.'</div>';
+				$this->_html .= $this->displayError($this->l('The field <b>Name</b> is required at least in').' '.$defaultLanguage->name);
 				return;
 			}
 
@@ -256,7 +256,7 @@ class ProductComments extends Module
 			$productCommentCriterion->active = (int)Tools::getValue('criterion_active');
 
 			if ($productCommentCriterion->save())
-				$this->_html .= '<div class="conf confirm">'.(Tools::getValue('editCriterion') ? $this->l('Criterion updated') : $this->l('Criterion added')).'</div>';
+				$this->_html .= $this->displayConfirmation((Tools::getValue('editCriterion') ? $this->l('Criterion updated') : $this->l('Criterion added')));
 		}
 		else if (!empty($action_criterion) && empty($name))
 		{

@@ -62,9 +62,9 @@ class BlockViewed extends Module
 		if (Tools::isSubmit('submitBlockViewed'))
 		{
 			if (!($productNbr = Tools::getValue('PRODUCTS_VIEWED_NBR')) || empty($productNbr))
-				$output .= $this->displayErrors($this->l('You must fill in the \'Products displayed\' field.'));
+				$output .= $this->displayError($this->l('You must fill in the \'Products displayed\' field.'));
 			elseif ((int)($productNbr) == 0)
-				$output .= $this->displayErrors($this->l('Invalid number.'));
+				$output .= $this->displayError($this->l('Invalid number.'));
 			else
 			{
 				Configuration::updateValue('PRODUCTS_VIEWED_NBR', (int)$productNbr);

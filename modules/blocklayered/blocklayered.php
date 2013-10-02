@@ -1320,13 +1320,7 @@ class BlockLayered extends Module
 		if (Tools::isSubmit('SubmitFilter'))
 		{
 			if (!Tools::getValue('layered_tpl_name'))
-				$html .= '
-				<div class="error">
-					<span style="float:right">
-						<a href="" id="hideError"><img src="../img/admin/close.png" alt="X"></a>
-					</span>
-					<img src="../img/admin/error2.png">'.$this->l('Filter template name required (cannot be empty)').'
-				</div>';
+				$html .= $this->displayError($this->l('Filter template name required (cannot be empty)'));
 			else
 			{
 				if (isset($_POST['id_layered_filter']) && $_POST['id_layered_filter'])
@@ -1409,9 +1403,8 @@ class BlockLayered extends Module
 					Db::getInstance()->autoExecute(_DB_PREFIX_.'layered_filter', $values_to_insert, 'INSERT');
 					$this->buildLayeredCategories();
 					
-					$html .= '<div class="conf">'.
-						$this->l('Your filter').' "'.Tools::safeOutput(Tools::getValue('layered_tpl_name')).'" '.
-						((isset($_POST['id_layered_filter']) && $_POST['id_layered_filter']) ? $this->l('was updated successfully.') : $this->l('was added successfully.')).'</div>';
+					$html .= $this->displayConfirmation($this->l('Your filter').' "'.Tools::safeOutput(Tools::getValue('layered_tpl_name')).'" '.
+						((isset($_POST['id_layered_filter']) && $_POST['id_layered_filter']) ? $this->l('was updated successfully.') : $this->l('was added successfully.')));
 				}
 			}
 		}
@@ -1442,18 +1435,10 @@ class BlockLayered extends Module
 				Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'layered_filter WHERE id_layered_filter = '.(int)$_GET['id_layered_filter'].' LIMIT 1');
 				$this->buildLayeredCategories();
 
-				$html .= '
-				<div class="conf">'.
-					$this->l('Filter template deleted, categories updated (reverted to default Filter template).').'
-				</div>';
+				$html .= $this->displayConfirmation($this->l('Filter template deleted, categories updated (reverted to default Filter template).'));
 			}
 			else
-			{
-				$html .= '
-				<div class="error">
-					<img src="../img/admin/error.png" alt="" title="" /> '.$this->l('Filter template not found').'
-				</div>';
-			}
+				$html .= $this->displayError($this->l('Filter template not found'));
 		}
 
 		$html .= '
