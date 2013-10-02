@@ -45,6 +45,7 @@ class AdminLoginControllerCore extends AdminController
 		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
 		$this->addJquery();
 		$this->addCSS('/'.$admin_webpath.'/themes/'.$this->bo_theme.'/css/admin-theme.css');
+		$this->addJS(_PS_JS_DIR_.'vendor/jquery.validate.js');
 		$this->addJS(_PS_JS_DIR_.'login.js');
 		$this->addJqueryUI('ui.widget');
 		$this->addJqueryUI('effects.shake');
