@@ -1260,7 +1260,7 @@ class CartCore extends ObjectModel
 		return true;
 	}
 
-	public static function getTotalCart($id_cart, $use_tax_display = false, $type = CART::BOTH)
+	public static function getTotalCart($id_cart, $use_tax_display = false, $type = Cart::BOTH)
 	{
 		$cart = new Cart($id_cart);
 		if (!Validate::isLoadedObject($cart))
