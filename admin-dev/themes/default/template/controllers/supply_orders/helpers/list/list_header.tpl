@@ -34,7 +34,7 @@
 			<div class="form-group">
 				<label for="id_warehouse" class="control-label col-lg-3">{l s='Filter by warehouse:'}</label>
 				<div class="col-lg-9">
-					<select name="id_warehouse" onChange="$(this).parent().parent().submit();">
+					<select name="id_warehouse" onChange="$('#supply_orders').submit();">
 					{foreach from=$warehouses key=k item=i}
 						<option {if $i.id_warehouse == $current_warehouse} selected="selected"{/if} value="{$i.id_warehouse}">{$i.name}</option>
 					{/foreach}
@@ -44,7 +44,7 @@
 			<div class="form-group">
 				<div class="checkbox col-lg-3 col-lg-push-3">
 					<label for="filter_status">
-						<input type="checkbox" name="filter_status" class="noborder" onChange="$(this).parent().parent().submit();" {if $filter_status == 1}value="on" checked{/if} /> {l s='Choose not to display completed/canceled orders:'}
+						<input type="checkbox" name="filter_status" class="noborder" onChange="$('#supply_orders').submit();" {if $filter_status == 1}value="on" checked{/if} /> {l s='Choose not to display completed/canceled orders:'}
 					</label>
 				</div>
 			</div>
