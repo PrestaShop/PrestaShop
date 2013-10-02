@@ -37,6 +37,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 		$this->context = Context::getContext();
 		$this->table = 'stock';
 		$this->className = 'Stock';
+		$this->tpl_list_vars['show_filter'] = true;
 		$this->lang = false;
 		$this->multishop_context = Shop::CONTEXT_ALL;
 
@@ -106,7 +107,31 @@ class AdminStockInstantStateControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-		$this->page_header_toolbar_title = $this->l('Instant stock status');		
+		$this->page_header_toolbar_title = $this->l('Instant stock status');
+
+		if ($this->display == 'details')
+			$this->page_header_toolbar_btn['back_to_list'] = array(
+				'href' => Context::getContext()->link->getAdminLink('AdminStockInstantState').(Tools::getValue('id_warehouse') ? '&id_warehouse='.Tools::getValue('id_warehouse') : ''),
+				'desc' => $this->l('Back to list'),
+				'icon' => 'process-icon-back'
+			);
+		elseif (Tools::isSubmit('id_warehouse') && (int)Tools::getValue('id_warehouse') != -1)
+		{
+			$this->page_header_toolbar_btn['export-stock-state-quantities-csv'] = array(
+				'short' => 'Export this list as CSV',
+				'href' => $this->context->link->getAdminLink('AdminStockInstantState').'&amp;csv_quantities&amp;id_warehouse='.(int)$this->getCurrentCoverageWarehouse(),
+				'desc' => $this->l('Export Quantities (CSV)'),
+				'imgclass' => 'export'
+			);
+
+			$this->page_header_toolbar_btn['export-stock-state-prices-csv'] = array(
+				'short' => 'Export this list as CSV',
+				'href' => $this->context->link->getAdminLink('AdminStockInstantState').'&amp;csv_prices&amp;id_warehouse='.(int)$this->getCurrentCoverageWarehouse(),
+				'desc' => $this->l('Export Prices (CSV)'),
+				'imgclass' => 'export'
+			);
+		}
+
 		parent::initPageHeaderToolbar();
 	}
 
@@ -180,77 +205,148 @@ class AdminStockInstantStateControllerCore extends AdminController
 		return $list;
 	}
 
+	public function renderDetails()
+	{
+		if (Tools::isSubmit('id_stock')) // if a product id is submit
+		{
+			$this->lang = false;
+			$this->table = 'stock';
+			$this->list_id = 'details';
+			$this->tpl_list_vars['show_filter'] = false;
+			$lang_id = (int)$this->context->language->id;
+			$this->actions = array();
+			$this->list_simple_header = true;
+			$ids = explode('_', Tools::getValue('id_stock'));
+
+			if (count($ids) != 2)
+				die;
+
+			$id_product = $ids[0];
+			$id_product_attribute = $ids[1];
+			$id_warehouse = Tools::getValue('id_warehouse', -1);
+			$this->_select = 'IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(DISTINCT agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as name,
+				w.id_currency, a.price_te, SUM(a.physical_quantity) as physical_quantity, SUM(a.usable_quantity) as usable_quantity,
+				(a.price_te * SUM(a.physical_quantity)) as valuation';
+			$this->_join = ' LEFT JOIN `'._DB_PREFIX_.'warehouse` AS w ON w.id_warehouse = a.id_warehouse';
+			$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
+				a.id_product = pl.id_product
+				AND pl.id_lang = '.(int)$this->context->language->id.'
+			)';
+			$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.id_product_attribute = a.id_product_attribute)';
+			$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'attribute` atr ON (atr.id_attribute = pac.id_attribute)';
+			$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (
+				al.id_attribute = pac.id_attribute
+				AND al.id_lang = '.(int)$this->context->language->id.'
+			)';
+			$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (
+				agl.id_attribute_group = atr.id_attribute_group
+				AND agl.id_lang = '.(int)$this->context->language->id.'
+			)';
+			$this->_where = 'AND a.id_product = '.(int)$id_product.' AND a.id_product_attribute = '.(int)$id_product_attribute;
+
+			if ($id_warehouse != -1)
+				$this->_where .= ' AND a.id_warehouse = '.(int)$id_warehouse;
+
+			$this->_groupBy = 'GROUP BY a.price_te';
+
+			self::$currentIndex = self::$currentIndex.'&id_stock='.Tools::getValue('id_stock').'&detailsstock';
+			$this->processFilter();
+			return parent::renderList();
+		}
+	}
+
 	/**
 	 * AdminController::getList() override
 	 * @see AdminController::getList()
 	 */
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
-		if ((Tools::isSubmit('csv_quantities') || Tools::isSubmit('csv_prices')) &&
-			(int)Tools::getValue('id_warehouse') != -1)
-			$limit = false;
-
-		$order_by_valuation = false;
-		$order_by_real_quantity = false;
-
-		if ($this->context->cookie->{$this->table.'Orderby'} == 'valuation')
+		if (Tools::isSubmit('id_stock'))
 		{
-			unset($this->context->cookie->{$this->table.'Orderby'});
-			$order_by_valuation = true;
+			parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
+
+			$nb_items = count($this->_list);
+
+			for ($i = 0; $i < $nb_items; $i++)
+			{
+				$item = &$this->_list[$i];
+				$manager = StockManagerFactory::getManager();
+				$item['real_quantity'] = $manager->getProductRealQuantities(
+					$item['id_product'],
+					$item['id_product_attribute'],
+					($this->getCurrentCoverageWarehouse() == -1 ? null : array($this->getCurrentCoverageWarehouse())),
+					true
+				);
+			}
 		}
-		else if ($this->context->cookie->{$this->table.'Orderby'} == 'real_quantity')
+		else
 		{
-			unset($this->context->cookie->{$this->table.'Orderby'});
-			$order_by_real_quantity = true;
+			if ((Tools::isSubmit('csv_quantities') || Tools::isSubmit('csv_prices')) &&
+				(int)Tools::getValue('id_warehouse') != -1)
+				$limit = false;
+
+			$order_by_valuation = false;
+			$order_by_real_quantity = false;
+
+			if ($this->context->cookie->{$this->table.'Orderby'} == 'valuation')
+			{
+				unset($this->context->cookie->{$this->table.'Orderby'});
+				$order_by_valuation = true;
+			}
+			else if ($this->context->cookie->{$this->table.'Orderby'} == 'real_quantity')
+			{
+				unset($this->context->cookie->{$this->table.'Orderby'});
+				$order_by_real_quantity = true;
+			}
+
+			parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
+
+			$nb_items = count($this->_list);
+
+			for ($i = 0; $i < $nb_items; ++$i)
+			{
+				$item = &$this->_list[$i];
+
+				$item['price_te'] = '--';
+				$item[$this->identifier] = $item['id_product'].'_'.$item['id_product_attribute'];
+
+				// gets stock manager
+				$manager = StockManagerFactory::getManager();
+
+				// gets quantities and valuation
+				$query = new DbQuery();
+				$query->select('SUM(physical_quantity) as physical_quantity');
+				$query->select('SUM(usable_quantity) as usable_quantity');
+				$query->select('SUM(price_te * physical_quantity) as valuation');
+				$query->from('stock');
+				$query->where('id_product = '.(int)$item['id_product'].' AND id_product_attribute = '.(int)$item['id_product_attribute']);
+
+				if ($this->getCurrentCoverageWarehouse() != -1)
+					$query->where('id_warehouse = '.(int)$this->getCurrentCoverageWarehouse());
+
+				$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
+
+				$item['physical_quantity'] = $res['physical_quantity'];
+				$item['usable_quantity'] = $res['usable_quantity'];
+
+				// gets real_quantity depending on the warehouse
+				$item['real_quantity'] = $manager->getProductRealQuantities($item['id_product'],
+																			$item['id_product_attribute'],
+																			($this->getCurrentCoverageWarehouse() == -1 ? null : array($this->getCurrentCoverageWarehouse())),
+																			true);
+
+				// removes the valuation if the filter corresponds to 'all warehouses'
+				if ($this->getCurrentCoverageWarehouse() == -1)
+					$item['valuation'] = 'N/A';
+				else
+					$item['valuation'] = $res['valuation'];
+			}
+
+			if ($this->getCurrentCoverageWarehouse() != -1 && $order_by_valuation)
+				usort($this->_list, array($this, 'valuationCmp'));
+			else if ($order_by_real_quantity)
+				usort($this->_list, array($this, 'realQuantityCmp'));
 		}
-
-		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
-
-		$nb_items = count($this->_list);
-
-		for ($i = 0; $i < $nb_items; ++$i)
-		{
-			$item = &$this->_list[$i];
-
-			$item['price_te'] = '--';
-			$item[$this->identifier] = $item['id_product'].'_'.$item['id_product_attribute'];
-
-			// gets stock manager
-			$manager = StockManagerFactory::getManager();
-
-			// gets quantities and valuation
-			$query = new DbQuery();
-			$query->select('SUM(physical_quantity) as physical_quantity');
-			$query->select('SUM(usable_quantity) as usable_quantity');
-			$query->select('SUM(price_te * physical_quantity) as valuation');
-			$query->from('stock');
-			$query->where('id_product = '.(int)$item['id_product'].' AND id_product_attribute = '.(int)$item['id_product_attribute']);
-
-			if ($this->getCurrentCoverageWarehouse() != -1)
-				$query->where('id_warehouse = '.(int)$this->getCurrentCoverageWarehouse());
-
-			$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
-
-			$item['physical_quantity'] = $res['physical_quantity'];
-			$item['usable_quantity'] = $res['usable_quantity'];
-
-			// gets real_quantity depending on the warehouse
-			$item['real_quantity'] = $manager->getProductRealQuantities($item['id_product'],
-																		$item['id_product_attribute'],
-																		($this->getCurrentCoverageWarehouse() == -1 ? null : array($this->getCurrentCoverageWarehouse())),
-																		true);
-
-			// removes the valuation if the filter corresponds to 'all warehouses'
-			if ($this->getCurrentCoverageWarehouse() == -1)
-				$item['valuation'] = 'N/A';
-			else
-				$item['valuation'] = $res['valuation'];
-		}
-
-		if ($this->getCurrentCoverageWarehouse() != -1 && $order_by_valuation)
-			usort($this->_list, array($this, 'valuationCmp'));
-		else if ($order_by_real_quantity)
-			usort($this->_list, array($this, 'realQuantityCmp'));
 	}
 
 	/**
@@ -300,51 +396,6 @@ class AdminStockInstantStateControllerCore extends AdminController
 	}
 
 	/**
-	 * Method called when an ajax request is made
-	 * @see AdminController::postProcess()
-	 */
-	public function ajaxProcess()
-	{
-		if (Tools::isSubmit('id')) // if a product id is submit
-		{
-			$this->lang = false;
-			$lang_id = (int)$this->context->language->id;
-			$ids = explode('_', Tools::getValue('id'));
-			if (count($ids) != 2)
-				die;
-
-			$id_product = $ids[0];
-			$id_product_attribute = $ids[1];
-			$id_warehouse = Tools::getValue('id_warehouse', -1);
-
-			$query = new DbQuery();
-			$query->select('w.id_currency, s.price_te, SUM(s.physical_quantity) as physical_quantity, SUM(s.usable_quantity) as usable_quantity,
-							(s.price_te * SUM(s.physical_quantity)) as valuation');
-			$query->from('stock', 's');
-			$query->leftJoin('warehouse', 'w', 'w.id_warehouse = s.id_warehouse');
-			$query->where('s.id_product = '.(int)$id_product.' AND s.id_product_attribute = '.(int)$id_product_attribute);
-			if ($id_warehouse != -1)
-				$query->where('s.id_warehouse = '.(int)$id_warehouse);
-			$query->groupBy('s.price_te');
-
-			$datas = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-
-			foreach ($datas as &$data)
-			{
-				$currency = new Currency($data['id_currency']);
-				if (Validate::isLoadedObject($currency))
-				{
-					$data['price_te'] = Tools::displayPrice($data['price_te'], $currency);
-					$data['valuation'] = Tools::displayPrice($data['valuation'], $currency);
-				}
-			}
-
-			echo Tools::jsonEncode(array('data'=> $datas, 'fields_display' => $this->fields_list));
-		}
-		die;
-	}
-
-	/**
 	 * @see AdminController::initToolbar();
 	 */
 	public function initToolbar()
@@ -355,12 +406,14 @@ class AdminStockInstantStateControllerCore extends AdminController
 				'short' => 'Export this list as CSV',
 				'href' => $this->context->link->getAdminLink('AdminStockInstantState').'&amp;csv_quantities&amp;id_warehouse='.(int)$this->getCurrentCoverageWarehouse(),
 				'desc' => $this->l('Export Quantities (CSV)'),
+				'imgclass' => 'export'
 			);
 
 			$this->toolbar_btn['export-stock-state-prices-csv'] = array(
 				'short' => 'Export this list as CSV',
 				'href' => $this->context->link->getAdminLink('AdminStockInstantState').'&amp;csv_prices&amp;id_warehouse='.(int)$this->getCurrentCoverageWarehouse(),
 				'desc' => $this->l('Export Prices (CSV)'),
+				'imgclass' => 'export'
 			);
 		}
 		parent::initToolbar();
