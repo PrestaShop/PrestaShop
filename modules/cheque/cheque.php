@@ -121,7 +121,7 @@ class Cheque extends PaymentModule
 				$this->_postProcess();
 			else
 				foreach ($this->_postErrors as $err)
-					$this->_html .= $this->displayErrors($err);
+					$this->_html .= $this->displayError($err);
 		}
 
 		$this->_html .= $this->_displayCheque();

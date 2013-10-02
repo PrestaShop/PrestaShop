@@ -61,9 +61,9 @@ class BlockTags extends Module
 		if (Tools::isSubmit('submitBlockTags'))
 		{
 			if (!($tagsNbr = Tools::getValue('BLOCKTAGS_NBR')) || empty($tagsNbr))
-				$output .= $this->displayErrors($this->l('Please complete the "tags displayed" field.'));
+				$output .= $this->displayError($this->l('Please complete the "tags displayed" field.'));
 			elseif ((int)($tagsNbr) == 0)
-				$output .= $this->displayErrors($this->l('Invalid number.'));
+				$output .= $this->displayError($this->l('Invalid number.'));
 			else
 			{
 				Configuration::updateValue('BLOCKTAGS_NBR', (int)$tagsNbr);
