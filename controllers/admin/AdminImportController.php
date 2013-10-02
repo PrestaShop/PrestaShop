@@ -670,7 +670,8 @@ class AdminImportControllerCore extends AdminController
 			$fd = fopen($uniqid_path, 'r');
 			$tab = fgetcsv($fd, MAX_LINE_SIZE, $separator);
 			fclose($fd);
-			unlink($uniqid_path);
+			if (file_exists($uniqid_path))
+				@unlink($uniqid_path);
 		}
 
 		if (empty($tab) || (!is_array($tab)))
@@ -1269,7 +1270,7 @@ class AdminImportControllerCore extends AdminController
 
 			$product->id_category_default = isset($product->id_category[0]) ? (int)$product->id_category[0] : '';
 	
-			$link_rewrite = (is_array($product->link_rewrite) && count($product->link_rewrite)) ? trim($product->link_rewrite[$id_lang]) : '';
+			$link_rewrite = (is_array($product->link_rewrite) && isset($product->link_rewrite[$id_lang])) ? trim($product->link_rewrite[$id_lang]) : '';
 
 			$valid_link = Validate::isLinkRewrite($link_rewrite);
 
@@ -1416,9 +1417,24 @@ class AdminImportControllerCore extends AdminController
 
 				if (isset($product->tags) && !empty($product->tags))
 				{
+					if (isset($product->id) && $product->id)
+					{
+						$tags = Tag::getProductTags($product->id);
+						if (is_array($tags) && count($tags))
+						{
+							if (!empty($product->tags))
+								$product->tags = explode($this->multiple_value_separator, $product->tags);
+							if (is_array($product->tags) && count($product->tags))
+							{
+								foreach ($product->tags as $key => $tag)
+									$product->tags[$key] = trim($tag);
+								$tags[$id_lang] = $product->tags;
+								$product->tags = $tags;
+							}
+						}
+					}
 					// Delete tags for this id product, for no duplicating error
 					Tag::deleteTagsForProduct($product->id);
-
 					if (!is_array($product->tags))
 					{
 						$product->tags = AdminImportController::createMultiLangField($product->tags);
