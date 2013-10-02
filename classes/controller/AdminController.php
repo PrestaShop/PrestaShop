@@ -1846,6 +1846,7 @@ class AdminControllerCore extends Controller
 		$helper->position_identifier = $this->position_identifier;
 		$helper->controller_name = $this->controller_name;
 		$helper->list_id = isset($this->list_id) ? $this->list_id : $this->table;
+		$helper->bootstrap = $this->bootstrap;
 
 		// For each action, try to add the corresponding skip elements list
 		$helper->list_skip_actions = $this->list_skip_actions;
