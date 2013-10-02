@@ -136,6 +136,9 @@ class HelperListCore extends Helper
 		$this->_list = $list;
 		$this->fields_list = $fields_display;
 
+		$this->orderBy = preg_replace('/^([a-z _]*!)/Ui', '', $this->orderBy);
+		$this->orderWay = preg_replace('/^([a-z _]*!)/Ui', '', $this->orderWay);
+
 		// Display list header (filtering, pagination and column names)
 		$tpl_vars['header'] = $this->displayListHeader();
 
@@ -522,9 +525,6 @@ class HelperListCore extends Helper
 			isset($this->context->cookie->{$this->list_id.'_pagination'}) ? $this->context->cookie->{$this->list_id.'_pagination'} : null
 		);
 
-		// Cleaning links
-		if (Tools::getValue($this->table.'Orderby') && Tools::getValue($this->table.'Orderway'))
-			$this->currentIndex = preg_replace('/&'.$this->table.'Orderby=([a-z _]*)&'.$this->table.'Orderway=([a-z]*)/i', '', $this->currentIndex);
 
 		if ($this->position_identifier && (int)Tools::getValue($this->position_identifier, 1))
 			$table_id = substr($this->identifier, 3, strlen($this->identifier));

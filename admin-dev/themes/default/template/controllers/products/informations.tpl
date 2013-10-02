@@ -166,7 +166,7 @@
 	</tr>
 	<tr class="redirect_product_options" style="display:none">
 		<td class="col-left">
-			{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
+			{include file="controllers/products/multishop/checkbox.tpl" field="redirect_type" type="radio" onclick=""}
 			<label class="text">{l s='Redirect:'}</label>
 		</td>
 		<td style="padding-bottom:5px;">
@@ -184,7 +184,7 @@
 	</tr>
 	<tr class="redirect_product_options redirect_product_options_product_choise" style="display:none">
 		<td class="col-left">
-			{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
+			{include file="controllers/products/multishop/checkbox.tpl" field="id_product_redirected" type="radio" onclick=""}
 			<label class="text">{l s='Related product:'}</label>
 		</td>
 		<td style="padding-bottom:5px;">

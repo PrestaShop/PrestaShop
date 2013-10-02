@@ -372,6 +372,7 @@ class ParentOrderControllerCore extends FrontController
 			'currencyFormat' => $this->context->currency->format,
 			'currencyBlank' => $this->context->currency->blank,
 			'show_option_allow_separate_package' => $show_option_allow_separate_package,
+			'smallSize' => Image::getSize(ImageType::getFormatedName('small')),
 				
 		));
 

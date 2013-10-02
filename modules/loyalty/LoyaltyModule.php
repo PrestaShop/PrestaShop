@@ -85,7 +85,8 @@ class LoyaltyModule extends ObjectModel
 		$total = 0;
 		if (Validate::isLoadedObject($cart))
 		{
-			$context = Context::getContext();
+			$currentContext = Context::getContext();
+			$context = clone $currentContext;
 			$context->cart = $cart;
 			$context->customer = new Customer($context->cart->id_customer);
 			$context->language = new Language($context->cart->id_lang);

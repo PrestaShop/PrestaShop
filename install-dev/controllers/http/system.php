@@ -89,6 +89,13 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 					)
 				),
 				array(
+					'title' => $this->l('Files'),
+					'success' => 1,
+					'checks' => array(
+						'files' => $this->l('All files are not successfuly uploaded on your server')
+					)
+				),
+				array(
 					'title' => $this->l('Recursive write permissions on files and folders:'),
 					'success' => 1,
 					'checks' => array(

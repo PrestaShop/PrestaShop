@@ -70,7 +70,7 @@ $(function() {
 					$.fancybox.close();
                     var buttons = {};
                     buttons[productcomment_ok] = "productcommentRefreshPage";
-                    fancyChooseBox(productcomment_added, productcomment_title, buttons);
+                    fancyChooseBox(moderation_active ? productcomment_added_moderation : productcomment_added, productcomment_title, buttons);
 				}
 				else
 				{
