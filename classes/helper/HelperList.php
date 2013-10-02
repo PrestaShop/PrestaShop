@@ -266,16 +266,24 @@ class HelperListCore extends Helper
 				}
 				elseif (isset($params['icon']) && isset($tr[$key]) && (isset($params['icon'][$tr[$key]]) || isset($params['icon']['default'])))
 				{
-					if (isset($params['icon'][$tr[$key]]) && is_array($params['icon'][$tr[$key]]))
-						$this->_list[$index][$key] = array(
-							'src' => $params['icon'][$tr[$key]]['src'],
-							'alt' => $params['icon'][$tr[$key]]['alt'],
-						);
+					if (!$this->bootstrap)
+					{
+						if (isset($params['icon'][$tr[$key]]) && is_array($params['icon'][$tr[$key]]))
+							$this->_list[$index][$key] = array(
+								'src' => $params['icon'][$tr[$key]]['src'],
+								'alt' => $params['icon'][$tr[$key]]['alt'],
+							);
+						else
+							$this->_list[$index][$key] = array(
+								'src' =>  isset($params['icon'][$tr[$key]]) ? $params['icon'][$tr[$key]] : $params['icon']['default'],
+								'alt' =>  isset($params['icon'][$tr[$key]]) ? $params['icon'][$tr[$key]] : $params['icon']['default'],
+							);
+					}
 					else
-						$this->_list[$index][$key] = array(
-							'src' =>  isset($params['icon'][$tr[$key]]) ? $params['icon'][$tr[$key]] : $params['icon']['default'],
-							'alt' =>  isset($params['icon'][$tr[$key]]) ? $params['icon'][$tr[$key]] : $params['icon']['default'],
-						);
+						if (isset($params['icon'][$tr[$key]]))
+							$this->_list[$index][$key] = array(
+								'class' => $params['icon'][$tr[$key]],
+							);
 				}
 				elseif (isset($params['type']) && $params['type'] == 'float')
 					$this->_list[$index][$key] = rtrim(rtrim($tr[$key], '0'), '.');
