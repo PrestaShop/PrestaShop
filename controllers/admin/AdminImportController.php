@@ -1787,8 +1787,9 @@ class AdminImportControllerCore extends AdminController
 											null,
 											$id_shop_list
 										);
-	
 										$id_product_attribute_update = true;
+										if (isset($info['supplier_reference']) && !empty($info['supplier_reference']))
+											$product->addSupplierReference($product->id_supplier, $id_product_attribute, $info['supplier_reference']);
 									}
 								}
 							}
@@ -1814,8 +1815,10 @@ class AdminImportControllerCore extends AdminController
 								(int)$info['minimal_quantity'],
 								$id_shop_list
 							);
+							if (isset($info['supplier_reference']) && !empty($info['supplier_reference']))
+								$product->addSupplierReference($product->id_supplier, $id_product_attribute, $info['supplier_reference']);
 						}
-	
+
 						// fills our attributes array, in order to add the attributes to the product_attribute afterwards
 						if(isset($attributes[$group.'_'.$attribute]))
 							$attributes_to_add[] = (int)$attributes[$group.'_'.$attribute];
