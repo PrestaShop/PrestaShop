@@ -1,19 +1,33 @@
 $(document).ready(function() {
-	// Focus on email address field
-	$('#email').focus();
-
 	// Initialize events
-	$('#login_form').submit(function(e) {
-		// Kill default behaviour
-		e.preventDefault();
-		doAjaxLogin($('#redirect').val());
-	});
+	$("#login_form").validate({
+	      rules: {
+	         "email":{
+	            "email": true,
+	            "required": true
+	         },
+	         "passwd": {
+	            "required": true
+	         }
+	       },
+			submitHandler: function(form)
+			{
+			   doAjaxLogin($('#redirect').val());
+			}
+	  });
 
-	$('#forgot_password_form').submit(function(e) {
-		// Kill default behaviour
-		e.preventDefault();
-		doAjaxForgot();
-	});
+	$("#forgot_password_form").validate({
+	      rules: {
+	         "email_forgot":{
+	            "email": true,
+	            "required": true
+	         }
+	       },
+			submitHandler: function(form)
+			{
+			  doAjaxForgot();
+			}
+	  });
 
 	$('.show-forgot-password').click(function(e) {
 		// Kill default behaviour
@@ -124,7 +138,6 @@ function displayErrors(errors) {
 	str_errors = '<p><strong>' + (errors.length > 1 ? there_are : there_is) + ' ' + errors.length + ' ' + (errors.length > 1 ? label_errors : label_error) + '</strong></p><ol>';
 	for (var error in errors) //IE6 bug fix
 		if (error != 'indexOf') str_errors += '<li>' + errors[error] + '</li>';
-	$('.ajax-loader').hide();
 	$('#error').html(str_errors + '</ol>').removeClass('hide').fadeIn('slow');
 	$("#login").effect("shake", {
 		times: 4
