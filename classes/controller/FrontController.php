@@ -575,6 +575,9 @@ class FrontControllerCore extends Controller
 				header('HTTP/1.1 503 temporarily overloaded');
 				
 				$this->context->smarty->assign($this->initLogoAndFavicon());
+				$this->context->smarty->assign(array(
+					'HOOK_MAINTENANCE' => Hook::exec('displayMaintenance', array()),
+				));
 
 				$template_dir = ($this->context->getMobileDevice() == true ? _PS_THEME_MOBILE_DIR_ : _PS_THEME_DIR_);
 				$this->smartyOutputContent($template_dir.'maintenance.tpl');
