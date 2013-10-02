@@ -89,6 +89,8 @@
 		<input type="hidden" name="token" value="{$token}" />
 	</fieldset>
 </form>
+{else}
+	</fieldset>
 {/if}
 
 {hook h='displayAdminListAfter'}
