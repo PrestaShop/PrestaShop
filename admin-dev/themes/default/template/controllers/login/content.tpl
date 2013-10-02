@@ -49,29 +49,33 @@
 				{if !isset($wrong_folder_name) && !isset($wrong_install_name)}
 					<form action="#" id="login_form" method="post" class="form-horizontal">
 						<fieldset>
-							<div class="row">
+							<div class="form-group">
 								<label for="email" class="control-label col-lg-3">
 									{l s='Email address:'}
 								</label>
 								<div class="input-group col-lg-5">
 									<span class="input-group-addon"><i class="icon-envelope"></i></span>
-									<input type="text" id="email" name="email" class="input email_field" tabindex="1" value="{if isset($email)}{$email|escape:'htmlall':'UTF-8'}{/if}" />
+									<input autofocus="autofocus" type="text" id="email" name="email" class="input email_field" value="{if isset($email)}{$email|escape:'htmlall':'UTF-8'}{/if}" />
 								</div>
 							</div>	
-							<div class="row">
+							<div class="form-group">
 								<label for="passwd" class="control-label col-lg-3">
 									{l s='Password:'}
 								</label>
 								<div class="input-group col-lg-5">
 									<span class="input-group-addon"><i class="icon-key"></i></span>
-									<input id="passwd" type="password" name="passwd" class="input password_field" tabindex="2" value="{if isset($password)}{$password}{/if}"/>
+									<input id="passwd" type="password" name="passwd" class="input password_field" value="{if isset($password)}{$password}{/if}"/>
 								</div>
 							</div>									
-							<div class="row">
+							<div class="form-group">
 								<div class="col-lg-9 col-lg-offset-3">
 									<button class="btn btn-default" name="submitLogin" type="submit">
 										{l s='Log in'}
 									</button>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-lg-9 col-lg-offset-3">
 									<p>		
 										<a href="#" class="show-forgot-password">
 											<i class="icon-question-sign"></i>
@@ -86,23 +90,27 @@
 					<form action="#" id="forgot_password_form" method="post" class="hide form-horizontal">
 						<fieldset>
 							<h2>{l s='Forgot your password?'}</h2>
-							<p class="bold">
-								{l s='In order to receive your access code by email, please enter the address you provided during the registration process.'}
+							<p>
+								<strong>{l s='In order to receive your access code by email, please enter the address you provided during the registration process.'}</strong>
 							</p>	
-							<div class="row">
+							<div class="form-group">
 								<label class="control-label col-lg-3">
 									{l s='Email address:'}
 								</label>
 								<div class="input-group col-lg-5">
 									<span class="input-group-addon"><i class="icon-envelope"></i></span>
-									<input type="text" name="email_forgot" id="email_forgot" class="input email_field" />
+									<input autofocus="autofocus" type="text" name="email_forgot" id="email_forgot" class="input email_field" />
 								</div>
 							</div>
-							<div class="row">
+							<div class="form-group">
 								<div class="col-lg-9 col-lg-offset-3">
 									<button class="btn btn-default" name="submitLogin" type="submit">
 										{l s='Send'}
 									</button>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-lg-9 col-lg-offset-3">
 									<p>		
 										<a href="#" class="show-login-form">
 											<i class="icon-angle-left"></i>
