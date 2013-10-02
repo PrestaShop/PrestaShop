@@ -24,5 +24,5 @@
 *}
 
 <a href="{$href}" id="details_{$params.action}_{$id}" title="{$action}" class="">
-	<i class="icon-tasks"></i> {$action}
+	<i class="icon-eye-open"></i> {$action}
 </a>
