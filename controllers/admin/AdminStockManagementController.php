@@ -1088,7 +1088,6 @@ class AdminStockManagementControllerCore extends AdminController
 		}
 		else
 		{
-			//$this->display = 'list';
 			parent::initContent();
 		}
 	}
