@@ -108,12 +108,5 @@
 		</fieldset>
 	</div>
 </div>
-		<fieldset>
-			<h3>
-				<i class="icon-dropbox"></i>
-				{if isset($is_template) && $is_template == 1} {l s='Template'} {/if}{l s='Products:'}
-			</h3>
-			{$supply_order_detail_content}
-		</fieldset>
-
+{$supply_order_detail_content}
 {/block}

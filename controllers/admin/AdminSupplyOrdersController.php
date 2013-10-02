@@ -1477,7 +1477,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
     public function displayCreateSupplyOrderLink($token = null, $id)
     {
         if (!array_key_exists('CreateSupplyOrder', self::$cache_lang))
-            self::$cache_lang['CreateSupplyOrder'] = $this->l('Use this template to create a supply order.');
+            self::$cache_lang['CreateSupplyOrder'] = $this->l('Use this template to create a supply order');
 
         if (!array_key_exists('CreateSupplyOrderConfirm', self::$cache_lang))
             self::$cache_lang['CreateSupplyOrderConfirm'] = $this->l('Are you sure you want to use this template?');
@@ -1583,20 +1583,17 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$this->fields_list = array(
 				'date_add' => array(
 					'title' => $this->l('Last update'),
-					'width' => 50,
 					'align' => 'left',
 					'type' => 'datetime',
 					'havingFilter' => true
 				),
 				'employee' => array(
 					'title' => $this->l('Employee'),
-					'width' => 100,
 					'align' => 'left',
 					'havingFilter' => true
 				),
 				'quantity' => array(
 					'title' => $this->l('Quantity received'),
-					'width' => 100,
 					'align' => 'left',
 					'havingFilter' => true
 				),
