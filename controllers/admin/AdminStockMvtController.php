@@ -112,7 +112,16 @@ class AdminStockMvtControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-		$this->page_header_toolbar_title = $this->l('Stock mouvement');		
+		$this->page_header_toolbar_title = $this->l('Stock mouvement');
+
+		if (Tools::isSubmit('id_warehouse') && (int)Tools::getValue('id_warehouse') != -1)
+			$this->page_header_toolbar_btn['export-stock-mvt-csv'] = array(
+				'short' => 'Export this list as CSV',
+				'href' => $this->context->link->getAdminLink('AdminStockMvt').'&amp;csv&amp;id_warehouse='.(int)$this->getCurrentWarehouseId(),
+				'desc' => $this->l('Export (CSV)'),
+				'imgclass' => 'export'
+			);
+
 		parent::initPageHeaderToolbar();
 	}
 
@@ -244,13 +253,13 @@ class AdminStockMvtControllerCore extends AdminController
 	public function initToolbar()
 	{
 		if (Tools::isSubmit('id_warehouse') && (int)Tools::getValue('id_warehouse') != -1)
-		{
 			$this->toolbar_btn['export-stock-mvt-csv'] = array(
 				'short' => 'Export this list as CSV',
 				'href' => $this->context->link->getAdminLink('AdminStockMvt').'&amp;csv&amp;id_warehouse='.(int)$this->getCurrentWarehouseId(),
 				'desc' => $this->l('Export (CSV)'),
+				'imgclass' => 'export'
 			);
-		}
+
 		parent::initToolbar();
 		unset($this->toolbar_btn['new']);
 	}
