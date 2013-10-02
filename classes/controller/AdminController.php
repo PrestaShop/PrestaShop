@@ -1528,7 +1528,7 @@ class AdminControllerCore extends Controller
 			$this->errors[] = Tools::displayError('You do not have permission to view this.');
 			return;
 		}
-		
+
 		$this->getLanguages();
 		// toolbar (save, cancel, new, ..)
 		$this->initToolbar();
@@ -1546,6 +1546,10 @@ class AdminControllerCore extends Controller
 			if ($this->className)
 				$this->loadObject(true);
 			$this->content .= $this->renderView();
+		}
+		elseif ($this->display == 'details')
+		{
+			$this->content .= $this->renderDetails();
 		}
 		elseif (!$this->ajax)
 		{
@@ -1720,6 +1724,14 @@ class AdminControllerCore extends Controller
 		$view = $helper->generateView();
 
 		return $view;
+	}
+
+	/**
+	 * Override to render the view page
+	 */
+	public function renderDetails()
+	{
+		return $this->renderList();
 	}
 
 	/**
@@ -2143,6 +2155,16 @@ class AdminControllerCore extends Controller
 			{
 				$this->display = 'view';
 				$this->action = 'view';
+			}
+			else
+				$this->errors[] = Tools::displayError('You do not have permission to view this.');
+		}
+		elseif (isset($_GET['details'.$this->table]))
+		{
+			if ($this->tabAccess['view'] === '1')
+			{
+				$this->display = 'details';
+				$this->action = 'details';
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to view this.');
