@@ -383,7 +383,7 @@ class AdminControllerCore extends Controller
 	 */
 	public function initToolbarTitle()
 	{
-		$this->toolbar_title = array_unique($this->breadcrumbs);
+		$this->toolbar_title = is_array($this->breadcrumbs) ? array_unique($this->breadcrumbs) : array($this->breadcrumbs);
 
 		switch ($this->display)
 		{
