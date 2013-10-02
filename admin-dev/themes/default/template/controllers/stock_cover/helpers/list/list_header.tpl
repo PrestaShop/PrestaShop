@@ -24,6 +24,7 @@
 *}
 {extends file="helpers/list/list_header.tpl"}
 {block name=override_header}
+{if isset($show_filter) && $show_filter}
 <fieldset>
 	<h3><i class="icon-cogs"></i> {l s='Filters'}</h3>
 	<div class="filter-stock-extended">
@@ -63,4 +64,5 @@
 		</form>
 	</div>
 </fieldset>
+{/if}
 {/block}
