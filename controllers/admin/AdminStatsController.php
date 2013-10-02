@@ -234,12 +234,12 @@ class AdminStatsControllerCore extends AdminStatsTabController
 	public static function getAverageCustomerAge()
 	{
 		$value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT AVG(birthday)
+		SELECT AVG(DATEDIFF(NOW(), birthday))
 		FROM `'._DB_PREFIX_.'customer` c
 		'.Shop::addSqlAssociation('customer', 'c').'
 		WHERE active = 1
 		AND birthday IS NOT NULL AND birthday != "0000-00-00"');
-		return round((time() - strtotime($value)) / 86400 / 365, 1);
+		return round($value / 365);
 	}
 
 	public static function getPendingMessages()
@@ -381,7 +381,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				break;
 
 			case 'avg_customer_age':
-				$value = sprintf($this->l('%.1f years'), AdminStatsController::getAverageCustomerAge(), 1);
+				$value = sprintf($this->l('%d years'), AdminStatsController::getAverageCustomerAge(), 1);
 				ConfigurationKPI::updateValue('AVG_CUSTOMER_AGE', $value);
 				ConfigurationKPI::updateValue('AVG_CUSTOMER_AGE_EXPIRE', strtotime('+1 day'));
 				break;
