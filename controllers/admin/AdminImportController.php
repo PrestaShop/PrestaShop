@@ -574,17 +574,12 @@ class AdminImportControllerCore extends AdminController
 		for ($i = 0; $i < $nb_column; $i++)
 			if (MAX_COLUMNS * (int)$current_table <= $i && (int)$i < MAX_COLUMNS * ((int)$current_table + 1))
 				$html .= '<th style="width: '.(900 / MAX_COLUMNS).'px; vertical-align: top; padding: 4px">
-							<select onchange="askFeatureName(this, '.$i.');"
-								style="width: '.(900 / MAX_COLUMNS).'px;"
+							<select style="width: '.(900 / MAX_COLUMNS).'px;"
 								id="type_value['.$i.']"
 								name="type_value['.$i.']"
 								class="type_value">
 								'.$this->getTypeValuesOptions($i).'
 							</select>
-							<div id="features_'.$i.'" style="display: none;">
-								<input style="width: 90px" type="text" name="" id="feature_name_'.$i.'">
-								<input type="button" value="ok" onclick="replaceFeature($(\'#feature_name_'.$i.'\').attr(\'name\'), '.$i.');">
-							</div>
 						</th>';
 		$html .= '</tr>';
 
