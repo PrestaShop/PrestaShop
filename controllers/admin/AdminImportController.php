@@ -670,7 +670,8 @@ class AdminImportControllerCore extends AdminController
 			$fd = fopen($uniqid_path, 'r');
 			$tab = fgetcsv($fd, MAX_LINE_SIZE, $separator);
 			fclose($fd);
-			unlink($uniqid_path);
+			if (file_exists($uniqid_path))
+				@unlink($uniqid_path);
 		}
 
 		if (empty($tab) || (!is_array($tab)))
@@ -1269,7 +1270,7 @@ class AdminImportControllerCore extends AdminController
 
 			$product->id_category_default = isset($product->id_category[0]) ? (int)$product->id_category[0] : '';
 	
-			$link_rewrite = (is_array($product->link_rewrite) && count($product->link_rewrite)) ? trim($product->link_rewrite[$id_lang]) : '';
+			$link_rewrite = (is_array($product->link_rewrite) && isset($product->link_rewrite[$id_lang])) ? trim($product->link_rewrite[$id_lang]) : '';
 
 			$valid_link = Validate::isLinkRewrite($link_rewrite);
 
@@ -1394,31 +1395,67 @@ class AdminImportControllerCore extends AdminController
 				}
 
 				// SpecificPrice (only the basic reduction feature is supported by the import)
-				if ((isset($info['reduction_price']) && $info['reduction_price'] > 0) || (isset($info['reduction_percent']) && $info['reduction_percent'] > 0))
-				{
-					$specific_price = new SpecificPrice();
-					$specific_price->id_product = (int)$product->id;
-					// @todo multishop specific price import
-					$specific_price->id_shop = $this->context->shop->id;
-					$specific_price->id_currency = 0;
-					$specific_price->id_country = 0;
-					$specific_price->id_group = 0;
-					$specific_price->price = -1;
-					$specific_price->id_customer = 0;
-					$specific_price->from_quantity = 1;
-					$specific_price->reduction = (isset($info['reduction_price']) && $info['reduction_price']) ? $info['reduction_price'] : $info['reduction_percent'] / 100;
-					$specific_price->reduction_type = (isset($info['reduction_price']) && $info['reduction_price']) ? 'amount' : 'percentage';
-					$specific_price->from = (isset($info['reduction_from']) && Validate::isDate($info['reduction_from'])) ? $info['reduction_from'] : '0000-00-00 00:00:00';
-					$specific_price->to = (isset($info['reduction_to']) && Validate::isDate($info['reduction_to']))  ? $info['reduction_to'] : '0000-00-00 00:00:00';
-					if (!$specific_price->add())
-						$this->addProductWarning(Tools::safeOutput($info['name']), $product->id, $this->l('Discount is invalid'));
-				}
+				if (!Shop::isFeatureActive())
+					$info['shop'] = 1;
+				elseif (!isset($info['shop']) || empty($info['shop']))
+					$info['shop'] = implode($this->multiple_value_separator, Shop::getContextListShopID());
+	
+				// Get shops for each attributes
+				$info['shop'] = explode($this->multiple_value_separator, $info['shop']);
+					
+				$id_shop_list = array();
+				foreach ($info['shop'] as $shop)
+					if (!is_numeric($shop))
+						$id_shop_list[] = (int)Shop::getIdByName($shop);
+					else
+						$id_shop_list[] = $shop;
+
+					if ((isset($info['reduction_price']) && $info['reduction_price'] > 0) || (isset($info['reduction_percent']) && $info['reduction_percent'] > 0))
+						foreach($id_shop_list as $id_shop)
+						{
+							$specific_price = SpecificPrice::getSpecificPrice($product->id, $id_shop, 0, 0, 0, 1, 0, 0, 0, 0);
+
+							if (is_array($specific_price))
+								$specific_price = new SpecificPrice((int)$specific_price['id_specific_price']);
+							else
+								$specific_price = new SpecificPrice();
+							$specific_price->id_product = (int)$product->id;
+							$specific_price->id_specific_price_rule = 0;
+							$specific_price->id_shop = $id_shop;
+							$specific_price->id_currency = 0;
+							$specific_price->id_country = 0;
+							$specific_price->id_group = 0;
+							$specific_price->price = -1;
+							$specific_price->id_customer = 0;
+							$specific_price->from_quantity = 1;
+							$specific_price->reduction = (isset($info['reduction_price']) && $info['reduction_price']) ? $info['reduction_price'] : $info['reduction_percent'] / 100;
+							$specific_price->reduction_type = (isset($info['reduction_price']) && $info['reduction_price']) ? 'amount' : 'percentage';
+							$specific_price->from = (isset($info['reduction_from']) && Validate::isDate($info['reduction_from'])) ? $info['reduction_from'] : '0000-00-00 00:00:00';
+							$specific_price->to = (isset($info['reduction_to']) && Validate::isDate($info['reduction_to']))  ? $info['reduction_to'] : '0000-00-00 00:00:00';
+							if (!$specific_price->save())
+								$this->addProductWarning(Tools::safeOutput($info['name']), $product->id, $this->l('Discount is invalid'));
+						}
 
 				if (isset($product->tags) && !empty($product->tags))
 				{
+					if (isset($product->id) && $product->id)
+					{
+						$tags = Tag::getProductTags($product->id);
+						if (is_array($tags) && count($tags))
+						{
+							if (!empty($product->tags))
+								$product->tags = explode($this->multiple_value_separator, $product->tags);
+							if (is_array($product->tags) && count($product->tags))
+							{
+								foreach ($product->tags as $key => $tag)
+									$product->tags[$key] = trim($tag);
+								$tags[$id_lang] = $product->tags;
+								$product->tags = $tags;
+							}
+						}
+					}
 					// Delete tags for this id product, for no duplicating error
 					Tag::deleteTagsForProduct($product->id);
-
 					if (!is_array($product->tags))
 					{
 						$product->tags = AdminImportController::createMultiLangField($product->tags);
@@ -1771,8 +1808,9 @@ class AdminImportControllerCore extends AdminController
 											null,
 											$id_shop_list
 										);
-	
 										$id_product_attribute_update = true;
+										if (isset($info['supplier_reference']) && !empty($info['supplier_reference']))
+											$product->addSupplierReference($product->id_supplier, $id_product_attribute, $info['supplier_reference']);
 									}
 								}
 							}
@@ -1798,8 +1836,10 @@ class AdminImportControllerCore extends AdminController
 								(int)$info['minimal_quantity'],
 								$id_shop_list
 							);
+							if (isset($info['supplier_reference']) && !empty($info['supplier_reference']))
+								$product->addSupplierReference($product->id_supplier, $id_product_attribute, $info['supplier_reference']);
 						}
-	
+
 						// fills our attributes array, in order to add the attributes to the product_attribute afterwards
 						if(isset($attributes[$group.'_'.$attribute]))
 							$attributes_to_add[] = (int)$attributes[$group.'_'.$attribute];
@@ -2610,37 +2650,37 @@ class AdminImportControllerCore extends AdminController
 						unlink(_PS_CAT_IMG_DIR_.$d);
 				break;
 			case $this->entities[$this->l('Products')]:
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_shop');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'feature_product');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_lang');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'category_product');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_tag');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'image');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'image_lang');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'image_shop');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'specific_price');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'specific_price_priority');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_carrier');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'cart_product');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'compare_product');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_shop`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'feature_product`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_lang`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'category_product`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_tag`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'image`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'image_lang`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'image_shop`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'specific_price`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'specific_price_priority`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_carrier`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'cart_product`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'compare_product`');
 				if (count(Db::getInstance()->executeS('SHOW TABLES LIKE \''._DB_PREFIX_.'favorite_product\' '))) //check if table exist
-					Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'favorite_product');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attachment');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_country_tax');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_download');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_group_reduction_cache');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_sale');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_supplier');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'scene_products');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'warehouse_product_location');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'stock');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'stock_available');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'stock_mvt');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customization');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customization_field');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supply_order_detail');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_impact');
+					Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'favorite_product`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attachment`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_country_tax`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_download`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_group_reduction_cache`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_sale`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_supplier`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'scene_products`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'warehouse_product_location`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'stock`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'stock_available`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'stock_mvt`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customization`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customization_field`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supply_order_detail`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_impact`');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute`');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_shop`');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_combination`');
@@ -2651,7 +2691,7 @@ class AdminImportControllerCore extends AdminController
 				break;
 			case $this->entities[$this->l('Combinations')]:
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute`');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_impact');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_impact`');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_lang`');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_group`');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_group_lang`');
@@ -2661,26 +2701,26 @@ class AdminImportControllerCore extends AdminController
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_shop`');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_combination`');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_image`');
-				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'stock_available` WHERE id_product_attribute !=0');
+				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'stock_available` WHERE id_product_attribute != 0');
 				break;
 			case $this->entities[$this->l('Customers')]:
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customer');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customer`');
 				break;
 			case $this->entities[$this->l('Addresses')]:
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'address');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'address`');
 				break;
 			case $this->entities[$this->l('Manufacturers')]:
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer_lang');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer_shop');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer_lang`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer_shop`');
 				foreach (scandir(_PS_MANU_IMG_DIR_) as $d)
 					if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d))
 						unlink(_PS_MANU_IMG_DIR_.$d);
 				break;
 			case $this->entities[$this->l('Suppliers')]:
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier_lang');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier_shop');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier_lang`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier_shop`');
 				foreach (scandir(_PS_SUPP_IMG_DIR_) as $d)
 					if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d))
 						unlink(_PS_SUPP_IMG_DIR_.$d);

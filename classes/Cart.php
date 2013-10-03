@@ -340,6 +340,7 @@ class CartCore extends ObjectModel
 				'.($filter == CartRule::FILTER_ACTION_SHIPPING ? 'AND free_shipping = 1' : '').'
 				'.($filter == CartRule::FILTER_ACTION_GIFT ? 'AND gift_product != 0' : '').'
 				'.($filter == CartRule::FILTER_ACTION_REDUCTION ? 'AND (reduction_percent != 0 OR reduction_amount != 0)' : '')
+				.' ORDER by cr.priority ASC'
 			);
 			Cache::store($cache_key, $result);
 		}
@@ -1260,7 +1261,7 @@ class CartCore extends ObjectModel
 		return true;
 	}
 
-	public static function getTotalCart($id_cart, $use_tax_display = false, $type = CART::BOTH)
+	public static function getTotalCart($id_cart, $use_tax_display = false, $type = Cart::BOTH)
 	{
 		$cart = new Cart($id_cart);
 		if (!Validate::isLoadedObject($cart))
