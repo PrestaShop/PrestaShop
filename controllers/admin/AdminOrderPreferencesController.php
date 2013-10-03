@@ -128,6 +128,13 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						'cast' => 'intval',
 						'type' => 'bool',
 					),
+					'PS_ADS_IMG_PS' => array(
+						'title' => $this->l('Packingslip image'),
+						'desc' => $this->l('Add product image to packingslip'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool',
+					),
 				),
 			),
 			'gift' => array(

@@ -29,9 +29,22 @@
 </table>
 
 <!-- ADDRESSES -->
-<table style="width: 100%">
+<table style="width: 80%">
 	<tr>
-		<td style="width: 20%"></td>
+		<td style="width: 20%">
+<!-- CUSTOMER INFORMATIONS -->
+			<b>{l s='Order Number:' pdf='true'}</b><br />
+			{$order->getUniqReference()}<br/>
+			<br/>
+			<b>{l s='Order Date:' pdf='true'}</b><br />
+			{dateFormat date=$order->date_add full=0}<br/>
+			<br/>
+			{if isset($carrier)}
+			<b>{l s='Carrier:' pdf='true'}</b><br />
+			{$carrier->name}<br/>
+			{/if}			
+<!-- / CUSTOMER INFORMATIONS -->
+		</td>
 		<td style="width: 80%">
 			{if !empty($invoice_address)}
 				<table style="width: 100%">
@@ -71,43 +84,29 @@
 <!-- PRODUCTS TAB -->
 <table style="width: 100%">
 	<tr>
-		<td style="width: 22%; padding-right: 7px; text-align: right; vertical-align: top">
-			<!-- CUSTOMER INFORMATIONS -->
-			<b>{l s='Order Number:' pdf='true'}</b><br />
-			{$order->getUniqReference()}<br />
-			<br />
-			<b>{l s='Order Date:' pdf='true'}</b><br />
-			{dateFormat date=$order->date_add full=0}<br />
-			<br />
-			<br />
-			{if isset($carrier)}
-			<b>{l s='Carrier:' pdf='true'}</b><br />
-			{$carrier->name}<br />
-			<br />
-			{/if}			
-			<!-- / CUSTOMER INFORMATIONS -->
-		</td>
-		<td style="width: 78%; text-align: right">
+		<td style="width: 100%; text-align: right">
 			<table style="width: 100%">
 				<tr style="line-height:6px;">
-					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 40%">{l s='PRODUCT NAME' pdf='true'}</td>
+					{if Configuration::get('PS_ADS_IMG_PS')}<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 10%">{l s='IMAGE' pdf='true'}</td>{/if}
+					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: {if Configuration::get('PS_ADS_IMG_PS')}40%{else}50%{/if}">{l s='PRODUCT NAME' pdf='true'}</td>
 					<td style="background-color: #4D4D4D; color: #FFF; text-align: left; font-weight: bold; width: 20%">{l s='REFERENCE' pdf='true'}</td>
-					<td style="background-color: #4D4D4D; color: #FFF; text-align: center; font-weight: bold; width: 20%">{l s='QTY' pdf='true'}</td>
+					<td style="background-color: #4D4D4D; color: #FFF; text-align: center; font-weight: bold; width: 10%">{l s='QTY' pdf='true'}</td>
 					<td style="background-color: #4D4D4D; color: #FFF; text-align: center; font-weight: bold; width: 20%">{l s='WAREHOUSE' pdf='true'}</td>
 				</tr>
 				{foreach $order_details as $product}
 				{cycle values='#FFF,#DDD' assign=bgcolor}
-				<tr style="line-height:6px;background-color:{$bgcolor};">
-					<td style="text-align: left; width: 40%">{$product.product_name}</td>
-					<td style="text-align: left; width: 20%">
+				<tr style="line-height:6px;background-color:{$bgcolor};" {if Configuration::get('PS_ADS_IMG_PS') && isset($product.image) && $product.image->id && isset($product.image_size)}height="{$product['image_size'][1]}"{/if}>
+					{if Configuration::get('PS_ADS_IMG_PS')}<td style="text-align: left;">{if isset($product.image) && $product.image->id}{$product.image_tag}{/if}</td>{/if}
+					<td style="text-align: left;">{$product.product_name}</td>
+					<td style="text-align: left;">
 						{if empty($product.product_reference)}
 							--- 
 						{else}
 							{$product.product_reference}
 						{/if}
 					</td>
-					<td style="text-align: center; width: 20%">{$product.product_quantity}</td>
-					<td style="text-align: center; width: 20%">{$product.warehouse_name} ({$product.warehouse_location})</td>
+					<td style="text-align: center;">{$product.product_quantity}</td>
+					<td style="text-align: center;">{$product.warehouse_name} ({$product.warehouse_location})</td>
 				</tr>
 				{/foreach}
 			</table>

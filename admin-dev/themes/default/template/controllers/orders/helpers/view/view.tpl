@@ -750,9 +750,31 @@
 			</div>
 			<legend><img src="../img/admin/delivery.gif" alt="{l s='Delivery:'}" />{l s='Delivery:'}</legend>
 			<div style="float:left;width: 100%;">
-				<select name="adsProductName"><option value="select pname">--  {l s='Select productname'} --</select>
-				{l s='Reference:'}<input type="text" name=""adsReference value="" placeholder="Enter REF" /> {l s='Quantity'}
-				<input type="text" name="ads_qty" value="1" /> <button type="submit" name="sumbitAdsAdd" value="1">Add</button>
+			<script type="text/javascript">
+				function adsName2Ref() {
+					var select = document.getElementById('adsProductName');
+					var opt = select.options[select.selectedIndex].value;
+					var Products = new Array();
+					Products['select_pname'] = new Array('','')
+					{foreach from=$products item=product key=k}
+						Products[{$product.product_id}] = new Array('{if $product.product_reference}{$product.product_reference}{/if}','{if isset($product.product_ean13)}{$product.product_ean13}{/if}');
+					{/foreach}
+					var ref = Products[opt][0];
+					var ean = Products[opt][1];
+					document.getElementById('adsReference').value = ref;
+					document.getElementById('adsEan13').value = ean;
+				}
+			</script>
+				<select name="adsProductName" onchange=adsName2Ref() id="adsProductName">
+					<option value="select_pname">--  {l s='Select productname'} --
+					{foreach from=$products item=product key=k}
+						<option value="{$product.product_id}" >{$product.product_name}</option>
+					{/foreach}
+				</select>
+				{l s='Reference:'}<input type="text" name="adsReference" id="adsReference"  value="" placeholder="Enter REF" />
+				{l s='Ean 13:'}<input type="text" name="adsEan13" id="adsEan13  value="" placeholder="Enter Ean 13" />
+				{l s='Quantity'} 	<input type="text" name="ads_qty" value="1" />
+				<button type="submit" name="sumbitAdsAdd" value="1">Add</button>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<button type="submit" name="submitAdsAdAll" value="1">Add All products</button><br><br>
 				<table style="width: 100%;" cellspacing="0" cellpadding="0" class="table" id="orderDeliveryProducts">
@@ -782,16 +804,13 @@
 						</th>
 					</tr>
 
-					{foreach from=$products item=product key=k}
+					{foreach from=$delivered_products item=product key=k}
 						{* Include customized datas partial *}
 						{include file='controllers/orders/_customized_data.tpl'}
 
 						{* Include product line partial *}
 						{include file='controllers/orders/_delivery_product_line.tpl'}
 					{/foreach}
-					{if $can_edit}
-						{include file='controllers/orders/_new_product.tpl'}
-					{/if}
 				</table>
 				<div class="clear"></div>
 			</div>
