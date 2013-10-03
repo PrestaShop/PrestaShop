@@ -54,21 +54,13 @@ class AdminCustomersControllerCore extends AdminController
 
 		$this->default_form_language = $this->context->language->id;
 
-		$genders = array();
-		$genders_icon = array();
-		$genders_icon[] = array('src' => '../genders/Unknown.jpg', 'alt' => '');		
-		foreach (Gender::getGenders() as $gender)
-		{
-			$gender_file = 'genders/'.$gender->id.'.jpg';
-			if (file_exists(_PS_IMG_DIR_.$gender_file))
-				$genders_icon[$gender->id] = array('src' => '../'.$gender_file, 'alt' => $gender->name);
-			else
-				$genders_icon[$gender->id] = array('src' => '../genders/Unknown.jpg', 'alt' => $gender->name);
-			$genders[$gender->id] = $gender->name;
-		}
+		$titles_array = array();
+		$genders = Gender::getGenders($this->context->language->id);
+		foreach ($genders as $gender)
+			$titles_array[$gender->id_gender] = $gender->name;
 
 		$this->_select = '
-		a.date_add,
+		a.date_add, gl.name as title,
 		IF (YEAR(`birthday`) = 0, "-", (YEAR(CURRENT_DATE)-YEAR(`birthday`)) - (RIGHT(CURRENT_DATE, 5) < RIGHT(birthday, 5))) AS `age`, (
 			SELECT c.date_add FROM '._DB_PREFIX_.'guest g
 			LEFT JOIN '._DB_PREFIX_.'connections c ON c.id_guest = g.id_guest
@@ -76,20 +68,20 @@ class AdminCustomersControllerCore extends AdminController
 			ORDER BY c.date_add DESC
 			LIMIT 1
 		) as connect';
+		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'gender_lang gl ON (a.id_gender = gl.id_gender AND gl.id_lang = '.(int)$this->context->language->id.')';
 		$this->fields_list = array(
 			'id_customer' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
 				'class' => 'fixed-width-xs'
 			),
-			'id_gender' => array(
+			'title' => array(
 				'title' => $this->l('Title'),
-				'align' => 'center',
-				'icon' => $genders_icon,
-				'orderby' => false,
-				'type' => 'select',
-				'list' => $genders,
 				'filter_key' => 'a!id_gender',
+				'type' => 'select',
+				'list' => $titles_array,
+				'filter_type' => 'int',
+				'order_key' => 'gl!name'
 			),
 			'lastname' => array(
 				'title' => $this->l('Last name')

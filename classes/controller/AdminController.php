@@ -431,7 +431,7 @@ class AdminControllerCore extends Controller
 						foreach ($val as $v)
 							if (is_string($v) && !empty($v))
 								$filter_value .= ' - '.htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
-						$filter_value = ltrim($tmp, ' -');
+						$filter_value = ltrim($filter_value, ' -');
 						if (!empty($filter_value))
 							$filters[] = sprintf($this->l('%s: %s'), $t['title'], $filter_value);
 					}
