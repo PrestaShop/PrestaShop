@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<entity_tab>
+  <tab id="Home" name="首頁"/>
+  <tab id="CMS_Pages" name="靜態網頁"/>
+  <tab id="CMS_Categories" name="網頁分類"/>
+  <tab id="Combinations_Generator" name="組合產生器"/>
+  <tab id="Search" name="搜尋"/>
+  <tab id="Login" name="登入"/>
+  <tab id="Shops" name="商店"/>
+  <tab id="Shop_URLs" name="商店網址"/>
+  <tab id="Catalog" name="產品目錄"/>
+  <tab id="Orders" name="訂單"/>
+  <tab id="Customers" name="客戶"/>
+  <tab id="Price_Rules" name="價格規則"/>
+  <tab id="Shipping" name="配送"/>
+  <tab id="Localization" name="在地化"/>
+  <tab id="Modules" name="模組"/>
+  <tab id="Preferences" name="設定"/>
+  <tab id="Advanced_Parameters" name="進階設定"/>
+  <tab id="Administration" name="管理"/>
+  <tab id="Stats" name="狀態"/>
+  <tab id="Stock" name="庫存"/>
+  <tab id="Products" name="產品"/>
+  <tab id="Categories" name="分類"/>
+  <tab id="Monitoring" name="追蹤"/>
+  <tab id="Attributes_and_Values" name="屬性與數值"/>
+  <tab id="Features" name="功能"/>
+  <tab id="Manufacturers" name="製造商"/>
+  <tab id="Suppliers" name="供應商"/>
+  <tab id="Image_Mapping" name="引導圖片"/>
+  <tab id="Tags" name="標籤"/>
+  <tab id="Attachments" name="附加檔案"/>
+  <tab id="Orders_1" name="訂單"/>
+  <tab id="Invoices" name="發票"/>
+  <tab id="Merchandise_Returns" name="退貨"/>
+  <tab id="Delivery_Slips" name="出貨單"/>
+  <tab id="Credit_Slips" name="折讓單"/>
+  <tab id="Statuses" name="狀態"/>
+  <tab id="Order_Messages" name="訂單訊息"/>
+  <tab id="Customers_1" name="客戶"/>
+  <tab id="Addresses" name="地址"/>
+  <tab id="Groups" name="群組"/>
+  <tab id="Shopping_Carts" name="購物車"/>
+  <tab id="Customer_Service" name="客戶服務"/>
+  <tab id="Contacts" name="聯絡人"/>
+  <tab id="Titles" name="稱謂"/>
+  <tab id="Outstanding" name="特色"/>
+  <tab id="Cart_Rules" name="購物車規則"/>
+  <tab id="Catalog_Price_Rules" name="產品目錄價格規則"/>
+  <tab id="Marketing" name="行銷"/>
+  <tab id="Shipping_1" name="配送"/>
+  <tab id="Carriers" name="貨運商"/>
+  <tab id="Price_Ranges" name="價格範圍"/>
+  <tab id="Weight_Ranges" name="重量範圍"/>
+  <tab id="Localization_1" name="在地化"/>
+  <tab id="Languages" name="語言"/>
+  <tab id="Zones" name="區域"/>
+  <tab id="Countries" name="國家"/>
+  <tab id="States" name="縣市"/>
+  <tab id="Currencies" name="貨幣"/>
+  <tab id="Taxes" name="稅務"/>
+  <tab id="Tax_Rules" name="稅務規則"/>
+  <tab id="Translations" name="翻譯"/>
+  <tab id="Modules_1" name="模組"/>
+  <tab id="Modules_Themes_Catalog" name="目錄模組與佈景"/>
+  <tab id="Positions" name="位置"/>
+  <tab id="Payment" name="付款"/>
+  <tab id="General" name="一般"/>
+  <tab id="Orders_2" name="訂單"/>
+  <tab id="Products_1" name="產品"/>
+  <tab id="Customers_2" name="客戶"/>
+  <tab id="Themes" name="佈景"/>
+  <tab id="SEO_URLs" name="SEO 網址"/>
+  <tab id="CMS" name="網頁"/>
+  <tab id="Images" name="圖片"/>
+  <tab id="Store_Contacts" name="商店聯絡人"/>
+  <tab id="Search_1" name="Search"/>
+  <tab id="Maintenance" name="Maintenance"/>
+  <tab id="Geolocation" name="Geolocation"/>
+  <tab id="Configuration_Information" name="Configuration Information"/>
+  <tab id="Performance" name="Performance"/>
+  <tab id="E-mail" name="E-mail"/>
+  <tab id="Multistore" name="Multistore"/>
+  <tab id="CSV_Import" name="CSV Import"/>
+  <tab id="DB_Backup" name="DB Backup"/>
+  <tab id="SQL_Manager" name="SQL Manager"/>
+  <tab id="Logs" name="Logs"/>
+  <tab id="Webservice" name="Webservice"/>
+  <tab id="Preferences_1" name="Preferences"/>
+  <tab id="Quick_Access" name="Quick Access"/>
+  <tab id="Employees" name="Employees"/>
+  <tab id="Profiles" name="Profiles"/>
+  <tab id="Permissions" name="Permissions"/>
+  <tab id="Menus" name="Menus"/>
+  <tab id="Stats_1" name="Stats"/>
+  <tab id="Search_Engines" name="Search Engines"/>
+  <tab id="Referrers" name="Referrers"/>
+  <tab id="Warehouses" name="Warehouses"/>
+  <tab id="Stock_Management" name="Stock Management"/>
+  <tab id="Stock_Movement" name="Stock Movement"/>
+  <tab id="Instant_Stock_Status" name="Instant Stock Status"/>
+  <tab id="Stock_Coverage" name="Stock Coverage"/>
+  <tab id="Supply_orders" name="Supply orders"/>
+  <tab id="Configuration" name="Configuration"/>
+</entity_tab>
