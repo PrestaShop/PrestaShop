@@ -175,13 +175,15 @@ class AdminProductsControllerCore extends AdminController
 				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (image_shop.`id_image` = i.`id_image` AND image_shop.`cover` = 1 AND image_shop.id_shop = '.$id_shop.')';
 		
 		$this->_select .= 'shop.name as shopname, ';
-		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`';
+		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, 0 AS price_final, sav.`quantity` as sav_quantity';
 		
 		if ($join_category)
 		{
 			$this->_join .= ' INNER JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product` AND cp.`id_category` = '.(int)$this->_category->id.') ';
 			$this->_select .= ' , cp.`position`, ';
 		}
+
+		$this->_select .= ', IF((SELECT COUNT(psp.id_specific_price) FROM `'._DB_PREFIX_.'specific_price` psp WHERE psp.id_product = a.id_product) > 0, 1, 0) as discount';
 
 		$this->_group = 'GROUP BY '.$alias.'.id_product';
 
@@ -248,6 +250,23 @@ class AdminProductsControllerCore extends AdminController
 				'orderby' => true,
 				'hint' => $this->l('This is the quantity available in the current shop/group.'),
 			);
+
+		$this->fields_list['discount'] = array(
+			'title' => $this->l('Discount?'),
+			'tmpTableFilter' => true,
+			'width' => 70,
+			'align' => 'center',
+			'type' => 'bool',
+			'orderby' => false,
+			'icon' => array(
+				0 => 'blank.gif',
+				1 => array(
+					'src' => 'money.png',
+					'alt' => $this->l('Product with reduction'),
+				)
+			),
+		);
+
 		$this->fields_list['active'] = array(
 			'title' => $this->l('Status'),
 			'width' => 70,
