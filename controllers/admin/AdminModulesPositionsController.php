@@ -226,6 +226,8 @@ class AdminModulesPositionsControllerCore extends AdminController
 
 	public function initContent()
 	{
+		$this->addJS(__PS_BASE_URI__.'js/vendor/jquery.sortable.js');
+
 		if (array_key_exists('addToHook', $_GET) || array_key_exists('editGraft', $_GET) || (Tools::isSubmit('submitAddToHook') && $this->errors))
 		{
 			$this->display = 'edit';

@@ -27,15 +27,6 @@
 	var token = '{$token}';
 	var come_from = 'AdminModulesPositions';
 </script>
-<script type="text/javascript" src="../js/vendor/jquery.sortable.js"></script>
-<style type="text/css">
-	li.sortable-placeholder {
-		border: 1px dashed #CCC;
-		background: #8EB1D7;
-		list-style: none;
-		margin-bottom: 4px;
-	}
-</style>
 
 {include file="toolbar.tpl" toolbar_btn=$toolbar_btn toolbar_scroll=$toolbar_scroll title=$title}
 <div>{block name="leadin"}{/block}</div>
@@ -90,7 +81,7 @@
 
 	{if $hook['module_count']}
 						<section class="module_list">
-						<ul{if $hook['modules']|count > 1} class="sortable"{/if}>
+						<ul class="list-unstyled{if $hook['modules']|count > 1} sortable{/if}">
 
 						{foreach $hook['modules'] as $position => $module}
 							{if isset($module['instance'])}
