@@ -1543,7 +1543,7 @@ class AdminImportControllerCore extends AdminController
 						if(!empty($feature_name) && !empty($feature_value))
 						{
 							$id_feature = Feature::addFeatureImport($feature_name, $position);
-							$id_feature_value = FeatureValue::addFeatureValueImport($id_feature, $feature_value);
+							$id_feature_value = FeatureValue::addFeatureValueImport($id_feature, $feature_value, $product->id, $id_lang);
 							Product::addFeatureProductImport($product->id, $id_feature, $id_feature_value);
 						}
 					}
