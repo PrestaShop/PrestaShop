@@ -513,7 +513,7 @@ class AdminImportControllerCore extends AdminController
 
 		$this->context->cookie->entity_selected = (int)Tools::getValue('entity');
 
-		if ($csv_selected = Tools::getValue('csv'))
+		if (Tools::getValue('csv'))
 			$this->context->cookie->csv_selected = Tools::getValue('csv');
 
 		$this->tpl_view_vars = array(
@@ -670,7 +670,8 @@ class AdminImportControllerCore extends AdminController
 			$fd = fopen($uniqid_path, 'r');
 			$tab = fgetcsv($fd, MAX_LINE_SIZE, $separator);
 			fclose($fd);
-			unlink($uniqid_path);
+			if (file_exists($uniqid_path))
+				@unlink($uniqid_path);
 		}
 
 		if (empty($tab) || (!is_array($tab)))
@@ -928,7 +929,7 @@ class AdminImportControllerCore extends AdminController
 						$this->errors[] = sprintf(
 							Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
 							$category_to_create->name[$default_language_id],
-							(isset($category_to_create->id) ? $category_to_create->id : 'null')
+							(isset($category_to_create->id) && !empty($category_to_create->id))? $category_to_create->id : 'null'
 						);
 						$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
 							Db::getInstance()->getMsgError();
@@ -961,7 +962,7 @@ class AdminImportControllerCore extends AdminController
 				$this->warnings[] = sprintf(
 					Tools::displayError('Rewrite link for %1$s (ID: %2$s) was re-written as %3$s.'),
 					$bak,
-					(isset($info['id']) ? $info['id'] : 'null'),
+					(isset($info['id']) && !empty($info['id']))? $info['id'] : 'null',
 					$category->link_rewrite[$default_language_id]
 				);
 			$res = false;
@@ -1009,8 +1010,8 @@ class AdminImportControllerCore extends AdminController
 			{
 				$this->errors[] = sprintf(
 					Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-					(isset($info['name']) ? Tools::safeOutput($info['name']) : 'No Name'),
-					(isset($info['id']) ? Tools::safeOutput($info['id']) : 'No ID')
+					(isset($info['name']) && !empty($info['name']))? Tools::safeOutput($info['name']) : 'No Name',
+					(isset($info['id']) && !empty($info['id']))? Tools::safeOutput($info['id']) : 'No ID'
 				);
 				$error_tmp = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').Db::getInstance()->getMsgError();
 				if ($error_tmp != '')
@@ -1067,13 +1068,23 @@ class AdminImportControllerCore extends AdminController
 
 			if (Tools::getValue('forceIDs') && isset($info['id']) && (int)$info['id'])
 				$product = new Product((int)$info['id']);
-			else
+			elseif (Tools::getValue('match_ref') && array_key_exists('reference', $info))
 			{
-				if (array_key_exists('id', $info) && (int)$info['id'] && Product::existsInDatabase((int)$info['id'], 'product'))
-					$product = new Product((int)$info['id']);
-				else
-					$product = new Product();
+					$datas = Db::getInstance()->getRow('
+						SELECT p.`id_product`
+						FROM `'._DB_PREFIX_.'product` p
+						'.Shop::addSqlAssociation('product', 'p').'
+						WHERE p.`reference` = "'.pSQL($info['reference']).'"
+					');
+					if (isset($datas['id_product']) && $datas['id_product'])
+						$product = new Product((int)$datas['id_product']);
+					else
+						$product = new Product();
 			}
+			elseif (array_key_exists('id', $info) && (int)$info['id'] && Product::existsInDatabase((int)$info['id'], 'product'))
+					$product = new Product((int)$info['id']);
+			else
+				$product = new Product();
 
 			if (array_key_exists('id', $info) && (int)$info['id'] && Product::existsInDatabase((int)$info['id'], 'product'))
 			{
@@ -1138,7 +1149,7 @@ class AdminImportControllerCore extends AdminController
 						$this->errors[] = sprintf(
 							Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
 							$manufacturer->name,
-							(isset($manufacturer->id) ? $manufacturer->id : 'null')
+							(isset($manufacturer->id) && !empty($manufacturer->id))? $manufacturer->id : 'null'
 						);
 						$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
 							Db::getInstance()->getMsgError();
@@ -1169,7 +1180,7 @@ class AdminImportControllerCore extends AdminController
 						$this->errors[] = sprintf(
 							Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
 							$supplier->name,
-							(isset($supplier->id) ? $supplier->id : 'null')
+							(isset($supplier->id) && !empty($supplier->id))? $supplier->id : 'null'
 						);
 						$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
 							Db::getInstance()->getMsgError();
@@ -1215,7 +1226,7 @@ class AdminImportControllerCore extends AdminController
 								$this->errors[] = sprintf(
 									Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
 									$category_to_create->name[$default_language_id],
-									(isset($category_to_create->id) ? $category_to_create->id : 'null')
+									(isset($category_to_create->id) && !empty($category_to_create->id))? $category_to_create->id : 'null'
 								);
 								$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
 									Db::getInstance()->getMsgError();
@@ -1247,7 +1258,7 @@ class AdminImportControllerCore extends AdminController
 								$this->errors[] = sprintf(
 									Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
 									$category_to_create->name[$default_language_id],
-									(isset($category_to_create->id) ? $category_to_create->id : 'null')
+									(isset($category_to_create->id) && !empty($category_to_create->id))? $category_to_create->id : 'null'
 								);
 								$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
 									Db::getInstance()->getMsgError();
@@ -1259,7 +1270,7 @@ class AdminImportControllerCore extends AdminController
 
 			$product->id_category_default = isset($product->id_category[0]) ? (int)$product->id_category[0] : '';
 	
-			$link_rewrite = (is_array($product->link_rewrite) && count($product->link_rewrite)) ? trim($product->link_rewrite[$id_lang]) : '';
+			$link_rewrite = (is_array($product->link_rewrite) && isset($product->link_rewrite[$id_lang])) ? trim($product->link_rewrite[$id_lang]) : '';
 
 			$valid_link = Validate::isLinkRewrite($link_rewrite);
 
@@ -1274,11 +1285,11 @@ class AdminImportControllerCore extends AdminController
 				$this->warnings[] = sprintf(
 					Tools::displayError('Rewrite link for %1$s (ID: %2$s) was re-written as %3$s.'),
 					$product->name[$id_lang],
-					(isset($info['id']) ? $info['id'] : 'null'),
+					(isset($info['id']) && !empty($info['id']))? $info['id'] : 'null',
 					$link_rewrite
 				);
 
-			if (!Tools::getValue('match_ref') || !(is_array($product->link_rewrite) && count($product->link_rewrite)))
+			if (!Tools::getValue('match_ref') || !(is_array($product->link_rewrite) && count($product->link_rewrite) && !empty($product->link_rewrite[$id_lang])))
 				$product->link_rewrite = AdminImportController::createMultiLangField($link_rewrite);
 
 			// replace the value of separator by coma
@@ -1311,7 +1322,7 @@ class AdminImportControllerCore extends AdminController
 						SELECT product_shop.`date_add`, p.`id_product`
 						FROM `'._DB_PREFIX_.'product` p
 						'.Shop::addSqlAssociation('product', 'p').'
-						WHERE p.`reference` = "'.$product->reference.'"
+						WHERE p.`reference` = "'.pSQL($product->reference).'"
 					');
 					$product->id = (int)$datas['id_product'];
 					$product->date_add = pSQL($datas['date_add']);
@@ -1357,8 +1368,8 @@ class AdminImportControllerCore extends AdminController
 			{
 				$this->errors[] = sprintf(
 					Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-					(isset($info['name']) ? Tools::safeOutput($info['name']) : 'No Name'),
-					(isset($info['id']) ? Tools::safeOutput($info['id']) : 'No ID')
+					(isset($info['name']) && !empty($info['name']))? Tools::safeOutput($info['name']) : 'No Name',
+					(isset($info['id']) && !empty($info['id']))? Tools::safeOutput($info['id']) : 'No ID'
 				);
 				$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
 					Db::getInstance()->getMsgError();
@@ -1384,31 +1395,67 @@ class AdminImportControllerCore extends AdminController
 				}
 
 				// SpecificPrice (only the basic reduction feature is supported by the import)
-				if ((isset($info['reduction_price']) && $info['reduction_price'] > 0) || (isset($info['reduction_percent']) && $info['reduction_percent'] > 0))
-				{
-					$specific_price = new SpecificPrice();
-					$specific_price->id_product = (int)$product->id;
-					// @todo multishop specific price import
-					$specific_price->id_shop = $this->context->shop->id;
-					$specific_price->id_currency = 0;
-					$specific_price->id_country = 0;
-					$specific_price->id_group = 0;
-					$specific_price->price = -1;
-					$specific_price->id_customer = 0;
-					$specific_price->from_quantity = 1;
-					$specific_price->reduction = (isset($info['reduction_price']) && $info['reduction_price']) ? $info['reduction_price'] : $info['reduction_percent'] / 100;
-					$specific_price->reduction_type = (isset($info['reduction_price']) && $info['reduction_price']) ? 'amount' : 'percentage';
-					$specific_price->from = (isset($info['reduction_from']) && Validate::isDate($info['reduction_from'])) ? $info['reduction_from'] : '0000-00-00 00:00:00';
-					$specific_price->to = (isset($info['reduction_to']) && Validate::isDate($info['reduction_to']))  ? $info['reduction_to'] : '0000-00-00 00:00:00';
-					if (!$specific_price->add())
-						$this->addProductWarning(Tools::safeOutput($info['name']), $product->id, $this->l('Discount is invalid'));
-				}
+				if (!Shop::isFeatureActive())
+					$info['shop'] = 1;
+				elseif (!isset($info['shop']) || empty($info['shop']))
+					$info['shop'] = implode($this->multiple_value_separator, Shop::getContextListShopID());
+	
+				// Get shops for each attributes
+				$info['shop'] = explode($this->multiple_value_separator, $info['shop']);
+					
+				$id_shop_list = array();
+				foreach ($info['shop'] as $shop)
+					if (!is_numeric($shop))
+						$id_shop_list[] = (int)Shop::getIdByName($shop);
+					else
+						$id_shop_list[] = $shop;
+
+					if ((isset($info['reduction_price']) && $info['reduction_price'] > 0) || (isset($info['reduction_percent']) && $info['reduction_percent'] > 0))
+						foreach($id_shop_list as $id_shop)
+						{
+							$specific_price = SpecificPrice::getSpecificPrice($product->id, $id_shop, 0, 0, 0, 1, 0, 0, 0, 0);
+
+							if (is_array($specific_price))
+								$specific_price = new SpecificPrice((int)$specific_price['id_specific_price']);
+							else
+								$specific_price = new SpecificPrice();
+							$specific_price->id_product = (int)$product->id;
+							$specific_price->id_specific_price_rule = 0;
+							$specific_price->id_shop = $id_shop;
+							$specific_price->id_currency = 0;
+							$specific_price->id_country = 0;
+							$specific_price->id_group = 0;
+							$specific_price->price = -1;
+							$specific_price->id_customer = 0;
+							$specific_price->from_quantity = 1;
+							$specific_price->reduction = (isset($info['reduction_price']) && $info['reduction_price']) ? $info['reduction_price'] : $info['reduction_percent'] / 100;
+							$specific_price->reduction_type = (isset($info['reduction_price']) && $info['reduction_price']) ? 'amount' : 'percentage';
+							$specific_price->from = (isset($info['reduction_from']) && Validate::isDate($info['reduction_from'])) ? $info['reduction_from'] : '0000-00-00 00:00:00';
+							$specific_price->to = (isset($info['reduction_to']) && Validate::isDate($info['reduction_to']))  ? $info['reduction_to'] : '0000-00-00 00:00:00';
+							if (!$specific_price->save())
+								$this->addProductWarning(Tools::safeOutput($info['name']), $product->id, $this->l('Discount is invalid'));
+						}
 
 				if (isset($product->tags) && !empty($product->tags))
 				{
+					if (isset($product->id) && $product->id)
+					{
+						$tags = Tag::getProductTags($product->id);
+						if (is_array($tags) && count($tags))
+						{
+							if (!empty($product->tags))
+								$product->tags = explode($this->multiple_value_separator, $product->tags);
+							if (is_array($product->tags) && count($product->tags))
+							{
+								foreach ($product->tags as $key => $tag)
+									$product->tags[$key] = trim($tag);
+								$tags[$id_lang] = $product->tags;
+								$product->tags = $tags;
+							}
+						}
+					}
 					// Delete tags for this id product, for no duplicating error
 					Tag::deleteTagsForProduct($product->id);
-
 					if (!is_array($product->tags))
 					{
 						$product->tags = AdminImportController::createMultiLangField($product->tags);
@@ -1761,8 +1808,9 @@ class AdminImportControllerCore extends AdminController
 											null,
 											$id_shop_list
 										);
-	
 										$id_product_attribute_update = true;
+										if (isset($info['supplier_reference']) && !empty($info['supplier_reference']))
+											$product->addSupplierReference($product->id_supplier, $id_product_attribute, $info['supplier_reference']);
 									}
 								}
 							}
@@ -1788,8 +1836,10 @@ class AdminImportControllerCore extends AdminController
 								(int)$info['minimal_quantity'],
 								$id_shop_list
 							);
+							if (isset($info['supplier_reference']) && !empty($info['supplier_reference']))
+								$product->addSupplierReference($product->id_supplier, $id_product_attribute, $info['supplier_reference']);
 						}
-	
+
 						// fills our attributes array, in order to add the attributes to the product_attribute afterwards
 						if(isset($attributes[$group.'_'.$attribute]))
 							$attributes_to_add[] = (int)$attributes[$group.'_'.$attribute];
@@ -1964,7 +2014,7 @@ class AdminImportControllerCore extends AdminController
 				$this->errors[] = sprintf(
 					Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
 					$info['email'],
-					(isset($info['id']) ? $info['id'] : 'null')
+					(isset($info['id']) && !empty($info['id']))? $info['id'] : 'null'
 				);
 				$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
 					Db::getInstance()->getMsgError();
@@ -2061,7 +2111,7 @@ class AdminImportControllerCore extends AdminController
 							Tools::displayError('%1$s does not exist in database %2$s (ID: %3$s) cannot be saved'),
 							Db::getInstance()->getMsgError(),
 							$address->customer_email,
-							(isset($info['id']) ? $info['id'] : 'null')
+							(isset($info['id']) && !empty($info['id']))? $info['id'] : 'null'
 						);
 				}
 				else
@@ -2110,7 +2160,7 @@ class AdminImportControllerCore extends AdminController
 					$this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
 						Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
 						$manufacturer->name,
-						(isset($manufacturer->id) ? $manufacturer->id : 'null')
+						(isset($manufacturer->id) && !empty($manufacturer->id))? $manufacturer->id : 'null'
 					);
 					$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
 						Db::getInstance()->getMsgError();
@@ -2131,7 +2181,7 @@ class AdminImportControllerCore extends AdminController
 					$this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
 						Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
 						$supplier->name,
-						(isset($supplier->id) ? $supplier->id : 'null')
+						(isset($supplier->id) && !empty($supplier->id))? $supplier->id : 'null'
 					);
 					$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
 						Db::getInstance()->getMsgError();
@@ -2160,7 +2210,7 @@ class AdminImportControllerCore extends AdminController
 							$this->errors[] = sprintf(
 								Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
 								$info['alias'],
-								(isset($info['id']) ? $info['id'] : 'null')
+								(isset($info['id']) && !empty($info['id']))? $info['id'] : 'null'
 							);
 					}
 				}
@@ -2177,7 +2227,7 @@ class AdminImportControllerCore extends AdminController
 				$this->errors[] = sprintf(
 					Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
 					$info['alias'],
-					(isset($info['id']) ? $info['id'] : 'null')
+					(isset($info['id']) && !empty($info['id']))? $info['id'] : 'null'
 				);
 				$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
 					Db::getInstance()->getMsgError();
@@ -2247,8 +2297,8 @@ class AdminImportControllerCore extends AdminController
 			{
 				$this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
 					Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-					(isset($info['name']) ? Tools::safeOutput($info['name']) : 'No Name'),
-					(isset($info['id']) ? Tools::safeOutput($info['id']) : 'No ID')
+					(isset($info['name']) && !empty($info['name']))? Tools::safeOutput($info['name']) : 'No Name',
+					(isset($info['id']) && !empty($info['id']))? Tools::safeOutput($info['id']) : 'No ID'
 				);
 				$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
 					Db::getInstance()->getMsgError();
@@ -2294,8 +2344,8 @@ class AdminImportControllerCore extends AdminController
 				if (!$res)
 					$this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
 						Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-						(isset($info['name']) ? Tools::safeOutput($info['name']) : 'No Name'),
-						(isset($info['id']) ? Tools::safeOutput($info['id']) : 'No ID')
+						(isset($info['name']) && !empty($info['name']))? Tools::safeOutput($info['name']) : 'No Name',
+						(isset($info['id']) && !empty($info['id']))? Tools::safeOutput($info['id']) : 'No ID'
 					);
 				else
 				{
@@ -2553,13 +2603,9 @@ class AdminImportControllerCore extends AdminController
 
 	protected static function usortFiles($a, $b)
 	{
-		$a = strrev(substr(strrev($a), 0, 14));
-		$b = strrev(substr(strrev($b), 0, 14));
-
 		if ($a == $b)
 			return 0;
-
-		return ($a < $b) ? 1 : -1;
+		return ($b < $a) ? 1 : -1;
 	}
 
 	protected function openCsvFile()
@@ -2604,37 +2650,37 @@ class AdminImportControllerCore extends AdminController
 						unlink(_PS_CAT_IMG_DIR_.$d);
 				break;
 			case $this->entities[$this->l('Products')]:
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_shop');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'feature_product');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_lang');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'category_product');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_tag');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'image');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'image_lang');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'image_shop');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'specific_price');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'specific_price_priority');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_carrier');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'cart_product');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'compare_product');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_shop`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'feature_product`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_lang`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'category_product`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_tag`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'image`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'image_lang`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'image_shop`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'specific_price`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'specific_price_priority`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_carrier`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'cart_product`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'compare_product`');
 				if (count(Db::getInstance()->executeS('SHOW TABLES LIKE \''._DB_PREFIX_.'favorite_product\' '))) //check if table exist
-					Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'favorite_product');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attachment');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_country_tax');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_download');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_group_reduction_cache');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_sale');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_supplier');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'scene_products');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'warehouse_product_location');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'stock');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'stock_available');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'stock_mvt');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customization');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customization_field');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supply_order_detail');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_impact');
+					Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'favorite_product`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attachment`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_country_tax`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_download`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_group_reduction_cache`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_sale`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_supplier`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'scene_products`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'warehouse_product_location`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'stock`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'stock_available`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'stock_mvt`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customization`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customization_field`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supply_order_detail`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_impact`');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute`');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_shop`');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_combination`');
@@ -2645,7 +2691,7 @@ class AdminImportControllerCore extends AdminController
 				break;
 			case $this->entities[$this->l('Combinations')]:
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute`');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_impact');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_impact`');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_lang`');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_group`');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_group_lang`');
@@ -2655,26 +2701,26 @@ class AdminImportControllerCore extends AdminController
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_shop`');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_combination`');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_image`');
-				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'stock_available` WHERE id_product_attribute !=0');
+				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'stock_available` WHERE id_product_attribute != 0');
 				break;
 			case $this->entities[$this->l('Customers')]:
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customer');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customer`');
 				break;
 			case $this->entities[$this->l('Addresses')]:
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'address');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'address`');
 				break;
 			case $this->entities[$this->l('Manufacturers')]:
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer_lang');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer_shop');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer_lang`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer_shop`');
 				foreach (scandir(_PS_MANU_IMG_DIR_) as $d)
 					if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d))
 						unlink(_PS_MANU_IMG_DIR_.$d);
 				break;
 			case $this->entities[$this->l('Suppliers')]:
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier_lang');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier_shop');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier_lang`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier_shop`');
 				foreach (scandir(_PS_SUPP_IMG_DIR_) as $d)
 					if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d))
 						unlink(_PS_SUPP_IMG_DIR_.$d);
@@ -2703,6 +2749,7 @@ class AdminImportControllerCore extends AdminController
 
 		if (Tools::isSubmit('submitFileUpload'))
 		{
+			$path = _PS_ADMIN_DIR_.'/import/'.date('Ymdhis').'-';
 			if (isset($_FILES['file']) && !empty($_FILES['file']['error']))
 			{
 				switch ($_FILES['file']['error'])
@@ -2729,12 +2776,15 @@ class AdminImportControllerCore extends AdminController
 				}
 			}
 			else if (!file_exists($_FILES['file']['tmp_name']) ||
-				!@move_uploaded_file($_FILES['file']['tmp_name'], _PS_ADMIN_DIR_.'/import/'.date('Ymdhis').'-'.$_FILES['file']['name']))
+				!@move_uploaded_file($_FILES['file']['tmp_name'], $path.$_FILES['file']['name']))
 				$this->errors[] = $this->l('An error occurred while uploading / copying the file.');
 			else
+			{
+				@chmod($path.$_FILES['file']['name'], 0664);
 				Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=18');
+			}
 		}
-		else if (Tools::getValue('import'))
+		elseif (Tools::getValue('import'))
 		{
 			// Check if the CSV file exist
 			if (Tools::getValue('csv'))
@@ -2798,7 +2848,41 @@ class AdminImportControllerCore extends AdminController
 			else
 				$this->errors[] = $this->l('You must upload a file in order to proceed to the next step');
 		}
-
+		elseif ($filename = Tools::getValue('csvfilename'))
+		{
+			$filename = base64_decode($filename);
+			$file =  _PS_ADMIN_DIR_.'/import/'.basename($filename);
+			if (realpath(dirname($file)) != _PS_ADMIN_DIR_.'/import')
+				exit();
+			if (!empty($filename))
+			{
+				$bName = basename($filename);
+				if ($delete = Tools::getValue('delete') && file_exists($file))
+					@unlink($file);
+				elseif (file_exists($file))
+				{
+					$bName = explode('.', $bName);
+					$bName = strtolower($bName[count($bName) - 1]);
+					$mimeTypes = array('csv' => 'text/csv');
+	
+					if (isset($mimeTypes[$bName]))
+						$mimeType = $mimeTypes[$bName];
+					else
+						$mimeType = 'application/octet-stream';
+					if (ob_get_level()) 
+						ob_end_clean();
+	
+					header('Content-Transfer-Encoding: binary');
+					header('Content-Type: '.$mimeType);
+					header('Content-Length: '.filesize($file));
+					header('Content-Disposition: attachment; filename="'.$filename.'"');
+					$fp = fopen($file, 'rb');
+					while (is_resource($fp) && !feof($fp))
+						echo fgets($fp, 16384);
+					exit;
+				}
+			}	
+		}
 		parent::postProcess();
 	}
 

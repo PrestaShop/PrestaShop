@@ -264,7 +264,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'select',
-					'label' => $this->l('Attribute type:'),
+					'label' => $this->l('Attribute group:'),
 					'name' => 'id_attribute_group',
 					'required' => true,
 					'options' => array(
@@ -272,7 +272,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 						'id' => 'id_attribute_group',
 						'name' => 'name'
 					),
-					'desc' => $this->l('Choose the type of the attribute')
+					'desc' => $this->l('Choose the group of the attribute')
 				),
 				array(
 					'type' => 'text',

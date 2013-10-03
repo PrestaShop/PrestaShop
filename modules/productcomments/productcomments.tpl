@@ -27,6 +27,11 @@ var productcomments_controller_url = '{$productcomments_controller_url}';
 var confirm_report_message = "{l s='Are you sure you want report this comment?' mod='productcomments'}";
 var secure_key = "{$secure_key}";
 var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
+var productcomment_added = '{l s='Your comment has been added!' mod='productcomments'}';
+var productcomment_added_moderation = '{l s='Your comment has been added and will be available once approved by a moderator' mod='productcomments'}';
+var productcomment_title = '{l s='New comment' mod='productcomments'}';
+var productcomment_ok = '{l s='OK' mod='productcomments'}';
+var moderation_active = {$moderation_active};
 </script>
 
 <div id="idTab5">
@@ -71,11 +76,13 @@ var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
 			</div>
 			{/if}
 		{/foreach}
+        {if (!$too_early AND ($logged OR $allow_guests))}
 		<p class="align_center">
 			<a id="new_comment_tab_btn" class="open-comment-form" href="#new_comment_form">{l s='Write your review' mod='productcomments'} !</a>
 		</p>
+        {/if}
 	{else}
-		{if ($too_early == false AND ($logged OR $allow_guests))}
+		{if (!$too_early AND ($logged OR $allow_guests))}
 		<p class="align_center">
 			<a id="new_comment_tab_btn" class="open-comment-form" href="#new_comment_form">{l s='Be the first to write your review' mod='productcomments'} !</a>
 		</p>
