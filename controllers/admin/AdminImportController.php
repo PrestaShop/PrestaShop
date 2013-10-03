@@ -426,7 +426,7 @@ class AdminImportControllerCore extends AdminController
 					
 			}
 
-		$this->separator = strval(trim(Tools::getValue('separator', ';')));
+		$this->separator = substr(strval(trim(Tools::getValue('separator', ';'))), 0, 1);
 
 		if (is_null(Tools::getValue('multiple_value_separator')) || trim(Tools::getValue('multiple_value_separator')) == '')
 			$this->multiple_value_separator = ',';
@@ -469,14 +469,26 @@ class AdminImportControllerCore extends AdminController
 		if (isset($this->entities[$this->l(Tools::ucfirst(Tools::getValue('import_type')))]))
 		{
 			$entity_selected = $this->entities[$this->l(Tools::ucfirst(Tools::getValue('import_type')))];
-			$this->context->cookie->entity_selected = $entity_selected;
+			$this->context->cookie->entity_selected = (int)$entity_selected;
 		}
 		elseif (isset($this->context->cookie->entity_selected))
 			$entity_selected = (int)$this->context->cookie->entity_selected;
 
 		$csv_selected = '';
 		if (isset($this->context->cookie->csv_selected))
-			$csv_selected = pSQL($this->context->cookie->csv_selected);
+			$csv_selected = base64_decode($this->context->cookie->csv_selected);
+
+		$id_lang_selected = '';
+		if (isset($this->context->cookie->iso_lang_selected) && $this->context->cookie->iso_lang_selected)
+			$id_lang_selected = (int)Language::getIdByIso(base64_decode($this->context->cookie->iso_lang_selected));
+
+		$separator_selected = '';
+		if (isset($this->context->cookie->separator_selected) && $this->context->cookie->separator_selected)
+			$separator_selected = base64_decode($this->context->cookie->separator_selected);
+
+		$multiple_value_separator_selected = '';
+		if (isset($this->context->cookie->multiple_value_separator_selected) && $this->context->cookie->multiple_value_separator_selected)
+			$multiple_value_separator_selected = base64_decode($this->context->cookie->multiple_value_separator_selected);
 
 		$this->tpl_form_vars = array(
 			'module_confirmation' => (Tools::getValue('import')) && (isset($this->warnings) && !count($this->warnings)),
@@ -484,9 +496,11 @@ class AdminImportControllerCore extends AdminController
 			'entities' => $this->entities,
 			'entity_selected' => $entity_selected,
 			'csv_selected' => $csv_selected,
+			'separator_selected' => $separator_selected,
+			'multiple_value_separator_selected' => $multiple_value_separator_selected,
 			'files_to_import' => $files_to_import,
 			'languages' => Language::getLanguages(false),
-			'id_language' => $this->context->language->id,
+			'id_language' => ($id_lang_selected) ? $id_lang_selected : $this->context->language->id,
 			'available_fields' => $this->getAvailableFields(),
 			'truncateAuthorized' => (Shop::isFeatureActive() && $this->context->employee->isSuperAdmin()) || !Shop::isFeatureActive(),
 			'PS_ADVANCED_STOCK_MANAGEMENT' => Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'),
@@ -512,9 +526,10 @@ class AdminImportControllerCore extends AdminController
 			$data[$i] = $this->generateContentTable($i, $nb_column, $handle, $this->separator);
 
 		$this->context->cookie->entity_selected = (int)Tools::getValue('entity');
-
-		if (Tools::getValue('csv'))
-			$this->context->cookie->csv_selected = Tools::getValue('csv');
+		$this->context->cookie->iso_lang_selected = base64_encode(Tools::getValue('iso_lang'));
+		$this->context->cookie->separator_selected = base64_encode(Tools::getValue('separator'));
+		$this->context->cookie->multiple_value_separator_selected = base64_encode(Tools::getValue('multiple_value_separator'));
+		$this->context->cookie->csv_selected = base64_encode(Tools::getValue('csv'));
 
 		$this->tpl_view_vars = array(
 			'import_matchs' => Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'import_match'),

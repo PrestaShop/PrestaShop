@@ -59,7 +59,7 @@
 				{if count($files_to_import)}
 					<select name="csv">
 						{foreach $files_to_import AS $filename}
-							<option value="{$filename}"{if $csv_selected == $filename} selected="selected"{/if}>{$filename}</option>
+							<option value="{$filename}"{if $csv_selected == $filename} selected="selected"{/if}>{$filename|escape:'htmlall':'UTF-8'}</option>
 						{/foreach}
 					</select>
 				{/if}
@@ -119,12 +119,12 @@
 			</div>
 			<label class="clear">{l s='Field separator'} </label>
 			<div class="margin-form">
-				<input type="text" size="2" value=";" name="separator"/>
+				<input type="text" size="2" value="{if isset($separator_selected)}{$separator_selected|escape:'htmlall':'UTF-8'}{else};{/if}" name="separator"/>
 				{l s='e.g. '}"1<span class="bold" style="color: red">;</span>Ipod<span class="bold" style="color: red">;</span>129.90<span class="bold" style="color: red">;</span>5"
 			</div>
 			<label class="clear">{l s='Multiple value separator'} </label>
 			<div class="margin-form">
-				<input type="text" size="2" value="," name="multiple_value_separator"/>
+				<input type="text" size="2" value="{if isset($multiple_value_separator_selected)}{$multiple_value_separator_selected|escape:'htmlall':'UTF-8'}{else},{/if}" name="multiple_value_separator"/>
 				{l s='e.g. '}"Ipod;red.jpg<span class="bold" style="color: red">,</span>blue.jpg<span class="bold" style="color: red">,</span>green.jpg;129.90"
 			</div>
 			<label for="truncate" class="clear">{l s='Delete all'} <span id="entitie">{l s='categories'}</span> {l s='before import?'} </label>
@@ -216,7 +216,7 @@
 			else
 			{
 				$(".import_supply_orders_details").hide();
-				$('input[name=multiple_value_separator]').val(',');
+				$('input[name=multiple_value_separator]').val('{if isset($multiple_value_separator_selected)}{$multiple_value_separator_selected}{else},{/if}');
 			}
 			if ($("#entity > option:selected").val() == 1)
 				$("label[for=match_ref], #match_ref, label[for=regenerate], #regenerate").show();
