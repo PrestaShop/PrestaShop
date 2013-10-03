@@ -25,19 +25,19 @@
 <table class="table" id="documents_table">
 	<thead>
 		<tr>
-			<th width="10%">
+			<th>
 				<span class="title_box ">{l s='Date'}</span>
 			</th>
 			<th>
 				<span class="title_box ">{l s='Document'}</span>
 			</th>
-			<th width="20%">
+			<th>
 				<span class="title_box ">{l s='Number'}</span>
 			</th>
-			<th width="20%">
+			<th>
 				<span class="title_box ">{l s='Amount'}</span>
 			</th>
-			<th width="1%"></th>
+			<th></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -67,23 +67,32 @@
 					</td>
 					<td>
 						{if get_class($document) eq 'OrderInvoice'}
+
 							{if isset($document->is_delivery)}
 								<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order_invoice={$document->id}">
 						   	{else}
 								<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateInvoicePDF&id_order_invoice={$document->id}">
 						   {/if}
+
 						{elseif get_class($document) eq 'OrderSlip'}
 							<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateOrderSlipPDF&id_order_slip={$document->id}">
 						{/if}
+
 						{if get_class($document) eq 'OrderInvoice'}
+						
 							{if isset($document->is_delivery)}
 								#{Configuration::get('PS_DELIVERY_PREFIX', $current_id_lang, null, $order->id_shop)}{'%06d'|sprintf:$document->delivery_number}
 							{else}
 								{$document->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}
 							{/if}
+
 						{elseif get_class($document) eq 'OrderSlip'}
+
 							#{Configuration::get('PS_CREDIT_SLIP_PREFIX', $current_id_lang)}{'%06d'|sprintf:$document->id}
-						{/if} 	<span class="btn btn-default">
+
+						{/if} 
+
+								<span class="btn btn-default">
 									<i class="icon-search"></i>
 									{l s='See the document'}
 								</span>
@@ -159,9 +168,9 @@
 		{foreachelse}
 			<tr>
 				<td colspan="5" class="text-center">
-					<h4>{l s='No documents are available'}</h4>
+					<i class="icon-warning-sign"></i> {l s='No documents are available'}
 					{if isset($invoice_management_active) && $invoice_management_active}
-						<a class="btn btn-default" href="{$current_index}&viewOrder&submitGenerateInvoice&id_order={$order->id}{if isset($smarty.get.token)}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}{/if}">
+						<a class="btn btn-link" href="{$current_index}&viewOrder&submitGenerateInvoice&id_order={$order->id}{if isset($smarty.get.token)}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}{/if}">
 							<i class="icon-repeat"></i>
 							{l s='Generate invoice'}
 						</a>

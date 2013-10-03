@@ -8392,6 +8392,17 @@ tr.highlight td {
   -webkit-box-shadow: none;
   box-shadow: none; }
 
+/* line 737, admin-theme.sass */
+li.sortable-placeholder {
+  border: 1px dashed #cccccc;
+  background-color: #bbbbbb;
+  margin-bottom: 4px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px; }
+
 /* line 1, _nav.sass */
 #nav-sidebar {
   float: left;
