@@ -69,7 +69,7 @@
 							<input type="submit" class="btn btn-default" name="submitShippingNumber" value="{l s='Update'}" />
 						</span>
 						<a href="#" class="edit_shipping_number_link btn btn-default">
-							<i class="icon-search"></i>
+							<i class="icon-pencil"></i>
 							{l s='Edit'}
 						</a>
 						<a href="#" class="cancel_shipping_number_link btn btn-default" style="display: none;">

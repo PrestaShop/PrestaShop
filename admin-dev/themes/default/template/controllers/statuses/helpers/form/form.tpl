@@ -65,10 +65,18 @@
 					</button>
 					<ul class="dropdown-menu">
 						{foreach from=$languages item=language_flag}
-						<li><a href="javascript:hideOtherLanguage({$language_flag.id_lang});" tabindex="-1"><img src="{$base_url}/img/l/{$language_flag.id_lang|intval}.jpg" alt=""> {$language_flag.name}</a></li>
+						<li>
+							<a href="javascript:hideOtherLanguage({$language_flag.id_lang});" tabindex="-1">
+								<img src="{$base_url}/img/l/{$language_flag.id_lang|intval}.jpg" alt="">
+								{$language_flag.name}
+							</a>
+						</li>
 						{/foreach}
 					</ul>
-					<button type="button" class="btn btn-default" onclick="viewTemplates('#template_select_{$language.id_lang}', '../mails/{$language.iso_code}/', '.html');"><i class="icon-eye-open"></i> {l s='Preview'}</button>
+					<button type="button" class="btn btn-default" onclick="viewTemplates('#template_select_{$language.id_lang}', '../mails/{$language.iso_code}/', '.html');">
+						<i class="icon-eye-open"></i>
+						{l s='Preview'}
+					</button>
 				</div>
 			</div>
 		{/foreach}
