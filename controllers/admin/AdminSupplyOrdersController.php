@@ -150,16 +150,26 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	public function initPageHeaderToolbar()
 	{
 		$this->page_header_toolbar_title = $this->l('Supply orders');
-		$this->page_header_toolbar_btn['new_supply_order'] = array(
-			'href' => self::$currentIndex.'&amp;addsupply_order&amp;token='.$this->token,
-			'desc' => $this->l('Add new supply order'),
-			'icon' => 'process-icon-new'
-		);
-		$this->page_header_toolbar_btn['new_supply_order_template'] = array(
-			'href' => self::$currentIndex.'&amp;addsupply_order&amp;mod=template&amp;token='.$this->token,
-			'desc' => $this->l('Add new supply order template'),
-			'icon' => 'process-icon-new'
-		);
+
+		if ($this->display == 'details')
+			$this->page_header_toolbar_btn['back'] = array(
+				'href' => Context::getContext()->link->getAdminLink('AdminSupplyOrders'),
+				'desc' => $this->l('Back to list'),
+				'icon' => 'process-icon-back'
+			);
+		else
+		{
+			$this->page_header_toolbar_btn['new_supply_order'] = array(
+				'href' => self::$currentIndex.'&amp;addsupply_order&amp;token='.$this->token,
+				'desc' => $this->l('Add new supply order'),
+				'icon' => 'process-icon-new'
+			);
+			$this->page_header_toolbar_btn['new_supply_order_template'] = array(
+				'href' => self::$currentIndex.'&amp;addsupply_order&amp;mod=template&amp;token='.$this->token,
+				'desc' => $this->l('Add new supply order template'),
+				'icon' => 'process-icon-new'
+			);
+		}
 		
 		parent::initPageHeaderToolbar();
 	}
@@ -364,7 +374,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$limit = false;
 
 		// defines button specific for non-template supply orders
-		if (!$this->is_template_list)
+		if (!$this->is_template_list && $this->display != 'details')
 		{
 			// adds export csv buttons
 			$this->toolbar_btn['export-csv-orders'] = array(
@@ -1493,28 +1503,24 @@ class AdminSupplyOrdersControllerCore extends AdminController
         return $this->context->smarty->fetch('helpers/list/list_action_supply_order_create_from_template.tpl');
     }
 
-	/**
-	 * method call when ajax request is made with the details row action
-	 * @see AdminController::postProcess()
-	 */
-	public function ajaxProcess()
+	public function renderDetails()
 	{
 		// tests if an id is submit
-		if (Tools::isSubmit('id') && !Tools::isSubmit('display_product_history'))
+		if (Tools::isSubmit('id_supply_order') && !Tools::isSubmit('display_product_history'))
 		{
 			// overrides attributes
 			$this->identifier = 'id_supply_order_history';
 			$this->table = 'supply_order_history';
-
-			$this->display = 'list';
 			$this->lang = false;
+			$this->actions = array();
+			$this->toolbar_btn = array();
+			$this->list_simple_header = true;
 			// gets current lang id
 			$lang_id = (int)$this->context->language->id;
 			// gets supply order id
-			$id_supply_order = (int)Tools::getValue('id');
+			$id_supply_order = (int)Tools::getValue('id_supply_order');
 
 			// creates new fields_list
-			unset($this->fields_list);
 			$this->fields_list = array(
 				'history_date' => array(
 					'title' => $this->l('Last update'),
@@ -1551,33 +1557,21 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			)';
 
 			$this->_where = 'AND a.`id_supply_order` = '.(int)$id_supply_order;
-			$this->_orderBy = 'a.`date_add`';
+			$this->_orderBy = 'a.date_add';
 			$this->_orderWay = 'DESC';
 
-			// gets list and forces no limit clause in the request
-			$this->getList($lang_id, 'date_add', 'DESC', 0, false, false);
-
-			// renders list
-			$helper = new HelperList();
-			$helper->no_link = true;
-			$helper->show_toolbar = false;
-			$helper->toolbar_scroll = false;
-			$helper->shopLinkType = '';
-			$helper->identifier = $this->identifier;
-			//$helper->colorOnBackground = true;
-			$helper->simple_header = true;
-			$content = $helper->generateList($this->_list, $this->fields_list);
-
-			echo Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
+			return parent::renderList();
 		}
-		else if (Tools::isSubmit('id') && Tools::isSubmit('display_product_history'))
+		else if (Tools::isSubmit('id_supply_order') && Tools::isSubmit('display_product_history'))
 		{
 			$this->identifier = 'id_supply_order_receipt_history';
 			$this->table = 'supply_order_receipt_history';
-			$this->display = 'list';
+			$this->actions = array();
+			$this->toolbar_btn = array();
+			$this->list_simple_header = true;
 			$this->lang = false;
 			$lang_id = (int)$this->context->language->id;
-			$id_supply_order_detail = (int)Tools::getValue('id');
+			$id_supply_order_detail = (int)Tools::getValue('id_supply_order');
 
 			unset($this->fields_list);
 			$this->fields_list = array(
@@ -1603,25 +1597,11 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			unset($this->_select, $this->_join, $this->_where, $this->_orderBy, $this->_orderWay, $this->_group, $this->_filterHaving, $this->_filter);
 			$this->_select = 'CONCAT(a.`employee_lastname`, \' \', a.`employee_firstname`) as employee';
 			$this->_where = 'AND a.`id_supply_order_detail` = '.(int)$id_supply_order_detail;
+			$this->_orderBy = 'a.date_add';
+			$this->_orderWay = 'DESC';
 
-			// gets list and forces no limit clause in the request
-			$this->getList($lang_id, 'date_add', 'DESC', 0, false, false);
-
-			// renders list
-			$helper = new HelperList();
-			$helper->no_link = true;
-			$helper->show_toolbar = false;
-			$helper->toolbar_scroll = false;
-			$helper->shopLinkType = '';
-			$helper->identifier = $this->identifier;
-			$helper->colorOnBackground = true;
-			$helper->simple_header = true;
-			$content = $helper->generateList($this->_list, $this->fields_list);
-
-			echo Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
+			return parent::renderList();
 		}
-
-		die;
 	}
 
 	/**
