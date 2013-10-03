@@ -841,7 +841,7 @@ class AdminControllerCore extends Controller
 							$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=4&token='.$this->token;
 
 						// Default behavior (save and back)
-						if (empty($this->redirect_after))
+						if (empty($this->redirect_after) && $this->redirect_after !== false)
 							$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=4&token='.$this->token;
 					}
 					Logger::addLog(sprintf($this->l('%s edition'), $this->className), 1, null, $this->className, (int)$object->id, true, (int)$this->context->employee->id);
