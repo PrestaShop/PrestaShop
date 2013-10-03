@@ -1289,9 +1289,10 @@ class AdminImportControllerCore extends AdminController
 
 			// replace the value of separator by coma
 			if ($this->multiple_value_separator != ',')
-				foreach ($product->meta_keywords as &$meta_keyword)
-					if (!empty($meta_keyword))
-						$meta_keyword = str_replace($this->multiple_value_separator, ',', $meta_keyword);
+				if (is_array($product->meta_keywords))
+					foreach ($product->meta_keywords as &$meta_keyword)
+						if (!empty($meta_keyword))
+							$meta_keyword = str_replace($this->multiple_value_separator, ',', $meta_keyword);
 
 			// Convert comma into dot for all floating values
 			foreach (Product::$definition['fields'] as $key => $array)
