@@ -183,7 +183,7 @@ class SpecificPriceRuleCore extends ObjectModel
 
 		if ($conditions_group)
 		{
-			$where .= ' AND (';
+			$where .= ' AND ((';
 			foreach ($conditions_group as $id_condition_group => $condition_group)
 			{
 				$fields = array(
@@ -235,7 +235,7 @@ class SpecificPriceRuleCore extends ObjectModel
 				
 				$where = rtrim($where, ' AND ').') OR (';
 			}
-			$where = rtrim($where, 'OR (');
+			$where = rtrim($where, 'OR (').')';
 		}
 		if ($products && count($products))
 			$where .= ' AND p.id_product IN ('.implode(', ', array_map('intval', $products)).')';
