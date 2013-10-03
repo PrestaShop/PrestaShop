@@ -1677,6 +1677,7 @@ class CartCore extends ObjectModel
 				$warehouse_count_by_address[$product['id_address_delivery']][$warehouse['id_warehouse']]++;
 			}
 		}
+		unset($product);
 
 		arsort($warehouse_count_by_address);
 
@@ -1694,9 +1695,12 @@ class CartCore extends ObjectModel
 			$id_warehouse = 0;
 			foreach ($warehouse_count_by_address[$product['id_address_delivery']] as $id_war => $val)
 			{
-				$product['carrier_list'] = array_merge($product['carrier_list'], Carrier::getAvailableCarrierList(new Product($product['id_product']), $id_war, $product['id_address_delivery'], null, $this));
-				if (in_array((int)$id_war, $product['warehouse_list']) && $id_warehouse == 0)
-					$id_warehouse = (int)$id_war;
+				if (in_array((int)$id_war, $product['warehouse_list']))
+				{
+					$product['carrier_list'] = array_merge($product['carrier_list'], Carrier::getAvailableCarrierList(new Product($product['id_product']), $id_war, $product['id_address_delivery'], null, $this));
+					if (!$id_warehouse)
+						$id_warehouse = (int)$id_war;
+				}
 			}
 
 			if (!isset($grouped_by_warehouse[$product['id_address_delivery']]['in_stock'][$id_warehouse]))
@@ -1715,6 +1719,7 @@ class CartCore extends ObjectModel
 
 			$grouped_by_warehouse[$product['id_address_delivery']][$key][$id_warehouse][] = $product;
 		}
+		unset($product);
 
 		// Step 3 : grouped product from grouped_by_warehouse by available carriers
 		$grouped_by_carriers = array();
@@ -1733,7 +1738,6 @@ class CartCore extends ObjectModel
 				{
 					if (!isset($grouped_by_carriers[$id_address_delivery][$key][$id_warehouse]))
 						$grouped_by_carriers[$id_address_delivery][$key][$id_warehouse] = array();
-
 					foreach ($product_list as $product)
 					{
 						$package_carriers_key = implode(',', $product['carrier_list']);
@@ -1798,7 +1802,6 @@ class CartCore extends ObjectModel
 									);
 								$package_list[$id_address_delivery][$key][$id_warehouse][$id_carrier]['carrier_list'] =
 									array_intersect($package_list[$id_address_delivery][$key][$id_warehouse][$id_carrier]['carrier_list'], $data['carrier_list']);
-
 								$package_list[$id_address_delivery][$key][$id_warehouse][$id_carrier]['product_list'] =
 									array_merge($package_list[$id_address_delivery][$key][$id_warehouse][$id_carrier]['product_list'], $data['product_list']);
 
