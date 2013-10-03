@@ -1389,7 +1389,7 @@ class AdminImportControllerCore extends AdminController
 			else
 			{
 				// Product supplier
-				if (isset($product->id_supplier) && isset($product->supplier_reference))
+				if (isset($product->id_supplier) && property_exists($product, 'supplier_reference'))
 				{
 					$id_product_supplier = ProductSupplier::getIdByProductAndSupplier((int)$product->id, 0, (int)$product->id_supplier);
 					if ($id_product_supplier)
