@@ -1890,10 +1890,9 @@ class OrderCore extends ObjectModel
 	}
 	
 	/**
-	 * Return a unique reference like : GWJTHMZUN#2
+	 * Return id of carrier
 	 * 
-	 * With multishipping, order reference are the same for all orders made with the same cart
-	 * in this case this method suffix the order reference by a # and the order number
+	 * Get id of the carrier used in order
 	 * 
 	 * @since 1.5.5.0
 	 */	
