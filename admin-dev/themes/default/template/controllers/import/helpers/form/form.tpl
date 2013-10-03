@@ -67,20 +67,31 @@
 				<a href="#upload_file_import" id="upload_file_import_link" class="button"><img src="../img/admin/add.gif" alt="Uplaod" title="Upload" />{l s='Upload'}</a>
 			</div>
 			<div style="width:50%; margin: 0 auto;">
-				<a href="#" onclick="$('#sample_files_import').slideToggle(); return false;">{l s='Click to view our sample import csv files.'}</a>
-				<ul id="sample_files_import" style="display:none">
-					<li><a href="../docs/csv_import/categories_import.csv">{l s='Sample Categories file'}</a></li>
-					<li><a href="../docs/csv_import/products_import.csv">{l s='Sample Products file'}</a></li>
-					<li><a href="../docs/csv_import/combinations_import.csv">{l s='Sample Combinations file'}</a></li>
-					<li><a href="../docs/csv_import/customers_import.csv">{l s='Sample Customers file'}</a></li>
-					<li><a href="../docs/csv_import/addresses_import.csv">{l s='Sample Addresses file'}</a></li>
-					<li><a href="../docs/csv_import/manufacturers_import.csv">{l s='Sample Manufacturers file'}</a></li>
-					<li><a href="../docs/csv_import/suppliers_import.csv">{l s='Sample Suppliers file'}</a></li>
-					{if $PS_ADVANCED_STOCK_MANAGEMENT}
-						<li><a href="../docs/csv_import/supply_orders_import.csv">{l s='Supply Orders sample file'}</a></li>
-						<li><a href="../docs/csv_import/supply_orders_details_import.csv">{l s='Supply Orders Details sample file'}</a></li>
-					{/if}
-				</ul>
+				<div style="width:50%; display: inline-block; float :left;">
+					<a href="#" onclick="$('#sample_files_import').slideToggle(); return false;">{l s='Click to view our sample import csv files.'}</a>
+					<ul id="sample_files_import" style="display:none;">
+						<li><a class="_blank" href="../docs/csv_import/categories_import.csv">{l s='Sample Categories file'}</a></li>
+						<li><a class="_blank" href="../docs/csv_import/products_import.csv">{l s='Sample Products file'}</a></li>
+						<li><a class="_blank" href="../docs/csv_import/combinations_import.csv">{l s='Sample Combinations file'}</a></li>
+						<li><a class="_blank" href="../docs/csv_import/customers_import.csv">{l s='Sample Customers file'}</a></li>
+						<li><a class="_blank" href="../docs/csv_import/addresses_import.csv">{l s='Sample Addresses file'}</a></li>
+						<li><a class="_blank" href="../docs/csv_import/manufacturers_import.csv">{l s='Sample Manufacturers file'}</a></li>
+						<li><a class="_blank" href="../docs/csv_import/suppliers_import.csv">{l s='Sample Suppliers file'}</a></li>
+						{if $PS_ADVANCED_STOCK_MANAGEMENT}
+							<li><a class="_blank" href="../docs/csv_import/supply_orders_import.csv">{l s='Supply Orders sample file'}</a></li>
+							<li><a class="_blank" href="../docs/csv_import/supply_orders_details_import.csv">{l s='Supply Orders Details sample file'}</a></li>
+						{/if}
+					</ul>
+				</div>
+				<div style="width:50%; float:left;">
+					<a href="#" onclick="$('#csv_files_import').slideToggle(); return false;">{l s='Click to view your csv files.'}</a>
+					<ul id="csv_files_import" style="display:none;">
+							{foreach $files_to_import AS $filename}
+								<li><a href="{$current}&token={$token}&csvfilename={$filename|@base64_encode}">{$filename}</a>&nbsp;&nbsp;
+<a href="{$current}&token={$token}&csvfilename={$filename|@base64_encode}&delete=1"><img src="../img/admin/delete.gif" /></a></li>
+							{/foreach}
+					</ul>
+				</div>
 				<div class="clear">&nbsp;</div>
 			</div>
 			<label class="clear">{l s='What kind of entity would you like to import?'} </label>

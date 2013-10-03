@@ -7,9 +7,9 @@
 		<language iso_code="fi" />
 	</languages>
 	<taxes>
-		<tax id="1" name="ALV FI 23%" rate="23" />
-		<tax id="2" name="ALV FI 13%" rate="13" />
-		<tax id="3" name="ALV FI 9%" rate="9" />
+		<tax id="1" name="ALV FI 24%" rate="24" />
+		<tax id="2" name="ALV FI 14%" rate="14" />
+		<tax id="3" name="ALV FI 10%" rate="10" />
 		
 		<taxRulesGroup name="FI Standard Rate (23%)">
 			<taxRule iso_code_country="be" id_tax="1" />
