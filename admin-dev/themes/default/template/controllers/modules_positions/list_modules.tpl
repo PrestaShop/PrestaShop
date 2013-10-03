@@ -27,7 +27,15 @@
 	var token = '{$token}';
 	var come_from = 'AdminModulesPositions';
 </script>
-<script type="text/javascript" src="../js/admin-dnd.js"></script>
+<script type="text/javascript" src="../js/jquery/jquery.sortable.js"></script>
+<style type="text/css">
+	li.sortable-placeholder {
+		border: 1px dashed #CCC;
+		background: #8EB1D7;
+		list-style: none;
+		margin-bottom: 4px;
+	}
+</style>
 
 {include file="toolbar.tpl" toolbar_btn=$toolbar_btn toolbar_scroll=$toolbar_scroll title=$title}
 <div>{block name="leadin"}{/block}</div>
@@ -82,42 +90,42 @@
 
 	{if $hook['module_count']}
 						<section class="module_list">
-		{foreach $hook['modules'] as $position => $module}
-			{if isset($module['instance'])}
-							<div id="{$hook['id_hook']}_{$module['instance']->id}" class="module_list_item">
+						<ul{if $hook['modules']|count > 1} class="sortable"{/if}>
+
+						{foreach $hook['modules'] as $position => $module}
+							{if isset($module['instance'])}
+							<li id="{$hook['id_hook']}_{$module['instance']->id}" class="module_list_item">
 								<div class="module_col_select">
 									<input type="checkbox" id="mod{$hook['id_hook']}_{$module['instance']->id}" class="hook{$hook['id_hook']}" onclick="hookCheckboxes({$hook['id_hook']}, 1, this)" name="unhooks[]" value="{$hook['id_hook']}_{$module['instance']->id}"/>
 								</div>
-				{if !$display_key}
+								{if !$display_key}
 								<div class="module_col_position" {if $can_move && $hook['module_count'] >= 2}class="dragHandle"{/if} id="td_{$hook['id_hook']}_{$module['instance']->id}">
 									<span class="positions">{$module@iteration}</span>
-					{if $can_move}
+									{if $can_move}
 									<div class="btn-group-vertical">
-									<a class="btn btn-default btn-xs" {if {$module@iteration} == 1} disabled{/if} href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&direction=0&token={$token}&changePosition#{$hook['name']}">
-										<i class="icon-chevron-up"></i>
-									</a>
+										<a class="btn btn-default btn-xs" {if {$module@iteration} == 1} disabled{/if} href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&direction=0&token={$token}&changePosition#{$hook['name']}">
+											<i class="icon-chevron-up"></i>
+										</a>
 
-									<a class="btn btn-default btn-xs" {if {$module@iteration} == count($hook['modules'])}disabled{/if} href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&direction=1&token={$token}&changePosition#{$hook['name']}">
-										<i class="icon-chevron-down"></i>
-									</a>
+										<a class="btn btn-default btn-xs" {if {$module@iteration} == count($hook['modules'])}disabled{/if} href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&direction=1&token={$token}&changePosition#{$hook['name']}">
+											<i class="icon-chevron-down"></i>
+										</a>
 									</div>
-					{/if}
+									{/if}
 								</div>
-				{/if}
-<div class="module_col_icon">
-	<img src="../modules/{$module['instance']->name}/logo.png" alt="{$module['instance']->name|stripslashes}" />
-</div>
-<div class="module_col_infos"><span class="module_name">
-											{$module['instance']->displayName|stripslashes} {if $module['instance']->version}
-											<small class="text-muted">&nbsp;-&nbsp;v{if $module['instance']->version|intval == $module['instance']->version}{sprintf('%.1f', $module['instance']->version)}{else}{$module['instance']->version|floatval}{/if}</small>{/if}
-										</span>
-										<div class="module_description">{$module['instance']->description}</div></div>
-<div class="module_col_actions">
+								{/if}
+								<div class="module_col_icon">
+									<img src="../modules/{$module['instance']->name}/logo.png" alt="{$module['instance']->name|stripslashes}" />
+								</div>
+								<div class="module_col_infos">
+									<span class="module_name">
+										{$module['instance']->displayName|stripslashes} {if $module['instance']->version}
+										<small class="text-muted">&nbsp;-&nbsp;v{if $module['instance']->version|intval == $module['instance']->version}{sprintf('%.1f', $module['instance']->version)}{else}{$module['instance']->version|floatval}{/if}</small>{/if}
+									</span>
+									<div class="module_description">{$module['instance']->description}</div>
+								</div>
+								<div class="module_col_actions">
 									<!-- <div class="lab_modules_positions" for="mod{$hook['id_hook']}_{$module['instance']->id}"></div> -->
-										
-										
-									
-
 									<div class="btn-group">
 										<a class="btn btn-default" href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&editGraft{if $display_key}&show_modules={$display_key}{/if}&token={$token}">
 											<i class="icon-pencil"></i>
@@ -136,11 +144,10 @@
 										</ul>
 									</div>
 								</div>
-
-								</div>
-							
-			{/if}
-		{/foreach}
+							</li>
+							{/if}
+						{/foreach}
+						</ul>
 						</section>
 	{else}
 							<!-- <p>{l s='No module was found for this hook.'}</p> -->
@@ -172,3 +179,31 @@
 		</div>
 	</div>
 </div>
+<script type="text/javascript">
+	$('.sortable').sortable({
+		forcePlaceholderSize: true
+	}).bind('sortupdate', function(e, ui) {
+		var ids = ui.item.attr('id').split('_');
+		var way = (ui.start_index < ui.end_index)? 1 : 0;
+		var data = ids[0]+'[]=';
+
+		$.each(e.target.children, function(index, element) {
+			data += '&'+ids[0]+'[]='+$(element).attr('id');
+		});
+
+		$.ajax({
+			type: 'POST',
+			headers: { "cache-control": "no-cache" },
+			async: false,
+			url: currentIndex + '&token=' + token + '&' + 'rand=' + new Date().getTime(),
+			data: data + '&action=updatePositions&id_hook='+ids[0]+'&id_module='+ids[1]+'&way='+way+'&ajax=1' ,
+			success: function(data) {
+				start = 0;
+
+				$.each(e.target.children, function(index, element) {
+					$(element).find('.positions').html(++start);
+				});
+			}
+		});
+	});
+</script>
