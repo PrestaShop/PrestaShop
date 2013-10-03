@@ -38,6 +38,11 @@
 	var defaults_order_state = new Array();
 	var customization_errors = false;
 	var pic_dir = '{$pic_dir}';
+	var currency_format = 5;
+	var currency_sign = '';
+	var currency_blank = false;
+	var priceDisplayPrecision = 2;
+	
 	{foreach from=$defaults_order_state key='module' item='id_order_state'}
 		defaults_order_state['{$module}'] = '{$id_order_state}';
 	{/foreach}
@@ -505,7 +510,6 @@
 				}
 				displaySummary(res);
 				resetBind();
-				updateCurrencySign();
 			}
 		});
 	}
@@ -652,11 +656,12 @@
 			var id_product = Number(this.id_product);
 			var id_product_attribute = Number(this.id_product_attribute);
 			cart_quantity[Number(this.id_product)+'_'+Number(this.id_product_attribute)+'_'+Number(this.id_customization)] = this.cart_quantity;
-			cart_content += '<tr><td><img src="'+this.image_link+'" title="'+this.name+'" /></td><td>'+this.name+'<br />'+this.attributes_small+'</td><td>'+this.reference+'</td><td><input type="text" size="7" rel="'+this.id_product+'_'+this.id_product_attribute+'" class="product_unit_price" value="'+this.price+'" />&nbsp;<span class="currency_sign"></span></td><td>';
+			cart_content += '<tr><td><img src="'+this.image_link+'" title="'+this.name+'" /></td><td>'+this.name+'<br />'+this.attributes_small+'</td><td>'+this.reference+'</td><td><input type="text" size="7" rel="'+this.id_product+'_'+this.id_product_attribute+'" class="product_unit_price" value="' + formatCurrency(parseFloat(this.price.replace(',', '.')), currency_format, currency_sign, currency_blank) + '" /></td><td>';
 			cart_content += (!this.id_customization ? '<div style="float:left;"><a href="#" class="increaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" ><img src="../img/admin/up.gif" /></a><br /><a href="#" class="decreaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'"><img src="../img/admin/down.gif" /></a></div>' : '');
 			cart_content += (!this.id_customization ? '<div style="float:left;"><input type="text" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" class="cart_quantity" size="2" value="'+this.cart_quantity+'" />' : '');
 			cart_content += (!this.id_customization ? '<a href="#" class="delete_product" rel="delete_'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" ><img src="../img/admin/delete.gif" /></a></div>' : '');
-			cart_content += '</td><td>'+this.total+'&nbsp;<span class="currency_sign"></span></td></tr>';
+			cart_content += '</td><td>' + formatCurrency(parseFloat(this.total.replace(',', '.')), currency_format, currency_sign, currency_blank) + '</td></tr>';
+			
 			if (this.id_customization && this.id_customization != 0)
 			{
 				$.each(this.customized_datas[this.id_product][this.id_product_attribute][id_address_delivery], function() {
@@ -712,6 +717,11 @@
 
 	function displaySummary(jsonSummary)
 	{
+		currency_format = jsonSummary.currency.format;
+		currency_sign = jsonSummary.currency.sign;
+		currency_blank = jsonSummary.currency.blank;
+		priceDisplayPrecision = jsonSummary.currency.decimals ? 2 : 0;
+	
 		updateCartProducts(jsonSummary.summary.products, jsonSummary.summary.gift_products, jsonSummary.cart.id_address_delivery);
 		updateCartVouchers(jsonSummary.summary.discounts);
 		updateAddressesList(jsonSummary.addresses, jsonSummary.cart.id_address_delivery, jsonSummary.cart.id_address_invoice);
@@ -737,20 +747,19 @@
 			$('#free_shipping').removeAttr('checked');
 
 		$('#gift_message').html(jsonSummary.cart.gift_message);
-		if(!changed_shipping_price)
-			$('#shipping_price').html('<b>'+jsonSummary.summary.total_shipping+'</b>');
+		if (!changed_shipping_price)
+			$('#shipping_price').html('<b>' + formatCurrency(parseFloat(jsonSummary.summary.total_shipping), currency_format, currency_sign, currency_blank) + '</b>');
 		shipping_price_selected_carrier = jsonSummary.summary.total_shipping;
-
-		$('#total_vouchers').html(jsonSummary.summary.total_discounts_tax_exc);
-		$('#total_shipping').html(jsonSummary.summary.total_shipping_tax_exc);
-		$('#total_taxes').html(jsonSummary.summary.total_tax);
-		$('#total_without_taxes').html(jsonSummary.summary.total_price_without_tax);
-		$('#total_with_taxes').html(jsonSummary.summary.total_price);
-		$('#total_products').html(jsonSummary.summary.total_products);
+		
+		$('#total_vouchers').html(formatCurrency(parseFloat(jsonSummary.summary.total_discounts_tax_exc.replace(',', '.')), currency_format, currency_sign, currency_blank));
+		$('#total_shipping').html(formatCurrency(parseFloat(jsonSummary.summary.total_shipping_tax_exc.replace(',', '.')), currency_format, currency_sign, currency_blank));
+		$('#total_taxes').html(formatCurrency(parseFloat(jsonSummary.summary.total_tax.replace(',', '.')), currency_format, currency_sign, currency_blank));
+		$('#total_without_taxes').html(formatCurrency(parseFloat(jsonSummary.summary.total_price_without_tax.replace(',', '.')), currency_format, currency_sign, currency_blank));
+		$('#total_with_taxes').html(formatCurrency(parseFloat(jsonSummary.summary.total_price.replace(',', '.')), currency_format, currency_sign, currency_blank));
+		$('#total_products').html(formatCurrency(parseFloat(jsonSummary.summary.total_products.replace(',', '.')), currency_format, currency_sign, currency_blank));
 		id_currency = jsonSummary.cart.id_currency;
 		$('#id_currency option').removeAttr('selected');
 		$('#id_currency option[value="'+id_currency+'"]').attr('selected', true);
-		updateCurrencySign();
 		id_lang = jsonSummary.cart.id_lang;
 		$('#id_lang option').removeAttr('selected');
 		$('#id_lang option[value="'+id_lang+'"]').attr('selected', true);
@@ -778,21 +787,21 @@
 				qty: qty,
 				id_customer: id_customer,
 				id_cart: id_cart,
-				},
+			},
 			success : function(res)
 			{
-					displaySummary(res);
-					var errors = '';
-					if(res.errors.length)
-					{
-						$.each(res.errors, function() {
-							errors += this+'<br />';
-						});
-						$('#products_err').show();
-					}
-					else
-						$('#products_err').hide();
-					$('#products_err').html(errors);
+				displaySummary(res);
+				var errors = '';
+				if (res.errors.length)
+				{
+					$.each(res.errors, function() {
+						errors += this + '<br />';
+					});
+					$('#products_err').show();
+				}
+				else
+					$('#products_err').hide();
+				$('#products_err').html(errors);
 			}
 		});
 	}
@@ -886,11 +895,6 @@
 				displaySummary(res);
 			}
 		});
-	}
-
-	function updateCurrencySign()
-	{
-		$('.currency_sign').html(currencies[id_currency]);
 	}
 
 	function sendMailToCustomer()
@@ -1184,7 +1188,7 @@
 				</select>
 			</p>
 			<p>
-				<label for="shipping_price">{l s='Shipping price'}</label> <span id="shipping_price"  name="shipping_price"></span>&nbsp;<span class="currency_sign"></span>&nbsp;
+				<label for="shipping_price">{l s='Shipping price'}</label> <span id="shipping_price"  name="shipping_price"></span>
 			</p>
 			<p>
 				<label for="free_shipping">{l s='Free shipping'}</label>
@@ -1208,12 +1212,12 @@
 	<div id="send_email_feedback"></div>
 	<div id="cart_summary" style="clear:both;float:left;">
 		<ul>
-			<li><span class="total_cart">{l s='Total products'}</span><span id="total_products"></span><span class="currency_sign"></span></li>
-			<li><span class="total_cart">{l s='Total vouchers'}</span><span id="total_vouchers"></span><span class="currency_sign"></span></li>
-			<li><span class="total_cart">{l s='Total shipping'}</span><span id="total_shipping"></span><span class="currency_sign"></span></li>
-			<li><span class="total_cart">{l s='Total taxes'}</span><span id="total_taxes"></span><span class="currency_sign"></span></li>
-			<li><span class="total_cart">{l s='Total without taxes'}</span><span id="total_without_taxes"></span><span class="currency_sign"></span></li>
-			<li><span class="total_cart">{l s='Total with taxes'}</span><span id="total_with_taxes"></span><span class="currency_sign"></span></li>
+			<li><span class="total_cart">{l s='Total products'}</span><span id="total_products"></span></li>
+			<li><span class="total_cart">{l s='Total vouchers'}</span><span id="total_vouchers"></span></li>
+			<li><span class="total_cart">{l s='Total shipping'}</span><span id="total_shipping"></span></li>
+			<li><span class="total_cart">{l s='Total taxes'}</span><span id="total_taxes"></span></li>
+			<li><span class="total_cart">{l s='Total without taxes'}</span><span id="total_without_taxes"></span></li>
+			<li><span class="total_cart">{l s='Total with taxes'}</span><span id="total_with_taxes"></span></li>
 		</ul>
 	</div>
 	<div class="order_message_right">

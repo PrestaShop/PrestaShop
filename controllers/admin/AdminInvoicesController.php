@@ -44,7 +44,7 @@ class AdminInvoicesControllerCore extends AdminController
 					),
 					'PS_INVOICE_TAXES_BREAKDOWN' => array(
 						'title' => $this->l('Enable the breakdown of taxes on the invoice:'),
-						'desc' => $this->l('Enable the breakdown of taxes on the invoice when there are computed (like in QC)'),
+						'desc' => $this->l('Show a breakdown of taxes by tax rate on the invoice when there are several taxes combined'),
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
