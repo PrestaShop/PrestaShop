@@ -925,11 +925,33 @@
 		var addresses_invoice_options = '';
 		var address_invoice_detail = '';
 		var address_delivery_detail = '';
+		var delivery_address_edit_link = '';
+		var invoice_address_edit_link = '';
+
 		$.each(addresses, function() {
 			if (this.id_address == id_address_invoice)
-				address_invoice_detail = this.company+' '+this.firstname+' '+this.lastname+'<br />'+this.address1+'<br />'+this.address2+'<br />'+this.postcode+' '+this.city+' '+this.country;
+			{
+				address_invoice_detail = this.company+' '+this.firstname+' '+this.lastname+'<br />'+this.address1+'<br />'+this.address2+'<br />'+this.postcode+' '+this.city;
+
+				if (this.state != null)
+					address_invoice_detail += ' '+this.state;
+
+				address_invoice_detail += '</br>'+this.country;
+
+				invoice_address_edit_link = "{$link->getAdminLink('AdminAddresses')}&id_address="+this.id_address+"&updateaddress&realedit=1&liteDisplaying=1&submitFormAjax=1#";
+			}
+
 			if(this.id_address == id_address_delivery)
-				address_delivery_detail = this.company+' '+this.firstname+' '+this.lastname+'<br />'+this.address1+'<br />'+this.address2+'<br />'+this.postcode+' '+this.city+' '+this.country;
+			{
+				address_delivery_detail = this.company+' '+this.firstname+' '+this.lastname+'<br />'+this.address1+'<br />'+this.address2+'<br />'+this.postcode+' '+this.city;
+
+				if (this.state != null)
+					address_delivery_detail += ' '+this.state;
+
+				address_delivery_detail += '</br>'+this.country;
+
+				delivery_address_edit_link = "{$link->getAdminLink('AdminAddresses')}&id_address="+this.id_address+"&updateaddress&realedit=1&liteDisplaying=1&submitFormAjax=1#";
+			}
 
 			addresses_delivery_options += '<option value="'+this.id_address+'" '+(this.id_address == id_address_delivery ? 'selected="selected"' : '')+'>'+this.alias+'</option>';
 			addresses_invoice_options += '<option value="'+this.id_address+'" '+(this.id_address == id_address_invoice ? 'selected="selected"' : '')+'>'+this.alias+'</option>';
@@ -949,6 +971,8 @@
 		$('#id_address_invoice').html(addresses_invoice_options);
 		$('#address_delivery_detail').html(address_delivery_detail);
 		$('#address_invoice_detail').html(address_invoice_detail);
+		$('#edit_delivery_address').attr('href', delivery_address_edit_link);
+		$('#edit_invoice_address').attr('href', invoice_address_edit_link);
 	}
 
 	function updateAddresses()
@@ -1159,14 +1183,14 @@
 	<div id="address_delivery">
 		<h3>{l s='Delivery'}</h3>
 		<select id="id_address_delivery" name="id_address_delivery">
-		</select>
+		</select>&nbsp;<a class="fancybox" id="edit_delivery_address" href="#"><img src="../img/admin/edit.gif" /></a>
 		<div id="address_delivery_detail">
 		</div>
 	</div>
 	<div id="address_invoice">
 		<h3>{l s='Invoice'}</h3>
 		<select id="id_address_invoice" name="id_address_invoice">
-		</select>
+		</select>&nbsp;<a class="fancybox" id="edit_invoice_address" href="#"><img src="../img/admin/edit.gif" /></a>
 		<div id="address_invoice_detail">
 		</div>
 	</div>
