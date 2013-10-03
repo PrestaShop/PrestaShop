@@ -183,7 +183,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->_select .= ' , cp.`position`, ';
 		}
 
-		$this->_select .= ', IF((SELECT COUNT(psp.id_specific_price) FROM `'._DB_PREFIX_.'specific_price` psp WHERE psp.id_specific_price = a.id_product) > 0, 1, 0) as discount';
+		$this->_select .= ', IF((SELECT COUNT(psp.id_specific_price) FROM `'._DB_PREFIX_.'specific_price` psp WHERE psp.id_product = a.id_product) > 0, 1, 0) as discount';
 
 		$this->_group = 'GROUP BY '.$alias.'.id_product';
 
