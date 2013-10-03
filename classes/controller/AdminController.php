@@ -841,7 +841,7 @@ class AdminControllerCore extends Controller
 							$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=4&token='.$this->token;
 
 						// Default behavior (save and back)
-						if (empty($this->redirect_after))
+						if (empty($this->redirect_after) && $this->redirect_after !== false)
 							$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=4&token='.$this->token;
 					}
 					Logger::addLog(sprintf($this->l('%s edition'), $this->className), 1, null, $this->className, (int)$object->id, true, (int)$this->context->employee->id);
@@ -2427,7 +2427,12 @@ class AdminControllerCore extends Controller
 			$class_name = $this->className;
 
 		$object = new $class_name();
-		$definition = ObjectModel::getDefinition($class_name);
+
+		if (method_exists($this, 'getValidationRules'))
+			$definition = $this->getValidationRules();
+		else
+			$definition = ObjectModel::getDefinition($class_name);
+
 		$default_language = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
 
 		foreach ($definition['fields'] as $field => $def)

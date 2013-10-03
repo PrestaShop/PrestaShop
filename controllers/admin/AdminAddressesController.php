@@ -299,6 +299,9 @@ class AdminAddressesControllerCore extends AdminController
 
 	public function processSave()
 	{
+		if (Tools::getValue('submitFormAjax'))
+			$this->redirect_after = false;
+
 		// Transform e-mail in id_customer for parent processing
 		if (Validate::isEmail(Tools::getValue('email')))
 		{
