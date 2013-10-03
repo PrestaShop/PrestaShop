@@ -69,6 +69,7 @@ class Watermark extends Module
 
 	public function install()
 	{
+		$this->writeHtaccessSection();
 		if (!parent::install() || !$this->registerHook('watermark'))
 			return false;
 		Configuration::updateValue('WATERMARK_TRANSPARENCY', 60);
@@ -79,6 +80,7 @@ class Watermark extends Module
 
 	public function uninstall()
 	{
+		$this->removeHtaccessSection();
 		return (parent::uninstall()
 			&& Configuration::deleteByName('WATERMARK_TYPES')
 			&& Configuration::deleteByName('WATERMARK_TRANSPARENCY')
@@ -207,9 +209,51 @@ class Watermark extends Module
 			</fieldset>
 		</form>';
 	}
+	
+	public function getAdminDir()
+	{
+		$admin_dir = str_replace('\\', '/', _PS_ADMIN_DIR_);
+		$admin_dir = explode('/', $admin_dir);
+		$len = count($admin_dir);
+		return $len > 1 ? $admin_dir[$len - 1] : _PS_ADMIN_DIR_;
+	}
+	
+	public function removeHtaccessSection()
+	{
+		$key1 = "\n# start ~ module watermark section";
+		$key2 = "# end ~ module watermark section\n";
+		$path = _PS_ROOT_DIR_ . '/.htaccess';
+		if (file_exists($path) && is_writable($path)) {
+			$s = file_get_contents($path);
+			$p1 = strpos($s, $key1);
+			$p2 = strpos($s, $key2, $p1);
+			if ($p1 === false || $p2 === false) return false;
+			$s = substr($s, 0, $p1) . substr($s, $p2 + strlen($key2));
+			file_put_contents($path, $s);
+		}
+		return true;
+	}
+
+	public function writeHtaccessSection()
+	{
+		$admin_dir = $this->getAdminDir();
+		$source = "\n# start ~ module watermark section
+Options +FollowSymLinks
+RewriteEngine On
+RewriteCond expr \"! %{HTTP_REFERER} -strmatch '*://%{HTTP_HOST}*/$admin_dir/*'\"
+RewriteRule [0-9/]+/[0-9]+\\.jpg$ - [F]
+# end ~ module watermark section\n";
+
+		$path = _PS_ROOT_DIR_ . '/.htaccess';
+		file_put_contents($path, $source, FILE_APPEND);
+	}
 
 	public function getContent()
 	{
+		//Modify htaccess to prevent downlaod of original pictures
+		$this->removeHtaccessSection();
+		$this->writeHtaccessSection();
+		
 		$this->_html = '<h2>'.$this->displayName.'</h2>';
 
 		if (Tools::isSubmit('btnSubmit'))
