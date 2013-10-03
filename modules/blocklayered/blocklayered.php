@@ -1940,7 +1940,7 @@ class BlockLayered extends Module
 									$(\'#error-treeview\').hide();
 								updElements(0, 0);
 							},
-							\'onComplete\': function() {
+							\'afterLoad\': function() {
 								lock_treeview_hidding = true;
 								$(\'#categories-treeview\').parent().parent().show();
 								if($($(\'#categories-treeview li\')[0]).attr(\'cleaned\'))
@@ -1950,8 +1950,7 @@ class BlockLayered extends Module
 								$($(\'#categories-treeview li span\')[0]).trigger(\'click\');
 								$($(\'#categories-treeview li\')[0]).children(\'div\').remove();
 								$($(\'#categories-treeview li\')[0]).
-									removeClass(\'collapsable lastCollapsable\').
-									addClass(\'last static\');
+									removeClass(\'collapsable lastCollapsable\')
 								$(\'.hitarea\').live(\'click\', function(it)
 								{
 									$(this).parent().find(\'> .category_label\').click();
