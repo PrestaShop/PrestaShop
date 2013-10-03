@@ -27,7 +27,7 @@
 	var token = '{$token}';
 	var come_from = 'AdminModulesPositions';
 </script>
-<script type="text/javascript" src="../js/jquery/jquery.sortable.js"></script>
+<script type="text/javascript" src="../js/vendor/jquery.sortable.js"></script>
 <style type="text/css">
 	li.sortable-placeholder {
 		border: 1px dashed #CCC;
