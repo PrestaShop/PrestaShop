@@ -1949,12 +1949,6 @@ class BlockLayered extends Module
 								$($(\'#categories-treeview li\')[0]).removeClass(\'static\');
 								$($(\'#categories-treeview li span\')[0]).trigger(\'click\');
 								$($(\'#categories-treeview li\')[0]).children(\'div\').remove();
-								$($(\'#categories-treeview li\')[0]).
-									removeClass(\'collapsable lastCollapsable\')
-								$(\'.hitarea\').live(\'click\', function(it)
-								{
-									$(this).parent().find(\'> .category_label\').click();
-								});
 							}
 						});
 
