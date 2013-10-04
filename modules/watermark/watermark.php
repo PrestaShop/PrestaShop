@@ -97,7 +97,7 @@ class Watermark extends Module
 		
 		if (empty($transparency))
 			$this->_postErrors[] = $this->l('Transparency required.');
-		elseif ($transparency < 0 || $transparency > 100)
+		elseif ($transparency < 1 || $transparency > 100)
 			$this->_postErrors[] = $this->l('Transparency is not in allowed range.');
 
 		if (empty($yalign))
@@ -174,7 +174,7 @@ class Watermark extends Module
 						</td>
 					</tr>
 					<tr>
-						<td width="270" style="height: 35px;">'.$this->l('Watermark transparency (0-100)').'</td>
+						<td width="270" style="height: 35px;">'.$this->l('Watermark transparency (1-100)').'</td>
 					    <td><input type="text" name="transparency" value="'.(float)Tools::getValue('transparency', Configuration::get('WATERMARK_TRANSPARENCY')).'" style="width: 30px;" /></td>
 					</tr>
 					<tr><td width="270" style="height: 35px;">'.$this->l('Watermark X align').'</td>
