@@ -368,7 +368,7 @@
 													{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
 												/>
 												<label
-													class="t radio"
+													class="radio"
 													{if $value.value == 1}
 														for="{$input.name}_on"
 													{else}

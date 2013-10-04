@@ -134,26 +134,38 @@
 	{/if}
 	</td>
 	<td class="partial_refund_fields current-edit" style="display:none;">
-		<div>
-			{l s='Quantity:'}
+
+		<div class="form-group">
+			<label class="control-label">
+				{l s='Quantity:'}
+			</label>
+			<div class="input-group">
+				<input onchange="checkPartialRefundProductQuantity(this)" type="text" name="partialRefundProductQuantity[{{$product['id_order_detail']}}]" value="0" />
+				<div class="input-group-addon">0/{$productQuantity-$product['product_quantity_refunded']}</div>
+			</div>
 		</div>
-		<div>
-			<input onchange="checkPartialRefundProductQuantity(this)" type="text" name="partialRefundProductQuantity[{{$product['id_order_detail']}}]" value="0" />
-			 0/{$productQuantity-$product['product_quantity_refunded']}
+
+		<div class="form-group">
+			<label class="control-label">
+				{l s='Amount:'}
+			</label>
+			<div class="input-group">
+				<div class="input-group-addon">
+					{$currency->prefix}
+					{$currency->suffix}
+				</div>
+				<input onchange="checkPartialRefundProductAmount(this)" type="text" name="partialRefundProduct[{$product['id_order_detail']}]" />
+			</div>
 		</div>
-		<div>
-			{l s='Amount:'}
+
+		<div class="form-group">
+			{if !empty($product['amount_refund']) && $product['amount_refund'] > 0}
+				({l s='%s refund' sprintf=$product['amount_refund']})
+			{/if}
+			<input type="hidden" value="{$product['quantity_refundable']}" class="partialRefundProductQuantity" />
+			<input type="hidden" value="{$product['amount_refundable']}" class="partialRefundProductAmount" />		
 		</div>
-		<div>
-			{$currency->prefix}
-			<input onchange="checkPartialRefundProductAmount(this)" type="text" name="partialRefundProduct[{$product['id_order_detail']}]" />
-			{$currency->suffix}
-		</div>
-		{if !empty($product['amount_refund']) && $product['amount_refund'] > 0}
-			({l s='%s refund' sprintf=$product['amount_refund']})
-		{/if}
-		<input type="hidden" value="{$product['quantity_refundable']}" class="partialRefundProductQuantity" />
-		<input type="hidden" value="{$product['amount_refundable']}" class="partialRefundProductAmount" />
+	
 	</td>
 	{if ($can_edit && !$order->hasBeenDelivered())}
 	<td class="product_invoice" colspan="2" style="display: none;">
@@ -198,7 +210,6 @@
 			{l s='Cancel'}
 		</button>
 
-		
 	</td>
 	{/if}
 </tr>
