@@ -2178,7 +2178,7 @@ class AdminControllerCore extends Controller
 		elseif (empty($start) && isset($this->context->cookie->{$this->list_id.'_start'}) && Tools::isSubmit('export'.$this->table))
 			$start = $this->context->cookie->{$this->list_id.'_start'};
 		else
-			$start = $this->_listTotal;
+			$start = 0;
 
 		$this->context->cookie->{$this->list_id.'_start'} = $start;
 
