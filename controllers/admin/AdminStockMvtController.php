@@ -159,6 +159,7 @@ class AdminStockMvtControllerCore extends AdminController
 							LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.id_product_attribute = stock.id_product_attribute)
 							LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (
 								al.id_attribute = pac.id_attribute
+								AND pac.id_product_attribute <> 0
 								AND al.id_lang = '.(int)$this->context->language->id.'
 							)';
 		// overrides group

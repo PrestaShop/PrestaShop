@@ -7,25 +7,29 @@
 	</label>
 	<div class="col-lg-8">	
 		{foreach from=$languages item=language}
+		{if $languages|count > 1}
 		<div class="row">
 			<div class="translatable-field lang-{$language.id_lang}" {if $language.id_lang != $id_lang_default}style="display:none"{/if}>
-				<div class="input-group col-lg-12">
+				<div class="col-lg-9">
+		{/if}
 					<input id="name_{$language.id_lang|intval}" type="text"  name="name_{$language.id_lang|intval}" value="{$currentTab->getFieldValue($currentObject, 'name', $language.id_lang|intval)|escape:html:'UTF-8'}">
-					<div class="input-group-btn">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-							<img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt="">
-							{$language.iso_code} 
-							<span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu">
-							{foreach from=$languages item=language}
-							<li><a href="javascript:hideOtherLanguage({$language.id_lang});" tabindex="-1"><img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt=""> {$language.name}</a></li>
-							{/foreach}
-						</ul>
-					</div>
+		{if $languages|count > 1}
 				</div>
+				<div class="col-lg-2">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+						<img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt="">
+						{$language.iso_code} 
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu">
+						{foreach from=$languages item=language}
+						<li><a href="javascript:hideOtherLanguage({$language.id_lang});" tabindex="-1"><img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt=""> {$language.name}</a></li>
+						{/foreach}
+					</ul>
+				</div>		
 			</div>
 		</div>
+		{/if}
 		{/foreach}
 	</div>
 </div>

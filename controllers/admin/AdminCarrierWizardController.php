@@ -142,9 +142,9 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$bread_extended = array_unique($this->breadcrumbs);
 
 		if (Tools::getValue('id_carrier'))
-			$bread_extended[1] = $this->l('Edit');
+			$bread_extended[2] = $this->l('Edit');
 		else
-			$bread_extended[1] = $this->l('Add new');
+			$bread_extended[2] = $this->l('Add new');
 
 		$this->toolbar_title = $bread_extended;
 	}
