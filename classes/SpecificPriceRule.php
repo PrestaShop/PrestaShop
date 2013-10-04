@@ -267,7 +267,7 @@ class SpecificPriceRuleCore extends ObjectModel
 	public static function applyRuleToProduct($id_rule, $id_product, $id_product_attribute = null)
 	{
 		$rule = new SpecificPriceRule((int)$id_rule);
-		if (!Validate::isLoadedObject($rule))
+		if (!Validate::isLoadedObject($rule) || !$id_product)
 			return false;
 
 		$specific_price = new SpecificPrice();
