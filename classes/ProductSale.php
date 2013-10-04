@@ -86,7 +86,8 @@ class ProductSaleCore
 					MAX(image_shop.`id_image`) id_image, il.`legend`,
 					ps.`quantity` AS sales, t.`rate`, pl.`meta_keywords`, pl.`meta_title`, pl.`meta_description`,
 					DATEDIFF(p.`date_add`, DATE_SUB(NOW(),
-					INTERVAL '.$interval.' DAY)) > 0 AS new
+					INTERVAL '.$interval.' DAY)) > 0 AS new,
+					IFNULL(pa.minimal_quantity, p.minimal_quantity) as minimal_quantity
 				FROM `'._DB_PREFIX_.'product_sale` ps
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON ps.`id_product` = p.`id_product`
 				'.Shop::addSqlAssociation('product', 'p', false).'
@@ -142,10 +143,12 @@ class ProductSaleCore
 		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
 
 		$sql = 'SELECT p.id_product, pl.`link_rewrite`, pl.`name`, pl.`description_short`, MAX(image_shop.`id_image`) id_image, il.`legend`,
-					ps.`quantity` AS sales, p.`ean13`, p.`upc`, cl.`link_rewrite` AS category
+					ps.`quantity` AS sales, p.`ean13`, p.`upc`, cl.`link_rewrite` AS category, p.show_price, p.available_for_order, p.quantity, p.customizable,
+					IFNULL(pa.minimal_quantity, p.minimal_quantity) as minimal_quantity, p.out_of_stock
 				FROM `'._DB_PREFIX_.'product_sale` ps
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON ps.`id_product` = p.`id_product`
 				'.Shop::addSqlAssociation('product', 'p').'
+				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (ps.`id_product` = pa.`id_product` AND pa.default_on = 1)
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 					ON p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
@@ -166,6 +169,7 @@ class ProductSaleCore
 				GROUP BY product_shop.id_product
 				ORDER BY sales DESC
 				LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
+
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
 			return false;
 
@@ -173,6 +177,13 @@ class ProductSaleCore
 		{
 		 	$row['link'] = $context->link->getProductLink($row['id_product'], $row['link_rewrite'], $row['category'], $row['ean13']);
 		 	$row['id_image'] = Product::defineProductImage($row, $id_lang);
+			$row['allow_oosp'] = Product::isAvailableWhenOutOfStock($row['out_of_stock']);
+			$row['price_tax_exc'] = Product::getPriceStatic(
+						(int)$row['id_product'],
+						false,
+						((isset($row['id_product_attribute']) && !empty($row['id_product_attribute'])) ? (int)$row['id_product_attribute'] : null),
+						(Product::$_taxCalculationMethod == PS_TAX_EXC ? 2 : 6)
+					);
 		}
 		return $result;
 	}
