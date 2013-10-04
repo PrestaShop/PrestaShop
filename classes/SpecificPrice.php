@@ -302,7 +302,7 @@ class SpecificPriceCore extends ObjectModel
 			if (!isset($last_quantity[(int)$specific_price['id_product_attribute']]))
 				 $last_quantity[(int)$specific_price['id_product_attribute']] = $specific_price['from_quantity'];
 			elseif ($last_quantity[(int)$specific_price['id_product_attribute']] == $specific_price['from_quantity'])
-		        break;
+		        continue;
 
 			$last_quantity[(int)$specific_price['id_product_attribute']] = $specific_price['from_quantity'];
             if ($specific_price['from_quantity'] > 1)
