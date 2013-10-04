@@ -34,6 +34,7 @@ class AdminTabsControllerCore extends AdminController
 		$this->context = Context::getContext();
 		$this->multishop_context = Shop::CONTEXT_ALL;
 		$this->table = 'tab';
+		$this->list_id = 'tab';
 		$this->className = 'Tab';
 		$this->lang = true;
 
@@ -85,11 +86,19 @@ class AdminTabsControllerCore extends AdminController
 	public function initPageHeaderToolbar()
 	{
 		$this->page_header_toolbar_title = $this->l('Menus');
-		$this->page_header_toolbar_btn['new_menu'] = array(
-			'href' => self::$currentIndex.'&amp;addtab&amp;token='.$this->token,
-			'desc' => $this->l('Add new menu'),
-			'icon' => 'process-icon-new'
-		);
+
+		if ($this->display == 'details')
+			$this->page_header_toolbar_btn['back_to_list'] = array(
+				'href' => Context::getContext()->link->getAdminLink('AdminTabs'),
+				'desc' => $this->l('Back to list'),
+				'icon' => 'process-icon-back'
+			);
+		else
+			$this->page_header_toolbar_btn['new_menu'] = array(
+				'href' => self::$currentIndex.'&amp;addtab&amp;token='.$this->token,
+				'desc' => $this->l('Add new menu'),
+				'icon' => 'process-icon-new'
+			);
 		
 		parent::initPageHeaderToolbar();
 	}
@@ -212,53 +221,42 @@ class AdminTabsControllerCore extends AdminController
 		return parent::renderList();
 	}
 
-	/**
-	 * method call when ajax request is made with the details row action
-	 * @see AdminController::postProcess()
-	 */
-	public function ajaxProcessDetails()
+	public function initProcess()
 	{
-		if (($id = Tools::getValue('id')))
+		if (Tools::getIsset('details'.$this->table))
 		{
-			// override attributes
-			$this->display = 'list';
-			$this->lang = false;
+			$this->list_id = 'details';
 
+			if (isset($_POST['submitReset'.$this->list_id]))
+				$this->processResetFilters();
+		}
+		else
+			$this->list_id = 'tab';
+
+		return parent::initProcess();
+	}
+
+	public function renderDetails()
+	{
+		if (($id = Tools::getValue('id_tab')))
+		{
+			$this->lang = false;
+			$this->list_id = 'details';
 			$this->addRowAction('edit');
 			$this->addRowAction('delete');
+			$this->toolbar_btn = array();
+			$tab = $this->loadObject($id);
+			$this->toolbar_title = $tab->name[$this->context->employee->id_lang];
 
 			$this->_select = 'b.*';
 			$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'tab_lang` b ON (b.`id_tab` = a.`id_tab` AND b.`id_lang` = '.$this->context->language->id.')';
 			$this->_where = 'AND a.`id_parent` = '.(int)$id;
 			$this->_orderBy = 'position';
-
-			// get list and force no limit clause in the request
-			$this->getList($this->context->language->id);
-
-			// Render list
-			$helper = new HelperList();
-			$helper->actions = $this->actions;
-			$helper->list_skip_actions = $this->list_skip_actions;
-			$helper->no_link = true;
-			$helper->shopLinkType = '';
-			$helper->identifier = $this->identifier;
-			$helper->imageType = $this->imageType;
-			$helper->toolbar_scroll = false;
-			$helper->show_toolbar = false;
-			$helper->orderBy = 'position';
-			$helper->orderWay = 'ASC';
-			$helper->currentIndex = self::$currentIndex;
-			$helper->token = $this->token;
-			$helper->table = $this->table;
-			$helper->position_identifier = $this->position_identifier;
-			// Force render - no filter, form, js, sorting ...
-			$helper->simple_header = true;
-			$content = $helper->generateList($this->_list, $this->fields_list);
-
-			echo Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
+		
+			self::$currentIndex = self::$currentIndex.'&details'.$this->table;
+			$this->processFilter();
+			return parent::renderList();
 		}
-
-		die;
 	}
 
 	public function postProcess()

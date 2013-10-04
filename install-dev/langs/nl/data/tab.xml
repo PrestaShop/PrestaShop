@@ -102,4 +102,5 @@
   <tab id="Stock_Coverage" name="Stock Coverage"/>
   <tab id="Supply_orders" name="Supply orders"/>
   <tab id="Configuration" name="Configuration"/>
+  <tab id="CarrierWizard" name="Carrier"/>
 </entity_tab>

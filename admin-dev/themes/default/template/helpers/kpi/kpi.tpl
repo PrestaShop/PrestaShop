@@ -45,9 +45,9 @@
 		success: function(jsonData){
 			if (!jsonData.has_errors)
 			{
-				if (jsonData.value)
+				if (jsonData.value != undefined)
 					$('#{$id|addslashes} .value').html(jsonData.value);
-				if (jsonData.data)
+				if (jsonData.data != undefined)
 				{
 					$("#{$id|addslashes} .boxchart svg").remove();
 					set_d3_{$id|str_replace:'-':'_'|addslashes}(jsonData.data);

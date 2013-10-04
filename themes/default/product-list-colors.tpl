@@ -22,5 +22,10 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{capture name=title}{l s='Popular' mod='homefeatured'}{/capture}
-{include file="$tpl_dir./product-list-home.tpl" id="homefeatured_block" title=$smarty.capture.title}
+
+
+<ul id="color_to_pick_list" class="clearfix">
+	{foreach from=$colors_list item='color'}
+		<li><a id="color_{$color.id_product_attribute|intval}" class="color_pick" style="background: {$color.color};"></a></li>
+	{/foreach}
+</ul>

@@ -217,7 +217,7 @@ class BlockBestSellers extends Module
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return false;
 
-		if (!($result = ProductSale::getBestSalesLight((int)$params['cookie']->id_lang, 0, 5)))
+		if (!($result = ProductSale::getBestSalesLight((int)$params['cookie']->id_lang, 0, 8)))
 			return (Configuration::get('PS_BLOCK_BESTSELLERS_DISPLAY') ? array() : false);
 
 		$bestsellers = array();

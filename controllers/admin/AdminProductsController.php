@@ -2212,6 +2212,9 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initContent($token = null)
 	{
+		//Required for Features Textarea autosize
+		$this->addJS(_PS_JS_DIR_.'jquery/plugins/jquery.autosize.min.js');
+
 		if ($this->display == 'edit' || $this->display == 'add')
 		{
 			$this->fields_form = array();
