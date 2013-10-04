@@ -44,6 +44,7 @@ class AddressControllerCore extends FrontController
 	{
 		parent::setMedia();
 		$this->addJS(_THEME_JS_DIR_.'tools/statesManagement.js');
+		$this->addJS(_PS_JS_DIR_.'validate.js');
 	}
 
 	/**
@@ -268,6 +269,7 @@ class AddressControllerCore extends FrontController
 
 		// Assign common vars
 		$this->context->smarty->assign(array(
+			'address_validation' => Address::$definition['fields'],
 			'one_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'),
 			'onr_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'), //retro compat
 			'ajaxurl' => _MODULE_DIR_,
@@ -339,8 +341,8 @@ class AddressControllerCore extends FrontController
 	protected function assignAddressFormat()
 	{
 		$id_country = is_null($this->_address)? 0 : (int)$this->_address->id_country;
-		$dlv_adr_fields = AddressFormat::getOrderedAddressFields($id_country, true, true);
-		$this->context->smarty->assign('ordered_adr_fields', $dlv_adr_fields);
+		$ordered_adr_fields = AddressFormat::getOrderedAddressFields($id_country, true, true);
+		$this->context->smarty->assign('ordered_adr_fields', $ordered_adr_fields);
 	}
 
 	/**
