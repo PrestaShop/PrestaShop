@@ -100,4 +100,5 @@
   <tab id="Warehouses" name="Hurtownie"/>
   <tab id="Webservice" name="Us&#x142;ugi internetowe"/>
   <tab id="Zones" name="Strefy"/>
+  <tab id="CarrierWizard" name="Carrier"/>
 </entity_tab>
