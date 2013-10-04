@@ -230,13 +230,18 @@
 											<div class="col-lg-9">
 												<div class="row">
 												{foreach $field['languages'] AS $id_lang => $value}
+													{if $field['languages']|count > 1}
 													<div class="translatable-field lang-{$id_lang}" {if $id_lang != $current_id_lang}style="display:none;"{/if}>
 														<div class="col-lg-9">
+													{else}
+													<div class="col-lg-12">
+													{/if}
 															<input type="text"
 																name="{$key}_{$id_lang}"
 																value="{$value|escape:'htmlall':'UTF-8'}"
 																{if isset($input.class)}class="{$input.class}"{/if}
 															/>
+													{if $field['languages']|count > 1}
 														</div>
 														<div class="col-lg-2">
 															<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -253,6 +258,9 @@
 															</ul>
 														</div>
 													</div>
+													{else}
+													</div>
+													{/if}
 												{/foreach}
 												</div>
 											</div>
