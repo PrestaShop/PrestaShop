@@ -303,7 +303,7 @@ class AdminHomeControllerCore extends AdminController
 
 	public function getMonthlyStatistics()
 	{
-		$currency = Tools::setCurrency(NULL);
+		$currency = Tools::setCurrency(null);
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT IFNULL(SUM(`total_paid_real` / conversion_rate), "0") as total_sales, COUNT(*) as total_orders
 			FROM `'._DB_PREFIX_.'orders`
@@ -400,7 +400,7 @@ class AdminHomeControllerCore extends AdminController
 			$chart->getCurve(1)->setPoint(strtotime($row['invoice_date'].' 02:00:00'), $row['total_converted']);
 		$chart->setSize(580, 170);
 		$chart->setTimeMode(strtotime('-7 DAYS', time()), time(), 'd');
-		$currency = Tools::setCurrency(NULL);
+		$currency = Tools::setCurrency(null);
 		$chart->getCurve(1)->setLabel($this->l('Sales + Tax').' ('.strtoupper($currency->iso_code).')');
 
 		$content .= $chart->fetch();
