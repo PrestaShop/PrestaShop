@@ -496,9 +496,11 @@ class OrderCore extends ObjectModel
 	
 	public function getProductsDeliveryDetails()
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE__)->executeS('
+		return Db::getInstance()->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'order_delivery` ody
+		LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = ody.product_id)
+		LEFT JOIN `'._DB_PREFIX_.'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = ody.id_shop)
 		WHERE ody.`id_order` = ' . (int)($this->id));
 	}
 
@@ -593,14 +595,21 @@ class OrderCore extends ObjectModel
 		return $resultArray;
 	}
 	
-	public function getProductsDelivery($products = false, $selectedProducts = false, $selectedQty = false)
+	public function getProductsDelivery($deliverd_products = false, $selectedProducts = false, $selectedQty = false)
 	{
 		if(!$deliverd_products)
+		{
 			$deliverd_products = $this->getProductsDeliveryDetails();
+// 			$resultArray = $this->getProducts($deliverd_products); // update array with all info, but only on delivered products
+		}
+// 			print_r($deliverd_products);
+// 			echo("<hr>");
+// 			print_r($resultArray);
+// 			echo("<hr>");
 			
 		$customized_datas = Product::getAllCustomizedDatas($this->id_cart);
-		
 		$resultArray = array();
+		$newResultArray = array();
 		foreach($deliverd_products as $row)
 		{
 			// Change qty if selected
@@ -615,31 +624,37 @@ class OrderCore extends ObjectModel
 			}
 
 			$this->setProductImageInformations($row);
-			$this->setProductCurrentStock($row);
+// 			$this->setProductCurrentStock($row);
 
 			// Backward compatibility 1.4 -> 1.5
-			$this->setProductPrices($row);
+// 			$this->setProductPrices($row);
 
 			$this->setProductCustomizedDatas($row, $customized_datas);
 
 			// Add information for virtual product
-			if ($row['download_hash'] && !empty($row['download_hash']))
-			{
-				$row['filename'] = ProductDownload::getFilenameFromIdProduct((int)$row['product_id']);
-				// Get the display filename
-				$row['display_filename'] = ProductDownload::getFilenameFromFilename($row['filename']);
-			}
+// 			if ($row['download_hash'] && !empty($row['download_hash']))
+// 			{
+// 				$row['filename'] = ProductDownload::getFilenameFromIdProduct((int)$row['product_id']);
+// 				// Get the display filename
+// 				$row['display_filename'] = ProductDownload::getFilenameFromFilename($row['filename']);
+// 			}
 			
 			$row['id_address_delivery'] = $this->id_address_delivery;
 			
 			/* Stock product */
-			$resultArray[(int)$row['id_order_detail']] = $row;
+			$resultArray[(int)$row['id']] = $row;
 		}
 
 		if ($customized_datas)
 			Product::addCustomizationPrice($resultArray, $customized_datas);
 
-		return $resultArray;
+		foreach($resultArray as $product) {
+				$newResultArray[$product['delivery_id']][] = $product;
+		}
+		
+// 		return $resultArray;
+print_r($newResultArray);
+		return $newResultArray;
 		
 	}
 	
@@ -2004,6 +2019,25 @@ class OrderCore extends ObjectModel
 				SELECT `id_order_carrier`
 				FROM `'._DB_PREFIX_.'order_carrier`
 				WHERE `id_order` = '.(int)$this->id);
-	}		
+	}
+	
+	/**
+	 * Return number for next deliver box for ads
+	 * 
+	 * @since 1.5.5.0
+	 */	
+	
+	public function getAdsDeliverySlipNr()
+	{
+		$nr = Db::getInstance()->executeS('
+		SELECT MAX(delivery_id) as delivery_id
+		FROM `'._DB_PREFIX_.'order_delivery` ody
+		WHERE ody.`id_order` = ' . (int)$this->id);
+		$nr = $nr[0]['delivery_id'];
+		if($nr == "") { // if no number was found, then change to default 1
+			$nr = 1;
+		}
+		return $nr;
+	}
 }
 

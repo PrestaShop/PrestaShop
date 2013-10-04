@@ -62,28 +62,28 @@ class HTMLTemplatePackageSlipCore extends HTMLTemplate
 		}
 		
 		$order_details = $this->order_invoice->getProducts();
-		foreach ($order_details as $key => $order_detail)
+		foreach ($order_details as &$order_detail)
 		{
-			$order_details[$key]['warehouse_name'] = "--";
-			$order_details[$key]['warehouse_location'] = "--";
+			$order_detail['warehouse_name'] = "--";
+			$order_detail['warehouse_location'] = "--";
 			if ($order_detail['id_warehouse'] != 0)
 			{
 				$warehouse = new Warehouse((int)$order_detail['id_warehouse']);
 				$warehouse_location = $warehouse->getProductLocation($order_detail["product_id"],$order_detail["product_attribute_id"],$warehouse->id);
-				$order_details[$key]['warehouse_name'] = $warehouse->name;
+				$order_detail['warehouse_name'] = $warehouse->name;
 				if($warehouse_location != "") {
-					$order_details[$key]['warehouse_location'] = $warehouse_location;
+					$order_detail['warehouse_location'] = $warehouse_location;
 				}
 			}
 			if ($order_detail['image'] != null)
 			{
 				$name = 'product_mini_'.(int)$order_detail['product_id'].(isset($order_detail['product_attribute_id']) ? '_'.(int)$order_detail['product_attribute_id'] : '').'.jpg';
 				// generate image cache, only for back office
-				$order_details[$key]['image_tag'] = ImageManager::thumbnail(_PS_IMG_DIR_.'p/'.$order_detail['image']->getExistingImgPath().'.jpg', $name, 45, 'jpg',true);
+				$order_detail['image_tag'] = ImageManager::thumbnail(_PS_IMG_DIR_.'p/'.$order_detail['image']->getExistingImgPath().'.jpg', $name, 45, 'jpg',true);
 				if (file_exists(_PS_TMP_IMG_DIR_.$name))
-					$order_details[$key]['image_size'] = getimagesize(_PS_TMP_IMG_DIR_.$name);
+					$order_detail['image_size'] = getimagesize(_PS_TMP_IMG_DIR_.$name);
 				else
-					$order_details[$key]['image_size'] = false;
+					$order_detail['image_size'] = false;
 			}
 		}
 	

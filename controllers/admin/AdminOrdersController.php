@@ -1234,12 +1234,62 @@ class AdminOrdersControllerCore extends AdminController
 				}
 			}
 			
-			elseif (Tools::getValue('submitAdsAdd')) 
-			{
-				// Do some shit here.
-			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
+		}
+		elseif (Tools::isSubmit('submitAdsAdd') && isset($order))
+		{
+			if(Tools::getValue('adsQty')) // Qty is a must
+			{
+				if($adsRef = Tools::getValue('adsReference')) // first check reference
+				{
+					$products = $order->getProducts();
+// 					print_r($products);
+					foreach($products as $product) {
+						if($product['product_reference'] == $adsRef) {
+							$product_id = $product['product_id'];
+							$product_attribute_id = $product['product_attribute_id'];
+							break; // saves resources, since we only loop untill we find product
+						}
+					}
+					$id_order = Tools::getValue('id_order');
+					$delivery_id = Tools::getValue('submitAdsAdd');
+					$qty = Db::getInstance()->executeS('
+					SELECT delivery_qty
+					FROM `'._DB_PREFIX_.'order_delivery` ody
+					WHERE ody.`id_order` = ' . (int)$id_order .
+					' AND ody.`product_id` = ' . $product_id .
+					' AND ody.`product_attribute_id` = ' . $product_attribute_id .
+					' AND ody.`delivery_id` = ' . $delivery_id);
+					if(isset($qty['delivery_qty']))
+					{
+						$new_qty = $qty["delivery_qty"] + Tools::getValue('adsQty');
+						Db::getInstance()->update('order_delivery',array('delivery_qty' => $new_qty),array('id_order' => $id_order,'product_id' => $product_id, 'product_attribute_id' => $product_attribute_id,
+						'delivery_id' => $delivery_id,'id_shop' =>$order->id_shop));
+					}
+					else
+					{
+						Db::getInstance()->insert('order_delivery',array('id_order' => $id_order,'product_id' => $product_id, 'product_attribute_id' => $product_attribute_id,'delivery_id' => $delivery_id,
+						'delivery_qty' => 1,'id_shop' =>$order->id_shop));
+					}
+				}
+				elseif(Tools::getValue('adsEan13'))
+				{
+				}
+				elseif(Tools::getValue('adsProductName'))
+				{
+				}
+				// move sql here
+				// tink all but the foreach loop can be here.
+			}
+			else
+			{
+				$this->errors[] = Tools::displayError('An error occurred when addning product to delivery');
+			}
+		}
+		elseif (Tools::getValue('submitAdsAddAll') && isset($order))
+		{
+			// Add all products
 		}
 
 		parent::postProcess();
@@ -1254,7 +1304,7 @@ class AdminOrdersControllerCore extends AdminController
 		$customer = new Customer($order->id_customer);
 		$carrier = new Carrier($order->id_carrier);
 		$products = $this->getProducts($order);
-		$delivered_products = $this->getProducts($order);
+		$delivered_products = $this->getProductsDelivery($order);
 		$currency = new Currency((int)$order->id_currency);
 		// Carrier module call
 		$carrier_module_call = null;
@@ -1347,6 +1397,8 @@ class AdminOrdersControllerCore extends AdminController
 			else
 				$product['warehouse_name'] = '--';
 		}
+		
+		$ads_deliverynr = $order->getAdsDeliverySlipNr();
 
 		// Smarty assign
 		$this->tpl_view_vars = array(
@@ -1390,7 +1442,8 @@ class AdminOrdersControllerCore extends AdminController
 			'not_paid_invoices_collection' => $order->getNotPaidInvoicesCollection(),
 			'payment_methods' => $payment_methods,
 			'invoice_management_active' => Configuration::get('PS_INVOICE', null, null, $order->id_shop),
-			'display_warehouse' => (int)Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
+			'display_warehouse' => (int)Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'),
+			'ads_deliverynr' => $ads_deliverynr,
 		);
 
 		return parent::renderView();
@@ -2226,6 +2279,29 @@ class AdminOrdersControllerCore extends AdminController
 		}
 
 		return $products;
+	}
+	
+	protected function getProductsDelivery($order)
+	{
+		$delivered_products = $order->getProductsDelivery();
+		foreach ($delivered_products as $delivery)
+		{
+		foreach ($delivery as &$product)
+			{
+				if ($product['image'] != null)
+				{
+					$name = 'product_mini_'.(int)$product['product_id'].(isset($product['product_attribute_id']) ? '_'.(int)$product['product_attribute_id'] : '').'.jpg';
+					// generate image cache, only for back office
+					$product['image_tag'] = ImageManager::thumbnail(_PS_IMG_DIR_.'p/'.$product['image']->getExistingImgPath().'.jpg', $name, 45, 'jpg');
+					if (file_exists(_PS_TMP_IMG_DIR_.$name))
+						$product['image_size'] = getimagesize(_PS_TMP_IMG_DIR_.$name);
+					else
+						$product['image_size'] = false;
+				}
+			}
+		}
+
+		return $delivered_products;
 	}
 	
 	protected function reinjectQuantity($order_detail, $qty_cancel_product)

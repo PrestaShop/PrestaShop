@@ -742,7 +742,7 @@
 	<div class="clear" style="height:20px;">&nbsp;</div>
 
 	{if Configuration::get('PS_ADS')}
-	<form style="width: 98%" class="container-command-top-spacing" action="{$current_index}&vieworder&token={$smarty.get.token}&id_order={$order->id}" method="post" onsubmit="return orderDeleteProduct('{l s='This product cannot be returned.'}', '{l s='Quantity to cancel is greater than quantity available.'}');">
+	<form style="width: 98%" class="container-command-top-spacing" action="{$current_index}&vieworder&token={$smarty.get.token}&id_order={$order->id}" method="post">
 		<input type="hidden" name="id_order" value="{$order->id}" />
 		<fieldset style="width: 100%; ">
 			<div style="display: none">
@@ -771,12 +771,13 @@
 						<option value="{$product.product_id}" >{$product.product_name}</option>
 					{/foreach}
 				</select>
-				{l s='Reference:'}<input type="text" name="adsReference" id="adsReference"  value="" placeholder="Enter REF" />
+				{l s='Reference:'}<input type="text" name="adsReference" id="adsReference"  value="" placeholder="Enter Reference" />
 				{l s='Ean 13:'}<input type="text" name="adsEan13" id="adsEan13  value="" placeholder="Enter Ean 13" />
-				{l s='Quantity'} 	<input type="text" name="ads_qty" value="1" />
-				<button type="submit" name="sumbitAdsAdd" value="1">Add</button>
+				{l s='Quantity'} 	<input type="text" name="adsQty" value="1" />
+				<button type="submit" name="submitAdsAdd" value="{$ads_deliverynr}">Add</button>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<button type="submit" name="submitAdsAdAll" value="1">Add All products</button><br><br>
+				<button type="submit" name="submitAdsAddAll" value="{$ads_deliverynr}">Add All products</button><br><br>
+				{foreach from=$delivered_products item=delivery_id}
 				<table style="width: 100%;" cellspacing="0" cellpadding="0" class="table" id="orderDeliveryProducts">
 					<tr>
 						<th height="39" align="center" style="width: 7%">&nbsp;</th>
@@ -804,7 +805,8 @@
 						</th>
 					</tr>
 
-					{foreach from=$delivered_products item=product key=k}
+					{foreach from=$delivery_id item=product key=k}
+						[ {print_r($product)} ]
 						{* Include customized datas partial *}
 						{include file='controllers/orders/_customized_data.tpl'}
 
@@ -812,6 +814,7 @@
 						{include file='controllers/orders/_delivery_product_line.tpl'}
 					{/foreach}
 				</table>
+				{/foreach}
 				<div class="clear"></div>
 			</div>
 		</fieldset>
