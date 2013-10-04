@@ -208,14 +208,14 @@ class AdminGroupsControllerCore extends AdminController
 		$this->bulk_actions = false;
 		$this->no_link = true;
 		$this->fields_list = (array(
-			'id_customer' => array('title' => $this->l('ID'), 'width' => 15, 'align' => 'center', 'filter_key' => 'c!id_customer'),
-			'id_gender' => array('title' => $this->l('Titles'), 'align' => 'center', 'width' => 50,'icon' => $genders_icon, 'list' => $genders),
-			'firstname' => array('title' => $this->l('First name'), 'align' => 'center'),
-			'lastname' => array('title' => $this->l('Last name'), 'align' => 'center'),
-			'email' => array('title' => $this->l('Email address'), 'width' => 150, 'align' => 'center', 'filter_key' => 'c!email', 'orderby' => true),
-			'birthday' => array('title' => $this->l('Birth date'), 'width' => 150, 'align' => 'right', 'type' => 'date'),
-			'date_add' => array('title' => $this->l('Register date'), 'width' => 150, 'align' => 'right', 'type' => 'date'),
-			'active' => array('title' => $this->l('Enabled'),'align' => 'center','width' => 20, 'active' => 'status','type' => 'bool')
+			'id_customer' => array('title' => $this->l('ID'), 'align' => 'center', 'filter_key' => 'c!id_customer', 'class' => 'fixed-width-xs'),
+			'id_gender' => array('title' => $this->l('Titles'), 'icon' => $genders_icon, 'list' => $genders),
+			'firstname' => array('title' => $this->l('First name')),
+			'lastname' => array('title' => $this->l('Last name')),
+			'email' => array('title' => $this->l('Email address'), 'filter_key' => 'c!email', 'orderby' => true),
+			'birthday' => array('title' => $this->l('Birth date'), 'type' => 'date', 'class' => 'fixed-width-md', 'align' => 'center'),
+			'date_add' => array('title' => $this->l('Register date'), 'type' => 'date', 'class' => 'fixed-width-md', 'align' => 'center'),
+			'active' => array('title' => $this->l('Enabled'),'align' => 'center', 'class' => 'fixed-width-sm', 'active' => 'status','type' => 'bool')
 		));
 		$this->_select = 'c.*';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'customer` c ON (a.`id_customer` = c.`id_customer`)';
