@@ -86,8 +86,7 @@ class ProductSaleCore
 					MAX(image_shop.`id_image`) id_image, il.`legend`,
 					ps.`quantity` AS sales, t.`rate`, pl.`meta_keywords`, pl.`meta_title`, pl.`meta_description`,
 					DATEDIFF(p.`date_add`, DATE_SUB(NOW(),
-					INTERVAL '.$interval.' DAY)) > 0 AS new,
-					IFNULL(pa.minimal_quantity, p.minimal_quantity) as minimal_quantity
+					INTERVAL '.$interval.' DAY)) > 0 AS new
 				FROM `'._DB_PREFIX_.'product_sale` ps
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON ps.`id_product` = p.`id_product`
 				'.Shop::addSqlAssociation('product', 'p', false).'
