@@ -100,4 +100,5 @@
   <tab id="Warehouses" name="Entrep&#xF4;ts"/>
   <tab id="Webservice" name="Service web"/>
   <tab id="Zones" name="Zones"/>
+  <tab id="CarrierWizard" name="Transporteur"/>
 </entity_tab>
