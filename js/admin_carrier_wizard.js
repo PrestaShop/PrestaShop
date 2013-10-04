@@ -368,7 +368,6 @@ function bind_inputs()
 function is_freeClick(elt)
 {
 	var is_free = $(elt);
-console.log(parseInt(is_free.val()));
 	if (parseInt(is_free.val()))
 		hideFees();
 	else
@@ -389,10 +388,8 @@ function hideFees()
 function showFees()
 {
 	$('tr.range_inf td, tr.range_sup td, tr.fees_all td, tr.fees td').each( function () {
-		console.log('tototo');
 		if ($(this).index() >= 2)
 		{
-			console.log('tititi');
 			//enable only if zone is active
 			tr = $(this).parent('tr');
 			validate = $('tr.fees_all td:eq('+$(this).index()+')').hasClass('validated');
