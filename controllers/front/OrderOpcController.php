@@ -37,10 +37,12 @@ class OrderOpcControllerCore extends ParentOrderController
 	 */
 	public function init()
 	{
+		global $isVirtualCart;
+		
 		parent::init();
 
 		if ($this->nbProducts)
-			$this->context->smarty->assign('virtual_cart', false);
+			$this->context->smarty->assign('virtual_cart', $isVirtualCart);
 		
 		$this->context->smarty->assign('is_multi_address_delivery', $this->context->cart->isMultiAddressDelivery() || ((int)Tools::getValue('multi-shipping') == 1));
 		$this->context->smarty->assign('open_multishipping_fancybox', (int)Tools::getValue('multi-shipping') == 1);
