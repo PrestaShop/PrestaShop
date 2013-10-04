@@ -293,6 +293,7 @@ class AdminImportControllerCore extends AdminController
 			case $this->entities[$this->l('Addresses')]:
 				//Overwrite required_fields
 				$this->required_fields = array(
+					'alias',
 					'lastname',
 					'firstname',
 					'address1',
@@ -307,7 +308,7 @@ class AdminImportControllerCore extends AdminController
 					'id' => array('label' => $this->l('ID')),
 					'alias' => array('label' => $this->l('Alias *')),
 					'active' => array('label' => $this->l('Active  (0/1)')),
-					'customer_email' => array('label' => $this->l('Customer email')),
+					'customer_email' => array('label' => $this->l('Customer email *')),
 					'id_customer' => array('label' => $this->l('Customer ID:')),
 					'manufacturer' => array('label' => $this->l('Manufacturer')),
 					'supplier' => array('label' => $this->l('Supplier')),
@@ -316,7 +317,7 @@ class AdminImportControllerCore extends AdminController
 					'firstname' => array('label' => $this->l('First Name *')),
 					'address1' => array('label' => $this->l('Address 1 *')),
 					'address2' => array('label' => $this->l('Address 2')),
-					'postcode' => array('label' => $this->l('Postal code / Zipcode*')),
+					'postcode' => array('label' => $this->l('Postal code / Zipcode *')),
 					'city' => array('label' => $this->l('City *')),
 					'country' => array('label' => $this->l('Country *')),
 					'state' => array('label' => $this->l('State')),
