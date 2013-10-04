@@ -65,6 +65,7 @@ class CompareControllerCore extends FrontController
 
 			die('1');
 		}
+		die('0');
 	}
 
 	/**
@@ -73,6 +74,8 @@ class CompareControllerCore extends FrontController
 	 */
 	public function initContent()
 	{
+		if (Tools::getValue('ajax'))
+			return;
 		parent::initContent();
 
 		//Clean compare product table
@@ -86,7 +89,10 @@ class CompareControllerCore extends FrontController
 		if (($product_list = Tools::getValue('compare_product_list')) && ($postProducts = (isset($product_list) ? rtrim($product_list, '|') : '')))
 			$ids = array_unique(explode('|', $postProducts));
 		else if (isset($this->context->cookie->id_compare))
+		{
 			$ids = CompareProduct::getCompareProducts($this->context->cookie->id_compare);
+			Tools::redirect($this->context->link->getPageLink('products-comparison', null, $this->context->language->id, array('compare_product_list' => implode('|', $ids))));
+		}
 		else
 			$ids = null;
 
