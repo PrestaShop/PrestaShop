@@ -119,7 +119,7 @@
 					<tbody>
 				{foreach from=$history item=row key=key}
 						{if ($key == 0)}
-						<tr class="highlight">
+						<tr class="highlighted">
 							<td><img src="../img/os/{$row['id_order_state']}.gif" /></td>
 							<td><span class="title_box ">{$row['ostate_name']|stripslashes}</span></td>
 							<td><span class="title_box ">{if $row['employee_lastname']}{$row['employee_firstname']|stripslashes} {$row['employee_lastname']|stripslashes}{/if}</span></td>
@@ -332,7 +332,7 @@
 			
 
 			{if count($order->getOrderPayments()) > 0}
-			<p class="alert alert-warning" style="{if round($orders_total_paid_tax_incl, 2) == round($total_paid, 2) || $currentState->id == 6}display: none;{/if}">
+			<p class="alert alert-danger" style="{if round($orders_total_paid_tax_incl, 2) == round($total_paid, 2) || $currentState->id == 6}display: none;{/if}">
 				{l s='Warning'}
 				<strong>{displayPrice price=$total_paid currency=$currency->id}</strong>
 				{l s='paid instead of'}
@@ -764,7 +764,7 @@
 							{/if}
 						</th>
 						<th style="display:none" class="partial_refund_fields">
-							{l s='Partial refund'}
+							<span class="title_box ">{l s='Partial refund'}</span>
 						</th>
 						{if !$order->hasBeenDelivered()}
 						<th></th>
@@ -788,10 +788,10 @@
 			{if $can_edit}
 			{if !$order->hasBeenDelivered()}
 			<div class="row-margin-bottom">
-				<a href="#" class="add_product btn btn-default">
+				<button type="button" id="add_product" class="btn btn-default">
 					<i class="icon-plus-sign"></i>
 					{l s='Add a product'}
-				</a>
+				</button>
 			</div>
 			{/if}
 			{/if}
@@ -836,9 +836,13 @@
 								{displayPrice price=$order->total_shipping_tax_incl currency=$currency->id}
 							</td>
 							<td class="partial_refund_fields current-edit" style="display:none;">
-								{$currency->prefix}
-								<input type="text" name="partialRefundShippingCost" value="0" />
-								{$currency->suffix}
+								<div class="input-group">
+									<div class="input-group-addon">
+										{$currency->prefix}
+										{$currency->suffix}
+									</div>
+									<input type="text" name="partialRefundShippingCost" value="0" />
+								</div>
 							</td>
 						</tr>
 						<tr id="total_order">
@@ -850,6 +854,59 @@
 						</tr>
 					</table>
 				</div>
+			</div>
+			<div style="display: none;" class="standard_refund_fields form-horizontal">
+				{if ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN'))}
+				<p class="checkbox">
+					<label for="reinjectQuantities">
+						<input type="checkbox" name="reinjectQuantities"/>
+						{l s='Re-stock products'}
+					</label>
+				</p>
+				{/if}
+
+				{if ((!$order->hasBeenDelivered() && $order->hasBeenPaid()) || ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN')))}
+				<p class="checkbox">
+					<label for="generateCreditSlip">
+						<input type="checkbox" id="generateCreditSlip" name="generateCreditSlip" onclick="toggleShippingCost(this)" />
+						{l s='Generate a credit card slip'}
+					</label>
+				</p>
+				<p class="checkbox">
+					<label for="generateDiscount">
+						<input type="checkbox" id="generateDiscount" name="generateDiscount" onclick="toggleShippingCost(this)" />
+						{l s='Generate a voucher'}
+					</label>
+				</p>
+				<p class="checkbox" id="spanShippingBack" style="display:none;">
+					<label for="shippingBack" style="float:none">
+						<input type="checkbox" id="shippingBack" name="shippingBack" />
+						{l s='Repay shipping costs'}
+					</label>
+				</p>
+				{/if}
+
+				{if (!$order->hasBeenDelivered() || ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN')))}
+				<input type="submit" name="cancelProduct" value="{if $order->hasBeenDelivered()}{l s='Return products'}{elseif $order->hasBeenPaid()}{l s='Refund products'}{else}{l s='Cancel products'}{/if}" class="btn btn-default" />
+				{/if}
+			</div>
+			<div style="display:none;" class="partial_refund_fields">
+				<p class="checkbox">
+					<label for="reinjectQuantities">
+						<input type="checkbox" id="reinjectQuantities" name="reinjectQuantities" />
+						{l s='Re-stock products'}
+					</label>
+				</p>
+				<p class="checkbox">
+					<label for="generateDiscountRefund">
+						<input type="checkbox" id="generateDiscountRefund" name="generateDiscountRefund" onclick="toggleShippingCost(this)" />
+						{l s='Generate a voucher'}
+					</label>
+				</p>
+				<button type="submit" name="partialRefund" class="btn btn-default" />
+					<i class="icon-ok"></i>
+					{l s='Partial refund'}
+				</button>
 			</div>
 		</fieldset>
 
@@ -872,7 +929,9 @@
 								{l s='Value'}
 							</span>
 						</th>
-						{if $can_edit}<th></th>{/if}
+						{if $can_edit}
+						<th></th>
+						{/if}
 					</tr>
 				</thead>
 				<tbody>
@@ -908,35 +967,6 @@
 	{/if}
 {/if}
 
-			<div style="display: none;" class="standard_refund_fields">
-				{if ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN'))}
-				<input type="checkbox" name="reinjectQuantities"/>
-				<label for="reinjectQuantities">{l s='Re-stock products'}</label>
-				{/if}
-
-				{if ((!$order->hasBeenDelivered() && $order->hasBeenPaid()) || ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN')))}
-				<input type="checkbox" id="generateCreditSlip" name="generateCreditSlip" onclick="toggleShippingCost(this)" />
-				<label for="generateCreditSlip">{l s='Generate a credit card slip'}</label>
-				<input type="checkbox" id="generateDiscount" name="generateDiscount" onclick="toggleShippingCost(this)" />
-				<label for="generateDiscount">{l s='Generate a voucher'}</label>
-
-				<span id="spanShippingBack" style="display:none;">
-					<input type="checkbox" id="shippingBack" name="shippingBack" class="btn btn-default" />
-					<label for="shippingBack" style="float:none; font-weight:normal;">{l s='Repay shipping costs'}</label>
-				</span>
-				{/if}
-
-				{if (!$order->hasBeenDelivered() || ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN')))}
-				<input type="submit" name="cancelProduct" value="{if $order->hasBeenDelivered()}{l s='Return products'}{elseif $order->hasBeenPaid()}{l s='Refund products'}{else}{l s='Cancel products'}{/if}" class="btn btn-default" />
-				{/if}
-			</div>
-			<div style="display:none;" class="partial_refund_fields">
-				<input type="checkbox" name="reinjectQuantities" class="btn btn-default" />
-				<label for="reinjectQuantities">{l s='Re-stock products'}</label>
-				<input type="checkbox" id="generateDiscountRefund" name="generateDiscountRefund" class="btn btn-default" onclick="toggleShippingCost(this)" />
-				<label for="generateDiscount">{l s='Generate a voucher'}</label>
-				<input type="submit" name="partialRefund" value="{l s='Partial refund'}" class="btn btn-default" />
-			</div>
 		</fieldset>
 	</form>
 
@@ -946,36 +976,79 @@
 				<i class="icon-envelope"></i>
 				{l s='New message'}
 			</h3>
-			<button type="button" class="btn btn-default" onclick="$('#message').slideToggle();$('#message_m').slideToggle();return false">
+
+			<p id="message_m" style="display: {if Tools::getValue('message')}none{else}block{/if}">
+				{l s='to add a comment or send a message to the customer.'}
+			</p>
+
+			<button id="newMessage" type="button" class="btn btn-default">
+				<i class="icon-envelope"></i>
 				{l s='New message'}
 			</button>
-			<div id="message_m" style="display: {if Tools::getValue('message')}none{else}block{/if}">
 
-			{l s='to add a comment or send a message to the customer.'}
+			<div id="message" class="form-horizontal" style="display:none">
+				<div class="form-group">
+					<label class="control-label col-lg-3">{l s='Choose a standard message'}</label>
+					<div class="col-lg-9">
+						<select name="order_message" id="order_message" onchange="orderOverwriteMessage(this, '{l s='Do you want to overwrite your existing message?'}')">
+							<option value="0" selected="selected">--</option>
+							{foreach from=$orderMessages item=orderMessage}
+							<option value="{$orderMessage['message']|escape:'htmlall':'UTF-8'}">{$orderMessage['name']}</option>
+							{/foreach}
+						</select>
+					</div>
+				</div>
 
+				<div class="form-group">
+					<label class="control-label col-lg-3">{l s='Display to customer?'}</label>
+					<div class="col-lg-9">
+						<div class="row">
+							<div class="input-group col-lg-2">
+								<span class="switch prestashop-switch">
+									<input type="radio" name="visibility" id="visibility_on" value="0" />
+									<label class="radio" for="visibility_on">
+										<i class="icon-check-sign text-success"></i>
+										{l s='Yes'}
+									</label>
+									<input type="radio" name="visibility" id="visibility_off" value="1" checked="checked" /> 
+									<label class="radio" for="visibility_off">
+										<i class="icon-ban-circle text-danger"></i>
+										{l s='No'}
+									</label>
+									<span class="slide-button btn btn-default"></span>
+								</span>
+							</div>
+						</div>				
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="control-label col-lg-3">{l s='Message'}</label>
+					<div class="col-lg-9">
+						<textarea id="txt_msg" class="textarea-autosize" name="message">{Tools::getValue('message')|escape:'htmlall':'UTF-8'}</textarea>
+						<p id="nbchars"></p>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-lg-9 col-lg-offset-3">
+						<input type="hidden" name="id_order" value="{$order->id}" />
+						<input type="hidden" name="id_customer" value="{$order->id_customer}" />
+						<button type="button" id="cancelMessage" class="btn btn-default">
+							<i class="icon-remove text-danger"></i>
+							{l s='Cancel'}
+						</button>
+						<button type="submit" id="submitMessage" class="btn btn-default" >
+							<i class="icon-ok text-success"></i>
+							{l s='Send'}
+						</button>
+					</div>
+				</div>
 			</div>
+			<hr/>
 			<a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'htmlall':'UTF-8'}">
 				<b>{l s='Click here'}</b> {l s='to see all messages.'}
+				<i class="icon-external-link"></i>
 			</a>
-			<div id="message" style="display: {if Tools::getValue('message')}block{else}none{/if}">
-				<select name="order_message" id="order_message" onchange="orderOverwriteMessage(this, '{l s='Do you want to overwrite your existing message?'}')">
-					<option value="0" selected="selected">-- {l s='Choose a standard message'} --</option>
-					{foreach from=$orderMessages item=orderMessage}
-						<option value="{$orderMessage['message']|escape:'htmlall':'UTF-8'}">{$orderMessage['name']}</option>
-					{/foreach}
-				</select>
-				<b>{l s='Display to customer?'}</b>
-				<input type="radio" name="visibility" id="visibility" value="0" /> {l s='Yes'}
-				<input type="radio" name="visibility" value="1" checked="checked" /> {l s='No'}
-
-				<p id="nbchars"></p>
-
-				<textarea id="txt_msg" name="message" cols="50" rows="8" onKeyUp="var length = document.getElementById('txt_msg').value.length; if (length > 600) length = '600+'; document.getElementById('nbchars').innerHTML = '{l s='600 characters, max.'} (' + length + ')';">{Tools::getValue('message')|escape:'htmlall':'UTF-8'}</textarea>
-
-				<input type="hidden" name="id_order" value="{$order->id}" />
-				<input type="hidden" name="id_customer" value="{$order->id_customer}" />
-				<input type="submit" class="btn btn-default" name="submitMessage" value="{l s='Send'}" />
-			</div>
 		</fieldset>
 	</form>
 
@@ -989,7 +1062,7 @@
 			<div {if $message['is_new_for_me']}class="new_message"{/if}>
 			{if ($message['is_new_for_me'])}
 				<a class="new_message" title="{l s='Mark this message as \'viewed\''}" href="{$smarty.server.REQUEST_URI}&token={$smarty.get.token}&messageReaded={$message['id_message']}">
-					<img src="../img/admin/enabled.gif" alt="" />
+					<i class="icon-ok"></i>
 				</a>
 			{/if}
 			{l s='At'} <i>{dateFormat date=$message['date_add']}</i> 
@@ -1002,5 +1075,9 @@
 		{/foreach}
 	</fieldset>
 	{/if}
+
+	<script type="text/javascript">
+		$(".textarea-autosize").autosize();
+ 	</script>
 
 {/block}

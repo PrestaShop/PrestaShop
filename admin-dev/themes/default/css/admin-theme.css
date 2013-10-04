@@ -8146,25 +8146,26 @@ textarea {
   border-color: #cccccc !important; }
 
 /* line 559, admin-theme.sass */
-tr.highlight td {
-  background-color: #ffffc0; }
+tr.highlighted td {
+  background-color: #1ba6e5 !important;
+  color: white; }
 
-/* line 562, admin-theme.sass */
+/* line 565, admin-theme.sass */
 .hook_panel {
   -webkit-box-shadow: rgba(255, 255, 255, 0.9) 0 0 0 1px inset;
   box-shadow: rgba(255, 255, 255, 0.9) 0 0 0 1px inset;
   padding: 10px 10px 5px 10px;
   margin-bottom: 3px !important; }
 
-/* line 567, admin-theme.sass */
+/* line 570, admin-theme.sass */
 .module_name {
   font-size: 1.2em; }
 
-/* line 571, admin-theme.sass */
+/* line 574, admin-theme.sass */
 .hook_panel_header {
   margin: 0 -10px 0 -10px;
   padding: 0 10px 10px 10px; }
-/* line 574, admin-theme.sass */
+/* line 577, admin-theme.sass */
 .hook_panel_header .hook_name {
   font-weight: 400;
   font-size: 1.2em;
@@ -8177,15 +8178,15 @@ tr.highlight td {
   border: solid 1px #cccccc;
   background-color: white;
   padding: 0 4px; }
-/* line 582, admin-theme.sass */
+/* line 585, admin-theme.sass */
 .hook_panel_header .hook_title {
   text-transform: uppercase;
   font-size: 1em; }
-/* line 585, admin-theme.sass */
+/* line 588, admin-theme.sass */
 .hook_panel_header .hook_description {
   padding: 3px 0 0 3px; }
 
-/* line 589, admin-theme.sass */
+/* line 592, admin-theme.sass */
 .module_list .module_list_item {
   display: table;
   width: 100%;
@@ -8200,7 +8201,7 @@ tr.highlight td {
   -o-border-radius: 3px;
   border-radius: 3px; }
 
-/* line 597, admin-theme.sass */
+/* line 600, admin-theme.sass */
 .module_col_select {
   display: table-cell;
   width: 22px;
@@ -8209,13 +8210,13 @@ tr.highlight td {
   text-align: center;
   border-right: 1px solid #dddddd; }
 
-/* line 604, admin-theme.sass */
+/* line 607, admin-theme.sass */
 .module_col_position {
   display: table-cell;
   width: 60px;
   vertical-align: middle;
   text-align: right; }
-/* line 609, admin-theme.sass */
+/* line 612, admin-theme.sass */
 .module_col_position .positions {
   font-family: "Ubuntu", sans-serif;
   font-weight: 200;
@@ -8233,41 +8234,41 @@ tr.highlight td {
   border: solid 1px #cccccc;
   background-color: #eeeeee; }
 
-/* line 620, admin-theme.sass */
+/* line 623, admin-theme.sass */
 .module_col_icon {
   display: table-cell;
   width: 50px;
   text-align: center;
   vertical-align: middle; }
 
-/* line 626, admin-theme.sass */
+/* line 629, admin-theme.sass */
 .module_col_infos {
   display: table-cell;
   height: 50px;
   vertical-align: middle; }
 
-/* line 631, admin-theme.sass */
+/* line 634, admin-theme.sass */
 .module_col_actions {
   display: table-cell;
   width: 160px;
   padding: 0 10px;
   vertical-align: middle;
   text-align: right; }
-/* line 637, admin-theme.sass */
+/* line 640, admin-theme.sass */
 .module_col_actions .btn-group {
   text-align: left; }
 
-/* line 641, admin-theme.sass */
+/* line 644, admin-theme.sass */
 .tree {
   padding: 0 0 0 20px;
   list-style: none; }
-/* line 644, admin-theme.sass */
+/* line 647, admin-theme.sass */
 .tree input {
   margin-right: 4px; }
-/* line 646, admin-theme.sass */
+/* line 649, admin-theme.sass */
 .tree i {
   font-size: 1.3em; }
-/* line 650, admin-theme.sass */
+/* line 653, admin-theme.sass */
 .tree .tree-item-name, .tree .tree-folder-name {
   padding: 0 5px;
   -webkit-border-radius: 6px;
@@ -8276,17 +8277,17 @@ tr.highlight td {
   -o-border-radius: 6px;
   border-radius: 6px;
   font-weight: normal; }
-/* line 654, admin-theme.sass */
+/* line 657, admin-theme.sass */
 .tree .tree-item-name:hover, .tree .tree-folder-name:hover {
   background-color: #eeeeee;
   cursor: pointer; }
-/* line 657, admin-theme.sass */
+/* line 660, admin-theme.sass */
 .tree .tree-selected {
   background-color: #a4dcf5; }
-/* line 659, admin-theme.sass */
+/* line 662, admin-theme.sass */
 .tree .tree-selected i.tree-dot {
   background-color: #1ba6e5; }
-/* line 661, admin-theme.sass */
+/* line 664, admin-theme.sass */
 .tree i.tree-dot {
   display: inline-block;
   position: relative;
@@ -8299,55 +8300,55 @@ tr.highlight td {
   -ms-border-radius: 6px;
   -o-border-radius: 6px;
   border-radius: 6px; }
-/* line 669, admin-theme.sass */
+/* line 672, admin-theme.sass */
 .tree .tree-item-disable, .tree .tree-folder-name-disable {
   color: #cccccc; }
-/* line 671, admin-theme.sass */
+/* line 674, admin-theme.sass */
 .tree .tree-item-disable:hover, .tree .tree-folder-name-disable:hover {
   color: #cccccc;
   background-color: none; }
 
-/* line 675, admin-theme.sass */
+/* line 678, admin-theme.sass */
 .nav-tabs {
   border-bottom: none; }
-/* line 678, admin-theme.sass */
+/* line 681, admin-theme.sass */
 .nav-tabs li.active a.tab-page {
   background-color: white; }
 
-/* line 681, admin-theme.sass */
+/* line 684, admin-theme.sass */
 .tree-actions {
   padding-bottom: 4px;
   display: inline-block; }
 
-/* line 686, admin-theme.sass */
+/* line 689, admin-theme.sass */
 .tt-query {
   border-bottom-right-radius: 3px !important;
   border-top-right-radius: 3px !important; }
 
-/* line 688, admin-theme.sass */
+/* line 691, admin-theme.sass */
 .tt-dropdown-menu {
   background-color: white;
   border: solid 1px #cccccc;
   font-size: 0.9em;
   text-transform: none; }
 
-/* line 693, admin-theme.sass */
+/* line 696, admin-theme.sass */
 .tt-suggestions {
   padding: 0 6px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0 1px 4px;
   box-shadow: rgba(0, 0, 0, 0.25) 0 1px 4px; }
 
-/* line 696, admin-theme.sass */
+/* line 699, admin-theme.sass */
 .tt-suggestion p {
   border-bottom: solid 1px #cccccc;
   margin: 0 !important;
   padding: 0 !important; }
 
-/* line 700, admin-theme.sass */
+/* line 703, admin-theme.sass */
 .tt-suggestion:last-child p {
   border-bottom: none; }
 
-/* line 704, admin-theme.sass */
+/* line 707, admin-theme.sass */
 .tagify-container {
   background-color: white;
   padding: 2px 6px;
@@ -8361,10 +8362,10 @@ tr.highlight td {
   border: solid 1px #cccccc;
   -webkit-box-shadow: rgba(0, 0, 0, 0.075) 0 1px 1px inset;
   box-shadow: rgba(0, 0, 0, 0.075) 0 1px 1px inset; }
-/* line 712, admin-theme.sass */
+/* line 715, admin-theme.sass */
 .tagify-container span {
   float: left; }
-/* line 714, admin-theme.sass */
+/* line 717, admin-theme.sass */
 .tagify-container > span {
   display: inline-block;
   padding: 3px 5px;
@@ -8373,26 +8374,26 @@ tr.highlight td {
   border: 1px solid #1ba6e5;
   background-color: #60c1ed;
   color: white; }
-/* line 722, admin-theme.sass */
+/* line 725, admin-theme.sass */
 .tagify-container > span > a {
   padding-left: 5px;
   color: #1ba6e5;
   text-decoration: none;
   font-weight: bold; }
-/* line 727, admin-theme.sass */
+/* line 730, admin-theme.sass */
 .tagify-container > input {
   margin-top: 2px;
   border: 0 none;
   width: 100px;
   -webkit-box-shadow: none;
   box-shadow: none; }
-/* line 732, admin-theme.sass */
+/* line 735, admin-theme.sass */
 .tagify-container > input:focus {
   outline: 0;
   -webkit-box-shadow: none;
   box-shadow: none; }
 
-/* line 737, admin-theme.sass */
+/* line 740, admin-theme.sass */
 li.sortable-placeholder {
   border: 1px dashed #cccccc;
   background-color: #bbbbbb;

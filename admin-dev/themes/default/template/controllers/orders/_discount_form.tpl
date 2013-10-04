@@ -99,17 +99,16 @@
 		</div>
 	</div>
 	{/if}
-	
+
 	<div class="form-group">
 		<div class="col-lg-9 col-lg-offset-3">
-			<button class="btn btn-default" type="submit" name="submitNewVoucher">
-				<i class="icon-ok"></i>
-				{l s='Add'}
-			</button>
-
 			<button class="btn btn-default" type="button" id="cancel_add_voucher">
-				<i class="icon-remove"></i>
+				<i class="icon-remove text-danger"></i>
 				{l s='Cancel'}
+			</button>
+			<button class="btn btn-default" type="submit" name="submitNewVoucher">
+				<i class="icon-ok text-success"></i>
+				{l s='Add'}
 			</button>
 		</div>
 	</div>
