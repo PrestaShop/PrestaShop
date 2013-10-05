@@ -198,7 +198,7 @@ class MediaCore
 			$file_uri = $js_uri;
 		// check if js files exists
 
-		if (!preg_match('/^http(s?):\/\//i', $file_uri) && !@filemtime($file_uri))
+		if (!preg_match('/^http(s?):\/\//i', $file_uri) && (!is_file($file_uri) || !filemtime($file_uri)))
 			return false;
 
 		if (Context::getContext()->controller->controller_type == 'admin' && !array_key_exists('host', $url_data))
@@ -225,7 +225,7 @@ class MediaCore
 		$url_data = parse_url($css_uri);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
 		// check if css files exists
-		if (!@filemtime($file_uri) && !array_key_exists('host', $url_data)) 
+		if ((!is_file($file_uri) || !filemtime($file_uri)) && !array_key_exists('host', $url_data)) 
 			return false;
 
 		if (Context::getContext()->controller->controller_type == 'admin')
