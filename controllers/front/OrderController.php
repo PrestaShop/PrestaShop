@@ -26,6 +26,7 @@
 
 class OrderControllerCore extends ParentOrderController
 {
+	public $php_self = 'order';
 	public $step;
 
 	/**
