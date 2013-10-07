@@ -21,9 +21,9 @@ function SmartWizard(target, options) {
     this.elmStepContainer = $('<div></div>').addClass("stepContainer");
     this.loader = $('<div>Loading</div>').addClass("loader");
     this.buttons = {
-        next : $('<a>'+options.labelNext+'</a>').attr("href","#").addClass("buttonNext").addClass("btn"),
-        previous : $('<a>'+options.labelPrevious+'</a>').attr("href","#").addClass("buttonPrevious").addClass("btn"),
-        finish  : $('<a>'+options.labelFinish+'</a>').attr("href","#").addClass("buttonFinish").addClass("btn")
+        next : $('<a>'+options.labelNext+'</a>').attr("href","#").addClass("buttonNext").addClass("btn btn-default"),
+        previous : $('<a>'+options.labelPrevious+'</a>').attr("href","#").addClass("buttonPrevious").addClass("btn btn-default"),
+        finish  : $('<a>'+options.labelFinish+'</a>').attr("href","#").addClass("buttonFinish").addClass("btn btn-success")
     };
 
     /*
@@ -67,7 +67,7 @@ function SmartWizard(target, options) {
             return false;
         });
         $($this.buttons.finish).click(function() {
-            if(!$(this).hasClass('buttonDisabled')){
+            if(!$(this).hasClass('disabled')){
                 if($.isFunction($this.options.onFinish)) {
                     var context = { fromStep: $this.curStepIdx + 1 };
                     if(!$this.options.onFinish.call(this,$($this.steps), context)){
@@ -261,23 +261,23 @@ function SmartWizard(target, options) {
     var _adjustButton = function($this) {
         if (! $this.options.cycleSteps){
             if (0 >= $this.curStepIdx) {
-                $($this.buttons.previous).addClass("buttonDisabled");
+                $($this.buttons.previous).addClass("disabled");
 				if ($this.options.hideButtonsOnDisabled) {
                     $($this.buttons.previous).hide();
                 }
             }else{
-                $($this.buttons.previous).removeClass("buttonDisabled");
+                $($this.buttons.previous).removeClass("disabled");
                 if ($this.options.hideButtonsOnDisabled) {
                     $($this.buttons.previous).show();
                 }
             }
             if (($this.steps.length-1) <= $this.curStepIdx){
-                $($this.buttons.next).addClass("buttonDisabled");
+                $($this.buttons.next).addClass("disabled");
                 if ($this.options.hideButtonsOnDisabled) {
                     $($this.buttons.next).hide();
                 }
             }else{
-                $($this.buttons.next).removeClass("buttonDisabled");
+                $($this.buttons.next).removeClass("disabled");
                 if ($this.options.hideButtonsOnDisabled) {
                     $($this.buttons.next).show();
                 }
@@ -285,12 +285,12 @@ function SmartWizard(target, options) {
         }
         // Finish Button
         if (! $this.steps.hasClass('disabled') || $this.options.enableFinishButton){
-            $($this.buttons.finish).removeClass("buttonDisabled");
+            $($this.buttons.finish).removeClass("disabled");
             if ($this.options.hideButtonsOnDisabled) {
                 $($this.buttons.finish).show();
             }
         }else{
-            $($this.buttons.finish).addClass("buttonDisabled");
+            $($this.buttons.finish).addClass("disabled");
             if ($this.options.hideButtonsOnDisabled) {
                 $($this.buttons.finish).hide();
             }
