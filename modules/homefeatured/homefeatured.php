@@ -70,10 +70,10 @@ class HomeFeatured extends Module
 
 	public function getContent()
 	{
-		$output = '<h2>'.$this->displayName.'</h2>';
+		$output = '';
 		if (Tools::isSubmit('submitHomeFeatured'))
 		{
-			$nbr = (int)Tools::getValue('nbr');
+			$nbr = (int)Tools::getValue('HOME_FEATURED_NBR');
 			if (!$nbr OR $nbr <= 0 OR !Validate::isInt($nbr))
 				$errors[] = $this->l('An invalid number of products has been specified.');
 			else
@@ -83,25 +83,7 @@ class HomeFeatured extends Module
 			else
 				$output .= $this->displayConfirmation($this->l('Your settings have been updated.'));
 		}
-		return $output.$this->displayForm();
-	}
-
-	public function displayForm()
-	{
-		$output = '
-		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset><legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
-				<p>'.$this->l('To add products to your homepage, simply add them to the "home" category.').'</p><br />
-				<label>'.$this->l('Define the number of products to be displayed.').'</label>
-				<div class="margin-form">
-					<input type="text" size="5" name="nbr" value="'.Tools::safeOutput(Tools::getValue('nbr', (int)(Configuration::get('HOME_FEATURED_NBR')))).'" />
-					<p class="clear">'.$this->l('Define the number of products that you would like to display on homepage (default: 8).').'</p>
-
-				</div>
-				<center><input type="submit" name="submitHomeFeatured" value="'.$this->l('Save').'" class="button" /></center>
-			</fieldset>
-		</form>';
-		return $output;
+		return $output.$this->renderForm();
 	}
 
 	public function hookDisplayHeader($params)
@@ -145,5 +127,57 @@ class HomeFeatured extends Module
 	public function hookDeleteProduct($params)
 	{
 		$this->_clearCache('homefeatured.tpl');
+	}
+	
+	public function renderForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Settings'),
+					'icon' => 'icon-cogs'
+				),
+				'description' => $this->l('To add products to your homepage, simply add them to the "home" category.'),
+				'input' => array(
+					array(
+						'type' => 'text',
+						'label' => $this->l('Define the number of products to be displayed.'),
+						'name' => 'HOME_FEATURED_NBR',
+						'class' => 'fixed-width-xs',
+						'desc' => $this->l('Define the number of products that you would like to display on homepage (default: 8).'),
+					),
+				),
+			'submit' => array(
+				'title' => $this->l('Save'),
+				'class' => 'btn btn-primary')
+			),
+		);
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$this->fields_form = array();
+		$helper->id = (int)Tools::getValue('id_carrier');
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitHomeFeatured';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function getConfigFieldsValues()
+	{
+		return array(
+			'HOME_FEATURED_NBR' => Tools::getValue('HOME_FEATURED_NBR', Configuration::get('HOME_FEATURED_NBR')),
+			);
 	}
 }
