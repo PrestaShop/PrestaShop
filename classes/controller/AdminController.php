@@ -654,7 +654,7 @@ class AdminControllerCore extends Controller
 			'export_content' => $content
 			)
 		);
-			
+
 		$this->layout = 'layout-export.tpl';
 	}
 
@@ -2112,6 +2112,7 @@ class AdminControllerCore extends Controller
 	 */
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
+
 		if (!isset($this->list_id))
 			$this->list_id = $this->table;
 
@@ -2166,12 +2167,20 @@ class AdminControllerCore extends Controller
 			$order_by = $this->fields_list[$order_by]['order_key'];
 
 		/* Determine offset from current page */
+
+		
 		if ((isset($_POST['submitFilter'.$this->list_id]) ||
 		isset($_POST['submitFilter'.$this->list_id.'_x']) ||
 		isset($_POST['submitFilter'.$this->list_id.'_y'])) &&
 		!empty($_POST['submitFilter'.$this->list_id]) &&
 		is_numeric($_POST['submitFilter'.$this->list_id]))
 			$start = ((int)$_POST['submitFilter'.$this->list_id] - 1) * $limit;
+		elseif (empty($start) && isset($this->context->cookie->{$this->list_id.'_start'}) && Tools::isSubmit('export'.$this->table))
+			$start = $this->context->cookie->{$this->list_id.'_start'};
+		else
+			$start = 0;
+
+		$this->context->cookie->{$this->list_id.'_start'} = $start;
 
 		/* Cache */
 		$this->_lang = (int)$id_lang;
@@ -2240,8 +2249,6 @@ class AdminControllerCore extends Controller
 			if (isset($this->_having))
 				$having_clause .= $this->_having.' ';
 		}
-
-
 
 		$this->_listsql = '
 		SELECT SQL_CALC_FOUND_ROWS
@@ -2464,8 +2471,27 @@ class AdminControllerCore extends Controller
 					$this->errors[$field] = $error;
 		}
 
+
 		/* Overload this method for custom checking */
 		$this->_childValidation();
+
+		/* Checking for multilingual fields validity */
+		if (isset($rules['validateLang']) && is_array($rules['validateLang']))
+			foreach ($rules['validateLang'] as $field_lang => $function)
+				foreach ($languages as $language)
+					if (($value = Tools::getValue($field_lang.'_'.$language['id_lang'])) !== false && !empty($value))
+					{
+						if (Tools::strtolower($function) == 'iscleanhtml' && Configuration::get('PS_ALLOW_HTML_IFRAME'))
+							$res = Validate::$function($value, true);
+						else
+							$res = Validate::$function($value);
+						if (!$res)
+							$this->errors[$field_lang.'_'.$language['id_lang']] = sprintf(
+								Tools::displayError('The %1$s field (%2$s) is invalid.'),
+								call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name),
+								$language['name']
+							);
+					}
 	}
 
 	/**

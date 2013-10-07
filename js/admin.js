@@ -477,32 +477,6 @@ function validateImportation(mandatory)
 		}
 }
 
-function askFeatureName(selected, selector)
-{
-	var elem;
-
-	if (selected.value == 'features')
-	{
-		$('#features_' + selector).show();
-		$('#feature_name_' + selector).attr('name', selected.name);
-	}
-}
-
-function replaceFeature(toReplace, selector)
-{
-	var elem;
-
-	if ($('#feature_name_' + selector).val() == '')
-		return false;
-
-	elem = getE(toReplace);
-	elem.options[elem.selectedIndex].text = $('#feature_name_' + selector).val();
-	elem.options[elem.selectedIndex].value = '#F_' + $('#feature_name_' + selector).val();
-	$('#features_' + selector).toggle();
-	$('#feature_name_' + selector).val('');
-	$('#feature_name_' + selector).attr('name', '');
-}
-
 function chooseTypeTranslation(id_lang)
 {
 	getE('translation_lang').value = id_lang;
