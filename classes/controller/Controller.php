@@ -334,12 +334,14 @@ abstract class ControllerCore
 			}
 		}
 		else
+		{
 			$plugin_path = Media::getJqueryPluginPath($name, $folder);
 
 		if(!empty($plugin_path['css']))
 			$this->addCSS($plugin_path['css']);
 		if(!empty($plugin_path['js']))
 			$this->addJS($plugin_path['js']);
+		}
 	}
 
 	/**

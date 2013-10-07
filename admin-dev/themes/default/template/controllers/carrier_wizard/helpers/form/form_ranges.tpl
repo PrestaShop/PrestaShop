@@ -40,7 +40,7 @@
 					</td>
 					{foreach from=$ranges key=r item=range}
 						<td class="center">
-							<input name="fees[{$zone.id_zone|intval}][{$range.id_range|intval}]" type="text" 
+							<input name="fees[{$zone.id_zone|intval}][{$range.id_range|intval}]" type="text"
 							{if !isset($fields_value['zones'][$zone.id_zone]) || (isset($fields_value['zones'][$zone.id_zone]) && !$fields_value['zones'][$zone.id_zone])} disabled="disabled"{/if} {if isset($price_by_range[$range.id_range][$zone.id_zone]) && $price_by_range[$range.id_range][$zone.id_zone] && isset($fields_value['zones'][$zone.id_zone]) && $fields_value['zones'][$zone.id_zone]} value="{$price_by_range[$range.id_range][$zone.id_zone]|string_format:'%.6f'}" {else} value="" {/if} /> &nbsp; {$currency_sign}
 						</td>
 					{/foreach}
@@ -53,7 +53,7 @@
 						{if $smarty.foreach.ranges.first}
 							<td class="center">&nbsp;</td>
 						{else}
-							<td class="center"><button class="button">{l s='Delete'}</button</td>
+							<td class="center"><button class="button">{l s='Delete'}</button></td>
 						{/if}
 					{/foreach}
 				</tr>
