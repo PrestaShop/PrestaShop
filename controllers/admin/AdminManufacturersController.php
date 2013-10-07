@@ -596,6 +596,9 @@ class AdminManufacturersControllerCore extends AdminController
 					'href' => $this->context->link->getAdminLink('AdminManufacturers').'&addaddress=1&id_manufacturer='.(int)$manufacturer->id,
 					'desc' => $this->l('Add address')
 				);
+
+		$this->toolbar_title = is_array($this->breadcrumbs) ? array_unique($this->breadcrumbs) : array($this->breadcrumbs);
+		$this->toolbar_title[] = $manufacturer->name;
 		
 		$addresses = $manufacturer->getAddresses($this->context->language->id);
 

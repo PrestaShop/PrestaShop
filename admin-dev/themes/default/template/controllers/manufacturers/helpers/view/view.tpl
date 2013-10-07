@@ -26,20 +26,23 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
-<div class="panel">
-	<h3>{$manufacturer->name}</h3>
-	<span>{l s='Total addresses'} {count($addresses)}</span>
+<fieldset>
+	<h3>{l s='Addresses'} <span class="badge">{count($addresses)}</span></h3>
 	{if !count($addresses)}
 		{l s='No address has been found for this manufacturer.'}
 	{else}
 		{foreach $addresses AS $addresse}
+		<div class="panel">
+			<div class="panel-heading">
+				{$addresse.firstname} {$addresse.lastname}
+				<div class="pull-right">
+					<a class="btn btn-default" href="{$link->getAdminLink('AdminManufacturers')}&id_address={$addresse.id_address}&editaddresses=1">
+						<i class="icon-edit"></i>
+						{l s='Edit'}</a>
+				</div>
+			</div>
+
 			<table class="table">
-				<thead>
-					<tr>
-						<th>{$addresse.firstname} {$addresse.lastname}
-						</th>
-					</tr>
-				</thead>
 				<tbody>
 					<tr>
 						<td>
@@ -56,20 +59,13 @@
 						</td>
 					</tr>
 				</tbody>
-				<tfoot>
-					<tr>
-						<td>
-							<a class="btn btn-default" href="{$link->getAdminLink('AdminManufacturers')}&id_address={$addresse.id_address}&editaddresses=1">
-							<i class="icon-edit"></i>
-							{l s='Edit'}</a>
-						</td>
-					</tr>
-				</tfoot>
 			</table>
+		</div>
 		{/foreach}
 	{/if}
-
-	<span>{l s='Total products'} {count($products)}</span>
+</fieldset>
+<fieldset>
+	<h3>{l s='Products'} <span class="badge">{count($products)}</span></h3>
 
 	{foreach $products AS $product}
 		{if !$product->hasAttributes()}
@@ -146,5 +142,5 @@
 			</div>
 		{/if}
 	{/foreach}
-</div>
+</fieldset>
 {/block}
