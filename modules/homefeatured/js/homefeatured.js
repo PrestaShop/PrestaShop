@@ -1,4 +1,4 @@
-{*
+/*
 * 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -21,6 +21,16 @@
 *  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
-*}
-{capture name=title}{l s='Popular' mod='homefeatured'}{/capture}
-{include file="$tpl_dir./product-list-home.tpl" id="homefeatured_block" title=$smarty.capture.title}
+*/
+
+$(document).ready(function()
+{
+	$('.title_block').click(function(){
+		var button = $(this);
+		$('#index #center_column .products_block').removeClass('active');
+		button.parent('.products_block').addClass('active');
+		$('#index #center_column .products_block .block_content').hide(0, function(){
+			button.next('.block_content').show(0);
+		});
+	});
+});

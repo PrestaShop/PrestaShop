@@ -66,7 +66,10 @@
 						<span class="shipping_number_edit" style="display:none;">
 							<input type="hidden" name="id_order_carrier" value="{$line.id_order_carrier|htmlentities}" />
 							<input type="text" name="tracking_number" value="{$line.tracking_number|htmlentities}" />
-							<input type="submit" class="btn btn-default" name="submitShippingNumber" value="{l s='Update'}" />
+							<button type="submit" class="btn btn-default" name="submitShippingNumber">
+								<i class="icon-ok"></i>
+								{l s='Update'}
+							</button>
 						</span>
 						<a href="#" class="edit_shipping_number_link btn btn-default">
 							<i class="icon-pencil"></i>

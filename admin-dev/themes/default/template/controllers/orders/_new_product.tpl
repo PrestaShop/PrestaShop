@@ -76,9 +76,13 @@
 		{/if}
 	</td>
 	<td style="display:none;">
+		<button type="button" class="btn btn-default" id="cancelAddProduct">
+			<i class="icon-remove text-danger"></i>
+			{l s='Cancel'}
+		</button>
 		<button type="button" class="btn btn-default" id="submitAddProduct" disabled="disabled">
-			<i class="icon-ok"></i>
-			{l s='Add product'}
+			<i class="icon-ok text-success"></i>
+			{l s='Add'}
 		</button>
 	</td>
 </tr>
