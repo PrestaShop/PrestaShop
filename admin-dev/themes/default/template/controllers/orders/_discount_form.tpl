@@ -54,7 +54,6 @@
 			<div class="input-group">
 				<div class="input-group-addon">
 					<span id="discount_currency_sign" style="display: none;">{$currency->sign}</span>
-
 					<span id="discount_percent_symbol">%</span>
 				</div>
 				<input class="form-control" type="text" name="discount_value"/>
