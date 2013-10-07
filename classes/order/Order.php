@@ -499,6 +499,7 @@ class OrderCore extends ObjectModel
 		return Db::getInstance()->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'order_delivery` ody
+		LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.product_id = ody.product_id)
 		LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = ody.product_id)
 		LEFT JOIN `'._DB_PREFIX_.'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = ody.id_shop)
 		WHERE ody.`id_order` = ' . (int)($this->id));
@@ -600,60 +601,48 @@ class OrderCore extends ObjectModel
 		if(!$deliverd_products)
 		{
 			$deliverd_products = $this->getProductsDeliveryDetails();
-// 			$resultArray = $this->getProducts($deliverd_products); // update array with all info, but only on delivered products
 		}
-// 			print_r($deliverd_products);
-// 			echo("<hr>");
-// 			print_r($resultArray);
-// 			echo("<hr>");
 			
 		$customized_datas = Product::getAllCustomizedDatas($this->id_cart);
 		$resultArray = array();
 		$newResultArray = array();
 		foreach($deliverd_products as $row)
 		{
+			$row['product_quantity'] = $row['delivery_qty'];
+			
 			// Change qty if selected
 			if ($selectedQty)
 			{
 				$row['product_quantity'] = 0;
 				foreach ($selectedProducts as $key => $id_product)
-					if ($row['id_order_detail'] == $id_product)
+					if ($row['id'] == $id_product)
 						$row['product_quantity'] = (int)($selectedQty[$key]);
 				if (!$row['product_quantity'])
 					continue;
 			}
 
 			$this->setProductImageInformations($row);
-// 			$this->setProductCurrentStock($row);
+			$this->setProductCurrentStock($row);
 
 			// Backward compatibility 1.4 -> 1.5
-// 			$this->setProductPrices($row);
+			$this->setProductPrices($row);
 
 			$this->setProductCustomizedDatas($row, $customized_datas);
 
-			// Add information for virtual product
-// 			if ($row['download_hash'] && !empty($row['download_hash']))
-// 			{
-// 				$row['filename'] = ProductDownload::getFilenameFromIdProduct((int)$row['product_id']);
-// 				// Get the display filename
-// 				$row['display_filename'] = ProductDownload::getFilenameFromFilename($row['filename']);
-// 			}
-			
 			$row['id_address_delivery'] = $this->id_address_delivery;
 			
-			/* Stock product */
+			/* store product */
 			$resultArray[(int)$row['id']] = $row;
 		}
 
 		if ($customized_datas)
 			Product::addCustomizationPrice($resultArray, $customized_datas);
 
+		// move array to delivery
 		foreach($resultArray as $product) {
 				$newResultArray[$product['delivery_id']][] = $product;
 		}
 		
-// 		return $resultArray;
-print_r($newResultArray);
 		return $newResultArray;
 		
 	}

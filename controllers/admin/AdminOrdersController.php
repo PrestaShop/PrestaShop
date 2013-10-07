@@ -1239,12 +1239,11 @@ class AdminOrdersControllerCore extends AdminController
 		}
 		elseif (Tools::isSubmit('submitAdsAdd') && isset($order))
 		{
-			if(Tools::getValue('adsQty')) // Qty is a must
+			if(Tools::getValue('adsQty') && (Tools::getValue('adsReference') || Tools::getValue('adsEan13') || Tools::getValue('adsProductName') ) ) // Qty is a must
 			{
+				$products = $order->getProducts();
 				if($adsRef = Tools::getValue('adsReference')) // first check reference
 				{
-					$products = $order->getProducts();
-// 					print_r($products);
 					foreach($products as $product) {
 						if($product['product_reference'] == $adsRef) {
 							$product_id = $product['product_id'];
@@ -1252,35 +1251,48 @@ class AdminOrdersControllerCore extends AdminController
 							break; // saves resources, since we only loop untill we find product
 						}
 					}
-					$id_order = Tools::getValue('id_order');
-					$delivery_id = Tools::getValue('submitAdsAdd');
-					$qty = Db::getInstance()->executeS('
-					SELECT delivery_qty
-					FROM `'._DB_PREFIX_.'order_delivery` ody
-					WHERE ody.`id_order` = ' . (int)$id_order .
-					' AND ody.`product_id` = ' . $product_id .
-					' AND ody.`product_attribute_id` = ' . $product_attribute_id .
-					' AND ody.`delivery_id` = ' . $delivery_id);
-					if(isset($qty['delivery_qty']))
-					{
-						$new_qty = $qty["delivery_qty"] + Tools::getValue('adsQty');
-						Db::getInstance()->update('order_delivery',array('delivery_qty' => $new_qty),array('id_order' => $id_order,'product_id' => $product_id, 'product_attribute_id' => $product_attribute_id,
-						'delivery_id' => $delivery_id,'id_shop' =>$order->id_shop));
-					}
-					else
-					{
-						Db::getInstance()->insert('order_delivery',array('id_order' => $id_order,'product_id' => $product_id, 'product_attribute_id' => $product_attribute_id,'delivery_id' => $delivery_id,
-						'delivery_qty' => 1,'id_shop' =>$order->id_shop));
+				}
+				elseif($adsEan13 = Tools::getValue('adsEan13')) // if no reference, see if we got ean13
+				{
+					foreach($products as $product) {
+						if($product['product_ean13'] == $adsEan13) {
+							$product_id = $product['product_id'];
+							$product_attribute_id = $product['product_attribute_id'];
+							break;
+						}
 					}
 				}
-				elseif(Tools::getValue('adsEan13'))
+				elseif($adsProdID = Tools::getValue('adsProductName')) // an last, get id from name selecter
 				{
+					foreach($products as $product) {
+						if($product['product_id'] == $adsProdID) {
+							$product_id = $product['product_id'];
+							$product_attribute_id = $product['product_attribute_id'];
+							break;
+						}
+					}
 				}
-				elseif(Tools::getValue('adsProductName'))
+				$id_order = Tools::getValue('id_order');
+				$delivery_id = Tools::getValue('submitAdsAdd');
+				$qty = Db::getInstance()->executeS('
+				SELECT delivery_qty
+				FROM `'._DB_PREFIX_.'order_delivery` ody
+				WHERE ody.`id_order` = ' . (int)$id_order .
+				' AND ody.`product_id` = ' . $product_id .
+				' AND ody.`product_attribute_id` = ' . $product_attribute_id .
+				' AND ody.`delivery_id` = ' . $delivery_id);
+				if(isset($qty[0]['delivery_qty']))
 				{
+					$new_qty = $qty[0]["delivery_qty"] + Tools::getValue('adsQty');
+					Db::getInstance()->update('order_delivery',array('delivery_qty' => $new_qty),
+					'`id_order` = '. $id_order . ' AND `product_id` = ' . $product_id . ' AND `product_attribute_id` = '. $product_attribute_id .
+					' AND `delivery_id` = ' . $delivery_id . ' AND `id_shop` = ' . $order->id_shop);
 				}
-				// move sql here
-				// tink all but the foreach loop can be here.
+				else
+				{
+					Db::getInstance()->insert('order_delivery',array('id_order' => $id_order,'product_id' => $product_id, 'product_attribute_id' => $product_attribute_id,'delivery_id' => $delivery_id,
+					'delivery_qty' => 1,'id_shop' =>$order->id_shop));
+				}
 			}
 			else
 			{
@@ -1294,7 +1306,7 @@ class AdminOrdersControllerCore extends AdminController
 
 		parent::postProcess();
 	}
-
+	
 	public function renderView()
 	{
 		$order = new Order(Tools::getValue('id_order'));
@@ -1304,6 +1316,7 @@ class AdminOrdersControllerCore extends AdminController
 		$customer = new Customer($order->id_customer);
 		$carrier = new Carrier($order->id_carrier);
 		$products = $this->getProducts($order);
+		
 		$delivered_products = $this->getProductsDelivery($order);
 		$currency = new Currency((int)$order->id_currency);
 		// Carrier module call
@@ -2283,11 +2296,13 @@ class AdminOrdersControllerCore extends AdminController
 	
 	protected function getProductsDelivery($order)
 	{
+		// get delivered products
 		$delivered_products = $order->getProductsDelivery();
-		foreach ($delivered_products as $delivery)
+		foreach ($delivered_products as &$delivery)
 		{
-		foreach ($delivery as &$product)
+			foreach ($delivery as &$product)
 			{
+				// add missing elemnts to table.
 				if ($product['image'] != null)
 				{
 					$name = 'product_mini_'.(int)$product['product_id'].(isset($product['product_attribute_id']) ? '_'.(int)$product['product_attribute_id'] : '').'.jpg';
@@ -2298,7 +2313,14 @@ class AdminOrdersControllerCore extends AdminController
 					else
 						$product['image_size'] = false;
 				}
-			}
+				if ($product['id_warehouse'] != 0)
+				{
+					$warehouse = new Warehouse((int)$product['id_warehouse']);
+					$product['warehouse_name'] = $warehouse->name;
+				}
+				else
+					$product['warehouse_name'] = '--';
+				}
 		}
 
 		return $delivered_products;

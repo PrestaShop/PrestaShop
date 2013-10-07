@@ -765,6 +765,35 @@
 					document.getElementById('adsEan13').value = ean;
 				}
 			</script>
+			<script type="text/javascript">
+			/* Focus and scroll down to */
+			var adsRef = '{$smarty.post.adsReference}';
+			if(adsRef != '') {
+				window.setTimeout(function ()
+				{
+				var el = document.getElementById('adsReference')
+				el.focus();
+				el.scrollIntoView(true);
+				}, 0);
+			}
+			var adsEan13 = '{$smarty.post.adsEan13}';
+			if(adsEan13 != '') {
+				window.setTimeout(function ()
+				{
+				var el = document.getElementById('adsEan13')
+				el.focus();
+				el.scrollIntoView(true);
+				}, 0);
+			}
+			var adsProductName = '{$smarty.post.adsProductName}';
+			if(adsProductName != '') {
+				window.setTimeout(function ()
+				{
+				var el = document.getElementById('adsProductName')
+				el.scrollIntoView(true);
+				}, 0);
+			}
+			</script>
 				<select name="adsProductName" onchange=adsName2Ref() id="adsProductName">
 					<option value="select_pname">--  {l s='Select productname'} --
 					{foreach from=$products item=product key=k}
@@ -776,7 +805,14 @@
 				{l s='Quantity'} 	<input type="text" name="adsQty" value="1" />
 				<button type="submit" name="submitAdsAdd" value="{$ads_deliverynr}">Add</button>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<button type="submit" name="submitAdsAddAll" value="{$ads_deliverynr}">Add All products</button><br><br>
+				<button type="submit" name="submitAdsAddAll" value="{$ads_deliverynr}">Add All products</button><br>
+				<input type="submit" name="submitAdsGenSlip" value="Generate Delivery Slip for: ">
+				<select name="adsSlipNr" id="adsSlipNr">
+					{for $var=1 to $ads_deliverynr}
+						<option value="{$var}" >{$var}</option>
+					{/for}
+				</select>
+				<br><br>
 				{foreach from=$delivered_products item=delivery_id}
 				<table style="width: 100%;" cellspacing="0" cellpadding="0" class="table" id="orderDeliveryProducts">
 					<tr>
@@ -785,28 +821,13 @@
 						<th style="width: 15%; text-align: center">{l s='Unit Price'} <sup>*</sup></th>
 						<th style="width: 4%; text-align: center">{l s='Qty'}</th>
 						{if $display_warehouse}<th style="text-align: center">{l s='Warehouse'}</th>{/if}
-						{if ($order->hasBeenPaid())}<th style="width: 3%; text-align: center">{l s='Refunded'}</th>{/if}
-						{if ($order->hasBeenDelivered() || $order->hasProductReturned())}<th style="width: 3%; text-align: center">{l s='Returned'}</th>{/if}
-						{if $stock_management}<th style="width: 10%; text-align: center">{l s='Available quantity'}</th>{/if}
 						<th style="width: 10%; text-align: center">{l s='Total'} <sup>*</sup></th>
-						<th colspan="2" style="display: none;" class="add_product_fields">&nbsp;</th>
-						<th colspan="2" style="display: none;" class="edit_product_fields">&nbsp;</th>
-						<th colspan="2" style="display: none;" class="standard_refund_fields"><img src="../img/admin/delete.gif" alt="{l s='Products:'}" />
-							{if ($order->hasBeenDelivered() || $order->hasBeenShipped())}
-								{l s='Return'}
-							{elseif ($order->hasBeenPaid())}
-								{l s='Refund'}
-							{else}
-								{l s='Cancel'}
-							{/if}
-						</th>
-						<th style="width: 12%;text-align:right;display:none" class="partial_refund_fields">
-							{l s='Partial refund'}
-						</th>
 					</tr>
 
 					{foreach from=$delivery_id item=product key=k}
-						[ {print_r($product)} ]
+						<tr>
+							<td colspan="6">{l s='Delivery'} {$k+1}</td>
+						</tr>
 						{* Include customized datas partial *}
 						{include file='controllers/orders/_customized_data.tpl'}
 
