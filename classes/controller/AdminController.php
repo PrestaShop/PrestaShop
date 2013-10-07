@@ -1786,7 +1786,7 @@ class AdminControllerCore extends Controller
 		}
 
 		// Execute Hook AdminController SetMedia
-		Hook::exec('actionAdminControllerSetMedia', array());
+		Hook::exec('actionAdminControllerSetMedia');
 	}
 
 	/**
