@@ -41,7 +41,7 @@
 				<div class="margin-form">
 					<select id="id_category" name="id_category">
 						{foreach from=$categories item='category'}
-						<option value="{$category.id_category}">{$category.name}</option>
+						<option value="{$category.id_category|intval}">({$category.id_category|intval}) {$category.name}</option>
 						{/foreach}
 					</select>
 					<a class="button bt-icon" href="#" id="add_condition_category">

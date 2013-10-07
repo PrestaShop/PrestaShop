@@ -1730,7 +1730,7 @@ abstract class ModuleCore
 	{
 		Tools::enableCache();
 		if ($cache_id === null)
-			$cache_id = Module::getCacheId($this->name);
+			$cache_id = $this->name;
 		Tools::clearCache(Context::getContext()->smarty, $this->getTemplatePath($template), $cache_id, $compile_id);
 		Tools::restoreCacheSettings();
 	}

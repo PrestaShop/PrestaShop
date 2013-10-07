@@ -16,13 +16,14 @@
 - bMancone
 - bumbu
 - Burhan
-- Cédric Mouleyre
 - Caleydon Media
 - cam.lafit
 - Captain FLAM
 - Captain-FLAM
 - ccauw
+- Cédric Mouleyre
 - ChristopheBoucaut
+- CINS
 - cippest
 - cmouleyre
 - Corentin Delcourt
@@ -34,42 +35,50 @@
 - David Gasperoni
 - Davy Rolink
 - djfm
+- dlage
 - dMetzger
 - (d)oekia
 - Dragan Skrbic
-- DrÿSs'
 - dreammeup
 - DrySs
+- DrÿSs
+- DrÿSs'
 - dSevere
 - Edouard Gaulué
 - emily-d
 - Fabio Chelly
 - fBrignoli
 - fram
+- Francois Gaillard
 - François Gaillard
+- Fran?s Gaillard
 - fSerny
 - Gabriel Schwardy
 - gBrunier
 - gCharmes
 - gPoulain
+- gr4devel
 - Grégoire Bélorgey
 - Gregory Roussac
 - gRoussac
 - Guillaume DELOINCE
+- ha99y
 - hAitmansour
 - Ha!*!*y
 - indesign47
 - inem0o
 - ivancasasempere
-- Jérôme Nadaud
 - jBreux
+- jeckyl
 - jeromenadaud
 - Jerome Nadaud
+- Jérôme Nadaud
 - jessylenne
 - jmCollin
 - jObregon
 - Jonathan Danse
 - joseantgv
+- Julien
 - Kevin Granger
 - kpodemski
 - Krystian Podemski
@@ -77,8 +86,11 @@
 - lCherifi
 - ldecoker
 - lLefevre
+- LOIC ROSSET ltd
+- makk1ntosh
 - marcinsz101
 - Marco Cervellin
+- matiasiglesias
 - Mats Rynge
 - MatthieuB
 - Maxence
@@ -101,32 +113,39 @@
 - PhpMadman
 - Pierre
 - Piotr Kaczor
-- Piotr Moćko
+- Piotr Mocko
 - PrestaEdit
 - prestarocket
+- Prestaspirit
 - pxls
-- Rémi Gaillard
 - Raphaël Malié
 - raulgundin
+- Rémi Gaillard
 - rGaillard
 - Rimas Kudelis
 - rMalie
 - rMontagne
+- romainberger
 - root
 - runningz
-- Sébastien
-- Sébastien Bocahu
+- sagaradonis
 - Samy Rabih
 - Sarah Lorenzini
 - Seb
+- Sébastien
+- Sébastien Bocahu
 - Seynaeve
 - Shagshag
+- sjousse
 - sLorenzini
+- smartdatasoft
+- soufyan
 - soware
 - Staging
 - sThiebaut
 - Sylvain WITMEYER
 - tDidierjean
+- unknown
 - vAugagneur
 - vChabot
 - Vincent Augagneur
@@ -138,3 +157,5 @@
 - Xavier
 - Xavier POITAU
 - Yoozio
+- zimmi1
+

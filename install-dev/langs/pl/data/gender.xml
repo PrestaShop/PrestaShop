@@ -2,5 +2,4 @@
 <entity_gender>
   <gender id="1" name="Pan"/>
   <gender id="2" name="Pani"/>
-  <gender id="3" name="Panna"/>
 </entity_gender>

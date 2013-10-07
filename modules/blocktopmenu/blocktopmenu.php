@@ -543,21 +543,21 @@ class Blocktopmenu extends Module
 					$selected = ($this->page_name == 'product' && (Tools::getValue('id_product') == $id)) ? ' class="sfHover"' : '';
 					$product = new Product((int)$id, true, (int)$id_lang);
 					if (!is_null($product->id))
-						$this->_menu .= '<li'.$selected.'><a href="'.htmlentities($product->getLink()).'">'.$product->name.'</a></li>'.PHP_EOL;
+						$this->_menu .= '<li'.$selected.'><a href="'.Tools::HtmlEntitiesUTF8($product->getLink()).'">'.$product->name.'</a></li>'.PHP_EOL;
 					break;
 
 				case 'CMS':
 					$selected = ($this->page_name == 'cms' && (Tools::getValue('id_cms') == $id)) ? ' class="sfHover"' : '';
 					$cms = CMS::getLinks((int)$id_lang, array($id));
 					if (count($cms))
-						$this->_menu .= '<li'.$selected.'><a href="'.htmlentities($cms[0]['link']).'">'.$cms[0]['meta_title'].'</a></li>'.PHP_EOL;
+						$this->_menu .= '<li'.$selected.'><a href="'.Tools::HtmlEntitiesUTF8($cms[0]['link']).'">'.$cms[0]['meta_title'].'</a></li>'.PHP_EOL;
 					break;
 
 				case 'CMS_CAT':
 					$category = new CMSCategory((int)$id, (int)$id_lang);
 					if (count($category))
 					{
-						$this->_menu .= '<li><a href="'.htmlentities($category->getLink()).'">'.$category->name.'</a>';
+						$this->_menu .= '<li><a href="'.Tools::HtmlEntitiesUTF8($category->getLink()).'">'.$category->name.'</a>';
 						$this->getCMSMenuItems($category->id);
 						$this->_menu .= '</li>'.PHP_EOL;
 					}
@@ -583,7 +583,7 @@ class Blocktopmenu extends Module
 						else
 							$manufacturer->link_rewrite = 0;
 						$link = new Link;
-						$this->_menu .= '<li'.$selected.'><a href="'.htmlentities($link->getManufacturerLink((int)$id, $manufacturer->link_rewrite)).'">'.$manufacturer->name.'</a></li>'.PHP_EOL;
+						$this->_menu .= '<li'.$selected.'><a href="'.Tools::HtmlEntitiesUTF8($link->getManufacturerLink((int)$id, $manufacturer->link_rewrite)).'">'.$manufacturer->name.'</a></li>'.PHP_EOL;
 					}
 					break;
 
@@ -603,7 +603,7 @@ class Blocktopmenu extends Module
 					if (!is_null($supplier->id))
 					{
 						$link = new Link;
-						$this->_menu .= '<li'.$selected.'><a href="'.htmlentities($link->getSupplierLink((int)$id, $supplier->link_rewrite)).'">'.$supplier->name.'</a></li>'.PHP_EOL;
+						$this->_menu .= '<li'.$selected.'><a href="'.Tools::HtmlEntitiesUTF8($link->getSupplierLink((int)$id, $supplier->link_rewrite)).'">'.$supplier->name.'</a></li>'.PHP_EOL;
 					}
 					break;
 
@@ -613,7 +613,7 @@ class Blocktopmenu extends Module
 					if (Validate::isLoadedObject($shop))
 					{
 						$link = new Link;
-						$this->_menu .= '<li'.$selected.'><a href="'.htmlentities($shop->getBaseURL()).'">'.$shop->name.'</a></li>'.PHP_EOL;
+						$this->_menu .= '<li'.$selected.'><a href="'.Tools::HtmlEntitiesUTF8($shop->getBaseURL()).'">'.$shop->name.'</a></li>'.PHP_EOL;
 					}
 					break;
 				case 'LNK':
@@ -625,7 +625,7 @@ class Blocktopmenu extends Module
 							$default_language = Configuration::get('PS_LANG_DEFAULT');
 							$link = MenuTopLinks::get($link[0]['id_linksmenutop'], $default_language, (int)Shop::getContextShopID());
 						}
-						$this->_menu .= '<li><a href="'.htmlentities($link[0]['link']).'"'.(($link[0]['new_window']) ? ' target="_blank"': '').'>'.$link[0]['label'].'</a></li>'.PHP_EOL;
+						$this->_menu .= '<li><a href="'.Tools::HtmlEntitiesUTF8($link[0]['link']).'"'.(($link[0]['new_window']) ? ' target="_blank"': '').'>'.$link[0]['label'].'</a></li>'.PHP_EOL;
 					}
 					break;
 			}
@@ -677,7 +677,7 @@ class Blocktopmenu extends Module
 		if (!empty($is_intersected))
 		{
 			$this->_menu .= '<li '.$selected.'>';
-			$this->_menu .= '<a href="'.htmlentities($category_link).'">'.$category->name.'</a>';
+			$this->_menu .= '<a href="'.Tools::HtmlEntitiesUTF8($category_link).'">'.$category->name.'</a>';
 
 			if (count($children))
 			{
