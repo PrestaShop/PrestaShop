@@ -36,6 +36,7 @@
 		<input type="hidden" name="{$identifier}" id="{$identifier}" value="{$form_id}" />
 	{/if}
 	{foreach $fields as $f => $fieldset}
+		{block name="fieldset"}
 		<fieldset id="fieldset_{$f}">
 			{foreach $fieldset.form as $key => $field}
 				{if $key == 'legend'}
@@ -48,6 +49,7 @@
 					<div class="alert alert-info">{$field}</div>
 				{elseif $key == 'input'}
 					{foreach $field as $input}
+						{block name="input_row"}
 						<div class="row {if $input.type == 'hidden'}hide{/if}" {if $input.name == 'id_state'}id="contains_states"{if !$contains_states}style="display:none;"{/if}{/if}>
 						{if $input.type == 'hidden'}
 							<input type="hidden" name="{$input.name}" id="{$input.name}" value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" />
@@ -593,6 +595,7 @@
 							{/block}{* end block field *}
 						{/if}
 						</div>
+						{/block}
 					{/foreach}
 					{hook h='displayAdminForm' fieldset=$f}
 					{if isset($name_controller)}
@@ -637,6 +640,7 @@
 	<div class="small"><sup>*</sup> {l s='Required field'}</div>
 {/if*} -->
 		</fieldset>
+		{/block}
 		{block name="other_fieldsets"}{/block}
 	{/foreach}
 </form>
