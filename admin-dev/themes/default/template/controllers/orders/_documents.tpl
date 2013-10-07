@@ -123,8 +123,8 @@
 						{if !isset($document->is_delivery)}
 							{if $document->getRestPaid()}
 								<a href="#" class="js-set-payment btn btn-default" data-amount="{$document->getRestPaid()}" data-id-invoice="{$document->id}" title="{l s='Set payment form'}">
-									<i class="icon-pencil"></i>
-									{l s='Set payment form'}
+									<i class="icon-money"></i>
+									{l s='Enter Payment'}
 								</a>
 							{/if}
 							<a href="#" class="btn btn-default" onclick="$('#invoiceNote{$document->id}').show(); return false;" title="{if $document->note eq ''}{l s='Add note'}{else}{l s='Edit note'}{/if}">
@@ -148,7 +148,7 @@
 							<p>
 								<label for="editNote{$document->id}" class="t">{l s='Note'}</label>
 								<input type="hidden" name="id_order_invoice" value="{$document->id}" />
-								<textarea name="note" rows="10" cols="10" id="editNote{$document->id}" class="edit-note">{$document->note|escape:'htmlall':'UTF-8'}</textarea>
+								<textarea name="note" id="editNote{$document->id}" class="edit-note textarea-autosize">{$document->note|escape:'htmlall':'UTF-8'}</textarea>
 							</p>
 							<p>
 								<button type="submit" name="submitEditNote" class="btn btn-default"> 

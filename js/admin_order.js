@@ -293,13 +293,35 @@ function closeAddProduct()
 	current_product = null;
 }
 
+
+
 /**
  * This method allow to initialize all events
  */
 function init()
 {
-	$('.add_product').unbind('click');
-	$('.add_product').click(function() {
+	$('#txt_msg').on('keyup', function(){
+		var length = $('#txt_msg').val().length;
+		if (length > 600) length = '600+';
+		$('#nbchars').html(length+'/600');
+	});
+
+	$('#newMessage').unbind('click');
+	$('#newMessage').click(function() {
+		$(this).hide();
+		$('#message').show();
+		return false;
+	});
+
+	$('#cancelMessage').unbind('click');
+	$('#cancelMessage').click(function() {
+		$('#newMessage').show();
+		$('#message').hide();
+		return false;
+	});
+
+	$('#add_product').unbind('click');
+	$('#add_product').click(function() {
 		$('.cancel_product_change_link:visible').trigger('click');
 		$('.add_product_fields').show();
 		$('.edit_product_fields').hide();
@@ -308,10 +330,15 @@ function init()
 		$('tr#new_product').slideDown('fast', function () {
 			$('tr#new_product td').fadeIn('fast');
 		});
-
+		$(this).hide();
 		$.scrollTo('tr#new_product', 1200, {offset: -100});
-
 		return false;
+	});
+
+	$('#cancelAddProduct').unbind('click');
+	$('#cancelAddProduct').click(function() {
+		$('#add_product').show();
+		$('tr#new_product td').fadeOut('fast');
 	});
 
 	$("#add_product_product_name").autocomplete(admin_order_tab_link,
@@ -793,15 +820,13 @@ function init()
 	$('#add_voucher').click(function() {
 		$(this).hide();
 		$('#voucher_form').show();
-
 		return false;
 	});
 
 	$('#cancel_add_voucher').unbind('click');
 	$('#cancel_add_voucher').click(function() {
 		$('#voucher_form').hide();
-		$('#add_discount_btn').show();
-
+		$('#add_voucher').show();
 		return false;
 	});
 
@@ -873,7 +898,6 @@ $(document).ready(function() {
 			$('.partial_refund_fields').hide();
 			$('.standard_refund_fields').fadeIn();
 		}
-
 		return false;
 	});
 
@@ -896,7 +920,6 @@ $(document).ready(function() {
 			$('.standard_refund_fields').hide();
 			$('.partial_refund_fields').fadeIn();
 		}
-
 		return false;
 	});
 });

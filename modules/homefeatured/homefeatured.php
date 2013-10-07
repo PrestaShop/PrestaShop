@@ -112,6 +112,7 @@ class HomeFeatured extends Module
 	public function hookHeader($params)
 	{
 		$this->context->controller->addCSS(($this->_path).'homefeatured.css', 'all');
+		$this->context->controller->addJS(($this->_path).'js/homefeatured.js');
 	}
 
 	public function hookDisplayHome($params)

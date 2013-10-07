@@ -132,6 +132,11 @@ class AdminOrdersControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function initContent(){
+		$this->addJS(_PS_JS_DIR_.'jquery/plugins/jquery.autosize.min.js');
+		return parent::initContent();
+	}
+
 	public function initPageHeaderToolbar()
 	{
 		$this->page_header_toolbar_title = $this->l('Orders');
