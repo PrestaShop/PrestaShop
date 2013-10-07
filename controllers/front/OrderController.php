@@ -94,8 +94,6 @@ class OrderControllerCore extends ParentOrderController
 	 */
 	public function initContent()
 	{
-		global $isVirtualCart;
-
 		parent::initContent();
 
 		if (Tools::isSubmit('ajax') && Tools::getValue('method') == 'updateExtraCarrier')
@@ -117,7 +115,7 @@ class OrderControllerCore extends ParentOrderController
 		}
 
 		if ($this->nbProducts)
-			$this->context->smarty->assign('virtual_cart', $isVirtualCart);
+			$this->context->smarty->assign('virtual_cart', $this->context->cart->isVirtualCart());
 
 		// 4 steps to the order
 		switch ((int)$this->step)
@@ -225,12 +223,11 @@ class OrderControllerCore extends ParentOrderController
 	 */
 	public function autoStep()
 	{
-		global $isVirtualCart;
 
 		if ($this->step >= 2 && (!$this->context->cart->id_address_delivery || !$this->context->cart->id_address_invoice))
 			Tools::redirect('index.php?controller=order&step=1');
 
-		if ($this->step > 2 && !$isVirtualCart && count($this->context->cart->getDeliveryOptionList()) == 0)
+		if ($this->step > 2 && !$this->context->cart->isVirtualCart() && count($this->context->cart->getDeliveryOptionList()) == 0)
 			Tools::redirect('index.php?controller=order&step=2');
 
 		$delivery = new Address((int)$this->context->cart->id_address_delivery);
