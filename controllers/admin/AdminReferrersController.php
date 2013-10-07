@@ -198,55 +198,50 @@ class AdminReferrersControllerCore extends AdminController
 		$this->fields_form[0] = array('form' => array(
 			'legend' => array(
 				'title' => $this->l('Affiliate'),
-				'image' => '../img/admin/affiliation.png'
+				'icon' => 'icon-group'
 			),
 			'input' => array(
 				array(
 					'type' => 'text',
 					'label' => $this->l('Name:'),
 					'name' => 'name',
-					'size' => 20,
 					'required' => true
 				),
 				array(
 					'type' => 'password',
 					'label' => $this->l('Password:'),
 					'name' => 'passwd',
-					'size' => 20,
 					'desc' => $this->l('Leave blank if no change')
 				)
 			),
 			'desc' => array(
 				$this->l('Affiliates can access their data with this name and password.'),
-				$this->l('Front access:').' <a href="'.$uri.'modules/trackingfront/stats.php" style="font-style: italic;">'.$uri.'modules/trackingfront/stats.php</a>'
+				$this->l('Front access:').' <a class="btn btn-link" href="'.$uri.'modules/trackingfront/stats.php" style="font-style: italic;"><i class="icon-external-link-sign"></i> '.$uri.'modules/trackingfront/stats.php</a>'
 			)
 		));
 
 		$this->fields_form[1] = array('form' => array(
 			'legend' => array(
 				'title' => $this->l('Commission plan'),
-				'image' => '../img/admin/money.png'
+				'icon' => 'icon-dollar'
 			),
 			'input' => array(
 				array(
 					'type' => 'text',
 					'label' => $this->l('Click fee:'),
 					'name' => 'click_fee',
-					'size' => 8,
 					'desc' => $this->l('Fee given for each visit.')
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Base fee:'),
 					'name' => 'base_fee',
-					'size' => 8,
 					'desc' => $this->l('Fee given for each order placed.')
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Percent fee:'),
 					'name' => 'percent_fee',
-					'size' => 8,
 					'desc' => $this->l('Percent of the sales.')
 				)
 			)
@@ -264,7 +259,7 @@ class AdminReferrersControllerCore extends AdminController
 		$this->fields_form[2] = array('form' => array(
 			'legend' => array(
 				'title' => $this->l('Technical information -- Simple mode.'),
-				'image' => '../img/admin/affiliation.png'
+				'icon' => 'icon-cogs'
 			),
 			'help' => true,
 			'input' => array(
@@ -274,7 +269,7 @@ class AdminReferrersControllerCore extends AdminController
 					'name' => 'http_referer_like',
 					'cols' => 40,
 					'rows' => 1,
-					'h3' => $this->l('HTTP referrer')
+					'legend' => $this->l('HTTP referrer')
 				),
 				array(
 					'type' => 'textarea',
@@ -289,7 +284,7 @@ class AdminReferrersControllerCore extends AdminController
 					'name' => 'request_uri_like',
 					'cols' => 40,
 					'rows' => 1,
-					'h3' => $this->l('Request URI')
+					'legend' => $this->l('Request URI')
 				),
 				array(
 					'type' => 'textarea',
@@ -310,7 +305,7 @@ class AdminReferrersControllerCore extends AdminController
 		$this->fields_form[3] = array('form' => array(
 			'legend' => array(
 				'title' => $this->l('Technical information -- Expert mode'),
-				'image' => '../img/admin/affiliation.png'
+				'icon' => 'icon-cogs'
 			),
 			'input' => array(
 				array(
@@ -319,7 +314,7 @@ class AdminReferrersControllerCore extends AdminController
 					'name' => 'http_referer_regexp',
 					'cols' => 40,
 					'rows' => 1,
-					'h3' => $this->l('HTTP referrer')
+					'legend' => $this->l('HTTP referrer')
 				),
 				array(
 					'type' => 'textarea',
@@ -334,7 +329,7 @@ class AdminReferrersControllerCore extends AdminController
 					'name' => 'request_uri_regexp',
 					'cols' => 40,
 					'rows' => 1,
-					'h3' => $this->l('Request URI')
+					'legend' => $this->l('Request URI')
 				),
 				array(
 					'type' => 'textarea',
