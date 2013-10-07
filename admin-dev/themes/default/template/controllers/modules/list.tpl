@@ -150,8 +150,6 @@
 									<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#">
 										<i class="icon-star"></i> {l s='Remove from Favorites'}
 									</a>
-								</li>
-								<li>
 									<a class="action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#" style="display: none;">
 										<i class="icon-star"></i> {l s='Mark as Favorite'}
 									</a>
@@ -161,8 +159,6 @@
 									<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#" style="display: none;">
 										<i class="icon-star"></i> {l s='Remove from Favorites'}
 									</a>
-								</li>
-								<li>
 									<a class="action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#">
 										<i class="icon-star"></i> {l s='Mark as Favorite'}
 									</a>
