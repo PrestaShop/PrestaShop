@@ -24,6 +24,200 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.5
 --------------------------------
 ####################################
+#   v1.5.6.0 - (2013-10-07)  #
+####################################
+
+	Fixed bugs:
+
+	[-] Installer : added the missing default tab in the employee
+	[-] INSTALLER : Fix bug #PSCFV-8289 bad orders vouchers total after update
+	[-] INSTALLER: Wrong SQL query for PS_LEGACY_IMAGES to 0
+	[-] INSTALLER: short_description for PREFIX_manufacturer_lang is now type TEXT
+	[-] INSTALLER : Fix infinite loop when order message has additional ampersand
+	[-] INSTALLER : Fix fatal error in upgrade, could not load configuration class
+	[-] INSTALLER : no update value in fix_download_product_feature_active
+	[-] INSTALLER : Fix fatal error when upgrading
+
+	[-] FO : isVirtualCart was forced to false
+	[-] FO: Fix display of quantity discounts on product pages if the customer is allowable for multiple discount for the same quantity #PSCFV-10580
+	[-] FO: packages should be splitted with advanced stock management when carrier is not associated to multiple warehouse
+	[-] FO : Fix #PSCFV-10480 again, css fix
+	[-] FO : Fix #PSCFV-10480 again css fix
+	[-] FO : Fix bug #PSCFV-10478 could not see auto added cart rule voucher on product page
+	[-] FO: Fix #PSCFV-10461
+	[-] FO : Fix bug #PSCFV-10328 Set country currency if defined when geolocated
+	[-] FO: Fix Product::getAttributesGroups() minimal_quantity/weight/available_date should be multishop
+	[-] FO : replace ucfirst by ucwords for the customer firstname #PSCFV-10396
+	[-] FO : 301 Redirect /iso_lang to /iso_lang/ url
+	[-] FO : Fix bug #PSCFV-8917 taxes calculation when changing delivery address
+	[-] FO: Fix SSL links on domain_ssl instead domain
+	[-] FO : fixed chinese search with multiple symbols #PSCFV-10322
+	[-] FO : Partial fix of adding gift on cart rule on the same entity in the cart rule
+	[-] FO : Fix bug #PSCFV-10118 quantity not updated when cart rules give the same product as gift
+	[-] FO : fixed bug when is virtual cart on OPC carriers is no longer displayed
+	[-] FO : FixBug when route id is empty
+
+	[-] BO : Bug fix - Modules confirmation messages
+	[-] BO : Retro compat, PS_ADMIN_DIR not defined //bad commit sorry
+	[-] BO : Employee's default_tab may not exists, switching to AdminOrders
+	[-] BO : Retro compat, PS_ADMIN_DIR not defined
+	[-] BO : AdminImport add combinations available fields
+	[-] BO : AdminImport add adresses required fields
+	[-] BO : Fix bug #PSCFV-9323 supplier_reference can be unset
+	[-] BO : Fix bug #PSCFV-10064, could not import feature in multilang, thanks @E.Bigfoot
+	[-] BO : Fix bug #PSCFV-10064, could not import deature in multilang, thanks @E.Bigfoot
+	[-] BO : Remove dead code in AdminImport
+	[-] BO : FixBug #PSCFV-10558 - Invalid HTML markup.
+	[-] BO : Fix bug #PSCFV-8389 duplicates is SpecificPrice table
+	[-] BO : AdminImport, tables are not truncated
+	[-] BO : managed decimal format in BO orders
+	[-] BO : Fix bug #PSCFV-5060 could not import supplier_combinations in combinations import
+	[-] BO : Fix #PSCFV-6482 could not import tags in deiffrent languages
+	[-] BO : fixed currency format on order creation
+	[-] Bo : Fix again #PSCFV-10474 again, not deleting start page after import
+	[-] Bo : Fix again #PSCFV-10474 coul not export more than 300 products
+	[-] BO: Fix total without tax in breakdown taxes when taxes are combined #PSCFV-10394 on the invoices
+	[-] BO: translation mismatch    Here is a form to edit the values ​​in the group, we do not need here "attribute type".
+	[-] BO : AdminImport, not matching by ref for updating
+	[-] BO: Fix #PSCFV-10488 filter by employee on logs tab
+	[-] BO : FixBig #PSCFV-10442 - Members Cutomer Group list
+	[-] BO : Could not import empty linkrewrite for products and not matching refs
+	[-] BO : Sort import files in select
+	[-] BO : Remove duplicate sql insert in setProductOutOfStock in monoshop
+	[-] BO : Fix #PSCFV-10501 Remove fatal error
+	[-] BO : Fix bug #PSCFV-9675 could not import non existent parent category
+	[-] BO : Bad entity pre selected in AdminImport
+	[-] BO : Fix bug #PSCFV-10483, could not import other language product link_rewrite
+	[-] BO: Fix data validation when iframe is allowed on some entities like CMS
+	[-] BO : Fix Bug For new Fancy Box events
+	[-] BO : fixed the redirection to a 404 page when loging in in the updater
+	[-] BO : Bad input radio names
+	[-] BO : Issue with domready on adminImport
+	[-] BO : do not reaffect import_type for categories
+	[-] BO: Bad id for multishop checkbox on admin products - weird bug with active flag #PSCFV-9935
+	[-] BO : Fix proces and save buttons for Modules and AdminControllers
+	[-] Bo : Modules 'save' button not active
+	[-] BO : Fix bug #PSCFV-8214 import entity pre selected
+	[-] BO : Fix bugPSCFV-10249 images copy when unix path
+	[-] BO : limited the number of customers displayed in the group view to 100 in order to avoid memory usage error
+	[-] BO : FixBug #PSCFV-9900 Double quote escape problem in delete button link
+	[-] BO : Could not order in AdminStatuses by ID or template
+	[-] BO : Fix bug #PSCFV-8407 can not customize feature column name if needed
+	[-] BO : quote badly decoded in customerThreads
+	[-] BO : Fix Bug #PSCFV-10331 check all from list
+	[-] BO : Customer message twice encoded
+	[-] BO : Fix bug, orders states not ordered by order state name
+	[-] BO : Bug fix - Encoding & tips of the day
+	[-] BO : Do not copy link_rewrite from title if cms already has one
+	[-] BO : Small changes when creating vouchers in back office orders
+	[-] BO: Fix out of stock creation with multishop and stock sharing
+	[-] BO: Fix preview url with multishop
+	[-] BO : Fix possible Uncaught exception 'ReflectionException' when viewing AdminMeta
+	[-] BO : FixBug PSCFV-10331 - Tax rules Pagination
+	[-] BO : Display the old image system migration tool if product images are in _PS_PROD_IMG_DIR_
+	[-] BO : ini_get('safe_mode') can return false
+	[-] BO : AdminModulesController - Bug fix, $params was not set
+	[-] BO : Fix #PSCFV-9906 could not register search engines keywords
+	[-] BO : Fix pull request #665
+	[-] BO : Fix error returned when first import of a localisation pack
+	[-] BO : FixBug #PSCFV-10213 check product/attribute id - Thanks F. Cespedes
+	[-] BO: Fix fatal error on customer edition when email is not valid
+	[-] BO : fixed bug when try to add jquery from  ajax.googleapis.com in BO
+	[-] BO : FixBug Url rewrite preview when user have a different language from shop
+	[-] BO : fixed bug with multistore context on carrier wizard
+
+	[-] Classes : Bug fix - FrontController, mobile & JS minifier fixed
+
+	[-] CORE : #PSCFV-10389 Avoid eventual empty Specific Price Rule
+	[-] CORE : Fix bug #PSCFV-10179 Duplicate specific price records when updating a product
+	[-] CORE : Cart rules not ordered by priority for PaymentModule
+	[-] CORE : Partial fix bug #PSCFV-10534 bad total_products_wt calculated without other cart rules
+	[-] CORE : Could not add too long tags
+	[-] CORE : Missing tag max size
+	[-] CORE : Partial fix for #PSCFV-10482 getCacheId is different in back office
+	[-] CORE : Fix bug #PSCFV-10471 Cart item count problem, unique_id grouping error for id_product and id_product_attribute
+	[-] CORE : #PSCFV-10461 customer group in getPriceStatic, pull request https://github.com/kpodemski/kp-PrestaShop/commit/361ebc72e09d00463bb7a7b7af670e3235ab6a5a
+	[-] Core: Set a remote addr with php-cli #PSCFV-10372
+	[-] CORE : Could not add several cart rules
+	[-] CORE : Fix bug #PSCFV-10040 Notice: Undefined index: unifunc && Fatal error: Function name must be a string on some PHP version with empty cache folder and smarty cache enabled
+	[-] CORE: Fix for field length and type regarding https://github.com/PrestaShop/PrestaShop/pull/678
+	[-] CORE : Remove PHP Warning:  file_put_contents on modules config.xml
+	[-] CORE : fixed bug #PSCFV-10175 - No virtuel download email send after accepted payment
+
+	[-] MO : Blocklayered - Fix empty fancy box after template edit
+	[-] MO : FixBug #10460 - UTF8 bug on accented URL
+	[-] MO : Blockcart, wrong tbody
+	[-] MO : Fix buig #PSCFV-10480 Blockcart too long cart_block_product_name
+	[-] MO : FixBug #PNM-1683 - Treeview problem
+	[-] MO: Fix time of smarty cache invalidation
+	[-] MO : PNM-1715 - Bug fix accented chars & ajax-cart
+	[-] MO : Editorial could not delete image
+	[-] MO : Fixed a bug when displaying textures    Corrections links texture image in the blocklayered
+	[-] MO : carriercompare fixed bug, override template's files in theme. Ticket #PNM-1691
+	[-] MO : Statsdata, exception on duplicate entry
+	[-] MO: Fix unifunc smarty errors if module is displayed on multiplehook without cache
+	[-] MO : fix bug #PSCFV-9906 again, bad url parsing
+	[-] MO: Fix blocklayered sort by quantity #PSCFV-10300
+
+	[-] WS: Fix order by on id field on multishop entities
+	[-] WS: Fix entities retrieve for some cases
+	[-] WS: 404 error should be returned if a multishop entity does not exists #PSCFV-10229
+	[-] WS: Bad xlink for tax_rules_group in product
+
+	[-] PDF : Report of https://github.com/enumag/PrestaShop/commit/9c939cceadebd58ad390fb4f108816e3c17c0275
+
+	[-] LO: Argeninian localization
+
+	Improved/changed features:
+
+	[*] Project : Orders should rely only on ps_order_cart_rule
+
+	[*] Installer : added file check in order to check if everyhting has been successfuly uploaded
+
+	[*] FO: Allow to enable SSL on all the pages
+	[*] FO : removed extra slash and point
+
+	[*] BO : AdminImport, retrieve separators and lang selected
+	[*] BO : Add category id in AdminSpecificPriceRule
+	[*] BO: Allow to breakdown the taxes when they are computed
+	[*] BO : AdminImport, remove csv files
+	[*] BO : Adminimport, check csv download path
+	[*] BO : Add csv file download in AdminImport
+	[*] BO : improved automatic language creation
+	[*] BO : Set import entity in cookie (#PSCFV-8214)
+	[*] BO: sort modules name in Stats
+
+	[*] CORE : Increasing the length of link_rewrite & name in Category.php    In database this fields have varchar(128) so let's give the user full size of fields
+	[*] CORE : bad else if in getTemplatePath
+	[*] CORE : Refactoring Tools::copy() as copy with context > PHP 5.3
+	[*] Core: don't re-generate the class_index.php file if a class is not known to avoid misuse of class_exists()
+
+	[*] MO : MailAlerts : Add SQL update script for v2.5
+	[*] MO : MailAlerts : multishop/multilang full compatibility    Customers will receive alerts based on the real context of the moment they subscribed to the alert (sho, theme & language)    SQL update table : `ps_mailalert_customer_oos`    =========================================    ALTER TABLE `ps_mailalert_customer_oos`    ADD `id_lang` INT( 10 ) UNSIGNED NOT NULL ,    DROP PRIMARY KEY ,    ADD PRIMARY KEY ( `id_customer` , `customer_email` , `id_product` , `id_product_attribute` , `id_shop` ) ;
+
+	[*] LO : Removed 'Miss' from the default genders because too country specific
+	[*] LO : Use single quote as thousands separator for CHF currency
+
+	Added Features:
+
+	[+] FO : add getManufacturer() to ManufacturerControllerCore    Add getManufacturer() to ManufacturerControllerCore to access the protected manufacturer instance of the controller.
+
+	[+] BO : add TinyMCE editor for supplier descrpition in AdminManufacturerSupplier
+	[+] BO : add TinyMCE editor for short and long descrpition in AdminManufacturerController
+	[+] BO : Improve mod rewrite check
+
+	[+] MO : add link to all manufacturer page and the feature to show All Suppliers
+	[+] MO : add the option to show all Manufacturer    Add the option to show all Manufacturer in blocktopmenu module.
+	[+] MO : Mailalerts - Add Total tax paid to order confirmation
+
+	[+] TR : Added Indonesian installer
+
+	[+] LO : Completed Traditional Chinese Installer
+	[+] LO :  Added Bengali installer
+	[+] LO: Added Traditional Chinese installer
+
+
+####################################
 #   v1.5.5.0 - (2013-08-22)  #
 ####################################
 

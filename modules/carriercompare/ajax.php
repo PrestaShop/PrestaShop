@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/* SSL Management */
+$useSSL = true;
+
 require_once(dirname(__FILE__).'../../../config/config.inc.php');
 require_once(dirname(__FILE__).'../../../init.php');
 require_once(dirname(__FILE__).'/carriercompare.php');

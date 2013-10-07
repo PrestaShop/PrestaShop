@@ -754,7 +754,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
-				'hint' => 'Note that you can see details on the receptions - per products',
+				'hint' => $this->l('Note that you can see details on the receptions - per products'),
 			),
 			'quantity_expected' => array(
 				'title' => $this->l('Quantity expected'),

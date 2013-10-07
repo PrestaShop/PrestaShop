@@ -27,6 +27,11 @@ var productcomments_controller_url = '{$productcomments_controller_url}';
 var confirm_report_message = "{l s='Are you sure you want report this comment?' mod='productcomments'}";
 var secure_key = "{$secure_key}";
 var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
+var productcomment_added = '{l s='Your comment has been added!' mod='productcomments'}';
+var productcomment_added_moderation = '{l s='Your comment has been added and will be available once approved by a moderator' mod='productcomments'}';
+var productcomment_title = '{l s='New comment' mod='productcomments'}';
+var productcomment_ok = '{l s='OK' mod='productcomments'}';
+var moderation_active = {$moderation_active};
 </script>
 
 <div id="idTab5">
@@ -71,11 +76,13 @@ var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
 			</div>
 			{/if}
 		{/foreach}
+        {if (!$too_early AND ($logged OR $allow_guests))}
 		<p class="align_center">
 			<a id="new_comment_tab_btn" class="open-comment-form" href="#new_comment_form">{l s='Write your review' mod='productcomments'} !</a>
 		</p>
+        {/if}
 	{else}
-		{if ($too_early == false AND ($logged OR $allow_guests))}
+		{if (!$too_early AND ($logged OR $allow_guests))}
 		<p class="align_center">
 			<a id="new_comment_tab_btn" class="open-comment-form" href="#new_comment_form">{l s='Be the first to write your review' mod='productcomments'} !</a>
 		</p>
@@ -89,7 +96,7 @@ var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
 <!-- Fancybox -->
 <div style="display: none;">
 	<div id="new_comment_form">
-		<form action="#">
+		<form id="id_new_comment_form" action="#">
 			<h2 class="title">{l s='Write your review' mod='productcomments'}</h2>
 			<div class="product clearfix">
 				<img src="{$link->getImageLink($product->link_rewrite, $productcomment_cover, 'home_default')|escape:'html'}" height="{$homeSize.height}" width="{$homeSize.width}" alt="{$product->name|escape:html:'UTF-8'}" />
@@ -136,7 +143,7 @@ var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
 				{/if}
 
 				<div id="new_comment_form_footer">
-					<input id="id_product_comment_send" name="id_product" type="hidden" value='{$id_product_comment_form}'></input>
+					<input id="id_product_comment_send" name="id_product" type="hidden" value='{$id_product_comment_form}' />
 					<p class="fl required"><sup>*</sup> {l s='Required fields' mod='productcomments'}</p>
 					<p class="fr">
 						<button id="submitNewMessage" name="submitMessage" type="submit">{l s='Send' mod='productcomments'}</button>&nbsp;

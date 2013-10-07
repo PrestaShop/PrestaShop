@@ -86,6 +86,19 @@ class AdminPreferencesControllerCore extends AdminController
 					'type' => 'bool',
 					'default' => '0'
 				),
+			);
+
+			if (Configuration::get('PS_SSL_ENABLED'))
+				$fields['PS_SSL_ENABLED_EVERYWHERE'] = array(
+					'title' => $this->l('Force the SSL on all the pages'),
+					'desc' => $this->l('Force all your store to use SSL'),
+					'validation' => 'isBool',
+					'cast' => 'intval',
+					'type' => 'bool',
+					'default' => '0'
+				);
+
+			$fields = array_merge($fields, array(
 				'PS_TOKEN_ENABLE' => array(
 					'title' => $this->l('Increase Front Office security'),
 					'desc' => $this->l('Enable or disable token in the Front Office to improve PrestaShop\'s security.'),
@@ -135,7 +148,7 @@ class AdminPreferencesControllerCore extends AdminController
 					'list' => $activities2,
 					'identifier' => 'value'
 				),
-			);
+			));
 
 			// No HTTPS activation if you haven't already.
 			if (!Tools::usingSecureMode() && !Configuration::get('PS_SSL_ENABLED'))

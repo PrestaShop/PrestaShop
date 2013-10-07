@@ -1,10 +1,10 @@
-Hi {firstname} {lastname},
+Здравствуйте, {firstname} {lastname},
 
-Here is your personal login information for {shop_name}:
+Ваши персональные данные для входа в {shop_name}:
 
-Password: {passwd}
-E-mail address: {email}
+Электронная почта: {email}
+Пароль: {passwd}
 
 {shop_name} - {shop_url}
 
-{shop_url} powered by PrestaShop™
+{shop_url} под управлением PrestaShop™

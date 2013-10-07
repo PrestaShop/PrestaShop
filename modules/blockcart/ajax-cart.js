@@ -214,26 +214,46 @@ var ajaxCart = {
 					$element = $('#bigpic');
 				var $picture = $element.clone();
 				var pictureOffsetOriginal = $element.offset();
+				pictureOffsetOriginal.right = $(window).innerWidth() - pictureOffsetOriginal.left - $element.width();
 
-				if ($picture.size())
-					$picture.css({'position': 'absolute', 'top': pictureOffsetOriginal.top, 'left': pictureOffsetOriginal.left});
+				if ($picture.length)
+				{
+					$picture.css({
+						position: 'absolute',
+						top: pictureOffsetOriginal.top,
+						right: pictureOffsetOriginal.right
+					});
+				}
 
 				var pictureOffset = $picture.offset();
-				if ($('#cart_block')[0] && $('#cart_block').offset().top && $('#cart_block').offset().left)
-					var cartBlockOffset = $('#cart_block').offset();
-				else
-					var cartBlockOffset = $('#shopping_cart').offset();
+				var cartBlock = $('#cart_block');
+				if (!$('#cart_block')[0] || !$('#cart_block').offset().top || !$('#cart_block').offset().left)
+					cartBlock = $('#shopping_cart');
+				var cartBlockOffset = cartBlock.offset();
+				cartBlockOffset.right = $(window).innerWidth() - cartBlockOffset.left - cartBlock.width();
 
 				// Check if the block cart is activated for the animation
-				if (cartBlockOffset != undefined && $picture.size())
+				if (cartBlockOffset != undefined && $picture.length)
 				{
 					$picture.appendTo('body');
-					$picture.css({ 'position': 'absolute', 'top': $picture.css('top'), 'left': $picture.css('left'), 'z-index': 4242 })
-					.animate({ 'width': $element.attr('width')*0.66, 'height': $element.attr('height')*0.66, 'opacity': 0.2, 'top': cartBlockOffset.top + 30, 'left': cartBlockOffset.left + 15 }, 1000)
-					.fadeOut(100, function() {
-						ajaxCart.updateCartInformation(jsonData, addedFromProductPage);
-						$(this).remove();
-					});
+					$picture
+						.css({
+							position: 'absolute',
+							top: pictureOffsetOriginal.top,
+							right: pictureOffsetOriginal.right,
+							zIndex: 4242
+						})
+						.animate({
+							width: $element.attr('width')*0.66,
+							height: $element.attr('height')*0.66,
+							opacity: 0.2,
+							top: cartBlockOffset.top + 30,
+							right: cartBlockOffset.right + 15
+						}, 1000)
+						.fadeOut(100, function() {
+							ajaxCart.updateCartInformation(jsonData, addedFromProductPage);
+							$(this).remove();
+						});
 				}
 				else
 					ajaxCart.updateCartInformation(jsonData, addedFromProductPage);
@@ -378,8 +398,7 @@ var ajaxCart = {
 		else
 		{
 			$('#vouchers tbody').html('');
-
-			for (i=0;i<jsonData.discounts.length;i++)
+			for (i=0; i < jsonData.discounts.length; i++)
 			{
 				if (parseFloat(jsonData.discounts[i].price_float) > 0)
 				{
@@ -388,15 +407,14 @@ var ajaxCart = {
 						delete_link = '<a class="delete_voucher" href="'+jsonData.discounts[i].link+'" title="'+delete_txt+'"><img src="'+img_dir+'icon/delete.gif" alt="'+delete_txt+'" class="icon" /></a>';
 					$('#vouchers tbody').append($(
 						'<tr class="bloc_cart_voucher" id="bloc_cart_voucher_'+jsonData.discounts[i].id+'">'
-						+'	<td class="quantity">1x</td>'
-						+'	<td class="name" title="'+jsonData.discounts[i].description+'">'+jsonData.discounts[i].name+'</td>'
-						+'	<td class="price">-'+jsonData.discounts[i].price+'</td>'
-						+'	<td class="delete">' + delete_link + '</td>'
-						+'</tr>'
+						+ '<td class="quantity">1x</td>'
+						+ '<td class="name" title="'+jsonData.discounts[i].description+'">'+jsonData.discounts[i].name+'</td>'
+						+ '<td class="price">-'+jsonData.discounts[i].price+'</td>'
+						+ '<td class="delete">' + delete_link + '</td>'
+						+ '</tr>'
 					));
 				}
 			}
-
 			$('#vouchers').show();
 		}
 
@@ -444,7 +462,8 @@ var ajaxCart = {
 					var productAttributeId = (this.hasAttributes ? parseInt(this.attributes) : 0);
 					var content =  '<dt class="hidden" id="cart_block_product_' + domIdProduct + '">';
 					content += '<span class="quantity-formated"><span class="quantity">' + this.quantity + '</span>x</span>';
-					var name = (this.name.length > 12 ? this.name.substring(0, 10) + '...' : this.name);
+					var min = this.name.indexOf(';', 10);
+					var name = (this.name.length > 12 ? this.name.substring(0, ((min - 10) <= 7) ? min : 10) + '...' : this.name);
 					content += '<a href="' + this.link + '" title="' + this.name + '" class="cart_block_product_name">' + name + '</a>';
 
 					if (typeof(this.is_gift) == 'undefined' || this.is_gift == 0)
@@ -728,5 +747,10 @@ $(document).ready(function(){
 				location.reload();
 		}
 		return false;
+	});
+
+	$('#cart_navigation input').click(function(){
+		$(this).attr('disabled', true).removeClass('exclusive').addClass('exclusive_disabled');
+		$(this).closest("form").get(0).submit();
 	});
 });

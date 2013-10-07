@@ -30,7 +30,7 @@
 
 {if isset($fields.title)}<h2>{$fields.title}</h2>{/if}
 {block name="defaultForm"}
-<form id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'htmlall':'UTF-8'}{else}{$table}_form{/if}" class="defaultForm {$name_controller}" action="{$current}&{if !empty($submit_action)}{$submit_action}=1{/if}&token={$token}" method="post" enctype="multipart/form-data" {if isset($style)}style="{$style}"{/if}>
+<form id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'htmlall':'UTF-8'}{else}{if $table == null}configuration_form{else}{$table}_form{/if}{/if}" class="defaultForm {$name_controller}" action="{$current}&{if !empty($submit_action)}{$submit_action}=1{/if}&token={$token}" method="post" enctype="multipart/form-data" {if isset($style)}style="{$style}"{/if}>
 	{if $form_id}
 		<input type="hidden" name="{$identifier}" id="{$identifier}" value="{$form_id}" />
 	{/if}
@@ -192,7 +192,7 @@
 									{/if}
 								{elseif $input.type == 'radio'}
 									{foreach $input.values as $value}
-										<input type="radio"	name="{$input.name}"id="{$value.id}" value="{$value.value|escape:'htmlall':'UTF-8'}"
+										<input type="radio" name="{$input.name}" id="{$value.id}" value="{$value.value|escape:'htmlall':'UTF-8'}"
 												{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
 												{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if} />
 										<label {if isset($input.class)}class="{$input.class}"{/if} for="{$value.id}">
@@ -432,7 +432,8 @@
 			};
 		{/foreach}
 		// we need allowEmployeeFormLang var in ajax request
-		allowEmployeeFormLang = {$allowEmployeeFormLang};
+		allowEmployeeFormLang = {$allowEmployeeFormLang|intval};
+		employee_token = '{getAdminToken tab='AdminEmployees'}';
 		displayFlags(languages, id_language, allowEmployeeFormLang);
 
 		$(document).ready(function() {
@@ -454,6 +455,7 @@
 				});
 
 		});
+	state_token = '{getAdminToken tab='AdminStates'}';
 	{block name="script"}{/block}
 	</script>
 {/if}

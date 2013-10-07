@@ -30,6 +30,7 @@ select[disabled="disabled"], input[disabled="disabled"],textarea[disabled="disab
 
 /*BUTTON*/
 .button{
+	cursor: pointer;
 	background: #e3e3e3 url('../img/bg-button-degrade.png') repeat-x scroll left top;
 	background: -moz-linear-gradient(center top , #F9F9F9, #E3E3E3) repeat scroll 0 0 transparent;
 	background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#E3E3E3)) repeat scroll 0 0 transparent;

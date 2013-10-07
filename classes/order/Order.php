@@ -712,11 +712,10 @@ class OrderCore extends ObjectModel
 	}
 
 	public function getCartRules()
-	{
+	{	
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'order_cart_rule` ocr
-		LEFT JOIN `'._DB_PREFIX_.'cart_rule` cr ON cr.`id_cart_rule` = ocr.`id_cart_rule`
 		WHERE ocr.`id_order` = '.(int)$this->id);
 	}
 

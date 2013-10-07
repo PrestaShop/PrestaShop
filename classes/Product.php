@@ -1368,8 +1368,8 @@ class ProductCore extends ObjectModel
 			}
 
 			$product_supplier->product_supplier_reference = pSQL($supplier_reference);
-			$product_supplier->product_supplier_price_te = (float)$price;
-			$product_supplier->id_currency = (int)$id_currency;
+			$product_supplier->product_supplier_price_te = !is_null($price) ? (float)$price : (float)$product_supplier->product_supplier_price_te;
+			$product_supplier->id_currency = !is_null($id_currency) ? (int)$id_currency : (int)$product_supplier->id_currency;
 			$product_supplier->save();
 		}
 	}
@@ -2468,8 +2468,9 @@ class ProductCore extends ObjectModel
 
 		if (!Validate::isBool($usetax) || !Validate::isUnsignedId($id_product))
 			die(Tools::displayError());
+
 		// Initializations
-		$id_group = (isset($context->customer) ? $context->customer->id_default_group : (int)Configuration::get('PS_CUSTOMER_GROUP'));
+		$id_group = (int)Group::getCurrent()->id;
 
 		// If there is cart in context or if the specified id_cart is different from the context cart id
 		if (!is_object($cur_cart) || (Validate::isUnsignedInt($id_cart) && $id_cart && $cur_cart->id != $id_cart))
@@ -2508,7 +2509,7 @@ class ProductCore extends ObjectModel
 		$id_state = 0;
 		$zipcode = 0;
 
-		if (!$id_address)
+		if (!$id_address && Validate::isLoadedObject($cur_cart))
 			$id_address = $cur_cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
 
 		if ($id_address)
@@ -2719,8 +2720,7 @@ class ProductCore extends ObjectModel
 		if ($use_group_reduction)
 		{
 			$reduction_from_category = GroupReduction::getValueForProduct($id_product, $id_group);
-
-			if (!empty($reduction_from_category) && (float)$reduction_from_category == 0)
+			if ($reduction_from_category !== false)
 				$price -= $price * (float)$reduction_from_category;
 			else // apply group reduction if there is no group reduction for this category
 				$price *= ((100 - Group::getReductionByIdGroup($id_group)) / 100);
@@ -2914,7 +2914,7 @@ class ProductCore extends ObjectModel
 	 * @param Shop $shop
 	 * @return string
 	 */
-	public static function sqlStock($product_alias, $product_attribute = 0, $inner_join = false, Shop $shop = null)
+	public static function sqlStock($product_alias, $product_attribute = null, $inner_join = false, Shop $shop = null)
 	{
 		$id_shop = ($shop !== null ? (int)$shop->id : null);
 		$sql = (($inner_join) ? ' INNER ' : ' LEFT ').'
@@ -3055,18 +3055,18 @@ class ProductCore extends ObjectModel
 		if (!Combination::isFeatureActive())
 			return array();
 		$sql = 'SELECT ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, agl.`public_name` AS public_group_name,
-					a.`id_attribute`, al.`name` AS attribute_name, a.`color` AS attribute_color, pa.`id_product_attribute`,
-					IFNULL(stock.quantity, 0) as quantity, product_attribute_shop.`price`, product_attribute_shop.`ecotax`, pa.`weight`,
+					a.`id_attribute`, al.`name` AS attribute_name, a.`color` AS attribute_color, product_attribute_shop.`id_product_attribute`,
+					IFNULL(stock.quantity, 0) as quantity, product_attribute_shop.`price`, product_attribute_shop.`ecotax`, product_attribute_shop.`weight`,
 					product_attribute_shop.`default_on`, pa.`reference`, product_attribute_shop.`unit_price_impact`,
-					pa.`minimal_quantity`, pa.`available_date`, ag.`group_type`
+					product_attribute_shop.`minimal_quantity`, product_attribute_shop.`available_date`, ag.`group_type`
 				FROM `'._DB_PREFIX_.'product_attribute` pa
 				'.Shop::addSqlAssociation('product_attribute', 'pa').'
 				'.Product::sqlStock('pa', 'pa').'
-				LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`
-				LEFT JOIN `'._DB_PREFIX_.'attribute` a ON a.`id_attribute` = pac.`id_attribute`
-				LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
-				LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON a.`id_attribute` = al.`id_attribute`
-				LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON ag.`id_attribute_group` = agl.`id_attribute_group`
+				LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.`id_product_attribute` = pa.`id_product_attribute`)
+				LEFT JOIN `'._DB_PREFIX_.'attribute` a ON (a.`id_attribute` = pac.`id_attribute`)
+				LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON (ag.`id_attribute_group` = a.`id_attribute_group`)
+				LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute`)
+				LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group`)
 				'.Shop::addSqlAssociation('attribute', 'a').'
 				WHERE pa.`id_product` = '.(int)$this->id.'
 					AND al.`id_lang` = '.(int)$id_lang.'
@@ -3159,8 +3159,9 @@ class ProductCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (p.`id_manufacturer`= m.`id_manufacturer`)
 				'.Product::sqlStock('p', 0).'
 				WHERE `id_product_1` = '.(int)$this->id.
-				($active ? ' AND product_shop.`active` = 1' : '').'
+				($active ? ' AND product_shop.`active` = 1 AND product_shop.`visibility` != \'none\'' : '').'
 				GROUP BY product_shop.id_product';
+
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
 			return false;
 		foreach ($result as &$row)

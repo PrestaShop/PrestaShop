@@ -696,16 +696,12 @@ class InstallXmlLoader
 
 		if (is_null($tables))
 		{
-			$sql = 'SHOW TABLES';
 			$tables = array();
-			foreach (Db::getInstance()->executeS($sql) as $row)
+			foreach (Db::getInstance()->executeS('SHOW TABLES') as $row)
 			{
 				$table = current($row);
 				if (preg_match('#^'._DB_PREFIX_.'(.+?)(_lang)?$#i', $table, $m))
-					if (preg_match('#^'._DB_PREFIX_.'(.+?)_shop$#i', $table, $m2) && !isset($tables[$m2[1]]))
-						$tables[$m[1]] = (isset($m[2]) && $m[2]) ? true : false;
-					else
-						$tables[$m[1]] = (isset($m[2]) && $m[2]) ? true : false;
+					$tables[$m[1]] = (isset($m[2]) && $m[2]) ? true : false;
 			}
 		}
 

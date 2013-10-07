@@ -98,6 +98,8 @@ class AdminModulesControllerCore extends AdminController
 		$this->list_modules_categories['others']['name'] = $this->l('Other Modules');
 		$this->list_modules_categories['mobile']['name'] = $this->l('Mobile');
 
+		uasort($this->list_modules_categories, array($this, 'checkCategoriesNames'));
+
 		// Set Id Employee, Iso Default Country and Filter Configuration
 		$this->id_employee = (int)$this->context->employee->id;
 		$this->iso_default_country = $this->context->country->iso_code;
@@ -127,6 +129,14 @@ class AdminModulesControllerCore extends AdminController
 		// Check if logged on Addons
 		if (isset($this->context->cookie->username_addons) && isset($this->context->cookie->password_addons) && !empty($this->context->cookie->username_addons) && !empty($this->context->cookie->password_addons))
 			$this->logged_on_addons = true;
+	}
+	
+	public function checkCategoriesNames($a, $b)
+	{
+		if ($a['name'] === $this->l('Other Modules'))
+			return true;
+
+		return (bool)($a['name'] > $b['name']);
 	}
 	
 	public function setMedia()
@@ -768,7 +778,7 @@ class AdminModulesControllerCore extends AdminController
 		}
 
 		if (isset($_GET['update']))
-			Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&updated=1tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).(isset($modules_list_save) ? '&modules_list='.$modules_list_save : '').$params);
+			Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&updated=1tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).(isset($modules_list_save) ? '&modules_list='.$modules_list_save : ''));
 	}
 	
 	public function postProcess()
@@ -1098,8 +1108,8 @@ class AdminModulesControllerCore extends AdminController
 					$modules[$km]->preferences = $modules_preferences[$modules[$km]->name];
 			}
 			unset($object);
-			if (isset($module->version_addons))
-				$upgrade_available[] = array('anchor' => ucfirst($module->name), 'name' => $module->displayName);;
+			if ($module->installed && isset($module->version_addons) && $module->version_addons)
+				$upgrade_available[] = array('anchor' => ucfirst($module->name), 'name' => $module->displayName);
 		}
 
 		// Don't display categories without modules

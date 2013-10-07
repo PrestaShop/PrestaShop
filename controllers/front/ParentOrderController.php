@@ -56,8 +56,6 @@ class ParentOrderControllerCore extends FrontController
 		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 
 		$this->nbProducts = $this->context->cart->nbProducts();
-
-		global $isVirtualCart;
 		
 		if (!$this->context->customer->isLogged(true) && $this->context->getMobileDevice() && Tools::getValue('step'))
 			Tools::redirect($this->context->link->getPageLink('authentication', true, (int)$this->context->language->id, $params));
@@ -372,6 +370,7 @@ class ParentOrderControllerCore extends FrontController
 			'currencyFormat' => $this->context->currency->format,
 			'currencyBlank' => $this->context->currency->blank,
 			'show_option_allow_separate_package' => $show_option_allow_separate_package,
+			'smallSize' => Image::getSize(ImageType::getFormatedName('small')),
 				
 		));
 

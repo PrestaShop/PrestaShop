@@ -78,6 +78,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 	public function initRulesList($id_group)
 	{
 		$this->table = 'tax_rule';
+		$this->list_id = 'tax_rule';
 		$this->identifier = 'id_tax_rule';
 		$this->className = 'TaxRule';
 		$this->lang = false;
@@ -505,6 +506,19 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 	{
 		// TODO: check if the rule already exists
 		return $tr->validateController();
+	}
+	
+	protected function displayAjaxUpdateTaxRule()
+	{
+		if ($this->tabAccess['view'] === '1')
+		{
+			$id_tax_rule = Tools::getValue('id_tax_rule');
+			$tax_rules = new TaxRule((int)$id_tax_rule);
+			$output = array();
+			foreach ($tax_rules as $key => $result)
+				$output[$key] = $result;
+			die(Tools::jsonEncode($output));
+		}
 	}
 }
 

@@ -494,6 +494,20 @@ class ToolsCore
 		if (($is_negative = ($price < 0)))
 			$price *= -1;
 		$price = Tools::ps_round($price, $c_decimals);
+
+		/*
+		* If the language is RTL and the selected currency format contains spaces as thousands separator
+		* then the number will be printed in reverse since the space is interpreted as separating words.
+		* To avoid this we replace the currency format containing a space with the one containing a comma (,) as thousand
+		* separator when the language is RTL.
+		*
+		* TODO: This is not ideal, a currency format should probably be tied to a language, not to a currency.
+		*/
+		if(($c_format == 2) && ($context->language->is_rtl == 1))
+		{
+			$c_format = 4;
+		}
+
 		switch ($c_format)
 		{
 			/* X 0,000.00 */
@@ -512,9 +526,9 @@ class ToolsCore
 			case 4:
 				$ret = number_format($price, $c_decimals, '.', ',').$blank.$c_char;
 				break;
-			/* 0 000.00 X  Added for the switzerland currency */
+			/* 0'000.00 X  Added for the switzerland currency */
 			case 5:
-				$ret = number_format($price, $c_decimals, '.', ' ').$blank.$c_char;
+				$ret = number_format($price, $c_decimals, '.', "'").$blank.$c_char;
 				break;
 		}
 		if ($is_negative)
@@ -1260,6 +1274,13 @@ class ToolsCore
 		return Tools::strtoupper(Tools::substr($str, 0, 1)).Tools::substr($str, 1);
 	}
 
+	public static function ucwords($str)
+	{
+		if (function_exists('mb_convert_case'))
+			return mb_convert_case($str, MB_CASE_TITLE);
+		return ucwords(strtolower($str));
+	}
+
 	public static function orderbyPrice(&$array, $order_way)
 	{
 		foreach ($array as &$row)
@@ -1401,26 +1422,9 @@ class ToolsCore
 	
 	public static function copy($source, $destination, $stream_context = null)
 	{
-		if ($stream_context == null && preg_match('/^https?:\/\//', $source))
-			$stream_context = @stream_context_create(array('http' => array('timeout' => 10)));
-
-		if (in_array(@ini_get('allow_url_fopen'), array('On', 'on', '1')) || !preg_match('/^https?:\/\//', $source))
-			return @copy($source, $destination, $stream_context);
-		elseif (function_exists('curl_init'))
-		{
-			$curl = curl_init();
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($curl, CURLOPT_URL, $source);
-			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
-			curl_setopt($curl, CURLOPT_TIMEOUT, 10);
-			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-			$opts = stream_context_get_options($stream_context);
-			$content = curl_exec($curl);
-			curl_close($curl);
-			return file_put_contents($destination, $content);
-		}
-		else
-			return false;
+		if (is_null($stream_context) && !preg_match('/^https?:\/\//', $source))
+			return @copy($source, $destination);
+		return @file_put_contents($destination, Tools::file_get_contents($source, false, $stream_context));
 	}
 
 	/**
@@ -1596,7 +1600,8 @@ class ToolsCore
 
 		if (self::$_cache_nb_media_servers && ($id_media_server = (abs(crc32($filename)) % self::$_cache_nb_media_servers + 1)))
 			return constant('_MEDIA_SERVER_'.$id_media_server.'_');
-		return Tools::getShopDomain();
+
+		return Tools::usingSecureMode() ? Tools::getShopDomainSSL() : Tools::getShopDomain();
 	}
 
 	public static function generateHtaccess($path = null, $rewrite_settings = null, $cache_control = null, $specific = '', $disable_multiviews = null, $medias = false, $disable_modsec = null)
@@ -1675,6 +1680,9 @@ class ToolsCore
 
 		// RewriteEngine
 		fwrite($write_fd, "<IfModule mod_rewrite.c>\n");
+
+		// Ensure HTTP_MOD_REWRITE variable is set in environment
+		fwrite($write_fd, "SetEnv HTTP_MOD_REWRITE On\n");
 
 		// Disable multiviews ?
 		if ($disable_multiviews)
@@ -2478,89 +2486,66 @@ exit;
 		return preg_replace('/\\\[px]\{[a-z]\}{1,2}|(\/[a-z]*)u([a-z]*)$/i', "$1$2", $pattern);
 	}
 
+	protected static $is_addons_up = true;
 	public static function addonsRequest($request, $params = array())
 	{
-		$addons_url = 'api.addons.prestashop.com';
-		$postData = '';
-		$postDataArray = array(
+		if (!self::$is_addons_up)
+			return false;
+
+		$postData = http_build_query(array(
 			'version' => isset($params['version']) ? $params['version'] : _PS_VERSION_,
 			'iso_lang' => Tools::strtolower(isset($params['iso_lang']) ? $params['iso_lang'] : Context::getContext()->language->iso_code),
 			'iso_code' => Tools::strtolower(isset($params['iso_country']) ? $params['iso_country'] : Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))),
-			'shop_url' => urlencode(isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain()),
-			'mail' => urlencode(isset($params['email']) ? $params['email'] : Configuration::get('email'))
-		);
-		foreach ($postDataArray as $postDataKey => $postDataValue)
-			$postData .= '&'.$postDataKey.'='.$postDataValue;
-		$postData = ltrim($postData, '&');
+			'shop_url' => isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain(),
+			'mail' => isset($params['email']) ? $params['email'] : Configuration::get('email')
+		));
 
-		// Config for each request
-		if ($request == 'native')
+		$protocols = array('https');
+		switch ($request)
 		{
-			// Define protocol accepted and post data values for this request
-			$protocolsList = array('https://' => 443, 'http://' => 80);
-			$postData .= '&method=listing&action=native';
-		}
-		if ($request == 'must-have')
-		{
-			// Define protocol accepted and post data values for this request
-			$protocolsList = array('https://' => 443, 'http://' => 80);
-			$postData .= '&method=listing&action=must-have';
-		}
-		if ($request == 'customer')
-		{
-			// Define protocol accepted and post data values for this request
-			$protocolsList = array('https://' => 443);
-			$postData .= '&method=listing&action=customer&username='.urlencode(trim(Context::getContext()->cookie->username_addons)).'&password='.urlencode(trim(Context::getContext()->cookie->password_addons));
-		}
-		if ($request == 'check_customer')
-		{
-			// Define protocol accepted and post data values for this request
-			$protocolsList = array('https://' => 443);
-			$postData .= '&method=check_customer&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
-		}
-		if ($request == 'module')
-		{
-			// Define protocol accepted and post data values for this request
-			if (isset($params['username_addons']) && isset($params['password_addons']))
-			{
-				$protocolsList = array('https://' => 443);
-				$postData .= '&method=module&id_module='.urlencode($params['id_module']).'&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
-			}
-			else
-			{
-				$protocolsList = array('https://' => 443, 'http://' => 80);
+			case 'native':
+				$protocols[] = 'http';
+				$postData .= '&method=listing&action=native';
+				break;
+			case 'must-have':
+				$protocols[] = 'http';
+				$postData .= '&method=listing&action=must-have';
+				break;
+			case 'customer':
+				$postData .= '&method=listing&action=customer&username='.urlencode(trim(Context::getContext()->cookie->username_addons)).'&password='.urlencode(trim(Context::getContext()->cookie->password_addons));
+				break;
+			case 'check_customer':
+				$postData .= '&method=check_customer&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
+				break;
+			case 'module':
 				$postData .= '&method=module&id_module='.urlencode($params['id_module']);
-			}
-		}
-		
-		if ($request == 'install-modules')
-		{
-			// Define protocol accepted and post data values for this request
-			$protocolsList = array('https://' => 443, 'http://' => 80);
-			$postData .= '&method=listing&action=install-modules';
-			
+				if (isset($params['username_addons']) && isset($params['password_addons']))
+					$postData .= '&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
+				else
+					$protocols[] = 'http';
+
+				break;
+			case 'install-modules':
+				$protocols[] = 'http';
+				$postData .= '&method=listing&action=install-modules';
+				break;
+			default:
+				return false;
 		}
 
-		// Make the request
-		$opts = array(
-			'http'=>array(
+		$context = stream_context_create(array(
+			'http' => array(
 				'method'=> 'POST',
 				'content' => $postData,
 				'header'  => 'Content-type: application/x-www-form-urlencoded',
 				'timeout' => 5,
 			)
-		);
-		$context = stream_context_create($opts);
-		foreach ($protocolsList as $protocol => $port)
-		{
-			$content = Tools::file_get_contents($protocol.$addons_url, false, $context);
-
-			// If content returned, we cache it
-			if ($content)
+		));
+		foreach ($protocols as $protocol)
+			if ($content = Tools::file_get_contents($protocol.'://api.addons.prestashop.com', false, $context))
 				return $content;
-		}
 
-		// No content, return false
+		self::$is_addons_up = false;
 		return false;
 	}
 

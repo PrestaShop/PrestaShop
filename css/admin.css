@@ -332,6 +332,8 @@ select optgroup option {
 
 .lab_modules_positions img {
 	float:left;
+	width:32px;
+	height:32px;
 }
 
 

@@ -50,8 +50,8 @@
 		<br /><br />
 		<b>{l s='Please confirm your order by clicking \'I confirm my order\'' mod='cashondelivery'}.</b>
 	</p>
-	<p class="cart_navigation">
+	<p class="cart_navigation" id="cart_navigation">
 		<a href="{$link->getPageLink('order', true)}?step=3" class="button_large">{l s='Other payment methods' mod='cashondelivery'}</a>
-		<input type="submit" name="submit" value="{l s='I confirm my order' mod='cashondelivery'}" class="exclusive_large" />
+		<input type="submit" value="{l s='I confirm my order' mod='cashondelivery'}" class="exclusive_large" />
 	</p>
 </form>

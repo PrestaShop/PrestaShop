@@ -39,7 +39,7 @@ class MediaCore
 		'ui.accordion' => array('fileName' => 'jquery.ui.accordion.min.js', 'dependencies' => array('ui.core', 'ui.widget'), 'theme' => true),
 		'ui.autocomplete' => array('fileName' => 'jquery.ui.autocomplete.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.position'), 'theme' => true),
 		'ui.button' => array('fileName' => 'jquery.ui.button.min.js', 'dependencies' => array('ui.core', 'ui.widget'), 'theme' => true),
-		'ui.dialog' => array('fileName' => 'jquery.ui.dialog.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.position'), 'theme' => true),
+		'ui.dialog' => array('fileName' => 'jquery.ui.dialog.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.position','ui.button'), 'theme' => true),
 		'ui.slider' => array('fileName' => 'jquery.ui.slider.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.mouse'), 'theme' => true),
 		'ui.tabs' => array('fileName' => 'jquery.ui.tabs.min.js', 'dependencies' => array('ui.core', 'ui.widget'), 'theme' => true),
 		'ui.datepicker' => array('fileName' => 'jquery.ui.datepicker.min.js', 'dependencies' => array('ui.core'), 'theme' => true),
@@ -201,7 +201,7 @@ class MediaCore
 		if (!preg_match('/^http(s?):\/\//i', $file_uri) && !@filemtime($file_uri))
 			return false;
 
-		if (Context::getContext()->controller->controller_type == 'admin')
+		if (Context::getContext()->controller->controller_type == 'admin' && !array_key_exists('host', $url_data))
 		{
 			$js_uri = preg_replace('/^'.preg_quote(__PS_BASE_URI__, '/').'/', '/', $js_uri);
 			$js_uri = dirname(preg_replace('/\?.+$/', '', $_SERVER['REQUEST_URI']).'a').'/..'.$js_uri;
@@ -271,10 +271,10 @@ class MediaCore
 
 		if ($add_no_conflict)
 			$return[] = Media::getJSPath(_PS_JS_DIR_.'jquery/jquery.noConflict.php?version='.$version);
-		
+
 		//added query migrate for compatibility with new version of jquery will be removed in ps 1.6
 		$return[] = Media::getJSPath(_PS_JS_DIR_.'jquery/jquery-migrate-1.2.1.js');
-		
+
 		return $return;
 	}
 

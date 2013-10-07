@@ -246,7 +246,7 @@ class AdminCategoriesControllerCore extends AdminController
 				'desc' => $this->l('Add New')
 			);
 			$this->toolbar_btn['import'] = array(
-				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type='.$this->table,
+				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=categories',
 				'desc' => $this->l('Import')
 			);
 		}

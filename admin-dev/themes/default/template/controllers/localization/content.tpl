@@ -24,9 +24,9 @@
 *}
 
 <div class="width4">
-	{$localization_form}
+	{if isset($localization_form)}{$localization_form}{/if}
 </div>
 <br />
 <div class="width4">
-	{$localization_options}
+	{if isset($localization_options)}{$localization_options}{/if}
 </div>

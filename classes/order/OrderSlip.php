@@ -129,19 +129,6 @@ class OrderSlipCore extends ObjectModel
 			{
 				$products[$key] = $product;
 				$products[$key]['product_quantity'] = $slip_quantity[$product['id_order_detail']];
-				if (count($cart_rules))
-				{
-					$order->setProductPrices($product);
-					$realProductPrice = $products[$key]['product_price'];
-					// Todo : must be updated to use the cart rules
-					foreach ($cart_rules as $cart_rule)
-					{
-						if ($cart_rule['reduction_percent'])
-							$products[$key]['product_price'] -= $realProductPrice * ($cart_rule['reduction_percent'] / 100);
-						elseif ($cart_rule['reduction_amount'])
-							$products[$key]['product_price'] -= (($cart_rule['reduction_amount'] * ($product['product_price_wt'] / $order->total_products_wt)) / (1.00 + ($product['tax_rate'] / 100)));
-					}
-				}
 			}
 		return $order->getProducts($products);
 	}

@@ -45,7 +45,7 @@ class AdminControllerCore extends Controller
 	public $template = 'content.tpl';
 
 	/** @var string Associated table name */
-	public $table;
+	public $table = 'configuration';
 
 	public $list_id;
 
@@ -387,7 +387,7 @@ class AdminControllerCore extends Controller
 			$filter = '';
 			foreach ($this->fields_list AS $field => $t)
 			{
-				if ($val = htmlspecialchars(Tools::getValue($this->table.'Filter_'.$field), ENT_QUOTES, 'UTF-8'))
+				if ($val = Tools::getValue($this->table.'Filter_'.$field))
 				{
 					if(!is_array($val) && !empty($val))
 						$filter .= ($filter ?  ', ' : $this->l(' filter by ')).$t['title'].' : ';
@@ -395,13 +395,13 @@ class AdminControllerCore extends Controller
 					if (isset($t['type']) && $t['type'] == 'bool')
 						$filter .= ((bool)$val) ? $this->l('yes') : $this->l('no');
 					elseif(is_string($val))
-						$filter .= $val;
+						$filter .= htmlspecialchars($val, ENT_QUOTES, 'UTF-8');
 					elseif(is_array($val))
 					{
 						$tmp = '';
 						foreach($val as $v)
 							if(is_string($v) && !empty($v))
-								$tmp .= ' - '.$v;
+								$tmp .= ' - '.htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
 						if(Tools::strlen($tmp))
 						{
 							$tmp = ltrim($tmp, ' - ');
@@ -654,7 +654,7 @@ class AdminControllerCore extends Controller
 			'export_content' => $content
 			)
 		);
-			
+
 		$this->layout = 'layout-export.tpl';
 	}
 
@@ -726,6 +726,8 @@ class AdminControllerCore extends Controller
 	 */
 	public function processAdd()
 	{
+		if (!isset($this->className) || empty($this->className))
+			return false;
 		/* Checking fields validity */
 		$this->validateRules();
 		if (count($this->errors) <= 0)
@@ -1142,6 +1144,8 @@ class AdminControllerCore extends Controller
 	 */
 	protected function loadObject($opt = false)
 	{
+		if (!isset($this->className) || empty($this->className))
+			return true;
 		$id = (int)Tools::getValue($this->identifier);
 		if ($id && Validate::isUnsignedId($id))
 		{
@@ -1535,21 +1539,23 @@ class AdminControllerCore extends Controller
 	
 	protected function addToolBarModulesListButton()
 	{
-		
 		if (!$this->isFresh(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 86400))
 			file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, Tools::addonsRequest('native'));
 		
-		$country_module_list_xml = simplexml_load_file(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
-			$country_module_list = array();
+		$country_module_list = file_get_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
+		if (!empty($country_module_list) && $country_module_list_xml = simplexml_load_string($country_module_list))
+		{
+			$country_module_list_array = array();
 			foreach ($country_module_list_xml->module as $k => $m)
-				$country_module_list[] = (string)$m->name;
-		$this->tab_modules_list['slider_list'] = array_intersect($this->tab_modules_list['slider_list'], $country_module_list);
+				$country_module_list_array[] = (string)$m->name;
+			$this->tab_modules_list['slider_list'] = array_intersect($this->tab_modules_list['slider_list'], $country_module_list_array);
+		}
 		
 		if (is_array($this->tab_modules_list['slider_list']) && count($this->tab_modules_list['slider_list']))
 			$this->toolbar_btn['modules-list'] = array(
-					'href' => '#',
-					'desc' => $this->l('Modules List')
-				);
+				'href' => '#',
+				'desc' => $this->l('Modules List')
+			);
 	}
 
 	/**
@@ -2106,6 +2112,7 @@ class AdminControllerCore extends Controller
 	 */
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
+
 		if (!isset($this->list_id))
 			$this->list_id = $this->table;
 
@@ -2153,28 +2160,38 @@ class AdminControllerCore extends Controller
 			|| !Validate::isUnsignedId($id_lang))
 			throw new PrestaShopException('get list params is not valid');
 
-		if (isset($this->fields_list[$order_by]) && isset($this->fields_list[$order_by]['filter_key']))
-			$order_by = $this->fields_list[$order_by]['filter_key'];
+		if (!isset($this->fields_list[$order_by]['order_key']) && isset($this->fields_list[$order_by]['filter_key']))
+			$this->fields_list[$order_by]['order_key'] = $this->fields_list[$order_by]['filter_key'];
+
+		if (isset($this->fields_list[$order_by]) && isset($this->fields_list[$order_by]['order_key']))
+			$order_by = $this->fields_list[$order_by]['order_key'];
 
 		/* Determine offset from current page */
+
+		
 		if ((isset($_POST['submitFilter'.$this->list_id]) ||
 		isset($_POST['submitFilter'.$this->list_id.'_x']) ||
 		isset($_POST['submitFilter'.$this->list_id.'_y'])) &&
 		!empty($_POST['submitFilter'.$this->list_id]) &&
 		is_numeric($_POST['submitFilter'.$this->list_id]))
 			$start = ((int)$_POST['submitFilter'.$this->list_id] - 1) * $limit;
+		elseif (empty($start) && isset($this->context->cookie->{$this->list_id.'_start'}) && Tools::isSubmit('export'.$this->table))
+			$start = $this->context->cookie->{$this->list_id.'_start'};
+		else
+			$start = 0;
+
+		$this->context->cookie->{$this->list_id.'_start'} = $start;
 
 		/* Cache */
 		$this->_lang = (int)$id_lang;
+		$this->_orderBy = $order_by;
 
 		if (preg_match('/[.!]/', $order_by))
 		{
 			$order_by_split = preg_split('/[.!]/', $order_by);
 			$order_by = pSQL($order_by_split[0]).'.`'.pSQL($order_by_split[1]).'`';
-			$this->_orderBy = (isset($order_by_split) && isset($order_by_split[1])) ? $order_by_split[1] : $order_by;
 		}
-		else
-			$this->_orderBy = $order_by;
+
 		$this->_orderWay = Tools::strtoupper($order_way);
 
 		/* SQL table : orders, but class name is Order */
@@ -2232,8 +2249,6 @@ class AdminControllerCore extends Controller
 			if (isset($this->_having))
 				$having_clause .= $this->_having.' ';
 		}
-
-
 
 		$this->_listsql = '
 		SELECT SQL_CALC_FOUND_ROWS
@@ -2401,7 +2416,7 @@ class AdminControllerCore extends Controller
 	public function getFieldValue($obj, $key, $id_lang = null)
 	{
 		if ($id_lang)
-			$default_value = ($obj->id && isset($obj->{$key}[$id_lang])) ? $obj->{$key}[$id_lang] : false;
+			$default_value = (isset($obj->id) && $obj->id && isset($obj->{$key}[$id_lang])) ? $obj->{$key}[$id_lang] : false;
 		else
 			$default_value = isset($obj->{$key}) ? $obj->{$key} : false;
 
@@ -2508,12 +2523,18 @@ class AdminControllerCore extends Controller
 			foreach ($rules['validateLang'] as $field_lang => $function)
 				foreach ($languages as $language)
 					if (($value = Tools::getValue($field_lang.'_'.$language['id_lang'])) !== false && !empty($value))
-						if (!Validate::$function($value))
+					{
+						if (Tools::strtolower($function) == 'iscleanhtml' && Configuration::get('PS_ALLOW_HTML_IFRAME'))
+							$res = Validate::$function($value, true);
+						else
+							$res = Validate::$function($value);
+						if (!$res)
 							$this->errors[$field_lang.'_'.$language['id_lang']] = sprintf(
 								Tools::displayError('The %1$s field (%2$s) is invalid.'),
 								call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name),
 								$language['name']
 							);
+					}
 	}
 
 	/**
@@ -2940,21 +2961,17 @@ class AdminControllerCore extends Controller
 
 	public function isFresh($file, $timeout = 604800000)
 	{
-		if (file_exists(_PS_ROOT_DIR_.$file))
-		{
-			if (filesize(_PS_ROOT_DIR_.$file) < 1)
-				return false;
+		if (file_exists(_PS_ROOT_DIR_.$file) && filesize(_PS_ROOT_DIR_.$file) > 0)
 			return ((time() - filemtime(_PS_ROOT_DIR_.$file)) < $timeout);
-		}
-		else
-			return false;
+		return false;
 	}
 
+	protected static $is_prestashop_up = true;
 	public function refresh($file_to_refresh, $external_file)
 	{
-		$content = Tools::file_get_contents($external_file);
-		if ($content)
+		if (self::$is_prestashop_up && $content = Tools::file_get_contents($external_file))
 			return (bool)file_put_contents(_PS_ROOT_DIR_.$file_to_refresh, $content);
+		self::$is_prestashop_up = false;
 		return false;
 	}
 	

@@ -140,36 +140,33 @@ class SearchCore
 			$string = implode(' ', $processed_words);
 		}
 
-		if ($indexation)
+		// If the language is constituted with symbol and there is no "words", then split every chars
+		if (in_array($iso_code, array('zh', 'tw', 'ja')) && function_exists('mb_strlen'))
 		{
-			// If the language is constituted with symbol and there is no "words", then split every chars
-			if (in_array($iso_code, array('zh', 'tw', 'ja')) && function_exists('mb_strlen'))
-			{
-				// Cut symbols from letters
-				$symbols = '';
-				$letters = '';
-				foreach (explode(' ', $string) as $mb_word)
-					if (strlen(Tools::replaceAccentedChars($mb_word)) == mb_strlen(Tools::replaceAccentedChars($mb_word)))
-						$letters .= $mb_word.' ';
-					else
-						$symbols .= $mb_word.' ';
-			
-				if (preg_match_all('/./u', $symbols, $matches))
-					$symbols = implode(' ', $matches[0]);
+			// Cut symbols from letters
+			$symbols = '';
+			$letters = '';
+			foreach (explode(' ', $string) as $mb_word)
+				if (strlen(Tools::replaceAccentedChars($mb_word)) == mb_strlen(Tools::replaceAccentedChars($mb_word)))
+					$letters .= $mb_word.' ';
+				else
+					$symbols .= $mb_word.' ';
+		
+			if (preg_match_all('/./u', $symbols, $matches))
+				$symbols = implode(' ', $matches[0]);
 
-				$string = $letters.$symbols;
-			}
-			else
+			$string = $letters.$symbols;
+		}
+		elseif ($indexation)
+		{
+			$minWordLen = (int)Configuration::get('PS_SEARCH_MINWORDLEN');
+			if ($minWordLen > 1)
 			{
-				$minWordLen = (int)Configuration::get('PS_SEARCH_MINWORDLEN');
-				if ($minWordLen > 1)
-				{
-					$minWordLen -= 1;
-					$string = preg_replace('/(?<=\s)[^\s]{1,'.$minWordLen.'}(?=\s)/Su', ' ', $string);
-					$string = preg_replace('/^[^\s]{1,'.$minWordLen.'}(?=\s)/Su', '', $string);
-					$string = preg_replace('/(?<=\s)[^\s]{1,'.$minWordLen.'}$/Su', '', $string);
-					$string = preg_replace('/^[^\s]{1,'.$minWordLen.'}$/Su', '', $string);
-				}
+				$minWordLen -= 1;
+				$string = preg_replace('/(?<=\s)[^\s]{1,'.$minWordLen.'}(?=\s)/Su', ' ', $string);
+				$string = preg_replace('/^[^\s]{1,'.$minWordLen.'}(?=\s)/Su', '', $string);
+				$string = preg_replace('/(?<=\s)[^\s]{1,'.$minWordLen.'}$/Su', '', $string);
+				$string = preg_replace('/^[^\s]{1,'.$minWordLen.'}$/Su', '', $string);
 			}
 		}
 

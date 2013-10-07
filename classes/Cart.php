@@ -340,6 +340,7 @@ class CartCore extends ObjectModel
 				'.($filter == CartRule::FILTER_ACTION_SHIPPING ? 'AND free_shipping = 1' : '').'
 				'.($filter == CartRule::FILTER_ACTION_GIFT ? 'AND gift_product != 0' : '').'
 				'.($filter == CartRule::FILTER_ACTION_REDUCTION ? 'AND (reduction_percent != 0 OR reduction_amount != 0)' : '')
+				.' ORDER by cr.priority ASC'
 			);
 			Cache::store($cache_key, $result);
 		}
@@ -429,7 +430,7 @@ class CartCore extends ObjectModel
 						product_shop.`available_for_order`, product_shop.`price`, product_shop.`active`, product_shop.`unity`, product_shop.`unit_price_ratio`, 
 						stock.`quantity` AS quantity_available, p.`width`, p.`height`, p.`depth`, stock.`out_of_stock`, p.`weight`,
 						p.`date_add`, p.`date_upd`, IFNULL(stock.quantity, 0) as quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
-						CONCAT(cp.`id_product`, IFNULL(cp.`id_product_attribute`, 0), IFNULL(cp.`id_address_delivery`, 0)) AS unique_id, cp.id_address_delivery,
+						CONCAT(LPAD(cp.`id_product`, 10, 0), LPAD(IFNULL(cp.`id_product_attribute`, 0), 10, 0), IFNULL(cp.`id_address_delivery`, 0)) AS unique_id, cp.id_address_delivery,
 						product_shop.`wholesale_price`, product_shop.advanced_stock_management, ps.product_supplier_reference supplier_reference');
 
 		// Build FROM
@@ -762,10 +763,11 @@ class CartCore extends ObjectModel
 	{
 		// You can't add a cart rule that does not exist
 		$cartRule = new CartRule($id_cart_rule, Context::getContext()->language->id);
+
 		if (!Validate::isLoadedObject($cartRule))
 			return false;
 		
-		if (Db::getInstance()->getValue('SELECT id_cart_rule FROM '._DB_PREFIX_.'cart_cart_rule WHERE id_cart = '.(int)$this->id))
+		if (Db::getInstance()->getValue('SELECT id_cart_rule FROM '._DB_PREFIX_.'cart_cart_rule WHERE id_cart_rule = '.(int)$id_cart_rule.' AND id_cart = '.(int)$this->id))
 			return false;
 			
 		// Add the cart rule to the cart
@@ -1259,7 +1261,7 @@ class CartCore extends ObjectModel
 		return true;
 	}
 
-	public static function getTotalCart($id_cart, $use_tax_display = false, $type = CART::BOTH)
+	public static function getTotalCart($id_cart, $use_tax_display = false, $type = Cart::BOTH)
 	{
 		$cart = new Cart($id_cart);
 		if (!Validate::isLoadedObject($cart))
@@ -1675,6 +1677,7 @@ class CartCore extends ObjectModel
 				$warehouse_count_by_address[$product['id_address_delivery']][$warehouse['id_warehouse']]++;
 			}
 		}
+		unset($product);
 
 		arsort($warehouse_count_by_address);
 
@@ -1692,9 +1695,12 @@ class CartCore extends ObjectModel
 			$id_warehouse = 0;
 			foreach ($warehouse_count_by_address[$product['id_address_delivery']] as $id_war => $val)
 			{
-				$product['carrier_list'] = array_merge($product['carrier_list'], Carrier::getAvailableCarrierList(new Product($product['id_product']), $id_war, $product['id_address_delivery'], null, $this));
-				if (in_array((int)$id_war, $product['warehouse_list']) && $id_warehouse == 0)
-					$id_warehouse = (int)$id_war;
+				if (in_array((int)$id_war, $product['warehouse_list']))
+				{
+					$product['carrier_list'] = array_merge($product['carrier_list'], Carrier::getAvailableCarrierList(new Product($product['id_product']), $id_war, $product['id_address_delivery'], null, $this));
+					if (!$id_warehouse)
+						$id_warehouse = (int)$id_war;
+				}
 			}
 
 			if (!isset($grouped_by_warehouse[$product['id_address_delivery']]['in_stock'][$id_warehouse]))
@@ -1713,6 +1719,7 @@ class CartCore extends ObjectModel
 
 			$grouped_by_warehouse[$product['id_address_delivery']][$key][$id_warehouse][] = $product;
 		}
+		unset($product);
 
 		// Step 3 : grouped product from grouped_by_warehouse by available carriers
 		$grouped_by_carriers = array();
@@ -1731,7 +1738,6 @@ class CartCore extends ObjectModel
 				{
 					if (!isset($grouped_by_carriers[$id_address_delivery][$key][$id_warehouse]))
 						$grouped_by_carriers[$id_address_delivery][$key][$id_warehouse] = array();
-
 					foreach ($product_list as $product)
 					{
 						$package_carriers_key = implode(',', $product['carrier_list']);
@@ -1796,7 +1802,6 @@ class CartCore extends ObjectModel
 									);
 								$package_list[$id_address_delivery][$key][$id_warehouse][$id_carrier]['carrier_list'] =
 									array_intersect($package_list[$id_address_delivery][$key][$id_warehouse][$id_carrier]['carrier_list'], $data['carrier_list']);
-
 								$package_list[$id_address_delivery][$key][$id_warehouse][$id_carrier]['product_list'] =
 									array_merge($package_list[$id_address_delivery][$key][$id_warehouse][$id_carrier]['product_list'], $data['product_list']);
 
@@ -3415,6 +3420,7 @@ class CartCore extends ObjectModel
 	 */
 	public function setNoMultishipping()
 	{
+		$emptyCache = $result = false;
 		if (Configuration::get('PS_ALLOW_MULTISHIPPING'))
 		{
 			// Upgrading quantities
@@ -3433,7 +3439,9 @@ class CartCore extends ObjectModel
 						AND `id_shop` = '.(int)$this->id_shop.'
 						AND id_product = '.$product['id_product'].'
 						AND id_product_attribute = '.$product['id_product_attribute'];
-					Db::getInstance()->execute($sql);
+				$result = Db::getInstance()->execute($sql);
+				if ($result)
+					$emptyCache = true;
 			}
 
 			// Merging multiple lines
@@ -3451,15 +3459,18 @@ class CartCore extends ObjectModel
 		}
 		
 		// Update delivery address for each product line
-		Db::getInstance()->execute('
-		UPDATE `'._DB_PREFIX_.'cart_product`
+		$sql = 'UPDATE `'._DB_PREFIX_.'cart_product`
 		SET `id_address_delivery` = (
 			SELECT `id_address_delivery` FROM `'._DB_PREFIX_.'cart`
 			WHERE `id_cart` = '.(int)$this->id.' AND `id_shop` = '.(int)$this->id_shop.'
 		)
 		WHERE `id_cart` = '.(int)$this->id.'
-		'.(Configuration::get('PS_ALLOW_MULTISHIPPING') ? ' AND `id_shop` = '.(int)$this->id_shop : ''));
-		
+		'.(Configuration::get('PS_ALLOW_MULTISHIPPING') ? ' AND `id_shop` = '.(int)$this->id_shop : '');
+	
+		$result = Db::getInstance()->execute($sql);
+		if ($result)
+			$emptyCache = true;
+
 		if (Customization::isFeatureActive())
 			Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'customization`
@@ -3468,6 +3479,9 @@ class CartCore extends ObjectModel
 				WHERE `id_cart` = '.(int)$this->id.'
 			)
 			WHERE `id_cart` = '.(int)$this->id);
+
+		if ($emptyCache)	
+			$this->_products = null;
 	}
 
 	/**

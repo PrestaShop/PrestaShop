@@ -119,25 +119,37 @@ function copy2friendlyURL()
 
 function copyMeta2friendlyURL()
 {
-	$('#input_link_rewrite_' + id_language).val(str2url($('#name_' + id_language).val().replace(/^[0-9]+\./, ''), 'UTF-8'));
+	if (!$('input[name="id_cms"]').length)
+		$('#link_rewrite_' + id_language).val(str2url($('#name_' + id_language).val().replace(/^[0-9]+\./, ''), 'UTF-8'));
 }
 
 function updateCurrentText()
 {
 	$('#current_product').html($('#name_' + id_language).val());
 }
+
 function updateFriendlyURLByName()
 {
 	$('#link_rewrite_' + id_language).val(str2url($('#name_' + id_language).val(), 'UTF-8'));
 	$('#friendly-url').html($('#link_rewrite_' + id_language).val());
 }
+
 function updateFriendlyURL()
 {
 	var link = $('#link_rewrite_' + id_language);
 	if (link[0])
 	{
+		$('#friendly-url').text(str2url($('#link_rewrite_' + id_language).val(), 'UTF-8'));
+	}
+}
+
+function updateLinkRewrite()
+{
+	var link = $('#link_rewrite_' + id_language);
+	if (link[0])
+	{
 		link.val(str2url($('#link_rewrite_' + id_language).val(), 'UTF-8'));
-		$('#seo #friendly-url').text(link.val());
+		$('#friendly-url').text(link.val());
 	}
 }
 
@@ -172,10 +184,15 @@ function changeFormLanguage(id_language_new, iso_code, employee_cookie)
 
 	// For multishop checkboxes
 	$('.multishop_lang_'+id_language_new).show().siblings('div[class^=\'multishop_lang_\']').hide();
-
 	$('.language_flags').hide();
 	if (employee_cookie)
-		$.post("ajax.php", { form_language_id: id_language_new });
+		$.post("index.php", {
+			action: 'formLanguage', 
+			tab: 'AdminEmployees',
+			ajax: 1,
+			token: employee_token,
+			form_language_id: id_language_new 
+		});
 	id_language = id_language_new;
 
 	updateCurrentText();
@@ -460,32 +477,6 @@ function validateImportation(mandatory)
 		}
 }
 
-function askFeatureName(selected, selector)
-{
-	var elem;
-
-	if (selected.value == 'feature')
-	{
-		$('#features_' + selector).show();
-		$('#feature_name_' + selector).attr('name', selected.name);
-	}
-}
-
-function replaceFeature(toReplace, selector)
-{
-	var elem;
-
-	if ($('#feature_name_' + selector).val() == '')
-		return false;
-
-	elem = getE(toReplace);
-	elem.options[elem.selectedIndex].text = $('#feature_name_' + selector).val();
-	elem.options[elem.selectedIndex].value = '#F_' + $('#feature_name_' + selector).val();
-	$('#features_' + selector).toggle();
-	$('#feature_name_' + selector).val('');
-	$('#feature_name_' + selector).attr('name', '');
-}
-
 function chooseTypeTranslation(id_lang)
 {
 	getE('translation_lang').value = id_lang;
@@ -734,6 +725,7 @@ function doAdminAjax(data, success_func, error_func)
 	{
 		url : 'index.php',
 		data : data,
+		type : 'POST',
 		success : function(data){
 			if (success_func)
 				return success_func(data);

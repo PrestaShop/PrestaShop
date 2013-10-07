@@ -178,7 +178,7 @@ $(document).ready(function () {
 	</tr>
 	<tr {if !$ps_use_ecotax} style="display:none;"{/if}>
 		<td class="col-left">
-			{include file="controllers/products/multishop/checkbox.tpl" field="ecot" type="default"}
+			{include file="controllers/products/multishop/checkbox.tpl" field="ecotax" type="default"}
 			<label>{l s='Eco-tax (tax incl.):'}</label>
 		</td>
 		<td>

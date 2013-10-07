@@ -94,7 +94,8 @@ class AdminSuppliersControllerCore extends AdminController
 					'rows' => 10,
 					'lang' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'desc' => $this->l('Will appear in the supplier list')
+					'desc' => $this->l('Will appear in the supplier list'),
+					'autoload_rte' => 'rte' //Enable TinyMCE editor for short description
 				),
 				array(
 					'type' => 'text',
@@ -259,6 +260,24 @@ class AdminSuppliersControllerCore extends AdminController
 		$this->fields_value['size'] = $image ? filesize(_PS_SUPP_IMG_DIR_.'/'.$this->object->id.'.jpg') / 1000 : false;
 
 		return parent::renderForm();
+	}
+
+	/**
+	 * AdminController::initToolbar() override
+	 * @see AdminController::initToolbar()
+	 *
+	 */
+	public function initToolbar()
+	{
+		switch ($this->display)
+		{
+			default:
+				parent::initToolbar();
+				$this->toolbar_btn['import'] = array(
+					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=suppliers',
+					'desc' => $this->l('Import')
+				);
+		}
 	}
 
 	public function renderView()

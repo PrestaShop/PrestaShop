@@ -445,6 +445,7 @@ class BlockLayered extends Module
 		static $_MODULES = array();
 		global $_MODULE;
 
+			$file = _PS_MODULE_DIR_.$this->name.'/translations/'.Language::getIsoById($id_lang).'.php';
 
 		if (!array_key_exists($id_lang, $_MODULES))
 		{
@@ -1770,7 +1771,7 @@ class BlockLayered extends Module
 				$root_category = array('id_category' => '0', 'name' => $this->l('Root'));
 
 			$helper = new Helper();
-			$html .= $helper->renderCategoryTree(null, $selected_cat, 'categoryBox');
+			$html .= $helper->renderCategoryTree(null, $selected_cat, 'categoryBox', false, false, array(), true);
 			
 			$html .= '
 					<br />
@@ -1929,7 +1930,7 @@ class BlockLayered extends Module
 						
 						$(\'label a#inline\').fancybox({ 
 							\'hideOnContentClick\': false,
-							\'onClosed\': function() {
+							\'beforeClose\': function() {
 								lock_treeview_hidding = false;
 								$(\'#categories-treeview\').parent().parent().hide();
 								updCatCounter();
@@ -1939,7 +1940,7 @@ class BlockLayered extends Module
 									$(\'#error-treeview\').hide();
 								updElements(0, 0);
 							},
-							\'onComplete\': function() {
+							\'afterLoad\': function() {
 								lock_treeview_hidding = true;
 								$(\'#categories-treeview\').parent().parent().show();
 								if($($(\'#categories-treeview li\')[0]).attr(\'cleaned\'))
@@ -1949,8 +1950,7 @@ class BlockLayered extends Module
 								$($(\'#categories-treeview li span\')[0]).trigger(\'click\');
 								$($(\'#categories-treeview li\')[0]).children(\'div\').remove();
 								$($(\'#categories-treeview li\')[0]).
-									removeClass(\'collapsable lastCollapsable\').
-									addClass(\'last static\');
+									removeClass(\'collapsable lastCollapsable\')
 								$(\'.hitarea\').live(\'click\', function(it)
 								{
 									$(this).parent().find(\'> .category_label\').click();
@@ -2389,11 +2389,13 @@ class BlockLayered extends Module
 				MAX(image_shop.`id_image`) id_image,
 				il.legend, 
 				m.name manufacturer_name,
-				DATEDIFF('.$alias_where.'.`date_add`, DATE_SUB(NOW(), INTERVAL '.(int)$nb_day_new_product.' DAY)) > 0 AS new
+				DATEDIFF('.$alias_where.'.`date_add`, DATE_SUB(NOW(), INTERVAL '.(int)$nb_day_new_product.' DAY)) > 0 AS new,
+				stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity
 			FROM `'._DB_PREFIX_.'category_product` cp
 			LEFT JOIN '._DB_PREFIX_.'category c ON (c.id_category = cp.id_category)
 			LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = cp.`id_product`
 			'.Shop::addSqlAssociation('product', 'p').'
+			'.Product::sqlStock('p', null, false, Context::getContext()->shop).'
 			LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = p.id_product'.Shop::addSqlRestrictionOnLang('pl').' AND pl.id_lang = '.(int)$cookie->id_lang.')
 			LEFT JOIN `'._DB_PREFIX_.'image` i  ON (i.`id_product` = p.`id_product`)'.
 			Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'

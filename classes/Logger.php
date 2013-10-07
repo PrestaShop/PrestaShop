@@ -149,6 +149,11 @@ class	LoggerCore extends ObjectModel
 
 		return $this->hash;
 	}
+	
+	public static function eraseAllLogs()
+	{
+		return Db::getInstance()->execute('TRUNCATE TABLE '._DB_PREFIX_.'log');
+	}
 
 	/**
 	 * check if this log message already exists in database.
