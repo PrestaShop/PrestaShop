@@ -28,7 +28,7 @@
     // these function pointers may change
     var matches = function(elem) { elem.show() }
     var noMatch = function(elem) { elem.hide(); new_hidden = true }
-    var getText = function(elem) { return elem.html() }
+    var getText = function(elem) { return elem.text() }
 
     if( column ) {
       var index = null;
