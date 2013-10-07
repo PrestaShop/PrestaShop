@@ -700,32 +700,34 @@ class AdminModulesControllerCore extends AdminController
 							$hooklink = 'index.php?tab=AdminModulesPositions&token='.Tools::getAdminTokenLite('AdminModulesPositions').'&show_modules='.(int)$module->id;
 							$tradlink = 'index.php?tab=AdminTranslations&token='.Tools::getAdminTokenLite('AdminTranslations').'&type=modules&lang=';
 
-							$mlanguage = '';
-							foreach (Language::getLanguages(false) as $language)
-								$mlanguage .= '<a href="'.$tradlink.$language['iso_code'].'#'.$module->name.'" ><img src="'._THEME_LANG_DIR_.$language['id_lang'].'.jpg" alt="'.$language['iso_code'].'" title="'.$language['iso_code'].'" /></a>';
-
-
 							$this->context->smarty->assign(array(
 								'module_name' => $module->name,
 								'backlink' => $backlink,
 								'module_hooklink' => $hooklink,
-								'module_language' => $mlanguage
+								'tradlink' => $tradlink,
+								'module_languages' => Language::getLanguages(false),
+								'theme_language_dir' => _THEME_LANG_DIR_
 							));
 							
 							// Display checkbox in toolbar if multishop
 							if (Shop::isFeatureActive())
 							{
-								$activateOnclick = 'onclick="location.href = \''.$this->getCurrentUrl('enable').'&enable=\'+(($(this).attr(\'checked\')) ? 1 : 0)"';
-								$multishop = '<input type="checkbox" name="activateModule" value="1" '.(($module->active) ? 'checked="checked"' : '').' '.$activateOnclick.' /> '.$this->l('Activate module for').' ';
 								if (Shop::getContext() == Shop::CONTEXT_SHOP)
-									$toolbar .= 'shop <b>'.$this->context->shop->name.'</b>';
+									$shop_context = 'shop <strong>'.$this->context->shop->name.'</strong>';
 								elseif (Shop::getContext() == Shop::CONTEXT_GROUP)
 								{
 									$shop_group = new ShopGroup((int)Shop::getContextShopGroupID());
-									$multishop .= 'all shops of group shop <b>'.$shop_group->name.'</b>';
+									$shop_context = 'all shops of group shop <strong>'.$shop_group->name.'</strong>';
 								}
 								else
-									$multishop .= 'all shops';
+									$shop_context = 'all shops';
+
+								$this->context->smarty->assign(array(
+									'module' => $module,
+									'display_multishop_checkbox' => true,
+									'current_url' => $this->getCurrentUrl('enable'),
+									'shop_context' => $shop_context
+								));
 							}
 
 
@@ -736,7 +738,8 @@ class AdminModulesControllerCore extends AdminController
 							}
 							// Display module configuration
 							$header = $this->context->smarty->fetch('controllers/modules/configure.tpl');
-							$this->context->smarty->assign('module_content', $header.$echo );
+							$configuration_bar = $this->context->smarty->fetch('controllers/modules/configuration_bar.tpl');
+							$this->context->smarty->assign('module_content', $header.$configuration_bar.$echo );
 						}
 						elseif ($echo === true)
 						{
