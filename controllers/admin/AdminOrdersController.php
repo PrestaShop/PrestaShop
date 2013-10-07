@@ -1047,7 +1047,7 @@ class AdminOrdersControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
-		elseif (Tools::getValue('submitNewVoucher') && isset($order))
+		elseif (Tools::isSubmit('submitNewVoucher') && isset($order))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{

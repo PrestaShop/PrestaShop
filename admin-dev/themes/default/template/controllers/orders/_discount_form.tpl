@@ -52,15 +52,11 @@
 		</label>
 		<div class="col-lg-9">
 			<div class="input-group">
-				{if ($currency->format % 2)}
-					<span id="discount_currency_sign" class="input-group-addon" style="display: none;">{$currency->sign}</span>
-				{else}
-					<span id="discount_percent_symbol" class="input-group-addon">%</span>
-				{/if}
+				<div class="input-group-addon">
+					<span id="discount_currency_sign" style="display: none;">{$currency->sign}</span>
 
-				{if !($currency->format % 2)}
-					<span id="discount_currency_sign" class="input-group-addon" style="display: none;">{$currency->sign}</span>
-				{/if}
+					<span id="discount_percent_symbol">%</span>
+				</div>
 				<input class="form-control" type="text" name="discount_value"/>
 			</div>
 			<p class="text-muted" id="discount_value_help" style="display: none;">

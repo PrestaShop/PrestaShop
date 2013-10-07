@@ -25,34 +25,49 @@
 <tr id="new_product" style="display:none">
 	<td style="display:none;" colspan="2">
 		<input type="hidden" id="add_product_product_id" name="add_product[product_id]" value="0" />
-		{l s='Product:'} <input type="text" id="add_product_product_name" value=""/>
-		<div id="add_product_product_attribute_area" style="display: none;">
-			{l s='Combinations'} <select name="add_product[product_attribute_id]" id="add_product_product_attribute_id"></select>
+
+		<div class="form-group">
+			<label>{l s='Product:'}</label>
+			<div class="input-group">
+				<input type="text" id="add_product_product_name" value=""/>
+				<div class="input-group-addon">
+					<i class="icon-search"></i>
+				</div>
+			</div>
 		</div>
-		<div id="add_product_product_warehouse_area" style="display: none;">
-			{l s='Warehouse'} <select  id="add_product_warehouse" name="add_product_warehouse">
-			</select>
+		
+		<div id="add_product_product_attribute_area" class="form-group" style="display: none;">
+			<label>{l s='Combinations'}</label>
+			<select name="add_product[product_attribute_id]" id="add_product_product_attribute_id"></select>
+		</div>
+
+		<div id="add_product_product_warehouse_area" class="form-group" style="display: none;">
+			<label>{l s='Warehouse'}</label>
+			<select  id="add_product_warehouse" name="add_product_warehouse"></select>
 		</div>
 	</td>
+
 	<td style="display:none;">
-		{if $currency->sign % 2}
-			{$currency->sign}
-		{/if}
-		<input type="text" name="add_product[product_price_tax_excl]" id="add_product_product_price_tax_excl" value="" disabled="disabled" />
-		{if !($currency->sign % 2)}
-			{$currency->sign}
-		{/if}
-		{l s='tax excl.'}
-		<br />
-		{if $currency->sign % 2}
-			{$currency->sign}
-		{/if}
-		<input type="text" name="add_product[product_price_tax_incl]" id="add_product_product_price_tax_incl" value="" disabled="disabled" />
-		{if !($currency->sign % 2)}
-			{$currency->sign}
-		{/if}
-		{l s='tax incl.'}<br />
+		<div class="form-group">
+			<div class="input-group">
+				<div class="input-group-addon">
+					{$currency->sign}
+					{l s='tax excl.'}
+				</div>
+				<input type="text" name="add_product[product_price_tax_excl]" id="add_product_product_price_tax_excl" value="" disabled="disabled" />
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="input-group">
+				<div class="input-group-addon">
+					{$currency->sign}
+					{l s='tax incl.'}
+				</div>
+				<input type="text" name="add_product[product_price_tax_incl]" id="add_product_product_price_tax_incl" value="" disabled="disabled" />
+			</div>
+		</div>
 	</td>
+
 	<td style="display:none;" class="productQuantity">
 		<input type="text" name="add_product[product_quantity]" id="add_product_product_quantity" value="1" disabled="disabled" />
 	</td>
