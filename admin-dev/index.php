@@ -28,7 +28,7 @@ $timer_start = microtime(true);
 define('_PS_ADMIN_DIR_', getcwd());
 
 if (!defined('PS_ADMIN_DIR'))
-	define('PS_ADMIN_DIR', PS_ADMIN_DIR);
+	define('PS_ADMIN_DIR', _PS_ADMIN_DIR_);
 
 require(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 require(_PS_ADMIN_DIR_.'/functions.php');
