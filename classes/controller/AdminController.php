@@ -693,7 +693,7 @@ class AdminControllerCore extends Controller
 					$this->redirect_after = self::$currentIndex.'&conf=1&token='.$this->token;
 				$this->errors[] = Tools::displayError('An error occurred during deletion.');
 				if ($res)
-					Logger::addLog(sprintf($this->l('%s deletion'), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
+					Logger::addLog(sprintf($this->l('%s deletion', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
 			}
 		}
 		else
@@ -744,7 +744,7 @@ class AdminControllerCore extends Controller
 			/* voluntary do affectation here */
 			elseif (($_POST[$this->identifier] = $this->object->id) && $this->postImage($this->object->id) && !count($this->errors) && $this->_redirect)
 			{
-				Logger::addLog(sprintf($this->l('%s addition'), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
+				Logger::addLog(sprintf($this->l('%s addition', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
 				$parent_id = (int)Tools::getValue('id_parent', 1);
 				$this->afterAdd($this->object);
 				$this->updateAssoShop($this->object->id);
@@ -844,7 +844,7 @@ class AdminControllerCore extends Controller
 						if (empty($this->redirect_after) && $this->redirect_after !== false)
 							$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=4&token='.$this->token;
 					}
-					Logger::addLog(sprintf($this->l('%s edition'), $this->className), 1, null, $this->className, (int)$object->id, true, (int)$this->context->employee->id);
+					Logger::addLog(sprintf($this->l('%s edition', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$object->id, true, (int)$this->context->employee->id);
 				}
 				else
 					$this->errors[] = Tools::displayError('An error occurred while updating an object.').
@@ -2768,7 +2768,7 @@ class AdminControllerCore extends Controller
 						}
 					
 					if ($delete_ok)
-						Logger::addLog(sprintf($this->l('%s deletion'), $this->className), 1, null, $this->className, (int)$to_delete->id, true, (int)$this->context->employee->id);
+						Logger::addLog(sprintf($this->l('%s deletion', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$to_delete->id, true, (int)$this->context->employee->id);
 					else
 						$this->errors[] = sprintf(Tools::displayError('Can\'t delete #%d'), $id);
 				}
