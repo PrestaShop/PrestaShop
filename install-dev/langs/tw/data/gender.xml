@@ -2,5 +2,4 @@
 <entity_gender>
   <gender id="1" name="先生"/>
   <gender id="2" name="女士"/>
-  <gender id="3" name="小姐"/>
 </entity_gender>
