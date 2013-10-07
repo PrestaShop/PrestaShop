@@ -2853,9 +2853,9 @@ class AdminImportControllerCore extends AdminController
 				
 				if ($import_type !== false)
 				{
-					$log_message = sprintf($this->l('%s import'), $import_type);
+					$log_message = sprintf($this->l('%s import', 'AdminTab', false, false), $import_type);
 					if (Tools::getValue('truncate'))
-						$log_message .= ' '.$this->l('with truncate');
+						$log_message .= ' '.$this->l('with truncate', 'AdminTab', false, false);
 					Logger::addLog($log_message, 1, null, $import_type, null, true, (int)$this->context->employee->id);
 				}
 			}
