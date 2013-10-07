@@ -8312,7 +8312,7 @@ tr.highlighted td {
 .nav-tabs {
   border-bottom: none; }
 /* line 681, admin-theme.sass */
-.nav-tabs li.active a.tab-page {
+.nav-tabs li.active a, .nav-tabs li.active a:hover {
   background-color: white; }
 
 /* line 684, admin-theme.sass */

@@ -517,6 +517,7 @@ function init()
 
 							$('.standard_refund_fields').hide();
 							$('.partial_refund_fields').hide();
+							$('#add_product').show();
 						}
 						else
 							jAlert(data.error);
@@ -616,30 +617,20 @@ function init()
 					var element_list = $('.customized-' + element.parent().parent().find('.edit_product_id_order_detail').val());
 					if (!element_list.length)
 						element_list = element.parent().parent().parent();
-
-					//element_list.css('background-color', '#E8EDC2');
-
 					element_list.find('td .product_price_show').hide();
 					element_list.find('td .product_quantity_show').hide();
-					//element_list.find('td .product_price_edit').parent().attr('align', 'left');
 					element_list.find('td .product_price_edit').show();
 					element_list.find('td .product_quantity_edit').show();
-
 					element_list.find('td.cancelCheck').hide();
 					element_list.find('td.cancelQuantity').hide();
 					element_list.find('td.product_invoice').show();
-
 					$('td.product_action').attr('colspan', 3);
 					$('th.edit_product_fields').show();
 					$('th.edit_product_fields').attr('colspan',  2);
 					element_list.find('td.product_action').attr('colspan', 1);
-
-					//element.parent().children('.delete_product_line').hide();
 					element.parent().children('.edit_product_change_link').parent().hide();
-					
 					element.parent().parent().find('button.submitProductChange').show();
 					element.parent().parent().find('.cancel_product_change_link').show();
-
 					$('.standard_refund_fields').hide();
 					$('.partial_refund_fields').hide();
 				}
@@ -658,21 +649,15 @@ function init()
 		var element_list = $('.customized-' + $(this).parent().parent().find('.edit_product_id_order_detail').val());
 		if (!element_list.length)
 			element_list = $($(this).parent().parent());
-
-		//element_list.css('background-color', '#FFF');
 		element_list.find('td .product_price_show').show();
 		element_list.find('td .product_quantity_show').show();
-		//element_list.find('td .product_price_edit').parent().attr('align', 'center');
 		element_list.find('td .product_price_edit').hide();
 		element_list.find('td .product_quantity_edit').hide();
-
 		element_list.find('td.product_invoice').hide();
 		element_list.find('td.cancelCheck').show();
 		element_list.find('td.cancelQuantity').show();
-
-		//element_list.find('.delete_product_line').show();
 		element_list.find('.edit_product_change_link').parent().show();
-		element_list.find('button[name=submitProductChange]').hide();
+		element_list.find('button.submitProductChange').hide();
 		element_list.find('.cancel_product_change_link').hide();
 		$('.standard_refund_fields').hide();
 		return false;

@@ -49,7 +49,7 @@
 
 	<td style="display:none;">
 		<div class="form-group">
-			<div class="input-group">
+			<div class="input-group fixed-width-xl">
 				<div class="input-group-addon">
 					{$currency->sign}
 					{l s='tax excl.'}
@@ -58,7 +58,7 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<div class="input-group">
+			<div class="input-group fixed-width-xl">
 				<div class="input-group-addon">
 					{$currency->sign}
 					{l s='tax incl.'}
@@ -69,16 +69,16 @@
 	</td>
 
 	<td style="display:none;" class="productQuantity">
-		<input type="text" name="add_product[product_quantity]" id="add_product_product_quantity" value="1" disabled="disabled" />
+		<input type="number" class="form-control fixed-width-sm" name="add_product[product_quantity]" id="add_product_product_quantity" value="1" disabled="disabled" />
 	</td>
-	{if ($order->hasBeenPaid())}<td style="display:none;" class="productQuantity">&nbsp;</td>{/if}
-	{if $display_warehouse}<td style="" align="center">&nbsp;</td>{/if}
-	{if ($order->hasBeenDelivered())}<td style="display:none;" class="productQuantity">&nbsp;</td>{/if}
+	{if ($order->hasBeenPaid())}<td style="display:none;" class="productQuantity"></td>{/if}
+	{if $display_warehouse}<td></td>{/if}
+	{if ($order->hasBeenDelivered())}<td style="display:none;" class="productQuantity"></td>{/if}
 	<td style="display:none;" class="productQuantity" id="add_product_product_stock">0</td>
 	<td style="display:none;" id="add_product_product_total">{displayPrice price=0 currency=$currency->id}</td>
 	<td style="display:none;" colspan="2">
 		{if sizeof($invoices_collection)}
-		<select name="add_product[invoice]" id="add_product_product_invoice" disabled="disabled">
+		<select class="form-control" name="add_product[invoice]" id="add_product_product_invoice" disabled="disabled">
 			<optgroup class="existing" label="{l s='Existing'}">
 				{foreach from=$invoices_collection item=invoice}
 				<option value="{$invoice->id}">{$invoice->getInvoiceNumberFormatted($current_id_lang)}</option>
@@ -101,17 +101,29 @@
 		</button>
 	</td>
 </tr>
+
 <tr id="new_invoice" style="display:none">
 	<td colspan="10">
-		<h3>{l s='New invoice information'}</h3>
-		<label>{l s='Carrier'}</label>
-		<div class="margin-form">
-			{$carrier->name}
-		</div>
-		<div class="margin-form">
-			<input type="checkbox" name="add_invoice[free_shipping]" value="1" />
-			<label class="t">{l s='Free shipping'}</label>
-			<p>{l s='If you don\'t select "Free shipping," the normal shipping cost will be applied.'}</p>
+		<h4>{l s='New invoice information'}</h4>
+		<div class="form-horizontal">
+			<div class="form-group">
+				<label class="control-label col-lg-3">{l s='Carrier'}</label>
+				<div class="col-lg-9">
+					<p class="form-control-static"><strong>{$carrier->name}</strong></p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-lg-3">{l s='Shipping Cost'}</label>
+				<div class="col-lg-9">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" name="add_invoice[free_shipping]" value="1" />
+							{l s='Free shipping'}
+						</label>
+						<p class="help-block">{l s='If you don\'t select "Free shipping," the normal shipping cost will be applied.'}</p>
+					</div>
+				</div>
+			</div>
 		</div>
 	</td>
 </tr>

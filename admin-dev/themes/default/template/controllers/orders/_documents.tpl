@@ -69,13 +69,13 @@
 						{if get_class($document) eq 'OrderInvoice'}
 
 							{if isset($document->is_delivery)}
-								<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order_invoice={$document->id}">
+							<a target="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order_invoice={$document->id}">
 						   	{else}
-								<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateInvoicePDF&id_order_invoice={$document->id}">
+							<a target="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateInvoicePDF&id_order_invoice={$document->id}">
 						   {/if}
 
 						{elseif get_class($document) eq 'OrderSlip'}
-							<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateOrderSlipPDF&id_order_slip={$document->id}">
+							<a target="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateOrderSlipPDF&id_order_slip={$document->id}">
 						{/if}
 
 						{if get_class($document) eq 'OrderInvoice'}
@@ -90,13 +90,8 @@
 
 							#{Configuration::get('PS_CREDIT_SLIP_PREFIX', $current_id_lang)}{'%06d'|sprintf:$document->id}
 
-						{/if} 
-
-								<span class="btn btn-default">
-									<i class="icon-search"></i>
-									{l s='See the document'}
-								</span>
-							</a>
+						{/if}
+						</a>
 					</td>
 					<td>
 					{if get_class($document) eq 'OrderInvoice'}
@@ -121,12 +116,14 @@
 					<td class="text-right document_action">
 					{if get_class($document) eq 'OrderInvoice'}
 						{if !isset($document->is_delivery)}
+
 							{if $document->getRestPaid()}
 								<a href="#" class="js-set-payment btn btn-default" data-amount="{$document->getRestPaid()}" data-id-invoice="{$document->id}" title="{l s='Set payment form'}">
 									<i class="icon-money"></i>
 									{l s='Enter Payment'}
 								</a>
 							{/if}
+
 							<a href="#" class="btn btn-default" onclick="$('#invoiceNote{$document->id}').show(); return false;" title="{if $document->note eq ''}{l s='Add note'}{else}{l s='Edit note'}{/if}">
 								{if $document->note eq ''}
 									<i class="icon-plus-sign-alt"></i>
@@ -136,6 +133,7 @@
 									{l s='Edit note'}
 								{/if}
 							</a>
+
 						{/if}
 					{/if}
 					</td>
