@@ -26,21 +26,26 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
-	<form action="{$current}&token={$token}&viewcustomer_thread&id_customer_thread={$id_customer_thread}" method="post" enctype="multipart/form-data">
-		<fieldset>
 
-			<div id="ChangeStatus">
+<fieldset>
+	<h3>
+		<i class="icon-envelope"></i>
+		{l s='Message status'}
+	</h3>
+	<form action="{$current}&token={$token}&viewcustomer_thread&id_customer_thread={$id_customer_thread}" method="post" enctype="multipart/form-data" class="form-horizontal">
+		<div id="ChangeStatus" class="row row-margin-bottom">
+			<label class="control-label col-lg-3">{l s='Change status of message:'}</label>
+			<div class="col-lg-3">
 				<select onchange="quickSelect(this);">
-					<option value="0">{l s='Change status of message:'}</option>
 					{foreach $actions as $action}
 						<option value="{$action.href}">&gt; {$action.name}</option>
 					{/foreach}
 				</select>
 			</div>
-
-			<p>
-				<img src="../img/admin/email_go.png" alt="" /> 
-				{l s='Forward this discussion to an employee:'}
+		</div>
+		<div class="row row-margin-bottom">
+			<label class="control-label col-lg-3">{l s='Forward this discussion to an employee:'}</label>
+			<div class="col-lg-3">
 				<select name="id_employee_forward">
 					<option value="-1">{l s='-- Choose --'}</option>
 					{foreach $employees as $employee}
@@ -48,84 +53,126 @@
 					{/foreach}
 					<option value="0">{l s='Someone else'}</option>
 				</select>
-			</p>
-
-			<div id="message_forward_email" style="display:none">
-				<b>{l s='Email'}</b> <input type="text" name="email" />
 			</div>
+		</div>
 
-			<div id="message_forward" style="display:none;margin-bottom:10px">
-				<textarea name="message_forward" style="width:500px;height:80px;margin-top:15px;">{l s='You can add a comment here.'}</textarea><br />
-				<input type="Submit" name="submitForward" class="button" value="{l s='Forward this discussion.'}" style="margin-top: 10px;" />
+		<div id="message_forward_email" class="row row-margin-bottom" style="display:none">
+			<label class="control-label col-lg-3">{l s='Email'}</label>
+			<div class="col-lg-3"> 
+				<input type="text" name="email" />
 			</div>
+		</div>
 
-		</fieldset>
+		<div id="message_forward" style="display:none;">
+			<div class="row row-margin-bottom">
+				<label class="control-label col-lg-3">{l s='Comment:'}</label>
+				<div class="col-lg-7"> 
+					<textarea name="message_forward" rows="6">{l s='You can add a comment here.'}</textarea>
+				</div>
+			</div>
+			<div class="row row-margin-bottom">
+				<div class="col-lg-offset-3"> 
+					<button type="Submit" name="submitForward" class="btn btn-default">
+						<i class="icon-mail-forward"></i> {l s='Forward this discussion.'}
+					</button>
+				</div>
+			</div>
+		</div>
 	</form>
+</fieldset>
 
 
 	{if $thread->id_customer}
 
-		<div>
+		<fieldset>
 		{if $orders && count($orders)}
 			{if $count_ok}
-				<div>
-					<h2>{l s='Orders'}</h2>
+				<h3>
+					<i class="icon-shopping-cart"></i> {l s='Orders'}
+				</h3>
+				<div class="table-responsive clearfix">
 					<table class="table">
 						<tr>
-							<th class="center">{l s='ID'}</th>
-							<th class="center">{l s='Date'}</th>
-							<th class="center">{l s='Products:'}</th>
-							<th class="center">{l s='Total paid'}</th>
-							<th class="center">{l s='Payment: '}</th>
-							<th class="center">{l s='State'}</th>
-							<th class="center">{l s='Actions'}</th>
+							<th class="center">
+								<span class="title_box">{l s='ID'}</span>
+							</th>
+							<th class="center">
+								<span class="title_box">{l s='Date'}</span>
+							</th>
+							<th class="center">
+								<span class="title_box">{l s='Products:'}</span>
+							</th>
+							<th class="center">
+								<span class="title_box">{l s='Total paid'}</span>
+							</th>
+							<th class="center">
+								<span class="title_box">{l s='Payment: '}</span>
+							</th>
+							<th class="center">
+								<span class="title_box">{l s='State'}</span>
+							</th>
+							<th class="center">
+								<span class="title_box">{l s='Actions'}</span>
+							</th>
 						</tr>
 						{assign var=irow value=0}
 						{foreach $orders_ok as $order}
-							<tr {if $irow++ % 2}class="alt_row"{/if} style="cursor: pointer" 
-											onclick="document.location='?tab=AdminOrders&id_order={$order.id_order}&vieworder&token={getAdminToken tab='AdminOrders'}">
+							<tr onclick="document.location='?tab=AdminOrders&id_order={$order.id_order}&vieworder&token={getAdminToken tab='AdminOrders'}">
 								<td class="center">{$order.id_order}</td>
-								<td>{$order.date_add}</td>
-								<td align="right">{$order.nb_products}</td>
-								<td align="right">{$order.total_paid_real}</td>
-								<td>{$order.payment}</td>
-								<td>{$order.order_state}</td>
-								<td align="center">
-									<a href="?tab=AdminOrders&id_order={$order.id_order}&vieworder&token={getAdminToken tab='AdminOrders'}">
-										<img src="../img/admin/details.gif" />
+								<td class="center">{$order.date_add}</td>
+								<td class="center">{$order.nb_products}</td>
+								<td class="center">{$order.total_paid_real}</td>
+								<td class="center">{$order.payment}</td>
+								<td class="center">{$order.order_state}</td>
+								<td class="center">
+									<a class=" btn btn-default" href="?tab=AdminOrders&id_order={$order.id_order}&vieworder&token={getAdminToken tab='AdminOrders'}">
+										<i class="icon-eye-open"></i> {l s='View'}
 									</a>
 								</td>
 							</tr>
 						{/foreach}
 					</table>
-					<h3 style="color:green;font-weight:700;margin-top:10px">
-						{l s='Validated Orders:'} {$count_ok} {l s='for'} {$total_ok}
-					</h3>
 				</div>
+				<p class="pull-right">
+					{l s='Validated Orders:'} {$count_ok} {l s='for'} <strong>{$total_ok}</strong>
+				</p>
 			{/if}
 		{/if}
+		</fieldset>
+		<fieldset>
 		{if $products && count($products)}
-			<div>
-				<h2>{l s='Products:'}</h2>
-				<table cellspacing="0" cellpadding="0" class="table">
+			<h3>
+				<i class="icon-archive"></i> {l s='Products:'}
+			</h3>
+			<div class="table-responsive clearfix">
+				<table class="table">
 					<tr>
-						<th class="center">{l s='Date'}</th>
-						<th class="center">{l s='ID'}</th>
-						<th class="center">{l s='Name'}</th>
-						<th class="center">{l s='Quantity'}</th>
-						<th class="center">{l s='Actions'}</th>
+						<th class="center">
+							<span class="title_box">{l s='Date'}</span>
+						</th>
+						<th class="center">
+							<span class="title_box">{l s='ID'}</span>
+						</th>
+						<th class="center">
+							<span class="title_box">{l s='Name'}</span>
+						</th>
+						<th class="center">
+							<span class="title_box">{l s='Quantity'}</span>
+						</th>
+						<th class="center">
+							<span class="title_box">{l s='Actions'}</span>
+						</th>
 					</tr>
 					{assign var=irow value=0}
 					{foreach $products as $product}
-						<tr {if $irow++ % 2}class="alt_row"{/if} style="cursor: pointer" 
-							onclick="document.location = '?tab=AdminOrders&id_order={$product.id_order}&vieworder&token={getAdminToken tab='AdminOrders'}'">
-							<td>{$product.date_add}</td>
-							<td>{$product.product_id}</td>
-							<td>{$product.product_name}</td>
-							<td align="right">{$product.product_quantity}</td>
-							<td align="center">
-								<a href="?tab=AdminOrders&id_order={$product.id_order}&vieworder&token={getAdminToken tab='AdminOrders'}">
-									<img src="../img/admin/details.gif" />
+						<tr onclick="document.location = '?tab=AdminOrders&id_order={$product.id_order}&vieworder&token={getAdminToken tab='AdminOrders'}'">
+							<td class="center">{$product.date_add}</td>
+							<td class="center">{$product.product_id}</td>
+							<td class="center">{$product.product_name}</td>
+							<td class="center">{$product.product_quantity}</td>
+							<td class="center">
+								<a class=" btn btn-default" href="?tab=AdminOrders&id_order={$product.id_order}&vieworder&token={getAdminToken tab='AdminOrders'}">
+									<i class="icon-eye-open"></i> {l s='View'}
 								</a>
 							</td>
 						</tr>
@@ -133,10 +180,10 @@
 				</table>
 			</div>
 		{/if}
-		</div>
+		</fieldset>
 	{/if}
 
-	<div>
+	<div class="row row-margin-bottom">
 		{foreach $messages as $message}
 			{$message}
 		{/foreach}
