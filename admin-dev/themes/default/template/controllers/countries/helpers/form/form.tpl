@@ -26,45 +26,56 @@
 
 {block name="field"}
 	{if $input.type == 'address_layout'}
-		<div class="margin-form">
-			<div style="float:left">
+
+			<div class="col-lg-3">
 				<textarea id="ordered_fields" name="address_layout" style="width: 300px;height: 140px;">{$input.address_layout}</textarea>
 			</div>
-			<div style="float:left; margin-left:20px; width:340px;">
+			<div class="col-lg-6">
 				{l s='Required fields for the address (click for more details):'} {$input.display_valid_fields}
 			</div>
-			<div class="clear"></div>
-			<div style="margin:10px 0 10px 0;">
-				<a id="useLastDefaultLayout" style="margin-left:5px;" href="javascript:void(0)" onClick="resetLayout('{$input.encoding_address_layout}', 'lastDefault');" class="button">
-					{l s='Use the last registered format'}</a>
-				<a id="useDefaultLayoutSystem" style="margin-left:5px;" href="javascript:void(0)" onClick="resetLayout('{$input.encoding_default_layout}', 'defaultSystem');" class="button">
-					{l s='Use the default format'}</a>
-				<a id="useCurrentLastModifiedLayout" style="margin-left:5px;" href="javascript:void(0)" onClick="resetLayout(lastLayoutModified, 'currentModified')" class="button">
-					{l s='Use my current modified format'}</a>
-				<a id="eraseCurrentLayout" style="margin-left:5px;" href="javascript:void(0)" onClick="resetLayout('', 'erase');" class="button">
-					{l s='Clear format'}</a>
-				<div style="margin-top:10px; padding-top:5px; height:10px;" id="explanationText"></div>
-			</div>
 		</div>
+		<div class="row">
+			<div class="col-lg-9 col-lg-push-3">
+				<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='This will restore your last registered address format.'}" data-html="true"><a id="useLastDefaultLayout" href="javascript:void(0)" onClick="resetLayout('{$input.encoding_address_layout}', 'lastDefault');" class="btn btn-default">
+					{l s='Use the last registered format'}</a></span>
+				<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='This will restore the default address format for this country.'}" data-html="true"><a id="useDefaultLayoutSystem" href="javascript:void(0)" onClick="resetLayout('{$input.encoding_default_layout}', 'defaultSystem');" class="btn btn-default">
+					{l s='Use the default format'}</a></span>
+				<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='This will restore your current address format.'}" data-html="true"><a id="useCurrentLastModifiedLayout" href="javascript:void(0)" onClick="resetLayout(lastLayoutModified, 'currentModified')" class="btn btn-default">
+					{l s='Use my current modified format'}</a></span>
+				<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='This will delete the current address format'}" data-html="true"><a id="eraseCurrentLayout" href="javascript:void(0)" onClick="resetLayout('', 'erase');" class="btn btn-default">
+					{l s='Clear format'}</a></span>
+			</div>
 	{else}
 		{$smarty.block.parent}
 	{/if}		
 {/block}
-{block name="label"}
+{block name="input_row"}
 	{if $input.name == 'standardization'}
-		<div id="TAASC" style="display: none;">{$smarty.block.parent}
+		<div class="row" id="TAASC" style="display: none;">
+			<label for="{$input.name}" class="control-label col-lg-3 ">{$input.label}</label>
+			<div class="col-lg-9">
+				<div class="row">
+					<div class="input-group col-lg-2">
+						<span class="switch prestashop-switch">
+							<input type="radio" name="{$input.name}" id="{$input.name}_on" value="1">
+							<label class="radio" for="{$input.name}_on">
+								<i class="icon-check-sign color_success"></i> {l s='Yes'}
+							</label>
+							<input type="radio" name="{$input.name}" id="{$input.name}_off" value="0" checked="checked">
+							<label class="radio" for="{$input.name}_off">
+								<i class="icon-ban-circle color_danger"></i> {l s='No'}
+							</label>
+							<span class="slide-button btn btn-default"></span>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
 	{else}
 		{$smarty.block.parent}
 	{/if}
 {/block}
 
-{block name="input"}
-	{if $input.name == 'standardization'}
-		{$smarty.block.parent}</div>
-	{else}
-		{$smarty.block.parent}
-	{/if}
-{/block}
 
 {block name=script}
 
@@ -81,22 +92,6 @@
 			lastLayoutModified = $(this).val();
 		});
 
-		$('#useLastDefaultLayout').mouseover(function() {
-			switchExplanationText("{l s='This will restore your last registered address format.'}");
-		});
-
-		$('#useDefaultLayoutSystem').mouseover(function() {
-			switchExplanationText("{l s='This will restore the default address format for this country.'}");
-		});
-
-		$('#useCurrentLastModifiedLayout').mouseover(function() {
-			switchExplanationText("{l s='This will restore your current address format.'}");
-		});
-
-		$('#eraseCurrentLayout').mouseover(function() {
-			switchExplanationText("{l s='This will delete the current address format'}");
-		});
-
 		$('#need_zip_code_on, #need_zip_code_off').change(function() {
 			disableZipFormat();
 		});
@@ -106,13 +101,6 @@
 		});				
 		disableTAASC();
 	});
-
-	function switchExplanationText(text) {
-		$("#explanationText").fadeOut("fast", function() {
-			$(this).html(text);
-			$(this).fadeIn("fast");
-		});
-	}
 
 	function addFieldsToCursorPosition(pattern) {
 		$("#ordered_fields").replaceSelection(pattern + " ");
