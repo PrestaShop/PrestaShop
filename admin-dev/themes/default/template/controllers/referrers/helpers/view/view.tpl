@@ -108,7 +108,7 @@
 			{/foreach}
 		</table>
 		<form id="product_referrers" name="product_referrers" class="form-horizontal">
-			<div class="row">
+			<div class="form-group">
 				<label class="control-label col-lg-3">{l s='Filter by product:'}</label>
 				<div class="col-lg-9">
 					<select id="selectProduct" name="selectProduct" style="width: 200px;" onfocus="fillProducts();" onchange="updateConversionRate(this.value);">
@@ -116,7 +116,7 @@
 					</select>
 				</div>
 			</div>
-			<div class="row">
+			<div class="form-group">
 				<label class="control-label col-lg-3">{l s='Search'}</label>
 				<div class="col-lg-9">
 					<input class="btn btn-default" type="text" size="34" id="filterProduct" name="filterProduct" onkeyup="fillProducts();" />
