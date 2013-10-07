@@ -157,64 +157,6 @@ class AdminFeaturesControllerCore extends AdminController
 	}
 
 	/**
-	 * method call when ajax request is made with the details row action
-	 * @see AdminController::postProcess()
-	 */
-	/*public function ajaxProcessDetails()
-	{
-		if (($id = Tools::getValue('id')))
-		{
-			$this->setTypeValue();
-			$this->lang = true;
-
-			// override attributes
-			$this->display = 'list';
-
-			// Action for list
-			$this->addRowAction('edit');
-			$this->addRowAction('delete');
-
-			if (!Validate::isLoadedObject($obj = new Feature((int)$id)))
-				$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
-
-			$this->fields_list = array(
-				'id_feature_value' => array(
-					'title' => $this->l('ID'),
-					'width' => 25
-				),
-				'value' => array(
-					'title' => $this->l('Value')
-				)
-			);
-
-			$this->_where = sprintf('AND `id_feature` = %d', (int)$id);
-
-			// get list and force no limit clause in the request
-			$this->getList($this->context->language->id);
-
-			// Render list
-			$helper = new HelperList();
-			$helper->actions = $this->actions;
-			$helper->no_link = true;
-			$helper->shopLinkType = '';
-			$helper->identifier = $this->identifier;
-			$helper->toolbar_scroll = false;
-			$helper->orderBy = 'position';
-			$helper->orderWay = 'ASC';
-			$helper->currentIndex = self::$currentIndex;
-			$helper->token = $this->token;
-			$helper->table = $this->table;
-			$helper->simple_header = true;
-			$helper->show_toolbar = false;
-			$helper->bulk_actions = $this->bulk_actions;
-			$content = $helper->generateList($this->_list, $this->fields_list);
-
-			echo Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
-			exit;
-		}
-	}*/
-
-	/**
 	 * AdminController::renderForm() override
 	 * @see AdminController::renderForm()
 	 */
