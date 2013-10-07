@@ -74,6 +74,7 @@
 				<i class="icon-comments"></i>
 				<span class="title">{l s='Messages'}<br /><small>sous-titre</small></span>
 				<span class="value">{sizeof($messages)}</span>
+				<span class="value"><a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'htmlall':'UTF-8'}">{sizeof($customer_thread_message)}</a></span>
 			</div>
 			<div class="col-lg-3 box-stats color1" >
 				<i class="icon-ok"></i>
@@ -168,15 +169,6 @@
 					<i class="icon-print"></i>
 					{l s='Print order'}
 				</a>
-				<hr/>
-				<dl>
-					<dt>
-						<a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'htmlall':'UTF-8'}">{l s='New Customer Messages:'}</a>
-					</dt>
-					<dd>
-						<a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'htmlall':'UTF-8'}">{sizeof($customer_thread_message)}</a>
-					</dd>
-				</dl>
 			</div>
 		</div>
 	</div>
@@ -1037,7 +1029,7 @@
 							<i class="icon-remove text-danger"></i>
 							{l s='Cancel'}
 						</button>
-						<button type="submit" id="submitMessage" class="btn btn-default" >
+						<button type="submit" id="submitMessage" class="btn btn-default" name="submitMessage">
 							<i class="icon-ok text-success"></i>
 							{l s='Send'}
 						</button>
