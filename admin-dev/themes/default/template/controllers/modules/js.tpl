@@ -348,7 +348,7 @@
 	              // res.status  = cache or refresh
 	              if (data == 'OK')
 	              {
-	                el.parent('div').find('.toggle_favorite').toggle();
+	                el.parent('li').find('.toggle_favorite').toggle();
 	              }
 	                
 	            },
