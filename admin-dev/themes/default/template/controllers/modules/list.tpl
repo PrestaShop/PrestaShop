@@ -47,7 +47,7 @@
 				<td><img class="imgm" alt="" src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}"></td>
 				<td>
 					<div class="moduleDesc" id="anchor{$module->name|ucfirst}">
-						<h3>{$module->displayName}
+						<h3>{$module->displayName}<span style="display:none">{$module->name}</span>
 							{if isset($module->type) && $module->type == 'addonsMustHave'}
 								<span class="setup must-have">{l s='Must Have'}</span>
 							{else}
