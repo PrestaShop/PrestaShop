@@ -8311,44 +8311,49 @@ tr.highlighted td {
 /* line 678, admin-theme.sass */
 .nav-tabs {
   border-bottom: none; }
-/* line 681, admin-theme.sass */
+/* line 680, admin-theme.sass */
+.nav-tabs li a {
+  font-size: 1.2em;
+  text-transform: uppercase;
+  font-weight: 300; }
+/* line 685, admin-theme.sass */
 .nav-tabs li.active a, .nav-tabs li.active a:hover {
   background-color: white; }
 
-/* line 684, admin-theme.sass */
+/* line 688, admin-theme.sass */
 .tree-actions {
   padding-bottom: 4px;
   display: inline-block; }
 
-/* line 689, admin-theme.sass */
+/* line 693, admin-theme.sass */
 .tt-query {
   border-bottom-right-radius: 3px !important;
   border-top-right-radius: 3px !important; }
 
-/* line 691, admin-theme.sass */
+/* line 695, admin-theme.sass */
 .tt-dropdown-menu {
   background-color: white;
   border: solid 1px #cccccc;
   font-size: 0.9em;
   text-transform: none; }
 
-/* line 696, admin-theme.sass */
+/* line 700, admin-theme.sass */
 .tt-suggestions {
   padding: 0 6px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0 1px 4px;
   box-shadow: rgba(0, 0, 0, 0.25) 0 1px 4px; }
 
-/* line 699, admin-theme.sass */
+/* line 703, admin-theme.sass */
 .tt-suggestion p {
   border-bottom: solid 1px #cccccc;
   margin: 0 !important;
   padding: 0 !important; }
 
-/* line 703, admin-theme.sass */
+/* line 707, admin-theme.sass */
 .tt-suggestion:last-child p {
   border-bottom: none; }
 
-/* line 707, admin-theme.sass */
+/* line 711, admin-theme.sass */
 .tagify-container {
   background-color: white;
   padding: 2px 6px;
@@ -8362,10 +8367,10 @@ tr.highlighted td {
   border: solid 1px #cccccc;
   -webkit-box-shadow: rgba(0, 0, 0, 0.075) 0 1px 1px inset;
   box-shadow: rgba(0, 0, 0, 0.075) 0 1px 1px inset; }
-/* line 715, admin-theme.sass */
+/* line 719, admin-theme.sass */
 .tagify-container span {
   float: left; }
-/* line 717, admin-theme.sass */
+/* line 721, admin-theme.sass */
 .tagify-container > span {
   display: inline-block;
   padding: 3px 5px;
@@ -8374,26 +8379,26 @@ tr.highlighted td {
   border: 1px solid #1ba6e5;
   background-color: #60c1ed;
   color: white; }
-/* line 725, admin-theme.sass */
+/* line 729, admin-theme.sass */
 .tagify-container > span > a {
   padding-left: 5px;
   color: #1ba6e5;
   text-decoration: none;
   font-weight: bold; }
-/* line 730, admin-theme.sass */
+/* line 734, admin-theme.sass */
 .tagify-container > input {
   margin-top: 2px;
   border: 0 none;
   width: 100px;
   -webkit-box-shadow: none;
   box-shadow: none; }
-/* line 735, admin-theme.sass */
+/* line 739, admin-theme.sass */
 .tagify-container > input:focus {
   outline: 0;
   -webkit-box-shadow: none;
   box-shadow: none; }
 
-/* line 740, admin-theme.sass */
+/* line 744, admin-theme.sass */
 li.sortable-placeholder {
   border: 1px dashed #cccccc;
   background-color: #bbbbbb;
