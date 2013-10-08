@@ -23,6 +23,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+{$kpis}
+
 <div class="page-head">
 	<h2 class="page-title">
 		{l s='List of modules'}
@@ -72,4 +74,3 @@
 		</div>
 	</div>
 {/if}
-

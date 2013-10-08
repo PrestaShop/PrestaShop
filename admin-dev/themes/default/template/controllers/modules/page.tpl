@@ -23,7 +23,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-
 	{include file='controllers/modules/header.tpl'}
 
 	{if $upgrade_available|@count}

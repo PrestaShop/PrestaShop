@@ -975,6 +975,51 @@ class AdminModulesControllerCore extends AdminController
 		return false;
 	}
 	
+	public function renderKpis()
+	{
+		$time = time();
+		$kpis = array();
+
+		/* The data generation is located in AdminStatsControllerCore */
+
+		$helper = new HelperKpi();
+		$helper->id = 'box-installed-modules';
+		$helper->icon = 'icon-puzzle-piece';
+		$helper->color = 'color1';
+		$helper->title = html_entity_decode($this->l('Installed Modules'));
+		if (ConfigurationKPI::get('INSTALLED_MODULES') !== false)
+			$helper->value = ConfigurationKPI::get('INSTALLED_MODULES');
+		if (ConfigurationKPI::get('INSTALLED_MODULES_EXPIRE') < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=installed_modules';
+		$kpis[] = $helper->generate();
+
+		$helper = new HelperKpi();
+		$helper->id = 'box-disabled-modules';
+		$helper->icon = 'icon-off';
+		$helper->color = 'color2';
+		$helper->title = html_entity_decode($this->l('Disabled Modules'));
+		if (ConfigurationKPI::get('DISABLED_MODULES') !== false)
+			$helper->value = ConfigurationKPI::get('DISABLED_MODULES');
+		if (ConfigurationKPI::get('DISABLED_MODULES_EXPIRE') < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=disabled_modules';
+		$kpis[] = $helper->generate();
+
+		$helper = new HelperKpi();
+		$helper->id = 'box-update-modules';
+		$helper->icon = 'icon-refresh';
+		$helper->color = 'color3';
+		$helper->title = html_entity_decode($this->l('Modules to update'));
+		if (ConfigurationKPI::get('UPDATE_MODULES') !== false)
+			$helper->value = ConfigurationKPI::get('UPDATE_MODULES');
+		if (ConfigurationKPI::get('UPDATE_MODULES_EXPIRE') < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=update_modules';
+		$kpis[] = $helper->generate();
+
+		$helper = new HelperKpiRow();
+		$helper->kpis = $kpis;
+		return $helper->generate();
+	}
+	
 	public function initContent()
 	{
 		// Adding Css
@@ -1003,8 +1048,8 @@ class AdminModulesControllerCore extends AdminController
 		$tab_modules_preferences = array();
 		$modules_preferences_tmp = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'module_preference` WHERE `id_employee` = '.(int)$this->id_employee);
 		$tab_modules_preferences_tmp = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'tab_module_preference` WHERE `id_employee` = '.(int)$this->id_employee);
-		
-		foreach($tab_modules_preferences_tmp as $i => $j)
+
+		foreach ($tab_modules_preferences_tmp as $i => $j)
 			$tab_modules_preferences[$j['module']][] = $j['id_tab'];
 
 		foreach ($modules_preferences_tmp as $k => $v)
@@ -1167,6 +1212,8 @@ class AdminModulesControllerCore extends AdminController
 
 		$tpl_vars['add_permission'] = $this->tabAccess['add'];
 		$tpl_vars['tab_modules_preferences'] = $tab_modules_preferences;
+
+		$tpl_vars['kpis'] = $this->renderKpis();
 
 		if ($this->logged_on_addons)
 		{

@@ -72,6 +72,38 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
 	}
 	
+	public static function getInstalledModules()
+	{
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT COUNT(*)
+		FROM `'._DB_PREFIX_.'module` m
+		'.Shop::addSqlAssociation('module', 'm'));
+	}
+	
+	public static function getDisabledModules()
+	{
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT COUNT(*)
+		FROM `'._DB_PREFIX_.'module` m
+		'.Shop::addSqlAssociation('module', 'm').'
+		WHERE `active` = 0');
+	}
+	
+	public static function getModulesToUpdate()
+	{
+		$context = Context::getContext();
+		$logged_on_addons = false;
+		if (isset($context->cookie->username_addons) && isset($context->cookie->password_addons)
+		&& !empty($context->cookie->username_addons) && !empty($context->cookie->password_addons))
+			$logged_on_addons = true;
+		$modules = Module::getModulesOnDisk(true, $logged_on_addons, $context->employee->id);
+		$upgrade_available = 0;
+		foreach ($modules as $km => $module)
+			if ($module->installed && isset($module->version_addons) && (int)(string)$module->version_addons) // SimpleXMLElement 
+				++$upgrade_available;
+		return $upgrade_available;
+	}
+	
 	public static function getPercentProductStock()
 	{
 		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
@@ -315,7 +347,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				else
 					$value = 0;
 				$value .= '%';
-				
+
 				ConfigurationKPI::updateValue('CONVERSION_RATE_CHART', Tools::jsonEncode($data));
 				ConfigurationKPI::updateValue('CONVERSION_RATE', $value);
 				ConfigurationKPI::updateValue('CONVERSION_RATE_EXPIRE', strtotime(date('Y-m-d 00:00:00', strtotime('+1 day'))));
@@ -325,6 +357,24 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				$value = AdminStatsController::getAbandonedCarts(date('Y-m-d H:i:s', strtotime('-2 day')), date('Y-m-d H:i:s', strtotime('-1 day')));
 				ConfigurationKPI::updateValue('ABANDONED_CARTS', $value);
 				ConfigurationKPI::updateValue('ABANDONED_CARTS_EXPIRE', strtotime('+10 min'));
+				break;
+
+			case 'installed_modules':
+				$value = AdminStatsController::getInstalledModules();
+				ConfigurationKPI::updateValue('INSTALLED_MODULES', $value);
+				ConfigurationKPI::updateValue('INSTALLED_MODULES_EXPIRE', strtotime('+2 min'));
+				break;
+
+			case 'disabled_modules':
+				$value = AdminStatsController::getDisabledModules();
+				ConfigurationKPI::updateValue('DISABLED_MODULES', $value);
+				ConfigurationKPI::updateValue('DISABLED_MODULES_EXPIRE', strtotime('+2 min'));
+				break;
+
+			case 'update_modules':
+				$value = AdminStatsController::getModulesToUpdate();
+				ConfigurationKPI::updateValue('UPDATE_MODULES', $value);
+				ConfigurationKPI::updateValue('UPDATE_MODULES_EXPIRE', strtotime('+2 min'));
 				break;
 
 			case 'percent_product_stock':
