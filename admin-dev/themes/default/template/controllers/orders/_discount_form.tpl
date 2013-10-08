@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div class="form-horizontal">
+<div class="form-horizontal well">
 	<div class="form-group">
 		<label class="control-label col-lg-3">
 			{l s='Name'}
@@ -95,7 +95,7 @@
 	</div>
 	{/if}
 
-	<div class="form-group">
+	<div class="row">
 		<div class="col-lg-9 col-lg-offset-3">
 			<button class="btn btn-default" type="button" id="cancel_add_voucher">
 				<i class="icon-remove text-danger"></i>

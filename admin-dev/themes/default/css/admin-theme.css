@@ -1510,7 +1510,7 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
   display: block;
   width: 100%;
   height: 27px;
-  padding: 4px 12px;
+  padding: 4px 8px;
   font-size: 12px;
   line-height: 1.42857;
   color: #555555;
@@ -1732,7 +1732,7 @@ textarea.input-lg, .input-group-lg > textarea, .input-group-lg > textarea.input-
 /* line 10, ../bower_components/sass-bootstrap/lib/_buttons.scss */
 .btn {
   display: inline-block;
-  padding: 4px 12px;
+  padding: 4px 8px;
   margin-bottom: 0;
   font-size: 12px;
   font-weight: normal;
@@ -3170,7 +3170,7 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
 
 /* line 59, ../bower_components/sass-bootstrap/lib/_input-groups.scss */
 .input-group-addon {
-  padding: 4px 12px;
+  padding: 4px 8px;
   font-size: 12px;
   font-weight: normal;
   line-height: 1;
@@ -3842,7 +3842,7 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
 .pagination > li > a, .pagination > li > span {
   position: relative;
   float: left;
-  padding: 4px 12px;
+  padding: 4px 8px;
   line-height: 1.42857;
   text-decoration: none;
   background-color: white;

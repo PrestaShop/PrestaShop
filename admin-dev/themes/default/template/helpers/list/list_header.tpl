@@ -152,10 +152,8 @@
 								if (submited)
 									return false;
 								submited = true;
-
 								//add hidden input to emulate submit button click when posting the form -> field name posted
 								btn_submit.before('<input type="hidden" name="'+btn_submit.attr("name")+'" value="1" />');
-
 								$('#{$table}_form').submit();
 								return false;
 							});
@@ -165,7 +163,6 @@
 								btn_save_and_stay.click(function() {
 									//add hidden input to emulate submit button click when posting the form -> field name posted
 									btn_submit.before('<input type="hidden" name="'+btn_submit.attr("name")+'AndStay" value="1" />');
-
 									$('#{$table}_form').submit();
 									return false;
 								});
@@ -265,11 +262,21 @@
 									<option value="0" {if $params.value == 0 && $params.value != ''} selected="selected" {/if}>{l s='No'}</option>
 								</select>
 							{elseif $params.type == 'date' || $params.type == 'datetime'}
-								<div class="date_range form-group">
-									<label>{l s='From'}</label>
-									<input type="text" class="filter datepicker date-input form-control" id="{$params.id_date}_0" name="{$params.name_date}[0]" value="{if isset($params.value.0)}{$params.value.0}{/if}"{if isset($params.width)} style="width:70px"{/if}/>
-									<label>{l s='To'}</label>
-									<input type="text" class="filter datepicker date-input form-control" id="{$params.id_date}_1" name="{$params.name_date}[1]" value="{if isset($params.value.1)}{$params.value.1}{/if}"{if isset($params.width)} style="width:70px"{/if}/>
+								<div class="date_range row">
+									<div class="input-group fixed-width-xl">
+										<span class="input-group-addon">{l s='From'}</span>
+										<input type="text" class="filter datepicker date-input form-control" id="{$params.id_date}_0" name="{$params.name_date}[0]" value="{if isset($params.value.0)}{$params.value.0}{/if}"/>
+										<span class="input-group-addon">
+											<i class="icon-calendar"></i>
+										</span>
+									</div>
+									<div class="input-group fixed-width-xl">
+										<span class="input-group-addon">{l s='To'}</span>
+										<input type="text" class="filter datepicker date-input form-control" id="{$params.id_date}_1" name="{$params.name_date}[1]" value="{if isset($params.value.1)}{$params.value.1}{/if}"/>
+										<span class="input-group-addon">
+											<i class="icon-calendar"></i>
+										</span>
+									</div>
 								</div>
 							{elseif $params.type == 'select'}
 								{if isset($params.filter_key)}

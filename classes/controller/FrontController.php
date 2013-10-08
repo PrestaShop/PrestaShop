@@ -337,7 +337,8 @@ class FrontControllerCore extends Controller
 			'PS_CATALOG_MODE' => (bool)Configuration::get('PS_CATALOG_MODE') || !(bool)Group::getCurrent()->show_prices,
 			'b2b_enable' => (bool)Configuration::get('PS_B2B_ENABLE'),
 			'request' => $link->getPaginationLink(false, false, false, true),
-			'PS_STOCK_MANAGEMENT' => Configuration::get('PS_STOCK_MANAGEMENT')
+			'PS_STOCK_MANAGEMENT' => Configuration::get('PS_STOCK_MANAGEMENT'),
+			'quick_view' => Configuration::get('PS_QUICK_VIEW'),
 		));
 
 		// Add the tpl files directory for mobile
@@ -740,6 +741,12 @@ class FrontControllerCore extends Controller
 		}
 		if ($this->context->language->is_rtl)
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
+		
+		if (Configuration::get('PS_QUICK_VIEW'))
+		{
+			$this->addjqueryPlugin('fancybox');
+			$this->addJS(_THEME_JS_DIR_.'quick-view.js');
+		}
 
 		// Execute Hook FrontController SetMedia
 		Hook::exec('actionFrontControllerSetMedia', array());
@@ -1141,5 +1148,41 @@ class FrontControllerCore extends Controller
 	            'logo_image_height' => ($mobile_device == false ? Configuration::get('SHOP_LOGO_HEIGHT') : Configuration::get('SHOP_LOGO_MOBILE_HEIGHT')),
 	            'logo_url' => $logo
   				);
+	}
+	
+	protected function addColorsToProductList(&$products)
+	{
+		if (!count($products))
+			return;
+
+		$products_need_cache = array();
+		foreach ($products as &$product)
+			if (!$this->isCached(_PS_THEME_DIR_.'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product'])))
+				$products_need_cache[] = (int)$product['id_product']; 
+
+		$colors = false;
+		if (count($products_need_cache))
+			$colors = Product::getAttributesColorList($products_need_cache);
+
+		Tools::enableCache();
+		foreach ($products as &$product)
+		{
+			$tpl = $this->context->smarty->createTemplate(_PS_THEME_DIR_.'product-list-colors.tpl');
+			if (isset($colors[$product['id_product']]))
+					$tpl->assign(array(
+						'id_product' => $product['id_product'],
+						'colors_list' => $colors[$product['id_product']]
+					));
+			if (!in_array($product['id_product'], $products_need_cache) || isset($colors[$product['id_product']]))
+				$product['color_list'] = $tpl->fetch(_PS_THEME_DIR_.'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']));
+			else
+				$product['color_list'] = '';
+		}
+		Tools::restoreCacheSettings();
+	}
+	
+	protected function getColorsListCacheId($id_product)
+	{
+		return 'productlist_colors|'.(int)$id_product.'|'.$this->context->shop->id;
 	}
 }

@@ -2423,7 +2423,7 @@ class AdminProductsControllerCore extends AdminController
 				<span style="float: left">
 				'.$this->l('Your product will be saved as a draft.').'
 				</span>
-				<span style="float:right"><a href="#" class="button" style="display: block" onclick="submitAddProductAndPreview()" >'.$this->l('Save and preview.').'</a></span>
+				<span style="float:right"><a href="#" class="button" style="display: block" onclick="submitAddProductAndPreview()" >'.$this->l('Save and preview').'</a></span>
 				<input type="hidden" name="fakeSubmitAddProductAndPreview" id="fakeSubmitAddProductAndPreview" />
 				<br class="clear" />
 				</p>
@@ -2506,7 +2506,7 @@ class AdminProductsControllerCore extends AdminController
 						$this->toolbar_btn['delete'] = array(
 							'short' => 'Delete',
 							'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)$product->id.'&amp;deleteproduct',
-							'desc' => $this->l('Delete this product.'),
+							'desc' => $this->l('Delete this product'),
 							'confirm' => 1,
 							'js' => 'if (confirm(\''.$this->l('Delete product?').'\')){return true;}else{event.preventDefault();}'
 						);
@@ -2614,7 +2614,7 @@ class AdminProductsControllerCore extends AdminController
 		{
 			$this->product_exists_in_shop = false;
 			if ($this->tab_display == 'Informations')
-				$this->displayWarning($this->l('Warning: The product does not exist in this shop.'));
+				$this->displayWarning($this->l('Warning: The product does not exist in this shop'));
 			
 			$default_product = new Product();
 			$definition = ObjectModel::getDefinition($product);
@@ -2771,7 +2771,7 @@ class AdminProductsControllerCore extends AdminController
 						);
 
 						if ($id_currency <= 0 || ( !($result = Currency::getCurrency($id_currency)) || empty($result) ))
-							$this->errors[] = Tools::displayError($this->l('The selected currency is not valid.'));
+							$this->errors[] = Tools::displayError('The selected currency is not valid');
 
 						// Save product-supplier data
 						$product_supplier_id = (int)ProductSupplier::getIdByProductAndSupplier($product->id, $attribute['id_product_attribute'], $supplier->id_supplier);
@@ -3177,7 +3177,7 @@ class AdminProductsControllerCore extends AdminController
 		if (!file_exists($exists_file)
 			&& !empty($product->productDownload->display_filename)
 			&& empty($product->cache_default_attribute))
-			$msg = sprintf(Tools::displayError('This file "%s" is missing.'), $product->productDownload->display_filename);
+			$msg = sprintf(Tools::displayError('This file "%s" is missing'), $product->productDownload->display_filename);
 		else
 			$msg = '';
 
@@ -4383,7 +4383,7 @@ class AdminProductsControllerCore extends AdminController
 				<span>
 				'.$this->l('Your product will be saved as a draft.').'
 				</span>
-				<span style="float:right"><a href="#" class="button" style="display: block" onclick="submitAddProductAndPreview()" >'.$this->l('Save and preview.').'</a></span>
+				<span style="float:right"><a href="#" class="button" style="display: block" onclick="submitAddProductAndPreview()" >'.$this->l('Save and preview').'</a></span>
 				<input type="hidden" name="fakeSubmitAddProductAndPreview" id="fakeSubmitAddProductAndPreview" />
 				</p>
 			</div>';

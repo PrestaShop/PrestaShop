@@ -86,7 +86,7 @@
 	{/if}
 	{if $DASHACTIVITY_SHOW_NOTIFICATION}
 	<section id="dash_notifications" class="loading">
-		<header><i class="icon-exclamation-sign"></i> {l s='Notification'}</header>
+		<header><i class="icon-exclamation-sign"></i> {l s='Notifications'}</header>
 		<ul class="data_list_vertical">
 			<li>
 				<span class="data_label">{l s='New Messages'}</span>
@@ -95,7 +95,7 @@
 				</span>
 			</li>
 			<li>
-				<span class="data_label">{l s='Order Inquires'}</span>
+				<span class="data_label">{l s='Order Inquiries'}</span>
 				<span class="data_value size_l">
 					<span id="order_inquires"></span>
 				</span>
