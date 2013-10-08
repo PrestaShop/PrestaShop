@@ -40,7 +40,7 @@
 			onkeyup="if (isArrowKey(event)) return ;updateFriendlyURL();"
 			onblur="updateLinkRewrite();"
 			{if isset($maxchar)} data-maxchar="{$maxchar}"{/if}
-			{if isset($maxlength)} maxlength="{$maxlength}"{/if}>
+			{if isset($maxlength)} maxlength="{$maxlength}"{/if} />
 			{if isset($maxchar)}
 			</div>
 			{/if}
