@@ -65,6 +65,7 @@ class InstallLanguages
 		foreach (scandir(_PS_INSTALL_LANGS_PATH_) as $lang)
 			if ($lang[0] != '.' && is_dir(_PS_INSTALL_LANGS_PATH_.$lang) && $lang != self::DEFAULT_ISO && file_exists(_PS_INSTALL_LANGS_PATH_.$lang.'/install.php'))
 				$this->languages[$lang] = new InstallLanguage($lang);
+		uasort($this->languages, 'ps_usort_languages');
 	}
 
 	/**
@@ -76,7 +77,6 @@ class InstallLanguages
 	{
 		if (!in_array($iso, $this->getIsoList()))
 			throw new PrestashopInstallerException('Language '.$iso.' not found');
-
 		$this->language = $iso;
 	}
 
@@ -201,4 +201,13 @@ class InstallLanguages
 		}
 		return false;
 	}
+}
+
+function ps_usort_languages($a, $b)
+{
+	$aname = $a->getMetaInformation('name');
+	$bname = $b->getMetaInformation('name');
+    if ($aname == $bname)
+        return 0;
+    return ($aname < $bname) ? -1 : 1;
 }

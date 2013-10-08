@@ -63,25 +63,25 @@
 			</section>
 
 			<section class="dash_links panel">
-				<h4><i class="icon-link"></i>{l s="Useful PrestaShop Links"}</h4>
+				<h4><i class="icon-link"></i> {l s="Useful PrestaShop Links"}</h4>
 					<dl>
-						<dt>{l s="Discover the latest official documentation :"}</dt>
+						<dt>{l s="Discover the official documentation"}</dt>
 						<dd><a href="http://doc.prestashop.com/display/PS16?utm_source=backoffice_dashboard" target="_blank">{l s="Go to doc.prestashop.com"}</a></dd>
 					</dl>
 					<dl>
-						<dt>{l s="Use the PrestaShop forum & discover a great community :"}</dt>
+						<dt>{l s="Use the forum & discover a great community"}</dt>
 						<dd><a href="http://www.prestashop.com/forums?utm_source=backoffice_dashboard" target="_blank">{l s="Go to forums.prestashop.com"}</a></dd>
 					</dl>
 					<dl>
-						<dt>{l s="Enhance your Shop with new templates & modules :"}</dt>
+						<dt>{l s="Enhance your Shop with new templates & modules"}</dt>
 						<dd><a href="http://addons.prestashop.com?utm_source=backoffice_dashboard" target="_blank">{l s="Go to addons.prestashop.com"}</a></dd>
 					</dl>
 					<dl>
-						<dt>{l s="PrestaShop BugTracker :"}</dt>
+						<dt>{l s="Report issues in the Bug Tracker"}</dt>
 						<dd><a href="http://forge.prestashop.com?utm_source=backoffice_dashboard" target="_blank">{l s="Go to forge.prestashop.com"}</a></dd>
 					</dl>
 					<dl>
-						<dt>{l s="Contact US :"}</dt>
+						<dt>{l s="Contact Us"}</dt>
 						<dd><a href="http://www.prestashop.com/en/contact-us?utm_source=backoffice_dashboard" target="_blank">{l s="Go to prestashop.com"}</a></dd>
 					</dl>
 			</section>
