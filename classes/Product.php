@@ -522,7 +522,7 @@ class ProductCore extends ObjectModel
 			$cur_cart = Context::getContext()->cart;
 			$id_address = 0;
 			if (Validate::isLoadedObject($cur_cart))
-				$id_address = $cur_cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+				$id_address = (int)$cur_cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
 			$address_infos = Address::getCountryAndState($id_address);
 
 			if (self::$_taxCalculationMethod != PS_TAX_EXC
