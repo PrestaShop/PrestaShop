@@ -519,6 +519,17 @@ class ProductCore extends ObjectModel
 			if (!Validate::isLoadedObject($customer))
 				die(Tools::displayError());
 			self::$_taxCalculationMethod = Group::getPriceDisplayMethod((int)$customer->id_default_group);
+			$cur_cart = Context::getContext()->cart;
+			$id_address = 0;
+			if (Validate::isLoadedObject($cur_cart))
+				$id_address = $cur_cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+			$address_infos = Address::getCountryAndState($id_address);
+
+			if (self::$_taxCalculationMethod != PS_TAX_EXC
+				&& !empty($address_infos['vat_number'])
+				&& $address_infos['id_country'] != Configuration::get('VATNUMBER_COUNTRY')
+				&& Configuration::get('VATNUMBER_MANAGEMENT'))
+				self::$_taxCalculationMethod = PS_TAX_EXC;
 		}
 		else
 			self::$_taxCalculationMethod = Group::getPriceDisplayMethod(Group::getCurrent()->id);
