@@ -140,6 +140,18 @@ class AdminEmployeesControllerCore extends AdminController
 		}
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['new_employee'] = array(
+				'href' => self::$currentIndex.'&amp;addemployee&amp;token='.$this->token,
+				'desc' => $this->l('Add new employee'),
+				'icon' => 'process-icon-new'
+			);
+
+		parent::initPageHeaderToolbar();
+	}
+
 	public function renderList()
 	{
  		$this->_select = 'pl.`name` AS profile';

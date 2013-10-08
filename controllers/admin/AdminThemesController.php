@@ -396,6 +396,18 @@ class AdminThemesControllerCore extends AdminController
 		return parent::processDelete();
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['new_theme'] = array(
+				'href' => self::$currentIndex.'&amp;addtheme&amp;token='.$this->token,
+				'desc' => $this->l('Add new theme'),
+				'icon' => 'process-icon-new'
+			);
+
+		parent::initPageHeaderToolbar();
+	}
+
 	public function initContent()
 	{
 
@@ -434,8 +446,10 @@ class AdminThemesControllerCore extends AdminController
 	public function ajaxProcessGetAddonsThemes()
 	{
 		// notice : readfile should be replaced by something else
-		if (@fsockopen('addons.prestashop.com', 80, $errno, $errst, 3))
-			@readfile('http://addons.prestashop.com/adminthemes.php?lang='.$this->context->language->iso_code);
+		/*if (@fsockopen('addons.prestashop.com', 80, $errno, $errst, 3))
+			@readfile('http://addons.prestashop.com/adminthemes.php?lang='.$this->context->language->iso_code);*/
+
+		die(Tools::file_get_contents('http://addons.prestashop.com/adminthemes.php?lang='.$this->context->language->iso_code));
 	}
 
 	/**

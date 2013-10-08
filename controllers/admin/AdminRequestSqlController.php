@@ -267,6 +267,7 @@ class AdminRequestSqlControllerCore extends AdminController
 	{
 		// toolbar (save, cancel, new, ..)
 		$this->initToolbar();
+		$this->initPageHeaderToolbar();
 		if ($this->display == 'edit' || $this->display == 'add')
 		{
 			if (!$this->loadObject(true))
@@ -291,8 +292,23 @@ class AdminRequestSqlControllerCore extends AdminController
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
-			'url_post' => self::$currentIndex.'&token='.$this->token,
+			'url_post' => self::$currentIndex.'&token='.$this->token,			
+			'show_page_header_toolbar' => $this->show_page_header_toolbar,
+			'page_header_toolbar_title' => $this->page_header_toolbar_title,
+			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
 		));
+	}
+
+	public function initPageHeaderToolbar()
+	{
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['new_request'] = array(
+				'href' => self::$currentIndex.'&amp;addrequest_sql&amp;token='.$this->token,
+				'desc' => $this->l('Add new SQL request'),
+				'icon' => 'process-icon-new'
+			);
+
+		parent::initPageHeaderToolbar();
 	}
 
 	/**

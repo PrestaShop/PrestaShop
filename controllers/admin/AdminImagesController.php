@@ -648,7 +648,19 @@ class AdminImagesControllerCore extends AdminController
 			'safe_mode' => Tools::getSafeModeStatus(),
 			'link_ppreferences' => 'index.php?tab=AdminPPreferences&token='.Tools::getAdminTokenLite('AdminPPreferences').'#PS_LEGACY_IMAGES_on',
 		));
-}
+	}
+
+	public function initPageHeaderToolbar()
+	{
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['new_image_type'] = array(
+				'href' => self::$currentIndex.'&amp;addimage_type&amp;token='.$this->token,
+				'desc' => $this->l('Add new image type'),
+				'icon' => 'process-icon-new'
+			);
+		
+		parent::initPageHeaderToolbar();
+	}
 
 	/**
 	 * Move product images to the new filesystem

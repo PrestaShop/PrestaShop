@@ -2433,12 +2433,12 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-		$this->page_header_toolbar_title = $this->l('Products');
-		$this->page_header_toolbar_btn['new_product'] = array(
-			'href' => self::$currentIndex.'&amp;addproduct&amp;token='.$this->token,
-			'desc' => $this->l('Add new product'),
-			'icon' => 'process-icon-new'
-		);
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['new_product'] = array(
+				'href' => self::$currentIndex.'&amp;addproduct&amp;token='.$this->token,
+				'desc' => $this->l('Add new product'),
+				'icon' => 'process-icon-new'
+			);
 
 		parent::initPageHeaderToolbar();
 	}

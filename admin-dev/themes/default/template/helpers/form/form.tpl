@@ -22,12 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-{if $show_toolbar}
-	{include file="toolbar.tpl" toolbar_btn=$toolbar_btn toolbar_scroll=$toolbar_scroll title=$title}
-	<div class="leadin">{block name="leadin"}{/block}</div>
-{/if}
-
 {if isset($fields.title)}<h3>{$fields.title}</h3>{/if}
 
 {block name="defaultForm"}
@@ -82,7 +76,7 @@
 							{/block}
 
 							{block name="field"}
-								<div class="col-lg-9">
+								<div class="col-lg-9{if !isset($input.label)} col-lg-offset-3{/if}">
 								{block name="input"}
 								{if $input.type == 'text' || $input.type == 'tags'}
 									{if isset($input.lang) AND $input.lang}
@@ -639,6 +633,9 @@
 <!-- {*if $required_fields}
 	<div class="small"><sup>*</sup> {l s='Required field'}</div>
 {/if*} -->
+		{block name="footer"}
+		{include file="footer_toolbar.tpl"}
+		{/block}
 		</fieldset>
 		{/block}
 		{block name="other_fieldsets"}{/block}

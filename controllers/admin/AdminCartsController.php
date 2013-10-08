@@ -96,12 +96,12 @@ class AdminCartsControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-		$this->page_header_toolbar_title = $this->l('Carts');
-		$this->page_header_toolbar_btn['export_cart'] = array(
-			'href' => self::$currentIndex.'&amp;exportcart&amp;token='.$this->token,
-			'desc' => $this->l('Export carts'),
-			'icon' => 'process-icon-export'
-		);
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['export_cart'] = array(
+				'href' => self::$currentIndex.'&amp;exportcart&amp;token='.$this->token,
+				'desc' => $this->l('Export carts'),
+				'icon' => 'process-icon-export'
+			);
 
 		parent::initPageHeaderToolbar();
 	}

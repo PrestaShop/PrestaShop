@@ -424,6 +424,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
 		// toolbar (save, cancel, new, ..)
 		$this->initToolbar();
+		$this->initPageHeaderToolbar();
 		if ($this->display == 'edit' || $this->display == 'add')
 		{
 			if (!($this->object = $this->loadObject(true)))
@@ -451,23 +452,16 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			'token' => $this->token,
 			'content' => $this->content,
 			'url_post' => self::$currentIndex.'&token='.$this->token,
+			'show_page_header_toolbar' => $this->show_page_header_toolbar,
+			'page_header_toolbar_title' => $this->page_header_toolbar_title,
+			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
 		));
 	}
 
 	public function initPageHeaderToolbar()
 	{
-		if ($this->display == 'view')
+		if (empty($this->display))
 		{
-			$this->page_header_toolbar_title = $this->attribute_name[$this->context->employee->id_lang];
-			$this->page_header_toolbar_btn['back_to_list'] = array(
-				'href' => Context::getContext()->link->getAdminLink('AdminAttributesGroups'),
-				'desc' => $this->l('Back to list'),
-				'icon' => 'process-icon-back'
-			);
-		}
-		else
-		{
-			$this->page_header_toolbar_title = $this->l('Attribute groups');
 			$this->page_header_toolbar_btn['new_attribute_group'] = array(
 				'href' => self::$currentIndex.'&amp;addattribute_group&amp;token='.$this->token,
 				'desc' => $this->l('Add new attribute'),
@@ -478,7 +472,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				'desc' => $this->l('Add new value'),
 				'icon' => 'process-icon-new'
 			);
-		}
+		}		
 
 		parent::initPageHeaderToolbar();
 	}
@@ -544,7 +538,14 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				break;
 
 			case 'view':
-				$bread_extended[] = $this->attribute_name[$this->context->employee->id_lang];
+				if (Tools::getIsset('viewattribute_group'))
+				{
+					if (($id = Tools::getValue('id_attribute_group')))
+						if (Validate::isLoadedObject($obj = new AttributeGroup((int)$id)))
+							$bread_extended[] = $obj->name[$this->context->employee->id_lang];
+				}
+				else
+					$bread_extended[] = $this->attribute_name[$this->context->employee->id_lang];
 				break;
 
 			case 'editAttributes':

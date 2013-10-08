@@ -195,18 +195,20 @@ class AdminStatusesControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-		$this->page_header_toolbar_title = $this->l('States');
-		$this->page_header_toolbar_btn['new_order_state'] = array(
-			'href' => self::$currentIndex.'&amp;addorder_state&amp;token='.$this->token,
-			'desc' => $this->l('Add new order state'),
-			'icon' => 'process-icon-new'
-		);
-		$this->page_header_toolbar_btn['new_order_return_state'] = array(
-			'href' => self::$currentIndex.'&amp;addorder_return_state&amp;token='.$this->token,
-			'desc' => $this->l('Add new order return state'),
-			'icon' => 'process-icon-new'
-		);
-
+		if (empty($this->display))
+		{
+			$this->page_header_toolbar_btn['new_order_state'] = array(
+				'href' => self::$currentIndex.'&amp;addorder_state&amp;token='.$this->token,
+				'desc' => $this->l('Add new order state'),
+				'icon' => 'process-icon-new'
+			);
+			$this->page_header_toolbar_btn['new_order_return_state'] = array(
+				'href' => self::$currentIndex.'&amp;addorder_return_state&amp;token='.$this->token,
+				'desc' => $this->l('Add new order return state'),
+				'icon' => 'process-icon-new'
+			);
+		}
+		
 		parent::initPageHeaderToolbar();
 	}
 	

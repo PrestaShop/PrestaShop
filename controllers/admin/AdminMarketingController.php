@@ -43,6 +43,12 @@ class AdminMarketingControllerCore extends AdminController
 	{
 		$this->toolbar_title = array_unique($this->breadcrumbs);
 	}
+
+	public function initPageHeaderToolbar()
+	{
+		parent::initPageHeaderToolbar();
+		$this->page_header_toolbar_btn = array();
+	}
 	
 	public function initToolbar()
 	{

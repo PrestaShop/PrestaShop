@@ -25,7 +25,7 @@
 <div id="ajax_confirmation" class="alert alert-success" style="display:none"></div>
 {* ajaxBox allows*}	<div id="ajaxBox" style="display:none"></div>
 {if isset($content)}
-	{if isset($show_page_header_toolbar) && $show_page_header_toolbar}
+	{if isset($show_page_header_toolbar) && $show_page_header_toolbar &&(!isset($lite_display) || !$lite_display)}
 		<div class="leadin">
 			{foreach from=$page_header_toolbar_btn item=btn key=k}
 				{if $k == 'modules-list'}

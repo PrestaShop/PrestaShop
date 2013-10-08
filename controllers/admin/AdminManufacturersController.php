@@ -102,17 +102,33 @@ class AdminManufacturersControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-		$this->page_header_toolbar_title = $this->l('Manufacturers');
-		$this->page_header_toolbar_btn['new_manufacturer'] = array(
-			'href' => self::$currentIndex.'&amp;addmanufacturer&amp;token='.$this->token,
-			'desc' => $this->l('Add new manufacturer'),
-			'icon' => 'process-icon-new'
-		);
-		$this->page_header_toolbar_btn['new_manufacturer_address'] = array(
-			'href' => self::$currentIndex.'&amp;addaddress&amp;token='.$this->token,
-			'desc' => $this->l('Add new manufacturer address'),
-			'icon' => 'process-icon-new'
-		);
+		if (empty($this->display))
+		{
+			$this->page_header_toolbar_btn['new_manufacturer'] = array(
+				'href' => self::$currentIndex.'&amp;addmanufacturer&amp;token='.$this->token,
+				'desc' => $this->l('Add new manufacturer'),
+				'icon' => 'process-icon-new'
+			);
+			$this->page_header_toolbar_btn['new_manufacturer_address'] = array(
+				'href' => self::$currentIndex.'&amp;addaddress&amp;token='.$this->token,
+				'desc' => $this->l('Add new manufacturer address'),
+				'icon' => 'process-icon-new'
+			);
+		}
+		elseif ($this->display == 'editaddresses' || $this->display == 'addaddress') {
+			// Default cancel button - like old back link
+			if (!isset($this->no_back) || $this->no_back == false)
+			{
+				$back = Tools::safeOutput(Tools::getValue('back', ''));
+				if (empty($back))
+					$back = self::$currentIndex.'&token='.$this->token;
+
+				$this->page_header_toolbar_btn['cancel'] = array(
+					'href' => $back,
+					'desc' => $this->l('Cancel')
+				);
+			}
+		}
 
 		parent::initPageHeaderToolbar();
 	}
@@ -652,6 +668,7 @@ class AdminManufacturersControllerCore extends AdminController
 	{
 		// toolbar (save, cancel, new, ..)
 		$this->initToolbar();
+		$this->initPageHeaderToolbar();
 		if ($this->display == 'editaddresses' || $this->display == 'addaddress')
 			$this->content .= $this->renderFormAddress();
 		else if ($this->display == 'edit' || $this->display == 'add')
@@ -676,6 +693,9 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
 			'url_post' => self::$currentIndex.'&token='.$this->token,
+			'show_page_header_toolbar' => $this->show_page_header_toolbar,
+			'page_header_toolbar_title' => $this->page_header_toolbar_title,
+			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
 		));
 	}
 

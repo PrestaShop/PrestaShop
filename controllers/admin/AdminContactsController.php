@@ -119,12 +119,12 @@ class AdminContactsControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-		$this->page_header_toolbar_title = $this->l('Contacts');
-		$this->page_header_toolbar_btn['new_contact'] = array(
-			'href' => self::$currentIndex.'&amp;addcontact&amp;token='.$this->token,
-			'desc' => $this->l('Add new contact'),
-			'icon' => 'process-icon-new'
-		);
+		if(empty($this->display))
+			$this->page_header_toolbar_btn['new_contact'] = array(
+				'href' => self::$currentIndex.'&amp;addcontact&amp;token='.$this->token,
+				'desc' => $this->l('Add new contact'),
+				'icon' => 'process-icon-new'
+			);
 
 		parent::initPageHeaderToolbar();
 	}

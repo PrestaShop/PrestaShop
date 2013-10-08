@@ -87,12 +87,12 @@ class AdminGendersControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-		$this->page_header_toolbar_title = $this->l('Genders');
-		$this->page_header_toolbar_btn['new_gender'] = array(
-			'href' => self::$currentIndex.'&amp;addgender&amp;token='.$this->token,
-			'desc' => $this->l('Add new gender'),
-			'icon' => 'process-icon-new'
-		);
+		if(empty($this->display))
+			$this->page_header_toolbar_btn['new_gender'] = array(
+				'href' => self::$currentIndex.'&amp;addgender&amp;token='.$this->token,
+				'desc' => $this->l('Add new gender'),
+				'icon' => 'process-icon-new'
+			);
 
 		parent::initPageHeaderToolbar();
 	}

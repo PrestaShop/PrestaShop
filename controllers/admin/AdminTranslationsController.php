@@ -98,6 +98,8 @@ class AdminTranslationsControllerCore extends AdminController
 	 */
 	public function initContent()
 	{
+		$this->initPageHeaderToolbar();
+		
 		if (!is_null($this->type_selected))
 		{
 			$method_name = 'initForm'.$this->type_selected;
@@ -112,7 +114,11 @@ class AdminTranslationsControllerCore extends AdminController
 		else
 			$this->content = $this->initMain();
 
-		$this->context->smarty->assign(array('content' => $this->content));
+		$this->context->smarty->assign(array(
+			'content' => $this->content,
+			'show_page_header_toolbar' => $this->show_page_header_toolbar,
+			'page_header_toolbar_title' => $this->page_header_toolbar_title,
+			'page_header_toolbar_btn' => $this->page_header_toolbar_btn));
 	}
 
 	/**

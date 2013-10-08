@@ -28,7 +28,6 @@
 	var come_from = 'AdminModulesPositions';
 </script>
 
-{include file="toolbar.tpl" toolbar_btn=$toolbar_btn toolbar_scroll=$toolbar_scroll title=$title}
 <div>{block name="leadin"}{/block}</div>
 
 <div class="row">

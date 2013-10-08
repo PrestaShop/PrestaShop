@@ -53,6 +53,8 @@ class AdminTrackingControllerCore extends AdminController
 
 	public function initContent()
 	{
+		$this->initPageHeaderToolbar();
+
 		if ($id_category = Tools::getValue('id_category') && Tools::getIsset('viewcategory'))
 			Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts').'&id_category='.(int)$id_category.'&viewcategory');
 
@@ -72,13 +74,10 @@ class AdminTrackingControllerCore extends AdminController
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
 			'url_post' => self::$currentIndex.'&token='.$this->token,
+			'show_page_header_toolbar' => $this->show_page_header_toolbar,
+			'page_header_toolbar_title' => $this->page_header_toolbar_title,
+			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
 		));
-	}
-
-	public function initPageHeaderToolbar()
-	{
-		$this->page_header_toolbar_title = $this->l('Monitoring');
-		parent::initPageHeaderToolbar();
 	}
 
 	public function getCustomListCategoriesEmpty()

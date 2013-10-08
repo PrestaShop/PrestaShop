@@ -84,6 +84,17 @@ class AdminPaymentControllerCore extends AdminController
 			}
 	}
 
+	public function initToolbarTitle()
+	{
+		$this->toolbar_title = array_unique($this->breadcrumbs);
+	}
+
+	public function initPageHeaderToolbar()
+	{
+		parent::initPageHeaderToolbar();
+		$this->page_header_toolbar_btn = array();
+	}
+
 	public function postProcess()
 	{
 		if ($this->action)
