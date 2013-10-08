@@ -443,7 +443,7 @@ ul#footer a:link, ul#footer a:active, ul#footer a:visited {
 #formSetMethod {padding-bottom:20px;}
 	#formSetMethod p {padding-bottom:0;}
 
-ul#langList {list-style-type:none;}
+#langList {margin-bottom:20px}
 
 /* ETAPE 2 - required ******************************************************* */
 #sheet_system #req_bt_refresh {float:right;}
