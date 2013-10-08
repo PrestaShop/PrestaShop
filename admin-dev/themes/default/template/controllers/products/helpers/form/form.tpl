@@ -262,6 +262,7 @@
 			<input type="hidden" name="id_product_attribute" id="id_product_attribute" value="0" />
 			<input type="hidden" name="key_tab" id="key_tab" value="Informations" />
 			<button id="product_form_submit_btn"  type="submit" name="submitAddproduct" class="btn btn-primary"> {l s='Save'}</button>
+			{include file="footer_toolbar.tpl"}
 		</form>
 	</div>
 {/block}
