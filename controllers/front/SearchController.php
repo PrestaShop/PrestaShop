@@ -75,6 +75,9 @@ class SearchControllerCore extends FrontController
 			Hook::exec('actionSearch', array('expr' => $query, 'total' => $search['total']));
 			$nbProducts = $search['total'];
 			$this->pagination($nbProducts);
+
+			$this->addColorsToProductList($search['result']);
+
 			$this->context->smarty->assign(array(
 				'products' => $search['result'], // DEPRECATED (since to 1.4), not use this: conflict with block_cart module
 				'search_products' => $search['result'],
@@ -83,7 +86,7 @@ class SearchControllerCore extends FrontController
 				'instant_search' => $this->instant_search,
 				'homeSize' => Image::getSize(ImageType::getFormatedName('home'))));
 		}
-		else if (($query = Tools::getValue('search_query', Tools::getValue('ref'))) && !is_array($query))
+		elseif (($query = Tools::getValue('search_query', Tools::getValue('ref'))) && !is_array($query))
 		{
 			$this->productSort();
 			$this->n = abs((int)(Tools::getValue('n', Configuration::get('PS_PRODUCTS_PER_PAGE'))));
@@ -93,6 +96,9 @@ class SearchControllerCore extends FrontController
 			Hook::exec('actionSearch', array('expr' => $query, 'total' => $search['total']));
 			$nbProducts = $search['total'];
 			$this->pagination($nbProducts);
+
+			$this->addColorsToProductList($search['result']);
+
 			$this->context->smarty->assign(array(
 				'products' => $search['result'], // DEPRECATED (since to 1.4), not use this: conflict with block_cart module
 				'search_products' => $search['result'],
@@ -100,12 +106,15 @@ class SearchControllerCore extends FrontController
 				'search_query' => $query,
 				'homeSize' => Image::getSize(ImageType::getFormatedName('home'))));
 		}
-		else if (($tag = urldecode(Tools::getValue('tag'))) && !is_array($tag))
+		elseif (($tag = urldecode(Tools::getValue('tag'))) && !is_array($tag))
 		{
 			$nbProducts = (int)(Search::searchTag($this->context->language->id, $tag, true));
 			$this->pagination($nbProducts);
 			$result = Search::searchTag($this->context->language->id, $tag, false, $this->p, $this->n, $this->orderBy, $this->orderWay);
 			Hook::exec('actionSearch', array('expr' => $tag, 'total' => count($result)));
+
+			$this->addColorsToProductList($search['result']);
+
 			$this->context->smarty->assign(array(
 				'search_tag' => $tag,
 				'products' => $result, // DEPRECATED (since to 1.4), not use this: conflict with block_cart module

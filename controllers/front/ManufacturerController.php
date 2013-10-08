@@ -97,9 +97,13 @@ class ManufacturerControllerCore extends FrontController
 		$this->manufacturer->description = Tools::nl2br(trim($this->manufacturer->description));
 		$nbProducts = $this->manufacturer->getProducts($this->manufacturer->id, null, null, null, $this->orderBy, $this->orderWay, true);
 		$this->pagination((int)$nbProducts);
+
+		$products = $this->manufacturer->getProducts($this->manufacturer->id, $this->context->language->id, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay);
+		$this->addColorsToProductList($products);
+
 		$this->context->smarty->assign(array(
 			'nb_products' => $nbProducts,
-			'products' => $this->manufacturer->getProducts($this->manufacturer->id, $this->context->language->id, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay),
+			'products' => $products,
 			'path' => ($this->manufacturer->active ? Tools::safeOutput($this->manufacturer->name) : ''),
 			'manufacturer' => $this->manufacturer,
 			'comparator_max_item' => Configuration::get('PS_COMPARATOR_MAX_ITEM')

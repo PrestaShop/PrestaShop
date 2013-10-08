@@ -1142,4 +1142,40 @@ class FrontControllerCore extends Controller
 	            'logo_url' => $logo
   				);
 	}
+	
+	protected function addColorsToProductList(&$products)
+	{
+		if (!count($products))
+			return;
+
+		$products_need_cache = array();
+		foreach ($products as &$product)
+			if (!$this->isCached(_PS_THEME_DIR_.'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product'])))
+				$products_need_cache[] = (int)$product['id_product']; 
+
+		$colors = false;
+		if (count($products_need_cache))
+			$colors = Product::getAttributesColorList($products_need_cache);
+
+		Tools::enableCache();
+		foreach ($products as &$product)
+		{
+			$tpl = $this->context->smarty->createTemplate(_PS_THEME_DIR_.'product-list-colors.tpl');
+			if (isset($colors[$product['id_product']]))
+					$tpl->assign(array(
+						'id_product' => $product['id_product'],
+						'colors_list' => $colors[$product['id_product']]
+					));
+			if (!in_array($product['id_product'], $products_need_cache) || isset($colors[$product['id_product']]))
+				$product['color_list'] = $tpl->fetch(_PS_THEME_DIR_.'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']));
+			else
+				$product['color_list'] = '';
+		}
+		Tools::restoreCacheSettings();
+	}
+	
+	protected function getColorsListCacheId($id_product)
+	{
+		return 'productlist_colors|'.(int)$id_product.'|'.$this->context->shop->id;
+	}
 }
