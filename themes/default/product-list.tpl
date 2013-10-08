@@ -37,7 +37,7 @@
 				{/if}
 			</div>
 			<div class="center_block">
-				<a href="{$product.link|escape:'htmlall':'UTF-8'}" class="product_img_link" title="{$product.name|escape:'htmlall':'UTF-8'}">
+				<a href="{$product.link|escape:'htmlall':'UTF-8'}" class="product_img_link {if $quick_view}quick-view{/if}" title="{$product.name|escape:'htmlall':'UTF-8'}" data-toto="fuck">
 					<img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')|escape:'html'}" alt="{$product.legend|escape:'htmlall':'UTF-8'}" {if isset($homeSize)} width="{$homeSize.width}" height="{$homeSize.height}"{/if} />
 					{if isset($product.new) && $product.new == 1}<span class="new">{l s='New'}</span>{/if}
 				</a>

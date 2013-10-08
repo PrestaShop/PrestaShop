@@ -337,7 +337,8 @@ class FrontControllerCore extends Controller
 			'PS_CATALOG_MODE' => (bool)Configuration::get('PS_CATALOG_MODE') || !(bool)Group::getCurrent()->show_prices,
 			'b2b_enable' => (bool)Configuration::get('PS_B2B_ENABLE'),
 			'request' => $link->getPaginationLink(false, false, false, true),
-			'PS_STOCK_MANAGEMENT' => Configuration::get('PS_STOCK_MANAGEMENT')
+			'PS_STOCK_MANAGEMENT' => Configuration::get('PS_STOCK_MANAGEMENT'),
+			'quick_view' => Configuration::get('PS_QUICK_VIEW'),
 		));
 
 		// Add the tpl files directory for mobile
@@ -740,6 +741,12 @@ class FrontControllerCore extends Controller
 		}
 		if ($this->context->language->is_rtl)
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
+		
+		if (Configuration::get('PS_QUICK_VIEW'))
+		{
+			$this->addjqueryPlugin('fancybox');
+			$this->addJS(_THEME_JS_DIR_.'quick-view.js');
+		}
 
 		// Execute Hook FrontController SetMedia
 		Hook::exec('actionFrontControllerSetMedia', array());
