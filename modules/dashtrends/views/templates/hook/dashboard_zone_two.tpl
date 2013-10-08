@@ -25,7 +25,7 @@
 
 <section id="dashtrends" class="panel widget">
 	<header class="panel-heading">
-		<i class="icon-bar-chart"></i> {l s='Score Trends'}
+		<i class="icon-bar-chart"></i> {l s='Dashboard'}
 		<span class="panel-heading-action">
 			<a class="list-tooolbar-btn" href="javascript:void(0);" title="configure">
 				<i class="process-icon-configure"></i>
