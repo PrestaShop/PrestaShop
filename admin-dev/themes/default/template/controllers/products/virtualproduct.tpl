@@ -26,7 +26,7 @@
 <script type="text/javascript">
 	var newLabel = '{l s='New label'}';
 	var choose_language = '{l s='Choose language:'}';
-	var required = '{l s='required'}';
+	var required = '{l s='Required'}';
 	var customizationUploadableFileNumber = '{$product->uploadable_files}';
 	var customizationTextFieldNumber = '{$product->text_fields}';
 	var uploadableFileLabel = 0;

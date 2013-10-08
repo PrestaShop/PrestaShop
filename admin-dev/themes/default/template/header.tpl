@@ -33,7 +33,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="robots" content="NOFOLLOW, NOINDEX">
-	<title>{$shop_name} {if $meta_title != ''}{if isset($navigationPipe)}{$navigationPipe|escape:'htmlall':'UTF-8'}{else}&gt;{/if} {$meta_title}{/if} (PrestaShop&trade;)</title>
+	<title>{$shop_name} {if $meta_title != ''}{if isset($navigationPipe)}{$navigationPipe|escape:'htmlall':'UTF-8'}{else}&gt;{/if} {$meta_title}{/if}</title>
 	{if $display_header}
 	<script type="text/javascript">
 		var help_class_name = '{$controller_name}';
@@ -263,11 +263,11 @@
 					<a href='#' class="employee_name dropdown-toggle" data-toggle="dropdown">
 						<img src="{$img_dir}prestashop-avatar.png" height="15" width="15" />
 						{$first_name}&nbsp;{$last_name}
-						<i class="icon-angle-down"></i>
+						<i class="caret"></i>
 					</a>
 					<ul id="employee_links" class="dropdown-menu">
 						<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'htmlall':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences'}</a></li>
-						<li><a id="header_logout" href="index.php?logout"><i class="icon-signout"></i> {l s='logout'}</a></li>
+						<li><a id="header_logout" href="index.php?logout"><i class="icon-signout"></i> {l s='Log out'}</a></li>
 					</ul>
 				</li>
 			</ul>
