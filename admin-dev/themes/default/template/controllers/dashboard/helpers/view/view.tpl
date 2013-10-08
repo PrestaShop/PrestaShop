@@ -63,7 +63,7 @@
 			</section>
 
 			<section class="dash_links panel">
-				<h4><i class="icon-link"></i>{l s="Useful PrestaShop Links"}</h4>
+				<h4><i class="icon-link"></i> {l s="Useful PrestaShop Links"}</h4>
 					<dl>
 						<dt>{l s="Discover the official documentation"}</dt>
 						<dd><a href="http://doc.prestashop.com/display/PS16?utm_source=backoffice_dashboard" target="_blank">{l s="Go to doc.prestashop.com"}</a></dd>

@@ -149,7 +149,7 @@ class AdminDashboardControllerCore extends AdminController
 			'translations' => $translations,
 			'action' => '#',
 			'warning' => $this->getWarningDomainName(),
-			'new_version_url' => Tools::getCurrentUrlProtocolPrefix().'api.dev.prestashop.com/version/check_version.php?v='._PS_VERSION_.'&l='.$this->context->language->iso_code,
+			'new_version_url' => Tools::getCurrentUrlProtocolPrefix().'api.prestashop.com/version/check_version.php?v='._PS_VERSION_.'&lang='.$this->context->language->iso_code,
 			'dashboard_use_push' => Configuration::get('PS_DASHBOARD_USE_PUSH'),
 			'datepickerFrom' => Tools::getValue('datepickerFrom', $this->context->employee->stats_date_from),
 			'datepickerTo' => Tools::getValue('datepickerTo', $this->context->employee->stats_date_to)
