@@ -242,7 +242,7 @@
 				<p>
 					<span >
 					{l s='Your product will be saved as a draft.'}</span>
-					<span style="float:right"><a href="#" class="button" style="display: block" onclick="submitAddProductAndPreview()" >{l s='Save and preview.'}</a></span>
+					<span style="float:right"><a href="#" class="button" style="display: block" onclick="submitAddProductAndPreview()" >{l s='Save and preview'}</a></span>
 					<input type="hidden" name="fakeSubmitAddProductAndPreview" id="fakeSubmitAddProductAndPreview" />
 				</p>
 			</div>
