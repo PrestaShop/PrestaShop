@@ -48,7 +48,7 @@
 	</td>
 
 	<td style="display:none;">
-		<div class="form-group">
+		<div class="row">
 			<div class="input-group fixed-width-xl">
 				<div class="input-group-addon">
 					{$currency->sign}
@@ -57,7 +57,7 @@
 				<input type="text" name="add_product[product_price_tax_excl]" id="add_product_product_price_tax_excl" value="" disabled="disabled" />
 			</div>
 		</div>
-		<div class="form-group">
+		<div class="row">
 			<div class="input-group fixed-width-xl">
 				<div class="input-group-addon">
 					{$currency->sign}
