@@ -26,9 +26,22 @@
 
 class AdminAddonsCatalogControllerCore extends AdminController
 {
+	public function __construct()
+	{
+		$this->bootstrap = true;
+		parent::__construct();
+	}
+
 	public function initContent()
 	{
-		$this->context->smarty->assign('parentDomain', Tools::getHttpHost(true).substr($_SERVER['REQUEST_URI'], 0, -1 * strlen(basename($_SERVER['REQUEST_URI']))));
+		$this->initPageHeaderToolbar();
+
+		$this->context->smarty->assign(array(
+			'parentDomain' => Tools::getHttpHost(true).substr($_SERVER['REQUEST_URI'], 0, -1 * strlen(basename($_SERVER['REQUEST_URI']))),
+			'show_page_header_toolbar' => $this->show_page_header_toolbar,
+			'page_header_toolbar_title' => $this->page_header_toolbar_title,
+			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
+		));
 		parent::initContent();
 	}
 }

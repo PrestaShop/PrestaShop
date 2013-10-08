@@ -341,5 +341,17 @@ class AdminCurrenciesControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('This currency already exists.');
 		parent::initProcess();
 	}
+
+	public function initPageHeaderToolbar()
+	{
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['new_currency'] = array(
+				'href' => self::$currentIndex.'&amp;addcurrency&amp;token='.$this->token,
+				'desc' => $this->l('Add new currency'),
+				'icon' => 'process-icon-new'
+			);
+
+		parent::initPageHeaderToolbar();
+	}
 }
 

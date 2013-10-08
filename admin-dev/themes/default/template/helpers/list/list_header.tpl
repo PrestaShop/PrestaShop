@@ -57,25 +57,6 @@
 {if !$simple_header}
 <div class="leadin">
 	{block name="leadin"}{/block}
-	{foreach from=$toolbar_btn item=btn key=k}
-		{if $k == 'modules-list'}
-		<div class="modal fade" id="modules_list_container">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h3 class="modal-title">{l s='Modules'}</h3>
-					</div>
-					<div class="modal-body">
-						<div id="modules_list_container_tab" style="display:none;"></div>
-						<div id="modules_list_loader"><img src="../img/loader.gif" alt=""/></div>
-					</div>
-				</div>
-			</div>
-		</div>
-		{break}
-		{/if}
-	{/foreach}
 </div>
 {/if}
 
@@ -100,28 +81,14 @@
 			{if isset($toolbar_btn) && count($toolbar_btn) >0}
 			<span class="panel-heading-action">
 			{foreach from=$toolbar_btn item=btn key=k}
-				<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="list-tooolbar-btn" {if isset($btn.href)}href="{$btn.href}"{/if} {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
-					<label>
-						<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s=$btn.desc}" data-html="true">
-							<i class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if} {if isset($btn.class)}{$btn.class}{/if}" ></i>
-						</span>
-					</label>
-				</a>
-				{if $k == 'modules-list'}
-				<div class="modal fade" id="modules_list_container">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header">
-								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-								<h3 class="modal-title">{l s='Modules'}</h3>
-							</div>
-							<div class="modal-body">
-								<div id="modules_list_container_tab" style="display:none;"></div>
-								<div id="modules_list_loader"><img src="../img/loader.gif" alt=""/></div>
-							</div>
-						</div>
-					</div>
-				</div>
+				{if $k != 'modules-list'}
+					<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="list-tooolbar-btn" {if isset($btn.href)}href="{$btn.href}"{/if} {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
+						<label>
+							<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s=$btn.desc}" data-html="true">
+								<i class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if} {if isset($btn.class)}{$btn.class}{/if}" ></i>
+							</span>
+						</label>
+					</a>
 				{/if}
 			{/foreach}
 				<a id="desc-{$table}-refresh" class="list-tooolbar-btn" href="javascript:location.reload();">
@@ -137,7 +104,7 @@
 			<script language="javascript" type="text/javascript">
 			//<![CDATA[
 				var submited = false
-				var modules_list_loaded = false;
+
 				$(function() {
 					//get reference on save link
 					btn_save = $('i[class~="process-icon-save"]').parent();
@@ -205,52 +172,10 @@
 							}
 						{/block}
 					}
-					{if isset($tab_modules_open)}
-						if ({$tab_modules_open})
-							openModulesList();
-					{/if}
 				});
-				{if isset($tab_modules_list)}
-				$('.process-icon-modules-list').parent('a').unbind().bind('click', function (){
-					console.log('ok');
-					openModulesList();
-				});
-
-				function openModulesList()
-				{
-					$('#modules_list_container').modal('show');
-					if (!modules_list_loaded)
-					{
-						$.ajax({
-							type: "POST",
-							url : '{$admin_module_ajax_url}',
-							async: true,
-							data : {
-								ajax : "1",
-								controller : "AdminModules",
-								action : "getTabModulesList",
-								tab_modules_list : '{$tab_modules_list}',
-								back_tab_modules_list : '{$back_tab_modules_list}'
-							},
-							success : function(data)
-							{
-								$('#modules_list_container_tab').html(data).slideDown();
-								$('#modules_list_loader').hide();
-								modules_list_loaded = true;
-							}
-						});
-					}
-					else
-					{
-						$('#modules_list_container_tab').slideDown();
-						$('#modules_list_loader').hide();
-					}
-					return false;
-				}
-				{/if}
 			//]]>
-		</script>
-		{/if}
+			</script>
+			{/if}
 		</div>
 {/if}
 {if $simple_header}

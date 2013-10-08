@@ -26,7 +26,8 @@
 {extends file="helpers/options/options.tpl"}
 {block name="field"}
 	{if $field['type'] == 'checkbox_table'}
-		<div class="margin-form" style="float: left; padding-left: 0; width: 317px; margin-top: 6px; height: 300px; overflow-y: auto;">
+		{*TODO : overflow*}
+		<div class="well margin-form" style="height: 300px; overflow-y: auto;">
 			<table class="table" cellspacing="0">
 				<thead>
 					<tr>
@@ -44,8 +45,6 @@
 				</tbody>
 			</table>
 		</div>
-		<div class="clear"></div>
-		<br />
 	{else}
 		{$smarty.block.parent}
 	{/if}

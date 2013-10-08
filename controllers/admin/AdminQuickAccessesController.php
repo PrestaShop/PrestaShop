@@ -117,12 +117,12 @@ class AdminQuickAccessesControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-		$this->page_header_toolbar_title = $this->l('Quick access');
-		$this->page_header_toolbar_btn['new_quick_access'] = array(
-			'href' => self::$currentIndex.'&amp;addquick_access&amp;token='.$this->token,
-			'desc' => $this->l('Add new quick access'),
-			'icon' => 'process-icon-new'
-		);
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['new_quick_access'] = array(
+				'href' => self::$currentIndex.'&amp;addquick_access&amp;token='.$this->token,
+				'desc' => $this->l('Add new quick access'),
+				'icon' => 'process-icon-new'
+			);
 
 		parent::initPageHeaderToolbar();
 	}

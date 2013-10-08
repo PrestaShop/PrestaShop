@@ -118,12 +118,12 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-		$this->page_header_toolbar_title = $this->l('Specific price rules');
-		$this->page_header_toolbar_btn['new_specific_price_rule'] = array(
-			'href' => self::$currentIndex.'&amp;addspecific_price_rule&amp;token='.$this->token,
-			'desc' => $this->l('Add new specific rule'),
-			'icon' => 'process-icon-new'
-		);
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['new_specific_price_rule'] = array(
+				'href' => self::$currentIndex.'&amp;addspecific_price_rule&amp;token='.$this->token,
+				'desc' => $this->l('Add new specific rule'),
+				'icon' => 'process-icon-new'
+			);
 
 		parent::initPageHeaderToolbar();
 	}

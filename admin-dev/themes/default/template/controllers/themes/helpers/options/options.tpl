@@ -52,16 +52,23 @@
 {block name="after"}
 	<fieldset id="prestastore-content"></fieldset>
 	<script type="text/javascript">
-		$.post(
-			"ajax-tab.php",
-			{
+		$.ajax({
+			type: 'POST',
+			headers: { "cache-control": "no-cache" },
+			url: 'ajax-tab.php?rand=' + new Date().getTime(),
+			async: true,
+			cache: false,
+			dataType : "html",
+			data: {
 				tab: 'AdminThemes',
 				token: '{$token}',
 				ajax: '1',
 				action:'getAddonsThemes',
 				page:'themes'
-			}, function(a){
-				$("#prestastore-content").html("<h3><i class='icon-puzzle-piece'></i> {l s='Live from PrestaShop Addons!'}</h3>"+a);
-			});
+			},
+			success: function(htmlData) {
+				$("#prestastore-content").html("<h3><i class='icon-puzzle-piece'></i> {l s='Live from PrestaShop Addons!'}</h3>"+htmlData);
+			}
+		});
 	</script>
 {/block}

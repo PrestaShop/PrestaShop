@@ -137,7 +137,6 @@ class AdminFeaturesControllerCore extends AdminController
 			}
 
 			$this->feature_name = $obj->name;
-			$this->toolbar_title = $this->feature_name;	
 			$this->fields_list = array(
 				'id_feature_value' => array(
 					'title' => $this->l('ID'),
@@ -200,16 +199,7 @@ class AdminFeaturesControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-		if ($this->display == 'view')
-		{
-			$this->page_header_toolbar_title = $this->feature_name[$this->context->employee->id_lang];
-			$this->page_header_toolbar_btn['back_to_list'] = array(
-				'href' => Context::getContext()->link->getAdminLink('AdminFeatures'),
-				'desc' => $this->l('Back to list'),
-				'icon' => 'process-icon-back'
-			);
-		}
-		else
+		if (empty($this->display))
 		{
 			$this->page_header_toolbar_title = $this->l('Features');
 			$this->page_header_toolbar_btn['new_feature'] = array(
@@ -270,6 +260,27 @@ class AdminFeaturesControllerCore extends AdminController
 			default:
 				parent::initToolbar();
 		}
+	}
+
+	public function initToolbarTitle()
+	{
+		$bread_extended = $this->breadcrumbs;
+
+		switch ($this->display)
+		{
+			case 'view':
+				if (Tools::getIsset('viewfeature'))
+				{
+					if (($id = Tools::getValue('id_feature')))
+						if (Validate::isLoadedObject($obj = new Feature((int)$id)))
+							$bread_extended[] = $obj->name[$this->context->employee->id_lang];
+				}
+				else
+					$bread_extended[] = $this->attribute_name[$this->context->employee->id_lang];
+				break;
+		}
+
+		$this->toolbar_title = $bread_extended;
 	}
 
 	/**
@@ -349,6 +360,7 @@ class AdminFeaturesControllerCore extends AdminController
 		{
 			// toolbar (save, cancel, new, ..)
 			$this->initToolbar();
+			$this->initPageHeaderToolbar();
 			if ($this->display == 'edit' || $this->display == 'add')
 			{
 				if (!$this->loadObject(true))
@@ -382,6 +394,9 @@ class AdminFeaturesControllerCore extends AdminController
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
 			'url_post' => self::$currentIndex.'&token='.$this->token,
+			'show_page_header_toolbar' => $this->show_page_header_toolbar,
+			'page_header_toolbar_title' => $this->page_header_toolbar_title,
+			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
 		));
 	}
 

@@ -78,8 +78,6 @@ class AdminStockManagementControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-		$this->page_header_toolbar_title = $this->l('Stock management');
-
 		if ($this->display == 'details')
 			$this->page_header_toolbar_btn['back_to_list'] = array(
 				'href' => Context::getContext()->link->getAdminLink('AdminStockManagement'),
@@ -1036,6 +1034,8 @@ class AdminStockManagementControllerCore extends AdminController
 
 					$helper = new HelperForm();
 
+					$this->initPageHeaderToolbar();
+
 					// Check if form template has been overriden
 					if (file_exists($this->context->smarty->getTemplateDir(0).'/'.$this->tpl_folder.'form.tpl'))
 						$helper->tpl = $this->tpl_folder.'form.tpl';
@@ -1079,7 +1079,10 @@ class AdminStockManagementControllerCore extends AdminController
 					$this->content .= $helper->generateForm($this->fields_form);
 
 					$this->context->smarty->assign(array(
-						'content' => $this->content
+						'content' => $this->content,						
+						'show_page_header_toolbar' => $this->show_page_header_toolbar,
+						'page_header_toolbar_title' => $this->page_header_toolbar_title,
+						'page_header_toolbar_btn' => $this->page_header_toolbar_btn
 					));
 				}
 				else

@@ -92,6 +92,19 @@ class AdminWebserviceControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['new_webservice'] = array(
+				'href' => self::$currentIndex.'&amp;addwebservice_account&amp;token='.$this->token,
+				'desc' => $this->l('Add new webservice'),
+				'icon' => 'process-icon-new'
+			);
+
+		parent::initPageHeaderToolbar();
+	}
+
+
 	protected function processUpdateOptions()
 	{
 		parent::processUpdateOptions();

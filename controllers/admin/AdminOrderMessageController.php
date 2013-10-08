@@ -90,12 +90,12 @@ class AdminOrderMessageControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-		$this->page_header_toolbar_title = $this->l('Order messages');
-		$this->page_header_toolbar_btn['new_order_message'] = array(
-			'href' => self::$currentIndex.'&amp;addorder_message&amp;token='.$this->token,
-			'desc' => $this->l('Add new order message'),
-			'icon' => 'process-icon-new'
-		);
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['new_order_message'] = array(
+				'href' => self::$currentIndex.'&amp;addorder_message&amp;token='.$this->token,
+				'desc' => $this->l('Add new order message'),
+				'icon' => 'process-icon-new'
+			);
 
 		parent::initPageHeaderToolbar();
 	}

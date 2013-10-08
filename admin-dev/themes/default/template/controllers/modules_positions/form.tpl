@@ -23,7 +23,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{include file="toolbar.tpl" toolbar_btn=$toolbar_btn toolbar_scroll=$toolbar_scroll title=$title}
 <div class="leadin">{block name="leadin"}{/block}</div>
 
 <form action="{$url_submit}" id="{$table}_form" method="post" class="form-horizontal">

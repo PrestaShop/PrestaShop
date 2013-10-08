@@ -79,7 +79,6 @@ class AdminSlipControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-		$this->page_header_toolbar_title = $this->l('Slips');
 		$this->page_header_toolbar_btn['generate_pdf'] = array(
 			'href' => self::$currentIndex.'&amp;token='.$this->token,
 			'desc' => $this->l('Generate PDF'),
@@ -154,13 +153,17 @@ class AdminSlipControllerCore extends AdminController
 	public function initContent()
 	{
 		$this->initToolbar();
+		$this->initPageHeaderToolbar();
 		$this->content .= $this->renderList();
 		$this->content .= $this->renderForm();
-		$this->content .= '<br>'.$this->renderOptions();
+		$this->content .= $this->renderOptions();
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
 			'url_post' => self::$currentIndex.'&token='.$this->token,
+			'show_page_header_toolbar' => $this->show_page_header_toolbar,
+			'page_header_toolbar_title' => $this->page_header_toolbar_title,
+			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
 		));
 	}
 

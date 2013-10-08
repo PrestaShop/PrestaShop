@@ -191,6 +191,18 @@ class AdminSearchConfControllerCore extends AdminController
 		);
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['new_alias'] = array(
+				'href' => self::$currentIndex.'&amp;addalias&amp;token='.$this->token,
+				'desc' => $this->l('Add new alias'),
+				'icon' => 'process-icon-new'
+			);
+		
+		parent::initPageHeaderToolbar();
+	}
+
 	public function initProcess()
 	{
 		parent::initProcess();

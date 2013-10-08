@@ -146,12 +146,12 @@ class AdminGroupsControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-		$this->page_header_toolbar_title = $this->l('Groups');
-		$this->page_header_toolbar_btn['new_group'] = array(
-			'href' => self::$currentIndex.'&amp;addgroup&amp;token='.$this->token,
-			'desc' => $this->l('Add new group'),
-			'icon' => 'process-icon-new'
-		);
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['new_group'] = array(
+				'href' => self::$currentIndex.'&amp;addgroup&amp;token='.$this->token,
+				'desc' => $this->l('Add new group'),
+				'icon' => 'process-icon-new'
+			);
 
 		parent::initPageHeaderToolbar();
 	}

@@ -121,6 +121,7 @@ class AdminInvoicesControllerCore extends AdminController
 		);
 
 		$this->table = 'invoice_date';
+		$this->show_toolbar = false;
 		$this->toolbar_title = $this->l('Print PDF invoices');
 		return parent::renderForm();
 	}
@@ -185,6 +186,7 @@ class AdminInvoicesControllerCore extends AdminController
 	{
 		$this->display = 'edit';
 		$this->initToolbar();
+		$this->initPageHeaderToolbar();
 		$this->content .= $this->initFormByDate();
 		$this->content .= $this->initFormByStatus();
 		$this->table = 'invoice';
@@ -192,7 +194,10 @@ class AdminInvoicesControllerCore extends AdminController
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
-			'url_post' => self::$currentIndex.'&token='.$this->token,
+			'url_post' => self::$currentIndex.'&token='.$this->token,			
+			'show_page_header_toolbar' => $this->show_page_header_toolbar,
+			'page_header_toolbar_title' => $this->page_header_toolbar_title,
+			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
 		));
 	}
 

@@ -1119,17 +1119,43 @@ class AdminControllerCore extends Controller
 
 		$title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title);
 
+		switch ($this->display)
+		{
+			case 'view':
+				// Default cancel button - like old back link
+				$back = Tools::safeOutput(Tools::getValue('back', ''));
+				if (empty($back))
+					$back = self::$currentIndex.'&token='.$this->token;
+				if (!Validate::isCleanHtml($back))
+					die(Tools::displayError());
+				if (!$this->lite_display)
+					$this->page_header_toolbar_btn['back'] = array(
+						'href' => $back,
+						'desc' => $this->l('Back to list')
+					);
+				break;
+			case 'add':
+			case 'edit':
+				// Default cancel button - like old back link
+				$back = Tools::safeOutput(Tools::getValue('back', ''));
+				if (empty($back))
+					$back = self::$currentIndex.'&token='.$this->token;
+				if (!Validate::isCleanHtml($back))
+					die(Tools::displayError());
+				if (!$this->lite_display)
+					$this->page_header_toolbar_btn['cancel'] = array(
+						'href' => $back,
+						'desc' => $this->l('Cancel')
+					);
+				break;
+		}
+
 		if (is_array($this->page_header_toolbar_btn)
 			&& $this->page_header_toolbar_btn instanceof Traversable
 			|| trim($title) != '')
 			$this->show_page_header_toolbar = true;
 
-		$this->context->smarty->assign(array(
-			'show_page_header_toolbar' => $this->show_page_header_toolbar,
-			'page_header_toolbar_title' => $title,
-			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
-		));
-
+		$this->page_header_toolbar_title = $title;
 		$this->addPageHeaderToolBarModulesListButton();
 	}
 
@@ -1149,7 +1175,17 @@ class AdminControllerCore extends Controller
 					'href' => '#',
 					'desc' => $this->l('Save')
 				);
-				//no break
+				$back = Tools::safeOutput(Tools::getValue('back', ''));
+				if (empty($back))
+					$back = self::$currentIndex.'&token='.$this->token;
+				if (!Validate::isCleanHtml($back))
+					die(Tools::displayError());
+				if (!$this->lite_display)
+					$this->toolbar_btn['cancel'] = array(
+						'href' => $back,
+						'desc' => $this->l('Cancel')
+					);
+				break;
 			case 'view':
 				// Default cancel button - like old back link
 				$back = Tools::safeOutput(Tools::getValue('back', ''));
@@ -1545,9 +1581,11 @@ class AdminControllerCore extends Controller
 		}
 
 		$this->getLanguages();
-		// toolbar (save, cancel, new, ..)
+		// toolbar (save, cancel, new, ..)		
 		$this->initToolbar();
 		$this->initTabModuleList();
+		$this->initPageHeaderToolbar();
+
 		if ($this->display == 'edit' || $this->display == 'add')
 		{
 			if (!$this->loadObject(true))
@@ -1580,7 +1618,11 @@ class AdminControllerCore extends Controller
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
+			'lite_display' => $this->lite_display,
 			'url_post' => self::$currentIndex.'&token='.$this->token,
+			'show_page_header_toolbar' => $this->show_page_header_toolbar,
+			'page_header_toolbar_title' => $this->page_header_toolbar_title,
+			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
 		));
 	}
 	
@@ -1695,8 +1737,6 @@ class AdminControllerCore extends Controller
 	 */
 	public function renderList()
 	{
-		$this->initPageHeaderToolbar();
-
 		if (!($this->fields_list && is_array($this->fields_list)))
 			return false;
 		$this->getList($this->context->language->id);
@@ -2114,9 +2154,9 @@ class AdminControllerCore extends Controller
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
-		elseif (Tools::getValue('submitAdd'.$this->table)
-				 || Tools::getValue('submitAdd'.$this->table.'AndStay')
-				 || Tools::getValue('submitAdd'.$this->table.'AndPreview'))
+		elseif (Tools::isSubmit('submitAdd'.$this->table)
+				 || Tools::isSubmit('submitAdd'.$this->table.'AndStay')
+				 || Tools::isSubmit('submitAdd'.$this->table.'AndPreview'))
 		{
 			// case 1: updating existing entry
 			if ($this->id_object)
@@ -2124,7 +2164,7 @@ class AdminControllerCore extends Controller
 				if ($this->tabAccess['edit'] === '1')
 				{
 					$this->action = 'save';
-					if (Tools::getValue('submitAdd'.$this->table.'AndStay'))
+					if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
 						$this->display = 'edit';
 					else
 						$this->display = 'list';
@@ -2138,7 +2178,7 @@ class AdminControllerCore extends Controller
 				if ($this->tabAccess['add'] === '1')
 				{
 					$this->action = 'save';
-					if (Tools::getValue('submitAdd'.$this->table.'AndStay'))
+					if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
 						$this->display = 'edit';
 					else
 						$this->display = 'list';

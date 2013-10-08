@@ -93,7 +93,7 @@ class AdminTabsControllerCore extends AdminController
 				'desc' => $this->l('Back to list'),
 				'icon' => 'process-icon-back'
 			);
-		else
+		elseif(empty($this->display))
 			$this->page_header_toolbar_btn['new_menu'] = array(
 				'href' => self::$currentIndex.'&amp;addtab&amp;token='.$this->token,
 				'desc' => $this->l('Add new menu'),

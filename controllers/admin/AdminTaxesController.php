@@ -108,6 +108,18 @@ class AdminTaxesControllerCore extends AdminController
 		$this->_where .= ' AND a.deleted = 0';
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['new_tax'] = array(
+				'href' => self::$currentIndex.'&amp;addtax&amp;token='.$this->token,
+				'desc' => $this->l('Add new tax'),
+				'icon' => 'process-icon-new'
+			);
+
+		parent::initPageHeaderToolbar();
+	}
+
 	/**
 	 * Display delete action link
 	 */

@@ -116,12 +116,12 @@ class AdminScenesControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-		$this->page_header_toolbar_title = $this->l('Scenes');
-		$this->page_header_toolbar_btn['new_scene'] = array(
-			'href' => self::$currentIndex.'&amp;addscene&amp;token='.$this->token,
-			'desc' => $this->l('Add new scene'),
-			'icon' => 'process-icon-new'
-		);
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['new_scene'] = array(
+				'href' => self::$currentIndex.'&amp;addscene&amp;token='.$this->token,
+				'desc' => $this->l('Add new scene'),
+				'icon' => 'process-icon-new'
+			);
 
 		parent::initPageHeaderToolbar();
 	}

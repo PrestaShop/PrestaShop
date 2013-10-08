@@ -40,6 +40,17 @@ class AdminInformationControllerCore extends AdminController
 		parent::initContent();
 	}
 
+	public function initToolbarTitle()
+	{
+		$this->toolbar_title = array_unique($this->breadcrumbs);
+	}
+
+	public function initPageHeaderToolbar()
+	{
+		parent::initPageHeaderToolbar();
+		unset($this->page_header_toolbar_btn['back']);
+	}
+
 	public function renderView()
 	{
 		$this->initPageHeaderToolbar();
@@ -75,12 +86,6 @@ class AdminInformationControllerCore extends AdminController
 		$this->tpl_view_vars = array_merge($this->getTestResult(), $this->tpl_view_vars);
 
 		return parent::renderView();
-	}
-
-	public function initPageHeaderToolbar()
-	{
-		$this->page_header_toolbar_title = $this->l('Configuration information');
-		parent::initPageHeaderToolbar();
 	}
 
 	/**

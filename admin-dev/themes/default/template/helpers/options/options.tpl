@@ -23,10 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{if $show_toolbar}
-	{include file="toolbar.tpl" toolbar_btn=$toolbar_btn toolbar_scroll=$toolbar_scroll title=$title}
-	<div class="leadin">{block name="leadin"}{/block}</div>
-{/if}
+<div class="leadin">{block name="leadin"}{/block}</div>
 
 <script type="text/javascript">
 	id_language = Number({$current_id_lang});
@@ -380,6 +377,9 @@
 				<div class="small"><sup>*</sup> {l s='Required field'}</div>
 			{/if*} -->
 			{if isset($categoryData['bottom'])}{$categoryData['bottom']}{/if}
+			{block name="footer"}
+			{include file="footer_toolbar.tpl"}
+			{/block}
 		</fieldset>
 	{/foreach}
 	{hook h='displayAdminOptions'}

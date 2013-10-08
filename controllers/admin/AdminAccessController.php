@@ -45,12 +45,6 @@ class AdminAccessControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function initPageHeaderToolbar()
-	{
-		$this->page_header_toolbar_title = $this->l('Permissions');
-		parent::initPageHeaderToolbar();
-	}
-
 	/**
 	 * AdminController::renderForm() override
 	 * @see AdminController::renderForm()
@@ -131,7 +125,21 @@ class AdminAccessControllerCore extends AdminController
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
 			'url_post' => self::$currentIndex.'&token='.$this->token,
+			'show_page_header_toolbar' => $this->show_page_header_toolbar,
+			'page_header_toolbar_title' => $this->page_header_toolbar_title,
+			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
 		));
+	}
+
+	public function initToolbarTitle()
+	{
+		$this->toolbar_title = array_unique($this->breadcrumbs);
+	}
+
+	public function initPageHeaderToolbar()
+	{
+		parent::initPageHeaderToolbar();
+		unset($this->page_header_toolbar_btn['cancel']);
 	}
 
 	public function ajaxProcessUpdateAccess()

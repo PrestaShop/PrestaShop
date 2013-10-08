@@ -118,17 +118,28 @@ class AdminCmsContentControllerCore extends AdminController
 		if (!$id_cms_category)
 			$id_cms_category = 1;
 
-		$this->page_header_toolbar_title = $this->l('CMS');
-		$this->page_header_toolbar_btn['new_cms_category'] = array(
-			'href' => self::$currentIndex.'&amp;addcms_category&amp;token='.$this->token,
-			'desc' => $this->l('Add new CMS category'),
-			'icon' => 'process-icon-new'
-		);
-		$this->page_header_toolbar_btn['new_cms_page'] = array(
-			'href' => self::$currentIndex.'&amp;addcms&amp;id_cms_category='.$id_cms_category.'&amp;token='.$this->token,
-			'desc' => $this->l('Add new CMS page'),
-			'icon' => 'process-icon-new'
-		);
+		$this->page_header_toolbar_title = 'CMS';
+
+		if ($this->display == 'list')
+		{
+			$this->page_header_toolbar_btn['new_cms_category'] = array(
+				'href' => self::$currentIndex.'&amp;addcms_category&amp;token='.$this->token,
+				'desc' => $this->l('Add new CMS category'),
+				'icon' => 'process-icon-new'
+			);
+			$this->page_header_toolbar_btn['new_cms_page'] = array(
+				'href' => self::$currentIndex.'&amp;addcms&amp;id_cms_category='.$id_cms_category.'&amp;token='.$this->token,
+				'desc' => $this->l('Add new CMS page'),
+				'icon' => 'process-icon-new'
+			);
+		}
+		else
+		{
+			$this->page_header_toolbar_btn['cancel'] = array(
+				'href' => self::$currentIndex.'&amp;token='.$this->token,
+				'desc' => $this->l('Cancel')
+			);
+		}
 
 		if (is_array($this->page_header_toolbar_btn)
 			&& $this->page_header_toolbar_btn instanceof Traversable

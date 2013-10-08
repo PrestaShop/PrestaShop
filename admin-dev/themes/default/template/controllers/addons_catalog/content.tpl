@@ -22,6 +22,33 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+{if isset($content)}
+	{if isset($show_page_header_toolbar) && $show_page_header_toolbar &&(!isset($lite_display) || !$lite_display)}
+		<div class="leadin">
+			{foreach from=$page_header_toolbar_btn item=btn key=k}
+				{if $k == 'modules-list'}
+				<div class="modal fade" id="modules_list_container">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+								<h3 class="modal-title">{l s='Modules'}</h3>
+							</div>
+							<div class="modal-body">
+								<div id="modules_list_container_tab" style="display:none;"></div>
+								<div id="modules_list_loader"><img src="../img/loader.gif" alt=""/></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				{/if}
+			{/foreach}
+		</div>
+		{include file="page_header_toolbar.tpl" toolbar_btn=$page_header_toolbar_btn title=$page_header_toolbar_title}
+	{/if}
+	{$content}
+{/if}
+
 <iframe frameborder="no" style="margin:0px;padding:0px;width:100%;height:920px" src="http://addons.prestashop.com/iframe/search.php?parentUrl={$parentDomain}"></iframe>
 <div class="clear">&nbsp;</div>
 

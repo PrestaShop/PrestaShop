@@ -149,15 +149,13 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-		$this->page_header_toolbar_title = $this->l('Supply orders');
-
 		if ($this->display == 'details')
 			$this->page_header_toolbar_btn['back'] = array(
 				'href' => Context::getContext()->link->getAdminLink('AdminSupplyOrders'),
 				'desc' => $this->l('Back to list'),
 				'icon' => 'process-icon-back'
 			);
-		else
+		elseif (empty($this->display))
 		{
 			$this->page_header_toolbar_btn['new_supply_order'] = array(
 				'href' => self::$currentIndex.'&amp;addsupply_order&amp;token='.$this->token,
@@ -575,6 +573,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$this->display = 'update_order_state';
 		// overrides parent::initContent();
 		$this->initToolbar();
+		$this->initPageHeaderToolbar();
 
 		// given the current state, loads available states
 		$states = SupplyOrderState::getSupplyOrderStates($supply_order->id_supply_order_state);
@@ -636,7 +635,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 		$this->context->smarty->assign(array(
 			'content' => $content,
-			'url_post' => self::$currentIndex.'&token='.$this->token,
+			'url_post' => self::$currentIndex.'&token='.$this->token,			
+			'show_page_header_toolbar' => $this->show_page_header_toolbar,
+			'page_header_toolbar_title' => $this->page_header_toolbar_title,
+			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
 		));
 	}
 
@@ -718,6 +720,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		// if it's not a valid order
 		if (!Validate::isLoadedObject($supply_order))
 			return parent::initContent();
+
+		$this->initPageHeaderToolbar();
 
 		// re-defines fields_list
 		$this->fields_list = array(
@@ -855,7 +859,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 		// assigns var
 		$this->context->smarty->assign(array(
-			'content' => $content,
+			'content' => $content,						
+			'show_page_header_toolbar' => $this->show_page_header_toolbar,
+			'page_header_toolbar_title' => $this->page_header_toolbar_title,
+			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
 		));
 	}
 

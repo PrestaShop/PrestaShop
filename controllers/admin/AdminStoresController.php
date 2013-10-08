@@ -129,6 +129,18 @@ class AdminStoresControllerCore extends AdminController
 			unset($this->toolbar_btn['save']);
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['new_store'] = array(
+				'href' => self::$currentIndex.'&amp;addstore&amp;token='.$this->token,
+				'desc' => $this->l('Add new store'),
+				'icon' => 'process-icon-new'
+			);
+		
+		parent::initPageHeaderToolbar();
+	}
+
 	public function renderList()
 	{
 		// Set toolbar options

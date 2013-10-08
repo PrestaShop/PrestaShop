@@ -99,12 +99,12 @@ class AdminProfilesControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-		$this->page_header_toolbar_title = $this->l('Profiles');
-		$this->page_header_toolbar_btn['new_profile'] = array(
-			'href' => self::$currentIndex.'&amp;addprofile&amp;token='.$this->token,
-			'desc' => $this->l('Add new profile'),
-			'icon' => 'process-icon-new'
-		);
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['new_profile'] = array(
+				'href' => self::$currentIndex.'&amp;addprofile&amp;token='.$this->token,
+				'desc' => $this->l('Add new profile'),
+				'icon' => 'process-icon-new'
+			);
 		
 		parent::initPageHeaderToolbar();
 	}
