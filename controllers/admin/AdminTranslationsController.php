@@ -581,24 +581,28 @@ class AdminTranslationsControllerCore extends AdminController
 			if (preg_match('#^translations\/'.$iso_code.'\/tabs.php#Ui', $file['filename'], $matches) && Validate::isLanguageIsoCode($iso_code))
 			{
 				// Include array width new translations tabs
-				$tabs = array();
-				if (Tools::file_exists_cache(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$file['filename']))
-					$tabs = include_once(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$file['filename']);
-
-				foreach ($tabs as $class_name => $translations)
+				$_TABS = array();
+				clearstatcache();
+				if (file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$file['filename']))
+					 include_once(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$file['filename']);
+				
+				if (count($_TABS))
 				{
-					// Get instance of this tab by class name
-					$tab = Tab::getInstanceFromClassName($class_name);
-					//Check if class name exists
-					if (isset($tab->class_name) && !empty($tab->class_name))
+					foreach ($_TABS as $class_name => $translations)
 					{
-						$id_lang = Language::getIdByIso($iso_code);
-						$tab->name[(int)$id_lang] = $translations;
+						// Get instance of this tab by class name
+						$tab = Tab::getInstanceFromClassName($class_name);
+						//Check if class name exists
+						if (isset($tab->class_name) && !empty($tab->class_name))
+						{
+							$id_lang = Language::getIdByIso($iso_code);
+							$tab->name[(int)$id_lang] = $translations;
 
-						if (!Validate::isGenericName($tab->name[(int)$id_lang]))
-							$errors[] = sprintf(Tools::displayError('Tab "%s" is not valid'), $tab->name[(int)$id_lang]);
-						else
-							$tab->update();
+							if (!Validate::isGenericName($tab->name[(int)$id_lang]))
+								$errors[] = sprintf(Tools::displayError('Tab "%s" is not valid'), $tab->name[(int)$id_lang]);
+							else
+								$tab->update();
+						}
 					}
 				}
 			}
