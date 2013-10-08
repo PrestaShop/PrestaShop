@@ -805,7 +805,8 @@
 				{l s='Quantity'} 	<input type="text" name="adsQty" value="1" />
 				<button type="submit" name="submitAdsAdd" value="{$ads_deliverynr}">Add</button>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<button type="submit" name="submitAdsAddAll" value="{$ads_deliverynr}">Add All products</button><br>
+				<button type="submit" name="submitAdsAddAll" value="{$ads_deliverynr}">Add All products</button>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<input type="submit" name="submitAdsGenSlip" value="Generate Delivery Slip for: ">
 				<select name="adsSlipNr" id="adsSlipNr">
 					{for $var=1 to $ads_deliverynr}
@@ -813,7 +814,7 @@
 					{/for}
 				</select>
 				<br><br>
-				{foreach from=$delivered_products item=delivery_id}
+				{foreach from=$delivered_products item=$product}
 				<table style="width: 100%;" cellspacing="0" cellpadding="0" class="table" id="orderDeliveryProducts">
 					<tr>
 						<th height="39" align="center" style="width: 7%">&nbsp;</th>
@@ -824,10 +825,11 @@
 						<th style="width: 10%; text-align: center">{l s='Total'} <sup>*</sup></th>
 					</tr>
 
-					{foreach from=$delivery_id item=product key=k}
-						<tr>
+					{foreach from=$delivered_products item=$product}
+<!--						<tr>
 							<td colspan="6">{l s='Delivery'} {$k+1}</td>
 						</tr>
+-->
 						{* Include customized datas partial *}
 						{include file='controllers/orders/_customized_data.tpl'}
 

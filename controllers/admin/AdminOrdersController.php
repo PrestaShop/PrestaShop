@@ -1272,26 +1272,25 @@ class AdminOrdersControllerCore extends AdminController
 						}
 					}
 				}
-				$id_order = Tools::getValue('id_order');
-				$delivery_id = Tools::getValue('submitAdsAdd');
-				$qty = Db::getInstance()->executeS('
-				SELECT delivery_qty
-				FROM `'._DB_PREFIX_.'order_delivery` ody
-				WHERE ody.`id_order` = ' . (int)$id_order .
-				' AND ody.`product_id` = ' . $product_id .
-				' AND ody.`product_attribute_id` = ' . $product_attribute_id .
-				' AND ody.`delivery_id` = ' . $delivery_id);
-				if(isset($qty[0]['delivery_qty']))
-				{
-					$new_qty = $qty[0]["delivery_qty"] + Tools::getValue('adsQty');
-					Db::getInstance()->update('order_delivery',array('delivery_qty' => $new_qty),
-					'`id_order` = '. $id_order . ' AND `product_id` = ' . $product_id . ' AND `product_attribute_id` = '. $product_attribute_id .
-					' AND `delivery_id` = ' . $delivery_id . ' AND `id_shop` = ' . $order->id_shop);
+// 				$id_order = Tools::getValue('id_order');
+				$delivery_nr = Tools::getValue('submitAdsAdd');
+				$order_delivery = new OrderDelivery($order->id);
+				$delivery_id = $order_delivery->getIdFromNr($delivery_nr,$order);
+				if(empty($delivery_id)) { // the order has no delivered products
+					$order_delivery->createDelivery($delivery_nr,$order,$product_id,$product_attribute_id,Tools::getValue('adsQty')); // creates delivery and adds delivery detail
 				}
 				else
 				{
-					Db::getInstance()->insert('order_delivery',array('id_order' => $id_order,'product_id' => $product_id, 'product_attribute_id' => $product_attribute_id,'delivery_id' => $delivery_id,
-					'delivery_qty' => 1,'id_shop' =>$order->id_shop));
+					$qty = $order_delivery->getProductQty($product_id,$product_attribute_id,$delivery_id);
+					if(!empty($qty))
+					{
+						$new_qty = $qty + Tools::getValue('adsQty');
+						$order_delivery->updateQty($product_id,$product_attribute_id,$delivery_id,$new_qty);
+					}
+					else
+					{
+						$order_delivery->createDeliveryDetail($delivery_id,$product_id,$product_attribute_id,Tools::getValue('adsQty'));
+					}
 				}
 			}
 			else
@@ -1317,7 +1316,11 @@ class AdminOrdersControllerCore extends AdminController
 		$carrier = new Carrier($order->id_carrier);
 		$products = $this->getProducts($order);
 		
+		$order_delivery = new OrderDelivery($order->id);
+		$ads_deliverynr = $order_delivery->getMaxNr($order);
+	
 		$delivered_products = $this->getProductsDelivery($order);
+// 		print_r($delivered_products);
 		$currency = new Currency((int)$order->id_currency);
 		// Carrier module call
 		$carrier_module_call = null;
@@ -1410,8 +1413,6 @@ class AdminOrdersControllerCore extends AdminController
 			else
 				$product['warehouse_name'] = '--';
 		}
-		
-		$ads_deliverynr = $order->getAdsDeliverySlipNr();
 
 		// Smarty assign
 		$this->tpl_view_vars = array(
@@ -2298,6 +2299,10 @@ class AdminOrdersControllerCore extends AdminController
 	{
 		// get delivered products
 		$delivered_products = $order->getProductsDelivery();
+// 		echo('<pre>');
+// 		print_r($delivered_products);
+// 		echo('</pre>');
+// 		print_r($delivered_products);
 		foreach ($delivered_products as &$delivery)
 		{
 			foreach ($delivery as &$product)

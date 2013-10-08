@@ -97,8 +97,7 @@ class OrderInvoiceCore extends ObjectModel
 			'id_order' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'number' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'delivery_number' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-			'package' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-			// mysql package ps_order_invoice
+			'package' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'delivery_date' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
 			'total_discount_tax_excl' =>array('type' => self::TYPE_FLOAT),
 			'total_discount_tax_incl' =>array('type' => self::TYPE_FLOAT),

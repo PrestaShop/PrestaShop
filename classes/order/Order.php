@@ -496,13 +496,26 @@ class OrderCore extends ObjectModel
 	
 	public function getProductsDeliveryDetails()
 	{
-		return Db::getInstance()->executeS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'order_delivery` ody
-		LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.product_id = ody.product_id)
-		LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = ody.product_id)
-		LEFT JOIN `'._DB_PREFIX_.'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = ody.id_shop)
-		WHERE ody.`id_order` = ' . (int)($this->id));
+		$order_delivery = new OrderDelivery($this->id);
+		$delivery_ids = $order_delivery->getIds($this);
+		$details = array();
+
+		foreach($delivery_ids as $delivery_id) {
+			$detail = Db::getInstance()->executeS('
+			SELECT *, ody.id_order
+			FROM `'._DB_PREFIX_.'order_delivery_detail` odyd
+			LEFT JOIN `'._DB_PREFIX_.'order_delivery` ody ON (ody.delivery_id = odyd.delivery_id)
+			LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.product_id = odyd.product_id AND ody.id_order = od.id_order)
+			LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = odyd.product_id)
+			LEFT JOIN `'._DB_PREFIX_.'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = ' . $delivery_id['id_shop'] . ')
+			WHERE odyd.`delivery_id` = ' . $delivery_id['delivery_id']);
+			$nr = $order_delivery->getNrFromId($delivery_id['delivery_id']);
+			$details[$nr] = $detail;
+		}
+// 		echo('<pre>');
+// 		print_r($details);
+// 		echo('</pre><hr>');
+		return $details;
 	}
 
 	public function getFirstMessage()
@@ -605,10 +618,20 @@ class OrderCore extends ObjectModel
 			
 		$customized_datas = Product::getAllCustomizedDatas($this->id_cart);
 		$resultArray = array();
-		$newResultArray = array();
-		foreach($deliverd_products as $row)
+// 		$newResultArray = array();
+		foreach($deliverd_products as $k => $delivery_nr)
 		{
-			$row['product_quantity'] = $row['delivery_qty'];
+// 		echo('<pre>');
+// 		print_r($delivery_nr);
+// 		echo('</pre>');
+			foreach($delivery_nr as $row)
+			{
+				$row['delivery_nr'] = $k;
+// 				echo("loop");
+// 				echo('<pre>------');
+// 				print_r($row);
+// 				echo('-----</pre>');
+				
 			
 			// Change qty if selected
 			if ($selectedQty)
@@ -632,18 +655,27 @@ class OrderCore extends ObjectModel
 			$row['id_address_delivery'] = $this->id_address_delivery;
 			
 			/* store product */
-			$resultArray[(int)$row['id']] = $row;
+// 			$resultArray[(int)$row['id']] = $row;
+			$resultArray[$k][] = $row;
+			}
+// 			echo('<hr>');
 		}
 
 		if ($customized_datas)
-			Product::addCustomizationPrice($resultArray, $customized_datas);
+			foreach($resultArray as $array) {
+				Product::addCustomizationPrice($array, $customized_datas);
+			}
 
 		// move array to delivery
-		foreach($resultArray as $product) {
-				$newResultArray[$product['delivery_id']][] = $product;
-		}
+// 		foreach($resultArray as $product) {
+// 				$newResultArray[$product['delivery_id']][] = $product;
+// 		}
 		
-		return $newResultArray;
+// 		return $newResultArray;
+// 		echo('<pre>');
+// 		print_r($resultArray);
+// 		echo('</pre>');
+		return $resultArray;
 		
 	}
 	
@@ -1572,10 +1604,21 @@ class OrderCore extends ObjectModel
 		$invoices = $this->getInvoicesCollection()->getResults();
 		$delivery_slips = $this->getDeliverySlipsCollection()->getResults();
 		// @TODO review
+// 		$i = 0;
 		foreach ($delivery_slips as $delivery)
 		{
+			/* This needs to be rewritten to fit new delivery class.
+				if ads is true then there is no delivery_date
+				And this deliver_date should be added to order_delivery
+				delivery_date is the date that the last product was added to delivery.
+				also we need to retrive delivery_nr somehow. don't know if it is in $delivery
+				
+				AND then we also need to 
+			*/
+// 			$i++;
 			$delivery->is_delivery = true;
 			$delivery->date_add = $delivery->delivery_date;
+// 			$delivery->delivery_id = $i;
 		}
 		$order_slips = $this->getOrderSlipsCollection()->getResults();
 		if(Configuration::get('PS_ADS')) {
@@ -1678,11 +1721,24 @@ class OrderCore extends ObjectModel
 	 */
 	public function getDeliverySlipsCollection()
 	{
-		$order_invoices = new Collection('OrderInvoice');
-		$order_invoices->where('id_order', '=', $this->id);
-		$order_invoices->where('delivery_number', '!=', '0');
+	
+		if(Configuration::get('PS_ADS')) {
+			$order_delivery = new OrderDelivery();
+			$ads_deliverynr = $order_delivery->getMaxNr($this);
+			$order_invoices = new Collection('OrderDelivery');
+			$order_invoices->where('id_order', '=', $this->id);
+			echo('<pre>');
+			print_r($order_invoices);
+			echo('</pre>');
+		} else {
+			$order_invoices = new Collection('OrderInvoice');
+			$order_invoices->where('id_order', '=', $this->id);
+			$order_invoices->where('delivery_number', '!=', '0');
+		}
+		
 		return $order_invoices;
 	}
+	
 
 	/**
 	 * Get all not paid invoices for the current order
@@ -2011,7 +2067,7 @@ class OrderCore extends ObjectModel
 	}
 	
 	/**
-	 * Return number for next deliver box for ads
+	 * Return number for next delivery box for ads
 	 * 
 	 * @since 1.5.5.0
 	 */	
@@ -2020,8 +2076,8 @@ class OrderCore extends ObjectModel
 	{
 		$nr = Db::getInstance()->executeS('
 		SELECT MAX(delivery_id) as delivery_id
-		FROM `'._DB_PREFIX_.'order_delivery` ody
-		WHERE ody.`id_order` = ' . (int)$this->id);
+		FROM `'._DB_PREFIX_.'order_delivery_detail` odyd
+		WHERE odyd.`id_order` = ' . (int)$this->id);
 		$nr = $nr[0]['delivery_id'];
 		if($nr == "") { // if no number was found, then change to default 1
 			$nr = 1;
