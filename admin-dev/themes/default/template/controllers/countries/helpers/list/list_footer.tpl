@@ -23,48 +23,43 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 			</table>
-
-			{if !$simple_header && $list_total > 20}
 			<div class="row">
 				<div class="col-lg-8">
-					{if $bulk_actions}
-					<div>
-						{if $bulk_actions|count > 1}
-							<div class="form-group">
-								<div class="col-lg-6">
-									<select id="select_submitBulk" name="select_submitBulk">
-										{foreach $bulk_actions as $key => $params}
-										<option value="{$key}">{$params.text}</option>
-										{/foreach}
-									</select>
-								</div>
-								<div class="col-lg-6">
-									<input type="submit" class="btn btn-default" name="submitBulk" id="submitBulk" value="{l s='Apply'}" />
-								</div>
+				{if $bulk_actions}
+					{if $bulk_actions|count > 1}
+						<div class="form-group bulk-actions">
+							<div class="col-lg-6">
+								<select id="select_submitBulk" name="select_submitBulk">
+									{foreach $bulk_actions as $key => $params}
+									<option value="{$key}">{$params.text}</option>
+									{/foreach}
+								</select>
 							</div>
-						{else}
-							{foreach $bulk_actions as $key => $params}
-							<div class="form-group">
-								<div class="col-lg-6">
-								{if $key == 'affectzone'}
-									<select id="zone_to_affect" name="zone_to_affect">
-										{foreach $zones as $z}
-											<option value="{$z['id_zone']}">{$z['name']}</option>
-										{/foreach}
-									</select>
-								{/if}
-								</div>
-								<div class="col-lg-6">
-									<input type="submit" class="btn btn-default" name="submitBulk{$key}{$table}" value="{$params.text}" {if isset($params.confirm)}onclick="return confirm('{$params.confirm}');"{/if} />
-								</div>
+							<div class="col-lg-6">
+								<input type="submit" class="btn btn-default" name="submitBulk" id="submitBulk" value="{l s='Apply'}" />
 							</div>
-							{/foreach}
-						{/if}
-					</div>
+						</div>
+					{else}
+						{foreach $bulk_actions as $key => $params}
+						<div class="form-group bulk-actions">
+							<div class="col-lg-6">
+							{if $key == 'affectzone'}
+								<select id="zone_to_affect" name="zone_to_affect">
+									{foreach $zones as $z}
+										<option value="{$z['id_zone']}">{$z['name']}</option>
+									{/foreach}
+								</select>
+							{/if}
+							</div>
+							<div class="col-lg-6">
+								<input type="submit" class="btn btn-default" name="submitBulk{$key}{$table}" value="{$params.text}" {if isset($params.confirm)}onclick="return confirm('{$params.confirm}');"{/if} />
+							</div>
+						</div>
+						{/foreach}
 					{/if}
+				{/if}
 				</div>
-
-
+				{if !$simple_header && $list_total > 20}
 				<div class="col-lg-4">
 					{* Choose number of results per page *}
 					<span class="pagination">
@@ -136,9 +131,8 @@
 						});
 					</script>
 				</div>
+				{/if}
 			</div>
-			{/if}
-
 		</td>
 	</tr>
 </table>

@@ -24,9 +24,10 @@
 *}
 	</table>
 </div>
-
-	{if $bulk_actions}
-		<div class="btn-group">
+<div class="row">
+	<div class="col-lg-8">
+		{if $bulk_actions}
+		<div class="btn-group bulk-actions">
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 				{l s='Bulk actions'} <span class="caret"></span>
 			</button>
@@ -53,36 +54,82 @@
 			{/foreach}
 			</ul>
 		</div>
-	{/if}
-
+		{/if}
+	</div>
 	{if !$simple_header && $list_total > 20}
-	<div class="table-pagination pull-right">
-		<span>
-		{if $page > 1}
-			<input type="image" src="../img/admin/list-prev2.gif" onclick="getE('submitFilter{$table}').value=1"/>&nbsp;
-			<input type="image" src="../img/admin/list-prev.gif" onclick="getE('submitFilter{$table}').value={$page - 1}"/>
-		{/if}
-			{l s='Page'} <b>{$page}</b> / {$total_pages}
-		{if $page < $total_pages}
-			<input type="image" src="../img/admin/list-next.gif" onclick="getE('submitFilter{$table}').value={$page + 1}"/>&nbsp;
-			<input type="image" src="../img/admin/list-next2.gif" onclick="getE('submitFilter{$table}').value={$total_pages}"/>
-		{/if}
+	<div class="col-lg-4">
+		{* Choose number of results per page *}
+		<span class="pagination">
+			{l s='Display'}: 
+			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+				{$selected_pagination}
+				<i class="icon-caret-down"></i>
+			</button>
+			<ul class="dropdown-menu">
+			{foreach $pagination AS $value}
+				<li>
+					<a href="javascript:void(0);" class="pagination-items-page" data-items="{$value|intval}">{$value}</a>
+				</li>
+			{/foreach}
+			</ul>
+			/ {$list_total} {l s='result(s)'}
+			<input type="hidden" id="pagination-items-page" name="{$table}_pagination" value="{$selected_pagination|intval}" />
 		</span>
-
-		<span>
-			&nbsp;|&nbsp;
-			<label >{l s='Display'}</label>
-			<select class="filter fixed-width-xs" name="pagination" onchange="submit()">
-				{* Choose number of results per page *}
-				{foreach $pagination AS $value}
-					<option value="{$value|intval}"{if $selected_pagination == $value} selected="selected" {elseif $selected_pagination == NULL && $value == $pagination[1]} selected="selected2"{/if}>{$value|intval}</option>
-				{/foreach}
-			</select>
-		</span>
-		<span> / {$list_total} {l s='result(s)'}</span>
+		<script type="text/javascript">
+			$('.pagination-items-page').on('click',function(e){
+				e.preventDefault();
+				$('#pagination-items-page').val($(this).data("items")).closest("form").submit();
+			});
+		</script>
+		<ul class="pagination pull-right">
+			<li {if $page <= 1}class="disabled"{/if}>
+				<a href="javascript:void(0);" class="pagination-link" data-page="1">
+					<i class="icon-double-angle-left"></i>
+				</a>
+			</li>
+			<li {if $page <= 1}class="disabled"{/if}>
+				<a href="javascript:void(0);" class="pagination-link" data-page="{$page - 1}">
+					<i class="icon-angle-left"></i>
+				</a>
+			</li>
+			{assign p 0}
+			{while $p++ < $total_pages}
+				{if $p < $page-2}
+					<li class="disabled">
+						<a href="javascript:void(0);">&hellip;</a>
+					</li>
+					{assign p $page-3}
+				{else if $p > $page+2}
+					<li class="disabled">
+						<a href="javascript:void(0);">&hellip;</a>
+					</li>
+					{assign p $total_pages}
+				{else}
+					<li {if $p == $page}class="active"{/if}>
+						<a href="javascript:void(0);" class="pagination-link" data-page="{$p}">{$p}</a>
+					</li>
+				{/if}
+			{/while}
+			<li {if $page > $total_pages}class="disabled"{/if}>
+				<a href="javascript:void(0);" class="pagination-link" data-page="{$page + 1}">
+					<i class="icon-angle-right"></i>
+				</a>
+			</li>
+			<li {if $page > $total_pages}class="disabled"{/if}>
+				<a href="javascript:void(0);" class="pagination-link" data-page="{$total_pages}">
+					<i class="icon-double-angle-right"></i>
+				</a>
+			</li>
+		</ul>
+		<script type="text/javascript">
+			$('.pagination-link').on('click',function(e){
+				e.preventDefault();
+				$('#submitFilter'+'{$table}').val($(this).data("page")).closest("form").submit();
+			});
+		</script>
 	</div>
 	{/if}
-
+</div>
 
 
 {if !$simple_header}
