@@ -763,6 +763,11 @@ class AdminCarrierWizardControllerCore extends AdminController
 					$this->updateAssoShop((int)$new_carrier->id);
 					$this->duplicateLogo((int)$new_carrier->id, (int)$current_carrier->id);
 					$this->changeGroups((int)$new_carrier->id);
+					
+					//Copy default carrier
+					if (Configuration::get('PS_CARRIER_DEFAULT') == $current_carrier->id)
+						Configuration::updateValue('PS_CARRIER_DEFAULT', (int)$new_carrier->id);
+					
 					// Call of hooks
 					Hook::exec('actionCarrierUpdate', array(
 							'id_carrier' => (int)$current_carrier->id,
