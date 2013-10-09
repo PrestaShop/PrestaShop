@@ -1272,7 +1272,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
-		$helper->id = 'box-country';
+		$helper->id = 'box-translations';
 		$helper->icon = 'icon-list';
 		$helper->color = 'color3';
 		$helper->title = $this->l('Front Office Translations');

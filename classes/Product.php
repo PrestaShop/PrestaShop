@@ -3051,7 +3051,7 @@ class ProductCore extends ObjectModel
 			return array();
 			
 		if (!$res = Db::getInstance()->executeS('
-					SELECT pa.id_product, a.color, a.id_attribute, pac.id_product_attribute
+					SELECT pa.id_product, a.color, pac.id_product_attribute
 					FROM '._DB_PREFIX_.'product_attribute pa
 					'.Shop::addSqlAssociation('product_attribute', 'pa').'
 					JOIN '._DB_PREFIX_.'product_attribute_combination pac ON (pac.id_product_attribute = product_attribute_shop.id_product_attribute)
@@ -3068,7 +3068,7 @@ class ProductCore extends ObjectModel
 			if (Tools::isEmpty($row['color']))
 				continue;
 
-			$colors[(int)$row['id_product']][] = array('id_product_attribute' => (int)$row['id_product_attribute'], 'color' => $row['color']);
+			$colors[(int)$row['id_product']][] = array('id_product_attribute' => (int)$row['id_product_attribute'], 'color' => $row['color'], 'id_product' => $row['id_product']);
 		}
 		
 		return $colors;
@@ -5107,8 +5107,8 @@ class ProductCore extends ObjectModel
 		foreach ($attributes as &$a)
 		{
 			foreach ($a as &$b)
-				$b = str_replace('-', '_', Tools::link_rewrite($b));
-			$anchor .= '/'.$a['group'].'-'.$a['name'];
+				$b = str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'), '_', Tools::link_rewrite($b));
+			$anchor .= '/'.$a['group'].Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR').$a['name'];
 		}
 		return $anchor;
 	}

@@ -181,6 +181,15 @@ class AdminPPreferencesControllerCore extends AdminController
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
+					),
+					'PS_ATTRIBUTE_ANCHOR_SEPARATOR' => array(
+						'title' => $this->l('Separator of attribute anchor on the product links'),
+						'type' => 'select',
+						'list' => array(
+							array('id' => '-', 'name' => '-'),
+							array('id' => ',', 'name' => ','),
+						),
+						'identifier' => 'id'
 					)
 				)
 			),
