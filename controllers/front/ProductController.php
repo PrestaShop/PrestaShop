@@ -515,10 +515,14 @@ class ProductControllerCore extends FrontController
 		if (is_array($attributes_combinations) && count($attributes_combinations))
 			foreach ($attributes_combinations as &$ac)
 				foreach ($ac as &$val)
-					$val = str_replace('-', '_', Tools::link_rewrite(str_replace(array(',', '.'), '-', $val)));
+					$val = str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'), '_', Tools::link_rewrite(str_replace(array(',', '.'), '-', $val)));
 		else
 			$attributes_combinations = array();
-		$this->context->smarty->assign('attributesCombinations', $attributes_combinations);
+		$this->context->smarty->assign(array(
+			'attributesCombinations' =>  $attributes_combinations,
+			'attribute_anchor_separator' => Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR')
+			)
+		);
 	}
 
 	/**
