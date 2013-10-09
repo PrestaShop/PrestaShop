@@ -52,6 +52,14 @@ class AdminDashboardControllerCore extends AdminController
 			__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/nv.d3.css',
 		));
 	}
+
+	public function initPageHeaderToolbar()
+	{
+		parent::initPageHeaderToolbar();
+
+		$this->page_header_toolbar_title = $this->l('Dashboard');
+		$this->page_header_toolbar_btn = array();
+	}
 	
 	protected function getOptionFields()
 	{
