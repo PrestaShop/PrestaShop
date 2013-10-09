@@ -67,10 +67,10 @@
 				<span class="title">{l s='Date'}<br /><small>sous-titre</small></span>
 				<span class="value">{dateFormat date=$order->date_add full=false}</span>
 			</div>
-			<div class="col-lg-3 box-stats color1" >
+			<div class="col-lg-3 box-stats color2" >
 				<i class="icon-comments"></i>
 				<span class="title">{l s='Messages'}<br /><small>sous-titre</small></span>
-				<span class="value">{sizeof($messages)}</span>
+				<!-- <span class="value">{sizeof($messages)}</span> -->
 				<span class="value"><a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'htmlall':'UTF-8'}">{sizeof($customer_thread_message)}</a></span>
 			</div>
 			<div class="col-lg-3 box-stats color1" >
@@ -97,7 +97,7 @@
 						<i class="icon-chevron-left"></i>
 						{l s='Prev'}
 						</a>
-					{l s='Order'} : <strong>{$order->reference}</strong>
+					{l s='Order'} : <strong>#{$order->id} - {$order->reference}</strong>
 					<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$nextOrder}" {if !$nextOrder}disabled{/if}>
 						{l s='Next'}
 						<i class="icon-chevron-right"></i>

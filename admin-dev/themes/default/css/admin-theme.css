@@ -8268,7 +8268,7 @@ tr.highlighted td {
 /* line 649, admin-theme.sass */
 .tree i {
   font-size: 1.3em; }
-/* line 653, admin-theme.sass */
+/* line 651, admin-theme.sass */
 .tree .tree-item-name, .tree .tree-folder-name {
   padding: 0 5px;
   -webkit-border-radius: 6px;
@@ -8277,17 +8277,17 @@ tr.highlighted td {
   -o-border-radius: 6px;
   border-radius: 6px;
   font-weight: normal; }
-/* line 657, admin-theme.sass */
+/* line 655, admin-theme.sass */
 .tree .tree-item-name:hover, .tree .tree-folder-name:hover {
   background-color: #eeeeee;
   cursor: pointer; }
-/* line 660, admin-theme.sass */
+/* line 658, admin-theme.sass */
 .tree .tree-selected {
   background-color: #a4dcf5; }
-/* line 662, admin-theme.sass */
+/* line 660, admin-theme.sass */
 .tree .tree-selected i.tree-dot {
   background-color: #1ba6e5; }
-/* line 664, admin-theme.sass */
+/* line 662, admin-theme.sass */
 .tree i.tree-dot {
   display: inline-block;
   position: relative;
@@ -8300,60 +8300,61 @@ tr.highlighted td {
   -ms-border-radius: 6px;
   -o-border-radius: 6px;
   border-radius: 6px; }
-/* line 672, admin-theme.sass */
+/* line 670, admin-theme.sass */
 .tree .tree-item-disable, .tree .tree-folder-name-disable {
   color: #cccccc; }
-/* line 674, admin-theme.sass */
+/* line 672, admin-theme.sass */
 .tree .tree-item-disable:hover, .tree .tree-folder-name-disable:hover {
   color: #cccccc;
   background-color: none; }
 
-/* line 678, admin-theme.sass */
+/* line 676, admin-theme.sass */
 .nav-tabs {
   border-bottom: none; }
-/* line 680, admin-theme.sass */
+/* line 678, admin-theme.sass */
 .nav-tabs li a {
-  font-size: 1.2em;
+  font-size: 1.1em;
+  font-family: "Ubuntu", sans-serif;
   text-transform: uppercase;
   font-weight: 300; }
-/* line 685, admin-theme.sass */
+/* line 684, admin-theme.sass */
 .nav-tabs li.active a, .nav-tabs li.active a:hover {
   background-color: white; }
 
-/* line 688, admin-theme.sass */
+/* line 687, admin-theme.sass */
 .tree-actions {
   padding-bottom: 4px;
   display: inline-block; }
 
-/* line 693, admin-theme.sass */
+/* line 692, admin-theme.sass */
 .tt-query {
   border-bottom-right-radius: 3px !important;
   border-top-right-radius: 3px !important; }
 
-/* line 695, admin-theme.sass */
+/* line 694, admin-theme.sass */
 .tt-dropdown-menu {
   background-color: white;
   border: solid 1px #cccccc;
   font-size: 0.9em;
   text-transform: none; }
 
-/* line 700, admin-theme.sass */
+/* line 699, admin-theme.sass */
 .tt-suggestions {
   padding: 0 6px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0 1px 4px;
   box-shadow: rgba(0, 0, 0, 0.25) 0 1px 4px; }
 
-/* line 703, admin-theme.sass */
+/* line 702, admin-theme.sass */
 .tt-suggestion p {
   border-bottom: solid 1px #cccccc;
   margin: 0 !important;
   padding: 0 !important; }
 
-/* line 707, admin-theme.sass */
+/* line 706, admin-theme.sass */
 .tt-suggestion:last-child p {
   border-bottom: none; }
 
-/* line 711, admin-theme.sass */
+/* line 710, admin-theme.sass */
 .tagify-container {
   background-color: white;
   padding: 2px 6px;
@@ -8367,10 +8368,10 @@ tr.highlighted td {
   border: solid 1px #cccccc;
   -webkit-box-shadow: rgba(0, 0, 0, 0.075) 0 1px 1px inset;
   box-shadow: rgba(0, 0, 0, 0.075) 0 1px 1px inset; }
-/* line 719, admin-theme.sass */
+/* line 718, admin-theme.sass */
 .tagify-container span {
   float: left; }
-/* line 721, admin-theme.sass */
+/* line 720, admin-theme.sass */
 .tagify-container > span {
   display: inline-block;
   padding: 3px 5px;
@@ -8379,26 +8380,26 @@ tr.highlighted td {
   border: 1px solid #1ba6e5;
   background-color: #60c1ed;
   color: white; }
-/* line 729, admin-theme.sass */
+/* line 728, admin-theme.sass */
 .tagify-container > span > a {
   padding-left: 5px;
   color: #1ba6e5;
   text-decoration: none;
   font-weight: bold; }
-/* line 734, admin-theme.sass */
+/* line 733, admin-theme.sass */
 .tagify-container > input {
   margin-top: 2px;
   border: 0 none;
   width: 100px;
   -webkit-box-shadow: none;
   box-shadow: none; }
-/* line 739, admin-theme.sass */
+/* line 738, admin-theme.sass */
 .tagify-container > input:focus {
   outline: 0;
   -webkit-box-shadow: none;
   box-shadow: none; }
 
-/* line 744, admin-theme.sass */
+/* line 743, admin-theme.sass */
 li.sortable-placeholder {
   border: 1px dashed #cccccc;
   background-color: #bbbbbb;
