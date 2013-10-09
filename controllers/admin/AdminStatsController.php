@@ -504,7 +504,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				else
 				{
 					$country = new Country($row['id_country'], $this->context->language->id);
-					$value = sprintf($this->l('%.1f%% %s'), $row['orders'], $country->name);
+					$value = sprintf($this->l('%d%% %s'), $row['orders'], $country->name);
 				}
 
 				ConfigurationKPI::updateValue('MAIN_COUNTRY', array($this->context->language->id => $value));				
