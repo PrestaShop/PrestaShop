@@ -369,8 +369,9 @@ class AdminControllerCore extends Controller
 			if (!empty($prev) && $prev == $tab['name'])
 				array_pop($this->breadcrumbs);
 			$prev = $tab['name'];
-			if ($tab['id_parent'] != 0)
-				$this->breadcrumbs[] = '<a href="'.Tools::htmlentitiesUTF8($this->context->link->getAdminLink($tab['class_name'])).'">'.$tab['name'].'</a>';
+
+			if ($tab['id_parent'] != 0 && ($link = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_ ).'/'.$this->context->link->getAdminLink($tab['class_name'])) != $_SERVER['REQUEST_URI'])
+				$this->breadcrumbs[] = '<a href="'.Tools::htmlentitiesUTF8($link).'">'.$tab['name'].'</a>';
 			else
 				$this->breadcrumbs[] = $tab['name'];
 		}
