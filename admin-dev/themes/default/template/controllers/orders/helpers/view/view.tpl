@@ -133,6 +133,24 @@
 						<i class="icon-print"></i>
 						{l s='Print order'}
 					</a>
+					{if Configuration::get('PS_ORDER_RETURN')}
+					<a class="btn btn-default" id="desc-order-standard_refund" href="">
+						<i class="icon-exchange"></i>
+						{if $order->hasBeenShipped()}
+							{l s='Return products'}
+						{elseif $order->hasBeenPaid()}
+							{l s='Standard refund'}
+						{else}
+							{l s='Cancel products'}
+						{/if}
+					</a>
+					{/if}
+					{if $order->hasInvoice()}
+					<a class="btn btn-default" id="desc-order-partial_refund" href="">
+						<i class="icon-exchange"></i>
+						{l s='Partial refund'}
+					</a>
+					{/if}
 				</div>
 				<!-- Tab nav -->
 				<ul class="nav nav-tabs" id="tabOrder">
