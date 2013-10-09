@@ -168,9 +168,9 @@ class OrderDetailControllerCore extends FrontController
 				$this->context->smarty->assign(array(
 					'shop_name' => strval(Configuration::get('PS_SHOP_NAME')),
 					'order' => $order,
-					'return_allowed' => (int)($order->isReturnable()),
+					'return_allowed' => (int)$order->isReturnable(),
 					'currency' => new Currency($order->id_currency),
-					'order_state' => (int)($id_order_state),
+					'order_state' => (int)$id_order_state,
 					'invoiceAllowed' => (int)(Configuration::get('PS_INVOICE')),
 					'invoice' => (OrderState::invoiceAvailable($id_order_state) && count($order->getInvoicesCollection())),
 					'order_history' => $order->getHistory($this->context->language->id, false, true),
