@@ -1253,7 +1253,8 @@ class AdminOrdersControllerCore extends AdminController
 
 		$helper = new HelperKpi();
 		$helper->id = 'box-conversion-rate';
-		$helper->chart = true;
+		$helper->icon = 'icon-sort-by-attributes-alt';
+		//$helper->chart = true;
 		$helper->color = 'color1';
 		$helper->title = $this->l('Conversion Rate');
 		$helper->subtitle = $this->l('30 days');
@@ -1271,6 +1272,7 @@ class AdminOrdersControllerCore extends AdminController
 		$helper->color = 'color2';
 		$helper->title = $this->l('Abandoned Carts');
 		$helper->subtitle = $this->l('Today');
+		$helper->href = $this->context->link->getAdminLink('AdminCarts');
 		if (ConfigurationKPI::get('ABANDONED_CARTS') !== false)
 			$helper->value = ConfigurationKPI::get('ABANDONED_CARTS');
 		if (ConfigurationKPI::get('ABANDONED_CARTS_EXPIRE') < $time)

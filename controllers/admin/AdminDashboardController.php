@@ -33,7 +33,7 @@ class AdminDashboardControllerCore extends AdminController
 
 		parent::__construct();
 		
-		if (Tools::isSubmit('profitability_conf') || Tools::isSubmit('submitOptions'))
+		if (Tools::isSubmit('profitability_conf') || Tools::isSubmit('submitOptionsconfiguration'))
 			$this->fields_options = $this->getOptionFields();
 	}
 
