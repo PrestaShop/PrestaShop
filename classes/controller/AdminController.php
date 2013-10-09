@@ -1137,6 +1137,11 @@ class AdminControllerCore extends Controller
 				break;
 			case 'add':
 			case 'edit':
+				// Default save button - action dynamically handled in javascript
+				$this->page_header_toolbar_btn['save'] = array(
+					'href' => '#',
+					'desc' => $this->l('Save')
+				);
 				// Default cancel button - like old back link
 				$back = Tools::safeOutput(Tools::getValue('back', ''));
 				if (empty($back))
@@ -1149,6 +1154,12 @@ class AdminControllerCore extends Controller
 						'desc' => $this->l('Cancel')
 					);
 				break;
+			case 'options':
+				// Default save button - action dynamically handled in javascript
+				$this->page_header_toolbar_btn['save'] = array(
+					'href' => '#',
+					'desc' => $this->l('Save')
+				);
 		}
 
 		if (is_array($this->page_header_toolbar_btn)
