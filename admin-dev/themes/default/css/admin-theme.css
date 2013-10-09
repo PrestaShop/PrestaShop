@@ -1,4 +1,4 @@
-/*!
+/*
  * Bootstrap v3.0.0
  *
  * Copyright 2013 Twitter, Inc
@@ -7,7 +7,7 @@
  *
  * Designed and built with all the love in the world by @mdo and @fat.
  */
-/*! normalize.css v2.1.0 | MIT License | git.io/normalize */
+/* normalize.css v2.1.0 | MIT License | git.io/normalize */
 /* line 22, ../bower_components/sass-bootstrap/lib/_normalize.scss */
 article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {
   display: block; }
@@ -5717,7 +5717,7 @@ th.visible-print, td.visible-print {
   /* line 523, ../bower_components/sass-bootstrap/lib/_mixins.scss */
   th.hidden-print, td.hidden-print {
     display: none !important; } }
-/*!
+/*
  *  Font Awesome 3.2.1
  *  the iconic font designed for Bootstrap
  *  ------------------------------------------------------------------------------
@@ -7558,46 +7558,54 @@ html, body {
   padding: 9px 5px; }
 /* line 24, admin-theme.sass */
 #header_notifs_icon_wrapper > li > a > i {
-  font-size: 1.2em;
-  color: white; }
-/* line 27, admin-theme.sass */
+  font-size: 1.4em;
+  color: white;
+  vertical-align: middle; }
+/* line 28, admin-theme.sass */
 #header_notifs_icon_wrapper .notifs_badge {
   background-color: #8bc954; }
-/* line 30, admin-theme.sass */
+/* line 31, admin-theme.sass */
 #header_notifs_icon_wrapper .notifs_dropdown {
   background-color: transparent;
   border: none;
   box-shadow: none; }
-/* line 34, admin-theme.sass */
+/* line 35, admin-theme.sass */
 #header_notifs_icon_wrapper .notifs_panel {
   width: 300px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.5) 2px 2px 8px;
   box-shadow: rgba(0, 0, 0, 0.5) 2px 2px 8px; }
-/* line 41, admin-theme.sass */
+/* line 42, admin-theme.sass */
 #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header h3, #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header #content .panel-heading, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .panel-heading, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .notifs_panel_header, #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header #content .notifs_panel_header, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header .notifs_panel_header {
   padding: 0;
   font-size: 1.3em;
   margin: 0; }
 
-/* line 48, admin-theme.sass */
+/* line 49, admin-theme.sass */
 #header_nav_toggle {
   background-color: black;
   border: none;
   color: white; }
 
-/* line 56, admin-theme.sass */
+/* line 57, admin-theme.sass */
+#header_employee_box a img {
+  margin-right: 5px; }
+/* line 59, admin-theme.sass */
+#header_employee_box #header_foaccess i {
+  font-size: 1.2em; }
+
+/* line 61, admin-theme.sass */
 #header_search {
   width: 130px;
   padding: 0 0 0 10px; }
 @media (max-width: 768px) {
-  /* line 56, admin-theme.sass */
+  /* line 61, admin-theme.sass */
   #header_search {
     width: 100%; } }
-/* line 63, admin-theme.sass */
+/* line 68, admin-theme.sass */
 #header_search input, #header_search .form-group, #header_search fieldset > .row, #header_search #dashboard fieldset > .data_list_vertical, #dashboard #header_search fieldset > .data_list_vertical {
   margin: 0; }
 
-/* line 70, admin-theme.sass */
+/* line 75, admin-theme.sass */
 #main {
   min-height: 100%;
   padding: 36px 0 60px;
@@ -7605,7 +7613,7 @@ html, body {
   background-color: #f8f8f8;
   background-image: url("../img/patterns/bedge_grunge.png"); }
 
-/* line 77, admin-theme.sass */
+/* line 82, admin-theme.sass */
 #content {
   padding: 80px 20px 0;
   margin-left: 240px;
@@ -7619,7 +7627,7 @@ html, body {
   -moz-transition-timing-function: ease-out;
   -o-transition-timing-function: ease-out;
   transition-timing-function: ease-out; }
-/* line 83, admin-theme.sass */
+/* line 88, admin-theme.sass */
 #content fieldset, #content .panel, #content #header_notifs_icon_wrapper .notifs_panel, #header_notifs_icon_wrapper #content .notifs_panel, #content #dash_version {
   padding: 20px;
   margin-bottom: 20px;
@@ -7632,7 +7640,7 @@ html, body {
   border-radius: 5px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0 2px 0, white 0 0 0 3px inset;
   box-shadow: rgba(0, 0, 0, 0.1) 0 2px 0, white 0 0 0 3px inset; }
-/* line 92, admin-theme.sass */
+/* line 97, admin-theme.sass */
 #content h3:not(.modal-title), #content .panel-heading:not(.modal-title), #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title), #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title), #content .panel-heading, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header {
   border: none;
   padding: 0 5px;
@@ -7644,10 +7652,10 @@ html, body {
   text-transform: uppercase;
   background-color: white;
   border-bottom: solid 1px #cccccc; }
-/* line 104, admin-theme.sass */
+/* line 109, admin-theme.sass */
 #content h3:not(.modal-title) i, #content .panel-heading:not(.modal-title) i, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) i, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) i, #content h3:not(.modal-title) a, #content .panel-heading:not(.modal-title) a, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) a, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) a, #content .panel-heading i, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header i, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header i, #content .panel-heading a, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header a, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header a {
   color: contrasted(#e6e8e3); }
-/* line 106, admin-theme.sass */
+/* line 111, admin-theme.sass */
 #content h3:not(.modal-title) .badge, #content .panel-heading:not(.modal-title) .badge, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) .badge, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) .badge, #content h3:not(.modal-title) #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper #content h3:not(.modal-title) .notifs_badge, #content .panel-heading:not(.modal-title) #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper #content .panel-heading:not(.modal-title) .notifs_badge, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) .notifs_badge, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) .notifs_badge, #content .panel-heading .badge, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .badge, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header .badge, #content .panel-heading #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper #content .panel-heading .notifs_badge, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .notifs_badge, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header .notifs_badge {
   background-color: white;
   -webkit-border-radius: none;
@@ -7662,42 +7670,42 @@ html, body {
   font-weight: 300;
   float: left;
   margin-left: -5px; }
-/* line 116, admin-theme.sass */
+/* line 121, admin-theme.sass */
 #content h3:not(.modal-title) .panel-heading-action, #content .panel-heading:not(.modal-title) .panel-heading-action, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) .panel-heading-action, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) .panel-heading-action, #content .panel-heading .panel-heading-action, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .panel-heading-action, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header .panel-heading-action {
   margin-right: -5px; }
-/* line 119, admin-theme.sass */
-#content h3:not(.modal-title) .panel-heading-action a.list-tooolbar-btn, #content .panel-heading:not(.modal-title) .panel-heading-action a.list-tooolbar-btn, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) .panel-heading-action a.list-tooolbar-btn, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) .panel-heading-action a.list-tooolbar-btn, #content .panel-heading .panel-heading-action a.list-tooolbar-btn, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .panel-heading-action a.list-tooolbar-btn, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header .panel-heading-action a.list-tooolbar-btn {
+/* line 124, admin-theme.sass */
+#content h3:not(.modal-title) .panel-heading-action a.list-toolbar-btn, #content .panel-heading:not(.modal-title) .panel-heading-action a.list-toolbar-btn, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) .panel-heading-action a.list-toolbar-btn, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) .panel-heading-action a.list-toolbar-btn, #content .panel-heading .panel-heading-action a.list-toolbar-btn, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .panel-heading-action a.list-toolbar-btn, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header .panel-heading-action a.list-toolbar-btn {
   float: left;
   height: 30px;
   width: 30px;
   color: #1ba6e5;
   border-left: solid 1px #cccccc; }
-/* line 125, admin-theme.sass */
-#content h3:not(.modal-title) .panel-heading-action a.list-tooolbar-btn:hover, #content .panel-heading:not(.modal-title) .panel-heading-action a.list-tooolbar-btn:hover, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) .panel-heading-action a.list-tooolbar-btn:hover, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) .panel-heading-action a.list-tooolbar-btn:hover, #content .panel-heading .panel-heading-action a.list-tooolbar-btn:hover, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .panel-heading-action a.list-tooolbar-btn:hover, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header .panel-heading-action a.list-tooolbar-btn:hover {
+/* line 130, admin-theme.sass */
+#content h3:not(.modal-title) .panel-heading-action a.list-toolbar-btn:hover, #content .panel-heading:not(.modal-title) .panel-heading-action a.list-toolbar-btn:hover, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) .panel-heading-action a.list-toolbar-btn:hover, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) .panel-heading-action a.list-toolbar-btn:hover, #content .panel-heading .panel-heading-action a.list-toolbar-btn:hover, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .panel-heading-action a.list-toolbar-btn:hover, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header .panel-heading-action a.list-toolbar-btn:hover {
   text-decoration: none;
   color: black; }
-/* line 128, admin-theme.sass */
-#content h3:not(.modal-title) .panel-heading-action a.list-tooolbar-btn i, #content .panel-heading:not(.modal-title) .panel-heading-action a.list-tooolbar-btn i, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) .panel-heading-action a.list-tooolbar-btn i, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) .panel-heading-action a.list-tooolbar-btn i, #content .panel-heading .panel-heading-action a.list-tooolbar-btn i, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .panel-heading-action a.list-tooolbar-btn i, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header .panel-heading-action a.list-tooolbar-btn i {
+/* line 133, admin-theme.sass */
+#content h3:not(.modal-title) .panel-heading-action a.list-toolbar-btn i, #content .panel-heading:not(.modal-title) .panel-heading-action a.list-toolbar-btn i, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) .panel-heading-action a.list-toolbar-btn i, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) .panel-heading-action a.list-toolbar-btn i, #content .panel-heading .panel-heading-action a.list-toolbar-btn i, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .panel-heading-action a.list-toolbar-btn i, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header .panel-heading-action a.list-toolbar-btn i {
   text-align: center;
-  font-size: 1.2em;
+  font-size: 1.3em;
   line-height: 30px; }
-/* line 132, admin-theme.sass */
+/* line 137, admin-theme.sass */
 #content .panel-danger .panel-heading, #content .panel-danger #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header, #header_notifs_icon_wrapper .notifs_panel #content .panel-danger .notifs_panel_header {
   background-color: #8bc954 !important; }
-/* line 134, admin-theme.sass */
+/* line 139, admin-theme.sass */
 #content .panel-heading-big {
   font-size: 2em;
   text-align: center; }
-/* line 137, admin-theme.sass */
+/* line 142, admin-theme.sass */
 #content form .alert, #content form #carrier_wizard .wizard_error, #carrier_wizard #content form .wizard_error {
   clear: both; }
 @media (max-width: 768px) {
-  /* line 77, admin-theme.sass */
+  /* line 82, admin-theme.sass */
   #content {
     margin-left: 0;
     width: 100%; } }
 
-/* line 144, admin-theme.sass */
+/* line 149, admin-theme.sass */
 .page-head {
   width: 100%;
   height: 55px;
@@ -7711,28 +7719,28 @@ html, body {
   background-color: #8fc04d;
   -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0 7px 0;
   box-shadow: rgba(0, 0, 0, 0.15) 0 7px 0; }
-/* line 156, admin-theme.sass */
+/* line 161, admin-theme.sass */
 .page-head h2.page-title {
   padding: 0 0 0 260px;
   font-size: 18px;
   color: white;
   text-transform: uppercase; }
 @media (max-width: 768px) {
-  /* line 156, admin-theme.sass */
+  /* line 161, admin-theme.sass */
   .page-head h2.page-title {
     padding: 0 0 0 20px; } }
-/* line 164, admin-theme.sass */
+/* line 169, admin-theme.sass */
 .page-head .btn-toolbar {
   margin: 0;
   padding: 3px 0 0 0; }
-/* line 167, admin-theme.sass */
+/* line 172, admin-theme.sass */
 .page-head .btn-toolbar .nav-tabs {
   margin: 0; }
-/* line 169, admin-theme.sass */
+/* line 174, admin-theme.sass */
 .page-head .btn-toolbar .nav-tabs > li > a {
   color: #333333; }
 
-/* line 173, admin-theme.sass */
+/* line 178, admin-theme.sass */
 .toolbar_btn {
   position: relative;
   padding: 2px 5px !important;
@@ -7742,13 +7750,13 @@ html, body {
   color: white;
   text-align: center;
   text-shadow: none; }
-/* line 182, admin-theme.sass */
+/* line 187, admin-theme.sass */
 .toolbar_btn:hover {
   color: #8fc04d;
   border-color: white;
   background-color: white !important; }
 
-/* line 187, admin-theme.sass */
+/* line 192, admin-theme.sass */
 [class^="process-icon-"], [class*=" process-icon-"] {
   height: 25px;
   min-width: 32px;
@@ -7764,20 +7772,20 @@ html, body {
   -webkit-font-smoothing: antialiased;
   *margin-right: 0.3em; }
 
-/* line 259, admin-theme.sass */
+/* line 264, admin-theme.sass */
 .navbar-inner {
   box-shadow: none !important; }
-/* line 261, admin-theme.sass */
+/* line 266, admin-theme.sass */
 .navbar-inner .input-append {
   margin-bottom: 0; }
 
-/* line 265, admin-theme.sass */
+/* line 270, admin-theme.sass */
 label.control-label {
   font-size: 13px;
   font-weight: normal;
   color: #666666; }
 
-/* line 270, admin-theme.sass */
+/* line 275, admin-theme.sass */
 label.control-label span.label-tooltip {
   text-decoration: none;
   font-size: 13px;
@@ -7791,11 +7799,11 @@ label.control-label span.label-tooltip {
   -o-border-radius: 3px;
   border-radius: 3px; }
 
-/* line 279, admin-theme.sass */
+/* line 284, admin-theme.sass */
 .tooltip {
   font-size: 12px; }
 
-/* line 282, admin-theme.sass */
+/* line 287, admin-theme.sass */
 label.required:before {
   content: "*";
   color: red;
@@ -7803,44 +7811,44 @@ label.required:before {
   position: relative;
   line-height: 12px; }
 
-/* line 289, admin-theme.sass */
+/* line 294, admin-theme.sass */
 select.input-tiny, input[type="text"].input-tiny, input[type="password"].input-tiny {
   width: 80px;
   float: left; }
 
-/* line 295, admin-theme.sass */
+/* line 300, admin-theme.sass */
 td.actions {
   min-width: 200px; }
 
-/* line 297, admin-theme.sass */
+/* line 302, admin-theme.sass */
 .dropdown-menu {
   text-align: left; }
 
-/* line 299, admin-theme.sass */
+/* line 304, admin-theme.sass */
 .btn-group-action {
   float: right; }
-/* line 301, admin-theme.sass */
+/* line 306, admin-theme.sass */
 .btn-group-action a {
   text-decoration: none; }
 
-/* line 304, admin-theme.sass */
+/* line 309, admin-theme.sass */
 .btn {
   text-transform: uppercase; }
-/* line 306, admin-theme.sass */
+/* line 311, admin-theme.sass */
 .btn .caret {
   border-top-color: #333333 !important; }
-/* line 309, admin-theme.sass */
+/* line 314, admin-theme.sass */
 .btn:hover .caret, .btn:focus .caret {
   border-top-color: white !important; }
-/* line 311, admin-theme.sass */
+/* line 316, admin-theme.sass */
 .btn.btn-default {
   -webkit-box-shadow: #e6e6e6 0 -2px 0 inset;
   box-shadow: #e6e6e6 0 -2px 0 inset; }
-/* line 314, admin-theme.sass */
+/* line 319, admin-theme.sass */
 .btn.btn-primary {
   -webkit-box-shadow: #c7e6c7 0 -2px 0 inset;
   box-shadow: #c7e6c7 0 -2px 0 inset; }
-/* line 317, admin-theme.sass */
+/* line 322, admin-theme.sass */
 .btn.btn-default[disabled] {
   border-color: #999999;
   color: #999999;
@@ -7848,22 +7856,22 @@ td.actions {
   -webkit-box-shadow: #cccccc 0 -2px 0 inset;
   box-shadow: #cccccc 0 -2px 0 inset; }
 
-/* line 323, admin-theme.sass */
+/* line 328, admin-theme.sass */
 hr {
   border-color: #dfdfdf;
   border-bottom: 1px solid white; }
 
-/* line 328, admin-theme.sass */
+/* line 333, admin-theme.sass */
 .table {
   border-collapse: separate;
-  border-spacing: 0 2px;
+  border-spacing: 0 2px 0 0;
   margin-bottom: 5px; }
-/* line 334, admin-theme.sass */
+/* line 339, admin-theme.sass */
 .table thead > tr > th {
   border: none;
   font-weight: normal;
   vertical-align: top; }
-/* line 338, admin-theme.sass */
+/* line 343, admin-theme.sass */
 .table thead > tr > th span.title_box {
   color: black;
   font-size: 1.1em;
@@ -7871,73 +7879,73 @@ hr {
   display: block;
   word-wrap: nowrap;
   white-space: nowrap; }
-/* line 345, admin-theme.sass */
+/* line 350, admin-theme.sass */
 .table thead > tr > th span.title_box.active {
   font-weight: bold; }
-/* line 347, admin-theme.sass */
+/* line 352, admin-theme.sass */
 .table thead > tr > th span.title_box a {
   text-decoration: none; }
-/* line 349, admin-theme.sass */
+/* line 354, admin-theme.sass */
 .table thead > tr > th span.title_box a.active {
   color: black; }
-/* line 351, admin-theme.sass */
+/* line 356, admin-theme.sass */
 .table input, .table select {
   margin: 0; }
-/* line 353, admin-theme.sass */
+/* line 358, admin-theme.sass */
 .table tbody > tr > td {
   border-top: none;
   background-color: white; }
-/* line 356, admin-theme.sass */
+/* line 361, admin-theme.sass */
 .table tbody > tr > td {
   padding: 3px 7px;
   vertical-align: middle;
   word-wrap: nowrap;
   font-size: 12px;
   border-bottom: solid 1px #eeeeee; }
-/* line 363, admin-theme.sass */
+/* line 368, admin-theme.sass */
 .table td.center, .table th.center {
   text-align: center; }
-/* line 365, admin-theme.sass */
+/* line 370, admin-theme.sass */
 .table tr td:first-child, .table tr th:first-child {
   border-top-left-radius: 3px;
   border-bottom-left-radius: 3px; }
-/* line 368, admin-theme.sass */
+/* line 373, admin-theme.sass */
 .table tr td:last-child, .table tr th:last-child {
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px; }
 
-/* line 373, admin-theme.sass */
+/* line 378, admin-theme.sass */
 tr.filter {
   background-color: #dfeff8; }
-/* line 375, admin-theme.sass */
+/* line 380, admin-theme.sass */
 tr.filter input[type="text"].filter, tr.filter input[type="password"].filter, tr.filter select.filter {
   font-size: 12px;
   border-color: #a0d0eb; }
 
-/* line 379, admin-theme.sass */
+/* line 384, admin-theme.sass */
 .breadcrumb {
   background-color: white; }
 
-/* line 382, admin-theme.sass */
+/* line 387, admin-theme.sass */
 .badge, #header_notifs_icon_wrapper .notifs_badge, .badge.badge-success, .badge.badge-error {
   background-color: #8fc04d; }
-/* line 384, admin-theme.sass */
+/* line 389, admin-theme.sass */
 #header_notifs_icon_wrapper .badge-success.notifs_badge, .badge-success.badge {
   background-color: #5cb85c; }
-/* line 387, admin-theme.sass */
+/* line 392, admin-theme.sass */
 #header_notifs_icon_wrapper .badge-error.notifs_badge, .badge-error.badge {
   background-color: #d9534f; }
 
-/* line 391, admin-theme.sass */
+/* line 396, admin-theme.sass */
 .row-margin-bottom {
   margin-bottom: 15px; }
 
-/* line 394, admin-theme.sass */
+/* line 399, admin-theme.sass */
 .icon-big {
   font-size: 4em;
   color: #c5c5c5; }
 
-/* line 399, admin-theme.sass */
+/* line 404, admin-theme.sass */
 #module-list h3, #module-list #content .panel-heading, #content #module-list .panel-heading, #module-list #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header, #content #header_notifs_icon_wrapper .notifs_panel #module-list .notifs_panel_header, #module-list #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header, #header_notifs_icon_wrapper .notifs_panel #content #module-list .notifs_panel_header {
   position: relative;
   top: 0;
@@ -7948,7 +7956,7 @@ tr.filter input[type="text"].filter, tr.filter input[type="password"].filter, tr
   color: #515561;
   font-weight: 500; }
 
-/* line 409, admin-theme.sass */
+/* line 414, admin-theme.sass */
 #footer {
   z-index: 600;
   min-height: 60px;
@@ -7957,13 +7965,13 @@ tr.filter input[type="text"].filter, tr.filter input[type="password"].filter, tr
   padding: 15px 0 0 0;
   background-color: #242424;
   color: #888888; }
-/* line 417, admin-theme.sass */
+/* line 422, admin-theme.sass */
 #footer a {
   color: #cccccc; }
-/* line 420, admin-theme.sass */
+/* line 425, admin-theme.sass */
 #footer a.link-social:hover {
   text-decoration: none; }
-/* line 422, admin-theme.sass */
+/* line 427, admin-theme.sass */
 #footer a.link-social i {
   font-size: 2em;
   width: 30px;
@@ -7976,23 +7984,23 @@ tr.filter input[type="text"].filter, tr.filter input[type="password"].filter, tr
   -ms-border-radius: 30px;
   -o-border-radius: 30px;
   border-radius: 30px; }
-/* line 430, admin-theme.sass */
+/* line 435, admin-theme.sass */
 #footer .link-twitter i {
   color: white;
   background-color: #7cceef; }
-/* line 433, admin-theme.sass */
+/* line 438, admin-theme.sass */
 #footer .link-facebook i {
   color: white;
   background-color: #557dbb; }
-/* line 436, admin-theme.sass */
+/* line 441, admin-theme.sass */
 #footer .link-github i {
   color: black;
   background-color: white; }
-/* line 439, admin-theme.sass */
+/* line 444, admin-theme.sass */
 #footer .link-google i {
   color: white;
   background-color: #e6644e; }
-/* line 442, admin-theme.sass */
+/* line 447, admin-theme.sass */
 #footer #go-top {
   position: fixed;
   bottom: 10px;
@@ -8010,46 +8018,46 @@ tr.filter input[type="text"].filter, tr.filter input[type="password"].filter, tr
   cursor: pointer;
   font-size: 16px;
   background-color: rgba(0, 0, 0, 0.5); }
-/* line 459, admin-theme.sass */
+/* line 464, admin-theme.sass */
 #footer #go-top:hover {
   background-color: black; }
 
-/* line 462, admin-theme.sass */
+/* line 467, admin-theme.sass */
 #nobootstrap {
   float: left; }
 
-/* line 468, admin-theme.sass */
+/* line 473, admin-theme.sass */
 .fixed-width-xs {
   width: 40px !important; }
 
-/* line 470, admin-theme.sass */
+/* line 475, admin-theme.sass */
 .fixed-width-sm {
   width: 80px !important; }
 
-/* line 472, admin-theme.sass */
+/* line 477, admin-theme.sass */
 .fixed-width-md {
   width: 120px !important; }
 
-/* line 474, admin-theme.sass */
+/* line 479, admin-theme.sass */
 .fixed-width-lg {
   width: 160px !important; }
 
-/* line 476, admin-theme.sass */
+/* line 481, admin-theme.sass */
 .fixed-width-xl {
   width: 200px !important; }
 
-/* line 478, admin-theme.sass */
+/* line 483, admin-theme.sass */
 .fixed-width-xxl {
   width: 250px !important; }
 
-/* line 487, admin-theme.sass */
+/* line 492, admin-theme.sass */
 textarea {
   resize: none; }
 
-/* line 490, admin-theme.sass */
+/* line 495, admin-theme.sass */
 .box-stats {
   background-color: white; }
-/* line 492, admin-theme.sass */
+/* line 497, admin-theme.sass */
 .box-stats .boxchart-overlay {
   padding: 10px 10px 5px 10px;
   margin-right: 10px;
@@ -8060,7 +8068,7 @@ textarea {
   -ms-border-radius: 3px;
   -o-border-radius: 3px;
   border-radius: 3px; }
-/* line 498, admin-theme.sass */
+/* line 503, admin-theme.sass */
 .box-stats i {
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -8075,97 +8083,97 @@ textarea {
   text-align: center;
   line-height: 64px;
   margin-right: 10px; }
-/* line 508, admin-theme.sass */
+/* line 513, admin-theme.sass */
 .box-stats .title {
   color: #666666;
   display: block; }
-/* line 511, admin-theme.sass */
+/* line 516, admin-theme.sass */
 .box-stats .value {
   font-size: 22px; }
-/* line 513, admin-theme.sass */
+/* line 518, admin-theme.sass */
 .box-stats small {
   line-height: 0.3em;
   color: #aaaaaa;
   text-transform: uppercase; }
 
-/* line 518, admin-theme.sass */
+/* line 523, admin-theme.sass */
 .color1 i, .color1 .boxchart-overlay {
   background-color: #2ba8e3;
   -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0 -3px 0 inset;
   box-shadow: rgba(0, 0, 0, 0.15) 0 -3px 0 inset; }
-/* line 521, admin-theme.sass */
+/* line 526, admin-theme.sass */
 .color1 .value {
   color: #2ba8e3; }
 
-/* line 524, admin-theme.sass */
+/* line 529, admin-theme.sass */
 .color2 i, .color2 .boxchart-overlay {
   background-color: #ff5450;
   -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0 -3px 0 inset;
   box-shadow: rgba(0, 0, 0, 0.15) 0 -3px 0 inset; }
-/* line 527, admin-theme.sass */
+/* line 532, admin-theme.sass */
 .color2 .value {
   color: #ff5450; }
 
-/* line 530, admin-theme.sass */
+/* line 535, admin-theme.sass */
 .color3 i, .color3 .boxchart-overlay {
   background-color: #9e5ba1;
   -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0 -3px 0 inset;
   box-shadow: rgba(0, 0, 0, 0.15) 0 -3px 0 inset; }
-/* line 533, admin-theme.sass */
+/* line 538, admin-theme.sass */
 .color3 .value {
   color: #9e5ba1; }
 
-/* line 536, admin-theme.sass */
+/* line 541, admin-theme.sass */
 .color4 i, .color4 .boxchart-overlay {
   background-color: #95cc6b;
   -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0 -3px 0 inset;
   box-shadow: rgba(0, 0, 0, 0.15) 0 -3px 0 inset; }
-/* line 539, admin-theme.sass */
+/* line 544, admin-theme.sass */
 .color4 .value {
   color: #95cc6b; }
 
-/* line 543, admin-theme.sass */
+/* line 548, admin-theme.sass */
 .data_chart rect {
   fill: white; }
-/* line 545, admin-theme.sass */
+/* line 550, admin-theme.sass */
 .data_chart path {
   stroke: white;
   stroke-width: 2;
   fill: none; }
-/* line 549, admin-theme.sass */
+/* line 554, admin-theme.sass */
 .data_chart line {
   stroke: black; }
-/* line 551, admin-theme.sass */
+/* line 556, admin-theme.sass */
 .data_chart .area {
   fill: rgba(255, 255, 255, 0.3);
   stroke-width: 0; }
 
-/* line 555, admin-theme.sass */
+/* line 560, admin-theme.sass */
 .thumbnail {
   background-color: white;
   border-color: #cccccc !important; }
 
-/* line 559, admin-theme.sass */
+/* line 564, admin-theme.sass */
 tr.highlighted td {
   background-color: #1ba6e5 !important;
   color: white; }
 
-/* line 565, admin-theme.sass */
+/* line 570, admin-theme.sass */
 .hook_panel {
   -webkit-box-shadow: rgba(255, 255, 255, 0.9) 0 0 0 1px inset;
   box-shadow: rgba(255, 255, 255, 0.9) 0 0 0 1px inset;
   padding: 10px 10px 5px 10px;
   margin-bottom: 3px !important; }
 
-/* line 570, admin-theme.sass */
+/* line 575, admin-theme.sass */
 .module_name {
   font-size: 1.2em; }
 
-/* line 574, admin-theme.sass */
+/* line 579, admin-theme.sass */
 .hook_panel_header {
   margin: 0 -10px 0 -10px;
   padding: 0 10px 10px 10px; }
-/* line 577, admin-theme.sass */
+/* line 582, admin-theme.sass */
 .hook_panel_header .hook_name {
   font-weight: 400;
   font-size: 1.2em;
@@ -8178,15 +8186,15 @@ tr.highlighted td {
   border: solid 1px #cccccc;
   background-color: white;
   padding: 0 4px; }
-/* line 585, admin-theme.sass */
+/* line 590, admin-theme.sass */
 .hook_panel_header .hook_title {
   text-transform: uppercase;
   font-size: 1em; }
-/* line 588, admin-theme.sass */
+/* line 593, admin-theme.sass */
 .hook_panel_header .hook_description {
   padding: 3px 0 0 3px; }
 
-/* line 592, admin-theme.sass */
+/* line 597, admin-theme.sass */
 .module_list .module_list_item {
   display: table;
   width: 100%;
@@ -8201,7 +8209,7 @@ tr.highlighted td {
   -o-border-radius: 3px;
   border-radius: 3px; }
 
-/* line 600, admin-theme.sass */
+/* line 605, admin-theme.sass */
 .module_col_select {
   display: table-cell;
   width: 22px;
@@ -8210,13 +8218,13 @@ tr.highlighted td {
   text-align: center;
   border-right: 1px solid #dddddd; }
 
-/* line 607, admin-theme.sass */
+/* line 612, admin-theme.sass */
 .module_col_position {
   display: table-cell;
   width: 60px;
   vertical-align: middle;
   text-align: right; }
-/* line 612, admin-theme.sass */
+/* line 617, admin-theme.sass */
 .module_col_position .positions {
   font-family: "Ubuntu", sans-serif;
   font-weight: 200;
@@ -8234,41 +8242,41 @@ tr.highlighted td {
   border: solid 1px #cccccc;
   background-color: #eeeeee; }
 
-/* line 623, admin-theme.sass */
+/* line 628, admin-theme.sass */
 .module_col_icon {
   display: table-cell;
   width: 50px;
   text-align: center;
   vertical-align: middle; }
 
-/* line 629, admin-theme.sass */
+/* line 634, admin-theme.sass */
 .module_col_infos {
   display: table-cell;
   height: 50px;
   vertical-align: middle; }
 
-/* line 634, admin-theme.sass */
+/* line 639, admin-theme.sass */
 .module_col_actions {
   display: table-cell;
   width: 160px;
   padding: 0 10px;
   vertical-align: middle;
   text-align: right; }
-/* line 640, admin-theme.sass */
+/* line 645, admin-theme.sass */
 .module_col_actions .btn-group {
   text-align: left; }
 
-/* line 644, admin-theme.sass */
+/* line 649, admin-theme.sass */
 .tree {
   padding: 0 0 0 20px;
   list-style: none; }
-/* line 647, admin-theme.sass */
+/* line 652, admin-theme.sass */
 .tree input {
   margin-right: 4px; }
-/* line 649, admin-theme.sass */
+/* line 654, admin-theme.sass */
 .tree i {
   font-size: 1.3em; }
-/* line 651, admin-theme.sass */
+/* line 656, admin-theme.sass */
 .tree .tree-item-name, .tree .tree-folder-name {
   padding: 0 5px;
   -webkit-border-radius: 6px;
@@ -8277,17 +8285,17 @@ tr.highlighted td {
   -o-border-radius: 6px;
   border-radius: 6px;
   font-weight: normal; }
-/* line 655, admin-theme.sass */
+/* line 660, admin-theme.sass */
 .tree .tree-item-name:hover, .tree .tree-folder-name:hover {
   background-color: #eeeeee;
   cursor: pointer; }
-/* line 658, admin-theme.sass */
+/* line 663, admin-theme.sass */
 .tree .tree-selected {
   background-color: #a4dcf5; }
-/* line 660, admin-theme.sass */
+/* line 665, admin-theme.sass */
 .tree .tree-selected i.tree-dot {
   background-color: #1ba6e5; }
-/* line 662, admin-theme.sass */
+/* line 667, admin-theme.sass */
 .tree i.tree-dot {
   display: inline-block;
   position: relative;
@@ -8300,61 +8308,61 @@ tr.highlighted td {
   -ms-border-radius: 6px;
   -o-border-radius: 6px;
   border-radius: 6px; }
-/* line 670, admin-theme.sass */
+/* line 675, admin-theme.sass */
 .tree .tree-item-disable, .tree .tree-folder-name-disable {
   color: #cccccc; }
-/* line 672, admin-theme.sass */
+/* line 677, admin-theme.sass */
 .tree .tree-item-disable:hover, .tree .tree-folder-name-disable:hover {
   color: #cccccc;
   background-color: none; }
 
-/* line 676, admin-theme.sass */
+/* line 681, admin-theme.sass */
 .nav-tabs {
   border-bottom: none; }
-/* line 678, admin-theme.sass */
+/* line 683, admin-theme.sass */
 .nav-tabs li a {
   font-size: 1.1em;
   font-family: "Ubuntu", sans-serif;
   text-transform: uppercase;
   font-weight: 300; }
-/* line 684, admin-theme.sass */
+/* line 689, admin-theme.sass */
 .nav-tabs li.active a, .nav-tabs li.active a:hover {
   background-color: white; }
 
-/* line 687, admin-theme.sass */
+/* line 692, admin-theme.sass */
 .tree-actions {
   padding-bottom: 4px;
   display: inline-block; }
 
-/* line 692, admin-theme.sass */
+/* line 697, admin-theme.sass */
 .tt-query {
   border-bottom-right-radius: 3px !important;
   border-top-right-radius: 3px !important; }
 
-/* line 694, admin-theme.sass */
+/* line 699, admin-theme.sass */
 .tt-dropdown-menu {
   background-color: white;
   border: solid 1px #cccccc;
   font-size: 0.9em;
   text-transform: none; }
 
-/* line 699, admin-theme.sass */
+/* line 704, admin-theme.sass */
 .tt-suggestions {
   padding: 0 6px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0 1px 4px;
   box-shadow: rgba(0, 0, 0, 0.25) 0 1px 4px; }
 
-/* line 702, admin-theme.sass */
+/* line 707, admin-theme.sass */
 .tt-suggestion p {
   border-bottom: solid 1px #cccccc;
   margin: 0 !important;
   padding: 0 !important; }
 
-/* line 706, admin-theme.sass */
+/* line 711, admin-theme.sass */
 .tt-suggestion:last-child p {
   border-bottom: none; }
 
-/* line 710, admin-theme.sass */
+/* line 715, admin-theme.sass */
 .tagify-container {
   background-color: white;
   padding: 2px 6px;
@@ -8368,10 +8376,10 @@ tr.highlighted td {
   border: solid 1px #cccccc;
   -webkit-box-shadow: rgba(0, 0, 0, 0.075) 0 1px 1px inset;
   box-shadow: rgba(0, 0, 0, 0.075) 0 1px 1px inset; }
-/* line 718, admin-theme.sass */
+/* line 723, admin-theme.sass */
 .tagify-container span {
   float: left; }
-/* line 720, admin-theme.sass */
+/* line 725, admin-theme.sass */
 .tagify-container > span {
   display: inline-block;
   padding: 3px 5px;
@@ -8380,26 +8388,26 @@ tr.highlighted td {
   border: 1px solid #1ba6e5;
   background-color: #60c1ed;
   color: white; }
-/* line 728, admin-theme.sass */
+/* line 733, admin-theme.sass */
 .tagify-container > span > a {
   padding-left: 5px;
   color: #1ba6e5;
   text-decoration: none;
   font-weight: bold; }
-/* line 733, admin-theme.sass */
+/* line 738, admin-theme.sass */
 .tagify-container > input {
   margin-top: 2px;
   border: 0 none;
   width: 100px;
   -webkit-box-shadow: none;
   box-shadow: none; }
-/* line 738, admin-theme.sass */
+/* line 743, admin-theme.sass */
 .tagify-container > input:focus {
   outline: 0;
   -webkit-box-shadow: none;
   box-shadow: none; }
 
-/* line 743, admin-theme.sass */
+/* line 748, admin-theme.sass */
 li.sortable-placeholder {
   border: 1px dashed #cccccc;
   background-color: #bbbbbb;

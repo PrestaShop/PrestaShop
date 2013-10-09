@@ -26,10 +26,10 @@
 	<div class="panel-heading">
 		<i class="icon-time"></i> {l s='Recent Activity'}
 		<span class="panel-heading-action">
-			<a class="list-tooolbar-btn" href="#" onclick="toggleDashConfig('dashactivity'); return false;" title="configure">
+			<a class="list-toolbar-btn" href="#" onclick="toggleDashConfig('dashactivity'); return false;" title="configure">
 				<i class="process-icon-configure"></i>
 			</a>
-			<a class="list-tooolbar-btn" href="#" onclick="refreshDashboard('dashactivity'); return false;" title="refresh">
+			<a class="list-toolbar-btn" href="#" onclick="refreshDashboard('dashactivity'); return false;" title="refresh">
 				<i class="process-icon-refresh"></i>
 			</a>
 		</span>

@@ -22,8 +22,9 @@ html, body
 	li a
 		padding: 9px 5px
 	> li > a > i
-		font-size: 1.2em
+		font-size: 1.4em
 		color: white
+		vertical-align: middle
 	.notifs_badge
 		@extend .badge
 		background-color: $badge-notif-color
@@ -53,6 +54,10 @@ html, body
 	@extend .nav
 	@extend .navbar-nav
 	@extend .navbar-right
+	a img
+		margin-right: 5px
+	#header_foaccess i
+		font-size: 1.2em
 #header_search
 	@extend .navbar-form
 	@extend .navbar-left
@@ -116,7 +121,7 @@ html, body
 		.panel-heading-action
 			@extend .pull-right
 			margin-right: -5px
-			a.list-tooolbar-btn
+			a.list-toolbar-btn
 				float: left
 				height: 30px
 				width: 30px
@@ -127,7 +132,7 @@ html, body
 					color: black
 				i
 					text-align: center
-					font-size: 1.2em
+					font-size: 1.3em
 					line-height: 30px
 	.panel-danger .panel-heading
 		background-color: $badge-notif-color!important
@@ -329,7 +334,7 @@ hr
 	@extend .table-striped
 	@extend .table-hover
 	border-collapse: separate
-	border-spacing: 0 2px
+	border-spacing: 0 2px 0 0
 	margin-bottom: 5px
 	thead > tr > th
 		border: none

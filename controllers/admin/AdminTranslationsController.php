@@ -316,6 +316,7 @@ class AdminTranslationsControllerCore extends AdminController
 				if (!empty($value))
 					$to_insert[$key] = $value;
 
+			ConfigurationKPI::updateValue('FRONTOFFICE_TRANSLATIONS_EXPIRE', time());
 			ConfigurationKPI::updateValue('TRANSLATE_TOTAL_'.$kpi_key, count($_POST));
 			ConfigurationKPI::updateValue('TRANSLATE_DONE_'.$kpi_key, count($to_insert));
 

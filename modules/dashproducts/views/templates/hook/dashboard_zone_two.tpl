@@ -27,10 +27,10 @@
 	<header class="panel-heading">
 		<i class="icon-bar-chart"></i> {l s='Product and Sales'}
 		<span class="panel-heading-action">
-			<a class="list-tooolbar-btn" href="#" title="configure">
+			<a class="list-toolbar-btn" href="#" title="configure">
 				<i class="process-icon-configure"></i>
 			</a>
-			<a class="list-tooolbar-btn" href="#"  onclick="refreshDashboard('dashproducts'); return false;"  title="refresh">
+			<a class="list-toolbar-btn" href="#"  onclick="refreshDashboard('dashproducts'); return false;"  title="refresh">
 				<i class="process-icon-refresh"></i>
 			</a>
 		</span>
