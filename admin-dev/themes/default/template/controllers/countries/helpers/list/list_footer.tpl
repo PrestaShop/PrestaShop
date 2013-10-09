@@ -89,7 +89,8 @@
 		{
 			$.ajax({
 				type: 'POST',
-				url: 'ajax.php',
+				headers: { "cache-control": "no-cache" },
+				url: 'ajax.php?rand=' + new Date().getTime(),
 				data: 'getZones=true&token={$token}',
 				async : true,
 				cache: false,
