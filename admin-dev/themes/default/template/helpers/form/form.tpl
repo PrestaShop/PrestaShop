@@ -102,10 +102,19 @@
 														</script>
 													{/literal}
 												{/if}
-												{if isset($input.maxchar)}
+												{if isset($input.maxchar) || isset($input.prefix) || isset($input.suffix)}
 												<div class="input-group">
-												<span id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}_counter" class="input-group-addon"><span class="text-count-down">{$input.maxchar}</span></span>
 												{/if}
+												{if isset($input.maxchar)}
+												<span id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}_counter" class="input-group-addon">
+													<span class="text-count-down">{$input.maxchar}</span>
+												</span>
+												{/if}
+												{if isset($input.prefix)}
+													<span class="input-group-addon">
+													  {$input.prefix}
+													</span>
+													{/if}
 												<input type="text"
 													id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}"
 													name="{$input.name}_{$language.id_lang}"
@@ -118,7 +127,12 @@
 													{if isset($input.readonly) && $input.readonly} readonly="readonly"{/if}
 													{if isset($input.disabled) && $input.disabled} disabled="disabled"{/if}
 													{if isset($input.autocomplete) && !$input.autocomplete} autocomplete="off"{/if} />
-												{if isset($input.maxchar)}
+													{if isset($input.suffix)}
+													<span class="input-group-addon">
+													  {$input.suffix}
+													</span>
+													{/if}
+												{if isset($input.maxchar) || isset($input.prefix) || isset($input.suffix)}
 												</div>
 												{/if}
 										{if $languages|count > 1}
@@ -175,9 +189,16 @@
 											{/literal}
 										{/if}
 										{assign var='value_text' value=$fields_value[$input.name]}
-										{if isset($input.maxchar)}
+										{if isset($input.maxchar) || isset($input.prefix) || isset($input.suffix)}
 										<div class="input-group">
+										{/if}
+										{if isset($input.maxchar)}
 										<span id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}_counter" class="input-group-addon"><span class="text-count-down">{$input.maxchar}</span></span>
+										{/if}
+										{if isset($input.prefix)}
+										<span class="input-group-addon">
+										  {$input.prefix}
+										</span>
 										{/if}
 										<input type="text"
 											name="{$input.name}"
@@ -191,8 +212,13 @@
 											{if isset($input.readonly) && $input.readonly} readonly="readonly"{/if}
 											{if isset($input.disabled) && $input.disabled} disabled="disabled"{/if}
 											{if isset($input.autocomplete) && !$input.autocomplete} autocomplete="off"{/if} />
-										{if isset($input.suffix)}{$input.suffix}{/if}
-										{if isset($input.maxchar)}
+										{if isset($input.suffix)}
+										<span class="input-group-addon">
+										  {$input.suffix}
+										</span>
+										{/if}
+										
+										{if isset($input.maxchar) || isset($input.prefix) || isset($input.suffix)}
 										</div>
 										{/if}
 										{if isset($input.maxchar)}
