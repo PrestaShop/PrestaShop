@@ -46,6 +46,6 @@
 	<link type="text/css" rel="stylesheet" href="{$base_url}css/admin-ie.css" />
 	<![endif]-->
 </head>
-<body>
-	<div id="main">
+<body class="page-topbar">
+	<div id="login">
 		<div id="content" class="page-content">

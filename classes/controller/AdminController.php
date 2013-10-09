@@ -1343,16 +1343,9 @@ class AdminControllerCore extends Controller
 		$template_dirs = $this->context->smarty->getTemplateDir();
 		
 		// Check if header/footer have been overriden
-		$header_tpl = 'header.tpl';
-		$footer_tpl = 'footer.tpl';
-		foreach ($template_dirs as $template_dir)
-		{
-			if (file_exists($template_dir.DIRECTORY_SEPARATOR.'header.tpl'))
-				$header_tpl = $template_dir.DIRECTORY_SEPARATOR.'header.tpl';
-			if (file_exists($template_dir.DIRECTORY_SEPARATOR.'footer.tpl'))
-				$footer_tpl = $template_dir.DIRECTORY_SEPARATOR.'footer.tpl';
-		}
-
+		$dir = $this->context->smarty->getTemplateDir(0).'controllers'.DIRECTORY_SEPARATOR.trim($this->override_folder, '\\/').DIRECTORY_SEPARATOR;
+		$header_tpl = file_exists($dir.'header.tpl') ? $dir.'header.tpl' : 'header.tpl';
+		$footer_tpl = file_exists($dir.'footer.tpl') ? $dir.'footer.tpl' : 'footer.tpl';
 		$tpl_action = $this->tpl_folder.$this->display.'.tpl';
 
 		// Check if action template has been overriden
@@ -3035,7 +3028,7 @@ class AdminControllerCore extends Controller
 		{
 			if (file_exists($this->context->smarty->getTemplateDir(1).DIRECTORY_SEPARATOR.$this->override_folder.$tpl_name))
 				return $this->context->smarty->createTemplate($this->override_folder.$tpl_name, $this->context->smarty);
-			else if (file_exists($this->context->smarty->getTemplateDir(0).'controllers'.DIRECTORY_SEPARATOR.$this->override_folder.$tpl_name))
+			elseif (file_exists($this->context->smarty->getTemplateDir(0).'controllers'.DIRECTORY_SEPARATOR.$this->override_folder.$tpl_name))
 				return $this->context->smarty->createTemplate('controllers'.DIRECTORY_SEPARATOR.$this->override_folder.$tpl_name, $this->context->smarty);
 		}
 
