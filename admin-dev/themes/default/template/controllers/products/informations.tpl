@@ -450,7 +450,9 @@
 				</div>
 				{/if}
 				{/foreach}
+			{if $languages|count > 1}
 			</div>
+			{/if}
 		</div>
 	</div>
 </fieldset>
