@@ -3431,7 +3431,7 @@ class AdminProductsControllerCore extends AdminController
 			))->fetch()
 			.'</div>'
 			.'<div class="form-group">'
-			.'<input type="checkbox" name="require_'.$type.'_'.(int)($id_customization_field).'" id="require_'.$type.'_'.(int)($id_customization_field).'" value="1" '.($required ? 'checked="checked"' : '').' style="float: left; margin: 0 4px"/><label for="require_'.$type.'_'.(int)($id_customization_field).'" style="float: none; font-weight: normal;"> '.$this->l('required').'</label>'
+			.'<input type="checkbox" name="require_'.$type.'_'.(int)($id_customization_field).'" id="require_'.$type.'_'.(int)($id_customization_field).'" value="1" '.($required ? 'checked="checked"' : '').' style="float:left;margin:1px 4px 0 0"/><label for="require_'.$type.'_'.(int)($id_customization_field).'" style="float:none;font-weight:normal"> '.$this->l('Required').'</label>'
 			.'</div>';
 	}
 

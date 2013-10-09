@@ -50,55 +50,52 @@
 {block name=leadin}
 	{if isset($delete_category) && $delete_category}
 		<div class="panel panel-danger">
-			<div class="panel-heading">
+			<p>
 				{if $need_delete_mode}
-					{l s='Do you want to delete the products too?'}
+					{l s='What do you want to do with the products associated with this category?'}
 				{else}
 					{l s='Deleting this category will remove products linked only within this category and no others. Are you sure you want to continue?'}
 				{/if}
-			</div>
+			</p>
 
 			{if $need_delete_mode}
 			<form action="{$REQUEST_URI}" method="post">
 				<div class="radio">
 					<label for="deleteMode_linkanddisable">
-						<input type="radio" name="deleteMode" value="linkanddisable" id="deleteMode_linkanddisable" />
-						{l s='No. I want to link products without other categories -- within the parent category -- and then disable them.'}
+						<input type="radio" name="deleteMode" value="linkanddisable" id="deleteMode_linkanddisable" checked="checked" />
+						{l s='I want to associate the products without other categories with the parent category and then disable them.'} <strong>{l s='(Recommended)'}</strong>
 					</label>
 				</div>
-
 				<div class="radio">
 					<label for="deleteMode_link">
 						<input type="radio" name="deleteMode" value="link" id="deleteMode_link" />
-						{l s='No. I want to link products without other categories and within the parent category.'}
+						{l s='I want to associate the products without other categories with the parent category.'}
 					</label>
 				</div>
-
 				<div class="radio">
 					<label for="deleteMode_delete">
 						<input type="radio" name="deleteMode" value="delete" id="deleteMode_delete" />
-						{l s='Yes. I want to remove products linked only within this category and no others.'}
+						{l s='I want to remove products linked only within this category and no others.'}
 					</label>
 				</div>
-
-				{else}
-					<input type="hidden" name="deleteMode" value="delete" id="deleteMode_delete" />
-				{/if}
-				{foreach $POST as $key => $value}
-					{if $key != 'deleteMode'}
-						{if is_array($value)}
-							{foreach $value as $val}
-								<input type="hidden" name="{$key|escape:'htmlall':'UTF-8'}[]" value="{$val|escape:'htmlall':'UTF-8'}" />
-							{/foreach}
-						{else}
-							<input type="hidden" name="{$key|escape:'htmlall':'UTF-8'}" value="{$value|escape:'htmlall':'UTF-8'}" />
-						{/if}
+			{else}
+				<input type="hidden" name="deleteMode" value="delete" id="deleteMode_delete" />
+			{/if}
+			{foreach $POST as $key => $value}
+				{if $key != 'deleteMode'}
+					{if is_array($value)}
+						{foreach $value as $val}
+							<input type="hidden" name="{$key|escape:'htmlall':'UTF-8'}[]" value="{$val|escape:'htmlall':'UTF-8'}" />
+						{/foreach}
+					{else}
+						<input type="hidden" name="{$key|escape:'htmlall':'UTF-8'}" value="{$value|escape:'htmlall':'UTF-8'}" />
 					{/if}
-				{/foreach}
+				{/if}
+			{/foreach}
 				<hr>
 				<input type="submit" name="cancel" class="btn btn-default" value="{l s='Cancel'}" />
 				<input type="submit" class="btn btn-primary" value="{l s='Validate'}" />
-				</form>
-			</div>
+			</form>
+		</div>
 	{/if}
 {/block}
