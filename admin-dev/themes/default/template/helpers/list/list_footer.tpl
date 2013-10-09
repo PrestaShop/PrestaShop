@@ -25,8 +25,8 @@
 	</table>
 </div>
 <div class="row">
-	{if $bulk_actions}
 	<div class="col-lg-8">
+		{if $bulk_actions}
 		<div class="btn-group bulk-actions">
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 				{l s='Bulk actions'} <span class="caret"></span>
@@ -54,9 +54,8 @@
 			{/foreach}
 			</ul>
 		</div>
+		{/if}
 	</div>
-	{/if}
-
 	{if !$simple_header && $list_total > 20}
 	<div class="col-lg-4">
 		{* Choose number of results per page *}
