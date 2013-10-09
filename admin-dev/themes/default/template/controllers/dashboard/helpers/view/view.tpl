@@ -31,12 +31,6 @@
 	var read_more = '{l s='Read more'}'
 </script>
 
-<div class="page-head">
-	<h2 class="page-title">
-		{l s='Dashboard'}
-	</h2>
-</div>
-
 <div id="dashboard">
 	<div class="row">
 		<div class="col-lg-12">

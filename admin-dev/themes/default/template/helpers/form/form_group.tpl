@@ -26,11 +26,11 @@
 {if count($groups) && isset($groups)}
 <table class="table">
 	<thead>
-		<th>
-			<input type="checkbox" name="checkme" id="checkme" class="noborder" onclick="checkDelBoxes(this.form, 'groupBox[]', this.checked)" />
+		<th class="fixed-width-xs">
+			<span class="title_box"><input type="checkbox" name="checkme" id="checkme" class="noborder" onclick="checkDelBoxes(this.form, 'groupBox[]', this.checked)" /></span>
 		</th>
-		<th>{l s='ID'}</th>
-		<th>{l s='Group name'}</th>
+		<th class="fixed-width-xs"><span class="title_box">{l s='ID'}</span></th>
+		<th><span class="title_box">{l s='Group name'}</span></th>
 	</thead>
 	<tbody>
 	{foreach $groups as $key => $group}
