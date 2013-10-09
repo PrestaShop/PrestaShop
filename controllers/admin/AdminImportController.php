@@ -428,11 +428,7 @@ class AdminImportControllerCore extends AdminController
 			}
 
 		$this->separator = substr(strval(trim(Tools::getValue('separator', ';'))), 0, 1);
-
-		if (is_null(Tools::getValue('multiple_value_separator')) || trim(Tools::getValue('multiple_value_separator')) == '')
-			$this->multiple_value_separator = ',';
-		else
-			$this->multiple_value_separator = Tools::getValue('multiple_value_separator');
+		$this->multiple_value_separator = substr(strval(trim(Tools::getValue('multiple_value_separator', ','))), 0, 1);
 
 		parent::__construct();
 	}
@@ -483,11 +479,11 @@ class AdminImportControllerCore extends AdminController
 		if (isset($this->context->cookie->iso_lang_selected) && $this->context->cookie->iso_lang_selected)
 			$id_lang_selected = (int)Language::getIdByIso(base64_decode($this->context->cookie->iso_lang_selected));
 
-		$separator_selected = '';
+		$separator_selected = $this->multiple_value_separator;
 		if (isset($this->context->cookie->separator_selected) && $this->context->cookie->separator_selected)
 			$separator_selected = base64_decode($this->context->cookie->separator_selected);
 
-		$multiple_value_separator_selected = '';
+		$multiple_value_separator_selected = $this->separator;
 		if (isset($this->context->cookie->multiple_value_separator_selected) && $this->context->cookie->multiple_value_separator_selected)
 			$multiple_value_separator_selected = base64_decode($this->context->cookie->multiple_value_separator_selected);
 
