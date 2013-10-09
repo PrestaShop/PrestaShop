@@ -62,9 +62,7 @@
 <!--start filter module-->
 <style>.ac_results { border:1px solid #C2C4D9; }</style>
 <div class="filter-module">
-	<form id="filternameForm" method="post">
-		<input placeholder="{l s='Search'}" type="text" value="" name="quicksearch" autocomplete="off" onkeyup="$.uiTableFilter($('#moduleContainer').find('table'), this.value);">
-	</form>
+	<input placeholder="{l s='Search'}" type="text" value="" name="quicksearch" autocomplete="off" onkeyup="$.uiTableFilter($('#moduleContainer').find('table'), this.value);">
 	<form method="post">
 		<div class="select-filter">
 			<label class="search-filter">{l s='Sort by'}:</label>
