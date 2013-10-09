@@ -623,7 +623,7 @@ class AdminCategoriesControllerCore extends AdminController
 			if ($this->delete_mode == 'linkanddisable')
 				$this->disable_products = true;
 		}
-		else if ($this->delete_mode != 'delete')
+		elseif ($this->delete_mode != 'delete')
 			$this->errors[] = Tools::displayError('Unknown delete mode:'.' '.$this->deleted);
 		
 	}
@@ -656,22 +656,21 @@ class AdminCategoriesControllerCore extends AdminController
 	
 	public function processDelete()
 	{
-		$category = $this->loadObject();
 		if ($this->tabAccess['delete'] === '1')
 		{
+			$category = $this->loadObject();
 			if ($category->isRootCategoryForAShop())
 				$this->errors[] = Tools::displayError('You cannot remove this category because one of your shops uses it as a root category.');
-			else if (parent::processDelete())
+			elseif (parent::processDelete())
 			{
 				$this->setDeleteMode();
 				$this->processFatherlessProducts((int)$category->id_parent);
 				return true;
 			}
-			else
-				return false;
 		}
 		else
 			$this->errors[] = Tools::displayError('You do not have permission to delete this.');
+		return false;
 	}
 	
 	public function processFatherlessProducts($id_parent)
