@@ -301,7 +301,7 @@
 
 {* end display_header*}	
 {else}
-	<body>
+	<body{if isset($lite_display) && $lite_display} class="display-modal"{/if}>
 		<div id="main">
 			<div id="content" class="page-content">
 {/if}
