@@ -114,6 +114,18 @@ class AdminCountriesControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['new_country'] = array(
+				'href' => self::$currentIndex.'&amp;addcountry&amp;token='.$this->token,
+				'desc' => $this->l('Add new country'),
+				'icon' => 'process-icon-new'
+			);
+
+		parent::initPageHeaderToolbar();
+	}
+
 	/**
 	 * AdminController::setMedia() override
 	 * @see AdminController::setMedia()
