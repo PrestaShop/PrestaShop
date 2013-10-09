@@ -466,7 +466,7 @@ class OrderInvoiceCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'order_invoice` oi
 			LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = oi.`id_order`)
 			WHERE DATE_ADD(oi.delivery_date, INTERVAL -1 DAY) <= \''.pSQL($date_to).'\'
-			AND oi.date_add >= \''.pSQL($date_from).'\'
+			AND oi.delivery_date >= \''.pSQL($date_from).'\'
 			'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 			ORDER BY oi.delivery_date ASC
 		');
