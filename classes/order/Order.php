@@ -1137,7 +1137,7 @@ class OrderCore extends ObjectModel
 
 			// Save Order invoice
 			$order_invoice->add();
-			self::setLastInvoiceNumber($order_invoice->id, $this->id_shop);
+			$this->setLastInvoiceNumber($order_invoice->id, $this->id_shop);
 
 			$order_invoice->saveCarrierTaxCalculator($tax_calculator->getTaxesAmount($order_invoice->total_shipping_tax_excl));
 
