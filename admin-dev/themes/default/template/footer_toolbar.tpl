@@ -24,17 +24,17 @@
 *}
 
 {if $show_toolbar}
-<div class="panel-footer">			
+<div class="panel-footer">
 	{foreach from=$toolbar_btn item=btn key=k}
 		{if $k != 'modules-list'}
 			<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="btn btn-default" {if isset($btn.href)}href="{$btn.href}"{/if} {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
-				<i class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if} {if isset($btn.class)}{$btn.class}{/if}" ></i> {l s=$btn.desc}
+				<i class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if} {if isset($btn.class)}{$btn.class}{/if}" ></i> <span {if isset($btn.force_desc) && $btn.force_desc == true } class="locked" {/if}>{$btn.desc}</span>
 			</a>
 		{/if}
 	{/foreach}
 	<script language="javascript" type="text/javascript">
 	//<![CDATA[
-		var submited = false
+		var submited = false;
 
 		$(function() {
 			//get reference on save link
@@ -49,30 +49,26 @@
 				btn_save_and_stay = $('i[class~="process-icon-save-and-stay"]').parent();
 
 				//get reference on current save link label
-				lbl_save = $('#desc-{$table}-save div');
+				lbl_save = $('#desc-{$table}-save');
 
 				//override save link label with submit button value
-				if (btn_submit.val().length > 0)
-					lbl_save.html(btn_submit.attr("value"));
+				if (btn_submit.html().length > 0)
+					lbl_save.find('span').html(btn_submit.html());
 
 				if (btn_save_and_stay.length > 0)
 				{
-
 					//get reference on current save link label
-					lbl_save_and_stay = $('#desc-{$table}-save-and-stay div');
+					lbl_save_and_stay = $('#desc-{$table}-save-and-stay');
 
 					//override save and stay link label with submit button value
-					if (btn_submit.val().length > 0 && lbl_save_and_stay && !lbl_save_and_stay.hasClass('locked'))
-					{
-						lbl_save_and_stay.html(btn_submit.val() + " {l s='and stay'} ");
-					}
-
+					if (btn_submit.html().length > 0 && lbl_save_and_stay && !lbl_save_and_stay.hasClass('locked'))
+						lbl_save_and_stay.find('span').html(btn_submit.html() + " {l s='and stay'} ");
 				}
 
 				//hide standard submit button
 				btn_submit.hide();
 				//bind enter key press to validate form
-				$('#{$table}_form').keypress(function (e) {
+				$('#{$table}_form').find('input').keypress(function (e) {
 					if (e.which == 13 && e.target.localName != 'textarea')
 						$('#desc-{$table}-save').click();
 				});
