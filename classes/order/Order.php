@@ -1086,6 +1086,29 @@ class OrderCore extends ObjectModel
 		');
 	}
 
+	public static function setLastInvoiceNumber($order_invoice_id, $id_shop)
+	{
+		if (!$order_invoice_id)
+			return false;
+
+		$number = Configuration::get('PS_INVOICE_START_NUMBER', null, null, $id_shop);
+		// If invoice start number has been set, you clean the value of this configuration
+		if ($number)
+			Configuration::updateValue('PS_INVOICE_START_NUMBER', false, false, null, $id_shop);
+
+		$sql = 'UPDATE `'._DB_PREFIX_.'order_invoice` SET number =';
+
+		if ($number)
+			$sql .= (int)$number;
+		else
+			$sql .= '(SELECT new_number FROM (SELECT (MAX(`number`) + 1) AS new_number
+			FROM `'._DB_PREFIX_.'order_invoice`) AS result)';
+
+		$sql .=' WHERE `id_order_invoice` = '.(int)$order_invoice_id;
+
+		return Db::getInstance()->execute($sql);
+	}
+
 	/**
 	 * This method allows to generate first invoice of the current order
 	 */
@@ -1095,13 +1118,7 @@ class OrderCore extends ObjectModel
 		{
 			$order_invoice = new OrderInvoice();
 			$order_invoice->id_order = $this->id;
-			$order_invoice->number = Configuration::get('PS_INVOICE_START_NUMBER', null, null, $this->id_shop);
-			// If invoice start number has been set, you clean the value of this configuration
-			if ($order_invoice->number)
-				Configuration::updateValue('PS_INVOICE_START_NUMBER', false, false, null, $this->id_shop);
-			else
-				$order_invoice->number = Order::getLastInvoiceNumber() + 1;
-
+			$order_invoice->number = 0;
 			$invoice_address = new Address((int)$this->id_address_invoice);
 			$carrier = new Carrier((int)$this->id_carrier);
 			$tax_calculator = $carrier->getTaxCalculator($invoice_address);
@@ -1120,6 +1137,7 @@ class OrderCore extends ObjectModel
 
 			// Save Order invoice
 			$order_invoice->add();
+			self::setLastInvoiceNumber($order_invoice->id, $this->id_shop);
 
 			$order_invoice->saveCarrierTaxCalculator($tax_calculator->getTaxesAmount($order_invoice->total_shipping_tax_excl));
 
