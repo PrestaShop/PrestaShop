@@ -105,52 +105,56 @@
 				</h3>
 				<!-- Orders Actions -->
 				<div class="well">
-					{if (count($invoices_collection))}
-					<a class="btn btn-default" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateInvoicePDF&id_order={$order->id}" target="_blank">
-						<i class="icon-file"></i>
-						{l s='View invoice'}
-					</a>
-					{else}
-						<span class="icon-stack">
+					<div class="row row-margin-bottom">
+						{if (count($invoices_collection))}
+						<a class="btn btn-default" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateInvoicePDF&id_order={$order->id}" target="_blank">
 							<i class="icon-file"></i>
-							<i class="icon-ban-circle icon-stack-base text-danger"></i>
-						</span>
-						{l s='No invoice'}
-					{/if}
-					{if (($currentState && $currentState->delivery) || $order->delivery_number)}
-					<a class="btn btn-default"  href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order={$order->id}" target="_blank">
-						<i class="icon-truck"></i>
-						{l s='View delivery slip'}
-					</a>
-					{else}
-						<span class="icon-stack">
-							<i class="icon-truck"></i>
-							<i class="icon-ban-circle icon-stack-base text-danger"></i>
-						</span>
-						{l s='No delivery slip'}
-					{/if}
-					<a class="btn btn-default" href="javascript:window.print()">
-						<i class="icon-print"></i>
-						{l s='Print order'}
-					</a>
-					{if Configuration::get('PS_ORDER_RETURN')}
-					<a class="btn btn-default" id="desc-order-standard_refund" href="">
-						<i class="icon-exchange"></i>
-						{if $order->hasBeenShipped()}
-							{l s='Return products'}
-						{elseif $order->hasBeenPaid()}
-							{l s='Standard refund'}
+							{l s='View invoice'}
+						</a>
 						{else}
-							{l s='Cancel products'}
+							<span class="icon-stack">
+								<i class="icon-file"></i>
+								<i class="icon-ban-circle icon-stack-base text-danger"></i>
+							</span>
+							{l s='No invoice'}
 						{/if}
-					</a>
-					{/if}
-					{if $order->hasInvoice()}
-					<a class="btn btn-default" id="desc-order-partial_refund" href="">
-						<i class="icon-exchange"></i>
-						{l s='Partial refund'}
-					</a>
-					{/if}
+						{if (($currentState && $currentState->delivery) || $order->delivery_number)}
+						<a class="btn btn-default"  href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order={$order->id}" target="_blank">
+							<i class="icon-truck"></i>
+							{l s='View delivery slip'}
+						</a>
+						{else}
+							<span class="icon-stack">
+								<i class="icon-truck"></i>
+								<i class="icon-ban-circle icon-stack-base text-danger"></i>
+							</span>
+							{l s='No delivery slip'}
+						{/if}
+						<a class="btn btn-default" href="javascript:window.print()">
+							<i class="icon-print"></i>
+							{l s='Print order'}
+						</a>
+					</div>
+					<div class="row">
+						{if Configuration::get('PS_ORDER_RETURN')}
+						<a class="btn btn-default" id="desc-order-standard_refund" href="">
+							<i class="icon-exchange"></i>
+							{if $order->hasBeenShipped()}
+								{l s='Return products'}
+							{elseif $order->hasBeenPaid()}
+								{l s='Standard refund'}
+							{else}
+								{l s='Cancel products'}
+							{/if}
+						</a>
+						{/if}
+						{if $order->hasInvoice()}
+						<a class="btn btn-default" id="desc-order-partial_refund" href="">
+							<i class="icon-exchange"></i>
+							{l s='Partial refund'}
+						</a>
+						{/if}
+					</div>
 				</div>
 				<!-- Tab nav -->
 				<ul class="nav nav-tabs" id="tabOrder">
