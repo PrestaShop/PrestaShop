@@ -139,13 +139,12 @@
 											</div>
 											<div class="col-lg-2">
 												<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
-													<img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt="">
 													{$language.iso_code}
 													<span class="caret"></span>
 												</button>
 												<ul class="dropdown-menu">
 													{foreach from=$languages item=language}
-													<li><a href="javascript:hideOtherLanguage({$language.id_lang});" tabindex="-1"><img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt=""> {$language.name}</a></li>
+													<li><a href="javascript:hideOtherLanguage({$language.id_lang});" tabindex="-1">{$language.name}</a></li>
 													{/foreach}
 												</ul>
 											</div>
@@ -424,16 +423,13 @@
 										</div>
 										<div class="col-lg-2">
 											<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
-												<img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt="">
 												{$language.iso_code}
 												<span class="caret"></span>
 											</button>
 											<ul class="dropdown-menu">
 												{foreach from=$languages item=language}
 												<li>
-													<a href="javascript:hideOtherLanguage({$language.id_lang});" tabindex="-1">
-														<img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt=""> {$language.name}
-													</a>
+													<a href="javascript:hideOtherLanguage({$language.id_lang});" tabindex="-1">{$language.name}</a>
 												</li>
 												{/foreach}
 											</ul>
