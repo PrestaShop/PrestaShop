@@ -113,7 +113,7 @@ class SearchControllerCore extends FrontController
 			$result = Search::searchTag($this->context->language->id, $tag, false, $this->p, $this->n, $this->orderBy, $this->orderWay);
 			Hook::exec('actionSearch', array('expr' => $tag, 'total' => count($result)));
 
-			$this->addColorsToProductList($search['result']);
+			$this->addColorsToProductList($result);
 
 			$this->context->smarty->assign(array(
 				'search_tag' => $tag,
