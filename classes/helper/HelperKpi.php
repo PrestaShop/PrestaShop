@@ -38,6 +38,7 @@ class HelperKpiCore extends Helper
 	public $value;
 	public $data;
 	public $source;
+	public $href;
 
 	public function generate()
 	{
@@ -52,7 +53,8 @@ class HelperKpiCore extends Helper
 			'subtitle' => $this->subtitle,
 			'value' => $this->value,
 			'data' => $this->data,
-			'source' => $this->source
+			'source' => $this->source,
+			'href' => $this->href
 		));
 		return $this->tpl->fetch();
 	}

@@ -1171,7 +1171,8 @@ class FrontControllerCore extends Controller
 			if (isset($colors[$product['id_product']]))
 					$tpl->assign(array(
 						'id_product' => $product['id_product'],
-						'colors_list' => $colors[$product['id_product']]
+						'colors_list' => $colors[$product['id_product']],
+						'link' => Context::getContext()->link
 					));
 			if (!in_array($product['id_product'], $products_need_cache) || isset($colors[$product['id_product']]))
 				$product['color_list'] = $tpl->fetch(_PS_THEME_DIR_.'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']));

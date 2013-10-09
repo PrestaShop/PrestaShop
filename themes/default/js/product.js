@@ -659,7 +659,7 @@ function getProductAttribute()
 	for (var i in attributesCombinations)
 		for (var a in tab_attributes)
 			if (attributesCombinations[i]['id_attribute'] === tab_attributes[a])
-				request += '/'+attributesCombinations[i]['group'] + '-' + attributesCombinations[i]['attribute'];
+				request += '/'+attributesCombinations[i]['group'] + attribute_anchor_separator + attributesCombinations[i]['attribute'];
 	request = request.replace(request.substring(0, 1), '#/');
 	url = window.location + '';
 
@@ -694,7 +694,7 @@ function checkUrl()
 			if (tabParams[0] == '')
 				tabParams.shift();
 			for (var i in tabParams)
-				tabValues.push(tabParams[i].split('-'));
+				tabValues.push(tabParams[i].split(attribute_anchor_separator));
 			product_id = $('#product_page_product_id').val();
 			// fill html with values
 			$('.color_pick').removeClass('selected');

@@ -29,3 +29,5 @@ CREATE TABLE `PREFIX_configuration_kpi_lang` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 /* PHP:ps1600_add_missing_index(); */;
+
+UPDATE `PREFIX_configuration` SET `value`='-' WHERE `name`='PS_ATTRIBUTE_ANCHOR_SEPARATOR';

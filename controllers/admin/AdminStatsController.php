@@ -62,7 +62,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		return $visitors;
 	}
 	
-	public static function getAbandonedCarts($date_from, $date_to, $granularity = false)
+	public static function getAbandonedCarts($date_from, $date_to)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT COUNT(DISTINCT id_guest)
@@ -319,6 +319,33 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			return 0;
 		return round($messages / $threads, 1);
 	}
+	
+	public static function getExpenses($date_from, $date_to)
+	{
+		$secs_per_year = 365.25 * 86400;
+		$secs_per_month = 30.4375 * 86400;
+		$total_secs = (strtotime($date_to) - min(strtotime($date_from), time())) / 86400;
+		$expenses = Configuration::get('CONF_MONTHLY_FEES') * $total_secs / $secs_per_month + Configuration::get('CONF_YEARLY_FEES') * $total_secs / $secs_per_year;
+
+		$orders = Db::getInstance()->ExecuteS('
+		SELECT
+			total_paid_tax_incl / o.conversion_rate as total_paid_tax_incl,
+			total_shipping_tax_excl / o.conversion_rate as total_shipping_tax_excl,
+			module
+		FROM `'._DB_PREFIX_.'orders` o
+		WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
+		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o'));
+		foreach ($orders as $order)
+		{
+			// Add flat fees for this order
+			$expenses += Configuration::get('CONF_ORDER_FIXED_FEES') + Configuration::get('CONF_'.strtoupper($order['module']).'_FIXED_FEE');
+			// Add variable fees for this order
+			$expenses += $order['total_paid_tax_incl'] * (Configuration::get('CONF_ORDER_VAR_FEES') + Configuration::get('CONF_'.strtoupper($order['module']).'_VAR_FEE')) / 100;
+			// Add shipping fees for this order
+			$expenses += $order['total_shipping_tax_excl'] * (100 - Configuration::get('CONF_SHIPPING_MARGIN')) / 100;
+		}
+		return $expenses;
+	}
 
 	public function displayAjaxGetKpi()
 	{
@@ -326,20 +353,20 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		switch (Tools::getValue('kpi'))
 		{
 			case 'conversion_rate':
-				$visitors = AdminStatsController::getUniqueVisitors(date('Y-m-d', strtotime('-31 day')), date('Y-m-d', strtotime('-1 day')), 'day');
-				$orders = AdminStatsController::getOrders(date('Y-m-d', strtotime('-31 day')), date('Y-m-d', strtotime('-1 day')), 'day');
+				$visitors = AdminStatsController::getUniqueVisitors(date('Y-m-d', strtotime('-31 day')), date('Y-m-d', strtotime('-1 day')), false /*'day'*/);
+				$orders = AdminStatsController::getOrders(date('Y-m-d', strtotime('-31 day')), date('Y-m-d', strtotime('-1 day')), false /*'day'*/);
 
-				$data = array();
-				$from = strtotime(date('Y-m-d 00:00:00', strtotime('-31 day')));
-				$to = strtotime(date('Y-m-d 23:59:59', strtotime('-1 day')));
-				for ($date = $from; $date <= $to; $date = strtotime('+1 day', $date))
-					if (isset($visitors[$date]) && $visitors[$date])
-						$data[$date] = round(100 * ((isset($orders[$date]) && $orders[$date]) ? $orders[$date] : 0) / $visitors[$date], 2);
-					else
-						$data[$date] = 0;
+				// $data = array();
+				// $from = strtotime(date('Y-m-d 00:00:00', strtotime('-31 day')));
+				// $to = strtotime(date('Y-m-d 23:59:59', strtotime('-1 day')));
+				// for ($date = $from; $date <= $to; $date = strtotime('+1 day', $date))
+					// if (isset($visitors[$date]) && $visitors[$date])
+						// $data[$date] = round(100 * ((isset($orders[$date]) && $orders[$date]) ? $orders[$date] : 0) / $visitors[$date], 2);
+					// else
+						// $data[$date] = 0;
 
-				$visits_sum = array_sum($visitors);
-				$orders_sum = array_sum($orders);
+				$visits_sum = $visitors; //array_sum($visitors);
+				$orders_sum = $orders; //array_sum($orders);
 				if ($visits_sum)
 					$value = round(100 * $orders_sum / $visits_sum, 2);
 				elseif ($orders_sum)
@@ -348,7 +375,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 					$value = 0;
 				$value .= '%';
 
-				ConfigurationKPI::updateValue('CONVERSION_RATE_CHART', Tools::jsonEncode($data));
+				// ConfigurationKPI::updateValue('CONVERSION_RATE_CHART', Tools::jsonEncode($data));
 				ConfigurationKPI::updateValue('CONVERSION_RATE', $value);
 				ConfigurationKPI::updateValue('CONVERSION_RATE_EXPIRE', strtotime(date('Y-m-d 00:00:00', strtotime('+1 day'))));
 				break;
@@ -356,7 +383,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			case 'abandoned_cart':
 				$value = AdminStatsController::getAbandonedCarts(date('Y-m-d H:i:s', strtotime('-2 day')), date('Y-m-d H:i:s', strtotime('-1 day')));
 				ConfigurationKPI::updateValue('ABANDONED_CARTS', $value);
-				ConfigurationKPI::updateValue('ABANDONED_CARTS_EXPIRE', strtotime('+10 min'));
+				ConfigurationKPI::updateValue('ABANDONED_CARTS_EXPIRE', strtotime('+1 hour'));
 				break;
 
 			case 'installed_modules':
@@ -504,7 +531,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				else
 				{
 					$country = new Country($row['id_country'], $this->context->language->id);
-					$value = sprintf($this->l('%.1f%% %s'), $row['orders'], $country->name);
+					$value = sprintf($this->l('%d%% %s'), $row['orders'], $country->name);
 				}
 
 				ConfigurationKPI::updateValue('MAIN_COUNTRY', array($this->context->language->id => $value));				
@@ -547,9 +574,10 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			case 'netprofit_visitor':
 				$date_from = date('Y-m-d', strtotime('-31 day'));
 				$date_to = date('Y-m-d', strtotime('-1 day'));
-				$visitors = AdminStatsController::getUniqueVisitors($date_from, $date_to);
+				$total_visitors = AdminStatsController::getUniqueVisitors($date_from, $date_to);
 				$total_sales = AdminStatsController::getTotalSales($date_from, $date_to);
-				$total_purchase = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				$total_expenses = AdminStatsController::getExpenses($date_from, $date_to);
+				$total_purchases = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT SUM(od.`product_quantity` * od.`purchase_supplier_price` / `conversion_rate`) as total_purchase_price
 				FROM `'._DB_PREFIX_.'orders` o
 				LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
@@ -557,11 +585,11 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o'));
 
 				$net_profits = $total_sales;
-				$net_profits -= $total_purchase;
-				// Todo : Add profitability calculation
+				$net_profits -= $total_purchases;
+				$net_profits -= $total_expenses;
 
-				if ($visitors)
-					$value = Tools::displayPrice($net_profits / $visitors, $currency);
+				if ($total_visitors)
+					$value = Tools::displayPrice($net_profits / $total_visitors, $currency);
 				elseif ($net_profits)
 					$value = '&infin;';
 				else
