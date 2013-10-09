@@ -30,18 +30,19 @@
 	<ul class="breadcrumb cat_bar2">
 		{assign var=i value=0}
 		{foreach $categories_tree key=key item=category}
+		<li>
 			{if $i++ == 0}
-				<li>
-					<i class="icon-home"></i>
+				<i class="icon-home"></i>
 				{assign var=params_url value=""}
 			{else}
 				{assign var=params_url value="&id_category={$category.id_category|intval}&viewcategory"}
 			{/if}
 			{if $category.id_category == $categories_tree_current_id}
-				{$category.name}</li>
+				{$category.name}
 			{else}
-				<a href="{$currentIndex}{$params_url}&token={$token}">{$category.name}</a></li>
+				<a href="{$currentIndex}{$params_url}&token={$token}">{$category.name}</a>
 			{/if}
+		</li>
 		{/foreach}
 	</ul>
 {/block}
