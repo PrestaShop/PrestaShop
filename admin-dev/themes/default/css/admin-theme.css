@@ -7902,14 +7902,17 @@ hr {
   word-wrap: nowrap;
   font-size: 12px;
   border-bottom: solid 1px #eeeeee; }
-/* line 368, admin-theme.sass */
+/* line 367, admin-theme.sass */
 .table td.center, .table th.center {
   text-align: center; }
-/* line 370, admin-theme.sass */
+/* line 369, admin-theme.sass */
+.table td.pointer {
+  cursor: pointer; }
+/* line 371, admin-theme.sass */
 .table tr td:first-child, .table tr th:first-child {
   border-top-left-radius: 3px;
   border-bottom-left-radius: 3px; }
-/* line 373, admin-theme.sass */
+/* line 374, admin-theme.sass */
 .table tr td:last-child, .table tr th:last-child {
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px; }
