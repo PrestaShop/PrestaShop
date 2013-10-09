@@ -36,13 +36,12 @@
 	</div>
 	<div class="col-lg-2">
 		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-			<img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt="">
 			{$language.iso_code}
 			<span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu">
 			{foreach from=$languages item=language}
-			<li><a href="javascript:hideOtherLanguage({$language.id_lang});"><img src="{$base_url}/img/l/{$language.id_lang|intval}.jpg" alt=""> {$language.name}</a></li>
+			<li><a href="javascript:hideOtherLanguage({$language.id_lang});">{$language.name}</a></li>
 			{/foreach}
 		</ul>
 	</div>
