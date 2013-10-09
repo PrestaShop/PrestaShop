@@ -367,7 +367,6 @@
 							name="{if isset($categoryData['submit']['name'])}{$categoryData['submit']['name']}{else}submitOptions{$table}{/if}"
 							class="btn btn-default {if isset($categoryData['submit']['class'])}{$categoryData['submit']['class']}{else}btn btn-default{/if}"
 							>
-							<i class="{if isset($categoryData['submit']['icon'])}{$categoryData['submit']['icon']}{else}icon-save{/if}"></i>
 							{if isset($categoryData['submit']['title'])}{$categoryData['submit']['title']}{else}{l s='Save'}{/if}
 						</button>
 					</div>
