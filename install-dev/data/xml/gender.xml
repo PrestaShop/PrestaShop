@@ -6,6 +6,5 @@
   <entities>
     <gender id="1" type="0"/>
     <gender id="2" type="1"/>
-    <gender id="3" type="1"/>
   </entities>
 </entity_gender>

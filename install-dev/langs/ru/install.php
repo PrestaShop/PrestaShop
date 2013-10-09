@@ -2,8 +2,8 @@
 return array(
 	'informations' => array(
 		'phone' => '+33 (0)1.40.18.30.04',
-        'support' => 'https://www.prestashop.com/ru/support',
-        'blog' => 'http://www.prestashop.com/blog/ru/'
+		'support' => 'https://www.prestashop.com/ru/support',
+		'blog' => 'http://www.prestashop.com/blog/ru/',
 	),
 	'translations' => array(
 		'An SQL error occured for entity <i>%1$s</i>: <i>%2$s</i>' => 'В SQL произошла ошибка для значения <i>%1$s</i>: <i>%2$s</i>',
@@ -242,5 +242,7 @@ return array(
 		'To enjoy the many features that are offered for free by PrestaShop, please read the license terms below. PrestaShop core is licensed under OSL 3.0, while the modules and themes are licensed under AFL 3.0.' => 'Чтобы пользоваться всем функционалом PrestaShop, прочтите лицензионное соглашение. Ядро PrestaShop разработано на OSL 3.0, модули и темы - на AFL 3.0.',
 		'For security purposes, you must delete the "install" folder.' => 'В целях безопасности, удалите папку "install\'.',
 		'http://doc.prestashop.com/display/PS15/Installing+PrestaShop#InstallingPrestaShop-Completingtheinstallation' => 'http://doc.prestashop.com/display/PS15/Installing+PrestaShop#InstallingPrestaShop-Completingtheinstallation',
+		'Files' => 'Файлы',
+		'All files are not successfuly uploaded on your server' => 'Все файлы успешно загружены на ваш сервер',
 	),
 );

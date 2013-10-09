@@ -27,7 +27,7 @@
 class HelperCore
 {
 	public $currentIndex;
-	public $table;
+	public $table = 'configuration';
 	public $identifier;
 	public $token;
 	public $toolbar_btn;
