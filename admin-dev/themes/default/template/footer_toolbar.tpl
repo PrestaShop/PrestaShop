@@ -28,7 +28,7 @@
 	{foreach from=$toolbar_btn item=btn key=k}
 		{if $k != 'modules-list'}
 			<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="btn btn-default" {if isset($btn.href)}href="{$btn.href}"{/if} {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
-				<i class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if} {if isset($btn.class)}{$btn.class}{/if}" ></i> {l s=$btn.desc}
+				<i class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if} {if isset($btn.class)}{$btn.class}{/if}" ></i> {$btn.desc}
 			</a>
 		{/if}
 	{/foreach}
@@ -49,7 +49,7 @@
 				btn_save_and_stay = $('i[class~="process-icon-save-and-stay"]').parent();
 
 				//get reference on current save link label
-				lbl_save = $('#desc-{$table}-save div');
+				lbl_save = $('#desc-{$table}-save');
 
 				//override save link label with submit button value
 				if (btn_submit.val().length > 0)
@@ -59,7 +59,7 @@
 				{
 
 					//get reference on current save link label
-					lbl_save_and_stay = $('#desc-{$table}-save-and-stay div');
+					lbl_save_and_stay = $('#desc-{$table}-save-and-stay');
 
 					//override save and stay link label with submit button value
 					if (btn_submit.val().length > 0 && lbl_save_and_stay && !lbl_save_and_stay.hasClass('locked'))
@@ -92,8 +92,8 @@
 					});
 
 					if (btn_save_and_stay)
-					{
-						btn_save_and_stay.click(function() {
+					{					
+						btn_save_and_stay.click(function(e) {
 							//add hidden input to emulate submit button click when posting the form -> field name posted
 							btn_submit.before('<input type="hidden" name="'+btn_submit.attr("name")+'AndStay" value="1" />');
 

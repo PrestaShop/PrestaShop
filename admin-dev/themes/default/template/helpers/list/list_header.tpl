@@ -82,7 +82,7 @@
 			<span class="panel-heading-action">
 			{foreach from=$toolbar_btn item=btn key=k}
 				{if $k != 'modules-list'}
-					<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="list-tooolbar-btn" {if isset($btn.href)}href="{$btn.href}"{/if} {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
+					<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="list-toolbar-btn" {if isset($btn.href)}href="{$btn.href}"{/if} {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
 						<label>
 							<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s=$btn.desc}" data-html="true">
 								<i class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if} {if isset($btn.class)}{$btn.class}{/if}" ></i>
@@ -91,7 +91,7 @@
 					</a>
 				{/if}
 			{/foreach}
-				<a id="desc-{$table}-refresh" class="list-tooolbar-btn" href="javascript:location.reload();">
+				<a id="desc-{$table}-refresh" class="list-toolbar-btn" href="javascript:location.reload();">
 					<label>
 						<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Refresh list'}" data-html="true">
 							<i class="process-icon-refresh" ></i>
