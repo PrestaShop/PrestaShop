@@ -28,17 +28,17 @@
 	var label_errors = '{l s='errors'}';
 	var label_error = '{l s='error'}';
 </script>
+
 <div id="container">
-	<fieldset>
 		<div class="row">	
 			<div id="error" class="hide col-lg-12 alert alert-danger">
 				{if isset($errors)}
-					<p>{if $nbErrors > 1}{l s='There are %d errors.' sprintf=$nbErrors}{else}{l s='There is %d error.' sprintf=$nbErrors}{/if}</p>
-					<ol>
-						{foreach from=$errors item="error"}
-							<li>{$error}</li>
-						{/foreach}
-					</ol>
+				<p>{if $nbErrors > 1}{l s='There are %d errors.' sprintf=$nbErrors}{else}{l s='There is %d error.' sprintf=$nbErrors}{/if}</p>
+				<ol>
+					{foreach from=$errors item="error"}
+						<li>{$error}</li>
+					{/foreach}
+				</ol>
 				{/if}
 			</div>
 			{if isset($warningSslMessage)}
@@ -47,98 +47,102 @@
 			<div id="login" class="col-lg-12">
 				<h1>{$shop_name}</h1>
 				{if !isset($wrong_folder_name) && !isset($wrong_install_name)}
-					<form action="#" id="login_form" method="post" class="form-horizontal">
-						<fieldset>
-							<div class="form-group">
-								<label for="email" class="control-label col-lg-3">
-									{l s='Email address:'}
-								</label>
-								<div class="input-group col-lg-5">
-									<span class="input-group-addon"><i class="icon-envelope"></i></span>
-									<input autofocus="autofocus" type="text" id="email" name="email" class="input email_field" value="{if isset($email)}{$email|escape:'htmlall':'UTF-8'}{/if}" />
-								</div>
-							</div>	
-							<div class="form-group">
-								<label for="passwd" class="control-label col-lg-3">
-									{l s='Password:'}
-								</label>
-								<div class="input-group col-lg-5">
-									<span class="input-group-addon"><i class="icon-key"></i></span>
-									<input id="passwd" type="password" name="passwd" class="input password_field" value="{if isset($password)}{$password}{/if}"/>
-								</div>
-							</div>									
-							<div class="form-group">
-								<div class="col-lg-9 col-lg-offset-3">
-									<button class="btn btn-default" name="submitLogin" type="submit">
-										{l s='Log in'}
-									</button>
-								</div>
+					<form action="#" id="login_form" class="panel" method="post">
+						<h3>{l s='Log in'}</h3>
+						<div class="form-group">
+							<label for="email">{l s='Email address:'}</label>
+							<div class="input-group">
+								<span class="input-group-addon"><i class="icon-envelope"></i></span>
+								<input
+									name="email"
+									type="text"
+									id="email"
+									class="email_field form-control"
+									value="{if isset($email)}{$email|escape:'htmlall':'UTF-8'}{/if}"
+									autofocus="autofocus"
+									placeholder="test@example.com" />
 							</div>
-							<div class="form-group">
-								<div class="col-lg-9 col-lg-offset-3">
-									<p>		
-										<a href="#" class="show-forgot-password">
-											<i class="icon-question-sign"></i>
-											{l s='Lost password?'}
-										</a>
-									</p>
-								</div>
+						</div>
+						<div class="form-group">
+							<label for="passwd">{l s='Password:'}</label>
+							<div class="input-group">
+								<span class="input-group-addon"><i class="icon-key"></i></span>
+								<input
+									name="passwd"
+									type="password"
+									id="passwd"
+									class="password_field form-control"
+									value="{if isset($password)}{$password}{/if}"
+									placeholder="{l s='Password'}" />
 							</div>
-							<input type="hidden" name="redirect" id="redirect" value="{$redirect}"/>
-						</fieldset>
-					</form>					
-					<form action="#" id="forgot_password_form" method="post" class="hide form-horizontal">
-						<fieldset>
-							<h2>{l s='Forgot your password?'}</h2>
-							<p>
-								<strong>{l s='In order to receive your access code by email, please enter the address you provided during the registration process.'}</strong>
-							</p>	
-							<div class="form-group">
-								<label class="control-label col-lg-3">
-									{l s='Email address:'}
-								</label>
-								<div class="input-group col-lg-5">
-									<span class="input-group-addon"><i class="icon-envelope"></i></span>
-									<input autofocus="autofocus" type="text" name="email_forgot" id="email_forgot" class="input email_field" />
-								</div>
+						</div>
+						<div class="form-group">
+							<button class="btn btn-default" name="submitLogin" type="submit">
+								<i class="icon-ok text-success"></i>
+								{l s='Log in'}
+							</button>
+							<button class="btn btn-link show-forgot-password" type="button">
+								<i class="icon-question-sign"></i>
+								{l s='Lost password?'}
+							</button>
+						</div>
+						<input type="hidden" name="redirect" id="redirect" value="{$redirect}"/>
+					</form>
+
+					<form action="#" id="forgot_password_form" method="post" class="hide form-horizontal panel">
+						<h3>{l s='Forgot your password?'}</h3>
+						<p class="alert alert-info">{l s='In order to receive your access code by email, please enter the address you provided during the registration process.'}
+						</p>	
+						<div class="form-group">
+							<label for="email_forgot">
+								{l s='Email address:'}
+							</label>
+							<div class="input-group">
+								<span class="input-group-addon"><i class="icon-envelope"></i></span>
+								<input
+									type="text"
+									name="email_forgot"
+									id="email_forgot"
+									class="input email_field form-control"
+									autofocus="autofocus"
+									placeholder="test@example.com" />
 							</div>
-							<div class="form-group">
-								<div class="col-lg-9 col-lg-offset-3">
-									<button class="btn btn-default" name="submitLogin" type="submit">
-										{l s='Send'}
-									</button>
-								</div>
-							</div>
-							<div class="form-group">
-								<div class="col-lg-9 col-lg-offset-3">
-									<p>		
-										<a href="#" class="show-login-form">
-											<i class="icon-angle-left"></i>
-											{l s='Back to login'}
-										</a>
-									</p>
-								</div>
-							</div>									
-						</fieldset>
+						</div>
+						<div class="form-group">
+							<button href="#" class="btn btn-default show-login-form">
+								<i class="icon-caret-left text-danger"></i>
+								{l s='Back to login'}
+							</button>
+							<button class="btn btn-default" name="submitLogin" type="submit">
+								<i class="icon-ok text-success"></i>
+								{l s='Send'}
+							</button>
+						</div>
 					</form>
 				{else}
 					<div class="col-lg-12">
 						<p>{l s='For security reasons, you cannot connect to the Back Office until after you have:'}</p>
 						<ul>
-							{if isset($wrong_install_name) && $wrong_install_name == true}<li>{l s='deleted the /install folder'}</li>{/if}
-							{if isset($wrong_folder_name) && $wrong_folder_name == true}<li>{l s='renamed the /admin folder (e.g. %s)' sprintf=$randomNb}</li>{/if}
+							{if isset($wrong_install_name) && $wrong_install_name == true}
+								<li>{l s='deleted the /install folder'}</li>
+							{/if}
+							{if isset($wrong_folder_name) && $wrong_folder_name == true}
+								<li>{l s='renamed the /admin folder (e.g. %s)' sprintf=$randomNb}</li>
+							{/if}
 						</ul>
 						<p>
-							<a href="{$adminUrl|escape:'htmlall':'UTF-8'}">{l s='Please then access this page by the new URL (e.g. %s)' sprintf=$adminUrl}</a>
+							<a href="{$adminUrl|escape:'htmlall':'UTF-8'}">
+								{l s='Please then access this page by the new URL (e.g. %s)' sprintf=$adminUrl}
+							</a>
 						</p>
 					</div>
 				{/if}
 			</div>
-			<p class="text-center">
-				<a href="http://www.prestashop.com">
-					&copy; 2005 - {$smarty.now|date_format:"%Y"} Copyright by PrestaShop. all rights reserved.
-				</a>
-			</p>
 		</div>	
-	</fieldset>
+
+	<p class="text-center text-muted">
+		<a href="http://www.prestashop.com">
+			&copy; 2005 - {$smarty.now|date_format:"%Y"} Copyright by PrestaShop. all rights reserved.
+		</a>
+	</p>
 </div>
