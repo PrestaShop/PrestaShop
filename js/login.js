@@ -1,30 +1,42 @@
 $(document).ready(function() {
 	// Initialize events
 	$("#login_form").validate({
-	      rules: {
-	         "email":{
-	            "email": true,
-	            "required": true
-	         },
-	         "passwd": {
-	            "required": true
-	         }
-	       },
-			submitHandler: function(form)
-			{
-			   doAjaxLogin($('#redirect').val());
+		  rules: {
+			 "email":{
+				"email": true,
+				"required": true },
+			 "passwd": {
+				"required": true }
+			},
+			submitHandler: function(form) {
+				doAjaxLogin($('#redirect').val());
+			},
+			// override jquery validate plugin defaults for bootstrap 3
+			highlight: function(element) {
+				$(element).closest('.form-group').addClass('has-error');
+			},
+			unhighlight: function(element) {
+				$(element).closest('.form-group').removeClass('has-error');
+			},
+			errorElement: 'span',
+			errorClass: 'help-block',
+			errorPlacement: function(error, element) {
+				if(element.parent('.input-group').length) {
+					error.insertAfter(element.parent());
+				} else {
+					error.insertAfter(element);
+				}
 			}
-	  });
+		});
 
 	$("#forgot_password_form").validate({
-	      rules: {
-	         "email_forgot":{
-	            "email": true,
-	            "required": true
-	         }
-	       },
-			submitHandler: function(form)
-			{
+		  rules: {
+			 "email_forgot": {
+				"email": true,
+				"required": true
+			 }
+		},
+		submitHandler: function(form) {
 			  doAjaxForgot();
 			}
 	  });
@@ -42,7 +54,6 @@ $(document).ready(function() {
 	});
 });
 
-
 function displayForgotPassword() {
 	$('#error').hide();
 	$('#login_form').fadeOut('fast', function () {
@@ -50,18 +61,15 @@ function displayForgotPassword() {
 		// Focus on email address forgot field
 		$('#email_forgot').select();
 	});
-
 }
 
 function displayLogin() {
 	$('#error').hide();
-
 	$('#forgot_password_form').fadeOut('fast', function () {
 		$('#login_form').fadeIn('fast');
 		// Focus on email address field
 		$('#email').select();
 	});
-
 	return false;
 }
 
@@ -101,6 +109,7 @@ function doAjaxLogin(redirect) {
 		});
 	});
 }
+
 function doAjaxForgot() {
 	$('#error').hide();
 	$('#forgot_password_form').fadeIn('slow', function() {
@@ -120,8 +129,7 @@ function doAjaxForgot() {
 			success: function(jsonData) {
 				if (jsonData.hasErrors)
 					displayErrors(jsonData.errors);
-				else
-				{
+				else {
 					alert(jsonData.confirm);
 					$('#forgot_password_form').hide();
 					displayLogin();
@@ -134,6 +142,7 @@ function doAjaxForgot() {
 		});
 	});
 }
+
 function displayErrors(errors) {
 	str_errors = '<p><strong>' + (errors.length > 1 ? there_are : there_is) + ' ' + errors.length + ' ' + (errors.length > 1 ? label_errors : label_error) + '</strong></p><ol>';
 	for (var error in errors) //IE6 bug fix
