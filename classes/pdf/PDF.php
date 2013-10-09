@@ -41,11 +41,12 @@ class PDFCore
 	const TEMPLATE_PACKAGE_SLIP = 'PackageSlip';
 	const TEMPLATE_SUPPLY_ORDER_FORM = 'SupplyOrderForm';
 
-	public function __construct($objects, $template, $smarty)
+	public function __construct($objects, $template, $smarty,$delivery_nr = false)
 	{
 		$this->pdf_renderer = new PDFGenerator((bool)Configuration::get('PS_PDF_USE_CACHE'));
 		$this->template = $template;
 		$this->smarty = $smarty;
+		$this->delivery_nr = $delivery_nr;
 
 		$this->objects = $objects;
 		if (!($objects instanceof Iterator) && !is_array($objects))
@@ -58,7 +59,8 @@ class PDFCore
 		$this->pdf_renderer->setFontForLang(Context::getContext()->language->iso_code);
 		foreach ($this->objects as $object)
 		{
-			$template = $this->getTemplateObject($object);
+
+		$template = $this->getTemplateObject($object);
 			if (!$template)
 				continue;
 
@@ -96,7 +98,7 @@ class PDFCore
 
 		if (class_exists($classname))
 		{
-			$class = new $classname($object, $this->smarty);
+			$class = new $classname($object, $this->smarty,$this->delivery_nr);
 			if (!($class instanceof HTMLTemplate))
 				throw new PrestaShopException('Invalid class. It should be an instance of HTMLTemplate');
 		}

@@ -31,15 +31,17 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 {
 	public $order;
 
-	public function __construct(OrderInvoice $order_invoice, $smarty)
+	public function __construct(OrderInvoice $order_invoice, $smarty,$delivery_nr = false)
 	{
+// 		print_r($order_invoice);
 		$this->order_invoice = $order_invoice;
 		$this->order = new Order($this->order_invoice->id_order);
 		$this->smarty = $smarty;
+		$this->delivery_nr = $delivery_nr;
 
 		// header informations
 		$this->date = Tools::displayDate($this->order->invoice_date);
-		$this->title = HTMLTemplateDeliverySlip::l('Delivery').' #'.Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id).sprintf('%06d', $this->order_invoice->delivery_number);
+		$this->title = HTMLTemplateDeliverySlip::l('Delivery').' #'.Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id).sprintf('%06d', $this->delivery_nr ? $this->order_invoice->id_order : $this->order_invoice->delivery_number) . ($this->delivery_nr ? '-' .$this->delivery_nr : '');
 
 		// footer informations
 		$this->shop = new Shop((int)$this->order->id_shop);
@@ -60,12 +62,24 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 			$invoice_address = new Address((int)$this->order->id_address_invoice);
 			$formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
 		}
+		if($this->delivery_nr) {
+			$products = $this->order->getProductsDelivery(false,false,false,$this->delivery_nr); // this will get all products...
+			$products = $products[$this->delivery_nr];
+			foreach($products as &$product) {
+				$product['product_quantity'] = $product['delivery_qty'];
+			}
+// 			echo('<pre>');
+// 			print_r($products);
+// 			echo('</pre>');
+		} else {
+			$products = $this->order_invoice->getProducts();
+		}
 		
 		$carrier = new Carrier($this->order->id_carrier);
 		$carrier->name = ($carrier->name == '0' ? Configuration::get('PS_SHOP_NAME') : $carrier->name);
 		$this->smarty->assign(array(
 			'order' => $this->order,
-			'order_details' => $this->order_invoice->getProducts(),
+			'order_details' => $products,
 			'delivery_address' => $formatted_delivery_address,
 			'invoice_address' => $formatted_invoice_address,
 			'order_invoice' => $this->order_invoice,

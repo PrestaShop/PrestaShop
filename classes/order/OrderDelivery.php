@@ -32,14 +32,22 @@ class OrderDeliveryCore extends ObjectModel
 	
 	/** @var integer */
 	public $id_shop;
+	
+	/** @var integer */
+	public $delivery_id;
+	
+	public $delivery_date;
+	
+	public $delivery_nr;
 
 	public static $definition = array(
 		'table' => 'order_delivery',
 		'primary' => 'delivery_id',
 		'fields' => array(
 			'id_order' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-			'id_shop' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_shop' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'delivery_nr' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'delivery_date' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
 		),
 	);
 
@@ -123,6 +131,7 @@ class OrderDeliveryCore extends ObjectModel
 	public function updateQty($product_id,$product_attribute_id,$delivery_id,$new_qty) {
 		Db::getInstance()->update('order_delivery_detail',array('delivery_qty' => $new_qty),
 		'`product_id` = ' . $product_id . ' AND `product_attribute_id` = '. $product_attribute_id .' AND `delivery_id` = ' . $delivery_id);
+		Db::getInstance()->update('order_delivery',array('delivery_date' => date('Y-m-d H:i:s') ), '`delivery_id` = ' . $delivery_id ); // update delivery date when adding product
 	}
 	
 	
@@ -141,5 +150,6 @@ class OrderDeliveryCore extends ObjectModel
 	public function createDeliveryDetail($delivery_id,$product_id,$product_attribute_id,$qty)
 	{
 		Db::getInstance()->insert('order_delivery_detail', array('product_id' => $product_id, 'product_attribute_id' => $product_attribute_id, 'delivery_id' => $delivery_id, 'delivery_qty' => $qty) );
+		Db::getInstance()->update('order_delivery',array('delivery_date' => date('Y-m-d H:i:s') ), '`delivery_id` = ' . $delivery_id ); // update delivery date when adding product
 	}
 }

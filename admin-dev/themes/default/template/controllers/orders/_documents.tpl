@@ -43,6 +43,8 @@
 		{/if}
 	{elseif get_class($document) eq 'OrderSlip'}
 		<tr class="invoice_line" id="orderslip_{$document->id}">
+	{elseif get_class($document) eq 'OrderDelivery'}
+		<tr class="delivery_line" id="delivery_{$document->id}">
 	{/if}
 
 		<td class="document_date">{dateFormat date=$document->date_add}</td>
@@ -57,6 +59,8 @@
 				{/if}
 			{elseif get_class($document) eq 'OrderSlip'}
 				{l s='Credit Slip'}
+			{elseif get_class($document) eq 'OrderDelivery'}
+				{l s='Delivery Slip'} {$document->delivery_nr}
 			{/if}</td>
 		<td class="document_number">
 			{if get_class($document) eq 'OrderInvoice'}
@@ -69,6 +73,8 @@
 			   {/if}
 			{elseif get_class($document) eq 'OrderSlip'}
 				<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateOrderSlipPDF&id_order_slip={$document->id}">
+			{elseif get_class($document) eq 'OrderDelivery'}
+				<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order_invoice={$document->id_order_invoice}&delivery_nr={$document->delivery_nr}">
 			{/if}
 			{if get_class($document) eq 'OrderInvoice'}
 				{if isset($document->is_delivery)}
@@ -80,6 +86,8 @@
 				{/if}
 			{elseif get_class($document) eq 'OrderSlip'}
 				#{Configuration::get('PS_CREDIT_SLIP_PREFIX', $current_id_lang)}{'%06d'|sprintf:$document->id}
+			{elseif get_class($document) eq 'OrderDelivery'}
+				#{Configuration::get('PS_DELIVERY_PREFIX', $current_id_lang, null, $order->id_shop)}{'%06d'|sprintf:$document->id_order}-{$document->delivery_nr}
 			{/if} <img src="../img/admin/details.gif" alt="{l s='See the document'}" /></a></td>
 		<td class="document_amount">
 		{if get_class($document) eq 'OrderInvoice'}
@@ -101,6 +109,8 @@
 			{/if}
 		{elseif get_class($document) eq 'OrderSlip'}
 			{displayPrice price=$document->amount currency=$currency->id}
+		{elseif get_class($document) eq 'OrderDelivery'}
+			--
 		{/if}
 		</td>
 		<td class="right document_action">

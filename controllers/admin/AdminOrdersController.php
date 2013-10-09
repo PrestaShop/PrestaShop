@@ -1320,7 +1320,9 @@ class AdminOrdersControllerCore extends AdminController
 		$ads_deliverynr = $order_delivery->getMaxNr($order);
 	
 		$delivered_products = $this->getProductsDelivery($order);
+// 		echo('<pre>');
 // 		print_r($delivered_products);
+// 		echo('</pre>');
 		$currency = new Currency((int)$order->id_currency);
 		// Carrier module call
 		$carrier_module_call = null;
@@ -2307,7 +2309,7 @@ class AdminOrdersControllerCore extends AdminController
 		{
 			foreach ($delivery as &$product)
 			{
-				// add missing elemnts to table.
+				// add missing elements to table.
 				if ($product['image'] != null)
 				{
 					$name = 'product_mini_'.(int)$product['product_id'].(isset($product['product_attribute_id']) ? '_'.(int)$product['product_attribute_id'] : '').'.jpg';

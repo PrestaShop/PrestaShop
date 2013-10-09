@@ -70,7 +70,11 @@ class AdminPdfControllerCore extends AdminController
 		if (Tools::isSubmit('id_order'))
 			$this->generateDeliverySlipPDFByIdOrder((int)Tools::getValue('id_order'));
 		elseif (Tools::isSubmit('id_order_invoice'))
-			$this->generateDeliverySlipPDFByIdOrderInvoice((int)Tools::getValue('id_order_invoice'));
+			if(Tools::isSubmit('delivery_nr')) {
+				$this->generateDeliverySlipPDFByIdOrderInvoice((int)Tools::getValue('id_order_invoice'),(int)Tools::getValue('delivery_nr'));
+			} else {
+				$this->generateDeliverySlipPDFByIdOrderInvoice((int)Tools::getValue('id_order_invoice'));	
+			}
 		elseif (Tools::isSubmit('id_delivery'))
 		{
 			$order = Order::getByDelivery((int)Tools::getValue('id_delivery'));
@@ -82,17 +86,8 @@ class AdminPdfControllerCore extends AdminController
 
 	public function processGeneratePackageSlipPDF()
 	{
-// 		if (Tools::isSubmit('id_order'))
-// 			$this->generateDeliverySlipPDFByIdOrder((int)Tools::getValue('id_order'));
-// 		else
 		if (Tools::isSubmit('id_order_invoice'))
-// 			$this->generateDeliverySlipPDFByIdOrderInvoice((int)Tools::getValue('id_order_invoice'));
 			$this->generatePackageSlipPDFByIdOrderInvoice((int)Tools::getValue('id_order_invoice'));
-// 		elseif (Tools::isSubmit('id_delivery'))
-// 		{
-// 			$order = Order::getByDelivery((int)Tools::getValue('id_delivery'));
-// 			$this->generateDeliverySlipPDFByIdOrder((int)$order->id);
-// 		}
 		else
 			die (Tools::displayError('The order ID -- or the invoice order ID -- is missing.'));
 	}
@@ -167,13 +162,12 @@ class AdminPdfControllerCore extends AdminController
 		$this->generatePDF($order_invoice_collection, PDF::TEMPLATE_DELIVERY_SLIP);
 	}
 
-	public function generateDeliverySlipPDFByIdOrderInvoice($id_order_invoice)
+	public function generateDeliverySlipPDFByIdOrderInvoice($id_order_invoice,$delivery_nr = false)
 	{
 		$order_invoice = new OrderInvoice((int)$id_order_invoice);
 		if (!Validate::isLoadedObject($order_invoice))
 			throw new PrestaShopException('Can\'t load Order Invoice object');
-
-		$this->generatePDF($order_invoice, PDF::TEMPLATE_DELIVERY_SLIP);
+		$this->generatePDF($order_invoice, PDF::TEMPLATE_DELIVERY_SLIP,$delivery_nr);
 	}
 
 	public function generatePackageSlipPDFByIdOrderInvoice($id_order_invoice)
@@ -206,9 +200,9 @@ class AdminPdfControllerCore extends AdminController
 		$this->generatePDF($order_invoice, PDF::TEMPLATE_INVOICE);
 	}
 
-	public function generatePDF($object, $template)
+	public function generatePDF($object, $template,$delivery_nr = false)
 	{
-		$pdf = new PDF($object, $template, Context::getContext()->smarty);
+		$pdf = new PDF($object, $template, Context::getContext()->smarty,$delivery_nr);
 		$pdf->render();
 	}
 }

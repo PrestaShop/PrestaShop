@@ -814,7 +814,6 @@
 					{/for}
 				</select>
 				<br><br>
-				{foreach from=$delivered_products item=$product}
 				<table style="width: 100%;" cellspacing="0" cellpadding="0" class="table" id="orderDeliveryProducts">
 					<tr>
 						<th height="39" align="center" style="width: 7%">&nbsp;</th>
@@ -824,20 +823,19 @@
 						{if $display_warehouse}<th style="text-align: center">{l s='Warehouse'}</th>{/if}
 						<th style="width: 10%; text-align: center">{l s='Total'} <sup>*</sup></th>
 					</tr>
-
-					{foreach from=$delivered_products item=$product}
-<!--						<tr>
-							<td colspan="6">{l s='Delivery'} {$k+1}</td>
+				{foreach from=$delivered_products item=delivery_nr key=k}
+						<tr>
+							<td colspan="6">{l s='Delivery'} {$k}</td>
 						</tr>
--->
+					{foreach from=$delivery_nr item=product}
 						{* Include customized datas partial *}
 						{include file='controllers/orders/_customized_data.tpl'}
 
 						{* Include product line partial *}
 						{include file='controllers/orders/_delivery_product_line.tpl'}
 					{/foreach}
-				</table>
 				{/foreach}
+				</table>
 				<div class="clear"></div>
 			</div>
 		</fieldset>

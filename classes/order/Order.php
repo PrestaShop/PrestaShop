@@ -494,7 +494,7 @@ class OrderCore extends ObjectModel
 		WHERE od.`id_order` = '.(int)($this->id));
 	}
 	
-	public function getProductsDeliveryDetails()
+	public function getProductsDeliveryDetails($get_delivery_nr = false)
 	{
 		$order_delivery = new OrderDelivery($this->id);
 		$delivery_ids = $order_delivery->getIds($this);
@@ -508,7 +508,7 @@ class OrderCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.product_id = odyd.product_id AND ody.id_order = od.id_order)
 			LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = odyd.product_id)
 			LEFT JOIN `'._DB_PREFIX_.'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = ' . $delivery_id['id_shop'] . ')
-			WHERE odyd.`delivery_id` = ' . $delivery_id['delivery_id']);
+			WHERE odyd.`delivery_id` = ' . $delivery_id['delivery_id'] . ($get_delivery_nr ? ' AND ody.`delivery_nr` =' . $get_delivery_nr : ''));
 			$nr = $order_delivery->getNrFromId($delivery_id['delivery_id']);
 			$details[$nr] = $detail;
 		}
@@ -609,11 +609,11 @@ class OrderCore extends ObjectModel
 		return $resultArray;
 	}
 	
-	public function getProductsDelivery($deliverd_products = false, $selectedProducts = false, $selectedQty = false)
+	public function getProductsDelivery($deliverd_products = false, $selectedProducts = false, $selectedQty = false,$get_delivery_nr = false)
 	{
 		if(!$deliverd_products)
 		{
-			$deliverd_products = $this->getProductsDeliveryDetails();
+			$deliverd_products = $this->getProductsDeliveryDetails($get_delivery_nr);
 		}
 			
 		$customized_datas = Product::getAllCustomizedDatas($this->id_cart);
@@ -1604,21 +1604,17 @@ class OrderCore extends ObjectModel
 		$invoices = $this->getInvoicesCollection()->getResults();
 		$delivery_slips = $this->getDeliverySlipsCollection()->getResults();
 		// @TODO review
-// 		$i = 0;
 		foreach ($delivery_slips as $delivery)
 		{
-			/* This needs to be rewritten to fit new delivery class.
-				if ads is true then there is no delivery_date
-				And this deliver_date should be added to order_delivery
-				delivery_date is the date that the last product was added to delivery.
-				also we need to retrive delivery_nr somehow. don't know if it is in $delivery
-				
-				AND then we also need to 
-			*/
-// 			$i++;
+			$id_order_invoice = Db::getInstance()->executeS('
+			SELECT id_order_invoice
+			FROM `'._DB_PREFIX_.'order_invoice` oi
+			WHERE oi.`id_order` = ' . $delivery->id_order);
+			$id_order_invoice = $id_order_invoice[0]['id_order_invoice'];
+
+			$delivery->id_order_invoice = $id_order_invoice;
 			$delivery->is_delivery = true;
 			$delivery->date_add = $delivery->delivery_date;
-// 			$delivery->delivery_id = $i;
 		}
 		$order_slips = $this->getOrderSlipsCollection()->getResults();
 		if(Configuration::get('PS_ADS')) {
@@ -1641,7 +1637,6 @@ class OrderCore extends ObjectModel
 		if(Configuration::get('PS_ADS')) {
 			$documents = array_merge($documents, $package_slip);
 		}
-// 		$documents = array_merge($invoices, $order_slips, $delivery_slips,$package_slip);
 		usort($documents, 'sortDocuments');
 
 		return $documents;
@@ -1707,10 +1702,10 @@ class OrderCore extends ObjectModel
 	 */
 	public function getPackageSlipCollection()
 	{
-		$order_invoices = new Collection('OrderInvoice');
-		$order_invoices->where('id_order', '=', $this->id);
-		$order_invoices->where('package', '!=', '0');
-		return $order_invoices;
+		$order_packages = new Collection('OrderInvoice');
+		$order_packages->where('id_order', '=', $this->id);
+		$order_packages->where('package', '!=', '0');
+		return $order_packages;
 	}
 	
 	/**
@@ -1721,22 +1716,18 @@ class OrderCore extends ObjectModel
 	 */
 	public function getDeliverySlipsCollection()
 	{
-	
 		if(Configuration::get('PS_ADS')) {
 			$order_delivery = new OrderDelivery();
 			$ads_deliverynr = $order_delivery->getMaxNr($this);
-			$order_invoices = new Collection('OrderDelivery');
-			$order_invoices->where('id_order', '=', $this->id);
-			echo('<pre>');
-			print_r($order_invoices);
-			echo('</pre>');
+			$order_deliverys = new Collection('OrderDelivery');
+			$order_deliverys->where('id_order', '=', $this->id);
 		} else {
-			$order_invoices = new Collection('OrderInvoice');
-			$order_invoices->where('id_order', '=', $this->id);
-			$order_invoices->where('delivery_number', '!=', '0');
+			$order_deliverys = new Collection('OrderInvoice');
+			$order_deliverys->where('id_order', '=', $this->id);
+			$order_deliverys->where('delivery_number', '!=', '0');
 		}
-		
-		return $order_invoices;
+
+		return $order_deliverys;
 	}
 	
 
