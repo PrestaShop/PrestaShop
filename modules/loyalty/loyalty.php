@@ -493,13 +493,20 @@ class Loyalty extends Module
 		include_once(dirname(__FILE__).'/LoyaltyModule.php');
 
 		$total_price = 0;
+		$taxesEnabled = Product::getTaxCalculationMethod();
 		$details = OrderReturn::getOrdersReturnDetail((int)$params['orderReturn']->id);
 		foreach ($details as $detail)
 		{
-			$total_price += Db::getInstance()->getValue('
-			SELECT ROUND(total_price_tax_incl, 2)
-			FROM '._DB_PREFIX_.'order_detail od
-			WHERE id_order_detail = '.(int)$detail['id_order_detail']);
+			if ($taxesEnabled == PS_TAX_EXC)
+				$total_price += Db::getInstance()->getValue('
+				SELECT ROUND(total_price_tax_excl, 2)
+				FROM '._DB_PREFIX_.'order_detail od
+				WHERE id_order_detail = '.(int)$detail['id_order_detail']);
+			else
+				$total_price += Db::getInstance()->getValue('
+				SELECT ROUND(total_price_tax_incl, 2)
+				FROM '._DB_PREFIX_.'order_detail od
+				WHERE id_order_detail = '.(int)$detail['id_order_detail']);
 		}
 
 		$loyalty_new = new LoyaltyModule();
@@ -650,8 +657,12 @@ class Loyalty extends Module
 		|| !Validate::isLoadedObject($loyalty = new LoyaltyModule((int)LoyaltyModule::getByOrderId((int)$params['order']->id))))
 			return false;
 
+		$taxesEnabled = Product::getTaxCalculationMethod();
 		$loyalty_new = new LoyaltyModule();
-		$loyalty_new->points = -1 * LoyaltyModule::getNbPointsByPrice(number_format($order_detail->total_price_tax_incl, 2, '.', ''));
+		if ($taxesEnabled == PS_TAX_EXC)
+			$loyalty_new->points = -1 * LoyaltyModule::getNbPointsByPrice(number_format($order_detail->total_price_tax_excl, 2, '.', ''));
+		else
+			$loyalty_new->points = -1 * LoyaltyModule::getNbPointsByPrice(number_format($order_detail->total_price_tax_incl, 2, '.', ''));	
 		$loyalty_new->id_loyalty_state = (int)LoyaltyStateModule::getCancelId();
 		$loyalty_new->id_order = (int)$params['order']->id;
 		$loyalty_new->id_customer = (int)$loyalty->id_customer;

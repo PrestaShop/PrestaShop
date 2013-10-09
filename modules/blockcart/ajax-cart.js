@@ -398,8 +398,7 @@ var ajaxCart = {
 		else
 		{
 			$('#vouchers tbody').html('');
-
-			for (i=0;i<jsonData.discounts.length;i++)
+			for (i=0; i < jsonData.discounts.length; i++)
 			{
 				if (parseFloat(jsonData.discounts[i].price_float) > 0)
 				{
@@ -408,15 +407,14 @@ var ajaxCart = {
 						delete_link = '<a class="delete_voucher" href="'+jsonData.discounts[i].link+'" title="'+delete_txt+'"><img src="'+img_dir+'icon/delete.gif" alt="'+delete_txt+'" class="icon" /></a>';
 					$('#vouchers tbody').append($(
 						'<tr class="bloc_cart_voucher" id="bloc_cart_voucher_'+jsonData.discounts[i].id+'">'
-						+'	<td class="quantity">1x</td>'
-						+'	<td class="name" title="'+jsonData.discounts[i].description+'">'+jsonData.discounts[i].name+'</td>'
-						+'	<td class="price">-'+jsonData.discounts[i].price+'</td>'
-						+'	<td class="delete">' + delete_link + '</td>'
-						+'</tr>'
+						+ '<td class="quantity">1x</td>'
+						+ '<td class="name" title="'+jsonData.discounts[i].description+'">'+jsonData.discounts[i].name+'</td>'
+						+ '<td class="price">-'+jsonData.discounts[i].price+'</td>'
+						+ '<td class="delete">' + delete_link + '</td>'
+						+ '</tr>'
 					));
 				}
 			}
-
 			$('#vouchers').show();
 		}
 
@@ -708,18 +706,18 @@ $(document).ready(function(){
 		function() {
 			$(this).css('border-radius', '3px 3px 0px 0px');
 			if (ajaxCart.nb_total_products > 0 || cart_qty > 0)
-				$("#cart_block").stop(true, true).slideDown(450);
+				$("#header_right #cart_block").stop(true, true).slideDown(450);
 		},
 		function() {
 			$('#shopping_cart a').css('border-radius', '3px');
 			setTimeout(function() {
 				if (!shopping_cart.isHoveringOver() && !cart_block.isHoveringOver())
-					$("#cart_block").stop(true, true).slideUp(450);
+					$("#header_right #cart_block").stop(true, true).slideUp(450);
 			}, 200);
 		}
 	);
 
-	$("#cart_block").hover(
+	$("#header_right #cart_block").hover(
 		function() {
 			$('#shopping_cart a').css('border-radius', '3px 3px 0px 0px');
 		},
@@ -727,7 +725,7 @@ $(document).ready(function(){
 			$('#shopping_cart a').css('border-radius', '3px');
 			setTimeout(function() {
 				if (!shopping_cart.isHoveringOver())
-					$("#cart_block").stop(true, true).slideUp(450);
+					$("#header_right #cart_block").stop(true, true).slideUp(450);
 			}, 200);
 		}
 	);

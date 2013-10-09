@@ -251,6 +251,8 @@ class FrontControllerCore extends Controller
 			$this->context->cart = $cart;
 			CartRule::autoAddToCart($this->context);
 		}
+		else
+			$this->context->cart = $cart;	
 
 		/* get page name to display it in body id */
 
@@ -325,7 +327,7 @@ class FrontControllerCore extends Controller
 			'currencies' => Currency::getCurrencies(),
 			'languages' => $languages,
 			'meta_language' => implode('-', $meta_language),
-			'priceDisplay' => Product::getTaxCalculationMethod(),
+			'priceDisplay' => Product::getTaxCalculationMethod((int)$this->context->cookie->id_customer),
 			'add_prod_display' => (int)Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
 			'shop_name' => Configuration::get('PS_SHOP_NAME'),
 			'roundMode' => (int)Configuration::get('PS_PRICE_ROUND_MODE'),

@@ -1187,7 +1187,7 @@ class WebserviceRequestCore
 				else
 				{
 					$object = new $this->resourceConfiguration['retrieveData']['className']();
-					if ($object->isMultiShopField($this->resourceConfiguration['fields'][$fieldName]['sqlId']))
+					if ($object->isMultiShopField($this->resourceConfiguration['fields'][$fieldName]['sqlId']) || $fieldName == 'id')
 						$table_alias = 'multi_shop_'.$this->resourceConfiguration['retrieveData']['table'];
 					else
 						$table_alias = '';
