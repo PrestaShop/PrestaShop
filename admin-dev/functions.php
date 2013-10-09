@@ -183,7 +183,7 @@ function getPath($urlBase, $id_category, $path = '', $highlight = '', $categoryT
 
 		$name = ($highlight != null) ? str_ireplace($highlight, '<span class="highlight">'.$highlight.'</span>', CMSCategory::hideCMSCategoryPosition($category->name)) : CMSCategory::hideCMSCategoryPosition($category->name);
 		$edit = '<a href="'.$urlBase.'&id_cms_category='.$category->id.'&addcategory&token=' . Tools::getAdminToken('AdminCmsContent'.(int)(Tab::getIdFromClassName('AdminCmsContent')).(int)$context->employee->id).'">
-				<img src="../img/admin/edit.gif" alt="Modify" /></a> ';
+				<i class="icon-pencil"></i></a> ';
 		if ($category->id == 1)
 			$edit = '<li><a href="'.$urlBase.'&id_cms_category='.$category->id.'&viewcategory&token=' . Tools::getAdminToken('AdminCmsContent'.(int)(Tab::getIdFromClassName('AdminCmsContent')).(int)$context->employee->id).'">
 					<i class="icon-home"></i></a></li> ';
