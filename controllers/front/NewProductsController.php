@@ -63,8 +63,11 @@ class NewProductsControllerCore extends FrontController
 
 		$this->pagination($nbProducts);
 
+		$products = Product::getNewProducts($this->context->language->id, (int)($this->p) - 1, (int)($this->n), false, $this->orderBy, $this->orderWay);
+		$this->addColorsToProductList($products);
+
 		$this->context->smarty->assign(array(
-			'products' => Product::getNewProducts($this->context->language->id, (int)($this->p) - 1, (int)($this->n), false, $this->orderBy, $this->orderWay),
+			'products' => $products,
 			'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
 			'nbProducts' => (int)($nbProducts),
 			'homeSize' => Image::getSize(ImageType::getFormatedName('home')),
