@@ -201,6 +201,17 @@ class AdminInvoicesControllerCore extends AdminController
 		));
 	}
 
+	public function initToolbarTitle()
+	{
+		$this->toolbar_title = array_unique($this->breadcrumbs);
+	}
+
+	public function initPageHeaderToolbar()
+	{
+		parent::initPageHeaderToolbar();
+		unset($this->page_header_toolbar_btn['cancel']);
+	}
+
 	public function postProcess()
 	{
 		if (Tools::isSubmit('submitAddinvoice_date'))
