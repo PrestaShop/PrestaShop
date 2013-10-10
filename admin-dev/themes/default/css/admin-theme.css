@@ -7598,12 +7598,12 @@ html, body {
   color: contrasted(#e6e8e3); }
 /* line 46, admin-theme.sass */
 #content h3:not(.modal-title) .badge, #content .panel-heading:not(.modal-title) .badge, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) .badge, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) .badge, #content h3:not(.modal-title) #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper #content h3:not(.modal-title) .notifs_badge, #content .panel-heading:not(.modal-title) #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper #content .panel-heading:not(.modal-title) .notifs_badge, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) .notifs_badge, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) .notifs_badge, #content .panel-heading .badge, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .badge, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header .badge, #content .panel-heading #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper #content .panel-heading .notifs_badge, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .notifs_badge, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header .notifs_badge {
-  background-color: white;
-  -webkit-border-radius: none;
-  -moz-border-radius: none;
-  -ms-border-radius: none;
-  -o-border-radius: none;
-  border-radius: none;
+  background-color: #1ba6e5;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -ms-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0;
   height: 29px;
   line-height: 25px;
   font-size: 1.3em;
@@ -7634,10 +7634,6 @@ html, body {
 #content .panel-danger .panel-heading, #content .panel-danger #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header, #header_notifs_icon_wrapper .notifs_panel #content .panel-danger .notifs_panel_header {
   background-color: #8bc954 !important; }
 /* line 74, admin-theme.sass */
-#content .panel-heading-big {
-  font-size: 2em;
-  text-align: center; }
-/* line 77, admin-theme.sass */
 #content form .alert, #content form #carrier_wizard .wizard_error, #carrier_wizard #content form .wizard_error {
   clear: both; }
 @media (max-width: 768px) {
@@ -7646,7 +7642,7 @@ html, body {
     margin-left: 0;
     width: 100%; } }
 
-/* line 84, admin-theme.sass */
+/* line 81, admin-theme.sass */
 #nobootstrap {
   float: left; }
 
@@ -8817,21 +8813,28 @@ textarea {
   .page-head h2.page-title {
     padding: 0 0 0 20px; } }
 /* line 21, admin-theme/_admin-toolbar.sass */
+.page-head h2.page-title a {
+  border-bottom: dotted 1px white; }
+/* line 23, admin-theme/_admin-toolbar.sass */
+.page-head h2.page-title a:hover {
+  color: black;
+  border-color: black; }
+/* line 26, admin-theme/_admin-toolbar.sass */
 .page-head a {
   color: white;
-  font-style: underline; }
-/* line 24, admin-theme/_admin-toolbar.sass */
+  text-decoration: none; }
+/* line 30, admin-theme/_admin-toolbar.sass */
 .page-head .btn-toolbar {
   margin: 0;
   padding: 3px 0 0 0; }
-/* line 27, admin-theme/_admin-toolbar.sass */
+/* line 33, admin-theme/_admin-toolbar.sass */
 .page-head .btn-toolbar .nav-tabs {
   margin: 0; }
-/* line 29, admin-theme/_admin-toolbar.sass */
+/* line 35, admin-theme/_admin-toolbar.sass */
 .page-head .btn-toolbar .nav-tabs > li > a {
   color: #333333; }
 
-/* line 32, admin-theme/_admin-toolbar.sass */
+/* line 38, admin-theme/_admin-toolbar.sass */
 .toolbar_btn {
   position: relative;
   padding: 2px 5px !important;
@@ -8841,13 +8844,13 @@ textarea {
   color: white;
   text-align: center;
   text-shadow: none; }
-/* line 41, admin-theme/_admin-toolbar.sass */
+/* line 47, admin-theme/_admin-toolbar.sass */
 .toolbar_btn:hover {
   color: #8fc04d;
   border-color: white;
   background-color: white !important; }
 
-/* line 46, admin-theme/_admin-toolbar.sass */
+/* line 52, admin-theme/_admin-toolbar.sass */
 [class^="process-icon-"], [class*=" process-icon-"] {
   height: 25px;
   min-width: 32px;
