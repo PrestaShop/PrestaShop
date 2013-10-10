@@ -10,35 +10,20 @@ $(document).ready(function()
 	var wrapper_id = "";
 	var type = new Array();
 	
-	$(".notifs").live("click", function(){
-		// Add class "open_notifs" to the clicked notification, remove the class from other notificationqs
-		$('.notifs').removeClass('open_notifs');
-		$(this).addClass('open_notifs');
-		
-		wrapper_id = $(this).attr("id");
-		type = wrapper_id.split("s_notif")
+	$(".notifs").click(function(){
+		var wrapper_id = $(this).parent().attr("id");
+
 		$.post("ajax.php",
 			{
-				"updateElementEmployee" : "1", "updateElementEmployeeType" : type[0]
+				"updateElementEmployee" : "1",
+				"updateElementEmployeeType" : $(this).parent().attr('data-type')
 			}, function(data) {
 			if(data)
 			{
-				if(!$("#" + wrapper_id + "_wrapper").is(":visible"))
-				{
-					$(".notifs_wrapper").hide();
-					$("#" + wrapper_id + "_number_wrapper").hide();  
-					$("#" + wrapper_id + "_wrapper").show();  
-				}else
-				{
-					$("#" + wrapper_id + "_wrapper").hide();							
-				}
+				$("#" + wrapper_id + "_value").html(0);
+				$("#" + wrapper_id + "_number_wrapper").hide();
 			}				
 		});
-	});
-	
-	$("#main").click(function(){
-		$(".notifs_wrapper").hide();
-		$('.notifs').removeClass('open_notifs');
 	});
 
 	// call it once immediately, then use setTimeout if refresh is activated
@@ -66,7 +51,7 @@ function getPush(refresh)
 				html += "<small class='text-muted'>1 minute ago</small>";
 				html += "</span></a>";
 			});
-			if (json.order.total)
+			if (parseInt(json.order.total) > 0)
 			{
 				//$("#list_orders_notif").prev("p").hide();
 				$("#list_orders_notif").empty().append(html);
@@ -88,7 +73,7 @@ function getPush(refresh)
 				html += "<small class='text-muted'>1 minute ago</small>";
 				html += "</span></a>";
 			});						
-			if (json.customer.total)
+			if (parseInt(json.customer.total) > 0)
 			{
 				//$("#list_customers_notif").prev("p").hide();
 				$("#list_customers_notif").empty().append(html);
@@ -111,7 +96,7 @@ function getPush(refresh)
 				html += "</span></a>";
 			});
 
-			if (json.customer_message.total)
+			if (parseInt(json.customer_message.total) > 0)
 			{
 				// $("#list_customer_messages_notif").prev("p").hide();
 				$("#list_customer_messages_notif").empty().append(html);

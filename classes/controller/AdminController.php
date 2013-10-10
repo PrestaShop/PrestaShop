@@ -1503,7 +1503,7 @@ class AdminControllerCore extends Controller
 			/* Hooks are volontary out the initialize array (need those variables already assigned) */
 			$bo_color = empty($this->context->employee->bo_color) ? '#FFFFFF' : $this->context->employee->bo_color;
 			$this->context->smarty->assign(array(
-				'autorefresh_notifications' => Configuration::get('PS_ADMIN_REFRESH_NOTIFICATION'),
+				'autorefresh_notifications' => Configuration::get('PS_ADMINREFRESH_NOTIFICATION'),
 				'help_box' => Configuration::get('PS_HELPBOX'),
 				'round_mode' => Configuration::get('PS_PRICE_ROUND_MODE'),
 				'brightness' => Tools::getBrightness($bo_color) < 128 ? 'white' : '#383838',
