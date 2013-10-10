@@ -1073,7 +1073,7 @@ class AdminTranslationsControllerCore extends AdminController
 		{
 			case 'front':
 					// Parsing file in Front office
-					$regex = '/\{l\s*s=(?|\'('._PS_TRANS_PATTERN_.')\'|"('._PS_TRANS_PATTERN_.')")(\s*sprintf=.*)?(\s*js=1)?\s*\}/U';
+					$regex = '/\{l\s*s=[\'\"]'._PS_TRANS_PATTERN_.'[\'\"](\s*sprintf=.*)?(\s*js=1)?\s*\}/U';
 				break;
 
 			case 'back':
@@ -1083,7 +1083,7 @@ class AdminTranslationsControllerCore extends AdminController
 					else if ($type_file == 'specific')
 						$regex = '/Translate::getAdminTranslation\(\''._PS_TRANS_PATTERN_.'\'\)/U';
 					else
-						$regex = '/\{l\s*s\s*=(?|\''._PS_TRANS_PATTERN_.'\'|"'._PS_TRANS_PATTERN_.'")(\s*sprintf=.*)?(\s*js=1)?(\s*slashes=1)?\s*\}/U';
+						$regex = '/\{l\s*s\s*=[\'\"]'._PS_TRANS_PATTERN_.'[\'\"](\s*sprintf=.*)?(\s*js=1)?(\s*slashes=1)?\s*\}/U';
 				break;
 
 			case 'errors':
@@ -1097,7 +1097,10 @@ class AdminTranslationsControllerCore extends AdminController
 						$regex = '/->l\(\''._PS_TRANS_PATTERN_.'\'(, ?\'(.+)\')?(, ?(.+))?\)/U';
 					else
 						// In tpl file look for something that should contain mod='module_name' according to the documentation
-						$regex = '/\{l\s*s=(?|\''._PS_TRANS_PATTERN_.'\'|"'._PS_TRANS_PATTERN_.'").*\s+mod=\''.$module_name.'\'.*\}/U';
+						$regex = array(
+							'/\{l\s*s=\''._PS_TRANS_PATTERN_.'\'.*\s+mod=\''.$module_name.'\'.*\}/U',
+							'/\{l\s*s=\"'._PS_TRANS_PATTERN_.'\".*\s+mod=\''.$module_name.'\'.*\}/U'
+						);
 				break;
 
 			case 'pdf':
@@ -1105,11 +1108,21 @@ class AdminTranslationsControllerCore extends AdminController
 					if ($type_file == 'php')
 						$regex = '/HTMLTemplate.*::l\(\''._PS_TRANS_PATTERN_.'\'[\)|\,]/U';
 					else
-						$regex = '/\{l\s*s=(?|\''._PS_TRANS_PATTERN_.'\'|"'._PS_TRANS_PATTERN_.'")(\s*sprintf=.*)?(\s*js=1)?(\s*pdf=\'true\')?\s*\}/U';
+						$regex = '/\{l\s*s=[\'\"]'._PS_TRANS_PATTERN_.'[\'\"](\s*sprintf=.*)?(\s*js=1)?(\s*pdf=\'true\')?\s*\}/U';
 				break;
 		}
 
-		preg_match_all($regex, $content, $matches);
+		if (is_array($regex))
+		{
+			$matches = array(1 => array());
+			foreach ($regex as $regex_row)
+			{
+				preg_match_all($regex_row, $content, $matches2);
+				$matches[1] = array_merge($matches[1], $matches2[1]);
+			}
+		}
+		else
+			preg_match_all($regex, $content, $matches);
 
 		return $matches[1];
 	}
