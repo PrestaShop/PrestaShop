@@ -94,7 +94,8 @@ function doAjaxLogin(redirect) {
 				submitLogin: "1",
 				passwd: $('#passwd').val(),
 				email: $('#email').val(),
-				redirect: redirect
+				redirect: redirect,
+				stay_logged_in: $('#stay_logged_in:checked').val()
 			},
 			success: function(jsonData) {
 				if (jsonData.hasErrors)
