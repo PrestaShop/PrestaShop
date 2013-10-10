@@ -180,6 +180,10 @@ class AdminLoginControllerCore extends AdminController
 				$cookie->profile = $this->context->employee->id_profile;
 				$cookie->passwd = $this->context->employee->passwd;
 				$cookie->remote_addr = $this->context->employee->remote_addr;
+
+				if (!Tools::getValue('stay_logged_in'))
+					$cookie->last_activity = time();
+
 				$cookie->write();
 
 				// If there is a valid controller name submitted, redirect to it

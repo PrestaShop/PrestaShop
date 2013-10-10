@@ -85,12 +85,8 @@
 				</div>
 				<div class="form-group">
 					<div class="checkbox">
-						<label for="stayloggedin">
-							<input
-								name="stayloggedin"
-								type="checkbox"
-								id="stayloggedin"
-							/>
+						<label for="stay_logged_in">
+							<input name="stay_logged_in" type="checkbox" id="stay_logged_in" value="1"	/>
 							{l s='Keep me logged in'}
 						</label>
 					</div>
