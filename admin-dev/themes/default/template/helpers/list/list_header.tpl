@@ -77,7 +77,7 @@
 	{block name="override_form_extra"}{/block}
 	<fieldset class="col-lg-12">
 		<div class="panel-heading">
-			{if is_array($title)}{$title|end}{else}{$title}{/if}
+			{if isset($icon)}<i class="{$icon}"></i> {/if}{if is_array($title)}{$title|end}{else}{$title}{/if}
 			{if isset($toolbar_btn) && count($toolbar_btn) >0}
 			<span class="panel-heading-action">
 			{foreach from=$toolbar_btn item=btn key=k}
@@ -177,7 +177,7 @@
 {/if}
 {if $simple_header}
 <fieldset class="col-lg-12">
-	<h3>{if is_array($title)}{$title|end}{else}{$title}{/if}</h3>
+	<h3>{if isset($icon)}<i class="{$icon}"></i> {/if}{if is_array($title)}{$title|end}{else}{$title}{/if}</h3>
 {/if}
 	<div class="table-responsive clearfix">
 		<table
