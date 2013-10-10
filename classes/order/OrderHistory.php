@@ -76,7 +76,7 @@ class OrderHistoryCore extends ObjectModel
 	 * @param int/object $id_order
 	 * @param bool $use_existing_payment
 	 */
-	public function changeIdOrderState($new_order_state, $id_order, $use_existing_payment = false)
+	public function changeIdOrderState($new_order_state, $id_order, $use_existing_payment = false,$delivery_id = false)
 	{
 		if (!$new_order_state || !$id_order)
 			return;
@@ -167,6 +167,14 @@ class OrderHistoryCore extends ObjectModel
 				
 			$errorOrCanceledStatuses = array(Configuration::get('PS_OS_ERROR'), Configuration::get('PS_OS_CANCELED'));
 			
+			if(Configuration::get('PS_ADS') ) {
+				if($new_os->partially_shipped)
+				{
+					$order_delivery = new OrderDelivery($order->id);
+					$order_delivery->setPartiallyShipped($delivery_id);
+				}
+			}
+
 			// foreach products of the order
 			if (Validate::isLoadedObject($old_os))			
 				foreach ($order->getProductsDetail() as $product)

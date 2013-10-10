@@ -60,6 +60,9 @@ class OrderStateCore extends ObjectModel
 	/** @var boolean Shipped */
 	public $shipped;
 
+	/** @var boolean Partially shipped */
+	public partially_shipped;
+
 	/** @var boolean Paid */
 	public $paid;
 	
@@ -86,6 +89,7 @@ class OrderStateCore extends ObjectModel
 			'hidden' =>		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'paid' =>		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'deleted' =>	array('type' => self::TYPE_BOOL, 'validade' => 'isBool'),
+			'partially_shipped' =>	array('type' => self::TYPE_BOOL, 'validade' => 'isBool'),
 
 			// Lang fields
 			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),

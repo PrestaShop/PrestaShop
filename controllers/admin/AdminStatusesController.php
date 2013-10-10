@@ -353,6 +353,18 @@ class AdminStatusesControllerCore extends AdminController
 					'desc' => "Advanced Delivery System must be enabled.",
 				),
 				array(
+					'type' => 'checkbox',
+					'name' => 'partially_shipped',
+					'values' => array(
+						'query' => array(
+							array('id' => 'on',  'name' => $this->l('Set the order as partially shipped'), 'val' => '1'),
+							),
+						'id' => 'id',
+						'name' => 'name'
+					),
+					'desc' => "Advanced Delivery System must be enabled.",
+				),
+				array(
 					'type' => 'select_template',
 					'label' => $this->l('Template:'),
 					'name' => 'template',
@@ -394,6 +406,7 @@ class AdminStatusesControllerCore extends AdminController
 			'paid_on' => $this->getFieldValue($obj, 'paid'),
 			'delivery_on' => $this->getFieldValue($obj, 'delivery'),
 			'package_on' => $this->getFieldValue($obj, 'package'),
+			'partially_shipped_on' => $this->getFieldValue($obj, 'partially_shipped'),
 		);
 
 		return parent::renderForm();
@@ -509,6 +522,7 @@ class AdminStatusesControllerCore extends AdminController
 			$_POST['paid'] = (int)Tools::getValue('paid_on');
 			$_POST['delivery'] = (int)Tools::getValue('delivery_on');
 			$_POST['package'] = (int)Tools::getValue('package_on');
+			$_POST['partially_shipped'] = (int)Tools::getValue('partially_shipped_on');
 			if (!$_POST['send_email'])
 			{
 				$languages = Language::getLanguages(false);

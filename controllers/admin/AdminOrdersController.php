@@ -338,6 +338,7 @@ class AdminOrdersControllerCore extends AdminController
 					$current_order_state = $order->getCurrentOrderState();
 					if ($current_order_state->id != $order_state->id)
 					{
+						$delivery_nr = Tools::getValue('delivery_nr');
 						// Create new OrderHistory
 						$history = new OrderHistory();
 						$history->id_order = $order->id;
@@ -346,7 +347,9 @@ class AdminOrdersControllerCore extends AdminController
 						$use_existings_payment = false;
 						if (!$order->hasInvoice())
 							$use_existings_payment = true;
-						$history->changeIdOrderState((int)$order_state->id, $order, $use_existings_payment);
+						$order_delivery = new OrderDelivery($order->id);
+						$delivery_id = $order_delivery->getIdFromNr($delivery_nr,$order);
+						$history->changeIdOrderState((int)$order_state->id, $order, $use_existings_payment,$delivery_id);
 
 						$carrier = new Carrier($order->id_carrier, $order->id_lang);
 						$templateVars = array();

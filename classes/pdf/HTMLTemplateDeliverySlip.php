@@ -104,7 +104,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 	 */
 	public function getFilename()
 	{
-		return Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order->invoice_number).'.pdf';
+		return Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order->invoice_number) . ($this->delivery_nr ? '-' .$this->delivery_nr : '')  .'.pdf';
 	}
 }
 

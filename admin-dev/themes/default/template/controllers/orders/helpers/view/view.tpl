@@ -117,6 +117,7 @@
 				{/foreach}
 				</select>
 				<input type="hidden" name="id_order" value="{$order->id}" />
+				<input type="hidden" name="delivery_nr" value="{$ads_deliverynr}" />
 				<input type="submit" name="submitState" value="{l s='Add'}" class="button" />
 			</form>
 			<br />
@@ -789,6 +790,8 @@
 			if(adsProductName != '') {
 				window.setTimeout(function ()
 				{
+				var refel = document.getElementById('adsReference')
+				refel.focus();
 				var el = document.getElementById('adsProductName')
 				el.scrollIntoView(true);
 				}, 0);
@@ -806,14 +809,7 @@
 				<button type="submit" name="submitAdsAdd" value="{$ads_deliverynr}">Add</button>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<button type="submit" name="submitAdsAddAll" value="{$ads_deliverynr}">Add All products</button>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<input type="submit" name="submitAdsGenSlip" value="Generate Delivery Slip for: ">
-				<select name="adsSlipNr" id="adsSlipNr">
-					{for $var=1 to $ads_deliverynr}
-						<option value="{$var}" >{$var}</option>
-					{/for}
-				</select>
-				<br><br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br><br>
 				<table style="width: 100%;" cellspacing="0" cellpadding="0" class="table" id="orderDeliveryProducts">
 					<tr>
 						<th height="39" align="center" style="width: 7%">&nbsp;</th>
@@ -829,7 +825,7 @@
 						</tr>
 					{foreach from=$delivery_nr item=product}
 						{* Include customized datas partial *}
-						{include file='controllers/orders/_customized_data.tpl'}
+						{include file='controllers/orders/_delivery_customized_data.tpl'}
 
 						{* Include product line partial *}
 						{include file='controllers/orders/_delivery_product_line.tpl'}

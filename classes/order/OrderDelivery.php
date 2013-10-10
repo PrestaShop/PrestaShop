@@ -66,13 +66,17 @@ class OrderDeliveryCore extends ObjectModel
 
 	public function getMaxNr($order)
 	{
-		$nr = Db::getInstance()->executeS('
-		SELECT MAX(delivery_nr) as delivery_nr
+		$result = Db::getInstance()->executeS('
+		SELECT MAX(delivery_nr) as delivery_nr,shipped
 		FROM `'._DB_PREFIX_.'order_delivery` ody
 		WHERE ody.`id_order` = ' . (int)$order->id . ' AND ody.`id_shop` = ' . (int)$order->id_shop);
-		$nr = $nr[0]['delivery_nr'];
+		$nr = $result[0]['delivery_nr'];
+		$shipped = $result[0]['shipped'];
 		if($nr == "") { // if no number was found, then change to default 1
 			$nr = 1;
+		}
+		if($shipped != "" && $shipped = 1) {
+			$nr++; // if maximum delivery nr is marked as shipped, then we need to increase the delivery nr, so that a new delivery is created.
 		}
 		return $nr;
 	}
@@ -152,4 +156,10 @@ class OrderDeliveryCore extends ObjectModel
 		Db::getInstance()->insert('order_delivery_detail', array('product_id' => $product_id, 'product_attribute_id' => $product_attribute_id, 'delivery_id' => $delivery_id, 'delivery_qty' => $qty) );
 		Db::getInstance()->update('order_delivery',array('delivery_date' => date('Y-m-d H:i:s') ), '`delivery_id` = ' . $delivery_id ); // update delivery date when adding product
 	}
+
+	public function setPartiallyShipped($delivery_id)
+	{
+		Db::getInstance()->update('order_delivery',array('shipped' => 1 ), '`delivery_id` = ' . $delivery_id ); // set delivery id as shipped
+	}
+
 }
