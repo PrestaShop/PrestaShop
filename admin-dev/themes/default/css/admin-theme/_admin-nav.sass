@@ -2,6 +2,7 @@
 	float: left
 	width: 240px
 	height: 100%!important
+	overflow-y: auto
 	z-index: 500
 	background-color: $main-color
 	border-right: 1px solid black
@@ -35,17 +36,17 @@
 						color: black
 						background-color: white
 			&.active
-				a.title:hover
+				a.title:hover:not(.active)
 					color: contrast-color($main-color, white, #333, 10%)
 			&.expanded
 				a.title
 					color: white
 					background-color: darken($main-color,10%)
 					border-bottom: solid 1px darken($main-color,25%)
-					&:hover
-						background-color: lighten($main-color,10%)
 					i
 						color: white
+					&:hover
+						background-color: lighten($main-color,10%)
 				span.submenu_expand
 					@extend .icon-angle-up
 				ul.submenu

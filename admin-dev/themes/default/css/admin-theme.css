@@ -7543,9 +7543,10 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 /* line 7, admin-theme.sass */
 html, body {
+  min-height: 100%;
   height: 100%; }
 
-/* line 10, admin-theme.sass */
+/* line 11, admin-theme.sass */
 #main {
   min-height: 100%;
   padding: 36px 0 60px;
@@ -7553,7 +7554,7 @@ html, body {
   background-color: #f8f8f8;
   background-image: url("../img/patterns/bedge_grunge.png"); }
 
-/* line 17, admin-theme.sass */
+/* line 18, admin-theme.sass */
 #content {
   padding: 80px 20px 0;
   margin-left: 240px;
@@ -7567,7 +7568,7 @@ html, body {
   -moz-transition-timing-function: ease-out;
   -o-transition-timing-function: ease-out;
   transition-timing-function: ease-out; }
-/* line 23, admin-theme.sass */
+/* line 24, admin-theme.sass */
 #content fieldset, #content .panel, #content #header_notifs_icon_wrapper .notifs_panel, #header_notifs_icon_wrapper #content .notifs_panel, #content #dash_version {
   padding: 20px;
   margin-bottom: 20px;
@@ -7580,7 +7581,7 @@ html, body {
   border-radius: 5px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0 2px 0, white 0 0 0 3px inset;
   box-shadow: rgba(0, 0, 0, 0.1) 0 2px 0, white 0 0 0 3px inset; }
-/* line 32, admin-theme.sass */
+/* line 33, admin-theme.sass */
 #content h3:not(.modal-title), #content .panel-heading:not(.modal-title), #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title), #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title), #content .panel-heading, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header {
   border: none;
   padding: 0 5px;
@@ -7592,10 +7593,10 @@ html, body {
   text-transform: uppercase;
   background-color: white;
   border-bottom: solid 1px #cccccc; }
-/* line 43, admin-theme.sass */
+/* line 44, admin-theme.sass */
 #content h3:not(.modal-title) i, #content .panel-heading:not(.modal-title) i, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) i, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) i, #content h3:not(.modal-title) a, #content .panel-heading:not(.modal-title) a, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) a, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) a, #content .panel-heading i, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header i, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header i, #content .panel-heading a, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header a, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header a {
   color: contrasted(#e6e8e3); }
-/* line 45, admin-theme.sass */
+/* line 46, admin-theme.sass */
 #content h3:not(.modal-title) .badge, #content .panel-heading:not(.modal-title) .badge, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) .badge, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) .badge, #content h3:not(.modal-title) #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper #content h3:not(.modal-title) .notifs_badge, #content .panel-heading:not(.modal-title) #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper #content .panel-heading:not(.modal-title) .notifs_badge, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) .notifs_badge, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) .notifs_badge, #content .panel-heading .badge, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .badge, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header .badge, #content .panel-heading #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper #content .panel-heading .notifs_badge, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .notifs_badge, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header .notifs_badge {
   background-color: white;
   -webkit-border-radius: none;
@@ -7610,105 +7611,66 @@ html, body {
   font-weight: 300;
   float: left;
   margin-left: -5px; }
-/* line 55, admin-theme.sass */
+/* line 56, admin-theme.sass */
 #content h3:not(.modal-title) .panel-heading-action, #content .panel-heading:not(.modal-title) .panel-heading-action, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) .panel-heading-action, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) .panel-heading-action, #content .panel-heading .panel-heading-action, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .panel-heading-action, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header .panel-heading-action {
   margin-right: -5px; }
-/* line 58, admin-theme.sass */
+/* line 59, admin-theme.sass */
 #content h3:not(.modal-title) .panel-heading-action a.list-toolbar-btn, #content .panel-heading:not(.modal-title) .panel-heading-action a.list-toolbar-btn, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) .panel-heading-action a.list-toolbar-btn, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) .panel-heading-action a.list-toolbar-btn, #content .panel-heading .panel-heading-action a.list-toolbar-btn, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .panel-heading-action a.list-toolbar-btn, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header .panel-heading-action a.list-toolbar-btn {
   float: left;
   height: 30px;
   width: 30px;
   color: #1ba6e5;
   border-left: solid 1px #cccccc; }
-/* line 64, admin-theme.sass */
+/* line 65, admin-theme.sass */
 #content h3:not(.modal-title) .panel-heading-action a.list-toolbar-btn:hover, #content .panel-heading:not(.modal-title) .panel-heading-action a.list-toolbar-btn:hover, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) .panel-heading-action a.list-toolbar-btn:hover, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) .panel-heading-action a.list-toolbar-btn:hover, #content .panel-heading .panel-heading-action a.list-toolbar-btn:hover, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .panel-heading-action a.list-toolbar-btn:hover, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header .panel-heading-action a.list-toolbar-btn:hover {
   text-decoration: none;
   color: black; }
-/* line 67, admin-theme.sass */
+/* line 68, admin-theme.sass */
 #content h3:not(.modal-title) .panel-heading-action a.list-toolbar-btn i, #content .panel-heading:not(.modal-title) .panel-heading-action a.list-toolbar-btn i, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) .panel-heading-action a.list-toolbar-btn i, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) .panel-heading-action a.list-toolbar-btn i, #content .panel-heading .panel-heading-action a.list-toolbar-btn i, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .panel-heading-action a.list-toolbar-btn i, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header .panel-heading-action a.list-toolbar-btn i {
   text-align: center;
   font-size: 1.3em;
   line-height: 30px; }
-/* line 71, admin-theme.sass */
+/* line 72, admin-theme.sass */
 #content .panel-danger .panel-heading, #content .panel-danger #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header, #header_notifs_icon_wrapper .notifs_panel #content .panel-danger .notifs_panel_header {
   background-color: #8bc954 !important; }
-/* line 73, admin-theme.sass */
+/* line 74, admin-theme.sass */
 #content .panel-heading-big {
   font-size: 2em;
   text-align: center; }
-/* line 76, admin-theme.sass */
+/* line 77, admin-theme.sass */
 #content form .alert, #content form #carrier_wizard .wizard_error, #carrier_wizard #content form .wizard_error {
   clear: both; }
 @media (max-width: 768px) {
-  /* line 17, admin-theme.sass */
+  /* line 18, admin-theme.sass */
   #content {
     margin-left: 0;
     width: 100%; } }
 
-/* line 83, admin-theme.sass */
-.page-head {
-  width: 100%;
-  height: 55px;
-  padding: 0 10px 0 0;
-  margin: 0;
-  border-bottom: 4px solid #75a139;
-  position: fixed;
-  top: 36px;
-  left: 0px;
-  z-index: 499;
-  background-color: #8fc04d;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0 7px 0;
-  box-shadow: rgba(0, 0, 0, 0.15) 0 7px 0; }
-/* line 95, admin-theme.sass */
-.page-head h2.page-title {
-  padding: 0 0 0 260px;
-  font-size: 18px;
-  color: white;
-  text-transform: uppercase; }
-@media (max-width: 768px) {
-  /* line 95, admin-theme.sass */
-  .page-head h2.page-title {
-    padding: 0 0 0 20px; } }
-/* line 103, admin-theme.sass */
-.page-head a {
-  color: white;
-  font-style: underline; }
-/* line 106, admin-theme.sass */
-.page-head .btn-toolbar {
-  margin: 0;
-  padding: 3px 0 0 0; }
-/* line 109, admin-theme.sass */
-.page-head .btn-toolbar .nav-tabs {
-  margin: 0; }
-/* line 111, admin-theme.sass */
-.page-head .btn-toolbar .nav-tabs > li > a {
-  color: #333333; }
-
-/* line 114, admin-theme.sass */
+/* line 84, admin-theme.sass */
 .navbar-inner {
   box-shadow: none !important; }
-/* line 116, admin-theme.sass */
+/* line 86, admin-theme.sass */
 .navbar-inner .input-append {
   margin-bottom: 0; }
 
-/* line 119, admin-theme.sass */
+/* line 89, admin-theme.sass */
 .breadcrumb {
   background-color: white; }
 
-/* line 122, admin-theme.sass */
+/* line 92, admin-theme.sass */
 #nobootstrap {
   float: left; }
 
-/* line 134, admin-theme.sass */
+/* line 104, admin-theme.sass */
 .nav-tabs {
   border-bottom: none; }
-/* line 136, admin-theme.sass */
+/* line 106, admin-theme.sass */
 .nav-tabs li a {
   font-size: 1.1em;
   font-family: "Ubuntu", sans-serif;
   text-transform: uppercase;
   font-weight: 300; }
-/* line 142, admin-theme.sass */
+/* line 112, admin-theme.sass */
 .nav-tabs li.active a, .nav-tabs li.active a:hover {
   background-color: white; }
 
@@ -7775,16 +7737,18 @@ html, body {
 /* line 1, admin-theme/_admin-footer.sass */
 #footer {
   z-index: 600;
-  min-height: 60px;
   display: block;
   width: 100%;
-  padding: 15px 0 0 0;
-  background-color: #242424;
-  color: #888888; }
-/* line 9, admin-theme/_admin-footer.sass */
+  background-color: rgba(36, 36, 36, 0.85);
+  color: #888888;
+  position: fixed;
+  bottom: 0;
+  height: 50px;
+  line-height: 50px; }
+/* line 11, admin-theme/_admin-footer.sass */
 #footer a {
   color: #cccccc; }
-/* line 11, admin-theme/_admin-footer.sass */
+/* line 13, admin-theme/_admin-footer.sass */
 #footer #go-top {
   position: fixed;
   bottom: 10px;
@@ -7802,14 +7766,14 @@ html, body {
   cursor: pointer;
   font-size: 16px;
   background-color: rgba(0, 0, 0, 0.5); }
-/* line 28, admin-theme/_admin-footer.sass */
+/* line 30, admin-theme/_admin-footer.sass */
 #footer #go-top:hover {
   background-color: black; }
-
 /* line 32, admin-theme/_admin-footer.sass */
-a.link-social:hover {
-  text-decoration: none; }
-/* line 34, admin-theme/_admin-footer.sass */
+#footer .social-networks {
+  margin: 4px 0 0 0; }
+
+/* line 36, admin-theme/_admin-footer.sass */
 a.link-social i {
   font-size: 2em;
   width: 30px;
@@ -7822,36 +7786,56 @@ a.link-social i {
   -ms-border-radius: 30px;
   -o-border-radius: 30px;
   border-radius: 30px; }
+/* line 44, admin-theme/_admin-footer.sass */
+a.link-social:hover {
+  text-decoration: none; }
 
-/* line 42, admin-theme/_admin-footer.sass */
+/* line 47, admin-theme/_admin-footer.sass */
 .link-twitter i {
   color: white;
   background-color: #7cceef; }
+/* line 50, admin-theme/_admin-footer.sass */
+.link-twitter i:hover {
+  color: #7cceef;
+  background-color: white; }
 
-/* line 45, admin-theme/_admin-footer.sass */
+/* line 53, admin-theme/_admin-footer.sass */
 .link-facebook i {
   color: white;
   background-color: #557dbb; }
+/* line 56, admin-theme/_admin-footer.sass */
+.link-facebook i:hover {
+  color: #557dbb;
+  background-color: white; }
 
-/* line 48, admin-theme/_admin-footer.sass */
+/* line 59, admin-theme/_admin-footer.sass */
 .link-github i {
   color: black;
   background-color: white; }
+/* line 62, admin-theme/_admin-footer.sass */
+.link-github i:hover {
+  color: white;
+  background-color: black; }
 
-/* line 51, admin-theme/_admin-footer.sass */
+/* line 65, admin-theme/_admin-footer.sass */
 .link-google i {
   color: white;
   background-color: #e6644e; }
+/* line 68, admin-theme/_admin-footer.sass */
+.link-google i:hover {
+  color: #e6644e;
+  background-color: white; }
 
 /* line 1, admin-theme/_admin-nav.sass */
 #nav-sidebar {
   float: left;
   width: 240px;
   height: 100% !important;
+  overflow-y: auto;
   z-index: 500;
   background-color: #515561;
   border-right: 1px solid black; }
-/* line 8, admin-theme/_admin-nav.sass */
+/* line 9, admin-theme/_admin-nav.sass */
 #nav-sidebar li.maintab > a > i {
   display: inline-block;
   height: 30px;
@@ -7865,56 +7849,56 @@ a.link-social i {
   -ms-border-radius: 40px;
   -o-border-radius: 40px;
   border-radius: 40px; }
-/* line 18, admin-theme/_admin-nav.sass */
+/* line 19, admin-theme/_admin-nav.sass */
 #nav-sidebar li:not(.active) ul {
   display: none; }
-/* line 21, admin-theme/_admin-nav.sass */
+/* line 22, admin-theme/_admin-nav.sass */
 #nav-sidebar li.active span.submenu_expand {
   display: none; }
-/* line 23, admin-theme/_admin-nav.sass */
+/* line 24, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu {
   margin: 0;
   padding: 0;
   border-top: 1px black solid;
   list-style: none; }
-/* line 28, admin-theme/_admin-nav.sass */
+/* line 29, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu li.maintab {
   position: relative; }
-/* line 31, admin-theme/_admin-nav.sass */
+/* line 32, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu li.maintab.active a.title {
   color: white;
   background-color: #1ba6e5; }
-/* line 34, admin-theme/_admin-nav.sass */
+/* line 35, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu li.maintab.active a.title i {
   color: black;
   background-color: white; }
-/* line 38, admin-theme/_admin-nav.sass */
-#nav-sidebar ul.menu li.maintab.active a.title:hover {
+/* line 39, admin-theme/_admin-nav.sass */
+#nav-sidebar ul.menu li.maintab.active a.title:hover:not(.active) {
   color: white; }
-/* line 41, admin-theme/_admin-nav.sass */
+/* line 42, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu li.maintab.expanded a.title {
   color: white;
   background-color: #3a3d45;
   border-bottom: solid 1px #17181c; }
-/* line 45, admin-theme/_admin-nav.sass */
-#nav-sidebar ul.menu li.maintab.expanded a.title:hover {
-  background-color: #686d7d; }
-/* line 47, admin-theme/_admin-nav.sass */
+/* line 46, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu li.maintab.expanded a.title i {
   color: white; }
-/* line 51, admin-theme/_admin-nav.sass */
+/* line 48, admin-theme/_admin-nav.sass */
+#nav-sidebar ul.menu li.maintab.expanded a.title:hover {
+  background-color: #686d7d; }
+/* line 52, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu li.maintab.expanded ul.submenu {
   display: block; }
-/* line 53, admin-theme/_admin-nav.sass */
+/* line 54, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu li.maintab.expanded ul.submenu a {
   color: #9da1ae;
   background-color: #2e3037;
   border-bottom: solid 1px #17181c; }
-/* line 57, admin-theme/_admin-nav.sass */
+/* line 58, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu li.maintab.expanded ul.submenu a:hover {
   color: white;
   background-color: #454953; }
-/* line 60, admin-theme/_admin-nav.sass */
+/* line 61, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu li.maintab a.title {
   display: block;
   position: relative;
@@ -7936,7 +7920,7 @@ a.link-social i {
   -moz-transition-timing-function: ease-out;
   -o-transition-timing-function: ease-out;
   transition-timing-function: ease-out; }
-/* line 75, admin-theme/_admin-nav.sass */
+/* line 76, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu li.maintab a.title i {
   color: #9094a2;
   background-color: #17181c;
@@ -7950,14 +7934,14 @@ a.link-social i {
   -moz-transition-timing-function: ease-out;
   -o-transition-timing-function: ease-out;
   transition-timing-function: ease-out; }
-/* line 81, admin-theme/_admin-nav.sass */
+/* line 82, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu li.maintab a.title:hover {
   background-color: #686d7d;
   color: white; }
-/* line 84, admin-theme/_admin-nav.sass */
+/* line 85, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu li.maintab a.title:hover i {
   color: white; }
-/* line 86, admin-theme/_admin-nav.sass */
+/* line 87, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu li.maintab span.submenu_expand {
   position: absolute;
   right: 10px;
@@ -7969,15 +7953,15 @@ a.link-social i {
   color: black;
   background-color: transparent;
   text-shadow: #686d7d 1px 1px 0; }
-/* line 99, admin-theme/_admin-nav.sass */
+/* line 100, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu li.maintab span.submenu_expand:hover {
   color: white;
   text-shadow: #232429 -1px -1px 0; }
-/* line 102, admin-theme/_admin-nav.sass */
+/* line 103, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.submenu {
   list-style: none;
   padding: 0; }
-/* line 106, admin-theme/_admin-nav.sass */
+/* line 107, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.submenu li a {
   display: block;
   padding: 4px 5px 4px 10px;
@@ -7985,15 +7969,15 @@ a.link-social i {
   border: none;
   border-bottom: solid 1px #eeeeee;
   background-color: white; }
-/* line 113, admin-theme/_admin-nav.sass */
+/* line 114, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.submenu li a:hover {
   color: #515561;
   background-color: #edeeef;
   text-decoration: none; }
-/* line 117, admin-theme/_admin-nav.sass */
+/* line 118, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.submenu li:last-child a {
   border-bottom: none; }
-/* line 119, admin-theme/_admin-nav.sass */
+/* line 120, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.submenu li.active a {
   color: white;
   background-color: #1ba6e5;
@@ -8003,7 +7987,7 @@ a.link-social i {
   #nav-sidebar {
     display: none; } }
 
-/* line 126, admin-theme/_admin-nav.sass */
+/* line 127, admin-theme/_admin-nav.sass */
 #nav-topbar {
   position: fixed;
   height: 28px;
@@ -8012,14 +7996,14 @@ a.link-social i {
   width: 100%;
   z-index: 600;
   background-color: white; }
-/* line 134, admin-theme/_admin-nav.sass */
+/* line 135, admin-theme/_admin-nav.sass */
 #nav-topbar ul.menu {
   height: 28px;
   margin: 0;
   padding: 0;
   display: block;
   list-style: none; }
-/* line 140, admin-theme/_admin-nav.sass */
+/* line 141, admin-theme/_admin-nav.sass */
 #nav-topbar ul.menu > li {
   height: 28px;
   padding: 0;
@@ -8028,46 +8012,46 @@ a.link-social i {
   list-style: none;
   position: relative;
   float: left; }
-/* line 148, admin-theme/_admin-nav.sass */
+/* line 149, admin-theme/_admin-nav.sass */
 #nav-topbar ul.menu > li > a {
   display: block;
   line-height: 28px;
   color: #515561;
   padding: 0 6px;
   margin: 0; }
-/* line 154, admin-theme/_admin-nav.sass */
+/* line 155, admin-theme/_admin-nav.sass */
 #nav-topbar ul.menu > li > a i {
   margin: 0;
   width: 15px;
   background-color: transparent;
   font-size: 18px; }
-/* line 159, admin-theme/_admin-nav.sass */
+/* line 160, admin-theme/_admin-nav.sass */
 #nav-topbar ul.menu > li > a:hover {
   text-decoration: none;
   background-color: #515561;
   color: white; }
-/* line 163, admin-theme/_admin-nav.sass */
+/* line 164, admin-theme/_admin-nav.sass */
 #nav-topbar ul.menu > li > a:hover i {
   color: white !important; }
-/* line 166, admin-theme/_admin-nav.sass */
+/* line 167, admin-theme/_admin-nav.sass */
 #nav-topbar ul.menu > li.active > a {
   color: white;
   background-color: #515561; }
-/* line 169, admin-theme/_admin-nav.sass */
+/* line 170, admin-theme/_admin-nav.sass */
 #nav-topbar ul.menu > li.active > a i {
   color: white; }
-/* line 171, admin-theme/_admin-nav.sass */
+/* line 172, admin-theme/_admin-nav.sass */
 #nav-topbar .menu-collapse {
   display: none; }
-/* line 173, admin-theme/_admin-nav.sass */
+/* line 174, admin-theme/_admin-nav.sass */
 #nav-topbar ul.submenu {
   display: none !important;
   -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0 2px 4px;
   box-shadow: rgba(0, 0, 0, 0.3) 0 2px 4px; }
-/* line 177, admin-theme/_admin-nav.sass */
+/* line 178, admin-theme/_admin-nav.sass */
 #nav-topbar > ul.menu > li.expanded ul.submenu {
   display: block !important; }
-/* line 180, admin-theme/_admin-nav.sass */
+/* line 181, admin-theme/_admin-nav.sass */
 #nav-topbar > ul.menu > li ul.submenu {
   display: none !important;
   position: absolute;
@@ -8076,33 +8060,33 @@ a.link-social i {
   left: 0;
   top: 28px;
   width: 200px !important; }
-/* line 188, admin-theme/_admin-nav.sass */
+/* line 189, admin-theme/_admin-nav.sass */
 #nav-topbar > ul.menu > li ul.submenu li {
   width: 200px;
   padding: 0;
   list-style: none; }
-/* line 192, admin-theme/_admin-nav.sass */
+/* line 193, admin-theme/_admin-nav.sass */
 #nav-topbar > ul.menu > li ul.submenu li a {
   display: block;
   padding: 4px 5px 4px 10px;
   font-size: 12px;
   background-color: white;
   border-bottom: solid 1px #eeeeee; }
-/* line 198, admin-theme/_admin-nav.sass */
+/* line 199, admin-theme/_admin-nav.sass */
 #nav-topbar > ul.menu > li ul.submenu li a:hover {
   color: #515561;
   background-color: #edeeef;
   text-decoration: none; }
-/* line 202, admin-theme/_admin-nav.sass */
+/* line 203, admin-theme/_admin-nav.sass */
 #nav-topbar > ul.menu > li ul.submenu li:last-child a {
   border-bottom: none; }
-/* line 204, admin-theme/_admin-nav.sass */
+/* line 205, admin-theme/_admin-nav.sass */
 #nav-topbar > ul.menu > li ul.submenu li.active a {
   color: white;
   background-color: #1ba6e5;
   border-bottom: solid 1px #1585b8; }
 
-/* line 209, admin-theme/_admin-nav.sass */
+/* line 210, admin-theme/_admin-nav.sass */
 .menu-collapse {
   height: 54px;
   width: 100%;
@@ -8114,24 +8098,24 @@ a.link-social i {
   border-bottom: 3px solid #3a3d45;
   color: #0b0c0e; }
 
-/* line 221, admin-theme/_admin-nav.sass */
+/* line 222, admin-theme/_admin-nav.sass */
 .page-topbar #main {
   padding-top: 64px; }
-/* line 223, admin-theme/_admin-nav.sass */
+/* line 224, admin-theme/_admin-nav.sass */
 .page-topbar #nav-sidebar {
   display: none; }
-/* line 225, admin-theme/_admin-nav.sass */
+/* line 226, admin-theme/_admin-nav.sass */
 .page-topbar .page-head {
   top: 63px; }
-/* line 227, admin-theme/_admin-nav.sass */
+/* line 228, admin-theme/_admin-nav.sass */
 .page-topbar #content {
   margin-left: 0;
   width: 100%; }
-/* line 230, admin-theme/_admin-nav.sass */
+/* line 231, admin-theme/_admin-nav.sass */
 .page-topbar #content .page-head h2.page-title {
   padding: 0 0 0 20px; }
 
-/* line 234, admin-theme/_admin-nav.sass */
+/* line 235, admin-theme/_admin-nav.sass */
 .page-sidebar-closed #nav-sidebar {
   width: 50px;
   -webkit-transition-property: width;
@@ -8144,10 +8128,10 @@ a.link-social i {
   -moz-transition-timing-function: ease-out;
   -o-transition-timing-function: ease-out;
   transition-timing-function: ease-out; }
-/* line 239, admin-theme/_admin-nav.sass */
+/* line 240, admin-theme/_admin-nav.sass */
 .page-sidebar-closed #nav-sidebar span.title {
   display: none; }
-/* line 241, admin-theme/_admin-nav.sass */
+/* line 242, admin-theme/_admin-nav.sass */
 .page-sidebar-closed #nav-sidebar ul.submenu {
   display: none !important;
   padding-top: 37px;
@@ -8155,39 +8139,39 @@ a.link-social i {
   top: 0;
   -webkit-box-shadow: rgba(0, 0, 0, 0.2) 1px 1px 0, rgba(0, 0, 0, 0.3) 2px 2px 4px;
   box-shadow: rgba(0, 0, 0, 0.2) 1px 1px 0, rgba(0, 0, 0, 0.3) 2px 2px 4px; }
-/* line 247, admin-theme/_admin-nav.sass */
+/* line 248, admin-theme/_admin-nav.sass */
 .page-sidebar-closed #nav-sidebar > ul > li:hover {
   width: 250px !important;
   position: relative; }
-/* line 250, admin-theme/_admin-nav.sass */
+/* line 251, admin-theme/_admin-nav.sass */
 .page-sidebar-closed #nav-sidebar > ul > li:hover span.title {
   display: inline-block; }
-/* line 252, admin-theme/_admin-nav.sass */
+/* line 253, admin-theme/_admin-nav.sass */
 .page-sidebar-closed #nav-sidebar > ul > li:hover ul.submenu {
   display: block !important;
   position: absolute;
   left: 50px;
   width: 200px !important; }
-/* line 257, admin-theme/_admin-nav.sass */
+/* line 258, admin-theme/_admin-nav.sass */
 .page-sidebar-closed #content {
   margin-left: 50px; }
-/* line 259, admin-theme/_admin-nav.sass */
+/* line 260, admin-theme/_admin-nav.sass */
 .page-sidebar-closed #content .page-head h2.page-title {
   padding: 0 0 0 70px; }
 @media (max-width: 768px) {
-  /* line 259, admin-theme/_admin-nav.sass */
+  /* line 260, admin-theme/_admin-nav.sass */
   .page-sidebar-closed #content .page-head h2.page-title {
     padding: 0 0 0 20px; } }
 @media (max-width: 768px) {
-  /* line 257, admin-theme/_admin-nav.sass */
+  /* line 258, admin-theme/_admin-nav.sass */
   .page-sidebar-closed #content {
     margin-left: 0;
     width: 100%; } }
-/* line 266, admin-theme/_admin-nav.sass */
+/* line 267, admin-theme/_admin-nav.sass */
 .page-sidebar-closed .submenu_expand {
   display: none; }
 
-/* line 298, admin-theme/_admin-nav.sass */
+/* line 299, admin-theme/_admin-nav.sass */
 [class^="icon-Admin"] {
   margin-right: 6px; }
 
@@ -8310,6 +8294,10 @@ tr.highlighted td {
 /* line 56, admin-theme/_admin-tables.sass */
 td.actions {
   min-width: 200px; }
+
+/* line 59, admin-theme/_admin-tables.sass */
+.bulk-actions {
+  margin: 17px 0; }
 
 /* line 1, admin-theme/_admin-tree.sass */
 .tree {
@@ -8816,6 +8804,45 @@ textarea {
   .prestashop-switch span {
     color: white; } }
 /* line 1, admin-theme/_admin-toolbar.sass */
+.page-head {
+  width: 100%;
+  height: 55px;
+  padding: 0 10px 0 0;
+  margin: 0;
+  border-bottom: 4px solid #75a139;
+  position: fixed;
+  top: 36px;
+  left: 0px;
+  z-index: 499;
+  background-color: #8fc04d;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0 7px 0;
+  box-shadow: rgba(0, 0, 0, 0.15) 0 7px 0; }
+/* line 13, admin-theme/_admin-toolbar.sass */
+.page-head h2.page-title {
+  padding: 0 0 0 260px;
+  font-size: 18px;
+  color: white;
+  text-transform: uppercase; }
+@media (max-width: 768px) {
+  /* line 13, admin-theme/_admin-toolbar.sass */
+  .page-head h2.page-title {
+    padding: 0 0 0 20px; } }
+/* line 21, admin-theme/_admin-toolbar.sass */
+.page-head a {
+  color: white;
+  font-style: underline; }
+/* line 24, admin-theme/_admin-toolbar.sass */
+.page-head .btn-toolbar {
+  margin: 0;
+  padding: 3px 0 0 0; }
+/* line 27, admin-theme/_admin-toolbar.sass */
+.page-head .btn-toolbar .nav-tabs {
+  margin: 0; }
+/* line 29, admin-theme/_admin-toolbar.sass */
+.page-head .btn-toolbar .nav-tabs > li > a {
+  color: #333333; }
+
+/* line 32, admin-theme/_admin-toolbar.sass */
 .toolbar_btn {
   position: relative;
   padding: 2px 5px !important;
@@ -8825,13 +8852,13 @@ textarea {
   color: white;
   text-align: center;
   text-shadow: none; }
-/* line 10, admin-theme/_admin-toolbar.sass */
+/* line 41, admin-theme/_admin-toolbar.sass */
 .toolbar_btn:hover {
   color: #8fc04d;
   border-color: white;
   background-color: white !important; }
 
-/* line 15, admin-theme/_admin-toolbar.sass */
+/* line 46, admin-theme/_admin-toolbar.sass */
 [class^="process-icon-"], [class*=" process-icon-"] {
   height: 25px;
   min-width: 32px;
