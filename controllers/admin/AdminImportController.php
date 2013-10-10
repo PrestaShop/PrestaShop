@@ -2862,7 +2862,7 @@ class AdminImportControllerCore extends AdminController
 		{
 			$filename = base64_decode($filename);
 			$file =  _PS_ADMIN_DIR_.'/import/'.basename($filename);
-			if (realpath(dirname($file)) != _PS_ADMIN_DIR_.'/import')
+			if (realpath(dirname($file)) != _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'import')
 				exit();
 			if (!empty($filename))
 			{
