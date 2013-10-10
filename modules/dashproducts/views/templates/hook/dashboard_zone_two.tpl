@@ -24,7 +24,8 @@
 *}
 
 <section id="dashproducts" class="panel widget">
-	<header class="panel-heading">
+
+	<header class="panel-heading row-margin-bottom">
 		<i class="icon-bar-chart"></i> {l s='Product and Sales'}
 		<span class="panel-heading-action">
 			<a class="list-toolbar-btn" href="#" title="configure">
@@ -37,7 +38,7 @@
 	</header>
 
 	<nav>
-		<ul class="nav">
+		<ul class="nav nav-tabs">
 			<li class="active"><a href="#dash_recent_orders" data-toggle="tab">
 				<i class="icon-fire"></i> {l s='Recent Orders'}</a>
 			</li>
@@ -51,9 +52,9 @@
 				<i class="icon-thumbs-up"></i> {l s='Best Sales'}</a></li>
 		</ul>
 	</nav>
-	<div class="tab-content">
-		<div class="tab-pane active" id="dash_recent_orders">
-			<h4>{l s="Last 10 orders:"}</h4>
+	<div class="tab-content panel">
+		<div class="tab-pane  active" id="dash_recent_orders">
+			<h3>{l s="Last 10 orders:"}</h3>
 			<table class="table data_table" id="table_recent_orders">
 				<thead>
 				</thead>
@@ -62,7 +63,7 @@
 			</table>
 		</div>
 		<div class="tab-pane" id="dash_best_sellers">
-			<h4>{l s="Top 5 products:"}</h4>
+			<h3>{l s="Top 5 products:"}</h3>
 			<table class="table data_table" id="table_best_sellers">
 				<thead>
 				</thead>
@@ -71,7 +72,7 @@
 			</table>
 		</div>
 		<div class="tab-pane" id="dash_most_viewed">
-			<h4>{l s="Coming soon"}</h4>
+			<h3>{l s="Coming soon"}</h3>
 			<table class="table data_table" id="table_most_viewed">
 				<thead>
 				</thead>
@@ -82,7 +83,7 @@
 		<div class="tab-pane" id="dash_top_search">
 			<div class="row">
 				<div class="col-lg-7">
-					<h4>{l s="Top 10 most search terms:"}</h4>
+					<h3>{l s="Top 10 most search terms:"}</h3>
 					<table class="table data_table" id="table_top_10_most_search">
 						<thead>
 						</thead>
@@ -91,7 +92,7 @@
 					</table>
 				</div>
 				<div class="col-lg-5">
-					<h4>{l s="Coming soon"}</h4>
+					<h3>{l s="Coming soon"}</h3>
 					<table class="table data_table" id="table_top_5_search">
 						<thead>
 						</thead>

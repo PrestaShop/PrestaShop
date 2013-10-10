@@ -81,36 +81,14 @@ html, body
 		margin-left: 0
 		width: 100%
 
-.navbar-inner
-	box-shadow: none!important
-	.input-append
-		margin-bottom: 0
-
-.breadcrumb
-	background-color: lighten($bg-content-color,7%)
-
 #nobootstrap
 	float: left
-
-//WIP (refacto, keep it simple, order ...)
 
 //todo: remove temp fix for bootstrap RC1 -> final
 input[type="text"],input[type="search"],input[type="password"], textarea, select
 	@extend .form-control
 fieldset > .row
 	@extend .form-group
-
-//tabs
-.nav-tabs
-	border-bottom: none
-	li a
-		font-size: 1.1em
-		font-family: $headings-font-family
-		text-transform: uppercase
-		font-weight: 300
-	li.active
-		a, a:hover
-			background-color: white
 
 //components
 @import "admin-theme/admin-header"
