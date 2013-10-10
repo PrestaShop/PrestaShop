@@ -72,62 +72,21 @@ class ProductToolTip extends Module
 
 	public function getContent()
 	{
+		$html = '';
 		/* Update values in DB */
 		if (Tools::isSubmit('SubmitToolTip'))
 		{
-			Configuration::updateValue('PS_PTOOLTIP_PEOPLE', (int)(Tools::getValue('ps_ptooltip_people')));
-			Configuration::updateValue('PS_PTOOLTIP_DATE_CART', (int)(Tools::getValue('ps_ptooltip_date_cart')));
-			Configuration::updateValue('PS_PTOOLTIP_DATE_ORDER', (int)(Tools::getValue('ps_ptooltip_date_order')));
-			Configuration::updateValue('PS_PTOOLTIP_DAYS', ((int)(Tools::getValue('ps_ptooltip_days') < 0 ? 0 : (int)Tools::getValue('ps_ptooltip_days'))));
-			Configuration::updateValue('PS_PTOOLTIP_LIFETIME', ((int)(Tools::getValue('ps_ptooltip_lifetime') < 0 ? 0 : (int)Tools::getValue('ps_ptooltip_lifetime'))));
+			Configuration::updateValue('PS_PTOOLTIP_PEOPLE', (int)(Tools::getValue('PS_PTOOLTIP_PEOPLE')));
+			Configuration::updateValue('PS_PTOOLTIP_DATE_CART', (int)(Tools::getValue('PS_PTOOLTIP_DATE_CART')));
+			Configuration::updateValue('PS_PTOOLTIP_DATE_ORDER', (int)(Tools::getValue('PS_PTOOLTIP_DATE_ORDER')));
+			Configuration::updateValue('PS_PTOOLTIP_DAYS', ((int)(Tools::getValue('PS_PTOOLTIP_DAYS') < 0 ? 0 : (int)Tools::getValue('PS_PTOOLTIP_DAYS'))));
+			Configuration::updateValue('PS_PTOOLTIP_LIFETIME', ((int)(Tools::getValue('PS_PTOOLTIP_LIFETIME') < 0 ? 0 : (int)Tools::getValue('PS_PTOOLTIP_LIFETIME'))));
 
-			echo $this->displayConfirmation($this->l('Settings updated'));
+			$html .= $this->displayConfirmation($this->l('Settings updated'));
 		}
 
 		/* Configuration form */
-		$output = '
-		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
-		<fieldset class="width2" style="float: left;">
-			<legend><img src="'.__PS_BASE_URI__.'modules/producttooltip/logo.gif" alt="" />'.$this->l('Product tooltips').'</legend>
-			<p>
-				'.$this->l('Display the number of people who are currently watching this product?').'<br /><br />
-				<img src="'._PS_ADMIN_IMG_.'enabled.gif" alt="" /><input type="radio" name="ps_ptooltip_people" value="1"'.(Configuration::get('PS_PTOOLTIP_PEOPLE') ? ' checked="checked"' : '').' style="vertical-align: middle;" /> '.$this->l('Yes').'
-				&nbsp;<img src="'._PS_ADMIN_IMG_.'disabled.gif" alt="" /><input type="radio" name="ps_ptooltip_people" value="0"'.(!Configuration::get('PS_PTOOLTIP_PEOPLE') ? ' checked="checked"' : '').' style="vertical-align: middle;" /> '.$this->l('No').'<br />
-			</p>
-			<p>
-				'.$this->l('Lifetime:').'
-				<input type="text" name="ps_ptooltip_lifetime" style="width: 30px;" value="'.(int)(Configuration::get('PS_PTOOLTIP_LIFETIME')).'" /> '.$this->l('minutes').'<br />
-			</p>
-			<p>
-				'.$this->l('If you activate the option above, you must activate the first option of StatData module').'
-			</p>
-			<hr size="1" noshade />
-			<p>
-				'.$this->l('Display the last time the product has been ordered?').'<br /><br />
-				<img src="'._PS_ADMIN_IMG_.'enabled.gif" alt="" /><input type="radio" name="ps_ptooltip_date_order" value="1"'.(Configuration::get('PS_PTOOLTIP_DATE_ORDER') ? ' checked="checked"' : '').' style="vertical-align: middle;" /> '.$this->l('Yes').'
-				&nbsp;<img src="'._PS_ADMIN_IMG_.'disabled.gif" alt="" /><input type="radio" name="ps_ptooltip_date_order" value="0"'.(!Configuration::get('PS_PTOOLTIP_DATE_ORDER') ? ' checked="checked"' : '').' style="vertical-align: middle;" /> '.$this->l('No').'<br /><br />
-			</p>
-			<p>
-				'.$this->l('If not ordered yet, display the last time the product has been added to a cart?').'<br /><br />
-				<img src="'._PS_ADMIN_IMG_.'enabled.gif" alt="" /><input type="radio" name="ps_ptooltip_date_cart" value="1"'.(Configuration::get('PS_PTOOLTIP_DATE_CART') ? ' checked="checked"' : '').' style="vertical-align: middle;" /> '.$this->l('Yes').'
-				&nbsp;<img src="'._PS_ADMIN_IMG_.'disabled.gif" alt="" /><input type="radio" name="ps_ptooltip_date_cart" value="0"'.(!Configuration::get('PS_PTOOLTIP_DATE_CART') ? ' checked="checked"' : '').' style="vertical-align: middle;" /> '.$this->l('No').'<br /><br />
-
-			</p>
-			<p>
-				'.$this->l('Do not display events older than:').'
-				<input type="text" name="ps_ptooltip_days" style="width: 30px;" value="'.(int)(Configuration::get('PS_PTOOLTIP_DAYS')).'" /> '.$this->l('days').'<br />
-			</p>
-			<hr size="1" noshade />
-			<center><input type="submit" name="SubmitToolTip" class="button" value="'.$this->l('Update settings').'" style="margin-top: 10px;"  /></center>
-		</fieldset>
-		<p style="float: left; margin: 10px 0 0 30px;">
-			<b>'.$this->l('Sample:').'</b><br />
-			<img src="'.__PS_BASE_URI__.'modules/producttooltip/sample.gif" style="margin-top: 10px;" />
-		</p>
-		<div style="clear: both; font-size: 0;"></div>
-		</form>';
-
-		return $output;
+		return $html.$this->renderForm();
 	}
 
 	public function hookHeader($params)
@@ -187,6 +146,133 @@ class ProductToolTip extends Module
 
 		if ((isset($nbPeople['nb']) AND $nbPeople['nb'] > 0) OR isset($order['date_add']) OR isset($cart['date_add']))
 			return $this->display(__FILE__, 'producttooltip.tpl');
+	}
+	
+	public function renderForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Settings'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Number of people:'),
+						'desc' => $this->l('Display the number of people who are currently watching this product?').'<br>'.
+								$this->l('If you activate the option above, you must activate the first option of StatData module'),
+						'name' => 'PS_PTOOLTIP_PEOPLE',
+						'values' => array(
+									array(
+										'id' => 'active_on',
+										'value' => 1,
+										'label' => $this->l('Enabled')
+									),
+									array(
+										'id' => 'active_off',
+										'value' => 0,
+										'label' => $this->l('Disabled')
+									)
+								),
+						),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Lifetime:'),
+						'name' => 'PS_PTOOLTIP_LIFETIME',
+						'suffix' => 'minutes',
+						'values' => array(
+									array(
+										'id' => 'active_on',
+										'value' => 1,
+										'label' => $this->l('Enabled')
+									),
+									array(
+										'id' => 'active_off',
+										'value' => 0,
+										'label' => $this->l('Disabled')
+									)
+								),
+					),
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Product ordered:'),
+						'desc' => $this->l('Display the last time the product has been ordered?'),
+						'name' => 'PS_PTOOLTIP_DATE_ORDER',
+						'values' => array(
+									array(
+										'id' => 'active_on',
+										'value' => 1,
+										'label' => $this->l('Enabled')
+									),
+									array(
+										'id' => 'active_off',
+										'value' => 0,
+										'label' => $this->l('Disabled')
+									)
+								),
+					),
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Added to a cart:'),
+						'label' => $this->l('If not ordered yet, display the last time the product has been added to a cart?'),
+						'name' => 'PS_PTOOLTIP_DATE_CART',
+						'values' => array(
+									array(
+										'id' => 'active_on',
+										'value' => 1,
+										'label' => $this->l('Enabled')
+									),
+									array(
+										'id' => 'active_off',
+										'value' => 0,
+										'label' => $this->l('Disabled')
+									)
+								),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Do not display events older than:'),
+						'name' => 'PS_PTOOLTIP_DAYS',
+						'suffix' => 'days'
+					),
+				),
+			'submit' => array(
+				'title' => $this->l('Save'),
+				'class' => 'btn btn-primary')
+			),
+		);
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$this->fields_form = array();
+
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'SubmitToolTip';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function getConfigFieldsValues()
+	{
+		return array(
+			'PS_PTOOLTIP_PEOPLE' => Tools::getValue('PS_PTOOLTIP_PEOPLE', Configuration::get('PS_PTOOLTIP_PEOPLE')),
+			'PS_PTOOLTIP_LIFETIME' => Tools::getValue('PS_PTOOLTIP_LIFETIME', Configuration::get('PS_PTOOLTIP_LIFETIME')),
+			'PS_PTOOLTIP_DATE_ORDER' => Tools::getValue('PS_PTOOLTIP_DATE_ORDER', Configuration::get('PS_PTOOLTIP_DATE_ORDER')),
+			'PS_PTOOLTIP_DATE_CART' => Tools::getValue('PS_PTOOLTIP_DATE_CART', Configuration::get('PS_PTOOLTIP_DATE_CART')),
+			'PS_PTOOLTIP_DAYS' => Tools::getValue('PS_PTOOLTIP_DAYS', Configuration::get('PS_PTOOLTIP_DAYS')),
+		);
 	}
 }
 
