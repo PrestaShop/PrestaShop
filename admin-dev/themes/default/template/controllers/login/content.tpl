@@ -57,30 +57,42 @@
 			<form action="#" id="login_form" method="post">
 				<h3 class="text-center"><i class="icon-unlock"></i> {l s='Log in'}</h3>
 				<div class="form-group">
-					<label for="email">{l s='Email address:'}</label>
+					<label class="control-label" for="email">{l s='Email address:'}</label>
 					<div class="input-group">
 						<span class="input-group-addon"><i class="icon-envelope"></i></span>
 						<input
 							name="email"
 							type="text"
 							id="email"
-							class="email_field form-control"
+							class="form-control"
 							value="{if isset($email)}{$email|escape:'htmlall':'UTF-8'}{/if}"
 							autofocus="autofocus"
 							placeholder="test@example.com" />
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="passwd">{l s='Password:'}</label>
+					<label class="control-label" for="passwd">{l s='Password:'}</label>
 					<div class="input-group">
 						<span class="input-group-addon"><i class="icon-key"></i></span>
 						<input
 							name="passwd"
 							type="password"
 							id="passwd"
-							class="password_field form-control"
+							class="form-control"
 							value="{if isset($password)}{$password}{/if}"
 							placeholder="{l s='Password'}" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="checkbox">
+						<label for="stayloggedin">
+							<input
+								name="stayloggedin"
+								type="checkbox"
+								id="stayloggedin"
+							/>
+							{l s='Keep me logged in'}
+						</label>
 					</div>
 				</div>
 				<hr/>
@@ -102,7 +114,7 @@
 				<p class="alert alert-info">{l s='In order to receive your access code by email, please enter the address you provided during the registration process.'}
 				</p>	
 				<div class="form-group">
-					<label for="email_forgot">
+					<label class="control-label" for="email_forgot">
 						{l s='Email address:'}
 					</label>
 					<div class="input-group">
@@ -111,7 +123,7 @@
 							type="text"
 							name="email_forgot"
 							id="email_forgot"
-							class="input email_field form-control"
+							class="form-control"
 							autofocus="autofocus"
 							placeholder="test@example.com" />
 					</div>
@@ -147,6 +159,7 @@
 			</div>
 			{/if}
 		</div>
+
 		<div class="col-md-4 col-md-offset-4">
 			<p class="text-center text-muted">
 				<a href="http://www.prestashop.com">
