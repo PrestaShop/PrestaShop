@@ -1,0 +1,70 @@
+.box-stats
+	background-color: white
+	.boxchart-overlay
+		padding: 10px 10px 5px 10px
+		margin-right: 10px
+		float: left
+		color: white
+		@include border-radius(3px)
+	i
+		float: left
+		height: 64px
+		width: 64px
+		margin-right: 10px
+		color: white
+		font-size: 35px
+		text-align: center
+		line-height: 64px
+		@include border-radius(3px)
+	.title
+		color: #666
+		display: block
+	.value
+		font-size: 22px
+	small
+		line-height: 0.3em
+		color: #aaa
+		text-transform: uppercase
+	&:hover
+		text-decoration: none
+.color1
+	i, .boxchart-overlay
+		background-color: #2BA8E3
+		@include box-shadow(rgba(black,0.15) 0 -3px 0 inset)
+	.value
+		color: #2BA8E3
+.color2
+	i, .boxchart-overlay
+		background-color: #FF5450
+		@include box-shadow(rgba(black,0.15) 0 -3px 0 inset)
+	.value
+		color: #FF5450
+.color3
+	i, .boxchart-overlay
+		background-color: #9E5BA1
+		@include box-shadow(rgba(black,0.15) 0 -3px 0 inset)
+	.value
+		color: #9E5BA1
+.color4
+	i, .boxchart-overlay
+		background-color: #95CC6B
+		@include box-shadow(rgba(black,0.15) 0 -3px 0 inset)
+	.value
+		color: #95CC6B
+
+.data_chart
+	rect
+		fill: white
+	path
+		stroke: white
+		stroke-width: 2
+		fill: none
+	line
+		stroke: black
+	.area
+		fill: rgba(white,0.30)
+		stroke-width: 0
+
+.icon-big
+	font-size: 4em
+	color: darken($bg-content-color,20%)

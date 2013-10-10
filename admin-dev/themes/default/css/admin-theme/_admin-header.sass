@@ -1,0 +1,64 @@
+#header_infos
+	@extend .navbar
+	@extend .navbar-inverse
+	@extend .navbar-fixed-top
+	background-color: $bg-header-color
+#header_shopname
+	@extend .navbar-brand
+	font: 300 1.3em/100% $headings-font-family
+#header_notifs_icon_wrapper
+	@extend .hidden-xs
+	@extend .nav
+	@extend .navbar-nav
+	li a
+		padding: 9px 5px
+	> li > a > i
+		font-size: 1.4em
+		color: white
+		vertical-align: middle
+	.notifs_badge
+		@extend .badge
+		background-color: $badge-notif-color
+	.notifs_dropdown
+		background-color: transparent
+		border: none
+		box-shadow: none
+	.notifs_panel
+		@extend .panel
+		@extend .panel-default
+		width: 300px
+		@include box-shadow(rgba(black,0.5) 2px 2px 8px)
+		.notifs_panel_header
+			@extend .panel-heading
+			h3
+				padding: 0
+				font-size: 1.3em
+				margin: 0
+		.notifs_panel_footer
+			@extend .panel-footer
+
+#header_nav_toggle
+	background-color: black
+	border: none
+	color: white
+#header_employee_box
+	@extend .nav
+	@extend .navbar-nav
+	@extend .navbar-right
+	a img
+		margin-right: 5px
+	#header_foaccess i
+		font-size: 1.2em
+#header_search
+	@extend .navbar-form
+	@extend .navbar-left
+	width: 130px
+	padding: 0 0 0 10px
+	@media (max-width: $screen-tablet)
+		width: 100%
+	input, .form-group
+		margin: 0
+#header_quick
+	@extend .nav
+	@extend .navbar-nav
+	@extend .navbar-left

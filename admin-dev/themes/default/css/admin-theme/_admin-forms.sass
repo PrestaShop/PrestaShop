@@ -1,0 +1,111 @@
+//form
+label.control-label
+	font-size: 13px
+	font-weight: normal
+	color: #666
+
+label.control-label span.label-tooltip
+	text-decoration: none
+	font-size: 13px
+	background-color: darken($bg-content-color,5%)
+	border: none
+	border-bottom: solid 1px darken($bg-content-color,10%)
+	padding: 0 5px
+	@include border-radius(3px)
+
+
+label.required:before
+	content: '*'
+	color: red
+	font-size: 14px
+	position: relative
+	line-height: 12px
+
+.tooltip
+	font-size: 12px
+
+select.input-tiny,
+input[type="text"].input-tiny,
+input[type="password"].input-tiny
+	width: 80px
+	float: left
+
+textarea
+	resize: none
+
+//buttons
+.btn
+	text-transform: uppercase
+	.caret
+		border-top-color: $gray-dark!important
+	&:hover, &:focus
+		.caret
+			border-top-color: white!important
+	&.btn-default
+		@include box-shadow(darken($btn-default-bg,10%) 0 -2px 0 inset)
+
+	&.btn-primary
+		@include box-shadow(lighten($brand-success,30%) 0 -2px 0  inset)
+
+	&.btn-default[disabled]
+		border-color: $gray-light
+		color: $gray-light
+		background-color: lighten($gray-light,35%)
+		@include box-shadow(lighten($gray-light,20%) 0 -2px 0  inset)
+.dropdown-menu
+	text-align: left
+.btn-group-action
+	float: right
+	a
+		text-decoration: none
+
+//typeahead
+.tt-query
+	+border-right-radius(3px!important)
+.tt-dropdown-menu
+	background-color: white
+	border: solid 1px #ccc
+	font-size: 0.9em
+	text-transform: none
+.tt-suggestions
+	padding: 0 6px
+	+box-shadow(rgba(black,0.25) 0 1px 4px)
+.tt-suggestion p
+	border-bottom: solid 1px #ccc
+	margin: 0!important
+	padding: 0!important
+.tt-suggestion:last-child p
+	border-bottom: none
+
+//tag
+.tagify-container
+	background-color: white
+	padding: 2px 6px
+	min-height: 30px
+	overflow: auto
+	+border-radius(5px)
+	border: solid 1px #ccc
+	+box-shadow(rgba(0, 0, 0, 0.075) 0 1px 1px inset)
+	span
+		float: left
+	> span
+		display: inline-block
+		padding: 3px 5px
+		margin: 3px
+		border-radius: 2px
+		border: 1px solid $brand-primary
+		background-color: lighten($brand-primary,15%)
+		color: white
+		> a
+			padding-left: 5px
+			color: $brand-primary
+			text-decoration: none
+			font-weight: bold
+	> input
+		margin-top: 2px
+		border: 0 none
+		width: 100px
+		+box-shadow(none)
+	> input:focus
+		outline: 0
+		+box-shadow(none)

@@ -1,0 +1,53 @@
+#footer
+	z-index: 600
+	min-height: 60px
+	display: block
+	width: 100%
+	padding: 15px 0 0 0
+	background-color: $bg-footer-color
+	color: #888
+	a
+		color: #ccc
+	#go-top
+		position: fixed
+		bottom: 10px
+		height: 30px
+		width: 30px
+		text-align: center
+		line-height: 30px
+		right: 10px
+		z-index: 9003
+		display: block
+		padding: 0px 6px 0px 6px
+		margin: -2px 0px 0px
+		text-decoration: none
+		color: #fff
+		cursor: pointer
+		font-size: 16px
+		background-color: rgba(0,0,0,0.5)
+		&:hover
+			background-color: black
+
+a.link-social
+	&:hover
+		text-decoration: none
+	i
+		font-size: 2em
+		width: 30px
+		height: 30px
+		display: inline-block
+		line-height: 30px
+		text-align: center
+		@include border-radius(30px)
+.link-twitter i
+	color: white
+	background-color: #7CCEEF
+.link-facebook i
+	color: white
+	background-color: #557DBB
+.link-github i
+	color: black
+	background-color: white
+.link-google i
+	color: white
+	background-color: #E6644E
