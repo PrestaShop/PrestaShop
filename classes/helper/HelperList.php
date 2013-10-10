@@ -608,7 +608,7 @@ class HelperListCore extends Helper
 		));
 
 		$this->header_tpl->assign(array_merge($this->tpl_vars, array(
-			'title' => $this->title,
+			'title' => array_key_exists('title', $this->tpl_vars) ? $this->tpl_vars['title'] : $this->title,
 			'show_filters' => (count($this->_list) <= 1 && !$has_value) ? false : true,
 			'filters_has_value' => $has_value,
 			'show_toolbar' => $this->show_toolbar,
