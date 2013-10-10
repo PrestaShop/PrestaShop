@@ -44,8 +44,8 @@ html, body
 		i, a
 			color: contrasted($bg-panel-heading-color)
 		.badge
-			background-color: lighten($bg-panel-heading-color,20%)
-			@include border-radius(none)
+			background-color: $brand-primary
+			+border-radius(0)
 			height: 29px
 			line-height: 25px
 			font-size: 1.3em
@@ -71,9 +71,6 @@ html, body
 					line-height: 30px
 	.panel-danger .panel-heading
 		background-color: $badge-notif-color!important
-	.panel-heading-big
-		font-size: 2em
-		text-align: center
 	form .alert
 		clear: both
 		
