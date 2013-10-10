@@ -1451,7 +1451,7 @@ class AdminImportControllerCore extends AdminController
 						{
 							$specific_price = SpecificPrice::getSpecificPrice($product->id, $id_shop, 0, 0, 0, 1, 0, 0, 0, 0);
 
-							if (is_array($specific_price))
+							if (is_array($specific_price) && isset($specific_price['id_specific_price']))
 								$specific_price = new SpecificPrice((int)$specific_price['id_specific_price']);
 							else
 								$specific_price = new SpecificPrice();
