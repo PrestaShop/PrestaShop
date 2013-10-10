@@ -29,24 +29,25 @@
 		li.maintab
 			position: relative
 			&.active
-				a.title
+				a.title, a.title:hover
 					color: contrast-color($brand-primary, white, #333, 10%)
 					background-color: $brand-primary
 					i
 						color: black
 						background-color: white
+
 			&.active
-				a.title:hover:not(.active)
+				a.title:hover
 					color: contrast-color($main-color, white, #333, 10%)
 			&.expanded
 				a.title
 					color: white
 					background-color: darken($main-color,10%)
 					border-bottom: solid 1px darken($main-color,25%)
-					i
-						color: white
 					&:hover
 						background-color: lighten($main-color,10%)
+					i
+						color: white
 				span.submenu_expand
 					@extend .icon-angle-up
 				ul.submenu
@@ -268,7 +269,6 @@
 		display: none
 
 //icons
-
 .icon-AdminDashboard
 	@extend .icon-dashboard
 .icon-AdminCatalog
