@@ -1,11 +1,13 @@
 #footer
 	z-index: 600
-	min-height: 60px
 	display: block
 	width: 100%
-	padding: 15px 0 0 0
-	background-color: $bg-footer-color
+	background-color: rgba($bg-footer-color,0.85)
 	color: #888
+	position: fixed
+	bottom: 0
+	height: 50px
+	line-height: 50px
 	a
 		color: #ccc
 	#go-top
@@ -27,10 +29,10 @@
 		background-color: rgba(0,0,0,0.5)
 		&:hover
 			background-color: black
+	.social-networks
+		margin: 4px 0 0 0
 
 a.link-social
-	&:hover
-		text-decoration: none
 	i
 		font-size: 2em
 		width: 30px
@@ -39,15 +41,30 @@ a.link-social
 		line-height: 30px
 		text-align: center
 		@include border-radius(30px)
+	&:hover
+		text-decoration: none
+
 .link-twitter i
 	color: white
 	background-color: #7CCEEF
+	&:hover
+		color: #7CCEEF
+		background-color: white
 .link-facebook i
 	color: white
 	background-color: #557DBB
+	&:hover
+		color: #557DBB
+		background-color: white
 .link-github i
 	color: black
 	background-color: white
+	&:hover
+		color: white
+		background-color: black
 .link-google i
 	color: white
 	background-color: #E6644E
+	&:hover
+		color: #E6644E
+		background-color: white

@@ -1,3 +1,34 @@
+.page-head
+	width: 100%
+	height: 55px
+	padding: 0 10px 0 0
+	margin: 0
+	border-bottom: 4px solid darken($secondary-color,10%)
+	position: fixed
+	top: 36px
+	left: 0px
+	z-index: 499
+	background-color: $secondary-color
+	@include box-shadow(rgba(black,0.15) 0 7px 0)
+	h2.page-title
+		@extend .pull-left
+		padding: 0 0 0 260px
+		font-size: 18px
+		color: white
+		text-transform: uppercase
+		@media (max-width: $screen-tablet)
+			padding: 0 0 0 20px
+	a
+		color: white
+		font-style: underline
+	.btn-toolbar
+		margin: 0
+		padding: 3px 0 0 0
+		.nav-tabs
+			margin: 0
+		.nav-tabs > li > a
+			color: #333
+
 .toolbar_btn
 	position: relative
 	padding: 2px 5px !important

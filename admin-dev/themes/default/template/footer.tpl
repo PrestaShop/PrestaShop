@@ -27,12 +27,11 @@
 </div>
 {if $display_footer}
 {hook h="displayBackOfficeFooter"}
-	<div id="footer" class="affix" data-offset-bottom="0">
-		<div class="col-sm-3 hidden-xs">
-			<a href="http://www.prestashop.com/" target="_blank">PrestaShop&trade; {$ps_version}</a><br />
-			<span>{l s='Load time: '} {number_format(microtime(true) - $timer_start, 3, '.', '')}s</span>
+	<div id="footer">
+		<div class="col-sm-5 hidden-xs">
+			<a href="http://www.prestashop.com/" target="_blank">PrestaShop&trade; {$ps_version}</a> - <span>{l s='Load time: '} {number_format(microtime(true) - $timer_start, 3, '.', '')}s</span>
 		</div>
-		<div class="col-sm-2  hidden-xs">
+		<div class="col-sm-2 hidden-xs social-networks">
 			<a class="link-social link-twitter" href="#" title="Twitter">
 				<i class="icon-twitter"></i>
 			</a>
@@ -47,7 +46,7 @@
 			</a>
 		</div>	
 
-		<div class="col-sm-7">
+		<div class="col-sm-5">
 			<a href="http://www.prestashop.com/en/contact_us?utm_source=backoffice_footer" target="_blank" class="footer_link">{l s='Contact'}</a>
 			|&nbsp;<a href="http://forge.prestashop.com/?utm_source=backoffice_footer" target="_blank" class="footer_link">{l s='Bug Tracker'}</a>
 			|&nbsp;<a href="http://www.prestashop.com/forums/?utm_source=backoffice_footer" target="_blank" class="footer_link">{l s='Forum'}</a>
@@ -63,6 +62,13 @@
 			$("#go-top").click(function() {
   				$("html, body").animate({ scrollTop: 0 }, "slow");
   				return false;
+			});
+			$(window).scroll(function() {
+				if ($(this).scrollTop()) {
+					$('#go-top:hidden').stop(true, true).fadeIn();
+				} else {
+					$('#go-top').stop(true, true).fadeOut();
+				}
 			});
 		</script>
 	</div>
