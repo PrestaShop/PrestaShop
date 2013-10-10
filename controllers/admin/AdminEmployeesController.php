@@ -134,8 +134,7 @@ class AdminEmployeesControllerCore extends AdminController
 		if ($this->context->employee->id == Tools::getValue('id_employee'))
 		{
 			$this->tabAccess['view'] = '1';
-			if (!$this->tabAccess['edit'])
-				$this->restrict_edition = true;
+			$this->restrict_edition = true;
 			$this->tabAccess['edit'] = '1';
 		}
 	}
