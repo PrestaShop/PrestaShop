@@ -120,8 +120,8 @@
 
 			<ul id="header_notifs_icon_wrapper">
 {if {$show_new_orders} == 1}
-				<li id="orders_notif" class="dropdown" >
-					<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
+				<li id="orders_notif" class="dropdown" data-type="order">
+					<a href="javascript:void(0);" class="dropdown-toggle notifs" data-toggle="dropdown">
 						<i class="icon-shopping-cart"></i>
 						<span id="orders_notif_number_wrapper" class="notifs_badge">
 							<span id="orders_notif_value">0</span>
@@ -150,8 +150,8 @@
 				</li>
 {/if}
 {if {$show_new_customers} == 1}
-				<li id="customers_notif" class="dropdown">
-					<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
+				<li id="customers_notif" class="dropdown" data-type="customer">
+					<a href="javascript:void(0);" class="dropdown-toggle notifs" data-toggle="dropdown">
 						<i class="icon-user"></i>
 						<span id="customers_notif_number_wrapper" class="notifs_badge">
 							<span id="customers_notif_value">0</span>
@@ -180,8 +180,8 @@
 				</li>
 {/if}
 {if {$show_new_messages} == 1}
-				<li id="customer_messages_notif" class="dropdown">
-					<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
+				<li id="customer_messages_notif" class="dropdown" data-type="customer_message">
+					<a href="javascript:void(0);" class="dropdown-toggle notifs" data-toggle="dropdown">
 						<i class="icon-envelope"></i>
 						<span id="customer_messages_notif_number_wrapper" class="notifs_badge">
 							<span id="customer_messages_notif_value" >0</span>
