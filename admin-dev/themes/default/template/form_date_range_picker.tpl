@@ -35,6 +35,11 @@
 				</div>
 			</div>
 		</div>
+		<div class="row">
+			<div class="col-lg-12">
+				{$calendar}
+			</div>
+		</div>
 	</form>
 	<script type="text/javascript">
 		$(document).ready(function() {
