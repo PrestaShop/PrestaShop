@@ -32,14 +32,17 @@
 		<a href="http://www.prestashop.com/" target="_blank">PrestaShop&trade; {$ps_version}</a> - <span>{l s='Load time: '} {number_format(microtime(true) - $timer_start, 3, '.', '')}s</span>
 	</div>
 	<div class="col-sm-2 hidden-xs social-networks">
-		<a class="link-social link-twitter" href="https://twitter.com/PrestaShop" title="Twitter">
+		<a class="link-social link-twitter" href="https://twitter.com/PrestaShop" target="_blank" title="Twitter">
 			<i class="icon-twitter"></i>
 		</a>
-		<a class="link-social link-facebook" href="https://www.facebook.com/prestashop" title="Facebook">
+		<a class="link-social link-facebook" href="https://www.facebook.com/prestashop" target="_blank" title="Facebook">
 			<i class="icon-facebook"></i>
 		</a>
-		<a class="link-social link-github" href="https://github.com/PrestaShop/PrestaShop/" title="Github">
+		<a class="link-social link-github" href="https://github.com/PrestaShop/PrestaShop/" target="_blank" title="Github">
 			<i class="icon-github"></i>
+		</a>
+		<a class="link-social link-google" href="https://plus.google.com/communities/106282122101569374397" target="_blank" title="Google">
+			<i class="icon-google-plus"></i>
 		</a>
 	</div>	
 
