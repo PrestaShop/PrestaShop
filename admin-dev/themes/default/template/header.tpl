@@ -72,6 +72,8 @@
 		var currentIndex = '{$currentIndex}';
 		var default_language = '{$default_language|intval}';
 		var choose_language_translate = "{l s='Choose language' slashes=1}";
+		var admin_modules_link = '{$link->getAdminLink("AdminModules")|addslashes}';
+		var tab_modules_list = '{if isset($tab_modules_list) && $tab_modules_list}{$tab_modules_list|addslashes}{/if}';
 	</script>
 	{/if}
 	{if isset($css_files)}
