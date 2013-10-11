@@ -47,7 +47,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				SELECT LEFT(`date_add`, 10) as date, COUNT(DISTINCT id_guest) as visitors
 				FROM `'._DB_PREFIX_.'connections`
 				WHERE `date_add` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
-				'.Shop::addSqlRestriction(false).'
+				'.Shop::addSqlRestriction().'
 				GROUP BY LEFT(`date_add`, 10)');
 				foreach ($result as $row)
 					$visitors[strtotime($row['date'])] = $row['visitors'];
@@ -57,7 +57,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				SELECT COUNT(DISTINCT id_guest) as visitors
 				FROM `'._DB_PREFIX_.'connections`
 				WHERE `date_add` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
-				'.Shop::addSqlRestriction(false));
+				'.Shop::addSqlRestriction());
 		}
 		return $visitors;
 	}
@@ -69,7 +69,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		FROM `'._DB_PREFIX_.'cart`
 		WHERE `date_add` BETWEEN "'.pSQL($date_from).'" AND "'.pSQL($date_to).'"
 		AND id_cart NOT IN (SELECT id_cart FROM `'._DB_PREFIX_.'orders`)
-		'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
+		'.Shop::addSqlRestriction());
 	}
 	
 	public static function getInstalledModules()
@@ -85,8 +85,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT COUNT(*)
 		FROM `'._DB_PREFIX_.'module` m
-		'.Shop::addSqlAssociation('module', 'm').'
-		WHERE `active` = 0');
+		'.Shop::addSqlAssociation('module', 'm', true, 'module_shop.active=1')
+		);
 	}
 	
 	public static function getModulesToUpdate()
@@ -150,7 +150,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		SELECT SUM(total_paid_tax_excl / o.conversion_rate)
 		FROM `'._DB_PREFIX_.'orders` o
 		WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
-		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o'));
+		'.Shop::addSqlRestriction(false, 'o'));
 	}
 	
 	public static function get8020SalesCatalog($date_from, $date_to)
@@ -160,7 +160,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		FROM `'._DB_PREFIX_.'orders` o
 		LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
 		WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
-		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o'));
+		'.Shop::addSqlRestriction(false, 'o'));
 		if (!$total_sales)
 			return '0%';
 
@@ -174,7 +174,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		FROM `'._DB_PREFIX_.'orders` o
 		LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
 		WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
-		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
+		'.Shop::addSqlRestriction(false, 'o').'
 		GROUP BY od.product_id, od.product_attribute_id
 		ORDER BY SUM(total_price_tax_excl) DESC');
 
@@ -199,7 +199,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			SELECT LEFT(`invoice_date`, 10) as date, COUNT(*) as orders
 			FROM `'._DB_PREFIX_.'orders`
 			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
-			'.Shop::addSqlRestriction(Shop::SHARE_ORDER).'
+			'.Shop::addSqlRestriction(false).'
 			GROUP BY LEFT(`invoice_date`, 10)');
 			foreach ($result as $row)
 				$orders[strtotime($row['date'])] = $row['orders'];
@@ -209,7 +209,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			SELECT COUNT(*) as orders
 			FROM `'._DB_PREFIX_.'orders`
 			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
-			'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
+			'.Shop::addSqlRestriction(false));
 		return $orders;
 	}
 	
@@ -258,7 +258,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		FROM `'._DB_PREFIX_.'orders` o
 		LEFT JOIN `'._DB_PREFIX_.'address` a ON o.id_address_delivery = a.id_address
 		WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
-		'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
+		'.Shop::addSqlRestriction());
 		$row['orders'] = round(100 * $row['orders'] / $total_orders, 1);
 		return $row;
 	}
@@ -287,6 +287,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		INNER JOIN `'._DB_PREFIX_.'customer_message` cm2 ON (cm1.id_customer_thread = cm2.id_customer_thread AND cm1.date_add < cm2.date_add)
 		WHERE cm1.`date_add` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
 		AND cm1.id_employee = 0 AND cm2.id_employee != 0
+		'.Shop::addSqlRestriction().'
 		GROUP BY cm1.id_customer_thread');
 		$total_questions = $total_replies = $threads = 0;
 		foreach ($result as $row)
@@ -307,6 +308,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		FROM `'._DB_PREFIX_.'customer_thread` ct
 		LEFT JOIN `'._DB_PREFIX_.'customer_message` cm ON (ct.id_customer_thread = cm.id_customer_thread)
 		WHERE ct.`date_add` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
+		'.Shop::addSqlRestriction().'
 		AND status = "closed"
 		GROUP BY ct.id_customer_thread');
 		$threads = $messages = 0;
@@ -334,7 +336,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			module
 		FROM `'._DB_PREFIX_.'orders` o
 		WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
-		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o'));
+		'.Shop::addSqlRestriction(false, 'o'));
 		foreach ($orders as $order)
 		{
 			// Add flat fees for this order
@@ -542,14 +544,14 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				$value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT COUNT(*)
 				FROM `'._DB_PREFIX_.'customer` c
-				'.Shop::addSqlAssociation('customer', 'c').'
+				'.Shop::addSqlRestriction().'
 				WHERE active = 1');
 				if ($value)
 				{
 					$orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 					SELECT COUNT(*)
 					FROM `'._DB_PREFIX_.'orders` o
-					'.Shop::addSqlAssociation('orders', 'o').'
+					'.Shop::addSqlRestriction().'
 					WHERE valid = 1');
 					$value = round($orders / $value, 2);
 				}
@@ -565,7 +567,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 					SUM(`total_paid_tax_excl` / `conversion_rate`) as total_paid_tax_excl
 				FROM `'._DB_PREFIX_.'orders`
 				WHERE `invoice_date` BETWEEN "'.pSQL(date('Y-m-d', strtotime('-31 day'))).' 00:00:00" AND "'.pSQL(date('Y-m-d', strtotime('-1 day'))).' 23:59:59"
-				'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
+				'.Shop::addSqlRestriction());
 				$value = Tools::displayPrice($row['orders'] ? $row['total_paid_tax_excl'] / $row['orders'] : 0, $currency);
 				ConfigurationKPI::updateValue('AVG_ORDER_VALUE', $value);
 				ConfigurationKPI::updateValue('AVG_ORDER_VALUE_EXPIRE', strtotime(date('Y-m-d 00:00:00', strtotime('+1 day'))));
@@ -582,7 +584,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				FROM `'._DB_PREFIX_.'orders` o
 				LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
 				WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
-				'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o'));
+				'.Shop::addSqlRestriction(false, 'o'));
 
 				$net_profits = $total_sales;
 				$net_profits -= $total_purchases;
