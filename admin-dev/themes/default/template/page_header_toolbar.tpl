@@ -68,8 +68,7 @@
 						if (btn_submit.html().length > 0)
 							lbl_save.find('span').html(btn_submit.html());
 
-						if (btn_save_and_stay.length > 0)
-						{
+						if (btn_save_and_stay.length > 0) {
 							//get reference on current save link label
 							lbl_save_and_stay = $('#page-header-desc-{$table}-save-and-stay');
 
@@ -100,12 +99,10 @@
 								return false;
 							});
 
-							if (btn_save_and_stay)
-							{
+							if (btn_save_and_stay) {
 								btn_save_and_stay.click(function() {
 									//add hidden input to emulate submit button click when posting the form -> field name posted
 									btn_submit.before('<input type="hidden" name="'+btn_submit.attr("name")+'AndStay" value="1" />');
-
 									$('#{$table}_form').submit();
 									return false;
 								});
@@ -113,47 +110,17 @@
 						{/block}
 					}
 
-					{if isset($tab_modules_open)}
-						if ({$tab_modules_open})
-							openModulesList();
+					{if isset($tab_modules_open) && $tab_modules_open}
+						$('#modules_list_container').modal('show');
+						openModulesList();
 					{/if}
 				});
+
 				{if isset($tab_modules_list)}
-				$('.process-icon-modules-list').parent('a').unbind().bind('click', function (){
-					openModulesList();
-				});
-				
-				function openModulesList()
-				{
-					$('#modules_list_container').modal('show');
-					if (!modules_list_loaded)
-					{
-						$.ajax({
-							type: "POST",
-							url : '{$admin_module_ajax_url}',
-							async: true,
-							data : {
-								ajax : "1",
-								controller : "AdminModules",
-								action : "getTabModulesList",
-								tab_modules_list : '{$tab_modules_list}',
-								back_tab_modules_list : '{$back_tab_modules_list}'
-							},
-							success : function(data)
-							{
-								$('#modules_list_container_tab').html(data).slideDown();
-								$('#modules_list_loader').hide();
-								modules_list_loaded = true;
-							}
-						});
-					}
-					else
-					{
-						$('#modules_list_container_tab').slideDown();
-						$('#modules_list_loader').hide();
-					}
-					return false;
-				}
+					$('.process-icon-modules-list').parent('a').unbind().bind('click', function (){
+						$('#modules_list_container').modal('show');
+						openModulesList();
+					});
 				{/if}
 			//]]>
 			</script>
