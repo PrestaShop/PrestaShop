@@ -426,7 +426,7 @@ class AdminOrdersControllerCore extends AdminController
 						$customer_message = new CustomerMessage();
 						$customer_message->id_customer_thread = $customer_thread->id;
 						$customer_message->id_employee = (int)$this->context->employee->id;
-						$customer_message->message = htmlentities(Tools::getValue('message'), ENT_COMPAT, 'UTF-8');
+						$customer_message->message = Tools::getValue('message');
 						$customer_message->private = Tools::getValue('visibility');
 
 						if (!$customer_message->add())

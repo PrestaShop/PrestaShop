@@ -401,7 +401,7 @@ class AdminCartsControllerCore extends AdminController
 			{
 				if (Validate::isMessage($message_content))
 				{
-					$message->message = htmlentities($message_content, ENT_COMPAT, 'UTF-8');
+					$message->message = $message_content;
 					$message->id_cart = (int)$this->context->cart->id;
 					$message->id_customer = (int)$this->context->cart->id_customer;
 					$message->save();
