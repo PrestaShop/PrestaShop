@@ -97,7 +97,7 @@ class Watermark extends Module
 		
 		if (empty($transparency))
 			$this->_postErrors[] = $this->l('Transparency required.');
-		elseif ($transparency < 0 || $transparency > 100)
+		elseif ($transparency < 1 || $transparency > 100)
 			$this->_postErrors[] = $this->l('Transparency is not in allowed range.');
 
 		if (empty($yalign))
