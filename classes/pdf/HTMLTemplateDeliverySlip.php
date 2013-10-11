@@ -63,14 +63,11 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 			$formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
 		}
 		if($this->delivery_nr) {
-			$products = $this->order->getProductsDelivery(false,false,false,$this->delivery_nr); // this will get all products...
+			$products = $this->order->getProductsDelivery(false,false,false,$this->delivery_nr); // get only deliverd products
 			$products = $products[$this->delivery_nr];
 			foreach($products as &$product) {
 				$product['product_quantity'] = $product['delivery_qty'];
 			}
-// 			echo('<pre>');
-// 			print_r($products);
-// 			echo('</pre>');
 		} else {
 			$products = $this->order_invoice->getProducts();
 		}

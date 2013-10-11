@@ -1601,7 +1601,13 @@ class OrderCore extends ObjectModel
 	 */
 	public function getDocuments()
 	{
-		$invoices = $this->getInvoicesCollection()->getResults();
+		if(Configuration::get('PS_ADS') && Configuration::get('PS_ADS_INVOICE_DELIVERD') ) {
+				$invoices = array(); // make array if invoice_deliverd is enable
+		}
+		else
+		{
+			$invoices = $this->getInvoicesCollection()->getResults();
+		}
 		$delivery_slips = $this->getDeliverySlipsCollection()->getResults();
 		// @TODO review
 		foreach ($delivery_slips as $delivery)
@@ -1615,6 +1621,22 @@ class OrderCore extends ObjectModel
 			$delivery->id_order_invoice = $id_order_invoice;
 			$delivery->is_delivery = true;
 			$delivery->date_add = $delivery->delivery_date;
+			if(Configuration::get('PS_ADS') && Configuration::get('PS_ADS_INVOICE_DELIVERD') ) {
+				$products = $this->getProductsDelivery(false,false,false,$delivery->delivery_nr); // get only deliverd products
+				$total_paid_tax_incl = 0;
+				foreach($products as $array) {
+					foreach($array as $product) {
+					$total_paid_tax_incl_product = ($product['unit_price_tax_incl'] * $product['delivery_qty']);
+					$total_paid_tax_incl += $total_paid_tax_incl_product;
+					}
+				}
+				// This will create invoices based on how many slips there are.
+				$invoice = $this->getInvoicesCollection()->getResults();
+				$invoice = $invoice[0];
+				$invoice->delivery_nr = $delivery->delivery_nr;
+				$invoice->total_paid_tax_incl = $total_paid_tax_incl;
+				$invoices[] = $invoice;
+			}
 		}
 		$order_slips = $this->getOrderSlipsCollection()->getResults();
 		if(Configuration::get('PS_ADS')) {
@@ -1717,8 +1739,6 @@ class OrderCore extends ObjectModel
 	public function getDeliverySlipsCollection()
 	{
 		if(Configuration::get('PS_ADS')) {
-			$order_delivery = new OrderDelivery();
-			$ads_deliverynr = $order_delivery->getMaxNr($this);
 			$order_deliverys = new Collection('OrderDelivery');
 			$order_deliverys->where('id_order', '=', $this->id);
 		} else {

@@ -118,7 +118,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 				)
 			),
 			'ads' => array(
-				'title' => $this->l('Advanced Delivery System'),
+				'title' => $this->l('Advanced Delivery System 1.1'),
 				'icon' => 'tab-preferences',
 				'fields' => array(
 					'PS_ADS' => array(
@@ -131,6 +131,13 @@ class AdminOrderPreferencesControllerCore extends AdminController
 					'PS_ADS_IMG_PS' => array(
 						'title' => $this->l('Packingslip image'),
 						'desc' => $this->l('Add product image to packingslip'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool',
+					),
+					'PS_ADS_INVOICE_DELIVERD' => array(
+						'title' => $this->l('Invoice Deliverd'),
+						'desc' => $this->l('Only invoice deliverd products, Invoices will match nr of delivery slips'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool',

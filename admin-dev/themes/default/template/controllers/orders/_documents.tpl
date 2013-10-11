@@ -38,6 +38,8 @@
 	{if get_class($document) eq 'OrderInvoice'}
 		{if isset($document->is_delivery)}
 		<tr class="invoice_line" id="delivery_{$document->id}">
+		{elseif isset($document->is_package)}
+		<tr class="invoice_line" id="package">
 		{else}
 		<tr class="invoice_line" id="invoice_{$document->id}">
 		{/if}
@@ -55,7 +57,7 @@
 				{elseif isset($document->is_package)}
 					{l s='Packing slip'}
 				{else}
-					{l s='Invoice'}
+					{l s='Invoice'}{if isset($document->delivery_nr)} {l s='for Delivery Slip'} {$document->delivery_nr}{/if}
 				{/if}
 			{elseif get_class($document) eq 'OrderSlip'}
 				{l s='Credit Slip'}
@@ -82,7 +84,7 @@
 				{elseif isset($document->is_package)}
 					#PACKSLIP
 				{else}
-					{$document->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}
+					{$document->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}{if isset($document->delivery_nr)}-{$document->delivery_nr}{/if}
 				{/if}
 			{elseif get_class($document) eq 'OrderSlip'}
 				#{Configuration::get('PS_CREDIT_SLIP_PREFIX', $current_id_lang)}{'%06d'|sprintf:$document->id}
@@ -97,14 +99,17 @@
 				--
 			{else}
 				{displayPrice price=$document->total_paid_tax_incl currency=$currency->id}&nbsp;
-				{if $document->getTotalPaid()}
-					<span style="color:red;font-weight:bold;">
-					{if $document->getRestPaid() > 0}
-						({displayPrice price=$document->getRestPaid() currency=$currency->id} {l s='not paid'})
-					{else if $document->getRestPaid() < 0}
-						({displayPrice price=-$document->getRestPaid() currency=$currency->id} {l s='overpaid'})
+				{if Configuration::get('PS_ADS') &&  Configuration::get('PS_ADS_INVOICE_DELIVERD')}
+				{else}
+					{if $document->getTotalPaid()}
+						<span style="color:red;font-weight:bold;">
+						{if $document->getRestPaid() > 0}
+							({displayPrice price=$document->getRestPaid() currency=$currency->id} {l s='not paid'})
+						{else if $document->getRestPaid() < 0}
+							({displayPrice price=-$document->getRestPaid() currency=$currency->id} {l s='overpaid'})
+						{/if}
+						</span>
 					{/if}
-					</span>
 				{/if}
 			{/if}
 		{elseif get_class($document) eq 'OrderSlip'}
@@ -116,8 +121,11 @@
 		<td class="right document_action">
 		{if get_class($document) eq 'OrderInvoice'}
 			{if !isset($document->is_delivery) && !isset($document->is_package)}
-				{if $document->getRestPaid()}
-					<a href="#" class="js-set-payment" data-amount="{$document->getRestPaid()}" data-id-invoice="{$document->id}" title="{l s='Set payment form'}"><img src="../img/admin/money_add.png" alt="{l s='Set payment form'}" /></a>
+				{if Configuration::get('PS_ADS') &&  Configuration::get('PS_ADS_INVOICE_DELIVERD')}
+				{else}
+					{if $document->getRestPaid()}
+						<a href="#" class="js-set-payment" data-amount="{$document->getRestPaid()}" data-id-invoice="{$document->id}" title="{l s='Set payment form'}"><img src="../img/admin/money_add.png" alt="{l s='Set payment form'}" /></a>
+					{/if}
 				{/if}
 				<a href="#" onclick="$('#invoiceNote{$document->id}').show(); return false;" title="{if $document->note eq ''}{l s='Add note'}{else}{l s='Edit note'}{/if}"><img src="../img/admin/note.png" alt="{if $document->note eq ''}{l s='Add note'}{else}{l s='Edit note'}{/if}"{if $document->note eq ''} class="js-disabled-action"{/if} /></a>
 			{/if}

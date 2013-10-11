@@ -61,7 +61,7 @@ class OrderStateCore extends ObjectModel
 	public $shipped;
 
 	/** @var boolean Partially shipped */
-	public partially_shipped;
+	public $partially_shipped;
 
 	/** @var boolean Paid */
 	public $paid;

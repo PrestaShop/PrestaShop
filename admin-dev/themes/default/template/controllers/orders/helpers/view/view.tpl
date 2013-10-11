@@ -821,7 +821,7 @@
 					</tr>
 				{foreach from=$delivered_products item=delivery_nr key=k}
 						<tr>
-							<td colspan="6">{l s='Delivery'} {$k}</td>
+							<td colspan="6">{l s='Delivery'} {$k} {if $delivery_nr[0]['shipped']} - Shipped {/if}</td>
 						</tr>
 					{foreach from=$delivery_nr item=product}
 						{* Include customized datas partial *}

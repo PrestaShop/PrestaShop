@@ -52,9 +52,13 @@
 				<option value="{$invoice->id}">{$invoice->getInvoiceNumberFormatted($current_id_lang)}</option>
 				{/foreach}
 			</optgroup>
-			<optgroup label="{l s='New'}">
-				<option value="0">{l s='Create a new invoice'}</option>
-			</optgroup>
+			{if Configuration::get('PS_ADS') && Configuration::get('PS_ADS_INVOICE_DELIVERD')}
+				<!-- No new invoices when using this option on ADS  -->
+			{else}
+				<optgroup label="{l s='New'}">
+					<option value="0">{l s='Create a new invoice'}</option>
+				</optgroup>
+			{/if}
 		</select>
 		{/if}
 	</td>
