@@ -1,232 +1,229 @@
-@import url(http://fonts.googleapis.com/css?family=Josefin+Sans:200,400,700)
-@import compass
-
-$color-bright: #F0E9DC
+$color-bright: white
 $font-family: 'Josefin Sans', sans-serif
-$color-calendar: #4FA2D4
+$color-calendar: $brand-primary
+
 $color-calendar-compare: #E18E70
 $color-calendar-day: $color-bright
 $color-calendar-outrange: darken($color-calendar,15%)
 $color-calendar-day-selected: darken($color-calendar,25%)
 $color-calendar-range: darken($color-calendar,15%)
 
-
 #datepicker
-  input[type="text"]
-  padding: 6px
-  background-color: darken($color-calendar,20%)
-  .input-selected
-    margin: 0
-  #date-start.input-selected
-    border: solid 3px $color-calendar-day-selected
-  #date-end.input-selected
-    border: solid 3px $color-calendar-day-selected
-  .datepickers-container
-    width: 60%
-    float: left
-    margin: 0
-    font-size: 16px
-    height: 16.8em
-  form#datepicker-form
-    width: 40%
-    float: left
-    +border-radius(0)
-    border: none
-    #date-range .form-date-heading
-      background-color: darken($color-calendar-compare,5%)
-    #date-compare .form-date-heading
-      background-color: darken($color-calendar-compare,5%)
-    .form-date-heading
-      font-family: $font-family
-      font-size: 1.15em
-      padding: 6px
-      color: $color-bright
-      font-weight: 200
-      text-transform: uppercase
-      .btn-default
-        background-color: rgba($color-bright,0.3)
-        font-weight: 700
-        color: $color-bright
-        border: none
-    .form-date-body
-      padding: 10px
-    .form-date-group
-      +box-shadow(darken($color-calendar,30%) 0 0 4px)
-      background-color: $color-bright
-      width: 100%
-      margin: 0 auto 6px auto
-      label, input
-        float: left
-        margin-right: 6px
-      label
-        line-height: 3.2em
-        font-weight: 700
-        font-size: 0.8em
-        margin-bottom: 0
-      input[type='text']
-        width: 35%
-    .actions
-      +box-shadow(darken($color-calendar,30%) 0 0 4px)
-      padding: 0
-      background-color: $color-calendar
-      .btn-primary
-        padding: 12px
-        text-transform:  uppercase
-        background-color: $color-bright
-        color: $color-calendar-day-selected
-        border: none
-      .btn-default
-        padding: 12px
-        text-transform:  uppercase
-        color: $color-calendar-day-selected
-        background: transparent
-        border: none
-    label
-      font-family: $font-family
-      font-weight: 700
-      text-transform: uppercase
-      color: #666
-  .datepicker
-    +box-shadow(darken($color-calendar,30%) 0 0 4px)
-    position: relative
-    float: left
-    margin-right: 1%
-    width: 49%
-    height: 100%
-    background-color: $color-calendar
-    font-family: $font-family
-    table
-      width: 100%
-      margin: 0
-    thead
-      tr th:after
-        content: ""
-        border-top: 1px solid darken($color-calendar,10%)
-        width: 100%
-        display: block
-      tr th
-        background-color: darken($color-calendar,5%)
-        color: lighten($color-calendar,25%)
-        font-size: 0.7em
-        font-weight: 700
-        border-bottom: solid 1px lighten($color-calendar,7%)
-        text-transform: uppercase
-      tr:first-child th
-        background-color: $color-bright
-        font-weight: 200
-        font-size: 1.4em
-        color: $color-calendar-day-selected
-    td, th
-      text-align: center
-      height: 2em
-      line-height: 2em
-      padding: 0
-      color: $color-calendar-day
-      position: relative
-    td
-      font-weight: 400
-      padding: 0 10px
-      border-bottom: solid 1px $color-calendar
-      &.day:after
-        content: ""
-        position: absolute
-        display: block
-        top: 0
-        left: 0
-        width: 100%
-        height: 100%
-        z-index: 0
-        background-color: transparent
-      &.day:hover
-        cursor: pointer
-      &.day.disabled
-        color: $color-calendar-outrange
-      &.old, &.new
-        color: $color-calendar-outrange
-      &.start-selected:not(.old):not(.new):not(.end-selected)
-        font-weight: 700
-        background-color: $color-calendar-day-selected
-        +border-left-radius(15px)
-        @extend .chevron-left
-      &.end-selected:not(.old):not(.new):not(.start-selected)
-        font-weight: 700
-        background-color: $color-calendar-day-selected
-        @extend .chevron-right
-        +border-right-radius(15px)
-      &.end-selected.start-selected
-        +border-radius(15px)
-        font-weight: 700
-        background-color: $color-calendar-day-selected
-      &.range
-        color: lighten($color-calendar-range,35%)
-        background-color: $color-calendar-range
-      &.today
-        background-color: $color-bright
+	input[type="text"]
+	padding: 6px
+	background-color: darken($color-calendar,10%)
+	.input-selected
+		margin: 0
+	#date-start.input-selected
+		border: solid 3px $color-calendar-day-selected
+	#date-end.input-selected
+		border: solid 3px $color-calendar-day-selected
+	.datepickers-container
+		width: 60%
+		float: left
+		margin: 0
+		font-size: 16px
+		height: 16.8em
+	form#datepicker-form
+		width: 40%
+		float: left
+		+border-radius(0)
+		border: none
+		#date-range .form-date-heading
+			background-color: darken($color-calendar-compare,5%)
+		#date-compare .form-date-heading
+			background-color: darken($color-calendar-compare,5%)
+		.form-date-heading
+			font-family: $font-family
+			font-size: 1.15em
+			padding: 6px
+			color: $color-bright
+			font-weight: 200
+			text-transform: uppercase
+			.btn-default
+				background-color: rgba($color-bright,0.3)
+				font-weight: 700
+				color: $color-bright
+				border: none
+		.form-date-body
+			padding: 10px
+		.form-date-group
+			+box-shadow(darken($color-calendar,30%) 0 0 4px)
+			background-color: $color-bright
+			width: 100%
+			margin: 0 auto 6px auto
+			label, input
+				float: left
+				margin-right: 6px
+			label
+				line-height: 3.2em
+				font-weight: 700
+				font-size: 0.8em
+				margin-bottom: 0
+			input[type='text']
+				width: 35%
+		.actions
+			+box-shadow(darken($color-calendar,30%) 0 0 4px)
+			padding: 0
+			background-color: $color-calendar
+			.btn-primary
+				padding: 12px
+				text-transform:  uppercase
+				background-color: $color-bright
+				color: $color-calendar-day-selected
+				border: none
+			.btn-default
+				padding: 12px
+				text-transform:  uppercase
+				color: $color-calendar-day-selected
+				background: transparent
+				border: none
+		label
+			font-family: $font-family
+			font-weight: 700
+			text-transform: uppercase
+			color: #666
+	.datepicker
+		//+box-shadow(darken($color-calendar,30%) 0 0 4px)
+		position: relative
+		float: left
+		margin-right: 1%
+		width: 49%
+		height: 100%
+		background-color: $color-calendar
+		font-family: $font-family
+		table
+			width: 100%
+			margin: 0
+		thead
+			tr th:after
+				content: ""
+				border-top: 1px solid darken($color-calendar,10%)
+				width: 100%
+				display: block
+			tr th
+				background-color: darken($color-calendar,5%)
+				color: lighten($color-calendar,25%)
+				font-size: 0.7em
+				font-weight: 700
+				border-bottom: solid 1px lighten($color-calendar,7%)
+				text-transform: uppercase
+			tr:first-child th
+				background-color: $color-bright
+				font-weight: 200
+				font-size: 1.4em
+				color: $color-calendar-day-selected
+		td, th
+			text-align: center
+			height: 2em
+			line-height: 2em
+			padding: 0
+			color: $color-calendar-day
+			position: relative
+		td
+			font-weight: 400
+			padding: 0 10px
+			border-bottom: solid 1px $color-calendar
+			&.day:after
+				content: ""
+				position: absolute
+				display: block
+				top: 0
+				left: 0
+				width: 100%
+				height: 100%
+				z-index: 0
+				background-color: transparent
+			&.day:hover
+				cursor: pointer
+			&.day.disabled
+				color: $color-calendar-outrange
+			&.old, &.new
+				color: $color-calendar-outrange
+			&.start-selected:not(.old):not(.new):not(.end-selected)
+				font-weight: 700
+				background-color: $color-calendar-day-selected
+				+border-left-radius(15px)
+				@extend .chevron-left
+			&.end-selected:not(.old):not(.new):not(.start-selected)
+				font-weight: 700
+				background-color: $color-calendar-day-selected
+				@extend .chevron-right
+				+border-right-radius(15px)
+			&.end-selected.start-selected
+				+border-radius(15px)
+				font-weight: 700
+				background-color: $color-calendar-day-selected
+			&.range
+				color: lighten($color-calendar-range,35%)
+				background-color: $color-calendar-range
+			&.today
+				background-color: $color-bright
 
-      span
-        padding: 0
-        display: block
-        width: 33.333%
-        height: 3em
-        line-height: 3em
-        font-weight: 400
-        float: left
-        text-transform: uppercase
-        cursor: pointer
-        &:hover
-          background-color: $color-calendar-day-selected
-        &.active
-          background-color: $color-calendar-day-selected
-          color: #fff
-        &.old
-          color: $color-calendar-outrange
-    th
-      &.switch
-        width: 145px
-      &.next, &.prev
-        font-size: 1.3em
-    thead tr:first-child th
-      cursor: pointer
+			span
+				padding: 0
+				display: block
+				width: 33.333%
+				height: 3em
+				line-height: 3em
+				font-weight: 400
+				float: left
+				text-transform: uppercase
+				cursor: pointer
+				&:hover
+					background-color: $color-calendar-day-selected
+				&.active
+					background-color: $color-calendar-day-selected
+					color: #fff
+				&.old
+					color: $color-calendar-outrange
+		th
+			&.switch
+				width: 145px
+			&.next, &.prev
+				font-size: 1.3em
+		thead tr:first-child th
+			cursor: pointer
 
 
 .chevron-left, .chevron-right
-  position: relative
+	position: relative
 .chevron-left:before, .chevron-right:before
-  display: block
-  content: ""
-  width: 0
-  height: 0
-  border-style: solid
-  position: absolute
+	display: block
+	content: ""
+	width: 0
+	height: 0
+	border-style: solid
+	position: absolute
 .chevron-left:before
-  right: 0px
-  top: 0
-  border-width: 1em 0 1em 0.5em
-  border-color: transparent transparent transparent $color-calendar-day-selected
-  background-color: $color-calendar-range
+	right: 0px
+	top: 0
+	border-width: 1em 0 1em 0.5em
+	border-color: transparent transparent transparent $color-calendar-day-selected
+	background-color: $color-calendar-range
 .chevron-right:before
-  left: 0px
-  top: 0
-  border-width: 1em 0 1em 0.5em
-  border-color: transparent transparent transparent $color-calendar-range
-  background-color: $color-calendar-day-selected
+	left: 0px
+	top: 0
+	border-width: 1em 0 1em 0.5em
+	border-color: transparent transparent transparent $color-calendar-range
+	background-color: $color-calendar-day-selected
 
 .input-complete
-  -webkit-animation: one 0.2s ease-in-out
-  -moz-animation: one 0.2s ease-in-out
-  -ms-animation: one 0.2s ease-in-out
-  -o-animation: one 0.2s ease-in-out
-  animation: one 0.2s ease-in-out
-    
+	-webkit-animation: one 0.2s ease-in-out
+	-moz-animation: one 0.2s ease-in-out
+	-ms-animation: one 0.2s ease-in-out
+	-o-animation: one 0.2s ease-in-out
+	animation: one 0.2s ease-in-out
+		
 @-webkit-keyframes one
-  0%
-    background-color: $color-calendar
-  100%
-    background-color: $color-bright
+	0%
+		background-color: $color-calendar
+	100%
+		background-color: $color-bright
 
 @-webkit-keyframes two
-  0%
-    +box-shadow($color-calendar 0 0 0 20px inset)
-  100%
-    +box-shadow($color-calendar 0 0 0 inset)
-      
+	0%
+		+box-shadow($color-calendar 0 0 0 20px inset)
+	100%
+		+box-shadow($color-calendar 0 0 0 inset)
+			

@@ -7542,12 +7542,12 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 .icon-renren:before {
   content: "\f18b"; }
 
-/* line 7, admin-theme.sass */
+/* line 10, admin-theme.sass */
 html, body {
   min-height: 100%;
   height: 100%; }
 
-/* line 11, admin-theme.sass */
+/* line 14, admin-theme.sass */
 #main {
   min-height: 100%;
   padding: 36px 0 60px;
@@ -7555,7 +7555,7 @@ html, body {
   background-color: #f8f8f8;
   background-image: url("../img/patterns/bedge_grunge.png"); }
 
-/* line 18, admin-theme.sass */
+/* line 21, admin-theme.sass */
 #content {
   padding: 80px 20px 0;
   margin-left: 240px;
@@ -7569,7 +7569,7 @@ html, body {
   -moz-transition-timing-function: ease-out;
   -o-transition-timing-function: ease-out;
   transition-timing-function: ease-out; }
-/* line 24, admin-theme.sass */
+/* line 27, admin-theme.sass */
 #content fieldset, #content .panel, #content #header_notifs_icon_wrapper .notifs_panel, #header_notifs_icon_wrapper #content .notifs_panel, #content #dash_version {
   padding: 20px;
   margin-bottom: 20px;
@@ -7582,7 +7582,7 @@ html, body {
   border-radius: 5px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0 2px 0, white 0 0 0 3px inset;
   box-shadow: rgba(0, 0, 0, 0.1) 0 2px 0, white 0 0 0 3px inset; }
-/* line 33, admin-theme.sass */
+/* line 36, admin-theme.sass */
 #content h3:not(.modal-title), #content .panel-heading:not(.modal-title), #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title), #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title), #content .panel-heading, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header {
   border: none;
   padding: 0 5px;
@@ -7594,10 +7594,10 @@ html, body {
   text-transform: uppercase;
   background-color: white;
   border-bottom: solid 1px #cccccc; }
-/* line 44, admin-theme.sass */
+/* line 47, admin-theme.sass */
 #content h3:not(.modal-title) i, #content .panel-heading:not(.modal-title) i, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) i, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) i, #content h3:not(.modal-title) a, #content .panel-heading:not(.modal-title) a, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) a, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) a, #content .panel-heading i, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header i, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header i, #content .panel-heading a, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header a, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header a {
   color: contrasted(#e6e8e3); }
-/* line 46, admin-theme.sass */
+/* line 49, admin-theme.sass */
 #content h3:not(.modal-title) .badge, #content .panel-heading:not(.modal-title) .badge, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) .badge, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) .badge, #content h3:not(.modal-title) #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper #content h3:not(.modal-title) .notifs_badge, #content .panel-heading:not(.modal-title) #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper #content .panel-heading:not(.modal-title) .notifs_badge, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) .notifs_badge, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) .notifs_badge, #content .panel-heading .badge, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .badge, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header .badge, #content .panel-heading #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper #content .panel-heading .notifs_badge, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .notifs_badge, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header .notifs_badge {
   background-color: #1ba6e5;
   -webkit-border-radius: 0;
@@ -7612,38 +7612,38 @@ html, body {
   font-weight: 300;
   float: left;
   margin-left: -5px; }
-/* line 56, admin-theme.sass */
+/* line 59, admin-theme.sass */
 #content h3:not(.modal-title) .panel-heading-action, #content .panel-heading:not(.modal-title) .panel-heading-action, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) .panel-heading-action, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) .panel-heading-action, #content .panel-heading .panel-heading-action, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .panel-heading-action, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header .panel-heading-action {
   margin-right: -5px; }
-/* line 59, admin-theme.sass */
+/* line 62, admin-theme.sass */
 #content h3:not(.modal-title) .panel-heading-action a.list-toolbar-btn, #content .panel-heading:not(.modal-title) .panel-heading-action a.list-toolbar-btn, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) .panel-heading-action a.list-toolbar-btn, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) .panel-heading-action a.list-toolbar-btn, #content .panel-heading .panel-heading-action a.list-toolbar-btn, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .panel-heading-action a.list-toolbar-btn, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header .panel-heading-action a.list-toolbar-btn {
   float: left;
   height: 30px;
   width: 30px;
   color: #1ba6e5;
   border-left: solid 1px #cccccc; }
-/* line 65, admin-theme.sass */
+/* line 68, admin-theme.sass */
 #content h3:not(.modal-title) .panel-heading-action a.list-toolbar-btn:hover, #content .panel-heading:not(.modal-title) .panel-heading-action a.list-toolbar-btn:hover, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) .panel-heading-action a.list-toolbar-btn:hover, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) .panel-heading-action a.list-toolbar-btn:hover, #content .panel-heading .panel-heading-action a.list-toolbar-btn:hover, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .panel-heading-action a.list-toolbar-btn:hover, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header .panel-heading-action a.list-toolbar-btn:hover {
   text-decoration: none;
   color: black; }
-/* line 68, admin-theme.sass */
+/* line 71, admin-theme.sass */
 #content h3:not(.modal-title) .panel-heading-action a.list-toolbar-btn i, #content .panel-heading:not(.modal-title) .panel-heading-action a.list-toolbar-btn i, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header:not(.modal-title) .panel-heading-action a.list-toolbar-btn i, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header:not(.modal-title) .panel-heading-action a.list-toolbar-btn i, #content .panel-heading .panel-heading-action a.list-toolbar-btn i, #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .panel-heading-action a.list-toolbar-btn i, #header_notifs_icon_wrapper .notifs_panel #content .notifs_panel_header .panel-heading-action a.list-toolbar-btn i {
   text-align: center;
   font-size: 1.3em;
   line-height: 30px; }
-/* line 72, admin-theme.sass */
+/* line 75, admin-theme.sass */
 #content .panel-danger .panel-heading, #content .panel-danger #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header, #header_notifs_icon_wrapper .notifs_panel #content .panel-danger .notifs_panel_header {
   background-color: #8bc954 !important; }
-/* line 74, admin-theme.sass */
+/* line 77, admin-theme.sass */
 #content form .alert, #content form #carrier_wizard .wizard_error, #carrier_wizard #content form .wizard_error {
   clear: both; }
 @media (max-width: 768px) {
-  /* line 18, admin-theme.sass */
+  /* line 21, admin-theme.sass */
   #content {
     margin-left: 0;
     width: 100%; } }
 
-/* line 81, admin-theme.sass */
+/* line 84, admin-theme.sass */
 #nobootstrap {
   float: left; }
 
@@ -7830,7 +7830,7 @@ a.link-social:hover {
   display: none; }
 /* line 24, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu {
-  margin: 0;
+  margin: 0 0 50px 0;
   padding: 0;
   border-top: 1px black solid;
   list-style: none; }
@@ -8863,27 +8863,27 @@ textarea {
   -webkit-font-smoothing: antialiased;
   *margin-right: 0.3em; }
 
-/* line 14, admin-theme/_admin-date-range-picker.sass */
+/* line 11, admin-theme/_admin-date-range-picker.sass */
 #datepicker {
   padding: 6px;
-  background-color: #256d98; }
-/* line 18, admin-theme/_admin-date-range-picker.sass */
+  background-color: #1585b8; }
+/* line 15, admin-theme/_admin-date-range-picker.sass */
 #datepicker .input-selected {
   margin: 0; }
-/* line 20, admin-theme/_admin-date-range-picker.sass */
+/* line 17, admin-theme/_admin-date-range-picker.sass */
 #datepicker #date-start.input-selected {
-  border: solid 3px #205e83; }
-/* line 22, admin-theme/_admin-date-range-picker.sass */
+  border: solid 3px #0d5373; }
+/* line 19, admin-theme/_admin-date-range-picker.sass */
 #datepicker #date-end.input-selected {
-  border: solid 3px #205e83; }
-/* line 24, admin-theme/_admin-date-range-picker.sass */
+  border: solid 3px #0d5373; }
+/* line 21, admin-theme/_admin-date-range-picker.sass */
 #datepicker .datepickers-container {
   width: 60%;
   float: left;
   margin: 0;
   font-size: 16px;
   height: 16.8em; }
-/* line 30, admin-theme/_admin-date-range-picker.sass */
+/* line 27, admin-theme/_admin-date-range-picker.sass */
 #datepicker form#datepicker-form {
   width: 40%;
   float: left;
@@ -8893,127 +8893,122 @@ textarea {
   -o-border-radius: 0;
   border-radius: 0;
   border: none; }
-/* line 35, admin-theme/_admin-date-range-picker.sass */
+/* line 32, admin-theme/_admin-date-range-picker.sass */
 #datepicker form#datepicker-form #date-range .form-date-heading {
   background-color: #dd7d5b; }
-/* line 37, admin-theme/_admin-date-range-picker.sass */
+/* line 34, admin-theme/_admin-date-range-picker.sass */
 #datepicker form#datepicker-form #date-compare .form-date-heading {
   background-color: #dd7d5b; }
-/* line 39, admin-theme/_admin-date-range-picker.sass */
+/* line 36, admin-theme/_admin-date-range-picker.sass */
 #datepicker form#datepicker-form .form-date-heading {
   font-family: "Josefin Sans", sans-serif;
   font-size: 1.15em;
   padding: 6px;
-  color: #f0e9dc;
+  color: white;
   font-weight: 200;
   text-transform: uppercase; }
-/* line 46, admin-theme/_admin-date-range-picker.sass */
+/* line 43, admin-theme/_admin-date-range-picker.sass */
 #datepicker form#datepicker-form .form-date-heading .btn-default {
-  background-color: rgba(240, 233, 220, 0.3);
+  background-color: rgba(255, 255, 255, 0.3);
   font-weight: 700;
-  color: #f0e9dc;
+  color: white;
   border: none; }
-/* line 51, admin-theme/_admin-date-range-picker.sass */
+/* line 48, admin-theme/_admin-date-range-picker.sass */
 #datepicker form#datepicker-form .form-date-body {
   padding: 10px; }
-/* line 53, admin-theme/_admin-date-range-picker.sass */
+/* line 50, admin-theme/_admin-date-range-picker.sass */
 #datepicker form#datepicker-form .form-date-group {
-  -webkit-box-shadow: #1b4f6f 0 0 4px;
-  -moz-box-shadow: #1b4f6f 0 0 4px;
-  box-shadow: #1b4f6f 0 0 4px;
-  background-color: #f0e9dc;
+  -webkit-box-shadow: #0b435c 0 0 4px;
+  box-shadow: #0b435c 0 0 4px;
+  background-color: white;
   width: 100%;
   margin: 0 auto 6px auto; }
-/* line 58, admin-theme/_admin-date-range-picker.sass */
+/* line 55, admin-theme/_admin-date-range-picker.sass */
 #datepicker form#datepicker-form .form-date-group label, #datepicker form#datepicker-form .form-date-group input {
   float: left;
   margin-right: 6px; }
-/* line 61, admin-theme/_admin-date-range-picker.sass */
+/* line 58, admin-theme/_admin-date-range-picker.sass */
 #datepicker form#datepicker-form .form-date-group label {
   line-height: 3.2em;
   font-weight: 700;
   font-size: 0.8em;
   margin-bottom: 0; }
-/* line 66, admin-theme/_admin-date-range-picker.sass */
+/* line 63, admin-theme/_admin-date-range-picker.sass */
 #datepicker form#datepicker-form .form-date-group input[type='text'] {
   width: 35%; }
-/* line 68, admin-theme/_admin-date-range-picker.sass */
+/* line 65, admin-theme/_admin-date-range-picker.sass */
 #datepicker form#datepicker-form .actions {
-  -webkit-box-shadow: #1b4f6f 0 0 4px;
-  -moz-box-shadow: #1b4f6f 0 0 4px;
-  box-shadow: #1b4f6f 0 0 4px;
+  -webkit-box-shadow: #0b435c 0 0 4px;
+  box-shadow: #0b435c 0 0 4px;
   padding: 0;
-  background-color: #4fa2d4; }
-/* line 72, admin-theme/_admin-date-range-picker.sass */
+  background-color: #1ba6e5; }
+/* line 69, admin-theme/_admin-date-range-picker.sass */
 #datepicker form#datepicker-form .actions .btn-primary {
   padding: 12px;
   text-transform: uppercase;
-  background-color: #f0e9dc;
-  color: #205e83;
+  background-color: white;
+  color: #0d5373;
   border: none; }
-/* line 78, admin-theme/_admin-date-range-picker.sass */
+/* line 75, admin-theme/_admin-date-range-picker.sass */
 #datepicker form#datepicker-form .actions .btn-default {
   padding: 12px;
   text-transform: uppercase;
-  color: #205e83;
+  color: #0d5373;
   background: transparent;
   border: none; }
-/* line 84, admin-theme/_admin-date-range-picker.sass */
+/* line 81, admin-theme/_admin-date-range-picker.sass */
 #datepicker form#datepicker-form label {
   font-family: "Josefin Sans", sans-serif;
   font-weight: 700;
   text-transform: uppercase;
   color: #666666; }
-/* line 89, admin-theme/_admin-date-range-picker.sass */
+/* line 86, admin-theme/_admin-date-range-picker.sass */
 #datepicker .datepicker {
-  -webkit-box-shadow: #1b4f6f 0 0 4px;
-  -moz-box-shadow: #1b4f6f 0 0 4px;
-  box-shadow: #1b4f6f 0 0 4px;
   position: relative;
   float: left;
   margin-right: 1%;
   width: 49%;
   height: 100%;
-  background-color: #4fa2d4;
+  background-color: #1ba6e5;
   font-family: "Josefin Sans", sans-serif; }
-/* line 98, admin-theme/_admin-date-range-picker.sass */
+/* line 95, admin-theme/_admin-date-range-picker.sass */
 #datepicker .datepicker table {
   width: 100%;
   margin: 0; }
-/* line 102, admin-theme/_admin-date-range-picker.sass */
+/* line 99, admin-theme/_admin-date-range-picker.sass */
 #datepicker .datepicker thead tr th:after {
   content: "";
-  border-top: 1px solid #2f8ac1;
+  border-top: 1px solid #1585b8;
   width: 100%;
   display: block; }
-/* line 107, admin-theme/_admin-date-range-picker.sass */
+/* line 104, admin-theme/_admin-date-range-picker.sass */
 #datepicker .datepicker thead tr th {
-  background-color: #3b97cf;
-  color: #b5d8ed;
+  background-color: #1896cf;
+  color: #8dd3f2;
   font-size: 0.7em;
   font-weight: 700;
-  border-bottom: solid 1px #6cb1db;
+  border-bottom: solid 1px #3bb3e9;
   text-transform: uppercase; }
-/* line 114, admin-theme/_admin-date-range-picker.sass */
+/* line 111, admin-theme/_admin-date-range-picker.sass */
 #datepicker .datepicker thead tr:first-child th {
-  background-color: #f0e9dc;
+  background-color: white;
   font-weight: 200;
   font-size: 1.4em;
-  color: #205e83; }
-/* line 119, admin-theme/_admin-date-range-picker.sass */
+  color: #0d5373; }
+/* line 116, admin-theme/_admin-date-range-picker.sass */
 #datepicker .datepicker td, #datepicker .datepicker th {
   text-align: center;
   height: 2em;
   line-height: 2em;
   padding: 0;
-  color: #f0e9dc;
+  color: white;
   position: relative; }
-/* line 126, admin-theme/_admin-date-range-picker.sass */
+/* line 123, admin-theme/_admin-date-range-picker.sass */
 #datepicker .datepicker td {
   font-weight: 400;
   padding: 0 10px;
-  border-bottom: solid 1px #4fa2d4; }
-/* line 130, admin-theme/_admin-date-range-picker.sass */
+  border-bottom: solid 1px #1ba6e5; }
+/* line 127, admin-theme/_admin-date-range-picker.sass */
 #datepicker .datepicker td.day:after {
   content: "";
   position: absolute;
@@ -9024,36 +9019,28 @@ textarea {
   height: 100%;
   z-index: 0;
   background-color: transparent; }
-/* line 140, admin-theme/_admin-date-range-picker.sass */
+/* line 137, admin-theme/_admin-date-range-picker.sass */
 #datepicker .datepicker td.day:hover {
   cursor: pointer; }
-/* line 142, admin-theme/_admin-date-range-picker.sass */
+/* line 139, admin-theme/_admin-date-range-picker.sass */
 #datepicker .datepicker td.day.disabled {
-  color: #2a7bac; }
-/* line 144, admin-theme/_admin-date-range-picker.sass */
+  color: #1275a1; }
+/* line 141, admin-theme/_admin-date-range-picker.sass */
 #datepicker .datepicker td.old, #datepicker .datepicker td.new {
-  color: #2a7bac; }
-/* line 146, admin-theme/_admin-date-range-picker.sass */
+  color: #1275a1; }
+/* line 143, admin-theme/_admin-date-range-picker.sass */
 #datepicker .datepicker td.start-selected:not(.old):not(.new):not(.end-selected) {
   font-weight: 700;
-  background-color: #205e83;
-  -moz-border-radius-topleft: 15px;
-  -webkit-border-top-left-radius: 15px;
-  border-top-left-radius: 15px;
-  -moz-border-radius-bottomleft: 15px;
-  -webkit-border-bottom-left-radius: 15px;
-  border-bottom-left-radius: 15px; }
-/* line 151, admin-theme/_admin-date-range-picker.sass */
+  background-color: #0d5373;
+  border-bottom-left-radius: 15px;
+  border-top-left-radius: 15px; }
+/* line 148, admin-theme/_admin-date-range-picker.sass */
 #datepicker .datepicker td.end-selected:not(.old):not(.new):not(.start-selected) {
   font-weight: 700;
-  background-color: #205e83;
-  -moz-border-radius-topright: 15px;
-  -webkit-border-top-right-radius: 15px;
-  border-top-right-radius: 15px;
-  -moz-border-radius-bottomright: 15px;
-  -webkit-border-bottom-right-radius: 15px;
-  border-bottom-right-radius: 15px; }
-/* line 156, admin-theme/_admin-date-range-picker.sass */
+  background-color: #0d5373;
+  border-bottom-right-radius: 15px;
+  border-top-right-radius: 15px; }
+/* line 153, admin-theme/_admin-date-range-picker.sass */
 #datepicker .datepicker td.end-selected.start-selected {
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
@@ -9061,15 +9048,15 @@ textarea {
   -o-border-radius: 15px;
   border-radius: 15px;
   font-weight: 700;
-  background-color: #205e83; }
-/* line 160, admin-theme/_admin-date-range-picker.sass */
+  background-color: #0d5373; }
+/* line 157, admin-theme/_admin-date-range-picker.sass */
 #datepicker .datepicker td.range {
-  color: #a1cde8;
-  background-color: #2a7bac; }
-/* line 163, admin-theme/_admin-date-range-picker.sass */
+  color: #77caef;
+  background-color: #1275a1; }
+/* line 160, admin-theme/_admin-date-range-picker.sass */
 #datepicker .datepicker td.today {
-  background-color: #f0e9dc; }
-/* line 166, admin-theme/_admin-date-range-picker.sass */
+  background-color: white; }
+/* line 163, admin-theme/_admin-date-range-picker.sass */
 #datepicker .datepicker td span {
   padding: 0;
   display: block;
@@ -9080,31 +9067,31 @@ textarea {
   float: left;
   text-transform: uppercase;
   cursor: pointer; }
-/* line 176, admin-theme/_admin-date-range-picker.sass */
+/* line 173, admin-theme/_admin-date-range-picker.sass */
 #datepicker .datepicker td span:hover {
-  background-color: #205e83; }
-/* line 178, admin-theme/_admin-date-range-picker.sass */
+  background-color: #0d5373; }
+/* line 175, admin-theme/_admin-date-range-picker.sass */
 #datepicker .datepicker td span.active {
-  background-color: #205e83;
+  background-color: #0d5373;
   color: white; }
-/* line 181, admin-theme/_admin-date-range-picker.sass */
+/* line 178, admin-theme/_admin-date-range-picker.sass */
 #datepicker .datepicker td span.old {
-  color: #2a7bac; }
-/* line 184, admin-theme/_admin-date-range-picker.sass */
+  color: #1275a1; }
+/* line 181, admin-theme/_admin-date-range-picker.sass */
 #datepicker .datepicker th.switch {
   width: 145px; }
-/* line 186, admin-theme/_admin-date-range-picker.sass */
+/* line 183, admin-theme/_admin-date-range-picker.sass */
 #datepicker .datepicker th.next, #datepicker .datepicker th.prev {
   font-size: 1.3em; }
-/* line 188, admin-theme/_admin-date-range-picker.sass */
+/* line 185, admin-theme/_admin-date-range-picker.sass */
 #datepicker .datepicker thead tr:first-child th {
   cursor: pointer; }
 
-/* line 192, admin-theme/_admin-date-range-picker.sass */
+/* line 189, admin-theme/_admin-date-range-picker.sass */
 .chevron-left, #datepicker .datepicker td.start-selected:not(.old):not(.new):not(.end-selected), .chevron-right, #datepicker .datepicker td.end-selected:not(.old):not(.new):not(.start-selected) {
   position: relative; }
 
-/* line 194, admin-theme/_admin-date-range-picker.sass */
+/* line 191, admin-theme/_admin-date-range-picker.sass */
 .chevron-left:before, #datepicker .datepicker td.start-selected:not(.end-selected):not(.new):not(.old):before, .chevron-right:before, #datepicker .datepicker td.end-selected:not(.start-selected):not(.new):not(.old):before {
   display: block;
   content: "";
@@ -9113,23 +9100,23 @@ textarea {
   border-style: solid;
   position: absolute; }
 
-/* line 201, admin-theme/_admin-date-range-picker.sass */
+/* line 198, admin-theme/_admin-date-range-picker.sass */
 .chevron-left:before, #datepicker .datepicker td.start-selected:not(.end-selected):not(.new):not(.old):before {
   right: 0px;
   top: 0;
   border-width: 1em 0 1em 0.5em;
-  border-color: transparent transparent transparent #205e83;
-  background-color: #2a7bac; }
+  border-color: transparent transparent transparent #0d5373;
+  background-color: #1275a1; }
 
-/* line 207, admin-theme/_admin-date-range-picker.sass */
+/* line 204, admin-theme/_admin-date-range-picker.sass */
 .chevron-right:before, #datepicker .datepicker td.end-selected:not(.start-selected):not(.new):not(.old):before {
   left: 0px;
   top: 0;
   border-width: 1em 0 1em 0.5em;
-  border-color: transparent transparent transparent #2a7bac;
-  background-color: #205e83; }
+  border-color: transparent transparent transparent #1275a1;
+  background-color: #0d5373; }
 
-/* line 214, admin-theme/_admin-date-range-picker.sass */
+/* line 211, admin-theme/_admin-date-range-picker.sass */
 .input-complete {
   -webkit-animation: one 0.2s ease-in-out;
   -moz-animation: one 0.2s ease-in-out;
@@ -9138,26 +9125,445 @@ textarea {
   animation: one 0.2s ease-in-out; }
 
 @-webkit-keyframes one {
-  /* line 222, admin-theme/_admin-date-range-picker.sass */
+  /* line 219, admin-theme/_admin-date-range-picker.sass */
   0% {
-    background-color: #4fa2d4; }
+    background-color: #1ba6e5; }
 
-  /* line 224, admin-theme/_admin-date-range-picker.sass */
+  /* line 221, admin-theme/_admin-date-range-picker.sass */
   100% {
-    background-color: #f0e9dc; } }
+    background-color: white; } }
 
 @-webkit-keyframes two {
-  /* line 228, admin-theme/_admin-date-range-picker.sass */
+  /* line 225, admin-theme/_admin-date-range-picker.sass */
   0% {
-    -webkit-box-shadow: #4fa2d4 0 0 0 20px inset;
-    -moz-box-shadow: #4fa2d4 0 0 0 20px inset;
-    box-shadow: #4fa2d4 0 0 0 20px inset; }
+    -webkit-box-shadow: #1ba6e5 0 0 0 20px inset;
+    box-shadow: #1ba6e5 0 0 0 20px inset; }
 
-  /* line 230, admin-theme/_admin-date-range-picker.sass */
+  /* line 227, admin-theme/_admin-date-range-picker.sass */
   100% {
-    -webkit-box-shadow: #4fa2d4 0 0 0 inset;
-    -moz-box-shadow: #4fa2d4 0 0 0 inset;
-    box-shadow: #4fa2d4 0 0 0 inset; } }
+    -webkit-box-shadow: #1ba6e5 0 0 0 inset;
+    box-shadow: #1ba6e5 0 0 0 inset; } }
+
+/*!
+ * Ladda
+ * http://lab.hakim.se/ladda
+ * MIT licensed
+ *
+ * Copyright (C) 2013 Hakim El Hattab, http://hakim.se
+ */
+/*************************************
+ * CONFIG
+ */
+/*************************************
+ * MIXINS
+ */
+/*************************************
+ * BUTTON BASE
+ */
+/* line 60, admin-theme/_ladda.scss */
+.ladda-button {
+  position: relative; }
+
+/* Spinner animation */
+/* line 66, admin-theme/_ladda.scss */
+.ladda-button .ladda-spinner {
+  position: absolute;
+  z-index: 2;
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  top: 50%;
+  margin-top: -16px;
+  opacity: 0;
+  pointer-events: none; }
+
+/* Button label */
+/* line 79, admin-theme/_ladda.scss */
+.ladda-button .ladda-label {
+  position: relative;
+  z-index: 3; }
+
+/* Progress bar */
+/* line 85, admin-theme/_ladda.scss */
+.ladda-button .ladda-progress {
+  position: absolute;
+  width: 0;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.2);
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: 0.1s linear all !important;
+  -moz-transition: 0.1s linear all !important;
+  -ms-transition: 0.1s linear all !important;
+  -o-transition: 0.1s linear all !important;
+  transition: 0.1s linear all !important; }
+
+/* line 98, admin-theme/_ladda.scss */
+.ladda-button[data-loading] .ladda-progress {
+  opacity: 1;
+  visibility: visible; }
+
+/*************************************
+ * EASING
+ */
+/* line 110, admin-theme/_ladda.scss */
+.ladda-button, .ladda-button .ladda-spinner, .ladda-button .ladda-label {
+  -webkit-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all !important;
+  -moz-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all !important;
+  -ms-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all !important;
+  -o-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all !important;
+  transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all !important; }
+
+/* line 119, admin-theme/_ladda.scss */
+.ladda-button[data-style=zoom-in], .ladda-button[data-style=zoom-in] .ladda-spinner, .ladda-button[data-style=zoom-in] .ladda-label, .ladda-button[data-style=zoom-out], .ladda-button[data-style=zoom-out] .ladda-spinner, .ladda-button[data-style=zoom-out] .ladda-label {
+  -webkit-transition: 0.3s ease all !important;
+  -moz-transition: 0.3s ease all !important;
+  -ms-transition: 0.3s ease all !important;
+  -o-transition: 0.3s ease all !important;
+  transition: 0.3s ease all !important; }
+
+/*************************************
+ * EXPAND LEFT
+ */
+/* line 129, admin-theme/_ladda.scss */
+.ladda-button[data-style=expand-right] .ladda-spinner {
+  right: 14px; }
+/* line 134, admin-theme/_ladda.scss */
+.ladda-button[data-style=expand-right][data-size="s"] .ladda-spinner, .ladda-button[data-style=expand-right][data-size="xs"] .ladda-spinner {
+  right: 4px; }
+/* line 138, admin-theme/_ladda.scss */
+.ladda-button[data-style=expand-right][data-loading] {
+  padding-right: 56px; }
+/* line 141, admin-theme/_ladda.scss */
+.ladda-button[data-style=expand-right][data-loading] .ladda-spinner {
+  opacity: 1; }
+/* line 146, admin-theme/_ladda.scss */
+.ladda-button[data-style=expand-right][data-loading][data-size="s"], .ladda-button[data-style=expand-right][data-loading][data-size="xs"] {
+  padding-right: 40px; }
+
+/*************************************
+ * EXPAND RIGHT
+ */
+/* line 158, admin-theme/_ladda.scss */
+.ladda-button[data-style=expand-left] .ladda-spinner {
+  left: 14px; }
+/* line 163, admin-theme/_ladda.scss */
+.ladda-button[data-style=expand-left][data-size="s"] .ladda-spinner, .ladda-button[data-style=expand-left][data-size="xs"] .ladda-spinner {
+  left: 4px; }
+/* line 167, admin-theme/_ladda.scss */
+.ladda-button[data-style=expand-left][data-loading] {
+  padding-left: 56px; }
+/* line 170, admin-theme/_ladda.scss */
+.ladda-button[data-style=expand-left][data-loading] .ladda-spinner {
+  opacity: 1; }
+/* line 175, admin-theme/_ladda.scss */
+.ladda-button[data-style=expand-left][data-loading][data-size="s"], .ladda-button[data-style=expand-left][data-loading][data-size="xs"] {
+  padding-left: 40px; }
+
+/*************************************
+ * EXPAND UP
+ */
+/* line 186, admin-theme/_ladda.scss */
+.ladda-button[data-style=expand-up] {
+  overflow: hidden; }
+/* line 189, admin-theme/_ladda.scss */
+.ladda-button[data-style=expand-up] .ladda-spinner {
+  top: -32px;
+  left: 50%;
+  margin-left: -16px; }
+/* line 195, admin-theme/_ladda.scss */
+.ladda-button[data-style=expand-up][data-loading] {
+  padding-top: 54px; }
+/* line 198, admin-theme/_ladda.scss */
+.ladda-button[data-style=expand-up][data-loading] .ladda-spinner {
+  opacity: 1;
+  top: 14px;
+  margin-top: 0; }
+/* line 205, admin-theme/_ladda.scss */
+.ladda-button[data-style=expand-up][data-loading][data-size="s"], .ladda-button[data-style=expand-up][data-loading][data-size="xs"] {
+  padding-top: 32px; }
+/* line 208, admin-theme/_ladda.scss */
+.ladda-button[data-style=expand-up][data-loading][data-size="s"] .ladda-spinner, .ladda-button[data-style=expand-up][data-loading][data-size="xs"] .ladda-spinner {
+  top: 4px; }
+
+/*************************************
+ * EXPAND DOWN
+ */
+/* line 220, admin-theme/_ladda.scss */
+.ladda-button[data-style=expand-down] {
+  overflow: hidden; }
+/* line 223, admin-theme/_ladda.scss */
+.ladda-button[data-style=expand-down] .ladda-spinner {
+  top: 62px;
+  left: 50%;
+  margin-left: -16px; }
+/* line 230, admin-theme/_ladda.scss */
+.ladda-button[data-style=expand-down][data-size="s"] .ladda-spinner, .ladda-button[data-style=expand-down][data-size="xs"] .ladda-spinner {
+  top: 40px; }
+/* line 234, admin-theme/_ladda.scss */
+.ladda-button[data-style=expand-down][data-loading] {
+  padding-bottom: 54px; }
+/* line 237, admin-theme/_ladda.scss */
+.ladda-button[data-style=expand-down][data-loading] .ladda-spinner {
+  opacity: 1; }
+/* line 242, admin-theme/_ladda.scss */
+.ladda-button[data-style=expand-down][data-loading][data-size="s"], .ladda-button[data-style=expand-down][data-loading][data-size="xs"] {
+  padding-bottom: 32px; }
+
+/*************************************
+ * SLIDE LEFT
+ */
+/* line 252, admin-theme/_ladda.scss */
+.ladda-button[data-style=slide-left] {
+  overflow: hidden; }
+/* line 255, admin-theme/_ladda.scss */
+.ladda-button[data-style=slide-left] .ladda-label {
+  position: relative; }
+/* line 258, admin-theme/_ladda.scss */
+.ladda-button[data-style=slide-left] .ladda-spinner {
+  left: 100%;
+  margin-left: -16px; }
+/* line 264, admin-theme/_ladda.scss */
+.ladda-button[data-style=slide-left][data-loading] .ladda-label {
+  opacity: 0;
+  left: -100%; }
+/* line 268, admin-theme/_ladda.scss */
+.ladda-button[data-style=slide-left][data-loading] .ladda-spinner {
+  opacity: 1;
+  left: 50%; }
+
+/*************************************
+ * SLIDE RIGHT
+ */
+/* line 279, admin-theme/_ladda.scss */
+.ladda-button[data-style=slide-right] {
+  overflow: hidden; }
+/* line 282, admin-theme/_ladda.scss */
+.ladda-button[data-style=slide-right] .ladda-label {
+  position: relative; }
+/* line 285, admin-theme/_ladda.scss */
+.ladda-button[data-style=slide-right] .ladda-spinner {
+  right: 100%;
+  margin-left: -16px; }
+/* line 291, admin-theme/_ladda.scss */
+.ladda-button[data-style=slide-right][data-loading] .ladda-label {
+  opacity: 0;
+  left: 100%; }
+/* line 295, admin-theme/_ladda.scss */
+.ladda-button[data-style=slide-right][data-loading] .ladda-spinner {
+  opacity: 1;
+  left: 50%; }
+
+/*************************************
+ * SLIDE UP
+ */
+/* line 306, admin-theme/_ladda.scss */
+.ladda-button[data-style=slide-up] {
+  overflow: hidden; }
+/* line 309, admin-theme/_ladda.scss */
+.ladda-button[data-style=slide-up] .ladda-label {
+  position: relative; }
+/* line 312, admin-theme/_ladda.scss */
+.ladda-button[data-style=slide-up] .ladda-spinner {
+  left: 50%;
+  margin-left: -16px;
+  margin-top: 1em; }
+/* line 319, admin-theme/_ladda.scss */
+.ladda-button[data-style=slide-up][data-loading] .ladda-label {
+  opacity: 0;
+  top: -1em; }
+/* line 323, admin-theme/_ladda.scss */
+.ladda-button[data-style=slide-up][data-loading] .ladda-spinner {
+  opacity: 1;
+  margin-top: -16px; }
+
+/*************************************
+ * SLIDE DOWN
+ */
+/* line 334, admin-theme/_ladda.scss */
+.ladda-button[data-style=slide-down] {
+  overflow: hidden; }
+/* line 337, admin-theme/_ladda.scss */
+.ladda-button[data-style=slide-down] .ladda-label {
+  position: relative; }
+/* line 340, admin-theme/_ladda.scss */
+.ladda-button[data-style=slide-down] .ladda-spinner {
+  left: 50%;
+  margin-left: -16px;
+  margin-top: -2em; }
+/* line 347, admin-theme/_ladda.scss */
+.ladda-button[data-style=slide-down][data-loading] .ladda-label {
+  opacity: 0;
+  top: 1em; }
+/* line 351, admin-theme/_ladda.scss */
+.ladda-button[data-style=slide-down][data-loading] .ladda-spinner {
+  opacity: 1;
+  margin-top: -16px; }
+
+/*************************************
+ * ZOOM-OUT
+ */
+/* line 363, admin-theme/_ladda.scss */
+.ladda-button[data-style=zoom-out] {
+  overflow: hidden; }
+
+/* line 366, admin-theme/_ladda.scss */
+.ladda-button[data-style=zoom-out] .ladda-spinner {
+  left: 50%;
+  margin-left: -16px;
+  -webkit-transform: scale(2.5);
+  -moz-transform: scale(2.5);
+  -ms-transform: scale(2.5);
+  -o-transform: scale(2.5);
+  transform: scale(2.5); }
+
+/* line 372, admin-theme/_ladda.scss */
+.ladda-button[data-style=zoom-out] .ladda-label {
+  position: relative;
+  display: inline-block; }
+
+/* line 377, admin-theme/_ladda.scss */
+.ladda-button[data-style=zoom-out][data-loading] .ladda-label {
+  opacity: 0;
+  -webkit-transform: scale(0.5);
+  -moz-transform: scale(0.5);
+  -ms-transform: scale(0.5);
+  -o-transform: scale(0.5);
+  transform: scale(0.5); }
+
+/* line 382, admin-theme/_ladda.scss */
+.ladda-button[data-style=zoom-out][data-loading] .ladda-spinner {
+  opacity: 1;
+  -webkit-transform: none;
+  -moz-transform: none;
+  -ms-transform: none;
+  -o-transform: none;
+  transform: none; }
+
+/*************************************
+ * ZOOM-IN
+ */
+/* line 393, admin-theme/_ladda.scss */
+.ladda-button[data-style=zoom-in] {
+  overflow: hidden; }
+
+/* line 396, admin-theme/_ladda.scss */
+.ladda-button[data-style=zoom-in] .ladda-spinner {
+  left: 50%;
+  margin-left: -16px;
+  -webkit-transform: scale(0.2);
+  -moz-transform: scale(0.2);
+  -ms-transform: scale(0.2);
+  -o-transform: scale(0.2);
+  transform: scale(0.2); }
+
+/* line 402, admin-theme/_ladda.scss */
+.ladda-button[data-style=zoom-in] .ladda-label {
+  position: relative;
+  display: inline-block; }
+
+/* line 407, admin-theme/_ladda.scss */
+.ladda-button[data-style=zoom-in][data-loading] .ladda-label {
+  opacity: 0;
+  -webkit-transform: scale(2.2);
+  -moz-transform: scale(2.2);
+  -ms-transform: scale(2.2);
+  -o-transform: scale(2.2);
+  transform: scale(2.2); }
+
+/* line 412, admin-theme/_ladda.scss */
+.ladda-button[data-style=zoom-in][data-loading] .ladda-spinner {
+  opacity: 1;
+  -webkit-transform: none;
+  -moz-transform: none;
+  -ms-transform: none;
+  -o-transform: none;
+  transform: none; }
+
+/*************************************
+ * CONTRACT
+ */
+/* line 423, admin-theme/_ladda.scss */
+.ladda-button[data-style=contract] {
+  overflow: hidden;
+  width: 100px; }
+
+/* line 427, admin-theme/_ladda.scss */
+.ladda-button[data-style=contract] .ladda-spinner {
+  left: 50%;
+  margin-left: -16px; }
+
+/* line 432, admin-theme/_ladda.scss */
+.ladda-button[data-style=contract][data-loading] {
+  border-radius: 50%;
+  width: 52px; }
+
+/* line 436, admin-theme/_ladda.scss */
+.ladda-button[data-style=contract][data-loading] .ladda-label {
+  opacity: 0; }
+
+/* line 439, admin-theme/_ladda.scss */
+.ladda-button[data-style=contract][data-loading] .ladda-spinner {
+  opacity: 1; }
+
+/*************************************
+ * OVERLAY
+ */
+/* line 449, admin-theme/_ladda.scss */
+.ladda-button[data-style=contract-overlay] {
+  overflow: hidden;
+  width: 100px;
+  box-shadow: 0px 0px 0px 3000px rgba(0, 0, 0, 0); }
+
+/* line 454, admin-theme/_ladda.scss */
+.ladda-button[data-style=contract-overlay] .ladda-spinner {
+  left: 50%;
+  margin-left: -16px; }
+
+/* line 459, admin-theme/_ladda.scss */
+.ladda-button[data-style=contract-overlay][data-loading] {
+  border-radius: 50%;
+  width: 52px;
+  /*outline: 10000px solid rgba( 0, 0, 0, 0.5 );*/
+  box-shadow: 0px 0px 0px 3000px rgba(0, 0, 0, 0.8); }
+
+/* line 466, admin-theme/_ladda.scss */
+.ladda-button[data-style=contract-overlay][data-loading] .ladda-label {
+  opacity: 0; }
+
+/* line 469, admin-theme/_ladda.scss */
+.ladda-button[data-style=contract-overlay][data-loading] .ladda-spinner {
+  opacity: 1; }
+
+/* line 8, admin-theme/_ladda-theme.sass */
+.ladda-button[disabled], .ladda-button[data-loading] {
+  border-color: rgba(0, 0, 0, 0.07);
+  cursor: default;
+  background-color: #999999; }
+/* line 13, admin-theme/_ladda-theme.sass */
+.ladda-button[disabled]:hover, .ladda-button[data-loading]:hover {
+  cursor: default;
+  background-color: #999999; }
+/* line 16, admin-theme/_ladda-theme.sass */
+.ladda-button[data-size=xs] {
+  padding: 4px 8px; }
+/* line 18, admin-theme/_ladda-theme.sass */
+.ladda-button[data-size=xs] .ladda-label {
+  font-size: 0.7em; }
+/* line 20, admin-theme/_ladda-theme.sass */
+.ladda-button[data-size=s] {
+  padding: 6px 10px; }
+/* line 22, admin-theme/_ladda-theme.sass */
+.ladda-button[data-size=s] .ladda-label {
+  font-size: 0.9em; }
+/* line 24, admin-theme/_ladda-theme.sass */
+.ladda-button[data-size=l] .ladda-label {
+  font-size: 1.2em; }
+/* line 26, admin-theme/_ladda-theme.sass */
+.ladda-button[data-size=xl] .ladda-label {
+  font-size: 1.5em; }
 
 /* line 1, admin-theme/_admin-carrier-wizard.sass */
 #carrier_wizard {
@@ -9344,7 +9750,6 @@ textarea {
 /* line 11, admin-theme/_admin-modules.sass */
 .hook_panel {
   -webkit-box-shadow: rgba(255, 255, 255, 0.9) 0 0 0 1px inset;
-  -moz-box-shadow: rgba(255, 255, 255, 0.9) 0 0 0 1px inset;
   box-shadow: rgba(255, 255, 255, 0.9) 0 0 0 1px inset;
   padding: 10px 10px 5px 10px;
   margin-bottom: 3px !important; }
@@ -9386,7 +9791,6 @@ textarea {
   margin-bottom: 4px;
   background-color: white;
   -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0 0 3px, rgba(0, 0, 0, 0.1) 0 -2px 0 inset;
-  -moz-box-shadow: rgba(0, 0, 0, 0.3) 0 0 3px, rgba(0, 0, 0, 0.1) 0 -2px 0 inset;
   box-shadow: rgba(0, 0, 0, 0.3) 0 0 3px, rgba(0, 0, 0, 0.1) 0 -2px 0 inset;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -9423,7 +9827,6 @@ textarea {
   -o-border-radius: 3px;
   border-radius: 3px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px inset;
-  -moz-box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px inset;
   box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px inset;
   border: solid 1px #cccccc;
   background-color: #eeeeee; }
@@ -9678,116 +10081,94 @@ li.sortable-placeholder {
   animation-duration: 0.7s;
   -webkit-animation-direction: linear;
   animation-direction: linear;
-  -webkit-transform: scale(0.7, 0.7);
-  -moz-transform: scale(0.7, 0.7);
-  -ms-transform: scale(0.7, 0.7);
-  -o-transform: scale(0.7, 0.7);
-  transform: scale(0.7, 0.7); }
+  -webkit-transform: scale(0.7);
+  -ms-transform: scale(0.7);
+  transform: scale(0.7); }
 
 @-webkit-keyframes bounceG {
   /* line 209, admin-theme/_admin-dashboard.sass */
   0% {
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
     opacity: 0;
-    -webkit-transform: scale(0.1, 0.1);
-    -moz-transform: scale(0.1, 0.1);
-    -ms-transform: scale(0.1, 0.1);
-    -o-transform: scale(0.1, 0.1);
-    transform: scale(0.1, 0.1); }
+    filter: alpha(opacity=0);
+    -webkit-transform: scale(0.1);
+    -ms-transform: scale(0.1);
+    transform: scale(0.1); }
 
   /* line 212, admin-theme/_admin-dashboard.sass */
   100% {
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
     opacity: 1;
-    -webkit-transform: scale(1, 1);
-    -moz-transform: scale(1, 1);
-    -ms-transform: scale(1, 1);
-    -o-transform: scale(1, 1);
-    transform: scale(1, 1); } }
+    filter: alpha(opacity=100);
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1); } }
 
 @-moz-keyframes bounceG {
   /* line 209, admin-theme/_admin-dashboard.sass */
   0% {
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
     opacity: 0;
-    -webkit-transform: scale(0.1, 0.1);
-    -moz-transform: scale(0.1, 0.1);
-    -ms-transform: scale(0.1, 0.1);
-    -o-transform: scale(0.1, 0.1);
-    transform: scale(0.1, 0.1); }
+    filter: alpha(opacity=0);
+    -webkit-transform: scale(0.1);
+    -ms-transform: scale(0.1);
+    transform: scale(0.1); }
 
   /* line 212, admin-theme/_admin-dashboard.sass */
   100% {
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
     opacity: 1;
-    -webkit-transform: scale(1, 1);
-    -moz-transform: scale(1, 1);
-    -ms-transform: scale(1, 1);
-    -o-transform: scale(1, 1);
-    transform: scale(1, 1); } }
+    filter: alpha(opacity=100);
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1); } }
 
 @-ms-keyframes bounceG {
   /* line 209, admin-theme/_admin-dashboard.sass */
   0% {
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
     opacity: 0;
-    -webkit-transform: scale(0.1, 0.1);
-    -moz-transform: scale(0.1, 0.1);
-    -ms-transform: scale(0.1, 0.1);
-    -o-transform: scale(0.1, 0.1);
-    transform: scale(0.1, 0.1); }
+    filter: alpha(opacity=0);
+    -webkit-transform: scale(0.1);
+    -ms-transform: scale(0.1);
+    transform: scale(0.1); }
 
   /* line 212, admin-theme/_admin-dashboard.sass */
   100% {
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
     opacity: 1;
-    -webkit-transform: scale(1, 1);
-    -moz-transform: scale(1, 1);
-    -ms-transform: scale(1, 1);
-    -o-transform: scale(1, 1);
-    transform: scale(1, 1); } }
+    filter: alpha(opacity=100);
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1); } }
 
 @-o-keyframes bounceG {
   /* line 209, admin-theme/_admin-dashboard.sass */
   0% {
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
     opacity: 0;
-    -webkit-transform: scale(0.1, 0.1);
-    -moz-transform: scale(0.1, 0.1);
-    -ms-transform: scale(0.1, 0.1);
-    -o-transform: scale(0.1, 0.1);
-    transform: scale(0.1, 0.1); }
+    filter: alpha(opacity=0);
+    -webkit-transform: scale(0.1);
+    -ms-transform: scale(0.1);
+    transform: scale(0.1); }
 
   /* line 212, admin-theme/_admin-dashboard.sass */
   100% {
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
     opacity: 1;
-    -webkit-transform: scale(1, 1);
-    -moz-transform: scale(1, 1);
-    -ms-transform: scale(1, 1);
-    -o-transform: scale(1, 1);
-    transform: scale(1, 1); } }
+    filter: alpha(opacity=100);
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1); } }
 
 @keyframes bounceG {
   /* line 209, admin-theme/_admin-dashboard.sass */
   0% {
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
     opacity: 0;
-    -webkit-transform: scale(0.1, 0.1);
-    -moz-transform: scale(0.1, 0.1);
-    -ms-transform: scale(0.1, 0.1);
-    -o-transform: scale(0.1, 0.1);
-    transform: scale(0.1, 0.1); }
+    filter: alpha(opacity=0);
+    -webkit-transform: scale(0.1);
+    -ms-transform: scale(0.1);
+    transform: scale(0.1); }
 
   /* line 212, admin-theme/_admin-dashboard.sass */
   100% {
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
     opacity: 1;
-    -webkit-transform: scale(1, 1);
-    -moz-transform: scale(1, 1);
-    -ms-transform: scale(1, 1);
-    -o-transform: scale(1, 1);
-    transform: scale(1, 1); } }
+    filter: alpha(opacity=100);
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1); } }
 
 /* line 216, admin-theme/_admin-dashboard.sass */
 #dash_version {
