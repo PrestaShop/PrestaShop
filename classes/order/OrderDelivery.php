@@ -66,25 +66,26 @@ class OrderDeliveryCore extends ObjectModel
 
 	public function getMaxNr($order)
 	{
-		/* Nested statement. first select MAX delivery_nr
-		then use that delivery nr to get the shipped value from that row.
-		(And again get delivery_nr so it's returned to array)
-		*/
-		$result = Db::getInstance()->executeS('
-		SELECT ody2.`shipped`,ody2.`delivery_nr` as delivery_nr
-		FROM `'._DB_PREFIX_.'order_delivery` ody2
-		WHERE ody2.`delivery_nr` IN
-		(SELECT MAX(ody.`delivery_nr`)
-		FROM `'._DB_PREFIX_.'order_delivery` ody
-		WHERE ody.`id_order` = ' . (int)$order->id . ' AND ody.`id_shop` = ' . (int)$order->id_shop  . ')');
-		$nr = $result[0]['delivery_nr'];
-		$shipped = $result[0]['shipped'];
-		if($nr == "") { // if no number was found, then change to default 1
-			$nr = 1;
+		$nr = Db::getInstance()->executeS('SELECT MAX(`delivery_nr`) as delivery_nr
+		FROM `'._DB_PREFIX_.'order_delivery`
+		WHERE `id_order` = ' . (int)$order->id . ' AND `id_shop` = ' . (int)$order->id_shop );
+		$nr = $nr[0]['delivery_nr'];
+
+		$shipped = 0;
+		if($nr != "") {
+			$shipped = Db::getInstance()->executeS('
+			SELECT `shipped`
+			FROM `'._DB_PREFIX_.'order_delivery`
+			WHERE `delivery_nr` = ' . $nr . ' AND `id_order` = ' . (int)$order->id . ' AND `id_shop` = ' . (int)$order->id_shop );
+			$shipped = $shipped[0]['shipped'];
 		}
-		if($shipped == 1) {
+
+		if($nr == "")
+			$nr = 1; // if no number was found, then change to default 1
+
+		if($shipped == 1)
 			$nr++; // if maximum delivery nr is marked as shipped, then we need to increase the delivery nr, so that a new delivery is created.
-		}
+
 		return $nr;
 	}
 	

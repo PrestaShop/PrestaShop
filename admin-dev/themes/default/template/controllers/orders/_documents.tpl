@@ -71,7 +71,7 @@
 				{elseif isset($document->is_package)}
 					<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generatePackageSlipPDF&id_order_invoice={$document->id}">
 			   	{else}
-					<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateInvoicePDF&id_order_invoice={$document->id}">
+					<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateInvoicePDF&id_order_invoice={$document->id}{if $document->delivery_nr}&delivery_nr={$document->delivery_nr}{/if}">
 			   {/if}
 			{elseif get_class($document) eq 'OrderSlip'}
 				<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateOrderSlipPDF&id_order_slip={$document->id}">

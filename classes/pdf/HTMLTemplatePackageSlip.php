@@ -30,6 +30,7 @@
 class HTMLTemplatePackageSlipCore extends HTMLTemplate 
 {
 	public $order;
+	public $available_in_your_account = false;
 
 	public function __construct(OrderInvoice $order_invoice, $smarty)
 	{

@@ -49,7 +49,10 @@ class AdminPdfControllerCore extends AdminController
 		if (Tools::isSubmit('id_order'))
 			$this->generateInvoicePDFByIdOrder(Tools::getValue('id_order'));
 		elseif (Tools::isSubmit('id_order_invoice'))
-			$this->generateInvoicePDFByIdOrderInvoice(Tools::getValue('id_order_invoice'));
+			if(Tools::isSubmit('delivery_nr'))
+				$this->generateInvoicePDFByIdOrderInvoice(Tools::getValue('id_order_invoice'),Tools::getValue('delivery_nr') );
+			else
+				$this->generateInvoicePDFByIdOrderInvoice(Tools::getValue('id_order_invoice'));
 		else
 			die (Tools::displayError('The order ID -- or the invoice order ID -- is missing.'));
 	}
@@ -70,11 +73,10 @@ class AdminPdfControllerCore extends AdminController
 		if (Tools::isSubmit('id_order'))
 			$this->generateDeliverySlipPDFByIdOrder((int)Tools::getValue('id_order'));
 		elseif (Tools::isSubmit('id_order_invoice'))
-			if(Tools::isSubmit('delivery_nr')) {
+			if(Tools::isSubmit('delivery_nr'))
 				$this->generateDeliverySlipPDFByIdOrderInvoice((int)Tools::getValue('id_order_invoice'),(int)Tools::getValue('delivery_nr'));
-			} else {
+			else
 				$this->generateDeliverySlipPDFByIdOrderInvoice((int)Tools::getValue('id_order_invoice'));	
-			}
 		elseif (Tools::isSubmit('id_delivery'))
 		{
 			$order = Order::getByDelivery((int)Tools::getValue('id_delivery'));
@@ -190,14 +192,14 @@ class AdminPdfControllerCore extends AdminController
 		$this->generatePDF($order_invoice_list, PDF::TEMPLATE_INVOICE);
 	}
 
-	public function generateInvoicePDFByIdOrderInvoice($id_order_invoice)
+	public function generateInvoicePDFByIdOrderInvoice($id_order_invoice,$delivery_nr = false)
 	{
 		$order_invoice = new OrderInvoice((int)$id_order_invoice);
 		if (!Validate::isLoadedObject($order_invoice))
 			die(Tools::displayError('The order invoice cannot be found within your database.'));
 
 		Hook::exec('actionPDFInvoiceRender', array('order_invoice_list' => array($order_invoice)));
-		$this->generatePDF($order_invoice, PDF::TEMPLATE_INVOICE);
+		$this->generatePDF($order_invoice, PDF::TEMPLATE_INVOICE,$delivery_nr);
 	}
 
 	public function generatePDF($object, $template,$delivery_nr = false)

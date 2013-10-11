@@ -324,6 +324,15 @@ class OrderInvoiceCore extends ObjectModel
 						'total_price_tax_excl' => 0
 					);
 
+				/*
+					I think the solution is here. need to change total_price_tax_excl with as I have done in HTMLTemplate
+					$total_price_tax_excl_product = ($product['unit_price_tax_excl'] * $product['delivery_qty']);
+					Problem here is that currently it don't have acces to delivery_qty.
+					
+					
+					what about ratio? Does that need to change?
+					total_amount seems somehow to be allready fixed in current invoice.
+				*/
 				$ratio = $tax_infos['total_price_tax_excl'] / $this->total_products;
 				$order_reduction_amount = $this->total_discount_tax_excl * $ratio;
 				$tmp_tax_infos[$tax_infos['rate']]['total_amount'] += ($tax_infos['total_amount'] - Tools::ps_round($tax_infos['ecotax'] * $tax_infos['product_quantity'] * $tax_infos['ecotax_tax_rate'] / 100, 2));

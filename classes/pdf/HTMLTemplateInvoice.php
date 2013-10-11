@@ -32,17 +32,18 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 	public $order;
 	public $available_in_your_account = false;
 
-	public function __construct(OrderInvoice $order_invoice, $smarty)
+	public function __construct(OrderInvoice $order_invoice, $smarty,$delivery_nr = false)
 	{
 		$this->order_invoice = $order_invoice;
 		$this->order = new Order((int)$this->order_invoice->id_order);
 		$this->smarty = $smarty;
+		$this->delivery_nr = $delivery_nr;
 
 		// header informations
 		$this->date = Tools::displayDate($order_invoice->date_add);
 
 		$id_lang = Context::getContext()->language->id;
-		$this->title = HTMLTemplateInvoice::l('Invoice ').' #'.Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, (int)$this->order->id_shop).sprintf('%06d', $order_invoice->number);
+		$this->title = HTMLTemplateInvoice::l('Invoice ').' #'.Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, (int)$this->order->id_shop).sprintf('%06d', $order_invoice->number) . ($this->delivery_nr ? '-' .$this->delivery_nr : '');
 		// footer informations
 		$this->shop = new Shop((int)$this->order->id_shop);
 	}
@@ -65,10 +66,30 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 		}
 
 		$customer = new Customer((int)$this->order->id_customer);
+		
+		if($this->delivery_nr) {
+			$products = $this->order->getProductsDelivery(false,false,false,$this->delivery_nr); // get only deliverd products
+			$products = $products[$this->delivery_nr];
+			$total_paid_tax_incl = 0;
+			$total_paid_tax_excl = 0;
+			foreach($products as &$product) {
+				$product['product_quantity'] = $product['delivery_qty'];
+					$total_price_tax_incl_product = ($product['unit_price_tax_incl'] * $product['delivery_qty']);
+					$total_price_tax_excl_product = ($product['unit_price_tax_excl'] * $product['delivery_qty']);
+					$total_paid_tax_incl += $total_price_tax_incl_product;
+					$total_paid_tax_excl += $total_price_tax_excl_product;
+			}
+				$product['total_price_tax_incl'] = $total_price_tax_incl_product;
+				$product['total_price_tax_excl'] = $total_price_tax_excl_product;
+				$this->order_invoice->total_products_wt = $total_paid_tax_incl;
+				$this->order_invoice->total_products = $total_paid_tax_excl;
+		} else {
+			$products = $this->order_invoice->getProducts();
+		}
 
 		$this->smarty->assign(array(
 			'order' => $this->order,
-			'order_details' => $this->order_invoice->getProducts(),
+			'order_details' => $products,
 			'cart_rules' => $this->order->getCartRules($this->order_invoice->id),
 			'delivery_address' => $formatted_delivery_address,
 			'invoice_address' => $formatted_invoice_address,
@@ -139,7 +160,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 	 */
 	public function getFilename()
 	{
-		return Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_invoice->number).'.pdf';
+		return Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_invoice->number) . ($this->delivery_nr ? '-' .$this->delivery_nr : '')  .'.pdf';
 	}
 }
 
