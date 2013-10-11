@@ -8176,34 +8176,30 @@ a.link-social:hover {
   margin-bottom: 15px; }
 
 /* line 17, admin-theme/_admin-commons.sass */
-textarea {
-  resize: none; }
-
-/* line 20, admin-theme/_admin-commons.sass */
 .thumbnail {
   background-color: white;
   border-color: #cccccc !important; }
 
-/* line 24, admin-theme/_admin-commons.sass */
+/* line 21, admin-theme/_admin-commons.sass */
 .badge, #header_notifs_icon_wrapper .notifs_badge, .badge.badge-success, .badge.badge-error {
   background-color: #8fc04d; }
-/* line 26, admin-theme/_admin-commons.sass */
+/* line 23, admin-theme/_admin-commons.sass */
 #header_notifs_icon_wrapper .badge-success.notifs_badge, .badge-success.badge {
   background-color: #5cb85c; }
-/* line 29, admin-theme/_admin-commons.sass */
+/* line 26, admin-theme/_admin-commons.sass */
 #header_notifs_icon_wrapper .badge-error.notifs_badge, .badge-error.badge {
   background-color: #d9534f; }
 
-/* line 34, admin-theme/_admin-commons.sass */
+/* line 31, admin-theme/_admin-commons.sass */
 .nav-tabs {
   border-bottom: none; }
-/* line 36, admin-theme/_admin-commons.sass */
+/* line 33, admin-theme/_admin-commons.sass */
 .nav-tabs li a {
   font-size: 1.1em;
   font-family: "Ubuntu", sans-serif;
   text-transform: uppercase;
   font-weight: 300; }
-/* line 42, admin-theme/_admin-commons.sass */
+/* line 39, admin-theme/_admin-commons.sass */
 .nav-tabs li.active a, .nav-tabs li.active a:hover {
   background-color: white; }
 
