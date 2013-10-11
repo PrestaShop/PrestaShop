@@ -232,12 +232,10 @@ class TabCore extends ObjectModel
 		{
 			self::$_cache_tabs[$id_lang] = array();
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-				SELECT *
-				FROM `'._DB_PREFIX_.'tab` t
-				LEFT JOIN `'._DB_PREFIX_.'tab_lang` tl
-					ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = '.(int)$id_lang.')
-				ORDER BY t.`position` ASC
-			');
+			SELECT *
+			FROM `'._DB_PREFIX_.'tab` t
+			LEFT JOIN `'._DB_PREFIX_.'tab_lang` tl ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = '.(int)$id_lang.')
+			ORDER BY t.`position` ASC');
 			foreach ($result as $row)
 			{
 				if (!isset(self::$_cache_tabs[$id_lang][$row['id_parent']]))
@@ -252,6 +250,7 @@ class TabCore extends ObjectModel
 				$array_all = array_merge($array_all, $array_parent);
 			return $array_all;
 		}
+			
 		return (isset(self::$_cache_tabs[$id_lang][$id_parent]) ? self::$_cache_tabs[$id_lang][$id_parent] : array());
 	}
 
