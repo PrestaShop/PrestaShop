@@ -359,6 +359,8 @@
   'HelpAccess' => '',
   'HelpAccessCore' => 'classes/HelpAccess.php',
   'Helper' => '',
+  'HelperCalendar' => '',
+  'HelperCalendarCore' => 'classes/helper/HelperCalendar.php',
   'HelperCore' => 'classes/helper/Helper.php',
   'HelperForm' => '',
   'HelperFormCore' => 'classes/helper/HelperForm.php',
