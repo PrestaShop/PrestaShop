@@ -1,11 +1,11 @@
 $(document).ready(function() {
 	// Initialize events
 	$("#login_form").validate({
-		  rules: {
-			 "email":{
+		rules: {
+			"email":{
 				"email": true,
 				"required": true },
-			 "passwd": {
+			"passwd": {
 				"required": true }
 			},
 			submitHandler: function(form) {
@@ -64,9 +64,13 @@ $(document).ready(function() {
 			}
 		});
 	});
-	
 });
 
+//todo: ladda init - move to top
+var l = new Object();
+function feedbackSubmit() {
+	l = Ladda.create( document.querySelector( 'button[type=submit]' ) );
+}
 
 function displayForgotPassword() {
 	$('#error').hide();
@@ -111,7 +115,12 @@ function doAjaxLogin(redirect) {
 				redirect: redirect,
 				stay_logged_in: $('#stay_logged_in:checked').val()
 			},
+			beforeSend: function(){
+				feedbackSubmit();
+				l.start();
+			},
 			success: function(jsonData) {
+				l.stop();
 				if (jsonData.hasErrors)
 					displayErrors(jsonData.errors);
 				else
@@ -163,7 +172,9 @@ function displayErrors(errors) {
 	for (var error in errors) //IE6 bug fix
 		if (error != 'indexOf') str_errors += '<li>' + errors[error] + '</li>';
 	$('#error').html(str_errors + '</ol>').removeClass('hide').fadeIn('slow');
-	$("#login").effect("shake", {
-		times: 4
-	}, 100);
+
+
+	// $("#login").effect("shake", {
+	// 	times: 4
+	// }, 100);
 }
