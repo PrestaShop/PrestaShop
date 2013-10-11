@@ -52,7 +52,21 @@ $(document).ready(function() {
 		e.preventDefault();
 		displayLogin();
 	});
+
+	//Tab-index loop
+	$('form').each(function(){
+		var list  = $(this).find('*[tabindex]').sort(function(a,b){ return a.tabIndex < b.tabIndex ? -1 : 1; }),
+			first = list.first();
+		list.last().on('keydown', function(e){
+			if( e.keyCode === 9 ) {
+				first.focus();
+				return false;
+			}
+		});
+	});
+	
 });
+
 
 function displayForgotPassword() {
 	$('#error').hide();
