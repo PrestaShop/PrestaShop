@@ -720,6 +720,8 @@ CREATE TABLE `PREFIX_employee` (
   `last_passwd_gen` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `stats_date_from` date default NULL,
   `stats_date_to` date default NULL,
+  `stats_compare_from` date default NULL,
+  `stats_compare_to` date default NULL,
   `bo_color` varchar(32) default NULL,
   `bo_theme` varchar(32) default NULL,
   `default_tab` int(10) unsigned NOT NULL DEFAULT 0,
