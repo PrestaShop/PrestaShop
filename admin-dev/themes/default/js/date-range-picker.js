@@ -228,7 +228,7 @@
 				switch(target[0].nodeName.toLowerCase()) {
 					case 'th':
 						switch(target[0].className) {
-							case 'switch':
+							case 'month-switch':
 								this.showMode(1);
 								break;
 							case 'prev':
@@ -284,7 +284,7 @@
 								target.addClass("start-selected");
 								start = target.data("val");
 								$("#date-start").val(start);
-								!switched ? click = 1 : click = 2;
+								if(!switched) {click = 1;} else {click = 2;}
 								if(!switched){
 									$("#date-end").val(null).focus().addClass("input-selected");
 									target.addClass("start-selected").addClass("end-selected");
@@ -412,7 +412,7 @@
 			if (!data) {
 				$this.data('datepicker', (data = new Datepicker(this, $.extend({}, $.fn.datepicker.defaults,options))));
 			}
-			if (typeof option === 'string') { data[option](val) }
+			if (typeof option === 'string') { data[option](val);}
 		});
 	};
 
@@ -516,7 +516,7 @@
 		headTemplate: '<thead>'+
 							'<tr>'+
 								'<th class="prev"><i class="icon-angle-left"></i></th>'+
-								'<th colspan="5" class="switch"></th>'+
+								'<th colspan="5" class="month-switch"></th>'+
 								'<th class="next"><i class="icon-angle-right"</th>'+
 							'</tr>'+
 						'</thead>',
