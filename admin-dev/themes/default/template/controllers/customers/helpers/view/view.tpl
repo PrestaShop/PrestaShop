@@ -112,11 +112,11 @@
 					<li>
 						{l s='Newsletter:'} {if $customer->newsletter}
 							<span class="label label-success">
-								<i class="icon-check-sign"></i> {l s='Yes'}
+								<i class="icon-check-sign"></i> {l s='Registered'}
 							</span>
 						{else}
 							<span class="label label-warning">
-								<i class="icon-ban-circle"></i> {l s='No'}
+								<i class="icon-ban-circle"></i> {l s='Unregistered'}
 							</span>
 						{/if}
 					</li>
@@ -125,19 +125,23 @@
 						{if $customer->optin}
 						<span class="label label-success">
 							<i class="icon-check-sign"></i>
-							{l s='Yes'}
+							{l s='Registered'}
 						</span>
 						{else}
 						<span class="label label-warning">
 							<i class="icon-ban-circle"></i>
-							{l s='No'}
+							{l s='Unregistered'}
 						</span>
 						{/if}
 					</li>
 					<li>
 						{l s='Age:'}
-						{$customer_stats['age']}
-						{if isset($customer->birthday['age'])}({$customer_birthday}){else}{l s='Unknown'}{/if}</li>
+						{if isset($customer->birthday)}
+							{$customer_stats['age']} {l s='years old'} ({l s='Birth date:'} {$customer_birthday})
+						{else}
+							{l s='Unknown'}
+						{/if}
+					</li>
 					<li>
 						{l s='Last update:'}
 						<span>{$last_update}</span>
@@ -147,12 +151,12 @@
 						{if $customer->active}
 						<span class="label label-success">
 							<i class="icon-check-sign"></i>
-							{l s='Yes'}
+							{l s='Active'}
 						</span>
 						{else}
 						<span class="label label-warning">
 							<i class="icon-ban-circle"></i>
-							{l s='No'}
+							{l s='Inactive'}
 						</span>
 						{/if}
 					</li>
@@ -193,11 +197,11 @@
 						<div class="row">
 							<div class="col-lg-6">
 								<i class="icon-ok-circle icon-big"></i>
-								{l s='Valid orders:'} <span class="badge badge-success">{$count_ok}</span> {l s='for'} {$total_ok}
+								{l s='Valid orders:'} <span class="label label-success">{$count_ok}</span> {l s='for'} {$total_ok}
 							</div>
 							<div class="col-lg-6">
 								<i class="icon-exclamation-sign icon-big"></i>
-								{l s='Invalid orders:'} <span class="badge badge-warning">{$count_ko}</span>
+								{l s='Invalid orders:'} <span class="label label-danger">{$count_ko}</span>
 							</div>
 						</div>
 					</div>
