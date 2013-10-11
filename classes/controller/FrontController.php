@@ -1184,6 +1184,6 @@ class FrontControllerCore extends Controller
 	
 	protected function getColorsListCacheId($id_product)
 	{
-		return 'productlist_colors|'.(int)$id_product.'|'.$this->context->shop->id;
+		return Product::getColorsListCacheId($id_product);
 	}
 }
