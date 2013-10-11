@@ -64,7 +64,7 @@ class EmployeeCore extends ObjectModel
 	public $bo_width;
 
 	/** @var bool, false */
-	public $bo_menu;
+	public $bo_menu = 1;
 	
 	/* Deprecated */
 	public $bo_show_screencast = false;
