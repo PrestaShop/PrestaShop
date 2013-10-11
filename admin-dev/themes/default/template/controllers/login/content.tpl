@@ -55,9 +55,8 @@
 
 			{if !isset($wrong_folder_name) && !isset($wrong_install_name)}
 			<form action="#" id="login_form" method="post">
-				<h3 class="text-center"><i class="icon-unlock"></i> {l s='Log in'}</h3>
 				<div class="form-group">
-					<label class="control-label" for="email">{l s='Email address:'}</label>
+					<label class="control-label" for="email">{l s='Email address'}</label>
 					<div class="input-group">
 						<span class="input-group-addon"><i class="icon-envelope"></i></span>
 						<input
@@ -67,11 +66,17 @@
 							class="form-control"
 							value="{if isset($email)}{$email|escape:'htmlall':'UTF-8'}{/if}"
 							autofocus="autofocus"
+							tabindex="1"
 							placeholder="test@example.com" />
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="control-label" for="passwd">{l s='Password:'}</label>
+					<label class="control-label" for="passwd">
+						{l s='Password'}
+						(<a href="#" class="show-forgot-password" >
+							{l s='lost password'}&hellip;
+						</a>)
+					</label>
 					<div class="input-group">
 						<span class="input-group-addon"><i class="icon-key"></i></span>
 						<input
@@ -80,24 +85,21 @@
 							id="passwd"
 							class="form-control"
 							value="{if isset($password)}{$password}{/if}"
+							tabindex="2"
 							placeholder="{l s='Password'}" />
 					</div>
 				</div>
 				<div class="form-group">
 					<div class="checkbox">
 						<label for="stay_logged_in">
-							<input name="stay_logged_in" type="checkbox" id="stay_logged_in" value="1"	/>
+							<input name="stay_logged_in" type="checkbox" id="stay_logged_in" value="1"	tabindex="3"/>
 							{l s='Keep me logged in'}
 						</label>
 					</div>
 				</div>
 				<hr/>
 				<div class="form-group">
-					<button class="btn btn-link show-forgot-password" type="button">
-						<i class="icon-question-sign"></i>
-						{l s='Lost password?'}
-					</button>
-					<button class="btn btn-default pull-right" name="submitLogin" type="submit">
+					<button class="btn btn-default btn-lg btn-block" name="submitLogin" type="submit" tabindex="4">
 						<i class="icon-ok text-success"></i>
 						{l s='Log in'}
 					</button>
@@ -105,13 +107,17 @@
 				<input type="hidden" name="redirect" id="redirect" value="{$redirect}"/>
 			</form>
 
-			<form action="#" id="forgot_password_form" method="post" class="hide form-horizontal">
-				<h3 class="text-center"><i class="icon-exclamation-sign"></i> {l s='Forgot your password?'}</h3>
-				<p class="alert alert-info">{l s='In order to receive your access code by email, please enter the address you provided during the registration process.'}
-				</p>	
+			<form action="#" id="forgot_password_form" method="post" class="hide">
+				<div class="alert alert-info">
+					<h4 class="text-center">
+						<i class="icon-exclamation-sign"></i>
+						{l s='Forgot your password?'}
+					</h4>
+					<p>{l s='In order to receive your access code by email, please enter the address you provided during the registration process.'}</p>
+				</div>
 				<div class="form-group">
 					<label class="control-label" for="email_forgot">
-						{l s='Email address:'}
+						{l s='Email address'}
 					</label>
 					<div class="input-group">
 						<span class="input-group-addon"><i class="icon-envelope"></i></span>
@@ -121,16 +127,17 @@
 							id="email_forgot"
 							class="form-control"
 							autofocus="autofocus"
+							tabindex="1"
 							placeholder="test@example.com" />
 					</div>
 				</div>
 				<hr/>
 				<div class="form-group">
-					<button href="#" class="btn btn-default show-login-form">
+					<button href="#" class="btn btn-default show-login-form" tabindex="3">
 						<i class="icon-caret-left text-danger"></i>
 						{l s='Back to login'}
 					</button>
-					<button class="btn btn-default pull-right" name="submitLogin" type="submit">
+					<button class="btn btn-default pull-right" name="submitLogin" type="submit" tabindex="2">
 						<i class="icon-ok text-success"></i>
 						{l s='Send'}
 					</button>
@@ -159,7 +166,7 @@
 		<div class="col-md-4 col-md-offset-4">
 			<p class="text-center text-muted">
 				<a href="http://www.prestashop.com">
-					&copy; 2005 - {$smarty.now|date_format:"%Y"} Copyright by PrestaShop. all rights reserved.
+					&copy; PrestaShop 2005-{$smarty.now|date_format:"%Y"} - All rights reserved.
 				</a>
 			</p>
 			<p class="text-center">
