@@ -92,7 +92,7 @@ class ProductCommentsDefaultModuleFrontController extends ModuleFrontController
 		if (!count($errors))
 		{
 			$customer_comment = ProductComment::getByCustomer(Tools::getValue('id_product'), $id_customer, true, $id_guest);
-			if (!$customer_comment || ($customer_comment && (strtotime($customer_comment['date_add']) + Configuration::get('PRODUCT_COMMENTS_MINIMAL_TIME')) < time()))
+			if (!$customer_comment || ($customer_comment && (strtotime($customer_comment['date_add']) + (int)Configuration::get('PRODUCT_COMMENTS_MINIMAL_TIME')) < time()))
 			{
 
 				$comment = new ProductComment();

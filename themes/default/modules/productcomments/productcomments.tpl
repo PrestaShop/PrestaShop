@@ -24,13 +24,13 @@
 *}
 <script type="text/javascript">
 var productcomments_controller_url = '{$productcomments_controller_url}';
-var confirm_report_message = "{l s='Are you sure you want report this comment?' mod='productcomments'}";
-var secure_key = "{$secure_key}";
+var confirm_report_message = '{l s='Are you sure you want report this comment?' mod='productcomments' js=1}';
+var secure_key = '{$secure_key}';
 var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
-var productcomment_added = '{l s='Your comment has been added!' mod='productcomments'}';
-var productcomment_added_moderation = '{l s='Your comment has been added and will be available once approved by a moderator' mod='productcomments'}';
-var productcomment_title = '{l s='New comment' mod='productcomments'}';
-var productcomment_ok = '{l s='OK' mod='productcomments'}';
+var productcomment_added = '{l s='Your comment has been added!' mod='productcomments' js=1}';
+var productcomment_added_moderation = '{l s='Your comment has been added and will be available once approved by a moderator' mod='productcomments' js=1}';
+var productcomment_title = '{l s='New comment' mod='productcomments' js=1}';
+var productcomment_ok = '{l s='OK' mod='productcomments' js=1}';
 var moderation_active = {$moderation_active};
 </script>
 
@@ -109,7 +109,7 @@ var moderation_active = {$moderation_active};
 			<div class="new_comment_form_content">
 				<h2>{l s='Write your review' mod='productcomments'}</h2>
 
-				<div id="new_comment_form_error" class="error" style="display: none;">
+				<div id="new_comment_form_error" class="error" style="display: none; padding: 15px 25px">
 					<ul></ul>
 				</div>
 
