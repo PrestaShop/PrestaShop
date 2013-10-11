@@ -17,14 +17,6 @@
  * limitations under the License.
  * ========================================================= */
 
-$(function() {
-	var currentMonth = new Date(Date.now());
-	var previousMonth = new Date(new Date(currentMonth).setMonth(currentMonth.getMonth()-1));
-	$('.datepicker1').datepicker("setValue",previousMonth);
-	$('.datepicker2').datepicker("setValue",currentMonth);
-	$("#date-start").focus().addClass("input-selected");
-});
-
 //click action
 !function( $ ) {
 	var click, switched, val, start, end, over;

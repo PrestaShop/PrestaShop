@@ -42,7 +42,7 @@ class AdminDashboardControllerCore extends AdminController
 		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
 		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
 		parent::setMedia();
-		$this->addJqueryUI('ui.datepicker');
+		//$this->addJqueryUI('ui.datepicker');
 		$this->addJS(array(
 			_PS_JS_DIR_.'/vendor/d3.js',
 			__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/nv.d3.js',
@@ -150,6 +150,8 @@ class AdminDashboardControllerCore extends AdminController
 			'To' => $this->l('To:', 'AdminStatsTab'),
 			'Save' => $this->l('Save', 'AdminStatsTab')
 		);
+
+		$calendar_helper = new HelperCalendar();
 		
 		$this->tpl_view_vars = array(
 			'hookDashboardZoneOne' => Hook::exec('dashboardZoneOne'),
@@ -159,6 +161,7 @@ class AdminDashboardControllerCore extends AdminController
 			'warning' => $this->getWarningDomainName(),
 			'new_version_url' => Tools::getCurrentUrlProtocolPrefix().'api.prestashop.com/version/check_version.php?v='._PS_VERSION_.'&lang='.$this->context->language->iso_code,
 			'dashboard_use_push' => Configuration::get('PS_DASHBOARD_USE_PUSH'),
+			'calendar' => $calendar_helper->generate(),
 			'datepickerFrom' => Tools::getValue('datepickerFrom', $this->context->employee->stats_date_from),
 			'datepickerTo' => Tools::getValue('datepickerTo', $this->context->employee->stats_date_to)
 		);
