@@ -152,7 +152,11 @@ class AdminDashboardControllerCore extends AdminController
 		);
 
 		$calendar_helper = new HelperCalendar();
-		
+		$calendar_helper->setDateFrom(Tools::getValue('date_from', $this->context->employee->stats_date_from));
+		$calendar_helper->setDateTo(Tools::getValue('date_to', $this->context->employee->stats_date_to));
+		$calendar_helper->setCompareDateFrom(Tools::getValue('compare_date_from', $this->context->employee->stats_compare_from));
+		$calendar_helper->setCompareDateTo(Tools::getValue('compare_date_to', $this->context->employee->stats_compare_to));
+
 		$this->tpl_view_vars = array(
 			'hookDashboardZoneOne' => Hook::exec('dashboardZoneOne'),
 			'hookDashboardZoneTwo' => Hook::exec('dashboardZoneTwo'),
@@ -166,6 +170,20 @@ class AdminDashboardControllerCore extends AdminController
 			'datepickerTo' => Tools::getValue('datepickerTo', $this->context->employee->stats_date_to)
 		);
 		return parent::renderView();
+	}
+
+	public function postProcess()
+	{
+		if (Tools::isSubmit('submitDateRange'))
+		{
+			$this->context->employee->stats_date_from = Tools::getValue('date_from');
+			$this->context->employee->stats_date_to = Tools::getValue('date_to');
+			$this->context->employee->stats_compare_from = Tools::getValue('compare_date_from');
+			$this->context->employee->stats_compare_to = Tools::getValue('compare_date_to');
+			$this->context->employee->update();
+		}
+
+		parent::postProcess();
 	}
 	
 	protected function getWarningDomainName()
