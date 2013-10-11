@@ -544,15 +544,15 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				$value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT COUNT(*)
 				FROM `'._DB_PREFIX_.'customer` c
-				'.Shop::addSqlRestriction().'
-				WHERE active = 1');
+				WHERE active = 1
+				'.Shop::addSqlRestriction());
 				if ($value)
 				{
 					$orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 					SELECT COUNT(*)
 					FROM `'._DB_PREFIX_.'orders` o
-					'.Shop::addSqlRestriction().'
-					WHERE valid = 1');
+					WHERE valid = 1
+					'.Shop::addSqlRestriction());
 					$value = round($orders / $value, 2);
 				}
 
