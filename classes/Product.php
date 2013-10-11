@@ -3049,17 +3049,21 @@ class ProductCore extends ObjectModel
 	{
 		if (!count($products))
 			return array();
-			
+
+		$check_stock = !Configuration::get('PS_DISP_UNAVAILABLE_ATTR');
 		if (!$res = Db::getInstance()->executeS('
-					SELECT pa.id_product, a.color, pac.id_product_attribute
+					SELECT pa.id_product, a.color, pac.id_product_attribute,'.($check_stock ? 'SUM(IF(stock.quantity > 0, 1, 0)' : '').') qty
 					FROM '._DB_PREFIX_.'product_attribute pa
-					'.Shop::addSqlAssociation('product_attribute', 'pa').'
+					'.Shop::addSqlAssociation('product_attribute', 'pa').
+					($check_stock ? Product::sqlStock('pa', 'pa') : '').'
 					JOIN '._DB_PREFIX_.'product_attribute_combination pac ON (pac.id_product_attribute = product_attribute_shop.id_product_attribute)
 					JOIN '._DB_PREFIX_.'attribute a ON (a.id_attribute = pac.id_attribute)
 					JOIN '._DB_PREFIX_.'attribute_group ag ON (ag.id_attribute_group = ag.id_attribute_group)
 					WHERE pa.id_product IN ('.implode(array_map('intval', $products), ',').') AND ag.is_color_group = 1
 					GROUP BY pa.id_product, color
-			'))
+					'.($check_stock ? 'HAVING qty > 0' : '')
+				)
+			)
 				return false;
 
 		$colors = array();
@@ -5466,5 +5470,27 @@ class ProductCore extends ObjectModel
 			if((int)$item['id'] > 0)
 				Pack::addItem($this->id, (int)$item['id'], (int)$item['quantity']);
 		return true;
+	}
+
+	public function isColorUnavailable($id_attribute, $id_shop)
+	{
+		return Db::getInstance()->getValue('
+			SELECT sa.id_product_attribute
+			FROM '._DB_PREFIX_.'stock_available sa
+			WHERE id_product='.(int)$this->id.' AND quantity <= 0
+			'.StockAvailable::addSqlShopRestriction(null, $id_shop, 'sa').'
+			AND id_product_attribute IN (
+				SELECT pa.id_product_attribute
+				FROM '._DB_PREFIX_.'product_attribute pa
+				JOIN '._DB_PREFIX_.'product_attribute_shop product_attribute_shop ON (product_attribute_shop.id_product_attribute = pa.id_product_attribute AND product_attribute_shop.id_shop='.(int)$id_shop.')
+				JOIN '._DB_PREFIX_.'product_attribute_combination pac ON (pac.id_product_attribute AND product_attribute_shop.id_product_attribute)	
+				WHERE pa.id_product='.(int)$this->id.' AND pac.id_attribute='.(int)$id_attribute.'
+			)'
+		);
+	}
+		
+	public static function getColorsListCacheId($id_product)
+	{
+		return 'productlist_colors|'.(int)$id_product.'|'.(int)Context::getContext()->shop->id;
 	}
 }

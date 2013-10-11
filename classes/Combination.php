@@ -268,6 +268,17 @@ class CombinationCore extends ObjectModel
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
+	
+	public function getColorsAttributes()
+	{
+		return Db::getInstance()->executeS('
+			SELECT a.id_attribute
+			FROM '._DB_PREFIX_.'product_attribute_combination pac
+			JOIN '._DB_PREFIX_.'attribute a ON (pac.id_attribute = a.id_attribute)
+			JOIN '._DB_PREFIX_.'attribute_group ag ON (ag.id_attribute_group = a.id_attribute_group)
+			WHERE pac.id_product_attribute='.(int)$this->id.' AND ag.is_color_group = 1
+		');
+	}
 
 	/**
 	 * Retrive the price of combination
