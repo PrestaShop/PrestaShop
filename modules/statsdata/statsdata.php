@@ -56,40 +56,10 @@ class StatsData extends Module
 			Configuration::updateValue('PS_STATSDATA_CUSTOMER_PAGESVIEWS', (int)Tools::getValue('PS_STATSDATA_CUSTOMER_PAGESVIEWS'));
 			Configuration::updateValue('PS_STATSDATA_PAGESVIEWS', (int)Tools::getValue('PS_STATSDATA_PAGESVIEWS'));
 			Configuration::updateValue('PS_STATSDATA_PLUGINS', (int)Tools::getValue('PS_STATSDATA_PLUGINS'));
-			$html .= '<div class="conf">'.$this->l('Configuration updated').'</div>';
+			$html .= $this->displayConfirmation($this->l('Configuration updated'));
 		}
 	
-		$html .=  '<form action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'" method="post">
-		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->l('Settings').'</legend>
-			<label>'.$this->l('Save page views for each customer').'</label>
-			<div class="margin-form">
-				<input type="radio" name="PS_STATSDATA_CUSTOMER_PAGESVIEWS" id="PS_STATSDATA_CUSTOMER_PAGESVIEWS_on" value="1" '.(Tools::getValue('PS_STATSDATA_CUSTOMER_PAGESVIEWS', Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS')) ? 'checked="checked"' : '').' />
-				<label class="t" for="PS_STATSDATA_CUSTOMER_PAGESVIEWS_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" /></label>
-				<input type="radio" name="PS_STATSDATA_CUSTOMER_PAGESVIEWS" id="PS_STATSDATA_CUSTOMER_PAGESVIEWS_off" value="0" '.(Tools::getValue('PS_STATSDATA_CUSTOMER_PAGESVIEWS', Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS')) ? '' : 'checked="checked"').' />
-				<label class="t" for="PS_STATSDATA_CUSTOMER_PAGESVIEWS_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" /></label>
-				<p>'.$this->l('Stored customer page views uses a lot of CPU resources and database space.').'</p>
-			</div>
-			<div class="clear">&nbsp;</div>
-			<label>'.$this->l('Save global page views.').'</label>
-			<div class="margin-form">
-				<input type="radio" name="PS_STATSDATA_PAGESVIEWS" id="PS_STATSDATA_PAGESVIEWS_on" value="1" '.(Tools::getValue('PS_STATSDATA_PAGESVIEWS', Configuration::get('PS_STATSDATA_PAGESVIEWS')) ? 'checked="checked"' : '').' />
-				<label class="t" for="PS_STATSDATA_PAGESVIEWS_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" /></label>
-				<input type="radio" name="PS_STATSDATA_PAGESVIEWS" id="PS_STATSDATA_PAGESVIEWS_off" value="0" '.(Tools::getValue('PS_STATSDATA_PAGESVIEWS', Configuration::get('PS_STATSDATA_PAGESVIEWS')) ? '' : 'checked="checked"').' />
-				<label class="t" for="PS_STATSDATA_PAGESVIEWS_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" /></label>
-				<p>'.$this->l('Global page views uses fewer resources than customer\'s, but it uses resources nonetheless.').'</p>
-			</div>
-			<div class="clear">&nbsp;</div>
-			<label>'.$this->l('Plugins detection').'</label>
-			<div class="margin-form">
-				<input type="radio" name="PS_STATSDATA_PLUGINS" id="PS_STATSDATA_PLUGINS_on" value="1" '.(Tools::getValue('PS_STATSDATA_PLUGINS', Configuration::get('PS_STATSDATA_PLUGINS')) ? 'checked="checked"' : '').' />
-				<label class="t" for="PS_STATSDATA_PLUGINS_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" /></label>
-				<input type="radio" name="PS_STATSDATA_PLUGINS" id="PS_STATSDATA_PLUGINS_off" value="0" '.(Tools::getValue('PS_STATSDATA_PLUGINS', Configuration::get('PS_STATSDATA_PLUGINS')) ? '' : 'checked="checked"').' />
-				<label class="t" for="PS_STATSDATA_PLUGINS_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" /></label>
-				<p>'.$this->l('Plugins detection loads an extra 20kb javascript file for new visitors.').'</p>
-			</div>
-			<div class="clear">&nbsp;</div>
-			<input type="submit" class="button" name="submitStatsData" value="'.$this->l('Update').'" />
-		</fieldset>';
+		$html .= $this->renderForm();
 
 		return $html;
 	}
@@ -197,6 +167,106 @@ class StatsData extends Module
 			$guest->id_customer = $params['cookie']->id_customer;
 			$guest->{$method}();
 		}
+	}
+	
+	public function renderForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Settings'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Save page views for each customer'),
+						'name' => 'PS_STATSDATA_CUSTOMER_PAGESVIEWS',
+						'desc' => $this->l('Stored customer page views uses a lot of CPU resources and database space.'),
+						'values' => array(
+									array(
+										'id' => 'active_on',
+										'value' => 1,
+										'label' => $this->l('Enabled')
+									),
+									array(
+										'id' => 'active_off',
+										'value' => 0,
+										'label' => $this->l('Disabled')
+									)
+								),
+						),
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Save global page views'),
+						'name' => 'PS_STATSDATA_PAGESVIEWS',
+						'desc' => $this->l('Global page views uses fewer resources than customer\'s, but it uses resources nonetheless.'),
+						'values' => array(
+									array(
+										'id' => 'active_on',
+										'value' => 1,
+										'label' => $this->l('Enabled')
+									),
+									array(
+										'id' => 'active_off',
+										'value' => 0,
+										'label' => $this->l('Disabled')
+									)
+								),
+						),
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Plugins detection'),
+						'name' => 'PS_STATSDATA_PLUGINS',
+						'desc' => $this->l('Plugins detection loads an extra 20kb javascript file for new visitors.'),
+						'values' => array(
+									array(
+										'id' => 'active_on',
+										'value' => 1,
+										'label' => $this->l('Enabled')
+									),
+									array(
+										'id' => 'active_off',
+										'value' => 0,
+										'label' => $this->l('Disabled')
+									)
+								),
+						)
+				),
+			'submit' => array(
+				'title' => $this->l('Save'),
+				'class' => 'btn btn-primary')
+			),
+		);
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$this->fields_form = array();
+
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitStatsData';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function getConfigFieldsValues()
+	{
+		return array(
+			'PS_STATSDATA_CUSTOMER_PAGESVIEWS' => Tools::getValue('PS_STATSDATA_CUSTOMER_PAGESVIEWS', Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS')),
+			'PS_STATSDATA_PAGESVIEWS' => Tools::getValue('PS_STATSDATA_PAGESVIEWS', Configuration::get('PS_STATSDATA_PAGESVIEWS')),
+			'PS_STATSDATA_PLUGINS' => Tools::getValue('PS_STATSDATA_PLUGINS', Configuration::get('PS_STATSDATA_PLUGINS')),
+		);
 	}
 }
 
