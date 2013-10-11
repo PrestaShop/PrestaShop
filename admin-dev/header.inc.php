@@ -39,7 +39,7 @@ echo '
 		<link type="text/css" rel="stylesheet" href="'._PS_JS_DIR_.'jquery/ui/themes/base/jquery.ui.datepicker.css" />
 		<link type="text/css" rel="stylesheet" href="'._PS_CSS_DIR_.'admin.css" />
 		<link type="text/css" rel="stylesheet" href="'._PS_JS_DIR_.'jquery/plugins/cluetip/jquery.cluetip.css" />
-		<link type="text/css" rel="stylesheet" href="themes/'.Context::getContext()->employee->bo_theme.'/css/admin.css" />
+		<link type="text/css" rel="stylesheet" href="themes/'.Context::getContext()->employee->bo_theme.'/css/backward/admin.css" />
 		<link type="text/css" rel="stylesheet" href="'._PS_JS_DIR_.'jquery/plugins/chosen/jquery.chosen.css" />
 		<title>PrestaShop&trade; - '.Translate::getAdminTranslation('Administration panel').'</title>
 		<script type="text/javascript">

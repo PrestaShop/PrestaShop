@@ -28,7 +28,7 @@ class AdminGroupsControllerCore extends AdminController
 {
 	public function __construct()
 	{
-		$this->bootstrap = true ;
+		$this->bootstrap = true;
 		$this->table = 'group';
 		$this->className = 'Group';
 		$this->list_id = 'group';
