@@ -33,7 +33,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="robots" content="NOFOLLOW, NOINDEX">
-	<title>{$shop_name} {if $meta_title != ''}{if isset($navigationPipe)}{$navigationPipe|escape:'htmlall':'UTF-8'}{else}&gt;{/if} {$meta_title}{/if} (PrestaShop&trade;)</title>
+	<title>
+		{$shop_name} {if $meta_title != ''}{if isset($navigationPipe)}{$navigationPipe|escape:'htmlall':'UTF-8'}{else}&gt;{/if} {$meta_title}{/if} (PrestaShop&trade;)
+	</title>
 	{foreach from=$css_files key=css_uri item=media}
 		<link href="{$css_uri}" rel="stylesheet" type="text/css" media="{$media}" />
 	{/foreach}
