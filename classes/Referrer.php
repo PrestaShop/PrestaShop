@@ -314,6 +314,7 @@ class ReferrerCore extends ObjectModel
 					FROM '._DB_PREFIX_.'referrer r
 					LEFT JOIN '._DB_PREFIX_.'connections_source cs ON ('.self::$_join.')
 					WHERE id_referrer = '.(int)$row['id_referrer'].'
+					AND id_connections_source IS NOT NULL
 				)');
 			}
 	}
