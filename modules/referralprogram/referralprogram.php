@@ -152,7 +152,9 @@ class ReferralProgram extends Module
 		Configuration::updateValue('REFERRAL_DISCOUNT_TYPE', (int)(Tools::getValue('discount_type')));
 		Configuration::updateValue('REFERRAL_NB_FRIENDS', (int)(Tools::getValue('nb_friends')));
 		Configuration::updateValue('REFERRAL_PERCENTAGE', (int)(Tools::getValue('discount_value_percentage')));
-		Configuration::updateValue('REFERRAL_DISCOUNT_DESCRIPTION', Tools::getValue('discount_description'));
+		foreach (Language::getLanguages(false) as $lang)
+			Configuration::updateValue('REFERRAL_DISCOUNT_DESCRIPTION', array($lang['id_lang'] => Tools::getValue('discount_description_'.(int)$lang['id_lang'])));
+		
 		$this->_html .= $this->displayConfirmation($this->l('Configuration updated.'));
 	}
 
@@ -185,9 +187,12 @@ class ReferralProgram extends Module
 		$newXml .= '<referralprogram>'."\n";
 		$newXml .= "\t".'<body>';
 		// Making body data
-		foreach ($_POST AS $key => $field)
-			if ($line = $this->putContent($newXml, $key, $field, $forbiddenKey, 'body'))
+		foreach (Language::getLanguages(false) as $lang)
+		{
+			if ($line = $this->putContent($newXml, 'body_paragraph_'.(int)$lang['id_lang'], Tools::getValue('body_paragraph_'.(int)$lang['id_lang']), $forbiddenKey, 'body'))
 				$newXml .= $line;
+		}
+		
 		$newXml .= "\n\t".'</body>'."\n";
 		$newXml .= '</referralprogram>'."\n";
 
@@ -226,165 +231,15 @@ class ReferralProgram extends Module
 				$this->_postProcess();
 			else
 				foreach ($this->_errors AS $err)
-					$this->_html .= '<div class="errmsg">'.$err.'</div>';
+					$this->_html .= $err;
 		}
 		elseif (Tools::isSubmit('submitText'))
-		{
-			foreach ($_POST AS $key => $value)
-				if (!is_array(Tools::getValue($key)) && !Validate::isString(Tools::getValue($key)))
-				{
-					$this->_html .= $this->displayError($this->l('Invalid html field, javascript is forbidden'));
-					$this->_displayForm();
-					return $this->_html;
-				}
 			$this->_writeXml();
-		}
 
-		$this->_html .= '<h2>'.$this->displayName.'</h2>';
-		$this->_displayForm();
-		$this->_displayFormRules();
+		$this->_html .= $this->renderForm();
+
 		return $this->_html;
 	}
-
-	private function _displayForm()
-	{
-		$divLangName = 'cpara¤dd';
-		$currencies = Currency::getCurrencies();
-
-		$this->_html .= '
-		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
-		<fieldset>
-			<legend><img src="'._PS_ADMIN_IMG_.'prefs.gif" alt="'.$this->l('Settings').'" />'.$this->l('Settings').'</legend>
-			<p>
-				<label class="t" for="order_quantity">'.$this->l('Minimum number of orders a sponsored friend must place to get their voucher:').'</label>
-				<input type="text" name="order_quantity" id="order_quantity" value="'.Tools::safeOutput(Tools::getValue('order_quantity', Configuration::get('REFERRAL_ORDER_QUANTITY'))).'" style="width: 50px; text-align: right;" />
-			</p>
-			<p>
-				<label class="t" for="nb_friends">'.$this->l('Number of friends in the referral program invitation form (customer account, referral program section):').'</label>
-				<input type="text" name="nb_friends" id="nb_friends" value="'.Tools::safeOutput(Tools::getValue('nb_friends', Configuration::get('REFERRAL_NB_FRIENDS'))).'" style="width: 50px; text-align: right;" />
-			</p>
-			<p>
-				<label class="t">'.$this->l('Voucher type:').'</label>
-				<input type="radio" name="discount_type" id="discount_type1" value="1" onclick="$(\'#voucherbycurrency\').hide(); $(\'#voucherbypercentage\').show();" '.(Tools::getValue('discount_type', Configuration::get('REFERRAL_DISCOUNT_TYPE')) == 1 ? 'checked="checked"' : '').' />
-				<label class="t" for="discount_type1">'.$this->l('Voucher offering a percentage').'</label>
-				&nbsp;
-				<input type="radio" name="discount_type" id="discount_type2" value="2" onclick="$(\'#voucherbycurrency\').show(); $(\'#voucherbypercentage\').hide();" '.(Tools::getValue('discount_type', Configuration::get('REFERRAL_DISCOUNT_TYPE')) == 2 ? 'checked="checked"' : '').' />
-				<label class="t" for="discount_type2">'.$this->l('Voucher offering a fixed amount (by currency)').'</label>
-			</p>
-			<p id="voucherbypercentage"'.(Configuration::get('REFERRAL_DISCOUNT_TYPE') == 2 ? ' style="display: none;"' : '').'><label class="t">'.$this->l('Percentage:').'</label> <input type="text" id="discount_value_percentage" name="discount_value_percentage" value="'.Tools::safeOutput(Tools::getValue('discount_value_percentage', Configuration::get('REFERRAL_PERCENTAGE'))).'" style="width: 50px; text-align: right;" /> %</p>
-			<table id="voucherbycurrency" cellpadding="5" style="border: 1px solid #BBB;'.(Configuration::get('REFERRAL_DISCOUNT_TYPE') == 1 ? ' display: none;' : '').'" border="0">
-				<tr>
-					<th style="width: 80px;">'.$this->l('Currency').'</th>
-					<th>'.$this->l('Voucher amount').'</th>
-				</tr>';
-
-		foreach ($currencies AS $currency)
-			$this->_html .= '
-			<tr>
-				<td>'.(Configuration::get('PS_CURRENCY_DEFAULT') == $currency['id_currency'] ? '<span style="font-weight: bold;">' : '').htmlentities($currency['name'], ENT_NOQUOTES, 'utf-8').(Configuration::get('PS_CURRENCY_DEFAULT') == $currency['id_currency'] ? '<span style="font-weight: bold;">' : '').'</td>
-				<td><input type="text" name="discount_value['.(int)($currency['id_currency']).']" id="discount_value['.(int)($currency['id_currency']).']" value="'.Tools::safeOutput(Tools::getValue('discount_value['.(int)($currency['id_currency']).']', Configuration::get('REFERRAL_DISCOUNT_VALUE_'.(int)($currency['id_currency'])))).'" style="width: 50px; text-align: right;" /> '.$currency['sign'].'</td>
-			</tr>';
-
-		$this->_html .= '
-		</table>
-			<p>
-				 <div style="float: left"><label class="t" for="discount_description">'.$this->l('Voucher description:').'</label></div>';
-			$id_lang_default = (int)Configuration::get('PS_LANG_DEFAULT');
-			$languages = Language::getLanguages(true);
-
-			foreach ($languages AS $language)
-				$this->_html .= '
-				<div  class="lang_'.(int)$language['id_lang'].'"  id="dd_'.(int)$language['id_lang'].'" style="display: '.($language['id_lang'] == $id_lang_default ? 'block' : 'none').'; float: left; margin-left: 4px;">
-					<input type="text" name="discount_description['.(int)$language['id_lang'].']" id="discount_description['.$language['id_lang'].']" value="'.(isset($_POST['discount_description'][(int)($language['id_lang'])]) ? $_POST['discount_description'][(int)($language['id_lang'])] : $this->_configuration['REFERRAL_DISCOUNT_DESCRIPTION'][(int)($language['id_lang'])]).'" style="width: 200px;" />
-				</div>';
-			$this->_html .= $this->displayFlags($languages, $id_lang_default, $divLangName, 'dd', true);
-			$this->_html .= '
-			</p>
-			<div class="clear center"><input class="button" style="margin-top: 10px" name="submitReferralProgram" id="submitReferralProgram" value="'.$this->l('Update settings').'" type="submit" /></div>
-		</fieldset>
-		</form><br/>';
-	}
-
-	private function _displayFormRules()
-	{
-		// Languages preliminaries
-		$languages = Language::getLanguages(false);
-		$iso = $this->context->language->iso_code;
-		$divLangName = 'cpara¤dd';
-
-		// xml loading
-		$xml = false;
-		if (file_exists($this->_xmlFile))
-			if (!$xml = @simplexml_load_file($this->_xmlFile))
-				$this->_html .= $this->displayError($this->l('Your text is empty.'));
-
-		// TinyMCE
-		if (version_compare(_PS_VERSION_, '1.4.0.0') >= 0)
-			$this->_html .= '
-			<script type="text/javascript">	
-				var iso = \''.(file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en').'\' ;
-				var pathCSS = \''._THEME_CSS_DIR_.'\' ;
-				var ad = \''.dirname($_SERVER['PHP_SELF']).'\' ;
-			</script>
-			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tiny_mce/tiny_mce.js"></script>
-			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tinymce.inc.js"></script>
-			<script language="javascript" type="text/javascript">
-				id_language = Number('.(int)$this->context->language->id.');
-				tinySetup();
-			</script>';
-		else
-		{
-			$this->_html .= '
-			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-			<script type="text/javascript">
-				tinyMCE.init({
-					mode : "textareas",
-					theme : "advanced",
-					plugins : "safari,pagebreak,style,layer,table,advimage,advlink,inlinepopups,media,searchreplace,contextmenu,paste,directionality,fullscreen",
-					theme_advanced_buttons1 : "newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
-					theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,,|,forecolor,backcolor",
-					theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,media,|,ltr,rtl,|,fullscreen",
-					theme_advanced_buttons4 : "insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,del,ins,attribs,|,pagebreak",
-					theme_advanced_toolbar_location : "top",
-					theme_advanced_toolbar_align : "left",
-					theme_advanced_statusbar_location : "bottom",
-					theme_advanced_resizing : false,
-					content_css : "'.__PS_BASE_URI__.'themes/'._THEME_NAME_.'/css/global.css",
-					document_base_url : "'.__PS_BASE_URI__.'",
-					width: "600",
-					height: "auto",
-					font_size_style_values : "8pt, 10pt, 12pt, 14pt, 18pt, 24pt, 36pt",
-					template_external_list_url : "lists/template_list.js",
-					external_link_list_url : "lists/link_list.js",
-					external_image_list_url : "lists/image_list.js",
-					media_external_list_url : "lists/media_list.js",
-					elements : "nourlconvert",
-					entity_encoding: "raw",
-					convert_urls : false,
-					language : "'.(file_exists(_PS_ROOT_DIR_.'/js/tinymce/jscripts/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en').'"
-				});
-				id_language = Number('.(int)$this->context->language->id.');
-			</script>';
-		}
-		$this->_html .= '<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" enctype="multipart/form-data">
-			<fieldset>
-				<legend><img src="'.$this->_path.'logo.gif" alt="" title="" /> '.$this->l('Conditions of the referral program').'</legend>
-				<div class="translatable">';
-		foreach ($languages AS $language)
-		{
-			$this->_html .= '
-			<div class="lang_'.(int)$language['id_lang'].'" id="cpara_'.(int)$language['id_lang'].'" style="display: '.($language['id_lang'] == (int)$this->context->language->id ? 'block' : 'none').';float: left;">
-				<textarea class="rte" cols="120" rows="25" id="body_paragraph_'.(int)$language['id_lang'].'" name="body_paragraph_'.(int)$language['id_lang'].'">'.($xml ? stripslashes(htmlspecialchars($xml->body->{'paragraph_'.(int)$language['id_lang']})) : '').'</textarea>
-			</div>';
-		}
-		$this->_html .= $this->displayFlags($languages, $this->context->language->id, $divLangName, 'cpara', true);
-
-		$this->_html .= '</div>
-				<div class="clear center"><input type="submit" name="submitText" value="'.$this->l('Update text').'" class="button" style="margin-top: 10px" /></div>
-			</fieldset>
-		</form>';
-	}
-
 
 	/**
 	* Hook call when cart created and updated
@@ -657,7 +512,8 @@ class ReferralProgram extends Module
 	}
 	
 	public function renderForm()
-	{	
+	{
+
 		$fields_form_1 = array(
 			'form' => array(
 				'legend' => array(
@@ -667,16 +523,51 @@ class ReferralProgram extends Module
 				'input' => array(
 					array(
 						'type' => 'text',
-						'name' => '',
-						'class' => 'fixed-width-md',
-						'label' => $this->l('Minimum number of orders a sponsored friend must place to get their voucher:'),
+						'label' => $this->l('Minimum number of orders a sponsored friend must place to get their voucher'),
+						'name' => 'order_quantity',
 					),
-				), 
+					array(
+						'type' => 'text',
+						'label' => $this->l('Number of friends in the referral program invitation form (customer account, referral program section):'),
+						'name' => 'nb_friends',
+					),
+					array(
+						'type' => 'radio',
+						'label' => $this->l('Voucher type :'),
+						'name' => 'discount_type',
+						'values' => array(
+							array(
+								'id' => 'discount_type1',
+								'value' => 1,
+								'label' => $this->l('Voucher offering a percentage')),
+							array(
+								'id' => 'discount_type2',
+								'value' => 2,
+								'label' => $this->l('Voucher offering a fixed amount (by currency)')),
+						),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Percentage'),
+						'name' => 'discount_value_percentage',
+						'suffix' => '%'
+					),
+					array(
+						'type' => 'discount_value',
+						'label' => 	$this->l('Voucher amount'),
+						'name' => 'discount_value',
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Voucher description'),
+						'name' => 'discount_description',
+						'lang' => true,
+					)
+				),
 				'submit' => array(
-					'title' => $this->l('Delete catalog'),
+					'title' => $this->l('Save'),
 					'class' => 'btn btn-primary',
-					'name' => 'submitTruncateCatalog',
-					'id' => 'submitTruncateCatalog',
+					'name' => 'submitReferralProgram',
 					)
 			),
 		);
@@ -684,29 +575,22 @@ class ReferralProgram extends Module
 		$fields_form_2 = array(
 			'form' => array(
 				'legend' => array(
-					'title' => $this->l('Orders and customers'),
+					'title' => $this->l('Conditions of the referral program'),
 					'icon' => 'icon-cogs'
 				),
-				'description' => $this->l('I understand that all the orders and customers will be removed without possible rollback: customers, carts, orders, connections, guests, messages, stats...'),
-				'submit' => array(
-					'title' => $this->l('Delete orders & customers'),
-					'class' => 'btn btn-primary',
-					'name' => 'submitTruncateSales',
-					'id' => 'submitTruncateSales',
+				'input' => array(
+					array(
+						'type' => 'textarea',
+						'autoload_rte' => true,
+						'label' => $this->l('Text'),
+						'name' => 'body_paragraph',
+						'lang' => true,
 					)
-			),
-		);
-		
-		$fields_form_3 = array(
-			'form' => array(
-				'legend' => array(
-					'title' => $this->l('Functional integrity constraints'),
-					'icon' => 'icon-cogs'
 				),
-			'submit' => array(
-				'title' => $this->l('Check & fix'),
-				'class' => 'btn btn-primary',
-				'name' => 'submitCheckAndFix',
+				'submit' => array(
+					'title' => $this->l('Save'),
+					'class' => 'btn btn-primary',
+					'name' => 'submitText',
 				)
 			),
 		);
@@ -717,23 +601,76 @@ class ReferralProgram extends Module
 		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
 		$helper->default_form_language = $lang->id;
 		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
-		$this->fields_form = array();
-		$helper->id = (int)Tools::getValue('id_carrier');
 		$helper->identifier = $this->identifier;
-		$helper->submit_action = 'btnSubmit';
+		$helper->submit_action = 'submitModule';
+		$helper->module = $this;
 		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
 		$helper->token = Tools::getAdminTokenLite('AdminModules');
 		$helper->tpl_vars = array(
+			'currencies' => Currency::getCurrencies(),
 			'fields_value' => $this->getConfigFieldsValues(),
 			'languages' => $this->context->controller->getLanguages(),
 			'id_language' => $this->context->language->id
 		);
-
-		return $helper->generateForm(array($fields_form_1, $fields_form_2, $fields_form_3));
+		
+		$helper->override_folder = '/';
+		
+		return $this->renderJs().$helper->generateForm(array($fields_form_1, $fields_form_2));
 	}
 	
 	public function getConfigFieldsValues()
+	{	
+		$fields_values = array(
+			'order_quantity' => Tools::getValue('order_quantity', Configuration::get('REFERRAL_ORDER_QUANTITY')),
+			'discount_type' => Tools::getValue('discount_type', Configuration::get('REFERRAL_DISCOUNT_TYPE')),
+			'nb_friends' => Tools::getValue('nb_friends', Configuration::get('REFERRAL_NB_FRIENDS')),
+			'discount_value_percentage' => Tools::getValue('discount_value_percentage', Configuration::get('REFERRAL_PERCENTAGE')),
+		);
+	
+		$languages = Language::getLanguages(false);
+		foreach ($languages as $lang)
+			$fields_values['discount_description'][$lang['id_lang']] = Tools::getValue('discount_description_'.(int)$lang['id_lang'], Configuration::get('REFERRAL_DISCOUNT_DESCRIPTION', (int)$lang['id_lang']));
+		
+		$currencies = Currency::getCurrencies();
+		foreach ($currencies as $currency)
+			$fields_values['discount_value'][$currency['id_currency']] = Tools::getValue('discount_value['.(int)$currency['id_currency'].']', Configuration::get('REFERRAL_DISCOUNT_VALUE_'.(int)$currency['id_currency']));
+		
+		// xml loading
+		$xml = false;
+		if (file_exists($this->_xmlFile))
+			if ($xml = @simplexml_load_file($this->_xmlFile))
+				foreach ($languages as $lang)
+				{
+					$key = 'paragraph_'.$lang['id_lang'];
+					$fields_values['body_paragraph'][$lang['id_lang']] = Tools::getValue('body_paragraph_'.(int)$lang['id_lang'] ,(string)$xml->body->$key);
+				}
+	
+		return $fields_values;
+	}
+	
+	public function renderJs()
 	{
-		return array('value' => '');
+		return "
+		<script>
+			$(document).ready(function () {
+				toggleVoucherType()
+				$('input[name=discount_type]').click(function () {toggleVoucherType()});
+			});
+			
+			function toggleVoucherType()
+			{
+				if ($('input[name=discount_type]:checked').val() == 2)
+				{
+					$('#discount_value_percentage').closest('.row').hide();
+					$('#discount_value').closest('.row').show();
+				}
+				else
+				{
+					$('#discount_value_percentage').closest('.row').show();
+					$('#discount_value').closest('.row').hide();
+				}
+			}
+		</script>
+		";
 	}
 }
