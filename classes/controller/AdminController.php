@@ -1441,7 +1441,9 @@ class AdminControllerCore extends Controller
 		$current_id = Tab::getCurrentParentId();
 		foreach ($tabs as $index => $tab)
 		{
-			if (($tab['class_name'] == 'AdminStock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0) || $tab['class_name'] == 'AdminCarrierWizard')
+			if (!checkTabRights($tab['id_tab'])
+				|| ($tab['class_name'] == 'AdminStock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
+				|| $tab['class_name'] == 'AdminCarrierWizard')
 			{
 				unset($tabs[$index]);
 				continue;
@@ -1490,10 +1492,6 @@ class AdminControllerCore extends Controller
 					unset($sub_tabs[$index2]);					
 			}
 			$tabs[$index]['sub_tabs'] = $sub_tabs;
-
-			// If there are no subtabs, we don't want to display the parent tab in menu
-			if (empty($sub_tabs))
-				unset($tabs[$index]);
 		}
 		
 		if (Validate::isLoadedObject($this->context->employee))
