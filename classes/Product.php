@@ -3324,7 +3324,7 @@ class ProductCore extends ObjectModel
 			$context = Context::getContext();
 
 		$sql = new DbQuery();
-		$sql->select('p.`id_product`, pl.`name`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`, product_shop.advanced_stock_management, p.`customizable`');
+		$sql->select('p.`id_product`, pl.`name`, p.`ean13`, p.`upc`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`, product_shop.advanced_stock_management, p.`customizable`');
 		$sql->from('category_product', 'cp');
 		$sql->leftJoin('product', 'p', 'p.`id_product` = cp.`id_product`');
 		$sql->join(Shop::addSqlAssociation('product', 'p'));
@@ -3335,6 +3335,8 @@ class ProductCore extends ObjectModel
 		$sql->leftJoin('manufacturer', 'm', 'm.`id_manufacturer` = p.`id_manufacturer`');
 
 		$where = 'pl.`name` LIKE \'%'.pSQL($query).'%\'
+		OR p.`ean13` LIKE \'%'.pSQL($query).'%\'
+		OR p.`upc` LIKE \'%'.pSQL($query).'%\'
 		OR p.`reference` LIKE \'%'.pSQL($query).'%\'
 		OR p.`supplier_reference` LIKE \'%'.pSQL($query).'%\'
 		OR  p.`id_product` IN (SELECT id_product FROM '._DB_PREFIX_.'product_supplier sp WHERE `product_supplier_reference` LIKE \'%'.pSQL($query).'%\')';
