@@ -7,7 +7,7 @@
 		<fieldset class='form-date-group' id='date-range'>
 			<div class='form-date-heading'>
 				{l s='Date range'}
-				{if isset($actions) || $actions|count > 0}
+				{if isset($actions) && $actions|count > 0}
 					{if $actions|count > 1}
 					<div class='btn btn-default btn-xs pull-right dropdown-toggle' data-toggle='dropdown'>
 						{l s='Custom'}
