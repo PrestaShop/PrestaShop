@@ -113,7 +113,7 @@ class AdminEmployeesControllerCore extends AdminController
 			if ($theme[0] != '.' && is_dir($path.$theme) && (file_exists($path.$theme.'/css/admin.css') || file_exists($path.$theme.'/css/admin-theme.css')))
 				$this->themes[] = $theme;
 
-		$home_tab = Tab::getInstanceFromClassName('adminHome');
+		$home_tab = Tab::getInstanceFromClassName('AdminDashboard');
 		$this->tabs_list[$home_tab->id] = array(
 				'name' => $home_tab->name[$this->context->language->id],
 				'id_tab' => $home_tab->id,

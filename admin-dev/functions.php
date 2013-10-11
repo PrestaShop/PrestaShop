@@ -411,8 +411,8 @@ function runAdminTab($tab, $ajaxMode = false)
 	$cookie = Context::getContext()->cookie;
 	if (empty($tab) && !sizeof($_POST))
 	{
-		$tab = 'AdminHome';
-		$_POST['tab'] = 'AdminHome';
+		$tab = 'AdminDashboard';
+		$_POST['tab'] = $tab;
 		$_POST['token'] = Tools::getAdminTokenLite($tab);
 	}
 	// $tab = $_REQUEST['tab'];

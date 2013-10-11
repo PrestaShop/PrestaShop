@@ -31,3 +31,5 @@ CREATE TABLE `PREFIX_configuration_kpi_lang` (
 /* PHP:ps1600_add_missing_index(); */;
 
 UPDATE `PREFIX_configuration` SET `value`='-' WHERE `name` = 'PS_ATTRIBUTE_ANCHOR_SEPARATOR';
+
+UPDATE `PREFIX_tab` SET class_name = 'AdminDashboard' WHERE class_name = 'AdminHome';

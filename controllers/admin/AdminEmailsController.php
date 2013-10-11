@@ -184,7 +184,7 @@ class AdminEmailsControllerCore extends AdminController
 		$this->initPageHeaderToolbar();
 		$this->addToolBarModulesListButton();
 		unset($this->toolbar_btn['save']);
-		$back = $this->context->link->getAdminLink('AdminHome');
+		$back = $this->context->link->getAdminLink('AdminDashboard');
 		
 		$this->toolbar_btn['back'] = array(
 			'href' => $back,
