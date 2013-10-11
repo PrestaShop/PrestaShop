@@ -72,12 +72,16 @@ class Blocktopmenu extends Module
 			!$this->registerHook('actionObjectCategoryAddAfter') ||
 			!$this->registerHook('actionObjectCmsUpdateAfter') ||
 			!$this->registerHook('actionObjectCmsDeleteAfter') ||
+			!$this->registerHook('actionObjectCmsAddAfter') ||
 			!$this->registerHook('actionObjectSupplierUpdateAfter') ||
 			!$this->registerHook('actionObjectSupplierDeleteAfter') ||
+			!$this->registerHook('actionObjectSupplierAddAfter') ||
 			!$this->registerHook('actionObjectManufacturerUpdateAfter') ||
 			!$this->registerHook('actionObjectManufacturerDeleteAfter') ||
+			!$this->registerHook('actionObjectManufacturerAddAfter') ||
 			!$this->registerHook('actionObjectProductUpdateAfter') ||
 			!$this->registerHook('actionObjectProductDeleteAfter') ||
+			!$this->registerHook('actionObjectProductAddAfter') ||
 			!$this->registerHook('categoryUpdate') ||
 			!$this->registerHook('actionShopDataDuplication') ||
 			!$this->installDB())
@@ -858,6 +862,11 @@ class Blocktopmenu extends Module
 		$this->clearMenuCache();
 	}
 	
+	public function hookActionObjectCmsAddAfter($params)
+	{
+		$this->clearMenuCache();
+	}
+	
 	public function hookActionObjectSupplierUpdateAfter($params)
 	{
 		$this->clearMenuCache();
@@ -866,7 +875,12 @@ class Blocktopmenu extends Module
 	public function hookActionObjectSupplierDeleteAfter($params)
 	{
 		$this->clearMenuCache();
-	}	
+	}
+	
+	public function hookActionObjectSupplierAddAfter($params)
+	{
+		$this->clearMenuCache();
+	}
 
 	public function hookActionObjectManufacturerUpdateAfter($params)
 	{
@@ -878,12 +892,22 @@ class Blocktopmenu extends Module
 		$this->clearMenuCache();
 	}
 	
+	public function hookActionObjectManufacturerAddAfter($params)
+	{
+		$this->clearMenuCache();
+	}
+	
 	public function hookActionObjectProductUpdateAfter($params)
 	{
 		$this->clearMenuCache();
 	}
 	
 	public function hookActionObjectProductDeleteAfter($params)
+	{
+		$this->clearMenuCache();
+	}
+	
+	public function hookActionObjectProductAddAfter($params)
 	{
 		$this->clearMenuCache();
 	}
