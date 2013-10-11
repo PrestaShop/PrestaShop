@@ -29,9 +29,19 @@
 					</div>
 					<div class='form-date-body form-group'>
 						<label>{l s='From'}</label>
-						<input class='date-input form-control' id='date-start' placeholder='Start' type='text'>
+						<input class='date-input form-control' id='date-start' placeholder='Start' type='text' name="date_from" value="{$date_from}" />
 						<label>{l s='to'}</label>
-						<input class='date-input form-control' id='date-end' placeholder='End' type='text'>
+						<input class='date-input form-control' id='date-end' placeholder='End' type='text' name="date_to" value="{$date_to}" />
+					</div>
+					<hr/>
+					<div class='form-date-heading'>
+						<div>{l s='Compare to'}</div>
+					</div>
+					<div class="form-date-body form-group">
+						<label>{l s='From'}</label>
+						<input id="compare-date-start" class="date-input form-control" type="text" placeholder="Start" name="compare_date_from" value="{$compare_date_from}" />
+						<label>{l s='to'}</label>
+						<input id="compare-date-end" class="date-input form-control" type="text" placeholder="End" name="compare_date_to" value="{$compare_date_to}" />
 					</div>
 					<hr/>
 					<div class='form-group'>
@@ -40,7 +50,7 @@
 							{l s='Cancel'}
 						</button>
 
-						<button class='btn btn-default' type='submit'>
+						<button class='btn btn-default' type='submit' name="submitDateRange">
 							<i class='icon-ok text-success'></i>
 							{l s='Apply'}
 						</button>

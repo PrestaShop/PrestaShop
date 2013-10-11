@@ -52,6 +52,9 @@ class EmployeeCore extends ObjectModel
 	public $stats_date_from;
 	public $stats_date_to;
 
+	public $stats_compare_from;
+	public $stats_compare_to;
+
 	/** @var string Display back office background in the specified color */
 	public $bo_color;
 
@@ -96,6 +99,8 @@ class EmployeeCore extends ObjectModel
 			'bo_menu' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'stats_date_from' => 	array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'stats_date_to' => 		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'stats_compare_from' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'stats_compare_to' => 	array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
 	);
 
@@ -105,6 +110,8 @@ class EmployeeCore extends ObjectModel
 			'last_passwd_gen' => array('setter' => null),
 			'stats_date_from' => array('setter' => null),
 			'stats_date_to' => array('setter' => null),
+			'stats_compare_from' => array('setter' => null),
+			'stats_compare_to' => array('setter' => null),
 			'passwd' => array('setter' => 'setWsPasswd'),
 		),
 	);

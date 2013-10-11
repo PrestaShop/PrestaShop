@@ -64,3 +64,5 @@ INSERT INTO `PREFIX_hook_module` (`id_module`, `id_shop`, `id_hook`, `position`)
 );
 
 /* PHP:update_order_messages(); */;
+
+ALTER TABLE  `PREFIX_employee` ADD  `stats_compare_from` DATE NULL DEFAULT NULL AFTER  `stats_date_to` , ADD  `stats_compare_to` DATE NULL DEFAULT NULL AFTER  `stats_compare_from`

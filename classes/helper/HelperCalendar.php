@@ -29,9 +29,11 @@ class HelperCalendarCore extends Helper
 	const DEFAULT_DATE_FORMAT = 'dd-mm-yyyy';
 
 	private $_actions;
+	private $_compare_date_from;
+	private $_compare_date_to;
 	private $_date_format;
-	private $_from_date;
-	private $_to_date;
+	private $_date_from;
+	private $_date_to;
 
 	public function __construct()
 	{
@@ -57,6 +59,40 @@ class HelperCalendarCore extends Helper
 		return $this->_actions;
 	}
 
+	public function setCompareDateFrom($value)
+	{
+		if (!is_string($value))
+			throw new PrestaShopException('Date format must be string');
+
+		$this->_compare_date_from = $value;
+		return $this;
+	}
+
+	public function getCompareDateFrom()
+	{
+		if (!isset($this->_compare_date_from))
+			$this->_compare_date_from = date('d-m-Y', strtotime("-31 days"));
+
+		return $this->_compare_date_from;
+	}
+
+	public function setCompareDateTo($value)
+	{
+		if (!is_string($value))
+			throw new PrestaShopException('Date format must be string');
+
+		$this->_compare_date_to = $value;
+		return $this;
+	}
+
+	public function getCompareDateTo()
+	{
+		if (!isset($this->_compare_date_to))
+			$this->_compare_date_to = date('d-m-Y');
+
+		return $this->_compare_date_to;
+	}
+
 	public function setDateFormat($value)
 	{
 		if (!is_string($value))
@@ -74,38 +110,38 @@ class HelperCalendarCore extends Helper
 		return $this->_date_format;
 	}
 
-	public function setFromDate($value)
+	public function setDateFrom($value)
 	{
 		if (!is_string($value))
 			throw new PrestaShopException('Date format must be string');
 
-		$this->_from_date = $value;
+		$this->_date_from = $value;
 		return $this;
 	}
 
-	public function getFromDate()
+	public function getDateFrom()
 	{
-		if (!isset($this->_from_date))
-			$this->_from_date = date('d-m-Y', strtotime("-31 days"));
+		if (!isset($this->_date_from))
+			$this->_date_from = date('d-m-Y', strtotime("-31 days"));
 
-		return $this->_from_date;
+		return $this->_date_from;
 	}
 
-	public function setToDate($value)
+	public function setDateTo($value)
 	{
 		if (!is_string($value))
 			throw new PrestaShopException('Date format must be string');
 
-		$this->_to_date = $value;
+		$this->_date_to = $value;
 		return $this;
 	}
 
-	public function getToDate()
+	public function getDateTo()
 	{
-		if (!isset($this->_to_date))
-			$this->_to_date = date('d-m-Y');
+		if (!isset($this->_date_to))
+			$this->_date_to = date('d-m-Y');
 
-		return $this->_to_date;
+		return $this->_date_to;
 	}
 
 	public function addAction($action)
@@ -142,10 +178,12 @@ class HelperCalendarCore extends Helper
 
 		$this->tpl = $this->createTemplate($this->base_tpl);
 		$this->tpl->assign(array(
-			'date_format' => $this->getDateFormat(),
-			'from_date'   => $this->getFromDate(),
-			'to_date'     => $this->getToDate(),
-			'actions'     => $this->getActions()
+			'date_format'       => $this->getDateFormat(),
+			'date_from'         => $this->getDateFrom(),
+			'date_to'           => $this->getDateTo(),
+			'compare_date_from' => $this->getCompareDateFrom(),
+			'compare_date_to'   => $this->getCompareDateTo(),
+			'actions'           => $this->getActions()
 		));
 
 		$html .= parent::generate();
