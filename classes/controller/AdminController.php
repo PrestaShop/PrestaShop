@@ -1917,10 +1917,12 @@ class AdminControllerCore extends Controller
 		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
 		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
 
-		//Deprecated stylesheets
-		$this->addCSS(_PS_CSS_DIR_.'admin.css', 'all');
-		$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/admin.css', 'all');
-
+		// Deprecated stylesheets
+		if (!$this->bootstrap)
+		{
+			$this->addCSS(_PS_CSS_DIR_.'admin.css', 'all');
+			$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/backward/admin.css', 'all');
+		}
 		//Bootstrap v3.00 + Specific Admin Theme
 		$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/admin-theme.css', 'all');
 
