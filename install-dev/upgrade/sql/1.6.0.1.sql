@@ -50,6 +50,15 @@ INSERT INTO `PREFIX_hook` (`name`, `title`, `position`, `live_edit`) VALUES
 ('dashboardZoneTwo', 'dashboardZoneTwo', 1, 0),
 ('dashboardData', 'dashboardData', 0, 0);
 
-INSERT INTO `PREFIX_hook_module` (`id_module`, `id_shop`, `id_hook`, `position`) VALUES (
-	SELECT m.id_module, s.id_shop, h.id_hook, 1 FROM `PREFIX_module` m, `PREFIX_shop` s, `PREFIX_hook` h WHERE m.name IN ('dashactivity', 'dashtrends', 'dashproducts') AND h.name IN ('dashboardZoneOne', 'dashboardZoneTwo', 'dashboardData')
+INSERT INTO `PREFIX_hook_module` (`id_module`, `id_shop`, `id_hook`, `position`) (
+	SELECT m.id_module, s.id_shop, h.id_hook, 0 FROM `PREFIX_module` m, `PREFIX_shop` s, `PREFIX_hook` h WHERE m.name IN ('dashactivity', 'dashtrends', 'dashproducts') AND h.name IN ('dashboardData')
+);
+INSERT INTO `PREFIX_hook_module` (`id_module`, `id_shop`, `id_hook`, `position`) (
+	SELECT m.id_module, s.id_shop, h.id_hook, 1 FROM `PREFIX_module` m, `PREFIX_shop` s, `PREFIX_hook` h WHERE m.name IN ('dashactivity') AND h.name IN ('dashboardZoneOne')
+);
+INSERT INTO `PREFIX_hook_module` (`id_module`, `id_shop`, `id_hook`, `position`) (
+	SELECT m.id_module, s.id_shop, h.id_hook, 1 FROM `PREFIX_module` m, `PREFIX_shop` s, `PREFIX_hook` h WHERE m.name IN ('dashtrends') AND h.name IN ('dashboardZoneTwo')
+);
+INSERT INTO `PREFIX_hook_module` (`id_module`, `id_shop`, `id_hook`, `position`) (
+	SELECT m.id_module, s.id_shop, h.id_hook, 2 FROM `PREFIX_module` m, `PREFIX_shop` s, `PREFIX_hook` h WHERE m.name IN ('dashproducts') AND h.name IN ('dashboardZoneTwo')
 );
