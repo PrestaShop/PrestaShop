@@ -334,7 +334,7 @@ class AdminControllerCore extends Controller
 		if (!$this->_defaultOrderBy) $this->_defaultOrderBy = $this->identifier;
 		$this->tabAccess = Profile::getProfileAccess($this->context->employee->id_profile, $this->id);
 
-		// Fix for AdminHome
+		// Fix for homepage
 		if ($this->controller_name == 'AdminDashboard')
 			$_POST['token'] = $this->token;
 
@@ -1284,7 +1284,7 @@ class AdminControllerCore extends Controller
 			if (false === strpos($url, '?token=') && false === strpos($url, '&token='))
 				$url .= '&token='.$this->token;
 			if (strpos($url, '?') === false)
-				$url = str_replace('&token', '?controller=AdminHome&token', $url);
+				$url = str_replace('&token', '?controller=AdminDashboard&token', $url);
 
 			$this->context->smarty->assign('url', htmlentities($url));
 			return false;
