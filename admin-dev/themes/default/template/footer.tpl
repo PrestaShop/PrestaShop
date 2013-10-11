@@ -27,51 +27,35 @@
 </div>
 {if $display_footer}
 {hook h="displayBackOfficeFooter"}
-	<div id="footer">
-		<div class="col-sm-5 hidden-xs">
-			<a href="http://www.prestashop.com/" target="_blank">PrestaShop&trade; {$ps_version}</a> - <span>{l s='Load time: '} {number_format(microtime(true) - $timer_start, 3, '.', '')}s</span>
-		</div>
-		<div class="col-sm-2 hidden-xs social-networks">
-			<a class="link-social link-twitter" href="#" title="Twitter">
-				<i class="icon-twitter"></i>
-			</a>
-			<a class="link-social link-facebook" href="#" title="Facebook">
-				<i class="icon-facebook"></i>
-			</a>
-			<a class="link-social link-github" href="#" title="Github">
-				<i class="icon-github"></i>
-			</a>
-			<a class="link-social link-google" href="#" title="Google">
-				<i class="icon-google-plus"></i>
-			</a>
-		</div>	
-
-		<div class="col-sm-5">
-			<a href="http://www.prestashop.com/en/contact_us?utm_source=backoffice_footer" target="_blank" class="footer_link">{l s='Contact'}</a>
-			|&nbsp;<a href="http://forge.prestashop.com/?utm_source=backoffice_footer" target="_blank" class="footer_link">{l s='Bug Tracker'}</a>
-			|&nbsp;<a href="http://www.prestashop.com/forums/?utm_source=backoffice_footer" target="_blank" class="footer_link">{l s='Forum'}</a>
-			|&nbsp;<a href="http://addons.prestashop.com/?utm_source=backoffice_footer" target="_blank" class="footer_link">{l s='Addons'}</a>
-			{if $iso_is_fr}
-			<p>Questions / Renseignements / Formations : 
-				<strong>+33 (0)1.40.18.30.04</strong>
-			<p>
-			{/if}
-		</div>
-		<div id="go-top"><i class="icon-arrow-up"></i></div>
-		<script>
-			$("#go-top").click(function() {
-  				$("html, body").animate({ scrollTop: 0 }, "slow");
-  				return false;
-			});
-			$(window).scroll(function() {
-				if ($(this).scrollTop()) {
-					$('#go-top:hidden').stop(true, true).fadeIn();
-				} else {
-					$('#go-top').stop(true, true).fadeOut();
-				}
-			});
-		</script>
+<div id="footer">
+	<div class="col-sm-5 hidden-xs">
+		<a href="http://www.prestashop.com/" target="_blank">PrestaShop&trade; {$ps_version}</a> - <span>{l s='Load time: '} {number_format(microtime(true) - $timer_start, 3, '.', '')}s</span>
 	</div>
+	<div class="col-sm-2 hidden-xs social-networks">
+		<a class="link-social link-twitter" href="https://twitter.com/PrestaShop" title="Twitter">
+			<i class="icon-twitter"></i>
+		</a>
+		<a class="link-social link-facebook" href="https://www.facebook.com/prestashop" title="Facebook">
+			<i class="icon-facebook"></i>
+		</a>
+		<a class="link-social link-github" href="https://github.com/PrestaShop/PrestaShop/" title="Github">
+			<i class="icon-github"></i>
+		</a>
+	</div>	
+
+	<div class="col-sm-5">
+		<a href="http://www.prestashop.com/en/contact_us?utm_source=backoffice_footer" target="_blank" class="footer_link">{l s='Contact'}</a>
+		|&nbsp;<a href="http://forge.prestashop.com/?utm_source=backoffice_footer" target="_blank" class="footer_link">{l s='Bug Tracker'}</a>
+		|&nbsp;<a href="http://www.prestashop.com/forums/?utm_source=backoffice_footer" target="_blank" class="footer_link">{l s='Forum'}</a>
+		|&nbsp;<a href="http://addons.prestashop.com/?utm_source=backoffice_footer" target="_blank" class="footer_link">{l s='Addons'}</a>
+		{if $iso_is_fr}
+		<p>Questions / Renseignements / Formations : 
+			<strong>+33 (0)1.40.18.30.04</strong>
+		<p>
+		{/if}
+	</div>
+	<div id="go-top" class="hide"><i class="icon-arrow-up"></i></div>
+</div>
 {/if}
 </body>
 </html>
