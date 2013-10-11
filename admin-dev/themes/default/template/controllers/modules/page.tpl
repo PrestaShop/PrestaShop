@@ -22,28 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-{$kpis}
-
-<div class="page-head">
-	<h2 class="page-title">
-		{l s='List of modules'}
-	</h2>
-	<div class="page-bar toolbarBox">
-		<div class="btn-toolbar">
-			<ul class="cc_button nav nav-pills pull-right">
-				{if $add_permission eq '1'}
-				<li>
-					<a id="desc-module-new" class="toolbar_btn" href="#top_container" onclick="$('#module_install').slideToggle();" title="{l s='Add a new module'}">
-						<i class="process-icon-new-module" ></i>
-						<div>{l s='Add a new module'}</div>
-					</a>
-				</li>
-				{/if}
-			</ul>
-		</div>
-	</div>
-</div>
+{include file='controllers/modules/top.tpl'}
 
 {if $add_permission eq '1'}
 <div id="module_install" class="row" style="{if !isset($smarty.post.downloadflag)}display: none;{/if}">
