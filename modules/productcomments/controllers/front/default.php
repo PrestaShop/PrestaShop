@@ -73,21 +73,21 @@ class ProductCommentsDefaultModuleFrontController extends ModuleFrontController
 		$errors = array();
 		// Validation
 		if (!Validate::isInt(Tools::getValue('id_product')))
-			$errors[] = $module_instance->l('ID product is incorrect');
+			$errors[] = $module_instance->l('ID product is incorrect', 'default');
 		if (!Tools::getValue('title') || !Validate::isGenericName(Tools::getValue('title')))
-			$errors[] = $module_instance->l('Title is incorrect');
+			$errors[] = $module_instance->l('Title is incorrect', 'default');
 		if (!Tools::getValue('content') || !Validate::isMessage(Tools::getValue('content')))
-			$errors[] = $module_instance->l('Comment is incorrect');
+			$errors[] = $module_instance->l('Comment is incorrect', 'default');
 		if (!$id_customer && (!Tools::isSubmit('customer_name') || !Tools::getValue('customer_name') || !Validate::isGenericName(Tools::getValue('customer_name'))))
-			$errors[] = $module_instance->l('Customer name is incorrect');
+			$errors[] = $module_instance->l('Customer name is incorrect', 'default');
 		if (!$this->context->customer->id && !Configuration::get('PRODUCT_COMMENTS_ALLOW_GUESTS'))
-			$errors[] = $module_instance->l('You must be logged in order to send a comment');
+			$errors[] = $module_instance->l('You must be logged in order to send a comment', 'default');
 		if (!count(Tools::getValue('criterion')))
-			$errors[] = $module_instance->l('You must give a rating');
+			$errors[] = $module_instance->l('You must give a rating', 'default');
 
 		$product = new Product(Tools::getValue('id_product'));
 		if (!$product->id)
-			$errors[] = $module_instance->l('Product not found');
+			$errors[] = $module_instance->l('Product not found', 'default');
 
 		if (!count($errors))
 		{
