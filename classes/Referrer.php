@@ -139,21 +139,22 @@ class ReferrerCore extends ObjectModel
 		}
 
 		$sql = 'SELECT COUNT(DISTINCT cs.id_connections_source) AS visits,
-					COUNT(DISTINCT cs.id_connections) as visitors,
-					COUNT(DISTINCT c.id_guest) as uniqs,
-					COUNT(DISTINCT cp.time_start) as pages
-				FROM '._DB_PREFIX_.'referrer_cache rc
-				LEFT JOIN '._DB_PREFIX_.'referrer r ON rc.id_referrer = r.id_referrer
-				LEFT JOIN '._DB_PREFIX_.'referrer_shop rs ON r.id_referrer = rs.id_referrer
-				LEFT JOIN '._DB_PREFIX_.'connections_source cs ON rc.id_connections_source = cs.id_connections_source
-				LEFT JOIN '._DB_PREFIX_.'connections c ON cs.id_connections = c.id_connections
-				LEFT JOIN '._DB_PREFIX_.'connections_page cp ON cp.id_connections = c.id_connections
-				'.$join.'
-				WHERE cs.date_add BETWEEN '.ModuleGraph::getDateBetween($employee).'
-					'.Shop::addSqlRestriction(false, 'rs').'
-					'.Shop::addSqlRestriction(false, 'c').'
-					AND rc.id_referrer = '.(int)$this->id
-					.$where;
+			COUNT(DISTINCT cs.id_connections) as visitors,
+			COUNT(DISTINCT c.id_guest) as uniqs,
+			COUNT(DISTINCT cp.time_start) as pages
+			FROM '._DB_PREFIX_.'referrer_cache rc
+			LEFT JOIN '._DB_PREFIX_.'referrer r ON rc.id_referrer = r.id_referrer
+			LEFT JOIN '._DB_PREFIX_.'referrer_shop rs ON r.id_referrer = rs.id_referrer
+			LEFT JOIN '._DB_PREFIX_.'connections_source cs ON rc.id_connections_source = cs.id_connections_source
+			LEFT JOIN '._DB_PREFIX_.'connections c ON cs.id_connections = c.id_connections
+			LEFT JOIN '._DB_PREFIX_.'connections_page cp ON cp.id_connections = c.id_connections
+			'.$join.'
+			WHERE 1'.
+			((isset($employee->stats_date_from) && isset($employee->stats_date_from))? ' AND cs.date_add BETWEEN \''.pSQL($employee->stats_date_from).' 00:00:00\' AND \''.pSQL($employee->stats_date_to).' 23:59:59\'' : '').
+			Shop::addSqlRestriction(false, 'rs').
+			Shop::addSqlRestriction(false, 'c').
+			' AND rc.id_referrer = '.(int)$this->id.
+			$where;
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 	}
 
