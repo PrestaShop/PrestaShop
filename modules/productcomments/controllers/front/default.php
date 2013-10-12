@@ -125,7 +125,7 @@ class ProductCommentsDefaultModuleFrontController extends ModuleFrontController
 				}
 				$result = true;
  				//send mail
-				$donnees = array(
+				$data = array(
 					'{texte}' => $module_instance->l('New comment available'),
 					'{content}' => $comment->content,
 					'{id_product}' => $comment->id_product,
@@ -137,7 +137,7 @@ class ProductCommentsDefaultModuleFrontController extends ModuleFrontController
 				Mail::Send((int)Context::getContext()->language->id,
 						'newcomment',
 						'New comment',
-						$donnees,
+						$data,
 						Configuration::get('PS_SHOP_EMAIL'),
 						null,
 						null,
