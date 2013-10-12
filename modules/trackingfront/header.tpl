@@ -31,7 +31,8 @@
 		<script type="text/javascript" src="{$smarty.const._PS_JS_DIR_}jquery/jquery-1.7.2.min.js"></script>
 		<script type="text/javascript" src="{$smarty.const._PS_JS_DIR_}jquery/ui/jquery.ui.core.min.js"></script>
 		<script type="text/javascript" src="{$smarty.const._PS_JS_DIR_}jquery/ui/jquery.ui.datepicker.min.js"></script>
-		<link type="text/css" rel="stylesheet" href="{$smarty.const._PS_JS_DIR_}jquery/themes/base/jquery.ui.datepicker.css" />
+		<link type="text/css" rel="stylesheet" href="{$smarty.const._PS_JS_DIR_}jquery/ui/themes/base/jquery.ui.all.css" />
+		<link type="text/css" rel="stylesheet" href="{$smarty.const._PS_JS_DIR_}jquery/ui/themes/base/jquery.ui.datepicker.css" />
 	</head>
 	<body>
 
