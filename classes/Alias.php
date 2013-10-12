@@ -124,5 +124,21 @@ class AliasCore extends ObjectModel
 	{
 		return Configuration::get('PS_ALIAS_FEATURE_ACTIVE');
 	}
+
+	/**
+	 * This method is allow to know if a alias exist for AdminImportController
+	 * @since 1.5.7
+	 * @return bool
+	 */
+	public static function aliasExists($id_alias)
+	{
+		$row = Db::getInstance()->getRow('
+			SELECT `id_alias`
+			FROM '._DB_PREFIX_.'alias a
+			WHERE a.`id_alias` = '.(int)$id_alias
+		);
+
+		return isset($row['id_alias']);
+	}
 }
 
