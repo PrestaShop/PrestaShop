@@ -61,8 +61,11 @@ class HelperCalendarCore extends Helper
 
 	public function setCompareDateFrom($value)
 	{
+		if (!isset($value) || $value == '');
+			$value = date('d-m-Y', strtotime("-31 days"));
+
 		if (!is_string($value))
-			throw new PrestaShopException('Date format must be string');
+			throw new PrestaShopException('Date must be string');
 
 		$this->_compare_date_from = $value;
 		return $this;
@@ -78,8 +81,11 @@ class HelperCalendarCore extends Helper
 
 	public function setCompareDateTo($value)
 	{
+		if (!isset($value) || $value == '')
+			$value = date('Y-m-d');
+
 		if (!is_string($value))
-			throw new PrestaShopException('Date format must be string');
+			throw new PrestaShopException('Date must be string');
 
 		$this->_compare_date_to = $value;
 		return $this;
@@ -112,8 +118,11 @@ class HelperCalendarCore extends Helper
 
 	public function setDateFrom($value)
 	{
+		if (!isset($value) || $value == '')
+			$value = date('d-m-Y', strtotime("-31 days"));
+
 		if (!is_string($value))
-			throw new PrestaShopException('Date format must be string');
+			throw new PrestaShopException('Date must be string');
 
 		$this->_date_from = $value;
 		return $this;
@@ -129,8 +138,11 @@ class HelperCalendarCore extends Helper
 
 	public function setDateTo($value)
 	{
+		if (!isset($value) || $value == '')
+			$value = date('Y-m-d');
+
 		if (!is_string($value))
-			throw new PrestaShopException('Date format must be string');
+			throw new PrestaShopException('Date must be string');
 
 		$this->_date_to = $value;
 		return $this;
