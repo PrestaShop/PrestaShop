@@ -116,7 +116,11 @@ class LoyaltyModule extends ObjectModel
 				$total += ($taxesEnabled == PS_TAX_EXC ? $product['price'] : $product['price_wt'])* (int)($product['cart_quantity']);
 			}
 			foreach ($cart->getCartRules(false) AS $cart_rule)
-				$total -= $cart_rule['value_real'];
+				if ($taxesEnabled == PS_TAX_EXC)
+					$total -= $cart_rule['value_tax_exc'];
+				else
+					$total -= $cart_rule['value_real'];
+				
 		}
 
 		return self::getNbPointsByPrice($total);

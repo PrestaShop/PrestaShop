@@ -103,7 +103,7 @@ class ProductSaleCore
 				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 				'.Product::sqlStock('p').'
 				WHERE product_shop.`active` = 1
-					AND p.`visibility` != \'none\'
+					AND product_shop.`visibility` != \'none\'
 					AND p.`id_product` IN (
 						SELECT cp.`id_product`
 						FROM `'._DB_PREFIX_.'category_group` cg
@@ -158,7 +158,7 @@ class ProductSaleCore
 					ON cl.`id_category` = product_shop.`id_category_default`
 					AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').'
 				WHERE product_shop.`active` = 1
-					AND p.`visibility` != \'none\'
+					AND product_shop.`visibility` != \'none\'
 					AND p.`id_product` IN (
 						SELECT cp.`id_product`
 						FROM `'._DB_PREFIX_.'category_group` cg

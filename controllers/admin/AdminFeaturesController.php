@@ -149,9 +149,27 @@ class AdminFeaturesControllerCore extends AdminController
 			);
 
 			$this->_where = sprintf('AND `id_feature` = %d', (int)$id);
-			self::$currentIndex = self::$currentIndex.'&id_feature='.(int)$id.'&viewfeature';
-			$this->processFilter();
-			return parent::renderList();
+
+			// get list and force no limit clause in the request
+			$this->getList($this->context->language->id, 'id_feature_value', 'ASC');
+			
+			// Render list
+			$helper = new HelperList();
+			$helper->actions = $this->actions;
+			$helper->no_link = true;
+			$helper->shopLinkType = '';
+			$helper->identifier = $this->identifier;
+			$helper->toolbar_scroll = false;
+			$helper->currentIndex = self::$currentIndex;
+			$helper->token = $this->token;
+			$helper->table = $this->table;
+			$helper->simple_header = true;
+			$helper->show_toolbar = false;
+			$helper->bulk_actions = $this->bulk_actions;
+			$content = $helper->generateList($this->_list, $this->fields_list);
+
+			echo Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
+			exit;
 		}
 	}
 

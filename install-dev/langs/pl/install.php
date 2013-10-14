@@ -82,7 +82,7 @@ return array(
 		'You must enter a database login' => 'Podaj login dla bazy danych',
 		'Tables prefix is invalid' => 'Prefiks tebeli jest niepoprawny ',
 		'Wrong engine chosen for MySQL' => 'Silnik dla MySQL jest niepoprawny',
-		'Cannot convert database data to utf-8' => 'Nie można przekonwertowąć bazy danych na utf-8',
+		'Cannot convert database data to utf-8' => 'Nie można przekonwertować bazy danych na utf-8',
 		'At least one table with same prefix was already found, please change your prefix or drop your database' => 'Co najmniej jedna tabela z tym samym prefiksem została znaleziona - proszę zmienić aktualny prefiks lub usunąć istniejące tabele.',
 		'Database Server is not found. Please verify the login, password and server fields' => 'Nie można połączyć się z serwerem bazy danych. Sprawdź swój login i hasło.',
 		'Connection to MySQL server succeeded, but database "%s" not found' => 'Połączenie do serwera MySQL odbyło się poprawnie lecz baza danych "%is" nie została znaleziona.',

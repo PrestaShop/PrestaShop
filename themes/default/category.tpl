@@ -58,8 +58,8 @@
 			{if $category->description}
 				<div class="cat_desc">
 				{if strlen($category->description) > 120}
-					<p id="category_description_short">{$category->description|truncate:120}</p>
-					<p id="category_description_full" style="display:none">{$category->description}</p>
+					<div id="category_description_short">{$category->description|truncate:120}</div>
+					<div id="category_description_full" style="display:none;">{$category->description}</div>
 					<a href="#" onclick="$('#category_description_short').hide(); $('#category_description_full').show(); $(this).hide(); return false;" class="lnk_more">{l s='More'}</a>
 				{else}
 					<p>{$category->description}</p>

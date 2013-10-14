@@ -36,7 +36,7 @@ class AdminLogsControllerCore extends AdminController
 
 		$this->fields_list = array(
 			'id_log' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-			'employee' => array('title' => $this->l('Employee'), 'align' => 'center'),
+			'employee' => array('title' => $this->l('Employee'), 'align' => 'center', 'havingFilter' => true),
 			'severity' => array('title' => $this->l('Severity (1-4)'), 'align' => 'center', 'class' => 'fixed-width-xs'),
 			'message' => array('title' => $this->l('Message')),
 			'object_type' => array('title' => $this->l('Object type'), 'class' => 'fixed-width-sm'),
@@ -81,7 +81,6 @@ class AdminLogsControllerCore extends AdminController
 		);
 		unset($this->toolbar_btn['new']);
 	}
-
 }
 
 ?>

@@ -50,6 +50,7 @@ class TrackingFront extends Module
 			$fakeEmployee = new Employee();
 			$fakeEmployee->stats_date_from = $this->context->cookie->stats_date_from;
 			$fakeEmployee->stats_date_to = $this->context->cookie->stats_date_to;
+
 			$result = Db::getInstance()->getRow('
 			SELECT `id_referrer`
 			FROM `'._DB_PREFIX_.'referrer`
@@ -95,10 +96,13 @@ class TrackingFront extends Module
 			$this->smarty->assign('errors', $errors);
 		}
 
+		$from = date('Y-m-d');
+		$to = date('Y-m-d');
+
 		if (Tools::isSubmit('submitDatePicker'))
 		{
-			$this->context->cookie->stats_date_from = Tools::getValue('datepickerFrom');
-			$this->context->cookie->stats_date_to = Tools::getValue('datepickerTo');
+			$from = Tools::getValue('datepickerFrom');
+			$to= Tools::getValue('datepickerTo');
 		}
 		if (Tools::isSubmit('submitDateDay'))
 		{
@@ -133,6 +137,8 @@ class TrackingFront extends Module
 			$from = (date('Y') - 1).date('-01-01');
 			$to = (date('Y') - 1).date('-12-31');
 		}
+		$this->context->cookie->stats_date_from = $from;
+		$this->context->cookie->stats_date_to = $to;
 	}
 	
 	public function isLogged()
@@ -187,15 +193,16 @@ class TrackingFront extends Module
 		
 		$echo = '
 		<script type="text/javascript">
-			$("#datepickerFrom").datepicker({
-				prevText:"",
-				nextText:"",
-				dateFormat:"yy-mm-dd"});
-			$("#datepickerTo").datepicker({
-				prevText:"",
-				nextText:"",
-				dateFormat:"yy-mm-dd"});
-			
+			$(document).ready(function() {
+				$("#datepickerFrom").datepicker({
+					prevText:"",
+					nextText:"",
+					dateFormat:"yy-mm-dd"});
+				$("#datepickerTo").datepicker({
+					prevText:"",
+					nextText:"",
+					dateFormat:"yy-mm-dd"});
+			});
 			function updateValues()
 			{
 				$.getJSON("stats.php",{ajaxProductFilter:1,id_referrer:'.$referrer->id.',token:"'.$this->context->cookie->tracking_passwd.'",id_product:0},

@@ -71,37 +71,60 @@
 				{if count($files_to_import)}
 					<select name="csv">
 						{foreach $files_to_import AS $filename}
-							<option value="{$filename}"{if $csv_selected == $filename} selected="selected"{/if}>{$filename}</option>
+							<option value="{$filename}"{if $csv_selected == $filename} selected="selected"{/if}>{$filename|escape:'htmlall':'UTF-8'}</option>
 						{/foreach}
 					</select>
 				{/if}
-				&nbsp;
+
 				<a href="#upload_file_import" id="upload_file_import_link" class="btn btn-default">
 					<i class="icon-plus-sign-alt"></i>
 					{l s='Upload'}
 				</a>
+
 			</div>
 		</div>
+
 		<div class="form-group">
-			<p class="alert alert-info col-lg-offset-3">
-				<a href="#" onclick="$('#sample_files_import').slideToggle(); return false;">
-					{l s='Click to view our sample import csv files.'}
-				</a>
-			</p>
-			<div id="sample_files_import" style="display:none" class="list-group">
-				<a class="list-group-item" href="../docs/csv_import/categories_import.csv">{l s='Sample Categories file'}</a>
-				<a class="list-group-item" href="../docs/csv_import/products_import.csv">{l s='Sample Products file'}</a>
-				<a class="list-group-item" href="../docs/csv_import/combinations_import.csv">{l s='Sample Combinations file'}</a>
-				<a class="list-group-item" href="../docs/csv_import/customers_import.csv">{l s='Sample Customers file'}</a>
-				<a class="list-group-item" href="../docs/csv_import/addresses_import.csv">{l s='Sample Addresses file'}</a>
-				<a class="list-group-item" href="../docs/csv_import/manufacturers_import.csv">{l s='Sample Manufacturers file'}</a>
-				<a class="list-group-item" href="../docs/csv_import/suppliers_import.csv">{l s='Sample Suppliers file'}</a>
-				{if $PS_ADVANCED_STOCK_MANAGEMENT}
-					<a class="list-group-item" href="../docs/csv_import/supply_orders_import.csv">{l s='Supply Orders sample file'}</a>
-					<a class="list-group-item" href="../docs/csv_import/supply_orders_details_import.csv">{l s='Supply Orders Details sample file'}</a>
-				{/if}
+			<div class="col-lg-6">
+				<p class="alert alert-info">
+					<a href="#" onclick="$('#sample_files_import').slideToggle(); return false;">
+						{l s='Click to view our sample import csv files.'}
+					</a>
+				</p>
+				<div id="sample_files_import" style="display:none" class="list-group">
+					<a class="list-group-item" href="../docs/csv_import/categories_import.csv" target="_blank">{l s='Sample Categories file'}</a>
+					<a class="list-group-item" href="../docs/csv_import/products_import.csv" target="_blank">{l s='Sample Products file'}</a>
+					<a class="list-group-item" href="../docs/csv_import/combinations_import.csv" target="_blank">{l s='Sample Combinations file'}</a>
+					<a class="list-group-item" href="../docs/csv_import/customers_import.csv" target="_blank">{l s='Sample Customers file'}</a>
+					<a class="list-group-item" href="../docs/csv_import/addresses_import.csv" target="_blank">{l s='Sample Addresses file'}</a>
+					<a class="list-group-item" href="../docs/csv_import/manufacturers_import.csv" target="_blank">{l s='Sample Manufacturers file'}</a>
+					<a class="list-group-item" href="../docs/csv_import/suppliers_import.csv" target="_blank">{l s='Sample Suppliers file'}</a>
+					{if $PS_ADVANCED_STOCK_MANAGEMENT}
+						<a class="list-group-item" href="../docs/csv_import/supply_orders_import.csv" target="_blank">{l s='Supply Orders sample file'}</a>
+						<a class="list-group-item" href="../docs/csv_import/supply_orders_details_import.csv" target="_blank">{l s='Supply Orders Details sample file'}</a>
+					{/if}
+				</div>
+			</div>
+			<div class="col-lg-6">
+				<p class="alert alert-info">
+					<a href="#" onclick="$('#csv_files_import').slideToggle(); return false;">
+						{l s='Click to view your csv files.'}
+					</a>
+				</p>
+
+				<ul id="csv_files_import" style="display:none;">
+					{foreach $files_to_import AS $filename}
+					<li>
+						<a href="{$current}&token={$token}&csvfilename={$filename|@base64_encode}">{$filename}</a>
+						<a href="{$current}&token={$token}&csvfilename={$filename|@base64_encode}&delete=1" class="btn btn-default">
+							<i class="icon-trash"></i> {l s='Delete'}
+						</a>
+					</li>
+					{/foreach}
+				</ul>
 			</div>
 		</div>
+
 		<div class="form-group">
 			<label class="control-label col-lg-3">{l s='What kind of entity would you like to import?'} </label>
 			<div class="col-lg-6">
@@ -140,14 +163,14 @@
 			<label class="control-label col-lg-3">{l s='Field separator'} </label>
 			<div class="col-lg-6 input-group">
 				<span class="input-group-addon">{l s='e.g. '}"1; Ipod; 129.90; 5"</span>
-				<input type="text" size="2" value=";" name="separator"/>
+				<input type="text" size="2" value="{if isset($separator_selected)}{$separator_selected|escape:'htmlall':'UTF-8'}{else};{/if}" name="separator"/>
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="control-label col-lg-3">{l s='Multiple value separator'} </label>
 			<div class="col-lg-6 input-group">
 				<span class="input-group-addon">{l s='e.g. '}"Ipod; red.jpg, blue.jpg, green.jpg; 129.90"</span>
-				<input type="text" size="2" value="," name="multiple_value_separator"/>
+				<input type="text" size="2" value="{if isset($multiple_value_separator_selected)}{$multiple_value_separator_selected|escape:'htmlall':'UTF-8'}{else},{/if}" name="multiple_value_separator"/>
 			</div>
 		</div>
 		<div class="form-group">
@@ -172,7 +195,6 @@
 				<input name="regenerate" id="regenerate" type="checkbox" />
 			</div>
 		</div>
-
 		<div class="form-group">
 			<label for="forceIDs" class="control-label col-lg-3">
 				<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='If you don\'t use this option, all ID\'s will be auto-incremented.'}">
@@ -263,7 +285,7 @@
 			else
 			{
 				$(".import_supply_orders_details").hide();
-				$('input[name=multiple_value_separator]').val(',');
+				$('input[name=multiple_value_separator]').val('{if isset($multiple_value_separator_selected)}{$multiple_value_separator_selected}{else},{/if}');
 			}
 			if ($("#entity > option:selected").val() == 1)
 				$("label[for=match_ref], #match_ref, label[for=regenerate], #regenerate").show();

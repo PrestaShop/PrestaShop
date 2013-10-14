@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	// Initialize events
-	$("#login_form").validate({
+	$("#login_form, #forgot_password_form").validate({
 		rules: {
 			"email":{
 				"email": true,
@@ -72,22 +72,21 @@ function feedbackSubmit() {
 	l = Ladda.create( document.querySelector( 'button[type=submit]' ) );
 }
 
+
 function displayForgotPassword() {
+
 	$('#error').hide();
-	$('#login_form').fadeOut('fast', function () {
-		$("#forgot_password_form").removeClass('hide').fadeIn('fast');
-		// Focus on email address forgot field
-		$('#email_forgot').select();
-	});
+	$("#login").find('.flip-container').toggleClass("flip");
+	$("#forgot_password_form").removeClass('hide');
+	$('#email_forgot').select();
 }
 
 function displayLogin() {
+
 	$('#error').hide();
-	$('#forgot_password_form').fadeOut('fast', function () {
-		$('#login_form').fadeIn('fast');
-		// Focus on email address field
-		$('#email').select();
-	});
+	$("#login").find('.flip-container').toggleClass("flip");
+	//$('#login_form').fadeIn('fast');
+	$('#email').select();
 	return false;
 }
 

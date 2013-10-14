@@ -133,36 +133,46 @@ class MailCore
 		{
 			foreach ($to as $key => $addr)
 			{
-				$to_name = null;
 				$addr = trim($addr);
 				if (!Validate::isEmail($addr))
 				{
 					Tools::dieOrLog(Tools::displayError('Error: invalid e-mail address'), $die);
 					return false;
 				}
+
 				if (is_array($to_name))
 				{
 					if ($to_name && is_array($to_name) && Validate::isGenericName($to_name[$key]))
 						$to_name = $to_name[$key];
 				}
-				if ($to_name == null)
-					$to_name = $addr;
-				/* Encode accentuated chars */
-				if (function_exists('mb_encode_mimeheader'))
-					$to_list->addTo($addr, mb_encode_mimeheader($to_name, 'utf-8'));
+
+				if ($to_name == null || $to_name == $addr)
+					$to_name = '';
 				else
-					$to_list->addTo($addr, self::mimeEncode($to_name));
+				{
+					if (function_exists('mb_encode_mimeheader'))
+						$to_name = mb_encode_mimeheader($to_name, 'utf-8');
+					else
+						$to_name = self::mimeEncode($to_name);
+				}
+
+				$to_list->addTo($addr, $to_name);
 			}
 			$to_plugin = $to[0];
 		} else {
 			/* Simple recipient, one address */
 			$to_plugin = $to;
-			if ($to_name == null)
-				$to_name = $to;
-			if (function_exists('mb_encode_mimeheader'))
-				$to_list->addTo($to, mb_encode_mimeheader($to_name, 'utf-8'));
+			if ($to_name == null || $to_name == $to)
+				$to_name = '';
 			else
-				$to_list->addTo($to, self::mimeEncode($to_name));
+			{
+				if (function_exists('mb_encode_mimeheader'))
+					$to_name = mb_encode_mimeheader($to_name, 'utf-8');
+				else
+					$to_name = self::mimeEncode($to_name);
+			}
+
+			$to_list->addTo($to, $to_name);
 		}
 		if(isset($bcc)) {
 			$to_list->addBcc($bcc);
@@ -235,8 +245,13 @@ class MailCore
 					include_once($template_path.$iso.'/lang.php');
 			else if ($module_name && file_exists($theme_path.'mails/'.$iso.'/lang.php'))
 				include_once($theme_path.'mails/'.$iso.'/lang.php');
-			else
+			else if (file_exists(_PS_MAIL_DIR_.$iso.'/lang.php'))
 				include_once(_PS_MAIL_DIR_.$iso.'/lang.php');
+			else
+			{
+				Tools::dieOrLog(Tools::displayError('Error - The lang file is missing for :').' '.$iso, $die);
+				return false;
+			}
 
 			/* Create mail and attach differents parts */
 			$message = new Swift_Message('['.Configuration::get('PS_SHOP_NAME', null, null, $id_shop).'] '.$subject);

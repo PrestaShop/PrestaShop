@@ -713,7 +713,7 @@ class ProductComments extends Module
 			'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
 			'criterions' => ProductCommentCriterion::getByProduct((int)Tools::getValue('id_product'), $this->context->language->id),
 			'action_url' => '',
-			'averageTotal' => (int)$average['grade'],
+			'averageTotal' => round($average['grade']),
 			'too_early' => ($customerComment && (strtotime($customerComment['date_add']) + Configuration::get('PRODUCT_COMMENTS_MINIMAL_TIME')) > time()),
 			'nbComments' => (int)(ProductComment::getCommentNumber((int)Tools::getValue('id_product')))
 		));
