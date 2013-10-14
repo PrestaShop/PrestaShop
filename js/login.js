@@ -74,6 +74,9 @@ function feedbackSubmit() {
 
 function displayForgotPassword() {
 	$('#error').hide();
+
+	document.querySelector("#login").toggle("flip");
+
 	$('#login_form').fadeOut('fast', function () {
 		$("#forgot_password_form").removeClass('hide').fadeIn('fast');
 		// Focus on email address forgot field

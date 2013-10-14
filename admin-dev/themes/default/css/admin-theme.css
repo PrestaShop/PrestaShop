@@ -9565,6 +9565,44 @@ textarea {
 .ladda-button[data-size=xl] .ladda-label {
   font-size: 1.5em; }
 
+/* line 1, admin-theme/_admin-login.sass */
+.flip-container {
+  perspective: 1000; }
+
+/* line 4, admin-theme/_admin-login.sass */
+.flip-container:hover .flipper, .flip-container.hover .flipper {
+  transform: rotateY(180deg); }
+
+/* line 8, admin-theme/_admin-login.sass */
+.flip-container, .front, .back {
+  width: 420px;
+  height: 420px; }
+
+/* line 14, admin-theme/_admin-login.sass */
+.flipper {
+  transition: 0.6s;
+  transform-style: preserve-3d;
+  position: relative; }
+
+/* line 19, admin-theme/_admin-login.sass */
+.front, .back {
+  backface-visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0; }
+
+/* line 26, admin-theme/_admin-login.sass */
+.front {
+  z-index: 2; }
+
+/* line 29, admin-theme/_admin-login.sass */
+.back {
+  transform: rotateY(180deg); }
+
+/* line 32, admin-theme/_admin-login.sass */
+.flip-container:hover .flipper, .flip-container.hover .flipper, .flip-container.flip .flipper {
+  transform: rotateY(180deg); }
+
 /* line 1, admin-theme/_admin-carrier-wizard.sass */
 #carrier_wizard {
   position: relative;
