@@ -36,13 +36,16 @@ class AdminCmsCategoriesControllerCore extends AdminController
 		$this->bootstrap = true;
 		$this->is_cms = true;
 		$this->table = 'cms_category';
+		$this->list_id = 'cms_category';
 		$this->className = 'CMSCategory';
 		$this->lang = true;
 		$this->addRowAction('view');
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?'), 'icon' => 'icon-trash'));
 
+		$this->tpl_list_vars['icon'] = 'icon-folder-close';
+		$this->tpl_list_vars['title'] = $this->l('Categories');
 		$this->fields_list = array(
 		'id_cms_category' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
 		'name' => array('title' => $this->l('Name'), 'width' => 'auto', 'callback' => 'hideCMSCategoryPosition', 'callback_object' => 'CMSCategory'),
@@ -62,7 +65,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 		}
 
 		$this->cms_category = AdminCmsContentController::getCurrentCMSCategory();
-		$this->_filter = 'AND `id_parent` = '.(int)$this->cms_category->id;
+		$this->_where = ' AND `id_parent` = '.(int)$this->cms_category->id;
 		$this->_select = 'position ';
 
 		parent::__construct();
@@ -71,21 +74,9 @@ class AdminCmsCategoriesControllerCore extends AdminController
 	public function renderList()
 	{
 		$this->initToolbar();
-        $this->toolbar_btn['new']['href'] .= '&amp;id_parent='.(int)Tools::getValue('id_cms_category');
+		if (isset($this->toolbar_btn['new']))
+        	$this->toolbar_btn['new']['href'] .= '&amp;id_parent='.(int)Tools::getValue('id_cms_category');
 		return parent::renderList();
-	}
-
-	/**
-	 * Modifying initial getList method to display position feature (drag and drop)
-	 */
-	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
-	{
-		if ($order_by && $this->context->cookie->__get($this->table.'Orderby'))
-			$order_by = $this->context->cookie->__get($this->table.'Orderby');
-		else
-			$order_by = 'position';
-
-		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 	}
 
 	public function postProcess()

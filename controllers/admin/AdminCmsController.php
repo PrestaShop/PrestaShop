@@ -36,12 +36,12 @@ class AdminCmsControllerCore extends AdminController
 	{
 		$this->bootstrap = true;
 		$this->table = 'cms';
+		$this->list_id = 'cms';
 		$this->className = 'CMS';
 		$this->lang = true;
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
-
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?'), 'icon' => 'icon-trash'));
 		$this->fields_list = array(
 			'id_cms' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
 			'link_rewrite' => array('title' => $this->l('URL')),
@@ -59,10 +59,13 @@ class AdminCmsControllerCore extends AdminController
 		}
 
 		$this->_category = AdminCmsContentController::getCurrentCMSCategory();
+		$this->tpl_list_vars['icon'] = 'icon-folder-close';
+		$this->tpl_list_vars['title'] = sprintf($this->l('Pages in category "%s"'),
+			$this->_category->name[Context::getContext()->employee->id_lang]);
 		$this->_join = '
 		LEFT JOIN `'._DB_PREFIX_.'cms_category` c ON (c.`id_cms_category` = a.`id_cms_category`)';
 		$this->_select = 'a.position ';
-		$this->_filter = 'AND c.id_cms_category = '.(int)$this->_category->id;
+		$this->_where = ' AND c.id_cms_category = '.(int)$this->_category->id;
 
 		parent::__construct();
 	}
@@ -196,6 +199,7 @@ class AdminCmsControllerCore extends AdminController
 
 	public function renderList()
 	{
+		//self::$currentIndex = self::$currentIndex.'&cms';
 		$this->toolbar_title = $this->l('Pages in this category');
 		$this->toolbar_btn['new'] = array(
 			'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;id_cms_category='.(int)$this->id_cms_category.'&amp;token='.$this->token,
@@ -219,28 +223,8 @@ class AdminCmsControllerCore extends AdminController
 		$this->displayListFooter($token);
 	}
 	
-	/**
-	* Modifying initial getList method to display position feature (drag and drop)
-	*/
-	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
-	{
-		if (Tools::isSubmit($this->table.'Orderby') || Tools::isSubmit($this->table.'Orderway'))
-			$this->filter = true;
-		
-		if ($order_by && $this->context->cookie->__get($this->table.'Orderby'))
-			$order_by = $this->context->cookie->__get($this->table.'Orderby');
-		else
-			$order_by = 'position';
-		
-		if (is_null($order_way))
-			$order_way = Tools::getValue($this->table.'Orderway', 'ASC');
-
-		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
-	}
-	
 	public function postProcess()
-	{
-	
+	{	
 		if (Tools::isSubmit('viewcms') && ($id_cms = (int)Tools::getValue('id_cms')) && ($cms = new CMS($id_cms, $this->context->language->id)) && Validate::isLoadedObject($cms))
 		{
 			$redir = $this->context->link->getCMSLink($cms);
