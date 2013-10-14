@@ -9566,41 +9566,51 @@ textarea {
   font-size: 1.5em; }
 
 /* line 1, admin-theme/_admin-login.sass */
-.flip-container {
-  perspective: 1000; }
-
-/* line 4, admin-theme/_admin-login.sass */
-.flip-container:hover .flipper, .flip-container.hover .flipper {
-  transform: rotateY(180deg); }
-
+#login-panel {
+  margin: 0 auto;
+  width: 420px; }
+/* line 5, admin-theme/_admin-login.sass */
+#login-panel .flip-container {
+  height: 500px;
+  -webkit-perspective: 1000px;
+  -moz-perspective: 1000px;
+  -ms-perspective: 1000px;
+  -o-perspective: 1000px;
+  perspective: 1000px; }
 /* line 8, admin-theme/_admin-login.sass */
-.flip-container, .front, .back {
-  width: 420px;
-  height: 420px; }
-
-/* line 14, admin-theme/_admin-login.sass */
-.flipper {
-  transition: 0.6s;
+#login-panel .flip-container.flip .flipper {
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
+  -ms-transform: rotateY(180deg);
+  -o-transform: rotateY(180deg);
+  transform: rotateY(180deg); }
+/* line 13, admin-theme/_admin-login.sass */
+#login-panel .flipper {
+  -webkit-transition-duration: 0.6s;
+  transition-duration: 0.6s;
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  -ms-transform-style: preserve-3d;
+  -o-transform-style: preserve-3d;
   transform-style: preserve-3d;
   position: relative; }
-
-/* line 19, admin-theme/_admin-login.sass */
-.front, .back {
+/* line 18, admin-theme/_admin-login.sass */
+#login-panel .front, #login-panel .back {
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
   backface-visibility: hidden;
   position: absolute;
   top: 0;
   left: 0; }
-
-/* line 26, admin-theme/_admin-login.sass */
-.front {
+/* line 24, admin-theme/_admin-login.sass */
+#login-panel .front {
   z-index: 2; }
-
-/* line 29, admin-theme/_admin-login.sass */
-.back {
-  transform: rotateY(180deg); }
-
-/* line 32, admin-theme/_admin-login.sass */
-.flip-container:hover .flipper, .flip-container.hover .flipper, .flip-container.flip .flipper {
+/* line 27, admin-theme/_admin-login.sass */
+#login-panel .back {
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
+  -ms-transform: rotateY(180deg);
+  -o-transform: rotateY(180deg);
   transform: rotateY(180deg); }
 
 /* line 1, admin-theme/_admin-carrier-wizard.sass */

@@ -1,35 +1,28 @@
-.flip-container
-	perspective: 1000
-
-.flip-container:hover .flipper,
-.flip-container.hover .flipper
-	transform: rotateY(180deg)
-
-.flip-container,
-.front,
-.back
+#login-panel
+	margin: 0 auto
 	width: 420px
-	height: 420px
 
-.flipper
-	transition: 0.6s
-	transform-style: preserve-3d
-	position: relative
+	.flip-container
+		height: 500px
+		@include perspective(1000px)
+		&.flip .flipper
+			@include rotateY(180deg)
 
-.front,
-.back
-	backface-visibility: hidden
-	position: absolute
-	top: 0
-	left: 0
+	.flip-container, .front, .back
 
-.front
-	z-index: 2
+	.flipper
+		@include transition-duration(0.6s)
+		@include transform-style(preserve-3d)
+		position: relative
 
-.back
-	transform: rotateY(180deg)
+	.front, .back
+		@include backface-visibility(hidden)
+		position: absolute
+		top: 0
+		left: 0
 
-.flip-container:hover .flipper,
-.flip-container.hover .flipper,
-.flip-container.flip .flipper
-	transform: rotateY(180deg)
+	.front
+		z-index: 2
+
+	.back
+		@include rotateY(180deg)
