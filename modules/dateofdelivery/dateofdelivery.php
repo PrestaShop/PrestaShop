@@ -88,13 +88,17 @@ class DateOfDelivery extends Module
 
 	public function getContent()
 	{		
-		$this->_html .= '<h2>'.$this->l('Date of delivery configuration').'</h2>';
+		$this->_html .= '';
 		
 		$this->_postProcess();
-		if (Tools::isSubmit('addCarrierRule') OR (Tools::isSubmit('editCarrierRule') AND Tools::isSubmit('id_carrier_rule')))
-			$this->_setCarrierRuleForm();
+		if (Tools::isSubmit('addCarrierRule') OR (Tools::isSubmit('updatedateofdelivery') AND Tools::isSubmit('id_carrier_rule')))
+			$this->_html .= $this->renderAddForm();
 		else
-			$this->_setConfigurationForm();
+		{
+			$this->_html .= $this->renderList();
+			$this->_html .= $this->renderForm();
+		}
+			
 		
 		return $this->_html;
 	}
@@ -212,10 +216,10 @@ class DateOfDelivery extends Module
 			
 			if (!sizeof($errors))
 			{
-				Configuration::updateValue('DOD_EXTRA_TIME_PRODUCT_OOS', (int)(Tools::getValue('extra_time_product_oos')));
-				Configuration::updateValue('DOD_EXTRA_TIME_PREPARATION', (int)(Tools::getValue('extra_time_preparation')));
-				Configuration::updateValue('DOD_PREPARATION_SATURDAY', (int)(Tools::isSubmit('preparation_saturday')));
-				Configuration::updateValue('DOD_PREPARATION_SUNDAY', (int)(Tools::isSubmit('preparation_sunday')));
+				Configuration::updateValue('DOD_EXTRA_TIME_PRODUCT_OOS', (int)Tools::getValue('extra_time_product_oos'));
+				Configuration::updateValue('DOD_EXTRA_TIME_PREPARATION', (int)Tools::getValue('extra_time_preparation'));
+				Configuration::updateValue('DOD_PREPARATION_SATURDAY', (int)Tools::getValue('preparation_day_preparation_saturday'));
+				Configuration::updateValue('DOD_PREPARATION_SUNDAY', (int)Tools::getValue('preparation_day_preparation_sunday'));
 				Configuration::updateValue('DOD_DATE_FORMAT', Tools::getValue('date_format'));
 				$this->_html .= $this->displayConfirmation($this->l('Settings are updated'));
 			}
@@ -229,7 +233,7 @@ class DateOfDelivery extends Module
 				$errors[] = $this->l('Minimum time is invalid');
 			if (!Validate::isUnsignedInt(Tools::getValue('maximal_time')))
 				$errors[] = $this->l('Maximum time is invalid');
-			if (($carrier = new Carrier((int)(Tools::getValue('id_carrier')))) AND !Validate::isLoadedObject($carrier))
+			if (($carrier = new Carrier((int)Tools::getValue('id_carrier'))) AND !Validate::isLoadedObject($carrier))
 				$errors[] = $this->l('Carrier is invalid');
 			if ($this->_isAlreadyDefinedForCarrier((int)($carrier->id), (int)(Tools::getValue('id_carrier_rule', 0))))
 				$errors[] = $this->l('You cannot use this carrier, a rule has already been saved.');
@@ -240,7 +244,7 @@ class DateOfDelivery extends Module
 				{
 					if (Db::getInstance()->execute('
 					INSERT INTO `'._DB_PREFIX_.'dateofdelivery_carrier_rule`(`id_carrier`, `minimal_time`, `maximal_time`, `delivery_saturday`, `delivery_sunday`) 
-					VALUES ('.(int)($carrier->id).', '.(int)(Tools::getValue('minimal_time')).', '.(int)(Tools::getValue('maximal_time')).', '.(int)(Tools::isSubmit('delivery_saturday')).', '.(int)(Tools::isSubmit('delivery_sunday')).')
+					VALUES ('.(int)($carrier->id).', '.(int)Tools::getValue('minimal_time').', '.(int)Tools::getValue('maximal_time').', '.(int)Tools::isSubmit('preparation_day_delivery_saturday').', '.(int)Tools::isSubmit('preparation_day_delivery_sunday').')
 					'))
 						Tools::redirectAdmin(AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&confirmAddCarrierRule');
 					else
@@ -250,10 +254,10 @@ class DateOfDelivery extends Module
 				{
 					if (Db::getInstance()->execute('
 					UPDATE `'._DB_PREFIX_.'dateofdelivery_carrier_rule`  
-					SET `id_carrier` = '.(int)($carrier->id).', `minimal_time` = '.(int)(Tools::getValue('minimal_time')).', `maximal_time` = '.(int)(Tools::getValue('maximal_time')).', `delivery_saturday` = '.(int)(Tools::isSubmit('delivery_saturday')).', `delivery_sunday` = '.(int)(Tools::isSubmit('delivery_sunday')).'
-					WHERE `id_carrier_rule` = '.(int)(Tools::getValue('id_carrier_rule'))
+					SET `id_carrier` = '.(int)($carrier->id).', `minimal_time` = '.(int)Tools::getValue('minimal_time').', `maximal_time` = '.(int)Tools::getValue('maximal_time').', `delivery_saturday` = '.(int)Tools::isSubmit('preparation_day_delivery_saturday').', `delivery_sunday` = '.(int)Tools::isSubmit('preparation_day_delivery_sunday').'
+					WHERE `id_carrier_rule` = '.(int)Tools::getValue('id_carrier_rule')
 					))
-						Tools::redirectAdmin(AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&confirmEditCarrierRule');
+						Tools::redirectAdmin(AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&confirmupdatedateofdelivery');
 					else
 						$this->_html .= $this->displayError($this->l('An error occurred on updating of carrier rule.'));
 				}
@@ -263,171 +267,17 @@ class DateOfDelivery extends Module
 				$this->_html .= $this->displayError(implode('<br />', $errors));
 		}
 		
-		if (Tools::isSubmit('deleteCarrierRule') AND Tools::isSubmit('id_carrier_rule') AND (int)(Tools::getValue('id_carrier_rule')) AND $this->_isCarrierRuleExists((int)(Tools::getValue('id_carrier_rule'))))
+		if (Tools::isSubmit('deletedateofdelivery') AND Tools::isSubmit('id_carrier_rule') AND (int)Tools::getValue('id_carrier_rule') AND $this->_isCarrierRuleExists((int)Tools::getValue('id_carrier_rule')))
 		{
-			$this->_deleteByIdCarrierRule((int)(Tools::getValue('id_carrier_rule')));
+			$this->_deleteByIdCarrierRule((int)Tools::getValue('id_carrier_rule'));
 			$this->_html .= $this->displayConfirmation($this->l('Carrier rule deleted successfully'));
 		}
 		
 		if (Tools::isSubmit('confirmAddCarrierRule'))
 			$this->_html = $this->displayConfirmation($this->l('Carrier rule added successfully'));
 		
-		if (Tools::isSubmit('confirmEditCarrierRule'))
+		if (Tools::isSubmit('confirmupdatedateofdelivery'))
 			$this->_html = $this->displayConfirmation($this->l('Carrier rule updated successfully'));
-	}
-	
-	private function _setConfigurationForm()
-	{
-		$this->_html .= '
-		<fieldset>
-			<legend><img src="'._PS_BASE_URL_.__PS_BASE_URI__.'modules/'.$this->name.'/img/time.png" alt="" /> '.$this->l('Carrier configuration').'</legend>
-			
-			<p><a href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&addCarrierRule"><img src="'._PS_BASE_URL_.__PS_BASE_URI__.'modules/'.$this->name.'/img/time_add.png" alt="" /> '.$this->l('Add a new carrier rule').'</a></p>
-			
-			<h3>'.$this->l('List of carrier rules').'</h3>';
-			
-		$carrier_rules = $this->_getCarrierRulesWithCarrierName();
-		if (sizeof($carrier_rules))
-		{
-			$this->_html .= '<table width="100%" class="table" cellspacing="0" cellpadding="0">
-			<thead>
-			<tr>
-				<th width="30%"><b>'.$this->l('Name of carrier').'</b></th>
-				<th width="40%" class="center"><b>'.$this->l('Delivery between').'</b></th>
-				<th width="10%" class="center"><b>'.$this->l('Saturday delivery').'</b></th>
-				<th width="10%" class="center"><b>'.$this->l('Sunday delivery').'</b></th>
-				<th width="10%" class="center"><b>'.$this->l('Actions').'</b></th>
-			</tr>
-			</thead>
-			<tbody>
-			';
-			
-			foreach ($carrier_rules as $rule)
-			{
-				$this->_html .= '
-				<tr>
-					<td width="30%">'.(!preg_match('/^0$/Ui', $rule['name']) ? htmlentities($rule['name'], ENT_QUOTES, 'UTF-8') : Configuration::get('PS_SHOP_NAME')).'</td>
-					<td width="40%" class="center"><b>'.'</b> '.sprintf($this->l('%1$d day(s) and %2$d day(s)'), $rule['minimal_time'], $rule['maximal_time']).'</td>
-					<td width="10%" class="center">';
-					
-				if ($rule['delivery_saturday'])
-					$this->_html .= '<img src="'._PS_BASE_URL_.__PS_BASE_URI__.'modules/'.$this->name.'/img/tick.png" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />';
-				else
-					$this->_html .= '<img src="'._PS_BASE_URL_.__PS_BASE_URI__.'modules/'.$this->name.'/img/cross.png" alt="'.$this->l('No').'" title="'.$this->l('No').'" />';
-				$this->_html .='
-					</td>
-					<td width="10%" class="center">';
-					
-				if ($rule['delivery_sunday'])
-					$this->_html .= '<img src="'._PS_BASE_URL_.__PS_BASE_URI__.'modules/'.$this->name.'/img/tick.png" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />';
-				else
-					$this->_html .= '<img src="'._PS_BASE_URL_.__PS_BASE_URI__.'modules/'.$this->name.'/img/cross.png" alt="'.$this->l('No').'" title="'.$this->l('No').'" />';
-				$this->_html .= '
-					</td>
-					<td width="10%" class="center">
-						<a href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&editCarrierRule&id_carrier_rule='.(int)($rule['id_carrier_rule']).'" title="'.$this->l('Edit').'"><img src="'._PS_ADMIN_IMG_.'edit.gif" alt="" /></a> 
-						<a href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&deleteCarrierRule&id_carrier_rule='.(int)($rule['id_carrier_rule']).'" title="'.$this->l('Delete').'"><img src="'._PS_ADMIN_IMG_.'delete.gif" alt="" /></a>
-					</td>
-				</tr>';
-			}
-			
-			$this->_html .= '
-			</tbody>
-			</table>';
-		}
-		else
-			$this->_html .= '<p class="center">'.$this->l('No carrier rule').'</p>';
-		
-		$this->_html .= '
-		</fieldset>
-		<br />
-		<form method="post" action="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'">
-			<fieldset style="width:500px;">
-				<legend><img src="'._PS_BASE_URL_.__PS_BASE_URI__.'modules/'.$this->name.'/img/time.png" alt="" /> '.$this->l('More options').'</legend>
-				
-				<label for="extra_time_product_oos">'.$this->l('Extra time when a product is out of stock').'</label>
-				<div class="margin-form">
-					<input type="text" name="extra_time_product_oos" id="extra_time_product_oos" value="'.(int)(Tools::getValue('extra_time_product_oos', Configuration::get('DOD_EXTRA_TIME_PRODUCT_OOS'))).'" size="2" /> '.$this->l('day(s)').'
-				</div>
-				<div class="clear"></div>
-				<label for="extra_time_preparation">'.$this->l('Extra time for preparation of the order').'</label>
-				<div class="margin-form">
-					<input type="text" name="extra_time_preparation" id="extra_time_preparation" value="'.(int)(Tools::getValue('extra_time_preparation', Configuration::get('DOD_EXTRA_TIME_PREPARATION'))).'" size="2" /> '.$this->l('day(s)').'
-				</div>
-				<div class="clear"></div>
-				<label>'.$this->l('Preparation option').'</label>
-				<div class="margin-form">
-					<ul style="list-style-type:none;margin:0;padding:0;">
-						<li><input type="checkbox" name="preparation_saturday" id="preparation_saturday" '.(Configuration::get('DOD_PREPARATION_SATURDAY') ? 'checked="checked"' : '').' /> <label class="t" for="preparation_saturday">'.$this->l('Saturday preparation').'</label></li>
-						<li><input type="checkbox" name="preparation_sunday" id="preparation_sunday" '.(Configuration::get('DOD_PREPARATION_SUNDAY') ? 'checked="checked"' : '').' /> <label class="t" for="preparation_sunday">'.$this->l('Sunday preparation').'</label></li>
-					</ul>
-				</div>
-				<label for="date_format">'.$this->l('Date format:').'</label>
-				<div class="margin-form">
-					<input type="text" name="date_format" id="date_format" value="'.htmlentities(Tools::getValue('date_format', Configuration::get('DOD_DATE_FORMAT')), ENT_QUOTES, 'UTF-8').'" size="10" />
-					<p>'.$this->l('You can see all parameters available at:').' <a href="http://www.php.net/manual/en/function.date.php" target="_blank">http://www.php.net/manual/en/function.date.php</a></p>
-				</div>
-				<p class="center"><input type="submit" class="button" name="submitMoreOptions" value="'.$this->l('Save').'" /></p>
-			</fieldset>
-		</form>
-		';
-	}
-	
-	private function _setCarrierRuleForm()
-	{
-		$carriers = Carrier::getCarriers($this->context->language->id, true, false, false, null, Carrier::ALL_CARRIERS);
-		if (Tools::isSubmit('editCarrierRule') AND $this->_isCarrierRuleExists(Tools::getValue('id_carrier_rule')))
-			$carrier_rule = $this->_getCarrierRule(Tools::getValue('id_carrier_rule'));
-		
-		$this->_html .= '
-		<form method="post" action="'.$_SERVER['REQUEST_URI'].'">
-		';
-		
-		if (isset($carrier_rule) AND $carrier_rule['id_carrier_rule'])
-			$this->_html .= '<input type="hidden" name="id_carrier_rule" value="'.(int)($carrier_rule['id_carrier_rule']).'" />';
-		$this->_html .= '
-		<fieldset>
-		';
-		
-		if (Tools::isSubmit('addCarrierRule'))
-			$this->_html .= '<legend><img src="'._PS_BASE_URL_.__PS_BASE_URI__.'modules/'.$this->name.'/img/time_add.png" alt="" /> '.$this->l('New carrier rule').'</legend>';
-		elseif (Tools::isSubmit('editCarrierRule'))
-			$this->_html .= '<legend><img src="'._PS_BASE_URL_.__PS_BASE_URI__.'modules/'.$this->name.'/img/time_add.png" alt="" /> '.$this->l('Edit carrier rule').'</legend>';
-		
-		$this->_html .= '
-			<label for="id_carrier">'.$this->l('Carrier:').'</label>
-			<div class="margin-form">
-				<select name="id_carrier" id="id_carrier">
-					<option>'.$this->l('Choose').'</option>';
-		foreach ($carriers as $carrier)
-			$this->_html .= '<option value="'.$carrier['id_carrier'].'" '.((Tools::isSubmit('id_carrier') AND Tools::getValue('id_carrier') == $carrier['id_carrier']) ? 'selected="selected"' : ((isset($carrier_rule) AND $carrier_rule['id_carrier'] == $carrier['id_carrier']) ? 'selected="selected"' : '')).'>'.htmlentities($carrier['name'].' | '.$carrier['delay'], ENT_QUOTES, 'UTF-8').'</option>';
-		
-		$this->_html .= '
-				</select>
-			</div>
-			
-			<label>'.$this->l('Delivery between').'</label>
-			<div class="margin-form">
-				<input type="text" name="minimal_time" value="'.htmlentities(Tools::getValue('minimal_time', ((isset($carrier_rule) AND $carrier_rule['minimal_time']) ? $carrier_rule['minimal_time'] : 0)), ENT_QUOTES, 'UTF-8').'" size="2" /> '.$this->l('day(s) and').' 
-				<input type="text" name="maximal_time" value="'.htmlentities(Tools::getValue('maximal_time', ((isset($carrier_rule) AND $carrier_rule['maximal_time']) ? $carrier_rule['maximal_time'] : 0)), ENT_QUOTES, 'UTF-8').'" size="2" /> '.$this->l('day(s)').'
-			</div>
-			
-			<label>'.$this->l('Delivery options:').'</label>
-			<div class="margin-form">
-				<ul style="list-style-type:none;margin:0;padding:0;">
-					<li><input type="checkbox" name="delivery_saturday" id="delivery_saturday" '.(Tools::isSubmit('delivery_saturday') ? 'checked="checked"' : ((isset($carrier_rule) AND $carrier_rule['delivery_saturday']) ? 'checked="checked"' : '')).' /> <label class="t" for="delivery_saturday">'.$this->l('Saturday delivery').'</label></li>
-					<li><input type="checkbox" name="delivery_sunday" id="delivery_sunday" '.(Tools::isSubmit('delivery_sunday') ? 'checked="checked"' : ((isset($carrier_rule) AND $carrier_rule['delivery_sunday']) ? 'checked="checked"' : '')).' /> <label class="t" for="delivery_sunday">'.$this->l('Sunday delivery').'</label></li>
-				</ul>
-			</div>
-			
-			<p class="center"><input type="submit" class="button" name="submitCarrierRule" value="'.$this->l('Save').'" /></p>
-			<p class="center"><a href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'">'.$this->l('Cancel').'</a></p>
-		';
-		
-		$this->_html .= '
-		</fieldset>
-		</form>
-		';
 	}
 	
 	private function _getCarrierRulesWithCarrierName()
@@ -595,5 +445,266 @@ class DateOfDelivery extends Module
 				$date_maximal_time
 			)
 		);
+	}
+	
+	public function renderForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Settings'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'text',
+						'label' => $this->l('Extra time when a product is out of stock'),
+						'name' => 'extra_time_product_oos',
+						'suffix' => $this->l('day(s)'),
+						),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Extra time for preparation of the order'),
+						'name' => 'extra_time_preparation',
+						'suffix' => $this->l('day(s)'),
+						),
+					array(
+						'type' => 'checkbox',
+						'label' => $this->l('Preparation option'),
+						'name' => 'preparation_day',
+						'values' => array(
+							'id' => 'id',
+							'name' => 'name',
+							'query' => array(
+								array(
+									'id' => 'preparation_saturday',
+									'name' => $this->l('Saturday preparation'),
+									'val' => 1
+								),
+								array(
+									'id' => 'preparation_sunday',
+									'name' => $this->l('Sunday preparation'),
+									'val' => 1
+								),
+							),
+						)
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Date format:'),
+						'name' => 'date_format',
+						'desc' => $this->l('You can see all parameters available at:').' <a href="http://www.php.net/manual/en/function.date.php">http://www.php.net/manual/en/function.date.php</a>',
+						),
+				),
+			'submit' => array(
+				'title' => $this->l('Save'),
+				'class' => 'btn btn-primary')
+			),
+		);
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$this->fields_form = array();
+
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitMoreOptions';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function renderAddForm()
+	{
+		$carriers = Carrier::getCarriers($this->context->language->id, true, false, false, null, Carrier::ALL_CARRIERS);
+
+		foreach ($carriers as $key => $val)
+			$carriers[$key]['name'] = (!$val['name'] ? Configuration::get('PS_SHOP_NAME') : $val['name']);
+		
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Settings'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+						array(
+						'type' => 'select',
+						'label' => $this->l('Carrier :'),
+						'name' => 'id_carrier',
+						'options' => array(
+							'query' => $carriers,
+							'id' => 'id_carrier',
+							'name' => 'name'
+						)
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Delivery between'),
+						'name' => 'minimal_time',
+						'suffix' => $this->l('day(s)'),
+						),
+					array(
+						'type' => 'text',
+						'label' => $this->l(''),
+						'name' => 'maximal_time',
+						'suffix' => $this->l('day(s)'),
+						),
+					array(
+						'type' => 'checkbox',
+						'label' => $this->l('Preparation option'),
+						'name' => 'preparation_day',
+						'values' => array(
+							'id' => 'id',
+							'name' => 'name',
+							'query' => array(
+								array(
+									'id' => 'delivery_saturday',
+									'name' => $this->l('Saturday preparation'),
+									'val' => 1
+								),
+								array(
+									'id' => 'delivery_sunday',
+									'name' => $this->l('Sunday preparation'),
+									'val' => 1
+								),
+							),
+						)
+					)
+				),
+			'submit' => array(
+				'title' => $this->l('Save'),
+				'class' => 'btn btn-primary',
+				'name' => 'submitCarrierRule',
+				)
+			),
+		);
+		
+		if (Tools::getValue('id_carrier_rule') && $this->_isCarrierRuleExists(Tools::getValue('id_carrier_rule')))
+			$fields_form['form']['input'][] = array('type' => 'hidden', 'name' => 'id_carrier_rule');
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$this->fields_form = array();
+
+		$helper->identifier = $this->identifier;
+		
+		if (Tools::getValue('id_carrier_rule'))
+			$helper->submit_action = 'updatedateofdelivery';
+		else
+			$helper->submit_action = 'addCarrierRule';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getCarrierRuleFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function getConfigFieldsValues()
+	{
+		return array(
+			'extra_time_product_oos' => Tools::getValue('extra_time_product_oos', Configuration::get('DOD_EXTRA_TIME_PRODUCT_OOS')),
+			'extra_time_preparation' => Tools::getValue('extra_time_preparation', Configuration::get('DOD_EXTRA_TIME_PREPARATION')),
+			'preparation_day_preparation_saturday' => Tools::getValue('preparation_day_preparation_saturday', Configuration::get('DOD_PREPARATION_SATURDAY')),
+			'preparation_day_preparation_sunday' => Tools::getValue('preparation_day_preparation_sunday', Configuration::get('DOD_PREPARATION_SUNDAY')),
+			'date_format' => Tools::getValue('date_format', Configuration::get('DOD_DATE_FORMAT')),
+			'id_carrier' => Tools::getValue('id_carrier'),
+		);
+	}
+	
+	public function getCarrierRuleFieldsValues()
+	{
+		$fields = array(
+			'id_carrier_rule' => Tools::getValue('id_carrier_rule'),
+			'id_carrier' => Tools::getValue('id_carrier'),
+			'minimal_time' => Tools::getValue('minimal_time'),
+			'maximal_time' => Tools::getValue('maximal_time'),
+			'delivery_saturday' => Tools::getValue('delivery_saturday'),
+			'delivery_sunday' => Tools::getValue('delivery_sunday'),
+			);
+		
+		if (Tools::isSubmit('updatedateofdelivery') AND $this->_isCarrierRuleExists(Tools::getValue('id_carrier_rule')))
+		{
+			$carrier_rule = $this->_getCarrierRule(Tools::getValue('id_carrier_rule'));
+
+			$fields['id_carrier_rule'] = Tools::getValue('id_carrier_rule', $carrier_rule['id_carrier_rule']);
+			$fields['id_carrier'] = Tools::getValue('id_carrier', $carrier_rule['id_carrier']);
+			$fields['minimal_time'] = Tools::getValue('minimal_time', $carrier_rule['minimal_time']);
+			$fields['maximal_time'] = Tools::getValue('maximal_time', $carrier_rule['maximal_time']);
+			$fields['preparation_day_delivery_saturday'] = Tools::getValue('preparation_day_delivery_saturday', $carrier_rule['delivery_saturday']);
+			$fields['preparation_day_delivery_sunday'] = Tools::getValue('preparation_day_delivery_sunday', $carrier_rule['delivery_sunday']);
+		}
+
+		return $fields;
+	}
+	
+	public function renderList()
+	{
+		
+		$add_url = $this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&addCarrierRule=1';
+		
+		$fields_list = array(
+			'name' => array(
+				'title' => $this->l('Name of carrier'),
+				'type' => 'text',
+			),
+			'delivery_between' => array(
+				'title' => $this->l('Delivery between'),
+				'type' => 'text',
+			),
+			'delivery_saturday' => array(
+				'title' => $this->l('Saturday delivery'),
+				'type' => 'bool',
+				'align' => 'center',
+				'active' => 'status',
+			),
+			'delivery_sunday' => array(
+				'title' => $this->l('Sunday delivery'),
+				'type' => 'bool',
+				'align' => 'center',
+				'active' => 'status',
+			),
+		);
+		$list = $this->_getCarrierRulesWithCarrierName();
+		
+		foreach ($list as $key => $val)
+		{
+			if (!$val['name'])
+				$list[$key]['name'] = Configuration::get('PS_SHOP_NAME');
+			$list[$key]['delivery_between'] = sprintf($this->l('%1$d day(s) and %2$d day(s)'), $val['minimal_time'], $val['maximal_time']);
+		}
+		
+		$helper = new HelperList();
+		$helper->shopLinkType = '';
+		$helper->simple_header = true;
+		$helper->identifier = 'id_carrier_rule';
+		$helper->actions = array('edit', 'delete');
+		$helper->show_toolbar = false;
+
+		$helper->title = $this->l('Link list');
+		$helper->table = $this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
+		
+		$this->context->smarty->assign(array('add_url' => $add_url));
+		
+		return $this->display(__FILE__, 'button.tpl').$helper->generateList($list, $fields_list).$this->display(__FILE__, 'button.tpl');
 	}
 }
