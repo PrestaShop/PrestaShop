@@ -24,7 +24,11 @@
 	// Picker object
 	var Datepicker = function(element, options){
 		this.element = $(element);
-		this.format = DPGlobal.parseFormat(options.format||this.element.data('date-format')||'mm/dd/yyyy');
+
+		if (typeof options.dates != 'undefined')
+			DPGlobal.dates = options.dates;
+
+		this.format = DPGlobal.parseFormat(options.format||this.element.data('date-format')||'Y-m-d');
 		this.picker = $(DPGlobal.template).appendTo(this.element).show()
 		.on({
 			click: $.proxy(this.click, this),
@@ -283,7 +287,7 @@
 								$(".start-selected").removeClass("start-selected");
 								target.addClass("start-selected");
 								start = target.data("val");
-								$("#date-start").val(start);
+								$("#date-start").val(DPGlobal.formatDate(new Date(start), DPGlobal.parseFormat('Y-m-d')));
 								if(!switched) {click = 1;} else {click = 2;}
 								if(!switched){
 									$("#date-end").val(null).focus().addClass("input-selected");
@@ -296,7 +300,7 @@
 								$(".end-selected").removeClass("end-selected");
 								target.addClass("end-selected");
 								end = target.data("val");
-								$("#date-end").val(end);
+								$("#date-end").val(DPGlobal.formatDate(new Date(end), DPGlobal.parseFormat('Y-m-d')));
 								click = 2;
 								$("#date-end").removeClass("input-selected").addClass("input-complete");
 								//this.range();
@@ -353,14 +357,14 @@
 				//switch
 				if (start && over < start ){
 					end = start;
-					$("#date-end").val(start).removeClass("input-selected");
+					$("#date-end").val(DPGlobal.formatDate(new Date(start), DPGlobal.parseFormat('Y-m-d'))).removeClass("input-selected");
 					$("#date-start").val(null).focus().addClass("input-selected");
 					$("#datepicker .start-selected").removeClass("start-selected").addClass("end-selected");
 					start = null;
 					switched = true;
 				} else if (end && over > end ){
 					start = end;
-					$("#date-start").val(end).removeClass("input-selected");
+					$("#date-start").val(DPGlobal.formatDate(new Date(end), DPGlobal.parseFormat('Y-m-d'))).removeClass("input-selected");
 					$("#date-end").val(null).focus().addClass("input-selected");
 					$("#datepicker .end-selected").removeClass("end-selected").addClass("start-selected");
 					end = null;
@@ -485,10 +489,12 @@
 							date.setMonth(val - 1);
 							break;
 						case 'yy':
+						case 'y':
 							year = 2000 + val;
 							date.setFullYear(2000 + val);
 							break;
 						case 'yyyy':
+						case 'Y':
 							year = val;
 							date.setFullYear(val);
 							break;
@@ -503,10 +509,12 @@
 				d: date.getDate(),
 				m: date.getMonth() + 1,
 				yy: date.getFullYear().toString().substring(2),
-				yyyy: date.getFullYear()
+				y: date.getFullYear().toString().substring(2),
+				yyyy: date.getFullYear(),
+				Y: date.getFullYear()
 			};
-			val.dd = (val.d < 10 ? '0' : '') + val.d;
-			val.mm = (val.m < 10 ? '0' : '') + val.m;
+			val.d = (val.d < 10 ? '0' : '') + val.d;
+			val.m = (val.m < 10 ? '0' : '') + val.m;
 			var date = [];
 			for (var i=0, cnt = format.parts.length; i < cnt; i++) {
 				date.push(val[format.parts[i]]);
