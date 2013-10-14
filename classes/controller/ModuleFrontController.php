@@ -60,7 +60,7 @@ class ModuleFrontControllerCore extends FrontController
 		elseif (Tools::file_exists_cache($this->getTemplatePath().$template))
 			$this->template = $this->getTemplatePath().$template;
 		else
-			throw new PrestaShopException("Template '$template'' not found");
+			throw new PrestaShopException("Template '$template' not found");
 	}
 
 	/**

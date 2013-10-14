@@ -360,7 +360,6 @@
 									{/if}
 								{elseif $input.type == 'radio'}
 									{foreach $input.values as $value}
-
 										<div class="radio {if isset($input.class)}"{$input.class}"{/if}">
 											<label>
 											<input type="radio"	name="{$input.name}" id="{$value.id}" value="{$value.value|escape:'htmlall':'UTF-8'}"

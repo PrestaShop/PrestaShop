@@ -206,7 +206,7 @@ class AdminGroupsControllerCore extends AdminController
 		$this->list_id = 'customer_group';
 		$this->actions = array();
 		$this->bulk_actions = false;
-		$this->no_link = true;
+		$this->list_no_link = true;
 		$this->fields_list = (array(
 			'id_customer' => array('title' => $this->l('ID'), 'align' => 'center', 'filter_key' => 'c!id_customer', 'class' => 'fixed-width-xs'),
 			'id_gender' => array('title' => $this->l('Titles'), 'icon' => $genders_icon, 'list' => $genders),
