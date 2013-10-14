@@ -1157,7 +1157,7 @@ class FrontControllerCore extends Controller
 	
 	protected function addColorsToProductList(&$products)
 	{
-		if (!count($products))
+		if (!is_array($products) || !count($products))
 			return;
 
 		$products_need_cache = array();
