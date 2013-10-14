@@ -237,16 +237,16 @@ class AdminBackupControllerCore extends AdminController
 			$date = date('Y-m-d H:i:s', $timestamp);
 			$age = time() - $timestamp;
 			if ($age < 3600)
-				$age = '< 1 '.$this->l('Hour');
+				$age = '< 1 '.$this->l('Hour', 'AdminTab', false, false);
 			else if ($age < 86400)
 			{
 				$age = floor($age / 3600);
-				$age = $age.' '.(($age == 1) ? $this->l('Hour') : $this->l('Hours'));
+				$age = $age.' '.(($age == 1) ? $this->l('Hour', 'AdminTab', false, false) : $this->l('Hours', 'AdminTab', false, false));
 			}
 			else
 			{
 				$age = floor($age / 86400);
-				$age = $age.' '.(($age == 1) ? $this->l('Day') : $this->l('Days'));
+				$age = $age.' '.(($age == 1) ? $this->l('Day') : $this->l('Days', 'AdminTab', false, false));
 			}
 			$size = filesize(_PS_ADMIN_DIR_.'/backups/'.$file);
 			$this->_list[] = array(

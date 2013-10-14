@@ -76,6 +76,8 @@
 	</fieldset>
 </div>
 <div class="col-lg-12">
+	<h2>{l s='Members of this customer group'}</h2>
+	<p>{l s='Limited to the first 100 customers.'} {l s='Please use filters to narrow your search.'}</p>
 	{$customerList}
 </div>
 {/block}

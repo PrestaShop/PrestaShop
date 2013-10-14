@@ -13,6 +13,9 @@
     <hook id="actionValidateOrder" live_edit="0">
       <name>actionValidateOrder</name><title>New orders</title><description/>
     </hook>
+    <hook id="displayMaintenance" live_edit="0">
+      <name>displayMaintenance</name><title>Maintenance Page</title><description>This hook displays new elements on the maintenance page</description>
+    </hook>
     <hook id="actionPaymentConfirmation" live_edit="0">
       <name>actionPaymentConfirmation</name><title>Payment confirmation</title><description>This hook displays new elements after the payment is validated</description>
     </hook>

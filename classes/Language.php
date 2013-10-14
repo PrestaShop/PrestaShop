@@ -737,7 +737,7 @@ class LanguageCore extends ObjectModel
 			'/en-default-'.ImageType::getFormatedName('small').'.jpg',
 			'/en-default-'.ImageType::getFormatedName('scene').'.jpg'
 		);
-		
+
 		foreach (array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_) as $to)
 			foreach ($files_copy as $file)
 				@copy(dirname(__FILE__).'/../img/l'.$file, $to.str_replace('/en', '/'.$iso_code, $file));

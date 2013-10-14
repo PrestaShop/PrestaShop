@@ -519,6 +519,17 @@ class ProductCore extends ObjectModel
 			if (!Validate::isLoadedObject($customer))
 				die(Tools::displayError());
 			self::$_taxCalculationMethod = Group::getPriceDisplayMethod((int)$customer->id_default_group);
+			$cur_cart = Context::getContext()->cart;
+			$id_address = 0;
+			if (Validate::isLoadedObject($cur_cart))
+				$id_address = (int)$cur_cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+			$address_infos = Address::getCountryAndState($id_address);
+
+			if (self::$_taxCalculationMethod != PS_TAX_EXC
+				&& !empty($address_infos['vat_number'])
+				&& $address_infos['id_country'] != Configuration::get('VATNUMBER_COUNTRY')
+				&& Configuration::get('VATNUMBER_MANAGEMENT'))
+				self::$_taxCalculationMethod = PS_TAX_EXC;
 		}
 		else
 			self::$_taxCalculationMethod = Group::getPriceDisplayMethod(Group::getCurrent()->id);
@@ -1368,8 +1379,8 @@ class ProductCore extends ObjectModel
 			}
 
 			$product_supplier->product_supplier_reference = pSQL($supplier_reference);
-			$product_supplier->product_supplier_price_te = (float)$price;
-			$product_supplier->id_currency = (int)$id_currency;
+			$product_supplier->product_supplier_price_te = !is_null($price) ? (float)$price : (float)$product_supplier->product_supplier_price_te;
+			$product_supplier->id_currency = !is_null($id_currency) ? (int)$id_currency : (int)$product_supplier->id_currency;
 			$product_supplier->save();
 		}
 	}
@@ -2509,7 +2520,7 @@ class ProductCore extends ObjectModel
 		$id_state = 0;
 		$zipcode = 0;
 
-		if (!$id_address)
+		if (!$id_address && Validate::isLoadedObject($cur_cart))
 			$id_address = $cur_cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
 
 		if ($id_address)
@@ -2720,8 +2731,7 @@ class ProductCore extends ObjectModel
 		if ($use_group_reduction)
 		{
 			$reduction_from_category = GroupReduction::getValueForProduct($id_product, $id_group);
-
-			if (!empty($reduction_from_category) && (float)$reduction_from_category == 0)
+			if ($reduction_from_category !== false)
 				$price -= $price * (float)$reduction_from_category;
 			else // apply group reduction if there is no group reduction for this category
 				$price *= ((100 - Group::getReductionByIdGroup($id_group)) / 100);
@@ -3193,8 +3203,9 @@ class ProductCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (p.`id_manufacturer`= m.`id_manufacturer`)
 				'.Product::sqlStock('p', 0).'
 				WHERE `id_product_1` = '.(int)$this->id.
-				($active ? ' AND product_shop.`active` = 1' : '').'
+				($active ? ' AND product_shop.`active` = 1 AND product_shop.`visibility` != \'none\'' : '').'
 				GROUP BY product_shop.id_product';
+
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
 			return false;
 		foreach ($result as &$row)
@@ -3346,7 +3357,7 @@ class ProductCore extends ObjectModel
 			$context = Context::getContext();
 
 		$sql = new DbQuery();
-		$sql->select('p.`id_product`, pl.`name`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`, product_shop.advanced_stock_management, p.`customizable`');
+		$sql->select('p.`id_product`, pl.`name`, p.`ean13`, p.`upc`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`, product_shop.advanced_stock_management, p.`customizable`');
 		$sql->from('category_product', 'cp');
 		$sql->leftJoin('product', 'p', 'p.`id_product` = cp.`id_product`');
 		$sql->join(Shop::addSqlAssociation('product', 'p'));
@@ -3357,6 +3368,8 @@ class ProductCore extends ObjectModel
 		$sql->leftJoin('manufacturer', 'm', 'm.`id_manufacturer` = p.`id_manufacturer`');
 
 		$where = 'pl.`name` LIKE \'%'.pSQL($query).'%\'
+		OR p.`ean13` LIKE \'%'.pSQL($query).'%\'
+		OR p.`upc` LIKE \'%'.pSQL($query).'%\'
 		OR p.`reference` LIKE \'%'.pSQL($query).'%\'
 		OR p.`supplier_reference` LIKE \'%'.pSQL($query).'%\'
 		OR  p.`id_product` IN (SELECT id_product FROM '._DB_PREFIX_.'product_supplier sp WHERE `product_supplier_reference` LIKE \'%'.pSQL($query).'%\')';

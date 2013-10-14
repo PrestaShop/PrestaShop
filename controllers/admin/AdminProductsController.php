@@ -630,7 +630,7 @@ class AdminProductsControllerCore extends AdminController
 					{
 						$id_category = (int)Tools::getValue('id_category');
 						$category_url = empty($id_category) ? '' : '&id_category='.(int)$id_category;
-						Logger::addLog(sprintf($this->l('%s deletion'), $this->className), 1, null, $this->className, (int)$object->id, true, (int)$this->context->employee->id);
+						Logger::addLog(sprintf($this->l('%s deletion', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$object->id, true, (int)$this->context->employee->id);
 						$this->redirect_after = self::$currentIndex.'&conf=1&token='.$this->token.$category_url;
 					}
 					else
@@ -729,7 +729,7 @@ class AdminProductsControllerCore extends AdminController
 							if (!count($this->errors))
 							{
 								if ($product->delete())
-									Logger::addLog(sprintf($this->l('%s deletion'), $this->className), 1, null, $this->className, (int)$product->id, true, (int)$this->context->employee->id);
+									Logger::addLog(sprintf($this->l('%s deletion', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$product->id, true, (int)$this->context->employee->id);
 								else
 									$success = false;
 							}
@@ -1714,7 +1714,7 @@ class AdminProductsControllerCore extends AdminController
 
 		if ($this->object->add())
 		{
-			Logger::addLog(sprintf($this->l('%s addition'), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
+			Logger::addLog(sprintf($this->l('%s addition', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
 			$this->addCarriers();
 			$this->updateAccessories($this->object);
 			$this->updatePackItems($this->object);
@@ -1836,7 +1836,7 @@ class AdminProductsControllerCore extends AdminController
 
 				if ($object->update())
 				{
-					Logger::addLog(sprintf($this->l('%s edition'), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
+					Logger::addLog(sprintf($this->l('%s edition', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
 					if (in_array($this->context->shop->getContext(), array(Shop::CONTEXT_SHOP, Shop::CONTEXT_ALL)))
 					{
 						if ($this->isTabSubmitted('Shipping'))
