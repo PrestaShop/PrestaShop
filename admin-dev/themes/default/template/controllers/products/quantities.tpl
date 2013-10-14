@@ -42,11 +42,8 @@
 
 			{if $show_quantities == true}
 				<div class="alert alert-warning" id="available_quantity_ajax_msg" style="display: none;"></div>
-				<div class="error" id="available_quantity_ajax_error_msg" style="display: none;"></div>
-				<div class="alert" id="available_quantity_ajax_success_msg" style="display: none;"></div>
-
-				
-					
+				<div class="alert alert-danger" id="available_quantity_ajax_error_msg" style="display: none;"></div>
+				<div class="alert alert-success" id="available_quantity_ajax_success_msg" style="display: none;"></div>					
 				<div {if $product->is_virtual || $product->cache_is_pack}style="display:none;"{/if} class="row stockForVirtualProduct">
 					<div class="col-lg-12">
 						<p class="checkbox">
@@ -116,8 +113,8 @@
 					</colgroup>
 					<thead>
 						<tr>
-							<th>{l s='Quantity'}</th>
-							<th>{l s='Designation'}</th>
+							<th><span class="title_box">{l s='Quantity'}</span></th>
+							<th><span class="title_box">{l s='Designation'}</span></th>
 						</tr>
 					</thead>
 					{foreach from=$attributes item=attribute}

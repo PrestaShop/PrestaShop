@@ -36,9 +36,9 @@
 	<table class="table">
 		<thead>
 			<tr>
-				<th>{l s='Feature'}</th>
-				<th>{l s='Pre-defined value'}</th>
-				<th><u>{l s='or'}</u> {l s='Customized value'}</th>
+				<th><span class="title_box">{l s='Feature'}</span></th>
+				<th><span class="title_box">{l s='Pre-defined value'}</span></th>
+				<th><span class="title_box"><u>{l s='or'}</u> {l s='Customized value'}</span></th>
 			</tr>
 		</thead>
 

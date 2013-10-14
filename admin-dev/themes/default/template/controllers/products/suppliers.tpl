@@ -38,9 +38,9 @@
 	<table class="table">
 		<thead>
 			<tr>
-				<th>{l s='Selected'}</th>
-				<th>{l s='Supplier Name'}</th>
-				<th>{l s='Default'}</th>
+				<th class="fixed-width-xs"><span class="title_box">{l s='Selected'}</span></th>
+				<th><span class="title_box">{l s='Supplier Name'}</span></th>
+				<th class="fixed-width-xs"><span class="title_box">{l s='Default'}</span></th>
 			</tr>
 		</thead>
 		<tbody>
