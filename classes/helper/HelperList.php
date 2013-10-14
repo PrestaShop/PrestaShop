@@ -453,10 +453,10 @@ class HelperListCore extends Helper
 			self::$cache_lang['Delete'] = $this->l('Delete', 'Helper');
 
 		if (!array_key_exists('DeleteItem', self::$cache_lang))
-			self::$cache_lang['DeleteItem'] = $this->l('Delete selected item?', 'Helper');
+			self::$cache_lang['DeleteItem'] = $this->l('Delete selected item?', 'Helper', false, false);
 
 		if (!array_key_exists('Name', self::$cache_lang))
-			self::$cache_lang['Name'] = $this->l('Name:', 'Helper');
+			self::$cache_lang['Name'] = $this->l('Name:', 'Helper', false, false);
 
 		if (!is_null($name))
 			$name = '\n\n'.self::$cache_lang['Name'].' '.$name;

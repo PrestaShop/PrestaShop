@@ -188,8 +188,9 @@ class CurrencyCore extends ObjectModel
 			4 => array('left' => '', 'right' => &$formated_strings['right']),
 			5 => array('left' => '', 'right' => &$formated_strings['right'])
 		);
-
-		return ($formats[$this->format][$side]);
+		if (isset($formats[$this->format][$side]))
+			return ($formats[$this->format][$side]);
+		return $this->sign;
 	}
 
 	/**

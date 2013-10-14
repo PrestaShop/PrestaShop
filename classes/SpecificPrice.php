@@ -169,7 +169,8 @@ class SpecificPriceCore extends ObjectModel
 
 	    $priority = SpecificPrice::getPriority($id_product);
 	    foreach (array_reverse($priority) as $k => $field)
-			$select .= ' IF (`'.bqSQL($field).'` = '.(int)$$field.', '.pow(2, $k + 1).', 0) + ';
+			if (!empty($field))
+				$select .= ' IF (`'.bqSQL($field).'` = '.(int)$$field.', '.pow(2, $k + 1).', 0) + ';
 
 	    return rtrim($select, ' +').') AS `score`';
 	}
@@ -228,7 +229,7 @@ class SpecificPriceCore extends ObjectModel
 					(`to` = \'0000-00-00 00:00:00\' OR \''.$now.'\' <= `to`)
 				)
 				AND id_cart IN (0, '.(int)$id_cart.')'.
-				(($real_quantity != 0 && !Configuration::get('PS_QTY_DISCOUNT_ON_COMBINATION')) ? ' AND IF(`from_quantity` > 1, `from_quantity`, 0) <= IF(id_product_attribute=0,'.(int)$quantity.' ,'.(int)$real_quantity.')' : 'AND `from_quantity` <= '.(int)$real_quantity).'
+				(($real_quantity != 0 && !Configuration::get('PS_QTY_DISCOUNT_ON_COMBINATION')) ? ' AND IF(`from_quantity` > 1, `from_quantity`, 0) <= IF(id_product_attribute=0,'.(int)$quantity.' ,'.(int)$real_quantity.')' : 'AND `from_quantity` <= '.max(1, (int)$real_quantity)).'
 				ORDER BY `id_product_attribute` DESC, `from_quantity` DESC, `id_specific_price_rule` ASC, `score` DESC');
 		}
 		return self::$_specificPriceCache[$key];
@@ -301,7 +302,7 @@ class SpecificPriceCore extends ObjectModel
 			if (!isset($last_quantity[(int)$specific_price['id_product_attribute']]))
 				 $last_quantity[(int)$specific_price['id_product_attribute']] = $specific_price['from_quantity'];
 			elseif ($last_quantity[(int)$specific_price['id_product_attribute']] == $specific_price['from_quantity'])
-		        break;
+		        continue;
 
 			$last_quantity[(int)$specific_price['id_product_attribute']] = $specific_price['from_quantity'];
             if ($specific_price['from_quantity'] > 1)

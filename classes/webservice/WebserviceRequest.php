@@ -1187,7 +1187,8 @@ class WebserviceRequestCore
 				else
 				{
 					$object = new $this->resourceConfiguration['retrieveData']['className']();
-					if ($object->isMultiShopField($this->resourceConfiguration['fields'][$fieldName]['sqlId']))
+					$assoc = Shop::getAssoTable($this->resourceConfiguration['retrieveData']['table']);
+					if ($assoc !== false && $assoc['type'] == 'shop' && ($object->isMultiShopField($this->resourceConfiguration['fields'][$fieldName]['sqlId']) || $fieldName == 'id'))
 						$table_alias = 'multi_shop_'.$this->resourceConfiguration['retrieveData']['table'];
 					else
 						$table_alias = '';

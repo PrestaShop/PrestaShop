@@ -1,0 +1,28 @@
+#login-panel
+	margin: 0 auto
+	width: 420px
+
+	.flip-container
+		height: 500px
+		@include perspective(1000px)
+		&.flip .flipper
+			@include rotateY(180deg)
+
+	.flip-container, .front, .back
+
+	.flipper
+		@include transition-duration(0.6s)
+		@include transform-style(preserve-3d)
+		position: relative
+
+	.front, .back
+		@include backface-visibility(hidden)
+		position: absolute
+		top: 0
+		left: 0
+
+	.front
+		z-index: 2
+
+	.back
+		@include rotateY(180deg)

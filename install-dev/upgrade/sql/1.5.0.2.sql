@@ -345,11 +345,11 @@ INSERT INTO `PREFIX_order_invoice` (`id_order`, `number`, `total_discount_tax_ex
 ALTER TABLE `PREFIX_tab` ADD `active` TINYINT(1) UNSIGNED NOT NULL DEFAULT '1';
 
 UPDATE `PREFIX_order_detail` od
-SET od.`id_order_invoice` = (
+SET od.`id_order_invoice` = IFNULL((
 	SELECT oi.`id_order_invoice`
 	FROM `PREFIX_order_invoice` oi
 	WHERE oi.`id_order` = od.`id_order`
-);
+), 0);
 
 INSERT INTO `PREFIX_order_carrier` (`id_order`, `id_carrier`, `id_order_invoice`, `weight`, `shipping_cost_tax_excl`, `shipping_cost_tax_incl`, `tracking_number`, `date_add`) (
 	SELECT `id_order`, `id_carrier`, (

@@ -243,7 +243,7 @@ class OrderInvoiceCore extends ObjectModel
 		WHERE od.`id_order` = '.(int)$this->id_order.'
 		AND od.`id_order_invoice` = '.(int)$this->id.'
 		AND od.`tax_computation_method` = '.(int)TaxCalculator::ONE_AFTER_ANOTHER_METHOD
-		);
+		) || Configuration::get('PS_INVOICE_TAXES_BREAKDOWN');
 	}
 
 	/**
@@ -301,7 +301,7 @@ class OrderInvoiceCore extends ObjectModel
 		{
 			// sum by order details in order to retrieve real taxes rate
 			$taxes_infos = Db::getInstance()->executeS('
-			SELECT odt.`id_order_detail`, t.`rate` AS `name`, SUM(od.`total_price_tax_excl`) AS total_price_tax_excl, SUM(t.`rate`) AS rate, SUM(`total_amount`) AS `total_amount`, od.`ecotax`, od.`ecotax_tax_rate`, od.`product_quantity`
+			SELECT odt.`id_order_detail`, t.`rate` AS `name`, od.`total_price_tax_excl` AS total_price_tax_excl, SUM(t.`rate`) AS rate, SUM(`total_amount`) AS `total_amount`, od.`ecotax`, od.`ecotax_tax_rate`, od.`product_quantity`
 			FROM `'._DB_PREFIX_.'order_detail_tax` odt
 			LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = odt.`id_tax`)
 			LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
@@ -466,7 +466,7 @@ class OrderInvoiceCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'order_invoice` oi
 			LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = oi.`id_order`)
 			WHERE DATE_ADD(oi.delivery_date, INTERVAL -1 DAY) <= \''.pSQL($date_to).'\'
-			AND oi.date_add >= \''.pSQL($date_from).'\'
+			AND oi.delivery_date >= \''.pSQL($date_from).'\'
 			'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 			ORDER BY oi.delivery_date ASC
 		');

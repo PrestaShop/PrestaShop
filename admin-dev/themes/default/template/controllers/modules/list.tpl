@@ -104,7 +104,7 @@
 								{$module->description}
 							{/if}
 						</p>
-						{if isset($module->message) && (!isset($module->type) || ($module->type != 'addonsMustHave' || $module->type !== 'addonsNative'))}<div class="alert alert-success">{$module->message}</div>{/if}
+						{if isset($module->message) && (empty($module->name) !== false) && (!isset($module->type) || ($module->type != 'addonsMustHave' || $module->type !== 'addonsNative'))}<div class="alert alert-success">{$module->message}</div>{/if}
 					</div>
 				</td>
 				<td>

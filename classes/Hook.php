@@ -316,7 +316,7 @@ class HookCore extends ObjectModel
 				if (Validate::isLoadedObject($context->country))
 					$sql->where('(h.name = "displayPayment" AND (SELECT id_country FROM '._DB_PREFIX_.'module_country mc WHERE mc.id_module = m.id_module AND id_country = '.(int)$context->country->id.' AND id_shop = '.(int)$context->shop->id.' LIMIT 1) = '.(int)$context->country->id.')');
 				if (Validate::isLoadedObject($context->currency))
-					$sql->where('(h.name = "displayPayment" AND (SELECT id_currency FROM '._DB_PREFIX_.'module_currency mcr WHERE mcr.id_module = m.id_module AND id_currency IN ('.(int)$context->currency->id.', -2) LIMIT 1) IN ('.(int)$context->currency->id.', -2))');
+					$sql->where('(h.name = "displayPayment" AND (SELECT id_currency FROM '._DB_PREFIX_.'module_currency mcr WHERE mcr.id_module = m.id_module AND id_currency IN ('.(int)$context->currency->id.', -1, -2) LIMIT 1) IN ('.(int)$context->currency->id.', -1, -2))');
 			}
 			if (Validate::isLoadedObject($context->shop))
 				$sql->where('hm.id_shop = '.(int)$context->shop->id);
