@@ -3062,7 +3062,7 @@ class ProductCore extends ObjectModel
 
 		$check_stock = !Configuration::get('PS_DISP_UNAVAILABLE_ATTR');
 		if (!$res = Db::getInstance()->executeS('
-					SELECT pa.id_product, a.color, pac.id_product_attribute, ('.($check_stock ? 'SUM(IF(stock.quantity > 0, 1, 0)' : '0').') qty
+					SELECT pa.id_product, a.color, pac.id_product_attribute, '.($check_stock ? 'SUM(IF(stock.quantity > 0, 1, 0))' : '0').' qty
 					FROM '._DB_PREFIX_.'product_attribute pa
 					'.Shop::addSqlAssociation('product_attribute', 'pa').
 					($check_stock ? Product::sqlStock('pa', 'pa') : '').'
