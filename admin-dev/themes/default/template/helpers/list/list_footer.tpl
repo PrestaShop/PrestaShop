@@ -56,7 +56,7 @@
 		</div>
 		{/if}
 	</div>
-	{if !$simple_header && $list_total > 20}
+	{if !$simple_header && $list_total > $pagination[0]}
 	<div class="col-lg-4">
 		{* Choose number of results per page *}
 		<span class="pagination">
@@ -73,7 +73,7 @@
 			{/foreach}
 			</ul>
 			/ {$list_total} {l s='result(s)'}
-			<input type="hidden" id="pagination-items-page" name="{$table}_pagination" value="{$selected_pagination|intval}" />
+			<input type="hidden" id="pagination-items-page" name="{$list_id}_pagination" value="{$selected_pagination|intval}" />
 		</span>
 		<script type="text/javascript">
 			$('.pagination-items-page').on('click',function(e){
@@ -124,7 +124,7 @@
 		<script type="text/javascript">
 			$('.pagination-link').on('click',function(e){
 				e.preventDefault();
-				$('#submitFilter'+'{$table}').val($(this).data("page")).closest("form").submit();
+				$('#submitFilter'+'{$list_id}').val($(this).data("page")).closest("form").submit();
 			});
 		</script>
 	</div>

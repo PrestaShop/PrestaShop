@@ -642,8 +642,12 @@ class HelperListCore extends Helper
 	 */
 	public function displayListFooter()
 	{
+		if (!isset($this->list_id))
+			$this->list_id = $this->table;
+
 		$this->footer_tpl->assign(array_merge($this->tpl_vars, array(
-			'current' => $this->currentIndex
+			'current' => $this->currentIndex,
+			'list_id' => $this->list_id
 		)));
 		return $this->footer_tpl->fetch();
 	}
