@@ -60,14 +60,14 @@
 <table class="table tableDnD" id="imageTable">
 	<thead>
 		<tr class="nodrag nodrop"> 
-			<th>{l s='Image'}</th>
-			<th class="center">{l s='Position'}</th>
+			<th class="fixed-width-sm"><span class="title_box">{l s='Image'}</span></th>
+			<th class="center fixed-width-xs"><span class="title_box">{l s='Position'}</span></th>
 			{if $shops}
 			{foreach from=$shops item=shop}
-				<th>{$shop.name}</th>
+				<th class="center fixed-width-xs"><span class="title_box">{$shop.name}</span></th>
 			{/foreach}
 			{/if}
-			<th class="center">{l s='Cover'}</th>
+			<th class="center fixed-width-xs"><span class="title_box">{l s='Cover'}</span></th>
 			<th></th>
 		</tr>
 	</thead>

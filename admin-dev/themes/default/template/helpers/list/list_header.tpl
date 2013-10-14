@@ -177,7 +177,7 @@
 {/if}
 {if $simple_header}
 <fieldset class="col-lg-12">
-	<h3>{if isset($icon)}<i class="{$icon}"></i> {/if}{if is_array($title)}{$title|end}{else}{$title}{/if}</h3>
+	{if isset($title)}<h3>{if isset($icon)}<i class="{$icon}"></i> {/if}{if is_array($title)}{$title|end}{else}{$title}{/if}</h3>{/if}
 {/if}
 	<div class="table-responsive clearfix">
 		<table
