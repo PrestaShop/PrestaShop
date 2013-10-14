@@ -1,45 +1,63 @@
 $(document).ready(function() {
 	// Initialize events
-	$("#login_form, #forgot_password_form").validate({
+	$("#login_form").validate({
 		rules: {
 			"email":{
 				"email": true,
-				"required": true },
-			"passwd": {
-				"required": true }
-			},
-			submitHandler: function(form) {
-				doAjaxLogin($('#redirect').val());
-			},
-			// override jquery validate plugin defaults for bootstrap 3
-			highlight: function(element) {
-				$(element).closest('.form-group').addClass('has-error');
-			},
-			unhighlight: function(element) {
-				$(element).closest('.form-group').removeClass('has-error');
-			},
-			errorElement: 'span',
-			errorClass: 'help-block',
-			errorPlacement: function(error, element) {
-				if(element.parent('.input-group').length) {
-					error.insertAfter(element.parent());
-				} else {
-					error.insertAfter(element);
-				}
-			}
-		});
-
-	$("#forgot_password_form").validate({
-		  rules: {
-			 "email_forgot": {
-				"email": true,
 				"required": true
-			 }
+			},
+			"passwd": {
+				"required": true
+			}
 		},
 		submitHandler: function(form) {
-			  doAjaxForgot();
+			doAjaxLogin($('#redirect').val());
+		},
+		// override jquery validate plugin defaults for bootstrap 3
+		highlight: function(element) {
+			$(element).closest('.form-group').addClass('has-error');
+		},
+		unhighlight: function(element) {
+			$(element).closest('.form-group').removeClass('has-error');
+		},
+		errorElement: 'span',
+		errorClass: 'help-block',
+		errorPlacement: function(error, element) {
+			if(element.parent('.input-group').length) {
+				error.insertAfter(element.parent());
+			} else {
+				error.insertAfter(element);
 			}
-	  });
+		}
+	});
+
+	$("#forgot_password_form").validate({
+		rules: {
+			"email_forgot": {
+				"email": true,
+				"required": true
+			}
+		},
+		submitHandler: function(form) {
+		  doAjaxForgot();
+		},
+		// override jquery validate plugin defaults for bootstrap 3
+		highlight: function(element) {
+			$(element).closest('.form-group').addClass('has-error');
+		},
+		unhighlight: function(element) {
+			$(element).closest('.form-group').removeClass('has-error');
+		},
+		errorElement: 'span',
+		errorClass: 'help-block',
+		errorPlacement: function(error, element) {
+			if(element.parent('.input-group').length) {
+				error.insertAfter(element.parent());
+			} else {
+				error.insertAfter(element);
+			}
+		}
+	});
 
 	$('.show-forgot-password').click(function(e) {
 		// Kill default behaviour
@@ -72,20 +90,15 @@ function feedbackSubmit() {
 	l = Ladda.create( document.querySelector( 'button[type=submit]' ) );
 }
 
-
 function displayForgotPassword() {
-
 	$('#error').hide();
 	$("#login").find('.flip-container').toggleClass("flip");
-	$("#forgot_password_form").removeClass('hide');
 	$('#email_forgot').select();
 }
 
 function displayLogin() {
-
 	$('#error').hide();
 	$("#login").find('.flip-container').toggleClass("flip");
-	//$('#login_form').fadeIn('fast');
 	$('#email').select();
 	return false;
 }
@@ -126,6 +139,7 @@ function doAjaxLogin(redirect) {
 					window.location.assign(jsonData.redirect);
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
+				l.stop();
 				$('#error').html('<h3>TECHNICAL ERROR:</h3><p>Details: Error thrown: ' + XMLHttpRequest + '</p><p>Text status: ' + textStatus + '</p>').removeClass('hide');
 				$('#login_form').fadeOut('slow');
 			}

@@ -29,13 +29,14 @@
 	var label_error = '{l s='error'}';
 </script>
 	<div id="login-panel">
-		<div id="login-header" class="panel">
+		<div id="login-header">
 			<h1 class="text-center">
 				<img width="40px" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNi4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iNjEycHgiIGhlaWdodD0iNzkycHgiIHZpZXdCb3g9IjAgMCA2MTIgNzkyIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA2MTIgNzkyOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8cGF0aCBkPSJNMjA0LDg2Yy0zNiwyMy00Nyw2MS00MiwxMjBsLTI3LDNDMTMxLDE0NywxNjEsOTgsMjA0LDg2eiBNMjQ1LDc4YzY0LDgsMTAwLDM1LDExNSwxMDVsLTE2OSwyMEMxODUsMTQwLDE5OSwxMDUsMjQ1LDc4eg0KCSBNMjgwLDY0YzcyLDAsMTIwLDI1LDEzNSwxMTJsLTI3LDNDMzc1LDExMiwzNDEsNzYsMjgwLDY0eiBNNDQyLDE3NEM0MjksNTQsMzE0LDE5LDI0MCw1NmMtODMtMi0xNDAsNzMtMTMzLDE1N2wtOTYsMTBsNTgsNTUwDQoJbDI2MS0yNmMtNDctNTMtMTAwLTEzMy0xMjQtMTUyYy0yNy0yMy0zMC0zMS0yMy00NWMxMi0xNCwyNC0xMiw0NSw0bDQ4LDM3bDcsMzZsMTQtMWwtMzctMjMxYy00LTI0LDEtMzUsMTktNDBjMTgtMiwyNyw3LDMxLDM0DQoJbDIzLDE0MWwxOC0yYy03LTUwLTMtNTcsMTctNjJjMTktMywyOCwxMCwzNSw2NGwxNy0xYy01LTUwLTEtNTcsMTktNjBjMjItMSwyNSwxMiwzMiw2NWwxNiwyYy00LTQwLTQtNTEsMTgtNTNjMjEsMCwyNSwxNCwzMSw1OA0KCWMxNSwxMDAsMTMsMTU0LTYsMTgzbDcyLTdsLTU4LTU1NUw0NDIsMTc0eiIvPg0KPC9zdmc+DQo="/>
 							PRESTASHOP
 			</h1>
 			<hr/>
 			<h4 class="text-center">{$shop_name}</h4>
+			<hr/>
 			<div id="error" class="hide alert alert-danger">
 			{if isset($errors)}
 				<h4>
@@ -49,7 +50,7 @@
 					<li>{$error}</li>
 					{/foreach}
 				</ol>
-				{/if}
+			{/if}
 			</div>
 
 			{if isset($warningSslMessage)}
@@ -117,7 +118,7 @@
 				</div>
 
 				<div class="back panel">
-					<form action="#" id="forgot_password_form" method="post" class="hide">
+					<form action="#" id="forgot_password_form" method="post">
 						<div class="alert alert-info">
 							<h4 class="text-center">
 								<i class="icon-exclamation-sign"></i>
