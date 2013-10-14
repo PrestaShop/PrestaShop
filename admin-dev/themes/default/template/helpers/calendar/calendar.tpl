@@ -2,8 +2,13 @@
 	<div class="row">
 		<div class="col-lg-8">
 			<div class="datepickers-container">
-				<div class="datepicker1" data-date="{$from_date}" data-date-format="{$date_format}"></div>
-				<div class="datepicker2" data-date="{$to_date}" data-date-format="{$date_format}"></div>
+				{if $is_rtl}
+				<div class="datepicker2" data-date="{$date_to}" data-date-format="{$date_format}"></div>
+				<div class="datepicker1" data-date="{$date_from}" data-date-format="{$date_format}"></div>				
+				{else}
+				<div class="datepicker1" data-date="{$date_from}" data-date-format="{$date_format}"></div>
+				<div class="datepicker2" data-date="{$date_to}" data-date-format="{$date_format}"></div>
+				{/if}
 			</div>
 		</div>
 		<div class="col-lg-4">
