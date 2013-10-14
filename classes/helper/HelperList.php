@@ -513,7 +513,7 @@ class HelperListCore extends Helper
 		if (Tools::getIsset($this->table.'Orderby'))
 			$order = '&'.$this->table.'Orderby='.urlencode($this->orderBy).'&'.$this->table.'Orderway='.urlencode(strtolower($this->orderWay));
 
-		$action = $this->currentIndex.$identifier.'&token='.$token.$order.'#'.$this->table;
+		$action = $this->currentIndex.$identifier.'&token='.$token.'#'.$this->table;
 
 		/* Determine current page number */
 		$page = (int)Tools::getValue('submitFilter'.$this->list_id);
