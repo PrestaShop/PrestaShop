@@ -1,14 +1,24 @@
+#login
+	height: 100%	
+	@include background(radial-gradient(color-stops(rgba(104,128,138,.4) 10%,rgba(138,114,76,0) 40%), top left),linear-gradient(top,rgba(57,173,219,.25),rgba(42,60,87,.4)),linear-gradient(left top,#670D10,#092756))
+
+#login-header
+	margin: 0
+	color: white
+
 #login-panel
 	margin: 0 auto
 	width: 420px
+	.panel
+		@include box-shadow(rgba(white,0.45) 0 0 0 6px)
+	.panel-footer
+		margin: 0 -20px -20px
 
 	.flip-container
-		height: 500px
 		@include perspective(1000px)
+		height: 370px
 		&.flip .flipper
 			@include rotateY(180deg)
-
-	.flip-container, .front, .back
 
 	.flipper
 		@include transition-duration(0.6s)
@@ -26,3 +36,7 @@
 
 	.back
 		@include rotateY(180deg)
+
+#login-footer
+	a
+		color: #A0AAB5

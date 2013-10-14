@@ -9566,25 +9566,46 @@ textarea {
   font-size: 1.5em; }
 
 /* line 1, admin-theme/_admin-login.sass */
+#login {
+  height: 100%;
+  background: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 40, color-stop(10%, rgba(104, 128, 138, 0.4)), color-stop(40%, rgba(138, 114, 76, 0))), -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(57, 173, 219, 0.25)), color-stop(100%, rgba(42, 60, 87, 0.4))), -webkit-gradient(linear, 0% 0%, 100% 100%, color-stop(0%, #670d10), color-stop(100%, #092756));
+  background: -webkit-radial-gradient(top left, rgba(104, 128, 138, 0.4) 10%, rgba(138, 114, 76, 0) 40%), -webkit-linear-gradient(top, rgba(57, 173, 219, 0.25), rgba(42, 60, 87, 0.4)), -webkit-linear-gradient(left top, #670d10, #092756);
+  background: -moz-radial-gradient(top left, rgba(104, 128, 138, 0.4) 10%, rgba(138, 114, 76, 0) 40%), -moz-linear-gradient(top, rgba(57, 173, 219, 0.25), rgba(42, 60, 87, 0.4)), -moz-linear-gradient(left top, #670d10, #092756);
+  background: -o-radial-gradient(top left, rgba(104, 128, 138, 0.4) 10%, rgba(138, 114, 76, 0) 40%), -o-linear-gradient(top, rgba(57, 173, 219, 0.25), rgba(42, 60, 87, 0.4)), -o-linear-gradient(left top, #670d10, #092756);
+  background: radial-gradient(top left, rgba(104, 128, 138, 0.4) 10%, rgba(138, 114, 76, 0) 40%), linear-gradient(top, rgba(57, 173, 219, 0.25), rgba(42, 60, 87, 0.4)), linear-gradient(left top, #670d10, #092756); }
+
+/* line 5, admin-theme/_admin-login.sass */
+#login-header {
+  margin: 0;
+  color: white; }
+
+/* line 9, admin-theme/_admin-login.sass */
 #login-panel {
   margin: 0 auto;
   width: 420px; }
-/* line 5, admin-theme/_admin-login.sass */
+/* line 12, admin-theme/_admin-login.sass */
+#login-panel .panel, #login-panel #header_notifs_icon_wrapper .notifs_panel, #header_notifs_icon_wrapper #login-panel .notifs_panel, #login-panel #dash_version {
+  -webkit-box-shadow: rgba(255, 255, 255, 0.45) 0 0 0 6px;
+  box-shadow: rgba(255, 255, 255, 0.45) 0 0 0 6px; }
+/* line 14, admin-theme/_admin-login.sass */
+#login-panel .panel-footer, #login-panel #header_notifs_icon_wrapper .notifs_panel .notifs_panel_footer, #header_notifs_icon_wrapper .notifs_panel #login-panel .notifs_panel_footer {
+  margin: 0 -20px -20px; }
+/* line 17, admin-theme/_admin-login.sass */
 #login-panel .flip-container {
-  height: 500px;
   -webkit-perspective: 1000px;
   -moz-perspective: 1000px;
   -ms-perspective: 1000px;
   -o-perspective: 1000px;
-  perspective: 1000px; }
-/* line 8, admin-theme/_admin-login.sass */
+  perspective: 1000px;
+  height: 370px; }
+/* line 20, admin-theme/_admin-login.sass */
 #login-panel .flip-container.flip .flipper {
   -webkit-transform: rotateY(180deg);
   -moz-transform: rotateY(180deg);
   -ms-transform: rotateY(180deg);
   -o-transform: rotateY(180deg);
   transform: rotateY(180deg); }
-/* line 13, admin-theme/_admin-login.sass */
+/* line 23, admin-theme/_admin-login.sass */
 #login-panel .flipper {
   -webkit-transition-duration: 0.6s;
   transition-duration: 0.6s;
@@ -9594,7 +9615,7 @@ textarea {
   -o-transform-style: preserve-3d;
   transform-style: preserve-3d;
   position: relative; }
-/* line 18, admin-theme/_admin-login.sass */
+/* line 28, admin-theme/_admin-login.sass */
 #login-panel .front, #login-panel .back {
   -webkit-backface-visibility: hidden;
   -moz-backface-visibility: hidden;
@@ -9602,16 +9623,20 @@ textarea {
   position: absolute;
   top: 0;
   left: 0; }
-/* line 24, admin-theme/_admin-login.sass */
+/* line 34, admin-theme/_admin-login.sass */
 #login-panel .front {
   z-index: 2; }
-/* line 27, admin-theme/_admin-login.sass */
+/* line 37, admin-theme/_admin-login.sass */
 #login-panel .back {
   -webkit-transform: rotateY(180deg);
   -moz-transform: rotateY(180deg);
   -ms-transform: rotateY(180deg);
   -o-transform: rotateY(180deg);
   transform: rotateY(180deg); }
+
+/* line 41, admin-theme/_admin-login.sass */
+#login-footer a {
+  color: #a0aab5; }
 
 /* line 1, admin-theme/_admin-carrier-wizard.sass */
 #carrier_wizard {
