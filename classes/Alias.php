@@ -127,7 +127,7 @@ class AliasCore extends ObjectModel
 
 	/**
 	 * This method is allow to know if a alias exist for AdminImportController
-	 * @since 1.5.7
+	 * @since 1.5.6.0
 	 * @return bool
 	 */
 	public static function aliasExists($id_alias)
