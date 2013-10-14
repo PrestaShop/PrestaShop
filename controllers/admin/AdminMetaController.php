@@ -393,7 +393,7 @@ class AdminMetaControllerCore extends AdminController
 			{
 				fwrite($write_fd, "# Private pages\n");
 				foreach ($this->rb_data['GB'] as $gb)
-					fwrite($write_fd, 'Disallow: */'.$gb."\n");
+					fwrite($write_fd, 'Disallow: /*'.$gb."\n");
 			}
 			
 			// Directories
@@ -410,7 +410,7 @@ class AdminMetaControllerCore extends AdminController
 				fwrite($write_fd, "# Files\n");
 				foreach ($this->rb_data['Files'] as $iso_code => $files)
 					foreach ($files as $file)
-						fwrite($write_fd, 'Disallow: */'.$iso_code.'/'.$file."\n");
+						fwrite($write_fd, 'Disallow: /*'.$iso_code.'/'.$file."\n");
 			}
 			
 			// Sitemap
