@@ -34,6 +34,7 @@ class HelperCalendarCore extends Helper
 	private $_date_format;
 	private $_date_from;
 	private $_date_to;
+	private $_rtl;
 
 	public function __construct()
 	{
@@ -62,7 +63,7 @@ class HelperCalendarCore extends Helper
 	public function setCompareDateFrom($value)
 	{
 		if (!isset($value) || $value == '');
-			$value = date('d-m-Y', strtotime("-31 days"));
+			$value = date('Y-m-d', strtotime("-31 days"));
 
 		if (!is_string($value))
 			throw new PrestaShopException('Date must be string');
@@ -74,7 +75,7 @@ class HelperCalendarCore extends Helper
 	public function getCompareDateFrom()
 	{
 		if (!isset($this->_compare_date_from))
-			$this->_compare_date_from = date('d-m-Y', strtotime("-31 days"));
+			$this->_compare_date_from = date('Y-m-d', strtotime("-31 days"));
 
 		return $this->_compare_date_from;
 	}
@@ -94,7 +95,7 @@ class HelperCalendarCore extends Helper
 	public function getCompareDateTo()
 	{
 		if (!isset($this->_compare_date_to))
-			$this->_compare_date_to = date('d-m-Y');
+			$this->_compare_date_to = date('Y-m-d');
 
 		return $this->_compare_date_to;
 	}
@@ -119,7 +120,7 @@ class HelperCalendarCore extends Helper
 	public function setDateFrom($value)
 	{
 		if (!isset($value) || $value == '')
-			$value = date('d-m-Y', strtotime("-31 days"));
+			$value = date('Y-m-d', strtotime("-31 days"));
 
 		if (!is_string($value))
 			throw new PrestaShopException('Date must be string');
@@ -131,7 +132,7 @@ class HelperCalendarCore extends Helper
 	public function getDateFrom()
 	{
 		if (!isset($this->_date_from))
-			$this->_date_from = date('d-m-Y', strtotime("-31 days"));
+			$this->_date_from = date('Y-m-d', strtotime("-31 days"));
 
 		return $this->_date_from;
 	}
@@ -151,9 +152,15 @@ class HelperCalendarCore extends Helper
 	public function getDateTo()
 	{
 		if (!isset($this->_date_to))
-			$this->_date_to = date('d-m-Y');
+			$this->_date_to = date('Y-m-d');
 
 		return $this->_date_to;
+	}
+
+	public function setRTL($value)
+	{
+		$this->_rtl = (bool)$value;
+		return $this;
 	}
 
 	public function addAction($action)
@@ -195,10 +202,19 @@ class HelperCalendarCore extends Helper
 			'date_to'           => $this->getDateTo(),
 			'compare_date_from' => $this->getCompareDateFrom(),
 			'compare_date_to'   => $this->getCompareDateTo(),
-			'actions'           => $this->getActions()
+			'actions'           => $this->getActions(),
+			'is_rtl'            => $this->isRTL()
 		));
 
 		$html .= parent::generate();
 		return $html;
+	}
+
+	public function isRTL()
+	{
+		if (!isset($this->_rtl))
+			$this->_rtl = Context::getContext()->language->is_rtl;
+
+		return $this->_rtl;
 	}
 }
