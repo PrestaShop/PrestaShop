@@ -88,6 +88,7 @@ class AdminImportControllerCore extends AdminController
 			$this->l('Addresses'),
 			$this->l('Manufacturers'),
 			$this->l('Suppliers'),
+			$this->l('Alias'),
 		);
 
 		// @since 1.5.0
@@ -360,7 +361,6 @@ class AdminImportControllerCore extends AdminController
 					'postcode' => 'X'
 				);
 			break;
-
 			case $this->entities[$this->l('Manufacturers')]:
 			case $this->entities[$this->l('Suppliers')]:
 				//Overwrite validators AS name is not MultiLangField
@@ -390,6 +390,23 @@ class AdminImportControllerCore extends AdminController
 
 				self::$default_values = array(
 					'shop' => Shop::getGroupFromShop(Configuration::get('PS_SHOP_DEFAULT')),
+				);
+			break;
+			case $this->entities[$this->l('Alias')]:
+				//Overwrite required_fields
+				$this->required_fields = array(
+					'alias',
+					'search',
+				);
+				$this->available_fields = array(
+					'no' => array('label' => $this->l('Ignore this column')),
+					'id' => array('label' => $this->l('ID')),
+					'alias' => array('label' => $this->l('Alias *')),
+					'search' => array('label' => $this->l('Search *')),
+					'active' => array('label' => $this->l('Active')),
+					);
+				self::$default_values = array(
+					'active' => '1',
 				);
 			break;
 		}
@@ -2435,6 +2452,56 @@ class AdminImportControllerCore extends AdminController
 		$this->closeCsvFile($handle);
 	}
 
+	public function aliasImport()
+	{
+		$this->receiveTab();
+		$handle = $this->openCsvFile();
+		AdminImportController::setLocale();
+		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
+		{
+			if (Tools::getValue('convert'))
+				$line = $this->utf8EncodeArray($line);
+			$info = AdminImportController::getMaskedRow($line);
+
+			AdminImportController::setDefaultValues($info);
+
+			if (Tools::getValue('forceIDs') && isset($info['id']) && (int)$info['id'])
+				$alias = new Alias((int)$info['id']);
+			else
+			{
+				if (array_key_exists('id', $info) && (int)$info['id'] && Alias::existsInDatabase((int)$info['id'], 'alias'))
+					$alias = new Alias((int)$info['id']);
+				else
+					$alias = new Alias();
+			}
+
+			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $alias);
+			
+			$res = false;
+			if (($field_error = $alias->validateFields(UNFRIENDLY_ERROR, true)) === true &&
+				($lang_field_error = $alias->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
+			{
+				if ($alias->id && $alias->aliasExists($alias->id))
+					$res = $alias->update();
+				if (!$res)
+					$res = $alias->add();
+
+				if (!$res)
+					$this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
+						Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+						$info['name'],
+						(isset($info['id']) ? $info['id'] : 'null')
+					);
+			}
+			else
+			{
+				$this->errors[] = $this->l('Alias is invalid').' ('.$alias->name.')';
+				$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '');
+			}
+		}
+		$this->closeCsvFile($handle);
+	}
+
 	/**
 	 * @since 1.5.0
 	 */
@@ -2782,6 +2849,9 @@ class AdminImportControllerCore extends AdminController
 					if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d))
 						unlink(_PS_SUPP_IMG_DIR_.$d);
 				break;
+			case $this->entities[$this->l('Alias')]:
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'alias`');
+				break;
 		}
 		Image::clearTmpDir();
 		return true;
@@ -2879,6 +2949,9 @@ class AdminImportControllerCore extends AdminController
 					case $this->entities[$import_type = $this->l('Suppliers')]:
 						$this->supplierImport();
 						$this->clearSmartyCache();
+						break;
+					case $this->entities[$import_type = $this->l('Alias')]:
+						$this->aliasImport();
 						break;
 				}
 				
