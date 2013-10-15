@@ -1234,11 +1234,7 @@ abstract class ModuleCore
 				$module->interest = 0;
 			}
 
-		usort($module_list, create_function('$a,$b', '
-			if ($a->displayName == $b->displayName)
-				return 0;
-			return ($a->displayName < $b->displayName) ? -1 : 1;
-		'));
+		usort($module_list, create_function('$a,$b', 'return strnatcasecmp($a->displayName, $b->displayName);'));
 
 		if ($errors)
 		{
