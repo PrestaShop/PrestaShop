@@ -215,10 +215,12 @@ class AdminDashboardControllerCore extends AdminController
 			if (Validate::isLoadedObject($module_obj))
 				$id_module = $module_obj->id;
 		}
-		
+
 		$params = array(
 			'date_from' => $this->context->employee->stats_date_from,
 			'date_to' => $this->context->employee->stats_date_to,
+			'compare_from' => $this->context->employee->stats_compare_from,
+			'compare_to' => $this->context->employee->stats_compare_to,
 			'dashboard_use_push' => (int)Tools::getValue('dashboard_use_push')
 		);
 		
