@@ -115,13 +115,7 @@ class Dashactivity extends Module
 						'.($maintenance_ips ? 'AND ip_address NOT IN ('.preg_replace('/[^,0-9]/', '', $maintenance_ips).')' : '');
 			$online_visitor = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 		}
-		
-		$order_nbr = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT COUNT(*)
-		FROM `'._DB_PREFIX_.'orders`
-		WHERE `invoice_date` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
-		'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
-		
+
 		$pending_orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT COUNT(*)
 		FROM `'._DB_PREFIX_.'orders` o
@@ -210,7 +204,6 @@ class Dashactivity extends Module
 
 		return array(
 			'data_value' => array(
-				'order_nbr' => $order_nbr,
 				'pending_orders' => $pending_orders,
 				'return_exchanges' => $return_exchanges,
 				'abandoned_cart' => $abandoned_cart,
@@ -352,6 +345,8 @@ class Dashactivity extends Module
 	public function getConfigFieldsValues()
 	{
 		return array(
+			'DASHACTIVITY_SHOW_STOCK' => Configuration::get('PS_STOCK_MANAGEMENT'),
+			'DASHACTIVITY_SHOW_RETURNS' => Configuration::get('PS_ORDER_RETURN'),
 			'DASHACTIVITY_SHOW_PENDING' => Tools::getValue('DASHACTIVITY_SHOW_PENDING', Configuration::get('DASHACTIVITY_SHOW_PENDING')),
 			'DASHACTIVITY_SHOW_NOTIFICATION' => Tools::getValue('DASHACTIVITY_SHOW_NOTIFICATION', Configuration::get('DASHACTIVITY_SHOW_NOTIFICATION')),
 			'DASHACTIVITY_SHOW_CUSTOMERS' => Tools::getValue('DASHACTIVITY_SHOW_CUSTOMERS', Configuration::get('DASHACTIVITY_SHOW_CUSTOMERS')),

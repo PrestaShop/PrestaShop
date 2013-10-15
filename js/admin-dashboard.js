@@ -68,7 +68,7 @@ function refreshDashboard(module_name, use_push)
 				action:'refreshDashboard',
 				module:module_list[module_id],
 				dashboard_use_push:Number(use_push)
-				},
+			},
 			dataType: 'json',
 			success : function(widgets){
 				for (var widget_name in widgets)
