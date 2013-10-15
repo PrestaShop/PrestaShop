@@ -50,7 +50,7 @@
 {/block}
 
 {block name="after"}
-	<fieldset id="prestastore-content"></fieldset>
+	<div class="panel" id="prestastore-content"></div>
 	<script type="text/javascript">
 		$.ajax({
 			type: 'POST',

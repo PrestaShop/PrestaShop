@@ -61,7 +61,7 @@
 	</script>
 	
 	<form method="get" action="index.php" id="typeTranslationForm" class="form-horizontal">
-		<fieldset>
+		<div class="panel">
 			<h3>
 				<i class="icon-file-text"></i>
 				{l s='Modify translations'}
@@ -113,10 +113,10 @@
 				</div>
 				<input type="hidden" name="token" value="{$token}" />
 			</div>
-		</fieldset>
+		</div>
 	</form>
 	<form action="{$url_submit}" method="post" enctype="multipart/form-data" class="form-horizontal">
-		<fieldset>
+		<div class="panel">
 			<h3>
 				<i class="icon-download"></i>
 				{l s='Add / Update a language'}
@@ -147,11 +147,11 @@
 					<p class="text-danger">{l s='Cannot connect to the PrestaShop website to get the language list.'}</p>
 				{/if}				
 			</div>
-		</fieldset>
+		</div>
 	</form>
 	
 	<form action="{$url_submit}" method="post" enctype="multipart/form-data" class="form-horizontal">
-		<fieldset>
+		<div class="panel">
 			<h3>
 				<i class="icon-download"></i>
 				{l s='Import a language pack manually'}
@@ -181,11 +181,11 @@
 					<input type="submit" value="{l s='   Import   '}" name="submitImport" class="btn btn-default" />
 				</div>
 			</div>
-		</fieldset>
+		</div>
 	</form>
 	
 	<form action="{$url_submit}" method="post" enctype="multipart/form-data" class="form-horizontal">
-		<fieldset>
+		<div class="panel">
 			<h3>
 				<i class="icon-upload"></i>
 				{l s='Export a language'}
@@ -219,11 +219,11 @@
 					<input type="submit" class="btn btn-default" name="submitExport" value="{l s='Export'}" />
 				</div>
 			</div>
-		</fieldset>
+		</div>
 	</form>
 	
 	<form action="{$url_submit}" method="post" class="form-horizontal">
-		<fieldset>
+		<div class="panel">
 			<h3>
 				<i class="icon-copy"></i>
 				{l s='Copy'}
@@ -278,6 +278,6 @@
 					{l s='Language files must be complete to allow copying of translations.'}
 				</p>
 			</div>
-		</fieldset>
+		</div>
 	</form>
 {/block}

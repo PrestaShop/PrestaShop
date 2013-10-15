@@ -24,7 +24,7 @@
 *}
 
 {if isset($product->id)}
-	<fieldset>
+	<div class="panel">
 		<input type="hidden" name="submitted_tabs[]" value="Quantities" />
 		<h3>{l s='Available quantities for sale'}</h3>
 		{if !$ps_stock_management}
@@ -171,8 +171,8 @@
 				</div>
 			{/if}
 		{/if}
-	</fieldset>
-	<fieldset>
+	</div>
+	<div class="panel">
 		<h3>{l s='Availability settings'}</h3>
 
 		{if !$has_attribute}
@@ -233,7 +233,7 @@
 			var quantities_ajax_success = '{l s='Data saved'}';
 			var quantities_ajax_waiting = '{l s='Saving data...'}';
 		</script>
-	</fieldset>
+	</div>
 {/if}
 {*$default_language*}
 <script type="text/javascript">

@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<fieldset>
+<div class="panel">
 	<h3>
 		<i class="icon-list-ul"></i>
 		{l s='Modules list'}
@@ -51,4 +51,4 @@
 			{/if}
 		</div>
 	</div>
-</fieldset>
+</div>

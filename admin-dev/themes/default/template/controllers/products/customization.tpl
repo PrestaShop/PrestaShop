@@ -24,7 +24,7 @@
 *}
 
 {if isset($obj->id)}
-<fieldset>
+<div class="panel">
 	<input type="hidden" name="submitted_tabs[]" value="Customization" />
 	<h3>{l s='Add or modify customizable properties.'}</h3>
 	
@@ -76,5 +76,5 @@
 		</div>
 	</div>
 	{/if}
-</fieldset>
+</div>
 {/if}

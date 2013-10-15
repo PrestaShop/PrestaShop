@@ -50,10 +50,10 @@
 				<li>{l s='Some sentences to translate use this syntax: %s... These are variables, and PrestaShop take care of replacing them before displaying your translation. You must leave these in your translations, and place them appropriately in your sentence.' sprintf='%d, %s, %1$s, %2$d'}</li>
 			</ul>
 		</div>
-		<fieldset>
+		<div class="panel">
 			<p>{l s='Expressions to translate:'} <span class="badge">{l s='%d' sprintf=$count}</span></p>
 			<p>{l s='Total missing expresssions:'} <span class="badge">{l s='%d' sprintf=$missing_translations}</p>
-		</fieldset>
+		</div>
 
 		<script type="text/javascript">
 			$(document).ready(function(){
@@ -105,7 +105,7 @@
 							{else}
 								{$missing_translations_module = 0}
 							{/if}
-							<fieldset>
+							<div class="panel">
 								<h3 onclick="$('#{$theme_name}_{$module_name}_{$template_name|replace:'.':'_'}').slideToggle();">{if $theme_name}{$theme_name} - {/if}{$template_name}
 									<span class="badge">{$newLang|count}</span> {l s='expressions'} <span class="label label-danger">{$missing_translations_module}</span>
 								</h3>
@@ -140,7 +140,7 @@
 										{/foreach}
 									</table>
 								</div>
-							</fieldset>
+							</div>
 						{/if}
 					{/foreach}
 				{/foreach}

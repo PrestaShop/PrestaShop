@@ -25,7 +25,7 @@
 {extends file="helpers/options/options.tpl"}
 {block name="after"}
 {if $use_sync}
-		<fieldset>
+		<div class="panel">
 			<legend>{l s='Sync'}</legend>
 			<label>{l s='Run sync:'}</label>
 			<div class="margin-form">
@@ -35,7 +35,7 @@
 				<div class="error" style="display:none" id="ajax_error"></div>
 				<div class="alert" style="display:none" id="ajax_conf"></div>
 			</div>
-		</fieldset>
+		</div>
 
 		<script type="text/javascript"> 
 			var ajaxQueries = new Array();

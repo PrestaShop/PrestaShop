@@ -52,7 +52,7 @@
 {if isset($display_regenerate)}
 
 	<form class="form-horizontal" action="{$current}&token={$token}" method="post">
-		<fieldset>
+		<div class="panel">
 			<h3>
                 <i class="icon-picture"></i>
                 {l s='Regenerate thumbnails'}
@@ -126,7 +126,7 @@
 					<input type="Submit" name="submitRegenerate{$table}" value="{l s='Regenerate thumbnails'}" class="btn btn-primary" onclick="return confirm('{l s='Are you sure?'}');" />
 				</div>
 			</div>
-		</fieldset>
+		</div>
 	</form>
 {/if}
 
@@ -137,7 +137,7 @@
         </div>
     {else}
         <form action="{$current}&token={$token}" method="post" class="form-horizontal">
-            <fieldset>
+            <div class="panel">
                 <h3>
                     <i class="icon-picture"></i>
                     {l s='Move images'}
@@ -154,7 +154,7 @@
                         <input type="Submit" name="submitMoveImages{$table}" value="{l s='Move images'}" class="btn btn-primary" onclick="return confirm('{l s='Are you sure?'}');" />
                     </div>
                 </div>
-            </fieldset>
+            </div>
         </form>
     {/if}
 {/if}

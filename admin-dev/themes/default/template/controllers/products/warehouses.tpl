@@ -25,7 +25,7 @@
 
 <input type="hidden" name="warehouse_loaded" value="1">
 {if isset($product->id)}
-<fieldset>
+<div class="panel">
 	<input type="hidden" name="submitted_tabs[]" value="Warehouses" />
 	<h3>{l s='Product location in warehouses'}</h3>
 	<div class="row">
@@ -95,5 +95,5 @@
 			{/foreach}
 		</div>
 	</div>
-</fieldset>
+</div>
 {/if}

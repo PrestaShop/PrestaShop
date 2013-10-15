@@ -247,7 +247,7 @@
 					<div class="tab-pane active" id="shipping">
 						<!-- Shipping block -->
 						{if !$order->isVirtual()}
-						<fieldset class="form-horizontal">
+						<div class="panel form-horizontal">
 							<div class="form-group">
 								<div class="col-lg-6">
 									<label class="control-label col-lg-9">{l s='Recycled packaging'}</label>
@@ -299,14 +299,14 @@
 							{if $carrierModuleCall}
 								{$carrierModuleCall}
 							{/if}
-						</fieldset>
+						</div>
 						{/if}
 					</div>
 					<!-- Tab returns -->
 					<div class="tab-pane" id="returns">
 						{if !$order->isVirtual()}
 						<!-- Return block -->
-						<fieldset>
+						<div class="panel">
 							{if $order->getReturn()|count > 0}
 							<table class="table">
 								<thead>
@@ -356,7 +356,7 @@
 							{if $carrierModuleCall}
 								{$carrierModuleCall}
 							{/if}
-						</fieldset>
+						</div>
 						{/if}
 					</div>
 				</div>
@@ -602,7 +602,7 @@
 		</div>
 
 		<!-- Payments block -->
-		<fieldset>
+		<div class="panel">
 			<h3>
 				<i class="icon-money"></i>
 				{l s="Payment"}
@@ -773,11 +773,11 @@
 				</div>
 			</form>
 			{/if}
-		</fieldset>
+		</div>
 
 		<!-- Sources block -->
 		{if (sizeof($sources))}
-		<fieldset>
+		<div class="panel">
 			<h3>
 				<i class="icon-globe"></i>
 				{l s='Sources'}
@@ -792,7 +792,7 @@
 				</li>
 			{/foreach}
 			</ul>
-		</fieldset>
+		</div>
 		{/if}
 	
 		<!-- linked orders block -->
@@ -852,7 +852,7 @@
 			<input type="hidden" value="{$order->getWarehouseList()|implode}" id="warehouse_list" />
 		</div>
 
-		<fieldset>
+		<div class="panel">
 			<h3>
 				<i class="icon-shopping-cart"></i>
 				{l s='Products'}
@@ -1102,13 +1102,13 @@
 					{l s='Partial refund'}
 				</button>
 			</div>
-		</fieldset>
+		</div>
 	</form>
 
 	
 
 	{if (sizeof($messages))}
-	<fieldset>
+	<div class="panel">
 		<h3>
 			<i class="icon-envelope-alt"></i>
 			{l s='Messages'}
@@ -1128,7 +1128,7 @@
 			<p>{$message['message']|escape:'htmlall':'UTF-8'|nl2br}</p>
 			</div>
 		{/foreach}
-	</fieldset>
+	</div>
 	{/if}
 
 	<script type="text/javascript">

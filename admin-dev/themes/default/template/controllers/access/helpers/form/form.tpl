@@ -173,14 +173,14 @@
 	<div class="leadin">{block name="leadin"}{/block}</div>
 {/if}
 <div class="row">
-<div class="productTabs col-lg-2">
-	<div class="tab list-group">
-	{foreach $profiles as $profile}
-		<a class="list-group-item nav-profile {if $profile.id_profile == $current_profile}active{/if}" id="profile-{$profile.id_profile}" href="{$current}&token={$token}&id_profile={$profile.id_profile}">{$profile.name}</a>
-	{/foreach}
+	<div class="productTabs col-lg-2">
+		<div class="tab list-group">
+		{foreach $profiles as $profile}
+			<a class="list-group-item nav-profile {if $profile.id_profile == $current_profile}active{/if}" id="profile-{$profile.id_profile}" href="{$current}&token={$token}&id_profile={$profile.id_profile}">{$profile.name}</a>
+		{/foreach}
+		</div>
 	</div>
-</div>
-<form id="{$table}_form" class="defaultForm form-horizontal col-lg-10" action="{$current}&{$submit_action}=1&token={$token}" method="post" enctype="multipart/form-data">
+	<form id="{$table}_form" class="defaultForm form-horizontal col-lg-10" action="{$current}&{$submit_action}=1&token={$token}" method="post" enctype="multipart/form-data">
 		{if $form_id}
 			<input type="hidden" name="{$identifier}" id="{$identifier}" value="{$form_id}" />
 		{/if}
@@ -197,7 +197,7 @@
 			<div class="row">			
 			{if $profile.id_profile != $admin_profile}
 				<div class="col-lg-6">	
-					<fieldset>
+					<div class="panel">
 						<h3>{l s='Menu'}</h3>
 						<table class="table" id="table_{$profile.id_profile}">
 							<thead>
@@ -345,10 +345,10 @@
 								{/if}
 							</tbody>
 						</table>
-					</fieldset>
+					</div>
 				</div>
 				<div class="col-lg-6">
-					<fieldset>
+					<div class="panel">
 						<h3>{l s='Modules'}</h3>
 						<table class="table" id="table_module_{$profile.id_profile}">
 							<thead>
@@ -413,17 +413,17 @@
 								{/if}
 							</tbody>
 						</table>
-					</fieldset>
+					</div>
 				</div>
 			{else}
 				<div class="col-lg-12">
-					<fieldset>
+					<div class="panel">
 						{l s='Administrator permissions cannot be modified.'}
-					</fieldset>
+					</div>
 				</div>
 			{/if}
 			</div>
 		</div>
 		{/foreach}
-</form>
+	</form>
 </div>

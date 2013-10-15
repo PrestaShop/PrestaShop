@@ -103,7 +103,7 @@ $(document).ready(function () {
 	Customer.init();
 });
 </script>
-<fieldset>
+<div class="panel">
 	<input type="hidden" name="submitted_tabs[]" value="Prices" />
 	<h3>{l s='Product price'}</h3>
 
@@ -281,10 +281,10 @@ $(document).ready(function () {
 			</div>
 		</div>
 	</div>
-</fieldset>
+</div>
 
 {if isset($specificPriceModificationForm)}
-<fieldset>
+<div class="panel">
 	<h3>{l s='Specific prices'}</h3>
 
 	<div class="alert alert-info">

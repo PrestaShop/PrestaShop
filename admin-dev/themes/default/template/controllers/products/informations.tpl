@@ -28,7 +28,7 @@
 	{assign var=class_input_ajax value=''}
 {/if}
 
-<fieldset>
+<div class="panel">
 	<input type="hidden" name="submitted_tabs[]" value="Informations" />
 	<h3 class="tab">{l s='Information'}</h3>
 	<div class="alert alert-info">{l s='Product global information'}</div>
@@ -453,4 +453,4 @@
 			{/if}
 		</div>
 	</div>
-</fieldset>
+</div>

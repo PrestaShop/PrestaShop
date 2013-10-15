@@ -33,7 +33,7 @@
 	<i class="icon-plus-sign"></i> {l s='Add a new condition group'}
 </a>
 <div class="clearfix">&nbsp;</div>
-<fieldset>
+<div class="panel">
 	<h3><i class="icon-tasks"></i> {l s='Conditions'}</h3>
 	<form class="form-horizontal">
 		<div class="row">
@@ -145,7 +145,7 @@
 {if !$is_multishop}
 	<input type="hidden" name="id_shop" value=1 />
 {/if}
-</fieldset>
+</div>
 {/block}
 
 {block name="script"}
@@ -192,9 +192,9 @@ function delete_condition(condition)
 function new_condition_group()
 {
 	last_condition_group++;
-	var html = '<fieldset id="condition_group_'+last_condition_group+'" class="condition_group alert-info"><h3><i class="icon-tasks"></i> {l s='Condition group'} '+last_condition_group+'</h3>';
+	var html = '<div id="condition_group_'+last_condition_group+'" class="panel condition_group alert-info"><h3><i class="icon-tasks"></i> {l s='Condition group'} '+last_condition_group+'</h3>';
 		html += '<table class="table alert-info"><thead><tr><th class="fixed-width-md"><span class="title_box">{l s='Type'}</span></th><th><span class="title_box">{l s='Value'}</span></th><th></th></tr></thead><tbody></tbody></table>';
-		html += '</fieldset><div class="row condition_separator text-center">{l s='OR'}</div><div class="clearfix">&nbsp;</div>';
+		html += '</div><div class="row condition_separator text-center">{l s='OR'}</div><div class="clearfix">&nbsp;</div>';
 	$('#condition_group_list').append(html);
 	toggle_condition_group(last_condition_group);
 }

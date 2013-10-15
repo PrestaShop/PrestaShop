@@ -54,7 +54,7 @@
 
 
 <form action="{$action_fees}" id="fees" name="fees" method="post" class="form-horizontal">
-	<fieldset>
+	<div class="panel">
 		<h3>
 			<i class="icon-truck"></i>
 			{l s='Fees by carrier, geographical zone and ranges'}
@@ -138,5 +138,5 @@
 			</table>
 		{/if}
 		<input type="hidden" name="id_carrier" value="{$id_carrier}" />
-	</fieldset>
+	</div>
 </form>

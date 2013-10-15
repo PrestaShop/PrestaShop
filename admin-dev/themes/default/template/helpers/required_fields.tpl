@@ -27,7 +27,7 @@
 	<i class="icon-plus-sign"></i> {l s='Set required fields for this section'}
 </a>
 <div class="clearfix">&nbsp;</div>
-<fieldset style="display:none" class="requiredFieldsParameters">
+<div style="display:none" class="panel requiredFieldsParameters">
 	<h3><i class="icon-asterisk"></i> {l s='Required Fields'}</h3>
 	<form name="updateFields" action="{$current}&submitFields=1&token={$token}" method="post">
 		<div class="alert alert-info">
@@ -59,4 +59,4 @@
 		</table>
 		<button class="btn btn-primary pull-right" type="submit" name="submitFields"><i class="icon-save"></i> {l s='Save'}</button>
 	</form>
-</fieldset>
+</div>

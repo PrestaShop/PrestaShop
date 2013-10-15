@@ -28,8 +28,11 @@
 {block name="override_header"}
 
 	{if isset($backup_url) && isset($backup_weight)}
-	<fieldset>
-		<h3><i class="icon-download"></i> {l s='Download'}</h3>
+	<div class="panel">
+		<h3>
+			<i class="icon-download"></i>
+			{l s='Download'}
+		</h3>
 		<p>
 			<a class="btn btn-default" href="{$backup_url}">
 				<i class="icon-download"></i> 
@@ -37,9 +40,8 @@
 			</a>
 		</p>
 		<p>{l s='Tip: You can also download this file over to your FTP. Backup files are located in the "admin/backups" directory.'}</p>
-	</fieldset>
+	</div>
 	{/if}
-
 
 		<div class="alert alert-warning">
 			<button data-dismiss="alert" class="close" type="button">×</button>
@@ -63,8 +65,6 @@
 			</form>
 		</div>
 
-
-
 		<div class="alert alert-info">
 			<p>{l s='How to restore a database backup in 10 easy steps:'}</p>
 			<ol>
@@ -80,6 +80,5 @@
 				<li>{l s='Click on the "Go" button and please wait patiently for the import  process to conclude. This may take several minutes.'}</li>
 			</ol>
 		</div>
-
 
 {/block}

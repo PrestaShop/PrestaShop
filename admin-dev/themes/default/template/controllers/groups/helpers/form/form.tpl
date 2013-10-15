@@ -145,7 +145,7 @@
 			</table>
 		
 		<div style="display:none" id="group_discount_category_fancybox">
-			<fieldset class="form-horizontal">
+			<div class="panel form-horizontal">
 				<div class="col-lg-12">
 					<h3><i class="icon-group"></i> {l s='New group category discount'}</h3>
 					<hr/>
@@ -164,7 +164,7 @@
 						</div>
 					</div>
 				</div>
-			</fieldset>
+			</div>
 		</div>
 	</div>
 	{elseif $input['type'] == 'modules'}

@@ -87,7 +87,7 @@
 
 {if !$simple_header}
 		<input type="hidden" name="token" value="{$token}" />
-	</fieldset>
+	</div>
 </form>
 {/if}
 

@@ -27,7 +27,7 @@
 
 {block name="override_tpl"}
 
-<fieldset>
+<div class="panel">
 	<h3>
 		<i class="icon-envelope"></i>
 		{l s='Message status'}
@@ -79,12 +79,12 @@
 			</div>
 		</div>
 	</form>
-</fieldset>
+</div>
 
 
 	{if $thread->id_customer}
 
-		<fieldset>
+		<div class="panel">
 		{if $orders && count($orders)}
 			{if $count_ok}
 				<h3>
@@ -138,8 +138,8 @@
 				</p>
 			{/if}
 		{/if}
-		</fieldset>
-		<fieldset>
+		</div>
+		<div class="panel">
 		{if $products && count($products)}
 			<h3>
 				<i class="icon-archive"></i> {l s='Products:'}
@@ -180,7 +180,7 @@
 				</table>
 			</div>
 		{/if}
-		</fieldset>
+		</div>
 	{/if}
 
 	<div class="row row-margin-bottom">

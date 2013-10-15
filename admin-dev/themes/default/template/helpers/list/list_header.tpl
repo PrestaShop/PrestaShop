@@ -75,7 +75,7 @@
 {if !$simple_header}
 <form method="post" action="{$action}" class="form-horizontal">
 	{block name="override_form_extra"}{/block}
-	<fieldset class="col-lg-12">
+	<div class="panel col-lg-12">
 		<div class="panel-heading">
 			{if isset($icon)}<i class="{$icon}"></i> {/if}{if is_array($title)}{$title|end}{else}{$title}{/if}
 			{if isset($toolbar_btn) && count($toolbar_btn) >0}
@@ -176,7 +176,7 @@
 		</div>
 {/if}
 {if $simple_header}
-<fieldset class="col-lg-12">
+<div class="panel col-lg-12">
 	{if isset($title)}<h3>{if isset($icon)}<i class="{$icon}"></i> {/if}{if is_array($title)}{$title|end}{else}{$title}{/if}</h3>{/if}
 {/if}
 	<div class="table-responsive clearfix{if isset($use_overflow) && $use_overflow} overflow-y{/if}">

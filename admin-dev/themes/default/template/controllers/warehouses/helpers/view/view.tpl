@@ -26,7 +26,7 @@
 {extends file="helpers/view/view.tpl"}
 {block name="override_tpl"}
 {if isset($warehouse)}
-<fieldset>
+<div class="panel">
 	<h3><i class="icon-cogs"></i> {l s='General information'}</h3>
 	<div class="form-horizontal">
 		<div class="row">
@@ -70,8 +70,8 @@
 			<div class="col-lg-9"><p class="form-control-static">{$warehouse_value}</p></div>
 		</div>
 	</div>
-</fieldset>
-<fieldset>
+</div>
+<div class="panel">
 	<h3><i class="icon-sitemap"></i> {l s='Shops:'}</h3>
 	{if isset($shops) && count($shops) > 0}
 	<div class="alert alert-info">{l s='The following are the shops associated with this warehouse.'}</div>
@@ -94,16 +94,16 @@
 	{else}
 	<div class="alert alert-warning">{l s='Currently there is no shop associated with this warehouse.'}</div>
 	{/if}
-</fieldset>
-<fieldset>
+</div>
+<div class="panel">
 	<h3><i class="icon-archive"></i> {l s='Stock'}</h3>
 	<a class="btn btn-link" href="index.php?controller=adminstockinstantstate&id_warehouse={$warehouse->id}&token={getAdminToken tab='AdminStockInstantState'}">{l s='See products details'} <i class="icon-external-link-sign"></i></a>
-</fieldset>
-<fieldset>
+</div>
+<div class="panel">
 	<h3><i class="icon-reorder"></i> {l s='History'}</h3>
 	<a class="btn btn-link" href="index.php?controller=adminstockmvt&id_warehouse={$warehouse->id}&token={getAdminToken tab='AdminStockMvt'}">{l s='See warehouse\'s activity details'} <i class="icon-external-link-sign"></i></a>
-</fieldset>
+</div class="panel">
 {else}
-	<fieldset><div class="alert alert danger">{l s='This warehouse does not exist.'}</div></fieldset>
+	<div class="panel"><div class="alert alert danger">{l s='This warehouse does not exist.'}</div></div>
 {/if}
 {/block}

@@ -38,7 +38,7 @@
 	enctype="multipart/form-data" class="form-horizontal">
 	{foreach $option_list AS $category => $categoryData}
 		{if isset($categoryData['top'])}{$categoryData['top']}{/if}
-		<fieldset {if isset($categoryData['class'])}class="{$categoryData['class']}"{/if} id="{$table}_fieldset_{$category}">
+		<div class="panel {if isset($categoryData['class'])}{$categoryData['class']}{/if}" id="{$table}_fieldset_{$category}">
 			{* Options category title *}
 			<h3>
 				<i class="{if isset($categoryData['icon'])}{$categoryData['icon']}{else}icon-cogs{/if}"></i>
@@ -377,7 +377,7 @@
 			{block name="footer"}
 			{include file="footer_toolbar.tpl"}
 			{/block}
-		</fieldset>
+		</div>
 	{/foreach}
 	{hook h='displayAdminOptions'}
 	{if isset($name_controller)}
