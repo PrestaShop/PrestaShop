@@ -25,7 +25,7 @@
 
 <input type="hidden" name="supplier_loaded" value="1">
 {if isset($product->id)}
-<fieldset>
+<div class="panel">
 	<input type="hidden" name="submitted_tabs[]" value="Suppliers" />
 	<h3>{l s='Suppliers of the current product'}</h3>
 	<div class="alert alert-info">
@@ -56,8 +56,8 @@
 	<a class="btn btn-link bt-icon confirm_leave" href="{$link->getAdminLink('AdminSuppliers')|escape:'htmlall':'UTF-8'}&addsupplier">
 		<i class="icon-plus"></i> {l s='Create a new supplier'} <i class="icon-external-link-sign"></i>
 	</a>
-</fieldset>
-<fieldset>
+</div>
+<div class="panel">
 	<h3>{l s='Product reference(s)'}</h3>
 	<div class="alert alert-info">
 		{if $associated_suppliers|@count == 0}
@@ -126,5 +126,5 @@
 		</div>
 		{/foreach}
 	</div>
-</fieldset>
+</div>
 {/if}

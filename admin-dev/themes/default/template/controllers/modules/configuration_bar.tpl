@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<fieldset>
+<div class="panel">
 	<h3><i class="icon-cogs"></i> {l s='Configuration'}</h3>
 	<div class="row">
 		<div class="input-group">
@@ -44,4 +44,4 @@
 			{l s='Activate module for '}{$shop_context}
 	</div>
 	{/if}
-</fieldset>
+</div>

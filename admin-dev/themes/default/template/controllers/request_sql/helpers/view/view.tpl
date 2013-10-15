@@ -26,7 +26,7 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
-<fieldset>
+<div class="panel">
 	<h3><i class="icon-cog"></i> {l s='Request result'}</h3>
 	{if isset($view['error'])}
 		<div class="alert alert-warning">{l s='This request has no result.'}</div>
@@ -63,5 +63,5 @@
 			});
 		</script>
 	{/if}
-</fieldset>
+</div>
 {/block}

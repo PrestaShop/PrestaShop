@@ -25,7 +25,7 @@
 {extends file="helpers/list/list_header.tpl"}
 {block name=override_header}
 	{if count($list_warehouses) > 0}
-<fieldset>
+<div class="panel">
 	<h3><i class="icon-cogs"></i> {l s='Filters'}</h3>
 	<div class="filter-stock">
 			<form type="get" id="stock-movement-filter" class="form-horizontal">
@@ -44,5 +44,5 @@
 			</form>
 		{/if}
 	</div>
-</fieldset>
+</div>
 {/block}

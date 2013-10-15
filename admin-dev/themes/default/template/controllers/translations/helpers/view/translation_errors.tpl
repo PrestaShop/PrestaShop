@@ -47,10 +47,10 @@
 		<div class="alert alert-info">
 			{l s='Some sentences to translate use this syntax: %s... These are variables, and PrestaShop take care of replacing them before displaying your translation. You must leave these in your translations, and place them appropriately in your sentence.' sprintf='%d, %s, %1$s, %2$d'}
 		</div>
-		<fieldset>
+		<div class="panel">
 			<p>{l s='Expressions to translate:'} <span class="badge">{l s='%d' sprintf=$count}</span></p>
 			<p>{l s='Total missing expresssions:'} <span class="badge">{l s='%d' sprintf=$missing_translations|array_sum}</p>
-		</fieldset>
+		</div>
 
 		<script type="text/javascript">
 			$(document).ready(function(){
@@ -80,7 +80,7 @@
 		</div>
 
 		<form method="post" id="{$table}_form" action="{$url_submit}" class="form-horizontal">
-			<fieldset>
+			<div class="panel">
 				{*{$auto_translate}$*}
 				<input type="hidden" name="lang" value="{$lang}" />
 				<input type="hidden" name="type" value="{$type}" />
@@ -105,7 +105,7 @@
 						</tr>
 					{/foreach}
 				</table>
-			</fieldset>
+			</div>
 		</form>
 	{/if}
 

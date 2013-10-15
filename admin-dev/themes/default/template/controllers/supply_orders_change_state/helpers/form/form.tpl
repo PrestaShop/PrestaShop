@@ -63,10 +63,10 @@ $(document).ready(function() {
 
 {block name="other_fieldsets"}							
 {if isset($supply_order_state) && $supply_order_state->editable == false && isset($supply_order)}
-<fieldset>
+<div class="panel">
 	<h3><i class="icon-download-alt"></i> {l s='Print the supply order form'}</h3>
 	<a href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateSupplyOrderFormPDF&id_supply_order={$supply_order->id}" onclick="return !window.open(this.href);" title="Export as PDF" class="btn btn-default"><i class="icon-download-alt"></i> {l s='Click here to download the supply order form.'}.</a>
-</fieldset>
+</div>
 {/if}
 
 {/block}

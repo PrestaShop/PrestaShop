@@ -67,8 +67,11 @@
 {if $generate}<div class="module_confirmation conf confirm">{l s='%d product(s) successfully created.' sprintf=$combinations_size}</div>{/if}
 <script type="text/javascript" src="../js/attributesBack.js"></script>
 <form enctype="multipart/form-data" method="post" id="generator" action="{$url_generator}">
-	<fieldset>
-		<h3><i class="icon-asterisk"></i> {l s='Attributes generator'}</h3>
+	<div class="panel">
+		<h3>
+			<i class="icon-asterisk"></i>
+			{l s='Attributes generator'}
+		</h3>
 		<div class="row">
 			<div class="col-lg-3">
 				<div class="form-group">
@@ -139,5 +142,5 @@
 				<button type="submit" class="btn btn-default" name="generate"><i class="icon-random"></i> {l s='Generate these Combinations'}</button>
 			</div>
 		</div>
-	</fieldset>
+	</div>
 </form>

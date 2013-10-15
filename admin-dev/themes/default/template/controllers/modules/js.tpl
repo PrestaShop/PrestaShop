@@ -108,12 +108,11 @@
 		{
 			$('.categoryModuleFilterLink').css('background-color', 'white');
 			$(this).css('background-color', '#EBEDF4');
-			var ajaxReloadCurrentIndex = $(this).find('a').attr('href').replace('index.php', 'ajax-tab.php');
 			try
 			{
 				resAjax = $.ajax({
 					type:"POST",
-					url : ajaxReloadCurrentIndex,
+					url : $(this).attr('href'),
 					async: true,
 					data : {
 						ajax : "1",

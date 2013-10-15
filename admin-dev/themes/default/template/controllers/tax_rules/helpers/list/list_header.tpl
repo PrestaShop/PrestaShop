@@ -33,7 +33,7 @@
 {/if}
 
 <form method="post" action="{$currentIndex}&{$identifier}&token={$token}&id_tax_rules_group={$id_tax_rules_group}&updatetax_rules_group#{$table}" class="form">
-	<fieldset>
+	<div class="panel">
 	<input type="hidden" id="submitFilter{$list_id}" name="submitFilter{$list_id}" value="0"/>
 	<div class="table-responsive clearfix">
 		<table

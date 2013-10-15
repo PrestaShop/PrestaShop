@@ -26,7 +26,7 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
-<fieldset>
+<div class="panel">
 	{include file="helpers/kpi/kpi.tpl"
 		id="kpi-cart"
 		color="color1"
@@ -37,10 +37,10 @@
 		source=''
 		chart=null
 	}
-</fieldset>
+</div>
 <div class="row">
 	<div class="col-lg-6">
-		<fieldset>
+		<div class="panel">
 			<h3><i class="icon-user"></i> {l s='Customer information'}</h3>
 			{if $customer->id}
 				<a class="btn btn-default pull-right" href="mailto:{$customer->email}"><i class="icon-envelope"></i> {$customer->email}</a>
@@ -70,10 +70,10 @@
 			{else}
 				<h2>{l s='Guest not registered'}</h2>
 			{/if}
-		</fieldset>
+		</div>
 	</div>
 	<div class="col-lg-6">
-		<fieldset>
+		<div class="panel">
 			<h3><i class="icon-shopping-cart"></i> {l s='Order information'}</h3>
 			{if $order->id}
 				<h2><a href="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&id_order={$order->id}&vieworder"> {l s='Order #%d' sprintf=$order->id|string_format:"%06d"}</a></h2>
@@ -84,10 +84,10 @@
 					<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&id_cart={$cart->id}&addorder"><i class="icon-shopping-cart"></i> {l s='Create an order from this cart.'}</a>
 				{/if}
 			{/if}
-		</fieldset>
+		</div>
 	</div>
 </div>
-<fieldset>
+<div class="panel">
 	<h3><i class="icon-archive"></i> {l s='Cart summary'}</h3>
 		<table class="table" id="orderProducts">
 			<thead>
@@ -193,7 +193,7 @@
 	</table>
 	
 	{if $discounts}
-	<table cellspacing="0" cellpadding="0" class="table" style="width:280px; margin:15px 0px 0px 420px;">
+	<table class="table">
 		<tr>
 			<th><img src="../img/admin/coupon.gif" alt="{l s='Discounts'}" />{l s='Discount name'}</th>
 			<th align="center" style="width: 100px">{l s='Value'}</th>
@@ -211,4 +211,4 @@
 	</div>	
 	<div class="clear" style="height:20px;">&nbsp;</div>
 {/block}
-</fieldset>
+</div>

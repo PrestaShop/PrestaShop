@@ -31,7 +31,7 @@
 	{/if}
 	{foreach $fields as $f => $fieldset}
 		{block name="fieldset"}
-		<fieldset id="fieldset_{$f}">
+		<div class="panel" id="fieldset_{$f}">
 			{foreach $fieldset.form as $key => $field}
 				{if $key == 'legend'}
 					<h3>
@@ -657,7 +657,7 @@
 		{block name="footer"}
 		{include file="footer_toolbar.tpl"}
 		{/block}
-		</fieldset>
+		</div>
 		{/block}
 		{block name="other_fieldsets"}{/block}
 	{/foreach}

@@ -28,7 +28,7 @@
 {block name="after"}
 <div class="row">
 	<div class="col-lg-3">
-		<fieldset>
+		<div class="panel">
 			<h3><i class="icon-list"></i> {l s='List of MySQL Tables'}</h3>
 			<div class="row" id="selectTables">
 				<select id="table" size="10">
@@ -40,15 +40,15 @@
 			<div class="row">
 				<button type="button" id="add_table" class="btn btn-default">{l s='Add table'}</button>
 			</div>
-		</fieldset>
+		</div>
 	</div>
 	<div class="col-lg-9">
-		<fieldset>
+		<div class="panel">
 			<h3><i class="icon-list"></i> {l s='List of tables attributes'}</h3>
 			<div id="listAttributes">
 				<div class="alert alert-warning">{l s='Please choose a MySQL table'}</div>
 			</div>
-		</fieldset>
+		</div>
 	</div>
 </div>
 	
