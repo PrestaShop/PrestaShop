@@ -68,8 +68,8 @@ class AdminLoginControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.');
 			else
 			{
-				$warningSslMessage = Tools::displayError('SSL is activated. Please connect using the following URL to log into secure mode (https://).');
-				$warningSslMessage .= '<a href="https://'.Tools::safeOutput(Tools::getServerName()).Tools::safeOutput($_SERVER['REQUEST_URI']).'">https://'.Tools::safeOutput(Tools::getServerName()).Tools::safeOutput($_SERVER['REQUEST_URI']).'</a>';
+				$warningSslMessage = Tools::displayError('SSL is activated. Please connect using the following link to ');
+				$warningSslMessage .= '<a href="https://'.Tools::safeOutput(Tools::getServerName()).Tools::safeOutput($_SERVER['REQUEST_URI']).'">log into secure mode (https://)</a>';
 				$this->context->smarty->assign(array('warningSslMessage' => $warningSslMessage));
 			}
 		}
