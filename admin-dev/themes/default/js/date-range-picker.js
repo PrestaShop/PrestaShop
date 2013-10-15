@@ -19,7 +19,7 @@
 
 //click action
 !function( $ ) {
-	var click, switched, val, start, end, over;
+	var click, switched, val, start, end, over
 
 	// Picker object
 	var Datepicker = function(element, options){
@@ -264,6 +264,14 @@
 									this.viewDate['get'+DPGlobal.modes[this.viewMode].navFnc].call(this.viewDate) +
 									DPGlobal.modes[this.viewMode].navStep * (target[0].className === 'prev' ? -1 : 1)
 								);
+
+								this.date = new Date(this.viewDate);
+								this.element.trigger({
+									type: 'changeDate',
+									date: this.date,
+									viewMode: DPGlobal.modes[this.viewMode].clsName
+								});
+
 								this.fill();
 								this.set();
 								break;
