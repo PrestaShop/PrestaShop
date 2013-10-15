@@ -41,7 +41,7 @@
 		<a class="link-social link-github" href="https://github.com/PrestaShop/PrestaShop/" target="_blank" title="Github">
 			<i class="icon-github"></i>
 		</a>
-		<a class="link-social link-google" href="https://plus.google.com/communities/106282122101569374397" target="_blank" title="Google">
+		<a class="link-social link-google" href="https://plus.google.com/+prestashop/" target="_blank" title="Google">
 			<i class="icon-google-plus"></i>
 		</a>
 	</div>	

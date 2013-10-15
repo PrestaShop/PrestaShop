@@ -124,10 +124,12 @@ function data_trends(widget_name, data)
 	for (var data_id in data)
 	{
 		$('#'+data_id).html(data[data_id]['value']);
-		if (data[data_id]['way'] == 'down')
-			$('#'+data_id).parent().removeClass('dash_trend_up').addClass('dash_trend_down');
+		if (data[data_id]['way'] == 'up')
+			$('#'+data_id).parent().removeClass('dash_trend_down').removeClass('dash_trend_right').addClass('dash_trend_up');
+		else if (data[data_id]['way'] == 'down')
+			$('#'+data_id).parent().removeClass('dash_trend_up').removeClass('dash_trend_right').addClass('dash_trend_down');
 		else
-			$('#'+data_id).parent().removeClass('dash_trend_down').addClass('dash_trend_up');
+			$('#'+data_id).parent().removeClass('dash_trend_down').removeClass('dash_trend_up').addClass('dash_trend_right');
 		$('#'+data_id).closest('section').removeClass('loading');
 	}
 }
