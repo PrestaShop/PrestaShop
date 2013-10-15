@@ -111,7 +111,6 @@ class Dashtrends extends Module
 				$tmp_data['visits_score'][strtotime($row['date'])] = $row['visits_score'];
 		}
 
-		// First we retrieve the 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT
 			LEFT(`invoice_date`, 10) as date,

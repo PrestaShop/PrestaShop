@@ -96,76 +96,16 @@ class BlockWishList extends Module
 				$this->_html .= '<div class="alert error">'.$this->l('Activate module : Invalid choice.').'</div>';
 			$this->_html .= '<div class="conf confirm">'.$this->l('Settings updated').'</div>';
 		}
-		$this->_displayForm();
-		return ($this->_html);
+		
+		$this->_html .= $this->renderJS();
+		$this->_html .= $this->renderForm();
+		if (Tools::getValue('id_customer') && Tools::getValue('id_wishlist'))
+			$this->_html .= $this->renderList((int)Tools::getValue('id_wishlist'));
+		
+		
+		return $this->_html;
 	}
 
-	private function _displayForm()
-	{
-		$this->_displayFormView();
-	}
-	
-	private function _displayFormView()
-	{
-		$customers = Customer::getCustomers();
-		if (!sizeof($customers))
-			return;
-		$id_customer = (int)(Tools::getValue('id_customer'));
-		if (!$id_customer)
-			$id_customer = $customers[0]['id_customer'];
-		$this->_html .= '<br />
-		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" id="listing">
-			<fieldset>
-				<legend><img src="'.$this->_path.'img/icon/package_go.png" alt="" title="" />'.$this->l('Listing').'</legend>
-
-				<label>'.$this->l('Customers').'</label>
-				<div class="margin-form">
-					<select name="id_customer" onchange="$(\'#listing\').submit();">';
-		foreach ($customers as $customer)
-		{
-			$this->_html .= '<option value="'.(int)($customer['id_customer']).'"';
-			if ($customer['id_customer'] == $id_customer)
-				$this->_html .= ' selected="selected"';
-			$this->_html .= '>'.htmlentities($customer['firstname'], ENT_COMPAT, 'UTF-8').' '.htmlentities($customer['lastname'], ENT_COMPAT, 'UTF-8').'</option>';
-		}
-		$this->_html .= '
-					</select>
-				</div>';
-		require_once(dirname(__FILE__).'/WishList.php');
-		$wishlists = WishList::getByIdCustomer($id_customer);
-		if (!sizeof($wishlists))
-			return ($this->_html .= '</fieldset></form>');
-		$id_wishlist = false;
-		foreach ($wishlists AS $row)
-			if ($row['id_wishlist'] == Tools::getValue('id_wishlist'))
-			{
-				$id_wishlist = (int)(Tools::getValue('id_wishlist'));
-				break;
-			}
-		if (!$id_wishlist)
-			$id_wishlist = $wishlists[0]['id_wishlist'];
-		$this->_html .= '
-				<label>'.$this->l('Wishlists').'</label>
-				<div class="margin-form">
-					<select name="id_wishlist" onchange="$(\'#listing\').submit();">';
-		foreach ($wishlists as $wishlist)
-		{
-			$this->_html .= '<option value="'.(int)($wishlist['id_wishlist']).'"';
-			if ($wishlist['id_wishlist'] == $id_wishlist)
-			{
-				$this->_html .= ' selected="selected"';
-				$counter = $wishlist['counter'];
-			}
-			$this->_html .= '>'.htmlentities($wishlist['name'], ENT_COMPAT, 'UTF-8').'</option>';
-		}
-		$this->_html .= '
-					</select>
-				</div>';
-		$this->_displayProducts((int)($id_wishlist));
-		$this->_html .= 	'</fieldset>
-		</form>';
-	}
-	
 	public function hookHeader($params)
 	{
 		$this->context->controller->addCSS(($this->_path).'blockwishlist.css', 'all');
@@ -332,5 +272,137 @@ class BlockWishList extends Module
 	{
 		return $this->l('You must be logged in to manage your wishlists.');
 	}
-}
+	
+	public function renderJS()
+	{
+		return "<script>
+			$(document).ready(function () { $('#id_customer, #id_wishlist').change( function () { $('#module_form').submit(); }) });
+		</script>";
+	}
+	
+	public function renderForm()
+	{
+		$customers = Customer::getCustomers();
+		foreach ($customers as $key => $val)
+			$customers[$key]['name'] =  $val['firstname'].' '.$val['lastname'];
+		
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Listing'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'select',
+						'label' => $this->l('Customers :'),
+						'name' => 'id_customer',
+						'options' => array(
+							'default' => array('value' => 0, 'label' => $this->l('Choose customer')),
+							'query' => $customers,
+							'id' => 'id_customer',
+							'name' => 'name'
+						),
+					)
+				),
+			),
+		);
+		
+		if ($id_customer = Tools::getValue('id_customer'))
+		{
+			require_once(dirname(__FILE__).'/WishList.php');
+			$wishlists = WishList::getByIdCustomer($id_customer);
+			$fields_form['form']['input'][] = array(
+													'type' => 'select',
+													'label' => $this->l('Wishlist :'),
+													'name' => 'id_wishlist',
+													'options' => array(
+														'default' => array('value' => 0, 'label' => $this->l('Choose wishlist')),
+														'query' => $wishlists,
+														'id' => 'id_wishlist',
+														'name' => 'name'
+													),
+												);
+		}
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$this->fields_form = array();
 
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitModule';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function getConfigFieldsValues()
+	{
+		return array(
+			'id_customer' => Tools::getValue('id_customer'),
+			'id_wishlist' => Tools::getValue('id_wishlist'),
+		);
+	}
+		
+	public function renderList($id_wishlist)
+	{
+		$wishlist = new WishList($id_wishlist);
+		$products = WishList::getProductByIdCustomer($id_wishlist, $wishlist->id_customer, $this->context->language->id);
+
+		foreach ($products as $key => $val)
+		{
+			$image = Image::getCover($val['id_product']);
+			$products[$key]['image'] = $this->context->link->getImageLink($val['link_rewrite'], $image['id_image'], 'small');
+		}
+		
+		$fields_list = array(
+			'image' => array(
+				'title' => $this->l('Image'),
+				'type' => 'image',
+			),
+			'name' => array(
+				'title' => $this->l('Product'),
+				'type' => 'text',
+			),
+			'attributes_small' => array(
+				'title' => $this->l('Combination'),
+				'type' => 'text',
+			),
+			'quantity' => array(
+				'title' => $this->l('Quantity'),
+				'type' => 'text',
+			),
+			'priority' => array(
+				'title' => $this->l('Priority'),
+				'type' => 'priority',
+				'values' => array($this->l('High'), $this->l('Medium'), $this->l('Low')),
+			)
+		);
+
+		
+		$helper = new HelperList();
+		$helper->shopLinkType = '';
+		$helper->simple_header = true;
+		$helper->actions = array();
+		$helper->show_toolbar = false;
+		$helper->module = $this;
+		$helper->identifier = 'image';
+		$helper->title = $this->l('Product list');
+		$helper->table = $this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
+		$helper->tpl_vars = array('priority' => array($this->l('High'), $this->l('Medium'), $this->l('Low')));
+		
+		return $helper->generateList($products, $fields_list);
+	}
+}

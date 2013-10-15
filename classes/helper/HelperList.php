@@ -533,7 +533,6 @@ class HelperListCore extends Helper
 			isset($this->context->cookie->{$this->list_id.'_pagination'}) ? $this->context->cookie->{$this->list_id.'_pagination'} : null
 		);
 
-
 		if ($this->position_identifier && (int)Tools::getValue($this->position_identifier, 1))
 			$table_id = substr($this->identifier, 3, strlen($this->identifier));
 
