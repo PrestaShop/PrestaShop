@@ -179,7 +179,7 @@
 <fieldset class="col-lg-12">
 	{if isset($title)}<h3>{if isset($icon)}<i class="{$icon}"></i> {/if}{if is_array($title)}{$title|end}{else}{$title}{/if}</h3>{/if}
 {/if}
-	<div class="table-responsive clearfix">
+	<div class="table-responsive clearfix{if isset($use_overflow) && $use_overflow} overflow-y{/if}">
 		<table
 			name="list_table"
 			{if $table_id} id={$table_id}{/if}
