@@ -24,7 +24,7 @@
 *}
 <section id="dashactivity" class="panel widget{if $allow_push} allow_push{/if}">
 	<div class="panel-heading">
-		<i class="icon-time"></i> {l s='Recent Activity'}
+		<i class="icon-time"></i> {l s="Activity overview" mod="dashactivity"}
 		<span class="panel-heading-action">
 			<a class="list-toolbar-btn" href="#" onclick="toggleDashConfig('dashactivity'); return false;" title="configure">
 				<i class="process-icon-configure"></i>
@@ -38,49 +38,64 @@
 		<header><i class="icon-wrench"></i> {l s='Configuration'}</header>
 		{$dashactivity_config_form}
 	</section>
-	<section id="dash_orders" class="loading">
+	<section id="dash_live" class="loading">
 		<ul class="data_list_large">
 			<li>
 				<span class="data_label size_l">
-					{l s='Orders'}<br/>
-					<small class="text-muted">{l s='Within the last seven days'}</small>
+					{l s='Online Visitor'}
+					<small class="text-muted"><br/>
+						{l s='In the last 30 minutes'}
+					</small>
 				</span>
 				<span class="data_value size_xxl">
-					<span id="order_nbr">
-					</span><br/>
-					<small class="dash_trend dash_trend_up"><span id="orders_trends"></span>%</small>
+					<span id="online_visitor"></span>
+				</span>
+			</li>
+			<li>
+				<span class="data_label size_l">
+					{l s='Active Shopping Carts'}
+					<small class="text-muted"><br/>
+						{l s='In the last 30 minutes'}
+					</small>
+				</span>
+				<span class="data_value size_xxl">
+					<span id="active_shopping_cart"></span>
 				</span>
 			</li>
 		</ul>			
 	</section>
 	{if $DASHACTIVITY_SHOW_PENDING}
 	<section id="dash_pending" class="loading">
-		<header><i class="icon-time"></i> {l s='Pending'}</header>
+		<header><i class="icon-time"></i> {l s='Currently Pending'}</header>
 		<ul class="data_list">
 			<li>
-				<span class="data_label">{l s='Pending Orders'}</span>
+				<span class="data_label">{l s='Orders'}</span>
 				<span class="data_value size_l">
 					<span id="pending_orders"></span>
 				</span>
 			</li>
+			{if $DASHACTIVITY_SHOW_RETURNS}
 			<li>
 				<span class="data_label">{l s='Return/Exchanges'}</span>
 				<span class="data_value size_l">
 					<span id="return_exchanges"></span>
 				</span>
 			</li>
+			{/if}
 			<li>
 				<span class="data_label">{l s='Abandoned Carts'}</span>
 				<span class="data_value size_l">
 					<span id="abandoned_cart"></span>
 				</span>
 			</li>
+			{if $DASHACTIVITY_SHOW_STOCK}
 			<li>
 				<span class="data_label">{l s='Products Out of Stock'}</span>
 				<span class="data_value size_l">
 					<span id="products_out_of_stock"></span>
 				</span>
 			</li>
+			{/if}
 		</ul>
 	</section>
 	{/if}
@@ -111,7 +126,7 @@
 	{/if}
 	{if $DASHACTIVITY_SHOW_CUSTOMERS}
 	<section id="dash_customers" class="loading">
-		<header><i class="icon-user"></i> {l s='Customers'}</header>
+		<header><i class="icon-user"></i> {l s='Customers & Newsletters'}</header>
 		<ul class="data_list">
 			<li>
 				<span class="data_label">{l s='New Customers'}</span>
@@ -120,31 +135,7 @@
 				</span>
 			</li>
 			<li>
-				<span class="data_label">{l s='Online Visitor'}</span>
-				<span class="data_value size_md">
-					<span id="online_visitor"></span>
-				</span>
-			</li>
-			<li>
-				<span class="data_label">
-					{l s='Active Shopping Carts'}
-					<small class="text-muted"><br/>
-						{l s='In the last 30 minutes'}
-					</small>
-				</span>
-				<span class="data_value size_md">
-					<span id="active_shopping_cart"></span>
-				</span>
-			</li>
-		</ul>
-	</section>
-	{/if}
-	{if $DASHACTIVITY_SHOW_NEWSLETTER}
-	<section id="dash_newsletter" class="loading">
-		<header><i class="icon-envelope"></i> {l s='Newsletter'}</header>
-		<ul class="data_list">
-			<li>
-				<span class="data_label">{l s='New Registrations'}</span>
+				<span class="data_label">{l s='New Subscriptions'}</span>
 				<span class="data_value size_md">
 					<span id="new_registrations"></span>
 				</span>
