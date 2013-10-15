@@ -263,7 +263,7 @@ $(document).ready(function () {
 		<div class="col-lg-9 col-lg-offset-3">
 			<div class="alert alert-success">
 				<strong>{l s='Final retail price:'}</strong>
-				<span {if !$country_display_tax_label}style="display:none"{/if} >
+				<span>
 					{$currency->prefix}
 					<span id="finalPrice" >0.00</span>
 					{$currency->suffix}
