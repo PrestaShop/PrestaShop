@@ -64,7 +64,7 @@ class OrderDeliveryCore extends ObjectModel
 		$this->context = $context->cloneContext();
 	}
 
-	public function getMaxNr($order)
+	public function getNextSlipNr($order)
 	{
 		$nr = Db::getInstance()->executeS('SELECT MAX(`delivery_nr`) as delivery_nr
 		FROM `'._DB_PREFIX_.'order_delivery`
@@ -168,6 +168,26 @@ class OrderDeliveryCore extends ObjectModel
 	public function setPartiallyShipped($delivery_id)
 	{
 		Db::getInstance()->update('order_delivery',array('shipped' => 1 ), '`delivery_id` = ' . $delivery_id ); // set delivery id as shipped
+	}
+
+	public function getShippedByNr($delivery_nr,$id_order)
+	{
+		$ship = Db::getInstance()->executeS(
+		'SELECT `shipped`
+		FROM `'._DB_PREFIX_.'order_delivery`
+		WHERE `delivery_nr` = ' . $delivery_nr . ' AND `id_order` = ' . $id_order);
+		if($ship)
+			return $ship[0]['shipped'];
+	}
+
+	public function getDeliveryDate($delivery_nr,$id_order)
+	{
+		$date = Db::getInstance()->executeS(
+		'SELECT `delivery_date`
+		FROM `'._DB_PREFIX_.'order_delivery`
+		WHERE `delivery_nr` = ' . $delivery_nr . ' AND `id_order` = ' . $id_order);
+		if($date)
+			return $date[0]['delivery_date'];
 	}
 
 }

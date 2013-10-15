@@ -255,7 +255,7 @@ class OrderInvoiceCore extends ObjectModel
 	 * @since 1.5
 	 * @return array
 	 */
-	public function getProductTaxesBreakdown()
+	public function getProductTaxesBreakdown($delivery_nr = false)
 	{
 		$tmp_tax_infos = array();
 		if ($this->useOneAfterAnotherTaxComputationMethod())
@@ -313,9 +313,31 @@ class OrderInvoiceCore extends ObjectModel
 			GROUP BY odt.`id_order_detail`
 			');
 
+			if (Configuration::get('PS_ADS') && Configuration::get('PS_ADS_INVOICE_DELIVERD') && $delivery_nr )
+			{
+				$order = New Order($this->id_order);
+				$products = $order->getProductsDelivery(false,false,false,$delivery_nr); // get only deliverd products
+				$products = $products[$delivery_nr];
+				$total_price_tax_excl = 0;
+				foreach($products as &$product) {
+					$product['product_quantity'] = $product['delivery_qty'];
+						$total_price_tax_excl_product = ($product['unit_price_tax_excl'] * $product['delivery_qty']);
+						$total_price_tax_excl += $total_price_tax_excl_product;
+				}
+
+				$delivery = Db::getInstance()->executeS('
+				SELECT  od.`unit_price_tax_excl`, odyd.`delivery_qty`, odt.`unit_amount`
+				FROM `'._DB_PREFIX_.'order_detail_tax` odt
+				LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
+				LEFT JOIN `'._DB_PREFIX_.'order_delivery_detail` odyd ON (od.`product_id` = odyd.`product_id`)
+				WHERE od.`id_order` = '.(int)$this->id_order.'
+				');
+				$delivery = $delivery[$delivery_nr-1];
+			}
+
 			// sum by taxes
 			$tmp_tax_infos = array();
-			foreach ($taxes_infos as $tax_infos)
+			foreach ($taxes_infos as &$tax_infos)
 			{
 				if (!isset($tmp_tax_infos[$tax_infos['rate']]))
 					$tmp_tax_infos[$tax_infos['rate']] = array(
@@ -324,15 +346,13 @@ class OrderInvoiceCore extends ObjectModel
 						'total_price_tax_excl' => 0
 					);
 
-				/*
-					I think the solution is here. need to change total_price_tax_excl with as I have done in HTMLTemplate
-					$total_price_tax_excl_product = ($product['unit_price_tax_excl'] * $product['delivery_qty']);
-					Problem here is that currently it don't have acces to delivery_qty.
-					
-					
-					what about ratio? Does that need to change?
-					total_amount seems somehow to be allready fixed in current invoice.
-				*/
+					if (Configuration::get('PS_ADS') && Configuration::get('PS_ADS_INVOICE_DELIVERD') && $delivery_nr )
+					{
+						$tax_infos['total_price_tax_excl'] = $total_price_tax_excl;
+						$tax_infos['total_amount'] =  $delivery['delivery_qty'] * $delivery['unit_amount'];
+						$tax_infos['product_quantity'] = $delivery['delivery_qty'];
+					}
+
 				$ratio = $tax_infos['total_price_tax_excl'] / $this->total_products;
 				$order_reduction_amount = $this->total_discount_tax_excl * $ratio;
 				$tmp_tax_infos[$tax_infos['rate']]['total_amount'] += ($tax_infos['total_amount'] - Tools::ps_round($tax_infos['ecotax'] * $tax_infos['product_quantity'] * $tax_infos['ecotax_tax_rate'] / 100, 2));

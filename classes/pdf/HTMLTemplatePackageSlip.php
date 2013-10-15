@@ -39,8 +39,8 @@ class HTMLTemplatePackageSlipCore extends HTMLTemplate
 		$this->smarty = $smarty;
 
 		// header informations
-		$this->date = Tools::displayDate(date("Y-m-d"));// ($this->order->invoice_date);
-		$this->title = HTMLTemplatePackageSlip::l('Package Slip'); //.' #'.sprintf('%06d', $this->order_invoice->id_order);
+		$this->date = Tools::displayDate(date("Y-m-d H:i:s"));
+		$this->title = HTMLTemplatePackageSlip::l('Package Slip') .' #'.sprintf('%06d', $this->order_invoice->id_order);
 
 		// footer informations
 		$this->shop = new Shop((int)$this->order->id_shop);
@@ -63,6 +63,23 @@ class HTMLTemplatePackageSlipCore extends HTMLTemplate
 		}
 		
 		$order_details = $this->order_invoice->getProducts();
+		$delivery_products = $this->order->getProductsDelivery();
+		$deliverd_products = array();
+		foreach($delivery_products as $key => $delivery)
+		{
+				foreach($delivery as $product) {
+					if($product['shipped'] == 1) {
+						if(!empty($deliverd_products[ $product['product_id'] ]))
+						{
+							$deliverd_products[ $product['product_id'] ] += $product['delivery_qty'];
+						}
+						else
+						{
+							$deliverd_products[ $product['product_id'] ] = $product['delivery_qty'];
+						}
+					}
+				}
+		}
 		foreach ($order_details as &$order_detail)
 		{
 			$order_detail['warehouse_name'] = "--";
@@ -85,6 +102,11 @@ class HTMLTemplatePackageSlipCore extends HTMLTemplate
 					$order_detail['image_size'] = getimagesize(_PS_TMP_IMG_DIR_.$name);
 				else
 					$order_detail['image_size'] = false;
+			}
+			if($deliverd_products[ $order_detail['product_id'] ])
+			{
+				// Removed delivered products qty
+				$order_detail['product_quantity'] = $order_detail['product_quantity'] - $deliverd_products[ $order_detail['product_id'] ];
 			}
 		}
 	

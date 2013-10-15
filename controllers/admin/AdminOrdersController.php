@@ -1301,9 +1301,29 @@ class AdminOrdersControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('An error occurred when addning product to delivery');
 			}
 		}
-		elseif (Tools::getValue('submitAdsAddAll') && isset($order))
+		elseif (Tools::isSubmit('submitAdsAddAll') && isset($order))
 		{
-			// Add all products
+			// Add all remaning products
+		}
+		elseif (Tools::isSubmit('setTemplates') && isset($order))
+		{
+			$exists = Db::getInstance()->executeS('
+			SELECT id_order
+			FROM `'._DB_PREFIX_.'order_template`
+			WHERE `id_order` = ' .$order->id. '
+			'); // check if we allready set an template to this order
+				$what = array('invoice' => Tools::getValue('invoice_template'),'delivery-slip' => Tools::getValue('delivery_template') );
+				if(!empty($exists)) // if we allready has set an template, we must update
+				{
+					$where = '`id_order` = ' . $order->id; // update @ id_order
+					Db::getInstance()->update('order_template',$what,$where);
+				}
+				else
+				{
+					// else we add id_order to what and insert it in table
+					$what = array_merge($what,array('id_order' => $order->id));
+					Db::getInstance()->insert('order_template',$what);
+				}
 		}
 
 		parent::postProcess();
@@ -1320,12 +1340,10 @@ class AdminOrdersControllerCore extends AdminController
 		$products = $this->getProducts($order);
 		
 		$order_delivery = new OrderDelivery($order->id);
-		$ads_deliverynr = $order_delivery->getMaxNr($order);
+		$ads_deliverynr = $order_delivery->getNextSlipNr($order);
 	
 		$delivered_products = $this->getProductsDelivery($order);
-// 		echo('<pre>');
-// 		print_r($delivered_products);
-// 		echo('</pre>');
+
 		$currency = new Currency((int)$order->id_currency);
 		// Carrier module call
 		$carrier_module_call = null;
@@ -1463,6 +1481,10 @@ class AdminOrdersControllerCore extends AdminController
 			'invoice_management_active' => Configuration::get('PS_INVOICE', null, null, $order->id_shop),
 			'display_warehouse' => (int)Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'),
 			'ads_deliverynr' => $ads_deliverynr,
+			'invoice_templates' => $this->getTemplateModels('invoice'),
+			'cur_invoice_template' => $this->getCurrentTemplate('invoice',$order),
+			'delivery_templates' => $this->getTemplateModels('delivery-slip'),
+			'cur_delivery_template' => $this->getCurrentTemplate('delivery-slip',$order),
 		);
 
 		return parent::renderView();
@@ -2304,10 +2326,7 @@ class AdminOrdersControllerCore extends AdminController
 	{
 		// get delivered products
 		$delivered_products = $order->getProductsDelivery();
-// 		echo('<pre>');
-// 		print_r($delivered_products);
-// 		echo('</pre>');
-// 		print_r($delivered_products);
+
 		foreach ($delivered_products as &$delivery)
 		{
 			foreach ($delivery as &$product)
@@ -2397,5 +2416,51 @@ class AdminOrdersControllerCore extends AdminController
 		$order_invoice->total_paid_tax_excl -= $value_tax_excl;
 		$order_invoice->update();
 	}
+
+	protected function getTemplateModels($model)
+	{
+		$models = array(
+			array(
+				'value' => $model,
+				'name' => $model
+			)
+		);
+
+		$templates_override = $this->getTemplateModelsFromDir(_PS_THEME_DIR_.'pdf/',$model);
+		$templates_default = $this->getTemplateModelsFromDir(_PS_PDF_DIR_,$model);
+
+		foreach (array_merge($templates_default, $templates_override) as $template)
+		{
+			$template_name = basename($template, '.tpl');
+			$models[] = array('value' => $template_name, 'name' => $template_name);
+		}
+		return $models;
+	}
+
+	protected function getTemplateModelsFromDir($directory,$model)
+	{
+		$templates = false;
+
+		if (is_dir($directory))
+			$templates = glob($directory.$model . '-*.tpl');
+
+		if (!$templates)
+			$templates = array();
+
+		return $templates;
+	}
+
+	protected function getCurrentTemplate($model,$order)
+	{
+			$template = Db::getInstance()->executeS('
+			SELECT `' . $model . '`
+			FROM `'._DB_PREFIX_.'order_template`
+			WHERE `id_order` = ' .$order->id. '
+			');
+			if($template)
+				$template = $template[0][$model];
+			return $template;
+	}
+
 }
 

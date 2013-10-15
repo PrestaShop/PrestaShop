@@ -118,7 +118,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 				)
 			),
 			'ads' => array(
-				'title' => $this->l('Advanced Delivery System 1.1'),
+				'title' => $this->l('Advanced Delivery System 1.2'),
 				'icon' => 'tab-preferences',
 				'fields' => array(
 					'PS_ADS' => array(
@@ -141,6 +141,28 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool',
+					),
+					'PS_INVOICE_MODEL' => array(
+						'title' => $this->l('Invoice model:'),
+						'desc' => $this->l('Choose an invoice model. This is same setting as Orders > Invoices'),
+						'type' => 'select',
+						'identifier' => 'value',
+						'list' => $this->getTemplateModels('invoice')
+					),
+					'PS_DELIVERY_MODEL' => array(
+						'title' => $this->l('Delivery model:'),
+						'desc' => $this->l('Choose an delivery model'),
+						'type' => 'select',
+						'identifier' => 'value',
+						'list' => $this->getTemplateModels('delivery-slip')
+					),
+					'PS_ADS_SAMPLE_TEXT' => array(
+						'title' => $this->l('Sample text:'),
+						'desc' => $this->l('This text will appear after the product on deliver-slip-sampleorder'),
+						'size' => 6,
+						'type' => 'textareaLang',
+						'cols' => 40,
+						'rows' => 8
 					),
 				),
 			),
@@ -193,5 +215,38 @@ class AdminOrderPreferencesControllerCore extends AdminController
 				WHERE id_cms = '.(int)Tools::getValue('PS_CONDITIONS_CMS_ID');
 		if (Tools::getValue('PS_CONDITIONS') && (Tools::getValue('PS_CONDITIONS_CMS_ID') == 0 || !Db::getInstance()->getValue($sql)))
 			$this->errors[] = Tools::displayError('Assign a valid CMS page if you want it to be read.');
+	}
+
+	protected function getTemplateModels($model)
+	{
+		$models = array(
+			array(
+				'value' => $model,
+				'name' => $model
+			)
+		);
+
+		$templates_override = $this->getTemplateModelsFromDir(_PS_THEME_DIR_.'pdf/',$model);
+		$templates_default = $this->getTemplateModelsFromDir(_PS_PDF_DIR_,$model);
+
+		foreach (array_merge($templates_default, $templates_override) as $template)
+		{
+			$template_name = basename($template, '.tpl');
+			$models[] = array('value' => $template_name, 'name' => $template_name);
+		}
+		return $models;
+	}
+
+	protected function getTemplateModelsFromDir($directory,$model)
+	{
+		$templates = false;
+
+		if (is_dir($directory))
+			$templates = glob($directory.$model . '-*.tpl');
+
+		if (!$templates)
+			$templates = array();
+
+		return $templates;
 	}
 }

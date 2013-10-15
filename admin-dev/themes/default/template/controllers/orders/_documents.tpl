@@ -49,7 +49,13 @@
 		<tr class="delivery_line" id="delivery_{$document->id}">
 	{/if}
 
-		<td class="document_date">{dateFormat date=$document->date_add}</td>
+		<td class="document_date">
+			{if get_class($document) eq 'OrderInvoice' && isset($document->is_package)}
+				--
+			{else}
+				{dateFormat date=$document->date_add}
+			{/if}
+		</td>
 		<td class="document_type">
 			{if get_class($document) eq 'OrderInvoice'}
 				{if isset($document->is_delivery)}
@@ -71,7 +77,7 @@
 				{elseif isset($document->is_package)}
 					<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generatePackageSlipPDF&id_order_invoice={$document->id}">
 			   	{else}
-					<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateInvoicePDF&id_order_invoice={$document->id}{if $document->delivery_nr}&delivery_nr={$document->delivery_nr}{/if}">
+					<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateInvoicePDF&id_order_invoice={$document->id}{if isset($document->delivery_nr)}&delivery_nr={$document->delivery_nr}{/if}">
 			   {/if}
 			{elseif get_class($document) eq 'OrderSlip'}
 				<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateOrderSlipPDF&id_order_slip={$document->id}">

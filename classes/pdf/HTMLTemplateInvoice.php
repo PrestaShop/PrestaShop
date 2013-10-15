@@ -38,11 +38,20 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 		$this->order = new Order((int)$this->order_invoice->id_order);
 		$this->smarty = $smarty;
 		$this->delivery_nr = $delivery_nr;
+		$this->order_invoice->delivery_nr = $delivery_nr;
 
 		// header informations
-		$this->date = Tools::displayDate($order_invoice->date_add);
 
-		$id_lang = Context::getContext()->language->id;
+		$date = $order_invoice->date_add;
+		if(Configuration::get('PS_ADS') && $delivery_nr)
+		{
+			$this->order_delivery = new OrderDelivery($this->order_invoice->id_order);
+			$date = $this->order_delivery->getDeliveryDate($delivery_nr,$this->order_invoice->id_order);
+		}
+
+		$this->date = Tools::displayDate($date);
+
+		$id_lang = Context::getContext((int)$this->order_invoice->id_order)->language->id;
 		$this->title = HTMLTemplateInvoice::l('Invoice ').' #'.Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, (int)$this->order->id_shop).sprintf('%06d', $order_invoice->number) . ($this->delivery_nr ? '-' .$this->delivery_nr : '');
 		// footer informations
 		$this->shop = new Shop((int)$this->order->id_shop);
@@ -83,6 +92,17 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 				$product['total_price_tax_excl'] = $total_price_tax_excl_product;
 				$this->order_invoice->total_products_wt = $total_paid_tax_incl;
 				$this->order_invoice->total_products = $total_paid_tax_excl;
+				if($this->delivery_nr == 1) {
+					$total_paid_tax_excl += $this->order_invoice->total_shipping_tax_excl;
+					$total_paid_tax_incl += $this->order_invoice->total_shipping_tax_incl;
+				}
+				else
+				{
+					$this->order_invoice->total_shipping_tax_excl = 0;
+					$this->order_invoice->total_shipping_tax_incl = 0;
+				}
+				$this->order_invoice->total_paid_tax_incl = $total_paid_tax_incl;
+				$this->order_invoice->total_paid_tax_excl = $total_paid_tax_excl;
 		} else {
 			$products = $this->order_invoice->getProducts();
 		}
@@ -98,7 +118,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			'customer' => $customer
 		));
 
-		return $this->smarty->fetch($this->getTemplateByCountry($country->iso_code));
+		return $this->smarty->fetch($this->getTemplateByCountry($country->iso_code,$this->order->id));
 	}
 
 	/**
@@ -115,7 +135,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			$this->smarty->assign(array(
 				'tax_exempt' => $tax_exempt,
 				'use_one_after_another_method' => $this->order_invoice->useOneAfterAnotherTaxComputationMethod(),
-				'product_tax_breakdown' => $this->order_invoice->getProductTaxesBreakdown(),
+				'product_tax_breakdown' => $this->order_invoice->getProductTaxesBreakdown($this->delivery_nr),
 				'shipping_tax_breakdown' => $this->order_invoice->getShippingTaxesBreakdown($this->order),
 				'ecotax_tax_breakdown' => $this->order_invoice->getEcoTaxTaxesBreakdown(),
 				'wrapping_tax_breakdown' => $this->order_invoice->getWrappingTaxesBreakdown(),
@@ -131,8 +151,13 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 	 * Returns the invoice template associated to the country iso_code
 	 * @param string $iso_country
 	 */
-	protected function getTemplateByCountry($iso_country)
+	protected function getTemplateByCountry($iso_country,$id_order)
 	{
+		if($order_template = $this->getOrderTemplate($id_order) )
+		{
+			return $this->getTemplate($order_template);
+		}
+
 		$file = Configuration::get('PS_INVOICE_MODEL');
 
 		// try to fetch the iso template
@@ -143,6 +168,18 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			$template = $this->getTemplate($file);
 
 		return $template;
+	}
+
+	protected function getOrderTemplate($id_order)
+	{
+			$template = Db::getInstance()->executeS('
+			SELECT `invoice`
+			FROM `'._DB_PREFIX_.'order_template`
+			WHERE `id_order` = ' .$id_order. '
+			');
+			if($template)
+				$template = $template[0]['invoice'];
+			return $template;
 	}
 
 	/**

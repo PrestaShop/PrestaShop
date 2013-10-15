@@ -618,21 +618,12 @@ class OrderCore extends ObjectModel
 			
 		$customized_datas = Product::getAllCustomizedDatas($this->id_cart);
 		$resultArray = array();
-// 		$newResultArray = array();
 		foreach($deliverd_products as $k => $delivery_nr)
 		{
-// 		echo('<pre>');
-// 		print_r($delivery_nr);
-// 		echo('</pre>');
 			foreach($delivery_nr as $row)
 			{
 				$row['delivery_nr'] = $k;
-// 				echo("loop");
-// 				echo('<pre>------');
-// 				print_r($row);
-// 				echo('-----</pre>');
-				
-			
+
 			// Change qty if selected
 			if ($selectedQty)
 			{
@@ -655,10 +646,8 @@ class OrderCore extends ObjectModel
 			$row['id_address_delivery'] = $this->id_address_delivery;
 			
 			/* store product */
-// 			$resultArray[(int)$row['id']] = $row;
 			$resultArray[$k][] = $row;
 			}
-// 			echo('<hr>');
 		}
 
 		if ($customized_datas)
@@ -666,15 +655,6 @@ class OrderCore extends ObjectModel
 				Product::addCustomizationPrice($array, $customized_datas);
 			}
 
-		// move array to delivery
-// 		foreach($resultArray as $product) {
-// 				$newResultArray[$product['delivery_id']][] = $product;
-// 		}
-		
-// 		return $newResultArray;
-// 		echo('<pre>');
-// 		print_r($resultArray);
-// 		echo('</pre>');
 		return $resultArray;
 		
 	}
@@ -1602,12 +1582,9 @@ class OrderCore extends ObjectModel
 	public function getDocuments()
 	{
 		if(Configuration::get('PS_ADS') && Configuration::get('PS_ADS_INVOICE_DELIVERD') ) {
-				$invoices = array(); // make array if invoice_deliverd is enable
+				$invoices_ads = array(); // make array if invoice_deliverd is enable
 		}
-		else
-		{
-			$invoices = $this->getInvoicesCollection()->getResults();
-		}
+		$invoices = $this->getInvoicesCollection()->getResults();
 		$delivery_slips = $this->getDeliverySlipsCollection()->getResults();
 		// @TODO review
 		foreach ($delivery_slips as $delivery)
@@ -1635,7 +1612,8 @@ class OrderCore extends ObjectModel
 				$invoice = $invoice[0];
 				$invoice->delivery_nr = $delivery->delivery_nr;
 				$invoice->total_paid_tax_incl = $total_paid_tax_incl;
-				$invoices[] = $invoice;
+				$invoice->date_add = $delivery->delivery_date;
+				$invoices_ads[] = $invoice;
 			}
 		}
 		$order_slips = $this->getOrderSlipsCollection()->getResults();
@@ -1657,7 +1635,7 @@ class OrderCore extends ObjectModel
 		
 		$documents = array_merge($invoices, $order_slips, $delivery_slips);
 		if(Configuration::get('PS_ADS')) {
-			$documents = array_merge($documents, $package_slip);
+			$documents = array_merge($documents, $package_slip,$invoices_ads);
 		}
 		usort($documents, 'sortDocuments');
 

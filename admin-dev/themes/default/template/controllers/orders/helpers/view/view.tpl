@@ -259,6 +259,28 @@
 			</fieldset>
 			<br />
 
+			<!-- Template block -->
+			{if Configuration::get('PS_ADS')}
+			<fieldset>
+				<legend><img src="../img/admin/pdf.gif" /> {l s='PDF Templates'}</legend>
+				<form method="post" action="{$currentIndex}&vieworder&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
+				Invoice template <select name="invoice_template">
+					{foreach from=$invoice_templates item=template}
+						<option value="{$template['value']}" {if $template['value'] == $cur_invoice_template} selected {/if} >{$template['name']}</option>
+					{/foreach}
+				</select><br>
+				<br>
+				Delivery template <select name="delivery_template">
+					{foreach from=$delivery_templates item=template}
+						<option value="{$template['value']}" {if $template['value'] == $cur_delivery_template} selected {/if} >{$template['name']}</option>
+					{/foreach}
+				</select><br>
+				<input type="submit" class="button" name="setTemplates" value="{l s='Set Templates'}" />
+				</form>
+			</fieldset>
+			<br />
+			{/if}
+
 			<!-- Payments block -->
 			<fieldset>
 				<legend><img src="../img/admin/money.gif" /> {l s='Payment: '}</legend>
