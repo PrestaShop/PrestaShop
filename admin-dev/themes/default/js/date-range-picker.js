@@ -242,6 +242,8 @@
 					}
 				}
 			});
+
+			click = 2;
 		},
 
 		click: function(e) {
