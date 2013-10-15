@@ -178,21 +178,21 @@
 	</div>
 	<div id="login-footer">
 		<p class="text-center text-muted">
-			<a href="http://www.prestashop.com">
+			<a href="http://www.prestashop.com/">
 				&copy; PrestaShop 2005-{$smarty.now|date_format:"%Y"} - All rights reserved.
 			</a>
 		</p>
 		<p class="text-center">
-			<a class="link-social link-twitter" href="#" title="Twitter">
+			<a class="link-social link-twitter" href="https://twitter.com/PrestaShop" target="_blank" title="Twitter">
 				<i class="icon-twitter"></i>
 			</a>
-			<a class="link-social link-facebook" href="#" title="Facebook">
+			<a class="link-social link-facebook" href="https://www.facebook.com/prestashop" target="_blank" title="Facebook">
 				<i class="icon-facebook"></i>
 			</a>
-			<a class="link-social link-github" href="#" title="Github">
+			<a class="link-social link-github" href="https://github.com/PrestaShop/PrestaShop/" target="_blank" title="Github">
 				<i class="icon-github"></i>
 			</a>
-			<a class="link-social link-google" href="#" title="Google">
+			<a class="link-social link-google" href="https://plus.google.com/+prestashop/" target="_blank" title="Google">
 				<i class="icon-google-plus"></i>
 			</a>
 		</p>
