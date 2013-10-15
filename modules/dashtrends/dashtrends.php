@@ -224,7 +224,7 @@ class Dashtrends extends Module
 			),
 			'visits_score_trends' => array(
 				'way' => ($data1['visits'] == $data2['visits'] ? 'right' : ($data1['visits'] > $data2['visits'] ? 'up' : 'down')),
-				'value' => ($data1['visits'] > $data2['visits'] ? '+' : '').($data2['visits'] ? round(100 * $data1['visits'] / $data2['visits'] - 100, 2).'%' : '+&infin;')
+				'value' => ($data1['visits'] > $data2['visits'] ? '+' : '').($data2['visits'] ? round(100 * $data1['visits'] / $data2['visits'] - 100, 2).'%' : '&infin;')
 			),
 			'conversion_rate_score_trends' => array(
 				'way' => ($data1['conversion_rate'] == $data2['conversion_rate'] ? 'right' : ($data1['conversion_rate'] > $data2['conversion_rate'] ? 'up' : 'down')),
