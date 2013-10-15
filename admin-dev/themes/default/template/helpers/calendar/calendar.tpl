@@ -91,12 +91,29 @@
 		var end   = '{$date_to}';
 
 	{literal}
-		$('.datepicker1').datepicker({"dates": translated_dates, "weekStart": 1, "start": start, "end": end});
-		$('.datepicker2').datepicker({"dates": translated_dates, "weekStart": 1, "start": start, "end": end});
-		//$('.datepicker1').datepicker('range');
-		//$('.datepicker2').range();
+		var datepickerStart = $('.datepicker1').datepicker({
+			"dates": translated_dates,
+			"weekStart": 1,
+			"start": start,
+			"end": end
+		}).on('changeDate', function(ev){
+			if (ev.date.valueOf() >= datepickerEnd.date.valueOf()){
+				datepickerEnd.setValue(ev.date.setMonth(ev.date.getMonth()+1));
+			}
+		}).data('datepicker');
+
+		var datepickerEnd = $('.datepicker2').datepicker({
+			"dates": translated_dates,
+			"weekStart": 1,
+			"start":start,
+			"end": end
+		}).on('changeDate', function(ev){
+			if (ev.date.valueOf() <= datepickerStart.date.valueOf()){
+				datepickerStart.setValue(ev.date.setMonth(ev.date.getMonth()-1));
+			}
+		}).data('datepicker');
 	{/literal}
-	
+
 		$("#date-start").focus().addClass("input-selected");
 		$('#datepicker-cancel').click(function() {
 			$('#datepicker').slideUp(200);
