@@ -465,7 +465,7 @@ class ParentOrderControllerCore extends FrontController
 		$address = new Address($this->context->cart->id_address_delivery);
 		$id_zone = Address::getZoneById($address->id);
 		$bad_delivery = false;
-		if ($bad_delivery = (bool)!Address::isCountryActiveById((int)$this->context->cart->id_address_delivery) || !Address::isCountryActiveById((int)$this->context->cart->id_address_invoice))
+		if (($bad_delivery = (bool)!Address::isCountryActiveById((int)$this->context->cart->id_address_delivery)) || (!Address::isCountryActiveById((int)$this->context->cart->id_address_invoice)))
 		{
 			if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1 && Dispatcher::getInstance()->getController() != 'order-opc')
 				{
