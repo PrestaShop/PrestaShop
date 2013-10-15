@@ -29,10 +29,10 @@
 	var label_error = '{l s='error'}';
 </script>
 	<div id="login-panel">
-		<div id="login-header">
+		<div id="login-header" class="animated fadeIn">
 			<h1 class="text-center">
-				<img width="40px" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNi4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iNjEycHgiIGhlaWdodD0iNzkycHgiIHZpZXdCb3g9IjAgMCA2MTIgNzkyIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA2MTIgNzkyOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8cGF0aCBkPSJNMjA0LDg2Yy0zNiwyMy00Nyw2MS00MiwxMjBsLTI3LDNDMTMxLDE0NywxNjEsOTgsMjA0LDg2eiBNMjQ1LDc4YzY0LDgsMTAwLDM1LDExNSwxMDVsLTE2OSwyMEMxODUsMTQwLDE5OSwxMDUsMjQ1LDc4eg0KCSBNMjgwLDY0YzcyLDAsMTIwLDI1LDEzNSwxMTJsLTI3LDNDMzc1LDExMiwzNDEsNzYsMjgwLDY0eiBNNDQyLDE3NEM0MjksNTQsMzE0LDE5LDI0MCw1NmMtODMtMi0xNDAsNzMtMTMzLDE1N2wtOTYsMTBsNTgsNTUwDQoJbDI2MS0yNmMtNDctNTMtMTAwLTEzMy0xMjQtMTUyYy0yNy0yMy0zMC0zMS0yMy00NWMxMi0xNCwyNC0xMiw0NSw0bDQ4LDM3bDcsMzZsMTQtMWwtMzctMjMxYy00LTI0LDEtMzUsMTktNDBjMTgtMiwyNyw3LDMxLDM0DQoJbDIzLDE0MWwxOC0yYy03LTUwLTMtNTcsMTctNjJjMTktMywyOCwxMCwzNSw2NGwxNy0xYy01LTUwLTEtNTcsMTktNjBjMjItMSwyNSwxMiwzMiw2NWwxNiwyYy00LTQwLTQtNTEsMTgtNTNjMjEsMCwyNSwxNCwzMSw1OA0KCWMxNSwxMDAsMTMsMTU0LTYsMTgzbDcyLTdsLTU4LTU1NUw0NDIsMTc0eiIvPg0KPC9zdmc+DQo="/>
-							PRESTASHOP
+				<img id="logo" width="40px" src="{$img_dir}/icon-prestashop.svg"/>
+				PRESTASHOP
 			</h1>
 			<hr/>
 			<h4 class="text-center">{$shop_name}</h4>
@@ -57,7 +57,7 @@
 			<div class="alert alert-warning">{$warningSslMessage}</div>
 			{/if}
 		</div>
-		<div class="flip-container">
+		<div class="flip-container animated fadeInDown">
 			<div class="flipper">
 				<div class="front panel">
 					{if !isset($wrong_folder_name) && !isset($wrong_install_name)}
@@ -142,7 +142,6 @@
 									placeholder="test@example.com" />
 							</div>
 						</div>
-						<hr/>
 						<div class="panel-footer">
 							<button href="#" class="btn btn-default show-login-form" tabindex="3">
 								<i class="icon-caret-left"></i>
@@ -176,23 +175,23 @@
 			{/if}
 		</div>
 	</div>
-	<div id="login-footer">
+	<div id="login-footer" class="animated fadeIn">
 		<p class="text-center text-muted">
-			<a href="http://www.prestashop.com">
+			<a href="http://www.prestashop.com/">
 				&copy; PrestaShop 2005-{$smarty.now|date_format:"%Y"} - All rights reserved.
 			</a>
 		</p>
 		<p class="text-center">
-			<a class="link-social link-twitter" href="#" title="Twitter">
+			<a class="link-social link-twitter" href="https://twitter.com/PrestaShop" target="_blank" title="Twitter">
 				<i class="icon-twitter"></i>
 			</a>
-			<a class="link-social link-facebook" href="#" title="Facebook">
+			<a class="link-social link-facebook" href="https://www.facebook.com/prestashop" target="_blank" title="Facebook">
 				<i class="icon-facebook"></i>
 			</a>
-			<a class="link-social link-github" href="#" title="Github">
+			<a class="link-social link-github" href="https://github.com/PrestaShop/PrestaShop/" target="_blank" title="Github">
 				<i class="icon-github"></i>
 			</a>
-			<a class="link-social link-google" href="#" title="Google">
+			<a class="link-social link-google" href="https://plus.google.com/+prestashop/" target="_blank" title="Google">
 				<i class="icon-google-plus"></i>
 			</a>
 		</p>
