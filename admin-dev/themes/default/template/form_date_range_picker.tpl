@@ -29,9 +29,6 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-md-4">
-						<input type="submit" name="submitDatePicker" id="submitDatePicker" class="btn btn-default pull-right" value="{if isset($translations.Save)}{$translations.Save}{else}{l s='Save'}{/if}" />
-					</div>
 				</div>
 			</div>
 		</div>
@@ -40,15 +37,24 @@
 				{$calendar}
 			</div>
 		</div>
-	</form>
+	</form>	
 	<script type="text/javascript">
 		$(document).ready(function() {
-			if ($("form#calendar_form .datepicker").length > 0)
+			/*if ($("form#calendar_form .datepicker").length > 0)
 				$("form#calendar_form .datepicker").datepicker({
 					prevText: '',
 					nextText: '',
 					dateFormat: 'yy-mm-dd'
-				});
+				});*/
+			$('#datepickerFrom').click(function() {
+				$('#datepicker').slideDown(200);
+				$('#date-start').focus();
+			});
+
+			$('#datepickerTo').click(function() {
+				$('#datepicker').slideDown(200);
+				$('#date-start').focus();
+			});
 		});
 	</script>
 </div>

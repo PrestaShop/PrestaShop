@@ -20,11 +20,33 @@
 //click action
 !function( $ ) {
 	var click, switched, val, start, end, over;
-	
+
 	// Picker object
 	var Datepicker = function(element, options){
 		this.element = $(element);
-		this.format = DPGlobal.parseFormat(options.format||this.element.data('date-format')||'mm/dd/yyyy');
+
+		if (typeof options.dates != 'undefined')
+			DPGlobal.dates = options.dates;
+
+		if (typeof options.start != 'undefined'){
+			if (options.start.constructor === String)
+				start = DPGlobal.parseDate(options.start, DPGlobal.parseFormat('Y-m-d')).getTime();
+			else if (options.start.constructor === Number)
+				start = options.start;
+			else if (options.start.constructor === Date)
+				start = options.start.getTime();
+		}
+
+		if (typeof options.end != 'undefined'){
+			if (options.end.constructor === String)
+				end = DPGlobal.parseDate(options.end, DPGlobal.parseFormat('Y-m-d')).getTime();
+			else if (options.end.constructor === Number)
+				end = options.end;
+			else if (options.end.constructor === Date)
+				end = options.end.getTime();
+		}
+
+		this.format = DPGlobal.parseFormat(options.format||this.element.data('date-format')||'Y-m-d');
 		this.picker = $(DPGlobal.template).appendTo(this.element).show()
 		.on({
 			click: $.proxy(this.click, this),
@@ -72,10 +94,10 @@
 		this.update();
 		this.showMode();
 	};
-	
+
 	Datepicker.prototype = {
 		constructor: Datepicker,
-		
+
 		show: function(e) {
 			this.picker.show();
 
@@ -99,7 +121,7 @@
 			var formated = DPGlobal.formatDate(this.date, this.format);
 			this.element.data('date', formated);
 		},
-		
+
 		setValue: function(newDate) {
 			if (typeof newDate === 'string') {
 				this.date = DPGlobal.parseDate(newDate, this.format);
@@ -110,7 +132,7 @@
 			this.viewDate = new Date(this.date.getFullYear(), this.date.getMonth(), 1, 0, 0, 0, 0);
 			this.fill();
 		},
-				
+
 		update: function(newDate){
 			this.date = DPGlobal.parseDate(
 				typeof newDate === 'string' ? newDate : (this.isInput ? this.element.prop('value') : this.element.data('date')),
@@ -119,7 +141,7 @@
 			this.viewDate = new Date(this.date.getFullYear(), this.date.getMonth(), 1, 0, 0, 0, 0);
 			this.fill();
 		},
-		
+
 		fillDow: function(){
 			var dowCnt = this.weekStart;
 			var html = '<tr>';
@@ -129,7 +151,7 @@
 			html += '</tr>';
 			this.picker.find('.datepicker-days thead').append(html);
 		},
-		
+
 		fillMonths: function(){
 			var html = '';
 			var i = 0;
@@ -138,7 +160,7 @@
 			}
 			this.picker.find('.datepicker-months td').append(html);
 		},
-		
+
 		fill: function() {
 			var d = new Date(this.viewDate),
 				year = d.getFullYear(),
@@ -180,7 +202,7 @@
 			}
 			this.picker.find('.datepicker-days tbody').empty().append(html.join(''));
 			var currentYear = this.date.getFullYear();
-			
+
 			var months = this.picker.find('.datepicker-months')
 						.find('th:eq(1)')
 							.text(year)
@@ -189,7 +211,7 @@
 			if (currentYear === year) {
 				months.eq(this.date.getMonth()).addClass('active');
 			}
-			
+
 			html = '';
 			year = parseInt(year/10, 10) * 10;
 			var yearCont = this.picker.find('.datepicker-years')
@@ -205,21 +227,23 @@
 			yearCont.html(html);
 
 			$("#datepicker .day").each(function(){
-				var date_val = $(this).data("val");
+				var date_val = parseInt($(this).data('val'),10);
 				if(end&&start){
-					if(date_val > start && date_val < end){
+					if(date_val > start && date_val < end) {
 						$(this).not(".old").not(".new").addClass("range");
 					}
-					if(date_val === start){
+
+					if(date_val === start) {
 						$(this).not(".old").not(".new").addClass("start-selected");
 					}
-					if(date_val === end){
+
+					if(date_val === end) {
 						$(this).not(".old").not(".new").addClass("end-selected");
 					}
 				}
 			});
 		},
-		
+
 		click: function(e) {
 			e.stopPropagation();
 			e.preventDefault();
@@ -283,7 +307,7 @@
 								$(".start-selected").removeClass("start-selected");
 								target.addClass("start-selected");
 								start = target.data("val");
-								$("#date-start").val(start);
+								$("#date-start").val(DPGlobal.formatDate(new Date(start), DPGlobal.parseFormat('Y-m-d')));
 								if(!switched) {click = 1;} else {click = 2;}
 								if(!switched){
 									$("#date-end").val(null).focus().addClass("input-selected");
@@ -296,7 +320,7 @@
 								$(".end-selected").removeClass("end-selected");
 								target.addClass("end-selected");
 								end = target.data("val");
-								$("#date-end").val(end);
+								$("#date-end").val(DPGlobal.formatDate(new Date(end), DPGlobal.parseFormat('Y-m-d')));
 								click = 2;
 								$("#date-end").removeClass("input-selected").addClass("input-complete");
 								//this.range();
@@ -325,11 +349,11 @@
 			$("#datepicker .day").each(function(){
 				val = parseInt($(this).data('val'),10);
 				if (!end){
-					if( val > start && val < over){
+					if( val > start && val < over){
 						$(this).not(".old").not(".new").addClass("range");
 					}
 				} else if (!start){
-					if( val > over && val < end){
+					if( val > over && val < end){
 						$(this).not(".old").not(".new").addClass("range");
 					}
 				} else if (start&&end) {
@@ -337,11 +361,11 @@
 				}
 			});
 		},
-		
+
 		mouseover: function(e){
 			//data-val from day overed
 			over = $(e.target).data("val");
-			
+
 			//this condition will focus start just after mouseover on datepicker, but it's weird...
 			//if(click==2){
 				//$("#date-start").focus().addClass("input-selected")
@@ -353,14 +377,14 @@
 				//switch
 				if (start && over < start ){
 					end = start;
-					$("#date-end").val(start).removeClass("input-selected");
+					$("#date-end").val(DPGlobal.formatDate(new Date(start), DPGlobal.parseFormat('Y-m-d'))).removeClass("input-selected");
 					$("#date-start").val(null).focus().addClass("input-selected");
 					$("#datepicker .start-selected").removeClass("start-selected").addClass("end-selected");
 					start = null;
 					switched = true;
 				} else if (end && over > end ){
 					start = end;
-					$("#date-start").val(end).removeClass("input-selected");
+					$("#date-start").val(DPGlobal.formatDate(new Date(end), DPGlobal.parseFormat('Y-m-d'))).removeClass("input-selected");
 					$("#date-end").val(null).focus().addClass("input-selected");
 					$("#datepicker .end-selected").removeClass("end-selected").addClass("start-selected");
 					end = null;
@@ -395,7 +419,7 @@
 			e.stopPropagation();
 			e.preventDefault();
 		},
-		
+
 		showMode: function(dir) {
 			if (dir) {
 				this.viewMode = Math.max(this.minViewMode, Math.min(2, this.viewMode + dir));
@@ -403,7 +427,7 @@
 			this.picker.find('>div').hide().filter('.datepicker-'+DPGlobal.modes[this.viewMode].clsName).show();
 		}
 	};
-	
+
 	$.fn.datepicker = function ( option, val ) {
 		return this.each(function () {
 			var $this = $(this),
@@ -422,7 +446,7 @@
 		}
 	};
 	$.fn.datepicker.Constructor = Datepicker;
-	
+
 	var DPGlobal = {
 		modes: [
 			{
@@ -485,10 +509,12 @@
 							date.setMonth(val - 1);
 							break;
 						case 'yy':
+						case 'y':
 							year = 2000 + val;
 							date.setFullYear(2000 + val);
 							break;
 						case 'yyyy':
+						case 'Y':
 							year = val;
 							date.setFullYear(val);
 							break;
@@ -503,10 +529,12 @@
 				d: date.getDate(),
 				m: date.getMonth() + 1,
 				yy: date.getFullYear().toString().substring(2),
-				yyyy: date.getFullYear()
+				y: date.getFullYear().toString().substring(2),
+				yyyy: date.getFullYear(),
+				Y: date.getFullYear()
 			};
-			val.dd = (val.d < 10 ? '0' : '') + val.d;
-			val.mm = (val.m < 10 ? '0' : '') + val.m;
+			val.d = (val.d < 10 ? '0' : '') + val.d;
+			val.m = (val.m < 10 ? '0' : '') + val.m;
 			var date = [];
 			for (var i=0, cnt = format.parts.length; i < cnt; i++) {
 				date.push(val[format.parts[i]]);
