@@ -28,7 +28,7 @@
 
 <div class="row">
 	<div class="col-lg-6">
-		<fieldset>
+		<div class="panel">
 			<h3>
 				<i class="icon-info"></i>
 				{if isset($is_template) && $is_template == 1} {l s='Template'} {/if}{l s='General information'}
@@ -63,10 +63,10 @@
 					<td>{$supply_order_discount_rate} %</td>
 				</tr>
 			</table>
-		</fieldset>
+		</div>
 	</div>
 	<div class="col-lg-6">
-		<fieldset>
+		<div class="panel">
 			<h3>
 				<i class="icon-th-list"></i>
 				{if isset($is_template) && $is_template == 1} {l s='Template'} {/if}{l s='Summary'}
@@ -105,7 +105,7 @@
 					</tr>
 				</tbody>
 			</table>
-		</fieldset>
+		</div>
 	</div>
 </div>
 {$supply_order_detail_content}

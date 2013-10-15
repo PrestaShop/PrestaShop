@@ -26,7 +26,7 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
-<fieldset>
+<div class="panel">
 	<h3>{l s='Addresses'} <span class="badge">{count($addresses)}</span></h3>
 	{if !count($addresses)}
 		{l s='No address has been found for this manufacturer.'}
@@ -63,8 +63,8 @@
 		</div>
 		{/foreach}
 	{/if}
-</fieldset>
-<fieldset>
+</div>
+<div class="panel">
 	<h3>{l s='Products'} <span class="badge">{count($products)}</span></h3>
 
 	{foreach $products AS $product}
@@ -142,5 +142,5 @@
 			</div>
 		{/if}
 	{/foreach}
-</fieldset>
+</div>
 {/block}

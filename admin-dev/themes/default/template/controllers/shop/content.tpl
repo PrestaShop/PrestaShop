@@ -49,10 +49,10 @@
 
 <div class="row">
 	<div class="col-lg-4">
-		<fieldset>
+		<div class="panel">
 			<h3><i class="icon-sitemap"></i> {l s='Multistore tree'}</h3>
 			{include file="controllers/shop/tree.tpl" selected_tree_id=$selected_tree_id}	
-		</fieldset>
+		</div>
 	</div>
 	<div class="col-lg-8">{$content}</div>
 </div>

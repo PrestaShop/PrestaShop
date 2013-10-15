@@ -36,7 +36,7 @@
 </script>
 
 <div class="defaultForm">
-	<fieldset>
+	<div class="panel">
 		{l s='Carrier name:'} <strong id="summary_name"></strong>
 		<div id="summary_meta_informations"></div>
 		<div id="summary_shipping_cost"></div>
@@ -56,5 +56,5 @@
 		</div>
 		{/if}
 		{$active_form}
-	</fieldset>
+	</div>
 </div>

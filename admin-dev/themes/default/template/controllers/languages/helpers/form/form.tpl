@@ -52,10 +52,9 @@
 {/block}
 
 {block name="other_fieldsets"}
-
 	{if isset($fields['new'])}
 		<br /><br />
-		<fieldset style="width:572px;">
+		<div class="panel" style="width:572px;">
 			{foreach $fields['new'] as $key => $field}
 				{if $key == 'legend'}
 					<legend>
@@ -85,7 +84,6 @@
 			{/foreach}
 			<br />
 			<div class="small">{l s='Missing files are marked in red'}</div>
-		</fieldset>
+		</div>
 	{/if}
-
 {/block}

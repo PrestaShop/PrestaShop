@@ -27,7 +27,7 @@
 
 {if !$email}
 
-	<fieldset>
+	<div class="panel">
 		<h3>
 			{if !empty($message.employee_name)}
 				<i class="icon-user"></i>
@@ -178,20 +178,20 @@
 				<dd>{$message.message|escape:'htmlall':'UTF-8'|nl2br}</dd>
 			</dl>
 		</div>
-	</fieldset>
+	</div>
 
 {if !$email}
 	{if empty($message.id_employee)}
-		<fieldset>
+		<div class="panel">
 			<button class="btn btn-default"
 				onclick="$('#reply_to_{$message.id_customer_message}').show(500); $(this).hide();">
 				<i class="icon-mail-reply"></i> {l s='Reply to this message'}
 			</button>
-		</fieldset>
+		</div>
 	{/if}
 
 	<div id="reply_to_{$message.id_customer_message}" style="display: none;">
-		<fieldset>
+		<div class="panel">
 			<form action="{$current}&token={getAdminToken tab='AdminCustomerThreads'}&id_customer_thread={$message.id_customer_thread}&viewcustomer_thread" method="post" enctype="multipart/form-data" class="form-horizontal">
 				<div class="panel-heading">
 					{l s='Please type your reply below:'}
@@ -212,7 +212,7 @@
 					<input type="hidden" name="msg_email" value="{$message.email}" />
 				</div>				
 			</form>
-		</fieldset>
+		</div>
 	</div>
 {/if}
 

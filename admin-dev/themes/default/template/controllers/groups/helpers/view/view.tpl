@@ -27,7 +27,7 @@
 
 {block name="override_tpl"}
 <div class="col-lg-6">
-	<fieldset>
+	<div class="panel">
 		<h3><i class="icon-group"></i> {l s='Group information'}</h3>
 		<h2><i class="icon-group"></i> {$group->name[$language->id]}</h2>
 		<div class="form-horizontal">
@@ -48,10 +48,10 @@
 				<div class="col-lg-3"><p class="form-control-static">{if $group->show_prices}{l s='Yes'}{else}{l s='No'}{/if}</p></div>
 			</div>
 		</div>
-	</fieldset>
+	</div>
 </div>
 <div class="col-lg-6">
-	<fieldset>
+	<div class="panel">
 		<h3><i class="icon-dollar"></i> {l s='Current category discount'}</h3>	
 		{if !$categorieReductions}
 			<div class="alert alert-warning">{l s='None'}</div>
@@ -73,7 +73,7 @@
 				<tbody>
 			</table>
 		{/if}
-	</fieldset>
+	</div>
 </div>
 <div class="col-lg-12">
 	<h2>{l s='Members of this customer group'}</h2>

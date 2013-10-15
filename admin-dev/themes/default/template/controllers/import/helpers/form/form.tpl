@@ -54,7 +54,7 @@
 {* Import fieldset *}
 <form id="preview_import" action="{$current}&token={$token}" method="post" enctype="multipart/form-data" class="form-horizontal">
 	
-	<fieldset>
+	<div class="panel">
 		<h3>
 			<i class="icon-download"></i>
 			{l s='Import'}
@@ -233,10 +233,10 @@
 				</ul>
 			</div>
 		{/if}
-	</fieldset>
+	</div>
 </form>
 
-<fieldset>
+<div class="panel">
 	<h3>
 		<i class="icon-download"></i>
 		{l s='Available fields'}
@@ -245,7 +245,7 @@
 		{$available_fields}
 	</div>
 	<p>{l s='* Required field'}</p>
-</fieldset>
+</div>
 
 <script type="text/javascript">
 	$(document).ready(function(){

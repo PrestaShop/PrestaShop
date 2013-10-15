@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {if isset($product->id) && !$product->is_virtual}
-<fieldset>
+<div class="panel">
 
 	<script type="text/javascript">
 		var msg_combination_1 = '{l s='Please choose an attribute.'}';
@@ -374,9 +374,7 @@
 				</button>
 			</span>
 		</div>
-	</div>		
-
+	</div>
 	{$list}
-
-</fieldset>
+</div>
 {/if}

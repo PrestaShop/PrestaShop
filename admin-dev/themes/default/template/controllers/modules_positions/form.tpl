@@ -30,7 +30,7 @@
 	{if $display_key}
 		<input type="hidden" name="show_modules" value="{$display_key}" />
 	{/if}
-	<fieldset>
+	<div class="panel">
 		<h3>
 			<i class="icon-paste"></i>
 			{l s='Transplant a module'}
@@ -83,7 +83,7 @@
 				<input type="submit" value="{l s='Save'}" name="{if $edit_graft}submitEditGraft{else}submitAddToHook{/if}" id="{$table}_form_submit_btn" class="btn btn-primary" />
 			</div>
 		</div>
-	</fieldset>
+	</div>
 </form>
 <script type="text/javascript">
 	//<![CDATA

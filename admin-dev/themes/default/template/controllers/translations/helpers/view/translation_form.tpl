@@ -50,13 +50,13 @@
 				<li>{l s='Some sentences to translate use this syntax: %s... These are variables, and PrestaShop take care of replacing them before displaying your translation. You must leave these in your translations, and place them appropriately in your sentence.' sprintf='%d, %s, %1$s, %2$d'}</li>
 			</ul>
 		</div>
-		<fieldset>
+		<div class="panel">
 			<p>{l s='Expressions to translate:'} <span class="badge">{l s='%d' sprintf=$count}</span></p>
 			<p>{l s='Total missing expresssions:'} <span class="badge">{l s='%d' sprintf=$missing_translations|array_sum}</p>
-		</fieldset>
+		</div>
 
 		<form method="post" id="{$table}_form" action="{$url_submit}" class="form-horizontal">
-			<fieldset>
+			<div class="panel">
 				{$toggle_button}
 				<input type="hidden" name="lang" value="{$lang}" />
 				<input type="hidden" name="type" value="{$type}" />
@@ -89,10 +89,10 @@
 						</ul>
 					</div>
 				</div>
-			</fieldset>
+			</div>
 			{foreach $tabsArray as $k => $newLang}
 				{if !empty($newLang)}
-					<fieldset>
+					<div class="panel">
 						<h3 onclick="$('#{$k}-tpl').slideToggle();">
 							{$k} - <span class="badge">{$newLang|count}</span> {l s='expressions'}
 							{if isset($missing_translations[$k])} <span class="label label-danger">{$missing_translations[$k]} {l s='missing'}</span>{/if}
@@ -125,8 +125,8 @@
 									</tr>
 								{/foreach}
 							</table>
-							</div>
-					</fieldset>
+						</div>
+					</div>
 				{/if}
 			{/foreach}
 		</form>

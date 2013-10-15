@@ -54,7 +54,7 @@
 		</div>
 
 		<form method="post" id="{$table}_form" action="{$url_submit}" class="form-horizontal">
-			<fieldset>
+			<div class="panel">
 				{$toggle_button}
 				<input type="hidden" name="lang" value="{$lang}" />
 				<input type="hidden" name="type" value="{$type}" />
@@ -87,16 +87,16 @@
 						</ul>
 					</div>
 				</div>
-			</fieldset>
-			<fieldset>
+			</div>
+			<div class="panel">
 				<h3>
 					<i class="icon-envelope"></i>
 					{l s='Core emails:'}
 				</h3>
 				<p>{l s='List of emails in the folder'} <strong>"mails/{$lang|strtolower}/"</strong></p>
 				{$mail_content}
-			</fieldset>
-			<fieldset>
+			</div>
+			<div class="panel">
 				<h3>
 					<i class="icon-envelope"></i>
 					{l s='Module emails:'}
@@ -105,7 +105,7 @@
 				{foreach $module_mails as $module_name => $mails}
 					{$mails['display']}
 				{/foreach}
-			</fieldset>
+			</div>
 		</form>
 	{/if}
 
