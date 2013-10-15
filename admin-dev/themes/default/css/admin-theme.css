@@ -10123,27 +10123,36 @@ li.sortable-placeholder {
 /* line 157, admin-theme/_admin-dashboard.sass */
 #dashboard #dashtrends svg {
   height: 350px; }
-/* line 164, admin-theme/_admin-dashboard.sass */
+/* line 162, admin-theme/_admin-dashboard.sass */
+#dashboard #dashaddons {
+  padding: 20px 20px 0 20px; }
+/* line 163, admin-theme/_admin-dashboard.sass */
+#dashboard #dashaddons header a {
+  display: block; }
+/* line 165, admin-theme/_admin-dashboard.sass */
+#dashboard #dashaddons header a:hover {
+  text-decoration: none; }
+/* line 170, admin-theme/_admin-dashboard.sass */
 #dashboard #dashactivity svg {
   height: 150px; }
-/* line 171, admin-theme/_admin-dashboard.sass */
+/* line 177, admin-theme/_admin-dashboard.sass */
 #dashboard .loading .data_value {
   min-width: 30px;
   text-align: center; }
-/* line 174, admin-theme/_admin-dashboard.sass */
+/* line 180, admin-theme/_admin-dashboard.sass */
 #dashboard .loading .data_value:before {
   font-size: 0.7em;
   font-family: FontAwesome;
   content: "\f021";
   color: #cccccc; }
-/* line 180, admin-theme/_admin-dashboard.sass */
+/* line 186, admin-theme/_admin-dashboard.sass */
 #dashboard .loading .data_value span, #dashboard .loading .data_value small {
   display: none; }
-/* line 182, admin-theme/_admin-dashboard.sass */
+/* line 188, admin-theme/_admin-dashboard.sass */
 #dashboard .loading .data_trend {
   display: none; }
 
-/* line 207, admin-theme/_admin-dashboard.sass */
+/* line 213, admin-theme/_admin-dashboard.sass */
 .data_loading, #dashboard .data_value span, #dashboard .data_value .dash_trend {
   opacity: 1;
   -webkit-animation-name: bounceG;
@@ -10157,7 +10166,7 @@ li.sortable-placeholder {
   transform: scale(0.7); }
 
 @-webkit-keyframes bounceG {
-  /* line 215, admin-theme/_admin-dashboard.sass */
+  /* line 221, admin-theme/_admin-dashboard.sass */
   0% {
     opacity: 0;
     filter: alpha(opacity=0);
@@ -10165,7 +10174,7 @@ li.sortable-placeholder {
     -ms-transform: scale(0.1);
     transform: scale(0.1); }
 
-  /* line 218, admin-theme/_admin-dashboard.sass */
+  /* line 224, admin-theme/_admin-dashboard.sass */
   100% {
     opacity: 1;
     filter: alpha(opacity=100);
@@ -10174,7 +10183,7 @@ li.sortable-placeholder {
     transform: scale(1); } }
 
 @-moz-keyframes bounceG {
-  /* line 215, admin-theme/_admin-dashboard.sass */
+  /* line 221, admin-theme/_admin-dashboard.sass */
   0% {
     opacity: 0;
     filter: alpha(opacity=0);
@@ -10182,7 +10191,7 @@ li.sortable-placeholder {
     -ms-transform: scale(0.1);
     transform: scale(0.1); }
 
-  /* line 218, admin-theme/_admin-dashboard.sass */
+  /* line 224, admin-theme/_admin-dashboard.sass */
   100% {
     opacity: 1;
     filter: alpha(opacity=100);
@@ -10191,7 +10200,7 @@ li.sortable-placeholder {
     transform: scale(1); } }
 
 @-ms-keyframes bounceG {
-  /* line 215, admin-theme/_admin-dashboard.sass */
+  /* line 221, admin-theme/_admin-dashboard.sass */
   0% {
     opacity: 0;
     filter: alpha(opacity=0);
@@ -10199,7 +10208,7 @@ li.sortable-placeholder {
     -ms-transform: scale(0.1);
     transform: scale(0.1); }
 
-  /* line 218, admin-theme/_admin-dashboard.sass */
+  /* line 224, admin-theme/_admin-dashboard.sass */
   100% {
     opacity: 1;
     filter: alpha(opacity=100);
@@ -10208,7 +10217,7 @@ li.sortable-placeholder {
     transform: scale(1); } }
 
 @-o-keyframes bounceG {
-  /* line 215, admin-theme/_admin-dashboard.sass */
+  /* line 221, admin-theme/_admin-dashboard.sass */
   0% {
     opacity: 0;
     filter: alpha(opacity=0);
@@ -10216,7 +10225,7 @@ li.sortable-placeholder {
     -ms-transform: scale(0.1);
     transform: scale(0.1); }
 
-  /* line 218, admin-theme/_admin-dashboard.sass */
+  /* line 224, admin-theme/_admin-dashboard.sass */
   100% {
     opacity: 1;
     filter: alpha(opacity=100);
@@ -10225,7 +10234,7 @@ li.sortable-placeholder {
     transform: scale(1); } }
 
 @keyframes bounceG {
-  /* line 215, admin-theme/_admin-dashboard.sass */
+  /* line 221, admin-theme/_admin-dashboard.sass */
   0% {
     opacity: 0;
     filter: alpha(opacity=0);
@@ -10233,7 +10242,7 @@ li.sortable-placeholder {
     -ms-transform: scale(0.1);
     transform: scale(0.1); }
 
-  /* line 218, admin-theme/_admin-dashboard.sass */
+  /* line 224, admin-theme/_admin-dashboard.sass */
   100% {
     opacity: 1;
     filter: alpha(opacity=100);
@@ -10241,11 +10250,11 @@ li.sortable-placeholder {
     -ms-transform: scale(1);
     transform: scale(1); } }
 
-/* line 222, admin-theme/_admin-dashboard.sass */
+/* line 228, admin-theme/_admin-dashboard.sass */
 #dash_version {
   padding: 0 !important;
   overflow: hidden; }
-/* line 226, admin-theme/_admin-dashboard.sass */
+/* line 232, admin-theme/_admin-dashboard.sass */
 #dash_version iframe {
   height: 140px;
   width: 100%; }

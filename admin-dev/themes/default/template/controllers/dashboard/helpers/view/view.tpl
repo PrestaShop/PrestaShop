@@ -46,6 +46,13 @@
 		</div>
 		<div class="col-lg-7" id="hookDashboardZoneTwo">
 			{$hookDashboardZoneTwo}
+			<section id="dashaddons" class="panel widget">
+				<header class="panel-heading">
+					<a href="http://addons.prestashop.com/?utm_source=backoffice_dashboard" target="_blank">
+						<i class="icon-plus"></i> {l s='Add more graph and data'}
+					</a>
+				</header>
+			</section>
 		</div>
 		<div class="col-lg-2">
 			
