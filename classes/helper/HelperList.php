@@ -444,13 +444,13 @@ class HelperListCore extends Helper
 			self::$cache_lang['Delete'] = $this->l('Delete', 'Helper');
 
 		if (!array_key_exists('DeleteItem', self::$cache_lang))
-			self::$cache_lang['DeleteItem'] = $this->l('Delete selected item?', 'Helper', false, false);
+			self::$cache_lang['DeleteItem'] = $this->l('Delete selected item?', 'Helper', true, false);
 
 		if (!array_key_exists('Name', self::$cache_lang))
-			self::$cache_lang['Name'] = $this->l('Name:', 'Helper', false, false);
+			self::$cache_lang['Name'] = $this->l('Name:', 'Helper', true, false);
 
 		if (!is_null($name))
-			$name = '\n\n'.self::$cache_lang['Name'].' '.$name;
+			$name = addcslashes('\n\n'.self::$cache_lang['Name'].' '.$name, '\'');
 
 		$data = array(
 			$this->identifier => $id,
@@ -459,7 +459,7 @@ class HelperListCore extends Helper
 		);
 		
 		if ($this->specificConfirmDelete !== false)
-			$data['confirm'] = !is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : Tools::safeOutput(addcslashes(self::$cache_lang['DeleteItem'].$name, '\''));
+			$data['confirm'] = !is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : Tools::safeOutput(self::$cache_lang['DeleteItem'].$name);
 		
 		$tpl->assign(array_merge($this->tpl_delete_link_vars, $data));
 
@@ -513,7 +513,7 @@ class HelperListCore extends Helper
 		if (Tools::getIsset($this->table.'Orderby'))
 			$order = '&'.$this->table.'Orderby='.urlencode($this->orderBy).'&'.$this->table.'Orderway='.urlencode(strtolower($this->orderWay));
 
-		$action = $this->currentIndex.$identifier.'&token='.$token.$order.'#'.$this->table;
+		$action = $this->currentIndex.$identifier.'&token='.$token.'#'.$this->table;
 
 		/* Determine current page number */
 		$page = (int)Tools::getValue('submitFilter'.$this->list_id);

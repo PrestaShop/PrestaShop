@@ -455,8 +455,8 @@ class AdminImportControllerCore extends AdminController
 					
 			}
 
-		$this->separator = substr(strval(trim(Tools::getValue('separator', ';'))), 0, 1);
-		$this->multiple_value_separator = substr(strval(trim(Tools::getValue('multiple_value_separator', ','))), 0, 1);
+		$this->separator = Tools::substr(strval(trim(Tools::getValue('separator', ';'))), 0, 1);
+		$this->multiple_value_separator = Tools::substr(strval(trim(Tools::getValue('multiple_value_separator', ','))), 0, 1);
 
 		parent::__construct();
 	}
@@ -632,7 +632,7 @@ class AdminImportControllerCore extends AdminController
 			$html .= '<tr id="table_'.$current_table.'_line_'.$current_line.'" style="padding: 4px">';
 			foreach ($line as $nb_c => $column)
 				if ((MAX_COLUMNS * (int)$current_table <= $nb_c) && ((int)$nb_c < MAX_COLUMNS * ((int)$current_table + 1)))
-					$html .= '<td>'.htmlentities(substr($column, 0, 200), ENT_QUOTES, 'UTF-8').'</td>';
+					$html .= '<td>'.htmlentities(Tools::substr($column, 0, 200), ENT_QUOTES, 'UTF-8').'</td>';
 			$html .= '</tr>';
 		}
 		$html .= '</table>';
@@ -2111,7 +2111,7 @@ class AdminImportControllerCore extends AdminController
 					$country->active = 1;
 					$country->name = AdminImportController::createMultiLangField($address->country);
 					$country->id_zone = 0; // Default zone for country to create
-					$country->iso_code = strtoupper(substr($address->country, 0, 2)); // Default iso for country to create
+					$country->iso_code = Tools::strtoupper(Tools::substr($address->country, 0, 2)); // Default iso for country to create
 					$country->contains_states = 0; // Default value for country to create
 					$lang_field_error = $country->validateFieldsLang(UNFRIENDLY_ERROR, true);
 					if (($field_error = $country->validateFields(UNFRIENDLY_ERROR, true)) === true &&
@@ -2142,7 +2142,7 @@ class AdminImportControllerCore extends AdminController
 					$state->name = $address->state;
 					$state->id_country = isset($country->id) ? (int)$country->id : 0;
 					$state->id_zone = 0; // Default zone for state to create
-					$state->iso_code = strtoupper(substr($address->state, 0, 2)); // Default iso for state to create
+					$state->iso_code = Tools::strtoupper(Tools::substr($address->state, 0, 2)); // Default iso for state to create
 					$state->tax_behavior = 0;
 					if (($field_error = $state->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 						($lang_field_error = $state->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $state->add())

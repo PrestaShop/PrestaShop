@@ -401,7 +401,7 @@ class AdminMetaControllerCore extends AdminController
 			{
 				fwrite($write_fd, "# Directories\n");
 				foreach ($this->rb_data['Directories'] as $dir)
-					fwrite($write_fd, 'Disallow: /*'.$dir."\n");
+					fwrite($write_fd, 'Disallow: */'.$dir."\n");
 			}
 			
 			// Files
