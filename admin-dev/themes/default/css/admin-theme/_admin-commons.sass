@@ -43,13 +43,21 @@
 	padding-left: 60px
 	position: relative
 	&:before
-		content: "\f00d"
-		@extend .icon-remove
 		position: absolute
 		top: 0
-		left: 0
+		left: 10px
+		display: block
+		min-height: 25px
+		min-width: 25px
+		font-family: FontAwesome
+		font-weight: normal
+		font-style: normal
+		font-size: 35px
+		text-decoration: inherit
+		-webkit-font-smoothing: antialiased
+		content: "\f00d"
+
 
 .overflow-y
 	height: 200px
 	overflow-y: auto
-	

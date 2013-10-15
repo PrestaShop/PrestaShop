@@ -6151,7 +6151,7 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
   content: "\f00c"; }
 
 /* line 419, admin-theme/_font-awesome.scss */
-.icon-remove:before, .alert.alert-danger:before:before, #carrier_wizard .wizard_error:before:before, .process-icon-cancel:before {
+.icon-remove:before, .process-icon-cancel:before {
   content: "\f00d"; }
 
 /* line 422, admin-theme/_font-awesome.scss */
@@ -8210,12 +8210,21 @@ a.link-social:hover {
   position: relative; }
 /* line 45, admin-theme/_admin-commons.sass */
 .alert.alert-danger:before, #carrier_wizard .wizard_error:before {
-  content: "\f00d";
   position: absolute;
   top: 0;
-  left: 0; }
+  left: 10px;
+  display: block;
+  min-height: 25px;
+  min-width: 25px;
+  font-family: FontAwesome;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 35px;
+  text-decoration: inherit;
+  -webkit-font-smoothing: antialiased;
+  content: "\f00d"; }
 
-/* line 52, admin-theme/_admin-commons.sass */
+/* line 61, admin-theme/_admin-commons.sass */
 .overflow-y {
   height: 200px;
   overflow-y: auto; }
