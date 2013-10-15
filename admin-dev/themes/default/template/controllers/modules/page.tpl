@@ -71,7 +71,7 @@
 		</div>
 		<!--start sidebar module-->
 		<div class="row">
-			<div class="categorieTitle col-lg-3">
+			<div class="categoriesTitle col-lg-3">
 				<div class="list-group">
 					<form id="filternameForm" method="post" class="list-group-item form-horizontal">
 						<div class="input-group col-lg-12">
@@ -90,7 +90,7 @@
 						{l s='All'} <span class="badge pull-right">{$nb_modules}</span>
 					</a>
 					{foreach from=$list_modules_categories item=module_category key=module_category_key}
-						<a class="list-group-item {if isset($categoryFiltered[$module_category_key])}active{/if}" href="{$currentIndex}&token={$token}&{if isset($categoryFiltered[$module_category_key])}un{/if}filterCategory={$module_category_key}">
+						<a class="categoryModuleFilterLink list-group-item {if isset($categoryFiltered[$module_category_key])}active{/if}" href="{$currentIndex}&token={$token}&{if isset($categoryFiltered[$module_category_key])}un{/if}filterCategory={$module_category_key}">
 							{$module_category.name} <span class="badge pull-right">{$module_category.nb}</span>
 						</a>
 					{/foreach}
