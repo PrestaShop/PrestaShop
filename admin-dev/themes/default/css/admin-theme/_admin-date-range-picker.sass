@@ -18,80 +18,55 @@ $color-calendar-range: darken($color-calendar,15%)
 		border: solid 3px $color-calendar-day-selected
 	#date-end.input-selected
 		border: solid 3px $color-calendar-day-selected
-	.datepickers-container
-		width: 60%
-		float: left
-		margin: 0
-		font-size: 16px
-		height: 16.8em
-	form#datepicker-form
-		width: 40%
-		float: left
-		+border-radius(0)
-		border: none
+	div#datepicker-form
 		#date-range .form-date-heading
-			background-color: darken($color-calendar-compare,5%)
+			background-color: darken($color-calendar,5%)
 		#date-compare .form-date-heading
 			background-color: darken($color-calendar-compare,5%)
 		.form-date-heading
-			font-family: $font-family
-			font-size: 1.15em
 			padding: 6px
-			color: $color-bright
-			font-weight: 200
-			text-transform: uppercase
+			.title, .checkbox-title label
+				font-family: $font-family
+				font-size: 1.15em
+				color: $color-bright
+				font-weight: 200
+				text-transform: uppercase
+				line-height: 2em
 			.btn-default
 				background-color: rgba($color-bright,0.3)
 				font-weight: 700
 				color: $color-bright
 				border: none
-		.form-date-body
-			padding: 10px
-		.form-date-group
-			+box-shadow(darken($color-calendar,30%) 0 0 4px)
-			background-color: $color-bright
+		.form-date-body, .form-date-actions
 			width: 100%
-			margin: 0 auto 6px auto
+			padding: 10px
+			background-color: white
+			display: inline-block
+		.form-date-group
+			width: 100%
+			margin: 0 auto
+			label
+				font-family: $font-family
+				font-size: 0.8em
+				font-weight: 700
+				text-transform: uppercase
+				color: #666
+				line-height: 3.2em
+				margin-bottom: 0
 			label, input
 				float: left
 				margin-right: 6px
-			label
-				line-height: 3.2em
-				font-weight: 700
-				font-size: 0.8em
-				margin-bottom: 0
 			input[type='text']
 				width: 35%
-		.actions
-			+box-shadow(darken($color-calendar,30%) 0 0 4px)
-			padding: 0
-			background-color: $color-calendar
-			.btn-primary
-				padding: 12px
-				text-transform:  uppercase
-				background-color: $color-bright
-				color: $color-calendar-day-selected
-				border: none
-			.btn-default
-				padding: 12px
-				text-transform:  uppercase
-				color: $color-calendar-day-selected
-				background: transparent
-				border: none
-		label
-			font-family: $font-family
-			font-weight: 700
-			text-transform: uppercase
-			color: #666
+
 	.datepicker
-		//+box-shadow(darken($color-calendar,30%) 0 0 4px)
 		position: relative
-		float: left
-		margin-right: 1%
-		width: 49%
-		height: 100%
+		margin: 0 0 8px 0
+		width: 100%
 		background-color: $color-calendar
 		font-family: $font-family
+		font-size: 14px
+		height: 16.8em
 		table
 			width: 100%
 			margin: 0

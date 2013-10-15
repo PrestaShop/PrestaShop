@@ -38,3 +38,18 @@
 	li.active
 		a, a:hover
 			background-color: white
+
+.alert.alert-danger
+	padding-left: 60px
+	position: relative
+	&:before
+		content: "\f00d"
+		@extend .icon-remove
+		position: absolute
+		top: 0
+		left: 0
+
+.overflow-y
+	height: 200px
+	overflow-y: auto
+	
