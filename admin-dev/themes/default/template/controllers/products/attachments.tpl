@@ -24,7 +24,7 @@
 *}
 
 {if isset($obj->id)}
-<fieldset>
+<div class="panel">
 	<input type="hidden" name="submitted_tabs[]" value="Attachments" />
 	<h3>{l s='Attachment'}</h3>
 
@@ -131,5 +131,5 @@
 		var ad = '{$ad}';
 		hideOtherLanguage({$id_lang});
 	</script>
-</fieldset>
+</div>
 {/if}

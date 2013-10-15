@@ -30,7 +30,7 @@
 	<input type="hidden" id="product_ids_to_delete" name="product_ids_to_delete" value="{$product_ids_to_delete}" />
 	<input type="hidden" name="updatesupply_order" value="1" />
 
-	<fieldset>
+	<div class="panel">
 		<h3><i class="icon-cogs"></i> {l s='Manage the products you want to order from the supplier.'}</h3>
 		<div class="alert alert-info">{l s='To add a product to the order, type the first letters of the product name, then select it from the drop-down list.'}</div>
 		<div class="row">
@@ -107,7 +107,7 @@
 				{/foreach}
 			</tbody>
 		</table>
-	</fieldset>
+	</div>
 
 	<script type="text/javascript">
 		product_infos = null;

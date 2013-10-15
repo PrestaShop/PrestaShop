@@ -28,7 +28,7 @@
 <div id="settings_referrers" class="row">
 	<div class="col-lg-3">
 		<form action="{$current}&token={$token}" method="post" id="settings_form" name="settings_form" class="form-horizontal">
-			<fieldset>
+			<div class="panel">
 				<h3>
 					<i class="icon-cog"></i> {l s='Settings'}
 				</h3>
@@ -57,12 +57,12 @@
 				<button type="submit" class="btn btn-default pull-right" name="submitSettings" id="submitSettings">
 					<i class="icon-save"></i> {l s='Save'}
 				</button>
-			</fieldset>
+			</div>
 		</form>
 	</div>
 	<div class="col-lg-6">
 		<form action="{$current}&token={$token}" method="post" id="refresh_index_form" name="refresh_index_form" class="form-horizontal">
-			<fieldset>
+			<div class="panel">
 				<h3>
 					<i class="icon-fullscreen"></i> {l s='Indexation'}
 				</h3>
@@ -70,12 +70,12 @@
 				<button type="submit" class="btn btn-default pull-right" name="submitRefreshIndex" id="submitRefreshIndex">
 					<i class="icon-refresh"></i> {l s='Refresh index'}
 				</button>
-			</fieldset>
+			</div>
 		</form>
 	</div>
 	<div class="col-lg-6">
 		<form action="{$current}&token={$token}" method="post" id="refresh_cache_form" name="refresh_cache_form" class="form-horizontal">
-			<fieldset>
+			<div class="panel">
 				<h3>
 					<i class="icon-briefcase"></i> {l s='Cache'}
 				</h3>
@@ -83,7 +83,7 @@
 				<button type="submit" class="btn btn-default pull-right" name="submitRefreshCache" id="submitRefreshCache">
 					<i class="icon-refresh"></i> {l s='Refresh cache'}
 				</button>
-			</fieldset>
+			</div>
 		</form>
 	</div>
 </div>

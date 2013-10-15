@@ -24,7 +24,7 @@
 *}
 
 <form action="{$url_submit}" method="post" id="form_{$list['name_id']}" class="form-horizontal">
-	<fieldset>
+	<div class="panel">
 		<h3>
 			<i class="{$list['icon']}"></i>
 			{$list['title']}
@@ -124,5 +124,5 @@
 				{l s='Save restrictions'}
 			</button>
 		</div>
-	</fieldset>
+	</div>
 </form>

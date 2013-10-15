@@ -26,7 +26,7 @@
 
 {block name="other_fieldsets"}
 	{if $f == 1}
-		<fieldset>
+		<div class="panel">
 			<h3>
 				<i class="icon-question-sign"></i> {l s='Help'}
 			</h3>
@@ -71,7 +71,7 @@
 					</li>
 				</ul>
 			</div>
-		</fieldset>
+		</div>
 	{/if}
 {/block}
 

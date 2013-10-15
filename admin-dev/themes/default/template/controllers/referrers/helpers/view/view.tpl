@@ -94,7 +94,7 @@
 		}
 	</script>
 
-	<fieldset>
+	<div class="panel">
 		<h3>
 			<i class="icon-bar-chart"></i> {l s='Statistics'}
 		</h3>
@@ -123,7 +123,7 @@
 				</div>
 			</div>
 		</form>
-	</fieldset>
+	</div>
 	<script type="text/javascript">
 		updateConversionRate(0);
 	</script>

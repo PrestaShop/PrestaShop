@@ -573,7 +573,7 @@
 						stock[id_product] = new Array();
 						if (this.customizable == '1')
 						{
-							customization_html += '<fieldset class="width3"><h3>{l s='Customization'}</h3><form id="customization_'+id_product+'" class="id_customization" method="post" enctype="multipart/form-data" action="'+admin_cart_link+'" style="display:none;">';
+							customization_html += '<div class="panel width3"><h3>{l s='Customization'}</h3><form id="customization_'+id_product+'" class="id_customization" method="post" enctype="multipart/form-data" action="'+admin_cart_link+'" style="display:none;">';
 							customization_html += '<input type="hidden" name="id_product" value="'+id_product+'" />';
 							customization_html += '<input type="hidden" name="id_cart" value="'+id_cart+'" />';
 							customization_html += '<input type="hidden" name="action" value="updateCustomizationFields" />';
@@ -590,7 +590,7 @@
 									customization_html += '<input class="customization_field" type="text" name="customization_'+id_product+'_'+this.id_customization_field+'" id="customization_'+id_product+'_'+this.id_customization_field+'">';
 								customization_html += '</p>';
 							});
-							customization_html += '</fieldset></form>';
+							customization_html += '</div></form>';
 						}
 
 						$.each(this.combinations, function() {
@@ -1007,7 +1007,7 @@
 <div class="leadin">{block name="leadin"}{/block}</div>
 
 <form action="" method="" class="form-horizontal">
-	<fieldset id="customer_part">
+	<div class="panel" id="customer_part">
 		<h3>
 			<i class="icon-user"></i>
 			{l s='Customer'}
@@ -1031,10 +1031,10 @@
 		<div class="row">
 			<div id="customers" class="col-lg-9 pull-right"></div>
 		</div>
-	</fieldset>
+	</div>
 </form>
 <form class="form-horizontal" action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&submitAdd{$table}=1" method="post" autocomplete="off">
-	<fieldset id="products_part" style="display:none;">
+	<div class="panel" id="products_part" style="display:none;">
 		<h3>
 			<i class="icon-folder-close"></i>
 			{l s='Cart'}
@@ -1212,8 +1212,8 @@
 				</div>
 			</div>
 		</div>
-	</fieldset>
-	<fieldset id="vouchers_part" style="display:none;">
+	</div>
+	<div class="panel" id="vouchers_part" style="display:none;">
 		<h3>
 			<i class="icon-table"></i>
 			{l s='Vouchers'}
@@ -1247,8 +1247,8 @@
 			</table>
 		</div>
 		<div id="vouchers_err" class="alert alert-warning" style="display:none;"></div>
-	</fieldset>
-	<fieldset id="address_part" style="display:none;">
+	</div>
+	<div class="panel" id="address_part" style="display:none;">
 		<h3>
 			<i class="icon-envelope"></i>
 			{l s='Addresses'}
@@ -1283,8 +1283,8 @@
 				</div>
 			</div>
 		</div>
-	</fieldset>
-	<fieldset id="carriers_part" style="display:none;">
+	</div>
+	<div class="panel" id="carriers_part" style="display:none;">
 		<h3>
 			<i class="icon-truck"></i>
 			{l s='Shipping'}
@@ -1326,8 +1326,8 @@
 				{/if}
 			</div>
 		</div>
-	</fieldset>
-	<fieldset id="summary_part" style="display:none;">
+	</div>
+	<div class="panel" id="summary_part" style="display:none;">
 		<h3>
 			<i class="icon-align-justify"></i>
 			{l s='Summary'}
@@ -1398,10 +1398,9 @@
 				</div>
 			</div>
 		</div>
-	</fieldset>
+	</div>
 </form>
 <div id="loader_container">
 	<div id="loader">
 	</div>
 </div>
-

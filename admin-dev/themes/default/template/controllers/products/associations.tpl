@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<fieldset>
+<div class="panel">
 	<input type="hidden" name="submitted_tabs[]" value="Associations" />
 	<h3>{l s='Associations'}</h3>
 	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Associations"}
@@ -100,4 +100,4 @@
 			</a>
 		</div>
 	</div>
-</fieldset>
+</div>
