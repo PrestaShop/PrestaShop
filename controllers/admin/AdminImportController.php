@@ -472,8 +472,8 @@ class AdminImportControllerCore extends AdminController
 					
 			}
 
-		$this->separator = Tools::substr(strval(trim(Tools::getValue('separator', ';'))), 0, 1);
-		$this->multiple_value_separator = Tools::substr(strval(trim(Tools::getValue('multiple_value_separator', ','))), 0, 1);
+		$this->separator = Tools::substr(strval(trim(Tools::getValue('separator', ','))), 0, 1);
+		$this->multiple_value_separator = Tools::substr(strval(trim(Tools::getValue('multiple_value_separator', ';'))), 0, 1);
 
 		parent::__construct();
 	}
