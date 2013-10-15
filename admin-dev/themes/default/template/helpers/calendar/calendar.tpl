@@ -47,7 +47,7 @@
 					<div class='form-date-heading clearfix'>
 						<span class="checkbox-title">
 							<label >
-								<input type='checkbox'>
+								<input type='checkbox' id="datepicker-compare">
 								{l s='Compare to'}
 							</label>
 						</span>
@@ -65,7 +65,7 @@
 					</div>
 				</div>
 				<div class='form-date-actions'>
-					<button class='btn btn-default' type='button'>
+					<button class='btn btn-default' type='button' id="datepicker-cancel">
 						<i class='icon-remove text-danger'></i>
 						{l s='Cancel'}
 					</button>
@@ -80,8 +80,35 @@
 </div>
 <script type="text/javascript">
 	$(function() {
-		$('.datepicker1').datepicker();
-		$('.datepicker2').datepicker();
+		var translated_dates = {
+			days: ["{l s='Sunday'}", "{l s='Monday'}", "{l s='Tuesday'}", "{l s='Wednesday'}", "{l s='Thursday'}", "{l s='Friday'}", "{l s='Saturday'}", "{l s='Sunday'}"],
+			daysShort: ["{l s='Sun'}", "{l s='Mon'}", "{l s='Tue'}", "{l s='Wed'}", "{l s='Thu'}", "{l s='Fri'}", "{l s='Sat'}", "{l s='Sun'}"],
+			daysMin: ["{l s='Su'}", "{l s='Mo'}", "{l s='Tu'}", "{l s='We'}", "{l s='Th'}", "{l s='Fr'}", "{l s='Sa'}", "{l s='Su'}"],
+			months: ["{l s='January'}", "{l s='February'}", "{l s='March'}", "{l s='April'}", "{l s='May'}", "{l s='June'}", "{l s='July'}", "{l s='August'}", "{l s='September'}", "{l s='October'}", "{l s='November'}", "{l s='December'}"],
+			monthsShort: ["{l s='Jan'}", "{l s='Feb'}", "{l s='Mar'}", "{l s='Apr'}", "{l s='May'}", "{l s='Jun'}", "{l s='Jul'}", "{l s='Aug'}", "{l s='Sep'}", "{l s='Oct'}", "{l s='Nov'}", "{l s='Dec'}"]
+		};
+		var start = '{$date_from}';
+		var end   = '{$date_to}';
+
+	{literal}
+		$('.datepicker1').datepicker({"dates": translated_dates, "weekStart": 1, "start": start, "end": end});
+		$('.datepicker2').datepicker({"dates": translated_dates, "weekStart": 1, "start": start, "end": end});
+		//$('.datepicker1').datepicker('range');
+		//$('.datepicker2').range();
+	{/literal}
+	
 		$("#date-start").focus().addClass("input-selected");
+		$('#datepicker-cancel').click(function() {
+			$('#datepicker').slideUp(200);
+		});
+
+		$('#datepicker').show(function() {
+			$('#date-start').focus();
+		});
+
+		$('#datepicker-compare').click(function() {
+			if ($(this).attr("checked"))
+				$('#compare-date-start').focus();
+		})
 	});
 </script>

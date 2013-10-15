@@ -26,7 +26,7 @@
 
 class HelperCalendarCore extends Helper
 {
-	const DEFAULT_DATE_FORMAT = 'dd-mm-yyyy';
+	const DEFAULT_DATE_FORMAT = 'Y-m-d';
 
 	private $_actions;
 	private $_compare_date_from;
@@ -62,7 +62,7 @@ class HelperCalendarCore extends Helper
 
 	public function setCompareDateFrom($value)
 	{
-		if (!isset($value) || $value == '');
+		if (!isset($value) || $value == '')
 			$value = date('Y-m-d', strtotime("-31 days"));
 
 		if (!is_string($value))
