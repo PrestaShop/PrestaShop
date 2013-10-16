@@ -88,9 +88,10 @@
 			<table style="width: 100%">
 				<tr style="line-height:6px;">
 					{if Configuration::get('PS_ADS_IMG_PS')}<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 10%">{l s='IMAGE' pdf='true'}</td>{/if}
-					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: {if Configuration::get('PS_ADS_IMG_PS')}40%{else}50%{/if}">{l s='PRODUCT NAME' pdf='true'}</td>
-					<td style="background-color: #4D4D4D; color: #FFF; text-align: left; font-weight: bold; width: 20%">{l s='REFERENCE' pdf='true'}</td>
-					<td style="background-color: #4D4D4D; color: #FFF; text-align: center; font-weight: bold; width: 10%">{l s='QTY' pdf='true'}</td>
+					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: {if Configuration::get('PS_ADS_IMG_PS')}35%{else}45%{/if}">{l s='PRODUCT NAME' pdf='true'}</td>
+					<td style="background-color: #4D4D4D; color: #FFF; text-align: left; font-weight: bold; width: 15%">{l s='REFERENCE' pdf='true'}</td>
+					<td style="background-color: #4D4D4D; color: #FFF; text-align: center; font-weight: bold; width: 10%">{l s='QTY TO SHIP' pdf='true'}</td>
+					<td style="background-color: #4D4D4D; color: #FFF; text-align: center; font-weight: bold; width: 10%">{l s='QTY NOT PACKED' pdf='true'}</td>
 					<td style="background-color: #4D4D4D; color: #FFF; text-align: center; font-weight: bold; width: 20%">{l s='WAREHOUSE' pdf='true'}</td>
 				</tr>
 				{foreach $order_details as $product}
@@ -106,6 +107,7 @@
 						{/if}
 					</td>
 					<td style="text-align: center;">{$product.product_quantity}</td>
+					<td style="text-align: center;">{if $product.product_quantity_current}{$product.product_quantity_current}{else}{$product.product_quantity}{/if}</td>
 					<td style="text-align: center;">{$product.warehouse_name} ({$product.warehouse_location})</td>
 				</tr>
 				{/foreach}

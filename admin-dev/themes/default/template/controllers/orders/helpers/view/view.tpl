@@ -780,7 +780,7 @@
 					var Products = new Array();
 					Products['select_pname'] = new Array('','')
 					{foreach from=$products item=product key=k}
-						Products[{$product.product_id}] = new Array('{if $product.product_reference}{$product.product_reference}{/if}','{if isset($product.product_ean13)}{$product.product_ean13}{/if}');
+						Products[{$product.product_id} + '_' + {$product.product_attribute_id}] = new Array('{if $product.product_reference}{$product.product_reference}{/if}','{if isset($product.product_ean13)}{$product.product_ean13}{/if}');
 					{/foreach}
 					var ref = Products[opt][0];
 					var ean = Products[opt][1];
@@ -822,7 +822,7 @@
 				<select name="adsProductName" onchange=adsName2Ref() id="adsProductName">
 					<option value="select_pname">--  {l s='Select productname'} --
 					{foreach from=$products item=product key=k}
-						<option value="{$product.product_id}" >{$product.product_name}</option>
+						<option value="{$product.product_id}_{$product.product_attribute_id}" >{$product.product_name}</option>
 					{/foreach}
 				</select>
 				{l s='Reference:'}<input type="text" name="adsReference" id="adsReference"  value="" placeholder="Enter Reference" />

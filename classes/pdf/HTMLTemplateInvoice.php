@@ -81,15 +81,16 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			$products = $products[$this->delivery_nr];
 			$total_paid_tax_incl = 0;
 			$total_paid_tax_excl = 0;
-			foreach($products as &$product) {
-				$product['product_quantity'] = $product['delivery_qty'];
+			foreach($products as &$product)
+			{
+					$product['product_quantity'] = $product['delivery_qty'];
 					$total_price_tax_incl_product = ($product['unit_price_tax_incl'] * $product['delivery_qty']);
 					$total_price_tax_excl_product = ($product['unit_price_tax_excl'] * $product['delivery_qty']);
 					$total_paid_tax_incl += $total_price_tax_incl_product;
 					$total_paid_tax_excl += $total_price_tax_excl_product;
+					$product['total_price_tax_incl'] = $total_price_tax_incl_product;
+					$product['total_price_tax_excl'] = $total_price_tax_excl_product;
 			}
-				$product['total_price_tax_incl'] = $total_price_tax_incl_product;
-				$product['total_price_tax_excl'] = $total_price_tax_excl_product;
 				$this->order_invoice->total_products_wt = $total_paid_tax_incl;
 				$this->order_invoice->total_products = $total_paid_tax_excl;
 				if($this->delivery_nr == 1) {

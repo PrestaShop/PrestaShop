@@ -65,17 +65,28 @@ class HTMLTemplatePackageSlipCore extends HTMLTemplate
 		$order_details = $this->order_invoice->getProducts();
 		$delivery_products = $this->order->getProductsDelivery();
 		$deliverd_products = array();
-		foreach($delivery_products as $key => $delivery)
+		foreach($delivery_products as  $delivery)
 		{
 				foreach($delivery as $product) {
 					if($product['shipped'] == 1) {
-						if(!empty($deliverd_products[ $product['product_id'] ]))
+						if(!empty($deliverd_products[ $product['product_id'] . '_' . $product['product_attribute_id'] ]))
 						{
-							$deliverd_products[ $product['product_id'] ] += $product['delivery_qty'];
+							$deliverd_products[ $product['product_id'] . '_' . $product['product_attribute_id' ] ] += $product['delivery_qty'];
 						}
 						else
 						{
-							$deliverd_products[ $product['product_id'] ] = $product['delivery_qty'];
+							$deliverd_products[ $product['product_id'] . '_' . $product['product_attribute_id' ] ] = $product['delivery_qty'];
+						}
+					}
+					else
+					{
+						if(!empty($deliverd_products[ $product['product_id'] . '_' . $product['product_attribute_id'] . "_current"] ) )
+						{
+							$deliverd_products[ $product['product_id'] . '_' . $product['product_attribute_id' ] . "_current" ] += $product['delivery_qty'];
+						}
+						else
+						{
+							$deliverd_products[ $product['product_id'] . '_' . $product['product_attribute_id' ] . "_current" ] = $product['delivery_qty'];
 						}
 					}
 				}
@@ -103,10 +114,17 @@ class HTMLTemplatePackageSlipCore extends HTMLTemplate
 				else
 					$order_detail['image_size'] = false;
 			}
-			if($deliverd_products[ $order_detail['product_id'] ])
-			{
-				// Removed delivered products qty
-				$order_detail['product_quantity'] = $order_detail['product_quantity'] - $deliverd_products[ $order_detail['product_id'] ];
+			if(!empty($deliverd_products)) {
+				if(isset($deliverd_products[ $order_detail['product_id'] . '_' . $order_detail['product_attribute_id' ] ]))
+				{
+					// Removed delivered products qty
+					$order_detail['product_quantity'] = $order_detail['product_quantity'] - $deliverd_products[ $order_detail['product_id'] . '_' . $order_detail['product_attribute_id' ] ];
+				}
+				if(isset($deliverd_products[ $order_detail['product_id'] . '_' . $order_detail['product_attribute_id' ] . "_current"]) )
+				{
+					// Removed deliverd products qty and qty on unshipped delivery
+					$order_detail['product_quantity_current'] = ($order_detail['product_quantity'] - $deliverd_products[ $order_detail['product_id'] . '_' . $order_detail['product_attribute_id' ] . '_current']);
+				}
 			}
 		}
 	

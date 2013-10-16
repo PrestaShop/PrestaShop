@@ -505,16 +505,13 @@ class OrderCore extends ObjectModel
 			SELECT *, ody.id_order
 			FROM `'._DB_PREFIX_.'order_delivery_detail` odyd
 			LEFT JOIN `'._DB_PREFIX_.'order_delivery` ody ON (ody.delivery_id = odyd.delivery_id)
-			LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.product_id = odyd.product_id AND ody.id_order = od.id_order)
+			LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.product_id = odyd.product_id AND ody.id_order = od.id_order AND od.product_attribute_id = odyd.product_attribute_id)
 			LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = odyd.product_id)
 			LEFT JOIN `'._DB_PREFIX_.'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = ' . $delivery_id['id_shop'] . ')
 			WHERE odyd.`delivery_id` = ' . $delivery_id['delivery_id'] . ($get_delivery_nr ? ' AND ody.`delivery_nr` =' . $get_delivery_nr : ''));
 			$nr = $order_delivery->getNrFromId($delivery_id['delivery_id']);
 			$details[$nr] = $detail;
 		}
-// 		echo('<pre>');
-// 		print_r($details);
-// 		echo('</pre><hr>');
 		return $details;
 	}
 
@@ -1611,6 +1608,9 @@ class OrderCore extends ObjectModel
 				$invoice = $this->getInvoicesCollection()->getResults();
 				$invoice = $invoice[0];
 				$invoice->delivery_nr = $delivery->delivery_nr;
+				if($delivery->delivery_nr == 1) {
+					$total_paid_tax_incl += $invoice->total_shipping_tax_incl; // Add shipping fee to 1st invoice
+				}
 				$invoice->total_paid_tax_incl = $total_paid_tax_incl;
 				$invoice->date_add = $delivery->delivery_date;
 				$invoices_ads[] = $invoice;
@@ -2058,7 +2058,6 @@ class OrderCore extends ObjectModel
 	/**
 	 * Return number for next delivery box for ads
 	 * 
-	 * @since 1.5.5.0
 	 */	
 	
 	public function getAdsDeliverySlipNr()

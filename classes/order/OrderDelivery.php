@@ -38,16 +38,18 @@ class OrderDeliveryCore extends ObjectModel
 	
 	public $delivery_date;
 	
-	public $delivery_nr;
+	public $delivery_number;
 
 	public static $definition = array(
 		'table' => 'order_delivery',
 		'primary' => 'delivery_id',
 		'fields' => array(
 			'id_order' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_order_invoice' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_shop' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-			'delivery_nr' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-			'delivery_date' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
+			'delivery_number' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'date_add' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
+			'shipped' => 			array('type' => self::TYPE_INT),
 		),
 	);
 
@@ -66,17 +68,17 @@ class OrderDeliveryCore extends ObjectModel
 
 	public function getNextSlipNr($order)
 	{
-		$nr = Db::getInstance()->executeS('SELECT MAX(`delivery_nr`) as delivery_nr
+		$nr = Db::getInstance()->executeS('SELECT MAX(`delivery_number`) as delivery_number
 		FROM `'._DB_PREFIX_.'order_delivery`
 		WHERE `id_order` = ' . (int)$order->id . ' AND `id_shop` = ' . (int)$order->id_shop );
-		$nr = $nr[0]['delivery_nr'];
+		$nr = $nr[0]['delivery_number'];
 
 		$shipped = 0;
 		if($nr != "") {
 			$shipped = Db::getInstance()->executeS('
 			SELECT `shipped`
 			FROM `'._DB_PREFIX_.'order_delivery`
-			WHERE `delivery_nr` = ' . $nr . ' AND `id_order` = ' . (int)$order->id . ' AND `id_shop` = ' . (int)$order->id_shop );
+			WHERE `delivery_number` = ' . $nr . ' AND `id_order` = ' . (int)$order->id . ' AND `id_shop` = ' . (int)$order->id_shop );
 			$shipped = $shipped[0]['shipped'];
 		}
 
@@ -91,11 +93,11 @@ class OrderDeliveryCore extends ObjectModel
 	
 	public function getNrFromId($id) {
 		$nr = Db::getInstance()->executeS('
-		SELECT delivery_nr
+		SELECT delivery_number
 		FROM `'._DB_PREFIX_.'order_delivery` ody
 		WHERE ody.`delivery_id` = ' . $id
 		);
-		return $nr[0]['delivery_nr'];
+		return $nr[0]['delivery_number'];
 	}
 
 	public function getIds($order)
@@ -118,18 +120,18 @@ class OrderDeliveryCore extends ObjectModel
 	}
 	
 	/**
-	 * Retrive id nr for order if delivery_nr is matched
+	 * Retrive id nr for order if delivery_number is matched
 	 * 
 	 * @since 
-	 * @param $delivery_nr
+	 * @param $delivery_number
 	 * @return delivery_id
 	 */
-	public function getIdFromNr($delivery_nr,$order)
+	public function getIdFromNr($delivery_number,$Id_order,$id_shop)
 	{
 		$sql = '
 		SELECT delivery_id
 		FROM `' . _DB_PREFIX_ . 'order_delivery` ody
-		WHERE ody.`id_order` = ' . (int)$order->id . ' AND ody.`id_shop` = ' . (int)$order->id_shop . ' AND ody.`delivery_nr` = ' . $delivery_nr;
+		WHERE ody.`id_order` = ' . (int)$id_order . ' AND ody.`id_shop` = ' . (int)$id_shop . ' AND ody.`delivery_number` = ' . $delivery_number;
 		$id = Db::getInstance()->executeS($sql);
 		if(isset($id[0])) {
 			return $id[0]["delivery_id"];
@@ -146,12 +148,116 @@ class OrderDeliveryCore extends ObjectModel
 		Db::getInstance()->update('order_delivery',array('delivery_date' => date('Y-m-d H:i:s') ), '`delivery_id` = ' . $delivery_id ); // update delivery date when adding product
 	}
 	
-	
-	
-	public function createDelivery($delivery_nr,$order,$product_id,$product_attribute_id,$qty,$auto_detail = true)
+	/**
+	 * This method allows to generate first invoice of the current order
+	 */
+	public function setInvoice($order,$use_existing_payment=false)
 	{
-		Db::getInstance()->insert('order_delivery',array('id_order' => (int)$order->id,'id_shop' => (int)$order->id_shop,'delivery_nr' => $delivery_nr) );
+			$order_invoice = new OrderInvoice();
+			$order_invoice->id_order = $this->id;
+			$order_invoice->number = Configuration::get('PS_INVOICE_START_NUMBER', null, null, $this->id_shop);
+			// If invoice start number has been set, you clean the value of this configuration
+			if ($order_invoice->number)
+				Configuration::updateValue('PS_INVOICE_START_NUMBER', false, false, null, $this->id_shop);
+			else
+				$order_invoice->number = Order::getLastInvoiceNumber() + 1;
+
+			$invoice_address = new Address((int)$this->id_address_invoice);
+			$carrier = new Carrier((int)$this->id_carrier);
+			$tax_calculator = $carrier->getTaxCalculator($invoice_address);
+			
+			// TODO: This needs to be rewritten to use order_delivery_detail's
+			// on OrdersController line 1607 is addProduct. It uses an cart to create the invoice.
+			// that might actually be an better idea.
+			$order_invoice->total_discount_tax_excl = $this->total_discounts_tax_excl;
+			$order_invoice->total_discount_tax_incl = $this->total_discounts_tax_incl;
+			$order_invoice->total_paid_tax_excl = $this->total_paid_tax_excl;
+			$order_invoice->total_paid_tax_incl = $this->total_paid_tax_incl;
+			$order_invoice->total_products = $this->total_products;
+			$order_invoice->total_products_wt = $this->total_products_wt;
+			$order_invoice->total_shipping_tax_excl = $this->total_shipping_tax_excl;
+			$order_invoice->total_shipping_tax_incl = $this->total_shipping_tax_incl;
+			$order_invoice->shipping_tax_computation_method = $tax_calculator->computation_method;
+			$order_invoice->total_wrapping_tax_excl = $this->total_wrapping_tax_excl;
+			$order_invoice->total_wrapping_tax_incl = $this->total_wrapping_tax_incl;
+
+			// Save Order invoice
+			$order_invoice->add();
+
+			$order_invoice->saveCarrierTaxCalculator($tax_calculator->getTaxesAmount($order_invoice->total_shipping_tax_excl));
+
+			// Update order_carrier
+			$id_order_carrier = Db::getInstance()->getValue('
+				SELECT `id_order_carrier`
+				FROM `'._DB_PREFIX_.'order_carrier`
+				WHERE `id_order` = '.(int)$order_invoice->id_order.'
+				AND (`id_order_invoice` IS NULL OR `id_order_invoice` = 0)');
+			
+			if ($id_order_carrier)
+			{
+				$order_carrier = new OrderCarrier($id_order_carrier);
+				$order_carrier->id_order_invoice = (int)$order_invoice->id;
+				$order_carrier->update();
+			}
+
+			// Update order detail
+			Db::getInstance()->execute('
+				UPDATE `'._DB_PREFIX_.'order_detail`
+				SET `id_order_invoice` = '.(int)$order_invoice->id.'
+				WHERE `id_order` = '.(int)$order_invoice->id_order);
+
+			// Update order payment
+			if ($use_existing_payment)
+			{
+				$id_order_payments = Db::getInstance()->executeS('
+					SELECT DISTINCT op.id_order_payment 
+					FROM `'._DB_PREFIX_.'order_payment` op
+					INNER JOIN `'._DB_PREFIX_.'orders` o ON (o.reference = op.order_reference)
+					LEFT JOIN `'._DB_PREFIX_.'order_invoice_payment` oip ON (oip.id_order_payment = op.id_order_payment)					
+					WHERE (oip.id_order != '.(int)$order_invoice->id_order.' OR oip.id_order IS NULL) AND o.id_order = '.(int)$order_invoice->id_order);
+
+				if (count($id_order_payments))
+				{
+					foreach ($id_order_payments as $order_payment)
+						Db::getInstance()->execute('
+							INSERT INTO `'._DB_PREFIX_.'order_invoice_payment`
+							SET
+								`id_order_invoice` = '.(int)$order_invoice->id.',
+								`id_order_payment` = '.(int)$order_payment['id_order_payment'].',
+								`id_order` = '.(int)$order_invoice->id_order);
+					// Clear cache
+					Cache::clean('order_invoice_paid_*');
+				}
+			}
+
+			// Update order cart rule
+			Db::getInstance()->execute('
+				UPDATE `'._DB_PREFIX_.'order_cart_rule`
+				SET `id_order_invoice` = '.(int)$order_invoice->id.'
+				WHERE `id_order` = '.(int)$order_invoice->id_order);
+
+			// Keep it for backward compatibility, to remove on 1.6 version
+			$this->invoice_date = $order_invoice->date_add;
+			$this->invoice_number = $order_invoice->number;
+			$this->update();
+	}
+	
+	public function createDelivery($delivery_number,$order,$product_id,$product_attribute_id,$qty,$auto_detail = true)
+	{
+		// First create an invoice.
+			
+		//Now create delivery
+		Db::getInstance()->insert('order_delivery',array(
+		'id_order' => (int)$order->id,
+		'id_shop' => (int)$order->id_shop,
+		'id_order_invoice' => '',
+		'delivery_number' => $delivery_number,
+		'date_add' => date("Y-m-d h:i:s")
+		) );
 		$delivery_id = Db::getInstance()->Insert_ID();
+		/*
+			Here we should add an function to create an invoice.
+		*/
 		if($auto_detail) {
 			$this->createDeliveryDetail($delivery_id,$product_id,$product_attribute_id,$qty);
 		} else {
@@ -170,22 +276,22 @@ class OrderDeliveryCore extends ObjectModel
 		Db::getInstance()->update('order_delivery',array('shipped' => 1 ), '`delivery_id` = ' . $delivery_id ); // set delivery id as shipped
 	}
 
-	public function getShippedByNr($delivery_nr,$id_order)
+	public function getShippedByNr($delivery_number,$id_order)
 	{
 		$ship = Db::getInstance()->executeS(
 		'SELECT `shipped`
 		FROM `'._DB_PREFIX_.'order_delivery`
-		WHERE `delivery_nr` = ' . $delivery_nr . ' AND `id_order` = ' . $id_order);
+		WHERE `delivery_number` = ' . $delivery_number . ' AND `id_order` = ' . $id_order);
 		if($ship)
 			return $ship[0]['shipped'];
 	}
 
-	public function getDeliveryDate($delivery_nr,$id_order)
+	public function getDeliveryDate($delivery_number,$id_order)
 	{
 		$date = Db::getInstance()->executeS(
 		'SELECT `delivery_date`
 		FROM `'._DB_PREFIX_.'order_delivery`
-		WHERE `delivery_nr` = ' . $delivery_nr . ' AND `id_order` = ' . $id_order);
+		WHERE `delivery_number` = ' . $delivery_number . ' AND `id_order` = ' . $id_order);
 		if($date)
 			return $date[0]['delivery_date'];
 	}

@@ -1278,7 +1278,7 @@ class AdminOrdersControllerCore extends AdminController
 // 				$id_order = Tools::getValue('id_order');
 				$delivery_nr = Tools::getValue('submitAdsAdd');
 				$order_delivery = new OrderDelivery($order->id);
-				$delivery_id = $order_delivery->getIdFromNr($delivery_nr,$order);
+				$delivery_id = $order_delivery->getIdFromNr($delivery_nr,$order->id,$order->id_shop);
 				if(empty($delivery_id)) { // the order has no delivered products
 					$order_delivery->createDelivery($delivery_nr,$order,$product_id,$product_attribute_id,Tools::getValue('adsQty')); // creates delivery and adds delivery detail
 				}
