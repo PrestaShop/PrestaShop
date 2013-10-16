@@ -39,17 +39,26 @@
 
 	<nav>
 		<ul class="nav nav-tabs">
-			<li class="active"><a href="#dash_recent_orders" data-toggle="tab">
-				<i class="icon-fire"></i> {l s='Recent Orders'}</a>
+			<li class="active">
+				<a href="#dash_recent_orders" data-toggle="tab">
+					<i class="icon-fire"></i> {l s='Recent Orders'}
+				</a>
 			</li>
-			<li><a href="#dash_best_sellers" data-toggle="tab">
-				<i class="icon-trophy"></i> {l s='Best Sellers'}</a></li>
-			<li><a href="#dash_most_viewed" data-toggle="tab">
-				<i class="icon-eye-open"></i>  {l s='Most Viewed'}</a></li>
-			<li><a href="#dash_top_search" data-toggle="tab">
-				<i class="icon-search"></i> {l s='Top Search'}</a></li>
-			<li><a href="#dash_best_sales" data-toggle="tab">
-				<i class="icon-thumbs-up"></i> {l s='Best Sales'}</a></li>
+			<li>
+				<a href="#dash_best_sellers" data-toggle="tab">
+					<i class="icon-trophy"></i> {l s='Best Sellers'}
+				</a>
+			</li>
+			<li>
+				<a href="#dash_most_viewed" data-toggle="tab">
+					<i class="icon-eye-open"></i>  {l s='Most Viewed'}
+				</a>
+			</li>
+			<li>
+				<a href="#dash_top_search" data-toggle="tab">
+					<i class="icon-search"></i> {l s='Top Search'}
+				</a>
+			</li>
 		</ul>
 	</nav>
 	<div class="tab-content panel">
