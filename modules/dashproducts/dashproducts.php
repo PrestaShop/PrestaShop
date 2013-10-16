@@ -51,26 +51,26 @@ class Dashproducts extends Module
 	{
 		return $this->display(__FILE__, 'dashboard_zone_two.tpl');
 	}
-	
+
 	public function hookDashboardData($params)
 	{
 		$table_recent_orders = $this->getTableRecentOrders();
 		$table_best_sellers = $this->getTableBestSellers($params['date_from'], $params['date_to']);
 		$table_most_viewed = $this->getTableMostViewed($params['date_from'], $params['date_to']);
 		$table_top_10_most_search = $this->getTableTop10MostSearch($params['date_from'], $params['date_to']);
-		$table_top_5_search = $this->getTableTop5Search();
-		
+		//$table_top_5_search = $this->getTableTop5Search();
+
 		return array(
 			'data_table' => array(
 				'table_recent_orders' => $table_recent_orders,
 				'table_best_sellers' => $table_best_sellers,
 				'table_most_viewed' => $table_most_viewed,
 				'table_top_10_most_search' => $table_top_10_most_search,
-				'table_top_5_search' => $table_top_5_search
+				//'table_top_5_search' => $table_top_5_search
 			)
 		);
 	}
-	
+
 	public function getTableRecentOrders()
 	{
 		$header = array(
@@ -80,7 +80,7 @@ class Dashproducts extends Module
 			array('title' => $this->l('Date'), 'class' => 'text-center'),
 			array('title' => $this->l('Action'), 'class' => 'text-center'),
 		);
-		
+
 		$orders = Order::getOrdersWithInformations(10);
 
 		$body = array();
@@ -122,10 +122,9 @@ class Dashproducts extends Module
 		}
 		return array('header' => $header, 'body' => $body);
 	}
-	
+
 	public function getTableBestSellers($date_from, $date_to)
 	{
-		
 		$header = array(
 			array(
 				'id' => 'image',
@@ -158,7 +157,7 @@ class Dashproducts extends Module
 				'class' => 'text-center',
 			)
 		);
-		
+
 		$products = Db::getInstance()->ExecuteS('
 		SELECT
 			product_id,
@@ -174,7 +173,7 @@ class Dashproducts extends Module
 		GROUP BY product_id
 		ORDER BY total DESC
 		LIMIT 10');
-		
+
 		$body = array();
 		foreach ($products as $product)
 		{
@@ -218,7 +217,7 @@ class Dashproducts extends Module
 		}
 		return array('header' => $header, 'body' => $body);
 	}
-	
+
 	public function getTableMostViewed($date_from, $date_to)
 	{
 		$header = array(
@@ -301,7 +300,7 @@ class Dashproducts extends Module
 		
 		return array('header' => $header, 'body' => $body);
 	}
-	
+
 	public function getTableTop10MostSearch($date_from, $date_to)
 	{
 		$header = array(
@@ -321,7 +320,7 @@ class Dashproducts extends Module
 				'class' => 'text-center'
 			)
 		);
-		
+
 		$terms = $this->getMostSearchTerms($date_from, $date_to);
 		$body = array();
 		if (is_array($terms) && count($terms))
@@ -348,7 +347,7 @@ class Dashproducts extends Module
 
 		return array('header' => $header, 'body' => $body);
 	}
-	
+
 	public function getTableTop5Search()
 	{
 		$header = array(
@@ -375,7 +374,7 @@ class Dashproducts extends Module
 		
 		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 	}
-	
+
 	public function getTotalProductAddedCart($date_from, $date_to, $id_product)
 	{
 		$sql = 'SELECT count(`id_product`) as count
@@ -386,7 +385,7 @@ class Dashproducts extends Module
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 	}
-	
+
 	public function getTotalProductPurchased($date_from, $date_to, $id_product)
 	{
 		$sql = 'SELECT count(`product_id`) as count
@@ -399,7 +398,7 @@ class Dashproducts extends Module
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 	}
-	
+
 	public function getTotalViewed($date_from, $date_to)
 	{
 		$gapi = Module::isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
@@ -428,7 +427,7 @@ class Dashproducts extends Module
 			AND dr.`time_start` BETWEEN "'.pSQL($date_from).'" AND "'.pSQL($date_to).'"
 			AND dr.`time_end` BETWEEN "'.pSQL($date_from).'" AND "'.pSQL($date_to).'"');
 	}
-	
+
 	public function getMostSearchTerms($date_from, $date_to, $limit = 10)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('

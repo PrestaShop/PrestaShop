@@ -91,7 +91,7 @@
 		</div>
 		<div class="tab-pane" id="dash_top_search">
 			<div class="row">
-				<div class="col-lg-7">
+				<div class="col-lg-12">
 					<h3>{l s="Top 10 most search terms"}</h3>
 					<table class="table data_table" id="table_top_10_most_search">
 						<thead>
@@ -100,6 +100,7 @@
 						</tbody>
 					</table>
 				</div>
+				{*
 				<div class="col-lg-5">
 					<h3>{l s="Coming soon"}</h3>
 					<table class="table data_table" id="table_top_5_search">
@@ -109,6 +110,7 @@
 						</tbody>
 					</table>
 				</div>
+				*}
 			</div>
 		</div>
 	</div>
