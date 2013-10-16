@@ -2,7 +2,6 @@
 <entity_profile>
   <fields id="name" class="Profile" sql="a.id_profile &gt; 1"/>
   <entities>
-    <profile id="Administrator"/>
     <profile id="Logistician"/>
     <profile id="Translator"/>
     <profile id="Salesman"/>
