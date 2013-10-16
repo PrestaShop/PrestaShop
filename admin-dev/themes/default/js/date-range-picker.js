@@ -400,7 +400,7 @@
 									$(".start-selected-compare").removeClass("start-selected-compare");
 									target.addClass("start-selected-compare");
 									startCompare = target.data("val");
-									$("#compare-date-start").val(DPGlobal.formatDate(new Date(startCompare), DPGlobal.parseFormat('Y-m-d')));
+									$("#date-start-compare").val(DPGlobal.formatDate(new Date(startCompare), DPGlobal.parseFormat('Y-m-d')));
 								} else {
 									$(".start-selected").removeClass("start-selected");
 									target.addClass("start-selected");
@@ -411,7 +411,7 @@
 								if(!switched) {click = 1;} else {click = 2;}
 								if(!switched){
 									if (compare) {
-										$("#compare-date-end").val(null).focus().addClass("input-selected");
+										$("#date-end-compare").val(null).focus().addClass("input-selected");
 										target.addClass("start-selected-compare").addClass("end-selected-compare");
 									} else {
 										$("#date-end").val(null).focus().addClass("input-selected");
@@ -420,7 +420,7 @@
 								}
 
 								if (compare)
-									$("#compare-date-start").removeClass("input-selected").addClass("input-complete");
+									$("#date-start-compare").removeClass("input-selected").addClass("input-complete");
 								else
 									$("#date-start").removeClass("input-selected").addClass("input-complete");
 							}
@@ -430,9 +430,9 @@
 									$(".end-selected-compare").removeClass("end-selected-compare");
 									target.addClass("end-selected-compare");
 									endCompare = target.data("val");
-									$("#compare-date-end").val(DPGlobal.formatDate(new Date(endCompare), DPGlobal.parseFormat('Y-m-d')));
+									$("#date-end-compare").val(DPGlobal.formatDate(new Date(endCompare), DPGlobal.parseFormat('Y-m-d')));
 									click = 2;
-									$("#compare-date-end").removeClass("input-selected").addClass("input-complete");
+									$("#date-end-compare").removeClass("input-selected").addClass("input-complete");
 								} else {
 									$(".end-selected").removeClass("end-selected");
 									target.addClass("end-selected");
@@ -516,8 +516,8 @@
 					if (startCompare && over < startCompare)
 					{
 						endCompare = startCompare;
-						$("#compare-date-end").val(DPGlobal.formatDate(new Date(startCompare), DPGlobal.parseFormat('Y-m-d'))).removeClass("input-selected");
-						$("#compare-date-start").val(null).focus().addClass("input-selected");
+						$("#date-end-compare").val(DPGlobal.formatDate(new Date(startCompare), DPGlobal.parseFormat('Y-m-d'))).removeClass("input-selected");
+						$("#date-start-compare").val(null).focus().addClass("input-selected");
 						$("#datepicker .start-selected-compare").removeClass("start-selected-compare").addClass("end-selected-compare");
 						startCompare = null;
 						switched = true;
@@ -525,8 +525,8 @@
 					else if (endCompare && over > endCompare)
 					{
 						startCompare = endCompare;
-						$("#compare-date-start").val(DPGlobal.formatDate(new Date(endCompare), DPGlobal.parseFormat('Y-m-d'))).removeClass("input-selected");
-						$("#compare-date-end").val(null).focus().addClass("input-selected");
+						$("#date-start-compare").val(DPGlobal.formatDate(new Date(endCompare), DPGlobal.parseFormat('Y-m-d'))).removeClass("input-selected");
+						$("#date-end-compare").val(null).focus().addClass("input-selected");
 						$("#datepicker .end-selected-compare").removeClass("end-selected-compare").addClass("start-selected-compare");
 						endCompare = null;
 						switched = false;

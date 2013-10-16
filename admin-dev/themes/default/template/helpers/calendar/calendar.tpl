@@ -57,11 +57,11 @@
 						</button>
 
 					</div>
-					<div class="form-date-body" id="compare-form-date-body" style="display: none;">
+					<div class="form-date-body" id="form-date-body-compare" style="display: none;">
 						<label>{l s='From'}</label>
-						<input id="compare-date-start" class="date-input form-control" type="text" placeholder="Start" name="compare_date_from" value="{$compare_date_from}" />
+						<input id="date-start-compare" class="date-input form-control" type="text" placeholder="Start" name="compare_date_from" value="{$compare_date_from}" />
 						<label>{l s='to'}</label>
-						<input id="compare-date-end" class="date-input form-control" type="text" placeholder="End" name="compare_date_to" value="{$compare_date_to}" />
+						<input id="date-end-compare" class="date-input form-control" type="text" placeholder="End" name="compare_date_to" value="{$compare_date_to}" />
 					</div>
 				</div>
 				<div class='form-date-actions'>
@@ -125,14 +125,14 @@
 			$(this).addClass("input-selected");
 		});
 
-		$("#compare-date-start").focus(function() {
+		$("#date-start-compare").focus(function() {
 			datepickerStart.setCompare(true);
 			datepickerEnd.setCompare(true);
 			$(".date-input").removeClass("input-selected");
 			$(this).addClass("input-selected");
 		});
 
-		$("#compare-date-end").focus(function() {
+		$("#date-end-compare").focus(function() {
 			datepickerStart.setCompare(true);
 			datepickerEnd.setCompare(true);
 			$(".date-input").removeClass("input-selected");
@@ -149,18 +149,18 @@
 
 		$('#datepicker-compare').click(function() {
 			if ($(this).attr("checked")) {
-				datepickerStart.setStartCompare($("#compare-date-start").val());
-				datepickerStart.setEndCompare($("#compare-date-end").val());
-				datepickerEnd.setStartCompare($("#compare-date-start").val());
-				datepickerEnd.setEndCompare($("#compare-date-end").val());
-				$('#compare-form-date-body').show();
-				$('#compare-date-start').focus();
+				datepickerStart.setStartCompare($("#date-start-compare").val());
+				datepickerStart.setEndCompare($("#date-end-compare").val());
+				datepickerEnd.setStartCompare($("#date-start-compare").val());
+				datepickerEnd.setEndCompare($("#date-end-compare").val());
+				$('#form-date-body-compare').show();
+				$('#date-start-compare').focus();
 			} else {
 				datepickerStart.setStartCompare(null);
 				datepickerStart.setEndCompare(null);
 				datepickerEnd.setStartCompare(null);
 				datepickerEnd.setEndCompare(null);
-				$('#compare-form-date-body').hide();
+				$('#form-date-body-compare').hide();
 				$('#date-start').focus();
 			}
 		})
