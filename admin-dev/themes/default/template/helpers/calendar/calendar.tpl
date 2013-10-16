@@ -17,6 +17,7 @@
 		{/if}
 		<div class="col-lg-4 clearfix">
 			<div id='datepicker-form' class='form-inline'>
+
 				<div id='date-range' class='form-date-group'>
 					<div  class='form-date-heading'>
 						<span class="title">{l s='Date range'}</span>
@@ -43,8 +44,9 @@
 						<input class='date-input form-control' id='date-end' placeholder='End' type='text' name="date_to" value="{$date_to}" />
 					</div>
 				</div>
+
 				<div id="date-compare" class='form-date-group'>
-					<div class='form-date-heading clearfix'>
+					<div class='form-date-heading'>
 						<span class="checkbox-title">
 							<label >
 								<input type='checkbox' id="datepicker-compare">
@@ -55,7 +57,6 @@
 							Custom
 							<i class='icon-angle-down'></i>
 						</button>
-
 					</div>
 					<div class="form-date-body" id="form-date-body-compare" style="display: none;">
 						<label>{l s='From'}</label>
