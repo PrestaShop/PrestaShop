@@ -63,7 +63,7 @@
 			</table>
 		</div>
 		<div class="tab-pane" id="dash_best_sellers">
-			<h3>{l s="Top 5 products"}</h3>
+			<h3>{l s="Top 10 products"}</h3>
 			<table class="table data_table" id="table_best_sellers">
 				<thead>
 				</thead>
@@ -101,15 +101,6 @@
 					</table>
 				</div>
 			</div>
-		</div>
-		<div class="tab-pane" id="dash_best_sales">
-			<h3>{l s="Coming soon"}</h3>
-			<table class="table data_table" id="table_best_sales">
-				<thead>
-				</thead>
-				<tbody>
-				</tbody>
-			</table>
 		</div>
 	</div>
 </section>
