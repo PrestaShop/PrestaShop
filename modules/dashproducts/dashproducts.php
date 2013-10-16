@@ -59,7 +59,6 @@ class Dashproducts extends Module
 		$table_most_viewed = $this->getTableMostViewed($params['date_from'], $params['date_to']);
 		$table_top_10_most_search = $this->getTableTop10MostSearch($params['date_from'], $params['date_to']);
 		$table_top_5_search = $this->getTableTop5Search();
-		$table_best_sales = $this->getTableBestSales();
 		
 		return array(
 			'data_table' => array(
@@ -67,8 +66,7 @@ class Dashproducts extends Module
 				'table_best_sellers' => $table_best_sellers,
 				'table_most_viewed' => $table_most_viewed,
 				'table_top_10_most_search' => $table_top_10_most_search,
-				'table_top_5_search' => $table_top_5_search,
-				'table_best_sales' => $table_best_sales,
+				'table_top_5_search' => $table_top_5_search
 			)
 		);
 	}
@@ -84,7 +82,7 @@ class Dashproducts extends Module
 		);
 		
 		$orders = Order::getOrdersWithInformations(10);
-				
+
 		$body = array();
 		foreach ($orders as $order)
 		{
@@ -161,50 +159,63 @@ class Dashproducts extends Module
 			)
 		);
 		
-		$products = ProductSale::getBestSalesLight($this->context->language->id);
+		$products = Db::getInstance()->ExecuteS('
+		SELECT
+			product_id,
+			count(*) as total,
+			AVG(total_price_tax_excl / conversion_rate) as price,
+			SUM(total_price_tax_excl / conversion_rate) as sales,
+			SUM(product_quantity * purchase_supplier_price / conversion_rate) as expenses
+		FROM `'._DB_PREFIX_.'orders` o
+		LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
+		WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
+		AND valid = 1
+		'.Shop::addSqlRestriction(false, 'o').'
+		GROUP BY product_id
+		ORDER BY total DESC
+		LIMIT 10');
 		
 		$body = array();
-		if (is_array($products) && count($products))
-			foreach ($products as $product)
-			{
-				$product_obj = new Product((int)$product['id_product']);
-				if (!Validate::isLoadedObject($product_obj))
-					continue;
-				
-				$tr = array();
-				$tr[] = array(
+		foreach ($products as $product)
+		{
+			$product_obj = new Product((int)$product['product_id'], false, $this->context->language->id);
+			if (!Validate::isLoadedObject($product_obj))
+				continue;
+			$category = new Category($product_obj->getDefaultCategory(), $this->context->language->id);
+			
+			$body[] = array(
+				array(
 					'id' => 'product',
-					'value' => '<img src="..'._PS_TMP_IMG_.'product_mini_'.$product['id_product'].'.jpg'.'" />',
-					'class' => 'text-center',
-					);
-				$tr[] = array(
+					'value' => '<img src="'._PS_TMP_IMG_.'product_mini_'.$product['product_id'].'.jpg'.'" />',
+					'class' => 'text-center'
+				),
+				array(
 					'id' => 'product',
-					'value' => Tools::htmlentitiesUTF8($product['name']).'<br/>'.Tools::displayPrice(Product::getPriceStatic((int)$product['id_product'])),
-					'class' => 'text-center',
-					);
-				$category = new Category($product_obj->getDefaultCategory(), $this->context->language->id);
-				$tr[] = array(
+					'value' => Tools::htmlentitiesUTF8($product_obj->name).'<br/>'.Tools::displayPrice($product['price']),
+					'class' => 'text-center'
+				),
+				array(
 					'id' => 'category',
 					'value' => $category->name,
-					'class' => 'text-center',
-					);
-				$tr[] = array(
+					'class' => 'text-center'
+				),
+				array(
 					'id' => 'total_sold',
-					'value' => $product['sales'],
-					'class' => 'text-center',
-					);
-				$tr[] = array(
+					'value' => $product['total'],
+					'class' => 'text-center'
+				),
+				array(
 					'id' => 'sales',
-					'value' => Tools::displayPrice($this->getTotalProductSales($date_from, $date_to, (int)$product['id_product'])),
-					'class' => 'text-center',
-					);
-				$tr[] = array(
+					'value' => Tools::displayPrice($product['sales']),
+					'class' => 'text-center'
+				),
+				array(
 					'id' => 'net_profit',
-					'value' => 'coming soon',
-					'class' => 'text-center',
-					);
-				$body[] = $tr;
-			}		
+					'value' => Tools::displayPrice($product['sales'] - $product['expenses']),
+					'class' => 'text-center'
+				)
+			);
+		}
 		return array('header' => $header, 'body' => $body);
 	}
 	
@@ -351,49 +362,7 @@ class Dashproducts extends Module
 		
 		return array('header' => $header, 'body' => $body);
 	}
-	
-	public function getTableBestSales()
-	{
-		$header = array(
-			array(
-				'id' => 'reference',
-				'title' => $this->l('Ref.'),
-			),
-			array(
-				'id' => 'name',
-				'title' => $this->l('Name'),
-			),
-			array(
-				'id' => 'totalQuantitySold',
-				'title' => $this->l('Quantity sold'),
-			),
-			array(
-				'id' => 'avg_price_sold',
-				'title' => $this->l('Price sold'),
-			),
-			array(
-				'id' => 'total_price_sold',
-				'title' => $this->l('Sales'),
-			),
-			array(
-				'id' => 'average_quantity_sold',
-				'title' => $this->l('Qty sold in a day.'),
-			),
-			array(
-				'id' => 'total_page_viewed',
-				'title' => $this->l('Page views'),
-			),
-			array(
-				'id' => 'quantity',
-				'title' => $this->l('Available qty for sale.'),
-			)
-		);
-		
-		$body = array();
-		
-		return array('header' => $header, 'body' => $body);
-	}
-	
+
 	public function getTotalProductSales($date_from, $date_to, $id_product)
 	{
 		$sql = 'SELECT SUM(od.`product_quantity` * od.`product_price`) AS total
