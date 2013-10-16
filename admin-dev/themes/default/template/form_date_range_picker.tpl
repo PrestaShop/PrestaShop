@@ -40,12 +40,6 @@
 	</form>	
 	<script type="text/javascript">
 		$(document).ready(function() {
-			/*if ($("form#calendar_form .datepicker").length > 0)
-				$("form#calendar_form .datepicker").datepicker({
-					prevText: '',
-					nextText: '',
-					dateFormat: 'yy-mm-dd'
-				});*/
 			$('#datepickerFrom').click(function() {
 				$('#datepicker').slideDown(200);
 				$('#date-start').focus();
@@ -53,7 +47,7 @@
 
 			$('#datepickerTo').click(function() {
 				$('#datepicker').slideDown(200);
-				$('#date-start').focus();
+				$('#date-end').focus();
 			});
 		});
 	</script>

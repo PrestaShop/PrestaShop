@@ -19,16 +19,17 @@
 
 //click action
 !function( $ ) {
-	var click, switched, val, start, end, over
+	var click, switched, val, start, end, over, compare, startCompare, endCompare;
 
 	// Picker object
 	var Datepicker = function(element, options){
 		this.element = $(element);
+		compare = false;
 
-		if (typeof options.dates != 'undefined')
+		if (typeof options.dates !== 'undefined')
 			DPGlobal.dates = options.dates;
 
-		if (typeof options.start != 'undefined'){
+		if (typeof options.start !== 'undefined'){
 			if (options.start.constructor === String)
 				start = DPGlobal.parseDate(options.start, DPGlobal.parseFormat('Y-m-d')).getTime();
 			else if (options.start.constructor === Number)
@@ -37,7 +38,7 @@
 				start = options.start.getTime();
 		}
 
-		if (typeof options.end != 'undefined'){
+		if (typeof options.end !== 'undefined'){
 			if (options.end.constructor === String)
 				end = DPGlobal.parseDate(options.end, DPGlobal.parseFormat('Y-m-d')).getTime();
 			else if (options.end.constructor === Number)
@@ -46,8 +47,12 @@
 				end = options.end.getTime();
 		}
 
-		this.format = DPGlobal.parseFormat(options.format||this.element.data('date-format')||'Y-m-d');
-		this.picker = $(DPGlobal.template).appendTo(this.element).show()
+		if (typeof options.compare !== 'undefined'){
+			compare = options.compare;
+		}
+
+		this.format  = DPGlobal.parseFormat(options.format||this.element.data('date-format')||'Y-m-d');
+		this.picker  = $(DPGlobal.template).appendTo(this.element).show()
 		.on({
 			click: $.proxy(this.click, this),
 			mouseover: $.proxy(this.mouseover, this),
@@ -120,6 +125,51 @@
 		set: function() {
 			var formated = DPGlobal.formatDate(this.date, this.format);
 			this.element.data('date', formated);
+		},
+
+		setCompare: function(value) {
+			compare = value;
+			this.updateRange();
+		},
+
+		setStart: function(date) {
+			if (date.constructor === String)
+				start = DPGlobal.parseDate(date, DPGlobal.parseFormat('Y-m-d')).getTime();
+			else if (date.constructor === Number)
+				start = date;
+			else if (date.constructor === Date)
+				start = date.getTime();
+		},
+
+		setEnd: function(date) {
+			if (date.constructor === String)
+				end = DPGlobal.parseDate(date, DPGlobal.parseFormat('Y-m-d')).getTime();
+			else if (date.constructor === Number)
+				end = date;
+			else if (date.constructor === Date)
+				end = date.getTime();
+		},
+
+		setStartCompare: function(date) {
+			if (date === null)
+				startCompare = date;
+			else if (date.constructor === String)
+				startCompare = DPGlobal.parseDate(date, DPGlobal.parseFormat('Y-m-d')).getTime();
+			else if (date.constructor === Number)
+				startCompare = date;
+			else if (date.constructor === Date)
+				startCompare = date.getTime();
+		},
+
+		setEndCompare: function(date) {
+			if (date === null)
+				endCompare = date;
+			else if (date.constructor === String)
+				endCompare = DPGlobal.parseDate(date, DPGlobal.parseFormat('Y-m-d')).getTime();
+			else if (date.constructor === Number)
+				endCompare = date;
+			else if (date.constructor === Date)
+				endCompare = date.getTime();
 		},
 
 		setValue: function(newDate) {
@@ -225,25 +275,42 @@
 				year += 1;
 			}
 			yearCont.html(html);
+			this.updateRange();
+			click = 2;
+		},
 
+		updateRange: function() {
 			$("#datepicker .day").each(function(){
 				var date_val = parseInt($(this).data('val'),10);
-				if(end&&start){
-					if(date_val > start && date_val < end) {
+
+				if (end && start)
+				{
+					if(date_val > start && date_val < end)
 						$(this).not(".old").not(".new").addClass("range");
-					}
 
-					if(date_val === start) {
+					if(date_val === start)
 						$(this).not(".old").not(".new").addClass("start-selected");
-					}
 
-					if(date_val === end) {
+					if(date_val === end)
 						$(this).not(".old").not(".new").addClass("end-selected");
-					}
 				}
-			});
 
-			click = 2;
+				if (endCompare && startCompare)
+				{
+					if(date_val > startCompare && date_val < endCompare)
+						$(this).not(".old").not(".new").addClass("range-compare");
+
+					if(date_val === startCompare)
+						$(this).not(".old").not(".new").addClass("start-selected-compare");
+
+					if(date_val === endCompare)
+						$(this).not(".old").not(".new").addClass("end-selected-compare");
+				}
+				else
+					$(this).not(".old").not(".new").removeClass("range-compare")
+						.removeClass("start-selected-compare")
+						.removeClass("end-selected-compare");
+			});
 		},
 
 		click: function(e) {
@@ -304,36 +371,76 @@
 						if (target.is('.day') && !target.is('.disabled') && !target.is('.old') && !target.is('.new')){
 							// reset process for a new range
 							if(click === 2) {
-								start = null;
-								end = null;
+								if (compare)
+								{
+									startCompare = null;
+									endCompare = null;
+								}
+								else
+								{
+									start = null;
+									end = null;
+								}
+
 								click = null;
 								switched = false;
-								$("td.day").removeClass("start-selected").removeClass("end-selected");
-								$(".date-input").removeClass("input-selected").removeClass("input-complete");
-								$(".range").removeClass("range");
+								if (compare) {
+									$("td.day").removeClass("start-selected-compare").removeClass("end-selected-compare");
+									$(".date-input").removeClass("input-selected").removeClass("input-complete");
+									$(".range-compare").removeClass("range-compare");
+								} else {
+									$("td.day").removeClass("start-selected").removeClass("end-selected");
+									$(".date-input").removeClass("input-selected").removeClass("input-complete");
+									$(".range").removeClass("range");
+								}
 							}
 							//define start with first click or switched one
 							if (!click || switched === true) {
-								$(".start-selected").removeClass("start-selected");
-								target.addClass("start-selected");
-								start = target.data("val");
-								$("#date-start").val(DPGlobal.formatDate(new Date(start), DPGlobal.parseFormat('Y-m-d')));
+								if (compare) {
+									$(".start-selected-compare").removeClass("start-selected-compare");
+									target.addClass("start-selected-compare");
+									startCompare = target.data("val");
+									$("#compare-date-start").val(DPGlobal.formatDate(new Date(startCompare), DPGlobal.parseFormat('Y-m-d')));
+								} else {
+									$(".start-selected").removeClass("start-selected");
+									target.addClass("start-selected");
+									start = target.data("val");
+									$("#date-start").val(DPGlobal.formatDate(new Date(start), DPGlobal.parseFormat('Y-m-d')));
+								}
+																	
 								if(!switched) {click = 1;} else {click = 2;}
 								if(!switched){
-									$("#date-end").val(null).focus().addClass("input-selected");
-									target.addClass("start-selected").addClass("end-selected");
+									if (compare) {
+										$("#compare-date-end").val(null).focus().addClass("input-selected");
+										target.addClass("start-selected-compare").addClass("end-selected-compare");
+									} else {
+										$("#date-end").val(null).focus().addClass("input-selected");
+										target.addClass("start-selected").addClass("end-selected");
+									}
 								}
-								$("#date-start").removeClass("input-selected").addClass("input-complete");
+
+								if (compare)
+									$("#compare-date-start").removeClass("input-selected").addClass("input-complete");
+								else
+									$("#date-start").removeClass("input-selected").addClass("input-complete");
 							}
 							//define end
 							else {
-								$(".end-selected").removeClass("end-selected");
-								target.addClass("end-selected");
-								end = target.data("val");
-								$("#date-end").val(DPGlobal.formatDate(new Date(end), DPGlobal.parseFormat('Y-m-d')));
-								click = 2;
-								$("#date-end").removeClass("input-selected").addClass("input-complete");
-								//this.range();
+								if (compare) {
+									$(".end-selected-compare").removeClass("end-selected-compare");
+									target.addClass("end-selected-compare");
+									endCompare = target.data("val");
+									$("#compare-date-end").val(DPGlobal.formatDate(new Date(endCompare), DPGlobal.parseFormat('Y-m-d')));
+									click = 2;
+									$("#compare-date-end").removeClass("input-selected").addClass("input-complete");
+								} else {
+									$(".end-selected").removeClass("end-selected");
+									target.addClass("end-selected");
+									end = target.data("val");
+									$("#date-end").val(DPGlobal.formatDate(new Date(end), DPGlobal.parseFormat('Y-m-d')));
+									click = 2;
+									$("#date-end").removeClass("input-selected").addClass("input-complete");
+								}
 							}
 						}
 						if (target.is('.old')||target.is('.new')){
@@ -358,16 +465,35 @@
 			//range
 			$("#datepicker .day").each(function(){
 				val = parseInt($(this).data('val'),10);
-				if (!end){
-					if( val > start && val < over){
-						$(this).not(".old").not(".new").addClass("range");
+				if (compare)
+				{
+					if (!endCompare)
+					{
+						if( val > startCompare && val < over)
+							$(this).not(".old").not(".new").addClass("range-compare");
 					}
-				} else if (!start){
-					if( val > over && val < end){
-						$(this).not(".old").not(".new").addClass("range");
+					else if (!startCompare)
+					{
+						if( val > over && val < endCompare)
+							$(this).not(".old").not(".new").addClass("range-compare");
 					}
-				} else if (start&&end) {
-					$(this).addClass("range");
+					else if (startCompare && endCompare)
+						$(this).addClass("range-compare");
+				}
+				else
+				{
+					if (!end)
+					{
+						if( val > start && val < over)
+							$(this).not(".old").not(".new").addClass("range");
+					}
+					else if (!start)
+					{
+						if( val > over && val < end)
+							$(this).not(".old").not(".new").addClass("range");
+					}
+					else if (start && end)
+						$(this).addClass("range");
 				}
 			});
 		},
@@ -383,46 +509,103 @@
 
 			//action after first click
 			if(click === 1 && over){
-				$("#datepicker .range").removeClass("range");
+				if (compare)
+				{
+					$("#datepicker .range-compare").removeClass("range-compare");
+
+					if (startCompare && over < startCompare)
+					{
+						endCompare = startCompare;
+						$("#compare-date-end").val(DPGlobal.formatDate(new Date(startCompare), DPGlobal.parseFormat('Y-m-d'))).removeClass("input-selected");
+						$("#compare-date-start").val(null).focus().addClass("input-selected");
+						$("#datepicker .start-selected-compare").removeClass("start-selected-compare").addClass("end-selected-compare");
+						startCompare = null;
+						switched = true;
+					}
+					else if (endCompare && over > endCompare)
+					{
+						startCompare = endCompare;
+						$("#compare-date-start").val(DPGlobal.formatDate(new Date(endCompare), DPGlobal.parseFormat('Y-m-d'))).removeClass("input-selected");
+						$("#compare-date-end").val(null).focus().addClass("input-selected");
+						$("#datepicker .end-selected-compare").removeClass("end-selected-compare").addClass("start-selected-compare");
+						endCompare = null;
+						switched = false;
+					}
+
+					if(startCompare)
+					{
+						$(".end-selected-compare").removeClass("end-selected-compare");
+						$(e.target).addClass("end-selected-compare");
+					}
+					else if(endCompare)
+					{
+						$(".start-selected-compare").removeClass("start-selected-compare");
+						$(e.target).addClass("start-selected-compare");
+					}
+				}
+				else
+				{
+					$("#datepicker .range").removeClass("range");
+
+					if (start && over < start)
+					{
+						end = start;
+						$("#date-end").val(DPGlobal.formatDate(new Date(start), DPGlobal.parseFormat('Y-m-d'))).removeClass("input-selected");
+						$("#date-start").val(null).focus().addClass("input-selected");
+						$("#datepicker .start-selected").removeClass("start-selected").addClass("end-selected");
+						start = null;
+						switched = true;
+					}
+					else if (end && over > end)
+					{
+						start = end;
+						$("#date-start").val(DPGlobal.formatDate(new Date(end), DPGlobal.parseFormat('Y-m-d'))).removeClass("input-selected");
+						$("#date-end").val(null).focus().addClass("input-selected");
+						$("#datepicker .end-selected").removeClass("end-selected").addClass("start-selected");
+						end = null;
+						switched = false;
+					}
+
+					if(start)
+					{
+						$(".end-selected").removeClass("end-selected");
+						$(e.target).addClass("end-selected");
+					}
+					else if(end)
+					{
+						$(".start-selected").removeClass("start-selected");
+						$(e.target).addClass("start-selected");
+					}
+				}
 				//switch
-				if (start && over < start ){
-					end = start;
-					$("#date-end").val(DPGlobal.formatDate(new Date(start), DPGlobal.parseFormat('Y-m-d'))).removeClass("input-selected");
-					$("#date-start").val(null).focus().addClass("input-selected");
-					$("#datepicker .start-selected").removeClass("start-selected").addClass("end-selected");
-					start = null;
-					switched = true;
-				} else if (end && over > end ){
-					start = end;
-					$("#date-start").val(DPGlobal.formatDate(new Date(end), DPGlobal.parseFormat('Y-m-d'))).removeClass("input-selected");
-					$("#date-end").val(null).focus().addClass("input-selected");
-					$("#datepicker .end-selected").removeClass("end-selected").addClass("start-selected");
-					end = null;
-					switched = false;
-				}
-				if(start){
-					$(".end-selected").removeClass("end-selected");
-					$(e.target).addClass("end-selected");
-				} else
-				if(end){
-					$(".start-selected").removeClass("start-selected");
-					$(e.target).addClass("start-selected");
-				}
+				
 				$(".date-input").removeClass("input-complete");
 				this.range();
 			}
 		},
 
 		mouseout: function(){
-			if (!start||!end) {
-				$("#datepicker .range").removeClass("range");
+			if (compare)
+			{
+				if (!startCompare||!endCompare)
+					$("#datepicker .range-compare").removeClass("range-compare");
+
+				if (!endCompare)
+					$(".end-selected-compare").removeClass("end-selected-compare");
+
+				else if (!startCompare)
+					$(".start-selected-compare").removeClass("start-selected-compare");
 			}
-			if (!end) {
-				$(".end-selected").removeClass("end-selected");
-			} else
-			if (!start) {
-				$(".start-selected").removeClass("start-selected");
-			}
+			else
+			{
+				if (!start||!end)
+					$("#datepicker .range").removeClass("range");
+
+				if (!end)
+					$(".end-selected").removeClass("end-selected");
+				else if (!start)
+					$(".start-selected").removeClass("start-selected");
+			}			
 		},
 
 		mousedown: function(e){
@@ -431,9 +614,9 @@
 		},
 
 		showMode: function(dir) {
-			if (dir) {
+			if (dir)
 				this.viewMode = Math.max(this.minViewMode, Math.min(2, this.viewMode + dir));
-			}
+
 			this.picker.find('>div').hide().filter('.datepicker-'+DPGlobal.modes[this.viewMode].clsName).show();
 		}
 	};

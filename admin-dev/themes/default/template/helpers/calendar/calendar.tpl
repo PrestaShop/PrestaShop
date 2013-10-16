@@ -57,7 +57,7 @@
 						</button>
 
 					</div>
-					<div class="form-date-body">
+					<div class="form-date-body" id="compare-form-date-body" style="display: none;">
 						<label>{l s='From'}</label>
 						<input id="compare-date-start" class="date-input form-control" type="text" placeholder="Start" name="compare_date_from" value="{$compare_date_from}" />
 						<label>{l s='to'}</label>
@@ -87,15 +87,13 @@
 			months: ["{l s='January'}", "{l s='February'}", "{l s='March'}", "{l s='April'}", "{l s='May'}", "{l s='June'}", "{l s='July'}", "{l s='August'}", "{l s='September'}", "{l s='October'}", "{l s='November'}", "{l s='December'}"],
 			monthsShort: ["{l s='Jan'}", "{l s='Feb'}", "{l s='Mar'}", "{l s='Apr'}", "{l s='May'}", "{l s='Jun'}", "{l s='Jul'}", "{l s='Aug'}", "{l s='Sep'}", "{l s='Oct'}", "{l s='Nov'}", "{l s='Dec'}"]
 		};
-		var start = '{$date_from}';
-		var end   = '{$date_to}';
 
 	{literal}
 		var datepickerStart = $('.datepicker1').datepicker({
 			"dates": translated_dates,
 			"weekStart": 1,
-			"start": start,
-			"end": end
+			"start": $("#date-start").val(),
+			"end": $("#date-end").val()
 		}).on('changeDate', function(ev){
 			if (ev.date.valueOf() >= datepickerEnd.date.valueOf()){
 				datepickerEnd.setValue(ev.date.setMonth(ev.date.getMonth()+1));
@@ -105,16 +103,42 @@
 		var datepickerEnd = $('.datepicker2').datepicker({
 			"dates": translated_dates,
 			"weekStart": 1,
-			"start":start,
-			"end": end
+			"start": $("#date-start").val(),
+			"end": $("#date-end").val()
 		}).on('changeDate', function(ev){
 			if (ev.date.valueOf() <= datepickerStart.date.valueOf()){
 				datepickerStart.setValue(ev.date.setMonth(ev.date.getMonth()-1));
 			}
-		}).data('datepicker');
-	{/literal}
+		}).data('datepicker');		
 
-		$("#date-start").focus().addClass("input-selected");
+		$("#date-start").focus(function() {
+			datepickerStart.setCompare(false);
+			datepickerEnd.setCompare(false);
+			$(".date-input").removeClass("input-selected");
+			$(this).addClass("input-selected");
+		});
+
+		$("#date-end").focus(function() {
+			datepickerStart.setCompare(false);
+			datepickerEnd.setCompare(false);
+			$(".date-input").removeClass("input-selected");
+			$(this).addClass("input-selected");
+		});
+
+		$("#compare-date-start").focus(function() {
+			datepickerStart.setCompare(true);
+			datepickerEnd.setCompare(true);
+			$(".date-input").removeClass("input-selected");
+			$(this).addClass("input-selected");
+		});
+
+		$("#compare-date-end").focus(function() {
+			datepickerStart.setCompare(true);
+			datepickerEnd.setCompare(true);
+			$(".date-input").removeClass("input-selected");
+			$(this).addClass("input-selected");
+		});
+		
 		$('#datepicker-cancel').click(function() {
 			$('#datepicker').slideUp(200);
 		});
@@ -124,8 +148,23 @@
 		});
 
 		$('#datepicker-compare').click(function() {
-			if ($(this).attr("checked"))
+			if ($(this).attr("checked")) {
+				datepickerStart.setStartCompare($("#compare-date-start").val());
+				datepickerStart.setEndCompare($("#compare-date-end").val());
+				datepickerEnd.setStartCompare($("#compare-date-start").val());
+				datepickerEnd.setEndCompare($("#compare-date-end").val());
+				$('#compare-form-date-body').show();
 				$('#compare-date-start').focus();
+			} else {
+				datepickerStart.setStartCompare(null);
+				datepickerStart.setEndCompare(null);
+				datepickerEnd.setStartCompare(null);
+				datepickerEnd.setEndCompare(null);
+				$('#compare-form-date-body').hide();
+				$('#date-start').focus();
+			}
 		})
+
+		{/literal}
 	});
 </script>
