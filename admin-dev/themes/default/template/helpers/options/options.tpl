@@ -87,7 +87,7 @@
 					{if $field['type'] == 'hidden'}
 						<input type="hidden" name="{$key}" value="{$field['value']}" />
 					{else}
-						<div class="row">
+						<div class="form-group">
 							<div id="conf_id_{$key}" {if $field['is_invisible']} class="isInvisible"{/if}>								
 								{block name="label"}
 									{if isset($field['title']) && isset($field['hint'])}
@@ -357,7 +357,7 @@
 				{/if}
 			{/foreach}
 			{if isset($categoryData['submit'])}
-				<div class="row">
+				<div class="form-group">
 					<div class="col-lg-9 col-lg-offset-3">
 						<button
 							type="submit"

@@ -44,7 +44,7 @@
 				{elseif $key == 'input'}
 					{foreach $field as $input}
 						{block name="input_row"}
-						<div class="row {if $input.type == 'hidden'}hide{/if}" {if $input.name == 'id_state'}id="contains_states"{if !$contains_states}style="display:none;"{/if}{/if}>
+						<div class="form-group {if $input.type == 'hidden'}hide{/if}" {if $input.name == 'id_state'}id="contains_states"{if !$contains_states}style="display:none;"{/if}{/if}>
 						{if $input.type == 'hidden'}
 							<input type="hidden" name="{$input.name}" id="{$input.name}" value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" />
 						{else}
@@ -81,7 +81,7 @@
 								{if $input.type == 'text' || $input.type == 'tags'}
 									{if isset($input.lang) AND $input.lang}
 									{if $languages|count > 1}
-									<div class="row">
+									<div class="form-group">
 									{/if}
 									{foreach $languages as $language}
 										{assign var='value_text' value=$fields_value[$input.name][$language.id_lang]}
@@ -239,7 +239,7 @@
 									{/if}
 								{elseif $input.type == 'textbutton'}
 									{assign var='value_text' value=$fields_value[$input.name]}
-									<div class="row">
+									<div class="form-group">
 										<div class="col-lg-9">
 										{if isset($input.maxchar)}
 										<div class="input-group">
@@ -371,7 +371,7 @@
 										{if isset($value.p) && $value.p}<p class="help-block">{$value.p}</p>{/if}
 									{/foreach}
 								{elseif $input.type == 'switch'}
-									<div class="row">
+									<div class="form-group">
 										<div class="input-group col-lg-2">
 											<span class="switch prestashop-switch">
 												{foreach $input.values as $value}
@@ -413,7 +413,7 @@
 									{if isset($input.lang) AND $input.lang}
 									{foreach $languages as $language}
 									{if $languages|count > 1}
-									<div class="row translatable-field lang-{$language.id_lang}"  {if $language.id_lang != $defaultFormLanguage}style="display:none;"{/if}>
+									<div class="form-group translatable-field lang-{$language.id_lang}"  {if $language.id_lang != $defaultFormLanguage}style="display:none;"{/if}>
 
 										<div class="col-lg-9">
 									{/if}
@@ -511,7 +511,7 @@
 											value=""
 											{if isset($input.autocomplete) && !$input.autocomplete}autocomplete="off"{/if} />
 								{elseif $input.type == 'birthday'}
-								<div class="row">
+								<div class="form-group">
 									{foreach $input.options as $key => $select}
 									<div class="col-lg-4">
 										<select name="{$key}" class="{if isset($input.class)}{$input.class}{/if}">
@@ -621,7 +621,7 @@
 						{hook h=$hookName fieldset=$f}
 					{/if}
 				{elseif $key == 'submit'}
-					<div class="row">
+					<div class="form-group">
 						<div class="col-lg-9 col-lg-offset-3">
 							<button
 								type="submit"
