@@ -64,8 +64,8 @@
 	$('document').ready( function() {
 		// ScrollTo
 		if (anchor != '')
-			$.scrollTo('#'+anchor, 1200, {offset: -100});
-
+			$.uiTableFilter($('#moduleContainer').find('table'), anchor);
+		
 		$('#moduleQuicksearch').keyup(function() {
 			console.log(this.value);
 			$.uiTableFilter($('#moduleContainer').find('table'), this.value);
