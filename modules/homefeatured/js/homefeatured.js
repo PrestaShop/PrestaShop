@@ -25,12 +25,12 @@
 
 $(document).ready(function()
 {
-	$('.title_block').click(function(){
+	$('.home_tab li a').click(function(){
 		var button = $(this);
-		$('#index #center_column .products_block').removeClass('active');
-		button.parent('.products_block').addClass('active');
-		$('#index #center_column .products_block .block_content').hide(0, function(){
-			button.next('.block_content').show(0);
+		$('.home_tab li').removeClass('active');
+		button.parent('li').addClass('active');
+		$('.home_tab_content .product_list').hide(0, function(){
+			$('.home_tab_content .' + button.prop('class')).show(0).addClass('active').removeClass('hidden');
 		});
 	});
 });

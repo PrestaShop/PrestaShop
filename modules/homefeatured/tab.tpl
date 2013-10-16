@@ -22,5 +22,4 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{capture name=title}{l s='Best sellers' mod='blockbestsellers'}{/capture}
-{include file="$tpl_dir./product-list-home.tpl" id="blockbestsellers_block" title=$smarty.capture.title products=$best_sellers}
+<li><a class="homefeatured">{l s='Popular' mod='homefeatured'}</a></li>

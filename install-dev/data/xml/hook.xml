@@ -274,5 +274,11 @@
     <hook id="actionModuleInstallAfter" live_edit="0">
       <name>actionModuleInstallAfter</name><title>actionModuleInstallAfter</title><description></description>
     </hook>
+	<hook id="displayHomeTab" live_edit="1">
+      <name>displayHomeTab</name><title>Home Page Tabs</title><description>This hook displays new elements on the homepage tabs</description>
+    </hook>
+    <hook id="displayHomeTabContent" live_edit="1">
+      <name>displayHomeTabContent</name><title>Home Page Tabs Content</title><description>This hook displays new elements on the homepage tabs content</description>
+    </hook>	
   </entities>
 </entity_hook>
