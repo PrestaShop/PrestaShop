@@ -1187,7 +1187,7 @@ abstract class ModuleCore
 							$item->name = strip_tags((string)$modaddons->name);
 							$item->version = strip_tags((string)$modaddons->version);
 							$item->tab = strip_tags((string)$modaddons->tab);
-							$item->displayName = strip_tags((string)$modaddons->displayName).' (Addons)';
+							$item->displayName = strip_tags((string)$modaddons->displayName);
 							$item->description = stripslashes(strip_tags((string)$modaddons->description));
 							$item->author = strip_tags((string)$modaddons->author);
 							$item->limited_countries = array();
