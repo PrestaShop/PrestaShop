@@ -174,6 +174,6 @@
 	</tr>
 {/foreach}
 {else}
-	<tr><td class="center" colspan="{count($fields_display) + 2}"><i class="icon-warning-sign"></i> {l s='No items found'}</td></tr>
+	<tr><td class="center" colspan="{count($fields_display) + 2}"><i class="icon-warning-sign"></i> {l s='No records found'}</td></tr>
 {/if}
 </tbody>
