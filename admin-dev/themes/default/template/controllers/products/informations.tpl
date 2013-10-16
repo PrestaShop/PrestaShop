@@ -201,7 +201,7 @@
 	<div class="row redirect_product_options" style="display:none">		
 		<label class="control-label col-lg-3" for="redirect_type">
 			{include file="controllers/products/multishop/checkbox.tpl" field="redirect_type" type="radio" onclick=""}
-			{l s='Redirect:'}
+			{l s='Redirect when disabled'}
 		</label>
 		<div class="col-lg-5">
 			<select name="redirect_type" id="redirect_type">
@@ -214,9 +214,9 @@
 	<div class="row redirect_product_options" style="display:none">
 		<div class="col-lg-9 col-lg-offset-3">
 			<div class="alert alert-info">
-				{l s='404 : Not Found = Product does not exist and no redirect'}<br/>
-				{l s='301 : Moved Permanently = Product Moved Permanently'}<br/>
-				{l s='302 : Moved Temporarily = Product moved temporarily'}
+				{l s='404 Not Found = Do not redirect and display a 404 page'}<br/>
+				{l s='301 Moved Permanently = Permanently display another product instead'}<br/>
+				{l s='302 Moved Temporarily = Temporarily display another product instead'}
 			</div>	
 		</div>
 	</div>
