@@ -143,7 +143,7 @@ class AdminModulesControllerCore extends AdminController
 	public function setMedia()
 	{
 		parent::setMedia();
-		$this->addJqueryPlugin(array('autocomplete', 'fancybox'));
+		$this->addJqueryPlugin(array('autocomplete', 'fancybox', 'tablefilter'));
 	}
 
 	public function ajaxProcessRefreshModuleList()
