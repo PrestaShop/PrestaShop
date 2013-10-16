@@ -292,7 +292,7 @@ class MediaCore
 		$url_data = parse_url($folder.$file);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
 		$ui_tmp = array();
-		if (self::$jquery_ui_dependencies[$component]['theme'] && $check_dependencies)
+		if (isset(Media::$jquery_ui_dependencies[$component]) && Media::$jquery_ui_dependencies[$component]['theme'] && $check_dependencies)
 		{
 			$theme_css = Media::getCSSPath($folder.'themes/'.$theme.'/jquery.ui.theme.css');
 			$comp_css = Media::getCSSPath($folder.'themes/'.$theme.'/jquery.'.$component.'.css');

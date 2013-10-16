@@ -66,22 +66,11 @@
 		if (anchor != '')
 			$.scrollTo('#'+anchor, 1200, {offset: -100});
 
-		// AutoComplete Search
-		$('input[name="filtername"]').autocomplete(moduleList, {
-			minChars: 0,
-			width: 310,
-			matchContains: true,
-			highlightItem: true,
-			formatItem: function(row, i, max, term) {
-				var image = '../modules/'+row.name+'/logo.gif';
-				if (row.image != '')
-					image = row.image;
-				return '<img src="'+image+'" style="float:left;margin:5px;width:16px;height:16px"><strong>'+row.displayName+'</strong>'+((row.author != '') ? ' ' + by + ' ' + truncate_author(row.author) : '') + '<br /><span style="font-size: 80%;">'+ row.desc +'</span><br/><div style="height:15px;padding-top:5px">'+ row.option +'</div>';
-			},
-			formatResult: function(row) {
-				return row.displayName;
-			}
+		$('#moduleQuicksearch').keyup(function() {
+			console.log(this.value);
+			$.uiTableFilter($('#moduleContainer').find('table'), this.value);
 		});
+		
 		$('input[name="filtername"]').result(function(event, data, formatted) {
 			$('#filternameForm').submit();
 		});
