@@ -1,15 +1,21 @@
 $color-bright: white
 $font-family: 'Josefin Sans', sans-serif
-$color-calendar: $brand-primary
 
+$color-calendar: $brand-primary
 $color-calendar-compare: #E18E70
+
 $color-calendar-day: $color-bright
+
 $color-calendar-outrange: darken($color-calendar,15%)
+$color-calendar-outrange-compare: darken($color-calendar-compare,15%)
+
 $color-calendar-day-selected: darken($color-calendar,25%)
+$color-calendar-day-selected-compare: darken($color-calendar-compare,25%)
+
 $color-calendar-range: darken($color-calendar,15%)
+$color-calendar-range-compare: darken($color-calendar-compare,15%)
 
 #datepicker
-	input[type="text"]
 	padding: 6px
 	background-color: darken($color-calendar,10%)
 	.input-selected
@@ -129,9 +135,18 @@ $color-calendar-range: darken($color-calendar,15%)
 				+border-radius(15px)
 				font-weight: 700
 				background-color: $color-calendar-day-selected
+			&.start-selected-compare:not(.old):not(.new):not(.end-selected-compare)
+				background-color: $color-calendar-day-selected-compare
+			&.end-selected-compare:not(.old):not(.new):not(.start-selected-compare)
+				background-color: $color-calendar-day-selected-compare
+			&.end-selected-compare.start-selected-compare
+				background-color: $color-calendar-day-selected-compare
 			&.range
 				color: lighten($color-calendar-range,35%)
 				background-color: $color-calendar-range
+			&.range-compare
+				color: lighten($color-calendar-range-compare,35%)
+				background-color: $color-calendar-range-compare
 			&.today
 				background-color: $color-bright
 
@@ -160,6 +175,29 @@ $color-calendar-range: darken($color-calendar,15%)
 		thead tr:first-child th
 			cursor: pointer
 
+	.datepicker.datepicker-compare
+		background-color: $color-calendar-compare
+		thead
+			tr th:after
+				border-top: 1px solid darken($color-calendar-compare,10%)
+			tr th
+				background-color: darken($color-calendar-compare,5%)
+				color: lighten($color-calendar-compare,25%)
+				border-bottom: solid 1px lighten($color-calendar-compare,7%)
+			tr:first-child th
+				color: $color-calendar-day-selected-compare
+		td
+			border-bottom: solid 1px $color-calendar-compare
+			&.day.disabled
+				color: $color-calendar-outrange-compare
+			&.old, &.new
+				color: $color-calendar-outrange-compare
+
+			span
+				&:hover, &.active
+					background-color: $color-calendar-day-selected-compare
+				&.old
+					color: $color-calendar-outrange-compare
 
 .chevron-left, .chevron-right
 	position: relative
