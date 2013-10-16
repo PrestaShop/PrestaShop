@@ -3130,9 +3130,9 @@ class AdminControllerCore extends Controller
 		$module->optionsHtml = $this->displayModuleOptions($module, $output_type, $back);
 		$link_admin_modules = $this->context->link->getAdminLink('AdminModules', true);
 		
-		$module->options['install_url'] = $link_admin_modules.'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name);
-		$module->options['update_url'] = $link_admin_modules.'&update='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name);
-		$module->options['uninstall_url'] = $link_admin_modules.'&uninstall='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name);
+		$module->options['install_url'] = $link_admin_modules.'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name);
+		$module->options['update_url'] = $link_admin_modules.'&update='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name);
+		$module->options['uninstall_url'] = $link_admin_modules.'&uninstall='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name);
 
 		$module->options['uninstall_onclick'] = ((!$module->onclick_option) ?
 			((empty($module->confirmUninstall)) ? '' : 'return confirm(\''.addslashes($module->confirmUninstall).'\');') :
@@ -3171,41 +3171,55 @@ class AdminControllerCore extends Controller
 			$this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this?'] = $this->l('This action will permanently remove the module from the server. Are you sure you want to do this?');
 		}	
 		$link_admin_modules = $this->context->link->getAdminLink('AdminModules', true);
-		$modules_options = array(
-			'configure-module' => array(
+		$modules_options = array();
+		
+		$configure_module = array(
 				'href' => $link_admin_modules.'&configure='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.urlencode($module->name),
 				'onclick' => $module->onclick_option && isset($module->onclick_option_content['configure']) ? $module->onclick_option_content['configure'] : '',
 				'title' => '',
 				'text' => $this->translationsTab['Configure'],
 				'cond' => $module->id && isset($module->is_configurable) && $module->is_configurable,
 				'icon' => 'wrench',
-				),
-			'desactive-module' => array(
+				);
+		$desactive_module = array(
 				'href' => $link_admin_modules.'&module_name='.urlencode($module->name).'&'.($module->active ? 'enable=0' : 'enable=1').'&tab_module='.$module->tab,
 				'onclick' => $module->active && $module->onclick_option && isset($module->onclick_option_content['desactive']) ? $module->onclick_option_content['desactive'] : '' ,
 				'title' => Shop::isFeatureActive() ? htmlspecialchars($module->active ? $this->translationsTab['Disable this module'] : $this->translationsTab['Enable this module for all shops']) : '',
 				'text' => $module->active ? $this->translationsTab['Disable'] : $this->translationsTab['Enable'],
 				'cond' => $module->id,
 				'icon' => 'off',
-				),
-			'reset-module' => array(
+				);
+		$reset_module = array(
 				'href' => $link_admin_modules.'&module_name='.urlencode($module->name).'&reset&tab_module='.$module->tab,
 				'onclick' => $module->onclick_option && isset($module->onclick_option_content['reset']) ? $module->onclick_option_content['reset'] : '',
 				'title' => '',
 				'text' => $this->translationsTab['Reset'],
 				'cond' => $module->id && $module->active,
 				'icon' => 'share-alt',
-				),
-			'delete-module' => array(
+				);
+		$delete_module = array(
 				'href' => $link_admin_modules.'&delete='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.urlencode($module->name),
 				'onclick' => $module->onclick_option && isset($module->onclick_option_content['delete']) ? $module->onclick_option_content['delete'] : 'return confirm(\''.$this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this?'].'\');',
 				'title' => '',
 				'text' => $this->translationsTab['Delete'],
 				'cond' => true,
 				'icon' => 'remove',
-				),
-		);
-
+				);
+			
+		if ($module->active)
+		{
+			$modules_options[] = $configure_module;
+			$modules_options[] = $desactive_module;
+		}
+		else
+		{
+			$modules_options[] = $desactive_module;
+			$modules_options[] = $configure_module;
+		}
+		
+		$modules_options[] = $reset_module;
+		$modules_options[] = $delete_module; 
+		
 		$return = '';
 		foreach ($modules_options as $option_name => $option)
 		{
@@ -3233,15 +3247,15 @@ class AdminControllerCore extends Controller
 		if ($output_type == 'select')
 		{
 			if (!$module->id)
-				$return = '<option data-onclick="" data-href="'.$link_admin_modules.'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : '').'" >'.$this->translationsTab['Install'].'</option>'.$return;
+				$return = '<option data-onclick="" data-href="'.$link_admin_modules.'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : '').'" >'.$this->translationsTab['Install'].'</option>'.$return;
 			else
-				$return .= '<option data-onclick=""  data-href="'.$link_admin_modules.'&uninstall='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : '').'" >'.$this->translationsTab['Uninstall'].'</option>';
+				$return .= '<option data-onclick=""  data-href="'.$link_admin_modules.'&uninstall='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : '').'" >'.$this->translationsTab['Uninstall'].'</option>';
 			$return = '<select id="select_'.$module->name.'">'.$return.'</select>';
 		}
 		else if ($output_type == 'array')
 		{
 			if ($module->id)
-				$return[] = '<a href="'.$link_admin_modules.'&uninstall='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : '').'"
+				$return[] = '<a href="'.$link_admin_modules.'&uninstall='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : '').'"
 				onclick="'.$option['onclick'].'"
 				title="'.$option['title'].'">
 				<i class="icon-minus-sign-alt"></i>&nbsp;'.$this->translationsTab['Uninstall'].'</a>';
