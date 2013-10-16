@@ -34,7 +34,7 @@
 	</thead>
 	<tbody>
 	{foreach $groups as $key => $group}
-		<tr {if $key %2}class="alt_row"{/if}>
+		<tr>
 			<td>
 				{assign var=id_checkbox value=groupBox|cat:'_'|cat:$group['id_group']}
 				<input type="checkbox" name="groupBox[]" class="groupBox" id="{$id_checkbox}" value="{$group['id_group']}" {if $fields_value[$id_checkbox]}checked="checked"{/if} />

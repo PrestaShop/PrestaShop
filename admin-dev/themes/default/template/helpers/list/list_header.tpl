@@ -243,7 +243,7 @@
 				</tr>
 			{if !$simple_header && $show_filters}
 				<tr class="nodrag nodrop filter {if $row_hover}row_hover{/if}">
-					<td class="center">
+					<td class="text-center">
 						{if $has_bulk_actions}
 							--
 						{/if}
@@ -263,7 +263,7 @@
 								</select>
 							{elseif $params.type == 'date' || $params.type == 'datetime'}
 								<div class="date_range row">
-									<div class="input-group fixed-width-xl">
+									<div class="input-group fixed-width-xl row-margin-bottom">
 										<span class="input-group-addon">{l s='From'}</span>
 										<input type="text" class="filter datepicker date-input form-control" id="{$params.id_date}_0" name="{$params.name_date}[0]" value="{if isset($params.value.0)}{$params.value.0}{/if}"/>
 										<span class="input-group-addon">
