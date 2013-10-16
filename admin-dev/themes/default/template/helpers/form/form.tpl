@@ -371,7 +371,7 @@
 										{if isset($value.p) && $value.p}<p class="help-block">{$value.p}</p>{/if}
 									{/foreach}
 								{elseif $input.type == 'switch'}
-									<div class="form-group">
+									<div class="row">
 										<div class="input-group col-lg-2">
 											<span class="switch prestashop-switch">
 												{foreach $input.values as $value}
