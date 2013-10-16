@@ -135,8 +135,14 @@ class EmployeeCore extends ObjectModel
 		if (empty($this->stats_date_from))
 			$this->stats_date_from = date('Y-m-d 00:00:00');
 
+		if (empty($this->stats_compare_from))
+			$this->stats_compare_from = date('Y-m-d 00:00:00');
+
 		if (empty($this->stats_date_to))
 			$this->stats_date_to = date('Y-m-d 23:59:59');
+
+		if (empty($this->stats_compare_to))
+			$this->stats_compare_to = date('Y-m-d 00:00:00');
 
 		return parent::getFields();
 	}
