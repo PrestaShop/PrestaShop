@@ -1,8 +1,5 @@
 <?xml version="1.0"?>
 <entity_profile>
-  <profile id="Administrator">
-    <name>Administrator</name>
-  </profile>
   <profile id="Logistician">
     <name>Logistician</name>
   </profile>
