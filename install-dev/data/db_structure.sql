@@ -722,6 +722,7 @@ CREATE TABLE `PREFIX_employee` (
   `stats_date_to` date default NULL,
   `stats_compare_from` date default NULL,
   `stats_compare_to` date default NULL,
+  `stats_compare_option` int(1) unsigned NOT NULL DEFAULT 1,
   `bo_color` varchar(32) default NULL,
   `bo_theme` varchar(32) default NULL,
   `default_tab` int(10) unsigned NOT NULL DEFAULT 0,
