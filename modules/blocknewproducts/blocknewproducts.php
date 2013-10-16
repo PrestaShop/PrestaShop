@@ -33,7 +33,7 @@ class BlockNewProducts extends Module
 	{
 		$this->name = 'blocknewproducts';
 		$this->tab = 'front_office_features';
-		$this->version = '1.4';
+		$this->version = '1.5';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -46,12 +46,13 @@ class BlockNewProducts extends Module
 	public function install()
 	{
 		if (!parent::install()
-			|| !$this->registerHook('rightColumn')
 			|| !$this->registerHook('header')
 			|| !$this->registerHook('addproduct')
 			|| !$this->registerHook('updateproduct')
 			|| !$this->registerHook('deleteproduct')
 			|| !Configuration::updateValue('NEW_PRODUCTS_NBR', 5)
+			|| !$this->registerHook('displayHomeTab')
+			|| !$this->registerHook('displayHomeTabContent')
 		)
 			return false;
 		$this->_clearCache('blocknewproducts.tpl');
@@ -61,6 +62,7 @@ class BlockNewProducts extends Module
 	public function uninstall()
 	{
 		$this->_clearCache('blocknewproducts.tpl');
+		$this->_clearCache('tab.tpl');
 		return parent::uninstall();
 	}
 
@@ -110,8 +112,13 @@ class BlockNewProducts extends Module
 	{
 		return $this->hookRightColumn($params);
 	}
+
+	public function hookdisplayHomeTab($params)
+	{
+		return $this->display(__FILE__, 'tab.tpl', $this->getCacheId('blocknewproducts-tab'));
+	}
 	
-	public function hookHome($params)
+	public function hookdisplayHomeTabContent($params)
 	{
 		return $this->hookRightColumn($params);
 	}

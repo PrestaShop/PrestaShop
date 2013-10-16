@@ -65,4 +65,8 @@ INSERT INTO `PREFIX_hook_module` (`id_module`, `id_shop`, `id_hook`, `position`)
 
 /* PHP:update_order_messages(); */;
 
-ALTER TABLE  `PREFIX_employee` ADD  `stats_compare_from` DATE NULL DEFAULT NULL AFTER  `stats_date_to` , ADD  `stats_compare_to` DATE NULL DEFAULT NULL AFTER  `stats_compare_from`
+ALTER TABLE  `PREFIX_employee` ADD  `stats_compare_from` DATE NULL DEFAULT NULL AFTER  `stats_date_to` , ADD  `stats_compare_to` DATE NULL DEFAULT NULL AFTER  `stats_compare_from`;
+
+INSERT INTO `PREFIX_hook` (`id_hook` , `name` , `title` , `description` , `position` , `live_edit`) 
+VALUES (NULL , 'displayHomeTab', 'Home Page Tabs', 'This hook displays new elements on the homepage tabs', '1', '1'), 
+(NULL , 'displayHomeTabContent', 'Home Page Tabs Content', 'This hook displays new elements on the homepage tabs content', '1', '1');

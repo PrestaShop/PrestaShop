@@ -36,7 +36,7 @@ class HomeFeatured extends Module
 	{
 		$this->name = 'homefeatured';
 		$this->tab = 'front_office_features';
-		$this->version = '1.1';
+		$this->version = '1.2';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -52,11 +52,12 @@ class HomeFeatured extends Module
 		Configuration::updateValue('HOME_FEATURED_NBR', 8);
 
 		if (!parent::install()
-			|| !$this->registerHook('displayHome')
 			|| !$this->registerHook('header')
 			|| !$this->registerHook('addproduct')
 			|| !$this->registerHook('updateproduct')
 			|| !$this->registerHook('deleteproduct')
+			|| !$this->registerHook('displayHomeTab')
+			|| !$this->registerHook('displayHomeTabContent')
 		)
 			return false;
 		return true;
@@ -65,6 +66,7 @@ class HomeFeatured extends Module
 	public function uninstall()
 	{
 		$this->_clearCache('homefeatured.tpl');
+		$this->_clearCache('tab.tpl');
 		return parent::uninstall();
 	}
 
@@ -97,9 +99,14 @@ class HomeFeatured extends Module
 		$this->context->controller->addJS(($this->_path).'js/homefeatured.js');
 	}
 
-	public function hookDisplayHome($params)
+	public function hookDisplayHomeTab($params)
 	{
-		if (!$this->isCached('homefeatured.tpl', $this->getCacheId('homefeatured')))
+		return $this->display(__FILE__, 'tab.tpl', $this->getCacheId('homefeatured-tab'));
+	}
+
+	public function hookDisplayHomeTabContent($params)
+	{
+		if (!$this->isCached('homefeatured.tpl', $this->getCacheId()))
 		{
 			$category = new Category(Context::getContext()->shop->getCategory(), (int)Context::getContext()->language->id);
 			$nb = (int)Configuration::get('HOME_FEATURED_NBR');
@@ -111,7 +118,13 @@ class HomeFeatured extends Module
 				'homeSize' => Image::getSize(ImageType::getFormatedName('home')),
 			));
 		}
-		return $this->display(__FILE__, 'homefeatured.tpl', $this->getCacheId('homefeatured'));
+		return $this->display(__FILE__, 'homefeatured.tpl', $this->getCacheId());
+	}
+	
+	/* Retro Compatibility < 1.6.0.1 */
+	public function hookDisplayHome($params)
+	{
+		return $this->hookDisplayHomeTabContent();
 	}
 
 	public function hookAddProduct($params)

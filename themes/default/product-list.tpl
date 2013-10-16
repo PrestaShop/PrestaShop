@@ -25,7 +25,7 @@
 
 {if isset($products)}
 	<!-- Products list -->
-	<ul id="product_list" class="clear">
+	<ul class="product_list clear{if isset($class) && $class} {$class}{/if}">
 	{foreach from=$products item=product name=products}
 		<li class="ajax_block_product {if $smarty.foreach.products.first}first_item{elseif $smarty.foreach.products.last}last_item{/if} {if $smarty.foreach.products.index % 2}alternate_item{else}item{/if} clearfix">
 			<div class="left_block">
