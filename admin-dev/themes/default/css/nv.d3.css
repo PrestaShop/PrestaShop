@@ -95,11 +95,12 @@
 
 .nvtooltip table {
   margin: 6px;
+  border-spacing:0;
 }
 
+
 .nvtooltip table td {
-  padding-right: 9px;
-  padding-bottom: 3px;
+  padding: 2px 9px 2px 0;
   vertical-align: middle;
 }
 
@@ -111,11 +112,26 @@
   font-weight: bold;
 }
 
+.nvtooltip table tr.highlight td {
+  padding: 1px 9px 1px 0;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-top-style: solid;
+  border-top-width: 1px;
+}
+
 .nvtooltip table td.legend-color-guide div {
   width: 8px;
   height: 8px;
   vertical-align: middle;
 }
+
+.nvtooltip .footer {
+  padding: 3px;
+  text-align: center;
+}
+
+
 .nvtooltip-pending-removal {
   position: absolute;
   pointer-events: none;
