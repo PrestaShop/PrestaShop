@@ -171,48 +171,7 @@ class BlockAdvertising extends Module
 	public function getContent()
 	{
 		$this->postProcess();
-		$output = '
-		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" enctype="multipart/form-data">
-			<fieldset>
-				<legend>'.$this->l('Advertising block configuration').'</legend>';
-		if ($this->adv_img)
-		{
-			$output .= '
-			<a href="'.$this->adv_link.'" target="_blank" title="'.$this->adv_title.'">
-				<img src="'.$this->context->link->protocol_content.$this->adv_img.'" alt="'.$this->adv_title.'" title="'.$this->adv_title.'"
-					style="width:155px;height:163px;margin-left:100px"/>
-			</a>';
-			if ($this->adv_imgname == 'advertising')
-				$output .= $this->l('You cannot delete the default image (but you can change it below).');
-			else
-				$output .= '<input class="button" type="submit" name="submitDeleteImgConf" value="'.$this->l('Delete image').'" style=""/>';
-		}
-		else
-			$output .= '<div style="margin-left: 100px;width:163px;">'.$this->l('No image').'</div>';
-		$output .= '<br/><br/>
-				<label for="adv_img">'.$this->l('Change image').'&nbsp;&nbsp;</label>
-				<div class="margin-form">
-					<input id="adv_img" type="file" name="adv_img" />
-					<p>'.$this->l('Image will be displayed as 155x163').'</p>
-				</div>
-				<br class="clear"/>
-				<label for="adv_link">'.$this->l('Image link').'</label>
-				<div class="margin-form">
-					<input id="adv_link" type="text" name="adv_link" value="'.$this->adv_link.'" style="width:250px" />
-				</div>
-				<br class="clear"/>
-				<label for="adv_title">'.$this->l('Title').'</label>
-				<div class="margin-form">
-					<input id="adv_title" type="text" name="adv_title" value="'.$this->adv_title.'" style="width:250px" />
-				</div>
-				<br class="clear"/>
-				<div class="margin-form">
-					<input class="button" type="submit" name="submitAdvConf" value="'.$this->l('Validate').'"/>
-				</div>
-				<br class="clear"/>
-			</fieldset>
-		</form>';
-		return $output;
+		return $this->renderForm();
 	}
 
 	public function hookRightColumn($params)
@@ -235,5 +194,68 @@ class BlockAdvertising extends Module
 	public function hookHeader($params)
 	{
 		$this->context->controller->addCSS($this->_path.'blockadvertising.css', 'all');
+	}
+	
+	public function renderForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Configuration'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'file',
+						'label' => $this->l('Block image'),
+						'name' => 'adv_img',
+						'desc' => $this->l('Image will be displayed as 155x163'),
+						'thumb' => '../modules/'.$this->name.'/advertising.jpg',
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Image link'),
+						'name' => 'adv_link',
+						'desc' => $this->l('Such as bank branch, IBAN number, BIC, etc...')
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Title'),
+						'name' => 'adv_title',
+					),
+				),
+			'submit' => array(
+				'title' => $this->l('Save'),
+				'class' => 'btn btn-primary')
+			),
+		);
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$this->fields_form = array();
+		$helper->id = (int)Tools::getValue('id_carrier');
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitAdvConf';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function getConfigFieldsValues()
+	{
+		return array(
+			'adv_link' => Tools::getValue('adv_link', Configuration::get('BLOCKADVERT_LINK')),
+			'adv_title' => Tools::getValue('adv_title', Configuration::get('BLOCKADVERT_TITLE')),
+		);
 	}
 }
