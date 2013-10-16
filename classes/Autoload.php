@@ -83,8 +83,7 @@ class Autoload
 			return;
 
 		// regenerate the class index if the requested file doesn't exists
-		if (!isset($this->index[$classname])
-			|| ($this->index[$classname] && !is_file($this->root_dir.$this->index[$classname]))
+		if ((isset($this->index[$classname]) && $this->index[$classname] && !is_file($this->root_dir.$this->index[$classname]))
 			|| (isset($this->index[$classname.'Core']) && $this->index[$classname.'Core'] && !is_file($this->root_dir.$this->index[$classname.'Core'])))
 			$this->generateIndex();
 
@@ -139,7 +138,7 @@ class Autoload
 		else
 		{
 			$filename_tmp = tempnam(dirname($filename), basename($filename.'.'));
-			if ($filename_tmp !== false AND file_put_contents($filename_tmp, $content, LOCK_EX) !== false)
+			if ($filename_tmp !== false && file_put_contents($filename_tmp, $content, LOCK_EX) !== false)
 			{
 				if (!@rename($filename_tmp, $filename))
 					unlink($filename_tmp);
