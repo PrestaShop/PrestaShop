@@ -8177,39 +8177,43 @@ a.link-social:hover {
 .row-margin-bottom {
   margin-bottom: 15px; }
 
-/* line 17, admin-theme/_admin-commons.sass */
+/* line 16, admin-theme/_admin-commons.sass */
+.row-padding-top {
+  padding-top: 15px; }
+
+/* line 19, admin-theme/_admin-commons.sass */
 .thumbnail {
   background-color: white;
   border-color: #cccccc !important; }
 
-/* line 21, admin-theme/_admin-commons.sass */
+/* line 23, admin-theme/_admin-commons.sass */
 .badge, #header_notifs_icon_wrapper .notifs_badge, .badge.badge-success, .badge.badge-error {
   background-color: #8fc04d; }
-/* line 23, admin-theme/_admin-commons.sass */
+/* line 25, admin-theme/_admin-commons.sass */
 #header_notifs_icon_wrapper .badge-success.notifs_badge, .badge-success.badge {
   background-color: #5cb85c; }
-/* line 26, admin-theme/_admin-commons.sass */
+/* line 28, admin-theme/_admin-commons.sass */
 #header_notifs_icon_wrapper .badge-error.notifs_badge, .badge-error.badge {
   background-color: #d9534f; }
 
-/* line 31, admin-theme/_admin-commons.sass */
+/* line 33, admin-theme/_admin-commons.sass */
 .nav-tabs {
   border-bottom: none; }
-/* line 33, admin-theme/_admin-commons.sass */
+/* line 35, admin-theme/_admin-commons.sass */
 .nav-tabs li a {
   font-size: 1.1em;
   font-family: "Ubuntu", sans-serif;
   text-transform: uppercase;
   font-weight: 300; }
-/* line 39, admin-theme/_admin-commons.sass */
+/* line 41, admin-theme/_admin-commons.sass */
 .nav-tabs li.active a, .nav-tabs li.active a:hover {
   background-color: white; }
 
-/* line 42, admin-theme/_admin-commons.sass */
+/* line 44, admin-theme/_admin-commons.sass */
 .alert.alert-danger, #carrier_wizard .wizard_error {
   padding-left: 60px;
   position: relative; }
-/* line 45, admin-theme/_admin-commons.sass */
+/* line 47, admin-theme/_admin-commons.sass */
 .alert.alert-danger:before, #carrier_wizard .wizard_error:before {
   position: absolute;
   top: 0;
@@ -8225,7 +8229,31 @@ a.link-social:hover {
   -webkit-font-smoothing: antialiased;
   content: "\f00d"; }
 
-/* line 61, admin-theme/_admin-commons.sass */
+/* line 62, admin-theme/_admin-commons.sass */
+.alert.alert-success, #carrier_wizard .alert-success.wizard_error {
+  padding-left: 60px;
+  position: relative; }
+/* line 65, admin-theme/_admin-commons.sass */
+.alert.alert-success:before, #carrier_wizard .alert-success.wizard_error:before {
+  position: absolute;
+  top: 0;
+  left: 10px;
+  display: block;
+  min-height: 25px;
+  min-width: 25px;
+  font-family: FontAwesome;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 35px;
+  text-decoration: inherit;
+  -webkit-font-smoothing: antialiased;
+  content: "\f00c"; }
+
+/* line 81, admin-theme/_admin-commons.sass */
+.panel .panel-footer, #header_notifs_icon_wrapper .notifs_panel .panel-footer, #dash_version .panel-footer, #header_notifs_icon_wrapper .notifs_panel .notifs_panel_footer {
+  margin: 0 -20px -20px; }
+
+/* line 86, admin-theme/_admin-commons.sass */
 .overflow-y {
   height: 200px;
   overflow-y: auto; }
