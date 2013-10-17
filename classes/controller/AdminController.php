@@ -2286,7 +2286,7 @@ class AdminControllerCore extends Controller
 		(isset($this->_filter) ? $this->_filter : '').$where_shop.'
 		'.(isset($this->_group) ? $this->_group.' ' : '').'
 		'.$having_clause.'
-		ORDER BY '.(($order_by == $this->identifier) ? 'a.' : '').$order_by.' '.pSQL($order_way).
+		ORDER BY '.((str_replace('`', '', $order_by) == $this->identifier) ? 'a.' : '').$order_by.' '.pSQL($order_way).
 		($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '').
 		(($use_limit === true) ? ' LIMIT '.(int)$start.','.(int)$limit : '');
 
