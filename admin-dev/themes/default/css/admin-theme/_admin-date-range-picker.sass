@@ -132,8 +132,11 @@ $color-calendar-range-compare: lighten($color-calendar-compare,10%)
 				//@extend .chevron-left
 				&.range-compare
 					background-color: mix($color-calendar-day-selected,$color-calendar-range-compare,70%)
+					+border-left-radius(0)
 				&.end-selected-compare, &.start-selected-compare
 					background-color: mix($color-calendar-day-selected,$color-calendar-day-selected-compare,70%)
+				&.end-selected-compare
+					+border-radius(0)
 			&.end-selected:not(.old):not(.new):not(.start-selected)
 				color: $color-bright
 				font-weight: 700
@@ -142,8 +145,11 @@ $color-calendar-range-compare: lighten($color-calendar-compare,10%)
 				+border-right-radius(15px)
 				&.range-compare
 					background-color: mix($color-calendar-day-selected,$color-calendar-range-compare,70%)
+					+border-right-radius(0)
 				&.end-selected-compare, &.start-selected-compare
 					background-color: mix($color-calendar-day-selected,$color-calendar-day-selected-compare,70%)
+				&.start-selected-compare
+					+border-radius(0)
 			&.start-selected-compare:not(.old):not(.new):not(.end-selected-compare)
 				color: $color-bright
 				font-weight: 700
@@ -152,6 +158,7 @@ $color-calendar-range-compare: lighten($color-calendar-compare,10%)
 				//@extend .chevron-left
 				&.range
 					background-color: mix($color-calendar-day-selected-compare,$color-calendar-range,70%)
+					+border-left-radius(0)
 			&.end-selected-compare:not(.old):not(.new):not(.start-selected-compare)
 				color: $color-bright
 				font-weight: 700
@@ -160,6 +167,7 @@ $color-calendar-range-compare: lighten($color-calendar-compare,10%)
 				+border-right-radius(15px)
 				&.range
 					background-color: mix($color-calendar-day-selected-compare,$color-calendar-range,70%)
+					+border-right-radius(0)
 			&.end-selected.start-selected
 				color: $color-bright
 				+border-radius(15px)
