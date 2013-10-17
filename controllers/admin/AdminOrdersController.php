@@ -139,12 +139,16 @@ class AdminOrdersControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-		if (empty($this->display) && Context::getContext()->shop->getContext() == Shop::CONTEXT_SHOP && isset($this->toolbar_btn['new']) && Shop::isFeatureActive())
+		if (empty($this->display))
 			$this->page_header_toolbar_btn['new_order'] = array(
 				'href' => self::$currentIndex.'&amp;addorder&amp;token='.$this->token,
 				'desc' => $this->l('Add new order'),
 				'icon' => 'process-icon-new'
 			);
+
+		if (Context::getContext()->shop->getContext() != Shop::CONTEXT_SHOP && isset($this->toolbar_btn['new'])
+			&& Shop::isFeatureActive())
+			unset($this->page_header_toolbar_btn['new_order']);
 
 		parent::initPageHeaderToolbar();
 	}
