@@ -67,7 +67,6 @@
 			$.uiTableFilter($('#moduleContainer').find('table'), anchor);
 		
 		$('#moduleQuicksearch').keyup(function() {
-			console.log(this.value);
 			$.uiTableFilter($('#moduleContainer').find('table'), this.value);
 		});
 		
