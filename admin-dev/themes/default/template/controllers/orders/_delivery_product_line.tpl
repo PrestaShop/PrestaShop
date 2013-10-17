@@ -40,13 +40,14 @@
 	</td>
 	<td align="center">
 		<span class="product_price_show">{displayPrice price=$product_price currency=$currency->id}</span>
+		<input type="hidden" name="product_id_order_detail" value="{$product['id_order_detail']}" />
 	</td>
 	<td align="center" class="productQuantity">
 		{$product['delivery_qty']}
 	</td>
 	{if $display_warehouse}<td>{$product.warehouse_name|escape:'htmlall':'UTF-8'}</td>{/if}
 	<td align="center" class="total_product">
-		{displayPrice price=(Tools::ps_round($product_price, 2) * ($product['delivery_qty'] - $product['customizationQuantityTotal'])) currency=$currency->id}
+		{displayPrice price=(Tools::ps_round($product_price, 2) * ($product['product_quantity'] - $product['customizationQuantityTotal'])) currency=$currency->id}
 	</td>
 </tr>
 {/if}

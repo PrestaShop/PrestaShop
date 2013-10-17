@@ -1280,7 +1280,7 @@ class AdminOrdersControllerCore extends AdminController
 				$order_delivery = new OrderDelivery($order->id);
 				$delivery_id = $order_delivery->getIdFromNr($delivery_nr,$order->id,$order->id_shop);
 				if(empty($delivery_id)) { // the order has no delivered products
-					$order_delivery->createDelivery($delivery_nr,$order,$product_id,$product_attribute_id,Tools::getValue('adsQty')); // creates delivery and adds delivery detail
+					$order_delivery->createDelivery($delivery_nr,$order,$product_id,$product_attribute_id,Tools::getValue('adsQty'),Tools::getValue('adsWarehouse')); // creates delivery and adds delivery detail
 				}
 				else
 				{
@@ -1288,11 +1288,14 @@ class AdminOrdersControllerCore extends AdminController
 					if(!empty($qty))
 					{
 						$new_qty = $qty + Tools::getValue('adsQty');
-						$order_delivery->updateQty($product_id,$product_attribute_id,$delivery_id,$new_qty);
+// 						$order_delivery->updateQty($product_id,$product_attribute_id,$delivery_id,$new_qty);
+// 						$order_delivery->updateDeliveryDetail($order,$product_id,$product_attribute_id,Tools::getValue('adsQty'),$delivery_id,Tools::getValue('adsWarehouse'));
+						$order_delivery->createDeliveryDetail($order,$product_id,$product_attribute_id,$new_qty,$delivery_id,Tools::getValue('adsWarehouse'),true);
 					}
 					else
 					{
-						$order_delivery->createDeliveryDetail($delivery_id,$product_id,$product_attribute_id,Tools::getValue('adsQty'));
+// 						$order_delivery->createDeliveryDetail($delivery_id,$product_id,$product_attribute_id,Tools::getValue('adsQty'));
+						$order_delivery->createDeliveryDetail($order,$product_id,$product_attribute_id,Tools::getValue('adsQty'),$delivery_id,Tools::getValue('adsWarehouse'));
 					}
 				}
 			}

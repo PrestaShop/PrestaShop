@@ -778,19 +778,44 @@
 					var select = document.getElementById('adsProductName');
 					var opt = select.options[select.selectedIndex].value;
 					var Products = new Array();
-					Products['select_pname'] = new Array('','')
+					Products['select_pname'] = new Array('','','0'); /* Empty boxes if we select pname */
 					{foreach from=$products item=product key=k}
-						Products[{$product.product_id} + '_' + {$product.product_attribute_id}] = new Array('{if $product.product_reference}{$product.product_reference}{/if}','{if isset($product.product_ean13)}{$product.product_ean13}{/if}');
+						Products[{$product.product_id} + '_' + {$product.product_attribute_id}] = new Array(
+						'{if isset($product.product_reference)}{$product.product_reference}{/if}',
+						'{if isset($product.product_ean13)}{$product.product_ean13}{/if}',
+						'{if isset($product.id_warehouse)}{$product.id_warehouse}{else}0{/if}');
 					{/foreach}
 					var ref = Products[opt][0];
 					var ean = Products[opt][1];
+					var wh = Products[opt][2];
+					document.getElementById('adsWarehouse').value = wh;
 					document.getElementById('adsReference').value = ref;
 					document.getElementById('adsEan13').value = ean;
 				}
 			</script>
 			<script type="text/javascript">
+				function adsRef2WH(id) {
+					document.getElementById('adsWarehouse').value = '0'; // reset value on every change
+					// that way we will get 0, if not ref is matched
+					var el = document.getElementById(id).value;
+					var Products = new Array();
+					{foreach from=$products item=product key=k}
+						{if isset($product.product_reference) && $product.product_reference != ""}
+						Products['{$product.product_reference}'] = new Array(
+						'{if isset($product.id_warehouse)}{$product.id_warehouse}{else}0{/if}');
+						{/if}
+						{if isset($product.product_ean13) && $product.product_ean13 != ""}
+						Products['{$product.product_ean13}'] = new Array(
+						'{if isset($product.id_warehouse)}{$product.id_warehouse}{else}0{/if}');
+						{/if}
+					{/foreach}
+					var wh = Products[el][0];
+					if (wh) document.getElementById('adsWarehouse').value = wh;
+				}
+			</script>
+			<script type="text/javascript">
 			/* Focus and scroll down to */
-			var adsRef = '{$smarty.post.adsReference}';
+			var adsRef = '{if isset($smarty.post.adsReference)}{$smarty.post.adsReference}{/if}';
 			if(adsRef != '') {
 				window.setTimeout(function ()
 				{
@@ -799,7 +824,7 @@
 				el.scrollIntoView(true);
 				}, 0);
 			}
-			var adsEan13 = '{$smarty.post.adsEan13}';
+			var adsEan13 = '{if isset($smarty.post.adsEan13)}{$smarty.post.adsEan13}{/if}';
 			if(adsEan13 != '') {
 				window.setTimeout(function ()
 				{
@@ -808,7 +833,7 @@
 				el.scrollIntoView(true);
 				}, 0);
 			}
-			var adsProductName = '{$smarty.post.adsProductName}';
+			var adsProductName = '{if isset($smarty.post.adsProductName)}{$smarty.post.adsProductName}{/if}';
 			if(adsProductName != '') {
 				window.setTimeout(function ()
 				{
@@ -825,9 +850,10 @@
 						<option value="{$product.product_id}_{$product.product_attribute_id}" >{$product.product_name}</option>
 					{/foreach}
 				</select>
-				{l s='Reference:'}<input type="text" name="adsReference" id="adsReference"  value="" placeholder="Enter Reference" />
-				{l s='Ean 13:'}<input type="text" name="adsEan13" id="adsEan13  value="" placeholder="Enter Ean 13" />
+				{l s='Reference:'}<input type="text" name="adsReference" id="adsReference" onKeyUp="adsRef2WH('adsReference')"  value="" placeholder="Enter Reference" />
+				{l s='Ean 13:'}<input type="text" name="adsEan13" id="adsEan13 onKeyPress="adsRef2WH('adsEan13')" onKeyUp="adsRef2WH('adsEan13')" value="" placeholder="Enter Ean 13" />
 				{l s='Quantity'} 	<input type="text" name="adsQty" value="1" />
+				<input type="hidden" name="adsWarehouse" id="adsWarehouse" value="0" />
 				<button type="submit" name="submitAdsAdd" value="{$ads_deliverynr}">Add</button>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<button type="submit" name="submitAdsAddAll" value="{$ads_deliverynr}">Add All products</button>

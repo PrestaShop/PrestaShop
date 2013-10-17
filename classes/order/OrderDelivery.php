@@ -36,7 +36,7 @@ class OrderDeliveryCore extends ObjectModel
 	/** @var integer */
 	public $delivery_id;
 	
-	public $delivery_date;
+	public $date_add;
 	
 	public $delivery_number;
 
@@ -99,6 +99,15 @@ class OrderDeliveryCore extends ObjectModel
 		);
 		return $nr[0]['delivery_number'];
 	}
+	
+	public function getInvoiceFromId($id) {
+		$nr = Db::getInstance()->executeS('
+		SELECT id_order_invoice
+		FROM `'._DB_PREFIX_.'order_delivery` ody
+		WHERE ody.`delivery_id` = ' . $id
+		);
+		return $nr[0]['id_order_invoice'];
+	}
 
 	public function getIds($order)
 	{
@@ -111,12 +120,12 @@ class OrderDeliveryCore extends ObjectModel
 	public function getProductQty($product_id,$product_attribute_id,$delivery_id)
 	{
 		$qty = Db::getInstance()->executeS('
-		SELECT delivery_qty
+		SELECT product_quantity
 		FROM `'._DB_PREFIX_.'order_delivery_detail` odyd
 		WHERE odyd.`product_id` = ' . $product_id .
 		' AND odyd.`product_attribute_id` = ' . $product_attribute_id .
 		' AND odyd.`delivery_id` = ' . $delivery_id);
-		return $qty[0]["delivery_qty"];
+		return $qty[0]["product_quantity"];
 	}
 	
 	/**
@@ -126,7 +135,7 @@ class OrderDeliveryCore extends ObjectModel
 	 * @param $delivery_number
 	 * @return delivery_id
 	 */
-	public function getIdFromNr($delivery_number,$Id_order,$id_shop)
+	public function getIdFromNr($delivery_number,$id_order,$id_shop)
 	{
 		$sql = '
 		SELECT delivery_id
@@ -143,134 +152,157 @@ class OrderDeliveryCore extends ObjectModel
 	}
 	
 	public function updateQty($product_id,$product_attribute_id,$delivery_id,$new_qty) {
-		Db::getInstance()->update('order_delivery_detail',array('delivery_qty' => $new_qty),
+		Db::getInstance()->update('order_delivery_detail',array('product_quantity' => $new_qty),
 		'`product_id` = ' . $product_id . ' AND `product_attribute_id` = '. $product_attribute_id .' AND `delivery_id` = ' . $delivery_id);
-		Db::getInstance()->update('order_delivery',array('delivery_date' => date('Y-m-d H:i:s') ), '`delivery_id` = ' . $delivery_id ); // update delivery date when adding product
+		Db::getInstance()->update('order_delivery',array('date_add' => date('Y-m-d H:i:s') ), '`delivery_id` = ' . $delivery_id ); // update delivery date when adding product
+		
 	}
 	
-	/**
-	 * This method allows to generate first invoice of the current order
-	 */
-	public function setInvoice($order,$use_existing_payment=false)
+	public function setInvoice($order,$product_id,$product_attribute_id,$qty,$id_order_invoice = 0,$use_existing_payment=false)
 	{
-			$order_invoice = new OrderInvoice();
-			$order_invoice->id_order = $this->id;
-			$order_invoice->number = Configuration::get('PS_INVOICE_START_NUMBER', null, null, $this->id_shop);
-			// If invoice start number has been set, you clean the value of this configuration
-			if ($order_invoice->number)
-				Configuration::updateValue('PS_INVOICE_START_NUMBER', false, false, null, $this->id_shop);
-			else
-				$order_invoice->number = Order::getLastInvoiceNumber() + 1;
+		// create the product
+		$product = new Product($product_id, false, $order->id_lang);
+		if (!Validate::isLoadedObject($product))
+			die(Tools::jsonEncode(array(
+				'result' => false,
+				'error' => Tools::displayError('The product object cannot be loaded.')
+			)));
 
-			$invoice_address = new Address((int)$this->id_address_invoice);
-			$carrier = new Carrier((int)$this->id_carrier);
-			$tax_calculator = $carrier->getTaxCalculator($invoice_address);
-			
-			// TODO: This needs to be rewritten to use order_delivery_detail's
-			// on OrdersController line 1607 is addProduct. It uses an cart to create the invoice.
-			// that might actually be an better idea.
-			$order_invoice->total_discount_tax_excl = $this->total_discounts_tax_excl;
-			$order_invoice->total_discount_tax_incl = $this->total_discounts_tax_incl;
-			$order_invoice->total_paid_tax_excl = $this->total_paid_tax_excl;
-			$order_invoice->total_paid_tax_incl = $this->total_paid_tax_incl;
-			$order_invoice->total_products = $this->total_products;
-			$order_invoice->total_products_wt = $this->total_products_wt;
-			$order_invoice->total_shipping_tax_excl = $this->total_shipping_tax_excl;
-			$order_invoice->total_shipping_tax_incl = $this->total_shipping_tax_incl;
-			$order_invoice->shipping_tax_computation_method = $tax_calculator->computation_method;
-			$order_invoice->total_wrapping_tax_excl = $this->total_wrapping_tax_excl;
-			$order_invoice->total_wrapping_tax_incl = $this->total_wrapping_tax_incl;
-
-			// Save Order invoice
-			$order_invoice->add();
-
-			$order_invoice->saveCarrierTaxCalculator($tax_calculator->getTaxesAmount($order_invoice->total_shipping_tax_excl));
-
-			// Update order_carrier
-			$id_order_carrier = Db::getInstance()->getValue('
-				SELECT `id_order_carrier`
-				FROM `'._DB_PREFIX_.'order_carrier`
-				WHERE `id_order` = '.(int)$order_invoice->id_order.'
-				AND (`id_order_invoice` IS NULL OR `id_order_invoice` = 0)');
-			
-			if ($id_order_carrier)
-			{
-				$order_carrier = new OrderCarrier($id_order_carrier);
-				$order_carrier->id_order_invoice = (int)$order_invoice->id;
-				$order_carrier->update();
-			}
-
-			// Update order detail
-			Db::getInstance()->execute('
-				UPDATE `'._DB_PREFIX_.'order_detail`
-				SET `id_order_invoice` = '.(int)$order_invoice->id.'
-				WHERE `id_order` = '.(int)$order_invoice->id_order);
-
-			// Update order payment
-			if ($use_existing_payment)
-			{
-				$id_order_payments = Db::getInstance()->executeS('
-					SELECT DISTINCT op.id_order_payment 
-					FROM `'._DB_PREFIX_.'order_payment` op
-					INNER JOIN `'._DB_PREFIX_.'orders` o ON (o.reference = op.order_reference)
-					LEFT JOIN `'._DB_PREFIX_.'order_invoice_payment` oip ON (oip.id_order_payment = op.id_order_payment)					
-					WHERE (oip.id_order != '.(int)$order_invoice->id_order.' OR oip.id_order IS NULL) AND o.id_order = '.(int)$order_invoice->id_order);
-
-				if (count($id_order_payments))
-				{
-					foreach ($id_order_payments as $order_payment)
-						Db::getInstance()->execute('
-							INSERT INTO `'._DB_PREFIX_.'order_invoice_payment`
-							SET
-								`id_order_invoice` = '.(int)$order_invoice->id.',
-								`id_order_payment` = '.(int)$order_payment['id_order_payment'].',
-								`id_order` = '.(int)$order_invoice->id_order);
-					// Clear cache
-					Cache::clean('order_invoice_paid_*');
-				}
-			}
-
-			// Update order cart rule
-			Db::getInstance()->execute('
-				UPDATE `'._DB_PREFIX_.'order_cart_rule`
-				SET `id_order_invoice` = '.(int)$order_invoice->id.'
-				WHERE `id_order` = '.(int)$order_invoice->id_order);
-
-			// Keep it for backward compatibility, to remove on 1.6 version
-			$this->invoice_date = $order_invoice->date_add;
-			$this->invoice_number = $order_invoice->number;
-			$this->update();
-	}
-	
-	public function createDelivery($delivery_number,$order,$product_id,$product_attribute_id,$qty,$auto_detail = true)
-	{
-		// First create an invoice.
-			
-		//Now create delivery
-		Db::getInstance()->insert('order_delivery',array(
-		'id_order' => (int)$order->id,
-		'id_shop' => (int)$order->id_shop,
-		'id_order_invoice' => '',
-		'delivery_number' => $delivery_number,
-		'date_add' => date("Y-m-d h:i:s")
-		) );
-		$delivery_id = Db::getInstance()->Insert_ID();
-		/*
-			Here we should add an function to create an invoice.
-		*/
-		if($auto_detail) {
-			$this->createDeliveryDetail($delivery_id,$product_id,$product_attribute_id,$qty);
-		} else {
-			return $delivery_id;
+		if (isset($product_attribute_id) && $product_attribute_id)
+		{
+			$combination = new Combination($product_attribute_id);
+			if (!Validate::isLoadedObject($combination))
+				die(Tools::jsonEncode(array(
+				'result' => false,
+				'error' => Tools::displayError('The combination object cannot be loaded.')
+			)));
 		}
+
+		// Total method
+		$total_method = Cart::BOTH_WITHOUT_SHIPPING;
+
+		// Create new cart
+		$cart = new Cart();
+		$cart->id_shop_group = $order->id_shop_group;
+		$cart->id_shop = $order->id_shop;
+		$cart->id_customer = $order->id_customer;
+		$cart->id_carrier = $order->id_carrier;
+		$cart->id_address_delivery = $order->id_address_delivery;
+		$cart->id_address_invoice = $order->id_address_invoice;
+		$cart->id_currency = $order->id_currency;
+		$cart->id_lang = $order->id_lang;
+		$cart->secure_key = $order->secure_key;
+
+		// Save new cart
+		$cart->add();
+
+		// Save context (in order to apply cart rule)
+		$this->context->cart = $cart;
+		$this->context->customer = new Customer($order->id_customer);
+
+		// always add taxes even if there are not displayed to the customer
+		$use_taxes = true;
+
+		$initial_product_price_tax_incl = Product::getPriceStatic($product->id, $use_taxes, isset($combination) ? $combination->id : null, 2, null, false, true, 1,
+			false, $order->id_customer, $cart->id, $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
+
+		// Add product to cart
+		$update_quantity = $cart->updateQty($qty, $product->id, isset($product_attribute_id) ? $product_attribute_id : null,
+			isset($combination) ? $combination->id : null, 'up', 0, new Shop($cart->id_shop));
+
+		// If order is valid, we can create a new invoice or edit an existing invoice
+// 		if ($order->hasInvoice())
+// 		{
+			$order_invoice = new OrderInvoice($id_order_invoice);
+			// Create new invoice
+			if ($order_invoice->id == 0)
+			{
+				// If we create a new invoice, we calculate shipping cost
+				$total_method = Cart::BOTH;
+				// Create Cart rule in order to make free shipping
+// 				if (isset($invoice_informations['free_shipping']) && $invoice_informations['free_shipping'])
+// 				{
+					$cart_rule = new CartRule();
+					$cart_rule->id_customer = $order->id_customer;
+					$cart_rule->name = array(
+// 						Configuration::get('PS_LANG_DEFAULT') => $this->l('[Generated] CartRule for Free Shipping')
+						Configuration::get('PS_LANG_DEFAULT') => '[Generated] CartRule for Free Shipping'
+					);
+					$cart_rule->date_from = date('Y-m-d H:i:s', time());
+					$cart_rule->date_to = date('Y-m-d H:i:s', time() + 24 * 3600);
+					$cart_rule->quantity = 1;
+					$cart_rule->quantity_per_user = 1;
+					$cart_rule->minimum_amount_currency = $order->id_currency;
+					$cart_rule->reduction_currency = $order->id_currency;
+					$cart_rule->free_shipping = true;
+					$cart_rule->active = 1;
+					$cart_rule->add();
+
+					// Add cart rule to cart and in order
+					$cart->addCartRule($cart_rule->id);
+					$values = array(
+						'tax_incl' => $cart_rule->getContextualValue(true),
+						'tax_excl' => $cart_rule->getContextualValue(false)
+					);
+					$order->addCartRule($cart_rule->id, $cart_rule->name[Configuration::get('PS_LANG_DEFAULT')], $values);
+// 				}
+
+				$order_invoice->id_order = $order->id;
+				if ($order_invoice->number)
+					Configuration::updateValue('PS_INVOICE_START_NUMBER', false, false, null, $order->id_shop);
+				else
+					$order_invoice->number = Order::getLastInvoiceNumber() + 1;
+
+				$invoice_address = new Address((int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
+				$carrier = new Carrier((int)$order->id_carrier);
+				$tax_calculator = $carrier->getTaxCalculator($invoice_address);
+
+				$order_invoice->total_paid_tax_excl = Tools::ps_round((float)$cart->getOrderTotal(false, $total_method), 2);
+				$order_invoice->total_paid_tax_incl = Tools::ps_round((float)$cart->getOrderTotal($use_taxes, $total_method), 2);
+				$order_invoice->total_products = (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+				$order_invoice->total_products_wt = (float)$cart->getOrderTotal($use_taxes, Cart::ONLY_PRODUCTS);
+				$order_invoice->total_shipping_tax_excl = (float)$cart->getTotalShippingCost(null, false);
+				$order_invoice->total_shipping_tax_incl = (float)$cart->getTotalShippingCost();
+
+				$order_invoice->total_wrapping_tax_excl = abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING));
+				$order_invoice->total_wrapping_tax_incl = abs($cart->getOrderTotal($use_taxes, Cart::ONLY_WRAPPING));
+				$order_invoice->shipping_tax_computation_method = (int)$tax_calculator->computation_method;
+
+				// Update current order field, only shipping because other field is updated later
+				$order->total_shipping += $order_invoice->total_shipping_tax_incl;
+				$order->total_shipping_tax_excl += $order_invoice->total_shipping_tax_excl;
+				$order->total_shipping_tax_incl += ($use_taxes) ? $order_invoice->total_shipping_tax_incl : $order_invoice->total_shipping_tax_excl;
+
+				$order->total_wrapping += abs($cart->getOrderTotal($use_taxes, Cart::ONLY_WRAPPING));
+				$order->total_wrapping_tax_excl += abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING));
+				$order->total_wrapping_tax_incl += abs($cart->getOrderTotal($use_taxes, Cart::ONLY_WRAPPING));
+				$order_invoice->add();
+
+				$order_invoice->saveCarrierTaxCalculator($tax_calculator->getTaxesAmount($order_invoice->total_shipping_tax_excl));
+
+				$order_carrier = new OrderCarrier();
+				$order_carrier->id_order = (int)$order->id;
+				$order_carrier->id_carrier = (int)$order->id_carrier;
+				$order_carrier->id_order_invoice = (int)$order_invoice->id;
+				$order_carrier->weight = (float)$cart->getTotalWeight();
+				$order_carrier->shipping_cost_tax_excl = (float)$order_invoice->total_shipping_tax_excl;
+				$order_carrier->shipping_cost_tax_incl = ($use_taxes) ? (float)$order_invoice->total_shipping_tax_incl : (float)$order_invoice->total_shipping_tax_excl;
+				$order_carrier->add();
+				return $order_invoice;
+			}
+			// Update current invoice
+			else
+			{
+				$order_invoice->total_paid_tax_excl += Tools::ps_round((float)($cart->getOrderTotal(false, $total_method)), 2);
+				$order_invoice->total_paid_tax_incl += Tools::ps_round((float)($cart->getOrderTotal($use_taxes, $total_method)), 2);
+				$order_invoice->total_products += (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+				$order_invoice->total_products_wt += (float)$cart->getOrderTotal($use_taxes, Cart::ONLY_PRODUCTS);
+				$order_invoice->update();
+				return $order_invoice;
+			}
+// 		}
 	}
 	
-	public function createDeliveryDetail($delivery_id,$product_id,$product_attribute_id,$qty)
-	{
-		Db::getInstance()->insert('order_delivery_detail', array('product_id' => $product_id, 'product_attribute_id' => $product_attribute_id, 'delivery_id' => $delivery_id, 'delivery_qty' => $qty) );
-		Db::getInstance()->update('order_delivery',array('delivery_date' => date('Y-m-d H:i:s') ), '`delivery_id` = ' . $delivery_id ); // update delivery date when adding product
-	}
-
 	public function setPartiallyShipped($delivery_id)
 	{
 		Db::getInstance()->update('order_delivery',array('shipped' => 1 ), '`delivery_id` = ' . $delivery_id ); // set delivery id as shipped
@@ -289,11 +321,191 @@ class OrderDeliveryCore extends ObjectModel
 	public function getDeliveryDate($delivery_number,$id_order)
 	{
 		$date = Db::getInstance()->executeS(
-		'SELECT `delivery_date`
+		'SELECT `date_add`
 		FROM `'._DB_PREFIX_.'order_delivery`
 		WHERE `delivery_number` = ' . $delivery_number . ' AND `id_order` = ' . $id_order);
 		if($date)
-			return $date[0]['delivery_date'];
+			return $date[0]['date_add'];
+	}
+
+	public function createDelivery($delivery_number,$order,$product_id,$product_attribute_id,$qty,$id_warehouse)
+	{
+		// First create/update invoice.
+		$id_order_invoice = $order->invoice_number; // This should get the id for the default invoice
+		if(Configuration::get('PS_ADS_INVOICE_DELIVERD')) {
+			$id_order_invoice = 0; // Reset it if we should create a new one
+		}
+		$order_invoice = $this->setInvoice($order,$product_id,$product_attribute_id,$qty,$id_order_invoice);
+
+		//Now create delivery
+		Db::getInstance()->insert('order_delivery',array(
+			'id_order' => (int)$order->id,
+			'id_shop' => (int)$order->id_shop,
+			'id_order_invoice' => $order_invoice->number,
+			'delivery_number' => $delivery_number,
+			'date_add' => date("Y-m-d h:i:s"),
+		) );
+		$delivery_id = Db::getInstance()->Insert_ID();
+		$this->createDeliveryDetail($order,$product_id,$product_attribute_id,$qty,$delivery_id,$id_warehouse,$order_invoice);
+	}
+
+	public function createDeliveryDetail($order,$product_id,$product_attribute_id,$qty,$delivery_id,$id_warehouse,$order_invoice = false,$update = false)
+	{
+		// update invoice
+		if(!$order_invoice) {
+			$id_order_invoice = $this->getInvoiceFromId($delivery_id);
+			$order_invoice = new OrderInvoice($id_order_invoice);
+		}
+
+		// prepare for order detail
+		// create the product
+		$product = new Product($product_id, false, $order->id_lang);
+		if (!Validate::isLoadedObject($product))
+			die(Tools::jsonEncode(array(
+				'result' => false,
+				'error' => Tools::displayError('The product object cannot be loaded.')
+			)));
+
+		if (isset($product_attribute_id) && $product_attribute_id)
+		{
+			$combination = new Combination($product_attribute_id);
+			if (!Validate::isLoadedObject($combination))
+				die(Tools::jsonEncode(array(
+				'result' => false,
+				'error' => Tools::displayError('The combination object cannot be loaded.')
+			)));
+		}
+
+		// Total method
+		$total_method = Cart::BOTH_WITHOUT_SHIPPING;
+
+		// Create new cart
+		$cart = new Cart();
+		$cart->id_shop_group = $order->id_shop_group;
+		$cart->id_shop = $order->id_shop;
+		$cart->id_customer = $order->id_customer;
+		$cart->id_carrier = $order->id_carrier;
+		$cart->id_address_delivery = $order->id_address_delivery;
+		$cart->id_address_invoice = $order->id_address_invoice;
+		$cart->id_currency = $order->id_currency;
+		$cart->id_lang = $order->id_lang;
+		$cart->secure_key = $order->secure_key;
+
+		// Save new cart
+		$cart->add();
+
+		// Save context (in order to apply cart rule)
+		$this->context->cart = $cart;
+		$this->context->customer = new Customer($order->id_customer);
+
+		// always add taxes even if there are not displayed to the customer
+		$use_taxes = true;
+
+		$initial_product_price_tax_incl = Product::getPriceStatic($product->id, $use_taxes, isset($combination) ? $combination->id : null, 2, null, false, true, 1,
+			false, $order->id_customer, $cart->id, $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
+
+		// Add product to cart
+		$update_quantity = $cart->updateQty($qty, $product->id, isset($product_attribute_id) ? $product_attribute_id : null,
+			isset($combination) ? $combination->id : null, 'up', 0, new Shop($cart->id_shop));
+
+		if($update)
+		{
+			$id_order_detail = $this->getOrderDetailId($product_id,$product_attribute_id,$delivery_id,$id_order_invoice,$order->id);
+			$order_delivery_detail = new OrderDeliveryDetail($id_order_detail);
+		}
+		else
+		{
+			// Create Order Delivery detail information
+			$order_delivery_detail = new OrderDeliveryDetail();
+		}
+		$order_delivery_detail->createDetailList($order, $cart, $order->getCurrentOrderState(), $cart->getProducts(), (isset($order_invoice) ? $order_invoice->id : 0), $use_taxes,$id_warehouse,$delivery_id);
+
+		Db::getInstance()->update('order_delivery',array('date_add' => date('Y-m-d H:i:s') ), '`delivery_id` = ' . $delivery_id ); // update delivery date when adding product
+		
+	}
+	
+	public function updateDeliveryDetail($order,$product_id,$product_attribute_id,$qty,$delivery_id,$id_warehouse)
+	{
+		$id_order_invoice = $this->getInvoiceFromId($delivery_id);
+		$order_invoice = new OrderInvoice($id_order_invoice);
+
+		// prepare for order detail
+		// create the product
+		$product = new Product($product_id, false, $order->id_lang);
+		if (!Validate::isLoadedObject($product))
+			die(Tools::jsonEncode(array(
+				'result' => false,
+				'error' => Tools::displayError('The product object cannot be loaded.')
+			)));
+
+		if (isset($product_attribute_id) && $product_attribute_id)
+		{
+			$combination = new Combination($product_attribute_id);
+			if (!Validate::isLoadedObject($combination))
+				die(Tools::jsonEncode(array(
+				'result' => false,
+				'error' => Tools::displayError('The combination object cannot be loaded.')
+			)));
+		}
+
+		// always add taxes even if there are not displayed to the customer
+		$use_taxes = true;
+		
+		// Total method
+		$total_method = Cart::BOTH_WITHOUT_SHIPPING;
+
+		// Create new cart
+		$cart = new Cart();
+		$cart->id_shop_group = $order->id_shop_group;
+		$cart->id_shop = $order->id_shop;
+		$cart->id_customer = $order->id_customer;
+		$cart->id_carrier = $order->id_carrier;
+		$cart->id_address_delivery = $order->id_address_delivery;
+		$cart->id_address_invoice = $order->id_address_invoice;
+		$cart->id_currency = $order->id_currency;
+		$cart->id_lang = $order->id_lang;
+		$cart->secure_key = $order->secure_key;
+		
+		// Save context (in order to apply cart rule)
+		$this->context->cart = $cart;
+		$this->context->customer = new Customer($order->id_customer);
+
+		// always add taxes even if there are not displayed to the customer
+		$use_taxes = true;
+
+		$initial_product_price_tax_incl = Product::getPriceStatic($product->id, $use_taxes, isset($combination) ? $combination->id : null, 2, null, false, true, 1,
+			false, $order->id_customer, $cart->id, $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
+
+		// Add product to cart
+		$update_quantity = $cart->updateQty($qty, $product->id, isset($product_attribute_id) ? $product_attribute_id : null,
+			isset($combination) ? $combination->id : null, 'up', 0, new Shop($cart->id_shop));
+
+		// Save new cart
+		$cart->add();
+
+		// Create Order Delivery detail information
+		$id_order_detail = $this->getOrderDetailId($product_id,$product_attribute_id,$delivery_id,$id_order_invoice,$order->id);
+// 		echo($id_order_detail . ']');
+		
+		$order_delivery_detail = new OrderDeliveryDetail($id_order_detail);
+		
+		$order_delivery_detail->updateDetail($order, $cart, $product, $id_order_invoice, $use_taxes = true); // 481
+
+		Db::getInstance()->update('order_delivery',array('date_add' => date('Y-m-d H:i:s') ), '`delivery_id` = ' . $delivery_id ); // update delivery date when adding product
+		
+	}
+	
+	function getOrderDetailId($product_id,$product_attribute_id,$delivery_id,$id_order_invoice,$id_order) {
+		$qty = Db::getInstance()->executeS('
+		SELECT id_order_detail
+		FROM `'._DB_PREFIX_.'order_delivery_detail` odyd
+		WHERE odyd.`product_id` = ' . $product_id .
+		' AND odyd.`product_attribute_id` = ' . $product_attribute_id .
+		' AND odyd.`delivery_id` = ' . $delivery_id .
+		' AND odyd.`id_order_invoice` = ' . $id_order_invoice .
+		' AND odyd.`id_order` = ' . $id_order
+		);
+		return $qty[0]["id_order_detail"];
 	}
 
 }
