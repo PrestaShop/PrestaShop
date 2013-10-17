@@ -31,10 +31,10 @@ class AdminFeaturesControllerCore extends AdminController
 
 	public function __construct()
 	{
-	 	$this->table = 'feature';
+		$this->table = 'feature';
 		$this->className = 'Feature';
 		$this->list_id = 'feature';
-	 	$this->lang = true;
+		$this->lang = true;
 
 		$this->fields_list = array(
 			'id_feature' => array(
@@ -63,7 +63,7 @@ class AdminFeaturesControllerCore extends AdminController
 			)
 		);
 
-	 	$this->bulk_actions = array(
+		$this->bulk_actions = array(
 			'delete' => array(
 				'text' => $this->l('Delete selected'),
 				'icon' => $this->l('icon-trash'),
@@ -82,15 +82,15 @@ class AdminFeaturesControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 		$this->addRowAction('view');
-	 	$this->_defaultOrderBy = 'position';
+		$this->_defaultOrderBy = 'position';
 
-	 	// Added specific button in toolbar
-	 	$this->toolbar_btn['newAttributes'] = array(
+		// Added specific button in toolbar
+		$this->toolbar_btn['newAttributes'] = array(
 			'href' => self::$currentIndex.'&amp;addfeature_value&amp;token='.$this->token,
 			'desc' => $this->l('Add new feature values')
 		);
 
-	 	$this->toolbar_btn['new'] = array(
+		$this->toolbar_btn['new'] = array(
 			'href' => self::$currentIndex.'&amp;addfeature&amp;token='.$this->token,
 			'desc' => $this->l('Add a new feature')
 		);
@@ -137,6 +137,7 @@ class AdminFeaturesControllerCore extends AdminController
 			}
 
 			$this->feature_name = $obj->name;
+			$this->toolbar_title = $this->feature_name;        
 			$this->fields_list = array(
 				'id_feature_value' => array(
 					'title' => $this->l('ID'),
@@ -149,27 +150,9 @@ class AdminFeaturesControllerCore extends AdminController
 			);
 
 			$this->_where = sprintf('AND `id_feature` = %d', (int)$id);
-
-			// get list and force no limit clause in the request
-			$this->getList($this->context->language->id, 'id_feature_value', 'ASC');
-			
-			// Render list
-			$helper = new HelperList();
-			$helper->actions = $this->actions;
-			$helper->no_link = true;
-			$helper->shopLinkType = '';
-			$helper->identifier = $this->identifier;
-			$helper->toolbar_scroll = false;
-			$helper->currentIndex = self::$currentIndex;
-			$helper->token = $this->token;
-			$helper->table = $this->table;
-			$helper->simple_header = true;
-			$helper->show_toolbar = false;
-			$helper->bulk_actions = $this->bulk_actions;
-			$content = $helper->generateList($this->_list, $this->fields_list);
-
-			echo Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
-			exit;
+			self::$currentIndex = self::$currentIndex.'&id_feature='.(int)$id.'&viewfeature';
+			$this->processFilter();
+			return parent::renderList();
 		}
 	}
 
