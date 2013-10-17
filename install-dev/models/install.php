@@ -464,10 +464,6 @@ class InstallModelInstall extends InstallAbstractModel
 			$employee->bo_theme = 'default';
 			$employee->default_tab = 1;
 			$employee->active = true;
-			$employee->stats_date_from = date('Y').'-01-01';
-			$employee->stats_date_to = date('Y').'-12-31';
-			$employee->stats_compare_from = date('Y').'-01-01';
-			$employee->stats_compare_to = date('Y').'-12-31';
 			$employee->id_profile = 1;
 			$employee->id_lang = Configuration::get('PS_LANG_DEFAULT');
 			$employee->bo_menu = 1;

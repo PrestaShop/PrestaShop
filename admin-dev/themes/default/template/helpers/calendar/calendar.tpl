@@ -49,17 +49,17 @@
 					<div class='form-date-heading'>
 						<span class="checkbox-title">
 							<label >
-								<input type='checkbox' id="datepicker-compare">
+								<input type='checkbox' id="datepicker-compare" name="datepicker_compare"{if isset($compare_date_from) && isset($compare_date_to)} checked="checked"{/if}>
 								{l s='Compare to'}
 							</label>
 						</span>
-						<select id="compare-options" name="compare_date_option" disabled="disabled">
+						<select id="compare-options" name="compare_date_option"{if is_null($compare_date_from) || is_null($compare_date_to)} disabled="disabled"{/if}>
 							<option value="1"{if $compare_option == 1}selected="selected"{/if} label="{l s='Previous period'}">{l s='Previous period'}</option>
 							<option value="2"{if $compare_option == 2}selected="selected"{/if} label="{l s='Previous Year'}">{l s='Previous Year'}</option>
 							<option value="3"{if $compare_option == 3}selected="selected"{/if} label="{l s='Custom'}">{l s='Custom'}</option>
 						</select>
 					</div>
-					<div class="form-date-body" id="form-date-body-compare" style="display: none;">
+					<div class="form-date-body" id="form-date-body-compare"{if is_null($compare_date_from) || is_null($compare_date_to)} style="display: none;"{/if}>
 						<label>{l s='From'}</label>
 						<input id="date-start-compare" class="date-input form-control" type="text" placeholder="Start" name="compare_date_from" value="{$compare_date_from}" />
 						<label>{l s='to'}</label>
@@ -152,10 +152,12 @@
 
 	function setPreviousPeriod() {
 		startDate = parseDate($("#date-start").val(), parseFormat('{$date_format}'));
+		startDate = startDate.setDate(startDate.getDate()-1);
 		endDate = parseDate($("#date-end").val(), parseFormat('{$date_format}'));
-		diff = endDate.getTime() - startDate.getTime();
-		startDateCompare = startDate.getTime()-diff;
-		$("#date-end-compare").val($("#date-start").val());
+		endDate = endDate.setDate(endDate.getDate()-1);
+		diff = endDate - startDate;
+		startDateCompare = startDate-diff;
+		$("#date-end-compare").val(formatDate(new Date(startDate), parseFormat('{$date_format}')));
 		$("#date-start-compare").val(formatDate(new Date(startDateCompare), parseFormat('{$date_format}')));
 	}
 
@@ -238,6 +240,9 @@
 
 		$('#datepicker-compare').click(function() {
 			if ($(this).attr("checked")) {
+				if ($("#date-start-compare").val().replace(/^\s+|\s+$/g, '').length == 0)
+					$('#compare-options').trigger('change');
+
 				datepickerStart.setStartCompare($("#date-start-compare").val());
 				datepickerStart.setEndCompare($("#date-end-compare").val());
 				datepickerEnd.setStartCompare($("#date-start-compare").val());
@@ -266,6 +271,18 @@
 			$('#date-start-compare').focus();
 		});
 
+		if ($('#datepicker-compare').attr("checked"))
+		{
+			if ($("#date-start-compare").val().replace(/^\s+|\s+$/g, '').length == 0)
+				$('#compare-options').trigger('change');
+
+			datepickerStart.setStartCompare($("#date-start-compare").val());
+			datepickerStart.setEndCompare($("#date-end-compare").val());
+			datepickerEnd.setStartCompare($("#date-start-compare").val());
+			datepickerEnd.setEndCompare($("#date-end-compare").val());
+			datepickerStart.setCompare(true);
+			datepickerEnd.setCompare(true);
+		}
 		{/literal}
 	});
 </script>
