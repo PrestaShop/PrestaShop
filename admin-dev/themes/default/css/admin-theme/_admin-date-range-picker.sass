@@ -1,37 +1,40 @@
 $color-bright: white
 
 $color-calendar: #00A4E7
-$color-calendar-compare: #E18E70
+$color-calendar-compare: #FF8000
 
 $color-calendar-day: $color-bright
 
-$color-calendar-outrange: darken($color-calendar,15%)
-$color-calendar-outrange-compare: darken($color-calendar-compare,15%)
+$color-calendar-outrange: #ccc
 
-$color-calendar-day-selected: darken($color-calendar,25%)
-$color-calendar-day-selected-compare: darken($color-calendar-compare,25%)
 
-$color-calendar-range: darken($color-calendar,15%)
-$color-calendar-range-compare: darken($color-calendar-compare,15%)
+$color-calendar-day-selected: $color-calendar
+$color-calendar-day-selected-compare: $color-calendar-compare
+
+$color-calendar-range: lighten($color-calendar,10%)
+$color-calendar-range-compare: lighten($color-calendar-compare,10%)
 
 #datepicker
-	padding: 6px
 	//background-color: darken($color-calendar,10%)
 	.input-selected
 		margin: 0
 	#date-start.input-selected, #date-end.input-selected,
 		border: solid 3px $color-calendar-day-selected
 	#date-start-compare.input-selected, #date-end-compare.input-selected,
-		border: solid 3px $color-calendar-day-selected
+		border: solid 3px $color-calendar-day-selected-compare
 	div#datepicker-form
-		#date-range .form-date-heading
-			background-color: darken($color-calendar,5%)
-		#date-compare .form-date-heading
-			background-color: darken($color-calendar-compare,5%)
+		#date-range
+			border: solid 1px darken($color-calendar,5%)
+			.form-date-heading
+				background-color: darken($color-calendar,5%)
+		#date-compare
+			border: solid 1px darken($color-calendar-compare,5%)
+			.form-date-heading
+				background-color: darken($color-calendar-compare,5%)
 		.form-date-heading
 			height: 30px
 			line-height: 30px
-			padding: 0 8px
+			padding: 0 0 0 8px
 			.title, .checkbox-title label
 				font-size: 1.15em
 				color: $color-bright
@@ -43,23 +46,24 @@ $color-calendar-range-compare: darken($color-calendar-compare,15%)
 				font-weight: 700
 				color: $color-bright
 				border: none
+			select
+				margin: 2px 2px 0 0
 		.form-date-body, .form-date-actions
 			width: 100%
 			padding: 10px
 			background-color: white
 			display: inline-block
 		.form-date-actions
-			border: solid 1px black
+			border: solid 1px #ccc
 		.form-date-group
+			clear: both
 			width: 100%
 			margin: 0 auto 6px auto
-			border: solid 1px black
 			label
 				font-size: 0.8em
 				font-weight: 700
 				text-transform: uppercase
 				color: #666
-				//line-height: 3.2em
 			input
 				margin: 4px 4px 0 0
 			input[type='text']
@@ -71,9 +75,9 @@ $color-calendar-range-compare: darken($color-calendar-compare,15%)
 		position: relative
 		margin: 0 0 8px 0
 		width: 100%
-		background-color: $color-calendar
+		//background-color: $color-calendar
 		font-size: 13px
-		border: solid 1px black
+		border: solid 1px #ccc
 		table
 			width: 100%
 			margin: 0
@@ -86,7 +90,7 @@ $color-calendar-range-compare: darken($color-calendar-compare,15%)
 				display: block
 			tr th
 				background-color: darken($color-calendar,5%)
-				color: lighten($color-calendar,25%)
+				color: darken($color-calendar,25%)
 				font-size: 0.7em
 				font-weight: 700
 				border-bottom: solid 1px lighten($color-calendar,7%)
@@ -99,11 +103,11 @@ $color-calendar-range-compare: darken($color-calendar-compare,15%)
 		td, th
 			text-align: center
 			padding: 0
-			color: $color-calendar-day
 			position: relative
 		td
+			color: $color-calendar-day-selected
 			height: 2.4em
-			padding: 0 10px
+			padding: 0 8px
 			&.day:after
 				content: ""
 				position: absolute
@@ -119,40 +123,65 @@ $color-calendar-range-compare: darken($color-calendar-compare,15%)
 				color: $color-calendar-outrange
 			&.old, &.new
 				color: $color-calendar-outrange
+
 			&.start-selected:not(.old):not(.new):not(.end-selected)
+				color: $color-bright
 				font-weight: 700
 				background-color: $color-calendar-day-selected
 				+border-left-radius(15px)
 				//@extend .chevron-left
+				&.range-compare
+					background-color: mix($color-calendar-day-selected,$color-calendar-range-compare,70%)
+				&.end-selected-compare, &.start-selected-compare
+					background-color: mix($color-calendar-day-selected,$color-calendar-day-selected-compare,70%)
 			&.end-selected:not(.old):not(.new):not(.start-selected)
+				color: $color-bright
 				font-weight: 700
 				background-color: $color-calendar-day-selected
 				//@extend .chevron-right
 				+border-right-radius(15px)
+				&.range-compare
+					background-color: mix($color-calendar-day-selected,$color-calendar-range-compare,70%)
+				&.end-selected-compare, &.start-selected-compare
+					background-color: mix($color-calendar-day-selected,$color-calendar-day-selected-compare,70%)
 			&.start-selected-compare:not(.old):not(.new):not(.end-selected-compare)
+				color: $color-bright
 				font-weight: 700
 				background-color: $color-calendar-day-selected-compare
 				+border-left-radius(15px)
 				//@extend .chevron-left
+				&.range
+					background-color: mix($color-calendar-day-selected-compare,$color-calendar-range,70%)
 			&.end-selected-compare:not(.old):not(.new):not(.start-selected-compare)
+				color: $color-bright
 				font-weight: 700
 				background-color: $color-calendar-day-selected-compare
 				//@extend .chevron-right
 				+border-right-radius(15px)
+				&.range
+					background-color: mix($color-calendar-day-selected-compare,$color-calendar-range,70%)
 			&.end-selected.start-selected
+				color: $color-bright
 				+border-radius(15px)
 				font-weight: 700
 				background-color: $color-calendar-day-selected
 			&.end-selected-compare.start-selected-compare
+				color: $color-bright
 				+border-radius(15px)
 				font-weight: 700
 				background-color: $color-calendar-day-selected-compare
+
+
 			&.range
 				color: lighten($color-calendar-range,35%)
 				background-color: $color-calendar-range
+				&.range-compare
+					background-color: mix($color-calendar-range,$color-calendar-range-compare,50%)
 			&.range-compare
 				color: lighten($color-calendar-range-compare,35%)
 				background-color: $color-calendar-range-compare
+				&.range
+					background-color: mix($color-calendar-range,$color-calendar-range-compare,50%)
 			&.today
 				background-color: $color-bright
 			span
@@ -179,29 +208,6 @@ $color-calendar-range-compare: darken($color-calendar-compare,15%)
 				font-size: 1.3em
 		thead tr:first-child th
 			cursor: pointer
-
-	.datepicker.datepicker-compare
-		background-color: $color-calendar-compare
-		thead
-			tr th:after
-				border-top: 1px solid darken($color-calendar-compare,10%)
-			tr th
-				background-color: darken($color-calendar-compare,5%)
-				color: lighten($color-calendar-compare,25%)
-				border-bottom: solid 1px lighten($color-calendar-compare,7%)
-			tr:first-child th
-				color: $color-calendar-day-selected-compare
-		td
-			border-bottom: solid 1px $color-calendar-compare
-			&.day.disabled
-				color: $color-calendar-outrange-compare
-			&.old, &.new
-				color: $color-calendar-outrange-compare
-			span
-				&:hover, &.active
-					background-color: $color-calendar-day-selected-compare
-				&.old
-					color: $color-calendar-outrange-compare
 
 .chevron-left, .chevron-right
 	position: relative
