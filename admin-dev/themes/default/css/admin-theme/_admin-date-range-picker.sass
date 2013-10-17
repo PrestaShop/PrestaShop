@@ -171,11 +171,17 @@ $color-calendar-range-compare: lighten($color-calendar-compare,10%)
 				+border-radius(15px)
 				font-weight: 700
 				background-color: $color-calendar-day-selected
+				&.range-compare
+					background-color: mix($color-calendar-day-selected,$color-calendar-range-compare,70%)
+					+border-radius(0)
 			&.end-selected-compare.start-selected-compare
 				color: $color-bright
 				+border-radius(15px)
 				font-weight: 700
 				background-color: $color-calendar-day-selected-compare
+				&.range
+					background-color: mix($color-calendar-day-selected-compare,$color-calendar-range,70%)
+					+border-radius(0)
 			&.range
 				color: lighten($color-calendar-range,35%)
 				background-color: $color-calendar-range
