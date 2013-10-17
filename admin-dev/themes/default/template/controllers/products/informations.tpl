@@ -94,8 +94,10 @@
 
 	<div id="warn_virtual_combinations" class="alert alert-warning" style="display:none">{l s='You cannot use combinations with a virtual product.'}</div>
 
-	<div class="row">
-		<label class="control-label col-lg-3" for="simple_product">{$bullet_common_field} {l s='Type:'}</label>
+	<div class="form-group">
+		<label class="control-label col-lg-3" for="simple_product">
+			{$bullet_common_field} {l s='Type:'}
+		</label>
 		<div class="col-lg-9">
 			<div class="radio">
 				<label for="simple_product">
@@ -120,7 +122,7 @@
 
 	<hr/>
 
-	<div class="row">
+	<div class="form-group">
 		<label class="control-label col-lg-3 required" for="name_{$id_lang}">
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='Invalid characters:'} &lt;&gt;;=#{}">
@@ -128,18 +130,16 @@
 			</span>
 		</label>
 		<div class="col-lg-5">
-			<div class="row">
-				{include file="controllers/products/input_text_lang.tpl"
-					languages=$languages
-					input_class="{$class_input_ajax}{if !$product->id}copy2friendlyUrl{/if} updateCurrentText"
-					input_value=$product->name
-					input_name="name"
-				}
-			</div>
+			{include file="controllers/products/input_text_lang.tpl"
+				languages=$languages
+				input_class="{$class_input_ajax}{if !$product->id}copy2friendlyUrl{/if} updateCurrentText"
+				input_value=$product->name
+				input_name="name"
+			}
 		</div>
 	</div>
 
-	<div class="row">
+	<div class="form-group">
 		<label class="control-label col-lg-3" for="reference">
 			<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='Special characters allowed:'} .-_#\">
@@ -151,7 +151,7 @@
 		</div>
 	</div>
 
-	<div class="row">
+	<div class="form-group">
 		<label class="control-label col-lg-3" for="ean13">
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='(Europe, Japan)'}">
@@ -163,7 +163,7 @@
 		</div>
 	</div>
 
-	<div class="row">
+	<div class="form-group">
 		<label class="control-label col-lg-3" for="upc">
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='(US, Canada)'}">
@@ -178,7 +178,7 @@
 	<hr/>
 
 	{* status informations *}	
-	<div class="row">		
+	<div class="form-group">		
 		<label class="control-label col-lg-3">
 			{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
 			{l s='Status:'}
@@ -187,18 +187,20 @@
 			<span class="switch prestashop-switch">
 				<input onclick="toggleDraftWarning(false);showOptions(true);showRedirectProductOptions(false);" type="radio" name="active" id="active_on" value="1" {if $product->active || !$product->isAssociatedToShop()}checked="checked" {/if} />
 				<label for="active_on" class="radioCheck">
-					<i class="icon-check-sign"></i> {l s='Enabled'}
+					<i class="icon-check-sign text-success"></i>
+					{l s='Enabled'}
 				</label>
 				<input onclick="toggleDraftWarning(true);showOptions(false);showRedirectProductOptions(true);"  type="radio" name="active" id="active_off" value="0" {if !$product->active && $product->isAssociatedToShop()}checked="checked"{/if} />
 				<label for="active_off" class="radioCheck">
-					<i class="icon-ban-circle"></i> {l s='Disabled'}
+					<i class="icon-ban-circle text-danger"></i>
+					{l s='Disabled'}
 				</label>
 				<span class="slide-button btn btn-default"></span>
 			</span>
 		</div>
 	</div>
 
-	<div class="row redirect_product_options" style="display:none">		
+	<div class="form-group redirect_product_options" style="display:none">		
 		<label class="control-label col-lg-3" for="redirect_type">
 			{include file="controllers/products/multishop/checkbox.tpl" field="redirect_type" type="radio" onclick=""}
 			{l s='Redirect when disabled'}
@@ -211,7 +213,7 @@
 			</select>
 		</div>
 	</div>
-	<div class="row redirect_product_options" style="display:none">
+	<div class="form-group redirect_product_options" style="display:none">
 		<div class="col-lg-9 col-lg-offset-3">
 			<div class="alert alert-info">
 				{l s='404 Not Found = Do not redirect and display a 404 page'}<br/>
@@ -221,7 +223,7 @@
 		</div>
 	</div>
 
-	<div class="row redirect_product_options redirect_product_options_product_choise" style="display:none">		
+	<div class="form-group redirect_product_options redirect_product_options_product_choise" style="display:none">		
 		<label class="control-label col-lg-3" for="related_product_autocomplete_input">
 			{include file="controllers/products/multishop/checkbox.tpl" field="id_product_redirected" type="radio" onclick=""}
 			{l s='Related product:'}
@@ -248,7 +250,7 @@
 		</script>
 	</div>
 
-	<div class="row">		
+	<div class="form-group">		
 		<label class="control-label col-lg-3" for="visibility">
 			{include file="controllers/products/multishop/checkbox.tpl" field="visibility" type="default"}
 			{l s='Visibility:'}
@@ -263,7 +265,7 @@
 		</div>
 	</div>
 
-	<div id="product_options" class="row" {if !$product->active}style="display:none"{/if} >
+	<div id="product_options" class="form-group" {if !$product->active}style="display:none"{/if} >
 		<div class="col-lg-12">
 			<div class="form-group">
 				<label class="control-label col-lg-3" for="available_for_order">
@@ -347,7 +349,7 @@
 	</div>
 
 	{if $images}
-	<div class="row">
+	<div class="form-group">
 		<div class="col-lg-9 col-lg-offset-3">
 			<div class="alert alert-info">
 				{l s='Would you like to add an image in your description?'}
@@ -357,7 +359,7 @@
 	</div>
 
 	<div id="createImageDescription" class="panel" style="display:none">
-		<div class="row">
+		<div class="form-group">
 			<label class="control-label col-lg-3" for="smallImage_0">{l s='Select your image:'}</label>
 			<div class="col-lg-9">
 				<ul class="list-inline">
@@ -372,7 +374,7 @@
 				</ul>
 			</div>
 		</div>
-		<div class="row">
+		<div class="form-group">
 			<label class="control-label col-lg-3" for="leftRight_1">{l s='Position:'}</label>
 			<div class="col-lg-5">
 				<p class="checkbox">
@@ -385,7 +387,7 @@
 				</p>
 			</div>
 		</div>
-		<div class="row">
+		<div class="form-group">
 			<label class="control-label col-lg-3" for="imageTypes_0">{l s='Select the type of picture:'}</label>
 			<div class="col-lg-5">
 				{foreach from=$imagesTypes key=key item=type}
@@ -398,7 +400,7 @@
 				{/foreach}
 			</div>
 		</div>
-		<div class="row">
+		<div class="form-group">
 			<label class="control-label col-lg-3" for="resultImage">
 				<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='The tag to copy/paste into the description.'}">
