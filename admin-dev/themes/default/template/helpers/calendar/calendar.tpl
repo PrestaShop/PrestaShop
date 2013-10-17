@@ -191,7 +191,15 @@
 				datepickerEnd.setValue(ev.date.setMonth(ev.date.getMonth()+1));
 			}
 		}).data('daterangepicker');
+	{/literal}
 
+		startDate = parseDate($("#date-start").val(), parseFormat('{$date_format}'));
+		endDate = parseDate($("#date-end").val(), parseFormat('{$date_format}'));
+
+		if (startDate.getFullYear() == endDate.getFullYear() && startDate.getMonth() == endDate.getMonth())
+			datepickerStart.setValue(startDate.setMonth(startDate.getMonth()-1));
+
+	{literal}
 		var datepickerEnd = $('.datepicker2').daterangepicker({
 			"dates": translated_dates,
 			"weekStart": 1,
@@ -220,6 +228,7 @@
 		$("#date-start-compare").focus(function() {
 			datepickerStart.setCompare(true);
 			datepickerEnd.setCompare(true);
+			$('#compare-options').val(3);
 			$(".date-input").removeClass("input-selected");
 			$(this).addClass("input-selected");
 		});
@@ -241,16 +250,9 @@
 
 		$('#datepicker-compare').click(function() {
 			if ($(this).attr("checked")) {
-				if ($("#date-start-compare").val().replace(/^\s+|\s+$/g, '').length == 0)
-					$('#compare-options').trigger('change');
-
-				datepickerStart.setStartCompare($("#date-start-compare").val());
-				datepickerStart.setEndCompare($("#date-end-compare").val());
-				datepickerEnd.setStartCompare($("#date-start-compare").val());
-				datepickerEnd.setEndCompare($("#date-end-compare").val());
+				$('#compare-options').trigger('change');
 				$('#form-date-body-compare').show();
 				$('#compare-options').prop('disabled', false);
-				$('#date-start-compare').focus();
 			} else {
 				datepickerStart.setStartCompare(null);
 				datepickerStart.setEndCompare(null);
@@ -268,8 +270,16 @@
 				
 			if (this.value == 2)
 				setPreviousYear();
-	
-			$('#date-start-compare').focus();
+
+			datepickerStart.setStartCompare($("#date-start-compare").val());
+			datepickerStart.setEndCompare($("#date-end-compare").val());
+			datepickerEnd.setStartCompare($("#date-start-compare").val());
+			datepickerEnd.setEndCompare($("#date-end-compare").val());
+			datepickerStart.setCompare(true);
+			datepickerEnd.setCompare(true);
+
+			if (this.value == 3)
+				$('#date-start-compare').focus();
 		});
 
 		if ($('#datepicker-compare').attr("checked"))
