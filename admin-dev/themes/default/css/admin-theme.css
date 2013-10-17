@@ -1539,7 +1539,7 @@ textarea.form-control, textarea {
   height: auto; }
 
 /* line 158, ../bower_components/sass-bootstrap/lib/_forms.scss */
-.form-group, fieldset > .row, #dashboard fieldset > .data_list_vertical {
+.form-group {
   margin-bottom: 15px; }
 
 /* line 168, ../bower_components/sass-bootstrap/lib/_forms.scss */
@@ -1689,7 +1689,7 @@ textarea.input-lg, .input-group-lg > textarea, .input-group-lg > textarea.input-
 
 @media (min-width: 768px) {
   /* line 291, ../bower_components/sass-bootstrap/lib/_forms.scss */
-  .form-inline .form-group, .navbar-form .form-group, #header_search .form-group, .form-inline fieldset > .row, .navbar-form fieldset > .row, #header_search fieldset > .row, .form-inline #dashboard fieldset > .data_list_vertical, #dashboard .form-inline fieldset > .data_list_vertical, .navbar-form #dashboard fieldset > .data_list_vertical, #dashboard .navbar-form fieldset > .data_list_vertical, #header_search #dashboard fieldset > .data_list_vertical, #dashboard #header_search fieldset > .data_list_vertical {
+  .form-inline .form-group, .navbar-form .form-group, #header_search .form-group {
     display: inline-block;
     margin-bottom: 0;
     vertical-align: middle; }
@@ -1713,17 +1713,17 @@ textarea.input-lg, .input-group-lg > textarea, .input-group-lg > textarea.input-
   margin-bottom: 0;
   padding-top: 5px; }
 /* line 340, ../bower_components/sass-bootstrap/lib/_forms.scss */
-.form-horizontal .form-group, .form-horizontal fieldset > .row, .form-horizontal #dashboard fieldset > .data_list_vertical, #dashboard .form-horizontal fieldset > .data_list_vertical {
+.form-horizontal .form-group {
   margin-left: -5px;
   margin-right: -5px; }
 /* line 21, ../bower_components/sass-bootstrap/lib/_mixins.scss */
-.form-horizontal .form-group:before, .form-horizontal fieldset > .row:before, .form-horizontal #dashboard fieldset > .data_list_vertical:before, #dashboard .form-horizontal fieldset > .data_list_vertical:before, .form-horizontal .form-group:after, .form-horizontal fieldset > .row:after, .form-horizontal #dashboard fieldset > .data_list_vertical:after, #dashboard .form-horizontal fieldset > .data_list_vertical:after {
+.form-horizontal .form-group:before, .form-horizontal .form-group:after {
   content: " ";
   /* 1 */
   display: table;
   /* 2 */ }
 /* line 25, ../bower_components/sass-bootstrap/lib/_mixins.scss */
-.form-horizontal .form-group:after, .form-horizontal fieldset > .row:after, .form-horizontal #dashboard fieldset > .data_list_vertical:after, #dashboard .form-horizontal fieldset > .data_list_vertical:after {
+.form-horizontal .form-group:after {
   clear: both; }
 @media (min-width: 768px) {
   /* line 346, ../bower_components/sass-bootstrap/lib/_forms.scss */
@@ -3602,7 +3602,7 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
   margin-bottom: 4px; }
 @media (max-width: 767px) {
   /* line 288, ../bower_components/sass-bootstrap/lib/_navbar.scss */
-  .navbar-form .form-group, #header_search .form-group, .navbar-form fieldset > .row, #header_search fieldset > .row, .navbar-form #dashboard fieldset > .data_list_vertical, #dashboard .navbar-form fieldset > .data_list_vertical, #header_search #dashboard fieldset > .data_list_vertical, #dashboard #header_search fieldset > .data_list_vertical {
+  .navbar-form .form-group, #header_search .form-group {
     margin-bottom: 5px; } }
 @media (min-width: 768px) {
   /* line 276, ../bower_components/sass-bootstrap/lib/_navbar.scss */
@@ -7704,7 +7704,7 @@ html, body {
   #header_search {
     width: 100%; } }
 /* line 59, admin-theme/_admin-header.sass */
-#header_search input, #header_search .form-group, #header_search fieldset > .row, #header_search #dashboard fieldset > .data_list_vertical, #dashboard #header_search fieldset > .data_list_vertical {
+#header_search input, #header_search .form-group {
   margin: 0; }
 
 /* line 1, admin-theme/_admin-footer.sass */
