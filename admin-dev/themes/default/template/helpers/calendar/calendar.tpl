@@ -23,15 +23,15 @@
 						<span class="title">{l s='Date range'}</span>
 						{if isset($actions) && $actions|count > 0}
 							{if $actions|count > 1}
-							<div class='btn btn-default btn-xs pull-right dropdown-toggle' data-toggle='dropdown'>
+							<button class='btn btn-default btn-xs pull-right dropdown-toggle' data-toggle='dropdown' type="button">
 								{l s='Custom'}
 								<i class='icon-angle-down'></i>
-								<ul class='dropdown-menu'>
-									{foreach from=$actions item=action}
-									<li><a{if isset($action.href)} href="{$action.href}"{/if}{if isset($action.class)} class="{$action.class}"{/if}>{if isset($action.icon)}<i class="{$action.icon}"> {/if}{$action.label}</a></li>
-									{/foreach}
-								</ul>
-							</div>
+							</button>
+							<ul class='dropdown-menu'>
+								{foreach from=$actions item=action}
+								<li><a{if isset($action.href)} href="{$action.href}"{/if}{if isset($action.class)} class="{$action.class}"{/if}>{if isset($action.icon)}<i class="{$action.icon}"></i> {/if}{$action.label}</a></li>
+								{/foreach}
+							</ul>
 							{else}
 							<a{if isset($actions[0].href)} href="{$actions[0].href}"{/if} class="btn btn-default btn-xs pull-right{if isset($actions[0].class)} {$actions[0].class}{/if}">{if isset($actions[0].icon)}<i class="{$actions[0].icon}"></i> {/if}{$actions[0].label}</a>
 							{/if}
@@ -53,10 +53,21 @@
 								{l s='Compare to'}
 							</label>
 						</span>
-						<button class='btn btn-default btn-xs pull-right dropdown-toggle' data-toggle='dropdown'>
-							Custom
-							<i class='icon-angle-down'></i>
+						<button class='btn btn-default btn-xs pull-right dropdown-toggle' data-toggle='dropdown' type="button">
+							{l s='Select'}
+							<i class='icon-angle-down'></i>							
 						</button>
+						<ul class='dropdown-menu'>
+							<li>
+								<a href="javascript:void(0);" onclick="$('#date-start-compare').focus();"><i class="icon-cogs"></i> {l s='Custom'}</a>
+							</li>
+							<li>
+								<a href="javascript:void(0);" onclick="setPreviousPeriod()"><i class="icon-cogs"></i> {l s='Previous period'}</a>
+							</li>
+							<li>
+								<a href="javascript:void(0);" onclick="setPreviousYear()"><i class="icon-cogs"></i> {l s='Previous Year'}</a>
+							</li>
+						</ul>
 					</div>
 					<div class="form-date-body" id="form-date-body-compare" style="display: none;">
 						<label>{l s='From'}</label>
@@ -80,6 +91,93 @@
 	</div>
 </div>
 <script type="text/javascript">
+	{literal}
+	function parseFormat(format){
+		var separator = format.match(/[.\/\-\s].*?/),
+			parts = format.split(/\W+/);
+		if (!separator || !parts || parts.length === 0){
+			throw new Error("Invalid date format.");
+		}
+		return {separator: separator, parts: parts};
+	}
+
+	function parseDate(date, format) {
+		var parts = date.split(format.separator),
+			date = new Date(),
+			val;
+		date.setHours(0);
+		date.setMinutes(0);
+		date.setSeconds(0);
+		date.setMilliseconds(0);
+		if (parts.length === format.parts.length) {
+			var year = date.getFullYear(), day = date.getDate(), month = date.getMonth();
+			for (var i=0, cnt = format.parts.length; i < cnt; i++) {
+				val = parseInt(parts[i], 10)||1;
+				switch(format.parts[i]) {
+					case 'dd':
+					case 'd':
+						day = val;
+						date.setDate(val);
+						break;
+					case 'mm':
+					case 'm':
+						month = val - 1;
+						date.setMonth(val - 1);
+						break;
+					case 'yy':
+					case 'y':
+						year = 2000 + val;
+						date.setFullYear(2000 + val);
+						break;
+					case 'yyyy':
+					case 'Y':
+						year = val;
+						date.setFullYear(val);
+						break;
+				}
+			}
+			date = new Date(year, month, day, 0 ,0 ,0);
+		}
+		return date;
+	}
+
+	function formatDate(date, format){
+		var val = {
+			d: date.getDate(),
+			m: date.getMonth() + 1,
+			yy: date.getFullYear().toString().substring(2),
+			y: date.getFullYear().toString().substring(2),
+			yyyy: date.getFullYear(),
+			Y: date.getFullYear()
+		};
+		val.d = (val.d < 10 ? '0' : '') + val.d;
+		val.m = (val.m < 10 ? '0' : '') + val.m;
+		var date = [];
+		for (var i=0, cnt = format.parts.length; i < cnt; i++) {
+			date.push(val[format.parts[i]]);
+		}
+		return date.join(format.separator);
+	}
+	{/literal}
+
+	function setPreviousPeriod() {
+		startDate = parseDate($("#date-start").val(), parseFormat('{$date_format}'));
+		endDate = parseDate($("#date-end").val(), parseFormat('{$date_format}'));
+		diff = endDate.getTime() - startDate.getTime();
+		startDateCompare = startDate.getTime()-diff;
+		$("#date-end-compare").val($("#date-start").val());
+		$("#date-start-compare").val(formatDate(new Date(startDateCompare), parseFormat('{$date_format}')));
+	}
+
+	function setPreviousYear() {
+		startDate = parseDate($("#date-start").val(), parseFormat('{$date_format}'));
+		startDate = startDate.setFullYear(startDate.getFullYear() - 1);
+		endDate = parseDate($("#date-end").val(), parseFormat('{$date_format}'));
+		endDate = endDate.setFullYear(endDate.getFullYear() - 1);
+		$("#date-start-compare").val(formatDate(new Date(startDate), parseFormat('{$date_format}')));
+		$("#date-end-compare").val(formatDate(new Date(endDate), parseFormat('{$date_format}')));
+	}
+
 	$(function() {
 		var translated_dates = {
 			days: ["{l s='Sunday'}", "{l s='Monday'}", "{l s='Tuesday'}", "{l s='Wednesday'}", "{l s='Thursday'}", "{l s='Friday'}", "{l s='Saturday'}", "{l s='Sunday'}"],
@@ -110,7 +208,7 @@
 			if (ev.date.valueOf() <= datepickerStart.date.valueOf()){
 				datepickerStart.setValue(ev.date.setMonth(ev.date.getMonth()-1));
 			}
-		}).data('datepicker');		
+		}).data('datepicker');
 
 		$("#date-start").focus(function() {
 			datepickerStart.setCompare(false);

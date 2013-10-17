@@ -29,6 +29,7 @@ class HelperCalendarCore extends Helper
 	const DEFAULT_DATE_FORMAT = 'Y-m-d';
 
 	private $_actions;
+	private $_compare_actions;
 	private $_compare_date_from;
 	private $_compare_date_to;
 	private $_date_format;
@@ -58,6 +59,23 @@ class HelperCalendarCore extends Helper
 			$this->_actions = array();
 
 		return $this->_actions;
+	}
+
+	public function setCompareActions($value)
+	{
+		if (!is_array($value) && !$value instanceof Traversable)
+			throw new PrestaShopException('Actions value must be an traversable array');
+
+		$this->_compare_actions = $value;
+		return $this;
+	}
+
+	public function getCompareActions()
+	{
+		if (!isset($this->_compare_actions))
+			$this->_compare_actions = array();
+
+		return $this->_compare_actions;
 	}
 
 	public function setCompareDateFrom($value)
@@ -173,6 +191,16 @@ class HelperCalendarCore extends Helper
 		return $this;
 	}
 
+	public function addCompareAction($action)
+	{
+		if (!isset($this->_compare_actions))
+			$this->_compare_actions = array();
+
+		$this->_compare_actions[] = $action;
+
+		return $this;
+	}
+
 	public function generate()
 	{
 		$context =  Context::getContext();
@@ -203,6 +231,7 @@ class HelperCalendarCore extends Helper
 			'compare_date_from' => $this->getCompareDateFrom(),
 			'compare_date_to'   => $this->getCompareDateTo(),
 			'actions'           => $this->getActions(),
+			'compare_actions'   => $this->getCompareActions(),
 			'is_rtl'            => $this->isRTL()
 		));
 
