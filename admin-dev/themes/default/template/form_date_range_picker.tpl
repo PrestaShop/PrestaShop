@@ -18,13 +18,13 @@
 							<div class="col-xs-6">
 								<div class="input-group">
 									<label class="input-group-addon">{if isset($translations.From)}{$translations.From}{else}{l s='From:'}{/if}</label>
-									<input type="text" name="datepickerFrom" id="datepickerFrom" value="{$datepickerFrom|escape}" class="form-control datepicker">
+									<input type="text" name="datepickerFrom" id="datepickerFrom" value="{$datepickerFrom|escape}" class="form-control">
 								</div>
 							</div>
 							<div class="col-xs-6">
 								<div class="input-group">
 									<label class="input-group-addon">{if isset($translations.To)}{$translations.To}{else}{l s='From:'}{/if}</label>
-									<input type="text" name="datepickerTo" id="datepickerTo" value="{$datepickerTo|escape}" class="datepicker form-control">
+									<input type="text" name="datepickerTo" id="datepickerTo" value="{$datepickerTo|escape}" class="form-control">
 								</div>
 							</div>
 						</div>

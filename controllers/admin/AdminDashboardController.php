@@ -42,7 +42,7 @@ class AdminDashboardControllerCore extends AdminController
 		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
 		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
 		parent::setMedia();
-		//$this->addJqueryUI('ui.datepicker');
+		$this->addJqueryUI('ui.datepicker');
 		$this->addJS(array(
 			_PS_JS_DIR_.'/vendor/d3.js',
 			__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/nv.d3.min.js',
