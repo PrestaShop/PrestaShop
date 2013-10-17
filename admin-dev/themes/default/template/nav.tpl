@@ -1,4 +1,4 @@
-<nav id="nav-sidebar" data-spy="affix" data-offset-top="0" role="navigation">
+<nav id="nav-sidebar" role="navigation">
 {if !$tab}
 	<div class="mainsubtablist" style="display:none"></div>
 {/if}
@@ -31,5 +31,4 @@
 		{/if}
 	{/foreach}
 	</ul>
-
 </nav>

@@ -7801,7 +7801,7 @@ a.link-social:hover {
 
 /* line 1, admin-theme/_admin-nav.sass */
 #nav-sidebar {
-  float: left;
+  position: fixed;
   width: 240px;
   height: 100% !important;
   overflow-y: auto;
@@ -7845,33 +7845,33 @@ a.link-social:hover {
 #nav-sidebar ul.menu li.maintab.active a.title i, #nav-sidebar ul.menu li.maintab.active a.title:hover i {
   color: black;
   background-color: white; }
-/* line 40, admin-theme/_admin-nav.sass */
+/* line 39, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu li.maintab.active a.title:hover {
   color: white; }
-/* line 43, admin-theme/_admin-nav.sass */
+/* line 42, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu li.maintab.expanded a.title {
   color: white;
   background-color: #3a3d45;
   border-bottom: solid 1px #17181c; }
-/* line 47, admin-theme/_admin-nav.sass */
+/* line 46, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu li.maintab.expanded a.title:hover {
   background-color: #686d7d; }
-/* line 49, admin-theme/_admin-nav.sass */
+/* line 48, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu li.maintab.expanded a.title i {
   color: white; }
-/* line 53, admin-theme/_admin-nav.sass */
+/* line 52, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu li.maintab.expanded ul.submenu {
   display: block; }
-/* line 55, admin-theme/_admin-nav.sass */
+/* line 54, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu li.maintab.expanded ul.submenu a {
   color: #9da1ae;
   background-color: #2e3037;
   border-bottom: solid 1px #17181c; }
-/* line 59, admin-theme/_admin-nav.sass */
+/* line 58, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu li.maintab.expanded ul.submenu a:hover {
   color: white;
   background-color: #454953; }
-/* line 62, admin-theme/_admin-nav.sass */
+/* line 61, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu li.maintab a.title {
   display: block;
   position: relative;
@@ -7893,7 +7893,7 @@ a.link-social:hover {
   -moz-transition-timing-function: ease-out;
   -o-transition-timing-function: ease-out;
   transition-timing-function: ease-out; }
-/* line 77, admin-theme/_admin-nav.sass */
+/* line 76, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu li.maintab a.title i {
   color: #9094a2;
   background-color: #17181c;
@@ -7907,14 +7907,14 @@ a.link-social:hover {
   -moz-transition-timing-function: ease-out;
   -o-transition-timing-function: ease-out;
   transition-timing-function: ease-out; }
-/* line 83, admin-theme/_admin-nav.sass */
+/* line 82, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu li.maintab a.title:hover {
   background-color: #686d7d;
   color: white; }
-/* line 86, admin-theme/_admin-nav.sass */
+/* line 85, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu li.maintab a.title:hover i {
   color: white; }
-/* line 88, admin-theme/_admin-nav.sass */
+/* line 87, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu li.maintab span.submenu_expand {
   position: absolute;
   right: 10px;
@@ -7926,15 +7926,15 @@ a.link-social:hover {
   color: black;
   background-color: transparent;
   text-shadow: #686d7d 1px 1px 0; }
-/* line 101, admin-theme/_admin-nav.sass */
+/* line 99, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.menu li.maintab span.submenu_expand:hover {
   color: white;
   text-shadow: #232429 -1px -1px 0; }
-/* line 104, admin-theme/_admin-nav.sass */
+/* line 102, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.submenu {
   list-style: none;
   padding: 0; }
-/* line 108, admin-theme/_admin-nav.sass */
+/* line 106, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.submenu li a {
   display: block;
   padding: 4px 5px 4px 10px;
@@ -7942,15 +7942,15 @@ a.link-social:hover {
   border: none;
   border-bottom: solid 1px #eeeeee;
   background-color: white; }
-/* line 115, admin-theme/_admin-nav.sass */
+/* line 113, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.submenu li a:hover {
   color: #515561;
   background-color: #edeeef;
   text-decoration: none; }
-/* line 119, admin-theme/_admin-nav.sass */
+/* line 117, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.submenu li:last-child a {
   border-bottom: none; }
-/* line 121, admin-theme/_admin-nav.sass */
+/* line 119, admin-theme/_admin-nav.sass */
 #nav-sidebar ul.submenu li.active a {
   color: white;
   background-color: #1ba6e5;
@@ -7960,7 +7960,7 @@ a.link-social:hover {
   #nav-sidebar {
     display: none; } }
 
-/* line 128, admin-theme/_admin-nav.sass */
+/* line 126, admin-theme/_admin-nav.sass */
 #nav-topbar {
   position: fixed;
   height: 28px;
@@ -7969,14 +7969,14 @@ a.link-social:hover {
   width: 100%;
   z-index: 600;
   background-color: white; }
-/* line 136, admin-theme/_admin-nav.sass */
+/* line 134, admin-theme/_admin-nav.sass */
 #nav-topbar ul.menu {
   height: 28px;
   margin: 0;
   padding: 0;
   display: block;
   list-style: none; }
-/* line 142, admin-theme/_admin-nav.sass */
+/* line 140, admin-theme/_admin-nav.sass */
 #nav-topbar ul.menu > li {
   height: 28px;
   padding: 0;
@@ -7985,46 +7985,46 @@ a.link-social:hover {
   list-style: none;
   position: relative;
   float: left; }
-/* line 150, admin-theme/_admin-nav.sass */
+/* line 148, admin-theme/_admin-nav.sass */
 #nav-topbar ul.menu > li > a {
   display: block;
   line-height: 28px;
   color: #515561;
   padding: 0 6px;
   margin: 0; }
-/* line 156, admin-theme/_admin-nav.sass */
+/* line 154, admin-theme/_admin-nav.sass */
 #nav-topbar ul.menu > li > a i {
   margin: 0;
   width: 15px;
   background-color: transparent;
   font-size: 18px; }
-/* line 161, admin-theme/_admin-nav.sass */
+/* line 159, admin-theme/_admin-nav.sass */
 #nav-topbar ul.menu > li > a:hover {
   text-decoration: none;
   background-color: #515561;
   color: white; }
-/* line 165, admin-theme/_admin-nav.sass */
+/* line 163, admin-theme/_admin-nav.sass */
 #nav-topbar ul.menu > li > a:hover i {
   color: white !important; }
-/* line 168, admin-theme/_admin-nav.sass */
+/* line 166, admin-theme/_admin-nav.sass */
 #nav-topbar ul.menu > li.active > a {
   color: white;
   background-color: #515561; }
-/* line 171, admin-theme/_admin-nav.sass */
+/* line 169, admin-theme/_admin-nav.sass */
 #nav-topbar ul.menu > li.active > a i {
   color: white; }
-/* line 173, admin-theme/_admin-nav.sass */
+/* line 171, admin-theme/_admin-nav.sass */
 #nav-topbar .menu-collapse {
   display: none; }
-/* line 175, admin-theme/_admin-nav.sass */
+/* line 173, admin-theme/_admin-nav.sass */
 #nav-topbar ul.submenu {
   display: none !important;
   -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0 2px 4px;
   box-shadow: rgba(0, 0, 0, 0.3) 0 2px 4px; }
-/* line 179, admin-theme/_admin-nav.sass */
+/* line 177, admin-theme/_admin-nav.sass */
 #nav-topbar > ul.menu > li.expanded ul.submenu {
   display: block !important; }
-/* line 182, admin-theme/_admin-nav.sass */
+/* line 180, admin-theme/_admin-nav.sass */
 #nav-topbar > ul.menu > li ul.submenu {
   display: none !important;
   position: absolute;
@@ -8033,33 +8033,33 @@ a.link-social:hover {
   left: 0;
   top: 28px;
   width: 200px !important; }
-/* line 190, admin-theme/_admin-nav.sass */
+/* line 188, admin-theme/_admin-nav.sass */
 #nav-topbar > ul.menu > li ul.submenu li {
   width: 200px;
   padding: 0;
   list-style: none; }
-/* line 194, admin-theme/_admin-nav.sass */
+/* line 192, admin-theme/_admin-nav.sass */
 #nav-topbar > ul.menu > li ul.submenu li a {
   display: block;
   padding: 4px 5px 4px 10px;
   font-size: 12px;
   background-color: white;
   border-bottom: solid 1px #eeeeee; }
-/* line 200, admin-theme/_admin-nav.sass */
+/* line 198, admin-theme/_admin-nav.sass */
 #nav-topbar > ul.menu > li ul.submenu li a:hover {
   color: #515561;
   background-color: #edeeef;
   text-decoration: none; }
-/* line 204, admin-theme/_admin-nav.sass */
+/* line 202, admin-theme/_admin-nav.sass */
 #nav-topbar > ul.menu > li ul.submenu li:last-child a {
   border-bottom: none; }
-/* line 206, admin-theme/_admin-nav.sass */
+/* line 204, admin-theme/_admin-nav.sass */
 #nav-topbar > ul.menu > li ul.submenu li.active a {
   color: white;
   background-color: #1ba6e5;
   border-bottom: solid 1px #1585b8; }
 
-/* line 211, admin-theme/_admin-nav.sass */
+/* line 209, admin-theme/_admin-nav.sass */
 .menu-collapse {
   height: 54px;
   width: 100%;
@@ -8071,25 +8071,26 @@ a.link-social:hover {
   border-bottom: 3px solid #3a3d45;
   color: #0b0c0e; }
 
-/* line 223, admin-theme/_admin-nav.sass */
+/* line 221, admin-theme/_admin-nav.sass */
 .page-topbar #main {
   padding-top: 64px; }
-/* line 225, admin-theme/_admin-nav.sass */
+/* line 223, admin-theme/_admin-nav.sass */
 .page-topbar #nav-sidebar {
   display: none; }
-/* line 227, admin-theme/_admin-nav.sass */
+/* line 225, admin-theme/_admin-nav.sass */
 .page-topbar .page-head {
   top: 63px; }
-/* line 229, admin-theme/_admin-nav.sass */
+/* line 227, admin-theme/_admin-nav.sass */
 .page-topbar #content {
   margin-left: 0;
   width: 100%; }
-/* line 232, admin-theme/_admin-nav.sass */
+/* line 230, admin-theme/_admin-nav.sass */
 .page-topbar #content .page-head h2.page-title {
   padding: 0 0 0 20px; }
 
-/* line 236, admin-theme/_admin-nav.sass */
+/* line 234, admin-theme/_admin-nav.sass */
 .page-sidebar-closed #nav-sidebar {
+  overflow: visible;
   width: 50px;
   -webkit-transition-property: width;
   -moz-transition-property: width;
@@ -8101,10 +8102,10 @@ a.link-social:hover {
   -moz-transition-timing-function: ease-out;
   -o-transition-timing-function: ease-out;
   transition-timing-function: ease-out; }
-/* line 241, admin-theme/_admin-nav.sass */
+/* line 240, admin-theme/_admin-nav.sass */
 .page-sidebar-closed #nav-sidebar span.title {
   display: none; }
-/* line 243, admin-theme/_admin-nav.sass */
+/* line 242, admin-theme/_admin-nav.sass */
 .page-sidebar-closed #nav-sidebar ul.submenu {
   display: none !important;
   padding-top: 37px;
@@ -8112,39 +8113,39 @@ a.link-social:hover {
   top: 0;
   -webkit-box-shadow: rgba(0, 0, 0, 0.2) 1px 1px 0, rgba(0, 0, 0, 0.3) 2px 2px 4px;
   box-shadow: rgba(0, 0, 0, 0.2) 1px 1px 0, rgba(0, 0, 0, 0.3) 2px 2px 4px; }
-/* line 249, admin-theme/_admin-nav.sass */
+/* line 248, admin-theme/_admin-nav.sass */
 .page-sidebar-closed #nav-sidebar > ul > li:hover {
   width: 250px !important;
   position: relative; }
-/* line 252, admin-theme/_admin-nav.sass */
+/* line 251, admin-theme/_admin-nav.sass */
 .page-sidebar-closed #nav-sidebar > ul > li:hover span.title {
   display: inline-block; }
-/* line 254, admin-theme/_admin-nav.sass */
+/* line 253, admin-theme/_admin-nav.sass */
 .page-sidebar-closed #nav-sidebar > ul > li:hover ul.submenu {
   display: block !important;
   position: absolute;
   left: 50px;
   width: 200px !important; }
-/* line 259, admin-theme/_admin-nav.sass */
+/* line 258, admin-theme/_admin-nav.sass */
 .page-sidebar-closed #content {
   margin-left: 50px; }
-/* line 261, admin-theme/_admin-nav.sass */
+/* line 260, admin-theme/_admin-nav.sass */
 .page-sidebar-closed #content .page-head h2.page-title {
   padding: 0 0 0 70px; }
 @media (max-width: 768px) {
-  /* line 261, admin-theme/_admin-nav.sass */
+  /* line 260, admin-theme/_admin-nav.sass */
   .page-sidebar-closed #content .page-head h2.page-title {
     padding: 0 0 0 20px; } }
 @media (max-width: 768px) {
-  /* line 259, admin-theme/_admin-nav.sass */
+  /* line 258, admin-theme/_admin-nav.sass */
   .page-sidebar-closed #content {
     margin-left: 0;
     width: 100%; } }
-/* line 268, admin-theme/_admin-nav.sass */
+/* line 267, admin-theme/_admin-nav.sass */
 .page-sidebar-closed .submenu_expand {
   display: none; }
 
-/* line 299, admin-theme/_admin-nav.sass */
+/* line 298, admin-theme/_admin-nav.sass */
 [class^="icon-Admin"] {
   margin-right: 6px; }
 
