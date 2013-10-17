@@ -15,7 +15,6 @@ $color-calendar-range: lighten($color-calendar,10%)
 $color-calendar-range-compare: lighten($color-calendar-compare,10%)
 
 #datepicker
-	//background-color: darken($color-calendar,10%)
 	.input-selected
 		margin: 0
 	#date-start.input-selected, #date-end.input-selected,
@@ -71,11 +70,10 @@ $color-calendar-range-compare: lighten($color-calendar-compare,10%)
 			button
 				margin: 5px 0 0 0
 
-	.datepicker
+	.daterangepicker
 		position: relative
 		margin: 0 0 8px 0
 		width: 100%
-		//background-color: $color-calendar
 		font-size: 13px
 		border: solid 1px #ccc
 		table
@@ -178,8 +176,6 @@ $color-calendar-range-compare: lighten($color-calendar-compare,10%)
 				+border-radius(15px)
 				font-weight: 700
 				background-color: $color-calendar-day-selected-compare
-
-
 			&.range
 				color: lighten($color-calendar-range,35%)
 				background-color: $color-calendar-range
@@ -217,6 +213,7 @@ $color-calendar-range-compare: lighten($color-calendar-compare,10%)
 		thead tr:first-child th
 			cursor: pointer
 
+//chevrons are disabled time to figure out the firefox incompatibility..
 .chevron-left, .chevron-right
 	position: relative
 .chevron-left:before, .chevron-right:before

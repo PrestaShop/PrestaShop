@@ -26,25 +26,28 @@
 		this.element = $(element);
 		compare = false;
 
-		if (typeof options.dates !== 'undefined')
+		if (typeof options.dates !== 'undefined'){
 			DPGlobal.dates = options.dates;
+		}
 
 		if (typeof options.start !== 'undefined'){
-			if (options.start.constructor === String)
+			if (options.start.constructor === String){
 				start = DPGlobal.parseDate(options.start, DPGlobal.parseFormat('Y-m-d')).getTime();
-			else if (options.start.constructor === Number)
+			} else if (options.start.constructor === Number){
 				start = options.start;
-			else if (options.start.constructor === Date)
+			} else if (options.start.constructor === Date){
 				start = options.start.getTime();
+			}
 		}
 
 		if (typeof options.end !== 'undefined'){
-			if (options.end.constructor === String)
+			if (options.end.constructor === String){
 				end = DPGlobal.parseDate(options.end, DPGlobal.parseFormat('Y-m-d')).getTime();
-			else if (options.end.constructor === Number)
+			} else if (options.end.constructor === Number) {
 				end = options.end;
-			else if (options.end.constructor === Date)
+			} else if (options.end.constructor === Date) {
 				end = options.end.getTime();
+			}
 		}
 
 		if (typeof options.compare !== 'undefined'){
@@ -133,43 +136,50 @@
 		},
 
 		setStart: function(date) {
-			if (date.constructor === String)
+			if (date.constructor === String) {
 				start = DPGlobal.parseDate(date, DPGlobal.parseFormat('Y-m-d')).getTime();
-			else if (date.constructor === Number)
+			} else if (date.constructor === Number){
 				start = date;
-			else if (date.constructor === Date)
+			} else if (date.constructor === Date){
 				start = date.getTime();
+			}
 		},
 
 		setEnd: function(date) {
-			if (date.constructor === String)
+			if (date.constructor === String){
 				end = DPGlobal.parseDate(date, DPGlobal.parseFormat('Y-m-d')).getTime();
-			else if (date.constructor === Number)
+			} else if (date.constructor === Number){
 				end = date;
-			else if (date.constructor === Date)
+			} else if (date.constructor === Date){
 				end = date.getTime();
+			}
 		},
 
 		setStartCompare: function(date) {
-			if (date === null)
+			if (date === null){
 				startCompare = date;
-			else if (date.constructor === String)
+			}
+			else if (date.constructor === String){
 				startCompare = DPGlobal.parseDate(date, DPGlobal.parseFormat('Y-m-d')).getTime();
-			else if (date.constructor === Number)
+			}
+			else if (date.constructor === Number){
 				startCompare = date;
-			else if (date.constructor === Date)
+			}
+			else if (date.constructor === Date){
 				startCompare = date.getTime();
+			}
 		},
 
 		setEndCompare: function(date) {
-			if (date === null)
+			if (date === null){
 				endCompare = date;
-			else if (date.constructor === String)
+			} else if (date.constructor === String){
 				endCompare = DPGlobal.parseDate(date, DPGlobal.parseFormat('Y-m-d')).getTime();
-			else if (date.constructor === Number)
+			} else if (date.constructor === Number){
 				endCompare = date;
-			else if (date.constructor === Date)
+			} else if (date.constructor === Date){
 				endCompare = date.getTime();
+			}
 		},
 
 		setValue: function(newDate) {
@@ -285,31 +295,32 @@
 
 				if (end && start)
 				{
-					if(date_val > start && date_val < end)
+					if(date_val > start && date_val < end) {
 						$(this).not(".old").not(".new").addClass("range");
-
-					if(date_val === start)
+					}
+					if(date_val === start) {
 						$(this).not(".old").not(".new").addClass("start-selected");
-
-					if(date_val === end)
+					}
+					if(date_val === end) {
 						$(this).not(".old").not(".new").addClass("end-selected");
+					}
 				}
 
-				if (endCompare && startCompare)
-				{
-					if(date_val > startCompare && date_val < endCompare)
+				if (endCompare && startCompare) {
+					if(date_val > startCompare && date_val < endCompare) {
 						$(this).not(".old").not(".new").addClass("range-compare");
-
-					if(date_val === startCompare)
+					}
+					if(date_val === startCompare) {
 						$(this).not(".old").not(".new").addClass("start-selected-compare");
-
-					if(date_val === endCompare)
+					}
+					if(date_val === endCompare) {
 						$(this).not(".old").not(".new").addClass("end-selected-compare");
-				}
-				else
+					}
+				} else {
 					$(this).not(".old").not(".new").removeClass("range-compare")
 						.removeClass("start-selected-compare")
 						.removeClass("end-selected-compare");
+				}
 			});
 		},
 
