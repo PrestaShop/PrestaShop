@@ -1,4 +1,4 @@
-<div id="datepicker" class="datepicker-days">
+<div id="datepicker" class="daterangepicker-days">
 	<div class="row">	
 		{if $is_rtl}
 		<div class="col-sm-6 col-lg-4">
@@ -180,7 +180,7 @@
 		};
 
 	{literal}
-		var datepickerStart = $('.datepicker1').datepicker({
+		var datepickerStart = $('.datepicker1').daterangepicker({
 			"dates": translated_dates,
 			"weekStart": 1,
 			"start": $("#date-start").val(),
@@ -189,9 +189,9 @@
 			if (ev.date.valueOf() >= datepickerEnd.date.valueOf()){
 				datepickerEnd.setValue(ev.date.setMonth(ev.date.getMonth()+1));
 			}
-		}).data('datepicker');
+		}).data('daterangepicker');
 
-		var datepickerEnd = $('.datepicker2').datepicker({
+		var datepickerEnd = $('.datepicker2').daterangepicker({
 			"dates": translated_dates,
 			"weekStart": 1,
 			"start": $("#date-start").val(),
@@ -200,7 +200,7 @@
 			if (ev.date.valueOf() <= datepickerStart.date.valueOf()){
 				datepickerStart.setValue(ev.date.setMonth(ev.date.getMonth()-1));
 			}
-		}).data('datepicker');
+		}).data('daterangepicker');
 
 		$("#date-start").focus(function() {
 			datepickerStart.setCompare(false);
