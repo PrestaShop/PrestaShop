@@ -80,6 +80,7 @@
 		</div>
 	</div>
 </div>
+
 <script type="text/javascript">
 	{literal}
 	function parseFormat(format){
