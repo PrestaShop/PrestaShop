@@ -245,6 +245,16 @@ class AdminModulesPositionsControllerCore extends AdminController
 		));
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_btn['save'] = array(
+			'href' => self::$currentIndex.'&addToHook'.($this->display_key ? '&show_modules='.$this->display_key : '').'&token='.$this->token,
+			'desc' => $this->l('Transplant a module')
+		);
+
+		return parent::initPageHeaderToolbar();
+	}
+
 	public function initMain()
 	{
 		// Init toolbar
