@@ -205,6 +205,8 @@ class AdminGroupsControllerCore extends AdminController
 		$this->lang = false;
 		$this->list_id = 'customer_group';
 		$this->actions = array();
+		$this->addRowAction('edit');
+		$this->identifier = 'id_customer';
 		$this->bulk_actions = false;
 		$this->list_no_link = true;
 		$this->fields_list = (array(
@@ -552,5 +554,25 @@ class AdminGroupsControllerCore extends AdminController
 		$this->displayInformation($guest_group_information);
 		$this->displayInformation($default_group_information);
 		return parent::renderList();
+	}
+
+	public function displayEditLink($token = null, $id, $name = null)
+	{
+		$tpl = $this->createTemplate('helpers/list/list_action_edit.tpl');
+		if (!array_key_exists('Edit', self::$cache_lang))
+			self::$cache_lang['Edit'] = $this->l('Edit', 'Helper');
+
+		$href = self::$currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.'&token='.($token != null ? $token : $this->token);
+
+		if ($this->display == 'view')
+			$href = Context::getContext()->link->getAdminLink('AdminCustomers').'&id_customer='.(int)$id.'&updatecustomer';
+
+		$tpl->assign(array(
+			'href' => $href,
+			'action' => self::$cache_lang['Edit'],
+			'id' => $id
+		));
+
+		return $tpl->fetch();
 	}
 }
