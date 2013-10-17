@@ -284,7 +284,7 @@
 										<option value="" {if $params.value == ''} selected="selected" {/if}>--</option>
 										{if isset($params.list) && is_array($params.list)}
 											{foreach $params.list AS $option_value => $option_display}
-												<option value="{$option_value}" {if $option_display == $params.value ||  $option_value == $params.value} selected="selected"{/if}>{$option_display}</option>
+												<option value="{$option_value}" {if (string)$option_display === (string)$params.value ||  (string)$option_value === (string)$params.value} selected="selected"{/if}>{$option_display}</option>
 											{/foreach}
 										{/if}
 									</select>
