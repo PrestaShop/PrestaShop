@@ -67,6 +67,7 @@
 							{$module->categoryName}
 						</div>
 						<div class="module_name">
+							<span style="display:none">{$module->name}</span>
 							{$module->displayName}
 
 							<small>v{$module->version}</small>
