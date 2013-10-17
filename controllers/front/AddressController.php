@@ -245,6 +245,8 @@ class AddressControllerCore extends FrontController
 			// Redirect to old page or current page
 			if ($back = Tools::getValue('back'))
 			{
+				if ($back == Tools::secureReferrer(Tools::getValue('back')))
+					Tools::redirect(html_entity_decode($back));
 				$mod = Tools::getValue('mod');
 				Tools::redirect('index.php?controller='.$back.($mod ? '&back='.$mod : ''));
 			}

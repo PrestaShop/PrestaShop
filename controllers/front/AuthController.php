@@ -92,7 +92,7 @@ class AuthControllerCore extends FrontController
 		if (!empty($key))
 			$back .= (strpos($back, '?') !== false ? '&' : '?').'key='.$key;
 		if (!empty($back))
-			$this->context->smarty->assign('back', Tools::safeOutput($back));
+			$this->context->smarty->assign('back', Tools::safeOutput(Tools::secureReferrer($back)));
 	
 		if (Tools::getValue('display_guest_checkout'))
 		{
@@ -327,7 +327,7 @@ class AuthControllerCore extends FrontController
 
 				if (!$this->ajax)
 				{
-					if ($back = Tools::getValue('back'))
+					if (($back = Tools::getValue('back')) && $back == Tools::secureReferrer(Tools::getValue('back')))
 						Tools::redirect(html_entity_decode($back));
 					Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? urlencode($this->authRedirection) : 'my-account'));
 				}
@@ -463,7 +463,7 @@ class AuthControllerCore extends FrontController
 							die(Tools::jsonEncode($return));
 						}
 
-						if ($back = Tools::getValue('back'))
+						if (($back = Tools::getValue('back')) && $back == Tools::secureReferrer(Tools::getValue('back')))
 							Tools::redirect(html_entity_decode($back));
 						// redirection: if cart is not empty : redirection to the cart
 						if (count($this->context->cart->getProducts(true)) > 0)
@@ -601,7 +601,7 @@ class AuthControllerCore extends FrontController
 							if (!Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && !$this->ajax && !Tools::isSubmit('submitGuestAccount'))
 								Tools::redirect('index.php?controller=address');
 								
-							if ($back = Tools::getValue('back'))
+							if (($back = Tools::getValue('back')) && $back == Tools::secureReferrer(Tools::getValue('back')))
 								Tools::redirect(html_entity_decode($back));
 
 							// redirection: if cart is not empty : redirection to the cart
