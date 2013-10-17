@@ -236,6 +236,7 @@
 		$("#date-end-compare").focus(function() {
 			datepickerStart.setCompare(true);
 			datepickerEnd.setCompare(true);
+			$('#compare-options').val(3);
 			$(".date-input").removeClass("input-selected");
 			$(this).addClass("input-selected");
 		});
