@@ -9100,6 +9100,14 @@ textarea {
   font-weight: 700;
   background-color: #00a4e7; }
 /* line 174, admin-theme/_admin-date-range-picker.sass */
+#datepicker .daterangepicker td.end-selected.start-selected.range-compare {
+  background-color: #4ca0b1;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -ms-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0; }
+/* line 177, admin-theme/_admin-date-range-picker.sass */
 #datepicker .daterangepicker td.end-selected-compare.start-selected-compare {
   color: white;
   -webkit-border-radius: 15px;
@@ -9109,24 +9117,32 @@ textarea {
   border-radius: 15px;
   font-weight: 700;
   background-color: #ff8000; }
-/* line 179, admin-theme/_admin-date-range-picker.sass */
+/* line 182, admin-theme/_admin-date-range-picker.sass */
+#datepicker .daterangepicker td.end-selected-compare.start-selected-compare.range {
+  background-color: #ba924c;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -ms-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0; }
+/* line 185, admin-theme/_admin-date-range-picker.sass */
 #datepicker .daterangepicker td.range {
   color: #cef1ff;
   background-color: #1bbdff; }
-/* line 182, admin-theme/_admin-date-range-picker.sass */
+/* line 188, admin-theme/_admin-date-range-picker.sass */
 #datepicker .daterangepicker td.range.range-compare {
   background-color: #8dab99; }
-/* line 184, admin-theme/_admin-date-range-picker.sass */
+/* line 190, admin-theme/_admin-date-range-picker.sass */
 #datepicker .daterangepicker td.range-compare {
   color: #fff2e5;
   background-color: #ff9933; }
-/* line 187, admin-theme/_admin-date-range-picker.sass */
+/* line 193, admin-theme/_admin-date-range-picker.sass */
 #datepicker .daterangepicker td.range-compare.range {
   background-color: #8dab99; }
-/* line 189, admin-theme/_admin-date-range-picker.sass */
+/* line 195, admin-theme/_admin-date-range-picker.sass */
 #datepicker .daterangepicker td.today {
   background-color: white; }
-/* line 191, admin-theme/_admin-date-range-picker.sass */
+/* line 197, admin-theme/_admin-date-range-picker.sass */
 #datepicker .daterangepicker td span {
   padding: 0;
   display: block;
@@ -9137,31 +9153,31 @@ textarea {
   float: left;
   text-transform: uppercase;
   cursor: pointer; }
-/* line 201, admin-theme/_admin-date-range-picker.sass */
+/* line 207, admin-theme/_admin-date-range-picker.sass */
 #datepicker .daterangepicker td span:hover {
   background-color: #00a4e7; }
-/* line 203, admin-theme/_admin-date-range-picker.sass */
+/* line 209, admin-theme/_admin-date-range-picker.sass */
 #datepicker .daterangepicker td span.active {
   background-color: #00a4e7;
   color: white; }
-/* line 206, admin-theme/_admin-date-range-picker.sass */
+/* line 212, admin-theme/_admin-date-range-picker.sass */
 #datepicker .daterangepicker td span.old {
   color: #cccccc; }
-/* line 209, admin-theme/_admin-date-range-picker.sass */
+/* line 215, admin-theme/_admin-date-range-picker.sass */
 #datepicker .daterangepicker th.switch {
   width: 145px; }
-/* line 211, admin-theme/_admin-date-range-picker.sass */
+/* line 217, admin-theme/_admin-date-range-picker.sass */
 #datepicker .daterangepicker th.next, #datepicker .daterangepicker th.prev {
   font-size: 1.3em; }
-/* line 213, admin-theme/_admin-date-range-picker.sass */
+/* line 219, admin-theme/_admin-date-range-picker.sass */
 #datepicker .daterangepicker thead tr:first-child th {
   cursor: pointer; }
 
-/* line 217, admin-theme/_admin-date-range-picker.sass */
+/* line 223, admin-theme/_admin-date-range-picker.sass */
 .chevron-left, .chevron-right {
   position: relative; }
 
-/* line 219, admin-theme/_admin-date-range-picker.sass */
+/* line 225, admin-theme/_admin-date-range-picker.sass */
 .chevron-left:before, .chevron-right:before {
   display: block;
   content: "";
@@ -9170,7 +9186,7 @@ textarea {
   border-style: solid;
   position: absolute; }
 
-/* line 226, admin-theme/_admin-date-range-picker.sass */
+/* line 232, admin-theme/_admin-date-range-picker.sass */
 .chevron-left:before {
   right: 0;
   top: 0;
@@ -9178,7 +9194,7 @@ textarea {
   border-color: transparent transparent transparent #00a4e7;
   background-color: #1bbdff; }
 
-/* line 232, admin-theme/_admin-date-range-picker.sass */
+/* line 238, admin-theme/_admin-date-range-picker.sass */
 .chevron-right:before {
   left: 0;
   top: 0;
@@ -9186,7 +9202,7 @@ textarea {
   border-color: transparent transparent transparent #1bbdff;
   background-color: #00a4e7; }
 
-/* line 238, admin-theme/_admin-date-range-picker.sass */
+/* line 244, admin-theme/_admin-date-range-picker.sass */
 .input-complete {
   -webkit-animation: one 0.2s ease-in-out;
   -moz-animation: one 0.2s ease-in-out;
@@ -9195,21 +9211,21 @@ textarea {
   animation: one 0.2s ease-in-out; }
 
 @-webkit-keyframes one {
-  /* line 246, admin-theme/_admin-date-range-picker.sass */
+  /* line 252, admin-theme/_admin-date-range-picker.sass */
   0% {
     background-color: #00a4e7; }
 
-  /* line 248, admin-theme/_admin-date-range-picker.sass */
+  /* line 254, admin-theme/_admin-date-range-picker.sass */
   100% {
     background-color: white; } }
 
 @-webkit-keyframes two {
-  /* line 252, admin-theme/_admin-date-range-picker.sass */
+  /* line 258, admin-theme/_admin-date-range-picker.sass */
   0% {
     -webkit-box-shadow: #00a4e7 0 0 0 20px inset;
     box-shadow: #00a4e7 0 0 0 20px inset; }
 
-  /* line 254, admin-theme/_admin-date-range-picker.sass */
+  /* line 260, admin-theme/_admin-date-range-picker.sass */
   100% {
     -webkit-box-shadow: #00a4e7 0 0 0 inset;
     box-shadow: #00a4e7 0 0 0 inset; } }
