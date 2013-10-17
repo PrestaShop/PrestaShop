@@ -24,7 +24,7 @@
 *}
 <section id="dashactivity" class="panel widget{if $allow_push} allow_push{/if}">
 	<div class="panel-heading">
-		<i class="icon-time"></i> {l s="Activity overview" mod="dashactivity"}
+		<i class="icon-time"></i> {l s='Activity overview' mod='dashactivity'}
 		<span class="panel-heading-action">
 			<a class="list-toolbar-btn" href="#" onclick="toggleDashConfig('dashactivity'); return false;" title="configure">
 				<i class="process-icon-configure"></i>
@@ -35,16 +35,16 @@
 		</span>
 	</div>
 	<section id="dashactivity_config" class="dash_config hide">
-		<header><i class="icon-wrench"></i> {l s='Configuration'}</header>
+		<header><i class="icon-wrench"></i> {l s='Configuration' mod='dashactivity'}</header>
 		{$dashactivity_config_form}
 	</section>
 	<section id="dash_live" class="loading">
 		<ul class="data_list_large">
 			<li>
 				<span class="data_label size_l">
-					{l s='Online Visitor'}
+					{l s='Online Visitor' mod='dashactivity'}
 					<small class="text-muted"><br/>
-						{l s='In the last 30 minutes'}
+						{l s='In the last 30 minutes' mod='dashactivity'}
 					</small>
 				</span>
 				<span class="data_value size_xxl">
@@ -53,9 +53,9 @@
 			</li>
 			<li>
 				<span class="data_label size_l">
-					{l s='Active Shopping Carts'}
+					{l s='Active Shopping Carts' mod='dashactivity'}
 					<small class="text-muted"><br/>
-						{l s='In the last 30 minutes'}
+						{l s='In the last 30 minutes' mod='dashactivity'}
 					</small>
 				</span>
 				<span class="data_value size_xxl">
@@ -66,31 +66,31 @@
 	</section>
 	{if $DASHACTIVITY_SHOW_PENDING}
 	<section id="dash_pending" class="loading">
-		<header><i class="icon-time"></i> {l s='Currently Pending'}</header>
+		<header><i class="icon-time"></i> {l s='Currently Pending' mod='dashactivity'}</header>
 		<ul class="data_list">
 			<li>
-				<span class="data_label">{l s='Orders'}</span>
+				<span class="data_label">{l s='Orders' mod='dashactivity'}</span>
 				<span class="data_value size_l">
 					<span id="pending_orders"></span>
 				</span>
 			</li>
 			{if $DASHACTIVITY_SHOW_RETURNS}
 			<li>
-				<span class="data_label">{l s='Return/Exchanges'}</span>
+				<span class="data_label">{l s='Return/Exchanges' mod='dashactivity'}</span>
 				<span class="data_value size_l">
 					<span id="return_exchanges"></span>
 				</span>
 			</li>
 			{/if}
 			<li>
-				<span class="data_label">{l s='Abandoned Carts'}</span>
+				<span class="data_label">{l s='Abandoned Carts' mod='dashactivity'}</span>
 				<span class="data_value size_l">
 					<span id="abandoned_cart"></span>
 				</span>
 			</li>
 			{if $DASHACTIVITY_SHOW_STOCK}
 			<li>
-				<span class="data_label">{l s='Products Out of Stock'}</span>
+				<span class="data_label">{l s='Products Out of Stock' mod='dashactivity'}</span>
 				<span class="data_value size_l">
 					<span id="products_out_of_stock"></span>
 				</span>
@@ -101,22 +101,22 @@
 	{/if}
 	{if $DASHACTIVITY_SHOW_NOTIFICATION}
 	<section id="dash_notifications" class="loading">
-		<header><i class="icon-exclamation-sign"></i> {l s='Notifications'}</header>
+		<header><i class="icon-exclamation-sign"></i> {l s='Notifications' mod='dashactivity'}</header>
 		<ul class="data_list_vertical">
 			<li>
-				<span class="data_label">{l s='New Messages'}</span>
+				<span class="data_label">{l s='New Messages' mod='dashactivity'}</span>
 				<span class="data_value size_l">
 					<span id="new_messages"></span>
 				</span>
 			</li>
 			<li>
-				<span class="data_label">{l s='Order Inquiries'}</span>
+				<span class="data_label">{l s='Order Inquiries' mod='dashactivity'}</span>
 				<span class="data_value size_l">
 					<span id="order_inquires"></span>
 				</span>
 			</li>
 			<li>
-				<span class="data_label">{l s='Product Reviews'}</span>
+				<span class="data_label">{l s='Product Reviews' mod='dashactivity'}</span>
 				<span class="data_value size_l">
 					<span id="product_reviews"></span>
 				</span>
@@ -126,22 +126,22 @@
 	{/if}
 	{if $DASHACTIVITY_SHOW_CUSTOMERS}
 	<section id="dash_customers" class="loading">
-		<header><i class="icon-user"></i> {l s='Customers & Newsletters'}</header>
+		<header><i class="icon-user"></i> {l s='Customers & Newsletters' mod='dashactivity'}</header>
 		<ul class="data_list">
 			<li>
-				<span class="data_label">{l s='New Customers'}</span>
+				<span class="data_label">{l s='New Customers' mod='dashactivity'}</span>
 				<span class="data_value size_md">
 					<span id="new_customers"></span>
 				</span>
 			</li>
 			<li>
-				<span class="data_label">{l s='New Subscriptions'}</span>
+				<span class="data_label">{l s='New Subscriptions' mod='dashactivity'}</span>
 				<span class="data_value size_md">
 					<span id="new_registrations"></span>
 				</span>
 			</li>
 			<li>
-				<span class="data_label">{l s='Total Subscribers'}</span>
+				<span class="data_label">{l s='Total Subscribers' mod='dashactivity'}</span>
 				<span class="data_value size_md">
 					<span id="total_suscribers"></span>
 				</span>
@@ -151,22 +151,22 @@
 	{/if}
 	{if $DASHACTIVITY_SHOW_TRAFFIC}
 	<section id="dash_traffic" class="loading">
-		<header><i class="icon-globe"></i> {l s='Traffic'}</header>
+		<header><i class="icon-globe"></i> {l s='Traffic' mod='dashactivity'}</header>
 		<ul class="data_list">
 			<li>
-				<span class="data_label">{l s='Visits'}</span>
+				<span class="data_label">{l s='Visits' mod='dashactivity'}</span>
 				<span class="data_value size_md">
 					<span id="visits"></span>
 				</span>
 			</li>
 			<li>
-				<span class="data_label">{l s='Unique Visitors'}</span>
+				<span class="data_label">{l s='Unique Visitors' mod='dashactivity'}</span>
 				<span class="data_value size_md">
 					<span id="unique_visitors"></span>
 				</span>
 			</li>
 			<li>
-				<span class="data_label">{l s='Traffic Sources'}</span>
+				<span class="data_label">{l s='Traffic Sources' mod='dashactivity'}</span>
 				<ul class="data_list_small" id="dash_traffic_source">
 				</ul>
 				<div id="dash_traffic_chart2" class='chart with-transitions'>
