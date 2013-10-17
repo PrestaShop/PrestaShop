@@ -156,6 +156,7 @@ class AdminDashboardControllerCore extends AdminController
 		$calendar_helper->setDateTo(Tools::getValue('date_to', $this->context->employee->stats_date_to));
 		$calendar_helper->setCompareDateFrom(Tools::getValue('compare_date_from', $this->context->employee->stats_compare_from));
 		$calendar_helper->setCompareDateTo(Tools::getValue('compare_date_to', $this->context->employee->stats_compare_to));
+		$calendar_helper->setCompareOption(Tools::getValue('compare_date_option', $this->context->employee->stats_compare_option));
 
 		$this->tpl_view_vars = array(
 			'hookDashboardZoneOne' => Hook::exec('dashboardZoneOne'),
@@ -180,6 +181,7 @@ class AdminDashboardControllerCore extends AdminController
 			$this->context->employee->stats_date_to = Tools::getValue('date_to');
 			$this->context->employee->stats_compare_from = Tools::getValue('compare_date_from');
 			$this->context->employee->stats_compare_to = Tools::getValue('compare_date_to');
+			$this->context->employee->stats_compare_option = Tools::getValue('compare_date_option');
 			$this->context->employee->update();
 		}
 

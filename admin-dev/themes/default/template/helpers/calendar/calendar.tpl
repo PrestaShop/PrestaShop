@@ -53,21 +53,11 @@
 								{l s='Compare to'}
 							</label>
 						</span>
-						<button class='btn btn-default btn-xs pull-right dropdown-toggle' data-toggle='dropdown' type="button">
-							{l s='Select'}
-							<i class='icon-angle-down'></i>							
-						</button>
-						<ul class='dropdown-menu'>
-							<li>
-								<a href="javascript:void(0);" onclick="$('#date-start-compare').focus();"><i class="icon-cogs"></i> {l s='Custom'}</a>
-							</li>
-							<li>
-								<a href="javascript:void(0);" onclick="setPreviousPeriod()"><i class="icon-cogs"></i> {l s='Previous period'}</a>
-							</li>
-							<li>
-								<a href="javascript:void(0);" onclick="setPreviousYear()"><i class="icon-cogs"></i> {l s='Previous Year'}</a>
-							</li>
-						</ul>
+						<select id="compare-options" name="compare_date_option" disabled="disabled">
+							<option value="1"{if $compare_option == 1}selected="selected"{/if} label="{l s='Previous period'}">{l s='Previous period'}</option>
+							<option value="2"{if $compare_option == 2}selected="selected"{/if} label="{l s='Previous Year'}">{l s='Previous Year'}</option>
+							<option value="3"{if $compare_option == 3}selected="selected"{/if} label="{l s='Custom'}">{l s='Custom'}</option>
+						</select>
 					</div>
 					<div class="form-date-body" id="form-date-body-compare" style="display: none;">
 						<label>{l s='From'}</label>
@@ -253,6 +243,7 @@
 				datepickerEnd.setStartCompare($("#date-start-compare").val());
 				datepickerEnd.setEndCompare($("#date-end-compare").val());
 				$('#form-date-body-compare').show();
+				$('#compare-options').prop('disabled', false);
 				$('#date-start-compare').focus();
 			} else {
 				datepickerStart.setStartCompare(null);
@@ -260,9 +251,20 @@
 				datepickerEnd.setStartCompare(null);
 				datepickerEnd.setEndCompare(null);
 				$('#form-date-body-compare').hide();
+				$('#compare-options').prop('disabled', true);
 				$('#date-start').focus();
 			}
 		})
+
+		$('#compare-options').change(function() {
+			if (this.value == 1)
+				setPreviousPeriod();
+				
+			if (this.value == 2)
+				setPreviousYear();
+	
+			$('#date-start-compare').focus();
+		});
 
 		{/literal}
 	});
