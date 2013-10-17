@@ -22,7 +22,7 @@
 	var click, switched, val, start, end, over, compare, startCompare, endCompare;
 
 	// Picker object
-	var Datepicker = function(element, options){
+	var DateRangePicker = function(element, options){
 		this.element = $(element);
 		compare = false;
 
@@ -100,8 +100,8 @@
 		this.showMode();
 	};
 
-	Datepicker.prototype = {
-		constructor: Datepicker,
+	DateRangePicker.prototype = {
+		constructor: DateRangePicker,
 
 		show: function(e) {
 			this.picker.show();
@@ -112,7 +112,7 @@
 			}
 			var that = this;
 			$(document).on('mousedown', function(ev){
-				if ($(ev.target).closest('.datepicker').length === 0) {
+				if ($(ev.target).closest('.daterangepicker').length === 0) {
 					that.hide();
 				}
 			});
@@ -199,7 +199,7 @@
 				html += '<th class="dow">'+DPGlobal.dates.daysMin[(dowCnt++)%7]+'</th>';
 			}
 			html += '</tr>';
-			this.picker.find('.datepicker-days thead').append(html);
+			this.picker.find('.daterangepicker-days thead').append(html);
 		},
 
 		fillMonths: function(){
@@ -208,7 +208,7 @@
 			while (i < 12) {
 				html += '<span class="month">'+DPGlobal.dates.monthsShort[i++]+'</span>';
 			}
-			this.picker.find('.datepicker-months td').append(html);
+			this.picker.find('.daterangepicker-months td').append(html);
 		},
 
 		fill: function() {
@@ -216,7 +216,7 @@
 				year = d.getFullYear(),
 				month = d.getMonth(),
 				currentDate = this.date.valueOf();
-			this.picker.find('.datepicker-days th:eq(1)')
+			this.picker.find('.daterangepicker-days th:eq(1)')
 						.text(year+' / '+DPGlobal.dates.months[month]);
 			var prevMonth = new Date(year, month-1, 28,0,0,0,0),
 				day = DPGlobal.getDaysInMonth(prevMonth.getFullYear(), prevMonth.getMonth());
@@ -250,10 +250,10 @@
 				}
 				prevMonth.setDate(prevMonth.getDate()+1);
 			}
-			this.picker.find('.datepicker-days tbody').empty().append(html.join(''));
+			this.picker.find('.daterangepicker-days tbody').empty().append(html.join(''));
 			var currentYear = this.date.getFullYear();
 
-			var months = this.picker.find('.datepicker-months')
+			var months = this.picker.find('.daterangepicker-months')
 						.find('th:eq(1)')
 							.text(year)
 							.end()
@@ -264,7 +264,7 @@
 
 			html = '';
 			year = parseInt(year/10, 10) * 10;
-			var yearCont = this.picker.find('.datepicker-years')
+			var yearCont = this.picker.find('.daterangepicker-years')
 								.find('th:eq(1)')
 									.text(year + '-' + (year + 9))
 									.end()
@@ -617,28 +617,28 @@
 			if (dir)
 				this.viewMode = Math.max(this.minViewMode, Math.min(2, this.viewMode + dir));
 
-			this.picker.find('>div').hide().filter('.datepicker-'+DPGlobal.modes[this.viewMode].clsName).show();
+			this.picker.find('>div').hide().filter('.daterangepicker-'+DPGlobal.modes[this.viewMode].clsName).show();
 		}
 	};
 
-	$.fn.datepicker = function ( option, val ) {
+	$.fn.daterangepicker = function ( option, val ) {
 		return this.each(function () {
 			var $this = $(this),
-				data = $this.data('datepicker'),
+				data = $this.data('daterangepicker'),
 				options = typeof option === 'object' && option;
 			if (!data) {
-				$this.data('datepicker', (data = new Datepicker(this, $.extend({}, $.fn.datepicker.defaults,options))));
+				$this.data('daterangepicker', (data = new DateRangePicker(this, $.extend({}, $.fn.daterangepicker.defaults,options))));
 			}
 			if (typeof option === 'string') { data[option](val);}
 		});
 	};
 
-	$.fn.datepicker.defaults = {
+	$.fn.daterangepicker.defaults = {
 		onRender: function() {
 			return '';
 		}
 	};
-	$.fn.datepicker.Constructor = Datepicker;
+	$.fn.daterangepicker.Constructor = DateRangePicker;
 
 	var DPGlobal = {
 		modes: [
@@ -743,20 +743,20 @@
 						'</thead>',
 		contTemplate: '<tbody><tr><td colspan="7"></td></tr></tbody>'
 	};
-	DPGlobal.template = '<div class="datepicker">'+
-							'<div class="datepicker-days">'+
+	DPGlobal.template = '<div class="daterangepicker">'+
+							'<div class="daterangepicker-days">'+
 								'<table class=" table-condensed">'+
 									DPGlobal.headTemplate+
 									'<tbody></tbody>'+
 								'</table>'+
 							'</div>'+
-							'<div class="datepicker-months">'+
+							'<div class="daterangepicker-months">'+
 								'<table class="table-condensed">'+
 									DPGlobal.headTemplate+
 									DPGlobal.contTemplate+
 								'</table>'+
 							'</div>'+
-							'<div class="datepicker-years">'+
+							'<div class="daterangepicker-years">'+
 								'<table class="table-condensed">'+
 									DPGlobal.headTemplate+
 									DPGlobal.contTemplate+
