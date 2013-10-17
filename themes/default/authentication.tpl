@@ -167,7 +167,7 @@ $(document).ready(function() {
 					<span><input type="text" id="email_create" name="email_create" value="{if isset($smarty.post.email_create)}{$smarty.post.email_create|stripslashes}{/if}" class="account_input" /></span>
 				</p>
 				<p class="submit">
-					{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'htmlall':'UTF-8'}" />{/if}
+					{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back}" />{/if}
 					<input type="submit" id="SubmitCreate" name="SubmitCreate" class="button_large" value="{l s='Create an account'}" />
 					<input type="hidden" class="hidden" name="SubmitCreate" value="{l s='Create an account'}" />
 				</p>
