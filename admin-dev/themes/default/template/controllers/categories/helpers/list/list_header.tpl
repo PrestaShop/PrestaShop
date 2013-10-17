@@ -50,14 +50,14 @@
 
 {block name=leadin}
 	{if isset($delete_category) && $delete_category}
-		<div class="panel panel-danger">
-			<p>
+		<div class="panel">
+			<div class="panel-heading">
 				{if $need_delete_mode}
 					{l s='What do you want to do with the products associated with this category?'}
 				{else}
 					{l s='Deleting this category will remove products linked only within this category and no others. Are you sure you want to continue?'}
 				{/if}
-			</p>
+			</div>
 
 			{if $need_delete_mode}
 			<form action="{$REQUEST_URI}" method="post">
@@ -93,9 +93,16 @@
 					{/if}
 				{/if}
 			{/foreach}
-				<hr>
-				<input type="submit" name="cancel" class="btn btn-default" value="{l s='Cancel'}" />
-				<input type="submit" class="btn btn-primary" value="{l s='Validate'}" />
+				<div class="panel-footer">
+					<button type="button" name="cancel" class="btn btn-default">
+						<i class="icon-remove"></i>
+						{l s='Cancel'}
+					</button>
+					<button type="submit" class="btn btn-default">
+						<i class="icon-trash text-danger"></i>
+						{l s='Delete'}
+					</button>
+				</div>
 			</form>
 		</div>
 	{/if}
