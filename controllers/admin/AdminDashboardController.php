@@ -152,10 +152,21 @@ class AdminDashboardControllerCore extends AdminController
 		);
 
 		$calendar_helper = new HelperCalendar();
+
 		$calendar_helper->setDateFrom(Tools::getValue('date_from', $this->context->employee->stats_date_from));
 		$calendar_helper->setDateTo(Tools::getValue('date_to', $this->context->employee->stats_date_to));
-		$calendar_helper->setCompareDateFrom(Tools::getValue('compare_date_from', $this->context->employee->stats_compare_from));
-		$calendar_helper->setCompareDateTo(Tools::getValue('compare_date_to', $this->context->employee->stats_compare_to));
+
+		$stats_compare_from = $this->context->employee->stats_compare_from;
+		$stats_compare_to = $this->context->employee->stats_compare_to;
+
+		if (is_null($stats_compare_from) || $stats_compare_from == '0000-00-00')
+			$stats_compare_from = null;
+
+		if (is_null($stats_compare_to) || $stats_compare_to == '0000-00-00')
+			$stats_compare_to = null;
+
+		$calendar_helper->setCompareDateFrom($stats_compare_from);
+		$calendar_helper->setCompareDateTo($stats_compare_to);
 		$calendar_helper->setCompareOption(Tools::getValue('compare_date_option', $this->context->employee->stats_compare_option));
 
 		$this->tpl_view_vars = array(
@@ -179,9 +190,20 @@ class AdminDashboardControllerCore extends AdminController
 		{
 			$this->context->employee->stats_date_from = Tools::getValue('date_from');
 			$this->context->employee->stats_date_to = Tools::getValue('date_to');
-			$this->context->employee->stats_compare_from = Tools::getValue('compare_date_from');
-			$this->context->employee->stats_compare_to = Tools::getValue('compare_date_to');
-			$this->context->employee->stats_compare_option = Tools::getValue('compare_date_option');
+
+			if (Tools::getValue('datepicker_compare'))
+			{
+				$this->context->employee->stats_compare_from = Tools::getValue('compare_date_from');
+				$this->context->employee->stats_compare_to = Tools::getValue('compare_date_to');
+				$this->context->employee->stats_compare_option = Tools::getValue('compare_date_option');
+			}
+			else
+			{
+				$this->context->employee->stats_compare_from = null;
+				$this->context->employee->stats_compare_to = null;
+				$this->context->employee->stats_compare_option = HelperCalendar::DEFAULT_COMPARE_OPTION;
+			}
+
 			$this->context->employee->update();
 		}
 

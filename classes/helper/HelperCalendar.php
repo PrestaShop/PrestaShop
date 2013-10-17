@@ -26,7 +26,8 @@
 
 class HelperCalendarCore extends Helper
 {
-	const DEFAULT_DATE_FORMAT = 'Y-m-d';
+	const DEFAULT_DATE_FORMAT    = 'Y-m-d';
+	const DEFAULT_COMPARE_OPTION = 1;
 
 	private $_actions;
 	private $_compare_actions;
@@ -81,41 +82,23 @@ class HelperCalendarCore extends Helper
 
 	public function setCompareDateFrom($value)
 	{
-		if (!isset($value) || $value == '')
-			$value = date('Y-m-d', strtotime("-31 days"));
-
-		if (!is_string($value))
-			throw new PrestaShopException('Date must be a string');
-
 		$this->_compare_date_from = $value;
 		return $this;
 	}
 
 	public function getCompareDateFrom()
 	{
-		if (!isset($this->_compare_date_from))
-			$this->_compare_date_from = date('Y-m-d', strtotime("-31 days"));
-
 		return $this->_compare_date_from;
 	}
 
 	public function setCompareDateTo($value)
 	{
-		if (!isset($value) || $value == '')
-			$value = date('Y-m-d');
-
-		if (!is_string($value))
-			throw new PrestaShopException('Date must be a string');
-
 		$this->_compare_date_to = $value;
 		return $this;
 	}
 
 	public function getCompareDateTo()
 	{
-		if (!isset($this->_compare_date_to))
-			$this->_compare_date_to = date('Y-m-d');
-
 		return $this->_compare_date_to;
 	}
 
