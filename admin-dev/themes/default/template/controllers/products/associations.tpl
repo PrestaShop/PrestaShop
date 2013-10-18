@@ -70,15 +70,20 @@
 			<input type="hidden" name="inputAccessories" id="inputAccessories" value="{foreach from=$accessories item=accessory}{$accessory.id_product}-{/foreach}" />
 			<input type="hidden" name="nameAccessories" id="nameAccessories" value="{foreach from=$accessories item=accessory}{$accessory.name|escape:'htmlall':'UTF-8'}¤{/foreach}" />
 			<div id="ajax_choose_product">
-				<input type="text" value="" id="product_autocomplete_input" />				
+				<div class="input-group">
+					<input type="text" value="" id="product_autocomplete_input" />
+					<span class="input-group-addon"><i class="icon-search"></i></span>
+				</div>
 			</div>
+
 			<div id="divAccessories">
-			{* @todo : donot use 3 foreach, but assign var *}
 			{foreach from=$accessories item=accessory}
+			<div class="form-control-static">
+				<button type="button" class="btn btn-default delAccessory" name="{$accessory.id_product}">
+					<i class="icon-remove text-danger"></i>
+				</button>
 				{$accessory.name|escape:'htmlall':'UTF-8'}{if !empty($accessory.reference)}{$accessory.reference}{/if}
-				<span class="delAccessory" name="{$accessory.id_product}" style="cursor: pointer;">
-					<img src="../img/admin/delete.gif" class="middle" alt="" />
-				</span>
+			</div>
 			{/foreach}
 			</div>
 		</div>

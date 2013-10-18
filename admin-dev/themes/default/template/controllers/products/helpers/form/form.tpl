@@ -230,7 +230,7 @@
 		</script>
 
 		<div id="product-tab-content-wait" style="display:none">
-			<div id="loading">{l s='Loading...'}</div>
+			<div id="loading"><i class="icon-refresh icon-spin"></i>&nbsp;{l s='Loading...'}</div>
 		</div>
 
 		<form id="product_form" class="form-horizontal col-lg-10" action="{$form_action}" method="post" enctype="multipart/form-data" name="product" style="display:none;">
@@ -239,8 +239,8 @@
 
 			{if !$product->active && $product->isAssociatedToShop()}
 			<div class="alert alert-info draft" >
-				<span>{l s='Your product will be saved as a draft.'}</span>
-				<a href="#" class="btn btn-default pull-right" onclick="submitAddProductAndPreview()" ><i class="icon-external-link-sign"></i> {l s='Save and preview'}</a>
+				{l s='Your product will be saved as a draft.'}
+				<a href="#" class="btn btn-default" onclick="submitAddProductAndPreview()" ><i class="icon-eye-open"></i>&nbsp;{l s='Save and preview'}</a>
 				<input type="hidden" name="fakeSubmitAddProductAndPreview" id="fakeSubmitAddProductAndPreview" />
 			</div>
 			{/if}

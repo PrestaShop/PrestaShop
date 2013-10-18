@@ -235,13 +235,16 @@
 				<input type="text" id="related_product_autocomplete_input" autocomplete="off" class="ac_input" />
 				<span class="input-group-addon"><i class="icon-search"></i></span>
 			</div>
+
+			<div class="form-control-static">
+				<span id="related_product_name"><i class="icon-warning-sign"></i>&nbsp;{l s='No related product'}</span>
+				<span id="related_product_remove" style="display:none">
+					<a class="btn btn-default" href="#" onclick="removeRelatedProduct(); return false" id="related_product_remove_link">
+						<i class="icon-remove text-danger"></i>
+					</a>
+				</span>
+			</div>
 			
-			<span id="related_product_remove" style="display:none">
-				<a class="btn btn-default" href="#" onclick="removeRelatedProduct(); return false" id="related_product_remove_link">
-					<i class="icon-trash"></i>
-				</a>
-			</span>
-			<span id="related_product_name">{l s='No related product'}</span>
 		</div>
 		<script>
 			var no_related_product = '{l s='No related product'}';

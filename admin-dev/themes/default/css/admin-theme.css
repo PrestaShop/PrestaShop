@@ -8390,6 +8390,12 @@ td.actions {
   padding-bottom: 4px;
   display: inline-block; }
 
+/* line 36, admin-theme/_admin-tree.sass */
+.tree-panel-heading-controls {
+  margin: -20px -20px 20px;
+  padding: 5px;
+  border-bottom: solid 1px #dfdfdf; }
+
 /* line 2, admin-theme/_admin-forms.sass */
 label.control-label {
   font-size: 13px;
