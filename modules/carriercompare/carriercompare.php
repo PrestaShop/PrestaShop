@@ -290,15 +290,15 @@ class CarrierCompare extends Module
 				'input' => array(
 					array(
 						'type' => 'select',
-						'label' => $this->l('Refresh carrier list method'),
+						'label' => $this->l('How to refresh the carrier list?'),
 						'name' => 'SE_RERESH_METHOD',
 						'required' => false,
-						'desc' => $this->l('How would you like to refresh information for a customer?'),
+						'desc' => $this->l('This determines when the list of carriers presented to the customer is updated.'),
 						'default_value' => (int)$this->context->country->id,
 						'options' => array(
 							'query' => array(
-								array('id' => 0, 'name' => $this->l('Anytime')),
-								array('id' => 1, 'name' => $this->l('The required information is set.'))
+								array('id' => 0, 'name' => $this->l('Automatically with each field change')),
+								array('id' => 1, 'name' => $this->l('When the customer clicks on the "Estimate Shipping Cost" button'))
 								),
 							'id' => 'id',
 							'name' => 'name',
