@@ -26,21 +26,44 @@
 
 {block name="input"}
 	{if $input.type == 'file'}
-		{if isset($input.display_image) && $input.display_image}
-			{if isset($fields_value.image) && $fields_value.image}
-				<div id="image">
-					{$fields_value.image}
-					<p align="center">{l s='File size'} {$fields_value.size}kb</p>
-					{if $shared_category}
-						<p class="alert alert-warning">{l s='If you delete this picture, it will be deleted in all of your shared shops!'}</p>
-					{/if}
-					<a class="btn btn-default" href="{$current}&{$identifier}={$form_id}&token={$token}&{if $shared_category}forcedeleteImage=1{else}deleteImage=1{/if}" onclick="return confirm('{l s='If you delete this picture, it will be deleted in all of your shared shops!'}\n\n{l s='Do you want to continue?'}')">
+		<input id="{$input.name}" type="file" name="{$input.name}" class="hide" />
+		<div class="dummyfile input-group">
+			<span class="input-group-addon"><i class="icon-file"></i></span>
+			<input id="{$input.name}-name" type="text" class="disabled" name="filename" readonly />
+			<span class="input-group-btn">
+				<button id="{$input.name}-selectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
+					<i class="icon-folder-open"></i> {l s='Choose a file'}
+				</button>
+			</span>
+		</div>
+		{if isset($input.desc)}<p>{$input.desc}</p>{/if}
+		{if isset($fields_value.image) && $fields_value.image}
+			<div class="clearfix">&nbsp;</div>
+			<div id="image" class="img-thumbnail">
+				{$fields_value.image}
+				<div class="text-center">
+					<p>{l s='File size'} {$fields_value.size}kb</p>
+					<a class="btn btn-default" href="{$current}&{$identifier}={$form_id}&token={$token}&deleteImage=1">
 						<i class="icon-trash"></i> {l s='Delete'}
 					</a>
 				</div>
-			{/if}
+			</div>
 		{/if}
-		<input type="file" name="{$input.name}" {if isset($input.id)}id="{$input.id}"{/if} />
+		<script>
+			$(document).ready(function(){
+				$('#{$input.name}-selectbutton').click(function(e){
+					$('#{$input.name}').trigger('click');
+				});
+				$('#{$input.name}-name').click(function(e){
+					$('#{$input.name}').trigger('click');
+				});
+				$('#{$input.name}').change(function(e){
+					var val = $(this).val();
+					var file = val.split(/[\\/]/);
+					$('#{$input.name}-name').val(file[file.length-1]);
+				});
+			});
+		</script>
 	{else}
 		{$smarty.block.parent}
 	{/if}

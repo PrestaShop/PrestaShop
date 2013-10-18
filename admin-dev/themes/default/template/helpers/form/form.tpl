@@ -496,6 +496,9 @@
 											$('#{$input.name}-selectbutton').click(function(e){
 												$('#{$input.name}').trigger('click');
 											});
+											$('#{$input.name}-name').click(function(e){
+												$('#{$input.name}').trigger('click');
+											});
 											$('#{$input.name}').change(function(e){
 												var val = $(this).val();
 												var file = val.split(/[\\/]/);
