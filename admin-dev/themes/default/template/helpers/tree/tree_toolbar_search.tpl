@@ -24,14 +24,17 @@
 *}
 
 <!-- <label for="node-search">{l s=$label}</label> -->
-<span class="pull-right">
+<div class="input-group fixed-width-xl pull-right">
+	<div class="input-group-addon">
+		<i class="icon-search"></i>
+	</div>
 	<input type="text"
 		{if isset($id)}id="{$id}"{/if}
 		{if isset($name)}name="{$name}"{/if}
-		class="{if isset($class)} {$class}{/if} fixed-width-xl"
+		class="{if isset($class)} {$class}{/if}"
 		placeholder="search..."
 	/>
-</span>
+</div>
 
 {if isset($typeahead_source) && isset($id)}
 

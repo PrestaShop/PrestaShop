@@ -3239,7 +3239,7 @@ class AdminProductsControllerCore extends AdminController
 		if (!is_array($specific_prices) || !count($specific_prices))
 			$content .= '
 				<tr>
-					<td colspan="13">'.$this->l('No specific prices.').'</td>
+					<td class="text-center" colspan="13"><i class="icon-warning-sign"></i>&nbsp;'.$this->l('No specific prices.').'</td>
 				</tr>';
 		else
 		{
@@ -3285,8 +3285,8 @@ class AdminProductsControllerCore extends AdminController
 				{
 					$content .= '
 					<tr '.($i % 2 ? 'class="alt_row"' : '').'>
-						<td class="cell border">'.$rule_name.'</td>
-						<td class="cell border">'.$attributes_name.'</td>';
+						<td>'.$rule_name.'</td>
+						<td>'.$attributes_name.'</td>';
 
 					$can_delete_specific_prices = true;
 					if (Shop::isFeatureActive())
@@ -3294,20 +3294,20 @@ class AdminProductsControllerCore extends AdminController
 						$id_shop_sp = $specific_price['id_shop'];
 						$can_delete_specific_prices = (count($this->context->employee->getAssociatedShops()) > 1 && !$id_shop_sp) || $id_shop_sp;
 						$content .= '
-						<td class="cell border">'.($id_shop_sp ? $shops[$id_shop_sp]['name'] : $this->l('All shops')).'</td>';
+						<td>'.($id_shop_sp ? $shops[$id_shop_sp]['name'] : $this->l('All shops')).'</td>';
 					}
 					$price = Tools::ps_round($specific_price['price'], 2);
 					$fixed_price = ($price == Tools::ps_round($obj->price, 2) || $specific_price['price'] == -1) ? '--' : Tools::displayPrice($price, $current_specific_currency);
 					$content .= '
-						<td class="cell border">'.($specific_price['id_currency'] ? $currencies[$specific_price['id_currency']]['name'] : $this->l('All currencies')).'</td>
-						<td class="cell border">'.($specific_price['id_country'] ? $countries[$specific_price['id_country']]['name'] : $this->l('All countries')).'</td>
-						<td class="cell border">'.($specific_price['id_group'] ? $groups[$specific_price['id_group']]['name'] : $this->l('All groups')).'</td>
-						<td class="cell border" title="'.$this->l('ID:').' '.$specific_price['id_customer'].'">'.(isset($customer_full_name) ? $customer_full_name : $this->l('All customers')).'</td>
-						<td class="cell border">'.$fixed_price.'</td>
-						<td class="cell border">'.$impact.'</td>
-						<td class="cell border">'.$period.'</td>
-						<td class="cell border">'.$specific_price['from_quantity'].'</th>
-						<td class="cell border">'.((!$rule->id && $can_delete_specific_prices) ? '<a class="btn btn-default" name="delete_link" href="'.self::$currentIndex.'&id_product='.(int)Tools::getValue('id_product').'&action=deleteSpecificPrice&id_specific_price='.(int)($specific_price['id_specific_price']).'&token='.Tools::getValue('token').'"><i class="icon-trash"></i></a>': '').'</td>
+						<td>'.($specific_price['id_currency'] ? $currencies[$specific_price['id_currency']]['name'] : $this->l('All currencies')).'</td>
+						<td>'.($specific_price['id_country'] ? $countries[$specific_price['id_country']]['name'] : $this->l('All countries')).'</td>
+						<td>'.($specific_price['id_group'] ? $groups[$specific_price['id_group']]['name'] : $this->l('All groups')).'</td>
+						<td title="'.$this->l('ID:').' '.$specific_price['id_customer'].'">'.(isset($customer_full_name) ? $customer_full_name : $this->l('All customers')).'</td>
+						<td>'.$fixed_price.'</td>
+						<td>'.$impact.'</td>
+						<td>'.$period.'</td>
+						<td>'.$specific_price['from_quantity'].'</th>
+						<td>'.((!$rule->id && $can_delete_specific_prices) ? '<a class="btn btn-default" name="delete_link" href="'.self::$currentIndex.'&id_product='.(int)Tools::getValue('id_product').'&action=deleteSpecificPrice&id_specific_price='.(int)($specific_price['id_specific_price']).'&token='.Tools::getValue('token').'"><i class="icon-trash"></i></a>': '').'</td>
 					</tr>';
 					$i++;
 					unset($customer_full_name);
@@ -3317,7 +3317,7 @@ class AdminProductsControllerCore extends AdminController
 		$content .= '
 				</tbody>
 			</table>
-		</fieldset>';
+		</div>';
 
 		$content .= '
 		<script type="text/javascript">
@@ -3344,14 +3344,14 @@ class AdminProductsControllerCore extends AdminController
 		// Reindex array starting from 0
 		$specific_price_priorities = array_values($specific_price_priorities);
 
-		$content .= '<fieldset>
+		$content .= '<div class="panel">
 		<h3>'.$this->l('Priority management').'</h3>
 		<div class="alert alert-info">
 				'.$this->l('Sometimes one customer can fit into multiple price rules. Priorities allow you to define which rule applies to the customer.').'
 		</div>';
 
 		$content .= '
-		<div class="row">
+		<div class="form-group">
 			<label class="control-label col-lg-3" for="specificPricePriority1">'.$this->l('Priorities:').'</label>
 			<div class="input-group col-lg-9">
 				<select id="specificPricePriority1" name="specificPricePriority[]">
@@ -3383,15 +3383,14 @@ class AdminProductsControllerCore extends AdminController
 				</select>
 			</div>
 		</div>
-
-		<div class="row">
-			<div class="col-lg-9 col-offset-3">
+		<div class="form-group">
+			<div class="col-lg-9 col-lg-offset-3">
 				<p class="checkbox">
 					<label for="specificPricePriorityToAll"><input type="checkbox" name="specificPricePriorityToAll" id="specificPricePriorityToAll" />'.$this->l('Apply to all products').'</label>
 				</p>
 			</div>
 		</div>
-		</fieldset>
+		</div>
 		';
 		return $content;
 	}
@@ -3423,16 +3422,14 @@ class AdminProductsControllerCore extends AdminController
 
 		$template = $this->context->smarty->createTemplate('controllers/products/input_text_lang.tpl',
 			$this->context->smarty);
-		return '<div class="form-group">'
+		return '<div class="form-group"><div class="input-group">'
 			.$template->assign(array(
 				'languages' => $languages,
 				'input_name'  => 'label_'.$type.'_'.(int)($id_customization_field),
 				'input_value' => $input_value
 			))->fetch()
-			.'</div>'
-			.'<div class="form-group">'
-			.'<input type="checkbox" name="require_'.$type.'_'.(int)($id_customization_field).'" id="require_'.$type.'_'.(int)($id_customization_field).'" value="1" '.($required ? 'checked="checked"' : '').' style="float:left;margin:1px 4px 0 0"/><label for="require_'.$type.'_'.(int)($id_customization_field).'" style="float:none;font-weight:normal"> '.$this->l('Required').'</label>'
-			.'</div>';
+			.'<span class="input-group-addon"><span class="checkbox"><input type="checkbox" name="require_'.$type.'_'.(int)($id_customization_field).'" id="require_'.$type.'_'.(int)($id_customization_field).'" value="1" '.($required ? 'checked="checked"' : '').'/><label for="require_'.$type.'_'.(int)($id_customization_field).'"> '.$this->l('Required').'</label></span></span>'
+			.'</div></div>';
 	}
 
 	protected function _displayLabelFields(&$obj, &$labels, $languages, $default_language, $type)
