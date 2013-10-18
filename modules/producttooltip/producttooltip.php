@@ -159,8 +159,8 @@ class ProductToolTip extends Module
 				'input' => array(
 					array(
 						'type' => 'switch',
-						'label' => $this->l('Number of people:'),
-						'desc' => $this->l('Display the number of people who are currently watching this product?').'<br>'.
+						'label' => $this->l('Number of visitors'),
+						'desc' => $this->l('Display the number of visitors who are currently watching this product?').'<br>'.
 								$this->l('If you activate the option above, you must activate the first option of StatData module'),
 						'name' => 'PS_PTOOLTIP_PEOPLE',
 						'values' => array(
@@ -178,7 +178,8 @@ class ProductToolTip extends Module
 						),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Lifetime:'),
+						'label' => $this->l('Period length'),
+						'desc' => 'For instance, if set to 30 minutes, display the number of visitors in the last 30 minutes.',
 						'name' => 'PS_PTOOLTIP_LIFETIME',
 						'suffix' => 'minutes',
 						'values' => array(
@@ -196,7 +197,7 @@ class ProductToolTip extends Module
 					),
 					array(
 						'type' => 'switch',
-						'label' => $this->l('Product ordered:'),
+						'label' => $this->l('Last order date'),
 						'desc' => $this->l('Display the last time the product has been ordered?'),
 						'name' => 'PS_PTOOLTIP_DATE_ORDER',
 						'values' => array(
@@ -214,8 +215,8 @@ class ProductToolTip extends Module
 					),
 					array(
 						'type' => 'switch',
-						'label' => $this->l('Added to a cart:'),
-						'label' => $this->l('If not ordered yet, display the last time the product has been added to a cart?'),
+						'label' => $this->l('Added to a cart'),
+						'desc' => $this->l('If not ordered yet, display the last time the product has been added to a cart?'),
 						'name' => 'PS_PTOOLTIP_DATE_CART',
 						'values' => array(
 									array(
@@ -232,7 +233,7 @@ class ProductToolTip extends Module
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Do not display events older than:'),
+						'label' => $this->l('Do not display events older than'),
 						'name' => 'PS_PTOOLTIP_DAYS',
 						'suffix' => 'days'
 					),
