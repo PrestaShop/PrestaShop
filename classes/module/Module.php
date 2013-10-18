@@ -1753,6 +1753,7 @@ abstract class ModuleCore
 					@unlink($file);
 					@file_put_contents($file, $xml);
 				}
+			@chmod($file, 0664);
 		}
 	}
 
