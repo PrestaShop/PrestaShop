@@ -80,12 +80,14 @@
 						{if isset($input.desc)}<p>{$input.desc}</p>{/if}
 						{if isset($fields_value.image) && $fields_value.image}
 							<div class="clearfix">&nbsp;</div>
-							<div id="image" class="thumbnail">
+							<div id="image" class="img-thumbnail">
 								{$fields_value.image}
-								<p>{l s='File size'} {$fields_value.size}kb</p>
-								<a class="btn btn-default" href="{$current}&{$identifier}={$form_id}&token={$token}&deleteImage=1">
-									<i class="icon-trash"></i> {l s='Delete'}
-								</a>
+								<div class="text-center">
+									<p>{l s='File size'} {$fields_value.size}kb</p>
+									<a class="btn btn-default" href="{$current}&{$identifier}={$form_id}&token={$token}&deleteImage=1">
+										<i class="icon-trash"></i> {l s='Delete'}
+									</a>
+								</div>
 							</div>
 						{/if}
 						<script>
