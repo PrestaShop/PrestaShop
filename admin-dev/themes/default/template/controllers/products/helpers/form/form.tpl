@@ -239,12 +239,9 @@
 
 			{if !$product->active && $product->isAssociatedToShop()}
 			<div class="alert alert-info draft" >
-				<p>
-					<span >
-					{l s='Your product will be saved as a draft.'}</span>
-					<span style="float:right"><a href="#" class="button" style="display: block" onclick="submitAddProductAndPreview()" >{l s='Save and preview'}</a></span>
-					<input type="hidden" name="fakeSubmitAddProductAndPreview" id="fakeSubmitAddProductAndPreview" />
-				</p>
+				<span>{l s='Your product will be saved as a draft.'}</span>
+				<a href="#" class="btn btn-default pull-right" onclick="submitAddProductAndPreview()" ><i class="icon-external-link-sign"></i> {l s='Save and preview'}</a>
+				<input type="hidden" name="fakeSubmitAddProductAndPreview" id="fakeSubmitAddProductAndPreview" />
 			</div>
 			{/if}
 
