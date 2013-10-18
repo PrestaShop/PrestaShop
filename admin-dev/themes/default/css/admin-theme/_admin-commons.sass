@@ -13,6 +13,8 @@
 
 .row-margin-bottom
 	margin-bottom: 15px
+.row-padding-top
+	padding-top: 15px
 
 .thumbnail
 	background-color: white
@@ -56,6 +58,29 @@
 		text-decoration: inherit
 		-webkit-font-smoothing: antialiased
 		content: "\f00d"
+
+.alert.alert-success
+	padding-left: 60px
+	position: relative
+	&:before
+		position: absolute
+		top: 0
+		left: 10px
+		display: block
+		min-height: 25px
+		min-width: 25px
+		font-family: FontAwesome
+		font-weight: normal
+		font-style: normal
+		font-size: 35px
+		text-decoration: inherit
+		-webkit-font-smoothing: antialiased
+		content: "\f00c"
+
+.panel
+	.panel-footer
+		margin: 0 -20px -20px
+
 
 
 .overflow-y

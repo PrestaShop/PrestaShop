@@ -1,5 +1,5 @@
 #nav-sidebar
-	float: left
+	position: fixed
 	width: 240px
 	height: 100%!important
 	overflow-y: auto
@@ -35,7 +35,6 @@
 					i
 						color: black
 						background-color: white
-
 			&.active
 				a.title:hover
 					color: contrast-color($main-color, white, #333, 10%)
@@ -97,7 +96,6 @@
 				background-color: transparent
 				@extend .icon-angle-down
 				@include text-shadow(lighten($main-color,10%) 1px 1px 0)
-
 				&:hover
 					color: white
 					@include text-shadow(darken($main-color,20%) -1px -1px 0)
@@ -234,6 +232,7 @@
 
 .page-sidebar-closed
 	#nav-sidebar
+		overflow: visible 
 		width: 50px
 		@include transition-property(width)
 		@include transition-duration(0.4s)
