@@ -302,21 +302,15 @@ class Dashtrends extends Module
 		$chart_data = array();
 		foreach (array_keys($this->dashboard_data) as $chart_key)
 		{
-			$calibration = 1;
-			foreach ($this->dashboard_data[$chart_key] as $value)
-				if ($value)
-				{
-					$calibration = $value;
-					break;
-				}
+			$calibration = array_sum($this->dashboard_data[$chart_key]) / count($this->dashboard_data[$chart_key]);
 
 			$chart_data[$chart_key] = array();
 			foreach ($this->dashboard_data[$chart_key] as $key => $value)
-				$chart_data[$chart_key][] = array(1000 * $key, 100 * $value / $calibration);
+				$chart_data[$chart_key][] = array(1000 * $key, $calibration ? 100 * $value / $calibration : 0);
 
 			$chart_data_compare[$chart_key] = array();
 			foreach ($this->dashboard_data_compare[$chart_key] as $key => $value)
-				$chart_data_compare[$chart_key][] = array(1000 * $key, 100 * $value / $calibration);
+				$chart_data_compare[$chart_key][] = array(1000 * $key, $calibration ? 100 * $value / $calibration : 0);
 		}
 		
 		$charts = array(
