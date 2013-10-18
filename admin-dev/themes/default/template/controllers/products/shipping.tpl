@@ -30,40 +30,40 @@
 		<div class="alert alert-info">{l s='Warning, if you change the value of fields with an orange bullet %s, the value will be changed for all other shops for this product' sprintf=$bullet_common_field}</div>
 	{/if}
 
-	<div class="row">
-		<label class="control-label col-lg-5" for="width">{$bullet_common_field} {l s='Width (package):'}</label>
+	<div class="form-group">
+		<label class="control-label col-lg-3" for="width">{$bullet_common_field} {l s='Width (package):'}</label>
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$ps_dimension_unit}</span>
 			<input maxlength="6" id="width" name="width" type="text" value="{$product->width}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />			
 		</div>
 	</div>
 
-	<div class="row">
-		<label class="control-label col-lg-5" for="height">{$bullet_common_field} {l s='Height (package):'}</label>
+	<div class="form-group">
+		<label class="control-label col-lg-3" for="height">{$bullet_common_field} {l s='Height (package):'}</label>
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$ps_dimension_unit}</span>
 			<input maxlength="6" id="height" name="height" type="text" value="{$product->height}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
 		</div>
 	</div>
 	
-	<div class="row">
-		<label class="control-label col-lg-5" for="depth">{$bullet_common_field} {l s='Depth (package):'}</label>
+	<div class="form-group">
+		<label class="control-label col-lg-3" for="depth">{$bullet_common_field} {l s='Depth (package):'}</label>
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$ps_dimension_unit}</span>
 			<input maxlength="6" id="depth" name="depth" type="text" value="{$product->depth}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
 		</div>
 	</div>
 
-	<div class="row">
-		<label class="control-label col-lg-5" for="weight">{$bullet_common_field} {l s='Weight (package):'}</label>
+	<div class="form-group">
+		<label class="control-label col-lg-3" for="weight">{$bullet_common_field} {l s='Weight (package):'}</label>
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$ps_weight_unit}</span>
 			<input maxlength="6" id="weight" name="weight" type="text" value="{$product->weight}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
 		</div>
 	</div>
 
-	<div class="row">
-		<label class="control-label col-lg-5" for="additional_shipping_cost">
+	<div class="form-group">
+		<label class="control-label col-lg-3" for="additional_shipping_cost">
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='A carrier tax will be applied.'}">
 				{l s='Additional shipping cost (per quantity):'}
@@ -76,12 +76,12 @@
 		</div>
 	</div>
 
-	<div class="row">
-		<label class="control-label col-lg-5" for="availableCarriers">{l s='Carriers:'}</label>
-		<div class="input-group col-lg-7">
-			<div class="row">
-				<div class="col-lg-6">
-					<label for="availableCarriers">{l s='Available carriers'}</label>
+	<div class="form-group">
+		<label class="control-label col-lg-3" for="availableCarriers">{l s='Carriers:'}</label>
+		<div class="col-lg-9">
+			<div class="form-control-static row">
+				<div class="col-xs-6">
+					<p>{l s='Available carriers'}</p>
 					<select multiple id="availableCarriers" name="availableCarriers">
 						{foreach $carrier_list as $carrier}
 							{if !isset($carrier.selected) || !$carrier.selected}
@@ -91,8 +91,8 @@
 					</select>
 					<a href="#" id="addCarrier" class="btn btn-default btn-block">{l s='Add'} <i class="icon-arrow-right"></i></a>
 				</div>
-				<div class="col-lg-6">
-					<label for="selectedCarriers">{l s='Selected carriers'}</label>
+				<div class="col-xs-6">
+					<p>{l s='Selected carriers'}</p>
 					<select multiple id="selectedCarriers" name="selectedCarriers[]">
 						{foreach $carrier_list as $carrier}
 							{if isset($carrier.selected) && $carrier.selected}
