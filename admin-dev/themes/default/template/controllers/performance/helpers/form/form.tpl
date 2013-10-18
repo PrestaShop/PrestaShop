@@ -117,7 +117,7 @@
 							<td>{$server.port}</td>
 							<td>{$server.weight}</td>
 							<td align="right">
-								<a class="btn btn-default" href="{$current}&token={$token}&deleteMemcachedServer={$server.id_memcached_server}" onclick="if (!confirm('{l s='Do you really want to remove the server %s:%s'|sprintf:$server.ip:$server.port}')) return false;"><i class="icon-minus-sign-alt"></i> {l s='Remove'}</a>
+								<a class="btn btn-default" href="{$current}&token={$token}&deleteMemcachedServer={$server.id_memcached_server}" onclick="if (!confirm('{l s='Do you really want to remove the server %s:%s' sprintf=[$server.ip, $server.port] js=1}')) return false;"><i class="icon-minus-sign-alt"></i> {l s='Remove'}</a>
 							</td>
 						</tr>
 					{/foreach}
