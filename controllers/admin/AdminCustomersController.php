@@ -304,7 +304,7 @@ class AdminCustomersControllerCore extends AdminController
 					'name' => 'passwd',
 					'size' => 33,
 					'required' => ($obj->id ? false : true),
-					'desc' => ($obj->id ? $this->l('Leave  this field blank if there\'s no change') : $this->l('Minimum of five characters (only letters and numbers).').' -_')
+					'desc' => ($obj->id ? $this->l('Leave  this field blank if there\'s no change') : $this->l('Minimum of five characters'))
 				),
 				array(
 					'type' => 'birthday',
