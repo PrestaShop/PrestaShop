@@ -30,7 +30,7 @@
 	
 	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Customization"}
 
-	<div class="row">		
+	<div class="form-group">		
 		<label class="control-label col-lg-3" for="uploadable_files">
 			{include file="controllers/products/multishop/checkbox.tpl" field="uploadable_files" type="default"}
 			<span class="label-tooltip" data-toggle="tooltip"
@@ -42,7 +42,7 @@
 			<input type="text" name="uploadable_files" id="uploadable_files" value="{$uploadable_files|htmlentities}" />
 		</div>
 	</div>
-	<div class="row">
+	<div class="form-group">
 		<label class="control-label col-lg-3" for="text_fields">
 			{include file="controllers/products/multishop/checkbox.tpl" field="text_fields" type="default"}
 			<span class="label-tooltip" data-toggle="tooltip"
@@ -56,7 +56,7 @@
 	</div>
 	{if $has_file_labels}
 	<hr/>
-	<div class="row">
+	<div class="form-group">
 		<label class="control-label col-lg-3">
 			{l s='Define the label of the file fields:'}
 		</label>
@@ -67,7 +67,7 @@
 	{/if}
 	{if $has_text_labels}
 	<hr/>
-	<div class="row">
+	<div class="form-group">
 		<label class="control-label col-lg-3">
 			{l s='Define the label of the text fields:'}
 		</label>

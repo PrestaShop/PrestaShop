@@ -112,7 +112,7 @@ $(document).ready(function () {
 	</div>
 
 	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Prices"}
-	<div class="row">
+	<div class="form-group">
 		<label class="control-label col-lg-3" for="wholesale_price">
 			{include file="controllers/products/multishop/checkbox.tpl" field="wholesale_price" type="default"}
 			<span class="label-tooltip" data-toggle="tooltip"
@@ -127,7 +127,7 @@ $(document).ready(function () {
 		</div>
 	</div>
 
-	<div class="row">
+	<div class="form-group">
 		<label class="control-label col-lg-3" for="priceTE">
 			{include file="controllers/products/multishop/checkbox.tpl" field="price" type="price"}
 			<span class="label-tooltip" data-toggle="tooltip"
@@ -142,7 +142,7 @@ $(document).ready(function () {
 		</div>
 	</div>
 
-	<div class="row">		
+	<div class="form-group">		
 		<label class="control-label col-lg-3" for="id_tax_rules_group">
 			{include file="controllers/products/multishop/checkbox.tpl" field="id_tax_rules_group" type="default"}
 			{l s='Tax rule:'}
@@ -182,7 +182,7 @@ $(document).ready(function () {
 	</div>
 
 	{if $tax_exclude_taxe_option}
-	<div class="row">
+	<div class="form-group">
 		<div class="col-lg-9 col-lg-offset-3">
 			<div class="alert">
 				{l s='Taxes are currently disabled'} :
@@ -193,7 +193,7 @@ $(document).ready(function () {
 	</div>
 	{/if}
 
-	<div class="row" {if !$ps_use_ecotax} style="display:none;"{/if}>
+	<div class="form-group" {if !$ps_use_ecotax} style="display:none;"{/if}>
 		<label class="control-label col-lg-3" for="ecotax">
 			{include file="controllers/products/multishop/checkbox.tpl" field="ecotax" type="default"}
 			<span class="label-tooltip" data-toggle="tooltip"
@@ -207,7 +207,7 @@ $(document).ready(function () {
 		</div>
 	</div>
 
-	<div class="row" {if !$country_display_tax_label || $tax_exclude_taxe_option}style="display:none;"{/if} >
+	<div class="form-group" {if !$country_display_tax_label || $tax_exclude_taxe_option}style="display:none;"{/if} >
 		<label class="control-label col-lg-3" for="priceTI">{l s='Retail price with tax:'}</label>
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
@@ -216,7 +216,7 @@ $(document).ready(function () {
 		</div>
 	</div>
 
-	<div class="row">
+	<div class="form-group">
 		<label class="control-label col-lg-3" for="unit_price">
 			{include file="controllers/products/multishop/checkbox.tpl" field="unit_price" type="unit_price"}
 			<span class="label-tooltip" data-toggle="tooltip"
@@ -233,7 +233,7 @@ $(document).ready(function () {
 	</div>
 
 	{if $ps_tax && $country_display_tax_label}
-	<div class="row">
+	<div class="form-group">
 		<div class="col-lg-9 col-lg-offset-3">
 			<div class="alert alert-warning">
 				<span>{l s='or'}
@@ -245,7 +245,7 @@ $(document).ready(function () {
 	</div>
 	{/if}
 
-	<div class="row">
+	<div class="form-group">
 		<label class="control-label col-lg-3" for="on_sale">
 		{include file="controllers/products/multishop/checkbox.tpl" field="on_sale" type="default"}
 		</label>
@@ -259,7 +259,7 @@ $(document).ready(function () {
 		</div>
 	</div>
 
-	<div class="row">
+	<div class="form-group">
 		<div class="col-lg-9 col-lg-offset-3">
 			<div class="alert alert-success">
 				<strong>{l s='Final retail price:'}</strong>
@@ -291,13 +291,13 @@ $(document).ready(function () {
 		{l s='You can set specific prices for clients belonging to different groups, different countries, etc...'}
 	</div>
 
-	<div class="row">
+	<div class="form-group">
 		<div class="col-lg-12">
 			<a class="btn btn-default" href="#" id="show_specific_price">
 				<i class="icon-plus-sign"></i> {l s='Add a new specific price'}
 			</a>
 			<a class="btn btn-default" href="#" id="hide_specific_price" style="display:none">
-				<i class="icon-remove"></i> {l s='Cancel new specific price'}
+				<i class="icon-remove text-danger"></i> {l s='Cancel new specific price'}
 			</a>
 		</div>
 	</div>
@@ -312,7 +312,7 @@ $(document).ready(function () {
 	<div id="add_specific_price" class="well" style="display: none;">
 		<div class="col-lg-12">
 			<div class="form-group">
-				<label class="control-label col-lg-3" for="{if !$multi_shop}spm_currency_0{else}sp_id_shop{/if}">{l s='For:'}</label>
+				<label class="control-label col-lg-3" for="{if !$multi_shop}spm_currency_0{else}sp_id_shop{/if}">{l s='For'}</label>
 				<div class="col-lg-9">
 					<div class="row">
 					{if !$multi_shop}
@@ -356,10 +356,14 @@ $(document).ready(function () {
 			</div>
 
 			<div class="form-group">
-				<label class="control-label col-lg-3" for="customer">{l s='Customer:'}</label>
+				<label class="control-label col-lg-3" for="customer">{l s='Customer'}</label>
 				<div class="col-lg-9">
 					<input type="hidden" name="sp_id_customer" id="id_customer" value="0" />
-					<input type="text" name="customer" value="{l s='All customers'}" id="customer" autocomplete="off" />
+					<div class="input-group">
+						<input type="text" name="customer" value="{l s='All customers'}" id="customer" autocomplete="off" />
+						<span class="input-group-addon"><i class="icon-search"></i></span>
+					</div>
+					
 				</div>
 				<img src="../img/admin/field-loader.gif" id="customerLoader" alt="{l s='Loading...'}" style="display: none;" />
 				<div id="customers"></div>
@@ -380,11 +384,24 @@ $(document).ready(function () {
 			{/if}
 
 			<div class="form-group">
-				<label class="control-label col-lg-3" for="sp_from">{l s='Available from:'}</label>
-				<div class="input-group col-lg-4">
-					<input class="datepicker" type="text" name="sp_from" value="" style="text-align: center" id="sp_from" />
-					<span class="input-group-addon">{l s='to'}</span>
-					<input class="datepicker" type="text" name="sp_to" value="" style="text-align: center" id="sp_to" />
+				<label class="control-label col-lg-3" for="sp_from">{l s='Available'}</label>
+				<div class="col-lg-9">
+					<div class="row">
+						<div class="col-lg-6">
+							<div class="input-group">
+								<span class="input-group-addon">{l s='from'}</span>
+								<input class="datepicker" type="text" name="sp_from" value="" style="text-align: center" id="sp_from" />
+								<span class="input-group-addon"><i class="icon-calendar-empty"></i></span>
+							</div>
+						</div>
+						<div class="col-lg-6">
+							<div class="input-group">
+								<span class="input-group-addon">{l s='to'}</span>
+								<input class="datepicker" type="text" name="sp_to" value="" style="text-align: center" id="sp_to" />
+								<span class="input-group-addon"><i class="icon-calendar-empty"></i></span>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 
@@ -471,21 +488,21 @@ $(document).ready(function () {
 		});
 	</script>
 
-	<table id="specific_prices_list" class="table">
+	<table id="specific_prices_list" class="table table-bordered">
 		<thead>
 			<tr>
-				<th class="cell border" >{l s='Rule'}</th>
-				<th class="cell border" >{l s='Combination'}</th>
+				<th>{l s='Rule'}</th>
+				<th>{l s='Combination'}</th>
 				{if $multi_shop}<th>{l s='Shop'}</th>{/if}
-				<th class="cell border">{l s='Currency'}</th>
-				<th class="cell border">{l s='Country'}</th>
-				<th class="cell border">{l s='Group'}</th>
-				<th class="cell border">{l s='Customer'}</th>
-				<th class="cell border">{l s='Fixed price'}</th>
-				<th class="cell border">{l s='Impact'}</th>
-				<th class="cell border">{l s='Period'}</th>
-				<th class="cell border">{l s='From (quantity)'}</th>
-				<th class="cell border">{l s='Action'}</th>
+				<th>{l s='Currency'}</th>
+				<th>{l s='Country'}</th>
+				<th>{l s='Group'}</th>
+				<th>{l s='Customer'}</th>
+				<th>{l s='Fixed price'}</th>
+				<th>{l s='Impact'}</th>
+				<th>{l s='Period'}</th>
+				<th>{l s='From (quantity)'}</th>
+				<th>{l s='Action'}</th>
 			</tr>
 		</thead>
 		<tbody>

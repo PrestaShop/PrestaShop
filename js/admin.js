@@ -647,19 +647,17 @@ function addRelatedProduct(id_product_to_add, product_name)
 	if (!id_product_to_add || id_product == id_product_to_add)
 		return;
 	$('#related_product_name').html(product_name);
-	$('#related_product_name').parent('p').css('margin-top', 0);
 	$('input[name=id_product_redirected]').val(id_product_to_add);
-	$('#related_product_autocomplete_input').hide();
+	$('#related_product_autocomplete_input').parent().hide();
 	$('#related_product_remove').show();
 }
 
 function removeRelatedProduct()
 {
 	$('#related_product_name').html(no_related_product);
-	$('#related_product_name').parent('p').css('margin-top', '0.5em');
 	$('input[name=id_product_redirected]').val(0);
 	$('#related_product_remove').hide();
-	$('#related_product_autocomplete_input').fadeIn();
+	$('#related_product_autocomplete_input').parent().fadeIn();
 }
 
 function showRedirectProductSelectOptions(show)

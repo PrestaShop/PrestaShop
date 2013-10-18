@@ -44,8 +44,8 @@
 				<div class="alert alert-warning" id="available_quantity_ajax_msg" style="display: none;"></div>
 				<div class="alert alert-danger" id="available_quantity_ajax_error_msg" style="display: none;"></div>
 				<div class="alert alert-success" id="available_quantity_ajax_success_msg" style="display: none;"></div>					
-				<div {if $product->is_virtual || $product->cache_is_pack}style="display:none;"{/if} class="row stockForVirtualProduct">
-					<div class="col-lg-12">
+				<div class="row" {if $product->is_virtual || $product->cache_is_pack}style="display:none;"{/if} class="row stockForVirtualProduct">
+					<div class="col-lg-9 col-lg-offset-3">
 						<p class="checkbox">
 							<label for="advanced_stock_management">
 								<input type="checkbox" name="advanced_stock_management" class="advanced_stock_management" id="advanced_stock_management" 
@@ -58,12 +58,14 @@
 										disabled="disabled" 
 									{/if} 
 								/>
-								{l s='I want to use the advanced stock management system for this product.'} 
-								{if $stock_management_active == 0 && !$product->cache_is_pack}&nbsp;-&nbsp;<strong>{l s='This requires you to enable advanced stock management.'}</strong>
-								{else if $product->cache_is_pack}&nbsp;-&nbsp;{l s='This parameter depends on the product(s) in the pack.'}
-								{/if}
+								{l s='I want to use the advanced stock management system for this product.'}
 							</label>
 						</p>
+							{if $stock_management_active == 0 && !$product->cache_is_pack}
+								<p class="text-danger"><i class="icon-warning-sign"></i>&nbsp;{l s='This requires you to enable advanced stock management.'}</p>
+							{else if $product->cache_is_pack}
+								<p class="text-info">{l s='This parameter depends on the product(s) in the pack.'}</p>
+							{/if}
 					</div>
 				</div>
 
@@ -105,45 +107,43 @@
 						<p>{l s='Given the quantities of the products in this pack, the maximum quantity should be:'} {$pack_quantity}</p>
 					</div>	
 				{/if}
-
-				<table class="table">
-					<colgroup>
-						<col width="50">
-						<col>
-					</colgroup>
-					<thead>
-						<tr>
-							<th><span class="title_box">{l s='Quantity'}</span></th>
-							<th><span class="title_box">{l s='Designation'}</span></th>
-						</tr>
-					</thead>
-					{foreach from=$attributes item=attribute}
-						<tr>
-							<td class="available_quantity" id="qty_{$attribute['id_product_attribute']}">
-								<span>{$available_quantity[$attribute['id_product_attribute']]}</span>
-								<input type="text" value="{$available_quantity[$attribute['id_product_attribute']]|htmlentities}"/>
-							</td>
-							<td>{$product_designation[$attribute['id_product_attribute']]}</td>
-						</tr>
-					{/foreach}
-				</table>
-
+				<div class="row">
+					<div class="col-lg-9 col-lg-offset-3">
+						<table class="table">
+							<thead>
+								<tr>
+									<th><span class="title_box">{l s='Quantity'}</span></th>
+									<th><span class="title_box">{l s='Designation'}</span></th>
+								</tr>
+							</thead>
+							{foreach from=$attributes item=attribute}
+								<tr>
+									<td class="available_quantity" id="qty_{$attribute['id_product_attribute']}">
+										<span>{$available_quantity[$attribute['id_product_attribute']]}</span>
+										<input type="text" class="fixed-width-sm" value="{$available_quantity[$attribute['id_product_attribute']]|htmlentities}"/>
+									</td>
+									<td>{$product_designation[$attribute['id_product_attribute']]}</td>
+								</tr>
+							{/foreach}
+						</table>
+					</div>
+				</div>
 				<div id="when_out_of_stock" class="row">
 					<label class="control-label col-lg-3">{l s='When out of stock:'}</label>
 					<div class="col-lg-9">
-						<p class="checkbox">
+						<p class="radio">
 							<label id="label_out_of_stock_1" for="out_of_stock_1">
 								<input {if $product->out_of_stock == 0} checked="checked" {/if} id="out_of_stock_1" type="radio" checked="checked" value="0" class="out_of_stock" name="out_of_stock">
 								{l s='Deny orders'}
 							</label>
 						</p>
-						<p class="checkbox">
+						<p class="radio">
 							<label id="label_out_of_stock_2" for="out_of_stock_2">
 								<input {if $product->out_of_stock == 1} checked="checked" {/if} id="out_of_stock_2" type="radio" value="1" class="out_of_stock" name="out_of_stock">
 								{l s='Allow orders'}
 							</label>
 						</p>
-						<p class="checkbox">
+						<p class="radio">
 							<label id="label_out_of_stock_3" for="out_of_stock_3">
 								<input {if $product->out_of_stock == 2} checked="checked" {/if} id="out_of_stock_3" type="radio" value="2" class="out_of_stock" name="out_of_stock">
 								{l s='Default'}:
@@ -176,25 +176,25 @@
 		<h3>{l s='Availability settings'}</h3>
 
 		{if !$has_attribute}
-			<div class="row">
+			<div class="form-group">
 				<label class="control-label col-lg-3" for="minimal_quantity">{l s='Minimum quantity:'}</label>
-				<div class="col-lg-1">
-					<input maxlength="6" name="minimal_quantity" id="minimal_quantity" type="text" value="{$product->minimal_quantity|default:1}" />
+				<div class="col-lg-9">
+					<input class="form-control fixed-width-sm" maxlength="6" name="minimal_quantity" id="minimal_quantity" type="text" value="{$product->minimal_quantity|default:1}" />
+					<p class="help-block">{l s='The minimum quantity to buy this product (set to 1 to disable this feature)'}</p>
 				</div>
-				<p class="help-block">{l s='The minimum quantity to buy this product (set to 1 to disable this feature)'}</p>
 			</div>
 		{/if}
 
 		{if $ps_stock_management}			
-			<div class="row">
-				<label class="control-label col-lg-5" for="available_now_{$default_language}">
+			<div class="form-group">
+				<label class="control-label col-lg-3" for="available_now_{$default_language}">
 					{include file="controllers/products/multishop/checkbox.tpl" field="available_now" type="default" multilang="true"}
 					<span class="label-tooltip" data-toggle="tooltip"
 						title="{l s='Forbidden characters:'} &#60;&#62;;&#61;#&#123;&#125;">
 						{l s='Displayed text when in-stock:'}
 					</span>
 				</label>
-				<div class="col-lg-5">
+				<div class="col-lg-9">
 					<div class="row">
 						{include file="controllers/products/input_text_lang.tpl"
 							languages=$languages
@@ -203,8 +203,8 @@
 					</div>
 				</div>
 			</div>
-			<div class="row">
-				<label class="control-label col-lg-5" for="available_later_{$default_language}">
+			<div class="form-group">
+				<label class="control-label col-lg-3" for="available_later_{$default_language}">
 					{include file="controllers/products/multishop/checkbox.tpl" field="available_later" type="default" multilang="true"}
 					<span class="label-tooltip" data-toggle="tooltip"
 						title="{l s='Forbidden characters:'} &#60;&#62;;&#61;#&#123;&#125;">
@@ -212,7 +212,7 @@
 					</span>
 					
 				</label>
-				<div class="col-lg-5">
+				<div class="col-lg-9">
 					<div class="row">
 						{include file="controllers/products/input_text_lang.tpl"
 							languages=$languages
@@ -223,9 +223,19 @@
 			</div>
 			
 			{if !$countAttributes}
-				<label for="available_date">{l s='Available date:'}</label>
-				<input id="available_date" name="available_date" value="{$product->available_date}" class="datepicker" type="text" />
-				<p>{l s='The available date when this product is out of stock.'}</p>
+			<div class="form-group">
+				<label class="control-label col-lg-3" for="available_date">{l s='Available date:'}</label>
+				<div class="col-lg-9">
+					<div class="input-group fixed-width-md">
+						<input id="available_date" name="available_date" value="{$product->available_date}" class="datepicker" type="text" />
+						<div class="input-group-addon">
+							<i class="icon-calendar-empty"></i>
+						</div>
+
+					</div>
+					<p class="help-block">{l s='The available date when this product is out of stock.'}</p>
+				</div>
+			</div>
 			{/if}
 		{/if}
 

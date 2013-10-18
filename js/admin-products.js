@@ -632,7 +632,7 @@ product_tabs['Associations'] = new function(){
 		var $nameAccessories = $('#nameAccessories');
 
 		/* delete product from select + add product line to the div, input_name, input_ids elements */
-		$divAccessories.html($divAccessories.html() + productName + ' <span class="delAccessory" name="' + productId + '" style="cursor: pointer;"><img src="../img/admin/delete.gif" /></span><br />');
+		$divAccessories.html($divAccessories.html() + '<div class="form-control-static"><button type="button" class="delAccessory btn btn-default" name="' + productId + '"><i class="icon-remove text-danger"></i></button>&nbsp;'+ productName +'</div>');
 		$nameAccessories.val($nameAccessories.val() + productName + '¤');
 		$inputAccessories.val($inputAccessories.val() + productId + '-');
 		$('#product_autocomplete_input').val('');
@@ -669,7 +669,7 @@ product_tabs['Associations'] = new function(){
 			{
 				input.value += inputCut[i] + '-';
 				name.value += nameCut[i] + '¤';
-				div.innerHTML += nameCut[i] + ' <span class="delAccessory" name="' + inputCut[i] + '" style="cursor: pointer;"><img src="../img/admin/delete.gif" /></span><br />';
+				div.innerHTML += '<div class="form-control-static"><button type="button" class="delAccessory btn btn-default" name="' + inputCut[i] +'"><i class="icon-remove text-danger"></i></button>&nbsp;' + nameCut[i] + '</div>';
 			}
 			else
 				$('#selectAccessories').append('<option selected="selected" value="' + inputCut[i] + '-' + nameCut[i] + '">' + inputCut[i] + ' - ' + nameCut[i] + '</option>');
@@ -825,13 +825,13 @@ product_tabs['Informations'] = new function(){
 				scroll:false,
 				cacheLength:0,
 				formatItem: function(item) {
-						return item[0]+' - '+item[1];
+					return item[0]+' - '+item[1];
 				}
 			}).result(function(e, i){  
-					if(i != undefined)
-						addRelatedProduct(i[1], i[0]);
-					$(this).val('');
-		       });
+				if(i != undefined)
+					addRelatedProduct(i[1], i[0]);
+				$(this).val('');
+			});
 		 addRelatedProduct(id_product_redirected, product_name_redirected);
 	};
 
@@ -1046,7 +1046,7 @@ product_tabs['Pack'] = new function(){
 			var lineDisplay = curPackItemQty+ 'x ' +curPackItemName;
 
 			var divContent = $('#divPackItems').html();
-			divContent += '<li><button class="btn btn-default delPackItem" name="' + curPackItemId + '" ><i class="icon-trash"></i></button>'+
+			divContent += '<li><button class="btn btn-default delPackItem" name="' + curPackItemId + '" ><i class="icon-remove text-danger"></i></button>'+
 			lineDisplay+'</li>';
 
 			// QTYxID-QTYxID
@@ -1098,7 +1098,7 @@ product_tabs['Pack'] = new function(){
 					{
 						input.value += inputCut[i] + '-';
 						name.value += nameCut[i] + '¤';
-						div.innerHTML += nameCut[i] + '<li><button class="btn btn-default delPackItem" name="' + inputQty[1] + '"><i class="icon-trash"></i></button></li>';
+						div.innerHTML += nameCut[i] + '<li><button class="btn btn-default delPackItem" name="' + inputQty[1] + '"><i class="icon-remove text-danger"></i></button></li>';
 					}
 				}
 

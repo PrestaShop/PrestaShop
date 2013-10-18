@@ -137,7 +137,7 @@
 					<li>
 						{l s='Age:'}
 						{if isset($customer->birthday)}
-							{$customer_stats['age']} {l s='years old'} ({l s='Birth date:'} {$customer_birthday})
+							{l s='%d years old' sprintf=[$customer_stats['age']]} ({l s='Birth date:'} {$customer_birthday})
 						{else}
 							{l s='Unknown'}
 						{/if}

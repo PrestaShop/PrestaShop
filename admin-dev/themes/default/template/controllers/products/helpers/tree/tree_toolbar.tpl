@@ -22,4 +22,8 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{if isset($actions)}{foreach from=$actions item=action} {$action->render()}{/foreach}{/if}
+{if isset($actions)}
+	{foreach from=$actions item=action}
+		{$action->render()}
+	{/foreach}
+{/if}
