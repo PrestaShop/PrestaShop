@@ -48,7 +48,7 @@
 			{$hookDashboardZoneTwo}
 			<section id="dashaddons" class="panel widget">
 				<header class="panel-heading">
-					<a href="http://addons.prestashop.com/?utm_source=backoffice_dashboard" target="_blank">
+					<a href="http://addons.prestashop.com/208-dashboards?utm_source=backoffice_dashboard" target="_blank">
 						<i class="icon-plus"></i> {l s='Add more graph and data'}
 					</a>
 				</header>
