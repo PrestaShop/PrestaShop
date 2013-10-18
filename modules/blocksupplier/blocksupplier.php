@@ -169,7 +169,7 @@ class BlockSupplier extends Module
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Elements number'),
+						'label' => $this->l('Number of elements to display'),
 						'name' => 'SUPPLIER_DISPLAY_TEXT_NB',
 						'class' => 'fixed-width-xs'
 					),
