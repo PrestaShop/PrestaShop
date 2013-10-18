@@ -297,9 +297,9 @@ class Dashactivity extends Module
 			
 		$sub_widget = array(
 			array('label' => $this->l('Show Pending'), 'config_name' => 'DASHACTIVITY_SHOW_PENDING'),
-			array('label' => $this->l('Show Notification'), 'config_name' => 'DASHACTIVITY_SHOW_NOTIFICATION'),
-			array('label' => $this->l('Show Customers'), 'config_name' => 'DASHACTIVITY_SHOW_CUSTOMERS'),
-			array('label' => $this->l('Show Newsletter'), 'config_name' => 'DASHACTIVITY_SHOW_NEWSLETTER'),
+			array('label' => $this->l('Show Notifications'), 'config_name' => 'DASHACTIVITY_SHOW_NOTIFICATION'),
+			array('label' => $this->l('Show Clients'), 'config_name' => 'DASHACTIVITY_SHOW_CUSTOMERS'),
+			array('label' => $this->l('Show Newsletters'), 'config_name' => 'DASHACTIVITY_SHOW_NEWSLETTER'),
 			array('label' => $this->l('Show Traffic'), 'config_name' => 'DASHACTIVITY_SHOW_TRAFFIC'),
 			);
 		
