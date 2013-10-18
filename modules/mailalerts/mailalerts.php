@@ -257,6 +257,21 @@ class MailAlerts extends Module
 		</form>';
 	}
 
+	public function getAllMessages($id)
+	{
+		$messages = Db::getInstance()->executeS('
+			SELECT `message`
+			FROM `'._DB_PREFIX_.'message`
+			WHERE `id_order` = '.(int)$id.'
+			ORDER BY `id_message` ASC
+		');
+		$result = array();
+		foreach ($messages as $message) {
+			$result[] = $message['message'];
+		}
+		return implode('<br/>', $result);
+	}
+
 	public function hookActionValidateOrder($params)
 	{
 		if (!$this->_merchant_order || empty($this->_merchant_mails))
@@ -274,7 +289,7 @@ class MailAlerts extends Module
 		$invoice = new Address((int)$order->id_address_invoice);
 		$order_date_text = Tools::displayDate($order->date_add, (int)$id_lang);
 		$carrier = new Carrier((int)$order->id_carrier);
-		$message = $order->getFirstMessage();
+		$message = $this->getAllMessages($order->id);
 
 		if (!$message || empty($message))
 			$message = $this->l('No message');
