@@ -156,6 +156,14 @@ class OrderDetailControllerCore extends FrontController
 				if ($order->total_discounts > 0)
 					$this->context->smarty->assign('total_old', (float)($order->total_paid - $order->total_discounts));
 				$products = $order->getProducts();
+				$deliverd_products = $order->getProductsDelivery();
+				$order_delivery = new OrderDelivery();
+				foreach($deliverd_products as $k => $delivery_number) {
+					$shipped = $order_delivery->getShippedByNr($k,$order->id);
+					if($shipped == 0) {
+						unset($deliverd_products[$k]);
+					}
+				}
 
 				/* DEPRECATED: customizedDatas @since 1.5 */
 				$customizedDatas = Product::getAllCustomizedDatas((int)($order->id_cart));
@@ -173,8 +181,10 @@ class OrderDetailControllerCore extends FrontController
 					'order_state' => (int)($id_order_state),
 					'invoiceAllowed' => (int)(Configuration::get('PS_INVOICE')),
 					'invoice' => (OrderState::invoiceAvailable($id_order_state) && count($order->getInvoicesCollection())),
+					'invoices' => $order->getInvoicesCollection()->getResults(),
 					'order_history' => $order->getHistory($this->context->language->id, false, true),
 					'products' => $products,
+					'deliverd_products' => $deliverd_products,
 					'discounts' => $order->getCartRules(),
 					'carrier' => $carrier,
 					'address_invoice' => $addressInvoice,

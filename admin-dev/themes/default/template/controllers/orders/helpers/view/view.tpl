@@ -117,7 +117,7 @@
 				{/foreach}
 				</select>
 				<input type="hidden" name="id_order" value="{$order->id}" />
-				<input type="hidden" name="delivery_nr" value="{$ads_deliverynr}" />
+				<input type="hidden" name="delivery_number" value="{$ads_deliverynr}" />
 				<input type="submit" name="submitState" value="{l s='Add'}" class="button" />
 			</form>
 			<br />
@@ -634,7 +634,7 @@
 						<th style="width: 12%;text-align:right;display:none" class="partial_refund_fields">
 							{l s='Partial refund'}
 						</th>
-						{if !$order->hasBeenDelivered()}
+						{if !$order->hasBeenDelivered() || Configuration::get('PS_ADS')}
 						<th style="width: 8%;text-align:center;">
 							{l s='Action'}
 						</th>
@@ -648,7 +648,7 @@
 						{* Include product line partial *}
 						{include file='controllers/orders/_product_line.tpl'}
 					{/foreach}
-					{if $can_edit}
+					{if $can_edit || Configuration::get('PS_ADS')}
 						{include file='controllers/orders/_new_product.tpl'}
 					{/if}
 				</table>
@@ -814,6 +814,13 @@
 				}
 			</script>
 			<script type="text/javascript">
+				function ButtonText() {
+					var nr = document.getElementById('adsQty').value;
+					if(nr < 0) document.getElementById('adsAdd').innerHTML = 'Remove';
+					else document.getElementById('adsAdd').innerHTML = 'Add'
+				}
+			</script>
+			<script type="text/javascript">
 			/* Focus and scroll down to */
 			var adsRef = '{if isset($smarty.post.adsReference)}{$smarty.post.adsReference}{/if}';
 			if(adsRef != '') {
@@ -852,9 +859,9 @@
 				</select>
 				{l s='Reference:'}<input type="text" name="adsReference" id="adsReference" onKeyUp="adsRef2WH('adsReference')"  value="" placeholder="Enter Reference" />
 				{l s='Ean 13:'}<input type="text" name="adsEan13" id="adsEan13 onKeyPress="adsRef2WH('adsEan13')" onKeyUp="adsRef2WH('adsEan13')" value="" placeholder="Enter Ean 13" />
-				{l s='Quantity'} 	<input type="text" name="adsQty" value="1" />
+				{l s='Quantity'} 	<input type="text" name="adsQty" id="adsQty" onKeyPress="ButtonText()" onKeyUp="ButtonText()"  value="1" />
 				<input type="hidden" name="adsWarehouse" id="adsWarehouse" value="0" />
-				<button type="submit" name="submitAdsAdd" value="{$ads_deliverynr}">Add</button>
+				<button type="submit" name="submitAdsAdd" value="{$ads_deliverynr}" id="adsAdd">Add</button>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<button type="submit" name="submitAdsAddAll" value="{$ads_deliverynr}">Add All products</button>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br><br>
@@ -867,11 +874,11 @@
 						{if $display_warehouse}<th style="text-align: center">{l s='Warehouse'}</th>{/if}
 						<th style="width: 10%; text-align: center">{l s='Total'} <sup>*</sup></th>
 					</tr>
-				{foreach from=$delivered_products item=delivery_nr key=k}
+				{foreach from=$delivered_products item=delivery_number key=k}
 						<tr>
-							<td colspan="6">{l s='Delivery'} {$k} {if $delivery_nr[0]['shipped']} - Shipped {/if}</td>
+							<td colspan="6">{l s='Delivery'} {$k} {if $delivery_number[0]['shipped']} - Shipped {/if}</td>
 						</tr>
-					{foreach from=$delivery_nr item=product}
+					{foreach from=$delivery_number item=product}
 						{* Include customized datas partial *}
 						{include file='controllers/orders/_delivery_customized_data.tpl'}
 

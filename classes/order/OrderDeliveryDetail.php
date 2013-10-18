@@ -241,28 +241,73 @@ class OrderDeliveryDetailCore extends ObjectModel
 		$this->context = $context->cloneContext();
 	}
 	
-	public function updateDetail($order, $cart, $product, $id_order_invoice, $use_taxes = true)
+	protected function updateDetail(Order $order, Cart $cart, $product, $id_order_state, $id_order_invoice, $use_taxes = true, $id_warehouse = 0,$delivery_id)
 	{
-		echo('<pre>');
-			print_r($product);
-		echo('</pre>');
-		break;
 	
-// 		$this->unit_price_tax_incl = (float)$product->price;
-		$this->unit_price_tax_excl = (float)$product->price;
-// 		$this->total_price_tax_incl = (float)$product->total_wt;
-		$this->total_price_tax_excl = (float)$product->total;
-		$this->product_quantity = (int)($product->cart_quantity);
-		$this->update();
+		// I should be able to remove alot of the info here
 		
-		$total_method = Cart::BOTH;
-		
-				$order_invoice = new OrderInvoice($id_order_invoice);		
-				$order_invoice->total_paid_tax_excl = Tools::ps_round((float)$cart->getOrderTotal(false, $total_method), 2);
-				$order_invoice->total_paid_tax_incl = Tools::ps_round((float)$cart->getOrderTotal($use_taxes, $total_method), 2);
-				$order_invoice->total_products = (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
-				$order_invoice->total_products_wt = (float)$cart->getOrderTotal($use_taxes, Cart::ONLY_PRODUCTS);
-				$order_invoice->update();
+		if ($use_taxes)
+			$this->tax_calculator = new TaxCalculator();
+
+		$this->product_id = (int)($product['id_product']);
+		$this->delivery_id = $delivery_id;
+		$this->product_attribute_id = (int)($product['id_product_attribute'] ? (int)($product['id_product_attribute']) : null);
+		$this->product_name = $product['name'].
+			((isset($product['attributes']) && $product['attributes'] != null) ?
+				' - '.$product['attributes'] : '');
+
+		$this->product_quantity = (int)($product['cart_quantity']);
+		$this->product_ean13 = empty($product['ean13']) ? null : pSQL($product['ean13']);
+		$this->product_upc = empty($product['upc']) ? null : pSQL($product['upc']);
+		$this->product_reference = empty($product['reference']) ? null : pSQL($product['reference']);
+		$this->product_supplier_reference = empty($product['supplier_reference']) ? null : pSQL($product['supplier_reference']);
+		$this->product_weight = (float)($product['id_product_attribute'] ? $product['weight_attribute'] : $product['weight']);
+		$this->id_warehouse = $id_warehouse;
+
+		$productQuantity = (int)(Product::getQuantity($this->product_id, $this->product_attribute_id));
+		$this->product_quantity_in_stock = ($productQuantity - (int)($product['cart_quantity']) < 0) ?
+			$productQuantity : (int)($product['cart_quantity']);
+
+		$this->setVirtualProductInformation($product);
+		$this->checkProductStock($product, $id_order_state);
+
+		if ($use_taxes)
+			$this->setProductTax($order, $product);
+		$this->setShippingCost($order, $product);
+		$this->setDetailProductPrice($order, $cart, $product);
+
+		// Set order invoice id
+		$this->id_order_invoice = (int)$id_order_invoice;
+
+		// Set shop id
+		$this->id_shop = (int)$product['id_shop'];
+
+		// Update
+			$this->update();
+		if ($use_taxes)
+			$this->updateTaxAmount($order);
+		unset($this->tax_calculator);
+
+		$total_method = Cart::BOTH_WITHOUT_SHIPPING;
+
+		$order_invoice = new OrderInvoice($id_order_invoice);
+		$order_invoice->total_paid_tax_excl = Tools::ps_round((float)$cart->getOrderTotal(false, $total_method), 2);
+		$order_invoice->total_paid_tax_incl = Tools::ps_round((float)$cart->getOrderTotal($use_taxes, $total_method), 2);
+		$order_invoice->total_products = (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+		$order_invoice->total_products_wt = (float)$cart->getOrderTotal($use_taxes, Cart::ONLY_PRODUCTS);
+
+		$order_delivery = new OrderDelivery();
+		$delivery_number = $order_delivery->getNrFromId($delivery_id);
+		if($delivery_number != 1)
+		{
+			if($order_invoice->total_shipping_tax_incl != 0)
+			{
+				$order_invoice->total_shipping_tax_excl = 0;
+				$order_invoice->total_shipping_tax_incl = 0;
+			}
+		}
+
+		$order_invoice->update();
 	}
 	
 	public function updateTaxAmount($order)
@@ -342,8 +387,22 @@ class OrderDeliveryDetailCore extends ObjectModel
 			$this->saveTaxCalculator($order);
 		unset($this->tax_calculator);
 		}
+	}
 
+	public function updateDetailList(Order $order, Cart $cart, $id_order_state, $product_list, $id_order_invoice = 0, $use_taxes = true, $id_warehouse = 0,$delivery_id)
+	{
+		$this->vat_address = new Address((int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+		$this->customer = new Customer((int)($order->id_customer));
 
+		$this->id_order = $order->id;
+		$this->outOfStock = false;
+
+		foreach ($product_list as $product)
+			$this->updateDetail($order, $cart, $product, $id_order_state, $id_order_invoice, $use_taxes, $id_warehouse,$delivery_id);
+
+		unset($this->vat_address);
+		unset($products);
+		unset($this->customer);
 	}
 
 	/**
@@ -354,7 +413,7 @@ class OrderDeliveryDetailCore extends ObjectModel
 	 * @param int $id_order_invoice
 	 * @param bool $use_taxes set to false if you don't want to use taxes
 	*/
-	public function createDetailList(Order $order, Cart $cart, $id_order_state, $product_list, $id_order_invoice = 0, $use_taxes = true, $id_warehouse = 0,$delivery_id,$update = false)
+	public function createDetailList(Order $order, Cart $cart, $id_order_state, $product_list, $id_order_invoice = 0, $use_taxes = true, $id_warehouse = 0,$delivery_id)
 	{
 		$this->vat_address = new Address((int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 		$this->customer = new Customer((int)($order->id_customer));
@@ -363,7 +422,7 @@ class OrderDeliveryDetailCore extends ObjectModel
 		$this->outOfStock = false;
 
 		foreach ($product_list as $product)
-			$this->createDetail($order, $cart, $product, $id_order_state, $id_order_invoice, $use_taxes, $id_warehouse,$delivery_id,$update);
+			$this->createDetail($order, $cart, $product, $id_order_state, $id_order_invoice, $use_taxes, $id_warehouse,$delivery_id);
 
 		unset($this->vat_address);
 		unset($products);

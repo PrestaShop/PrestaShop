@@ -62,7 +62,7 @@ class HTMLTemplatePackageSlipCore extends HTMLTemplate
 			$formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
 		}
 		
-		$order_details = $this->order_invoice->getProducts();
+		$order_details = $this->order->getProducts();
 		$delivery_products = $this->order->getProductsDelivery();
 		$deliverd_products = array();
 		foreach($delivery_products as  $delivery)
@@ -71,22 +71,22 @@ class HTMLTemplatePackageSlipCore extends HTMLTemplate
 					if($product['shipped'] == 1) {
 						if(!empty($deliverd_products[ $product['product_id'] . '_' . $product['product_attribute_id'] ]))
 						{
-							$deliverd_products[ $product['product_id'] . '_' . $product['product_attribute_id' ] ] += $product['delivery_qty'];
+							$deliverd_products[ $product['product_id'] . '_' . $product['product_attribute_id' ] ] += $product['product_quantity'];
 						}
 						else
 						{
-							$deliverd_products[ $product['product_id'] . '_' . $product['product_attribute_id' ] ] = $product['delivery_qty'];
+							$deliverd_products[ $product['product_id'] . '_' . $product['product_attribute_id' ] ] = $product['product_quantity'];
 						}
 					}
 					else
 					{
 						if(!empty($deliverd_products[ $product['product_id'] . '_' . $product['product_attribute_id'] . "_current"] ) )
 						{
-							$deliverd_products[ $product['product_id'] . '_' . $product['product_attribute_id' ] . "_current" ] += $product['delivery_qty'];
+							$deliverd_products[ $product['product_id'] . '_' . $product['product_attribute_id' ] . "_current" ] += $product['product_quantity'];
 						}
 						else
 						{
-							$deliverd_products[ $product['product_id'] . '_' . $product['product_attribute_id' ] . "_current" ] = $product['delivery_qty'];
+							$deliverd_products[ $product['product_id'] . '_' . $product['product_attribute_id' ] . "_current" ] = $product['product_quantity'];
 						}
 					}
 				}

@@ -43,7 +43,7 @@
 		<input type="hidden" name="product_id_order_detail" value="{$product['id_order_detail']}" />
 	</td>
 	<td align="center" class="productQuantity">
-		{$product['delivery_qty']}
+		{$product['product_quantity']}
 	</td>
 	{if $display_warehouse}<td>{$product.warehouse_name|escape:'htmlall':'UTF-8'}</td>{/if}
 	<td align="center" class="total_product">

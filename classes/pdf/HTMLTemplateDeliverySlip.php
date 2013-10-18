@@ -31,19 +31,19 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 {
 	public $order;
 
-	public function __construct(OrderInvoice $order_invoice, $smarty,$delivery_nr = false)
+	public function __construct(OrderInvoice $order_invoice, $smarty,$delivery_number = false)
 	{
 		$this->order_invoice = $order_invoice;
 		$this->order = new Order($this->order_invoice->id_order);
 		$this->smarty = $smarty;
-		$this->delivery_nr = $delivery_nr;
+		$this->delivery_number = $delivery_number;
 
 		// header informations
 		$date = $this->order->invoice_date;
-		if(Configuration::get('PS_ADS') && $delivery_nr)
+		if(Configuration::get('PS_ADS') && $delivery_number)
 		{
 			$this->order_delivery = new OrderDelivery($this->order_invoice->id_order);
-			$date = $this->order_delivery->getDeliveryDate($delivery_nr,$this->order_invoice->id_order);
+			$date = $this->order_delivery->getDeliveryDate($delivery_number,$this->order_invoice->id_order);
 		}
 		$this->date = Tools::displayDate($date);
 		$title = 'Delivery';
@@ -51,7 +51,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 		{
 			$title = 'Sample Delivery ';
 		}
-		$this->title = HTMLTemplateDeliverySlip::l($title).' #'.Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id).sprintf('%06d', $this->delivery_nr ? $this->order_invoice->id_order : $this->order_invoice->delivery_number) . ($this->delivery_nr ? '-' .$this->delivery_nr : '');
+		$this->title = HTMLTemplateDeliverySlip::l($title).' #'.Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id).sprintf('%06d', $this->delivery_number ? $this->order_invoice->id_order : $this->order_invoice->delivery_number) . ($this->delivery_number ? '-' .$this->delivery_number : '');
 
 		// footer informations
 		$this->shop = new Shop((int)$this->order->id_shop);
@@ -73,12 +73,12 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 			$invoice_address = new Address((int)$this->order->id_address_invoice);
 			$formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
 		}
-		if($this->delivery_nr) {
-			$products = $this->order->getProductsDelivery(false,false,false,$this->delivery_nr); // get only deliverd products
-			$products = $products[$this->delivery_nr];
-			foreach($products as &$product) {
-				$product['product_quantity'] = $product['delivery_qty'];
-			}
+		if($this->delivery_number) {
+			$products = $this->order->getProductsDelivery(false,false,false,$this->delivery_number); // get only deliverd products
+			$products = $products[$this->delivery_number];
+// 			foreach($products as &$product) {
+// 				$product['product_quantity'] = $product['delivery_qty'];
+// 			}
 		} else {
 			$products = $this->order_invoice->getProducts();
 		}
@@ -157,7 +157,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 	 */
 	public function getFilename()
 	{
-		return Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order->invoice_number) . ($this->delivery_nr ? '-' .$this->delivery_nr : '')  .'.pdf';
+		return Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_invoice->id) . ($this->delivery_number ? '-' .$this->delivery_number : '')  .'.pdf';
 	}
 }
 

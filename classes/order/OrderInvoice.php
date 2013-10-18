@@ -255,7 +255,7 @@ class OrderInvoiceCore extends ObjectModel
 	 * @since 1.5
 	 * @return array
 	 */
-	public function getProductTaxesBreakdown($delivery_nr = false)
+	public function getProductTaxesBreakdown()
 	{
 		$tmp_tax_infos = array();
 		if ($this->useOneAfterAnotherTaxComputationMethod())
@@ -313,30 +313,6 @@ class OrderInvoiceCore extends ObjectModel
 			GROUP BY odt.`id_order_detail`
 			');
 
-			if (Configuration::get('PS_ADS') && Configuration::get('PS_ADS_INVOICE_DELIVERD') && $delivery_nr )
-			{
-				$order = New Order($this->id_order);
-				$products = $order->getProductsDelivery(false,false,false,$delivery_nr); // get only deliverd products
-				$products = $products[$delivery_nr];
-				foreach($products as &$product) {
-						$product['product_quantity'] = $product['delivery_qty'];
-						$total_price_tax_excl_product = ($product['unit_price_tax_excl'] * $product['delivery_qty']);
-						foreach($taxes_infos as &$tax_infos) {
-							if($tax_infos['id_order_detail'] == $product['id_order_detail']) {
-								$tax_infos['total_price_tax_excl'] = $total_price_tax_excl_product;
-							}
-						}
-				}
-
-				$delivery = Db::getInstance()->executeS('
-				SELECT  od.`unit_price_tax_excl`, odyd.`delivery_qty`, odt.`unit_amount`,od.`id_order_detail`
-				FROM `'._DB_PREFIX_.'order_detail_tax` odt
-				LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
-				LEFT JOIN `'._DB_PREFIX_.'order_delivery_detail` odyd ON (od.`product_id` = odyd.`product_id` AND od.`product_attribute_id` = odyd.`product_attribute_id`)
-				WHERE od.`id_order` = '.(int)$this->id_order.'
-				');
-			}
-
 			// sum by taxes
 			$tmp_tax_infos = array();
 			foreach ($taxes_infos as &$tax_infos)
@@ -347,16 +323,6 @@ class OrderInvoiceCore extends ObjectModel
 						'name' => 0,
 						'total_price_tax_excl' => 0
 					);
-
-					if (Configuration::get('PS_ADS') && Configuration::get('PS_ADS_INVOICE_DELIVERD') && $delivery_nr )
-					{
-						foreach($delivery as $product) {
-							if($tax_infos['id_order_detail'] == $product['id_order_detail']) {
-								$tax_infos['total_amount'] =  $product['delivery_qty'] * $product['unit_amount'];
-								$tax_infos['product_quantity'] = $product['delivery_qty'];
-							}
-						}
-					}
 
 				$ratio = $tax_infos['total_price_tax_excl'] / $this->total_products;
 				$order_reduction_amount = $this->total_discount_tax_excl * $ratio;

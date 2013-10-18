@@ -52,7 +52,7 @@
 				<option value="{$invoice->id}">{$invoice->getInvoiceNumberFormatted($current_id_lang)}</option>
 				{/foreach}
 			</optgroup>
-			{if Configuration::get('PS_ADS') && Configuration::get('PS_ADS_INVOICE_DELIVERD')}
+			{if Configuration::get('PS_ADS') && Configuration::get('PS_ADS_INVOICE_DELIVERED')}
 				<!-- No new invoices when using this option on ADS  -->
 			{else}
 				<optgroup label="{l s='New'}">

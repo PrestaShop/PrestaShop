@@ -198,6 +198,28 @@
 </ul>
 <!-- /order details -->
 
+<!-- order delivery details -->
+<h3 class="bg">{l s='Order Deliveries'}</h3>
+{if !$is_guest}<form action="{$link->getPageLink('order-follow', true)|escape:'html'}" method="post">{/if}
+<ul data-role="listview" data-inset="true">
+{foreach from=$deliverd_products item=delivery_number name=delivery_number key=k}
+			<li class="item">{l s='Delivery'} {$k}<li>
+	{foreach from=$delivery_number item=delivery_product name=delivery_products}
+		{if !isset($delivery_product.deleted)}
+			{assign var='productId' value=$delivery_product.product_id}
+			{assign var='productAttributeId' value=$delivery_product.product_attribute_id}
+			{if isset($delivery_product.customizedDatas)}
+				{assign var='deliveryproductQuantity' value=$delivery_product.product_quantity-$delivery_product.customizationQuantityTotal}
+			{else}
+				{assign var='deliveryproductQuantity' value=$delivery_product.product_quantity}
+			{/if}
+			{include file="./order-detail-delivery-product-li.tpl"}
+		{/if}
+	{/foreach}
+{/foreach}
+</ul>
+<!-- /order delivery details -->
+
 {if $order->getShipping()|count > 0}
 <h3 class="bg">{l s='Carrier'}</h3>
 <ul data-role="listview" >

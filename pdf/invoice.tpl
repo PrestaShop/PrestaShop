@@ -78,6 +78,11 @@
 			<b>{l s='Order Date:' pdf='true'}</b><br />
 			{dateFormat date=$order->date_add full=0}<br />
 			<br />
+			{if $due_date}
+			<b>{l s='Due Date:' pdf='true'}</b><br />
+			{dateFormat date=$due_day full=0}<br />
+			<br />
+			{/if}
 			<b>{l s='Payment Method:' pdf='true'}</b><br />
 			<table style="width: 100%;">
 			{foreach from=$order_invoice->getOrderPaymentCollection() item=payment}

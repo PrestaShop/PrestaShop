@@ -102,6 +102,11 @@
 			<b>{l s='Order Date:' pdf='true'}</b><br />
 			{dateFormat date=$order->date_add full=0}<br />
 			<br />
+			{if $due_date}
+			<b>{l s='Due Date:' pdf='true'}</b><br />
+			{dateFormat date=$due_day full=0}<br />
+			<br />
+			{/if}
 			<b>{l s='Payment Method:' pdf='true'}</b><br />
 			<table style="width: 100%;">
 			{foreach from=$order_invoice->getOrderPaymentCollection() item=payment}
@@ -252,7 +257,7 @@
 					<td style="width: 15%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_paid_tax_incl}</td>
 				</tr>
 
-				{if $order_invoice->getRestPaid() && !$order_invoice->delivery_nr}
+				{if $order_invoice->getRestPaid() && !$order_invoice->delivery_number}
 				<tr style="line-height:5px;color:red;">
 					<td style="text-align: right; font-weight: bold">{l s='Remaining Amount Due' pdf='true'}</td>
 					<td style="width: 15%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->getRestPaid()}</td>

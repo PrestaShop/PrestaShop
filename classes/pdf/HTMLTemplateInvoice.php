@@ -32,27 +32,26 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 	public $order;
 	public $available_in_your_account = false;
 
-	public function __construct(OrderInvoice $order_invoice, $smarty,$delivery_nr = false)
+	public function __construct(OrderInvoice $order_invoice, $smarty,$delivery_number = false)
 	{
 		$this->order_invoice = $order_invoice;
 		$this->order = new Order((int)$this->order_invoice->id_order);
 		$this->smarty = $smarty;
-		$this->delivery_nr = $delivery_nr;
-		$this->order_invoice->delivery_nr = $delivery_nr;
+		$this->delivery_number = $delivery_number;
 
 		// header informations
 
 		$date = $order_invoice->date_add;
-		if(Configuration::get('PS_ADS') && $delivery_nr)
+		if(Configuration::get('PS_ADS') && $delivery_number)
 		{
 			$this->order_delivery = new OrderDelivery($this->order_invoice->id_order);
-			$date = $this->order_delivery->getDeliveryDate($delivery_nr,$this->order_invoice->id_order);
+			$date = $this->order_delivery->getDeliveryDate($delivery_number,$this->order_invoice->id_order);
 		}
 
 		$this->date = Tools::displayDate($date);
 
 		$id_lang = Context::getContext((int)$this->order_invoice->id_order)->language->id;
-		$this->title = HTMLTemplateInvoice::l('Invoice ').' #'.Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, (int)$this->order->id_shop).sprintf('%06d', $order_invoice->number) . ($this->delivery_nr ? '-' .$this->delivery_nr : '');
+		$this->title = HTMLTemplateInvoice::l('Invoice ').' #'.Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, (int)$this->order->id_shop).sprintf('%06d', $order_invoice->number) . ($this->delivery_number ? '-' .$this->delivery_number : '');
 		// footer informations
 		$this->shop = new Shop((int)$this->order->id_shop);
 	}
@@ -75,37 +74,24 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 		}
 
 		$customer = new Customer((int)$this->order->id_customer);
-		
-		if($this->delivery_nr) {
-			$products = $this->order->getProductsDelivery(false,false,false,$this->delivery_nr); // get only deliverd products
-			$products = $products[$this->delivery_nr];
-			$total_paid_tax_incl = 0;
-			$total_paid_tax_excl = 0;
-			foreach($products as &$product)
-			{
-					$product['product_quantity'] = $product['delivery_qty'];
-					$total_price_tax_incl_product = ($product['unit_price_tax_incl'] * $product['delivery_qty']);
-					$total_price_tax_excl_product = ($product['unit_price_tax_excl'] * $product['delivery_qty']);
-					$total_paid_tax_incl += $total_price_tax_incl_product;
-					$total_paid_tax_excl += $total_price_tax_excl_product;
-					$product['total_price_tax_incl'] = $total_price_tax_incl_product;
-					$product['total_price_tax_excl'] = $total_price_tax_excl_product;
-			}
-				$this->order_invoice->total_products_wt = $total_paid_tax_incl;
-				$this->order_invoice->total_products = $total_paid_tax_excl;
-				if($this->delivery_nr == 1) {
-					$total_paid_tax_excl += $this->order_invoice->total_shipping_tax_excl;
-					$total_paid_tax_incl += $this->order_invoice->total_shipping_tax_incl;
-				}
-				else
-				{
-					$this->order_invoice->total_shipping_tax_excl = 0;
-					$this->order_invoice->total_shipping_tax_incl = 0;
-				}
-				$this->order_invoice->total_paid_tax_incl = $total_paid_tax_incl;
-				$this->order_invoice->total_paid_tax_excl = $total_paid_tax_excl;
+
+		if($this->delivery_number) {
+			$products = $this->order->getProductsDelivery(false,false,false,$this->delivery_number); // get only deliverd products
+			$products = $products[$this->delivery_number];
 		} else {
 			$products = $this->order_invoice->getProducts();
+		}
+		
+		$due_date = false;
+		$due_day = false;
+		if(Configuration::get('PS_ADS') && Configuration::get('PS_ADS_INVOICE_DUE_DATE'))
+		{
+			if(Configuration::get('PS_ADS_INVOICE_DUE_DAYS') != "")
+			{
+				$due_date = true;
+				$days = Configuration::get('PS_ADS_INVOICE_DUE_DAYS');
+				$due_day = date("Y-m-d h:i:s",strtotime('+' . $days . ' days',strtotime($this->date)));
+			}
 		}
 
 		$this->smarty->assign(array(
@@ -116,7 +102,9 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			'invoice_address' => $formatted_invoice_address,
 			'tax_excluded_display' => Group::getPriceDisplayMethod($customer->id_default_group),
 			'tax_tab' => $this->getTaxTabContent(),
-			'customer' => $customer
+			'customer' => $customer,
+			'due_date' => $due_date,
+			'due_day' => $due_day,
 		));
 
 		return $this->smarty->fetch($this->getTemplateByCountry($country->iso_code,$this->order->id));
@@ -136,7 +124,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			$this->smarty->assign(array(
 				'tax_exempt' => $tax_exempt,
 				'use_one_after_another_method' => $this->order_invoice->useOneAfterAnotherTaxComputationMethod(),
-				'product_tax_breakdown' => $this->order_invoice->getProductTaxesBreakdown($this->delivery_nr),
+				'product_tax_breakdown' => $this->order_invoice->getProductTaxesBreakdown(),
 				'shipping_tax_breakdown' => $this->order_invoice->getShippingTaxesBreakdown($this->order),
 				'ecotax_tax_breakdown' => $this->order_invoice->getEcoTaxTaxesBreakdown(),
 				'wrapping_tax_breakdown' => $this->order_invoice->getWrappingTaxesBreakdown(),
@@ -198,7 +186,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 	 */
 	public function getFilename()
 	{
-		return Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_invoice->number) . ($this->delivery_nr ? '-' .$this->delivery_nr : '')  .'.pdf';
+		return Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_invoice->number) . ($this->delivery_number ? '-' .$this->delivery_number : '')  .'.pdf';
 	}
 }
 

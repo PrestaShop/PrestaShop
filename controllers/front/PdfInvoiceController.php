@@ -42,6 +42,11 @@ class PdfInvoiceControllerCore extends FrontController
 		if (!(int)Configuration::get('PS_INVOICE'))
 			die(Tools::displayError('Invoices are disabled in this shop.'));
 
+		if(Tools::getValue('id_order_invocive'))
+		{
+			
+		}
+
 		$id_order = (int)Tools::getValue('id_order');
 		if (Validate::isUnsignedId($id_order))
 			$order = new Order((int)$id_order);

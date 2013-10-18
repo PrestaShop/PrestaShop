@@ -338,7 +338,7 @@ class AdminOrdersControllerCore extends AdminController
 					$current_order_state = $order->getCurrentOrderState();
 					if ($current_order_state->id != $order_state->id)
 					{
-						$delivery_nr = Tools::getValue('delivery_nr');
+						$delivery_number = Tools::getValue('delivery_number');
 						// Create new OrderHistory
 						$history = new OrderHistory();
 						$history->id_order = $order->id;
@@ -348,7 +348,7 @@ class AdminOrdersControllerCore extends AdminController
 						if (!$order->hasInvoice())
 							$use_existings_payment = true;
 						$order_delivery = new OrderDelivery($order->id);
-						$delivery_id = $order_delivery->getIdFromNr($delivery_nr,$order);
+						$delivery_id = $order_delivery->getIdFromNr($delivery_number,$order->id,$order->id_shop);
 						$history->changeIdOrderState((int)$order_state->id, $order, $use_existings_payment,$delivery_id);
 
 						$carrier = new Carrier($order->id_carrier, $order->id_lang);
@@ -1242,13 +1242,14 @@ class AdminOrdersControllerCore extends AdminController
 		}
 		elseif (Tools::isSubmit('submitAdsAdd') && isset($order))
 		{
-			if(Tools::getValue('adsQty') && (Tools::getValue('adsReference') || Tools::getValue('adsEan13') || Tools::getValue('adsProductName') ) ) // Qty is a must
+			if(Tools::getValue('adsQty') && Tools::getValue('adsQty') != 0 && ( Tools::getValue('adsReference') || Tools::getValue('adsEan13') || Tools::getValue('adsProductName') != "select_pname" ) ) // Qty is a must
 			{
 				$products = $order->getProducts();
 				if($adsRef = Tools::getValue('adsReference')) // first check reference
 				{
 					foreach($products as $product) {
-						if($product['product_reference'] == $adsRef) {
+						if($product['product_reference'] == $adsRef)
+						{
 							$product_id = $product['product_id'];
 							$product_attribute_id = $product['product_attribute_id'];
 							break; // saves resources, since we only loop untill we find product
@@ -1258,7 +1259,8 @@ class AdminOrdersControllerCore extends AdminController
 				elseif($adsEan13 = Tools::getValue('adsEan13')) // if no reference, see if we got ean13
 				{
 					foreach($products as $product) {
-						if($product['product_ean13'] == $adsEan13) {
+						if($product['product_ean13'] == $adsEan13)
+						{
 							$product_id = $product['product_id'];
 							$product_attribute_id = $product['product_attribute_id'];
 							break;
@@ -1268,34 +1270,47 @@ class AdminOrdersControllerCore extends AdminController
 				elseif($adsProdID = Tools::getValue('adsProductName')) // an last, get id from name selecter
 				{
 					foreach($products as $product) {
-						if($product['product_id'] == $adsProdID) {
+						if($product['product_id'] == $adsProdID)
+						{
 							$product_id = $product['product_id'];
 							$product_attribute_id = $product['product_attribute_id'];
 							break;
 						}
 					}
 				}
-// 				$id_order = Tools::getValue('id_order');
-				$delivery_nr = Tools::getValue('submitAdsAdd');
+				$delivery_number = Tools::getValue('submitAdsAdd');
 				$order_delivery = new OrderDelivery($order->id);
-				$delivery_id = $order_delivery->getIdFromNr($delivery_nr,$order->id,$order->id_shop);
-				if(empty($delivery_id)) { // the order has no delivered products
-					$order_delivery->createDelivery($delivery_nr,$order,$product_id,$product_attribute_id,Tools::getValue('adsQty'),Tools::getValue('adsWarehouse')); // creates delivery and adds delivery detail
+				$delivery_id = $order_delivery->getIdFromNr($delivery_number,$order->id,$order->id_shop);
+				if(empty($delivery_id))
+				{
+					// the order has no delivered products on this delivery number
+					if(Tools::getValue('adsQty') < 0)
+					{
+						$this->errors[] = Tools::displayError('Product does not exist on this delivery, there for it can not be removed');
+					}
+					else
+					{
+						$order_delivery->createDelivery($delivery_number,$order,$product_id,$product_attribute_id,Tools::getValue('adsQty'),Tools::getValue('adsWarehouse')); // creates delivery and adds delivery detail
+					}
 				}
 				else
 				{
 					$qty = $order_delivery->getProductQty($product_id,$product_attribute_id,$delivery_id);
-					if(!empty($qty))
+					if($qty > 0)
 					{
 						$new_qty = $qty + Tools::getValue('adsQty');
-// 						$order_delivery->updateQty($product_id,$product_attribute_id,$delivery_id,$new_qty);
-// 						$order_delivery->updateDeliveryDetail($order,$product_id,$product_attribute_id,Tools::getValue('adsQty'),$delivery_id,Tools::getValue('adsWarehouse'));
-						$order_delivery->createDeliveryDetail($order,$product_id,$product_attribute_id,$new_qty,$delivery_id,Tools::getValue('adsWarehouse'),true);
+						$order_delivery->updateDeliveryDetail($order,$product_id,$product_attribute_id,$new_qty,$delivery_id,Tools::getValue('adsWarehouse'));
 					}
 					else
 					{
-// 						$order_delivery->createDeliveryDetail($delivery_id,$product_id,$product_attribute_id,Tools::getValue('adsQty'));
-						$order_delivery->createDeliveryDetail($order,$product_id,$product_attribute_id,Tools::getValue('adsQty'),$delivery_id,Tools::getValue('adsWarehouse'));
+						if(Tools::getValue('adsQty') < 0)
+						{
+							$this->errors[] = Tools::displayError('Product does not exist on this delivery, there for it can not be removed');
+						}
+						else
+						{
+							$order_delivery->createDeliveryDetail($order,$product_id,$product_attribute_id,Tools::getValue('adsQty'),$delivery_id,Tools::getValue('adsWarehouse'));
+						}
 					}
 				}
 			}
@@ -1306,7 +1321,68 @@ class AdminOrdersControllerCore extends AdminController
 		}
 		elseif (Tools::isSubmit('submitAdsAddAll') && isset($order))
 		{
-			// Add all remaning products
+			$products = $order->getProducts(); // get all ordered products
+			$order_delivery = new OrderDelivery();
+			$ids = $order_delivery->getIds($order->id,$order->id_shop); // get all delivery ids for this order
+			foreach($ids as $id) {
+				foreach($products as &$product) {
+					$qty = $order_delivery->getProductQty($product['product_id'],$product['product_attribute_id'],$id['delivery_id']); // get delivered qty
+					// set it to delivered_qty
+					if(!isset($product['delivered_qty']))
+					{
+						$product['delivered_qty'] = $qty;
+						$product['delivery_ids'] = array($id['delivery_id']); // add delivery id aswell
+					}
+					else
+					{
+						$product['delivery_ids'] = array_merge($product['delivery_ids'],array($id['delivery_id']));
+						$product['delivered_qty'] = $product['delivered_qty'] + $qty;
+					}
+				}
+			}
+			$delivery_number = Tools::getValue('submitAdsAddAll'); // Get slip nr
+			$order_delivery = new OrderDelivery($order->id);
+			$delivery_id = $order_delivery->getIdFromNr($delivery_number,$order->id,$order->id_shop); // Get delivery id
+			foreach($products as $product) {
+				if(isset($product['delivered_qty']) && $product['delivered_qty'] > 0) // if delivered_qty is set and higher then 0
+				{
+					$remaning_qty = $product['product_quantity'] - $product['delivered_qty'];
+					if($remaning_qty > 0) {
+						$isOnId = false;
+						foreach($product['delivery_ids'] as $id) {
+							// find our current id in product
+							if($id == $delivery_id) {
+								$isOnId = true;
+								$current_qty = $order_delivery->getProductQty($product['product_id'],$product['product_attribute_id'],$delivery_id);
+							}
+						}
+						if($isOnId) // if product and delivery id OK
+						 {
+							 // update qty
+							$new_qty = $remaning_qty + $current_qty;
+							$order_delivery->updateDeliveryDetail($order,$product['product_id'],$product['product_attribute_id'],$new_qty,$delivery_id,$product['id_warehouse']);
+						}
+						else // if product does not exist on delivery id
+						{
+							if(empty($delivery_id)) // not even the delivery id exists
+							{
+								// create new delivery
+								$order_delivery->createDelivery($delivery_number,$order,$product['product_id'],$product['product_attribute_id'],$remaning_qty,$product['id_warehouse']); // creates delivery and adds delivery detail
+							}
+							else // delivery exists
+							{
+								// add product to delivery
+								$order_delivery->createDeliveryDetail($order,$product['product_id'],$product['product_attribute_id'],$remaning_qty,$delivery_id,$product['id_warehouse']);
+							}
+						}
+					}
+				}
+				elseif(!isset($product['delivered_qty'])) // if it is not set, then it's not delivered
+				{
+					$order_delivery->createDeliveryDetail($order,$product['product_id'],$product['product_attribute_id'],$product['product_quantity'],$delivery_id,$product['id_warehouse']);
+				}
+			}
+
 		}
 		elseif (Tools::isSubmit('setTemplates') && isset($order))
 		{
@@ -2240,11 +2316,11 @@ class AdminOrdersControllerCore extends AdminController
 			)));
 
 		// We can't edit a delivered order
-		if ($order->hasBeenDelivered())
-			die(Tools::jsonEncode(array(
-				'result' => false,
-				'error' => Tools::displayError('You cannot edit a delivered order.')
-			)));
+		if ($order->hasBeenDelivered() && !Configuration::get('PS_ADS') )
+				die(Tools::jsonEncode(array(
+					'result' => false,
+					'error' => Tools::displayError('You cannot edit a delivered order.')
+				)));
 
 		if (!empty($order_invoice) && $order_invoice->id_order != Tools::getValue('id_order'))
 			die(Tools::jsonEncode(array(

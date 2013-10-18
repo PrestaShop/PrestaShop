@@ -494,10 +494,10 @@ class OrderCore extends ObjectModel
 		WHERE od.`id_order` = '.(int)($this->id));
 	}
 	
-	public function getProductsDeliveryDetails($get_delivery_nr = false)
+	public function getProductsDeliveryDetails($get_delivery_number = false)
 	{
 		$order_delivery = new OrderDelivery($this->id);
-		$delivery_ids = $order_delivery->getIds($this);
+		$delivery_ids = $order_delivery->getIds($this->id,$this->id_shop);
 		$details = array();
 
 		foreach($delivery_ids as $delivery_id) {
@@ -505,10 +505,9 @@ class OrderCore extends ObjectModel
 			SELECT *, ody.id_order
 			FROM `'._DB_PREFIX_.'order_delivery_detail` odyd
 			LEFT JOIN `'._DB_PREFIX_.'order_delivery` ody ON (ody.delivery_id = odyd.delivery_id)
-			LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.product_id = odyd.product_id AND ody.id_order = od.id_order AND od.product_attribute_id = odyd.product_attribute_id)
 			LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = odyd.product_id)
 			LEFT JOIN `'._DB_PREFIX_.'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = ' . $delivery_id['id_shop'] . ')
-			WHERE odyd.`delivery_id` = ' . $delivery_id['delivery_id'] . ($get_delivery_nr ? ' AND ody.`delivery_nr` =' . $get_delivery_nr : ''));
+			WHERE odyd.`delivery_id` = ' . $delivery_id['delivery_id'] . ($get_delivery_number ? ' AND ody.`delivery_number` =' . $get_delivery_number : ''));
 			$nr = $order_delivery->getNrFromId($delivery_id['delivery_id']);
 			$details[$nr] = $detail;
 		}
@@ -606,20 +605,20 @@ class OrderCore extends ObjectModel
 		return $resultArray;
 	}
 	
-	public function getProductsDelivery($deliverd_products = false, $selectedProducts = false, $selectedQty = false,$get_delivery_nr = false)
+	public function getProductsDelivery($deliverd_products = false, $selectedProducts = false, $selectedQty = false,$get_delivery_number = false)
 	{
 		if(!$deliverd_products)
 		{
-			$deliverd_products = $this->getProductsDeliveryDetails($get_delivery_nr);
+			$deliverd_products = $this->getProductsDeliveryDetails($get_delivery_number);
 		}
 			
 		$customized_datas = Product::getAllCustomizedDatas($this->id_cart);
 		$resultArray = array();
-		foreach($deliverd_products as $k => $delivery_nr)
+		foreach($deliverd_products as $k => $delivery_number)
 		{
-			foreach($delivery_nr as $row)
+			foreach($delivery_number as $row)
 			{
-				$row['delivery_nr'] = $k;
+				$row['delivery_number'] = $k;
 
 			// Change qty if selected
 			if ($selectedQty)
@@ -1578,50 +1577,27 @@ class OrderCore extends ObjectModel
 	 */
 	public function getDocuments()
 	{
-		if(Configuration::get('PS_ADS') && Configuration::get('PS_ADS_INVOICE_DELIVERD') ) {
-				$invoices_ads = array(); // make array if invoice_deliverd is enable
-		}
 		$invoices = $this->getInvoicesCollection()->getResults();
 		$delivery_slips = $this->getDeliverySlipsCollection()->getResults();
 		// @TODO review
 		foreach ($delivery_slips as $delivery)
 		{
-			$id_order_invoice = Db::getInstance()->executeS('
-			SELECT id_order_invoice
-			FROM `'._DB_PREFIX_.'order_invoice` oi
-			WHERE oi.`id_order` = ' . $delivery->id_order);
-			$id_order_invoice = $id_order_invoice[0]['id_order_invoice'];
-
-			$delivery->id_order_invoice = $id_order_invoice;
 			$delivery->is_delivery = true;
-			$delivery->date_add = $delivery->delivery_date;
-			if(Configuration::get('PS_ADS') && Configuration::get('PS_ADS_INVOICE_DELIVERD') ) {
-				$products = $this->getProductsDelivery(false,false,false,$delivery->delivery_nr); // get only deliverd products
-				$total_paid_tax_incl = 0;
-				foreach($products as $array) {
-					foreach($array as $product) {
-					$total_paid_tax_incl_product = ($product['unit_price_tax_incl'] * $product['delivery_qty']);
-					$total_paid_tax_incl += $total_paid_tax_incl_product;
-					}
-				}
-				// This will create invoices based on how many slips there are.
-				$invoice = $this->getInvoicesCollection()->getResults();
-				$invoice = $invoice[0];
-				$invoice->delivery_nr = $delivery->delivery_nr;
-				if($delivery->delivery_nr == 1) {
-					$total_paid_tax_incl += $invoice->total_shipping_tax_incl; // Add shipping fee to 1st invoice
-				}
-				$invoice->total_paid_tax_incl = $total_paid_tax_incl;
-				$invoice->date_add = $delivery->delivery_date;
-				$invoices_ads[] = $invoice;
-			}
 		}
 		$order_slips = $this->getOrderSlipsCollection()->getResults();
 		if(Configuration::get('PS_ADS')) {
 			$package_slip = $this->getPackageSlipCollection()->getResults();
-			foreach ($package_slip as $package)
+			foreach ($package_slip as $k => $package)
 			{
-				$package->is_package = true;
+				// with the currect construct of package_slip we only need to display 1
+				if($k == 0)
+				{
+					$package->is_package = true;
+				}
+				else
+				{
+					unset($package_slip[$k]);
+				}
 			}
 		}
 
@@ -1635,7 +1611,7 @@ class OrderCore extends ObjectModel
 		
 		$documents = array_merge($invoices, $order_slips, $delivery_slips);
 		if(Configuration::get('PS_ADS')) {
-			$documents = array_merge($documents, $package_slip,$invoices_ads);
+			$documents = array_merge($documents, $package_slip);
 		}
 		usort($documents, 'sortDocuments');
 

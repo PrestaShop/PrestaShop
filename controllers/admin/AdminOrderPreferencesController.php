@@ -118,7 +118,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 				)
 			),
 			'ads' => array(
-				'title' => $this->l('Advanced Delivery System 1.2'),
+				'title' => $this->l('Advanced Delivery System 2.1'),
 				'icon' => 'tab-preferences',
 				'fields' => array(
 					'PS_ADS' => array(
@@ -135,12 +135,26 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						'cast' => 'intval',
 						'type' => 'bool',
 					),
-					'PS_ADS_INVOICE_DELIVERD' => array(
+					'PS_ADS_INVOICE_DELIVERED' => array(
 						'title' => $this->l('Invoice Deliverd'),
 						'desc' => $this->l('Only invoice deliverd products, Invoices will match nr of delivery slips'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool',
+					),
+					'PS_ADS_INVOICE_DUE_DATE' => array(
+						'title' => $this->l('Invoice Due Date'),
+						'desc' => $this->l('Enable Due date on invoice templates'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool',
+					),
+					'PS_ADS_INVOICE_DUE_DAYS' => array(
+						'title' => $this->l('Due Date Days'),
+						'desc' => $this->l('Nr of days after invoice date, invoice should be paid'),
+						'validation' => 'isUnsignedInt',
+						'cast' => 'intval',
+						'type' => 'text',
 					),
 					'PS_INVOICE_MODEL' => array(
 						'title' => $this->l('Invoice model:'),

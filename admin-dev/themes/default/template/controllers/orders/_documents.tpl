@@ -63,12 +63,12 @@
 				{elseif isset($document->is_package)}
 					{l s='Packing slip'}
 				{else}
-					{l s='Invoice'}{if isset($document->delivery_nr)} {l s='for Delivery Slip'} {$document->delivery_nr}{/if}
+					{l s='Invoice'}{if isset($document->delivery_number)} {l s='for Delivery Slip'} {$document->delivery_number}{/if}
 				{/if}
 			{elseif get_class($document) eq 'OrderSlip'}
 				{l s='Credit Slip'}
 			{elseif get_class($document) eq 'OrderDelivery'}
-				{l s='Delivery Slip'} {$document->delivery_nr}
+				{l s='Delivery Slip'} {$document->delivery_number}
 			{/if}</td>
 		<td class="document_number">
 			{if get_class($document) eq 'OrderInvoice'}
@@ -77,12 +77,12 @@
 				{elseif isset($document->is_package)}
 					<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generatePackageSlipPDF&id_order_invoice={$document->id}">
 			   	{else}
-					<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateInvoicePDF&id_order_invoice={$document->id}{if isset($document->delivery_nr)}&delivery_nr={$document->delivery_nr}{/if}">
+					<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateInvoicePDF&id_order_invoice={$document->id}{if isset($document->delivery_number)}&delivery_number={$document->delivery_number}{/if}">
 			   {/if}
 			{elseif get_class($document) eq 'OrderSlip'}
 				<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateOrderSlipPDF&id_order_slip={$document->id}">
 			{elseif get_class($document) eq 'OrderDelivery'}
-				<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order_invoice={$document->id_order_invoice}&delivery_nr={$document->delivery_nr}">
+				<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order_invoice={$document->id}&delivery_number={$document->delivery_number}">
 			{/if}
 			{if get_class($document) eq 'OrderInvoice'}
 				{if isset($document->is_delivery)}
@@ -90,12 +90,12 @@
 				{elseif isset($document->is_package)}
 					#PACKSLIP
 				{else}
-					{$document->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}{if isset($document->delivery_nr)}-{$document->delivery_nr}{/if}
+					{$document->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}
 				{/if}
 			{elseif get_class($document) eq 'OrderSlip'}
 				#{Configuration::get('PS_CREDIT_SLIP_PREFIX', $current_id_lang)}{'%06d'|sprintf:$document->id}
 			{elseif get_class($document) eq 'OrderDelivery'}
-				#{Configuration::get('PS_DELIVERY_PREFIX', $current_id_lang, null, $order->id_shop)}{'%06d'|sprintf:$document->id_order}-{$document->delivery_nr}
+				#{Configuration::get('PS_DELIVERY_PREFIX', $current_id_lang, null, $order->id_shop)}{'%06d'|sprintf:$document->id_order}
 			{/if} <img src="../img/admin/details.gif" alt="{l s='See the document'}" /></a></td>
 		<td class="document_amount">
 		{if get_class($document) eq 'OrderInvoice'}
@@ -105,7 +105,7 @@
 				--
 			{else}
 				{displayPrice price=$document->total_paid_tax_incl currency=$currency->id}&nbsp;
-				{if Configuration::get('PS_ADS') &&  Configuration::get('PS_ADS_INVOICE_DELIVERD')}
+				{if Configuration::get('PS_ADS') &&  Configuration::get('PS_ADS_INVOICE_DELIVERED')}
 				{else}
 					{if $document->getTotalPaid()}
 						<span style="color:red;font-weight:bold;">
@@ -127,7 +127,7 @@
 		<td class="right document_action">
 		{if get_class($document) eq 'OrderInvoice'}
 			{if !isset($document->is_delivery) && !isset($document->is_package)}
-				{if Configuration::get('PS_ADS') &&  Configuration::get('PS_ADS_INVOICE_DELIVERD')}
+				{if Configuration::get('PS_ADS') &&  Configuration::get('PS_ADS_INVOICE_DELIVERED')}
 				{else}
 					{if $document->getRestPaid()}
 						<a href="#" class="js-set-payment" data-amount="{$document->getRestPaid()}" data-id-invoice="{$document->id}" title="{l s='Set payment form'}"><img src="../img/admin/money_add.png" alt="{l s='Set payment form'}" /></a>
