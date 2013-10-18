@@ -39,12 +39,12 @@
 		{if isset($input.desc)}<p>{$input.desc}</p>{/if}
 		{if isset($fields_value.image) && $fields_value.image}
 			<div class="clearfix">&nbsp;</div>
-			<div id="image" class="img-thumbnail">
+			<div id="image" class="thumbnail">
 				{$fields_value.image}
 				<div class="text-center">
 					<p>{l s='File size'} {$fields_value.size}kb</p>
 					<a class="btn btn-default" href="{$current}&{$identifier}={$form_id}&token={$token}&deleteImage=1">
-						<i class="icon-trash"></i> {l s='Delete'}
+						<i class="icon-remove text-danger"></i> {l s='Delete'}
 					</a>
 				</div>
 			</div>
@@ -85,11 +85,11 @@
 {block name="description"}
 	{$smarty.block.parent}
 	{if ($input.name == 'groupBox')}
-		<p class="alert alert-info">
-			<span>{$input.info_introduction}</span><br />
-			<span>{$input.unidentified}</span><br />
-			<span>{$input.guest}</span><br />
-			<span>{$input.customer}</span><br />
-		</p>
+		<div class="alert alert-info">
+			<h4>{$input.info_introduction}</h4>
+			<p>{$input.unidentified}<br />
+			{$input.guest}<br />
+			{$input.customer}</p>
+		</div>
 	{/if}
 {/block}
