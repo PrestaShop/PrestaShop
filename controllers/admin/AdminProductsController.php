@@ -2419,14 +2419,9 @@ class AdminProductsControllerCore extends AdminController
 	protected function _displayDraftWarning($active)
 	{
 		$content = '<div class="warn draft" style="'.($active ? 'display:none' : '').'">
-				<p>
-				<span style="float: left">
-				'.$this->l('Your product will be saved as a draft.').'
-				</span>
-				<span style="float:right"><a href="#" class="button" style="display: block" onclick="submitAddProductAndPreview()" >'.$this->l('Save and preview').'</a></span>
+				<span>'.$this->l('Your product will be saved as a draft.').'</span>
+				<a href="#" class="btn btn-default pull-right" onclick="submitAddProductAndPreview()" ><i class="icon-external-link-sign"></i> '.$this->l('Save and preview').'</a>
 				<input type="hidden" name="fakeSubmitAddProductAndPreview" id="fakeSubmitAddProductAndPreview" />
-				<br class="clear" />
-				</p>
 	 		</div>';
 			$this->tpl_form_vars['draft_warning'] = $content;
 	}
@@ -4379,13 +4374,9 @@ class AdminProductsControllerCore extends AdminController
 	protected function _displayUnavailableProductWarning()
 	{
 		$content = '<div class="alert">
-				<p>
-				<span>
-				'.$this->l('Your product will be saved as a draft.').'
-				</span>
-				<span style="float:right"><a href="#" class="button" style="display: block" onclick="submitAddProductAndPreview()" >'.$this->l('Save and preview').'</a></span>
+			<span>'.$this->l('Your product will be saved as a draft.').'</span>
+				<a href="#" class="btn btn-default pull-right" onclick="submitAddProductAndPreview()" ><i class="icon-external-link-sign"></i> '.$this->l('Save and preview').'</a>
 				<input type="hidden" name="fakeSubmitAddProductAndPreview" id="fakeSubmitAddProductAndPreview" />
-				</p>
 			</div>';
 			$this->tpl_form_vars['warning_unavailable_product'] = $content;
 	}
