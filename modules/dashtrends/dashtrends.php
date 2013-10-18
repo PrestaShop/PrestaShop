@@ -254,7 +254,8 @@ class Dashtrends extends Module
 		$this->dashboard_data_sum_compare = $this->addupData($this->dashboard_data_compare);
 		
 		$data_trends = $this->compareData($this->dashboard_data_sum, $this->dashboard_data_sum_compare);
-
+		$this->dashboard_data_compare = $this->translateCompareData($this->dashboard_data, $this->dashboard_data_compare);
+		
 		return array(
 			'data_value' => array(
 				'sales_score' => Tools::displayPrice(round($this->dashboard_data_sum['sales']), $currency),
@@ -269,6 +270,33 @@ class Dashtrends extends Module
 		);
 	}
 	
+	protected function translateCompareData($normal, $compare)
+	{
+		$translated_array = array();
+		foreach ($compare as $key => $date_array)
+		{
+			$normal_min = key($normal[$key]);
+			end($normal[$key]); // move the internal pointer to the end of the array
+			$normal_max = key($normal[$key]);
+			reset($normal[$key]);
+			$normal_size = $normal_max - $normal_min;
+			
+			$compare_min = key($compare[$key]);
+			end($compare[$key]); // move the internal pointer to the end of the array
+			$compare_max = key($compare[$key]);
+			reset($compare[$key]);
+			$compare_size = $compare_max - $compare_min;
+
+			$translated_array[$key] = array();
+			foreach ($date_array as $compare_date => $value)
+			{
+				$translation = $normal_min + ($compare_date - $compare_min) * ($normal_size / $compare_size);
+				$translated_array[$key][number_format($translation, 0, '', '')] = $value;
+			}
+		}
+		return $translated_array;
+	}
+	
 	public function getChartTrends()
 	{
 		$chart_data = array();
@@ -281,40 +309,31 @@ class Dashtrends extends Module
 					$calibration = $value;
 					break;
 				}
-			$chart_values = array();
-			foreach ($this->dashboard_data[$chart_key] as $key => $value)
-				$chart_values[] = array(1000 * $key, 100 * $value / $calibration);
-			$chart_data[$chart_key] = $chart_values;
-		}
 
-		return array(
-			'chart_type' => 'line_chart_trends',
-			'data' => array(
-				array(
-					'key' => $this->l('Sales'),
-					'values' => $chart_data['sales']
-				),
-				array(
-					'key' => $this->l('Orders'),
-					'values' => $chart_data['orders']
-				),
-				array(
-					'key' => $this->l('Average Cart Value'),
-					'values' => $chart_data['average_cart_value']
-				),
-				array(
-					'key' => $this->l('Visits'),
-					'values' => $chart_data['visits']
-				),
-				array(
-					'key' => $this->l('Conversion Rate'),
-					'values' => $chart_data['conversion_rate']
-				),
-				array(
-					'key' => $this->l('Net Profits'),
-					'values' => $chart_data['net_profits']
-				)
-			)
+			$chart_data[$chart_key] = array();
+			foreach ($this->dashboard_data[$chart_key] as $key => $value)
+				$chart_data[$chart_key][] = array(1000 * $key, 100 * $value / $calibration);
+
+			$chart_data_compare[$chart_key] = array();
+			foreach ($this->dashboard_data_compare[$chart_key] as $key => $value)
+				$chart_data_compare[$chart_key][] = array(1000 * $key, 100 * $value / $calibration);
+		}
+		
+		$charts = array(
+			'sales' => $this->l('Sales'),
+			'orders' => $this->l('Orders'),
+			'average_cart_value' => $this->l('Average Cart Value'),
+			'visits' => $this->l('Visits'),
+			'conversion_rate' => $this->l('Conversion Rate'),
+			'net_profits' => $this->l('Net Profits')
 		);
+		
+		$data = array('chart_type' => 'line_chart_trends', 'data' => array());
+		foreach ($charts as $key => $title)
+		{
+			$data['data'][] = array('key' => $title, 'values' => $chart_data[$key], 'disabled' => ($key == 'sales' ? false : true));
+			$data['data'][] = array('key' => sprintf($this->l('%s (previous period)'), $title), 'values' => $chart_data_compare[$key], 'disabled' => ($key == 'sales' ? false : true));
+		}
+		return $data;
 	}
 }
