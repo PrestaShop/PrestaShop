@@ -60,7 +60,7 @@
 								html.append($('<li>').html(file))
 							});
 							$('#changedFiles')
-								.append($('<h3>').html(lang+' ('+json[key].length+')'))
+								.append($('<h4>').html(lang+' ('+json[key].length+')'))
 								.append(html);
 						}
 					});

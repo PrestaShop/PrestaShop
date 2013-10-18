@@ -25,12 +25,14 @@
 
 {foreach from=$languages item=language}
 	{if $languages|count > 1}
-	<div class="translatable-field lang-{$language.id_lang}">
+	<div class="translatable-field row lang-{$language.id_lang}">
 		<div class="col-lg-9">
 	{/if}
-			{if isset($maxchar)}
-			<div class="input-group">
-			<span id="{$input_name}_{$language.id_lang}_counter" class="input-group-addon"><span class="text-count-down">{$maxchar}</span></span>
+		{if isset($maxchar)}
+		<div class="input-group">
+			<span id="{$input_name}_{$language.id_lang}_counter" class="input-group-addon">
+				<span class="text-count-down">{$maxchar}</span>
+			</span>
 			{/if}
 			<input type="text"
 			id="{$input_name}_{$language.id_lang}"
@@ -42,8 +44,8 @@
 			{if isset($maxchar)} data-maxchar="{$maxchar}"{/if}
 			{if isset($maxlength)} maxlength="{$maxlength}"{/if} />
 			{if isset($maxchar)}
-			</div>
-			{/if}
+		</div>
+		{/if}
 	{if $languages|count > 1}
 		</div>
 		<div class="col-lg-2">

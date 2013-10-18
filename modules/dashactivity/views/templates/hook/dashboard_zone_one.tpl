@@ -42,7 +42,7 @@
 		<ul class="data_list_large">
 			<li>
 				<span class="data_label size_l">
-					{l s='Online Visitor' mod='dashactivity'}
+					{l s='Online Visitors' mod='dashactivity'}
 					<small class="text-muted"><br/>
 						{l s='In the last 30 minutes' mod='dashactivity'}
 					</small>

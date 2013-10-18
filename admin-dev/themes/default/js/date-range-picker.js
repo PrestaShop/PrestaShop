@@ -307,6 +307,10 @@
 				}
 
 				if (endCompare && startCompare) {
+					$(this).removeClass("range-compare")
+						.removeClass("start-selected-compare")
+						.removeClass("end-selected-compare");
+
 					if(date_val > startCompare && date_val < endCompare) {
 						$(this).not(".old").not(".new").addClass("range-compare");
 					}
