@@ -530,4 +530,20 @@ class AdminLanguagesControllerCore extends AdminController
 		//update employee lang if current id lang is disabled
 		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'employee` set `id_lang`='.(int)Configuration::get('PS_LANG_DEFAULT').' WHERE `id_lang`='.(int)$current_id_lang);
 	}
+
+	protected function afterImageUpload()
+	{
+		parent::afterImageUpload();
+
+		if (($id_lang = (int)Tools::getValue('id_lang')) &&
+			 isset($_FILES) && count($_FILES) && file_exists(_PS_LANG_IMG_DIR_.$id_lang.'.jpg'))
+		{
+			$current_file = _PS_TMP_IMG_DIR_.'lang_mini_'.$id_lang.'_'.$this->context->shop->id.'.jpg';
+
+			if (file_exists($current_file))
+				unlink($current_file);
+		}
+
+		return true;
+	}
 }

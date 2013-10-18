@@ -88,7 +88,7 @@ PS_SE_HandleEvent();
 		<p class="warning center" id="noCarrier" style="display: none;">{l s='No carrier has been made available for this selection.' mod='carriercompare'}</p>
 		<p class="SE_SubmitRefreshCard">
 			<input class="exclusive_large" id="carriercompare_submit" type="submit" name="carriercompare_submit" value="{l s='Update cart' mod='carriercompare'}"/>
-			<input id="update_carriers_list" type="button" class="exclusive_large" value="{l s='Update carrier list' mod='carriercompare'}" />
+			<input id="update_carriers_list" type="button" class="exclusive_large" value="{l s='Estimate Shipping Cost' mod='carriercompare'}" />
 		</p>
 	</fieldset>
 </form>

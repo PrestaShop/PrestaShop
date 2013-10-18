@@ -371,6 +371,11 @@ class AdminSuppliersControllerCore extends AdminController
 				if (!ImageManager::resize($file, _PS_SUPP_IMG_DIR_.$id_supplier.'-'.stripslashes($image_type['name']).'.jpg', (int)$image_type['width'], (int)$image_type['height']))
 					$return = false;
 			}
+
+			$current_logo_file = _PS_TMP_IMG_DIR_.'supplier_mini_'.$id_supplier.'_'.$this->context->shop->id.'.jpg';
+
+			if (file_exists($current_logo_file))
+				unlink($current_logo_file);
 		}
 		return $return;
 	}
