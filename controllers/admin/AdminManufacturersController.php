@@ -718,6 +718,11 @@ class AdminManufacturersControllerCore extends AdminController
 					(int)$image_type['height']
 				);
 			}
+
+			$current_logo_file = _PS_TMP_IMG_DIR_.'manufacturer_mini_'.$id_manufacturer.'_'.$this->context->shop->id.'.jpg';
+
+			if ($res && file_exists($current_logo_file))
+				unlink($current_logo_file);
 		}
 
 		if (!$res)
@@ -725,7 +730,7 @@ class AdminManufacturersControllerCore extends AdminController
 
 		return $res;
 	}
-	
+
 	protected function beforeDelete($object)
 	{
 		return true;
