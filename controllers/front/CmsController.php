@@ -108,7 +108,12 @@ class CmsControllerCore extends FrontController
 			$this->context->smarty->assign(array(
 				'cms' => $this->cms,
 				'content_only' => (int)(Tools::getValue('content_only')),
-				'path' => $path
+				'path' => $path,
+				'body_classes' => array(
+						'cms',
+						'cms-'.$this->product->id,
+						'product-'.$this->cms->link_rewrite
+				)
 			));
 		}
 		else if ($this->assignCase == 2)
@@ -119,6 +124,11 @@ class CmsControllerCore extends FrontController
 				'sub_category' => $this->cms_category->getSubCategories($this->context->language->id),
 				'cms_pages' => CMS::getCMSPages($this->context->language->id, (int)($this->cms_category->id) ),
 				'path' => ($this->cms_category->id !== 1) ? Tools::getPath($this->cms_category->id, $this->cms_category->name, false, 'CMS') : '',
+				'body_classes' => array(
+						'cmscategory',
+						'cmscategory-'.$this->cms_category->id,
+						'cmscategory-'.$this->cms_category->link_rewrite
+				)
 			));
 		}
 
