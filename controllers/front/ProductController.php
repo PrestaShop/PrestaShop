@@ -273,8 +273,8 @@ class ProductControllerCore extends FrontController
 				'outOfStockAllowed' => (int)Configuration::get('PS_ORDER_OUT_OF_STOCK'),
 				'body_classes' => array(
 						'product',
-						'product-'.$this->category->id,
-						'product-'.$this->category->link_rewrite
+						'product-'.$this->product->id,
+						'product-'.$this->product->link_rewrite
 				)
 			));
 		}
