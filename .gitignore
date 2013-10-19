@@ -6,7 +6,6 @@
 .svn
 .DS_Store
 .sass-cache
-.bak
 robots.txt
 sitemap.xml
 cache/cachefs/*
