@@ -86,7 +86,6 @@
 					else
 						$('#vat_number_block_invoice').hide();
 				}
-				
 				$(document).ready(function() {
 					$('#company').on('input',function(){
 						vat_number();
@@ -96,6 +95,10 @@
 					});
 					vat_number();
 					vat_number_invoice();
+					{/literal}
+					$('.id_state option[value={if isset($guestInformations.id_state)}{$guestInformations.id_state|intval}{/if}]').prop('selected', true);
+					$('.id_state_invoice option[value={if isset($guestInformations.id_state_invoice)}{$guestInformations.id_state_invoice|intval}{/if}]').prop('selected', true);
+					{literal}
 				});
 				{/literal}
 				</script>
@@ -279,7 +282,7 @@
 				<input type="hidden" name="alias" id="alias" value="{l s='My address'}"/>
 
 				<p class="checkbox">
-					<input type="checkbox" name="invoice_address" id="invoice_address" autocomplete="off"/>
+					<input type="checkbox" name="invoice_address" id="invoice_address"{if (isset($smarty.post.invoice_address) && $smarty.post.invoice_address) || (isset($guestInformations) && $guestInformations.invoice_address)} checked="checked"{/if} autocomplete="off"/>
 					<label for="invoice_address"><b>{l s='Please use another address for invoice'}</b></label>
 				</p>
 
@@ -289,7 +292,7 @@
 					<h3>{l s='Invoice address'}</h3>
 					{foreach from=$inv_all_fields item=field_name}
 					{if $field_name eq "company" &&  $b2b_enable}
-					<p class="text is_customer_param">
+					<p class="text">
 						<label for="company_invoice">{l s='Company'}</label>
 						<input type="text" class="text" id="company_invoice" name="company_invoice" value="" />
 					</p>
@@ -375,13 +378,13 @@
 						<textarea name="other_invoice" id="other_invoice" cols="26" rows="3"></textarea>
 					</p>
 					{if isset($one_phone_at_least) && $one_phone_at_least}
-						<p class="inline-infos required">{l s='You must register at least one phone number.'}</p>
+						<p class="inline-infos required is_customer_param">{l s='You must register at least one phone number.'}</p>
 					{/if}					
-					<p class="text">
+					<p class="text is_customer_param">
 						<label for="phone_invoice">{l s='Home phone'}</label>
 						<input type="text" class="text" name="phone_invoice" id="phone_invoice" value="{if isset($guestInformations) && $guestInformations.phone_invoice}{$guestInformations.phone_invoice}{/if}" />
 					</p>
-					<p class="{if isset($one_phone_at_least) && $one_phone_at_least}required {/if}text is_customer_param">
+					<p class="{if isset($one_phone_at_least) && $one_phone_at_least}required {/if}text">
 						<label for="phone_mobile_invoice">{l s='Mobile phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>*</sup>{/if}</label>
 						<input type="text" class="text" name="phone_mobile_invoice" id="phone_mobile_invoice" value="{if isset($guestInformations) && $guestInformations.phone_mobile_invoice}{$guestInformations.phone_mobile_invoice}{/if}" />
 					</p>
