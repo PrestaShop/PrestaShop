@@ -1162,7 +1162,7 @@ class ToolsCore
 
 		$replacements = array(
 				'a', 'c', 'd', 'e', 'g', 'h', 'i', 'j', 'k', 'l', 'n', 'o', 'r', 's', 'ss', 't', 'u', 'y', 'w', 'z', 'ae', 'oe',
-				'A', 'C', 'D', 'E', 'G', 'H', 'I', 'J', 'K', 'L', 'N', 'O', 'R', 'S', 'T', 'U', 'W', 'Y', 'Z', 'AE', 'OE'
+				'A', 'C', 'D', 'E', 'G', 'H', 'I', 'J', 'K', 'L', 'N', 'O', 'R', 'S', 'T', 'U', 'Y', 'W', 'Z', 'AE', 'OE'
 			);
 
 		return preg_replace($patterns, $replacements, $str);
