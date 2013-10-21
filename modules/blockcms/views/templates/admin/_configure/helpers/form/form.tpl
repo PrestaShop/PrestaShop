@@ -25,10 +25,18 @@
 
 {extends file="helpers/form/form.tpl"}
 
+{block name="label"}
+	{if $input.type == 'cms_blocks'}
+		
+	{else}
+		{$smarty.block.parent}
+	{/if}
+{/block}
+
 {block name="input"}
 
     {if $input.type == 'cms_blocks'}
-
+	<div class="row">
         <script type="text/javascript">
             var come_from = '{$name_controller}';
             var token = '{$token}';
@@ -39,8 +47,7 @@
         {if isset($cms_blocks_positions) && count($cms_blocks_positions) > 0}
 
             {foreach $cms_blocks_positions as $key => $cms_blocks_position}
-                <div style="float:left;{if $key == 0}margin-right:2em;{/if}">
-
+                <div class="col-lg-6">
                     <h3 style="margin-top:1px;">
                         {if $key == 0}
                             {l s='Left blocks' mod='blockcms'}
@@ -94,6 +101,7 @@
                 </div>
             {/foreach}
         {/if}
+	</div>
     {elseif $input.type == 'select_category'}
 
         {function name=render_select level=0}
