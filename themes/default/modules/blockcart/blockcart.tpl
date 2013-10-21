@@ -126,7 +126,7 @@ var generated_date = {$smarty.now|intval};
 			</tbody>
 		</table>
 		<p id="cart-prices">
-			<span id="cart_block_shipping_cost" class="price ajax_cart_shipping_cost">{$shipping_cost}</span>
+			<span id="cart_block_shipping_cost" class="price ajax_cart_shipping_cost">{if $shipping_cost_float == 0}{l s='Free shipping!' mod='blockcart'}{else}{$shipping_cost}{/if}</span>
 			<span>{l s='Shipping' mod='blockcart'}</span>
 			<br/>
 			{if $show_wrapping}
@@ -162,4 +162,34 @@ var generated_date = {$smarty.now|intval};
 	</div>
 	</div>
 </div>
+<div id="layer_cart">
+	<div class="layer_cart_product">
+		<h2>{l s='Product successfully added to your shopping cart' mod='blockcart'}</h2>
+		<img class="layer_cart_img" alt="img" src="{$base_dir}img/404.gif"/>
+		<div class="layer_cart_product_info">
+			<span id="layer_cart_product_title" style="font-size:1em"></span>
+			<span id="layer_cart_product_attributes"></span>
+			<p>{l s='Quantity:' mod='blockcart'}&nbsp;<span id="layer_cart_product_quantity"></span></p>
+			<p>{l s='Total:' mod='blockcart'}&nbsp;<span id="layer_cart_product_price"></p>
+		</div>
+	</div>
+	<div class="layer_cart_cart">
+		<span class="cross" title="{l s='Close window' mod='blockcart'}"></span>
+		<span>{l s='Cart' mod='blockcart'}</span>&nbsp;<span class="ajax_cart_quantity">{$cart_qties}</span>&nbsp;<span class="ajax_cart_product_txt{if $cart_qties > 1} hidden{/if}">{l s='item' mod='blockcart'}</span><span class="ajax_cart_product_txt_s{if $cart_qties < 2} hidden{/if}">{l s='items' mod='blockcart'}</span>
+		<span>{l s='Total products' mod='blockcart'}{if $priceDisplay == 1}&nbsp;{l s='(tax exclu.):' mod='blockcart'}{else}&nbsp;{l s='(tax incl.):' mod='blockcart'}{/if}</span>&nbsp;<span class="ajax_block_products_total">{if $cart_qties > 0}{convertPrice price=$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS)}{/if}</span>
+{if $show_wrapping}
+		<span>{l s='Wrapping' mod='blockcart'}{if $priceDisplay == 1}&nbsp;{l s='(tax exclu.):' mod='blockcart'}{else}&nbsp;{l s='(tax incl.):' mod='blockcart'}{/if}</span>&nbsp;<span class="price cart_block_wrapping_cost">{if $priceDisplay == 1}{convertPrice price=$cart->getOrderTotal(false, Cart::ONLY_WRAPPING)}{else}{convertPrice price=$cart->getOrderTotal(true, Cart::ONLY_WRAPPING)}{/if}</span>
+{/if}
+		<span>{l s='Total shipping (tax exclu.):' mod='blockcart'}</span>&nbsp;<span class="ajax_cart_shipping_cost">{if $shipping_cost_float == 0}{l s='Free shipping!' mod='blockcart'}{else}{$shipping_cost}{/if}</span>
+{if $show_tax && isset($tax_cost)}
+		<span>{l s='Tax' mod='blockcart'}</span><span id="cart_block_tax_cost" class="price ajax_cart_tax_cost">{$tax_cost}</span>
+{/if}		
+		<span>{l s='Total:' mod='blockcart'}{if $priceDisplay == 1}&nbsp;{l s='(tax exclu.):' mod='blockcart'}{else}&nbsp;{l s='(tax incl.):' mod='blockcart'}{/if}</span>&nbsp;<span class="ajax_cart_total">{if $cart_qties > 0}{if $priceDisplay == 1}{convertPrice price=$cart->getOrderTotal(false)}{else}{convertPrice price=$cart->getOrderTotal(true)}{/if}{/if}</span>
+		<span class="freeshipping{if $cart_qties > 0 && ($free_shipping <= 0 || $shipping_cost_float == 0)} hidden{/if}"><span>{l s='Spend just' mod='blockcart'}</span>&nbsp;<span class="ajax_cart_free_shipping">{convertPrice price=$free_shipping}</span><span>&nbsp;{l s='more and get' mod='blockcart'}</span>&nbsp;<span>{l s='FREE SHIPPING!' mod='blockcart'}</span></span>
+		<span class="continue" title="{l s='Continue shopping' mod='blockcart'}">{l s='Continue shopping' mod='blockcart'}</span>
+		<a href="{$link->getPageLink("$order_process", true)|escape:'html'}" title="{l s='Procedd to checkout' mod='blockcart'}" rel="nofollow">{l s='Procedd to checkout' mod='blockcart'}</a>	
+	</div>
+	<div class="crossseling"></div>
+</div>
+<div class="layer_cart_overlay"></div>
 <!-- /MODULE Block cart -->
