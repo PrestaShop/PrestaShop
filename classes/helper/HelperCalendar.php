@@ -212,13 +212,19 @@ class HelperCalendarCore extends Helper
 			$bo_theme = 'default';
 
 		if ($context->controller->ajax)
+		{
 			$html = '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
 				.'/themes/'.$bo_theme.'/js/date-range-picker.js"></script>';
+			$html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
+				.'/themes/'.$bo_theme.'/js/calendar.js"></script>';
+		}
 		else
 		{
 			$html = '';
 			$context->controller->addJs(__PS_BASE_URI__.$admin_webpath
 				.'/themes/'.$bo_theme.'/js/date-range-picker.js');
+			$context->controller->addJs(__PS_BASE_URI__.$admin_webpath
+				.'/themes/'.$bo_theme.'/js/calendar.js');
 		}
 
 		$this->tpl = $this->createTemplate($this->base_tpl);
