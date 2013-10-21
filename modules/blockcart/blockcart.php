@@ -33,7 +33,7 @@ class BlockCart extends Module
 	{
 		$this->name = 'blockcart';
 		$this->tab = 'front_office_features';
-		$this->version = '1.2';
+		$this->version = '1.3';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -99,6 +99,17 @@ class BlockCart extends Module
 			}
 		}
 
+		$total_free_shipping = 0;
+		if ($free_shipping = Tools::convertPrice(floatval(Configuration::get('PS_SHIPPING_FREE_PRICE')), new Currency(intval($params['cart']->id_currency))))
+		{
+			$total_free_shipping =  floatval($free_shipping - ($params['cart']->getOrderTotal(true, Cart::ONLY_PRODUCTS) + $params['cart']->getOrderTotal(true, Cart::ONLY_DISCOUNTS)));
+			$discounts = $params['cart']->getCartRules(CartRule::FILTER_ACTION_SHIPPING);
+			if ($total_free_shipping < 0)
+				$total_free_shipping = 0;
+			if (is_array($discounts) && count($discounts))
+				$total_free_shipping = 0;
+		}
+
 		$this->smarty->assign(array(
 			'products' => $products,
 			'customizedDatas' => Product::getAllCustomizedDatas((int)($params['cart']->id)),
@@ -115,7 +126,8 @@ class BlockCart extends Module
 			'total' => Tools::displayPrice($totalToPay, $currency),
 			'order_process' => Configuration::get('PS_ORDER_PROCESS_TYPE') ? 'order-opc' : 'order',
 			'ajax_allowed' => (int)(Configuration::get('PS_BLOCK_CART_AJAX')) == 1 ? true : false,
-			'static_token' => Tools::getToken(false)
+			'static_token' => Tools::getToken(false),
+			'free_shipping' => $total_free_shipping
 		));
 		if (count($errors))
 			$this->smarty->assign('errors', $errors);
@@ -134,6 +146,16 @@ class BlockCart extends Module
 			else
 				Configuration::updateValue('PS_BLOCK_CART_AJAX', (int)($ajax));
 			$output .= $this->displayConfirmation($this->l('Settings updated'));
+
+			if (!($productNbr = Tools::getValue('PS_BLOCK_CART_XSELL_LIMIT')) || empty($productNbr))
+				$output .= $this->displayError($this->l('Please complete the "products to display" field.'));
+			elseif ((int)($productNbr) == 0)
+				$output .= $this->displayError($this->l('Invalid number.'));
+			else
+			{
+				Configuration::updateValue('PS_BLOCK_CART_XSELL_LIMIT', (int)(Tools::getValue('PS_BLOCK_CART_XSELL_LIMIT')));
+				$output .= $this->displayConfirmation($this->l('Settings updated'));
+			}
 		}
 		return $output.$this->renderForm();
 	}
@@ -145,7 +167,8 @@ class BlockCart extends Module
 			|| $this->registerHook('top') == false
 			|| $this->registerHook('header') == false
 			|| $this->registerHook('actionCartListOverride') == false
-			|| Configuration::updateValue('PS_BLOCK_CART_AJAX', 1) == false)
+			|| Configuration::updateValue('PS_BLOCK_CART_AJAX', 1) == false
+			|| Configuration::updateValue('PS_BLOCK_CART_XSELL_LIMIT', 12) == false)
 			return false;
 		return true;
 	}
@@ -172,7 +195,13 @@ class BlockCart extends Module
 			return;
 
 		$this->assignContentVars($params);
-		$res = $this->display(__FILE__, 'blockcart-json.tpl');
+		$res = Tools::jsonDecode($this->display(__FILE__, 'blockcart-json.tpl'), true);
+		if (is_array($res) && $id_product = Tools::getValue('id_product'))
+		{
+			$this->smarty->assign('orderProducts', OrderDetail::getCrossSells($id_product, $this->context->language->id, Configuration::get('PS_BLOCK_CART_XSELL_LIMIT')));
+			$res['crossSelling'] = $this->display(__FILE__, 'crossselling.tpl');
+		}
+		$res = Tools::jsonEncode($res);
 		return $res;
 	}
 
@@ -192,7 +221,10 @@ class BlockCart extends Module
 
 		$this->context->controller->addCSS(($this->_path).'blockcart.css', 'all');
 		if ((int)(Configuration::get('PS_BLOCK_CART_AJAX')))
+		{
 			$this->context->controller->addJS(($this->_path).'ajax-cart.js');
+			$this->context->controller->addJqueryPlugin(array('scrollTo', 'serialScroll'));
+		}
 	}
 	
 	public function hookTop($params)
@@ -227,7 +259,14 @@ class BlockCart extends Module
 										'label' => $this->l('Disabled')
 									)
 								),
-						)
+						),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Products to display in cross selling'),
+						'name' => 'PS_BLOCK_CART_XSELL_LIMIT',
+						'class' => 'fixed-width-xs',
+						'desc' => $this->l('Define the number of products to be displayed in the cross selling block.')
+					),
 				),
 			'submit' => array(
 				'title' => $this->l('Save'),
@@ -260,7 +299,7 @@ class BlockCart extends Module
 	{
 		return array(
 			'PS_BLOCK_CART_AJAX' => Tools::getValue('PS_BLOCK_CART_AJAX', Configuration::get('PS_BLOCK_CART_AJAX')),
+			'PS_BLOCK_CART_XSELL_LIMIT' => Tools::getValue('PS_BLOCK_CART_XSELL_LIMIT', Configuration::get('PS_BLOCK_CART_XSELL_LIMIT'))
 		);
 	}
 }
-

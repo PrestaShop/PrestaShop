@@ -654,4 +654,62 @@ class OrderDetailCore extends ObjectModel
     	$query->where('od.`id_order_detail` = '.(int)$this->id_order_detail);
     	return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
     }
+
+	public static function getCrossSells($id_product, $id_lang, $limit = 12)
+	{
+		if (!$id_product || !$id_lang)
+			return;
+
+		$front = true;
+		if (!in_array(Context::getContext()->controller->controller_type, array('front', 'modulefront')))
+			$front = false;
+
+		$orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		SELECT o.id_order
+		FROM '._DB_PREFIX_.'orders o
+		LEFT JOIN '._DB_PREFIX_.'order_detail od ON (od.id_order = o.id_order)
+		WHERE o.valid = 1 AND od.product_id = '.(int)$id_product);
+
+		if (sizeof($orders))
+		{
+			$list = '';
+			foreach ($orders AS $order)
+				$list .= (int)$order['id_order'].',';
+			$list = rtrim($list, ',');
+
+			$orderProducts = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+				SELECT DISTINCT od.product_id, p.id_product, pl.name, pl.link_rewrite, p.reference, i.id_image, product_shop.show_price, cl.link_rewrite category, p.ean13, p.out_of_stock, p.id_category_default
+				FROM '._DB_PREFIX_.'order_detail od
+				LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = od.product_id)
+				'.Shop::addSqlAssociation('product', 'p').'
+				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = od.product_id'.Shop::addSqlRestrictionOnLang('pl').')
+				LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = product_shop.id_category_default'.Shop::addSqlRestrictionOnLang('cl').')
+				LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = od.product_id)
+				WHERE od.id_order IN ('.$list.')
+					AND pl.id_lang = '.(int)$id_lang.'
+					AND cl.id_lang = '.(int)$id_lang.'
+					AND od.product_id != '.(int)$id_product.'
+					AND i.cover = 1
+					AND product_shop.active = 1'
+					.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
+				ORDER BY RAND()
+				LIMIT '.(int)$limit.'
+			');
+
+			$taxCalc = Product::getTaxCalculationMethod();
+			if (is_array($orderProducts))
+			{
+				foreach ($orderProducts AS &$orderProduct)
+				{
+					$orderProduct['image'] = Context::getContext()->link->getImageLink($orderProduct['link_rewrite'], (int)$orderProduct['product_id'].'-'.(int)$orderProduct['id_image'], ImageType::getFormatedName('medium'));
+					$orderProduct['link'] = Context::getContext()->link->getProductLink((int)$orderProduct['product_id'], $orderProduct['link_rewrite'], $orderProduct['category'], $orderProduct['ean13']);
+					if ($taxCalc == 0 OR $taxCalc == 2)
+						$orderProduct['displayed_price'] = Product::getPriceStatic((int)$orderProduct['product_id'], true, NULL);
+					elseif ($taxCalc == 1)
+						$orderProduct['displayed_price'] = Product::getPriceStatic((int)$orderProduct['product_id'], false, NULL);
+				}
+				return Product::getProductsProperties($id_lang, $orderProducts);
+			}
+		}
+	}
 }
