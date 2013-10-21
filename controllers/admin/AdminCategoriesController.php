@@ -491,7 +491,7 @@ class AdminCategoriesControllerCore extends AdminController
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
-				'class' => 'btn-primary'
+				'class' => 'btn-default'
 			)
 		);
 		

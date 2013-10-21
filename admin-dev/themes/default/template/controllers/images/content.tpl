@@ -123,7 +123,7 @@
 			</div>
 			<div class="row">
 				<div class="col-lg-9 col-lg-push-3">
-					<input type="Submit" name="submitRegenerate{$table}" value="{l s='Regenerate thumbnails'}" class="btn btn-primary" onclick="return confirm('{l s='Are you sure?'}');" />
+					<input type="Submit" name="submitRegenerate{$table}" value="{l s='Regenerate thumbnails'}" class="btn btn-default" onclick="return confirm('{l s='Are you sure?'}');" />
 				</div>
 			</div>
 		</div>
@@ -151,7 +151,7 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-12 pull-right">
-                        <input type="Submit" name="submitMoveImages{$table}" value="{l s='Move images'}" class="btn btn-primary" onclick="return confirm('{l s='Are you sure?'}');" />
+                        <input type="Submit" name="submitMoveImages{$table}" value="{l s='Move images'}" class="btn btn-default" onclick="return confirm('{l s='Are you sure?'}');" />
                     </div>
                 </div>
             </div>

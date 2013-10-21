@@ -37,7 +37,7 @@
 							</select>
 						</div>
 						<div class="col-lg-6">
-							<input type="submit" class="btn btn-primary" name="submitBulk" id="submitBulk" value="{l s='Apply'}" />
+							<input type="submit" class="btn btn-default" name="submitBulk" id="submitBulk" value="{l s='Apply'}" />
 						</div>
 					</div>
 					{else}
@@ -53,7 +53,7 @@
 							{/if}
 							</div>
 							<div class="col-lg-6">
-								<input type="submit" class="btn btn-primary" name="submitBulk{$key}{$table}" value="{$params.text}" {if isset($params.confirm)}onclick="return confirm('{$params.confirm}');"{/if} />
+								<input type="submit" class="btn btn-default" name="submitBulk{$key}{$table}" value="{$params.text}" {if isset($params.confirm)}onclick="return confirm('{$params.confirm}');"{/if} />
 							</div>
 						</div>
 						{/foreach}
