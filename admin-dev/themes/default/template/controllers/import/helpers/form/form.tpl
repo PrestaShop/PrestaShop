@@ -25,27 +25,46 @@
 
 <div class="leadin">{block name="leadin"}{/block}</div>
 {if $module_confirmation}
-	<div class="module_confirmation conf confirm">
-		{l s='Your .CSV file has been sucessfully imported into your shop.'}
-	</div>
+<div class="module_confirmation conf confirm">
+	{l s='Your .CSV file has been sucessfully imported into your shop.'}
+</div>
 {/if}
 <div style="display: none">
-	<div id="upload_file_import" style="padding-left: 10px; background-color: #EBEDF4; border: 1px solid #CCCED7">
-		<div class="clear">&nbsp;</div>
-		<form action="{$current}&token={$token}" method="post" enctype="multipart/form-data">
-			<label class="clear" style="width:160px; text-align: left;">{l s='Select your CSV file'} </label>	
-			<div class="margin-form" style="padding-left:190px;">
-				<input name="file" type="file" />
-				<p class="preference_description">
-					{l s='You can also upload your file via FTP to the following directory:'} {$path_import}.
-				</p>
-			</div>
-			
-			<div class="margin-form" style="padding-left:190px;">
-				<input type="submit" name="submitFileUpload" value="{l s='Upload'}" class="button" />
-				<p class="preference_description">
-					{l s='Only UTF-8 and ISO-8859-1 encoding are allowed'}
-				</p>
+	<div id="upload_file_import">
+		<div class="alert alert-info">{l s='Only UTF-8 and ISO-8859-1 encoding are allowed'}</div>
+		<form action="{$current}&token={$token}" method="post" enctype="multipart/form-data" class="form-horizontal">
+			<div class="panel">
+				<div class="form-group">
+					<label class="control-label col-lg-3">{l s='Select your CSV file'}</label>
+					<div class="col-lg-9">
+						<div class="row">
+							<div class="col-lg-7">
+								<input id="file" type="file" name="file" class="hide" />
+								<div class="dummyfile input-group">
+									<span class="input-group-addon"><i class="icon-file"></i></span>
+									<input id="file-name" type="text" class="disabled" name="filename" readonly />
+									<span class="input-group-btn">
+										<button id="file-selectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
+											<i class="icon-folder-open"></i> {l s='Choose a file'}
+										</button>
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-lg-7">
+								<p class="help-block">
+									{l s='You can also upload your file via FTP to the following directory:'} {$path_import}.
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-lg-9 col-lg-offset-3">
+						<input type="submit" name="submitFileUpload" value="{l s='Upload'}" class="btn btn-default" />
+					</div>
+				</div>
 			</div>
 		</form>
 	</div>
@@ -328,5 +347,17 @@
 			    showTitle: false
 		 	});
 		};	
+
+		$('#file-selectbutton').click(function(e){
+			$('#file').trigger('click');
+		});
+		$('#file-name').click(function(e){
+			$('#file').trigger('click');
+		});
+		$('#file').change(function(e){
+			var val = $(this).val();
+			var file = val.split(/[\\/]/);
+			$('#file-name').val(file[file.length-1]);
+		});
 	});
 </script>
