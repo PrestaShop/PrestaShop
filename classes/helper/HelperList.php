@@ -603,16 +603,16 @@ class HelperListCore extends Helper
 			'list_total' => $this->listTotal,
 			'token' => $this->token,
 			'table' => $this->table,
-			'bulk_actions' => (count($this->_list) <= 1 && !$has_value) ? array() : $this->bulk_actions
+			'bulk_actions' => (count($this->_list) <= 1 && !$has_value) ? array() : $this->bulk_actions,
+			'show_toolbar' => $this->show_toolbar,
+			'toolbar_scroll' => $this->toolbar_scroll,
+			'toolbar_btn' => $this->toolbar_btn,
 		));
 
 		$this->header_tpl->assign(array_merge($this->tpl_vars, array(
 			'title' => array_key_exists('title', $this->tpl_vars) ? $this->tpl_vars['title'] : $this->title,
 			'show_filters' => (count($this->_list) <= 1 && !$has_value) ? false : true,
 			'filters_has_value' => $has_value,
-			'show_toolbar' => $this->show_toolbar,
-			'toolbar_scroll' => $this->toolbar_scroll,
-			'toolbar_btn' => $this->toolbar_btn,
 			'currentIndex' => $this->currentIndex,
 			'action' => $action,
 			'is_order_position' => $this->position_identifier && $this->orderBy == 'position',
