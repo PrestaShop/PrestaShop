@@ -76,6 +76,7 @@
 
 {if !$simple_header}
 <form method="post" action="{$action}" class="form-horizontal">
+	<input type="hidden" id="submitFilter{$list_id}" name="submitFilter{$list_id}" value="0"/>
 	{block name="override_form_extra"}{/block}
 	<div class="panel col-lg-12">
 		<div class="panel-heading">
@@ -300,7 +301,6 @@
 					{if $has_actions}
 					<td class="actions">
 						{if $show_filters}
-						<input type="hidden" id="submitFilter{$list_id}" name="submitFilter{$list_id}" value="0"/>
 						<span class="pull-right">
 							{*Search must be before reset for default form submit*}
 							<button type="submit" id="submitFilterButton{$list_id}" name="submitFilter" class="btn btn-default" data-list-id="{$list_id}">
