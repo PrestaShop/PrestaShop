@@ -110,12 +110,12 @@
 					</li>
 				{/if}
 			{/while}
-			<li {if $page > $total_pages}class="disabled"{/if}>
+			<li {if $page >= $total_pages}class="disabled"{/if}>
 				<a href="javascript:void(0);" class="pagination-link" data-page="{$page + 1}" data-list-id="{$list_id}">
 					<i class="icon-angle-right"></i>
 				</a>
 			</li>
-			<li {if $page > $total_pages}class="disabled"{/if}>
+			<li {if $page >= $total_pages}class="disabled"{/if}>
 				<a href="javascript:void(0);" class="pagination-link" data-page="{$total_pages}" data-list-id="{$list_id}">
 					<i class="icon-double-angle-right"></i>
 				</a>
@@ -124,7 +124,9 @@
 		<script type="text/javascript">
 			$('.pagination-link').on('click',function(e){
 				e.preventDefault();
-				$('#submitFilter'+$(this).data("list-id")).val($(this).data("page")).closest("form").submit();
+
+				if (!$(this).parent().hasClass('disabled'))
+					$('#submitFilter'+$(this).data("list-id")).val($(this).data("page")).closest("form").submit();
 			});
 		</script>
 	</div>
