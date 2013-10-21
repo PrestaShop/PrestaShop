@@ -37,8 +37,21 @@
 						{l s='Module file'}
 					</span>
 				</label>
-				<div class="col-lg-3">
-					<input type="file" name="file" class="form-control" />
+				<div class="col-lg-12">
+					<div class="row">
+						<div class="col-lg-7">
+							<input id="file" type="file" name="file" class="hide" />
+							<div class="dummyfile input-group">
+								<span class="input-group-addon"><i class="icon-file"></i></span>
+								<input id="file-name" type="text" class="disabled" name="filename" readonly />
+								<span class="input-group-btn">
+									<button id="file-selectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
+										<i class="icon-folder-open"></i> {l s='Choose a file'}
+									</button>
+								</span>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="form-group">
@@ -98,3 +111,19 @@
 		</div>
 	</div>
 </div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#file-selectbutton').click(function(e){
+			$('#file').trigger('click');
+		});
+		$('#file-name').click(function(e){
+			$('#file').trigger('click');
+		});
+		$('#file').change(function(e){
+			var val = $(this).val();
+			var file = val.split(/[\\/]/);
+			$('#file-name').val(file[file.length-1]);
+		});
+	});
+</script>
