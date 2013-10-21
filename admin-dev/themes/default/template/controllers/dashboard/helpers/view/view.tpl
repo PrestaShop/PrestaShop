@@ -26,9 +26,9 @@
 <script>
 	var dashboard_ajax_url = '{$link->getAdminLink('AdminDashboard')}';
 	var adminstats_ajax_url = '{$link->getAdminLink('AdminStats')}';
-	var no_results_translation = '{l s='No result'}';
+	var no_results_translation = '{l s='No result' js='1'}';
 	var dashboard_use_push = '{$dashboard_use_push|intval}';
-	var read_more = '{l s='Read more'}'
+	var read_more = '{l s='Read more' js='1'}';
 </script>
 
 <div id="dashboard">
@@ -46,13 +46,11 @@
 		</div>
 		<div class="col-lg-7" id="hookDashboardZoneTwo">
 			{$hookDashboardZoneTwo}
-			<section id="dashaddons" class="panel widget">
-				<header class="panel-heading">
-					<a href="http://addons.prestashop.com/208-dashboards?utm_source=backoffice_dashboard" target="_blank">
-						<i class="icon-plus"></i> {l s='Add more graph and data'}
-					</a>
-				</header>
-			</section>
+			<div id="dashaddons" class="widget">
+				<a href="http://addons.prestashop.com/208-dashboards?utm_source=backoffice_dashboard" target="_blank">
+					<i class="icon-plus"></i> {l s='Add more graph and data'}
+				</a>
+			</div>
 		</div>
 		<div class="col-lg-2">
 			

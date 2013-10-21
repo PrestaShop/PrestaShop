@@ -80,7 +80,7 @@
 					<input type="hidden" name="id_module" value="{$id_module}" />
 					<input type="hidden" name="id_hook" value="{$id_hook}" />
 				{/if}
-				<input type="submit" value="{l s='Save'}" name="{if $edit_graft}submitEditGraft{else}submitAddToHook{/if}" id="{$table}_form_submit_btn" class="btn btn-primary" />
+				<input type="submit" value="{l s='Save'}" name="{if $edit_graft}submitEditGraft{else}submitAddToHook{/if}" id="{$table}_form_submit_btn" class="btn btn-default" />
 			</div>
 		</div>
 	</div>

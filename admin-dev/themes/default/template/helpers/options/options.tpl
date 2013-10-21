@@ -350,10 +350,9 @@
 									</p>
 								</div>
 								{/if}
-								
+								{/block}{* end block field *}
 							</div>
 						</div>
-					{/block}{* end block field *}
 				{/if}
 			{/foreach}
 			{if isset($categoryData['submit'])}

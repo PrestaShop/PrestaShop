@@ -29,9 +29,7 @@
 		{include file='controllers/cart_rules/actions.tpl'}
 		{include file="footer_toolbar.tpl"}
 	</div>
-	<button type="submit" class="btn btn-primary btn-large pull-right" name="submitAddcart_rule" id="{$table|escape}_form_submit_btn">
-		<i class="icon-save"></i>
-		{l s='Save'}
+	<button type="submit" class="btn btn-default pull-right" name="submitAddcart_rule" id="{$table|escape}_form_submit_btn">{l s='Save'}
 	</button>
 	<!--<input type="submit" value="{l s='Save and stay'}" class="button" name="submitAddcart_ruleAndStay" id="" />-->
 </form>

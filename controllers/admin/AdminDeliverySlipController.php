@@ -83,7 +83,7 @@ class AdminDeliverySlipControllerCore extends AdminController
 			),
 			'submit' => array(
 				'title' => $this->l('Generate PDF file'),
-				'class' => 'btn btn-primary',
+				'class' => 'btn btn-default',
 				'icon' => 'icon-download-alt'	
 			)
 		);

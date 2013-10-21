@@ -226,7 +226,7 @@ class AdminCurrenciesControllerCore extends AdminController
 
 		$this->fields_form['submit'] = array(
 			'title' => $this->l('Save'),
-			'class' => 'btn btn-primary'
+			'class' => 'btn btn-default'
 		);
 
 		return parent::renderForm();
