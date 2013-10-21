@@ -88,6 +88,12 @@ html, body
 input[type="text"],input[type="search"],input[type="password"], textarea, select
 	@extend .form-control
 
+//todo: fix focus firefox
+*:focus
+	outline: none!important
+	-moz-outline: none!important
+	-moz-user-focus: ignore!important
+
 //components
 @import "admin-theme/admin-header"
 @import "admin-theme/admin-footer"
