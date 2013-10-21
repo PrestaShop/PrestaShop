@@ -32,6 +32,7 @@
 	<td>
 		<div id="anchor{$module->name|ucfirst}">
 			<span>
+				<span style="display:none">{$module->name}</span>
 				{$module->displayName|truncate:40:'…'} {$module->version}
 				{if isset($module->id) && $module->id gt 0 }
 					{if $module->active}
