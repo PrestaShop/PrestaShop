@@ -210,6 +210,8 @@ class HelperListCore extends Helper
 
 					if (method_exists($this->context->controller, $method_name))
 						$this->_list[$index][$action] = $this->context->controller->$method_name($this->token, $id, $name);
+					else if ($this->module instanceof Module && method_exists($this->module, $method_name))
+						$this->_list[$index][$action] = $this->module->$method_name($this->token, $id, $name);
 					elseif (method_exists($this, $method_name))
 						$this->_list[$index][$action] = $this->$method_name($this->token, $id, $name);
 				}
