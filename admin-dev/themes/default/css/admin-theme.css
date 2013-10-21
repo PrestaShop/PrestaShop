@@ -1,5 +1,5 @@
 @import url(http://fonts.googleapis.com/css?family=Josefin+Sans:200,400,700);
-/*
+/*!
  * Bootstrap v3.0.0
  *
  * Copyright 2013 Twitter, Inc
@@ -8,7 +8,7 @@
  *
  * Designed and built with all the love in the world by @mdo and @fat.
  */
-/* normalize.css v2.1.0 | MIT License | git.io/normalize */
+/*! normalize.css v2.1.0 | MIT License | git.io/normalize */
 /* line 22, ../bower_components/sass-bootstrap/lib/_normalize.scss */
 article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {
   display: block; }
@@ -5718,7 +5718,7 @@ th.visible-print, td.visible-print {
   /* line 523, ../bower_components/sass-bootstrap/lib/_mixins.scss */
   th.hidden-print, td.hidden-print {
     display: none !important; } }
-/*
+/*!
  *  Font Awesome 3.2.1
  *  the iconic font designed for Bootstrap
  *  ------------------------------------------------------------------------------
@@ -7647,6 +7647,12 @@ html, body {
 #nobootstrap {
   float: left; }
 
+/* line 92, admin-theme.sass */
+*:focus {
+  outline: none !important;
+  -moz-outline: none !important;
+  -moz-user-focus: ignore !important; }
+
 /* line 1, admin-theme/_admin-header.sass */
 #header_infos {
   background-color: #242424; }
@@ -8213,18 +8219,15 @@ a.link-social:hover {
   font-family: "Ubuntu", sans-serif;
   text-transform: uppercase;
   font-weight: 300; }
-/* line 40, admin-theme/_admin-commons.sass */
-.nav-tabs li a:hover {
-  background-color: white; }
-/* line 43, admin-theme/_admin-commons.sass */
-.nav-tabs li.active a, .nav-tabs li.active a:hover {
+/* line 41, admin-theme/_admin-commons.sass */
+.nav-tabs li.active a, .nav-tabs li.active a:hover, .nav-tabs li.active a:focus {
   background-color: white; }
 
-/* line 46, admin-theme/_admin-commons.sass */
+/* line 44, admin-theme/_admin-commons.sass */
 .alert.alert-danger, #carrier_wizard .wizard_error {
   padding-left: 60px;
   position: relative; }
-/* line 49, admin-theme/_admin-commons.sass */
+/* line 47, admin-theme/_admin-commons.sass */
 .alert.alert-danger:before, #carrier_wizard .wizard_error:before {
   position: absolute;
   top: 0;
@@ -8240,11 +8243,11 @@ a.link-social:hover {
   -webkit-font-smoothing: antialiased;
   content: "\f00d"; }
 
-/* line 64, admin-theme/_admin-commons.sass */
+/* line 62, admin-theme/_admin-commons.sass */
 .alert.alert-success, #carrier_wizard .alert-success.wizard_error {
   padding-left: 60px;
   position: relative; }
-/* line 67, admin-theme/_admin-commons.sass */
+/* line 65, admin-theme/_admin-commons.sass */
 .alert.alert-success:before, #carrier_wizard .alert-success.wizard_error:before {
   position: absolute;
   top: 0;
@@ -8260,11 +8263,11 @@ a.link-social:hover {
   -webkit-font-smoothing: antialiased;
   content: "\f00c"; }
 
-/* line 83, admin-theme/_admin-commons.sass */
+/* line 81, admin-theme/_admin-commons.sass */
 .panel .panel-footer, #header_notifs_icon_wrapper .notifs_panel .panel-footer, #dash_version .panel-footer, #header_notifs_icon_wrapper .notifs_panel .notifs_panel_footer {
   margin: 0 -20px -20px; }
 
-/* line 88, admin-theme/_admin-commons.sass */
+/* line 84, admin-theme/_admin-commons.sass */
 .overflow-y {
   height: 200px;
   overflow-y: auto; }
@@ -9276,7 +9279,8 @@ textarea {
     -webkit-box-shadow: #00a4e7 0 0 0 inset;
     box-shadow: #00a4e7 0 0 0 inset; } }
 
-/* Ladda
+/*!
+ * Ladda
  * http://lab.hakim.se/ladda
  * MIT licensed
  *
