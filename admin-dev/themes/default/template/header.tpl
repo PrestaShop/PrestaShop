@@ -43,11 +43,11 @@
 		var roundMode = {$round_mode};
 			{if isset($shop_context)}
 				{if $shop_context == Shop::CONTEXT_ALL}
-				var youEditFieldFor = "{l s='A modification of this field will be applied for all shops' slashes=1 }";
+				var youEditFieldFor = '{l s='A modification of this field will be applied for all shops' slashes=1}';
 					{elseif $shop_context == Shop::CONTEXT_GROUP}
-				var youEditFieldFor = "{l s='A modification of this field will be applied for all shops of group ' slashes=1 }<b>{$shop_name}</b>";
+				var youEditFieldFor = '{l s='A modification of this field will be applied for all shops of group' slashes=1} <b>{$shop_name}</b>';
 					{else}
-				var youEditFieldFor = "{l s='A modification of this field will be applied for the shop ' slashes=1 }<b>{$shop_name}</b>";
+				var youEditFieldFor = '{l s='A modification of this field will be applied for the shop' slashes=1} <b>{$shop_name}</b>';
 				{/if}
 				{else}
 			var youEditFieldFor = '';
@@ -65,11 +65,11 @@
 		var new_msg = '{l s='A new message posted on your shop.' slashes=1}';
 		var excerpt_msg = '{l s='Excerpt: ' slashes=1}';
 		var see_msg = '{l s='Read this message' slashes=1}';
-		var token_admin_orders = '{getAdminToken tab='AdminOrders' slashes=1}';
-		var token_admin_customers = '{getAdminToken tab='AdminCustomers' slashes=1}';
-		var token_admin_customer_threads = '{getAdminToken tab='AdminCustomerThreads' slashes=1}';
+		var token_admin_orders = '{getAdminToken tab='AdminOrders'}';
+		var token_admin_customers = '{getAdminToken tab='AdminCustomers'}';
+		var token_admin_customer_threads = '{getAdminToken tab='AdminCustomerThreads'}';
 		var currentIndex = '{$currentIndex}';
-		var choose_language_translate = "{l s='Choose language' slashes=1 }";
+		var choose_language_translate = '{l s='Choose language' slashes=1}';
 	</script>
 {/if}
 
