@@ -861,12 +861,14 @@ $(document).ready(function()
 	});
 
 	$('#ajax_running').ajaxStop(function() {
-		$(this).slideUp('fast');
+		var element = $(this)
+		setTimeout(function(){element.slideUp('fast')}, 1000);
 		clearTimeout(ajax_running_timeout);
 	});
 
 	$('#ajax_running').ajaxError(function() {
-		$(this).slideUp('fast');
+		var element = $(this)
+		setTimeout(function(){element.slideUp('fast')}, 1000);
 		clearTimeout(ajax_running_timeout);
 	});
 	
