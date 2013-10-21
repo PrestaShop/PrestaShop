@@ -357,13 +357,11 @@ class ToolsCore
 			if (Validate::isLanguageIsoCode($string))
 			{
 				$lang = new Language(Language::getIdByIso($string));
-				if (Validate::isLoadedObject($lang) && $lang->active)
-				{				
-					$language = new Language((int)$lang->id);
-					if (Validate::isLoadedObject($language))
-						Context::getContext()->language = $language;				
+				if (Validate::isLoadedObject($lang) && $lang->active && $lang->isAssociatedToShop())
+				{
+					Context::getContext()->language = $lang;
 					$cookie->id_lang = (int)$lang->id;
-				}					
+				}
 			}
 		}
 		
