@@ -407,7 +407,7 @@ class AdminControllerCore extends Controller
 	
 	public function addFiltersToBreadcrumbs()
 	{
-		if (Tools::isSubmit('submitFilter'))
+		if (Tools::isSubmit('submitFilter') && is_array($this->fields_list))
 		{
 			$filters = array();
 			foreach ($this->fields_list as $field => $t)

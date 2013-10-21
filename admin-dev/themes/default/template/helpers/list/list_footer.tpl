@@ -131,6 +131,18 @@
 	{/if}
 </div>
 
+{foreach from=$toolbar_btn item=btn key=k}
+	{if $k == 'back'}
+		{assign 'back_button' $btn}
+	{/if}
+{/foreach}
+{if isset($back_button)}
+<div class="panel-footer">
+	<a id="desc-{$table}-{if isset($back_button.imgclass)}{$back_button.imgclass}{else}{$k}{/if}" class="btn btn-default" {if isset($back_button.href)}href="{$back_button.href}"{/if} {if isset($back_button.target) && $back_button.target}target="_blank"{/if}{if isset($back_button.js) && $back_button.js}onclick="{$back_button.js}"{/if}>
+		<i class="process-icon-{if isset($back_button.imgclass)}{$back_button.imgclass}{else}{$k}{/if} {if isset($back_button.class)}{$back_button.class}{/if}" ></i> <span {if isset($back_button.force_desc) && $back_button.force_desc == true } class="locked" {/if}>{$back_button.desc}</span>
+	</a>
+</div>
+{/if}
 
 {if !$simple_header}
 		<input type="hidden" name="token" value="{$token}" />
@@ -139,6 +151,7 @@
 {else}
 	</div>
 {/if}
+
 
 {hook h='displayAdminListAfter'}
 {if isset($name_controller)}
