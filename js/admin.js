@@ -871,7 +871,34 @@ $(document).ready(function()
 	});
 	
 	bindTabModuleListAction();
-	
+
+	//Check filters value on submit filter
+	$("[name='submitFilter']").click(function(event) {
+		var list_id = $(this).data('list-id');
+		var empty_filters = true;
+
+		$(document.body).find("input[name*='"+list_id+"Filter']").each(function() {
+			if ($(this).val() != '')
+			{
+				empty_filters = false;
+				return false;
+			}
+		});
+
+		$(document.body).find("select[name*='"+list_id+"Filter']").each(function() {
+			if ($(this).val() != '')
+			{
+				empty_filters = false;
+				return false;
+			}
+		});
+
+		if (empty_filters)
+		{
+			event.preventDefault();
+			$('#'+list_id+'-empty-filters-alert').show();
+		}
+	});
 });
 
 
@@ -1078,4 +1105,3 @@ function sendBulkAction(form, action)
 
 	$(form).submit();
 }
-

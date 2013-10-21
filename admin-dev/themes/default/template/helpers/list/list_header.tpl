@@ -72,6 +72,8 @@
 	{hook h=$hookName}
 {/if}
 
+<div class="alert alert-warning" id="{$list_id}-empty-filters-alert" style="display:none;">{l s='Please fill at least one field to perform a search in this list.'}</div>
+
 {if !$simple_header}
 <form method="post" action="{$action}" class="form-horizontal">
 	{block name="override_form_extra"}{/block}
@@ -81,7 +83,7 @@
 			{if isset($toolbar_btn) && count($toolbar_btn) >0}
 			<span class="panel-heading-action">
 			{foreach from=$toolbar_btn item=btn key=k}
-				{if $k != 'modules-list'}
+				{if $k != 'modules-list' && $k != 'back'}
 					<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="list-toolbar-btn" {if isset($btn.href)}href="{$btn.href}"{/if} {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
 						<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s=$btn.desc}" data-html="true">
 							<i class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if} {if isset($btn.class)}{$btn.class}{/if}" ></i>
@@ -301,7 +303,7 @@
 						<input type="hidden" id="submitFilter{$list_id}" name="submitFilter{$list_id}" value="0"/>
 						<span class="pull-right">
 							{*Search must be before reset for default form submit*}
-							<button type="submit" id="submitFilterButton{$list_id}" name="submitFilter" class="btn btn-default" />
+							<button type="submit" id="submitFilterButton{$list_id}" name="submitFilter" class="btn btn-default" data-list-id="{$list_id}">
 								<i class="icon-search"></i> {l s='Search'}
 							</button>
 							{if $filters_has_value}
