@@ -1,5 +1,5 @@
 @import url(http://fonts.googleapis.com/css?family=Josefin+Sans:200,400,700);
-/*!
+/*
  * Bootstrap v3.0.0
  *
  * Copyright 2013 Twitter, Inc
@@ -8,7 +8,7 @@
  *
  * Designed and built with all the love in the world by @mdo and @fat.
  */
-/*! normalize.css v2.1.0 | MIT License | git.io/normalize */
+/* normalize.css v2.1.0 | MIT License | git.io/normalize */
 /* line 22, ../bower_components/sass-bootstrap/lib/_normalize.scss */
 article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {
   display: block; }
@@ -5718,7 +5718,7 @@ th.visible-print, td.visible-print {
   /* line 523, ../bower_components/sass-bootstrap/lib/_mixins.scss */
   th.hidden-print, td.hidden-print {
     display: none !important; } }
-/*!
+/*
  *  Font Awesome 3.2.1
  *  the iconic font designed for Bootstrap
  *  ------------------------------------------------------------------------------
@@ -9276,8 +9276,7 @@ textarea {
     -webkit-box-shadow: #00a4e7 0 0 0 inset;
     box-shadow: #00a4e7 0 0 0 inset; } }
 
-/*!
- * Ladda
+/* Ladda
  * http://lab.hakim.se/ladda
  * MIT licensed
  *
@@ -10414,5 +10413,5 @@ li.sortable-placeholder {
   overflow: hidden; }
 /* line 232, admin-theme/_admin-dashboard.sass */
 #dash_version iframe {
-  height: 140px;
+  height: 80px;
   width: 100%; }
