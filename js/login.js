@@ -132,9 +132,9 @@ function doAjaxLogin(redirect) {
 				l.start();
 			},
 			success: function(jsonData) {
-				l.stop();
 				if (jsonData.hasErrors)
 					displayErrors(jsonData.errors);
+					l.stop();
 				else
 					window.location.assign(jsonData.redirect);
 			},

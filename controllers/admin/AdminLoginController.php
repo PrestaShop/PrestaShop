@@ -49,9 +49,9 @@ class AdminLoginControllerCore extends AdminController
 		$this->addJS(_PS_JS_DIR_.'vendor/spin.js');
 		$this->addJS(_PS_JS_DIR_.'vendor/ladda.js');
 		$this->addJS(_PS_JS_DIR_.'login.js');
-		$this->addJqueryUI('ui.widget');
-		$this->addJqueryUI('effects.shake');
-		$this->addJqueryUI('effects.slide');
+		//$this->addJqueryUI('ui.widget');
+		//$this->addJqueryUI('effects.shake');
+		//$this->addJqueryUI('effects.slide');
 	}
 	
 	public function initContent()
