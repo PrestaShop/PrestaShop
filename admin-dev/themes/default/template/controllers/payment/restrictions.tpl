@@ -119,7 +119,7 @@
 			</table>
 		</div>
 		<div class="row pull-right">
-			<button type="submit" class="btn btn-primary" name="submitModule{$list['name_id']}"> 
+			<button type="submit" class="btn btn-default" name="submitModule{$list['name_id']}"> 
 				<i class="icon-save"></i>
 				{l s='Save restrictions'}
 			</button>
