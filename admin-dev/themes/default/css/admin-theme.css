@@ -7697,15 +7697,23 @@ html, body {
 
 /* line 52, admin-theme/_admin-header.sass */
 #header_search {
-  width: 130px;
-  padding: 0 0 0 10px; }
+  width: 160px;
+  padding: 0 0 0 10px;
+  position: relative; }
 @media (max-width: 768px) {
   /* line 52, admin-theme/_admin-header.sass */
   #header_search {
     width: 100%; } }
-/* line 59, admin-theme/_admin-header.sass */
+/* line 60, admin-theme/_admin-header.sass */
 #header_search input, #header_search .form-group {
   margin: 0; }
+/* line 62, admin-theme/_admin-header.sass */
+#header_search .form-group.focus-search {
+  position: absolute;
+  z-index: 900;
+  top: 0;
+  left: 10px;
+  width: 400px; }
 
 /* line 1, admin-theme/_admin-footer.sass */
 #footer {
@@ -8205,15 +8213,18 @@ a.link-social:hover {
   font-family: "Ubuntu", sans-serif;
   text-transform: uppercase;
   font-weight: 300; }
-/* line 41, admin-theme/_admin-commons.sass */
+/* line 40, admin-theme/_admin-commons.sass */
+.nav-tabs li a:hover {
+  background-color: white; }
+/* line 43, admin-theme/_admin-commons.sass */
 .nav-tabs li.active a, .nav-tabs li.active a:hover {
   background-color: white; }
 
-/* line 44, admin-theme/_admin-commons.sass */
+/* line 46, admin-theme/_admin-commons.sass */
 .alert.alert-danger, #carrier_wizard .wizard_error {
   padding-left: 60px;
   position: relative; }
-/* line 47, admin-theme/_admin-commons.sass */
+/* line 49, admin-theme/_admin-commons.sass */
 .alert.alert-danger:before, #carrier_wizard .wizard_error:before {
   position: absolute;
   top: 0;
@@ -8229,11 +8240,11 @@ a.link-social:hover {
   -webkit-font-smoothing: antialiased;
   content: "\f00d"; }
 
-/* line 62, admin-theme/_admin-commons.sass */
+/* line 64, admin-theme/_admin-commons.sass */
 .alert.alert-success, #carrier_wizard .alert-success.wizard_error {
   padding-left: 60px;
   position: relative; }
-/* line 65, admin-theme/_admin-commons.sass */
+/* line 67, admin-theme/_admin-commons.sass */
 .alert.alert-success:before, #carrier_wizard .alert-success.wizard_error:before {
   position: absolute;
   top: 0;
@@ -8249,11 +8260,11 @@ a.link-social:hover {
   -webkit-font-smoothing: antialiased;
   content: "\f00c"; }
 
-/* line 81, admin-theme/_admin-commons.sass */
+/* line 83, admin-theme/_admin-commons.sass */
 .panel .panel-footer, #header_notifs_icon_wrapper .notifs_panel .panel-footer, #dash_version .panel-footer, #header_notifs_icon_wrapper .notifs_panel .notifs_panel_footer {
   margin: 0 -20px -20px; }
 
-/* line 86, admin-theme/_admin-commons.sass */
+/* line 88, admin-theme/_admin-commons.sass */
 .overflow-y {
   height: 200px;
   overflow-y: auto; }
@@ -8416,7 +8427,7 @@ label.control-label span.label-tooltip {
   -o-border-radius: 3px;
   border-radius: 3px; }
 
-/* line 17, admin-theme/_admin-forms.sass */
+/* line 16, admin-theme/_admin-forms.sass */
 label.required:before {
   content: "*";
   color: red;
@@ -8424,37 +8435,38 @@ label.required:before {
   position: relative;
   line-height: 12px; }
 
-/* line 24, admin-theme/_admin-forms.sass */
+/* line 23, admin-theme/_admin-forms.sass */
 .tooltip {
   font-size: 12px; }
 
-/* line 27, admin-theme/_admin-forms.sass */
+/* line 26, admin-theme/_admin-forms.sass */
 select.input-tiny, input[type="text"].input-tiny, input[type="password"].input-tiny {
   width: 80px;
   float: left; }
 
-/* line 33, admin-theme/_admin-forms.sass */
+/* line 32, admin-theme/_admin-forms.sass */
 textarea {
   resize: none; }
 
-/* line 37, admin-theme/_admin-forms.sass */
+/* line 36, admin-theme/_admin-forms.sass */
 .btn {
   text-transform: uppercase; }
-/* line 39, admin-theme/_admin-forms.sass */
+/* line 38, admin-theme/_admin-forms.sass */
 .btn .caret {
   border-top-color: #333333 !important; }
-/* line 42, admin-theme/_admin-forms.sass */
+/* line 41, admin-theme/_admin-forms.sass */
 .btn:hover .caret, .btn:focus .caret {
   border-top-color: white !important; }
-/* line 44, admin-theme/_admin-forms.sass */
+/* line 43, admin-theme/_admin-forms.sass */
 .btn.btn-default {
   -webkit-box-shadow: #e6e6e6 0 -2px 0 inset;
   box-shadow: #e6e6e6 0 -2px 0 inset; }
-/* line 47, admin-theme/_admin-forms.sass */
+/* line 46, admin-theme/_admin-forms.sass */
 .btn.btn-primary {
-  -webkit-box-shadow: #c7e6c7 0 -2px 0 inset;
-  box-shadow: #c7e6c7 0 -2px 0 inset; }
-/* line 50, admin-theme/_admin-forms.sass */
+  background-color: #1ba6e5;
+  color: white;
+  border-color: #1585b8; }
+/* line 52, admin-theme/_admin-forms.sass */
 .btn.btn-default[disabled] {
   border-color: #999999;
   color: #999999;
@@ -8462,46 +8474,46 @@ textarea {
   -webkit-box-shadow: #cccccc 0 -2px 0 inset;
   box-shadow: #cccccc 0 -2px 0 inset; }
 
-/* line 55, admin-theme/_admin-forms.sass */
+/* line 57, admin-theme/_admin-forms.sass */
 .dropdown-menu {
   text-align: left; }
 
-/* line 57, admin-theme/_admin-forms.sass */
+/* line 59, admin-theme/_admin-forms.sass */
 .btn-group-action {
   float: right; }
-/* line 59, admin-theme/_admin-forms.sass */
+/* line 61, admin-theme/_admin-forms.sass */
 .btn-group-action a {
   text-decoration: none; }
 
-/* line 63, admin-theme/_admin-forms.sass */
+/* line 65, admin-theme/_admin-forms.sass */
 .tt-query {
   border-bottom-right-radius: 3px !important;
   border-top-right-radius: 3px !important; }
 
-/* line 65, admin-theme/_admin-forms.sass */
+/* line 67, admin-theme/_admin-forms.sass */
 .tt-dropdown-menu {
   background-color: white;
   border: solid 1px #cccccc;
   font-size: 0.9em;
   text-transform: none; }
 
-/* line 70, admin-theme/_admin-forms.sass */
+/* line 72, admin-theme/_admin-forms.sass */
 .tt-suggestions {
   padding: 0 6px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0 1px 4px;
   box-shadow: rgba(0, 0, 0, 0.25) 0 1px 4px; }
 
-/* line 73, admin-theme/_admin-forms.sass */
+/* line 75, admin-theme/_admin-forms.sass */
 .tt-suggestion p {
   border-bottom: solid 1px #cccccc;
   margin: 0 !important;
   padding: 0 !important; }
 
-/* line 77, admin-theme/_admin-forms.sass */
+/* line 79, admin-theme/_admin-forms.sass */
 .tt-suggestion:last-child p {
   border-bottom: none; }
 
-/* line 81, admin-theme/_admin-forms.sass */
+/* line 83, admin-theme/_admin-forms.sass */
 .tagify-container {
   background-color: white;
   padding: 2px 6px;
@@ -8515,10 +8527,10 @@ textarea {
   border: solid 1px #cccccc;
   -webkit-box-shadow: rgba(0, 0, 0, 0.075) 0 1px 1px inset;
   box-shadow: rgba(0, 0, 0, 0.075) 0 1px 1px inset; }
-/* line 89, admin-theme/_admin-forms.sass */
+/* line 91, admin-theme/_admin-forms.sass */
 .tagify-container span {
   float: left; }
-/* line 91, admin-theme/_admin-forms.sass */
+/* line 93, admin-theme/_admin-forms.sass */
 .tagify-container > span {
   display: inline-block;
   padding: 3px 5px;
@@ -8527,20 +8539,20 @@ textarea {
   border: 1px solid #1ba6e5;
   background-color: #60c1ed;
   color: white; }
-/* line 99, admin-theme/_admin-forms.sass */
+/* line 101, admin-theme/_admin-forms.sass */
 .tagify-container > span > a {
   padding-left: 5px;
   color: #1ba6e5;
   text-decoration: none;
   font-weight: bold; }
-/* line 104, admin-theme/_admin-forms.sass */
+/* line 106, admin-theme/_admin-forms.sass */
 .tagify-container > input {
   margin-top: 2px;
   border: 0 none;
   width: 100px;
   -webkit-box-shadow: none;
   box-shadow: none; }
-/* line 109, admin-theme/_admin-forms.sass */
+/* line 111, admin-theme/_admin-forms.sass */
 .tagify-container > input:focus {
   outline: 0;
   -webkit-box-shadow: none;

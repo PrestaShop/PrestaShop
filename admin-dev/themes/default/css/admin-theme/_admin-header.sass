@@ -52,12 +52,22 @@
 #header_search
 	@extend .navbar-form
 	@extend .navbar-left
-	width: 130px
+	width: 160px
 	padding: 0 0 0 10px
+	position: relative
 	@media (max-width: $screen-tablet)
 		width: 100%
 	input, .form-group
 		margin: 0
+	.form-group.focus-search
+		position: absolute
+		z-index: 900
+		top: 0
+		left: 10px
+		width: 400px
+
+	
+
 #header_quick
 	@extend .nav
 	@extend .navbar-nav

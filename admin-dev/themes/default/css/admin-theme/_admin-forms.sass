@@ -13,7 +13,6 @@ label.control-label span.label-tooltip
 	padding: 0 5px
 	@include border-radius(3px)
 
-
 label.required:before
 	content: '*'
 	color: red
@@ -45,7 +44,10 @@ textarea
 		@include box-shadow(darken($btn-default-bg,10%) 0 -2px 0 inset)
 
 	&.btn-primary
-		@include box-shadow(lighten($brand-success,30%) 0 -2px 0  inset)
+		background-color: $brand-primary
+		color: white
+		border-color: darken($brand-primary,10%)
+		//@include box-shadow(lighten($brand-success,30%) 0 -2px 0  inset)
 
 	&.btn-default[disabled]
 		border-color: $gray-light
