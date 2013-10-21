@@ -157,7 +157,7 @@ class AdminImagesControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					)
 				),
-				'submit' => array('title' => $this->l('Save   '), 'class' => 'btn btn-primary'),
+				'submit' => array('title' => $this->l('Save   '), 'class' => 'btn btn-default'),
 			),
 		);
 		
@@ -326,7 +326,7 @@ class AdminImagesControllerCore extends AdminController
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
-				'class' => 'btn btn-primary'
+				'class' => 'btn btn-default'
 			)
 		);
 

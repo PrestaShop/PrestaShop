@@ -57,6 +57,6 @@
 			{/foreach}
 			</tbody>
 		</table>
-		<button class="btn btn-primary pull-right" type="submit" name="submitFields"><i class="icon-save"></i> {l s='Save'}</button>
+		<button class="btn btn-default pull-right" type="submit" name="submitFields"><i class="icon-save"></i> {l s='Save'}</button>
 	</form>
 </div>

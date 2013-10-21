@@ -187,7 +187,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			),
 			'submit' => array(
 				'title' => $this->l('Save and stay'),
-				'class' => 'btn btn-primary',
+				'class' => 'btn btn-default',
 				'stay' => true
 			)
 		);
@@ -337,7 +337,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			),
 			'submit' => array(
 				'title' => $this->l('Save and stay'),
-				'class' => 'btn btn-primary',
+				'class' => 'btn btn-default',
 				'stay' => true
 			)
 		);

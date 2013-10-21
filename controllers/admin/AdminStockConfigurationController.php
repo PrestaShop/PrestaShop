@@ -190,7 +190,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 				),
 				'submit' => array(
 					'title' => $this->l('Save'),
-					'class' => 'btn btn-primary'
+					'class' => 'btn btn-default'
 				)
 			);
 		}
@@ -302,7 +302,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 					),
 					'submit' => array(
 						'title' => $this->l('Save'),
-						'class' => 'btn btn-primary'
+						'class' => 'btn btn-default'
 					)
 				);
 
@@ -339,7 +339,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 							),
 							'submit' => array(
 								'title' => $this->l('Save'),
-								'class' => 'btn btn-primary'
+								'class' => 'btn btn-default'
 							)
 						);
 					}

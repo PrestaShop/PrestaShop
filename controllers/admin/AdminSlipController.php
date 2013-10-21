@@ -115,7 +115,7 @@ class AdminSlipControllerCore extends AdminController
 			),
 			'submit' => array(
 				'title' => $this->l('Generate PDF file'),
-				'class' => 'btn btn-primary',
+				'class' => 'btn btn-default',
 				'id' => 'submitPrint',
 				'icon' => 'icon-download-alt'
 			)
