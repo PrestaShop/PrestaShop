@@ -2876,7 +2876,7 @@ class AdminImportControllerCore extends AdminController
 
 		if (Tools::isSubmit('submitFileUpload'))
 		{
-			$path = _PS_ADMIN_DIR_.'/import/'.date('Ymdhis').'-';
+			$path = _PS_ADMIN_DIR_.'/import/'.date('YmdHis').'-';
 			if (isset($_FILES['file']) && !empty($_FILES['file']['error']))
 			{
 				switch ($_FILES['file']['error'])
