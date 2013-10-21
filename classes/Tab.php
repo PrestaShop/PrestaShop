@@ -339,12 +339,13 @@ class TabCore extends ObjectModel
 	 * Get Instance from tab class name
 	 *
 	 * @param $class_name string Name of tab class
+	 * @param $id_lang integer id_lang
 	 * @return Tab Tab object (empty if bad id or class name)
 	 */
-	public static function getInstanceFromClassName($class_name)
+	public static function getInstanceFromClassName($class_name, $id_lang = null)
 	{
 		$id_tab = (int)Tab::getIdFromClassName($class_name);
-		return new Tab($id_tab);
+		return new Tab($id_tab, $id_lang);
 	}
 
 	public static function getNbTabs($id_parent = null)
