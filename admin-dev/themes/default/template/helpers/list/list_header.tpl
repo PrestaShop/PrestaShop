@@ -72,6 +72,8 @@
 	{hook h=$hookName}
 {/if}
 
+<div class="alert alert-warning" id="{$list_id}-empty-filters-alert" style="display:none;">{l s='Please fill at least one field to perform a search in this list.'}</div>
+
 {if !$simple_header}
 <form method="post" action="{$action}" class="form-horizontal">
 	{block name="override_form_extra"}{/block}
@@ -301,7 +303,7 @@
 						<input type="hidden" id="submitFilter{$list_id}" name="submitFilter{$list_id}" value="0"/>
 						<span class="pull-right">
 							{*Search must be before reset for default form submit*}
-							<button type="submit" id="submitFilterButton{$list_id}" name="submitFilter" class="btn btn-default" />
+							<button type="submit" id="submitFilterButton{$list_id}" name="submitFilter" class="btn btn-default" data-list-id="{$list_id}">
 								<i class="icon-search"></i> {l s='Search'}
 							</button>
 							{if $filters_has_value}
