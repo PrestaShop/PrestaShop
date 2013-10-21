@@ -34,54 +34,51 @@
 	<title>{$meta_title} - PrestaShop&trade;</title>
 {if $display_header}
 	<script type="text/javascript">
-		var help_class_name = '{$controller_name}';
-		var iso_user = '{$iso_user}';
-		var country_iso_code = '{$country_iso_code}';
-		var _PS_VERSION_ = '{$smarty.const._PS_VERSION_}';
-
-		var helpboxes = {$help_box};
-		var roundMode = {$round_mode};
-			{if isset($shop_context)}
-				{if $shop_context == Shop::CONTEXT_ALL}
-				var youEditFieldFor = '{l s='A modification of this field will be applied for all shops' slashes=1}';
-					{elseif $shop_context == Shop::CONTEXT_GROUP}
-				var youEditFieldFor = '{l s='A modification of this field will be applied for all shops of group' slashes=1} <b>{$shop_name}</b>';
-					{else}
-				var youEditFieldFor = '{l s='A modification of this field will be applied for the shop' slashes=1} <b>{$shop_name}</b>';
-				{/if}
-				{else}
-			var youEditFieldFor = '';
-			{/if}
-		{* Notifications vars *}
-		var autorefresh_notifications = '{$autorefresh_notifications}';
-		var new_order_msg = '{l s='A new order has been placed on your shop.' slashes=1}';
-		var order_number_msg = '{l s='Order number: ' slashes=1}';
-		var total_msg = '{l s='Total: ' slashes=1}';
-		var from_msg = '{l s='From: ' slashes=1}';
-		var see_order_msg = '{l s='View this order' slashes=1}';
-		var new_customer_msg = '{l s='A new customer registered on your shop.' slashes=1}';
-		var customer_name_msg = '{l s='Customer name: ' slashes=1}';
-		var see_customer_msg = '{l s='View this customer' slashes=1}';
-		var new_msg = '{l s='A new message posted on your shop.' slashes=1}';
-		var excerpt_msg = '{l s='Excerpt: ' slashes=1}';
-		var see_msg = '{l s='Read this message' slashes=1}';
+		var help_class_name = '{$controller_name|@addcslashes:'\''}';
+		var iso_user = '{$iso_user|@addcslashes:'\''}';
+		var country_iso_code = '{$country_iso_code|@addcslashes:'\''}';
+		var _PS_VERSION_ = '{$smarty.const._PS_VERSION_|@addcslashes:'\''}';
+		var helpboxes = {$help_box|intval};
+		var roundMode = {$round_mode|intval};
+{if isset($shop_context)}
+{if $shop_context == Shop::CONTEXT_ALL}
+		var youEditFieldFor = '{l s='A modification of this field will be applied for all shops' js=1}';
+{elseif $shop_context == Shop::CONTEXT_GROUP}
+		var youEditFieldFor = '{l s='A modification of this field will be applied for all shops of group' js=1} <b>{$shop_name|@addcslashes:'\''}</b>';
+{else}
+		var youEditFieldFor = '{l s='A modification of this field will be applied for the shop' js=1} <b>{$shop_name|@addcslashes:'\''}</b>';
+{/if}
+{else}
+		var youEditFieldFor = '';
+{/if}
+		var autorefresh_notifications = '{$autorefresh_notifications|@addcslashes:'\''}';
+		var new_order_msg = '{l s='A new order has been placed on your shop.' js=1}';
+		var order_number_msg = '{l s='Order number: ' js=1}';
+		var total_msg = '{l s='Total: ' js=1}';
+		var from_msg = '{l s='From: ' js=1}';
+		var see_order_msg = '{l s='View this order' js=1}';
+		var new_customer_msg = '{l s='A new customer registered on your shop.' js=1}';
+		var customer_name_msg = '{l s='Customer name: ' js=1}';
+		var see_customer_msg = '{l s='View this customer' js=1}';
+		var new_msg = '{l s='A new message posted on your shop.' js=1}';
+		var excerpt_msg = '{l s='Excerpt: ' js=1}';
+		var see_msg = '{l s='Read this message' js=1}';
 		var token_admin_orders = '{getAdminToken tab='AdminOrders'}';
 		var token_admin_customers = '{getAdminToken tab='AdminCustomers'}';
 		var token_admin_customer_threads = '{getAdminToken tab='AdminCustomerThreads'}';
-		var currentIndex = '{$currentIndex}';
-		var choose_language_translate = '{l s='Choose language' slashes=1}';
+		var currentIndex = '{$currentIndex|@addcslashes:'\''}';
+		var choose_language_translate = '{l s='Choose language' js=1}';
 	</script>
 {/if}
-
 {if isset($css_files)}
-	{foreach from=$css_files key=css_uri item=media}
-		<link href="{$css_uri}" rel="stylesheet" type="text/css" media="{$media}" />
-	{/foreach}
+{foreach from=$css_files key=css_uri item=media}
+	<link href="{$css_uri}" rel="stylesheet" type="text/css" media="{$media}" />
+{/foreach}
 {/if}
 {if isset($js_files)}
-	{foreach from=$js_files item=js_uri}
-		<script type="text/javascript" src="{$js_uri}"></script>
-	{/foreach}
+{foreach from=$js_files item=js_uri}
+	<script type="text/javascript" src="{$js_uri}"></script>
+{/foreach}
 {/if}
 	<link rel="icon" type="image/vnd.microsoft.icon" href="{$img_dir}favicon.ico" />
 	<link rel="shortcut icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
