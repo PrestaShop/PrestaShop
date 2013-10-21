@@ -90,7 +90,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->bulk_actions = array(
 			'delete' => array(
 				'text' => $this->l('Delete selected'),
-				'icon' => $this->l('icon-trash'),
+				'icon' => 'icon-trash',
 				'confirm' => $this->l('Delete selected items?')
 			)
 		);
