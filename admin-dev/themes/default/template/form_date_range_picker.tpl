@@ -3,12 +3,12 @@
 		<div class="row">
 			<div class="col-lg-6">
 				<div class="btn-group">
-					<input type="submit" name="submitDateDay" class="btn btn-default submitDateDay" value="{$translations.Day}">
-					<input type="submit" name="submitDateMonth" class="btn btn-default submitDateMonth" value="{$translations.Month}">
-					<input type="submit" name="submitDateYear" class="btn btn-default submitDateYear" value="{$translations.Year}">
-					<input type="submit" name="submitDateDayPrev" class="btn btn-default submitDateDayPrev" value="{$translations.Day}-1">
-					<input type="submit" name="submitDateMonthPrev" class="btn btn-default submitDateMonthPrev" value="{$translations.Month}-1">
-					<input type="submit" name="submitDateYearPrev" class="btn btn-default submitDateYearPrev" value="{$translations.Year}-1">
+					<button type="button" name="submitDateDay" class="btn btn-default submitDateDay" onclick="setDayPeriod()">{$translations.Day}</button>
+					<button type="button" name="submitDateMonth" class="btn btn-default submitDateMonth" onclick="setMonthPeriod()">{$translations.Month}</button>
+					<button type="button" name="submitDateYear" class="btn btn-default submitDateYear" onclick="setYearPeriod()">{$translations.Year}</button>
+					<button type="button" name="submitDateDayPrev" class="btn btn-default submitDateDayPrev" onclick="setPreviousDayPeriod()">{$translations.Day}-1</button>
+					<button type="button" name="submitDateMonthPrev" class="btn btn-default submitDateMonthPrev" onclick="setPreviousMonthPeriod()">{$translations.Month}-1</button>
+					<button type="button" name="submitDateYearPrev" class="btn btn-default submitDateYearPrev" onclick="setPreviousYearPeriod()">{$translations.Year}-1</button>
 				</div>					
 			</div>
 			<div class="col-lg-6">

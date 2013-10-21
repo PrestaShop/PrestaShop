@@ -39,9 +39,9 @@
 					</div>
 					<div class='form-date-body'>
 						<label>{l s='From'}</label>
-						<input class='date-input form-control' id='date-start' placeholder='Start' type='text' name="date_from" value="{$date_from}" />
+						<input class='date-input form-control' id='date-start' placeholder='Start' type='text' name="date_from" value="{$date_from}" data-date-format="{$date_format}" />
 						<label>{l s='to'}</label>
-						<input class='date-input form-control' id='date-end' placeholder='End' type='text' name="date_to" value="{$date_to}" />
+						<input class='date-input form-control' id='date-end' placeholder='End' type='text' name="date_to" value="{$date_to}" data-date-format="{$date_format}" />
 					</div>
 				</div>
 
@@ -61,9 +61,9 @@
 					</div>
 					<div class="form-date-body" id="form-date-body-compare"{if is_null($compare_date_from) || is_null($compare_date_to)} style="display: none;"{/if}>
 						<label>{l s='From'}</label>
-						<input id="date-start-compare" class="date-input form-control" type="text" placeholder="Start" name="compare_date_from" value="{$compare_date_from}" />
+						<input id="date-start-compare" class="date-input form-control" type="text" placeholder="Start" name="compare_date_from" value="{$compare_date_from}" data-date-format="{$date_format}" />
 						<label>{l s='to'}</label>
-						<input id="date-end-compare" class="date-input form-control" type="text" placeholder="End" name="compare_date_to" value="{$compare_date_to}" />
+						<input id="date-end-compare" class="date-input form-control" type="text" placeholder="End" name="compare_date_to" value="{$compare_date_to}" data-date-format="{$date_format}" />
 					</div>
 				</div>
 				<div class='form-date-actions'>
@@ -82,219 +82,11 @@
 </div>
 
 <script type="text/javascript">
-	{literal}
-	function parseFormat(format){
-		var separator = format.match(/[.\/\-\s].*?/),
-			parts = format.split(/\W+/);
-		if (!separator || !parts || parts.length === 0){
-			throw new Error("Invalid date format.");
-		}
-		return {separator: separator, parts: parts};
-	}
-
-	function parseDate(date, format) {
-		var parts = date.split(format.separator),
-			date = new Date(),
-			val;
-		date.setHours(0);
-		date.setMinutes(0);
-		date.setSeconds(0);
-		date.setMilliseconds(0);
-		if (parts.length === format.parts.length) {
-			var year = date.getFullYear(), day = date.getDate(), month = date.getMonth();
-			for (var i=0, cnt = format.parts.length; i < cnt; i++) {
-				val = parseInt(parts[i], 10)||1;
-				switch(format.parts[i]) {
-					case 'dd':
-					case 'd':
-						day = val;
-						date.setDate(val);
-						break;
-					case 'mm':
-					case 'm':
-						month = val - 1;
-						date.setMonth(val - 1);
-						break;
-					case 'yy':
-					case 'y':
-						year = 2000 + val;
-						date.setFullYear(2000 + val);
-						break;
-					case 'yyyy':
-					case 'Y':
-						year = val;
-						date.setFullYear(val);
-						break;
-				}
-			}
-			date = new Date(year, month, day, 0 ,0 ,0);
-		}
-		return date;
-	}
-
-	function formatDate(date, format){
-		var val = {
-			d: date.getDate(),
-			m: date.getMonth() + 1,
-			yy: date.getFullYear().toString().substring(2),
-			y: date.getFullYear().toString().substring(2),
-			yyyy: date.getFullYear(),
-			Y: date.getFullYear()
-		};
-		val.d = (val.d < 10 ? '0' : '') + val.d;
-		val.m = (val.m < 10 ? '0' : '') + val.m;
-		var date = [];
-		for (var i=0, cnt = format.parts.length; i < cnt; i++) {
-			date.push(val[format.parts[i]]);
-		}
-		return date.join(format.separator);
-	}
-	{/literal}
-
-	function setPreviousPeriod() {
-		startDate = parseDate($("#date-start").val(), parseFormat('{$date_format}'));
-		startDate = startDate.setDate(startDate.getDate()-1);
-		endDate = parseDate($("#date-end").val(), parseFormat('{$date_format}'));
-		endDate = endDate.setDate(endDate.getDate()-1);
-		diff = endDate - startDate;
-		startDateCompare = startDate-diff;
-		$("#date-end-compare").val(formatDate(new Date(startDate), parseFormat('{$date_format}')));
-		$("#date-start-compare").val(formatDate(new Date(startDateCompare), parseFormat('{$date_format}')));
-	}
-
-	function setPreviousYear() {
-		startDate = parseDate($("#date-start").val(), parseFormat('{$date_format}'));
-		startDate = startDate.setFullYear(startDate.getFullYear() - 1);
-		endDate = parseDate($("#date-end").val(), parseFormat('{$date_format}'));
-		endDate = endDate.setFullYear(endDate.getFullYear() - 1);
-		$("#date-start-compare").val(formatDate(new Date(startDate), parseFormat('{$date_format}')));
-		$("#date-end-compare").val(formatDate(new Date(endDate), parseFormat('{$date_format}')));
-	}
-
-	$(function() {
-		var translated_dates = {
-			days: ["{l s='Sunday'}", "{l s='Monday'}", "{l s='Tuesday'}", "{l s='Wednesday'}", "{l s='Thursday'}", "{l s='Friday'}", "{l s='Saturday'}", "{l s='Sunday'}"],
-			daysShort: ["{l s='Sun'}", "{l s='Mon'}", "{l s='Tue'}", "{l s='Wed'}", "{l s='Thu'}", "{l s='Fri'}", "{l s='Sat'}", "{l s='Sun'}"],
-			daysMin: ["{l s='Su'}", "{l s='Mo'}", "{l s='Tu'}", "{l s='We'}", "{l s='Th'}", "{l s='Fr'}", "{l s='Sa'}", "{l s='Su'}"],
-			months: ["{l s='January'}", "{l s='February'}", "{l s='March'}", "{l s='April'}", "{l s='May'}", "{l s='June'}", "{l s='July'}", "{l s='August'}", "{l s='September'}", "{l s='October'}", "{l s='November'}", "{l s='December'}"],
-			monthsShort: ["{l s='Jan'}", "{l s='Feb'}", "{l s='Mar'}", "{l s='Apr'}", "{l s='May'}", "{l s='Jun'}", "{l s='Jul'}", "{l s='Aug'}", "{l s='Sep'}", "{l s='Oct'}", "{l s='Nov'}", "{l s='Dec'}"]
-		};
-
-	{literal}
-		var datepickerStart = $('.datepicker1').daterangepicker({
-			"dates": translated_dates,
-			"weekStart": 1,
-			"start": $("#date-start").val(),
-			"end": $("#date-end").val()
-		}).on('changeDate', function(ev){
-			if (ev.date.valueOf() >= datepickerEnd.date.valueOf()){
-				datepickerEnd.setValue(ev.date.setMonth(ev.date.getMonth()+1));
-			}
-		}).data('daterangepicker');
-	{/literal}
-
-		startDate = parseDate($("#date-start").val(), parseFormat('{$date_format}'));
-		endDate = parseDate($("#date-end").val(), parseFormat('{$date_format}'));
-
-		if (startDate.getFullYear() == endDate.getFullYear() && startDate.getMonth() == endDate.getMonth())
-			datepickerStart.setValue(startDate.setMonth(startDate.getMonth()-1));
-
-	{literal}
-		var datepickerEnd = $('.datepicker2').daterangepicker({
-			"dates": translated_dates,
-			"weekStart": 1,
-			"start": $("#date-start").val(),
-			"end": $("#date-end").val()
-		}).on('changeDate', function(ev){
-			if (ev.date.valueOf() <= datepickerStart.date.valueOf()){
-				datepickerStart.setValue(ev.date.setMonth(ev.date.getMonth()-1));
-			}
-		}).data('daterangepicker');
-
-		$("#date-start").focus(function() {
-			datepickerStart.setCompare(false);
-			datepickerEnd.setCompare(false);
-			$(".date-input").removeClass("input-selected");
-			$(this).addClass("input-selected");
-		});
-
-		$("#date-end").focus(function() {
-			datepickerStart.setCompare(false);
-			datepickerEnd.setCompare(false);
-			$(".date-input").removeClass("input-selected");
-			$(this).addClass("input-selected");
-		});
-
-		$("#date-start-compare").focus(function() {
-			datepickerStart.setCompare(true);
-			datepickerEnd.setCompare(true);
-			$('#compare-options').val(3);
-			$(".date-input").removeClass("input-selected");
-			$(this).addClass("input-selected");
-		});
-
-		$("#date-end-compare").focus(function() {
-			datepickerStart.setCompare(true);
-			datepickerEnd.setCompare(true);
-			$('#compare-options').val(3);
-			$(".date-input").removeClass("input-selected");
-			$(this).addClass("input-selected");
-		});
-		
-		$('#datepicker-cancel').click(function() {
-			$('#datepicker').slideUp(200);
-		});
-
-		$('#datepicker').show(function() {
-			$('#date-start').focus();
-		});
-
-		$('#datepicker-compare').click(function() {
-			if ($(this).attr("checked")) {
-				$('#compare-options').trigger('change');
-				$('#form-date-body-compare').show();
-				$('#compare-options').prop('disabled', false);
-			} else {
-				datepickerStart.setStartCompare(null);
-				datepickerStart.setEndCompare(null);
-				datepickerEnd.setStartCompare(null);
-				datepickerEnd.setEndCompare(null);
-				$('#form-date-body-compare').hide();
-				$('#compare-options').prop('disabled', true);
-				$('#date-start').focus();
-			}
-		})
-
-		$('#compare-options').change(function() {
-			if (this.value == 1)
-				setPreviousPeriod();
-				
-			if (this.value == 2)
-				setPreviousYear();
-
-			datepickerStart.setStartCompare($("#date-start-compare").val());
-			datepickerStart.setEndCompare($("#date-end-compare").val());
-			datepickerEnd.setStartCompare($("#date-start-compare").val());
-			datepickerEnd.setEndCompare($("#date-end-compare").val());
-			datepickerStart.setCompare(true);
-			datepickerEnd.setCompare(true);
-
-			if (this.value == 3)
-				$('#date-start-compare').focus();
-		});
-
-		if ($('#datepicker-compare').attr("checked"))
-		{
-			if ($("#date-start-compare").val().replace(/^\s+|\s+$/g, '').length == 0)
-				$('#compare-options').trigger('change');
-
-			datepickerStart.setStartCompare($("#date-start-compare").val());
-			datepickerStart.setEndCompare($("#date-end-compare").val());
-			datepickerEnd.setStartCompare($("#date-start-compare").val());
-			datepickerEnd.setEndCompare($("#date-end-compare").val());
-			datepickerStart.setCompare(true);
-			datepickerEnd.setCompare(true);
-		}
-		{/literal}
-	});
+	translated_dates = {
+		days: ['{l s='Sunday' js=1}', '{l s='Monday' js=1}', '{l s='Tuesday' js=1}', '{l s='Wednesday' js=1}', '{l s='Thursday' js=1}', '{l s='Friday' js=1}', '{l s='Saturday' js=1}', '{l s='Sunday' js=1}'],
+		daysShort: ['{l s='Sun' js=1}', '{l s='Mon' js=1}', '{l s='Tue' js=1}', '{l s='Wed' js=1}', '{l s='Thu' js=1}', '{l s='Fri' js=1}', '{l s='Sat' js=1}', '{l s='Sun' js=1}'],
+		daysMin: ['{l s='Su' js=1}', '{l s='Mo' js=1}', '{l s='Tu' js=1}', '{l s='We' js=1}', '{l s='Th' js=1}', '{l s='Fr' js=1}', '{l s='Sa' js=1}', '{l s='Su' js=1}'],
+		months: ['{l s='January' js=1}', '{l s='February' js=1}', '{l s='March' js=1}', '{l s='April' js=1}', '{l s='May' js=1}', '{l s='June' js=1}', '{l s='July' js=1}', '{l s='August' js=1}', '{l s='September' js=1}', '{l s='October' js=1}', '{l s='November' js=1}', '{l s='December' js=1}'],
+		monthsShort: ['{l s='Jan' js=1}', '{l s='Feb' js=1}', '{l s='Mar' js=1}', '{l s='Apr' js=1}', '{l s='May' js=1}', '{l s='Jun' js=1}', '{l s='Jul' js=1}', '{l s='Aug' js=1}', '{l s='Sep' js=1}', '{l s='Oct' js=1}', '{l s='Nov' js=1}', '{l s='Dec' js=1}']
+	};
 </script>
