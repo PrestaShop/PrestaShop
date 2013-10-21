@@ -34,6 +34,7 @@
 				<td valign="top">
 					<div class="moduleDesc" id="anchor{$module->name|ucfirst}">
 						<h3>
+							<span style="display:none">{$module->name}</span> 
 							{$module->displayName|truncate:36:'…'} {$module->version}
 							{if isset($module->id) && $module->id gt 0 }
 								{if $module->active}
