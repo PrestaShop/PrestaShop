@@ -341,6 +341,7 @@ class FrontControllerCore extends Controller
 			'request' => $link->getPaginationLink(false, false, false, true),
 			'PS_STOCK_MANAGEMENT' => Configuration::get('PS_STOCK_MANAGEMENT'),
 			'quick_view' => Configuration::get('PS_QUICK_VIEW'),
+			'shop_phone' => Configuration::get('PS_SHOP_PHONE'),
 		));
 
 		// Add the tpl files directory for mobile
