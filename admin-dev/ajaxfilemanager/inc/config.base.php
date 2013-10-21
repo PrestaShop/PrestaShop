@@ -78,9 +78,9 @@
 	define('CONFIG_EDITABLE_VALID_EXTS', 'txt,htm,html,xml,js,css'); //make you include all these extension in CONFIG_UPLOAD_VALID_EXTS if you want all valid
 	
 	define('CONFIG_OVERWRITTEN', false); //overwirte when processing paste
-	define('CONFIG_UPLOAD_VALID_EXTS', 'gif,jpg,png');// // 
+	define('CONFIG_UPLOAD_VALID_EXTS', 'gif,jpg,jpeg,png');// // 
 	//define('CONFIG_UPLOAD_VALID_EXTS', 'gif,jpg,png,bmp,tif,zip,sit,rar,gz,tar,htm,html,mov,mpg,avi,asf,mpeg,wmv,aif,aiff,wav,mp3,swf,ppt,rtf,doc,pdf,xls,txt,xml,xsl,dtd');//
-	define("CONFIG_VIEWABLE_VALID_EXTS", 'gif,jpg,png');
+	define("CONFIG_VIEWABLE_VALID_EXTS", 'gif,jpg,jpeg,jpeg,png');
 	//define('CONFIG_UPLOAD_VALID_EXTS', 'gif,jpg,png,txt'); // 
 	define('CONFIG_UPLOAD_INVALID_EXTS', '');
 
