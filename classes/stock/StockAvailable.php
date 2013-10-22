@@ -380,6 +380,21 @@ class StockAvailableCore extends ObjectModel
 			return false;
 
 		$result &= $this->postSave();
+		return $result;
+	}
+
+	/**
+	 * Upgrades total_quantity_available after having saved
+	 * @see StockAvailableCore::update()
+	 * @see StockAvailableCore::add()
+	 */
+	public function postSave()
+	{
+		if ($this->id_product_attribute == 0)
+			return true;
+
+		$id_shop = (Shop::getContext() != Shop::CONTEXT_GROUP ? $this->id_shop : null);
+
 		if (!Configuration::get('PS_DISP_UNAVAILABLE_ATTR'))
 		{
 			$combination = new Combination((int)$this->id_product_attribute);
@@ -399,22 +414,7 @@ class StockAvailableCore extends ObjectModel
 					}
 				}
 			}
-			
 		}
-		return $result;
-	}
-
-	/**
-	 * Upgrades total_quantity_available after having saved
-	 * @see StockAvailableCore::update()
-	 * @see StockAvailableCore::add()
-	 */
-	public function postSave()
-	{
-		if ($this->id_product_attribute == 0)
-			return true;
-
-		$id_shop = (Shop::getContext() != Shop::CONTEXT_GROUP ? $this->id_shop : null);
 		
 		$total_quantity = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT SUM(quantity) as quantity
