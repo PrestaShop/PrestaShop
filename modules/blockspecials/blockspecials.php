@@ -165,7 +165,7 @@ class BlockSpecials extends Module
 				),
 			'submit' => array(
 				'title' => $this->l('Save'),
-				'class' => 'btn btn-primary')
+				'class' => 'btn btn-default')
 			),
 		);
 		

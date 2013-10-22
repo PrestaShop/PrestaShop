@@ -76,20 +76,19 @@
 				</div>
 			</div>
 
-			<div class="form-group">
 			{foreach $types AS $k => $type}
-				<label class="control-label col-lg-3 second-select format_{$k}" style="display:none;">{l s='Select a format'}</label>
-				<div class="col-lg-9 second-select margin-form format_{$k}" style="display:none;">
-					<select class="second-select format_{$k}" name="format_{$k}">
+			<div class="form-group second-select format_{$k}" style="display:none;">			
+				<label class="control-label col-lg-3">{l s='Select a format'}</label>
+				<div class="col-lg-9 margin-form">
+					<select name="format_{$k}">
 						<option value="all">{l s='All'}</option>
 						{foreach $formats[$k] AS $format}
 							<option value="{$format['id_image_type']}">{$format['name']}</option>
 						{/foreach}
 					</select>
 				</div>
-			{/foreach}
 			</div>
-
+			{/foreach}
 			<script>
 				function changeFormat(elt)
 				{ldelim}

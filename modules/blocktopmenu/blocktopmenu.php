@@ -151,6 +151,12 @@ class Blocktopmenu extends Module
 		}
 		else if (Tools::isSubmit('submitBlocktopmenuLinks'))
 		{
+			foreach ($languages as $key => $val)
+			{
+				$links_label[$val['id_lang']] = Tools::getValue('link_'.(int)$val['id_lang']);
+				$labels[$val['id_lang']] = Tools::getValue('label_'.(int)$val['id_lang']);
+			}
+			
 			if ((!count($links_label)) && (!count($labels)))
 				;
 			else if (!count($links_label))
@@ -161,7 +167,7 @@ class Blocktopmenu extends Module
 				$this->_html .= $this->displayError($this->l('Please add a label for your default language.'));
 			else
 			{
-				MenuTopLinks::add(Tools::getValue('link'), Tools::getValue('label'), Tools::getValue('new_window', 0), (int)Shop::getContextShopID());
+				MenuTopLinks::add($links_label, $labels,  Tools::getValue('new_window', 0), (int)Shop::getContextShopID());
 				$this->_html .= $this->displayConfirmation($this->l('The link has been added.'));
 			}
 			$update_cache = true;
@@ -779,7 +785,7 @@ class Blocktopmenu extends Module
 				),
 				'submit' => array(
 					'title' => $this->l('Save'),
-					'class' => 'btn btn-primary',
+					'class' => 'btn btn-default',
 					)
 			),
 		);
@@ -851,7 +857,7 @@ class Blocktopmenu extends Module
 				),
 				'submit' => array(
 					'title' => $this->l('Save'),
-					'class' => 'btn btn-primary',
+					'class' => 'btn btn-default',
 					)
 			),
 		);
