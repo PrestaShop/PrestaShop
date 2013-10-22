@@ -161,7 +161,7 @@ class Dashtrends extends Module
 			),
 			'conversion_rate_score_trends' => array(
 				'way' => ($data1['conversion_rate'] == $data2['conversion_rate'] ? 'right' : ($data1['conversion_rate'] > $data2['conversion_rate'] ? 'up' : 'down')),
-				'value' => ($data1['conversion_rate'] > $data2['conversion_rate'] ? '+' : '').($data2['conversion_rate'] ? round($data1['visits_score'] - $data2['visits_score'], 2).$this->l('pts') : '&infin;')
+				'value' => ($data1['conversion_rate'] > $data2['conversion_rate'] ? '+' : '').($data2['conversion_rate'] ? round($data1['visits'] - $data2['visits'], 2).$this->l('pts') : '&infin;')
 			),
 			'net_profits_score_trends' => array(
 				'way' => ($data1['net_profits'] == $data2['net_profits'] ? 'right' : ($data1['net_profits'] > $data2['net_profits'] ? 'up' : 'down')),
