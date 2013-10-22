@@ -32,6 +32,11 @@ input[type="password"].input-tiny
 textarea
 	resize: none
 
+
+textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-input:focus
+	background-color: #FEFBE2
+	@include box-shadow(none)
+
 //buttons
 .btn
 	text-transform: uppercase
@@ -42,6 +47,12 @@ textarea
 			border-top-color: white!important
 	&.btn-default
 		@include box-shadow(darken($btn-default-bg,10%) 0 -2px 0 inset)
+		&:hover
+			@include box-shadow(none)
+			background-color: $brand-primary
+			color: white
+			border-color: darken($brand-primary,10%)
+
 
 	&.btn-primary
 		background-color: $brand-primary
@@ -53,7 +64,7 @@ textarea
 		border-color: $gray-light
 		color: $gray-light
 		background-color: lighten($gray-light,35%)
-		@include box-shadow(lighten($gray-light,20%) 0 -2px 0  inset)
+		@include box-shadow(lighten($gray-light,20%) 0 -2px 0 inset)
 .dropdown-menu
 	text-align: left
 .btn-group-action

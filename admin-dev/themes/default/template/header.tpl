@@ -219,7 +219,7 @@
 					<input type="hidden" name="bo_search_type" id="bo_search_type" />
 					<div class="input-group">
 						<div class="input-group-btn">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 								<i id="search_type_icon" class="icon-reorder"></i>
 								<i class="icon-caret-down"></i>
 							</button>
