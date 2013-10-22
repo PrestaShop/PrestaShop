@@ -69,6 +69,8 @@ ALTER TABLE  `PREFIX_employee` ADD  `stats_compare_from` DATE NULL DEFAULT NULL 
 
 INSERT INTO `PREFIX_hook` (`id_hook` , `name` , `title` , `description` , `position` , `live_edit`) 
 VALUES (NULL , 'displayHomeTab', 'Home Page Tabs', 'This hook displays new elements on the homepage tabs', '1', '1'), 
-(NULL , 'displayHomeTabContent', 'Home Page Tabs Content', 'This hook displays new elements on the homepage tabs content', '1', '1');
+(NULL , 'displayHomeTabContent', 'Home Page Tabs Content', 'This hook displays new elements on the homepage tabs content', '1', '1'),
+(NULL , 'displayBackOfficeCategory', 'Display new elements in the Back Office, tab AdminCategories', 'This hook launches modules when the AdminCategories tab is displayed in the Back Office', '1', '1'),
+(NULL , 'actionBackOfficeCategory', 'Process new elements in the Back Office, tab AdminCategories', 'This hook process modules when the AdminCategories tab is displayed in the Back Office', '1', '1');
 
 ALTER TABLE  `PREFIX_employee` ADD  `stats_compare_option` INT( 1 ) NOT NULL DEFAULT  '1' AFTER  `stats_compare_to`;
