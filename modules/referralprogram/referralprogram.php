@@ -566,7 +566,7 @@ class ReferralProgram extends Module
 				),
 				'submit' => array(
 					'title' => $this->l('Save'),
-					'class' => 'btn btn-primary',
+					'class' => 'btn btn-default',
 					'name' => 'submitReferralProgram',
 					)
 			),
@@ -589,7 +589,7 @@ class ReferralProgram extends Module
 				),
 				'submit' => array(
 					'title' => $this->l('Save'),
-					'class' => 'btn btn-primary',
+					'class' => 'btn btn-default',
 					'name' => 'submitText',
 				)
 			),
