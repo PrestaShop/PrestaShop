@@ -358,6 +358,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			GROUP BY LEFT(`invoice_date`, 10)');
 			foreach ($result as $row)
 				$purchases[strtotime($row['date'])] = $row['total_purchase_price'];
+			return $purchases;
 		}
 		else
 			return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
@@ -370,8 +371,6 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
 			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
 			'.Shop::addSqlRestriction(false, 'o'));
-		
-		
 	}
 	
 	public static function getExpenses($date_from, $date_to, $granularity = false)
