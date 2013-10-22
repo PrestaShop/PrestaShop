@@ -63,62 +63,103 @@ class AdminDashboardControllerCore extends AdminController
 	
 	protected function getOptionFields()
 	{
+		$forms = array();
 		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-		$fields = array();
-		
+		$carriers = Carrier::getCarriers($this->context->language->id, true);
 		$modules = Module::getModulesOnDisk(true);
+		
+		$forms = array(
+			'payment' => array('title' => $this->l('Average bank fees per payment method')),
+			'carriers' => array('title' => $this->l('Average shipping fees per shipping method')),
+			'other' => array('title' => $this->l('Other settings')),
+			'expenses' => array('title' => $this->l('Other expenses'))
+		);
+		foreach ($forms as &$form)
+		{
+			$form['icon'] = 'tab-preferences';
+			$form['fields'] = array();
+			$form['submit'] = array('title' => $this->l('Save'), 'class' => 'button');
+		}
+
 		foreach ($modules as $module)
 			if ($module->tab == 'payments_gateways' && $module->id)
 			{
-				$fields['CONF_'.strtoupper($module->name).'_FIXED_FEE'] = array(
-					'title' => sprintf($this->l('Fixed fee / %s'), $module->displayName),
-					'desc' => sprintf($this->l('Choose a fixed fee for each order placed with %s.'), $module->displayName),
+				$forms['payment']['fields']['CONF_'.strtoupper($module->name).'_FIXED'] = array(
+					'title' => $module->displayName,
+					'desc' => sprintf($this->l('Choose a fixed fee for each order placed in %s with %s.'), $currency->iso_code, $module->displayName),
 					'validation' => 'isPrice',
 					'cast' => 'floatval',
 					'type' => 'text',
 					'default' => '0',
 					'suffix' => $currency->iso_code
 				);
-				$fields['CONF_'.strtoupper($module->name).'_VAR_FEE'] = array(
-					'title' => sprintf($this->l('Variable fee / %s'), $module->displayName),
-					'desc' => sprintf($this->l('Choose a variable fee for each order placed with %s. It will be applied on the total paid with taxes.'), $module->displayName),
+				$forms['payment']['fields']['CONF_'.strtoupper($module->name).'_VAR'] = array(
+					'title' => $module->displayName,
+					'desc' => sprintf($this->l('Choose a variable fee for each order placed in %s with %s. It will be applied on the total paid with taxes.'), $currency->iso_code, $module->displayName),
 					'validation' => 'isPercentage',
 					'cast' => 'floatval',
 					'type' => 'text',
 					'default' => '0',
 					'suffix' => '%'
 				);
+				
+				if (Currency::isMultiCurrencyActivated())
+				{
+					$forms['payment']['fields']['CONF_'.strtoupper($module->name).'_FIXED_FOREIGN'] = array(
+						'title' => $module->displayName,
+						'desc' => sprintf($this->l('Choose a fixed fee for each order placed with a foreign currency with %s.'), $module->displayName),
+						'validation' => 'isPrice',
+						'cast' => 'floatval',
+						'type' => 'text',
+						'default' => '0',
+						'suffix' => $currency->iso_code
+					);
+					$forms['payment']['fields']['CONF_'.strtoupper($module->name).'_VAR_FOREIGN'] = array(
+						'title' => $module->displayName,
+						'desc' => sprintf($this->l('Choose a variable fee for each order placed with a foreign currency with %s. It will be applied on the total paid with taxes.'), $module->displayName),
+						'validation' => 'isPercentage',
+						'cast' => 'floatval',
+						'type' => 'text',
+						'default' => '0',
+						'suffix' => '%'
+					);
+				}
 			}
-		$fields['CONF_ORDER_FIXED_FEES'] = array(
-			'title' => $this->l('Other fixed fees'),
-			'desc' => $this->l('Other fixed fees applied to each order.'),
-			'validation' => 'isPrice',
-			'cast' => 'floatval',
-			'type' => 'text',
-			'default' => '0',
-			'suffix' => $currency->iso_code
-		);
-		$fields['CONF_SHIPPING_MARGIN'] = array(
-			'title' => $this->l('Shipping Margin'),
-			'desc' => $this->l('Profit margin on your shipping fees.'),
+
+		foreach ($carriers as $carrier)
+		{
+			$forms['carriers']['fields']['CONF_'.strtoupper($carrier['id_reference']).'_SHIP'] = array(
+				'title' => $carrier['name'],
+				'desc' => sprintf($this->l('%% of what you charged the customer for domestic delivery with %s.'), $carrier['name']),
+				'validation' => 'isPercentage',
+				'cast' => 'floatval',
+				'type' => 'text',
+				'default' => '0',
+				'suffix' => '%'
+			);
+			$forms['carriers']['fields']['CONF_'.strtoupper($carrier['id_reference']).'_SHIP_OVERSEAS'] = array(
+				'title' => $carrier['name'],
+				'desc' => sprintf($this->l('%% of what you charged the customer for overseas delivery with %s.'), $carrier['name']),
+				'validation' => 'isPercentage',
+				'cast' => 'floatval',
+				'type' => 'text',
+				'default' => '0',
+				'suffix' => '%'
+			);
+		}
+
+		$forms['other']['fields']['CONF_AVERAGE_PRODUCT_MARGIN'] = array(
+			'title' => $this->l('Average gross margin (Selling price / Buying price)'),
+			'desc' => $this->l('Only used if you do not specify your buying price for each product.'),
 			'validation' => 'isPercentage',
-			'cast' => 'floatval',
+			'cast' => 'intval',
 			'type' => 'text',
 			'default' => '0',
 			'suffix' => '%'
 		);
-		$fields['CONF_MONTHLY_FEES'] = array(
-			'title' => $this->l('Monthly fees'),
-			'desc' => $this->l('Monthly fees like hosting, adwords, etc.'),
-			'validation' => 'isPrice',
-			'cast' => 'floatval',
-			'type' => 'text',
-			'default' => '0',
-			'suffix' => $currency->iso_code
-		);
-		$fields['CONF_YEARLY_FEES'] = array(
-			'title' => $this->l('Yearly fees'),
-			'desc' => $this->l('Yearly fees like hosting, subscriptions, etc.'),
+
+		$forms['other']['fields']['CONF_ORDER_FIXED'] = array(
+			'title' => $this->l('Other fee per order'),
 			'validation' => 'isPrice',
 			'cast' => 'floatval',
 			'type' => 'text',
@@ -126,14 +167,26 @@ class AdminDashboardControllerCore extends AdminController
 			'suffix' => $currency->iso_code
 		);
 
-		return array(
-			'profitability' => array(
-				'title' => $this->l('Profitability Configuration'),
-				'icon' => 'tab-preferences',
-				'fields' =>	$fields,
-				'submit' => array('title' => $this->l('Save'), 'class' => 'button'),
-			),
+		$expense_types = array(
+			'hosting' => $this->l('Hosting'),
+			'tools' => $this->l('Tools (E-mailing, etc.)'),
+			'acounting' => $this->l('Accounting'),
+			'development' => $this->l('Development'),
+			'marketing' => $this->l('Marketing (Adwords, etc.)'),
+			'others' => $this->l('Others')
 		);
+
+		foreach ($expense_types as $expense_type => $expense_label)
+			$forms['expenses']['fields']['CONF_MONTHLY_'.strtoupper($expense_type)] = array(
+				'title' => $expense_label,
+				'validation' => 'isPrice',
+				'cast' => 'floatval',
+				'type' => 'text',
+				'default' => '0',
+				'suffix' => $currency->iso_code
+			);
+
+		return $forms;
 	}
 
 	public function renderView()
