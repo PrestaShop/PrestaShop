@@ -139,7 +139,7 @@ Tip: If the customer privacy message is too long to be written directly in the f
 				),
 			'submit' => array(
 				'title' => $this->l('Save'),
-				'class' => 'btn btn-primary')
+				'class' => 'btn btn-default')
 			),
 		);
 		
