@@ -36,7 +36,7 @@
 							</div>
 							<div class="modal-body">
 								<div id="modules_list_container_tab" style="display:none;"></div>
-								<div id="modules_list_loader"><img src="../img/loader.gif" alt=""/></div>
+								<div id="modules_list_loader"><i class="icon-refresh icon-large icon-spin"></i> {l s='Loading'}</div>
 							</div>
 						</div>
 					</div>
@@ -64,7 +64,7 @@
 				{l s='Be careful! Manually uploaded thumbnails will be erased and replaced by automatically generated thumbnails.'}
 			</div>
 			
-			<div class="row">
+			<div class="form-group">
 				<label class="control-label col-lg-3">{l s='Select an image'}</label>
 				<div class="col-lg-9">
 					<select name="type" onchange="changeFormat(this)">
@@ -76,7 +76,7 @@
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="form-group">
 			{foreach $types AS $k => $type}
 				<label class="control-label col-lg-3 second-select format_{$k}" style="display:none;">{l s='Select a format'}</label>
 				<div class="col-lg-9 second-select margin-form format_{$k}" style="display:none;">
@@ -98,7 +98,7 @@
 				{rdelim}
 			</script>
 
-			<div class="row">
+			<div class="form-group">
 				<label class="control-label col-lg-3">
 					{l s='Erase previous images'}
 				</label>
@@ -117,11 +117,13 @@
 								<span class="slide-button btn btn-default"></span>
 							</span>
 						</div>
-						{l s='Select "No" only if your server timed out and you need to resume the regeneration.'}
 					</div>
+					<p class="help-block">
+						{l s='Select "No" only if your server timed out and you need to resume the regeneration.'}
+					</p>
 				</div>
 			</div>
-			<div class="row">
+			<div class="form-group">
 				<div class="col-lg-9 col-lg-push-3">
 					<input type="Submit" name="submitRegenerate{$table}" value="{l s='Regenerate thumbnails'}" class="btn btn-default" onclick="return confirm('{l s='Are you sure?'}');" />
 				</div>
