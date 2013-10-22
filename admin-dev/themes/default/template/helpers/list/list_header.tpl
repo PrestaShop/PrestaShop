@@ -74,8 +74,8 @@
 
 <div class="alert alert-warning" id="{$list_id}-empty-filters-alert" style="display:none;">{l s='Please fill at least one field to perform a search in this list.'}</div>
 
-{if !$simple_header}
 <form method="post" action="{$action}" class="form-horizontal">
+{if !$simple_header}
 	<input type="hidden" id="submitFilter{$list_id}" name="submitFilter{$list_id}" value="0"/>
 	{block name="override_form_extra"}{/block}
 	<div class="panel col-lg-12">

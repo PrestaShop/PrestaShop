@@ -149,11 +149,10 @@
 {if !$simple_header}
 		<input type="hidden" name="token" value="{$token}" />
 	</div>
-</form>
 {else}
 	</div>
 {/if}
-
+</form>
 
 {hook h='displayAdminListAfter'}
 {if isset($name_controller)}
