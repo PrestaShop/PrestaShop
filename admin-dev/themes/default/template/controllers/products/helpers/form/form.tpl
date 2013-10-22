@@ -246,7 +246,6 @@
 			{/if}
 
 			{* all input are here *}
-			<div class="row">
 			{foreach $product_tabs key=numStep item=tab}
 				<div id="product-tab-content-{$tab.id}" class="{if !$tab.selected}not-loaded{/if} product-tab-content" {if !$tab.selected}style="display:none"{/if}>
 					{if $tab.selected}
@@ -254,8 +253,6 @@
 					{/if}
 				</div>
 			{/foreach}
-			</div>
-
 			<input type="hidden" name="id_product_attribute" id="id_product_attribute" value="0" />
 			<input type="hidden" name="key_tab" id="key_tab" value="Informations" />
 			<button id="product_form_submit_btn"  type="submit" name="submitAddproduct" class="btn btn-default">{l s='Save'}</button>
