@@ -33,6 +33,7 @@ class Dashtrends extends Module
 	protected $dashboard_data_compare;
 	protected $dashboard_data_sum;
 	protected $dashboard_data_sum_compare;
+	protected $data_trends;
 
 	public function __construct()
 	{
@@ -248,14 +249,17 @@ class Dashtrends extends Module
 		$this->dashboard_data = $this->refineData($params['date_from'], $params['date_to'], $tmp_data);
 		$this->dashboard_data_sum = $this->addupData($this->dashboard_data);
 
-		// Retrieve, refine and add up data for the comparison period
-		$tmp_data_compare = $this->getData($params['compare_from'], $params['compare_to']);
-		$this->dashboard_data_compare = $this->refineData($params['compare_from'], $params['compare_to'], $tmp_data_compare);
-		$this->dashboard_data_sum_compare = $this->addupData($this->dashboard_data_compare);
-		
-		$data_trends = $this->compareData($this->dashboard_data_sum, $this->dashboard_data_sum_compare);
-		$this->dashboard_data_compare = $this->translateCompareData($this->dashboard_data, $this->dashboard_data_compare);
-		
+		if ($params['compare_from'] && $params['compare_from'] != '0000-00-00')
+		{
+			// Retrieve, refine and add up data for the comparison period
+			$tmp_data_compare = $this->getData($params['compare_from'], $params['compare_to']);
+			$this->dashboard_data_compare = $this->refineData($params['compare_from'], $params['compare_to'], $tmp_data_compare);
+			$this->dashboard_data_sum_compare = $this->addupData($this->dashboard_data_compare);
+			
+			$this->data_trends = $this->compareData($this->dashboard_data_sum, $this->dashboard_data_sum_compare);
+			$this->dashboard_data_compare = $this->translateCompareData($this->dashboard_data, $this->dashboard_data_compare);
+		}
+
 		return array(
 			'data_value' => array(
 				'sales_score' => Tools::displayPrice(round($this->dashboard_data_sum['sales']), $currency),
@@ -265,7 +269,7 @@ class Dashtrends extends Module
 				'conversion_rate_score' => round(100 * $this->dashboard_data_sum['conversion_rate'], 2).'%',
 				'net_profits_score' => Tools::displayPrice(round($this->dashboard_data_sum['net_profits']), $currency),
 			),
-			'data_trends' => $data_trends,
+			'data_trends' => $this->data_trends,
 			'data_chart' => array('dash_trends_chart1' => $this->getChartTrends()),
 		);
 	}
@@ -308,9 +312,12 @@ class Dashtrends extends Module
 			foreach ($this->dashboard_data[$chart_key] as $key => $value)
 				$chart_data[$chart_key][] = array(1000 * $key, $calibration ? 100 * $value / $calibration : 0);
 
-			$chart_data_compare[$chart_key] = array();
-			foreach ($this->dashboard_data_compare[$chart_key] as $key => $value)
-				$chart_data_compare[$chart_key][] = array(1000 * $key, $calibration ? 100 * $value / $calibration : 0);
+			if ($this->dashboard_data_compare)
+			{
+				$chart_data_compare[$chart_key] = array();
+				foreach ($this->dashboard_data_compare[$chart_key] as $key => $value)
+					$chart_data_compare[$chart_key][] = array(1000 * $key, $calibration ? 100 * $value / $calibration : 0);
+			}
 		}
 		
 		$charts = array(
@@ -326,7 +333,8 @@ class Dashtrends extends Module
 		foreach ($charts as $key => $title)
 		{
 			$data['data'][] = array('id' => $key, 'key' => $title, 'values' => $chart_data[$key], 'disabled' => ($key == 'sales' ? false : true));
-			$data['data'][] = array('id' => $key.'_compare', 'key' => sprintf($this->l('%s (previous period)'), $title), 'values' => $chart_data_compare[$key], 'disabled' => ($key == 'sales' ? false : true));
+			if ($this->dashboard_data_compare)
+				$data['data'][] = array('id' => $key.'_compare', 'key' => sprintf($this->l('%s (previous period)'), $title), 'values' => $chart_data_compare[$key], 'disabled' => ($key == 'sales' ? false : true));
 		}
 		return $data;
 	}
