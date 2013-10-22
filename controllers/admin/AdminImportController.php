@@ -1137,7 +1137,7 @@ class AdminImportControllerCore extends AdminController
 			else
 				$product = new Product();
 
-			if (array_key_exists('id', $info) && (int)$info['id'] && Product::existsInDatabase((int)$info['id'], 'product'))
+			if (isset($product->id) && $product->id && Product::existsInDatabase((int)$product->id, 'product'))
 			{
 				$product->loadStockData();
 				$category_data = Product::getProductCategories((int)$product->id);
