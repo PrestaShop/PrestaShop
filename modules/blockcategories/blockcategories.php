@@ -117,8 +117,13 @@ class BlockCategories extends Module
 
 	public function hookDisplayBackOfficeCategory($params)
 	{
+		$category = new Category((int)Tools::getValue('id_category'));
+
+		if ($category->level_depth != 2)
+			return;
+
 		for ($i=0;$i<3;$i++)
-			$images[$i] = ImageManager::thumbnail(_PS_CAT_IMG_DIR_.Tools::getValue('id_category').'-'.$i.'_thumb.jpg', $this->context->controller->table.'_'.(int)Tools::getValue('id_category').'-'.$i.'_thumb.jpg', 100, 'jpg', true);
+			$images[$i] = ImageManager::thumbnail(_PS_CAT_IMG_DIR_.(int)$category->id.'-'.$i.'_thumb.jpg', $this->context->controller->table.'_'.(int)$category->id.'-'.$i.'_thumb.jpg', 100, 'jpg', true);
 
 		$this->smarty->assign(array(
 			'name'    => 'thumb',
