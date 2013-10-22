@@ -1086,11 +1086,11 @@ class AdminImportControllerCore extends AdminController
 
 					// Get shops for each attributes
 					$info['shop'] = explode($this->multiple_value_separator, $info['shop']);
-
+					
 					foreach ($info['shop'] as $shop)
-						if (!is_numeric($shop))
+						if (!empty($shop) && !is_numeric($shop))
 							$category->addShop(Shop::getIdByName($shop));
-						else
+						elseif (!empty($shop))
 							$category->addShop($shop);
 				}
 			}
@@ -1162,9 +1162,9 @@ class AdminImportControllerCore extends AdminController
 			// link product to shops
 			$product->id_shop_list = array();
 			foreach (explode($this->multiple_value_separator, $product->shop) as $shop)
-				if (!is_numeric($shop))
+				if (!empty($shop) && !is_numeric($shop))
 					$product->id_shop_list[] = Shop::getIdByName($shop);
-				else
+				elseif (!empty($shop))
 					$product->id_shop_list[] = $shop;
 
 			if ((int)$product->id_tax_rules_group != 0)
@@ -1405,8 +1405,10 @@ class AdminImportControllerCore extends AdminController
 			$product_shop = explode($this->multiple_value_separator, $product->shop);
 			foreach ($product_shop as $shop)
 			{
+				if (empty($shop))
+					continue;
 				$shop = trim($shop);
-				if (!is_numeric($shop))
+				if (!empty($shop) && !is_numeric($shop))
 					$shop = Shop::getIdByName($shop);
 
 				if (in_array($shop, $shop_ids))
@@ -1458,36 +1460,36 @@ class AdminImportControllerCore extends AdminController
 					
 				$id_shop_list = array();
 				foreach ($info['shop'] as $shop)
-					if (!is_numeric($shop))
+					if (!empty($shop) && !is_numeric($shop))
 						$id_shop_list[] = (int)Shop::getIdByName($shop);
-					else
+					elseif (!empty($shop))
 						$id_shop_list[] = $shop;
 
-					if ((isset($info['reduction_price']) && $info['reduction_price'] > 0) || (isset($info['reduction_percent']) && $info['reduction_percent'] > 0))
-						foreach($id_shop_list as $id_shop)
-						{
-							$specific_price = SpecificPrice::getSpecificPrice($product->id, $id_shop, 0, 0, 0, 1, 0, 0, 0, 0);
+				if ((isset($info['reduction_price']) && $info['reduction_price'] > 0) || (isset($info['reduction_percent']) && $info['reduction_percent'] > 0))
+					foreach($id_shop_list as $id_shop)
+					{
+						$specific_price = SpecificPrice::getSpecificPrice($product->id, $id_shop, 0, 0, 0, 1, 0, 0, 0, 0);
 
-							if (is_array($specific_price) && isset($specific_price['id_specific_price']))
-								$specific_price = new SpecificPrice((int)$specific_price['id_specific_price']);
-							else
-								$specific_price = new SpecificPrice();
-							$specific_price->id_product = (int)$product->id;
-							$specific_price->id_specific_price_rule = 0;
-							$specific_price->id_shop = $id_shop;
-							$specific_price->id_currency = 0;
-							$specific_price->id_country = 0;
-							$specific_price->id_group = 0;
-							$specific_price->price = -1;
-							$specific_price->id_customer = 0;
-							$specific_price->from_quantity = 1;
-							$specific_price->reduction = (isset($info['reduction_price']) && $info['reduction_price']) ? $info['reduction_price'] : $info['reduction_percent'] / 100;
-							$specific_price->reduction_type = (isset($info['reduction_price']) && $info['reduction_price']) ? 'amount' : 'percentage';
-							$specific_price->from = (isset($info['reduction_from']) && Validate::isDate($info['reduction_from'])) ? $info['reduction_from'] : '0000-00-00 00:00:00';
-							$specific_price->to = (isset($info['reduction_to']) && Validate::isDate($info['reduction_to']))  ? $info['reduction_to'] : '0000-00-00 00:00:00';
-							if (!$specific_price->save())
-								$this->addProductWarning(Tools::safeOutput($info['name']), $product->id, $this->l('Discount is invalid'));
-						}
+						if (is_array($specific_price) && isset($specific_price['id_specific_price']))
+							$specific_price = new SpecificPrice((int)$specific_price['id_specific_price']);
+						else
+							$specific_price = new SpecificPrice();
+						$specific_price->id_product = (int)$product->id;
+						$specific_price->id_specific_price_rule = 0;
+						$specific_price->id_shop = $id_shop;
+						$specific_price->id_currency = 0;
+						$specific_price->id_country = 0;
+						$specific_price->id_group = 0;
+						$specific_price->price = -1;
+						$specific_price->id_customer = 0;
+						$specific_price->from_quantity = 1;
+						$specific_price->reduction = (isset($info['reduction_price']) && $info['reduction_price']) ? $info['reduction_price'] : $info['reduction_percent'] / 100;
+						$specific_price->reduction_type = (isset($info['reduction_price']) && $info['reduction_price']) ? 'amount' : 'percentage';
+						$specific_price->from = (isset($info['reduction_from']) && Validate::isDate($info['reduction_from'])) ? $info['reduction_from'] : '0000-00-00 00:00:00';
+						$specific_price->to = (isset($info['reduction_to']) && Validate::isDate($info['reduction_to']))  ? $info['reduction_to'] : '0000-00-00 00:00:00';
+						if (!$specific_price->save())
+							$this->addProductWarning(Tools::safeOutput($info['name']), $product->id, $this->l('Discount is invalid'));
+					}
 
 				if (isset($product->tags) && !empty($product->tags))
 				{
@@ -1501,7 +1503,8 @@ class AdminImportControllerCore extends AdminController
 							if (is_array($product->tags) && count($product->tags))
 							{
 								foreach ($product->tags as $key => $tag)
-									$product->tags[$key] = trim($tag);
+									if (!empty($tag))
+										$product->tags[$key] = trim($tag);
 								$tags[$id_lang] = $product->tags;
 								$product->tags = $tags;
 							}
@@ -1509,7 +1512,7 @@ class AdminImportControllerCore extends AdminController
 					}
 					// Delete tags for this id product, for no duplicating error
 					Tag::deleteTagsForProduct($product->id);
-					if (!is_array($product->tags))
+					if (!is_array($product->tags) && !empty($product->tags))
 					{
 						$product->tags = AdminImportController::createMultiLangField($product->tags);
 						foreach ($product->tags as $key => $tags)
@@ -1593,14 +1596,19 @@ class AdminImportControllerCore extends AdminController
 				if (isset($features['features']) && !empty($features['features']))
 					foreach (explode($this->multiple_value_separator, $features['features']) as $single_feature)
 					{
+						if (empty($single_feature))
+							continue;
 						$tab_feature = explode(':', $single_feature);
-						$feature_name = trim($tab_feature[0]);
-						$feature_value = trim($tab_feature[1]);
-						$position = isset($tab_feature[2]) ? $tab_feature[2]: false;
+						$feature_name = isset($tab_feature[0]) ? trim($tab_feature[0]) : '';
+						$feature_value = isset($tab_feature[1]) ? trim($tab_feature[1]) : '';
+						$position = isset($tab_feature[2]) ? (int)$tab_feature[2] : false;
 						if(!empty($feature_name) && !empty($feature_value))
 						{
-							$id_feature = Feature::addFeatureImport($feature_name, $position);
-							$id_feature_value = FeatureValue::addFeatureValueImport($id_feature, $feature_value, $product->id, $id_lang);
+							$id_feature = (int)Feature::addFeatureImport($feature_name, $position);
+							$id_product = null;
+							if (Tools::getValue('forceIDs') || Tools::getValue('match_ref'))
+								$id_product = (int)$product->id;
+							$id_feature_value = (int)FeatureValue::addFeatureValueImport($id_feature, $feature_value, $id_product, $id_lang);
 							Product::addFeatureProductImport($product->id, $id_feature, $id_feature_value);
 						}
 					}
@@ -1658,11 +1666,12 @@ class AdminImportControllerCore extends AdminController
 			$info['shop'] = explode($this->multiple_value_separator, $info['shop']);
 				
 			$id_shop_list = array();
-			foreach ($info['shop'] as $shop)
-				if (!is_numeric($shop))
-					$id_shop_list[] = Shop::getIdByName($shop);
-				else
-					$id_shop_list[] = $shop;
+			if (is_array($info['shop']) && count($info['shop']))
+				foreach ($info['shop'] as $shop)
+					if (!empty($shop) && !is_numeric($shop))
+						$id_shop_list[] = Shop::getIdByName($shop);
+					elseif (!empty($shop))
+						$id_shop_list[] = $shop;
 			
 			if(isset($info['id_product']))
 				$product = new Product((int)$info['id_product'], false, $default_language);
@@ -1736,12 +1745,14 @@ class AdminImportControllerCore extends AdminController
 			if(isset($info['group']))
 				foreach (explode($this->multiple_value_separator, $info['group']) as $key => $group)
 				{
+					if (empty($group))
+						continue;
 					$tab_group = explode(':', $group);
 					$group = trim($tab_group[0]);
 					if (!isset($tab_group[1]))
 						$type = 'select';
 					else
-					$type = trim($tab_group[1]);
+						$type = trim($tab_group[1]);
 	
 					// sets group
 					$groups_attributes[$key]['group'] = $group;
@@ -1791,6 +1802,8 @@ class AdminImportControllerCore extends AdminController
 			if(isset($info['attribute']))
 				foreach (explode($this->multiple_value_separator, $info['attribute']) as $key => $attribute)
 				{
+					if (empty($attribute))
+						continue;
 					$tab_attribute = explode(':', $attribute);
 					$attribute = trim($tab_attribute[0]);
 					// if position is filled
@@ -2002,6 +2015,8 @@ class AdminImportControllerCore extends AdminController
 			{
 				foreach ($id_shop_list as $id_shop)
 				{
+					if (empty($id_shop))
+						continue;
 					$shop = new Shop((int)$id_shop);
 					$group_shop = $shop->getGroup();
 					if ($group_shop->share_customer)
@@ -2357,6 +2372,8 @@ class AdminImportControllerCore extends AdminController
 						$shops = array();
 						foreach ($manufacturer->shop as $shop)
 						{
+							if (empty($shop))
+								continue;
 							$shop = trim($shop);
 							if (!is_numeric($shop))
 								$shop = ShopGroup::getIdByName($shop);
@@ -2434,6 +2451,8 @@ class AdminImportControllerCore extends AdminController
 						$shops = array();
 						foreach ($supplier->shop as $shop)
 						{
+							if (empty($shop))
+								continue;
 							$shop = trim($shop);
 							if (!is_numeric($shop))
 								$shop = ShopGroup::getIdByName($shop);
