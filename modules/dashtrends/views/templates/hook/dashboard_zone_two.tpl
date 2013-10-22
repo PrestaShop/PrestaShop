@@ -36,32 +36,32 @@
 		</span>
 	</header>
 	<div id="dashtrends_toolbar" class="row">
-		<dl class="col-xs-4 col-lg-2 active">
+		<dl class="col-xs-4 col-lg-2 active" onclick="selectDashtrendsChart(this, 'sales');">
 			<dt>{l s='Sales'}</dt>
 			<dd class="data_value size_l"><span id="sales_score"></span></dd>
 			<dd class="dash_trend"><span id="sales_score_trends"></span></dd>
 		</dl>
-		<dl class="col-xs-4 col-lg-2">
+		<dl class="col-xs-4 col-lg-2" onclick="selectDashtrendsChart(this, 'orders');">
 			<dt>{l s='Orders'}</dt>
 			<dd class="data_value size_l"><span id="orders_score"></span></dd>
 			<dd class="dash_trend"><span id="orders_score_trends"></span></dd>
 		</dl>
-		<dl class="col-xs-4 col-lg-2">
+		<dl class="col-xs-4 col-lg-2" onclick="selectDashtrendsChart(this, 'average_cart_value');">
 			<dt>{l s='Cart Value'}</dt>
 			<dd class="data_value size_l"><span id="cart_value_score"></span></dd>
 			<dd class="dash_trend"><span id="cart_value_score_trends"></span></dd>
 		</dl>
-		<dl class="col-xs-4 col-lg-2">
+		<dl class="col-xs-4 col-lg-2" onclick="selectDashtrendsChart(this, 'visits');">
 			<dt>{l s='Visits'}</dt>
 			<dd class="data_value size_l"><span id="visits_score"></span></dd>
 			<dd class="dash_trend"><span id="visits_score_trends"></span></dd>
 		</dl>
-		<dl class="col-xs-4 col-lg-2">
+		<dl class="col-xs-4 col-lg-2" onclick="selectDashtrendsChart(this, 'conversion_rate');">
 			<dt>{l s='Conversion Rate'}</dt>
 			<dd class="data_value size_l"><span id="conversion_rate_score"></span></dd>
 			<dd class="dash_trend"><span id="conversion_rate_score_trends"></span></dd>
 		</dl>
-		<dl class="col-xs-4 col-lg-2">
+		<dl class="col-xs-4 col-lg-2" onclick="selectDashtrendsChart(this, 'net_profits');">
 			<dt>{l s='Net Profits'}</dt>
 			<dd class="data_value size_l"><span id="net_profits_score"></span></dd>
 			<dd class="dash_trend"><span id="net_profits_score_trends"></span></dd>

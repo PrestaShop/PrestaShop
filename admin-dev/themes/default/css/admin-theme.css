@@ -1,5 +1,5 @@
 @import url(http://fonts.googleapis.com/css?family=Josefin+Sans:200,400,700);
-/*!
+/*
  * Bootstrap v3.0.0
  *
  * Copyright 2013 Twitter, Inc
@@ -8,7 +8,7 @@
  *
  * Designed and built with all the love in the world by @mdo and @fat.
  */
-/*! normalize.css v2.1.0 | MIT License | git.io/normalize */
+/* normalize.css v2.1.0 | MIT License | git.io/normalize */
 /* line 22, ../bower_components/sass-bootstrap/lib/_normalize.scss */
 article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {
   display: block; }
@@ -5718,7 +5718,7 @@ th.visible-print, td.visible-print {
   /* line 523, ../bower_components/sass-bootstrap/lib/_mixins.scss */
   th.hidden-print, td.hidden-print {
     display: none !important; } }
-/*!
+/*
  *  Font Awesome 3.2.1
  *  the iconic font designed for Bootstrap
  *  ------------------------------------------------------------------------------
@@ -9312,8 +9312,7 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
     -webkit-box-shadow: #00a4e7 0 0 0 inset;
     box-shadow: #00a4e7 0 0 0 inset; } }
 
-/*!
- * Ladda
+/* Ladda
  * http://lab.hakim.se/ladda
  * MIT licensed
  *
@@ -10295,6 +10294,7 @@ li.sortable-placeholder {
   margin: 4px -16px; }
 /* line 140, admin-theme/_admin-dashboard.sass */
 #dashboard #dashtrends dl {
+  cursor: pointer;
   margin: 0;
   min-height: 120px;
   text-align: center;
@@ -10302,22 +10302,22 @@ li.sortable-placeholder {
   padding: 10px;
   border-left: 1px solid #dddddd;
   border-bottom: 1px solid #dddddd; }
-/* line 148, admin-theme/_admin-dashboard.sass */
+/* line 149, admin-theme/_admin-dashboard.sass */
 #dashboard #dashtrends dl:first-child {
   border-left: none; }
-/* line 150, admin-theme/_admin-dashboard.sass */
+/* line 151, admin-theme/_admin-dashboard.sass */
 #dashboard #dashtrends dl.active {
   background-color: #eeeeee; }
-/* line 152, admin-theme/_admin-dashboard.sass */
+/* line 153, admin-theme/_admin-dashboard.sass */
 #dashboard #dashtrends dt {
   text-align: center;
   height: 37px;
   line-height: 1em;
   font: 300 1.1em/120% "Ubuntu", sans-serif; }
-/* line 157, admin-theme/_admin-dashboard.sass */
+/* line 158, admin-theme/_admin-dashboard.sass */
 #dashboard #dashtrends svg {
   height: 350px; }
-/* line 162, admin-theme/_admin-dashboard.sass */
+/* line 163, admin-theme/_admin-dashboard.sass */
 #dashboard #dashaddons {
   background-color: white;
   border: 1px dashed #dfdfdf;
@@ -10327,33 +10327,33 @@ li.sortable-placeholder {
   -o-border-radius: 3px;
   border-radius: 3px;
   padding: 10px 20px; }
-/* line 166, admin-theme/_admin-dashboard.sass */
+/* line 167, admin-theme/_admin-dashboard.sass */
 #dashboard #dashaddons a {
   display: block; }
-/* line 168, admin-theme/_admin-dashboard.sass */
+/* line 169, admin-theme/_admin-dashboard.sass */
 #dashboard #dashaddons a:hover {
   text-decoration: none; }
-/* line 173, admin-theme/_admin-dashboard.sass */
+/* line 174, admin-theme/_admin-dashboard.sass */
 #dashboard #dashactivity svg {
   height: 150px; }
-/* line 180, admin-theme/_admin-dashboard.sass */
+/* line 181, admin-theme/_admin-dashboard.sass */
 #dashboard .loading .data_value {
   min-width: 30px;
   text-align: center; }
-/* line 183, admin-theme/_admin-dashboard.sass */
+/* line 184, admin-theme/_admin-dashboard.sass */
 #dashboard .loading .data_value:before {
   font-size: 0.7em;
   font-family: FontAwesome;
   content: "\f021";
   color: #cccccc; }
-/* line 189, admin-theme/_admin-dashboard.sass */
+/* line 190, admin-theme/_admin-dashboard.sass */
 #dashboard .loading .data_value span, #dashboard .loading .data_value small {
   display: none; }
-/* line 191, admin-theme/_admin-dashboard.sass */
+/* line 192, admin-theme/_admin-dashboard.sass */
 #dashboard .loading .data_trend {
   display: none; }
 
-/* line 216, admin-theme/_admin-dashboard.sass */
+/* line 217, admin-theme/_admin-dashboard.sass */
 .data_loading, #dashboard .data_value span, #dashboard .data_value .dash_trend {
   opacity: 1;
   -webkit-animation-name: bounceG;
@@ -10367,7 +10367,7 @@ li.sortable-placeholder {
   transform: scale(0.7); }
 
 @-webkit-keyframes bounceG {
-  /* line 224, admin-theme/_admin-dashboard.sass */
+  /* line 225, admin-theme/_admin-dashboard.sass */
   0% {
     opacity: 0;
     filter: alpha(opacity=0);
@@ -10375,7 +10375,7 @@ li.sortable-placeholder {
     -ms-transform: scale(0.1);
     transform: scale(0.1); }
 
-  /* line 227, admin-theme/_admin-dashboard.sass */
+  /* line 228, admin-theme/_admin-dashboard.sass */
   100% {
     opacity: 1;
     filter: alpha(opacity=100);
@@ -10384,7 +10384,7 @@ li.sortable-placeholder {
     transform: scale(1); } }
 
 @-moz-keyframes bounceG {
-  /* line 224, admin-theme/_admin-dashboard.sass */
+  /* line 225, admin-theme/_admin-dashboard.sass */
   0% {
     opacity: 0;
     filter: alpha(opacity=0);
@@ -10392,7 +10392,7 @@ li.sortable-placeholder {
     -ms-transform: scale(0.1);
     transform: scale(0.1); }
 
-  /* line 227, admin-theme/_admin-dashboard.sass */
+  /* line 228, admin-theme/_admin-dashboard.sass */
   100% {
     opacity: 1;
     filter: alpha(opacity=100);
@@ -10401,7 +10401,7 @@ li.sortable-placeholder {
     transform: scale(1); } }
 
 @-ms-keyframes bounceG {
-  /* line 224, admin-theme/_admin-dashboard.sass */
+  /* line 225, admin-theme/_admin-dashboard.sass */
   0% {
     opacity: 0;
     filter: alpha(opacity=0);
@@ -10409,7 +10409,7 @@ li.sortable-placeholder {
     -ms-transform: scale(0.1);
     transform: scale(0.1); }
 
-  /* line 227, admin-theme/_admin-dashboard.sass */
+  /* line 228, admin-theme/_admin-dashboard.sass */
   100% {
     opacity: 1;
     filter: alpha(opacity=100);
@@ -10418,7 +10418,7 @@ li.sortable-placeholder {
     transform: scale(1); } }
 
 @-o-keyframes bounceG {
-  /* line 224, admin-theme/_admin-dashboard.sass */
+  /* line 225, admin-theme/_admin-dashboard.sass */
   0% {
     opacity: 0;
     filter: alpha(opacity=0);
@@ -10426,7 +10426,7 @@ li.sortable-placeholder {
     -ms-transform: scale(0.1);
     transform: scale(0.1); }
 
-  /* line 227, admin-theme/_admin-dashboard.sass */
+  /* line 228, admin-theme/_admin-dashboard.sass */
   100% {
     opacity: 1;
     filter: alpha(opacity=100);
@@ -10435,7 +10435,7 @@ li.sortable-placeholder {
     transform: scale(1); } }
 
 @keyframes bounceG {
-  /* line 224, admin-theme/_admin-dashboard.sass */
+  /* line 225, admin-theme/_admin-dashboard.sass */
   0% {
     opacity: 0;
     filter: alpha(opacity=0);
@@ -10443,7 +10443,7 @@ li.sortable-placeholder {
     -ms-transform: scale(0.1);
     transform: scale(0.1); }
 
-  /* line 227, admin-theme/_admin-dashboard.sass */
+  /* line 228, admin-theme/_admin-dashboard.sass */
   100% {
     opacity: 1;
     filter: alpha(opacity=100);
@@ -10451,11 +10451,11 @@ li.sortable-placeholder {
     -ms-transform: scale(1);
     transform: scale(1); } }
 
-/* line 231, admin-theme/_admin-dashboard.sass */
+/* line 232, admin-theme/_admin-dashboard.sass */
 #dash_version {
   padding: 0 !important;
   overflow: hidden; }
-/* line 235, admin-theme/_admin-dashboard.sass */
+/* line 236, admin-theme/_admin-dashboard.sass */
 #dash_version iframe {
   height: 80px;
   width: 100%; }

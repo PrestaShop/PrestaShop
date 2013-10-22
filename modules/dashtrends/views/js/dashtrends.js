@@ -1,3 +1,6 @@
+var dashtrends_data;
+var dashtrends_chart;
+
 function line_chart_trends(widget_name, chart_details)
 {
 	nv.addGraph(function() {  
@@ -14,14 +17,32 @@ function line_chart_trends(widget_name, chart_details)
 	
 		chart.yAxis
 			.tickFormat(d3.format(',.1%'));
-	
+
+		dashtrends_data = chart_details.data;
+		dashtrends_chart = chart;
+
 		d3.select('#dash_trends_chart1 svg')
 			.datum(chart_details.data)
 			.call(chart);
-	
-		//TODO: Figure out a good way to do this automatically
 		nv.utils.windowResize(chart.update);
-	
+
 		return chart;
 	});
+}
+
+function selectDashtrendsChart(element, type)
+{
+	$('#dashtrends_toolbar dl').removeClass('active');
+	$(element).addClass('active');
+
+	$.each(dashtrends_data, function(index, value) {
+		if (value.id == type || value.id == type + '_compare')
+			value.disabled = false;
+		else
+			value.disabled = true;
+	});
+
+	d3.select('#dash_trends_chart1 svg')
+		.datum(dashtrends_data)
+		.call(dashtrends_chart);
 }
