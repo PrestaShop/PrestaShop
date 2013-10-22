@@ -543,7 +543,7 @@ class PSCleaner extends Module
 				'description' => $this->l('I understand that all the catalog data will be removed without possible rollback: products, features, categories, tags, images, prices, attachments, scenes, stocks, attribute groups and values, manufacturers, suppliers…'),
 			'submit' => array(
 				'title' => $this->l('Delete catalog'),
-				'class' => 'btn btn-primary',
+				'class' => 'btn btn-default',
 				'name' => 'submitTruncateCatalog',
 				'id' => 'submitTruncateCatalog',
 				)
@@ -559,7 +559,7 @@ class PSCleaner extends Module
 				'description' => $this->l('I understand that all the orders and customers will be removed without possible rollback: customers, carts, orders, connections, guests, messages, stats...'),
 				'submit' => array(
 					'title' => $this->l('Delete orders & customers'),
-					'class' => 'btn btn-primary',
+					'class' => 'btn btn-default',
 					'name' => 'submitTruncateSales',
 					'id' => 'submitTruncateSales',
 					)
@@ -574,7 +574,7 @@ class PSCleaner extends Module
 				),
 			'submit' => array(
 				'title' => $this->l('Check & fix'),
-				'class' => 'btn btn-primary',
+				'class' => 'btn btn-default',
 				'name' => 'submitCheckAndFix',
 				)
 			),

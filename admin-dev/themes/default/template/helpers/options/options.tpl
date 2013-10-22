@@ -362,7 +362,7 @@
 							type="submit"
 							id="{$table}_form_submit_btn"
 							name="{if isset($categoryData['submit']['name'])}{$categoryData['submit']['name']}{else}submitOptions{$table}{/if}"
-							class="btn btn-default {if isset($categoryData['submit']['class'])}{$categoryData['submit']['class']}{else}btn btn-default{/if}"
+							class="{if isset($categoryData['submit']['class'])}{$categoryData['submit']['class']}{else}btn btn-default{/if}"
 							>
 							{if isset($categoryData['submit']['title'])}{$categoryData['submit']['title']}{else}{l s='Save'}{/if}
 						</button>
