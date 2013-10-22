@@ -324,27 +324,51 @@ class AdminStatsControllerCore extends AdminStatsTabController
 	
 	public static function getExpenses($date_from, $date_to)
 	{
-		$secs_per_year = 365.25 * 86400;
 		$secs_per_month = 30.4375 * 86400;
 		$total_secs = (strtotime($date_to) - min(strtotime($date_from), time())) / 86400;
-		$expenses = Configuration::get('CONF_MONTHLY_FEES') * $total_secs / $secs_per_month + Configuration::get('CONF_YEARLY_FEES') * $total_secs / $secs_per_year;
+		$expenses =
+			Configuration::get('CONF_MONTHLY_ACOUNTING')
+			+ Configuration::get('CONF_MONTHLY_DEVELOPMENT')
+			+ Configuration::get('CONF_MONTHLY_HOSTING')
+			+ Configuration::get('CONF_MONTHLY_MARKETING')
+			+ Configuration::get('CONF_MONTHLY_OTHERS')
+			+ Configuration::get('CONF_MONTHLY_TOOLS');
+		$expenses *= $total_secs / $secs_per_month;
 
 		$orders = Db::getInstance()->ExecuteS('
 		SELECT
 			total_paid_tax_incl / o.conversion_rate as total_paid_tax_incl,
 			total_shipping_tax_excl / o.conversion_rate as total_shipping_tax_excl,
-			module
+			o.module,
+			a.id_country,
+			o.id_currency,
+			c.id_reference as carrier_reference
 		FROM `'._DB_PREFIX_.'orders` o
+		LEFT JOIN `'._DB_PREFIX_.'address` a ON o.id_address_delivery = a.id_address
+		LEFT JOIN `'._DB_PREFIX_.'carrier` c ON o.id_carrier = c.id_carrier
 		WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
 		'.Shop::addSqlRestriction(false, 'o'));
 		foreach ($orders as $order)
 		{
 			// Add flat fees for this order
-			$expenses += Configuration::get('CONF_ORDER_FIXED_FEES') + Configuration::get('CONF_'.strtoupper($order['module']).'_FIXED_FEE');
+			$expenses += Configuration::get('CONF_ORDER_FIXED') + (
+				$order['id_currency'] == Configuration::get('PS_DEFAULT_CURRENCY')
+					? Configuration::get('CONF_'.strtoupper($order['module']).'_FIXED')
+					: Configuration::get('CONF_'.strtoupper($order['module']).'_FIXED_FOREIGN')
+				);
 			// Add variable fees for this order
-			$expenses += $order['total_paid_tax_incl'] * (Configuration::get('CONF_ORDER_VAR_FEES') + Configuration::get('CONF_'.strtoupper($order['module']).'_VAR_FEE')) / 100;
+			$expenses += $order['total_paid_tax_incl'] * (
+				$order['id_currency'] == Configuration::get('PS_DEFAULT_CURRENCY')
+					? Configuration::get('CONF_'.strtoupper($order['module']).'_VAR')
+					: Configuration::get('CONF_'.strtoupper($order['module']).'_VAR_FOREIGN')
+				) / 100;
 			// Add shipping fees for this order
-			$expenses += $order['total_shipping_tax_excl'] * (100 - Configuration::get('CONF_SHIPPING_MARGIN')) / 100;
+				//
+			$expenses += $order['total_shipping_tax_excl'] * (
+				$order['id_country'] == Configuration::get('PS_DEFAULT_COUNTRY')
+					? Configuration::get('CONF_'.strtoupper($order['carrier_reference']).'_SHIP')
+					: Configuration::get('CONF_'.strtoupper($order['carrier_reference']).'_SHIP_OVERSEAS')
+				) / 100;
 		}
 		return $expenses;
 	}
@@ -580,7 +604,11 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				$total_sales = AdminStatsController::getTotalSales($date_from, $date_to);
 				$total_expenses = AdminStatsController::getExpenses($date_from, $date_to);
 				$total_purchases = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT SUM(od.`product_quantity` * od.`purchase_supplier_price` / `conversion_rate`) as total_purchase_price
+				SELECT SUM(od.`product_quantity` * IF(
+					od.`purchase_supplier_price` > 0,
+					od.`purchase_supplier_price` / `conversion_rate`,
+					od.`original_product_price` * '.(int)Configuration::get('CONF_AVERAGE_PRODUCT_MARGIN').' / 100
+				)) as total_purchase_price
 				FROM `'._DB_PREFIX_.'orders` o
 				LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
 				WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
