@@ -1,0 +1,105 @@
+body{
+	background-color: #ffffff;
+	width:650px;
+	margin:auto;
+	font-family: "Open-sans", sans-serif;
+	color: #555454;
+	font-size: 13px;
+	line-height: 18px
+}
+
+.table tbody > tr > td {
+	border:none;
+	padding-left:0;
+	padding-right:0;
+}
+
+td.space {width:20px;}
+td.space_footer {padding:0 !important;}
+
+.table .table{background-color: #ffffff;}
+
+table.table-mail{
+	margin-top:10px;
+	-moz-box-shadow: 0 0 5px #afafaf;
+	-webkit-box-shadow: 0 0 5px #afafaf;
+	-o-box-shadow: 0 0 5px #afafaf;
+	box-shadow: 0 0 5px #afafaf;
+	filter:progid:DXImageTransform.Microsoft.Shadow(color=#afafaf, Direction=134, Strength=5);
+}
+
+table.table-recap tbody > tr > td, .table-recap thead > tr > th{
+	border: 1px solid #DDDDDD !important
+}
+
+table.table-recap td{
+	padding:10px !important;
+	color:#777777;
+}
+
+.table .table-recap thead > tr > th{
+	background-color: #fbfbfb;
+	padding:10px;
+	font-family: Arial;
+	color:#333333;
+	font-size: 13px
+}
+
+table.table-recap .conf_body td{color:#333333;}
+
+table.table-recap .conf_body td.total{
+	color:#555454;
+	font-size:18px;
+	font-weight:500;
+	font-family: "Open-sans", sans-serif;
+}
+
+table.table-recap .conf_body td.total_amount{
+	color:#333333;
+	font-size: 21px;
+	font-weight:500;
+	font-family: "Open-sans", sans-serif;
+}
+
+a{color: #337ff1}
+
+td.logo{
+	border-bottom: 4px solid #333333 !important
+}
+
+span.title{
+	font-weight: 500;
+	font-size: 28px;
+	text-transform: uppercase;
+}
+span.subtitle{
+	font-weight: 500;
+	font-size: 16px;
+	text-transform: uppercase;
+}
+
+td.box{
+	background-color: #fbfbfb;
+	padding: 10px !important;
+	border: 1px solid #d6d4d4 !important
+}
+
+td.box p{
+	text-transform: uppercase;
+	font-weight: 500;
+	font-size: 18px;
+	border-bottom: 1px solid #d6d4d4 !important;
+	padding-bottom: 10px
+}
+
+td.box span{
+	color:#777777;
+}
+
+td.box span span{
+	color:#333333;
+}
+
+td.footer{
+	border-top: 4px solid #333333 !important
+}
