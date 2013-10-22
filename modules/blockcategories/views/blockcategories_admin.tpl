@@ -12,10 +12,10 @@
 	</div>
 {if isset($images.$foo) && $images.$foo}
 	<div class="clearfix">&nbsp;</div>
-	<div id="image" class="thumbnail">
-		{$images.$foo.image}
+	<div id="image" class="img-thumbnail">
+		{$images.$foo}
 		<div class="text-center">
-			<a class="btn btn-default" href="">
+			<a class="btn btn-default" href="{$current}&token={$token}&deleteThumb={$foo|intval}&id_category={$smarty.get.id_category|intval}">
 				<i class="icon-remove text-danger"></i> {l s='Delete'}
 			</a>
 		</div>
