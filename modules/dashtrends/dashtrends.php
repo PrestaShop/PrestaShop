@@ -68,83 +68,21 @@ class Dashtrends extends Module
 	{
 		// We need the following figures to calculate our stats
 		$tmp_data = array(
-			'visits_score' => array(),
-			'orders_score' => array(),
+			'visits' => array(),
+			'orders' => array(),
 			'total_paid_tax_excl' => array(),
-			'total_discounts_tax_excl' => array(),
-			'total_credit_tax_excl' => array(),
-			'total_credit_shipping_tax_excl' => array(),
-			'total_product_price_tax_excl' => array(),
-			'total_purchase_price' => array()
+			'total_purchases' => array(),
+			'total_expenses' => array()
 		);
 
-		// The visits are retrieved from Analytics if available
-		$gapi = Module::isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
-		if (Validate::isLoadedObject($gapi) && $gapi->isConfigured())
-		{
-			if ($result = $gapi->requestReportData('ga:date', 'ga:visits', $date_from.' 00:00:00', $date_to.' 23:59:59', null, null, 1, 9999))
-				foreach ($result as $row)
-					$tmp_data['visits_score'][strtotime(preg_replace('/^([0-9]{4})([0-9]{2})([0-9]{2})$/', '$1-$2-$3', $row['dimensions']['date']))] = $row['metrics']['visits'];
-		}
-		else
-		{
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-			SELECT
-				LEFT(`date_add`, 10) as date,
-				COUNT(*) as visits_score
-			FROM `'._DB_PREFIX_.'connections`
-			WHERE `date_add` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to.' 23:59:59').'"
-			'.Shop::addSqlRestriction(false).'
-			GROUP BY LEFT(`date_add`, 10)');
-			foreach ($result as $row)
-				$tmp_data['visits_score'][strtotime($row['date'])] = $row['visits_score'];
-		}
-
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT
-			LEFT(`invoice_date`, 10) as date,
-			COUNT(*) as orders_score,
-			SUM(`total_paid_tax_excl` / `conversion_rate`) as total_paid_tax_excl,
-			SUM(`total_discounts_tax_excl` / `conversion_rate`) as total_discounts_tax_excl
-		FROM `'._DB_PREFIX_.'orders`
-		WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to.' 23:59:59').'"
-		'.Shop::addSqlRestriction(Shop::SHARE_ORDER).'
-		GROUP BY LEFT(`invoice_date`, 10)');
-		foreach ($result as $row)
-			foreach (array('orders_score', 'total_paid_tax_excl', 'total_discounts_tax_excl') as $var)
-				$tmp_data[$var][strtotime($row['date'])] = $row[$var];
-
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT
-			LEFT(os.`date_add`, 10) as date,
-			SUM(os.`amount` / o.`conversion_rate`) as total_credit_tax_excl,
-			SUM(os.`shipping_cost_amount` / o.`conversion_rate`) as total_credit_shipping_tax_excl
-		FROM `'._DB_PREFIX_.'orders` o
-		LEFT JOIN `'._DB_PREFIX_.'order_slip` os ON o.id_order = os.id_order
-		WHERE os.`date_add` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to.' 23:59:59').'"
-		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
-		GROUP BY LEFT(os.`date_add`, 10)');
-		foreach ($result as $row)
-			foreach (array('total_credit_tax_excl', 'total_credit_shipping_tax_excl') as $var)
-				$tmp_data[$var][strtotime($row['date'])] = $row[$var];
-
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT
-			LEFT(`invoice_date`, 10) as date,
-			SUM(od.`total_price_tax_excl` / `conversion_rate`) as total_product_price_tax_excl,
-			SUM(od.`product_quantity` * od.`purchase_supplier_price` / `conversion_rate`) as total_purchase_price
-		FROM `'._DB_PREFIX_.'orders` o
-		LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
-		WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to.' 23:59:59').'"
-		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
-		GROUP BY LEFT(`invoice_date`, 10)');
-		foreach ($result as $row)
-			foreach (array('total_product_price_tax_excl', 'total_purchase_price') as $var)
-				$tmp_data[$var][strtotime($row['date'])] = $row[$var];
-
+		$tmp_data['visits'] = AdminStatsControllerCore::getVisits(false, $date_from, $date_to, 'day');
+		$tmp_data['orders'] = AdminStatsControllerCore::getOrders($date_from, $date_to, 'day');
+		$tmp_data['total_paid_tax_excl'] = AdminStatsControllerCore::getTotalSales($date_from, $date_to, 'day');
+		$tmp_data['total_purchases'] = AdminStatsControllerCore::getPurchases($date_from, $date_to, 'day');
+		$tmp_data['total_expenses'] = AdminStatsControllerCore::getExpenses($date_from, $date_to, 'day');
 		return $tmp_data;
 	}
-	
+
 	protected function refineData($date_from, $date_to, $gross_data)
 	{
 		$refined_data = array(
@@ -162,28 +100,22 @@ class Dashtrends extends Module
 			$refined_data['sales'][$date] = 0;
 			if (isset($gross_data['total_paid_tax_excl'][$date]))
 				$refined_data['sales'][$date] += $gross_data['total_paid_tax_excl'][$date];
-			if (isset($gross_data['total_credit_tax_excl'][$date]))
-				$refined_data['sales'][$date] -= $gross_data['total_credit_tax_excl'][$date];
-			if (isset($gross_data['total_credit_shipping_tax_excl'][$date]))
-				$refined_data['sales'][$date] -= $gross_data['total_credit_shipping_tax_excl'][$date];
 				
-			$refined_data['orders'][$date] = isset($gross_data['orders_score'][$date]) ? $gross_data['orders_score'][$date] : 0;
+			$refined_data['orders'][$date] = isset($gross_data['orders'][$date]) ? $gross_data['orders'][$date] : 0;
 			
 			$refined_data['average_cart_value'][$date] = $refined_data['orders'][$date] ? $refined_data['sales'][$date] / $refined_data['orders'][$date] : 0;
 			
-			$refined_data['visits'][$date] = isset($gross_data['visits_score'][$date]) ? $gross_data['visits_score'][$date] : 0;
+			$refined_data['visits'][$date] = isset($gross_data['visits'][$date]) ? $gross_data['visits'][$date] : 0;
 			
 			$refined_data['conversion_rate'][$date] = $refined_data['visits'][$date] ? $refined_data['orders'][$date] / $refined_data['visits'][$date] : 0;
 
 			$refined_data['net_profits'][$date] = 0;
-			if (isset($gross_data['total_product_price_tax_excl'][$date]))
-				$refined_data['net_profits'][$date] += $gross_data['total_product_price_tax_excl'][$date];
-			if (isset($gross_data['total_discounts_tax_excl'][$date]))
-				$refined_data['net_profits'][$date] -= $gross_data['total_discounts_tax_excl'][$date];
-			if (isset($gross_data['total_purchase_price'][$date]))
-				$refined_data['net_profits'][$date] -= $gross_data['total_purchase_price'][$date];
-			if (isset($gross_data['total_credit_tax_excl'][$date]))
-				$refined_data['net_profits'][$date] -= $gross_data['total_credit_tax_excl'][$date];
+			if (isset($gross_data['total_paid_tax_excl'][$date]))
+				$refined_data['net_profits'][$date] += $gross_data['total_paid_tax_excl'][$date];
+			if (isset($gross_data['total_purchases'][$date]))
+				$refined_data['net_profits'][$date] -= $gross_data['total_purchases'][$date];
+			if (isset($gross_data['total_expenses'][$date]))
+				$refined_data['net_profits'][$date] -= $gross_data['total_expenses'][$date];
 		}
 		return $refined_data;
 	}
