@@ -634,6 +634,15 @@
 								>
 								{if isset($field.icon)}<i class="{$field.icon}"></i>{/if} {$field.title}
 							</button>
+							{if isset($field.reset)}
+							<button
+								type="reset"
+								id="{if isset($field.id)}{$field.id}{else}{$table}_form_reset_btn{/if}"
+								class="{if isset($field.reset.class)}{$field.reset.class}{else}btn btn-default{/if}"
+								>
+								{if isset($field.reset.icon)}<i class="{$field.reset.icon}"></i>{/if} {$field.reset.title}
+							</button>
+							{/if}
 						</div>
 					</div>
 				{elseif $key == 'desc'}
