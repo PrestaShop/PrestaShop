@@ -598,7 +598,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				break;
 
 			case 'netprofit_visitor':
-				$date_from = date('Y-m-d', strtotime('-131 day'));
+				$date_from = date('Y-m-d', strtotime('-31 day'));
 				$date_to = date('Y-m-d', strtotime('-1 day'));
 				$total_visitors = AdminStatsController::getUniqueVisitors($date_from, $date_to);
 				$total_sales = AdminStatsController::getTotalSales($date_from, $date_to);
