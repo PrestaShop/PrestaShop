@@ -26,40 +26,41 @@
 
 class AdminStatsControllerCore extends AdminStatsTabController
 {
-	public static function getUniqueVisitors($date_from, $date_to, $granularity = false)
+	public static function getVisits($unique = false, $date_from, $date_to, $granularity = false)
 	{
-		$visitors = array();
+		$visits = array();
 		$gapi = Module::isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
 		if (Validate::isLoadedObject($gapi) && $gapi->isConfigured())
 		{
-			if ($result = $gapi->requestReportData($granularity ? 'ga:date' : '', 'ga:visitors', $date_from, $date_to, null, null, 1, 30))
+			$metric = $unique ? 'visitors' : 'visits';
+			if ($result = $gapi->requestReportData($granularity ? 'ga:date' : '', 'ga:'.$metric, $date_from, $date_to, null, null, 1, 30))
 				foreach ($result as $row)
 					if ($granularity == 'day')
-						$visitors[strtotime(preg_replace('/^([0-9]{4})([0-9]{2})([0-9]{2})$/', '$1-$2-$3', $row['dimensions']['date']))] = $row['metrics']['visitors'];
+						$visits[strtotime(preg_replace('/^([0-9]{4})([0-9]{2})([0-9]{2})$/', '$1-$2-$3', $row['dimensions']['date']))] = $row['metrics'][$metric];
 					elseif ($granularity == false)
-						$visitors = $row['metrics']['visitors'];
+						$visits = $row['metrics'][$metric];
 		}
 		else
 		{
 			if ($granularity == 'day')
 			{
 				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-				SELECT LEFT(`date_add`, 10) as date, COUNT(DISTINCT id_guest) as visitors
+				SELECT LEFT(`date_add`, 10) as date, COUNT('.($unique ? 'DISTINCT id_guest' : '*').') as visits
 				FROM `'._DB_PREFIX_.'connections`
 				WHERE `date_add` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
 				'.Shop::addSqlRestriction().'
 				GROUP BY LEFT(`date_add`, 10)');
 				foreach ($result as $row)
-					$visitors[strtotime($row['date'])] = $row['visitors'];
+					$visits[strtotime($row['date'])] = $row['visits'];
 			}
 			else
-				$visitors = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT COUNT(DISTINCT id_guest) as visitors
+				$visits = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				SELECT COUNT('.($unique ? 'DISTINCT id_guest' : '*').') as visits
 				FROM `'._DB_PREFIX_.'connections`
 				WHERE `date_add` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
 				'.Shop::addSqlRestriction());
 		}
-		return $visitors;
+		return $visits;
 	}
 	
 	public static function getAbandonedCarts($date_from, $date_to)
@@ -144,13 +145,27 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		WHERE product_shop.active = 0');
 	}
 	
-	public static function getTotalSales($date_from, $date_to)
+	public static function getTotalSales($date_from, $date_to, $granularity = false)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT SUM(total_paid_tax_excl / o.conversion_rate)
-		FROM `'._DB_PREFIX_.'orders` o
-		WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
-		'.Shop::addSqlRestriction(false, 'o'));
+		if ($granularity == 'day')
+		{
+			$sales = array();
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+			SELECT LEFT(`invoice_date`, 10) as date, SUM(total_paid_tax_excl / o.conversion_rate) as sales
+			FROM `'._DB_PREFIX_.'orders` o
+			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
+			'.Shop::addSqlRestriction(false, 'o').'
+			GROUP BY LEFT(`invoice_date`, 10)');
+			foreach ($result as $row)
+				$sales[strtotime($row['date'])] = $row['sales'];
+			return $sales;
+		}
+		else
+			return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT SUM(total_paid_tax_excl / o.conversion_rate)
+			FROM `'._DB_PREFIX_.'orders` o
+			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
+			'.Shop::addSqlRestriction(false, 'o'));
 	}
 	
 	public static function get8020SalesCatalog($date_from, $date_to)
@@ -203,6 +218,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			GROUP BY LEFT(`invoice_date`, 10)');
 			foreach ($result as $row)
 				$orders[strtotime($row['date'])] = $row['orders'];
+			return $orders;
 		}
 		else
 			$orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
@@ -322,21 +338,78 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		return round($messages / $threads, 1);
 	}
 	
-	public static function getExpenses($date_from, $date_to)
+	public static function getPurchases($date_from, $date_to, $granularity = false)
 	{
-		$secs_per_month = 30.4375 * 86400;
-		$total_secs = (strtotime($date_to) - min(strtotime($date_from), time())) / 86400;
-		$expenses =
-			Configuration::get('CONF_MONTHLY_ACOUNTING')
-			+ Configuration::get('CONF_MONTHLY_DEVELOPMENT')
-			+ Configuration::get('CONF_MONTHLY_HOSTING')
-			+ Configuration::get('CONF_MONTHLY_MARKETING')
-			+ Configuration::get('CONF_MONTHLY_OTHERS')
-			+ Configuration::get('CONF_MONTHLY_TOOLS');
-		$expenses *= $total_secs / $secs_per_month;
+		if ($granularity == 'day')
+		{
+			$purchases = array();
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+			SELECT
+				LEFT(`invoice_date`, 10) as date,
+				SUM(od.`product_quantity` * IF(
+					od.`purchase_supplier_price` > 0,
+					od.`purchase_supplier_price` / `conversion_rate`,
+					od.`original_product_price` * '.(int)Configuration::get('CONF_AVERAGE_PRODUCT_MARGIN').' / 100
+				)) as total_purchase_price
+			FROM `'._DB_PREFIX_.'orders` o
+			LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
+			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
+			'.Shop::addSqlRestriction(false, 'o').'
+			GROUP BY LEFT(`invoice_date`, 10)');
+			foreach ($result as $row)
+				$purchases[strtotime($row['date'])] = $row['total_purchase_price'];
+		}
+		else
+			return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT SUM(od.`product_quantity` * IF(
+				od.`purchase_supplier_price` > 0,
+				od.`purchase_supplier_price` / `conversion_rate`,
+				od.`original_product_price` * '.(int)Configuration::get('CONF_AVERAGE_PRODUCT_MARGIN').' / 100
+			)) as total_purchase_price
+			FROM `'._DB_PREFIX_.'orders` o
+			LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
+			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
+			'.Shop::addSqlRestriction(false, 'o'));
+		
+		
+	}
+	
+	public static function getExpenses($date_from, $date_to, $granularity = false)
+	{
+		if ($granularity == 'day')
+		{
+			$expenses = array();
+			$from = strtotime($date_from.' 00:00:00');
+			$to = strtotime($date_to.' 23:59:59');
+			for ($date = $from; $date <= $to; $date = strtotime('+1 day', $date))
+			{
+				$expenses[$date] =
+					Configuration::get('CONF_MONTHLY_ACOUNTING')
+					+ Configuration::get('CONF_MONTHLY_DEVELOPMENT')
+					+ Configuration::get('CONF_MONTHLY_HOSTING')
+					+ Configuration::get('CONF_MONTHLY_MARKETING')
+					+ Configuration::get('CONF_MONTHLY_OTHERS')
+					+ Configuration::get('CONF_MONTHLY_TOOLS');
+				$expenses[$date] /= date('t', $date);
+			}
+		}
+		else
+		{
+			$secs_per_month = 30.4375 * 86400;
+			$total_secs = (strtotime($date_to) - min(strtotime($date_from), time())) / 86400;
+			$expenses =
+				Configuration::get('CONF_MONTHLY_ACOUNTING')
+				+ Configuration::get('CONF_MONTHLY_DEVELOPMENT')
+				+ Configuration::get('CONF_MONTHLY_HOSTING')
+				+ Configuration::get('CONF_MONTHLY_MARKETING')
+				+ Configuration::get('CONF_MONTHLY_OTHERS')
+				+ Configuration::get('CONF_MONTHLY_TOOLS');
+			$expenses *= $total_secs / $secs_per_month;
+		}
 
 		$orders = Db::getInstance()->ExecuteS('
 		SELECT
+			`invoice_date`,
 			total_paid_tax_incl / o.conversion_rate as total_paid_tax_incl,
 			total_shipping_tax_excl / o.conversion_rate as total_shipping_tax_excl,
 			o.module,
@@ -351,24 +424,35 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		foreach ($orders as $order)
 		{
 			// Add flat fees for this order
-			$expenses += Configuration::get('CONF_ORDER_FIXED') + (
+			$flat_fees = Configuration::get('CONF_ORDER_FIXED') + (
 				$order['id_currency'] == Configuration::get('PS_DEFAULT_CURRENCY')
 					? Configuration::get('CONF_'.strtoupper($order['module']).'_FIXED')
 					: Configuration::get('CONF_'.strtoupper($order['module']).'_FIXED_FOREIGN')
 				);
+
 			// Add variable fees for this order
-			$expenses += $order['total_paid_tax_incl'] * (
+			$var_fees = $order['total_paid_tax_incl'] * (
 				$order['id_currency'] == Configuration::get('PS_DEFAULT_CURRENCY')
 					? Configuration::get('CONF_'.strtoupper($order['module']).'_VAR')
 					: Configuration::get('CONF_'.strtoupper($order['module']).'_VAR_FOREIGN')
 				) / 100;
+
 			// Add shipping fees for this order
-				//
-			$expenses += $order['total_shipping_tax_excl'] * (
+			$shipping_fees = $order['total_shipping_tax_excl'] * (
 				$order['id_country'] == Configuration::get('PS_DEFAULT_COUNTRY')
 					? Configuration::get('CONF_'.strtoupper($order['carrier_reference']).'_SHIP')
 					: Configuration::get('CONF_'.strtoupper($order['carrier_reference']).'_SHIP_OVERSEAS')
 				) / 100;
+			
+			// Tally up these fees
+			if ($granularity == 'day')
+			{
+				if (!isset($expenses[strtotime($order['invoice_date'])]))
+					$expenses[strtotime($order['invoice_date'])] = 0;
+				$expenses[strtotime($order['invoice_date'])] += $flat_fees + $var_fees + $shipping_fees;
+			}
+			else
+				$expenses += $flat_fees + $var_fees + $shipping_fees;
 		}
 		return $expenses;
 	}
@@ -379,7 +463,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		switch (Tools::getValue('kpi'))
 		{
 			case 'conversion_rate':
-				$visitors = AdminStatsController::getUniqueVisitors(date('Y-m-d', strtotime('-31 day')), date('Y-m-d', strtotime('-1 day')), false /*'day'*/);
+				$visitors = AdminStatsController::getVisits(true, date('Y-m-d', strtotime('-31 day')), date('Y-m-d', strtotime('-1 day')), false /*'day'*/);
 				$orders = AdminStatsController::getOrders(date('Y-m-d', strtotime('-31 day')), date('Y-m-d', strtotime('-1 day')), false /*'day'*/);
 
 				// $data = array();
@@ -600,23 +684,11 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			case 'netprofit_visitor':
 				$date_from = date('Y-m-d', strtotime('-31 day'));
 				$date_to = date('Y-m-d', strtotime('-1 day'));
-				$total_visitors = AdminStatsController::getUniqueVisitors($date_from, $date_to);
-				$total_sales = AdminStatsController::getTotalSales($date_from, $date_to);
-				$total_expenses = AdminStatsController::getExpenses($date_from, $date_to);
-				$total_purchases = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT SUM(od.`product_quantity` * IF(
-					od.`purchase_supplier_price` > 0,
-					od.`purchase_supplier_price` / `conversion_rate`,
-					od.`original_product_price` * '.(int)Configuration::get('CONF_AVERAGE_PRODUCT_MARGIN').' / 100
-				)) as total_purchase_price
-				FROM `'._DB_PREFIX_.'orders` o
-				LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
-				WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
-				'.Shop::addSqlRestriction(false, 'o'));
 
-				$net_profits = $total_sales;
-				$net_profits -= $total_purchases;
-				$net_profits -= $total_expenses;
+				$total_visitors = AdminStatsController::getVisits(true, $date_from, $date_to);
+				$net_profits = AdminStatsController::getTotalSales($date_from, $date_to);
+				$net_profits -= AdminStatsController::getExpenses($date_from, $date_to);
+				$net_profits -= AdminStatsController::getPurchases($date_from, $date_to);
 
 				if ($total_visitors)
 					$value = Tools::displayPrice($net_profits / $total_visitors, $currency);
