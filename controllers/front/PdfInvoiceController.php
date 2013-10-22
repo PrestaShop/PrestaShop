@@ -29,7 +29,7 @@ class PdfInvoiceControllerCore extends FrontController
 	protected $display_header = false;
 	protected $display_footer = false;
 
-    public $content_only = true;
+	public $content_only = true;
 
 	protected $template;
 	public $filename;
@@ -42,49 +42,48 @@ class PdfInvoiceControllerCore extends FrontController
 		if (!(int)Configuration::get('PS_INVOICE'))
 			die(Tools::displayError('Invoices are disabled in this shop.'));
 
-		if(Tools::getValue('id_order_invocive'))
+		if(Tools::getValue('id_order_invoice'))
 		{
-			
+			$order_invoice = new OrderInvoice((int)Tools::getValue('id_order_invoice'));
+			if (!Validate::isLoadedObject($order_invoice))
+				die(Tools::displayError('The order invoice cannot be found within your database.'));
+
+			$this->order_invoice = $order_invoice;
 		}
+		else
+		{
 
-		$id_order = (int)Tools::getValue('id_order');
-		if (Validate::isUnsignedId($id_order))
-			$order = new Order((int)$id_order);
+			$id_order = (int)Tools::getValue('id_order');
+			if (Validate::isUnsignedId($id_order))
+				$order = new Order((int)$id_order);
 
-		if (!isset($order) || !Validate::isLoadedObject($order))
-			die(Tools::displayError('The invoice was not found.'));
+			if (!isset($order) || !Validate::isLoadedObject($order))
+				die(Tools::displayError('The invoice was not found.'));
 
-		if ((isset($this->context->customer->id) && $order->id_customer != $this->context->customer->id) || (Tools::isSubmit('secure_key') && $order->secure_key != Tools::getValue('secure_key')))
-			die(Tools::displayError('The invoice was not found.'));
+			if ((isset($this->context->customer->id) && $order->id_customer != $this->context->customer->id) || (Tools::isSubmit('secure_key') && $order->secure_key != Tools::getValue('secure_key')))
+				die(Tools::displayError('The invoice was not found.'));
 
-		if (!OrderState::invoiceAvailable($order->getCurrentState()) && !$order->invoice_number)
-			die(Tools::displayError('No invoice is available.'));
+			if (!OrderState::invoiceAvailable($order->getCurrentState()) && !$order->invoice_number)
+				die(Tools::displayError('No invoice is available.'));
 
-		$this->order = $order;
+			$this->order = $order;
+		}
 	}
 
 	public function display()
 	{	
-		$order_invoice_list = $this->order->getInvoicesCollection();
-		Hook::exec('actionPDFInvoiceRender', array('order_invoice_list' => $order_invoice_list));
+		if($this->order_invoice)
+		{
+			$pdf = new PDF($this->order_invoice, PDF::TEMPLATE_INVOICE, $this->context->smarty);
+			$pdf->render();
+		}
+		else
+		{
+			$order_invoice_list = $this->order->getInvoicesCollection();
+			Hook::exec('actionPDFInvoiceRender', array('order_invoice_list' => $order_invoice_list));
 
-		$pdf = new PDF($order_invoice_list, PDF::TEMPLATE_INVOICE, $this->context->smarty, $this->context->language->id);
-		$pdf->render();
-	}
-
-
-	/**
-	 * Returns the invoice template associated to the country iso_code
-	 * @param string $iso_user
-	 */
-	public function getTemplate($iso_country)
-	{
-		$template = _PS_THEME_PDF_DIR_.'/invoice.tpl';
-
-		$iso_template = _PS_THEME_PDF_DIR_.'/invoice.'.$iso_country.'.tpl';
-		if (file_exists($iso_template))
-			$template = $iso_template;
-
-		return $template;
+			$pdf = new PDF($order_invoice_list, PDF::TEMPLATE_INVOICE, $this->context->smarty);
+			$pdf->render();
+		}
 	}
 }

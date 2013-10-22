@@ -117,7 +117,7 @@
 				{/foreach}
 				</select>
 				<input type="hidden" name="id_order" value="{$order->id}" />
-				<input type="hidden" name="delivery_number" value="{$ads_deliverynr}" />
+				<input type="hidden" name="delivery_number" value="{$eds_delivery_number}" />
 				<input type="submit" name="submitState" value="{l s='Add'}" class="button" />
 			</form>
 			<br />
@@ -260,7 +260,7 @@
 			<br />
 
 			<!-- Template block -->
-			{if Configuration::get('PS_ADS')}
+			{if Configuration::get('PS_EDS')}
 			<fieldset>
 				<legend><img src="../img/admin/pdf.gif" /> {l s='PDF Templates'}</legend>
 				<form method="post" action="{$currentIndex}&vieworder&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
@@ -634,7 +634,7 @@
 						<th style="width: 12%;text-align:right;display:none" class="partial_refund_fields">
 							{l s='Partial refund'}
 						</th>
-						{if !$order->hasBeenDelivered() || Configuration::get('PS_ADS')}
+						{if !$order->hasBeenDelivered() || Configuration::get('PS_EDS')}
 						<th style="width: 8%;text-align:center;">
 							{l s='Action'}
 						</th>
@@ -648,7 +648,7 @@
 						{* Include product line partial *}
 						{include file='controllers/orders/_product_line.tpl'}
 					{/foreach}
-					{if $can_edit || Configuration::get('PS_ADS')}
+					{if $can_edit || Configuration::get('PS_EDS')}
 						{include file='controllers/orders/_new_product.tpl'}
 					{/if}
 				</table>
@@ -764,7 +764,7 @@
 	</form>
 	<div class="clear" style="height:20px;">&nbsp;</div>
 
-	{if Configuration::get('PS_ADS')}
+	{if Configuration::get('PS_EDS')}
 	<form style="width: 98%" class="container-command-top-spacing" action="{$current_index}&vieworder&token={$smarty.get.token}&id_order={$order->id}" method="post">
 		<input type="hidden" name="id_order" value="{$order->id}" />
 		<fieldset style="width: 100%; ">
@@ -774,8 +774,8 @@
 			<legend><img src="../img/admin/delivery.gif" alt="{l s='Delivery:'}" />{l s='Delivery:'}</legend>
 			<div style="float:left;width: 100%;">
 			<script type="text/javascript">
-				function adsName2Ref() {
-					var select = document.getElementById('adsProductName');
+				function edsName2Ref() {
+					var select = document.getElementById('edsProductName');
 					var opt = select.options[select.selectedIndex].value;
 					var Products = new Array();
 					Products['select_pname'] = new Array('','','0'); /* Empty boxes if we select pname */
@@ -788,14 +788,14 @@
 					var ref = Products[opt][0];
 					var ean = Products[opt][1];
 					var wh = Products[opt][2];
-					document.getElementById('adsWarehouse').value = wh;
-					document.getElementById('adsReference').value = ref;
-					document.getElementById('adsEan13').value = ean;
+					document.getElementById('edsWarehouse').value = wh;
+					document.getElementById('edsReference').value = ref;
+					document.getElementById('edsEan13').value = ean;
 				}
 			</script>
 			<script type="text/javascript">
-				function adsRef2WH(id) {
-					document.getElementById('adsWarehouse').value = '0'; // reset value on every change
+				function edsRef2WH(id) {
+					document.getElementById('edsWarehouse').value = '0'; // reset value on every change
 					// that way we will get 0, if not ref is matched
 					var el = document.getElementById(id).value;
 					var Products = new Array();
@@ -810,60 +810,60 @@
 						{/if}
 					{/foreach}
 					var wh = Products[el][0];
-					if (wh) document.getElementById('adsWarehouse').value = wh;
+					if (wh) document.getElementById('edsWarehouse').value = wh;
 				}
 			</script>
 			<script type="text/javascript">
 				function ButtonText() {
-					var nr = document.getElementById('adsQty').value;
-					if(nr < 0) document.getElementById('adsAdd').innerHTML = 'Remove';
-					else document.getElementById('adsAdd').innerHTML = 'Add'
+					var nr = document.getElementById('edsQty').value;
+					if(nr < 0) document.getElementById('edsAdd').innerHTML = 'Remove';
+					else document.getElementById('edsAdd').innerHTML = 'Add'
 				}
 			</script>
 			<script type="text/javascript">
 			/* Focus and scroll down to */
-			var adsRef = '{if isset($smarty.post.adsReference)}{$smarty.post.adsReference}{/if}';
-			if(adsRef != '') {
+			var edsRef = '{if isset($smarty.post.edsReference)}{$smarty.post.edsReference}{/if}';
+			if(edsRef != '') {
 				window.setTimeout(function ()
 				{
-				var el = document.getElementById('adsReference')
+				var el = document.getElementById('edsReference')
 				el.focus();
 				el.scrollIntoView(true);
 				}, 0);
 			}
-			var adsEan13 = '{if isset($smarty.post.adsEan13)}{$smarty.post.adsEan13}{/if}';
-			if(adsEan13 != '') {
+			var edsEan13 = '{if isset($smarty.post.edsEan13)}{$smarty.post.edsEan13}{/if}';
+			if(edsEan13 != '') {
 				window.setTimeout(function ()
 				{
-				var el = document.getElementById('adsEan13')
+				var el = document.getElementById('edsEan13')
 				el.focus();
 				el.scrollIntoView(true);
 				}, 0);
 			}
-			var adsProductName = '{if isset($smarty.post.adsProductName)}{$smarty.post.adsProductName}{/if}';
-			if(adsProductName != '') {
+			var edsProductName = '{if isset($smarty.post.edsProductName)}{$smarty.post.edsProductName}{/if}';
+			if(edsProductName != '') {
 				window.setTimeout(function ()
 				{
-				var refel = document.getElementById('adsReference')
+				var refel = document.getElementById('edsReference')
 				refel.focus();
-				var el = document.getElementById('adsProductName')
+				var el = document.getElementById('edsProductName')
 				el.scrollIntoView(true);
 				}, 0);
 			}
 			</script>
-				<select name="adsProductName" onchange=adsName2Ref() id="adsProductName">
+				<select name="edsProductName" onchange=edsName2Ref() id="edsProductName">
 					<option value="select_pname">--  {l s='Select productname'} --
 					{foreach from=$products item=product key=k}
 						<option value="{$product.product_id}_{$product.product_attribute_id}" >{$product.product_name}</option>
 					{/foreach}
 				</select>
-				{l s='Reference:'}<input type="text" name="adsReference" id="adsReference" onKeyUp="adsRef2WH('adsReference')"  value="" placeholder="Enter Reference" />
-				{l s='Ean 13:'}<input type="text" name="adsEan13" id="adsEan13 onKeyPress="adsRef2WH('adsEan13')" onKeyUp="adsRef2WH('adsEan13')" value="" placeholder="Enter Ean 13" />
-				{l s='Quantity'} 	<input type="text" name="adsQty" id="adsQty" onKeyPress="ButtonText()" onKeyUp="ButtonText()"  value="1" />
-				<input type="hidden" name="adsWarehouse" id="adsWarehouse" value="0" />
-				<button type="submit" name="submitAdsAdd" value="{$ads_deliverynr}" id="adsAdd">Add</button>
+				{l s='Reference:'}<input type="text" name="edsReference" id="edsReference" onKeyUp="edsRef2WH('edsReference')"  value="" placeholder="Enter Reference" />
+				{l s='Ean 13:'}<input type="text" name="edsEan13" id="edsEan13 onKeyPress="edsRef2WH('edsEan13')" onKeyUp="edsRef2WH('edsEan13')" value="" placeholder="Enter Ean 13" />
+				{l s='Quantity'} 	<input type="text" name="edsQty" id="edsQty" onKeyPress="ButtonText()" onKeyUp="ButtonText()"  value="1" />
+				<input type="hidden" name="edsWarehouse" id="edsWarehouse" value="0" />
+				<button type="submit" name="submitEdsAdd" value="{$eds_delivery_number}" id="edsAdd">Add</button>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<button type="submit" name="submitAdsAddAll" value="{$ads_deliverynr}">Add All products</button>
+				<button type="submit" name="submitEdsAddAll" value="{$eds_delivery_number}">Add All products</button>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br><br>
 				<table style="width: 100%;" cellspacing="0" cellpadding="0" class="table" id="orderDeliveryProducts">
 					<tr>

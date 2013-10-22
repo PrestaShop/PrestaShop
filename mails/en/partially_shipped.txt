@@ -12,4 +12,4 @@ If you have guest account, you can follow your order using this link: {guest_tra
 
 {shop_name} - {shop_url}
 
-{shop_url} powered by PrestaShop&trade;
+{shop_name} powered by PrestaShop™

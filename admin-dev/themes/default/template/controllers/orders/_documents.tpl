@@ -29,6 +29,9 @@
 		<th style="">{l s='Document'}</th>
 		<th style="width:20%">{l s='Number'}</th>
 		<th style="width:10%">{l s='Amount'}</th>
+		{if Configuration::get('PS_EDS') && Configuration::get('PS_EDS_EMAIL_PDF')}
+		<th style="width:1%"></th>
+		{/if}
 		<th style="width:1%"></th>
 	</tr>
 	</thead>
@@ -77,12 +80,12 @@
 				{elseif isset($document->is_package)}
 					<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generatePackageSlipPDF&id_order_invoice={$document->id}">
 			   	{else}
-					<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateInvoicePDF&id_order_invoice={$document->id}{if isset($document->delivery_number)}&delivery_number={$document->delivery_number}{/if}">
+					<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateInvoicePDF&id_order_invoice={$document->id}">
 			   {/if}
 			{elseif get_class($document) eq 'OrderSlip'}
 				<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateOrderSlipPDF&id_order_slip={$document->id}">
 			{elseif get_class($document) eq 'OrderDelivery'}
-				<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order_invoice={$document->id}&delivery_number={$document->delivery_number}">
+				<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order_invoice={$document->id}">
 			{/if}
 			{if get_class($document) eq 'OrderInvoice'}
 				{if isset($document->is_delivery)}
@@ -95,7 +98,7 @@
 			{elseif get_class($document) eq 'OrderSlip'}
 				#{Configuration::get('PS_CREDIT_SLIP_PREFIX', $current_id_lang)}{'%06d'|sprintf:$document->id}
 			{elseif get_class($document) eq 'OrderDelivery'}
-				#{Configuration::get('PS_DELIVERY_PREFIX', $current_id_lang, null, $order->id_shop)}{'%06d'|sprintf:$document->id_order}
+				#{Configuration::get('PS_DELIVERY_PREFIX', $current_id_lang, null, $order->id_shop)}{'%06d'|sprintf:$document->delivery_number}
 			{/if} <img src="../img/admin/details.gif" alt="{l s='See the document'}" /></a></td>
 		<td class="document_amount">
 		{if get_class($document) eq 'OrderInvoice'}
@@ -105,7 +108,7 @@
 				--
 			{else}
 				{displayPrice price=$document->total_paid_tax_incl currency=$currency->id}&nbsp;
-				{if Configuration::get('PS_ADS') &&  Configuration::get('PS_ADS_INVOICE_DELIVERED')}
+				{if Configuration::get('PS_EDS') &&  Configuration::get('PS_EDS_INVOICE_DELIVERED')}
 				{else}
 					{if $document->getTotalPaid()}
 						<span style="color:red;font-weight:bold;">
@@ -124,14 +127,25 @@
 			--
 		{/if}
 		</td>
+		{if Configuration::get('PS_EDS') && Configuration::get('PS_EDS_EMAIL_PDF')}
+		<td class="right document_action">
+			<form method="post" action="{$currentIndex}&vieworder&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
+				<input type="hidden" name="id_order_invoice" value="{$document->id}" />
+				{if get_class($document) eq 'OrderInvoice'}
+					{if !isset($document->is_delivery) && !isset($document->is_package)}
+						<input type="image" src="../img/admin/email.gif" name="emailInvoice" value="1" title="E-mail Invoice as PDF" />
+					{/if}
+				{elseif get_class($document) eq 'OrderDelivery'}
+					<input type="image" src="../img/admin/email.gif" name="emailDelivery" value="1" title="E-mail Delivery Slip as PDF" />
+				{/if}
+			</form>
+		</td>
+		{/if}
 		<td class="right document_action">
 		{if get_class($document) eq 'OrderInvoice'}
 			{if !isset($document->is_delivery) && !isset($document->is_package)}
-				{if Configuration::get('PS_ADS') &&  Configuration::get('PS_ADS_INVOICE_DELIVERED')}
-				{else}
-					{if $document->getRestPaid()}
-						<a href="#" class="js-set-payment" data-amount="{$document->getRestPaid()}" data-id-invoice="{$document->id}" title="{l s='Set payment form'}"><img src="../img/admin/money_add.png" alt="{l s='Set payment form'}" /></a>
-					{/if}
+				{if $document->getRestPaid()}
+					<a href="#" class="js-set-payment" data-amount="{$document->getRestPaid()}" data-id-invoice="{$document->id}" title="{l s='Set payment form'}"><img src="../img/admin/money_add.png" alt="{l s='Set payment form'}" /></a>
 				{/if}
 				<a href="#" onclick="$('#invoiceNote{$document->id}').show(); return false;" title="{if $document->note eq ''}{l s='Add note'}{else}{l s='Edit note'}{/if}"><img src="../img/admin/note.png" alt="{if $document->note eq ''}{l s='Add note'}{else}{l s='Edit note'}{/if}"{if $document->note eq ''} class="js-disabled-action"{/if} /></a>
 			{/if}

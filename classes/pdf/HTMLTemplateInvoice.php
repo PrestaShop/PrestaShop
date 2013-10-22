@@ -32,26 +32,28 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 	public $order;
 	public $available_in_your_account = false;
 
-	public function __construct(OrderInvoice $order_invoice, $smarty,$delivery_number = false)
+	public function __construct(OrderInvoice $order_invoice, $smarty)
 	{
 		$this->order_invoice = $order_invoice;
 		$this->order = new Order((int)$this->order_invoice->id_order);
 		$this->smarty = $smarty;
-		$this->delivery_number = $delivery_number;
 
 		// header informations
 
 		$date = $order_invoice->date_add;
-		if(Configuration::get('PS_ADS') && $delivery_number)
+		if(Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DELIVERED') )
 		{
 			$this->order_delivery = new OrderDelivery($this->order_invoice->id_order);
-			$date = $this->order_delivery->getDeliveryDate($delivery_number,$this->order_invoice->id_order);
+			$date = $this->order_delivery->getDeliveryDate($this->order_invoice->delivery_number,$this->order_invoice->id_order);
 		}
 
 		$this->date = Tools::displayDate($date);
 
 		$id_lang = Context::getContext((int)$this->order_invoice->id_order)->language->id;
-		$this->title = HTMLTemplateInvoice::l('Invoice ').' #'.Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, (int)$this->order->id_shop).sprintf('%06d', $order_invoice->number) . ($this->delivery_number ? '-' .$this->delivery_number : '');
+		if(Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DELIVERED') )
+			$this->title = HTMLTemplateInvoice::l('Invoice ').' #'.Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, (int)$this->order->id_shop).sprintf('%06d', $order_invoice->number) . '-' . $this->order_invoice->delivery_number;
+		else
+			$this->title = HTMLTemplateInvoice::l('Invoice ').' #'.Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, (int)$this->order->id_shop).sprintf('%06d', $order_invoice->number);
 		// footer informations
 		$this->shop = new Shop((int)$this->order->id_shop);
 	}
@@ -75,21 +77,24 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
 		$customer = new Customer((int)$this->order->id_customer);
 
-		if($this->delivery_number) {
-			$products = $this->order->getProductsDelivery(false,false,false,$this->delivery_number); // get only deliverd products
-			$products = $products[$this->delivery_number];
-		} else {
+		if(Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DELIVERED') )
+		{
+			$products = $this->order->getProductsDelivery(false,false,false,$this->order_invoice->delivery_number); // get only deliverd products
+			$products = $products[$this->order_invoice->delivery_number];
+		}
+		else
+		{
 			$products = $this->order_invoice->getProducts();
 		}
-		
+
 		$due_date = false;
 		$due_day = false;
-		if(Configuration::get('PS_ADS') && Configuration::get('PS_ADS_INVOICE_DUE_DATE'))
+		if(Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DUE_DATE'))
 		{
-			if(Configuration::get('PS_ADS_INVOICE_DUE_DAYS') != "")
+			if(Configuration::get('PS_EDS_INVOICE_DUE_DAYS') != "")
 			{
 				$due_date = true;
-				$days = Configuration::get('PS_ADS_INVOICE_DUE_DAYS');
+				$days = Configuration::get('PS_EDS_INVOICE_DUE_DAYS');
 				$due_day = date("Y-m-d h:i:s",strtotime('+' . $days . ' days',strtotime($this->date)));
 			}
 		}
@@ -186,7 +191,10 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 	 */
 	public function getFilename()
 	{
-		return Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_invoice->number) . ($this->delivery_number ? '-' .$this->delivery_number : '')  .'.pdf';
+		if(Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DELIVERED') )
+			return Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_invoice->number) . '-' . $this->order_invoice->delivery_number .'.pdf';
+		else
+			return Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_invoice->number) . '.pdf';
 	}
 }
 

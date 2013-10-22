@@ -117,39 +117,39 @@ class AdminOrderPreferencesControllerCore extends AdminController
 					)
 				)
 			),
-			'ads' => array(
-				'title' => $this->l('Advanced Delivery System 2.1'),
+			'eds' => array(
+				'title' => $this->l('Extended Delivery System 2.3'),
 				'icon' => 'tab-preferences',
 				'fields' => array(
-					'PS_ADS' => array(
-						'title' => $this->l('Enable ADS'),
-						'desc' => $this->l('Activate Advanced Delivery System, with packingslip, multiple deliveryslips'),
+					'PS_EDS' => array(
+						'title' => $this->l('Enable EDS'),
+						'desc' => $this->l('Activate Extended Delivery System, with packingslip, multiple deliveryslips'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool',
 					),
-					'PS_ADS_IMG_PS' => array(
+					'PS_EDS_IMG_PS' => array(
 						'title' => $this->l('Packingslip image'),
 						'desc' => $this->l('Add product image to packingslip'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool',
 					),
-					'PS_ADS_INVOICE_DELIVERED' => array(
+					'PS_EDS_INVOICE_DELIVERED' => array(
 						'title' => $this->l('Invoice Deliverd'),
 						'desc' => $this->l('Only invoice deliverd products, Invoices will match nr of delivery slips'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool',
 					),
-					'PS_ADS_INVOICE_DUE_DATE' => array(
+					'PS_EDS_INVOICE_DUE_DATE' => array(
 						'title' => $this->l('Invoice Due Date'),
 						'desc' => $this->l('Enable Due date on invoice templates'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool',
 					),
-					'PS_ADS_INVOICE_DUE_DAYS' => array(
+					'PS_EDS_INVOICE_DUE_DAYS' => array(
 						'title' => $this->l('Due Date Days'),
 						'desc' => $this->l('Nr of days after invoice date, invoice should be paid'),
 						'validation' => 'isUnsignedInt',
@@ -170,13 +170,27 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						'identifier' => 'value',
 						'list' => $this->getTemplateModels('delivery-slip')
 					),
-					'PS_ADS_SAMPLE_TEXT' => array(
+					'PS_EDS_SAMPLE_TEXT' => array(
 						'title' => $this->l('Sample text:'),
 						'desc' => $this->l('This text will appear after the product on deliver-slip-sampleorder'),
 						'size' => 6,
 						'type' => 'textareaLang',
 						'cols' => 40,
 						'rows' => 8
+					),
+					'PS_EDS_EMAIL_PDF' => array(
+						'title' => $this->l('Email PDF'),
+						'desc' => $this->l('Adds an e-mail button for each delivery/invoice'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool',
+					),
+					'PS_EDS_EMAIL_PDF_LATEST' => array(
+						'title' => $this->l('Only E-mail latest invoice/delivery'),
+						'desc' => $this->l('On statues with Attach invoice/delivery PDF enabled, only attach latest invoice/delivery, not all'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool',
 					),
 				),
 			),

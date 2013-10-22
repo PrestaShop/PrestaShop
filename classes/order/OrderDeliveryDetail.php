@@ -87,11 +87,11 @@ class OrderDeliveryDetailCore extends ObjectModel
 	/** @var float */
 	public $reduction_amount;
 
-    /** @var float */
-    public $reduction_amount_tax_excl;
+	/** @var float */
+	public $reduction_amount_tax_excl;
 
-    /** @var float */
-    public $reduction_amount_tax_incl;
+	/** @var float */
+	public $reduction_amount_tax_incl;
 
 	/** @var float */
 	public $group_reduction;
@@ -144,15 +144,15 @@ class OrderDeliveryDetailCore extends ObjectModel
 	/** @var int Id warehouse */
 	public $id_warehouse;
 
-    /** @var float additional shipping price tax excl */
-    public $total_shipping_price_tax_excl;
+	/** @var float additional shipping price tax excl */
+	public $total_shipping_price_tax_excl;
 
-    /** @var float additional shipping price tax incl */
-    public $total_shipping_price_tax_incl;
+	/** @var float additional shipping price tax incl */
+	public $total_shipping_price_tax_incl;
 
 	/** @var float */
 	public $purchase_supplier_price;
-	
+
 	/** @var bool */
 	protected $outOfStock = false;
 
@@ -170,12 +170,12 @@ class OrderDeliveryDetailCore extends ObjectModel
 
 	/** @var Context object */
 	protected $context = null;
-	
+
 	/** @var integer */
 	public $delivery_id;
-	
+
 	public $delivery_date;
-	
+
 	public $delivery_number;
 
 	/**
@@ -201,8 +201,8 @@ class OrderDeliveryDetailCore extends ObjectModel
 			'product_price' => 				array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
 			'reduction_percent' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
 			'reduction_amount' =>			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'reduction_amount_tax_incl' =>  array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'reduction_amount_tax_excl' =>  array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'reduction_amount_tax_incl' =>  array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'reduction_amount_tax_excl' =>  array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'group_reduction' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
 			'product_quantity_discount' => 	array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
 			'product_ean13' => 				array('type' => self::TYPE_STRING, 'validate' => 'isEan13'),
@@ -240,28 +240,27 @@ class OrderDeliveryDetailCore extends ObjectModel
 			$context = Context::getContext();
 		$this->context = $context->cloneContext();
 	}
-	
-	protected function updateDetail(Order $order, Cart $cart, $product, $id_order_state, $id_order_invoice, $use_taxes = true, $id_warehouse = 0,$delivery_id)
+
+	protected function updateDetail(Order $order, Cart $cart, $product, $id_order_state, $id_order_invoice, $use_taxes = true, $id_warehouse = 0, $delivery_id)
 	{
-	
 		// I should be able to remove alot of the info here
-		
+
 		if ($use_taxes)
 			$this->tax_calculator = new TaxCalculator();
 
 		$this->product_id = (int)($product['id_product']);
 		$this->delivery_id = $delivery_id;
-		$this->product_attribute_id = (int)($product['id_product_attribute'] ? (int)($product['id_product_attribute']) : null);
+		$this->product_attribute_id = (int)$product['id_product_attribute'] ? (int)($product['id_product_attribute']) : null;
 		$this->product_name = $product['name'].
-			((isset($product['attributes']) && $product['attributes'] != null) ?
-				' - '.$product['attributes'] : '');
+			(isset($product['attributes']) && $product['attributes'] != null) ?
+				' - '.$product['attributes'] : '';
 
 		$this->product_quantity = (int)($product['cart_quantity']);
 		$this->product_ean13 = empty($product['ean13']) ? null : pSQL($product['ean13']);
 		$this->product_upc = empty($product['upc']) ? null : pSQL($product['upc']);
 		$this->product_reference = empty($product['reference']) ? null : pSQL($product['reference']);
 		$this->product_supplier_reference = empty($product['supplier_reference']) ? null : pSQL($product['supplier_reference']);
-		$this->product_weight = (float)($product['id_product_attribute'] ? $product['weight_attribute'] : $product['weight']);
+		$this->product_weight = (float)$product['id_product_attribute'] ? $product['weight_attribute'] : $product['weight'];
 		$this->id_warehouse = $id_warehouse;
 
 		$productQuantity = (int)(Product::getQuantity($this->product_id, $this->product_attribute_id));
@@ -298,9 +297,9 @@ class OrderDeliveryDetailCore extends ObjectModel
 
 		$order_delivery = new OrderDelivery();
 		$delivery_number = $order_delivery->getNrFromId($delivery_id);
-		if($delivery_number != 1)
+		if ($delivery_number != 1)
 		{
-			if($order_invoice->total_shipping_tax_incl != 0)
+			if ($order_invoice->total_shipping_tax_incl != 0)
 			{
 				$order_invoice->total_shipping_tax_excl = 0;
 				$order_invoice->total_shipping_tax_incl = 0;
@@ -329,16 +328,10 @@ class OrderDeliveryDetailCore extends ObjectModel
 	 * @param int $id_order_invoice
 	 * @param bool $use_taxes set to false if you don't want to use taxes
 	 */
-	protected function createDetail(Order $order, Cart $cart, $product, $id_order_state, $id_order_invoice, $use_taxes = true, $id_warehouse = 0,$delivery_id,$update = false)
+	protected function createDetail(Order $order, Cart $cart, $product, $id_order_state, $id_order_invoice, $use_taxes = true, $id_warehouse = 0, $delivery_id)
 	{
-	
 		if ($use_taxes)
 			$this->tax_calculator = new TaxCalculator();
-
-		if(!$update)
-		 {
-			$this->id = null;
-		}
 
 		$this->product_id = (int)($product['id_product']);
 		$this->delivery_id = $delivery_id;
@@ -374,22 +367,13 @@ class OrderDeliveryDetailCore extends ObjectModel
 		$this->id_shop = (int)$product['id_shop'];
 
 		// Add new entry to the table
-		if($update) {
-			$this->update();
-		if ($use_taxes)
-			$this->updateTaxAmount($order);
-		unset($this->tax_calculator);
-		}
-		else
-		{
 		$this->save();
 		if ($use_taxes)
 			$this->saveTaxCalculator($order);
 		unset($this->tax_calculator);
-		}
 	}
 
-	public function updateDetailList(Order $order, Cart $cart, $id_order_state, $product_list, $id_order_invoice = 0, $use_taxes = true, $id_warehouse = 0,$delivery_id)
+	public function updateDetailList(Order $order, Cart $cart, $id_order_state, $product_list, $id_order_invoice = 0, $use_taxes = true, $id_warehouse = 0, $delivery_id)
 	{
 		$this->vat_address = new Address((int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 		$this->customer = new Customer((int)($order->id_customer));
@@ -398,7 +382,7 @@ class OrderDeliveryDetailCore extends ObjectModel
 		$this->outOfStock = false;
 
 		foreach ($product_list as $product)
-			$this->updateDetail($order, $cart, $product, $id_order_state, $id_order_invoice, $use_taxes, $id_warehouse,$delivery_id);
+			$this->updateDetail($order, $cart, $product, $id_order_state, $id_order_invoice, $use_taxes, $id_warehouse, $delivery_id);
 
 		unset($this->vat_address);
 		unset($products);
@@ -413,7 +397,7 @@ class OrderDeliveryDetailCore extends ObjectModel
 	 * @param int $id_order_invoice
 	 * @param bool $use_taxes set to false if you don't want to use taxes
 	*/
-	public function createDetailList(Order $order, Cart $cart, $id_order_state, $product_list, $id_order_invoice = 0, $use_taxes = true, $id_warehouse = 0,$delivery_id)
+	public function createDetailList(Order $order, Cart $cart, $id_order_state, $product_list, $id_order_invoice = 0, $use_taxes = true, $id_warehouse = 0, $delivery_id)
 	{
 		$this->vat_address = new Address((int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 		$this->customer = new Customer((int)($order->id_customer));
@@ -422,7 +406,7 @@ class OrderDeliveryDetailCore extends ObjectModel
 		$this->outOfStock = false;
 
 		foreach ($product_list as $product)
-			$this->createDetail($order, $cart, $product, $id_order_state, $id_order_invoice, $use_taxes, $id_warehouse,$delivery_id);
+			$this->createDetail($order, $cart, $product, $id_order_state, $id_order_invoice, $use_taxes, $id_warehouse, $delivery_id);
 
 		unset($this->vat_address);
 		unset($products);
@@ -514,7 +498,7 @@ class OrderDeliveryDetailCore extends ObjectModel
 
 	$carrier = OrderInvoice::getCarrier((int)$this->id_order_invoice);
 	if (isset($carrier) && Validate::isLoadedObject($carrier))
-	    $tax_rate = $carrier->getTaxesRate(new Address((int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+		$tax_rate = $carrier->getTaxesRate(new Address((int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 
 	$this->total_shipping_price_tax_excl = (float)$product['additional_shipping_cost'];
 	$this->total_shipping_price_tax_incl = (float)($this->total_shipping_price_tax_excl * (1 + ($tax_rate / 100)));
@@ -540,9 +524,9 @@ class OrderDeliveryDetailCore extends ObjectModel
 		$this->total_price_tax_incl = (float)$product['total_wt'];
 		$this->total_price_tax_excl = (float)$product['total'];
 
-        $this->purchase_supplier_price = (float)$product['wholesale_price'];
-        if ($product['id_supplier'] > 0)
-            $this->purchase_supplier_price = (float)ProductSupplier::getProductPrice((int)$product['id_supplier'], $product['id_product'], $product['id_product_attribute'], true);
+		$this->purchase_supplier_price = (float)$product['wholesale_price'];
+		if ($product['id_supplier'] > 0)
+			$this->purchase_supplier_price = (float)ProductSupplier::getProductPrice((int)$product['id_supplier'], $product['id_product'], $product['id_product_attribute'], true);
 
 		$this->setSpecificPrice($order, $product);
 

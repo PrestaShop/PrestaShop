@@ -38,14 +38,13 @@
 <p><strong>{l s='Payment method'}</strong> <span class="color-myaccount">{$order->payment|escape:'htmlall':'UTF-8'}</span></p>
 {if $invoice AND $invoiceAllowed}
 <p>
-	{if Configuration::get('PS_ADS') && Configuration::get('PS_ADS_INVOICE_DELIVERD')}
+	{if Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DELIVERD')}
 		{foreach $invoices item=pdfInvoice}
 			<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
-			<a target="_blank" href="{$link->getPageLink('pdf-invoice', true)}?id_order_invoice={$pdfInvoice->number|intval}&delivery_number=$pdfInvoice->delivery_number{if $is_guest}&secure_key={$order->secure_key}{/if}">
+			<a target="_blank" href="{$link->getPageLink('pdf-invoice', true)}?id_order_invoice={$pdfInvoice->number|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}">
 			{l s='Invoice for Delivery Slip'} {$pdfInvoice->delivery_number}</a>
 			<br>
 		{/foreach}
-		<!-- ADS rewrite this. display link for each invoice instead, and then call id_order and delivery nr -->
 	{else}
 	<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
 	<a target="_blank" href="{$link->getPageLink('pdf-invoice', true)}?id_order={$order->id|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}">{l s='Download your invoice as a PDF file.'}</a>
@@ -363,8 +362,8 @@
 	</table>
 {/if}
 </div>
-
-<div id="order-detail-content" class="table_block">
+{if Configuration::get('PS_EDS')}
+<div id="order-delivery-detail-content" class="table_block">
 	<table class="std">
 		<thead>
 			<tr>
@@ -377,7 +376,7 @@
 		</thead>
 		<tbody>
 		{foreach from=$deliverd_products item=delivery_number name=delivery_number key=k}
-			<tr>
+			<tr class="delivery_head">
 				<td colspan="5">{l s='Delivery'} {$k}</td>
 			<tr>
 			{foreach from=$delivery_number item=delivery_product name=delivery_products}
@@ -504,6 +503,7 @@
 		{/foreach}
 		</tbody>
 	</table>
+{/if}
 
 <br />
 {if !$is_guest}

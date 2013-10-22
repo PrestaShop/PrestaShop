@@ -350,7 +350,7 @@ class AdminStatusesControllerCore extends AdminController
 						'id' => 'id',
 						'name' => 'name'
 					),
-					'desc' => "Advanced Delivery System must be enabled.",
+					'desc' => 'Extended Delivery System must be enabled',
 				),
 				array(
 					'type' => 'checkbox',
@@ -362,7 +362,31 @@ class AdminStatusesControllerCore extends AdminController
 						'id' => 'id',
 						'name' => 'name'
 					),
-					'desc' => "Advanced Delivery System must be enabled.",
+					'desc' => 'Extended Delivery System must be enabled',
+				),
+				array(
+					'type' => 'checkbox',
+					'name' => 'attach_pdf_invoice',
+					'values' => array(
+						'query' => array(
+							array('id' => 'on',  'name' => $this->l('Attach invoice pdf to email'), 'val' => '1'),
+							),
+						'id' => 'id',
+						'name' => 'name'
+					),
+					'desc' => 'Extended Delivery System must be enabled',
+				),
+				array(
+					'type' => 'checkbox',
+					'name' => 'attach_pdf_delivery',
+					'values' => array(
+						'query' => array(
+							array('id' => 'on',  'name' => $this->l('Attach delivery slip pdf to email'), 'val' => '1'),
+							),
+						'id' => 'id',
+						'name' => 'name'
+					),
+					'desc' => 'Extended Delivery System must be enabled',
 				),
 				array(
 					'type' => 'select_template',
@@ -407,6 +431,8 @@ class AdminStatusesControllerCore extends AdminController
 			'delivery_on' => $this->getFieldValue($obj, 'delivery'),
 			'package_on' => $this->getFieldValue($obj, 'package'),
 			'partially_shipped_on' => $this->getFieldValue($obj, 'partially_shipped'),
+			'attach_pdf_delivery_on' => $this->getFieldValue($obj, 'attach_pdf_delivery'),
+			'attach_pdf_invoice_on' => $this->getFieldValue($obj, 'attach_pdf_invoice'),
 		);
 
 		return parent::renderForm();
@@ -523,6 +549,8 @@ class AdminStatusesControllerCore extends AdminController
 			$_POST['delivery'] = (int)Tools::getValue('delivery_on');
 			$_POST['package'] = (int)Tools::getValue('package_on');
 			$_POST['partially_shipped'] = (int)Tools::getValue('partially_shipped_on');
+			$_POST['attach_pdf_delivery'] = (int)Tools::getValue('attach_pdf_delivery_on');
+			$_POST['attach_pdf_invoice'] = (int)Tools::getValue('attach_pdf_invoice_on');
 			if (!$_POST['send_email'])
 			{
 				$languages = Language::getLanguages(false);

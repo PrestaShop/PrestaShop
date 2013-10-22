@@ -40,7 +40,7 @@
 	</a></td>
 	<td align="center">
 		<span class="product_price_show">{displayPrice price=$product_price currency=$currency->id}</span>
-		{if $can_edit || Configuration::get('PS_ADS')}
+		{if $can_edit || Configuration::get('PS_EDS')}
 		<span class="product_price_edit" style="display:none;">
 			<input type="hidden" name="product_id_order_detail" class="edit_product_id_order_detail" value="{$product['id_order_detail']}" />
 			{if $currency->sign % 2}{$currency->sign}{/if}<input type="text" name="product_price_tax_excl" class="edit_product_price_tax_excl edit_product_price" value="{Tools::ps_round($product['unit_price_tax_excl'], 2)}" size="5" /> {if !($currency->sign % 2)}{$currency->sign}{/if} {l s='tax excl.'}<br />
@@ -50,7 +50,7 @@
 	</td>
 	<td align="center" class="productQuantity">
 		<span class="product_quantity_show{if (int)$product['product_quantity'] > 1} red bold{/if}">{$product['product_quantity']}</span>
-		{if $can_edit || Configuration::get('PS_ADS')}
+		{if $can_edit || Configuration::get('PS_EDS')}
 		<span class="product_quantity_edit" style="display:none;">
 			<input type="text" name="product_quantity" class="edit_product_quantity" value="{$product['product_quantity']|htmlentities}" size="2" />
 		</span>
@@ -146,7 +146,7 @@
 		{/if}
 	</td>
 	{/if}
-	{if ( ($can_edit && !$order->hasBeenDelivered()) || Configuration::get('PS_ADS') ) }
+	{if ( ($can_edit && !$order->hasBeenDelivered()) || Configuration::get('PS_EDS') ) }
 	<td class="product_action" style="text-align:right">
 		<a href="#" class="edit_product_change_link"><img src="../img/admin/edit.gif" alt="{l s='Edit'}" /></a>
 		<input type="submit" class="button" name="submitProductChange" value="{l s='Update'}"  style="display: none;" />

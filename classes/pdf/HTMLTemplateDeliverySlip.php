@@ -31,27 +31,31 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 {
 	public $order;
 
-	public function __construct(OrderInvoice $order_invoice, $smarty,$delivery_number = false)
+	public function __construct(OrderInvoice $order_invoice, $smarty)
 	{
 		$this->order_invoice = $order_invoice;
 		$this->order = new Order($this->order_invoice->id_order);
 		$this->smarty = $smarty;
-		$this->delivery_number = $delivery_number;
 
 		// header informations
 		$date = $this->order->invoice_date;
-		if(Configuration::get('PS_ADS') && $delivery_number)
+		if(Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DELIVERED') )
 		{
 			$this->order_delivery = new OrderDelivery($this->order_invoice->id_order);
-			$date = $this->order_delivery->getDeliveryDate($delivery_number,$this->order_invoice->id_order);
+			$date = $this->order_delivery->getDeliveryDate($this->order_invoice->delivery_number,$this->order_invoice->id_order);
 		}
+
 		$this->date = Tools::displayDate($date);
+
 		$title = 'Delivery';
 		if($this->getOrderTemplate($this->order->id) == 'delivery-slip-sampleorder')
 		{
-			$title = 'Sample Delivery ';
+			$title = 'Sample Delivery';
 		}
-		$this->title = HTMLTemplateDeliverySlip::l($title).' #'.Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id).sprintf('%06d', $this->delivery_number ? $this->order_invoice->id_order : $this->order_invoice->delivery_number) . ($this->delivery_number ? '-' .$this->delivery_number : '');
+		if(Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DELIVERED') )
+			$this->title = HTMLTemplateDeliverySlip::l($title).' #'.Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id).sprintf('%06d', $this->order_invoice->id) . '-' . $this->order_invoice->delivery_number;
+		else
+			$this->title = HTMLTemplateDeliverySlip::l($title).' #'.Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id).sprintf('%06d', $this->order_invoice->delivery_number);
 
 		// footer informations
 		$this->shop = new Shop((int)$this->order->id_shop);
@@ -73,20 +77,21 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 			$invoice_address = new Address((int)$this->order->id_address_invoice);
 			$formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
 		}
-		if($this->delivery_number) {
-			$products = $this->order->getProductsDelivery(false,false,false,$this->delivery_number); // get only deliverd products
-			$products = $products[$this->delivery_number];
-// 			foreach($products as &$product) {
-// 				$product['product_quantity'] = $product['delivery_qty'];
-// 			}
-		} else {
+
+		if(Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DELIVERED') )
+		{
+			$products = $this->order->getProductsDelivery(false,false,false,$this->order_invoice->delivery_number); // get only deliverd products
+			$products = $products[$this->order_invoice->delivery_number];
+		}
+		else
+		{
 			$products = $this->order_invoice->getProducts();
 		}
 
 		$sample_text = false;
-		if(Configuration::get('PS_ADS') && Configuration::get('PS_ADS_SAMPLE_TEXT', (int)Context::getContext()->language->id, null, (int)$this->order->id_shop) != "")
+		if(Configuration::get('PS_EDS') && Configuration::get('PS_EDS_SAMPLE_TEXT', (int)Context::getContext()->language->id, null, (int)$this->order->id_shop) != "")
 		{
-			$sample_text = Configuration::get('PS_ADS_SAMPLE_TEXT', (int)Context::getContext()->language->id, null, (int)$this->order->id_shop);
+			$sample_text = Configuration::get('PS_EDS_SAMPLE_TEXT', (int)Context::getContext()->language->id, null, (int)$this->order->id_shop);
 		}
 
 		$carrier = new Carrier($this->order->id_carrier);
@@ -112,12 +117,12 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 	{
 		// set default slip
 		$file = 'delivery-slip';
-		if(Configuration::get('PS_ADS')) {
+		if(Configuration::get('PS_EDS')) {
 			if($order_template = $this->getOrderTemplate($id_order) ) // get slip specific for order
 			{
 				return $this->getTemplate($order_template);
 			}
-			$file = Configuration::get('PS_DELIVERY_MODEL'); // set default slip set by ads settings
+			$file = Configuration::get('PS_DELIVERY_MODEL'); // set default slip set by eds settings
 		}
 
 		// try to fetch the iso template
@@ -157,7 +162,10 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 	 */
 	public function getFilename()
 	{
-		return Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_invoice->id) . ($this->delivery_number ? '-' .$this->delivery_number : '')  .'.pdf';
+		if(Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DELIVERED') )
+			return Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_invoice->id) . '-' . $this->order_invoice->delivery_number .'.pdf';
+		else
+			return Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_invoice->id) .'.pdf';
 	}
 }
 

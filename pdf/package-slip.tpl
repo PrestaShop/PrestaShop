@@ -87,8 +87,8 @@
 		<td style="width: 100%; text-align: right">
 			<table style="width: 100%">
 				<tr style="line-height:6px;">
-					{if Configuration::get('PS_ADS_IMG_PS')}<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 10%">{l s='IMAGE' pdf='true'}</td>{/if}
-					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: {if Configuration::get('PS_ADS_IMG_PS')}35%{else}45%{/if}">{l s='PRODUCT NAME' pdf='true'}</td>
+					{if Configuration::get('PS_EDS_IMG_PS')}<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 10%">{l s='IMAGE' pdf='true'}</td>{/if}
+					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: {if Configuration::get('PS_EDS_IMG_PS')}35%{else}45%{/if}">{l s='PRODUCT NAME' pdf='true'}</td>
 					<td style="background-color: #4D4D4D; color: #FFF; text-align: left; font-weight: bold; width: 15%">{l s='REFERENCE' pdf='true'}</td>
 					<td style="background-color: #4D4D4D; color: #FFF; text-align: center; font-weight: bold; width: 10%">{l s='QTY TO SHIP' pdf='true'}</td>
 					<td style="background-color: #4D4D4D; color: #FFF; text-align: center; font-weight: bold; width: 10%">{l s='QTY NOT PACKED' pdf='true'}</td>
@@ -96,8 +96,8 @@
 				</tr>
 				{foreach $order_details as $product}
 				{cycle values='#FFF,#DDD' assign=bgcolor}
-				<tr style="line-height:6px;background-color:{$bgcolor};" {if Configuration::get('PS_ADS_IMG_PS') && isset($product.image) && $product.image->id && isset($product.image_size)}height="{$product['image_size'][1]}"{/if}>
-					{if Configuration::get('PS_ADS_IMG_PS')}<td style="text-align: left;">{if isset($product.image) && $product.image->id}{$product.image_tag}{/if}</td>{/if}
+				<tr style="line-height:6px;background-color:{$bgcolor};" {if Configuration::get('PS_EDS_IMG_PS') && isset($product.image) && $product.image->id && isset($product.image_size)}height="{$product['image_size'][1]}"{/if}>
+					{if Configuration::get('PS_EDS_IMG_PS')}<td style="text-align: left;">{if isset($product.image) && $product.image->id}{$product.image_tag}{/if}</td>{/if}
 					<td style="text-align: left;">{$product.product_name}</td>
 					<td style="text-align: left;">
 						{if empty($product.product_reference)}

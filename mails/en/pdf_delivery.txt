@@ -1,0 +1,6 @@
+Hello {firstname} {lastname}
+
+Here is a copy of your delivery slip
+
+Regards,
+{shop_name} powered by PrestaShop™

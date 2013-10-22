@@ -50,8 +50,18 @@
 	<li><strong>{l s='Payment method'}</strong> <span class="color-myaccount">{$order->payment|escape:'htmlall':'UTF-8'}</span></li>
 	{if $invoice AND $invoiceAllowed}
 	<li>
+	{if Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DELIVERD')}
+		{foreach $invoices item=pdfInvoice}
+			<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
+			<a target="_blank" href="{$link->getPageLink('pdf-invoice', true)}?id_order_invoice={$pdfInvoice->number|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}">
+			{l s='Invoice for Delivery Slip'} {$pdfInvoice->delivery_number}</a>
+			<br>
+		{/foreach}
+	{else}
 		<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
-		<a href="{$link->getPageLink('pdf-invoice', true)}?id_order={$order->id|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}" data-ajax="false">{l s='Download your invoice as a PDF file.'}</li>
+			<a href="{$link->getPageLink('pdf-invoice', true)}?id_order={$order->id|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}" data-ajax="false">{l s='Download your invoice as a PDF file.'}
+		{/if}
+	{/if}
 	</li>
 	{/if}
 	{if $order->recyclable}
@@ -89,11 +99,20 @@
 {* > TO CHECK ==========================*}
 {if $invoice AND $invoiceAllowed}
 <p>
-	<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
-	{if $is_guest}
-		<a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order->id}&amp;secure_key=$order->secure_key")|escape:'html'}" >{l s='Download your invoice as a PDF file.'}</a>
+	{if Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DELIVERD')}
+		{foreach $invoices item=pdfInvoice}
+			<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
+			<a target="_blank" href="{$link->getPageLink('pdf-invoice', true)}?id_order_invoice={$pdfInvoice->number|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}">
+			{l s='Invoice for Delivery Slip'} {$pdfInvoice->delivery_number}</a>
+			<br>
+		{/foreach}
 	{else}
-		<a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order->id}")|escape:'html'}" >{l s='Download your invoice as a PDF file.'}</a>
+		<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
+		{if $is_guest}
+			<a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order->id}&amp;secure_key=$order->secure_key")|escape:'html'}" >{l s='Download your invoice as a PDF file.'}</a>
+		{else}
+			<a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order->id}")|escape:'html'}" >{l s='Download your invoice as a PDF file.'}</a>
+		{/if}
 	{/if}
 </p>
 {/if}
@@ -198,6 +217,7 @@
 </ul>
 <!-- /order details -->
 
+{if Configuration::get('PS_EDS')}
 <!-- order delivery details -->
 <h3 class="bg">{l s='Order Deliveries'}</h3>
 {if !$is_guest}<form action="{$link->getPageLink('order-follow', true)|escape:'html'}" method="post">{/if}
@@ -219,6 +239,7 @@
 {/foreach}
 </ul>
 <!-- /order delivery details -->
+{/if}
 
 {if $order->getShipping()|count > 0}
 <h3 class="bg">{l s='Carrier'}</h3>

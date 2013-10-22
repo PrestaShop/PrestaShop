@@ -1585,7 +1585,7 @@ class OrderCore extends ObjectModel
 			$delivery->is_delivery = true;
 		}
 		$order_slips = $this->getOrderSlipsCollection()->getResults();
-		if(Configuration::get('PS_ADS')) {
+		if(Configuration::get('PS_EDS')) {
 			$package_slip = $this->getPackageSlipCollection()->getResults();
 			foreach ($package_slip as $k => $package)
 			{
@@ -1610,7 +1610,7 @@ class OrderCore extends ObjectModel
 		}
 		
 		$documents = array_merge($invoices, $order_slips, $delivery_slips);
-		if(Configuration::get('PS_ADS')) {
+		if(Configuration::get('PS_EDS')) {
 			$documents = array_merge($documents, $package_slip);
 		}
 		usort($documents, 'sortDocuments');
@@ -1692,7 +1692,7 @@ class OrderCore extends ObjectModel
 	 */
 	public function getDeliverySlipsCollection()
 	{
-		if(Configuration::get('PS_ADS')) {
+		if(Configuration::get('PS_EDS')) {
 			$order_deliverys = new Collection('OrderDelivery');
 			$order_deliverys->where('id_order', '=', $this->id);
 		} else {
@@ -2032,11 +2032,11 @@ class OrderCore extends ObjectModel
 	}
 	
 	/**
-	 * Return number for next delivery box for ads
+	 * Return number for next delivery box for eds
 	 * 
 	 */	
 	
-	public function getAdsDeliverySlipNr()
+	public function getEdsDeliverySlipNr()
 	{
 		$nr = Db::getInstance()->executeS('
 		SELECT MAX(delivery_id) as delivery_id
