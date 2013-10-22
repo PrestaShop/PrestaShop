@@ -334,7 +334,7 @@ class HelperListCore extends Helper
 			'view' => in_array('view', $this->actions),
 			'edit' => in_array('edit', $this->actions),
 			'has_actions' => !empty($this->actions),
-			'has_bulk_actions' => !empty($this->bulk_actions),
+			'has_bulk_actions' =>  count($this->_list) <= 1 ? false : !empty($this->bulk_actions),
 			'list_skip_actions' => $this->list_skip_actions,
 			'row_hover' => $this->row_hover,
 		)));
@@ -605,10 +605,11 @@ class HelperListCore extends Helper
 			'list_total' => $this->listTotal,
 			'token' => $this->token,
 			'table' => $this->table,
-			'bulk_actions' => (count($this->_list) <= 1 && !$has_value) ? array() : $this->bulk_actions,
+			'bulk_actions' => $this->bulk_actions,
 			'show_toolbar' => $this->show_toolbar,
 			'toolbar_scroll' => $this->toolbar_scroll,
 			'toolbar_btn' => $this->toolbar_btn,
+			'has_bulk_actions' => (count($this->_list) <= 1 && !$has_value) ? false : !empty($this->bulk_actions),
 		));
 
 		$this->header_tpl->assign(array_merge($this->tpl_vars, array(
@@ -626,7 +627,6 @@ class HelperListCore extends Helper
 			'id_cat' => $id_cat,
 			'shop_link_type' => $this->shopLinkType,
 			'has_actions' => !empty($this->actions),
-			'has_bulk_actions' => (count($this->_list) <= 1 && !$has_value) ? false : !empty($this->bulk_actions),
 			'table_id' => isset($table_id) ? $table_id : null,
 			'table_dnd' => isset($table_dnd) ? $table_dnd : null,
 			'name' => isset($name) ? $name : null,
