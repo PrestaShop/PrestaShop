@@ -27,7 +27,7 @@
 	<header class="panel-heading">
 		<i class="icon-bar-chart"></i> {l s='Dashboard'}
 		<span class="panel-heading-action">
-			<a class="list-toolbar-btn" href="javascript:void(0);" title="configure">
+			<a class="list-toolbar-btn" href="{$link->getAdminLink('AdminDashboard')}&profitability_conf=1" title="configure">
 				<i class="process-icon-configure"></i>
 			</a>
 			<a class="list-toolbar-btn" href="#"  onclick="refreshDashboard('dashtrends'); return false;"  title="refresh">
