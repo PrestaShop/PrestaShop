@@ -325,8 +325,8 @@ class Dashtrends extends Module
 		$data = array('chart_type' => 'line_chart_trends', 'data' => array());
 		foreach ($charts as $key => $title)
 		{
-			$data['data'][] = array('key' => $title, 'values' => $chart_data[$key], 'disabled' => ($key == 'sales' ? false : true));
-			$data['data'][] = array('key' => sprintf($this->l('%s (previous period)'), $title), 'values' => $chart_data_compare[$key], 'disabled' => ($key == 'sales' ? false : true));
+			$data['data'][] = array('id' => $key, 'key' => $title, 'values' => $chart_data[$key], 'disabled' => ($key == 'sales' ? false : true));
+			$data['data'][] = array('id' => $key.'_compare', 'key' => sprintf($this->l('%s (previous period)'), $title), 'values' => $chart_data_compare[$key], 'disabled' => ($key == 'sales' ? false : true));
 		}
 		return $data;
 	}
