@@ -126,7 +126,7 @@
 	{/if}
 	{if $DASHACTIVITY_SHOW_CUSTOMERS}
 	<section id="dash_customers" class="loading">
-		<header><i class="icon-user"></i> {l s='Customers & Newsletters' mod='dashactivity'}</header>
+		<header><i class="icon-user"></i> {l s='Customers & Newsletters' mod='dashactivity'} <span class="subtitle small" id="customers-newsletters-subtitle"><span></header>
 		<ul class="data_list">
 			<li>
 				<span class="data_label">{l s='New Customers' mod='dashactivity'}</span>
@@ -151,7 +151,7 @@
 	{/if}
 	{if $DASHACTIVITY_SHOW_TRAFFIC}
 	<section id="dash_traffic" class="loading">
-		<header><i class="icon-globe"></i> {l s='Traffic' mod='dashactivity'}</header>
+		<header><i class="icon-globe"></i> {l s='Traffic' mod='dashactivity'}  <span class="subtitle small" id="traffic-subtitle"><span></header>
 		<ul class="data_list">
 			<li>
 				<span class="data_label">{l s='Visits' mod='dashactivity'}</span>
@@ -177,3 +177,8 @@
 	</section>
 	{/if}
 </section>
+
+<script type="text/javascript">
+	date_subtitle = "{$date_subtitle}";
+	date_format   = "{$date_format}";
+</script>

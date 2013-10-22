@@ -51,6 +51,7 @@ Date.parseDate = function(date, format) {
 			switch(formatParts[i]) {
 				case 'dd':
 				case 'd':
+				case 'j':
 				date.setDate(parseInt(parts[i], 10)||1);
 				break;
 
@@ -121,6 +122,7 @@ Date.prototype.format = function(format) {
 		switch(formatParts[i]) {
 			case 'dd':
 			case 'd':
+			case 'j':
 			result += this.getDate() + formatSeparator;
 			break;
 

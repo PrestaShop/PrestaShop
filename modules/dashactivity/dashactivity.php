@@ -65,12 +65,22 @@ class Dashactivity extends Module
 	public function hookDisplayBackOfficeHeader()
 	{
 		if (get_class($this->context->controller) == 'AdminDashboardController')
+		{
+			if (method_exists($this->context->controller, 'addJquery'))
+				$this->context->controller->addJquery();
+
 			$this->context->controller->addJs($this->_path.'views/js/'.$this->name.'.js');
+			$this->context->controller->addJs(_PS_JS_DIR_.'date.js');
+		}
 	}
 
 	public function hookDashboardZoneOne($params)
 	{
-		$this->context->smarty->assign(array_merge(array('dashactivity_config_form' => $this->renderConfigForm()), $this->getConfigFieldsValues()));
+		$this->context->smarty->assign(array_merge(array(
+			'dashactivity_config_form' => $this->renderConfigForm(),
+			'date_subtitle' => $this->l('From %s to %s'),
+			'date_format' => $this->context->language->date_format_lite
+		), $this->getConfigFieldsValues()));
 		return $this->display(__FILE__, 'dashboard_zone_one.tpl');
 	}
 	
