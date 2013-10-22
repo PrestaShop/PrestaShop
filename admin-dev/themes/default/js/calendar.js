@@ -179,6 +179,7 @@ function setDayPeriod() {
 	$('#date-start').trigger('change');
 
 	updatePickerFromInput();
+	$('button[name="submitDateRange"]').click();
 }
 
 function setPreviousDayPeriod() {
@@ -189,6 +190,7 @@ function setPreviousDayPeriod() {
 	$('#date-start').trigger('change');
 
 	updatePickerFromInput();
+	$('button[name="submitDateRange"]').click();
 }
 
 function setMonthPeriod() {
@@ -199,17 +201,19 @@ function setMonthPeriod() {
 	$('#date-start').trigger('change');	
 
 	updatePickerFromInput();
+	$('button[name="submitDateRange"]').click();
 }
 
 function setPreviousMonthPeriod() {
 	date = new Date();
-	date = date.subMonths(1);
+	date = new Date(date.getFullYear(), date.getMonth(), 0);
 	$("#date-end").val(date.format($("#date-end").data('date-format')));
 	date = new Date(date.setDate(1));
 	$("#date-start").val(date.format($("#date-start").data('date-format')));
 	$('#date-start').trigger('change');	
 
 	updatePickerFromInput();
+	$('button[name="submitDateRange"]').click();
 }
 
 function setYearPeriod() {
@@ -220,6 +224,7 @@ function setYearPeriod() {
 	$('#date-start').trigger('change');
 
 	updatePickerFromInput();
+	$('button[name="submitDateRange"]').click();
 }
 
 function setPreviousYearPeriod() {
@@ -231,6 +236,7 @@ function setPreviousYearPeriod() {
 	$('#date-start').trigger('change');
 
 	updatePickerFromInput();
+	$('button[name="submitDateRange"]').click();
 }
 
 
