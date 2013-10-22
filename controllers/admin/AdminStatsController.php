@@ -408,7 +408,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
 		$orders = Db::getInstance()->ExecuteS('
 		SELECT
-			`invoice_date`,
+			LEFT(`invoice_date`, 10) as date,
 			total_paid_tax_incl / o.conversion_rate as total_paid_tax_incl,
 			total_shipping_tax_excl / o.conversion_rate as total_shipping_tax_excl,
 			o.module,
@@ -424,21 +424,21 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		{
 			// Add flat fees for this order
 			$flat_fees = Configuration::get('CONF_ORDER_FIXED') + (
-				$order['id_currency'] == Configuration::get('PS_DEFAULT_CURRENCY')
+				$order['id_currency'] == Configuration::get('PS_CURRENCY_DEFAULT')
 					? Configuration::get('CONF_'.strtoupper($order['module']).'_FIXED')
 					: Configuration::get('CONF_'.strtoupper($order['module']).'_FIXED_FOREIGN')
 				);
 
 			// Add variable fees for this order
 			$var_fees = $order['total_paid_tax_incl'] * (
-				$order['id_currency'] == Configuration::get('PS_DEFAULT_CURRENCY')
+				$order['id_currency'] == Configuration::get('PS_CURRENCY_DEFAULT')
 					? Configuration::get('CONF_'.strtoupper($order['module']).'_VAR')
 					: Configuration::get('CONF_'.strtoupper($order['module']).'_VAR_FOREIGN')
 				) / 100;
 
 			// Add shipping fees for this order
 			$shipping_fees = $order['total_shipping_tax_excl'] * (
-				$order['id_country'] == Configuration::get('PS_DEFAULT_COUNTRY')
+				$order['id_country'] == Configuration::get('PS_COUNTRY_DEFAULT')
 					? Configuration::get('CONF_'.strtoupper($order['carrier_reference']).'_SHIP')
 					: Configuration::get('CONF_'.strtoupper($order['carrier_reference']).'_SHIP_OVERSEAS')
 				) / 100;
@@ -446,9 +446,9 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			// Tally up these fees
 			if ($granularity == 'day')
 			{
-				if (!isset($expenses[strtotime($order['invoice_date'])]))
-					$expenses[strtotime($order['invoice_date'])] = 0;
-				$expenses[strtotime($order['invoice_date'])] += $flat_fees + $var_fees + $shipping_fees;
+				if (!isset($expenses[strtotime($order['date'])]))
+					$expenses[strtotime($order['date'])] = 0;
+				$expenses[strtotime($order['date'])] += $flat_fees + $var_fees + $shipping_fees;
 			}
 			else
 				$expenses += $flat_fees + $var_fees + $shipping_fees;
