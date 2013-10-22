@@ -26,7 +26,7 @@
 </div>
 <div class="row">
 	<div class="col-lg-8">
-		{if $bulk_actions}
+		{if $bulk_actions && $has_bulk_actions}
 		<div class="btn-group bulk-actions">
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 				{l s='Bulk actions'} <span class="caret"></span>
