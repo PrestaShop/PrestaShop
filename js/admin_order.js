@@ -666,9 +666,7 @@ function init()
 	$('button.submitProductChange').unbind('click');
 	$('button.submitProductChange').click(function(e) {
 		e.preventDefault();
-		//console.log($(this).closest('tr.product-line-row').find('td .edit_product_quantity').val());
-		//console.log($(this).closest('tr.product-line-row').find('td .edit_product_price').val());
-		//return false;
+
 		if ($(this).closest('tr.product-line-row').find('td .edit_product_quantity').val() <= 0)
 		{
 			jAlert(txt_add_product_no_product_quantity);
