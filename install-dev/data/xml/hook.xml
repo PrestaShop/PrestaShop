@@ -68,7 +68,7 @@
       <name>actionOrderStatusUpdate</name><title>Order status update - Event</title><description>This hook launches modules when the status of an order changes.</description>
     </hook>
     <hook id="displayAdminOrder" live_edit="0">
-      <name>displayAdminOrder</name><title>Display new elements in the Back Office, tab AdminOrder</title><description>This hook launches modules when the AdminOrder" tab is displayed in the Back Office"</description>
+      <name>displayAdminOrder</name><title>Display new elements in the Back Office, tab AdminOrder</title><description>This hook launches modules when the AdminOrder tab is displayed in the Back Office</description>
     </hook>
     <hook id="displayFooter" live_edit="0">
       <name>displayFooter</name><title>Footer</title><description>This hook displays new blocks in the footer</description>
@@ -77,7 +77,7 @@
       <name>displayPDFInvoice</name><title>PDF Invoice</title><description>This hook allows you to display additional information on PDF invoices</description>
     </hook>
     <hook id="displayAdminCustomers" live_edit="0">
-      <name>displayAdminCustomers</name><title>Display new elements in the Back Office, tab AdminCustomers</title><description>This hook launches modules when the AdminCustomers" tab is displayed in the Back Office"</description>
+      <name>displayAdminCustomers</name><title>Display new elements in the Back Office, tab AdminCustomers</title><description>This hook launches modules when the AdminCustomers tab is displayed in the Back Office</description>
     </hook>
     <hook id="displayOrderConfirmation" live_edit="0">
       <name>displayOrderConfirmation</name><title>Order confirmation page</title><description>This hook is called within an order's confirmation page</description>
@@ -279,6 +279,12 @@
     </hook>
     <hook id="displayHomeTabContent" live_edit="1">
       <name>displayHomeTabContent</name><title>Home Page Tabs Content</title><description>This hook displays new elements on the homepage tabs content</description>
-    </hook>	
+    </hook>
+    <hook id="displayBackOfficeCategory" live_edit="0">
+      <name>displayBackOfficeCategory</name><title>Display new elements in the Back Office, tab AdminCategories</title><description>This hook launches modules when the AdminCategories tab is displayed in the Back Office</description>
+    </hook>
+     <hook id="actionBackOfficeCategory" live_edit="0">
+      <name>actionBackOfficeCategory</name><title>Process new elements in the Back Office, tab AdminCategories</title><description>This hook process modules when the AdminCategories tab is displayed in the Back Office</description>
+    </hook>
   </entities>
 </entity_hook>

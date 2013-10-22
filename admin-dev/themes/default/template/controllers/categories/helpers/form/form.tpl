@@ -64,6 +64,7 @@
 				});
 			});
 		</script>
+		{$displayBackOfficeCategory}
 	{else}
 		{$smarty.block.parent}
 	{/if}

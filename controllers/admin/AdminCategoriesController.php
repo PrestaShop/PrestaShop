@@ -494,9 +494,10 @@ class AdminCategoriesControllerCore extends AdminController
 				'class' => 'btn-default'
 			)
 		);
-		
+
 		$this->tpl_form_vars['shared_category'] = Validate::isLoadedObject($obj) && $obj->hasMultishopEntries(); 
 		$this->tpl_form_vars['PS_ALLOW_ACCENTED_CHARS_URL'] = (int)Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
+		$this->tpl_form_vars['displayBackOfficeCategory'] = Hook::exec('displayBackOfficeCategory');
 		
 		// Display this field only if multistore option is enabled
 		if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && Tools::isSubmit('add'.$this->table.'root'))
@@ -574,6 +575,8 @@ class AdminCategoriesControllerCore extends AdminController
 			if (Tools::isSubmit('forcedeleteImage'))
 				Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getAdminTokenLite('AdminCategories').'&conf=7');
 		}
+
+		Hook::exec('actionBackOfficeCategory');
 		
 		return parent::postProcess();
 	}

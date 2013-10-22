@@ -33,7 +33,7 @@ class BlockCategories extends Module
 	{
 		$this->name = 'blockcategories';
 		$this->tab = 'front_office_features';
-		$this->version = '2.0';
+		$this->version = '2.1';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -54,6 +54,8 @@ class BlockCategories extends Module
 			!$this->registerHook('categoryDeletion') ||
 			!$this->registerHook('actionAdminMetaControllerUpdate_optionsBefore') ||
 			!$this->registerHook('actionAdminLanguagesControllerStatusBefore') ||
+			!$this->registerHook('displayBackOfficeCategory') ||
+			!$this->registerHook('actionBackOfficeCategory') ||
 			!Configuration::updateValue('BLOCK_CATEG_MAX_DEPTH', 4) ||
 			!Configuration::updateValue('BLOCK_CATEG_DHTML', 1))
 			return false;
@@ -111,6 +113,56 @@ class BlockCategories extends Module
 					 'name' => $resultIds[$id_category]['name'], 'desc'=> $resultIds[$id_category]['description'],
 					 'children' => $children);
 		return $return;
+	}
+
+	public function hookDisplayBackOfficeCategory($params)
+	{
+		$this->smarty->assign(array(
+			'name'    => 'thumb',
+			'images'  => array()
+		));	
+		
+		return $this->display(__FILE__, 'views/blockcategories_admin.tpl');
+	}
+
+	public function hookActionBackOfficeCategory($params)
+	{
+		$total_errors = array();
+
+		for ($i=0; $i<3; $i++)
+			if (isset($_FILES['thumb-'.$i]) && $_FILES['thumb-'.$i]['size'] > 0)
+			{
+				$errors = array();
+				// Check image validity
+				$max_size = (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE');
+
+				if ($error = ImageManager::validateUpload($_FILES['thumb-'.$i], Tools::getMaxUploadSize($max_size)))
+					$errors[] = $error;
+
+				$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
+
+				if (!$tmp_name)
+					$errors[] = Tools::displayError('Invalid Temporary directory');
+
+				if (!move_uploaded_file($_FILES['thumb-'.$i]['tmp_name'], $tmp_name))
+					$errors[] = Tools::displayError('Error uploading thumbnail image');
+
+				// Evaluate the memory required to resize the image: if it's too much, you can't resize it.
+				if (!ImageManager::checkImageMemoryLimit($tmp_name))
+					$errors[] = Tools::displayError('Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings. ');
+
+				// Copy new image
+				if (empty($errors) && !ImageManager::resize($tmp_name, _PS_CAT_IMG_DIR_.Tools::getValue('id_category').'-'.$i.'_thumb.jpg'))
+					$errors[] = Tools::displayError('An error occurred while uploading the image.');
+
+				if (count($errors))
+					$total_errors = array_merge($total_errors, $errors);
+
+				unlink($tmp_name);
+			}
+
+		if (count($total_errors))
+			;//TODO : Show errors
 	}
 
 	public function hookLeftColumn($params)
