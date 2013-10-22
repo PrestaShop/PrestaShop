@@ -128,7 +128,7 @@ class FeatureValueCore extends ObjectModel
 				return $tab['value'];
 	}
 
-	public static function addFeatureValueImport($id_feature, $value, $id_product, $id_lang = null, $custom = false)
+	public static function addFeatureValueImport($id_feature, $value, $id_product = null, $id_lang = null, $custom = false)
 	{
 		$id_feature_value = false;
 		if (!is_null($id_product) && $id_product)
