@@ -64,7 +64,7 @@
 				{l s='Be careful! Manually uploaded thumbnails will be erased and replaced by automatically generated thumbnails.'}
 			</div>
 			
-			<div class="row">
+			<div class="form-group">
 				<label class="control-label col-lg-3">{l s='Select an image'}</label>
 				<div class="col-lg-9">
 					<select name="type" onchange="changeFormat(this)">
@@ -76,20 +76,19 @@
 				</div>
 			</div>
 
-			<div class="row">
 			{foreach $types AS $k => $type}
-				<label class="control-label col-lg-3 second-select format_{$k}" style="display:none;">{l s='Select a format'}</label>
-				<div class="col-lg-9 second-select margin-form format_{$k}" style="display:none;">
-					<select class="second-select format_{$k}" name="format_{$k}">
+			<div class="form-group second-select format_{$k}" style="display:none;">			
+				<label class="control-label col-lg-3">{l s='Select a format'}</label>
+				<div class="col-lg-9 margin-form">
+					<select name="format_{$k}">
 						<option value="all">{l s='All'}</option>
 						{foreach $formats[$k] AS $format}
 							<option value="{$format['id_image_type']}">{$format['name']}</option>
 						{/foreach}
 					</select>
 				</div>
-			{/foreach}
 			</div>
-
+			{/foreach}
 			<script>
 				function changeFormat(elt)
 				{ldelim}
@@ -98,7 +97,7 @@
 				{rdelim}
 			</script>
 
-			<div class="row">
+			<div class="form-group">
 				<label class="control-label col-lg-3">
 					{l s='Erase previous images'}
 				</label>
@@ -117,11 +116,15 @@
 								<span class="slide-button btn btn-default"></span>
 							</span>
 						</div>
-						{l s='Select "No" only if your server timed out and you need to resume the regeneration.'}
+					</div>
+					<div class="row">
+						<div class="col-lg-9">
+							<p class="help-block">{l s='Select "No" only if your server timed out and you need to resume the regeneration.'}</p>
+						</div>
 					</div>
 				</div>
 			</div>
-			<div class="row">
+			<div class="form-group">
 				<div class="col-lg-9 col-lg-push-3">
 					<input type="Submit" name="submitRegenerate{$table}" value="{l s='Regenerate thumbnails'}" class="btn btn-default" onclick="return confirm('{l s='Are you sure?'}');" />
 				</div>
