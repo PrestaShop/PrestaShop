@@ -117,9 +117,12 @@ class BlockCategories extends Module
 
 	public function hookDisplayBackOfficeCategory($params)
 	{
+		for ($i=0;$i<3;$i++)
+			$images[$i] = ImageManager::thumbnail(_PS_CAT_IMG_DIR_.Tools::getValue('id_category').'-'.$i.'_thumb.jpg', $this->context->controller->table.'_'.(int)Tools::getValue('id_category').'-'.$i.'_thumb.jpg', 100, 'jpg', true);
+
 		$this->smarty->assign(array(
 			'name'    => 'thumb',
-			'images'  => array()
+			'images'  => $images
 		));	
 		
 		return $this->display(__FILE__, 'views/blockcategories_admin.tpl');
@@ -152,7 +155,7 @@ class BlockCategories extends Module
 					$errors[] = Tools::displayError('Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings. ');
 
 				// Copy new image
-				if (empty($errors) && !ImageManager::resize($tmp_name, _PS_CAT_IMG_DIR_.Tools::getValue('id_category').'-'.$i.'_thumb.jpg'))
+				if (empty($errors) && !ImageManager::resize($tmp_name, _PS_CAT_IMG_DIR_.(int)Tools::getValue('id_category').'-'.$i.'_thumb.jpg'))
 					$errors[] = Tools::displayError('An error occurred while uploading the image.');
 
 				if (count($errors))
@@ -161,8 +164,15 @@ class BlockCategories extends Module
 				unlink($tmp_name);
 			}
 
+		if (($id_thumb = Tools::getValue('deleteThumb', false)) !== false)
+		{
+			if (file_exists(_PS_CAT_IMG_DIR_.(int)Tools::getValue('id_category').'-'.(int)$id_thumb.'_thumb.jpg')
+				&& !unlink(_PS_CAT_IMG_DIR_.(int)Tools::getValue('id_category').'-'.(int)$id_thumb.'_thumb.jpg'))
+				$this->context->controller->errors[] = Tools::displayError('Error while delet');
+		}
+
 		if (count($total_errors))
-			;//TODO : Show errors
+			$this->context->controller->errors = array_merge($this->context->controller->errors, $total_errors);
 	}
 
 	public function hookLeftColumn($params)
