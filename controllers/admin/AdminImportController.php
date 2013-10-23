@@ -958,7 +958,7 @@ class AdminImportControllerCore extends AdminController
 			}
 			elseif (isset($category->parent) && is_string($category->parent))
 			{
-				$category_parent = Category::searchByName($default_language_id, $category->parent, true);
+				$category_parent = Category::searchByName($id_lang, $category->parent, true);
 				if ($category_parent['id_category'])
 				{
 					$category->id_parent = (int)$category_parent['id_category'];
@@ -979,7 +979,7 @@ class AdminImportControllerCore extends AdminController
 					{
 						$this->errors[] = sprintf(
 							Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-							$category_to_create->name[$default_language_id],
+							$category_to_create->name[$id_lang],
 							(isset($category_to_create->id) && !empty($category_to_create->id))? $category_to_create->id : 'null'
 						);
 						$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
@@ -1021,8 +1021,8 @@ class AdminImportControllerCore extends AdminController
 				($lang_field_error = $category->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && empty($this->errors))
 			{
 				$category_already_created = Category::searchByNameAndParentCategoryId(
-					$default_language_id,
-					$category->name[$default_language_id],
+					$id_lang,
+					$category->name[$id_lang],
 					$category->id_parent
 				);
 
@@ -1286,7 +1286,7 @@ class AdminImportControllerCore extends AdminController
 					}
 					else if (is_string($value) && !empty($value))
 					{
-						$category = Category::searchByName($default_language_id, trim($value), true);
+						$category = Category::searchByName($id_lang, trim($value), true);
 						if ($category['id_category'])
 							$product->id_category[] = (int)$category['id_category'];
 						else
@@ -1949,6 +1949,9 @@ class AdminImportControllerCore extends AdminController
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
 		$default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');
+		$id_lang = Language::getIdByIso(Tools::getValue('iso_lang'));
+		if (!Validate::isUnsignedId($id_lang))
+			$id_lang = $default_language_id;
 		AdminImportController::setLocale();
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
@@ -1976,31 +1979,40 @@ class AdminImportControllerCore extends AdminController
 				$customer_exist = true;
 				$customer_groups = $customer->getGroups();
 				$addresses = $customer->getAddresses((int)Configuration::get('PS_LANG_DEFAULT'));
-				foreach ($customer_groups as $key => $group)
-					if ($group == $customer->id_default_group)
-						unset($customer_groups[$key]);
 			}
+
+			if (!isset($customer_groups) || count($customer_groups) == 0)
+				$customer_groups = array(0 => Configuration::get('PS_CUSTOMER_GROUP'));
 
 			// Group Importation
 			if (isset($info['group']) && !empty($info['group']))
 			{
-				if (!isset($customer_groups))
-					$customer_groups = array();
-
-				$myGroup = Group::searchByName($default_language_id, $info['group']);
-
-				if (!$myGroup)
+				foreach (explode($this->multiple_value_separator, $info['group']) as $key => $group)
 				{
-					$myGroup = new Group();
-					$myGroup->name = Array($default_language_id => $info['group']);
-					$myGroup->price_display_method = 1;
-					$myGroup->add();
-					$myGroup = Group::searchByName($default_language_id, $info['group']);
+					if(empty($group))
+						continue;
+					$id_group = false;
+					$myGroup = Group::searchByName($id_lang, $group);
+					if (isset($myGroup['id_group']) && $myGroup['id_group'])
+						$id_group = (int)$myGroup['id_group'];
+					if (!$id_group)
+					{
+						$myGroup = new Group();
+						$myGroup->name = Array($id_lang => $group);
+						if ($id_lang != $default_language_id)
+							$myGroup->name = array_merge($myGroup->name, array($default_language_id => $group));
+						$myGroup->price_display_method = 1;
+						$myGroup->add();
+						if (Validate::isLoadedObject($myGroup))
+							$id_group = (int)$myGroup->id;
+					}
+					if ($id_group)
+						$customer_groups[] = (int)$id_group;
 				}
-				if (isset($myGroup['0']['id_group']))
-					$customer_groups[] = $myGroup['0']['id_group'];
 			}
-
+			elseif(empty($info['group']) && isset($customer->id) && $customer->id)
+				$customer_groups = array(0 => Configuration::get('PS_CUSTOMER_GROUP'));
+				
 			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $customer);
 
 			if ($customer->passwd)
@@ -2037,7 +2049,7 @@ class AdminImportControllerCore extends AdminController
 			//set temporally for validate field
 			$customer->id_shop = $default_shop->id;
 			$customer->id_shop_group = $default_shop->getGroup()->id;
-
+			$customer_groups = array_flip(array_flip($customer_groups));
 			$res = true;
 			if (($field_error = $customer->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 				($lang_field_error = $customer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
@@ -2055,12 +2067,9 @@ class AdminImportControllerCore extends AdminController
 								$customer->id = $current_id_customer;
 								$res &= $customer->update();
 							}
-
 							else
 							{
 								$res &= $customer->add();
-								if (isset($customer_groups))
-									$customer->addGroups($customer_groups);
 								if (isset($addresses))
 									foreach ($addresses as $address)
 									{
@@ -2069,6 +2078,8 @@ class AdminImportControllerCore extends AdminController
 										Db::getInstance()->insert('address', $address);
 									}
 							}
+							if ($res && isset($customer_groups))
+								$customer->updateGroup($customer_groups);
 						}
 					}
 					else
@@ -2083,8 +2094,6 @@ class AdminImportControllerCore extends AdminController
 						else
 						{
 							$res &= $customer->add();
-							if (isset($customer_groups))
-									$customer->addGroups($customer_groups);
 							if (isset($addresses))
 								foreach ($addresses as $address)
 								{
@@ -2093,9 +2102,12 @@ class AdminImportControllerCore extends AdminController
 									Db::getInstance()->insert('address', $address);
 								}
 						}
+						if ($res && isset($customer_groups))
+							$customer->updateGroup($customer_groups);
 					}
 				}
 			}
+			unset($customer_groups);
 			$customer_exist = false;
 			if (!$res)
 			{
@@ -3088,3 +3100,4 @@ class AdminImportControllerCore extends AdminController
 		}
 	}
 }
+?>
