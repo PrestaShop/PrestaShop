@@ -8,10 +8,11 @@ body{
 	line-height: 18px
 }
 
+table{width:100%;}
+
 .table tbody > tr > td {
 	border:none;
-	padding-left:0;
-	padding-right:0;
+	padding:7px 0
 }
 
 td.space {width:20px;}
@@ -64,24 +65,28 @@ table.table-recap .conf_body td.total_amount{
 a{color: #337ff1}
 
 td.logo{
-	border-bottom: 4px solid #333333 !important
+	border-bottom: 4px solid #333333 !important;
 }
+
+p{margin:3px 0 7px 0;}
 
 span.title{
 	font-weight: 500;
 	font-size: 28px;
 	text-transform: uppercase;
+	line-height: 33px;
 }
 span.subtitle{
 	font-weight: 500;
 	font-size: 16px;
 	text-transform: uppercase;
+	line-height: 25px;
 }
 
 td.box{
 	background-color: #fbfbfb;
 	padding: 10px !important;
-	border: 1px solid #d6d4d4 !important
+	border: 1px solid #d6d4d4 !important;
 }
 
 td.box p{
