@@ -586,8 +586,7 @@ function init()
 
 	$('.edit_product_change_link').unbind('click');
 	$('.edit_product_change_link').click(function() {
-		$('.add_product_fields').hide();
-		$('.standard_refund_fields').hide();
+		$('.add_product_fields, .standard_refund_fields, .order_action').hide();
 		$('.edit_product_fields').show();
 		$('.cancel_product_change_link:visible').trigger('click');
 		closeAddProduct();
@@ -656,6 +655,7 @@ function init()
 		element_list.find('.edit_product_change_link').parent().show();
 		element_list.find('button.submitProductChange').hide();
 		element_list.find('.cancel_product_change_link').hide();
+		$('.order_action').show();
 		$('.standard_refund_fields').hide();
 		return false;
 	});
