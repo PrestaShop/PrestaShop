@@ -468,27 +468,34 @@ class AdminCountriesControllerCore extends AdminController
 
 	protected function displayValidFields()
 	{
-		$html = '<ul>';
+		$html_tabnav = '<ul class="nav nav-tabs" id="custom-address-fields">';
+		$html_tabcontent = '<div class="tab-content" >';
 
 		$object_list = AddressFormat::getLiableClass('Address');
 		$object_list['Address'] = null;
 
 		// Get the available properties for each class
+		$i = 0;
+		$class_tab_active = 'active';
 		foreach ($object_list as $class_name => &$object)
 		{
+			if ($i != 0){ $class_tab_active = ''; }
 			$fields = array();
-
-			$html .= '<li>
-				<a href="javascript:void(0);" onClick="displayAvailableFields(\''.$class_name.'\')">'.$class_name.'</a>';
+			$html_tabnav .= '<li class="'.$class_tab_active.'"">
+				<a href="#availableListFieldsFor_'.$class_name.'"><i class="icon-caret-down"></i>&nbsp;'.$class_name.'</a></li>';
+			
 			foreach (AddressFormat::getValidateFields($class_name) as $name)
-				$fields[] = '<a style="color:#4B8;" href="javascript:void(0);" class="addPattern" id="'.($class_name == 'Address' ? $name : $class_name.':'.$name).'">
-					'.$name.'</a>';
-			$html .= '
-				<div class="availableFieldsList" id="availableListFieldsFor_'.$class_name.'" style="width:300px;">
-				'.implode(', ', $fields).'</div></li>';
+				$fields[] = '<a href="javascript:void(0);" class="addPattern btn btn-default btn-xs" id="'.($class_name == 'Address' ? $name : $class_name.':'.$name).'">
+					<i class="icon-plus-sign"></i>&nbsp;'.$name.'</a>';
+			$html_tabcontent .= '
+				<div class="tab-pane availableFieldsList panel '.$class_tab_active.'" id="availableListFieldsFor_'.$class_name.'">
+				'.implode(' ', $fields).'</div>';
 			unset($object);
+			$i ++;
 		}
-		return $html .= '</ul>';
+		$html_tabnav .= '</ul>';
+		$html_tabcontent .= '</div>';
+		return $html = $html_tabnav.$html_tabcontent;
 	}
 
 	public static function displayCallPrefix($prefix)
@@ -496,5 +503,3 @@ class AdminCountriesControllerCore extends AdminController
 		return ((int)$prefix ? '+'.$prefix : '-');
 	}
 }
-
-
