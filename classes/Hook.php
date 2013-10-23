@@ -278,7 +278,7 @@ class HookCore extends ObjectModel
 	public static function getHookModuleExecList($hook_name = null)
 	{
 		$context = Context::getContext();
-		$cache_id = 'hook_module_exec_list_'.(int)$context->shop->id.((isset($context->customer)) ? '_'.$context->customer->id : '');
+		$cache_id = 'hook_module_exec_list_'.(isset($context->shop->id) ? '_'.$context->shop->id : '' ).((isset($context->customer)) ? '_'.$context->customer->id : '');
 		if (!Cache::isStored($cache_id) || $hook_name == 'displayPayment')
 		{
 			$frontend = true;
