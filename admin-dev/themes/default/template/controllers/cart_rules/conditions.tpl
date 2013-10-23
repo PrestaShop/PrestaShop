@@ -1,4 +1,4 @@
-<div class="row">
+<div class="form-group">
 	<label class="control-label col-lg-3">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='Optional: The cart rule will be available to everyone if you leave this field blank.'}">
@@ -13,7 +13,7 @@
 	</div>
 </div>
 
-<div class="row">
+<div class="form-group">
 	<label class="control-label col-lg-3">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='The default period is one month.'}">
@@ -38,7 +38,7 @@
 	</div>
 </div>
 
-<div class="row">
+<div class="form-group">
 	<label class="control-label col-lg-3">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='You can choose a minimum amount for the cart either with or without the taxes and shipping.'}">
@@ -80,7 +80,7 @@
 	</div>
 </div>
 
-<div class="row">
+<div class="form-group">
 	<label class="control-label col-lg-3">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='The cart rule will be applied to the first "X" customers only.'}">
@@ -93,7 +93,7 @@
 	</div>
 </div>
 
-<div class="row">
+<div class="form-group">
 	<label class="control-label col-lg-3">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='A customer will only be able to use the cart rule "X" time(s).'}">
@@ -108,14 +108,14 @@
 
 
 
-<div class="row">
+<div class="form-group">
 	<label class="control-label col-lg-3">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="">
 			{l s='Restrictions'}
 		</span>
 	</label>
-	<div class="col-lg-8">
+	<div class="col-lg-9">
 		{if $countries.unselected|@count + $countries.selected|@count > 1}
 		<div class="row">
 			<label class="checkbox">
@@ -124,9 +124,9 @@
 			</label>
 			<span class="help-block">{l s='This restriction applies to the country of delivery.'}</span>
 			<div id="country_restriction_div">
-				<table>
+				<table class="table">
 					<tr>
-						<td >
+						<td>
 							<p>{l s='Unselected countries'}</p>
 							<select id="country_select_1" multiple>
 								{foreach from=$countries.unselected item='country'}
@@ -152,12 +152,14 @@
 
 		{if $carriers.unselected|@count + $carriers.selected|@count > 1}
 		<div class="row">
-			<label class="checkbox">
-				<input type="checkbox" id="carrier_restriction" name="carrier_restriction" value="1" {if $carriers.unselected|@count}checked="checked"{/if} />
-				{l s='Carrier selection'}
-			</label>
+			<p class="checkbox">
+				<label>
+					<input type="checkbox" id="carrier_restriction" name="carrier_restriction" value="1" {if $carriers.unselected|@count}checked="checked"{/if} />
+					{l s='Carrier selection'}
+				</label>
+			</p>
 			<div id="carrier_restriction_div">
-				<table>
+				<table class="table">
 					<tr>
 						<td>
 							<p>{l s='Unselected carriers'}</p>
@@ -185,12 +187,14 @@
 
 		{if $groups.unselected|@count + $groups.selected|@count > 1}
 		<div class="row">
-			<label class="checkbox">
-				<input type="checkbox" id="group_restriction" name="group_restriction" value="1" {if $groups.unselected|@count}checked="checked"{/if} />
-				{l s='Customer group selection'}
-			</label>
+			<p class="checkbox">
+				<label>
+					<input type="checkbox" id="group_restriction" name="group_restriction" value="1" {if $groups.unselected|@count}checked="checked"{/if} />
+					{l s='Customer group selection'}
+				</label>
+			</p>
 			<div id="group_restriction_div">
-				<table>
+				<table class="table">
 					<tr>
 						<td>
 							<p>{l s='Unselected groups'}</p>
@@ -218,12 +222,14 @@
 
 		{if $cart_rules.unselected|@count + $cart_rules.selected|@count > 0}
 		<div class="row">
-			<label class="checkbox">
-				<input type="checkbox" id="cart_rule_restriction" name="cart_rule_restriction" value="1" {if $cart_rules.unselected|@count}checked="checked"{/if} />
-				{l s='Compatibility with other cart rules'}
-			</label>
+			<p class="checkbox">
+				<label>
+					<input type="checkbox" id="cart_rule_restriction" name="cart_rule_restriction" value="1" {if $cart_rules.unselected|@count}checked="checked"{/if} />
+					{l s='Compatibility with other cart rules'}
+				</label>
+			</p>
 			<div id="cart_rule_restriction_div" >
-				<table class="col-lg-12">
+				<table  class="table">
 					<tr>
 						<td>
 							<p>{l s='Uncombinable cart rules'}</p>
@@ -250,12 +256,14 @@
 		{/if}
 
 		<div class="row">
-			<label class="checkbox">
-				<input type="checkbox" id="product_restriction" name="product_restriction" value="1" {if $product_rule_groups|@count}checked="checked"{/if} />
-				{l s='Product selection'}
-			</label>
+			<p class="checkbox">
+				<label>
+					<input type="checkbox" id="product_restriction" name="product_restriction" value="1" {if $product_rule_groups|@count}checked="checked"{/if} />
+					{l s='Product selection'}
+				</label>
+			</p>
 			<div id="product_restriction_div">
-				<table id="product_rule_group_table" cellpadding="0" cellspacing="0">
+				<table id="product_rule_group_table" class="table">
 					{foreach from=$product_rule_groups item='product_rule_group'}
 						{$product_rule_group}
 					{/foreach}
@@ -268,13 +276,15 @@
 
 		{if $shops.unselected|@count + $shops.selected|@count > 1}
 		<div class="row">
-			<label class="checkbox">
-				<input type="checkbox" id="shop_restriction" name="shop_restriction" value="1" {if $shops.unselected|@count}checked="checked"{/if} />
-				{l s='Shop selection'}
-			</label>
+			<p class="checkbox">
+				<label>
+					<input type="checkbox" id="shop_restriction" name="shop_restriction" value="1" {if $shops.unselected|@count}checked="checked"{/if} />
+					{l s='Shop selection'}
+				</label>
+			</p>
 			<div id="shop_restriction_div">
 				<br/>
-				<table class="col-lg-9">
+				<table class="table">
 					<tr>
 						<td>
 							<p>{l s='Unselected shops'}</p>

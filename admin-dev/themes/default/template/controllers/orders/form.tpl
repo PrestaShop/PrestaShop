@@ -33,8 +33,8 @@
 	var currencies = new Array();
 	var id_currency = '';
 	var id_lang = '';
-	var txt_show_carts = '{l s='Show carts and orders for this customer.' js=1}';
-	var txt_hide_carts = '{l s='Hide carts and orders for this customer.' js=1}';
+	//var txt_show_carts = '{l s='Show carts and orders for this customer.' js=1}';
+	//var txt_hide_carts = '{l s='Hide carts and orders for this customer.' js=1}';
 	var defaults_order_state = new Array();
 	var customization_errors = false;
 	var pic_dir = '{$pic_dir}';
@@ -88,12 +88,12 @@
 		$('#show_old_carts').click(function() {
 			if ($('#old_carts_orders:visible').length == 0)
 			{
-				$(this).html(txt_hide_carts);
+				//$(this).html(txt_hide_carts);
 				$('#old_carts_orders').slideDown('slow');
 			}
 			else
 			{
-				$(this).html(txt_show_carts);
+				//$(this).html(txt_show_carts);
 				$('#old_carts_orders').slideUp('slow');
 			}
 			return false;
@@ -102,7 +102,7 @@
 			sendMailToCustomer();
 			return false;
 		});
-		$('#show_old_carts').click();
+		//$('#show_old_carts').click();
 		$('#payment_module_name').change();
 		$.ajaxSetup({ type:"post" });
 		$("#voucher").autocomplete('{$link->getAdminLink('AdminCartRules')|addslashes}', {
@@ -241,14 +241,36 @@
 			});
 		});
 		resetBind();
+
+		$('#products_found').hide();
+		$('#carts').hide();
+
+		$('#customer_part').on('click','button.setup-customer',function(e){
+			e.preventDefault();
+			setupCustomer($(this).data('customer'));
+			$(this).removeClass('setup-customer').addClass('change-customer').html('<i class="icon-refresh"></i>&nbsp;{l s="Change"}').blur();
+			$(this).closest('.customerCard').addClass('selected-customer');
+			$('.selected-customer .panel-heading').prepend('<i class="icon-ok text-success"></i>');
+			$('.customerCard').not('.selected-customer').remove();
+			$('#search-customer-form-group').hide();
+		});
+
+		$('#customer_part').on('click','button.change-customer',function(e){
+			e.preventDefault();
+			$('#search-customer-form-group').show();
+			$(this).blur();
+		});
+
 	});
+
+	
 
 	function resetBind()
 	{
 		$('.fancybox').fancybox({
 			'type': 'iframe',
-			'width': '60%',
-			'height': '100%'
+			'width': '90%',
+			'height': '90%'
 		});
 		/*$("#new_address").fancybox({
 			onClosed: useCart(id_cart)
@@ -444,24 +466,34 @@
 			{
 				if(res.found)
 				{
-					var html = '<ul class="nav">';
+					var html = '';
 					$.each(res.customers, function() {
-						html += '<li class="customerCard"><div class="customerName"><a class="fancybox" href="{$link->getAdminLink('AdminCustomers')}&id_customer='+this.id_customer+'&viewcustomer&liteDisplaying=1">'+this.firstname+' '+this.lastname+'</a><span class="customerBirthday"> '+((this.birthday != '0000-00-00') ? this.birthday : '')+'</span></div>';
-						html += '<div class="customerEmail"><a href="mailto:'+this.email+'">'+this.email+'</div>';
-						html += '<div class="col-lg-3"><a onclick="setupCustomer('+ this.id_customer+');return false;" href="#" class="id_customer btn btn-default">{l s='Choose'}</a></div></li>';
+						html += '<div class="customerCard col-lg-4">';
+						html += '<div class="panel">';
+						html += '<div class="panel-heading">'+this.firstname+' '+this.lastname;
+						html += '<span class="pull-right">#'+this.id_customer+'</span></div>';
+						html += '<span>'+this.email+'</span><br/>';
+						html += '<span class="text-muted">'+((this.birthday != '0000-00-00') ? this.birthday : '')+'</span><br/>';
+						html += '<div class="panel-footer">';
+						html += '<a href="{$link->getAdminLink('AdminCustomers')}&id_customer='+this.id_customer+'&viewcustomer&liteDisplaying=1" class="btn btn-default fancybox"><i class="icon-search"></i> {l s='Details'}</a>';
+						html += '<button type="button" data-customer="'+this.id_customer+'" class="setup-customer btn btn-default pull-right"><i class="icon-ok"></i> {l s='Choose'}</button>';
+						html += '</div>';
+						html += '</div>';
+						html += '</div>';
 					});
-					html += '</ul>';
 				}
 				else
-					html = '<div class="alert alert-warning">{l s='No customers found'}</div>';
+					html = '<div class="alert alert-warning"><i class="icon-warning-sign"></i>&nbsp;{l s='No customers found'}</div>';
 				$('#customers').html(html);
 				resetBind();
 			}
 		});
 	}
 
+
 	function setupCustomer(idCustomer)
 	{
+		$('#carts').show();
 		$('#products_part').show();
 		$('#vouchers_part').show();
 		$('#address_part').show();
@@ -491,14 +523,25 @@
 					var html_carts = '';
 					var html_orders = '';
 					$.each(res.carts, function() {
-						html_carts += '<tr><td>'+this.id_cart+'</td><td>'+this.date_add+'</td><td>'+this.total_price+'</td>';
-						html_carts += '<td><a title="{l s='View this cart'}" class="fancybox" href="index.php?tab=AdminCarts&id_cart='+this.id_cart+'&viewcart&token={getAdminToken tab='AdminCarts'}&liteDisplaying=1#"><img src="../img/admin/details.gif" /></a>';
-						html_carts += '<a href="#" title="{l s='Use this cart'}" class="use_cart" rel="'+this.id_cart+'"><img src="../img/admin/duplicate.png" /></a></td></tr>';
+						html_carts += '<tr>';
+						html_carts += '<td>'+this.id_cart+'</td>';
+						html_carts += '<td>'+this.date_add+'</td>';
+						html_carts += '<td>'+this.total_price+'</td>';
+						html_carts += '<td>';
+						html_carts += '<a title="{l s='View this cart'}" class="fancybox btn btn-default" href="index.php?tab=AdminCarts&id_cart='+this.id_cart+'&viewcart&token={getAdminToken tab='AdminCarts'}&liteDisplaying=1#"><i class="icon-search"></i></a>';
+						html_carts += '&nbsp;<a href="#" title="{l s='Use this cart'}" class="use_cart btn btn-default" rel="'+this.id_cart+'"><i class="icon-copy"></i></a>';
+						html_carts += '</td>';
+						html_carts += '</tr>';
 					});
+
 					$.each(res.orders, function() {
-						html_orders += '<tr><td>'+this.id_order+'</td><td>'+this.date_add+'</td><td>'+(this.nb_products ? this.nb_products : '0')+'</td><td>'+this.total_paid_real+'</span></td><td>'+this.payment+'</td><td>'+this.order_state+'</td>';
-						html_orders += '<td><a title="{l s='View this order'}" class="fancybox" href="{$link->getAdminLink('AdminOrders')}&id_order='+this.id_order+'&vieworder&liteDisplaying=1#"><img src="../img/admin/details.gif" /></a>';
-						html_orders += '<a href="#" "title="{l s='Duplicate this order'}" class="duplicate_order" rel="'+this.id_order+'"><img src="../img/admin/duplicate.png" /></a></td></tr>';
+						html_orders += '<tr>';
+						html_orders += '<td>'+this.id_order+'</td><td>'+this.date_add+'</td><td>'+(this.nb_products ? this.nb_products : '0')+'</td><td>'+this.total_paid_real+'</span></td><td>'+this.payment+'</td><td>'+this.order_state+'</td>';
+						html_orders += '<td>';
+						html_orders += '<a href="{$link->getAdminLink('AdminOrders')}&id_order='+this.id_order+'&vieworder&liteDisplaying=1#" title="{l s='View this order'}" class="fancybox btn btn-default"><i class="icon-search"></i></a>';
+						html_orders += '&nbsp;<a href="#" "title="{l s='Duplicate this order'}" class="duplicate_order btn btn-default" rel="'+this.id_order+'"><i class="icon-copy"></i></a>';
+						html_orders += '</td>';
+						html_orders += '</tr>';
 					});
 					$('#nonOrderedCarts table tbody').html(html_carts);
 					$('#lastOrders table tbody').html(html_orders);
@@ -573,22 +616,22 @@
 						stock[id_product] = new Array();
 						if (this.customizable == '1')
 						{
-							customization_html += '<div class="panel width3"><h3>{l s='Customization'}</h3><form id="customization_'+id_product+'" class="id_customization" method="post" enctype="multipart/form-data" action="'+admin_cart_link+'" style="display:none;">';
+							customization_html += '<div class="panel"><h3>{l s='Customization'}</h3><form id="customization_'+id_product+'" class="id_customization" method="post" enctype="multipart/form-data" action="'+admin_cart_link+'" style="display:none;">';
 							customization_html += '<input type="hidden" name="id_product" value="'+id_product+'" />';
 							customization_html += '<input type="hidden" name="id_cart" value="'+id_cart+'" />';
 							customization_html += '<input type="hidden" name="action" value="updateCustomizationFields" />';
 							customization_html += '<input type="hidden" name="id_customer" value="'+id_customer+'" />';
 							customization_html += '<input type="hidden" name="ajax" value="1" />';
 							$.each(this.customization_fields, function() {
-								customization_html += '<p><label for="customization_'+id_product+'_'+this.id_customization_field+'">';
-								if (this.required == 1)
-									customization_html += '<sup>*</sup>';
-								customization_html += this.name+'{l s=':'}</label>';
+								class_customization_field = "";
+								if (this.required == 1){ class_customization_field = 'required' };
+								customization_html += '<div class="form-group"><label class="control-label col-lg-3 ' + class_customization_field + '" for="customization_'+id_product+'_'+this.id_customization_field+'">';
+								customization_html += this.name+'{l s=':'}</label><div class="col-lg-9">';
 								if (this.type == 0)
-									customization_html += '<input class="customization_field" type="file" name="customization_'+id_product+'_'+this.id_customization_field+'" id="customization_'+id_product+'_'+this.id_customization_field+'">';
+									customization_html += '<input class="form-control customization_field" type="file" name="customization_'+id_product+'_'+this.id_customization_field+'" id="customization_'+id_product+'_'+this.id_customization_field+'">';
 								else if (this.type == 1)
-									customization_html += '<input class="customization_field" type="text" name="customization_'+id_product+'_'+this.id_customization_field+'" id="customization_'+id_product+'_'+this.id_customization_field+'">';
-								customization_html += '</p>';
+									customization_html += '<input class="form-control customization_field" type="text" name="customization_'+id_product+'_'+this.id_customization_field+'" id="customization_'+id_product+'_'+this.id_customization_field+'">';
+								customization_html += '</div></div>';
 							});
 							customization_html += '</div></form>';
 						}
@@ -657,9 +700,9 @@
 			var id_product_attribute = Number(this.id_product_attribute);
 			cart_quantity[Number(this.id_product)+'_'+Number(this.id_product_attribute)+'_'+Number(this.id_customization)] = this.cart_quantity;
 			cart_content += '<tr><td><img src="'+this.image_link+'" title="'+this.name+'" /></td><td>'+this.name+'<br />'+this.attributes_small+'</td><td>'+this.reference+'</td><td><input type="text" size="7" rel="'+this.id_product+'_'+this.id_product_attribute+'" class="product_unit_price" value="' + formatCurrency(parseFloat(this.price.replace(',', '.')), currency_format, currency_sign, currency_blank) + '" /></td><td>';
-			cart_content += (!this.id_customization ? '<div style="float:left;"><a href="#" class="increaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" ><img src="../img/admin/up.gif" /></a><br /><a href="#" class="decreaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'"><img src="../img/admin/down.gif" /></a></div>' : '');
+			cart_content += (!this.id_customization ? '<div style="float:left;"><a href="#" class="increaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" ><i class="icon-caret-up"></i></a><br /><a href="#" class="decreaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'"><i class="icon-caret-down"></i></a></div>' : '');
 			cart_content += (!this.id_customization ? '<div style="float:left;"><input type="text" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" class="cart_quantity" size="2" value="'+this.cart_quantity+'" />' : '');
-			cart_content += (!this.id_customization ? '<a href="#" class="delete_product" rel="delete_'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" ><img src="../img/admin/delete.gif" /></a></div>' : '');
+			cart_content += (!this.id_customization ? '<a href="#" class="delete_product btn btn-default" rel="delete_'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" ><i class="icon-remove text-danger"></i></a></div>' : '');
 			cart_content += '</td><td>' + formatCurrency(parseFloat(this.total.replace(',', '.')), currency_format, currency_sign, currency_blank) + '</td></tr>';
 			
 			if (this.id_customization && this.id_customization != 0)
@@ -681,9 +724,9 @@
 						});
 					}
 			cart_content += '<tr><td></td><td>'+customized_desc+'</td><td></td><td></td><td>';
-			cart_content += '<div style="float:left;"><a href="#" class="increaseqty_product" rel="'+id_product+'_'+id_product_attribute+'_'+id_customization+'" ><img src="../img/admin/up.gif" /></a><br /><a href="#" class="decreaseqty_product" rel="'+id_product+'_'+id_product_attribute+'_'+id_customization+'"><img src="../img/admin/down.gif" /></a></div>';
+			cart_content += '<div style="float:left;"><a href="#" class="increaseqty_product" rel="'+id_product+'_'+id_product_attribute+'_'+id_customization+'" ><i class="icon-caret-up"></i></a><br /><a href="#" class="decreaseqty_product" rel="'+id_product+'_'+id_product_attribute+'_'+id_customization+'"><i class="icon-caret-down"></i></a></div>';
 			cart_content += '<div style="float:left;"><input type="text" rel="'+id_product+'_'+id_product_attribute+'_'+id_customization +'" class="cart_quantity" size="2" value="'+this.quantity+'" />';
-			cart_content += '<a href="#" class="delete_product" rel="delete_'+id_product+'_'+id_product_attribute+'_'+id_customization+'" ><img src="../img/admin/delete.gif" /></a>';
+			cart_content += '<a href="#" class="delete_product btn btn-default" rel="delete_'+id_product+'_'+id_product_attribute+'_'+id_customization+'" ><i class="icon-remove"></i></a>';
 			cart_content += '</div></td><td></td></tr>';
 				});
 			}
@@ -701,7 +744,7 @@
 		var vouchers_html = '';
 		if (typeof(vouchers) == 'object')
 			$.each(vouchers, function(){
-				vouchers_html += '<tr><td>'+this.name+'</td><td>'+this.description+'</td><td>'+this.value_real+'</td><td><a href="#" class="delete_discount" rel="'+this.id_discount+'"><img src="../img/admin/delete.gif" /></a></td></tr>';
+				vouchers_html += '<tr><td>'+this.name+'</td><td>'+this.description+'</td><td>'+this.value_real+'</td><td><a href="#" class="btn btn-default delete_discount" rel="'+this.id_discount+'"><i class="icon-remove"></i></a> {l s='Delete'}</td></tr>';
 			});
 		$('#voucher_list tbody').html($.trim(vouchers_html));
 		if ($('#voucher_list tbody').html().length == 0)
@@ -1012,234 +1055,248 @@
 			<i class="icon-user"></i>
 			{l s='Customer'}
 		</h3>
-		<div class="row">
-			<div class="col-lg-12">
-				<a class="fancybox btn btn-default" href="{$link->getAdminLink('AdminCustomers')|escape:'htmlall':'UTF-8'}&addcustomer&liteDisplaying=1&submitFormAjax=1#">
-					<i class="icon-plus-sign-alt"></i>
-					{l s='Add new customer'}
-				</a>
-			</div>
+
+		<div id="search-customer-form-group" class="form-group">
 			<label class="control-label col-lg-3">
 				<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Search a customer by typping the first letters of his/her name'}">
 					{l s='Search customers'}
 				</span>
 			</label>
-			<div class="col-lg-6">
-				<input type="text" id="customer" value="" />
+			<div class="col-lg-9">
+				<div class="row">
+					<div class="col-lg-6">
+						<div class="input-group">
+							<input type="text" id="customer" value="" />
+							<span class="input-group-addon">
+								<i class="icon-search"></i>
+							</span>
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<span class="form-control-static">{l s='Or'}&nbsp;</span>
+						<a class="fancybox btn btn-default" href="{$link->getAdminLink('AdminCustomers')|escape:'htmlall':'UTF-8'}&addcustomer&liteDisplaying=1&submitFormAjax=1#">
+							<i class="icon-plus-sign-alt"></i>
+							{l s='Add new customer'}
+						</a>
+					</div>
+				</div>
 			</div>
 		</div>
+		
 		<div class="row">
-			<div id="customers" class="col-lg-9 pull-right"></div>
+			<div id="customers"></div>
+		</div>
+
+		<div id="carts">
+			<!-- <a href="#" id="show_old_carts" class="btn btn-default"><i class="icon-carret-down"></i>&nbsp;{l s='Carts and Orders'}</a> -->
+			<ul id="old_carts_orders_navtab" class="nav nav-tabs">
+				<li class="active">
+					<a href="#nonOrderedCarts" data-toggle="tab">
+						<i class="icon-shopping-cart"></i>
+						{l s='Carts'}
+					</a>
+				</li>
+				<li>
+					<a href="#lastOrders" data-toggle="tab">
+						<i class="icon-credit-card"></i>
+						{l s='Orders'}
+					</a>
+				</li>
+			</ul>
+			<div id="old_carts_orders" class="tab-content panel">
+				<div id="nonOrderedCarts" class="tab-pane active">
+					<table class="table">
+						<thead>
+							<tr>
+								<th><span class="title_box">{l s='ID'}</span></th>
+								<th><span class="title_box">{l s='Date'}</span></th>
+								<th><span class="title_box">{l s='Total'}</span></th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+				<div id="lastOrders" class="tab-pane">
+					<table class="table">
+						<thead>
+							<tr>
+								<th><span class="title_box">{l s='ID'}</span></th>
+								<th><span class="title_box">{l s='Date'}</span></th>
+								<th><span class="title_box">{l s='Products:'}</span></th>
+								<th><span class="title_box">{l s='Total paid'}</span></th>
+								<th><span class="title_box">{l s='Payment: '}</span></th>
+								<th><span class="title_box">{l s='Status'}</span></th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+			</div>
 		</div>
 	</div>
 </form>
+
 <form class="form-horizontal" action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&submitAdd{$table}=1" method="post" autocomplete="off">
 	<div class="panel" id="products_part" style="display:none;">
 		<h3>
-			<i class="icon-folder-close"></i>
+			<i class="icon-shopping-cart"></i>
 			{l s='Cart'}
 		</h3>
-		<div class="row">
+		<div class="form-group">
 			<label class="control-label col-lg-3">
 				<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Search a product by typping the first letters of his/her name.'}">
 					{l s='Search for a product'}
 				</span>
 			</label>
-			<div class="col-lg-6">
+			<div class="col-lg-9">
 				<input type="hidden" value="" id="id_cart" name="id_cart" />
-				<input type="text" id="product" value="" />
+				<div class="input-group">
+					<input type="text" id="product" value="" />
+					<span class="input-group-addon">
+						<i class="icon-search"></i>
+					</span>
+				</div>
 			</div>
 		</div>
-		<div class="row">
-			<div id="products_found" class="col-lg-12">
-				<div class="row">
-					<div id="product_list" class="col-lg-12"></div>
+
+		<div id="products_found">
+			<hr/>
+			<div id="product_list" class="form-group"></div>
+			<div id="attributes_list" class="form-group"></div>
+			<!-- TODO - please be kind : refacto -->
+			<div class="form-group">
+				<div class="col-lg-9 col-lg-offset-3">
+					<iframe id="customization_list" seamless>
+						<html>
+						<head>
+							{if isset($css_files_orders)}
+								{foreach from=$css_files_orders key=css_uri item=media}
+									<link href="{$css_uri}" rel="stylesheet" type="text/css" media="{$media}" />
+								{/foreach}
+							{/if}
+						</head>
+						<body>
+						</body>
+						</html>
+					</iframe>
 				</div>
-				<div class="row">
-					<div id="attributes_list" class="col-lg-12"></div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-lg-3" for="qty">{l s='Quantity:'}</label>
+				<div class="col-lg-9">
+					<input type="text" name="qty" id="qty" class="form-control fixed-width-sm" value="1" />
+					<p class="help-block">{l s='In stock:'} <span id="qty_in_stock"></span></p>
 				</div>
-				<iframe id="customization_list" style="border:0px;overflow:hidden;width:100%">
-					<html>
-					<head>
-						{if isset($css_files_orders)}
-							{foreach from=$css_files_orders key=css_uri item=media}
-								<link href="{$css_uri}" rel="stylesheet" type="text/css" media="{$media}" />
-							{/foreach}
-						{/if}
-					</head>
-					<body>
-					</body>
-					</html>
-				</iframe>
-				<div class="row">
-					<div class="col-lg-12">
-						<label class="control-label col-lg-3" for="qty">
-							{l s='Quantity:'}
-						</label>
-						<div class="col-lg-6">
-							<input type="text" name="qty" id="qty" value="1" />
-						</div>
-					</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-lg-9 col-lg-offset-3">
+					<input type="submit" onclick="addProduct();return false;" class="btn btn-default" id="submitAddProduct" value="{l s='Add to cart'}"/>
 				</div>
-				<div class="row">
-					<div class="col-lg-12">
-						<label class="control-label col-lg-3">
-							{l s='In stock:'}
-							<span id="qty_in_stock"></span>
-						</label>
-					</div>
-				</div>
-				<input type="submit" onclick="addProduct();return false;" class="btn btn-default" id="submitAddProduct" value="{l s='Add to cart'}"/></p>
 			</div>
 		</div>
+
 		<div id="products_err" class="alert alert-warning" style="display:none;"></div>
+		
+		<hr/>
+
 		<div class="row">
 			<div class="col-lg-12">
 				<table class="table" id="customer_cart">
-					<colgroup>
-						<col width="50">
-						<col width="">
-						<col width="90">
-						<col width="100">
-						<col width="50">
-						<col width="50">
-					</colgroup>
 					<thead>
 						<tr>
-							<th height="39">{l s='Product'}</th>
-							<th>{l s='Description'}</th>
-							<th>{l s='Ref'}</th>
-							<th>{l s='Unit price'}</th>
-							<th width="80">{l s='Qty'}</th>
-							<th width="80">{l s='Price'}</th>
+							<th><span class="title_box">{l s='Product'}</span></th>
+							<th><span class="title_box">{l s='Description'}</span></th>
+							<th><span class="title_box">{l s='Ref'}</span></th>
+							<th><span class="title_box">{l s='Unit price'}</span></th>
+							<th><span class="title_box">{l s='Qty'}</span></th>
+							<th><span class="title_box">{l s='Price'}</span></th>
 						</tr>
 					</thead>
 					<tbody>
 					</tbody>
 				</table>
-				<p class="alert alert-warning">{l s='The prices are without taxes.'}</p>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-lg-12">
-				<label class="control-label col-lg-3" for="id_currency">
-					{l s='Currency'}
-				</label>
-				<script type="text/javascript">
+
+		<div class="form-group">
+			<div class="col-lg-9 col-lg-offset-3">
+				<div class="alert alert-warning">{l s='The prices are without taxes.'}</div>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-lg-3" for="id_currency">
+				{l s='Currency'}
+			</label>
+			<script type="text/javascript">
+				{foreach from=$currencies item='currency'}
+					currencies['{$currency.id_currency}'] = '{$currency.sign}';
+				{/foreach}
+			</script>
+			<div class="col-lg-9">
+				<select id="id_currency" name="id_currency">
 					{foreach from=$currencies item='currency'}
-						currencies['{$currency.id_currency}'] = '{$currency.sign}';
+						<option rel="{$currency.iso_code}" value="{$currency.id_currency}">{$currency.name}</option>
 					{/foreach}
-				</script>
-				<div class="col-lg-6">
-					<select id="id_currency" name="id_currency">
-						{foreach from=$currencies item='currency'}
-							<option rel="{$currency.iso_code}" value="{$currency.id_currency}">{$currency.name}</option>
-						{/foreach}
-					</select>
-				</div>
-			</div>
-			<div class="col-lg-12">
-				<label class="control-label col-lg-3" for="id_lang">
-					{l s='Language'}
-				</label>
-				<div class="col-lg-6">
-					<select id="id_lang" name="id_lang">
-						{foreach from=$langs item='lang'}
-							<option value="{$lang.id_lang}">{$lang.name}</option>
-						{/foreach}
-					</select>
-				</div>
+				</select>
 			</div>
 		</div>
-		<div class="row">
-			<div id="carts" class="col-lg-12">
-				<a href="#" id="show_old_carts" class="btn btn-default"></a>
-				<div id="old_carts_orders">
-					<div id="nonOrderedCarts" class="col-lg-6">
-						<h4>
-							<i class="icon-folder-close"></i>
-							{l s='Carts'}
-						</h4>
-						<table cellspacing="0" cellpadding="0" class="table width5">
-							<colgroup>
-								<col width="10">
-								<col width="200">
-								<col width="70">
-								<col width="50">
-							</colgroup>
-							<thead>
-								<tr>
-									<th height="39">{l s='ID'}</th>
-									<th>{l s='Date'}</th>
-									<th>{l s='Total'}</th>
-									<th>{l s='Action'}</th>
-								</tr>
-							</thead>
-							<tbody>
-							</tbody>
-						</table>
-					</div>
-					<div id="lastOrders" class="col-lg-6">
-						<h4>
-							<i class="icon-align-justify"></i>
-							{l s='Orders'}
-						</h4>
-						<table class="table">
-							<colgroup>
-								<col width="10">
-								<col width="200">
-								<col width="">
-								<col width="100">
-								<col width="100">
-								<col width="200">
-								<col width="50">
-							</colgroup>
-							<thead>
-								<tr>
-									<th height="39">{l s='ID'}</th>
-									<th>{l s='Date'}</th>
-									<th>{l s='Products:'}</th>
-									<th>{l s='Total paid'}</th>
-									<th>{l s='Payment: '}</th>
-									<th>{l s='Status'}</th>
-									<th>{l s='Action'}</th>
-								</tr>
-							</thead>
-							<tbody>
-							</tbody>
-						</table>
-					</div>
-				</div>
+		<div class="form-group">
+			<label class="control-label col-lg-3" for="id_lang">
+				{l s='Language'}
+			</label>
+			<div class="col-lg-9">
+				<select id="id_lang" name="id_lang">
+					{foreach from=$langs item='lang'}
+						<option value="{$lang.id_lang}">{$lang.name}</option>
+					{/foreach}
+				</select>
 			</div>
 		</div>
 	</div>
+
 	<div class="panel" id="vouchers_part" style="display:none;">
 		<h3>
-			<i class="icon-table"></i>
+			<i class="icon-ticket"></i>
 			{l s='Vouchers'}
 		</h3>
-		<div class="row">
-			<div class="col-lg-12">
-				<a class="fancybox btn btn-default" href="{$link->getAdminLink('AdminCartRules')|escape:'htmlall':'UTF-8'}&addcart_rule&liteDisplaying=1&submitFormAjax=1#">
-					<i class="icon-plus-sign-alt"></i>
-					{l s='Add new voucher'}
-				</a>
-			</div>
+		<div class="form-group">
 			<label class="control-label col-lg-3">
 				{l s='Search for a voucher:'} 
 			</label>
-			<div class="col-lg-6">
-				<input type="text" id="voucher" value="" />
+			<div class="col-lg-9">
+				<div class="row">
+					<div class="col-lg-6">
+						<div class="input-group">
+							<input type="text" id="voucher" value="" />
+							<div class="input-group-addon">
+								<i class="icon-search"></i>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<span class="form-control-static">{l s='Or'}&nbsp;</span>
+						<a class="fancybox btn btn-default" href="{$link->getAdminLink('AdminCartRules')|escape:'htmlall':'UTF-8'}&addcart_rule&liteDisplaying=1&submitFormAjax=1#">
+							<i class="icon-plus-sign-alt"></i>
+							{l s='Add new voucher'}
+						</a>
+					</div>
+				</div>
 			</div>
 		</div>
-		<div class="margin-form">
-			<table cellspacing="0" cellpadding="0" class="table" id="voucher_list">
+		<div class="row">
+			<table class="table" id="voucher_list">
 				<thead>
 					<tr>
-						<th class="left">{l s='Name'}</th>
-						<th class="left">{l s='Description'}</th>
-						<th class="left">{l s='Value'}</th>
-						<th class="left">{l s='Action'}</th>
+						<th><span class="title_box">{l s='Name'}</span></th>
+						<th><span class="title_box">{l s='Description'}</span></th>
+						<th><span class="title_box">{l s='Value'}</span></th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -1248,6 +1305,7 @@
 		</div>
 		<div id="vouchers_err" class="alert alert-warning" style="display:none;"></div>
 	</div>
+
 	<div class="panel" id="address_part" style="display:none;">
 		<h3>
 			<i class="icon-envelope"></i>
@@ -1256,20 +1314,14 @@
 		<div id="addresses_err" class="alert alert-warning" style="display:none;"></div>
 
 		<div class="row">
-			<div class="col-lg-12">
-				<a class="fancybox btn btn-default" id="new_address" href="{$link->getAdminLink('AdminAddresses')|escape:'htmlall':'UTF-8'}&addaddress&id_customer=42&liteDisplaying=1&submitFormAjax=1#">
-					<i class="icon-plus-sign-alt"></i>
-					{l s='Add a new address'}
-				</a>
-			</div>
 			<div id="address_delivery" class="col-lg-6">
 				<h4>
 					<i class="icon-truck"></i>
 					{l s='Delivery'}
 				</h4>
-				<select id="id_address_delivery" name="id_address_delivery">
-				</select>
-				<div id="address_delivery_detail">
+				<select id="id_address_delivery" name="id_address_delivery"></select>
+				<div class="well">
+					<div id="address_delivery_detail"></div>
 				</div>
 			</div>
 			<div id="address_invoice" class="col-lg-6">
@@ -1277,10 +1329,18 @@
 					<i class="icon-file-text"></i>
 					{l s='Invoice'}
 				</h4>
-				<select id="id_address_invoice" name="id_address_invoice">
-				</select>
-				<div id="address_invoice_detail">
+				<select id="id_address_invoice" name="id_address_invoice"></select>
+				<div class="well">
+					<div id="address_invoice_detail"></div>
 				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-12">
+				<a class="fancybox btn btn-default" id="new_address" href="{$link->getAdminLink('AdminAddresses')|escape:'htmlall':'UTF-8'}&addaddress&id_customer=42&liteDisplaying=1&submitFormAjax=1#">
+					<i class="icon-plus-sign-alt"></i>
+					{l s='Add a new address'}
+				</a>
 			</div>
 		</div>
 	</div>
@@ -1291,7 +1351,7 @@
 		</h3>
 		<div id="carriers_err" style="display:none;" class="alert alert-warning"></div>
 		<div id="carrier_form">
-			<div class="row">
+			<div class="form-group">
 				<label class="control-label col-lg-3">
 					{l s='Delivery option'} 
 				</label>
@@ -1300,31 +1360,52 @@
 					</select>
 				</div>
 			</div>
-			<div class="row">
+			<div class="form-group">
 				<label class="control-label col-lg-3" for="shipping_price">
 					{l s='Shipping price:'}
 				</label>
 				<div class="col-lg-6">
-					<span id="shipping_price" name="shipping_price"></span>
+					<span id="shipping_price" class="form-static-control" name="shipping_price"></span>
 				</div>
 			</div>
-			<div class="row">
+			<div class="form-group">
 				<label class="control-label col-lg-3" for="free_shipping">
 					{l s='Free shipping'}
 				</label>
 				<div class="col-lg-6">
-					<input type="checkbox" id="free_shipping" name="free_shipping" value="1" />
+					<div class="checkbox">
+						<input type="checkbox" id="free_shipping" name="free_shipping" value="1" />
+					</div>
 				</div>
 			</div>
-			<div id="float:left;">
-				{if $recyclable_pack}
-					<p><input type="checkbox" name="carrier_recycled_package" value="1" id="carrier_recycled_package" />  <label for="carrier_recycled_package">{l s='Recycled package'}</label></p>
-				{/if}
-				{if $gift_wrapping}
-					<p><input type="checkbox" name="order_gift" id="order_gift" value="1" /> <label for="order_gift">{l s='Gift'}</label></p>
-					<p><label for="gift_message">{l s='Gift message'}</label><textarea id="gift_message" cols="40" rows="4"></textarea></p>
-				{/if}
+
+			{if $recyclable_pack}
+			<div class="form-group">
+				<div class="checkbox col-lg-9 col-offset-3">
+					<label for="carrier_recycled_package">
+						<input type="checkbox" name="carrier_recycled_package" value="1" id="carrier_recycled_package" />
+						{l s='Recycled package'}
+					</label>
+				</div>
 			</div>
+			{/if}
+
+			{if $gift_wrapping}
+			<div class="form-group">
+				<div class="checkbox col-lg-9 col-offset-3">
+					<label for="order_gift">
+						<input type="checkbox" name="order_gift" id="order_gift" value="1" />
+						{l s='Gift'}
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-lg-3" for="gift_message">{l s='Gift message'}</label>
+				<div class="col-lg-9">
+					<textarea id="gift_message" class="form-control" cols="40" rows="4"></textarea>
+				</div>
+			</div>
+			{/if}
 		</div>
 	</div>
 	<div class="panel" id="summary_part" style="display:none;">
@@ -1332,48 +1413,63 @@
 			<i class="icon-align-justify"></i>
 			{l s='Summary'}
 		</h3>
-		<div class="row">
-			<div id="send_email_feedback" class="col-lg-12"></div>
-		</div>
-		<div class="row">
-			<div id="cart_summary" class="col-lg-12">
-				<ul class="nav navbar-nav">
-					<li><span>{l s='Total products:'}</span>&nbsp;<span id="total_products"></span></li>
-					<li><span>{l s='Total vouchers:'}</span>&nbsp;<span id="total_vouchers"></span></li>
-					<li><span>{l s='Total shipping:'}</span>&nbsp;<span id="total_shipping"></span></li>
-					<li><span>{l s='Total taxes:'}</span>&nbsp;<span id="total_taxes"></span></li>
-					<li><span>{l s='Total without taxes:'}</span>&nbsp;<span id="total_without_taxes"></span></li>
-					<li><span>{l s='Total with taxes'}</span>&nbsp;<span id="total_with_taxes"></span></li>
-				</ul>
+
+		<div id="send_email_feedback" class="alert alert-warning"></div>
+
+		<div id="cart_summary" class="panel row-margin-bottom text-center">
+			<div class="row">
+				<div class="col-lg-2">
+					<span>{l s='Total products:'}</span><br/>
+					<span id="total_products" class="size_l"></span>
+				</div>
+				<div class="col-lg-2">
+					<span>{l s='Total vouchers:'}</span><br/>
+					<span id="total_vouchers" class="size_l"></span>
+				</div>
+				<div class="col-lg-2">
+					<span>{l s='Total shipping:'}</span><br/>
+					<span id="total_shipping" class="size_l"></span>
+				</div>
+				<div class="col-lg-2">
+					<span>{l s='Total taxes:'}</span><br/>
+					<span id="total_taxes" class="size_l"></span>
+				</div>
+				<div class="col-lg-2">
+					<span>{l s='Total without taxes:'}</span><br/>
+					<span id="total_without_taxes" class="size_l"></span>
+				</div>
+				<div class="col-lg-2">
+					<span>{l s='Total with taxes'}</span><br/>
+					<span id="total_with_taxes" class="size_l"></span>
+				</div>
 			</div>
 		</div>
+
 		<div class="row">
 			<div class="order_message_right col-lg-12">
-				<div class="row">
+				<div class="form-group">
 					<label class="control-label col-lg-3" for="order_message">{l s='Order message'}</label>
 					<div class="col-lg-6">
 						<textarea name="order_message" id="order_message" rows="3" cols="45"></textarea>
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-lg-12">
-						<p>
-							<a href="#" id="send_email_to_customer" class="btn btn-default">
-								<i class="icon-envelope"></i>
-								{l s='Send an email to the customer with the link to process the payment.'}
-							</a>
-						</p>
-						<p>
-							<a target="_blank" id="go_order_process" href="" class="btn btn-default">
-								<i class="icon-external-link-sign"></i>
-								{l s='Go on payment page to process the payment.'}
-							</a>
-						</p>
+
+				<div class="form-group">
+					<div class="col-lg-9 col-lg-offset-3">
+						<a href="#" id="send_email_to_customer" class="btn btn-default">
+							<i class="icon-credit-card"></i>
+							{l s='Send an email to the customer with the link to process the payment.'}
+						</a>
+						<a target="_blank" id="go_order_process" href="" class="btn btn-link">
+							{l s='Go on payment page to process the payment.'}
+							<i class="icon-external-link"></i>
+						</a>
 					</div>
 				</div>
-				<div class="row">
+
+				<div class="form-group">
 					<label class="control-label col-lg-3">{l s='Payment'}</label>
-					<div class="col-lg-6">
+					<div class="col-lg-9">
 						<select name="payment_module_name" id="payment_module_name">
 							{foreach from=$payment_modules item='module'}
 								<option value="{$module->name}" {if isset($smarty.post.payment_module_name) && $module->name == $smarty.post.payment_module_name}selected="selected"{/if}>{$module->displayName}</option>
@@ -1381,9 +1477,10 @@
 						</select>
 					</div>
 				</div>
-				<div class="row">
+
+				<div class="form-group">
 					<label class="control-label col-lg-3">{l s='Order status'}</label>
-					<div class="col-lg-6">
+					<div class="col-lg-9">
 						<select name="id_order_state" id="id_order_state">
 							{foreach from=$order_states item='order_state'}
 								<option value="{$order_state.id_order_state}" {if isset($smarty.post.id_order_state) && $order_state.id_order_state == $smarty.post.id_order_state}selected="selected"{/if}>{$order_state.name}</option>
@@ -1391,8 +1488,9 @@
 						</select>
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-lg-12 pull-right">
+
+				<div class="form-group">
+					<div class="col-lg-9 col-lg-offset-3">
 						<input type="submit" name="submitAddOrder" class="btn btn-default" value="{l s='Create the order'}" />
 					</div>
 				</div>
@@ -1400,7 +1498,7 @@
 		</div>
 	</div>
 </form>
+
 <div id="loader_container">
-	<div id="loader">
-	</div>
+	<div id="loader"></div>
 </div>

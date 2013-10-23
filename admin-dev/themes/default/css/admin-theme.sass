@@ -81,8 +81,23 @@ html, body
 		margin-left: 0
 		width: 100%
 
+//backward
 #nobootstrap
 	float: left
+
+//orders
+#customer_part
+	.customerCard
+		&.selected-customer .panel
+			color: $brand-success
+			border: solid 2px $brand-success
+
+//modal 
+body.display-modal
+	#content, #main
+		margin: 0
+		padding: 0
+		background: #F8F8F8
 
 //todo: remove temp fix for bootstrap RC1 -> final
 input[type="text"],input[type="search"],input[type="password"], textarea, select

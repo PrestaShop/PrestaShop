@@ -601,247 +601,256 @@
 				</form>
 			</div>
 		</div>
+	</div>
 
-		<!-- Payments block -->
-		<div class="panel">
-			<h3>
-				<i class="icon-money"></i>
-				{l s="Payment"}
-			</h3>
-			{if count($order->getOrderPayments()) > 0}
-			<p class="alert alert-danger" style="{if round($orders_total_paid_tax_incl, 2) == round($total_paid, 2) || $currentState->id == 6}display: none;{/if}">
-				{l s='Warning'}
-				<strong>{displayPrice price=$total_paid currency=$currency->id}</strong>
-				{l s='paid instead of'}
-				<strong class="total_paid">{displayPrice price=$orders_total_paid_tax_incl currency=$currency->id}</strong>
-				
-				{foreach $order->getBrother() as $brother_order}
-					{if $brother_order@first}
-						{if count($order->getBrother()) == 1}
-							<br />{l s='This warning also concerns order '}
-						{else}
-							<br />{l s='This warning also concerns the next orders:'}
+	<div class="row">
+		<div class="col-lg-12">
+			<!-- Payments block -->
+			<div class="panel">
+				<h3>
+					<i class="icon-money"></i>
+					{l s="Payment"}
+				</h3>
+				{if count($order->getOrderPayments()) > 0}
+				<p class="alert alert-danger" style="{if round($orders_total_paid_tax_incl, 2) == round($total_paid, 2) || $currentState->id == 6}display: none;{/if}">
+					{l s='Warning'}
+					<strong>{displayPrice price=$total_paid currency=$currency->id}</strong>
+					{l s='paid instead of'}
+					<strong class="total_paid">{displayPrice price=$orders_total_paid_tax_incl currency=$currency->id}</strong>
+					
+					{foreach $order->getBrother() as $brother_order}
+						{if $brother_order@first}
+							{if count($order->getBrother()) == 1}
+								<br />{l s='This warning also concerns order '}
+							{else}
+								<br />{l s='This warning also concerns the next orders:'}
+							{/if}
 						{/if}
-					{/if}
-					<a href="{$current_index}&vieworder&id_order={$brother_order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
-						#{'%06d'|sprintf:$brother_order->id}
-					</a>
-				{/foreach}
-			</p>
-			{/if}
+						<a href="{$current_index}&vieworder&id_order={$brother_order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
+							#{'%06d'|sprintf:$brother_order->id}
+						</a>
+					{/foreach}
+				</p>
+				{/if}
 
-			<form id="formAddPayment" method="post" action="{$current_index}&vieworder&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
+				<form id="formAddPayment" method="post" action="{$current_index}&vieworder&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
+					<table class="table">
+						<thead>
+							<tr>
+								<th><span class="title_box ">{l s='Date'}</span></th>
+								<th><span class="title_box ">{l s='Payment method'}</span></th>
+								<th><span class="title_box ">{l s='Transaction ID'}</span></th>
+								<th><span class="title_box ">{l s='Amount'}</span></th>
+								<th><span class="title_box ">{l s='Invoice'}</span></th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							{foreach from=$order->getOrderPaymentCollection() item=payment}
+							<tr>
+								<td>{dateFormat date=$payment->date_add full=true}</td>
+								<td>{$payment->payment_method}</td>
+								<td>{$payment->transaction_id}</td>
+								<td>{displayPrice price=$payment->amount currency=$payment->id_currency}</td>
+								<td>
+								{if $invoice = $payment->getOrderInvoice($order->id)}
+									{$invoice->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}
+								{else}
+									{l s='No invoice'}
+								{/if}
+								</td>
+								<td>
+									<button class="btn btn-default open_payment_information">
+										<i class="icon-search"></i>
+										{l s='See payment information'}
+									</button>
+								</td>
+							</tr>
+							<tr class="payment_information" style="display: none;">
+								<td colspan="6">
+									<p>
+										<b>{l s='Card Number'}</b>&nbsp;
+										{if $payment->card_number}
+											{$payment->card_number}
+										{else}
+											<i>{l s='Not defined'}</i>
+										{/if}
+									</p>
+									<p>
+										<b>{l s='Card Brand'}</b>&nbsp;
+										{if $payment->card_brand}
+											{$payment->card_brand}
+										{else}
+											<i>{l s='Not defined'}</i>
+										{/if}
+									</p>
+									<p>
+										<b>{l s='Card Expiration'}</b>&nbsp;
+										{if $payment->card_expiration}
+											{$payment->card_expiration}
+										{else}
+											<i>{l s='Not defined'}</i>
+										{/if}
+									</p>
+									<p>
+										<b>{l s='Card Holder'}</b>&nbsp;
+										{if $payment->card_holder}
+											{$payment->card_holder}
+										{else}
+											<i>{l s='Not defined'}</i>
+										{/if}
+									</p>
+								</td>
+							</tr>
+							{foreachelse}
+							<tr>
+								<td class="text-center" colspan="6">
+									<i class="icon-warning-sign"></i>
+									{l s='No payments are available'}
+								</td>
+							</tr>
+							{/foreach}
+							<tr class="current-edit">
+								<td>
+									<input type="text" name="payment_date" class="datepicker" value="{date('Y-m-d H:i:s')}" />
+								</td>
+								<td>
+									<select name="payment_method" class="payment_method">
+									{foreach from=$payment_methods item=payment_method}
+										<option value="{$payment_method}">{$payment_method}</option>
+									{/foreach}
+									</select>
+								</td>
+								<td>
+									<input type="text" name="payment_transaction_id" value="" />
+								</td>
+								<td>
+									<div class="form-group">
+										<div class="col-lg-9">
+											<input type="text" name="payment_amount" value="" />
+										</div>
+										<div class="col-lg-3">
+											<select name="payment_currency" class="payment_currency">
+											{foreach from=$currencies item=current_currency}
+												<option value="{$current_currency['id_currency']}"{if $current_currency['id_currency'] == $currency->id} selected="selected"{/if}>{$current_currency['sign']}</option>
+											{/foreach}
+											</select>
+										</div>								
+									</div>
+								</td>
+								{if count($invoices_collection) > 0}
+								<td>
+									<select name="payment_invoice" id="payment_invoice">
+									{foreach from=$invoices_collection item=invoice}
+										<option value="{$invoice->id}" selected="selected">{$invoice->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}</option>
+									{/foreach}
+									</select>
+								</td>
+								{/if}
+								<td>
+									<button class="btn btn-default" type="submit" name="submitAddPayment">
+										<i class="icon-ok"></i>
+										{l s='Save'}
+									</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+				{if (!$order->valid && sizeof($currencies) > 1)}
+				<form class="form-horizontal well" method="post" action="{$currentIndex}&vieworder&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
+					<div class="row">
+						<label class="control-label col-lg-3">{l s='Change currency'}</label>
+						<div class="col-lg-6">
+							<select name="new_currency">
+							{foreach from=$currencies item=currency_change}
+								{if $currency_change['id_currency'] != $order->id_currency}
+								<option value="{$currency_change['id_currency']}">{$currency_change['name']} - {$currency_change['sign']}</option>
+								{/if}
+							{/foreach}
+							</select>
+							<p class="help-block">{l s='Do not forget to update your exchange rate before making this change.'}</p>
+						</div>
+						<div class="col-lg-3">
+							<input type="submit" class="btn btn-default" name="submitChangeCurrency" value="{l s='Change'}" />
+						</div>
+					</div>
+				</form>
+				{/if}
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-lg-12">
+			<!-- Sources block -->
+			{if (sizeof($sources))}
+			<div class="panel">
+				<h3>
+					<i class="icon-globe"></i>
+					{l s='Sources'}
+				</h3>
+				<ul {if sizeof($sources) > 3}style="height: 200px; overflow-y: scroll;"{/if}>
+				{foreach from=$sources item=source}
+					<li>
+						{dateFormat date=$source['date_add'] full=true}<br />
+						<b>{l s='From'}</b>{if $source['http_referer'] != ''}<a href="{$source['http_referer']}">{parse_url($source['http_referer'], $smarty.const.PHP_URL_HOST)|regex_replace:'/^www./':''}</a>{else}-{/if}<br />
+						<b>{l s='To'}</b> <a href="http://{$source['request_uri']}">{$source['request_uri']|truncate:100:'...'}</a><br />
+						{if $source['keywords']}<b>{l s='Keywords'}</b> {$source['keywords']}<br />{/if}<br />
+					</li>
+				{/foreach}
+				</ul>
+			</div>
+			{/if}
+		
+			<!-- linked orders block -->
+			{if count($order->getBrother()) > 0}
+			<div class="panel">
+				<h3>
+					<i class="icon-cart"></i>
+					{l s='Linked orders'}
+				</h3>
 				<table class="table">
 					<thead>
 						<tr>
-							<th><span class="title_box ">{l s='Date'}</span></th>
-							<th><span class="title_box ">{l s='Payment method'}</span></th>
-							<th><span class="title_box ">{l s='Transaction ID'}</span></th>
-							<th><span class="title_box ">{l s='Amount'}</span></th>
-							<th><span class="title_box ">{l s='Invoice'}</span></th>
+							<th>
+								{l s='Order no. '}
+							</th>
+							<th>
+								{l s='Status'}
+							</th>
+							<th>
+								{l s='Amount'}
+							</th>
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
-						{foreach from=$order->getOrderPaymentCollection() item=payment}
+						{foreach $order->getBrother() as $brother_order}
 						<tr>
-							<td>{dateFormat date=$payment->date_add full=true}</td>
-							<td>{$payment->payment_method}</td>
-							<td>{$payment->transaction_id}</td>
-							<td>{displayPrice price=$payment->amount currency=$payment->id_currency}</td>
 							<td>
-							{if $invoice = $payment->getOrderInvoice($order->id)}
-								{$invoice->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}
-							{else}
-								{l s='No invoice'}
-							{/if}
+								<a href="{$current_index}&vieworder&id_order={$brother_order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">#{'%06d'|sprintf:$brother_order->id}</a>
 							</td>
 							<td>
-								<button class="btn btn-default open_payment_information">
-									<i class="icon-search"></i>
-									{l s='See payment information'}
-								</button>
+								{$brother_order->getCurrentOrderState()->name[$current_id_lang]}
 							</td>
-						</tr>
-						<tr class="payment_information" style="display: none;">
-							<td colspan="6">
-								<p>
-									<b>{l s='Card Number'}</b>&nbsp;
-									{if $payment->card_number}
-										{$payment->card_number}
-									{else}
-										<i>{l s='Not defined'}</i>
-									{/if}
-								</p>
-								<p>
-									<b>{l s='Card Brand'}</b>&nbsp;
-									{if $payment->card_brand}
-										{$payment->card_brand}
-									{else}
-										<i>{l s='Not defined'}</i>
-									{/if}
-								</p>
-								<p>
-									<b>{l s='Card Expiration'}</b>&nbsp;
-									{if $payment->card_expiration}
-										{$payment->card_expiration}
-									{else}
-										<i>{l s='Not defined'}</i>
-									{/if}
-								</p>
-								<p>
-									<b>{l s='Card Holder'}</b>&nbsp;
-									{if $payment->card_holder}
-										{$payment->card_holder}
-									{else}
-										<i>{l s='Not defined'}</i>
-									{/if}
-								</p>
+							<td>
+								{displayPrice price=$brother_order->total_paid_tax_incl currency=$currency->id}
 							</td>
-						</tr>
-						{foreachelse}
-						<tr>
-							<td class="text-center" colspan="6">
-								<i class="icon-warning-sign"></i>
-								{l s='No payments are available'}
+							<td>
+								<a href="{$current_index}&vieworder&id_order={$brother_order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
+									<i class="icon-eye-open"></i>
+									{l s='See the order'}
+								</a>
 							</td>
 						</tr>
 						{/foreach}
-						<tr class="current-edit">
-							<td>
-								<input type="text" name="payment_date" class="datepicker" value="{date('Y-m-d H:i:s')}" />
-							</td>
-							<td>
-								<select name="payment_method" class="payment_method">
-								{foreach from=$payment_methods item=payment_method}
-									<option value="{$payment_method}">{$payment_method}</option>
-								{/foreach}
-								</select>
-							</td>
-							<td>
-								<input type="text" name="payment_transaction_id" value="" />
-							</td>
-							<td>
-								<div class="form-group">
-									<div class="col-lg-9">
-										<input type="text" name="payment_amount" value="" />
-									</div>
-									<div class="col-lg-3">
-										<select name="payment_currency" class="payment_currency">
-										{foreach from=$currencies item=current_currency}
-											<option value="{$current_currency['id_currency']}"{if $current_currency['id_currency'] == $currency->id} selected="selected"{/if}>{$current_currency['sign']}</option>
-										{/foreach}
-										</select>
-									</div>								
-								</div>
-							</td>
-							{if count($invoices_collection) > 0}
-							<td>
-								<select name="payment_invoice" id="payment_invoice">
-								{foreach from=$invoices_collection item=invoice}
-									<option value="{$invoice->id}" selected="selected">{$invoice->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}</option>
-								{/foreach}
-								</select>
-							</td>
-							{/if}
-							<td>
-								<button class="btn btn-default" type="submit" name="submitAddPayment">
-									<i class="icon-ok"></i>
-									{l s='Save'}
-								</button>
-							</td>
-						</tr>
 					</tbody>
 				</table>
-			</form>
-			{if (!$order->valid && sizeof($currencies) > 1)}
-			<form class="form-horizontal well" method="post" action="{$currentIndex}&vieworder&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
-				<div class="row">
-					<label class="control-label col-lg-3">{l s='Change currency'}</label>
-					<div class="col-lg-6">
-						<select name="new_currency">
-						{foreach from=$currencies item=currency_change}
-							{if $currency_change['id_currency'] != $order->id_currency}
-							<option value="{$currency_change['id_currency']}">{$currency_change['name']} - {$currency_change['sign']}</option>
-							{/if}
-						{/foreach}
-						</select>
-						<p class="help-block">{l s='Do not forget to update your exchange rate before making this change.'}</p>
-					</div>
-					<div class="col-lg-3">
-						<input type="submit" class="btn btn-default" name="submitChangeCurrency" value="{l s='Change'}" />
-					</div>
-				</div>
-			</form>
+			</div>
 			{/if}
 		</div>
-
-		<!-- Sources block -->
-		{if (sizeof($sources))}
-		<div class="panel">
-			<h3>
-				<i class="icon-globe"></i>
-				{l s='Sources'}
-			</h3>
-			<ul {if sizeof($sources) > 3}style="height: 200px; overflow-y: scroll;"{/if}>
-			{foreach from=$sources item=source}
-				<li>
-					{dateFormat date=$source['date_add'] full=true}<br />
-					<b>{l s='From'}</b>{if $source['http_referer'] != ''}<a href="{$source['http_referer']}">{parse_url($source['http_referer'], $smarty.const.PHP_URL_HOST)|regex_replace:'/^www./':''}</a>{else}-{/if}<br />
-					<b>{l s='To'}</b> <a href="http://{$source['request_uri']}">{$source['request_uri']|truncate:100:'...'}</a><br />
-					{if $source['keywords']}<b>{l s='Keywords'}</b> {$source['keywords']}<br />{/if}<br />
-				</li>
-			{/foreach}
-			</ul>
-		</div>
-		{/if}
-	
-		<!-- linked orders block -->
-		{if count($order->getBrother()) > 0}
-		<div class="panel">
-			<h3>
-				<i class="icon-cart"></i>
-				{l s='Linked orders'}
-			</h3>
-			<table class="table">
-				<thead>
-					<tr>
-						<th>
-							{l s='Order no. '}
-						</th>
-						<th>
-							{l s='Status'}
-						</th>
-						<th>
-							{l s='Amount'}
-						</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					{foreach $order->getBrother() as $brother_order}
-					<tr>
-						<td>
-							<a href="{$current_index}&vieworder&id_order={$brother_order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">#{'%06d'|sprintf:$brother_order->id}</a>
-						</td>
-						<td>
-							{$brother_order->getCurrentOrderState()->name[$current_id_lang]}
-						</td>
-						<td>
-							{displayPrice price=$brother_order->total_paid_tax_incl currency=$currency->id}
-						</td>
-						<td>
-							<a href="{$current_index}&vieworder&id_order={$brother_order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
-								<i class="icon-eye-open"></i>
-								{l s='See the order'}
-							</a>
-						</td>
-					</tr>
-					{/foreach}
-				</tbody>
-			</table>
-		</div>
-		{/if}
+	</div>
 
 		
 
