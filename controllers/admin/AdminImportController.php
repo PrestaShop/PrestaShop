@@ -247,7 +247,7 @@ class AdminImportControllerCore extends AdminController
 					'delete_existing_images' => array(
 						'label' => $this->l('Delete existing images (0 = No, 1 = Yes)')
 					),
-					'features' => array('label' => $this->l('Feature(Name:Value:Position)')),
+					'features' => array('label' => $this->l('Feature(Name:Value:Position:Customized)')),
 					'online_only' => array('label' => $this->l('Available online only (0 = No, 1 = Yes)')),
 					'condition' => array('label' => $this->l('Condition')),
 					'customizable' => array('label' => $this->l('Customizable (0 = No, 1 = Yes)')),
@@ -472,9 +472,8 @@ class AdminImportControllerCore extends AdminController
 					
 			}
 
-		$this->separator = Tools::substr(strval(trim(Tools::getValue('separator', ','))), 0, 1);
-		$this->multiple_value_separator = Tools::substr(strval(trim(Tools::getValue('multiple_value_separator', ';'))), 0, 1);
-
+		$this->separator = ($separator = Tools::substr(strval(trim(Tools::getValue('separator'))), 0, 1)) ? $separator :  ';';
+		$this->multiple_value_separator = ($separator = Tools::substr(strval(trim(Tools::getValue('multiple_value_separator'))), 0, 1)) ? $separator :  ',';
 		parent::__construct();
 	}
 
@@ -569,8 +568,8 @@ class AdminImportControllerCore extends AdminController
 
 		$this->context->cookie->entity_selected = (int)Tools::getValue('entity');
 		$this->context->cookie->iso_lang_selected = base64_encode(Tools::getValue('iso_lang'));
-		$this->context->cookie->separator_selected = base64_encode(Tools::getValue('separator'));
-		$this->context->cookie->multiple_value_separator_selected = base64_encode(Tools::getValue('multiple_value_separator'));
+		$this->context->cookie->separator_selected = base64_encode($this->separator);
+		$this->context->cookie->multiple_value_separator_selected = base64_encode($this->multiple_value_separator);
 		$this->context->cookie->csv_selected = base64_encode(Tools::getValue('csv'));
 
 		$this->tpl_view_vars = array(
@@ -1138,7 +1137,7 @@ class AdminImportControllerCore extends AdminController
 			else
 				$product = new Product();
 
-			if (array_key_exists('id', $info) && (int)$info['id'] && Product::existsInDatabase((int)$info['id'], 'product'))
+			if (isset($product->id) && $product->id && Product::existsInDatabase((int)$product->id, 'product'))
 			{
 				$product->loadStockData();
 				$category_data = Product::getProductCategories((int)$product->id);
@@ -1602,13 +1601,14 @@ class AdminImportControllerCore extends AdminController
 						$feature_name = isset($tab_feature[0]) ? trim($tab_feature[0]) : '';
 						$feature_value = isset($tab_feature[1]) ? trim($tab_feature[1]) : '';
 						$position = isset($tab_feature[2]) ? (int)$tab_feature[2] : false;
+						$custom = isset($tab_feature[3]) ? (int)$tab_feature[3] : false;
 						if(!empty($feature_name) && !empty($feature_value))
 						{
 							$id_feature = (int)Feature::addFeatureImport($feature_name, $position);
 							$id_product = null;
 							if (Tools::getValue('forceIDs') || Tools::getValue('match_ref'))
 								$id_product = (int)$product->id;
-							$id_feature_value = (int)FeatureValue::addFeatureValueImport($id_feature, $feature_value, $id_product, $id_lang);
+							$id_feature_value = (int)FeatureValue::addFeatureValueImport($id_feature, $feature_value, $id_product, $id_lang, $custom);
 							Product::addFeatureProductImport($product->id, $id_feature, $id_feature_value);
 						}
 					}
@@ -1626,7 +1626,6 @@ class AdminImportControllerCore extends AdminController
 				StockAvailable::setQuantity((int)$product->id, 0, $product->quantity, $this->context->shop->id);
 
 		}
-
 		$this->closeCsvFile($handle);
 	}
 

@@ -51,7 +51,7 @@
 	{if $invoice AND $invoiceAllowed}
 	<li>
 		<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
-		<a href="{$link->getPageLink('pdf-invoice', true)}?id_order={$order->id|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}" data-ajax="false">{l s='Download your invoice as a PDF file.'}</li>
+		<a href="{$link->getPageLink('pdf-invoice', true)}?id_order={$order->id|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}" data-ajax="false">{l s='Download your invoice as a PDF file.'}
 	</li>
 	{/if}
 	{if $order->recyclable}
