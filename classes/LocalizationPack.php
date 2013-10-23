@@ -52,6 +52,7 @@ class LocalizationPackCore
 			$res &= $this->installConfiguration($xml);
 			$res &= $this->installModules($xml);
 			$res &= $this->_installLanguages($xml, $install_mode);
+			$res &= $this->updateDefaultGroupDisplayMethod($xml);
 
 			if ($res && isset($this->iso_code_lang))
 			{
@@ -240,7 +241,7 @@ class LocalizationPackCore
 				}
 			}
 		}
-		return $this->updateDefaultGroupDisplayMethod($xml);
+		return true;
 	}
 
 	protected function _installCurrencies($xml, $install_mode = false)
@@ -387,6 +388,11 @@ class LocalizationPackCore
 			}
 
 		return true;
+	}
+	
+	protected function _installGroups($xml)
+	{
+		return $this->updateDefaultGroupDisplayMethod($xml);
 	}
 
 	protected function updateDefaultGroupDisplayMethod($xml)
