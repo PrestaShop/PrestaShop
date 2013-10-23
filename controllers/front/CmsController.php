@@ -111,7 +111,7 @@ class CmsControllerCore extends FrontController
 				'path' => $path,
 				'body_classes' => array(
 						'cms',
-						'cms-'.$this->product->id,
+						'cms-'.$this->cms->id,
 						'product-'.$this->cms->link_rewrite
 				)
 			));
