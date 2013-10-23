@@ -28,16 +28,22 @@ class AdminStatsControllerCore extends AdminStatsTabController
 {
 	public static function getVisits($unique = false, $date_from, $date_to, $granularity = false)
 	{
-		$visits = array();
+		$visits = ($granularity == false) ? 0 : array();
 		$gapi = Module::isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
 		if (Validate::isLoadedObject($gapi) && $gapi->isConfigured())
 		{
 			$metric = $unique ? 'visitors' : 'visits';
-			if ($result = $gapi->requestReportData($granularity ? 'ga:date' : '', 'ga:'.$metric, $date_from, $date_to, null, null, 1, 30))
+			if ($result = $gapi->requestReportData($granularity ? 'ga:date' : '', 'ga:'.$metric, $date_from, $date_to, null, null, 1, 5000))
 				foreach ($result as $row)
 					if ($granularity == 'day')
 						$visits[strtotime(preg_replace('/^([0-9]{4})([0-9]{2})([0-9]{2})$/', '$1-$2-$3', $row['dimensions']['date']))] = $row['metrics'][$metric];
-					elseif ($granularity == false)
+					elseif ($granularity == 'month')
+					{
+						if (!isset($visits[strtotime(preg_replace('/^([0-9]{4})([0-9]{2})([0-9]{2})$/', '$1-$2-01', $row['dimensions']['date']))]))
+							$visits[strtotime(preg_replace('/^([0-9]{4})([0-9]{2})([0-9]{2})$/', '$1-$2-01', $row['dimensions']['date']))] = 0;
+						$visits[strtotime(preg_replace('/^([0-9]{4})([0-9]{2})([0-9]{2})$/', '$1-$2-01', $row['dimensions']['date']))] += $row['metrics'][$metric];
+					}
+					else
 						$visits = $row['metrics'][$metric];
 		}
 		else
@@ -52,6 +58,17 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				GROUP BY LEFT(`date_add`, 10)');
 				foreach ($result as $row)
 					$visits[strtotime($row['date'])] = $row['visits'];
+			}
+			elseif ($granularity == 'month')
+			{
+				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+				SELECT LEFT(`date_add`, 7) as date, COUNT('.($unique ? 'DISTINCT id_guest' : '*').') as visits
+				FROM `'._DB_PREFIX_.'connections`
+				WHERE `date_add` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
+				'.Shop::addSqlRestriction().'
+				GROUP BY LEFT(`date_add`, 7)');
+				foreach ($result as $row)
+					$visits[strtotime($row['date'].'-01')] = $row['visits'];
 			}
 			else
 				$visits = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
@@ -160,6 +177,19 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				$sales[strtotime($row['date'])] = $row['sales'];
 			return $sales;
 		}
+		elseif ($granularity == 'month')
+		{
+			$sales = array();
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+			SELECT LEFT(`invoice_date`, 7) as date, SUM(total_paid_tax_excl / o.conversion_rate) as sales
+			FROM `'._DB_PREFIX_.'orders` o
+			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
+			'.Shop::addSqlRestriction(false, 'o').'
+			GROUP BY LEFT(`invoice_date`, 7)');
+			foreach ($result as $row)
+				$sales[strtotime($row['date'].'-01')] = $row['sales'];
+			return $sales;
+		}
 		else
 			return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT SUM(total_paid_tax_excl / o.conversion_rate)
@@ -218,6 +248,19 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			GROUP BY LEFT(`invoice_date`, 10)');
 			foreach ($result as $row)
 				$orders[strtotime($row['date'])] = $row['orders'];
+			return $orders;
+		}
+		elseif ($granularity == 'month')
+		{
+			$orders = array();
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+			SELECT LEFT(`invoice_date`, 7) as date, COUNT(*) as orders
+			FROM `'._DB_PREFIX_.'orders`
+			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
+			'.Shop::addSqlRestriction(false).'
+			GROUP BY LEFT(`invoice_date`, 7)');
+			foreach ($result as $row)
+				$orders[strtotime($row['date'].'-01')] = $row['orders'];
 			return $orders;
 		}
 		else

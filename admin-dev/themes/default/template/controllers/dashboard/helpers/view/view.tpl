@@ -46,7 +46,7 @@
 		</div>
 		<div class="col-lg-7" id="hookDashboardZoneTwo">
 			{$hookDashboardZoneTwo}
-			<div id="dashaddons" class="widget">
+			<div id="dashaddons">
 				<a href="http://addons.prestashop.com/208-dashboards?utm_source=backoffice_dashboard" target="_blank">
 					<i class="icon-plus"></i> {l s='Add more graph and data'}
 				</a>
