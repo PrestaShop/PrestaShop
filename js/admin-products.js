@@ -133,17 +133,8 @@ product_tabs['Combinations'] = new function(){
 				if (data.status == 'ok')
 				{
 					showSuccessMessage(data.message);
-
-					// Reset previous default attribute display
-					var previous = $('a[name=is_default]');
-					previous.closest('tr').attr('style', '');
-					previous.show();
-					previous.attr('name', '');
-
-					// Update new default attribute display
-					$(item).closest('tr').css('background','#BDE5F8');
-					$(item).hide();
-					$(item).attr('name', 'is_default');
+					$('.highlighted').removeClass('highlighted');
+					$(item).closest('tr').addClass('highlighted');
 				}
 				else
 					showErrorMessage(data.message);
@@ -152,9 +143,9 @@ product_tabs['Combinations'] = new function(){
 	};
 
 	this.bindDefault = function(){
-		$('a[name=is_default]').hide();
 		$('table[name=list_table]').delegate('a.default', 'click', function(e){
 			e.preventDefault();
+			console.log('ok');
 			self.defaultProductAttribute(this.href, this);
 		});
 	};

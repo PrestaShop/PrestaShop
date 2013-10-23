@@ -3852,12 +3852,10 @@ class AdminProductsControllerCore extends AdminController
 					$comb_array[$id_product_attribute]['image'] = $product_attribute['id_image'] ? new Image($product_attribute['id_image']) : false;
 					$comb_array[$id_product_attribute]['available_date'] = $product_attribute['available_date'] != 0 ? date('Y-m-d', strtotime($product_attribute['available_date'])) : '0000-00-00';
 					$comb_array[$id_product_attribute]['attributes'] = $list;
+					$comb_array[$id_product_attribute]['name'] = $list;
 
 					if ($product_attribute['default_on'])
-					{
-						$comb_array[$id_product_attribute]['name'] = 'is_default';
 						$comb_array[$id_product_attribute]['class'] = $default_class;
-					}
 				}
 			}
 		}
