@@ -277,6 +277,7 @@
 					$('#header_search_options').on('click','li a', function(e){
 						e.preventDefault();
 						$('#header_search_options .search-option').removeClass('active');
+						$(this).closest('li').addClass('active');
 						$('#bo_search_type').val($(this).data('value'));
 						$('#search_type_icon').removeAttr("class").addClass($(this).data('icon'));
 						$('#bo_query').attr("placeholder",$(this).data('placeholder'));
@@ -285,35 +286,22 @@
 				</script>
 
 			<!-- js 
-				size up search field on focus
-				prevent blank search
+					OK - size up search field on focus
+					- prevent blank search
+					OK - dropdown menu as select
+					OK - fill input hidden field with data value from list item
+					OK - change icon in suffix
+					OK - set active on right list item
+					OK - focus input field
+					OK - change place holder
+					- use change for first init
+					- clear search
+					(?) - keep focus state when keyword exists
 
-				dropdown menu as select
-					- fill input hidden field with data value from list item
-					- change icon in suffix
-					- set active on right list item
-					- focus input field
-					- change place holder
-			-->
-				<!-- 	//todo Search in section
-				<select name="bo_search_type" id="bo_search_type" class="chosen no-search">
-
-					<option value="0">{l s='everywhere'}</option>
+					old code sample:
 					<option value="1" {if {$search_type} == 1} selected="selected" {/if}>{l s='catalog'}</option>
-
-					<optgroup label="{l s='customers'}:">
-						<option value="2" {if {$search_type} == 2} selected="selected" {/if}>{l s='by name'}</option>
-						<option value="6" {if {$search_type} == 6} selected="selected" {/if}>{l s='by ip address'}</option>
-					</optgroup>
-
-					<option value="3" {if {$search_type} == 3} selected="selected" {/if}>{l s='orders'}</option>
-					<option value="4" {if {$search_type} == 4} selected="selected" {/if}>{l s='invoices'}</option>
-					<option value="5" {if {$search_type} == 5} selected="selected" {/if}>{l s='carts'}</option>
-					<option value="7" {if {$search_type} == 7} selected="selected" {/if}>{l s='modules'}</option>
-
-				</select>  -->
+			-->
 			</form>
-
 
 {if count($quick_access) > 0}
 			<ul id="header_quick">
