@@ -15,7 +15,7 @@
 			<?php echo t('Message from a customer'); ?>
 		</p>
 		<span>
-			<?php echo t('You have received a new message regarding order with the reference {order_name}.'); ?><br /><br />
+			<?php echo t('You have received a new message regarding order with the reference <span><strong>{order_name}</strong></span>.'); ?><br /><br />
 			<?php echo t('<span><strong>Customer:</strong></span> {firstname} {lastname} ({email})'); ?><br /><br />
 			<?php echo t('{message}'); ?>
 		</span>

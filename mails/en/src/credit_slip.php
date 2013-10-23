@@ -15,7 +15,7 @@
 			<?php echo t('Your order with the reference {order_name} - Credit slip created'); ?>
 		</p>
 		<span>
-			<?php echo t('We have generated a credit slip in your name for order with the reference {order_name}'); ?>
+			<?php echo t('We have generated a credit slip in your name for order with the reference <span><strong>{order_name}</strong></span>.'); ?>
 		</span>
 	</td>
 </tr>

@@ -15,7 +15,7 @@
 			<?php echo t('Password reset request for {shop_name}'); ?>
 		</p>
 		<span>
-			<?php echo t('You have requested to reset your {shop_name} login details.'); ?><br/><br/>
+			<?php echo t('You have requested to reset your <span><strong>{shop_name}</strong></span> login details.'); ?><br/><br/>
 			<?php echo t('Please note that this will change your current password.'); ?><br/><br/>
 			<?php echo t('To confirm this action, please use the following link:<br /> <a href="{url}">{url}</a>'); ?>
 		</span>

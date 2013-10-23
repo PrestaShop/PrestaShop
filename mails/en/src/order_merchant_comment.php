@@ -15,7 +15,7 @@
 			<?php echo t('New message from {shop_name}'); ?>
 		</p>
 		<span>
-			<?php echo t('You have received a new message from {shop_name} regarding order with the reference {order_name}.'); ?><br /><br />
+			<?php echo t('You have received a new message from <span><strong>{shop_name}</strong></span> regarding order with the reference <span><strong>{order_name}</strong></span>.'); ?><br /><br />
 			<?php echo t('<span><strong>Message:</strong></span> {message}'); ?>
 		</span>
 	</td>

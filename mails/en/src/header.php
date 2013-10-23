@@ -11,8 +11,8 @@ function t($str)
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<title><?php echo t('Message from {shop_name}'); ?></title>
-		<link rel="stylesheet" type="text/css" href="../../admin-dev/themes/default/css/admin-mail.css" />
-		<link rel="stylesheet" type="text/css" href="../../admin-dev/themes/default/css/admin-theme/email.css" />
+		<link rel="stylesheet" type="text/css" href="../../../admin-dev/themes/default/css/admin-mail.css" />
+		<link rel="stylesheet" type="text/css" href="../../../admin-dev/themes/default/css/admin-theme/email.css" />
 	</head>
 	<body>
 		<table class="table table-mail">

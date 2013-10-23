@@ -15,7 +15,7 @@
 			<?php echo t('Your {shop_name} login information'); ?>
 		</p>
 		<span>
-			<?php echo t('Here is your personal login information for {shop_name}:'); ?><br/>
+			<?php echo t('Here is your personal login information for <span><strong>{shop_name}</strong></span>:'); ?><br/>
 			<?php echo t('<span><strong>First name:</strong></span> {firstname}'); ?><br />
 			<?php echo t('<span><strong>Last name:</strong></span> {lastname}'); ?><br />
 			<?php echo t('<span><strong>Password:</strong></span> {passwd}'); ?><br />
