@@ -151,7 +151,7 @@
 					<td style="text-align: right; width: 10%">
                     {if (isset($order_detail.reduction_amount) && $order_detail.reduction_amount > 0)}
                         -{displayPrice currency=$order->id_currency price=$order_detail.reduction_amount}
-                    {else if (isset($order_detail.reduction_percent) && $order_detail.reduction_percent > 0)}
+                    {elseif (isset($order_detail.reduction_percent) && $order_detail.reduction_percent > 0)}
                         -{$order_detail.reduction_percent}%
                     {else}
                     --
