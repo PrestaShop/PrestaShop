@@ -338,5 +338,21 @@ WHERE
 
 DELETE FROM `PREFIX_hook_module` 
 WHERE
-	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockmyaccount')
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockmyaccount');
 
+DELETE FROM `PREFIX_hook_module` WHERE id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayRightColumn');
+
+SET @id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn');
+INSERT INTO `PREFIX_hook_module_exceptions` (`id_shop`, `id_module`, `id_hook`, `file_name`) (
+	SELECT 1, id_module, id_hook, pages.page
+	FROM `PREFIX_hook_module`
+	JOIN (
+		SELECT 'index' as page
+		UNION SELECT 'auth' as page
+		UNION SELECT 'cart' as page
+		UNION SELECT 'order' as page
+		UNION SELECT 'orderopc' as page
+		UNION SELECT 'stores' as page
+	) pages
+	WHERE id_hook = @id_hook
+);
