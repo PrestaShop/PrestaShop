@@ -175,7 +175,7 @@ var ajaxCart = {
 	},
 
 	// add a product in the cart via ajax
-	add : function(idProduct, idCombination, addedFromProductPage, callerElement, quantity, whishlist){
+	add : function(idProduct, idCombination, addedFromProductPage, callerElement, quantity, wishlist){
 		if (addedFromProductPage && !checkCustomizations())
 		{
 			alert(fieldRequired);
@@ -204,9 +204,9 @@ var ajaxCart = {
 			data: 'controller=cart&add=1&ajax=true&qty=' + ((quantity && quantity != null) ? quantity : '1') + '&id_product=' + idProduct + '&token=' + static_token + ( (parseInt(idCombination) && idCombination != null) ? '&ipa=' + parseInt(idCombination): ''),
 			success: function(jsonData,textStatus,jqXHR)
 			{
-				// add appliance to whishlist module
-				if (whishlist && !jsonData.errors)
-					WishlistAddProductCart(whishlist[0], idProduct, idCombination, whishlist[1]);
+				// add appliance to wishlist module
+				if (wishlist && !jsonData.errors)
+					WishlistAddProductCart(wishlist[0], idProduct, idCombination, wishlist[1]);
 
 				// add the picture to the cart
 				var $element = $(callerElement).parent().parent().find('a.product_image img,a.product_img_link img');
