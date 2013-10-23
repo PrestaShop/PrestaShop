@@ -172,10 +172,16 @@ class OrderHistoryCore extends ObjectModel
 				if ($new_os->partially_shipped)
 				{
 					$order_delivery = new OrderDelivery($order->id);
-					$order_delivery->setPartiallyShipped($delivery_id);
+					$order_delivery->setShipped($delivery_id);
+				}
+				if ($new_os->shipped == 1)
+				{
+					$order_delivery = new OrderDelivery($order->id);
+					$ids = $order_delivery->getIds($order->id, $order->id_shop);
+					foreach ($ids as $id)
+						$order_delivery->setShipped($id['delivery_id']);
 				}
 			}
-			// TODO EDS: Add if status shipped is set, then ALL deliverys are marked as shipped
 
 			// foreach products of the order
 			if (Validate::isLoadedObject($old_os))			
@@ -435,20 +441,21 @@ class OrderHistoryCore extends ObjectModel
 					$file_attachement['name'] = Configuration::get('PS_INVOICE_PREFIX', (int)$order->id_lang, null, $order->id_shop).sprintf('%06d', $order->invoice_number).'.pdf';
 					$file_attachement['mime'] = 'application/pdf';
 				}
-				elseif ($result['attach_pdf_invoice'] || $result['attach_pdf_delivery'])
+				elseif (($result['attach_pdf_invoice'] || $result['attach_pdf_delivery']) && Configuration::get('PS_EDS'))
 				{
 					$file_attachement = array();
 					$context = Context::getContext();
+
+					if (Configuration::get('PS_EDS_EMAIL_PDF_LATEST'))
+					{
+						$id_order_invoice = $order->getLatestInvoice();
+						$invoice = new OrderInvoice($id_order_invoice);
+					}
+					else
+						$invoice = $order->getInvoicesCollection();
+
 					if ($result['attach_pdf_invoice'])
 					{
-						if (Configuration::get('PS_EDS_EMAIL_PDF_LATEST'))
-						{
-							// TODO EDS add function get highest invoice id for order number
-							$invoice = $order->getInvoicesCollection();
-						}
-						else
-							$invoice = $order->getInvoicesCollection();
-
 						$pdf = new PDF($invoice, PDF::TEMPLATE_INVOICE, $context->smarty);
 						$file_attachement['invoice']['content'] = $pdf->render(false);
 						$file_attachement['invoice']['name'] = 'invoice.pdf';
@@ -456,7 +463,7 @@ class OrderHistoryCore extends ObjectModel
 					}
 					if ($result['attach_pdf_delivery'])
 					{
-						$pdf = new PDF($order->getInvoicesCollection(), PDF::TEMPLATE_DELIVERY_SLIP, $context->smarty);
+						$pdf = new PDF($invoice, PDF::TEMPLATE_DELIVERY_SLIP, $context->smarty);
 						$file_attachement['delivery']['content'] = $pdf->render(false);
 						$file_attachement['delivery']['name'] = 'delivery.pdf';
 						$file_attachement['delivery']['mime'] = 'application/pdf';

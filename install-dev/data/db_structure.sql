@@ -2466,72 +2466,77 @@ CREATE TABLE `PREFIX_order_invoice_payment` (
 	KEY `id_order` (`id_order`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-CREATE TABLE `PREFIX_order_delivery_detail_tax` (
-  `id_order_detail` int(11) NOT NULL,
-  `id_tax` int(11) NOT NULL,
-  `unit_amount` DECIMAL(16, 6) NOT NULL DEFAULT '0.00',
-  `total_amount` DECIMAL(16, 6) NOT NULL DEFAULT '0.00'
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
-
-CREATE TABLE `PREFIX_order_delivery_detail` (
-  `id_order_detail` int(10) unsigned NOT NULL auto_increment,
+CREATE TABLE IF NOT EXISTS `PREFIX_order_delivery_detail` (
+  `id_order_detail` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `delivery_id` int(10) unsigned NOT NULL,
   `id_order` int(10) unsigned NOT NULL,
-  `id_order_invoice` int(11) default NULL,
-  `id_warehouse` int(10) unsigned DEFAULT 0,
+  `id_order_invoice` int(11) DEFAULT NULL,
+  `id_warehouse` int(10) unsigned DEFAULT '0',
   `id_shop` int(11) unsigned NOT NULL,
   `product_id` int(10) unsigned NOT NULL,
-  `product_attribute_id` int(10) unsigned default NULL,
+  `product_attribute_id` int(10) unsigned DEFAULT NULL,
   `product_name` varchar(255) NOT NULL,
-  `product_quantity` int(10) unsigned NOT NULL default '0',
-  `product_quantity_in_stock` int(10) NOT NULL default 0,
-  `product_quantity_refunded` int(10) unsigned NOT NULL default '0',
-  `product_quantity_return` int(10) unsigned NOT NULL default '0',
-  `product_quantity_reinjected` int(10) unsigned NOT NULL default 0,
-  `product_price` decimal(20,6) NOT NULL default '0.000000',
-  `reduction_percent` DECIMAL(10, 2) NOT NULL default '0.00',
-  `reduction_amount` DECIMAL(20, 6) NOT NULL default '0.000000',
-  `reduction_amount_tax_incl` DECIMAL(20, 6) NOT NULL default '0.000000',
-  `reduction_amount_tax_excl` DECIMAL(20, 6) NOT NULL default '0.000000',
-  `group_reduction` DECIMAL(10, 2) NOT NULL default '0.000000',
-  `product_quantity_discount` decimal(20,6) NOT NULL default '0.000000',
-  `product_ean13` varchar(13) default NULL,
-  `product_upc` varchar(12) default NULL,
-  `product_reference` varchar(32) default NULL,
-  `product_supplier_reference` varchar(32) default NULL,
-  `product_weight` DECIMAL(20,6) NOT NULL,
-  `tax_computation_method` tinyint(1) unsigned NOT NULL default '0',
+  `product_quantity` int(10) unsigned NOT NULL DEFAULT '0',
+  `product_quantity_in_stock` int(10) NOT NULL DEFAULT '0',
+  `product_quantity_refunded` int(10) unsigned NOT NULL DEFAULT '0',
+  `product_quantity_return` int(10) unsigned NOT NULL DEFAULT '0',
+  `product_quantity_reinjected` int(10) unsigned NOT NULL DEFAULT '0',
+  `product_price` decimal(20,6) NOT NULL DEFAULT '0.000000',
+  `reduction_percent` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `reduction_amount` decimal(20,6) NOT NULL DEFAULT '0.000000',
+  `reduction_amount_tax_incl` decimal(20,6) NOT NULL DEFAULT '0.000000',
+  `reduction_amount_tax_excl` decimal(20,6) NOT NULL DEFAULT '0.000000',
+  `group_reduction` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `product_quantity_discount` decimal(20,6) NOT NULL DEFAULT '0.000000',
+  `product_ean13` varchar(13) DEFAULT NULL,
+  `product_upc` varchar(12) DEFAULT NULL,
+  `product_reference` varchar(32) DEFAULT NULL,
+  `product_supplier_reference` varchar(32) DEFAULT NULL,
+  `product_weight` decimal(20,6) NOT NULL,
+  `tax_computation_method` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `tax_name` varchar(16) NOT NULL,
-  `tax_rate` DECIMAL(10,3) NOT NULL DEFAULT '0.000',
-  `ecotax` decimal(21,6) NOT NULL default '0.00',
-  `ecotax_tax_rate` DECIMAL(5,3) NOT NULL DEFAULT '0.000',
-  `discount_quantity_applied` TINYINT(1) NOT NULL DEFAULT 0,
-  `download_hash` varchar(255) default NULL,
-  `download_nb` int(10) unsigned default '0',
-  `download_deadline` datetime default NULL,
-  `total_price_tax_incl` DECIMAL(20, 6) NOT NULL default '0.000000',
-  `total_price_tax_excl` DECIMAL(20, 6) NOT NULL default '0.000000',
-  `unit_price_tax_incl` DECIMAL(20, 6) NOT NULL default '0.000000',
-  `unit_price_tax_excl` DECIMAL(20, 6) NOT NULL default '0.000000',
-  `total_shipping_price_tax_incl` DECIMAL(20, 6) NOT NULL default '0.000000',
-  `total_shipping_price_tax_excl` DECIMAL(20, 6) NOT NULL default '0.000000',
-  `purchase_supplier_price` DECIMAL(20, 6) NOT NULL default '0.000000',
-  `original_product_price` DECIMAL(20, 6) NOT NULL default '0.000000',
+  `tax_rate` decimal(10,3) NOT NULL DEFAULT '0.000',
+  `ecotax` decimal(21,6) NOT NULL DEFAULT '0.000000',
+  `ecotax_tax_rate` decimal(5,3) NOT NULL DEFAULT '0.000',
+  `discount_quantity_applied` tinyint(1) NOT NULL DEFAULT '0',
+  `download_hash` varchar(255) DEFAULT NULL,
+  `download_nb` int(10) unsigned DEFAULT '0',
+  `download_deadline` datetime DEFAULT NULL,
+  `total_price_tax_incl` decimal(20,6) NOT NULL DEFAULT '0.000000',
+  `total_price_tax_excl` decimal(20,6) NOT NULL DEFAULT '0.000000',
+  `unit_price_tax_incl` decimal(20,6) NOT NULL DEFAULT '0.000000',
+  `unit_price_tax_excl` decimal(20,6) NOT NULL DEFAULT '0.000000',
+  `total_shipping_price_tax_incl` decimal(20,6) NOT NULL DEFAULT '0.000000',
+  `total_shipping_price_tax_excl` decimal(20,6) NOT NULL DEFAULT '0.000000',
+  `purchase_supplier_price` decimal(20,6) NOT NULL DEFAULT '0.000000',
+  `original_product_price` decimal(20,6) NOT NULL DEFAULT '0.000000',
   PRIMARY KEY (`id_order_detail`),
   KEY `order_detail_order` (`id_order`),
   KEY `product_id` (`product_id`),
   KEY `product_attribute_id` (`product_attribute_id`),
-  KEY `id_order_id_order_detail` (`id_order`, `id_order_detail`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+  KEY `id_order_id_order_detail` (`id_order`,`id_order_detail`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `ps_order_delivery` (
+CREATE TABLE IF NOT EXISTS `PREFIX_order_delivery_detail_tax` (
+  `id_order_detail` int(11) NOT NULL,
+  `id_tax` int(11) NOT NULL,
+  `unit_amount` decimal(16,6) NOT NULL DEFAULT '0.000000',
+  `total_amount` decimal(16,6) NOT NULL DEFAULT '0.000000'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `PREFIX_order_delivery` (
   `delivery_id` int(10) NOT NULL AUTO_INCREMENT,
   `id_order` int(10) NOT NULL,
   `id_shop` int(11) NOT NULL,
   `shipped` tinyint(1) NOT NULL DEFAULT '0',
-  `id_order_invoice` int(11) UNSIGNED NOT NULL,
+  `id_order_invoice` int(11) unsigned NOT NULL,
   `delivery_number` int(11) NOT NULL,
-  `date_add` datetime,
-   PRIMARY KEY (`delivery_id`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+  `date_add` datetime DEFAULT NULL,
+  PRIMARY KEY (`delivery_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `PREFIX_order_template` (
+  `id_order` int(10) NOT NULL,
+  `invoice` varchar(255) DEFAULT NULL,
+  `delivery-slip` varchar(255) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;

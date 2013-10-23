@@ -39,8 +39,8 @@ class HTMLTemplatePackageSlipCore extends HTMLTemplate
 		$this->smarty = $smarty;
 
 		// header informations
-		$this->date = Tools::displayDate(date("Y-m-d H:i:s"));
-		$this->title = HTMLTemplatePackageSlip::l('Package Slip') .' #'.sprintf('%06d', $this->order_invoice->id_order);
+		$this->date = Tools::displayDate(date('Y-m-d H:i:s'));
+		$this->title = HTMLTemplatePackageSlip::l('Package Slip').' #'.sprintf('%06d', $this->order_invoice->id_order);
 
 		// footer informations
 		$this->shop = new Shop((int)$this->order->id_shop);
@@ -65,66 +65,55 @@ class HTMLTemplatePackageSlipCore extends HTMLTemplate
 		$order_details = $this->order->getProducts();
 		$delivery_products = $this->order->getProductsDelivery();
 		$deliverd_products = array();
-		foreach($delivery_products as  $delivery)
+		foreach ($delivery_products as $delivery)
 		{
-				foreach($delivery as $product) {
-					if($product['shipped'] == 1) {
-						if(!empty($deliverd_products[ $product['product_id'] . '_' . $product['product_attribute_id'] ]))
-						{
-							$deliverd_products[ $product['product_id'] . '_' . $product['product_attribute_id' ] ] += $product['product_quantity'];
-						}
+				foreach ($delivery as $product)
+				{
+					if ($product['shipped'] == 1)
+					{
+						if (!empty($deliverd_products[$product['product_id'].'_'.$product['product_attribute_id']]))
+							$deliverd_products[$product['product_id'].'_'.$product['product_attribute_id']] += $product['product_quantity'];
 						else
-						{
-							$deliverd_products[ $product['product_id'] . '_' . $product['product_attribute_id' ] ] = $product['product_quantity'];
-						}
+							$deliverd_products[$product['product_id'].'_'.$product['product_attribute_id']] = $product['product_quantity'];
 					}
 					else
 					{
-						if(!empty($deliverd_products[ $product['product_id'] . '_' . $product['product_attribute_id'] . "_current"] ) )
-						{
-							$deliverd_products[ $product['product_id'] . '_' . $product['product_attribute_id' ] . "_current" ] += $product['product_quantity'];
-						}
+						if (!empty($deliverd_products[$product['product_id'].'_'.$product['product_attribute_id'].'_current']))
+							$deliverd_products[$product['product_id'].'_'.$product['product_attribute_id'].'_current'] += $product['product_quantity'];
 						else
-						{
-							$deliverd_products[ $product['product_id'] . '_' . $product['product_attribute_id' ] . "_current" ] = $product['product_quantity'];
-						}
+							$deliverd_products[$product['product_id'].'_'.$product['product_attribute_id'].'_current'] = $product['product_quantity'];
 					}
 				}
 		}
 		foreach ($order_details as &$order_detail)
 		{
-			$order_detail['warehouse_name'] = "--";
-			$order_detail['warehouse_location'] = "--";
+			$order_detail['warehouse_name'] = '--';
+			$order_detail['warehouse_location'] = '--';
 			if ($order_detail['id_warehouse'] != 0)
 			{
 				$warehouse = new Warehouse((int)$order_detail['id_warehouse']);
-				$warehouse_location = $warehouse->getProductLocation($order_detail["product_id"],$order_detail["product_attribute_id"],$warehouse->id);
+				$warehouse_location = $warehouse->getProductLocation($order_detail['product_id'], $order_detail['product_attribute_id'], $warehouse->id);
 				$order_detail['warehouse_name'] = $warehouse->name;
-				if($warehouse_location != "") {
+				if ($warehouse_location != '')
 					$order_detail['warehouse_location'] = $warehouse_location;
-				}
 			}
 			if ($order_detail['image'] != null)
 			{
 				$name = 'product_mini_'.(int)$order_detail['product_id'].(isset($order_detail['product_attribute_id']) ? '_'.(int)$order_detail['product_attribute_id'] : '').'.jpg';
 				// generate image cache, only for back office
-				$order_detail['image_tag'] = ImageManager::thumbnail(_PS_IMG_DIR_.'p/'.$order_detail['image']->getExistingImgPath().'.jpg', $name, 45, 'jpg',true);
+				$order_detail['image_tag'] = ImageManager::thumbnail(_PS_IMG_DIR_.'p/'.$order_detail['image']->getExistingImgPath().'.jpg', $name, 45, 'jpg', true);
 				if (file_exists(_PS_TMP_IMG_DIR_.$name))
 					$order_detail['image_size'] = getimagesize(_PS_TMP_IMG_DIR_.$name);
 				else
 					$order_detail['image_size'] = false;
 			}
-			if(!empty($deliverd_products)) {
-				if(isset($deliverd_products[ $order_detail['product_id'] . '_' . $order_detail['product_attribute_id' ] ]))
-				{
-					// Removed delivered products qty
-					$order_detail['product_quantity'] = $order_detail['product_quantity'] - $deliverd_products[ $order_detail['product_id'] . '_' . $order_detail['product_attribute_id' ] ];
-				}
-				if(isset($deliverd_products[ $order_detail['product_id'] . '_' . $order_detail['product_attribute_id' ] . "_current"]) )
-				{
-					// Removed deliverd products qty and qty on unshipped delivery
-					$order_detail['product_quantity_current'] = ($order_detail['product_quantity'] - $deliverd_products[ $order_detail['product_id'] . '_' . $order_detail['product_attribute_id' ] . '_current']);
-				}
+			if (!empty($deliverd_products))
+			{
+				if (isset($deliverd_products[$order_detail['product_id'].'_'.$order_detail['product_attribute_id']])) // Removed delivered products qty
+					$order_detail['product_quantity'] = $order_detail['product_quantity'] - $deliverd_products[$order_detail['product_id'].'_'.$order_detail['product_attribute_id']];
+
+				if (isset($deliverd_products[$order_detail['product_id'].'_'.$order_detail['product_attribute_id'].'_current'])) // Removed deliverd products qty and qty on unshipped delivery
+					$order_detail['product_quantity_current'] = ($order_detail['product_quantity'] - $deliverd_products[$order_detail['product_id'].'_'.$order_detail['product_attribute_id'].'_current']);
 			}
 		}
 	
@@ -157,7 +146,7 @@ class HTMLTemplatePackageSlipCore extends HTMLTemplate
 	 */
 	public function getFilename()
 	{
-		return "PACKSLIP".sprintf('%06d', $this->order_invoice->id_order).'.pdf';
+		return 'PACKSLIP'.sprintf('%06d', $this->order_invoice->id_order).'.pdf';
 	}
 }
 

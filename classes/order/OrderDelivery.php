@@ -262,7 +262,7 @@ class OrderDeliveryCore extends ObjectModel
 			}
 	}
 
-	public function setPartiallyShipped($delivery_id)
+	public function setShipped($delivery_id)
 	{
 		Db::getInstance()->update('order_delivery', array('shipped' => 1 ), '`delivery_id` = '.$delivery_id ); // set delivery id as shipped
 	}

@@ -13,20 +13,22 @@
     <field name="paid"/>
     <field name="package"/>
     <field name="partially_shipped"/>
+    <field name="attach_pdf_invoice"/>
+    <field name="attach_pdf_delivery"/>
   </fields>
   <entities>
-    <order_state id="Awaiting_cheque_payment" invoice="0" send_email="1" module_name="cheque" color="RoyalBlue" unremovable="1" hidden="0" logable="0" delivery="0" package="0" shipped="0" paid="0"/>
-    <order_state id="Payment_accepted" invoice="1" send_email="1" color="LimeGreen" unremovable="1" hidden="0" logable="1" delivery="0" package="0" shipped="0" paid="1"/>
-    <order_state id="Preparation_in_progress" invoice="1" send_email="1" color="DarkOrange" unremovable="1" hidden="0" logable="1" delivery="1" package="1" shipped="0" paid="1" />
-    <order_state id="Shipped" invoice="1" send_email="1" color="BlueViolet" unremovable="1" hidden="0" logable="1" delivery="1" package="0" shipped="1" paid="1"/>
-    <order_state id="Delivered" invoice="1" send_email="0" color="#108510" unremovable="1" hidden="0" logable="1" delivery="1" package="0" shipped="1" paid="1"/>
-    <order_state id="Canceled" invoice="0" send_email="1" color="Crimson" unremovable="1" hidden="0" logable="0" delivery="0" package="0" shipped="0" paid="0"/>
-    <order_state id="Refund" invoice="1" send_email="1" color="#ec2e15" unremovable="1" hidden="0" logable="0" delivery="0" package="0" shipped="0" paid="0"/>
-    <order_state id="Payment_error" invoice="0" send_email="1" color="#8f0621" unremovable="1" hidden="0" logable="0" delivery="0" package="0" shipped="0" paid="0"/>
-    <order_state id="On_backorder" invoice="1" send_email="1" color="HotPink" unremovable="1" hidden="0" logable="0" delivery="0" package="0" shipped="0" paid="1"/>
-    <order_state id="Awaiting_bank_wire_payment" invoice="0" send_email="1" module_name="bankwire" color="RoyalBlue" unremovable="1" hidden="0" logable="0" delivery="0" package="0" shipped="0" paid="0"/>
-    <order_state id="Awaiting_PayPal_payment" invoice="0" send_email="0" color="RoyalBlue" unremovable="1" hidden="0" logable="0" delivery="0" package="0" shipped="0" paid="0"/>
-    <order_state id="Payment_remotely_accepted" invoice="1" send_email="1" color="LimeGreen" unremovable="1" hidden="0" logable="1" delivery="0" package="0" shipped="0" paid="1"/>
-    <order_state id="Partially_shipped" invoice="1" send_email="0" color="BlueViolet" unremovable="1" hidden="0" logable="1" delivery="1" package="0" shipped="0" paid="0" partially_shipped="1" />
+    <order_state id="Awaiting_cheque_payment" invoice="0" send_email="1" module_name="cheque" color="RoyalBlue" unremovable="1" hidden="0" logable="0" delivery="0" package="0" shipped="0" paid="0" attach_pdf_invoice="0" attach_pdf_delivery="0" />
+    <order_state id="Payment_accepted" invoice="1" send_email="1" color="LimeGreen" unremovable="1" hidden="0" logable="1" delivery="0" package="0" shipped="0" paid="1" attach_pdf_invoice="0" attach_pdf_delivery="0" />
+    <order_state id="Preparation_in_progress" invoice="1" send_email="1" color="DarkOrange" unremovable="1" hidden="0" logable="1" delivery="1" package="1" shipped="0" paid="1" attach_pdf_invoice="0" attach_pdf_delivery="0" />
+    <order_state id="Shipped" invoice="1" send_email="1" color="BlueViolet" unremovable="1" hidden="0" logable="1" delivery="1" package="0" shipped="1" paid="1" attach_pdf_invoice="0" attach_pdf_delivery="0" />
+    <order_state id="Delivered" invoice="1" send_email="0" color="#108510" unremovable="1" hidden="0" logable="1" delivery="1" package="0" shipped="1" paid="1" attach_pdf_invoice="0" attach_pdf_delivery="0" />
+    <order_state id="Canceled" invoice="0" send_email="1" color="Crimson" unremovable="1" hidden="0" logable="0" delivery="0" package="0" shipped="0" paid="0" attach_pdf_invoice="0" attach_pdf_delivery="0" />
+    <order_state id="Refund" invoice="1" send_email="1" color="#ec2e15" unremovable="1" hidden="0" logable="0" delivery="0" package="0" shipped="0" paid="0" attach_pdf_invoice="0" attach_pdf_delivery="0" />
+    <order_state id="Payment_error" invoice="0" send_email="1" color="#8f0621" unremovable="1" hidden="0" logable="0" delivery="0" package="0" shipped="0" paid="0" attach_pdf_invoice="0" attach_pdf_delivery="0" />
+    <order_state id="On_backorder" invoice="1" send_email="1" color="HotPink" unremovable="1" hidden="0" logable="0" delivery="0" package="0" shipped="0" paid="1" attach_pdf_invoice="0" attach_pdf_delivery="0" />
+    <order_state id="Awaiting_bank_wire_payment" invoice="0" send_email="1" module_name="bankwire" color="RoyalBlue" unremovable="1" hidden="0" logable="0" delivery="0" package="0" shipped="0" paid="0" attach_pdf_invoice="0" attach_pdf_delivery="0" />
+    <order_state id="Awaiting_PayPal_payment" invoice="0" send_email="0" color="RoyalBlue" unremovable="1" hidden="0" logable="0" delivery="0" package="0" shipped="0" paid="0" attach_pdf_invoice="0" attach_pdf_delivery="0" />
+    <order_state id="Payment_remotely_accepted" invoice="1" send_email="1" color="LimeGreen" unremovable="1" hidden="0" logable="1" delivery="0" package="0" shipped="0" paid="1" attach_pdf_invoice="0" attach_pdf_delivery="0" />
+    <order_state id="Partially_shipped" invoice="1" send_email="0" color="BlueViolet" unremovable="1" hidden="0" logable="1" delivery="1" package="0" shipped="0" paid="0" partially_shipped="1" attach_pdf_invoice="0" attach_pdf_delivery="0" />
   </entities>
 </entity_order_state>

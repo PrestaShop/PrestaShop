@@ -42,7 +42,7 @@ class PdfInvoiceControllerCore extends FrontController
 		if (!(int)Configuration::get('PS_INVOICE'))
 			die(Tools::displayError('Invoices are disabled in this shop.'));
 
-		if(Tools::getValue('id_order_invoice'))
+		if (Tools::getValue('id_order_invoice'))
 		{
 			$order_invoice = new OrderInvoice((int)Tools::getValue('id_order_invoice'));
 			if (!Validate::isLoadedObject($order_invoice))
@@ -72,7 +72,7 @@ class PdfInvoiceControllerCore extends FrontController
 
 	public function display()
 	{	
-		if($this->order_invoice)
+		if ($this->order_invoice)
 		{
 			$pdf = new PDF($this->order_invoice, PDF::TEMPLATE_INVOICE, $this->context->smarty);
 			$pdf->render();

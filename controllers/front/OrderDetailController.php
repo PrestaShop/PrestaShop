@@ -158,9 +158,10 @@ class OrderDetailControllerCore extends FrontController
 				$products = $order->getProducts();
 				$deliverd_products = $order->getProductsDelivery();
 				$order_delivery = new OrderDelivery();
-				foreach($deliverd_products as $k => $delivery_number) {
-					$shipped = $order_delivery->getShippedByNr($k,$order->id);
-					if($shipped == 0)
+				foreach ($deliverd_products as $k => $delivery_number)
+				{
+					$shipped = $order_delivery->getShippedByNr($k, $order->id);
+					if ($shipped == 0)
 						unset($deliverd_products[$k]);
 				}
 
@@ -174,9 +175,10 @@ class OrderDetailControllerCore extends FrontController
 
 				$invoices = $order->getInvoicesCollection()->getResults();
 				// remove nonshipped invoices
-				foreach($invoices as $kIn => $pdfinvoice) {
-					$shipped = $order_delivery->getShippedByNr($pdfinvoice->delivery_number,$order->id);
-					if($shipped == 0)
+				foreach ($invoices as $kIn => $pdfinvoice)
+				{
+					$shipped = $order_delivery->getShippedByNr($pdfinvoice->delivery_number, $order->id);
+					if ($shipped == 0)
 						unset($invoices[$kIn]);
 				}
 

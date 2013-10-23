@@ -66,7 +66,8 @@
 				{elseif isset($document->is_package)}
 					{l s='Packing slip'}
 				{else}
-					{l s='Invoice'}{if isset($document->delivery_number)} {l s='for Delivery Slip'} {$document->delivery_number}{/if}
+					{l s='Invoice'}
+					{if Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DELIVERED') && $document->delivery_number > 0 } {l s='for Delivery Slip'} {$document->delivery_number}{/if}
 				{/if}
 			{elseif get_class($document) eq 'OrderSlip'}
 				{l s='Credit Slip'}

@@ -38,16 +38,16 @@
 <p><strong>{l s='Payment method'}</strong> <span class="color-myaccount">{$order->payment|escape:'htmlall':'UTF-8'}</span></p>
 {if $invoice AND $invoiceAllowed}
 <p>
-	{if Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DELIVERD')}
+	{if Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DELIVERED')}
 		{foreach $invoices item=pdfInvoice}
-			<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
+			<img src="{$img_dir}icon/pdf.gif" alt="pdf icon" class="icon" />
 			<a target="_blank" href="{$link->getPageLink('pdf-invoice', true)}?id_order_invoice={$pdfInvoice->number|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}">
 			{l s='Invoice for Delivery Slip'} {$pdfInvoice->delivery_number}</a>
 			<br>
 		{/foreach}
 	{else}
-	<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
-	<a target="_blank" href="{$link->getPageLink('pdf-invoice', true)}?id_order={$order->id|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}">{l s='Download your invoice as a PDF file.'}</a>
+		<img src="{$img_dir}icon/pdf.gif" alt="pdf icon" class="icon" />
+		<a target="_blank" href="{$link->getPageLink('pdf-invoice', true)}?id_order={$order->id|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}">{l s='Download your invoice as a PDF file.'}</a>
 	{/if}
 </p>
 {/if}
@@ -395,7 +395,9 @@
 							<td class="bold">
 								<label for="cb_{$delivery_product.id_order_detail|intval}">{$delivery_product.product_name|escape:'htmlall':'UTF-8'}</label>
 							</td>
-							<td><input class="order_qte_input"  name="order_qte_input[{$smarty.foreach.products.index}]" type="text" size="2" value="{$delivery_product.customizationQuantityTotal|intval}" /><label for="cb_{$delivery_product.id_order_detail|intval}"><span class="order_qte_span editable">{$delivery_product.customizationQuantityTotal|intval}</span></label></td>
+							<td>
+								<span class="order_qte_span">{$delivery_product.customizationQuantityTotal|intval}</span>
+							</td>
 							<td>
 								<label for="cb_{$delivery_product.id_order_detail|intval}">
 									{if $group_use_tax}
@@ -477,7 +479,9 @@
 									{/if}
 								</label>
 							</td>
-							<td><input class="order_qte_input" name="order_qte_input[{$delivery_product.id_order_detail|intval}]" type="text" size="2" value="{$deliveredproductQuantity|intval}" /><label for="cb_{$delivery_product.id_order_detail|intval}"><span class="order_qte_span editable">{$deliveredproductQuantity|intval}</span></label></td>
+							<td>
+								<span class="order_qte_span">{$deliveredproductQuantity|intval}</span>
+							</td>
 							<td>
 								<label for="cb_{$delivery_product.id_order_detail|intval}">
 								{if $group_use_tax}

@@ -497,17 +497,18 @@ class OrderCore extends ObjectModel
 	public function getProductsDeliveryDetails($get_delivery_number = false)
 	{
 		$order_delivery = new OrderDelivery($this->id);
-		$delivery_ids = $order_delivery->getIds($this->id,$this->id_shop);
+		$delivery_ids = $order_delivery->getIds($this->id, $this->id_shop);
 		$details = array();
 
-		foreach($delivery_ids as $delivery_id) {
+		foreach ($delivery_ids as $delivery_id)
+		{
 			$detail = Db::getInstance()->executeS('
 			SELECT *, ody.id_order
 			FROM `'._DB_PREFIX_.'order_delivery_detail` odyd
 			LEFT JOIN `'._DB_PREFIX_.'order_delivery` ody ON (ody.delivery_id = odyd.delivery_id)
 			LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = odyd.product_id)
-			LEFT JOIN `'._DB_PREFIX_.'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = ' . $delivery_id['id_shop'] . ')
-			WHERE odyd.`delivery_id` = ' . $delivery_id['delivery_id'] . ($get_delivery_number ? ' AND ody.`delivery_number` =' . $get_delivery_number : ''));
+			LEFT JOIN `'._DB_PREFIX_.'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = '.$delivery_id['id_shop'].')
+			WHERE odyd.`delivery_id` = '.$delivery_id['delivery_id'].($get_delivery_number ? ' AND ody.`delivery_number` ='.$get_delivery_number : ''));
 			$nr = $order_delivery->getNrFromId($delivery_id['delivery_id']);
 			$details[$nr] = $detail;
 		}
@@ -605,18 +606,16 @@ class OrderCore extends ObjectModel
 		return $resultArray;
 	}
 	
-	public function getProductsDelivery($deliverd_products = false, $selectedProducts = false, $selectedQty = false,$get_delivery_number = false)
+	public function getProductsDelivery($deliverd_products = false, $selectedProducts = false, $selectedQty = false, $get_delivery_number = false)
 	{
-		if(!$deliverd_products)
-		{
+		if (!$deliverd_products)
 			$deliverd_products = $this->getProductsDeliveryDetails($get_delivery_number);
-		}
-			
+
 		$customized_datas = Product::getAllCustomizedDatas($this->id_cart);
 		$resultArray = array();
-		foreach($deliverd_products as $k => $delivery_number)
+		foreach ($deliverd_products as $k => $delivery_number)
 		{
-			foreach($delivery_number as $row)
+			foreach ($delivery_number as $row)
 			{
 				$row['delivery_number'] = $k;
 
@@ -647,9 +646,8 @@ class OrderCore extends ObjectModel
 		}
 
 		if ($customized_datas)
-			foreach($resultArray as $array) {
+			foreach ($resultArray as $array)
 				Product::addCustomizationPrice($array, $customized_datas);
-			}
 
 		return $resultArray;
 		
@@ -1581,23 +1579,19 @@ class OrderCore extends ObjectModel
 		$delivery_slips = $this->getDeliverySlipsCollection()->getResults();
 		// @TODO review
 		foreach ($delivery_slips as $delivery)
-		{
 			$delivery->is_delivery = true;
-		}
+
 		$order_slips = $this->getOrderSlipsCollection()->getResults();
-		if(Configuration::get('PS_EDS')) {
+		if (Configuration::get('PS_EDS'))
+		{
 			$package_slip = $this->getPackageSlipCollection()->getResults();
 			foreach ($package_slip as $k => $package)
 			{
 				// with the currect construct of package_slip we only need to display 1
-				if($k == 0)
-				{
+				if ($k == 0)
 					$package->is_package = true;
-				}
 				else
-				{
 					unset($package_slip[$k]);
-				}
 			}
 		}
 
@@ -1608,11 +1602,11 @@ class OrderCore extends ObjectModel
 				return 0;
 			return ($a->date_add < $b->date_add) ? -1 : 1;
 		}
-		
+
 		$documents = array_merge($invoices, $order_slips, $delivery_slips);
-		if(Configuration::get('PS_EDS')) {
+		if (Configuration::get('PS_EDS'))
 			$documents = array_merge($documents, $package_slip);
-		}
+
 		usort($documents, 'sortDocuments');
 
 		return $documents;
@@ -1692,10 +1686,13 @@ class OrderCore extends ObjectModel
 	 */
 	public function getDeliverySlipsCollection()
 	{
-		if(Configuration::get('PS_EDS')) {
+		if (Configuration::get('PS_EDS'))
+		{
 			$order_deliverys = new Collection('OrderDelivery');
 			$order_deliverys->where('id_order', '=', $this->id);
-		} else {
+		}
+		else
+		{
 			$order_deliverys = new Collection('OrderInvoice');
 			$order_deliverys->where('id_order', '=', $this->id);
 			$order_deliverys->where('delivery_number', '!=', '0');
@@ -2041,12 +2038,20 @@ class OrderCore extends ObjectModel
 		$nr = Db::getInstance()->executeS('
 		SELECT MAX(delivery_id) as delivery_id
 		FROM `'._DB_PREFIX_.'order_delivery_detail` odyd
-		WHERE odyd.`id_order` = ' . (int)$this->id);
+		WHERE odyd.`id_order` = '.(int)$this->id);
 		$nr = $nr[0]['delivery_id'];
-		if($nr == "") { // if no number was found, then change to default 1
+		if ($nr == '') // if no number was found, then change to default 1
 			$nr = 1;
-		}
+
 		return $nr;
 	}
-}
 
+	public function getLatestInvoice()
+	{
+		$invoice = Db::getInstance()->executeS('
+		SELECT MAX(id_order_invoice) as id_order_invoice
+		FROM `'._DB_PREFIX_.'order_invoice` oi
+		WHERE oi.`id_order` = '.(int)$this->id);
+		return $invoice[0]['id_order_invoice'];
+	}
+}

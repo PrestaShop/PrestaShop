@@ -26,7 +26,7 @@
 
 class OrderStateCore extends ObjectModel
 {
- 	/** @var string Name */
+	/** @var string Name */
 	public $name;
 
 	/** @var string Template name if there is any e-mail to send */
@@ -153,7 +153,7 @@ class OrderStateCore extends ObjectModel
 
 	public function isRemovable()
 	{
-	 	return !($this->unremovable);
+		return !($this->unremovable);
 	}
 }
 

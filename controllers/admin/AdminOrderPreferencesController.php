@@ -118,7 +118,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 				)
 			),
 			'eds' => array(
-				'title' => $this->l('Extended Delivery System 2.3'),
+				'title' => $this->l('Extended Delivery System 2.4'),
 				'icon' => 'tab-preferences',
 				'fields' => array(
 					'PS_EDS' => array(
@@ -254,8 +254,8 @@ class AdminOrderPreferencesControllerCore extends AdminController
 			)
 		);
 
-		$templates_override = $this->getTemplateModelsFromDir(_PS_THEME_DIR_.'pdf/',$model);
-		$templates_default = $this->getTemplateModelsFromDir(_PS_PDF_DIR_,$model);
+		$templates_override = $this->getTemplateModelsFromDir(_PS_THEME_DIR_.'pdf/', $model);
+		$templates_default = $this->getTemplateModelsFromDir(_PS_PDF_DIR_, $model);
 
 		foreach (array_merge($templates_default, $templates_override) as $template)
 		{
@@ -265,12 +265,12 @@ class AdminOrderPreferencesControllerCore extends AdminController
 		return $models;
 	}
 
-	protected function getTemplateModelsFromDir($directory,$model)
+	protected function getTemplateModelsFromDir($directory, $model)
 	{
 		$templates = false;
 
 		if (is_dir($directory))
-			$templates = glob($directory.$model . '-*.tpl');
+			$templates = glob($directory.$model.'-*.tpl');
 
 		if (!$templates)
 			$templates = array();

@@ -14,7 +14,3 @@ ALTER TABLE `PREFIX_manufacturer_lang` CHANGE `short_description` `short_descrip
 /* PHP:remove_tab(AdminRangePrice); */;
 /* PHP:remove_tab(AdminRangeWeight); */;
 
-
-/* Add support for delivery system */;
-ALTER TABLE `PREFIX_order_state` ADD `package` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0';
-ALTER TABLE `PREFIX_order_invoice` ADD `package` INT( 11 ) NOT NULL;

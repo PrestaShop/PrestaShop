@@ -41,17 +41,17 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 		// header informations
 
 		$date = $order_invoice->date_add;
-		if(Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DELIVERED') )
+		if (Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DELIVERED') &&  $this->order_invoice->delivery_number > 0)
 		{
 			$this->order_delivery = new OrderDelivery($this->order_invoice->id_order);
-			$date = $this->order_delivery->getDeliveryDate($this->order_invoice->delivery_number,$this->order_invoice->id_order);
+			$date = $this->order_delivery->getDeliveryDate($this->order_invoice->delivery_number, $this->order_invoice->id_order);
 		}
 
 		$this->date = Tools::displayDate($date);
 
 		$id_lang = Context::getContext((int)$this->order_invoice->id_order)->language->id;
-		if(Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DELIVERED') )
-			$this->title = HTMLTemplateInvoice::l('Invoice ').' #'.Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, (int)$this->order->id_shop).sprintf('%06d', $order_invoice->number) . '-' . $this->order_invoice->delivery_number;
+		if (Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DELIVERED') &&  $this->order_invoice->delivery_number > 0)
+			$this->title = HTMLTemplateInvoice::l('Invoice ').' #'.Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, (int)$this->order->id_shop).sprintf('%06d', $order_invoice->number).'-'.$this->order_invoice->delivery_number;
 		else
 			$this->title = HTMLTemplateInvoice::l('Invoice ').' #'.Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, (int)$this->order->id_shop).sprintf('%06d', $order_invoice->number);
 		// footer informations
@@ -77,25 +77,26 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
 		$customer = new Customer((int)$this->order->id_customer);
 
-		if(Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DELIVERED') )
+		if (Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DELIVERED') &&  $this->order_invoice->delivery_number > 0)
 		{
-			$products = $this->order->getProductsDelivery(false,false,false,$this->order_invoice->delivery_number); // get only deliverd products
-			$products = $products[$this->order_invoice->delivery_number];
+			$products = $this->order->getProductsDelivery(false, false, false, $this->order_invoice->delivery_number); // get only deliverd products
+			if($products)
+				$products = $products[$this->order_invoice->delivery_number];
+			else
+				$products = $this->order_invoice->getProducts();
 		}
 		else
-		{
 			$products = $this->order_invoice->getProducts();
-		}
 
 		$due_date = false;
 		$due_day = false;
-		if(Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DUE_DATE'))
+		if (Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DUE_DATE'))
 		{
-			if(Configuration::get('PS_EDS_INVOICE_DUE_DAYS') != "")
+			if (Configuration::get('PS_EDS_INVOICE_DUE_DAYS') != '')
 			{
 				$due_date = true;
 				$days = Configuration::get('PS_EDS_INVOICE_DUE_DAYS');
-				$due_day = date("Y-m-d h:i:s",strtotime('+' . $days . ' days',strtotime($this->date)));
+				$due_day = date('Y-m-d h:i:s', strtotime('+'.$days.' days', strtotime($this->date)));
 			}
 		}
 
@@ -112,7 +113,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			'due_day' => $due_day,
 		));
 
-		return $this->smarty->fetch($this->getTemplateByCountry($country->iso_code,$this->order->id));
+		return $this->smarty->fetch($this->getTemplateByCountry($country->iso_code, $this->order->id));
 	}
 
 	/**
@@ -145,12 +146,10 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 	 * Returns the invoice template associated to the country iso_code
 	 * @param string $iso_country
 	 */
-	protected function getTemplateByCountry($iso_country,$id_order)
+	protected function getTemplateByCountry($iso_country, $id_order)
 	{
-		if($order_template = $this->getOrderTemplate($id_order) )
-		{
+		if ($order_template = $this->getOrderTemplate($id_order))
 			return $this->getTemplate($order_template);
-		}
 
 		$file = Configuration::get('PS_INVOICE_MODEL');
 
@@ -169,10 +168,11 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			$template = Db::getInstance()->executeS('
 			SELECT `invoice`
 			FROM `'._DB_PREFIX_.'order_template`
-			WHERE `id_order` = ' .$id_order. '
-			');
-			if($template)
+			WHERE `id_order` = '.$id_order);
+
+			if ($template)
 				$template = $template[0]['invoice'];
+
 			return $template;
 	}
 
@@ -191,10 +191,10 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 	 */
 	public function getFilename()
 	{
-		if(Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DELIVERED') )
-			return Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_invoice->number) . '-' . $this->order_invoice->delivery_number .'.pdf';
+		if (Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DELIVERED') &&  $this->order_invoice->delivery_number > 0)
+			return Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_invoice->number).'-'.$this->order_invoice->delivery_number.'.pdf';
 		else
-			return Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_invoice->number) . '.pdf';
+			return Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_invoice->number).'.pdf';
 	}
 }
 

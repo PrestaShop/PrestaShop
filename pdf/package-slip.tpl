@@ -107,7 +107,7 @@
 						{/if}
 					</td>
 					<td style="text-align: center;">{$product.product_quantity}</td>
-					<td style="text-align: center;">{if $product.product_quantity_current}{$product.product_quantity_current}{else}{$product.product_quantity}{/if}</td>
+					<td style="text-align: center;">{if isset($product.product_quantity_current)}{$product.product_quantity_current}{else}{$product.product_quantity}{/if}</td>
 					<td style="text-align: center;">{$product.warehouse_name} ({$product.warehouse_location})</td>
 				</tr>
 				{/foreach}

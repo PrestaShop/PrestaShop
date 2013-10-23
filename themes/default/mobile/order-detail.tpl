@@ -49,20 +49,20 @@
 	{if $carrier->id}<li><strong>{l s='Carrier'}</strong> {if $carrier->name == "0"}{$shop_name|escape:'htmlall':'UTF-8'}{else}{$carrier->name|escape:'htmlall':'UTF-8'}{/if}</li>{/if}
 	<li><strong>{l s='Payment method'}</strong> <span class="color-myaccount">{$order->payment|escape:'htmlall':'UTF-8'}</span></li>
 	{if $invoice AND $invoiceAllowed}
-	<li>
-	{if Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DELIVERD')}
-		{foreach $invoices item=pdfInvoice}
-			<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
-			<a target="_blank" href="{$link->getPageLink('pdf-invoice', true)}?id_order_invoice={$pdfInvoice->number|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}">
-			{l s='Invoice for Delivery Slip'} {$pdfInvoice->delivery_number}</a>
-			<br>
-		{/foreach}
-	{else}
-		<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
-			<a href="{$link->getPageLink('pdf-invoice', true)}?id_order={$order->id|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}" data-ajax="false">{l s='Download your invoice as a PDF file.'}
+		{if Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DELIVERED')}
+			{foreach $invoices item=pdfInvoice}
+				<li>
+					<img src="{$img_dir}icon/pdf.gif" alt="pdf icon" class="icon" />
+					<a target="_blank" href="{$link->getPageLink('pdf-invoice', true)}?id_order_invoice={$pdfInvoice->number|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}">
+					{l s='Invoice for Delivery Slip'} {$pdfInvoice->delivery_number}</a>
+				</li>
+			{/foreach}
+		{else}
+			<li>
+				<img src="{$img_dir}icon/pdf.gif" alt="pdf icon" class="icon" />
+					<a href="{$link->getPageLink('pdf-invoice', true)}?id_order={$order->id|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}" data-ajax="false">{l s='Download your invoice as a PDF file.'}
+			</li>
 		{/if}
-	{/if}
-	</li>
 	{/if}
 	{if $order->recyclable}
 	<li><img src="{$img_dir}icon/recyclable.gif" alt="" class="icon" />&nbsp;{l s='You have given permission to receive your order in recycled packaging.'}</li>
@@ -99,15 +99,15 @@
 {* > TO CHECK ==========================*}
 {if $invoice AND $invoiceAllowed}
 <p>
-	{if Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DELIVERD')}
+	{if Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DELIVERED')}
 		{foreach $invoices item=pdfInvoice}
-			<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
+			<img src="{$img_dir}icon/pdf.gif" alt="pdf icon" class="icon" />
 			<a target="_blank" href="{$link->getPageLink('pdf-invoice', true)}?id_order_invoice={$pdfInvoice->number|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}">
 			{l s='Invoice for Delivery Slip'} {$pdfInvoice->delivery_number}</a>
 			<br>
 		{/foreach}
 	{else}
-		<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
+		<img src="{$img_dir}icon/pdf.gif" alt="pdf icon" class="icon" />
 		{if $is_guest}
 			<a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order->id}&amp;secure_key=$order->secure_key")|escape:'html'}" >{l s='Download your invoice as a PDF file.'}</a>
 		{else}
@@ -321,7 +321,7 @@
 		<p>{l s='If you would like to add a comment about your order, please write it in the field below.'}</p>
 		<fieldset>
 			<label for="id_product">{l s='Product'}</label>
-			<select name="id_product" style="width:300px;">
+			<select name="id_product">
 				<option value="0">{l s='-- Choose --'}</option>
 				{foreach from=$products item=product name=products}
 					<option value="{$product.product_id}">{$product.product_name}</option>

@@ -76,7 +76,7 @@
 		{/foreach}
 		</p>
 		<p>
-			<input class="order_qte_input" name="customization_qty_input[{$customizationId|intval}]" type="text" size="2" value="{$customization.quantity|intval}" /><span class="order_qte_span editable">{$customization.quantity|intval}</span>
+			<span class="order_qte_span">{$customization.quantity|intval}</span>
 		</p>
 	</li>
 	{/foreach}
@@ -102,7 +102,9 @@
 		</h3>
 		<p><strong>{l s='Reference'}</strong> {if $delivery_product.product_reference}{$delivery_product.product_reference|escape:'htmlall':'UTF-8'}{else}--{/if}</p>
 		<p><strong>{l s='Quantity'}</strong></p>
-		<fieldset><input class="order_qte_input" data-mini="true" name="order_qte_input[{$delivery_product.id_order_detail|intval}]" type="text" size="2" value="{$deliveryproductQuantity|intval}" /><span class="order_qte_span editable">{$deliveryproductQuantity|intval}</span></fieldset>
+		<fieldset>
+		<span class="order_qte_span">{$deliveryproductQuantity|intval}</span>
+		</fieldset>
 		<p><strong>{l s='Unit price'}</strong> 
 			{if $group_use_tax}
 				{convertPriceWithCurrency price=$delivery_product.unit_price_tax_incl currency=$currency}
