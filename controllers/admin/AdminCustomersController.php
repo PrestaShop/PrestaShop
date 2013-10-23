@@ -615,9 +615,10 @@ class AdminCustomersControllerCore extends AdminController
 			$carts[$i]['name'] = $carrier->name;
 		}
 
-		$sql = 'SELECT DISTINCT id_product, c.id_cart, c.id_shop, cp.id_shop AS cp_id_shop
+		$sql = 'SELECT DISTINCT cp.id_product, c.id_cart, c.id_shop, cp.id_shop AS cp_id_shop
 				FROM '._DB_PREFIX_.'cart_product cp
 				JOIN '._DB_PREFIX_.'cart c ON (c.id_cart = cp.id_cart)
+				JOIN '._DB_PREFIX_.'product p ON (cp.id_product = p.id_product)
 				WHERE c.id_customer = '.(int)$customer->id.'
 					AND cp.id_product NOT IN (
 							SELECT product_id
@@ -630,7 +631,7 @@ class AdminCustomersControllerCore extends AdminController
 		for ($i = 0; $i < $total_interested; $i++)
 		{
 			$product = new Product($interested[$i]['id_product'], false, $this->default_form_language, $interested[$i]['id_shop']);
-			if  (!Validate::isLoadedObject($product))
+			if (!Validate::isLoadedObject($product))
 				continue;
 			$interested[$i]['url'] = $this->context->link->getProductLink(
 				$product->id,
