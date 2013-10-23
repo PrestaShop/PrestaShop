@@ -90,10 +90,10 @@
 			</div>
 		</div>
 
-		<div class="form-group">
+		<div class="row">
 			<label class="control-label col-lg-3" for="attribute">{l s='Value:'}</label>
 			<div class="col-lg-9">
-				<div class="row">
+				<div class="form-group">
 					<div class="col-lg-8">
 						<select name="attribute" id="attribute">
 							<option value="0">---</option>
@@ -103,7 +103,7 @@
 						<button type="button" class="btn btn-default btn-block" onclick="add_attr();"><i class="icon-plus-sign-alt"></i> {l s='Add'}</button>
 					</div>
 				</div>
-				<div class="row">
+				<div class="form-group">
 					<div class="col-lg-8">
 						<select id="product_att_list" name="attribute_combination_list[]" multiple="multiple" ></select>
 					</div>
@@ -256,7 +256,7 @@
 			</div>
 		</div>
 
-		<div id="tr_unit_impact" class="row">
+		<div id="tr_unit_impact" class="form-group">
 			<label class="control-label col-lg-3" for="attribute_unit_impact">
 				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_unit_impact" type="attribute_unit_impact"}
 				{l s='Impact on unit price :'}
