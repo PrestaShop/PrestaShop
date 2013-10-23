@@ -35,14 +35,14 @@ UPDATE `PREFIX_configuration` SET `value`='-' WHERE `name` = 'PS_ATTRIBUTE_ANCHO
 UPDATE `PREFIX_tab` SET class_name = 'AdminDashboard', id_parent = 0, active = 1, module = "" WHERE class_name = 'AdminHome';
 
 INSERT INTO `PREFIX_module` (`name`, `active`, `version`)
-VALUES ('dashactivity', '1', '0.1'), ('dashtrends', '1', '0.1'), ('dashproducts', '1', '0.1');
+VALUES ('dashactivity', '1', '0.1'),('dashtrends', '1', '0.1'),('dashgoals', '1', '0.1'),('dashproducts', '1', '0.1');
 
 INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `view`, `configure`) (
-	SELECT p.id_profile, m.id_module, 1, 1 FROM `PREFIX_module` m, `PREFIX_profile` p WHERE m.name IN ('dashactivity', 'dashtrends', 'dashproducts')
+	SELECT p.id_profile, m.id_module, 1, 1 FROM `PREFIX_module` m, `PREFIX_profile` p WHERE m.name IN ('dashactivity', 'dashtrends', 'dashgoals', 'dashproducts')
 );
 
 INSERT INTO `PREFIX_module_shop` (`id_module`, `id_shop`) (
-	SELECT m.id_module, s.id_shop FROM `PREFIX_module` m, `PREFIX_shop` s WHERE m.name IN ('dashactivity', 'dashtrends', 'dashproducts')
+	SELECT m.id_module, s.id_shop FROM `PREFIX_module` m, `PREFIX_shop` s WHERE m.name IN ('dashactivity', 'dashtrends', 'dashgoals', 'dashproducts')
 );
 
 INSERT INTO `PREFIX_hook` (`name`, `title`, `position`, `live_edit`) VALUES
@@ -60,7 +60,10 @@ INSERT INTO `PREFIX_hook_module` (`id_module`, `id_shop`, `id_hook`, `position`)
 	SELECT m.id_module, s.id_shop, h.id_hook, 1 FROM `PREFIX_module` m, `PREFIX_shop` s, `PREFIX_hook` h WHERE m.name IN ('dashtrends') AND h.name IN ('dashboardZoneTwo')
 );
 INSERT INTO `PREFIX_hook_module` (`id_module`, `id_shop`, `id_hook`, `position`) (
-	SELECT m.id_module, s.id_shop, h.id_hook, 2 FROM `PREFIX_module` m, `PREFIX_shop` s, `PREFIX_hook` h WHERE m.name IN ('dashproducts') AND h.name IN ('dashboardZoneTwo')
+	SELECT m.id_module, s.id_shop, h.id_hook, 2 FROM `PREFIX_module` m, `PREFIX_shop` s, `PREFIX_hook` h WHERE m.name IN ('dashgoals') AND h.name IN ('dashboardZoneTwo')
+);
+INSERT INTO `PREFIX_hook_module` (`id_module`, `id_shop`, `id_hook`, `position`) (
+	SELECT m.id_module, s.id_shop, h.id_hook, 3 FROM `PREFIX_module` m, `PREFIX_shop` s, `PREFIX_hook` h WHERE m.name IN ('dashproducts') AND h.name IN ('dashboardZoneTwo')
 );
 
 /* PHP:update_order_messages(); */;

@@ -540,6 +540,7 @@ class InstallModelInstall extends InstallAbstractModel
 				'cheque',
 				'dashactivity',
 				'dashtrends',
+				'dashgoals',
 				'dashproducts',
 				'favoriteproducts',
 				'graphartichow',
