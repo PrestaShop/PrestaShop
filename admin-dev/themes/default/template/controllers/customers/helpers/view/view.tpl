@@ -295,7 +295,7 @@
 						{foreach $carts AS $key => $cart}
 							<tr onclick="document.location = '?tab=AdminCarts&id_cart={$cart['id_cart']}&viewcart&token={getAdminToken tab='AdminCarts'}'">
 								<td>{$cart['id_cart']}</td>
-								<td>{dateFormat date=$order['date_add'] full=0}</td>
+								<td>{dateFormat date=$cart['date_upd'] full=0}</td>
 								<td>{$cart['name']}</td>
 								<td align="right">{$cart['total_price']}</td>
 								<td align="center">
