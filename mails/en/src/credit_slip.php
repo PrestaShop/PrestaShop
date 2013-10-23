@@ -2,8 +2,7 @@
 
 <tr>
 	<td align="center">
-		<?php echo t('<span class="title">Hi {firstname} {lastname},</span>'); 
-		?>
+		<span class="title"><?php echo t('Hi {firstname} {lastname},'); ?></span>
 	</td>
 </tr>
 <tr>
@@ -20,8 +19,13 @@
 	</td>
 </tr>
 <tr>
+	<td>&nbsp;</td>
+</tr>
+<tr>
 	<td>
-		<?php echo t('<span>You can review this credit slip and download your invoice from the <a href="{history_url}">"My credit slips"</a> section of your account by clicking <a href="{my_account_url}">"My account"</a> on our shop.</span>'); ?>
+		<span>
+			<?php echo t('You can review this credit slip and download your invoice from the <a href="{history_url}">"My credit slips"</a> section of your account by clicking <a href="{my_account_url}">"My account"</a> on our shop.'); ?>
+		</span>
 	</td>
 </tr>
 

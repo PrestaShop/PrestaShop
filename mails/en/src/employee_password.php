@@ -2,8 +2,7 @@
 
 <tr>
 	<td align="center">
-		<?php echo t('<span class="title">Hi {firstname} {lastname},</span>'); 
-		?>
+		<span class="title"><?php echo t('Hi {firstname} {lastname},'); ?></span>
 	</td>
 </tr>
 <tr>
@@ -15,11 +14,11 @@
 			<?php echo t('Your {shop_name} login information'); ?>
 		</p>
 		<span>
-			<?php echo t('Here is your personal login information for <span><strong>{shop_name}</strong></span>:'); ?><br/>
-			<?php echo t('<span><strong>First name:</strong></span> {firstname}'); ?><br />
-			<?php echo t('<span><strong>Last name:</strong></span> {lastname}'); ?><br />
-			<?php echo t('<span><strong>Password:</strong></span> {passwd}'); ?><br />
-			<?php echo t('<span><strong>E-mail address:</strong></span> {email}'); ?>
+			<?php echo t('Here is your personal login information for <span><strong>{shop_name}</strong></span>:'); ?><br/><br/>
+			<span><strong><?php echo t('First name:'); ?></strong></span> {firstname}<br />
+			<span><strong><?php echo t('Last name:'); ?></strong></span> {lastname}<br />
+			<span><strong><?php echo t('Password:'); ?></strong></span> {passwd}<br />
+			<span><strong><?php echo t('E-mail address:'); ?></strong></span> {email}
 		</span>
 	</td>
 </tr>

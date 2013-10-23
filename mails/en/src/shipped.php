@@ -2,9 +2,8 @@
 
 <tr>
 	<td align="center">
-		<?php echo t('<span class="title">Hi {firstname} {lastname},</span><br/>
-			<span class="subtitle">Thank you for shopping with {shop_name}!</span>'); 
-		?>
+		<span class="title"><?php echo t('Hi {firstname} {lastname},'); ?></span><br/>
+		<span class="subtitle"><?php echo t('Thank you for shopping with {shop_name}!'); ?></span>
 	</td>
 </tr>
 <tr>
@@ -23,7 +22,9 @@
 </tr>
 <tr>
 	<td>
-		<?php echo t('<span>You can now place orders on our shop: <a href="{shop_url}">{shop_name}</a></span>'); ?>.
+		<span>
+			<?php echo t('You can now place orders on our shop: <a href="{shop_url}">{shop_name}</a>'); ?>.
+		</span>
 	</td>
 </tr>
 
