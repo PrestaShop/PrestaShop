@@ -1,0 +1,115 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
+/*** ESSENTIAL STYLES ***/
+.sf-contener {
+  clear: both;
+}
+
+.sf-menu, .sf-menu * {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sf-menu {
+  margin: 50px 0 0;
+  padding: 0;
+  width: 100%;
+  border-bottom: 3px solid #e9e9e9;
+  background: #f6f6f6;
+}
+
+.sf-menu ul {
+  position: absolute;
+  top: -999em;
+  width: 10em;
+  /* left offset of submenus need to match (see below) */
+  background: #fff;
+}
+
+.sf-menu ul li {
+  width: 100%;
+}
+
+.sf-menu li:hover {
+  visibility: inherit;
+  /* fixes IE7 'sticky bug' */
+}
+
+.sf-menu li {
+  position: relative;
+}
+
+.sf-menu > li {
+  float: left;
+  border-right: 1px solid #d6d4d4;
+  margin-bottom: -3px;
+}
+.sf-menu > li > a {
+  font: 600 18px/22px "Open Sans", sans-serif;
+  text-transform: uppercase;
+  color: #484848;
+  display: block;
+  padding: 17px 20px;
+  border-bottom: 3px solid #e9e9e9;
+}
+.sf-menu > li.sfHover > a, .sf-menu > li > a:hover, .sf-menu > li.sfHoverForce a {
+  background: #333;
+  border-bottom-color: #666666;
+  color: #fff;
+}
+
+.sf-menu li li a {
+  display: block;
+  position: relative;
+  color: #777777;
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: bold;
+  padding-bottom: 10px;
+}
+.sf-menu li li a:before {
+  content: "";
+  display: inline-block;
+  font-family: "FontAwesome";
+  padding-right: 10px;
+}
+.sf-menu li li a:hover {
+  color: #333;
+}
+
+.sf-menu li ul {
+  display: none;
+  left: 0;
+  top: 59px;
+  /* match top ul list item height */
+  z-index: 99;
+  width: 220px;
+  padding: 25px 30px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 13px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 13px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 13px;
+}
+
+ul.sf-menu li:hover li ul,
+ul.sf-menu li.sfHover li ul {
+  top: -999em;
+}
+
+ul.sf-menu li li:hover ul,
+ul.sf-menu li li.sfHover ul {
+  left: 200px;
+  /* match ul width */
+  top: 0;
+}
+
+ul.sf-menu li li:hover li ul,
+ul.sf-menu li li.sfHover li ul {
+  top: -999em;
+}
+
+ul.sf-menu li li li:hover ul,
+ul.sf-menu li li li.sfHover ul {
+  left: 200px;
+  /* match ul width */
+  top: 0;
+}

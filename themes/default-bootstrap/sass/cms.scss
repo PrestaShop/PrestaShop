@@ -1,0 +1,105 @@
+@import '_theme_variables';
+
+/**************************************************************
+					CMS Pages Styles
+***************************************************************/
+
+#cms {
+	
+	#center_column {
+		
+		.cms-block {padding-bottom:20px;}
+		
+		h1 {
+			margin-bottom:25px;	
+		}
+		
+		h3 {
+			font-size:16px;
+			border-bottom:none;
+			margin:0 0 0 0;
+			padding-bottom:17px;	
+		}
+		
+		p {
+			line-height:18px;	
+		}
+		
+		.list-1 {
+			
+			li {
+				padding:4px 0 6px 0;
+				font-weight:bold;
+				color:#46a74e;
+				border-top:1px solid $base-border-color;
+				
+				&:first-child { border:none;}
+				
+				em {
+					font-size:20px;
+					line-height:20px;
+					padding-right:15px;
+					vertical-align:-2px;
+				}	
+			}
+		}
+		img {
+			margin:4px 0 17px;
+			max-width:100%;
+			height:auto;
+		}
+		.testimonials {
+			border:1px solid;
+			border-color:#dfdede #d2d0d0 #b0afaf #d2d0d0;
+			margin:4px 0 13px 0;
+			position:relative;
+			
+			.inner {
+				border:1px solid #fff;
+				padding:19px 18px 11px 18px;
+				background: rgb(251,251,251);
+				background: -moz-linear-gradient(top,  rgba(251,251,251,1) 0%, rgba(254,254,254,1) 100%);
+				background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(251,251,251,1)), color-stop(100%,rgba(254,254,254,1)));
+				background: -webkit-linear-gradient(top,  rgba(251,251,251,1) 0%,rgba(254,254,254,1) 100%);
+				background: -o-linear-gradient(top,  rgba(251,251,251,1) 0%,rgba(254,254,254,1) 100%);
+				background: -ms-linear-gradient(top,  rgba(251,251,251,1) 0%,rgba(254,254,254,1) 100%);
+				background: linear-gradient(to bottom,  rgba(251,251,251,1) 0%,rgba(254,254,254,1) 100%);
+				
+				span {
+					text-indent:-5000px;
+					display:inline-block;
+					width:20px;
+					height:15px;
+					
+					&.before {
+						background:url(../img/bl-before-bg.png) no-repeat;
+						margin-right:8px;
+					}
+					
+					&.after {
+						background:url(../img/bl-after-bg.png) no-repeat;
+						margin-left:8px;
+					}
+				}
+			}
+			
+			&:after {
+				content:".";
+				display:block;
+				text-indent:-5000px;
+				position:absolute;
+				bottom:-16px;
+				left:21px;
+				width:15px;
+				height:16px;
+				background:url(../img/testimon-after.gif) no-repeat;
+			}
+			
+			& + p {
+				padding-left:45px;
+				margin-bottom:18px;	
+			}
+		}
+		p.bottom-indent { margin-bottom:18px;}
+	}
+}

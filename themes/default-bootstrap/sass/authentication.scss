@@ -1,0 +1,45 @@
+@import '_theme_variables';
+/**********************************************************
+				Authentication Styles
+**********************************************************/
+#account-creation_form .id_state, #account-creation_form .dni, #account-creation_form .postcode {
+	display: none;
+}
+
+#create-account_form {
+	min-height:297px;
+	
+	p {
+		margin-bottom:8px;
+	}
+	
+	.form-group {
+		margin-bottom:20px;
+	}
+}
+
+#login_form {
+	min-height:297px;
+	
+	.form-group {
+		margin-bottom:3px;
+		
+		&.lost_password {
+			margin:14px 0 15px 0;
+			
+			a {
+				text-decoration:underline;
+				
+				&:hover {
+					text-decoration:none;
+				}	
+			}
+		}
+	}
+}
+#login_form, #create-account_form {
+	
+	.form-control {
+		max-width:271px;	
+	}
+}

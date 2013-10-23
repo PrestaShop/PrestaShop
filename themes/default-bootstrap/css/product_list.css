@@ -1,0 +1,263 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
+/*******************************************************
+			 Product list Styles
+********************************************************/
+ul.product_list .availability span {
+  display: inline-block;
+  color: #fff;
+  font-weight: bold;
+  padding: 3px 8px 4px 8px;
+  margin-bottom: 20px;
+}
+ul.product_list .availability span.available-now {
+  background: #46a74e;
+  border: 1px solid #36943e;
+}
+ul.product_list .availability span.out-of-stock {
+  background: #ff7430;
+  border: 1px solid #ea5e1a;
+}
+ul.product_list .color-list-container {
+  margin-bottom: 12px;
+}
+ul.product_list .color-list-container ul li {
+  display: inline-block;
+  border: 1px solid #d6d4d4;
+}
+ul.product_list .color-list-container ul li a {
+  display: block;
+  width: 23px;
+  height: 23px;
+  margin: 1px;
+}
+
+/*******************************************************
+			 Product list(Grid) Styles 
+********************************************************/
+ul.product_list.grid > li {
+  margin-bottom: 20px;
+  text-align: center;
+}
+ul.product_list.grid > li .product-container {
+  background: #fff;
+  padding: 0;
+  position: relative;
+}
+ul.product_list.grid > li .product-container .product-image-container {
+  border: 1px solid #d6d4d4;
+  padding: 9px;
+  margin-bottom: 13px;
+  position: relative;
+}
+ul.product_list.grid > li .product-container .product-image-container .content_price {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 100%;
+  background: url(../img/price-container-bg.png);
+  padding: 9px 0;
+  display: none;
+}
+ul.product_list.grid > li .product-container .product-image-container .content_price span {
+  color: #fff;
+}
+ul.product_list.grid > li .product-container h5 {
+  padding: 0 15px 7px 15px;
+  min-height: 53px;
+}
+ul.product_list.grid > li .product-container .product-desc {
+  display: none;
+}
+ul.product_list.grid > li .product-container .content_price {
+  padding-bottom: 9px;
+  line-height: 21px;
+}
+ul.product_list.grid > li .product-container .old-price, ul.product_list.grid > li .product-container .price, ul.product_list.grid > li .product-container .price-percent-reduction {
+  display: inline-block;
+}
+ul.product_list.grid > li .product-container .product-flags {
+  display: none;
+}
+ul.product_list.grid > li .product-container .old-price {
+  margin-right: 5px;
+}
+ul.product_list.grid > li .product-container .button-container {
+  display: none;
+  margin-bottom: 14px;
+}
+ul.product_list.grid > li .product-container .button-container .ajax_add_to_cart_button, ul.product_list.grid > li .product-container .button-container span.button {
+  margin-right: 6px;
+}
+ul.product_list.grid > li .product-container .functional-buttons {
+  display: none;
+  background: url(../img/functional-bt-shadow.png) repeat-x;
+  padding: 11px 0 5px;
+}
+ul.product_list.grid > li .product-container .functional-buttons div {
+  width: 50%;
+  float: left;
+  padding: 3px 0 4px 0;
+}
+ul.product_list.grid > li .product-container .functional-buttons div a, ul.product_list.grid > li .product-container .functional-buttons div label {
+  font-weight: bold;
+  color: #777676;
+  cursor: pointer;
+}
+ul.product_list.grid > li .product-container .functional-buttons div a:hover, ul.product_list.grid > li .product-container .functional-buttons div label:hover {
+  color: #000;
+}
+ul.product_list.grid > li .product-container .functional-buttons div.wishlist {
+  border-right: 1px solid #d6d4d4;
+}
+ul.product_list.grid > li .product-container .functional-buttons div.compare:before {
+  content: "";
+  display: inline-block;
+  font-family: 'FontAwesome';
+}
+ul.product_list.grid > li .product-container .functional-buttons div.compare.compare.checked:before {
+  content: "";
+}
+ul.product_list.grid > li .product-container:hover {
+  -webkit-box-shadow: rgba(0, 0, 0, 0.17) 0 0 13px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.17) 0 0 13px;
+  box-shadow: rgba(0, 0, 0, 0.17) 0 0 13px;
+  margin-bottom: -48px;
+  position: relative;
+  z-index: 2;
+}
+ul.product_list.grid > li .product-container:hover .content_price {
+  display: none;
+}
+ul.product_list.grid > li .product-container:hover .product-image-container .content_price {
+  display: block;
+}
+ul.product_list.grid > li .product-container:hover .button-container, ul.product_list.grid > li .product-container:hover .functional-buttons {
+  display: block;
+}
+ul.product_list.grid > li.first-in-line {
+  clear: left;
+}
+
+/*******************************************************
+			 Product list(List) Styles 
+********************************************************/
+ul.product_list.list > li .product-container {
+  border-top: 1px solid #d6d4d4;
+  padding: 30px 0 30px;
+}
+ul.product_list.list > li .product-image-container {
+  position: relative;
+  border: 1px solid #d6d4d4;
+  padding: 9px;
+}
+ul.product_list.list > li .product-image-container .content_price {
+  display: none !important;
+}
+ul.product_list.list > li .product-flags {
+  color: #333333;
+  margin: -5px 0 10px 0;
+}
+ul.product_list.list > li .product-flags .discount {
+  color: #f13340;
+}
+ul.product_list.list > li h5 {
+  padding-bottom: 8px;
+}
+ul.product_list.list > li .product-desc {
+  margin-bottom: 15px;
+}
+ul.product_list.list > li .right-block .right-block-content {
+  border-left: 1px solid #d6d4d4;
+  padding-left: 30px;
+  padding-bottom: 16px;
+}
+ul.product_list.list > li .right-block .right-block-content .content_price {
+  padding-bottom: 24px;
+}
+ul.product_list.list > li .right-block .right-block-content .content_price span {
+  display: inline-block;
+  margin-top: -4px;
+}
+ul.product_list.list > li .right-block .right-block-content .content_price span.price-percent-reduction {
+  margin-left: 8px;
+}
+ul.product_list.list > li .right-block .right-block-content .button-container {
+  overflow: hidden;
+  padding-bottom: 20px;
+}
+ul.product_list.list > li .right-block .right-block-content .button-container .btn {
+  float: left;
+  clear: both;
+  margin-bottom: 10px;
+}
+ul.product_list.list > li .right-block .right-block-content .functional-buttons a, ul.product_list.list > li .right-block .right-block-content .functional-buttons label {
+  font-weight: bold;
+  color: #777676;
+  cursor: pointer;
+}
+ul.product_list.list > li .right-block .right-block-content .functional-buttons a i, ul.product_list.list > li .right-block .right-block-content .functional-buttons label i {
+  width: 30px;
+  height: 30px;
+  font-size: 15px;
+  text-align: center;
+  display: inline-block;
+  background: #929292;
+  color: #fff;
+  padding: 7px 0 0 0;
+  -webkit-border-radius: 100px;
+  -moz-border-radius: 100px;
+  -ms-border-radius: 100px;
+  -o-border-radius: 100px;
+  border-radius: 100px;
+  margin-right: 3px;
+}
+ul.product_list.list > li .right-block .right-block-content .functional-buttons a:hover, ul.product_list.list > li .right-block .right-block-content .functional-buttons label:hover {
+  color: #333333;
+}
+ul.product_list.list > li .right-block .right-block-content .functional-buttons a:hover i, ul.product_list.list > li .right-block .right-block-content .functional-buttons label:hover i {
+  background: #333333;
+}
+ul.product_list.list > li .right-block .right-block-content .functional-buttons .compare {
+  padding-top: 10px;
+}
+ul.product_list.list > li .right-block .right-block-content .functional-buttons .compare label:before {
+  content: "";
+  display: inline-block;
+  font-family: 'FontAwesome';
+  width: 30px;
+  height: 30px;
+  font-size: 15px;
+  text-align: center;
+  background: #929292;
+  -webkit-border-radius: 100px;
+  -moz-border-radius: 100px;
+  -ms-border-radius: 100px;
+  -o-border-radius: 100px;
+  border-radius: 100px;
+  margin-right: 3px;
+  padding: 4px 0 0 0;
+  color: #fff;
+}
+ul.product_list.list > li .right-block .right-block-content .functional-buttons .compare label:hover {
+  color: #333333;
+}
+ul.product_list.list > li .right-block .right-block-content .functional-buttons .compare label:hover:before {
+  background: #333333;
+}
+
+/*******************************************************
+			 Product list(Index page) Styles 
+********************************************************/
+#index ul.product_list > li {
+  border-bottom: 1px solid #d6d4d4;
+  padding-bottom: 35px;
+  margin-bottom: 50px;
+}
+#index ul.product_list > li .availability {
+  display: none;
+}
+#index ul.product_list > li.last-line {
+  border: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}

@@ -6,8 +6,8 @@
   </fields>
   <entities>
     <theme id="default">
-      <name>default</name>
-      <directory>default</directory>
+      <name>default-bootstrap</name>
+      <directory>default-bootstrap</directory>
     </theme>
   </entities>
 </entity_theme>
