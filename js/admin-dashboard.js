@@ -240,8 +240,16 @@ function toggleDashConfig(widget)
 
 function bindSubmitDashConfig()
 {
-	$('.submit_dash_config').on('click', function () {
+	$('.cancel_dash_config').on('click', function () {
 		saveDashConfig($(this).closest('section.widget').attr('id'));
+		return false;
+	});
+}
+
+function bindCancelDashConfig()
+{
+	$('.cancel_dash_config').on('click', function () {
+		toggleDashConfig($(this).closest('section.widget').attr('id'));
 		return false;
 	});
 }

@@ -221,10 +221,15 @@ class AdminDashboardControllerCore extends AdminController
 		$calendar_helper->setCompareDateFrom($stats_compare_from);
 		$calendar_helper->setCompareDateTo($stats_compare_to);
 		$calendar_helper->setCompareOption(Tools::getValue('compare_date_option', $this->context->employee->stats_compare_option));
-
+		
+		$params = array(
+			'date_from' => $this->context->employee->stats_date_from,
+			'date_to' => $this->context->employee->stats_date_to
+		);
+		
 		$this->tpl_view_vars = array(
-			'hookDashboardZoneOne' => Hook::exec('dashboardZoneOne'),
-			'hookDashboardZoneTwo' => Hook::exec('dashboardZoneTwo'),
+			'hookDashboardZoneOne' => Hook::exec('dashboardZoneOne', $params),
+			'hookDashboardZoneTwo' => Hook::exec('dashboardZoneTwo', $params),
 			'translations' => $translations,
 			'action' => '#',
 			'warning' => $this->getWarningDomainName(),
