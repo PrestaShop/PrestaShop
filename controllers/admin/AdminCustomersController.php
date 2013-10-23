@@ -630,6 +630,8 @@ class AdminCustomersControllerCore extends AdminController
 		for ($i = 0; $i < $total_interested; $i++)
 		{
 			$product = new Product($interested[$i]['id_product'], false, $this->default_form_language, $interested[$i]['id_shop']);
+			if  (!Validate::isLoadedObject($product))
+				continue;
 			$interested[$i]['url'] = $this->context->link->getProductLink(
 				$product->id,
 				$product->link_rewrite,
