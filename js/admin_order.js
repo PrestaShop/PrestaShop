@@ -324,20 +324,17 @@ function init()
 	$('#add_product').click(function() {
 		$('.cancel_product_change_link:visible').trigger('click');
 		$('.add_product_fields').show();
-		$('.edit_product_fields').hide();
-		$('.standard_refund_fields').hide();
-		$('.partial_refund_fields').hide();
+		$('.edit_product_fields, .standard_refund_fields, .partial_refund_fields, .order_action').hide();
 		$('tr#new_product').slideDown('fast', function () {
 			$('tr#new_product td').fadeIn('fast');
 		});
-		$(this).hide();
 		$.scrollTo('tr#new_product', 1200, {offset: -100});
 		return false;
 	});
 
 	$('#cancelAddProduct').unbind('click');
 	$('#cancelAddProduct').click(function() {
-		$('#add_product').show();
+		$('.order_action').show();
 		$('tr#new_product td').fadeOut('fast');
 	});
 
@@ -517,7 +514,7 @@ function init()
 
 							$('.standard_refund_fields').hide();
 							$('.partial_refund_fields').hide();
-							$('#add_product').show();
+							$('.order_action').show();
 						}
 						else
 							jAlert(data.error);
@@ -801,15 +798,17 @@ function init()
 
 	$('#add_voucher').unbind('click');
 	$('#add_voucher').click(function() {
-		$(this).hide();
-		$('#voucher_form').show();
+		$('.order_action').hide();
+		$('.panel-vouchers,#voucher_form').show();
 		return false;
 	});
 
 	$('#cancel_add_voucher').unbind('click');
 	$('#cancel_add_voucher').click(function() {
 		$('#voucher_form').hide();
-		$('#add_voucher').show();
+		if (!has_voucher)
+			$('.panel-vouchers').hide();
+		$('.order_action').show();
 		return false;
 	});
 
@@ -900,7 +899,8 @@ $(document).ready(function() {
 		else
 		{
 			flagRefund = 'partial';
-			$('.standard_refund_fields').hide();
+			$('.standard_refund_fields, .product_action, .order_action').hide();
+			$('.product_action').hide();
 			$('.partial_refund_fields').fadeIn();
 		}
 		return false;
