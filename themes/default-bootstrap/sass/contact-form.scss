@@ -1,0 +1,120 @@
+@import '_theme_variables';
+
+/**************************************************************************
+					Contact Page Styles
+**************************************************************************/
+
+.contact-title {
+	margin-top:-5px;
+	line-height:23px;
+	margin-bottom:27px;
+	
+	i {
+		font-size:23px;
+		color:#c0c0c0;
+		padding-right:8px;	
+	}
+}
+
+.contact-form-box {
+	padding:23px 0 0 0;
+	margin-bottom:30px;
+	background:url(../img/contact-form.png) repeat-x #fff;
+	@include box-shadow(rgba(black, 0.17) 0px 5px 13px);
+	
+	fieldset {
+		padding:0 19px 21px 19px;
+		background:url(../img/form-contact-shadow.png) center bottom no-repeat;
+		background-size:contain;
+	}
+	
+	label {
+		margin-bottom:6px;	
+	}
+	
+	.page-subheading {
+		padding-left:0px;
+		border:none;
+		margin-bottom:0;
+	}
+	
+	.col-md-3 {
+		padding-left:0;	
+	}
+	
+	.col-md-9 {
+		padding-right:0;	
+	}
+	
+	#desc_contact0 {display:none;}
+	
+	.form-group {
+		margin-bottom:7px;
+	}
+	
+	textarea {
+		height:257px;	
+	}
+	
+	.submit { margin-top:13px;}
+	
+	select.form-control {
+		max-width:270px;
+		width:100%;
+	}
+}
+/**************************************************************************
+				Contact Page Bottom Banners Styles 
+**************************************************************************/
+.contact-banners {
+	
+	.list-1 {
+		padding:6px 0 3px 0;
+		
+		li {
+			padding:0px 0 3px 0;
+			font:600 18px/22px 'Open Sans', sans-serif;
+			color:#555454;
+			
+			i {
+				font-size:25px;
+				line-height:25px;
+				color:#cdcdcd;
+				padding-right:10px;
+				vertical-align:-3px;
+			}	
+		}
+	}
+	
+	.list-2 {
+		padding:2px 0 2px 0;
+		
+		li {
+			font-weight:bold;
+			color:#46a74e;
+			padding:0 0 5px 0;
+			
+			i {
+				font-size:20px;
+				line-height:20px;
+				padding-right:10px;
+				vertical-align:-2px;	
+			}
+		}
+	}
+	
+	.box.box-last {
+		padding-bottom:49px;
+		
+		p {
+			
+			i {
+				font-size:29px;
+				line-height:29px;
+				color:#c0c0c0;
+				vertical-align:-6px;
+				padding-right:13px;
+			}
+		}
+	}
+}

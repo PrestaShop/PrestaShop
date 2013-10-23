@@ -1,0 +1,21 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
+/*******************************************************
+				Addresses Styles
+********************************************************/
+#addresses #center_column .page-heading {
+  margin-bottom: 22px;
+}
+#addresses #center_column p {
+  margin-bottom: 13px;
+}
+#addresses #center_column p.p-indent {
+  margin-bottom: 27px;
+}
+
+.address li.address_update {
+  margin-top: 14px;
+  margin-bottom: 6px;
+}
+.address li.address_update a {
+  margin-right: 10px;
+}

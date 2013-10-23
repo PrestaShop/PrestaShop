@@ -1,0 +1,42 @@
+/* block top user information */
+#header_right #header_user {
+  clear: both;
+  float: right;
+  margin-top: 50px;
+}
+#header_right #header_user #shopping_cart a {
+  padding: 7px 10px 14px 16px;
+  background: #333333;
+  min-width: 270px;
+  /* 200 */
+  display: block;
+  font-weight: bold;
+  color: #777777;
+  text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+}
+#header_right #header_user #shopping_cart a b {
+  color: #fff;
+  font: 600 18px/22px "Open Sans", sans-serif;
+  padding-right: 5px;
+}
+#header_right #header_user #shopping_cart a:before {
+  content: "";
+  font-family: "FontAwesome";
+  display: inline-block;
+  font-size: 23px;
+  line-height: 23px;
+  color: #fff;
+  padding-right: 15px;
+}
+#header_right #header_user #shopping_cart a:after {
+  content: "";
+  font-family: "FontAwesome";
+  display: inline-block;
+  float: right;
+  font-size: 18px;
+  color: #686666;
+  padding: 6px 0 0 0;
+}
+#header_right #header_user #shopping_cart .ajax_cart_total {
+  display: none !important;
+}

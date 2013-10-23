@@ -1,0 +1,48 @@
+@import 'compass';
+@import 'bootstrap_lib/_variables';
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
+$base-border-color:					#d6d4d4;
+
+// Boxes
+// -------------------------
+$base-box-bg:                       #fbfbfb;
+$base-box-padding:                  14px 18px 13px;
+$base-box-indent:                  0 0 30px 0;
+$font:normal 13px/18px Arial, Helvetica, sans-serif;
+
+$font-custom:'Open Sans', sans-serif;
+$font1:FontAwesome;
+//sub heading (h2,h3) define
+
+	@mixin sub-heading {
+		color: #555454;
+		text-transform: uppercase;
+		font-family:$font-custom;
+		font-weight: 600;
+		font-size: 18px;
+		line-height:20px;
+		padding:14px 20px 17px;
+		margin: 0 0 20px;
+		position: relative;			
+		border:1px solid #d6d4d4;
+		border-bottom:none;
+		background:#fbfbfb;		
+	
+	}
+//main border define
+
+$main_border:1px solid $base-border-color;
+
+// Indents
+//--------------------------
+$base-page-indent:                 $grid-gutter-width;
+
+// Product Elements
+//--------------------------
+$product-name-color:                #3a3939;
+$product-name-hover-color:          #f13340;
+
+// Product Listing
+//--------------------------
+$base-listing-border-color:					$base-border-color;
+$base-listing-grid-padding:					14px 18px 13px;

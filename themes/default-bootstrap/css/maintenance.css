@@ -1,0 +1,33 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
+/*********************************************************************
+					Maintenance Page Styles
+**********************************************************************/
+#maintenance {
+  margin: 126px 0 0 0;
+  padding: 91px 48px 365px 297px;
+  background: url(../img/bg_maintenance.png) no-repeat;
+}
+#maintenance .logo {
+  margin-bottom: 31px;
+}
+#maintenance h1 {
+  font: 600 28px/34px "Open Sans", sans-serif;
+  color: #333;
+  text-transform: uppercase;
+  border-bottom: 1px solid #d6d4d4;
+  padding: 0 0 14px 0;
+  margin: 0 0 19px 0;
+}
+#maintenance #message {
+  font: 600 16px/31px "Open Sans", sans-serif;
+  padding-left: 18px;
+  color: #555454;
+  text-transform: uppercase;
+}
+
+@media only screen and (min-width: 1200px) {
+  .container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}

@@ -1,0 +1,78 @@
+@import '_theme_variables';
+/******************************************************************
+					Sitemap Page Styles
+*******************************************************************/
+#sitemap {
+	
+	.sitemap_block {
+		
+		.page-subheading {
+			margin-bottom:16px;	
+		}
+		
+		li {
+			line-height:16px;
+			padding-bottom:11px;
+			
+			a {
+				
+				&:before {
+					content:"";
+					display:inline-block;
+					font-family:'FontAwesome';
+					padding-right:10px;	
+				}
+				
+				&:hover {
+					font-weight:bold;	
+				}
+			}
+		}
+	}
+}
+	
+#listpage_content div.tree_top {
+	padding-left:27px;
+	padding-top:5px;
+	
+	a {
+		
+		&:before {
+			content:"";
+			display:inline-block;
+			font-family:"FontAwesome";
+			font-size:20px;
+			color:#333;
+		}
+		
+		&:hover {
+			&:before {
+				color:$link-hover-color;
+			}	
+		}
+	}	
+}
+
+ul.tree {
+	padding-left:24px;
+	
+	li {
+		margin:0 0 0 21px;
+		padding:5px 0 0 33px;
+		border-left: 1px solid $base-border-color;
+		background: url(../img/sitemap-horizontal.png) no-repeat left 15px transparent;
+		
+		a:hover {
+			font-weight:bold;	
+		}
+	}
+	
+	> li {
+		margin:0 0 0 11px;
+	}
+	
+	li.last {
+		border: medium none;
+   		background: url(../img/sitemap-last.png) no-repeat 0px -4px transparent;
+	}
+}

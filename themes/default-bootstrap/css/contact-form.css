@@ -1,0 +1,101 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
+/**************************************************************************
+					Contact Page Styles
+**************************************************************************/
+.contact-title {
+  margin-top: -5px;
+  line-height: 23px;
+  margin-bottom: 27px;
+}
+.contact-title i {
+  font-size: 23px;
+  color: #c0c0c0;
+  padding-right: 8px;
+}
+
+.contact-form-box {
+  padding: 23px 0 0 0;
+  margin-bottom: 30px;
+  background: url(../img/contact-form.png) repeat-x white;
+  -webkit-box-shadow: rgba(0, 0, 0, 0) 0px 5px 13px;
+  -moz-box-shadow: rgba(0, 0, 0, 0) 0px 5px 13px;
+  box-shadow: rgba(0, 0, 0, 0) 0px 5px 13px;
+}
+.contact-form-box fieldset {
+  padding: 0 19px 21px 19px;
+  background: url(../img/form-contact-shadow.png) center bottom no-repeat;
+  background-size: contain;
+}
+.contact-form-box label {
+  margin-bottom: 6px;
+}
+.contact-form-box .page-subheading {
+  padding-left: 0px;
+  border: none;
+  margin-bottom: 0;
+}
+.contact-form-box .col-md-3 {
+  padding-left: 0;
+}
+.contact-form-box .col-md-9 {
+  padding-right: 0;
+}
+.contact-form-box #desc_contact0 {
+  display: none;
+}
+.contact-form-box .form-group {
+  margin-bottom: 7px;
+}
+.contact-form-box textarea {
+  height: 257px;
+}
+.contact-form-box .submit {
+  margin-top: 13px;
+}
+.contact-form-box select.form-control {
+  max-width: 270px;
+  width: 100%;
+}
+
+/**************************************************************************
+				Contact Page Bottom Banners Styles 
+**************************************************************************/
+.contact-banners .list-1 {
+  padding: 6px 0 3px 0;
+}
+.contact-banners .list-1 li {
+  padding: 0px 0 3px 0;
+  font: 600 18px/22px "Open Sans", sans-serif;
+  color: #555454;
+}
+.contact-banners .list-1 li i {
+  font-size: 25px;
+  line-height: 25px;
+  color: #cdcdcd;
+  padding-right: 10px;
+  vertical-align: -3px;
+}
+.contact-banners .list-2 {
+  padding: 2px 0 2px 0;
+}
+.contact-banners .list-2 li {
+  font-weight: bold;
+  color: #46a74e;
+  padding: 0 0 5px 0;
+}
+.contact-banners .list-2 li i {
+  font-size: 20px;
+  line-height: 20px;
+  padding-right: 10px;
+  vertical-align: -2px;
+}
+.contact-banners .box.box-last {
+  padding-bottom: 49px;
+}
+.contact-banners .box.box-last p i {
+  font-size: 29px;
+  line-height: 29px;
+  color: #c0c0c0;
+  vertical-align: -6px;
+  padding-right: 13px;
+}
