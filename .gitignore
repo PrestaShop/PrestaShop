@@ -6,6 +6,8 @@
 .svn
 .DS_Store
 .sass-cache
+*.sublime-project
+*.sublime-workspace
 robots.txt
 sitemap.xml
 cache/cachefs/*
