@@ -278,7 +278,7 @@
 		<p>{l s='If you would like to add a comment about your order, please write it in the field below.'}</p>
 		<fieldset>
 			<label for="id_product">{l s='Product'}</label>
-			<select name="id_product" style="width:300px;">
+			<select name="id_product">
 				<option value="0">{l s='-- Choose --'}</option>
 				{foreach from=$products item=product name=products}
 					<option value="{$product.product_id}">{$product.product_name}</option>
