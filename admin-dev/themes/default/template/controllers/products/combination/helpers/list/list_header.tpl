@@ -23,16 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{extends file="helpers/list/list_footer.tpl"}
+{extends file="helpers/list/list_header.tpl"}
 
-{block name="after"}
-	<div class="alert alert-info" style="display:block">
-		<ul>
-			<li>{l s='The row in blue is the default combination.'}</li>
-			<li>{l s='A default combination must be designated for each product.'}</li>
-		</ul>
-	</div>
-{/block}
-
-{block name="endForm"}
+{block name="startForm"}
 {/block}

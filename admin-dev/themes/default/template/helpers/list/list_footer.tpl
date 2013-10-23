@@ -152,7 +152,9 @@
 {else}
 	</div>
 {/if}
+{block name="endForm"}
 </form>
+{/block}
 
 {hook h='displayAdminListAfter'}
 {if isset($name_controller)}
