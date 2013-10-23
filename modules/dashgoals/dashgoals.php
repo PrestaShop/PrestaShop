@@ -29,6 +29,9 @@ if (!defined('_PS_VERSION_'))
 
 class Dashgoals extends Module
 {
+	protected static $month_labels = array();
+	protected static $types = array('traffic', 'conversion', 'avg_cart_value');
+
 	public function __construct()
 	{
 		$this->name = 'dashgoals';
@@ -38,6 +41,21 @@ class Dashgoals extends Module
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
+		
+		Dashgoals::$month_labels = array(
+			'01' => $this->l('January'),
+			'02' => $this->l('February'),
+			'03' => $this->l('March'),
+			'04' => $this->l('April'),
+			'05' => $this->l('May'),
+			'06' => $this->l('June'),
+			'07' => $this->l('July'),
+			'08' => $this->l('August'),
+			'09' => $this->l('September'),
+			'10' => $this->l('October'),
+			'11' => $this->l('November'),
+			'12' => $this->l('December')
+		);
 	}
 
 	public function install()
@@ -59,37 +77,63 @@ class Dashgoals extends Module
 	public function hookDashboardZoneTwo($params)
 	{
 		$year = date('Y');
-		$this->context->smarty->assign('goals_months', array(
-			'01_'.$year => sprintf($this->l('January, %s'), $year),
-			'02_'.$year => sprintf($this->l('February, %s'), $year),
-			'03_'.$year => sprintf($this->l('March, %s'), $year),
-			'04_'.$year => sprintf($this->l('April, %s'), $year),
-			'05_'.$year => sprintf($this->l('May, %s'), $year),
-			'06_'.$year => sprintf($this->l('June, %s'), $year),
-			'07_'.$year => sprintf($this->l('July, %s'), $year),
-			'08_'.$year => sprintf($this->l('August, %s'), $year),
-			'09_'.$year => sprintf($this->l('September, %s'), $year),
-			'10_'.$year => sprintf($this->l('October, %s'), $year),
-			'11_'.$year => sprintf($this->l('November, %s'), $year),
-			'12_'.$year => sprintf($this->l('December, %s'), $year),
-		));
+		$months = array();
+		for ($i = '01'; $i <= 12; $i = sprintf('%02d', $i + 1))
+			$months[$i.'_'.$year] = array('label' => Dashgoals::$month_labels[$i], 'values' => array());
+
+		foreach (Dashgoals::$types as $type)
+			foreach ($months as $month => &$month_row)
+			{
+				$key = 'dashgoals_'.$type.'_'.$month;
+				if (Tools::isSubmit('submitDashGoals'))
+					ConfigurationKPI::updateValue(strtoupper($key), (float)Tools::getValue($key));
+				$month_row['values'][$type] = ConfigurationKPI::get(strtoupper($key));
+			}
+
+		$this->context->smarty->assign('goals_year', $year);
+		$this->context->smarty->assign('goals_months', $months);
 		return $this->display(__FILE__, 'dashboard_zone_two.tpl');
 	}
 
 	public function hookDashboardData($params)
 	{
-		return array();
-			// 'data_chart' => array('dash_goals_chart1' => $this->getChartData()),
-		// );
+		return array(
+			'data_chart' => array('dash_goals_chart1' => $this->getChartData()),
+		);
 	}
 	
 	public function getChartData()
 	{
-		return array();
-	}
+		$year = date('Y');
 
-	public function renderConfigForm()
-	{
+		$visits = AdminStatsController::getVisits(false, date('Y-01-01'), date('Y-12-31'), 'month');
+		$orders = AdminStatsController::getOrders(date('Y-01-01'), date('Y-12-31'), 'month');
+		$sales = AdminStatsController::getTotalSales(date('Y-01-01'), date('Y-12-31'), 'month');
 
+		$stream1 = array('key' => $this->l('Traffic'), 'values' => array());
+		$stream2 = array('key' => $this->l('Conversion Rate'), 'values' => array());
+		$stream3 = array('key' => $this->l('Average Cart Value'), 'values' => array());
+
+		for ($i = '01'; $i <= 12; $i = sprintf('%02d', $i + 1))
+		{
+			$timestamp = strtotime($year.'-'.$i.'-01');
+			
+			$goal = ConfigurationKPI::get(strtoupper('dashgoals_traffic_'.$i.'_'.$year));
+			$stream1['values'][] = array('x' => Dashgoals::$month_labels[$i], 'y' => ($goal ? $visits[$timestamp] / $goal : 0));
+
+			$goal = ConfigurationKPI::get(strtoupper('dashgoals_conversion_'.$i.'_'.$year));
+			$value = 0;
+			if ($goal && isset($visits[$timestamp]) && $visits[$timestamp] && isset($orders[$timestamp]) && $orders[$timestamp])
+				$value = (100 * $orders[$timestamp] / $visits[$timestamp]) / $goal;
+			$stream2['values'][] = array('x' => Dashgoals::$month_labels[$i], 'y' => $value);
+			
+			$goal = ConfigurationKPI::get(strtoupper('dashgoals_avg_cart_value_'.$i.'_'.$year));
+			$value = 0;
+			if ($goal && isset($orders[$timestamp]) && $orders[$timestamp] && isset($sales[$timestamp]) && $sales[$timestamp])
+				$value = ($sales[$timestamp] / $orders[$timestamp]) / $goal;
+			$stream3['values'][] = array('x' => Dashgoals::$month_labels[$i], 'y' => $value);
+		}
+		
+		return array('chart_type' => 'bar_chart_goals', 'data' => array($stream1, $stream2, $stream3));
 	}
 }
