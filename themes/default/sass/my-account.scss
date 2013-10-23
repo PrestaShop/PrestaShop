@@ -1,0 +1,71 @@
+@import '_theme_variables';
+#my-account {
+	
+	.addresses-lists {
+		margin-bottom:30px;	
+	}
+	
+	ul.myaccount-link-list {
+		
+		li {
+			
+			overflow:hidden;
+			padding-bottom:10px;
+			
+			a {
+				display:block;
+				overflow:hidden;
+				font:600 16px/20px 'Open Sans', sans-serif;
+				color:#555454;
+				text-shadow:0px 1px rgba(255,255,255,1);
+				text-transform:uppercase;
+				text-decoration:none;
+				position:relative;
+				background: rgb(247,247,247);
+				background: -moz-linear-gradient(top,  rgba(247,247,247,1) 0%, rgba(237,237,237,1) 100%);
+				background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(247,247,247,1)), color-stop(100%,rgba(237,237,237,1)));
+				background: -webkit-linear-gradient(top,  rgba(247,247,247,1) 0%,rgba(237,237,237,1) 100%);
+				background: -o-linear-gradient(top,  rgba(247,247,247,1) 0%,rgba(237,237,237,1) 100%);
+				background: -ms-linear-gradient(top,  rgba(247,247,247,1) 0%,rgba(237,237,237,1) 100%);
+				background: linear-gradient(to bottom,  rgba(247,247,247,1) 0%,rgba(237,237,237,1) 100%);
+				filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f7', endColorstr='#ededed',GradientType=0 );
+				border:1px solid;
+				border-color:#cacaca #b7b7b7 #9a9a9a #b7b7b7;
+				@include border-radius(4px);
+				
+				i {
+					font-size:25px;
+					color:#fd7e01;
+					position:absolute;
+					left:0;
+					top:0;
+					width:52px;
+					height:100%;
+					padding:10px 0 0 0;
+					text-align:center;
+					border:1px solid #fff;
+					@include border-top-left-radius(4px);
+					@include border-bottom-left-radius(4px);
+				}
+				
+				span {
+					display:block;
+					padding:13px 15px 15px 17px;
+					overflow:hidden;
+					border:1px solid;
+					border-color:#fff #fff #fff #c8c8c8;
+					@include border-top-right-radius(5px);
+					@include border-bottom-right-radius(5px);
+					margin-left:52px;
+				}
+				
+				&:hover {
+					filter:none;
+					background:#e7e7e7;
+					border-color:#9e9e9e #c2c2c2 #c8c8c8 #c2c2c2;	
+				}
+			}
+		}
+	}
+}
+		

@@ -26,24 +26,24 @@
 <!-- Block Newsletter module-->
 
 <div id="newsletter_block_left" class="block">
-	<p class="title_block">{l s='Newsletter' mod='blocknewsletter'}</p>
+	<h4>{l s='Newsletter' mod='blocknewsletter'}</h4>
 	<div class="block_content">
-	{if isset($msg) && $msg}
-		<p class="{if $nw_error}warning_inline{else}success_inline{/if}">{$msg}</p>
-	{/if}
 		<form action="{$link->getPageLink('index')|escape:'html'}" method="post">
-			<p>
-				<input class="inputNew" id="newsletter-input" type="text" name="email" size="18" value="{if isset($value) && $value}{$value}{else}{l s='your e-mail' mod='blocknewsletter'}{/if}" />
-				<input type="submit" value="ok" class="button_mini" name="submitNewsletter" />
+			<div class="form-group">
+				<input class="inputNew form-control grey" id="newsletter-input" type="text" name="email" size="18" value="{if isset($value) && $value}{$value}{else}{l s='Enter your e-mail' mod='blocknewsletter'}{/if}" />
+                <button type="submit" name="submitNewsletter" class="btn btn-default button button-small"><span>{l s='Ok' mod='blocknewsletter'}</span></button>
 				<input type="hidden" name="action" value="0" />
-			</p>
+			</div>
 		</form>
+        {if isset($msg) && $msg}
+            <div class="{if $nw_error}warning_inline{else}success_inline{/if}">{$msg}</div>
+        {/if}
 	</div>
 </div>
 <!-- /Block Newsletter module-->
 
 <script type="text/javascript">
-    var placeholder = "{l s='your e-mail' mod='blocknewsletter' js=1}";
+    var placeholder = "{l s='Enter your e-mail' mod='blocknewsletter' js=1}";
         $(document).ready(function() {ldelim}
             $('#newsletter-input').on({ldelim}
                 focus: function() {ldelim}
@@ -59,7 +59,7 @@
             {rdelim});
 
             {if isset($msg)}
-                $('#columns').before('<div class="clearfix"></div><p class="{if $nw_error}warning{else}success{/if}">{l s="Newsletter:" js=1 mod="blocknewsletter"} {$msg}</p>');
+                $('#columns > .row').before('<div class="clearfix"></div><p class="alert {if $nw_error}alert-danger{else}alert-success{/if}">{l s="Newsletter:" js=1 mod="blocknewsletter"} {$msg}</p>');
             {/if}
         });
 </script>

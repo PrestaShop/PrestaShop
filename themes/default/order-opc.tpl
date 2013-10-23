@@ -31,9 +31,8 @@
 
 {if $PS_CATALOG_MODE}
 	{capture name=path}{l s='Your shopping cart'}{/capture}
-	{include file="$tpl_dir./breadcrumb.tpl"}
 	<h2 id="cart_title">{l s='Your shopping cart'}</h2>
-	<p class="warning">{l s='Your new order was not accepted.'}</p>
+	<p class="alert alert-warning">{l s='Your new order was not accepted.'}</p>
 {else}
 <script type="text/javascript">
 	// <![CDATA[
@@ -103,8 +102,7 @@
 		<!-- END Payment -->
 	{else}
 		{capture name=path}{l s='Your shopping cart'}{/capture}
-		{include file="$tpl_dir./breadcrumb.tpl"}
 		<h2>{l s='Your shopping cart'}</h2>
-		<p class="warning">{l s='Your shopping cart is empty.'}</p>
+		<p class="alert alert-warning">{l s='Your shopping cart is empty.'}</p>
 	{/if}
 {/if}

@@ -25,13 +25,15 @@
 
 {capture name=path}{l s='Product Comparison'}{/capture}
 
-{include file="$tpl_dir./breadcrumb.tpl"}
-<h1>{l s='Product Comparison'}</h1>
+<h1 class="page-heading">{l s='Product Comparison'}</h1>
 
 {if $hasProduct}
 <div class="products_block">
-	<table id="product_comparison">
-			<td width="20%" class="td_empty"></td>
+	<table id="product_comparison" class="table table-bordered">
+    	<tr>
+			<td width="20%" class="td_empty">
+            	<span>{l s='Features:'}</span>
+            </td>
 			{assign var='taxes_behavior' value=false}
 			{if $use_taxes && (!$priceDisplay  || $priceDisplay == 2)}
 				{assign var='taxes_behavior' value=true}
@@ -39,34 +41,50 @@
 		{foreach from=$products item=product name=for_products}
 			{assign var='replace_id' value=$product->id|cat:'|'}
 
-			<td width="{$width}%" class="ajax_block_product comparison_infos">
-				<a href="{$product->getLink()}" title="{$product->name|escape:html:'UTF-8'}" class="product_image" >
-					<img src="{$link->getImageLink($product->link_rewrite, $product->id_image, 'home_default')|escape:'html'}" alt="{$product->name|escape:html:'UTF-8'}" width="{$homeSize.width}" height="{$homeSize.height}" />
-				</a>
-				<p class="s_title_block"><a href="{$product->getLink()}" title="{$product->name|truncate:32:'...'|escape:'htmlall':'UTF-8'}">{$product->name|truncate:27:'...'|escape:'htmlall':'UTF-8'}</a></p>
-				<div class="product_desc"><a href="{$product->getLink()}">{$product->description_short|strip_tags|truncate:60:'...'}</a></div>
-				<a class="lnk_more" href="{$product->getLink()}" title="{l s='View'}">{l s='View'}</a>
-				
-				<div class="comparison_product_infos">
-					<div class="prices_container">
+			<td width="{$width}%" class="ajax_block_product comparison_infos product-block">
+            	<div class="remove">
+                	<a class="cmp_remove" href="{$link->getPageLink('products-comparison', true)|escape:'html'}" title="{l s='Remove'}" rel="ajax_id_product_{$product->id}"><i class="icon-trash"></i></a>
+                </div>
+                <div class="product-image-block">
+                    <a href="{$product->getLink()}" title="{$product->name|escape:html:'UTF-8'}" class="product_image" >
+                        <img class="img-responsive" src="{$link->getImageLink($product->link_rewrite, $product->id_image, 'home_default')|escape:'html'}" alt="{$product->name|escape:html:'UTF-8'}" />
+                    </a>
+                    {if isset($product->show_price) && $product->show_price && !isset($restricted_country_mode) && !$PS_CATALOG_MODE}
+                    	{if $product->on_sale}
+                        	<div class="sale-box"><span class="sale">{l s='Sale!'}</span></div>
+                        {/if}
+                    {/if}
+                </div>
+				<h5><a class="product-name" href="{$product->getLink()}" title="{$product->name|truncate:32:'...'|escape:'htmlall':'UTF-8'}">{$product->name|truncate:45:'...'|escape:'htmlall':'UTF-8'}</a></h5>
+                <div class="prices-container">
 					{if isset($product->show_price) && $product->show_price && !isset($restricted_country_mode) && !$PS_CATALOG_MODE}
-						<p class="price_container"><span class="price">{convertPrice price=$product->getPrice($taxes_behavior)}</span></p>
-						<div class="product_discount">
+						<span class="price product-price">{convertPrice price=$product->getPrice($taxes_behavior)}</span>
+						{if isset($product->specificPrice) && $product->specificPrice}
+                        	{if {$product->specificPrice.reduction_type == 'percentage'}}
+                            	<span class="old-price product-price">{displayWtPrice p=$product->getPrice($taxes_behavior)+($product->getPrice($taxes_behavior)* $product->specificPrice.reduction)}</span>
+                        		<span class="price-percent-reduction">-{$product->specificPrice.reduction*100|floatval}%</span>
+                            {else}
+                            	<span class="old-price product-price">{convertPrice price=($product->getPrice($taxes_behavior) + $product->specificPrice.reduction)}</span>
+                            	<span class="price-percent-reduction">-{convertPrice price=$product->specificPrice.reduction}</span>
+                            {/if}
+                        {/if}
 						{if $product->on_sale}
-							<span class="on_sale">{l s='On sale!'}</span>
 						{elseif $product->specificPrice AND $product->specificPrice.reduction}
-							<span class="discount">{l s='Reduced price!'}</span>
+                            <div class="product_discount">
+                                <span class="reduced-price">{l s='Reduced price!'}</span>
+                            </div>
 						{/if}
-						</div>
 
 						{if !empty($product->unity) && $product->unit_price_ratio > 0.000000}
-								{math equation="pprice / punit_price"  pprice=$product->getPrice($taxes_behavior)  punit_price=$product->unit_price_ratio assign=unit_price}
-							<p class="comparison_unit_price">{convertPrice price=$unit_price} {l s='per %s' sprintf=$product->unity|escape:'htmlall':'UTF-8'}</p>
+							{math equation="pprice / punit_price"  pprice=$product->getPrice($taxes_behavior)  punit_price=$product->unit_price_ratio assign=unit_price}
+							<span class="comparison_unit_price">&nbsp;{convertPrice price=$unit_price} {l s='per %s' sprintf=$product->unity|escape:'htmlall':'UTF-8'}</span>
 						{else}
-						&nbsp;
 						{/if}
 					{/if}
 					</div>
+				<div class="product_desc">{$product->description_short|strip_tags|truncate:60:'...'}</div>
+				
+				<div class="comparison_product_infos">
 				<!-- availability -->
 				<p class="comparison_availability_statut">
 					{if !(($product->quantity <= 0 && !$product->available_later) OR ($product->quantity != 0 && !$product->available_now) OR !$product->available_for_order OR $PS_CATALOG_MODE)}
@@ -84,35 +102,30 @@
 						</span>
 					{/if}
 				</p>
-				<a class="cmp_remove" href="{$link->getPageLink('products-comparison', true)|escape:'html'}" rel="ajax_id_product_{$product->id}">{l s='Remove'}</a>
-				{if (!$product->hasAttributes() OR (isset($add_prod_display) AND ($add_prod_display == 1))) AND $product->minimal_quantity == 1 AND $product->customizable != 2 AND !$PS_CATALOG_MODE}
-					{if ($product->quantity > 0 OR $product->allow_oosp)}
-						<a class="exclusive ajax_add_to_cart_button" rel="ajax_id_product_{$product->id}" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$product->id}&amp;token={$static_token}&amp;add")|escape:'html'}" title="{l s='Add to cart'}"><span></span>{l s='Add to cart'}</a>
-					{else}
-						<span class="exclusive">{l s='Add to cart'}</span>
-					{/if}
-				{else}
-					<div style="height:23px;"></div>
-				{/if}
-				</div>
+                <div class="clearfix">
+                	<div class="button-container">
+                            {if (!$product->hasAttributes() OR (isset($add_prod_display) AND ($add_prod_display == 1))) AND $product->minimal_quantity == 1 AND $product->customizable != 2 AND !$PS_CATALOG_MODE}
+                                {if ($product->quantity > 0 OR $product->allow_oosp)}
+                                    <a class="button ajax_add_to_cart_button btn btn-default" rel="ajax_id_product_{$product->id}" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$product->id}&amp;token={$static_token}&amp;add")|escape:'html'}" title="{l s='Add to cart'}"><span>{l s='Add to cart'}</span></a>
+                                {else}
+                                    <span class="exclusive btn btn-default disabled">{l s='Add to cart'}</span>
+                                {/if}
+                            {else}
+                                
+                            {/if}
+                            <a class="button lnk_view btn btn-default" href="{$product->getLink()}" title="{l s='View'}"><span>{l s='View'}</span></a>
+                        </div>
+                </div>
+                     
+               </div>
 			</td>
 		{/foreach}
 		</tr>
-
-		<tr class="comparison_header">
-			<td>
-				{l s='Features:'}
-			</td>
-			{section loop=$products|count step=1 start=0 name=td}
-			<td></td>
-			{/section}
-		</tr>
-
 		{if $ordered_features}
 		{foreach from=$ordered_features item=feature}
 		<tr>
 			{cycle values='comparison_feature_odd,comparison_feature_even' assign='classname'}
-			<td class="{$classname}" >
+			<td class="{$classname} feature-name" >
 				<strong>{$feature.name|escape:'htmlall':'UTF-8'}</strong>
 			</td>
 
@@ -139,6 +152,9 @@
 	</table>
 </div>
 {else}
-	<p class="warning">{l s='There are no products selected for comparison.'}</p>
+	<p class="alert alert-warning">{l s='There are no products selected for comparison.'}</p>
 {/if}
+<ul class="footer_link">
+	<li><a class="button lnk_view btn btn-default" href="{$base_dir}"><span><i class="icon-chevron-left left"></i>{l s='Continue Shopping'}</span></a></li>
+</ul>
 

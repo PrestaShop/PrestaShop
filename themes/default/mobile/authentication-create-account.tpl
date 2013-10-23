@@ -212,7 +212,7 @@
 		<input type="hidden" name="email_create" value="1" />
 		<input type="hidden" name="is_new_customer" value="1" />
 		{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'htmlall':'UTF-8'}" />{/if}
-		<input type="submit" name="submitAccount" id="submitAccount" value="{l s='Register'}" class="exclusive" />
+		<input type="submit" name="submitAccount" id="submitAccount" value="{l s='Register'}" class="exclusive btn btn-default" />
 		<span><sup>*</sup>{l s='Required field'}</span>
 	</p>
 

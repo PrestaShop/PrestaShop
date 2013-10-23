@@ -24,8 +24,8 @@
 *}
 
 <!-- Block myaccount module -->
-<div class="block myaccount">
-	<p class="title_block"><a href="{$link->getPageLink('my-account', true)|escape:'html'}" title="{l s='Manage my customer account' mod='blockmyaccountfooter'}" rel="nofollow">{l s='My account' mod='blockmyaccountfooter'}</a></p>
+<section class="footer-block col-xs-12 col-md-4">
+	<h4><a href="{$link->getPageLink('my-account', true)|escape:'html'}" title="{l s='Manage my customer account' mod='blockmyaccountfooter'}" rel="nofollow">{l s='My account' mod='blockmyaccountfooter'}</a></h4>
 	<div class="block_content">
 		<ul class="bullet">
 			<li><a href="{$link->getPageLink('history', true)|escape:'html'}" title="{l s='List of my orders' mod='blockmyaccountfooter'}" rel="nofollow">{l s='My orders' mod='blockmyaccountfooter'}</a></li>
@@ -35,8 +35,8 @@
 			<li><a href="{$link->getPageLink('identity', true)|escape:'html'}" title="{l s='Manage my personal information' mod='blockmyaccountfooter'}" rel="nofollow">{l s='My personal info' mod='blockmyaccountfooter'}</a></li>
 			{if $voucherAllowed}<li><a href="{$link->getPageLink('discount', true)|escape:'html'}" title="{l s='List of my vouchers' mod='blockmyaccountfooter'}" rel="nofollow">{l s='My vouchers' mod='blockmyaccountfooter'}</a></li>{/if}
 			{$HOOK_BLOCK_MY_ACCOUNT}
+            <li><a href="{$link->getPageLink('index')}?mylogout" title="{l s='Sign out' mod='blockmyaccountfooter'}" rel="nofollow">{l s='Sign out' mod='blockmyaccountfooter'}</a></li>
 		</ul>
-		<p class="logout"><a href="{$link->getPageLink('index')}?mylogout" title="{l s='Sign out' mod='blockmyaccountfooter'}" rel="nofollow">{l s='Sign out' mod='blockmyaccountfooter'}</a></p>
 	</div>
-</div>
+</section>
 <!-- /Block myaccount module -->

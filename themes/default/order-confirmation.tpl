@@ -24,9 +24,8 @@
 *}
 
 {capture name=path}{l s='Order confirmation'}{/capture}
-{include file="$tpl_dir./breadcrumb.tpl"}
 
-<h1>{l s='Order confirmation'}</h1>
+<h1 class="page-heading">{l s='Order confirmation'}</h1>
 
 {assign var='current_step' value='payment'}
 {include file="$tpl_dir./order-steps.tpl"}
@@ -35,13 +34,13 @@
 
 {$HOOK_ORDER_CONFIRMATION}
 {$HOOK_PAYMENT_RETURN}
-
-<br />
 {if $is_guest}
 	<p>{l s='Your order ID is:'} <span class="bold">{$id_order_formatted}</span> . {l s='Your order ID has been sent via email.'}</p>
-	<a href="{$link->getPageLink('guest-tracking', true, NULL, "id_order={$reference_order}&email={$email}")|escape:'html'}" title="{l s='Follow my order'}"><img src="{$img_dir}icon/order.gif" alt="{l s='Follow my order'}" class="icon" /></a>
-	<a href="{$link->getPageLink('guest-tracking', true, NULL, "id_order={$reference_order}&email={$email}")|escape:'html'}" title="{l s='Follow my order'}">{l s='Follow my order'}</a>
+    <p class="cart_navigation exclusive">
+	<a class="button-exclusive btn btn-default" href="{$link->getPageLink('guest-tracking', true, NULL, "id_order={$reference_order}&email={$email}")|escape:'html'}" title="{l s='Follow my order'}"><i class="icon-chevron-left"></i>{l s='Follow my order'}</a>
+    </p>
 {else}
-	<a href="{$link->getPageLink('history', true)|escape:'html'}" title="{l s='Back to orders'}"><img src="{$img_dir}icon/order.gif" alt="{l s='Back to orders'}" class="icon" /></a>
-	<a href="{$link->getPageLink('history', true)|escape:'html'}" title="{l s='Back to orders'}">{l s='Back to orders'}</a>
+<p class="cart_navigation exclusive">
+	<a class="button-exclusive btn btn-default" href="{$link->getPageLink('history', true)|escape:'html'}" title="{l s='Back to orders'}"><i class="icon-chevron-left"></i>{l s='Back to orders'}</a>
+</p>
 {/if}

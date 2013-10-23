@@ -24,21 +24,28 @@
 *}
 
 		{if !$content_only}
+                    </div>
+    {if isset($HOOK_RIGHT_COLUMN) && (str_replace(" ","",$HOOK_RIGHT_COLUMN)) !=''}{assign var='RightColumn' value=3}{/if}
+    {if isset($RightColumn) && $RightColumn !=0}
+    <!-- Right -->
+        <div id="right_column" class="col-xs-12 col-sm-3 column">
+            {$HOOK_RIGHT_COLUMN}
+        </div>
+    {/if}
+                	</div>
 				</div>
-
-<!-- Right -->
-				<div id="right_column" class="column grid_2 omega">
-					{$HOOK_RIGHT_COLUMN}
-				</div>
-			</div>
-
+            </div>
 <!-- Footer -->
-			<div id="footer" class="grid_9 alpha omega clearfix">
-				{$HOOK_FOOTER}
-				{if $PS_ALLOW_MOBILE_DEVICE}
-					<p class="center clearBoth"><a href="{$link->getPageLink('index', true)}?mobile_theme_ok">{l s='Browse the mobile site'}</a></p>
-				{/if}
-			</div>
+			<div class="footer-container">
+            	<div class="container">
+                    <footer id="footer" class="row">
+                        {$HOOK_FOOTER}
+                        {if $PS_ALLOW_MOBILE_DEVICE}
+                            <p class="text-center"><a href="{$link->getPageLink('index', true)}?mobile_theme_ok">{l s='Browse the mobile site'}</a></p>
+                        {/if}
+                    </footer>
+                </div>
+            </div>
 		</div>
 	{/if}
 	</body>

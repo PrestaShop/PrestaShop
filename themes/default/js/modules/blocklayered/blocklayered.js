@@ -237,7 +237,7 @@ function paginationButton() {
 		else if ($(this).hasClass('pagination_previous'))
 			nbPage = parseInt($('div.pagination li.current').children().html())- 1;
 	
-		$(this).children().click(function () {
+		$(this).children().children().click(function () {
 			if (nbPage == 0)
 				p = parseInt($(this).html()) + parseInt(nbPage);
 			else

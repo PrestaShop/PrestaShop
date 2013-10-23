@@ -23,14 +23,13 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture name=path}<a href="{$link->getPageLink('my-account', true)|escape:'html'}">{l s='My account'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Credit slips'}{/capture}
-{include file="$tpl_dir./breadcrumb.tpl"}
+{capture name=path}<a href="{$link->getPageLink('my-account', true)|escape:'html'}">{l s='My account'}</a><span class="navigation-pipe">{$navigationPipe}</span><span class="navigation_page">{l s='Credit slips'}</span>{/capture}
 
-<h1>{l s='Credit slips'}</h1>
-<p>{l s='Credit slips you have received after cancelled orders'}.</p>
+<h1 class="page-heading bottom-indent">{l s='Credit slips'}</h1>
+<p class="info-title">{l s='Credit slips you have received after cancelled orders'}.</p>
 <div class="block-center" id="block-history">
 	{if $ordersSlip && count($ordersSlip)}
-	<table id="order-list" class="std">
+	<table id="order-list" class="table table-bordered">
 		<thead>
 			<tr>
 				<th class="first_item">{l s='Credit slip'}</th>
@@ -46,19 +45,18 @@
 				<td class="history_method"><a class="color-myaccount" href="javascript:showOrder(1, {$slip.id_order|intval}, '{$link->getPageLink('order-detail')|escape:'html'}');">{l s='#%s' sprintf=$slip.id_order|string_format:"%06d"}</a></td>
 				<td class="bold">{dateFormat date=$slip.date_add full=0}</td>
 				<td class="history_invoice">
-					<a href="{$link->getPageLink('pdf-order-slip', true, NULL, "id_order_slip={$slip.id_order_slip|intval}")|escape:'html'}" title="{l s='Credit slip'} {l s='#%s' sprintf=$slip.id_order_slip|string_format:"%06d"}"><img src="{$img_dir}icon/pdf.gif" alt="{l s='Order slip'} {l s='#%s' sprintf=$slip.id_order_slip|string_format:"%06d"}" class="icon" /></a>
-					<a href="{$link->getPageLink('pdf-order-slip', true, NULL, "id_order_slip={$slip.id_order_slip|intval}")|escape:'html'}" title="{l s='Credit slip'} {l s='#%s' sprintf=$slip.id_order_slip|string_format:"%06d"}">{l s='PDF'}</a>
+					<a class="link-button" href="{$link->getPageLink('pdf-order-slip', true, NULL, "id_order_slip={$slip.id_order_slip|intval}")|escape:'html'}" title="{l s='Credit slip'} {l s='#%s' sprintf=$slip.id_order_slip|string_format:"%06d"}"><i class="icon-file-text large"></i>{l s='PDF'}</a>
 				</td>
 			</tr>
 		{/foreach}
 		</tbody>
 	</table>
-	<div id="block-order-detail" class="hidden">&nbsp;</div>
+	<div id="block-order-detail" class="unvisible">&nbsp;</div>
 	{else}
-		<p class="warning">{l s='You have not received any credit slips.'}</p>
+		<p class="alert alert-warning">{l s='You have not received any credit slips.'}</p>
 	{/if}
 </div>
 <ul class="footer_links">
-	<li><a href="{$link->getPageLink('my-account', true)}"><img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /></a><a href="{$link->getPageLink('my-account', true)|escape:'html'}">{l s='Back to your account'}</a></li>
-	<li class="f_right"><a href="{$base_dir}"><img src="{$img_dir}icon/home.gif" alt="" class="icon" /></a><a href="{$base_dir}">{l s='Home'}</a></li>
+	<li><a class="btn btn-default button button-small" href="{$link->getPageLink('my-account', true)|escape:'html'}"><span><i class="icon-chevron-left"></i> {l s='Back to your account'}</span></a></li>
+	<li><a class="btn btn-default button button-small" href="{$base_dir}"><span><i class="icon-chevron-left"></i> {l s='Home'}</span></a></li>
 </ul>

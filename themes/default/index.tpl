@@ -25,10 +25,10 @@
 
 {$HOOK_HOME}
 {if isset($HOOK_HOME_TAB_CONTENT)}
-{if isset($HOOK_HOME_TAB)}
-	<ul class="home_tab">{/if}{$HOOK_HOME_TAB}{if isset($HOOK_HOME_TAB)}</ul>
-{/if}
-	<div class="home_tab_content">
-	{$HOOK_HOME_TAB_CONTENT}
+    {if isset($HOOK_HOME_TAB)}
+        <ul id="home-page-tabs" class="nav nav-tabs">{/if}{$HOOK_HOME_TAB}{if isset($HOOK_HOME_TAB)}</ul>
+    {/if}
+	<div class="tab-content">
+		{$HOOK_HOME_TAB_CONTENT}
 	</div>
 {/if}

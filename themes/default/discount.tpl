@@ -22,13 +22,12 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{capture name=path}<a href="{$link->getPageLink('my-account', true)|escape:'html'}">{l s='My account'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='My vouchers'}{/capture}
-{include file="$tpl_dir./breadcrumb.tpl"}
+{capture name=path}<a href="{$link->getPageLink('my-account', true)|escape:'html'}">{l s='My account'}</a><span class="navigation-pipe">{$navigationPipe}</span><span class="navigation_page">{l s='My vouchers'}</span>{/capture}
 
-<h1>{l s='My vouchers'}</h1>
+<h1 class="page-heading">{l s='My vouchers'}</h1>
 
 {if isset($cart_rules) && count($cart_rules) && $nb_cart_rules}
-<table class="discount std table_block">
+<table class="discount table table-bordered">
 	<thead>
 		<tr>
 			<th class="discount_code first_item">{l s='Code'}</th>
@@ -66,9 +65,9 @@
 			</td>
 			<td class="discount_cumulative">
 				{if $discountDetail.cumulable == 1}
-					<img src="{$img_dir}icon/yes.gif" alt="{l s='Yes'}" class="icon" /> {l s='Yes'}
+					<i class="icon-ok icon"></i> {l s='Yes'}
 				{else}
-					<img src="{$img_dir}icon/no.gif" alt="{l s='No'}" class="icon" valign="middle" /> {l s='No'}
+					<i class="icon-remove icon"></i> {l s='No'}
 				{/if}
 			</td>
 			<td class="discount_expiration_date">{dateFormat date=$discountDetail.date_to}</td>
@@ -77,10 +76,10 @@
 	</tbody>
 </table>
 {else}
-	<p class="warning">{l s='You do not have any vouchers.'}</p>
+	<p class="alert alert-warning">{l s='You do not have any vouchers.'}</p>
 {/if}
 
-<ul class="footer_links">
-	<li><a href="{$link->getPageLink('my-account', true)|escape:'html'}"><img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /> {l s='Back to your account'}</a></li>
-	<li class="f_right"><a href="{$base_dir}"><img src="{$img_dir}icon/home.gif" alt="" class="icon" /> {l s='Home'}</a></li>
+<ul class="footer_links clearfix">
+	<li><a class="btn btn-default button button-small" href="{$link->getPageLink('my-account', true)|escape:'html'}"><span><i class="icon-chevron-left"></i> {l s='Back to your account'}</span></a></li>
+	<li><a class="btn btn-default button button-small" href="{$base_dir}"><span><i class="icon-chevron-left"></i> {l s='Home'}</span></a></li>
 </ul>

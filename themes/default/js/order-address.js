@@ -27,7 +27,6 @@ $(document).ready(function()
 {
 	if (typeof(formatedAddressFieldsValuesList) !== 'undefined')
 		updateAddressesDisplay(true);
-	resizeAddressesBox();
 });
 
 //update the display of the addresses
@@ -87,7 +86,6 @@ function updateAddressDisplay(addressType)
 		link = link.replace(expression, 'id_address=' + idAddress);
 		$('ul#address_' + addressType + ' li.address_update a').attr('href', link);
 	}
-	resizeAddressesBox();
 }
 
 function updateAddresses()
@@ -130,5 +128,4 @@ function updateAddresses()
 					alert("TECHNICAL ERROR: unable to save adresses \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
 			}
 		});
-	resizeAddressesBox();
 }

@@ -209,23 +209,6 @@ function in_array(value, array)
 			return true;
 	return false;
 }
-
-function resizeAddressesBox(nameBox)
-{
-	maxHeight = 0;
-
-	if (typeof(nameBox) === 'undefined')
-		nameBox = '.address';
-	$(nameBox).each(function()
-	{
-		$(this).css('height', 'auto');
-		currentHeight = $(this).height();
-		if (maxHeight < currentHeight)
-			maxHeight = currentHeight;
-	});
-	$(nameBox).height(maxHeight);
-}
-
 $(document).ready(function() {
 	$.fn.checkboxChange = function(fnChecked, fnUnchecked) {
 		if ($(this).prop('checked') && fnChecked)

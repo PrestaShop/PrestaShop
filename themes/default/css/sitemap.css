@@ -1,38 +1,55 @@
-#sitemap_content {margin-left: 20px}
-#sitemap_content .sitemap_block h3, 
-#sitemap_content .categTree h3 {margin: 20px 0 0 0}
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
+/******************************************************************
+					Sitemap Page Styles
+*******************************************************************/
+#sitemap .sitemap_block .page-subheading {
+  margin-bottom: 16px;
+}
+#sitemap .sitemap_block li {
+  line-height: 16px;
+  padding-bottom: 11px;
+}
+#sitemap .sitemap_block li a:before {
+  content: "";
+  display: inline-block;
+  font-family: 'FontAwesome';
+  padding-right: 10px;
+}
+#sitemap .sitemap_block li a:hover {
+  font-weight: bold;
+}
 
-#sitemap_content div.sitemap_block {
-   float: left;
-   min-height: 120px;
-   padding: 0;
-   width: 33%
-}
-#sitemap_content div.sitemap_block ul {list-style-type:none}
-#sitemap_content div.sitemap_block li a {
-   display: block;
-   padding: 2px 0 2px 10px;
-   color: #333;
-	background: url(../img/arrow_right_2.png) no-repeat 0 4px transparent
-}
-
-#listpage_content {margin: 50px 0 20px 20px;}
-#listpage_content div.categTree {
-   float: left;
-   width: 33%
-}
 #listpage_content div.tree_top {
-   padding: 3px 0 5px 24px;
-   background: url(../img/sitemap-top.gif) no-repeat -1px -3px transparent
+  padding-left: 27px;
+  padding-top: 5px;
 }
-#listpage_content ul {list-style-type:none}
-#listpage_content ul.tree li {
-   margin-left: 11px;
-   padding-left: 20px;
-   border-left: 1px dotted #999;
-   background: url(../img/sitemap-horizontal.png) no-repeat left 10px transparent
+#listpage_content div.tree_top a:before {
+  content: "";
+  display: inline-block;
+  font-family: "FontAwesome";
+  font-size: 20px;
+  color: #333;
 }
-#listpage_content ul.tree li.last {
-   border: medium none;
-   background: url(../img/sitemap-last.gif) no-repeat -12px -2px transparent
+#listpage_content div.tree_top a:hover:before {
+  color: #515151;
+}
+
+ul.tree {
+  padding-left: 24px;
+}
+ul.tree li {
+  margin: 0 0 0 21px;
+  padding: 5px 0 0 33px;
+  border-left: 1px solid #d6d4d4;
+  background: url(../img/sitemap-horizontal.png) no-repeat left 15px transparent;
+}
+ul.tree li a:hover {
+  font-weight: bold;
+}
+ul.tree > li {
+  margin: 0 0 0 11px;
+}
+ul.tree li.last {
+  border: medium none;
+  background: url(../img/sitemap-last.png) no-repeat 0px -4px transparent;
 }
