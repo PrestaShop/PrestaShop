@@ -35,32 +35,53 @@
 			</a>
 		</span>
 	</header>
-	<section id="dashgoals_config" class="dash_config">
+	<section id="dashgoals_config" class="dash_config hide">
 		<header><i class="icon-wrench"></i> {l s='Configuration' mod='dashgoals'}</header>
-		<table class="table table-condensed table-striped table-bordered">
-			<thead>
-				<tr>
-					<th>-</th>
-					<th>{l s='Traffic' mod='dashgoals'}</th>
-					<th>{l s='Conversion Rate' mod='dashgoals'}</th>
-					<th>{l s='Average Cart Value' mod='dashgoals'}</th>
-					<th>{l s='Sales' mod='dashgoals'}</th>
-				</tr>
-			</thead>
-			<tbody>
-				{foreach $goals_months as $month}
-				<tr>
-					<td>{$month}</td>
-					<td><input id="dashgoals_traffic_{$month@key}" name="dashgoals_traffic_{$month@key}" class="dashgoals_config_input form-control" value="" /></td>
-					<td><input id="dashgoals_conversion_rate_{$month@key}" name="dashgoals_conversion_rate_{$month@key}" class="dashgoals_config_input form-control" value="" /></td>
-					<td><input id="dashgoals_average_cart_value_{$month@key}" name="dashgoals_average_cart_value_{$month@key}" class="dashgoals_config_input form-control" value="" /></td>
-					<td id="dashgoals_sales_{$month@key}" class="dashgoals_sales">0</td>
-				</tr>
-				{/foreach}
-			</tbody>
-		</table>
+		<form class="defaultForm form-horizontal" method="post" action="{$link->getAdminLink('AdminDashboard')}">
+			<table class="table table-condensed table-striped table-bordered">
+				<thead>
+					<tr>
+						<th>{$goals_year}</th>
+						<th>{l s='Traffic' mod='dashgoals'}</th>
+						<th>{l s='Conversion Rate' mod='dashgoals'}</th>
+						<th>{l s='Average Cart Value' mod='dashgoals'}</th>
+						<th>{l s='Sales' mod='dashgoals'}</th>
+					</tr>
+				</thead>
+				<tbody>
+					{foreach $goals_months as $month}
+					<tr>
+						<td>
+							{$month.label}
+						</td>
+						<td>
+							<input id="dashgoals_traffic_{$month@key}" name="dashgoals_traffic_{$month@key}" class="dashgoals_config_input form-control"
+								value="{$month.values.traffic|intval}" />
+						</td>
+						<td>
+							<div class="input-group">
+								<input id="dashgoals_conversion_{$month@key}" name="dashgoals_conversion_{$month@key}" class="dashgoals_config_input form-control"
+									value="{$month.values.conversion|floatval}" />
+								<span class="input-group-addon">%</span>
+							</div>
+						</td>
+						<td>
+							<div class="input-group">
+								<span class="input-group-addon">{$currency_code|escape}</span>
+								<input id="dashgoals_avg_cart_value_{$month@key}" name="dashgoals_avg_cart_value_{$month@key}" class="dashgoals_config_input form-control"
+									value="{$month.values.avg_cart_value|intval}" />
+							</div>
+						</td>
+						<td id="dashgoals_sales_{$month@key}" class="dashgoals_sales">
+						</td>
+					</tr>
+					{/foreach}
+				</tbody>
+			</table>
+			<input class="btn btn-default" name="submitDashGoals" type="submit" value="{l s='Save' mod='dashgoals'}" />
+		</form>
 	</section>
-	<section class="loading hide">
+	<section class="loading">
 		<div id="dash_goals_chart1" class="chart with-transitions">
 			<svg></svg>
 		</div>
