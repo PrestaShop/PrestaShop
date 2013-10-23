@@ -48,6 +48,7 @@
 	var txt_add_product_no_product_price = "{l s='Error: Product price must be set' js=1}";
 	var txt_confirm = "{l s='Are you sure?' js=1}";
 	var statesShipped = new Array();
+	var has_voucher = {if count($discounts)}1{else}0{/if};
 	{foreach from=$states item=state}
 		{if (!$currentState->shipped && $state['shipped'])}
 			statesShipped.push({$state['id_order_state']});
@@ -927,7 +928,7 @@
 			</table>
 
 			{if $can_edit}
-			<div class="row-margin-bottom">
+			<div class="row-margin-bottom order_action">
 			{if !$order->hasBeenDelivered()}
 				<button type="button" id="add_product" class="btn btn-default">
 					<i class="icon-plus-sign"></i>
@@ -952,8 +953,7 @@
 					</div>
 				</div>
 				<div class="col-lg-6">
-
-					<div class="panel">
+					<div class="panel panel-vouchers" style="{if !sizeof($discounts)}display:none;{/if}">
 						{if (sizeof($discounts) || $can_edit)}
 						<table class="table">
 							<thead>
