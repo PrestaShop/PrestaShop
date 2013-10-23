@@ -51,11 +51,29 @@
 				<tbody>
 					{foreach $goals_months as $month}
 					<tr>
-						<td>{$month.label}</td>
-						<td><input id="dashgoals_traffic_{$month@key}" name="dashgoals_traffic_{$month@key}" class="dashgoals_config_input form-control" value="{$month.values.traffic|intval}" /></td>
-						<td><input id="dashgoals_conversion_{$month@key}" name="dashgoals_conversion_{$month@key}" class="dashgoals_config_input form-control" value="{$month.values.conversion|floatval}" /></td>
-						<td><input id="dashgoals_avg_cart_value_{$month@key}" name="dashgoals_avg_cart_value_{$month@key}" class="dashgoals_config_input form-control" value="{$month.values.avg_cart_value|intval}" /></td>
-						<td id="dashgoals_sales_{$month@key}" class="dashgoals_sales">0</td>
+						<td>
+							{$month.label}
+						</td>
+						<td>
+							<input id="dashgoals_traffic_{$month@key}" name="dashgoals_traffic_{$month@key}" class="dashgoals_config_input form-control"
+								value="{$month.values.traffic|intval}" />
+						</td>
+						<td>
+							<div class="input-group">
+								<input id="dashgoals_conversion_{$month@key}" name="dashgoals_conversion_{$month@key}" class="dashgoals_config_input form-control"
+									value="{$month.values.conversion|floatval}" />
+								<span class="input-group-addon">%</span>
+							</div>
+						</td>
+						<td>
+							<div class="input-group">
+								<span class="input-group-addon">{$currency_code|escape}</span>
+								<input id="dashgoals_avg_cart_value_{$month@key}" name="dashgoals_avg_cart_value_{$month@key}" class="dashgoals_config_input form-control"
+									value="{$month.values.avg_cart_value|intval}" />
+							</div>
+						</td>
+						<td id="dashgoals_sales_{$month@key}" class="dashgoals_sales">
+						</td>
 					</tr>
 					{/foreach}
 				</tbody>
