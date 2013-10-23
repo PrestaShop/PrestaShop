@@ -2,8 +2,7 @@
 
 <tr>
 	<td align="center">
-		<?php echo t('<span class="title">Hi {firstname} {lastname},</span>'); 
-		?>
+		<span class="title"><?php echo t('Hi {firstname} {lastname},'); ?></span>
 	</td>
 </tr>
 <tr>
@@ -15,10 +14,10 @@
 			<?php echo t('Message from a {shop_name} customer'); ?>
 		</p>
 		<span>
-			<?php echo t('<span><strong>Customer e-mail address: <a href="mailto:{email}">{email}</a></strong></span>'); ?><br /><br />
-			<?php echo t('<span><strong>Customer message:</strong></span> {message}'); ?><br /><br />
-			<?php echo t('<span><strong>Order ID:</strong></span> {order_name}'); ?><br />
-			<?php echo t('<span><strong>Attached file:</strong></span> {attached_file}'); ?>
+			<span><strong><?php echo t('Customer e-mail address:'); ?> <a href="mailto:{email}">{email}</a></strong></span><br /><br />
+			<span><strong><?php echo t('Customer message:'); ?></strong></span> {message}<br /><br />
+			<span><strong><?php echo t('Order ID:'); ?></strong></span> {order_name}<br />
+			<span><strong><?php echo t('Attached file:'); ?></strong></span> {attached_file}
 		</span>
 	</td>
 </tr>

@@ -3,7 +3,7 @@
 						</tr>
 						<tr>
 							<td class="footer">
-								<?php echo t('<a href="{shop_url}">{shop_name}</a> powered by <a href="http://www.prestashop.com/">PrestaShop&trade;</a>'); ?>
+								<span><?php echo t('<a href="{shop_url}">{shop_name}</a> powered by <a href="http://www.prestashop.com/">PrestaShop&trade;</a>'); ?></span>
 							</td>
 						</tr>
 					</table>

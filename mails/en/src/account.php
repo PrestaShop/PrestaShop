@@ -2,9 +2,8 @@
 
 <tr>
 	<td align="center">
-		<?php echo t('<span class="title">Hi {firstname} {lastname},</span><br/>
-			<span class="subtitle">Thank you for creating a customer account at {shop_name}.</span>'); 
-		?>
+		<span class="title"><?php echo t('Hi {firstname} {lastname},'); ?></span><br/>
+		<span class="subtitle"><?php echo t('Thank you for creating a customer account at {shop_name}.'); ?></span>
 	</td>
 </tr>
 <tr>
@@ -17,8 +16,8 @@
 		</p>
 		<span>
 			<?php echo t('Here are your login details:'); ?><br /> 
-			<?php echo t('<span><strong>E-mail address: <a href="mailto:{email}">{email}</a></strong></span>'); ?><br />
-			<?php echo t('<span><strong>Password:</strong></span> {passwd}'); ?>
+			<span><strong><?php echo t('E-mail address: <a href="mailto:{email}">{email}</a>'); ?></strong></span><br />
+			<span><strong><?php echo t('Password:'); ?></strong></span> {passwd}
 		</span>
 	</td>
 </tr>
@@ -37,8 +36,11 @@
 	</td>
 </tr>
 <tr>
+	<td>&nbsp;</td>
+</tr>
+<tr>
 	<td>
-		<?php echo t('<span>You can now place orders on our shop: <a href="{shop_url}">{shop_name}</a></span>'); ?>.
+		<span><?php echo t('You can now place orders on our shop: <a href="{shop_url}">{shop_name}</a>'); ?>.</span>
 	</td>
 </tr>
 

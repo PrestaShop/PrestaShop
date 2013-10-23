@@ -2,8 +2,7 @@
 
 <tr>
 	<td align="center">
-		<?php echo t('<span class="title">Hello,</span>'); 
-		?>
+		<span class="title"><?php echo t('Hello'); ?></span>
 	</td>
 </tr>
 <tr>
@@ -11,7 +10,9 @@
 </tr>
 <tr>
 	<td>
-		<?php echo t('<span>This is a <strong>test e-mail</strong> from your shop.<br /><br /> If you can read this, the test was successful!</span>'); ?>.
+		<span>
+			<?php echo t('This is a <strong>test e-mail</strong> from your shop.<br /><br /> If you can read this, the test was successful!'); ?>.
+		</span>
 	</td>
 </tr>
 

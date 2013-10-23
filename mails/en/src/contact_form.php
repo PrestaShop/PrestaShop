@@ -2,8 +2,7 @@
 
 <tr>
 	<td align="center">
-		<?php echo t('<span class="title">Hi {firstname} {lastname},</span>'); 
-		?>
+		<span class="title"><?php echo t('Hi {firstname} {lastname},'); ?></span>
 	</td>
 </tr>
 <tr>
@@ -16,16 +15,21 @@
 		</p>
 		<span>
 			<?php echo t('Your message has been sent successfully.'); ?><br /><br />
-			<?php echo t('<span><strong>Message:</strong></span> {message}'); ?><br /><br />
-			<?php echo t('<span><strong>Order ID:</strong></span> {order_name}'); ?><br />
-			<?php echo t('<span><strong>Product:</strong></span> {product_name}'); ?><br />
-			<?php echo t('<span><strong>Attached file:</strong></span> {attached_file}'); ?>
+			<span><strong><?php echo t('Message:'); ?></strong></span> {message}<br /><br />
+			<span><strong><?php echo t('Order ID:'); ?></strong></span> {order_name}<br />
+			<span><strong><?php echo t('Product:'); ?></strong></span> {product_name}<br />
+			<span><strong><?php echo t('Attached file:'); ?></strong></span> {attached_file}
 		</span>
 	</td>
 </tr>
 <tr>
+	<td>&nbsp;</td>
+</tr>
+<tr>
 	<td>
-		<?php echo t('<span>We will answer as soon as possible.</span>'); ?>
+		<span>
+			<?php echo t('We will answer as soon as possible.'); ?>
+		</span>
 	</td>
 </tr>
 

@@ -2,7 +2,7 @@
 
 <tr>
 	<td align="center">
-		<?php echo t('<span class="title">Hi {firstname} {lastname},</span>'); ?>
+		<span class="title"><?php echo t('Hi {firstname} {lastname},'); ?></span>
 	</td>
 </tr>
 <tr>

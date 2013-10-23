@@ -2,8 +2,7 @@
 
 <tr>
 	<td align="center">
-		<?php echo t('<span class="title">Hi {firstname} {lastname},</span>'); 
-		?>
+		<span class="title"><?php echo t('Hi {firstname} {lastname},'); ?></span>
 	</td>
 </tr>
 <tr>
@@ -16,19 +15,26 @@
 		</p>
 		<span>
 			<?php echo t('Your guest account for <span><strong>{shop_name}</strong></span> has been transformed into a customer account.'); ?> <br /><br />
-			<?php echo t('<span><strong>E-mail address:</strong></span> {email}'); ?><br /><br />
-			<?php echo t('<span><strong>Password:</strong></span> {passwd}'); ?>
+			<span><strong><?php echo t('E-mail address:'); ?></strong></span> {email}<br /><br />
+			<span><strong><?php echo t('Password:'); ?></strong></span> {passwd}
+		</span>
+	</td>
+</tr>
+<tr>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td>
+		<span>
+			<?php echo t('Please be careful when sharing these login details with others.'); ?>
 		</span>
 	</td>
 </tr>
 <tr>
 	<td>
-		<?php echo t('<span>Please be careful when sharing these login details with others.</span>'); ?>
-	</td>
-</tr>
-<tr>
-	<td>
-		<?php echo t('<span>You can access your customer account on our shop: {shop_url}</span>'); ?>
+		<span>
+			<?php echo t('You can access your customer account on our shop:'); ?> <strong>{shop_url}</strong>
+		</span>
 	</td>
 </tr>
 

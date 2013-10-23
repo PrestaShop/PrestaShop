@@ -2,9 +2,8 @@
 
 <tr>
 	<td align="center">
-		<?php echo t('<span class="title">Hi {firstname} {lastname},</span><br/>
-			<span class="subtitle">Thank you for shopping at {shop_name}!</span>'); 
-		?>
+		<span class="title"><?php echo t('Hi {firstname} {lastname},'); ?></span><br/>
+		<span class="subtitle"><?php echo t('Thank you for shopping at {shop_name}!'); ?></span>
 	</td>
 </tr>
 <tr>
@@ -30,21 +29,28 @@
 		</p>
 		<span>
 			<?php echo t('Here are the bank details for your wire or transfer:'); ?><br /> 
-			<?php echo t('<span><strong>Amount:</strong></span> {total_paid}'); ?><br />
-			<?php echo t('<span><strong>Account owner:</strong></span> {bankwire_owner}'); ?><br />
-			<?php echo t('<span><strong>Account details:</strong></span> {bankwire_details}'); ?><br />
-			<?php echo t('<span><strong>Bank address:</strong></span> {bankwire_address}'); ?>
+			<span><strong><?php echo t('Amount:'); ?></strong></span> {total_paid}<br />
+			<span><strong><?php echo t('Account owner:'); ?></strong></span> {bankwire_owner}<br />
+			<span><strong><?php echo t('Account details:'); ?></strong></span> {bankwire_details}<br />
+			<span><strong><?php echo t('Bank address:'); ?></strong></span> {bankwire_address}
+		</span>
+	</td>
+</tr>
+<tr>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td>
+		<span>
+			<?php echo t('You can review your order and download your invoice from the <a href="{history_url}">"Order history"</a> section of your customer account by clicking <a href="{my_account_url}">"My account"</a> on our shop.'); ?>
 		</span>
 	</td>
 </tr>
 <tr>
 	<td>
-		<?php echo t('<span>You can review your order and download your invoice from the <a href="{history_url}">"Order history"</a> section of your customer account by clicking <a href="{my_account_url}">"My account"</a> on our shop.</span>'); ?>
-	</td>
-</tr>
-<tr>
-	<td>
-		<?php echo t('<span>If you have a guest account, you can follow your order via the <a href="{guest_tracking_url}">"Guest Tracking"</a> section on our shop.</span>'); ?>
+		<span>
+			<?php echo t('If you have a guest account, you can follow your order via the <a href="{guest_tracking_url}">"Guest Tracking"</a> section on our shop.'); ?>
+		</span>
 	</td>
 </tr>
 

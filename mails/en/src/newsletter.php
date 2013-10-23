@@ -2,13 +2,12 @@
 
 <tr>
 	<td align="center">
-		<?php echo t('<span class="title">Newsletter from {shop_name}</span>'); 
-		?>
+		<span class="title"><?php echo t('Hi {firstname} {lastname},'); ?></span>
 	</td>
 </tr>
 <tr>
 	<td>
-		<?php echo t('{message}'); ?>
+		{message}
 	</td>
 </tr>
 

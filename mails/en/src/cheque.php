@@ -2,9 +2,8 @@
 
 <tr>
 	<td align="center">
-		<?php echo t('<span class="title">Hi {firstname} {lastname},</span><br/>
-			<span class="subtitle">Thank you for shopping at {shop_name}!</span>'); 
-		?>
+		<span class="title"><?php echo t('Hi {firstname} {lastname},'); ?></span><br/>
+		<span class="subtitle"><?php echo t('Thank you for shopping at {shop_name}!'); ?></span>
 	</td>
 </tr>
 <tr>
@@ -30,21 +29,28 @@
 		</p>
 		<span>
 			<?php echo t('Here are the bank details for your wire or transfer:'); ?><br /> 
-			<?php echo t('<span><strong>Amount:</strong></span> {total_paid}'); ?><br />
-			<?php echo t('<span><strong>Payable to the order of:</strong></span> {cheque_name}'); ?><br />
-			<?php echo t('<span><strong>Please mail your check to:</strong></span> {cheque_address_html}'); ?>
+			<span><strong><?php echo t('Amount:'); ?></strong></span> {total_paid}<br />
+			<span><strong><?php echo t('Payable to the order of:'); ?></strong></span> {cheque_name}<br />
+			<span><strong><?php echo t('Please mail your check to:'); ?></strong></span> {cheque_address_html}
 
 		</span>
 	</td>
 </tr>
 <tr>
+	<td>&nbsp;</td>
+</tr>
+<tr>
 	<td>
-		<?php echo t('<span>You can review your order and download your invoice from the <a href="{history_url}">"Order history"</a> section of your customer account by clicking <a href="{my_account_url}">"My account"</a> on our shop.</span>'); ?>
+		<span>
+			<?php echo t('You can review your order and download your invoice from the <a href="{history_url}">"Order history"</a> section of your customer account by clicking <a href="{my_account_url}">"My account"</a> on our shop.'); ?>
+		</span>
 	</td>
 </tr>
 <tr>
 	<td>
-		<?php echo t('<span>If you have a guest account, you can follow your order via the <a href="{guest_tracking_url}">"Guest Tracking"</a> section on our shop.</span>'); ?>
+		<span>
+			<?php echo t('If you have a guest account, you can follow your order via the <a href="{guest_tracking_url}">"Guest Tracking"</a> section on our shop.'); ?>
+		</span>
 	</td>
 </tr>
 
