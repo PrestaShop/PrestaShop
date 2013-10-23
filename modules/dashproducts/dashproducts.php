@@ -49,6 +49,7 @@ class Dashproducts extends Module
 
 	public function hookDashboardZoneTwo($params)
 	{
+		$this->context->smarty->assign(array('date_from' => Tools::displayDate($params['date_from']), 'date_to' => Tools::displayDate($params['date_to'])));
 		return $this->display(__FILE__, 'dashboard_zone_two.tpl');
 	}
 

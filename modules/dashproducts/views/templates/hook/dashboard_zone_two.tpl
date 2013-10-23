@@ -72,7 +72,7 @@
 			</table>
 		</div>
 		<div class="tab-pane" id="dash_best_sellers">
-			<h3>{l s="Top 10 products"}</h3>
+			<h3>{l s="Top 10 products"} - {l s="From:"} {$date_from} {l s="to:"} {$date_to}</h3>
 			<table class="table data_table" id="table_best_sellers">
 				<thead>
 				</thead>
@@ -81,7 +81,7 @@
 			</table>
 		</div>
 		<div class="tab-pane" id="dash_most_viewed">
-			<h3>{l s="Coming soon"}</h3>
+			<h3>{l s="Most Viewed"} - {l s="From:"} {$date_from} {l s="to:"} {$date_to}</h3>
 			<table class="table data_table" id="table_most_viewed">
 				<thead>
 				</thead>
@@ -90,28 +90,13 @@
 			</table>
 		</div>
 		<div class="tab-pane" id="dash_top_search">
-			<div class="row">
-				<div class="col-lg-12">
-					<h3>{l s="Top 10 most search terms"}</h3>
-					<table class="table data_table" id="table_top_10_most_search">
-						<thead>
-						</thead>
-						<tbody>
-						</tbody>
-					</table>
-				</div>
-				{*
-				<div class="col-lg-5">
-					<h3>{l s="Coming soon"}</h3>
-					<table class="table data_table" id="table_top_5_search">
-						<thead>
-						</thead>
-						<tbody>
-						</tbody>
-					</table>
-				</div>
-				*}
-			</div>
+			<h3>{l s="Top 10 most search terms"} - {l s="From:"} {$date_from} {l s="to:"} {$date_to}</h3>
+			<table class="table data_table" id="table_top_10_most_search">
+				<thead>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
 		</div>
 	</div>
 </section>
