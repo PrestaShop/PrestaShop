@@ -90,6 +90,7 @@ class Dashgoals extends Module
 				$month_row['values'][$type] = ConfigurationKPI::get(strtoupper($key));
 			}
 
+		$this->context->smarty->assign('currency_code', $this->context->currency->iso_code);
 		$this->context->smarty->assign('goals_year', $year);
 		$this->context->smarty->assign('goals_months', $months);
 		return $this->display(__FILE__, 'dashboard_zone_two.tpl');
@@ -97,9 +98,7 @@ class Dashgoals extends Module
 
 	public function hookDashboardData($params)
 	{
-		return array(
-			'data_chart' => array('dash_goals_chart1' => $this->getChartData()),
-		);
+		return array('data_chart' => array('dash_goals_chart1' => $this->getChartData()));
 	}
 	
 	public function getChartData()
