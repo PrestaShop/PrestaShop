@@ -646,6 +646,8 @@ class AdminCustomersControllerCore extends AdminController
 		}
 
 		$connections = $customer->getLastConnections();
+		if (!is_array($connections))
+			$connections = array();
 		$total_connections = count($connections);
 		for ($i = 0; $i < $total_connections; $i++)
 		{
@@ -654,7 +656,7 @@ class AdminCustomersControllerCore extends AdminController
 													preg_replace('/^www./', '', parse_url($connections[$i]['http_referer'], PHP_URL_HOST)) :
 														$this->l('Direct link');
 		}
-
+		
 		$referrers = Referrer::getReferrers($customer->id);
 		$total_referrers = count($referrers);
 		for ($i = 0; $i < $total_referrers; $i++)
