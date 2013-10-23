@@ -930,7 +930,7 @@ class ValidateCore
 	 */
 	public static function isLocalizationPackSelection($data)
 	{
-		return ($data === 'states' || $data === 'taxes' || $data === 'currencies' || $data === 'languages' || $data === 'units');
+		return in_array((string)$data, array('states', 'taxes', 'currencies', 'languages', 'units', 'groups'));
 	}
 
 	/**

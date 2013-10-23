@@ -236,6 +236,11 @@ class AdminLocalizationControllerCore extends AdminController
 				'id' => 'units',
 				'val' => 'units',
 				'name' => $this->l('Units (e.g. weight, volume, distance)')
+			),
+			array(
+				'id' => 'groups',
+				'val' => 'groups',
+				'name' => $this->l('Change the behavior of the taxes display for the groups')
 			)
 		);
 
