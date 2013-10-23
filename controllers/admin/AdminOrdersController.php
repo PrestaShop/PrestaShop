@@ -139,6 +139,8 @@ class AdminOrdersControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
+		parent::initPageHeaderToolbar();
+
 		if (empty($this->display))
 			$this->page_header_toolbar_btn['new_order'] = array(
 				'href' => self::$currentIndex.'&amp;addorder&amp;token='.$this->token,
@@ -146,11 +148,9 @@ class AdminOrdersControllerCore extends AdminController
 				'icon' => 'process-icon-new'
 			);
 
-		if (Context::getContext()->shop->getContext() != Shop::CONTEXT_SHOP && isset($this->toolbar_btn['new'])
+		if (Context::getContext()->shop->getContext() != Shop::CONTEXT_SHOP && isset($this->page_header_toolbar_btn['new_order'])
 			&& Shop::isFeatureActive())
 			unset($this->page_header_toolbar_btn['new_order']);
-
-		parent::initPageHeaderToolbar();
 	}
 
 	public function renderForm()
