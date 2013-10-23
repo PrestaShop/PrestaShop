@@ -1387,7 +1387,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
 										 		true,
 										 		$supply_order->id);
 
-					if (!$res)
+					if ($res)
+						StockAvailable::synchronize($supply_order_detail->id_product);
+					else
 						$this->errors[] = Tools::displayError($this->l('Something went wrong when adding products to the warehouse.'));
 
 					$location = Warehouse::getProductLocation($supply_order_detail->id_product,
