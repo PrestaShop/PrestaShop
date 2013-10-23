@@ -315,7 +315,7 @@ class OrderInvoiceCore extends ObjectModel
 
 			// sum by taxes
 			$tmp_tax_infos = array();
-			foreach ($taxes_infos as &$tax_infos)
+			foreach ($taxes_infos as $tax_infos)
 			{
 				if (!isset($tmp_tax_infos[$tax_infos['rate']]))
 					$tmp_tax_infos[$tax_infos['rate']] = array(

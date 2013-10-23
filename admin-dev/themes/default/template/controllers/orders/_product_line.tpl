@@ -133,7 +133,7 @@
 		<input type="hidden" value="{$product['quantity_refundable']}" class="partialRefundProductQuantity" />
 		<input type="hidden" value="{$product['amount_refundable']}" class="partialRefundProductAmount" />
 	</td>
-	{if ($can_edit && !$order->hasBeenDelivered() ) }
+	{if ($can_edit && !$order->hasBeenDelivered())}
 	<td class="product_invoice" colspan="2" style="display: none;text-align:center;">
 		{if sizeof($invoices_collection)}
 		<select name="product_invoice" class="edit_product_invoice">
@@ -146,7 +146,7 @@
 		{/if}
 	</td>
 	{/if}
-	{if ( ($can_edit && !$order->hasBeenDelivered()) || Configuration::get('PS_EDS') ) }
+	{if ( ($can_edit && !$order->hasBeenDelivered()) || Configuration::get('PS_EDS'))}
 	<td class="product_action" style="text-align:right">
 		<a href="#" class="edit_product_change_link"><img src="../img/admin/edit.gif" alt="{l s='Edit'}" /></a>
 		<input type="submit" class="button" name="submitProductChange" value="{l s='Update'}"  style="display: none;" />

@@ -118,7 +118,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 				)
 			),
 			'eds' => array(
-				'title' => $this->l('Extended Delivery System 2.4'),
+				'title' => $this->l('Extended Delivery System 2.4.1'),
 				'icon' => 'tab-preferences',
 				'fields' => array(
 					'PS_EDS' => array(

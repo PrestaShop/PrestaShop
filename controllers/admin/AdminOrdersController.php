@@ -1236,7 +1236,6 @@ class AdminOrdersControllerCore extends AdminController
 						$this->errors[] = Tools::displayError('An error occurred during the OrderCartRule creation');
 				}
 			}
-			
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}

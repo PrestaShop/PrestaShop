@@ -109,17 +109,14 @@
 				--
 			{else}
 				{displayPrice price=$document->total_paid_tax_incl currency=$currency->id}&nbsp;
-				{if Configuration::get('PS_EDS') &&  Configuration::get('PS_EDS_INVOICE_DELIVERED')}
-				{else}
-					{if $document->getTotalPaid()}
-						<span style="color:red;font-weight:bold;">
-						{if $document->getRestPaid() > 0}
-							({displayPrice price=$document->getRestPaid() currency=$currency->id} {l s='not paid'})
-						{else if $document->getRestPaid() < 0}
-							({displayPrice price=-$document->getRestPaid() currency=$currency->id} {l s='overpaid'})
-						{/if}
-						</span>
+				{if $document->getTotalPaid()}
+					<span style="color:red;font-weight:bold;">
+					{if $document->getRestPaid() > 0}
+						({displayPrice price=$document->getRestPaid() currency=$currency->id} {l s='not paid'})
+					{else if $document->getRestPaid() < 0}
+						({displayPrice price=-$document->getRestPaid() currency=$currency->id} {l s='overpaid'})
 					{/if}
+					</span>
 				{/if}
 			{/if}
 		{elseif get_class($document) eq 'OrderSlip'}

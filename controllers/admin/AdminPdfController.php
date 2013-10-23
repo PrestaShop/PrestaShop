@@ -70,7 +70,7 @@ class AdminPdfControllerCore extends AdminController
 		if (Tools::isSubmit('id_order'))
 			$this->generateDeliverySlipPDFByIdOrder((int)Tools::getValue('id_order'));
 		elseif (Tools::isSubmit('id_order_invoice'))
-			$this->generateDeliverySlipPDFByIdOrderInvoice((int)Tools::getValue('id_order_invoice'));	
+			$this->generateDeliverySlipPDFByIdOrderInvoice((int)Tools::getValue('id_order_invoice'));
 		elseif (Tools::isSubmit('id_delivery'))
 		{
 			$order = Order::getByDelivery((int)Tools::getValue('id_delivery'));
@@ -163,6 +163,7 @@ class AdminPdfControllerCore extends AdminController
 		$order_invoice = new OrderInvoice((int)$id_order_invoice);
 		if (!Validate::isLoadedObject($order_invoice))
 			throw new PrestaShopException('Can\'t load Order Invoice object');
+
 		$this->generatePDF($order_invoice, PDF::TEMPLATE_DELIVERY_SLIP);
 	}
 

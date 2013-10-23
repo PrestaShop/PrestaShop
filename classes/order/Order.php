@@ -1579,7 +1579,10 @@ class OrderCore extends ObjectModel
 		$delivery_slips = $this->getDeliverySlipsCollection()->getResults();
 		// @TODO review
 		foreach ($delivery_slips as $delivery)
+		{
 			$delivery->is_delivery = true;
+			$delivery->date_add = $delivery->delivery_date;
+		}
 
 		$order_slips = $this->getOrderSlipsCollection()->getResults();
 		if (Configuration::get('PS_EDS'))
