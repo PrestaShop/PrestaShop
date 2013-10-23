@@ -16,7 +16,7 @@
 			<?php echo t('Your order with the reference {order_name} - Awaiting check payment'); ?>
 		</p>
 		<span>
-			<?php echo t('Your order with the reference {order_name} has been placed successfully and will be <strong>shipped as soon as we receive your payment</strong>.'); ?>
+			<?php echo t('Your order with the reference <span><strong>{order_name}</strong></span> has been placed successfully and will be <strong>shipped as soon as we receive your payment</strong>.'); ?>
 		</span>
 	</td>
 </tr>
@@ -32,7 +32,7 @@
 			<?php echo t('Here are the bank details for your wire or transfer:'); ?><br /> 
 			<?php echo t('<span><strong>Amount:</strong></span> {total_paid}'); ?><br />
 			<?php echo t('<span><strong>Payable to the order of:</strong></span> {cheque_name}'); ?><br />
-			<?php echo t('Please mail your check to:</strong></span> {cheque_address_html}'); ?>
+			<?php echo t('<span><strong>Please mail your check to:</strong></span> {cheque_address_html}'); ?>
 
 		</span>
 	</td>

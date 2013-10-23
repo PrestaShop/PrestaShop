@@ -17,8 +17,8 @@
 		</p>
 		<span>
 			<?php echo t('Here are your login details:'); ?><br /> 
-			<?php echo t('<span><strong>E-mail address: <a href="mailto:{email}">{email}</a></strong>'); ?><br />
-			<?php echo t('<strong>Password:</strong></span> {passwd}'); ?>
+			<?php echo t('<span><strong>E-mail address: <a href="mailto:{email}">{email}</a></strong></span>'); ?><br />
+			<?php echo t('<span><strong>Password:</strong></span> {passwd}'); ?>
 		</span>
 	</td>
 </tr>

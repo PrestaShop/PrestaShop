@@ -16,7 +16,7 @@
 			<?php echo t('Your order with the reference {order_name} - Awaiting wire payment'); ?>
 		</p>
 		<span>
-			<?php echo t('Your order with the reference {order_name} has been placed successfully and will be <strong>shipped as soon as we receive your payment</strong>.'); ?>
+			<?php echo t('Your order with the reference <span><strong>{order_name}</strong></span> has been placed successfully and will be <strong>shipped as soon as we receive your payment</strong>.'); ?>
 		</span>
 	</td>
 </tr>

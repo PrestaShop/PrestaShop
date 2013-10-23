@@ -12,11 +12,10 @@
 <tr>
 	<td class="box">
 		<p>
-			<?php echo t('Your order with the reference {order_name} - Payment processing error'); ?>
+			<?php echo t('Refund processed for order with the reference {order_name}'); ?>
 		</p>
 		<span>
-			<?php echo t('There is a problem with your payment for <strong><span>{shop_name}</span></strong> order with the reference <strong><span>{order_name}</span></strong>. Please contact us at your earliest convenience.'); ?><br/>
-			<?php echo t('<strong>We cannot ship your order until we receive your payment. </strong>'); ?>
+			<?php echo t('We have processed your <strong><span>{shop_name}</strong></span> refund for order with the reference <strong><span>{order_name}</strong></span>.'); ?>
 		</span>
 	</td>
 </tr>
@@ -32,3 +31,4 @@
 </tr>
 
 <?php include ('footer.php'); ?>
+

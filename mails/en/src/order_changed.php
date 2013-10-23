@@ -15,7 +15,7 @@
 			<?php echo t('Your order with the reference {order_name} - Order changed'); ?>
 		</p>
 		<span>
-			<?php echo t('Your order with the reference {order_name} from {shop_name} has been changed by the merchant.'); ?><br />
+			<?php echo t('Your order with the reference <span><strong>{order_name}</strong></span> from <span><strong>{shop_name}</strong></span> has been changed by the merchant.'); ?><br />
 			<?php echo t('You can check for it in the <span><strong>"Tools" &gt; "Logs"</strong></span> section of your Back Office.'); ?>
 		</span>
 	</td>

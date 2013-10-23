@@ -15,7 +15,7 @@
 			<?php echo t('Your customer account creation'); ?>
 		</p>
 		<span>
-			<?php echo t('Your guest account for {shop_name} has been transformed into a customer account.'); ?> <br /><br />
+			<?php echo t('Your guest account for <span><strong>{shop_name}</strong></span> has been transformed into a customer account.'); ?> <br /><br />
 			<?php echo t('<span><strong>E-mail address:</strong></span> {email}'); ?><br /><br />
 			<?php echo t('<span><strong>Password:</strong></span> {passwd}'); ?>
 		</span>
