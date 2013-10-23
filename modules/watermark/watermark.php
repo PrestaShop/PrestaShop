@@ -93,7 +93,12 @@ class Watermark extends Module
 		$yalign = Tools::getValue('yalign');
 		$xalign = Tools::getValue('xalign');
 		$transparency = (int)(Tools::getValue('transparency'));
-		$image_types = Tools::getValue('image_types');
+		
+		$types = ImageType::getImagesTypes('products');
+		$id_image_type = array();
+		foreach ($types as $type)
+			if (!is_null(Tools::getValue('WATERMARK_TYPES_'.(int)$type['id_image_type'])))
+				$id_image_type['WATERMARK_TYPES_'.(int)$type['id_image_type']] = true;
 		
 		if (empty($transparency))
 			$this->_postErrors[] = $this->l('Transparency required.');
@@ -109,7 +114,7 @@ class Watermark extends Module
 			$this->_postErrors[] = $this->l('X-Align is required.');
 		elseif (!in_array($xalign, $this->xaligns))
 			$this->_postErrors[] = $this->l('X-Align is not in allowed range.');
-		if (empty($image_types))
+		if (!count($id_image_type))
 			$this->_postErrors[] = $this->l('At least one image type is required.');
 
 		if (isset($_FILES['PS_WATERMARK']['tmp_name']) && !empty($_FILES['PS_WATERMARK']['tmp_name']))
@@ -123,7 +128,13 @@ class Watermark extends Module
 
 	private function _postProcess()
 	{
-		Configuration::updateValue('WATERMARK_TYPES', implode(',', Tools::getValue('image_types')));
+		$types = ImageType::getImagesTypes('products');
+		$id_image_type = array();
+		foreach ($types as $type)
+			if (Tools::getValue('WATERMARK_TYPES_'.(int)$type['id_image_type']))
+				$id_image_type[] = $type['id_image_type'];
+
+		Configuration::updateValue('WATERMARK_TYPES', implode(',', $id_image_type));
 		Configuration::updateValue('WATERMARK_Y_ALIGN', Tools::getValue('yalign'));
 		Configuration::updateValue('WATERMARK_X_ALIGN', Tools::getValue('xalign'));
 		Configuration::updateValue('WATERMARK_TRANSPARENCY', Tools::getValue('transparency'));
@@ -145,69 +156,9 @@ class Watermark extends Module
 
 		if ($this->_errors)
 			foreach ($this->_errors as $error)
-				$this->_html .= '<div class="module_error alert error"><img src="../img/admin/warning.gif" alt="'.$this->l('ok').'" /> '.$this->l($error).'</div>';
+				$this->_html .= $this->displayError($this->l($error));
 		else
-			$this->_html .= '<div class="conf confirm">'.$this->l('Settings updated').'</div>';
-	}
-
-	private function _displayForm()
-	{
-	    $imageTypes = ImageType::getImagesTypes('products');
-	   $str_shop = '-'.(int)$this->context->shop->id;
-		if (Shop::getContext() != Shop::CONTEXT_SHOP || !Tools::file_exists_cache(dirname(__FILE__).'/watermark'.$str_shop.'.gif'))
-			$str_shop = '';
-
-		$this->_html .=
-		'<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" enctype="multipart/form-data">
-			<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" />'.$this->l('Watermark details').'</legend>
-				<p>'.$this->l('Once you have set up the module, regenerate the images using the "Images" tool in Preferences. However, the watermark will be added automatically to new images.').'</p>
-				<table border="0" width="500" cellpadding="0" cellspacing="0" id="form">
-					<tr>
-						<td />
-						<td>'.(Tools::file_exists_cache(dirname(__FILE__).'/watermark'.$str_shop.'.gif') ? '<img src="../modules/'.$this->name.'/watermark'.$str_shop.'.gif?t='.time().'" />' : $this->l('No watermark uploaded.')).'</td>
-					</tr>
-					<tr>
-						<td>'.$this->l('Watermark file').'</td>
-						<td>
-							<input type="file" name="PS_WATERMARK" />
-							<p style="color:#7F7F7F; font-size:0.85em; margin:0; padding:0;">'.$this->l('Must be in GIF format').'</p>
-						</td>
-					</tr>
-					<tr>
-						<td width="270" style="height: 35px;">'.$this->l('Watermark transparency (0-100)').'</td>
-					    <td><input type="text" name="transparency" value="'.(float)Tools::getValue('transparency', Configuration::get('WATERMARK_TRANSPARENCY')).'" style="width: 30px;" /></td>
-					</tr>
-					<tr><td width="270" style="height: 35px;">'.$this->l('Watermark X align').'</td>
-					    <td>
-						<select id="xalign" name = "xalign">';
-					    foreach ($this->xaligns as $align)
-						    $this->_html .= '<option value="'.$align.'"'.(Tools::getValue('xalign', Configuration::get('WATERMARK_X_ALIGN')) == $align ? ' selected="selected"' : '' ).'>'.$this->l($align).'</option>';
-					    $this->_html .= '</select>
-					    </td>
-					</tr>
-					<tr><td width="270" style="height: 35px;">'.$this->l('Watermark Y align').'</td>
-					    <td>
-						<select id="yalign" name = "yalign">';
-					    foreach ($this->yaligns as $align)
-						    $this->_html .= '<option value="'.$align.'"'.(Tools::getValue('yalign', Configuration::get('WATERMARK_Y_ALIGN')) == $align ? ' selected="selected"' : '' ).'>'.$this->l($align).'</option>';
-					    $this->_html .= '</select>
-					    </td>
-					</tr>
-					<tr><td width="270" style="height: 35px;">'.$this->l('Choose image types for watermark protection.').'</td><td>';
-					$selected_types = explode(',', Configuration::get('WATERMARK_TYPES'));
-					foreach (ImageType::getImagesTypes('products') as $type)
-					{
-					    $this->_html .= '<label style="float:none; ">
-						<input type="checkbox" value="'.$type['id_image_type'].'" name="image_types[]"'.
-						(in_array($type['id_image_type'], $selected_types) ? ' checked="checked"' : '').' />&nbsp;<span style="font-weight:bold;">'.$type['name'].'</span>
-					    ('.$type['width'].' x '.$type['height'].')</label><br />';
-					}
-					$this->_html .= '</td></tr>
-					<tr><td colspan="2">&nbsp;</td></tr>
-					<tr><td colspan="2" align="center"><input class="button" name="btnSubmit" value="'.$this->l('Update settings').'" type="submit" /></td></tr>
-				</table>
-			</fieldset>
-		</form>';
+			$this->_html .= $this->displayConfirmation($this->l('Settings updated'));
 	}
 	
 	public function getAdminDir()
@@ -254,7 +205,7 @@ RewriteRule [0-9/]+/[0-9]+\\.jpg$ - [F]
 		$this->removeHtaccessSection();
 		$this->writeHtaccessSection();
 		
-		$this->_html = '<h2>'.$this->displayName.'</h2>';
+		$this->_html = '';
 
 		if (Tools::isSubmit('btnSubmit'))
 		{
@@ -263,12 +214,10 @@ RewriteRule [0-9/]+/[0-9]+\\.jpg$ - [F]
 				$this->_postProcess();
 			else
 				foreach ($this->_postErrors as $err)
-					$this->_html .= '<div class="alert error">'.$err.'</div>';
+					$this->_html .= $this->displayError($err);
 		}
-		else
-			$this->_html .= '<br />';
 
-		$this->_displayForm();
+		$this->_html .= $this->renderForm();
 
 		return $this->_html;
 	}
@@ -326,6 +275,155 @@ RewriteRule [0-9/]+/[0-9]+\\.jpg$ - [F]
 		if (!imagecopymerge($image, $imagew, $xpos, $ypos, 0, 0, $watermarkWidth, $watermarkHeight, $this->transparency))
 			return false;
 		return imagejpeg($image, $outputpath, 100); 
-	} 
-}
+	}
+	
+	public function renderForm()
+	{
+		$types = ImageType::getImagesTypes('products');
+		foreach ($types as $key => $type)
+			$types[$key]['label'] =  $type['name'].' ('.$type['width'].' x '.$type['height'].')';
 
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Settings'),
+					'icon' => 'icon-cogs'
+				),
+				'description' => $this->l('Once you have set up the module, regenerate the images using the "Images" tool in Preferences. However, the watermark will be added automatically to new images.'),
+				'input' => array(
+					array(
+						'type' => 'file',
+						'label' => $this->l('Watermark file:'),
+						'name' => 'PS_WATERMARK',
+						'desc' => $this->l('Must be in GIF format'),
+						'thumb' => '../modules/'.$this->name.'/'.$this->name.'.gif?t='.rand(0, time()),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Watermark transparency (0-100)'),
+						'name' => 'transparency',
+						'class' => 'fixed-width-md',
+					),
+					array(
+						'type' => 'select',
+						'label' => $this->l('Watermark X align:'),
+						'name' => 'xalign',
+						'class' => 'fixed-width-md',
+						'options' => array(
+							'query' => array(
+								array(
+									'id' => 'left',
+									'name' => $this->l('left')
+								),
+								array(
+									'id' => 'middle',
+									'name' => $this->l('middle')
+								),
+								array(
+									'id' => 'right',
+									'name' => $this->l('right')
+								)
+							),
+							'id' => 'id',
+							'name' => 'name',
+						)
+					),
+					array(
+						'type' => 'select',
+						'label' => $this->l('Watermark X align:'),
+						'name' => 'yalign',
+						'class' => 'fixed-width-md',
+						'options' => array(
+							'query' => array(
+								array(
+									'id' => 'top',
+									'name' => $this->l('top')
+								),
+								array(
+									'id' => 'middle',
+									'name' => $this->l('middle')
+								),
+								array(
+									'id' => 'bottom',
+									'name' => $this->l('bottom')
+								)
+							),
+							'id' => 'id',
+							'name' => 'name',
+						)
+					),
+					array(
+						'type' => 'checkbox',
+						'name' => 'WATERMARK_TYPES',
+						'label' => $this->l('Choose image types for watermark protection:'),
+						'values' => array(
+							'query' => $types,
+							'id' => 'id_image_type',
+							'name' => 'label'
+						)
+					),
+				),
+				'submit' => array(
+					'title' => $this->l('Save'),
+					'class' => 'btn btn-default')
+			),
+		);
+
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'btnSubmit';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function getConfigFieldsValues()
+	{
+		$config_fields = array(
+			'PS_WATERMARK' => Tools::getValue('PS_WATERMARK', Configuration::get('PS_WATERMARK')),
+			'transparency' => Tools::getValue('transparency', Configuration::get('WATERMARK_TRANSPARENCY')),
+			'xalign' => Tools::getValue('xalign', Configuration::get('WATERMARK_X_ALIGN')),
+			'yalign' => Tools::getValue('yalign', Configuration::get('WATERMARK_Y_ALIGN')),
+		);
+		//get all images type available 
+		$types = ImageType::getImagesTypes('products');
+		$id_image_type = array();
+		foreach ($types as $type)
+			$id_image_type[] = $type['id_image_type'];
+		
+		//get images type from $_POST
+		$id_image_type_post = array();
+		foreach ($id_image_type as $id)
+			if (Tools::getValue('WATERMARK_TYPES_'.(int)$id))
+				$id_image_type_post['WATERMARK_TYPES_'.(int)$id] = true;
+
+		//get images type from Configuration
+		$id_image_type_config = array();
+		if ($confs = Configuration::get('WATERMARK_TYPES'))
+			$confs = explode(',', Configuration::get('WATERMARK_TYPES'));
+		else
+			$confs = array();
+
+		foreach ($confs as $conf)
+			$id_image_type_config['WATERMARK_TYPES_'.(int)$conf] = true;
+		
+		//return only common values and value from post
+		if (Tools::isSubmit('btnSubmit'))
+			$config_fields = array_merge($config_fields, array_intersect($id_image_type_post, $id_image_type_config));
+		else
+			$config_fields = array_merge($config_fields, $id_image_type_config);
+		
+		return $config_fields;
+	}
+}
