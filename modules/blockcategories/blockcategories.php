@@ -398,7 +398,7 @@ class BlockCategories extends Module
 					),
 					array(
 						'type' => 'radio',
-						'label' => $this->l('Sort:'),
+						'label' => $this->l('Sort'),
 						'name' => 'BLOCK_CATEG_SORT',
 						'values' => array(
 							array(
@@ -415,7 +415,7 @@ class BlockCategories extends Module
 					),
 					array(
 						'type' => 'radio',
-						'label' => $this->l('Sort way:'),
+						'label' => $this->l('Sort order'),
 						'name' => 'BLOCK_CATEG_SORT_WAY',
 						'values' => array(
 							array(
