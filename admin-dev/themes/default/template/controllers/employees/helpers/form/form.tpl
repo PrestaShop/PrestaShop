@@ -43,7 +43,7 @@
 	{elseif $input.type == 'default_tab'}
 	<select name="{$input.name}" id="{$input.name}">
 		{foreach $input.options AS $option}
-			{if $option.children|@count}
+			{if isset($option.children) && $option.children|@count}
 				<optgroup label="{$option.name|escape:'htmlall':'UTF-8'}"></optgroup>
 				{foreach $option.children AS $children}
 					<option value="{$children.id_tab}" {if $fields_value[$input.name] == $children.id_tab}selected="selected"{/if}>&nbsp;&nbsp;{$children.name|escape:'htmlall':'UTF-8'}</option>
