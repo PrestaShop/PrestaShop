@@ -36,7 +36,7 @@
 		$.ajax({
 			type: "POST",
 			url: "index.php",
-			data: "token={getAdminToken tab='AdminCustomers'}&tab=AdminCustomers&ajax=1&action=updateCustomerNote&id_customer={$customer->id}&note="+noteContent,
+			data: "token={getAdminToken tab='AdminCustomers'}&tab=AdminCustomers&ajax=1&action=updateCustomerNote&id_customer={$customer->id}&note="+encodeURIComponent(noteContent),
 			async : true,
 			success: function(r) {
 				$('#note_feedback').html('').hide();
