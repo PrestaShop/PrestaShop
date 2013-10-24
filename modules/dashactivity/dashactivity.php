@@ -76,7 +76,15 @@ class Dashactivity extends Module
 
 	public function hookDashboardZoneOne($params)
 	{
+		if (!Module::isInstalled('gapi'))
+			$gapi_mode = 'install';
+		elseif (($gapi = Module::getInstanceByName('gapi')) && Validate::isLoadedObject($gapi) && $gapi->isConfigured())
+			$gapi_mode = false;
+		else
+			$gapi_mode = 'configure';
+
 		$this->context->smarty->assign(array_merge(array(
+			'gapi_mode' => $gapi_mode,
 			'dashactivity_config_form' => $this->renderConfigForm(),
 			'date_subtitle' => $this->l('from %s to %s'),
 			'date_format' => $this->context->language->date_format_lite
@@ -265,17 +273,15 @@ class Dashactivity extends Module
 		else
 		{
 			$directLink = $this->l('Direct link');
-			$sql = 'SELECT http_referer
-					FROM '._DB_PREFIX_.'connections
-					WHERE 1
-						'.Shop::addSqlRestriction().'
-						AND date_add BETWEEN '.$date_from.' AND '.$date_to.'
-						LIMIT 0, '.(int)$limit;
-			
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->query($sql);
 			$websites = array($directLink => 0);
-			
-			while ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->nextRow($result))
+
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+			SELECT http_referer
+			FROM '._DB_PREFIX_.'connections
+			WHERE date_add BETWEEN '.$date_from.' AND '.$date_to.'
+			'.Shop::addSqlRestriction().'
+			LIMIT '.(int)$limit);
+			foreach ($result as $row)
 			{
 				if (!isset($row['http_referer']) || empty($row['http_referer']))
 					++$websites[$directLink];
@@ -299,17 +305,16 @@ class Dashactivity extends Module
 			'form' => array(
 				'id_form' => 'step_carrier_general',
 				'input' => array(),
-				'submit' => 
-					array(
-						'title' => $this->l('   Save   '),
-						'class' => 'btn btn-default submit_dash_config',
-						'reset' => array(
-							'title' => $this->l('Cancel'),
-							'class' => 'btn btn-default cancel_dash_config',
-							)
+				'submit' => array(
+					'title' => $this->l('   Save   '),
+					'class' => 'btn btn-default submit_dash_config',
+					'reset' => array(
+						'title' => $this->l('Cancel'),
+						'class' => 'btn btn-default cancel_dash_config',
 					)
-				),
-			);
+				)
+			),
+		);
 			
 		$sub_widget = array(
 			array('label' => $this->l('Show Pending'), 'config_name' => 'DASHACTIVITY_SHOW_PENDING'),
@@ -317,7 +322,7 @@ class Dashactivity extends Module
 			array('label' => $this->l('Show Clients'), 'config_name' => 'DASHACTIVITY_SHOW_CUSTOMERS'),
 			array('label' => $this->l('Show Newsletters'), 'config_name' => 'DASHACTIVITY_SHOW_NEWSLETTER'),
 			array('label' => $this->l('Show Traffic'), 'config_name' => 'DASHACTIVITY_SHOW_TRAFFIC'),
-			);
+		);
 		
 		foreach($sub_widget as $widget)
 			$fields_form['form']['input'][] = array(
@@ -326,18 +331,18 @@ class Dashactivity extends Module
 				'name' => $widget['config_name'],
 				'is_bool' => true,
 				'values' => array(
-							array(
-								'id' => 'active_on',
-								'value' => 1,
-								'label' => $this->l('Enabled')
-							),
-							array(
-								'id' => 'active_off',
-								'value' => 0,
-								'label' => $this->l('Disabled')
-							)
-						),
-				);
+					array(
+						'id' => 'active_on',
+						'value' => 1,
+						'label' => $this->l('Enabled')
+					),
+					array(
+						'id' => 'active_off',
+						'value' => 0,
+						'label' => $this->l('Disabled')
+					)
+				),
+			);
 		
 		$helper = new HelperForm();
 		$helper->show_toolbar = false;
