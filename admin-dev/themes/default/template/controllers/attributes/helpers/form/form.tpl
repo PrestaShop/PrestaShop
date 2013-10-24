@@ -27,7 +27,7 @@
 
 {block name="label"}
 	{if $input.type == 'color'}
-		<div id="colorAttributeProperties" "{if !$colorAttributeProperties}style="display:none"{/if};">
+		<div id="colorAttributeProperties" {if !$colorAttributeProperties}class="hide"{/if}>
 	{/if}
 	{if $input.type == 'closediv'}
 		</div>
