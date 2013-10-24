@@ -206,7 +206,7 @@
 				{elseif $field_name eq "address2"}
 				<p class="text is_customer_param">
 					<label for="address2">{l s='Address (Line 2)'}</label>
-					<input type="text" class="text" name="address2" id="address2" value="" />
+					<input type="text" class="text" name="address2" id="address2" value="{if isset($guestInformations) && $guestInformations.address2}{$guestInformations.address2}{/if}" />
 				</p>
 				{elseif $field_name eq "postcode"}
 				{$postCodeExist = true}
@@ -332,7 +332,7 @@
 					{$postCodeExist = true}
 					<p class="required postcode_invoice text">
 						<label for="postcode_invoice">{l s='Zip / Postal Code'} <sup>*</sup></label>
-						<input type="text" class="text" name="postcode_invoice" id="postcode_invoice" value="{if isset($guestInformations) && $guestInformations.postcode_invoice}{$guestInformations.postcode_invoice}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
+						<input type="text" class="text" name="postcode_invoice" id="postcode_invoice" value="{if isset($guestInformations) && $guestInformations.postcode_invoice}{$guestInformations.postcode_invoice}{/if}" onkeyup="$('#postcode_invoice').val($('#postcode_invoice').val().toUpperCase());" />
 					</p>
 					{elseif $field_name eq "city"}
 					<p class="required text">
