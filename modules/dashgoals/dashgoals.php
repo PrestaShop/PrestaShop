@@ -60,6 +60,19 @@ class Dashgoals extends Module
 
 	public function install()
 	{
+		for ($month = '01'; $month <= 12; $month = sprintf('%02d', $month + 1))
+		{
+			$key = strtoupper('dashgoals_traffic_'.$month.'_'.date('Y'));
+			if (!ConfigurationKPI::get($key))
+				ConfigurationKPI::updateValue($key, 600);
+			$key = strtoupper('dashgoals_conversion_'.$month.'_'.date('Y'));
+			if (!ConfigurationKPI::get($key))
+				ConfigurationKPI::updateValue($key, 2);
+			$key = strtoupper('dashgoals_avg_cart_value_'.$month.'_'.date('Y'));
+			if (!ConfigurationKPI::get($key))
+				ConfigurationKPI::updateValue($key, 80);
+		}
+
 		return (
 			parent::install()
 			&& $this->registerHook('dashboardZoneTwo')
@@ -118,18 +131,21 @@ class Dashgoals extends Module
 			$timestamp = strtotime($year.'-'.$i.'-01');
 			
 			$goal = ConfigurationKPI::get(strtoupper('dashgoals_traffic_'.$i.'_'.$year));
-			$stream1['values'][] = array('x' => Dashgoals::$month_labels[$i], 'y' => ($goal ? $visits[$timestamp] / $goal : 0));
+			$value = 0;
+			if ($goal && isset($visits[$timestamp]))
+				$value = round($visits[$timestamp] / $goal);
+			$stream1['values'][] = array('x' => Dashgoals::$month_labels[$i], 'y' => $value);
 
 			$goal = ConfigurationKPI::get(strtoupper('dashgoals_conversion_'.$i.'_'.$year));
 			$value = 0;
 			if ($goal && isset($visits[$timestamp]) && $visits[$timestamp] && isset($orders[$timestamp]) && $orders[$timestamp])
-				$value = (100 * $orders[$timestamp] / $visits[$timestamp]) / $goal;
+				$value = round((100 * $orders[$timestamp] / $visits[$timestamp]) / $goal);
 			$stream2['values'][] = array('x' => Dashgoals::$month_labels[$i], 'y' => $value);
 			
 			$goal = ConfigurationKPI::get(strtoupper('dashgoals_avg_cart_value_'.$i.'_'.$year));
 			$value = 0;
 			if ($goal && isset($orders[$timestamp]) && $orders[$timestamp] && isset($sales[$timestamp]) && $sales[$timestamp])
-				$value = ($sales[$timestamp] / $orders[$timestamp]) / $goal;
+				$value = round(($sales[$timestamp] / $orders[$timestamp]) / $goal);
 			$stream3['values'][] = array('x' => Dashgoals::$month_labels[$i], 'y' => $value);
 		}
 		
