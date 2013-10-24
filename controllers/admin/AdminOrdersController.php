@@ -147,6 +147,9 @@ class AdminOrdersControllerCore extends AdminController
 				'desc' => $this->l('Add new order'),
 				'icon' => 'process-icon-new'
 			);
+		
+		if ($this->display == 'add')
+			unset($this->page_header_toolbar_btn['save']);
 
 		if (Context::getContext()->shop->getContext() != Shop::CONTEXT_SHOP && isset($this->page_header_toolbar_btn['new_order'])
 			&& Shop::isFeatureActive())
