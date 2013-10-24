@@ -151,8 +151,17 @@
 	{/if}
 	{if $DASHACTIVITY_SHOW_TRAFFIC}
 	<section id="dash_traffic" class="loading">
-		<header><i class="icon-globe"></i> {l s='Traffic' mod='dashactivity'}  <span class="subtitle small" id="traffic-subtitle"><span></header>
+		<header>
+			<i class="icon-globe"></i> {l s='Traffic' mod='dashactivity'}  <span class="subtitle small" id="traffic-subtitle"><span>
+		</header>
 		<ul class="data_list">
+			{if $gapi_mode}
+				<li>
+					<span class="data_label">
+						<a href="{$link->getAdminLink('AdminModules')}&{$gapi_mode}=gapi"><img src="../modules/gapi/logo.gif" width="16" height="16" /> {l s="Connect to Google Analytics API" mod="dashactivity"}</a>
+					</span>
+				</li>
+			{/if}
 			<li>
 				<span class="data_label">{l s='Visits' mod='dashactivity'}</span>
 				<span class="data_value size_md">
