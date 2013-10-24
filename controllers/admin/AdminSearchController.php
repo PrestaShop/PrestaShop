@@ -206,7 +206,12 @@ class AdminSearchControllerCore extends AdminController
 	*/
 	public function searchFeatures()
 	{
+		$this->_list['features'] = array();
+
 		global $_LANGADM;
+		if ($_LANGADM === null)
+			return;
+		
 		$tabs = array();
 		$key_match = array();
 		$result = Db::getInstance()->executeS('
@@ -225,6 +230,7 @@ class AdminSearchControllerCore extends AdminController
 			$tabs[strtolower($key)] = $tabs[strtolower($value)];
 			$key_match[strtolower($key)] = $key;
 		}
+
 		$this->_list['features'] = array();
 		foreach ($_LANGADM as $key => $value)
 		{
@@ -242,11 +248,6 @@ class AdminSearchControllerCore extends AdminController
 				$this->_list['features'][$tabs[$key]][] = array('link' => Context::getContext()->link->getAdminLink($key_match[$key]), 'value' => Tools::safeOutput($value));
 			}
 		}
-
-		if (!count($this->_list['features']))
-			$this->_list['features'] = false;
-		else
-			$this->_list['features'];
 	}
 
 	protected function initOrderList()
