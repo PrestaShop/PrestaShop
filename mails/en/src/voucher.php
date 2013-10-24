@@ -11,7 +11,7 @@
 <tr>
 	<td class="box">
 		<p>
-			<?php echo t('Your order with the reference {order_name} - Voucher created'); ?>
+			<?php echo t('Order {order_name}'); ?>&nbsp;-&nbsp;<?php echo t('Voucher created'); ?>
 		</p>
 		<span>
 			<?php echo t('A voucher has been created in your name as a result of your order with the reference <span><strong>{order_name}</strong></span>.'); ?><br/><br/>

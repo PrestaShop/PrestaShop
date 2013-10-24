@@ -11,7 +11,7 @@
 <tr>
 	<td class="box">
 		<p>
-			<?php echo t('Your order {order_name} - Processing'); ?>
+			<?php echo t('Order {order_name}'); ?>&nbsp;-&nbsp;<?php echo t('Processing'); ?>
 		</p>
 		<span>
 			<?php echo t('We are currently processing your <strong><span>{shop_name}</span></strong> order with the reference <strong><span>{order_name}</span></strong>.'); ?>
