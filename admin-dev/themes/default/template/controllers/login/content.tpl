@@ -128,7 +128,7 @@
 						</div>
 						<div class="form-group">
 							<label class="control-label" for="email_forgot">
-								{l s='Email address'}
+								{l s='Email'}
 							</label>
 							<div class="input-group">
 								<span class="input-group-addon"><i class="icon-envelope"></i></span>
