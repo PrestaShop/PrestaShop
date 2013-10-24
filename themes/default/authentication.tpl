@@ -64,14 +64,14 @@ $(document).ready(function() {
 	});
 	function vat_number()
 	{
-		if ($('#company').val() != '')
+		if (($('#company').length) && ($('#company').val() != '')) 
 			$('#vat_number').show();
 		else
 			$('#vat_number').hide();
 	}
 	function vat_number_invoice()
 	{
-		if ($('#company_invoice').val() != '')
+		if (($('#company_invoice').length) && ($('#company_invoice').val() != '')) 
 			$('#vat_number_block_invoice').show();
 		else
 			$('#vat_number_block_invoice').hide();
