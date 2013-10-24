@@ -37,11 +37,11 @@ class AdminHomeControllerCore extends AdminController
 		if (Configuration::get('PS_REWRITING_SETTINGS'))
 		{
 			$rewrite = 2;
-			if (!file_exists(dirname(__FILE__).'/../../.htaccess'))
+			if (!file_exists(_PS_ROOT_DIR_.'/.htaccess'))
 				$rewrite = 1;
 			else
 			{
-				$stat = stat(dirname(__FILE__).'/../../.htaccess');
+				$stat = stat(_PS_ROOT_DIR_.'/.htaccess');
 				if (strtotime(Db::getInstance()->getValue('SELECT date_upd FROM '._DB_PREFIX_.'configuration WHERE name = "PS_REWRITING_SETTINGS"')) > $stat['mtime'])
 					$rewrite = 0;
 			}
@@ -49,14 +49,14 @@ class AdminHomeControllerCore extends AdminController
 
 		$htaccessAfterUpdate = 2;
 		$htaccessOptimized = (Configuration::get('PS_HTACCESS_CACHE_CONTROL') ? 2 : 0);
-		if (!file_exists(dirname(__FILE__).'/../../.htaccess'))
+		if (!file_exists(_PS_ROOT_DIR_.'/.htaccess'))
 		{
 			if (Configuration::get('PS_HTACCESS_CACHE_CONTROL'))
 				$htaccessOptimized = 1;
 		}
 		else
 		{
-			$stat = stat(dirname(__FILE__).'/../../.htaccess');
+			$stat = stat(_PS_ROOT_DIR_.'/.htaccess');
 			$dateUpdHtaccess = Db::getInstance()->getValue('SELECT date_upd FROM '._DB_PREFIX_.'configuration WHERE name = "PS_HTACCESS_CACHE_CONTROL"');
 			if (Configuration::get('PS_HTACCESS_CACHE_CONTROL') && strtotime($dateUpdHtaccess) > $stat['mtime'])
 				$htaccessOptimized = 1;

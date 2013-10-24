@@ -2089,7 +2089,7 @@ exit;
 		}
 		else
 		{
-			require_once(dirname(__FILE__).'/../tools/pclzip/pclzip.lib.php');
+			require_once(_PS_ROOT_DIR_.'/tools/pclzip/pclzip.lib.php');
 			$zip = new PclZip($from_file);
 			return ($zip->privCheckFormat() === true);
 		}
@@ -2119,7 +2119,7 @@ exit;
 		}
 		else
 		{
-			require_once(dirname(__FILE__).'/../tools/pclzip/pclzip.lib.php');
+			require_once(_PS_ROOT_DIR_.'/tools/pclzip/pclzip.lib.php');
 			$zip = new PclZip($from_file);
 			$list = $zip->extract(PCLZIP_OPT_PATH, $to_dir);
 			foreach ($list as $file)
