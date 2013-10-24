@@ -137,7 +137,7 @@ class AdminFeaturesControllerCore extends AdminController
 			}
 
 			$this->feature_name = $obj->name;
-			$this->toolbar_title = $this->feature_name;        
+			$this->toolbar_title = $this->feature_name[$this->context->employee->id_lang];
 			$this->fields_list = array(
 				'id_feature_value' => array(
 					'title' => $this->l('ID'),
