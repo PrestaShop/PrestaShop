@@ -206,9 +206,11 @@ class AdminGroupsControllerCore extends AdminController
 		$this->list_id = 'customer_group';
 		$this->actions = array();
 		$this->addRowAction('edit');
-		$this->identifier = 'id_customer';
+		$this->identifier = 'id_group';
 		$this->bulk_actions = false;
 		$this->list_no_link = true;
+		$this->explicitSelect = true;
+
 		$this->fields_list = (array(
 			'id_customer' => array('title' => $this->l('ID'), 'align' => 'center', 'filter_key' => 'c!id_customer', 'class' => 'fixed-width-xs'),
 			'id_gender' => array('title' => $this->l('Titles'), 'icon' => $genders_icon, 'list' => $genders),
@@ -217,7 +219,7 @@ class AdminGroupsControllerCore extends AdminController
 			'email' => array('title' => $this->l('Email address'), 'filter_key' => 'c!email', 'orderby' => true),
 			'birthday' => array('title' => $this->l('Birth date'), 'type' => 'date', 'class' => 'fixed-width-md', 'align' => 'center'),
 			'date_add' => array('title' => $this->l('Register date'), 'type' => 'date', 'class' => 'fixed-width-md', 'align' => 'center'),
-			'active' => array('title' => $this->l('Enabled'),'align' => 'center', 'class' => 'fixed-width-sm', 'active' => 'status','type' => 'bool')
+			'active' => array('title' => $this->l('Enabled'),'align' => 'center', 'class' => 'fixed-width-sm', 'active' => 'status','type' => 'bool', 'filter_key' => 'c!active')
 		));
 		$this->_select = 'c.*';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'customer` c ON (a.`id_customer` = c.`id_customer`)';
