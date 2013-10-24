@@ -151,7 +151,6 @@ class AdminAttachmentsControllerCore extends AdminController
 						);
 					else
 					{
-					
 						do $uniqid = sha1(microtime());
 						while (file_exists(_PS_DOWNLOAD_DIR_.$uniqid));
 						if (!copy($_FILES['file']['tmp_name'], _PS_DOWNLOAD_DIR_.$uniqid))
@@ -182,7 +181,7 @@ class AdminAttachmentsControllerCore extends AdminController
 		}
 		$return = parent::postProcess();
 		if (!$return && isset($uniqid) && file_exists(_PS_DOWNLOAD_DIR_.$uniqid))
-			@unlink(_PS_DOWNLOAD_DIR_.$uniqid);
+			unlink(_PS_DOWNLOAD_DIR_.$uniqid);
 		return $return;
 	}
 }
