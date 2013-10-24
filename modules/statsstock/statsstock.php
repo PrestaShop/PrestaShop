@@ -88,7 +88,7 @@ class StatsStock extends Module
 		<form action="'.$ru.'" method="post">
 			<input type="hidden" name="submitCategory" value="1" />
 			'.$this->l('Category').' : <select name="statsstock_id_category" onchange="this.form.submit();">
-				<option value="0">-- '.$this->l('All').' --</option>';
+				<option value="0">- '.$this->l('All').' -</option>';
 		foreach (Category::getSimpleCategories($this->context->language->id) as $category)
 			$this->html .= '<option value="'.(int)$category['id_category'].'" '.
 				($this->context->cookie->statsstock_id_category == $category['id_category'] ? 'selected="selected"' : '').'>'.

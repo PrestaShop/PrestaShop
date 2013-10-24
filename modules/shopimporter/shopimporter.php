@@ -333,7 +333,7 @@ class shopimporter extends ImportModule
 				<label>'.$this->l('Choose your import').' : </label>
 				<div class="margin-form">
 					<select name="import_module_name" id="import_module_name">
-						<option value="0">---</option>';
+						<option value="0">-</option>';
 
 		foreach($exportModules as $key => $module)
 			(($module->name != $this->name AND $module->id) ? $html .= '<option value="'.$module->name.'">'.$module->displayName.'</option>' : '' );
