@@ -1033,7 +1033,7 @@ CREATE TABLE `PREFIX_operating_system` (
 
 CREATE TABLE `PREFIX_orders` (
   `id_order` int(10) unsigned NOT NULL auto_increment,
-  `reference` VARCHAR(9),
+  `reference` VARCHAR(12),
   `id_shop_group` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_carrier` int(10) unsigned NOT NULL,
@@ -1335,7 +1335,7 @@ CREATE TABLE `PREFIX_page_viewed` (
 
 CREATE TABLE `PREFIX_order_payment` (
 	`id_order_payment` INT NOT NULL auto_increment,
-	`order_reference` VARCHAR(9),
+	`order_reference` VARCHAR(12),
 	`id_currency` INT UNSIGNED NOT NULL,
 	`amount` DECIMAL(10,2) NOT NULL,
 	`payment_method` varchar(255) NOT NULL,
