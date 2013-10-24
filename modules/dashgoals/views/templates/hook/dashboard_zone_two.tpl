@@ -23,6 +23,13 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+<script>
+	var currency_format = {$currency->format|intval};
+	var currency_sign = '{$currency->sign|addslashes}';
+	var currency_blank = {$currency->blank|intval};
+	var priceDisplayPrecision = 0;
+</script>
+
 <section id="dashgoals" class="panel widget">
 	<header class="panel-heading">
 		<i class="icon-bar-chart"></i> {l s='Goals' mod='dashgoals'}
@@ -55,8 +62,10 @@
 							{$month.label}
 						</td>
 						<td>
-							<input id="dashgoals_traffic_{$month@key}" name="dashgoals_traffic_{$month@key}" class="dashgoals_config_input form-control"
-								value="{$month.values.traffic|intval}" />
+							<div class="input-group">
+								<input id="dashgoals_traffic_{$month@key}" name="dashgoals_traffic_{$month@key}" class="dashgoals_config_input form-control"
+									value="{$month.values.traffic|intval}" />
+							</div>
 						</td>
 						<td>
 							<div class="input-group">
@@ -67,7 +76,7 @@
 						</td>
 						<td>
 							<div class="input-group">
-								<span class="input-group-addon">{$currency_code|escape}</span>
+								<span class="input-group-addon">{$currency->iso_code|escape}</span>
 								<input id="dashgoals_avg_cart_value_{$month@key}" name="dashgoals_avg_cart_value_{$month@key}" class="dashgoals_config_input form-control"
 									value="{$month.values.avg_cart_value|intval}" />
 							</div>

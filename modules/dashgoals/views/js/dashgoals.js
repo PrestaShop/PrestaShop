@@ -22,9 +22,9 @@ function dashgoals_calc_sales()
 		var key = $(this).attr('id').substr(16);
 		var sales = parseFloat($('#dashgoals_traffic_' + key).val()) * parseFloat($('#dashgoals_avg_cart_value_' + key).val()) * parseFloat($('#dashgoals_conversion_' + key).val()) / 100;
 		if (isNaN(sales))
-			$(this).text('0');
+			$(this).text(formatCurrency(0, currency_format, currency_sign, currency_blank));
 		else
-			$(this).text(parseInt(sales));
+			$(this).text(formatCurrency(parseInt(sales), currency_format, currency_sign, currency_blank));
 	});
 }
 

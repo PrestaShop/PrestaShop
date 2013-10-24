@@ -103,7 +103,7 @@ Date.prototype.format = function(format) {
 
 $(document).ready(function() {
 	if (date_subtitle === undefined)
-		date_subtitle = 'From %s to %s';
+		date_subtitle = '(from %s to %s)';
 
 	if (date_format === undefined)
 		date_format = 'Y-m-d';
