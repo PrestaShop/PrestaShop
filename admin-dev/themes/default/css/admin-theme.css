@@ -1,5 +1,5 @@
 @import url(http://fonts.googleapis.com/css?family=Josefin+Sans:200,400,700);
-/*
+/*!
  * Bootstrap v3.0.0
  *
  * Copyright 2013 Twitter, Inc
@@ -8,7 +8,7 @@
  *
  * Designed and built with all the love in the world by @mdo and @fat.
  */
-/* normalize.css v2.1.0 | MIT License | git.io/normalize */
+/*! normalize.css v2.1.0 | MIT License | git.io/normalize */
 /* line 22, ../bower_components/sass-bootstrap/lib/_normalize.scss */
 article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {
   display: block; }
@@ -5718,7 +5718,7 @@ th.visible-print, td.visible-print {
   /* line 523, ../bower_components/sass-bootstrap/lib/_mixins.scss */
   th.hidden-print, td.hidden-print {
     display: none !important; } }
-/*
+/*!
  *  Font Awesome 3.2.1
  *  the iconic font designed for Bootstrap
  *  ------------------------------------------------------------------------------
@@ -7647,18 +7647,28 @@ html, body {
 #nobootstrap {
   float: left; }
 
-/* line 91, admin-theme.sass */
+/* line 90, admin-theme.sass */
+.data-focus.data-focus-primary {
+  background-color: #1ba6e5;
+  color: white;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  border-radius: 10px; }
+
+/* line 98, admin-theme.sass */
 #customer_part .customerCard.selected-customer .panel, #customer_part .customerCard.selected-customer #header_notifs_icon_wrapper .notifs_panel, #header_notifs_icon_wrapper #customer_part .customerCard.selected-customer .notifs_panel, #customer_part .customerCard.selected-customer #dash_version {
   color: #5cb85c;
   border: solid 2px #5cb85c; }
 
-/* line 97, admin-theme.sass */
+/* line 104, admin-theme.sass */
 body.display-modal #content, body.display-modal #main {
   margin: 0;
   padding: 0;
   background: #f8f8f8; }
 
-/* line 107, admin-theme.sass */
+/* line 114, admin-theme.sass */
 *:focus {
   outline: none !important;
   -moz-outline: none !important;
@@ -8482,38 +8492,41 @@ select.input-tiny, input[type="text"].input-tiny, input[type="password"].input-t
 textarea {
   resize: none; }
 
-/* line 36, admin-theme/_admin-forms.sass */
+/* line 35, admin-theme/_admin-forms.sass */
 textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-input:focus {
   background-color: #fefbe2;
   -webkit-box-shadow: none;
   box-shadow: none; }
 
-/* line 41, admin-theme/_admin-forms.sass */
+/* line 40, admin-theme/_admin-forms.sass */
 .btn {
   text-transform: uppercase; }
-/* line 43, admin-theme/_admin-forms.sass */
+/* line 42, admin-theme/_admin-forms.sass */
 .btn .caret {
   border-top-color: #333333 !important; }
-/* line 46, admin-theme/_admin-forms.sass */
+/* line 45, admin-theme/_admin-forms.sass */
 .btn:hover .caret, .btn:focus .caret {
   border-top-color: white !important; }
-/* line 48, admin-theme/_admin-forms.sass */
+/* line 47, admin-theme/_admin-forms.sass */
 .btn.btn-default {
   -webkit-box-shadow: #e6e6e6 0 -2px 0 inset;
   box-shadow: #e6e6e6 0 -2px 0 inset; }
-/* line 50, admin-theme/_admin-forms.sass */
+/* line 49, admin-theme/_admin-forms.sass */
 .btn.btn-default:hover {
   -webkit-box-shadow: none;
   box-shadow: none;
   background-color: #1ba6e5;
   color: white;
   border-color: #1585b8; }
+/* line 54, admin-theme/_admin-forms.sass */
+.btn.btn-default:hover i {
+  color: white; }
 /* line 57, admin-theme/_admin-forms.sass */
 .btn.btn-primary {
   background-color: #1ba6e5;
   color: white;
   border-color: #1585b8; }
-/* line 63, admin-theme/_admin-forms.sass */
+/* line 62, admin-theme/_admin-forms.sass */
 .btn.btn-default[disabled] {
   border-color: #999999;
   color: #999999;
@@ -8521,46 +8534,46 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
   -webkit-box-shadow: #cccccc 0 -2px 0 inset;
   box-shadow: #cccccc 0 -2px 0 inset; }
 
-/* line 68, admin-theme/_admin-forms.sass */
+/* line 67, admin-theme/_admin-forms.sass */
 .dropdown-menu {
   text-align: left; }
 
-/* line 70, admin-theme/_admin-forms.sass */
+/* line 69, admin-theme/_admin-forms.sass */
 .btn-group-action {
   float: right; }
-/* line 72, admin-theme/_admin-forms.sass */
+/* line 71, admin-theme/_admin-forms.sass */
 .btn-group-action a {
   text-decoration: none; }
 
-/* line 76, admin-theme/_admin-forms.sass */
+/* line 75, admin-theme/_admin-forms.sass */
 .tt-query {
   border-bottom-right-radius: 3px !important;
   border-top-right-radius: 3px !important; }
 
-/* line 78, admin-theme/_admin-forms.sass */
+/* line 77, admin-theme/_admin-forms.sass */
 .tt-dropdown-menu {
   background-color: white;
   border: solid 1px #cccccc;
   font-size: 0.9em;
   text-transform: none; }
 
-/* line 83, admin-theme/_admin-forms.sass */
+/* line 82, admin-theme/_admin-forms.sass */
 .tt-suggestions {
   padding: 0 6px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0 1px 4px;
   box-shadow: rgba(0, 0, 0, 0.25) 0 1px 4px; }
 
-/* line 86, admin-theme/_admin-forms.sass */
+/* line 85, admin-theme/_admin-forms.sass */
 .tt-suggestion p {
   border-bottom: solid 1px #cccccc;
   margin: 0 !important;
   padding: 0 !important; }
 
-/* line 90, admin-theme/_admin-forms.sass */
+/* line 89, admin-theme/_admin-forms.sass */
 .tt-suggestion:last-child p {
   border-bottom: none; }
 
-/* line 94, admin-theme/_admin-forms.sass */
+/* line 93, admin-theme/_admin-forms.sass */
 .tagify-container {
   background-color: white;
   padding: 2px 6px;
@@ -8574,10 +8587,10 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
   border: solid 1px #cccccc;
   -webkit-box-shadow: rgba(0, 0, 0, 0.075) 0 1px 1px inset;
   box-shadow: rgba(0, 0, 0, 0.075) 0 1px 1px inset; }
-/* line 102, admin-theme/_admin-forms.sass */
+/* line 101, admin-theme/_admin-forms.sass */
 .tagify-container span {
   float: left; }
-/* line 104, admin-theme/_admin-forms.sass */
+/* line 103, admin-theme/_admin-forms.sass */
 .tagify-container > span {
   display: inline-block;
   padding: 3px 5px;
@@ -8586,20 +8599,20 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
   border: 1px solid #1ba6e5;
   background-color: #60c1ed;
   color: white; }
-/* line 112, admin-theme/_admin-forms.sass */
+/* line 111, admin-theme/_admin-forms.sass */
 .tagify-container > span > a {
   padding-left: 5px;
   color: #1ba6e5;
   text-decoration: none;
   font-weight: bold; }
-/* line 117, admin-theme/_admin-forms.sass */
+/* line 116, admin-theme/_admin-forms.sass */
 .tagify-container > input {
   margin-top: 2px;
   border: 0 none;
   width: 100px;
   -webkit-box-shadow: none;
   box-shadow: none; }
-/* line 122, admin-theme/_admin-forms.sass */
+/* line 121, admin-theme/_admin-forms.sass */
 .tagify-container > input:focus {
   outline: 0;
   -webkit-box-shadow: none;
@@ -9323,7 +9336,8 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
     -webkit-box-shadow: #00a4e7 0 0 0 inset;
     box-shadow: #00a4e7 0 0 0 inset; } }
 
-/* Ladda
+/*!
+ * Ladda
  * http://lab.hakim.se/ladda
  * MIT licensed
  *
@@ -10132,134 +10146,133 @@ li.sortable-placeholder {
   -o-border-radius: 5px;
   border-radius: 5px; }
 
-/* line 3, admin-theme/_admin-dashboard.sass */
+/* line 2, admin-theme/_admin-dashboard.sass */
 .size_s, .size_md, .size_l, .size_xl, .size_xxl {
-  font-family: "Ubuntu", sans-serif;
-  color: #515561; }
+  font-family: "Ubuntu", sans-serif; }
 
-/* line 6, admin-theme/_admin-dashboard.sass */
+/* line 4, admin-theme/_admin-dashboard.sass */
 .size_s {
   font-size: 1.1em; }
 
-/* line 8, admin-theme/_admin-dashboard.sass */
+/* line 6, admin-theme/_admin-dashboard.sass */
 .size_md {
   font-size: 1.3em; }
 
-/* line 10, admin-theme/_admin-dashboard.sass */
+/* line 8, admin-theme/_admin-dashboard.sass */
 .size_l {
   font-size: 1.7em; }
 
-/* line 12, admin-theme/_admin-dashboard.sass */
+/* line 10, admin-theme/_admin-dashboard.sass */
 .size_xl {
   font-size: 2em; }
 
-/* line 14, admin-theme/_admin-dashboard.sass */
+/* line 12, admin-theme/_admin-dashboard.sass */
 .size_xxl {
   font-size: 2.3em; }
 
-/* line 16, admin-theme/_admin-dashboard.sass */
+/* line 15, admin-theme/_admin-dashboard.sass */
 .color_success {
   color: #5cb85c; }
 
-/* line 18, admin-theme/_admin-dashboard.sass */
+/* line 17, admin-theme/_admin-dashboard.sass */
 .color_danger {
   color: #d9534f; }
 
-/* line 21, admin-theme/_admin-dashboard.sass */
+/* line 20, admin-theme/_admin-dashboard.sass */
 .dash_trend_down {
   color: red; }
-/* line 23, admin-theme/_admin-dashboard.sass */
+/* line 22, admin-theme/_admin-dashboard.sass */
 .dash_trend_down:before {
   margin-right: 4px;
   font-family: FontAwesome;
   content: "\f0ab"; }
 
-/* line 27, admin-theme/_admin-dashboard.sass */
+/* line 26, admin-theme/_admin-dashboard.sass */
 .dash_trend_up {
   color: green; }
-/* line 29, admin-theme/_admin-dashboard.sass */
+/* line 28, admin-theme/_admin-dashboard.sass */
 .dash_trend_up:before {
   margin-right: 4px;
   font-family: FontAwesome;
   content: "\f0aa"; }
 
-/* line 33, admin-theme/_admin-dashboard.sass */
+/* line 32, admin-theme/_admin-dashboard.sass */
 .dash_trend_right {
   color: darkblue; }
-/* line 35, admin-theme/_admin-dashboard.sass */
+/* line 34, admin-theme/_admin-dashboard.sass */
 .dash_trend_right:before {
   margin-right: 4px;
   font-family: FontAwesome;
   content: "\f0a9"; }
 
-/* line 40, admin-theme/_admin-dashboard.sass */
+/* line 39, admin-theme/_admin-dashboard.sass */
 .box-stats {
   height: 70px; }
 
-/* line 45, admin-theme/_admin-dashboard.sass */
+/* line 44, admin-theme/_admin-dashboard.sass */
 #dashboard section header {
   padding: 3px 8px;
   margin: 0 0 3px 0;
   color: white;
   font-size: 1.2em;
   background-color: #1ba6e5; }
-/* line 51, admin-theme/_admin-dashboard.sass */
+/* line 50, admin-theme/_admin-dashboard.sass */
 #dashboard section header.panel-heading, #dashboard section #header_notifs_icon_wrapper .notifs_panel header.notifs_panel_header, #header_notifs_icon_wrapper .notifs_panel #dashboard section header.notifs_panel_header {
   color: #555555; }
-/* line 54, admin-theme/_admin-dashboard.sass */
+/* line 53, admin-theme/_admin-dashboard.sass */
 #dashboard .data_list {
   margin: 0 0 10px 0;
   padding: 0; }
-/* line 58, admin-theme/_admin-dashboard.sass */
+/* line 57, admin-theme/_admin-dashboard.sass */
 #dashboard .data_list li {
   position: relative; }
-/* line 63, admin-theme/_admin-dashboard.sass */
+/* line 62, admin-theme/_admin-dashboard.sass */
 #dashboard .data_list .data_value {
   line-height: 39px;
   position: absolute;
   top: 0;
   right: 0;
   padding: 0 10px 0 0; }
-/* line 70, admin-theme/_admin-dashboard.sass */
+/* line 69, admin-theme/_admin-dashboard.sass */
 #dashboard .data_list_small {
   margin: 8px 0 10px 0;
   padding: 0 0 0 0;
   border-top: solid 1px #dddddd; }
-/* line 74, admin-theme/_admin-dashboard.sass */
+/* line 73, admin-theme/_admin-dashboard.sass */
 #dashboard .data_list_small li {
   padding: 3px 0;
   position: relative;
   border: none;
   margin: 0;
   border-bottom: dashed 1px #dddddd; }
-/* line 80, admin-theme/_admin-dashboard.sass */
+/* line 79, admin-theme/_admin-dashboard.sass */
 #dashboard .data_list_small .data_label {
   text-transform: uppercase;
   color: #bbbbbb; }
-/* line 83, admin-theme/_admin-dashboard.sass */
+/* line 82, admin-theme/_admin-dashboard.sass */
 #dashboard .data_list_small .data_value {
   line-height: 25px;
   position: absolute;
   top: 0;
   right: 0;
   padding: 0; }
-/* line 90, admin-theme/_admin-dashboard.sass */
+/* line 89, admin-theme/_admin-dashboard.sass */
 #dashboard .data_list_large {
   margin: 8px 0 10px 0;
   padding: 0; }
-/* line 94, admin-theme/_admin-dashboard.sass */
+/* line 93, admin-theme/_admin-dashboard.sass */
 #dashboard .data_list_large li {
   padding: 6px 0;
   position: relative;
   border: none;
   margin: 0; }
-/* line 99, admin-theme/_admin-dashboard.sass */
+/* line 98, admin-theme/_admin-dashboard.sass */
 #dashboard .data_list_large .data_label {
   line-height: 0.8em; }
-/* line 101, admin-theme/_admin-dashboard.sass */
+/* line 100, admin-theme/_admin-dashboard.sass */
 #dashboard .data_list_large .data_label small {
   font-size: 0.6em; }
-/* line 103, admin-theme/_admin-dashboard.sass */
+/* line 102, admin-theme/_admin-dashboard.sass */
 #dashboard .data_list_large .data_value {
   text-align: right;
   line-height: 0.6em;
@@ -10267,10 +10280,10 @@ li.sortable-placeholder {
   top: 0;
   right: 0;
   padding: 8px 0 0 0; }
-/* line 110, admin-theme/_admin-dashboard.sass */
+/* line 109, admin-theme/_admin-dashboard.sass */
 #dashboard .data_list_large .data_value small {
   font-size: 0.5em; }
-/* line 113, admin-theme/_admin-dashboard.sass */
+/* line 112, admin-theme/_admin-dashboard.sass */
 #dashboard .data_list_vertical {
   padding: 0;
   margin: 0 0 10px 0;
@@ -10280,30 +10293,30 @@ li.sortable-placeholder {
   -ms-border-radius: 3px;
   -o-border-radius: 3px;
   border-radius: 3px; }
-/* line 120, admin-theme/_admin-dashboard.sass */
+/* line 119, admin-theme/_admin-dashboard.sass */
 #dashboard .data_list_vertical li {
   border-left: solid 1px #dddddd;
   padding: 6px; }
-/* line 124, admin-theme/_admin-dashboard.sass */
+/* line 123, admin-theme/_admin-dashboard.sass */
 #dashboard .data_list_vertical li:first-child {
   border: none; }
-/* line 126, admin-theme/_admin-dashboard.sass */
+/* line 125, admin-theme/_admin-dashboard.sass */
 #dashboard .data_list_vertical .data_label {
   min-height: 32px;
   display: block;
   line-height: 1em;
   text-align: center; }
-/* line 131, admin-theme/_admin-dashboard.sass */
+/* line 130, admin-theme/_admin-dashboard.sass */
 #dashboard .data_list_vertical .data_value {
   display: block;
   text-align: center; }
-/* line 136, admin-theme/_admin-dashboard.sass */
+/* line 135, admin-theme/_admin-dashboard.sass */
 #dashboard #dashtrends header {
   margin-bottom: 0; }
-/* line 138, admin-theme/_admin-dashboard.sass */
+/* line 137, admin-theme/_admin-dashboard.sass */
 #dashboard #dashtrends #dashtrends_toolbar {
   margin: 4px -16px; }
-/* line 140, admin-theme/_admin-dashboard.sass */
+/* line 139, admin-theme/_admin-dashboard.sass */
 #dashboard #dashtrends dl {
   cursor: pointer;
   margin: 0;
@@ -10313,25 +10326,25 @@ li.sortable-placeholder {
   padding: 10px;
   border-left: 1px solid #dddddd;
   border-bottom: 1px solid #dddddd; }
-/* line 149, admin-theme/_admin-dashboard.sass */
+/* line 148, admin-theme/_admin-dashboard.sass */
 #dashboard #dashtrends dl:first-child {
   border-left: none; }
-/* line 151, admin-theme/_admin-dashboard.sass */
+/* line 150, admin-theme/_admin-dashboard.sass */
 #dashboard #dashtrends dl.active {
   background-color: #eeeeee; }
-/* line 153, admin-theme/_admin-dashboard.sass */
+/* line 152, admin-theme/_admin-dashboard.sass */
 #dashboard #dashtrends dt {
   text-align: center;
   height: 37px;
   line-height: 1em;
   font: 300 1.1em/120% "Ubuntu", sans-serif; }
-/* line 158, admin-theme/_admin-dashboard.sass */
+/* line 157, admin-theme/_admin-dashboard.sass */
 #dashboard #dashtrends svg {
   height: 350px; }
-/* line 162, admin-theme/_admin-dashboard.sass */
+/* line 161, admin-theme/_admin-dashboard.sass */
 #dashboard #dashgoals svg {
   height: 250px; }
-/* line 167, admin-theme/_admin-dashboard.sass */
+/* line 166, admin-theme/_admin-dashboard.sass */
 #dashboard #dashaddons {
   background-color: white;
   border: 1px dashed #dfdfdf;
@@ -10341,33 +10354,33 @@ li.sortable-placeholder {
   -o-border-radius: 3px;
   border-radius: 3px;
   padding: 10px 20px; }
-/* line 171, admin-theme/_admin-dashboard.sass */
+/* line 170, admin-theme/_admin-dashboard.sass */
 #dashboard #dashaddons a {
   display: block; }
-/* line 173, admin-theme/_admin-dashboard.sass */
+/* line 172, admin-theme/_admin-dashboard.sass */
 #dashboard #dashaddons a:hover {
   text-decoration: none; }
-/* line 178, admin-theme/_admin-dashboard.sass */
+/* line 177, admin-theme/_admin-dashboard.sass */
 #dashboard #dashactivity svg {
   height: 150px; }
-/* line 185, admin-theme/_admin-dashboard.sass */
+/* line 184, admin-theme/_admin-dashboard.sass */
 #dashboard .loading .data_value {
   min-width: 30px;
   text-align: center; }
-/* line 188, admin-theme/_admin-dashboard.sass */
+/* line 187, admin-theme/_admin-dashboard.sass */
 #dashboard .loading .data_value:before {
   font-size: 0.7em;
   font-family: FontAwesome;
   content: "\f021";
   color: #cccccc; }
-/* line 194, admin-theme/_admin-dashboard.sass */
+/* line 193, admin-theme/_admin-dashboard.sass */
 #dashboard .loading .data_value span, #dashboard .loading .data_value small {
   display: none; }
-/* line 196, admin-theme/_admin-dashboard.sass */
+/* line 195, admin-theme/_admin-dashboard.sass */
 #dashboard .loading .data_trend {
   display: none; }
 
-/* line 221, admin-theme/_admin-dashboard.sass */
+/* line 220, admin-theme/_admin-dashboard.sass */
 .data_loading, #dashboard .data_value span, #dashboard .data_value .dash_trend {
   opacity: 1;
   -webkit-animation-name: bounceG;
@@ -10381,7 +10394,7 @@ li.sortable-placeholder {
   transform: scale(0.7); }
 
 @-webkit-keyframes bounceG {
-  /* line 229, admin-theme/_admin-dashboard.sass */
+  /* line 228, admin-theme/_admin-dashboard.sass */
   0% {
     opacity: 0;
     filter: alpha(opacity=0);
@@ -10389,7 +10402,7 @@ li.sortable-placeholder {
     -ms-transform: scale(0.1);
     transform: scale(0.1); }
 
-  /* line 232, admin-theme/_admin-dashboard.sass */
+  /* line 231, admin-theme/_admin-dashboard.sass */
   100% {
     opacity: 1;
     filter: alpha(opacity=100);
@@ -10398,7 +10411,7 @@ li.sortable-placeholder {
     transform: scale(1); } }
 
 @-moz-keyframes bounceG {
-  /* line 229, admin-theme/_admin-dashboard.sass */
+  /* line 228, admin-theme/_admin-dashboard.sass */
   0% {
     opacity: 0;
     filter: alpha(opacity=0);
@@ -10406,7 +10419,7 @@ li.sortable-placeholder {
     -ms-transform: scale(0.1);
     transform: scale(0.1); }
 
-  /* line 232, admin-theme/_admin-dashboard.sass */
+  /* line 231, admin-theme/_admin-dashboard.sass */
   100% {
     opacity: 1;
     filter: alpha(opacity=100);
@@ -10415,7 +10428,7 @@ li.sortable-placeholder {
     transform: scale(1); } }
 
 @-ms-keyframes bounceG {
-  /* line 229, admin-theme/_admin-dashboard.sass */
+  /* line 228, admin-theme/_admin-dashboard.sass */
   0% {
     opacity: 0;
     filter: alpha(opacity=0);
@@ -10423,7 +10436,7 @@ li.sortable-placeholder {
     -ms-transform: scale(0.1);
     transform: scale(0.1); }
 
-  /* line 232, admin-theme/_admin-dashboard.sass */
+  /* line 231, admin-theme/_admin-dashboard.sass */
   100% {
     opacity: 1;
     filter: alpha(opacity=100);
@@ -10432,7 +10445,7 @@ li.sortable-placeholder {
     transform: scale(1); } }
 
 @-o-keyframes bounceG {
-  /* line 229, admin-theme/_admin-dashboard.sass */
+  /* line 228, admin-theme/_admin-dashboard.sass */
   0% {
     opacity: 0;
     filter: alpha(opacity=0);
@@ -10440,7 +10453,7 @@ li.sortable-placeholder {
     -ms-transform: scale(0.1);
     transform: scale(0.1); }
 
-  /* line 232, admin-theme/_admin-dashboard.sass */
+  /* line 231, admin-theme/_admin-dashboard.sass */
   100% {
     opacity: 1;
     filter: alpha(opacity=100);
@@ -10449,7 +10462,7 @@ li.sortable-placeholder {
     transform: scale(1); } }
 
 @keyframes bounceG {
-  /* line 229, admin-theme/_admin-dashboard.sass */
+  /* line 228, admin-theme/_admin-dashboard.sass */
   0% {
     opacity: 0;
     filter: alpha(opacity=0);
@@ -10457,7 +10470,7 @@ li.sortable-placeholder {
     -ms-transform: scale(0.1);
     transform: scale(0.1); }
 
-  /* line 232, admin-theme/_admin-dashboard.sass */
+  /* line 231, admin-theme/_admin-dashboard.sass */
   100% {
     opacity: 1;
     filter: alpha(opacity=100);
@@ -10465,11 +10478,11 @@ li.sortable-placeholder {
     -ms-transform: scale(1);
     transform: scale(1); } }
 
-/* line 236, admin-theme/_admin-dashboard.sass */
+/* line 235, admin-theme/_admin-dashboard.sass */
 #dash_version {
   padding: 0 !important;
   overflow: hidden; }
-/* line 240, admin-theme/_admin-dashboard.sass */
+/* line 239, admin-theme/_admin-dashboard.sass */
 #dash_version iframe {
   height: 80px;
   width: 100%; }
