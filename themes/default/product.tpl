@@ -435,7 +435,11 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 			{/if}
 			<p id="add_to_cart" {if (!$allow_oosp && $product->quantity <= 0) OR !$product->available_for_order OR (isset($restricted_country_mode) AND $restricted_country_mode) OR $PS_CATALOG_MODE}style="display:none"{/if} class="buttons_bottom_block">
 				<span></span>
-				<input type="submit" name="Submit" value="{l s='Add to cart'}" class="exclusive" />
+				{if $product->pre_order || ($product->quantity <= 0 && Configuration::get('PS_AUTO_PREORDER_NO_STOCK'))}
+					<input type="submit" name="Submit" value="{l s='Pre-Order'}" class="exclusive" />
+				{else}
+					<input type="submit" name="Submit" value="{l s='Add to cart'}" class="exclusive" />
+				{/if}
 			</p>
 			{if isset($HOOK_PRODUCT_ACTIONS) && $HOOK_PRODUCT_ACTIONS}{$HOOK_PRODUCT_ACTIONS}{/if}
 
@@ -545,7 +549,11 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 								<p class="clearfix" style="margin-top:5px">
 									<a class="button" href="{$accessoryLink|escape:'htmlall':'UTF-8'}" title="{l s='View'}">{l s='View'}</a>
 									{if !$PS_CATALOG_MODE && ($accessory.allow_oosp || $accessory.quantity > 0)}
-									<a class="exclusive button ajax_add_to_cart_button" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$accessory.id_product|intval}&amp;token={$static_token}&amp;add")|escape:'html'}" rel="ajax_id_product_{$accessory.id_product|intval}" title="{l s='Add to cart'}">{l s='Add to cart'}</a>
+										{if $accessory.pre_order || ($accessory->quantity <= 0 && Configuration::get('PS_AUTO_PREORDER_NO_STOCK'))}
+											<a class="exclusive button ajax_add_to_cart_button" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$accessory.id_product|intval}&amp;token={$static_token}&amp;add")|escape:'html'}" rel="ajax_id_product_{$accessory.id_product|intval}" title="{l s='Pre-Order'}">{l s='Pre-Order'}</a>
+										{else}
+											<a class="exclusive button ajax_add_to_cart_button" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$accessory.id_product|intval}&amp;token={$static_token}&amp;add")|escape:'html'}" rel="ajax_id_product_{$accessory.id_product|intval}" title="{l s='Add to cart'}">{l s='Add to cart'}</a>
+										{/if}
 									{/if}
 								</p>
 								

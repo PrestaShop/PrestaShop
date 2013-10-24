@@ -57,12 +57,24 @@
 				{if ($product.id_product_attribute == 0 || (isset($add_prod_display) && ($add_prod_display == 1))) && $product.available_for_order && !isset($restricted_country_mode) && $product.minimal_quantity <= 1 && $product.customizable != 2 && !$PS_CATALOG_MODE}
 					{if ($product.allow_oosp || $product.quantity > 0)}
 						{if isset($static_token)}
-							<a class="button ajax_add_to_cart_button exclusive" rel="ajax_id_product_{$product.id_product|intval}" href="{$link->getPageLink('cart',false, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;token={$static_token}", false)|escape:'html'}" title="{l s='Add to cart'}"><span></span>{l s='Add to cart'}</a>
+							{if $product.pre_order || ($product.quantity <= 0 && Configuration::get('PS_AUTO_PREORDER_NO_STOCK'))}
+								<a class="button ajax_add_to_cart_button exclusive" rel="ajax_id_product_{$product.id_product|intval}" href="{$link->getPageLink('cart',false, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;token={$static_token}", false)|escape:'html'}" title="{l s='Pre-Order'}"><span></span>{l s='Pre-Order'}</a>
+							{else}
+								<a class="button ajax_add_to_cart_button exclusive" rel="ajax_id_product_{$product.id_product|intval}" href="{$link->getPageLink('cart',false, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;token={$static_token}", false)|escape:'html'}" title="{l s='Add to cart'}"><span></span>{l s='Add to cart'}</a>
+							{/if}
 						{else}
-							<a class="button ajax_add_to_cart_button exclusive" rel="ajax_id_product_{$product.id_product|intval}" href="{$link->getPageLink('cart',false, NULL, "add=1&amp;id_product={$product.id_product|intval}", false)|escape:'html'}" title="{l s='Add to cart'}"><span></span>{l s='Add to cart'}</a>
-						{/if}						
+							{if $product.pre_order || ($product.quantity <= 0 && Configuration::get('PS_AUTO_PREORDER_NO_STOCK'))}
+								<a class="button ajax_add_to_cart_button exclusive" rel="ajax_id_product_{$product.id_product|intval}" href="{$link->getPageLink('cart',false, NULL, "add=1&amp;id_product={$product.id_product|intval}", false)|escape:'html'}" title="{l s='Pre-Order'}"><span></span>{l s='Pre-Order'}</a>
+							{else}
+								<a class="button ajax_add_to_cart_button exclusive" rel="ajax_id_product_{$product.id_product|intval}" href="{$link->getPageLink('cart',false, NULL, "add=1&amp;id_product={$product.id_product|intval}", false)|escape:'html'}" title="{l s='Add to cart'}"><span></span>{l s='Add to cart'}</a>
+							{/if}
+						{/if}
 					{else}
-						<span class="exclusive"><span></span>{l s='Add to cart'}</span><br />
+						{if $product.pre_order || ($product.quantity <= 0 && Configuration::get('PS_AUTO_PREORDER_NO_STOCK'))}
+							<span class="exclusive"><span></span>{l s='Pre-Order'}</span><br />
+						{else}
+							<span class="exclusive"><span></span>{l s='Add to cart'}</span><br />
+						{/if}
 					{/if}
 				{/if}
 				<a class="button lnk_view" href="{$product.link|escape:'htmlall':'UTF-8'}" title="{l s='View'}">{l s='View'}</a>

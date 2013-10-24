@@ -769,10 +769,13 @@ product_tabs['Informations'] = new function(){
 			{
 				$('#show_price').attr('checked', true);
 				$('#show_price').attr('disabled', true);
+				$('#pre_order').attr('disabled', false);
 			}
 			else
 			{
 				$('#show_price').attr('disabled', false);
+				$('#pre_order').attr('disabled', true);
+				$('#pre_order').attr('checked', false);
 			}
 		});
 				

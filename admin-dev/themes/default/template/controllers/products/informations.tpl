@@ -239,14 +239,18 @@
 					<input  type="checkbox" name="available_for_order" id="available_for_order" value="1" {if $product->available_for_order}checked="checked"{/if}  />
 					<label for="available_for_order" class="t">{l s='Available for order'}</label>
 				</li>
-			<li>
-				<input type="checkbox" name="show_price" id="show_price" value="1" {if $product->show_price}checked="checked"{/if} {if $product->available_for_order}disabled="disabled"{/if}/>
-				<label for="show_price" class="t">{l s='show price'}</label>
-			</li>
-			<li>
-				<input type="checkbox" name="online_only" id="online_only" value="1" {if $product->online_only}checked="checked"{/if} />
-				<label for="online_only" class="t">{l s='Online only (not sold in store)'}</label>
-			</li>
+				<li>
+					<input  type="checkbox" name="pre_order" id="pre_order" value="1" {if $product->pre_order}checked="checked"{/if}  />
+					<label for="pre_order" class="t">{l s='Always show as Pre-Order'}</label>
+				</li>
+				<li>
+					<input type="checkbox" name="show_price" id="show_price" value="1" {if $product->show_price}checked="checked"{/if} {if $product->available_for_order}disabled="disabled"{/if}/>
+					<label for="show_price" class="t">{l s='show price'}</label>
+				</li>
+				<li>
+					<input type="checkbox" name="online_only" id="online_only" value="1" {if $product->online_only}checked="checked"{/if} />
+					<label for="online_only" class="t">{l s='Online only (not sold in store)'}</label>
+				</li>
 			</ul>
 		</td>
 	</tr>
