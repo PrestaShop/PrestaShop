@@ -52,6 +52,15 @@ abstract class PaymentModuleCore extends Module
 
 		// Insert countries availability
 		$return = $this->addCheckboxCountryRestrictionsForModule();
+		
+		if (!Configuration::get('CONF_'.strtoupper($this->name).'_FIXED'))
+			Configuration::updateValue('CONF_'.strtoupper($this->name).'_FIXED', '0.2');
+		if (!Configuration::get('CONF_'.strtoupper($this->name).'_VAR'))
+			Configuration::updateValue('CONF_'.strtoupper($this->name).'_VAR', '2');
+		if (!Configuration::get('CONF_'.strtoupper($this->name).'_FIXED_FOREIGN'))
+			Configuration::updateValue('CONF_'.strtoupper($this->name).'_FIXED_FOREIGN', '0.2');
+		if (!Configuration::get('CONF_'.strtoupper($this->name).'_VAR_FOREIGN'))
+			Configuration::updateValue('CONF_'.strtoupper($this->name).'_VAR_FOREIGN', '2');
 
 		return $return;
 	}

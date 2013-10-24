@@ -66,6 +66,7 @@ UPDATE `PREFIX_configuration` SET value = '1' WHERE name = 'SUPPLIER_DISPLAY_FOR
 UPDATE `PREFIX_configuration` SET value = '1' WHERE name = 'BLOCK_CATEG_NBR_COLUMN_FOOTER';
 UPDATE `PREFIX_configuration` SET value = '' WHERE name = 'UPGRADER_BACKUPDB_FILENAME';
 UPDATE `PREFIX_configuration` SET value = '' WHERE name = 'UPGRADER_BACKUPFILES_FILENAME';
+UPDATE `PREFIX_configuration` SET value = '40' WHERE name = 'CONF_AVERAGE_PRODUCT_MARGIN';
 
 /* No right column */
 DELETE FROM `PREFIX_hook_module` WHERE id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayRightColumn');

@@ -90,7 +90,7 @@ class AdminDashboardControllerCore extends AdminController
 					'validation' => 'isPrice',
 					'cast' => 'floatval',
 					'type' => 'text',
-					'default' => '0',
+					'defaultValue' => '0',
 					'suffix' => $currency->iso_code
 				);
 				$forms['payment']['fields']['CONF_'.strtoupper($module->name).'_VAR'] = array(
@@ -99,7 +99,7 @@ class AdminDashboardControllerCore extends AdminController
 					'validation' => 'isPercentage',
 					'cast' => 'floatval',
 					'type' => 'text',
-					'default' => '0',
+					'defaultValue' => '0',
 					'suffix' => '%'
 				);
 				
@@ -111,7 +111,7 @@ class AdminDashboardControllerCore extends AdminController
 						'validation' => 'isPrice',
 						'cast' => 'floatval',
 						'type' => 'text',
-						'default' => '0',
+						'defaultValue' => '0',
 						'suffix' => $currency->iso_code
 					);
 					$forms['payment']['fields']['CONF_'.strtoupper($module->name).'_VAR_FOREIGN'] = array(
@@ -120,7 +120,7 @@ class AdminDashboardControllerCore extends AdminController
 						'validation' => 'isPercentage',
 						'cast' => 'floatval',
 						'type' => 'text',
-						'default' => '0',
+						'defaultValue' => '0',
 						'suffix' => '%'
 					);
 				}
@@ -134,7 +134,7 @@ class AdminDashboardControllerCore extends AdminController
 				'validation' => 'isPercentage',
 				'cast' => 'floatval',
 				'type' => 'text',
-				'default' => '0',
+				'defaultValue' => '0',
 				'suffix' => '%'
 			);
 			$forms['carriers']['fields']['CONF_'.strtoupper($carrier['id_reference']).'_SHIP_OVERSEAS'] = array(
@@ -143,7 +143,7 @@ class AdminDashboardControllerCore extends AdminController
 				'validation' => 'isPercentage',
 				'cast' => 'floatval',
 				'type' => 'text',
-				'default' => '0',
+				'defaultValue' => '0',
 				'suffix' => '%'
 			);
 		}
@@ -154,7 +154,7 @@ class AdminDashboardControllerCore extends AdminController
 			'validation' => 'isPercentage',
 			'cast' => 'intval',
 			'type' => 'text',
-			'default' => '0',
+			'defaultValue' => '0',
 			'suffix' => '%'
 		);
 
@@ -163,7 +163,7 @@ class AdminDashboardControllerCore extends AdminController
 			'validation' => 'isPrice',
 			'cast' => 'floatval',
 			'type' => 'text',
-			'default' => '0',
+			'defaultValue' => '0',
 			'suffix' => $currency->iso_code
 		);
 
@@ -182,7 +182,7 @@ class AdminDashboardControllerCore extends AdminController
 				'validation' => 'isPrice',
 				'cast' => 'floatval',
 				'type' => 'text',
-				'default' => '0',
+				'defaultValue' => '0',
 				'suffix' => $currency->iso_code
 			);
 
