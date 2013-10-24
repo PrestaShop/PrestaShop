@@ -69,13 +69,13 @@ class importerosc extends ImportModule
 
 		$html .= '<label style=\'width:220px\'>'.$this->l('Default osCommerce language  : ').'</label>
 				<div class="margin-form">
-				<select name=\'defaultOscLang\'><option value=\'0\'>------</option>';
+				<select name=\'defaultOscLang\'><option value=\'0\'>-</option>';
 				foreach($langagues AS $lang)
 					$html .= '<option value="'.$lang['languages_id'].'">'.$lang['name'].'</option>';
 		$html .= '</select></div>
 				<label style=\'width:220px\'>'.$this->l('Default osCommerce currency : ').'</label>
 				<div class=\'margin-form\'>
-				<select name=\'defaultOscCurrency\'><option value=\'0\'>------</option>';
+				<select name=\'defaultOscCurrency\'><option value=\'0\'>-</option>';
 				foreach($curencies AS $curency)
 					$html .= '<option value=\''.$curency['currencies_id'].'\'>'.$curency['title'].'</option>';
 		$html .= '</select></div>';
