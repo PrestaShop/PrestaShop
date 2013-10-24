@@ -11,7 +11,7 @@
 <tr>
 	<td class="box">
 		<p>
-			<?php echo t('Your order with the reference {order_name} - In transit'); ?>
+			<?php echo t('Order {order_name}'); ?>&nbsp;-&nbsp;<?php echo t('In transit'); ?>
 		</p>
 		<span>
 			<?php echo t('Your order with the reference <span><strong>{order_name}</strong></span> is currently in transit.'); ?> <br /><br />

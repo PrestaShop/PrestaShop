@@ -11,7 +11,7 @@
 <tr>
 	<td class="box">
 		<p>
-			<?php echo t('Refund processed for order with the reference {order_name}'); ?>
+			<?php echo t('Order {order_name}'); ?>&nbsp;-&nbsp;<?php echo t('Refund processed'); ?>
 		</p>
 		<span>
 			<?php echo t('We have processed your <strong><span>{shop_name}</strong></span> refund for order with the reference <strong><span>{order_name}</strong></span>.'); ?>
