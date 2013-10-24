@@ -1513,7 +1513,10 @@
 
 				<div class="form-group">
 					<div class="col-lg-9 col-lg-offset-3">
-						<input type="submit" name="submitAddOrder" class="btn btn-default" value="{l s='Create the order'}" />
+						<button type="submit" name="submitAddOrder" class="btn btn-default" />
+							<i class="icon-ok"></i>
+							{l s='Create the order'}
+						</button>
 					</div>
 				</div>
 			</div>
