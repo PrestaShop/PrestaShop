@@ -15,7 +15,7 @@
 			<?php echo t('Order details'); ?>
 		</p>
 		<span>
-			<?php echo t('Order:'); ?></strong></span> {order_name} <?php echo t('Placed on'); ?> {date}<br /><br />
+			<span><strong><?php echo t('Order:'); ?></strong></span> {order_name} <?php echo t('Placed on'); ?> {date}<br /><br />
 			<span><strong><?php echo t('Payment:'); ?></strong></span> {payment}
 		</span>
 	</td>
