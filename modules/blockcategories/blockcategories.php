@@ -173,7 +173,7 @@ class BlockCategories extends Module
 		{
 			if (file_exists(_PS_CAT_IMG_DIR_.(int)Tools::getValue('id_category').'-'.(int)$id_thumb.'_thumb.jpg')
 				&& !unlink(_PS_CAT_IMG_DIR_.(int)Tools::getValue('id_category').'-'.(int)$id_thumb.'_thumb.jpg'))
-				$this->context->controller->errors[] = Tools::displayError('Error while delet');
+				$this->context->controller->errors[] = Tools::displayError('Error while delete');
 		}
 
 		if (count($total_errors))
