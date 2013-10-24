@@ -196,8 +196,8 @@ class DateOfDelivery extends Module
 
 		$id_carrier = (int)OrderInvoice::getCarrierId($order_invoice->id);
 		$return = '';
-		if ($datesDelivery = $this->_getDatesOfDelivery($id_carrier, $oos, $order_invoice->date_add))
-			$return = sprintf($this->l('Approximate date of delivery is between %1$s and %2$s'), $datesDelivery[0], $datesDelivery[1]);
+		if (($datesDelivery = $this->_getDatesOfDelivery($id_carrier, $oos, $order_invoice->date_add)) && isset($datesDelivery[0][0]) && isset($datesDelivery[1][0]))
+			$return = sprintf($this->l('Approximate date of delivery is between %1$s and %2$s'), $datesDelivery[0][0], $datesDelivery[1][0]);
 
 		return $return;
 	}
