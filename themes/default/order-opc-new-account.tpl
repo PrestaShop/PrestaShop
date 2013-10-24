@@ -206,7 +206,7 @@
 				{elseif $field_name eq "address2"}
 				<p class="text is_customer_param">
 					<label for="address2">{l s='Address (Line 2)'}</label>
-					<input type="text" class="text" name="address2" id="address2" value="" />
+					<input type="text" class="text" name="address2" id="address2" value="{if isset($guestInformations) && $guestInformations.address2}{$guestInformations.address2}{/if}" />
 				</p>
 				{elseif $field_name eq "postcode"}
 				{$postCodeExist = true}
