@@ -90,174 +90,18 @@ class Followup extends Module
 	{
 		$html = '';
 		/* Save settings */
-		if (Tools::isSubmit('submitFollowUp'))	
+		if (Tools::isSubmit('submitFollowUp'))
+		{
+			$ok = true;
 			foreach ($this->confKeys AS $c)
-				Configuration::updateValue($c, (float)(Tools::getValue($c)));
-		
-		/* Init */
-		$conf = Configuration::getMultiple($this->confKeys);
-		foreach ($this->confKeys AS $k)
-			if (!isset($conf[$k]))
-				$conf[$k] = '';
-		$currency = new Currency((int)(Configuration::get('PS_CURRENCY_DEFAULT')));
-
-		$n1 = $this->cancelledCart(true);
-		$n2 = $this->reOrder(true);
-		$n3 = $this->bestCustomer(true);
-		$n4 = $this->badCustomer(true);
-		
-		$html .= '
-		<h2>'.$this->l('Customer follow-up').'</h2>
-		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset style="width: 400px; float: left;">
-				<legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
-				<p>'.$this->l('Four kinds of e-mail alerts available in order to stay in touch with your customers!').'<br /><br />
-				'.$this->l('Define settings and place this URL in crontab or call it manually daily:').'<br />
-				<b>'.Tools::getShopDomain(true, true).__PS_BASE_URI__.'modules/followup/cron.php?secure_key='.Configuration::get('PS_FOLLOWUP_SECURE_KEY').'</b></p>
-				<hr size="1" />
-				<p><b>1. '.$this->l('Cancelled carts').'</b><br /><br />'.$this->l('For each cancelled cart (with no order), generate a discount and send it to the customer.').'</p>
-				<label>'.$this->l('Enable').'</label>
-				<div class="margin-form" style="padding-top: 5px;"><input type="checkbox" name="PS_FOLLOW_UP_ENABLE_1" value="1" style="vertical-align: middle;" '.($conf['PS_FOLLOW_UP_ENABLE_1'] == 1 ? 'checked="checked"' : '').' /></div>
-				<label>'.$this->l('Discount amount').'</label>
-				<div class="margin-form"><input type="text" name="PS_FOLLOW_UP_AMOUNT_1" value="'.$conf['PS_FOLLOW_UP_AMOUNT_1'].'" size="6" onKeyUp="javascript:this.value = this.value.replace(/,/g, \'.\');" /> %</div>
-				<label>'.$this->l('Discount validity').'</label>
-				<div class="margin-form"><input type="text" name="PS_FOLLOW_UP_DAYS_1" value="'.$conf['PS_FOLLOW_UP_DAYS_1'].'" size="6" /> '.$this->l('day(s)').'</div>
-				<p>'.($n1 > 1 ? sprintf($this->l('Next process will send: %d e-mails'), $n1) : sprintf($this->l('Next process will send: %d e-mail'), $n1)).'</b></p>
-				<hr size="1" />
-				<p><b>2. '.$this->l('Re-order').'</b><br /><br />'.$this->l('For each validated order, generate a discount and send it to the customer.').'</p>
-				<label>'.$this->l('Enable').'</label>
-				<div class="margin-form" style="padding-top: 5px;"><input type="checkbox" name="PS_FOLLOW_UP_ENABLE_2" value="1" style="vertical-align: middle;" '.($conf['PS_FOLLOW_UP_ENABLE_2'] == 1 ? 'checked="checked"' : '').' /></div>
-				<label>'.$this->l('Discount amount').'</label>
-				<div class="margin-form"><input type="text" name="PS_FOLLOW_UP_AMOUNT_2" value="'.$conf['PS_FOLLOW_UP_AMOUNT_2'].'" size="6" onKeyUp="javascript:this.value = this.value.replace(/,/g, \'.\');" /> %</div>
-				<label>'.$this->l('Discount validity').'</label>
-				<div class="margin-form"><input type="text" name="PS_FOLLOW_UP_DAYS_2" value="'.$conf['PS_FOLLOW_UP_DAYS_2'].'" size="6" /> '.$this->l('day(s)').'</div>
-				<p>'.($n2 > 1 ? sprintf($this->l('Next process will send: %d e-mails'), $n2) : sprintf($this->l('Next process will send: %d e-mail'), $n2)).'</b></p>
-				<hr size="1" />
-				<p><b>3. '.$this->l('Best customers').'</b><br /><br />'.$this->l('For each customer raising a threshold, generate a discount and send it to the customer.').'</p>
-				<label>'.$this->l('Enable').'</label>
-				<div class="margin-form" style="padding-top: 5px;"><input type="checkbox" name="PS_FOLLOW_UP_ENABLE_3" value="1" style="vertical-align: middle;" '.($conf['PS_FOLLOW_UP_ENABLE_3'] == 1 ? 'checked="checked"' : '').' /></div>
-				<label>'.$this->l('Discount amount').'</label>
-				<div class="margin-form"><input type="text" name="PS_FOLLOW_UP_AMOUNT_3" value="'.$conf['PS_FOLLOW_UP_AMOUNT_3'].'" size="6" onKeyUp="javascript:this.value = this.value.replace(/,/g, \'.\');" /> %</div>
-				<label>'.$this->l('Threshold').'</label>
-				<div class="margin-form">'.($currency->format == 1 ? ' '.$currency->sign.' ' : '').'<input type="text" name="PS_FOLLOW_UP_THRESHOLD_3" value="'.$conf['PS_FOLLOW_UP_THRESHOLD_3'].'" size="6" onKeyUp="javascript:this.value = this.value.replace(/,/g, \'.\');" /> '.($currency->format == 2 ? ' '.$currency->sign : '').'</div>
-				<label>'.$this->l('Discount validity').'</label>
-				<div class="margin-form"><input type="text" name="PS_FOLLOW_UP_DAYS_3" value="'.$conf['PS_FOLLOW_UP_DAYS_3'].'" size="6" /> '.$this->l('day(s)').'</div>
-				<p>'.($n3 > 1 ? sprintf($this->l('Next process will send: %d e-mails'), $n3) : sprintf($this->l('Next process will send: %d e-mail'), $n3)).'</b></p>
-				<hr size="1" />
-				<p><b>4. '.$this->l('Bad customers').'</b><br /><br />'.$this->l('For each customer who has already passed at least one order and with no orders since a given duration, generate a discount and send it to the customer.').'</p>
-				<label>'.$this->l('Enable').'</label>
-				<div class="margin-form" style="padding-top: 5px;"><input type="checkbox" name="PS_FOLLOW_UP_ENABLE_4" value="1" style="vertical-align: middle;" '.($conf['PS_FOLLOW_UP_ENABLE_4'] == 1 ? 'checked="checked"' : '').' /></div>
-				<label>'.$this->l('Discount amount').'</label>
-				<div class="margin-form"><input type="text" name="PS_FOLLOW_UP_AMOUNT_4" value="'.$conf['PS_FOLLOW_UP_AMOUNT_4'].'" size="6" onKeyUp="javascript:this.value = this.value.replace(/,/g, \'.\');" /> %</div>
-				<label>'.$this->l('Since x days').'</label>
-				<div class="margin-form"><input type="text" name="PS_FOLLOW_UP_DAYS_THRESHOLD_4" value="'.$conf['PS_FOLLOW_UP_DAYS_THRESHOLD_4'].'" size="6" /> '.$this->l('day(s)').'</div>
-				<label>'.$this->l('Discount validity').'</label>
-				<div class="margin-form"><input type="text" name="PS_FOLLOW_UP_DAYS_4" value="'.$conf['PS_FOLLOW_UP_DAYS_4'].'" size="6" /> '.$this->l('day(s)').'</div>
-				<p>'.($n4 > 1 ? sprintf($this->l('Next process will send: %d e-mails'), $n4) : sprintf($this->l('Next process will send: %d e-mail'), $n4)).'</b></p>
-				<hr size="1" />
-				<input type="checkbox" style="vertical-align: middle;" name="PS_FOLLOW_UP_CLEAN_DB" value="1" '.($conf['PS_FOLLOW_UP_CLEAN_DB'] == 1 ? 'checked="checked"' : '').' /> '.$this->l('Delete outdated discounts during each launch to clean database.').'
-				<hr size="1" />
-				<center><input type="submit" name="submitFollowUp" value="'.$this->l('Save').'" class="button" /></center>
-			</fieldset>
-			
-			<style type="text/css">
-				table tr th {
-					text-align: center;
-					font-weight: bold;
-				}
-				
-				table tr td, table tr th {
-					padding: 3px;
-				}
-				
-				table tr td {
-					text-align: right;
-				}
-				
-				table { width: 460px; border: 1px solid #666; }
-			</style>
-			<fieldset style="width: 460px; margin-left: 10px; float: left;">
-				<legend><img src="'.$this->_path.'logo-2.gif" alt="" title="" />'.$this->l('Statistics').'</legend>
-				'.$this->l('Detailed statistics for last 30 days:').'<br /><br />
-				<p style="font-size: 10px; font-weight: bold;">
-				'.$this->l('S = Number of sent e-mails').'<br />
-				'.$this->l('U = Number of discounts used (valid orders only)').'<br />
-				'.$this->l('% = Conversion rate').'
-				</p><br />
-				<table border="1" style="font-size: 11px;">
-					<tr>
-						<th rowspan="2" style="width: 75px;">'.$this->l('Date').'</th>
-						<th colspan="3">'.$this->l('Cancelled carts').'</th>
-						<th colspan="3">'.$this->l('Re-order').'</th>
-						<th colspan="3">'.$this->l('Best cust.').'</th>
-						<th colspan="3">'.$this->l('Bad cust.').'</th>
-					</tr>';
-					
-			$stats = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT DATE_FORMAT(l.date_add, \'%Y-%m-%d\') date_stat, l.id_email_type, COUNT(l.id_log_email) nb, 
-			(SELECT COUNT(l2.id_cart_rule) 
-			FROM '._DB_PREFIX_.'log_email l2
-			LEFT JOIN '._DB_PREFIX_.'order_cart_rule ocr ON (ocr.id_cart_rule = l2.id_cart_rule)
-			LEFT JOIN '._DB_PREFIX_.'orders o ON (o.id_order = ocr.id_order)
-			WHERE l2.id_email_type = l.id_email_type AND l2.date_add = l.date_add AND ocr.id_order IS NOT NULL AND o.valid = 1) nb_used
-			FROM '._DB_PREFIX_.'log_email l
-			WHERE l.date_add >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
-			GROUP BY DATE_FORMAT(l.date_add, \'%Y-%m-%d\'), l.id_email_type');
-
-			$statsArray = array();
-			foreach ($stats AS $stat)
-			{
-				$statsArray[$stat['date_stat']][$stat['id_email_type']]['nb'] = (int)($stat['nb']);
-				$statsArray[$stat['date_stat']][$stat['id_email_type']]['nb_used'] = (int)($stat['nb_used']);
-			}
-			
-			$html .= '
-			<tr>
-				<td class="center">'.$this->l('S').'</td>
-				<td class="center">'.$this->l('U').'</td>
-				<td class="center">%</td>
-				<td class="center">'.$this->l('S').'</td>
-				<td class="center">'.$this->l('U').'</td>
-				<td class="center">%</td>
-				<td class="center">'.$this->l('S').'</td>
-				<td class="center">'.$this->l('U').'</td>
-				<td class="center">%</td>
-				<td class="center">'.$this->l('S').'</td>
-				<td class="center">'.$this->l('U').'</td>
-				<td class="center">%</td>
-			</tr>';
-			
-			if (!sizeof($statsArray))
-				$html .= '<tr><td colspan="13" style="font-weight: bold; text-align: center;">'.$this->l('No statistics at this time.').'</td></tr>';
-			foreach ($statsArray AS $date_stat => $array)
-			{
-				$rates = array();
-				for ($i = 1; $i != 5; $i++)
-					if (isset($statsArray[$date_stat][$i]['nb']) AND isset($statsArray[$date_stat][$i]['nb_used']) AND $statsArray[$date_stat][$i]['nb_used'] > 0)
-						$rates[$i] = number_format(($statsArray[$date_stat][$i]['nb_used'] / $statsArray[$date_stat][$i]['nb'])*100, 2, '.', '');
-				
-				$html .= '
-				<tr>
-					<td>'.$date_stat.'</td>';
-					
-				for ($i = 1; $i != 5; $i++)
-				{
-					$html .= '
-					<td>'.(isset($statsArray[$date_stat][$i]['nb']) ? (int)($statsArray[$date_stat][$i]['nb']) : 0).'</td>
-					<td>'.(isset($statsArray[$date_stat][$i]['nb_used']) ? (int)($statsArray[$date_stat][$i]['nb_used']) : 0).'</td>
-					<td>'.(isset($rates[$i]) ? '<b>'.$rates[$i].'</b>' : '0.00').'</td>';
-				}
-
-				$html .= '
-				</tr>';
-			}
-			
-			$html .= '
-				</table>
-			</fieldset>
-			<div class="clear"></div>
-		</form>';
-
+				$ok &= Configuration::updateValue($c, (float)Tools::getValue($c));
+			if ($ok)
+				$html .= $this->displayConfirmation($this->l('Settings updated succesfully'));
+			else
+				$html .= $this->displayError($this->l('Error occurred during settings update'));
+		}
+		$html .= $this->renderForm();
+		$html .= $this->renderStats();
 		return $html;
 	}
 	
@@ -510,5 +354,344 @@ class Followup extends Module
 			}
 		}
 	}
-}
+	
+	public function renderStats()
+	{
+		$stats = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+			SELECT DATE_FORMAT(l.date_add, \'%Y-%m-%d\') date_stat, l.id_email_type, COUNT(l.id_log_email) nb, 
+			(SELECT COUNT(l2.id_cart_rule) 
+			FROM '._DB_PREFIX_.'log_email l2
+			LEFT JOIN '._DB_PREFIX_.'order_cart_rule ocr ON (ocr.id_cart_rule = l2.id_cart_rule)
+			LEFT JOIN '._DB_PREFIX_.'orders o ON (o.id_order = ocr.id_order)
+			WHERE l2.id_email_type = l.id_email_type AND l2.date_add = l.date_add AND ocr.id_order IS NOT NULL AND o.valid = 1) nb_used
+			FROM '._DB_PREFIX_.'log_email l
+			WHERE l.date_add >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+			GROUP BY DATE_FORMAT(l.date_add, \'%Y-%m-%d\'), l.id_email_type');
 
+		$stats_array = array();
+		foreach ($stats AS $stat)
+		{
+			$stats_array[$stat['date_stat']][$stat['id_email_type']]['nb'] = (int)($stat['nb']);
+			$stats_array[$stat['date_stat']][$stat['id_email_type']]['nb_used'] = (int)($stat['nb_used']);
+		}
+		
+		foreach ($stats_array AS $date_stat => $array)
+		{
+			$rates = array();
+			for ($i = 1; $i != 5; $i++)
+				if (isset($stats_array[$date_stat][$i]['nb']) AND isset($stats_array[$date_stat][$i]['nb_used']) AND $stats_array[$date_stat][$i]['nb_used'] > 0)
+					$rates[$i] = number_format(($stats_array[$date_stat][$i]['nb_used'] / $stats_array[$date_stat][$i]['nb'])*100, 2, '.', '');
+			for ($i = 1; $i != 5; $i++)
+			{
+				$stats_array[$date_stat][$i]['nb'] = isset($stats_array[$date_stat][$i]['nb']) ? (int)($stats_array[$date_stat][$i]['nb']) : 0;
+				$stats_array[$date_stat][$i]['nb_used'] = isset($stats_array[$date_stat][$i]['nb_used']) ? (int)($stats_array[$date_stat][$i]['nb_used']) : 0;
+				$stats_array[$date_stat][$i]['rate'] = isset($rates[$i]) ? '<b>'.$rates[$i].'</b>' : '0.00';
+			}
+		}
+		
+		$this->context->smarty->assign(array('stats_array' => $stats_array));
+		return $this->display(__FILE__, 'stats.tpl');
+	}
+	
+	public function renderForm()
+	{
+		$currency = new Currency((int)(Configuration::get('PS_CURRENCY_DEFAULT')));
+		
+		$n1 = $this->cancelledCart(true);
+		$n2 = $this->reOrder(true);
+		$n3 = $this->bestCustomer(true);
+		$n4 = $this->badCustomer(true);
+		
+		$fields_form_1 = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Informations'),
+					'icon' => 'icon-cogs',
+				),
+				'description' => $this->l('Four kinds of e-mail alerts available in order to stay in touch with your customers!').'<br />'.
+								$this->l('Define settings and place this URL in crontab or call it manually daily:').'<br />
+								<b>'.Tools::getShopDomain(true, true).__PS_BASE_URI__.'modules/followup/cron.php?secure_key='.Configuration::get('PS_FOLLOWUP_SECURE_KEY').'</b></p>'
+			)
+		);
+		
+		$fields_form_2 = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Cancelled carts'),
+					'icon' => 'icon-cogs'
+				),
+				'description' => $this->l('For each cancelled cart (with no order), generate a discount and send it to the customer.'),
+				'input' => array(
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Enable'),
+						'name' => 'PS_FOLLOW_UP_ENABLE_1',
+						'values' => array(
+							array(
+								'id' => 'active_on',
+								'value' => 1,
+								'label' => $this->l('Enabled')
+							),
+							array(
+								'id' => 'active_off',
+								'value' => 0,
+								'label' => $this->l('Disabled')
+							)
+						),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Discount amount'),
+						'name' => 'PS_FOLLOW_UP_AMOUNT_1',
+						'suffix' => '%',
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Discount validity'),
+						'name' => 'PS_FOLLOW_UP_DAYS_1',
+						'suffix' => $this->l('day(s)'),
+					),
+					array(
+						'type' => 'desc',
+						'name' => '',
+						'text' => sprintf($this->l('Next process will send: %d e-mail(s)'), $n1)
+					),
+				),
+				'submit' => array(
+					'title' => $this->l('Save'),
+					'class' => 'btn btn-default')
+			),
+		);
+		
+		$fields_form_3 = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Re-order'),
+					'icon' => 'icon-cogs'
+				),
+				'description' => $this->l('For each validated order, generate a discount and send it to the customer.'),
+				'input' => array(
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Enable'),
+						'name' => 'PS_FOLLOW_UP_ENABLE_2',
+						'values' => array(
+							array(
+								'id' => 'active_on',
+								'value' => 1,
+								'label' => $this->l('Enabled')
+							),
+							array(
+								'id' => 'active_off',
+								'value' => 0,
+								'label' => $this->l('Disabled')
+							)
+						),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Discount amount'),
+						'name' => 'PS_FOLLOW_UP_AMOUNT_2',
+						'suffix' => '%',
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Discount validity'),
+						'name' => 'PS_FOLLOW_UP_DAYS_2',
+						'suffix' => $this->l('day(s)'),
+					),
+					array(
+						'type' => 'desc',
+						'name' => '',
+						'text' => sprintf($this->l('Next process will send: %d e-mail(s)'), $n2)
+					),
+				),
+				'submit' => array(
+					'title' => $this->l('Save'),
+					'class' => 'btn btn-default')
+			),
+		);
+		
+		$fields_form_4 = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Best customers'),
+					'icon' => 'icon-cogs'
+				),
+				'description' => $this->l('For each customer raising a threshold, generate a discount and send it to the customer.'),
+				'input' => array(
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Enable'),
+						'name' => 'PS_FOLLOW_UP_ENABLE_3',
+						'values' => array(
+							array(
+								'id' => 'active_on',
+								'value' => 1,
+								'label' => $this->l('Enabled')
+							),
+							array(
+								'id' => 'active_off',
+								'value' => 0,
+								'label' => $this->l('Disabled')
+							)
+						),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Discount amount'),
+						'name' => 'PS_FOLLOW_UP_AMOUNT_3',
+						'suffix' => '%',
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Threshold'),
+						'name' => 'PS_FOLLOW_UP_THRESHOLD_3',
+						'suffix' => $currency->sign,
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Discount validity'),
+						'name' => 'PS_FOLLOW_UP_DAYS_3',
+						'suffix' => $this->l('day(s)'),
+					),
+					array(
+						'type' => 'desc',
+						'name' => '',
+						'text' => sprintf($this->l('Next process will send: %d e-mail(s)'), $n3)
+					),
+				),
+				'submit' => array(
+					'title' => $this->l('Save'),
+					'class' => 'btn btn-default')
+			),
+		);
+		
+		$fields_form_5 = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Bad customers'),
+					'icon' => 'icon-cogs'
+				),
+				'description' => $this->l('For each customer who has already passed at least one order and with no orders since a given duration, generate a discount and send it to the customer.'),
+				'input' => array(
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Enable'),
+						'name' => 'PS_FOLLOW_UP_ENABLE_4',
+						'values' => array(
+							array(
+								'id' => 'active_on',
+								'value' => 1,
+								'label' => $this->l('Enabled')
+							),
+							array(
+								'id' => 'active_off',
+								'value' => 0,
+								'label' => $this->l('Disabled')
+							)
+						),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Discount amount'),
+						'name' => 'PS_FOLLOW_UP_AMOUNT_4',
+						'suffix' => '%',
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Since x days'),
+						'name' => 'PS_FOLLOW_UP_DAYS_THRESHOLD_4',
+						'suffix' => $this->l('day(s)'),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Discount validity'),
+						'name' => 'PS_FOLLOW_UP_DAYS_4',
+						'suffix' => $this->l('day(s)'),
+					),
+					array(
+						'type' => 'desc',
+						'name' => '',
+						'text' => sprintf($this->l('Next process will send: %d e-mail(s)'), $n4)
+					),
+				),
+				'submit' => array(
+					'title' => $this->l('Save'),
+					'class' => 'btn btn-default')
+			),
+		);
+		
+		$fields_form_6 = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('General'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Delete outdated discounts during each launch to clean database'),
+						'name' => 'PS_FOLLOW_UP_CLEAN_DB',
+						'values' => array(
+							array(
+								'id' => 'active_on',
+								'value' => 1,
+								'label' => $this->l('Enabled')
+							),
+							array(
+								'id' => 'active_off',
+								'value' => 0,
+								'label' => $this->l('Disabled')
+							)
+						),
+					),
+				),
+				'submit' => array(
+					'title' => $this->l('Save'),
+					'class' => 'btn btn-default')
+			),
+		);
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$helper->identifier = $this->identifier;
+		$helper->override_folder = '/';
+		$helper->module = $this;
+		$helper->submit_action = 'submitFollowUp';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form_1, $fields_form_2, $fields_form_3, $fields_form_4, $fields_form_5, $fields_form_6));
+	}
+	
+	public function getConfigFieldsValues()
+	{		
+		return array(
+			'PS_FOLLOW_UP_ENABLE_1' => Tools::getValue('PS_FOLLOW_UP_ENABLE_1', Configuration::get('PS_FOLLOW_UP_ENABLE_1')),
+			'PS_FOLLOW_UP_DAYS_1' => Tools::getValue('PS_FOLLOW_UP_DAYS_1', Configuration::get('PS_FOLLOW_UP_DAYS_1')),
+			'PS_FOLLOW_UP_AMOUNT_1' => Tools::getValue('PS_FOLLOW_UP_AMOUNT_1', Configuration::get('PS_FOLLOW_UP_AMOUNT_1')),
+			'PS_FOLLOW_UP_ENABLE_2' => Tools::getValue('PS_FOLLOW_UP_ENABLE_2', Configuration::get('PS_FOLLOW_UP_ENABLE_2')),
+			'PS_FOLLOW_UP_DAYS_2' => Tools::getValue('PS_FOLLOW_UP_DAYS_2', Configuration::get('PS_FOLLOW_UP_DAYS_2')),
+			'PS_FOLLOW_UP_AMOUNT_2' => Tools::getValue('PS_FOLLOW_UP_AMOUNT_2', Configuration::get('PS_FOLLOW_UP_AMOUNT_2')),
+			'PS_FOLLOW_UP_THRESHOLD_3' => Tools::getValue('PS_FOLLOW_UP_THRESHOLD_3', Configuration::get('PS_FOLLOW_UP_THRESHOLD_3')),
+			'PS_FOLLOW_UP_DAYS_3' => Tools::getValue('PS_FOLLOW_UP_DAYS_3', Configuration::get('PS_FOLLOW_UP_DAYS_3')),
+			'PS_FOLLOW_UP_ENABLE_3' => Tools::getValue('PS_FOLLOW_UP_ENABLE_3', Configuration::get('PS_FOLLOW_UP_ENABLE_3')),
+			'PS_FOLLOW_UP_AMOUNT_3' => Tools::getValue('PS_FOLLOW_UP_AMOUNT_3', Configuration::get('PS_FOLLOW_UP_AMOUNT_3')),
+			'PS_FOLLOW_UP_AMOUNT_4' => Tools::getValue('PS_FOLLOW_UP_AMOUNT_4', Configuration::get('PS_FOLLOW_UP_AMOUNT_4')),
+			'PS_FOLLOW_UP_ENABLE_4' => Tools::getValue('PS_FOLLOW_UP_ENABLE_4', Configuration::get('PS_FOLLOW_UP_ENABLE_4')),
+			'PS_FOLLOW_UP_DAYS_THRESHOLD_4' => Tools::getValue('PS_FOLLOW_UP_DAYS_THRESHOLD_4', Configuration::get('PS_FOLLOW_UP_DAYS_THRESHOLD_4')),
+			'PS_FOLLOW_UP_DAYS_4' => Tools::getValue('PS_FOLLOW_UP_DAYS_4', Configuration::get('PS_FOLLOW_UP_DAYS_4')),
+			'PS_FOLLOW_UP_CLEAN_DB' => Tools::getValue('PS_FOLLOW_UP_CLEAN_DB', Configuration::get('PS_FOLLOW_UP_CLEAN_DB')),
+		);
+	}
+}
