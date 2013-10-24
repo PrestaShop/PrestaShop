@@ -37,12 +37,12 @@ $(document).ready(function(){
 			matchFields += '&'+$(this).attr('id')+'='+$(this).attr('value');
 		});
 		$.ajax({
-	       type: 'GET',
+	       type: 'POST',
 	       url: 'index.php',
 	       async: false,
 	       cache: false,
 	       dataType : "json",
-	       data: 'ajax=1&action=saveImportMatchs&skip='+$('input[name=skip]').attr('value')+'&newImportMatchs='+newImportMatchs+matchFields+'&tab=AdminImport&token='+token,
+	       data: 'ajax=1&action=saveImportMatchs&tab=AdminImport&token=' + token + '&skip=' + $('input[name=skip]').attr('value') + '&newImportMatchs=' + newImportMatchs + matchFields,
 	       success: function(jsonData)
 	       {
 				$('#valueImportMatchs').append('<option id="'+jsonData.id+'" value="'+matchFields+'" selected="selected">'+newImportMatchs+'</option>');
@@ -62,12 +62,12 @@ $(document).ready(function(){
 	
 		var idToLoad = $('select#valueImportMatchs option:selected').attr('id');
 		$.ajax({
-		       type: 'GET',
+		       type: 'POST',
 		       url: 'index.php',
 		       async: false,
 		       cache: false,
 		       dataType : "json",
-		       data: 'ajax=1&action=loadImportMatchs&idImportMatchs='+idToLoad+'&tab=AdminImport&token='+token,
+		       data: 'ajax=1&action=loadImportMatchs&tab=AdminImport&token=' + token + '&idImportMatchs=' + idToLoad,
 		       success: function(jsonData)
 		       {
 					var matchs = jsonData.matchs.split('|')
@@ -87,12 +87,12 @@ $(document).ready(function(){
 	
 		var idToDelete = $('select#valueImportMatchs option:selected').attr('id');
 		$.ajax({
-		       type: 'GET',
+		       type: 'POST',
 		       url: 'index.php',
 		       async: false,
 		       cache: false,
 		       dataType : "json",
-		       data: 'ajax=1&action=deleteImportMatchs&idImportMatchs='+idToDelete+'&tab=AdminImport&token='+token,
+		       data: 'ajax=1&action=deleteImportMatchs&tab=AdminImport&token=' + token + '&idImportMatchs=' + idToDelete ,
 		       success: function(jsonData)
 		       {
 					$('select#valueImportMatchs option[id=\''+idToDelete+'\']').remove();

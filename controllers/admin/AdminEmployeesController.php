@@ -190,7 +190,7 @@ class AdminEmployeesControllerCore extends AdminController
 					'size' => 33,
 					'desc' => ($obj->id ?
 								$this->l('Leave this field blank if you do not want to change your password.') :
-									$this->l('Minimum of eight characters (use only letters and numbers)').' -_')
+									$this->l('Minimum of eight characters'))
 				),
 				array(
 					'type' => 'text',
@@ -341,9 +341,7 @@ class AdminEmployeesControllerCore extends AdminController
 		if (!($obj = $this->loadObject(true)))
 			return false;
 		$email = $this->getFieldValue($obj, 'email');
-		if (!Validate::isEmail($email))
-	 		$this->errors[] = Tools::displayError('Invalid email address.');
-		elseif (Employee::employeeExists($email) && (!Tools::getValue('id_employee') ||  ($employee = new Employee((int)Tools::getValue('id_employee'))) && $employee->email != $email))
+		if (Validate::isEmail($email) && Employee::employeeExists($email) && (!Tools::getValue('id_employee') ||  ($employee = new Employee((int)Tools::getValue('id_employee'))) && $employee->email != $email))
 			$this->errors[] = Tools::displayError('An account already exists for this email address:').' '.$email;
 	}
 

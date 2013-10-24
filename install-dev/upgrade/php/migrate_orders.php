@@ -75,7 +75,7 @@ function migrate_orders()
 		WHERE name = "PS_GIFT_WRAPPING_TAX"') / 100);
 
 	$cpt = 0;
-	$flush_limit = 1000;
+	$flush_limit = 500;
 	while ($order = Db::getInstance()->nextRow($order_res))
 	{
 		$sum_total_products = 0;

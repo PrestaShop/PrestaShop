@@ -13,3 +13,5 @@ ALTER TABLE `PREFIX_manufacturer_lang` CHANGE `short_description` `short_descrip
 /* PHP:add_module_to_hook(blockmyaccountfooter, actionModuleUnRegisterHookAfter); */;
 /* PHP:remove_tab(AdminRangePrice); */;
 /* PHP:remove_tab(AdminRangeWeight); */;
+
+UPDATE `PREFIX_employee` SET default_tab =  (SELECT `id_tab` FROM `PREFIX_tab` WHERE `class_name` LIKE 'AdminOrders' LIMIT 0 , 1) WHERE default_tab = 0;

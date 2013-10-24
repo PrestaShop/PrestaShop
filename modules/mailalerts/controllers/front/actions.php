@@ -97,7 +97,7 @@ class MailalertsActionsModuleFrontController extends ModuleFrontController
 		$id_lang = (int)$context->language->id;
 		$product = new Product($id_product, false, $id_lang, $id_shop, $context);
 
-		$mailAlert = MailAlert::customerHasNotification($id_customer, $id_product, $id_product_attribute, $id_shop);
+		$mailAlert = MailAlert::customerHasNotification($id_customer, $id_product, $id_product_attribute, $id_shop, null, $customer_email);
 
 		if ($mailAlert)
 		    die('2');

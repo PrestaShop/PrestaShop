@@ -42,6 +42,12 @@ class AdminInvoicesControllerCore extends AdminController
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
+					'PS_INVOICE_TAXES_BREAKDOWN' => array(
+						'title' => $this->l('Enable the breakdown of taxes on the invoice:'),
+						'desc' => $this->l('Show a breakdown of taxes by tax rate on the invoice when there are several taxes combined'),
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
 					'PS_INVOICE_PREFIX' => array(
 						'title' => $this->l('Invoice prefix:'),
 						'desc' => $this->l('Prefix used for invoice name (e.g. IN00001)'),
@@ -58,10 +64,8 @@ class AdminInvoicesControllerCore extends AdminController
 					'PS_INVOICE_FREE_TEXT' => array(
 						'title' => $this->l('Footer text:'),
 						'desc' => $this->l('This text will appear at the bottom of the invoice'),
-						'size' => 6,
-						'type' => 'textareaLang',
-						'cols' => 40,
-						'rows' => 8
+						'size' => 50,
+						'type' => 'textLang',
 					),
 					'PS_INVOICE_MODEL' => array(
 						'title' => $this->l('Invoice model:'),

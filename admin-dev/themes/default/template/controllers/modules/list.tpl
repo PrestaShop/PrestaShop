@@ -46,8 +46,8 @@
 				</td>
 				<td><img class="imgm" alt="" src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}"></td>
 				<td>
-					<div class="moduleDesc" id="anchor{$module->name|ucfirst}">
-						<h3>{$module->displayName}
+					<div class="moduleDesc" id="anchor{$module->name|ucfirst}" title="{$module->name}">
+						<h3>{$module->displayName}<span style="display:none">{$module->name}</span>
 							{if isset($module->type) && $module->type == 'addonsMustHave'}
 								<span class="setup must-have">{l s='Must Have'}</span>
 							{else}
@@ -77,7 +77,7 @@
 							</dl>
 						</div>
 						<p class="desc">{if isset($module->description) && $module->description ne ''}{l s='Description'} : {$module->description}{else}&nbsp;{/if}</p>
-						{if isset($module->message) && (!isset($module->type) || ($module->type != 'addonsMustHave' || $module->type !== 'addonsNative'))}<div class="conf">{$module->message}</div>{/if}
+						{if isset($module->message) && (empty($module->name) === false) && (!isset($module->type) || ($module->type != 'addonsMustHave' || $module->type !== 'addonsNative'))}<div class="conf">{$module->message}</div>{/if}
 						<div class="row-actions-module">
 							{if !isset($module->not_on_disk)}
 								{$module->optionsHtml}
@@ -101,7 +101,7 @@
 								<a href="{$module->addons_buy_url}" target="_blank" class="button updated"><span><img src="../img/admin/cart_addons.png">&nbsp;&nbsp;{if isset($module->id_currency) && isset($module->price)}{displayPrice price=$module->price currency=$module->id_currency}{/if}</span></a>
 							</li>
 						{else}
-							{if $module->id && isset($module->version_addons) && $module->version_addons}
+							{if isset($module->version_addons) && $module->version_addons}
 								<li><a href="{$module->options.update_url}" class="button updated"><span>{l s='Update it!'}</span></a></li>
 							{/if}
 								<li>

@@ -1086,6 +1086,41 @@ class OrderCore extends ObjectModel
 		');
 	}
 
+	public static function setLastInvoiceNumber($order_invoice_id, $id_shop)
+	{
+		if (!$order_invoice_id)
+			return false;
+
+		$number = Configuration::get('PS_INVOICE_START_NUMBER', null, null, $id_shop);
+		// If invoice start number has been set, you clean the value of this configuration
+		if ($number)
+			Configuration::updateValue('PS_INVOICE_START_NUMBER', false, false, null, $id_shop);
+
+		$sql = 'UPDATE `'._DB_PREFIX_.'order_invoice` SET number =';
+
+		if ($number)
+			$sql .= (int)$number;
+		else
+			$sql .= '(SELECT new_number FROM (SELECT (MAX(`number`) + 1) AS new_number
+			FROM `'._DB_PREFIX_.'order_invoice`) AS result)';
+
+		$sql .=' WHERE `id_order_invoice` = '.(int)$order_invoice_id;
+
+		return Db::getInstance()->execute($sql);
+	}
+
+	public function getInvoiceNumber($order_invoice_id)
+	{
+		if (!$order_invoice_id)
+			return false;
+
+		return Db::getInstance()->getValue('
+			SELECT `number`
+			FROM `'._DB_PREFIX_.'order_invoice`
+			WHERE `id_order_invoice` = '.(int)$order_invoice_id
+		);
+	}
+
 	/**
 	 * This method allows to generate first invoice of the current order
 	 */
@@ -1095,13 +1130,7 @@ class OrderCore extends ObjectModel
 		{
 			$order_invoice = new OrderInvoice();
 			$order_invoice->id_order = $this->id;
-			$order_invoice->number = Configuration::get('PS_INVOICE_START_NUMBER', null, null, $this->id_shop);
-			// If invoice start number has been set, you clean the value of this configuration
-			if ($order_invoice->number)
-				Configuration::updateValue('PS_INVOICE_START_NUMBER', false, false, null, $this->id_shop);
-			else
-				$order_invoice->number = Order::getLastInvoiceNumber() + 1;
-
+			$order_invoice->number = 0;
 			$invoice_address = new Address((int)$this->id_address_invoice);
 			$carrier = new Carrier((int)$this->id_carrier);
 			$tax_calculator = $carrier->getTaxCalculator($invoice_address);
@@ -1120,6 +1149,7 @@ class OrderCore extends ObjectModel
 
 			// Save Order invoice
 			$order_invoice->add();
+			$this->setLastInvoiceNumber($order_invoice->id, $this->id_shop);
 
 			$order_invoice->saveCarrierTaxCalculator($tax_calculator->getTaxesAmount($order_invoice->total_shipping_tax_excl));
 
@@ -1175,9 +1205,44 @@ class OrderCore extends ObjectModel
 
 			// Keep it for backward compatibility, to remove on 1.6 version
 			$this->invoice_date = $order_invoice->date_add;
-			$this->invoice_number = $order_invoice->number;
+			$this->invoice_number = $this->getInvoiceNumber($order_invoice->id);
 			$this->update();
 		}
+	}
+
+	public function setDeliveryNumber($order_invoice_id, $id_shop)
+	{
+		if (!$order_invoice_id)
+			return false;
+
+		$number = Configuration::get('PS_DELIVERY_NUMBER', null, null, $id_shop);
+		// If invoice start number has been set, you clean the value of this configuration
+		if ($number)
+			Configuration::updateValue('PS_DELIVERY_NUMBER', false, false, null, $id_shop);
+
+		$sql = 'UPDATE `'._DB_PREFIX_.'order_invoice` SET delivery_number =';
+
+		if ($number)
+			$sql .= (int)$number;
+		else
+			$sql .= '(SELECT new_number FROM (SELECT (MAX(`delivery_number`) + 1) AS new_number
+			FROM `'._DB_PREFIX_.'order_invoice`) AS result)';
+
+		$sql .=' WHERE `id_order_invoice` = '.(int)$order_invoice_id;
+
+		return Db::getInstance()->execute($sql);
+	}
+
+	public function getDeliveryNumber($order_invoice_id)
+	{
+		if (!$order_invoice_id)
+			return false;
+
+		return Db::getInstance()->getValue('
+			SELECT `delivery_number`
+			FROM `'._DB_PREFIX_.'order_invoice`
+			WHERE `id_order_invoice` = '.(int)$order_invoice_id
+		);
 	}
 
 	public function setDelivery()
@@ -1188,24 +1253,14 @@ class OrderCore extends ObjectModel
 		{
 			if ($order_invoice->delivery_number)
 				continue;
-
-			$number = (int)Configuration::get('PS_DELIVERY_NUMBER', null, null, $this->id_shop);
-			if (!$number)
-			{
-				//if delivery number is not set or wrong, we set a default one.
-				Configuration::updateValue('PS_DELIVERY_NUMBER', 1, false, null, $this->id_shop);
-				$number = 1;
-			}
 				
 			// Set delivery number on invoice
-			$order_invoice->delivery_number = $number;
+			$order_invoice->delivery_number = 0;
 			$order_invoice->delivery_date = date('Y-m-d H:i:s');
 			// Update Order Invoice
 			$order_invoice->update();
-
-			// Keep for backward compatibility
-			$this->delivery_number = $number;
-			Configuration::updateValue('PS_DELIVERY_NUMBER', $number + 1, false, null, $this->id_shop);
+			$this->setDeliveryNumber($order_invoice->id, $this->id_shop);
+			$this->delivery_number = $this->getDeliveryNumber($order_invoice->id);
 		}
 
 		// Keep it for backward compatibility, to remove on 1.6 version
@@ -1890,10 +1945,9 @@ class OrderCore extends ObjectModel
 	}
 	
 	/**
-	 * Return a unique reference like : GWJTHMZUN#2
+	 * Return id of carrier
 	 * 
-	 * With multishipping, order reference are the same for all orders made with the same cart
-	 * in this case this method suffix the order reference by a # and the order number
+	 * Get id of the carrier used in order
 	 * 
 	 * @since 1.5.5.0
 	 */	

@@ -45,7 +45,7 @@ class AdminControllerCore extends Controller
 	public $template = 'content.tpl';
 
 	/** @var string Associated table name */
-	public $table;
+	public $table = 'configuration';
 
 	public $list_id;
 
@@ -654,7 +654,7 @@ class AdminControllerCore extends Controller
 			'export_content' => $content
 			)
 		);
-			
+
 		$this->layout = 'layout-export.tpl';
 	}
 
@@ -693,7 +693,7 @@ class AdminControllerCore extends Controller
 					$this->redirect_after = self::$currentIndex.'&conf=1&token='.$this->token;
 				$this->errors[] = Tools::displayError('An error occurred during deletion.');
 				if ($res)
-					Logger::addLog(sprintf($this->l('%s deletion'), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
+					Logger::addLog(sprintf($this->l('%s deletion', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
 			}
 		}
 		else
@@ -744,7 +744,7 @@ class AdminControllerCore extends Controller
 			/* voluntary do affectation here */
 			elseif (($_POST[$this->identifier] = $this->object->id) && $this->postImage($this->object->id) && !count($this->errors) && $this->_redirect)
 			{
-				Logger::addLog(sprintf($this->l('%s addition'), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
+				Logger::addLog(sprintf($this->l('%s addition', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
 				$parent_id = (int)Tools::getValue('id_parent', 1);
 				$this->afterAdd($this->object);
 				$this->updateAssoShop($this->object->id);
@@ -841,10 +841,10 @@ class AdminControllerCore extends Controller
 							$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=4&token='.$this->token;
 
 						// Default behavior (save and back)
-						if (empty($this->redirect_after))
+						if (empty($this->redirect_after) && $this->redirect_after !== false)
 							$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=4&token='.$this->token;
 					}
-					Logger::addLog(sprintf($this->l('%s edition'), $this->className), 1, null, $this->className, (int)$object->id, true, (int)$this->context->employee->id);
+					Logger::addLog(sprintf($this->l('%s edition', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$object->id, true, (int)$this->context->employee->id);
 				}
 				else
 					$this->errors[] = Tools::displayError('An error occurred while updating an object.').
@@ -1940,7 +1940,10 @@ class AdminControllerCore extends Controller
 			$this->context->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
 		elseif ($this->context->shop->id != $shop_id)
 			$this->context->shop = new Shop($shop_id);
-
+		
+		// Replace current default country		
+		$this->context->country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+				
 		$this->initBreadcrumbs();
 	}
 
@@ -2112,6 +2115,7 @@ class AdminControllerCore extends Controller
 	 */
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
+
 		if (!isset($this->list_id))
 			$this->list_id = $this->table;
 
@@ -2166,12 +2170,20 @@ class AdminControllerCore extends Controller
 			$order_by = $this->fields_list[$order_by]['order_key'];
 
 		/* Determine offset from current page */
+
+		
 		if ((isset($_POST['submitFilter'.$this->list_id]) ||
 		isset($_POST['submitFilter'.$this->list_id.'_x']) ||
 		isset($_POST['submitFilter'.$this->list_id.'_y'])) &&
 		!empty($_POST['submitFilter'.$this->list_id]) &&
 		is_numeric($_POST['submitFilter'.$this->list_id]))
 			$start = ((int)$_POST['submitFilter'.$this->list_id] - 1) * $limit;
+		elseif (empty($start) && isset($this->context->cookie->{$this->list_id.'_start'}) && Tools::isSubmit('export'.$this->table))
+			$start = $this->context->cookie->{$this->list_id.'_start'};
+		else
+			$start = 0;
+
+		$this->context->cookie->{$this->list_id.'_start'} = $start;
 
 		/* Cache */
 		$this->_lang = (int)$id_lang;
@@ -2180,8 +2192,10 @@ class AdminControllerCore extends Controller
 		if (preg_match('/[.!]/', $order_by))
 		{
 			$order_by_split = preg_split('/[.!]/', $order_by);
-			$order_by = pSQL($order_by_split[0]).'.`'.pSQL($order_by_split[1]).'`';
+			$order_by = bqSQL($order_by_split[0]).'.`'.bqSQL($order_by_split[1]).'`';
 		}
+		elseif ($order_by)
+			$order_by = '`'.bqSQL($order_by).'`';
 
 		$this->_orderWay = Tools::strtoupper($order_way);
 
@@ -2241,8 +2255,6 @@ class AdminControllerCore extends Controller
 				$having_clause .= $this->_having.' ';
 		}
 
-
-
 		$this->_listsql = '
 		SELECT SQL_CALC_FOUND_ROWS
 		'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '');
@@ -2277,7 +2289,7 @@ class AdminControllerCore extends Controller
 		(isset($this->_filter) ? $this->_filter : '').$where_shop.'
 		'.(isset($this->_group) ? $this->_group.' ' : '').'
 		'.$having_clause.'
-		ORDER BY '.(($order_by == $this->identifier) ? 'a.' : '').pSQL($order_by).' '.pSQL($order_way).
+		ORDER BY '.((str_replace('`', '', $order_by) == $this->identifier) ? 'a.' : '').$order_by.' '.pSQL($order_way).
 		($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '').
 		(($use_limit === true) ? ' LIMIT '.(int)$start.','.(int)$limit : '');
 
@@ -2426,102 +2438,65 @@ class AdminControllerCore extends Controller
 		if (!$class_name)
 			$class_name = $this->className;
 
-		/* Class specific validation rules */
-		if (!empty($class_name))
-			$rules = call_user_func(array($class_name, 'getValidationRules'), $class_name);
+		$object = new $class_name();
 
-		if (isset($rules) && count($rules) && (count($rules['requiredLang']) || count($rules['sizeLang']) || count($rules['validateLang'])))
+		if (method_exists($this, 'getValidationRules'))
+			$definition = $this->getValidationRules();
+		else
+			$definition = ObjectModel::getDefinition($class_name);
+
+		$default_language = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+
+		foreach ($definition['fields'] as $field => $def)
 		{
-			/* Language() instance determined by default language */
-			$default_language = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+			$skip = array();
+			if (in_array($field, array('passwd', 'no-picture')))
+				$skip = array('required');
 
-			/* All availables languages */
-			$languages = Language::getLanguages(false);
+			if (isset($def['lang']) && $def['lang'] && isset($def['required']) && $def['required'])
+			{
+				$value = Tools::getValue($field.'_'.$default_language->id);
+				if (Tools::isEmpty($value))
+					$this->errors[$field.'_'.$default_language->id] = sprintf(
+							Tools::displayError('The field %1$s is required at least in %2$s.'),
+							$object->displayFieldName($field, $class_name),
+							$default_language->name
+					);
+
+				foreach (Language::getLanguages(false) as $language)
+				{
+					$value = Tools::getValue($field.'_'.$language['id_lang']);
+					if (!empty($value))
+						if (($error = $object->validateField($field, $value, $language['id_lang'], $skip, true)) !== true)
+							$this->errors[$field.'_'.$language['id_lang']] = $error;
+				}
+			}
+			else
+				if (($error = $object->validateField($field, Tools::getValue($field), null, $skip, true)) !== true)
+					$this->errors[$field] = $error;
 		}
 
-		/* Checking for required fields */
-		if (isset($rules['required']) && is_array($rules['required']))
-			foreach ($rules['required'] as $field)
-				if (($value = Tools::getValue($field)) == false && (string)$value != '0')
-					if (!Tools::getValue($this->identifier) || ($field != 'passwd' && $field != 'no-picture'))
-						$this->errors[$field] = sprintf(
-							Tools::displayError('The %s field is required.'),
-							call_user_func(array($class_name, 'displayFieldName'), $field, $class_name)
-						);
 
-		/* Checking for multilingual required fields */
-		if (isset($rules['requiredLang']) && is_array($rules['requiredLang']))		
-			foreach ($rules['requiredLang'] as $field_lang)
-				if (($empty = Tools::getValue($field_lang.'_'.$default_language->id)) === false || $empty !== '0' && empty($empty))
-					$this->errors[$field_lang.'_'.$default_language->id] = sprintf(
-						Tools::displayError('The field %1$s is required at least in %2$s.'),
-						call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name),
-						$default_language->name
-					);
-
-		/* Checking for maximum fields sizes */
-		if (isset($rules['size']) && is_array($rules['size']))			
-			foreach ($rules['size'] as $field => $max_length)
-				if (Tools::getValue($field) !== false && Tools::strlen(Tools::getValue($field)) > $max_length)
-					$this->errors[$field] = sprintf(
-						Tools::displayError('The %1$s field is too long (%2$d chars max).'),
-						call_user_func(array($class_name, 'displayFieldName'), $field, $class_name),
-						$max_length
-					);
-
-		/* Checking for maximum multilingual fields size */
-		if (isset($rules['sizeLang']) && is_array($rules['sizeLang']))			
-			foreach ($rules['sizeLang'] as $field_lang => $max_length)
-				foreach ($languages as $language)
-				{
-					$field_lang_value = Tools::getValue($field_lang.'_'.$language['id_lang']);
-					if ($field_lang_value !== false && Tools::strlen($field_lang_value) > $max_length)
-						$this->errors[$field_lang.'_'.$language['id_lang']] = sprintf(
-							Tools::displayError('The field %1$s (%2$s) is too long (%3$d chars max, html chars including).'),
-							call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name),
-							$language['name'],
-							$max_length
-						);
-				}
 		/* Overload this method for custom checking */
 		$this->_childValidation();
 
-		/* Checking for fields validity */
-		if (isset($rules['validate']) && is_array($rules['validate']))			
-			foreach ($rules['validate'] as $field => $function)
-				if (($value = Tools::getValue($field)) !== false && ($field != 'passwd'))
-					if (!Validate::$function($value) && !empty($value))
-						$this->errors[$field] = sprintf(
-							Tools::displayError('The %s field is invalid.'),
-							call_user_func(array($class_name, 'displayFieldName'), $field, $class_name)
-						);
-
-		/* Checking for passwd_old validity */
-		if (($value = Tools::getValue('passwd')) != false)
-		{
-			if ($class_name == 'Employee' && !Validate::isPasswdAdmin($value))
-				$this->errors['passwd'] = sprintf(
-					Tools::displayError('The %s field is invalid.'),
-					call_user_func(array($class_name, 'displayFieldName'), 'passwd', $class_name)
-				);
-			elseif ($class_name == 'Customer' && !Validate::isPasswd($value))
-				$this->errors['passwd'] = sprintf(
-					Tools::displayError('The %s field is invalid.'),
-					call_user_func(array($class_name, 'displayFieldName'), 'passwd', $class_name)
-				);
-		}
-
 		/* Checking for multilingual fields validity */
-		if (isset($rules['validateLang']) && is_array($rules['validateLang']))			
+		if (isset($rules['validateLang']) && is_array($rules['validateLang']))
 			foreach ($rules['validateLang'] as $field_lang => $function)
 				foreach ($languages as $language)
 					if (($value = Tools::getValue($field_lang.'_'.$language['id_lang'])) !== false && !empty($value))
-						if (!Validate::$function($value))
+					{
+						if (Tools::strtolower($function) == 'iscleanhtml' && Configuration::get('PS_ALLOW_HTML_IFRAME'))
+							$res = Validate::$function($value, true);
+						else
+							$res = Validate::$function($value);
+						if (!$res)
 							$this->errors[$field_lang.'_'.$language['id_lang']] = sprintf(
 								Tools::displayError('The %1$s field (%2$s) is invalid.'),
 								call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name),
 								$language['name']
 							);
+					}
 	}
 
 	/**
@@ -2798,7 +2773,7 @@ class AdminControllerCore extends Controller
 						}
 					
 					if ($delete_ok)
-						Logger::addLog(sprintf($this->l('%s deletion'), $this->className), 1, null, $this->className, (int)$to_delete->id, true, (int)$this->context->employee->id);
+						Logger::addLog(sprintf($this->l('%s deletion', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$to_delete->id, true, (int)$this->context->employee->id);
 					else
 						$this->errors[] = sprintf(Tools::displayError('Can\'t delete #%d'), $id);
 				}

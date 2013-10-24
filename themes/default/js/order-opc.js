@@ -308,7 +308,7 @@ function saveAddress(type)
 	params += 'address2='+encodeURIComponent($('#address2'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
 	params += 'postcode='+encodeURIComponent($('#postcode'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
 	params += 'city='+encodeURIComponent($('#city'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
-	params += 'id_country='+encodeURIComponent($('#id_country').val())+'&';
+	params += 'id_country='+encodeURIComponent($('#id_country'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
 	if ($('#id_state'+(type == 'invoice' ? '_invoice' : '')).val())
 		params += 'id_state='+encodeURIComponent($('#id_state'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
 	params += 'other='+encodeURIComponent($('#other'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
@@ -766,7 +766,7 @@ function multishippingMode(it)
 			'transitionIn': 'elastic',
 			'transitionOut': 'elastic',
 			'type': 'ajax',
-			'onClosed': function()
+			'beforeClose': function()
 			{
 				// Reload the cart
 				$.ajax({
@@ -783,7 +783,7 @@ function multishippingMode(it)
 				});
 				updateCarrierSelectionAndGift();
 			},
-			'onStart': function()
+			'beforeLoad': function()
 			{
 				// Removing all ids on the cart to avoid conflic with the new one on the fancybox
 				// This action could "break" the cart design, if css rules use ids of the cart

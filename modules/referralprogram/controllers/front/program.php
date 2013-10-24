@@ -183,6 +183,8 @@ class ReferralprogramProgramModuleFrontController extends ModuleFrontController
 
 		if ((int)($stats['nb_orders']) >= $orderQuantity)
 			$canSendInvitations = true;
+		
+		$discountInPercent = Tools::getValue('discount_type', Configuration::get('REFERRAL_DISCOUNT_TYPE')) == 1;
 
 		// Smarty display
 		$this->context->smarty->assign(array(
@@ -199,7 +201,7 @@ class ReferralprogramProgramModuleFrontController extends ModuleFrontController
 			'nbRevive' => $nbRevive,
 			'subscribeFriends' => ReferralProgramModule::getSponsorFriend((int)($this->context->customer->id), 'subscribed'),
 			'mails_exists' => (isset($mails_exists) ? $mails_exists : array()),
-			'currencySign' => $this->context->currency->sign
+			'currencySign' => ($discountInPercent ? '%' : $this->context->currency->sign)
 		));
 		$this->setTemplate('program.tpl');
 	}

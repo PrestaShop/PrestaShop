@@ -192,7 +192,7 @@
 									{/if}
 								{elseif $input.type == 'radio'}
 									{foreach $input.values as $value}
-										<input type="radio"	name="{$input.name}"id="{$value.id}" value="{$value.value|escape:'htmlall':'UTF-8'}"
+										<input type="radio" name="{$input.name}" id="{$value.id}" value="{$value.value|escape:'htmlall':'UTF-8'}"
 												{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
 												{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if} />
 										<label {if isset($input.class)}class="{$input.class}"{/if} for="{$value.id}">

@@ -401,7 +401,7 @@ class AdminCartsControllerCore extends AdminController
 			{
 				if (Validate::isMessage($message_content))
 				{
-					$message->message = htmlentities($message_content, ENT_COMPAT, 'UTF-8');
+					$message->message = $message_content;
 					$message->id_cart = (int)$this->context->cart->id;
 					$message->id_customer = (int)$this->context->cart->id_customer;
 					$message->save();
@@ -551,6 +551,8 @@ class AdminCartsControllerCore extends AdminController
 		if (count($summary['products']))
 			foreach ($summary['products'] as &$product)
 			{
+				$product['numeric_price'] = $product['price'];
+				$product['numeric_total'] = $product['total'];
 				$product['price'] = str_replace($currency->sign, '', Tools::displayPrice($product['price'], $currency));
 				$product['total'] = str_replace($currency->sign, '', Tools::displayPrice($product['total'], $currency));
 				$product['image_link'] = $this->context->link->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default');
@@ -684,18 +686,21 @@ class AdminCartsControllerCore extends AdminController
 					$free_shipping = true;
 					break;
 				}
-		return array('summary' => $this->getCartSummary(),
-						'delivery_option_list' => $this->getDeliveryOptionList(),
-						'cart' => $this->context->cart,
-						'addresses' => $this->context->customer->getAddresses((int)$this->context->cart->id_lang),
-						'id_cart' => $id_cart,
-						'order_message' => $message_content,
-						'link_order' => $this->context->link->getPageLink(
-							'order', false,
-							(int)$this->context->cart->id_lang,
-							'step=3&recover_cart='.$id_cart.'&token_cart='.md5(_COOKIE_KEY_.'recover_cart_'.$id_cart)),
-						'free_shipping' => (int)$free_shipping
-						);
+		return array(
+			'summary' => $this->getCartSummary(),
+			'delivery_option_list' => $this->getDeliveryOptionList(),
+			'cart' => $this->context->cart,
+			'currency' => new Currency($this->context->cart->id_currency),
+			'addresses' => $this->context->customer->getAddresses((int)$this->context->cart->id_lang),
+			'id_cart' => $id_cart,
+			'order_message' => $message_content,
+			'link_order' => $this->context->link->getPageLink(
+				'order', false,
+				(int)$this->context->cart->id_lang,
+				'step=3&recover_cart='.$id_cart.'&token_cart='.md5(_COOKIE_KEY_.'recover_cart_'.$id_cart)
+			),
+			'free_shipping' => (int)$free_shipping
+		);
 	}
 
 	public function initToolbar()

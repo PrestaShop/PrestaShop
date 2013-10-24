@@ -175,7 +175,7 @@ var ajaxCart = {
 	},
 
 	// add a product in the cart via ajax
-	add : function(idProduct, idCombination, addedFromProductPage, callerElement, quantity, whishlist){
+	add : function(idProduct, idCombination, addedFromProductPage, callerElement, quantity, wishlist){
 		if (addedFromProductPage && !checkCustomizations())
 		{
 			alert(fieldRequired);
@@ -204,9 +204,9 @@ var ajaxCart = {
 			data: 'controller=cart&add=1&ajax=true&qty=' + ((quantity && quantity != null) ? quantity : '1') + '&id_product=' + idProduct + '&token=' + static_token + ( (parseInt(idCombination) && idCombination != null) ? '&ipa=' + parseInt(idCombination): ''),
 			success: function(jsonData,textStatus,jqXHR)
 			{
-				// add appliance to whishlist module
-				if (whishlist && !jsonData.errors)
-					WishlistAddProductCart(whishlist[0], idProduct, idCombination, whishlist[1]);
+				// add appliance to wishlist module
+				if (wishlist && !jsonData.errors)
+					WishlistAddProductCart(wishlist[0], idProduct, idCombination, wishlist[1]);
 
 				// add the picture to the cart
 				var $element = $(callerElement).parent().parent().find('a.product_image img,a.product_img_link img');
@@ -398,8 +398,7 @@ var ajaxCart = {
 		else
 		{
 			$('#vouchers tbody').html('');
-
-			for (i=0;i<jsonData.discounts.length;i++)
+			for (i=0; i < jsonData.discounts.length; i++)
 			{
 				if (parseFloat(jsonData.discounts[i].price_float) > 0)
 				{
@@ -408,15 +407,14 @@ var ajaxCart = {
 						delete_link = '<a class="delete_voucher" href="'+jsonData.discounts[i].link+'" title="'+delete_txt+'"><img src="'+img_dir+'icon/delete.gif" alt="'+delete_txt+'" class="icon" /></a>';
 					$('#vouchers tbody').append($(
 						'<tr class="bloc_cart_voucher" id="bloc_cart_voucher_'+jsonData.discounts[i].id+'">'
-						+'	<td class="quantity">1x</td>'
-						+'	<td class="name" title="'+jsonData.discounts[i].description+'">'+jsonData.discounts[i].name+'</td>'
-						+'	<td class="price">-'+jsonData.discounts[i].price+'</td>'
-						+'	<td class="delete">' + delete_link + '</td>'
-						+'</tr>'
+						+ '<td class="quantity">1x</td>'
+						+ '<td class="name" title="'+jsonData.discounts[i].description+'">'+jsonData.discounts[i].name+'</td>'
+						+ '<td class="price">-'+jsonData.discounts[i].price+'</td>'
+						+ '<td class="delete">' + delete_link + '</td>'
+						+ '</tr>'
 					));
 				}
 			}
-
 			$('#vouchers').show();
 		}
 
@@ -464,7 +462,8 @@ var ajaxCart = {
 					var productAttributeId = (this.hasAttributes ? parseInt(this.attributes) : 0);
 					var content =  '<dt class="hidden" id="cart_block_product_' + domIdProduct + '">';
 					content += '<span class="quantity-formated"><span class="quantity">' + this.quantity + '</span>x</span>';
-					var name = (this.name.length > 12 ? this.name.substring(0, 10) + '...' : this.name);
+					var min = this.name.indexOf(';', 10);
+					var name = (this.name.length > 12 ? this.name.substring(0, ((min - 10) <= 7) ? min : 10) + '...' : this.name);
 					content += '<a href="' + this.link + '" title="' + this.name + '" class="cart_block_product_name">' + name + '</a>';
 
 					if (typeof(this.is_gift) == 'undefined' || this.is_gift == 0)
@@ -707,18 +706,18 @@ $(document).ready(function(){
 		function() {
 			$(this).css('border-radius', '3px 3px 0px 0px');
 			if (ajaxCart.nb_total_products > 0 || cart_qty > 0)
-				$("#cart_block").stop(true, true).slideDown(450);
+				$("#header_right #cart_block").stop(true, true).slideDown(450);
 		},
 		function() {
 			$('#shopping_cart a').css('border-radius', '3px');
 			setTimeout(function() {
 				if (!shopping_cart.isHoveringOver() && !cart_block.isHoveringOver())
-					$("#cart_block").stop(true, true).slideUp(450);
+					$("#header_right #cart_block").stop(true, true).slideUp(450);
 			}, 200);
 		}
 	);
 
-	$("#cart_block").hover(
+	$("#header_right #cart_block").hover(
 		function() {
 			$('#shopping_cart a').css('border-radius', '3px 3px 0px 0px');
 		},
@@ -726,7 +725,7 @@ $(document).ready(function(){
 			$('#shopping_cart a').css('border-radius', '3px');
 			setTimeout(function() {
 				if (!shopping_cart.isHoveringOver())
-					$("#cart_block").stop(true, true).slideUp(450);
+					$("#header_right #cart_block").stop(true, true).slideUp(450);
 			}, 200);
 		}
 	);

@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
+<script type="text/javascript" src="../js/jquery/plugins/jquery.uitablefilter.js"></script>
 {if $add_permission eq '1'}
 	{if isset($logged_on_addons)}
 			<!--start addons login-->
@@ -62,10 +62,7 @@
 <!--start filter module-->
 <style>.ac_results { border:1px solid #C2C4D9; }</style>
 <div class="filter-module">
-	<form id="filternameForm" method="post">
-		<input type="text" value="" name="filtername" autocomplete="off" class="ac_input">
-		<input type="submit" class="button" value="{l s='Search'}">
-	</form>
+	<input style="float: left; margin-right: 15px" placeholder="{l s='Search'}" type="text" value="" name="quicksearch" autocomplete="off" onkeyup="$.uiTableFilter($('#moduleContainer').find('table'), this.value);">
 	<form method="post">
 		<div class="select-filter">
 			<label class="search-filter">{l s='Sort by'}:</label>

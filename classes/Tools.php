@@ -357,13 +357,11 @@ class ToolsCore
 			if (Validate::isLanguageIsoCode($string))
 			{
 				$lang = new Language(Language::getIdByIso($string));
-				if (Validate::isLoadedObject($lang) && $lang->active)
-				{				
-					$language = new Language((int)$lang->id);
-					if (Validate::isLoadedObject($language))
-						Context::getContext()->language = $language;				
+				if (Validate::isLoadedObject($lang) && $lang->active && $lang->isAssociatedToShop())
+				{
+					Context::getContext()->language = $lang;
 					$cookie->id_lang = (int)$lang->id;
-				}					
+				}
 			}
 		}
 		
@@ -494,6 +492,20 @@ class ToolsCore
 		if (($is_negative = ($price < 0)))
 			$price *= -1;
 		$price = Tools::ps_round($price, $c_decimals);
+
+		/*
+		* If the language is RTL and the selected currency format contains spaces as thousands separator
+		* then the number will be printed in reverse since the space is interpreted as separating words.
+		* To avoid this we replace the currency format containing a space with the one containing a comma (,) as thousand
+		* separator when the language is RTL.
+		*
+		* TODO: This is not ideal, a currency format should probably be tied to a language, not to a currency.
+		*/
+		if(($c_format == 2) && ($context->language->is_rtl == 1))
+		{
+			$c_format = 4;
+		}
+
 		switch ($c_format)
 		{
 			/* X 0,000.00 */
@@ -512,9 +524,9 @@ class ToolsCore
 			case 4:
 				$ret = number_format($price, $c_decimals, '.', ',').$blank.$c_char;
 				break;
-			/* 0 000.00 X  Added for the switzerland currency */
+			/* X 0'000.00  Added for the switzerland currency */
 			case 5:
-				$ret = number_format($price, $c_decimals, '.', ' ').$blank.$c_char;
+				$ret = $c_char.$blank.number_format($price, $c_decimals, '.', "'");
 				break;
 		}
 		if ($is_negative)
@@ -703,6 +715,21 @@ class ToolsCore
                 return true;                    
 			}
         return false;
+    }
+
+    /**
+	* Delete file
+	*
+	* @param string File path
+	* @param array  Excluded files
+	*/
+    public static function deleteFile($file, $exclude_files = array())
+    {
+		if (isset($exclude_files) && !is_array($exclude_files))
+			$exclude_files = array($exclude_files);
+
+		if (file_exists($file) && is_file($file) && array_search(basename($file), $exclude_files) === FALSE)
+			unlink($file);
     }
     
 	/**
@@ -1133,7 +1160,7 @@ class ToolsCore
 
 		$replacements = array(
 				'a', 'c', 'd', 'e', 'g', 'h', 'i', 'j', 'k', 'l', 'n', 'o', 'r', 's', 'ss', 't', 'u', 'y', 'w', 'z', 'ae', 'oe',
-				'A', 'C', 'D', 'E', 'G', 'H', 'I', 'J', 'K', 'L', 'N', 'O', 'R', 'S', 'T', 'U', 'Z', 'AE', 'OE'
+				'A', 'C', 'D', 'E', 'G', 'H', 'I', 'J', 'K', 'L', 'N', 'O', 'R', 'S', 'T', 'U', 'Y', 'W', 'Z', 'AE', 'OE'
 			);
 
 		return preg_replace($patterns, $replacements, $str);

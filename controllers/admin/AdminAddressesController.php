@@ -77,7 +77,7 @@ class AdminAddressesControllerCore extends AdminController
 		parent::initToolbar();
 		if (!$this->display)
 			$this->toolbar_btn['import'] = array(
-				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type='.$this->table,
+				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=addresses',
 				'desc' => $this->l('Import')
 			);
 	}
@@ -299,6 +299,9 @@ class AdminAddressesControllerCore extends AdminController
 
 	public function processSave()
 	{
+		if (Tools::getValue('submitFormAjax'))
+			$this->redirect_after = false;
+
 		// Transform e-mail in id_customer for parent processing
 		if (Validate::isEmail(Tools::getValue('email')))
 		{

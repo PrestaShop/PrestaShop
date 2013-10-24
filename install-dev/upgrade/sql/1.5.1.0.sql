@@ -12,7 +12,7 @@ INSERT INTO `PREFIX_configuration`(`name`, `value`, `date_add`, `date_upd`) VALU
 ALTER TABLE `PREFIX_product` CHANGE `width` `width` DECIMAL(20, 6) NOT NULL DEFAULT '0', CHANGE `height` `height` DECIMAL(20, 6) NOT NULL DEFAULT '0', CHANGE `depth` `depth` DECIMAL(20, 6) NOT NULL DEFAULT '0', CHANGE `weight` `weight` DECIMAL(20, 6) NOT NULL DEFAULT '0';
 ALTER TABLE `PREFIX_product_attribute` CHANGE `weight` `weight` DECIMAL(20, 6) NOT NULL DEFAULT '0';
 ALTER TABLE `PREFIX_product_attribute_shop` CHANGE `weight` `weight` DECIMAL(20, 6) NOT NULL DEFAULT '0';
-ALTER TABLE `PREFIX_order_carrier` CHANGE `weight` `weight` DECIMAL(20, 6) NOT NULL DEFAULT '0';
+ALTER IGNORE TABLE `PREFIX_order_carrier` CHANGE `weight` `weight` DECIMAL(20, 6) NOT NULL DEFAULT '0';
 ALTER TABLE `PREFIX_attribute_impact` CHANGE `weight` `weight` DECIMAL(20, 6) NOT NULL DEFAULT '0';
 ALTER TABLE `PREFIX_order_detail` CHANGE `product_weight` `product_weight` DECIMAL(20, 6) NOT NULL DEFAULT '0';
 ALTER TABLE `PREFIX_stock_available` DROP INDEX `product_sqlstock`;

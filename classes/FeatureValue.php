@@ -128,34 +128,50 @@ class FeatureValueCore extends ObjectModel
 				return $tab['value'];
 	}
 
-	public static function addFeatureValueImport($id_feature, $name)
+	public static function addFeatureValueImport($id_feature, $value, $id_product = null, $id_lang = null, $custom = false)
 	{
-		$rq = Db::getInstance()->executeS('
-			SELECT fv.`id_feature_value`
-			FROM '._DB_PREFIX_.'feature_value fv
-			LEFT JOIN '._DB_PREFIX_.'feature_value_lang fvl
-				ON (fvl.`id_feature_value` = fv.`id_feature_value`)
-			WHERE `value` = \''.pSQL($name).'\'
-				AND fv.`id_feature` = '.(int)$id_feature.'
-			GROUP BY fv.`id_feature_value` LIMIT 1
-		');
-
-		if (!isset($rq[0]['id_feature_value']) || !$id_feature_value = (int)$rq[0]['id_feature_value'])
+		$id_feature_value = false;
+		if (!is_null($id_product) && $id_product)
 		{
-			// Feature doesn't exist, create it
-			$feature_value = new FeatureValue();
+			$id_feature_value = Db::getInstance()->getValue('
+				SELECT fp.`id_feature_value`
+				FROM '._DB_PREFIX_.'feature_product fp
+				INNER JOIN '._DB_PREFIX_.'feature_value fv USING (`id_feature_value`)
+				WHERE fp.`id_feature` = '.(int)$id_feature.'
+				AND fv.`custom` = '.(int)$custom.'
+				AND fp.`id_product` = '.(int)$id_product);
 
-			$languages = Language::getLanguages();
-			foreach ($languages as $language)
-				$feature_value->value[$language['id_lang']] = strval($name);
-
-			$feature_value->id_feature = (int)$id_feature;
-			$feature_value->custom = 1;
-			$feature_value->add();
-
-			return (int)$feature_value->id;
+			if ($custom && $id_feature_value && !is_null($id_lang) && $id_lang)
+				Db::getInstance()->execute('
+				UPDATE '._DB_PREFIX_.'feature_value_lang 
+				SET `value` = \''.pSQL($value).'\' 
+				WHERE `id_feature_value` = '.(int)$id_feature_value.' 
+				AND `value` != \''.pSQL($value).'\' 
+				AND `id_lang` = '.(int)$id_lang);
 		}
-		return (int)$id_feature_value;
+		
+		if (!$custom)		
+			$id_feature_value = Db::getInstance()->getValue('
+				SELECT fv.`id_feature_value`
+				FROM '._DB_PREFIX_.'feature_value fv
+				LEFT JOIN '._DB_PREFIX_.'feature_value_lang fvl ON (fvl.`id_feature_value` = fv.`id_feature_value` AND fvl.`id_lang` = '.(int)$id_lang.')
+				WHERE `value` = \''.pSQL($value).'\'
+				AND fv.`id_feature` = '.(int)$id_feature.'
+				AND fv.`custom` = 0
+				GROUP BY fv.`id_feature_value`');
+
+		if ($id_feature_value)
+			return (int)$id_feature_value;
+
+		// Feature doesn't exist, create it
+		$feature_value = new FeatureValue();
+		$feature_value->id_feature = (int)$id_feature;
+		$feature_value->custom = (bool)$custom;
+		foreach (Language::getLanguages() as $language)
+			$feature_value->value[$language['id_lang']] = $value;
+		$feature_value->add();
+
+		return (int)$feature_value->id;
 	}
 
 	public function add($autodate = true, $nullValues = false)

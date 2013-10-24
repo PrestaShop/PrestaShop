@@ -619,7 +619,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 				}
 			}
 			else
-				$this->validateRules('AdminCarrierWizardControllerCore');
+				$this->validateRules();
 		}
 
 		if (count($this->errors))
@@ -763,6 +763,11 @@ class AdminCarrierWizardControllerCore extends AdminController
 					$this->updateAssoShop((int)$new_carrier->id);
 					$this->duplicateLogo((int)$new_carrier->id, (int)$current_carrier->id);
 					$this->changeGroups((int)$new_carrier->id);
+					
+					//Copy default carrier
+					if (Configuration::get('PS_CARRIER_DEFAULT') == $current_carrier->id)
+						Configuration::updateValue('PS_CARRIER_DEFAULT', (int)$new_carrier->id);
+					
 					// Call of hooks
 					Hook::exec('actionCarrierUpdate', array(
 							'id_carrier' => (int)$current_carrier->id,
@@ -874,12 +879,12 @@ class AdminCarrierWizardControllerCore extends AdminController
 			return $return;
 	}
 
-	public static function getValidationRules()
+	public function getValidationRules()
 	{
 		$step_number = Tools::getValue('step_number');
 
 		if ($step_number == 4 && !Shop::isFeatureActive() || $step_number == 5 && Shop::isFeatureActive())
-			return array();
+			return array('fields' => array());
 
 		$step_fields = array(
 			1 => array('name', 'delay', 'grade', 'url'),
@@ -894,20 +899,12 @@ class AdminCarrierWizardControllerCore extends AdminController
 			array_splice($step_fields, 1, 0, $multistore_field);
 		}
 
-		$rules = Carrier::getValidationRules('Carrier');
+		$definition = ObjectModel::getDefinition('Carrier');
+		foreach ($definition['fields'] as $field => $def)
+			if (!in_array($field, $step_fields[$step_number]))
+				unset($definition['fields'][$field]);
 
-		foreach ($rules as $key_r => $rule)
-			foreach ($rule as $key_f => $field)
-			{
-				if (in_array($key_r, array('required', 'requiredLang')))
-				{
-					if(!in_array($field, $step_fields[$step_number]))
-						unset($rules[$key_r][$key_f]);
-				}
-				else if(!in_array($key_f, $step_fields[$step_number]))
-						unset($rules[$key_r][$key_f]);
-			}
-		return $rules;
+		return $definition;
 	}
 
 	public static function displayFieldName($field)

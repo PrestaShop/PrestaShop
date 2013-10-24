@@ -40,7 +40,7 @@ class OrderOpcControllerCore extends ParentOrderController
 		parent::init();
 
 		if ($this->nbProducts)
-			$this->context->smarty->assign('virtual_cart', false);
+			$this->context->smarty->assign('virtual_cart', $this->context->cart->isVirtualCart());
 		
 		$this->context->smarty->assign('is_multi_address_delivery', $this->context->cart->isMultiAddressDelivery() || ((int)Tools::getValue('multi-shipping') == 1));
 		$this->context->smarty->assign('open_multishipping_fancybox', (int)Tools::getValue('multi-shipping') == 1);
@@ -445,6 +445,21 @@ class OrderOpcControllerCore extends ParentOrderController
 			'phone_mobile_invoice' => Tools::htmlentitiesUTF8($address_invoice->phone_mobile),
 			'id_country_invoice' => (int)($address_invoice->id_country),
 			'id_state_invoice' => (int)($address_invoice->id_state),
+			'id_address_invoice' => $id_address_invoice,
+			'invoice_company' => Tools::htmlentitiesUTF8($address_invoice->company),
+			'invoice_lastname' => Tools::htmlentitiesUTF8($address_invoice->lastname),
+			'invoice_firstname' => Tools::htmlentitiesUTF8($address_invoice->firstname),
+			'invoice_vat_number' => Tools::htmlentitiesUTF8($address_invoice->vat_number),
+			'invoice_dni' => Tools::htmlentitiesUTF8($address_invoice->dni),
+			'invoice_address' => $this->context->cart->id_address_invoice !== $this->context->cart->id_address_delivery,
+			'invoice_address1' => Tools::htmlentitiesUTF8($address_invoice->address1),
+			'invoice_address2' => Tools::htmlentitiesUTF8($address_invoice->address2),
+			'invoice_postcode' => Tools::htmlentitiesUTF8($address_invoice->postcode),
+			'invoice_city' => Tools::htmlentitiesUTF8($address_invoice->city),
+			'invoice_phone' => Tools::htmlentitiesUTF8($address_invoice->phone),
+			'invoice_phone_mobile' => Tools::htmlentitiesUTF8($address_invoice->phone_mobile),
+			'invoice_id_country' => (int)($address_invoice->id_country),
+			'invoice_id_state' => (int)($address_invoice->id_state),
 		);
 	}
 

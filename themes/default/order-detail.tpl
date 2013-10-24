@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
+{if isset($order)}
 <form action="{if isset($opc) && $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" class="submit">
 	<div>
 		<input type="hidden" value="{$order->id}" name="id_order"/>
@@ -423,4 +423,5 @@
 	</form>
 {else}
 <p><img src="{$img_dir}icon/infos.gif" alt="" class="icon" />&nbsp;{l s='You cannot return merchandise with a guest account'}</p>
+{/if}
 {/if}

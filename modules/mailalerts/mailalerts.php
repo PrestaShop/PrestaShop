@@ -257,6 +257,21 @@ class MailAlerts extends Module
 		</form>';
 	}
 
+	public function getAllMessages($id)
+	{
+		$messages = Db::getInstance()->executeS('
+			SELECT `message`
+			FROM `'._DB_PREFIX_.'message`
+			WHERE `id_order` = '.(int)$id.'
+			ORDER BY `id_message` ASC
+		');
+		$result = array();
+		foreach ($messages as $message) {
+			$result[] = $message['message'];
+		}
+		return implode('<br/>', $result);
+	}
+
 	public function hookActionValidateOrder($params)
 	{
 		if (!$this->_merchant_order || empty($this->_merchant_mails))
@@ -274,7 +289,7 @@ class MailAlerts extends Module
 		$invoice = new Address((int)$order->id_address_invoice);
 		$order_date_text = Tools::displayDate($order->date_add, (int)$id_lang);
 		$carrier = new Carrier((int)$order->id_carrier);
-		$message = $order->getFirstMessage();
+		$message = $this->getAllMessages($order->id);
 
 		if (!$message || empty($message))
 			$message = $this->l('No message');
@@ -437,16 +452,20 @@ class MailAlerts extends Module
 	public function hookActionUpdateQuantity($params)
 	{
 		$id_product = (int)$params['id_product'];
+		$product = new Product($id_product);
+		$product_has_attributes = $product->hasAttributes();
 		$id_product_attribute = (int)$params['id_product_attribute'];
 		$quantity = (int)$params['quantity'];
 		$context = Context::getContext();
 		$id_shop = (int)$context->shop->id;
 		$id_lang = (int)$context->language->id;
 		$product = new Product($id_product, true, $id_lang, $id_shop, $context);
-		$configuration = Configuration::getMultiple(array('MA_LAST_QTIES', 'PS_STOCK_MANAGEMENT', 'PS_SHOP_EMAIL', 'PS_SHOP_NAME'), $id_lang, null, $id_shop);
+		$configuration = Configuration::getMultiple(array('MA_LAST_QTIES', 'PS_STOCK_MANAGEMENT', 'PS_SHOP_EMAIL', 'PS_SHOP_NAME'), null, null, $id_shop);
 		$ma_last_qties = (int)$configuration['MA_LAST_QTIES'];
-
-		if ($product->active == 1 && (int)$quantity <= $ma_last_qties && !(!$this->_merchant_oos || empty($this->_merchant_mails)) && $configuration['PS_STOCK_MANAGEMENT'])
+		
+		$check_oos = ($product_has_attributes && $id_product_attribute) || (!$product_has_attributes && !$id_product_attribute);
+		
+		if ($check_oos && $product->active == 1 && (int)$quantity <= $ma_last_qties && !(!$this->_merchant_oos || empty($this->_merchant_mails)) && $configuration['PS_STOCK_MANAGEMENT'])
 		{
 			$iso = Language::getIsoById($id_lang);
 			$product_name = Product::getProductName($id_product, $id_product_attribute, $id_lang);

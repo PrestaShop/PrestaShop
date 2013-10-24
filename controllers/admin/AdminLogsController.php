@@ -35,7 +35,7 @@ class AdminLogsControllerCore extends AdminController
 
 		$this->fields_list = array(
 			'id_log' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'employee' => array('title' => $this->l('Employee'), 'align' => 'center', 'width' => 100),
+			'employee' => array('title' => $this->l('Employee'), 'align' => 'center', 'width' => 100, 'havingFilter' => true),
 			'severity' => array('title' => $this->l('Severity (1-4)'), 'align' => 'center', 'width' => 50),
 			'message' => array('title' => $this->l('Message')),
 			'object_type' => array('title' => $this->l('Object type'), 'width' => 75),

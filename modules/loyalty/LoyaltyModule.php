@@ -85,9 +85,12 @@ class LoyaltyModule extends ObjectModel
 		$total = 0;
 		if (Validate::isLoadedObject($cart))
 		{
-			$context = Context::getContext();
+			$currentContext = Context::getContext();
+			$context = clone $currentContext;
 			$context->cart = $cart;
-			$context->customer = new Customer($context->cart->id_customer);
+			// if customer is logged we do not recreate it
+			if(!$context->customer->isLogged(true))
+				$context->customer = new Customer($context->cart->id_customer);
 			$context->language = new Language($context->cart->id_lang);
 			$context->shop = new Shop($context->cart->id_shop);
 			$context->currency = new Currency($context->cart->id_currency, null, $context->shop->id);
@@ -115,7 +118,11 @@ class LoyaltyModule extends ObjectModel
 				$total += ($taxesEnabled == PS_TAX_EXC ? $product['price'] : $product['price_wt'])* (int)($product['cart_quantity']);
 			}
 			foreach ($cart->getCartRules(false) AS $cart_rule)
-				$total -= $cart_rule['value_real'];
+				if ($taxesEnabled == PS_TAX_EXC)
+					$total -= $cart_rule['value_tax_exc'];
+				else
+					$total -= $cart_rule['value_real'];
+				
 		}
 
 		return self::getNbPointsByPrice($total);

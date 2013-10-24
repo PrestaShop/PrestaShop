@@ -713,7 +713,7 @@ class ProductComments extends Module
 			'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
 			'criterions' => ProductCommentCriterion::getByProduct((int)Tools::getValue('id_product'), $this->context->language->id),
 			'action_url' => '',
-			'averageTotal' => (int)$average['grade'],
+			'averageTotal' => round($average['grade']),
 			'too_early' => ($customerComment && (strtotime($customerComment['date_add']) + Configuration::get('PRODUCT_COMMENTS_MINIMAL_TIME')) > time()),
 			'nbComments' => (int)(ProductComment::getCommentNumber((int)Tools::getValue('id_product')))
 		));
@@ -755,7 +755,8 @@ class ProductComments extends Module
 			'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
 			'nbComments' => (int)ProductComment::getCommentNumber((int)Tools::getValue('id_product')),
 			'productcomments_controller_url' => $this->context->link->getModuleLink('productcomments'),
-			'productcomments_url_rewriting_activated' => Configuration::get('PS_REWRITING_SETTINGS', 0)
+			'productcomments_url_rewriting_activated' => Configuration::get('PS_REWRITING_SETTINGS', 0),
+			'moderation_active' => (int)Configuration::get('PRODUCT_COMMENTS_MODERATE')
 		));
 
 		$this->context->controller->pagination((int)ProductComment::getCommentNumber((int)Tools::getValue('id_product')));

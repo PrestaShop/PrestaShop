@@ -65,6 +65,9 @@ class FrontControllerCore extends Controller
 
 		parent::__construct();
 
+		if (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE'))
+			$this->ssl = true;
+
 		if (isset($useSSL))
 			$this->ssl = $useSSL;
 		else
@@ -144,8 +147,6 @@ class FrontControllerCore extends Controller
 		// Init cookie language
 		// @TODO This method must be moved into switchLanguage
 		Tools::setCookieLanguage($this->context->cookie);
-		
-		$currency = Tools::setCurrency($this->context->cookie);
 
 		$protocol_link = (Configuration::get('PS_SSL_ENABLED') || Tools::usingSecureMode()) ? 'https://' : 'http://';
 		$useSSL = ((isset($this->ssl) && $this->ssl && Configuration::get('PS_SSL_ENABLED')) || Tools::usingSecureMode()) ? true : false;
@@ -166,6 +167,8 @@ class FrontControllerCore extends Controller
 		if (Configuration::get('PS_GEOLOCATION_ENABLED'))
 			if (($newDefault = $this->geolocationManagement($this->context->country)) && Validate::isLoadedObject($newDefault))
 				$this->context->country = $newDefault;
+
+		$currency = Tools::setCurrency($this->context->cookie);
 
 		if (isset($_GET['logout']) || ($this->context->customer->logged && Customer::isBanned($this->context->customer->id)))
 		{
@@ -248,6 +251,8 @@ class FrontControllerCore extends Controller
 			$this->context->cart = $cart;
 			CartRule::autoAddToCart($this->context);
 		}
+		else
+			$this->context->cart = $cart;	
 
 		/* get page name to display it in body id */
 
@@ -322,7 +327,7 @@ class FrontControllerCore extends Controller
 			'currencies' => Currency::getCurrencies(),
 			'languages' => $languages,
 			'meta_language' => implode('-', $meta_language),
-			'priceDisplay' => Product::getTaxCalculationMethod(),
+			'priceDisplay' => Product::getTaxCalculationMethod((int)$this->context->cookie->id_customer),
 			'add_prod_display' => (int)Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
 			'shop_name' => Configuration::get('PS_SHOP_NAME'),
 			'roundMode' => (int)Configuration::get('PS_PRICE_ROUND_MODE'),
@@ -575,6 +580,9 @@ class FrontControllerCore extends Controller
 				header('HTTP/1.1 503 temporarily overloaded');
 				
 				$this->context->smarty->assign($this->initLogoAndFavicon());
+				$this->context->smarty->assign(array(
+					'HOOK_MAINTENANCE' => Hook::exec('displayMaintenance', array()),
+				));
 
 				$template_dir = ($this->context->getMobileDevice() == true ? _PS_THEME_MOBILE_DIR_ : _PS_THEME_DIR_);
 				$this->smartyOutputContent($template_dir.'maintenance.tpl');
@@ -597,7 +605,7 @@ class FrontControllerCore extends Controller
 		if (!$canonical_url || !Configuration::get('PS_CANONICAL_REDIRECT') || strtoupper($_SERVER['REQUEST_METHOD']) != 'GET' || Tools::getValue('live_edit'))
 			return;
 
-		$match_url = (($this->ssl && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+		$match_url = (Configuration::get('PS_SSL_ENABLED') && ($this->ssl || Configuration::get('PS_SSL_ENABLED_EVERYWHERE')) ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 		$match_url = rawurldecode($match_url);
 		if (!preg_match('/^'.Tools::pRegexp(rawurldecode($canonical_url), '/').'([&?].*)?$/', $match_url))
 		{
@@ -667,6 +675,7 @@ class FrontControllerCore extends Controller
 						}
 					}
 				}
+
 				if (isset($this->context->cookie->iso_code_country) && $this->context->cookie->iso_code_country && !Validate::isLanguageIsoCode($this->context->cookie->iso_code_country))
 					$this->context->cookie->iso_code_country = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
 				if (isset($this->context->cookie->iso_code_country) && ($id_country = Country::getByIso(strtoupper($this->context->cookie->iso_code_country))))
