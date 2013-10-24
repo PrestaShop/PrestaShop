@@ -85,24 +85,7 @@
 			if ($(this).val() != shipping_price_selected_carrier)
 				changed_shipping_price = true;
 		});
-		$('#show_old_carts').click(function() {
-			if ($('#old_carts_orders:visible').length == 0)
-			{
-				//$(this).html(txt_hide_carts);
-				$('#old_carts_orders').slideDown('slow');
-			}
-			else
-			{
-				//$(this).html(txt_show_carts);
-				$('#old_carts_orders').slideUp('slow');
-			}
-			return false;
-		});
-		$('#send_email_to_customer').click(function(){
-			sendMailToCustomer();
-			return false;
-		});
-		//$('#show_old_carts').click();
+
 		$('#payment_module_name').change();
 		$.ajaxSetup({ type:"post" });
 		$("#voucher").autocomplete('{$link->getAdminLink('AdminCartRules')|addslashes}', {
@@ -156,10 +139,9 @@
 			useCart($(this).attr('rel'));
 			return false;
 		});
-		$('#free_shipping').click(function() {
-			var free_shipping = 0;
-			if (this.checked)
-				free_shipping = 1;
+
+		$('input:radio[name="free_shipping"]').on('change',function() {
+			var free_shipping = $('input[name=free_shipping]:checked').val();
 			$.ajax({
 				type:"POST",
 				url: "{$link->getAdminLink('AdminCarts')|addslashes}",
@@ -242,6 +224,17 @@
 		});
 		resetBind();
 
+		$('#customer').focus();
+
+		$('#submitAddProduct').on('click',function(){
+			addProduct();
+		});
+
+		$('#send_email_to_customer').on('click',function(){
+			sendMailToCustomer();
+			return false;
+		});
+
 		$('#products_found').hide();
 		$('#carts').hide();
 
@@ -260,10 +253,7 @@
 			$('#search-customer-form-group').show();
 			$(this).blur();
 		});
-
 	});
-
-	
 
 	function resetBind()
 	{
@@ -476,7 +466,7 @@
 						html += '<span class="text-muted">'+((this.birthday != '0000-00-00') ? this.birthday : '')+'</span><br/>';
 						html += '<div class="panel-footer">';
 						html += '<a href="{$link->getAdminLink('AdminCustomers')}&id_customer='+this.id_customer+'&viewcustomer&liteDisplaying=1" class="btn btn-default fancybox"><i class="icon-search"></i> {l s='Details'}</a>';
-						html += '<button type="button" data-customer="'+this.id_customer+'" class="setup-customer btn btn-default pull-right"><i class="icon-ok"></i> {l s='Choose'}</button>';
+						html += '<button type="button" data-customer="'+this.id_customer+'" class="setup-customer btn btn-default pull-right"><i class="icon-arrow-right"></i> {l s='Choose'}</button>';
 						html += '</div>';
 						html += '</div>';
 						html += '</div>';
@@ -527,9 +517,9 @@
 						html_carts += '<td>'+this.id_cart+'</td>';
 						html_carts += '<td>'+this.date_add+'</td>';
 						html_carts += '<td>'+this.total_price+'</td>';
-						html_carts += '<td>';
-						html_carts += '<a title="{l s='View this cart'}" class="fancybox btn btn-default" href="index.php?tab=AdminCarts&id_cart='+this.id_cart+'&viewcart&token={getAdminToken tab='AdminCarts'}&liteDisplaying=1#"><i class="icon-search"></i></a>';
-						html_carts += '&nbsp;<a href="#" title="{l s='Use this cart'}" class="use_cart btn btn-default" rel="'+this.id_cart+'"><i class="icon-copy"></i></a>';
+						html_carts += '<td class="text-right">';
+						html_carts += '<a title="{l s='View this cart'}" class="fancybox btn btn-default" href="index.php?tab=AdminCarts&id_cart='+this.id_cart+'&viewcart&token={getAdminToken tab='AdminCarts'}&liteDisplaying=1#"><i class="icon-search"></i>&nbsp;{l s="Details"}</a>';
+						html_carts += '&nbsp;<a href="#" title="{l s='Use this cart'}" class="use_cart btn btn-default" rel="'+this.id_cart+'"><i class="icon-arrow-right"></i>&nbsp;{l s="Utiliser"}</a>';
 						html_carts += '</td>';
 						html_carts += '</tr>';
 					});
@@ -537,9 +527,9 @@
 					$.each(res.orders, function() {
 						html_orders += '<tr>';
 						html_orders += '<td>'+this.id_order+'</td><td>'+this.date_add+'</td><td>'+(this.nb_products ? this.nb_products : '0')+'</td><td>'+this.total_paid_real+'</span></td><td>'+this.payment+'</td><td>'+this.order_state+'</td>';
-						html_orders += '<td>';
-						html_orders += '<a href="{$link->getAdminLink('AdminOrders')}&id_order='+this.id_order+'&vieworder&liteDisplaying=1#" title="{l s='View this order'}" class="fancybox btn btn-default"><i class="icon-search"></i></a>';
-						html_orders += '&nbsp;<a href="#" "title="{l s='Duplicate this order'}" class="duplicate_order btn btn-default" rel="'+this.id_order+'"><i class="icon-copy"></i></a>';
+						html_orders += '<td class="text-right">';
+						html_orders += '<a href="{$link->getAdminLink('AdminOrders')}&id_order='+this.id_order+'&vieworder&liteDisplaying=1#" title="{l s='View this order'}" class="fancybox btn btn-default"><i class="icon-search"></i>&nbsp;{l s="Details"}</a>';
+						html_orders += '&nbsp;<a href="#" "title="{l s='Duplicate this order'}" class="duplicate_order btn btn-default" rel="'+this.id_order+'"><i class="icon-arrow-right"></i>&nbsp;{l s="Utiliser"}</a>';
 						html_orders += '</td>';
 						html_orders += '</tr>';
 					});
@@ -603,7 +593,7 @@
 				if(res.found)
 				{
 					if (!customization_errors)
-						$('#products_err').hide();
+						$('#products_err').addClass('hide');
 					else
 						customization_errors = false;
 					$('#products_found').show();
@@ -660,7 +650,7 @@
 				{
 					$('#products_found').hide();
 					$('#products_err').html('{l s='No products found'}');
-					$('#products_err').show();
+					$('#products_err').removeClass('hide');
 				}
 				resetBind();
 			}
@@ -699,10 +689,10 @@
 			var id_product = Number(this.id_product);
 			var id_product_attribute = Number(this.id_product_attribute);
 			cart_quantity[Number(this.id_product)+'_'+Number(this.id_product_attribute)+'_'+Number(this.id_customization)] = this.cart_quantity;
-			cart_content += '<tr><td><img src="'+this.image_link+'" title="'+this.name+'" /></td><td>'+this.name+'<br />'+this.attributes_small+'</td><td>'+this.reference+'</td><td><input type="text" size="7" rel="'+this.id_product+'_'+this.id_product_attribute+'" class="product_unit_price" value="' + formatCurrency(parseFloat(this.price.replace(',', '.')), currency_format, currency_sign, currency_blank) + '" /></td><td>';
-			cart_content += (!this.id_customization ? '<div style="float:left;"><a href="#" class="increaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" ><i class="icon-caret-up"></i></a><br /><a href="#" class="decreaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'"><i class="icon-caret-down"></i></a></div>' : '');
-			cart_content += (!this.id_customization ? '<div style="float:left;"><input type="text" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" class="cart_quantity" size="2" value="'+this.cart_quantity+'" />' : '');
-			cart_content += (!this.id_customization ? '<a href="#" class="delete_product btn btn-default" rel="delete_'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" ><i class="icon-remove text-danger"></i></a></div>' : '');
+			cart_content += '<tr><td><img src="'+this.image_link+'" title="'+this.name+'" /></td><td>'+this.name+'<br />'+this.attributes_small+'</td><td>'+this.reference+'</td><td><input type="text" rel="'+this.id_product+'_'+this.id_product_attribute+'" class="product_unit_price" value="' + formatCurrency(parseFloat(this.price.replace(',', '.')), currency_format, currency_sign, currency_blank) + '" /></td><td>';
+			cart_content += (!this.id_customization ? '<div class="input-group fixed-width-md"><div class="input-group-btn"><a href="#" class="btn btn-default increaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" ><i class="icon-caret-up"></i></a><a href="#" class="btn btn-default decreaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'"><i class="icon-caret-down"></i></a></div>' : '');
+			cart_content += (!this.id_customization ? '<input type="text" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" class="cart_quantity" value="'+this.cart_quantity+'" />' : '');
+			cart_content += (!this.id_customization ? '<div class="input-group-btn"><a href="#" class="delete_product btn btn-default" rel="delete_'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" ><i class="icon-remove text-danger"></i></a></div></div>' : '');
 			cart_content += '</td><td>' + formatCurrency(parseFloat(this.total.replace(',', '.')), currency_format, currency_sign, currency_blank) + '</td></tr>';
 			
 			if (this.id_customization && this.id_customization != 0)
@@ -724,10 +714,10 @@
 						});
 					}
 			cart_content += '<tr><td></td><td>'+customized_desc+'</td><td></td><td></td><td>';
-			cart_content += '<div style="float:left;"><a href="#" class="increaseqty_product" rel="'+id_product+'_'+id_product_attribute+'_'+id_customization+'" ><i class="icon-caret-up"></i></a><br /><a href="#" class="decreaseqty_product" rel="'+id_product+'_'+id_product_attribute+'_'+id_customization+'"><i class="icon-caret-down"></i></a></div>';
-			cart_content += '<div style="float:left;"><input type="text" rel="'+id_product+'_'+id_product_attribute+'_'+id_customization +'" class="cart_quantity" size="2" value="'+this.quantity+'" />';
-			cart_content += '<a href="#" class="delete_product btn btn-default" rel="delete_'+id_product+'_'+id_product_attribute+'_'+id_customization+'" ><i class="icon-remove"></i></a>';
-			cart_content += '</div></td><td></td></tr>';
+			cart_content += '<div class="input-group fixed-width-md"><a href="#" class="btn btn-default increaseqty_product" rel="'+id_product+'_'+id_product_attribute+'_'+id_customization+'" ><i class="icon-caret-up"></i></a><br /><a href="#" class="btn btn-default decreaseqty_product" rel="'+id_product+'_'+id_product_attribute+'_'+id_customization+'"><i class="icon-caret-down"></i></a></div>';
+			cart_content += '<input type="text" rel="'+id_product+'_'+id_product_attribute+'_'+id_customization +'" class="cart_quantity" value="'+this.quantity+'" />';
+			cart_content += '<div class="input-group-btn"><a href="#" class="delete_product btn btn-default" rel="delete_'+id_product+'_'+id_product_attribute+'_'+id_customization+'" ><i class="icon-remove"></i></a>';
+			cart_content += '</div></div></td><td></td></tr>';
 				});
 			}
 		});
@@ -744,7 +734,7 @@
 		var vouchers_html = '';
 		if (typeof(vouchers) == 'object')
 			$.each(vouchers, function(){
-				vouchers_html += '<tr><td>'+this.name+'</td><td>'+this.description+'</td><td>'+this.value_real+'</td><td><a href="#" class="btn btn-default delete_discount" rel="'+this.id_discount+'"><i class="icon-remove"></i></a> {l s='Delete'}</td></tr>';
+				vouchers_html += '<tr><td>'+this.name+'</td><td>'+this.description+'</td><td>'+this.value_real+'</td><td class="text-right"><a href="#" class="btn btn-default delete_discount" rel="'+this.id_discount+'"><i class="icon-remove text-danger"></i>&nbsp;{l s='Delete'}</a></td></tr>';
 			});
 		$('#voucher_list tbody').html($.trim(vouchers_html));
 		if ($('#voucher_list tbody').html().length == 0)
@@ -787,7 +777,7 @@
 		if (jsonSummary.free_shipping == 1)
 			$('#free_shipping').attr('checked', true);
 		else
-			$('#free_shipping').removeAttr('checked');
+			$('#free_shipping_off').attr('checked', true);
 
 		$('#gift_message').html(jsonSummary.cart.gift_message);
 		if (!changed_shipping_price)
@@ -840,10 +830,10 @@
 					$.each(res.errors, function() {
 						errors += this + '<br />';
 					});
-					$('#products_err').show();
+					$('#products_err').removeClass('hide');
 				}
 				else
-					$('#products_err').hide();
+					$('#products_err').addClass('hide');
 				$('#products_err').html(errors);
 			}
 		});
@@ -860,10 +850,10 @@
 		var id_product = $('#id_product option:selected').val();
 		$('#products_found #customization_list').contents().find('#customization_'+id_product).submit();
 		if (customization_errors)
-			$('#products_err').show();
+			$('#products_err').removeClass('hide');
 		else
 		{
-			$('#products_err').hide();
+			$('#products_err').addClass('hide');
 			updateQty(id_product, $('#ipa_'+id_product+' option:selected').val(), 0, $('#qty').val());
 		}
 	}
@@ -958,9 +948,9 @@
 			success : function(res)
 			{
 				if (res.errors)
-					$('#send_email_feedback').removeClass('conf').addClass('error');
+					$('#send_email_feedback').removeClass('hide').removeClass('alert-success').addClass('alert-danger');
 				else
-					$('#send_email_feedback').removeClass('error').addClass('conf');
+					$('#send_email_feedback').removeClass('hide').removeClass('alert-danger').addClass('alert-success');
 				$('#send_email_feedback').html(res.result);
 			}
 		});
@@ -1049,14 +1039,15 @@
 
 <div class="leadin">{block name="leadin"}{/block}</div>
 
-<form action="" method="" class="form-horizontal">
-	<div class="panel" id="customer_part">
+
+	<div class="panel form-horizontal" id="customer_part">
+
 		<h3>
 			<i class="icon-user"></i>
 			{l s='Customer'}
 		</h3>
 
-		<div id="search-customer-form-group" class="form-group">
+		<div id="search-customer-form-group" class="form-group ">
 			<label class="control-label col-lg-3">
 				<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Search a customer by typping the first letters of his/her name'}">
 					{l s='Search customers'}
@@ -1088,37 +1079,26 @@
 		</div>
 
 		<div id="carts">
-			<!-- <a href="#" id="show_old_carts" class="btn btn-default"><i class="icon-carret-down"></i>&nbsp;{l s='Carts and Orders'}</a> -->
+			<button type="button" id="show_old_carts" class="btn btn-default pull-right" data-toggle="collapse" data-target="#old_carts_orders">
+				<i class="icon-caret-down"></i>
+			</button>
+
 			<ul id="old_carts_orders_navtab" class="nav nav-tabs">
 				<li class="active">
-					<a href="#nonOrderedCarts" data-toggle="tab">
-						<i class="icon-shopping-cart"></i>
-						{l s='Carts'}
-					</a>
-				</li>
-				<li>
 					<a href="#lastOrders" data-toggle="tab">
 						<i class="icon-credit-card"></i>
 						{l s='Orders'}
 					</a>
 				</li>
+				<li>
+					<a href="#nonOrderedCarts" data-toggle="tab">
+						<i class="icon-shopping-cart"></i>
+						{l s='Carts'}
+					</a>
+				</li>
 			</ul>
-			<div id="old_carts_orders" class="tab-content panel">
-				<div id="nonOrderedCarts" class="tab-pane active">
-					<table class="table">
-						<thead>
-							<tr>
-								<th><span class="title_box">{l s='ID'}</span></th>
-								<th><span class="title_box">{l s='Date'}</span></th>
-								<th><span class="title_box">{l s='Total'}</span></th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody>
-						</tbody>
-					</table>
-				</div>
-				<div id="lastOrders" class="tab-pane">
+			<div id="old_carts_orders" class="tab-content panel collapse in">
+				<div id="lastOrders" class="tab-pane active">
 					<table class="table">
 						<thead>
 							<tr>
@@ -1135,10 +1115,24 @@
 						</tbody>
 					</table>
 				</div>
+				<div id="nonOrderedCarts" class="tab-pane">
+					<table class="table">
+						<thead>
+							<tr>
+								<th><span class="title_box">{l s='ID'}</span></th>
+								<th><span class="title_box">{l s='Date'}</span></th>
+								<th><span class="title_box">{l s='Total'}</span></th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>
-</form>
+
 
 <form class="form-horizontal" action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&submitAdd{$table}=1" method="post" autocomplete="off">
 	<div class="panel" id="products_part" style="display:none;">
@@ -1195,12 +1189,14 @@
 
 			<div class="form-group">
 				<div class="col-lg-9 col-lg-offset-3">
-					<input type="submit" onclick="addProduct();return false;" class="btn btn-default" id="submitAddProduct" value="{l s='Add to cart'}"/>
+					<button type="button" class="btn btn-default" id="submitAddProduct" />
+					<i class="icon-ok text-success"></i>
+					{l s='Add to cart'}
 				</div>
 			</div>
 		</div>
 
-		<div id="products_err" class="alert alert-warning" style="display:none;"></div>
+		<div id="products_err" class="hide alert alert-danger"></div>
 		
 		<hr/>
 
@@ -1319,7 +1315,9 @@
 					<i class="icon-truck"></i>
 					{l s='Delivery'}
 				</h4>
-				<select id="id_address_delivery" name="id_address_delivery"></select>
+				<div class="row-margin-bottom">
+					<select id="id_address_delivery" name="id_address_delivery"></select>
+				</div>
 				<div class="well">
 					<div id="address_delivery_detail"></div>
 				</div>
@@ -1329,7 +1327,9 @@
 					<i class="icon-file-text"></i>
 					{l s='Invoice'}
 				</h4>
-				<select id="id_address_invoice" name="id_address_invoice"></select>
+				<div class="row-margin-bottom">
+					<select id="id_address_invoice" name="id_address_invoice"></select>
+				</div>
 				<div class="well">
 					<div id="address_invoice_detail"></div>
 				</div>
@@ -1355,7 +1355,7 @@
 				<label class="control-label col-lg-3">
 					{l s='Delivery option'} 
 				</label>
-				<div class="col-lg-6">
+				<div class="col-lg-9">
 					<select name="delivery_option" id="delivery_option">
 					</select>
 				</div>
@@ -1364,18 +1364,28 @@
 				<label class="control-label col-lg-3" for="shipping_price">
 					{l s='Shipping price:'}
 				</label>
-				<div class="col-lg-6">
-					<span id="shipping_price" class="form-static-control" name="shipping_price"></span>
+				<div class="col-lg-9">
+					<p id="shipping_price" class="form-control-static" name="shipping_price"></p>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="control-label col-lg-3" for="free_shipping">
 					{l s='Free shipping'}
 				</label>
-				<div class="col-lg-6">
-					<div class="checkbox">
-						<input type="checkbox" id="free_shipping" name="free_shipping" value="1" />
-					</div>
+				<div class="input-group col-lg-3">
+					<span class="switch prestashop-switch">
+						<input type="radio" name="free_shipping" id="free_shipping" value="1">
+						<label for="free_shipping" class="radioCheck">
+							<i class="icon-check-sign text-success"></i>
+							{l s='yes'}
+						</label>
+						<input type="radio" name="free_shipping" id="free_shipping_off" value="0" checked="checked">
+						<label for="free_shipping_off" class="radioCheck">
+							<i class="icon-ban-circle text-danger"></i>
+							{l s='No'}
+						</label>
+						<span class="slide-button btn btn-default"></span>
+					</span>
 				</div>
 			</div>
 
@@ -1414,33 +1424,45 @@
 			{l s='Summary'}
 		</h3>
 
-		<div id="send_email_feedback" class="alert alert-warning"></div>
+		<div id="send_email_feedback" class="hide alert"></div>
 
 		<div id="cart_summary" class="panel row-margin-bottom text-center">
 			<div class="row">
 				<div class="col-lg-2">
-					<span>{l s='Total products:'}</span><br/>
-					<span id="total_products" class="size_l"></span>
+					<div class="data-focus">
+						<span>{l s='Total products:'}</span><br/>
+						<span id="total_products" class="size_l text-success"></span>
+					</div>
 				</div>
 				<div class="col-lg-2">
-					<span>{l s='Total vouchers:'}</span><br/>
-					<span id="total_vouchers" class="size_l"></span>
+					<div class="data-focus">
+						<span>{l s='Total vouchers:'}</span><br/>
+						<span id="total_vouchers" class="size_l text-danger"></span>
+					</div>
 				</div>
 				<div class="col-lg-2">
-					<span>{l s='Total shipping:'}</span><br/>
-					<span id="total_shipping" class="size_l"></span>
+					<div class="data-focus">
+						<span>{l s='Total shipping:'}</span><br/>
+						<span id="total_shipping" class="size_l"></span>
+					</div>
 				</div>
 				<div class="col-lg-2">
-					<span>{l s='Total taxes:'}</span><br/>
-					<span id="total_taxes" class="size_l"></span>
+					<div class="data-focus">
+						<span>{l s='Total taxes:'}</span><br/>
+						<span id="total_taxes" class="size_l"></span>
+					</div>
 				</div>
 				<div class="col-lg-2">
-					<span>{l s='Total without taxes:'}</span><br/>
-					<span id="total_without_taxes" class="size_l"></span>
+					<div class="data-focus">
+						<span>{l s='Total without taxes:'}</span><br/>
+						<span id="total_without_taxes" class="size_l"></span>
+					</div>
 				</div>
 				<div class="col-lg-2">
-					<span>{l s='Total with taxes'}</span><br/>
-					<span id="total_with_taxes" class="size_l"></span>
+					<div class="data-focus data-focus-primary">
+						<span>{l s='Total with taxes'}</span><br/>
+						<span id="total_with_taxes" class="size_l"></span>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -1456,7 +1478,7 @@
 
 				<div class="form-group">
 					<div class="col-lg-9 col-lg-offset-3">
-						<a href="#" id="send_email_to_customer" class="btn btn-default">
+						<a href="javascript:void(0);" id="send_email_to_customer" class="btn btn-default">
 							<i class="icon-credit-card"></i>
 							{l s='Send an email to the customer with the link to process the payment.'}
 						</a>
