@@ -153,12 +153,7 @@ INSERT INTO `PREFIX_hook_module_exceptions` (`id_shop`, `id_module`, `id_hook`, 
 		UNION SELECT 'orderfollow' as page
 		UNION SELECT 'orderslip' as page
 		UNION SELECT 'discount' as page
-		UNION SELECT '' as page
-		UNION SELECT '' as page
-		UNION SELECT '' as page
-		UNION SELECT '' as page
-		UNION SELECT '' as page
-		UNION SELECT '' as page
+		UNION SELECT 'product' as page
 	) pages
 	WHERE id_hook = @id_hook
 );

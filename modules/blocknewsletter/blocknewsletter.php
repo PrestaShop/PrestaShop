@@ -61,8 +61,7 @@ class Blocknewsletter extends Module
 
 	public function install()
 	{
-		if (parent::install() == false || $this->registerHook('leftColumn') == false || $this->registerHook('header') == false
-			|| $this->registerHook('actionCustomerAccountAdd') == false)
+		if (!parent::install() || !$this->registerHook(array('header', 'footer', 'actionCustomerAccountAdd')))
 			return false;
 
 		Configuration::updateValue('NW_SALT', Tools::passwdGen(16));
@@ -83,9 +82,8 @@ class Blocknewsletter extends Module
 
 	public function uninstall()
 	{
-		if (!parent::uninstall())
-			return false;
-		return Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'newsletter');
+		Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'newsletter');
+		return parent::uninstall();
 	}
 
 	public function getContent()

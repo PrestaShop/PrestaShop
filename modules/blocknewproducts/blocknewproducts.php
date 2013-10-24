@@ -105,7 +105,9 @@ class BlockNewProducts extends Module
 
 	protected function getCacheId($name = null)
 	{
-		return parent::getCacheId('blocknewproducts|'.date('Ymd'));
+		if ($name === null)
+			$name = 'blocknewproducts';
+		return parent::getCacheId($name.'|'.date('Ymd'));
 	}
 
 	public function hookLeftColumn($params)
@@ -125,7 +127,7 @@ class BlockNewProducts extends Module
 
 	public function hookHeader($params)
 	{
-		$this->context->controller->addCSS(($this->_path).'blocknewproducts.css', 'all');
+		$this->context->controller->addCSS($this->_path.'blocknewproducts.css', 'all');
 	}
 
 	public function hookAddProduct($params)
