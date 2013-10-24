@@ -31,7 +31,6 @@
 <div class="panel">
 	<input type="hidden" name="submitted_tabs[]" value="Informations" />
 	<h3 class="tab">{l s='Information'}</h3>
-	<div class="alert alert-info">{l s='Product global information'}</div>
 	<script type="text/javascript">
 		{if isset($PS_ALLOW_ACCENTED_CHARS_URL) && $PS_ALLOW_ACCENTED_CHARS_URL}
 			var PS_ALLOW_ACCENTED_CHARS_URL = 1;
