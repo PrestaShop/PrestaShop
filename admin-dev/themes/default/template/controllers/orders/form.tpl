@@ -718,12 +718,8 @@
 	function fixPriceFormat(price)
 	{
 		if(price.indexOf(',') > 0 && price.indexOf('.') > 0) // if contains , and .
-		{
 			if(price.indexOf(',') < price.indexOf('.')) // if , is before .
-			{
 				price = price.replace(',','');  // remove ,
-			}
-		}
 		price = price.replace(' ',''); // remove any spaces
 		price = price.replace(',','.'); // remove , if price did not cotain both , and .
 		return price;
