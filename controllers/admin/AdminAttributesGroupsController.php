@@ -584,7 +584,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	
 	protected function setTypeAttribute()
 	{
-		if (Tools::getValue('updateattribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute') || Tools::isSubmit('submitBulkdeleteattribute'))
+		if (Tools::isSubmit('updateattribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute') || Tools::isSubmit('submitBulkdeleteattribute'))
 		{
 			$this->table = 'attribute';
 			$this->className = 'Attribute';
