@@ -1,0 +1,15 @@
+
+[http://safe.shell.la/{shop_url}] 
+
+Hi {firstname} {lastname}, 
+
+Customer service - Forwarded discussion {EMPLOYEE} wanted to forward
+this discussion to you. 
+
+DISCUSSION HISTORY: {messages}
+
+{EMPLOYEE} added "{COMMENT}" 
+
+{shop_name} [http://safe.shell.la/{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

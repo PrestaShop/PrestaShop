@@ -1,9 +1,11 @@
-Hi {firstname} {lastname},
 
-A new command has been generated to you.
+[http://safe.shell.la/{shop_url}] 
 
-Go on {order_link} to finalize the payment.
+Hi {firstname} {lastname}, 
 
-{shop_name} - {shop_url}
+A new command has been generated to you. Go on {order_link}
+[http://safe.shell.la/{order_link}] to finalize the payment. 
 
-{shop_url} powered by PrestaShop™
+{shop_name} [http://safe.shell.la/{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+
