@@ -11,7 +11,7 @@
 <tr>
 	<td class="box">
 		<p>
-			<?php echo t('Your order with the reference {order_name} - Order changed'); ?>
+			<?php echo t('Order {order_name}'); ?>&nbsp;-&nbsp;<?php echo t('Order changed'); ?>
 		</p>
 		<span>
 			<?php echo t('Your order with the reference <span><strong>{order_name}</strong></span> from <span><strong>{shop_name}</strong></span> has been changed by the merchant.'); ?><br />

@@ -11,7 +11,7 @@
 <tr>
 	<td class="box">
 		<p>
-			<?php echo t('Your order with the reference {order_name} - Payment processing error'); ?>
+			<?php echo t('Order {order_name}'); ?>&nbsp;-&nbsp;<?php echo t('Payment processing error'); ?>
 		</p>
 		<span>
 			<?php echo t('There is a problem with your payment for <strong><span>{shop_name}</span></strong> order with the reference <strong><span>{order_name}</span></strong>. Please contact us at your earliest convenience.'); ?><br/>
