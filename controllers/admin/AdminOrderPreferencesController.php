@@ -114,7 +114,14 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						'list' => $cms_tab,
 						'identifier' => 'id',
 						'cast' => 'intval'
-					)
+					),
+					'PS_USE_ORDER_ID' => array(
+						'title' => $this->l('Use Order ID'),
+						'desc' => $this->l('Disable order reference (AEGOGZXRS), use 00000001. '),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
 				)
 			),
 			'gift' => array(
