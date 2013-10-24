@@ -68,6 +68,25 @@ function showOrder(mode, var_content, file)
 								$(this).val(1);
 						}
 					});
+					// The button to increment the product return value
+					$('.return_quantity_down').click(function () {
+						var $input = $(this).parent().parent().find('input');
+						var count = parseInt($input.val()) - 1;
+						count = count < 1 ? 1 : count;
+						$input.val(count);
+						$input.change();
+						return false;
+					});
+					// The button to decrement the product return value
+					$('.return_quantity_up').click(function () {
+						var maxQuantity = parseInt($(this).parent().parent().find('.order_qte_span').text());
+						var $input = $(this).parent().parent().find('input');
+						var count = parseInt($input.val()) + 1;
+						count = count > maxQuantity ? maxQuantity : count;
+						$input.val(count);
+						$input.change();
+						return false;
+					});
 				}
 				//catch the submit event of sendOrderMessage form
 				$('form#sendOrderMessage').submit(function(){
@@ -75,7 +94,6 @@ function showOrder(mode, var_content, file)
 			});
 			$(this).fadeIn('slow', function() {
 				$.scrollTo(this, 1200);
-				resizeAddressesBox();
 			});
 		});
 	});
@@ -85,14 +103,17 @@ function updateOrderLineDisplay(domCheckbox)
 {
 	var lineQuantitySpan = $(domCheckbox).parent().parent().find('.order_qte_span');
 	var lineQuantityInput = $(domCheckbox).parent().parent().find('.order_qte_input');
+	var lineQuantityButtons = $(domCheckbox).parent().parent().find('.return_quantity_up, .return_quantity_down');
 	if($(domCheckbox).is(':checked'))
 	{
 		lineQuantitySpan.hide();
 		lineQuantityInput.show();
+		lineQuantityButtons.show();
 	}
 	else
 	{
 		lineQuantityInput.hide();
+		lineQuantityButtons.hide();
 		lineQuantityInput.val(lineQuantitySpan.text());
 		lineQuantitySpan.show();
 	}

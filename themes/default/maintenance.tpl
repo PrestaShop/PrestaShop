@@ -36,19 +36,21 @@
 {/if}
 		<meta name="robots" content="{if isset($nobots)}no{/if}index,follow" />
 		<link rel="shortcut icon" href="{$favicon_url}" />
-		<link href="{$css_dir}maintenance.css" rel="stylesheet" type="text/css" />
+        <link href="{$css_dir}/bootstrap_lib/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+        <link href="{$css_dir}maintenance.css" rel="stylesheet" type="text/css" />
+        <link href='//fonts.googleapis.com/css?family=Open+Sans:600' rel='stylesheet' type='text/css' />
 	</head>
 	<body>
-		<div id="maintenance">
-			
-			 <p><img src="{$logo_url}" {if $logo_image_width}width="{$logo_image_width}"{/if} {if $logo_image_height}height="{$logo_image_height}"{/if} alt="logo" /><br /><br /></p>
-			 {$HOOK_MAINTENANCE}
-			 <p id="message">
-				{l s='In order to perform website maintenance, our online store will be temporarily offline.'}<br /><br />
+    	<div class="container">
+			<div id="maintenance">
+			 <div class="logo"><img src="{$logo_url}" {if $logo_image_width}width="{$logo_image_width}"{/if} {if $logo_image_height}height="{$logo_image_height}"{/if} alt="logo" /></div>
+             {$HOOK_MAINTENANCE}
+             <div id="message">
+             	<h1 class="maintenance-heading">{l s='Maintenance mode'}</h1>
+				{l s='In order to perform website maintenance, our online store will be temporarily offline.'}
 				{l s='We apologize for the inconvenience and ask that you please try again later.'}
-			 </p>
-
-			 <span style="clear:both;">&nbsp;</span>
+			 </div>
 		</div>
+        </div>
 	</body>
 </html>

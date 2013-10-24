@@ -24,30 +24,30 @@
 *}
 
 {capture name=path}<a href="{$link->getPageLink('authentication', true)|escape:'html'}" title="{l s='Authentication'}" rel="nofollow">{l s='Authentication'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Forgot your password'}{/capture}
-{include file="$tpl_dir./breadcrumb.tpl"}
-
-<h1>{l s='Forgot your password?'}</h1>
+<div class="box">
+<h1 class="page-subheading">{l s='Forgot your password?'}</h1>
 
 {include file="$tpl_dir./errors.tpl"}
 
 {if isset($confirmation) && $confirmation == 1}
-<p class="success">{l s='Your password has been successfully reset and a confirmation has been sent to your email address:'} {if isset($customer_email)}{$customer_email|escape:'htmlall':'UTF-8'|stripslashes}{/if}</p>
+<p class="alert alert-success">{l s='Your password has been successfully reset and a confirmation has been sent to your email address:'} {if isset($customer_email)}{$customer_email|escape:'htmlall':'UTF-8'|stripslashes}{/if}</p>
 {elseif isset($confirmation) && $confirmation == 2}
-<p class="success">{l s='A confirmation email has been sent to your address:'} {if isset($customer_email)}{$customer_email|escape:'htmlall':'UTF-8'|stripslashes}{/if}</p>
+<p class="alert alert-success">{l s='A confirmation email has been sent to your address:'} {if isset($customer_email)}{$customer_email|escape:'htmlall':'UTF-8'|stripslashes}{/if}</p>
 {else}
 <p>{l s='Please enter the email address you used to register. We will then send you a new password. '}</p>
 <form action="{$request_uri|escape:'htmlall':'UTF-8'}" method="post" class="std" id="form_forgotpassword">
 	<fieldset>
-		<p class="text">
+		<div class="form-group">
 			<label for="email">{l s='Email'}</label>
-			<input type="text" id="email" name="email" value="{if isset($smarty.post.email)}{$smarty.post.email|escape:'htmlall':'UTF-8'|stripslashes}{/if}" />
-		</p>
+			<input class="form-control" type="text" id="email" name="email" value="{if isset($smarty.post.email)}{$smarty.post.email|escape:'htmlall':'UTF-8'|stripslashes}{/if}" />
+		</div>
 		<p class="submit">
-			<input type="submit" class="button" value="{l s='Retrieve Password'}" />
+            <button type="submit" class="btn btn-default button button-medium"><span>{l s='Retrieve Password'}<i class="icon-chevron-right right"></i></span></button>
 		</p>
 	</fieldset>
 </form>
 {/if}
-<p class="clear">
-	<a href="{$link->getPageLink('authentication', true)}" title="{l s='Return to Login'}" rel="nofollow"><img src="{$img_dir}icon/my-account.gif" alt="{l s='Return to Login'}" class="icon" /></a><a href="{$link->getPageLink('authentication')|escape:'html'}" title="{l s='Back to Login'}" rel="nofollow">{l s='Back to Login'}</a>
-</p>
+</div>
+<ul class="clearfix footer_links">
+	<li><a class="btn btn-default button button-small" href="{$link->getPageLink('authentication')|escape:'html'}" title="{l s='Back to Login'}" rel="nofollow"><span><i class="icon-chevron-left"></i>{l s='Back to Login'}</span></a></li>
+</ul>

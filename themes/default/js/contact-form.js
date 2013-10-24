@@ -32,6 +32,6 @@ $(document).ready(function () {
 
 function showProductSelect(id_order)
 {
-	$('.product_select').hide().attr('disabled', 'disabled');
-	$('#'+id_order+'_order_products').show().removeAttr('disabled');
+	$('.product_select').hide().attr('disabled', 'disabled').parent('.selector').hide();
+	$('#'+id_order+'_order_products').show().removeAttr('disabled').parent('.selector').show();
 }

@@ -1,81 +1,37 @@
-#account-creation_form fieldset, fieldset.account_creation {
-	padding:0 0 15px 0;
-	border:1px solid #ccc;
-	background:#f8f8f8;
-}
-#account-creation_form h3 {
-	margin:0 0 15px 0;
-	padding:8px;
-	font-size:14px;
-	color:#fff;
-	text-transform:uppercase;
-	background:url(../img/bg_form_h3.png) repeat-x 0 0 #989898;
-}
-#center_column #account-creation_form p {margin:0; padding:0 0 10px 0}
-#account-creation_form p.required {color:#222}
-#account-creation_form p.required  sup {color:#990000}
-#account-creation_form p.radio span,
-#account-creation_form p.text label,
-#account-creation_form p.password label,
-#account-creation_form p.select label,
-#account-creation_form p.select span,
-#account-creation_form p.textarea label {
-	display:inline-block;
-	padding:6px 15px;
-	width:230px;/* 260 */
-	font-size:14px;
-	text-align:right;
-}
-#account-creation_form p.radio label {
-	float:none;
-	padding-right:10px;
-	width:auto;
-	font-size:14px;
-}
-#account-creation_form p.radio input {
-	position: relative;
-	bottom: -3px;
-}
-#account-creation_form p.checkbox label {
-	float:none;
-	width:auto;
-	font-size:12px;
-}
-#account-creation_form p.text input,
-#account-creation_form p.password input,
-#account-creation_form p.select input {
-	padding:0 5px;
-	height:22px;
-	width:360px;/* 370 */
-	border:1px solid #ccc;
-	font-size: 12px;
-	color:#666;
-}
-#account-creation_form span.inline-infos{display:inline-block;}
-#account-creation_form p.checkbox input {
-	margin-left:260px;
-}
-#account-creation_form p.select select {
-	margin-right:10px;
-	border:1px solid #ccc;
-	font-size: 12px;
-	color:#666;
-}
-#account-creation_form p.textarea textarea {
-	height:80px;
-	width:370px;
-	border:1px solid #ccc;
-	font-size: 12px;
-	color:#666;
-}
-#account-creation_form span.form_info, #account-creation_form p.inline-infos {
-	display:block;
-	margin:5px 0 0 265px!important;
-	color:#666;
-}
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
+/**********************************************************
+				Authentication Styles
+**********************************************************/
 #account-creation_form .id_state, #account-creation_form .dni, #account-creation_form .postcode {
-	display: none;
+  display: none;
 }
-#center_column #account-creation_form p.cart_navigation {
-	margin:20px 0;
+
+#create-account_form {
+  min-height: 297px;
+}
+#create-account_form p {
+  margin-bottom: 8px;
+}
+#create-account_form .form-group {
+  margin-bottom: 20px;
+}
+
+#login_form {
+  min-height: 297px;
+}
+#login_form .form-group {
+  margin-bottom: 3px;
+}
+#login_form .form-group.lost_password {
+  margin: 14px 0 15px 0;
+}
+#login_form .form-group.lost_password a {
+  text-decoration: underline;
+}
+#login_form .form-group.lost_password a:hover {
+  text-decoration: none;
+}
+
+#login_form .form-control, #create-account_form .form-control {
+  max-width: 271px;
 }

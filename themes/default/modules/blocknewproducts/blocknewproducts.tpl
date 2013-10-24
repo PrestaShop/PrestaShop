@@ -22,4 +22,4 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{include file="$tpl_dir./product-list.tpl" products=$new_products class='blocknewproducts active'}
+{include file="$tpl_dir./product-list.tpl" products=$new_products class='blocknewproducts tab-pane active'}

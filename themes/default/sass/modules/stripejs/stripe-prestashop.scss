@@ -1,0 +1,92 @@
+#stripe-payment-form {
+	line-height:20px;
+	padding-bottom:7px;
+	
+	.form-group {
+		margin-bottom:5px;
+		
+		input.stripe-card-number { width: 263px; }	
+	}
+	
+	.block-left {
+		float:left;
+		width:188px;
+		
+		.form-control {
+			width:72px;
+			float:left;
+			margin-right:10px;	
+		}
+		
+		a {margin-top:5px;}
+	}
+	
+	img.cc-icon {
+		float: left;
+		margin-right:10px;
+	}
+	.stripe-card-cvc-info { 
+		display:inline-block;
+		position: relative;
+		font-style:italic;
+		text-decoration:underline;
+		
+		&:hover {text-decoration:none;}
+	}
+	.stripe-card-expiry-year.form-control, .stripe-card-expiry-month.form-control {float:left;}
+	.stripe-card-expiry-year.form-control {width:68px;}
+	.stripe-card-expiry-month.form-control {
+		width:115px;
+		margin-right:10px;
+	}
+	.stripe-line {margin-bottom:11px;}
+	.ckeckbox {
+		margin-bottom:11px; 
+		
+		label {font-weight:normal;}}
+}
+a.stripe-card-cvc-info div.cvc-info {
+	background-color: #BDE5F8;
+	border: #00529B solid 1px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	color: #00529B!important;
+	display: none;
+	font-style: normal;
+	padding: 8px;
+	position: absolute;
+	right: -320px; top: -10px;
+	text-decoration: none;
+	width: 300px;
+}
+a.stripe-card-cvc-info:hover div.cvc-info { display: block; }
+div.cvc-info:hover { cursor: default; }
+img.disable { opacity: 0.3; }
+img.enable { opacity: 1; }
+#stripe-payment-form-cc .stripe-submit-button-cc { margin-left: 5px; }
+#stripe-payment-form-cc a { display: inline; font-size: 11px; text-decoration: underline; }
+div.stripe-payment-errors {
+	margin: 0 0 10px 0;
+	padding: 10px;
+	border: 1px solid #900;
+	font-size: 13px;
+	background: #FCC;
+	display: none;
+}
+
+div.stripe-card-deleted {
+	margin: 0 0 10px 0; 
+	padding: 10px;
+	border: 1px solid #ade27d; 
+	font-size: 13px;
+	background: #d3ffab;
+	display: none;
+	text-transform: none;
+}
+
+#stripe-translations, #stripe-ajax-loader { display: none; }
+#stripe_save_token { vertical-align: top; }
+a#stripe_error { display: none; }
+#stripe-payment-form input, #stripe-payment-form select { margin-left: 0; }
+#stripe-replace-card, #stripe-delete-card { border: none; padding: 0; cursor: pointer; }

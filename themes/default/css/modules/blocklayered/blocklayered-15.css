@@ -1,0 +1,241 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
+#enabled_filters {
+  background: #484848;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+}
+#enabled_filters span.layered_subtitle {
+  color: #fff;
+  display: block;
+  padding-bottom: 11px;
+}
+#enabled_filters li {
+  padding: 1px 0;
+  color: #9c9b9b;
+  cursor: pointer;
+  position: relative;
+}
+#enabled_filters li:hover, #enabled_filters li:hover a {
+  color: #fff;
+}
+#enabled_filters li a {
+  position: absolute;
+  top: 1px;
+  right: 0;
+  display: block;
+  cursor: pointer;
+  text-indent: 0px;
+  color: #888888;
+}
+#enabled_filters li a:before {
+  content: "";
+  display: block;
+  font-family: "FontAwesome";
+  width: 12px;
+  height: 12px;
+}
+
+#layered_block_left .layered_subtitle_heading {
+  border-bottom: 1px solid #d6d4d4;
+  padding: 0 12px 6px 0;
+  margin-bottom: 8px;
+  font-weight: bold;
+  position: relative;
+  color: #333333;
+}
+#layered_block_left .layered_subtitle_heading .layered_close {
+  position: absolute;
+  right: 0;
+  top: 4px;
+  height: 14px;
+  width: 12px;
+}
+#layered_block_left .layered_subtitle_heading .layered_close a {
+  display: block;
+  height: 14px;
+  width: 12px;
+  text-indent: -5000px;
+  position: relativee;
+  color: #d3d2d2;
+  font-size: 12px;
+  line-height: 14px;
+}
+#layered_block_left .layered_subtitle_heading .layered_close a:after {
+  content: "";
+  display: block;
+  text-indent: 0;
+  height: 14px;
+  width: 12px;
+  position: absolute;
+  top: 0px;
+  left: 0;
+  font-family: 'FontAwesome';
+  vertical-align: 1px;
+}
+#layered_block_left .layered_subtitle_heading .layered_close a:hover {
+  color: #515151;
+}
+#layered_block_left .layered_subtitle_heading .layered_close.closed a:after {
+  content: "";
+}
+
+#layered_block_left label {
+  font-weight: normal;
+}
+#layered_block_left .layered_filter_ul {
+  padding: 0 20px 5px;
+}
+#layered_block_left .layered_filter_ul li {
+  padding-bottom: 7px;
+}
+#layered_block_left .layered_filter_ul li .checker span, #layered_block_left .layered_filter_ul li .radio span {
+  top: 0;
+}
+#layered_block_left .layered_filter_ul li label {
+  margin-bottom: 0;
+}
+#layered_block_left .layered_filter_ul li label a {
+  font-weight: normal;
+}
+#layered_block_left .layered_filter_ul li label a:hover {
+  color: #333;
+}
+
+#layered_block_left ul li label {
+  cursor: pointer;
+  display: inline;
+}
+
+/* Style moved form the template to the css  */
+/******************************************************************************
+					Color List Style
+*******************************************************************************/
+#layered_block_left ul.color-group {
+  padding-top: 2px;
+  overflow: hidden;
+}
+#layered_block_left ul.color-group li {
+  width: 50%;
+  float: left;
+  line-height: 15px;
+  vertical-align: middle;
+  padding-bottom: 9px;
+}
+#layered_block_left ul.color-group li .color-option {
+  border: 1px solid #d6d4d4;
+  height: 15px;
+  margin-left: 0;
+  margin-right: 4px;
+  padding: 0;
+  width: 15px;
+  -webkit-box-shadow: white 0 0 1px 0px inset, white 0 0 0px 1px inset, white 0 0 0px 1px inset, white 0 0 1px 0px inset;
+  -moz-box-shadow: white 0 0 1px 0px inset, white 0 0 0px 1px inset, white 0 0 0px 1px inset, white 0 0 1px 0px inset;
+  box-shadow: white 0 0 1px 0px inset, white 0 0 0px 1px inset, white 0 0 0px 1px inset, white 0 0 1px 0px inset;
+}
+#layered_block_left ul.color-group li .color-option.on {
+  border-color: #000;
+}
+#layered_block_left ul.color-group li .color-option.disable {
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  -moz-opacity: 0.5;
+}
+
+#layered_block_left .nomargin a {
+  display: inline;
+}
+
+/**************************************************************************************
+					Layered Form Selects Styles
+***************************************************************************************/
+#layered_form .select {
+  max-width: 230px;
+}
+
+/**************************************************************************************
+					Range Slider Styles
+***************************************************************************************/
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+  background: #fbfbfb;
+  border-color: #d6d4d4;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  -ms-border-radius: 0px;
+  -o-border-radius: 0px;
+  border-radius: 0px;
+  width: 15px;
+  height: 15px;
+}
+.ui-state-default.ui-state-hover, .ui-widget-content .ui-state-default.ui-state-hover, .ui-widget-header .ui-state-default.ui-state-hover {
+  background: #555454;
+  border-color: #333;
+}
+
+.ui-slider .ui-slider-range {
+  background: #959595;
+  border: none;
+}
+
+.ui-corner-all {
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  -ms-border-radius: 0px;
+  -o-border-radius: 0px;
+  border-radius: 0px;
+  background: #efefef;
+  border: none;
+  height: 11px;
+}
+
+.ui-slider-horizontal .ui-slider-handle {
+  top: -0.14em;
+}
+
+.layered_price_range {
+  margin-left: 7px;
+}
+
+/**************************************************************************************
+					Range Input Styles
+***************************************************************************************/
+.layered_price_range_unit {
+  margin-right: 7px;
+}
+
+.layered_slider_container {
+  margin: 6px 0 6px 7px;
+}
+
+.layered_input_range_min, .layered_input_range_max {
+  width: 60px;
+  display: inline;
+}
+
+.layered_list_selected {
+  font-weight: bold;
+}
+
+.layered_list {
+  display: block;
+  cursor: pointer;
+}
+
+.layered_list:hover {
+  font-weight: bold;
+}
+
+.layered_ajax_loader p {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.hide-action {
+  text-align: center;
+  text-align: right;
+  display: block;
+  cursor: pointer;
+}
+
+.hide-action:hover {
+  font-weight: bold;
+}

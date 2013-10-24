@@ -25,13 +25,15 @@
 *}
 
 <!-- MODULE Block contact infos -->
-<div id="block_contact_infos">
-	<p class="title_block">{l s='Contact us' mod='blockcontactinfos'}</p>
-	<ul>
-		{if $blockcontactinfos_company != ''}<li><strong>{$blockcontactinfos_company|escape:'htmlall':'UTF-8'}</strong></li>{/if}
-		{if $blockcontactinfos_address != ''}<li><pre>{$blockcontactinfos_address|escape:'htmlall':'UTF-8'}</pre></li>{/if}
-		{if $blockcontactinfos_phone != ''}<li>{l s='Tel:' mod='blockcontactinfos'} {$blockcontactinfos_phone|escape:'htmlall':'UTF-8'}</li>{/if}
-		{if $blockcontactinfos_email != ''}<li>{l s='Email:' mod='blockcontactinfos'} {mailto address=$blockcontactinfos_email|escape:'htmlall':'UTF-8' encode="hex"}</li>{/if}
-	</ul>
-</div>
+<section id="block_contact_infos" class="footer-block col-xs-12 col-md-4">
+	<div>
+        <h4>{l s='Store Information' mod='blockcontactinfos'}</h4>
+        <ul>
+            {if $blockcontactinfos_company != ''}<li><i class="icon-map-marker"></i>{$blockcontactinfos_company|escape:'htmlall':'UTF-8'}{if $blockcontactinfos_address != ''}, {$blockcontactinfos_address|escape:'htmlall':'UTF-8'}{/if}</li>{/if}
+            {if $blockcontactinfos_phone != ''}<li><i class="icon-phone"></i>{l s='Call us now toll free:' mod='blockcontactinfos'} <span>{$blockcontactinfos_phone|escape:'htmlall':'UTF-8'}</span></li>{/if}
+            {if $blockcontactinfos_email != ''}<li><i class="icon-envelope-alt"></i>{l s='Email:' mod='blockcontactinfos'} <span>{mailto address=$blockcontactinfos_email|escape:'htmlall':'UTF-8' encode="hex"}</span></li>{/if}
+            <li><i class="icon-skype"></i>{l s='Skype:' mod='blockcontactinfos'} <span></span></li>
+        </ul>
+    </div>
+</section>
 <!-- /MODULE Block contact infos -->

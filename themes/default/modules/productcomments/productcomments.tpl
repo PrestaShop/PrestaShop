@@ -13,7 +13,7 @@
 *
 * DISCLAIMER
 *
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newersend_friend_form_content
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
@@ -39,8 +39,9 @@ var moderation_active = {$moderation_active};
 	{if $comments}
 		{foreach from=$comments item=comment}
 			{if $comment.content}
-			<div class="comment clearfix">
-				<div class="comment_author">
+			<div class="comment row">
+            
+				<div class="comment_author col-sm-2">
 					<span>{l s='Grade' mod='productcomments'}&nbsp</span>
 					<div class="star_content clearfix">
 					{section name="i" start=0 loop=5 step=1}
@@ -52,12 +53,14 @@ var moderation_active = {$moderation_active};
 					{/section}
 					</div>
 					<div class="comment_author_infos">
-						<strong>{$comment.customer_name|escape:'html':'UTF-8'}</strong><br/>
+						<strong>{$comment.customer_name|escape:'html':'UTF-8'}</strong>
 						<em>{dateFormat date=$comment.date_add|escape:'html':'UTF-8' full=0}</em>
 					</div>
 				</div>
-				<div class="comment_details">
-					<p class="title_block">{$comment.title}</p>
+                
+                
+				<div class="comment_details col-sm-10">
+					<p class="title_block"><strong>{$comment.title}</strong></p>
 					<p>{$comment.content|escape:'html':'UTF-8'|nl2br}</p>
 					<ul>
 						{if $comment.total_advice > 0}
@@ -65,7 +68,9 @@ var moderation_active = {$moderation_active};
 						{/if}
 						{if $logged == 1}
 							{if !$comment.customer_advice}
-							<li>{l s='Was this comment useful to you?' mod='productcomments'}<button class="usefulness_btn" data-is-usefull="1" data-id-product-comment="{$comment.id_product_comment}">{l s='yes' mod='productcomments'}</button><button class="usefulness_btn" data-is-usefull="0" data-id-product-comment="{$comment.id_product_comment}">{l s='no' mod='productcomments'}</button></li>
+							<li>{l s='Was this comment useful to you?' mod='productcomments'}
+                            <button class="usefulness_btn btn btn-default button button-small" data-is-usefull="1" data-id-product-comment="{$comment.id_product_comment}"><span>{l s='Yes' mod='productcomments'}</span></button>
+                            <button class="usefulness_btn btn btn-default button button-small" data-is-usefull="0" data-id-product-comment="{$comment.id_product_comment}"><span>{l s='No' mod='productcomments'}</span></button></li>
 							{/if}
 							{if !$comment.customer_report}
 							<li><span class="report_btn" data-id-product-comment="{$comment.id_product_comment}">{l s='Report abuse' mod='productcomments'}</span></li>
@@ -73,18 +78,19 @@ var moderation_active = {$moderation_active};
 						{/if}
 					</ul>
 				</div>
+                
 			</div>
 			{/if}
 		{/foreach}
         {if (!$too_early AND ($logged OR $allow_guests))}
 		<p class="align_center">
-			<a id="new_comment_tab_btn" class="open-comment-form" href="#new_comment_form">{l s='Write your review' mod='productcomments'} !</a>
+			<a id="new_comment_tab_btn" class="btn btn-default button button-small open-comment-form"  href="#new_comment_form"><span>{l s='Write your review' mod='productcomments'} !</span></a>
 		</p>
         {/if}
 	{else}
 		{if (!$too_early AND ($logged OR $allow_guests))}
 		<p class="align_center">
-			<a id="new_comment_tab_btn" class="open-comment-form" href="#new_comment_form">{l s='Be the first to write your review' mod='productcomments'} !</a>
+			<a id="new_comment_tab_btn" class="btn btn-default button button-small open-comment-form" href="#new_comment_form"><span>{l s='Be the first to write your review' mod='productcomments'} !</span></a>
 		</p>
 		{else}
 		<p class="align_center">{l s='No customer comments for the moment.' mod='productcomments'}</p>
@@ -97,8 +103,11 @@ var moderation_active = {$moderation_active};
 <div style="display: none;">
 	<div id="new_comment_form">
 		<form id="id_new_comment_form" action="#">
-			<h2 class="title">{l s='Write your review' mod='productcomments'}</h2>
-			<div class="product clearfix">
+			<h2 class="page-subheading">{l s='Write a review' mod='productcomments'}</h2>
+			
+            
+<div class="row">
+          <div class="product clearfix  col-xs-12 col-sm-6">
 				<img src="{$link->getImageLink($product->link_rewrite, $productcomment_cover, 'home_default')|escape:'html'}" height="{$homeSize.height}" width="{$homeSize.width}" alt="{$product->name|escape:html:'UTF-8'}" />
 				<div class="product_desc">
 					<p class="product_name"><strong>{$product->name}</strong></p>
@@ -106,8 +115,9 @@ var moderation_active = {$moderation_active};
 				</div>
 			</div>
 
-			<div class="new_comment_form_content">
-				<h2>{l s='Write your review' mod='productcomments'}</h2>
+
+			<div class="new_comment_form_content col-xs-12 col-sm-6">
+				<h2>{l s='Write a review' mod='productcomments'}</h2>
 
 				<div id="new_comment_form_error" class="error" style="display: none; padding: 15px 25px">
 					<ul></ul>
@@ -146,12 +156,15 @@ var moderation_active = {$moderation_active};
 					<input id="id_product_comment_send" name="id_product" type="hidden" value='{$id_product_comment_form}' />
 					<p class="fl required"><sup>*</sup> {l s='Required fields' mod='productcomments'}</p>
 					<p class="fr">
-						<button id="submitNewMessage" name="submitMessage" type="submit">{l s='Send' mod='productcomments'}</button>&nbsp;
-						{l s='or' mod='productcomments'}&nbsp;<a href="#" onclick="$.fancybox.close();">{l s='Cancel' mod='productcomments'}</a>
+						<button id="submitNewMessage" name="submitMessage" type="submit" class="btn button button-small"><span>{l s='Send' mod='productcomments'}</span></button>&nbsp;
+						{l s='or' mod='productcomments'}&nbsp;<a href="#" onclick="$.fancybox.close();" >{l s='Cancel' mod='productcomments'}</a>
 					</p>
 					<div class="clearfix"></div>
 				</div>
 			</div>
+            </div>
+            
+            
 		</form><!-- /end new_comment_form_content -->
 	</div>
 </div>

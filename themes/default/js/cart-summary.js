@@ -587,7 +587,7 @@ function updateCartSummary(json)
 	if (typeof json == 'undefined')
 		return;
 		
-	$('div.error').fadeOut();		
+	$('div.alert-danger').fadeOut();		
 
 	for (i=0;i<json.products.length;i++)
 		product_list[json.products[i].id_product + '_' + json.products[i].id_product_attribute + '_' + json.products[i].id_address_delivery] = json.products[i];
@@ -618,7 +618,7 @@ function updateCartSummary(json)
 			current_price = formatCurrency(product_list[i].price_wt, currencyFormat, currencySign, currencyBlank);
 		if (reduction && typeof(initial_price) !== 'undefined')
 			if (initial_price !== '' && product_list[i].price_without_quantity_discount > product_list[i].price)
-				initial_price_text = '<span style="text-decoration:line-through;">' + initial_price + '</span><br />';
+				initial_price_text = '<span class="old-price">' + initial_price + '</span>';
 
 		var key_for_blockcart = product_list[i].id_product + '_' + product_list[i].id_product_attribute + '_' + product_list[i].id_address_delivery;
 		var key_for_blockcart_nocustom = product_list[i].id_product + '_' + product_list[i].id_product_attribute + '_' + ((product_list[i].id_customization && product_list[i].quantity_without_customization != product_list[i].quantity)? 'nocustom' : '0') + '_' + product_list[i].id_address_delivery;
@@ -643,10 +643,8 @@ function updateCartSummary(json)
 			if (product_list[i].quantity_without_customization != product_list[i].quantity)
 				$('#total_product_price_' + key_for_blockcart_nocustom).html(formatCurrency(product_list[i].total_wt, currencyFormat, currencySign, currencyBlank));									
 		}
-
 		$('input[name=quantity_' + key_for_blockcart_nocustom + ']').val(product_list[i].id_customization? product_list[i].quantity_without_customization : product_list[i].cart_quantity);
 		$('input[name=quantity_' + key_for_blockcart_nocustom + '_hidden]').val(product_list[i].id_customization? product_list[i].quantity_without_customization : product_list[i].cart_quantity);
-
 		if (typeof(product_list[i].customizationQuantityTotal) !== 'undefined' && product_list[i].customizationQuantityTotal > 0)
 			$('#cart_quantity_custom_' + key_for_blockcart).html(product_list[i].customizationQuantityTotal);
 		nbrProducts += parseInt(product_list[i].quantity);			

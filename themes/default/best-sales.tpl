@@ -24,31 +24,29 @@
 *}
 
 {capture name=path}{l s='Top sellers'}{/capture}
-{include file="$tpl_dir./breadcrumb.tpl"}
 
-<h1>{l s='Top sellers'}</h1>
+<h1 class="page-heading product-listing">{l s='Top sellers'}</h1>
 
 {if $products}
 	<div class="content_sortPagiBar">
-		{include file="$tpl_dir./pagination.tpl"}
-
-		<div class="sortPagiBar clearfix">
+    	<div class="sortPagiBar clearfix">
 			{include file="./product-sort.tpl"}
-			{include file="./product-compare.tpl"}
 			{include file="./nbr-product-page.tpl"}
 		</div>
+    	<div class="top-pagination-content clearfix">
+        	{include file="./product-compare.tpl"}
+            {include file="$tpl_dir./pagination.tpl"}
+        </div>
 	</div>
 
 	{include file="./product-list.tpl" products=$products}
 
 	<div class="content_sortPagiBar">
-		<div class="sortPagiBar clearfix">
-			{include file="./product-sort.tpl" paginationId='bottom'}
-			{include file="./product-compare.tpl" paginationId='bottom'}
-			{include file="./nbr-product-page.tpl" paginationId='bottom'}
-		</div>
-		{include file="./pagination.tpl" paginationId='bottom'}
+        <div class="bottom-pagination-content clearfix">
+        	{include file="./product-compare.tpl"}
+			{include file="./pagination.tpl" paginationId='bottom'}
+        </div>
 	</div>
 	{else}
-	<p class="warning">{l s='No top sellers for the moment.'}</p>
+	<p class="alert alert-warning">{l s='No top sellers for the moment.'}</p>
 {/if}

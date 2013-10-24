@@ -52,7 +52,7 @@
 			{include file="./pagination.tpl"}
 			
 	{else}
-		<p class="warning">{l s='No top sellers for the moment.'}</p>
+		<p class="alert alert-warning">{l s='No top sellers for the moment.'}</p>
 	{/if}
 		{include file='./sitemap.tpl'}
 	</div><!-- #content -->

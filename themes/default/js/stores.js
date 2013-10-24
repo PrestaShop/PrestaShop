@@ -113,7 +113,7 @@ function searchLocationsNear(center)
 			createMarker(latlng, name, address, other, id_store, has_store_picture);
 			bounds.extend(latlng);
 
-			$('#stores-table tr:last').after('<tr class="node"><td class="num">'+parseInt(i + 1)+'</td><td><b>'+name+'</b>'+(has_store_picture === 1 ? '<br /><img src="'+img_store_dir+parseInt(id_store)+'-medium.jpg" alt="" />' : '')+'</td><td>'+address+(phone !== '' ? '<br /><br />'+translation_4+' '+phone : '')+'</td><td class="distance">'+distance+' '+distance_unit+'</td></tr>');
+			$('table#stores-table').find('tbody').append('<tr ><td class="num">'+parseInt(i + 1)+'</td><td class="name">'+(has_store_picture == 1 ? '<img src="'+img_store_dir+parseInt(id_store)+'-stores_default.jpg" alt="" />' : '')+'<span>'+name+'</span></td><td class="address">'+address+(phone !== '' ? ''+translation_4+' '+phone : '')+'</td><td class="distance">'+distance+' '+distance_unit+'</td></tr>');
 			$('#stores-table').show();
 		}
 
@@ -126,6 +126,7 @@ function searchLocationsNear(center)
 			});
 		}
 		locationSelect.style.visibility = 'visible';
+		$(locationSelect).parent().parent().addClass('active').show();
 		locationSelect.onchange = function() {
 			var markerNum = locationSelect.options[locationSelect.selectedIndex].value;
 			google.maps.event.trigger(markers[markerNum], 'click');
@@ -135,7 +136,7 @@ function searchLocationsNear(center)
 
 function createMarker(latlng, name, address, other, id_store, has_store_picture)
 {
-	var html = '<b>'+name+'</b><br/>'+address+(has_store_picture === 1 ? '<br /><br /><img src="'+img_store_dir+parseInt(id_store)+'-medium.jpg" alt="" />' : '')+other+'<br /><a href="http://maps.google.com/maps?saddr=&daddr='+latlng+'" target="_blank">'+translation_5+'<\/a>';
+	var html = '<b>'+name+'</b><br/>'+address+(has_store_picture === 1 ? '<br /><br /><img src="'+img_store_dir+parseInt(id_store)+'-medium_default.jpg" alt="" />' : '')+other+'<br /><a href="http://maps.google.com/maps?saddr=&daddr='+latlng+'" target="_blank">'+translation_5+'<\/a>';
 	var image = new google.maps.MarkerImage(img_ps_dir+logo_store);
 	var marker = '';
 

@@ -40,8 +40,8 @@
 	{/if}
 	<!-- nbr product/page -->
 	{if $nb_products > $products_per_page}
-		<form action="{if !is_array($requestNb)}{$requestNb}{else}{$requestNb.requestUrl}{/if}" method="get" class="nbrItemPage pagination">
-			<p>
+		<form action="{if !is_array($requestNb)}{$requestNb}{else}{$requestNb.requestUrl}{/if}" method="get" class="nbrItemPage">
+			<div class="clearfix">
 				{if isset($search_query) AND $search_query}<input type="hidden" name="search_query" value="{$search_query|escape:'htmlall':'UTF-8'}" />{/if}
 				{if isset($tag) AND $tag AND !is_array($tag)}<input type="hidden" name="tag" value="{$tag|escape:'htmlall':'UTF-8'}" />{/if}
 				<label for="nb_item{if isset($paginationId)}_{$paginationId}{/if}">{l s='Show'}</label>
@@ -52,7 +52,7 @@
 						{/if}
 					{/foreach}
 				{/if}
-				<select name="n" id="nb_item{if isset($paginationId)}_{$paginationId}{/if}" class="js-nb_item" onchange="this.form.submit();">
+				<select name="n" id="nb_item{if isset($paginationId)}_{$paginationId}{/if}" class="js-nb_item form-control" onchange="this.form.submit();">
 				{assign var="lastnValue" value="0"}
 				{foreach from=$nArray item=nValue}
 					{if $lastnValue <= $nb_products}
@@ -61,8 +61,8 @@
 					{assign var="lastnValue" value=$nValue}
 				{/foreach}
 				</select>
-				<span>{l s='Products by page'}</span>
-			</p>
+				<span>{l s='per page'}</span>
+			</div>
 		</form>
 	{/if}
 	<!-- /nbr product/page -->

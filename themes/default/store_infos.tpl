@@ -32,13 +32,10 @@
 	{l s='Saturday'}
 	{l s='Sunday'}
 *}
-<br />
-<br />
-<span id="store_hours">{l s='working hours'}</span>
-<table style="font-size: 9px;">
+
 	{foreach from=$days_datas  item=one_day}
-	<tr>
-		<td style="width: 70px;">{l s=$one_day.day}</td><td>{$one_day.hours}</td>
-	</tr>
+	<p>
+		<strong class="dark">{l s=$one_day.day}: </strong> &nbsp;<span>{$one_day.hours}</span>
+	</p>
 	{/foreach}
-</table>
+

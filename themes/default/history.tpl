@@ -23,18 +23,17 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture name=path}<a href="{$link->getPageLink('my-account', true)|escape:'html'}">{l s='My account'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Order history'}{/capture}
-{include file="$tpl_dir./breadcrumb.tpl"}
+{capture name=path}<a href="{$link->getPageLink('my-account', true)|escape:'html'}">{l s='My account'}</a><span class="navigation-pipe">{$navigationPipe}</span><span class="navigation_page">{l s='Order history'}</span>{/capture}
 {include file="$tpl_dir./errors.tpl"}
 
-<h1>{l s='Order history'}</h1>
-<p>{l s='Here are the orders you\'ve placed since your account was created.'}</p>
+<h1 class="page-heading bottom-indent">{l s='Order history'}</h1>
+<p class="info-title">{l s='Here are the orders you\'ve placed since your account was created.'}</p>
 
-{if $slowValidation}<p class="warning">{l s='If you have just placed an order, it may take a few minutes for it to be validated. Please refresh this page if your order is missing.'}</p>{/if}
+{if $slowValidation}<p class="alert alert-warning">{l s='If you have just placed an order, it may take a few minutes for it to be validated. Please refresh this page if your order is missing.'}</p>{/if}
 
 <div class="block-center" id="block-history">
 	{if $orders && count($orders)}
-	<table id="order-list" class="std">
+	<table id="order-list" class="table table-bordered">
 		<thead>
 			<tr>
 				<th class="first_item">{l s='Order reference'}</th>
@@ -43,7 +42,7 @@
 				<th class="item">{l s='Payment: '}</th>
 				<th class="item">{l s='Status'}</th>
 				<th class="item">{l s='Invoice'}</th>
-				<th class="last_item" style="width:65px">&nbsp;</th>
+				<th class="last_item">&nbsp;</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -59,31 +58,30 @@
 				<td class="history_state">{if isset($order.order_state)}{$order.order_state|escape:'htmlall':'UTF-8'}{/if}</td>
 				<td class="history_invoice">
 				{if (isset($order.invoice) && $order.invoice && isset($order.invoice_number) && $order.invoice_number) && isset($invoiceAllowed) && $invoiceAllowed == true}
-					<a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order.id_order}")|escape:'html'}" title="{l s='Invoice'}" class="_blank"><img src="{$img_dir}icon/pdf.gif" alt="{l s='Invoice'}" class="icon" /></a>
-					<a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order.id_order}")|escape:'html'}" title="{l s='Invoice'}" class="_blank">{l s='PDF'}</a>
+					<a class="link-button" href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order.id_order}")|escape:'html'}" title="{l s='Invoice'}" class="_blank"><i class="icon-file-text large"></i>{l s='PDF'}</a>
 				{else}-{/if}
 				</td>
 				<td class="history_detail">
-					<a class="color-myaccount" href="javascript:showOrder(1, {$order.id_order|intval}, '{$link->getPageLink('order-detail', true)|escape:'html'}');">{l s='details'}</a>
+					<a class="btn btn-default button button-small" href="javascript:showOrder(1, {$order.id_order|intval}, '{$link->getPageLink('order-detail', true)|escape:'html'}');"><span>{l s='details'}<i class="icon-chevron-right right"></i></span></a>
 					{if isset($opc) && $opc}
-					<a href="{$link->getPageLink('order-opc', true, NULL, "submitReorder&id_order={$order.id_order}")|escape:'html'}" title="{l s='Reorder'}">
+						<a class="link-button" href="{$link->getPageLink('order-opc', true, NULL, "submitReorder&id_order={$order.id_order}")|escape:'html'}" title="{l s='Reorder'}">
 					{else}
-					<a href="{$link->getPageLink('order', true, NULL, "submitReorder&id_order={$order.id_order}")|escape:'html'}" title="{l s='Reorder'}">
+						<a class="link-button" href="{$link->getPageLink('order', true, NULL, "submitReorder&id_order={$order.id_order}")|escape:'html'}" title="{l s='Reorder'}">
 					{/if}
-						<img src="{$img_dir}arrow_rotate_anticlockwise.png" alt="{l s='Reorder'}" title="{l s='Reorder'}" class="icon" />
+                        <i class="icon-refresh"></i>{l s='Reorder'}
 					</a>
 				</td>
 			</tr>
 		{/foreach}
 		</tbody>
 	</table>
-	<div id="block-order-detail" class="hidden">&nbsp;</div>
+	<div id="block-order-detail" class="unvisible">&nbsp;</div>
 	{else}
-		<p class="warning">{l s='You have not placed any orders.'}</p>
+		<p class="alert alert-warning">{l s='You have not placed any orders.'}</p>
 	{/if}
 </div>
 
 <ul class="footer_links clearfix">
-	<li><a href="{$link->getPageLink('my-account', true)|escape:'html'}"><img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /> {l s='Back to Your Account'}</a></li>
-	<li class="f_right"><a href="{$base_dir}"><img src="{$img_dir}icon/home.gif" alt="" class="icon" /> {l s='Home'}</a></li>
+	<li><a class="btn btn-default button button-small" href="{$link->getPageLink('my-account', true)|escape:'html'}"><span><i class="icon-chevron-left"></i> {l s='Back to Your Account'}</span></a></li>
+	<li><a class="btn btn-default button button-small" href="{$base_dir}"><span><i class="icon-chevron-left"></i> {l s='Home'}</span></a></li>
 </ul>

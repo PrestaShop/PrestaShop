@@ -24,7 +24,11 @@
 *}
 
 {if isset($orderby) AND isset($orderway)}
-
+<ul class="display">
+	<li class="display-title">{l s='View:'}</li>
+    <li id="grid"><a onclick="display('grid');"><i class="icon-th-large"></i>{l s='Grid'}</a></li>
+    <li id="list"><a onclick="display('list');"><i class="icon-th-list"></i>{l s='List'}</a></li>
+</ul>
 {* On 1.5 the var request is setted on the front controller. The next lines assure the retrocompatibility with some modules *}
 {if !isset($request)}
 	<!-- Sort products -->
@@ -55,9 +59,9 @@ $(document).ready(function(){
 </script>
 {/if}
 <form id="productsSortForm{if isset($paginationId)}_{$paginationId}{/if}" action="{$request|escape:'htmlall':'UTF-8'}" class="productsSortForm">
-	<p class="select">
+	<div class="select">
 		<label for="selectPrductSort{if isset($paginationId)}_{$paginationId}{/if}">{l s='Sort by'}</label>
-		<select id="selectPrductSort{if isset($paginationId)}_{$paginationId}{/if}" class="selectProductSort">
+		<select id="selectPrductSort{if isset($paginationId)}_{$paginationId}{/if}" class="selectProductSort form-control">
 			<option value="{$orderbydefault|escape:'htmlall':'UTF-8'}:{$orderwaydefault|escape:'htmlall':'UTF-8'}" {if $orderby eq $orderbydefault}selected="selected"{/if}>{l s='--'}</option>
 			{if !$PS_CATALOG_MODE}
 				<option value="price:asc" {if $orderby eq 'price' AND $orderway eq 'asc'}selected="selected"{/if}>{l s='Price: Lowest first'}</option>
@@ -71,7 +75,7 @@ $(document).ready(function(){
 			<option value="reference:asc" {if $orderby eq 'reference' AND $orderway eq 'asc'}selected="selected"{/if}>{l s='Reference: Lowest first'}</option>
 			<option value="reference:desc" {if $orderby eq 'reference' AND $orderway eq 'desc'}selected="selected"{/if}>{l s='Reference: Highest first'}</option>
 		</select>
-	</p>
+	</div>
 </form>
 <!-- /Sort products -->
 {/if}

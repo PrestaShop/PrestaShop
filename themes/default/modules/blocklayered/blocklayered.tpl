@@ -49,7 +49,7 @@ param_product_url = '';
 									{if isset($filter.slider)}
 										{if $smarty.foreach.f_values.first}
 											<li>
-												<a href="#" rel="layered_{$filter.type}_slider" title="{l s='Cancel' mod='blocklayered'}">x</a>
+												<a href="#" rel="layered_{$filter.type}_slider" title="{l s='Cancel' mod='blocklayered'}"></a>
 												{$filter.name|escape:html:'UTF-8'}{l s=':' mod='blocklayered'}
 												{if $filter.format}
 													{displayPrice price=$filter.values[0]} - 
@@ -64,7 +64,7 @@ param_product_url = '';
 										{foreach from=$filter.values key=id_value item=value}
 											{if $id_value == $filter_key && !is_numeric($filter_value) && ($filter.type eq 'id_attribute_group' || $filter.type eq 'id_feature') || $id_value == $filter_value && $filter.type neq 'id_attribute_group' && $filter.type neq 'id_feature'}
 												<li>
-													<a href="#" rel="layered_{$filter.type_lite}_{$id_value}" title="{l s='Cancel' mod='blocklayered'}">x</a>
+													<a href="#" rel="layered_{$filter.type_lite}_{$id_value}" title="{l s='Cancel' mod='blocklayered'}"></a>
 													{$filter.name|escape:html:'UTF-8'}{l s=':' mod='blocklayered'} {$value.name|escape:html:'UTF-8'}
 												</li>
 											{/if}
@@ -84,10 +84,11 @@ param_product_url = '';
 						{else}
 						<div>
 						{/if}
-						<span class="layered_subtitle">{$filter.name|escape:html:'UTF-8'}</span>
-						<span class="layered_close"><a href="#" rel="ul_layered_{$filter.type}_{$filter.id_key}">v</a></span>
-						<div class="clear"></div>
-						<ul id="ul_layered_{$filter.type}_{$filter.id_key}">
+                        <div class="layered_subtitle_heading">
+                            <span class="layered_subtitle">{$filter.name|escape:html:'UTF-8'}</span>
+                            <span class="layered_close"><a href="#" rel="ul_layered_{$filter.type}_{$filter.id_key}"></a></span>
+						</div>
+						<ul id="ul_layered_{$filter.type}_{$filter.id_key}" class="layered_filter_ul{if isset($filter.is_color_group) && $filter.is_color_group} color-group{/if}">
 						{if !isset($filter.slider)}
 							{if $filter.filter_type == 0}
 								{foreach from=$filter.values key=id_value item=value name=fe}
@@ -131,7 +132,7 @@ param_product_url = '';
 									{/if}
 								{/foreach}
 								{else}
-									<select class="select" {if $filter.filter_show_limit > 1}multiple="multiple" size="{$filter.filter_show_limit}"{/if}>
+									<select class="select form-control" {if $filter.filter_show_limit > 1}multiple="multiple" size="{$filter.filter_show_limit}"{/if}>
 										<option value="">{l s='No filters' mod='blocklayered'}</option>
 										{foreach from=$filter.values key=id_value item=value}
 										{if $value.nbr || !$hide_0_values}
@@ -187,9 +188,9 @@ param_product_url = '';
 							{else}
 								{if $filter.filter_type == 1}
 								<li class="nomargin">
-									{l s='From' mod='blocklayered'} <input class="layered_{$filter.type}_range layered_input_range_min layered_input_range" id="layered_{$filter.type}_range_min" type="text" value="{$filter.values[0]}"/>
+									{l s='From' mod='blocklayered'} <input class="layered_{$filter.type}_range layered_input_range_min layered_input_range form-control grey" id="layered_{$filter.type}_range_min" type="text" value="{$filter.values[0]}"/>
 									<span class="layered_{$filter.type}_range_unit">{$filter.unit}</span>
-									{l s='to' mod='blocklayered'} <input class="layered_{$filter.type}_range layered_input_range_max layered_input_range" id="layered_{$filter.type}_range_max" type="text" value="{$filter.values[1]}"/>
+									{l s='to' mod='blocklayered'} <input class="layered_{$filter.type}_range layered_input_range_max layered_input_range form-control grey" id="layered_{$filter.type}_range_max" type="text" value="{$filter.values[1]}"/>
 									<span class="layered_{$filter.type}_range_unit">{$filter.unit}</span>
 									<span class="layered_{$filter.type}_format" style="display:none;">{$filter.format}</span>
 									<script type="text/javascript">
@@ -250,8 +251,13 @@ param_product_url = '';
 		</form>
 	</div>
 	<div style="display: none;">
-		<p style=""><img src="{$img_ps_dir}loader.gif" alt="" /><br />{l s='Loading...' mod='blocklayered'}</p>
+		<p><img src="{$img_ps_dir}loader.gif" alt="" /><br />{l s='Loading...' mod='blocklayered'}</p>
 	</div>
 </div>
 {/if}
+<script>
+$(document).ready(function () {
+	$("#layered_form input[type='checkbox'], #layered_form input[type='radio'], select.form-control").uniform();
+});
+</script>
 <!-- /Block layered navigation module -->

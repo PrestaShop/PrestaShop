@@ -24,9 +24,9 @@
 *}
 
 <!-- Block categories module -->
-<div class="blockcategories_footer">
-	<p class="title_block">{l s='Categories' mod='blockcategories'}</p>
-<div class="category_footer" style="width:{$widthColumn}%">
+<section class="blockcategories_footer footer-block col-xs-12 col-md-2">
+	<h4>{l s='Categories' mod='blockcategories'}</h4>
+<div class="category_footer">
 	<div class="list">
 		<ul class="tree {if $isDhtml}dhtml{/if}">
 	
@@ -42,7 +42,7 @@
 	</div>
 </div>
 
-<div class="category_footer" style="float:left;clear:none;width:{$widthColumn}%">
+<div class="category_footer">
 		<div class="list">
 		<ul class="tree {if $isDhtml}dhtml{/if}">
 			{/if}
@@ -50,6 +50,5 @@
 		</ul>
 	</div>
 </div>
-<br class="clear"/>
-</div>
+</section>
 <!-- /Block categories module -->

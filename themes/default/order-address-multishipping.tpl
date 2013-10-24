@@ -93,8 +93,8 @@
 	function getAddressesTitles()
 	{
 		return {
-			'invoice': "{l s='Your billing address'}",
-			'delivery': "{l s='Your delivery address'}"
+			'invoice': "<h3 class='page-subheading'>{l s='Your billing address'}</h3>",
+			'delivery': "<h3 class='page-subheading'>{l s='Your delivery address'}</h3>"
 		};
 
 	}
@@ -112,7 +112,7 @@
 		dest_comp.html('');
 
 		li_content['title'] = adr_titles_vals[address_type];
-		li_content['update'] = '<a href="{$link->getPageLink('address', true, NULL, "id_address")|addslashes}'+id_address+'&amp;back=order?step=1{if $back}&mod={$back}{/if}" title="{l s='Update' js=1}">{l s='Update' js=1}</a>';
+		li_content['update'] = '<a class="btn btn-default button button-small" href="{$link->getPageLink('address', true, NULL, "id_address")|addslashes}'+id_address+'&amp;back=order?step=1{if $back}&mod={$back}{/if}" title="{l s='Update' js=1}"><span>{l s='Update' js=1}<i class="icon-chevron-right right"></i></span></a>';
 
 		appendAddressList(dest_comp, li_content, ordered_fields_name);
 	}
@@ -150,10 +150,9 @@
 
 {if !$opc}
 {capture name=path}{l s='Addresses'}{/capture}
-{include file="$tpl_dir./breadcrumb.tpl"}
 {/if}
 
-{if !$opc}<h1>{l s='Addresses'}</h1>{else}<h2><span>1</span> {l s='Addresses'}</h2>{/if}
+{if !$opc}<h1 class="page-heading">{l s='Addresses'}</h1>{else}<h1 class="page-heading step-num"><span>1</span> {l s='Addresses'}</h1>{/if}
 
 {if !$opc}
 {assign var='current_step' value='address'}
@@ -172,40 +171,44 @@
 		<p id="address_invoice_form" class="select" {if $cart->id_address_invoice == $cart->id_address_delivery}style="display: none;"{/if}>
 		
 		{if $addresses|@count >= 1}
+        <div class="form-group">
 			<label for="id_address_invoice" class="strong">{l s='Choose a billing address:'}</label>
-			<select name="id_address_invoice" id="id_address_invoice" class="address_select" onchange="updateAddressesDisplay();{if $opc}updateAddressSelection();{/if}">
+			<select name="id_address_invoice" id="id_address_invoice" class="address_select form-control" onchange="updateAddressesDisplay();{if $opc}updateAddressSelection();{/if}">
 			{section loop=$addresses step=-1 name=address}
 				<option value="{$addresses[address].id_address|intval}" {if $addresses[address].id_address == $cart->id_address_invoice && $cart->id_address_delivery != $cart->id_address_invoice}selected="selected"{/if}>{$addresses[address].alias|escape:'htmlall':'UTF-8'}</option>
 			{/section}
 			</select>
+        </div>
 		{else}
-			<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{'&multi-shipping=1'|urlencode}{if $back}&mod={$back}{/if}")|escape:'html'}" title="{l s='Add'}" class="button_large">{l s='Add a new address'}</a>
+			<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{'&multi-shipping=1'|urlencode}{if $back}&mod={$back}{/if}")|escape:'html'}" title="{l s='Add'}" class="button button-small btn btn-default"><span>{l s='Add a new address'}<i class="icon-chevron-right right"></i></span></a>
 		{/if}
 		</p>
-		<div class="clearfix">
-			<ul class="address alternate_item {if $cart->isVirtualCart()}full_width{/if}" id="address_invoice">
-			</ul>
+		<div class="row">
+        	<div class="col-sm-12 col-md-6">
+                <ul class="address alternate_item {if $cart->isVirtualCart()}full_width{/if} box" id="address_invoice">
+                </ul>
+            </div>
 		</div>
 		<p class="address_add submit">
-			<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{'&multi-shipping=1'|urlencode}{if $back}&mod={$back|urlencode}{/if}")|escape:'html'}" title="{l s='Add'}" class="button_large">&raquo; {l s='Add a new address'}</a>
+			<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{'&multi-shipping=1'|urlencode}{if $back}&mod={$back|urlencode}{/if}")|escape:'html'}" title="{l s='Add'}" class="button button-small btn btn-default"><span>{l s='Add a new address'}<i class="icon-chevron-right right"></i></span></a>
 		</p>
 		{if !$opc}
-		<div id="ordermsg" class="clearfix">
-			<p class="txt">{l s='If you would like to add a comment about your order, please write it in the field below.'}</p>
-			<p class="textarea"><textarea cols="60" rows="3" name="message">{if isset($oldMessage)}{$oldMessage}{/if}</textarea></p>
+		<div id="ordermsg" class="form-group">
+			<label>{l s='If you would like to add a comment about your order, please write it in the field below.'}</label>
+			<textarea class="form-control" cols="60" rows="6" name="message">{if isset($oldMessage)}{$oldMessage}{/if}</textarea>
 		</div>
 		{/if}
 	</div>
 {if !$opc}
-	<p class="cart_navigation submit">
+	<p class="cart_navigation clearfix">
 		<input type="hidden" class="hidden" name="step" value="2" />
 		<input type="hidden" name="back" value="{$back}" />
 		{if $back}
-			<a href="{$link->getPageLink('order', true, NULL, "step=0&amp;back={$back}")|escape:'html'}" title="{l s='Previous'}" class="button">&laquo; {l s='Previous'}</a>
+			<a href="{$link->getPageLink('order', true, NULL, "step=0&amp;back={$back}")|escape:'html'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Previous'}</a>
 		{else}
-			<a href="{$link->getPageLink('order', true, NULL, "step=0")|escape:'html'}" title="{l s='Previous'}" class="button">&laquo; {l s='Previous'}</a>
+			<a href="{$link->getPageLink('order', true, NULL, "step=0")|escape:'html'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Previous'}</a>
 		{/if}
-		<input type="submit" name="processAddress" value="{l s='Next'} &raquo;" class="exclusive" />
+        <button type="submit" name="processAddress" class="button btn btn-default button-medium"><span>{l s='Next'}<i class="icon-chevron-right right"></i></span></button>
 	</p>
 </form>
 {else}

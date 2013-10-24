@@ -24,16 +24,15 @@
 *}
 
 {capture name=path}{l s='Search'}{/capture}
-{include file="$tpl_dir./breadcrumb.tpl"}
 
-<h1 {if isset($instantSearch) && $instantSearch}id="instant_search_results"{/if}>
+<h1 {if isset($instant_search) && $instant_search}id="instant_search_results"{/if} class="page-heading {if !isset($instant_search) || (isset($instant_search) && !$instant_search)} product-listing{/if}">
 {l s='Search'}&nbsp;{if $nbProducts > 0}"{if isset($search_query) && $search_query}{$search_query|escape:'htmlall':'UTF-8'}{elseif $search_tag}{$search_tag|escape:'htmlall':'UTF-8'}{elseif $ref}{$ref|escape:'htmlall':'UTF-8'}{/if}"{/if}
-{if isset($instantSearch) && $instantSearch}<a href="#" class="close">{l s='Return to the previous page'}</a>{/if}
+{if isset($instant_search) && $instant_search}<a href="#" class="close">{l s='Return to the previous page'}</a>{else}<span class="heading-counter">{if $nbProducts == 1}{l s='%d result has been found.' sprintf=$nbProducts|intval}{else}{l s='%d results have been found.' sprintf=$nbProducts|intval}{/if}</span>{/if}
 </h1>
 
 {include file="$tpl_dir./errors.tpl"}
 {if !$nbProducts}
-	<p class="warning">
+	<p class="alert alert-warning">
 		{if isset($search_query) && $search_query}
 			{l s='No results were found for your search'}&nbsp;"{if isset($search_query)}{$search_query|escape:'htmlall':'UTF-8'}{/if}"
 		{elseif isset($search_tag) && $search_tag}
@@ -43,15 +42,25 @@
 		{/if}
 	</p>
 {else}
-	<h3 class="nbresult"><span class="big">{if $nbProducts == 1}{l s='%d result has been found.' sprintf=$nbProducts|intval}{else}{l s='%d results have been found.' sprintf=$nbProducts|intval}{/if}</span></h3>
-	{include file="./product-compare.tpl"}
-	{if !isset($instantSearch) || (isset($instantSearch) && !$instantSearch)}
-	<div class="sortPagiBar clearfix">
-		{include file="$tpl_dir./product-sort.tpl"}
+	{if isset($instant_search) && $instant_search}
+        <p class="alert alert-info">
+            {if $nbProducts == 1}{l s='%d result has been found.' sprintf=$nbProducts|intval}{else}{l s='%d results have been found.' sprintf=$nbProducts|intval}{/if}
+        </p>
+    {/if}
+    <div class="content_sortPagiBar">
+        
+            <div class="sortPagiBar clearfix {if isset($instant_search) && $instant_search} instant_search{/if}">
+                {include file="$tpl_dir./product-sort.tpl"}
+            </div>
+    	<div class="top-pagination-content clearfix">
+		{include file="./product-compare.tpl"}
+    </div>
 	</div>
-	{/if}
-	
 	{include file="$tpl_dir./product-list.tpl" products=$search_products}
-	{if !isset($instantSearch) || (isset($instantSearch) && !$instantSearch)}{include file="$tpl_dir./pagination.tpl"}{/if}
-	{include file="./product-compare.tpl"}
+    <div class="content_sortPagiBar">
+    	<div class="bottom-pagination-content clearfix">
+        	{include file="./product-compare.tpl"}
+        	{if !isset($instant_search) || (isset($instant_search) && !$instant_search)}{include file="$tpl_dir./pagination.tpl"}{/if}
+        </div>
+    </div>
 {/if}

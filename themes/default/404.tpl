@@ -23,6 +23,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div class="pagenotfound">
+	<div class="img-404">
+    	<img src="{$img_dir}/img-404.jpg" alt="{l s='pagenotfound'}" />
+    </div>
 	<h1>{l s='This page is not available'}</h1>
 
 	<p>
@@ -32,13 +35,13 @@
 	<h3>{l s='To find a product, please type its name in the field below.'}</h3>
 	<form action="{$link->getPageLink('search')|escape:'html'}" method="post" class="std">
 		<fieldset>
-			<p>
+			<div>
 				<label for="search">{l s='Search our product catalog:'}</label>
-				<input id="search_query" name="search_query" type="text" />
-				<input type="submit" name="Submit" value="OK" class="button_small" />
-			</p>
+				<input id="search_query" name="search_query" type="text" class="form-control grey" />
+                <button type="submit" name="Submit" value="OK" class="btn btn-default button button-small"><span>{l s='Ok'}</span></button>
+			</div>
 		</fieldset>
 	</form>
 
-	<p><a href="{$base_dir}" title="{l s='Home'}"><img src="{$img_dir}icon/home.gif" alt="{l s='Home'}" class="icon" /> {l s='Home'}</a></p>
+	<div class="buttons"><a class="btn btn-default button button-medium" href="{$base_dir}" title="{l s='Home'}"><span><i class="icon-chevron-left left"></i>{l s='Home page'}</span></a></div>
 </div>
