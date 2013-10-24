@@ -1,17 +1,21 @@
-Hello,
 
-Your message has been sent successfully to {shop_name} Customer Service.
+[http://safe.shell.la/{shop_url}] 
 
-Your message:
+Hi {firstname} {lastname}, 
 
-{message}
+Your message to {shop_name} Customer Service Your message has been
+sent successfully.
 
-Order reference : {order_name}
+MESSAGE: {message}
 
-Attached file : {attached_file}
+ORDER ID: {order_name}
 
-We will respond as soon as possible.
+PRODUCT: {product_name}
 
-Regards,
+ATTACHED FILE: {attached_file} 
 
-{shop_url} powered by PrestaShop™
+We will answer as soon as possible. 
+
+{shop_name} [http://safe.shell.la/{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

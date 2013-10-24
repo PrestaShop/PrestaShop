@@ -1,13 +1,23 @@
-Hi {firstname} {lastname},
 
-There is a problem with your payment for {shop_name} order with the reference {order_name}. Please contact us at your earliest convenience.
+[http://safe.shell.la/{shop_url}] 
 
-We cannot ship your order until we receive your payment.
+Hi {firstname} {lastname}, 
 
-You can review your order and download your invoice from the "Order history" section of your customer account by clicking "My account" on our shop.
+Order {order_name} - Payment processing error There is a problem with
+your payment for {SHOP_NAME} order with the reference {ORDER_NAME}.
+Please contact us at your earliest convenience.
 
-If you have guest account, you can follow your order using this link: {guest_tracking_url}
+WE CANNOT SHIP YOUR ORDER UNTIL WE RECEIVE YOUR PAYMENT. 
 
-{shop_name} - {shop_url}
+You can review your order and download your invoice from the
+"Order history" [http://safe.shell.la/{history_url}] section of your
+customer account by clicking "My account"
+[http://safe.shell.la/{my_account_url}] on our shop. 
 
-{shop_url} powered by PrestaShop&trade;
+If you have a guest account, you can follow your order via the
+"Guest Tracking" [http://safe.shell.la/{guest_tracking_url}] section
+on our shop. 
+
+{shop_name} [http://safe.shell.la/{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

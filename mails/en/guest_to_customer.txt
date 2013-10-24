@@ -1,12 +1,19 @@
-	Hi {firstname} {lastname},
 
-Your guest account for {shop_name} has been transformed into a customer account.
+[http://safe.shell.la/{shop_url}] 
 
-	E-mail address: {email}
-	Password: {passwd}
+Hi {firstname} {lastname}, 
 
-	You can access your account on our website: {shop_url}
+Your customer account creation Your guest account for {SHOP_NAME} has
+been transformed into a customer account. 
 
-	Please be careful when sharing these login details with others.
+E-MAIL ADDRESS: {email}
 
-{shop_url} powered by PrestaShop™
+PASSWORD: {passwd} 
+
+Please be careful when sharing these login details with others. 
+
+You can access your customer account on our shop: {SHOP_URL} 
+
+{shop_name} [http://safe.shell.la/{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

@@ -1,8 +1,12 @@
-Hello,
-	
-This is a test e-mail from your PrestaShop™ online shop.
 
-If you can read this, the test was successful!
+[http://safe.shell.la/{shop_url}] 
 
-Regards,
-{shop_name} powered by PrestaShop™
+Hello 
+
+This is a TEST E-MAIL from your shop.
+
+If you can read this, the test was successful!. 
+
+{shop_name} [http://safe.shell.la/{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+
