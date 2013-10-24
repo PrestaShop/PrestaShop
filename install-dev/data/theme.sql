@@ -125,7 +125,7 @@ UPDATE `PREFIX_hook_module` SET position = 5
 WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockmyaccountfooter')
 AND id_hook = @id_hook;
 
-UPDATE `PREFIX_hook_module` SET position = 3
+UPDATE `PREFIX_hook_module` SET position = 6
 WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcontactinfos')
 AND id_hook = @id_hook;
 
