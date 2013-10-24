@@ -40,9 +40,9 @@ class ControllerFactoryCore
 
 		if (!class_exists($className, false))
 		{
-			require_once(dirname(__FILE__).'/../controllers/'.$className.'.php');
-			if (file_exists(dirname(__FILE__).'/../override/controllers/'.$className.'.php'))
-				require_once(dirname(__FILE__).'/../override/controllers/'.$className.'.php');
+			require_once(_PS_ROOT_DIR_.'/controllers/'.$className.'.php');
+			if (file_exists(_PS_ROOT_DIR_.'/override/controllers/'.$className.'.php'))
+				require_once(_PS_ROOT_DIR_.'/override/controllers/'.$className.'.php');
 			else
 			{
 				$coreClass = new ReflectionClass($className.'Core');
