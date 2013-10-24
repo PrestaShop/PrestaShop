@@ -652,7 +652,7 @@ class AdminPerformanceControllerCore extends AdminController
 			if ($this->tabAccess['edit'] === '1')
 			{
 				$algo = (int)Tools::getValue('PS_CIPHER_ALGORITHM');
-				$prev_settings = file_get_contents(dirname(__FILE__).'/../../config/settings.inc.php');
+				$prev_settings = file_get_contents(_PS_ROOT_DIR_.'/config/settings.inc.php');
 				$new_settings = $prev_settings;
 				if ($algo)
 				{
@@ -686,8 +686,8 @@ class AdminPerformanceControllerCore extends AdminController
 				{
 					// If there is not settings file modification or if the backup and replacement of the settings file worked
 					if ($new_settings == $prev_settings || (
-						copy(dirname(__FILE__).'/../../config/settings.inc.php', dirname(__FILE__).'/../../config/settings.old.php')
-						&& (bool)file_put_contents(dirname(__FILE__).'/../../config/settings.inc.php', $new_settings)
+						copy(_PS_ROOT_DIR_.'/config/settings.inc.php', _PS_ROOT_DIR_.'/config/settings.old.php')
+						&& (bool)file_put_contents(_PS_ROOT_DIR_.'/config/settings.inc.php', $new_settings)
 					))
 					{
 						Configuration::updateValue('PS_CIPHER_ALGORITHM', $algo);
@@ -705,7 +705,7 @@ class AdminPerformanceControllerCore extends AdminController
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
-				$new_settings = $prev_settings = file_get_contents(dirname(__FILE__).'/../../config/settings.inc.php');
+				$new_settings = $prev_settings = file_get_contents(_PS_ROOT_DIR_.'/config/settings.inc.php');
 				$cache_active = (bool)Tools::getValue('cache_active');
 
 				if ($caching_system = Tools::getValue('caching_system'))
@@ -762,8 +762,8 @@ class AdminPerformanceControllerCore extends AdminController
 					$new_settings = preg_replace('/define\(\'_PS_CACHE_ENABLED_\', \'([01]?)\'\);/Ui', 'define(\'_PS_CACHE_ENABLED_\', \''.(int)$cache_active.'\');', $new_settings);
 					// If there is not settings file modification or if the backup and replacement of the settings file worked
 					if ($new_settings == $prev_settings || (
-						copy(dirname(__FILE__).'/../../config/settings.inc.php', dirname(__FILE__).'/../../config/settings.old.php')
-						&& (bool)file_put_contents(dirname(__FILE__).'/../../config/settings.inc.php', $new_settings)
+						copy(_PS_ROOT_DIR_.'/config/settings.inc.php', _PS_ROOT_DIR_.'/config/settings.old.php')
+						&& (bool)file_put_contents(_PS_ROOT_DIR_.'/config/settings.inc.php', $new_settings)
 					))
 						$redirectAdmin = true;
 					else

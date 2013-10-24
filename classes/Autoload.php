@@ -51,7 +51,7 @@ class Autoload
 
 	protected function __construct()
 	{
-		$this->root_dir = dirname(dirname(__FILE__)).'/';
+		$this->root_dir = _PS_ROOT_DIR_.'/';
 		if (file_exists($this->root_dir.Autoload::INDEX_FILE))
 			$this->index = include($this->root_dir.Autoload::INDEX_FILE);
 		else

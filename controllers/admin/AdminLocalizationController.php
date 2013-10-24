@@ -150,7 +150,7 @@ class AdminLocalizationControllerCore extends AdminController
 			
 				$pack = @Tools::file_get_contents('http://api.prestashop.com/localization/'.$version.'/'.Tools::getValue('iso_localization_pack').'.xml');
 
-				if (!$pack && !($pack = @Tools::file_get_contents(dirname(__FILE__).'/../../localization/'.Tools::getValue('iso_localization_pack').'.xml')))
+				if (!$pack && !($pack = @Tools::file_get_contents(_PS_ROOT_DIR_.'/localization/'.Tools::getValue('iso_localization_pack').'.xml')))
 					$this->errors[] = Tools::displayError('Cannot load the localization pack.');
 
 				if (!$selection = Tools::getValue('selection'))
@@ -192,7 +192,7 @@ class AdminLocalizationControllerCore extends AdminController
 		$xml_localization = Tools::simplexml_load_file('http://api.prestashop.com/rss/localization.xml');
 		if (!$xml_localization)
 		{
-			$localization_file = dirname(__FILE__).'/../../localization/localization.xml';
+			$localization_file = _PS_ROOT_DIR_.'/localization/localization.xml';
 			if (file_exists($localization_file))
 				$xml_localization = simplexml_load_file($localization_file);
 		}
