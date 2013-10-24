@@ -86,7 +86,7 @@ class Dashactivity extends Module
 		$this->context->smarty->assign(array_merge(array(
 			'gapi_mode' => $gapi_mode,
 			'dashactivity_config_form' => $this->renderConfigForm(),
-			'date_subtitle' => $this->l('from %s to %s'),
+			'date_subtitle' => $this->l('(from %s to %s)'),
 			'date_format' => $this->context->language->date_format_lite
 		), $this->getConfigFieldsValues()));
 		return $this->display(__FILE__, 'dashboard_zone_one.tpl');

@@ -158,7 +158,7 @@
 			{if $gapi_mode}
 				<li>
 					<span class="data_label">
-						<a href="{$link->getAdminLink('AdminModules')}&{$gapi_mode}=gapi"><img src="../modules/gapi/logo.gif" width="16" height="16" /> {l s="Connect to Google Analytics API" mod="dashactivity"}</a>
+						<a href="{$link->getAdminLink('AdminModules')}&{$gapi_mode}=gapi"><img src="../modules/gapi/logo.gif" width="16" height="16" /> {l s="Link to your Google Analytics account" mod="dashactivity"}</a>
 					</span>
 				</li>
 			{/if}
