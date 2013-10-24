@@ -32,7 +32,6 @@ input[type="password"].input-tiny
 textarea
 	resize: none
 
-
 textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-input:focus
 	background-color: #FEFBE2
 	@include box-shadow(none)
@@ -52,13 +51,13 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 			background-color: $brand-primary
 			color: white
 			border-color: darken($brand-primary,10%)
-
+			i
+				color: white
 
 	&.btn-primary
 		background-color: $brand-primary
 		color: white
 		border-color: darken($brand-primary,10%)
-		//@include box-shadow(lighten($brand-success,30%) 0 -2px 0  inset)
 
 	&.btn-default[disabled]
 		border-color: $gray-light
