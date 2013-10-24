@@ -675,67 +675,75 @@ abstract class ModuleCore
 	 */
 	public function registerHook($hook_name, $shop_list = null)
 	{
-		// Check hook name validation and if module is installed
-		if (!Validate::isHookName($hook_name))
-			throw new PrestaShopException('Invalid hook name');
-		if (!isset($this->id) || !is_numeric($this->id))
-			return false;
-
-		// Retrocompatibility
-		$hook_name_bak = $hook_name;
-		if ($alias = Hook::getRetroHookName($hook_name))
-			$hook_name = $alias;
-
-		Hook::exec('actionModuleRegisterHookBefore', array('object' => $this, 'hook_name' => $hook_name));
-		// Get hook id
-		$id_hook = Hook::getIdByName($hook_name);
-		$live_edit = Hook::getLiveEditById((int)Hook::getIdByName($hook_name_bak));
-
-		// If hook does not exist, we create it
-		if (!$id_hook)
-		{
-			$new_hook = new Hook();
-			$new_hook->name = pSQL($hook_name);
-			$new_hook->title = pSQL($hook_name);
-			$new_hook->live_edit  = pSQL($live_edit);
-			$new_hook->add();
-			$id_hook = $new_hook->id;
-			if (!$id_hook)
-				return false;
-		}
-
-		// If shop lists is null, we fill it with all shops
-		if (is_null($shop_list))
-			$shop_list = Shop::getShops(true, null, true);
-
 		$return = true;
-		foreach ($shop_list as $shop_id)
+		if (is_array($hook_name))
+			$hook_names = $hook_name;
+		else
+			$hook_names = array($hook_name);
+		
+		foreach ($hook_names as $hook_name)
 		{
-			// Check if already register
-			$sql = 'SELECT hm.`id_module`
-				FROM `'._DB_PREFIX_.'hook_module` hm, `'._DB_PREFIX_.'hook` h
-				WHERE hm.`id_module` = '.(int)($this->id).' AND h.`id_hook` = '.$id_hook.'
-				AND h.`id_hook` = hm.`id_hook` AND `id_shop` = '.(int)$shop_id;
-			if (Db::getInstance()->getRow($sql))
-				continue;
+			// Check hook name validation and if module is installed
+			if (!Validate::isHookName($hook_name))
+				throw new PrestaShopException('Invalid hook name');
+			if (!isset($this->id) || !is_numeric($this->id))
+				return false;
 
-			// Get module position in hook
-			$sql = 'SELECT MAX(`position`) AS position
-				FROM `'._DB_PREFIX_.'hook_module`
-				WHERE `id_hook` = '.(int)$id_hook.' AND `id_shop` = '.(int)$shop_id;
-			if (!$position = Db::getInstance()->getValue($sql))
-				$position = 0;
+			// Retrocompatibility
+			$hook_name_bak = $hook_name;
+			if ($alias = Hook::getRetroHookName($hook_name))
+				$hook_name = $alias;
 
-			// Register module in hook
-			$return &= Db::getInstance()->insert('hook_module', array(
-				'id_module' => (int)$this->id,
-				'id_hook' => (int)$id_hook,
-				'id_shop' => (int)$shop_id,
-				'position' => (int)($position + 1),
-			));
+			Hook::exec('actionModuleRegisterHookBefore', array('object' => $this, 'hook_name' => $hook_name));
+			// Get hook id
+			$id_hook = Hook::getIdByName($hook_name);
+			$live_edit = Hook::getLiveEditById((int)Hook::getIdByName($hook_name_bak));
+
+			// If hook does not exist, we create it
+			if (!$id_hook)
+			{
+				$new_hook = new Hook();
+				$new_hook->name = pSQL($hook_name);
+				$new_hook->title = pSQL($hook_name);
+				$new_hook->live_edit  = pSQL($live_edit);
+				$new_hook->add();
+				$id_hook = $new_hook->id;
+				if (!$id_hook)
+					return false;
+			}
+
+			// If shop lists is null, we fill it with all shops
+			if (is_null($shop_list))
+				$shop_list = Shop::getShops(true, null, true);
+
+			foreach ($shop_list as $shop_id)
+			{
+				// Check if already register
+				$sql = 'SELECT hm.`id_module`
+					FROM `'._DB_PREFIX_.'hook_module` hm, `'._DB_PREFIX_.'hook` h
+					WHERE hm.`id_module` = '.(int)($this->id).' AND h.`id_hook` = '.$id_hook.'
+					AND h.`id_hook` = hm.`id_hook` AND `id_shop` = '.(int)$shop_id;
+				if (Db::getInstance()->getRow($sql))
+					continue;
+
+				// Get module position in hook
+				$sql = 'SELECT MAX(`position`) AS position
+					FROM `'._DB_PREFIX_.'hook_module`
+					WHERE `id_hook` = '.(int)$id_hook.' AND `id_shop` = '.(int)$shop_id;
+				if (!$position = Db::getInstance()->getValue($sql))
+					$position = 0;
+
+				// Register module in hook
+				$return &= Db::getInstance()->insert('hook_module', array(
+					'id_module' => (int)$this->id,
+					'id_hook' => (int)$id_hook,
+					'id_shop' => (int)$shop_id,
+					'position' => (int)($position + 1),
+				));
+			}
+
+			Hook::exec('actionModuleRegisterHookAfter', array('object' => $this, 'hook_name' => $hook_name));
 		}
-
-		Hook::exec('actionModuleRegisterHookAfter', array('object' => $this, 'hook_name' => $hook_name));
 		return $return;
 	}
 
