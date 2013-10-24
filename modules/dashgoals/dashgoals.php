@@ -133,22 +133,21 @@ class Dashgoals extends Module
 			$goal = ConfigurationKPI::get(strtoupper('dashgoals_traffic_'.$i.'_'.$year));
 			$value = 0;
 			if ($goal && isset($visits[$timestamp]))
-				$value = round($visits[$timestamp] / $goal);
+				$value = round($visits[$timestamp] / $goal, 2);
 			$stream1['values'][] = array('x' => Dashgoals::$month_labels[$i], 'y' => $value);
 
 			$goal = ConfigurationKPI::get(strtoupper('dashgoals_conversion_'.$i.'_'.$year));
 			$value = 0;
 			if ($goal && isset($visits[$timestamp]) && $visits[$timestamp] && isset($orders[$timestamp]) && $orders[$timestamp])
-				$value = round((100 * $orders[$timestamp] / $visits[$timestamp]) / $goal);
+				$value = round((100 * $orders[$timestamp] / $visits[$timestamp]) / $goal, 2);
 			$stream2['values'][] = array('x' => Dashgoals::$month_labels[$i], 'y' => $value);
 			
 			$goal = ConfigurationKPI::get(strtoupper('dashgoals_avg_cart_value_'.$i.'_'.$year));
 			$value = 0;
 			if ($goal && isset($orders[$timestamp]) && $orders[$timestamp] && isset($sales[$timestamp]) && $sales[$timestamp])
-				$value = round(($sales[$timestamp] / $orders[$timestamp]) / $goal);
+				$value = round(($sales[$timestamp] / $orders[$timestamp]) / $goal, 2);
 			$stream3['values'][] = array('x' => Dashgoals::$month_labels[$i], 'y' => $value);
 		}
-		
 		return array('chart_type' => 'bar_chart_goals', 'data' => array($stream1, $stream2, $stream3));
 	}
 }
