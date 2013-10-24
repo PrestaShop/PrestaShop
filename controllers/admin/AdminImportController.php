@@ -240,6 +240,7 @@ class AdminImportControllerCore extends AdminController
 					'available_now' => array('label' => $this->l('Text when in stock')),
 					'available_later' => array('label' => $this->l('Text when backorder allowed')),
 					'available_for_order' => array('label' => $this->l('Available for order (0 = No, 1 = Yes)')),
+					'pre_order' => array('label' => $this->l('Set as Pre-Order product (0 = No, 1 = Yes)')),
 					'available_date' => array('label' => $this->l('Product available date')),
 					'date_add' => array('label' => $this->l('Product creation date')),
 					'show_price' => array('label' => $this->l('Show price (0 = No, 1 = Yes)')),
@@ -1147,6 +1148,10 @@ class AdminImportControllerCore extends AdminController
 
 			AdminImportController::setEntityDefaultValues($product);
 			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $product);
+
+			// Product can not be pre-order if it's not available for order
+			if($product->available_for_order == 0)
+				$product->pre_order = 0;
 
 			if (!Shop::isFeatureActive())
 				$product->shop = 1;

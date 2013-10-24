@@ -87,9 +87,17 @@
 				<a class="cmp_remove" href="{$link->getPageLink('products-comparison', true)|escape:'html'}" rel="ajax_id_product_{$product->id}">{l s='Remove'}</a>
 				{if (!$product->hasAttributes() OR (isset($add_prod_display) AND ($add_prod_display == 1))) AND $product->minimal_quantity == 1 AND $product->customizable != 2 AND !$PS_CATALOG_MODE}
 					{if ($product->quantity > 0 OR $product->allow_oosp)}
-						<a class="exclusive ajax_add_to_cart_button" rel="ajax_id_product_{$product->id}" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$product->id}&amp;token={$static_token}&amp;add")|escape:'html'}" title="{l s='Add to cart'}"><span></span>{l s='Add to cart'}</a>
+						{if $product->pre_order || ($product->quantity <= 0 && Configuration::get('PS_AUTO_PREORDER_NO_STOCK'))}
+							<a class="exclusive ajax_add_to_cart_button" rel="ajax_id_product_{$product->id}" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$product->id}&amp;token={$static_token}&amp;add")|escape:'html'}" title="{l s='Pre-Order'}"><span></span>{l s='Pre-Order'}</a>
+						{else}
+							<a class="exclusive ajax_add_to_cart_button" rel="ajax_id_product_{$product->id}" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$product->id}&amp;token={$static_token}&amp;add")|escape:'html'}" title="{l s='Add to cart'}"><span></span>{l s='Add to cart'}</a>
+						{/if}
 					{else}
-						<span class="exclusive">{l s='Add to cart'}</span>
+						{if $product->pre_order || ($product->quantity <= 0 && Configuration::get('PS_AUTO_PREORDER_NO_STOCK'))}
+							<span class="exclusive">{l s='Pre-Order'}</span>
+						{else}
+							<span class="exclusive">{l s='Add to cart'}</span>
+						{/if}
 					{/if}
 				{else}
 					<div style="height:23px;"></div>

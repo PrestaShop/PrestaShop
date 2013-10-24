@@ -137,7 +137,11 @@
 			{else}
 				{assign var='cart_btn_icon' value='data-icon="plus"'}
 			{/if}
-			<button type="submit" data-theme="{$cart_btn_theme}" name="Submit" class="{$cart_btn_class}" value="submit-value" id="Submit" {$cart_btn_icon} >{l s='Add to cart'}</button>
+			{if $product->pre_order || ($product->quantity <= 0 && Configuration::get('PS_AUTO_PREORDER_NO_STOCK'))}
+				<button type="submit" data-theme="{$cart_btn_theme}" name="Submit" class="{$cart_btn_class}" value="submit-value" id="Submit" {$cart_btn_icon} >{l s='Pre-Order'}</button>
+			{else}
+				<button type="submit" data-theme="{$cart_btn_theme}" name="Submit" class="{$cart_btn_class}" value="submit-value" id="Submit" {$cart_btn_icon} >{l s='Add to cart'}</button>
+			{/if}
 		</div><!-- .btn-row -->
 	</form><!-- #buy_block -->
 	{/if}
