@@ -14,7 +14,7 @@
 			<?php echo t('This is to inform you about the creation of a voucher.'); ?>
 		</p>
 		<span>
-			<?php echo t('Here is the code of your voucher: <span><strong>{voucher_num}</strong></span>'); ?><br/><br/>
+			<?php echo t('Here is the code of your voucher:'); ?> <span><strong>{voucher_num}</strong></span><br/><br/>
 			<?php echo t('Simply copy/paste this code during the payment process for your next order.'); ?>
 	</td>
 </tr>

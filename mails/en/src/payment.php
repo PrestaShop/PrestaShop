@@ -12,7 +12,7 @@
 <tr>
 	<td class="box">
 		<p>
-			<?php echo t('Your order with the reference {order_name} - Payment processed'); ?>
+			<?php echo t('Order {order_name}'); ?>&nbsp;-&nbsp;<?php echo t('Payment processed'); ?>
 		</p>
 		<span>
 			<?php echo t('Your payment for order with the reference <strong><span>{order_name}</span></strong> was successfully processed.'); ?>
