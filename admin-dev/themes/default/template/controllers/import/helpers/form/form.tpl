@@ -227,6 +227,10 @@
 				$(".import_products_categories, label[for=regenerate], #regenerate").show();
 			else
 				$(".import_products_categories, label[for=regenerate], #regenerate").hide();
+			if ($("#entity > option:selected").val() == 5 || $("#entity > option:selected").val() == 6)
+				$("label[for=regenerate], #regenerate").show()
+			else
+				$("label[for=regenerate], #regenerate").hide();
 			if ($("#entity > option:selected").val() == 0 || $("#entity > option:selected").val() == 1 || $("#entity > option:selected").val() == 3 || $("#entity > option:selected").val() == 5 || $("#entity > option:selected").val() == 6 || $("#entity > option:selected").val() == 7)
 				$("label[for=forceIDs], #forceIDs").show();
 			else
