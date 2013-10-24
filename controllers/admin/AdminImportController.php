@@ -382,6 +382,7 @@ class AdminImportControllerCore extends AdminController
 					'meta_title' => array('label' => $this->l('Meta title')),
 					'meta_keywords' => array('label' => $this->l('Meta keywords')),
 					'meta_description' => array('label' => $this->l('Meta description')),
+					'image' => array('label' => $this->l('Image URL')),
 					'shop' => array(
 						'label' => $this->l('ID / Name of group shop'),
 						'help' => $this->l('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.'),
@@ -881,6 +882,12 @@ class AdminImportControllerCore extends AdminController
 			break;
 			case 'categories':
 				$path = _PS_CAT_IMG_DIR_.(int)$id_entity;
+			break;
+			case 'manufacturers':
+				$path = _PS_MANU_IMG_DIR_.(int)$id_entity;
+			break;
+			case 'suppliers':
+				$path = _PS_SUPP_IMG_DIR_.(int)$id_entity;
 			break;
 		}
 		$url = str_replace(' ', '%20', trim($url));
@@ -2370,6 +2377,11 @@ class AdminImportControllerCore extends AdminController
 				if (!$res)
 					$res = $manufacturer->add();
 
+				//copying images of manufacturer
+				if (isset($manufacturer->image) && !empty($manufacturer->image))
+				if (!AdminImportController::copyImg($manufacturer->id, null, $manufacturer->image, 'manufacturers', !Tools::getValue('regenerate')))
+					$this->warnings[] = $manufacturer->image.' '.Tools::displayError('cannot be copied.');
+
 				if ($res)
 				{
 					// Associate supplier to group shop
@@ -2442,6 +2454,11 @@ class AdminImportControllerCore extends AdminController
 					$res = $supplier->update();
 				if (!$res)
 					$res = $supplier->add();
+
+				//copying images of suppliers
+				if (isset($supplier->image) && !empty($supplier->image))
+				if (!AdminImportController::copyImg($supplier->id, null, $supplier->image, 'suppliers', !Tools::getValue('regenerate')))
+					$this->warnings[] = $supplier->image.' '.Tools::displayError('cannot be copied.');
 
 				if (!$res)
 					$this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
