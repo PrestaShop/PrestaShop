@@ -79,7 +79,7 @@
 						</div>
 						<div class="form-group">
 								<a href="#" class="show-forgot-password pull-right" >
-									{l s='Lost password'}&hellip;
+									{l s='Lost password'}
 								</a>
 							<label class="control-label" for="passwd">
 								{l s='Password'}
@@ -138,16 +138,16 @@
 									id="email_forgot"
 									class="form-control"
 									autofocus="autofocus"
-									tabindex="1"
+									tabindex="5"
 									placeholder="test@example.com" />
 							</div>
 						</div>
 						<div class="panel-footer">
-							<button href="#" class="btn btn-default show-login-form" tabindex="3">
+							<button href="#" class="btn btn-default show-login-form" tabindex="7">
 								<i class="icon-caret-left"></i>
 								{l s='Back to login'}
 							</button>
-							<button class="btn btn-default pull-right" name="submitLogin" type="submit" tabindex="2">
+							<button class="btn btn-default pull-right" name="submitLogin" type="submit" tabindex="6">
 								<i class="icon-ok text-success"></i>
 								{l s='Send'}
 							</button>
