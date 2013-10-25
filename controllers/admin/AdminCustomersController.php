@@ -652,9 +652,7 @@ class AdminCustomersControllerCore extends AdminController
 		for ($i = 0; $i < $total_connections; $i++)
 		{
 			$connections[$i]['date_add'] = Tools::displayDate($connections[$i]['date_add'],null , true);
-			$connections[$i]['http_referer'] = $connections[$i]['http_referer'] ?
-													preg_replace('/^www./', '', parse_url($connections[$i]['http_referer'], PHP_URL_HOST)) :
-														$this->l('Direct link');
+			$connections[$i]['http_referer'] = $connections[$i]['http_referer'] ? preg_replace('/^www./', '', parse_url($connections[$i]['http_referer'], PHP_URL_HOST)) : $this->l('Direct link');
 		}
 		
 		$referrers = Referrer::getReferrers($customer->id);
