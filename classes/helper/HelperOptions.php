@@ -104,16 +104,22 @@ class HelperOptionsCore extends Helper
 					$uploader->setUrl(isset($field['url'])?$field['url']:null);
 					$uploader->setMultiple(isset($field['multiple'])?$field['multiple']:false);
 					$uploader->setUseAjax(isset($field['ajax'])?$field['ajax']:false);
-					$uploader->setDisplayImage(isset($field['display_image'])?$field['display_image']:false);
-					$uploader->setImage(isset($field['image'])?$field['image']:null);
-					$uploader->setThumb(isset($field['thumb'])?$field['thumb']:null);
-					$uploader->setSize(isset($field['size'])?$field['size']:null);
-					$uploader->setTitle(isset($field['title'])?$field['title']:null);
-					$uploader->setDeleteUrl(isset($field['delete_url'])?$field['delete_url']:null);
 
+					if (isset($field['images']))
+						$uploader->setImages($field['images']);
+					elseif (isset($field['image'])) // Use for retrocompatibility							
+						$uploader->setImages(array(
+							0 => array(
+							'image'      => isset($field['image'])?$field['image']:null,
+							'size'       => isset($field['size'])?$field['size']:null,
+							'delete_url' => isset($field['delete_url'])?$field['delete_url']:null
+						)));
+
+					$uploader->setThumb(isset($field['thumb'])?$field['thumb']:null);
+					$uploader->setTitle(isset($field['title'])?$field['title']:null);
 					$field['file'] = $uploader->render();
 				}
-					
+
 				// Cast options values if specified
 				if ($field['type'] == 'select' && isset($field['cast']))
 					foreach ($field['list'] as $option_key => $option)
