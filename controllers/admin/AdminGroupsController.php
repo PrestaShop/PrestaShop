@@ -221,7 +221,7 @@ class AdminGroupsControllerCore extends AdminController
 			'date_add' => array('title' => $this->l('Register date'), 'type' => 'date', 'class' => 'fixed-width-md', 'align' => 'center'),
 			'active' => array('title' => $this->l('Enabled'),'align' => 'center', 'class' => 'fixed-width-sm', 'active' => 'status','type' => 'bool', 'filter_key' => 'c!active')
 		));
-		$this->_select = 'c.*';
+		$this->_select = 'c.*, a.id_group';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'customer` c ON (a.`id_customer` = c.`id_customer`)';
 		$this->_where = 'AND a.`id_group` = '.(int)$group->id.' AND c.`deleted` != 1';
 		self::$currentIndex = self::$currentIndex.'&viewgroup';

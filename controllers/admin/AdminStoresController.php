@@ -163,6 +163,14 @@ class AdminStoresControllerCore extends AdminController
 
 	public function renderForm()
 	{
+		if (!($obj = $this->loadObject(true)))
+			return;
+
+		$image = _PS_STORE_IMG_DIR_.$obj->id.'.jpg';
+		$image_url = ImageManager::thumbnail($image, $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 350,
+			$this->imageType, true, true);
+		$image_size = file_exists($image) ? filesize($image) / 1000 : false;
+
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Stores'),
@@ -274,15 +282,18 @@ class AdminStoresControllerCore extends AdminController
 						)
 					),
 					'hint' => $this->l('Whether or not to display this store')
-				)
-			),
-			'rightCols' => array (
-				'input' => array(
+				),
+				array(
 					'type' => 'file',
 					'label' => $this->l('Picture'),
 					'name' => 'image',
+					'display_image' => true,
+					'image' => $image_url ? $image_url : false,
+					'size' => $image_size,
 					'hint' => $this->l('Storefront picture')
 				)
+			),
+			'hours' => array(
 			),
 			'submit' => array(
 				'title' => $this->l('   Save   '),
@@ -298,15 +309,6 @@ class AdminStoresControllerCore extends AdminController
 				'name' => 'checkBoxShopAsso',
 			);
 		}
-
-		if (!($obj = $this->loadObject(true)))
-			return;
-		
-		if (file_exists(_PS_TMP_IMG_DIR_.$this->table.'_'.(int)$obj->id.'.'.$this->imageType)) {
-			@unlink(_PS_TMP_IMG_DIR_.$this->table.'_'.(int)$obj->id.'.'.$this->imageType);
-		}
-
-		$image = ImageManager::thumbnail(_PS_STORE_IMG_DIR_.DIRECTORY_SEPARATOR.$obj->id.'.jpg', $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 350, $this->imageType, true, true);
 
 		$days = array();
 		$days[1] = $this->l('Monday');
@@ -324,8 +326,6 @@ class AdminStoresControllerCore extends AdminController
 		$this->fields_value = array(
 			'latitude' => $this->getFieldValue($obj, 'latitude') ? $this->getFieldValue($obj, 'latitude') : Configuration::get('PS_STORES_CENTER_LAT'),
 			'longitude' => $this->getFieldValue($obj, 'longitude') ? $this->getFieldValue($obj, 'longitude') : Configuration::get('PS_STORES_CENTER_LONG'),
-			'image' => $image ? $image : false,
-			'size' => $image ? filesize(_PS_STORE_IMG_DIR_.DIRECTORY_SEPARATOR.$obj->id.'.jpg') / 1000 : false,
 			'days' => $days,
 			'hours' => isset($hours_unserialized) ? $hours_unserialized : false
 		);
