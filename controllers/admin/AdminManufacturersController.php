@@ -268,6 +268,14 @@ class AdminManufacturersControllerCore extends AdminController
 
 	public function renderForm()
 	{
+		if (!($manufacturer = $this->loadObject(true)))
+			return;
+
+		$image = _PS_MANU_IMG_DIR_.$manufacturer->id.'.jpg';
+		$image_url = ImageManager::thumbnail($image, $this->table.'_'.(int)$manufacturer->id.'.'.$this->imageType, 350,
+			$this->imageType, true, true);
+		$image_size = file_exists($image) ? filesize($image) / 1000 : false;
+
 		$this->fields_form = array(
 			'tinymce' => true,
 			'legend' => array(
@@ -306,6 +314,8 @@ class AdminManufacturersControllerCore extends AdminController
 					'type' => 'file',
 					'label' => $this->l('Logo:'),
 					'name' => 'logo',
+					'image' => $image_url ? $image_url : false,
+					'size' => $image_size,
 					'display_image' => true,
 					'hint' => $this->l('Upload a manufacturer logo from your computer.')
 				),
@@ -371,13 +381,6 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->fields_form['submit'] = array(
 			'title' => $this->l('Save   '),
 			'class' => 'button'
-		);
-
-		$image = ImageManager::thumbnail(_PS_MANU_IMG_DIR_.'/'.$manufacturer->id.'.jpg', $this->table.'_'.(int)$manufacturer->id.'.'.$this->imageType, 350, $this->imageType, true);
-
-		$this->fields_value = array(
-			'image' => $image ? $image : false,
-			'size' => $image ? filesize(_PS_MANU_IMG_DIR_.'/'.$manufacturer->id.'.jpg') / 1000 : false
 		);
 
 		foreach ($this->_languages as $language)

@@ -388,6 +388,14 @@ class AdminCategoriesControllerCore extends AdminController
 		$guest_group_information = sprintf($this->l('%s - Customer who placed an order with the guest checkout.'), '<b>'.$guest->name[$this->context->language->id].'</b>');
 		$default_group_information = sprintf($this->l('%s - All people who have created an account on this site.'), '<b>'.$default->name[$this->context->language->id].'</b>');
 
+		if (!($obj = $this->loadObject(true)))
+			return;
+
+		$image = _PS_CAT_IMG_DIR_.$obj->id.'.jpg';
+		$image_url = ImageManager::thumbnail($image, $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 350,
+			$this->imageType, true, true);
+		$image_size = file_exists($image) ? filesize($image) / 1000 : false;
+
 		$this->fields_form = array(
 			'tinymce' => true,
 			'legend' => array(
@@ -446,6 +454,9 @@ class AdminCategoriesControllerCore extends AdminController
 					'label' => $this->l('Image:'),
 					'name' => 'image',
 					'display_image' => true,
+					'image' => $image_url ? $image_url : false,
+					'size' => $image_size,
+					'delete_url' => self::$currentIndex.'&'.$this->identifier.'='.$this->id.'&token='.$this->token.'&deleteImage=1',
 					'hint' => $this->l('Upload a category logo from your computer.')
 				),
 				array(
