@@ -2430,11 +2430,58 @@ class AdminProductsControllerCore extends AdminController
 	{
 		if (empty($this->display))
 			$this->page_header_toolbar_btn['new_product'] = array(
-				'href' => self::$currentIndex.'&amp;addproduct&amp;token='.$this->token,
-				'desc' => $this->l('Add new product'),
-				'icon' => 'process-icon-new'
-			);
+					'href' => self::$currentIndex.'&amp;addproduct&amp;token='.$this->token,
+					'desc' => $this->l('Add new product'),
+					'icon' => 'process-icon-new'
+				);
+		if ($this->display == 'edit' || $this->display == 'add')
+		{
+			if (($product = $this->loadObject(true)))
+			{
+				// adding button for duplicate this product
+				if ($this->tabAccess['add'] && $this->display != 'add')
+					$this->page_header_toolbar_btn['duplicate'] = array(
+						'short' => 'Duplicate',
+						'desc' => $this->l('Duplicate'),
+						'confirm' => 1,
+						'js' => 'if (confirm(\''.$this->l('Also copy images').' ?\')) document.location = \''.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)$product->id.'&amp;duplicateproduct\'; else document.location = \''.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)$product->id.'&amp;duplicateproduct&amp;noimage=1\';'
+					);
 
+				// adding button for preview this product
+				if ($url_preview = $this->getPreviewUrl($product))
+					$this->page_header_toolbar_btn['preview'] = array(
+						'short' => 'Preview',
+						'href' => $url_preview,
+						'desc' => $this->l('Preview'),
+						'target' => true,
+						'class' => 'previewUrl'
+					);
+
+				// adding button for preview this product statistics
+				if (file_exists(_PS_MODULE_DIR_.'statsproduct/statsproduct.php') && $this->display != 'add')
+					$this->page_header_toolbar_btn['stats'] = array(
+					'short' => 'Statistics',
+					'href' => $this->context->link->getAdminLink('AdminStats').'&amp;module=statsproduct&amp;id_product='.(int)$product->id,
+					'desc' => $this->l('Product sales'),
+				);
+				
+				// adding button for delete this product
+				if ($this->tabAccess['delete'] && $this->display != 'add')
+					$this->page_header_toolbar_btn['delete'] = array(
+						'short' => 'Delete',
+						'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)$product->id.'&amp;deleteproduct',
+						'desc' => $this->l('Delete this product'),
+						'confirm' => 1,
+						'js' => 'if (confirm(\''.$this->l('Delete product?').'\')){return true;}else{event.preventDefault();}'
+					);
+
+				$this->page_header_toolbar_btn['save-and-stay'] = array(
+					'short' => 'SaveAndStay',
+					'href' => '#',
+					'desc' => $this->l('Save and stay'),
+				);	
+			}
+		}
 		parent::initPageHeaderToolbar();
 	}
 
@@ -2443,76 +2490,25 @@ class AdminProductsControllerCore extends AdminController
 		parent::initToolbar();
 		if ($this->display == 'edit' || $this->display == 'add')
 		{
-			if ($product = $this->loadObject(true))
-			{
-				if ($this->tabAccess['edit'])
-				{
-					$this->toolbar_btn['save'] = array(
-						'short' => 'Save',
-						'href' => '#',
-						'desc' => $this->l('Save'),
-					);
+			$this->toolbar_btn['save'] = array(
+				'short' => 'Save',
+				'href' => '#',
+				'desc' => $this->l('Save'),
+			);
 
-					$this->toolbar_btn['save-and-stay'] = array(
-						'short' => 'SaveAndStay',
-						'href' => '#',
-						'desc' => $this->l('Save and stay'),
-					);
-				}
+			$this->toolbar_btn['save-and-stay'] = array(
+				'short' => 'SaveAndStay',
+				'href' => '#',
+				'desc' => $this->l('Save and stay'),
+			);
 
-				if ((bool)$product->id)
-				{
-					// adding button for duplicate this product
-					if ($this->tabAccess['add'] && $this->display != 'add')
-						$this->toolbar_btn['duplicate'] = array(
-							'short' => 'Duplicate',
-							'desc' => $this->l('Duplicate'),
-							'confirm' => 1,
-							'js' => 'if (confirm(\''.$this->l('Also copy images').' ?\')) document.location = \''.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)$product->id.'&amp;duplicateproduct\'; else document.location = \''.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)$product->id.'&amp;duplicateproduct&amp;noimage=1\';'
-						);
-
-					// adding button for preview this product
-					if ($url_preview = $this->getPreviewUrl($product))
-						$this->toolbar_btn['preview'] = array(
-							'short' => 'Preview',
-							'href' => $url_preview,
-							'desc' => $this->l('Preview'),
-							'target' => true,
-							'class' => 'previewUrl'
-						);
-
-					// adding button for preview this product statistics
-					if (file_exists(_PS_MODULE_DIR_.'statsproduct/statsproduct.php') && $this->display != 'add')
-						$this->toolbar_btn['stats'] = array(
-						'short' => 'Statistics',
-						'href' => $this->context->link->getAdminLink('AdminStats').'&amp;module=statsproduct&amp;id_product='.(int)$product->id,
-						'desc' => $this->l('Product sales'),
-					);
-
-					// adding button for adding a new combination in Combination tab
-					$this->toolbar_btn['newCombination'] = array(
-						'short' => 'New combination',
-						'desc' => $this->l('New combination'),
-						'class' => 'toolbar-new'
-					);
-				
-					// adding button for delete this product
-					if ($this->tabAccess['delete'] && $this->display != 'add')
-						$this->toolbar_btn['delete'] = array(
-							'short' => 'Delete',
-							'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)$product->id.'&amp;deleteproduct',
-							'desc' => $this->l('Delete this product'),
-							'confirm' => 1,
-							'js' => 'if (confirm(\''.$this->l('Delete product?').'\')){return true;}else{event.preventDefault();}'
-						);
-				}				
-			}
+			// adding button for adding a new combination in Combination tab
+			$this->toolbar_btn['newCombination'] = array(
+				'short' => 'New combination',
+				'desc' => $this->l('New combination'),
+				'class' => 'toolbar-new'
+			);
 		}
-		else
-			$this->toolbar_btn['import'] = array(
-					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=products',
-					'desc' => $this->l('Import')
-				);
 		
 		$this->context->smarty->assign('toolbar_scroll', 1);
 		$this->context->smarty->assign('show_toolbar', 1);

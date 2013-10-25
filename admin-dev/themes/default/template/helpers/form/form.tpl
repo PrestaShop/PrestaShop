@@ -36,7 +36,7 @@
 				{if $key == 'legend'}
 					<h3>
 						{if isset($field.image)}<img src="{$field.image}" alt="{$field.title|escape:'htmlall':'UTF-8'}" />{/if}
-						{if isset($field.icon)}<i class="{$field.icon}"/></i>{/if}
+						{if isset($field.icon)}<i class="{$field.icon}"></i>{/if}
 						{$field.title}
 					</h3>
 				{elseif $key == 'description' && $field}

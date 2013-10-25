@@ -70,26 +70,33 @@ class AdminCmsControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_btn['save-and-preview'] = array(
+			'href' => '#',
+			'desc' => $this->l('Save and preview')
+		);
+		$this->page_header_toolbar_btn['save-and-stay'] = array(
+			'short' => 'SaveAndStay',
+			'href' => '#',
+			'desc' => $this->l('Save and stay'),
+		);
+		
+		return parent::initPageHeaderToolbar();
+	}
+
 	public function renderForm()
 	{
 		if (!$this->loadObject(true))
 			return;
-		
+
 		if (Validate::isLoadedObject($this->object))
 			$this->display = 'edit';
 		else
 			$this->display = 'add';
 
-		$this->toolbar_btn['save-and-preview'] = array(
-			'href' => '#',
-			'desc' => $this->l('Save and preview')
-		);
-		$this->toolbar_btn['save-and-stay'] = array(
-			'short' => 'SaveAndStay',
-			'href' => '#',
-			'desc' => $this->l('Save and stay'),
-		);
 		$this->initToolbar();
+		$this->initPageHeaderToolbar();
 
 		$categories = CMSCategory::getCategories($this->context->language->id, false);
 		$html_categories = CMSCategory::recurseCMSCategory($categories, $categories[0][1], 1, $this->getFieldValue($this->object, 'id_cms_category'), 1);
@@ -226,16 +233,7 @@ class AdminCmsControllerCore extends AdminController
 	public function postProcess()
 	{	
 		if (Tools::isSubmit('viewcms') && ($id_cms = (int)Tools::getValue('id_cms')) && ($cms = new CMS($id_cms, $this->context->language->id)) && Validate::isLoadedObject($cms))
-		{
-			$redir = $this->context->link->getCMSLink($cms);
-			if (!$cms->active)
-			{
-				$admin_dir = dirname($_SERVER['PHP_SELF']);
-				$admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
-				$redir .= '?adtoken='.Tools::getAdminTokenLite('AdminCmsContent').'&ad='.$admin_dir.'&id_employee='.(int)$this->context->employee->id;
-			}
-			Tools::redirectAdmin($redir);
-		}
+			$this->redirect_after = $this->getPreviewUrl($cms);
 		elseif (Tools::isSubmit('deletecms'))
 		{
 			if (Tools::getValue('id_cms') == Configuration::get('PS_CONDITIONS_CMS_ID'))
@@ -301,27 +299,7 @@ class AdminCmsControllerCore extends AdminController
                     $this->updateAssoShop($cms->id);
             }
             if (Tools::isSubmit('submitAddcmsAndPreview'))
-            {
-                $alias = $this->getFieldValue($cms, 'link_rewrite', $this->context->language->id);
-                $preview_url = $this->context->link->getCMSLink($cms, $alias, $this->context->language->id);
-
-                if (!$cms->active)
-                {
-                    $admin_dir = dirname($_SERVER['PHP_SELF']);
-                    $admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
-                    $params = http_build_query(array(
-                        'adtoken' => Tools::getAdminTokenLite('AdminCmsContent'),
-                        'ad' => $admin_dir,
-                        'id_employee' => (int)$this->context->employee->id)
-                        );
-                    if (Configuration::get('PS_REWRITING_SETTINGS'))
-                        $params = '?'.$params;
-                    else
-                        $params = '&'.$params;
-                    $preview_url .= $cms->active ? '' : $params;
-                }
-                Tools::redirectAdmin($preview_url);
-            }
+					$this->redirect_after = $this->previewUrl($cms);
             elseif (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
                 Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$cms->id.'&conf=4&update'.$this->table.'&token='.Tools::getAdminTokenLite('AdminCmsContent'));
             else
@@ -379,6 +357,23 @@ class AdminCmsControllerCore extends AdminController
 		}
 		else
 			parent::postProcess(true);
+	}
+
+	public function getPreviewUrl(CMS $cms)
+	{			
+		$preview_url = $this->context->link->getCMSLink($cms, null, null, $this->context->language->id);
+		if (!$cms->active)
+		{
+			$params = http_build_query(array(
+				'adtoken' => Tools::getAdminTokenLite('AdminCmsContent'),
+				'ad' => substr(dirname($_SERVER['PHP_SELF']), strrpos(dirname($_SERVER['PHP_SELF']), '/') + 1),
+				'id_employee' => (int)$this->context->employee->id
+				)
+			);
+			$preview_url .= (strpos($preview_url, '?') === false ? '?' : '&').$params;
+		}
+
+		return $preview_url;
 	}
 }
 

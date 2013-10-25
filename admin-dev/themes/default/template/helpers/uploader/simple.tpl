@@ -22,22 +22,26 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{if isset($display_image) && $display_image}
-	{if isset($image) && $image}
-	<div class="form-group">
-		<div class="col-lg-12">
-			<div class="img-thumbnail text-center">
-				{$image}
-				{if isset($size)}<p>{l s='File size'} {$size}kb</p>{/if}
-				{if isset($delete_url)}
-				<a class="btn btn-default" href="{$delete_url}">
-					<i class="icon-trash"></i> {l s='Delete'}
+{if isset($images) && $images}
+<div class="form-group">
+	<div class="col-lg-12">
+		{foreach $images as $image}
+		{if isset($image.image)}
+		<div class="img-thumbnail text-center">
+			<p>{$image.image}</p>
+			{if isset($image.size)}<p>{l s='File size'} {$image.size}kb</p>{/if}
+			{if isset($image.delete_url)}
+			<p>
+				<a class="btn btn-default" href="{$image.delete_url}">
+				<i class="icon-trash"></i> {l s='Delete'}
 				</a>
-				{/if}
-			</div>
+			</p>
+			{/if}
 		</div>
+		{/if}
+		{/foreach}
 	</div>
-	{/if}
+</div>
 {/if}
 {if isset($thumb) && $thumb}
 	<div class="form-group">
@@ -69,23 +73,33 @@
 	</div>
 </div>
 
-<script>
+<script type="text/javascript">
 	$(document).ready(function(){
 		$('#{$id}-selectbutton').click(function(e) {
 			$('#{$id}').trigger('click');
 		});
+
 		$('#{$id}-name').click(function(e) {
 			$('#{$id}').trigger('click');
 		});
-		$('#{$id}').change(function(e) {
-			var files = $(this)[0].files;
-			var name  = '';
 
-			$.each(files, function(index, value) {
-				name += value.name+', ';
-			});
-			
-			$('#{$id}-name').val(name.slice(0, -2));
+		$('#{$id}').change(function(e) {
+			if ($(this)[0].files !== undefined)
+			{
+				var files = $(this)[0].files;
+				var name  = '';
+
+				$.each(files, function(index, value) {
+					name += value.name+', ';
+				});
+
+				$('#{$id}-name').val(name.slice(0, -2));
+			}
+			else // Internet Explorer 9 Compatibility
+			{
+				var name = $(this).val().split(/[\\/]/);
+				$('#{$id}-name').val(name[name.length-1]);
+			}
 		});
 	});
 </script>

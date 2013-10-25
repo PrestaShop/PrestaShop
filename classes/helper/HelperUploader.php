@@ -31,13 +31,10 @@ class HelperUploaderCore extends Uploader
 	const DEFAULT_AJAX_TEMPLATE      = 'ajax.tpl';
 
 	private   $_context;
-	private   $_delete_url;
-	private   $_display_image;
 	private   $_id;
-	private   $_image;
+	private   $_images;
 	private   $_name;
 	private   $_multiple;
-	private   $_size;
 	private   $_file;
 	protected $_template;
 	private   $_template_directory;
@@ -60,23 +57,6 @@ class HelperUploaderCore extends Uploader
 		return $this->_context;
 	}
 
-	public function setDeleteUrl($value)
-	{
-		$this->_delete_url = $value;
-		return $this;
-	}
-
-	public function getDeleteUrl()
-	{
-		return $this->_delete_url;
-	}
-
-	public function setDisplayImage($value)
-	{
-		$this->_display_image = $value;
-		return $this;
-	}
-
 	public function setId($value)
 	{
 		$this->_id = (string)$value;
@@ -91,15 +71,18 @@ class HelperUploaderCore extends Uploader
 		return $this->_id;
 	}
 
-	public function setImage($value)
+	public function setImages($value)
 	{
-		$this->_image = $value;
+		$this->_images = $value;
 		return $this;
 	}
 
-	public function getImage()
+	public function getImages()
 	{
-		return $this->_image;
+		if (!isset($this->_images))
+			$this->_images = array();
+
+		return $this->_images;
 	}
 
 	public function setName($value)
@@ -117,17 +100,6 @@ class HelperUploaderCore extends Uploader
 	{
 		$this->_multiple = (bool)$value;
 		return $this;
-	}
-
-	public function setSize($value)
-	{
-		$this->_size = $value;
-		return $this;
-	}
-
-	public function getSize()
-	{
-		return $this->_size;
 	}
 
 	public function setTemplate($value)
@@ -246,11 +218,6 @@ class HelperUploaderCore extends Uploader
 		return $this;
 	}
 
-	public function displayImage()
-	{
-		return (isset($this->_display_image) && $this->_display_image);
-	}
-
 	public function isMultiple()
 	{
 		return (isset($this->_multiple) && $this->_multiple);
@@ -297,7 +264,6 @@ class HelperUploaderCore extends Uploader
 
 			$this->getContext()->controller->addJs(__PS_BASE_URI__.'/js/vendor/spin.js');
 			$this->getContext()->controller->addJs(__PS_BASE_URI__.'/js/vendor/ladda.js');
-
 		}
 
 		if ($this->useAjax())
@@ -312,12 +278,9 @@ class HelperUploaderCore extends Uploader
 			'name'          => $this->getName(),
 			'url'           => $this->getUrl(),
 			'multiple'      => $this->isMultiple(),
-			'display_image' => $this->displayImage(),
-			'image'         => $this->getImage(),
+			'images'        => $this->getImages(),
 			'thumb'         => $this->getThumb(),
 			'file'          => $this->getFile(),
-			'size'          => $this->getSize(),
-			'delete_url'    => $this->getDeleteUrl(),
 			'title'         => $this->getTitle()
 		));
 
