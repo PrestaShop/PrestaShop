@@ -1,14 +1,14 @@
-Hi {firstname} {lastname},
 
-This is to inform you about the creation of a voucher.
+[http://safe.shell.la/{shop_url}] 
 
-Here is the code of your voucher : {voucher_num}.
+Hi {firstname} {lastname}, 
 
-Simply copy/paste this code during the payment process for your next order.
+This is to inform you about the creation of a voucher. Here is the
+code of your voucher: {VOUCHER_NUM}
 
-Thank you for shopping at {shop_name}.
+Simply copy/paste this code during the payment process for your next
+order. 
 
-{shop_name} - {shop_url}
+{shop_name} [http://safe.shell.la/{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
 
-
-{shop_url} powered by PrestaShop™
