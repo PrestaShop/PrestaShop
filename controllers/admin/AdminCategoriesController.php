@@ -457,7 +457,8 @@ class AdminCategoriesControllerCore extends AdminController
 					'image' => $image_url ? $image_url : false,
 					'size' => $image_size,
 					'delete_url' => self::$currentIndex.'&'.$this->identifier.'='.$this->id.'&token='.$this->token.'&deleteImage=1',
-					'hint' => $this->l('Upload a category logo from your computer.')
+					'hint' => $this->l('Upload a category logo from your computer.'),
+					'col' => 4
 				),
 				array(
 					'type' => 'text',
