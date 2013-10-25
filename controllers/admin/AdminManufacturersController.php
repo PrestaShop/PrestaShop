@@ -279,6 +279,7 @@ class AdminManufacturersControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Name:'),
 					'name' => 'name',
+					'col' => 4,
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
 				),
@@ -290,6 +291,7 @@ class AdminManufacturersControllerCore extends AdminController
 					'cols' => 60,
 					'rows' => 10,
 					'autoload_rte' => 'rte', //Enable TinyMCE editor for short description
+					'col' => 6,
 					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
 				),
 				array(
@@ -299,6 +301,7 @@ class AdminManufacturersControllerCore extends AdminController
 					'lang' => true,
 					'cols' => 60,
 					'rows' => 10,
+					'col' => 6,
 					'autoload_rte' => 'rte', //Enable TinyMCE editor for description
 					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
 				),
@@ -307,6 +310,7 @@ class AdminManufacturersControllerCore extends AdminController
 					'label' => $this->l('Logo:'),
 					'name' => 'logo',
 					'display_image' => true,
+					'col' => 6,
 					'hint' => $this->l('Upload a manufacturer logo from your computer.')
 				),
 				array(
@@ -314,6 +318,7 @@ class AdminManufacturersControllerCore extends AdminController
 					'label' => $this->l('Meta title:'),
 					'name' => 'meta_title',
 					'lang' => true,
+					'col' => 4,
 					'hint' => $this->l('Forbidden characters:').' &lt;&gt;;=#{}'
 				),
 				array(
@@ -321,6 +326,7 @@ class AdminManufacturersControllerCore extends AdminController
 					'label' => $this->l('Meta description:'),
 					'name' => 'meta_description',
 					'lang' => true,
+					'col' => 6,
 					'hint' => $this->l('Forbidden characters:').' &lt;&gt;;=#{}'
 				),
 				array(
@@ -328,6 +334,7 @@ class AdminManufacturersControllerCore extends AdminController
 					'label' => $this->l('Meta keywords:'),
 					'name' => 'meta_keywords',
 					'lang' => true,
+					'col' => 6,
 					'hint' => array(
 						$this->l('Forbidden characters:').' &lt;&gt;;=#{}',
 						$this->l('To add "tags," click inside the field, write something, and then press "Enter."')
@@ -432,6 +439,7 @@ class AdminManufacturersControllerCore extends AdminController
 				'type' => 'text',
 				'label' => $this->l('Manufacturer:'),
 				'name' => 'name',
+				'col' => 4,
 				'disabled' => true,
 			);
 
@@ -456,6 +464,7 @@ class AdminManufacturersControllerCore extends AdminController
 			'label' => $this->l('Last name:'),
 			'name' => 'lastname',
 			'required' => true,
+			'col' => 4,
 			'hint' => $this->l('Invalid characters:').' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:'
 		);
 		$form['input'][] = array(
@@ -463,24 +472,28 @@ class AdminManufacturersControllerCore extends AdminController
 			'label' => $this->l('First name:'),
 			'name' => 'firstname',
 			'required' => true,
+			'col' => 4,
 			'hint' => $this->l('Invalid characters:').' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:'
 		);
 		$form['input'][] = array(
 			'type' => 'text',
 			'label' => $this->l('Address:'),
 			'name' => 'address1',
+			'col' => 6,
 			'required' => true,
 		);
 		$form['input'][] = array(
 			'type' => 'text',
 			'label' => $this->l('Address (2):'),
 			'name' => 'address2',
+			'col' => 6,
 			'required' => false,
 		);
 		$form['input'][] = array(
 			'type' => 'text',
 			'label' => $this->l('Zip Code/Postal Code'),
 			'name' => 'postcode',
+			'col' => 2,
 			'required' => true,
 			'required' => false,
 		);
@@ -488,6 +501,7 @@ class AdminManufacturersControllerCore extends AdminController
 			'type' => 'text',
 			'label' => $this->l('City:'),
 			'name' => 'city',
+			'col' => 4,
 			'required' => true,
 		);
 		$form['input'][] = array(
@@ -496,6 +510,7 @@ class AdminManufacturersControllerCore extends AdminController
 			'name' => 'id_country',
 			'required' => false,
 			'default_value' => (int)$this->context->country->id,
+			'col' => 4,
 			'options' => array(
 				'query' => Country::getCountries($this->context->language->id),
 				'id' => 'id_country',
@@ -507,6 +522,7 @@ class AdminManufacturersControllerCore extends AdminController
 			'label' => $this->l('State:'),
 			'name' => 'id_state',
 			'required' => false,
+			'col' => 4,
 			'options' => array(
 				'query' => array(),
 				'id' => 'id_state',
@@ -517,12 +533,14 @@ class AdminManufacturersControllerCore extends AdminController
 			'type' => 'text',
 			'label' => $this->l('Home phone:'),
 			'name' => 'phone',
+			'col' => 4,
 			'required' => false,
 		);
 		$form['input'][] = array(
 			'type' => 'text',
 			'label' => $this->l('Mobile phone:'),
 			'name' => 'phone_mobile',
+			'col' => 4,
 			'required' => false,
 		);
 		$form['input'][] = array(
@@ -532,7 +550,8 @@ class AdminManufacturersControllerCore extends AdminController
 			'required' => false,
 			'hint' => $this->l('Forbidden characters:').' &lt;&gt;;=#{}',
 			'rows' => 2,
-			'cols' => 10
+			'cols' => 10,
+			'col' => 6,
 		);
 		$form['submit'] = array(
 			'title' => $this->l('Save   '),

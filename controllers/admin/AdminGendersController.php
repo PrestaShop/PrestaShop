@@ -110,6 +110,7 @@ class AdminGendersControllerCore extends AdminController
 					'label' => $this->l('Name:'),
 					'name' => 'name',
 					'lang' => true,
+					'col' => 4,
 					'hint' => $this->l('Invalid characters:').' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:',
 					'required' => true
 				),
@@ -141,18 +142,21 @@ class AdminGendersControllerCore extends AdminController
 					'type' => 'file',
 					'label' => $this->l('Image:'),
 					'name' => 'image',
+					'col' => 6,
 					'value' => true
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Image Width:'),
 					'name' => 'img_width',
+					'col' => 2,
 					'hint' => $this->l('Image width in pixels. Enter "0" to use the original size.')
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Image Height:'),
 					'name' => 'img_height',
+					'col' => 2,
 					'hint' => $this->l('Image height in pixels. Enter "0" to use the original size.')
 				)
 			),

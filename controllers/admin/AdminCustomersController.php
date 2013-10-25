@@ -284,6 +284,7 @@ class AdminCustomersControllerCore extends AdminController
 					'label' => $this->l('First name:'),
 					'name' => 'firstname',
 					'required' => true,
+					'col' => '4',
 					'hint' => $this->l('Forbidden characters:').' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:'
 				),
 				array(
@@ -291,12 +292,14 @@ class AdminCustomersControllerCore extends AdminController
 					'label' => $this->l('Last name:'),
 					'name' => 'lastname',
 					'required' => true,
+					'col' => '4',
 					'hint' => $this->l('Invalid characters:').' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:'
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Email address:'),
 					'name' => 'email',
+					'col' => '4',
 					'required' => true
 				),
 				array(
@@ -304,6 +307,7 @@ class AdminCustomersControllerCore extends AdminController
 					'label' => $this->l('Password:'),
 					'name' => 'passwd',
 					'required' => ($obj->id ? false : true),
+					'col' => '4',
 					'hint' => ($obj->id ? $this->l('Leave  this field blank if there\'s no change') : $this->l('Minimum of five characters (only letters and numbers).').' -_')
 				),
 				array(
@@ -392,32 +396,35 @@ class AdminCustomersControllerCore extends AdminController
 					unset($groups[$key]);
 		}
 
-		$this->fields_form['input'] = array_merge($this->fields_form['input'],
+		$this->fields_form['input'] = array_merge(
+			$this->fields_form['input'],
+			array(
 				array(
-					array(
-						'type' => 'group',
-						'label' => $this->l('Group access:'),
-						'name' => 'groupBox',
-						'values' => $groups,
-						'required' => true,
-						'hint' => $this->l('Select all the groups that you would like to apply to this customer.')
-							),
-					array(
-						'type' => 'select',
-						'label' => $this->l('Default customer group:'),
-						'name' => 'id_default_group',
-						'options' => array(
-							'query' => $groups,
-							'id' => 'id_group',
-							'name' => 'name'
-						),
-						'hint' => array(
-							$this->l('The group will be as applied by default.'),
-							$this->l('Apply the discount\'s price of this group.')
-							)
-						)
+					'type' => 'group',
+					'label' => $this->l('Group access:'),
+					'name' => 'groupBox',
+					'values' => $groups,
+					'required' => true,
+					'col' => '6',
+					'hint' => $this->l('Select all the groups that you would like to apply to this customer.')
+				),
+				array(
+					'type' => 'select',
+					'label' => $this->l('Default customer group:'),
+					'name' => 'id_default_group',
+					'options' => array(
+						'query' => $groups,
+						'id' => 'id_group',
+						'name' => 'name'
+					),
+					'col' => '4',
+					'hint' => array(
+						$this->l('The group will be as applied by default.'),
+						$this->l('Apply the discount\'s price of this group.')
 					)
-				);
+				)
+			)
+		);
 
 		// if customer is a guest customer, password hasn't to be there
 		if ($obj->id && ($obj->is_guest && $obj->id_default_group == Configuration::get('PS_GUEST_GROUP')))
