@@ -509,7 +509,7 @@
 								{elseif $input.type == 'categories_select'}
 									{$input.category_tree}
 								{elseif $input.type == 'asso_shop' && isset($asso_shop) && $asso_shop}
-										{$asso_shop}
+									{$asso_shop}
 								{elseif $input.type == 'color'}
 								<div class="col-lg-2">
 									<div class="row">

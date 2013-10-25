@@ -78,6 +78,12 @@ class AdminAttachmentsControllerCore extends AdminController
 
 	public function renderForm()
 	{
+		if (($obj = $this->loadObject(true)) && Validate::isLoadedObject($obj))
+		{
+			$link = $this->context->link->getPageLink('attachment', true, NULL, 'id_attachment='.$obj->id);
+			$size = round(filesize(_PS_DOWNLOAD_DIR_.$obj->file) / 1024);
+		}
+
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Attachment'),
@@ -90,22 +96,26 @@ class AdminAttachmentsControllerCore extends AdminController
 					'name' => 'name',
 					'required' => true,
 					'lang' => true,
+					'col' => 4
 				),
 				array(
 					'type' => 'textarea',
 					'label' => $this->l('Description:'),
 					'name' => 'description',
 					'lang' => true,
+					'col' => 6
 				),
 				array(
 					'type' => 'file',
+					'file' => isset($link) ? $link : null,
+					'size' => isset($size) ? $size : null,
 					'label' => $this->l('File:'),
 					'name' => 'file',
-					'hint' => $this->l('Upload a file from your computer.')
+					'col' => 6
 				),
 			),
 			'submit' => array(
-				'title' => $this->l('Save   '),
+				'title' => $this->l('Save'),
 				'class' => 'button'
 			)
 		);
