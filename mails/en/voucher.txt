@@ -1,13 +1,16 @@
-Hi {firstname} {lastname},
 
-A voucher has been created in your name as a result of your order with the reference {order_name}.
+[http://safe.shell.la/{shop_url}] 
 
-Voucher code: {voucher_num}, in the amount of {voucher_amount}.
+Hi {firstname} {lastname}, 
 
-Simply copy/paste this code during the payment process for your next order.
+Order {order_name} - Voucher created A voucher has been created in
+your name as a result of your order with the reference {ORDER_NAME}.
 
-Thank you for shopping at {shop_name}.
+VOUCHER CODE: {VOUCHER_NUM} in the amount of {VOUCHER_AMOUNT}
 
-{shop_name} - {shop_url}
+Simply copy/paste this code during the payment process for your next
+order. 
 
-{shop_url} powered by PrestaShop&trade;
+{shop_name} [http://safe.shell.la/{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

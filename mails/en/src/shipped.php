@@ -23,7 +23,7 @@
 <tr>
 	<td>
 		<span>
-			<?php echo t('You can now place orders on our shop: <a href="{shop_url}">{shop_name}</a>'); ?>.
+			<?php echo t('You can now place orders on our shop:'); ?> <a href="{shop_url}">{shop_name}</a>
 		</span>
 	</td>
 </tr>

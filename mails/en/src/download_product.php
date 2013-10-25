@@ -3,7 +3,7 @@
 <tr>
 	<td align="center">
 		<span class="title"><?php echo t('Hi {firstname} {lastname},'); ?></span><br/>
-		<span class="subtitle"><?php echo t('Thank you for your order from <strong>{shop_name}</strong>'); ?></span>
+		<span class="subtitle"><?php echo t('Thank you for your order with the reference {order_name} from <strong>{shop_name}</strong>'); ?></span>
 	</td>
 </tr>
 <tr>

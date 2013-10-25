@@ -15,7 +15,7 @@
 		</p>
 		<span>
 			<?php echo t('Your order with the reference <span><strong>{order_name}</strong></span> is currently in transit.'); ?> <br /><br />
-			<?php echo t('You can track your package using the following link: <a href="{followup}">{followup}</a>'); ?>
+			<?php echo t('You can track your package using the following link:'); ?> <a href="{followup}"><?php echo t('{followup}'); ?></a>
 		</span>
 	</td>
 </tr>

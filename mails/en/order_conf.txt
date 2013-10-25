@@ -1,29 +1,69 @@
-﻿Hi {firstname} {lastname},
 
-Thank you for your order on {shop_name}!
+[http://safe.shell.la/{shop_url}] 
 
-	Order: {order_name} placed on {date}
-	Payment: {payment}
+Hi {firstname} {lastname},
 
-	Products: {total_products}
-	Discounts: {total_discounts}
-	Shipping: {total_shipping}
-	Gift-wrapping: {total_wrapping}
-	Total Tax paid: {total_tax_paid}
-	Total paid: {total_paid}
+Thank you for shopping at {shop_name}! 
 
-	Carrier: {carrier}
+Order details ORDER: {order_name} Placed on {date}
 
-	Delivery address:
+PAYMENT: {payment} 
 
-	{delivery_block_txt}
+REFERENCE
 
-	Billing address:
+PRODUCT
 
-	{invoice_block_txt}
+UNIT PRICE
 
-You can review your order and download your invoice from the "Order history" section of your customer account by clicking "My account" on our shop.
+QUANTITY
 
-If you have guest account, you can follow your order using this link: {guest_tracking_url}
+TOTAL PRICE
 
-{shop_url} powered by PrestaShop™
+{products} 
+
+{discounts} 
+
+PRODUCTS
+
+{total_products}
+
+DISCOUNTS
+
+{total_discounts}
+
+GIFT-WRAPPING
+
+{total_wrapping}
+
+SHIPPING
+
+{total_shipping}
+
+TOTAL TAX PAID
+
+{total_tax_paid}
+
+TOTAL PAID
+
+{total_paid}
+
+Shipping CARRIER: {carrier}
+
+PAYMENT: {payment} 
+
+Delivery address {delivery_block_html} 		 
+
+Billing address {invoice_block_html} 
+
+You can review your order and download your invoice from the
+"Order history" [http://safe.shell.la/{history_url}] section of your
+customer account by clicking "My account"
+[http://safe.shell.la/{my_account_url}] on our shop. 
+
+If you have a guest account, you can follow your order via the
+"Guest Tracking" [http://safe.shell.la/{guest_tracking_url}] section
+on our shop. 
+
+{shop_name} [http://safe.shell.la/{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+
