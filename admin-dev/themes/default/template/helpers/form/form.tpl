@@ -76,7 +76,7 @@
 							{/block}
 
 							{block name="field"}
-								<div class="col-lg-{if isset($input.col)}{$input.col|intval}{else}9{/if}{if !isset($input.label)} col-lg-offset-3{/if}">
+								<div class="col-lg-{if isset($input.col)}{$input.col|intval}{else}9{/if} {if !isset($input.label)}col-lg-offset-3{/if}">
 								{block name="input"}
 								{if $input.type == 'text' || $input.type == 'tags'}
 									{if isset($input.lang) AND $input.lang}
@@ -516,7 +516,7 @@
 								{elseif $input.type == 'birthday'}
 								<div class="form-group">
 									{foreach $input.options as $key => $select}
-									<div class="col-lg-4">
+									<div class="col-lg-2">
 										<select name="{$key}" class="{if isset($input.class)}{$input.class}{/if}">
 											<option value="">-</option>
 											{if $key == 'months'}

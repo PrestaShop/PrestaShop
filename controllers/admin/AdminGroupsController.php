@@ -240,7 +240,7 @@ class AdminGroupsControllerCore extends AdminController
 				'icon' => 'icon-group'
 			),
 			'submit' => array(
-				'title' => $this->l('Save   '),
+				'title' => $this->l('Save'),
 				'class' => 'btn btn-default'
 			),
 			'input' => array(
@@ -250,18 +250,21 @@ class AdminGroupsControllerCore extends AdminController
 					'name' => 'name',
 					'required' => true,
 					'lang' => true,
+					'col' => 4,
 					'hint' => $this->l('Forbidden characters:').' 0-9!&amp;lt;&amp;gt;,;?=+()@#"�{}_$%:'
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Discount (%):'),
 					'name' => 'reduction',
+					'col' => 2,
 					'hint' => $this->l('Automatically apply this value as a discount on all products for members of this customer group.')
 				),
 				array(
 					'type' => 'select',
 					'label' => $this->l('Price display method:'),
 					'name' => 'price_display_method',
+					'col' => 2,
 					'hint' => $this->l('How prices are displayed in the order summary for this customer group.'),
 					'options' => array(
 						'query' => array(
