@@ -26,27 +26,33 @@
 <div class="form-group">
 	<div class="col-lg-12">
 		{foreach $images as $image}
+		{if isset($image.image)}
 		<div class="img-thumbnail text-center">
-			{$image}
-			{if isset($size)}<p>{l s='File size'} {$size}kb</p>{/if}
-			{if isset($delete_url)}
-			<a class="btn btn-default" href="{$delete_url}">
+			<p>{$image.image}</p>
+			{if isset($image.size)}<p>{l s='File size'} {$image.size}kb</p>{/if}
+			{if isset($image.delete_url)}
+			<p>
+				<a class="btn btn-default" href="{$image.delete_url}">
 				<i class="icon-trash"></i> {l s='Delete'}
-			</a>
+				</a>
+			</p>
 			{/if}
 		</div>
+		{/if}
 		{/foreach}
 	</div>
 </div>
 {/if}
 <div class="form-group">
-	<input id="{$id}" type="file" name="{$name}[]"{if isset($url)} data-url="{$url}"{/if}{if isset($multiple) && $multiple} multiple="multiple"{/if} class="hide" />
-	<button class="btn btn-default" data-style="expand-right" data-size="s" type="button" id="{$id}-add-button">
-		<i class="icon-plus-sign"></i> {if isset($multiple) && $multiple}{l s='Add files'}{else}{l s='Add file'}{/if}
-	</button>
-	<button class="ladda-button" data-style="expand-right" data-size="s" type="button" id="{$id}-upload-button" style="display:none;">
-		<i class="icon-cloud-upload"></i> <span class="ladda-label">{if isset($multiple) && $multiple}{l s='Upload files'}{else}{l s='Upload file'}{/if}</span>
-	</button>
+	<div class="col-lg-12">
+		<input id="{$id}" type="file" name="{$name}[]"{if isset($url)} data-url="{$url}"{/if}{if isset($multiple) && $multiple} multiple="multiple"{/if} class="hide" />
+		<button class="btn btn-default" data-style="expand-right" data-size="s" type="button" id="{$id}-add-button">
+			<i class="icon-plus-sign"></i> {if isset($multiple) && $multiple}{l s='Add files'}{else}{l s='Add file'}{/if}
+		</button>
+		<button class="ladda-button" data-style="expand-right" data-size="s" type="button" id="{$id}-upload-button" style="display:none;">
+			<i class="icon-cloud-upload"></i> <span class="ladda-label">{if isset($multiple) && $multiple}{l s='Upload files'}{else}{l s='Upload file'}{/if}</span>
+		</button>
+	</div>
 </div>
 <div class="row" style="display:none">
 	<div class="alert alert-info" id="{$id}-files-list">
@@ -81,6 +87,7 @@ $( document ).ready(function() {
         previewMaxWidth: 100,
         previewMaxHeight: 100,
         previewCrop: false,
+        limitMultiFileUploads: 3,
         start: function () {
         	upload_button.start();
         },
