@@ -39,6 +39,9 @@ class AdminAttachmentsControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 
+		$this->_select = 'IFNULL(virtual.products, 0) as products';
+		$this->_join = 'LEFT JOIN (SELECT id_attachment, COUNT(*) as products FROM '._DB_PREFIX_.'product_attachment GROUP BY id_attachment) virtual ON a.id_attachment = virtual.id_attachment';
+
 		$this->fields_list = array(
 			'id_attachment' => array(
 				'title' => $this->l('ID'),
@@ -50,7 +53,12 @@ class AdminAttachmentsControllerCore extends AdminController
 			),
 			'file' => array(
 				'title' => $this->l('File')
-			)
+			),
+			'products' => array(
+				'title' => $this->l('Associated to'),
+				'suffix' => $this->l('product(s)'),
+				'filter_key' => 'virtual!products',
+			),
 		);
 
 		parent::__construct();
