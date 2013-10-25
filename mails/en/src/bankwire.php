@@ -3,7 +3,7 @@
 <tr>
 	<td align="center">
 		<span class="title"><?php echo t('Hi {firstname} {lastname},'); ?></span><br/>
-		<span class="subtitle"><?php echo t('Thank you for shopping at {shop_name}!'); ?></span>
+		<span class="subtitle"><?php echo t('Thank you for shopping with {shop_name}!'); ?></span>
 	</td>
 </tr>
 <tr>
@@ -28,7 +28,7 @@
 			<?php echo t('You have selected to pay by wire transfer.'); ?>
 		</p>
 		<span>
-			<?php echo t('Here are the bank details for your wire or transfer:'); ?><br /> 
+			<?php echo t('Here are the bank details for your transfer:'); ?><br /> 
 			<span><strong><?php echo t('Amount:'); ?></strong></span> {total_paid}<br />
 			<span><strong><?php echo t('Account owner:'); ?></strong></span> {bankwire_owner}<br />
 			<span><strong><?php echo t('Account details:'); ?></strong></span> {bankwire_details}<br />
