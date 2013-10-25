@@ -306,7 +306,8 @@ class AdminImportControllerCore extends AdminController
 					'firstname' => array('label' => $this->l('First Name *')),
 					'newsletter' => array('label' => $this->l('Newsletter (0/1)')),
 					'optin' => array('label' => $this->l('Opt-in (0/1)')),
-					'group' => array('label' => $this->l('Groupe Name')),
+					'id_default_group' => array('label' => $this->l('Default group')),
+					'id_group' => array('label' => $this->l('Group ID')),
 					'id_shop' => array(
 						'label' => $this->l('ID / Name of shop'),
 						'help' => $this->l('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.'),
