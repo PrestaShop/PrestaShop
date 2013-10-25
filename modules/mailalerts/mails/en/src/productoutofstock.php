@@ -11,7 +11,7 @@
 <tr>
 	<td class="box">
 		<p>
-			{product} <?php echo t('is nearly out of stock.'); ?>
+			<?php echo t('{product} is nearly out of stock.'); ?>
 		</p>
 		<span>
 			<?php echo t('The remaining stock is now less than the specified minimum of'); ?> <strong><span>{last_qty}.</span></strong><br /><br /> 
