@@ -333,7 +333,7 @@ var ajaxCart = {
 								// If the cart is now empty, show the 'no product in the cart' message and close detail
 								if($('#cart_block dl.products dt').length == 0)
 								{
-									$("#cart_block").stop(true, true).slideUp(200);
+									$("#header #cart_block").stop(true, true).slideUp(200);
 									$('#cart_block_no_products:hidden').slideDown(450);
 									$('#cart_block dl.products').remove();
 								}
@@ -699,25 +699,25 @@ $(document).ready(function(){
 		cart_qty = parseInt($('.ajax_cart_quantity').html());
 
 	/* roll over cart */
-	var cart_block = new HoverWatcher('#cart_block');
+	var cart_block = new HoverWatcher('#header #cart_block');
 	var shopping_cart = new HoverWatcher('#shopping_cart');
 
 	$("#shopping_cart a:first").hover(
 		function() {
 			$(this).css('border-radius', '3px 3px 0px 0px');
 			if (ajaxCart.nb_total_products > 0 || cart_qty > 0)
-				$("#header_right #cart_block").stop(true, true).slideDown(450);
+				$("#header #cart_block").stop(true, true).slideDown(450);
 		},
 		function() {
 			$('#shopping_cart a').css('border-radius', '3px');
 			setTimeout(function() {
 				if (!shopping_cart.isHoveringOver() && !cart_block.isHoveringOver())
-					$("#header_right #cart_block").stop(true, true).slideUp(450);
+					$("#header #cart_block").stop(true, true).slideUp(450);
 			}, 200);
 		}
 	);
 
-	$("#header_right #cart_block").hover(
+	$("#header #cart_block").hover(
 		function() {
 			$('#shopping_cart a').css('border-radius', '3px 3px 0px 0px');
 		},
@@ -725,7 +725,7 @@ $(document).ready(function(){
 			$('#shopping_cart a').css('border-radius', '3px');
 			setTimeout(function() {
 				if (!shopping_cart.isHoveringOver())
-					$("#header_right #cart_block").stop(true, true).slideUp(450);
+					$("#header #cart_block").stop(true, true).slideUp(450);
 			}, 200);
 		}
 	);
