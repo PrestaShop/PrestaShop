@@ -85,7 +85,7 @@
 				</td>
 				<td style="padding-bottom:5px;">
 					<select name="attribute" id="attribute" style="width: 200px;">
-						<option value="0">---</option>
+						<option value="0">-</option>
 					</select>
 					<script type="text/javascript">
 					$(document).ready(function(){
