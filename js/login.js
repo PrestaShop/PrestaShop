@@ -59,17 +59,17 @@ $(document).ready(function() {
 		}
 	});
 
-	$('.show-forgot-password').click(function(e) {
-		// Kill default behaviour
+	$('.show-forgot-password').on('click',function(e) {
 		e.preventDefault();
 		displayForgotPassword();
 	});
 
-	$('.show-login-form').click(function(e) {
-		// Kill default behaviour
+	$('.show-login-form').on('click',function(e) {
 		e.preventDefault();
 		displayLogin();
 	});
+
+	$('#email').focus();
 
 	//Tab-index loop
 	$('form').each(function(){
@@ -84,7 +84,7 @@ $(document).ready(function() {
 	});
 });
 
-//todo: ladda init - move to top
+//todo: ladda init
 var l = new Object();
 function feedbackSubmit() {
 	l = Ladda.create( document.querySelector( 'button[type=submit]' ) );
@@ -127,16 +127,17 @@ function doAjaxLogin(redirect) {
 				redirect: redirect,
 				stay_logged_in: $('#stay_logged_in:checked').val()
 			},
-			beforeSend: function(){
+			beforeSend: function() {
 				feedbackSubmit();
 				l.start();
 			},
 			success: function(jsonData) {
-				if (jsonData.hasErrors)
+				if (jsonData.hasErrors) {
 					displayErrors(jsonData.errors);
 					l.stop();
-				else
+				} else {
 					window.location.assign(jsonData.redirect);
+				}
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
 				l.stop();
@@ -164,9 +165,9 @@ function doAjaxForgot() {
 				email_forgot: $('#email_forgot').val()
 			},
 			success: function(jsonData) {
-				if (jsonData.hasErrors)
+				if (jsonData.hasErrors) {
 					displayErrors(jsonData.errors);
-				else {
+				} else {
 					alert(jsonData.confirm);
 					$('#forgot_password_form').hide();
 					displayLogin();
@@ -185,9 +186,4 @@ function displayErrors(errors) {
 	for (var error in errors) //IE6 bug fix
 		if (error != 'indexOf') str_errors += '<li>' + errors[error] + '</li>';
 	$('#error').html(str_errors + '</ol>').removeClass('hide').fadeIn('slow');
-
-
-	// $("#login").effect("shake", {
-	// 	times: 4
-	// }, 100);
 }
