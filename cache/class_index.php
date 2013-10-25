@@ -242,7 +242,7 @@
   'CarrierCore' => 'classes/Carrier.php',
   'CarrierModule' => '',
   'CarrierModuleCore' => 'classes/module/CarrierModule.php',
-  'Cart' => 'override/classes/Cart.php',
+  'Cart' => '',
   'CartController' => '',
   'CartControllerCore' => 'controllers/front/CartController.php',
   'CartCore' => 'classes/Cart.php',
