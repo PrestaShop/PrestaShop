@@ -60,7 +60,7 @@
 		<label class="control-label col-lg-3">
 			{l s='Define the label of the file fields:'}
 		</label>
-		<div class="col-lg-9">
+		<div class="col-lg-6">
 			{$display_file_labels}
 		</div>
 	</div>
@@ -71,7 +71,7 @@
 		<label class="control-label col-lg-3">
 			{l s='Define the label of the text fields:'}
 		</label>
-		<div class="col-lg-9">
+		<div class="col-lg-6">
 			{$display_text_labels}
 		</div>
 	</div>
