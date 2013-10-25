@@ -11,10 +11,10 @@
 <tr>
 	<td class="box">
 		<p>
-			<?php echo t('A new command has been generated to you.'); ?>
+			<?php echo t('A new order has been generated on your behalf.'); ?>
 		</p>
 		<span>
-			<?php echo t('Go on <a href="{order_link}">{order_link}</a> to finalize the payment.'); ?>
+			<?php echo t('Please go on <a href="{order_link}">{order_link}</a> to finalize the payment.'); ?>
 		</span>
 	</td>
 </tr>

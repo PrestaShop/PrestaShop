@@ -16,7 +16,7 @@
 		</p>
 		<span>
 			<?php echo t('Here are your login details:'); ?><br /> 
-			<span><strong><?php echo t('E-mail address: <a href="mailto:{email}">{email}</a>'); ?></strong></span><br />
+			<span><strong><?php echo t('E-mail address:'); ?> <a href="mailto:{email}">{email}</a></strong></span><br />
 			<span><strong><?php echo t('Password:'); ?></strong></span> {passwd}
 		</span>
 	</td>
@@ -40,7 +40,7 @@
 </tr>
 <tr>
 	<td>
-		<span><?php echo t('You can now place orders on our shop: <a href="{shop_url}">{shop_name}</a>'); ?>.</span>
+		<span><?php echo t('You can now place orders on our shop:'); ?> <a href="{shop_url}">{shop_name}</a></span>
 	</td>
 </tr>
 

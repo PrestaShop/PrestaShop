@@ -1,5 +1,19 @@
-{reply}
 
-Please do not reply to this message, we will not receive it.
+[http://safe.shell.la/{shop_url}] 
 
-In order to reply, please use the following link: {link}
+Hi {firstname} {lastname}, 
+
+{reply} 
+
+You can review your order and download your invoice from the
+"Order history" [http://safe.shell.la/{history_url}] section of your
+customer account by clicking "My account"
+[http://safe.shell.la/{my_account_url}] on our shop. 
+
+If you have a guest account, you can follow your order via the
+"Guest Tracking" [http://safe.shell.la/{guest_tracking_url}] section
+on our shop. 
+
+{shop_name} [http://safe.shell.la/{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

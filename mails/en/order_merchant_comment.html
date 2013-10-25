@@ -1,40 +1,56 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/strict.dtd">
 <html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>Message from {shop_name}</title>
-</head>
-<body>
-<table style="font-family: Verdana,sans-serif; font-size: 11px; color: #374953; width: 550px;">
-<tbody>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Message from {shop_name}</title>
+		
+	</head>
+	<body style="background-color:#fff;width:650px;font-family:Open-sans, sans-serif;color:#555454;font-size:13px;line-height:18px;margin:auto">
+		<table class="table table-mail" style="margin-top:10px;-moz-box-shadow:0 0 5px #afafaf;-webkit-box-shadow:0 0 5px #afafaf;-o-box-shadow:0 0 5px #afafaf;box-shadow:0 0 5px #afafaf;filter:progid;width:100%">
+			<tr>
+				<td class="space" style="border:none;padding:7px 0;width:20px">&nbsp;</td>
+				<td align="center" style="border:none;padding:7px 0">
+					<table class="table" style="background-color:#fff;width:100%">
+						<tr>
+							<td align="center" class="logo" style="border:none;padding:7px 0;border-bottom:4px solid #333!important">
+								<a title="{shop_name}" href="{shop_url}" style="color:#337ff1">
+									<img src="{shop_logo}" alt="{shop_name}" />
+								</a>
+							</td>
+						</tr>
+
 <tr>
-<td align="left"><a title="{shop_name}" href="{shop_url}"><img style="border: none;" src="{shop_logo}" alt="{shop_name}" /></a></td>
+	<td align="center" colspan="3" style="border:none;padding:7px 0">
+		<span class="title" style="font-weight:500;font-size:28px;text-transform:uppercase;line-height:33px">Hi {firstname} {lastname},</span>
+	</td>
 </tr>
 <tr>
-<td>&nbsp;</td>
+	<td style="border:none;padding:7px 0">&nbsp;</td>
 </tr>
 <tr>
-<td align="left">Hi <strong style="color: {color};">{firstname} {lastname}</strong>,</td>
+	<td class="box" style="border:1px solid #d6d4d4!important;padding:10px!important;background-color:#fbfbfb">
+		<p style="text-transform:uppercase;font-weight:500;font-size:18px;border-bottom:1px solid #d6d4d4!important;padding-bottom:10px;margin:3px 0 7px">
+			New message from {shop_name}		</p>
+		<span style="color:#777">
+			You have received a new message from <span style="color:#777"><strong>{shop_name}</strong></span> regarding order with the reference <span style="color:#777"><strong>{order_name}</strong></span>.<br /><br />
+			<span style="color:#777"><strong>Message:</strong></span> {message}
+		</span>
+	</td>
 </tr>
-<tr>
-<td>&nbsp;</td>
-</tr>
-<tr>
-<td style="background-color: {color}; color: #fff; font-size: 12px; font-weight: bold; padding: 0.5em 1em;" align="left">New message from {shop_name}</td>
-</tr>
-<tr>
-<td>&nbsp;</td>
-</tr>
-<tr>
-<td align="left"><strong>You have received a new message from {shop_name} regarding order with the reference {order_name}.</strong> <br /><br /> Message:<br /> {message}</td>
-</tr>
-<tr>
-<td>&nbsp;</td>
-</tr>
-<tr>
-<td style="font-size: 10px; border-top: 1px solid #D9DADE;" align="center"><a style="color: {color}; font-weight: bold; text-decoration: none;" href="{shop_url}">{shop_name}</a> powered by <a style="text-decoration: none; color: #374953;" href="http://www.prestashop.com/">PrestaShop&trade;</a></td>
-</tr>
-</tbody>
-</table>
-</body>
+
+						<tr>
+							<td class="space_footer" style="border:none;padding:0!important">&nbsp;</td>
+						</tr>
+						<tr>
+							<td class="footer" style="border:none;padding:7px 0;border-top:4px solid #333!important">
+								<span><a href="{shop_url}" style="color:#337ff1">{shop_name}</a> powered by <a href="http://www.prestashop.com/" style="color:#337ff1">PrestaShop&trade;</a></span>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td class="space" style="border:none;padding:7px 0;width:20px">&nbsp;</td>
+			</tr>
+		</table>
+	</body>
 </html>

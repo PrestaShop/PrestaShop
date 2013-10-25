@@ -60,6 +60,7 @@ class AdminContactsControllerCore extends AdminController
 					'name' => 'name',
 					'required' => true,
 					'lang' => true,
+					'col' => 4,
 					'hint' => $this->l('Contact name (e.g. Customer Support)'),
 				),
 				array(
@@ -67,6 +68,7 @@ class AdminContactsControllerCore extends AdminController
 					'label' => $this->l('Email address'),
 					'name' => 'email',
 					'required' => false,
+					'col' => 4,
 					'hint' => $this->l('Emails will be sent to this address'),
 				),
 				array(
@@ -96,6 +98,7 @@ class AdminContactsControllerCore extends AdminController
 					'name' => 'description',
 					'required' => false,
 					'lang' => true,
+					'col' => 6,
 					'hint' => $this->l('Further information regarding this contact'),
 				),
 			),

@@ -85,7 +85,7 @@
 			});
 			</script>
 
-			<div class="col-lg-9">
+			<div class="col-lg-4">
 				<input type="text" id="email" name="email" value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}"/>
 			</div>
 		{/if}

@@ -108,6 +108,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'label' => $this->l('Name'),
 					'name' => 'name',
 					'required' => true,
+					'col' => 4,
 					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}',
 				),
 				array(
@@ -126,6 +127,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'label' => $this->l('Phone:'),
 					'name' => 'phone',
 					'maxlength' => 16,
+					'col' => 4,
 					'hint' => $this->l('Phone number for this supplier')
 				),
 				array(
@@ -133,12 +135,14 @@ class AdminSuppliersControllerCore extends AdminController
 					'label' => $this->l('Address:'),
 					'name' => 'address',
 					'maxlength' => 128,
+					'col' => 6,
 					'required' => true
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Address:').' (2)',
 					'name' => 'address2',
+					'col' => 6,
 					'maxlength' => 128,
 				),
 				array(
@@ -146,6 +150,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'label' => $this->l('Postal Code/Zip Code:'),
 					'name' => 'postcode',
 					'maxlength' => 12,
+					'col' => 2,
 					'required' => true,
 				),
 				array(
@@ -153,6 +158,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'label' => $this->l('City:'),
 					'name' => 'city',
 					'maxlength' => 32,
+					'col' => 4,
 					'required' => true,
 				),
 				array(
@@ -160,6 +166,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'label' => $this->l('Country:'),
 					'name' => 'id_country',
 					'required' => true,
+					'col' => 4,
 					'default_value' => (int)$this->context->country->id,
 					'options' => array(
 						'query' => Country::getCountries($this->context->language->id, false),
@@ -171,6 +178,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'type' => 'select',
 					'label' => $this->l('State'),
 					'name' => 'id_state',
+					'col' => 4,
 					'options' => array(
 						'id' => 'id_state',
 						'query' => array(),
@@ -191,6 +199,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'label' => $this->l('Meta title:'),
 					'name' => 'meta_title',
 					'lang' => true,
+					'col' => 4,
 					'hint' => $this->l('Forbidden characters:').' &lt;&gt;;=#{}'
 				),
 				array(
@@ -198,6 +207,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'label' => $this->l('Meta description:'),
 					'name' => 'meta_description',
 					'lang' => true,
+					'col' => 6,
 					'hint' => $this->l('Forbidden characters:').' &lt;&gt;;=#{}'
 				),
 				array(
@@ -205,6 +215,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'label' => $this->l('Meta keywords:'),
 					'name' => 'meta_keywords',
 					'lang' => true,
+					'col' => 6,
 					'hint' => array(
 						$this->l('To add "tags" click in the field, write something and then press "Enter"'),
 						$this->l('Forbidden characters:').' &lt;&gt;;=#{}'
