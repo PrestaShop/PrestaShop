@@ -185,6 +185,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'name' => 'name',
 					'lang' => true,
 					'required' => true,
+					'col' => '4',
 					'hint' => $this->l('Invalid characters:').' <>;=#{}'
 				),
 				array(
@@ -193,6 +194,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'name' => 'public_name',
 					'lang' => true,
 					'required' => true,
+					'col' => '4',
 					'hint' => $this->l('Group name displayed to the customer').'&nbsp;'.$this->l('Invalid characters:').' <>;=#{}'
 				),
 				array(
@@ -205,6 +207,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 						'id' => 'id',
 						'name' => 'name'
 					),
+					'col' => '2',
 					'hint' => $this->l('Choose the type of the attribute')
 				)
 			)

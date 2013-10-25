@@ -3,7 +3,7 @@
 <tr>
 	<td align="center">
 		<span class="title"><?php echo t('Hi {firstname} {lastname},'); ?></span><br/>
-		<span class="subtitle"><?php echo t('Thank you for shopping at {shop_name}!'); ?></span>
+		<span class="subtitle"><?php echo t('Thank you for shopping with {shop_name}!'); ?></span>
 	</td>
 </tr>
 <tr>
@@ -25,10 +25,10 @@
 <tr>
 	<td class="box">
 		<p>
-			<?php echo t('You have selected to pay by check. Please include on your check.'); ?>
+			<?php echo t('You have selected to pay by check.'); ?>
 		</p>
 		<span>
-			<?php echo t('Here are the bank details for your wire or transfer:'); ?><br /> 
+			<?php echo t('Here are the bank details for your check:'); ?><br /> 
 			<span><strong><?php echo t('Amount:'); ?></strong></span> {total_paid}<br />
 			<span><strong><?php echo t('Payable to the order of:'); ?></strong></span> {cheque_name}<br />
 			<span><strong><?php echo t('Please mail your check to:'); ?></strong></span> {cheque_address_html}

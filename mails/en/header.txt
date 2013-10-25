@@ -1,0 +1,3 @@
+
+[http://safe.shell.la/{shop_url}] 
+

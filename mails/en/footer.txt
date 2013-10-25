@@ -1,10 +1,4 @@
 
-[http://safe.shell.la/{shop_url}] 
-
-Hi {firstname} {lastname}, 
-
-{message} 
-
 {shop_name} [http://safe.shell.la/{shop_url}] powered by
 PrestaShop(tm) [http://www.prestashop.com/] 
 
