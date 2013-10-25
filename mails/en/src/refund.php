@@ -14,7 +14,7 @@
 			<?php echo t('Order {order_name}'); ?>&nbsp;-&nbsp;<?php echo t('Refund processed'); ?>
 		</p>
 		<span>
-			<?php echo t('We have processed your <strong><span>{shop_name}</strong></span> refund for order with the reference <strong><span>{order_name}</strong></span>.'); ?>
+			<?php echo t('We have processed your <strong><span>{shop_name}</span><strong/> refund for order with the reference <strong><span>{order_name}</span></strong>.'); ?>
 		</span>
 	</td>
 </tr>
