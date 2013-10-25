@@ -76,7 +76,7 @@
 							{/block}
 
 							{block name="field"}
-								<div class="col-lg-9{if !isset($input.label)} col-lg-offset-3{/if}">
+								<div class="col-lg-{if isset($input.col)}{$input.col|intval}{else}9{/if}{if !isset($input.label)} col-lg-offset-3{/if}">
 								{block name="input"}
 								{if $input.type == 'text' || $input.type == 'tags'}
 									{if isset($input.lang) AND $input.lang}

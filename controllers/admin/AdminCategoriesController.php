@@ -402,6 +402,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'lang' => true,
 					'required' => true,
 					'class' => 'copy2friendlyUrl',
+					'col' => '4',
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
 				),
 				array(
@@ -446,6 +447,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'label' => $this->l('Image:'),
 					'name' => 'image',
 					'display_image' => true,
+					'col' => '4',
 					'hint' => $this->l('Upload a category logo from your computer.')
 				),
 				array(
@@ -453,6 +455,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'label' => $this->l('Meta title:'),
 					'name' => 'meta_title',
 					'lang' => true,
+					'col' => '4',
 					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
 				),
 				array(
@@ -460,6 +463,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'label' => $this->l('Meta description:'),
 					'name' => 'meta_description',
 					'lang' => true,
+					'col' => '6',
 					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
 				),
 				array(
@@ -467,6 +471,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'label' => $this->l('Meta keywords:'),
 					'name' => 'meta_keywords',
 					'lang' => true,
+					'col' => '6',
 					'hint' => $this->l('To add "tags," click in the field, write something, and then press "Enter."').'&nbsp;'.$this->l('Forbidden characters:').' <>;=#{}'
 				),
 				array(
@@ -475,6 +480,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'name' => 'link_rewrite',
 					'lang' => true,
 					'required' => true,
+					'col' => '4',
 					'hint' => $this->l('Only letters and the minus (-) character are allowed.')
 				),
 				array(
@@ -486,6 +492,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'unidentified' => $unidentified_group_information,
 					'guest' => $guest_group_information,
 					'customer' => $default_group_information,
+					'col' => '6',
 					'hint' => $this->l('Mark all of the customer groups you;d like to have access to this category.')
 				)
 			),
