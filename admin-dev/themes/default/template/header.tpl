@@ -105,7 +105,7 @@
 </head>
 
 {if $display_header}
-	<body class="{if $employee->bo_menu}page-sidebar {* page-sidebar-closed *}{else}page-topbar{/if}">
+	<body class="{if $employee->bo_menu}page-sidebar {* page-sidebar-closed *}{else}page-topbar{/if} {$smarty.get.controller|escape|strtolower}">
 
 {* begin  HEADER *}
 	<header id="header">

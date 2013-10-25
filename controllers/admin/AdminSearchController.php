@@ -217,8 +217,10 @@ class AdminSearchControllerCore extends AdminController
 		$result = Db::getInstance()->executeS('
 		SELECT class_name, name
 		FROM '._DB_PREFIX_.'tab t
-		INNER JOIN '._DB_PREFIX_.'tab_lang tl ON (t.id_tab = tl.id_tab AND tl.id_lang = '.(int)$this->context->language->id.')
-		WHERE active = 1');
+		INNER JOIN '._DB_PREFIX_.'tab_lang tl ON (t.id_tab = tl.id_tab AND tl.id_lang = '.(int)$this->context->employee->id_lang.')
+		LEFT JOIN '._DB_PREFIX_.'access a ON (a.id_tab = t.id_tab AND a.id_profile = '.(int)$this->context->employee->id_profile.')
+		WHERE active = 1
+		'.($this->context->employee->id_profile != 1 ? 'AND view = 1' : ''));
 		foreach ($result as $row)
 		{
 			$tabs[strtolower($row['class_name'])] = $row['name'];
@@ -227,6 +229,8 @@ class AdminSearchControllerCore extends AdminController
 		foreach (AdminTab::$tabParenting as $key => $value)
 		{
 			$value = stripslashes($value);
+			if (!isset($tabs[strtolower($key)]) || !isset($tabs[strtolower($value)]))
+				continue;
 			$tabs[strtolower($key)] = $tabs[strtolower($value)];
 			$key_match[strtolower($key)] = $key;
 		}
@@ -324,16 +328,22 @@ class AdminSearchControllerCore extends AdminController
 			return parent::renderView();
 		else
 		{
-			if (isset($this->_list['features']))
+			$nb_results = 0;
+			foreach ($this->_list as $list)
+				if ($list != false)
+					$nb_results += count($list);
+			$this->tpl_view_vars['nb_results'] = $nb_results;
+
+			if (isset($this->_list['features']) && count($this->_list['features']))
 				$this->tpl_view_vars['features'] = $this->_list['features'];
-			if (isset($this->_list['categories']))
+			if (isset($this->_list['categories']) && count($this->_list['categories']))
 			{
 				$categories = array();
 				foreach ($this->_list['categories'] as $category)
 					$categories[] = getPath($this->context->link->getAdminLink('AdminCategories', false), $category['id_category']);
 				$this->tpl_view_vars['categories'] = $categories;
 			}
-			if (isset($this->_list['products']))
+			if (isset($this->_list['products']) && count($this->_list['products']))
 			{
 				$view = '';
 				$this->initProductList();
@@ -353,7 +363,7 @@ class AdminSearchControllerCore extends AdminController
 
 				$this->tpl_view_vars['products'] = $view;
 			}
-			if (isset($this->_list['customers']))
+			if (isset($this->_list['customers']) && count($this->_list['customers']))
 			{
 				$view = '';
 				$this->initCustomerList();
@@ -376,7 +386,7 @@ class AdminSearchControllerCore extends AdminController
 				}
 				$this->tpl_view_vars['customers'] = $view;
 			}
-			if (isset($this->_list['orders']))
+			if (isset($this->_list['orders']) && count($this->_list['orders']))
 			{
 				$view = '';
 				$this->initOrderList();
@@ -396,7 +406,7 @@ class AdminSearchControllerCore extends AdminController
 				$this->tpl_view_vars['orders'] = $view;
 			}
 
-			if (isset($this->_list['modules']))
+			if (isset($this->_list['modules']) && count($this->_list['modules']))
 				$this->tpl_view_vars['modules'] = $this->_list['modules'];
 
 			return parent::renderView();
