@@ -26,6 +26,13 @@
 <div class="page-head">
 	{block name=pageTitle}
 	<h2 class="page-title">
+		{if isset($toolbar_btn['back'])}
+			<a id="page-header-desc-{$table}-{if isset($toolbar_btn['back'].imgclass)}{$toolbar_btn['back'].imgclass}{else}{$k}{/if}" class="toolbar_btn" {if isset($toolbar_btn['back'].href)}href="{$toolbar_btn['back'].href}"{/if} title="{$toolbar_btn['back'].desc}" {if isset($toolbar_btn['back'].target) && $toolbar_btn['back'].target}target="_blank"{/if}{if isset($toolbar_btn['back'].js) && $toolbar_btn['back'].js}onclick="{$toolbar_btn['back'].js}"{/if}>
+				<i class="{if isset($toolbar_btn['back'].icon)}{$toolbar_btn['back'].icon}{else}process-icon-{if isset($toolbar_btn['back'].imgclass)}{$toolbar_btn['back'].imgclass}{else}{$k}{/if}{/if} {if isset($toolbar_btn['back'].class)}{$toolbar_btn['back'].class}{/if}" ></i>
+				<span {if isset($toolbar_btn['back'].force_desc) && $toolbar_btn['back'].force_desc == true } class="locked" {/if}>{$toolbar_btn['back'].desc}</span>
+			</a>
+
+		{/if}
 		{if is_array($title)}{$title|end}{else}{$title}{/if}
 	</h2>
 	{/block}
@@ -35,12 +42,14 @@
 			{block name=toolbarBox}
 			<ul class="cc_button nav nav-pills pull-right">
 				{foreach from=$toolbar_btn item=btn key=k}
+				{if $k != 'back'}
 				<li>
 					<a id="page-header-desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="toolbar_btn" {if isset($btn.href)}href="{$btn.href}"{/if} title="{$btn.desc}" {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
 						<i class="{if isset($btn.icon)}{$btn.icon}{else}process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}{/if} {if isset($btn.class)}{$btn.class}{/if}" ></i>
 						<span {if isset($btn.force_desc) && $btn.force_desc == true } class="locked" {/if}>{$btn.desc}</span>
 					</a>
 				</li>
+				{/if}
 				{/foreach}
 			</ul>
 
