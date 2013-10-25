@@ -312,16 +312,37 @@ class FeatureCore extends ObjectModel
 	 */
 	public static function cleanPositions()
 	{
-		return Db::getInstance()->execute('
-		UPDATE `'._DB_PREFIX_.'feature` f
-		LEFT JOIN (
-			SELECT @i := @i +1 AS rank, id_feature, position 
-			FROM `'._DB_PREFIX_.'feature`
-			JOIN (SELECT @i :=1) dummy
-			ORDER by position
-		) AS f2
-		USING (id_feature)
-		SET f.position = f2.rank - 1');
+		//Reordering positions to remove "holes" in them (after delete for instance)
+		$sql = "SELECT id_feature, position FROM "._DB_PREFIX_."feature ORDER BY id_feature";
+		$db = Db::getInstance();
+		$r = $db->executeS($sql, false);
+		$shiftTable = array(); //List of update queries (one query is necessary for each "hole" in the table)
+		$currentDelta = 0;
+		$minId = 0;
+		$maxId = 0;
+		$futurePosition = 1;
+		while ($line = $db->nextRow($r)) {
+			$delta = $futurePosition - $line['position']; //Difference between current position and future position
+			if ($delta != $currentDelta) {
+				$shiftTable[] = array('minId' => $minId, 'maxId' => $maxId, 'delta' => $currentDelta);
+				$currentDelta = $delta;
+				$minId = $line['id_feature'];
+			}
+			$maxId = $line['id_feature'];
+			$futurePosition++;
+		}
+		$shiftTable[] = array('minId' => $minId, 'maxId' => $maxId, 'delta' => $currentDelta);
+		
+		//Executing generated queries
+		foreach ($shiftTable as $line) {
+			$delta = $line['delta'];
+			if ($delta == 0) continue;
+			$delta = $delta > 0 ? '+' . (int)$delta : (int)$delta;
+			$minId = (int)$line['minId'];
+			$maxId = (int)$line['maxId'];
+			$sql = "UPDATE "._DB_PREFIX_."feature SET position = position $delta WHERE id_feature >= $minId AND id_feature <= $maxId";
+			Db::getInstance()->execute($sql);
+		}
 	}
 
 	/**
