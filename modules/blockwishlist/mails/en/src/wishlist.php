@@ -14,7 +14,7 @@
 			<?php echo t('Message from {shop_name}'); ?>
 		</p>
 		<span>
-			<span><strong>{firstname} {lastname}</strong></span> <?php echo t('indicated you may want to see his/her wishlist:'); ?> <span><strong>{wishlist}</strong></span><br /><br />
+			<?php echo t('<span><strong>{firstname} {lastname}</strong></span> indicated you may want to see his/her wishlist:'); ?> <span><strong>{wishlist}</strong></span><br /><br />
 			<a title="WishList" href="{message}">{wishlist}</a>
 		</span>
 	</td>
