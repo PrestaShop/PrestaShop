@@ -1694,6 +1694,11 @@ class ToolsCore
 		// RewriteEngine
 		fwrite($write_fd, "<IfModule mod_rewrite.c>\n");
 
+		// Ensure HTTP_MOD_REWRITE variable is set in environment
+		fwrite($write_fd, "<IfModule mod_env.c>\n");
+		fwrite($write_fd, "SetEnv HTTP_MOD_REWRITE On\n");
+		fwrite($write_fd, "</IfModule>\n\n");
+
 		// Disable multiviews ?
 		if ($disable_multiviews)
 			fwrite($write_fd, "\n# Disable Multiviews\nOptions -Multiviews\n\n");
