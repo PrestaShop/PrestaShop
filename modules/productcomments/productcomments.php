@@ -561,7 +561,7 @@ class ProductComments extends Module
 					<div class="margin-form">
 ">
 						<select name="id_product_comment_criterion" id="id_product_comment_criterion" onchange="window.location=\''.Tools::safeOutput($this->_baseUrl).'&updateCriterion=\'+$(\'#id_product_comment_criterion option:selected\').val()">
-							<option value="--">-- '.$this->l('Choose a criterion').' --</option>';
+							<option value="-">- '.$this->l('Choose a criterion').' -</option>';
 						foreach ($criterions as $foo)
 								$this->_html .= '<option value="'.(int)($foo['id_product_comment_criterion']).'" '.($foo['id_product_comment_criterion'] == $id_criterion ? 'selected="selected"' : '').'>'.$foo['name'].'</option>';
 			$this->_html .= '</select>

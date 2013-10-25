@@ -26,6 +26,9 @@
 include(dirname(__FILE__).'/../../config/config.inc.php');
 require_once(dirname(__FILE__).'/../../init.php');
 
+if (!Module::getInstanceByName('feeder')->active)
+	exit;
+
 // Get data
 $number = ((int)(Tools::getValue('n')) ? (int)(Tools::getValue('n')) : 10);
 $orderBy = Tools::getProductsOrder('by', Tools::getValue('orderby'));
@@ -64,7 +67,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>'."\n";
 		if (is_array($image) AND sizeof($image))
 		{
 			$imageObj = new Image($image[0]['id_image']);
-			echo "<![CDATA[<img src='"._PS_BASE_URL_._THEME_PROD_DIR_.$imageObj->getExistingImgPath()."-small_default.jpg' title='".str_replace('&', '', $product['name'])."' alt='thumb' />";
+			echo "<![CDATA[<img src='".$link->getImageLink($product['link_rewrite'], $image[0]['id_image'], 'small_default')."' title='".str_replace('&', '', $product['name'])."' alt='thumb' />";
 			$cdata = false;
 		}
 		if ($cdata)
