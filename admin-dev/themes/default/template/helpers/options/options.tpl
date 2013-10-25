@@ -200,14 +200,7 @@
 											<textarea class="textarea-autosize" name={$key} cols="{$field['cols']}" rows="{$field['rows']}">{$field['value']|escape:'htmlall':'UTF-8'}</textarea>
 										</div>
 									{elseif $field['type'] == 'file'}
-										{if isset($field['thumb']) && $field['thumb']}
-											<div class="col-lg-3">
-												<img src="{$field['thumb']}" alt="{$field['title']}" title="{$field['title']}" />
-											</div>
-										{/if}
-										<div class="col-lg-5">
-											<input type="file" name="{$key}" />
-										</div>
+										<div class="col-lg-9">{$field['file']}</div>
 						            {elseif $field['type'] == 'color'}
 										<div class="col-lg-2">
 											<div class="row">
