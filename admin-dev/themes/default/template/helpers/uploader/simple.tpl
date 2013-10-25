@@ -63,7 +63,7 @@
 				{if isset($file)}
 				<a href="{$file}">
 					<button type="button" class="btn btn-default">
-						<i class="icon-download"></i>
+						<i class="icon-cloud-download"></i>
 						{if isset($size)}{l s='Download current file (%skb)' sprintf=$size}{else}{l s='Download current file'}{/if}
 					</button>
 				</a>
