@@ -65,23 +65,33 @@
 	</div>
 </div>
 
-<script>
+<script type="text/javascript">
 	$(document).ready(function(){
 		$('#{$id}-selectbutton').click(function(e) {
 			$('#{$id}').trigger('click');
 		});
+
 		$('#{$id}-name').click(function(e) {
 			$('#{$id}').trigger('click');
 		});
-		$('#{$id}').change(function(e) {
-			var files = $(this)[0].files;
-			var name  = '';
 
-			$.each(files, function(index, value) {
-				name += value.name+', ';
-			});
-			
-			$('#{$id}-name').val(name.slice(0, -2));
+		$('#{$id}').change(function(e) {
+			if ($(this)[0].files !== undefined)
+			{
+				var files = $(this)[0].files;
+				var name  = '';
+
+				$.each(files, function(index, value) {
+					name += value.name+', ';
+				});
+
+				$('#{$id}-name').val(name.slice(0, -2));
+			}
+			else // Internet Explorer 9 Compatibility
+			{
+				var name = $(this).val().split(/[\\/]/);
+				$('#{$id}-name').val(name[name.length-1]);
+			}
 		});
 	});
 </script>
