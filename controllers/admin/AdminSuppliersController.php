@@ -88,6 +88,11 @@ class AdminSuppliersControllerCore extends AdminController
 		if (!($obj = $this->loadObject(true)))
 			return;
 
+		$image = _PS_SUPP_IMG_DIR_.$obj->id.'.jpg';
+		$image_url = ImageManager::thumbnail($image, $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 350,
+			$this->imageType, true, true);
+		$image_size = file_exists($image) ? filesize($image) / 1000 : false;
+
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Suppliers'),
@@ -177,6 +182,8 @@ class AdminSuppliersControllerCore extends AdminController
 					'label' => $this->l('Logo:'),
 					'name' => 'logo',
 					'display_image' => true,
+					'image' => $image_url ? $image_url : false,
+					'size' => $image_size,
 					'hint' => $this->l('Upload a supplier logo from your computer')
 				),
 				array(
@@ -270,11 +277,6 @@ class AdminSuppliersControllerCore extends AdminController
 			);
 		}
 
-		// set logo image
-		$image = ImageManager::thumbnail(_PS_SUPP_IMG_DIR_.'/'.$this->object->id.'.jpg', $this->table.'_'.(int)$this->object->id.'.'.$this->imageType, 350, $this->imageType, true);
-		$this->fields_value['image'] = $image ? $image : false;
-		$this->fields_value['size'] = $image ? filesize(_PS_SUPP_IMG_DIR_.'/'.$this->object->id.'.jpg') / 1000 : false;
-
 		return parent::renderForm();
 	}
 
@@ -285,15 +287,13 @@ class AdminSuppliersControllerCore extends AdminController
 	 */
 	public function initToolbar()
 	{
-		switch ($this->display)
-		{
-			default:
-				parent::initToolbar();
-				$this->toolbar_btn['import'] = array(
-					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=suppliers',
-					'desc' => $this->l('Import')
-				);
-		}
+		parent::initToolbar();
+
+		if (empty($this->display))
+			$this->toolbar_btn['import'] = array(
+				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=suppliers',
+				'desc' => $this->l('Import')
+			);
 	}
 
 	public function renderView()
