@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<div class="panel-heading">
+<div class="tree-panel-heading-controls">
 	<!-- <i class="icon-tag"></i>&nbsp;{l s=$title} -->
 	{if isset($toolbar)}{$toolbar}{/if}
 </div>
