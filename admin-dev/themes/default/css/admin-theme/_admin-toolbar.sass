@@ -64,14 +64,16 @@
 	-webkit-font-smoothing: antialiased
 	*margin-right: .3em
 
-.process-icon-new
-	@extend .icon-plus-sign-alt
-.process-icon-save
+.page-header-toolbar-back
+	border: none!important
+	display: inline-block
+
+.process-icon-save, .process-icon-save-and-stay, .process-icon-save-and-preview
 	@extend .icon-save
+.process-icon-cancel
+	@extend .icon-remove
 .process-icon-back
-	@extend .icon-arrow-left
-.process-icon-save-and-stay
-	@extend .icon-save
+	@extend .icon-circle-arrow-left
 .process-icon-help
 	@extend .icon-question-sign
 .process-icon-export
@@ -82,7 +84,7 @@
 	@extend .icon-question-sign
 .process-icon-edit
 	@extend .icon-edit
-.process-icon-newAttributes
+.process-icon-newAttributes, .process-icon-new, .process-icon-new-url
 	@extend .icon-plus-sign-alt
 .process-icon-modules-list
 	@extend .icon-puzzle-piece
@@ -96,9 +98,7 @@
 	@extend .icon-trash
 .process-icon-update
 	@extend icon-refresh
-.process-icon-preview
-	@extend .icon-eye-open
-.process-icon-previewURL
+.process-icon-preview, .process-icon-previewURL
 	@extend .icon-eye-open
 .process-icon-stats
 	@extend .icon-bar-chart
@@ -110,15 +110,10 @@
 	@extend .icon-minus-sign
 .process-icon-partial_refund
 	@extend .icon-exchange
-.process-icon-cancel
-	@extend .icon-remove
-.process-icon-new-url
-	@extend .icon-plus-sign-alt
 .process-icon-anchor
 	@extend .icon-anchor
 .process-icon-refresh
 	@extend .icon-refresh
 .process-icon-configure
 	@extend .icon-cog
-.process-icon-save-and-preview
-	@extend .icon-save
+
