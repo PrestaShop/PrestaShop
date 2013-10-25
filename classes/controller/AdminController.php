@@ -682,6 +682,7 @@ class AdminControllerCore extends Controller
 			'export_content' => $content
 			)
 		);
+
 		$this->layout = 'layout-export.tpl';
 	}
 
@@ -1372,12 +1373,14 @@ class AdminControllerCore extends Controller
 		foreach (array('errors', 'warnings', 'informations', 'confirmations') as $type)
 			$this->context->smarty->assign($type, $this->json ? Tools::jsonEncode(array_unique($this->$type)) : array_unique($this->$type));
 
-		$this->context->smarty->assign('page', $this->json ? Tools::jsonEncode($page) : $page);
-
-		if (!$this->ajax)
-			$this->smartyOutputContent(array($header_tpl, $this->layout, $footer_tpl));
-		else
-			$this->smartyOutputContent($this->layout);
+		$this->context->smarty->assign(array(
+			'page' =>  $this->json ? Tools::jsonEncode($page) : $page,
+			'header' => $this->context->smarty->fetch($header_tpl),
+			'footer' => $this->context->smarty->fetch($footer_tpl)
+			)
+		);
+			
+		$this->smartyOutputContent($this->layout);
 	}
 
 	/**
