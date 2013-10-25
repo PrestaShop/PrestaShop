@@ -1085,20 +1085,34 @@
 
 			<ul id="old_carts_orders_navtab" class="nav nav-tabs">
 				<li class="active">
-					<a href="#lastOrders" data-toggle="tab">
-						<i class="icon-credit-card"></i>
-						{l s='Orders'}
-					</a>
-				</li>
-				<li>
 					<a href="#nonOrderedCarts" data-toggle="tab">
 						<i class="icon-shopping-cart"></i>
 						{l s='Carts'}
 					</a>
 				</li>
+				<li>
+					<a href="#lastOrders" data-toggle="tab">
+						<i class="icon-credit-card"></i>
+						{l s='Orders'}
+					</a>
+				</li>
 			</ul>
 			<div id="old_carts_orders" class="tab-content panel collapse in">
-				<div id="lastOrders" class="tab-pane active">
+				<div id="nonOrderedCarts" class="tab-pane active">
+					<table class="table">
+						<thead>
+							<tr>
+								<th><span class="title_box">{l s='ID'}</span></th>
+								<th><span class="title_box">{l s='Date'}</span></th>
+								<th><span class="title_box">{l s='Total'}</span></th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+				<div id="lastOrders" class="tab-pane">
 					<table class="table">
 						<thead>
 							<tr>
@@ -1108,20 +1122,6 @@
 								<th><span class="title_box">{l s='Total paid'}</span></th>
 								<th><span class="title_box">{l s='Payment: '}</span></th>
 								<th><span class="title_box">{l s='Status'}</span></th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody>
-						</tbody>
-					</table>
-				</div>
-				<div id="nonOrderedCarts" class="tab-pane">
-					<table class="table">
-						<thead>
-							<tr>
-								<th><span class="title_box">{l s='ID'}</span></th>
-								<th><span class="title_box">{l s='Date'}</span></th>
-								<th><span class="title_box">{l s='Total'}</span></th>
 								<th></th>
 							</tr>
 						</thead>
