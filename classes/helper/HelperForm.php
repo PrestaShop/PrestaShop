@@ -76,6 +76,7 @@ class HelperFormCore extends Helper
 		$date = true;
 		$tinymce = true;
 		$textarea_autosize = true;
+		$file = true;
 		foreach ($this->fields_form as $fieldset_key => &$fieldset)
 			if (isset($fieldset['form']['input']))
 				foreach ($fieldset['form']['input'] as $key => &$params)
@@ -108,6 +109,23 @@ class HelperFormCore extends Helper
 								$this->context->smarty->assign('categories_tree', $tree->render());
 								$categories = false;
 							}
+						break;
+
+						case 'file':
+							$uploader = new HelperUploader();
+							$uploader->setId(isset($params['id'])?$params['id']:null);
+							$uploader->setName($params['name']);
+							$uploader->setUrl(isset($params['url'])?$params['url']:null);
+							$uploader->setMultiple(isset($params['multiple'])?$params['multiple']:false);
+							$uploader->setUseAjax(isset($params['ajax'])?$params['ajax']:false);
+							$uploader->setDisplayImage(isset($params['display_image'])?$params['display_image']:false);
+							$uploader->setImage(isset($params['image'])?$params['image']:null);
+							$uploader->setThumb(isset($params['thumb'])?$params['thumb']:null);
+							$uploader->setSize(isset($params['size'])?$params['size']:null);
+							$uploader->setTitle(isset($params['title'])?$params['title']:null);
+							$uploader->setDeleteUrl(isset($params['delete_url'])?$params['delete_url']:null);
+
+							$params['file'] = $uploader->render();
 						break;
 
 						case 'color':
