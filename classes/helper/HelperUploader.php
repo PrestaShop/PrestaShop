@@ -38,6 +38,7 @@ class HelperUploaderCore extends Uploader
 	private   $_name;
 	private   $_multiple;
 	private   $_size;
+	private   $_file;
 	protected $_template;
 	private   $_template_directory;
 	private   $_title;
@@ -195,6 +196,17 @@ class HelperUploaderCore extends Uploader
 			return $this->getTemplateDirectory().$template;
 	}
 
+	public function setFile($value)
+	{
+		$this->_file = $value;
+		return $this;
+	}
+
+	public function getFile()
+	{
+		return $this->_file;
+	}
+
 	public function setTitle($value)
 	{
 		$this->_title = $value;
@@ -303,6 +315,7 @@ class HelperUploaderCore extends Uploader
 			'display_image' => $this->displayImage(),
 			'image'         => $this->getImage(),
 			'thumb'         => $this->getThumb(),
+			'file'          => $this->getFile(),
 			'size'          => $this->getSize(),
 			'delete_url'    => $this->getDeleteUrl(),
 			'title'         => $this->getTitle()

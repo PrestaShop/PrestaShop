@@ -56,6 +56,14 @@
 				<button id="{$id}-selectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
 					<i class="icon-folder-open"></i> {if isset($multiple) && $multiple}{l s='Add files'}{else}{l s='Add file'}{/if}
 				</button>
+				{if isset($file)}
+				<a href="{$file}">
+					<button type="button" class="btn btn-default">
+						<i class="icon-download"></i>
+						{if isset($size)}{l s='Download current file (%skb)' sprintf=$size}{else}{l s='Download current file'}{/if}
+					</button>
+				</a>
+				{/if}
 			</span>
 		</div>
 	</div>

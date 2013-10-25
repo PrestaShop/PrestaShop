@@ -122,6 +122,7 @@ class HelperFormCore extends Helper
 							$uploader->setImage(isset($params['image'])?$params['image']:null);
 							$uploader->setThumb(isset($params['thumb'])?$params['thumb']:null);
 							$uploader->setSize(isset($params['size'])?$params['size']:null);
+							$uploader->setFile(isset($params['file'])?$params['file']:null);
 							$uploader->setTitle(isset($params['title'])?$params['title']:null);
 							$uploader->setDeleteUrl(isset($params['delete_url'])?$params['delete_url']:null);
 
