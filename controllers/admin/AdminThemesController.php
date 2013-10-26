@@ -87,7 +87,7 @@ class AdminThemesControllerCore extends AdminController
 			'tab' => 'AdminStores',
 		)
 	);
-	
+
 	public $className = 'Theme';
 	public $table = 'theme';
 	protected $toolbar_scroll = false;
@@ -128,7 +128,7 @@ class AdminThemesControllerCore extends AdminController
 					),
 					'PS_LOGO_MOBILE' => array(
 						'title' => $this->l('Header logo for mobile'),
-						'desc' => 
+						'desc' =>
 							((Configuration::get('PS_LOGO_MOBILE') === false) ? '<span class="light-warning">'.$this->l('Warning: No mobile logo has been defined. The header logo will be used instead.').'</span><br />' : '').
 							$this->l('Will appear on the main page of your mobile template. If left undefined, the header logo will be used.'),
 						'type' => 'file',
@@ -136,7 +136,7 @@ class AdminThemesControllerCore extends AdminController
 					),
 					'PS_LOGO_MAIL' => array(
 						'title' => $this->l('Mail logo'),
-						'desc' => 
+						'desc' =>
 							((Configuration::get('PS_LOGO_MAIL') === false) ? '<span class="light-warning">'.$this->l('Warning: No email logo has been indentified. The header logo will be used instead.').'</span><br />' : '').
 							$this->l('Will appear on email headers. If undefined, the header logo will be used.'),
 						'type' => 'file',
@@ -144,7 +144,7 @@ class AdminThemesControllerCore extends AdminController
 					),
 					'PS_LOGO_INVOICE' => array(
 						'title' => $this->l('Invoice logo'),
-						'desc' => 
+						'desc' =>
 							((Configuration::get('PS_LOGO_INVOICE') === false) ? '<span class="light-warning">'.$this->l('Warning: No invoice logo has been defined. The header logo will be used instead.').'</span><br />' : '').
 							$this->l('Will appear on invoice headers. If undefined, the header logo will be used.'),
 						'type' => 'file',
@@ -189,7 +189,7 @@ class AdminThemesControllerCore extends AdminController
 						'desc' => $this->l('Your mail will be highlighted in this color. HTML colors only, please (e.g.').' "lightblue", "#CC6600")',
 						'type' => 'color',
 						'name' => 'PS_MAIL_COLOR',
-						'size' => 30,					
+						'size' => 30,
 						'value' => Configuration::get('PS_MAIL_COLOR')
 					)
 				),
@@ -219,11 +219,11 @@ class AdminThemesControllerCore extends AdminController
 		$allow_mobile = (bool)Configuration::get('PS_ALLOW_MOBILE_DEVICE');
 		if (!$allow_mobile && Context::getContext()->shop->getTheme() == 'default')
 			return;
-		
+
 		$iso_code = Country::getIsoById((int)Configuration::get('PS_COUNTRY_DEFAULT'));
 		$paypal_installed = (bool)Module::isInstalled('paypal');
 		$paypal_countries = array('ES', 'FR', 'PL', 'IT');
-		
+
 		if (!$paypal_installed && in_array($iso_code, $paypal_countries))
 		{
 			if (!$this->isXmlHttpRequest())
@@ -240,7 +240,7 @@ class AdminThemesControllerCore extends AdminController
 		$selected_theme_dir = null;
 		if ($this->object)
 			$selected_theme_dir = $this->object->directory;
-		
+
 		foreach ($getAvailableThemes as $k => $dirname)
 		{
 			$available_theme_dir[$k]['value'] = $dirname;
@@ -287,7 +287,7 @@ class AdminThemesControllerCore extends AdminController
 				'label' => $this->l('Copy missing files from existing theme:'),
 				'desc' => $this->l('If you create a new theme, it\'s recommended that you use default theme files.'),
 				'options' => array(
-					'id' => 'id', 'name' => 'name', 
+					'id' => 'id', 'name' => 'name',
 					'default' => array('value' => 0, 'label' => '&nbsp;-&nbsp;'),
 					'query' => $theme_query,
 				)
@@ -316,11 +316,11 @@ class AdminThemesControllerCore extends AdminController
 
 		return parent::renderList();
 	}
-	
+
 	/**
 	 * copy $base_theme_dir into $target_theme_dir.
 	 *
-	 * @param string $base_theme_dir relative path to base dir 
+	 * @param string $base_theme_dir relative path to base dir
 	 * @param string $target_theme_dir relative path to target dir
 	 * @return boolean true if success
 	 */
@@ -340,13 +340,13 @@ class AdminThemesControllerCore extends AdminController
 				{
 					if (!is_dir($target_dir.$file))
 						mkdir($target_dir.$file, Theme::$access_rights);
-					
+
 					$res &= AdminThemesController::copyTheme($base_theme_dir.$file, $target_theme_dir.$file);
 				}
 				elseif (!file_exists($target_theme_dir.$file))
 					$res &= copy($base_dir.$file, $target_dir.$file);
 			}
-		
+
 		return $res;
 	}
 
@@ -395,34 +395,37 @@ class AdminThemesControllerCore extends AdminController
 	{
 
 		$this->checkMobileNeeds();
-		
+
 		$themes = array();
 		foreach (Theme::getThemes() as $theme)
 			$themes[] = $theme->directory;
 
 		foreach (scandir(_PS_ALL_THEMES_DIR_) as $theme_dir)
+    {
 			if ($theme_dir[0] != '.' && Validate::isDirName($theme_dir) && is_dir(_PS_ALL_THEMES_DIR_.$theme_dir) && file_exists(_PS_ALL_THEMES_DIR_.$theme_dir.'/preview.jpg') && !in_array($theme_dir, $themes))
 			{
 				$theme = new Theme();
 				$theme->name = $theme->directory = $theme_dir;
 				$theme->add();
 			}
-	
-		$content = '';
-		if (file_exists(_PS_IMG_DIR_.'logo.jpg'))
-		{
-			list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_.Configuration::get('PS_LOGO'));
-			Configuration::updateValue('SHOP_LOGO_HEIGHT', (int)round($height));
-			Configuration::updateValue('SHOP_LOGO_WIDTH', (int)round($width));
-		}
-		if (file_exists(_PS_IMG_DIR_.'logo_mobile.jpg'))
-		{
-			list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MOBILE'));
-			Configuration::updateValue('SHOP_LOGO_MOBILE_HEIGHT', (int)round($height));
-			Configuration::updateValue('SHOP_LOGO_MOBILE_WIDTH', (int)round($width));
-		}
+    }
 
-		$this->content .= $content;
+    $logoToUpdate = array(
+        'PS_LOGO' => 'SHOP_LOGO_',
+        'PS_LOGO_MOBILE' => 'SHOP_LOGO_MOBILE_'
+    );
+
+    foreach ($logoToUpdate as $logo => $prefix)
+    {
+      $logoPath = _PS_IMG_DIR_.Configuration::get($logo);
+      if (file_exists($logoPath))
+      {
+        list($width, $height, $type, $attr) = getimagesize($logoPath);
+        Configuration::updateValue($prefix . 'HEIGHT', (int)round($height));
+        Configuration::updateValue($prefix . 'WIDTH', (int)round($width));
+      }
+    }
+
 		return parent::initContent();
 	}
 
@@ -560,7 +563,7 @@ class AdminThemesControllerCore extends AdminController
 	{
 		$this->updateLogo('PS_LOGO', 'logo');
 	}
-	
+
 	/**
 	 * Update PS_LOGO_MOBILE
 	 */
