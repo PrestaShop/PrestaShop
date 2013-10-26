@@ -1186,7 +1186,6 @@ class BlockLayered extends Module
 
 
 		$this->context->controller->addJS(($this->_path).'blocklayered.js');
-		$this->context->controller->addJS(_PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js');
 		$this->context->controller->addJQueryUI('ui.slider');
 		$this->context->controller->addCSS(($this->_path).'blocklayered-15.css', 'all');
 		$this->context->controller->addJQueryPlugin('scrollTo');
@@ -1686,7 +1685,6 @@ class BlockLayered extends Module
 		</fieldset><br />
 		<fieldset class="width4">
 			<legend><img src="../img/admin/cog.gif" alt="" />'.$this->l('Build your own filter template').'</legend>
-			<link rel="stylesheet" href="'._PS_CSS_DIR_.'jquery-ui-1.8.10.custom.css" />
 			<style type="text/css">
 				#error-filter-name { display: none; }
 				#layered_container_left ul, #layered_container_right ul { list-style-type: none; padding-left: 0px; }
