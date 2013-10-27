@@ -39,7 +39,7 @@ class DiscountControllerCore extends FrontController
 	{
 		parent::initContent();
 
-		$cart_rules = CartRule::getCustomerCartRules($this->context->language->id, $this->context->customer->id, true, false);
+		$cart_rules = CartRule::getCustomerCartRules($this->context->language->id, $this->context->customer->id, true, false, false, null, $this->context);
 		$nb_cart_rules = count($cart_rules);
 
 		$this->context->smarty->assign(array('nb_cart_rules' => (int)$nb_cart_rules, 'cart_rules' => $cart_rules, 'discount' => $cart_rules, 'nbDiscounts' => (int)$nb_cart_rules));

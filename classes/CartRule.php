@@ -34,7 +34,7 @@ class CartRuleCore extends ObjectModel
 	const FILTER_ACTION_ALL_NOCAP = 5;
 
 	const BO_ORDER_CODE_PREFIX = 'BO_ORDER_';
-	
+
 	/* This variable controls that a free gift is offered only once, even when multi-shippping is activated and the same product is delivered in both addresses */
 	protected static $only_one_gift = array();
 
@@ -128,11 +128,11 @@ class CartRuleCore extends ObjectModel
 		Configuration::updateGlobalValue('PS_CART_RULE_FEATURE_ACTIVE', '1');
 		return true;
 	}
-	
+
 	public function update($null_values = false)
 	{
 		Cache::clean('getContextualValue_'.$this->id.'_*');
-		return parent::update($null_values);	
+		return parent::update($null_values);
 	}
 
 	/**
@@ -213,18 +213,26 @@ class CartRuleCore extends ObjectModel
 	 * @param Cart|null $cart
 	 * @return array
 	 */
-	public static function getCustomerCartRules($id_lang, $id_customer, $active = false, $includeGeneric = true, $inStock = false, Cart $cart = null)
+	public static function getCustomerCartRules($id_lang, $id_customer, $active = false, $includeGeneric = true, $inStock = false, Cart $cart = null, Context $context = null)
 	{
 		if (!CartRule::isFeatureActive())
 			return array();
 
+    if ($context == null)
+      $context = Context::getContext();
+
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'cart_rule` cr
+    LEFT JOIN '._DB_PREFIX_.'cart_rule_shop crs ON cr.id_cart_rule = crs.id_cart_rule
 		LEFT JOIN `'._DB_PREFIX_.'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = '.(int)$id_lang.')
 		WHERE (
 			cr.`id_customer` = '.(int)$id_customer.' OR cr.group_restriction = 1
 			'.($includeGeneric ? 'OR cr.`id_customer` = 0' : '').'
+		)
+    AND (
+			cr.`shop_restriction` = 0
+			'.((Shop::isFeatureActive() && $context->shop->id) ? 'OR crs.id_shop = '.(int)$context->shop->id : '').'
 		)
 		AND cr.date_from < "'.date('Y-m-d H:i:s').'"
 		AND cr.date_to > "'.date('Y-m-d H:i:s').'"
@@ -507,7 +515,7 @@ class CartRuleCore extends ObjectModel
 			if ($cartTotal < $minimum_amount)
 				return (!$display_error) ? false : Tools::displayError('You have not reached the minimum amount required to use this voucher');
 		}
-		
+
 		/* This loop checks:
 			- if the voucher is already in the cart
 			- if a non compatible voucher is in the cart
@@ -543,10 +551,10 @@ class CartRuleCore extends ObjectModel
 					}
 				}
 			}
-		
+
 		if (!$nb_products)
 			return (!$display_error) ? false : Tools::displayError('Cart is empty');
-		
+
 		if (!$display_error)
 			return true;
 	}
@@ -566,7 +574,7 @@ class CartRuleCore extends ObjectModel
 					$eligibleProductsList[] = (int)$product['id_product'].'-'.(int)$product['id_product_attribute'];
 				if (!count($eligibleProductsList))
 					return (!$display_error) ? false : Tools::displayError('You cannot use this voucher in an empty cart');
-				
+
 				$productRules = $this->getProductRules($id_product_rule_group);
 				foreach ($productRules as $productRule)
 				{
@@ -733,7 +741,7 @@ class CartRuleCore extends ObjectModel
 			$context = Context::getContext();
 		if (!$filter)
 			$filter = CartRule::FILTER_ACTION_ALL;
-		
+
 		$all_products = $context->cart->getProducts();
 		$package_products = (is_null($package) ? $all_products : $package['products']);
 
@@ -756,7 +764,7 @@ class CartRuleCore extends ObjectModel
 				$data = Db::getInstance()->executeS('
 					SELECT crc.id_cart_rule, c.id_carrier
 					FROM '._DB_PREFIX_.'cart_rule_carrier crc
-					INNER JOIN '._DB_PREFIX_.'carrier c ON (c.id_reference = crc.id_carrier AND c.deleted = 0)					
+					INNER JOIN '._DB_PREFIX_.'carrier c ON (c.id_reference = crc.id_carrier AND c.deleted = 0)
 					WHERE crc.id_cart_rule = '.(int)$this->id.'
 					AND c.id_carrier = '.(int)$context->cart->id_carrier);
 
@@ -801,7 +809,7 @@ class CartRuleCore extends ObjectModel
 						$cheapest_product = $product['id_product'].'-'.$product['id_product_attribute'];
 					}
 				}
-				
+
 				// Check if the cheapest product is in the package
 				$in_package = false;
 				foreach ($package_products as $product)
@@ -893,7 +901,7 @@ class CartRuleCore extends ObjectModel
 					{
 						$cart_amount_ti = $context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
 						$cart_amount_te = $context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
-						
+
 						// The reduction cannot exceed the products total, except when we do not want it to be limited (for the partial use calculation)
 						if ($filter != CartRule::FILTER_ACTION_ALL_NOCAP)
 							$reduction_amount = min($reduction_amount, $this->reduction_tax ? $cart_amount_ti : $cart_amount_te);
@@ -945,7 +953,7 @@ class CartRuleCore extends ObjectModel
 		Cache::store($cache_id, $reduction_value);
 		return $reduction_value;
 	}
-	
+
 	/**
 	 * Make sure caches are empty
 	 * Must be called before calling multiple time getContextualValue()
@@ -1075,7 +1083,7 @@ class CartRuleCore extends ObjectModel
 		FROM '._DB_PREFIX_.'cart_rule cr
 		LEFT JOIN '._DB_PREFIX_.'cart_rule_shop crs ON cr.id_cart_rule = crs.id_cart_rule
 		LEFT JOIN '._DB_PREFIX_.'cart_rule_carrier crca ON cr.id_cart_rule = crca.id_cart_rule
-		'.($context->cart->id_carrier ? 'LEFT JOIN '._DB_PREFIX_.'carrier c ON (c.id_reference = crca.id_carrier AND c.deleted = 0)' : '').'		
+		'.($context->cart->id_carrier ? 'LEFT JOIN '._DB_PREFIX_.'carrier c ON (c.id_reference = crca.id_carrier AND c.deleted = 0)' : '').'
 		LEFT JOIN '._DB_PREFIX_.'cart_rule_country crco ON cr.id_cart_rule = crco.id_cart_rule
 		WHERE cr.active = 1
 		AND cr.code = ""
@@ -1137,19 +1145,19 @@ class CartRuleCore extends ObjectModel
 			$is_feature_active = (bool)Configuration::get('PS_CART_RULE_FEATURE_ACTIVE');
 		return $is_feature_active;
 	}
-	
+
 	/* When an entity associated to a product rule (product, category, attribute, supplier, manufacturer...) is deleted, the product rules must be updated */
 	public static function cleanProductRuleIntegrity($type, $list)
 	{
 		// Type must be available in the 'type' enum of the table cart_rule_product_rule
 		if (!in_array($type, array('products', 'categories', 'attributes', 'manufacturers', 'suppliers')))
 			return false;
-		
+
 		// This check must not be removed because this var is used a few lines below
 		$list = (is_array($list) ? implode(',', array_map('intval', $list)) : (int)$list);
 		if (!preg_match('/^[0-9,]+$/', $list))
 			return false;
-			
+
 		// Delete associated restrictions on cart rules
 		Db::getInstance()->execute('
 		DELETE crprv
@@ -1157,7 +1165,7 @@ class CartRuleCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'cart_rule_product_rule_value` crprv ON crpr.`id_product_rule` = crprv.`id_product_rule`
 		WHERE crpr.`type` = "'.pSQL($type).'"
 		AND crprv.`id_item` IN ('.$list.')'); // $list is checked a few lines above
-			
+
 		// Delete the product rules that does not have any values
 		if (Db::getInstance()->Affected_Rows() > 0)
 			Db::getInstance()->execute('
