@@ -417,14 +417,20 @@ function displayImage(domAAroundImgThumb, no_animation)
 {
 	if (typeof(no_animation) == 'undefined')
 		no_animation = false;
-	if (domAAroundImgThumb.attr('href'))
+	if (domAAroundImgThumb.prop('href'))
 	{
-		var newSrc = domAAroundImgThumb.attr('href').replace('thickbox', 'large');
-		if ($('#bigpic').attr('src') != newSrc)
+		var new_src = domAAroundImgThumb.prop('href').replace('thickbox', 'large');
+		var new_title = domAAroundImgThumb.prop('title');
+		var new_href = domAAroundImgThumb.prop('href');
+		if ($('#bigpic').prop('src') != new_src)
 		{
-			$('#bigpic').attr('src', newSrc).load(function() {
+			$('#bigpic').prop({
+				'src' : new_src, 
+				'alt' : new_title, 
+				'title' : new_title
+			}).load(function(){
 				if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
-					$(this).attr('rel', domAAroundImgThumb.attr('href'));
+					$(this).prop('rel', new_href);
 			}); 
 		}
 		$('#views_block li a').removeClass('shown');
