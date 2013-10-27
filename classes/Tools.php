@@ -1689,7 +1689,7 @@ class ToolsCore
 		fwrite($write_fd, "# http://www.prestashop.com - http://www.prestashop.com/forums\n\n");
 
 		if ($disable_modsec)
-			fwrite($write_fd, "<IfModule mod_security.c>\nSecFilterEngine Off\nSecFilterScanPOST Off\n</IfModule>\n");
+			fwrite($write_fd, "<IfModule mod_security.c>\nSecFilterEngine Off\nSecFilterScanPOST Off\n</IfModule>\n\n");
 
 		// RewriteEngine
 		fwrite($write_fd, "<IfModule mod_rewrite.c>\n");
