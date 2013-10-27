@@ -51,7 +51,7 @@
                 <div class="left-block">
                 	<div class="product-image-container">
                     	<a href="{$product.link|escape:'htmlall':'UTF-8'}" class="product_img_link {if $quick_view}quick-view{/if}" title="{$product.name|escape:'htmlall':'UTF-8'}">
-                            <img class="replace-2x img-responsive" src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')|escape:'html'}" alt="{$product.legend|escape:'htmlall':'UTF-8'}" {if isset($homeSize)} width="{$homeSize.width}" height="{$homeSize.height}"{/if} />
+                            <img class="replace-2x img-responsive" src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')|escape:'html'}" alt="{$product.name|escape:'htmlall':'UTF-8'}" {if isset($homeSize)} width="{$homeSize.width}" height="{$homeSize.height}"{/if} />
                         </a>
                         {if (!$PS_CATALOG_MODE AND ((isset($product.show_price) && $product.show_price) || (isset($product.available_for_order) && $product.available_for_order)))}
                         	<div class="content_price">
