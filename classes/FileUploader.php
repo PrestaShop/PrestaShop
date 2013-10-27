@@ -102,6 +102,11 @@ class QqUploadedFileForm
 			$image = new Image();
 			$image->id_product = (int)$product->id;
 			$image->position = Image::getHighestPosition($product->id) + 1;
+			$legends = Tools::getValue('legend');
+			if (is_array($legends))
+				foreach ($legends as $key => $legend)
+					if (!empty($legend))
+						$image->legend[(int)$key] = $legend;
 			if (!Image::getCover($image->id_product))
 				$image->cover = 1;
 			else
@@ -136,7 +141,7 @@ class QqUploadedFileForm
 
 		if (!$image->update())
 			return array('error' => Tools::displayError('Error while updating status'));
-		$img = array('id_image' => $image->id, 'position' => $image->position, 'cover' => $image->cover, 'name' => $this->getName());
+		$img = array('id_image' => $image->id, 'position' => $image->position, 'cover' => $image->cover, 'name' => $this->getName(), 'legend' => $image->legend);
 		return array('success' => $img);
 	}
 
@@ -184,6 +189,11 @@ class QqUploadedFileXhr
 			$image = new Image();
 			$image->id_product = (int)($product->id);
 			$image->position = Image::getHighestPosition($product->id) + 1;
+			$legends = Tools::getValue('legend');
+			if (is_array($legends))
+				foreach ($legends as $key => $legend)
+					if (!empty($legend))
+						$image->legend[(int)$key] = $legend;
 			if (!Image::getCover($image->id_product))
 				$image->cover = 1;
 			else
@@ -223,7 +233,7 @@ class QqUploadedFileXhr
 
 		if (!$image->update())
 			return array('error' => Tools::displayError('Error while updating status'));
-		$img = array('id_image' => $image->id, 'position' => $image->position, 'cover' => $image->cover, 'name' => $this->getName());
+		$img = array('id_image' => $image->id, 'position' => $image->position, 'cover' => $image->cover, 'name' => $this->getName(), 'legend' => $image->legend);
 		return array('success' => $img);
 	}
 
