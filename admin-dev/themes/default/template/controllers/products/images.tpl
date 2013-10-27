@@ -30,6 +30,19 @@
 
 	<table cellpadding="5" style="width:100%">
 		<tr>
+			<td class="col-left">
+				<label>{l s='Legend:'}</label>
+			</td>
+			<td style="padding-bottom:5px;" class="translatable">
+			{foreach from=$languages item=language}
+				<div class="lang_{$language.id_lang}" style="{if !$language.is_default}display: none;{/if} float: left;">
+					<input class="updateCurrentText" size="43" type="text" {if !$product->id}disabled="disabled"{/if} id="legend_{$language.id_lang}" name="legend_{$language.id_lang}" value="{$product->name[$language.id_lang]|escape:'htmlall':'UTF-8'}"/>
+					<span class="hint" name="help_box">{l s='Invalid characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
+				</div>
+			{/foreach}
+			</td>
+		</tr>
+		<tr>
 			<td class="col-left"><label class="file_upload_label">{l s='File:'}</label></td>
 			<td style="padding-bottom:5px;">
 				<div id="file-uploader">
@@ -57,6 +70,7 @@
 						<thead>
 						<tr class="nodrag nodrop"> 
 							<th style="width: 100px;">{l s='Image'}</th>
+							<th>{l s='Legend'}</th>
 							<th>{l s='Position'}</th>
 							{if $shops}
 							{foreach from=$shops item=shop}
@@ -81,6 +95,7 @@
 					<img src="{$smarty.const._THEME_PROD_DIR_}{$iso_lang}-default-small_default.jpg" alt="image_id" title="image_id" />
 				</a>
 			</td>
+			<td>legend</td>
 			<td id="td_image_id" class="pointer dragHandle center positionImage">
 				image_position
 			</td>
@@ -101,7 +116,6 @@
 			</td>
 		</tr>
 	</table>
-
 	<script type="text/javascript">
 		var upbutton = '{l s='Upload an image'}';
 		var token = '{$token}';
@@ -128,7 +142,7 @@
 				}
 				else
 					assoc = false;
-				imageLine({$image->id}, "{$image->getExistingImgPath()}", {$image->position}, "{if $image->cover}enabled{else}forbbiden{/if}", assoc);
+				imageLine({$image->id}, "{$image->getExistingImgPath()}", {$image->position}, "{if $image->cover}enabled{else}forbbiden{/if}", assoc, "{$image->legend[$default_language]|@addcslashes:'\"'}");
 			{/foreach}
 			{literal}
 			$("#imageTable").tableDnD(
@@ -147,20 +161,20 @@
 				updateImagePosition(image_up);
 				}
 			});
+		
 			var filecheck = 1;
-			var uploader = new qq.FileUploader(
+			var params = new Array;
+			params['id_product'] = {/literal}{$id_product|intval}{literal};
+			params['id_category'] = {/literal}{$id_category_default|intval}{literal};
+			params['token'] = "{/literal}{$token}{literal}";
+			params['tab'] = "AdminProducts";
+			params['action'] = "addImage";
+			params['ajax'] = 1;
+			uploader = new qq.FileUploader(
 			{
 				element: document.getElementById("file-uploader"),
 				action: "ajax-tab.php",
 				debug: false,
-				params: {
-					id_product : {/literal}{$id_product}{literal},
-					id_category : {/literal}{$id_category_default}{literal},
-					token : "{/literal}{$token}{literal}",
-					tab : "AdminProducts",
-					action : 'addImage',
-					ajax: 1
-				},
 				onComplete: function(id, fileName, responseJSON)
 				{
 					var percent = ((filecheck * 100) / nbfile);
@@ -185,7 +199,7 @@
 						cover = "forbbiden";
 						if (responseJSON.cover == "1")
 							cover = "enabled";
-						imageLine(responseJSON.id, responseJSON.path, responseJSON.position, cover, responseJSON.shops)
+						imageLine(responseJSON.id, responseJSON.path, responseJSON.position, cover, responseJSON.shops, responseJSON.legend[{/literal}{$default_language|intval}{literal}])
 						$("#imageTable tr:last").after(responseJSON.html);
 						$("#countImage").html(parseInt($("#countImage").html()) + 1);
 						$("#img" + id).remove();
@@ -198,6 +212,12 @@
 				},
 				onSubmit: function(id, filename)
 				{
+					$('input[id^="legend_"]').each(function()
+					{
+						id = $(this).prop("id").replace("legend_", "legend[") + "]";
+						params[id] = $(this).val();
+					});
+					uploader.setParams(params);					
 					$("#imageTable").show();
 					$("#listImage").append("<li id='img"+id+"'><div class=\"float\" >" + filename + "</div></div><a style=\"margin-left:10px\"href=\"javascript:delQueue(" + id +");\"><img src=\"../img/admin/disabled.gif\" alt=\"\" border=\"0\"></a><p class=\"errorImg\"></p></li>");
 				}
@@ -309,13 +329,14 @@
 				$("#img" + id).remove();
 			}
 			
-			function imageLine(id, path, position, cover, shops)
+			function imageLine(id, path, position, cover, shops, legend)
 			{
 				line = $("#lineType").html();
 				line = line.replace(/image_id/g, id);
 				line = line.replace(/[a-z]{2}-default/g, path);
 				line = line.replace(/image_path/g, path);
 				line = line.replace(/image_position/g, position);
+				line = line.replace(/legend/g, legend);
 				line = line.replace(/blank/g, cover);
 				line = line.replace(/<tbody>/gi, "");
 				line = line.replace(/<\/tbody>/gi, "");
@@ -330,7 +351,6 @@
 
 				$("#imageList").append(line);
 			}
-
 			$('.fancybox').fancybox();
 		});
 		{/literal}

@@ -1341,7 +1341,6 @@ class AdminProductsControllerCore extends AdminController
 		if (isset($result['success']))
 		{
 			$obj = new Image((int)$result['success']['id_image']);
-
 			// Associate image to shop from context
 			$shops = Shop::getContextListShopID();
 			$obj->associateTo($shops);
@@ -1355,6 +1354,7 @@ class AdminProductsControllerCore extends AdminController
 				'id'=>$obj->id,
 				'path' => $obj->getExistingImgPath(),
 				'position' => $obj->position,
+				'legend' => $obj->legend,
 				'cover' => $obj->cover,
 				'shops' => $json_shops,
 			);
@@ -3613,7 +3613,9 @@ class AdminProductsControllerCore extends AdminController
 						'max_image_size' => $this->max_image_size / 1024 / 1024,
 						'up_filename' => (string)Tools::getValue('virtual_product_filename_attribute'),
 						'currency' => $this->context->currency,
-						'current_shop_id' => $current_shop_id
+						'current_shop_id' => $current_shop_id,
+						'languages' => $this->_languages,
+						'default_language' => (int)Configuration::get('PS_LANG_DEFAULT')
 				));
 			}
 			else

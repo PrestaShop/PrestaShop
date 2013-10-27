@@ -1103,6 +1103,12 @@ product_tabs['Pack'] = new function(){
 	}
 }
 
+product_tabs['Images'] = new function(){
+	this.onReady = function(){
+		displayFlags(languages, id_language, allowEmployeeFormLang);
+	}
+}
+
 product_tabs['Features'] = new function(){
 	this.onReady = function(){
 		displayFlags(languages, id_language, allowEmployeeFormLang);
