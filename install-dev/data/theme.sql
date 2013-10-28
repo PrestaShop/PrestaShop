@@ -6,6 +6,8 @@ UPDATE `PREFIX_configuration` SET value = '0' WHERE name = 'PS_PRODUCTS_ORDER_WA
 UPDATE `PREFIX_configuration` SET value = '4' WHERE name = 'PS_PRODUCTS_ORDER_BY';
 UPDATE `PREFIX_configuration` SET value = '1' WHERE name = 'PS_DISPLAY_QTIES';
 UPDATE `PREFIX_configuration` SET value = '20' WHERE name = 'PS_NB_DAYS_NEW_PRODUCT';
+UPDATE `PREFIX_configuration` SET value = '365' WHERE name = 'PS_NB_DAYS_LATEST_PRODUCT';
+UPDATE `PREFIX_configuration` SET value = '30' WHERE name = 'PS_NB_QTY_LATEST_PRODUCT';
 UPDATE `PREFIX_configuration` SET value = '1' WHERE name = 'PS_BLOCK_CART_AJAX';
 UPDATE `PREFIX_configuration` SET value = '8388608' WHERE name = 'PS_PRODUCT_PICTURE_MAX_SIZE';
 UPDATE `PREFIX_configuration` SET value = '64' WHERE name = 'PS_PRODUCT_PICTURE_WIDTH';
