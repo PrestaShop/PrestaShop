@@ -1320,6 +1320,8 @@ class AdminControllerCore extends Controller
 			));
 		}
 		$this->layout = 'layout-ajax.tpl';
+		$this->display_header = false;
+		$this->display_footer = false;
 		return $this->display();
 	}
 
