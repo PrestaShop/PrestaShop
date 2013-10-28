@@ -1,5 +1,5 @@
 
-[http://safe.shell.la/{shop_url}] 
+[{shop_url}] 
 
 Hi {firstname} {lastname}, 
 
@@ -10,10 +10,10 @@ your return #{id_order_return}, the new status is:
 MESSAGE: {message} 
 
 You can review your order and download your invoice from the
-"Order history" [http://safe.shell.la/{history_url}] section of your
+"Order history" [{history_url}] section of your
 customer account by clicking "My account"
-[http://safe.shell.la/{my_account_url}] on our shop. 
+[{my_account_url}] on our shop. 
 
-{shop_name} [http://safe.shell.la/{shop_url}] powered by
+{shop_name} [{shop_url}] powered by
 PrestaShop(tm) [http://www.prestashop.com/] 
 

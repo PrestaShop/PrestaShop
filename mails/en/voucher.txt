@@ -1,5 +1,5 @@
 
-[http://safe.shell.la/{shop_url}] 
+[{shop_url}] 
 
 Hi {firstname} {lastname}, 
 
@@ -11,6 +11,6 @@ VOUCHER CODE: {VOUCHER_NUM} in the amount of {VOUCHER_AMOUNT}
 Simply copy/paste this code during the payment process for your next
 order. 
 
-{shop_name} [http://safe.shell.la/{shop_url}] powered by
+{shop_name} [{shop_url}] powered by
 PrestaShop(tm) [http://www.prestashop.com/] 
 

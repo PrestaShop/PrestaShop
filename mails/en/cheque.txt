@@ -1,16 +1,16 @@
 
-[http://safe.shell.la/{shop_url}] 
+[{shop_url}] 
 
 Hi {firstname} {lastname},
 
-Thank you for shopping at {shop_name}! 
+Thank you for shopping with {shop_name}! 
 
 Order {order_name} - Awaiting check payment Your order with the
 reference {ORDER_NAME} has been placed successfully and will be
 SHIPPED AS SOON AS WE RECEIVE YOUR PAYMENT. 
 
-You have selected to pay by check. Please include on your check. Here
-are the bank details for your wire or transfer:
+You have selected to pay by check. Here are the bank details for your
+check:
 
 AMOUNT: {total_paid}
 
@@ -19,14 +19,14 @@ PAYABLE TO THE ORDER OF: {cheque_name}
 PLEASE MAIL YOUR CHECK TO: {cheque_address_html} 
 
 You can review your order and download your invoice from the
-"Order history" [http://safe.shell.la/{history_url}] section of your
+"Order history" [{history_url}] section of your
 customer account by clicking "My account"
-[http://safe.shell.la/{my_account_url}] on our shop. 
+[{my_account_url}] on our shop. 
 
 If you have a guest account, you can follow your order via the
-"Guest Tracking" [http://safe.shell.la/{guest_tracking_url}] section
+"Guest Tracking" [{guest_tracking_url}] section
 on our shop. 
 
-{shop_name} [http://safe.shell.la/{shop_url}] powered by
+{shop_name} [{shop_url}] powered by
 PrestaShop(tm) [http://www.prestashop.com/] 
 

@@ -1,5 +1,5 @@
 
-[http://safe.shell.la/{shop_url}] 
+[{shop_url}] 
 
 Hi {firstname} {lastname}, 
 
@@ -7,17 +7,17 @@ Order {order_name} - In transit Your order with the reference
 {ORDER_NAME} is currently in transit. 
 
 You can track your package using the following link: {followup}
-[http://safe.shell.la/{followup}] 
+[{followup}] 
 
 You can review your order and download your invoice from the
-"Order history" [http://safe.shell.la/{history_url}] section of your
+"Order history" [{history_url}] section of your
 customer account by clicking "My account"
-[http://safe.shell.la/{my_account_url}] on our shop. 
+[{my_account_url}] on our shop. 
 
 If you have a guest account, you can follow your order via the
-"Guest Tracking" [http://safe.shell.la/{guest_tracking_url}] section
+"Guest Tracking" [{guest_tracking_url}] section
 on our shop. 
 
-{shop_name} [http://safe.shell.la/{shop_url}] powered by
+{shop_name} [{shop_url}] powered by
 PrestaShop(tm) [http://www.prestashop.com/] 
 

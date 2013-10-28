@@ -1,30 +1,59 @@
-Hi,
 
-You've a new order from {firstname} {lastname} ({email}) on {shop_name}.
+[{shop_url}] 
 
-Order: {order_name}
-Placed on : {date}
-Carrier : {carrier}
-Payment: {payment}
-Discounts: {total_discounts}
-Shipping: {total_shipping}
-Total Tax paid: {total_tax_paid}
-Products: {total_products}
-Gift-wrapping: {total_wrapping}
-Total paid: {total_paid}
+Congratulations! 
 
-Delivery address:
+A new order was placed on {shop_name} from the following customer:
+{firstname} {lastname} ({email}) 
 
-{delivery_block_txt}
+Order details ORDER: {order_name} Placed on {date}
 
-Billing address:
+PAYMENT: {payment} 
 
-{invoice_block_txt}
+REFERENCE
 
-Customer message:
+PRODUCT
 
-{message}
+UNIT PRICE
 
+QUANTITY
 
+TOTAL PRICE
 
-{shop_url} powered by PrestaShop™
+{items} 
+
+PRODUCTS
+
+{total_products}
+
+DISCOUNTS
+
+{total_discounts}
+
+GIFT-WRAPPING
+
+{total_wrapping}
+
+SHIPPING
+
+{total_shipping}
+
+TOTAL TAX PAID
+
+{total_tax_paid}
+
+TOTAL PAID
+
+{total_paid}
+
+Carrier: {carrier} 
+
+Delivery address {delivery_block_html} 		 
+
+Billing address {invoice_block_html} 
+
+Customer message: {message} 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

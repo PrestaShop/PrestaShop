@@ -1,8 +1,13 @@
-Hi,
 
-{firstname} {lastname} indicated you may want to see his/her wishlist {wishlist} :
-{message}
+[{shop_url}] 
 
+Hi, 
 
+Message from {shop_name} {FIRSTNAME} {LASTNAME} indicated you may
+want to see his/her wishlist: {WISHLIST}
 
-{shop_url} Powered by PrestaShop™
+{wishlist} [{message}] 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+
