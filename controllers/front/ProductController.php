@@ -270,7 +270,12 @@ class ProductControllerCore extends FrontController
 				'currencyBlank' => $this->context->currency->blank,
 				'jqZoomEnabled' => Configuration::get('PS_DISPLAY_JQZOOM'),
 				'ENT_NOQUOTES' => ENT_NOQUOTES,
-				'outOfStockAllowed' => (int)Configuration::get('PS_ORDER_OUT_OF_STOCK')
+				'outOfStockAllowed' => (int)Configuration::get('PS_ORDER_OUT_OF_STOCK'),
+				'body_classes' => array(
+						'product',
+						'product-'.$this->product->id,
+						'product-'.$this->product->link_rewrite
+				)
 			));
 		}
 
