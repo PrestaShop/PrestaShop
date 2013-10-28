@@ -258,6 +258,7 @@ function setPreviousYear() {
 	$("#date-end-compare").val(endDate.format($("#date-start").data('date-format')));
 }
 
+
 $( document ).ready(function() {
 	//Instanciate datepickers
 	datepickerStart = $('.datepicker1').daterangepicker({
@@ -321,7 +322,7 @@ $( document ).ready(function() {
 	});
 	
 	$('#datepicker-cancel').click(function() {
-		$('#datepicker').slideUp(200);
+		$('#datepicker').addClass('hide');
 	});
 
 	$('#datepicker').show(function() {
@@ -375,4 +376,40 @@ $( document ).ready(function() {
 		datepickerStart.setCompare(true);
 		datepickerEnd.setCompare(true);
 	}
+
+	$('#datepickerFrom').click(function() {
+		$('#datepicker').removeClass('hide');
+		$('#date-start').focus();
+	});
+
+	$('#datepickerTo').click(function() {
+		$('#datepicker').removeClass('hide');
+		$('#date-end').focus();
+	});
+
+	$('.submitDateDay').on('click',function(e){
+		e.preventDefault;
+		setDayPeriod();
+	});
+	$('.submitDateMonth').on('click',function(e){
+		e.preventDefault;
+		setMonthPeriod()
+	});
+	$('.submitDateYear').on('click',function(e){
+		e.preventDefault;
+		setYearPeriod();
+	});
+	$('.submitDateDayPrev').on('click',function(e){
+		e.preventDefault;
+		setPreviousDayPeriod();
+	});
+	$('.submitDateMonthPrev').on('click',function(e){
+		e.preventDefault;
+		setPreviousMonthPeriod();
+	});
+	$('.submitDateYearPrev').on('click',function(e){
+		e.preventDefault;
+		setPreviousYearPeriod();
+	});
+
 });
