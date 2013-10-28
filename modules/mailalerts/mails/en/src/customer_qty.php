@@ -11,7 +11,7 @@
 <tr>
 	<td class="box">
 		<p>
-			{product} <?php echo t('is now available.'); ?>
+			<?php echo t('{product} is now available.'); ?>
 		</p>
 		<span>
 			<?php echo t('This item is once again in-stock.'); ?><br /><br /> 

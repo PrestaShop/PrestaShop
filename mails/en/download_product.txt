@@ -1,9 +1,10 @@
 
-[http://safe.shell.la/{shop_url}] 
+[{shop_url}] 
 
 Hi {firstname} {lastname},
 
-Thank you for your order from {SHOP_NAME} 
+Thank you for your order with the reference {order_name} from
+{SHOP_NAME} 
 
 Product(s) now available for download You have {NBPRODUCTS}
 product(s) now available for download using the following link(s):
@@ -11,15 +12,15 @@ product(s) now available for download using the following link(s):
 {virtualProducts} 
 
 You can review your order and download your invoice from the
-"Order history" [http://safe.shell.la/{history_url}] section of your
+"Order history" [{history_url}] section of your
 customer account by clicking "My account"
-[http://safe.shell.la/{my_account_url}] on our shop. 
+[{my_account_url}] on our shop. 
 
 If you have a guest account, you can follow your order via the
 "Guest Tracking"
-[http://safe.shell.la/{guest_tracking_url}?id_order={order_name}]
+[{guest_tracking_url}?id_order={order_name}]
 section on our shop. 
 
-{shop_name} [http://safe.shell.la/{shop_url}] powered by
+{shop_name} [{shop_url}] powered by
 PrestaShop(tm) [http://www.prestashop.com/] 
 
