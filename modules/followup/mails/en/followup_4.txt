@@ -1,11 +1,22 @@
-We miss you at {shop_name}
 
-Hello {firstname} {lastname},
- 
-You are one of our best customers, however you have not placed an order in {days_threshold} days.
+[{shop_url}] 
 
-We wish to thank you for the trust you have placed in us and want to give you a discount of {amount}% valid on your next order! This offer is valid for {days} days, so do not waste a moment!
- 
-Here is your coupon: {voucher_num}
+Hi {firstname} {lastname}, 
 
-Enter this code in your shopping cart to get your discount.
+Your cart at {shop_name} You are one of our best customers, however
+you have not placed an order in {days_threshold} days.
+
+Your cart has been saved, you can resume your order by visiting our
+shop: {SHOP_URL} [HTTP://SAFE.SHELL.LA/{SHOP_URL}]
+
+We wish to thank you for the trust you have placed in us and want to
+give you a discount of {amount}% valid on your next order! This offer
+is valid for {DAYS} days, so do not waste a moment! 
+
+HERE IS YOUR COUPON: {voucher_num}
+
+Enter this code in your shopping cart to get your discount. 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

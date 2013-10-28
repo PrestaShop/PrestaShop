@@ -11,10 +11,10 @@
 <tr>
 	<td class="box">
 		<p>
-			{product} <?php echo t('is almost out of stock.'); ?>
+			<?php echo t('{product} is almost out of stock.'); ?>
 		</p>
 		<span>
-			<?php echo t('The stock cover is now less than the specified minimum of'); ?> <strong><span>{warning_coverage}.</span></strong><br /><br /> 
+			<?php echo t('The stock cover is now less than the specified minimum of:'); ?> <strong><span>{warning_coverage}.</span></strong><br /><br /> 
 			<strong><span><?php echo t('Current stock cover:'); ?></span></strong> {current_coverage}
 		</span>
 	</td>
