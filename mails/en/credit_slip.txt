@@ -1,17 +1,16 @@
 
-[http://safe.shell.la/{shop_url}] 
+[{shop_url}] 
 
 Hi {firstname} {lastname}, 
 
-Your order with the reference {order_name} - Credit slip created We
-have generated a credit slip in your name for order with the reference
-{ORDER_NAME}. 
+Order {order_name} - Credit slip created We have generated a credit
+slip in your name for order with the reference {ORDER_NAME}. 
 
 You can review this credit slip and download your invoice from the
-"My credit slips" [http://safe.shell.la/{history_url}] section of your
+"My credit slips" [{history_url}] section of your
 account by clicking "My account"
-[http://safe.shell.la/{my_account_url}] on our shop. 
+[{my_account_url}] on our shop. 
 
-{shop_name} [http://safe.shell.la/{shop_url}] powered by
+{shop_name} [{shop_url}] powered by
 PrestaShop(tm) [http://www.prestashop.com/] 
 

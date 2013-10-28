@@ -1,5 +1,5 @@
 
-[http://safe.shell.la/{shop_url}] 
+[{shop_url}] 
 
 Hi {firstname} {lastname},
 
@@ -12,8 +12,8 @@ You will soon receive a URL to track the delivery progress of your
 package. 
 
 You can now place orders on our shop: {shop_name}
-[http://safe.shell.la/{shop_url}]. 
+[{shop_url}] 
 
-{shop_name} [http://safe.shell.la/{shop_url}] powered by
+{shop_name} [{shop_url}] powered by
 PrestaShop(tm) [http://www.prestashop.com/] 
 

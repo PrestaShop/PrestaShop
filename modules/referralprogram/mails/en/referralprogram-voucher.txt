@@ -1,12 +1,17 @@
-Hi {firstname} {lastname},
 
-We have created a voucher in your name for referring a friend.
+[{shop_url}] 
 
-Here is the code of your voucher : {voucher_num}, with an amount of {voucher_amount}.
-Simply copy/paste this code during the payment process for your next order.
+Hi {firstname} {lastname}, 
 
-Thank you for shopping at {shop_name}.
+Referral Program We have created a voucher in your name for referring
+a friend.
 
+Here is the code of your voucher: {VOUCHER_NUM}, with an amount of
+{VOUCHER_AMOUNT}.
 
+Simply copy/paste this code during the payment process for your next
+order. 
 
-{shop_url} powered by PrestaShop™
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+
