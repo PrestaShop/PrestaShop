@@ -1,5 +1,5 @@
 
-[http://safe.shell.la/{shop_url}] 
+[{shop_url}] 
 
 Hi {firstname} {lastname}, 
 
@@ -16,6 +16,6 @@ ATTACHED FILE: {attached_file}
 
 We will answer as soon as possible. 
 
-{shop_name} [http://safe.shell.la/{shop_url}] powered by
+{shop_name} [{shop_url}] powered by
 PrestaShop(tm) [http://www.prestashop.com/] 
 

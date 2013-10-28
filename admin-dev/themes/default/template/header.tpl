@@ -283,6 +283,11 @@
 						$('#bo_query').attr("placeholder",$(this).data('placeholder'));
 						$('#bo_query').focus();
 					});
+					{if isset($search_type) && $search_type}
+						$(document).ready(function() {
+							$('.search-option a[data-value='+{$search_type|intval}+']').click();
+						});
+					{/if}
 				</script>
 
 			<!-- js 
@@ -294,7 +299,6 @@
 					OK - set active on right list item
 					OK - focus input field
 					OK - change place holder
-					- use change for first init
 					- clear search
 					(?) - keep focus state when keyword exists
 

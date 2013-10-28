@@ -1,13 +1,13 @@
 
-[http://safe.shell.la/{shop_url}] 
+[{shop_url}] 
 
 Hi {firstname} {lastname}, 
 
-New message from {shop_name} You have received a new message from
+Message from {shop_name} You have received a new message from
 {SHOP_NAME} regarding order with the reference {ORDER_NAME}.
 
 MESSAGE: {message} 
 
-{shop_name} [http://safe.shell.la/{shop_url}] powered by
+{shop_name} [{shop_url}] powered by
 PrestaShop(tm) [http://www.prestashop.com/] 
 
