@@ -106,8 +106,8 @@ class AttachmentCore extends ObjectModel
 	public static function deleteProductAttachments($id_product)
 	{
 		$res = Db::getInstance()->execute('
-			DELETE FROM '._DB_PREFIX_.'product_attachment
-			WHERE id_product = '.(int)$id_product);
+		DELETE FROM '._DB_PREFIX_.'product_attachment
+		WHERE id_product = '.(int)$id_product);
 
 		Product::updateCacheAttachment((int)$id_product);
 		

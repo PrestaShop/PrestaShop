@@ -47,7 +47,7 @@ if (!defined('__PS_BASE_URI__'))
 	define('__PS_BASE_URI__', substr($_SERVER['REQUEST_URI'], 0, -1 * (strlen($_SERVER['REQUEST_URI']) - strrpos($_SERVER['REQUEST_URI'], '/')) - strlen(substr(dirname($_SERVER['REQUEST_URI']), strrpos(dirname($_SERVER['REQUEST_URI']), '/') + 1))));
 
 if (!defined('_THEME_NAME_'))
-	define('_THEME_NAME_', 'default');
+	define('_THEME_NAME_', 'default-bootstrap');
 
 require_once(dirname(_PS_INSTALL_PATH_).'/config/defines.inc.php');
 require_once(dirname(_PS_INSTALL_PATH_).'/config/defines_uri.inc.php');

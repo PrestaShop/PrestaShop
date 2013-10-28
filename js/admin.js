@@ -708,6 +708,7 @@ function checkMultishopDefaultValue(obj, key)
 	{
 		$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select').attr('disabled', true);
 		$('#conf_id_'+key+' label.conf_title').addClass('isDisabled');
+		$(obj).attr('disabled', false);
 	}
 	else
 	{

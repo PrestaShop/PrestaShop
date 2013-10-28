@@ -111,7 +111,7 @@
 					{elseif isset($params.callback)}
 						{$tr.$key}
 					{elseif $key == 'color'}
-						<div style="background-color: {$tr.$key}"></div>
+						<div style="background-color: {$tr.$key};" class="attributes-color-container"></div>
 					{elseif isset($params.maxlength) && Tools::strlen($tr.$key) > $params.maxlength}
 						<span title="{$tr.$key|escape:'htmlall':'UTF-8'}">{$tr.$key|truncate:$params.maxlength:'...'|escape:'htmlall':'UTF-8'}</span>
 					{else}
