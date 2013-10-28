@@ -194,15 +194,15 @@ class AdminDashboardControllerCore extends AdminController
 		if (Tools::isSubmit('profitability_conf'))
 			return parent::renderOptions();
 
-		$translations = array(
-			'Calendar' => $this->l('Calendar', 'AdminStatsTab'),
-			'Day' => $this->l('Day', 'AdminStatsTab'),
-			'Month' => $this->l('Month', 'AdminStatsTab'),
-			'Year' => $this->l('Year', 'AdminStatsTab'),
-			'From' => $this->l('From:', 'AdminStatsTab'),
-			'To' => $this->l('To:', 'AdminStatsTab'),
-			'Save' => $this->l('Save', 'AdminStatsTab')
-		);
+		// $translations = array(
+		// 	'Calendar' => $this->l('Calendar', 'AdminStatsTab'),
+		// 	'Day' => $this->l('Day', 'AdminStatsTab'),
+		// 	'Month' => $this->l('Month', 'AdminStatsTab'),
+		// 	'Year' => $this->l('Year', 'AdminStatsTab'),
+		// 	'From' => $this->l('From:', 'AdminStatsTab'),
+		// 	'To' => $this->l('To:', 'AdminStatsTab'),
+		// 	'Save' => $this->l('Save', 'AdminStatsTab')
+		// );
 
 		$calendar_helper = new HelperCalendar();
 
@@ -230,7 +230,7 @@ class AdminDashboardControllerCore extends AdminController
 		$this->tpl_view_vars = array(
 			'hookDashboardZoneOne' => Hook::exec('dashboardZoneOne', $params),
 			'hookDashboardZoneTwo' => Hook::exec('dashboardZoneTwo', $params),
-			'translations' => $translations,
+			//'translations' => $translations,
 			'action' => '#',
 			'warning' => $this->getWarningDomainName(),
 			'new_version_url' => Tools::getCurrentUrlProtocolPrefix().'api.prestashop.com/version/check_version.php?v='._PS_VERSION_.'&lang='.$this->context->language->iso_code,
