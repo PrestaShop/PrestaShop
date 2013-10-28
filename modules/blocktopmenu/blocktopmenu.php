@@ -291,6 +291,11 @@ class Blocktopmenu extends Module
 								<br/>
 								<a href="#" id="removeItem" style="border: 1px solid rgb(170, 170, 170); margin: 2px; padding: 2px; text-align: center; display: block; text-decoration: none; background-color: rgb(250, 250, 250); color: rgb(18, 52, 86);">&lt;&lt; '.$this->l('Remove').'</a>
 							</td>
+							<td style="vertical-align:top;padding:5px;">
+								<h4 style="margin:0 0 5px;">'.$this->l('Change order').':</h4> 
+								<a href="#" id="menuOrderUp" class="button" style="font-size:20px;display:block;">&uarr;</a><br/>
+								<a href="#" id="menuOrderDown" class="button" style="font-size:20px;display:block;">&darr;</a><br/>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -336,6 +341,28 @@ class Blocktopmenu extends Module
 						});
 						$("#itemsInput").val(options.substr(0, options.length - 1));
 					}
+					function move(up=false) {
+						var tomove = $("#items option:selected");
+						if (tomove.length >1) {
+							alert(\''.Tools::htmlentitiesUTF8($this->l('Please select just one item')).'\');
+							return false;
+						}
+						if (up) {
+							tomove.prev().insertAfter(tomove);
+						} else {
+							tomove.next().insertBefore(tomove);
+						}
+						serialize();
+					}
+					
+					$("#menuOrderUp").click(function(e){
+						e.preventDefault();
+						move(true);
+					})
+					$("#menuOrderDown").click(function(e){
+						e.preventDefault();
+						move();
+					})
 				});
 				</script>
 				<label for="s">'.$this->l('Search Bar').'</label>
