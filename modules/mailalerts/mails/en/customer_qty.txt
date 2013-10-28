@@ -1,12 +1,15 @@
-Hi,
 
-Product {product} is now available.
-This item is once again in-stock.
+[{shop_url}] 
 
-You can access the product page on: {product_link}
+Hi, 
 
-You can order it right now from our online shop.
+{product} is now available. This item is once again in-stock.
 
+You can access the product page by clicking on the link: {PRODUCT}
+[HTTP://SAFE.SHELL.LA/{PRODUCT_LINK}]
 
+You can order it right now from our online shop. 
 
-{shop_url} powered by PrestaShop™
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

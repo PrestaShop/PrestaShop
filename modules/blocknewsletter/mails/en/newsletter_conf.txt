@@ -1,7 +1,10 @@
-Hi
 
-Thank you for subscribing to our newsletter.
+[{shop_url}] 
 
+Hi, 
 
+THANK YOU FOR SUBSCRIBING TO OUR NEWSLETTER. 
 
-{shop_url} powered by PrestaShop™
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+
