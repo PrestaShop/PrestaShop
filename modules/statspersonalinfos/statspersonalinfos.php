@@ -75,7 +75,8 @@ class StatsPersonalInfos extends ModuleGraph
 					</ul>
 				</p>
 			</div>';
-		if (count(Customer::getCustomers()))
+		$has_customers = (bool)Db::getInstance()->getValue('SELECT id_customer FROM '._DB_PREFIX_.'customer');
+		if ($has_customers)
 		{
 			if (Tools::getValue('export'))
 				if (Tools::getValue('exportType') == 'gender')
