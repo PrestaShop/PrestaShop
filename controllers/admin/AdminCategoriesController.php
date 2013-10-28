@@ -388,6 +388,14 @@ class AdminCategoriesControllerCore extends AdminController
 		$guest_group_information = sprintf($this->l('%s - Customer who placed an order with the guest checkout.'), '<b>'.$guest->name[$this->context->language->id].'</b>');
 		$default_group_information = sprintf($this->l('%s - All people who have created an account on this site.'), '<b>'.$default->name[$this->context->language->id].'</b>');
 
+		if (!($obj = $this->loadObject(true)))
+			return;
+
+		$image = _PS_CAT_IMG_DIR_.$obj->id.'.jpg';
+		$image_url = ImageManager::thumbnail($image, $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 350,
+			$this->imageType, true, true);
+		$image_size = file_exists($image) ? filesize($image) / 1000 : false;
+
 		$this->fields_form = array(
 			'tinymce' => true,
 			'legend' => array(
@@ -402,7 +410,6 @@ class AdminCategoriesControllerCore extends AdminController
 					'lang' => true,
 					'required' => true,
 					'class' => 'copy2friendlyUrl',
-					'col' => '4',
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
 				),
 				array(
@@ -447,15 +454,17 @@ class AdminCategoriesControllerCore extends AdminController
 					'label' => $this->l('Image:'),
 					'name' => 'image',
 					'display_image' => true,
-					'col' => '4',
-					'hint' => $this->l('Upload a category logo from your computer.')
+					'image' => $image_url ? $image_url : false,
+					'size' => $image_size,
+					'delete_url' => self::$currentIndex.'&'.$this->identifier.'='.$this->id.'&token='.$this->token.'&deleteImage=1',
+					'hint' => $this->l('Upload a category logo from your computer.'),
+					'col' => 4
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Meta title:'),
 					'name' => 'meta_title',
 					'lang' => true,
-					'col' => '4',
 					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
 				),
 				array(
@@ -463,7 +472,6 @@ class AdminCategoriesControllerCore extends AdminController
 					'label' => $this->l('Meta description:'),
 					'name' => 'meta_description',
 					'lang' => true,
-					'col' => '6',
 					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
 				),
 				array(
@@ -471,7 +479,6 @@ class AdminCategoriesControllerCore extends AdminController
 					'label' => $this->l('Meta keywords:'),
 					'name' => 'meta_keywords',
 					'lang' => true,
-					'col' => '6',
 					'hint' => $this->l('To add "tags," click in the field, write something, and then press "Enter."').'&nbsp;'.$this->l('Forbidden characters:').' <>;=#{}'
 				),
 				array(
@@ -480,7 +487,6 @@ class AdminCategoriesControllerCore extends AdminController
 					'name' => 'link_rewrite',
 					'lang' => true,
 					'required' => true,
-					'col' => '4',
 					'hint' => $this->l('Only letters and the minus (-) character are allowed.')
 				),
 				array(
@@ -492,7 +498,6 @@ class AdminCategoriesControllerCore extends AdminController
 					'unidentified' => $unidentified_group_information,
 					'guest' => $guest_group_information,
 					'customer' => $default_group_information,
-					'col' => '6',
 					'hint' => $this->l('Mark all of the customer groups you;d like to have access to this category.')
 				)
 			),

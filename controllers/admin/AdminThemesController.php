@@ -133,6 +133,7 @@ class AdminThemesControllerCore extends AdminController
 						'title' => $this->l('Header logo'),
 						'hint' => $this->l('Will appear on main page. Recommended height: 52px. Maximum height on default theme: 65px.'),
 						'type' => 'file',
+						'name' => 'PS_LOGO',
 						'thumb' => _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()
 					),
 					'PS_LOGO_MOBILE' => array(
@@ -141,6 +142,7 @@ class AdminThemesControllerCore extends AdminController
 							((Configuration::get('PS_LOGO_MOBILE') === false) ? '<span class="light-warning">'.$this->l('Warning: No mobile logo has been defined. The header logo will be used instead.').'</span><br />' : '').
 							$this->l('Will appear on the main page of your mobile template. If left undefined, the header logo will be used.'),
 						'type' => 'file',
+						'name' => 'PS_LOGO_MOBILE',
 						'thumb' => (Configuration::get('PS_LOGO_MOBILE') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MOBILE'))) ? _PS_IMG_.Configuration::get('PS_LOGO_MOBILE').'?date='.time() : _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()
 					),
 					'PS_LOGO_MAIL' => array(
@@ -149,6 +151,7 @@ class AdminThemesControllerCore extends AdminController
 							((Configuration::get('PS_LOGO_MAIL') === false) ? '<span class="light-warning">'.$this->l('Warning: No email logo has been indentified. The header logo will be used instead.').'</span><br />' : '').
 							$this->l('Will appear on email headers. If undefined, the header logo will be used.'),
 						'type' => 'file',
+						'name' => 'PS_LOGO_MAIL',
 						'thumb' => (Configuration::get('PS_LOGO_MAIL') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL'))) ? _PS_IMG_.Configuration::get('PS_LOGO_MAIL').'?date='.time() : _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()
 					),
 					'PS_LOGO_INVOICE' => array(
@@ -157,6 +160,7 @@ class AdminThemesControllerCore extends AdminController
 							((Configuration::get('PS_LOGO_INVOICE') === false) ? '<span class="light-warning">'.$this->l('Warning: No invoice logo has been defined. The header logo will be used instead.').'</span><br />' : '').
 							$this->l('Will appear on invoice headers. If undefined, the header logo will be used.'),
 						'type' => 'file',
+						'name' => 'PS_LOGO_INVOICE',
 						'thumb' => (Configuration::get('PS_LOGO_INVOICE') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE'))) ? _PS_IMG_.Configuration::get('PS_LOGO_INVOICE').'?date='.time() : _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()
 					),
 					'PS_FAVICON' => array(
@@ -164,6 +168,7 @@ class AdminThemesControllerCore extends AdminController
 						'hint' => $this->l('Only ICO format allowed'),
 						'hint' => $this->l('Will appear in the address bar of your web browser.'),
 						'type' => 'file',
+						'name' => 'PS_FAVICON',
 						'thumb' => _PS_IMG_.Configuration::get('PS_FAVICON').'?date='.time()
 					),
 					'PS_STORES_ICON' => array(
@@ -171,6 +176,7 @@ class AdminThemesControllerCore extends AdminController
 						'hint' => $this->l('Only GIF format allowed.'),
 						'hint' => $this->l('Will appear on the store locator (inside Google Maps).').'<br />'.$this->l('Suggested size: 30x30, Transparent GIF'),
 						'type' => 'file',
+						'name' => 'PS_STORES_ICON',
 						'thumb' => _PS_IMG_.Configuration::get('PS_STORES_ICON').'?date='.time()
 					),
 					'PS_NAVIGATION_PIPE' => array(

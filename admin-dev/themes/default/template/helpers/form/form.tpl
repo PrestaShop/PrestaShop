@@ -36,7 +36,7 @@
 				{if $key == 'legend'}
 					<h3>
 						{if isset($field.image)}<img src="{$field.image}" alt="{$field.title|escape:'htmlall':'UTF-8'}" />{/if}
-						{if isset($field.icon)}<i class="{$field.icon}"/></i>{/if}
+						{if isset($field.icon)}<i class="{$field.icon}"></i>{/if}
 						{$field.title}
 					</h3>
 				{elseif $key == 'description' && $field}
@@ -456,56 +456,6 @@
 											</label>
 										</div>
 									{/foreach}
-								{elseif $input.type == 'file'}
-									{if isset($input.display_image) && $input.display_image}
-										{if isset($fields_value[$input.name].image) && $fields_value[$input.name].image}
-											<div id="image">
-												{$fields_value[$input.name].image}
-												<p>{l s='File size'} {$fields_value[$input.name].size}kb</p>
-												<a class="btn btn-default" href="{$current}&{$identifier}={$form_id}&token={$token}&deleteImage=1">
-													<i class="icon-trash"></i> {l s='Delete'}
-												</a>
-											</div>
-										{/if}
-									{/if}
-									{if isset($input['thumb']) && $input['thumb']}
-										<div class="row">
-											<div class="col-lg-7">
-												<img src="{$input['thumb']}" alt="{$input['name']}" title="{$input['name']}" />
-												<br/><br/>
-											</div>
-										</div>
-									{/if}
-									<div class="row">
-										<div class="col-lg-7">
-											<input id="{$input.name}" type="file" name="{$input.name}" class="hide" />
-											<div class="dummyfile input-group">
-												<span class="input-group-addon"><i class="icon-file"></i></span>
-												<input id="{$input.name}-name" type="text" class="disabled" name="filename" readonly />
-												<span class="input-group-btn">
-													<button id="{$input.name}-selectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
-														<i class="icon-folder-open"></i> {l s='Choose a file'}
-													</button>
-												</span>
-											</div>
-										</div>
-									</div>
-
-									<script>
-										$(document).ready(function(){
-											$('#{$input.name}-selectbutton').click(function(e){
-												$('#{$input.name}').trigger('click');
-											});
-											$('#{$input.name}-name').click(function(e){
-												$('#{$input.name}').trigger('click');
-											});
-											$('#{$input.name}').change(function(e){
-												var val = $(this).val();
-												var file = val.split(/[\\/]/);
-												$('#{$input.name}-name').val(file[file.length-1]);
-											});
-										});
-									</script>
 								{elseif $input.type == 'password'}
 									<input type="password"
 											id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
@@ -554,10 +504,12 @@
 									{$input.html}
 								{elseif $input.type == 'categories'}
 									{$categories_tree}
+								{elseif $input.type == 'file'}
+									{$input.file}
 								{elseif $input.type == 'categories_select'}
 									{$input.category_tree}
 								{elseif $input.type == 'asso_shop' && isset($asso_shop) && $asso_shop}
-										{$asso_shop}
+									{$asso_shop}
 								{elseif $input.type == 'color'}
 								<div class="col-lg-2">
 									<div class="row">

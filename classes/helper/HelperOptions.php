@@ -95,7 +95,31 @@ class HelperOptionsCore extends Helper
 
 				if ($field['type'] == 'texarea' || $field['type'] == 'textareaLang')
 					$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/jquery.autosize.min.js');
-					
+
+				if ($field['type'] == 'file')
+				{
+					$uploader = new HelperUploader();
+					$uploader->setId(isset($field['id'])?$field['id']:null);
+					$uploader->setName($field['name']);
+					$uploader->setUrl(isset($field['url'])?$field['url']:null);
+					$uploader->setMultiple(isset($field['multiple'])?$field['multiple']:false);
+					$uploader->setUseAjax(isset($field['ajax'])?$field['ajax']:false);
+
+					if (isset($field['images']))
+						$uploader->setImages($field['images']);
+					elseif (isset($field['image'])) // Use for retrocompatibility							
+						$uploader->setImages(array(
+							0 => array(
+							'image'      => isset($field['image'])?$field['image']:null,
+							'size'       => isset($field['size'])?$field['size']:null,
+							'delete_url' => isset($field['delete_url'])?$field['delete_url']:null
+						)));
+
+					$uploader->setThumb(isset($field['thumb'])?$field['thumb']:null);
+					$uploader->setTitle(isset($field['title'])?$field['title']:null);
+					$field['file'] = $uploader->render();
+				}
+
 				// Cast options values if specified
 				if ($field['type'] == 'select' && isset($field['cast']))
 					foreach ($field['list'] as $option_key => $option)

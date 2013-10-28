@@ -29,7 +29,7 @@ define ('TEXTAREA_SIZED', 70);
 class AdminTranslationsControllerCore extends AdminController
 {
 	/** Name of theme by default */
-	const DEFAULT_THEME_NAME = 'default';
+	const DEFAULT_THEME_NAME = 'default-bootstrap';
 
 	/** @var string : Link which list all pack of language */
 	protected $link_lang_pack = 'http://www.prestashop.com/download/lang_packs/get_each_language_pack.php';
