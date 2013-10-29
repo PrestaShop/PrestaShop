@@ -47,6 +47,13 @@ class AdminOrdersControllerCore extends AdminController
 		os.`color`,
 		IF((SELECT COUNT(so.id_order) FROM `'._DB_PREFIX_.'orders` so WHERE so.id_customer = a.id_customer) > 1, 0, 1) as new';
 
+		if (Configuration::get('PS_ORDER_LIST_COUNTRY'))
+		{
+			$this->_select .= ', (SELECT name FROM `'._DB_PREFIX_.'country_lang` WHERE id_country =
+			(SELECT DISTINCT id_country FROM `'._DB_PREFIX_.'address` WHERE id_address = a.id_address_delivery)
+			AND id_lang = (SELECT id_lang FROM `'._DB_PREFIX_.'employee` WHERE id_employee = ' .(int)$this->context->employee->id. ' )) as country';
+		}
+
 		$this->_join = '
 		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = a.`id_customer`)
 		LEFT JOIN `'._DB_PREFIX_.'order_state` os ON (os.`id_order_state` = a.`current_state`)
@@ -129,6 +136,17 @@ class AdminOrdersControllerCore extends AdminController
 			'search' => false,
 			'remove_onclick' => true)
 		);
+
+		if (Configuration::get('PS_ORDER_LIST_COUNTRY'))
+		{
+			$insert_array = array('country' => array(
+				'title' => $this->l('Country'),
+				'align' => 'center',
+				'width' => 65
+			));
+			$org_array = array_splice($this->fields_list, 0, 3);
+			$this->fields_list = array_merge($org_array, $insert_array, $this->fields_list);
+		}
 
 		$this->shopLinkType = 'shop';
 		$this->shopShareDatas = Shop::SHARE_ORDER;
