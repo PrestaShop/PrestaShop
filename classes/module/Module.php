@@ -660,10 +660,44 @@ abstract class ModuleCore
 			return $output;
 		echo $output;
 	}
-
+	
+	/**
+	 * Register multiple hooks at one time.
+	 * ex: $hooks = array( array('displayHeader', array('shop', 'shop1')) );
+	 * ex: $hooks = array( array('displayHeader', null), array( 'displayInvoice', null ) );
+	 * 
+	 * @param array $hooks An array of hooks & Shops
+	 * @param array $individual_results The result of every hook attempt(if not set{can't be set to null}, results wont be stored)
+	 * @return boolean result
+	 */
+	public function registerHooks($hooks, &$individual_results = null)
+	{
+		$result = true;
+		foreach ($hooks as $hook)
+		{
+			if ($individual_results !== null)
+			{
+				if ($this->registerHook($hook[0], $hook[1]))
+					$individual_resutls[$hook[0]] = true;
+				else
+				{
+					$individual_resutls[$hook[0]] = false;
+					$result = false;
+				}
+			}
+			else
+			{
+				if (!$this->registerHook($hook[0], $hook[1]))
+					$result = false;
+			}
+		}
+		
+		return $result;
+	}
+	
 	/**
 	 * Connect module to a hook
-	 *
+	 * 
 	 * @param string $hook_name Hook name
 	 * @param array $shop_list List of shop linked to the hook (if null, link hook to all shops)
 	 * @return boolean result
