@@ -169,8 +169,7 @@
 						</ul>
 					{/if}
 				</div>
-				{/if}
-			</div>
+				{if $compiled_actions|count > 1}</div>{/if}
 			{/if}
 		</td>
 	{/if}
