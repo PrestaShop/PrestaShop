@@ -87,7 +87,7 @@
 						btn_submit.hide();
 						//bind enter key press to validate form
 						$('#{$table}_form').keypress(function (e) {
-							if (e.which == 13 && e.target.localName != 'textarea')
+							if (e.which == 13 && e.target.localName != 'textarea' && !e.target.hasClass('tagify')))
 								$('#desc-{$table}-save').click();
 						});
 						//submit the form
