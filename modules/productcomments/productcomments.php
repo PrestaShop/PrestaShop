@@ -705,7 +705,7 @@ class ProductComments extends Module
 
 		$this->context->smarty->assign(array(
 			'id_product_comment_form' => (int)Tools::getValue('id_product'),
-			'product' => new Product((int)Tools::getValue('id_product'), false, $this->context->language->id),
+			'product' => $this->context->controller->getProduct(),
 			'secure_key' => $this->secure_key,
 			'logged' => (int)$this->context->customer->isLogged(true),
 			'allow_guests' => (int)Configuration::get('PRODUCT_COMMENTS_ALLOW_GUESTS'),
