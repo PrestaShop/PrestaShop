@@ -109,67 +109,69 @@
 					</div>
 				</td>
 				<td>
-					<div class="btn-group btn-group-action">
-						{if isset($module->type) && $module->type == 'addonsMustHave'}
-							<a class="btn btn-default" href="{$module->addons_buy_url}" target="_blank">
-								<i class="icon-shopping-cart"></i> &nbsp;{if isset($module->id_currency) && isset($module->price)}{displayPrice price=$module->price currency=$module->id_currency}{/if}
-							</a>
-						{else}
-							{if isset($module->id) && $module->id gt 0}
-								{if isset($module->version_addons) && $module->version_addons}
-									<a class="btn btn-warning" href="{$module->options.update_url}">
-										<i class="icon-refresh"></i> {l s='Update it!'}
-									</a>
-								{elseif !isset($module->not_on_disk)}
-									{if $module->optionsHtml|count > 0}
-										{assign var=option value=$module->optionsHtml[0]}
-										{$option}
-									{/if}
-								{else}
-									<a class="btn btn-danger" {if !empty($module->options.uninstall_onclick)}onclick="{$module->options.uninstall_onclick}"{/if} href="{$module->options.uninstall_url}">
-										<i class="icon-minus-sign-alt"></i>&nbsp;{l s='Uninstall'}
-									</a>
-								{/if}
-							{else}
-								<a class="btn btn-success" href="{$module->options.install_url}">
-									<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Install'}
+					<div class="btn-group-action">
+						<div class="btn-group">
+							{if isset($module->type) && $module->type == 'addonsMustHave'}
+								<a class="btn btn-default" href="{$module->addons_buy_url}" target="_blank">
+									<i class="icon-shopping-cart"></i> &nbsp;{if isset($module->id_currency) && isset($module->price)}{displayPrice price=$module->price currency=$module->id_currency}{/if}
 								</a>
-							{/if}
-							{if !isset($module->not_on_disk)}
-							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
-								<span class="caret">&nbsp;</span>
-							</button>
-
-							<ul class="dropdown-menu">
-								{foreach $module->optionsHtml key=key item=option}
-									{if $key != 0}
-										<li>{$option}</li>
-									{/if}
-								{/foreach}
-								{if isset($module->preferences) && isset($module->preferences['favorite']) && $module->preferences['favorite'] == 1}
-								<li>
-									<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#">
-										<i class="icon-star"></i> {l s='Remove from Favorites'}
-									</a>
-									<a class="action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#" style="display: none;">
-										<i class="icon-star"></i> {l s='Mark as Favorite'}
-									</a>
-								</li>
-								{else}
-								<li>
-									<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#" style="display: none;">
-										<i class="icon-star"></i> {l s='Remove from Favorites'}
-									</a>
-									<a class="action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#">
-										<i class="icon-star"></i> {l s='Mark as Favorite'}
-									</a>
-								</li>
-								{/if}
-							</ul>
 							{else}
-								&nbsp;
+								{if isset($module->id) && $module->id gt 0}
+									{if isset($module->version_addons) && $module->version_addons}
+										<a class="btn btn-warning" href="{$module->options.update_url}">
+											<i class="icon-refresh"></i> {l s='Update it!'}
+										</a>
+									{elseif !isset($module->not_on_disk)}
+										{if $module->optionsHtml|count > 0}
+											{assign var=option value=$module->optionsHtml[0]}
+											{$option}
+										{/if}
+									{else}
+										<a class="btn btn-danger" {if !empty($module->options.uninstall_onclick)}onclick="{$module->options.uninstall_onclick}"{/if} href="{$module->options.uninstall_url}">
+											<i class="icon-minus-sign-alt"></i>&nbsp;{l s='Uninstall'}
+										</a>
+									{/if}
+								{else}
+									<a class="btn btn-success" href="{$module->options.install_url}">
+										<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Install'}
+									</a>
+								{/if}
+								{if !isset($module->not_on_disk)}
+								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
+									<span class="caret">&nbsp;</span>
+								</button>
+
+								<ul class="dropdown-menu">
+									{foreach $module->optionsHtml key=key item=option}
+										{if $key != 0}
+											<li>{$option}</li>
+										{/if}
+									{/foreach}
+									{if isset($module->preferences) && isset($module->preferences['favorite']) && $module->preferences['favorite'] == 1}
+									<li>
+										<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#">
+											<i class="icon-star"></i> {l s='Remove from Favorites'}
+										</a>
+										<a class="action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#" style="display: none;">
+											<i class="icon-star"></i> {l s='Mark as Favorite'}
+										</a>
+									</li>
+									{else}
+									<li>
+										<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#" style="display: none;">
+											<i class="icon-star"></i> {l s='Remove from Favorites'}
+										</a>
+										<a class="action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#">
+											<i class="icon-star"></i> {l s='Mark as Favorite'}
+										</a>
+									</li>
+									{/if}
+								</ul>
+								{else}
+									&nbsp;
+								{/if}
 							{/if}
-						{/if}
+						</div>
 					</div>
 				</td>
 			</tr>
