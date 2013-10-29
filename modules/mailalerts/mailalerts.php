@@ -287,7 +287,7 @@ class MailAlerts extends Module
 		$configuration = Configuration::getMultiple(array('PS_SHOP_EMAIL', 'PS_MAIL_METHOD', 'PS_MAIL_SERVER', 'PS_MAIL_USER', 'PS_MAIL_PASSWD', 'PS_SHOP_NAME', 'PS_MAIL_COLOR'), $id_lang, null, $id_shop);
 		$delivery = new Address((int)$order->id_address_delivery);
 		$invoice = new Address((int)$order->id_address_invoice);
-		$order_date_text = Tools::displayDate($order->date_add, (int)$id_lang);
+		$order_date_text = Tools::displayDate($order->date_add);
 		$carrier = new Carrier((int)$order->id_carrier);
 		$message = $this->getAllMessages($order->id);
 
