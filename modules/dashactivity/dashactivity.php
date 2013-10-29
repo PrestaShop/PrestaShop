@@ -273,7 +273,7 @@ class Dashactivity extends Module
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 			SELECT http_referer
 			FROM '._DB_PREFIX_.'connections
-			WHERE date_add BETWEEN '.$date_from.' AND '.$date_to.'
+			WHERE date_add BETWEEN "'.$date_from.'" AND "'.$date_to.'"
 			'.Shop::addSqlRestriction().'
 			LIMIT '.(int)$limit);
 			foreach ($result as $row)
