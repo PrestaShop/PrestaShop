@@ -85,7 +85,7 @@
 				</td>
 				<td style="padding-bottom:5px;">
 					<select name="attribute" id="attribute" style="width: 200px;">
-						<option value="0">---</option>
+						<option value="0">-</option>
 					</select>
 					<script type="text/javascript">
 					$(document).ready(function(){
@@ -252,7 +252,7 @@
 							<li style="float: left; width: {$imageWidth}px;">
 								<input type="checkbox" name="id_image_attr[]" value="{$image.id_image}" id="id_image_attr_{$image.id_image}" />
 								<label for="id_image_attr_{$image.id_image}" style="float: none;">
-									<img src="{$smarty.const._THEME_PROD_DIR_}{$image.obj->getExistingImgPath()}-small_default.jpg" alt="{$image.legend|escape:'htmlall':'UTF-8'}" title="{$image.legend|escape:'htmlall':'UTF-8'}" />
+									<img src="{$smarty.const._THEME_PROD_DIR_}{$image.obj->getExistingImgPath()}-{$imageType}.jpg" alt="{$image.legend|escape:'htmlall':'UTF-8'}" title="{$image.legend|escape:'htmlall':'UTF-8'}" />
 								</label>
 							</li>
 						{/foreach}

@@ -705,7 +705,7 @@ class HomeSlider extends Module
 					cursor: "move",
 					update: function() {
 						var order = $(this).sortable("serialize") + "&action=updateSlidesPosition";
-						$.post("'._PS_BASE_URL_.__PS_BASE_URI__.'modules/'.$this->name.'/ajax_'.$this->name.'.php?secure_key='.$this->secure_key.'", order);
+						$.post("'.$this->context->shop->physical_uri.$this->context->shop->virtual_uri.'modules/'.$this->name.'/ajax_'.$this->name.'.php?secure_key='.$this->secure_key.'", order);
 						}
 					});
 				$mySlides.hover(function() {

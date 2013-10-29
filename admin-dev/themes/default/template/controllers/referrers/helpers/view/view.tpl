@@ -112,7 +112,7 @@
 			<label>{l s='Filter by product:'}</label>
 			<div class="margin-left">
 				<select id="selectProduct" name="selectProduct" style="width: 200px;" onfocus="fillProducts();" onchange="updateConversionRate(this.value);">
-					<option value="0" selected="selected">-- {l s='All'} --</option>
+					<option value="0" selected="selected">- {l s='All'} -</option>
 				</select>
 			</div>
 			<br class="clear" />

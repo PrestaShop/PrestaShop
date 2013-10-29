@@ -375,7 +375,7 @@ $(document).ready(function () {
 		<div class="margin-form">
 			<input type="text" name="sp_reduction" value="0.00" size="11" />
 			<select name="sp_reduction_type">
-				<option selected="selected">---</option>
+				<option selected="selected">-</option>
 				<option value="amount">{l s='Amount'}</option>
 				<option value="percentage">{l s='Percentage'}</option>
 			</select>

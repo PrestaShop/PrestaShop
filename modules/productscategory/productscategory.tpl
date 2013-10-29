@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{if count($categoryProducts) > 0 && $categoryProducts !== false}
+{if isset($categoryProducts) && count($categoryProducts) > 0 && $categoryProducts !== false}
 <div class="clearfix blockproductscategory">
 	<h2 class="productscategory_h2">{$categoryProducts|@count} {l s='other products in the same category:' mod='productscategory'}</h2>
 	<div id="{if count($categoryProducts) > 5}productscategory{else}productscategory_noscroll{/if}">
