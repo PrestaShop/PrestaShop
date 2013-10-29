@@ -253,7 +253,7 @@ class AdminImportControllerCore extends AdminController
 					'customizable' => array('label' => $this->l('Customizable (0 = No, 1 = Yes)')),
 					'uploadable_files' => array('label' => $this->l('Uploadable files (0 = No, 1 = Yes)')),
 					'text_fields' => array('label' => $this->l('Text fields (0 = No, 1 = Yes)')),
-					'out_of_stock' => array('label' => $this->l('Out_of_stock')),
+					'out_of_stock' => array('label' => $this->l('Action when out of stock')),
 					'advanced_stock_management' => array('label' => $this->l('Advanced stock management')),
 					'shop' => array(
 						'label' => $this->l('ID / Name of shop'),
