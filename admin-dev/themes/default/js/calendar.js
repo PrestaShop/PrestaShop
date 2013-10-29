@@ -377,6 +377,11 @@ $( document ).ready(function() {
 		datepickerEnd.setCompare(true);
 	}
 
+	$('#datepickerExpand').click(function() {
+		$('#datepicker').removeClass('hide');
+		$('#date-start').focus();
+	});
+
 	$('#datepickerFrom').click(function() {
 		$('#datepicker').removeClass('hide');
 		$('#date-start').focus();

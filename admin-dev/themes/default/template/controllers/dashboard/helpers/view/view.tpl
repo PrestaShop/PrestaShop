@@ -64,32 +64,23 @@
 						</div>
 						<div class="col-lg-6">
 							<div class="form-group">
-								<div class="input-group fixed-width-lg">
+								<div class="input-group fixed-width-lg hide">
 									<label class="input-group-addon">{l s='From'}</label>
 									<input type="text" name="datepickerFrom" id="datepickerFrom" value="{$datepickerFrom|escape}" class="form-control">
 								</div>
 							</div>
 							<div class="form-group">
-								<div class="input-group fixed-width-lg inline-form-element">
+								<div class="input-group fixed-width-lg hide">
 									<label class="input-group-addon">{l s='To'}</label>
 									<input type="text" name="datepickerTo" id="datepickerTo" value="{$datepickerTo|escape}" class="form-control">
 								</div>
 							</div>
 							<div class="form-group">
-								<p class="form-control-static">
-									13 Days
-								</p>
-							</div>
-							<div class="form-group">
-								<p class="checkbox">
-									<label>
-										<input type="checkbox">
-										Compare
-									</label>
-								</p>
-							</div>
-							<div class="form-group pull-right">
-								<button class="btn btn-default" type="button">
+								<button id="datepickerExpand" class="btn btn-default" type="button">
+									<strong class="text-info">{$datepickerFrom|escape}</strong>
+									-
+									<strong class="text-info">{$datepickerTo|escape}</strong>
+									- 13 Days
 									<i class="icon-calendar-empty"></i>
 									<i class="icon-caret-down"></i>
 								</button>
