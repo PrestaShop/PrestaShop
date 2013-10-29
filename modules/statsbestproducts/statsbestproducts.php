@@ -57,13 +57,13 @@ class StatsBestProducts extends ModuleGrid
 				'id' => 'reference',
 				'header' => $this->l('Ref.'),
 				'dataIndex' => 'reference',
-				'align' => 'center'
+				'align' => 'left'
 			),
 			array(
 				'id' => 'name',
 				'header' => $this->l('Name'),
 				'dataIndex' => 'name',
-				'align' => 'center'
+				'align' => 'left'
 			),
 			array(
 				'id' => 'totalQuantitySold',
@@ -75,13 +75,13 @@ class StatsBestProducts extends ModuleGrid
 				'id' => 'avgPriceSold',
 				'header' => $this->l('Price sold'),
 				'dataIndex' => 'avgPriceSold',
-				'align' => 'center'
+				'align' => 'right'
 			),
 			array(
 				'id' => 'totalPriceSold',
 				'header' => $this->l('Sales'),
 				'dataIndex' => 'totalPriceSold',
-				'align' => 'center'
+				'align' => 'right'
 			),
 			array(
 				'id' => 'averageQuantitySold',
@@ -103,7 +103,7 @@ class StatsBestProducts extends ModuleGrid
 			)
 		);
 		
-		$this->displayName = $this->l('Best-selling products.');
+		$this->displayName = $this->l('Best-selling products');
 		$this->description = $this->l('A list of the best-selling products.');
 	}
 
@@ -140,6 +140,7 @@ class StatsBestProducts extends ModuleGrid
 
 	public function getData()
 	{
+		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 		$dateBetween = $this->getDate();
 		$arrayDateBetween = explode(' AND ', $dateBetween);
 
@@ -178,7 +179,13 @@ class StatsBestProducts extends ModuleGrid
 
 		if (($this->_start === 0 || Validate::IsUnsignedInt($this->_start)) && Validate::IsUnsignedInt($this->_limit))
 			$this->_query .= ' LIMIT '.$this->_start.', '.($this->_limit);
-		$this->_values = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query);
+		$values = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query);
+		foreach ($values as &$value)
+		{
+			$value['avgPriceSold'] = Tools::displayPrice($value['avgPriceSold'], $currency);
+			$value['totalPriceSold'] = Tools::displayPrice($value['totalPriceSold'], $currency);
+		}
+		$this->_values = $values;
 		$this->_totalCount = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT FOUND_ROWS()');
 	}
 }
