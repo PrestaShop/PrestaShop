@@ -292,7 +292,7 @@ class Blocktopmenu extends Module
 								<a href="#" id="removeItem" style="border: 1px solid rgb(170, 170, 170); margin: 2px; padding: 2px; text-align: center; display: block; text-decoration: none; background-color: rgb(250, 250, 250); color: rgb(18, 52, 86);">&lt;&lt; '.$this->l('Remove').'</a>
 							</td>
 							<td style="vertical-align:top;padding:5px 15px;">
-								<h4 style="margin-top:5px;">'.$this->l('Change order').':</h4> 
+								<h4 style="margin-top:5px;">'.$this->l('Change position').'</h4> 
 								<a href="#" id="menuOrderUp" class="button" style="font-size:20px;display:block;">&uarr;</a><br/>
 								<a href="#" id="menuOrderDown" class="button" style="font-size:20px;display:block;">&darr;</a><br/>
 							</td>

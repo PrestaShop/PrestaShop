@@ -526,7 +526,7 @@ class AuthControllerCore extends FrontController
 
 				if (Tools::isSubmit('submitAccount') || Tools::isSubmit('submitGuestAccount'))
 					if (!($country = new Country($$addresses_type->id_country, Configuration::get('PS_LANG_DEFAULT'))) || !Validate::isLoadedObject($country))
-						$this->errors[] = Tools::displayError('The Country is invalid');
+						$this->errors[] = Tools::displayError('Country is invalid');
 				$contains_state = isset($country) && is_object($country) ? (int)$country->contains_states: 0;
 				$id_state = isset($$addresses_type) && is_object($$addresses_type) ? (int)$$addresses_type->id_state: 0;
 				if ((Tools::isSubmit('submitAccount')|| Tools::isSubmit('submitGuestAccount')) && $contains_state && !$id_state)
