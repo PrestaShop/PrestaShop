@@ -243,15 +243,15 @@
 				</tr>
 			{if !$simple_header && $show_filters}
 				<tr class="nodrag nodrop filter {if $row_hover}row_hover{/if}">
-					<td class="text-center">
+					<th class="text-center">
 						{if $has_bulk_actions}
 							--
 						{/if}
-					</td>
+					</th>
 
 					{* Filters (input, select, date or bool) *}
 					{foreach $fields_display AS $key => $params}
-					<td {if isset($params.align)} class="{$params.align}" {/if}>
+					<th {if isset($params.align)} class="{$params.align}" {/if}>
 						{if isset($params.search) && !$params.search}
 							--
 						{else}
@@ -293,14 +293,14 @@
 								<input type="text" class="filter" name="{$list_id}Filter_{if isset($params.filter_key)}{$params.filter_key}{else}{$key}{/if}" value="{$params.value|escape:'htmlall':'UTF-8'}" {if isset($params.width) && $params.width != 'auto'} style="width:{$params.width}px"{/if} />
 							{/if}
 						{/if}
-					</td>
+					</th>
 					{/foreach}
 
 					{if $shop_link_type}
-					<td>--</td>
+					<th>--</th>
 					{/if}
 					{if $has_actions}
-					<td class="actions">
+					<th class="actions">
 						{if $show_filters}
 						<span class="pull-right">
 							{*Search must be before reset for default form submit*}
@@ -314,7 +314,7 @@
 							{/if}
 						</span>
 						{/if}
-					</td>
+					</th>
 					{/if}
 				</tr>
 			{/if}

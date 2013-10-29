@@ -224,7 +224,7 @@
 				month = d.getMonth(),
 				currentDate = this.date.valueOf();
 			this.picker.find('.daterangepicker-days th:eq(1)')
-						.text(year+' / '+DPGlobal.dates.months[month]);
+						.text(year+' / '+DPGlobal.dates.months[month]).append('&nbsp;<small><i class="icon-angle-down"></i><small>');
 			var prevMonth = new Date(year, month-1, 28,0,0,0,0),
 				day = DPGlobal.getDaysInMonth(prevMonth.getFullYear(), prevMonth.getMonth());
 			prevMonth.setDate(day);
@@ -343,6 +343,14 @@
 						//reset
 						if (target.is('.day') && !target.is('.disabled')){
 							// reset process for a new range
+							if (start && end) {
+								if (!compare) {
+									click = 2 ;
+									$(".range").removeClass('range');
+									$(".start-selected").removeClass("start-selected");
+									$(".end-selected").removeClass("end-selected");
+								}
+							}
 							if(click === 2) {
 								if (compare) {
 									startCompare = null;
@@ -423,7 +431,6 @@
 		},
 
 		updateRange: function() {
-			console.log("update");
 			$("#datepicker .day").each(function(){
 				var date_val = parseInt($(this).data('val'),10);
 
