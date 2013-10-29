@@ -1290,14 +1290,6 @@ class AdminProductsControllerCore extends AdminController
 
 		if ($this->display == 'edit' || $this->display == 'add')
 		{
-			$this->addjQueryPlugin(array(
-				'autocomplete',
-				'tablednd',
-				'thickbox',
-				'ajaxfileupload',
-				'date'
-			));
-
 			$this->addJqueryUI(array(
 				'ui.core',
 				'ui.widget',
@@ -1305,6 +1297,15 @@ class AdminProductsControllerCore extends AdminController
 				'ui.slider',
 				'ui.datepicker'
 			));
+
+			$this->addjQueryPlugin(array(
+				'autocomplete',
+				'tablednd',
+				'thickbox',
+				'ajaxfileupload',
+				'date',
+				'tagify'
+			));			
 
 			$this->addJS(array(
 				_PS_JS_DIR_.'productTabsManager.js',

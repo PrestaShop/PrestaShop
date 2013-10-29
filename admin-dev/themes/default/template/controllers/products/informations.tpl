@@ -375,8 +375,19 @@
 			<td style="padding-bottom:5px;" class="translatable">
 				{foreach from=$languages item=language}
 					<div class="lang_{$language.id_lang}" style="{if !$language.is_default}display: none;{/if}float: left;">
+						{literal}
+						<script type="text/javascript">
+							$().ready(function () {
+								var input_id = '{/literal}tags_{$language.id_lang}{literal}';
+								$('#'+input_id).tagify({delimiters: [13,44], addTagPrompt: '{/literal}{l s='Add tag' js=1}{literal}'});
+								$({/literal}'#{$table}{literal}_form').submit( function() {
+									$(this).find('#'+input_id).val($('#'+input_id).tagify('serialize'));
+								});
+							});
+						</script>
+						{/literal}
 						<input size="55" type="text" id="tags_{$language.id_lang}" name="tags_{$language.id_lang}"
-							value="{$product->getTags($language.id_lang, true)|htmlentitiesUTF8}" />
+							value="{$product->getTags($language.id_lang, true)|htmlentitiesUTF8}" class="tagify" />
 						<span class="hint" name="help_box">{l s='Forbidden characters:'} !&lt;;&gt;;?=+#&quot;&deg;{}_$%<span class="hint-pointer">&nbsp;</span></span>
 					</div>
 				{/foreach}
