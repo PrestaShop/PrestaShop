@@ -123,14 +123,14 @@ class Dashactivity extends Module
 			$sql = 'SELECT COUNT(DISTINCT c.id_connections)
 					FROM `'._DB_PREFIX_.'connections` c
 					LEFT JOIN `'._DB_PREFIX_.'connections_page` cp ON c.id_connections = cp.id_connections
-					WHERE TIME_TO_SEC(TIMEDIFF(NOW(), cp.`time_start`)) < 900
+					WHERE TIME_TO_SEC(TIMEDIFF(NOW(), cp.`time_start`)) < 1800
 					AND cp.`time_end` IS NULL
 					'.Shop::addSqlRestriction(false, 'c').'
 					'.($maintenance_ips ? 'AND c.ip_address NOT IN ('.preg_replace('/[^,0-9]/', '', $maintenance_ips).')' : '');
 		else
 			$sql = 'SELECT COUNT(*)
 					FROM `'._DB_PREFIX_.'connections`
-					WHERE TIME_TO_SEC(TIMEDIFF(NOW(), `date_add`)) < 900
+					WHERE TIME_TO_SEC(TIMEDIFF(NOW(), `date_add`)) < 1800
 					'.Shop::addSqlRestriction(false).'
 					'.($maintenance_ips ? 'AND ip_address NOT IN ('.preg_replace('/[^,0-9]/', '', $maintenance_ips).')' : '');
 		$online_visitor = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
@@ -145,7 +145,7 @@ class Dashactivity extends Module
 		$abandoned_cart = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT COUNT(*)
 		FROM `'._DB_PREFIX_.'cart`
-		WHERE `date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
+		WHERE `date_upd` BETWEEN "'.pSQL(date('Y-m-d H:i:s', strtotime('-2 DAY'))).'" AND "'.pSQL(date('Y-m-d H:i:s', strtotime('-1 DAY'))).'"
 		AND id_cart NOT IN (SELECT id_cart FROM `'._DB_PREFIX_.'orders`)
 		'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
 		
@@ -157,18 +157,13 @@ class Dashactivity extends Module
 		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o'));
 
 		$products_out_of_stock = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT COUNT(*)
+		SELECT SUM(IF(IFNULL(stock.quantity, 0) > 0, 0, 1))
 		FROM `'._DB_PREFIX_.'product` p
 		'.Shop::addSqlAssociation('product', 'p').'
-		'.Product::sqlStock('p').'
-		WHERE IFNULL(stock.quantity, 0) <= 0');
+		LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON p.id_product = pa.id_product
+		'.Product::sqlStock('p', 'pa'));
 		
-		$new_messages = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT COUNT(*)
-		FROM `'._DB_PREFIX_.'customer_thread` ct
-		LEFT JOIN `'._DB_PREFIX_.'customer_message` cm ON ct.id_customer_thread = cm.id_customer_thread
-		WHERE cm.`date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
-		'.Shop::addSqlRestriction(false, 'ct'));
+		$new_messages = AdminStatsController::getPendingMessages();
 
 		$active_shopping_cart = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT COUNT(*)
