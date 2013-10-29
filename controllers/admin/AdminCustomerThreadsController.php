@@ -605,6 +605,12 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			ENT_QUOTES, 'UTF-8')
 		);
 
+		$is_valid_order_id = true;
+		$order = new Order((int)$message['id_order']);
+
+		if (!Validate::isLoadedObject($order))
+			$is_valid_order_id = false;
+
 		$tpl->assign(array(
 			'current' => self::$currentIndex,
 			'token' => $this->token,
@@ -615,7 +621,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			'PS_SHOP_NAME' => Configuration::get('PS_SHOP_NAME'),
 			'file_name' => file_exists(_PS_UPLOAD_DIR_.$message['file_name']),
 			'contacts' => $contacts,
-			'PS_CUSTOMER_SERVICE_SIGNATURE' => str_replace('\r\n', "\n", Configuration::get('PS_CUSTOMER_SERVICE_SIGNATURE', $message['id_lang']))
+			'PS_CUSTOMER_SERVICE_SIGNATURE' => str_replace('\r\n', "\n", Configuration::get('PS_CUSTOMER_SERVICE_SIGNATURE', $message['id_lang'])),
+			'is_valid_order_id' => $is_valid_order_id
 		));
 
 		return $tpl->fetch();
