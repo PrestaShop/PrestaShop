@@ -101,7 +101,7 @@ class GridHtml extends ModuleGridEngine
 						$.each(values, function(index, row){
 							var newLine = "<tr>";';
 			foreach ($params['columns'] as $column)
-				$html .= '	newLine += "<td'.(isset($column['align']) ? ' class=\"'.$column['align'].'\"' : '').'>" + row["'.$column['dataIndex'].'"] + "</td>";';
+				$html .= '	newLine += "<td'.(isset($column['align']) ? ' align=\"'.$column['align'].'\"' : '').'>" + row["'.$column['dataIndex'].'"] + "</td>";';
 			if (!isset($params['defaultSortColumn']))
 				$params['defaultSortColumn'] = false;
 			if (!isset($params['defaultSortDirection']))
