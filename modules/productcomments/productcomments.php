@@ -701,15 +701,18 @@ class ProductComments extends Module
 
 		$average = ProductComment::getAverageGrade((int)Tools::getValue('id_product'));
 
+		$product = $this->context->controller->getProduct();
+
 		$image = Product::getCover((int)Tools::getValue('id_product'));
+		$cover_image = $this->context->link->getImageLink($product->link_rewrite, $image['id_image'], 'medium_default');
 
 		$this->context->smarty->assign(array(
 			'id_product_comment_form' => (int)Tools::getValue('id_product'),
-			'product' => $this->context->controller->getProduct(),
+			'product' => $product,
 			'secure_key' => $this->secure_key,
 			'logged' => (int)$this->context->customer->isLogged(true),
 			'allow_guests' => (int)Configuration::get('PRODUCT_COMMENTS_ALLOW_GUESTS'),
-			'productcomment_cover' => (int)Tools::getValue('id_product').'-'.(int)$image['id_image'],
+			'productcomment_cover' => $cover_image,
 			'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
 			'criterions' => ProductCommentCriterion::getByProduct((int)Tools::getValue('id_product'), $this->context->language->id),
 			'action_url' => '',
@@ -736,11 +739,15 @@ class ProductComments extends Module
 			$averageTotal += (float)($average);
 		$averageTotal = count($averages) ? ($averageTotal / count($averages)) : 0;
 
+		$product = $this->context->controller->getProduct();
+
 		$image = Product::getCover((int)Tools::getValue('id_product'));
+		$cover_image = $this->context->link->getImageLink($product->link_rewrite, $image['id_image'], 'medium_default');
 
 		$this->context->smarty->assign(array(
 			'logged' => (int)$this->context->customer->isLogged(true),
 			'action_url' => '',
+			'product' => $product,
 			'comments' => ProductComment::getByProduct((int)Tools::getValue('id_product'), 1, null, $this->context->cookie->id_customer),
 			'criterions' => ProductCommentCriterion::getByProduct((int)Tools::getValue('id_product'), $this->context->language->id),
 			'averages' => $averages,
@@ -751,7 +758,7 @@ class ProductComments extends Module
 			'delay' => Configuration::get('PRODUCT_COMMENTS_MINIMAL_TIME'),
 			'id_product_comment_form' => (int)Tools::getValue('id_product'),
 			'secure_key' => $this->secure_key,
-			'productcomment_cover' => (int)Tools::getValue('id_product').'-'.(int)$image['id_image'],
+			'productcomment_cover' => $cover_image,
 			'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
 			'nbComments' => (int)ProductComment::getCommentNumber((int)Tools::getValue('id_product')),
 			'productcomments_controller_url' => $this->context->link->getModuleLink('productcomments'),
