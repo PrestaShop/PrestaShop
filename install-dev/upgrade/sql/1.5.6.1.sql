@@ -1,0 +1,1 @@
+ALTER TABLE `PREFIX_customer_message` CHANGE `ip_address` `ip_address` VARCHAR( 15 ) NULL DEFAULT NULL;
