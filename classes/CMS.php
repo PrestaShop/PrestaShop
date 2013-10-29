@@ -34,6 +34,7 @@ class CMSCore extends ObjectModel
 	public $link_rewrite;
 	public $id_cms_category;
 	public $position;
+	public $indexation;
 	public $active;
 
 	/**
@@ -46,6 +47,7 @@ class CMSCore extends ObjectModel
 		'fields' => array(
 			'id_cms_category' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'position' => 			array('type' => self::TYPE_INT),
+			'indexation' => 		array('type' => self::TYPE_BOOL),
 			'active' => 			array('type' => self::TYPE_BOOL),
 
 			// Lang fields
