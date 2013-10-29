@@ -306,7 +306,8 @@ class AdminImportControllerCore extends AdminController
 					'firstname' => array('label' => $this->l('First Name *')),
 					'newsletter' => array('label' => $this->l('Newsletter (0/1)')),
 					'optin' => array('label' => $this->l('Opt-in (0/1)')),
-					'group' => array('label' => $this->l('Group Name')),
+					'group' => array('label' => $this->l('Groups (x,y,z...)')),
+					'id_default_group' => array('label' => $this->l('Default group ID')),
 					'id_shop' => array(
 						'label' => $this->l('ID / Name of shop'),
 						'help' => $this->l('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.'),
@@ -1999,6 +2000,13 @@ class AdminImportControllerCore extends AdminController
 					if(empty($group))
 						continue;
 					$id_group = false;
+					if (is_numeric($group) && $group)
+					{
+						$myGroup = new Group((int)$group);
+						if (Validate::isLoadedObject($myGroup))
+							$customer_groups[] = (int)$group;
+						continue;
+					}						
 					$myGroup = Group::searchByName($id_lang, $group);
 					if (isset($myGroup['id_group']) && $myGroup['id_group'])
 						$id_group = (int)$myGroup['id_group'];
