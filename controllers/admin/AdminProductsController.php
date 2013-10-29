@@ -3595,6 +3595,7 @@ class AdminProductsControllerCore extends AdminController
 				foreach ($images as $k => $image)
 					$images[$k] = new Image($image['id_image']);
 
+
 				if ($this->context->shop->getContext() == Shop::CONTEXT_SHOP)
 					$current_shop_id = (int)$this->context->shop->id;
 				else
@@ -3617,6 +3618,12 @@ class AdminProductsControllerCore extends AdminController
 						'languages' => $this->_languages,
 						'default_language' => (int)Configuration::get('PS_LANG_DEFAULT')
 				));
+
+				$type = ImageType::getByNameNType('%', 'products', 'height');
+				if (isset($type['name']))
+					$data->assign('imageType', $type['name']);
+				else
+					$data->assign('imageType', 'small_default');
 			}
 			else
 				$this->displayWarning($this->l('You must save the product in this shop before adding images.'));	
@@ -3673,7 +3680,11 @@ class AdminProductsControllerCore extends AdminController
 					$data->assign('available_date', ($this->getFieldValue($product, 'available_date') != 0) ? stripslashes(htmlentities($this->getFieldValue($product, 'available_date'), $this->context->language->id)) : '0000-00-00');
 
 					$i = 0;
-					$data->assign('imageType', ImageType::getByNameNType('small_default', 'products'));
+					$type = ImageType::getByNameNType('%', 'products', 'height');
+					if (isset($type['name']))
+						$data->assign('imageType', $type['name']);
+					else
+						$data->assign('imageType', 'small_default');
 					$data->assign('imageWidth', (isset($image_type['width']) ? (int)($image_type['width']) : 64) + 25);
 					foreach ($images as $k => $image)
 					{
