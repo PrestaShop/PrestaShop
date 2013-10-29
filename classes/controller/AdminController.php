@@ -2341,22 +2341,20 @@ class AdminControllerCore extends Controller
 	public function getLanguages()
 	{
 		$cookie = $this->context->cookie;
-		$this->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$this->allow_employee_form_lang = (int)Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG');
 		if ($this->allow_employee_form_lang && !$cookie->employee_form_lang)
-			$cookie->employee_form_lang = (int)Configuration::get('PS_LANG_DEFAULT');
-		$use_lang_from_cookie = false;
+			$cookie->employee_form_lang = (int)$this->context->language->id;
+		
+		$lang_exists = false;
 		$this->_languages = Language::getLanguages(false);
-		if ($this->allow_employee_form_lang)
-			foreach ($this->_languages as $lang)
-				if ($cookie->employee_form_lang == $lang['id_lang'])
-					$use_lang_from_cookie = true;
-		if (!$use_lang_from_cookie)
-			$this->default_form_language = (int)Configuration::get('PS_LANG_DEFAULT');
-		else
-			$this->default_form_language = (int)$cookie->employee_form_lang;
+		foreach ($this->_languages as $lang)
+			if (isset($cookie->employee_form_lang) && $cookie->employee_form_lang == $lang['id_lang'])
+				$lang_exists = true;
+
+		$this->default_form_language = $lang_exists ? (int)$cookie->employee_form_lang : (int)$this->context->language->id;
 
 		foreach ($this->_languages as $k => $language)
-			$this->_languages[$k]['is_default'] = (int)($language['id_lang'] == $this->default_form_language);
+			$this->_languages[$k]['is_default'] = ((int)($language['id_lang'] == $this->default_form_language));
 
 		return $this->_languages;
 	}
