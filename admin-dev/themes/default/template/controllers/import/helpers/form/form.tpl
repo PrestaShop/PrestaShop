@@ -77,6 +77,7 @@
 						<li><a class="_blank" href="../docs/csv_import/addresses_import.csv">{l s='Sample Addresses file'}</a></li>
 						<li><a class="_blank" href="../docs/csv_import/manufacturers_import.csv">{l s='Sample Manufacturers file'}</a></li>
 						<li><a class="_blank" href="../docs/csv_import/suppliers_import.csv">{l s='Sample Suppliers file'}</a></li>
+						<li><a class="_blank" href="../docs/csv_import/alias_import.csv">{l s='Sample Alias file'}</a></li>
 						{if $PS_ADVANCED_STOCK_MANAGEMENT}
 							<li><a class="_blank" href="../docs/csv_import/supply_orders_import.csv">{l s='Supply Orders sample file'}</a></li>
 							<li><a class="_blank" href="../docs/csv_import/supply_orders_details_import.csv">{l s='Supply Orders Details sample file'}</a></li>
@@ -203,12 +204,12 @@
 		});
 
 		$("select#entity").change(function(){
-			if ($("#entity > option:selected").val() == 7 || $("#entity > option:selected").val() == 8)
+			if ($("#entity > option:selected").val() == 8 || $("#entity > option:selected").val() == 9)
 				$("label[for=truncate],#truncate").hide();
 			else
 				$("label[for=truncate],#truncate").show();
 	
-			if ($("#entity > option:selected").val() == 8)
+			if ($("#entity > option:selected").val() == 9)
 			{
 				$(".import_supply_orders_details").show();
 				$('input[name=multiple_value_separator]').val('|');
@@ -219,14 +220,22 @@
 				$('input[name=multiple_value_separator]').val('{if isset($multiple_value_separator_selected)}{$multiple_value_separator_selected}{else},{/if}');
 			}
 			if ($("#entity > option:selected").val() == 1)
-				$("label[for=match_ref], #match_ref, label[for=regenerate], #regenerate").show();
+				$("label[for=match_ref], #match_ref").show();
 			else
-				$("label[for=match_ref], #match_ref, label[for=regenerate], #regenerate").hide();
+				$("label[for=match_ref], #match_ref").hide();
+
 			if ($("#entity > option:selected").val() == 1 || $("#entity > option:selected").val() == 0)
-				$(".import_products_categories, label[for=regenerate], #regenerate").show();
+				$(".import_products_categories").show();
 			else
-				$(".import_products_categories, label[for=regenerate], #regenerate").hide();
-			if ($("#entity > option:selected").val() == 0 || $("#entity > option:selected").val() == 1 || $("#entity > option:selected").val() == 3 || $("#entity > option:selected").val() == 5 || $("#entity > option:selected").val() == 6)
+				$(".import_products_categories").hide();
+
+			if ($("#entity > option:selected").val() == 0 || $("#entity > option:selected").val() == 1 || 
+				$("#entity > option:selected").val() == 5 || $("#entity > option:selected").val() == 6)
+				$("label[for=regenerate], #regenerate").show()
+			else
+				$("label[for=regenerate], #regenerate").hide();
+
+			if ($("#entity > option:selected").val() == 0 || $("#entity > option:selected").val() == 1 || $("#entity > option:selected").val() == 3 || $("#entity > option:selected").val() == 5 || $("#entity > option:selected").val() == 6 || $("#entity > option:selected").val() == 7)
 				$("label[for=forceIDs], #forceIDs").show();
 			else
 				$("label[for=forceIDs], #forceIDs").hide();

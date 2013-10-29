@@ -3219,7 +3219,7 @@ class CartCore extends ObjectModel
 	public function getWsCartRows()
 	{
 		return Db::getInstance()->executeS('
-			SELECT id_product, id_product_attribute, quantity
+			SELECT id_product, id_product_attribute, quantity, id_address_delivery
 			FROM `'._DB_PREFIX_.'cart_product`
 			WHERE id_cart = '.(int)$this->id.' AND id_shop = '.(int)Context::getContext()->shop->id
 		);

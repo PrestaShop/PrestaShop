@@ -884,7 +884,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$step_number = Tools::getValue('step_number');
 
 		if ($step_number == 4 && !Shop::isFeatureActive() || $step_number == 5 && Shop::isFeatureActive())
-			return array();
+			return array('fields' => array());
 
 		$step_fields = array(
 			1 => array('name', 'delay', 'grade', 'url'),
@@ -903,7 +903,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 		foreach ($definition['fields'] as $field => $def)
 			if (!in_array($field, $step_fields[$step_number]))
 				unset($definition['fields'][$field]);
-		
+
 		return $definition;
 	}
 

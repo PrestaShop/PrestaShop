@@ -751,7 +751,7 @@
 			<a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'htmlall':'UTF-8'}"><b>{l s='Click here'}</b> {l s='to see all messages.'}</a><br>
 			<div id="message" style="display: {if Tools::getValue('message')}block{else}none{/if}">
 						<select name="order_message" id="order_message" onchange="orderOverwriteMessage(this, '{l s='Do you want to overwrite your existing message?'}')">
-							<option value="0" selected="selected">-- {l s='Choose a standard message'} --</option>
+							<option value="0" selected="selected">- {l s='Choose a standard message'} -</option>
 			{foreach from=$orderMessages item=orderMessage}
 				<option value="{$orderMessage['message']|escape:'htmlall':'UTF-8'}">{$orderMessage['name']}</option>
 			{/foreach}

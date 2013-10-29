@@ -174,7 +174,7 @@ class AdminProductsControllerCore extends AdminController
 				LEFT JOIN `'._DB_PREFIX_.'shop` shop ON (shop.id_shop = '.$id_shop.') 
 				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (image_shop.`id_image` = i.`id_image` AND image_shop.`cover` = 1 AND image_shop.id_shop = '.$id_shop.')';
 		
-		$this->_select .= 'shop.name as shopname, ';
+		$this->_select .= 'shop.name as shopname, a.id_shop_default, ';
 		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`';
 		
 		if ($join_category)
@@ -331,12 +331,17 @@ class AdminProductsControllerCore extends AdminController
 		$nb = count($this->_list);
 		if ($this->_list)
 		{
+			$context = $this->context->cloneContext();
+			$context->shop = clone($context->shop);
 			/* update product final price */
 			for ($i = 0; $i < $nb; $i++)
 			{
+				if (Context::getContext()->shop->getContext() != Shop::CONTEXT_SHOP)
+					$context->shop = new Shop((int)$this->_list[$i]['id_shop_default']);
+
 				// convert price with the currency from context
 				$this->_list[$i]['price'] = Tools::convertPrice($this->_list[$i]['price'], $this->context->currency, true, $this->context);
-				$this->_list[$i]['price_tmp'] = Product::getPriceStatic($this->_list[$i]['id_product'], true, null, 2, null, false, true, 1, true);
+				$this->_list[$i]['price_tmp'] = Product::getPriceStatic($this->_list[$i]['id_product'], true, null, 2, null, false, true, 1, true, null, null, null, $nothing, true, true, $context);
 			}
 		}
 
@@ -1336,7 +1341,6 @@ class AdminProductsControllerCore extends AdminController
 		if (isset($result['success']))
 		{
 			$obj = new Image((int)$result['success']['id_image']);
-
 			// Associate image to shop from context
 			$shops = Shop::getContextListShopID();
 			$obj->associateTo($shops);
@@ -1350,6 +1354,7 @@ class AdminProductsControllerCore extends AdminController
 				'id'=>$obj->id,
 				'path' => $obj->getExistingImgPath(),
 				'position' => $obj->position,
+				'legend' => $obj->legend,
 				'cover' => $obj->cover,
 				'shops' => $json_shops,
 			);
@@ -3590,6 +3595,7 @@ class AdminProductsControllerCore extends AdminController
 				foreach ($images as $k => $image)
 					$images[$k] = new Image($image['id_image']);
 
+
 				if ($this->context->shop->getContext() == Shop::CONTEXT_SHOP)
 					$current_shop_id = (int)$this->context->shop->id;
 				else
@@ -3608,8 +3614,16 @@ class AdminProductsControllerCore extends AdminController
 						'max_image_size' => $this->max_image_size / 1024 / 1024,
 						'up_filename' => (string)Tools::getValue('virtual_product_filename_attribute'),
 						'currency' => $this->context->currency,
-						'current_shop_id' => $current_shop_id
+						'current_shop_id' => $current_shop_id,
+						'languages' => $this->_languages,
+						'default_language' => (int)Configuration::get('PS_LANG_DEFAULT')
 				));
+
+				$type = ImageType::getByNameNType('%', 'products', 'height');
+				if (isset($type['name']))
+					$data->assign('imageType', $type['name']);
+				else
+					$data->assign('imageType', 'small_default');
 			}
 			else
 				$this->displayWarning($this->l('You must save the product in this shop before adding images.'));	
@@ -3666,7 +3680,11 @@ class AdminProductsControllerCore extends AdminController
 					$data->assign('available_date', ($this->getFieldValue($product, 'available_date') != 0) ? stripslashes(htmlentities($this->getFieldValue($product, 'available_date'), $this->context->language->id)) : '0000-00-00');
 
 					$i = 0;
-					$data->assign('imageType', ImageType::getByNameNType('small_default', 'products'));
+					$type = ImageType::getByNameNType('%', 'products', 'height');
+					if (isset($type['name']))
+						$data->assign('imageType', $type['name']);
+					else
+						$data->assign('imageType', 'small_default');
 					$data->assign('imageWidth', (isset($image_type['width']) ? (int)($image_type['width']) : 64) + 25);
 					foreach ($images as $k => $image)
 					{

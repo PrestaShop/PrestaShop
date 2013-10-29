@@ -186,7 +186,7 @@ class productsCategory extends Module
 	{
 		$this->context->controller->addCSS($this->_path.'productscategory.css', 'all');
 		$this->context->controller->addJS($this->_path.'productscategory.js');
-		$this->context->controller->addJqueryPlugin('serialScroll');
+		$this->context->controller->addJqueryPlugin(array('scrollTo', 'serialScroll'));
 	}
 
 	public function hookAddProduct($params)

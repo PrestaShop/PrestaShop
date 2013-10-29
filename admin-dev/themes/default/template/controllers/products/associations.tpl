@@ -103,11 +103,11 @@
 		<td class="col-left"><label>{l s='Manufacturer:'}</label></td>
 		<td style="padding-bottom:5px;">
 			<select name="id_manufacturer" id="id_manufacturer">
-				<option value="0">-- {l s='Choose (optional)'} --</option>
+				<option value="0">- {l s='Choose (optional)'} -</option>
 				{if $product->id_manufacturer}
 				<option value="{$product->id_manufacturer}" selected="selected">{$product->manufacturer_name}</option>
 				{/if}
-				<option disabled="disabled">----------</option>
+				<option disabled="disabled">-</option>
 			</select>&nbsp;&nbsp;&nbsp;
 			<a class="button bt-icon confirm_leave" style="margin-bottom:0" href="{$link->getAdminLink('AdminManufacturers')|escape:'htmlall':'UTF-8'}&addmanufacturer">
 				<img src="../img/admin/add.gif" alt="{l s='Create new manufacturer'}" title="{l s='Create new manufacturer'}" />

@@ -149,7 +149,7 @@ class ParentOrderControllerCore extends FrontController
 		if ((Configuration::get('PS_ORDER_PROCESS_TYPE') == 0 && Tools::getValue('step') == 1) || Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
 			$this->addJS(_THEME_JS_DIR_.'order-address.js');
 		$this->addJqueryPlugin('fancybox');
-		if ((int)(Configuration::get('PS_BLOCK_CART_AJAX')) || Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
+		if ((int)(Configuration::get('PS_BLOCK_CART_AJAX')) || Configuration::get('PS_ORDER_PROCESS_TYPE') == 1 || Tools::getValue('step') == 2)
 		{
 			$this->addJqueryPlugin('typewatch');
 			$this->addJS(_THEME_JS_DIR_.'cart-summary.js');
@@ -464,8 +464,17 @@ class ParentOrderControllerCore extends FrontController
 	{	
 		$address = new Address($this->context->cart->id_address_delivery);
 		$id_zone = Address::getZoneById($address->id);
-		if (!Address::isCountryActiveById((int)($this->context->cart->id_address_delivery)) || !Address::isCountryActiveById((int)($this->context->cart->id_address_invoice)))
-			Tools::redirect('index.php?controller=order&step=1');					
+		$bad_delivery = false;
+		if (($bad_delivery = (bool)!Address::isCountryActiveById((int)$this->context->cart->id_address_delivery)) || (!Address::isCountryActiveById((int)$this->context->cart->id_address_invoice)))
+		{
+			if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1 && Dispatcher::getInstance()->getController() != 'order-opc')
+				{
+					$back_url = $this->context->link->getPageLink('order', true, (int)$this->context->language->id, array('step' => Tools::getValue('step'), 'multi-shipping' => (int)Tools::getValue('multi-shipping')));
+					$params = array('multi-shipping' => (int)Tools::getValue('multi-shipping'), 'id_address' => ($bad_delivery ? (int)$this->context->cart->id_address_delivery : (int)$this->context->cart->id_address_invoice), 'back' => $back_url);
+					Tools::redirect($this->context->link->getPageLink('address', true, (int)$this->context->language->id, $params));
+				}
+			Tools::redirect('index.php?controller=order&step=1');
+		}
 		$carriers = $this->context->cart->simulateCarriersOutput();
 		$checked = $this->context->cart->simulateCarrierSelectedOutput();
 		$delivery_option_list = $this->context->cart->getDeliveryOptionList();

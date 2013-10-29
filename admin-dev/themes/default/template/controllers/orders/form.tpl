@@ -715,6 +715,16 @@
 		$('#payment_list').html(payment_list);
 	}
 
+	function fixPriceFormat(price)
+	{
+		if(price.indexOf(',') > 0 && price.indexOf('.') > 0) // if contains , and .
+			if(price.indexOf(',') < price.indexOf('.')) // if , is before .
+				price = price.replace(',','');  // remove ,
+		price = price.replace(' ',''); // remove any spaces
+		price = price.replace(',','.'); // remove , if price did not cotain both , and .
+		return price;
+	}
+
 	function displaySummary(jsonSummary)
 	{
 		currency_format = jsonSummary.currency.format;
@@ -750,13 +760,13 @@
 		if (!changed_shipping_price)
 			$('#shipping_price').html('<b>' + formatCurrency(parseFloat(jsonSummary.summary.total_shipping), currency_format, currency_sign, currency_blank) + '</b>');
 		shipping_price_selected_carrier = jsonSummary.summary.total_shipping;
-		
-		$('#total_vouchers').html(formatCurrency(parseFloat(jsonSummary.summary.total_discounts_tax_exc.replace(',', '.')), currency_format, currency_sign, currency_blank));
-		$('#total_shipping').html(formatCurrency(parseFloat(jsonSummary.summary.total_shipping_tax_exc.replace(',', '.')), currency_format, currency_sign, currency_blank));
-		$('#total_taxes').html(formatCurrency(parseFloat(jsonSummary.summary.total_tax.replace(',', '.')), currency_format, currency_sign, currency_blank));
-		$('#total_without_taxes').html(formatCurrency(parseFloat(jsonSummary.summary.total_price_without_tax.replace(',', '.')), currency_format, currency_sign, currency_blank));
-		$('#total_with_taxes').html(formatCurrency(parseFloat(jsonSummary.summary.total_price.replace(',', '.')), currency_format, currency_sign, currency_blank));
-		$('#total_products').html(formatCurrency(parseFloat(jsonSummary.summary.total_products.replace(',', '.')), currency_format, currency_sign, currency_blank));
+
+		$('#total_vouchers').html(formatCurrency(parseFloat(fixPriceFormat(jsonSummary.summary.total_discounts_tax_exc)), currency_format, currency_sign, currency_blank));
+		$('#total_shipping').html(formatCurrency(parseFloat(fixPriceFormat(jsonSummary.summary.total_shipping_tax_exc)), currency_format, currency_sign, currency_blank));
+		$('#total_taxes').html(formatCurrency(parseFloat(fixPriceFormat(jsonSummary.summary.total_tax)), currency_format, currency_sign, currency_blank));
+		$('#total_without_taxes').html(formatCurrency(parseFloat(fixPriceFormat(jsonSummary.summary.total_price_without_tax)), currency_format, currency_sign, currency_blank));
+		$('#total_with_taxes').html(formatCurrency(parseFloat(fixPriceFormat(jsonSummary.summary.total_price)), currency_format, currency_sign, currency_blank));
+		$('#total_products').html(formatCurrency(parseFloat(fixPriceFormat(jsonSummary.summary.total_products)), currency_format, currency_sign, currency_blank));
 		id_currency = jsonSummary.cart.id_currency;
 		$('#id_currency option').removeAttr('selected');
 		$('#id_currency option[value="'+id_currency+'"]').attr('selected', true);
