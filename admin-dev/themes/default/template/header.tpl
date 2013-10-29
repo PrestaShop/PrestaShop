@@ -224,7 +224,10 @@
 								<i class="icon-caret-down"></i>
 							</button>
 							<ul id="header_search_options" class="dropdown-menu">
-								<li class="search-all search-option active"><a href="#" data-value="0" data-placeholder="{l s='What are you looking for?'}"><i class="icon-search"></i> {l s='Everywhere'}</a></li>
+								<li class="search-all search-option active">
+									<a href="#" data-value="0" data-placeholder="{l s='What are you looking for?'}" data-icon="icon-reorder">
+										<i class="icon-search"></i> {l s='Everywhere'}</a>
+								</li>
 								<li class="divider"></li>
 								<li class="search-book search-option">
 									<a href="#" data-value="1" data-placeholder="{l s='Product name, SKU, reference...'}" data-icon="icon-book">
@@ -290,20 +293,16 @@
 					{/if}
 				</script>
 
-			<!-- js 
+			<!-- todo js 
 					OK - size up search field on focus
-					- prevent blank search
+					(?) -  prevent blank search
 					OK - dropdown menu as select
 					OK - fill input hidden field with data value from list item
 					OK - change icon in suffix
 					OK - set active on right list item
 					OK - focus input field
 					OK - change place holder
-					- clear search
-					(?) - keep focus state when keyword exists
-
-					old code sample:
-					<option value="1" {if {$search_type} == 1} selected="selected" {/if}>{l s='catalog'}</option>
+					(?) - keep focus state when search exists
 			-->
 			</form>
 

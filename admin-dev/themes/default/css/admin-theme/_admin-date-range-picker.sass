@@ -7,7 +7,6 @@ $color-calendar-day: $color-bright
 
 $color-calendar-outrange: #ccc
 
-
 $color-calendar-day-selected: $color-calendar
 $color-calendar-day-selected-compare: $color-calendar-compare
 
@@ -214,8 +213,12 @@ $color-calendar-range-compare: lighten($color-calendar-compare,10%)
 				&.old
 					color: $color-calendar-outrange
 		th
-			&.next, &.prev
-				width: 2em
+			&.next
+				text-align: right
+				padding: 0 10px 0 0
+			&.prev
+				text-align: left
+				padding: 0 0 0 10px 
 			&.next, &.prev, &.month-switch
 				font-size: 1.3em
 				line-height: 2em

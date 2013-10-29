@@ -377,19 +377,9 @@ $( document ).ready(function() {
 		datepickerEnd.setCompare(true);
 	}
 
-	$('#datepickerExpand').click(function() {
+	$('#datepickerExpand').on('click',function() {
 		$('#datepicker').removeClass('hide');
 		$('#date-start').focus();
-	});
-
-	$('#datepickerFrom').click(function() {
-		$('#datepicker').removeClass('hide');
-		$('#date-start').focus();
-	});
-
-	$('#datepickerTo').click(function() {
-		$('#datepicker').removeClass('hide');
-		$('#date-end').focus();
 	});
 
 	$('.submitDateDay').on('click',function(e){
