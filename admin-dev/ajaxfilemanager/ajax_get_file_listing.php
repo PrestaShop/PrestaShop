@@ -24,7 +24,8 @@
 		if(!empty($_GET['search']))
 		{
 			include_once(CLASS_SEARCH);
-			
+			if (!preg_match('/^'.Tools::pRegexp(realpath(dirname(__FILE__).'/'.$_GET['search_folder']), '/').'/i', _PS_ROOT_DIR_.'/img/cms'))
+				exit;
 			$search  = new Search($_GET['search_folder']);
 			$search->addSearchKeyword('recursive', @$_GET['search_recursively']);
 			$search->addSearchKeyword('mtime_from', @$_GET['search_mtime_from']);
