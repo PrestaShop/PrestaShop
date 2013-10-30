@@ -134,9 +134,48 @@ class AdminPerformanceControllerCore extends AdminController
 		$this->fields_value['smarty_console_key'] = Configuration::get('PS_SMARTY_CONSOLE_KEY');
 	}
 
-	public function initFieldsetFeaturesDetachables()
+	public function initFieldsetDebugMode()
 	{
 		$this->fields_form[1]['form'] = array(
+			'legend' => array(
+				'title' => $this->l('Debug mode'),
+				'image' => '../img/admin/prefs.gif'
+			),
+			'input' => array(
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Disable non PrestaShop modules'),
+					'name' => 'native_module',
+					'class' => 't',
+					'is_bool' => true,
+					'values' => array(
+						array(
+							'id' => 'native_module_on',
+							'value' => 1,
+							'label' => $this->l('Enabled')
+						),
+						array(
+							'id' => 'native_module_off',
+							'value' => 0,
+							'label' => $this->l('Disabled')
+						)
+					),
+					'desc' => $this->l('Enable or disable non PrestaShop Modules.')
+				),
+			),
+			'submit' => array(
+				'title' => $this->l('   Save   '),
+				'class' => 'button'
+			),
+		);
+
+		$this->fields_value['native_module'] = Configuration::get('PS_DISABLE_NON_NATIVE_MODULE');
+		$this->fields_value['debug_mode'] = Configuration::get('PS_DEBUG_MODE');
+	}
+
+	public function initFieldsetFeaturesDetachables()
+	{
+		$this->fields_form[2]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('Optional features'),
 				'image' => '../img/admin/tab-plugins.gif'
@@ -197,7 +236,7 @@ class AdminPerformanceControllerCore extends AdminController
 
 	public function initFieldsetCCC()
 	{
-		$this->fields_form[2]['form'] = array(
+		$this->fields_form[3]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('CCC (Combine, Compress and Cache)'),
 				'image' => '../img/admin/arrow_in.png'
@@ -317,7 +356,7 @@ class AdminPerformanceControllerCore extends AdminController
 
 	public function initFieldsetMediaServer()
 	{
-		$this->fields_form[3]['form'] = array(
+		$this->fields_form[4]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('Media servers (use only with CCC)'),
 				'image' => '../img/admin/subdomain.gif'
@@ -359,7 +398,7 @@ class AdminPerformanceControllerCore extends AdminController
 
 	public function initFieldsetCiphering()
 	{
-		$this->fields_form[4]['form'] = array(
+		$this->fields_form[5]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('Ciphering'),
 				'image' => '../img/admin/computer_key.png'
@@ -416,7 +455,7 @@ class AdminPerformanceControllerCore extends AdminController
 			)
 		);
 
-		$this->fields_form[5]['form'] = array(
+		$this->fields_form[6]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('Caching'),
 				'image' => '../img/admin/computer_key.png'
@@ -483,11 +522,12 @@ class AdminPerformanceControllerCore extends AdminController
 	{
 		// Initialize fieldset for a form
 		$this->initFieldsetSmarty();
+		$this->initFieldsetDebugMode();
 		$this->initFieldsetFeaturesDetachables();
 		$this->initFieldsetCCC();
 		$this->initFieldsetMediaServer();
 		$this->initFieldsetCiphering();
-		$this->initFieldsetCaching();
+		$this->initFieldsetCaching();		
 
 		// Activate multiple fieldset
 		$this->multiple_fieldsets = true;
@@ -797,6 +837,11 @@ class AdminPerformanceControllerCore extends AdminController
 			$redirectAdmin = true;
 			Tools::clearSmartyCache();
 			Autoload::getInstance()->generateIndex();
+		}
+
+		if (Tools::isSubmit('submitAddconfiguration'))
+		{
+			Configuration::updateGlobalValue('PS_DISABLE_NON_NATIVE_MODULE', (int)Tools::getValue('native_module'));
 		}
 
 		if ($redirectAdmin && (!isset($this->errors) || !count($this->errors)))

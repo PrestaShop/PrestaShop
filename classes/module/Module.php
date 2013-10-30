@@ -1293,6 +1293,23 @@ abstract class ModuleCore
 		return $db->executeS('SELECT * FROM `'._DB_PREFIX_.'module` m WHERE `name` NOT IN ('.implode(',', $arr_native_modules).') ');
 	}
 
+	public static function getNativeModuleList()
+	{
+		$module_list_xml = _PS_ROOT_DIR_.self::CACHE_FILE_MODULES_LIST;
+		$native_modules = simplexml_load_file($module_list_xml);
+		$native_modules = $native_modules->modules;
+		$modules = array();
+
+		foreach ($native_modules as $native_modules_type)
+			if (in_array($native_modules_type['type'], array('native', 'partner')))
+			{
+				foreach ($native_modules_type->module as $module)
+					$modules[] = $module['name'];
+			}
+
+		return $modules;
+	}
+
 	/**
 	 * Return installed modules
 	 *
