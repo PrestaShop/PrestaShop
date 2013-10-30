@@ -210,10 +210,7 @@
 				$("label[for=truncate],#truncate").show();
 	
 			if ($("#entity > option:selected").val() == 9)
-			{
 				$(".import_supply_orders_details").show();
-				$('input[name=multiple_value_separator]').val('|');
-			}
 			else
 			{
 				$(".import_supply_orders_details").hide();
