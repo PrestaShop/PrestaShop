@@ -884,7 +884,7 @@ product_tabs['Informations'] = new function(){
 			});
 
 			product_type = $(this).val();
-
+			$('#warn_virtual_combinations').hide();
 			// until a product is added in the pack
 			// if product is PTYPE_PACK, save buttons will be disabled
 			if (product_type == product_type_pack)
