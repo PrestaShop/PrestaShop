@@ -94,8 +94,8 @@
 		// Method to reload filter in ajax
 		$('.categoryModuleFilterLink').click(function()
 		{
-			$('.categoryModuleFilterLink').css('background-color', 'white');
-			$(this).css('background-color', '#EBEDF4');
+			$('.categoryModuleFilterLink').removeClass('active');
+			$(this).addClass('active');
 			try
 			{
 				resAjax = $.ajax({
