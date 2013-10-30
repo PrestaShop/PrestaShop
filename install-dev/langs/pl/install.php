@@ -207,5 +207,7 @@ return array(
 		'Country:' => 'Kraj',
 		'Must be letters and numbers with at least 8 characters' => 'Minimum 8 znaków z użyciem liter i cyfr',
 		'Must be at least 8 characters' => 'Min. 8 znaków',
+		'Files' => 'Dokumenty',
+		'All files are not successfuly uploaded on your server' => 'Pliki nie zostały przesłane do serwera',
 	),
 );
