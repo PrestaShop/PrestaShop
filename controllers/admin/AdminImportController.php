@@ -525,11 +525,11 @@ class AdminImportControllerCore extends AdminController
 		if (isset($this->context->cookie->iso_lang_selected) && $this->context->cookie->iso_lang_selected)
 			$id_lang_selected = (int)Language::getIdByIso(base64_decode($this->context->cookie->iso_lang_selected));
 
-		$separator_selected = $this->multiple_value_separator;
+		$separator_selected = $this->separator;
 		if (isset($this->context->cookie->separator_selected) && $this->context->cookie->separator_selected)
 			$separator_selected = base64_decode($this->context->cookie->separator_selected);
 
-		$multiple_value_separator_selected = $this->separator;
+		$multiple_value_separator_selected = $this->multiple_value_separator;
 		if (isset($this->context->cookie->multiple_value_separator_selected) && $this->context->cookie->multiple_value_separator_selected)
 			$multiple_value_separator_selected = base64_decode($this->context->cookie->multiple_value_separator_selected);
 
@@ -1989,9 +1989,6 @@ class AdminImportControllerCore extends AdminController
 				$addresses = $customer->getAddresses((int)Configuration::get('PS_LANG_DEFAULT'));
 			}
 
-			if (!isset($customer_groups) || count($customer_groups) == 0)
-				$customer_groups = array(0 => Configuration::get('PS_CUSTOMER_GROUP'));
-
 			// Group Importation
 			if (isset($info['group']) && !empty($info['group']))
 			{
@@ -2064,6 +2061,7 @@ class AdminImportControllerCore extends AdminController
 			//set temporally for validate field
 			$customer->id_shop = $default_shop->id;
 			$customer->id_shop_group = $default_shop->getGroup()->id;
+			$customer_groups[] = $customer->id_default_group;
 			$customer_groups = array_flip(array_flip($customer_groups));
 			$res = true;
 			if (($field_error = $customer->validateFields(UNFRIENDLY_ERROR, true)) === true &&
@@ -2596,34 +2594,32 @@ class AdminImportControllerCore extends AdminController
 			$date_delivery_expected = pSQL($info['date_delivery_expected']);
 			$discount_rate = (float)$info['discount_rate'];
 			$is_template = (bool)$info['is_template'];
-
+			
+			$error = '';
 			// checks parameters
 			if (!Supplier::supplierExists($id_supplier))
-				$this->errors[] = sprintf($this->l('Supplier ID (%d) is not valid (at line %d).'), $id_supplier, $current_line + 1);
+				$error = sprintf($this->l('Supplier ID (%d) is not valid (at line %d).'), $id_supplier, $current_line + 1);
 			if (!Language::getLanguage($id_lang))
-				$this->errors[] = sprintf($this->l('Lang ID (%d) is not valid (at line %d).'), $id_lang, $current_line + 1);
+				$error = sprintf($this->l('Lang ID (%d) is not valid (at line %d).'), $id_lang, $current_line + 1);
 			if (!Warehouse::exists($id_warehouse))
-				$this->errors[] = sprintf($this->l('Warehouse ID (%d) is not valid (at line %d).'), $id_warehouse, $current_line + 1);
+				$error = sprintf($this->l('Warehouse ID (%d) is not valid (at line %d).'), $id_warehouse, $current_line + 1);
 			if (!Currency::getCurrency($id_currency))
-				$this->errors[] = sprintf($this->l('Currency ID (%d) is not valid (at line %d).'), $id_currency, $current_line + 1);
+				$error = sprintf($this->l('Currency ID (%d) is not valid (at line %d).'), $id_currency, $current_line + 1);
 			if (empty($supply_order->reference) && SupplyOrder::exists($reference))
-				$this->errors[] = sprintf($this->l('Reference (%s) already exists (at line %d).'), $reference, $current_line + 1);
+				$error = sprintf($this->l('Reference (%s) already exists (at line %d).'), $reference, $current_line + 1);
 			if (!empty($supply_order->reference) && ($supply_order->reference != $reference && SupplyOrder::exists($reference)))
-				$this->errors[] = sprintf($this->l('Reference (%s) already exists (at line %d).'), $reference, $current_line + 1);
+				$error = sprintf($this->l('Reference (%s) already exists (at line %d).'), $reference, $current_line + 1);
 			if (!Validate::isDateFormat($date_delivery_expected))
-				$this->errors[] = sprintf($this->l('Date (%s) is not valid (at line %d). Format: %s.'), $date_delivery_expected,
-										   $current_line + 1, $this->l('YYYY-MM-DD'));
+				$error = sprintf($this->l('Date (%s) is not valid (at line %d). Format: %s.'), $date_delivery_expected, $current_line + 1, $this->l('YYYY-MM-DD'));
 			else if (new DateTime($date_delivery_expected) <= new DateTime('yesterday'))
-				$this->errors[] = sprintf($this->l('Date (%s) cannot be in the past (at line %d). Format: %s.'), $date_delivery_expected,
-										   $current_line + 1, $this->l('YYYY-MM-DD'));
+				$error = sprintf($this->l('Date (%s) cannot be in the past (at line %d). Format: %s.'), $date_delivery_expected, $current_line + 1, $this->l('YYYY-MM-DD'));
 			if ($discount_rate < 0 || $discount_rate > 100)
-				$this->errors[] = sprintf($this->l('Discount rate (%d) is not valid (at line %d). %s.'), $discount_rate,
-										   $current_line + 1, $this->l('Format: Between 0 and 100'));
+				$error = sprintf($this->l('Discount rate (%d) is not valid (at line %d). %s.'), $discount_rate, $current_line + 1, $this->l('Format: Between 0 and 100'));
 			if ($supply_order->id > 0 && !$supply_order->isEditable())
-				$this->errors[] = sprintf($this->l('Supply Order (%d) is not editable (at line %d).'), $supply_order->id, $current_line + 1);
+				$error = sprintf($this->l('Supply Order (%d) is not editable (at line %d).'), $supply_order->id, $current_line + 1);
 
 			// if no errors, sets supply order
-			if (empty($this->errors))
+			if (empty($error))
 			{
 				// adds parameters
 				$info['id_ref_currency'] = (int)Currency::getDefaultCurrency()->id;
@@ -2640,8 +2636,10 @@ class AdminImportControllerCore extends AdminController
 				AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $supply_order);
 
 				// updatesd($supply_order);
+
 				$res = true;
-				if ($supply_order->id > 0)
+
+				if ((int)$supply_order->id && ($supply_order->exists((int)$supply_order->id) || $supply_order->exists($supply_order->reference)))
 					$res &= $supply_order->update();
 				else
 					$res &= $supply_order->add();
@@ -2650,6 +2648,8 @@ class AdminImportControllerCore extends AdminController
 				if (!$res)
 					$this->errors[] = sprintf($this->l('Supply Order could not be saved (at line %d).'), $current_line + 1);
 			}
+			else
+				$this->errors[] = $error;
 		}
 
 		// closes

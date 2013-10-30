@@ -1593,6 +1593,18 @@ abstract class ModuleCore
 		return Cache::retrieve('Module::isInstalled'.$module_name);
 	}
 
+	public function isEnabledForShopContext()
+	{
+		$shop_list = Shop::getContextListShopID();
+		return (bool)Db::getInstance()->getValue('
+			SELECT COUNT(*) n
+			FROM `'._DB_PREFIX_.'module_shop`
+			WHERE id_module='.(int)$this->id.' AND id_shop IN ('.implode(',', array_map('intval', Shop::getContextListShopID())).')
+			GROUP BY id_module
+			HAVING n='.(int)count(Shop::getContextListShopID())
+		);
+	}
+
 	public static function isEnabled($module_name)
 	{
 		if (!Cache::isStored('Module::isEnabled'.$module_name))
