@@ -334,6 +334,7 @@
 						<i class="caret"></i>
 					</a>
 					<ul id="employee_links" class="dropdown-menu">
+						<li>{$employee_avatar}</li>
 						<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'htmlall':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences'}</a></li>
 						<li><a id="header_logout" href="index.php?logout"><i class="icon-signout"></i> {l s='Log out'}</a></li>
 					</ul>
