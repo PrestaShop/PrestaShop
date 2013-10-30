@@ -689,6 +689,8 @@ class AdminImportControllerCore extends AdminController
 	protected static function rewindBomAware($handle)
 	{
 		// A rewind wrapper that skip BOM signature wrongly
+		if (!is_resource($handle))
+			return false;
 		rewind($handle);
 		if (($bom = fread($handle, 3)) != "\xEF\xBB\xBF")
 			rewind($handle);
@@ -2061,7 +2063,16 @@ class AdminImportControllerCore extends AdminController
 			//set temporally for validate field
 			$customer->id_shop = $default_shop->id;
 			$customer->id_shop_group = $default_shop->getGroup()->id;
-			$customer_groups[] = $customer->id_default_group;
+			if (isset($info['id_default_group']) && !empty($info['id_default_group']) && !is_numeric($info['id_default_group']))
+			{
+				$myGroup = Group::searchByName($id_lang, $group);
+				if (isset($myGroup['id_group']) && $myGroup['id_group'])
+					$info['id_default_group'] = (int)$myGroup['id_group'];
+			}
+			$myGroup = new Group($customer->id_default_group);
+			if (Validate::isLoadedObject($myGroup))
+				$customer->id_default_group = (int)Configuration::get('PS_CUSTOMER_GROUP');
+			$customer_groups[] = (int)$customer->id_default_group;
 			$customer_groups = array_flip(array_flip($customer_groups));
 			$res = true;
 			if (($field_error = $customer->validateFields(UNFRIENDLY_ERROR, true)) === true &&
@@ -2775,6 +2786,8 @@ class AdminImportControllerCore extends AdminController
 
 	protected function getNbrColumn($handle, $glue)
 	{
+		if (!is_resource($handle))
+			return false;
 		$tmp = fgetcsv($handle, MAX_LINE_SIZE, $glue);
 		AdminImportController::rewindBomAware($handle);
 		return count($tmp);
@@ -2789,7 +2802,10 @@ class AdminImportControllerCore extends AdminController
 
 	protected function openCsvFile()
 	{
-		 $handle = fopen(_PS_ADMIN_DIR_.'/import/'.strval(preg_replace('/\.{2,}/', '.', Tools::getValue('csv'))), 'r');
+		$file = _PS_ADMIN_DIR_.'/import/'.strval(preg_replace('/\.{2,}/', '.', Tools::getValue('csv')));
+		$handle = false;
+		if (is_file($file) && is_readable($file))	
+			$handle = fopen($file, 'r');
 
 		if (!$handle)
 			$this->errors[] = Tools::displayError('Cannot read the .CSV file');
