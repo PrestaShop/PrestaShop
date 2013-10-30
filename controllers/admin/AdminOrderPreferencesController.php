@@ -117,7 +117,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 					),
 					'PS_USE_ORDER_ID' => array(
 						'title' => $this->l('Use Order ID'),
-						'desc' => $this->l('Disable order reference (AEGOGZXRS), use 00000001. '),
+						'desc' => $this->l('Disable order reference (AEGOGZXRS), use 000001. '),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'

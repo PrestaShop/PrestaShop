@@ -1443,7 +1443,7 @@ class OrderCore extends ObjectModel
 	{
 		if (Configuration::get('PS_USE_ORDER_ID'))
 		{
-			$order_number = sprintf('%09d', $id_order);
+			$order_number = sprintf('%06d', $id_order);
 			if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE'))
 				$order_number = $id_shop.$order_number;
 
