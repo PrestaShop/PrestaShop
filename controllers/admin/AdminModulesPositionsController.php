@@ -444,10 +444,6 @@ class AdminModulesPositionsControllerCore extends AdminController
 			$content .= '<option value="'.$k.'">'.$k.'</option>';
 
 		$content .= '</select>
-					</p> 
-					<p>
-						<input type="button" class="btn btn-default" value="'.$this->l('Add').'" onclick="position_exception_add('.$shop_id.')" />
-						<input type="button" class="btn btn-default" value="'.$this->l('Remove').'" onclick="position_exception_remove('.$shop_id.')" />
 					</p>';
 
 		return $content;
