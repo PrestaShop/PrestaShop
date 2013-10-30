@@ -57,7 +57,7 @@ class StatsBestCategories extends ModuleGrid
 				'id' => 'name',
 				'header' => $this->l('Name'),
 				'dataIndex' => 'name',
-				'align' => 'center'
+				'align' => 'left'
 			),
 			array(
 				'id' => 'totalQuantitySold',
@@ -69,7 +69,7 @@ class StatsBestCategories extends ModuleGrid
 				'id' => 'totalPriceSold',
 				'header' => $this->l('Total Price'),
 				'dataIndex' => 'totalPriceSold',
-				'align' => 'center'
+				'align' => 'right'
 			),
 			array(
 				'id' => 'totalPageViewed',
@@ -105,7 +105,7 @@ class StatsBestCategories extends ModuleGrid
 
 		$this->_html = '
 			<div class="panel-heading">
-				'.$this->displayName.'
+				<i class="icon-sitemap"></i> '.$this->displayName.'
 			</div>
 			'.$this->engine($engineParams).'
 			<a class="btn btn-default export-csv" href="'.htmlentities($_SERVER['REQUEST_URI']).'&export=1">
@@ -116,6 +116,7 @@ class StatsBestCategories extends ModuleGrid
 
 	public function getData()
 	{
+		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 		$dateBetween = $this->getDate();
 		$id_lang = $this->getLang();
 
@@ -197,7 +198,10 @@ class StatsBestCategories extends ModuleGrid
 		}
 		if (($this->_start === 0 || Validate::IsUnsignedInt($this->_start)) && Validate::IsUnsignedInt($this->_limit))
 			$this->_query .= ' LIMIT '.$this->_start.', '.($this->_limit);
-		$this->_values = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query);
+		$values = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query);
+		foreach ($values as &$value)
+			$value['totalPriceSold'] = Tools::displayPrice($value['totalPriceSold'], $currency);
+		$this->_values = $values;
 		$this->_totalCount = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT FOUND_ROWS()');
 	}
 }

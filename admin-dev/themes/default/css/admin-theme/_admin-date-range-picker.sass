@@ -7,7 +7,6 @@ $color-calendar-day: $color-bright
 
 $color-calendar-outrange: #ccc
 
-
 $color-calendar-day-selected: $color-calendar
 $color-calendar-day-selected-compare: $color-calendar-compare
 
@@ -81,20 +80,16 @@ $color-calendar-range-compare: lighten($color-calendar-compare,10%)
 			margin: 0
 			border-spacing: 1px
 		thead
-			tr th:after
-				content: ""
-				border-top: 1px solid darken($color-calendar,10%)
-				width: 100%
-				display: block
 			tr th
 				background-color: darken($color-calendar,5%)
-				color: darken($color-calendar,25%)
+				color: white
 				font-size: 0.7em
-				font-weight: 700
-				border-bottom: solid 1px lighten($color-calendar,7%)
+				height: 1.5em
 				text-transform: uppercase
+
 			tr:first-child th
 				background-color: $color-bright
+				border-bottom: 1px solid darken($color-calendar,5%)
 				font-weight: 200
 				font-size: 1.4em
 				color: $color-calendar-day-selected
@@ -102,10 +97,15 @@ $color-calendar-range-compare: lighten($color-calendar-compare,10%)
 			text-align: center
 			padding: 0
 			position: relative
+		tr
+			border-bottom: solid 1px white
 		td
 			color: $color-calendar-day-selected
 			height: 2.4em
 			padding: 0 8px
+			@include transition-property(all)
+			@include transition-duration(0.2s)
+			@include transition-timing-function(ease-out)
 			&.day:after
 				content: ""
 				position: absolute
@@ -205,6 +205,7 @@ $color-calendar-range-compare: lighten($color-calendar-compare,10%)
 				text-transform: uppercase
 				cursor: pointer
 				&:hover
+					color: white
 					background-color: $color-calendar-day-selected
 				&.active
 					background-color: $color-calendar-day-selected
@@ -212,10 +213,19 @@ $color-calendar-range-compare: lighten($color-calendar-compare,10%)
 				&.old
 					color: $color-calendar-outrange
 		th
-			&.switch
-				width: 145px
-			&.next, &.prev
+			&.next
+				text-align: right
+				padding: 0 10px 0 0
+			&.prev
+				text-align: left
+				padding: 0 0 0 10px 
+			&.next, &.prev, &.month-switch
 				font-size: 1.3em
+				line-height: 2em
+				height: 2em
+				&:hover
+					background-color: darken($color-calendar,5%)
+					color: white
 		thead tr:first-child th
 			cursor: pointer
 
