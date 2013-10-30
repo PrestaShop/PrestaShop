@@ -1989,9 +1989,6 @@ class AdminImportControllerCore extends AdminController
 				$addresses = $customer->getAddresses((int)Configuration::get('PS_LANG_DEFAULT'));
 			}
 
-			if (!isset($customer_groups) || count($customer_groups) == 0)
-				$customer_groups = array(0 => Configuration::get('PS_CUSTOMER_GROUP'));
-
 			// Group Importation
 			if (isset($info['group']) && !empty($info['group']))
 			{
@@ -2064,6 +2061,7 @@ class AdminImportControllerCore extends AdminController
 			//set temporally for validate field
 			$customer->id_shop = $default_shop->id;
 			$customer->id_shop_group = $default_shop->getGroup()->id;
+			$customer_groups[] = $customer->id_default_group;
 			$customer_groups = array_flip(array_flip($customer_groups));
 			$res = true;
 			if (($field_error = $customer->validateFields(UNFRIENDLY_ERROR, true)) === true &&
