@@ -27,7 +27,7 @@
 ob_start();
 
 // Check PHP version
-if (version_compare(PHP_VERSION, '5.1.3', '<'))
+if (version_compare(preg_replace('/[A-Za-z\-]/', '', PHP_VERSION), '5.1.3', '<'))
 	die('You need at least PHP 5.1.3 to run PrestaShop. Your current PHP version is '.PHP_VERSION);
 
 // Generate common constants
