@@ -28,6 +28,10 @@ $(document).ready( function () {
 		setDashboardDateRange(elt.currentTarget.name);
 		return false;
 	});
+	$(".preactivationLink").click(function() {
+		preactivationLinkClick($(this).attr("rel"));
+	});
+	
 
 	refreshDashboard(false, false);
 	getBlogRss();
@@ -283,3 +287,22 @@ function saveDashConfig(widget_name)
 	});
 }
 
+function preactivationLinkClick(module)
+{
+	$.ajax({
+		url : adminstats_ajax_url,
+		data : {
+				ajax : "1",
+				controller : "AdminDashboard",
+				action : "savePreactivationRequest",
+				module : module,
+				},
+		type: 'POST',
+		success : function(jsonData){
+	
+		},
+		error : function(data){
+			//@TODO display errors
+		}
+	});
+}
