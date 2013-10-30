@@ -1,7 +1,7 @@
 <tr id="product_rule_{$product_rule_group_id|intval}_{$product_rule_id|intval}_tr">
 	<td>
-		<a href="javascript:removeProductRule({$product_rule_group_id|intval}, {$product_rule_id|intval});">
-			<img src="../img/admin/disabled.gif" alt="{l s='Remove'}" title="{l s='Remove'}" />
+		<a class="btn btn-default" href="javascript:removeProductRule({$product_rule_group_id|intval}, {$product_rule_id|intval});">
+			<i class="icon-remove"></i>
 		</a>
 	</td>
 	<td>
@@ -17,8 +17,9 @@
 		<input type="text" id="product_rule_{$product_rule_group_id|intval}_{$product_rule_id|intval}_match" value="" disabled="disabled" />
 	</td>
 	<td>
-		<a id="product_rule_{$product_rule_group_id|intval}_{$product_rule_id|intval}_choose_link" href="#product_rule_{$product_rule_group_id|intval}_{$product_rule_id|intval}_choose_content">
-			<img src="../img/admin/choose.gif" alt="{l s='Choose'}" title="{l s='Choose'}" /> {l s='Choose'}
+		<a class="btn btn-default" id="product_rule_{$product_rule_group_id|intval}_{$product_rule_id|intval}_choose_link" href="#product_rule_{$product_rule_group_id|intval}_{$product_rule_id|intval}_choose_content">
+			<i class="icon-list-ul"></i>
+			{l s='Choose'}
 		</a>
 		<div>
 			<div id="product_rule_{$product_rule_group_id|intval}_{$product_rule_id|intval}_choose_content">
