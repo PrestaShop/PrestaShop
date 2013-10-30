@@ -48,14 +48,14 @@ class StatsCheckUp extends Module
 	public function install()
 	{
 		$confs = array(
-			'CHECKUP_DESCRIPTIONS_LT'=>100,
-			'CHECKUP_DESCRIPTIONS_GT'=>400,
-			'CHECKUP_IMAGES_LT'=>1,
-			'CHECKUP_IMAGES_GT'=>2,
-			'CHECKUP_SALES_LT'=>1,
-			'CHECKUP_SALES_GT'=>2,
-			'CHECKUP_STOCK_LT'=>1,
-			'CHECKUP_STOCK_GT'=>3
+			'CHECKUP_DESCRIPTIONS_LT' => 100,
+			'CHECKUP_DESCRIPTIONS_GT' => 400,
+			'CHECKUP_IMAGES_LT' => 1,
+			'CHECKUP_IMAGES_GT' => 2,
+			'CHECKUP_SALES_LT' => 1,
+			'CHECKUP_SALES_GT' => 2,
+			'CHECKUP_STOCK_LT' => 1,
+			'CHECKUP_STOCK_GT' => 3
 		);
 		foreach ($confs as $confname => $confdefault)
 			if (!Configuration::get($confname))
@@ -213,6 +213,7 @@ class StatsCheckUp extends Module
 				</div>
 			</div>
 		</form>
+		<div style="overflow-x:auto">
 		<table class="table checkup2">
 			<thead>
 				<tr>
@@ -318,7 +319,7 @@ class StatsCheckUp extends Module
 					<td class="center">'.$arrayColors[$totals['average']].'</td>
 				</tr>
 			</tfoot>
-		</table>';
+		</table></div>';
 
 		return $this->html;
 	}

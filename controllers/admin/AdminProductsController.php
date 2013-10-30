@@ -1285,20 +1285,21 @@ class AdminProductsControllerCore extends AdminController
 
 		if ($this->display == 'edit' || $this->display == 'add')
 		{
-			$this->addjQueryPlugin(array(
-				'autocomplete',
-				'tablednd',
-				'thickbox',
-				'ajaxfileupload',
-				'date'
-			));
-
 			$this->addJqueryUI(array(
 				'ui.core',
 				'ui.widget',
 				'ui.accordion',
 				'ui.slider',
 				'ui.datepicker'
+			));
+
+			$this->addjQueryPlugin(array(
+				'autocomplete',
+				'tablednd',
+				'thickbox',
+				'ajaxfileupload',
+				'date',
+				'tagify'
 			));
 
 			$this->addJS(array(

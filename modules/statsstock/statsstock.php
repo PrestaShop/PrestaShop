@@ -41,7 +41,7 @@ class StatsStock extends Module
 
 		parent::__construct();
 
-		$this->displayName = $this->l('Stats on available quantities.');
+		$this->displayName = $this->l('Stats on available quantities');
 		$this->description = '';
 	}
 
@@ -143,7 +143,7 @@ class StatsStock extends Module
 					<tr>
 						<th colspan="3"></th>
 						<th><span class="title_box active">'.$this->l('Total quantities').'</span></th>
-						<th><span class="title_box active">'.$this->l('Avg price').'</span></th>
+						<th><span class="title_box active">'.$this->l('Average price').'</span></th>
 						<th><span class="title_box active">'.$this->l('Total value').'</span></th>
 					</tr>
 					<tr>

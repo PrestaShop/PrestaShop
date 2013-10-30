@@ -183,10 +183,18 @@ class Dashproducts extends Module
 				continue;
 			$category = new Category($product_obj->getDefaultCategory(), $this->context->language->id);
 			
+			$img = '';
+			if (($row_image = Product::getCover($product_obj->id)) && $row_image['id_image'])
+			{
+				$image = new Image($row_image['id_image']);
+				$path_to_image = _PS_PROD_IMG_DIR_.$image->getExistingImgPath().'.'.$this->context->controller->imageType;
+				$img = ImageManager::thumbnail($path_to_image, 'product_mini_'.$product_obj->id.'.'.$this->context->controller->imageType, 45, $this->context->controller->imageType);
+			}
+
 			$body[] = array(
 				array(
 					'id' => 'product',
-					'value' => '<img src="'._PS_TMP_IMG_.'product_mini_'.$product['product_id'].'.jpg'.'" />',
+					'value' => $img,
 					'class' => 'text-center'
 				),
 				array(

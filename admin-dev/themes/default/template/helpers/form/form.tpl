@@ -94,7 +94,7 @@
 														<script type="text/javascript">
 															$().ready(function () {
 																var input_id = '{/literal}{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}{literal}';
-																$('#'+input_id).tagify({addTagPrompt: '{/literal}{l s='Add tag' js=1}{literal}'});
+																$('#'+input_id).tagify({delimiters: [13,44], addTagPrompt: '{/literal}{l s='Add tag' js=1}{literal}'});
 																$({/literal}'#{$table}{literal}_form').submit( function() {
 																	$(this).find('#'+input_id).val($('#'+input_id).tagify('serialize'));
 																});
@@ -179,7 +179,7 @@
 												$().ready(function () {
 													var input_id = '{/literal}{if isset($input.id)}{$input.id}{else}{$input.name}{/if}{literal}';
 													$('#'+input_id).tagify();
-													$('#'+input_id).tagify({addTagPrompt: '{/literal}{l s='Add tag'}{literal}'});
+													$('#'+input_id).tagify({delimiters: [13,44],addTagPrompt: '{/literal}{l s='Add tag'}{literal}'});
 													$({/literal}'#{$table}{literal}_form').submit( function() {
 														$(this).find('#'+input_id).val($('#'+input_id).tagify('serialize'));
 													});

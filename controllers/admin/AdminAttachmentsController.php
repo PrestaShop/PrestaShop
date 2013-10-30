@@ -37,6 +37,7 @@ class AdminAttachmentsControllerCore extends AdminController
 	 	$this->lang = true;
 
 		$this->addRowAction('edit');
+		$this->addRowAction('view');
 		$this->addRowAction('delete');
 
 		$this->_select = 'IFNULL(virtual.products, 0) as products';
@@ -74,6 +75,16 @@ class AdminAttachmentsControllerCore extends AdminController
 			);
 
 		parent::initPageHeaderToolbar();
+	}
+
+	public function renderView()
+	{
+		if (($obj = $this->loadObject(true)) && Validate::isLoadedObject($obj))
+		{
+			$link = $this->context->link->getPageLink('attachment', true, NULL, 'id_attachment='.$obj->id);
+			Tools::redirectLink($link);
+		}
+		return $this->displayWarning($this->l('File not found'));
 	}
 
 	public function renderForm()

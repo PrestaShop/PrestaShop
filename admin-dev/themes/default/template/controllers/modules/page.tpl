@@ -87,8 +87,11 @@
 			<div class="categoriesTitle col-lg-3">
 				<div class="list-group">
 					<form id="filternameForm" method="post" class="list-group-item form-horizontal">
-						<div class="input-group col-lg-12">
-							<input placeholder="{l s='Search'}" type="text" value="" name="moduleQuicksearch" id="moduleQuicksearch" autocomplete="off" />
+						<div class="input-group">
+							<input class="form-control" placeholder="{l s='Search'}" type="text" value="" name="moduleQuicksearch" id="moduleQuicksearch" autocomplete="off" />
+							<div class="input-group-addon">
+								<i class="icon-search"></i>
+							</div>
 						</div>
 					</form>
 					<a class="list-group-item {if isset($categoryFiltered.favorites)}active{/if}" href="{$currentIndex}&token={$token}&filterCategory=favorites">
