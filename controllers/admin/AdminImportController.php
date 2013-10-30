@@ -1996,6 +1996,7 @@ class AdminImportControllerCore extends AdminController
 			{
 				foreach (explode($this->multiple_value_separator, $info['group']) as $key => $group)
 				{
+					$group = trim($group);
 					if(empty($group))
 						continue;
 					$id_group = false;
@@ -2006,7 +2007,7 @@ class AdminImportControllerCore extends AdminController
 							$customer_groups[] = (int)$group;
 						continue;
 					}						
-					$myGroup = Group::searchByName($id_lang, $group);
+					$myGroup = Group::searchByName($group);
 					if (isset($myGroup['id_group']) && $myGroup['id_group'])
 						$id_group = (int)$myGroup['id_group'];
 					if (!$id_group)
@@ -2065,12 +2066,13 @@ class AdminImportControllerCore extends AdminController
 			$customer->id_shop_group = $default_shop->getGroup()->id;
 			if (isset($info['id_default_group']) && !empty($info['id_default_group']) && !is_numeric($info['id_default_group']))
 			{
-				$myGroup = Group::searchByName($id_lang, $group);
+				$info['id_default_group'] = trim($info['id_default_group']);
+				$myGroup = Group::searchByName($info['id_default_group']);
 				if (isset($myGroup['id_group']) && $myGroup['id_group'])
 					$info['id_default_group'] = (int)$myGroup['id_group'];
 			}
 			$myGroup = new Group($customer->id_default_group);
-			if (Validate::isLoadedObject($myGroup))
+			if (!Validate::isLoadedObject($myGroup))
 				$customer->id_default_group = (int)Configuration::get('PS_CUSTOMER_GROUP');
 			$customer_groups[] = (int)$customer->id_default_group;
 			$customer_groups = array_flip(array_flip($customer_groups));
