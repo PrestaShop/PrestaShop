@@ -714,7 +714,7 @@ class AdminModulesControllerCore extends AdminController
 								$activateOnclick = 'onclick="location.href = \''.$this->getCurrentUrl('enable').'&enable=\'+(($(this).attr(\'checked\')) ? 1 : 0)"';
 								$toolbar .= '<tr>
 										<th colspan="4">
-											<input type="checkbox" name="activateModule" value="1" '.(($module->active) ? 'checked="checked"' : '').' '.$activateOnclick.' /> '.$this->l('Activate module for').' ';
+											<input type="checkbox" name="activateModule" value="1" '.($module->isEnabledForShopContext() ? 'checked="checked"' : '').' '.$activateOnclick.' /> '.$this->l('Activate module for').' ';
 								if (Shop::getContext() == Shop::CONTEXT_SHOP)
 									$toolbar .= 'shop <b>'.$this->context->shop->name.'</b>';
 								elseif (Shop::getContext() == Shop::CONTEXT_GROUP)
