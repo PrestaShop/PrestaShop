@@ -200,5 +200,6 @@ return array(
 		'PHP register global option is on' => 'PHP register global optie is ingeschakeld',
 		'Must be at least 8 characters' => 'Minimaal 8 karakters',
 		'Files' => 'Bestanden',
+		'All files are not successfuly uploaded on your server' => 'Alle bestanden zijn niet succesvol geüpload naar uw server',
 	),
 );
