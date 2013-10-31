@@ -157,7 +157,7 @@ return array(
 		'Populate database tables' => 'Vullen database tabellen',
 		'Configure shop information' => 'Configureren winkelinformatie',
 		'Install modules' => 'Installeren modules',
-		'Install modules Addons' => 'Installeren Addons modules',
+		'Install Addons modules' => 'Installeren Addons modules',
 		'Install demonstration data' => 'Installeren demonstratiegegevens',
 		'Install theme' => 'Installeren thema',
 		'Cannot upload files' => 'Kan bestanden niet uploaden',

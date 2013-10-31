@@ -240,7 +240,7 @@ return array(
 		'Travel' => '旅遊',
 		'Database is created' => '資料庫已經建立',
 		'Cannot create the database automatically' => '無法自動建立資料庫',
-		'Install modules Addons' => '安裝模組與外掛',
+		'Install Addons modules' => '安裝模組與外掛',
 		'Files' => '檔案',
 		'All files are not successfuly uploaded on your server' => '所有檔案成功上傳到伺服器',
 		'Attempt to create the database automatically' => '嘗試自動建立資料庫',

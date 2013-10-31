@@ -231,7 +231,7 @@ return array(
 		'menu_configure' => 'Информация о магазине',
 		'menu_welcome' => 'Выберите язык',
 		'Your PHP sessions path is not writable - check with your hosting provider:' => 'Дисковая память недоступна в письменном виде - обратитесь к Вашему хостинг-провайдеру',
-		'Install modules Addons' => 'Установка модулей Addons',
+		'Install Addons modules' => 'Установка модулей Addons',
 		'Database is created' => 'База данных создана',
 		'Cannot create the database automatically' => 'Невозможно автоматически создать базу данных',
 		'Attempt to create the database automatically' => 'Попытка автоматического создания базы данных',

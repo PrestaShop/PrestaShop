@@ -236,7 +236,7 @@ return array(
 		'Your PHP sessions path is not writable - check with your hosting provider:' => 'Der Speicherungsordner ist nicht beschreibbar - bitte kontaktieren Sie Ihren Provider',
 		'Database is created' => 'Datenbank erstellt',
 		'Cannot create the database automatically' => 'Datenbank kann nicht automatisch erstellt werden',
-		'Install modules Addons' => 'Module Addons installieren',
+		'Install Addons modules' => 'Module Addons installieren',
 		'Files' => 'Dateien',
 		'All files are not successfuly uploaded on your server' => 'Es wurden nicht alle Dateien erfolgreich auf Ihren Server hochgeladen',
 		'Attempt to create the database automatically' => 'Versuchen, die Datenbank automatisch zu erstellen.',
