@@ -99,7 +99,7 @@ $(function(){ldelim}
             {if $field_name eq 'company'}
             <div class="form-group">
                 <label for="company">{l s='Company'}</label>
-                <input class="form-control" type="text" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{else}{if isset($address->company)}{$address->company|escape:'html'}{/if}{/if}" onkeyup="if (validate_{$address_validation.$field_name.validate}($(this).val())) $(this).parent().removeClass('form-error').addClass('form-ok'); else $(this).parent().addClass('form-error').removeClass('form-ok');" />
+                <input class="form-control" type="text" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{else}{if isset($address->company)}{$address->company|escape:'html'}{/if}{/if}" onkeyup="if($(this).val().length) { if (validate_{$address_validation.$field_name.validate}($(this).val())) $(this).parent().removeClass('form-error').addClass('form-ok'); else $(this).parent().addClass('form-error').removeClass('form-ok');}" />
             </div>
             {/if}
             {if $field_name eq 'vat_number'}
@@ -107,7 +107,7 @@ $(function(){ldelim}
                     <div id="vat_number">
                         <div class="form-group">
                             <label for="vat_number">{l s='VAT number'}</label>
-                            <input type="text" class="form-control" name="vat_number" value="{if isset($smarty.post.vat_number)}{$smarty.post.vat_number}{else}{if isset($address->vat_number)}{$address->vat_number|escape:'html'}{/if}{/if}" onkeyup="if (validate_{$address_validation.$field_name.validate}($(this).val())) $(this).parent().removeClass('form-error').addClass('form-ok'); else $(this).parent().addClass('form-error').removeClass('form-ok');" />
+                            <input type="text" class="form-control" name="vat_number" value="{if isset($smarty.post.vat_number)}{$smarty.post.vat_number}{else}{if isset($address->vat_number)}{$address->vat_number|escape:'html'}{/if}{/if}" onkeyup="if($(this).val().length) { if (validate_{$address_validation.$field_name.validate}($(this).val())) $(this).parent().removeClass('form-error').addClass('form-ok'); else $(this).parent().addClass('form-error').removeClass('form-ok'); }" />
                         </div>
                     </div>
                 </div>
@@ -135,7 +135,7 @@ $(function(){ldelim}
             {if $field_name eq 'address2'}
             <div class="required form-group">
                 <label for="address2">{l s='Address (Line 2)'}</label>
-                <input class="form-control" type="text" id="address2" name="address2" value="{if isset($smarty.post.address2)}{$smarty.post.address2}{else}{if isset($address->address2)}{$address->address2|escape:'html'}{/if}{/if}" onkeyup="if (validate_{$address_validation.$field_name.validate}($(this).val())) $(this).parent().removeClass('form-error').addClass('form-ok'); else $(this).parent().addClass('form-error').removeClass('form-ok');" />
+                <input class="form-control" type="text" id="address2" name="address2" value="{if isset($smarty.post.address2)}{$smarty.post.address2}{else}{if isset($address->address2)}{$address->address2|escape:'html'}{/if}{/if}" onkeyup="if($(this).val().length) { if (validate_{$address_validation.$field_name.validate}($(this).val())) $(this).parent().removeClass('form-error').addClass('form-ok'); else $(this).parent().addClass('form-error').removeClass('form-ok'); }" />
             </div>
             {/if}
             {if $field_name eq 'postcode'}
@@ -214,8 +214,8 @@ $(function(){ldelim}
             {/if}
             <div class="form-group">
                 <label for="other">{l s='Additional information'}</label>
-                <textarea class="form-control" id="other" name="other" cols="26" rows="3" onkeyup="if (validate_{$address_validation.other.validate}($(this).val())) $(this).parent().removeClass('form-error').addClass('form-ok'); else $(this).parent().addClass('form-error').removeClass('form-ok');
-              ">{if isset($smarty.post.other)}{$smarty.post.other}{else}{if isset($address->other)}{$address->other|escape:'html'}{/if}{/if}</textarea>
+                <textarea class="form-control" id="other" name="other" cols="26" rows="3" onkeyup="if($(this).val().length) { if (validate_{$address_validation.other.validate}($(this).val())) $(this).parent().removeClass('form-error').addClass('form-ok'); else $(this).parent().addClass('form-error').removeClass('form-ok');
+              }">{if isset($smarty.post.other)}{$smarty.post.other}{else}{if isset($address->other)}{$address->other|escape:'html'}{/if}{/if}</textarea>
             </div>
             <div class="form-group phone-number">
                 <label for="phone">{l s='Home phone'}</label>
@@ -227,7 +227,7 @@ $(function(){ldelim}
             <div class="clearfix"></div>
             <div class="{if isset($one_phone_at_least) && $one_phone_at_least}required {/if}form-group">
                 <label for="phone_mobile">{l s='Mobile phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>*</sup>{/if}</label>
-                <input type="tel" id="phone_mobile" class="form-control" name="phone_mobile" value="{if isset($smarty.post.phone_mobile)}{$smarty.post.phone_mobile}{else}{if isset($address->phone_mobile)}{$address->phone_mobile|escape:'html'}{/if}{/if}"  onkeyup="if (validate_{$address_validation.phone_mobile.validate}($(this).val())) $(this).parent().removeClass('form-error').addClass('form-ok'); else $(this).parent().addClass('form-error').removeClass('form-ok');"  />
+                <input type="tel" id="phone_mobile" class="form-control" name="phone_mobile" value="{if isset($smarty.post.phone_mobile)}{$smarty.post.phone_mobile}{else}{if isset($address->phone_mobile)}{$address->phone_mobile|escape:'html'}{/if}{/if}"  onkeyup="if($(this).val().length) { if (validate_{$address_validation.phone_mobile.validate}($(this).val())) $(this).parent().removeClass('form-error').addClass('form-ok'); else $(this).parent().addClass('form-error').removeClass('form-ok'); }"  />
             </div>
             <div class="required form-group" id="adress_alias">
                 <label for="alias">{l s='Please assign an address title for future reference.'} <sup>*</sup></label>
