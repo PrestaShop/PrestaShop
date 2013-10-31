@@ -208,7 +208,7 @@ var contentOnly = {if $content_only}true{else}false{/if}
 		{if isset($images) && count($images) > 0}
 		<!-- thumbnails -->
 		<div id="views_block" class="clearfix {if isset($images) && count($images) < 2}hidden{/if}">
-		{if isset($images) && count($images) > 3}<span class="view_scroll_spacer"><a id="view_scroll_left" class="" title="{l s='Other views'}" href="javascript:{ldelim}{rdelim}">{l s='Previous'}</a></span>{/if}
+		{if isset($images) && count($images) > 4}<span class="view_scroll_spacer"><a id="view_scroll_left" class="" title="{l s='Other views'}" href="javascript:{ldelim}{rdelim}">{l s='Previous'}</a></span>{/if}
 		<div id="thumbs_list">
 			<ul id="thumbs_list_frame">
 				{if isset($images)}
@@ -223,7 +223,7 @@ var contentOnly = {if $content_only}true{else}false{/if}
 				{/if}
 			</ul>
 		</div>
-		{if isset($images) && count($images) > 3}<a id="view_scroll_right" title="{l s='Other views'}" href="javascript:{ldelim}{rdelim}">{l s='Next'}</a>{/if}
+		{if isset($images) && count($images) > 4}<a id="view_scroll_right" title="{l s='Other views'}" href="javascript:{ldelim}{rdelim}">{l s='Next'}</a>{/if}
 		</div>
 		{/if}
 		{if isset($images) && count($images) > 1}<p class="resetimg clear"><span id="wrapResetImages" style="display: none;">
