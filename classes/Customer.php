@@ -589,9 +589,11 @@ class CustomerCore extends ObjectModel
 	 */
 	public function updateGroup($list)
 	{
-		$this->cleanGroups();
 		if ($list && !empty($list))
+		{
+			$this->cleanGroups();
 			$this->addGroups($list);
+		}
 		else
 			$this->addGroups(array($this->id_default_group));
 	}
@@ -606,7 +608,7 @@ class CustomerCore extends ObjectModel
 		foreach ($groups as $group)
 		{
 			$row = array('id_customer' => (int)$this->id, 'id_group' => (int)$group);
-			Db::getInstance()->insert('customer_group', $row);
+			Db::getInstance()->insert('customer_group', $row, false, true, Db::INSERT_IGNORE);
 		}
 	}
 
