@@ -2,7 +2,7 @@
 
 <!-- Database configuration -->
 <div id="dbPart">
-	<h2><?php echo $this->l('Configure your database by filling out the following fields:') ?></h2>
+	<h2><?php echo $this->l('Configure your database by filling out the following fields') ?></h2>
 	<p>
 		<?php echo $this->l('To use PrestaShop, you must <a href="http://doc.prestashop.com/display/PS15/Installing+PrestaShop#InstallingPrestaShop-Creatingadatabaseforyourshop" target="_blank">create a database</a> to collect all of your store’s data-related activities.') ?>
 		<br />
@@ -11,20 +11,20 @@
 
 	<div id="formCheckSQL">
 		<p class="first" style="margin-top: 15px;">
-			<label for="dbServer"><?php echo $this->l('Database server address:') ?> </label>
+			<label for="dbServer"><?php echo $this->l('Database server address') ?> </label>
 			<input size="25" class="text" type="text" id="dbServer" name="dbServer" value="<?php echo htmlspecialchars($this->database_server) ?>" />
 			<span class="userInfos aligned"><?php echo $this->l('The default port is 3306. To use a different port, add the port number at the end of your server’s address i.e ":4242".') ?></span>
 		</p>
 		<p>
-			<label for="dbName"><?php echo $this->l('Database name:') ?> </label>
+			<label for="dbName"><?php echo $this->l('Database name') ?> </label>
 			<input size="10" class="text" type="text" id="dbName" name="dbName" value="<?php echo htmlspecialchars($this->database_name) ?>" />
 		</p>
 		<p>
-			<label for="dbLogin"><?php echo $this->l('Database login:') ?> </label>
+			<label for="dbLogin"><?php echo $this->l('Database login') ?> </label>
 			<input class="text" size="10" type="text" id="dbLogin" name="dbLogin" value="<?php echo htmlspecialchars($this->database_login) ?>" />
 		</p>
 		<p>
-			<label for="dbPassword"><?php echo $this->l('Database password:') ?> </label>
+			<label for="dbPassword"><?php echo $this->l('Database password') ?> </label>
 			<input class="text" size="10" type="password" id="dbPassword" name="dbPassword" value="<?php echo htmlspecialchars($this->database_password) ?>" />
 		</p>
 		<!--
@@ -36,12 +36,12 @@
 			</select>
 		</p>-->
 		<p>
-			<label for="db_prefix"><?php echo $this->l('Tables prefix:')?></label>
+			<label for="db_prefix"><?php echo $this->l('Tables prefix')?></label>
 			<input class="text" type="text" id="db_prefix" name="db_prefix" value="<?php echo htmlspecialchars($this->database_prefix) ?>" />
 		</p>
 		<?php if (_PS_MODE_DEV_): ?>
 			<p>
-				<label for="db_clear"><?php echo $this->l('Drop existing tables (mode dev):')?></label>
+				<label for="db_clear"><?php echo $this->l('Drop existing tables (mode dev)')?></label>
 				<input type="checkbox" name="database_clear" id="db_clear" value="1" <?php if ($this->database_clear): ?>checked="checked"<?php endif; ?> />
 			</p>
 		<?php endif; ?>
@@ -95,7 +95,7 @@
 			</p>
 
 			<p>
-				<label for="smtpPassword"><?php echo $this->l('Password:') ?> </label>
+				<label for="smtpPassword"><?php echo $this->l('Password') ?> </label>
 				<input autocomplete="off" class="text" type="password" size="10" id="smtpPassword" name="smtpPassword" value="<?php echo htmlspecialchars($this->smtp_password) ?>" />
 			</p>
 		</div>
