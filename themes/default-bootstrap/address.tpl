@@ -217,13 +217,14 @@ $(function(){ldelim}
                 <textarea class="form-control" id="other" name="other" cols="26" rows="3" onkeyup="if (validate_{$address_validation.other.validate}($(this).val())) $(this).parent().removeClass('form-error').addClass('form-ok'); else $(this).parent().addClass('form-error').removeClass('form-ok');
               ">{if isset($smarty.post.other)}{$smarty.post.other}{else}{if isset($address->other)}{$address->other|escape:'html'}{/if}{/if}</textarea>
             </div>
-            {if isset($one_phone_at_least) && $one_phone_at_least}
-                <p class="inline-infos required">{l s='You must register at least one phone number.'}</p>
-            {/if}
-            <div class="form-group">
+            <div class="form-group phone-number">
                 <label for="phone">{l s='Home phone'}</label>
                 <input type="tel" id="phone" class="form-control" name="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{else}{if isset($address->phone)}{$address->phone|escape:'html'}{/if}{/if}"  onkeyup="if (validate_{$address_validation.phone.validate}($(this).val())) $(this).parent().removeClass('form-error').addClass('form-ok'); else $(this).parent().addClass('form-error').removeClass('form-ok');" />
             </div>
+            {if isset($one_phone_at_least) && $one_phone_at_least}
+                <p class="inline-infos required">{l s='You must register at least one phone number.'}</p>
+            {/if}
+            <div class="clearfix"></div>
             <div class="{if isset($one_phone_at_least) && $one_phone_at_least}required {/if}form-group">
                 <label for="phone_mobile">{l s='Mobile phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>*</sup>{/if}</label>
                 <input type="tel" id="phone_mobile" class="form-control" name="phone_mobile" value="{if isset($smarty.post.phone_mobile)}{$smarty.post.phone_mobile}{else}{if isset($address->phone_mobile)}{$address->phone_mobile|escape:'html'}{/if}{/if}"  onkeyup="if (validate_{$address_validation.phone_mobile.validate}($(this).val())) $(this).parent().removeClass('form-error').addClass('form-ok'); else $(this).parent().addClass('form-error').removeClass('form-ok');"  />

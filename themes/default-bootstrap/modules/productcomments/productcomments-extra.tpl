@@ -35,7 +35,7 @@ $(function(){
 });
 </script>
 
-{if $logged == 1 || $nbComments != 0}
+{if ($logged == 1 || $nbComments != 0) && !$content_only}
 </div><!-- Close the OosHook -->
 <div id="product_comments_block_extra">
 	{if $nbComments != 0}

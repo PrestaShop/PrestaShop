@@ -97,10 +97,9 @@
             </div>
         </div>
 		{if isset($stripe_save_tokens_ask)}
-        	<div class="ckeckbox">
-        <label class="lowercase" for="stripe_save_token">
+        <div class="ckeckbox">
 			<input type="checkbox" name="stripe_save_token" id="stripe_save_token" value="1" />
-			{l s='Store this credit card info for later use' mod='stripejs'}</label>
+			<label class="lowercase" for="stripe_save_token">{l s='Store this credit card info for later use' mod='stripejs'}</label>
         </div>
 		{/if}
 		<button type="submit" class="stripe-submit-button btn-default btn button button-small"><span>{l s='Submit Payment' mod='stripejs'}<i class="icon-chevron-right right"></i></span></button>

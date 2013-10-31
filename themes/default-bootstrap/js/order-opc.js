@@ -62,6 +62,7 @@ function updatePaymentMethodsDisplay()
 			success: function(json)
 			{
 				updatePaymentMethods(json);
+				$("select.form-control,input[type='checkbox']").uniform(); 
 			}
 		});
 		$(this).fadeOut('slow');		
