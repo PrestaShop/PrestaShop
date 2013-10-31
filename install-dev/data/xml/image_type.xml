@@ -12,7 +12,8 @@
     <field name="stores"/>
   </fields>
   <entities>
-    <image_type id="small_default" name="small_default" width="45" height="45" products="1" categories="1" manufacturers="1" suppliers="1" scenes="0" stores="0"/>
+    <image_type id="cart_default" name="cart_default" width="80" height="80" products="1" categories="0" manufacturers="0" suppliers="0" scenes="0" stores="0"/>
+    <image_type id="small_default" name="small_default" width="98" height="98" products="1" categories="0" manufacturers="0" suppliers="0" scenes="0" stores="0"/>
     <image_type id="medium_default" name="medium_default" width="125" height="125" products="1" categories="1" manufacturers="0" suppliers="0" scenes="0" stores="0"/>
     <image_type id="home_default" name="home_default" width="270" height="270" products="1" categories="0" manufacturers="0" suppliers="0" scenes="0" stores="0"/>
     <image_type id="large_default" name="large_default" width="458" height="458" products="1" categories="0" manufacturers="0" suppliers="0" scenes="0" stores="0"/>
