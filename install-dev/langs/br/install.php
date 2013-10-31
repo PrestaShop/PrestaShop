@@ -240,7 +240,7 @@ return array(
 		'Your PHP sessions path is not writable - check with your hosting provider:' => 'O caminho para sessão PHP não pode  ser escrito - verifique com o seu provedor de hospedagem',
 		'Database is created' => 'Banco de dados está criado',
 		'Cannot create the database automatically' => 'Não é possível criar o banco de dados automaticamente',
-		'Install modules Addons' => 'Instalar módulos Addons',
+		'Install Addons modules' => 'Instalar módulos Addons',
 		'Attempt to create the database automatically' => 'Tentativa de criar o banco de dados automaticamente',
 		'Country' => 'País',
 		'Must be letters and numbers with at least 8 characters' => 'Deve ser letras e números com pelo menos 8 caractéres',

@@ -242,7 +242,7 @@ return array(
 		'Your PHP sessions path is not writable - check with your hosting provider:' => 'Le dossier de stockage n\'est pas accessible en écriture - consultez votre hébergeur',
 		'Database is created' => 'Base de données créée',
 		'Cannot create the database automatically' => 'Impossible de créer la base de données automatiquement',
-		'Install modules Addons' => 'Installation des modules Addons',
+		'Install Addons modules' => 'Installation des modules Addons',
 		'Attempt to create the database automatically' => 'Essayer de créer la base de données automatiquement',
 		'Country' => 'Pays',
 		'Must be letters and numbers with at least 8 characters' => 'Lettres et chiffres avec au moins 8 caractères',

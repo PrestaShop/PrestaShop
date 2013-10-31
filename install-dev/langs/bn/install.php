@@ -62,7 +62,7 @@ return array(
 		'Populate database tables' => 'ডাটাবেস টেবিল তথ্যপূর্ণ হয়েছে',
 		'Configure shop information' => 'দোকানের তথ্য কনফিগার হয়েছে',
 		'Install modules' => 'মডিউল ইনস্টল হয়েছে',
-		'Install modules Addons' => 'মডিউল অ্যাডঅনস ইনস্টল হয়েছে',
+		'Install Addons modules' => 'মডিউল অ্যাডঅনস ইনস্টল হয়েছে',
 		'Install demonstration data' => 'ডেমনেসট্রেসন তথ্য ইনস্টল হয়েছে',
 		'PHP parameters:' => 'পিএইচপি পরামিতি',
 		'PHP 5.1.2 or later is not enabled' => 'পিএইচপি 5.1.2 অথবা পরবর্তী সংস্করণ সক্রিয় করা নেই',

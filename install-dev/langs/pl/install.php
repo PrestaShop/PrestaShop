@@ -202,7 +202,7 @@ return array(
 		'http://doc.prestashop.com/display/PS15/Installing+PrestaShop#InstallingPrestaShop-Completingtheinstallation' => 'http://doc.prestashop.com/display/PS15/Installing+PrestaShop#InstallingPrestaShop-Completingtheinstallation ',
 		'Database is created' => 'Baza danych jest tworzona ',
 		'Cannot create the database automatically' => 'Nie można automatycznie utworzyć bazy danych',
-		'Install modules Addons' => 'Instalacja modułów Addons',
+		'Install Addons modules' => 'Instalacja modułów Addons',
 		'Attempt to create the database automatically' => 'Próba utworzenia automatycznie bazy danych',
 		'Country' => 'Kraj',
 		'Must be letters and numbers with at least 8 characters' => 'Minimum 8 znaków z użyciem liter i cyfr',

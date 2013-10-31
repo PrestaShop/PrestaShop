@@ -238,7 +238,7 @@ return array(
 		'Your PHP sessions path is not writable - check with your hosting provider:' => 'La cartella di backup non è accessibile per scrittura - consulta il nostro servizio di hosting',
 		'Database is created' => 'Il database è creato',
 		'Cannot create the database automatically' => 'Non è possibile creare il database automaticamente',
-		'Install modules Addons' => 'Installazione moduli Addons',
+		'Install Addons modules' => 'Installazione moduli Addons',
 		'Attempt to create the database automatically' => 'Tentativo di creare il database automaticamente',
 		'Country' => 'Paese',
 		'Must be letters and numbers with at least 8 characters' => 'Deve contenere lettere e numeri ed essere composta da almeno 8 caratteri',

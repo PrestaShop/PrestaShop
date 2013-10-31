@@ -243,7 +243,7 @@ return array(
 		'Your PHP sessions path is not writable - check with your hosting provider:' => 'PHP sessions path tidak dapat ditulisi - cek ke tempat hosting Anda',
 		'Database is created' => 'Database berhasil dibuat',
 		'Cannot create the database automatically' => 'Tidak dapat membuat database secara otomatis',
-		'Install modules Addons' => 'Install modul Addons',
+		'Install Addons modules' => 'Install modul Addons',
 		'Attempt to create the database automatically' => 'Mencoba membuat database secara otomatis',
 		'Country' => 'Negara',
 		'Must be letters and numbers with at least 8 characters' => 'Harus huruf atau angka minimum 8 karakter',
