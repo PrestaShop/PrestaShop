@@ -136,7 +136,7 @@ class AdminPerformanceControllerCore extends AdminController
 				'title' => $this->l('Optional features'),
 				'icon' => 'icon-puzzle-piece'
 			),
-			'hint' => $this->l('Some features can be disabled in order to improve performance.'),
+			'description' => $this->l('Some features can be disabled in order to improve performance.'),
 			'input' => array(
 				array(
 					'type' => 'hidden',
@@ -195,7 +195,7 @@ class AdminPerformanceControllerCore extends AdminController
 				'title' => $this->l('CCC (Combine, Compress and Cache)'),
 				'icon' => 'icon-fullscreen'
 			),
-			'hint' => $this->l('CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.4+. Otherwise, CCC will cause problems.'),
+			'description' => $this->l('CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.4+. Otherwise, CCC will cause problems.'),
 			'input' => array(
 				array(
 					'type' => 'hidden',
@@ -305,7 +305,7 @@ class AdminPerformanceControllerCore extends AdminController
 				'title' => $this->l('Media servers (use only with CCC)'),
 				'icon' => 'icon-link'
 			),
-			'hint' => $this->l('You must enter another domain, or subdomain, in order to use cookieless static content.'),
+			'description' => $this->l('You must enter another domain, or subdomain, in order to use cookieless static content.'),
 			'input' => array(
 				array(
 					'type' => 'hidden',
