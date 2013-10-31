@@ -227,6 +227,12 @@ class AdminMetaControllerCore extends AdminController
 	public function renderForm()
 	{
 		$files = Meta::getPages(true, ($this->object->page ? $this->object->page : false));
+		
+		$is_index = false;
+		foreach ($this->object->url_rewrite as $rewrite)
+			if($is_index != true)
+				$is_index = ($this->object->page == 'index' && empty($rewrite)) ? true : false;
+
 		$pages = array(
 			'common' => array(
 				'name' => $this->l('Default pages'),
@@ -310,6 +316,7 @@ class AdminMetaControllerCore extends AdminController
 					'name' => 'url_rewrite',
 					'lang' => true,
 					'required' => true,
+					'disabled' => (bool)$is_index,
 					'hint' => $this->l('Only letters and hyphens are allowed'),
 					'desc' => $this->l('e.g. "contacts" for http://mysite.com/shop/contacts to redirect to http://mysite.com/shop/contact-form.php'),
 					'size' => 50
