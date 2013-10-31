@@ -160,7 +160,6 @@ var contentOnly = {if $content_only}true{else}false{/if}
 </script>
 <div id="primary_block" class="row">
 
-
 {if !$content_only}<div class="container"><div class="top-hr"></div></div>{/if}
 
 	{if isset($adminActionDisplay) && $adminActionDisplay}
@@ -188,7 +187,6 @@ var contentOnly = {if $content_only}true{else}false{/if}
         
 		<div id="image-block">
 
-                       
       	{if $product->on_sale}
 		<span class="sale-box"><span class="sale">{l s='Sale!'}</span></span>
 		{elseif $product->specificPrice AND $product->specificPrice.reduction AND $productPriceWithoutReduction > $productPrice}
