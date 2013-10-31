@@ -131,6 +131,9 @@ var ajaxCart = {
 			success: function(jsonData)
 			{
 				ajaxCart.updateCart(jsonData);
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+				alert("TECHNICAL ERROR: \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
 			}
 		});
 	},
@@ -736,7 +739,10 @@ $(document).ready(function(){
 			headers: { "cache-control": "no-cache" },
 			async: true,
 			cache: false,
-			url:$(this).attr('href') + '?rand=' + new Date().getTime()
+			url:$(this).attr('href') + '?rand=' + new Date().getTime(),
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+				alert("TECHNICAL ERROR: \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+			}
 		});
 		$(this).parent().parent().remove();
 		if ($('body').attr('id') == 'order' || $('body').attr('id') == 'order-opc')
