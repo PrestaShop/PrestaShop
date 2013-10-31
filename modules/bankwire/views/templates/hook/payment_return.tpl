@@ -36,9 +36,9 @@
 		&bull; {l s='to this bank' mod='bankwire'}:<br />
 		<strong>{if $bankwireAddress}{$bankwireAddress}{else}___________{/if}</strong><br /><br />
 		{if !isset($reference)}
-		&bull; {l s='Do not forget to insert your order number #%d in the subject of your bank wire' sprintf=$id_order mod='bankwire'}
+		&bull; {l s='Do not forget to insert your order number' mod='bankwire'} <b>{$id_order}</b> {l s='in the subject of your bank wire.' mod='bankwire'}
 		{else}
-		&bull; {l s='Do not forget to insert your order reference %s in the subject of your bank wire.' sprintf=$reference mod='bankwire'}
+		&bull; {l s='Do not forget to insert your order reference' mod='bankwire'} <b>{$reference}</b> {l s='in the subject of your bank wire.' mod='bankwire'}
 		{/if}<br /><br />
 		{l s='An email has been sent to you with this information.' mod='bankwire'}<br /><br />
 		{l s='Your order will be sent as soon as we receive your settlement' mod='bankwire'}.<br /><br />
