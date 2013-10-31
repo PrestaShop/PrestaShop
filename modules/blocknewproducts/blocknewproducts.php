@@ -89,12 +89,13 @@ class BlockNewProducts extends Module
 	{
 		if (!$this->isCached('blocknewproducts.tpl', $this->getCacheId()))
 		{
-			if (!Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY'))
-				return;
-			$newProducts = Product::getNewProducts((int) $params['cookie']->id_lang, 0, (int) Configuration::get('NEW_PRODUCTS_NBR'));
-			if (!$newProducts)
-				return;
-
+			if (!Configuration::get('NEW_PRODUCTS_NBR'))
+					return;
+			$newProducts = false;
+			if (Configuration::get('PS_NB_DAYS_NEW_PRODUCT'))
+					$newProducts = Product::getNewProducts((int) $params['cookie']->id_lang, 0, (int)Configuration::get('NEW_PRODUCTS_NBR'));
+			if (!$newProducts && !Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY'))
+					return;
 			$this->smarty->assign(array(
 				'new_products' => $newProducts,
 				'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
