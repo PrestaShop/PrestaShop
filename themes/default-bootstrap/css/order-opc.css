@@ -29,7 +29,7 @@
   margin-bottom: 2px;
 }
 #order-opc .form-group .form-control {
-  width: 271px;
+  max-width: 271px;
 }
 #order-opc .lost_password {
   display: inline-block;

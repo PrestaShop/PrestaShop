@@ -5,10 +5,13 @@
 **********************************************************************/
 
 #maintenance {
-	margin:126px 0 0 0;
-	padding:91px 48px 365px 297px;
-	background:url(../img/bg_maintenance.png) no-repeat;
-	
+	margin-top:50px;
+	/* > 1200 */
+	@media (min-width: $screen-lg) {
+		margin:126px 0 0 0;
+		padding:91px 48px 365px 297px;
+		background:url(../img/bg_maintenance.png) no-repeat;
+	}
 	.logo {
 		margin-bottom:31px;	
 	}

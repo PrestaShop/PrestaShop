@@ -33,16 +33,16 @@
 
 <div class="block-center" id="block-history">
 	{if $orders && count($orders)}
-	<table id="order-list" class="table table-bordered">
+	<table id="order-list" class="table table-bordered footab">
 		<thead>
 			<tr>
 				<th class="first_item">{l s='Order reference'}</th>
 				<th class="item">{l s='Date'}</th>
-				<th class="item">{l s='Total price'}</th>
-				<th class="item">{l s='Payment: '}</th>
+				<th data-hide="phone" class="item">{l s='Total price'}</th>
+				<th data-hide="phone,tablet" class="item">{l s='Payment: '}</th>
 				<th class="item">{l s='Status'}</th>
-				<th class="item">{l s='Invoice'}</th>
-				<th class="last_item">&nbsp;</th>
+				<th data-hide="phone,tablet" class="item">{l s='Invoice'}</th>
+				<th data-hide="phone,tablet" class="last_item">&nbsp;</th>
 			</tr>
 		</thead>
 		<tbody>

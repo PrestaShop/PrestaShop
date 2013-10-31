@@ -70,13 +70,13 @@
 {assign var='total_discounts_num' value="{if $total_discounts != 0}1{else}0{/if}"}
 {assign var='use_show_taxes' value="{if $use_taxes && $show_taxes}2{else}0{/if}"}
 {assign var='total_wrapping_taxes_num' value="{if $total_wrapping != 0}1{else}0{/if}"}
-<div id="order-detail-content" class="table_block">
+<div id="order-detail-content" class="table_block table-responsive">
 	<table id="cart_summary" class="table table-bordered">
 		<thead>
 			<tr>
 				<th class="cart_product first_item">{l s='Product'}</th>
 				<th class="cart_description item">{l s='Description'}</th>
-				<th class="cart_ref item">{l s='Ref.'}</th>
+				<th class="cart_avail item">{l s='Avail.'}</th>
 				<th class="cart_unit item">{l s='Unit price'}</th>
 				<th class="cart_quantity item">{l s='Qty'}</th>
 				<th class="cart_total item">{l s='Total'}</th>
@@ -399,8 +399,6 @@
 	{/if}
 {/if}
 
-<div id="HOOK_SHOPPING_CART">{$HOOK_SHOPPING_CART}</div>
-
 {* Define the style if it doesn't exist in the PrestaShop version*}
 {* Will be deleted for 1.5 version and more *}
 {if !isset($addresses_style)}
@@ -469,6 +467,7 @@
 	{/if}
 </div>
 {/if}
+<div id="HOOK_SHOPPING_CART">{$HOOK_SHOPPING_CART}</div>
 <p class="cart_navigation clearfix">
 	{if !$opc}
 		<a href="{if $back}{$link->getPageLink('order', true, NULL, 'step=1&amp;back={$back}')}{else}{$link->getPageLink('order', true, NULL, 'step=1')}{/if}" class="button btn btn-default standard-checkout button-medium" title="{l s='Proceed to checkout'}"><span>{l s='Proceed to checkout'}<i class="icon-chevron-right right"></i></span></a>

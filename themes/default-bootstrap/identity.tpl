@@ -59,20 +59,8 @@
                     <input class="form-control" type="text" name="lastname" id="lastname" value="{$smarty.post.lastname}" />
                 </div>
                 <div class="required form-group">
-                    <label for="email">{l s='Email'} <sup>*</sup></label>
+                    <label for="email">{l s='E-mail address'} <sup>*</sup></label>
                     <input class="form-control" type="email" name="email" id="email" value="{$smarty.post.email}" />
-                </div>
-                <div class="required form-group">
-                    <label for="old_passwd">{l s='Current Password'} <sup>*</sup></label>
-                    <input class="form-control" type="password" name="old_passwd" id="old_passwd" />
-                </div>
-                <div class="password form-group">
-                    <label for="passwd">{l s='New Password'}</label>
-                    <input class="form-control" type="password" name="passwd" id="passwd" />
-                </div>
-                <div class="password form-group">
-                    <label for="confirmation">{l s='Confirmation'}</label>
-                    <input class="form-control" type="password" name="confirmation" id="confirmation" />
                 </div>
                 <div class="form-group">
                     <label>{l s='Date of Birth'}</label>
@@ -116,6 +104,18 @@
                         </select>
                         </div>
                     </div>
+                </div>
+                <div class="required form-group">
+                    <label for="old_passwd">{l s='Current Password'} <sup>*</sup></label>
+                    <input class="form-control" type="password" name="old_passwd" id="old_passwd" />
+                </div>
+                <div class="password form-group">
+                    <label for="passwd">{l s='New Password'}</label>
+                    <input class="form-control" type="password" name="passwd" id="passwd" />
+                </div>
+                <div class="password form-group">
+                    <label for="confirmation">{l s='Confirmation'}</label>
+                    <input class="form-control" type="password" name="confirmation" id="confirmation" />
                 </div>
                 {if $newsletter}
                 <div class="checkbox">

@@ -19,6 +19,12 @@
 	.address-input {
 		float:left;
 		margin-right:19px;
+		
+		/* max 767px */
+		@media (max-width: $screen-xs-max) {
+			width:100%;
+			margin:0 0 20px 0;
+		}
 		label { margin-right:5px;}
 	}
 	
@@ -75,7 +81,7 @@
 	}
 	
 	#locationSelect {
-   		width:356px;
+   		max-width:356px;
 		visibility: hidden;
 	}
 	
@@ -97,8 +103,16 @@
 					span {
 						padding-left:15px;	
 					}
+					/* max 767px */
+					@media (max-width: $screen-xs-max) {
+						img {display:none;}
+					}
 				}
 			}
 		}
 	}
+}
+.store-image img {
+	width:100%;
+	min-width:100px;
 }
