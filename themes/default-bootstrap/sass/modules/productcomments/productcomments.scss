@@ -79,11 +79,11 @@ padding-top:2px;
 
 #product_comments_block_extra{	
 	.comments_note {margin-bottom:5px}	
-	#product_comments_block_extra .comments_note span,
+    .comments_note span,
 	.star_content {float:left;color:#333}	
 	.star_content {margin-top:1px}	
-	div.star {background: url(img/star.gif) no-repeat 0 0}	
-	div.star_on {background: url(img/star.gif) no-repeat 0 -13px}	
+	div.star {background: url(img/star.png) no-repeat 0 0}	
+	div.star_on {background: url(img/star.png) no-repeat 0 -13px}	
 	.comments_advices {clear:both;}
 }
 
@@ -220,7 +220,7 @@ padding-top:2px;
 		 div.comment .star_content {margin: 0 0 0 5px}
 		 div.star,
 		 div.star_on {
-			background: url(img/star.gif) no-repeat 0 0 transparent
+			background: url(img/star.png) no-repeat 0 0
 		}
 		 div.star_on {background-position: 0 -13px}
 		 .comment_author_infos {clear:both;
@@ -246,8 +246,15 @@ padding-top:2px;
 			margin:0
 		}
 		 div.comment_details li {
-			padding:2px 0 2px 12px;
-			background:url(img/bg_li.png) no-repeat 1px 45% #fff
+			padding:2px 0 2px;
+		&:before{
+			font-family:$font1;	
+			content:"";	
+			color:#333;
+			margin-right:8px
+			}
+		
+		
 		}
 		div.comment_details  .title_block{text-transform:capitalize}		
 		 a {

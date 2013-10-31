@@ -56,14 +56,14 @@
 <p class="info-title">{l s='Here is a list of pending merchandise returns'}.</p>
 <div class="block-center" id="block-history">
 	{if $ordersReturn && count($ordersReturn)}
-	<table id="order-list" class="table table-bordered">
+	<table id="order-list" class="table table-bordered footab">
 		<thead>
 			<tr>
 				<th class="first_item">{l s='Return'}</th>
 				<th class="item">{l s='Order'}</th>
-				<th class="item">{l s='Package status'}</th>
-				<th class="item">{l s='Date issued'}</th>
-				<th class="last_item">{l s='Return slip'}</th>
+				<th data-hide="phone"class="item">{l s='Package status'}</th>
+				<th data-hide="phone,tablet" class="item">{l s='Date issued'}</th>
+				<th data-hide="phone,tablet" class="last_item">{l s='Return slip'}</th>
 			</tr>
 		</thead>
 		<tbody>

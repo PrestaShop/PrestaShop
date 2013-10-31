@@ -32,6 +32,7 @@
 		{if isset($product.attributes) && $product.attributes}<small><a href="{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category)|escape:'htmlall':'UTF-8'}">{$product.attributes|escape:'htmlall':'UTF-8'}</a></small>{/if}
 	</td>
 	<td class="cart_ref">{if $product.reference}{$product.reference|escape:'htmlall':'UTF-8'}{else}--{/if}</td>
+    <td class="cart_avail">{if $product.stock_quantity > 0}<span class="label label-success">{l s='In Stock'}</span>{else}<span class="label label-warning">{l s='Out of Stock'}</span>{/if}</td>
 	<td class="cart_quantity {if isset($customizedDatas.$productId.$productAttributeId) AND $quantityDisplayed == 0} text-center {/if}">
 	{if isset($cannotModify) AND $cannotModify == 1}
 		<span>{if $quantityDisplayed == 0 AND isset($customizedDatas.$productId.$productAttributeId)}{$customizedDatas.$productId.$productAttributeId|@count}{else}{$product.cart_quantity-$quantityDisplayed}{/if}</span>
@@ -52,24 +53,26 @@
 	</td>
 	<td>
 		<form method="post" action="{$link->getPageLink('cart', true, NULL, "token={$token_cart}")|escape:'html'}">
-			<input type="hidden" name="id_product" value="{$product.id_product}" />
-			<input type="hidden" name="id_product_attribute" value="{$product.id_product_attribute}" />
-			<select name="address_delivery" id="select_address_delivery_{$product.id_product}_{$product.id_product_attribute}_{$product.id_address_delivery|intval}" class="cart_address_delivery form-control">
-				{if $product.id_address_delivery == 0 && $delivery->id == 0}
-				<option></option>
-				{/if}
-				<option value="-1">{l s='Create a new address'}</option>
-				{foreach $address_list as $address}
-					<option value="{$address.id_address}"
-						{if ($product.id_address_delivery > 0 && $product.id_address_delivery == $address.id_address) || ($product.id_address_delivery == 0  && $address.id_address == $delivery->id)}
-							selected="selected"
-						{/if}
-					>
-						{$address.alias}
-					</option>
-				{/foreach}
-				<option value="-2">{l s='Ship to multiple addresses'}</option>
-			</select>
+        	<div class="selector2">
+                <input type="hidden" name="id_product" value="{$product.id_product}" />
+                <input type="hidden" name="id_product_attribute" value="{$product.id_product_attribute}" />
+                <select name="address_delivery" id="select_address_delivery_{$product.id_product}_{$product.id_product_attribute}_{$product.id_address_delivery|intval}" class="cart_address_delivery form-control">
+                    {if $product.id_address_delivery == 0 && $delivery->id == 0}
+                    <option></option>
+                    {/if}
+                    <option value="-1">{l s='Create a new address'}</option>
+                    {foreach $address_list as $address}
+                        <option value="{$address.id_address}"
+                            {if ($product.id_address_delivery > 0 && $product.id_address_delivery == $address.id_address) || ($product.id_address_delivery == 0  && $address.id_address == $delivery->id)}
+                                selected="selected"
+                            {/if}
+                        >
+                            {$address.alias}
+                        </option>
+                    {/foreach}
+                    <option value="-2">{l s='Ship to multiple addresses'}</option>
+                </select>
+            </div>
 		</form>
 	</td>
 </tr>

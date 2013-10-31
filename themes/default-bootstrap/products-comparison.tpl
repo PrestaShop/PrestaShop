@@ -28,7 +28,7 @@
 <h1 class="page-heading">{l s='Product Comparison'}</h1>
 
 {if $hasProduct}
-<div class="products_block">
+<div class="products_block table-responsive">
 	<table id="product_comparison" class="table table-bordered">
     	<tr>
 			<td width="20%" class="td_empty">
