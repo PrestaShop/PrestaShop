@@ -19,7 +19,7 @@ $gray-lighter:           lighten(#000, 93.5%) !default; // #eee
 // -------------------------
 
 $brand-primary:         #428bca !default;
-$brand-success:         #5cb85c !default;
+$brand-success:         #46a74e !default;
 $brand-warning:         #f0ad4e !default;
 $brand-danger:          #d9534f !default;
 $brand-info:            #5bc0de !default;
@@ -48,7 +48,7 @@ $font-size-base:          13px !default;
 $font-size-large:         ceil($font-size-base * 1.25) !default; // ~18px
 $font-size-small:         ceil($font-size-base * 0.85) !default; // ~12px
 
-$line-height-base:        1.428571429; // 20/14
+$line-height-base:        1.428571428; // 20/14
 $line-height-computed:    floor($font-size-base * $line-height-base) !default; // ~20px
 
 $headings-font-family:    $font-family-base !default;
@@ -411,14 +411,15 @@ $popover-arrow-outer-fallback-color:  #999 !default;
 
 $label-default-bg:            $gray-light !default;
 $label-primary-bg:            $brand-primary !default;
-$label-success-bg:            $brand-success !default;
+$label-success-bg:            $state-success-bg !default;
 $label-info-bg:               $brand-info !default;
-$label-warning-bg:            $brand-warning !default;
+$label-warning-bg:            $state-warning-bg !default;
 $label-danger-bg:             $brand-danger !default;
 
 $label-color:                 #fff !default;
 $label-link-hover-color:      #fff !default;
-
+$label-success-border:        #36943e !default;
+$label-warning-border:            $state-warning-border !default;
 
 // Modals
 // -------------------------

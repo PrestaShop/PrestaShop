@@ -56,13 +56,13 @@
 
 {if $HOOK_PAYMENT}
 	{if !$opc}
-<div id="order-detail-content" class="table_block">
+<div id="order-detail-content" class="table_block table-responsive">
 	<table id="cart_summary" class="table table-bordered">
 		<thead>
 			<tr>
 				<th class="cart_product first_item">{l s='Product'}</th>
 				<th class="cart_description item">{l s='Description'}</th>
-				<th class="cart_availability item">{l s='Avail.'}</th>
+				<th class="cart_availability item">{l s='Ref.'}</th>
 				<th class="cart_unit item">{l s='Unit price'}</th>
 				<th class="cart_quantity item">{l s='Qty'}</th>
 				<th class="cart_total last_item">{l s='Total'}</th>
@@ -334,7 +334,7 @@
 {/if}
 
 {if !$opc}
-	<p class="cart_navigation clearfix"><a href="{$link->getPageLink('order', true, NULL, "step=2")|escape:'html'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Previous'}</a></p>
+	<p class="cart_navigation clearfix"><a href="{$link->getPageLink('order', true, NULL, "step=2")|escape:'html'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Continue shopping'}</a></p>
 {else}
 	</div>
 {/if}

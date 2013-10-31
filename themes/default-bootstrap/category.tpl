@@ -47,10 +47,7 @@
                         </div>
                     {else}
                     <!-- Category image -->
-                    <div class="content_scene_cat_bg" {if $category->id_image}style="background:url({$link->getCatImageLink($category->link_rewrite, $category->id_image, 'category_default')|escape:'html'}) 0 0 no-repeat; min-height:{$categorySize.height}px;" {/if}>
-                       
-                            
-            
+                    <div class="content_scene_cat_bg" {if $category->id_image}style="background:url({$link->getCatImageLink($category->link_rewrite, $category->id_image, 'category_default')|escape:'html'}) 0 bottom no-repeat; background-size:contain; min-height:{$categorySize.height}px;" {/if}>
                         {if $category->description}
                             <div class="cat_desc">
                             <h1 class="category-name">
@@ -96,13 +93,13 @@
                 	<div class="subcategory-image">
 						<a href="{$link->getCategoryLink($subcategory.id_category, $subcategory.link_rewrite)|escape:'htmlall':'UTF-8'}" title="{$subcategory.name|escape:'htmlall':'UTF-8'}" class="img">
 						{if $subcategory.id_image}
-							<img src="{$link->getCatImageLink($subcategory.link_rewrite, $subcategory.id_image, 'medium_default')|escape:'html'}" alt="" width="{$mediumSize.width}" height="{$mediumSize.height}" />
+							<img class="replace-2x" src="{$link->getCatImageLink($subcategory.link_rewrite, $subcategory.id_image, 'medium_default')|escape:'html'}" alt="" width="{$mediumSize.width}" height="{$mediumSize.height}" />
 						{else}
-							<img src="{$img_cat_dir}default-medium_default.jpg" alt="" width="{$mediumSize.width}" height="{$mediumSize.height}" />
+							<img class="replace-2x" src="{$img_cat_dir}default-medium_default.jpg" alt="" width="{$mediumSize.width}" height="{$mediumSize.height}" />
 						{/if}
 					</a>
                    	</div>
-					<h5><a class="subcategory-name" href="{$link->getCategoryLink($subcategory.id_category, $subcategory.link_rewrite)|escape:'htmlall':'UTF-8'}">{$subcategory.name|escape:'htmlall':'UTF-8'}</a></h5>
+					<h5><a class="subcategory-name" href="{$link->getCategoryLink($subcategory.id_category, $subcategory.link_rewrite)|escape:'htmlall':'UTF-8'}">{$subcategory.name|truncate:25:'...'|escape:'htmlall':'UTF-8'|truncate:350}</a></h5>
 					{if $subcategory.description}
 						<div class="cat_desc">{$subcategory.description}</div>
 					{/if}
