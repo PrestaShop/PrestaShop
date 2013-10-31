@@ -94,7 +94,7 @@ class SearchControllerCore extends FrontController
 			$query = Tools::replaceAccentedChars(urldecode($query));			
 			$search = Search::find($this->context->language->id, $query, $this->p, $this->n, $this->orderBy, $this->orderWay);
 			foreach ($search['result'] as &$product)
-				$product['link'] .= '&search_query='.urlencode($query).'&results='.(int)$search['total'];
+				$product['link'] .= (strpos($product['link'], '?') === false ? '?' : '&').'search_query='.urlencode($query).'&results='.(int)$search['total'];
 			Hook::exec('actionSearch', array('expr' => $query, 'total' => $search['total']));
 			$nbProducts = $search['total'];
 			$this->pagination($nbProducts);
