@@ -292,18 +292,6 @@
 						});
 					{/if}
 				</script>
-
-			<!-- todo js 
-					OK - size up search field on focus
-					(?) -  prevent blank search
-					OK - dropdown menu as select
-					OK - fill input hidden field with data value from list item
-					OK - change icon in suffix
-					OK - set active on right list item
-					OK - focus input field
-					OK - change place holder
-					(?) - keep focus state when search exists
-			-->
 			</form>
 
 {if count($quick_access) > 0}
@@ -329,13 +317,15 @@
 {/if}
 				<li id="employee_infos" class="dropdown">
 					<a href='#' class="employee_name dropdown-toggle" data-toggle="dropdown">
-						<img src="{$img_dir}prestashop-avatar.png" height="15" width="15" />
+						<span class="employee_avatar_small">{$employee_avatar}</span>
 						{$first_name}&nbsp;{$last_name}
 						<i class="caret"></i>
 					</a>
 					<ul id="employee_links" class="dropdown-menu">
-						<li>{$employee_avatar}</li>
+						<li><span class="employee_avatar">{$employee_avatar}</span></li>
+						<li class="divider"></li>
 						<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'htmlall':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences'}</a></li>
+						<li class="divider"></li>
 						<li><a id="header_logout" href="index.php?logout"><i class="icon-signout"></i> {l s='Log out'}</a></li>
 					</ul>
 				</li>

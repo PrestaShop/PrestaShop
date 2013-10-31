@@ -126,22 +126,21 @@
 #nav-topbar
 	position: fixed
 	height: 28px
-	top: 35px
+	top: 38px
 	left: 80
 	width: 100%
 	z-index: 600
 	background-color: white
+	border-bottom: solid 1px rgba(black,0.4)
 	ul.menu
-		height: 28px
 		margin: 0
 		padding: 0
 		display: block
 		list-style: none
 		> li
-			height: 28px
 			padding: 0
 			margin: 0
-			border-right: solid 1px #aaa
+			border-right: solid 1px rgba(black,0.4)
 			list-style: none
 			position: relative
 			float: left
@@ -156,18 +155,14 @@
 					width: 15px
 					background-color: transparent
 					font-size: 18px
-				&:hover
-					text-decoration: none
-					background-color: $main-color
-					color: white
-					i
-						color: white!important
-			&.active
+			&.active, &:hover
+				background-color: $brand-primary
 				> a
+					text-decoration: none
 					color: contrast-color($main-color, white, #333, 10%)
-					background-color: $main-color
 					i
 						color: white
+
 	.menu-collapse
 		display: none
 	ul.submenu
@@ -196,8 +191,8 @@
 					background-color: white
 					border-bottom: solid 1px #eee
 					&:hover
-						color: $main-color
-						background-color: mix(white, $main-color, 90%)
+						color: white
+						background-color: $brand-primary
 						text-decoration: none
 				&:last-child a
 					border-bottom: none
@@ -223,7 +218,7 @@
 	#nav-sidebar
 		display: none
 	.page-head
-		top: 63px
+		top: 66px
 	#content
 		margin-left: 0
 		width: 100%
