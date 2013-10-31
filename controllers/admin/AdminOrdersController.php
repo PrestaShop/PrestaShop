@@ -306,7 +306,7 @@ class AdminOrdersControllerCore extends AdminController
 							'{shipping_number}' => $order->shipping_number,
 							'{order_name}' => $order->getUniqReference()
 						);
-						if (@Mail::Send((int)$order->id_lang, 'in_transit', Mail::l('Package in transit'), $templateVars,
+						if (@Mail::Send((int)$order->id_lang, 'in_transit', Mail::l('Package in transit', (int)$order->id_lang), $templateVars,
 							$customer->email, $customer->firstname.' '.$customer->lastname, null, null, null, null,
 							_PS_MAIL_DIR_, true, (int)$order->id_shop))
 						{
@@ -704,7 +704,7 @@ class AdminOrdersControllerCore extends AdminController
 								@Mail::Send(
 									(int)$order->id_lang,
 									'credit_slip',
-									Mail::l('New credit slip regarding your order', $order->id_lang),
+									Mail::l('New credit slip regarding your order', (int)$order->id_lang),
 									$params,
 									$customer->email,
 									$customer->firstname.' '.$customer->lastname,
@@ -1809,7 +1809,7 @@ class AdminOrdersControllerCore extends AdminController
 		Mail::Send(
 			(int)$order->id_lang,
 			'order_changed',
-			Mail::l('Your order has been changed', $order->id_lang),
+			Mail::l('Your order has been changed', (int)$order->id_lang),
 			$data,
 			$order->getCustomer()->email,
 			$order->getCustomer()->firstname.' '.$order->getCustomer()->lastname,
