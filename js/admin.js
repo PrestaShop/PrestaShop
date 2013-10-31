@@ -863,13 +863,13 @@ $(document).ready(function()
 
 	$('#ajax_running').ajaxStop(function() {
 		var element = $(this)
-		setTimeout(function(){element.slideUp('fast')}, 1000);
+		setTimeout(function(){element.slideUp(150)}, 1000);
 		clearTimeout(ajax_running_timeout);
 	});
 
 	$('#ajax_running').ajaxError(function() {
 		var element = $(this)
-		setTimeout(function(){element.slideUp('fast')}, 1000);
+		setTimeout(function(){element.slideUp(150)}, 1000);
 		clearTimeout(ajax_running_timeout);
 	});
 	
