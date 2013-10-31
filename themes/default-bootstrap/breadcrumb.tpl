@@ -36,7 +36,7 @@
 		{/if}
 	{/if}
 </div>
-{if isset($smarty.get.search_query) && isset($smarty.get.results) && $smarty.get.results > 1}
+{if isset($smarty.get.search_query) && isset($smarty.get.results) && $smarty.get.results > 1 && isset($smarty.server.HTTP_REFERER)}
 <div class="pull-right">
 	<strong>
 		<a href="{$smarty.server.HTTP_REFERER|escape}" onclick="history.back();">
