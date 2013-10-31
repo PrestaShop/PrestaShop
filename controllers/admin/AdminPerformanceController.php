@@ -162,6 +162,26 @@ class AdminPerformanceControllerCore extends AdminController
 					),
 					'desc' => $this->l('Enable or disable non PrestaShop Modules.')
 				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Disable all overrides'),
+					'name' => 'overrides',
+					'class' => 't',
+					'is_bool' => true,
+					'values' => array(
+						array(
+							'id' => 'overrides_module_on',
+							'value' => 1,
+							'label' => $this->l('Enabled')
+						),
+						array(
+							'id' => 'overrides_module_off',
+							'value' => 0,
+							'label' => $this->l('Disabled')
+						)
+					),
+					'desc' => $this->l('Enable or disable all classes and controllers overrides')
+				),
 			),
 			'submit' => array(
 				'title' => $this->l('   Save   '),
@@ -170,7 +190,7 @@ class AdminPerformanceControllerCore extends AdminController
 		);
 
 		$this->fields_value['native_module'] = Configuration::get('PS_DISABLE_NON_NATIVE_MODULE');
-		$this->fields_value['debug_mode'] = Configuration::get('PS_DEBUG_MODE');
+		$this->fields_value['overrides'] = Configuration::get('PS_DISABLE_OVERRIDES');
 	}
 
 	public function initFieldsetFeaturesDetachables()
@@ -522,12 +542,18 @@ class AdminPerformanceControllerCore extends AdminController
 	{
 		// Initialize fieldset for a form
 		$this->initFieldsetSmarty();
-		$this->initFieldsetDebugMode();
+
+		if (_PS_MODE_DEV_)
+			$this->initFieldsetDebugMode();
+
 		$this->initFieldsetFeaturesDetachables();
 		$this->initFieldsetCCC();
 		$this->initFieldsetMediaServer();
 		$this->initFieldsetCiphering();
-		$this->initFieldsetCaching();		
+		$this->initFieldsetCaching();
+
+		// Reindex fields
+		$this->fields_form = array_values($this->fields_form);
 
 		// Activate multiple fieldset
 		$this->multiple_fieldsets = true;
@@ -839,9 +865,15 @@ class AdminPerformanceControllerCore extends AdminController
 			Autoload::getInstance()->generateIndex();
 		}
 
-		if (Tools::isSubmit('submitAddconfiguration'))
+		if (Tools::isSubmit('submitAddconfiguration') && _PS_MODE_DEV_)
 		{
 			Configuration::updateGlobalValue('PS_DISABLE_NON_NATIVE_MODULE', (int)Tools::getValue('native_module'));
+			Configuration::updateGlobalValue('PS_DISABLE_OVERRIDES', (int)Tools::getValue('overrides'));
+
+			if (Tools::getValue('overrides'))
+				Autoload::getInstance()->_include_override_path = false;
+
+			Autoload::getInstance()->generateIndex();
 		}
 
 		if ($redirectAdmin && (!isset($this->errors) || !count($this->errors)))
