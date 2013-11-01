@@ -131,9 +131,9 @@
 					</a>
 					<div class="dropdown-menu notifs_dropdown">
 						<section id="orders_notif_wrapper" class="notifs_panel">
-							<header class="notifs_panel_header">
+							<div class="notifs_panel_header">
 								<h3>{l s='Latest Orders'}</h3>
-							</header>
+							</div>
 							<div id="list_orders_notif" class="list-group">
 								<a href="#" class="media list-group-item no_notifs">
 									<span class="pull-left">
@@ -144,9 +144,9 @@
 									</span>
 								</a>
 							</div>
-							<footer class="notifs_panel_footer">
+							<div class="notifs_panel_footer">
 								<a href="index.php?controller=AdminOrders&amp;token={getAdminToken tab='AdminOrders'}">{l s='Show all orders'}</a>
-							</footer>
+							</div>
 						</section>
 					</div>
 				</li>
@@ -161,9 +161,9 @@
 					</a>
 					<div class="dropdown-menu notifs_dropdown">
 						<section id="customers_notif_wrapper" class="notifs_panel">
-							<header class="notifs_panel_header">
+							<div class="notifs_panel_header">
 								<h3>{l s='Latest Registrations'}</h3>
-							</header>
+							</div>
 							<div id="list_customers_notif" class="list-group">
 								<a href="#" class="media list-group-item no_notifs">
 									<span class="pull-left">
@@ -174,9 +174,9 @@
 									</span>
 								</a>
 							</div>
-							<footer class="panel-footer">
+							<div class="panel-footer">
 								<a href="index.php?controller=AdminCustomers&amp;token={getAdminToken tab='AdminCustomers'}">{l s='Show all customers'}</a>
-							</footer>
+							</div>
 						</section>
 					</div>
 				</li>
@@ -191,9 +191,9 @@
 					</a>
 					<div class="dropdown-menu notifs_dropdown">
 						<section id="customer_messages_notif_wrapper" class="notifs_panel">
-							<header class="notifs_panel_header">
+							<div class="notifs_panel_header">
 								<h3>{l s='Latest Messages'}</h3>
-							</header>
+							</div>
 							<div id="list_orders_notif" class="list-group">
 								<a href="#" class="media list-group-item no_notifs">
 									<span class="pull-left">
@@ -204,9 +204,9 @@
 									</span>
 								</a>
 							</div>
-							<footer class="panel-footer text-small">
+							<div class="panel-footer text-small">
 								<a href="index.php?tab=AdminCustomerThreads&amp;token={getAdminToken tab='AdminCustomerThreads'}">{l s='Show all messages'}</a>
-							</footer>
+							</div>
 						</section>
 					</div>
 				</li>
