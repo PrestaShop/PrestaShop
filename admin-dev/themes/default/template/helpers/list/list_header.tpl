@@ -263,16 +263,14 @@
 								</select>
 							{elseif $params.type == 'date' || $params.type == 'datetime'}
 								<div class="date_range row">
-									<div class="input-group fixed-width-xl row-margin-bottom">
-										<span class="input-group-addon">{l s='From'}</span>
-										<input type="text" class="filter datepicker date-input form-control" id="{$params.id_date}_0" name="{$params.name_date}[0]" value="{if isset($params.value.0)}{$params.value.0}{/if}"/>
+									<div class="input-group fixed-width-md row-margin-bottom">
+										<input type="text" class="filter datepicker date-input form-control" id="{$params.id_date}_0" name="{$params.name_date}[0]" value="{if isset($params.value.0)}{$params.value.0}{/if}" placeholder="{l s='From'}"/>
 										<span class="input-group-addon">
 											<i class="icon-calendar"></i>
 										</span>
 									</div>
-									<div class="input-group fixed-width-xl">
-										<span class="input-group-addon">{l s='To'}</span>
-										<input type="text" class="filter datepicker date-input form-control" id="{$params.id_date}_1" name="{$params.name_date}[1]" value="{if isset($params.value.1)}{$params.value.1}{/if}"/>
+									<div class="input-group fixed-width-md">
+										<input type="text" class="filter datepicker date-input form-control" id="{$params.id_date}_1" name="{$params.name_date}[1]" value="{if isset($params.value.1)}{$params.value.1}{/if}" placeholder="{l s='To'}" />
 										<span class="input-group-addon">
 											<i class="icon-calendar"></i>
 										</span>
