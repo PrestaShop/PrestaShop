@@ -74,7 +74,7 @@
 
 <div class="alert alert-warning" id="{$list_id}-empty-filters-alert" style="display:none;">{l s='Please fill at least one field to perform a search in this list.'}</div>
 {block name="startForm"}
-<form method="post" action="{$action}" class="form-horizontal">
+<form method="post" action="{$action}" class="form-horizontal clearfix">
 {/block}
 {if !$simple_header}
 	<input type="hidden" id="submitFilter{$list_id}" name="submitFilter{$list_id}" value="0"/>
@@ -181,7 +181,6 @@
 {/if}
 	<div class="table-responsive clearfix{if isset($use_overflow) && $use_overflow} overflow-y{/if}">
 		<table
-			name="list_table"
 			{if $table_id} id={$table_id}{/if}
 			class="table {if $table_dnd}tableDnD{/if} {$table}"
 			>
@@ -222,8 +221,8 @@
 							<a {if isset($order_by) && ($key == $order_by) && ($order_way == 'ASC')}class="active"{/if} href="{$currentIndex}&{$list_id}Orderby={$key|urlencode}&{$list_id}Orderway=asc&token={$token}{if isset($smarty.get.$identifier)}&{$identifier}={$smarty.get.$identifier|intval}{/if}">
 								<i class="icon-caret-up"></i>
 							</a>
+							{/if}
 						</span>
-					{/if}
 					</th>
 					{/foreach}
 					{if $shop_link_type}
