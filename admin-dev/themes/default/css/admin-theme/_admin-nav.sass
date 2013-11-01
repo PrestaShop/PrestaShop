@@ -129,32 +129,33 @@
 	top: 38px
 	left: 80
 	width: 100%
+	padding: 0 40px 0 0
 	z-index: 600
 	background-color: white
-	border-bottom: solid 1px rgba(black,0.4)
 	ul.menu
 		margin: 0
 		padding: 0
 		display: block
 		list-style: none
-		> li
+		li.maintab, li.subtab
+			height: 28px
 			padding: 0
 			margin: 0
-			border-right: solid 1px rgba(black,0.4)
 			list-style: none
 			position: relative
 			float: left
 			> a
 				display: block
-				line-height: 28px
+				line-height: 30px
 				color: $main-color
 				padding: 0 6px
 				margin: 0
+				font-size: 12px
 				i
 					margin: 0
 					width: 15px
 					background-color: transparent
-					font-size: 18px
+					font-size: 14px
 			&.active, &:hover
 				background-color: $brand-primary
 				> a
@@ -163,43 +164,63 @@
 					i
 						color: white
 
-	.menu-collapse
-		display: none
-	ul.submenu
-		display: none!important
-		@include box-shadow(rgba(black,0.3) 0 2px 4px)
-	> ul.menu > li.expanded
+		li.expanded > ul.submenu
+			display: block
 		ul.submenu
-			display: block!important
-	> ul.menu > li
-		ul.submenu
-			display: none!important
+			background-color: white
+			@include box-shadow(rgba(black,0.3) 0 2px 4px)
+			display: none
 			position: absolute
 			margin: 0
 			padding: 0
 			left: 0
 			top: 28px
 			width: 200px!important
-			li
+			> li
 				width: 200px
 				padding: 0
 				list-style: none
-				a
+				> a
 					display: block
 					padding: 4px 5px 4px 10px
 					font-size: 12px
-					background-color: white
 					border-bottom: solid 1px #eee
 					&:hover
 						color: white
 						background-color: $brand-primary
 						text-decoration: none
-				&:last-child a
-					border-bottom: none
 				&.active a
 					color: contrast-color($brand-primary, white, #333, 10%)
 					background-color: $brand-primary
 					border-bottom: solid 1px darken($brand-primary,10%)
+	#ellipsistab
+		display: block
+		width: 40px
+		height: 28px
+		padding: 0
+		margin: 0
+		position: absolute
+		right: 0
+		> a
+			text-align: center
+			font-size: 15px
+			line-height: 30px
+			color: $main-color
+			cursor: pointer
+		ul#ellipsis_submenu
+			right: 0
+			left: inherit
+			a.title
+				padding: 0 8px
+				text-align: left
+			li.subtab.expanded > ul
+				left: -200px
+				top: 0
+	.menu-collapse
+		display: none
+		
+
+
 
 .menu-collapse
 	height: 54px
