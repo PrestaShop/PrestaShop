@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 $(document).ready(function() {
-	$('input.validate, textarea.validate').keyup(function() {
+	$('input.validate, textarea.validate').on('keyup', function() {
 		if ($(this).hasClass('is_required') || $(this).val().length)
 		{
 			if (window['validate_'+$(this).attr('data-validate')]($(this).val()))
