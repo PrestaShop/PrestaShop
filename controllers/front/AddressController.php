@@ -43,8 +43,9 @@ class AddressControllerCore extends FrontController
 	public function setMedia()
 	{
 		parent::setMedia();
-		$this->addJS(_THEME_JS_DIR_.'tools/statesManagement.js');
 		$this->addJS(_PS_JS_DIR_.'validate.js');
+		$this->addJS(_THEME_JS_DIR_.'tools/statesManagement.js');
+		$this->addJS(_THEME_JS_DIR_.'validate_fields.js');
 	}
 
 	/**
