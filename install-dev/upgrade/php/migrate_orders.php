@@ -75,7 +75,7 @@ function migrate_orders()
 		WHERE name = "PS_GIFT_WRAPPING_TAX"') / 100);
 
 	$cpt = 0;
-	$flush_limit = 500;
+	$flush_limit = 250;
 	while ($order = Db::getInstance()->nextRow($order_res))
 	{
 		$sum_total_products = 0;
@@ -115,7 +115,8 @@ function migrate_orders()
 					else
 						$order_details[$k] = Db::getInstance()->escape($order_details[$k]);
 				}
-			$values_order_detail[] = '(\''.implode('\', \'', $order_details).'\')';
+			if (count($order_details))
+				$values_order_detail[] = '(\''.implode('\', \'', $order_details).'\')';
 		}
 
 		$average_tax_used = 1;
@@ -154,34 +155,31 @@ function migrate_orders()
 		if ($cpt >= $flush_limit)
 		{
 			$cpt = 0;
-			if (!Db::getInstance()->execute($insert_order_detail. implode(',', $values_order_detail)))
+
+			if (count($values_order_detail) && !Db::getInstance()->execute($insert_order_detail. implode(',', $values_order_detail)))
 			{
 				$res = false;
 				$array_errors[] = '[insert order detail 1] - '.Db::getInstance()->getMsgError();
 			}
-			if (!Db::getInstance()->execute($insert_order. implode(',', $values_order)))
+			if (count($values_order) && !Db::getInstance()->execute($insert_order. implode(',', $values_order)))
 			{
 				$res = false;
-				$array_errors[] = '[insert order 1] - '.Db::getInstance()->getMsgError();
+				$array_errors[] = '[insert order 2] - '.Db::getInstance()->getMsgError();
 			}
 			$values_order = array();
 			$values_order_detail = array();
 		}
 	}
 
-	if (count($values_order_detail))
+	if (count($values_order_detail) && !Db::getInstance()->execute($insert_order_detail. implode(',', $values_order_detail)))
 	{
-
-		if (!Db::getInstance()->execute($insert_order_detail. implode(',', $values_order_detail)))
-		{
-			$res = false;
-				$array_errors[] = '[insert order detail 2] - '.Db::getInstance()->getMsgError();
-		}
-		if (!Db::getInstance()->execute($insert_order. implode(',', $values_order)))
-		{
-			$res = false;
-				$array_errors[] = '[insert order 2] - '.Db::getInstance()->getMsgError();
-		}
+		$res = false;
+		$array_errors[] = '[insert order detail 3] - '.Db::getInstance()->getMsgError();
+	}
+	if (count($values_order) && !Db::getInstance()->execute($insert_order. implode(',', $values_order)))
+	{
+		$res = false;
+		$array_errors[] = '[insert order 4] - '.Db::getInstance()->getMsgError();
 	}
 
 	if (!mo_renameTables())
