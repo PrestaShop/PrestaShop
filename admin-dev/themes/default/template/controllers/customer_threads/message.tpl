@@ -23,17 +23,14 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-
-
 {if !$email}
-
 	<div class="panel">
 		<h3>
 			{if !empty($message.employee_name)}
-				<i class="icon-user"></i>
-					{$PS_SHOP_NAME} - {$message.employee_name}
+				<i>{$employee_avatar}</i>
+					 ({$message.employee_name}) - {$PS_SHOP_NAME} 
 			{else}
-				<i class="icon-user"></i> --
+				<i class="icon-user"></i> 
 				{if !empty($message.id_customer)}
 					<a href="index.php?tab=AdminCustomers&id_customer={$message.id_customer}&viewcustomer&token={getAdminToken tab='AdminCustomers'}" title="{l s='View customer'}">
 						{$message.customer_name}
@@ -43,7 +40,6 @@
 				{/if}
 			{/if}
 		</h3>
-
 		<div class="infoCustomer">
 			{if !empty($message.id_customer) && empty($message.id_employee)}
 			<dl class="dl-horizontal">
@@ -55,19 +51,16 @@
 				</dd>
 			</dl>
 			{/if}
-			
 			<dl class="dl-horizontal">			
 				<dt>{l s='Sent on:'}</dt>
 				<dd>{$message.date_add}</dd> 
 			</dl>
-
 			{if empty($message.id_employee)}
 			<dl class="dl-horizontal">
 				<dt>{l s='Browser:'}</dt>
 				<dd>{$message.user_agent}</dd>
 			</dl>
 			{/if}
-
 			{if !empty($message.file_name) && $file_name}
 			<dl class="dl-horizontal">
 				<dt>{l s='File attachment'}</dt> 
@@ -79,7 +72,6 @@
 				</dd>
 			</dl>
 			{/if}
-
 			{if !empty($message.id_order) && empty($message.id_employee)}
 				<dl class="dl-horizontal">
 					<dt>{l s='Order #'}</dt> 
@@ -90,7 +82,6 @@
 					</dd>
 				</dl>
 			{/if}
-
 			{if !empty($message.id_product) && empty($message.id_employee)}
 				<dl class="dl-horizontal">
 					<dt>{l s='Product #'}</dt> 
@@ -118,9 +109,7 @@
 				</dl>
 			</form>
 		</div>
-
 {else}
-
 		<div class="infoEmployee">
 			{if $id_employee}
 				<a class="btn btn-default pull-right" href="{$current}&token={getAdminToken tab='AdminCustomerThreads'}&id_customer_thread={$message.id_customer_thread}&viewcustomer_thread">
@@ -163,7 +152,6 @@
 				<dt>{l s='Subject:'}</dt>
 				<dd>{$message.subject}</dd>
 			</dl>
-
 {/if}
 			<dl class="dl-horizontal">
 				<dt>{l s='Thread ID:'}</dt>
@@ -179,7 +167,6 @@
 			</dl>
 		</div>
 	</div>
-
 {if !$email}
 	{if empty($message.id_employee)}
 		<div class="panel">
@@ -189,7 +176,6 @@
 			</button>
 		</div>
 	{/if}
-
 	<div id="reply_to_{$message.id_customer_message}" style="display: none;">
 		<div class="panel">
 			<form action="{$current}&token={getAdminToken tab='AdminCustomerThreads'}&id_customer_thread={$message.id_customer_thread}&viewcustomer_thread" method="post" enctype="multipart/form-data" class="form-horizontal">
@@ -215,4 +201,3 @@
 		</div>
 	</div>
 {/if}
-
