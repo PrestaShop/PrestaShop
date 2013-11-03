@@ -53,20 +53,21 @@ function update_customer_default_group()
 	FROM `'._DB_PREFIX_.'configuration`
 	WHERE `name` IN (\'PS_UNIDENTIFIED_GROUP\', \'PS_GUEST_GROUP\')');
 
-	$result = true;
+
 	if (count($carriers) && is_array($carriers) && count($groups) && is_array($groups))
 		foreach ($carriers as $carrier)
 			foreach ($groups as $group)
-				$result &= (bool)Db::getInstance()->execute('
+				Db::getInstance()->execute('
 				INSERT IGNORE INTO `'._DB_PREFIX_.'carrier_group` 
 				VALUES ('.(int)$carrier['id_carrier'].', '.(int)$group['id_group'].')');
-
-	if($result && file_exists($filename) && is_writable($filename))
+	
+	$result = false;
+	if(file_exists($filename) && is_writable($filename))
 	{
-		$result &= (bool)file_put_contents($filename, $content);
+		$result = (bool)file_put_contents($filename, $content);
 		if($result && file_exists($filename_old))
 		{
-			$result &= (bool)unlink($filename_old);
+			unlink($filename_old);
 			chmod($filename, 0664);
 		}
 	}
