@@ -672,14 +672,20 @@ class ToolsCore
 	public static function htmlentitiesUTF8($string, $type = ENT_QUOTES)
 	{
 		if (is_array($string))
-			return array_map(array('Tools', 'htmlentitiesUTF8'), $string);
+		{
+			$string = array_map(array('Tools', 'htmlentitiesUTF8'), $string);
+			return (string)array_shift($string);
+		}
 		return htmlentities((string)$string, $type, 'utf-8');
 	}
 
 	public static function htmlentitiesDecodeUTF8($string)
 	{
 		if (is_array($string))
-			return array_map(array('Tools', 'htmlentitiesDecodeUTF8'), $string);
+		{
+			$string = array_map(array('Tools', 'htmlentitiesDecodeUTF8'), $string);
+			return (string)array_shift($string);
+		}
 		return html_entity_decode((string)$string, ENT_QUOTES, 'utf-8');
 	}
 
