@@ -34,9 +34,6 @@ function migrate_orders()
 	if (!defined('PS_TAX_INC'))
 		 define('PS_TAX_INC', 0);
 
-	// init insert order detail query
-	$values_order_detail = array();
-	$col_order_detail = array();
 	$col_order_detail_old = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'order_detail`');
 	foreach ($col_order_detail_old as $k => $field)
 		if ($field['Field'] != 'id_order_invoice')
@@ -47,8 +44,6 @@ function migrate_orders()
 
 	$insert_order_detail = 'INSERT INTO `'._DB_PREFIX_.'order_detail_2` (`'.implode('`, `', $col_order_detail).'`) VALUES ';
 
-	// init insert order query
-	$values_order = array();
 	$col_orders = array();
 	$col_orders_old = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'orders`');
 
@@ -65,123 +60,133 @@ function migrate_orders()
 	if (!$res)
 		$array_errors[] = 'unable to duplicate tables orders and order_detail';
 
-	$order_res = Db::getInstance()->query(
-			'SELECT *
-			FROM `'._DB_PREFIX_.'orders`');
-
 	// this was done like that previously
 	$wrapping_tax_rate = 1 + ((float)Db::getInstance()->getValue('SELECT value
 		FROM `'._DB_PREFIX_.'configuration`
 		WHERE name = "PS_GIFT_WRAPPING_TAX"') / 100);
 
-	$cpt = 0;
-	$flush_limit = 250;
-	while ($order = Db::getInstance()->nextRow($order_res))
+	$step = 3000;
+	$count_orders = Db::getInstance()->getValue('SELECT count(id_order) FROM '._DB_PREFIX_.'orders');
+	$nb_loop = $start = 0;
+	if($count_orders > 0)
+		$nb_loop = ceil($count_orders / $step);
+	for($i = 0; $i < $nb_loop; $i++)
 	{
-		$sum_total_products = 0;
-		$sum_tax_amount = 0;
-		$default_group_id = mo_getCustomerDefaultGroup((int)$order['id_customer']);
-		$price_display_method = mo_getPriceDisplayMethod((int)$default_group_id);
-		$order_details_list = Db::getInstance()->executeS('
-		SELECT od.*
-		FROM `'._DB_PREFIX_.'order_detail` od
-		WHERE od.`id_order` = '.(int)$order['id_order']);
-
-		foreach ($order_details_list as $order_details)
+		$order_res = Db::getInstance()->query('SELECT * FROM `'._DB_PREFIX_.'orders` LIMIT '.(int)$start.', '.(int)$step);
+		$start = intval(($i+1) * $step);
+		$cpt = 0;
+		$flush_limit = 200;
+		while ($order = Db::getInstance()->nextRow($order_res))
 		{
-			// we don't want to erase order_details data in order to create the insert query
-			$products = mo_setProductPrices($order_details, $price_display_method);
-			$tax_rate = 1 + ((float)$products['tax_rate'] / 100);
-			$reduction_amount_tax_incl = (float)$products['reduction_amount'];
-
-			// cart::getTaxesAverageUsed equivalent
-			$sum_total_products += $products['total_price'];
-			
-			$sum_tax_amount += $products['total_wt'] - $products['total_price'];
-
-			$order_details['reduction_amount_tax_incl'] = $reduction_amount_tax_incl;
-			$order_details['reduction_amount_tax_excl'] = (float)mo_ps_round($reduction_amount_tax_incl / $tax_rate);
-			$order_details['total_price_tax_incl'] = (float)$products['total_wt'];
-			$order_details['total_price_tax_excl'] = (float)$products['total_price'];
-			$order_details['unit_price_tax_incl'] = (float)$products['product_price_wt'];
-			$order_details['unit_price_tax_excl'] = (float)$products['product_price'];
-			foreach (array_keys($order_details) as $k)
-				if (!in_array($k, $col_order_detail))
-					unset($order_details[$k]);
-				else
-				{
-					if (in_array($order_details[$k], array('product_price', 'reduction_percent', 'reduction_amount', 'group_reduction', 'product_quantity_discount', 'tax_rate', 'ecotax', 'ecotax_tax_rate')))
-						$order_details[$k] = (float)$order_details[$k];
+			$sum_total_products = 0;
+			$sum_tax_amount = 0;
+			$default_group_id = mo_getCustomerDefaultGroup((int)$order['id_customer']);
+			$price_display_method = mo_getPriceDisplayMethod((int)$default_group_id);
+			$order_details_list = Db::getInstance()->query('
+			SELECT od.*
+			FROM `'._DB_PREFIX_.'order_detail` od
+			WHERE od.`id_order` = '.(int)$order['id_order']);
+			while ($order_details = Db::getInstance()->nextRow($order_details_list))
+			{
+				$values_order_detail = array();
+				$values_order = array();
+				$col_order_detail = array();
+				// we don't want to erase order_details data in order to create the insert query
+				$products = mo_setProductPrices($order_details, $price_display_method);
+				$tax_rate = 1 + ((float)$products['tax_rate'] / 100);
+				$reduction_amount_tax_incl = (float)$products['reduction_amount'];
+	
+				// cart::getTaxesAverageUsed equivalent
+				$sum_total_products += $products['total_price'];
+				
+				$sum_tax_amount += $products['total_wt'] - $products['total_price'];
+	
+				$order_details['reduction_amount_tax_incl'] = $reduction_amount_tax_incl;
+				$order_details['reduction_amount_tax_excl'] = (float)mo_ps_round($reduction_amount_tax_incl / $tax_rate);
+				$order_details['total_price_tax_incl'] = (float)$products['total_wt'];
+				$order_details['total_price_tax_excl'] = (float)$products['total_price'];
+				$order_details['unit_price_tax_incl'] = (float)$products['product_price_wt'];
+				$order_details['unit_price_tax_excl'] = (float)$products['product_price'];
+				foreach (array_keys($order_details) as $k)
+					if (!in_array($k, $col_order_detail))
+						unset($order_details[$k]);
 					else
-						$order_details[$k] = Db::getInstance()->escape($order_details[$k]);
+					{
+						if (in_array($order_details[$k], array('product_price', 'reduction_percent', 'reduction_amount', 'group_reduction', 'product_quantity_discount', 'tax_rate', 'ecotax', 'ecotax_tax_rate')))
+							$order_details[$k] = (float)$order_details[$k];
+						else
+							$order_details[$k] = Db::getInstance()->escape($order_details[$k]);
+					}
+				if (count($order_details))
+					$values_order_detail[] = '(\''.implode('\', \'', $order_details).'\')';
+				unset($order_details);
+			}
+	
+			$average_tax_used = 1;
+			if ($sum_total_products > 0)
+				$average_tax_used +=  $sum_tax_amount / $sum_total_products;
+			$average_tax_used = round($average_tax_used, 4);
+			$carrier_tax_rate = 1;
+			if (isset($order['carrier_tax_rate']))
+				$carrier_tax_rate + ((float)$order['carrier_tax_rate'] / 100);
+	
+			$total_discount_tax_excl = $order['total_discounts'] / $average_tax_used;
+			$order['total_discounts_tax_incl'] = (float)$order['total_discounts'];
+			$order['total_discounts_tax_excl'] = (float)$total_discount_tax_excl;
+	
+			$order['total_shipping_tax_incl'] = (float)$order['total_shipping'];
+			$order['total_shipping_tax_excl'] = (float)($order['total_shipping'] / $carrier_tax_rate);
+			$shipping_taxes = $order['total_shipping_tax_incl'] - $order['total_shipping_tax_excl'];
+	
+			$order['total_wrapping_tax_incl'] = (float)$order['total_wrapping'];
+			$order['total_wrapping_tax_excl'] = ((float)$order['total_wrapping'] / $wrapping_tax_rate);
+			$wrapping_taxes = $order['total_wrapping_tax_incl'] - $order['total_wrapping_tax_excl'];
+	
+			$product_taxes = $order['total_products_wt'] - $order['total_products'];
+			$order['total_paid_tax_incl'] = (float)$order['total_paid'];
+			$order['total_paid_tax_excl'] = (float)$order['total_paid'] - $shipping_taxes - $wrapping_taxes - $product_taxes;
+			// protect text and varchar fields
+			$order['gift_message'] = Db::getInstance()->escape($order['gift_message']);
+			$order['payment'] = Db::getInstance()->escape($order['payment']);
+			$order['module'] = Db::getInstance()->escape($order['module']);
+	
+			$values_order[] = '(\''.implode('\', \'', $order).'\')';
+	
+			unset($order);
+			$cpt++;
+			
+			// limit to $cpt 
+			if ($cpt >= $flush_limit)
+			{
+				$cpt = 0;
+				if (isset($values_order_detail) && count($values_order_detail) && !Db::getInstance()->execute($insert_order_detail. implode(',', $values_order_detail)))
+				{
+					$res = false;
+					$array_errors[] = '[insert order detail 1] - '.Db::getInstance()->getMsgError();
 				}
-			if (count($order_details))
-				$values_order_detail[] = '(\''.implode('\', \'', $order_details).'\')';
-		}
-
-		$average_tax_used = 1;
-		if ($sum_total_products > 0)
-			$average_tax_used +=  $sum_tax_amount / $sum_total_products;
-		$average_tax_used = round($average_tax_used, 4);
-		$carrier_tax_rate = 1;
-		if (isset($order['carrier_tax_rate']))
-			$carrier_tax_rate + ((float)$order['carrier_tax_rate'] / 100);
-
-		$total_discount_tax_excl = $order['total_discounts'] / $average_tax_used;
-		$order['total_discounts_tax_incl'] = (float)$order['total_discounts'];
-		$order['total_discounts_tax_excl'] = (float)$total_discount_tax_excl;
-
-		$order['total_shipping_tax_incl'] = (float)$order['total_shipping'];
-		$order['total_shipping_tax_excl'] = (float)($order['total_shipping'] / $carrier_tax_rate);
-		$shipping_taxes = $order['total_shipping_tax_incl'] - $order['total_shipping_tax_excl'];
-
-		$order['total_wrapping_tax_incl'] = (float)$order['total_wrapping'];
-		$order['total_wrapping_tax_excl'] = ((float)$order['total_wrapping'] / $wrapping_tax_rate);
-		$wrapping_taxes = $order['total_wrapping_tax_incl'] - $order['total_wrapping_tax_excl'];
-
-		$product_taxes = $order['total_products_wt'] - $order['total_products'];
-		$order['total_paid_tax_incl'] = (float)$order['total_paid'];
-		$order['total_paid_tax_excl'] = (float)$order['total_paid'] - $shipping_taxes - $wrapping_taxes - $product_taxes;
-		// protect text and varchar fields
-		$order['gift_message'] = Db::getInstance()->escape($order['gift_message']);
-		$order['payment'] = Db::getInstance()->escape($order['payment']);
-		$order['module'] = Db::getInstance()->escape($order['module']);
-
-		$values_order[] = '(\''.implode('\', \'', $order).'\')';
-
-		unset($order);
-		$cpt++;
-
-		if ($cpt >= $flush_limit)
-		{
-			$cpt = 0;
-
-			if (count($values_order_detail) && !Db::getInstance()->execute($insert_order_detail. implode(',', $values_order_detail)))
-			{
-				$res = false;
-				$array_errors[] = '[insert order detail 1] - '.Db::getInstance()->getMsgError();
+				if (isset($values_order) && count($values_order) && !Db::getInstance()->execute($insert_order. implode(',', $values_order)))
+				{
+					$res = false;
+					$array_errors[] = '[insert order 2] - '.Db::getInstance()->getMsgError();
+				}
+				if (isset($values_order))
+					unset($values_order);
+				if (isset($values_order_detail))
+					unset($values_order_detail);
 			}
-			if (count($values_order) && !Db::getInstance()->execute($insert_order. implode(',', $values_order)))
-			{
-				$res = false;
-				$array_errors[] = '[insert order 2] - '.Db::getInstance()->getMsgError();
-			}
-			$values_order = array();
-			$values_order_detail = array();
 		}
 	}
 
-	if (count($values_order_detail) && !Db::getInstance()->execute($insert_order_detail. implode(',', $values_order_detail)))
+	if (isset($values_order_detail) && count($values_order_detail) && !Db::getInstance()->execute($insert_order_detail. implode(',', $values_order_detail)))
 	{
 		$res = false;
 		$array_errors[] = '[insert order detail 3] - '.Db::getInstance()->getMsgError();
 	}
-	if (count($values_order) && !Db::getInstance()->execute($insert_order. implode(',', $values_order)))
+	if (isset($values_order) && count($values_order) && !Db::getInstance()->execute($insert_order. implode(',', $values_order)))
 	{
 		$res = false;
 		$array_errors[] = '[insert order 4] - '.Db::getInstance()->getMsgError();
 	}
-
 	if (!mo_renameTables())
 	{
 		$res = false;
@@ -191,7 +196,6 @@ function migrate_orders()
 	if (!$res)
 		return array('error' => 1, 'msg' => count($array_errors).' error(s) : <br/>'.implode('<br/>', $array_errors));
 }
-
 
 /**
  * mo_ps_round is a simplification of Tools::ps_round:
