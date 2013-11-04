@@ -47,6 +47,11 @@ class AdminEmployeesControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 
+		$this->fieldImageSettings = array(
+			'name' => 'image',
+			'dir' => 'e'
+		);
+
 		$this->context = Context::getContext();
 
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
@@ -185,28 +190,37 @@ class AdminEmployeesControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('First Name:'),
+					'label' => $this->l('First Name'),
 					'name' => 'firstname',
 					'required' => true
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Last Name:'),
+					'label' => $this->l('Last Name'),
 					'name' => 'lastname',
 					'required' => true
 				),
 				array(
+					'type' => 'file',
+					'label' => $this->l('Picture'),
+					'name' => 'image',
+					'image' => ImageManager::thumbnail($obj->getImage(), $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 150, $this->imageType, true, true),
+					'col' => 6,
+					'value' => true,
+					'display_image' => true,
+				),
+				array(
 					'type' => 'password',
-					'label' => $this->l('Password:'),
+					'label' => $this->l('Password'),
 					'name' => 'passwd',
 					'required' => true,
 					'hint' => ($obj->id ?
 								$this->l('Leave this field blank if you do not want to change your password.') :
-									$this->l('Minimum of eight characters (use only letters and numbers)').' -_')
+									$this->l('Minimum of eight characters'))
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Email address:'),
+					'label' => $this->l('Email address'),
 					'name' => 'email',
 					'required' => true
 				),

@@ -32,7 +32,8 @@
 				<h3>
 					<i class="icon-cog"></i> {l s='Settings'}
 				</h3>
-				<div class="row">
+				<div class="alert alert-info">{l s='Direct traffic can be quite resource-intensive. You should consider enabling it only if you have a strong need for it.'}</div>
+				<div class="form-group">
 					<label class="control-label col-lg-5">{l s='Save direct traffic?'}</label>
 					<div class="col-lg-7">
 						<div class="row">
@@ -53,8 +54,8 @@
 					</div>
 				</div>
 					
-				<p>{l s='Direct traffic can be quite resource-intensive. You should consider enabling it only if you have a strong need for it.'}</p>
-				<button type="submit" class="btn btn-default pull-right" name="submitSettings" id="submitSettings">
+				
+				<button type="submit" class="btn btn-default" name="submitSettings" id="submitSettings">
 					<i class="icon-save"></i> {l s='Save'}
 				</button>
 			</div>
@@ -66,8 +67,8 @@
 				<h3>
 					<i class="icon-fullscreen"></i> {l s='Indexation'}
 				</h3>
-				<p>{l s='There is a huge quantity of data, so each connection corresponding to a referrer is indexed. You can also refresh this index by clicking the button above. This process may take awhile, and it\'s only needed if you modified or added a referrer, or if you want changes to be retroactive.'}</p>
-				<button type="submit" class="btn btn-default pull-right" name="submitRefreshIndex" id="submitRefreshIndex">
+				<div class="alert alert-info">{l s='There is a huge quantity of data, so each connection corresponding to a referrer is indexed. You can also refresh this index by clicking the button above. This process may take awhile, and it\'s only needed if you modified or added a referrer, or if you want changes to be retroactive.'}</div>
+				<button type="submit" class="btn btn-default" name="submitRefreshIndex" id="submitRefreshIndex">
 					<i class="icon-refresh"></i> {l s='Refresh index'}
 				</button>
 			</div>
@@ -79,8 +80,8 @@
 				<h3>
 					<i class="icon-briefcase"></i> {l s='Cache'}
 				</h3>
-				<p>{l s='In order to sort and filter your data, it\'s cached. You can refresh the cache by clicking on the button above.'}</p>
-				<button type="submit" class="btn btn-default pull-right" name="submitRefreshCache" id="submitRefreshCache">
+				<div class="alert alert-info">{l s='In order to sort and filter your data, it\'s cached. You can refresh the cache by clicking on the button above.'}</div>
+				<button type="submit" class="btn btn-default" name="submitRefreshCache" id="submitRefreshCache">
 					<i class="icon-refresh"></i> {l s='Refresh cache'}
 				</button>
 			</div>

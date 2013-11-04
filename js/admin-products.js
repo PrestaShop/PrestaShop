@@ -884,7 +884,7 @@ product_tabs['Informations'] = new function(){
 			});
 
 			product_type = $(this).val();
-
+			$('#warn_virtual_combinations').hide();
 			// until a product is added in the pack
 			// if product is PTYPE_PACK, save buttons will be disabled
 			if (product_type == product_type_pack)
@@ -1118,6 +1118,12 @@ product_tabs['Pack'] = new function(){
 
 	this.onReady = function(){
 		self.bindPackEvents();
+	}
+}
+
+product_tabs['Images'] = new function(){
+	this.onReady = function(){
+		displayFlags(languages, id_language, allowEmployeeFormLang);
 	}
 }
 

@@ -5,7 +5,7 @@
 			{l s='Limit to a single customer'}
 		</span>
 	</label>
-	<div class="input-group col-lg-4">
+	<div class="input-group col-lg-9">
 		<span class="input-group-addon"><i class="icon-user"></i></i></span>
 		<input type="hidden" id="id_customer" name="id_customer" value="{$currentTab->getFieldValue($currentObject, 'id_customer')|intval}" />
 		<input type="text" id="customerFilter" class="input-xlarge" name="customerFilter" value="{$customerFilter|escape:'htmlall':'UTF-8'}" />
@@ -87,9 +87,8 @@
 			{l s='Total available'}
 		</span>
 	</label>
-	<div class="input-group col-lg-2">
-		<span class="input-group-addon">×</span>
-		<input type="text" name="quantity" value="{$currentTab->getFieldValue($currentObject, 'quantity')|intval}" />
+	<div class="col-lg-9">
+		<input class="form-control" type="text" name="quantity" value="{$currentTab->getFieldValue($currentObject, 'quantity')|intval}" />
 	</div>
 </div>
 
@@ -100,9 +99,8 @@
 			{l s='Total available for each user.'}
 		</span>
 	</label>
-	<div class="input-group col-lg-2">
-		<span class="input-group-addon">×</span>
-		<input type="text" name="quantity_per_user" value="{$currentTab->getFieldValue($currentObject, 'quantity_per_user')|intval}" />
+	<div class="col-lg-9">
+		<input class="form-control" type="text" name="quantity_per_user" value="{$currentTab->getFieldValue($currentObject, 'quantity_per_user')|intval}" />
 	</div>
 </div>
 
@@ -110,18 +108,16 @@
 
 <div class="form-group">
 	<label class="control-label col-lg-3">
-		<span class="label-tooltip" data-toggle="tooltip"
-			title="">
-			{l s='Restrictions'}
-		</span>
+		{l s='Restrictions'}
 	</label>
 	<div class="col-lg-9">
 		{if $countries.unselected|@count + $countries.selected|@count > 1}
-		<div class="row">
-			<label class="checkbox">
-				<input type="checkbox" id="country_restriction" name="country_restriction" value="1" {if $countries.unselected|@count}checked="checked"{/if} />
-				{l s='Country selection'}
-			</label>
+			<p class="checkbox">
+				<label>
+					<input type="checkbox" id="country_restriction" name="country_restriction" value="1" {if $countries.unselected|@count}checked="checked"{/if} />
+					{l s='Country selection'}
+				</label>
+			</p>
 			<span class="help-block">{l s='This restriction applies to the country of delivery.'}</span>
 			<div id="country_restriction_div">
 				<table class="table">
@@ -147,11 +143,9 @@
 					</tr>
 				</table>
 			</div>
-		</div>
 		{/if}
 
 		{if $carriers.unselected|@count + $carriers.selected|@count > 1}
-		<div class="row">
 			<p class="checkbox">
 				<label>
 					<input type="checkbox" id="carrier_restriction" name="carrier_restriction" value="1" {if $carriers.unselected|@count}checked="checked"{/if} />
@@ -182,11 +176,9 @@
 					</tr>
 				</table>
 			</div>
-		</div>
 		{/if}
 
 		{if $groups.unselected|@count + $groups.selected|@count > 1}
-		<div class="row">
 			<p class="checkbox">
 				<label>
 					<input type="checkbox" id="group_restriction" name="group_restriction" value="1" {if $groups.unselected|@count}checked="checked"{/if} />
@@ -217,11 +209,9 @@
 					</tr>
 				</table>
 			</div>
-		</div>
 		{/if}
 
 		{if $cart_rules.unselected|@count + $cart_rules.selected|@count > 0}
-		<div class="row">
 			<p class="checkbox">
 				<label>
 					<input type="checkbox" id="cart_rule_restriction" name="cart_rule_restriction" value="1" {if $cart_rules.unselected|@count}checked="checked"{/if} />
@@ -252,10 +242,8 @@
 					</tr>
 				</table>
 			</div>
-		</div>
 		{/if}
 
-		<div class="row">
 			<p class="checkbox">
 				<label>
 					<input type="checkbox" id="product_restriction" name="product_restriction" value="1" {if $product_rule_groups|@count}checked="checked"{/if} />
@@ -272,10 +260,8 @@
 					<i class="icon-plus-sign"></i> {l s='Product selection'}
 				</a>
 			</div>
-		</div>
 
 		{if $shops.unselected|@count + $shops.selected|@count > 1}
-		<div class="row">
 			<p class="checkbox">
 				<label>
 					<input type="checkbox" id="shop_restriction" name="shop_restriction" value="1" {if $shops.unselected|@count}checked="checked"{/if} />

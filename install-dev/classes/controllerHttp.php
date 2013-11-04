@@ -95,6 +95,10 @@ abstract class InstallControllerHttp
 
 	final public static function execute()
 	{
+		$session = InstallSession::getInstance();
+		if (!$session->last_step || $session->last_step == 'welcome')
+			Autoload::getInstance()->generateIndex();
+
 		if (Tools::getValue('compile_templates'))
 		{
 			require_once (_PS_INSTALL_CONTROLLERS_PATH_.'http/smarty_compile.php');
@@ -111,7 +115,6 @@ abstract class InstallControllerHttp
 			self::$instances[$step] = new $classname($step);
 		}
 
-		$session = InstallSession::getInstance();
 		if (!$session->last_step || !in_array($session->last_step, self::$steps))
 			$session->last_step = self::$steps[0];
 

@@ -14,6 +14,13 @@
 #stores .address-input {
   float: left;
   margin-right: 19px;
+  /* max 767px */
+}
+@media (max-width: 767px) {
+  #stores .address-input {
+    width: 100%;
+    margin: 0 0 20px 0;
+  }
 }
 #stores .address-input label {
   margin-right: 5px;
@@ -60,7 +67,7 @@
   margin-left: 5px;
 }
 #stores #locationSelect {
-  width: 356px;
+  max-width: 356px;
   visibility: hidden;
 }
 #stores #stores-table {
@@ -73,6 +80,19 @@
   background: #fbfbfb;
   width: 46px;
 }
+#stores #stores-table tbody td.name {
+  /* max 767px */
+}
 #stores #stores-table tbody td.name span {
   padding-left: 15px;
+}
+@media (max-width: 767px) {
+  #stores #stores-table tbody td.name img {
+    display: none;
+  }
+}
+
+.store-image img {
+  width: 100%;
+  min-width: 100px;
 }

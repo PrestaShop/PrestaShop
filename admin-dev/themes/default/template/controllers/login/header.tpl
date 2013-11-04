@@ -44,9 +44,6 @@
 	{/foreach}
 	<link rel="icon" type="image/vnd.microsoft.icon" href="{$img_dir}favicon.ico" />
 	<link rel="shortcut icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
-	<!--[if IE]>
-	<link type="text/css" rel="stylesheet" href="{$base_url}css/admin-ie.css" />
-	<![endif]-->
 </head>
 <body class="page-topbar">
 	<div id="login">

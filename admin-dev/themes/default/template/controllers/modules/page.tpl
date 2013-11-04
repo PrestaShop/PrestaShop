@@ -87,14 +87,17 @@
 			<div class="categoriesTitle col-lg-3">
 				<div class="list-group">
 					<form id="filternameForm" method="post" class="list-group-item form-horizontal">
-						<div class="input-group col-lg-12">
-							<input placeholder="{l s='Search'}" type="text" value="" name="moduleQuicksearch" id="moduleQuicksearch" autocomplete="off" />
+						<div class="input-group">
+							<input class="form-control" placeholder="{l s='Search'}" type="text" value="" name="moduleQuicksearch" id="moduleQuicksearch" autocomplete="off" />
+							<div class="input-group-addon">
+								<i class="icon-search"></i>
+							</div>
 						</div>
 					</form>
-					<a class="list-group-item {if isset($categoryFiltered.favorites)}active{/if}" href="{$currentIndex}&token={$token}&filterCategory=favorites">
+					<a class="categoryModuleFilterLink list-group-item {if isset($categoryFiltered.favorites)}active{/if}" href="{$currentIndex}&token={$token}&filterCategory=favorites">
 						{l s='Favorites'} <span class="badge pull-right">{$nb_modules_favorites}</span>
 					</a>
-					<a class="list-group-item {if count($categoryFiltered) lte 0}active{/if}" href="{$currentIndex}&token={$token}&unfilterCategory=yes">
+					<a class="categoryModuleFilterLink list-group-item {if count($categoryFiltered) lte 0}active{/if}" href="{$currentIndex}&token={$token}&unfilterCategory=yes">
 						{l s='All'} <span class="badge pull-right">{$nb_modules}</span>
 					</a>
 					{foreach from=$list_modules_categories item=module_category key=module_category_key}

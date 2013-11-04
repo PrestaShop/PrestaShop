@@ -1139,7 +1139,7 @@ abstract class ObjectModelCore
 			{
 				$vars = get_class_vars($class_name);
 				foreach ($vars['shopIDs'] as $id_shop)
-					$or[] = ' main.id_shop = '.(int)$id_shop.' ';
+					$or[] = '(main.id_shop = '.(int)$id_shop.(isset($this->def['fields']['id_shop_group']) ? ' OR (id_shop = 0 AND id_shop_group='.(int)Shop::getGroupFromShop((int)$id_shop).')' : '').')';
 				
 				$prepend = '';
 				if (count($or))

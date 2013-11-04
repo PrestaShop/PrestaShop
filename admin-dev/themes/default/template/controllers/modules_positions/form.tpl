@@ -92,7 +92,7 @@
 		// TODO : Add & Remove automatically the "custom pages" in the "em_list_x"
 		var obj = $(this);
 		var shopID = obj.attr('id').replace(/\D/g, '');
-		var list = obj.parent().find('#em_list_' + shopID);
+		var list = obj.closest('form').find('#em_list_' + shopID);
 		var values = obj.val().split(',');
 		var len = values.length;
 		
@@ -103,11 +103,11 @@
 
 	function position_exception_listchange()
 	{
+
 		var obj = $(this);
 		var shopID = obj.attr('id').replace(/\D/g, '');
 		var str = obj.val().join(', ');
-		
-		obj.parent().find('#em_text_' + shopID).val(str);
+		obj.closest('form').find('#em_text_' + shopID).val(str);
 	}
 	
 	$(document).ready(function(){

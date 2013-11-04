@@ -5,14 +5,14 @@
 .label {
   display: inline;
   padding: .2em .6em .3em;
-  font-size: 75%;
+  font-size: 100%;
   font-weight: bold;
   line-height: 1;
   color: $label-color;
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
-  border-radius: .25em;
+  border-radius: 0;
 
   // Add hover effects, but only for links
   &[href] {
@@ -43,6 +43,7 @@
 
 .label-success {
   @include label-variant($label-success-bg);
+  border:1px solid $label-success-border;
 }
 
 .label-info {
@@ -51,6 +52,7 @@
 
 .label-warning {
   @include label-variant($label-warning-bg);
+  border:1px solid $label-warning-border;
 }
 
 .label-danger {

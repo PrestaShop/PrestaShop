@@ -28,10 +28,15 @@ $(document).ready( function () {
 		setDashboardDateRange(elt.currentTarget.name);
 		return false;
 	});
+	$(".preactivationLink").click(function() {
+		preactivationLinkClick($(this).attr("rel"));
+	});
+	
 
 	refreshDashboard(false, false);
 	getBlogRss();
 	bindSubmitDashConfig();
+	bindCancelDashConfig();
 	
 });
 
@@ -204,16 +209,15 @@ function getBlogRss()
 			},
 		dataType: 'json',
 		success : function(jsonData){
-			if (!jsonData.has_errors)
-			{
-				for (var article in jsonData.rss)
-				{
-					article_html = '<article><strong>'+jsonData.rss[article].title+'</strong><br>'+jsonData.rss[article].short_desc+'<br/><a href="'+jsonData.rss[article].link+'">'+read_more+'</a></article><br>';
-					$('.dash_news h4').after(article_html);
+			if (!jsonData.has_errors) {
+				for (var article in jsonData.rss) {
+					article_html = '<article><h4><a href="'+jsonData.rss[article].link+'">'+jsonData.rss[article].title+'</a></h4><p>'+jsonData.rss[article].short_desc+' <a href="'+jsonData.rss[article].link+'">'+read_more+'</a><p></article><hr/>';
+					$('.dash_news .dash_news_content').append(article_html);
 				}
 			}
-			else
+			else {
 				$('.dash_news').hide();
+			}
 		},
 		error : function(data){
 			//@TODO display errors
@@ -283,3 +287,22 @@ function saveDashConfig(widget_name)
 	});
 }
 
+function preactivationLinkClick(module)
+{
+	$.ajax({
+		url : adminstats_ajax_url,
+		data : {
+				ajax : "1",
+				controller : "AdminDashboard",
+				action : "savePreactivationRequest",
+				module : module,
+				},
+		type: 'POST',
+		success : function(jsonData){
+	
+		},
+		error : function(data){
+			//@TODO display errors
+		}
+	});
+}

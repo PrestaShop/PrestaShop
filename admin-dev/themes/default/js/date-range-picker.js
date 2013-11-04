@@ -56,14 +56,11 @@
 
 		this.format  = DPGlobal.parseFormat(options.format||this.element.data('date-format')||'Y-m-d');
 		this.picker  = $(DPGlobal.template).appendTo(this.element).show()
-		.on({
-			click: $.proxy(this.click, this),
-			mouseover: $.proxy(this.mouseover, this),
-			mouseout: $.proxy(this.mouseout, this)
-		});
-		//click: $.proxy(this.click, this),
-		//focus: $.proxy(this.show, this),
-		//keyup: $.proxy(this.update, this)
+			.on({
+				click: $.proxy(this.click, this),
+				mouseover: $.proxy(this.mouseover, this),
+				mouseout: $.proxy(this.mouseout, this)
+			});
 
 		this.minViewMode = options.minViewMode||this.element.data('date-minviewmode')||0;
 		if (typeof this.minViewMode === 'string') {
@@ -227,7 +224,7 @@
 				month = d.getMonth(),
 				currentDate = this.date.valueOf();
 			this.picker.find('.daterangepicker-days th:eq(1)')
-						.text(year+' / '+DPGlobal.dates.months[month]);
+						.text(year+' / '+DPGlobal.dates.months[month]).append('&nbsp;<small><i class="icon-angle-down"></i><small>');
 			var prevMonth = new Date(year, month-1, 28,0,0,0,0),
 				day = DPGlobal.getDaysInMonth(prevMonth.getFullYear(), prevMonth.getMonth());
 			prevMonth.setDate(day);
@@ -236,9 +233,7 @@
 			nextMonth.setDate(nextMonth.getDate() + 42);
 			nextMonth = nextMonth.valueOf();
 			var html = [];
-			var clsName,
-				prevY,
-				prevM;
+			var clsName, prevY, prevM;
 			while(prevMonth.valueOf() < nextMonth) {
 				if (prevMonth.getDay() === this.weekStart) {
 					html.push('<tr>');
@@ -251,10 +246,12 @@
 				} else if ((prevM > month && prevY === year) || prevY > year) {
 					clsName += ' new';
 				}
-				// if (prevMonth.valueOf() === currentDate) {
-				// clsName += ' active';
-				// }
-				html.push('<td class="day '+clsName+'" data-val="'+prevMonth.getTime()+'">'+prevMonth.getDate() + '</td>');
+				if (!clsName){
+					html.push('<td class="day" data-val="'+prevMonth.getTime()+'">' + prevMonth.getDate() + '</td>');
+				} else {
+					html.push('<td class="'+clsName+'"></td>');
+				}
+
 				if (prevMonth.getDay() === this.weekEnd) {
 					html.push('</tr>');
 				}
@@ -286,46 +283,7 @@
 			}
 			yearCont.html(html);
 			this.updateRange();
-			click = 2;
-		},
-
-		updateRange: function() {
-			$("#datepicker .day").each(function(){
-				var date_val = parseInt($(this).data('val'),10);
-
-				if (end && start)
-				{
-					if(date_val > start && date_val < end) {
-						$(this).not(".old").not(".new").addClass("range");
-					}
-					if(date_val === start) {
-						$(this).not(".old").not(".new").addClass("start-selected");
-					}
-					if(date_val === end) {
-						$(this).not(".old").not(".new").addClass("end-selected");
-					}
-				}
-
-				if (endCompare && startCompare) {
-					$(this).removeClass("range-compare")
-						.removeClass("start-selected-compare")
-						.removeClass("end-selected-compare");
-
-					if(date_val > startCompare && date_val < endCompare) {
-						$(this).not(".old").not(".new").addClass("range-compare");
-					}
-					if(date_val === startCompare) {
-						$(this).not(".old").not(".new").addClass("start-selected-compare");
-					}
-					if(date_val === endCompare) {
-						$(this).not(".old").not(".new").addClass("end-selected-compare");
-					}
-				} else {
-					$(this).not(".old").not(".new").removeClass("range-compare")
-						.removeClass("start-selected-compare")
-						.removeClass("end-selected-compare");
-				}
-			});
+			//click = 2;
 		},
 
 		click: function(e) {
@@ -383,20 +341,25 @@
 
 					case 'td':
 						//reset
-						if (target.is('.day') && !target.is('.disabled') && !target.is('.old') && !target.is('.new')){
+						if (target.is('.day') && !target.is('.disabled')){
 							// reset process for a new range
+							if (start && end) {
+								if (!compare) {
+									click = 2 ;
+									$(".range").removeClass('range');
+									$(".start-selected").removeClass("start-selected");
+									$(".end-selected").removeClass("end-selected");
+								}
+							}
 							if(click === 2) {
-								if (compare)
-								{
+								if (compare) {
 									startCompare = null;
 									endCompare = null;
 								}
-								else
-								{
+								else {
 									start = null;
 									end = null;
 								}
-
 								click = null;
 								switched = false;
 								if (compare) {
@@ -425,7 +388,7 @@
 								}
 																	
 								if(!switched) {click = 1;} else {click = 2;}
-								if(!switched){
+								if(!switched) {
 									if (compare) {
 										$("#date-end-compare").val(null).focus().addClass("input-selected");
 										target.addClass("start-selected-compare").addClass("end-selected-compare");
@@ -435,10 +398,12 @@
 									}
 								}
 
-								if (compare)
+								if (compare) {
 									$("#date-start-compare").removeClass("input-selected").addClass("input-complete");
-								else
+								}
+								else {
 									$("#date-start").removeClass("input-selected").addClass("input-complete");
+								}
 							}
 							//define end
 							else {
@@ -460,57 +425,67 @@
 								}
 							}
 						}
-						if (target.is('.old')||target.is('.new')){
-								var day = parseInt(target.text(), 10)||1;
-								var month = this.viewDate.getMonth();
-								var year = this.viewDate.getFullYear();
-								if (target.is('.old')) {
-									month -= 1;
-								} else if (target.is('.new')) {
-									month += 1;
-								}
-								this.viewDate = new Date(year, month, Math.min(28, day),0,0,0,0);
-								this.fill();
-								this.set();
-							}
 						break;
 				}
 			}
 		},
 
-		range: function(){
+		updateRange: function() {
+			$("#datepicker .day").each(function(){
+				var date_val = parseInt($(this).data('val'),10);
+
+				if (end && start) {
+					if(date_val > start && date_val < end) {
+						$(this).addClass("range");
+					}
+					if(date_val === start) {
+						$(this).addClass("start-selected");
+					}
+					if(date_val === end) {
+						$(this).addClass("end-selected");
+					}
+				}
+
+				if (endCompare && startCompare) {
+					$(this).removeClass("range-compare").removeClass("start-selected-compare").removeClass("end-selected-compare");
+
+					if(date_val > startCompare && date_val < endCompare) {
+						$(this).addClass("range-compare");
+					}
+					if(date_val === startCompare) {
+						$(this).addClass("start-selected-compare");
+					}
+					if(date_val === endCompare) {
+						$(this).addClass("end-selected-compare");
+					}
+				} else {
+					$(this).removeClass("range-compare").removeClass("start-selected-compare").removeClass("end-selected-compare");
+				}
+			});
+		},
+
+		mouseoverRange: function(){
 			//range
 			$("#datepicker .day").each(function(){
-				val = parseInt($(this).data('val'),10);
-				if (compare)
-				{
-					if (!endCompare)
-					{
-						if( val > startCompare && val < over)
-							$(this).not(".old").not(".new").addClass("range-compare");
+				var date_val = parseInt($(this).data('val'),10);
+				if (compare) {
+					if (!endCompare && date_val > startCompare && date_val < over) {
+						$(this).not(".old").not(".new").addClass("range-compare");
 					}
-					else if (!startCompare)
-					{
-						if( val > over && val < endCompare)
-							$(this).not(".old").not(".new").addClass("range-compare");
+					else if (!startCompare && date_val > over && date_val < endCompare) {
+						$(this).not(".old").not(".new").addClass("range-compare");
 					}
-					else if (startCompare && endCompare)
+					else if (startCompare && endCompare) {
 						$(this).addClass("range-compare");
+					}
 				}
-				else
-				{
-					if (!end)
-					{
-						if( val > start && val < over)
-							$(this).not(".old").not(".new").addClass("range");
+				else {
+					if (!end && date_val > start && date_val < over) {
+						$(this).not(".old").not(".new").addClass("range");
 					}
-					else if (!start)
-					{
-						if( val > over && val < end)
-							$(this).not(".old").not(".new").addClass("range");
+					else if (!start && date_val > over && date_val < end) {
+						$(this).not(".old").not(".new").addClass("range");
 					}
-					else if (start && end)
-						$(this).addClass("range");
 				}
 			});
 		},
@@ -519,19 +494,12 @@
 			//data-val from day overed
 			over = $(e.target).data("val");
 
-			//this condition will focus start just after mouseover on datepicker, but it's weird...
-			//if(click==2){
-				//$("#date-start").focus().addClass("input-selected")
-			//}
-
-			//action after first click
+			//action when one of two dates has been set
 			if(click === 1 && over){
-				if (compare)
-				{
+				if (compare) {
 					$("#datepicker .range-compare").removeClass("range-compare");
 
-					if (startCompare && over < startCompare)
-					{
+					if (startCompare && over < startCompare) {
 						endCompare = startCompare;
 						$("#date-end-compare").val(DPGlobal.formatDate(new Date(startCompare), DPGlobal.parseFormat('Y-m-d'))).removeClass("input-selected");
 						$("#date-start-compare").val(null).focus().addClass("input-selected");
@@ -539,8 +507,7 @@
 						startCompare = null;
 						switched = true;
 					}
-					else if (endCompare && over > endCompare)
-					{
+					else if (endCompare && over > endCompare) {
 						startCompare = endCompare;
 						$("#date-start-compare").val(DPGlobal.formatDate(new Date(endCompare), DPGlobal.parseFormat('Y-m-d'))).removeClass("input-selected");
 						$("#date-end-compare").val(null).focus().addClass("input-selected");
@@ -549,23 +516,19 @@
 						switched = false;
 					}
 
-					if(startCompare)
-					{
+					if (startCompare) {
 						$(".end-selected-compare").removeClass("end-selected-compare");
 						$(e.target).addClass("end-selected-compare");
 					}
-					else if(endCompare)
-					{
+					else if (endCompare) {
 						$(".start-selected-compare").removeClass("start-selected-compare");
 						$(e.target).addClass("start-selected-compare");
 					}
 				}
-				else
-				{
+				else {
 					$("#datepicker .range").removeClass("range");
 
-					if (start && over < start)
-					{
+					if (start && over < start) {
 						end = start;
 						$("#date-end").val(DPGlobal.formatDate(new Date(start), DPGlobal.parseFormat('Y-m-d'))).removeClass("input-selected");
 						$('#date-end').trigger('change');
@@ -574,8 +537,7 @@
 						start = null;
 						switched = true;
 					}
-					else if (end && over > end)
-					{
+					else if (end && over > end) {
 						start = end;
 						$("#date-start").val(DPGlobal.formatDate(new Date(end), DPGlobal.parseFormat('Y-m-d'))).removeClass("input-selected");
 						$('#date-start').trigger('change');
@@ -585,45 +547,42 @@
 						switched = false;
 					}
 
-					if(start)
-					{
+					if (start) {
 						$(".end-selected").removeClass("end-selected");
 						$(e.target).addClass("end-selected");
 					}
-					else if(end)
-					{
+					else if (end) {
 						$(".start-selected").removeClass("start-selected");
 						$(e.target).addClass("start-selected");
 					}
 				}
 				//switch
-				
 				$(".date-input").removeClass("input-complete");
-				this.range();
+				this.mouseoverRange();
 			}
 		},
 
 		mouseout: function(){
-			if (compare)
-			{
-				if (!startCompare||!endCompare)
+			if (compare) {
+				if (!startCompare||!endCompare) {
 					$("#datepicker .range-compare").removeClass("range-compare");
-
-				if (!endCompare)
+				}
+				if (!endCompare) {
 					$(".end-selected-compare").removeClass("end-selected-compare");
-
+				}
 				else if (!startCompare)
 					$(".start-selected-compare").removeClass("start-selected-compare");
 			}
-			else
-			{
-				if (!start||!end)
+			else {
+				if (!start||!end) {
 					$("#datepicker .range").removeClass("range");
-
-				if (!end)
+				}
+				if (!end) {
 					$(".end-selected").removeClass("end-selected");
-				else if (!start)
+				}
+				else if (!start) {
 					$(".start-selected").removeClass("start-selected");
+				}
 			}			
 		},
 

@@ -194,15 +194,15 @@ class AdminDashboardControllerCore extends AdminController
 		if (Tools::isSubmit('profitability_conf'))
 			return parent::renderOptions();
 
-		$translations = array(
-			'Calendar' => $this->l('Calendar', 'AdminStatsTab'),
-			'Day' => $this->l('Day', 'AdminStatsTab'),
-			'Month' => $this->l('Month', 'AdminStatsTab'),
-			'Year' => $this->l('Year', 'AdminStatsTab'),
-			'From' => $this->l('From:', 'AdminStatsTab'),
-			'To' => $this->l('To:', 'AdminStatsTab'),
-			'Save' => $this->l('Save', 'AdminStatsTab')
-		);
+		// $translations = array(
+		// 	'Calendar' => $this->l('Calendar', 'AdminStatsTab'),
+		// 	'Day' => $this->l('Day', 'AdminStatsTab'),
+		// 	'Month' => $this->l('Month', 'AdminStatsTab'),
+		// 	'Year' => $this->l('Year', 'AdminStatsTab'),
+		// 	'From' => $this->l('From:', 'AdminStatsTab'),
+		// 	'To' => $this->l('To:', 'AdminStatsTab'),
+		// 	'Save' => $this->l('Save', 'AdminStatsTab')
+		// );
 
 		$calendar_helper = new HelperCalendar();
 
@@ -230,7 +230,7 @@ class AdminDashboardControllerCore extends AdminController
 		$this->tpl_view_vars = array(
 			'hookDashboardZoneOne' => Hook::exec('dashboardZoneOne', $params),
 			'hookDashboardZoneTwo' => Hook::exec('dashboardZoneTwo', $params),
-			'translations' => $translations,
+			//'translations' => $translations,
 			'action' => '#',
 			'warning' => $this->getWarningDomainName(),
 			'new_version_url' => Tools::getCurrentUrlProtocolPrefix().'api.prestashop.com/version/check_version.php?v='._PS_VERSION_.'&lang='.$this->context->language->iso_code,
@@ -355,6 +355,18 @@ class AdminDashboardControllerCore extends AdminController
 			$return['widget_html'] = $module_obj->$hook(array());
 		
 		die(Tools::jsonEncode($return));
+	}
+	
+	public function ajaxProcessSavePreactivationRequest()
+	{
+		$isoUser = Context::getContext()->language->iso_code;
+		$isoCountry = Context::getContext()->country->iso_code;
+		$employee = new Employee((int)Context::getContext()->cookie->id_employee);
+		$firstname = $employee->firstname;
+		$lastname = $employee->lastname;
+		$email = $employee->email;
+		$return = @Tools::file_get_contents('http://api.prestashop.com/partner/premium/set_request.php?iso_country='.strtoupper($isoCountry).'&iso_lang='.strtolower($isoUser).'&host='.urlencode($_SERVER['HTTP_HOST']).'&ps_version='._PS_VERSION_.'&ps_creation='._PS_CREATION_DATE_.'&partner='.htmlentities(Tools::getValue('module')).'&shop='.urlencode(Configuration::get('PS_SHOP_NAME')).'&email='.urlencode($email).'&firstname='.urlencode($firstname).'&lastname='.urlencode($lastname).'&type=home');
+		die($return);
 	}
 }
 

@@ -154,6 +154,28 @@ class AdminTranslationsControllerCore extends AdminController
 		return $this->{$method_name}();
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		parent::initPageHeaderToolbar();
+
+		if (Tools::getValue('lang'))
+		{
+			$this->page_header_toolbar_btn['save-and-stay'] = array(
+				'short' => 'SaveAndStay',
+				'href' => '#',
+				'desc' => $this->l('Save and stay'),
+			);
+			$this->page_header_toolbar_btn['save'] = array(
+				'href' => '#',
+				'desc' => $this->l('Update translations')
+			);
+			$this->page_header_toolbar_btn['cancel'] = array(
+				'href' => self::$currentIndex.'&token='.$this->token,
+				'desc' => $this->l('Cancel')
+			);
+		}
+	}
+
 	/**
 	 * AdminController::initToolbar() override
 	 * @see AdminController::initToolbar()
@@ -1237,6 +1259,8 @@ class AdminTranslationsControllerCore extends AdminController
 		// Set the path of selected theme
 		if ($this->theme_selected)
 			define('_PS_THEME_SELECTED_DIR_', _PS_ROOT_DIR_.'/themes/'.$this->theme_selected.'/');
+		else
+			define('_PS_THEME_SELECTED_DIR_', '');
 
 		// Get type of translation
 		if (($type = Tools::getValue('type')) && !is_array($type))

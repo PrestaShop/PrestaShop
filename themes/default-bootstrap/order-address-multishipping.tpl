@@ -171,7 +171,7 @@
 		<p id="address_invoice_form" class="select" {if $cart->id_address_invoice == $cart->id_address_delivery}style="display: none;"{/if}>
 		
 		{if $addresses|@count >= 1}
-        <div class="form-group">
+        <div class="form-group selector1">
 			<label for="id_address_invoice" class="strong">{l s='Choose a billing address:'}</label>
 			<select name="id_address_invoice" id="id_address_invoice" class="address_select form-control" onchange="updateAddressesDisplay();{if $opc}updateAddressSelection();{/if}">
 			{section loop=$addresses step=-1 name=address}
@@ -204,11 +204,11 @@
 		<input type="hidden" class="hidden" name="step" value="2" />
 		<input type="hidden" name="back" value="{$back}" />
 		{if $back}
-			<a href="{$link->getPageLink('order', true, NULL, "step=0&amp;back={$back}")|escape:'html'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Previous'}</a>
+			<a href="{$link->getPageLink('order', true, NULL, "step=0&amp;back={$back}")|escape:'html'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Continue Shopping'}</a>
 		{else}
-			<a href="{$link->getPageLink('order', true, NULL, "step=0")|escape:'html'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Previous'}</a>
+			<a href="{$link->getPageLink('order', true, NULL, "step=0")|escape:'html'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Continue Shopping'}</a>
 		{/if}
-        <button type="submit" name="processAddress" class="button btn btn-default button-medium"><span>{l s='Next'}<i class="icon-chevron-right right"></i></span></button>
+        <button type="submit" name="processAddress" class="button btn btn-default button-medium"><span>{l s='Proceed to checkout'}<i class="icon-chevron-right right"></i></span></button>
 	</p>
 </form>
 {else}

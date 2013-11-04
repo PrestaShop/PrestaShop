@@ -1,0 +1,6 @@
+.topaddsharethis{ position:absolute; right:-170px; top:160px; width:150px;}
+.stButton .stFb, .stButton .stTwbutton, .stButton .stMainServices, .stButton .stButton_gradient {height:22px !important;}
+.stButton .stButton_gradient:hover {background: -moz-linear-gradient(center top , #D5D5D5 0px, #EFEFEF 48%, #FFFFFF 94%) repeat scroll 0 0 transparent!important;}
+.stButton .chicklets:hover{ opacity:1!important;}
+.stButton{ margin-bottom:15px;}
+.addsharethis .stButton:hover{ opacity:0.6;}
