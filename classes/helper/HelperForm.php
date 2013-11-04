@@ -119,11 +119,12 @@ class HelperFormCore extends Helper
 							$uploader->setMultiple(isset($params['multiple'])?$params['multiple']:false);
 							$uploader->setUseAjax(isset($params['ajax'])?$params['ajax']:false);
 
-							if (isset($params['images']))
-								$uploader->setImages($params['images']);
-							elseif (isset($params['image'])) // Use for retrocompatibility							
-								$uploader->setImages(array(
+							if (isset($params['files']) && $params['files'])
+								$uploader->setFiles($params['files']);
+							elseif (isset($params['image']) && $params['image']) // Use for retrocompatibility							
+								$uploader->setFiles(array(
 									0 => array(
+									'type'       => HelperUploader::TYPE_IMAGE,
 									'image'      => isset($params['image'])?$params['image']:null,
 									'size'       => isset($params['size'])?$params['size']:null,
 									'delete_url' => isset($params['delete_url'])?$params['delete_url']:null

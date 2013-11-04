@@ -30,10 +30,13 @@ class HelperUploaderCore extends Uploader
 	const DEFAULT_TEMPLATE           = 'simple.tpl';
 	const DEFAULT_AJAX_TEMPLATE      = 'ajax.tpl';
 
+	const TYPE_IMAGE                 = 'image';
+
 	private   $_context;
 	private   $_id;
-	private   $_images;
+	private   $_files;
 	private   $_name;
+	private   $_max_files;
 	private   $_multiple;
 	private   $_file;
 	protected $_template;
@@ -71,29 +74,29 @@ class HelperUploaderCore extends Uploader
 		return $this->_id;
 	}
 
-	public function setImages($value)
+	public function setFiles($value)
 	{
-		$this->_images = $value;
+		$this->_files = $value;
 		return $this;
 	}
 
-	public function getImages()
+	public function getFiles()
 	{
-		if (!isset($this->_images))
-			$this->_images = array();
+		if (!isset($this->_files))
+			$this->_files = array();
 
-		return $this->_images;
+		return $this->_files;
 	}
 
-	public function setName($value)
+	public function setMaxFiles($value)
 	{
-		$this->_name = (string)$value;
+		$this->_max_files = intval($value);
 		return $this;
 	}
 
-	public function getName()
+	public function getMaxFiles()
 	{
-		return $this->_name;
+		return $this->_max_files;
 	}
 
 	public function setMultiple($value)
@@ -106,6 +109,17 @@ class HelperUploaderCore extends Uploader
 	{
 		$this->_template = $value;
 		return $this;
+	}
+
+	public function setName($value)
+	{
+		$this->_name = (string)$value;
+		return $this;
+	}
+
+	public function getName()
+	{
+		return $this->_name;
 	}
 
 	public function getTemplate()
@@ -223,12 +237,6 @@ class HelperUploaderCore extends Uploader
 		return (isset($this->_multiple) && $this->_multiple);
 	}
 
-	public function process()
-	{
-		$files = parent::process();
-		die(Tools::jsonEncode(array($this->getName() => $files)));
-	}
-
 	public function render()
 	{
 		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
@@ -273,15 +281,18 @@ class HelperUploaderCore extends Uploader
 			$this->getTemplateFile($this->getTemplate()), $this->getContext()->smarty
 		);
 
+		$max_files = $this->getMaxFiles();
+
 		$template->assign(array(
 			'id'            => $this->getId(),
 			'name'          => $this->getName(),
 			'url'           => $this->getUrl(),
 			'multiple'      => $this->isMultiple(),
-			'images'        => $this->getImages(),
+			'files'         => $this->getFiles(),
 			'thumb'         => $this->getThumb(),
 			'file'          => $this->getFile(),
-			'title'         => $this->getTitle()
+			'title'         => $this->getTitle(),
+			'max_files'     => (isset($max_files) && $max_files > 0) ? ($max_files-count($this->getFiles())) : $max_files
 		));
 
 		$html .= $template->fetch();

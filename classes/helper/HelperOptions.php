@@ -105,11 +105,12 @@ class HelperOptionsCore extends Helper
 					$uploader->setMultiple(isset($field['multiple'])?$field['multiple']:false);
 					$uploader->setUseAjax(isset($field['ajax'])?$field['ajax']:false);
 
-					if (isset($field['images']))
-						$uploader->setImages($field['images']);
-					elseif (isset($field['image'])) // Use for retrocompatibility							
-						$uploader->setImages(array(
+					if (isset($field['files']) && $field['files'])
+						$uploader->setFiles($field['files']);
+					elseif (isset($field['image']) && $field['image']) // Use for retrocompatibility							
+						$uploader->setFiles(array(
 							0 => array(
+							'type'       => HelperUploader::TYPE_IMAGE,
 							'image'      => isset($field['image'])?$field['image']:null,
 							'size'       => isset($field['size'])?$field['size']:null,
 							'delete_url' => isset($field['delete_url'])?$field['delete_url']:null
