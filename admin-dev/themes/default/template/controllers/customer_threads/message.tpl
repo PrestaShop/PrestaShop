@@ -53,12 +53,12 @@
 			{/if}
 			<dl class="dl-horizontal">			
 				<dt>{l s='Sent on:'}</dt>
-				<dd>{$message.date_add}</dd> 
+				<dd>{$message.date_add}&nbsp;</dd>
 			</dl>
 			{if empty($message.id_employee)}
 			<dl class="dl-horizontal">
 				<dt>{l s='Browser:'}</dt>
-				<dd>{$message.user_agent}</dd>
+				<dd>{$message.user_agent}&nbsp;</dd>
 			</dl>
 			{/if}
 			{if !empty($message.file_name) && $file_name}
@@ -72,33 +72,26 @@
 				</dd>
 			</dl>
 			{/if}
-			{if !empty($message.id_order) && empty($message.id_employee)}
-				<dl class="dl-horizontal">
+			{if !empty($message.id_order) && $is_valid_order_id && empty($message.id_employee)}
+				<dl>
 					<dt>{l s='Order #'}</dt> 
-					<dd>
-						<a href="index.php?tab=AdminOrders&id_order={$message.id_order}&vieworder&token={getAdminToken tab='AdminOrders'}" title="{l s='View order'}">
-							{$message.id_order} <i class="icon-search"></i>
-						</a>
+					<dd><a href="index.php?tab=AdminOrders&id_order={$message.id_order}&vieworder&token={getAdminToken tab='AdminOrders'}" title="{l s='View order'}">{$message.id_order} <img src="../img/admin/search.gif" alt="{l s='View'}" /></a>
 					</dd>
 				</dl>
 			{/if}
 			{if !empty($message.id_product) && empty($message.id_employee)}
 				<dl class="dl-horizontal">
 					<dt>{l s='Product #'}</dt> 
-					<dd>
-						<a href="index.php?tab=AdminProducts&id_product={$message.id_product}&updateproduct&token={getAdminToken tab='AdminProducts'}" title="{l s='View order'}">
-							{$message.id_product} <i class="icon-search"></i>
-						</a>
-					</dd>
+					<dd><a href="index.php?tab=AdminProducts&id_product={$message.id_product}&updateproduct&token={getAdminToken tab='AdminProducts'}" title="{l s='View order'}">{$message.id_product} <img src="../img/admin/search.gif" alt="{l s='View'}" /></a></dd>
 				</dl>
 			{/if}
-
-			<form action="{$current}&token={$token}&id_customer_thread={$message.id_customer_thread}&viewcustomer_thread" method="post" class="form-horizontal">
-				<dl class="dl-horizontal">
-					<dt> {l s='Subject:'}</dt>
+			
+			<form class="form-horizontal" action="{$current}&token={$token}&id_customer_thread={$message.id_customer_thread}&viewcustomer_thread" method="post">
+				<input type="hidden" name="id_customer_message" value="{$message.id_customer_message}" />
+				<dl>
+					<dt>{l s='Subject:'}</dt>
 					<dd>
-						<input type="hidden" name="id_customer_message" value="{$message.id_customer_message}" />
-						<select name="id_contact" onchange="this.form.submit();" class="col-lg-3">
+						<select name="id_contact" onchange="this.form.submit();">
 							{foreach $contacts as $contact}
 								<option value="{$contact.id_contact}" {if $contact.id_contact == $message.id_contact}selected="selected"{/if}>
 									{$contact.name}

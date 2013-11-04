@@ -26,7 +26,6 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
-
 <script type="text/javascript">
 	function saveCustomerNote()
 	{

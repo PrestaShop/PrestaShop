@@ -56,6 +56,8 @@ class HookCore extends ObjectModel
 	 */
 	public static $executed_hooks = array();
 
+	public static $native_module;
+
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -416,12 +418,19 @@ class HookCore extends ObjectModel
 		// Look on modules list
 		$altern = 0;
 		$output = '';
-						
+
+		if (!isset(Hook::$native_module))
+			Hook::$native_module = Module::getNativeModuleList();
+
 		foreach ($module_list as $array)
 		{
 			// Check errors
 			if ($id_module && $id_module != $array['id_module'])
 				continue;
+
+			if ((bool)Configuration::get('PS_DISABLE_NON_NATIVE_MODULE') && !in_array($array['module'], self::$native_module))
+				continue;
+
 			if (!($moduleInstance = Module::getInstanceByName($array['module'])))
 				continue;
 

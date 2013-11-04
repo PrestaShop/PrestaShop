@@ -38,7 +38,7 @@
 				<span>
 					<select id="show_modules" onChange="autoUrl('show_modules', '{$url_show_modules}')" class="filter fixed-width-lg">
 						<option value="all">{l s='All modules'}&nbsp;</option>
-						<option>---------------</option>
+						<option>-</option>
 						{foreach $modules as $module}
 							<option value="{$module->id|intval}" {if $display_key == $module->id}selected="selected"{/if}>{$module->displayName}</option>
 						{/foreach}
@@ -51,7 +51,6 @@
 					</label>
 				</p>
 			</form>
-
 			<div id="modulePosition">
 				<form method="post" action="{$url_submit}" >
 

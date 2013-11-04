@@ -92,16 +92,16 @@
 		<label class="control-label col-lg-3" for="id_manufacturer">{l s='Manufacturer:'}</label>
 		<div class="col-lg-5">
 			<select name="id_manufacturer" id="id_manufacturer">
-				<option value="0">-- {l s='Choose (optional)'} --</option>
+				<option value="0">- {l s='Choose (optional)'} -</option>
 				{if $product->id_manufacturer}
 				<option value="{$product->id_manufacturer}" selected="selected">{$product->manufacturer_name}</option>
 				{/if}
-				<option disabled="disabled">----------</option>
+				<option disabled="disabled">-</option>
 			</select>
 		</div>
 		<div class="col-lg-4">
 			<a class="btn btn-link bt-icon confirm_leave" style="margin-bottom:0" href="{$link->getAdminLink('AdminManufacturers')|escape:'htmlall':'UTF-8'}&addmanufacturer">
-				<i class="icon-plus-sign"></i> {l s='Create new manufacturer'} <i class="icon-external-link-sign"></i> 
+				<i class="icon-plus-sign"></i> {l s='Create new manufacturer'} <i class="icon-external-link-sign"></i>
 			</a>
 		</div>
 	</div>

@@ -63,7 +63,8 @@ class AdminEmailsControllerCore extends AdminController
 						),
 						'js' => array(
 							1 => 'onclick="$(\'#smtp\').slideUp();"', 
-							2 => 'onclick="$(\'#smtp\').slideDown();"'
+							2 => 'onclick="$(\'#smtp\').slideDown();"',
+							3 => 'onclick="$(\'#smtp\').slideUp();"'
 						),
 						'visibility' => Shop::CONTEXT_ALL
 					),
