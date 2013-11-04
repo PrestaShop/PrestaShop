@@ -134,11 +134,11 @@ class AdminPerformanceControllerCore extends AdminController
 		$this->fields_form[1]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('Debug mode'),
-				'image' => '../img/admin/prefs.gif'
+				'icon' => 'icon-bug'
 			),
 			'input' => array(
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Disable non PrestaShop modules'),
 					'name' => 'native_module',
 					'class' => 't',
@@ -155,10 +155,10 @@ class AdminPerformanceControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Enable or disable non PrestaShop Modules.')
+					'hint' => $this->l('Enable or disable non PrestaShop Modules.')
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Disable all overrides'),
 					'name' => 'overrides',
 					'class' => 't',
@@ -175,7 +175,7 @@ class AdminPerformanceControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Enable or disable all classes and controllers overrides')
+					'hint' => $this->l('Enable or disable all classes and controllers overrides')
 				),
 			),
 			'submit' => array(
@@ -521,10 +521,6 @@ class AdminPerformanceControllerCore extends AdminController
 					'label' => $this->l('Directory depth'),
 					'name' => 'ps_cache_fs_directory_depth'
 				),
-			),
-			'submit' => array(
-				'title' => $this->l('Save'),
-				'class' => 'btn btn-default'
 			),
 			'memcachedServers' => true
 		);
