@@ -84,17 +84,16 @@ class CompareControllerCore extends FrontController
 		$hasProduct = false;
 
 		if (!Configuration::get('PS_COMPARATOR_MAX_ITEM'))
-				return Tools::redirect('index.php?controller=404');
+			return Tools::redirect('index.php?controller=404');
 
+		$ids = null;
 		if (($product_list = Tools::getValue('compare_product_list')) && ($postProducts = (isset($product_list) ? rtrim($product_list, '|') : '')))
 			$ids = array_unique(explode('|', $postProducts));
-		else if (isset($this->context->cookie->id_compare))
+		elseif (isset($this->context->cookie->id_compare))
 		{
 			$ids = CompareProduct::getCompareProducts($this->context->cookie->id_compare);
 			Tools::redirect($this->context->link->getPageLink('products-comparison', null, $this->context->language->id, array('compare_product_list' => implode('|', $ids))));
 		}
-		else
-			$ids = null;
 
 		if ($ids)
 		{
