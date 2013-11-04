@@ -44,7 +44,7 @@ class AdminCartRulesControllerCore extends AdminController
 			'code' => array('title' => $this->l('Code'), 'class' => 'fixed-width-sm'),
 			'quantity' => array('title' => $this->l('Quantity'), 'align' => 'center', 'class' => 'fixed-width-xs'),
 			'date_to' => array('title' => $this->l('Until'), 'class' => 'fixed-width-lg'),
-			'active' => array('title' => $this->l('Status'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false),
+			'active' => array('title' => $this->l('Status'), 'active' => 'status', 'type' => 'bool', 'orderby' => false),
 		);
 
 		parent::__construct();

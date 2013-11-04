@@ -69,10 +69,7 @@
 						<div class="module_name">
 							<span style="display:none">{$module->name}</span>
 							{$module->displayName}
-
 							<small>v{$module->version}</small>
-							
-
 							{if isset($module->type) && $module->type == 'addonsMustHave'}
 								<span class="label label-info">{l s='Must Have'}</span>
 							{elseif isset($module->id) && $module->id gt 0}
@@ -86,20 +83,7 @@
 							{else}
 								<span class="label label-warning">{l s='Not installed'}</span>
 							{/if}
-<!-- 						{if isset($module->id) && $module->id gt 0}
-								<span class="label label-success{if isset($module->active) && $module->active eq 0} off{/if}">{l s='Installed'}</span>
-							{else}
-								<span class="label label-warning">{l s='Not installed'}</span>
-							{/if} -->
 						</div>						
-						<!-- <p class="text-muted">
-							{if isset($module->author) && !empty($module->author)}
-								{l s='Developed by'} {$module->author|truncate:20:'...'}
-							{/if}
-							{if isset($module->version_addons)}
-								({l s='Update'} {$module->version_addons} {l s='Available on PrestaShop Addons'})
-							{/if}
-						</p> -->
 						<p class="module_description">
 							{if isset($module->description) && $module->description ne ''}
 								{$module->description}

@@ -24,7 +24,7 @@
 *}
 
 {if isset($orderby) AND isset($orderway)}
-<ul class="display">
+<ul class="display hidden-xs">
 	<li class="display-title">{l s='View:'}</li>
     <li id="grid"><a onclick="display('grid');"><i class="icon-th-large"></i>{l s='Grid'}</a></li>
     <li id="list"><a onclick="display('list');"><i class="icon-th-list"></i>{l s='List'}</a></li>
@@ -59,7 +59,7 @@ $(document).ready(function(){
 </script>
 {/if}
 <form id="productsSortForm{if isset($paginationId)}_{$paginationId}{/if}" action="{$request|escape:'htmlall':'UTF-8'}" class="productsSortForm">
-	<div class="select">
+	<div class="select selector1">
 		<label for="selectPrductSort{if isset($paginationId)}_{$paginationId}{/if}">{l s='Sort by'}</label>
 		<select id="selectPrductSort{if isset($paginationId)}_{$paginationId}{/if}" class="selectProductSort form-control">
 			<option value="{$orderbydefault|escape:'htmlall':'UTF-8'}:{$orderwaydefault|escape:'htmlall':'UTF-8'}" {if $orderby eq $orderbydefault}selected="selected"{/if}>{l s='--'}</option>

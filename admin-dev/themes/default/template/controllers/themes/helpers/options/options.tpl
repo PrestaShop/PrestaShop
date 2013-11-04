@@ -50,7 +50,7 @@
 {/block}
 
 {block name="after"}
-	<div class="panel" id="prestastore-content"></div>
+	<div class="panel clearfix" id="prestastore-content"></div>
 	<script type="text/javascript">
 		$.ajax({
 			type: 'POST',

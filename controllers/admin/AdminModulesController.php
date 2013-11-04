@@ -693,6 +693,7 @@ class AdminModulesControllerCore extends AdminController
 						// If the method called is "configure" (getContent method), we show the html code of configure page
 						if ($key == 'configure' && Module::isInstalled($module->name))
 						{
+							$this->bootstrap = (isset($module->bootstrap) && $module->bootstrap);
 							if (isset($module->multishop_context))
 								$this->multishop_context = $module->multishop_context;
 
@@ -829,7 +830,7 @@ class AdminModulesControllerCore extends AdminController
 
 		if (count($module_errors))
 		{
-			$html_error = '<ul style="line-height:20px">';
+			$html_error = '<ul>';
 			foreach ($module_errors as $module_error)
 			{
 				$html_error_description = '';
@@ -1022,9 +1023,6 @@ class AdminModulesControllerCore extends AdminController
 	
 	public function initContent()
 	{
-		// Adding Css
-		//$this->addCSS(__PS_BASE_URI__.str_replace(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR, '', _PS_ADMIN_DIR_).'/themes/'.$this->bo_theme.'/css/modules.css', 'all');
-
 		// If we are on a module configuration, no need to load all modules
 		if (Tools::getValue('configure') != '')
 			return true;

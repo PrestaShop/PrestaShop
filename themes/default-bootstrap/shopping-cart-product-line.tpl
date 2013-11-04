@@ -28,23 +28,27 @@
 	</td>
 	<td class="cart_description">
 		<p class="product-name"><a href="{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category, null, null, $product.id_shop, $product.id_product_attribute)|escape:'htmlall':'UTF-8'}">{$product.name|escape:'htmlall':'UTF-8'}</a></p>
+        <small class="cart_ref">{l s='SKU'} : {if $product.reference}{$product.reference|escape:'htmlall':'UTF-8'}{else}--{/if}</small>
 		{if isset($product.attributes) && $product.attributes}<small><a href="{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category, null, null, $product.id_shop, $product.id_product_attribute)|escape:'htmlall':'UTF-8'}">{$product.attributes|escape:'htmlall':'UTF-8'}</a></small>{/if}
 	</td>
-	<td class="cart_ref">{if $product.reference}{$product.reference|escape:'htmlall':'UTF-8'}{else}--{/if}</td>
+	<td class="cart_avail">{if $product.quantity_available > 0}<span class="label label-success">{l s='In Stock'}</span>{else}<span class="label label-warning">{l s='Out of Stock'}</span>{/if}</td>
 	<td class="cart_unit">
 		<span class="price" id="product_price_{$product.id_product}_{$product.id_product_attribute}{if $quantityDisplayed > 0}_nocustom{/if}_{$product.id_address_delivery|intval}{if !empty($product.gift)}_gift{/if}">
 			{if !empty($product.gift)}
 				<span class="gift-icon">{l s='Gift!'}</span>
 			{else}
             	{if !$priceDisplay}
-					<span class="price">{convertPrice price=$product.price_wt}</span>
+					<span class="price{if isset($product.is_discounted) && $product.is_discounted} special-price{/if}">{convertPrice price=$product.price_wt}</span>
 				{else}
-               	 <span class="price">{convertPrice price=$product.price}</span>
+               	 	<span class="price{if isset($product.is_discounted) && $product.is_discounted} special-price{/if}">{convertPrice price=$product.price}</span>
 				{/if}
 				{if isset($product.is_discounted) && $product.is_discounted}
+                	<span class="price-percent-reduction small">
+                    {assign var='priceReductonPercent' value= (($product.price_without_specific_price - $product.price)/$product.price_without_specific_price) * 100 * -1}
+                    {$priceReductonPercent|string_format:"%d"}%
+                    </span>
 					<span class="old-price">{convertPrice price=$product.price_without_specific_price}</span>
 				{/if}
-				
 			{/if}
 		</span>
 	</td>

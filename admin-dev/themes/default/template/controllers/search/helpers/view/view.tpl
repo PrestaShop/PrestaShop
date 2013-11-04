@@ -54,10 +54,8 @@ $(function() {
 			{foreach $features key=key item=feature}
 				{foreach $feature key=k item=val name=feature_list}
 					<tr>
-						<td><strong>{if $smarty.foreach.feature_list.first}{$key}{/if}</strong></td>
-						<td>
-							<a href="{$val.link}">{$val.value}</a>
-						</td>
+						<td><a href="{$val.link}"{if $smarty.foreach.feature_list.first}><strong>{$key}</strong>{/if}</a></td>
+						<td><a href="{$val.link}">{$val.value}</a></td>
 					</tr>
 				{/foreach}
 			{/foreach}
@@ -79,7 +77,7 @@ $(function() {
 			<tbody>
 			{foreach $modules key=key item=module}
 				<tr>
-					<td><strong><a href="{$module->linkto|escape:'htmlall':'UTF-8'}">{$module->displayName}</a></strong></td>
+					<td><a href="{$module->linkto|escape:'htmlall':'UTF-8'}"><strong>{$module->displayName}</strong></a></td>
 					<td><a href="{$module->linkto|escape:'htmlall':'UTF-8'}">{$module->description}</a></td>
 				</tr>
 			{/foreach}
@@ -99,7 +97,7 @@ $(function() {
 		</h3>
 		<table cellspacing="0" cellpadding="0" class="table">
 			{foreach $categories key=key item=category}
-				<tr class="alt_row">
+				<tr>
 					<td>{$category}</td>
 				</tr>
 			{/foreach}
@@ -145,4 +143,32 @@ $(function() {
 		{$orders}
 	</div>
 	{/if}
+
+	{if isset($addons) && $addons}
+	<div class="panel">
+		<h3>
+			{if $addons|@count == 1}
+				{l s='1 addon'}
+			{else}
+				{l s='%d addons' sprintf=$addons|@count}
+			{/if}
+		</h3>
+		<table class="table">
+			<tbody>
+			{foreach $addons key=key item=addon}
+				<tr>
+					<td><a href="{$addon.href|escape:'htmlall':'UTF-8'}" target="_blank"><strong>{$addon.title|escape:'htmlall':'UTF-8'}</strong></a></td>
+					<td><a href="{$addon.href|escape:'htmlall':'UTF-8'}" target="_blank">{$addon.description|truncate:256:'...'|escape:'htmlall':'UTF-8'}</a></td>
+				</tr>
+			{/foreach}
+		</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="2" class="text-center"><a href="http://addons.prestashop.com/search.php?search_query={$query|urlencode}" target="_blank"><strong>{l s='Show more results...'}</strong></a></td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+	{/if}
+
 {/if}

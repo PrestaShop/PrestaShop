@@ -32,7 +32,7 @@
 	{/if}
 	<span class="title">{$title|escape}<br /><small>{$subtitle|escape}</small></span>
 	<span class="value">{$value|escape}</span>
-</{if $href}a{else}div{/if}>
+</{if isset($href) && $href}a{else}div{/if}>
 
 {if isset($source) && $source != ''}
 <script>

@@ -39,11 +39,21 @@
 	}
 	
 	.col-md-3 {
-		padding-left:0;	
+		padding-left:0;
+		
+		/* max 991px */
+		@media (max-width: $screen-sm-max) {
+			padding-right:0;
+		}
 	}
 	
 	.col-md-9 {
-		padding-right:0;	
+		padding-right:0;
+		
+		/* max 991px */
+		@media (max-width: $screen-sm-max) {
+			padding-left:0;
+		}
 	}
 	
 	#desc_contact0 {display:none;}
@@ -61,6 +71,15 @@
 	select.form-control {
 		max-width:270px;
 		width:100%;
+	}
+	input.form-control {
+		max-width:270px;	
+	}
+	/* min 992px max 1199px */
+	@media (min-width: $screen-md) and (max-width: $screen-md-max) {
+		div.uploader span.filename {
+			width:114px;	
+		}
 	}
 }
 /**************************************************************************

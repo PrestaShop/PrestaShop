@@ -208,7 +208,7 @@
 	<div class="addresses clearfix">
     	<div class="row">
         	<div class="col-xs-12 col-sm-6">
-            	<div class="address_delivery select form-group">
+            	<div class="address_delivery select form-group selector1">
                 <label for="id_address_delivery">{if $cart->isVirtualCart()}{l s='Choose a billing address:'}{else}{l s='Choose a delivery address:'}{/if}</label>
                 <select name="id_address_delivery" id="id_address_delivery" class="address_select form-control" onchange="updateAddressesDisplay();{if $opc}updateAddressSelection();{/if}">
     
@@ -224,7 +224,7 @@
             </p>
             </div>
             <div class="col-xs-12 col-sm-6">
-            	<p id="address_invoice_form" class="select form-group" {if $cart->id_address_invoice == $cart->id_address_delivery}style="display: none;"{/if}>
+            	<div id="address_invoice_form" class="select form-group selector1" {if $cart->id_address_invoice == $cart->id_address_delivery}style="display: none;"{/if}>
     
                 {if $addresses|@count > 1}
                         <label for="id_address_invoice" class="strong">{l s='Choose a billing address:'}</label>
@@ -236,7 +236,7 @@
                     {else}
                         <a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1&select_address=1{if $back}&mod={$back}{/if}")|escape:'html'}" title="{l s='Add'}" class="button button-small btn btn-default"><span>{l s='Add a new address'}<i class="icon-chevron-right right"></i></span></a>
                     {/if}
-            	</p>
+            	</div>
             </div>
         </div>	
 		<div class="row">
@@ -263,8 +263,8 @@
 	<p class="cart_navigation clearfix">
 		<input type="hidden" class="hidden" name="step" value="2" />
 		<input type="hidden" name="back" value="{$back}" />
-		<a href="{$link->getPageLink($back_order_page, true, NULL, "step=0{if $back}&back={$back}{/if}")|escape:'html'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Previous'}</a>
-        <button type="submit" name="processAddress" class="button btn btn-default button-medium"><span>{l s='Next'}<i class="icon-chevron-right right"></i></span></button>
+		<a href="{$link->getPageLink($back_order_page, true, NULL, "step=0{if $back}&back={$back}{/if}")|escape:'html'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Continue Shopping'}</a>
+        <button type="submit" name="processAddress" class="button btn btn-default button-medium"><span>{l s='Proceed to checkout'}<i class="icon-chevron-right right"></i></span></button>
 	</p>
 </form>
 {else}

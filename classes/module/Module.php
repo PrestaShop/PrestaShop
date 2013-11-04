@@ -1247,11 +1247,7 @@ abstract class ModuleCore
 				$module->interest = 0;
 			}
 
-		usort($module_list, create_function('$a,$b', '
-			if ($a->displayName == $b->displayName)
-				return 0;
-			return ($a->displayName < $b->displayName) ? -1 : 1;
-		'));
+		usort($module_list, create_function('$a,$b', 'return strnatcasecmp($a->displayName, $b->displayName);'));
 
 		if ($errors)
 		{
@@ -1308,6 +1304,26 @@ abstract class ModuleCore
 			}
 
 		return $db->executeS('SELECT * FROM `'._DB_PREFIX_.'module` m WHERE `name` NOT IN ('.implode(',', $arr_native_modules).') ');
+	}
+
+	public static function getNativeModuleList()
+	{
+		$module_list_xml = _PS_ROOT_DIR_.self::CACHE_FILE_MODULES_LIST;
+		if (!file_exists($module_list_xml))
+			return false;
+
+		$native_modules = simplexml_load_file($module_list_xml);
+		$native_modules = $native_modules->modules;
+		$modules = array();
+
+		foreach ($native_modules as $native_modules_type)
+			if (in_array($native_modules_type['type'], array('native', 'partner')))
+			{
+				foreach ($native_modules_type->module as $module)
+					$modules[] = $module['name'];
+			}
+
+		return $modules;
 	}
 
 	/**
@@ -1593,6 +1609,18 @@ abstract class ModuleCore
 		return Cache::retrieve('Module::isInstalled'.$module_name);
 	}
 
+	public function isEnabledForShopContext()
+	{
+		$shop_list = Shop::getContextListShopID();
+		return (bool)Db::getInstance()->getValue('
+			SELECT COUNT(*) n
+			FROM `'._DB_PREFIX_.'module_shop`
+			WHERE id_module='.(int)$this->id.' AND id_shop IN ('.implode(',', array_map('intval', Shop::getContextListShopID())).')
+			GROUP BY id_module
+			HAVING n='.(int)count(Shop::getContextListShopID())
+		);
+	}
+
 	public static function isEnabled($module_name)
 	{
 		if (!Cache::isStored('Module::isEnabled'.$module_name))
@@ -1771,6 +1799,7 @@ abstract class ModuleCore
 					@unlink($file);
 					@file_put_contents($file, $xml);
 				}
+			@chmod($file, 0664);
 		}
 	}
 

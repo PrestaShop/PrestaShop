@@ -61,9 +61,7 @@
     margin: 0;
     padding: 0;
     font-size: 12px;
-    color: #000;
-    /*	text-align: center;
-    	behavior: url(csshover.htc); */ }
+    color: #000; }
   #nobootstrap .float {
     float: left; }
   #nobootstrap .floatr {

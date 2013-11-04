@@ -9,14 +9,21 @@
 	margin-bottom:26px;
 	
 	.content_scene_cat_bg {
-		padding:18px 0 10px 42px;
-		background-color:#403d3b;
+		padding:18px 10px 10px 42px;
+		background-color:#464646 !important;
+																		@media  (max-width: $screen-md-max) { // max 1199px
+																			padding:10px 10px 10px 15px;
+																		}
 	}
 	
 	h1.category-name {
 		font:600 42px/51px 'Open Sans', sans-serif;
 		color:#fff;	
 		margin-bottom:12px;
+																		@media  (max-width: $screen-md-max) { // max 1199px
+																			font-size:25px;
+																			line-height:30px;
+																		}
 	}
 	
 	p {margin-bottom:0;}
@@ -50,7 +57,7 @@
 
 #subcategories {
 	border-top:1px solid $base-border-color;
-	padding:15px 0 13px 0;
+	padding:15px 0 0px 0;
 	
 	p.subcategory-heading {
 		font-weight:bold;
@@ -66,6 +73,8 @@
 			width:128px;
 			margin-left:20px;
 			text-align:center;
+			margin-bottom:13px;
+			height:202px;
 			
 			.subcategory-image {
 				padding-bottom:8px;

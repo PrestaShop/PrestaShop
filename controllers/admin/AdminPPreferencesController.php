@@ -145,7 +145,6 @@ class AdminPPreferencesControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_DISPLAY_QTIES' => array(
 						'title' => $this->l('Display available quantities on the product page'),
-						'hint' => '',
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,
@@ -161,7 +160,6 @@ class AdminPPreferencesControllerCore extends AdminController
 					),
 					'PS_DISPLAY_JQZOOM' => array(
 						'title' => $this->l('Enable JqZoom instead of Thickbox on the product page'),
-						'hint' => '',
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,
@@ -169,7 +167,6 @@ class AdminPPreferencesControllerCore extends AdminController
 					),
 					'PS_DISP_UNAVAILABLE_ATTR' => array(
 						'title' => $this->l('Display unavailable product attributes on the product page'),
-						'hint' => '',
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,
@@ -206,7 +203,6 @@ class AdminPPreferencesControllerCore extends AdminController
 					),
 					'PS_STOCK_MANAGEMENT' => array(
 						'title' => $this->l('Enable stock management'),
-						'hint' => '',
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,

@@ -1,3 +1,4 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
 #stripe-payment-form {
   line-height: 20px;
   padding-bottom: 7px;
@@ -6,7 +7,7 @@
   margin-bottom: 5px;
 }
 #stripe-payment-form .form-group input.stripe-card-number {
-  width: 263px;
+  max-width: 263px;
 }
 #stripe-payment-form .block-left {
   float: left;
@@ -33,24 +34,38 @@
 #stripe-payment-form .stripe-card-cvc-info:hover {
   text-decoration: none;
 }
-#stripe-payment-form .stripe-card-expiry-year.form-control, #stripe-payment-form .stripe-card-expiry-month.form-control {
+#stripe-payment-form #uniform-month, #stripe-payment-form .stripe-card-expiry-year.form-control, #stripe-payment-form #uniform-year, #stripe-payment-form .stripe-card-expiry-month.form-control {
   float: left;
 }
 #stripe-payment-form .stripe-card-expiry-year.form-control {
   width: 68px;
 }
-#stripe-payment-form .stripe-card-expiry-month.form-control {
+#stripe-payment-form #uniform-month, #stripe-payment-form .stripe-card-expiry-month.form-control {
   width: 115px;
   margin-right: 10px;
 }
 #stripe-payment-form .stripe-line {
   margin-bottom: 11px;
 }
+@media (max-width: 479px) {
+  #stripe-payment-form .stripe-line .form-group {
+    clear: left;
+    width: 100%;
+  }
+}
 #stripe-payment-form .ckeckbox {
   margin-bottom: 11px;
 }
+#stripe-payment-form .ckeckbox .checker {
+  float: left;
+}
+#stripe-payment-form .ckeckbox .checker span {
+  top: 2px;
+}
 #stripe-payment-form .ckeckbox label {
   font-weight: normal;
+  cursor: pointer;
+  color: #777777;
 }
 
 a.stripe-card-cvc-info div.cvc-info {
