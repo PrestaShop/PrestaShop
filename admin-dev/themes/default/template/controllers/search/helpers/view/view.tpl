@@ -162,6 +162,11 @@ $(function() {
 				</tr>
 			{/foreach}
 		</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="2" class="text-center"><a href="http://addons.prestashop.com/search.php?search_query={$query|urlencode}" target="_blank"><strong>{l s='Show more results...'}</strong></a></td>
+				</tr>
+			</tfoot>
 		</table>
 	</div>
 	{/if}
