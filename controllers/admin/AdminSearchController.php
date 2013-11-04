@@ -197,14 +197,17 @@ class AdminSearchControllerCore extends AdminController
 				$this->_list['modules'][] = $module;
 			}
 
-		$vars = http_build_query(array(
-			'version' => _PS_VERSION_,
-			'iso_lang' => Tools::strtolower(Context::getContext()->language->iso_code),
-			'iso_code' => Tools::strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))),
-			'search_query' => $this->query
-		));
-		if (($json_content = Tools::file_get_contents('https://api.addons.prestashop.com/search.php?'.$vars)) != false)
-			$this->_list['addons'] = Tools::jsonDecode($json_content, true);
+		if (!is_numeric(trim($this->query)) && !Validate::isEmail($this->query))
+		{
+			$vars = http_build_query(array(
+				'version' => _PS_VERSION_,
+				'iso_lang' => Tools::strtolower(Context::getContext()->language->iso_code),
+				'iso_code' => Tools::strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))),
+				'search_query' => $this->query
+			));
+			if (($json_content = Tools::file_get_contents('https://api.addons.prestashop.com/search.php?'.$vars)) != false)
+				$this->_list['addons'] = Tools::jsonDecode($json_content, true);
+		}
 	}
 
 	/**
