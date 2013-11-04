@@ -31,7 +31,6 @@ $(document).ready( function () {
 	$(".preactivationLink").click(function() {
 		preactivationLinkClick($(this).attr("rel"));
 	});
-	
 
 	refreshDashboard(false, false);
 	getBlogRss();
@@ -40,7 +39,7 @@ $(document).ready( function () {
 	
 });
 
-function refreshDashboard(module_name, use_push)
+function refreshDashboard(module_name, use_push, extra)
 {
 	module_list = new Array();
 	
@@ -72,7 +71,8 @@ function refreshDashboard(module_name, use_push)
 				ajax:true,
 				action:'refreshDashboard',
 				module:module_list[module_id],
-				dashboard_use_push:Number(use_push)
+				dashboard_use_push:Number(use_push),
+				extra:extra
 			},
 			dataType: 'json',
 			success : function(widgets){
@@ -82,9 +82,6 @@ function refreshDashboard(module_name, use_push)
 
 				if (parseInt(dashboard_use_push) == 1)
 					refreshDashboard(false, true);
-			},
-			error : function(data){
-				//@TODO display errors
 			}
 		});
 	}
@@ -108,9 +105,6 @@ function setDashboardDateRange(action)
 				}
 				else
 					$('#datepickerFrom, #datepickerTo').parent('.input-group').addClass('has-error');
-			},
-			error : function(data){
-				//@TODO display errors
 			}
 		});
 }
@@ -218,9 +212,6 @@ function getBlogRss()
 			else {
 				$('.dash_news').hide();
 			}
-		},
-		error : function(data){
-			//@TODO display errors
 		}
 	});
 }
@@ -280,9 +271,6 @@ function saveDashConfig(widget_name)
 				refreshDashboard(widget_name);
 				toggleDashConfig(widget_name);
 			}
-		},
-		error : function(data){
-			//@TODO display errors
 		}
 	});
 }
@@ -300,9 +288,6 @@ function preactivationLinkClick(module)
 		type: 'POST',
 		success : function(jsonData){
 	
-		},
-		error : function(data){
-			//@TODO display errors
 		}
 	});
 }
