@@ -89,7 +89,7 @@
 						btn_submit.hide();
 						//bind enter key press to validate form
 						$('#{$table}_form').find('input').keypress(function (e) {
-							if (e.which == 13 && e.target.localName != 'textarea' && !e.target.hasClass('tagify'))
+							if (e.which == 13 && e.target.localName != 'textarea' && !$(e.target).parent().hasClass('tagify-container'))
 								$('#page-header-desc-{$table}-save').click();
 						});
 						//submit the form
