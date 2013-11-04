@@ -89,9 +89,6 @@
 	{if isset($displayBackOfficeHeader)}
 		{$displayBackOfficeHeader}
 	{/if}
-	<!--[if IE]>
-	<link type="text/css" rel="stylesheet" href="{$base_url}css/admin-ie.css" />
-	<![endif]-->
 	{if isset($brightness)}
 	<!--
 		/// todo multishop
