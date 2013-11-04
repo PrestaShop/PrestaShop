@@ -799,7 +799,7 @@ class ShopCore extends ObjectModel
 	{
 		if (Shop::getContext() == Shop::CONTEXT_SHOP)
 			$list = ($share) ? Shop::getSharedShops(Shop::getContextShopID(), $share) : array(Shop::getContextShopID());
-		else if (Shop::getContext() == Shop::CONTEXT_GROUP)
+		elseif (Shop::getContext() == Shop::CONTEXT_GROUP)
 			$list = Shop::getShops(true, Shop::getContextShopGroupID(), true);
 		else
 			$list = Shop::getShops(true, null, true);

@@ -95,7 +95,7 @@ function formatCurrency(price, currencyFormat, currencySign, currencyBlank)
 	if (currencyFormat == 4)
 		return (formatNumber(price, priceDisplayPrecision, ',', '.') + blank + currencySign);
 	if (currencyFormat == 5)
-		return (formatNumber(price, priceDisplayPrecision, ' ', '.') + blank + currencySign);
+		return (currencySign + blank + formatNumber(price, priceDisplayPrecision, '\'', '.'));
 	return price;
 }
 

@@ -2120,7 +2120,10 @@ class AdminControllerCore extends Controller
 			$this->context->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
 		elseif ($this->context->shop->id != $shop_id)
 			$this->context->shop = new Shop($shop_id);
-
+		
+		// Replace current default country		
+		$this->context->country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+				
 		$this->initBreadcrumbs();
 	}
 
@@ -2379,8 +2382,10 @@ class AdminControllerCore extends Controller
 		if (preg_match('/[.!]/', $order_by))
 		{
 			$order_by_split = preg_split('/[.!]/', $order_by);
-			$order_by = pSQL($order_by_split[0]).'.`'.pSQL($order_by_split[1]).'`';
+			$order_by = bqSQL($order_by_split[0]).'.`'.bqSQL($order_by_split[1]).'`';
 		}
+		elseif ($order_by)
+			$order_by = '`'.bqSQL($order_by).'`';
 
 		$this->_orderWay = Tools::strtoupper($order_way);
 
@@ -2474,7 +2479,7 @@ class AdminControllerCore extends Controller
 		(isset($this->_filter) ? $this->_filter : '').$where_shop.'
 		'.(isset($this->_group) ? $this->_group.' ' : '').'
 		'.$having_clause.'
-		ORDER BY '.(($order_by == $this->identifier) ? 'a.' : '').pSQL($order_by).' '.pSQL($order_way).
+		ORDER BY '.((str_replace('`', '', $order_by) == $this->identifier) ? 'a.' : '').$order_by.' '.pSQL($order_way).
 		($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '').
 		(($use_limit === true) ? ' LIMIT '.(int)$start.','.(int)$limit : '');
 
@@ -2526,22 +2531,20 @@ class AdminControllerCore extends Controller
 	public function getLanguages()
 	{
 		$cookie = $this->context->cookie;
-		$this->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$this->allow_employee_form_lang = (int)Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG');
 		if ($this->allow_employee_form_lang && !$cookie->employee_form_lang)
-			$cookie->employee_form_lang = (int)Configuration::get('PS_LANG_DEFAULT');
-		$use_lang_from_cookie = false;
+			$cookie->employee_form_lang = (int)$this->context->language->id;
+		
+		$lang_exists = false;
 		$this->_languages = Language::getLanguages(false);
-		if ($this->allow_employee_form_lang)
-			foreach ($this->_languages as $lang)
-				if ($cookie->employee_form_lang == $lang['id_lang'])
-					$use_lang_from_cookie = true;
-		if (!$use_lang_from_cookie)
-			$this->default_form_language = (int)Configuration::get('PS_LANG_DEFAULT');
-		else
-			$this->default_form_language = (int)$cookie->employee_form_lang;
+		foreach ($this->_languages as $lang)
+			if (isset($cookie->employee_form_lang) && $cookie->employee_form_lang == $lang['id_lang'])
+				$lang_exists = true;
+
+		$this->default_form_language = $lang_exists ? (int)$cookie->employee_form_lang : (int)$this->context->language->id;
 
 		foreach ($this->_languages as $k => $language)
-			$this->_languages[$k]['is_default'] = (int)($language['id_lang'] == $this->default_form_language);
+			$this->_languages[$k]['is_default'] = ((int)($language['id_lang'] == $this->default_form_language));
 
 		return $this->_languages;
 	}
