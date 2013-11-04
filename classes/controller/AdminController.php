@@ -1543,7 +1543,7 @@ class AdminControllerCore extends Controller
 			'link' => $this->context->link,
 			'shop_name' => Configuration::get('PS_SHOP_NAME'),
 			'base_url' => $this->context->shop->getBaseURL(),
-			'tab' => $tab, // Deprecated, this tab is declared in the foreach, so it's the last tab in the foreach
+			'tab' => isset($tab) ? $tab : null, // Deprecated, this tab is declared in the foreach, so it's the last tab in the foreach
 			'current_parent_id' => (int)Tab::getCurrentParentId(),
 			'tabs' => $tabs,
 			'install_dir_exists' => file_exists(_PS_ADMIN_DIR_.'/../install'),
