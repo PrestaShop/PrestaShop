@@ -113,6 +113,6 @@
 </div>
 {/if}
 <script type="text/javascript">
-	hideOtherLanguage({$default_language});
+	hideOtherLanguage(default_language);
 	$(".textarea-autosize").autosize();
 </script>
