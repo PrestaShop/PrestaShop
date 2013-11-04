@@ -183,7 +183,6 @@ class HomeSlider extends Module
 	public function getContent()
 	{
 		$this->_html .= $this->headerHTML();
-		$this->_html .= '<h2>'.$this->displayName.'.</h2>';
 
 		/* Validate & process */
 		if (Tools::isSubmit('submitSlide') || Tools::isSubmit('delete_id_slide') ||
@@ -191,14 +190,24 @@ class HomeSlider extends Module
 			Tools::isSubmit('changeStatus'))
 		{
 			if ($this->_postValidation())
+			{
 				$this->_postProcess();
-			$this->_displayForm();
+				$this->_html .= $this->renderForm();
+				$this->_html .= $this->renderList();
+			}
+			else
+				$this->_html .= $this->renderAddForm();
+				
+			
 		}
 		elseif (Tools::isSubmit('addSlide') || (Tools::isSubmit('id_slide') && $this->slideExists((int)Tools::getValue('id_slide'))))
-			$this->_displayAddForm();
+			$this->_html .= $this->renderAddForm();
 		else
-			$this->_displayForm();
-
+		{
+			$this->_html .= $this->renderForm();
+			$this->_html .= $this->renderList();
+		}
+			
 		return $this->_html;
 	}
 
@@ -456,6 +465,8 @@ class HomeSlider extends Module
 			/* If edit : checks id_slide */
 			if (Tools::isSubmit('id_slide'))
 			{
+
+				//d(var_dump(Tools::getValue('id_slide')));
 				if (!Validate::isInt(Tools::getValue('id_slide')) && !$this->slideExists(Tools::getValue('id_slide')))
 					$errors[] = $this->l('Invalid id_slide');
 			}
@@ -773,5 +784,246 @@ class HomeSlider extends Module
 				WHERE hs.`id_homeslider_slides` = '.(int)$id_slide;
 		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($req);
 		return ($row);
+	}
+	
+	public function renderList()
+	{
+		$slides = $this->getSlides();
+		foreach ($slides as $key => $slide)
+			$slides[$key]['status'] = $this->displayStatus($slide['id_slide'], $slide['active']); 
+		
+		$this->context->smarty->assign(array(
+			'link' => $this->context->link,
+			'slides' => $slides,
+		));
+		
+		return $this->display(__FILE__, 'list.tpl');
+	}
+	
+	public function renderAddForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Slide informations'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'file_lang',
+						'label' => $this->l('Select a file:'),
+						'name' => 'image',
+						'lang' => true,
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Title:'),
+						'name' => 'title',
+						'lang' => true,
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('URL:'),
+						'name' => 'url',
+						'lang' => true,
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Legend:'),
+						'name' => 'legend',
+						'lang' => true,
+					),
+					array(
+						'type' => 'textarea',
+						'label' => $this->l('Description:'),
+						'name' => 'description',
+						'lang' => true,
+					),
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Active'),
+						'name' => 'active_slide',
+						'is_bool' => true,
+						'values' => array(
+										array(
+											'id' => 'active_on',
+											'value' => 1,
+											'label' => $this->l('Yes')
+										),
+										array(
+											'id' => 'active_off',
+											'value' => 0,
+											'label' => $this->l('No')
+										)
+								),
+						),
+				),
+			'submit' => array(
+				'title' => $this->l('Save'),
+				'class' => 'btn btn-default')
+			),
+		);
+		
+		if (Tools::isSubmit('id_slide') && $this->slideExists((int)Tools::getValue('id_slide')))
+		{
+			$slide = new HomeSlide((int)Tools::getValue('id_slide'));
+			$fields_form['form']['input'][] = array('type' => 'hidden', 'name' => 'id_slide');
+			
+			$has_picture = true;
+
+			foreach (Language::getLanguages(false) as $lang)
+				if (!isset($slide->image[$lang['id_lang']]))
+					$has_picture &= false;
+
+			if ($has_picture)
+				$fields_form['form']['input'][] = array('type' => 'hidden', 'name' => 'has_picture');
+		}
+		
+
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$this->fields_form = array();
+		$helper->module = $this;
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitSlide';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$language = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->tpl_vars = array(
+			'base_url' => $this->context->shop->getBaseURL(),
+			'language' => array(
+				'id_lang' => $language->id,
+				'iso_code' => $language->iso_code
+				),
+			'fields_value' => $this->getAddFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+		
+		$helper->override_folder = '/';
+		
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function renderForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Settings'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'text',
+						'label' => $this->l('Height:'),
+						'name' => 'HOMESLIDER_HEIGHT',
+						'suffix' => 'px'
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Width:'),
+						'name' => 'HOMESLIDER_WIDTH',
+						'suffix' => 'px'
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Speed:'),
+						'name' => 'HOMESLIDER_SPEED',
+						'suffix' => 'ms'
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Pause:'),
+						'name' => 'HOMESLIDER_PAUSE',
+						'suffix' => 'ms'
+					),
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Loop:'),
+						'name' => 'HOMESLIDER_LOOP',
+						'values' => array(
+									array(
+										'id' => 'active_on',
+										'value' => 1,
+										'label' => $this->l('Enabled')
+									),
+									array(
+										'id' => 'active_off',
+										'value' => 0,
+										'label' => $this->l('Disabled')
+									)
+								),
+						)
+				),
+			'submit' => array(
+				'title' => $this->l('Save'),
+				'class' => 'btn btn-default')
+			),
+		);
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$this->fields_form = array();
+
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitSlider';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function getConfigFieldsValues()
+	{
+		return array(
+			'HOMESLIDER_HEIGHT' => Tools::getValue('HOMESLIDER_HEIGHT', Configuration::get('HOMESLIDER_HEIGHT')),
+			'HOMESLIDER_WIDTH' => Tools::getValue('HOMESLIDER_WIDTH', Configuration::get('HOMESLIDER_WIDTH')),
+			'HOMESLIDER_SPEED' => Tools::getValue('HOMESLIDER_SPEED', Configuration::get('HOMESLIDER_SPEED')),
+			'HOMESLIDER_PAUSE' => Tools::getValue('HOMESLIDER_PAUSE', Configuration::get('HOMESLIDER_PAUSE')),
+			'HOMESLIDER_LOOP' => Tools::getValue('HOMESLIDER_LOOP', Configuration::get('HOMESLIDER_LOOP')),
+		);
+	}
+	
+	public function getAddFieldsValues()
+	{
+		$fields = array();
+	
+		if (Tools::isSubmit('id_slide') && $this->slideExists((int)Tools::getValue('id_slide')))
+		{
+			$slide = new HomeSlide((int)Tools::getValue('id_slide'));
+			$fields['id_slide'] = (int)Tools::getValue('id_slide', $slide->id);
+		}
+		else
+			$slide = new HomeSlide();
+		
+		$fields['active_slide'] = Tools::getValue('active_slide', $slide->active);
+		$fields['has_picture'] = true;
+		
+		$languages = Language::getLanguages(false);
+		
+		foreach ($languages as $lang)
+		{
+			$fields['image'][$lang['id_lang']] = Tools::getValue('image_'.(int)$lang['id_lang']);
+			$fields['title'][$lang['id_lang']] = Tools::getValue('title_'.(int)$lang['id_lang'], $slide->title[$lang['id_lang']]);
+			$fields['url'][$lang['id_lang']] = Tools::getValue('url_'.(int)$lang['id_lang'], $slide->url[$lang['id_lang']]);
+			$fields['legend'][$lang['id_lang']] = Tools::getValue('legend_'.(int)$lang['id_lang'], $slide->legend[$lang['id_lang']]);
+			$fields['description'][$lang['id_lang']] = Tools::getValue('description_'.(int)$lang['id_lang'], $slide->description[$lang['id_lang']]);
+		}
+
+		return $fields;
 	}
 }
