@@ -693,6 +693,7 @@ class AdminModulesControllerCore extends AdminController
 						// If the method called is "configure" (getContent method), we show the html code of configure page
 						if ($key == 'configure' && Module::isInstalled($module->name))
 						{
+							$this->bootstrap = (isset($module->bootstrap) && $module->bootstrap);
 							if (isset($module->multishop_context))
 								$this->multishop_context = $module->multishop_context;
 
