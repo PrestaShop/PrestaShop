@@ -66,7 +66,7 @@ echo '
 	<body>
 		<form action="translate.php" method="post">
 			<select name="iso" onchange="document.location = \'translate.php?iso=\'+this.value;">
-				<option>-- Choose your language --</option>';
+				<option>- Choose your language -</option>';
 foreach ($languages as $language)
 	if (file_exists('../langs/'.$language.'/install.php'))
 		echo '<option value="'.htmlspecialchars($language, ENT_COMPAT, 'utf-8').'" '.($iso == $language ? 'selected="selected"' : '').'>'.htmlspecialchars($language, ENT_NOQUOTES, 'utf-8').'</option>'."\n";

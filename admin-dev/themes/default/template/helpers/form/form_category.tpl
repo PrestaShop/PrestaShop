@@ -24,11 +24,11 @@
 *}
 {if count($categories) && isset($categories)}
 	<script type="text/javascript">
-		var inputName = '{$categories.input_name}';
+		var inputName = '{$categories.input_name|@addcslashes:'\''}';
 		var use_radio = {if $categories.use_radio}1{else}0{/if};
-		var selectedCat = '{implode value=$categories.selected_cat}';
-		var selectedLabel = '{$categories.trads.selected}';
-		var home = '{$categories.trads.Root.name}';
+		var selectedCat = {$categories.selected_cat|@implode|intval};
+		var selectedLabel = '{$categories.trads.selected|@addcslashes:'\''}';
+		var home = '{$categories.trads.Root.name|@addcslashes:'\''}';
 		var use_radio = {if $categories.use_radio}1{else}0{/if};
 		var use_context = {if isset($categories.use_context)}1{else}0{/if};
 		$(document).ready(function(){

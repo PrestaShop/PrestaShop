@@ -3167,7 +3167,6 @@ class BlockLayered extends Module
 				
 			$smarty->assign($filter_block);
 			$smarty->assign('hide_0_values', Configuration::get('PS_LAYERED_HIDE_0_VALUES'));
-			
 			return $this->display(__FILE__, 'blocklayered.tpl');
 		}
 		else
