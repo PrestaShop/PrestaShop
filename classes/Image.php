@@ -40,6 +40,9 @@ class ImageCore extends ObjectModel
 	/** @var boolean Image is cover */
 	public $cover;
 
+	/** @var string Legend */
+	public $legend;
+
 	/** @var string image extension */
 	public $image_format = 'jpg';
 
@@ -66,6 +69,7 @@ class ImageCore extends ObjectModel
 			'id_product' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'position' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'cover' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'shop' => true),
+			'legend' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
 		),
 	);
 

@@ -1500,7 +1500,7 @@ abstract class AdminTabCore
 				case 'bool':
 					echo '
 					<select name="'.$this->table.'Filter_'.$key.'">
-						<option value="">--</option>
+						<option value="">-</option>
 						<option value="1"'.($value == 1 ? ' selected="selected"' : '').'>'.$this->l('Yes').'</option>
 						<option value="0"'.(($value == 0 && $value != '') ? ' selected="selected"' : '').'>'.$this->l('No').'</option>
 					</select>';
@@ -1524,7 +1524,7 @@ abstract class AdminTabCore
 					if (isset($params['filter_key']))
 					{
 						echo '<select onchange="$(\'#submitFilter'.$this->table.'\').focus();$(\'#submitFilter'.$this->table.'\').click();" name="'.$this->table.'Filter_'.$params['filter_key'].'" '.(isset($params['width']) ? 'style="width: '.$params['width'].'px"' : '').'>
-								<option value=""'.(($value == 0 && $value != '') ? ' selected="selected"' : '').'>--</option>';
+								<option value=""'.(($value == 0 && $value != '') ? ' selected="selected"' : '').'>-</option>';
 						if (isset($params['select']) && is_array($params['select']))
 							foreach ($params['select'] as $optionValue => $optionDisplay)
 							{

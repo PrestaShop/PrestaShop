@@ -429,6 +429,17 @@
 			<div class="row">
 			{/if}
 				{foreach from=$languages item=language}
+					{literal}
+					<script type="text/javascript">
+						$().ready(function () {
+							var input_id = '{/literal}tags_{$language.id_lang}{literal}';
+							$('#'+input_id).tagify({delimiters: [13,44], addTagPrompt: '{/literal}{l s='Add tag' js=1}{literal}'});
+							$({/literal}'#{$table}{literal}_form').submit( function() {
+								$(this).find('#'+input_id).val($('#'+input_id).tagify('serialize'));
+							});
+						});
+					</script>
+					{/literal}
 				{if $languages|count > 1}
 				<div class="translatable-field lang-{$language.id_lang}">
 					<div class="col-lg-9">
