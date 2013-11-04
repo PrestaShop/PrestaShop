@@ -115,7 +115,7 @@ class AdminEmployeesControllerCore extends AdminController
 
 		$path = _PS_ADMIN_DIR_.'/themes/';
 		foreach (scandir($path) as $theme)
-			if ($theme[0] != '.' && is_dir($path.$theme) && (file_exists($path.$theme.'/css/admin.css') || file_exists($path.$theme.'/css/admin-theme.css')))
+			if ($theme[0] != '.' && is_dir($path.$theme) && (file_exists($path.$theme.'/css/admin-theme.css')))
 				$this->themes[] = $theme;
 
 		$home_tab = Tab::getInstanceFromClassName('AdminDashboard', $this->context->language->id);
