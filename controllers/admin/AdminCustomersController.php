@@ -600,7 +600,7 @@ class AdminCustomersControllerCore extends AdminController
 			return;
 
 		$this->context->customer = $customer;
-		$gender = new Gender($customer->id_gender);
+		$gender = new Gender($customer->id_gender, $this->context->language->id);
 		$gender_image = $gender->getImage();
 
 		$customer_stats = $customer->getStats();
@@ -723,6 +723,7 @@ class AdminCustomersControllerCore extends AdminController
 		$shop = new Shop($customer->id_shop);
 		$this->tpl_view_vars = array(
 			'customer' => $customer,
+			'gender' => $gender,
 			'gender_image' => $gender_image,
 
 			// General information of the customer

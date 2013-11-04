@@ -67,8 +67,8 @@
 				</div>
 				<ul class="list-unstyled col-lg-6">
 					<li>
-						{l s='Gender:'}
-						<span><img src="{$gender_image}"/></span>
+						{l s='Title:'}
+						<span>{$gender->name}</span>
 					</li>
 					<li>
 						{l s='Email:'}
