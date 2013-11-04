@@ -92,7 +92,7 @@
 		<tr id="image_id">
 			<td style="padding: 4px;">
 				<a href="{$smarty.const._THEME_PROD_DIR_}image_path.jpg" class="fancybox">
-					<img src="{$smarty.const._THEME_PROD_DIR_}{$iso_lang}-default-{$imageType}.jpg" alt="image_id" title="image_id" />
+					<img src="{$smarty.const._THEME_PROD_DIR_}{$iso_lang}-default-{$imageType}.jpg" alt="legend" title="legend" />
 				</a>
 			</td>
 			<td>legend</td>
@@ -332,7 +332,7 @@
 			function imageLine(id, path, position, cover, shops, legend)
 			{
 				line = $("#lineType").html();
-				line = line.replace(/image_id/g, legend);
+				line = line.replace(/image_id/g, id);
 				line = line.replace(/[a-z]{0,2}-default/g, path);
 				line = line.replace(/image_path/g, path);
 				line = line.replace(/image_position/g, position);
