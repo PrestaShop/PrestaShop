@@ -56,6 +56,8 @@ class HookCore extends ObjectModel
 	 */
 	public static $executed_hooks = array();
 
+	public static $native_module;
+
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -388,6 +390,10 @@ class HookCore extends ObjectModel
 	 */
 	public static function exec($hook_name, $hook_args = array(), $id_module = null, $array_return = false, $check_exceptions = true, $use_push = false)
 	{
+		static $disable_non_native_modules = null;
+		if ($disable_non_native_modules === null)
+			$disable_non_native_modules = (bool)Configuration::get('PS_DISABLE_NON_NATIVE_MODULE');
+
 		// Check arguments validity
 		if (($id_module && !is_numeric($id_module)) || !Validate::isHookName($hook_name))
 			throw new PrestaShopException('Invalid id_module or hook_name');
@@ -416,12 +422,19 @@ class HookCore extends ObjectModel
 		// Look on modules list
 		$altern = 0;
 		$output = '';
-						
+
+		if ($disable_non_native_modules && !isset(Hook::$native_module))
+			Hook::$native_module = Module::getNativeModuleList();
+
 		foreach ($module_list as $array)
 		{
 			// Check errors
 			if ($id_module && $id_module != $array['id_module'])
 				continue;
+
+			if ((bool)$disable_non_native_modules && Hook::$native_module && count(Hook::$native_module) && !in_array($array['module'], self::$native_module))
+				continue;
+
 			if (!($moduleInstance = Module::getInstanceByName($array['module'])))
 				continue;
 

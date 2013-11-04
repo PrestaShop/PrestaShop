@@ -36,64 +36,60 @@
 	<title>{$shop_name} {if $meta_title != ''}{if isset($navigationPipe)}{$navigationPipe|escape:'htmlall':'UTF-8'}{else}&gt;{/if} {$meta_title}{/if}</title>
 	{if $display_header}
 	<script type="text/javascript">
-		var help_class_name = '{$controller_name}';
-		var iso_user = '{$iso_user}';
-		var country_iso_code = '{$country_iso_code}';
-		var _PS_VERSION_ = '{$smarty.const._PS_VERSION_}';
-		var helpboxes = {$help_box};
-		var roundMode = {$round_mode};
-			{if isset($shop_context)}
-				{if $shop_context == Shop::CONTEXT_ALL}
-				var youEditFieldFor = "{l s='A modification of this field will be applied for all shops' slashes=1 }";
-					{elseif $shop_context == Shop::CONTEXT_GROUP}
-				var youEditFieldFor = "{l s='A modification of this field will be applied for all shops of group ' slashes=1 }<b>{$shop_name}</b>";
-					{else}
-				var youEditFieldFor = "{l s='A modification of this field will be applied for the shop ' slashes=1 }<b>{$shop_name}</b>";
-				{/if}
-				{else}
-			var youEditFieldFor = '';
-			{/if}
-		{* Notifications vars *}
-		var autorefresh_notifications = '{$autorefresh_notifications}';
-		var new_order_msg = '{l s='A new order has been placed on your shop.' slashes=1}';
-		var order_number_msg = '{l s='Order number: ' slashes=1}';
-		var total_msg = '{l s='Total: ' slashes=1}';
-		var from_msg = '{l s='From: ' slashes=1}';
-		var see_order_msg = '{l s='View this order' slashes=1}';
-		var new_customer_msg = '{l s='A new customer registered on your shop.' slashes=1}';
-		var customer_name_msg = '{l s='Customer name: ' slashes=1}';
-		var see_customer_msg = '{l s='View this customer' slashes=1}';
-		var new_msg = '{l s='A new message posted on your shop.' slashes=1}';
-		var excerpt_msg = '{l s='Excerpt: ' slashes=1}';
-		var see_msg = '{l s='Read this message' slashes=1}';
-		var token_admin_orders = '{getAdminToken tab='AdminOrders' slashes=1}';
-		var token_admin_customers = '{getAdminToken tab='AdminCustomers' slashes=1}';
-		var token_admin_customer_threads = '{getAdminToken tab='AdminCustomerThreads' slashes=1}';
-		var currentIndex = '{$currentIndex}';
-		var default_language = '{$default_language|intval}';
-		var choose_language_translate = "{l s='Choose language' slashes=1}";
-		var admin_modules_link = '{$link->getAdminLink("AdminModules")|addslashes}';
-		var tab_modules_list = '{if isset($tab_modules_list) && $tab_modules_list}{$tab_modules_list|addslashes}{/if}';
+
+		var help_class_name = '{$controller_name|@addcslashes:'\''}';
+		var iso_user = '{$iso_user|@addcslashes:'\''}';
+		var country_iso_code = '{$country_iso_code|@addcslashes:'\''}';
+		var _PS_VERSION_ = '{$smarty.const._PS_VERSION_|@addcslashes:'\''}';
+		var helpboxes = {$help_box|intval};
+		var roundMode = {$round_mode|intval};
+{if isset($shop_context)}
+{if $shop_context == Shop::CONTEXT_ALL}
+		var youEditFieldFor = '{l s='A modification of this field will be applied for all shops' js=1}';
+{elseif $shop_context == Shop::CONTEXT_GROUP}
+		var youEditFieldFor = '{l s='A modification of this field will be applied for all shops of group' js=1} <b>{$shop_name|@addcslashes:'\''}</b>';
+{else}
+		var youEditFieldFor = '{l s='A modification of this field will be applied for the shop' js=1} <b>{$shop_name|@addcslashes:'\''}</b>';
+{/if}
+{else}
+		var youEditFieldFor = '';
+{/if}
+		var autorefresh_notifications = '{$autorefresh_notifications|@addcslashes:'\''}';
+		var new_order_msg = '{l s='A new order has been placed on your shop.' js=1}';
+		var order_number_msg = '{l s='Order number: ' js=1}';
+		var total_msg = '{l s='Total: ' js=1}';
+		var from_msg = '{l s='From: ' js=1}';
+		var see_order_msg = '{l s='View this order' js=1}';
+		var new_customer_msg = '{l s='A new customer registered on your shop.' js=1}';
+		var customer_name_msg = '{l s='Customer name: ' js=1}';
+		var see_customer_msg = '{l s='View this customer' js=1}';
+		var new_msg = '{l s='A new message posted on your shop.' js=1}';
+		var excerpt_msg = '{l s='Excerpt: ' js=1}';
+		var see_msg = '{l s='Read this message' js=1}';
+		var token_admin_orders = '{getAdminToken tab='AdminOrders'}';
+		var token_admin_customers = '{getAdminToken tab='AdminCustomers'}';
+		var token_admin_customer_threads = '{getAdminToken tab='AdminCustomerThreads'}';
+		var currentIndex = '{$currentIndex|@addcslashes:'\''}';
+		var choose_language_translate = '{l s='Choose language' js=1}';
+		var default_language = '{$default_language|addslashes}';
 	</script>
-	{/if}
-	{if isset($css_files)}
-		{foreach from=$css_files key=css_uri item=media}
-		<link href="{$css_uri}" rel="stylesheet" type="text/css" media="{$media}" />
-		{/foreach}
-	{/if}
-	{if isset($js_files)}
-	{foreach from=$js_files item=js_uri}
-		<script type="text/javascript" src="{$js_uri}"></script>
-	{/foreach}
-	{/if}
+{/if}
+{if isset($css_files)}
+{foreach from=$css_files key=css_uri item=media}
+	<link href="{$css_uri}" rel="stylesheet" type="text/css" media="{$media}" />
+{/foreach}
+{/if}
+{if isset($js_files)}
+{foreach from=$js_files item=js_uri}
+	<script type="text/javascript" src="{$js_uri}"></script>
+{/foreach}
+{/if}
+
 	<link rel="icon" type="image/vnd.microsoft.icon" href="{$img_dir}favicon.ico" />
 	<link rel="shortcut icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
 	{if isset($displayBackOfficeHeader)}
 		{$displayBackOfficeHeader}
 	{/if}
-	<!--[if IE]>
-	<link type="text/css" rel="stylesheet" href="{$base_url}css/admin-ie.css" />
-	<![endif]-->
 	{if isset($brightness)}
 	<!--
 		/// todo multishop
@@ -131,9 +127,9 @@
 					</a>
 					<div class="dropdown-menu notifs_dropdown">
 						<section id="orders_notif_wrapper" class="notifs_panel">
-							<header class="notifs_panel_header">
+							<div class="notifs_panel_header">
 								<h3>{l s='Latest Orders'}</h3>
-							</header>
+							</div>
 							<div id="list_orders_notif" class="list-group">
 								<a href="#" class="media list-group-item no_notifs">
 									<span class="pull-left">
@@ -144,9 +140,9 @@
 									</span>
 								</a>
 							</div>
-							<footer class="notifs_panel_footer">
+							<div class="notifs_panel_footer">
 								<a href="index.php?controller=AdminOrders&amp;token={getAdminToken tab='AdminOrders'}">{l s='Show all orders'}</a>
-							</footer>
+							</div>
 						</section>
 					</div>
 				</li>
@@ -161,9 +157,9 @@
 					</a>
 					<div class="dropdown-menu notifs_dropdown">
 						<section id="customers_notif_wrapper" class="notifs_panel">
-							<header class="notifs_panel_header">
+							<div class="notifs_panel_header">
 								<h3>{l s='Latest Registrations'}</h3>
-							</header>
+							</div>
 							<div id="list_customers_notif" class="list-group">
 								<a href="#" class="media list-group-item no_notifs">
 									<span class="pull-left">
@@ -174,9 +170,9 @@
 									</span>
 								</a>
 							</div>
-							<footer class="panel-footer">
+							<div class="panel-footer">
 								<a href="index.php?controller=AdminCustomers&amp;token={getAdminToken tab='AdminCustomers'}">{l s='Show all customers'}</a>
-							</footer>
+							</div>
 						</section>
 					</div>
 				</li>
@@ -191,9 +187,9 @@
 					</a>
 					<div class="dropdown-menu notifs_dropdown">
 						<section id="customer_messages_notif_wrapper" class="notifs_panel">
-							<header class="notifs_panel_header">
+							<div class="notifs_panel_header">
 								<h3>{l s='Latest Messages'}</h3>
-							</header>
+							</div>
 							<div id="list_orders_notif" class="list-group">
 								<a href="#" class="media list-group-item no_notifs">
 									<span class="pull-left">
@@ -204,9 +200,9 @@
 									</span>
 								</a>
 							</div>
-							<footer class="panel-footer text-small">
+							<div class="panel-footer text-small">
 								<a href="index.php?tab=AdminCustomerThreads&amp;token={getAdminToken tab='AdminCustomerThreads'}">{l s='Show all messages'}</a>
-							</footer>
+							</div>
 						</section>
 					</div>
 				</li>
@@ -292,18 +288,6 @@
 						});
 					{/if}
 				</script>
-
-			<!-- todo js 
-					OK - size up search field on focus
-					(?) -  prevent blank search
-					OK - dropdown menu as select
-					OK - fill input hidden field with data value from list item
-					OK - change icon in suffix
-					OK - set active on right list item
-					OK - focus input field
-					OK - change place holder
-					(?) - keep focus state when search exists
-			-->
 			</form>
 
 {if count($quick_access) > 0}
@@ -329,13 +313,15 @@
 {/if}
 				<li id="employee_infos" class="dropdown">
 					<a href='#' class="employee_name dropdown-toggle" data-toggle="dropdown">
-						<img src="{$img_dir}prestashop-avatar.png" height="15" width="15" />
+						<span class="employee_avatar_small">{$employee_avatar}</span>
 						{$first_name}&nbsp;{$last_name}
 						<i class="caret"></i>
 					</a>
 					<ul id="employee_links" class="dropdown-menu">
-						<li>{$employee_avatar}</li>
+						<li><span class="employee_avatar">{$employee_avatar}</span></li>
+						<li class="divider"></li>
 						<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'htmlall':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences'}</a></li>
+						<li class="divider"></li>
 						<li><a id="header_logout" href="index.php?logout"><i class="icon-signout"></i> {l s='Log out'}</a></li>
 					</ul>
 				</li>

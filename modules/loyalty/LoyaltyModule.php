@@ -88,7 +88,9 @@ class LoyaltyModule extends ObjectModel
 			$currentContext = Context::getContext();
 			$context = clone $currentContext;
 			$context->cart = $cart;
-			$context->customer = new Customer($context->cart->id_customer);
+			// if customer is logged we do not recreate it
+			if(!$context->customer->isLogged(true))
+				$context->customer = new Customer($context->cart->id_customer);
 			$context->language = new Language($context->cart->id_lang);
 			$context->shop = new Shop($context->cart->id_shop);
 			$context->currency = new Currency($context->cart->id_currency, null, $context->shop->id);

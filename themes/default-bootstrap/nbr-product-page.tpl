@@ -23,7 +23,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 {if isset($p) AND $p}
 	{if isset($smarty.get.id_category) && $smarty.get.id_category && isset($category)}
 		{assign var='requestPage' value=$link->getPaginationLink('category', $category, false, false, true, false)}
@@ -41,7 +40,7 @@
 	<!-- nbr product/page -->
 	{if $nb_products > $products_per_page}
 		<form action="{if !is_array($requestNb)}{$requestNb}{else}{$requestNb.requestUrl}{/if}" method="get" class="nbrItemPage">
-			<div class="clearfix">
+			<div class="clearfix selector1">
 				{if isset($search_query) AND $search_query}<input type="hidden" name="search_query" value="{$search_query|escape:'htmlall':'UTF-8'}" />{/if}
 				{if isset($tag) AND $tag AND !is_array($tag)}<input type="hidden" name="tag" value="{$tag|escape:'htmlall':'UTF-8'}" />{/if}
 				<label for="nb_item{if isset($paginationId)}_{$paginationId}{/if}">{l s='Show'}</label>

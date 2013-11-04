@@ -60,31 +60,44 @@ $( document ).ready(function() {
 		$('span.submenu_expand').remove();
 		$('.expanded').removeClass('expanded');
 
-		$('#nav-topbar').on('mouseenter', 'li.maintab.has_submenu',
+		// expand elements with submenu
+		$('#nav-topbar').on('mouseenter', 'li.has_submenu',
 			function(){
 				$(this).addClass('expanded');
-			});
-		$('#nav-topbar').on('mouseleave', 'li.maintab.has_submenu',
+		});
+		$('#nav-topbar').on('mouseleave', 'li.has_submenu',
 			function(){
 				$(this).removeClass('expanded');
 		});
 
-		//todo hide element over menu width on load
-		$('#nav-topbar').find('li.maintab').each(
-			function(){
+		// hide element over menu width on load
+		$('#nav-topbar').find('li.maintab').each(function(){
+			navEllipsis();
+		});
+
+		//hide element over menu width on resize
+		$(window).on('resize', function() {
+			navEllipsis();
+		});
+	}
+
+	function navEllipsis() {
+		var ellipsed = [];
+		$('#ellipsistab').remove();
+		$('#nav-topbar ul.menu').find('li.maintab').each(function(){
+			$(this).removeClass('hide');
 			if ($(this).position().top > 0) {
+				ellipsed.push($(this));
 				$(this).addClass('hide');
 			}
 		});
+		if (ellipsed.length > 0) {
+			$('#nav-topbar ul.menu').append('<li id="ellipsistab" class="subtab has_submenu"><a href="#"><i class="icon-ellipsis-horizontal"></i></a><ul id="ellipsis_submenu" class="submenu"></ul></li>');
+			for (var i = 0; i < ellipsed.length; i++) {
+				$('#ellipsis_submenu').append('<li class="subtab has_submenu">'+ellipsed[i].html()+'</li>');
+			}
 
-		//todo hide element over menu width on resize
-		$(window).on('resize', function() {
-			$('#nav-topbar ul.menu').find('li.maintab').each(function(){
-				if ($(this).position().top > 0) {
-					$(this).addClass('hide');
-				}
-			});
-		});
+		}
 	}
 
 	//nav switch

@@ -86,7 +86,7 @@
 #product_comments_block_extra .comments_note {
   margin-bottom: 5px;
 }
-#product_comments_block_extra #product_comments_block_extra .comments_note span,
+#product_comments_block_extra .comments_note span,
 #product_comments_block_extra .star_content {
   float: left;
   color: #333;
@@ -95,10 +95,10 @@
   margin-top: 1px;
 }
 #product_comments_block_extra div.star {
-  background: url(img/star.gif) no-repeat 0 0;
+  background: url(img/star.png) no-repeat 0 0;
 }
 #product_comments_block_extra div.star_on {
-  background: url(img/star.gif) no-repeat 0 -13px;
+  background: url(img/star.png) no-repeat 0 -13px;
 }
 #product_comments_block_extra .comments_advices {
   clear: both;
@@ -254,7 +254,7 @@
 }
 #product_comments_block_tab div.star,
 #product_comments_block_tab div.star_on {
-  background: url(img/star.gif) no-repeat 0 0 transparent;
+  background: url(img/star.png) no-repeat 0 0;
 }
 #product_comments_block_tab div.star_on {
   background-position: 0 -13px;
@@ -285,8 +285,13 @@
   margin: 0;
 }
 #product_comments_block_tab div.comment_details li {
-  padding: 2px 0 2px 12px;
-  background: url(img/bg_li.png) no-repeat 1px 45% white;
+  padding: 2px 0 2px;
+}
+#product_comments_block_tab div.comment_details li:before {
+  font-family: FontAwesome;
+  content: "";
+  color: #333;
+  margin-right: 8px;
 }
 #product_comments_block_tab div.comment_details .title_block {
   text-transform: capitalize;

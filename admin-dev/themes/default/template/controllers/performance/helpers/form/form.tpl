@@ -33,7 +33,7 @@
 	{$smarty.block.parent}
 	{if in_array($input.type, array('radio', 'switch')) && $input.name == 'smarty_cache'}
 		<div class="clearfix row-padding-top">
-			<a href="{$current}&token={$token}&empty_smarty_cache=1" class="btn btn-default" href="">
+			<a href="{$current}&token={$token}&empty_smarty_cache=1" class="btn btn-default">
 				<i class="icon-eraser"></i>
 				{l s='Clear Smarty cache & Autoload cache'}
 			</a>
@@ -97,33 +97,31 @@
 				</form>
 			</div>
 			{if $servers}
-			<div class="row">
-				<div class="form-group">
-					<table class="table">
-						<thead>
-							<tr>
-								<th class="fixed-width-xs"><span class="title_box">{l s='ID'}</span></th>
-								<th><span class="title_box">{l s='IP address'}</span></th>
-								<th class="fixed-width-xs"><span class="title_box">{l s='Port'}</span></th>
-								<th class="fixed-width-xs"><span class="title_box">{l s='Weight'}</span></th>
-								<th>&nbsp;</th>
-							</tr>
-						</thead>
-						<tbody>
-					{foreach $servers AS $server}
+			<div class="form-group">
+				<table class="table">
+					<thead>
 						<tr>
-							<td>{$server.id_memcached_server}</td>
-							<td>{$server.ip}</td>
-							<td>{$server.port}</td>
-							<td>{$server.weight}</td>
-							<td align="right">
-								<a class="btn btn-default" href="{$current}&token={$token}&deleteMemcachedServer={$server.id_memcached_server}" onclick="if (!confirm('{l s='Do you really want to remove the server %s:%s' sprintf=[$server.ip, $server.port] js=1}')) return false;"><i class="icon-minus-sign-alt"></i> {l s='Remove'}</a>
-							</td>
+							<th class="fixed-width-xs"><span class="title_box">{l s='ID'}</span></th>
+							<th><span class="title_box">{l s='IP address'}</span></th>
+							<th class="fixed-width-xs"><span class="title_box">{l s='Port'}</span></th>
+							<th class="fixed-width-xs"><span class="title_box">{l s='Weight'}</span></th>
+							<th>&nbsp;</th>
 						</tr>
-					{/foreach}
-						</tbody>
-					</table>
-				</div>
+					</thead>
+					<tbody>
+				{foreach $servers AS $server}
+					<tr>
+						<td>{$server.id_memcached_server}</td>
+						<td>{$server.ip}</td>
+						<td>{$server.port}</td>
+						<td>{$server.weight}</td>
+						<td>
+							<a class="btn btn-default" href="{$current}&token={$token}&deleteMemcachedServer={$server.id_memcached_server}" onclick="if (!confirm('{l s='Do you really want to remove the server %s:%s' sprintf=[$server.ip, $server.port] js=1}')) return false;"><i class="icon-minus-sign-alt"></i> {l s='Remove'}</a>
+						</td>
+					</tr>
+				{/foreach}
+					</tbody>
+				</table>
 			</div>
 			{/if}
 		</div>
@@ -132,17 +130,18 @@
 
 {block name="script"}
 
-	function showMemcached()
-	{
-		if ($('input[name="caching_system"]:radio:checked').val() == 'CacheMemcache')
-		{
+	function showMemcached() {
+		if ($('input[name="caching_system"]:radio:checked').val() == 'CacheMemcache') {
 			$('#memcachedServers').show();
 			$('#ps_cache_fs_directory_depth').parent().parent().hide();
 		}
-		else
-		{
+		else if ($('input[name="caching_system"]:radio:checked').val() == 'CacheFs') {
 			$('#memcachedServers').hide();
 			$('#ps_cache_fs_directory_depth').parent().parent().show();
+		}
+		else {
+			$('#memcachedServers').hide();
+			$('#ps_cache_fs_directory_depth').parent().parent().hide();
 		}
 	}
 

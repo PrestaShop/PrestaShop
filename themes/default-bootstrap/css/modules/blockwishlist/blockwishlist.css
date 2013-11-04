@@ -22,22 +22,6 @@
   margin-right: 6px;
 }
 
-/* bt add */
-.add_wishlist_button a {
-  padding: 5px 7px 5px 18px;
-}
-
-.add_wishlist_button a span {
-  z-index: 10;
-  display: block;
-  position: absolute;
-  top: -1px;
-  left: -12px;
-  height: 26px;
-  width: 26px;
-  background: url(img/icon/pict_add_wishlist.png) no-repeat 0 0 transparent;
-}
-
 /* block */
 #wishlist_block #wishlist_block_list {
   margin-bottom: 20px;
@@ -118,19 +102,21 @@
 }
 
 #module-blockwishlist-mywishlist .wishlistLinkTop ul.display_list {
-  border-bottom: 1px dotted #ccc;
+  border-bottom: 1px solid #d6d4d4;
   margin-bottom: 20px;
+}
+#module-blockwishlist-mywishlist .wishlistLinkTop ul.display_list a {
+  display: inline-block;
+  color: #333;
+  margin: 10px 10px 10px 0px;
+  font-weight: bold;
+}
+#module-blockwishlist-mywishlist .wishlistLinkTop ul.display_list a:hover {
+  color: #515151;
 }
 
 #module-blockwishlist-mywishlist .wishlistLinkTop li {
   float: left;
-}
-
-#module-blockwishlist-mywishlist .wishlistLinkTop .display_list li a {
-  display: inline-block;
-  padding: 7px 11px 5px 22px;
-  color: #333;
-  background: url(img/arrow_right_2.png) no-repeat 10px 10px transparent;
 }
 
 #module-blockwishlist-mywishlist .wishlistLinkTop #hideSendWishlist {
@@ -144,17 +130,53 @@
 
 /* wlp_bought ****************************************** */
 /* wlp_bought_list */
-ul.wlp_bought_list li .inner-content {
+ul.wlp_bought_list li {
+  margin-bottom: 30px;
+  /*> 992px*/
+  /*768px x 991px*/
+}
+ul.wlp_bought_list li .product_image {
+  padding: 9px;
+  border: 1px solid #d6d4d4;
+  margin-bottom: 20px;
+  max-width: 270px;
+}
+ul.wlp_bought_list li .product-name {
+  margin-bottom: 10px;
+  padding-right: 20px;
+}
+ul.wlp_bought_list li .product-name small {
+  display: block;
+  font-size: 11px;
+}
+ul.wlp_bought_list li .product-name small a {
+  font-size: 11px;
+}
+ul.wlp_bought_list li .product_infos {
   position: relative;
+}
+ul.wlp_bought_list li .btn_action .btn {
+  margin-bottom: 10px;
+}
+@media (min-width: 992px) {
+  ul.wlp_bought_list li.first-in-line {
+    clear: left;
+  }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  ul.wlp_bought_list li.first-item-of-tablet-line {
+    clear: left;
+  }
+}
+
+.wishlistLinkTop .submit {
+  margin-bottom: 30px;
 }
 
 ul.wlp_bought_list li .lnkdel {
   position: absolute;
-  top: 5px;
-  right: 5px;
+  top: 0px;
+  right: 0px;
   display: block;
-  height: 12px;
-  width: 12px;
-  text-indent: -5000px;
-  background: url(img/icon/delete.gif) no-repeat 0 0;
+  font-size: 14px;
 }

@@ -155,12 +155,12 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 	{/foreach}
 {/if}
 var isLoggedWishlist = {if $logged}true{else}false{/if};
+var contentOnly = {if $content_only}true{else}false{/if}
 //]]>
 </script>
-
 <div id="primary_block" class="row">
 
-<div class="container"><div class="top-hr"></div></div>
+{if !$content_only}<div class="container"><div class="top-hr"></div></div>{/if}
 
 	{if isset($adminActionDisplay) && $adminActionDisplay}
 	<div id="admin-action">
@@ -183,17 +183,25 @@ var isLoggedWishlist = {if $logged}true{else}false{/if};
   <!-- right infos-->  
     
    <div id="pb-right-column" class="col-xs-12 col-sm-4 col-md-5">
-		<!-- product img-->
+		<!-- product img-->        
+        
 		<div id="image-block">
+
+      	{if $product->on_sale}
+		<span class="sale-box"><span class="sale">{l s='Sale!'}</span></span>
+		{elseif $product->specificPrice AND $product->specificPrice.reduction AND $productPriceWithoutReduction > $productPrice}
+		<span class="discount">{l s='Reduced price!'}</span>
+		{/if} 
+        
 		{if $have_image}
 			<span id="view_full_size">
 				<img src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')|escape:'html'}"{if $jqZoomEnabled && $have_image} class="jqzoom"{/if} title="{$product->name|escape:'htmlall':'UTF-8'}" alt="{$product->name|escape:'htmlall':'UTF-8'}" id="bigpic" width="{$largeSize.width}" height="{$largeSize.height}"/>
-				<span class="span_link">{l s='View larger'}</span>
+				{if !$content_only}<span class="span_link">{l s='View larger'}</span>{/if}
 			</span>
 		{else}
 			<span id="view_full_size">
 				<img src="{$img_prod_dir}{$lang_iso}-default-large_default.jpg" id="bigpic" alt="" title="{$product->name|escape:'htmlall':'UTF-8'}" width="{$largeSize.width}" height="{$largeSize.height}" />
-				<span class="span_link">{l s='View larger'}</span>
+				{if !$content_only}<span class="span_link">{l s='View larger'}</span>{/if}
 			</span>
 		{/if}
 		</div>
@@ -218,7 +226,8 @@ var isLoggedWishlist = {if $logged}true{else}false{/if};
 		{if isset($images) && count($images) > 3}<a id="view_scroll_right" title="{l s='Other views'}" href="javascript:{ldelim}{rdelim}">{l s='Next'}</a>{/if}
 		</div>
 		{/if}
-		{if isset($images) && count($images) > 1}<p class="resetimg clear"><span id="wrapResetImages" style="display: none;"><img src="{$img_dir}icon/cancel_11x13.gif" alt="{l s='Cancel'}" width="11" height="13"/> <a id="resetImages" href="{$link->getProductLink($product)|escape:'html'}" onclick="$('span#wrapResetImages').hide('slow');return (false);">{l s='Display all pictures'}</a></span></p>{/if}
+		{if isset($images) && count($images) > 1}<p class="resetimg clear"><span id="wrapResetImages" style="display: none;">
+         <a id="resetImages" href="{$link->getProductLink($product)|escape:'html'}" onclick="$('span#wrapResetImages').hide('slow');return (false);"><i class="icon-repeat"></i>{l s='Display all pictures'}</a></span></p>{/if}
 
 	</div> 
    	<!-- end right infos--> 
@@ -243,17 +252,20 @@ var isLoggedWishlist = {if $logged}true{else}false{/if};
 			{if $product->description}
 			<p class="buttons_bottom_block"><a href="javascript:{ldelim}{rdelim}" class="button">{l s='More details'}</a></p>
 			{/if}
-			{if $packItems|@count > 0}
+		<!--	{if $packItems|@count > 0}
+            
 			<div class="short_description_pack">
-				<h3>{l s='Pack content'}</h3>
+	        <h3>{l s='Pack content'}</h3>
 				{foreach from=$packItems item=packItem}
+                
 				<div class="pack_content">
 					{$packItem.pack_quantity} x <a href="{$link->getProductLink($packItem.id_product, $packItem.link_rewrite, $packItem.category)|escape:'html'}">{$packItem.name|escape:'htmlall':'UTF-8'}</a>
 					<p>{$packItem.description_short}</p>
 				</div>
 				{/foreach}
 			</div>
-			{/if}
+            
+			{/if}-->
 		</div>
 		{/if}
 
@@ -265,16 +277,22 @@ var isLoggedWishlist = {if $logged}true{else}false{/if};
 				<span {if $product->quantity == 1} style="display: none;"{/if} id="quantityAvailableTxtMultiple">{l s='Items'}</span>
 			</p>
 			{/if}
+            
 
 			<!-- availability -->
 			<p id="availability_statut"{if ($product->quantity <= 0 && !$product->available_later && $allow_oosp) OR ($product->quantity > 0 && !$product->available_now) OR !$product->available_for_order OR $PS_CATALOG_MODE} style="display: none;"{/if}>
 				{*<span id="availability_label">{l s='Availability:'}</span>*}
 				<span id="availability_value"{if $product->quantity <= 0} class="warning_inline"{/if}>{if $product->quantity <= 0}{if $allow_oosp}{$product->available_later}{else}{l s='This product is no longer in stock'}{/if}{else}{$product->available_now}{/if}</span>				
 			</p>
+            
+			<p class="warning_inline" id="last_quantities"{if ($product->quantity > $last_qties OR $product->quantity <= 0) OR $allow_oosp OR !$product->available_for_order OR $PS_CATALOG_MODE} style="display: none"{/if} >{l s='Warning: Last items in stock!'}</p>
+            
 			<p id="availability_date"{if ($product->quantity > 0) OR !$product->available_for_order OR $PS_CATALOG_MODE OR !isset($product->available_date) OR $product->available_date < $smarty.now|date_format:'%Y-%m-%d'} style="display: none;"{/if}>
 				<span id="availability_date_label">{l s='Availability date:'}</span>
 				<span id="availability_date_value">{dateFormat date=$product->available_date full=false}</span>
 			</p>
+            
+            
 
 			<!-- Out of stock hook -->
 			<div id="oosHook"{if $product->quantity > 0} style="display: none;"{/if}>
@@ -288,7 +306,7 @@ var isLoggedWishlist = {if $logged}true{else}false{/if};
 			<div class="clear"></div>
 			<ul id="color_to_pick_list" class="clearfix">
 			{foreach from=$colors key='id_attribute' item='color'}
-				<li><a id="color_{$id_attribute|intval}" class="color_pick" style="background: {$color.value};" onclick="updateColorSelect({$id_attribute|intval});$('#wrapResetImages').show('slow');" title="{$color.name}">{if file_exists($col_img_dir|cat:$id_attribute|cat:'.jpg')}<img src="{$img_col_dir}{$id_attribute}.jpg" alt="{$color.name}" width="20" height="20" />{/if}</a></li>
+			<li><a id="color_{$id_attribute|intval}" class="color_pick" style="background: {$color.value};" onclick="updateColorSelect({$id_attribute|intval});$('#wrapResetImages').show('slow');" title="{$color.name}">{if file_exists($col_img_dir|cat:$id_attribute|cat:'.jpg')}<img src="{$img_col_dir}{$id_attribute}.jpg" alt="{$color.name}" width="20" height="20" />{/if}</a></li>
 			{/foreach}
 			</ul>
 			<div class="clear"></div>
@@ -309,14 +327,15 @@ var isLoggedWishlist = {if $logged}true{else}false{/if};
 		</form>
 		{/if}
 		{if isset($HOOK_EXTRA_RIGHT) && $HOOK_EXTRA_RIGHT}{$HOOK_EXTRA_RIGHT}{/if}        
-             		<!-- usefull links-->
+        {if !$content_only}
+        <!-- usefull links-->
 		<ul id="usefull_link_block" class="clearfix">
 			{if $HOOK_EXTRA_LEFT}{$HOOK_EXTRA_LEFT}{/if}
 			<li class="print"><a href="javascript:print();">{l s='Print'}</a></li>
 			{if $have_image && !$jqZoomEnabled}{/if}
 			
 		</ul>         
-        
+        {/if}
 	</div>    
     
     <!-- end left infos-->  
@@ -348,14 +367,6 @@ var isLoggedWishlist = {if $logged}true{else}false{/if};
 					<!-- {if $tax_enabled && $display_tax_label == 1}{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}{/if} -->
 			{/if}
 			</p>
-
-
-				{if $product->on_sale}
-					<img src="{$img_dir}onsale_{$lang_iso}.gif" alt="{l s='On sale'}" class="on_sale_img"/>
-					<span class="on_sale">{l s='On sale!'}</span>
-				{elseif $product->specificPrice AND $product->specificPrice.reduction AND $productPriceWithoutReduction > $productPrice}
-					<span class="discount">{l s='Reduced price!'}</span>
-				{/if}
 				{if $priceDisplay == 2}
 					<br />
 					<span id="pretaxe_price"><span id="pretaxe_price_display">{convertPrice price=$product->getPrice(false, $smarty.const.NULL)}</span>&nbsp;{l s='tax excl.'}</span>
@@ -372,7 +383,7 @@ var isLoggedWishlist = {if $logged}true{else}false{/if};
 	
 			{if $packItems|@count && $productPrice < $product->getNoPackPrice()}
 				<p class="pack_price">{l s='Instead of'} <span style="text-decoration: line-through;">{convertPrice price=$product->getNoPackPrice()}</span></p>
-				<br class="clear" />
+			
 			{/if}
 			{if $product->ecotax != 0}
 				<p class="price-ecotax">{l s='Include'} <span id="ecotax_price_display">{if $priceDisplay == 2}{$ecotax_tax_exc|convertAndFormatPrice}{else}{$ecotax_tax_inc|convertAndFormatPrice}{/if}</span> {l s='For green tax'}
@@ -396,10 +407,15 @@ var isLoggedWishlist = {if $logged}true{else}false{/if};
   <!-- quantity wanted -->
 			<p id="quantity_wanted_p"{if (!$allow_oosp && $product->quantity <= 0) OR $virtual OR !$product->available_for_order OR $PS_CATALOG_MODE} style="display: none;"{/if}>
 				<label>{l s='Quantity:'}</label>
-				<input type="text" name="qty" id="quantity_wanted" class="text" value="{if isset($quantityBackup)}{$quantityBackup|intval}{else}{if $product->minimal_quantity > 1}{$product->minimal_quantity}{else}1{/if}{/if}" size="2" maxlength="3" {if $product->minimal_quantity > 1}onkeyup="checkMinimalQuantity({$product->minimal_quantity});"{/if} />
-             <button class="btn btn-default button-minus"><span><i class="icon-minus"></i></span></button>    
-             <button class="btn btn-default button-plus"><span><i class="icon-plus"></i></span></button>        
-			</p>
+                
+               
+               <input type="text" name="qty" id="quantity_wanted" class="text" value="{if isset($quantityBackup)}{$quantityBackup|intval}{else}{if $product->minimal_quantity > 1}{$product->minimal_quantity}{else}1{/if}{/if}" size="2" maxlength="3" {if $product->minimal_quantity > 1}onkeyup="checkMinimalQuantity({$product->minimal_quantity});"{/if} />
+             <a href="#"  rel="qty" class="btn btn-default button-minus product_quantity_down"><span><i class="icon-minus"></i></span></a>
+             <a href="#"  rel="qty" class="btn btn-default button-plus product_quantity_up "><span><i class="icon-plus"></i></span></a>
+		<span class="clearfix"></span>
+
+</p>
+            
 
 			<!-- minimal quantity wanted -->
 			<p id="minimal_quantity_wanted_p"{if $product->minimal_quantity <= 1 OR !$product->available_for_order OR $PS_CATALOG_MODE} style="display: none;"{/if}>
@@ -467,21 +483,23 @@ var isLoggedWishlist = {if $logged}true{else}false{/if};
         <div class="box-cart-bottom">        
         
      <p id="add_to_cart" {if (!$allow_oosp && $product->quantity <= 0) OR !$product->available_for_order OR (isset($restricted_country_mode) AND $restricted_country_mode) OR $PS_CATALOG_MODE}style="display:none"{/if} class="buttons_bottom_block">	
-    <button class="exclusive">{l s='Add to cart'} </button>
+    	<button type="submit" name="Submit" class="exclusive"><span>{l s='Add to cart'}</span> </button>
 	</p>	
-
 
 	{if isset($HOOK_PRODUCT_ACTIONS) && $HOOK_PRODUCT_ACTIONS}{$HOOK_PRODUCT_ACTIONS}{/if}<strong></strong>
 
-			<p class="warning_inline" id="last_quantities"{if ($product->quantity > $last_qties OR $product->quantity <= 0) OR $allow_oosp OR !$product->available_for_order OR $PS_CATALOG_MODE} style="display: none"{/if} >{l s='Warning: Last items in stock!'}</p>
         
         </div>
         
+        {if !$content_only}
         <div class="box-security">
         <h5 class="product-heading-h5">{l s='Your Security Guaranteed'}</h5> 
         		<img class="logo-payment" src="{$img_dir}payment-logo.png" alt="" />     
                   
-        </div>   
+        </div>
+        
+        {/if}
+           
        </div>       
        
        </div>       
@@ -489,21 +507,23 @@ var isLoggedWishlist = {if $logged}true{else}false{/if};
     
 </div>
 
-
+{if !$content_only}
 <!-- More info -->
-<section class="page-product-box">
-{if $product->description}<h3 class="page-product-heading">{l s='More info'}</h3>{/if}
-	{if isset($product) && $product->description}
-		<!-- full description -->
-		<div  class="rte">{$product->description}</div>
-	{/if}
- </section>  
+{if $product->description}
+    <section class="page-product-box">
+    	<h3 class="page-product-heading">{l s='More info'}</h3>{/if}
+        {if isset($product) && $product->description}
+            <!-- full description -->
+            <div  class="rte">{$product->description}</div>
+    </section>  
+{/if}
 <!--end  More info -->
 
 
 <!-- Data sheet -->
+{if $features}
 <section class="page-product-box">
-{if $features}<h3 class="page-product-heading">{l s='Data sheet'}</h3>{/if}
+<h3 class="page-product-heading">{l s='Data sheet'}</h3>{/if}
 {if isset($features) && $features}
 <table class="table-data-sheet">			
 		{foreach from=$features item=feature}
@@ -514,11 +534,9 @@ var isLoggedWishlist = {if $logged}true{else}false{/if};
 		</tr>
         {/foreach}
    </table>
-   {/if}
 </section>
+{/if}
 <!--end Data sheet -->
-
-
 
 
 <!--HOOK_PRODUCT_TAB -->
@@ -528,23 +546,19 @@ var isLoggedWishlist = {if $logged}true{else}false{/if};
  </section>
 <!--end HOOK_PRODUCT_TAB -->
 
-
-
-
 <!--Accessories -->
 
+{if isset($accessories) AND $accessories}
 <section class="page-product-box">
-{if isset($accessories) AND $accessories}<h3 class="page-product-heading">{l s='Accessories'}</h3>{/if}
-
-	{if isset($accessories) AND $accessories}
-		<!-- accessories -->		
-			<div class="block products_block accessories-block clearfix">
+	<h3 class="page-product-heading">{l s='Accessories'}</h3>
+	<!-- accessories -->		
+		<div class="block products_block accessories-block clearfix">
 				<div class="block_content">
-					<article id="owl-carousel" class="owl-carousel clearfix">
+					<ul id="bxslider" class="bxslider clearfix">
 					{foreach from=$accessories item=accessory name=accessories_list}
 						{if ($accessory.allow_oosp || $accessory.quantity_all_versions > 0 || $accessory.quantity > 0) AND $accessory.available_for_order AND !isset($restricted_country_mode)}
 							{assign var='accessoryLink' value=$link->getProductLink($accessory.id_product, $accessory.link_rewrite, $accessory.category)}
-							<div class="item product-box ajax_block_product{if $smarty.foreach.accessories_list.first} first_item{elseif $smarty.foreach.accessories_list.last} last_item{else} item{/if} product_accessories_description">
+							<li class="item product-box ajax_block_product{if $smarty.foreach.accessories_list.first} first_item{elseif $smarty.foreach.accessories_list.last} last_item{else} item{/if} product_accessories_description">
 						
 								<div class="product_desc">
 								<a href="{$accessoryLink|escape:'htmlall':'UTF-8'}" title="{$accessory.legend|escape:'htmlall':'UTF-8'}" class="product-image product_image"><img src="{$link->getImageLink($accessory.link_rewrite, $accessory.id_image, 'home_default')|escape:'html'}" alt="{$accessory.legend|escape:'htmlall':'UTF-8'}" width="{$homeSize.width}" height="{$homeSize.height}" class="lazyOwl" /></a>
@@ -555,7 +569,7 @@ var isLoggedWishlist = {if $logged}true{else}false{/if};
 								</div>
 								
                              		<div class="s_title_block">
-									<h5 class="name-product"><a href="{$accessoryLink|escape:'htmlall':'UTF-8'}">      {$accessory.name|truncate:20:'...':true|escape:'htmlall':'UTF-8'}</a></h5>
+									<h5 class="product-name"><a href="{$accessoryLink|escape:'htmlall':'UTF-8'}">      {$accessory.name|truncate:20:'...':true|escape:'htmlall':'UTF-8'}</a></h5>
                                     
 									{if $accessory.show_price AND !isset($restricted_country_mode) AND !$PS_CATALOG_MODE}
                                     <span class="price">{if $priceDisplay != 1}{displayWtPrice p=$accessory.price}{else}{displayWtPrice p=$accessory.price_tax_exc}{/if}</span>{/if}
@@ -572,14 +586,14 @@ var isLoggedWishlist = {if $logged}true{else}false{/if};
 									{/if}
 								</div>
 								
-							</div>
+							</li>
 						{/if}
 					{/foreach}
-					</article>
+					</ul>
 				</div>
-			</div>		
-	{/if}
-</section>    
+			</div>	
+</section>    	
+{/if}
 <!--end Accessories -->
 
 {if (isset($quantity_discounts) && count($quantity_discounts) > 0)}
@@ -627,24 +641,27 @@ var isLoggedWishlist = {if $logged}true{else}false{/if};
 
 
 <!--Download -->
-<section class="page-product-box">
-{if $attachments}<h3 class="page-product-heading">{l s='Download'}</h3>{/if}
 	{if isset($attachments) && $attachments}
+    <section class="page-product-box">
+    	<h3 class="page-product-heading">{l s='Download'}</h3>
 		{foreach from=$attachments item=attachment}
 		<a  href="{$link->getPageLink('attachment', true, NULL, "id_attachment={$attachment.id_attachment}")|escape:'html'}"><span>{$attachment.name|escape:'htmlall':'UTF-8'}</span></a><br />{$attachment.description|escape:'htmlall':'UTF-8'}
 		{/foreach}	
-	{/if}
-</section>        
+        
+</section>    
+	{/if}    
 <!--end Download -->
 
 
 
 <!--Customization -->
+{if isset($product) && $product->customizable}	
 <section class="page-product-box">
-{if isset($product) && $product->customizable}<h3 class="page-product-heading">{l s='Product customization'}</h3>{/if}
+
+	<h3 class="page-product-heading">{l s='Product customization'}</h3>
 
 <!-- Customizable products -->
-	{if isset($product) && $product->customizable}	
+
 	   <form method="post" action="{$customizationFormTarget}" enctype="multipart/form-data" id="customizationForm" class="clearfix">
 				<p class="infoCustomizable">
 					{l s='After saving your customized product, remember to add it to your cart.'}
@@ -703,8 +720,8 @@ var isLoggedWishlist = {if $logged}true{else}false{/if};
 				</p>
 			</form>
 			<p class="clear required"><sup>*</sup> {l s='required fields'}</p>	
-	{/if}
 </section>
+	{/if}
 <!--end Customization -->
 
 
@@ -712,10 +729,10 @@ var isLoggedWishlist = {if $logged}true{else}false{/if};
 
 {/if}
 {if isset($packItems) && $packItems|@count > 0}
-	<div id="blockpack">
-		<h3>{l s='Pack content'}</h3>
+	<section id="blockpack">
+		<h3 class="page-product-heading">{l s='Pack content'}</h3>
 		{include file="$tpl_dir./product-list.tpl" products=$packItems}
-	</div>
+	</section>
 {/if}
 {/if}
 
@@ -723,22 +740,20 @@ var isLoggedWishlist = {if $logged}true{else}false{/if};
 <script type="text/javascript">
 $(document).ready(function() {	
  
- $("#owl-carousel").owlCarousel({
-		items :6,
-		lazyLoad : true,
-		navigation : true,
-		navigationText : ["",""],
-		pagination : false,
-		
-		dragBeforeAnimFinish : false,
-		mouseDrag : false,
-		touchDrag : false,
-
-		addClassActive : true,
-		transitionStyle : true
-}); 
+$('#bxslider').bxSlider({
+  minSlides: 1,
+  maxSlides: 6,
+  slideWidth: 178,
+  slideMargin: 20,
+  pager: false,
+  nextText: '',
+  prevText: '',
+  moveSlides:1,
+  infiniteLoop:false,
+  hideControlOnEnd: true
+	 });
 
 	});
 	</script>
 
-
+{/if}

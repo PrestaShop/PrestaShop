@@ -27,16 +27,16 @@
 <h1 class="page-heading">{l s='My vouchers'}</h1>
 
 {if isset($cart_rules) && count($cart_rules) && $nb_cart_rules}
-<table class="discount table table-bordered">
+<table class="discount table table-bordered footab">
 	<thead>
 		<tr>
 			<th class="discount_code first_item">{l s='Code'}</th>
 			<th class="discount_description item">{l s='Description'}</th>
 			<th class="discount_quantity item">{l s='Quantity'}</th>
-			<th class="discount_value item">{l s='Value'}*</th>
-			<th class="discount_minimum item">{l s='Minimum'}</th>
-			<th class="discount_cumulative item">{l s='Cumulative'}</th>
-			<th class="discount_expiration_date last_item">{l s='Expiration date'}</th>
+			<th data-hide="phone,tablet" class="discount_value item">{l s='Value'}*</th>
+			<th data-hide="phone,tablet" class="discount_minimum item">{l s='Minimum'}</th>
+			<th data-hide="phone,tablet" class="discount_cumulative item">{l s='Cumulative'}</th>
+			<th data-hide="phone" class="discount_expiration_date last_item">{l s='Expiration date'}</th>
 		</tr>
 	</thead>
 	<tbody>
