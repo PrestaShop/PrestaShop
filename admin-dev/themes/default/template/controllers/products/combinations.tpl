@@ -24,14 +24,12 @@
 *}
 {if isset($product->id) && !$product->is_virtual}
 <div class="panel">
-
 	<script type="text/javascript">
 		var msg_combination_1 = '{l s='Please choose an attribute.'}';
 		var msg_combination_2 = '{l s='Please choose a value.'}';
 		var msg_combination_3 = '{l s='You can only add one combination per attribute type.'}';
 		var msg_new_combination = '{l s='New combination'}';
 		var msg_cancel_combination = '{l s='Cancel combination'}';
-
 		var attrs = new Array();
 		var modifyattributegroup = "{l s='Modify this attribute combination.' js=1}";
 		attrs[0] = new Array(0, "---");
@@ -43,10 +41,8 @@
 			{/foreach}
 			);
 		{/foreach}
-
 		$(document).ready(function(){
 			populate_attrs();
-
 			$(".datepicker").datepicker({
 				prevText: '',
 				nextText: '',
@@ -54,14 +50,11 @@
 			});
 		});
 	</script>
-
 	<input type="hidden" name="submitted_tabs[]" value="Combinations" />
-
 	<h3>{l s='Add or modify combinations for this product.'}</h3>
 	<div class="alert alert-info">
 		{l s='Or use the'}&nbsp;<a class="btn btn-link bt-icon confirm_leave" href="index.php?tab=AdminAttributeGenerator&id_product={$product->id}&attributegenerator&token={$token_generator}"><i class="icon-magic"></i> {l s='Product combinations generator'} <i class="icon-external-link-sign"></i></a> {l s='in order to automatically create a set of combinations.'}
 	</div>
-	
 	{if $combination_exists}
 	<div class="alert alert-info" style="display:block">
 		{l s='Some combinations already exist. If you want to generate new combinations, the quantities for the existing combinations will be lost.'}<br/>
@@ -72,11 +65,8 @@
 		<br />
 		{include file="controllers/products/multishop/check_fields.tpl" product_tab="Combinations"}
 	{/if}
-
 	<div id="add_new_combination" class="panel" style="display: none;">
-
 		<div class="panel-heading">{l s='Add or modify combinations for this product.'}</div>
-
 		<div class="form-group">
 			<label class="control-label col-lg-3" for="attribute_group">{l s='Attribute:'}</label>
 			<div class="col-lg-5">
@@ -89,14 +79,13 @@
 				</select>
 			</div>
 		</div>
-
 		<div class="row">
 			<label class="control-label col-lg-3" for="attribute">{l s='Value:'}</label>
 			<div class="col-lg-9">
 				<div class="form-group">
 					<div class="col-lg-8">
 						<select name="attribute" id="attribute">
-							<option value="0">---</option>
+							<option value="0">-</option>
 						</select>
 					</div>
 					<div class="col-lg-4">
@@ -113,9 +102,7 @@
 				</div>
 			</div>
 		</div>
-
 		<hr/>
-
 		<div class="form-group">
 			<label class="control-label col-lg-3" for="attribute_reference">
 				<span class="label-tooltip" data-toggle="tooltip"
@@ -126,8 +113,7 @@
 			<div class="col-lg-5">
 				<input type="text" id="attribute_reference" name="attribute_reference" value="" />
 			</div>
-		</div>		
-
+		</div>
 		<div class="form-group">
 			<label class="control-label col-lg-3" for="attribute_ean13">
 				{l s='EAN13:'}
@@ -135,8 +121,7 @@
 			<div class="col-lg-3">
 				<input maxlength="13" type="text" id="attribute_ean13" name="attribute_ean13" value="" />
 			</div>
-		</div>		
-
+		</div>
 		<div class="form-group">
 			<label class="control-label col-lg-3" for="attribute_upc">
 				{l s='UPC:'}
@@ -144,10 +129,8 @@
 			<div class="col-lg-3">
 				<input maxlength="12" type="text" id="attribute_upc" name="attribute_upc" value="" />
 			</div>
-		</div>		
-		
+		</div>
 		<hr/>
-
 		<div class="form-group">
 			<label class="control-label col-lg-3" for="attribute_wholesale_price">
 				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_wholesale_price" type="default"}
@@ -165,7 +148,6 @@
 			</div>
 			<span style="display:none;" id="attribute_wholesale_price_full">({l s='Overrides wholesale price on "Information" tab'})</span>
 		</div>
-
 		<div class="form-group">
 			<label class="control-label col-lg-3" for="attribute_price_impact">
 				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_price_impact" type="attribute_price_impact"}
@@ -223,8 +205,6 @@
 				</div>
 			</div>
 		</div>
-			
-
 		<div class="form-group">
 			<label class="control-label col-lg-3" for="attribute_weight_impact">
 				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_weight_impact" type="attribute_weight_impact"}
@@ -255,7 +235,6 @@
 				</div>
 			</div>
 		</div>
-
 		<div id="tr_unit_impact" class="form-group">
 			<label class="control-label col-lg-3" for="attribute_unit_impact">
 				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_unit_impact" type="attribute_unit_impact"}
@@ -284,7 +263,6 @@
 				</div>
 			</div>
 		</div>
-
 		{if $ps_use_ecotax}
 		<div class="form-group">
 			<label class="control-label col-lg-3" for="attribute_ecotax">
@@ -303,7 +281,6 @@
 			</div>
 		</div>
 		{/if}
-
 		<div class="form-group">
 			<label class="control-label col-lg-3" for="attribute_minimal_quantity">
 				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_minimal_quantity" type="default"}
@@ -317,7 +294,6 @@
 				<input maxlength="6" name="attribute_minimal_quantity" id="attribute_minimal_quantity" type="text" value="{$minimal_quantity}" />
 			</div>
 		</div>
-
 		<div class="form-group">
 			<label class="control-label col-lg-3" for="available_date_attribute">
 				{include file="controllers/products/multishop/checkbox.tpl" field="available_date_attribute" type="default"}
@@ -333,9 +309,7 @@
 				</div>
 			</div>
 		</div>
-		
 		<hr/>
-
 		<div class="form-group">
 			<label class="control-label col-lg-3">{l s='Image:'}</label>
 			<div class="col-lg-9">
@@ -344,14 +318,13 @@
 					<li>
 						<input type="checkbox" name="id_image_attr[]" value="{$image.id_image}" id="id_image_attr_{$image.id_image}" />
 						<label for="id_image_attr_{$image.id_image}">
-							<img src="{$smarty.const._THEME_PROD_DIR_}{$image.obj->getExistingImgPath()}-small_default.jpg" alt="{$image.legend|escape:'htmlall':'UTF-8'}" title="{$image.legend|escape:'htmlall':'UTF-8'}" />
+							<img src="{$smarty.const._THEME_PROD_DIR_}{$image.obj->getExistingImgPath()}-{$imageType}.jpg" alt="{$image.legend|escape:'htmlall':'UTF-8'}" title="{$image.legend|escape:'htmlall':'UTF-8'}" />
 						</label>
 					</li>
 					{/foreach}
 				</ul>
 			</div>
 		</div>
-
 		<div class="form-group">
 			<label class="control-label col-lg-3" for="attribute_default">
 				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_default" type="attribute_default"}
@@ -366,7 +339,6 @@
 				</p>
 			</div>
 		</div>
-		
 		<div class="panel-footer">
 			<span id="ResetSpan">
 				<button type="reset" name="ResetBtn" id="ResetBtn" onclick="$('#desc-product-newCombination').click();" class="btn btn-default">

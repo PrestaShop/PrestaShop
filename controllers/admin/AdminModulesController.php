@@ -829,7 +829,7 @@ class AdminModulesControllerCore extends AdminController
 
 		if (count($module_errors))
 		{
-			$html_error = '<ul style="line-height:20px">';
+			$html_error = '<ul>';
 			foreach ($module_errors as $module_error)
 			{
 				$html_error_description = '';

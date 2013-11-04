@@ -339,6 +339,8 @@ class AdminCurrenciesControllerCore extends AdminController
 		}
 		if (Tools::isSubmit('submitAddcurrency') && !Tools::getValue('id_currency') && Currency::exists(Tools::getValue('iso_code'), Tools::getValue('iso_code_num')))
 				$this->errors[] = Tools::displayError('This currency already exists.');
+		if (Tools::isSubmit('submitAddcurrency') && (float)Tools::getValue('conversion_rate') <= 0)
+				$this->errors[] = Tools::displayError('This currency conversion rate can not be equal to 0.');
 		parent::initProcess();
 	}
 

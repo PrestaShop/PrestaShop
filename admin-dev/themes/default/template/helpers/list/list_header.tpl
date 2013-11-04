@@ -256,7 +256,7 @@
 						{else}
 							{if $params.type == 'bool'}
 								<select class="filter fixed-width-sm" onchange="$('#submitFilterButton{$list_id}').focus();$('#submitFilterButton{$list_id}').click();" name="{$list_id}Filter_{$key}">
-									<option value="">--</option>
+									<option value="">-</option>
 									<option value="1" {if $params.value == 1} selected="selected" {/if}>{l s='Yes'}</option>
 									<option value="0" {if $params.value == 0 && $params.value != ''} selected="selected" {/if}>{l s='No'}</option>
 								</select>
@@ -278,7 +278,7 @@
 							{elseif $params.type == 'select'}
 								{if isset($params.filter_key)}
 									<select class="filter" onchange="$('#submitFilterButton{$list_id}').focus();$('#submitFilterButton{$list_id}').click();" name="{$list_id}Filter_{$params.filter_key}" {if isset($params.width)} style="width:{$params.width}px"{/if}>
-										<option value="" {if $params.value == ''} selected="selected" {/if}>--</option>
+										<option value="" {if $params.value == ''} selected="selected" {/if}>-</option>
 										{if isset($params.list) && is_array($params.list)}
 											{foreach $params.list AS $option_value => $option_display}
 												<option value="{$option_value}" {if (string)$option_display === (string)$params.value ||  (string)$option_value === (string)$params.value} selected="selected"{/if}>{$option_display}</option>

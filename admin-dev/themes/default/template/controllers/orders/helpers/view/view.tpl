@@ -65,28 +65,26 @@
 		<div class="row">
 			<div class="col-lg-3 box-stats color3" >
 				<i class="icon-calendar-empty"></i>
-				<span class="title">{l s='Date'}<br /><small>sous-titre</small></span>
+				<span class="title">{l s='Date'}<br /><small>{l s='subtitle'}</small></span>
 				<span class="value">{dateFormat date=$order->date_add full=false}</span>
 			</div>
 			<div class="col-lg-3 box-stats color2" >
 				<i class="icon-comments"></i>
-				<span class="title">{l s='Messages'}<br /><small>sous-titre</small></span>
-				<!-- <span class="value">{sizeof($messages)}</span> -->
+				<span class="title">{l s='Messages'}<br /><small>{l s='subtitle'}</small></span>
 				<span class="value"><a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'htmlall':'UTF-8'}">{sizeof($customer_thread_message)}</a></span>
 			</div>
 			<div class="col-lg-3 box-stats color1" >
 				<i class="icon-ok"></i>
-				<span class="title">{l s='Products'}<br /><small>sous-titre</small></span>
+				<span class="title">{l s='Products'}<br /><small>{l s='subtitle'}</small></span>
 				<span class="value">{sizeof($products)}</span>
 			</div>
 			<div class="col-lg-3 box-stats color4" >
 				<i class="icon-money"></i>
-				<span class="title">{l s='Total'}<br /><small>sous-titre</small></span>
+				<span class="title">{l s='Total'}<br /><small>{l s='subtitle'}</small></span>
 				<span class="value">{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}</span>
 			</div>
 		</div>
 	</div>
-
 
 	<!-- Todo : Be smart and find the best place for Admin order hook -->
 	{hook h="displayAdminOrder" id_order=$order->id}
@@ -534,7 +532,7 @@
 							<label class="control-label col-lg-3">{l s='Choose a standard message'}</label>
 							<div class="col-lg-9">
 								<select name="order_message" id="order_message" onchange="orderOverwriteMessage(this, '{l s='Do you want to overwrite your existing message?'}')">
-									<option value="0" selected="selected">--</option>
+									<option value="0" selected="selected">-</option>
 									{foreach from=$orderMessages item=orderMessage}
 									<option value="{$orderMessage['message']|escape:'htmlall':'UTF-8'}">{$orderMessage['name']}</option>
 									{/foreach}
@@ -852,10 +850,6 @@
 		</div>
 	</div>
 
-		
-
-		
-
 	<form class="container-command-top-spacing" action="{$current_index}&vieworder&token={$smarty.get.token}&id_order={$order->id}" method="post" onsubmit="return orderDeleteProduct('{l s='This product cannot be returned.'}', '{l s='Quantity to cancel is greater than quantity available.'}');">
 		<input type="hidden" name="id_order" value="{$order->id}" />
 		<div style="display: none">
@@ -1113,8 +1107,6 @@
 			</div>
 		</div>
 	</form>
-
-	
 
 	{if (sizeof($messages))}
 	<div class="panel">

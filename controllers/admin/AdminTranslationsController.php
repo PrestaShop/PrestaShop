@@ -1259,6 +1259,8 @@ class AdminTranslationsControllerCore extends AdminController
 		// Set the path of selected theme
 		if ($this->theme_selected)
 			define('_PS_THEME_SELECTED_DIR_', _PS_ROOT_DIR_.'/themes/'.$this->theme_selected.'/');
+		else
+			define('_PS_THEME_SELECTED_DIR_', '');
 
 		// Get type of translation
 		if (($type = Tools::getValue('type')) && !is_array($type))
