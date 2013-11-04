@@ -84,7 +84,11 @@ public function hookDisplayMobileHeader($params)
 		if (Tools::getValue('search_query') || !$this->isCached('blocksearch.tpl', $this->getCacheId()))
 		{
 			$this->calculHookCommon($params);
-			$this->smarty->assign('blocksearch_type', 'block');
+			$this->smarty->assign(array(
+				'blocksearch_type' => 'block',
+				'search_query' => (string)Tools::getValue('search_query')
+				)
+			);
 		}
 		return $this->display(__FILE__, 'blocksearch.tpl', Tools::getValue('search_query') ? null : $this->getCacheId());
 	}
@@ -94,7 +98,12 @@ public function hookDisplayMobileHeader($params)
 		if (Tools::getValue('search_query') || !$this->isCached('blocksearch-top.tpl', $this->getCacheId('blocksearch-top')))
 		{
 			$this->calculHookCommon($params);
-			$this->smarty->assign('blocksearch_type', 'top');
+			$this->smarty->assign(array(
+				'blocksearch_type' => 'top',
+				'search_query' => (string)Tools::getValue('search_query')
+				)
+			);
+			
 		}
 
 		return $this->display(__FILE__, 'blocksearch-top.tpl', Tools::getValue('search_query') ? null : $this->getCacheId('blocksearch-top'));
