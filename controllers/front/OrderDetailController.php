@@ -156,13 +156,38 @@ class OrderDetailControllerCore extends FrontController
 				if ($order->total_discounts > 0)
 					$this->context->smarty->assign('total_old', (float)($order->total_paid - $order->total_discounts));
 				$products = $order->getProducts();
-				$deliverd_products = $order->getProductsDelivery();
+				$delivered_products = $order->getProductsDelivery();
 				$order_delivery = new OrderDelivery();
-				foreach ($deliverd_products as $k => $delivery_number)
+				foreach ($delivered_products as $k => $delivery_number)
 				{
 					$shipped = $order_delivery->getShippedByNr($k, $order->id);
 					if ($shipped == 0)
-						unset($deliverd_products[$k]);
+						unset($delivered_products[$k]);
+				}
+
+				$delivery_products = $order->getProductsDelivery();
+				$nondelivery_products = array();
+				foreach ($delivery_products as $delivery)
+				{
+						foreach ($delivery as $product)
+						{
+							if ($product['shipped'] == 1)
+							{
+								if (!empty($nondelivery_products[$product['product_id'].'_'.$product['product_attribute_id']]))
+									$nondelivery_products[$product['product_id'].'_'.$product['product_attribute_id']] += $product['product_quantity'];
+								else
+									$nondelivery_products[$product['product_id'].'_'.$product['product_attribute_id']] = $product['product_quantity'];
+							}
+						}
+				}
+				$undelivered_products = $order->getProducts();
+				foreach ($undelivered_products as &$un_product)
+				{
+					if (!empty($nondelivery_products))
+					{
+						if (isset($nondelivery_products[$un_product['product_id'].'_'.$un_product['product_attribute_id']])) // Removed delivered products qty
+							$un_product['product_quantity'] = $un_product['product_quantity'] - $nondelivery_products[$un_product['product_id'].'_'.$un_product['product_attribute_id']];
+					}
 				}
 
 				/* DEPRECATED: customizedDatas @since 1.5 */
@@ -193,7 +218,8 @@ class OrderDetailControllerCore extends FrontController
 					'invoices' => $invoices,
 					'order_history' => $order->getHistory($this->context->language->id, false, true),
 					'products' => $products,
-					'deliverd_products' => $deliverd_products,
+					'delivered_products' => $delivered_products,
+					'undelivered_products' => $undelivered_products,
 					'discounts' => $order->getCartRules(),
 					'carrier' => $carrier,
 					'address_invoice' => $addressInvoice,

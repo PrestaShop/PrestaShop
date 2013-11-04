@@ -222,7 +222,7 @@
 <h3 class="bg">{l s='Order Deliveries'}</h3>
 {if !$is_guest}<form action="{$link->getPageLink('order-follow', true)|escape:'html'}" method="post">{/if}
 <ul data-role="listview" data-inset="true">
-{foreach from=$deliverd_products item=delivery_number name=delivery_number key=k}
+{foreach from=$delivered_products item=delivery_number name=delivery_number key=k}
 			<li class="item">{l s='Delivery'} {$k}<li>
 	{foreach from=$delivery_number item=delivery_product name=delivery_products}
 		{if !isset($delivery_product.deleted)}

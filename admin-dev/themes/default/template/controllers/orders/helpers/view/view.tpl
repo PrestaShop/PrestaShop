@@ -774,23 +774,17 @@
 			<legend><img src="../img/admin/delivery.gif" alt="{l s='Delivery:'}" />{l s='Delivery:'}</legend>
 			<div style="float:left;width: 100%;">
 			<script type="text/javascript">
-				function edsName2Ref() {
+				function edsName2Warehouse() {
 					var select = document.getElementById('edsProductName');
 					var opt = select.options[select.selectedIndex].value;
 					var Products = new Array();
-					Products['select_pname'] = new Array('','','0'); /* Empty boxes if we select pname */
+					Products['select_pname'] = '0'; /* Empty box if we select pname */
 					{foreach from=$products item=product key=k}
-						Products[{$product.product_id} + '_' + {$product.product_attribute_id}] = new Array(
-						'{if isset($product.product_reference)}{$product.product_reference}{/if}',
-						'{if isset($product.product_ean13)}{$product.product_ean13}{/if}',
-						'{if isset($product.id_warehouse)}{$product.id_warehouse}{else}0{/if}');
+						Products[{$product.product_id} + '_' + {$product.product_attribute_id}] = 
+						'{if isset($product.id_warehouse)}{$product.id_warehouse}{else}0{/if}';
 					{/foreach}
-					var ref = Products[opt][0];
-					var ean = Products[opt][1];
-					var wh = Products[opt][2];
+					var wh = Products[opt];
 					document.getElementById('edsWarehouse').value = wh;
-					document.getElementById('edsReference').value = ref;
-					document.getElementById('edsEan13').value = ean;
 				}
 			</script>
 			<script type="text/javascript">
@@ -851,7 +845,7 @@
 				}, 0);
 			}
 			</script>
-				<select name="edsProductName" onchange=edsName2Ref() id="edsProductName">
+				<select name="edsProductName" onchange=edsName2Warehouse() id="edsProductName">
 					<option value="select_pname">--  {l s='Select productname'} --
 					{foreach from=$products item=product key=k}
 						<option value="{$product.product_id}_{$product.product_attribute_id}" >{$product.product_name}</option>

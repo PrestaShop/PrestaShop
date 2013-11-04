@@ -48,4 +48,8 @@
     <name>Payment remotely accepted</name>
     <template>payment</template>
   </order_state>
+  <order_state id="Partially_shipped">
+    <name>Partially shipped</name>
+    <template>partially_shipped</template>
+  </order_state>
 </entity_order_state>

@@ -1581,7 +1581,6 @@ class OrderCore extends ObjectModel
 		foreach ($delivery_slips as $delivery)
 		{
 			$delivery->is_delivery = true;
-			$delivery->date_add = $delivery->delivery_date;
 		}
 
 		$order_slips = $this->getOrderSlipsCollection()->getResults();

@@ -817,10 +817,11 @@ class CartCore extends ObjectModel
 	 * @param integer $quantity Quantity to add (or substract)
 	 * @param integer $id_product Product ID
 	 * @param integer $id_product_attribute Attribute ID if needed
+	 * @param boolean $force_qty Force adding even if qty is higher then stock
 	 * @param string $operator Indicate if quantity must be increased or decreased
 	 */
 	public function updateQty($quantity, $id_product, $id_product_attribute = null, $id_customization = false,
-		$operator = 'up', $id_address_delivery = 0, Shop $shop = null, $auto_add_cart_rule = true)
+		$operator = 'up', $id_address_delivery = 0, Shop $shop = null, $auto_add_cart_rule = true,$force_qty = false)
 	{
 		if (!$shop)
 			$shop = Context::getContext()->shop;
@@ -890,7 +891,7 @@ class CartCore extends ObjectModel
 					$qty = '+ '.(int)$quantity;
 
 					if (!Product::isAvailableWhenOutOfStock((int)$result2['out_of_stock']))
-						if ($new_qty > $product_qty)
+						if ($new_qty > $product_qty && !$force_qty)
 							return false;
 				}
 				else if ($operator == 'down')
@@ -933,7 +934,7 @@ class CartCore extends ObjectModel
 					$result2['quantity'] = Pack::getQuantity($id_product, $id_product_attribute);
 
 				if (!Product::isAvailableWhenOutOfStock((int)$result2['out_of_stock']))
-					if ((int)$quantity > $result2['quantity'])
+					if ((int)$quantity > $result2['quantity'] && !$force_qty)
 						return false;
 
 				if ((int)$quantity < $minimal_quantity)

@@ -1250,8 +1250,7 @@ class AdminOrdersControllerCore extends AdminController
 					{
 						if ($product['product_reference'] == $edsRef)
 						{
-							$product_id = $product['product_id'];
-							$product_attribute_id = $product['product_attribute_id'];
+							$edsProduct = $product;
 							break; // saves resources, since we only loop untill we find product
 						}
 					}
@@ -1262,21 +1261,19 @@ class AdminOrdersControllerCore extends AdminController
 					{
 						if ($product['product_ean13'] == $edsEan13)
 						{
-							$product_id = $product['product_id'];
-							$product_attribute_id = $product['product_attribute_id'];
+							$edsProduct = $product;
 							break;
 						}
 					}
 				}
 				elseif ($edsProdID = Tools::getValue('edsProductName')) // an last, get id from name selecter
 				{
+					list($product_id,$product_attribute_id) = explode("_",$edsProdID);
 					foreach ($products as $product)
 					{
-						if ($product['product_id'] == $edsProdID)
+						if ($product['product_id'] == $product_id && $product['product_attribute_id'] == $product_attribute_id)
 						{
-							$product_id = $product['product_id'];
-							$product_attribute_id = $product['product_attribute_id'];
-							break;
+							$edsProduct = $product;
 						}
 					}
 				}
@@ -1289,22 +1286,29 @@ class AdminOrdersControllerCore extends AdminController
 					if (Tools::getValue('edsQty') < 0)
 						$this->errors[] = Tools::displayError('Product does not exist on this delivery, there for it can not be removed');
 					else
-						$order_delivery->createDelivery($delivery_number, $order, $product_id, $product_attribute_id, Tools::getValue('edsQty'), Tools::getValue('edsWarehouse')); // creates delivery and adds delivery detail
+						$order_delivery->createDelivery($delivery_number, $order, $edsProduct, Tools::getValue('edsQty'), Tools::getValue('edsWarehouse')); // creates delivery and adds delivery detail
 				}
 				else
 				{
-					$qty = $order_delivery->getProductQty($product_id, $product_attribute_id, $delivery_id);
+					$qty = $order_delivery->getProductQty($edsProduct['product_id'], $edsProduct['product_attribute_id'], $delivery_id);
 					if ($qty > 0)
 					{
+						if (Tools::getValue('edsQty') < 0)
+						{
+						$order_delivery->subtractDeliveryDetail($order,$edsProduct,Tools::getValue('edsQty'),$delivery_id);
+						}
+						else
+						{
 						$new_qty = $qty + Tools::getValue('edsQty');
-						$order_delivery->updateDeliveryDetail($order, $product_id, $product_attribute_id, $new_qty, $delivery_id, Tools::getValue('edsWarehouse'));
+						$order_delivery->updateDeliveryDetail($order, $edsProduct, $new_qty, $delivery_id, Tools::getValue('edsWarehouse'));
+						}
 					}
 					else
 					{
 						if (Tools::getValue('edsQty') < 0)
 							$this->errors[] = Tools::displayError('Product does not exist on this delivery, there for it can not be removed');
 						else
-							$order_delivery->createDeliveryDetail($order, $product_id, $product_attribute_id, Tools::getValue('edsQty'), $delivery_id, Tools::getValue('edsWarehouse'));
+							$order_delivery->createDeliveryDetail($order, $edsProduct, Tools::getValue('edsQty'), $delivery_id, Tools::getValue('edsWarehouse'));
 					}
 				}
 			}
@@ -1322,23 +1326,31 @@ class AdminOrdersControllerCore extends AdminController
 				{
 					$qty = $order_delivery->getProductQty($product['product_id'], $product['product_attribute_id'], $id['delivery_id']); // get delivered qty
 					// set it to delivered_qty
-					if (!isset($product['delivered_qty']))
+					if($qty)
 					{
-						$product['delivered_qty'] = $qty;
-						$product['delivery_ids'] = array($id['delivery_id']); // add delivery id aswell
-					}
-					else
-					{
-						$product['delivery_ids'] = array_merge($product['delivery_ids'], array($id['delivery_id']));
-						$product['delivered_qty'] = $product['delivered_qty'] + $qty;
+						if (!isset($product['delivered_qty']))
+						{
+							$product['delivered_qty'] = $qty;
+							$product['delivery_ids'] = array($id['delivery_id']); // add delivery id aswell
+						}
+						else
+						{
+							$product['delivery_ids'] = array_merge($product['delivery_ids'], array($id['delivery_id']));
+							$product['delivered_qty'] = $product['delivered_qty'] + $qty;
+						}
+						$qty = false;
 					}
 				}
 			}
 			$delivery_number = Tools::getValue('submitEdsAddAll'); // Get slip nr
 			$order_delivery = new OrderDelivery($order->id);
-			$delivery_id = $order_delivery->getIdFromNr($delivery_number, $order->id, $order->id_shop); // Get delivery id
 			foreach ($products as $product)
 			{
+				// This needs to be retrived for every product, incease an id is created.
+				$delivery_id = $order_delivery->getIdFromNr($delivery_number, $order->id, $order->id_shop); // Get delivery id
+
+				if (!isset($product['id_warehouse']))
+					$product['id_warehouse'] = 0;
 				if (isset($product['delivered_qty']) && $product['delivered_qty'] > 0) // if delivered_qty is set and higher then 0
 				{
 					$remaning_qty = $product['product_quantity'] - $product['delivered_qty'];
@@ -1358,21 +1370,27 @@ class AdminOrdersControllerCore extends AdminController
 						{
 							// update qty
 							$new_qty = $remaning_qty + $current_qty;
-							$order_delivery->updateDeliveryDetail($order, $product['product_id'], $product['product_attribute_id'], $new_qty, $delivery_id, $product['id_warehouse']);
+							$order_delivery->updateDeliveryDetail($order, $product, $new_qty, $delivery_id, $product['id_warehouse']);
 						}
 						else // if product does not exist on delivery id
 						{
 							if (empty($delivery_id)) // not even the delivery id exists
 								// create new delivery
-								$order_delivery->createDelivery($delivery_number, $order, $product['product_id'], $product['product_attribute_id'], $remaning_qty, $product['id_warehouse']); // creates delivery and adds delivery detail
+								$order_delivery->createDelivery($delivery_number, $order, $product, $remaning_qty, $product['id_warehouse']); // creates delivery and adds delivery detail
 							else // delivery exists
 								// add product to delivery
-								$order_delivery->createDeliveryDetail($order, $product['product_id'], $product['product_attribute_id'], $remaning_qty, $delivery_id, $product['id_warehouse']);
+								$order_delivery->createDeliveryDetail($order, $product, $remaning_qty, $delivery_id, $product['id_warehouse']);
 						}
 					}
 				}
-				elseif (!isset($product['delivered_qty'])) // if it is not set, then it's not delivered
-					$order_delivery->createDeliveryDetail($order, $product['product_id'], $product['product_attribute_id'], $product['product_quantity'], $delivery_id, $product['id_warehouse']);
+				elseif (!isset($product['delivered_qty']))
+				{
+					// if it is not set, then it's not delivered
+					if (empty($delivery_id))
+						$order_delivery->createDelivery($delivery_number, $order, $product, $product['product_quantity'], $product['id_warehouse']); // creates delivery and adds delivery detail
+					else
+						$order_delivery->createDeliveryDetail($order, $product, $product['product_quantity'], $delivery_id, $product['id_warehouse']);
+				}
 			}
 
 		}

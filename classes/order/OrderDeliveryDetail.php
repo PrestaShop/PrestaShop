@@ -241,34 +241,36 @@ class OrderDeliveryDetailCore extends ObjectModel
 		$this->context = $context->cloneContext();
 	}
 
+	public function delete()
+	{
+		if(!$res = parent::delete())
+			return false;
+
+		Db::getInstance()->delete('order_delivery_detail_tax', 'id_order_detail='.(int)$this->id);
+
+		return $res;
+	}
+
 	protected function updateDetail(Order $order, Cart $cart, $product, $id_order_state, $id_order_invoice, $use_taxes = true, $id_warehouse = 0, $delivery_id)
 	{
-		// I should be able to remove alot of the info here
-
+	
+		$product_price_tax_incl = Tools::ps_round($this->unit_price_tax_incl);
+		$product_price_tax_excl = Tools::ps_round($this->unit_price_tax_excl);
+		$total_products_tax_incl = $product_price_tax_incl * $product['cart_quantity'];
+		$total_products_tax_excl = $product_price_tax_excl * $product['cart_quantity'];
+		$diff_price_tax_incl = $total_products_tax_incl - $this->total_price_tax_incl;
+		$diff_price_tax_excl = $total_products_tax_excl - $this->total_price_tax_excl;
+		
 		if ($use_taxes)
 			$this->tax_calculator = new TaxCalculator();
 
-		$this->product_id = (int)($product['id_product']);
 		$this->delivery_id = $delivery_id;
-		$this->product_attribute_id = (int)$product['id_product_attribute'] ? (int)($product['id_product_attribute']) : null;
-		$this->product_name = $product['name'].
-			(isset($product['attributes']) && $product['attributes'] != null) ?
-				' - '.$product['attributes'] : '';
 
 		$this->product_quantity = (int)($product['cart_quantity']);
-		$this->product_ean13 = empty($product['ean13']) ? null : pSQL($product['ean13']);
-		$this->product_upc = empty($product['upc']) ? null : pSQL($product['upc']);
-		$this->product_reference = empty($product['reference']) ? null : pSQL($product['reference']);
-		$this->product_supplier_reference = empty($product['supplier_reference']) ? null : pSQL($product['supplier_reference']);
-		$this->product_weight = (float)$product['id_product_attribute'] ? $product['weight_attribute'] : $product['weight'];
-		$this->id_warehouse = $id_warehouse;
 
 		$productQuantity = (int)(Product::getQuantity($this->product_id, $this->product_attribute_id));
 		$this->product_quantity_in_stock = ($productQuantity - (int)($product['cart_quantity']) < 0) ?
 			$productQuantity : (int)($product['cart_quantity']);
-
-		$this->setVirtualProductInformation($product);
-		$this->checkProductStock($product, $id_order_state);
 
 		if ($use_taxes)
 			$this->setProductTax($order, $product);
@@ -287,25 +289,31 @@ class OrderDeliveryDetailCore extends ObjectModel
 			$this->updateTaxAmount($order);
 		unset($this->tax_calculator);
 
-		$total_method = Cart::BOTH_WITHOUT_SHIPPING;
-
 		$order_invoice = new OrderInvoice($id_order_invoice);
-		$order_invoice->total_paid_tax_excl = Tools::ps_round((float)$cart->getOrderTotal(false, $total_method), 2);
-		$order_invoice->total_paid_tax_incl = Tools::ps_round((float)$cart->getOrderTotal($use_taxes, $total_method), 2);
-		$order_invoice->total_products = (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
-		$order_invoice->total_products_wt = (float)$cart->getOrderTotal($use_taxes, Cart::ONLY_PRODUCTS);
+
+		$order_invoice->total_products += $diff_price_tax_excl;
+		$order_invoice->total_products_wt += $diff_price_tax_incl;
 
 		$order_delivery = new OrderDelivery();
 		$delivery_number = $order_delivery->getNrFromId($delivery_id);
-		if ($delivery_number != 1)
+		if ($delivery_number == 1)
 		{
+			if ($order_invoice->total_shipping_tax_incl != 0)
+			{
+				$order_invoice->total_paid_tax_incl += $diff_price_tax_incl;
+				$order_invoice->total_paid_tax_excl += $diff_price_tax_excl;
+			}
+		}
+		else
+		{
+			$order_invoice->total_paid_tax_incl += $diff_price_tax_incl;
+			$order_invoice->total_paid_tax_excl += $diff_price_tax_excl;
 			if ($order_invoice->total_shipping_tax_incl != 0)
 			{
 				$order_invoice->total_shipping_tax_excl = 0;
 				$order_invoice->total_shipping_tax_incl = 0;
 			}
 		}
-
 		$order_invoice->update();
 	}
 	
@@ -353,7 +361,6 @@ class OrderDeliveryDetailCore extends ObjectModel
 			$productQuantity : (int)($product['cart_quantity']);
 
 		$this->setVirtualProductInformation($product);
-		$this->checkProductStock($product, $id_order_state);
 
 		if ($use_taxes)
 			$this->setProductTax($order, $product);
@@ -406,7 +413,9 @@ class OrderDeliveryDetailCore extends ObjectModel
 		$this->outOfStock = false;
 
 		foreach ($product_list as $product)
+		{
 			$this->createDetail($order, $cart, $product, $id_order_state, $id_order_invoice, $use_taxes, $id_warehouse, $delivery_id);
+		}
 
 		unset($this->vat_address);
 		unset($products);
@@ -430,28 +439,6 @@ class OrderDeliveryDetailCore extends ObjectModel
 			$this->download_hash = $productDownload->getHash();
 
 			unset($productDownload);
-		}
-	}
-
-	/**
-	 * Check the order state
-	 * @param array $product
-	 * @param int $id_order_state
-	 */
-	protected function checkProductStock($product, $id_order_state)
-	{
-		if ($id_order_state != Configuration::get('PS_OS_CANCELED') && $id_order_state != Configuration::get('PS_OS_ERROR'))
-		{
-			$update_quantity = true;
-			if (!StockAvailable::dependsOnStock($product['id_product']))
-				$update_quantity = StockAvailable::updateQuantity($product['id_product'], $product['id_product_attribute'], -(int)$product['cart_quantity']);
-
-			if ($update_quantity)
-				$product['stock_quantity'] -= $product['cart_quantity'];
-
-			if ($product['stock_quantity'] < 0 && Configuration::get('PS_STOCK_MANAGEMENT'))
-				$this->outOfStock = true;
-			Product::updateDefaultAttribute($product['id_product']);
 		}
 	}
 
@@ -513,6 +500,7 @@ class OrderDeliveryDetailCore extends ObjectModel
 	 */
 	protected function setDetailProductPrice(Order $order, Cart $cart, $product)
 	{
+		
 		$this->setContext((int)$product['id_shop']);
 		Product::getPriceStatic((int)$product['id_product'], true, (int)$product['id_product_attribute'], 6, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, $this->context);
 		$this->specificPrice = $specific_price;

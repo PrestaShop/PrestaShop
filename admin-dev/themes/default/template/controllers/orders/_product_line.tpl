@@ -135,14 +135,18 @@
 	</td>
 	{if ($can_edit && !$order->hasBeenDelivered())}
 	<td class="product_invoice" colspan="2" style="display: none;text-align:center;">
-		{if sizeof($invoices_collection)}
-		<select name="product_invoice" class="edit_product_invoice">
-			{foreach from=$invoices_collection item=invoice}
-			<option value="{$invoice->id}" {if $invoice->id == $product['id_order_invoice']}selected="selected"{/if}>#{Configuration::get('PS_INVOICE_PREFIX', $current_id_lang, null, $order->id_shop)}{'%06d'|sprintf:$invoice->number}</option>
-			{/foreach}
-		</select>
+		{if Configuration::get('PS_EDS') && Configuration::get('PS_EDS_INVOICE_DELIVERED')}
+			&nbsp;
 		{else}
-		&nbsp;
+			{if sizeof($invoices_collection)}
+			<select name="product_invoice" class="edit_product_invoice">
+				{foreach from=$invoices_collection item=invoice}
+				<option value="{$invoice->id}" {if $invoice->id == $product['id_order_invoice']}selected="selected"{/if}>#{Configuration::get('PS_INVOICE_PREFIX', $current_id_lang, null, $order->id_shop)}{'%06d'|sprintf:$invoice->number}</option>
+				{/foreach}
+			</select>
+			{else}
+			&nbsp;
+			{/if}
 		{/if}
 	</td>
 	{/if}
