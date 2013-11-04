@@ -145,4 +145,27 @@ $(function() {
 		{$orders}
 	</div>
 	{/if}
+
+	{if isset($addons) && $addons}
+	<div class="panel">
+		<h3>
+			{if $addons|@count == 1}
+				{l s='1 addon'}
+			{else}
+				{l s='%d addons' sprintf=$addons|@count}
+			{/if}
+		</h3>
+		<table class="table">
+			<tbody>
+			{foreach $addons key=key item=addon}
+				<tr>
+					<td><strong><a href="{$addon.href|escape:'htmlall':'UTF-8'}" target="_blank">{$addon.title|escape:'htmlall':'UTF-8'}</a></strong></td>
+					<td><a href="{$addon.href|escape:'htmlall':'UTF-8'}" target="_blank">{$addon.description|escape:'htmlall':'UTF-8'}</a></td>
+				</tr>
+			{/foreach}
+		</tbody>
+		</table>
+	</div>
+	{/if}
+
 {/if}
