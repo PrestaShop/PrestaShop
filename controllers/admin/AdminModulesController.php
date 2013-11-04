@@ -1023,9 +1023,6 @@ class AdminModulesControllerCore extends AdminController
 	
 	public function initContent()
 	{
-		// Adding Css
-		//$this->addCSS(__PS_BASE_URI__.str_replace(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR, '', _PS_ADMIN_DIR_).'/themes/'.$this->bo_theme.'/css/modules.css', 'all');
-
 		// If we are on a module configuration, no need to load all modules
 		if (Tools::getValue('configure') != '')
 			return true;
