@@ -111,16 +111,15 @@ class Dashgoals extends Module
 
 	public function hookDashboardData($params)
 	{
-		return array('data_chart' => array('dash_goals_chart1' => $this->getChartData()));
+		$year = ((isset($params['extra']) && $params['extra'] > 1970 && $params['extra'] < 2999) ? $params['extra'] : date('Y'));
+		return array('data_chart' => array('dash_goals_chart1' => $this->getChartData($year)));
 	}
 	
-	public function getChartData()
+	public function getChartData($year)
 	{
-		$year = date('Y');
-
-		$visits = AdminStatsController::getVisits(false, date('Y-01-01'), date('Y-12-31'), 'month');
-		$orders = AdminStatsController::getOrders(date('Y-01-01'), date('Y-12-31'), 'month');
-		$sales = AdminStatsController::getTotalSales(date('Y-01-01'), date('Y-12-31'), 'month');
+		$visits = AdminStatsController::getVisits(false, $year.date('-01-01'), $year.date('-12-31'), 'month');
+		$orders = AdminStatsController::getOrders($year.date('-01-01'), $year.date('-12-31'), 'month');
+		$sales = AdminStatsController::getTotalSales($year.date('-01-01'), $year.date('-12-31'), 'month');
 
 		$stream1 = array('key' => $this->l('Traffic'), 'values' => array());
 		$stream2 = array('key' => $this->l('Conversion Rate'), 'values' => array());

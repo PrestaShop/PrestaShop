@@ -303,7 +303,8 @@ class AdminDashboardControllerCore extends AdminController
 			'date_to' => $this->context->employee->stats_date_to,
 			'compare_from' => $this->context->employee->stats_compare_from,
 			'compare_to' => $this->context->employee->stats_compare_to,
-			'dashboard_use_push' => (int)Tools::getValue('dashboard_use_push')
+			'dashboard_use_push' => (int)Tools::getValue('dashboard_use_push'),
+			'extra' => (int)Tools::getValue('extra')
 		);
 		
 		die(Tools::jsonEncode(Hook::exec('dashboardData', $params, $id_module, true, true, (int)Tools::getValue('dashboard_use_push'))));
