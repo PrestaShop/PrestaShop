@@ -130,8 +130,17 @@ class HelperFormCore extends Helper
 									'delete_url' => isset($params['delete_url'])?$params['delete_url']:null
 								)));
 
+							if (isset($params['file']) && $params['file']) // Use for retrocompatibility							
+								$uploader->setFiles(array(
+									0 => array(
+									'type'       => HelperUploader::TYPE_FILE,
+									'size'       => isset($params['size'])?$params['size']:null,
+									'delete_url' => isset($params['delete_url'])?$params['delete_url']:null,
+									'download_url' => isset($params['file'])?$params['file']:null
+								)));
+
+
 							$uploader->setThumb(isset($params['thumb'])?$params['thumb']:null);
-							$uploader->setFile(isset($params['file'])?$params['file']:null);
 							$uploader->setTitle(isset($params['title'])?$params['title']:null);
 
 							$params['file'] = $uploader->render();
