@@ -216,7 +216,7 @@ class AdminEmployeesControllerCore extends AdminController
 					'required' => true,
 					'hint' => ($obj->id ?
 								$this->l('Leave this field blank if you do not want to change your password.') :
-									$this->l('Minimum of eight characters (use only letters and numbers)').' -_')
+									$this->l('Minimum of eight characters'))
 				),
 				array(
 					'type' => 'text',

@@ -3623,6 +3623,7 @@ class ProductCore extends ObjectModel
 					if ($result3)
 					{
 						$result3['id_feature_value'] = $new_id_feature_value;
+						$result3['value'] = pSQL($result3['value']);
 						$return &= Db::getInstance()->insert('feature_value_lang', $result3);
 					}
 				}

@@ -103,8 +103,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT COUNT(*)
 		FROM `'._DB_PREFIX_.'module` m
-		'.Shop::addSqlAssociation('module', 'm', true).'
-		WHERE m.active = 1');
+		'.Shop::addSqlAssociation('module', 'm', false).'
+		WHERE module_shop.id_module IS NULL OR m.active = 0');
 	}
 	
 	public static function getModulesToUpdate()

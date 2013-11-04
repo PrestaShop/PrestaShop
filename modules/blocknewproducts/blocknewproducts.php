@@ -90,12 +90,12 @@ class BlockNewProducts extends Module
 		if (!$this->isCached('blocknewproducts.tpl', $this->getCacheId()))
 		{
 			if (!Configuration::get('NEW_PRODUCTS_NBR'))
-					return;
+				return;
 			$newProducts = false;
 			if (Configuration::get('PS_NB_DAYS_NEW_PRODUCT'))
-					$newProducts = Product::getNewProducts((int) $params['cookie']->id_lang, 0, (int)Configuration::get('NEW_PRODUCTS_NBR'));
+				$newProducts = Product::getNewProducts((int) $params['cookie']->id_lang, 0, (int)Configuration::get('NEW_PRODUCTS_NBR'));
 			if (!$newProducts && !Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY'))
-					return;
+				return;
 			$this->smarty->assign(array(
 				'new_products' => $newProducts,
 				'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
@@ -145,6 +145,7 @@ class BlockNewProducts extends Module
 	{
 		$this->_clearCache('blocknewproducts.tpl');
 	}
+<<<<<<< HEAD
 	
 	public function renderForm()
 	{
@@ -214,3 +215,6 @@ class BlockNewProducts extends Module
 		);
 	}
 }
+=======
+}
+>>>>>>> d49c4cf62e1919c66dc46a4161cb8045153092c8

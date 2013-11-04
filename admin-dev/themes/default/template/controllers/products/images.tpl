@@ -33,27 +33,42 @@
 </h3>
 
 <div class="row">
-	<label class="control-label col-lg-5 file_upload_label">
-		<span class="label-tooltip" data-toggle="tooltip"
-			title="{l s='Format:'} JPG, GIF, PNG. {l s='Filesize:'} {$max_image_size|string_format:"%.2f"} {l s='MB max.'}">
-			{if isset($id_image)}{l s='Edit this product image'}{else}{l s='Add a new image to this product'}{/if}
-		</span>
-	</label>
-	<div class="col-lg-7">
-		{l s='File:'}
-		<div id="file-uploader">
-			<noscript>
-				<p>{l s='Please enable JavaScript to use file uploader:'}</p>
-			</noscript>
+	<div class="form-group">
+		<label class="control-label col-lg-3 file_upload_label">
+			<span class="label-tooltip" data-toggle="tooltip"
+				title="{l s='Format:'} JPG, GIF, PNG. {l s='Filesize:'} {$max_image_size|string_format:"%.2f"} {l s='MB max.'}">
+				{if isset($id_image)}{l s='Edit this product image'}{else}{l s='Add a new image to this product'}{/if}
+			</span>
+		</label>
+		<div class="col-lg-9">
+			{l s='File:'}
+			<div id="file-uploader">
+				<noscript>
+					<p>{l s='Please enable JavaScript to use file uploader:'}</p>
+				</noscript>
+			</div>
+			<div id="progressBarImage" class="progressBarImage"></div>
+			<div id="showCounter" style="display:none;">
+				<span id="imageUpload">0</span><span id="imageTotal">0</span>
+			</div>
+			<input type="hidden" name="resizer" value="auto" />
+		{if Tools::getValue('id_image')}
+			<input type="hidden" name="id_image" value="{Tools::getValue('id_image')|intval}" />
+		{/if}
 		</div>
-		<div id="progressBarImage" class="progressBarImage"></div>
-		<div id="showCounter" style="display:none;">
-			<span id="imageUpload">0</span><span id="imageTotal">0</span>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-lg-3">
+			{l s='Legend:'}
+		</label>
+		<div class="col-lg-9 translatable">
+			{foreach from=$languages item=language}
+			<div class="lang_{$language.id_lang}" style="{if !$language.is_default}display: none;{/if} float: left;">
+				<input class="updateCurrentText" type="text" {if !$product->id}disabled="disabled"{/if} id="legend_{$language.id_lang}" name="legend_{$language.id_lang}" value="{$product->name[$language.id_lang]|escape:'htmlall':'UTF-8'}"/>
+				<div class="help-block">{l s='Invalid characters:'} <>;=#{}</div>
+			</div>
+			{/foreach}
 		</div>
-		<input type="hidden" name="resizer" value="auto" />
-	{if Tools::getValue('id_image')}
-		<input type="hidden" name="id_image" value="{Tools::getValue('id_image')|intval}" />
-	{/if}
 	</div>
 </div>
 
@@ -61,6 +76,7 @@
 	<thead>
 		<tr class="nodrag nodrop"> 
 			<th class="fixed-width-sm"><span class="title_box">{l s='Image'}</span></th>
+			<th class="fixed-width-lg"><span class="title_box">{l s='Legend'}</span></th>
 			<th class="center fixed-width-xs"><span class="title_box">{l s='Position'}</span></th>
 			{if $shops}
 			{foreach from=$shops item=shop}
@@ -79,9 +95,10 @@
 	<tr id="image_id">
 		<td>
 			<a href="{$smarty.const._THEME_PROD_DIR_}image_path.jpg" class="fancybox">
-				<img src="{$smarty.const._THEME_PROD_DIR_}{$iso_lang}-default-small_default.jpg" alt="image_id" title="image_id" />
+				<img src="{$smarty.const._THEME_PROD_DIR_}{$iso_lang}-default-{$imageType}.jpg" alt="image_id" title="image_id" />
 			</a>
 		</td>
+		<td>legend</td>
 		<td id="td_image_id" class="pointer dragHandle center positionImage">
 			image_position
 		</td>
@@ -129,7 +146,7 @@
 			}
 			else
 				assoc = false;
-			imageLine({$image->id}, "{$image->getExistingImgPath()}", {$image->position}, "{if $image->cover}icon-check-sign{else}icon-check-empty{/if}", assoc);
+			imageLine({$image->id}, "{$image->getExistingImgPath()}", {$image->position}, "{if $image->cover}icon-check-sign{else}icon-check-empty{/if}", assoc, "{$image->legend[$default_language]|@addcslashes:'\"'}");
 		{/foreach}
 		{literal}
 		$("#imageTable").tableDnD(
@@ -149,19 +166,18 @@
 			}
 		});
 		var filecheck = 1;
-		var uploader = new qq.FileUploader(
+		var params = new Array;
+		params['id_product'] = {/literal}{$id_product|intval}{literal};
+		params['id_category'] = {/literal}{$id_category_default|intval}{literal};
+		params['token'] = "{/literal}{$token}{literal}";
+		params['tab'] = "AdminProducts";
+		params['action'] = "addImage";
+		params['ajax'] = 1;
+		uploader = new qq.FileUploader(
 		{
 			element: document.getElementById("file-uploader"),
 			action: "ajax-tab.php",
 			debug: false,
-			params: {
-				id_product : {/literal}{$id_product}{literal},
-				id_category : {/literal}{$id_category_default}{literal},
-				token : "{/literal}{$token}{literal}",
-				tab : "AdminProducts",
-				action : 'addImage',
-				ajax: 1
-			},
 			onComplete: function(id, fileName, responseJSON)
 			{
 				var percent = ((filecheck * 100) / nbfile);
@@ -186,7 +202,7 @@
 					cover = "icon-check-empty";
 					if (responseJSON.cover == "1")
 						cover = "icon-check-sign";
-					imageLine(responseJSON.id, responseJSON.path, responseJSON.position, cover, responseJSON.shops)
+					imageLine(responseJSON.id, responseJSON.path, responseJSON.position, cover, responseJSON.shops, responseJSON.legend[{/literal}{$default_language|intval}{literal}])
 					$("#imageTable tr:last").after(responseJSON.html);
 					$("#countImage").html(parseInt($("#countImage").html()) + 1);
 					$("#img" + id).remove();
@@ -199,6 +215,12 @@
 			},
 			onSubmit: function(id, filename)
 			{
+				$('input[id^="legend_"]').each(function()
+				{
+					id = $(this).prop("id").replace("legend_", "legend[") + "]";
+					params[id] = $(this).val();
+				});
+				uploader.setParams(params);
 				$("#imageTable").show();
 				$("#listImage").append("<li id='img"+id+"'><div>" + filename + "</div></div><a href=\"javascript:delQueue(" + id +");\"><img src=\"../img/admin/disabled.gif\" ></a><p class=\"errorImg\"></p></li>");
 			}
@@ -286,8 +308,7 @@
 				"ajax" : 1 
 			});
 		});
-		
-		//function	
+
 		function updateImagePosition(json)
 		{
 			doAdminAjax(
@@ -306,13 +327,14 @@
 			$("#img" + id).remove();
 		}
 		
-		function imageLine(id, path, position, cover, shops)
+		function imageLine(id, path, position, cover, shops, legend)
 		{
 			line = $("#lineType").html();
-			line = line.replace(/image_id/g, id);			
-			line = line.replace(/[a-z]{2}-default-small_default/g, path+'-small_default');
+			line = line.replace(/image_id/g, legend);			
+			line = line.replace(/[a-z]{0,2}-default-small_default/g, path+'-small_default');
 			line = line.replace(/image_path/g, path);
 			line = line.replace(/image_position/g, position);
+			line = line.replace(/legend/g, legend);
 			line = line.replace(/icon-check-empty/g, cover);
 			line = line.replace(/<tbody>/gi, "");
 			line = line.replace(/<\/tbody>/gi, "");

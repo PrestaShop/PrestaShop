@@ -70,7 +70,7 @@
     <title>Адреса</title>
     <description/>
     <keywords/>
-    <url_rewrite>address</url_rewrite>
+    <url_rewrite>addresses</url_rewrite>
   </meta>
   <meta id="authentication" id_shop="1">
     <title>Аутентификация</title>
