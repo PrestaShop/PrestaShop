@@ -28,16 +28,20 @@
 	var currency_sign = '{$currency->sign|addslashes}';
 	var currency_blank = {$currency->blank|intval};
 	var priceDisplayPrecision = 0;
+	
+	var dashgoals_year = {$goals_year|intval};
 </script>
 
 <section id="dashgoals" class="panel widget">
 	<header class="panel-heading">
-		<i class="icon-bar-chart"></i> {l s='Goals' mod='dashgoals'}
+		<i class="icon-bar-chart"></i> <span id="dashgoals_title">{l s='Your %s Forecast' mod='dashgoals' sprintf=$goals_year}</span>
+		<a href="javascript:void(0);" onclick="dashgoals_changeYear('backward');" class="icon-backward"></a>
+		<a href="javascript:void(0);" onclick="dashgoals_changeYear('forward');" class="icon-forward"></a>
 		<span class="panel-heading-action">
-			<a class="list-toolbar-btn" href="javascript:toggleDashConfig('dashgoals');" title="configure">
+			<a class="list-toolbar-btn" href="javascript:void(0);" onclick="toggleDashConfig('dashgoals');" title="configure">
 				<i class="process-icon-configure"></i>
 			</a>
-			<a class="list-toolbar-btn" href="#"  onclick="refreshDashboard('dashgoals');" title="refresh">
+			<a class="list-toolbar-btn" href="javascript:void(0);" onclick="refreshDashboard('dashgoals');" title="refresh">
 				<i class="process-icon-refresh"></i>
 			</a>
 		</span>
@@ -48,7 +52,11 @@
 			<table class="table table-condensed table-striped table-bordered">
 				<thead>
 					<tr>
-						<th>{$goals_year}</th>
+						<th>
+							<a href="javascript:void(0);" onclick="dashgoals_changeConfYear('backward');" class="icon-backward"></a>
+							<span id="dashgoals_conftitle">{$goals_year}</span>
+							<a href="javascript:void(0);" onclick="dashgoals_changeConfYear('forward');" class="icon-forward"></a>
+						</th>
 						<th>{l s='Traffic' mod='dashgoals'}</th>
 						<th>{l s='Conversion Rate' mod='dashgoals'}</th>
 						<th>{l s='Average Cart Value' mod='dashgoals'}</th>

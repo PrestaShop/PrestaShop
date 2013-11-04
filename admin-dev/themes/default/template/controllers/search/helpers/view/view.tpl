@@ -157,7 +157,7 @@ $(function() {
 			<tbody>
 			{foreach $addons key=key item=addon}
 				<tr>
-					<td><a href="{$addon.href|escape:'htmlall':'UTF-8'}" target="_blank"><strong>{$addon.title|escape:'htmlall':'UTF-8'}</strong></a></td>
+					<td><a href="{$addon.href|escape:'htmlall':'UTF-8'}" target="_blank"><strong><i class="icon-external-link-sign"></i> {$addon.title|escape:'htmlall':'UTF-8'}</strong></a></td>
 					<td><a href="{$addon.href|escape:'htmlall':'UTF-8'}" target="_blank">{$addon.description|truncate:256:'...'|escape:'htmlall':'UTF-8'}</a></td>
 				</tr>
 			{/foreach}
