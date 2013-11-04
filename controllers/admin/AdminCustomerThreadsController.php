@@ -404,7 +404,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 					$contact = new Contact((int)$ct->id_contact, (int)$ct->id_lang);
 					if (Validate::isLoadedObject($contact))
 					{
-						$from_name = $contact->name[(int)$ct->id_lang];
+						$from_name = $contact->name;
 						$from_email = $contact->email;
 					}
 					else
@@ -412,6 +412,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 						$from_name = null;
 						$from_email = null;
 					}
+
 					if (Mail::Send(
 						(int)$ct->id_lang,
 						'reply_msg',
