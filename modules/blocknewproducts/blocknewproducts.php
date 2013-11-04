@@ -145,8 +145,7 @@ class BlockNewProducts extends Module
 	{
 		$this->_clearCache('blocknewproducts.tpl');
 	}
-<<<<<<< HEAD
-	
+
 	public function renderForm()
 	{
 		$fields_form = array(
@@ -215,6 +214,3 @@ class BlockNewProducts extends Module
 		);
 	}
 }
-=======
-}
->>>>>>> d49c4cf62e1919c66dc46a4161cb8045153092c8
