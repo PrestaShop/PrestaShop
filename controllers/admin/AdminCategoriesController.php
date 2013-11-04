@@ -368,6 +368,29 @@ class AdminCategoriesControllerCore extends AdminController
 		if (ConfigurationKPI::get('EMPTY_CATEGORIES_EXPIRE') < $time)
 			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=empty_categories';
 		$kpis[] = $helper->generate();
+		
+		$helper = new HelperKpi();
+		$helper->id = 'box-top-category';
+		$helper->icon = 'icon-money';
+		$helper->color = 'color3';
+		$helper->title = $this->l('Top Category');
+		$helper->subtitle = $this->l('30 days');
+		if (ConfigurationKPI::get('TOP_CATEGORY', $this->context->employee->id_lang) !== false)
+			$helper->value = ConfigurationKPI::get('TOP_CATEGORY', $this->context->employee->id_lang);
+		if (ConfigurationKPI::get('TOP_CATEGORY_EXPIRE', $this->context->employee->id_lang) < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=top_category';
+		$kpis[] = $helper->generate();
+		
+		$helper = new HelperKpi();
+		$helper->id = 'box-products-per-category';
+		$helper->icon = 'icon-search';
+		$helper->color = 'color4';
+		$helper->title = $this->l('Average number of products per category');
+		if (ConfigurationKPI::get('PRODUCTS_PER_CATEGORY') !== false)
+			$helper->value = ConfigurationKPI::get('PRODUCTS_PER_CATEGORY');
+		if (ConfigurationKPI::get('PRODUCTS_PER_CATEGORY_EXPIRE') < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=products_per_category';
+		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpiRow();
 		$helper->kpis = $kpis;

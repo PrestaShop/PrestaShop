@@ -103,8 +103,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT COUNT(*)
 		FROM `'._DB_PREFIX_.'module` m
-		'.Shop::addSqlAssociation('module', 'm', true).'
-		WHERE m.active = 1');
+		'.Shop::addSqlAssociation('module', 'm', false).'
+		WHERE module_shop.id_module IS NULL OR m.active = 0');
 	}
 	
 	public static function getModulesToUpdate()
@@ -153,6 +153,14 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		WHERE c.active = 0');
 	}
 	
+	public static function getTotalCategories()
+	{
+		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT COUNT(*)
+		FROM `'._DB_PREFIX_.'category` c
+		'.Shop::addSqlAssociation('category', 'c'));
+	}
+	
 	public static function getDisabledProducts()
 	{
 		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
@@ -160,6 +168,14 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		FROM `'._DB_PREFIX_.'product` p
 		'.Shop::addSqlAssociation('product', 'p').'
 		WHERE product_shop.active = 0');
+	}
+	
+	public static function getTotalProducts()
+	{
+		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT COUNT(*)
+		FROM `'._DB_PREFIX_.'product` p
+		'.Shop::addSqlAssociation('product', 'p'));
 	}
 	
 	public static function getTotalSales($date_from, $date_to, $granularity = false)
@@ -232,6 +248,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			if ($products_sales > $total_sales)
 				break;
 		}
+
 		return round(100 * $products / $total_products).'%';
 	}
 
@@ -305,6 +322,31 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		elseif ($row['female'] > $row['male'] && $row['female'] > $row['neutral'])
 			return array('type' => 'female', 'value' => round(100 * $row['female'] / $row['total']));
 		return array('type' => 'neutral', 'value' => round(100 * $row['neutral'] / $row['total']));
+	}
+	
+	public static function getBestCategory($date_from, $date_to)
+	{
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT ca.`id_category`
+		FROM `'._DB_PREFIX_.'category` ca
+		LEFT JOIN `'._DB_PREFIX_.'category_product` capr ON ca.`id_category` = capr.`id_category`
+		LEFT JOIN (
+			SELECT pr.`id_product`, t.`totalPriceSold`
+			FROM `'._DB_PREFIX_.'product` pr
+			LEFT JOIN (
+				SELECT pr.`id_product`,
+					IFNULL(SUM(cp.`product_quantity`), 0) AS totalQuantitySold,
+					IFNULL(SUM(cp.`product_price` * cp.`product_quantity`), 0) / o.conversion_rate AS totalPriceSold
+				FROM `'._DB_PREFIX_.'product` pr
+				LEFT OUTER JOIN `'._DB_PREFIX_.'order_detail` cp ON pr.`id_product` = cp.`product_id`
+				LEFT JOIN `'._DB_PREFIX_.'orders` o ON o.`id_order` = cp.`id_order`
+				WHERE o.invoice_date BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
+				GROUP BY pr.`id_product`
+			) t ON t.`id_product` = pr.`id_product`
+		) t	ON t.`id_product` = capr.`id_product`
+		WHERE ca.`level_depth` > 1
+		GROUP BY ca.`id_category`
+		ORDER BY SUM(t.`totalPriceSold`) DESC');
 	}
 	
 	public static function getMainCountry($date_from, $date_to)
@@ -581,8 +623,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				break;
 
 			case '8020_sales_catalog':
-				$value = AdminStatsController::get8020SalesCatalog(date('Y-m-d', strtotime('-31 day')), date('Y-m-d', strtotime('-1 day')));
-				$value .= ' '.$this->l('of your Catalog');
+				$value = AdminStatsController::get8020SalesCatalog(date('Y-m-d', strtotime('-1 month')), date('Y-m-d'));
+				$value = sprintf($this->l('%d%% of your Catalog'), $value);
 				ConfigurationKPI::updateValue('8020_SALES_CATALOG', $value);
 				ConfigurationKPI::updateValue('8020_SALES_CATALOG_EXPIRE', strtotime('+12 hour'));
 				break;
@@ -742,6 +784,27 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				ConfigurationKPI::updateValue('NETPROFIT_VISITOR', $value);
 				ConfigurationKPI::updateValue('NETPROFIT_VISITOR_EXPIRE', strtotime(date('Y-m-d 00:00:00', strtotime('+1 day'))));
 				break;
+				
+				case 'products_per_category':
+					$products = AdminStatsController::getTotalProducts();
+					$categories = AdminStatsController::getTotalCategories();
+					$value = round($products / $categories);
+					ConfigurationKPI::updateValue('PRODUCTS_PER_CATEGORY', $value);
+					ConfigurationKPI::updateValue('PRODUCTS_PER_CATEGORY_EXPIRE', strtotime('+1 hour'));
+					break;
+					
+				case 'top_category':
+					if (!($id_category = AdminStatsController::getBestCategory(date('Y-m-d', strtotime('-1 month')), date('Y-m-d'))))
+						$value = $this->l('No category');
+					else
+					{
+						$category = new Category($id_category, $this->context->language->id);
+						$value = $category->name;
+					}
+
+					ConfigurationKPI::updateValue('TOP_CATEGORY', array($this->context->language->id => $value));				
+					ConfigurationKPI::updateValue('TOP_CATEGORY_EXPIRE', array($this->context->language->id => strtotime('+1 day')));
+					break;
 
 			default:
 				$value = false;

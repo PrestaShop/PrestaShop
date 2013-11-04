@@ -1,3 +1,4 @@
+@import '../../_theme_variables';
 #stripe-payment-form {
 	line-height:20px;
 	padding-bottom:7px;
@@ -5,7 +6,7 @@
 	.form-group {
 		margin-bottom:5px;
 		
-		input.stripe-card-number { width: 263px; }	
+		input.stripe-card-number { max-width: 263px; }	
 	}
 	
 	.block-left {
@@ -33,17 +34,26 @@
 		
 		&:hover {text-decoration:none;}
 	}
-	.stripe-card-expiry-year.form-control, .stripe-card-expiry-month.form-control {float:left;}
+	#uniform-month, .stripe-card-expiry-year.form-control, #uniform-year, .stripe-card-expiry-month.form-control {float:left;}
 	.stripe-card-expiry-year.form-control {width:68px;}
-	.stripe-card-expiry-month.form-control {
+	#uniform-month, .stripe-card-expiry-month.form-control {
 		width:115px;
 		margin-right:10px;
 	}
-	.stripe-line {margin-bottom:11px;}
+	.stripe-line {
+		margin-bottom:11px;
+		
+		.form-group {
+																		@media (max-width: $screen-xs - 1) { // max 479px
+																			clear:left;
+																			width:100%;
+																		}
+		}
+	}
 	.ckeckbox {
 		margin-bottom:11px; 
-		
-		label {font-weight:normal;}}
+		.checker {float:left; span {top:2px;}}
+		label {font-weight:normal; cursor:pointer; color:#777777}}
 }
 a.stripe-card-cvc-info div.cvc-info {
 	background-color: #BDE5F8;

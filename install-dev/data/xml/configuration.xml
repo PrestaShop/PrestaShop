@@ -567,7 +567,7 @@
       <value>1</value>
     </configuration>
     <configuration id="PS_STATS_RENDER" name="PS_STATS_RENDER">
-      <value>graphxmlswfcharts</value>
+      <value>graphnvd3</value>
     </configuration>
     <configuration id="PS_STATS_OLD_CONNECT_AUTO_CLEAN" name="PS_STATS_OLD_CONNECT_AUTO_CLEAN">
       <value>never</value>

@@ -10,6 +10,9 @@
 	
 	//FILESYSTEM CONFIG	<br>
 	require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . "class.auth.php");	
+	if (_PS_MODE_DEMO_)
+		die('This functionality has been disabled.');
+
 	define('CONFIG_QUERY_STRING_ENABLE', true); //Enable passed query string to setting the system configuration
 	if(!isset($_SESSION))
 	{

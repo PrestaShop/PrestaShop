@@ -56,11 +56,11 @@ $('document').ready(function()
 {capture name=path}
 	<a href="{$link->getPageLink('my-account', true)|escape:'htmlall':'UTF-8'}">
 		{l s='My account' mod='favoriteproducts'}</a>
-		<span class="navigation-pipe">{$navigationPipe}</span><span class="navigation_page">{l s='My favorite products.' mod='favoriteproducts'}</span>
+		<span class="navigation-pipe">{$navigationPipe}</span><span class="navigation_page">{l s='My favorite products' mod='favoriteproducts'}</span>
 {/capture}
 
 <div id="favoriteproducts_block_account">
-	<h1 class="page-heading">{l s='My favorite products.' mod='favoriteproducts'}</h1>
+	<h1 class="page-heading">{l s='My favorite products' mod='favoriteproducts'}</h1>
 	{if $favoriteProducts}
     	<ul class="row">
 			{foreach from=$favoriteProducts item=favoriteProduct}

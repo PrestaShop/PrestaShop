@@ -41,13 +41,13 @@ var homeslider_pause = {$homeslider.pause};
 </script>
 {/if}
 {if isset($homeslider_slides)}
-<div id="homepage-slider" class="col-xs-12">
+<div id="homepage-slider">
     <ul id="homeslider">
     {foreach from=$homeslider_slides item=slide}
         {if $slide.active}
             <li>
                 <a href="{$slide.url|escape:'htmlall':'UTF-8'}" title="{$slide.description|escape:'htmlall':'UTF-8'}">
-                <img src="{$smarty.const._MODULE_DIR_}homeslider/images/{$slide.image|escape:'htmlall':'UTF-8'}" alt="{$slide.legend|escape:'htmlall':'UTF-8'}" />
+                <img src="{$smarty.const._MODULE_DIR_}homeslider/images/{$slide.image|escape:'htmlall':'UTF-8'}" alt="{$slide.legend|escape:'htmlall':'UTF-8'}"  />
                 </a>
             </li>
         {/if}

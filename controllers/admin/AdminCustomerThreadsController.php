@@ -393,7 +393,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 					$contact = new Contact((int)$ct->id_contact, (int)$ct->id_lang);
 					if (Validate::isLoadedObject($contact))
 					{
-						$from_name = $contact->name[(int)$ct->id_lang];
+						$from_name = $contact->name;
 						$from_email = $contact->email;
 					}
 					else
@@ -401,6 +401,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 						$from_name = null;
 						$from_email = null;
 					}
+
 					if (Mail::Send(
 						(int)$ct->id_lang,
 						'reply_msg',
@@ -641,6 +642,12 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			ENT_QUOTES, 'UTF-8')
 		);
 
+		$is_valid_order_id = true;
+		$order = new Order((int)$message['id_order']);
+
+		if (!Validate::isLoadedObject($order))
+			$is_valid_order_id = false;
+
 		$tpl->assign(array(
 			'current' => self::$currentIndex,
 			'token' => $this->token,
@@ -651,7 +658,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			'PS_SHOP_NAME' => Configuration::get('PS_SHOP_NAME'),
 			'file_name' => file_exists(_PS_UPLOAD_DIR_.$message['file_name']),
 			'contacts' => $contacts,
-			'PS_CUSTOMER_SERVICE_SIGNATURE' => str_replace('\r\n', "\n", Configuration::get('PS_CUSTOMER_SERVICE_SIGNATURE', $message['id_lang']))
+			'PS_CUSTOMER_SERVICE_SIGNATURE' => str_replace('\r\n', "\n", Configuration::get('PS_CUSTOMER_SERVICE_SIGNATURE', $message['id_lang'])),
+			'is_valid_order_id' => $is_valid_order_id
 		));
 
 		return $tpl->fetch();

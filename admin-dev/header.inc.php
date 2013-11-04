@@ -56,9 +56,6 @@ echo '
 		<script type="text/javascript" src="'._PS_JS_DIR_.'jquery/plugins/chosen/jquery.chosen.js"></script>
 		<link rel="shortcut icon" href="'._PS_IMG_.'favicon.ico" />
 		'.Hook::exec('displayBackOfficeHeader').'
-		<!--[if IE]>
-		<link type="text/css" rel="stylesheet" href="'._PS_CSS_DIR_.'admin-ie.css" />
-		<![endif]-->
 		<style type="text/css">
 			div#header_infos, div#header_infos a#header_shopname, div#header_infos a#header_logout, div#header_infos a#header_foaccess {
 				color:'.(Tools::getBrightness(empty(Context::getContext()->employee->bo_color) ? '#FFFFFF' : Context::getContext()->employee->bo_color) < 128 ? 'white' : '#383838').'

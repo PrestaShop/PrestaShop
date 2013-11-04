@@ -22,57 +22,30 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 {if count($categoryProducts) > 0 && $categoryProducts !== false}
-<section class="clearfix blockproductscategory">
+<section class="page-product-box blockproductscategory">
 	<h3 class="productscategory_h3 page-product-heading">{$categoryProducts|@count} {l s='other products in the same category:' mod='productscategory'}</h3>
-	<div id="{if count($categoryProducts) > 5}productscategory{else}productscategory_noscroll{/if}">
-
 	<div id="productscategory_list">
-    
-		<article id="owl-carousel1" class="owl-carousel clearfix" {if count($categoryProducts) > 5}style="width: {math equation="width * nbImages" width=107 nbImages=$categoryProducts|@count}px"{/if} >
+		<ul id="bxslider1" class="bxslider clearfix">
 		 {foreach from=$categoryProducts item='categoryProduct' name=categoryProduct}
-			<div class="product-box item" {if count($categoryProducts) < 6}{/if}>
-				<a href="{$link->getProductLink($categoryProduct.id_product, $categoryProduct.link_rewrite, $categoryProduct.category, $categoryProduct.ean13)}" class="lnk_img product-image product_image" title="{$categoryProduct.name|htmlspecialchars}"><img src="{$link->getImageLink($categoryProduct.link_rewrite, $categoryProduct.id_image, 'home_default')|escape:'html'}" alt="{$categoryProduct.name|htmlspecialchars}" /></a>
+			<li class="product-box item">
+				<a href="{$link->getProductLink($categoryProduct.id_product, $categoryProduct.link_rewrite, $categoryProduct.category, $categoryProduct.ean13)}" class="lnk_img product-image" title="{$categoryProduct.name|htmlspecialchars}"><img src="{$link->getImageLink($categoryProduct.link_rewrite, $categoryProduct.id_image, 'home_default')|escape:'html'}" alt="{$categoryProduct.name|htmlspecialchars}" /></a>
                 
-				<h5 class="name-product">
+				<h5 class="product-name">
 					<a href="{$link->getProductLink($categoryProduct.id_product, $categoryProduct.link_rewrite, $categoryProduct.category, $categoryProduct.ean13)|escape:'html'}" title="{$categoryProduct.name|htmlspecialchars}">{$categoryProduct.name|truncate:14:'...'|escape:'htmlall':'UTF-8'}</a>
 				</h5>
 				{if $ProdDisplayPrice AND $categoryProduct.show_price == 1 AND !isset($restricted_country_mode) AND !$PS_CATALOG_MODE}
 				<p class="price_display">
-					<span class="price">{convertPrice price=$categoryProduct.displayed_price}</span>
+					<span class="price{if isset($categoryProduct.specific_prices) && $categoryProduct.specific_prices} special-price{/if}">{convertPrice price=$categoryProduct.displayed_price}</span>
+                    {if isset($categoryProduct.specific_prices.reduction) && $categoryProduct.specific_prices.reduction && $categoryProduct.specific_prices.reduction_type == 'percentage'}<span class="price-percent-reduction small">-{$categoryProduct.specific_prices.reduction * 100}%</span>{/if}
+                    {if isset($categoryProduct.specific_prices) && $categoryProduct.specific_prices}<span class="old-price">{displayWtPrice p=$categoryProduct.price_without_reduction}</span>{/if}
 				</p>
 				{else}
 				<br />
 				{/if}
-			</div>
+			</li>
 		{/foreach}
-		</article>
+		</ul>
 	</div>
-	</div>
-	<script type="text/javascript">
-		$('#productscategory_list').trigger('goto', [{$middlePosition}-3]);
-	</script>
 </section>
 {/if}
-
-
-<script type="text/javascript">
-$(document).ready(function() {
- $("#owl-carousel1").owlCarousel({
-		items :6,
-		lazyLoad : true,
-		navigation : true,
-		navigationText : ["",""],
-		pagination : false,
-		
-		dragBeforeAnimFinish : false,
-		mouseDrag : false,
-		touchDrag : false,
-
-		addClassActive : true,
-		transitionStyle : true
-}); 
-
-	});
-	</script>

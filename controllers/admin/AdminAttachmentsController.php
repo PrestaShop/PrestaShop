@@ -37,6 +37,7 @@ class AdminAttachmentsControllerCore extends AdminController
 	 	$this->lang = true;
 
 		$this->addRowAction('edit');
+		$this->addRowAction('view');
 		$this->addRowAction('delete');
 
 		$this->_select = 'IFNULL(virtual.products, 0) as products';
@@ -74,6 +75,16 @@ class AdminAttachmentsControllerCore extends AdminController
 			);
 
 		parent::initPageHeaderToolbar();
+	}
+
+	public function renderView()
+	{
+		if (($obj = $this->loadObject(true)) && Validate::isLoadedObject($obj))
+		{
+			$link = $this->context->link->getPageLink('attachment', true, NULL, 'id_attachment='.$obj->id);
+			Tools::redirectLink($link);
+		}
+		return $this->displayWarning($this->l('File not found'));
 	}
 
 	public function renderForm()
@@ -185,6 +196,8 @@ class AdminAttachmentsControllerCore extends AdminController
 							$this->errors[] = $this->l('Failed to copy the file.');
 						$_POST['file_name'] = $_FILES['file']['name'];
 						@unlink($_FILES['file']['tmp_name']);
+						if (!sizeof($this->errors) && isset($a) && file_exists(_PS_DOWNLOAD_DIR_.$a->file))
+							unlink(_PS_DOWNLOAD_DIR_.$a->file);
 						$_POST['file'] = $uniqid;
 						$_POST['mime'] = $_FILES['file']['type'];
 					}
@@ -200,11 +213,14 @@ class AdminAttachmentsControllerCore extends AdminController
 						'<b>'.$upload_mb.'</b>'
 					);
 				}
-				else if (!empty($_FILES['file']['tmp_name']))
+				else
 					$this->errors[] = $this->l('Upload error.  Please check your server configurations for the maximum upload size allowed.');
 			}
 			$this->validateRules();
 		}
-		return parent::postProcess();
+		$return = parent::postProcess();
+		if (!$return && isset($uniqid) && file_exists(_PS_DOWNLOAD_DIR_.$uniqid))
+			unlink(_PS_DOWNLOAD_DIR_.$uniqid);
+		return $return;
 	}
 }
