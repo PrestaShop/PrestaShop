@@ -37,10 +37,6 @@
 	{else}
 		{$smarty.block.parent}
 	{/if}
-
-	{if $input.name == 'image'}
-		{$displayBackOfficeCategory}	
-	{/if}
 {/block}
 {block name="description"}
 	{$smarty.block.parent}
@@ -51,5 +47,11 @@
 			{$input.guest}<br />
 			{$input.customer}</p>
 		</div>
+	{/if}
+{/block}
+{block name="input_row"}
+	{$smarty.block.parent}
+	{if ($input.name == 'image')}
+	{$displayBackOfficeCategory}
 	{/if}
 {/block}
