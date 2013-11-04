@@ -28,6 +28,28 @@ function dashgoals_calc_sales()
 	});
 }
 
+function dashgoals_changeYear(xward)
+{
+	var new_year = dashgoals_year;
+	if (xward == 'forward')
+		new_year = dashgoals_year + 1;
+	else if (xward == 'backward')
+		new_year = dashgoals_year - 1;
+	$('#dashgoals_title').text($('#dashgoals_title').text().replace(dashgoals_year, new_year));
+	dashgoals_year = new_year;
+	refreshDashboard('dashgoals', false, dashgoals_year);
+}
+
+function dashgoals_changeConfYear(xward)
+{
+	// Todo
+	// getModuleLink('dashgoals', 'ajax', array('year' => $('#dashgoals_conftitle').text()), $ssl = null, $id_lang = null, $id_shop = null)
+	if (xward == 'forward')
+		$('#dashgoals_conftitle').text(parseInt($('#dashgoals_conftitle').text()) + 1);
+	else if (xward == 'backward')
+		$('#dashgoals_conftitle').text(parseInt($('#dashgoals_conftitle').text()) - 1);
+}
+
 $(document).ready(function() {
 	$('.dashgoals_config_input').keyup(function() {
 		dashgoals_calc_sales();
