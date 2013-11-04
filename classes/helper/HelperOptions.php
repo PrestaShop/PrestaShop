@@ -116,6 +116,15 @@ class HelperOptionsCore extends Helper
 							'delete_url' => isset($field['delete_url'])?$field['delete_url']:null
 						)));
 
+					if (isset($field['file']) && $field['file']) // Use for retrocompatibility							
+						$uploader->setFiles(array(
+							0 => array(
+							'type'       => HelperUploader::TYPE_FILE,
+							'size'       => isset($field['size'])?$field['size']:null,
+							'delete_url' => isset($field['delete_url'])?$field['delete_url']:null,
+							'download_url' => isset($field['file'])?$field['file']:null
+						)));
+
 					$uploader->setThumb(isset($field['thumb'])?$field['thumb']:null);
 					$uploader->setTitle(isset($field['title'])?$field['title']:null);
 					$field['file'] = $uploader->render();

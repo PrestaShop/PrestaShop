@@ -31,6 +31,7 @@ class HelperUploaderCore extends Uploader
 	const DEFAULT_AJAX_TEMPLATE      = 'ajax.tpl';
 
 	const TYPE_IMAGE                 = 'image';
+	const TYPE_FILE                  = 'file';
 
 	private   $_context;
 	private   $_id;
@@ -38,7 +39,6 @@ class HelperUploaderCore extends Uploader
 	private   $_name;
 	private   $_max_files;
 	private   $_multiple;
-	private   $_file;
 	protected $_template;
 	private   $_template_directory;
 	private   $_title;
@@ -182,17 +182,6 @@ class HelperUploaderCore extends Uploader
 			return $this->getTemplateDirectory().$template;
 	}
 
-	public function setFile($value)
-	{
-		$this->_file = $value;
-		return $this;
-	}
-
-	public function getFile()
-	{
-		return $this->_file;
-	}
-
 	public function setTitle($value)
 	{
 		$this->_title = $value;
@@ -290,7 +279,6 @@ class HelperUploaderCore extends Uploader
 			'multiple'      => $this->isMultiple(),
 			'files'         => $this->getFiles(),
 			'thumb'         => $this->getThumb(),
-			'file'          => $this->getFile(),
 			'title'         => $this->getTitle(),
 			'max_files'     => (isset($max_files) && $max_files > 0) ? ($max_files-count($this->getFiles())) : $max_files
 		));
