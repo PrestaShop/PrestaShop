@@ -71,6 +71,7 @@
 		var token_admin_customer_threads = '{getAdminToken tab='AdminCustomerThreads'}';
 		var currentIndex = '{$currentIndex|@addcslashes:'\''}';
 		var choose_language_translate = '{l s='Choose language' js=1}';
+		var default_language = '{$default_language|addslashes}';
 	</script>
 {/if}
 {if isset($css_files)}
