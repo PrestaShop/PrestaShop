@@ -62,7 +62,7 @@
 					<div id="category_description_full" style="display:none;">{$category->description}</div>
 					<a href="#" onclick="$('#category_description_short').hide(); $('#category_description_full').show(); $(this).hide(); return false;" class="lnk_more">{l s='More'}</a>
 				{else}
-					<p>{$category->description}</p>
+					<div>{$category->description}</div>
 				{/if}
 				</div>
 			{/if}
