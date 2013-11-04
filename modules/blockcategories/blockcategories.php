@@ -56,6 +56,7 @@ class BlockCategories extends Module
 			!$this->registerHook('actionAdminLanguagesControllerStatusBefore') ||
 			!$this->registerHook('displayBackOfficeCategory') ||
 			!$this->registerHook('actionBackOfficeCategory') ||
+			!$this->registerHook('actionBackOfficeCategoryRemoveThumbnail') ||
 			!Configuration::updateValue('BLOCK_CATEG_MAX_DEPTH', 4) ||
 			!Configuration::updateValue('BLOCK_CATEG_DHTML', 1))
 			return false;
@@ -118,66 +119,102 @@ class BlockCategories extends Module
 	public function hookDisplayBackOfficeCategory($params)
 	{
 		$category = new Category((int)Tools::getValue('id_category'));
+		$files   = array();
 
 		if ($category->level_depth != 2)
 			return;
 
 		for ($i=0;$i<3;$i++)
-			$images[$i] = ImageManager::thumbnail(_PS_CAT_IMG_DIR_.(int)$category->id.'-'.$i.'_thumb.jpg', $this->context->controller->table.'_'.(int)$category->id.'-'.$i.'_thumb.jpg', 100, 'jpg', true);
+		{
+			if (file_exists(_PS_CAT_IMG_DIR_.(int)$category->id.'-'.$i.'_thumb.jpg'))
+			{
+				$files[$i]['type'] = HelperImageUploader::TYPE_IMAGE;
+				$files[$i]['image'] = ImageManager::thumbnail(_PS_CAT_IMG_DIR_.(int)$category->id.'-'.$i.'_thumb.jpg', $this->context->controller->table.'_'.(int)$category->id.'-'.$i.'_thumb.jpg', 100, 'jpg', true, true);
+				$files[$i]['delete_url'] = Context::getContext()->link->getAdminLink('AdminCategories').'&deleteThumb='.$i.'&id_category='.(int)$category->id;
+			}
+		}
 
-		$this->smarty->assign(array(
-			'name'    => 'thumb',
-			'images'  => $images
-		));	
-		
+		$helper = new HelperImageUploader();
+		$helper->setMultiple(true)->setUseAjax(true)->setName('thumbnail')->setFiles($files)->setMaxFiles(3)->setUrl(
+			Context::getContext()->link->getAdminLink('AdminCategories').'&ajax=1&id_category='.$category->id.'&action=uploadThumbnailImages');
+		$this->smarty->assign('helper', $helper->render());
 		return $this->display(__FILE__, 'views/blockcategories_admin.tpl');
 	}
 
 	public function hookActionBackOfficeCategory($params)
-	{
-		$total_errors = array();
+	{		
+		$category = new Category((int)Tools::getValue('id_category'));
 
-		for ($i=0; $i<3; $i++)
-			if (isset($_FILES['thumb-'.$i]) && $_FILES['thumb-'.$i]['size'] > 0)
+		if (isset($_FILES['thumbnail']))
+		{
+			//Get total of image already present in directory
+			$files = scandir(_PS_CAT_IMG_DIR_);
+			$assigned_keys = array();
+			$allowed_keys  = array(0, 1, 2);
+
+			foreach ($files as $file) {
+				$matches = array();
+
+				if (preg_match('/'.$category->id.'-([0-9])?_thumb.jpg/i', $file, $matches) === 1)
+					$assigned_keys[] = (int)$matches[1];
+			}
+
+			$available_keys = array_diff($allowed_keys, $assigned_keys);
+			$helper = new HelperImageUploader('files');
+			$files  = $helper->setName('thumbnail')->process();
+			$total_errors = array();
+
+			if (count($available_keys) < count($files))
 			{
+				$total_errors[] = sprintf(Tools::displayError('You cannot upload more than %s files'), count($available_keys));
+				die();
+			}
+
+			foreach ($files as $key => &$file)
+			{
+				$id = array_shift($available_keys);
 				$errors = array();
-				// Check image validity
-				$max_size = (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE');
-
-				if ($error = ImageManager::validateUpload($_FILES['thumb-'.$i], Tools::getMaxUploadSize($max_size)))
-					$errors[] = $error;
-
-				$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
-
-				if (!$tmp_name)
-					$errors[] = Tools::displayError('Invalid Temporary directory');
-
-				if (!move_uploaded_file($_FILES['thumb-'.$i]['tmp_name'], $tmp_name))
-					$errors[] = Tools::displayError('Error uploading thumbnail image');
-
 				// Evaluate the memory required to resize the image: if it's too much, you can't resize it.
-				if (!ImageManager::checkImageMemoryLimit($tmp_name))
+				if (!ImageManager::checkImageMemoryLimit($file['save_path']))
 					$errors[] = Tools::displayError('Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings. ');
-
 				// Copy new image
-				if (empty($errors) && !ImageManager::resize($tmp_name, _PS_CAT_IMG_DIR_.(int)Tools::getValue('id_category').'-'.$i.'_thumb.jpg'))
+				if (empty($errors) && !ImageManager::resize($file['save_path'], _PS_CAT_IMG_DIR_
+					.(int)Tools::getValue('id_category').'-'.$id.'_thumb.jpg'))
 					$errors[] = Tools::displayError('An error occurred while uploading the image.');
 
 				if (count($errors))
 					$total_errors = array_merge($total_errors, $errors);
 
-				unlink($tmp_name);
+				unlink($file['save_path']);
+				//Necesary to prevent hacking
+				unset($file['save_path']);
+
+				//Add image preview and delete url
+				$file['image'] = ImageManager::thumbnail(_PS_CAT_IMG_DIR_.(int)$category->id.'-'.$id.'_thumb.jpg',
+					$this->context->controller->table.'_'.(int)$category->id.'-'.$id.'_thumb.jpg', 100, 'jpg', true, true);
+				$file['delete_url'] = Context::getContext()->link->getAdminLink('AdminCategories').'&deleteThumb='
+					.$id.'&id_category='.(int)$category->id;
+				$id++;
 			}
 
+			if (count($total_errors))
+			$this->context->controller->errors = array_merge($this->context->controller->errors, $total_errors);
+
+			die(Tools::jsonEncode(array('thumbnail' => $files)));
+		}
+	}
+
+	public function hookActionBackOfficeCategoryRemoveThumbnail()
+	{
 		if (($id_thumb = Tools::getValue('deleteThumb', false)) !== false)
 		{
 			if (file_exists(_PS_CAT_IMG_DIR_.(int)Tools::getValue('id_category').'-'.(int)$id_thumb.'_thumb.jpg')
 				&& !unlink(_PS_CAT_IMG_DIR_.(int)Tools::getValue('id_category').'-'.(int)$id_thumb.'_thumb.jpg'))
 				$this->context->controller->errors[] = Tools::displayError('Error while delete');
-		}
 
-		if (count($total_errors))
-			$this->context->controller->errors = array_merge($this->context->controller->errors, $total_errors);
+			Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminCategories').'&id_category='
+				.(int)Tools::getValue('id_category').'&updatecategory');
+		}
 	}
 
 	public function hookLeftColumn($params)
