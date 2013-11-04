@@ -101,6 +101,8 @@
 				var display_multishop_checkboxes = false;
 			{/if}
 
+			var default_language = '{$default_language|addslashes}';
+			
 			$(document).ready(function()
 			{
 				hideOtherLanguage(default_language);
