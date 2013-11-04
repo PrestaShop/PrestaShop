@@ -672,10 +672,8 @@ class ToolsCore
 	public static function htmlentitiesUTF8($string, $type = ENT_QUOTES)
 	{
 		if (is_array($string))
-		{
-			$string = array_map(array('Tools', 'htmlentitiesUTF8'), $string);
-			return (string)array_shift($string);
-		}
+			return array_map(array('Tools', 'htmlentitiesUTF8'), $string);
+
 		return htmlentities((string)$string, $type, 'utf-8');
 	}
 
