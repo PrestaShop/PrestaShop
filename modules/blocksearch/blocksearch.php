@@ -33,7 +33,7 @@ class BlockSearch extends Module
 	{
 		$this->name = 'blocksearch';
 		$this->tab = 'search_filter';
-		$this->version = 1.2;
+		$this->version = 1.3;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
