@@ -1309,6 +1309,9 @@ abstract class ModuleCore
 	public static function getNativeModuleList()
 	{
 		$module_list_xml = _PS_ROOT_DIR_.self::CACHE_FILE_MODULES_LIST;
+		if (!file_exists($module_list_xml))
+			return false;
+
 		$native_modules = simplexml_load_file($module_list_xml);
 		$native_modules = $native_modules->modules;
 		$modules = array();
