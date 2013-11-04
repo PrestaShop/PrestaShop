@@ -36,6 +36,7 @@ $(document).ready( function () {
 	refreshDashboard(false, false);
 	getBlogRss();
 	bindSubmitDashConfig();
+	bindCancelDashConfig();
 	
 });
 
