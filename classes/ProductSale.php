@@ -149,9 +149,9 @@ class ProductSaleCore
 
 		//Subquery: get product ids in a separate query to (greatly!) improve performances and RAM usage
 		$sql = 'SELECT cp.`id_product`
-		FROM `'._DB_PREFIX_.'category_group` cg
-		LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
-		WHERE cg.`id_group` '.$sql_groups.' AND cp.`id_product` IS NOT NULL';
+			FROM `'._DB_PREFIX_.'category_group` cg
+			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
+			WHERE cg.`id_group` '.$sql_groups.' AND cp.`id_product` IS NOT NULL';
 		$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		$ids = array();
 		foreach ($products as $product)
@@ -167,7 +167,10 @@ class ProductSaleCore
 				FROM `'._DB_PREFIX_.'product_sale` ps
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON ps.`id_product` = p.`id_product`
 				'.Shop::addSqlAssociation('product', 'p').'
-				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (ps.`id_product` = pa.`id_product` AND pa.default_on = 1)
+				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
+					ON (p.`id_product` = pa.`id_product`)
+				'.Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.`default_on` = 1').'
+				'.Product::sqlStock('p', 'product_attribute_shop', false, $context->shop).'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 					ON p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
