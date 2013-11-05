@@ -1917,6 +1917,14 @@ class AdminControllerCore extends Controller
 		
 		$this->helper = $helper;
 	}
+	
+	public function setDeprecatedMedia()
+	{
+		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
+		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
+		$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/backward-admin-bootstrap-reset.css', 'all');
+		$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/backward-admin-old.css', 'all');
+	}
 
 	public function setMedia()
 	{
@@ -1927,14 +1935,10 @@ class AdminControllerCore extends Controller
 		$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/admin-theme.css', 'all');
 
 		// Deprecated stylesheets + reset bootstrap style for the #nobootstrap field - Backward compatibility
-		//if (!$this->bootstrap)
-		//{
-			$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/backward-admin-bootstrap-reset.css', 'all');
-			$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/backward-admin-old.css', 'all');
-			
-		//}
+		if (!$this->bootstrap)
+			$this->setDeprecatedMedia();
 		
-		//todo csss for rtl support
+		//todo css for rtl support
 		if ($this->context->language->is_rtl)
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
 

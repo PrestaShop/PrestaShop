@@ -49,7 +49,7 @@ class AdminDashboardControllerCore extends AdminController
 			_PS_JS_DIR_.'/admin-dashboard.js',
 		));
 		$this->addCSS(array(
-			__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/nv.d3.css',
+			__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/vendor/nv.d3.css',
 		));
 	}
 
