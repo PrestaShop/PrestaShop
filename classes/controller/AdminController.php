@@ -1972,14 +1972,13 @@ class AdminControllerCore extends Controller
 	 * @param boolean $htmlentities if set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
 	 * @return string the translation if available, or the english default text.
 	 */
-	protected function l($string, $class = 'AdminTab', $addslashes = false, $htmlentities = true)
+	protected function l($string, $class = null, $addslashes = false, $htmlentities = true)
 	{
-		// classname has changed, from AdminXXX to AdminXXXController
-		// So we remove 10 characters and we keep same keys
-		if (strtolower(substr($class, -10)) == 'controller')
-			$class = substr($class, 0, -10);
-		elseif ($class == 'AdminTab')
+		if ($class === null || $class == 'AdminTab')
 			$class = substr(get_class($this), 0, -10);
+		// classname has changed, from AdminXXX to AdminXXXController, so we remove 10 characters and we keep same keys
+		elseif (strtolower(substr($class, -10)) == 'controller')
+			$class = substr($class, 0, -10);
 		return Translate::getAdminTranslation($string, $class, $addslashes, $htmlentities);
 	}
 

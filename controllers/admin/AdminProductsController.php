@@ -2311,7 +2311,7 @@ class AdminProductsControllerCore extends AdminController
 			$helper->id = 'box-products-stock';
 			$helper->icon = 'icon-archive';
 			$helper->color = 'color1';
-			$helper->title = $this->l('Items in Stock');
+			$helper->title = $this->l('Items in Stock', null, null, false);
 			if (ConfigurationKPI::get('PERCENT_PRODUCT_STOCK') !== false)
 				$helper->value = ConfigurationKPI::get('PERCENT_PRODUCT_STOCK');
 			if (ConfigurationKPI::get('PERCENT_PRODUCT_STOCK_EXPIRE') < $time)
@@ -2323,7 +2323,7 @@ class AdminProductsControllerCore extends AdminController
 		$helper->id = 'box-avg-gross-margin';
 		$helper->icon = 'icon-tags';
 		$helper->color = 'color2';
-		$helper->title = $this->l('Average Gross Margin');
+		$helper->title = $this->l('Average Gross Margin', null, null, false);
 		if (ConfigurationKPI::get('PRODUCT_AVG_GROSS_MARGIN') !== false)
 			$helper->value = ConfigurationKPI::get('PRODUCT_AVG_GROSS_MARGIN');
 		if (ConfigurationKPI::get('PRODUCT_AVG_GROSS_MARGIN_EXPIRE') < $time)
@@ -2334,8 +2334,8 @@ class AdminProductsControllerCore extends AdminController
 		$helper->id = 'box-8020-sales-catalog';
 		$helper->icon = 'icon-beaker';
 		$helper->color = 'color3';
-		$helper->title = $this->l('80% of your sales');
-		$helper->subtitle = $this->l('30 days');
+		$helper->title = $this->l('80% of your sales', null, null, false);
+		$helper->subtitle = $this->l('30 days', null, null, false);
 		if (ConfigurationKPI::get('8020_SALES_CATALOG') !== false)
 			$helper->value = ConfigurationKPI::get('8020_SALES_CATALOG');
 		if (ConfigurationKPI::get('8020_SALES_CATALOG_EXPIRE') < $time)
@@ -2346,7 +2346,7 @@ class AdminProductsControllerCore extends AdminController
 		$helper->id = 'box-disabled-products';
 		$helper->icon = 'icon-off';
 		$helper->color = 'color4';
-		$helper->title = $this->l('Disabled Products');
+		$helper->title = $this->l('Disabled Products', null, null, false);
 		if (ConfigurationKPI::get('DISABLED_PRODUCTS') !== false)
 			$helper->value = ConfigurationKPI::get('DISABLED_PRODUCTS');
 		if (ConfigurationKPI::get('DISABLED_PRODUCTS_EXPIRE') < $time)
