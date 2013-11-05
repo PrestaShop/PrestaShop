@@ -38,7 +38,7 @@ class BlockLayered extends Module
 	{
 		$this->name = 'blocklayered';
 		$this->tab = 'front_office_features';
-		$this->version = '1.8.9';
+		$this->version = '1.9.0';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -1186,7 +1186,6 @@ class BlockLayered extends Module
 
 
 		$this->context->controller->addJS(($this->_path).'blocklayered.js');
-		$this->context->controller->addJS(_PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js');
 		$this->context->controller->addJQueryUI('ui.slider');
 		$this->context->controller->addCSS(($this->_path).'blocklayered-15.css', 'all');
 		$this->context->controller->addJQueryPlugin('scrollTo');
@@ -1686,7 +1685,6 @@ class BlockLayered extends Module
 		</fieldset><br />
 		<fieldset class="width4">
 			<legend><img src="../img/admin/cog.gif" alt="" />'.$this->l('Build your own filter template').'</legend>
-			<link rel="stylesheet" href="'._PS_CSS_DIR_.'jquery-ui-1.8.10.custom.css" />
 			<style type="text/css">
 				#error-filter-name { display: none; }
 				#layered_container_left ul, #layered_container_right ul { list-style-type: none; padding-left: 0px; }
@@ -2657,7 +2655,7 @@ class BlockLayered extends Module
 					AND '.$alias.'.active = 1 AND '.$alias.'.`visibility` IN ("both", "catalog")';
 					$sql_query['group'] = ') count_products
 					FROM '._DB_PREFIX_.'category c
-					LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category AND cl.id_lang = '.$id_lang.')
+					LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category AND cl.`id_shop` = '.(int)Context::getContext()->shop->id.' and cl.id_lang = '.$id_lang.')
 					WHERE c.nleft > '.(int)$parent->nleft.'
 					AND c.nright < '.(int)$parent->nright.'
 					'.($depth ? 'AND c.level_depth <= '.($parent->level_depth+(int)$depth) : '').'
@@ -2960,6 +2958,25 @@ class BlockLayered extends Module
 							if (isset($selected_filters['id_feature'][$feature['id_feature_value']]))
 								$feature_array[$feature['id_feature']]['values'][$feature['id_feature_value']]['checked'] = true;
 						}
+                                                
+                                                 // features are now sorted by natural sort
+                                                foreach ($feature_array as $key => $value) 
+                                                {   
+                                                     $temp = array();    
+                                                     foreach ($feature_array[$key]['values'] as $key_int => $value_int) 
+                                                         $temp[$key_int] = $value_int['name'];
+                                                     
+                                                     natcasesort($temp);
+                                                     
+                                                     $temp2 = array();
+                                                     
+                                                     foreach ($temp as $key_temp => $value_temp) 
+                                                         $temp2[$key_temp] = $feature_array[$key]['values'][$key_temp];
+                                                     
+                                                     $feature_array[$key]['values'] = $temp2;        
+                                                }
+                                                // end feature natural sorting
+                                                
 						$filter_blocks = array_merge($filter_blocks, $feature_array);
 					}
 					break;

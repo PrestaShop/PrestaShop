@@ -34,7 +34,7 @@ class productsCategory extends Module
 	public function __construct()
  	{
  	 	$this->name = 'productscategory';
- 	 	$this->version = '1.4';
+ 	 	$this->version = '1.5';
 		$this->author = 'PrestaShop';
  	 	$this->tab = 'front_office_features';
 		$this->need_instance = 0;
