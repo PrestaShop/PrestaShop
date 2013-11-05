@@ -1,7 +1,9 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
+/* line 4, ../../../sass/modules/blocktags/blocktags.scss */
 .tags_block .block_content {
   overflow: hidden;
 }
+/* line 7, ../../../sass/modules/blocktags/blocktags.scss */
 .tags_block .block_content a {
   display: inline-block;
   font-size: 13px;
@@ -12,6 +14,7 @@
   float: left;
   margin: 0 3px 3px 0;
 }
+/* line 17, ../../../sass/modules/blocktags/blocktags.scss */
 .tags_block .block_content a:hover {
   color: #333;
   background: #f6f6f6;

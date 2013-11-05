@@ -1,24 +1,57 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
 /* block top user information */
+/* line 5, ../../../sass/modules/blockuserinfo/blockuserinfo.scss */
 #header_right #header_user {
   clear: both;
   float: right;
   margin-top: 50px;
 }
+@media (min-width: 480px) and (max-width: 767px) {
+  /* line 5, ../../../sass/modules/blockuserinfo/blockuserinfo.scss */
+  #header_right #header_user {
+    margin-top: 25px;
+  }
+}
+@media (max-width: 479px) {
+  /* line 5, ../../../sass/modules/blockuserinfo/blockuserinfo.scss */
+  #header_right #header_user {
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 95px;
+    width: 270px;
+  }
+}
+/* line 23, ../../../sass/modules/blockuserinfo/blockuserinfo.scss */
 #header_right #header_user #shopping_cart a {
   padding: 7px 10px 14px 16px;
   background: #333333;
   min-width: 270px;
-  /* 200 */
   display: block;
   font-weight: bold;
   color: #777777;
   text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
 }
+@media (min-width: 768px) and (max-width: 991px) {
+  /* line 23, ../../../sass/modules/blockuserinfo/blockuserinfo.scss */
+  #header_right #header_user #shopping_cart a {
+    min-width: 190px;
+  }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  /* line 35, ../../../sass/modules/blockuserinfo/blockuserinfo.scss */
+  #header_right #header_user #shopping_cart a span.ajax_cart_product_txt, #header_right #header_user #shopping_cart a span.ajax_cart_product_txt_s {
+    display: none !important;
+  }
+}
+/* line 41, ../../../sass/modules/blockuserinfo/blockuserinfo.scss */
 #header_right #header_user #shopping_cart a b {
   color: #fff;
   font: 600 18px/22px "Open Sans", sans-serif;
   padding-right: 5px;
 }
+/* line 47, ../../../sass/modules/blockuserinfo/blockuserinfo.scss */
 #header_right #header_user #shopping_cart a:before {
   content: "";
   font-family: "FontAwesome";
@@ -28,6 +61,7 @@
   color: #fff;
   padding-right: 15px;
 }
+/* line 57, ../../../sass/modules/blockuserinfo/blockuserinfo.scss */
 #header_right #header_user #shopping_cart a:after {
   content: "";
   font-family: "FontAwesome";
@@ -37,6 +71,7 @@
   color: #686666;
   padding: 6px 0 0 0;
 }
+/* line 68, ../../../sass/modules/blockuserinfo/blockuserinfo.scss */
 #header_right #header_user #shopping_cart .ajax_cart_total {
   display: none !important;
 }

@@ -166,7 +166,7 @@ $(document).ready(function() {
                         <div class="alert alert-danger" id="create_account_error" style="display:none"></div>
                             <div class="form-group">
                                 <label for="email_create">{l s='Email address'}</label>
-                                <input type="text" class="is_required validate account_input form-control" data-validate="isEmail" id="email_create" name="email_create" value="{if isset($smarty.post.email_create)}{$smarty.post.email_create|stripslashes}{/if}" />
+                                <input type="text" id="email_create" name="email_create" value="{if isset($smarty.post.email_create)}{$smarty.post.email_create|stripslashes}{/if}" class="account_input form-control" />
                             </div>
                             <div class="submit">
                                 {if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'htmlall':'UTF-8'}" />{/if}
@@ -184,11 +184,11 @@ $(document).ready(function() {
                     <div class="form_content clearfix">
                         <div class="form-group">
                             <label for="email">{l s='Email address'}</label>
-                            <input class="is_required validate account_input form-control" data-validate="isEmail" type="text" id="email" name="email" value="{if isset($smarty.post.email)}{$smarty.post.email|stripslashes}{/if}" />
+                            <input type="text" id="email" name="email" value="{if isset($smarty.post.email)}{$smarty.post.email|stripslashes}{/if}" class="account_input form-control" />
                         </div>
                         <div class="form-group">
                             <label for="passwd">{l s='Password'}</label>
-                            <span><input class="is_required validate account_input form-control" type="password" data-validate="isPasswd" id="passwd" name="passwd" value="{if isset($smarty.post.passwd)}{$smarty.post.passwd|stripslashes}{/if}" /></span>
+                            <span><input type="password" id="passwd" name="passwd" value="{if isset($smarty.post.passwd)}{$smarty.post.passwd|stripslashes}{/if}" class="account_input form-control" /></span>
                         </div>
                         <p class="lost_password form-group"><a href="{$link->getPageLink('password')|escape:'html'}" title="{l s='Recover your forgotten password'}" rel="nofollow">{l s='Forgot your password?'}</a></p>
                         <p class="submit">
@@ -209,11 +209,10 @@ $(document).ready(function() {
 				<!-- Account -->
 				<div class="required form-group">
 					<label for="guest_email">{l s='Email address'} <sup>*</sup></label>
-					<input type="text" class="is_required validate form-control" data-validate="isEmail" id="guest_email" name="guest_email" value="{if isset($smarty.post.guest_email)}{$smarty.post.guest_email}{/if}" />
+					<input type="text" class="form-control" id="guest_email" name="guest_email" value="{if isset($smarty.post.guest_email)}{$smarty.post.guest_email}{/if}" />
 				</div>
-                <div class="cleafix">
+                <div class="cleafix gender-line">
 					<label>{l s='Title'}</label>
-                    <br />
 					{foreach from=$genders key=k item=gender}
                     <div class="radio-inline">
                     	<label for="id_gender{$gender->id}" class="top">
@@ -224,12 +223,12 @@ $(document).ready(function() {
                 </div>
 				<div class="required form-group">
 					<label for="firstname">{l s='First name'} <sup>*</sup></label>
-					<input type="text" class="is_required validate text form-control" data-validate="isName" id="firstname" name="firstname" onblur="$('#customer_firstname').val($(this).val());" value="{if isset($smarty.post.firstname)}{$smarty.post.firstname}{/if}" />
+					<input type="text" class="text form-control" id="firstname" name="firstname" onblur="$('#customer_firstname').val($(this).val());" value="{if isset($smarty.post.firstname)}{$smarty.post.firstname}{/if}" />
 					<input type="hidden" class="text" id="customer_firstname" name="customer_firstname" value="{if isset($smarty.post.firstname)}{$smarty.post.firstname}{/if}" />
 				</div>
 				<div class="required form-group">
 					<label for="lastname">{l s='Last name'} <sup>*</sup></label>
-					<input type="text" class="is_required validate text form-control" data-validate="isName" id="lastname" name="lastname" onblur="$('#customer_lastname').val($(this).val());" value="{if isset($smarty.post.lastname)}{$smarty.post.lastname}{/if}" />
+					<input type="text" class="text form-control" id="lastname" name="lastname" onblur="$('#customer_lastname').val($(this).val());" value="{if isset($smarty.post.lastname)}{$smarty.post.lastname}{/if}" />
 					<input type="hidden" class="text" id="customer_lastname" name="customer_lastname" value="{if isset($smarty.post.lastname)}{$smarty.post.lastname}{/if}" />
 				</div>
 				<div class="form-group date-select">
@@ -412,19 +411,19 @@ $(document).ready(function() {
             </div>
             <div class="required form-group">
                 <label for="customer_firstname">{l s='First name'} <sup>*</sup></label>
-                <input onkeyup="$('#firstname').val(this.value);" type="text" class="is_required validate form-control" data-validate="isName" id="customer_firstname" name="customer_firstname" value="{if isset($smarty.post.customer_firstname)}{$smarty.post.customer_firstname}{/if}" />
+                <input onkeyup="$('#firstname').val(this.value);" type="text" class="form-control" id="customer_firstname" name="customer_firstname" value="{if isset($smarty.post.customer_firstname)}{$smarty.post.customer_firstname}{/if}" />
             </div>
             <div class="required form-group">
                 <label for="customer_lastname">{l s='Last name'} <sup>*</sup></label>
-                <input onkeyup="$('#lastname').val(this.value);" type="text" class="is_required validate form-control" data-validate="isName" id="customer_lastname" name="customer_lastname" value="{if isset($smarty.post.customer_lastname)}{$smarty.post.customer_lastname}{/if}" />
+                <input onkeyup="$('#lastname').val(this.value);" type="text" class="form-control" id="customer_lastname" name="customer_lastname" value="{if isset($smarty.post.customer_lastname)}{$smarty.post.customer_lastname}{/if}" />
             </div>
             <div class="required form-group">
                 <label for="email">{l s='Email'} <sup>*</sup></label>
-                <input type="text" class="is_required validate form-control" data-validate="isEmail" id="email" name="email" value="{if isset($smarty.post.email)}{$smarty.post.email}{/if}" />
+                <input type="text" class="form-control" id="email" name="email" value="{if isset($smarty.post.email)}{$smarty.post.email}{/if}" />
             </div>
             <div class="required password form-group">
                 <label for="passwd">{l s='Password'} <sup>*</sup></label>
-                <input type="password" class="is_required validate form-control" data-validate="isPasswd" name="passwd" id="passwd" />
+                <input type="password" class="form-control" name="passwd" id="passwd" />
                 <span class="form_info">{l s='(Five characters minimum)'}</span>
             </div> 
             <div class="form-group">

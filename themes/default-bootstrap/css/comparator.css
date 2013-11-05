@@ -2,80 +2,100 @@
 /********************************************************************
 					Compare Page Styles
 ********************************************************************/
+/* line 10, ../sass/comparator.scss */
 table#product_comparison tbody tr td.product-block {
   vertical-align: top;
   padding: 14px 19px 19px;
   text-align: center;
 }
+/* line 16, ../sass/comparator.scss */
 table#product_comparison tbody tr td.td_empty, table#product_comparison tbody tr td.feature-name, table#product_comparison tbody tr.comparison_header {
   background: #fbfbfb;
   color: #333;
 }
+/* line 21, ../sass/comparator.scss */
 table#product_comparison tbody tr td.comparison_infos {
   text-align: center;
 }
+/* line 24, ../sass/comparator.scss */
 table#product_comparison tbody tr td.comparison_infos div.center {
   margin: 0 auto;
   width: 80px;
 }
+/* line 30, ../sass/comparator.scss */
 table#product_comparison tbody tr td.td_empty {
   vertical-align: bottom;
 }
+/* line 33, ../sass/comparator.scss */
 table#product_comparison tbody tr td.td_empty span {
   font: 600 18px/22px "Open Sans", sans-serif;
   text-transform: uppercase;
   color: #555454;
 }
+/* line 41, ../sass/comparator.scss */
 table#product_comparison .remove {
   text-align: right;
   padding-bottom: 15px;
 }
+/* line 45, ../sass/comparator.scss */
 table#product_comparison .remove a {
   font-size: 23px;
   line-height: 23px;
   color: #c0c0c0;
 }
+/* line 50, ../sass/comparator.scss */
 table#product_comparison .remove a:hover {
   color: #515151;
 }
+/* line 55, ../sass/comparator.scss */
 table#product_comparison .product-image-block {
   display: inline-block;
   position: relative;
 }
+/* line 59, ../sass/comparator.scss */
 table#product_comparison .product-image-block .product_image {
   padding: 9px;
   border: 1px solid #d6d4d4;
   display: inline-block;
   margin: 0 0 8px 0;
 }
+/* line 65, ../sass/comparator.scss */
 table#product_comparison .product-image-block .product_image img {
   width: 100%;
 }
+/* line 68, ../sass/comparator.scss */
 table#product_comparison h5 {
   padding-bottom: 8px;
   min-height: 54px;
 }
+/* line 72, ../sass/comparator.scss */
 table#product_comparison .prices-container {
   padding-bottom: 5px;
 }
+/* line 75, ../sass/comparator.scss */
 table#product_comparison .comparison_availability_statut {
   display: none;
   font-weight: bold;
   color: #060;
 }
+/* line 80, ../sass/comparator.scss */
 table#product_comparison .product_discount {
   padding-top: 5px;
 }
+/* line 83, ../sass/comparator.scss */
 table#product_comparison .product_discount .reduced-price {
   color: #f00;
   font-weight: bold;
 }
+/* line 88, ../sass/comparator.scss */
 table#product_comparison .product_desc {
   padding-bottom: 12px;
 }
+/* line 93, ../sass/comparator.scss */
 table#product_comparison .button-container a {
   margin-bottom: 10px;
 }
+/* line 97, ../sass/comparator.scss */
 table#product_comparison .comparison_unit_price {
   font-size: 17px;
   font-family: 'Open Sans', sans-serif;
@@ -83,6 +103,7 @@ table#product_comparison .comparison_unit_price {
   font-style: italic;
 }
 
+/* line 104, ../sass/comparator.scss */
 .footer_link {
   margin-bottom: 20px;
 }

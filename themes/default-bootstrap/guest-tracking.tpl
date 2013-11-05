@@ -109,7 +109,7 @@
                         <i>{l s='For example: QIIXJXNUI or QIIXJXNUI#1'}</i>
                     </div>
                     <div class="text form-group">
-                        <label>{l s='Email'}</label>
+                        <label>{l s='Email:'}</label>
                         <input class="form-control" type="text" name="email" value="{if isset($smarty.get.email)}{$smarty.get.email|escape:'htmlall':'UTF-8'}{else}{if isset($smarty.post.email)}{$smarty.post.email|escape:'htmlall':'UTF-8'}{/if}{/if}" />
                     </div>
 			<p>

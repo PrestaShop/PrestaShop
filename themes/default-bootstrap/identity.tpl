@@ -52,15 +52,15 @@
                 </div>
                 <div class="required form-group">
                     <label for="firstname">{l s='First name'} <sup>*</sup></label>
-                    <input class="is_required validate form-control" data-validate="isName" type="text" id="firstname" name="firstname" value="{$smarty.post.firstname}" />
+                    <input class="form-control" type="text" id="firstname" name="firstname" value="{$smarty.post.firstname}" />
                 </div>
                 <div class="required form-group">
                     <label for="lastname">{l s='Last name'} <sup>*</sup></label>
-                    <input class="is_required validate form-control" data-validate="isName" type="text" name="lastname" id="lastname" value="{$smarty.post.lastname}" />
+                    <input class="form-control" type="text" name="lastname" id="lastname" value="{$smarty.post.lastname}" />
                 </div>
                 <div class="required form-group">
                     <label for="email">{l s='E-mail address'} <sup>*</sup></label>
-                    <input class="is_required validate form-control" data-validate="isEmail" type="email" name="email" id="email" value="{$smarty.post.email}" />
+                    <input class="form-control" type="email" name="email" id="email" value="{$smarty.post.email}" />
                 </div>
                 <div class="form-group">
                     <label>{l s='Date of Birth'}</label>
@@ -107,15 +107,15 @@
                 </div>
                 <div class="required form-group">
                     <label for="old_passwd">{l s='Current Password'} <sup>*</sup></label>
-                    <input class="is_required validate form-control" type="password" data-validate="isPasswd" name="old_passwd" id="old_passwd" />
+                    <input class="form-control" type="password" name="old_passwd" id="old_passwd" />
                 </div>
                 <div class="password form-group">
                     <label for="passwd">{l s='New Password'}</label>
-                    <input class="is_required validate form-control" type="password" data-validate="isPasswd" name="passwd" id="passwd" />
+                    <input class="form-control" type="password" name="passwd" id="passwd" />
                 </div>
                 <div class="password form-group">
                     <label for="confirmation">{l s='Confirmation'}</label>
-                    <input class="is_required validate form-control" type="password" data-validate="isPasswd" name="confirmation" id="confirmation" />
+                    <input class="form-control" type="password" name="confirmation" id="confirmation" />
                 </div>
                 {if $newsletter}
                 <div class="checkbox">
