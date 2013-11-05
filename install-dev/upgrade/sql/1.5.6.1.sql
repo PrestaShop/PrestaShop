@@ -7,3 +7,5 @@ ALTER TABLE `PREFIX_currency` CHANGE `conversion_rate` `conversion_rate` DECIMAL
 UPDATE `PREFIX_orders` SET conversion_rate = 1 WHERE conversion_rate = 0;
 
 ALTER TABLE `PREFIX_cms` ADD `indexation` tinyint(1) UNSIGNED NULL DEFAULT '1' AFTER `active`;
+
+/* PHP:update_order_messages(); */;

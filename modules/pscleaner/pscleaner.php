@@ -34,7 +34,7 @@ class PSCleaner extends Module
 	{
 		$this->name = 'pscleaner';
 		$this->tab = 'administration';
-		$this->version = '0.9';
+		$this->version = '1.0';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
