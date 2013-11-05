@@ -987,7 +987,7 @@ class AdminModulesControllerCore extends AdminController
 		$helper->id = 'box-installed-modules';
 		$helper->icon = 'icon-puzzle-piece';
 		$helper->color = 'color1';
-		$helper->title = html_entity_decode($this->l('Installed Modules'));
+		$helper->title = $this->l('Installed Modules', null, null, false);
 		if (ConfigurationKPI::get('INSTALLED_MODULES') !== false)
 			$helper->value = ConfigurationKPI::get('INSTALLED_MODULES');
 		if (ConfigurationKPI::get('INSTALLED_MODULES_EXPIRE') < $time)
@@ -998,7 +998,7 @@ class AdminModulesControllerCore extends AdminController
 		$helper->id = 'box-disabled-modules';
 		$helper->icon = 'icon-off';
 		$helper->color = 'color2';
-		$helper->title = html_entity_decode($this->l('Disabled Modules'));
+		$helper->title = $this->l('Disabled Modules', null, null, false);
 		if (ConfigurationKPI::get('DISABLED_MODULES') !== false)
 			$helper->value = ConfigurationKPI::get('DISABLED_MODULES');
 		if (ConfigurationKPI::get('DISABLED_MODULES_EXPIRE') < $time)
@@ -1009,7 +1009,7 @@ class AdminModulesControllerCore extends AdminController
 		$helper->id = 'box-update-modules';
 		$helper->icon = 'icon-refresh';
 		$helper->color = 'color3';
-		$helper->title = html_entity_decode($this->l('Modules to update'));
+		$helper->title = $this->l('Modules to update', null, null, false);
 		if (ConfigurationKPI::get('UPDATE_MODULES') !== false)
 			$helper->value = ConfigurationKPI::get('UPDATE_MODULES');
 		if (ConfigurationKPI::get('UPDATE_MODULES_EXPIRE') < $time)
