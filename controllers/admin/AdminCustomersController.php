@@ -545,8 +545,8 @@ class AdminCustomersControllerCore extends AdminController
 		$helper->id = 'box-gender';
 		$helper->icon = 'icon-male';
 		$helper->color = 'color1';
-		$helper->title = $this->l('Customers');
-		$helper->subtitle = $this->l('All Time');
+		$helper->title = $this->l('Customers', null, null, false);
+		$helper->subtitle = $this->l('All Time', null, null, false);
 		if (ConfigurationKPI::get('CUSTOMER_MAIN_GENDER') !== false)
 			$helper->value = ConfigurationKPI::get('CUSTOMER_MAIN_GENDER');
 		if (ConfigurationKPI::get('CUSTOMER_MAIN_GENDER_EXPIRE') < $time)
@@ -557,8 +557,8 @@ class AdminCustomersControllerCore extends AdminController
 		$helper->id = 'box-age';
 		$helper->icon = 'icon-calendar';
 		$helper->color = 'color2';
-		$helper->title = $this->l('Average Age');
-		$helper->subtitle = $this->l('All Time');
+		$helper->title = $this->l('Average Age', 'AdminTab', null, false);
+		$helper->subtitle = $this->l('All Time', null, null, false);
 		if (ConfigurationKPI::get('AVG_CUSTOMER_AGE') !== false)
 			$helper->value = ConfigurationKPI::get('AVG_CUSTOMER_AGE');
 		if (ConfigurationKPI::get('AVG_CUSTOMER_AGE_EXPIRE') < $time)
@@ -569,8 +569,8 @@ class AdminCustomersControllerCore extends AdminController
 		$helper->id = 'box-orders';
 		$helper->icon = 'icon-retweet';
 		$helper->color = 'color3';
-		$helper->title = $this->l('Orders per Customer');
-		$helper->subtitle = $this->l('All Time');
+		$helper->title = $this->l('Orders per Customer', null, null, false);
+		$helper->subtitle = $this->l('All Time', null, null, false);
 		if (ConfigurationKPI::get('ORDERS_PER_CUSTOMER') !== false)
 			$helper->value = ConfigurationKPI::get('ORDERS_PER_CUSTOMER');
 		if (ConfigurationKPI::get('ORDERS_PER_CUSTOMER_EXPIRE') < $time)
@@ -581,8 +581,8 @@ class AdminCustomersControllerCore extends AdminController
 		$helper->id = 'box-newsletter';
 		$helper->icon = 'icon-envelope';
 		$helper->color = 'color4';
-		$helper->title = $this->l('Newsletter Registrations');
-		$helper->subtitle = $this->l('All Time');
+		$helper->title = $this->l('Newsletter Registrations', null, null, false);
+		$helper->subtitle = $this->l('All Time', null, null, false);
 		if (ConfigurationKPI::get('NEWSLETTER_REGISTRATIONS') !== false)
 			$helper->value = ConfigurationKPI::get('NEWSLETTER_REGISTRATIONS');
 		if (ConfigurationKPI::get('NEWSLETTER_REGISTRATIONS_EXPIRE') < $time)

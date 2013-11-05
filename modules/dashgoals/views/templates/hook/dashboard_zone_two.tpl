@@ -30,6 +30,8 @@
 	var priceDisplayPrecision = 0;
 	
 	var dashgoals_year = {$goals_year|intval};
+	
+	var dashgoals_ajax_link = '{$dashgoals_ajax_link|addslashes}';
 </script>
 
 <section id="dashgoals" class="panel widget">
@@ -46,58 +48,7 @@
 			</a>
 		</span>
 	</header>
-	<section id="dashgoals_config" class="dash_config hide">
-		<header><i class="icon-wrench"></i> {l s='Configuration' mod='dashgoals'}</header>
-		<form class="defaultForm form-horizontal" method="post" action="{$link->getAdminLink('AdminDashboard')}">
-			<table class="table table-condensed table-striped table-bordered">
-				<thead>
-					<tr>
-						<th>
-							<a href="javascript:void(0);" onclick="dashgoals_changeConfYear('backward');" class="icon-backward"></a>
-							<span id="dashgoals_conftitle">{$goals_year}</span>
-							<a href="javascript:void(0);" onclick="dashgoals_changeConfYear('forward');" class="icon-forward"></a>
-						</th>
-						<th>{l s='Traffic' mod='dashgoals'}</th>
-						<th>{l s='Conversion Rate' mod='dashgoals'}</th>
-						<th>{l s='Average Cart Value' mod='dashgoals'}</th>
-						<th>{l s='Sales' mod='dashgoals'}</th>
-					</tr>
-				</thead>
-				<tbody>
-					{foreach $goals_months as $month}
-					<tr>
-						<td>
-							{$month.label}
-						</td>
-						<td>
-							<div class="input-group">
-								<input id="dashgoals_traffic_{$month@key}" name="dashgoals_traffic_{$month@key}" class="dashgoals_config_input form-control"
-									value="{$month.values.traffic|intval}" />
-							</div>
-						</td>
-						<td>
-							<div class="input-group">
-								<input id="dashgoals_conversion_{$month@key}" name="dashgoals_conversion_{$month@key}" class="dashgoals_config_input form-control"
-									value="{$month.values.conversion|floatval}" />
-								<span class="input-group-addon">%</span>
-							</div>
-						</td>
-						<td>
-							<div class="input-group">
-								<span class="input-group-addon">{$currency->iso_code|escape}</span>
-								<input id="dashgoals_avg_cart_value_{$month@key}" name="dashgoals_avg_cart_value_{$month@key}" class="dashgoals_config_input form-control"
-									value="{$month.values.avg_cart_value|intval}" />
-							</div>
-						</td>
-						<td id="dashgoals_sales_{$month@key}" class="dashgoals_sales">
-						</td>
-					</tr>
-					{/foreach}
-				</tbody>
-			</table>
-			<input class="btn btn-default" name="submitDashGoals" type="submit" value="{l s='Save' mod='dashgoals'}" />
-		</form>
-	</section>
+	{include file='./config.tpl'}
 	<section class="loading">
 		<div id="dash_goals_chart1" class="chart with-transitions">
 			<svg></svg>
