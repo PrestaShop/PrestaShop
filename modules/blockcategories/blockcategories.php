@@ -36,7 +36,8 @@ class BlockCategories extends Module
 		$this->version = '2.2';
 		$this->author = 'PrestaShop';
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->displayName = $this->l('Categories block');
 		$this->description = $this->l('Adds a block featuring product categories.');

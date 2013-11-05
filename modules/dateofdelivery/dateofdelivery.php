@@ -39,7 +39,8 @@ class DateOfDelivery extends Module
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 		
 		$this->displayName = $this->l('Date of delivery');
 		$this->description = $this->l('Displays an approximate date of delivery');

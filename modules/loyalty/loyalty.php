@@ -46,7 +46,8 @@ class Loyalty extends Module
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->displayName = $this->l('Customer loyalty and rewards');
 		$this->description = $this->l('Provide a loyalty program to your customers.');
