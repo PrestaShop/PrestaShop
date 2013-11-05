@@ -1,18 +1,43 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
 /* block top user information */
 #header_right #header_user {
   clear: both;
   float: right;
   margin-top: 50px;
 }
+@media (min-width: 480px) and (max-width: 767px) {
+  #header_right #header_user {
+    margin-top: 25px;
+  }
+}
+@media (max-width: 479px) {
+  #header_right #header_user {
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 95px;
+    width: 270px;
+  }
+}
 #header_right #header_user #shopping_cart a {
   padding: 7px 10px 14px 16px;
   background: #333333;
   min-width: 270px;
-  /* 200 */
   display: block;
   font-weight: bold;
   color: #777777;
-  text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+  text-shadow: 1px 1px rgba(0, 0, 0, 0);
+  overflow: hidden;
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  #header_right #header_user #shopping_cart a {
+    min-width: 190px;
+  }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  #header_right #header_user #shopping_cart a span.ajax_cart_product_txt, #header_right #header_user #shopping_cart a span.ajax_cart_product_txt_s {
+    display: none !important;
+  }
 }
 #header_right #header_user #shopping_cart a b {
   color: #fff;

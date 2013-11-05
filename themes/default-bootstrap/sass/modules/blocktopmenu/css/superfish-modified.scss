@@ -16,6 +16,12 @@
 	width:			100%;
 	border-bottom:	3px solid #e9e9e9;
 	background:		#f6f6f6;
+																		@media (min-width: $screen-xs) and (max-width: $screen-xs-max) { // min 480px max 767px
+																			margin-top:80px;
+																		}
+																		@media (max-width: $screen-xs - 1) { // max 479px
+																			margin-top:70px;
+																		}
 }
 .sf-menu ul {
 	position:		absolute;
@@ -46,7 +52,7 @@
 		border-bottom:		3px solid #e9e9e9;
 	}
 	
-	&.sfHover > a, > a:hover, &.sfHoverForce a {
+	&.sfHover > a, > a:hover, &.sfHoverForce > a {
 		background:				#333;
 		border-bottom-color:	#666666;
 		color:					#fff;	

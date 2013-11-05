@@ -69,11 +69,16 @@
 	{/foreach}
 {/if}
 <script src="{$js_dir}/tools/bootstrap.min.js"></script>
+<!--[if IE 7]><html class="no-js lt-ie9 ie8" lang="{$lang_iso}">
+	 <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+<![endif]-->
 <script src="{$js_dir}/tools/jquery.total-storage.min.js"></script>
 <script src="{$js_dir}/jquery/jquery.uniform-modify.js"></script>
 <script src="{$js_dir}/jquery/highdpi.js"></script>
 <script src="{$js_dir}/jquery/jquery.bxslider.js"></script>
 <script src="{$js_dir}/jquery/footable.js"></script>
+<script src="{$js_dir}/jquery/resonsive_utilites.js"></script>
 		{$HOOK_HEADER}
 	</head>
 	
@@ -117,7 +122,7 @@
                                             </div>
                                         {/if}
                                     {/foreach}
-                                    <ul id="first-languages" class="countries_ul">
+                                    <ul id="first-languages" class="countries_ul toogle_content">
                                     {foreach from=$languages key=k item=language name="languages"}
                                         <li {if $language.iso_code == $lang_iso}class="selected"{/if}>
                                         {if $language.iso_code != $lang_iso}
@@ -159,12 +164,12 @@
                                         <div class="current">
                                             <input type="hidden" name="id_currency" id="id_currency" value=""/>
                                             <input type="hidden" name="SubmitCurrency" value="" />
-                                            {l s='Currency' mod='blockcurrencies'} :
+                                            <span class="cur-label">{l s='Currency' mod='blockcurrencies'} :</span>
                                             {foreach from=$currencies key=k item=f_currency}
                                                 {if $cookie->id_currency == $f_currency.id_currency}<strong>{$f_currency.iso_code}</strong>{/if}
                                             {/foreach}
                                         </div>
-                                        <ul id="first-currencies" class="currencies_ul">
+                                        <ul id="first-currencies" class="currencies_ul toogle_content">
                                             {foreach from=$currencies key=k item=f_currency}
                                                 <li {if $cookie->id_currency == $f_currency.id_currency}class="selected"{/if}>
                                                     <a href="javascript:setCurrency({$f_currency.id_currency});" title="{$f_currency.name}" rel="nofollow">{$f_currency.name}</a>
@@ -184,7 +189,7 @@
                     </div>
                 	<div class="container header-row-2">
                         <a id="header_logo" href="{$base_dir}" title="{$shop_name|escape:'htmlall':'UTF-8'}">
-                            <img class="logo" src="{$logo_url}" alt="{$shop_name|escape:'htmlall':'UTF-8'}" {if $logo_image_width}width="{$logo_image_width}"{/if} {if $logo_image_height}height="{$logo_image_height}" {/if}/>
+                            <img class="logo img-responsive" src="{$logo_url}" alt="{$shop_name|escape:'htmlall':'UTF-8'}" {if $logo_image_width}width="{$logo_image_width}"{/if} {if $logo_image_height}height="{$logo_image_height}" {/if}/>
                         </a>
                         <div id="header_right">
                             {$HOOK_TOP}
