@@ -29,11 +29,7 @@
 		<table class="table table-condensed table-striped table-bordered">
 			<thead>
 				<tr>
-					<th>
-						<a href="javascript:void(0);" onclick="dashgoals_changeConfYear('backward');" class="icon-backward"></a>
-						<span id="dashgoals_conftitle">{$goals_year}</span>
-						<a href="javascript:void(0);" onclick="dashgoals_changeConfYear('forward');" class="icon-forward"></a>
-					</th>
+					<th>{$goals_year}</th>
 					<th>{l s='Traffic' mod='dashgoals'}</th>
 					<th>{l s='Conversion Rate' mod='dashgoals'}</th>
 					<th>{l s='Average Cart Value' mod='dashgoals'}</th>
