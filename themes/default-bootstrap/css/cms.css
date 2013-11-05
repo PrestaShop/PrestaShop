@@ -2,47 +2,57 @@
 /**************************************************************
 					CMS Pages Styles
 ***************************************************************/
+/* line 11, ../sass/cms.scss */
 #cms #center_column .cms-block {
   padding-bottom: 20px;
 }
+/* line 13, ../sass/cms.scss */
 #cms #center_column h1 {
   margin-bottom: 25px;
 }
+/* line 17, ../sass/cms.scss */
 #cms #center_column h3 {
   font-size: 16px;
   border-bottom: none;
   margin: 0 0 0 0;
   padding-bottom: 17px;
 }
+/* line 24, ../sass/cms.scss */
 #cms #center_column p {
   line-height: 18px;
 }
+/* line 30, ../sass/cms.scss */
 #cms #center_column .list-1 li {
   padding: 4px 0 6px 0;
   font-weight: bold;
   color: #46a74e;
   border-top: 1px solid #d6d4d4;
 }
+/* line 36, ../sass/cms.scss */
 #cms #center_column .list-1 li:first-child {
   border: none;
 }
+/* line 38, ../sass/cms.scss */
 #cms #center_column .list-1 li em {
   font-size: 20px;
   line-height: 20px;
   padding-right: 15px;
   vertical-align: -2px;
 }
+/* line 46, ../sass/cms.scss */
 #cms #center_column img {
   margin: 4px 0 17px;
   max-width: 100%;
   height: auto;
 }
+/* line 51, ../sass/cms.scss */
 #cms #center_column .testimonials {
   border: 1px solid;
   border-color: #dfdede #d2d0d0 #b0afaf #d2d0d0;
   margin: 4px 0 13px 0;
   position: relative;
 }
+/* line 57, ../sass/cms.scss */
 #cms #center_column .testimonials .inner {
   border: 1px solid #fff;
   padding: 19px 18px 11px 18px;
@@ -54,20 +64,24 @@
   background: -ms-linear-gradient(top, #fbfbfb 0%, #fefefe 100%);
   background: linear-gradient(to bottom, #fbfbfb 0%, #fefefe 100%);
 }
+/* line 68, ../sass/cms.scss */
 #cms #center_column .testimonials .inner span {
   text-indent: -5000px;
   display: inline-block;
   width: 20px;
   height: 15px;
 }
+/* line 74, ../sass/cms.scss */
 #cms #center_column .testimonials .inner span.before {
   background: url(../img/bl-before-bg.png) no-repeat;
   margin-right: 8px;
 }
+/* line 79, ../sass/cms.scss */
 #cms #center_column .testimonials .inner span.after {
   background: url(../img/bl-after-bg.png) no-repeat;
   margin-left: 8px;
 }
+/* line 86, ../sass/cms.scss */
 #cms #center_column .testimonials:after {
   content: ".";
   display: block;
@@ -79,10 +93,12 @@
   height: 16px;
   background: url(../img/testimon-after.gif) no-repeat;
 }
+/* line 98, ../sass/cms.scss */
 #cms #center_column .testimonials + p {
   padding-left: 45px;
   margin-bottom: 18px;
 }
+/* line 103, ../sass/cms.scss */
 #cms #center_column p.bottom-indent {
   margin-bottom: 18px;
 }

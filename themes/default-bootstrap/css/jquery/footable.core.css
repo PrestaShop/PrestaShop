@@ -1,21 +1,27 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
+/* line 2, ../../sass/jquery/footable.core.scss */
 .footable {
   width: 100%;
 }
+/* line 8, ../../sass/jquery/footable.core.scss */
 .footable.breakpoint > tbody > tr.footable-detail-show > td {
   border-bottom: none;
 }
+/* line 11, ../../sass/jquery/footable.core.scss */
 .footable.breakpoint > tbody > tr.footable-detail-show > td > span.footable-toggle:before {
   font-family: "FontAwesome";
   content: "";
 }
+/* line 17, ../../sass/jquery/footable.core.scss */
 .footable.breakpoint > tbody > tr:hover:not(.footable-row-detail) {
   cursor: pointer;
 }
+/* line 21, ../../sass/jquery/footable.core.scss */
 .footable.breakpoint > tbody > tr > td.footable-cell-detail {
   background: #eee;
   border-top: none;
 }
+/* line 26, ../../sass/jquery/footable.core.scss */
 .footable.breakpoint > tbody > tr > td > span.footable-toggle {
   display: inline-block;
   font-family: "FontAwesome";
@@ -28,34 +34,42 @@
   padding-right: 5px;
   font-size: 14px;
 }
+/* line 38, ../../sass/jquery/footable.core.scss */
 .footable.breakpoint > tbody > tr > td > span.footable-toggle:before {
   font-family: "FontAwesome";
   content: "";
 }
+/* line 45, ../../sass/jquery/footable.core.scss */
 .footable.breakpoint.toggle-medium > tbody > tr > td > span.footable-toggle {
   font-size: 18px;
 }
+/* line 51, ../../sass/jquery/footable.core.scss */
 .footable.breakpoint.toggle-large > tbody > tr > td > span.footable-toggle {
   font-size: 24px;
 }
+/* line 56, ../../sass/jquery/footable.core.scss */
 .footable .footable-row-detail-inner {
   display: table;
 }
+/* line 60, ../../sass/jquery/footable.core.scss */
 .footable .footable-row-detail-row {
   display: table-row;
   line-height: 1.5em;
 }
+/* line 65, ../../sass/jquery/footable.core.scss */
 .footable .footable-row-detail-group {
   display: block;
   line-height: 2em;
   font-size: 1.2em;
   font-weight: bold;
 }
+/* line 72, ../../sass/jquery/footable.core.scss */
 .footable .footable-row-detail-name {
   display: table-cell;
   font-weight: bold;
   padding-right: 0.5em;
 }
+/* line 78, ../../sass/jquery/footable.core.scss */
 .footable .footable-row-detail-value {
   display: table-cell;
 }

@@ -1,10 +1,40 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
 /* block top search */
+/* line 3, ../../../sass/modules/blocksearch/blocksearch.scss */
 #search_block_top {
   position: absolute;
   right: 420px;
   top: 50px;
 }
+@media (min-width: 992px) and (max-width: 1199px) {
+  /* line 3, ../../../sass/modules/blocksearch/blocksearch.scss */
+  #search_block_top {
+    right: 295px;
+  }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  /* line 3, ../../../sass/modules/blocksearch/blocksearch.scss */
+  #search_block_top {
+    right: 207px;
+  }
+}
+@media (min-width: 480px) and (max-width: 767px) {
+  /* line 3, ../../../sass/modules/blocksearch/blocksearch.scss */
+  #search_block_top {
+    right: 0;
+    top: 85px;
+  }
+}
+@media (max-width: 479px) {
+  /* line 3, ../../../sass/modules/blocksearch/blocksearch.scss */
+  #search_block_top {
+    top: 56px;
+    right: 50%;
+    width: 270px;
+    margin-right: -135px;
+  }
+}
+/* line 24, ../../../sass/modules/blocksearch/blocksearch.scss */
 #search_block_top .btn.button-search {
   background: #333;
   float: left;
@@ -14,18 +44,22 @@
   text-align: center;
   padding: 10px 0 11px 0;
 }
+/* line 33, ../../../sass/modules/blocksearch/blocksearch.scss */
 #search_block_top .btn.button-search span {
   display: none;
 }
+/* line 35, ../../../sass/modules/blocksearch/blocksearch.scss */
 #search_block_top .btn.button-search:before {
   content: "";
   display: block;
   font-family: "FontAwesome";
   font-size: 17px;
 }
+/* line 42, ../../../sass/modules/blocksearch/blocksearch.scss */
 #search_block_top .btn.button-search:hover {
   color: #6f6f6f;
 }
+/* line 45, ../../../sass/modules/blocksearch/blocksearch.scss */
 #search_block_top #search_query_top {
   padding: 0 13px;
   height: 45px;
@@ -34,13 +68,33 @@
   float: left;
   margin-right: 1px;
 }
+@media (min-width: 768px) and (max-width: 991px) {
+  /* line 45, ../../../sass/modules/blocksearch/blocksearch.scss */
+  #search_block_top #search_query_top {
+    width: 180px;
+  }
+}
+@media (min-width: 480px) and (max-width: 767px) {
+  /* line 45, ../../../sass/modules/blocksearch/blocksearch.scss */
+  #search_block_top #search_query_top {
+    width: 212px;
+  }
+}
+@media (max-width: 479px) {
+  /* line 45, ../../../sass/modules/blocksearch/blocksearch.scss */
+  #search_block_top #search_query_top {
+    width: 212px;
+  }
+}
 
+/* line 63, ../../../sass/modules/blocksearch/blocksearch.scss */
 .ac_results {
   background: #fff;
   border: 1px solid #d6d4d4;
   width: 271px;
   margin-top: -1px;
 }
+/* line 69, ../../../sass/modules/blocksearch/blocksearch.scss */
 .ac_results li {
   padding: 0 10px;
   font-weight: normal;
@@ -48,22 +102,27 @@
   font-size: 13px;
   line-height: 22px;
 }
+/* line 76, ../../../sass/modules/blocksearch/blocksearch.scss */
 .ac_results li.ac_odd {
   background: #fff;
 }
+/* line 80, ../../../sass/modules/blocksearch/blocksearch.scss */
 .ac_results li:hover, .ac_results li.ac_over {
   background: #fbfbfb;
 }
 
+/* line 87, ../../../sass/modules/blocksearch/blocksearch.scss */
 form#searchbox label {
   color: #333;
   margin-bottom: 1px;
 }
+/* line 92, ../../../sass/modules/blocksearch/blocksearch.scss */
 form#searchbox input#search_query_block {
   border: 1px solid #d6d4d4;
   height: 18px;
   margin-top: 10px;
 }
+/* line 98, ../../../sass/modules/blocksearch/blocksearch.scss */
 form#searchbox input#search_button {
   padding: 1px 4px;
 }

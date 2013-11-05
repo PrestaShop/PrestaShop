@@ -1,4 +1,5 @@
 /*TMP*/
+/* line 3, ../sass/scenes.scss */
 #scenes .cluetip span {
   background: transparent url(../img/icon/cible.gif) no-repeat scroll center center;
   color: black;
@@ -12,6 +13,7 @@
 }
 
 /*TMP*/
+/* line 15, ../sass/scenes.scss */
 .thumbs_banner {
   margin: 10px auto;
   padding: 2px 0;
@@ -21,6 +23,7 @@
   border-bottom: 1px solid #ccc;
 }
 
+/* line 24, ../sass/scenes.scss */
 .thumbs_banner .space-keeper {
   width: 21px;
   float: left;
@@ -28,6 +31,7 @@
   height: 100%;
 }
 
+/* line 31, ../sass/scenes.scss */
 .thumbs_banner .space-keeper a.prev {
   display: none;
   width: 21px;
@@ -37,24 +41,29 @@
   background: url(../img/icon/serial_scroll_left.gif) no-repeat 0 0 #eeeeee;
 }
 
+/* line 39, ../sass/scenes.scss */
 #scenes_list {
   overflow: hidden;
   float: left;
   width: 478px;
 }
 
+/* line 44, ../sass/scenes.scss */
 #scenes_list ul {
   list-style-type: none;
 }
 
+/* line 48, ../sass/scenes.scss */
 #scenes_list li {
   float: left;
 }
 
+/* line 52, ../sass/scenes.scss */
 #scenes_list a {
   display: block;
 }
 
+/* line 56, ../sass/scenes.scss */
 .thumbs_banner a.next {
   float: left;
   display: block;
@@ -66,16 +75,19 @@
 }
 
 /* Cluetip design ****************************************************************************** */
+/* line 67, ../sass/scenes.scss */
 #scenes .screen_scene {
   margin: 0 auto;
 }
 
+/* line 71, ../sass/scenes.scss */
 #scenes a.cluetip {
   display: block;
   position: absolute;
   text-decoration: none;
 }
 
+/* line 77, ../sass/scenes.scss */
 .cluetip-product_scene {
   padding: 10px;
   border: 7px solid #999;
@@ -87,17 +99,20 @@
   opacity: 0.95;
 }
 
+/* line 88, ../sass/scenes.scss */
 .cluetip-product_scene #cluetip-close {
   text-align: right;
   float: right;
 }
 
+/* line 93, ../sass/scenes.scss */
 .cluetip-product_scene img {
   float: left;
   margin-right: 10px;
   border: 1px solid #cccccc;
 }
 
+/* line 98, ../sass/scenes.scss */
 .cluetip-product_scene .title_block {
   display: inline-block;
   margin-bottom: 5px;
@@ -105,16 +120,19 @@
   font-size: 12px;
 }
 
+/* line 105, ../sass/scenes.scss */
 .cluetip-product_scene .clear {
   margin: 0;
   padding: 0;
 }
 
+/* line 106, ../sass/scenes.scss */
 .cluetip-product_scene .clear a {
   /*float:left;*/
   margin-top: 2px;
 }
 
+/* line 111, ../sass/scenes.scss */
 .cluetip-product_scene p.description {
   float: left;
   padding: 0;
@@ -122,6 +140,7 @@
   color: #666666;
 }
 
+/* line 118, ../sass/scenes.scss */
 .cluetip-product_scene div.prices {
   float: right;
   position: relative;
@@ -129,6 +148,7 @@
   text-align: right;
 }
 
+/* line 124, ../sass/scenes.scss */
 .cluetip-product_scene .new {
   position: absolute;
   top: 0;
@@ -142,6 +162,7 @@
   background: none repeat scroll 0 0 #9b0000;
 }
 
+/* line 136, ../sass/scenes.scss */
 .cluetip-product_scene .price {
   padding-top: 18px;
   font-weight: bold;
@@ -149,6 +170,7 @@
   color: #990000;
 }
 
+/* line 142, ../sass/scenes.scss */
 .cluetip-product_scene .on_sale, .cluetip-product_scene .discount {
   display: block;
   font-weight: bold;

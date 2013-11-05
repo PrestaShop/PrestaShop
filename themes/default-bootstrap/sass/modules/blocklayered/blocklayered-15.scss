@@ -104,6 +104,10 @@
 	
 	.layered_filter_ul {
 		padding:0 20px 5px;
+																		@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { // min 768px max 991px
+																			padding-left:0;
+																			padding-right:0;
+																		}
 		
 		li {
 			padding-bottom:7px;

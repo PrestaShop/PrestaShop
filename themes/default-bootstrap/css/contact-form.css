@@ -2,77 +2,94 @@
 /**************************************************************************
 					Contact Page Styles
 **************************************************************************/
+/* line 7, ../sass/contact-form.scss */
 .contact-title {
   margin-top: -5px;
   line-height: 23px;
   margin-bottom: 27px;
 }
+/* line 12, ../sass/contact-form.scss */
 .contact-title i {
   font-size: 23px;
   color: #c0c0c0;
   padding-right: 8px;
 }
 
+/* line 19, ../sass/contact-form.scss */
 .contact-form-box {
   padding: 23px 0 0 0;
   margin-bottom: 30px;
   background: url(../img/contact-form.png) repeat-x white;
-  -webkit-box-shadow: rgba(0, 0, 0, 0) 0px 5px 13px;
-  -moz-box-shadow: rgba(0, 0, 0, 0) 0px 5px 13px;
-  box-shadow: rgba(0, 0, 0, 0) 0px 5px 13px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.17) 0px 5px 13px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.17) 0px 5px 13px;
+  box-shadow: rgba(0, 0, 0, 0.17) 0px 5px 13px;
   /* min 992px max 1199px */
 }
+/* line 25, ../sass/contact-form.scss */
 .contact-form-box fieldset {
   padding: 0 19px 21px 19px;
   background: url(../img/form-contact-shadow.png) center bottom no-repeat;
   background-size: contain;
 }
+/* line 31, ../sass/contact-form.scss */
 .contact-form-box label {
   margin-bottom: 6px;
 }
+/* line 35, ../sass/contact-form.scss */
 .contact-form-box .page-subheading {
   padding-left: 0px;
   border: none;
   margin-bottom: 0;
 }
+/* line 41, ../sass/contact-form.scss */
 .contact-form-box .col-md-3 {
   padding-left: 0;
   /* max 991px */
 }
 @media (max-width: 991px) {
+  /* line 41, ../sass/contact-form.scss */
   .contact-form-box .col-md-3 {
     padding-right: 0;
   }
 }
+/* line 50, ../sass/contact-form.scss */
 .contact-form-box .col-md-9 {
   padding-right: 0;
   /* max 991px */
 }
 @media (max-width: 991px) {
+  /* line 50, ../sass/contact-form.scss */
   .contact-form-box .col-md-9 {
     padding-left: 0;
   }
 }
+/* line 59, ../sass/contact-form.scss */
 .contact-form-box #desc_contact0 {
   display: none;
 }
+/* line 61, ../sass/contact-form.scss */
 .contact-form-box .form-group {
   margin-bottom: 7px;
 }
+/* line 65, ../sass/contact-form.scss */
 .contact-form-box textarea {
   height: 257px;
 }
+/* line 69, ../sass/contact-form.scss */
 .contact-form-box .submit {
   margin-top: 13px;
 }
+/* line 71, ../sass/contact-form.scss */
 .contact-form-box select.form-control {
   max-width: 270px;
   width: 100%;
 }
+/* line 75, ../sass/contact-form.scss */
 .contact-form-box input.form-control {
   max-width: 270px;
 }
 @media (min-width: 992px) and (max-width: 1199px) {
+  /* line 80, ../sass/contact-form.scss */
   .contact-form-box div.uploader span.filename {
     width: 114px;
   }
@@ -81,14 +98,17 @@
 /**************************************************************************
 				Contact Page Bottom Banners Styles 
 **************************************************************************/
+/* line 90, ../sass/contact-form.scss */
 .contact-banners .list-1 {
   padding: 6px 0 3px 0;
 }
+/* line 93, ../sass/contact-form.scss */
 .contact-banners .list-1 li {
   padding: 0px 0 3px 0;
   font: 600 18px/22px "Open Sans", sans-serif;
   color: #555454;
 }
+/* line 98, ../sass/contact-form.scss */
 .contact-banners .list-1 li i {
   font-size: 25px;
   line-height: 25px;
@@ -96,23 +116,28 @@
   padding-right: 10px;
   vertical-align: -3px;
 }
+/* line 108, ../sass/contact-form.scss */
 .contact-banners .list-2 {
   padding: 2px 0 2px 0;
 }
+/* line 111, ../sass/contact-form.scss */
 .contact-banners .list-2 li {
   font-weight: bold;
   color: #46a74e;
   padding: 0 0 5px 0;
 }
+/* line 116, ../sass/contact-form.scss */
 .contact-banners .list-2 li i {
   font-size: 20px;
   line-height: 20px;
   padding-right: 10px;
   vertical-align: -2px;
 }
+/* line 125, ../sass/contact-form.scss */
 .contact-banners .box.box-last {
   padding-bottom: 49px;
 }
+/* line 130, ../sass/contact-form.scss */
 .contact-banners .box.box-last p i {
   font-size: 29px;
   line-height: 29px;
