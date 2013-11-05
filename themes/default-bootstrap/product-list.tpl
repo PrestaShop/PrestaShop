@@ -31,11 +31,20 @@
     
 	{if $page_name !='index' && $page_name !='product'}
 		{assign var='nbItemsPerLine' value=3}
+        {assign var='nbItemsPerLineTablet' value=2}
+        {assign var='nbItemsPerLineMobile' value=3}
     {else}
+    	<script type="text/javascript">
+			$('document').ready(function(){
+				if (typeof reloadProductComparison != 'undefined')
+					reloadProductComparison()
+			});
+		</script>
     	{assign var='nbItemsPerLine' value=4}
+        {assign var='nbItemsPerLineTablet' value=3}
+        {assign var='nbItemsPerLineMobile' value=2}
     {/if}
     {*define numbers of product per line in other page for tablet*}
-    {assign var='nbItemsPerLineTablet' value=2}
     {assign var='nbLi' value=$products|@count}
     {math equation="nbLi/nbItemsPerLine" nbLi=$nbLi nbItemsPerLine=$nbItemsPerLine assign=nbLines}
     {math equation="nbLi/nbItemsPerLineTablet" nbLi=$nbLi nbItemsPerLineTablet=$nbItemsPerLineTablet assign=nbLinesTablet}
@@ -44,9 +53,11 @@
 	{foreach from=$products item=product name=products}
     	{math equation="(total%perLine)" total=$smarty.foreach.products.total perLine=$nbItemsPerLine assign=totModulo}
         {math equation="(total%perLineT)" total=$smarty.foreach.products.total perLineT=$nbItemsPerLineTablet assign=totModuloTablet}
+        {math equation="(total%perLineT)" total=$smarty.foreach.products.total perLineT=$nbItemsPerLineMobile assign=totModuloMobile}
         {if $totModulo == 0}{assign var='totModulo' value=$nbItemsPerLine}{/if}
         {if $totModuloTablet == 0}{assign var='totModuloTablet' value=$nbItemsPerLineTablet}{/if}
-		<li class="ajax_block_product col-xs-3 {if $smarty.foreach.products.iteration%$nbItemsPerLine == 0} last-in-line{elseif $smarty.foreach.products.iteration%$nbItemsPerLine == 1} first-in-line{/if} {if $smarty.foreach.products.iteration > ($smarty.foreach.products.total - $totModulo)}last-line{/if} {if $smarty.foreach.products.iteration%$nbItemsPerLineTablet == 0}last-item-of-tablet-line{elseif $smarty.foreach.products.iteration%$nbItemsPerLineTablet == 1}first-item-of-tablet-line{/if} {if $smarty.foreach.products.iteration > ($smarty.foreach.products.total - $totModuloTablet)}last-tablet-line{/if}">
+        {if $totModuloMobile == 0}{assign var='totModuloMobile' value=$nbItemsPerLineMobile}{/if}
+		<li class="ajax_block_product {if $page_name == 'index' || $page_name == 'product'}col-xs-12 col-sm-4 col-md-3{/if} {if $smarty.foreach.products.iteration%$nbItemsPerLine == 0} last-in-line{elseif $smarty.foreach.products.iteration%$nbItemsPerLine == 1} first-in-line{/if} {if $smarty.foreach.products.iteration > ($smarty.foreach.products.total - $totModulo)}last-line{/if} {if $smarty.foreach.products.iteration%$nbItemsPerLineTablet == 0}last-item-of-tablet-line{elseif $smarty.foreach.products.iteration%$nbItemsPerLineTablet == 1}first-item-of-tablet-line{/if} {if $smarty.foreach.products.iteration%$nbItemsPerLineMobile == 0}last-item-of-mobile-line{elseif $smarty.foreach.products.iteration%$nbItemsPerLineMobile == 1}first-item-of-mobile-line{/if} {if $smarty.foreach.products.iteration > ($smarty.foreach.products.total - $totModuloMobile)}last-mobile-line{/if}">
         	<div class="product-container">
                 <div class="left-block">
                 	<div class="product-image-container">
@@ -117,7 +128,7 @@
                     {if isset($comparator_max_item) && $comparator_max_item}
                         <div class="compare">
                             <label for="comparator_item_{$product.id_product}">
-                            <input type="checkbox" class="comparator hidden" id="comparator_item_{$product.id_product}" value="comparator_item_{$product.id_product}" {if isset($compareProducts) && in_array($product.id_product, $compareProducts)}checked="checked"{/if} autocomplete="off"/> 
+                            <input type="checkbox" class="comparator hidden" id="comparator_item_{$product.id_product}" value="comparator_item_{$product.id_product}" {if isset($compared_products) && in_array($product.id_product, $compared_products)}checked="checked"{/if} autocomplete="off"/> 
                             {l s='Add to Compare'}</label>
                         </div>
                     {/if}
@@ -133,8 +144,8 @@
 	<script type="text/javascript"><!--
 		function display(view) {
 			if (view == 'list') {
-				$('ul.product_list').removeClass('grid row').addClass('list row');
-				$('.product_list > li').removeClass('col-xs-12 col-xs-4 col-sm-6 col-md-4').addClass('col-xs-12');
+				$('ul.product_list').removeClass('grid').addClass('list row');
+				$('.product_list > li').removeClass('col-xs-12 col-sm-6 col-md-4').addClass('col-xs-12');
 				$('.product_list > li').each(function(index, element) {
 					html = '';
 					html = '<div class="product-container"><div class="row">';
@@ -170,8 +181,8 @@
 				if (typeof quick_view != 'undefined') 	// qick view button reload
 					quick_view();
 			} else {
-				$('ul.product_list').removeClass('list row').addClass('grid row');
-				$('.product_list > li').removeClass('col-xs-12 col-xs-4').addClass('col-xs-12 col-sm-6 col-md-4');
+				$('ul.product_list').removeClass('list').addClass('grid row');
+				$('.product_list > li').removeClass('col-xs-12').addClass('col-xs-12 col-sm-6 col-md-4');
 				$('.product_list > li').each(function(index, element) {
 				html = '';
 				html += '<div class="product-container">';

@@ -46,7 +46,7 @@
 	<!-- /Block CMS module -->
 {else}
 	<!-- MODULE Block footer -->
-	<section class="footer-block col-xs-12 col-md-2" id="block_various_links_footer">
+	<section class="footer-block col-xs-12 col-sm-2" id="block_various_links_footer">
 		<h4>{l s='Information' mod='blockcms'}</h4>
 		<ul>
 			{if !$PS_CATALOG_MODE}<li class="first_item"><a href="{$link->getPageLink('prices-drop')|escape:'html'}" title="{l s='Specials' mod='blockcms'}">{l s='Specials' mod='blockcms'}</a></li>{/if}

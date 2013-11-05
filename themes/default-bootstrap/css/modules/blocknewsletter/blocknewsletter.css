@@ -8,6 +8,12 @@
   display: inline-block;
   margin-right: 6px;
 }
+@media (min-width: 768px) and (max-width: 1199px) {
+  #columns #newsletter_block_left .form-group .form-control {
+    margin-bottom: 10px;
+    margin-right: 0;
+  }
+}
 #columns #newsletter_block_left .success_inline, #columns #newsletter_block_left .warning_inline {
   text-align: left;
   padding: 1px 0 0 0;
@@ -27,6 +33,12 @@
   float: left;
   padding: 13px 15px 7px 15px;
   margin-bottom: 0;
+}
+@media (max-width: 767px) {
+  #footer #newsletter_block_left {
+    background: #3F3F3F;
+    width: 100%;
+  }
 }
 #footer #newsletter_block_left h4 {
   background: none;
