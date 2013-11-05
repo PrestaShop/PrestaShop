@@ -2657,7 +2657,7 @@ class BlockLayered extends Module
 					AND '.$alias.'.active = 1 AND '.$alias.'.`visibility` IN ("both", "catalog")';
 					$sql_query['group'] = ') count_products
 					FROM '._DB_PREFIX_.'category c
-					LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category AND cl.id_lang = '.$id_lang.')
+					LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category AND cl.`id_shop` = '.(int)Context::getContext()->shop->id.' and cl.id_lang = '.$id_lang.')
 					WHERE c.nleft > '.(int)$parent->nleft.'
 					AND c.nright < '.(int)$parent->nright.'
 					'.($depth ? 'AND c.level_depth <= '.($parent->level_depth+(int)$depth) : '').'
