@@ -149,10 +149,10 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$this->toolbar_title = $bread_extended;
 	}
 
-	public function initToolbar()
+	public function initPageHeaderToolbar()
 	{
-		parent::initToolbar();
-		$this->toolbar_btn['back']['href'] = $this->context->link->getAdminLink('AdminCarriers');
+		parent::initPageHeaderToolbar();
+		$this->page_header_toolbar_btn = array();
 	}
 
 	public function renderStepOne($carrier)
