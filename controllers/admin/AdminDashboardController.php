@@ -343,7 +343,12 @@ class AdminDashboardControllerCore extends AdminController
 		$module = Tools::getValue('module');
 		$hook = Tools::getValue('hook');
 		$configs = Tools::getValue('configs');
-
+		
+		$params = array(
+			'date_from' => $this->context->employee->stats_date_from,
+			'date_to' => $this->context->employee->stats_date_to
+		);
+		
 		if (Validate::isModuleName($module) && $module_obj = Module::getInstanceByName($module))
 			if (Validate::isLoadedObject($module_obj) && method_exists($module_obj, 'saveDashConfig'))
 				$return['has_errors'] = $module_obj->saveDashConfig($configs);
@@ -353,7 +358,7 @@ class AdminDashboardControllerCore extends AdminController
 						Configuration::updateValue($name, $value);
 		
 		if (Validate::isHookName($hook) && method_exists($module_obj, $hook))
-			$return['widget_html'] = $module_obj->$hook(array());
+			$return['widget_html'] = $module_obj->$hook($params);
 		
 		die(Tools::jsonEncode($return));
 	}
