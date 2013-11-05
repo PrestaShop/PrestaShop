@@ -1,6 +1,5 @@
 #nobootstrap {
 	//old admin theme
-	body{font-family:Arial, Helvetica, sans-serif}
 	h1,h2,h3,h4{font-family:Arial, Helvetica, sans-serif;line-height:1.4em;margin-bottom:.5em}
 	h2{font-size:1.7em}
 	h3{font-size:1.25em}
@@ -121,14 +120,8 @@
 	.multishop_toolbar .chzn-container .chzn-results .first{background-color:#408BD5;color:#fff;font-weight:700}
 	.multishop_toolbar .chzn-container .chzn-results .group{background-color:#C6DEFC;font-style:italic;font-weight:700;padding-left:15px}
 	.multishop_toolbar .chzn-container .chzn-results .shop{background-color:#EAF2FC;padding-left:30px}
-	.toolbarBox{background-color:#F8F8F8;border:1px solid #CCC;margin-bottom:10px;padding:10px 0;position:relative}
-	.toolbarBox .pageTitle{line-height:48px;margin-left:10px}
-	.toolbarBox .pageTitle h3{font-size:2em;font-weight:700;line-height:48px;margin:0;padding:0}
-	.toolbarBox ul.cc_button{float:right;margin:0;padding:0}
-	.toolbarBox ul.cc_button li{color:#666;float:left;height:48px;list-style:none outside none;padding:1px 1px 3px 4px;text-align:center}
-	.toolbarBox a.toolbar_btn{border:1px solid #f8f8f8;border-width:1px;cursor:pointer;display:block;float:left;font-size:11px;min-width:50px;padding:1px 5px;white-space:nowrap}
-	.toolbarBox a.toolbar_btn:hover{background-color:#fff;border:1px inset #ccc}
-	.toolbarBox .toolbar_btn span{display:block;float:none;height:32px;margin:0 auto;position:relative}
+
+	
 	.toolbarBox .process-icon-delete{background-image:url(../img/process-icon-delete.png)}
 	.toolbarBox .process-icon-duplicate{background-image:url(../img/process-icon-duplicate.png)}
 	.toolbarBox .process-icon-stats{background-image:url(../img/process-icon-stats.png)}
@@ -147,6 +140,7 @@
 	.toolbarBox .process-icon-help{background-image:url(../img/process-icon-help.png)}
 	.toolbarBox .process-icon-help-new{background-image:url(../img/process-icon-help-new.png)}
 	.toolbarBox .process-icon-modules-list{background-image:url(../img/process-icon-modules-list.png)}
+	
 	.toolbarReduced{margin-right:221px}
 	#modules_list_button{background-image:url(../img/modules_list_button.png);border:none;cursor:pointer;font-size:1.6em;height:63px;padding-left:45px;position:absolute;right:0;top:0;width:211px}
 	.toolbarBox #modules_list_container{background:none repeat scroll 0 0 #FFF;border:solid 1px #CCC;display:block;float:right;height:auto;position:absolute;right:13px;top:63px;width:500px;z-index:100}
@@ -340,7 +334,7 @@
 	#moduleContainer .moduleGridDesc,#modules_list_container_tab .moduleGridDesc{display:block;height:30px;position:relative}
 	#moduleContainer ul.listing-grid-module li select,#modules_list_container_tab ul.listing-grid-module li select{position:absolute;right:0;top:0}
 	//root css
-	*{font-family:Arial,Verdana,Helvetica,sans-serif}
+
 	body{color:#000;font-size:12px;margin:0;padding:0}
 	a img{border:0}
 	a{color:#000;outline:0;text-decoration:none}
@@ -353,7 +347,7 @@
 	h3{font-size:1.1em}
 	h5{font-size:.83em}
 	h6{font-size:.67em}
-	h3.blue{color:#268CCD}
+	.blue{color:#268CCD}
 	.red{color:red}
 	form p{margin:.5em 0 0;padding:0 0 .5em}
 	form sup{color:#C00;font-weight:700;vertical-align:text-top}
@@ -696,45 +690,6 @@
 	#BoxUseSpecialSyntax .warn{margin:0 auto;width:500px}
 	#BoxUseSpecialSyntax ul{list-style-type:disc;margin-left:30px}
 	.id_customization .customization_field{min-width:205px;width:205px}
-	#carrier_wizard.swMain{display:block;float:left;margin:0;min-width:980px;padding:0;position:relative;width:100%}
-	#carrier_wizard.swMain .stepContainer{clear:both;display:block;margin:0;overflow:hidden;padding:0;position:relative}
-	#carrier_wizard.swMain .stepContainer div.content{clear:both;display:block;float:left;margin:0;overflow:visible;padding:0;position:absolute;text-align:left;width:100%;z-index:88}
-	#carrier_wizard.swMain div.actionBar{background-color:#f7f8f7;border:1px solid #caccca;clear:both;display:block;height:37px;margin-bottom:20px;overflow:auto;padding:0;position:relative;text-align:left;z-index:88}
-	#carrier_wizard.swMain .stepContainer .StepTitle{clear:both;display:block;margin:0;padding:5px;position:relative;text-align:left;z-index:88}
-	#carrier_wizard.swMain ul.anchor{clear:both;display:block;float:left;list-style:none;margin:0 0 10px;padding:0;position:relative;width:100%}
-	#carrier_wizard.swMain ul.anchor li{display:block;float:left;margin:0;padding:0;position:relative}
-	#carrier_wizard.swMain ul.nbr_steps_4.anchor li{width:25%}
-	#carrier_wizard.swMain ul.nbr_steps_5.anchor li{width:20%}
-	#carrier_wizard.swMain ul.anchor li a{display:block;height:32px;margin:0;outline-style:none;overflow:hidden;padding-right:25px;position:relative;text-decoration:none;z-index:99}
-	#carrier_wizard.swMain ul.anchor li a .stepNumber{color:#fffffe;float:left;font-size:30px;font-style:normal;font-weight:400;height:32px;line-height:32px;padding:0 5px;position:relative;text-align:center;width:24px}
-	#carrier_wizard.swMain ul.anchor li a .stepDesc{display:table-cell;font-size:15px;height:32px;line-height:13px;position:relative;text-align:left;vertical-align:middle}
-	#carrier_wizard.swMain ul.anchor li a.selected{background:#404956 url(../img/admin/steps-carrierwizard.png) no-repeat right -32px;color:#F8F8F8;cursor:text}
-	#carrier_wizard.swMain ul.anchor li a.done,#carrier_wizard.swMain ul.anchor li.done.selected a.selected{background:url(../img/admin/steps-carrierwizard.png) right 0 no-repeat #3f4856;color:#FFF;position:relative;z-index:99}
-	#carrier_wizard.swMain ul.anchor li a.disabled{background:url(../img/admin/steps-carrierwizard.png) right -64px no-repeat #cbcccb;color:#878787;cursor:text}
-	#carrier_wizard.swMain .buttonDisabled{background-color:#CCC!important;border:1px solid #CCC!important;color:#F8F8F8!important;cursor:text}
-	#carrier_wizard.swMain .buttonFinish{background-color:#5A5655;border:1px solid #5A5655;color:#FFF;display:block;float:right;margin:5px 10px 0 3px;outline-style:none;padding:5px;text-align:center;text-decoration:none;width:100px}
-	#carrier_logo_block{margin:0;padding:0;position:absolute;right:10px}
-	#carrier_wizard.swMain .msgBox{background-color:#FFD;border:1px solid #FFD700;color:#5A5655;display:none;float:left;margin:4px 0 0 5px;min-width:200px;padding:5px;position:relative;z-index:999}
-	#carrier_wizard.swMain .msgBox .content{float:left;padding:0}
-	#carrier_wizard.swMain .msgBox .close{border:1px solid #CCC;color:#CCC;display:block;float:right;margin:0 0 0 5px;outline-style:none;padding:0 2px;position:relative;text-align:center;text-decoration:none}
-	#carrier_wizard.swMain .msgBox .close:hover{border:1px solid #EA8511;color:#EA8511}
-	#carrier_wizard .border_top{border-top:solid 1px silver}
-	#carrier_wizard .border_bottom{border-bottom:solid 1px silver}
-	#carrier_wizard .border_left{border-left:solid 1px silver}
-	#carrier_wizard .border_right{border-right:solid 1px silver}
-	#carrier_wizard .border_all{border:solid 1px silver}
-	#carrier_wizard input.field_error{background-color:#FCC;border:solid 1px red}
-	#carrier_wizard .new_range,#carrier_wizard .validate_range{float:left;margin:35px 0 0 10px;width:130px}
-	#carrier_wizard tr.fees_all{background:#CCC}
-	#carrier_wizard #zones_table input[type=text]{width:45px}
-	#carrier_wizard #fieldset_form{min-height:190px}
-	#carrier_wizard #zone_ranges label{float:none;width:inherit}
-	#carrier_wizard #step_carrier_summary label{width:40px}
-	#carrier_wizard #step_carrier_summary .margin-form{padding-left:60px}
-	#carrier_wizard #summary_zones,#carrier_wizard #summary_groups,#carrier_wizard #summary_shops{list-style:disc;margin-left:20px;margin-top:10px}
-	#carrier_wizard .ranges_not_follow label{float:none;width:inherit}
-	#carrier_wizard .ranges_not_follow{margin-bottom:0;width:300px}
-	#carrier_wizard .assoShop{min-height:inherit}
 	.float,span.defaultSkin table.mceLayout tr.mceFirst td,#customer_part #customers ul,#MeaningStatus,#CustomerThreadContacts div#MeaningStatus,#conditions #condition_list a{float:left}
 	.floatr,#customer_part #customers ul li a.id_customer.button{float:right}
 	a.link,.warn a,#content .conf a:hover,#content .warn a:hover,#content .error a:hover{text-decoration:underline}
@@ -762,6 +717,4 @@
 	#conditions .condition_group h3,#conditions #condition_list h4{margin:0 0 10px}
 	#container-customer,#container-multishop{background-color:#EBEDF4;border:1px solid #CCCED7;color:#585A69;padding:10px}
 	#block_tips,#block_partner_tips{float:right;width:48.1%}
-	#carrier_wizard.swMain .buttonNext,#carrier_wizard.swMain .buttonPrevious{background-color:#5A5655;border:1px solid #5A5655;color:#FFF;display:block;float:right;margin:5px 3px 0;outline-style:none;padding:5px;text-align:center;text-decoration:none;width:100px}
-	#carrier_wizard.swMain ul.anchor li a.done .stepNumber,#carrier_wizard.swMain ul.anchor li a.done .stepDesc{color:#A9B6C8}
 }
