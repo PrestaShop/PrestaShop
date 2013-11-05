@@ -478,7 +478,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$helper->id = 'box-pending-messages';
 		$helper->icon = 'icon-envelope';
 		$helper->color = 'color1';
-		$helper->title = $this->l('Pending Messages');
+		$helper->title = $this->l('Pending Messages', null, null, false);
 		if (ConfigurationKPI::get('PENDING_MESSAGES') !== false)
 			$helper->value = ConfigurationKPI::get('PENDING_MESSAGES');
 		if (ConfigurationKPI::get('PENDING_MESSAGES_EXPIRE') < $time)
@@ -489,8 +489,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$helper->id = 'box-age';
 		$helper->icon = 'icon-time';
 		$helper->color = 'color2';
-		$helper->title = $this->l('Average Response Time');
-		$helper->subtitle = $this->l('30 days');
+		$helper->title = $this->l('Average Response Time', null, null, false);
+		$helper->subtitle = $this->l('30 days', null, null, false);
 		if (ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME') !== false)
 			$helper->value = ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME');
 		if (ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME_EXPIRE') < $time)
@@ -501,8 +501,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$helper->id = 'box-messages-per-thread';
 		$helper->icon = 'icon-copy';
 		$helper->color = 'color3';
-		$helper->title = $this->l('Messages per Thread');
-		$helper->subtitle = $this->l('30 day');
+		$helper->title = $this->l('Messages per Thread', null, null, false);
+		$helper->subtitle = $this->l('30 day', null, null, false);
 		if (ConfigurationKPI::get('MESSAGES_PER_THREAD') !== false)
 			$helper->value = ConfigurationKPI::get('MESSAGES_PER_THREAD');
 		if (ConfigurationKPI::get('MESSAGES_PER_THREAD_EXPIRE') < $time)
