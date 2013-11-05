@@ -2963,14 +2963,11 @@ class BlockLayered extends Module
                                                 
                                                  // features are now sorted by natural sort
                                                 foreach ($feature_array as $key => $value) {
-                                                     //ppp($feature_array[$key]['values']);
                                                      
                                                      $temp = array();
                                                      
                                                      foreach ($feature_array[$key]['values'] as $keyint => $valueint) {
-                                                         
-                                                         //ppp($feature_array[$key]['values'][$keyint]);
-                                                         
+                                                       
                                                          $temp[$keyint] = $valueint['name'];
                                                      }
                                                      
