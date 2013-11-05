@@ -246,7 +246,7 @@ class AdminGroupsControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name:'),
+					'label' => $this->l('Name'),
 					'name' => 'name',
 					'required' => true,
 					'lang' => true,
@@ -255,14 +255,15 @@ class AdminGroupsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Discount (%):'),
+					'label' => $this->l('Discount'),
 					'name' => 'reduction',
-					'col' => 2,
+					'suffix' => '%',
+					'col' => 1,
 					'hint' => $this->l('Automatically apply this value as a discount on all products for members of this customer group.')
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Price display method:'),
+					'label' => $this->l('Price display method'),
 					'name' => 'price_display_method',
 					'col' => 2,
 					'hint' => $this->l('How prices are displayed in the order summary for this customer group.'),
@@ -283,7 +284,7 @@ class AdminGroupsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Show prices:'),
+					'label' => $this->l('Show prices'),
 					'name' => 'show_prices',
 					'required' => false,
 					'class' => 't',
@@ -310,7 +311,7 @@ class AdminGroupsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'modules',
-					'label' => array('auth_modules' => $this->l('Authorized modules:'), 'unauth_modules' => $this->l('Unauthorized modules:')),
+					'label' => $this->l('Modules Authorization'),
 					'name' => 'auth_modules',
 					'values' => $this->formatModuleListAuth($group->id)
 				)

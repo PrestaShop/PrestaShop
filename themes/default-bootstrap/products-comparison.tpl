@@ -28,6 +28,12 @@
 <h1 class="page-heading">{l s='Product Comparison'}</h1>
 
 {if $hasProduct}
+<script type="text/javascript">
+	$('document').ready(function(){
+		if (typeof reloadProductComparison != 'undefined')
+			reloadProductComparison()
+	});
+</script>
 <div class="products_block table-responsive">
 	<table id="product_comparison" class="table table-bordered">
     	<tr>
@@ -108,7 +114,7 @@
                                 {if ($product->quantity > 0 OR $product->allow_oosp)}
                                     <a class="button ajax_add_to_cart_button btn btn-default" rel="ajax_id_product_{$product->id}" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$product->id}&amp;token={$static_token}&amp;add")|escape:'html'}" title="{l s='Add to cart'}"><span>{l s='Add to cart'}</span></a>
                                 {else}
-                                    <span class="exclusive btn btn-default disabled">{l s='Add to cart'}</span>
+                                    <span class="ajax_add_to_cart_button button btn btn-default disabled"><span>{l s='Add to cart'}</span></span>
                                 {/if}
                             {else}
                                 

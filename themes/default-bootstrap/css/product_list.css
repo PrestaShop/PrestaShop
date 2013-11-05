@@ -30,6 +30,12 @@ ul.product_list .color-list-container ul li a {
   height: 23px;
   margin: 1px;
 }
+ul.product_list .product-image-container {
+  text-align: center;
+}
+ul.product_list .product-image-container img {
+  margin: 0 auto;
+}
 ul.product_list .product-image-container .quick-view {
   font: 700 13px/16px Arial, Helvetica, sans-serif;
   color: #777676;
@@ -67,6 +73,7 @@ ul.product_list.grid > li {
 @media (min-width: 480px) and (max-width: 767px) {
   ul.product_list.grid > li {
     width: 50%;
+    float: left;
   }
 }
 ul.product_list.grid > li .product-container {
@@ -171,22 +178,22 @@ ul.product_list.grid > li .product-container .functional-buttons div.wishlist {
     display: none;
   }
 }
-ul.product_list.grid > li .product-container .functional-buttons div.compare:before {
+ul.product_list.grid > li .product-container .functional-buttons div.compare label:before {
   content: "";
   display: inline-block;
   font-family: 'FontAwesome';
 }
 @media (min-width: 992px) and (max-width: 1199px) {
-  ul.product_list.grid > li .product-container .functional-buttons div.compare:before {
+  ul.product_list.grid > li .product-container .functional-buttons div.compare label:before {
     display: none;
   }
 }
 @media (min-width: 480px) and (max-width: 767px) {
-  ul.product_list.grid > li .product-container .functional-buttons div.compare:before {
+  ul.product_list.grid > li .product-container .functional-buttons div.compare label:before {
     display: none;
   }
 }
-ul.product_list.grid > li .product-container .functional-buttons div.compare.compare.checked:before {
+ul.product_list.grid > li .product-container .functional-buttons div.compare label.checked:before {
   content: "";
 }
 @media (min-width: 1200px) {
@@ -324,6 +331,11 @@ ul.product_list.list > li .right-block .right-block-content .button-container .b
     clear: both;
   }
 }
+@media (min-width: 992px) {
+  ul.product_list.list > li .right-block .right-block-content .functional-buttons {
+    overflow: hidden;
+  }
+}
 @media (max-width: 991px) {
   ul.product_list.list > li .right-block .right-block-content .functional-buttons {
     clear: both;
@@ -388,7 +400,7 @@ ul.product_list.list > li .right-block .right-block-content .functional-buttons 
   -o-border-radius: 100px;
   border-radius: 100px;
   margin-right: 3px;
-  padding: 4px 0 0 0;
+  padding: 6px 0 0 0;
   color: #fff;
 }
 ul.product_list.list > li .right-block .right-block-content .functional-buttons .compare label:hover {
@@ -396,6 +408,12 @@ ul.product_list.list > li .right-block .right-block-content .functional-buttons 
 }
 ul.product_list.list > li .right-block .right-block-content .functional-buttons .compare label:hover:before {
   background: #333333;
+}
+ul.product_list.list > li .right-block .right-block-content .functional-buttons .compare label.checked:before {
+  background: #fff;
+  border: 1px solid #929292;
+  color: #929292;
+  padding-top: 5px;
 }
 @media (min-width: 1200px) {
   ul.product_list.list > li:hover .product-image-container .quick-view {
@@ -412,14 +430,31 @@ ul.product_list.list > li .right-block .right-block-content .functional-buttons 
 			 Product list(Index page) Styles 
 ********************************************************/
 #index ul.product_list.tab-pane > li {
-  padding-bottom: 35px;
-  margin-bottom: 50px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+@media (min-width: 1200px) {
+  #index ul.product_list.tab-pane > li {
+    /* min 1200px */
+    padding-bottom: 35px;
+    margin-bottom: 50px;
+  }
 }
 #index ul.product_list.tab-pane > li .availability {
   display: none;
 }
-#index ul.product_list.tab-pane > li.last-line {
-  border: none;
-  padding-bottom: 0;
-  margin-bottom: 0;
+@media (min-width: 1200px) {
+  #index ul.product_list.tab-pane > li.last-line {
+    border: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+}
+@media (min-width: 480px) and (max-width: 767px) {
+  #index ul.product_list.tab-pane > li.first-item-of-tablet-line {
+    clear: none;
+  }
+  #index ul.product_list.tab-pane > li.first-item-of-mobile-line {
+    clear: left;
+  }
 }

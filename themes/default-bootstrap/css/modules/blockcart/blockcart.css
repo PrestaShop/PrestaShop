@@ -106,6 +106,18 @@
   background: #484848;
   color: #fff;
 }
+@media (min-width: 480px) and (max-width: 767px) {
+  #header #cart_block {
+    top: 69px;
+  }
+}
+@media (max-width: 479px) {
+  #header #cart_block {
+    top: 44px;
+    left: 50%;
+    margin-left: -135px;
+  }
+}
 #header #cart_block a {
   color: #fff;
 }

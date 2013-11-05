@@ -39,7 +39,7 @@
 				<th class="first_item">{l s='Order reference'}</th>
 				<th class="item">{l s='Date'}</th>
 				<th data-hide="phone" class="item">{l s='Total price'}</th>
-				<th data-hide="phone,tablet" class="item">{l s='Payment: '}</th>
+				<th data-hide="phone,tablet" class="item">{l s='Payment'}</th>
 				<th class="item">{l s='Status'}</th>
 				<th data-hide="phone,tablet" class="item">{l s='Invoice'}</th>
 				<th data-hide="phone,tablet" class="last_item">&nbsp;</th>
@@ -55,14 +55,14 @@
 				<td class="history_date bold">{dateFormat date=$order.date_add full=0}</td>
 				<td class="history_price"><span class="price">{displayPrice price=$order.total_paid currency=$order.id_currency no_utf8=false convert=false}</span></td>
 				<td class="history_method">{$order.payment|escape:'htmlall':'UTF-8'}</td>
-				<td class="history_state">{if isset($order.order_state)}{$order.order_state|escape:'htmlall':'UTF-8'}{/if}</td>
+				<td class="history_state">{if isset($order.order_state)}<span class="label{if $order.id_order_state == 1 || $order.id_order_state == 10 || $order.id_order_state == 11} label-info{elseif $order.id_order_state == 5 || $order.id_order_state == 2 || $order.id_order_state == 12} label-success{elseif $order.id_order_state == 6 || $order.id_order_state == 7 || $order.id_order_state == 8} label-danger{elseif $order.id_order_state == 3 || $order.id_order_state == 9 || $order.id_order_state == 4} label-warning{/if}">{$order.order_state|escape:'htmlall':'UTF-8'}</span>{/if}</td>
 				<td class="history_invoice">
 				{if (isset($order.invoice) && $order.invoice && isset($order.invoice_number) && $order.invoice_number) && isset($invoiceAllowed) && $invoiceAllowed == true}
 					<a class="link-button" href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order.id_order}")|escape:'html'}" title="{l s='Invoice'}" class="_blank"><i class="icon-file-text large"></i>{l s='PDF'}</a>
 				{else}-{/if}
 				</td>
 				<td class="history_detail">
-					<a class="btn btn-default button button-small" href="javascript:showOrder(1, {$order.id_order|intval}, '{$link->getPageLink('order-detail', true)|escape:'html'}');"><span>{l s='details'}<i class="icon-chevron-right right"></i></span></a>
+					<a class="btn btn-default button button-small" href="javascript:showOrder(1, {$order.id_order|intval}, '{$link->getPageLink('order-detail', true)|escape:'html'}');"><span>{l s='Details'}<i class="icon-chevron-right right"></i></span></a>
 					{if isset($opc) && $opc}
 						<a class="link-button" href="{$link->getPageLink('order-opc', true, NULL, "submitReorder&id_order={$order.id_order}")|escape:'html'}" title="{l s='Reorder'}">
 					{else}

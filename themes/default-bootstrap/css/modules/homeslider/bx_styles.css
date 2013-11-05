@@ -12,6 +12,7 @@
 /******************************************************************************
 						Home Page Slider
 *******************************************************************************/
+/* line 18, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider {
   padding-left: 0;
   padding-right: 0;
@@ -21,6 +22,7 @@
   position: relative;
   z-index: 1;
 }
+/* line 27, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider #homeslider {
   margin: 0 auto;
   padding: 0;
@@ -31,6 +33,7 @@
 ********************************************************************************/
 /** RESET AND LAYOUT
 ===================================*/
+/* line 37, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider {
   /** THEME
   ===================================*/
@@ -41,27 +44,33 @@
   /* PAGER WITH AUTO-CONTROLS HYBRID LAYOUT */
   /* IMAGE CAPTIONS */
 }
+/* line 38, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper {
   position: relative;
   padding: 0;
   *zoom: 1;
 }
+/* line 43, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper a {
   display: block;
 }
+/* line 45, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper img {
   display: block;
   max-width: 100%;
 }
+/* line 55, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper .bx-viewport {
   width: 100%;
 }
+/* line 61, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper .bx-pager,
 #homepage-slider .bx-wrapper .bx-controls-auto {
   position: absolute;
   bottom: -30px;
   width: 100%;
 }
+/* line 69, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper .bx-loading {
   min-height: 50px;
   background: url(images/bx_loader.gif) center center no-repeat white;
@@ -72,6 +81,7 @@
   left: 0;
   z-index: 2000;
 }
+/* line 82, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper .bx-pager {
   text-align: center;
   font-size: .85em;
@@ -80,12 +90,14 @@
   color: #666;
   padding-top: 20px;
 }
+/* line 92, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper .bx-pager .bx-pager-item,
 #homepage-slider .bx-wrapper .bx-controls-auto .bx-controls-auto-item {
   display: inline-block;
   *zoom: 1;
   *display: inline;
 }
+/* line 98, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper .bx-pager.bx-default-pager a {
   background: #666;
   text-indent: -9999px;
@@ -98,22 +110,28 @@
   -webkit-border-radius: 5px;
   border-radius: 5px;
 }
+/* line 112, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper .bx-pager.bx-default-pager a:hover,
 #homepage-slider .bx-wrapper .bx-pager.bx-default-pager a.active {
   background: #000;
 }
+/* line 118, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper .bx-prev {
   right: 60px;
 }
+/* line 121, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper .bx-prev:after {
   content: "";
 }
+/* line 126, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper .bx-next {
   right: 10px;
 }
+/* line 129, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper .bx-next:after {
   content: "";
 }
+/* line 134, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper .bx-controls-direction a {
   position: absolute;
   bottom: 10px;
@@ -124,6 +142,7 @@
   z-index: 9999;
   border: 2px solid #fff;
 }
+/* line 144, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper .bx-controls-direction a:before {
   height: 48px;
   width: 48px;
@@ -137,6 +156,7 @@
   top: 0;
   z-index: 1;
 }
+/* line 158, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper .bx-controls-direction a:after {
   display: block;
   width: 48px;
@@ -152,16 +172,20 @@
   z-index: 2;
   padding: 16px 0 0 0;
 }
+/* line 176, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper .bx-controls-direction a:hover:before {
   background: #333;
   opacity: 0.83;
 }
+/* line 183, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper .bx-controls-direction a.disabled {
   display: none;
 }
+/* line 189, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper .bx-controls-auto {
   text-align: center;
 }
+/* line 193, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper .bx-controls-auto .bx-start {
   display: block;
   text-indent: -9999px;
@@ -171,10 +195,12 @@
   background: url(images/controls.png) -86px -11px no-repeat;
   margin: 0 3px;
 }
+/* line 204, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper .bx-controls-auto .bx-start:hover,
 #homepage-slider .bx-wrapper .bx-controls-auto .bx-start.active {
   background-position: -86px 0;
 }
+/* line 208, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper .bx-controls-auto .bx-stop {
   display: block;
   text-indent: -9999px;
@@ -184,18 +210,22 @@
   background: url(images/controls.png) -86px -44px no-repeat;
   margin: 0 3px;
 }
+/* line 219, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper .bx-controls-auto .bx-stop:hover,
 #homepage-slider .bx-wrapper .bx-controls-auto .bx-stop.active {
   background-position: -86px -33px;
 }
+/* line 225, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper .bx-controls.bx-has-controls-auto.bx-has-pager .bx-pager {
   text-align: left;
   width: 80%;
 }
+/* line 230, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper .bx-controls.bx-has-controls-auto.bx-has-pager .bx-controls-auto {
   right: 0;
   width: 35px;
 }
+/* line 237, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper .bx-caption {
   position: absolute;
   bottom: 0;
@@ -204,6 +234,7 @@
   background: rgba(80, 80, 80, 0.75);
   width: 100%;
 }
+/* line 246, ../../../sass/modules/homeslider/bx_styles.scss */
 #homepage-slider .bx-wrapper .bx-caption span {
   color: #fff;
   font-family: Arial;

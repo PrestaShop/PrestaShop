@@ -116,8 +116,8 @@
 					<input type="password" class="text form-control" name="passwd" id="passwd" />
 					<span class="form_info">{l s='(five characters min.)'}</span>
 				</div>
-				<div class="required clearfix">
-					<label>{l s='Title'}</label><br />
+				<div class="required clearfix gender-line">
+					<label>{l s='Title'}</label>
 					{foreach from=$genders key=k item=gender}	
                     	<div class="radio-inline">
                     	<label for="id_gender{$gender->id_gender}" class="top">

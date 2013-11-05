@@ -85,6 +85,12 @@
 #layered_block_left .layered_filter_ul {
   padding: 0 20px 5px;
 }
+@media (min-width: 768px) and (max-width: 991px) {
+  #layered_block_left .layered_filter_ul {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
 #layered_block_left .layered_filter_ul li {
   padding-bottom: 7px;
 }

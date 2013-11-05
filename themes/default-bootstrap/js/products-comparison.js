@@ -23,14 +23,15 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-$('document').ready(function(){
-	reloadProductComparison();
-});
-
 reloadProductComparison = function() {
+	$('input:checkbox.comparator').each(function() {
+        var checkedCheckbox = $(this);
+		if (checkedCheckbox.is(':checked'))
+			checkedCheckbox.parent().addClass('checked');
+    });
 	$('a.cmp_remove').click(function(){
 
-		var idProduct = $(this).attr('rel').replace('ajax_id_product_', '');
+		var idProduct = $(this).prop('rel').replace('ajax_id_product_', '');
 
 		$.ajax({
   			url: 'index.php?controller=products-comparison&ajax=1&action=remove&id_product=' + idProduct,
@@ -41,14 +42,12 @@ reloadProductComparison = function() {
 			}
 		});	
 	});
-
 	$('input:checkbox.comparator').click(function(){
-	
-		var idProduct = $(this).attr('value').replace('comparator_item_', '');
+		var totalValueNow = parseInt($('.bt_compare').next('.compare_product_count').val());
+		var idProduct = $(this).prop('value').replace('comparator_item_', '');
 		var checkbox = $(this);
-		
 		if(checkbox.is(':checked'))
-{
+		{
 			$.ajax({
 	  			url: 'index.php?controller=products-comparison&ajax=1&action=add&id_product=' + idProduct,
 	 			async: true,
@@ -56,12 +55,19 @@ reloadProductComparison = function() {
 	  			success: function(data){
 	  				if (data === '0')
 	  				{
-	  					checkbox.attr('checked', false);
+	  					checkbox.prop('checked', false);
 						alert(max_item);
+					}
+					else {
+							checkbox.prop('checked', true),
+							checkbox.parent().addClass('checked'),
+							totalVal = totalValueNow +1,
+							$('.bt_compare').next('.compare_product_count').val(totalVal),
+							totalValue(totalVal)
 					}
 	  			},
 	    		error: function(){
-	    			checkbox.attr('checked', false);
+	    			checkbox.prop('checked', false);
 	    		}
 			});	
 		}
@@ -73,12 +79,20 @@ reloadProductComparison = function() {
 	 			cache: false,
 	  			success: function(data){
 	  				if (data === '0')
-	  					checkbox.attr('checked', true);
-	    		},
+					
+	  					checkbox.prop('checked', true);
+						checkbox.parent().removeClass('checked');
+						totalVal = totalValueNow -1;
+						$('.bt_compare').next('.compare_product_count').val(totalVal),
+						totalValue(totalVal)
+	    		}, 
 	    		error: function(){
-	    			checkbox.attr('checked', true);
+	    			checkbox.prop('checked', true);
 	    		}
 			});	
 		}
 	});
+}
+function totalValue(value) {
+	$('.bt_compare').find('.total-compare-val').html(value);
 }
