@@ -94,10 +94,10 @@ img {
   width: 136px;
   text-align: center;
   font-weight: bold;
-  background: rgba(255, 255, 255, 0.5);
-  -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
-  -moz-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+  background: rgba(255, 255, 255, 0);
+  -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0);
+  -moz-box-shadow: 0 2px 8px rgba(0, 0, 0, 0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0);
 }
 /* line 73, ../sass/product.scss */
 #pb-right-column #image-block #view_full_size .span_link:after {
@@ -191,9 +191,9 @@ img {
 #thumbs_list li a {
   display: block;
   border: 3px solid #fff;
-  -webkit-transition: all 0.3s ease;
-  -moz-transition: all 0.3s ease;
-  -o-transition: all 0.3s ease;
+  -webkit-transition: all 0s ease;
+  -moz-transition: all 0s ease;
+  -o-transition: all 0s ease;
   transition: all 0.3s ease;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -596,9 +596,9 @@ span.view_scroll_spacer {
 /* line 477, ../sass/product.scss */
 .product_attributes,
 .box-cart-bottom {
-  -webkit-box-shadow: inset 0 6px 6px rgba(0, 0, 0, 0.05);
-  -moz-box-shadow: inset 0 6px 6px rgba(0, 0, 0, 0.05);
-  box-shadow: inset 0 6px 6px rgba(0, 0, 0, 0.05);
+  -webkit-box-shadow: inset 0 6px 6px rgba(0, 0, 0, 0);
+  -moz-box-shadow: inset 0 6px 6px rgba(0, 0, 0, 0);
+  box-shadow: inset 0 6px 6px rgba(0, 0, 0, 0);
   padding: 19px 19px 17px;
 }
 
@@ -692,9 +692,9 @@ span.view_scroll_spacer {
   padding: 12px 36px 14px 82px;
   color: #fff;
   display: block !important;
-  -webkit-transition: all 0.3s ease;
-  -moz-transition: all 0.3s ease;
-  -o-transition: all 0.3s ease;
+  -webkit-transition: all 0s ease;
+  -moz-transition: all 0s ease;
+  -o-transition: all 0s ease;
   transition: all 0.3s ease;
 }
 @media (max-width: 1199px) {

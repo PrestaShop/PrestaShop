@@ -92,7 +92,7 @@ table#product_comparison .product_desc {
   padding-bottom: 12px;
 }
 /* line 93, ../sass/comparator.scss */
-table#product_comparison .button-container a {
+table#product_comparison .button-container a, table#product_comparison .button-container > span {
   margin-bottom: 10px;
 }
 /* line 97, ../sass/comparator.scss */

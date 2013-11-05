@@ -282,7 +282,6 @@ var contentOnly = {if $content_only}true{else}false{/if}
             
 
 			<!-- availability -->
-            <link itemprop="availability" href="http://schema.org/InStock">
 			<p id="availability_statut"{if ($product->quantity <= 0 && !$product->available_later && $allow_oosp) OR ($product->quantity > 0 && !$product->available_now) OR !$product->available_for_order OR $PS_CATALOG_MODE} style="display: none;"{/if}>
 				{*<span id="availability_label">{l s='Availability:'}</span>*}
 				<span id="availability_value"{if $product->quantity <= 0} class="warning_inline"{/if}>{if $product->quantity <= 0}{if $allow_oosp}{$product->available_later}{else}{l s='This product is no longer in stock'}{/if}{else}{$product->available_now}{/if}</span>				
@@ -353,6 +352,7 @@ var contentOnly = {if $content_only}true{else}false{/if}
 
 			<div class="price">
 				<p class="our_price_display" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                <link itemprop="availability" href="http://schema.org/InStock">
 				{if $priceDisplay >= 0 && $priceDisplay <= 2}
 					<span id="our_price_display" itemprop="price">{convertPrice price=$productPrice}</span>
 					<!--{if $tax_enabled  && ((isset($display_tax_label) && $display_tax_label == 1) OR !isset($display_tax_label))}

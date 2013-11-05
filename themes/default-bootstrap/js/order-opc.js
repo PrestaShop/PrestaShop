@@ -453,6 +453,7 @@ $(function() {
 				updateState();
 				updateNeedIDNumber();
 				updateZipCode();
+				$("select.form-control,input[type='checkbox']").uniform(); 
 			});
 		}
 		else if (isGuest)
@@ -726,8 +727,6 @@ function bindInputs()
 	// Recyclable checkbox
 	$('#recyclable').click(function() {
 		updateCarrierSelectionAndGift();
-		$("select.form-control,input[type='checkbox']").uniform();  
-		
 	});
 	
 	// Gift checkbox update
@@ -737,7 +736,6 @@ function bindInputs()
 		else
 			$('#gift_div').hide();
 		updateCarrierSelectionAndGift();
-		$("select.form-control,input[type='checkbox']").uniform();  
 	});
 	
 	if ($('#gift').is(':checked'))
@@ -755,6 +753,7 @@ function bindInputs()
 	$('#cgv').click(function() {
 		updatePaymentMethodsDisplay();
 	});
+	$("select.form-control,input[type='checkbox']").uniform();
 }
 
 function multishippingMode(it)

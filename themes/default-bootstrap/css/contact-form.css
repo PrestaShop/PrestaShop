@@ -20,9 +20,9 @@
   padding: 23px 0 0 0;
   margin-bottom: 30px;
   background: url(../img/contact-form.png) repeat-x white;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.17) 0px 5px 13px;
-  -moz-box-shadow: rgba(0, 0, 0, 0.17) 0px 5px 13px;
-  box-shadow: rgba(0, 0, 0, 0.17) 0px 5px 13px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0) 0px 5px 13px;
+  -moz-box-shadow: rgba(0, 0, 0, 0) 0px 5px 13px;
+  box-shadow: rgba(0, 0, 0, 0) 0px 5px 13px;
   /* min 992px max 1199px */
 }
 /* line 25, ../sass/contact-form.scss */

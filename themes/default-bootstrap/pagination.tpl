@@ -55,7 +55,6 @@
 				{if isset($search_query) AND $search_query}<input type="hidden" name="search_query" value="{$search_query|escape:'htmlall':'UTF-8'}" />{/if}
 				{if isset($tag) AND $tag AND !is_array($tag)}<input type="hidden" name="tag" value="{$tag|escape:'htmlall':'UTF-8'}" />{/if}
                 <button type="submit" class="btn btn-default button exclusive-medium"><span>{l s='Show all'}</span></button>
-				<input name="n" id="nb_item" class="hidden" value="{$nb_products}" />
 				{if is_array($requestNb)}
 					{foreach from=$requestNb item=requestValue key=requestKey}
 						{if $requestKey != 'requestUrl'}
@@ -63,6 +62,7 @@
 						{/if}
 					{/foreach}
 				{/if}
+                <input name="n" id="nb_item" class="hidden" value="{$nb_products}" />
 			</div>
 		</form>
 	{/if}
@@ -113,7 +113,17 @@
 	{/if}
 	</div>
     <div class="product-count">
-    	Showing 1-12 of 1125 items
+    	{if ($n*$p) < $nb_products }
+    		{assign var='productShowing' value=$n*$p}
+        {else}
+        	{assign var='productShowing' value=($n*$p-$nb_products-$n*$p)*-1}
+        {/if}
+        {if $p==1}
+        	{assign var='productShowingStart' value=1}
+        {else}
+        	{assign var='productShowingStart' value=$n*$p-$n+1}
+        {/if}
+    	{l s='Showing'} {$productShowingStart} - {$productShowing} {l s='of'} {$nb_products}{if $nb_products > 1} {l s='items'}{else} {l s='item'}{/if}
     </div>
 	<!-- /Pagination -->
 {/if}

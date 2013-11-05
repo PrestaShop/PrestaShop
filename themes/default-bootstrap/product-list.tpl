@@ -34,6 +34,12 @@
         {assign var='nbItemsPerLineTablet' value=2}
         {assign var='nbItemsPerLineMobile' value=3}
     {else}
+    	<script type="text/javascript">
+			$('document').ready(function(){
+				if (typeof reloadProductComparison != 'undefined')
+					reloadProductComparison()
+			});
+		</script>
     	{assign var='nbItemsPerLine' value=4}
         {assign var='nbItemsPerLineTablet' value=3}
         {assign var='nbItemsPerLineMobile' value=2}
@@ -122,7 +128,7 @@
                     {if isset($comparator_max_item) && $comparator_max_item}
                         <div class="compare">
                             <label for="comparator_item_{$product.id_product}">
-                            <input type="checkbox" class="comparator hidden" id="comparator_item_{$product.id_product}" value="comparator_item_{$product.id_product}" {if isset($compareProducts) && in_array($product.id_product, $compareProducts)}checked="checked"{/if} autocomplete="off"/> 
+                            <input type="checkbox" class="comparator hidden" id="comparator_item_{$product.id_product}" value="comparator_item_{$product.id_product}" {if isset($compared_products) && in_array($product.id_product, $compared_products)}checked="checked"{/if} autocomplete="off"/> 
                             {l s='Add to Compare'}</label>
                         </div>
                     {/if}

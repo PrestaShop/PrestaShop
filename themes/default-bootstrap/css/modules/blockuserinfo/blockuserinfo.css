@@ -30,7 +30,7 @@
   display: block;
   font-weight: bold;
   color: #777777;
-  text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+  text-shadow: 1px 1px rgba(0, 0, 0, 0);
   overflow: hidden;
 }
 @media (min-width: 768px) and (max-width: 991px) {
