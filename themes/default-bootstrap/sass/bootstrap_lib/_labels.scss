@@ -48,6 +48,7 @@
 
 .label-info {
   @include label-variant($label-info-bg);
+   border:1px solid $label-info-border;
 }
 
 .label-warning {
@@ -57,4 +58,5 @@
 
 .label-danger {
   @include label-variant($label-danger-bg);
+  border:1px solid $label-danger-border;
 }

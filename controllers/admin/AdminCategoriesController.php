@@ -356,7 +356,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$helper->id = 'box-disabled-categories';
 		$helper->icon = 'icon-off';
 		$helper->color = 'color1';
-		$helper->title = $this->l('Disabled Categories');
+		$helper->title = $this->l('Disabled Categories', null, null, false);
 		if (ConfigurationKPI::get('DISABLED_CATEGORIES') !== false)
 			$helper->value = ConfigurationKPI::get('DISABLED_CATEGORIES');
 		if (ConfigurationKPI::get('DISABLED_CATEGORIES_EXPIRE') < $time)
@@ -367,7 +367,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$helper->id = 'box-empty-categories';
 		$helper->icon = 'icon-bookmark-empty';
 		$helper->color = 'color2';
-		$helper->title = $this->l('Empty Categories');
+		$helper->title = $this->l('Empty Categories', null, null, false);
 		if (ConfigurationKPI::get('EMPTY_CATEGORIES') !== false)
 			$helper->value = ConfigurationKPI::get('EMPTY_CATEGORIES');
 		if (ConfigurationKPI::get('EMPTY_CATEGORIES_EXPIRE') < $time)
@@ -378,8 +378,8 @@ class AdminCategoriesControllerCore extends AdminController
 		$helper->id = 'box-top-category';
 		$helper->icon = 'icon-money';
 		$helper->color = 'color3';
-		$helper->title = $this->l('Top Category');
-		$helper->subtitle = $this->l('30 days');
+		$helper->title = $this->l('Top Category', null, null, false);
+		$helper->subtitle = $this->l('30 days', null, null, false);
 		if (ConfigurationKPI::get('TOP_CATEGORY', $this->context->employee->id_lang) !== false)
 			$helper->value = ConfigurationKPI::get('TOP_CATEGORY', $this->context->employee->id_lang);
 		if (ConfigurationKPI::get('TOP_CATEGORY_EXPIRE', $this->context->employee->id_lang) < $time)

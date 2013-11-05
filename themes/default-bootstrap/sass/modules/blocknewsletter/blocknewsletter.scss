@@ -9,6 +9,10 @@
 			max-width:222px;
 			display:inline-block;
 			margin-right:6px;
+																		@media (min-width: $screen-sm) and (max-width: $screen-md-max) { // min 768px max 1199px
+																			margin-bottom:10px;
+																			margin-right:0;
+																		}
 		}
 	}
 	
@@ -35,6 +39,10 @@
 		float:left;
 		padding:13px 15px 7px 15px;
 		margin-bottom:0;
+																		@media (max-width: $screen-xs-max) { // max 767px
+																			background:#3F3F3F;
+																			width:100%;
+																		}
 		
 		h4 {
 			background:none;
@@ -43,7 +51,7 @@
 			text-transform:none;
 			font-size:21px;
 			line-height:25px;
-			border:none;	
+			border:none;
 		}
 		
 		.block_content {overflow:hidden;}

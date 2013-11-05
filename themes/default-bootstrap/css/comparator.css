@@ -73,7 +73,7 @@ table#product_comparison .product_discount .reduced-price {
 table#product_comparison .product_desc {
   padding-bottom: 12px;
 }
-table#product_comparison .button-container a {
+table#product_comparison .button-container a, table#product_comparison .button-container > span {
   margin-bottom: 10px;
 }
 table#product_comparison .comparison_unit_price {
