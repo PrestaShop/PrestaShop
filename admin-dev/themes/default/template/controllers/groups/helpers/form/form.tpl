@@ -169,7 +169,6 @@
 	</div>
 	{elseif $input['type'] == 'modules'}
 	<div style="{if !$form_id}display:none{/if}">
-		<div class="margin-form">
 		<script type="text/javascript">
 			$(document).ready(function() {
 				$('#authorized-modules').find('[value="0"]').click(function() {
@@ -185,7 +184,7 @@
 		<div class="col-lg-9" id="authorized-modules">			
 			{foreach $input['values']['auth_modules'] key=key item=module }
 			<div class="form-group">
-				<label class="control-label col-lg-2"><img src="../modules/{$module->name}/logo.gif"> {$module->displayName}</label>
+				<label class="control-label col-lg-4"><img src="../modules/{$module->name}/logo.gif"> {$module->displayName}</label>
 				<div class="input-group col-lg-2">
 					<span class="switch prestashop-switch">
 						<input type="radio" name="{$module->name}" id="{$module->name}_on" value="1" checked="checked">
@@ -200,7 +199,7 @@
 			{/foreach}
 			{foreach $input['values']['unauth_modules'] key=key item=module }
 			<div class="form-group">
-				<label class="control-label col-lg-2"><img src="../modules/{$module->name}/logo.gif"> {$module->displayName}</label>
+				<label class="control-label col-lg-4"><img src="../modules/{$module->name}/logo.gif"> {$module->displayName}</label>
 				<div class="input-group col-lg-2">
 					<span class="switch prestashop-switch">
 						<input type="radio" name="{$module->name}" id="{$module->name}_on" value="1">
