@@ -2960,6 +2960,34 @@ class BlockLayered extends Module
 							if (isset($selected_filters['id_feature'][$feature['id_feature_value']]))
 								$feature_array[$feature['id_feature']]['values'][$feature['id_feature_value']]['checked'] = true;
 						}
+                                                
+                                                 // features are now sorted by natural sort
+                                                foreach ($feature_array as $key => $value) {
+                                                     //ppp($feature_array[$key]['values']);
+                                                     
+                                                     $temp = array();
+                                                     
+                                                     foreach ($feature_array[$key]['values'] as $keyint => $valueint) {
+                                                         
+                                                         //ppp($feature_array[$key]['values'][$keyint]);
+                                                         
+                                                         $temp[$keyint] = $valueint['name'];
+                                                     }
+                                                     
+                                                     natcasesort($temp);
+                                                     
+                                                     $temp2 = array();
+                                                     
+                                                     foreach ($temp as $keytemp => $valuetemp) {
+                                                         
+                                                         $temp2[$keytemp] = $feature_array[$key]['values'][$keytemp];
+                                                     }
+                                                     
+                                                     $feature_array[$key]['values'] = $temp2;
+                                                     
+                                                }
+                                                // end feature natural sorting
+                                                
 						$filter_blocks = array_merge($filter_blocks, $feature_array);
 					}
 					break;
