@@ -444,7 +444,7 @@ $(document).ready(function () {
 						</div>
 						<div class="col-lg-6">
 							<select name="sp_reduction_type" id="sp_reduction_type">
-								<option selected="selected">---</option>
+								<option selected="selected">-</option>
 								<option value="amount">{l s='Amount'}</option>
 								<option value="percentage">{l s='Percentage'}</option>
 							</select>
@@ -453,7 +453,6 @@ $(document).ready(function () {
 				</div>
 				<p class="help-block">{l s='The discount is applied after the tax'}</p>
 			</div>
-
 		</div>
 	</div>
 	<script type="text/javascript">

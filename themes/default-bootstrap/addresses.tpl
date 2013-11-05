@@ -124,7 +124,7 @@
 {/if}
 
 <div class="clearfix main-page-indent">
-	<a href="{$link->getPageLink('address', true)|escape:'html'}" title="{l s='Add an address'}" class="btn btn-default button button-medium"><span>{l s='Add an address'}<i class="icon-chevron-right right"></i></span></a>
+	<a href="{$link->getPageLink('address', true)|escape:'html'}" title="{l s='Add an address'}" class="btn btn-default button button-medium"><span>{l s='Add a new address'}<i class="icon-chevron-right right"></i></span></a>
 </div>
 
 <ul class="footer_links clearfix">

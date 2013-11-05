@@ -39,7 +39,7 @@
 				{/foreach}
 			{else}
 				<select id="id_contact" name="id_contact" onchange="showElemFromSelect('id_contact', 'desc_contact')">
-					<option value="0">-- {l s='Subject Heading'} --</option>
+					<option value="0">- {l s='Subject Heading'} -</option>
 				{foreach from=$contacts item=contact}
 					<option value="{$contact.id_contact|intval}" {if isset($smarty.post.id_contact) && $smarty.post.id_contact == $contact.id_contact}selected="selected"{/if}>{$contact.name|escape:'htmlall':'UTF-8'}</option>
 				{/foreach}
@@ -65,7 +65,7 @@
 				{if (!isset($customerThread.id_order) || $customerThread.id_order > 0)}
 				<fieldset>
 					{if !isset($customerThread.id_order) && isset($isLogged) && $isLogged == 1}
-						<select name="id_order" ><option value="0">-- {l s='Order ID'} --</option>
+						<select name="id_order" ><option value="0">- {l s='Order ID'} -</option>
 						{foreach from=$orderList item=order}
 							<option value="{$order.value|intval}" {if $order.selected|intval}selected="selected"{/if}>{$order.label|escape:'htmlall':'UTF-8'}</option>
 						{/foreach}
@@ -82,7 +82,7 @@
 
 					{if !isset($customerThread.id_product)}
 						{foreach from=$orderedProductList key=id_order item=products name=products}
-							<select name="id_product"><option value="0">-- {l s='Product'} --</option>
+							<select name="id_product"><option value="0">- {l s='Product'} -</option>
 								{foreach from=$products item=product}
 									<option value="{$product.value|intval}">{$product.label|escape:'htmlall':'UTF-8'}</option>
 								{/foreach}

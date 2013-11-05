@@ -22,17 +22,17 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{if isset($images) && $images}
-<div class="form-group">
-	<div class="col-lg-12">
-		{foreach $images as $image}
-		{if isset($image.image)}
+<div class="form-group" style="display: none;">
+	<div class="col-lg-12" id="{$id}-images-thumbnails">
+		{if isset($files) && $files|count > 0}
+		{foreach $files as $file}
+		{if isset($file.image) && $file.type == 'image'}
 		<div class="img-thumbnail text-center">
-			<p>{$image.image}</p>
-			{if isset($image.size)}<p>{l s='File size'} {$image.size}kb</p>{/if}
-			{if isset($image.delete_url)}
+			<p>{$file.image}</p>
+			{if isset($file.size)}<p>{l s='File size'} {$file.size}kb</p>{/if}
+			{if isset($file.delete_url)}
 			<p>
-				<a class="btn btn-default" href="{$image.delete_url}">
+				<a class="btn btn-default" href="{$file.delete_url}">
 				<i class="icon-trash"></i> {l s='Delete'}
 				</a>
 			</p>
@@ -40,9 +40,9 @@
 		</div>
 		{/if}
 		{/foreach}
+		{/if}
 	</div>
 </div>
-{/if}
 <div class="form-group">
 	<div class="col-lg-12">
 		<input id="{$id}" type="file" name="{$name}[]"{if isset($url)} data-url="{$url}"{/if}{if isset($multiple) && $multiple} multiple="multiple"{/if} class="hide" />
@@ -65,16 +65,97 @@
 </div>
 
 <script type="text/javascript">
-$( document ).ready(function() {
-	$('#{$id}-add-button').on('click', function() {
-		$('#{$id}').trigger('click');
+	$( document ).ready(function() {
+		{if isset($multiple) && isset($max_files)}
+			var {$id}_max_files = {$max_files};
+		{/if}
+
+		{if isset($files) && $files}
+		$('#{$id}-images-thumbnails').parent().show();
+		{/if}
+
+		var {$id}_total_files = 0;
+		var {$id}_upload_button = Ladda.create( document.querySelector('#{$id}-upload-button' ));
+
+		var data = $('#{$id}').fileupload({
+			dataType: 'json',
+			autoUpload: false,
+			singleFileUploads: false,
+			add: function(e, data) {
+				if (typeof {$id}_max_files !== 'undefined') {
+					if ({$id}_total_files >= {$id}_max_files || data.originalFiles.length > {$id}_max_files) {
+						e.preventDefault();
+						alert('{l s='You can upload a maximum of %s files'|sprintf:$max_files}');
+						return;
+					}
+				}
+
+				{$id}_total_files++;
+				$('#{$id}-upload-button').show().on('click', function () {
+					data.submit();
+				});
+			},
+			start: function () {
+				{$id}_upload_button.start();
+			},
+			fail: function (e, data) {
+				$('#{$id}-errors').html(data.errorThrown.message).parent().show();
+			},
+			done: function (e, data) {
+				if (typeof data.result.{$name} !== 'undefined') {
+					for (var i=0; i<data.result.{$name}.length; i++) {
+						if (typeof data.result.{$name}[i].image !== 'undefined') {
+							var template = '<div class="img-thumbnail text-center">';
+							template += '<p>'+data.result.{$name}[i].image+'</p>';
+							
+							if (typeof data.result.{$name}[i].delete_url !== 'undefined') {
+								template += '<p><a class="btn btn-default" href="'+data.result.{$name}[i].delete_url+'"><i class="icon-trash"></i> {l s='Delete'}</a></p>';
+							}
+
+							template += '</div>';
+							$('#{$id}-images-thumbnails').html($('#{$id}-images-thumbnails').html()+template);
+							$('#{$id}-images-thumbnails').parent().show();
+						}
+					}
+				}
+			},
+			always: function (e, data) {
+				{$id}_upload_button.stop();
+			}
+		});
+
+		$('#{$id}-add-button').on('click', function() {
+			$('#{$id}').trigger('click');
+		});
 	});
 
-	var upload_button = Ladda.create( document.querySelector('#{$id}-upload-button' ));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	/**/
+
+	/*
 	var total_files   = 0;
 	var total_uploaded_files   = 0;
+	{if isset($multiple) && isset($max_files)}
+	var {$id}_max_files = {$max_files};
+	{/if}
 
-   	$('#{$id}').fileupload({
+   	$('#{$id}').fileupload(
+   	{
         dataType: 'json',
         autoUpload: false,
         acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
@@ -87,10 +168,7 @@ $( document ).ready(function() {
         previewMaxWidth: 100,
         previewMaxHeight: 100,
         previewCrop: false,
-        limitMultiFileUploads: 3,
-        start: function () {
-        	upload_button.start();
-        },
+       
         done: function (e, data) {
             $.each(data.result, function (index, file) {
                 if (file[0].error)
@@ -106,6 +184,16 @@ $( document ).ready(function() {
         	upload_button.setProgress(data.loaded / data.total);
 	    },
 	    add: function (e, data) {
+	    	console.log(data.originalFiles.length);
+	    	if (typeof {$id}_max_files !== 'undefined')
+			{
+				if (data.originalFiles.length > {$id}_max_files) {
+					e.preventDefault();
+					alert('{l s='You can upload a maximum of %s files'|sprintf:$max_files}');
+					return;
+				}
+			}
+
 	    	data.context = $('#{$id}-files-list');
 	    	data.context.parent().show();
 
@@ -128,6 +216,6 @@ $( document ).ready(function() {
    			if (total_files == 0)
    				upload_button.stop();
    		}
-    });
-});
+    });*/
+
 </script>

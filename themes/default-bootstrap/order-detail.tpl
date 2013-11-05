@@ -113,7 +113,7 @@
 </div>
 {$HOOK_ORDERDETAILDISPLAYED}
 {if !$is_guest}<form action="{$link->getPageLink('order-follow', true)|escape:'html'}" method="post">{/if}
-<div id="order-detail-content" class="table_block">
+<div id="order-detail-content" class="table_block table-responsive">
 	<table class="table table-bordered">
 		<thead>
 			<tr>
@@ -351,14 +351,14 @@
 	</table>
 </div>
 {if $order->getShipping()|count > 0}
-	<table class="table table-bordered">
+	<table class="table table-bordered footab">
 		<thead>
 			<tr>
 				<th class="first_item">{l s='Date'}</th>
 				<th class="item">{l s='Carrier'}</th>
-				<th class="item">{l s='Weight'}</th>
-				<th class="item">{l s='Shipping cost'}</th>
-				<th class="last_item">{l s='Tracking number'}</th>
+				<th data-hide="phone" class="item">{l s='Weight'}</th>
+				<th data-hide="phone" class="item">{l s='Shipping cost'}</th>
+				<th data-hide="phone" class="last_item">{l s='Tracking number'}</th>
 			</tr>
 		</thead>
 		<tbody>

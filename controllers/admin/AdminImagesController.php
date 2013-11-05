@@ -427,10 +427,11 @@ class AdminImagesControllerCore extends AdminController
 		if (!is_dir($dir))
 			return false;
 		$toDel = scandir($dir);
+
 		foreach ($toDel as $d)
 			foreach ($type as $imageType)
-				if (preg_match('/^[0-9]+\-'.($product ? '[0-9]+\-' : '').$imageType['name'].'\.jpg$/', $d) || preg_match('/^([[:lower:]]{2})\-default\-(.*)\.jpg$/', $d))
-					if (file_exists($dir.$d))
+				if (preg_match('/^[0-9]+\-'.($product ? '[0-9]+\-' : '').$imageType['name'].'\.jpg$/', $d) || preg_match('/^([[:lower:]]{2})\-default\-'.$imageType['name'].'\.jpg$/', $d))
+					if (file_exists($dir.$d))		
 						unlink($dir.$d);
 
 		// delete product images using new filesystem.

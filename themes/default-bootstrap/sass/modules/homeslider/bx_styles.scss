@@ -18,16 +18,23 @@
 #homepage-slider {
 	padding-left:0;
 	padding-right:0;
-	padding-top:30px;
-	margin-bottom:30px;
+	padding-top:29px;
+	margin-bottom:35px;
 	max-width:779px;
+	position:relative;
+	z-index:1;
+	
+	#homeslider {
+		margin:0 auto;
+		padding:0;
+	}
 }
 /*****************************************************************************
 						BXSlider Styles
 ********************************************************************************/
 /** RESET AND LAYOUT
 ===================================*/
-
+#homepage-slider {
 .bx-wrapper {
 	position: relative;
 	padding: 0;
@@ -38,7 +45,6 @@
 	img {
 		display: block;	
 		max-width: 100%;
-		height:auto;
 	}
 }
 
@@ -110,32 +116,68 @@
 /* DIRECTION CONTROLS (NEXT / PREV) */
 
 .bx-wrapper .bx-prev {
-	left: 10px;
-	background: url(images/controls.png) no-repeat 0 -32px;
+	right: 60px;
+	
+	&:after {
+		content:"";	
+	}
 }
 
 .bx-wrapper .bx-next {
 	right: 10px;
-	background: url(images/controls.png) no-repeat -43px -32px;
-}
-
-.bx-wrapper .bx-prev:hover {
-	background-position: 0 0;
-}
-
-.bx-wrapper .bx-next:hover {
-	background-position: -43px 0;
+	
+	&:after {
+		content:"";	
+	}
 }
 
 .bx-wrapper .bx-controls-direction a {
 	position: absolute;
-	top: 50%;
-	margin-top: -16px;
+	bottom: 10px;
 	outline: 0;
-	width: 32px;
-	height: 32px;
+	width: 52px;
+	height: 52px;
 	text-indent: -9999px;
 	z-index: 9999;
+	border:2px solid #fff;
+	
+	&:before {
+		height:48px;
+		width:48px;
+		display:block;
+		background:#fff;
+		content:".";
+		opacity:0.14;
+		text-indent:-9999px;
+		position:absolute;
+		left:0;
+		top:0;
+		z-index:1;
+	}
+	
+	&:after { 
+		display:block;
+		width:48px;
+		height:48px;
+		color:#fff;
+		text-indent:0;
+		text-align:center;
+		font-size:21px;
+		font-family:"FontAwesome";
+		position:absolute;
+		top:0;
+		left:0;
+		z-index:2;
+		padding:16px 0 0 0;
+	}
+	
+	&:hover {
+		
+		&:before {
+			background:#333;
+			opacity:0.83;	
+		}
+	}
 }
 
 .bx-wrapper .bx-controls-direction a.disabled {
@@ -207,4 +249,5 @@
 	display: block;
 	font-size: .85em;
 	padding: 10px;
+}
 }

@@ -26,7 +26,6 @@
 
 class AdminSearchControllerCore extends AdminController
 {
-
 	public function __construct()
 	{
 		$this->bootstrap = true;
@@ -197,6 +196,18 @@ class AdminSearchControllerCore extends AdminController
 				$module->linkto = 'index.php?tab=AdminModules&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).'&token='.Tools::getAdminTokenLite('AdminModules');
 				$this->_list['modules'][] = $module;
 			}
+
+		if (!is_numeric(trim($this->query)) && !Validate::isEmail($this->query))
+		{
+			$vars = http_build_query(array(
+				'version' => _PS_VERSION_,
+				'iso_lang' => Tools::strtolower(Context::getContext()->language->iso_code),
+				'iso_code' => Tools::strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))),
+				'search_query' => $this->query
+			));
+			if (($json_content = Tools::file_get_contents('https://api.addons.prestashop.com/search.php?'.$vars)) != false)
+				$this->_list['addons'] = Tools::jsonDecode($json_content, true);
+		}
 	}
 
 	/**
@@ -408,6 +419,8 @@ class AdminSearchControllerCore extends AdminController
 
 			if (isset($this->_list['modules']) && count($this->_list['modules']))
 				$this->tpl_view_vars['modules'] = $this->_list['modules'];
+			if (isset($this->_list['addons']) && count($this->_list['addons']))
+				$this->tpl_view_vars['addons'] = $this->_list['addons'];
 
 			return parent::renderView();
 		}

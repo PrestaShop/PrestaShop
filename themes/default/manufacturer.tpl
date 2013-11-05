@@ -33,7 +33,7 @@
 		<div class="description_box">
 			{if !empty($manufacturer->short_description)}
 				<p>{$manufacturer->short_description}</p>
-				<p class="hide_desc">{$manufacturer->description}</p>
+				<div class="hide_desc">{$manufacturer->description}</div>
 				<a href="#" class="lnk_more" onclick="$(this).prev().slideDown('slow'); $(this).hide(); return false;">{l s='More'}</a>
 			{else}
 				<p>{$manufacturer->description}</p>

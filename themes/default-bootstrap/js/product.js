@@ -511,7 +511,7 @@ $(document).ready(function()
 		stop:true,
 		onBefore:serialScrollFixLock,
 		duration:700,
-		step: 2,
+		step: 1,
 		lazy: true,
 		lock: false,
 		force:false,
@@ -570,12 +570,14 @@ $(document).ready(function()
 	$('#resetImages').click(function() {
 		refreshProductImages(0);
 	});
-
-	$('.thickbox').fancybox({
-		'hideOnContentClick': true,
-		'transitionIn'	: 'elastic',
-		'transitionOut'	: 'elastic'
-	});
+   if (contentOnly == false)
+		$('.thickbox').fancybox({
+			'hideOnContentClick': true,
+			'transitionIn'	: 'elastic',
+			'transitionOut'	: 'elastic'
+		});
+	else 
+		$('.thickbox').click(function(){return false})
 });
 
 function saveCustomization()
@@ -726,3 +728,35 @@ function checkUrl()
 		}
 	}
 }
+// product quantity change buttons
+$(document).ready(function(){
+    // The button to increment the product value
+    $('.product_quantity_up').click(function(e){
+        e.preventDefault();
+        fieldName = $(this).attr('rel');
+        var currentVal = parseInt($('input[name='+fieldName+']').val());
+		if (quantityAvailable > 0) {
+				quantityAvailableT = quantityAvailable;
+		} else {
+				quantityAvailableT = 100000000;
+		}
+        if (!isNaN(currentVal) && currentVal < quantityAvailableT) {
+            $('input[name='+fieldName+']').val(currentVal + 1).trigger('keyup');
+        } else {
+            $('input[name='+fieldName+']').val(quantityAvailableT);
+        }
+		return false;
+    });
+	 // The button to decrement the product value
+    $(".product_quantity_down").click(function(e) {
+        e.preventDefault();
+        fieldName = $(this).attr('rel');
+        var currentVal = parseInt($('input[name='+fieldName+']').val());
+        if (!isNaN(currentVal) && currentVal > 1) {
+            $('input[name='+fieldName+']').val(currentVal - 1).trigger('keyup');
+        } else {
+            $('input[name='+fieldName+']').val(1);
+        }
+		return false;
+    });
+});

@@ -286,5 +286,8 @@
      <hook id="actionBackOfficeCategory" live_edit="0">
       <name>actionBackOfficeCategory</name><title>Process new elements in the Back Office, tab AdminCategories</title><description>This hook process modules when the AdminCategories tab is displayed in the Back Office</description>
     </hook>
+    <hook id="actionBackOfficeCategoryRemoveThumbnail" live_edit="0">
+      <name>actionBackOfficeCategoryRemoveThumbnail</name><title>Delete elements in the Back Office, tab AdminCategories</title><description>This hook process modules when the AdminCategories tab call delete thumbnail</description>
+    </hook>
   </entities>
 </entity_hook>

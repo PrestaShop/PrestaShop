@@ -36,7 +36,7 @@
 <div class="panel">
 	<h3><i class="icon-tasks"></i> {l s='Conditions'}</h3>
 	<form class="form-horizontal">
-		<div class="row">
+		<div class="form-group">
 			<label for="id_category" class="control-label col-lg-3">{l s='Category'}</label>
 			<div class="col-lg-9">
 				<div class="col-lg-8">
@@ -53,7 +53,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="row">
+		<div class="form-group">
 			<label for="id_manufacturer" class="control-label col-lg-3">{l s='Manufacturer'}</label>
 			<div class="col-lg-9">
 				<div class="col-lg-8">
@@ -70,7 +70,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="row">
+		<div class="form-group">
 			<label for="id_supplier" class="control-label col-lg-3">{l s='Supplier'}</label>
 			<div class="col-lg-9">
 				<div class="col-lg-8">
@@ -87,7 +87,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="row">
+		<div class="form-group">
 			<label for="id_attribute" class="control-label col-lg-3">{l s='Attributes'}</label>
 			<div class="col-lg-9">
 				<div class="col-lg-4">
@@ -114,7 +114,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="row">
+		<div class="form-group">
 			<label for="id_attribute" class="control-label col-lg-3">{l s='Features'}</label>
 			<div class="col-lg-9">
 				<div class="col-lg-4">

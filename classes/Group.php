@@ -325,7 +325,7 @@ class GroupCore extends ObjectModel
 	  * @param boolean $unrestricted allows search without lang and includes first group and exact match
 	  * @return array Corresponding groupes
 	  */
-	public static function searchByName($id_lang, $query)
+	public static function searchByName($query)
 	{
 		return Db::getInstance()->getRow('
 			SELECT g.*, gl.*

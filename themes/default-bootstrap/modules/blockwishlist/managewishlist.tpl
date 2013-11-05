@@ -43,71 +43,86 @@
         <label>{l s='Permalink' mod='blockwishlist'}:</label>
         <input type="text" class="form-control" value="{$base_dir_ssl}modules/blockwishlist/view.php?token={$token_wish|escape:'htmlall':'UTF-8'}" readonly="readonly" /></p>
 		<p class="submit">
-			<a href="#" id="showSendWishlist" class="button_account exclusive" onclick="WishlistVisibility('wl_send', 'SendWishlist'); return false;" title="{l s='Send this wishlist' mod='blockwishlist'}">{l s='Send this wishlist' mod='blockwishlist'}</a>
+			<a href="#" id="showSendWishlist" class="btn btn-default button button-small" onclick="WishlistVisibility('wl_send', 'SendWishlist'); return false;" title="{l s='Send this wishlist' mod='blockwishlist'}"><span>{l s='Send this wishlist' mod='blockwishlist'}</span></a>
 		</p>
 	{/if}
 	<div class="wlp_bought">
+        {assign var='nbItemsPerLine' value=4}
+        {assign var='nbItemsPerLineTablet' value=3}
+        {assign var='nbLi' value=$products|@count}
+        {math equation="nbLi/nbItemsPerLine" nbLi=$nbLi nbItemsPerLine=$nbItemsPerLine assign=nbLines}
+        {math equation="nbLi/nbItemsPerLineTablet" nbLi=$nbLi nbItemsPerLineTablet=$nbItemsPerLineTablet assign=nbLinesTablet}
 		<ul class="row wlp_bought_list">
 		{foreach from=$products item=product name=i}
-			<li id="wlp_{$product.id_product}_{$product.id_product_attribute}" class="col-xs-12 col-sm-4 col-md-3">
-            	<div class="inner-content">
-                    <a href="javascript:;" class="lnkdel" onclick="WishlistProductManage('wlp_bought', 'delete', '{$id_wishlist}', '{$product.id_product}', '{$product.id_product_attribute}', $('#quantity_{$product.id_product}_{$product.id_product_attribute}').val(), $('#priority_{$product.id_product}_{$product.id_product_attribute}').val());" title="{l s='Delete' mod='blockwishlist'}">&raquo; {l s='Delete' mod='blockwishlist'}</a>
+        	{math equation="(total%perLine)" total=$smarty.foreach.i.total perLine=$nbItemsPerLine assign=totModulo}
+            {math equation="(total%perLineT)" total=$smarty.foreach.i.total perLineT=$nbItemsPerLineTablet assign=totModuloTablet}
+            {if $totModulo == 0}{assign var='totModulo' value=$nbItemsPerLine}{/if}
+            {if $totModuloTablet == 0}{assign var='totModuloTablet' value=$nbItemsPerLineTablet}{/if}
+			<li id="wlp_{$product.id_product}_{$product.id_product_attribute}" class="col-xs-12 col-sm-4 col-md-3 {if $smarty.foreach.i.iteration%$nbItemsPerLine == 0} last-in-line{elseif $smarty.foreach.i.iteration%$nbItemsPerLine == 1} first-in-line{/if} {if $smarty.foreach.i.iteration > ($smarty.foreach.i.total - $totModulo)}last-line{/if} {if $smarty.foreach.i.iteration%$nbItemsPerLineTablet == 0}last-item-of-tablet-line{elseif $smarty.foreach.i.iteration%$nbItemsPerLineTablet == 1}first-item-of-tablet-line{/if} {if $smarty.foreach.i.iteration > ($smarty.foreach.i.total - $totModuloTablet)}last-tablet-line{/if}">
+            	<div class="row">
+                    <div class="col-xs-6 col-sm-12">
                         <div class="product_image">
                             <a href="{$link->getProductlink($product.id_product, $product.link_rewrite, $product.category_rewrite)|escape:'html'}" title="{l s='Product detail' mod='blockwishlist'}">
-                                <img src="{$link->getImageLink($product.link_rewrite, $product.cover, 'medium_default')|escape:'html'}" alt="{$product.name|escape:'htmlall':'UTF-8'}" />
+                                <img class="replace-2x img-responsive" src="{$link->getImageLink($product.link_rewrite, $product.cover, 'home_default')|escape:'html'}" alt="{$product.name|escape:'htmlall':'UTF-8'}" />
                             </a>
                         </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-12">
                         <div class="product_infos">
-                            <p id="s_title" class="product_name">{$product.name|truncate:30:'...'|escape:'htmlall':'UTF-8'}</p>
-                            <span class="wishlist_product_detail">
-                            {if isset($product.attributes_small)}
-                                <small><a href="{$link->getProductlink($product.id_product, $product.link_rewrite, $product.category_rewrite)|escape:'html'}" title="{l s='Product detail' mod='blockwishlist'}">{$product.attributes_small|escape:'htmlall':'UTF-8'}</a></small>
+                            <a href="javascript:;" class="lnkdel" onclick="WishlistProductManage('wlp_bought', 'delete', '{$id_wishlist}', '{$product.id_product}', '{$product.id_product_attribute}', $('#quantity_{$product.id_product}_{$product.id_product_attribute}').val(), $('#priority_{$product.id_product}_{$product.id_product_attribute}').val());" title="{l s='Delete' mod='blockwishlist'}"><i class="icon-remove-sign"></i></a>
+                            <p id="s_title" class="product-name">
+                                {$product.name|truncate:30:'...'|escape:'htmlall':'UTF-8'}
+                                {if isset($product.attributes_small)}
+                                    <small><a href="{$link->getProductlink($product.id_product, $product.link_rewrite, $product.category_rewrite)|escape:'html'}" title="{l s='Product detail' mod='blockwishlist'}">{$product.attributes_small|escape:'htmlall':'UTF-8'}</a></small>
                             {/if}
+                            </p>
+                            <div class="wishlist_product_detail">
                             <p class="form-group">
-                            	<label for="quantity_{$product.id_product}_{$product.id_product_attribute}">{l s='Quantity' mod='blockwishlist'}:</label>
-                                <input type="text" class="form-control" id="quantity_{$product.id_product}_{$product.id_product_attribute}" value="{$product.quantity|intval}" size="3"  />
+                                <label for="quantity_{$product.id_product}_{$product.id_product_attribute}">{l s='Quantity' mod='blockwishlist'}:</label>
+                                <input type="text" class="form-control grey" id="quantity_{$product.id_product}_{$product.id_product_attribute}" value="{$product.quantity|intval}" size="3"  />
                             </p>
                             <p class="form-group">
                                 <label for="priority_{$product.id_product}_{$product.id_product_attribute}">{l s='Priority' mod='blockwishlist'}:</label>
-                                <select id="priority_{$product.id_product}_{$product.id_product_attribute}" class="form-control">
+                                <select id="priority_{$product.id_product}_{$product.id_product_attribute}" class="form-control grey">
                                     <option value="0"{if $product.priority eq 0} selected="selected"{/if}>{l s='High' mod='blockwishlist'}</option>
                                     <option value="1"{if $product.priority eq 1} selected="selected"{/if}>{l s='Medium' mod='blockwishlist'}</option>
                                     <option value="2"{if $product.priority eq 2} selected="selected"{/if}>{l s='Low' mod='blockwishlist'}</option>
                                 </select>
-                           	</p>
-                            </span>
+                            </p>
+                            </div>
+                            <div class="btn_action">
+                                <a href="javascript:;" class="btn btn-default button button-small" onclick="WishlistProductManage('wlp_bought_{$product.id_product_attribute}', 'update', '{$id_wishlist}', '{$product.id_product}', '{$product.id_product_attribute}', $('#quantity_{$product.id_product}_{$product.id_product_attribute}').val(), $('#priority_{$product.id_product}_{$product.id_product_attribute}').val());" title="{l s='Save' mod='blockwishlist'}"><span>{l s='Save' mod='blockwishlist'}</span></a>
+                            </div>
                         </div>
-                    <div class="btn_action">
-					<a href="javascript:;" class="exclusive lnksave" onclick="WishlistProductManage('wlp_bought_{$product.id_product_attribute}', 'update', '{$id_wishlist}', '{$product.id_product}', '{$product.id_product_attribute}', $('#quantity_{$product.id_product}_{$product.id_product_attribute}').val(), $('#priority_{$product.id_product}_{$product.id_product_attribute}').val());" title="{l s='Save' mod='blockwishlist'}">{l s='Save' mod='blockwishlist'}</a>
-				</div>
+                    </div>
                 </div>
 			</li>
 		{/foreach}
 		</ul>
 	</div>
 	{if !$refresh}
-	<form method="post" class="wl_send std hidden" onsubmit="return (false);">
+	<form method="post" class="wl_send box unvisible" onsubmit="return (false);">
 		<fieldset>
-			<p class="required">
+			<div class="required form-group">
 				<label for="email1">{l s='Email' mod='blockwishlist'}1 <sup>*</sup></label>
-				<input type="text" name="email1" id="email1" />
-			</p>
+				<input type="text" name="email1" id="email1" class="form-control" />
+			</div>
 			{section name=i loop=11 start=2}
-			<p>
+			<div class="form-group">
 				<label for="email{$smarty.section.i.index}">{l s='Email' mod='blockwishlist'}{$smarty.section.i.index}</label>
-				<input type="text" name="email{$smarty.section.i.index}" id="email{$smarty.section.i.index}" />
-			</p>
+				<input type="text" name="email{$smarty.section.i.index}" id="email{$smarty.section.i.index}" class="form-control" />
+			</div>
 			{/section}
-			<p class="submit">
-				<input class="button" type="submit" value="{l s='Send' mod='blockwishlist'}" name="submitWishlist" onclick="WishlistSend('wl_send', '{$id_wishlist}', 'email');" />
-			</p>
+			<div class="submit">
+                <button class="btn btn-default button button-small" type="submit" name="submitWishlist" onclick="WishlistSend('wl_send', '{$id_wishlist}', 'email');"><span>{l s='Send' mod='blockwishlist'}</span></button>
+			</div>
 			<p class="required">
 				<sup>*</sup> {l s='Required field'}
 			</p>
 		</fieldset>
 	</form>
 	{if count($productsBoughts)}
-	<table class="wlp_bought_infos hidden std">
+	<table class="wlp_bought_infos unvisible table table-bordered table-responsive">
 		<thead>
 			<tr>
 				<th class="first_item">{l s='Product' mod='blockwishlist'}</td>

@@ -281,20 +281,27 @@
 </div>
 
 {if !$opc}
+	<div class="clearfix">
+        <p><strong class="dark">{l s='Leave a message'}</strong></p>
+        <div class="form-group">
+            <p>{l s='If you would like to add a comment about your order, please write it in the field below.'}</p>
+            <textarea class="form-control" cols="120" rows="2" name="message" id="message">{if isset($oldMessage)}{$oldMessage|escape:'htmlall':'UTF-8'}{/if}</textarea>
+        </div>
+    </div>
 	<p class="cart_navigation clearfix">
 		<input type="hidden" name="step" value="3" />
 		<input type="hidden" name="back" value="{$back}" />
 		{if !$is_guest}
 			{if $back}
-				<a href="{$link->getPageLink('order', true, NULL, "step=1&back={$back}&multi-shipping={$multi_shipping}")|escape:'html'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Previous'}</a>
+				<a href="{$link->getPageLink('order', true, NULL, "step=1&back={$back}&multi-shipping={$multi_shipping}")|escape:'html'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Continue shopping'}</a>
 			{else}
-				<a href="{$link->getPageLink('order', true, NULL, "step=1&multi-shipping={$multi_shipping}")|escape:'html'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Previous'}</a>
+				<a href="{$link->getPageLink('order', true, NULL, "step=1&multi-shipping={$multi_shipping}")|escape:'html'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Continue shopping'}</a>
 			{/if}
 		{else}
-				<a href="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")|escape:'html'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Previous'}</a>
+				<a href="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")|escape:'html'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Continue shopping'}</a>
 		{/if}
 		{if isset($virtual_cart) && $virtual_cart || (isset($delivery_option_list) && !empty($delivery_option_list))}
-            <button type="submit" name="processCarrier" class="button btn btn-default standard-checkout button-medium"><span>{l s='Next'}<i class="icon-chevron-right right"></i></span></button>
+            <button type="submit" name="processCarrier" class="button btn btn-default standard-checkout button-medium"><span>{l s='Proceed to checkout'}<i class="icon-chevron-right right"></i></span></button>
 		{/if}
 	</p>
 </form>
