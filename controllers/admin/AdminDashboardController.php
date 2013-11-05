@@ -325,6 +325,7 @@ class AdminDashboardControllerCore extends AdminController
 			{
 				if ($articles_limit > 0 && Validate::isCleanHtml((string)$item->title) && Validate::isCleanHtml((string)$item->description))
 					$return['rss'][] = array(
+						'date' => Tools::displayDate(date('Y-m-d', strtotime((string)$item->pubDate))),
 						'title' => (string)$item->title,
 						'short_desc' => substr((string)$item->description, 0, 100).'...',
 						'link' => (string)$item->link,

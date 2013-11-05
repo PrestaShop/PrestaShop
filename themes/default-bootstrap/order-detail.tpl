@@ -64,8 +64,8 @@
 		<tbody>
 		{foreach from=$order_history item=state name="orderStates"}
 			<tr class="{if $smarty.foreach.orderStates.first}first_item{elseif $smarty.foreach.orderStates.last}last_item{/if} {if $smarty.foreach.orderStates.index % 2}alternate_item{else}item{/if}">
-				<td>{dateFormat date=$state.date_add full=1}</td>
-				<td>{$state.ostate_name|escape:'htmlall':'UTF-8'}</td>
+				<td class="step-by-step-date">{dateFormat date=$state.date_add full=0}</td>
+				<td><span class="label{if $state.id_order_state == 1 || $state.id_order_state == 10 || $state.id_order_state == 11} label-info{elseif $state.id_order_state == 5 || $state.id_order_state == 2 || $state.id_order_state == 12} label-success{elseif $state.id_order_state == 6 || $state.id_order_state == 7 || $state.id_order_state == 8} label-danger{elseif $state.id_order_state == 3 || $state.id_order_state == 9 || $state.id_order_state == 4} label-warning{/if}">{$state.ostate_name|escape:'htmlall':'UTF-8'}</span></td>
 			</tr>
 		{/foreach}
 		</tbody>
@@ -81,8 +81,22 @@
 <div class="adresses_bloc">
 	<div class="row">
     	<div class="col-xs-12 col-sm-6">
+        	<ul class="address alternate_item box" {if $order->isVirtual()}style="display:none;"{/if}>
+            <li><h3 class="page-subheading">{l s='Delivery address'} ({$address_delivery->alias})</h3></li>
+            {foreach from=$dlv_adr_fields name=dlv_loop item=field_item}
+                {if $field_item eq "company" && isset($address_delivery->company)}<li class="address_company">{$address_delivery->company|escape:'htmlall':'UTF-8'}</li>
+                {elseif $field_item eq "address2" && $address_delivery->address2}<li class="address_address2">{$address_delivery->address2|escape:'htmlall':'UTF-8'}</li>
+                {elseif $field_item eq "phone_mobile" && $address_delivery->phone_mobile}<li class="address_phone_mobile">{$address_delivery->phone_mobile|escape:'htmlall':'UTF-8'}</li>
+                {else}
+                        {assign var=address_words value=" "|explode:$field_item} 
+                        <li>{foreach from=$address_words item=word_item name="word_loop"}{if !$smarty.foreach.word_loop.first} {/if}<span class="address_{$word_item|replace:',':''}">{$deliveryAddressFormatedValues[$word_item|replace:',':'']|escape:'htmlall':'UTF-8'}</span>{/foreach}</li>
+                {/if}
+            {/foreach}
+        </ul>
+        </div>
+    	<div class="col-xs-12 col-sm-6">
         	<ul class="address item {if $order->isVirtual()}full_width{/if} box">
-            <li><h3 class="page-subheading">{l s='Billing'}</h3></li>
+            <li><h3 class="page-subheading">{l s='Invoice address'} ({$address_invoice->alias})</h3></li>
             {foreach from=$inv_adr_fields name=inv_loop item=field_item}
                 {if $field_item eq "company" && isset($address_invoice->company)}<li class="address_company">{$address_invoice->company|escape:'htmlall':'UTF-8'}</li>
                 {elseif $field_item eq "address2" && $address_invoice->address2}<li class="address_address2">{$address_invoice->address2|escape:'htmlall':'UTF-8'}</li>
@@ -92,20 +106,6 @@
                         <li>{foreach from=$address_words item=word_item name="word_loop"}{if !$smarty.foreach.word_loop.first} {/if}<span class="address_{$word_item|replace:',':''}">{$invoiceAddressFormatedValues[$word_item|replace:',':'']|escape:'htmlall':'UTF-8'}</span>{/foreach}</li>
                 {/if}
         
-            {/foreach}
-        </ul>
-        </div>
-        <div class="col-xs-12 col-sm-6">
-        	<ul class="address alternate_item box" {if $order->isVirtual()}style="display:none;"{/if}>
-            <li><h3 class="page-subheading">{l s='Delivery'}</h3></li>
-            {foreach from=$dlv_adr_fields name=dlv_loop item=field_item}
-                {if $field_item eq "company" && isset($address_delivery->company)}<li class="address_company">{$address_delivery->company|escape:'htmlall':'UTF-8'}</li>
-                {elseif $field_item eq "address2" && $address_delivery->address2}<li class="address_address2">{$address_delivery->address2|escape:'htmlall':'UTF-8'}</li>
-                {elseif $field_item eq "phone_mobile" && $address_delivery->phone_mobile}<li class="address_phone_mobile">{$address_delivery->phone_mobile|escape:'htmlall':'UTF-8'}</li>
-                {else}
-                        {assign var=address_words value=" "|explode:$field_item} 
-                        <li>{foreach from=$address_words item=word_item name="word_loop"}{if !$smarty.foreach.word_loop.first} {/if}<span class="address_{$word_item|replace:',':''}">{$deliveryAddressFormatedValues[$word_item|replace:',':'']|escape:'htmlall':'UTF-8'}</span>{/foreach}</li>
-                {/if}
             {/foreach}
         </ul>
         </div>
@@ -132,7 +132,7 @@
 			{if $priceDisplay && $use_tax}
 				<tr class="item">
 					<td colspan="{if $return_allowed}2{else}1{/if}">
-						<strong>{l s='Total products (tax excl.)'}</strong>
+						<strong>{l s='Items (tax excl.)'}</strong>
 					</td>
                     <td colspan="{if $order->hasProductReturned()}5{else}4{/if}">
                     	<span class="price">{displayWtPriceWithCurrency price=$order->getTotalProductsWithoutTaxes() currency=$currency}</span>
@@ -141,7 +141,7 @@
 			{/if}
 			<tr class="item">
 				<td colspan="{if $return_allowed}2{else}1{/if}">
-					<strong>{l s='Total products'} {if $use_tax}{l s='(tax incl.)'}{/if}: </strong>
+					<strong>{l s='Items'} {if $use_tax}{l s='(tax incl.)'}{/if} </strong>
 				</td>
                 <td colspan="{if $order->hasProductReturned()}5{else}4{/if}">
                 	<span class="price">{displayWtPriceWithCurrency price=$order->getTotalProductsWithTaxes() currency=$currency}</span>
@@ -150,7 +150,7 @@
 			{if $order->total_discounts > 0}
 			<tr class="item">
 				<td colspan="{if $return_allowed}2{else}1{/if}">
-					<strong>{l s='Total vouchers:'}</strong>
+					<strong>{l s='Total vouchers'}</strong>
 				</td>
                 <td colspan="{if $order->hasProductReturned()}5{else}4{/if}">
                 	<span class="price-discount">{displayWtPriceWithCurrency price=$order->total_discounts currency=$currency convert=1}</span>
@@ -160,7 +160,7 @@
 			{if $order->total_wrapping > 0}
 			<tr class="item">
 				<td colspan="{if $return_allowed}2{else}1{/if}">
-					<strong>{l s='Total gift wrapping cost:'}</strong>
+					<strong>{l s='Total gift wrapping cost'}</strong>
 				</td>
                 <td colspan="{if $order->hasProductReturned()}5{else}4{/if}">
                 	<span class="price-wrapping">{displayWtPriceWithCurrency price=$order->total_wrapping currency=$currency}</span>
@@ -169,7 +169,7 @@
 			{/if}
 			<tr class="item">
 				<td colspan="{if $return_allowed}2{else}1{/if}">
-					<strong>{l s='Total shipping'} {if $use_tax}{l s='(tax incl.)'}{/if}: </strong>
+					<strong>{l s='Shipping & handling'} {if $use_tax}{l s='(tax incl.)'}{/if} </strong>
 				</td>
                 <td colspan="{if $order->hasProductReturned()}5{else}4{/if}">
                 	<span class="price-shipping">{displayWtPriceWithCurrency price=$order->total_shipping currency=$currency}</span>
