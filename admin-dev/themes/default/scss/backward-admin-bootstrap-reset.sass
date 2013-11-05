@@ -1,7 +1,19 @@
 @import compass
 #nobootstrap
+	width: 100%
+	background-color: white
+	margin: -20px 0 0 -20px
+	padding: 20px
+	@include box-sizing(content-box)
 	*, *:before, *:after
 		@include box-sizing(content-box)
+	fieldset
+		h1, h2, h3, h4, h5, h6
+			margin: 0!important
+			padding: 0!important
+			background-color: transparent!important
+			border: none!important
+			text-transform: none!important
 	a
 		line-height: normal
 	.categorieList a
@@ -16,19 +28,16 @@
 		font-size: 13px
 		display: inline
 		line-height: normal
-	fieldset
-		clear: both
-
 	.breadcrumb
 		padding: 0
 	li
 		line-height: normal
 	select, textarea, input
 		height: inherit
-
 	label, input, button, select, textarea
 		font-size: 12px
 		line-height: 13px
+		border-radius: none!important
 
 	input[type="radio"], input[type="checkbox"]
 		margin: 0
@@ -47,8 +56,6 @@
 		line-height: normal
 		vertical-align: middle
 		border-top: none
-	#header #header_search #bo_search_submit
-		height: 25px!important
 	[class^="icon-"], [class*=" icon-"]
 		width: auto
 	.toolbarBox [class^="process-icon-"], .toolbarBox [class*=" process-icon-"]

@@ -1929,8 +1929,9 @@ class AdminControllerCore extends Controller
 		// Deprecated stylesheets + reset bootstrap style for the #nobootstrap field - Backward compatibility
 		//if (!$this->bootstrap)
 		//{
-			$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/backward-admin-old.css', 'all');
 			$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/backward-admin-bootstrap-reset.css', 'all');
+			$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/backward-admin-old.css', 'all');
+			
 		//}
 		
 		//todo csss for rtl support
