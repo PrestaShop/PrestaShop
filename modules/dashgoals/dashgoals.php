@@ -73,12 +73,34 @@ class Dashgoals extends Module
 				ConfigurationKPI::updateValue($key, 80);
 		}
 
+		// Prepare tab
+		$tab = new Tab();
+		$tab->active = 1;
+		$tab->class_name = "AdminDashgoals";
+		$tab->name = array();
+		foreach (Language::getLanguages(true) as $lang)
+			$tab->name[$lang['id_lang']] = 'Dashgoals';
+		$tab->id_parent = -1;
+		$tab->module = $this->name;
+
 		return (
-			parent::install()
+			$tab->add()
+			&& parent::install()
 			&& $this->registerHook('dashboardZoneTwo')
 			&& $this->registerHook('dashboardData')
 			&& $this->registerHook('displayBackOfficeHeader')
 		);
+	}
+
+	public function uninstall()
+	{
+		$id_tab = (int)Tab::getIdFromClassName('AdminDashgoals');
+		if ($id_tab)
+		{
+			$tab = new Tab($id_tab);
+			$tab->delete();
+		}
+		return parent::uninstall();
 	}
 	
 	public function hookDisplayBackOfficeHeader()
@@ -86,10 +108,9 @@ class Dashgoals extends Module
 		if (get_class($this->context->controller) == 'AdminDashboardController')
 			$this->context->controller->addJs($this->_path.'views/js/'.$this->name.'.js');
 	}
-
-	public function hookDashboardZoneTwo($params)
+	
+	public function setMonths($year)
 	{
-		$year = date('Y');
 		$months = array();
 		for ($i = '01'; $i <= 12; $i = sprintf('%02d', $i + 1))
 			$months[$i.'_'.$year] = array('label' => Dashgoals::$month_labels[$i], 'values' => array());
@@ -102,10 +123,20 @@ class Dashgoals extends Module
 					ConfigurationKPI::updateValue(strtoupper($key), (float)Tools::getValue($key));
 				$month_row['values'][$type] = ConfigurationKPI::get(strtoupper($key));
 			}
+		return $months;
+	}
 
-		$this->context->smarty->assign('currency', $this->context->currency);
-		$this->context->smarty->assign('goals_year', $year);
-		$this->context->smarty->assign('goals_months', $months);
+	public function hookDashboardZoneTwo($params)
+	{
+		$year = date('Y');
+		$months = $this->setMonths($year);
+
+		$this->context->smarty->assign(array(
+			'currency' => $this->context->currency,
+			'goals_year' => $year,
+			'goals_months' => $months,
+			'dashgoals_ajax_link' => $this->context->link->getAdminLink('AdminDashgoals')
+		));
 		return $this->display(__FILE__, 'dashboard_zone_two.tpl');
 	}
 

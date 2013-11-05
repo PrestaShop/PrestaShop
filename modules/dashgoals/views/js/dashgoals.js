@@ -42,12 +42,24 @@ function dashgoals_changeYear(xward)
 
 function dashgoals_changeConfYear(xward)
 {
-	// Todo
-	// getModuleLink('dashgoals', 'ajax', array('year' => $('#dashgoals_conftitle').text()), $ssl = null, $id_lang = null, $id_shop = null)
 	if (xward == 'forward')
 		$('#dashgoals_conftitle').text(parseInt($('#dashgoals_conftitle').text()) + 1);
 	else if (xward == 'backward')
 		$('#dashgoals_conftitle').text(parseInt($('#dashgoals_conftitle').text()) - 1);
+		
+	$.ajax({
+		url: dashgoals_ajax_link,
+		data: {
+			ajax: true,
+			action: 'changeconfyear',
+			year: parseInt($('#dashgoals_conftitle').text())
+		},
+		success : function(result){
+			$('#dashgoals_config').fadeOut();
+			$('#dashgoals_config').replaceWith(result);
+			$('#dashgoals_config').removeClass('hide').fadeIn();
+		}
+	});
 }
 
 $(document).ready(function() {
