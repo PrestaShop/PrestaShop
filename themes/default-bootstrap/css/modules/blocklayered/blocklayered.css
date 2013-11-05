@@ -1,15 +1,12 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
-/* line 4, ../../../sass/modules/blocklayered/blocklayered.scss */
 #layered_block_left ul.layered_filter_ul {
   border-top: 1px solid #d6d4d4;
 }
 
-/* line 9, ../../../sass/modules/blocklayered/blocklayered.scss */
 #layered_block_left div.block_content {
   padding: 6px;
 }
 
-/* line 13, ../../../sass/modules/blocklayered/blocklayered.scss */
 #layered_block_left ul {
   padding-left: 0;
   max-height: 120px;
@@ -19,115 +16,95 @@
   padding-right: 1px;
 }
 
-/* line 22, ../../../sass/modules/blocklayered/blocklayered.scss */
 #layered_form > div > div {
   border-bottom: 1px dotted #CCCCCC;
   padding-bottom: 5px;
   margin-bottom: 5px;
 }
 
-/* line 28, ../../../sass/modules/blocklayered/blocklayered.scss */
 #layered_block_left .hide-action {
   display: block;
   text-align: right;
   padding-right: 5px;
 }
 
-/* line 33, ../../../sass/modules/blocklayered/blocklayered.scss */
 #layered_block_left .hide-action:hover {
   text-decoration: underline;
 }
 
-/* line 37, ../../../sass/modules/blocklayered/blocklayered.scss */
 #layered_block_left ul li {
   margin-left: 15px;
   padding-left: 2px;
   list-style-type: none;
 }
 
-/* line 43, ../../../sass/modules/blocklayered/blocklayered.scss */
 #layered_block_left #enabled_filters, #layered_url_filter_block {
   font-size: 10px;
   padding-bottom: 5px;
 }
 
 /* Style moved form the template to the css  */
-/* line 50, ../../../sass/modules/blocklayered/blocklayered.scss */
 #layered_block_left ul li .disabled {
   color: #666;
 }
 
-/* line 53, ../../../sass/modules/blocklayered/blocklayered.scss */
 .product_list .warning {
   margin-top: 13px;
 }
 
-/* line 57, ../../../sass/modules/blocklayered/blocklayered.scss */
 #layered_form .select {
   width: 165px;
 }
 
-/* line 60, ../../../sass/modules/blocklayered/blocklayered.scss */
 #layered_block_left .color-option.disable {
   opacity: 0.5;
   filter: alpha(opacity=50);
   -moz-opacity: 0.5;
 }
 
-/* line 65, ../../../sass/modules/blocklayered/blocklayered.scss */
 #layered_form .color-option.on {
   border: 1px solid red;
 }
 
-/* line 68, ../../../sass/modules/blocklayered/blocklayered.scss */
 #layered_form input[type=radio] {
   margin-left: 2px;
   vertical-align: middle;
 }
 
-/* line 72, ../../../sass/modules/blocklayered/blocklayered.scss */
 .layered_price_range {
   margin-left: 7px;
 }
 
-/* line 75, ../../../sass/modules/blocklayered/blocklayered.scss */
 .layered_price_range_unit {
   margin-right: 7px;
 }
 
-/* line 78, ../../../sass/modules/blocklayered/blocklayered.scss */
 .layered_slider_container {
   margin: 6px 0 6px 6px;
   width: 93%;
 }
 
-/* line 81, ../../../sass/modules/blocklayered/blocklayered.scss */
 .layered_slider {
   margin-top: 5px;
 }
 
-/* line 84, ../../../sass/modules/blocklayered/blocklayered.scss */
 .layered_input_range_min {
   width: 30px;
 }
 
-/* line 87, ../../../sass/modules/blocklayered/blocklayered.scss */
 .layered_input_range_max {
   width: 40px;
 }
 
-/* line 90, ../../../sass/modules/blocklayered/blocklayered.scss */
 .layered_list_selected {
   font-weight: bold;
 }
 
-/* line 93, ../../../sass/modules/blocklayered/blocklayered.scss */
 .layered_ajax_loader p {
   margin: 20px 0;
   text-align: center;
 }
 
-/* line 97, ../../../sass/modules/blocklayered/blocklayered.scss */
 .hide-action {
   text-align: center;
   text-align: right;
@@ -135,7 +112,6 @@
   cursor: pointer;
 }
 
-/* line 103, ../../../sass/modules/blocklayered/blocklayered.scss */
 .hide-action:hover {
   font-weight: bold;
 }

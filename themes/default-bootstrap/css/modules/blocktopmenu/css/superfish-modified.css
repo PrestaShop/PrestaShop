@@ -1,18 +1,15 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
 /*** ESSENTIAL STYLES ***/
-/* line 3, ../../../../sass/modules/blocktopmenu/css/superfish-modified.scss */
 .sf-contener {
   clear: both;
 }
 
-/* line 8, ../../../../sass/modules/blocktopmenu/css/superfish-modified.scss */
 .sf-menu, .sf-menu * {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-/* line 13, ../../../../sass/modules/blocktopmenu/css/superfish-modified.scss */
 .sf-menu {
   margin: 50px 0 0;
   padding: 0;
@@ -21,19 +18,16 @@
   background: #f6f6f6;
 }
 @media (min-width: 480px) and (max-width: 767px) {
-  /* line 13, ../../../../sass/modules/blocktopmenu/css/superfish-modified.scss */
   .sf-menu {
     margin-top: 80px;
   }
 }
 @media (max-width: 479px) {
-  /* line 13, ../../../../sass/modules/blocktopmenu/css/superfish-modified.scss */
   .sf-menu {
     margin-top: 70px;
   }
 }
 
-/* line 26, ../../../../sass/modules/blocktopmenu/css/superfish-modified.scss */
 .sf-menu ul {
   position: absolute;
   top: -999em;
@@ -42,29 +36,24 @@
   background: #fff;
 }
 
-/* line 32, ../../../../sass/modules/blocktopmenu/css/superfish-modified.scss */
 .sf-menu ul li {
   width: 100%;
 }
 
-/* line 35, ../../../../sass/modules/blocktopmenu/css/superfish-modified.scss */
 .sf-menu li:hover {
   visibility: inherit;
   /* fixes IE7 'sticky bug' */
 }
 
-/* line 38, ../../../../sass/modules/blocktopmenu/css/superfish-modified.scss */
 .sf-menu li {
   position: relative;
 }
 
-/* line 41, ../../../../sass/modules/blocktopmenu/css/superfish-modified.scss */
 .sf-menu > li {
   float: left;
   border-right: 1px solid #d6d4d4;
   margin-bottom: -3px;
 }
-/* line 46, ../../../../sass/modules/blocktopmenu/css/superfish-modified.scss */
 .sf-menu > li > a {
   font: 600 18px/22px "Open Sans", sans-serif;
   text-transform: uppercase;
@@ -73,14 +62,12 @@
   padding: 17px 20px;
   border-bottom: 3px solid #e9e9e9;
 }
-/* line 55, ../../../../sass/modules/blocktopmenu/css/superfish-modified.scss */
 .sf-menu > li.sfHover > a, .sf-menu > li > a:hover, .sf-menu > li.sfHoverForce > a {
   background: #333;
   border-bottom-color: #666666;
   color: #fff;
 }
 
-/* line 61, ../../../../sass/modules/blocktopmenu/css/superfish-modified.scss */
 .sf-menu li li a {
   display: block;
   position: relative;
@@ -90,19 +77,16 @@
   font-weight: bold;
   padding-bottom: 10px;
 }
-/* line 70, ../../../../sass/modules/blocktopmenu/css/superfish-modified.scss */
 .sf-menu li li a:before {
   content: "";
   display: inline-block;
   font-family: "FontAwesome";
   padding-right: 10px;
 }
-/* line 77, ../../../../sass/modules/blocktopmenu/css/superfish-modified.scss */
 .sf-menu li li a:hover {
   color: #333;
 }
 
-/* line 81, ../../../../sass/modules/blocktopmenu/css/superfish-modified.scss */
 .sf-menu li ul {
   display: none;
   left: 0;
@@ -116,13 +100,11 @@
   box-shadow: rgba(0, 0, 0, 0) 0px 5px 13px;
 }
 
-/* line 91, ../../../../sass/modules/blocktopmenu/css/superfish-modified.scss */
 ul.sf-menu li:hover li ul,
 ul.sf-menu li.sfHover li ul {
   top: -999em;
 }
 
-/* line 95, ../../../../sass/modules/blocktopmenu/css/superfish-modified.scss */
 ul.sf-menu li li:hover ul,
 ul.sf-menu li li.sfHover ul {
   left: 200px;
@@ -130,13 +112,11 @@ ul.sf-menu li li.sfHover ul {
   top: 0;
 }
 
-/* line 100, ../../../../sass/modules/blocktopmenu/css/superfish-modified.scss */
 ul.sf-menu li li:hover li ul,
 ul.sf-menu li li.sfHover li ul {
   top: -999em;
 }
 
-/* line 104, ../../../../sass/modules/blocktopmenu/css/superfish-modified.scss */
 ul.sf-menu li li li:hover ul,
 ul.sf-menu li li li.sfHover ul {
   left: 200px;

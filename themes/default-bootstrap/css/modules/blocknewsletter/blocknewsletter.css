@@ -1,39 +1,32 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
 /* Block newsletter */
-/* line 5, ../../../sass/modules/blocknewsletter/blocknewsletter.scss */
 #columns #newsletter_block_left .form-group {
   margin-bottom: 0;
 }
-/* line 8, ../../../sass/modules/blocknewsletter/blocknewsletter.scss */
 #columns #newsletter_block_left .form-group .form-control {
   max-width: 222px;
   display: inline-block;
   margin-right: 6px;
 }
 @media (min-width: 768px) and (max-width: 1199px) {
-  /* line 8, ../../../sass/modules/blocknewsletter/blocknewsletter.scss */
   #columns #newsletter_block_left .form-group .form-control {
     margin-bottom: 10px;
     margin-right: 0;
   }
 }
-/* line 19, ../../../sass/modules/blocknewsletter/blocknewsletter.scss */
 #columns #newsletter_block_left .success_inline, #columns #newsletter_block_left .warning_inline {
   text-align: left;
   padding: 1px 0 0 0;
   margin-bottom: -19px;
 }
-/* line 25, ../../../sass/modules/blocknewsletter/blocknewsletter.scss */
 #columns #newsletter_block_left .success_inline {
   color: #418B19;
 }
-/* line 29, ../../../sass/modules/blocknewsletter/blocknewsletter.scss */
 #columns #newsletter_block_left .warning_inline {
   color: #f13340;
 }
 
 /* Block newsletter footer */
-/* line 36, ../../../sass/modules/blocknewsletter/blocknewsletter.scss */
 #footer #newsletter_block_left {
   overflow: hidden;
   width: 50%;
@@ -42,13 +35,11 @@
   margin-bottom: 0;
 }
 @media (max-width: 767px) {
-  /* line 36, ../../../sass/modules/blocknewsletter/blocknewsletter.scss */
   #footer #newsletter_block_left {
     background: #3F3F3F;
     width: 100%;
   }
 }
-/* line 47, ../../../sass/modules/blocknewsletter/blocknewsletter.scss */
 #footer #newsletter_block_left h4 {
   background: none;
   float: left;
@@ -58,15 +49,12 @@
   line-height: 25px;
   border: none;
 }
-/* line 57, ../../../sass/modules/blocknewsletter/blocknewsletter.scss */
 #footer #newsletter_block_left .block_content {
   overflow: hidden;
 }
-/* line 59, ../../../sass/modules/blocknewsletter/blocknewsletter.scss */
 #footer #newsletter_block_left .form-group {
   margin-bottom: 0;
 }
-/* line 62, ../../../sass/modules/blocknewsletter/blocknewsletter.scss */
 #footer #newsletter_block_left .form-group .form-control {
   height: 45px;
   max-width: 267px;
@@ -76,13 +64,11 @@
   padding: 5px 43px 5px 12px;
   display: inline-block;
 }
-/* line 71, ../../../sass/modules/blocknewsletter/blocknewsletter.scss */
 #footer #newsletter_block_left .form-group .form-control:focus {
   -webkit-box-shadow: black 0px 0px 0px;
   -moz-box-shadow: black 0px 0px 0px;
   box-shadow: black 0px 0px 0px;
 }
-/* line 76, ../../../sass/modules/blocknewsletter/blocknewsletter.scss */
 #footer #newsletter_block_left .form-group .button-small {
   margin-left: -41px;
   border: none;
@@ -90,22 +76,18 @@
   text-align: center;
   color: #908f8f;
 }
-/* line 83, ../../../sass/modules/blocknewsletter/blocknewsletter.scss */
 #footer #newsletter_block_left .form-group .button-small:before {
   content: "";
   font-family: 'FontAwesome';
   font-size: 28px;
   line-height: 28px;
 }
-/* line 90, ../../../sass/modules/blocknewsletter/blocknewsletter.scss */
 #footer #newsletter_block_left .form-group .button-small:hover {
   color: #fff !important;
 }
-/* line 94, ../../../sass/modules/blocknewsletter/blocknewsletter.scss */
 #footer #newsletter_block_left .form-group .button-small span {
   display: none;
 }
-/* line 98, ../../../sass/modules/blocknewsletter/blocknewsletter.scss */
 #footer #newsletter_block_left .warning_inline {
   display: inline-block;
   color: #f13340;

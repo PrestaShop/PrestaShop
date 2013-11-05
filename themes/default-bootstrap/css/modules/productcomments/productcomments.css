@@ -1,5 +1,4 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
-/* line 3, ../../../sass/modules/productcomments/productcomments.scss */
 #product_comments_block_extra {
   padding: 8px 10px 10px;
   font-weight: bold;
@@ -9,24 +8,20 @@
   margin: 39px 0 22px;
 }
 
-/* line 11, ../../../sass/modules/productcomments/productcomments.scss */
 .comments_advices {
   padding-top: 2px;
 }
-/* line 14, ../../../sass/modules/productcomments/productcomments.scss */
 .comments_advices li {
   display: inline-block;
   line-height: 30px;
   /*min 768px max 991px*/
 }
 @media (min-width: 768px) and (max-width: 991px) {
-  /* line 14, ../../../sass/modules/productcomments/productcomments.scss */
   .comments_advices li {
     display: block;
     line-height: 20px;
   }
 }
-/* line 23, ../../../sass/modules/productcomments/productcomments.scss */
 .comments_advices a {
   text-decoration: none;
   color: #777;
@@ -38,13 +33,11 @@
   /*min 768px max 991px*/
 }
 @media (min-width: 768px) and (max-width: 1199px) {
-  /* line 23, ../../../sass/modules/productcomments/productcomments.scss */
   .comments_advices a {
     float: none;
     line-height: 20px;
   }
 }
-/* line 38, ../../../sass/modules/productcomments/productcomments.scss */
 .comments_advices a:before {
   background: #929292;
   border-radius: 50px;
@@ -63,24 +56,19 @@
   /*max 1199px*/
 }
 @media (max-width: 1199px) {
-  /* line 38, ../../../sass/modules/productcomments/productcomments.scss */
   .comments_advices a:before {
     display: none;
   }
 }
-/* line 62, ../../../sass/modules/productcomments/productcomments.scss */
 .comments_advices a.reviews:before {
   content: "";
 }
-/* line 63, ../../../sass/modules/productcomments/productcomments.scss */
 .comments_advices a.open-comment-form:before {
   content: "";
 }
-/* line 64, ../../../sass/modules/productcomments/productcomments.scss */
 .comments_advices a:hover {
   color: #333;
 }
-/* line 65, ../../../sass/modules/productcomments/productcomments.scss */
 .comments_advices a.reviews {
   border-right: 1px solid #d6d4d4;
   padding-right: 30px;
@@ -88,7 +76,6 @@
   /* min 768px max 991px*/
 }
 @media (min-width: 768px) and (max-width: 991px) {
-  /* line 65, ../../../sass/modules/productcomments/productcomments.scss */
   .comments_advices a.reviews {
     margin-right: 0;
     padding: 0;
@@ -96,53 +83,43 @@
   }
 }
 
-/* line 81, ../../../sass/modules/productcomments/productcomments.scss */
 #product_comments_block_extra .comments_note {
   margin-bottom: 5px;
 }
-/* line 83, ../../../sass/modules/productcomments/productcomments.scss */
 #product_comments_block_extra .comments_note span,
 #product_comments_block_extra .star_content {
   float: left;
   color: #333;
 }
-/* line 84, ../../../sass/modules/productcomments/productcomments.scss */
 #product_comments_block_extra .star_content {
   margin-top: 1px;
 }
-/* line 85, ../../../sass/modules/productcomments/productcomments.scss */
 #product_comments_block_extra div.star {
   background: url(img/star.png) no-repeat 0 0;
 }
-/* line 86, ../../../sass/modules/productcomments/productcomments.scss */
 #product_comments_block_extra div.star_on {
   background: url(img/star.png) no-repeat 0 -13px;
 }
-/* line 87, ../../../sass/modules/productcomments/productcomments.scss */
 #product_comments_block_extra .comments_advices {
   clear: both;
 }
 
 /* pop-in add grade/advice ********************************************************************* */
-/* line 92, ../../../sass/modules/productcomments/productcomments.scss */
 #fancybox-wrap {
   width: 585px;
 }
 
-/* line 93, ../../../sass/modules/productcomments/productcomments.scss */
 #fancybox-content {
   width: 585px;
   border-width: 0;
 }
 
-/* line 97, ../../../sass/modules/productcomments/productcomments.scss */
 .new_comment_form_content .intro_form {
   padding-bottom: 10px;
   font-weight: bold;
   font-size: 12px;
 }
 
-/* line 103, ../../../sass/modules/productcomments/productcomments.scss */
 #new_comment_form {
   width: 465px;
   overflow: hidden;
@@ -151,16 +128,13 @@
   /*max 767px*/
 }
 @media (max-width: 767px) {
-  /* line 103, ../../../sass/modules/productcomments/productcomments.scss */
   #new_comment_form {
     width: 275px;
   }
 }
-/* line 114, ../../../sass/modules/productcomments/productcomments.scss */
 #new_comment_form h2 {
   margin-bottom: 10px;
 }
-/* line 115, ../../../sass/modules/productcomments/productcomments.scss */
 #new_comment_form .title {
   padding: 10px;
   font-size: 13px;
@@ -168,38 +142,30 @@
   text-transform: uppercase;
   background: #333333;
 }
-/* line 123, ../../../sass/modules/productcomments/productcomments.scss */
 #new_comment_form ul.grade_content {
   list-style-type: none;
 }
-/* line 124, ../../../sass/modules/productcomments/productcomments.scss */
 #new_comment_form .grade_content li {
   width: 50%;
 }
-/* line 125, ../../../sass/modules/productcomments/productcomments.scss */
 #new_comment_form .product {
   padding: 15px;
 }
-/* line 126, ../../../sass/modules/productcomments/productcomments.scss */
 #new_comment_form .product img {
   border: 1px solid #d6d4d4;
 }
-/* line 129, ../../../sass/modules/productcomments/productcomments.scss */
 #new_comment_form .product .product_desc {
   line-height: 18px;
   color: #666666;
 }
-/* line 133, ../../../sass/modules/productcomments/productcomments.scss */
 #new_comment_form .product .product_desc .product_name {
   padding: 10px 0 5px;
   font-size: 13px;
   color: black;
 }
-/* line 139, ../../../sass/modules/productcomments/productcomments.scss */
 #new_comment_form .grade_content {
   margin: 0 0 20px 0;
 }
-/* line 141, ../../../sass/modules/productcomments/productcomments.scss */
 #new_comment_form .grade_content span,
 #new_comment_form .grade_content span {
   display: inline-block;
@@ -208,23 +174,19 @@
   /* 160 */
   font-weight: bold;
 }
-/* line 147, ../../../sass/modules/productcomments/productcomments.scss */
 #new_comment_form .grade_content .cancel {
   margin-right: 5px;
 }
-/* line 148, ../../../sass/modules/productcomments/productcomments.scss */
 #new_comment_form .new_comment_form_content {
   padding: 15px;
   background: #f8f8f8;
 }
-/* line 152, ../../../sass/modules/productcomments/productcomments.scss */
 #new_comment_form label {
   display: block;
   margin: 12px 0 4px 0;
   font-weight: bold;
   font-size: 12px;
 }
-/* line 159, ../../../sass/modules/productcomments/productcomments.scss */
 #new_comment_form input,
 #new_comment_form textarea {
   padding: 0 5px;
@@ -233,152 +195,122 @@
   border: 1px solid #ccc;
   background: #fff;
 }
-/* line 166, ../../../sass/modules/productcomments/productcomments.scss */
 #new_comment_form textarea {
   height: 80px;
 }
-/* line 170, ../../../sass/modules/productcomments/productcomments.scss */
 #new_comment_form .submit {
   margin-top: 20px;
   padding: 0;
   font-size: 13px;
   text-align: right;
 }
-/* line 177, ../../../sass/modules/productcomments/productcomments.scss */
 #new_comment_form #criterions_list {
   border-bottom: 1px solid #CCC;
   padding-bottom: 15px;
   list-style-type: none;
 }
-/* line 182, ../../../sass/modules/productcomments/productcomments.scss */
 #new_comment_form #criterions_list li {
   margin-bottom: 10px;
 }
-/* line 185, ../../../sass/modules/productcomments/productcomments.scss */
 #new_comment_form #criterions_list label {
   display: inline;
   float: left;
   margin: 0 10px 0 0;
 }
-/* line 191, ../../../sass/modules/productcomments/productcomments.scss */
 #new_comment_form #criterions_list .star_content {
   float: left;
 }
-/* line 196, ../../../sass/modules/productcomments/productcomments.scss */
 #new_comment_form #new_comment_form_footer {
   margin-top: 20px;
   font-size: 12px;
 }
 
 /* TAB COMMENTS ******************************************************************************** */
-/* line 202, ../../../sass/modules/productcomments/productcomments.scss */
 #product_comments_block_tab {
   margin: 0 0 20px 0;
 }
-/* line 204, ../../../sass/modules/productcomments/productcomments.scss */
 #product_comments_block_tab div.comment {
   margin: 0 0 14px;
   padding-top: 14px;
   border-top: 1px solid #d6d4d4;
 }
-/* line 210, ../../../sass/modules/productcomments/productcomments.scss */
 #product_comments_block_tab div.comment:first-child {
   padding: 0;
   border: none;
 }
-/* line 211, ../../../sass/modules/productcomments/productcomments.scss */
 #product_comments_block_tab div.comment div.comment_author {
   padding: 0 20px;
   line-height: 18px;
 }
-/* line 215, ../../../sass/modules/productcomments/productcomments.scss */
 #product_comments_block_tab div.comment div.comment_author span {
   font-weight: bold;
 }
-/* line 217, ../../../sass/modules/productcomments/productcomments.scss */
 #product_comments_block_tab div.comment div.comment_author span,
 #product_comments_block_tab div.comment .star_content {
   float: left;
 }
-/* line 220, ../../../sass/modules/productcomments/productcomments.scss */
 #product_comments_block_tab div.comment .star_content {
   margin: 0 0 0 5px;
 }
-/* line 222, ../../../sass/modules/productcomments/productcomments.scss */
 #product_comments_block_tab div.star,
 #product_comments_block_tab div.star_on {
   background: url(img/star.png) no-repeat 0 0;
 }
-/* line 225, ../../../sass/modules/productcomments/productcomments.scss */
 #product_comments_block_tab div.star_on {
   background-position: 0 -13px;
 }
-/* line 226, ../../../sass/modules/productcomments/productcomments.scss */
 #product_comments_block_tab .comment_author_infos {
   clear: both;
   padding-top: 9px;
 }
-/* line 228, ../../../sass/modules/productcomments/productcomments.scss */
 #product_comments_block_tab .comment_author_infos strong {
   display: block;
   color: #333;
 }
-/* line 229, ../../../sass/modules/productcomments/productcomments.scss */
 #product_comments_block_tab .comment_author_infos em {
   color: #adadad;
 }
-/* line 232, ../../../sass/modules/productcomments/productcomments.scss */
 #product_comments_block_tab div.comment div.comment_details {
   overflow: hidden;
   border-left: 1px solid #d6d4d4;
   /*max 767px */
 }
 @media (max-width: 991px) {
-  /* line 232, ../../../sass/modules/productcomments/productcomments.scss */
   #product_comments_block_tab div.comment div.comment_details {
     border-left: none;
   }
 }
-/* line 244, ../../../sass/modules/productcomments/productcomments.scss */
 #product_comments_block_tab div.comment_details ul {
   list-style-type: none;
   margin: 0;
 }
-/* line 248, ../../../sass/modules/productcomments/productcomments.scss */
 #product_comments_block_tab div.comment_details li {
   padding: 2px 0 2px;
 }
-/* line 250, ../../../sass/modules/productcomments/productcomments.scss */
 #product_comments_block_tab div.comment_details li:before {
   font-family: FontAwesome;
   content: "";
   color: #333;
   margin-right: 8px;
 }
-/* line 259, ../../../sass/modules/productcomments/productcomments.scss */
 #product_comments_block_tab div.comment_details .title_block {
   text-transform: capitalize;
 }
-/* line 260, ../../../sass/modules/productcomments/productcomments.scss */
 #product_comments_block_tab a {
   text-decoration: none;
   font-weight: bold;
 }
-/* line 265, ../../../sass/modules/productcomments/productcomments.scss */
 #product_comments_block_tab span.report_btn {
   cursor: pointer;
 }
-/* line 266, ../../../sass/modules/productcomments/productcomments.scss */
 #product_comments_block_tab span.report_btn:hover {
   text-decoration: underline;
 }
 
-/* line 270, ../../../sass/modules/productcomments/productcomments.scss */
 .fl {
   float: left;
 }
 
-/* line 271, ../../../sass/modules/productcomments/productcomments.scss */
 .fr {
   float: right;
 }

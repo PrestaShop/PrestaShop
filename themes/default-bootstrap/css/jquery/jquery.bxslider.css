@@ -10,7 +10,6 @@
  * CEO and founder of bxCreative, LTD
  * http://bxcreative.com
  */
-/* line 16, ../../sass/jquery/jquery.bxslider.scss */
 #crossselling_list, .accessories-block .block_content, #productscategory_list {
   /** RESET AND LAYOUT
   ===================================*/
@@ -23,19 +22,16 @@
   /* PAGER WITH AUTO-CONTROLS HYBRID LAYOUT */
   /* IMAGE CAPTIONS */
 }
-/* line 21, ../../sass/jquery/jquery.bxslider.scss */
 #crossselling_list .bx-wrapper, .accessories-block .block_content .bx-wrapper, #productscategory_list .bx-wrapper {
   position: relative;
   padding: 0;
   *zoom: 1;
   margin: 0 !important;
 }
-/* line 28, ../../sass/jquery/jquery.bxslider.scss */
 #crossselling_list .bx-wrapper img, .accessories-block .block_content .bx-wrapper img, #productscategory_list .bx-wrapper img {
   max-width: 100%;
   display: block;
 }
-/* line 39, ../../sass/jquery/jquery.bxslider.scss */
 #crossselling_list .bx-wrapper .bx-pager,
 #crossselling_list .bx-wrapper .bx-controls-auto, .accessories-block .block_content .bx-wrapper .bx-pager,
 .accessories-block .block_content .bx-wrapper .bx-controls-auto, #productscategory_list .bx-wrapper .bx-pager,
@@ -44,7 +40,6 @@
   bottom: -30px;
   width: 100%;
 }
-/* line 47, ../../sass/jquery/jquery.bxslider.scss */
 #crossselling_list .bx-wrapper .bx-loading, .accessories-block .block_content .bx-wrapper .bx-loading, #productscategory_list .bx-wrapper .bx-loading {
   min-height: 50px;
   background: url(images/bx_loader.gif) center center no-repeat;
@@ -56,7 +51,6 @@
   z-index: 2000;
   display: none;
 }
-/* line 61, ../../sass/jquery/jquery.bxslider.scss */
 #crossselling_list .bx-wrapper .bx-pager, .accessories-block .block_content .bx-wrapper .bx-pager, #productscategory_list .bx-wrapper .bx-pager {
   text-align: center;
   font-size: .85em;
@@ -65,7 +59,6 @@
   color: #666;
   padding-top: 20px;
 }
-/* line 71, ../../sass/jquery/jquery.bxslider.scss */
 #crossselling_list .bx-wrapper .bx-pager .bx-pager-item,
 #crossselling_list .bx-wrapper .bx-controls-auto .bx-controls-auto-item, .accessories-block .block_content .bx-wrapper .bx-pager .bx-pager-item,
 .accessories-block .block_content .bx-wrapper .bx-controls-auto .bx-controls-auto-item, #productscategory_list .bx-wrapper .bx-pager .bx-pager-item,
@@ -74,7 +67,6 @@
   *zoom: 1;
   *display: inline;
 }
-/* line 77, ../../sass/jquery/jquery.bxslider.scss */
 #crossselling_list .bx-wrapper .bx-pager.bx-default-pager a, .accessories-block .block_content .bx-wrapper .bx-pager.bx-default-pager a, #productscategory_list .bx-wrapper .bx-pager.bx-default-pager a {
   text-indent: -9999px;
   display: block;
@@ -89,14 +81,12 @@
   -o-border-radius: 5px;
   border-radius: 5px;
 }
-/* line 89, ../../sass/jquery/jquery.bxslider.scss */
 #crossselling_list .bx-wrapper .bx-pager.bx-default-pager a:hover,
 #crossselling_list .bx-wrapper .bx-pager.bx-default-pager a.active, .accessories-block .block_content .bx-wrapper .bx-pager.bx-default-pager a:hover,
 .accessories-block .block_content .bx-wrapper .bx-pager.bx-default-pager a.active, #productscategory_list .bx-wrapper .bx-pager.bx-default-pager a:hover,
 #productscategory_list .bx-wrapper .bx-pager.bx-default-pager a.active {
   background: #000;
 }
-/* line 98, ../../sass/jquery/jquery.bxslider.scss */
 #crossselling_list .bx-wrapper .bx-controls-direction a, .accessories-block .block_content .bx-wrapper .bx-controls-direction a, #productscategory_list .bx-wrapper .bx-controls-direction a {
   margin-top: 38px;
   height: 20px;
@@ -108,7 +98,6 @@
   font-size: 0;
   overflow: hidden;
 }
-/* line 108, ../../sass/jquery/jquery.bxslider.scss */
 #crossselling_list .bx-wrapper .bx-controls-direction a:before, .accessories-block .block_content .bx-wrapper .bx-controls-direction a:before, #productscategory_list .bx-wrapper .bx-controls-direction a:before {
   padding-left: 2px;
   color: #c0c0c0;
@@ -116,35 +105,27 @@
   font-size: 20px;
   line-height: 22px;
 }
-/* line 116, ../../sass/jquery/jquery.bxslider.scss */
 #crossselling_list .bx-wrapper .bx-controls-direction a:hover:before, .accessories-block .block_content .bx-wrapper .bx-controls-direction a:hover:before, #productscategory_list .bx-wrapper .bx-controls-direction a:hover:before {
   color: #333;
 }
-/* line 120, ../../sass/jquery/jquery.bxslider.scss */
 #crossselling_list .bx-next, .accessories-block .block_content .bx-next, #productscategory_list .bx-next {
   right: 10px;
 }
-/* line 122, ../../sass/jquery/jquery.bxslider.scss */
 #crossselling_list .bx-next:before, .accessories-block .block_content .bx-next:before, #productscategory_list .bx-next:before {
   content: "";
 }
-/* line 127, ../../sass/jquery/jquery.bxslider.scss */
 #crossselling_list .bx-prev, .accessories-block .block_content .bx-prev, #productscategory_list .bx-prev {
   left: 10px;
 }
-/* line 129, ../../sass/jquery/jquery.bxslider.scss */
 #crossselling_list .bx-prev:before, .accessories-block .block_content .bx-prev:before, #productscategory_list .bx-prev:before {
   content: "";
 }
-/* line 137, ../../sass/jquery/jquery.bxslider.scss */
 #crossselling_list .bx-wrapper .bx-controls-direction a.disabled, .accessories-block .block_content .bx-wrapper .bx-controls-direction a.disabled, #productscategory_list .bx-wrapper .bx-controls-direction a.disabled {
   display: none;
 }
-/* line 143, ../../sass/jquery/jquery.bxslider.scss */
 #crossselling_list .bx-wrapper .bx-controls-auto, .accessories-block .block_content .bx-wrapper .bx-controls-auto, #productscategory_list .bx-wrapper .bx-controls-auto {
   text-align: center;
 }
-/* line 147, ../../sass/jquery/jquery.bxslider.scss */
 #crossselling_list .bx-wrapper .bx-controls-auto .bx-start, .accessories-block .block_content .bx-wrapper .bx-controls-auto .bx-start, #productscategory_list .bx-wrapper .bx-controls-auto .bx-start {
   display: block;
   text-indent: -9999px;
@@ -154,14 +135,12 @@
   background: url(images/controls.png) -86px -11px no-repeat;
   margin: 0 3px;
 }
-/* line 158, ../../sass/jquery/jquery.bxslider.scss */
 #crossselling_list .bx-wrapper .bx-controls-auto .bx-start:hover,
 #crossselling_list .bx-wrapper .bx-controls-auto .bx-start.active, .accessories-block .block_content .bx-wrapper .bx-controls-auto .bx-start:hover,
 .accessories-block .block_content .bx-wrapper .bx-controls-auto .bx-start.active, #productscategory_list .bx-wrapper .bx-controls-auto .bx-start:hover,
 #productscategory_list .bx-wrapper .bx-controls-auto .bx-start.active {
   background-position: -86px 0;
 }
-/* line 162, ../../sass/jquery/jquery.bxslider.scss */
 #crossselling_list .bx-wrapper .bx-controls-auto .bx-stop, .accessories-block .block_content .bx-wrapper .bx-controls-auto .bx-stop, #productscategory_list .bx-wrapper .bx-controls-auto .bx-stop {
   display: block;
   text-indent: -9999px;
@@ -171,24 +150,20 @@
   background: url(images/controls.png) -86px -44px no-repeat;
   margin: 0 3px;
 }
-/* line 173, ../../sass/jquery/jquery.bxslider.scss */
 #crossselling_list .bx-wrapper .bx-controls-auto .bx-stop:hover,
 #crossselling_list .bx-wrapper .bx-controls-auto .bx-stop.active, .accessories-block .block_content .bx-wrapper .bx-controls-auto .bx-stop:hover,
 .accessories-block .block_content .bx-wrapper .bx-controls-auto .bx-stop.active, #productscategory_list .bx-wrapper .bx-controls-auto .bx-stop:hover,
 #productscategory_list .bx-wrapper .bx-controls-auto .bx-stop.active {
   background-position: -86px -33px;
 }
-/* line 179, ../../sass/jquery/jquery.bxslider.scss */
 #crossselling_list .bx-wrapper .bx-controls.bx-has-controls-auto.bx-has-pager .bx-pager, .accessories-block .block_content .bx-wrapper .bx-controls.bx-has-controls-auto.bx-has-pager .bx-pager, #productscategory_list .bx-wrapper .bx-controls.bx-has-controls-auto.bx-has-pager .bx-pager {
   text-align: left;
   width: 80%;
 }
-/* line 184, ../../sass/jquery/jquery.bxslider.scss */
 #crossselling_list .bx-wrapper .bx-controls.bx-has-controls-auto.bx-has-pager .bx-controls-auto, .accessories-block .block_content .bx-wrapper .bx-controls.bx-has-controls-auto.bx-has-pager .bx-controls-auto, #productscategory_list .bx-wrapper .bx-controls.bx-has-controls-auto.bx-has-pager .bx-controls-auto {
   right: 0;
   width: 35px;
 }
-/* line 192, ../../sass/jquery/jquery.bxslider.scss */
 #crossselling_list .bx-wrapper .bx-caption, .accessories-block .block_content .bx-wrapper .bx-caption, #productscategory_list .bx-wrapper .bx-caption {
   position: absolute;
   bottom: 0;
@@ -197,7 +172,6 @@
   background: rgba(80, 80, 80, 0);
   width: 100%;
 }
-/* line 201, ../../sass/jquery/jquery.bxslider.scss */
 #crossselling_list .bx-wrapper .bx-caption span, .accessories-block .block_content .bx-wrapper .bx-caption span, #productscategory_list .bx-wrapper .bx-caption span {
   color: #fff;
   font-family: Arial;

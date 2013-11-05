@@ -2,24 +2,20 @@
 /*********************************************************************
 					Maintenance Page Styles
 **********************************************************************/
-/* line 7, ../sass/maintenance.scss */
 #maintenance {
   margin-top: 50px;
   /* > 1200 */
 }
 @media (min-width: 1200px) {
-  /* line 7, ../sass/maintenance.scss */
   #maintenance {
     margin: 126px 0 0 0;
     padding: 91px 48px 365px 297px;
     background: url(../img/bg_maintenance.png) no-repeat;
   }
 }
-/* line 15, ../sass/maintenance.scss */
 #maintenance .logo {
   margin-bottom: 31px;
 }
-/* line 18, ../sass/maintenance.scss */
 #maintenance h1 {
   font: 600 28px/34px "Open Sans", sans-serif;
   color: #333;
@@ -28,7 +24,6 @@
   padding: 0 0 14px 0;
   margin: 0 0 19px 0;
 }
-/* line 27, ../sass/maintenance.scss */
 #maintenance #message {
   font: 600 16px/31px "Open Sans", sans-serif;
   padding-left: 18px;
@@ -37,7 +32,6 @@
 }
 
 @media only screen and (min-width: 1200px) {
-  /* line 35, ../sass/maintenance.scss */
   .container {
     padding-left: 0;
     padding-right: 0;
