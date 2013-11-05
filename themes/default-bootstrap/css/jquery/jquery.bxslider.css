@@ -194,7 +194,7 @@
   bottom: 0;
   left: 0;
   background: #666\9;
-  background: rgba(80, 80, 80, 0.75);
+  background: rgba(80, 80, 80, 0);
   width: 100%;
 }
 /* line 201, ../../sass/jquery/jquery.bxslider.scss */

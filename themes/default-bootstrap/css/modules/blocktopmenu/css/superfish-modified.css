@@ -111,9 +111,9 @@
   z-index: 99;
   width: 220px;
   padding: 25px 30px;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 13px;
-  -moz-box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 13px;
-  box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 13px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0) 0px 5px 13px;
+  -moz-box-shadow: rgba(0, 0, 0, 0) 0px 5px 13px;
+  box-shadow: rgba(0, 0, 0, 0) 0px 5px 13px;
 }
 
 /* line 91, ../../../../sass/modules/blocktopmenu/css/superfish-modified.scss */
