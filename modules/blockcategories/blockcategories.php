@@ -176,6 +176,7 @@ class BlockCategories extends Module
 
 			$resultParents = array();
 			$resultIds = array();
+			$isDhtml = (Configuration::get('BLOCK_CATEG_DHTML') == 1 ? true : false);
 
 			foreach ($result as &$row)
 			{
@@ -186,27 +187,6 @@ class BlockCategories extends Module
 			$blockCategTree = $this->getTree($resultParents, $resultIds, Configuration::get('BLOCK_CATEG_MAX_DEPTH'));
 			unset($resultParents, $resultIds);
 
-			$id_category = (int)Tools::getValue('id_category');
-			$id_product = (int)Tools::getValue('id_product');
-			
-			$isDhtml = (Configuration::get('BLOCK_CATEG_DHTML') == 1 ? true : false);
-			if (Tools::isSubmit('id_category'))
-			{
-				$this->context->cookie->last_visited_category = $id_category;
-				$this->smarty->assign('currentCategoryId', $this->context->cookie->last_visited_category);
-			}
-			if (Tools::isSubmit('id_product'))
-			{
-				if (!isset($this->context->cookie->last_visited_category)
-					|| !Product::idIsOnCategoryId($id_product, array('0' => array('id_category' => $this->context->cookie->last_visited_category)))
-					|| !Category::inShopStatic($this->context->cookie->last_visited_category, $this->context->shop))
-				{
-					$product = new Product($id_product);
-					if (isset($product) && Validate::isLoadedObject($product))
-						$this->context->cookie->last_visited_category = (int)$product->id_category_default;
-				}
-				$this->smarty->assign('currentCategoryId', (int)$this->context->cookie->last_visited_category);
-			}
 			$this->smarty->assign('blockCategTree', $blockCategTree);
 
 			if (file_exists(_PS_THEME_DIR_.'modules/blockcategories/blockcategories.tpl'))
@@ -215,6 +195,29 @@ class BlockCategories extends Module
 				$this->smarty->assign('branche_tpl_path', _PS_MODULE_DIR_.'blockcategories/category-tree-branch.tpl');
 			$this->smarty->assign('isDhtml', $isDhtml);
 		}
+
+		$id_category = (int)Tools::getValue('id_category');
+		$id_product = (int)Tools::getValue('id_product');
+		
+		if (Tools::isSubmit('id_category'))
+		{
+			$this->context->cookie->last_visited_category = (int)$id_category;
+			$this->smarty->assign('currentCategoryId', $this->context->cookie->last_visited_category);
+		}
+
+		if (Tools::isSubmit('id_product'))
+		{
+			if (!isset($this->context->cookie->last_visited_category)
+				|| !Product::idIsOnCategoryId($id_product, array('0' => array('id_category' => $this->context->cookie->last_visited_category)))
+				|| !Category::inShopStatic($this->context->cookie->last_visited_category, $this->context->shop))
+			{
+				$product = new Product((int)$id_product);
+				if (isset($product) && Validate::isLoadedObject($product))
+					$this->context->cookie->last_visited_category = (int)$product->id_category_default;
+			}
+			$this->smarty->assign('currentCategoryId', (int)$this->context->cookie->last_visited_category);
+		}
+
 		$display = $this->display(__FILE__, 'blockcategories.tpl', $this->getCacheId());
 		return $display;
 	}
