@@ -40,9 +40,6 @@
             	<div class="container">
                     <footer id="footer" class="row">
                         {$HOOK_FOOTER}
-                        {if $PS_ALLOW_MOBILE_DEVICE}
-                            <p class="text-center"><a href="{$link->getPageLink('index', true)}?mobile_theme_ok">{l s='Browse the mobile site'}</a></p>
-                        {/if}
                     </footer>
                 </div>
             </div>
