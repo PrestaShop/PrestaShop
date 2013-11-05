@@ -30,6 +30,7 @@ class AdminDashgoalsController extends ModuleAdminController
 	public function ajaxProcessChangeConfYear()
 	{	
 		$year = (int)Tools::getValue('year');
+		Configuration::updateValue('PS_DASHGOALS_CURRENT_YEAR', $year);
 		$months = $this->module->setMonths($year);
 
 		$this->context->smarty->assign(array(

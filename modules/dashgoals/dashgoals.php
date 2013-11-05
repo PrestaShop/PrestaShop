@@ -60,6 +60,7 @@ class Dashgoals extends Module
 
 	public function install()
 	{
+		Configuration::updateValue('PS_DASHGOALS_CURRENT_YEAR', date('Y'));
 		for ($month = '01'; $month <= 12; $month = sprintf('%02d', $month + 1))
 		{
 			$key = strtoupper('dashgoals_traffic_'.$month.'_'.date('Y'));
@@ -128,7 +129,7 @@ class Dashgoals extends Module
 
 	public function hookDashboardZoneTwo($params)
 	{
-		$year = date('Y');
+		$year = Configuration::get('PS_DASHGOALS_CURRENT_YEAR');
 		$months = $this->setMonths($year);
 
 		$this->context->smarty->assign(array(
@@ -142,7 +143,7 @@ class Dashgoals extends Module
 
 	public function hookDashboardData($params)
 	{
-		$year = ((isset($params['extra']) && $params['extra'] > 1970 && $params['extra'] < 2999) ? $params['extra'] : date('Y'));
+		$year = ((isset($params['extra']) && $params['extra'] > 1970 && $params['extra'] < 2999) ? $params['extra'] : Configuration::get('PS_DASHGOALS_CURRENT_YEAR'));
 		return array('data_chart' => array('dash_goals_chart1' => $this->getChartData($year)));
 	}
 	
