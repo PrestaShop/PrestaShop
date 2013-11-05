@@ -1,19 +1,24 @@
 /* block CONTACT ******************************************************************************* */
+/* line 4, ../../../sass/modules/blockcontact/blockcontact.scss */
 #contact_block .label {
   display: none;
 }
+/* line 6, ../../../sass/modules/blockcontact/blockcontact.scss */
 #contact_block .block_content {
   color: #888888;
   padding: 0 20px 20px;
 }
+/* line 11, ../../../sass/modules/blockcontact/blockcontact.scss */
 #contact_block p {
   margin-bottom: 4px;
 }
+/* line 13, ../../../sass/modules/blockcontact/blockcontact.scss */
 #contact_block p.tel {
   font: 400 17px/21px Arial, Helvetica, sans-serif;
   color: #fff;
   margin-bottom: 6px;
 }
+/* line 18, ../../../sass/modules/blockcontact/blockcontact.scss */
 #contact_block p.tel i {
   font-size: 25px;
   vertical-align: -2px;

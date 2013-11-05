@@ -37,7 +37,7 @@ $(function(){
 
 {if ($logged == 1 || $nbComments != 0) && !$content_only}
 </div><!-- Close the OosHook -->
-<div id="product_comments_block_extra">
+<div id="product_comments_block_extra" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
 	{if $nbComments != 0}
 	<div class="comments_note clearfix">
 		<span>{l s='Rating' mod='productcomments'}&nbsp</span>
@@ -49,13 +49,14 @@ $(function(){
 				<div class="star star_on"></div>
 			{/if}
 		{/section}
+        <span class="hidden" itemprop="ratingValue">{$averageTotal}</span> 
 		</div>
 	</div>
 	{/if}
 
 	<ul class="comments_advices">
 		{if $nbComments != 0}
-		<li><a href="#idTab5" class="reviews">{l s='Read reviews' mod='productcomments'} ({$nbComments})</a></li>
+		<li><a href="#idTab5" class="reviews">{l s='Read reviews' mod='productcomments'} (<span itemprop="reviewCount">{$nbComments}</span>)</a></li>
 		{/if}
 		{if ($too_early == false AND ($logged OR $allow_guests))}
 		<li><a class="open-comment-form" href="#new_comment_form">{l s='Write a review' mod='productcomments'}</a></li>

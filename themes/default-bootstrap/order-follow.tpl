@@ -71,7 +71,7 @@
 			<tr class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if} {if $smarty.foreach.myLoop.index % 2}alternate_item{/if}">
 				<td class="bold"><a class="color-myaccount" href="javascript:showOrder(0, {$return.id_order_return|intval}, '{$link->getPageLink('order-return', true)|escape:'html'}');">{l s='#'}{$return.id_order_return|string_format:"%06d"}</a></td>
 				<td class="history_method"><a class="color-myaccount" href="javascript:showOrder(1, {$return.id_order|intval}, '{$link->getPageLink('order-detail', true)|escape:'html'}');">{l s='#'}{$return.id_order|string_format:"%06d"}</a></td>
-				<td class="history_method"><span class="bold">{$return.state_name|escape:'htmlall':'UTF-8'}</span></td>
+				<td class="history_method"><span class="label label-info">{$return.state_name|escape:'htmlall':'UTF-8'}</span></td>
 				<td class="bold">{dateFormat date=$return.date_add full=0}</td>
 				<td class="history_invoice">
 				{if $return.state == 2}

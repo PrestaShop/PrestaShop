@@ -158,7 +158,8 @@ var isLoggedWishlist = {if $logged}true{else}false{/if};
 var contentOnly = {if $content_only}true{else}false{/if}
 //]]>
 </script>
-<div id="primary_block" class="row">
+<div id="primary_block" class="row" itemscope itemtype="http://schema.org/Product">
+
 
 {if !$content_only}<div class="container"><div class="top-hr"></div></div>{/if}
 
@@ -187,6 +188,7 @@ var contentOnly = {if $content_only}true{else}false{/if}
         
 		<div id="image-block">
 
+                       
       	{if $product->on_sale}
 		<span class="sale-box"><span class="sale">{l s='Sale!'}</span></span>
 		{elseif $product->specificPrice AND $product->specificPrice.reduction AND $productPriceWithoutReduction > $productPrice}
@@ -195,12 +197,12 @@ var contentOnly = {if $content_only}true{else}false{/if}
         
 		{if $have_image}
 			<span id="view_full_size">
-				<img src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')|escape:'html'}"{if $jqZoomEnabled && $have_image} class="jqzoom"{/if} title="{$product->name|escape:'htmlall':'UTF-8'}" alt="{$product->name|escape:'htmlall':'UTF-8'}" id="bigpic" width="{$largeSize.width}" height="{$largeSize.height}"/>
+				<img itemprop="image" src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')|escape:'html'}"{if $jqZoomEnabled && $have_image} class="jqzoom"{/if} title="{$product->name|escape:'htmlall':'UTF-8'}" alt="{$product->name|escape:'htmlall':'UTF-8'}" id="bigpic" width="{$largeSize.width}" height="{$largeSize.height}"/>
 				{if !$content_only}<span class="span_link">{l s='View larger'}</span>{/if}
 			</span>
 		{else}
 			<span id="view_full_size">
-				<img src="{$img_prod_dir}{$lang_iso}-default-large_default.jpg" id="bigpic" alt="" title="{$product->name|escape:'htmlall':'UTF-8'}" width="{$largeSize.width}" height="{$largeSize.height}" />
+				<img itemprop="image" src="{$img_prod_dir}{$lang_iso}-default-large_default.jpg" id="bigpic" alt="" title="{$product->name|escape:'htmlall':'UTF-8'}" width="{$largeSize.width}" height="{$largeSize.height}" />
 				{if !$content_only}<span class="span_link">{l s='View larger'}</span>{/if}
 			</span>
 		{/if}
@@ -239,15 +241,15 @@ var contentOnly = {if $content_only}true{else}false{/if}
 			<p class="online_only">{l s='Online only'}</p>
 			{/if}
     
-		<h1>{$product->name|escape:'htmlall':'UTF-8'}</h1>
+		<h1 itemprop="name">{$product->name|escape:'htmlall':'UTF-8'}</h1>
 			<p id="product_reference" {if isset($groups) OR !$product->reference}style="display: none;"{/if}>
 				<label>{l s='Model'} </label>
-				<span class="editable">{$product->reference|escape:'htmlall':'UTF-8'}</span>
+				<span class="editable" itemprop="sku">{$product->reference|escape:'htmlall':'UTF-8'}</span>
 			</p>
 		{if $product->description_short OR $packItems|@count > 0}
 		<div id="short_description_block">
 			{if $product->description_short}
-				<div id="short_description_content" class="rte align_justify">{$product->description_short}</div>
+				<div id="short_description_content" class="rte align_justify" itemprop="description">{$product->description_short}</div>
 			{/if}
 			{if $product->description}
 			<p class="buttons_bottom_block"><a href="javascript:{ldelim}{rdelim}" class="button">{l s='More details'}</a></p>
@@ -349,9 +351,10 @@ var contentOnly = {if $content_only}true{else}false{/if}
             {if $product->show_price AND !isset($restricted_country_mode) AND !$PS_CATALOG_MODE}		
 
 			<div class="price">
-				<p class="our_price_display">
+				<p class="our_price_display" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                <link itemprop="availability" href="http://schema.org/InStock">
 				{if $priceDisplay >= 0 && $priceDisplay <= 2}
-					<span id="our_price_display">{convertPrice price=$productPrice}</span>
+					<span id="our_price_display" itemprop="price">{convertPrice price=$productPrice}</span>
 					<!--{if $tax_enabled  && ((isset($display_tax_label) && $display_tax_label == 1) OR !isset($display_tax_label))}
 						{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}
 					{/if}-->

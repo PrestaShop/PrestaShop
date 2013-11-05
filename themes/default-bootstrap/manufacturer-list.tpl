@@ -46,8 +46,8 @@
 
 	{if $nbManufacturers > 0}
     	<div class="content_sortPagiBar">
-        	<div class="sortPagiBar clearfix hidden-xs">
-            	<ul class="display">
+        	<div class="sortPagiBar clearfix">
+            	<ul class="display hidden-xs">
                     <li class="display-title">{l s='View:'}</li>
                     <li id="grid"><a onclick="display('grid');"><i class="icon-th-large"></i>{l s='Grid'}</a></li>
                     <li id="list"><a onclick="display('list');"><i class="icon-th-list"></i>{l s='List'}</a></li>
