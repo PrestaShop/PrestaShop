@@ -176,7 +176,6 @@ abstract class Controller extends ControllerCore
 
 	public function __construct()
 	{
-		parent::__construct();
 
 		// error management
 		set_error_handler('developpementErrorHandler');
