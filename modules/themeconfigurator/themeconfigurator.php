@@ -135,17 +135,31 @@ class ThemeConfigurator extends Module
 	{
 		return array(
 			array(
-				'label' => $this->l('Display reinsurance block'),
+				'label' => $this->l('Display the reinsurance block'),
 				'name' => 'blockreinsurance',
 				'desc' => '<a href="#">'.$this->l('Configure the reinsurance block').'</a>',
 				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('blockreinsurance')) && $module->active),
 				'is_module' => true,
 			),
 			array(
-				'label' => $this->l('Display social block'),
+				'label' => $this->l('Display the social following links'),
 				'name' => 'blocksocial',
-				'desc' => '<a href="#">'.$this->l('Configure the social block').'</a>',
+				'desc' => '<a href="#">'.$this->l('Configure the social following links').'</a>',
 				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('blocksocial')) && $module->active),
+				'is_module' => true,
+			),
+			array(
+				'label' => $this->l('Display contact information'),
+				'name' => 'blockcontactinfos',
+				'desc' => '<a href="#">'.$this->l('Configure the contact information of your store').'</a>',
+				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('blockcontactinfos')) && $module->active),
+				'is_module' => true,
+			),
+			array(
+				'label' => $this->l('Display social buttons on the products page'),
+				'name' => 'addsharethis',
+				'desc' => '<a href="#">'.$this->l('Configure').'</a>',
+				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('addsharethis')) && $module->active),
 				'is_module' => true,
 			),
 			array(
