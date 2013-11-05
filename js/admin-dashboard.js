@@ -235,7 +235,7 @@ function toggleDashConfig(widget)
 
 function bindSubmitDashConfig()
 {
-	$('.cancel_dash_config').on('click', function () {
+	$('.submit_dash_config').on('click', function () {
 		saveDashConfig($(this).closest('section.widget').attr('id'));
 		return false;
 	});
