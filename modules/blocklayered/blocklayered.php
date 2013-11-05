@@ -2962,26 +2962,20 @@ class BlockLayered extends Module
 						}
                                                 
                                                  // features are now sorted by natural sort
-                                                foreach ($feature_array as $key => $value) {
-                                                     
-                                                     $temp = array();
-                                                     
-                                                     foreach ($feature_array[$key]['values'] as $keyint => $valueint) {
-                                                       
-                                                         $temp[$keyint] = $valueint['name'];
-                                                     }
+                                                foreach ($feature_array as $key => $value) 
+                                                {   
+                                                     $temp = array();    
+                                                     foreach ($feature_array[$key]['values'] as $key_int => $value_int) 
+                                                         $temp[$key_int] = $value_int['name'];
                                                      
                                                      natcasesort($temp);
                                                      
                                                      $temp2 = array();
                                                      
-                                                     foreach ($temp as $keytemp => $valuetemp) {
-                                                         
-                                                         $temp2[$keytemp] = $feature_array[$key]['values'][$keytemp];
-                                                     }
+                                                     foreach ($temp as $key_temp => $value_temp) 
+                                                         $temp2[$key_temp] = $feature_array[$key]['values'][$key_temp];
                                                      
-                                                     $feature_array[$key]['values'] = $temp2;
-                                                     
+                                                     $feature_array[$key]['values'] = $temp2;        
                                                 }
                                                 // end feature natural sorting
                                                 
