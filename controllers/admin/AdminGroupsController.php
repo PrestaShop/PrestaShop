@@ -310,7 +310,7 @@ class AdminGroupsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'modules',
-					'label' => array('auth_modules' => $this->l('Authorized modules:'), 'unauth_modules' => $this->l('Unauthorized modules:')),
+					'label' => $this->l('Modules Authorization'),
 					'name' => 'auth_modules',
 					'values' => $this->formatModuleListAuth($group->id)
 				)

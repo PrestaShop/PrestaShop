@@ -27,11 +27,11 @@
 
 {block name="label"}
 	{if $input['type'] == 'modules'}
-		<div style="{if !$form_id}display:none{/if}">
+		<div {if !$form_id}class="hide"{/if}>
 			<label class="control-label col-lg-3">{l s='Authorized modules:'}</label>
 		</div>
 	{elseif $input['type'] == 'group_discount_category'}
-		<div style="{if !$form_id}display:none{/if}">
+		<div {if !$form_id}class="hide"{/if}>
 			{$smarty.block.parent}
 		</div>
 	{else}
@@ -39,10 +39,9 @@
 	{/if}
 {/block}
 
-
 {block name="field"}
 	{if $input['type'] == 'group_discount_category'}
-	<div style="{if !$form_id}display:none{/if}">
+	<div {if !$form_id}class="hide"{/if}>
 		<script type="text/javascript">
 		$(document).ready(function() {
 			$("#group_discount_category").fancybox({
@@ -143,7 +142,7 @@
 					</tr>
 				{/foreach}
 			</table>
-		
+		</div>
 		<div style="display:none" id="group_discount_category_fancybox">
 			<div class="panel form-horizontal">
 				<div class="col-lg-12">
@@ -168,7 +167,7 @@
 		</div>
 	</div>
 	{elseif $input['type'] == 'modules'}
-	<div style="{if !$form_id}display:none{/if}">
+	<div {if !$form_id}class="hide"{/if}>
 		<script type="text/javascript">
 			$(document).ready(function() {
 				$('#authorized-modules').find('[value="0"]').click(function() {
