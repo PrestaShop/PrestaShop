@@ -50,7 +50,8 @@ class MailAlerts extends Module
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		if ($this->id)
 			$this->init();

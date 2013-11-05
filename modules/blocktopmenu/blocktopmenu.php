@@ -55,7 +55,8 @@ class Blocktopmenu extends Module
 		$this->version = 1.6;
 		$this->author = 'PrestaShop';
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->displayName = $this->l('Top horizontal menu');
 		$this->description = $this->l('Add a new horizontal menu to the top of your e-commerce website.');

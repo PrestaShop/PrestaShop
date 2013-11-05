@@ -40,7 +40,8 @@ class HomeFeatured extends Module
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->displayName = $this->l('Featured products on the homepage.');
 		$this->description = $this->l('Displays featured products in the middle of your homepage.');
