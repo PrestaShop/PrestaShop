@@ -50,8 +50,9 @@
         	<div class="product-container">
                 <div class="left-block">
                 	<div class="product-image-container">
-                    	<a href="{$product.link|escape:'htmlall':'UTF-8'}" class="product_img_link {if $quick_view}quick-view{/if}" title="{$product.name|escape:'htmlall':'UTF-8'}">
+                    	<a href="{$product.link|escape:'htmlall':'UTF-8'}" class="product_img_link" title="{$product.name|escape:'htmlall':'UTF-8'}">
                             <img class="replace-2x img-responsive" src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')|escape:'html'}" alt="{$product.legend|escape:'htmlall':'UTF-8'}" {if isset($homeSize)} width="{$homeSize.width}" height="{$homeSize.height}"{/if} />
+                            {if isset($quick_view) && $quick_view}<a href="#" rel="{$product.link|escape:'htmlall':'UTF-8'}" class="quick-view"><span>Quick view</span></a>{/if}
                         </a>
                         {if (!$PS_CATALOG_MODE AND ((isset($product.show_price) && $product.show_price) || (isset($product.available_for_order) && $product.available_for_order)))}
                         	<div class="content_price">
@@ -133,12 +134,12 @@
 		function display(view) {
 			if (view == 'list') {
 				$('ul.product_list').removeClass('grid row').addClass('list row');
-				$('.product_list > li').removeClass('col-xs-12 col-xs-4 col-md-6 col-lg-4').addClass('col-xs-12');
+				$('.product_list > li').removeClass('col-xs-12 col-xs-4 col-sm-6 col-md-4').addClass('col-xs-12');
 				$('.product_list > li').each(function(index, element) {
 					html = '';
 					html = '<div class="product-container"><div class="row">';
-						html += '<div class="left-block col-xs-12 col-md-4">' + $(element).find('.left-block').html() + '</div>';
-						html += '<div class="center-block col-xs-12 col-md-4">';
+						html += '<div class="left-block col-xs-4 col-xs-5 col-md-4">' + $(element).find('.left-block').html() + '</div>';
+						html += '<div class="center-block col-xs-4 col-xs-7 col-md-4">';
 							html += '<div class="product-flags">'+ $(element).find('.product-flags').html() + '</div>';
 							html += '<h5>'+ $(element).find('h5').html() + '</h5>';
 							html += '<p class="product-desc">'+ $(element).find('.product-desc').html() + '</p>';
@@ -148,27 +149,29 @@
 								html += '<span class="availability">'+ availability +'</span>';
 							}
 						html += '</div>';	
-						html += '<div class="right-block col-xs-12 col-md-4"><div class="right-block-content">';
+						html += '<div class="right-block col-xs-4 col-xs-12 col-md-4"><div class="right-block-content row">';
 							var price = $(element).find('.content_price').html();       // check : catalog mode is enabled
 							if (price != null) { 
-								html += '<div class="content_price">'+ price + '</div>';
+								html += '<div class="content_price col-xs-5 col-md-12">'+ price + '</div>';
 							}
-							html += '<div class="button-container">'+ $(element).find('.button-container').html() +'</div>';
-							html += '<div class="functional-buttons">' + $(element).find('.functional-buttons').html() + '</div>';
+							html += '<div class="button-container col-xs-7 col-md-12">'+ $(element).find('.button-container').html() +'</div>';
+							html += '<div class="functional-buttons clearfix col-sm-12">' + $(element).find('.functional-buttons').html() + '</div>';
 						html += '</div>';
 					html += '</div></div>';
 				$(element).html(html);
 				});		
 				$('.display').find('li#list').addClass('selected');
 				$('.display').find('li#grid').removeAttr('class');
-				$.totalStorage('display', 'list'); 
+				$.totalStorage('display', 'list');
 				if (typeof reloadProductComparison != 'undefined') // compare button reload
 					reloadProductComparison();
 				if (typeof ajaxCart != 'undefined')      // cart button reload
 					ajaxCart.overrideButtonsInThePage();
+				if (typeof quick_view != 'undefined') 	// qick view button reload
+					quick_view();
 			} else {
 				$('ul.product_list').removeClass('list row').addClass('grid row');
-				$('.product_list > li').removeClass('col-xs-12 col-xs-4').addClass('col-xs-12 col-md-6 col-lg-4');
+				$('.product_list > li').removeClass('col-xs-12 col-xs-4').addClass('col-xs-12 col-sm-6 col-md-4');
 				$('.product_list > li').each(function(index, element) {
 				html = '';
 				html += '<div class="product-container">';
@@ -199,6 +202,8 @@
 					reloadProductComparison();				
 				if (typeof ajaxCart != 'undefined') 	// cart button reload
 					ajaxCart.overrideButtonsInThePage();
+				if (typeof quick_view != 'undefined') 	// qick view button reload
+					quick_view();
 			}	
 		}
 	view = $.totalStorage('display');

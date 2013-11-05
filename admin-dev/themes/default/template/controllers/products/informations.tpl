@@ -429,11 +429,7 @@
 			<div class="row">
 			{/if}
 				{foreach from=$languages item=language}
-				{if $languages|count > 1}
-				<div class="translatable-field lang-{$language.id_lang}">
-					<div class="col-lg-9">
-				{/if}
-				{literal}
+					{literal}
 					<script type="text/javascript">
 						$().ready(function () {
 							var input_id = '{/literal}tags_{$language.id_lang}{literal}';
@@ -443,7 +439,11 @@
 							});
 						});
 					</script>
-				{/literal}
+					{/literal}
+				{if $languages|count > 1}
+				<div class="translatable-field lang-{$language.id_lang}">
+					<div class="col-lg-9">
+				{/if}
 						<input type="text" id="tags_{$language.id_lang}" class="tagify updateCurrentText" name="tags_{$language.id_lang}" value="{$product->getTags($language.id_lang, true)|htmlentitiesUTF8}" />
 				{if $languages|count > 1}
 					</div>

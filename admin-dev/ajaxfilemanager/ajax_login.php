@@ -32,7 +32,6 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] === false) {
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link type="text/css" href="theme/<?php echo CONFIG_THEME_NAME; ?>/css/login.css" rel="stylesheet" />
 <title><?php echo LOGIN_PAGE_TITLE; ?></title>
 </head>
 <body>

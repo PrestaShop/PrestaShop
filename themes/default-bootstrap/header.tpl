@@ -56,8 +56,8 @@
         <link href="{$css_dir}/font-awesome.css" rel="stylesheet" type="text/css" media="all" />
         <link href="{$css_dir}/jquery/uniform.default.css" rel="stylesheet" type="text/css" media="all" />
         <link href="{$css_dir}/highdpi.css" rel="stylesheet" media="only screen and (-webkit-min-device-pixel-ratio: 2)" />
-        <link href="{$css_dir}jquery/owl-carousel/owl.carousel.css" rel="stylesheet" type="text/css" media="all" />
-        <link href="{$css_dir}jquery/owl-carousel/owl.theme.css" rel="stylesheet" type="text/css" media="all" />
+        <link href="{$css_dir}/jquery/footable.core.css" rel="stylesheet" type="text/css" media="all" />
+        <link href="{$css_dir}jquery/jquery.bxslider.css" rel="stylesheet" type="text/css" media="all" /> 
 {if isset($css_files)}
 	{foreach from=$css_files key=css_uri item=media}
 	<link href="{$css_uri}" rel="stylesheet" type="text/css" media="{$media}" />
@@ -71,8 +71,9 @@
 <script src="{$js_dir}/tools/bootstrap.min.js"></script>
 <script src="{$js_dir}/tools/jquery.total-storage.min.js"></script>
 <script src="{$js_dir}/jquery/jquery.uniform-modify.js"></script>
-<script src="{$js_dir}/jquery/owl.carousel.js"></script>
 <script src="{$js_dir}/jquery/highdpi.js"></script>
+<script src="{$js_dir}/jquery/jquery.bxslider.js"></script>
+<script src="{$js_dir}/jquery/footable.js"></script>
 		{$HOOK_HEADER}
 	</head>
 	
@@ -87,7 +88,7 @@
 			<div class="banner-top">
                 <div class="container">
                     <a href="#">
-                        <img class="banner-top" src="{$img_dir}top-banner.gif" alt="banner-top"/>
+                        <img class="banner-top img-responsive" src="{$img_dir}top-banner.gif" alt="banner-top"/>
                     </a>
                 </div>
             </div>

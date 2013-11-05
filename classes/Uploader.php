@@ -37,6 +37,7 @@ class UploaderCore
 	public function __construct($name = null)
 	{
 		$this->setName($name);
+		$this->files = array();
 	}
 
 	public function setAcceptTypes($value)
@@ -51,6 +52,14 @@ class UploaderCore
 			$this->setAcceptTypes('/.+$/i');
 
 		return $this->_accept_types;
+	}
+
+	public function getFilePath($file_name = null)
+	{
+		if (!isset($file_name))
+			return tempnam($this->getSavePath(), $this->getUniqueFileName());
+
+		return $this->getSavePath().$file_name;
 	}
 
 	public function getFiles()
@@ -100,50 +109,45 @@ class UploaderCore
 		return $this->_normalizeDirectory($this->_save_path);
 	}
 
-	public function getUniqueFileName()
+	public function getUniqueFileName($prefix = 'PS')
 	{
-		return uniqid('', true);
+		return uniqid($prefix, true);
 	}
 
 	public function process()
 	{
-		$this->files = array();
 		$upload = isset($_FILES[$this->getName()]) ? $_FILES[$this->getName()] : null;
 
 		if ($upload && is_array($upload['tmp_name']))
+		{
+			$tmp = array();
+
 			foreach ($upload['tmp_name'] as $index => $value)
-				$this->files[] = $this->upload(
-					$upload['tmp_name'][$index],
-					$upload['name'][$index],
-					$upload['size'][$index],
-					$upload['type'][$index],
-					$upload['error'][$index]
+			{	$tmp[$index] = array(
+					'tmp_name' => $upload['tmp_name'][$index],
+					'name'     => $upload['name'][$index],
+					'size'     => $upload['size'][$index],
+					'type'     => $upload['type'][$index],
+					'error'    => $upload['error'][$index]
 				);
+
+				$this->files[] = $this->upload($tmp[$index]);
+			}
+		}
 		else
-			$this->files[] = $this->upload(
-				$upload['tmp_name'],
-				$upload['name'],
-				isset($upload['size']) ? $upload['size'] : $this->_getServerVars('CONTENT_LENGTH'),
-				isset($upload['type']) ? $upload['type'] : $this->_getServerVars('CONTENT_TYPE'),
-				isset($upload['error']) ? $upload['error'] : null
-			);
+			$this->files[] = $this->upload($upload);
 
 		return $this->files;
 	}
 
-	public function upload($tmp_name, $name, $size, $type, $error)
+	public function upload($file)
 	{
-		$file = new stdClass();
-		$file->name = $name; //TODO: add unique file name if name is null
-		$file->size = intval($size);
-		$file->type = $type;
-
-		if ($this->validate($tmp_name, $file, $error))
+		if ($this->validate($file))
 		{
-			$file_path = $this->getSavePath().$file->name;
+			$file_path = $this->getFilePath($file['name']);
 		 
-			if ($tmp_name && is_uploaded_file($tmp_name)) {
-					move_uploaded_file($tmp_name, $file_path);
+			if ($file['tmp_name'] && is_uploaded_file($file['tmp_name'] )) {
+					move_uploaded_file($file['tmp_name'] , $file_path);
 			 } else {
 				// Non-multipart uploads (PUT method support)
 				file_put_contents($file_path, fopen('php://input', 'r'));
@@ -151,60 +155,55 @@ class UploaderCore
 			
 			$file_size = $this->_getFileSize($file_path);
 
-			if ($file_size === $file->size)
+			if ($file_size === $file['size'])
 			{
+				$file['save_path'] = $file_path;
 				//TODO do image processing
 			}
 			else
 			{
-				$file->size = $file_size;
+				$file['size'] = $file_size;
 				unlink($file_path);
-				$file->error = 'abort';
+				$file['error'] = 'abort';
 			}
 		}
 		
 		return $file;
 	}
 
-	protected function validate($tmp_name, $file, $error)
+	protected function validate($file)
 	{
-		if ($error)
-		{
-			$file->error = Tools::displayError($error);
-			return false;
-		}
-
 		$post_max_size = $this->_getPostMaxSizeBytes();
 
 		if ($post_max_size && ($this->_getServerVars('CONTENT_LENGTH') > $post_max_size))
 		{
-			$file->error = Tools::displayError('The uploaded file exceeds the post_max_size directive in php.ini');
+			$file['error'] = Tools::displayError('The uploaded file exceeds the post_max_size directive in php.ini');
 			return false;
 		}
 
-		if (!preg_match($this->getAcceptTypes(), $file->name))
+		if (!preg_match($this->getAcceptTypes(), $file['name']))
 		{
-			$file->error = Tools::displayError('Filetype not allowed');
+			$file['error'] = Tools::displayError('Filetype not allowed');
 			return false;
 		}
 
-		if ($file->size > $this->getMaxSize())
+		if ($file['size'] > $this->getMaxSize())
 		{
-			$file->error = Tools::displayError('File is too big');
+			$file['error'] = Tools::displayError('File is too big');
 			return false;
 		}
 
 		return true;
 	}
 
-	private function _getFileSize($file_path, $clear_stat_cache = false) {
+	protected function _getFileSize($file_path, $clear_stat_cache = false) {
 		if ($clear_stat_cache)
 			clearstatcache(true, $file_path);
 
 		return filesize($file_path);
 	}
 
-	private function _getPostMaxSizeBytes() {
+	protected function _getPostMaxSizeBytes() {
 		$post_max_size = ini_get('post_max_size');
 		$bytes         = trim($post_max_size);
 		$last          = strtolower($post_max_size[strlen($post_max_size) - 1]);
@@ -219,7 +218,7 @@ class UploaderCore
 		return $bytes;
 	}
 
-	private function _getServerVars($var)
+	protected function _getServerVars($var)
 	{
 		return (isset($_SERVER[$var]) ? $_SERVER[$var] : '');
 	}

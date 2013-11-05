@@ -31,7 +31,7 @@ function process_install(step)
 	if (!step)
 		step = process_steps[0];
 
-	$('.installing').hide().html(step.lang + ' ...').fadeIn('slow');
+	$('.installing').hide().html(step.lang + '...').fadeIn('slow');
 
 	$.ajax({
 		url: 'index.php',
@@ -81,7 +81,7 @@ function process_install(step)
 
 function process_install_subtasks(step)
 {
-	$('.installing').hide().html(step.lang+' ...').fadeIn('slow');
+	$('.installing').hide().html(step.lang+'...').fadeIn('slow');
 	process_install_subtask(step, 0);
 }
 

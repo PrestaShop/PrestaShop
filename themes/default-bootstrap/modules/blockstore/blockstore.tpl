@@ -27,7 +27,7 @@
 <div id="stores_block_left" class="block">
 	<p class="title_block"><a href="{$link->getPageLink('stores')|escape:'html'}" title="{l s='Our stores' mod='blockstore'}">{l s='Our stores' mod='blockstore'}</a></p>
 	<div class="block_content blockstore">
-		<p class="store_image"><a href="{$link->getPageLink('stores')|escape:'html'}" title="{l s='Our stores' mod='blockstore'}"><img src="{$module_dir}{$store_img}" alt="{l s='Our stores' mod='blockstore'}" /></a></p>
+		<p class="store_image"><a href="{$link->getPageLink('stores')|escape:'html'}" title="{l s='Our stores' mod='blockstore'}"><img class="img-responsive" src="{$module_dir}{$store_img}" alt="{l s='Our stores' mod='blockstore'}" /></a></p>
         <p class="store-description">Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magn.</p>
 		<div>
 			<a class="btn btn-default button button-small" href="{$link->getPageLink('stores')|escape:'html'}" title="{l s='Our stores' mod='blockstore'}"><span>{l s='Discover our stores' mod='blockstore'}<i class="icon-chevron-right right"></i></span></a>

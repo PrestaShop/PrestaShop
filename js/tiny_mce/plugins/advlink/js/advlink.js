@@ -385,7 +385,7 @@ function getAnchorListHTML(id, target) {
 	html = '<select id="' + id + '" name="' + id + '" class="mceAnchorList"'
 		+ ' onchange="this.form.' + target + '.value=this.options[this.selectedIndex].value"'
 		+ '>'
-		+ '<option value="">---</option>'
+		+ '<option value="">-</option>'
 		+ html
 		+ '</select>';
 
@@ -494,7 +494,7 @@ function getLinkListHTML(elm_id, target_form_element, onchange_func) {
 	if (typeof(onchange_func) != "undefined")
 		html += onchange_func + '(\'' + target_form_element + '\',this.options[this.selectedIndex].text,this.options[this.selectedIndex].value);';
 
-	html += '"><option value="">---</option>';
+	html += '"><option value="">-</option>';
 
 	for (var i=0; i<tinyMCELinkList.length; i++)
 		html += '<option value="' + tinyMCELinkList[i][1] + '">' + tinyMCELinkList[i][0] + '</option>';

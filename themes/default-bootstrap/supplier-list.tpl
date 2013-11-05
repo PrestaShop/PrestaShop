@@ -51,6 +51,7 @@
                 <li id="grid"><a onclick="display('grid');"><i class="icon-th-large"></i>{l s='Grid'}</a></li>
                 <li id="list"><a onclick="display('list');"><i class="icon-th-list"></i>{l s='List'}</a></li>
             </ul>
+            {include file="./nbr-product-page.tpl"}
         </div>
         <div class="top-pagination-content clearfix bottom-line">
             {include file="$tpl_dir./pagination.tpl"}
@@ -123,13 +124,13 @@
 		function display(view) {
 			if (view == 'list') {
 				$('#suppliers_list').attr('class', 'list row');
-				$('#suppliers_list > li').removeClass('col-xs-12 col-md-6 col-lg-4').addClass('col-xs-12');
+				$('#suppliers_list > li').removeClass('col-xs-12 col-sm-6 col-lg-4').addClass('col-xs-12');
 				$('#suppliers_list > li').each(function(index, element) {
 					html = '';
 					html = '<div class="mansup-container"><div class="row">';
-						html += '<div class="left-side col-xs-12 col-md-3">' + $(element).find('.left-side').html() + '</div>';
-						html += '<div class="middle-side col-xs-12 col-md-5">'+ $(element).find('.middle-side').html() +'</div>';	
-						html += '<div class="right-side col-xs-12 col-md-4"><div class="right-side-content">'+ $(element).find('.right-side-content').html() + '</div></div>'; 
+						html += '<div class="left-side col-xs-12 col-sm-3">' + $(element).find('.left-side').html() + '</div>';
+						html += '<div class="middle-side col-xs-12 col-sm-5">'+ $(element).find('.middle-side').html() +'</div>';	
+						html += '<div class="right-side col-xs-12 col-sm-4"><div class="right-side-content">'+ $(element).find('.right-side-content').html() + '</div></div>'; 
 					html += '</div></div>';
 				$(element).html(html);
 				});		
@@ -138,7 +139,7 @@
 				$.totalStorage('display', 'list'); 
 			} else {
 				$('#suppliers_list').attr('class', 'grid row');
-				$('#suppliers_list > li').removeClass('col-xs-12').addClass('col-xs-12 col-md-6 col-lg-4');
+				$('#suppliers_list > li').removeClass('col-xs-12').addClass('col-xs-12 col-sm-6 col-lg-4');
 				$('#suppliers_list > li').each(function(index, element) {
 				html = '';
 				html += '<div class="product-container">';

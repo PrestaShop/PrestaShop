@@ -308,7 +308,7 @@ class AdminCustomersControllerCore extends AdminController
 					'name' => 'passwd',
 					'required' => ($obj->id ? false : true),
 					'col' => '4',
-					'hint' => ($obj->id ? $this->l('Leave  this field blank if there\'s no change') : $this->l('Minimum of five characters (only letters and numbers).').' -_')
+					'hint' => ($obj->id ? $this->l('Leave  this field blank if there\'s no change') : $this->l('Minimum of five characters'))
 				),
 				array(
 					'type' => 'birthday',
@@ -600,7 +600,7 @@ class AdminCustomersControllerCore extends AdminController
 			return;
 
 		$this->context->customer = $customer;
-		$gender = new Gender($customer->id_gender);
+		$gender = new Gender($customer->id_gender, $this->context->language->id);
 		$gender_image = $gender->getImage();
 
 		$customer_stats = $customer->getStats();
@@ -678,9 +678,10 @@ class AdminCustomersControllerCore extends AdminController
 			$carts[$i]['name'] = $carrier->name;
 		}
 
-		$sql = 'SELECT DISTINCT id_product, c.id_cart, c.id_shop, cp.id_shop AS cp_id_shop
+		$sql = 'SELECT DISTINCT cp.id_product, c.id_cart, c.id_shop, cp.id_shop AS cp_id_shop
 				FROM '._DB_PREFIX_.'cart_product cp
 				JOIN '._DB_PREFIX_.'cart c ON (c.id_cart = cp.id_cart)
+				JOIN '._DB_PREFIX_.'product p ON (cp.id_product = p.id_product)
 				WHERE c.id_customer = '.(int)$customer->id.'
 					AND cp.id_product NOT IN (
 							SELECT product_id
@@ -693,6 +694,8 @@ class AdminCustomersControllerCore extends AdminController
 		for ($i = 0; $i < $total_interested; $i++)
 		{
 			$product = new Product($interested[$i]['id_product'], false, $this->default_form_language, $interested[$i]['id_shop']);
+			if (!Validate::isLoadedObject($product))
+				continue;
 			$interested[$i]['url'] = $this->context->link->getProductLink(
 				$product->id,
 				$product->link_rewrite,
@@ -706,15 +709,15 @@ class AdminCustomersControllerCore extends AdminController
 		}
 
 		$connections = $customer->getLastConnections();
+		if (!is_array($connections))
+			$connections = array();
 		$total_connections = count($connections);
 		for ($i = 0; $i < $total_connections; $i++)
 		{
 			$connections[$i]['date_add'] = Tools::displayDate($connections[$i]['date_add'],null , true);
-			$connections[$i]['http_referer'] = $connections[$i]['http_referer'] ?
-													preg_replace('/^www./', '', parse_url($connections[$i]['http_referer'], PHP_URL_HOST)) :
-														$this->l('Direct link');
+			$connections[$i]['http_referer'] = $connections[$i]['http_referer'] ? preg_replace('/^www./', '', parse_url($connections[$i]['http_referer'], PHP_URL_HOST)) : $this->l('Direct link');
 		}
-
+		
 		$referrers = Referrer::getReferrers($customer->id);
 		$total_referrers = count($referrers);
 		for ($i = 0; $i < $total_referrers; $i++)
@@ -723,6 +726,7 @@ class AdminCustomersControllerCore extends AdminController
 		$shop = new Shop($customer->id_shop);
 		$this->tpl_view_vars = array(
 			'customer' => $customer,
+			'gender' => $gender,
 			'gender_image' => $gender_image,
 
 			// General information of the customer

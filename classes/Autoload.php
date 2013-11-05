@@ -49,6 +49,8 @@ class Autoload
 	 */
 	public $index = array();
 
+	public $_include_override_path = true;
+
 	protected function __construct()
 	{
 		$this->root_dir = _PS_ROOT_DIR_.'/';
@@ -120,10 +122,16 @@ class Autoload
 	{
 		$classes = array_merge(
 			$this->getClassesFromDir('classes/'),
-			$this->getClassesFromDir('override/classes/'),
-			$this->getClassesFromDir('controllers/'),
-			$this->getClassesFromDir('override/controllers/')
+			$this->getClassesFromDir('controllers/')
 		);
+
+		if ($this->_include_override_path)
+			$classes = array_merge(
+				$classes,
+				$this->getClassesFromDir('override/classes/'),
+				$this->getClassesFromDir('override/controllers/')
+			);
+
 		ksort($classes);
 		$content = '<?php return '.var_export($classes, true).'; ?>';
 

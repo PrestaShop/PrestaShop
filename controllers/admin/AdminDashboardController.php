@@ -303,7 +303,8 @@ class AdminDashboardControllerCore extends AdminController
 			'date_to' => $this->context->employee->stats_date_to,
 			'compare_from' => $this->context->employee->stats_compare_from,
 			'compare_to' => $this->context->employee->stats_compare_to,
-			'dashboard_use_push' => (int)Tools::getValue('dashboard_use_push')
+			'dashboard_use_push' => (int)Tools::getValue('dashboard_use_push'),
+			'extra' => (int)Tools::getValue('extra')
 		);
 		
 		die(Tools::jsonEncode(Hook::exec('dashboardData', $params, $id_module, true, true, (int)Tools::getValue('dashboard_use_push'))));
@@ -342,7 +343,12 @@ class AdminDashboardControllerCore extends AdminController
 		$module = Tools::getValue('module');
 		$hook = Tools::getValue('hook');
 		$configs = Tools::getValue('configs');
-
+		
+		$params = array(
+			'date_from' => $this->context->employee->stats_date_from,
+			'date_to' => $this->context->employee->stats_date_to
+		);
+		
 		if (Validate::isModuleName($module) && $module_obj = Module::getInstanceByName($module))
 			if (Validate::isLoadedObject($module_obj) && method_exists($module_obj, 'saveDashConfig'))
 				$return['has_errors'] = $module_obj->saveDashConfig($configs);
@@ -352,9 +358,21 @@ class AdminDashboardControllerCore extends AdminController
 						Configuration::updateValue($name, $value);
 		
 		if (Validate::isHookName($hook) && method_exists($module_obj, $hook))
-			$return['widget_html'] = $module_obj->$hook(array());
+			$return['widget_html'] = $module_obj->$hook($params);
 		
 		die(Tools::jsonEncode($return));
+	}
+	
+	public function ajaxProcessSavePreactivationRequest()
+	{
+		$isoUser = Context::getContext()->language->iso_code;
+		$isoCountry = Context::getContext()->country->iso_code;
+		$employee = new Employee((int)Context::getContext()->cookie->id_employee);
+		$firstname = $employee->firstname;
+		$lastname = $employee->lastname;
+		$email = $employee->email;
+		$return = @Tools::file_get_contents('http://api.prestashop.com/partner/premium/set_request.php?iso_country='.strtoupper($isoCountry).'&iso_lang='.strtolower($isoUser).'&host='.urlencode($_SERVER['HTTP_HOST']).'&ps_version='._PS_VERSION_.'&ps_creation='._PS_CREATION_DATE_.'&partner='.htmlentities(Tools::getValue('module')).'&shop='.urlencode(Configuration::get('PS_SHOP_NAME')).'&email='.urlencode($email).'&firstname='.urlencode($firstname).'&lastname='.urlencode($lastname).'&type=home');
+		die($return);
 	}
 }
 
