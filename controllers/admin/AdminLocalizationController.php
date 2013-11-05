@@ -145,8 +145,10 @@ class AdminLocalizationControllerCore extends AdminController
 
 			if (Validate::isFileName(Tools::getValue('iso_localization_pack')))
 			{
-			
-				$pack = @Tools::file_get_contents('http://api.prestashop.com/localization/'.$version.'/'.Tools::getValue('iso_localization_pack').'.xml');
+				if (Tools::getValue('download_updated_pack') == '1')
+					$pack = @Tools::file_get_contents('http://api.prestashop.com/localization/'.$version.'/'.Tools::getValue('iso_localization_pack').'.xml');
+				else
+					$pack = false;
 
 				if (!$pack && !($pack = @Tools::file_get_contents(dirname(__FILE__).'/../../localization/'.Tools::getValue('iso_localization_pack').'.xml')))
 					$this->errors[] = Tools::displayError('Cannot load the localization pack.');
@@ -264,6 +266,26 @@ class AdminLocalizationControllerCore extends AdminController
 						'id' => 'id',
 						'name' => 'name'
 					)
+				),
+				array(
+					'type'	 => 'radio',
+					'label'  => $this->l('Download pack data'),
+					'desc' 	 => $this->l('If set to yes then the localization pack will be downloaded from prestashop.com. Otherwise the local xml file found in the localization folder of your PrestaShop installation will be used.'),
+					'name' 	 => 'download_updated_pack',
+					'class'  => 't',
+					'is_bool'=> true,
+					'values' => array(
+						array(
+							'id' 	=> 'download_updated_pack_yes',
+							'value'	=> 1,
+							'label' => $this->l('Yes')
+						),
+						array(
+							'id' 	=> 'download_updated_pack_no',
+							'value'	=> 0,
+							'label' => $this->l('No')
+						)
+					)
 				)
 			),
 			'submit' => array(
@@ -278,7 +300,8 @@ class AdminLocalizationControllerCore extends AdminController
 			'selection[]_taxes' => true,
 			'selection[]_currencies' => true,
 			'selection[]_languages' => true,
-			'selection[]_units' => true
+			'selection[]_units' => true,
+			'download_updated_pack' => 1
 		);
 
 		$this->show_toolbar = false;
