@@ -2,24 +2,19 @@
 /********************************************************
 			One-Page Checkout Styles
 ********************************************************/
-/* line 6, ../sass/order-opc.scss */
 #order-opc {
   line-height: 20px;
 }
-/* line 9, ../sass/order-opc.scss */
 #order-opc .box {
   padding-bottom: 20px;
 }
-/* line 11, ../sass/order-opc.scss */
 #order-opc .cart_navigation {
   margin-bottom: 53px;
 }
-/* line 15, ../sass/order-opc.scss */
 #order-opc .page-heading.step-num {
   position: relative;
   padding-left: 45px;
 }
-/* line 19, ../sass/order-opc.scss */
 #order-opc .page-heading.step-num span {
   font-weight: bold;
   font-size: 42px;
@@ -30,71 +25,56 @@
   left: 10px;
   top: -14px;
 }
-/* line 31, ../sass/order-opc.scss */
 #order-opc .form-group {
   margin-bottom: 2px;
 }
-/* line 34, ../sass/order-opc.scss */
 #order-opc .form-group .form-control {
   max-width: 271px;
 }
-/* line 37, ../sass/order-opc.scss */
 #order-opc .lost_password {
   display: inline-block;
   text-decoration: underline;
   margin: 5px 0 14px;
 }
-/* line 42, ../sass/order-opc.scss */
 #order-opc .lost_password:hover {
   text-decoration: none;
 }
-/* line 47, ../sass/order-opc.scss */
 #order-opc .title_block {
   font-weight: bold;
   color: #333;
   padding: 3px 0 6px;
 }
-/* line 53, ../sass/order-opc.scss */
 #order-opc .opc-button {
   padding: 11px 0 0 0;
 }
-/* line 55, ../sass/order-opc.scss */
 #order-opc ul.bullet {
   line-height: 22px;
   margin-bottom: 5px;
 }
-/* line 59, ../sass/order-opc.scss */
 #order-opc .date-select {
   padding-bottom: 10px;
 }
-/* line 61, ../sass/order-opc.scss */
 #order-opc .opc-add-save {
   border-top: 1px solid #d6d4d4;
   margin-top: 20px;
   padding-top: 20px;
 }
-/* line 67, ../sass/order-opc.scss */
 #order-opc #message {
   margin-bottom: 35px;
 }
-/* line 69, ../sass/order-opc.scss */
 #order-opc #opc_payment_methods {
   margin-bottom: 30px;
 }
-/* line 71, ../sass/order-opc.scss */
 #order-opc #opc_account {
   margin-bottom: 30px;
 }
-/* line 73, ../sass/order-opc.scss */
 #order-opc .address_delivery.select {
   margin-bottom: 15px;
 }
-/* line 75, ../sass/order-opc.scss */
 #order-opc #address_invoice_form.form-group {
   margin-bottom: 30px;
 }
 
-/* line 77, ../sass/order-opc.scss */
 #new_account_form .id_state, #new_account_form .dni, #new_account_form .postcode {
   display: none;
 }

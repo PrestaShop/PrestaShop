@@ -2,62 +2,50 @@
 /* ************************************************************************************************
       							Categories Page Styles
 ************************************************************************************************ */
-/* line 5, ../sass/category.scss */
 .content_scene_cat {
   border-top: 5px solid #333333;
   color: #d7d7d7;
   line-height: 19px;
   margin-bottom: 26px;
 }
-/* line 11, ../sass/category.scss */
 .content_scene_cat .content_scene_cat_bg {
   padding: 18px 10px 10px 42px;
   background-color: #464646 !important;
 }
 @media (max-width: 1199px) {
-  /* line 11, ../sass/category.scss */
   .content_scene_cat .content_scene_cat_bg {
     padding: 10px 10px 10px 15px;
   }
 }
-/* line 19, ../sass/category.scss */
 .content_scene_cat h1.category-name {
   font: 600 42px/51px "Open Sans", sans-serif;
   color: #fff;
   margin-bottom: 12px;
 }
 @media (max-width: 1199px) {
-  /* line 19, ../sass/category.scss */
   .content_scene_cat h1.category-name {
     font-size: 25px;
     line-height: 30px;
   }
 }
-/* line 29, ../sass/category.scss */
 .content_scene_cat p {
   margin-bottom: 0;
 }
-/* line 31, ../sass/category.scss */
 .content_scene_cat a {
   color: #fff;
 }
-/* line 34, ../sass/category.scss */
 .content_scene_cat a:hover {
   text-decoration: underline;
 }
-/* line 37, ../sass/category.scss */
 .content_scene_cat .content_scene {
   color: #777777;
 }
-/* line 40, ../sass/category.scss */
 .content_scene_cat .content_scene .cat_desc {
   padding-top: 20px;
 }
-/* line 43, ../sass/category.scss */
 .content_scene_cat .content_scene .cat_desc a {
   color: #777777;
 }
-/* line 46, ../sass/category.scss */
 .content_scene_cat .content_scene .cat_desc a:hover {
   color: #515151;
 }
@@ -65,22 +53,18 @@
 /* ************************************************************************************************
       							Sub Categories Styles
 ************************************************************************************************ */
-/* line 58, ../sass/category.scss */
 #subcategories {
   border-top: 1px solid #d6d4d4;
   padding: 15px 0 0px 0;
 }
-/* line 62, ../sass/category.scss */
 #subcategories p.subcategory-heading {
   font-weight: bold;
   color: #333;
   margin: 0 0 15px 0;
 }
-/* line 68, ../sass/category.scss */
 #subcategories ul {
   margin-left: -20px;
 }
-/* line 71, ../sass/category.scss */
 #subcategories ul li {
   float: left;
   width: 128px;
@@ -89,36 +73,29 @@
   margin-bottom: 13px;
   height: 202px;
 }
-/* line 79, ../sass/category.scss */
 #subcategories ul li .subcategory-image {
   padding-bottom: 8px;
 }
-/* line 82, ../sass/category.scss */
 #subcategories ul li .subcategory-image a {
   display: block;
   padding: 9px;
   border: 1px solid #d6d4d4;
 }
-/* line 87, ../sass/category.scss */
 #subcategories ul li .subcategory-image a img {
   max-width: 100%;
   vertical-align: top;
 }
-/* line 94, ../sass/category.scss */
 #subcategories ul li .subcategory-name {
   font: 600 18px/22px "Open Sans", sans-serif;
   color: #555454;
   text-transform: uppercase;
 }
-/* line 99, ../sass/category.scss */
 #subcategories ul li .subcategory-name:hover {
   color: #515151;
 }
-/* line 104, ../sass/category.scss */
 #subcategories ul li .cat_desc {
   display: none;
 }
-/* line 110, ../sass/category.scss */
 #subcategories ul li:hover .subcategory-image a {
   border: 5px solid #333333;
   padding: 5px;

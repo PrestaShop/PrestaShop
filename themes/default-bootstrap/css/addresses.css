@@ -2,25 +2,20 @@
 /*******************************************************
 				Addresses Styles
 ********************************************************/
-/* line 9, ../sass/addresses.scss */
 #addresses #center_column .page-heading {
   margin-bottom: 22px;
 }
-/* line 13, ../sass/addresses.scss */
 #addresses #center_column p {
   margin-bottom: 13px;
 }
-/* line 16, ../sass/addresses.scss */
 #addresses #center_column p.p-indent {
   margin-bottom: 27px;
 }
 
-/* line 23, ../sass/addresses.scss */
 .address li.address_update {
   margin-top: 14px;
   margin-bottom: 6px;
 }
-/* line 27, ../sass/addresses.scss */
 .address li.address_update a {
   margin-right: 10px;
 }

@@ -213,8 +213,7 @@ $(function(){ldelim}
             {/if}
             <div class="form-group">
                 <label for="other">{l s='Additional information'}</label>
-                <textarea class="form-control" id="other" name="other" cols="26" rows="3" onkeyup="if (validate_{$address_validation.other.validate}($(this).val())) $(this).parent().removeClass('form-error').addClass('form-ok'); else $(this).parent().addClass('form-error').removeClass('form-ok');
-              ">{if isset($smarty.post.other)}{$smarty.post.other}{else}{if isset($address->other)}{$address->other|escape:'html'}{/if}{/if}</textarea>
+                <textarea class="validate form-control" data-validate="{$address_validation.other.validate}" id="other" name="other" cols="26" rows="3" >{if isset($smarty.post.other)}{$smarty.post.other}{else}{if isset($address->other)}{$address->other|escape:'html'}{/if}{/if}</textarea>
             </div>
             <div class="form-group phone-number">
                 <label for="phone">{l s='Home phone'}</label>

@@ -2,20 +2,16 @@
 /************************************************************
 				History Page Styles
 ************************************************************/
-/* line 8, ../sass/history.scss */
 #order-detail-content table .return_quantity_buttons {
   margin-top: 3px;
 }
-/* line 11, ../sass/history.scss */
 #order-detail-content table .return_quantity_buttons a {
   display: none;
   float: left;
 }
-/* line 15, ../sass/history.scss */
 #order-detail-content table .return_quantity_buttons a + a {
   margin-left: 3px;
 }
-/* line 19, ../sass/history.scss */
 #order-detail-content table .order_qte_input {
   display: none;
   width: 57px;
@@ -24,42 +20,33 @@
   padding: 0;
   text-align: center;
 }
-/* line 28, ../sass/history.scss */
 #order-detail-content table label {
   font-weight: 400;
 }
 
-/* line 35, ../sass/history.scss */
 .table td.history_detail a + a {
   margin-left: 14px;
 }
-/* line 39, ../sass/history.scss */
 .table td.step-by-step-date {
   width: 105px;
 }
-/* line 44, ../sass/history.scss */
 .table tfoot strong {
   color: #333;
 }
 
-/* line 51, ../sass/history.scss */
 .info-order i {
   font-size: 20px;
 }
-/* line 54, ../sass/history.scss */
 .info-order i.icon-gift {
   color: #f13340;
 }
-/* line 55, ../sass/history.scss */
 .info-order i.icon-repeat {
   color: #55c65e;
 }
 
-/* line 58, ../sass/history.scss */
 #sendOrderMessage {
   margin-bottom: 30px;
 }
-/* line 61, ../sass/history.scss */
 #sendOrderMessage select.form-control {
   width: 263px;
 }

@@ -1,14 +1,11 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
-/* line 4, ../sass/my-account.scss */
 #my-account .addresses-lists {
   margin-bottom: 30px;
 }
-/* line 10, ../sass/my-account.scss */
 #my-account ul.myaccount-link-list li {
   overflow: hidden;
   padding-bottom: 10px;
 }
-/* line 15, ../sass/my-account.scss */
 #my-account ul.myaccount-link-list li a {
   display: block;
   overflow: hidden;
@@ -34,7 +31,6 @@
   -o-border-radius: 4px;
   border-radius: 4px;
 }
-/* line 36, ../sass/my-account.scss */
 #my-account ul.myaccount-link-list li a i {
   font-size: 25px;
   color: #fd7e01;
@@ -53,7 +49,6 @@
   -webkit-border-bottom-left-radius: 4px;
   border-bottom-left-radius: 4px;
 }
-/* line 51, ../sass/my-account.scss */
 #my-account ul.myaccount-link-list li a span {
   display: block;
   padding: 13px 15px 15px 17px;
@@ -68,7 +63,6 @@
   border-bottom-right-radius: 5px;
   margin-left: 52px;
 }
-/* line 62, ../sass/my-account.scss */
 #my-account ul.myaccount-link-list li a:hover {
   filter: none;
   background: #e7e7e7;

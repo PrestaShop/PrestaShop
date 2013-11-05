@@ -2,46 +2,36 @@
 /**********************************************************
 				Authentication Styles
 **********************************************************/
-/* line 5, ../sass/authentication.scss */
 #account-creation_form .id_state, #account-creation_form .dni, #account-creation_form .postcode {
   display: none;
 }
 
-/* line 9, ../sass/authentication.scss */
 #create-account_form {
   min-height: 297px;
 }
-/* line 12, ../sass/authentication.scss */
 #create-account_form p {
   margin-bottom: 8px;
 }
-/* line 16, ../sass/authentication.scss */
 #create-account_form .form-group {
   margin-bottom: 20px;
 }
 
-/* line 21, ../sass/authentication.scss */
 #login_form {
   min-height: 297px;
 }
-/* line 24, ../sass/authentication.scss */
 #login_form .form-group {
   margin-bottom: 3px;
 }
-/* line 27, ../sass/authentication.scss */
 #login_form .form-group.lost_password {
   margin: 14px 0 15px 0;
 }
-/* line 30, ../sass/authentication.scss */
 #login_form .form-group.lost_password a {
   text-decoration: underline;
 }
-/* line 33, ../sass/authentication.scss */
 #login_form .form-group.lost_password a:hover {
   text-decoration: none;
 }
 
-/* line 42, ../sass/authentication.scss */
 #login_form .form-control, #create-account_form .form-control {
   max-width: 271px;
 }
