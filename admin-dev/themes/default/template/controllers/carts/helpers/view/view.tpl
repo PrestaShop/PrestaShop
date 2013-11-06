@@ -50,7 +50,7 @@
 		<h2><img src="../img/admin/cart.gif" /> {l s='Order information'}</h2>
 		<span>
 		{if $order->id}
-			<a href="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&id_order={$order->id}&vieworder"> {l s='Order #%d' sprintf=$order->id|string_format:"%06d"}</a></span>
+			<a href="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&id_order={$order->id}&vieworder"> {l s='Order #%s' sprintf=$order->reference}</a></span>
 			<br /><br />
 			{l s='Made on:'} {dateFormat date=$order->date_add}<br /><br /><br /><br />
 		{else}
