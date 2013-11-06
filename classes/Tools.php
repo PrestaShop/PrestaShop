@@ -348,17 +348,10 @@ class ToolsCore
 		{
 			$array  = explode(',', Tools::strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
 			$string = $array[0];
-
+			
 			if (Validate::isLanguageCode($string))
 			{
-				$tab = explode('-', $array[0]);
-				$string = $tab[0];
-			}
-			else
-				$string = $array[0];
-			if (Validate::isLanguageIsoCode($string))
-			{
-				$lang = new Language(Language::getIdByIso($string));
+				$lang = Language::getLanguageByIETFCode($string);
 				if (Validate::isLoadedObject($lang) && $lang->active && $lang->isAssociatedToShop())
 				{
 					Context::getContext()->language = $lang;
@@ -366,7 +359,7 @@ class ToolsCore
 				}
 			}
 		}
-		
+
 		if (isset($cookie->detect_language))
 			unset($cookie->detect_language);
 
