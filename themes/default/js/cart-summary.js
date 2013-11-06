@@ -792,7 +792,7 @@ function refreshDeliveryOptions()
 	$.each($('.delivery_option_radio'), function() {
 		if ($(this).prop('checked'))
 		{
-			if ($(this).parent().find('.delivery_option_carrier .not-displayable').length == 0)
+			if ($(this).parent().find('.delivery_option_carrier.not-displayable').length == 0)
 				$(this).parent().find('.delivery_option_carrier').show();
 			var carrier_id_list = $(this).val().split(',');
 			carrier_id_list.pop();
