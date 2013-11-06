@@ -109,7 +109,7 @@ class MediaCore
 
 			// If the string is too big preg_replace return an error
 			// In this case, we don't compress the content
-			if (preg_last_error() == PREG_BACKTRACK_LIMIT_ERROR)
+			if (function_exists('preg_last_error') && preg_last_error() == PREG_BACKTRACK_LIMIT_ERROR)
 			{
 				if (_PS_MODE_DEV_)
 					error_log('ERROR: PREG_BACKTRACK_LIMIT_ERROR in function packJSinHTML');
