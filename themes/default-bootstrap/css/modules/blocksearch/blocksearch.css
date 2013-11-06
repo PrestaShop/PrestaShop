@@ -30,10 +30,10 @@
   }
 }
 #search_block_top .btn.button-search {
-  background: #333;
+  background: #333333;
   float: left;
   border: none;
-  color: #fff;
+  color: white;
   width: 57px;
   text-align: center;
   padding: 10px 0 11px 0;
@@ -75,7 +75,7 @@
 }
 
 .ac_results {
-  background: #fff;
+  background: white;
   border: 1px solid #d6d4d4;
   width: 271px;
   margin-top: -1px;
@@ -88,14 +88,14 @@
   line-height: 22px;
 }
 .ac_results li.ac_odd {
-  background: #fff;
+  background: white;
 }
 .ac_results li:hover, .ac_results li.ac_over {
   background: #fbfbfb;
 }
 
 form#searchbox label {
-  color: #333;
+  color: #333333;
   margin-bottom: 1px;
 }
 form#searchbox input#search_query_block {

@@ -1,3 +1,4 @@
+@import '../../_theme_variables';
 #compare_shipping {
 	
 	.form-group {
@@ -17,14 +18,14 @@
 	}
 	
 	.table {
-		background:#fff;
+		background:$light-background;
 		
 		thead {
 			
 			tr {
 				
 				th {
-					background:#fff;
+					background:$light-background;
 					padding:4px 10px 3px 10px;	
 				}
 			}

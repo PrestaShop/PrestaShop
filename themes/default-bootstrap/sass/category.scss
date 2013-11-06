@@ -3,7 +3,7 @@
       							Categories Page Styles
 ************************************************************************************************ */
 .content_scene_cat {
-	border-top:5px solid #333333;
+	border-top:5px solid $dark-border-color;
 	color:#d7d7d7;
 	line-height:19px;
 	margin-bottom:26px;
@@ -17,8 +17,8 @@
 	}
 	
 	h1.category-name {
-		font:600 42px/51px 'Open Sans', sans-serif;
-		color:#fff;	
+		font:600 42px/51px $font-custom;
+		color:$light-text-color;	
 		margin-bottom:12px;
 																		@media  (max-width: $screen-md-max) { // max 1199px
 																			font-size:25px;
@@ -29,13 +29,13 @@
 	p {margin-bottom:0;}
 	
 	a {
-		color:#fff;
+		color:$light-text-color;
 		
 		&:hover {text-decoration:underline;}
 	}
 	
 	.content_scene {
-		color:#777777;
+		color:$base-body-color;
 		
 		.cat_desc {
 			padding-top:20px;
@@ -61,7 +61,7 @@
 	
 	p.subcategory-heading {
 		font-weight:bold;
-		color:#333;
+		color:$base-text-color;
 		margin:0 0 15px 0;
 	}
 	
@@ -92,8 +92,8 @@
 			}
 			
 			.subcategory-name {
-				font:600 18px/22px 'Open Sans', sans-serif;
-				color:#555454;
+				font:600 18px/22px $font-custom;
+				color:$base-heading-color;
 				text-transform:uppercase;
 				
 				&:hover {
@@ -108,7 +108,7 @@
 				.subcategory-image {
 					
 					a {
-						border:5px solid #333333;
+						border:5px solid $dark-border-color;
 						padding:5px;
 					}
 				}	

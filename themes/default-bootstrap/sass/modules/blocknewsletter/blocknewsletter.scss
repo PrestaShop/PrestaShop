@@ -64,7 +64,7 @@
 				max-width:267px;
 				background:#3c3c3c;
 				border-color:#515151;
-				color:#fff;
+				color:$light-text-color;
 				padding:5px 43px 5px 12px;
 				display:inline-block;
 				
@@ -82,13 +82,13 @@
 				
 				&:before {
 					content:"";
-					font-family:'FontAwesome';
+					font-family:$font-icon;
 					font-size:28px;
 					line-height:28px;
 				}
 				
 				&:hover {
-					color:#fff !important;
+					color:$light-text-color !important;
 				}
 					
 				span{display:none;}	

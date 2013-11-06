@@ -4,7 +4,6 @@
 **********************************************************************/
 #maintenance {
   margin-top: 50px;
-  /* > 1200 */
 }
 @media (min-width: 1200px) {
   #maintenance {
@@ -18,7 +17,7 @@
 }
 #maintenance h1 {
   font: 600 28px/34px "Open Sans", sans-serif;
-  color: #333;
+  color: #333333;
   text-transform: uppercase;
   border-bottom: 1px solid #d6d4d4;
   padding: 0 0 14px 0;
