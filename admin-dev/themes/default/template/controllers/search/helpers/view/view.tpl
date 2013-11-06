@@ -25,7 +25,7 @@
 
 <script type="text/javascript">
 $(function() {
-	$('body').highlight('{$query}');
+	$('#content .panel').highlight('{$query}');
 });
 </script>
 
