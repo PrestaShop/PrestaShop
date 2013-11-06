@@ -1,15 +1,14 @@
-/* line 1, ../../../sass/modules/favoriteproducts/favoriteproducts.scss */
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
 #favoriteproducts_block_account .favoriteproduct {
   position: relative;
   margin-bottom: 14px;
   padding: 12px 8px;
-  border: 1px solid #eee;
+  border: 1px solid #d6d4d4;
   border-radius: 3px 3px 3px 3px;
 }
 
-/* line 9, ../../../sass/modules/favoriteproducts/favoriteproducts.scss */
 .favoriteproduct a.product_img_link {
-  border: 1px solid #CCCCCC;
+  border: 1px solid #d6d4d4;
   display: block;
   float: left;
   margin-right: 14px;
@@ -17,41 +16,35 @@
   position: relative;
 }
 
-/* line 17, ../../../sass/modules/favoriteproducts/favoriteproducts.scss */
 .favoriteproduct p.product_desc {
   line-height: 16px;
   overflow: hidden;
   padding: 0;
 }
 
-/* line 23, ../../../sass/modules/favoriteproducts/favoriteproducts.scss */
 .favoriteproduct .remove {
   position: absolute;
   top: 10px;
   right: 10px;
 }
 
-/* line 28, ../../../sass/modules/favoriteproducts/favoriteproducts.scss */
 .favoriteproduct .remove .icon {
   cursor: pointer;
 }
 
 /* lnk fiche produit */
-/* line 33, ../../../sass/modules/favoriteproducts/favoriteproducts.scss */
 #usefull_link_block li#favoriteproducts_block_extra_add {
   padding-left: 20px;
   background: url(img/add_favorite.gif) no-repeat 0 0;
   cursor: pointer;
 }
 
-/* line 39, ../../../sass/modules/favoriteproducts/favoriteproducts.scss */
 #usefull_link_block li#favoriteproducts_block_extra_remove {
   padding-left: 20px;
   background: url(img/del_favorite.gif) no-repeat 0 0;
   cursor: pointer;
 }
 
-/* line 45, ../../../sass/modules/favoriteproducts/favoriteproducts.scss */
 ul#usefull_link_block li#favoriteproducts_block_extra_added {
   padding-left: 20px;
   background: url(img/add_favorite.gif) no-repeat 0 0;
@@ -59,7 +52,6 @@ ul#usefull_link_block li#favoriteproducts_block_extra_added {
   display: none;
 }
 
-/* line 51, ../../../sass/modules/favoriteproducts/favoriteproducts.scss */
 ul#usefull_link_block li#favoriteproducts_block_extra_removed {
   padding-left: 20px;
   background: url(img/add_favorite.gif) no-repeat 0 0;

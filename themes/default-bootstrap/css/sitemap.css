@@ -12,7 +12,7 @@
 #sitemap .sitemap_block li a:before {
   content: "";
   display: inline-block;
-  font-family: 'FontAwesome';
+  font-family: "FontAwesome";
   padding-right: 10px;
 }
 #sitemap .sitemap_block li a:hover {
@@ -28,7 +28,7 @@
   display: inline-block;
   font-family: "FontAwesome";
   font-size: 20px;
-  color: #333;
+  color: #333333;
 }
 #listpage_content div.tree_top a:hover:before {
   color: #515151;

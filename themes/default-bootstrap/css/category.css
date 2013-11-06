@@ -19,7 +19,7 @@
 }
 .content_scene_cat h1.category-name {
   font: 600 42px/51px "Open Sans", sans-serif;
-  color: #fff;
+  color: white;
   margin-bottom: 12px;
 }
 @media (max-width: 1199px) {
@@ -32,7 +32,7 @@
   margin-bottom: 0;
 }
 .content_scene_cat a {
-  color: #fff;
+  color: white;
 }
 .content_scene_cat a:hover {
   text-decoration: underline;
@@ -59,7 +59,7 @@
 }
 #subcategories p.subcategory-heading {
   font-weight: bold;
-  color: #333;
+  color: #333333;
   margin: 0 0 15px 0;
 }
 #subcategories ul {

@@ -40,7 +40,7 @@
   }
 }
 #header_right #header_user #shopping_cart a b {
-  color: #fff;
+  color: white;
   font: 600 18px/22px "Open Sans", sans-serif;
   padding-right: 5px;
 }
@@ -50,7 +50,7 @@
   display: inline-block;
   font-size: 23px;
   line-height: 23px;
-  color: #fff;
+  color: white;
   padding-right: 15px;
 }
 #header_right #header_user #shopping_cart a:after {

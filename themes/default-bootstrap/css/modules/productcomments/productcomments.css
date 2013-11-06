@@ -45,7 +45,7 @@
   -webkit-border-radius: 50px;
   color: white;
   display: inline-block;
-  font-family: FontAwesome;
+  font-family: "FontAwesome";
   font-size: 15px;
   font-weight: normal;
   height: 30px;
@@ -67,7 +67,7 @@
   content: "";
 }
 .comments_advices a:hover {
-  color: #333;
+  color: #333333;
 }
 .comments_advices a.reviews {
   border-right: 1px solid #d6d4d4;
@@ -89,7 +89,7 @@
 #product_comments_block_extra .comments_note span,
 #product_comments_block_extra .star_content {
   float: left;
-  color: #333;
+  color: #333333;
 }
 #product_comments_block_extra .star_content {
   margin-top: 1px;
@@ -123,7 +123,7 @@
 #new_comment_form {
   width: 465px;
   overflow: hidden;
-  color: #333;
+  color: #333333;
   text-align: left;
   /*max 767px*/
 }
@@ -138,7 +138,7 @@
 #new_comment_form .title {
   padding: 10px;
   font-size: 13px;
-  color: #fff;
+  color: white;
   text-transform: uppercase;
   background: #333333;
 }
@@ -193,7 +193,7 @@
   height: 28px;
   width: 100%;
   border: 1px solid #ccc;
-  background: #fff;
+  background: white;
 }
 #new_comment_form textarea {
   height: 80px;
@@ -265,7 +265,7 @@
 }
 #product_comments_block_tab .comment_author_infos strong {
   display: block;
-  color: #333;
+  color: #333333;
 }
 #product_comments_block_tab .comment_author_infos em {
   color: #adadad;
@@ -288,9 +288,9 @@
   padding: 2px 0 2px;
 }
 #product_comments_block_tab div.comment_details li:before {
-  font-family: FontAwesome;
+  font-family: "FontAwesome";
   content: "";
-  color: #333;
+  color: #333333;
   margin-right: 8px;
 }
 #product_comments_block_tab div.comment_details .title_block {

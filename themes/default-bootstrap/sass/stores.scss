@@ -19,12 +19,10 @@
 	.address-input {
 		float:left;
 		margin-right:19px;
-		
-		/* max 767px */
-		@media (max-width: $screen-xs-max) {
-			width:100%;
-			margin:0 0 20px 0;
-		}
+																		@media (max-width: $screen-xs-max) { // max 767px
+																			width:100%;
+																			margin:0 0 20px 0;
+																		}
 		label { margin-right:5px;}
 	}
 	
@@ -72,7 +70,7 @@
 	
 	label {
 		font-weight:normal;
-		color:#777777;
+		color:$base-body-color;
 	}
 	
 	#stores_loader {
@@ -94,7 +92,7 @@
 				padding:20px;
 				
 				&.num {
-					background:#fbfbfb;
+					background:$table-background;
 					width:46px;	
 				}
 				
@@ -103,8 +101,8 @@
 					span {
 						padding-left:15px;	
 					}
-					/* max 767px */
-					@media (max-width: $screen-xs-max) {
+					
+					@media (max-width: $screen-xs-max) { // max 767px
 						img {display:none;}
 					}
 				}
