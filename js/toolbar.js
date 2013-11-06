@@ -46,21 +46,21 @@ $(document).ready(function(){
 	});
 
 	// if count warnings
-	$('#linkSeeMore').on('click', function(e){
+	$(document).on('click', '#linkSeeMore', function(e){
 		e.preventDefault();
 		$('#seeMore').show();
 		$(this).hide();
 		$('#linkHide').show();
 		return false;
 	});
-	$('#linkHide').on('click', function(e){
+	$(document).on('click', '#linkHide', function(e){
 		e.preventDefault();
 		$('#seeMore').hide();
 		$(this).hide();
 		$('#linkSeeMore').show();
 		return false;
 	});
-	$('#hideWarn').on('click', function(e){
+	$(document).on('click', '#hideWarn', function(e){
 		e.preventDefault();
 		$('.warn').hide('slow', function (){
 			$('.warn').remove();
