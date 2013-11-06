@@ -60,7 +60,7 @@
   max-width: 267px;
   background: #3c3c3c;
   border-color: #515151;
-  color: #fff;
+  color: white;
   padding: 5px 43px 5px 12px;
   display: inline-block;
 }
@@ -78,12 +78,12 @@
 }
 #footer #newsletter_block_left .form-group .button-small:before {
   content: "";
-  font-family: 'FontAwesome';
+  font-family: "FontAwesome";
   font-size: 28px;
   line-height: 28px;
 }
 #footer #newsletter_block_left .form-group .button-small:hover {
-  color: #fff !important;
+  color: white !important;
 }
 #footer #newsletter_block_left .form-group .button-small span {
   display: none;

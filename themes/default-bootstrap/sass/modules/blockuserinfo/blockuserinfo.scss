@@ -22,7 +22,7 @@
 			
 			a {
 				padding:7px 10px 14px 16px;
-				background:#333333;
+				background:$dark-background;
 				min-width: 270px;
 				display:block;
 				font-weight:bold;
@@ -39,24 +39,24 @@
 				}
 				
 				b {
-					color:#fff;
-					font:600 18px/22px 'Open Sans', sans-serif;
+					color:$light-text-color;
+					font:600 18px/22px $font-custom;
 					padding-right:5px;
 				}
 				
 				&:before {
 					content:"";
-					font-family:"FontAwesome";
+					font-family:$font-icon;
 					display:inline-block;
 					font-size:23px;
 					line-height:23px;
-					color:#fff;
+					color:$light-text-color;
 					padding-right:15px;
 				}
 				
 				&:after {
 					content:"";
-					font-family:"FontAwesome";
+					font-family:$font-icon;
 					display:inline-block;
 					float:right;
 					font-size:18px;

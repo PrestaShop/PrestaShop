@@ -6,18 +6,17 @@
 
 #maintenance {
 	margin-top:50px;
-	/* > 1200 */
-	@media (min-width: $screen-lg) {
-		margin:126px 0 0 0;
-		padding:91px 48px 365px 297px;
-		background:url(../img/bg_maintenance.png) no-repeat;
-	}
+																		@media (min-width: $screen-lg) { // > 1200 
+																			margin:126px 0 0 0;
+																			padding:91px 48px 365px 297px;
+																			background:url(../img/bg_maintenance.png) no-repeat;
+																		}
 	.logo {
 		margin-bottom:31px;	
 	}
 	h1 {
-		font:600 28px/34px 'Open Sans', sans-serif;
-		color:#333;
+		font:600 28px/34px $font-custom;
+		color:$base-text-color;
 		text-transform:uppercase;
 		border-bottom:1px solid $base-border-color;
 		padding:0 0 14px 0;
@@ -25,7 +24,7 @@
 	}
 	
 	#message {
-		font:600 16px/31px 'Open Sans', sans-serif;
+		font:600 16px/31px $font-custom;
 		padding-left:18px;
 		color:#555454;
 		text-transform:uppercase;	

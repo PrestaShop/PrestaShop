@@ -27,7 +27,7 @@
 	position:		absolute;
 	top:			-999em;
 	width:			10em; /* left offset of submenus need to match (see below) */
-	background:		#fff;
+	background:		$light-background;
 }
 .sf-menu ul li {
 	width:			100%;
@@ -40,11 +40,11 @@
 }
 .sf-menu > li {
 	float:			left;
-	border-right:	1px solid #d6d4d4;
+	border-right:	1px solid $base-border-color;
 	margin-bottom:	-3px;
 	
 	> a {
-		font:				600 18px/22px 'Open Sans', sans-serif;
+		font:				600 18px/22px $font-custom;
 		text-transform:		uppercase;
 		color:				#484848;
 		display:			block;
@@ -53,9 +53,9 @@
 	}
 	
 	&.sfHover > a, > a:hover, &.sfHoverForce > a {
-		background:				#333;
+		background:				$dark-background;
 		border-bottom-color:	#666666;
-		color:					#fff;	
+		color:					$light-text-color;	
 	}
 }
 .sf-menu li li a {
@@ -70,12 +70,12 @@
 	&:before {
 		content:		"";
 		display:		inline-block;
-		font-family:	"FontAwesome";
+		font-family:	$font-icon;
 		padding-right:	10px;	
 	}
 	
 	&:hover {
-		color:			#333;	
+		color:			$base-text-color;	
 	}
 }
 .sf-menu li ul {
