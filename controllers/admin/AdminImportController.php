@@ -506,7 +506,6 @@ class AdminImportControllerCore extends AdminController
 		$this->toolbar_btn = array();
 
 		// adds fancybox
-		$this->addCSS(_PS_CSS_DIR_.'jquery.fancybox-1.3.4.css', 'screen');
 		$this->addJqueryPlugin(array('fancybox'));
 
 		$entity_selected = 0;
