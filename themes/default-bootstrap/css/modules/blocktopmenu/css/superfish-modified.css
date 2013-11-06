@@ -33,7 +33,7 @@
   top: -999em;
   width: 10em;
   /* left offset of submenus need to match (see below) */
-  background: #fff;
+  background: white;
 }
 
 .sf-menu ul li {
@@ -63,9 +63,9 @@
   border-bottom: 3px solid #e9e9e9;
 }
 .sf-menu > li.sfHover > a, .sf-menu > li > a:hover, .sf-menu > li.sfHoverForce > a {
-  background: #333;
+  background: #333333;
   border-bottom-color: #666666;
-  color: #fff;
+  color: white;
 }
 
 .sf-menu li li a {
@@ -84,7 +84,7 @@
   padding-right: 10px;
 }
 .sf-menu li li a:hover {
-  color: #333;
+  color: #333333;
 }
 
 .sf-menu li ul {
@@ -95,9 +95,9 @@
   z-index: 99;
   width: 220px;
   padding: 25px 30px;
-  -webkit-box-shadow: rgba(0, 0, 0, 0) 0px 5px 13px;
-  -moz-box-shadow: rgba(0, 0, 0, 0) 0px 5px 13px;
-  box-shadow: rgba(0, 0, 0, 0) 0px 5px 13px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 13px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 13px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 13px;
 }
 
 ul.sf-menu li:hover li ul,

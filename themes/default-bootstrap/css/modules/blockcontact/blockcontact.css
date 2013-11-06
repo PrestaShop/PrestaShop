@@ -1,24 +1,20 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
 /* block CONTACT ******************************************************************************* */
-/* line 4, ../../../sass/modules/blockcontact/blockcontact.scss */
 #contact_block .label {
   display: none;
 }
-/* line 6, ../../../sass/modules/blockcontact/blockcontact.scss */
 #contact_block .block_content {
   color: #888888;
   padding: 0 20px 20px;
 }
-/* line 11, ../../../sass/modules/blockcontact/blockcontact.scss */
 #contact_block p {
   margin-bottom: 4px;
 }
-/* line 13, ../../../sass/modules/blockcontact/blockcontact.scss */
 #contact_block p.tel {
   font: 400 17px/21px Arial, Helvetica, sans-serif;
-  color: #fff;
+  color: white;
   margin-bottom: 6px;
 }
-/* line 18, ../../../sass/modules/blockcontact/blockcontact.scss */
 #contact_block p.tel i {
   font-size: 25px;
   vertical-align: -2px;

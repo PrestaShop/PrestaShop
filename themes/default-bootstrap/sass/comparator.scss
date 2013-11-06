@@ -14,8 +14,8 @@ table#product_comparison {
 			}
 			
 			td.td_empty, td.feature-name, &.comparison_header {
-				background:#fbfbfb;
-				color:#333;
+				background:$table-background;
+				color:$base-text-color;
 			}
 			
 			td.comparison_infos { 
@@ -31,7 +31,7 @@ table#product_comparison {
 				vertical-align:bottom;
 				
 				span {
-					font:600 18px/22px 'Open Sans', sans-serif;
+					font:600 18px/22px $font-custom;
 					text-transform:uppercase;
 					color:#555454;	
 				}
@@ -81,7 +81,7 @@ table#product_comparison {
 		padding-top:5px;
 		
 		.reduced-price {
-			color:#f00;
+			color:$product-reduced-price;
 			font-weight:bold;
 		}
 	}
@@ -96,8 +96,8 @@ table#product_comparison {
 	}
 	.comparison_unit_price {
 		font-size:17px;
-		font-family:'Open Sans', sans-serif;
-		color:#333;
+		font-family:$font-custom;
+		color:$product-price-color;
 		font-style:italic;	
 	}
 }

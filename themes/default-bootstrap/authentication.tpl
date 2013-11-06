@@ -129,6 +129,7 @@ $(document).ready(function() {
 						bindStateInputAndUpdate();
 						$(this).fadeIn('slow', function(){
 							document.location = '#account-creation';
+							$('select.form-control').uniform();
 						});
 					});
 				}

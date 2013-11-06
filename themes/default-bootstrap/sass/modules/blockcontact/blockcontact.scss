@@ -1,3 +1,4 @@
+@import '../../_theme_variables';
 /* block CONTACT ******************************************************************************* */
 #contact_block {
 	
@@ -11,8 +12,8 @@
 	p {margin-bottom:4px;}
 	
 	p.tel {
-		font:400 17px/21px Arial, Helvetica, sans-serif;
-		color:#fff;
+		font:400 17px/21px $font-famaly;
+		color:$light-text-color;
 		margin-bottom:6px;
 		
 		i {
