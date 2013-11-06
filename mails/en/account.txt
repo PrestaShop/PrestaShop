@@ -5,13 +5,13 @@ Hi {firstname} {lastname},
 
 Thank you for creating a customer account at {shop_name}. 
 
-Your {shop_name} login details Here are your login details:
+Here are your login details:
 
-E-MAIL ADDRESS: {EMAIL}
+E-MAIL ADDRESS: {email}
 
 PASSWORD: {passwd} 
 
-Important Security Tips: 
+Important Security Tips:
 
 * Always keep your account details safe.
 

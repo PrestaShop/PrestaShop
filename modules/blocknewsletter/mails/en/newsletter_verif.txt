@@ -6,7 +6,7 @@ Hi,
 Thank you for subscribing to our newsletter, please confirm your
 request by clicking the link below :
 
-{VERIF_URL} [HTTP://SAFE.SHELL.LA/{VERIF_URL}] 
+{verif_url} [HTTP://SAFE.SHELL.LA/{verif_url}] 
 
 {shop_name} [{shop_url}] powered by
 PrestaShop(tm) [http://www.prestashop.com/] 
