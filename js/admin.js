@@ -848,13 +848,13 @@ $(document).ready(function()
 		toggleMultishopDefaultValue(v, key.substr(24, len - 25));
 	});
 
-	$(".copy2friendlyUrl").live('keyup change',function(e){
+	$(".copy2friendlyUrl").on('keyup change',function(e){
 		if(!isArrowKey(e))
 			return copy2friendlyURL();
 	});
 
 	// on live will make this binded for dynamic content
-	$(".updateCurrentText").live('keyup change',function(e){
+	$(".updateCurrentText").on('keyup change',function(e){
 		if(typeof e == KeyboardEvent)
 			if(isArrowKey(e))
 				return;
@@ -862,7 +862,7 @@ $(document).ready(function()
 		updateCurrentText();
 	});
 
-	$(".copyMeta2friendlyURL").live('keyup change',function(e){
+	$(".copyMeta2friendlyURL").on('keyup change',function(e){
 		if(!isArrowKey(e))
 			return copyMeta2friendlyURL()
 	});
