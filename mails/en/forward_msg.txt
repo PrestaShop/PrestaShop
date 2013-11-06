@@ -3,12 +3,11 @@
 
 Hi {firstname} {lastname}, 
 
-Customer service - Forwarded discussion {EMPLOYEE} wanted to forward
-this discussion to you. 
+{employee} wanted to forward this discussion to you. 
 
 DISCUSSION HISTORY: {messages}
 
-{EMPLOYEE} added "{COMMENT}" 
+{employee} added "{comment}" 
 
 {shop_name} [{shop_url}] powered by
 PrestaShop(tm) [http://www.prestashop.com/] 
