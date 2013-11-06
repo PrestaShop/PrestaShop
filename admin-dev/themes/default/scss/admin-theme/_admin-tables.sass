@@ -1,6 +1,4 @@
 .table
-	@extend .table-striped
-	@extend .table-hover
 	border-collapse: separate
 	border-spacing: 0 2px 0 0
 	margin-bottom: 5px
@@ -24,15 +22,20 @@
 				color: black
 	input, select
 		margin: 0
-	tbody > tr > td
-		border-top: none
-		background-color: white
-	tbody > tr > td
-		padding: 3px 7px
-		vertical-align: middle
-		word-wrap: nowrap
-		font-size: 12px
-		border-bottom: solid 1px #eee
+	tbody
+		> tr > td
+			border-top: none
+			background-color: white
+			padding: 3px 7px
+			vertical-align: middle
+			word-wrap: nowrap
+			font-size: 12px
+			border-bottom: solid 1px #eee
+		> tr.odd > td
+			background-color: $table-bg-accent
+		> tr:hover > td
+			background-color: $table-bg-hover
+
 	td.center, th.center
 		text-align: center
 	td.pointer
