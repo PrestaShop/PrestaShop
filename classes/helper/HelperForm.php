@@ -118,6 +118,7 @@ class HelperFormCore extends Helper
 							$uploader->setUrl(isset($params['url'])?$params['url']:null);
 							$uploader->setMultiple(isset($params['multiple'])?$params['multiple']:false);
 							$uploader->setUseAjax(isset($params['ajax'])?$params['ajax']:false);
+							$uploader->setMaxFiles(isset($params['max_files'])?$params['max_files']:null);
 
 							if (isset($params['files']) && $params['files'])
 								$uploader->setFiles($params['files']);
@@ -138,7 +139,6 @@ class HelperFormCore extends Helper
 									'delete_url' => isset($params['delete_url'])?$params['delete_url']:null,
 									'download_url' => isset($params['file'])?$params['file']:null
 								)));
-
 
 							$uploader->setThumb(isset($params['thumb'])?$params['thumb']:null);
 							$uploader->setTitle(isset($params['title'])?$params['title']:null);
