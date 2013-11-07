@@ -5,7 +5,9 @@ Hi {firstname} {lastname},
 
 Thank you for shopping with {shop_name}! 
 
-Order details ORDER: {order_name} Placed on {date}
+Order details 
+
+ORDER: {order_name} Placed on {date}
 
 PAYMENT: {payment} 
 
@@ -47,13 +49,19 @@ TOTAL PAID
 
 {total_paid}
 
-Shipping CARRIER: {carrier}
+Shipping 
+
+CARRIER: {carrier}
 
 PAYMENT: {payment} 
 
-Delivery address {delivery_block_html} 		 
+Delivery address 
 
-Billing address {invoice_block_html} 
+{delivery_block_html} 		 
+
+Billing address 
+
+{invoice_block_html} 
 
 You can review your order and download your invoice from the
 "Order history" [{history_url}] section of your

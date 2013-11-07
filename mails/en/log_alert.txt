@@ -3,8 +3,7 @@
 
 Hi {firstname} {lastname}, 
 
-You have received a new log alert WARNING: you have received a new
-log alert in your Back Office.
+WARNING: you have received a new log alert in your Back Office.
 
 You can check for it in the "TOOLS" > "LOGS" section of your Back
 Office. 

@@ -3,8 +3,10 @@
 
 Hi, 
 
-{product} is nearly out of stock. The remaining stock is now less
-than the specified minimum of {LAST_QTY}.
+{product} is nearly out of stock. 
+
+The remaining stock is now less than the specified minimum of
+{last_qty}.
 
 REMAINING STOCK: {qty}
 

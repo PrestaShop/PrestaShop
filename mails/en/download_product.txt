@@ -4,12 +4,12 @@
 Hi {firstname} {lastname},
 
 Thank you for your order with the reference {order_name} from
-{SHOP_NAME} 
+{shop_name} 
 
-Product(s) now available for download You have {NBPRODUCTS}
-product(s) now available for download using the following link(s):
+You have {nbproducts} product(s) now available for download using the
+following link(s):
 
-{virtualProducts} 
+{virtualproducts} 
 
 You can review your order and download your invoice from the
 "Order history" [{history_url}] section of your

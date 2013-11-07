@@ -6,7 +6,9 @@ Congratulations!
 A new order was placed on {shop_name} from the following customer:
 {firstname} {lastname} ({email}) 
 
-Order details ORDER: {order_name} Placed on {date}
+Order details 
+
+ORDER: {order_name} Placed on {date}
 
 PAYMENT: {payment} 
 
@@ -46,13 +48,21 @@ TOTAL PAID
 
 {total_paid}
 
-Carrier: {carrier} 
+Carrier: 
 
-Delivery address {delivery_block_html} 		 
+{carrier} 
 
-Billing address {invoice_block_html} 
+Delivery address 
 
-Customer message: {message} 
+{delivery_block_html} 		 
+
+Billing address 
+
+{invoice_block_html} 
+
+Customer message: 
+
+{message} 
 
 {shop_name} [{shop_url}] powered by
 PrestaShop(tm) [http://www.prestashop.com/] 

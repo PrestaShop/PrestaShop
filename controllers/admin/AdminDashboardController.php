@@ -86,7 +86,7 @@ class AdminDashboardControllerCore extends AdminController
 			{
 				$forms['payment']['fields']['CONF_'.strtoupper($module->name).'_FIXED'] = array(
 					'title' => $module->displayName,
-					'desc' => sprintf($this->l('Choose a fixed fee for each order placed in %s with %s.'), $currency->iso_code, $module->displayName),
+					'desc' => sprintf($this->l('Choose a fixed fee for each order placed in %1$s with %2$s.'), $currency->iso_code, $module->displayName),
 					'validation' => 'isPrice',
 					'cast' => 'floatval',
 					'type' => 'text',
@@ -95,7 +95,7 @@ class AdminDashboardControllerCore extends AdminController
 				);
 				$forms['payment']['fields']['CONF_'.strtoupper($module->name).'_VAR'] = array(
 					'title' => $module->displayName,
-					'desc' => sprintf($this->l('Choose a variable fee for each order placed in %s with %s. It will be applied on the total paid with taxes.'), $currency->iso_code, $module->displayName),
+					'desc' => sprintf($this->l('Choose a variable fee for each order placed in %1$s with %2$s. It will be applied on the total paid with taxes.'), $currency->iso_code, $module->displayName),
 					'validation' => 'isPercentage',
 					'cast' => 'floatval',
 					'type' => 'text',

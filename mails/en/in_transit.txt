@@ -3,8 +3,7 @@
 
 Hi {firstname} {lastname}, 
 
-Order {order_name} - In transit Your order with the reference
-{ORDER_NAME} is currently in transit. 
+Your order with the reference {order_name} is currently in transit. 
 
 You can track your package using the following link: {followup}
 [{followup}] 
