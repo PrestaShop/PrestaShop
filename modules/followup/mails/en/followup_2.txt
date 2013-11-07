@@ -6,7 +6,7 @@ Hi {firstname} {lastname},
 Thank you for your order at {shop_name}. 
 
 As our way of saying thanks, we want to give you a discount of
-{AMOUNT}% off your next order! This offer is valid for {DAYS} days, so
+{amount}% off your next order! This offer is valid for {days} days, so
 do not waste a moment!
 
 HERE IS YOUR COUPON: {voucher_num}

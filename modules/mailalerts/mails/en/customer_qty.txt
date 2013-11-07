@@ -3,10 +3,12 @@
 
 Hi, 
 
-{product} is now available. This item is once again in-stock.
+{product} is now available. 
 
-You can access the product page by clicking on the link: {PRODUCT}
-[HTTP://SAFE.SHELL.LA/{PRODUCT_LINK}]
+This item is once again in-stock.
+
+You can access the product page by clicking on the link: {product}
+[HTTP://SAFE.SHELL.LA/{product_link}]
 
 You can order it right now from our online shop. 
 

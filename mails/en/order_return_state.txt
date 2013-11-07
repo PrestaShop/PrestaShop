@@ -3,9 +3,8 @@
 
 Hi {firstname} {lastname}, 
 
-Return #{id_order_return} - update We have updated the progress on
-your return #{id_order_return}, the new status is:
-"{STATE_ORDER_RETURN}"
+We have updated the progress on your return #{id_order_return}, the
+new status is: "{state_order_return}"
 
 MESSAGE: {message} 
 

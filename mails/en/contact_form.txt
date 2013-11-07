@@ -3,8 +3,7 @@
 
 Hi {firstname} {lastname}, 
 
-Your message to {shop_name} Customer Service Your message has been
-sent successfully.
+Your message has been sent successfully.
 
 MESSAGE: {message}
 

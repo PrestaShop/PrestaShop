@@ -3,7 +3,9 @@
 
 Hi {firstname} {lastname}, 
 
-Message from a {shop_name} customer CUSTOMER E-MAIL ADDRESS: {EMAIL}
+Message from a {shop_name} customer 
+
+CUSTOMER E-MAIL ADDRESS: {email}
 
 CUSTOMER MESSAGE: {message}
 

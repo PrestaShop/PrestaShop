@@ -3,8 +3,10 @@
 
 Hi, 
 
-{product} is almost out of stock. The stock cover is now less than
-the specified minimum of: {WARNING_COVERAGE}.
+{product} is almost out of stock. 
+
+The stock cover is now less than the specified minimum of:
+{warning_coverage}.
 
 CURRENT STOCK COVER: {current_coverage} 
 
