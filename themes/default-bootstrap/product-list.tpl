@@ -22,13 +22,8 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<script type="text/javascript">
-	var isLoggedWishlist = {if $logged}true{else}false{/if};
-</script>
 {if isset($products)}
-
 	{*define numbers of product per line in other page for desktop*}
-    
 	{if $page_name !='index' && $page_name !='product'}
 		{assign var='nbItemsPerLine' value=3}
         {assign var='nbItemsPerLineTablet' value=2}
@@ -122,9 +117,7 @@
                     {/if}
                 </div>
                 <div class="functional-buttons clearfix">
-                	<div class="wishlist">
-                		<a href="#" id="wishlist_button" onclick="WishlistCart('wishlist_block_list', 'add', '{$product.id_product|intval}', false, 1); return false;" class="addToWishlist"><i class="icon-heart-empty"></i> Add to Wishlist</a>
-                    </div>
+						{hook h='displayProductListFunctionalButtons' product=$product}
                     {if isset($comparator_max_item) && $comparator_max_item}
                         <div class="compare">
                             <label for="comparator_item_{$product.id_product}">
