@@ -243,22 +243,28 @@ class HelperUploaderCore extends Uploader
 				.'/themes/'.$bo_theme.'/js/vendor/jquery.ui.widget.js"></script>';
 			$html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
 				.'/themes/'.$bo_theme.'/js/jquery.iframe-transport.js"></script>';
-				$html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
+			$html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
 				.'/themes/'.$bo_theme.'/js/jquery.fileupload.js"></script>';
+				$html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
+				.'/themes/'.$bo_theme.'/js/jquery.fileupload-process.js"></script>';
+			$html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
+				.'/themes/'.$bo_theme.'/js/jquery.fileupload-validate.js"></script>';			
+			$html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.'/js/vendor/spin.js"></script>';
+			$html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.'/js/vendor/ladda.js"></script>';
 		}
 		else
 		{
 			$html = '';
 			$this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
 				.'/themes/'.$bo_theme.'/js/vendor/jquery.ui.widget.js');
-			//$context->controller->addJs('http://blueimp.github.io/JavaScript-Load-Image/js/load-image.min.js');
 			$this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
 				.'/themes/'.$bo_theme.'/js/jquery.iframe-transport.js');
 			$this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
 				.'/themes/'.$bo_theme.'/js/jquery.fileupload.js');
-			/*$context->controller->addJs(__PS_BASE_URI__.$admin_webpath
-				.'/themes/'.$bo_theme.'/js/jquery.fileupload-image.js');*/
-
+			$this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
+				.'/themes/'.$bo_theme.'/js/jquery.fileupload-process.js');
+			$this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
+				.'/themes/'.$bo_theme.'/js/jquery.fileupload-validate.js');			
 			$this->getContext()->controller->addJs(__PS_BASE_URI__.'/js/vendor/spin.js');
 			$this->getContext()->controller->addJs(__PS_BASE_URI__.'/js/vendor/ladda.js');
 		}
@@ -270,8 +276,6 @@ class HelperUploaderCore extends Uploader
 			$this->getTemplateFile($this->getTemplate()), $this->getContext()->smarty
 		);
 
-		$max_files = $this->getMaxFiles();
-
 		$template->assign(array(
 			'id'            => $this->getId(),
 			'name'          => $this->getName(),
@@ -280,7 +284,8 @@ class HelperUploaderCore extends Uploader
 			'files'         => $this->getFiles(),
 			'thumb'         => $this->getThumb(),
 			'title'         => $this->getTitle(),
-			'max_files'     => (isset($max_files) && $max_files > 0) ? ($max_files-count($this->getFiles())) : $max_files
+			'max_files'     => $this->getMaxFiles(),
+			'post_max_size' => $this->getPostMaxSizeBytes()
 		));
 
 		$html .= $template->fetch();

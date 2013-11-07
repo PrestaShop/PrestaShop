@@ -71,7 +71,9 @@
 		var token_admin_customer_threads = '{getAdminToken tab='AdminCustomerThreads'}';
 		var currentIndex = '{$currentIndex|@addcslashes:'\''}';
 		var choose_language_translate = '{l s='Choose language' js=1}';
-		var default_language = '{$default_language|addslashes}';
+		var default_language = '{$default_language|intval}';
+		var admin_modules_link = '{$link->getAdminLink("AdminModules")|addslashes}';
+		var tab_modules_list = '{if isset($tab_modules_list) && $tab_modules_list}{$tab_modules_list|addslashes}{/if}';
 	</script>
 {/if}
 {if isset($css_files)}
@@ -111,7 +113,7 @@
 				<i class="icon-reorder"></i>
 			</button>
 
-			<a id="header_shopname" href="{$link->getAdminLink('AdminDashboard')|escape:'htmlall':'UTF-8'}">
+			<a id="header_shopname" href="{$default_tab_link|escape:'htmlall':'UTF-8'}">
 				<img src="{$img_dir}prestashop-avatar.png" height="15" width="15" />
 				{$shop_name}
 			</a>

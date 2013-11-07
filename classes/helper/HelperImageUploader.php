@@ -26,35 +26,25 @@
 
 class HelperImageUploaderCore extends HelperUploader
 {
-	private $_temporary_path;
-
 	public function getMaxSize()
 	{
 		return (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE');
 	}
 
-	public function setTemporaryPath($value)
+	public function getSavePath()
 	{
-		$this->_temporary_path = $value;
-	}
-
-	public function getTemporaryPath()
-	{
-		if (!isset($this->_temporary_path))
-			$this->_temporary_path = _PS_TMP_IMG_DIR_;
-
-		return $this->_normalizeDirectory($this->_temporary_path);
+		return $this->_normalizeDirectory(_PS_TMP_IMG_DIR_);
 	}
 
 	public function getFilePath($file_name = null)
 	{
 		//Force file path
-		return tempnam($this->getTemporaryPath(), $this->getUniqueFileName());
+		return tempnam($this->getSavePath(), $this->getUniqueFileName());
 	}
 
 	protected function validate($file)
 	{
-		$post_max_size = $this->_getPostMaxSizeBytes();
+		$post_max_size = $this->getPostMaxSizeBytes();
 
 		if ($post_max_size && ($this->_getServerVars('CONTENT_LENGTH') > $post_max_size))
 		{
@@ -62,7 +52,10 @@ class HelperImageUploaderCore extends HelperUploader
 			return false;
 		}
 
-		if (!preg_match($this->getAcceptTypes(), $file['name']))
+		$types = $this->getAcceptTypes();
+
+		//TODO check mime type.
+		if (isset($types) && !in_array(pathinfo($file['name'], PATHINFO_EXTENSION), $types))
 		{
 			$file['error'] = Tools::displayError('Filetype not allowed');
 			return false;

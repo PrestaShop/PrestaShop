@@ -104,6 +104,7 @@ class HelperOptionsCore extends Helper
 					$uploader->setUrl(isset($field['url'])?$field['url']:null);
 					$uploader->setMultiple(isset($field['multiple'])?$field['multiple']:false);
 					$uploader->setUseAjax(isset($field['ajax'])?$field['ajax']:false);
+					$uploader->setMaxFiles(isset($field['max_files'])?$field['max_files']:null);
 
 					if (isset($field['files']) && $field['files'])
 						$uploader->setFiles($field['files']);

@@ -199,6 +199,10 @@ class CategoryControllerCore extends FrontController
 			// Pagination must be call after "getProducts"
 			$this->pagination($this->nbProducts);
 
+		Hook::exec('actionProductListModifier', array(
+			'nb_products' => &$this->nbProducts,
+			'cat_products' => &$this->cat_products,
+		));
 
 		foreach ($this->cat_products as &$product)
 			if ($product['id_product_attribute'] && isset($product['product_attribute_minimal_quantity']))

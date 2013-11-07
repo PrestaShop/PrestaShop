@@ -48,9 +48,6 @@ class UploaderCore
 
 	public function getAcceptTypes()
 	{
-		if (!isset($this->_accept_types))
-			$this->setAcceptTypes('/.+$/i');
-
 		return $this->_accept_types;
 	}
 
@@ -101,6 +98,21 @@ class UploaderCore
 		return $this;
 	}
 
+	public function getPostMaxSizeBytes() {
+		$post_max_size = ini_get('post_max_size');
+		$bytes         = trim($post_max_size);
+		$last          = strtolower($post_max_size[strlen($post_max_size) - 1]);
+
+		switch ($last)
+		{
+			case 'g': $bytes *= 1024;
+			case 'm': $bytes *= 1024;
+			case 'k': $bytes *= 1024;
+		}
+
+		return $bytes;
+	}
+
 	public function getSavePath()
 	{
 		if (!isset($this->_save_path))
@@ -134,8 +146,11 @@ class UploaderCore
 				$this->files[] = $this->upload($tmp[$index]);
 			}
 		}
-		else
+		elseif ($upload)
+		{
+
 			$this->files[] = $this->upload($upload);
+		}
 
 		return $this->files;
 	}
@@ -173,7 +188,7 @@ class UploaderCore
 
 	protected function validate($file)
 	{
-		$post_max_size = $this->_getPostMaxSizeBytes();
+		$post_max_size = $this->getPostMaxSizeBytes();
 
 		if ($post_max_size && ($this->_getServerVars('CONTENT_LENGTH') > $post_max_size))
 		{
@@ -181,7 +196,10 @@ class UploaderCore
 			return false;
 		}
 
-		if (!preg_match($this->getAcceptTypes(), $file['name']))
+		$types = $this->getAcceptTypes();
+
+		//TODO check mime type.
+		if (isset($types) && !in_array(pathinfo($file['name'], PATHINFO_EXTENSION), $types))
 		{
 			$file['error'] = Tools::displayError('Filetype not allowed');
 			return false;
@@ -201,21 +219,6 @@ class UploaderCore
 			clearstatcache(true, $file_path);
 
 		return filesize($file_path);
-	}
-
-	protected function _getPostMaxSizeBytes() {
-		$post_max_size = ini_get('post_max_size');
-		$bytes         = trim($post_max_size);
-		$last          = strtolower($post_max_size[strlen($post_max_size) - 1]);
-
-		switch ($last)
-		{
-			case 'g': $bytes *= 1024;
-			case 'm': $bytes *= 1024;
-			case 'k': $bytes *= 1024;
-		}
-
-		return $bytes;
 	}
 
 	protected function _getServerVars($var)

@@ -5,6 +5,5 @@ if (!defined('_PS_VERSION_'))
 
 function upgrade_module_2_1($object)
 {
-	return ($object->registerHook('displayBackOfficeCategory') && $object->registerHook('actionBackOfficeCategory')
-		&& $object->registerHook('actionBackOfficeCategoryRemoveThumbnail'));
+	return $object->registerHook('displayBackOfficeCategory');
 }
