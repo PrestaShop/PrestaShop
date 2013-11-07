@@ -340,7 +340,7 @@ class AdminDashboardControllerCore extends AdminController
 	
 	public function ajaxProcessSaveDashConfig()
 	{
-		$return = array('has_errors' => false);
+		$return = array('has_errors' => false, 'errors' => array());
 		$module = Tools::getValue('module');
 		$hook = Tools::getValue('hook');
 		$configs = Tools::getValue('configs');
@@ -351,8 +351,17 @@ class AdminDashboardControllerCore extends AdminController
 		);
 		
 		if (Validate::isModuleName($module) && $module_obj = Module::getInstanceByName($module))
-			if (Validate::isLoadedObject($module_obj) && method_exists($module_obj, 'saveDashConfig'))
-				$return['has_errors'] = $module_obj->saveDashConfig($configs);
+		{
+			if (Validate::isLoadedObject($module_obj) && method_exists($module_obj, 'validateDashConfig'))
+				$return['errors'] = $module_obj->validateDashConfig($configs);
+			if (!count($return['errors']))
+			{
+				if (Validate::isLoadedObject($module_obj) && method_exists($module_obj, 'saveDashConfig'))
+					$return['has_errors'] = $module_obj->saveDashConfig($configs);
+			}
+			else
+				$return['has_errors'] = true;
+		}
 		else if (is_array($configs) && count($configs))
 				foreach ($configs as $name => $value)
 					if (Validate::isConfigName($name))
@@ -360,7 +369,7 @@ class AdminDashboardControllerCore extends AdminController
 		
 		if (Validate::isHookName($hook) && method_exists($module_obj, $hook))
 			$return['widget_html'] = $module_obj->$hook($params);
-		
+
 		die(Tools::jsonEncode($return));
 	}
 	
