@@ -22,7 +22,7 @@ $brand-primary:         #428bca !default;
 $brand-success:         #46a74e !default;
 $brand-warning:         #f0ad4e !default;
 $brand-danger:          #d9534f !default;
-$brand-info:            #5bc0de !default;
+$brand-info:            #5192f3 !default;
 
 // Scaffolding
 // -------------------------
@@ -414,12 +414,14 @@ $label-primary-bg:            $brand-primary !default;
 $label-success-bg:            $state-success-bg !default;
 $label-info-bg:               $brand-info !default;
 $label-warning-bg:            $state-warning-bg !default;
-$label-danger-bg:             $brand-danger !default;
+$label-danger-bg:             $state-danger-bg !default;
 
 $label-color:                 #fff !default;
 $label-link-hover-color:      #fff !default;
 $label-success-border:        #36943e !default;
-$label-warning-border:            $state-warning-border !default;
+$label-warning-border:        $state-warning-border !default;
+$label-info-border:        	  $state-info-border !default;
+$label-danger-border:         $state-danger-border !default;
 
 // Modals
 // -------------------------

@@ -37,7 +37,8 @@ class ProductToolTip extends Module
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->displayName = $this->l('Product tooltips');
 		$this->description = $this->l('Show how many people are watching a product page, last sale and last cart added.');

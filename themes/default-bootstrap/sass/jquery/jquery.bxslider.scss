@@ -61,7 +61,7 @@
 		.bx-wrapper .bx-pager {
 			text-align: center;
 			font-size: .85em;
-			font-family: Arial;
+			font-family: $font-famaly;
 			font-weight: bold;
 			color: #666;
 			padding-top: 20px;
@@ -108,12 +108,12 @@
 			&:before{
 				padding-left:2px;
 				color:#c0c0c0;
-				font-family:$font1;
+				font-family:$font-icon;
 				font-size:20px;
 				line-height:22px;	
 			}
 			
-			&:hover:before{color:#333}
+			&:hover:before{color:$base-text-color}
 		}
 		
 		
@@ -199,8 +199,8 @@
 		}
 		
 		.bx-wrapper .bx-caption span {
-			color: #fff;
-			font-family: Arial;
+			color: $light-text-color;
+			font-family: $font-famaly;
 			display: block;
 			font-size: .85em;
 			padding: 10px;

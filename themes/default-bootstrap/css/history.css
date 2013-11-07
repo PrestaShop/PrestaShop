@@ -27,8 +27,11 @@
 .table td.history_detail a + a {
   margin-left: 14px;
 }
+.table td.step-by-step-date {
+  width: 105px;
+}
 .table tfoot strong {
-  color: #333;
+  color: #333333;
 }
 
 .info-order i {

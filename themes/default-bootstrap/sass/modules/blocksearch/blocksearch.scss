@@ -3,13 +3,29 @@
 #search_block_top {
 	position:absolute;
 	right: 420px;
-    top: 50px;
+    top: 50px;														
+																		@media (min-width: $screen-md) and (max-width: $screen-md-max) { // min 992px max 1199px 
+																			right:295px;
+																		}
+																		@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { // min 768px max 991px
+																			right:207px;
+																		}
+																		@media (min-width: $screen-xs) and (max-width: $screen-xs-max) { // min 480px max 767px
+																			right:0;
+																			top:85px;
+																		}
+																		@media (max-width: $screen-xs - 1) { // max 479px
+																			top:56px;
+																			right:50%;
+																			width:270px;
+																			margin-right:270px/2*-1;
+																		}
 	
 	.btn.button-search {
-		background:#333;
+		background:$dark-background;
 		float: left;
 		border:none;
-		color:#fff;
+		color:$light-text-color;
 		width:57px;
 		text-align:center;
 		padding:10px 0 11px 0;
@@ -19,7 +35,7 @@
 		&:before {
 			content:"";
 			display:block;
-			font-family:"FontAwesome";
+			font-family:$font-icon;
 			font-size:17px;
 		}
 		
@@ -30,13 +46,22 @@
 		padding:0 13px;
 		height:45px;
 		width:271px;
-		background:#fbfbfb;
+		background:$base-box-bg;
 		float: left;
 		margin-right:1px;
+																		@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { // min 768px max 991px
+																			width:180px;
+																		}
+																		@media (min-width: $screen-xs) and (max-width: $screen-xs-max) { // min 480px max 767px
+																			width:212px;
+																		}
+																		@media (max-width: $screen-xs - 1) { // max 479px
+																			width:212px;
+																		}	
 	}
 }
 .ac_results  {
-	background:#fff;
+	background:$light-background;
 	border:1px solid $base-border-color;
 	width:271px;
 	margin-top:-1px;
@@ -49,18 +74,18 @@
 		line-height:22px;
 		
 		&.ac_odd {
-			background:#fff;	
+			background:$light-background;	
 		}
 		
 		&:hover, &.ac_over {
-			background:#fbfbfb;	
+			background:$base-box-bg;	
 		}
 	}
 }	
 
 form#searchbox {
 	label{
-		color:#333;
+		color:$base-text-color;
 		margin-bottom:1px
 	}
 	

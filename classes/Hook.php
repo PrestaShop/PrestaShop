@@ -450,7 +450,7 @@ class HookCore extends ObjectModel
 				//retro compat of controller names
 				$matching_name = array(
 					'authentication' => 'auth',
-					'compare' => 'products-comparison',
+					'productscomparison' => 'compare'
 				);
 				if (isset($matching_name[$controller]) && in_array($matching_name[$controller], $exceptions))
 					continue;

@@ -341,9 +341,9 @@ div.button {
   /* Keep buttons barely visible so they can get focus */
 }
 div.button a, div.button button, div.button input {
-  opacity: 0.01;
-  filter: alpha(opacity=1);
-  -moz-opacity: 0.01;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  -moz-opacity: 0;
   display: block;
   top: 0;
   left: 0;

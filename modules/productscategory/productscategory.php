@@ -39,7 +39,8 @@ class productsCategory extends Module
  	 	$this->tab = 'front_office_features';
 		$this->need_instance = 0;
 		
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 		
 		$this->displayName = $this->l('Products Category');
 		$this->description = $this->l('Display products of the same category on the product page.');

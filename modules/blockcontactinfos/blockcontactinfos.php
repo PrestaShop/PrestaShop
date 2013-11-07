@@ -39,7 +39,8 @@ class Blockcontactinfos extends Module
 			$this->tab = 'Blocks';
 		$this->version = '1.0';
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->displayName = $this->l('Block contact info');
 		$this->description = $this->l('This module will allow you to display your e-store\'s contact information in a customizable block.');

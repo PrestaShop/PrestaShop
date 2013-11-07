@@ -35,24 +35,30 @@ function dashgoals_changeYear(xward)
 		new_year = dashgoals_year + 1;
 	else if (xward == 'backward')
 		new_year = dashgoals_year - 1;
-	$('#dashgoals_title').text($('#dashgoals_title').text().replace(dashgoals_year, new_year));
-	dashgoals_year = new_year;
-	refreshDashboard('dashgoals', false, dashgoals_year);
-}
 
-function dashgoals_changeConfYear(xward)
-{
-	// Todo
-	// getModuleLink('dashgoals', 'ajax', array('year' => $('#dashgoals_conftitle').text()), $ssl = null, $id_lang = null, $id_shop = null)
-	if (xward == 'forward')
-		$('#dashgoals_conftitle').text(parseInt($('#dashgoals_conftitle').text()) + 1);
-	else if (xward == 'backward')
-		$('#dashgoals_conftitle').text(parseInt($('#dashgoals_conftitle').text()) - 1);
+	$.ajax({
+		url: dashgoals_ajax_link,
+		data: {
+			ajax: true,
+			action: 'changeconfyear',
+			year: new_year
+		},
+		success : function(result){
+			$('#dashgoals_title').text($('#dashgoals_title').text().replace(dashgoals_year, new_year));
+			var hide_conf = $('#dashgoals_config').hasClass('hide');
+			$('#dashgoals_config').replaceWith(result);
+			dashgoals_calc_sales();
+			if (!hide_conf)
+				$('#dashgoals_config').removeClass('hide');
+			$('.dashgoals_config_input').off();
+			$('.dashgoals_config_input').keyup(function() { dashgoals_calc_sales(); });
+			dashgoals_year = new_year;
+			refreshDashboard('dashgoals', false, dashgoals_year);
+		}
+	});
 }
 
 $(document).ready(function() {
-	$('.dashgoals_config_input').keyup(function() {
-		dashgoals_calc_sales();
-	});
+	$('.dashgoals_config_input').keyup(function() { dashgoals_calc_sales(); });
 	dashgoals_calc_sales();
 });

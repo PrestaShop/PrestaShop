@@ -102,11 +102,11 @@ Date.prototype.format = function(format) {
 }
 
 $(document).ready(function() {
-	if (date_subtitle === undefined)
-		date_subtitle = '(from %s to %s)';
+	if (typeof date_subtitle === "undefined")
+		var date_subtitle = '(from %s to %s)';
 
-	if (date_format === undefined)
-		date_format = 'Y-m-d';
+	if (typeof date_format === "undefined")
+		var date_format = 'Y-m-d';
 
 	$('#date-start').change(function() {
 		start = Date.parseDate($('#date-start').val(), 'Y-m-d');

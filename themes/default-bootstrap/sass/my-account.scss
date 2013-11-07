@@ -15,7 +15,7 @@
 			a {
 				display:block;
 				overflow:hidden;
-				font:600 16px/20px 'Open Sans', sans-serif;
+				font:600 16px/20px $font-custom;
 				color:#555454;
 				text-shadow:0px 1px rgba(255,255,255,1);
 				text-transform:uppercase;
@@ -43,7 +43,7 @@
 					height:100%;
 					padding:10px 0 0 0;
 					text-align:center;
-					border:1px solid #fff;
+					border:1px solid $light-border-color;
 					@include border-top-left-radius(4px);
 					@include border-bottom-left-radius(4px);
 				}
@@ -53,7 +53,7 @@
 					padding:13px 15px 15px 17px;
 					overflow:hidden;
 					border:1px solid;
-					border-color:#fff #fff #fff #c8c8c8;
+					border-color:$light-border-color $light-border-color $light-border-color #c8c8c8;
 					@include border-top-right-radius(5px);
 					@include border-bottom-right-radius(5px);
 					margin-left:52px;

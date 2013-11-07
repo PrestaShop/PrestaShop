@@ -129,6 +129,7 @@ $(document).ready(function() {
 						bindStateInputAndUpdate();
 						$(this).fadeIn('slow', function(){
 							document.location = '#account-creation';
+							$('select.form-control').uniform();
 						});
 					});
 				}
@@ -211,9 +212,8 @@ $(document).ready(function() {
 					<label for="guest_email">{l s='Email address'} <sup>*</sup></label>
 					<input type="text" class="is_required validate form-control" data-validate="isEmail" id="guest_email" name="guest_email" value="{if isset($smarty.post.guest_email)}{$smarty.post.guest_email}{/if}" />
 				</div>
-                <div class="cleafix">
+                <div class="cleafix gender-line">
 					<label>{l s='Title'}</label>
-                    <br />
 					{foreach from=$genders key=k item=gender}
                     <div class="radio-inline">
                     	<label for="id_gender{$gender->id}" class="top">

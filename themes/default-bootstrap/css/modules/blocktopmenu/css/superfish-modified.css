@@ -17,13 +17,23 @@
   border-bottom: 3px solid #e9e9e9;
   background: #f6f6f6;
 }
+@media (min-width: 480px) and (max-width: 767px) {
+  .sf-menu {
+    margin-top: 80px;
+  }
+}
+@media (max-width: 479px) {
+  .sf-menu {
+    margin-top: 70px;
+  }
+}
 
 .sf-menu ul {
   position: absolute;
   top: -999em;
   width: 10em;
   /* left offset of submenus need to match (see below) */
-  background: #fff;
+  background: white;
 }
 
 .sf-menu ul li {
@@ -52,10 +62,10 @@
   padding: 17px 20px;
   border-bottom: 3px solid #e9e9e9;
 }
-.sf-menu > li.sfHover > a, .sf-menu > li > a:hover, .sf-menu > li.sfHoverForce a {
-  background: #333;
+.sf-menu > li.sfHover > a, .sf-menu > li > a:hover, .sf-menu > li.sfHoverForce > a {
+  background: #333333;
   border-bottom-color: #666666;
-  color: #fff;
+  color: white;
 }
 
 .sf-menu li li a {
@@ -74,7 +84,7 @@
   padding-right: 10px;
 }
 .sf-menu li li a:hover {
-  color: #333;
+  color: #333333;
 }
 
 .sf-menu li ul {
