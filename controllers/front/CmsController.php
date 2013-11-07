@@ -120,7 +120,7 @@ class CmsControllerCore extends FrontController
 				'category' => $this->cms_category, //for backward compatibility
 				'cms_category' => $this->cms_category,
 				'sub_category' => $this->cms_category->getSubCategories($this->context->language->id),
-				'cms_pages' => CMS::getCMSPages($this->context->language->id, (int)($this->cms_category->id) ),
+				'cms_pages' => CMS::getCMSPages($this->context->language->id, (int)($this->cms_category->id), true, (int)$this->context->shop->id),
 				'path' => ($this->cms_category->id !== 1) ? Tools::getPath($this->cms_category->id, $this->cms_category->name, false, 'CMS') : '',
 			));
 		}
