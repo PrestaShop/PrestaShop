@@ -216,7 +216,7 @@ class BlockCategories extends Module
 		{
 			if (file_exists(_PS_CAT_IMG_DIR_.(int)Tools::getValue('id_category').'-'.(int)$id_thumb.'_thumb.jpg')
 				&& !unlink(_PS_CAT_IMG_DIR_.(int)Tools::getValue('id_category').'-'.(int)$id_thumb.'_thumb.jpg'))
-				$this->context->controller->errors[] = Tools::displayError('Error while delete');
+				$this->context->controller->errors[] = Tools::displayError('An error occurred while deleting the image.');
 
 			Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminCategories').'&id_category='
 				.(int)Tools::getValue('id_category').'&updatecategory');
