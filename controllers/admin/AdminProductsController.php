@@ -3883,6 +3883,7 @@ class AdminProductsControllerCore extends AdminController
 
 		$helper = new HelperList();
 		$helper->identifier = 'id_product_attribute';
+		$helper->table_id = 'combinations-list';
 		$helper->token = $this->token;
 		$helper->currentIndex = self::$currentIndex;
 		$helper->no_link = true;

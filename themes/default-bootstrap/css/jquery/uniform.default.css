@@ -9,28 +9,23 @@ http://uniformjs.com/
 
 */
 /* General settings */
-/* line 178, ../../sass/jquery/_uniform._base.scss */
 div.selector, div.selector span, div.checker span, div.radio span, div.uploader, div.uploader span.action, div.button, div.button span {
   background-image: url("../../../img/jquery/uniform/sprite.png");
   background-repeat: no-repeat;
   -webkit-font-smoothing: antialiased;
 }
-/* line 188, ../../sass/jquery/_uniform._base.scss */
 div.selector, div.checker, div.button, div.radio, div.uploader {
   vertical-align: middle;
   /* Keeping this as :focus to remove browser styles */
 }
-/* line 193, ../../sass/jquery/_uniform._base.scss */
 div.selector:focus, div.checker:focus, div.button:focus, div.radio:focus, div.uploader:focus {
   outline: 0;
 }
-/* line 203, ../../sass/jquery/_uniform._base.scss */
 div.selector, div.selector *, div.radio, div.radio *, div.checker, div.checker *, div.uploader, div.uploader *, div.button, div.button * {
   margin: 0;
   padding: 0;
 }
 
-/* line 210, ../../sass/jquery/_uniform._base.scss */
 .highContrastDetect {
   background: url("../../../img/jquery/uniform/bg-input.png") repeat-x 0 0;
   width: 0px;
@@ -38,7 +33,6 @@ div.selector, div.selector *, div.radio, div.radio *, div.checker, div.checker *
 }
 
 /* Input & Textarea */
-/* line 220, ../../sass/jquery/_uniform._base.scss */
 input.uniform-input,
 select.uniform-multiselect,
 textarea.uniform {
@@ -49,7 +43,6 @@ textarea.uniform {
 
 /* Remove default webkit and possible mozilla .search styles.
  * Keeping this as :active to remove browser styles */
-/* line 234, ../../sass/jquery/_uniform._base.scss */
 div.checker input,
 input[type="search"],
 input[type="search"]:active {
@@ -58,7 +51,6 @@ input[type="search"]:active {
 }
 
 /* Select */
-/* line 240, ../../sass/jquery/_uniform._base.scss */
 div.selector {
   background-position: 0 -54px;
   line-height: 27px;
@@ -67,7 +59,6 @@ div.selector {
   position: relative;
   overflow: hidden;
 }
-/* line 247, ../../sass/jquery/_uniform._base.scss */
 div.selector span {
   text-overflow: ellipsis;
   display: block;
@@ -81,15 +72,12 @@ div.selector span {
   width: 100%;
   display: block;
 }
-/* line 258, ../../sass/jquery/_uniform._base.scss */
 div.selector.fixedWidth {
   width: 190px;
 }
-/* line 260, ../../sass/jquery/_uniform._base.scss */
 div.selector.fixedWidth span {
   width: 150px;
 }
-/* line 265, ../../sass/jquery/_uniform._base.scss */
 div.selector select {
   opacity: 0;
   filter: alpha(opacity=0);
@@ -102,124 +90,96 @@ div.selector select {
   left: 0px;
   width: 100%;
 }
-/* line 275, ../../sass/jquery/_uniform._base.scss */
 div.selector.active span {
   background-position: right -27px;
 }
-/* line 281, ../../sass/jquery/_uniform._base.scss */
 div.selector.hover span, div.selector.focus span {
   background-position: right -27px;
 }
-/* line 286, ../../sass/jquery/_uniform._base.scss */
 div.selector.hover.active span, div.selector.focus.active span {
   background-position: right -27px;
 }
-/* line 294, ../../sass/jquery/_uniform._base.scss */
 div.selector.disabled span, div.selector.disabled.active span {
   background-position: right 0;
 }
 
 /* Select1 */
-/* line 302, ../../sass/jquery/_uniform._base.scss */
 div.selector1 > div {
   background-position: 0 -135px;
 }
-/* line 304, ../../sass/jquery/_uniform._base.scss */
 div.selector1 > div span {
   background-position: right -81px;
 }
-/* line 309, ../../sass/jquery/_uniform._base.scss */
 div.selector1 > div.active span {
   background-position: right -108px;
 }
-/* line 315, ../../sass/jquery/_uniform._base.scss */
 div.selector1 > div.hover span, div.selector1 > div.focus span {
   background-position: right -108px;
 }
-/* line 320, ../../sass/jquery/_uniform._base.scss */
 div.selector1 > div.hover.active span, div.selector1 > div.focus.active span {
   background-position: right -108px;
 }
-/* line 93, ../../sass/jquery/_uniform._base.scss */
 div.selector1 > div.disabled, div.selector1 > div.disabled.active {
   background-position: 0 -135px;
 }
-/* line 328, ../../sass/jquery/_uniform._base.scss */
 div.selector1 > div.disabled span, div.selector1 > div.disabled.active span {
   background-position: right -81px;
 }
 
 /* Select2 */
-/* line 338, ../../sass/jquery/_uniform._base.scss */
 div.selector2 > div {
   background-position: 0 -216px;
 }
-/* line 340, ../../sass/jquery/_uniform._base.scss */
 div.selector2 > div span {
   background-position: right -162px;
 }
-/* line 345, ../../sass/jquery/_uniform._base.scss */
 div.selector2 > div.active span {
   background-position: right -189px;
 }
-/* line 351, ../../sass/jquery/_uniform._base.scss */
 div.selector2 > div.hover span, div.selector2 > div.focus span {
   background-position: right -189px;
 }
-/* line 356, ../../sass/jquery/_uniform._base.scss */
 div.selector2 > div.hover.active span, div.selector2 > div.focus.active span {
   background-position: right -189px;
 }
-/* line 93, ../../sass/jquery/_uniform._base.scss */
 div.selector2 > div.disabled, div.selector2 > div.disabled.active {
   background-position: 0 -216px;
 }
-/* line 364, ../../sass/jquery/_uniform._base.scss */
 div.selector2 > div.disabled span, div.selector2 > div.disabled.active span {
   background-position: right -162px;
 }
 
 /* Select3 */
-/* line 373, ../../sass/jquery/_uniform._base.scss */
 div.selector3 > div {
   background-position: 0 -351px;
 }
-/* line 375, ../../sass/jquery/_uniform._base.scss */
 div.selector3 > div span {
   background-position: right -297px;
 }
-/* line 380, ../../sass/jquery/_uniform._base.scss */
 div.selector3 > div.active span {
   background-position: right -324px;
 }
-/* line 386, ../../sass/jquery/_uniform._base.scss */
 div.selector3 > div.hover span, div.selector3 > div.focus span {
   background-position: right -324px;
 }
-/* line 391, ../../sass/jquery/_uniform._base.scss */
 div.selector3 > div.hover.active span, div.selector3 > div.focus.active span {
   background-position: right -324px;
 }
-/* line 93, ../../sass/jquery/_uniform._base.scss */
 div.selector3 > div.disabled, div.selector3 > div.disabled.active {
   background-position: 0 -351px;
 }
-/* line 399, ../../sass/jquery/_uniform._base.scss */
 div.selector3 > div.disabled span, div.selector3 > div.disabled.active span {
   background-position: right -297px;
 }
 
 /* Checkbox */
-/* line 411, ../../sass/jquery/_uniform._base.scss */
 div.checker {
   position: relative;
 }
-/* line 414, ../../sass/jquery/_uniform._base.scss */
 div.checker, div.checker span, div.checker input {
   width: 15px;
   height: 15px;
 }
-/* line 419, ../../sass/jquery/_uniform._base.scss */
 div.checker span {
   display: -moz-inline-box;
   display: inline-block;
@@ -228,11 +188,9 @@ div.checker span {
   text-align: center;
   background-position: 0 -257px;
 }
-/* line 99, ../../sass/jquery/_uniform._base.scss */
 div.checker span.checked {
   background-position: -15px -257px;
 }
-/* line 428, ../../sass/jquery/_uniform._base.scss */
 div.checker input {
   opacity: 0;
   filter: alpha(opacity=0);
@@ -244,51 +202,40 @@ div.checker input {
   *display: inline;
   zoom: 1;
 }
-/* line 434, ../../sass/jquery/_uniform._base.scss */
 div.checker.active span {
   background-position: -15px -257px;
 }
-/* line 99, ../../sass/jquery/_uniform._base.scss */
 div.checker.active span.checked {
   background-position: -15px -257px;
 }
-/* line 444, ../../sass/jquery/_uniform._base.scss */
 div.checker.hover span, div.checker.focus span {
   background-position: -30px -257px;
 }
-/* line 99, ../../sass/jquery/_uniform._base.scss */
 div.checker.hover span.checked, div.checker.focus span.checked {
   background-position: -15px -257px;
 }
-/* line 453, ../../sass/jquery/_uniform._base.scss */
 div.checker.hover.active span, div.checker.focus.active span {
   background-position: -15px -257px;
 }
-/* line 99, ../../sass/jquery/_uniform._base.scss */
 div.checker.hover.active span.checked, div.checker.focus.active span.checked {
   background-position: -15px -257px;
 }
-/* line 93, ../../sass/jquery/_uniform._base.scss */
 div.checker.disabled, div.checker.disabled.active {
   background-position: 0 -257px;
 }
-/* line 99, ../../sass/jquery/_uniform._base.scss */
 div.checker.disabled span.checked, div.checker.disabled.active span.checked {
   background-position: 0 -257px;
 }
 
 /* Radio */
-/* line 477, ../../sass/jquery/_uniform._base.scss */
 div.radio {
   position: relative;
   display: inline;
 }
-/* line 480, ../../sass/jquery/_uniform._base.scss */
 div.radio, div.radio span, div.radio input {
   width: 13px;
   height: 13px;
 }
-/* line 484, ../../sass/jquery/_uniform._base.scss */
 div.radio span {
   display: -moz-inline-box;
   display: inline-block;
@@ -297,11 +244,9 @@ div.radio span {
   text-align: center;
   background-position: 0 -243px;
 }
-/* line 99, ../../sass/jquery/_uniform._base.scss */
 div.radio span.checked {
   background-position: -13px -243px;
 }
-/* line 494, ../../sass/jquery/_uniform._base.scss */
 div.radio input {
   opacity: 0;
   filter: alpha(opacity=0);
@@ -314,41 +259,32 @@ div.radio input {
   zoom: 1;
   text-align: center;
 }
-/* line 501, ../../sass/jquery/_uniform._base.scss */
 div.radio.active span {
   background-position: -13px -243px;
 }
-/* line 99, ../../sass/jquery/_uniform._base.scss */
 div.radio.active span.checked {
   background-position: -13px -243px;
 }
-/* line 511, ../../sass/jquery/_uniform._base.scss */
 div.radio.hover span, div.radio.focus span {
   background-position: -13px -36px -243px;
 }
-/* line 99, ../../sass/jquery/_uniform._base.scss */
 div.radio.hover span.checked, div.radio.focus span.checked {
   background-position: -13px -243px;
 }
-/* line 520, ../../sass/jquery/_uniform._base.scss */
 div.radio.hover.active span, div.radio.focus.active span {
   background-position: -13px -243px;
 }
-/* line 99, ../../sass/jquery/_uniform._base.scss */
 div.radio.hover.active span.checked, div.radio.focus.active span.checked {
   background-position: -13px -243px;
 }
-/* line 531, ../../sass/jquery/_uniform._base.scss */
 div.radio.disabled span, div.radio.disabled.active span {
   background-position: 0 -243px;
 }
-/* line 99, ../../sass/jquery/_uniform._base.scss */
 div.radio.disabled span.checked, div.radio.disabled.active span.checked {
   background-position: 0 -243px;
 }
 
 /* Uploader */
-/* line 543, ../../sass/jquery/_uniform._base.scss */
 div.uploader {
   background: none;
   height: 27px;
@@ -357,7 +293,6 @@ div.uploader {
   position: relative;
   overflow: hidden;
 }
-/* line 551, ../../sass/jquery/_uniform._base.scss */
 div.uploader span.action {
   background-position: 0 -378px;
   height: 27px;
@@ -369,7 +304,6 @@ div.uploader span.action {
   overflow: hidden;
   cursor: pointer;
 }
-/* line 563, ../../sass/jquery/_uniform._base.scss */
 div.uploader span.filename {
   text-overflow: ellipsis;
   display: block;
@@ -383,7 +317,6 @@ div.uploader span.filename {
   width: 172px;
   padding: 0 10px;
 }
-/* line 574, ../../sass/jquery/_uniform._base.scss */
 div.uploader input {
   opacity: 0;
   filter: alpha(opacity=0);
@@ -400,7 +333,6 @@ div.uploader input {
 }
 
 /* Buttons */
-/* line 588, ../../sass/jquery/_uniform._base.scss */
 div.button {
   background-position: 0 -634px;
   height: 30px;
@@ -408,11 +340,10 @@ div.button {
   position: relative;
   /* Keep buttons barely visible so they can get focus */
 }
-/* line 595, ../../sass/jquery/_uniform._base.scss */
 div.button a, div.button button, div.button input {
-  opacity: 0.01;
-  filter: alpha(opacity=1);
-  -moz-opacity: 0.01;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  -moz-opacity: 0;
   display: block;
   top: 0;
   left: 0;
@@ -420,7 +351,6 @@ div.button a, div.button button, div.button input {
   bottom: 0;
   position: absolute;
 }
-/* line 605, ../../sass/jquery/_uniform._base.scss */
 div.button span {
   display: -moz-inline-box;
   display: inline-block;
@@ -433,28 +363,22 @@ div.button span {
   margin-left: 13px;
   padding: 0;
 }
-/* line 81, ../../sass/jquery/_uniform._base.scss */
 div.button.active {
   background-position: 0 -664px;
 }
-/* line 618, ../../sass/jquery/_uniform._base.scss */
 div.button.active span {
   background-position: right -544px;
   cursor: default;
 }
-/* line 87, ../../sass/jquery/_uniform._base.scss */
 div.button.hover, div.button.focus {
   background-position: 0 -694px;
 }
-/* line 627, ../../sass/jquery/_uniform._base.scss */
 div.button.hover span, div.button.focus span {
   background-position: right -574px;
 }
-/* line 93, ../../sass/jquery/_uniform._base.scss */
 div.button.disabled, div.button.disabled.active {
   background-position: 0 -724px;
 }
-/* line 635, ../../sass/jquery/_uniform._base.scss */
 div.button.disabled span, div.button.disabled.active span {
   background-position: right -604px;
   cursor: default;
@@ -464,7 +388,6 @@ div.button.disabled span, div.button.disabled.active span {
 /* ************************************************************************************************
 		uniform
 ************************************************************************************************ */
-/* line 24, ../../sass/jquery/uniform.default.scss */
 input.uniform-input,
 select.uniform-multiselect,
 textarea.uniform {
@@ -475,7 +398,6 @@ textarea.uniform {
   color: #777;
   border: solid 1px #d6d4d4;
 }
-/* line 87, ../../sass/jquery/_uniform._base.scss */
 input.uniform-input.hover, input.uniform-input.focus,
 select.uniform-multiselect.hover,
 select.uniform-multiselect.focus,
@@ -489,7 +411,6 @@ textarea.uniform.focus {
 
 /* PRESENTATION */
 /* Buttons */
-/* line 44, ../../sass/jquery/uniform.default.scss */
 div.button span {
   font-weight: bold;
   font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
@@ -497,92 +418,75 @@ div.button span {
   letter-spacing: 1px;
   text-transform: uppercase;
 }
-/* line 53, ../../sass/jquery/uniform.default.scss */
 div.button.hover span, div.button.focus span {
   color: #555;
 }
-/* line 59, ../../sass/jquery/uniform.default.scss */
 div.button.disabled span, div.button.disabled.active span {
   color: #bbb;
 }
 
 /* Select */
-/* line 68, ../../sass/jquery/uniform.default.scss */
 #compare_shipping .form-group label {
   display: block;
 }
 
-/* line 69, ../../sass/jquery/uniform.default.scss */
 div.selector {
   font-size: 12px;
 }
-/* line 72, ../../sass/jquery/uniform.default.scss */
 div.selector span {
   color: #666;
   text-shadow: 0 1px 0 #fff;
 }
-/* line 78, ../../sass/jquery/uniform.default.scss */
 div.selector select {
   font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
   font-size: 12px;
 }
-/* line 84, ../../sass/jquery/uniform.default.scss */
 div.selector.disabled span, div.selector.disabled.active span {
   color: #bbb;
 }
 
-/* line 90, ../../sass/jquery/uniform.default.scss */
 .checker span input {
   margin: 0 !important;
 }
 
-/* line 92, ../../sass/jquery/uniform.default.scss */
 .radio input[type="radio"], .radio-inline input[type="radio"], .checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"] {
   margin: 0 !important;
 }
 
-/* line 94, ../../sass/jquery/uniform.default.scss */
 .radio-inline, .checkbox-inline {
   cursor: default;
 }
 
 /* Checker */
-/* line 97, ../../sass/jquery/uniform.default.scss */
 div.checker {
   cursor: pointer;
   margin-right: 5px;
 }
-/* line 100, ../../sass/jquery/uniform.default.scss */
 div.checker span {
   position: relative;
   top: -2px;
 }
 
-/* line 103, ../../sass/jquery/uniform.default.scss */
 #layered_form div.checker {
   display: inline;
 }
 
 /* Radio */
-/* line 109, ../../sass/jquery/uniform.default.scss */
 div.radio {
   margin-right: 3px;
 }
-/* line 111, ../../sass/jquery/uniform.default.scss */
 div.radio span {
   position: relative;
   top: -2px;
 }
 
 /* Uploader */
-/* line 115, ../../sass/jquery/uniform.default.scss */
 div.uploader span.action {
   text-shadow: rgba(0, 0, 0, 0.1) 0px 1px 0px;
   font-size: 13px;
   font-weight: bold;
   color: #fff;
 }
-/* line 122, ../../sass/jquery/uniform.default.scss */
 div.uploader span.filename {
   color: #777;
   border: solid 1px #d6d4d4;
@@ -590,17 +494,14 @@ div.uploader span.filename {
   background: #fbfbfb;
   margin-right: 2px;
 }
-/* line 131, ../../sass/jquery/uniform.default.scss */
 div.uploader.disabled span.action, div.uploader.disabled.active span.action {
   color: #aaa;
 }
-/* line 135, ../../sass/jquery/uniform.default.scss */
 div.uploader.disabled span.filename, div.uploader.disabled.active span.filename {
   border-color: #ddd;
   color: #aaa;
 }
 
-/* line 143, ../../sass/jquery/uniform.default.scss */
 input.uniform-input, input.uniform-input:focus {
   background-color: #fff;
 }
