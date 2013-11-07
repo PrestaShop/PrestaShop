@@ -21,7 +21,7 @@
 			font-size:42px;
 			line-height:51px;
 			font-style:italic;
-			color:#333;
+			color:$base-text-color;
 			position:absolute;
 			left:10px;
 			top:-14px;
@@ -46,7 +46,7 @@
 	
 	.title_block {
 		font-weight:bold;
-		color:#333;
+		color:$base-text-color;
 		padding:3px 0 6px;	
 	}
 	

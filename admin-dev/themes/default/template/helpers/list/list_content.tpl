@@ -27,10 +27,11 @@
 {foreach $list AS $index => $tr}
 	<tr
 	{if $position_identifier}id="tr_{$id_category}_{$tr.$identifier}_{if isset($tr.position['position'])}{$tr.position['position']}{else}0{/if}"{/if}
-	class="{if isset($tr.class)} {$tr.class}{/if}"
+	class="{if isset($tr.class)} {$tr.class}{/if} {if $tr@iteration is odd by 1}odd{/if}"
 	{if isset($tr.color) && $color_on_bg}style="background-color: {$tr.color}"{/if}
+
 	>
-		<td class="center">
+		<td class="text-center">
 			{if $bulk_actions && $has_bulk_actions}
 				{if isset($list_skip_actions.delete)}
 					{if !in_array($tr.$identifier, $list_skip_actions.delete)}
@@ -40,6 +41,7 @@
 					<input type="checkbox" name="{$table}Box[]" value="{$tr.$identifier}" class="noborder" />
 				{/if}
 			{/if}
+
 		</td>
 		{foreach $fields_display AS $key => $params}
 			{block name="open_td"}

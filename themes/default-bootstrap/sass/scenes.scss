@@ -1,4 +1,4 @@
-
+@import '_theme_variables';
 /*TMP*/
 #scenes .cluetip span{
 	background:transparent url(../img/icon/cible.gif) no-repeat scroll center center;
@@ -81,7 +81,7 @@
 	-webkit-border-radius:3px;
    border-radius:3px;
 	text-align:left;
-	background:#fff;
+	background:$light-background;
 	opacity:0.95;
 }
 
@@ -112,7 +112,7 @@
 	float:left;
 	padding:0;
 	width:140px;
-	color:#666
+	color:$description-color;
 }
 
 .cluetip-product_scene div.prices{
@@ -129,7 +129,7 @@
    padding: 1px 5px;
    font-weight: bold;
    font-size: 10px;
-   color: #fff;
+   color: $light-text-color;
    text-transform: uppercase;
 	background: none repeat scroll 0 0 #9B0000
 }
