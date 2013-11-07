@@ -18,8 +18,7 @@ html, body
 	background-image: url('../img/patterns/bedge_grunge.png') // texture
 
 #content
-	padding: 80px 20px 0
-	margin-left: 240px
+	padding: 80px 10px 0
 	@include transition-property(margin)
 	@include transition-duration(0.4s)
 	@include transition-timing-function(ease-out)
@@ -74,11 +73,10 @@ html, body
 	.panel-danger .panel-heading
 		background-color: $badge-notif-color!important
 	form .alert
-		clear: both
-		
-	@media (max-width: $screen-tablet)
-		margin-left: 0
-		width: 100%
+		clear: both		
+	@media (max-width: $screen-phone)
+		margin: 0
+		padding: 80px 5px 0
 
 //backward
 #nobootstrap

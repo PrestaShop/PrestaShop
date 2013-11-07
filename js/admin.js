@@ -1111,7 +1111,7 @@ function quickSelect(elt)
 }
 
 
-//bootstrap BO New fonctions
+//New Admin fonctions
 
 function hideOtherLanguage(id)
 {
@@ -1137,4 +1137,34 @@ function sendBulkAction(form, action)
 		$(form).attr('action', form_action.splice(form_action.lastIndexOf('&'), 0, '&' + action));
 
 	$(form).submit();
+}
+
+function openModulesList() {
+	if (!modules_list_loaded)
+	{
+		$.ajax({
+			type: "POST",
+			url : admin_modules_link,
+			async: true,
+			data : {
+				ajax : "1",
+				controller : "AdminModules",
+				action : "getTabModulesList",
+				tab_modules_list : tab_modules_list,
+				back_tab_modules_list : window.location.href
+			},
+			success : function(data)
+			{
+				$('#modules_list_container_tab').html(data).slideDown();
+				$('#modules_list_loader').hide();
+				modules_list_loaded = true;
+			}
+		});
+	}
+	else
+	{
+		$('#modules_list_container_tab').slideDown();
+		$('#modules_list_loader').hide();
+	}
+	return false;
 }
