@@ -214,7 +214,7 @@
 								{$params.title}
 							{/if}
 
-							{if (!isset($params.orderby) || $params.orderby) && !$simple_header}
+							{if (!isset($params.orderby) || $params.orderby) && !$simple_header && $show_filters}
 							<a {if isset($order_by) && ($key == $order_by) && ($order_way == 'DESC')}class="active"{/if}  href="{$currentIndex}&{$list_id}Orderby={$key|urlencode}&{$list_id}Orderway=desc&token={$token}{if isset($smarty.get.$identifier)}&{$identifier}={$smarty.get.$identifier|intval}{/if}">
 								<i class="icon-caret-down"></i>
 							</a>

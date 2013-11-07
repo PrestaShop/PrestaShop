@@ -29,7 +29,7 @@ $(function() {
 });
 </script>
 
-{if !$nb_results}
+{if !isset($nb_results) || !$nb_results}
 	<h2>{l s='There are no results matching your query "%s".' sprintf=$query}</h2>
 {else}
 	<h2>
