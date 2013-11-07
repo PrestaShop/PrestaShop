@@ -312,11 +312,6 @@ class AdminCategoriesControllerCore extends AdminController
 		}
 	}
 
-	public function ajaxProcessuploadThumbnailImages()
-	{
-		Hook::exec('actionBackOfficeCategory');
-	}
-
 	public function initProcess()
 	{
 		if (Tools::isSubmit('add'.$this->table.'root'))
@@ -616,9 +611,9 @@ class AdminCategoriesControllerCore extends AdminController
 				Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getAdminTokenLite('AdminCategories').'&conf=7');
 		}
 		
-		Hook::exec('actionBackOfficeCategoryRemoveThumbnail');
 		return parent::postProcess();
 	}
+	
 	public function processForceDeleteImage()
 	{
 		$category = $this->loadObject(true);
