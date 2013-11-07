@@ -251,6 +251,8 @@ function bindCancelDashConfig()
 
 function saveDashConfig(widget_name)
 {
+	$('section#'+widget_name+' .form-group').removeClass('has-error');
+	$('#'+widget_name+'_errors').remove();
 	configs = '';
 	$('#'+widget_name+' form input, #'+widget_name+' form textarea , #'+widget_name+' form select').each( function () {
 		if ($(this).attr('type') == 'radio' && !$(this).attr('checked'))
@@ -258,18 +260,34 @@ function saveDashConfig(widget_name)
 		configs += '&configs['+$(this).attr('name')+']='+$(this).val();
 	});
 	data = 'ajax=true&action=saveDashConfig&module='+widget_name+configs+'&hook='+$('#'+widget_name).closest('[id^=hook]').attr('id');
-	
+
 	$.ajax({
 		url : dashboard_ajax_url,
 		data : data,
 		dataType: 'json',
+		error: function(XMLHttpRequest, textStatus, errorThrown) {
+				jAlert("TECHNICAL ERROR: \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+			},
 		success : function(jsonData){
+
 			if (!jsonData.has_errors)
 			{
 				$('#'+widget_name).find('section').not('.dash_config').remove();
 				$('#'+widget_name).append($(jsonData.widget_html).find('section').not('.dash_config'));
 				refreshDashboard(widget_name);
 				toggleDashConfig(widget_name);
+			}
+			else
+			{
+				errors_str = '<div class="alert alert-danger" id="'+widget_name+'_errors">';
+				for (error in jsonData.errors)
+				{
+					errors_str += jsonData.errors[error]+'<br/>';
+					$('#'+error).closest('.form-group').addClass('has-error');
+				}
+				errors_str += '</div>';
+				$('section#'+widget_name+'_config header').after(errors_str);
+				errors_str += '</div>';
 			}
 		}
 	});
