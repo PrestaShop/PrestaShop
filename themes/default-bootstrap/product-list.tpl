@@ -123,7 +123,7 @@
                 </div>
                 <div class="functional-buttons clearfix">
                 	<div class="wishlist">
-                		<a href="#" id="wishlist_button" onclick="WishlistCart('wishlist_block_list', 'add', '{$product.id_product|intval}', false, 1); return false;" class="addToWishlist"><i class="icon-heart-empty"></i> Add to Wishlist</a>
+                		<a href="#" id="wishlist_button_{$product.id_product|intval}" rel="{$product.id_product|intval}" onclick="WishlistCart('wishlist_block_list', 'add', '{$product.id_product|intval}', false, 1); return false;" class="addToWishlist wishlistProd_{$product.id_product|intval}">Add to Wishlist</a>
                     </div>
                     {if isset($comparator_max_item) && $comparator_max_item}
                         <div class="compare">
