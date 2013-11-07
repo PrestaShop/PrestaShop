@@ -44,7 +44,18 @@ class BlockCategories extends Module
 
 	public function install()
 	{
-		if (!parent::install() ||
+		// Prepare tab
+		$tab = new Tab();
+		$tab->active = 1;
+		$tab->class_name = "AdminBlockCategories";
+		$tab->name = array();
+		foreach (Language::getLanguages(true) as $lang)
+			$tab->name[$lang['id_lang']] = 'BlockCategories';
+		$tab->id_parent = -1;
+		$tab->module = $this->name;
+
+		if (!$tab->add() ||
+			!parent::install() ||
 			!$this->registerHook('leftColumn') ||
 			!$this->registerHook('footer') ||
 			!$this->registerHook('header') ||
@@ -55,8 +66,6 @@ class BlockCategories extends Module
 			!$this->registerHook('actionAdminMetaControllerUpdate_optionsBefore') ||
 			!$this->registerHook('actionAdminLanguagesControllerStatusBefore') ||
 			!$this->registerHook('displayBackOfficeCategory') ||
-			!$this->registerHook('actionBackOfficeCategory') ||
-			!$this->registerHook('actionBackOfficeCategoryRemoveThumbnail') ||
 			!Configuration::updateValue('BLOCK_CATEG_MAX_DEPTH', 4) ||
 			!Configuration::updateValue('BLOCK_CATEG_DHTML', 1))
 			return false;
@@ -65,6 +74,14 @@ class BlockCategories extends Module
 
 	public function uninstall()
 	{
+		$id_tab = (int)Tab::getIdFromClassName('AdminBlockCategories');
+		
+		if ($id_tab)
+		{
+			$tab = new Tab($id_tab);
+			$tab->delete();
+		}
+
 		if (!parent::uninstall() ||
 			!Configuration::deleteByName('BLOCK_CATEG_MAX_DEPTH') ||
 			!Configuration::deleteByName('BLOCK_CATEG_DHTML'))
@@ -135,91 +152,16 @@ class BlockCategories extends Module
 			{
 				$files[$i]['type'] = HelperImageUploader::TYPE_IMAGE;
 				$files[$i]['image'] = ImageManager::thumbnail(_PS_CAT_IMG_DIR_.(int)$category->id.'-'.$i.'_thumb.jpg', $this->context->controller->table.'_'.(int)$category->id.'-'.$i.'_thumb.jpg', 100, 'jpg', true, true);
-				$files[$i]['delete_url'] = Context::getContext()->link->getAdminLink('AdminCategories').'&deleteThumb='.$i.'&id_category='.(int)$category->id;
+				$files[$i]['delete_url'] = Context::getContext()->link->getAdminLink('AdminBlockCategories').'&deleteThumb='.$i.'&id_category='.(int)$category->id;
 			}
 		}
 
 		$helper = new HelperImageUploader();
 		$helper->setMultiple(true)->setUseAjax(true)->setName('thumbnail')->setFiles($files)->setMaxFiles(3)->setUrl(
-			Context::getContext()->link->getAdminLink('AdminCategories').'&ajax=1&id_category='.$category->id.'&action=uploadThumbnailImages');
+			Context::getContext()->link->getAdminLink('AdminBlockCategories').'&ajax=1&id_category='.$category->id
+			.'&action=uploadThumbnailImages');
 		$this->smarty->assign('helper', $helper->render());
 		return $this->display(__FILE__, 'views/blockcategories_admin.tpl');
-	}
-
-	public function hookActionBackOfficeCategory($params)
-	{		
-		$category = new Category((int)Tools::getValue('id_category'));
-
-		if (isset($_FILES['thumbnail']))
-		{
-			//Get total of image already present in directory
-			$files = scandir(_PS_CAT_IMG_DIR_);
-			$assigned_keys = array();
-			$allowed_keys  = array(0, 1, 2);
-
-			foreach ($files as $file) {
-				$matches = array();
-
-				if (preg_match('/'.$category->id.'-([0-9])?_thumb.jpg/i', $file, $matches) === 1)
-					$assigned_keys[] = (int)$matches[1];
-			}
-
-			$available_keys = array_diff($allowed_keys, $assigned_keys);
-			$helper = new HelperImageUploader('files');
-			$files  = $helper->setName('thumbnail')->process();
-			$total_errors = array();
-
-			if (count($available_keys) < count($files))
-			{
-				$total_errors[] = sprintf(Tools::displayError('You cannot upload more than %s files'), count($available_keys));
-				die();
-			}
-
-			foreach ($files as $key => &$file)
-			{
-				$id = array_shift($available_keys);
-				$errors = array();
-				// Evaluate the memory required to resize the image: if it's too much, you can't resize it.
-				if (!ImageManager::checkImageMemoryLimit($file['save_path']))
-					$errors[] = Tools::displayError('Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings. ');
-				// Copy new image
-				if (empty($errors) && !ImageManager::resize($file['save_path'], _PS_CAT_IMG_DIR_
-					.(int)Tools::getValue('id_category').'-'.$id.'_thumb.jpg'))
-					$errors[] = Tools::displayError('An error occurred while uploading the image.');
-
-				if (count($errors))
-					$total_errors = array_merge($total_errors, $errors);
-
-				unlink($file['save_path']);
-				//Necesary to prevent hacking
-				unset($file['save_path']);
-
-				//Add image preview and delete url
-				$file['image'] = ImageManager::thumbnail(_PS_CAT_IMG_DIR_.(int)$category->id.'-'.$id.'_thumb.jpg',
-					$this->context->controller->table.'_'.(int)$category->id.'-'.$id.'_thumb.jpg', 100, 'jpg', true, true);
-				$file['delete_url'] = Context::getContext()->link->getAdminLink('AdminCategories').'&deleteThumb='
-					.$id.'&id_category='.(int)$category->id;
-				$id++;
-			}
-
-			if (count($total_errors))
-			$this->context->controller->errors = array_merge($this->context->controller->errors, $total_errors);
-
-			die(Tools::jsonEncode(array('thumbnail' => $files)));
-		}
-	}
-
-	public function hookActionBackOfficeCategoryRemoveThumbnail()
-	{
-		if (($id_thumb = Tools::getValue('deleteThumb', false)) !== false)
-		{
-			if (file_exists(_PS_CAT_IMG_DIR_.(int)Tools::getValue('id_category').'-'.(int)$id_thumb.'_thumb.jpg')
-				&& !unlink(_PS_CAT_IMG_DIR_.(int)Tools::getValue('id_category').'-'.(int)$id_thumb.'_thumb.jpg'))
-				$this->context->controller->errors[] = Tools::displayError('Error while delete');
-
-			Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminCategories').'&id_category='
-				.(int)Tools::getValue('id_category').'&updatecategory');
-		}
 	}
 
 	public function hookLeftColumn($params)
