@@ -41,10 +41,10 @@ function create_multistore()
 		// @todo generate __PS_BASE_URI__ using $_SERVER['REQUEST_URI'], just in case
 		return false;
 	}
-	$all_themes_dir = _PS_ROOT_DIR_.'/themes';
+	$all_themes_dir = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'themes';
 	$themes = scandir($all_themes_dir);
 	foreach ($themes AS $theme)
-		if (is_dir($all_themes_dir.'/'.$theme) 
+		if (is_dir($all_themes_dir.DIRECTORY_SEPARATOR.$theme.DIRECTORY_SEPARATOR) 
 				&& $theme[0] != '.' 
 				&& $theme != 'prestashop')
 		{
@@ -73,8 +73,8 @@ function create_multistore()
 		$shop_domain_ssl = create_multistore_getHttpHost();
 	}
 
-	$_PS_DIRECTORY_ = trim(str_replace(' ', '%20', $INSTALLER__PS_BASE_URI), '/');
-	$_PS_DIRECTORY_ = ($_PS_DIRECTORY_) ? '/'.$_PS_DIRECTORY_.'/' : '/';
+	$_PS_DIRECTORY_ = trim(str_replace(' ', '%20', $INSTALLER__PS_BASE_URI), DIRECTORY_SEPARATOR);
+	$_PS_DIRECTORY_ = ($_PS_DIRECTORY_) ? '/'.$_PS_DIRECTORY_.DIRECTORY_SEPARATOR : DIRECTORY_SEPARATOR;
 	$res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'shop_url` (`id_shop`, `domain`, `domain_ssl`, `physical_uri`, `virtual_uri`, `main`, `active`) 
 																			VALUES(1, \''.pSQL($shop_domain).'\', \''.pSQL($shop_domain_ssl).'\', \''.pSQL($_PS_DIRECTORY_).'\', \'\', 1, 1)');
 
