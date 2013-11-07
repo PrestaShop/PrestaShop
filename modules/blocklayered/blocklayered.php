@@ -1274,7 +1274,7 @@ class BlockLayered extends Module
 				//<![CDATA[
 				$(document).ready(function()
 				{
-					$(\'#selectPrductSort\').unbind(\'change\').bind(\'change\', function()
+					$(\'#selectProductSort\').unbind(\'change\').bind(\'change\', function()
 					{
 						reloadContent();
 					})
