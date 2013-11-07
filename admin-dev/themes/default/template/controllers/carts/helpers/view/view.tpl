@@ -76,7 +76,7 @@
 		<div class="panel">
 			<h3><i class="icon-shopping-cart"></i> {l s='Order information'}</h3>
 			{if $order->id}
-				<h2><a href="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&id_order={$order->id}&vieworder"> {l s='Order #%d' sprintf=$order->id|string_format:"%06d"}</a></h2>
+				<h2><a href="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&id_order={$order->id}&vieworder"> {l s='Order #%s' sprintf=$order->reference}</a></h2>
 				{l s='Made on:'} {dateFormat date=$order->date_add}
 			{else}
 				<h2>{l s='No order was created from this cart.'}</h2>
